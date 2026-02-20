@@ -66,6 +66,28 @@ See `PROBABILISTIC_SCORING_COMPLETE.md` for full details.
 - ✅ MCP tools: `calculate_temporal_eig`, `compare_hypothesis_priority`
 - ✅ Configurable decay rate and enable/disable toggle
 
+### Post-MVP Phase 4: Three-Axis Dashboard Scoring ✅ COMPLETE (Feb 20, 2026)
+- ✅ `backend/dashboard_scorer.py` (720 lines) - Main scoring service
+- ✅ `backend/tests/test_dashboard_scorer.py` (380 lines) - Test suite
+- ✅ **Procurement Maturity Score** (0-100): Capability assessment from 4 components
+  - Capability Signals (40%): Job postings, tech adoption
+  - Digital Initiatives (30%): Transformations, modernizations
+  - Partnership Activity (20%): Partnerships, integrations
+  - Executive Changes (10%): C-level hires
+- ✅ **Active Procurement Probability** (6-month): Temporal + EIG based
+  - Validated RFP Bonus (+40%): Confirmed RFP detected
+  - Procurement Density (30%): Signals per month
+  - Temporal Recency (20%): Recent activity bonus
+  - EIG Confidence (10%): Overall hypothesis confidence
+- ✅ **Sales Readiness Level**: 5 levels (NOT_READY, MONITOR, ENGAGE, HIGH_PRIORITY, LIVE)
+- ✅ **Confidence Intervals**: Bootstrap-style estimation based on sample size
+- ✅ **Batch Scoring**: Efficient multi-entity scoring with parallelization
+- ✅ 6/6 tests passing
+- ✅ Converts complex temporal intelligence into clear sales signals
+
+**Total Post-MVP Implementation**: ~1,500 lines of production code
+**Total Test Coverage**: 17 tests passing across all post-MVP phases
+
 ---
 
 **Status**: ✅ COMPLETE AND READY FOR DEPLOYMENT
