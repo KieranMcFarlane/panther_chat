@@ -63,6 +63,8 @@ Usage (API Client):
 import os
 import sys
 import logging
+import math
+import random
 from datetime import datetime, timezone
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
@@ -97,6 +99,174 @@ class RalphLoopConfig:
     enable_confidence_validation: bool = True  # Feature flag for confidence validation
     max_confidence_adjustment: float = 0.15  # Max ± adjustment Claude can make
     confidence_review_threshold: float = 0.2  # Flag for manual review if adjustment > this
+
+
+# =============================================================================
+# SIGNAL CLASSIFICATION
+# =============================================================================
+
+# =============================================================================
+# SIGNAL STRENGTH ASSESSMENT (Probabilistic Scoring)
+# =============================================================================
+
+SIGNAL_STRENGTH_PROMPT = """Analyze this procurement signal and assign a strength score.
+
+Signal: {title}
+URL: {url}
+Category: {category}
+Signal Class: {signal_class}
+
+For CAPABILITY signals (job postings, tech adoption):
+- Rate 0.6 if: C-level, VP, Director, "Head of", "Chief"
+- Rate 0.5 if: Manager, Lead, "Senior", Principal
+- Rate 0.4 if: Specialist, individual contributor, Analyst
+
+For PROCUREMENT_INDICATOR (evaluation activity):
+- Rate 0.9 if: "RFP", "tender", "procurement", "vendor selection", "solicitation"
+- Rate 0.8 if: "evaluating", "demo", "POC", "proof of concept", "pilot"
+- Rate 0.7 if: "researching", "exploring", "considering", "assessment"
+- Rate 0.6 if: general tech mention, partnership, collaboration
+
+Return ONLY a number with two decimal places (e.g., "0.65").
+"""
+
+
+def calculate_temporal_decay(
+    signal_date: datetime,
+    current_date: datetime = None,
+    decay_lambda: float = 0.015
+) -> float:
+    """
+    Calculate temporal decay weight using exponential decay
+
+    Formula: weight = e^(-λ × age_in_days)
+
+    λ = 0.015 produces:
+    - 7 days old: ~90% weight
+    - 30 days old: ~64% weight
+    - 60 days old: ~41% weight
+    - 90 days old: ~26% weight
+    - 365 days old: <1% weight
+
+    This ensures recent signals contribute more to activity scores.
+
+    Args:
+        signal_date: When the signal was collected/published
+        current_date: Reference date for decay calculation (defaults to now)
+        decay_lambda: Decay rate (default 0.015 for moderate decay)
+
+    Returns:
+        Decay weight between 0.01 and 1.0
+    """
+    if current_date is None:
+        current_date = datetime.now(timezone.utc)
+
+    age_days = max(0, (current_date - signal_date).days)
+    decay = math.exp(-decay_lambda * age_days)
+
+    return max(0.01, min(1.0, decay))  # Clamp between 1% and 100%
+
+
+async def assess_signal_strength(
+    signal: Dict[str, Any],
+    signal_class: SignalClass,
+    claude_client = None
+) -> float:
+    """
+    Assess individual signal strength using Claude content analysis
+
+    Returns weight between:
+    - CAPABILITY: 0.4-0.6 (based on seniority/role impact)
+    - PROCUREMENT_INDICATOR: 0.6-0.9 (based on phrasing strength)
+    - VALIDATED_RFP: 1.0 (fixed)
+
+    Assessment criteria for CAPABILITY:
+    - 0.6: C-level, VP, Director roles (high seniority)
+    - 0.5: Manager, Lead roles (medium seniority)
+    - 0.4: Specialist, individual contributor (low seniority)
+
+    Assessment criteria for PROCUREMENT_INDICATOR:
+    - 0.9: "issued RFP", "tender", "procurement", "vendor selection"
+    - 0.8: "evaluating", "demo", "proof of concept"
+    - 0.7: "researching", "exploring", "considering"
+    - 0.6: general mentions, partnerships
+
+    Args:
+        signal: Signal dictionary with 'title', 'url', 'category' keys
+        signal_class: The signal class (CAPABILITY, PROCUREMENT_INDICATOR, VALIDATED_RFP)
+        claude_client: Optional ClaudeClient for content analysis
+
+    Returns:
+        Strength score between 0.4 and 1.0
+    """
+    # VALIDATED_RFP signals always have max strength
+    if signal_class == SignalClass.VALIDATED_RFP:
+        return 1.0
+
+    # If no Claude client, use heuristic-based assessment
+    if claude_client is None:
+        return _heuristic_signal_strength(signal, signal_class)
+
+    title = signal.get('title', '')
+    url = signal.get('url', '')
+    category = signal.get('category', '')
+
+    prompt = SIGNAL_STRENGTH_PROMPT.format(
+        title=title,
+        url=url,
+        category=category,
+        signal_class=signal_class.value
+    )
+
+    try:
+        response = await claude_client.query(prompt, max_tokens=50)
+
+        # Extract number from response
+        import re
+        match = re.search(r'0\.\d+', response)
+        if match:
+            strength = float(match.group())
+            # Clamp to valid range
+            if signal_class == SignalClass.CAPABILITY:
+                return max(0.4, min(0.6, strength))
+            else:  # PROCUREMENT_INDICATOR
+                return max(0.6, min(0.9, strength))
+    except Exception as e:
+        logger.warning(f"Claude signal strength assessment failed: {e}, using heuristic")
+
+    # Fallback to heuristic
+    return _heuristic_signal_strength(signal, signal_class)
+
+
+def _heuristic_signal_strength(signal: Dict[str, Any], signal_class: SignalClass) -> float:
+    """
+    Fallback heuristic-based signal strength assessment
+
+    Uses keyword matching when Claude is unavailable.
+    """
+    title = signal.get('title', '').lower()
+
+    if signal_class == SignalClass.CAPABILITY:
+        # Check for seniority keywords
+        if any(kw in title for kw in ['chief', 'c-level', 'vp ', 'vice president', 'director', 'head of']):
+            return 0.6
+        elif any(kw in title for kw in ['manager', 'lead ', 'senior', 'principal']):
+            return 0.5
+        else:
+            return 0.4
+
+    elif signal_class == SignalClass.PROCUREMENT_INDICATOR:
+        # Check for procurement strength keywords
+        if any(kw in title for kw in ['rfp', 'tender', 'procurement', 'vendor selection', 'solicitation']):
+            return 0.9
+        elif any(kw in title for kw in ['evaluating', 'demo', 'poc', 'proof of concept', 'pilot']):
+            return 0.8
+        elif any(kw in title for kw in ['researching', 'exploring', 'considering', 'assessment']):
+            return 0.7
+        else:
+            return 0.6
+
+    return 0.5  # Default fallback
 
 
 # =============================================================================
@@ -152,10 +322,15 @@ def recalculate_hypothesis_state(
     category: str,
     capability_signals: List[Dict[str, Any]],
     procurement_indicators: List[Dict[str, Any]],
-    validated_rfps: List[Dict[str, Any]]
+    validated_rfps: List[Dict[str, Any]],
+    claude_client = None
 ) -> HypothesisState:
     """
-    Recalculate hypothesis state from all signals
+    Probabilistic hypothesis state calculation with:
+    1. Individual signal strength assessment
+    2. Temporal decay weighting (recent signals matter more)
+    3. Confidence-based adjustment
+    4. Sigmoid state transitions (smooth not linear)
 
     This is a critical architectural function: we aggregate at the hypothesis
     level, NOT the signal level. All signals contribute to hypothesis-level scores.
@@ -171,37 +346,95 @@ def recalculate_hypothesis_state(
         capability_signals: List of CAPABILITY-classified signals
         procurement_indicators: List of PROCUREMENT_INDICATOR signals
         validated_rfps: List of VALIDATED_RFP signals
+        claude_client: Optional ClaudeClient for signal strength assessment
 
     Returns:
         HypothesisState with calculated scores and state
     """
-    # Calculate maturity score from CAPABILITY signals
-    # Each CAPABILITY signal contributes 0.15 to maturity
-    maturity_score = min(1.0, len(capability_signals) * 0.15)
+    # -------------------------------------------------------------------------
+    # MATURITY SCORE (from CAPABILITY signals)
+    # -------------------------------------------------------------------------
+    maturity_sum = 0.0
+    for signal in capability_signals:
+        # Get signal strength (0.4-0.6) from heuristic or Claude analysis
+        try:
+            # For now, use heuristic (async Claude would require async wrapper)
+            strength = _heuristic_signal_strength(signal, SignalClass.CAPABILITY)
+        except Exception:
+            strength = 0.5  # Default fallback
 
-    # Calculate activity score from PROCUREMENT_INDICATOR signals
-    # Each indicator contributes 0.25 to activity
-    activity_score = min(1.0, len(procurement_indicators) * 0.25)
+        # Get temporal decay weight
+        signal_date = signal.get('collected_at', signal.get('first_seen', datetime.now(timezone.utc)))
+        if isinstance(signal_date, str):
+            signal_date = datetime.fromisoformat(signal_date.replace('Z', '+00:00'))
+        decay = calculate_temporal_decay(signal_date, decay_lambda=0.015)
 
-    # Determine state based on scores and validated RFPs
+        # Get confidence multiplier (0.45-1.0 range)
+        confidence = signal.get('confidence', 0.5)
+        confidence_multiplier = 0.45 + (confidence * 0.55)
+
+        # Weighted contribution
+        contribution = strength * decay * confidence_multiplier
+        maturity_sum += contribution
+
+    # Normalize: divide by expected max (assume ~5 signals max at 0.6 strength)
+    maturity_score = min(1.0, maturity_sum / 3.0) if capability_signals else 0.0
+
+    # -------------------------------------------------------------------------
+    # ACTIVITY SCORE (from PROCUREMENT_INDICATOR signals)
+    # -------------------------------------------------------------------------
+    activity_sum = 0.0
+    for signal in procurement_indicators:
+        # Get signal strength (0.6-0.9) from heuristic or Claude analysis
+        try:
+            strength = _heuristic_signal_strength(signal, SignalClass.PROCUREMENT_INDICATOR)
+        except Exception:
+            strength = 0.7  # Default fallback
+
+        # Get temporal decay weight (higher decay sensitivity for activity)
+        signal_date = signal.get('collected_at', signal.get('first_seen', datetime.now(timezone.utc)))
+        if isinstance(signal_date, str):
+            signal_date = datetime.fromisoformat(signal_date.replace('Z', '+00:00'))
+        decay = calculate_temporal_decay(signal_date, decay_lambda=0.02)
+
+        # Get confidence multiplier
+        confidence = signal.get('confidence', 0.5)
+        confidence_multiplier = 0.60 + (confidence * 0.40)
+
+        # Weighted contribution
+        contribution = strength * decay * confidence_multiplier
+        activity_sum += contribution
+
+    # Normalize: divide by expected max (assume ~4 signals max at 0.9 strength)
+    activity_score = min(1.0, activity_sum / 3.6) if procurement_indicators else 0.0
+
+    # -------------------------------------------------------------------------
+    # STATE DETERMINATION (Sigmoid transitions)
+    # -------------------------------------------------------------------------
+    def sigmoid(x: float, midpoint: float = 0.5, steepness: float = 10.0) -> float:
+        """Sigmoid function for smooth state transitions"""
+        return 1.0 / (1.0 + math.exp(-steepness * (x - midpoint)))
+
+    # Calculate state probabilities
+    p_live = sigmoid(activity_score, midpoint=0.8, steepness=15.0) if validated_rfps else 0.0
+    p_engage = sigmoid(activity_score, midpoint=0.55, steepness=12.0)
+    p_warm = sigmoid(activity_score, midpoint=0.35, steepness=10.0)
+
+    # Select state with highest probability
     if len(validated_rfps) >= 1:
-        # Validated RFP means LIVE procurement state
         state = "LIVE"
-    elif activity_score >= 0.6:
-        # High activity means ENGAGE (sales should reach out)
+    elif p_engage > 0.5:
         state = "ENGAGE"
-    elif activity_score >= 0.4 or maturity_score >= 0.5:
-        # Moderate activity or high maturity means WARM (monitor closely)
+    elif p_warm > 0.5:
         state = "WARM"
     else:
-        # Default monitoring state
         state = "MONITOR"
 
     return HypothesisState(
         entity_id=entity_id,
         category=category,
-        maturity_score=maturity_score,
-        activity_score=activity_score,
+        maturity_score=round(maturity_score, 3),
+        activity_score=round(activity_score, 3),
         state=state,
         last_updated=datetime.now(timezone.utc)
     )
@@ -1033,13 +1266,14 @@ class RalphLoop:
             cat_indicators = [s for s in procurement_indicators if hasattr(s, 'subtype') and s.subtype == category]
             cat_rfps = [s for s in validated_rfps if hasattr(s, 'subtype') and s.subtype == category]
 
-            # Calculate hypothesis state
+            # Calculate hypothesis state (with probabilistic scoring)
             hypothesis_states[category] = recalculate_hypothesis_state(
                 entity_id=entity_id,
                 category=category,
                 capability_signals=[s.__dict__ for s in cat_capability],
                 procurement_indicators=[s.__dict__ for s in cat_indicators],
-                validated_rfps=[s.__dict__ for s in cat_rfps]
+                validated_rfps=[s.__dict__ for s in cat_rfps],
+                claude_client=self.claude_client  # Pass claude_client for signal strength assessment
             )
 
             logger.info(f"   📈 Category {category}: maturity={hypothesis_states[category].maturity_score:.2f}, "
