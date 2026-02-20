@@ -50,6 +50,14 @@ See `PROBABILISTIC_SCORING_COMPLETE.md` for full details.
 - ✅ `UNIVERSAL-DOSSIER-OUTREACH-SUMMARY.md` (540+ lines)
 - ✅ 36 comprehensive test cases
 
+### Post-MVP Phase 2: Episode Clustering ✅ COMPLETE (Feb 20, 2026)
+- ✅ `backend/episode_clustering.py` (420 lines)
+- ✅ Semantic embedding generation with fallback
+- ✅ Temporal compression (45-day window)
+- ✅ Cosine similarity clustering (0.78 threshold)
+- ✅ 6/6 tests passing
+- ✅ MCP tools: `get_clustered_timeline`, `cluster_episodes`
+
 ---
 
 **Status**: ✅ COMPLETE AND READY FOR DEPLOYMENT

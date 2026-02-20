@@ -509,6 +509,127 @@ async def build_temporal_narrative(
 
 
 # =============================================================================
+# Phase 2: Episode Clustering Tools
+# =============================================================================
+
+async def get_clustered_timeline(
+    entity_id: str,
+    entity_name: Optional[str] = None,
+    from_time: Optional[str] = None,
+    to_time: Optional[str] = None,
+    time_window_days: int = 45,
+    similarity_threshold: float = 0.78
+) -> Dict[str, Any]:
+    """
+    Get semantic + temporally compressed timeline for an entity
+
+    Uses episode clustering to combine similar events within time windows.
+    This reduces noise and improves signal quality for temporal analysis.
+
+    Args:
+        entity_id: Entity identifier
+        entity_name: Optional display name
+        from_time: Optional start time filter
+        to_time: Optional end time filter
+        time_window_days: Temporal window for clustering (default: 45)
+        similarity_threshold: Cosine similarity threshold (default: 0.78)
+
+    Returns:
+        Compressed timeline with clustered episodes and statistics
+    """
+    logger.info(f"Getting clustered timeline for {entity_id}")
+
+    # Import clustering service
+    from backend.episode_clustering import EpisodeClusteringService
+
+    service = EpisodeClusteringService()
+    await service.initialize()
+
+    result = await service.get_cluster_timeline(
+        entity_id=entity_id,
+        entity_name=entity_name,
+        from_time=from_time,
+        to_time=to_time
+    )
+
+    return result
+
+
+async def cluster_episodes(
+    entity_id: str,
+    entity_name: Optional[str] = None,
+    from_time: Optional[str] = None,
+    to_time: Optional[str] = None,
+    episode_types: Optional[List[str]] = None,
+    time_window_days: int = 45,
+    similarity_threshold: float = 0.78
+) -> Dict[str, Any]:
+    """
+    Cluster episodes using semantic embeddings and temporal proximity
+
+    Returns detailed cluster information including:
+    - Cluster ID and member episodes
+    - Combined descriptions
+    - Confidence scores
+    - Time span statistics
+
+    Args:
+        entity_id: Entity identifier
+        entity_name: Optional display name
+        from_time: Optional start time filter
+        to_time: Optional end time filter
+        episode_types: Optional episode type filter
+        time_window_days: Temporal window for clustering
+        similarity_threshold: Cosine similarity threshold
+
+    Returns:
+        List of clustered episodes with metadata
+    """
+    logger.info(f"Clustering episodes for {entity_id}")
+
+    # Import clustering service
+    from backend.episode_clustering import EpisodeClusteringService
+
+    service = EpisodeClusteringService()
+    await service.initialize()
+
+    clusters = await service.cluster_entity_episodes(
+        entity_id=entity_id,
+        entity_name=entity_name,
+        time_window_days=time_window_days,
+        similarity_threshold=similarity_threshold,
+        from_time=from_time,
+        to_time=to_time,
+        episode_types=episode_types
+    )
+
+    # Convert to dict format
+    return {
+        "entity_id": entity_id,
+        "entity_name": entity_name or entity_id,
+        "clusters": [
+            {
+                "cluster_id": c.cluster_id,
+                "episode_type": c.episode_type,
+                "combined_description": c.combined_description,
+                "timestamp_center": c.timestamp_center,
+                "timestamp_earliest": c.timestamp_earliest,
+                "timestamp_latest": c.timestamp_latest,
+                "episode_count": c.episode_count,
+                "confidence_score": c.confidence_score,
+                "source_episodes": c.source_episodes,
+                "was_clustered": c.metadata.get("clustered", False),
+                "time_span_days": c.metadata.get("time_span_days", 0)
+            }
+            for c in clusters
+        ],
+        "total_clusters": len(clusters),
+        "total_episodes": sum(c.episode_count for c in clusters),
+        "compression_ratio": round(sum(c.episode_count for c in clusters) / len(clusters), 2) if clusters else 1.0
+    }
+
+
+# =============================================================================
 # MCP Server using stdio protocol
 # =============================================================================
 
@@ -779,6 +900,84 @@ async def main():
                 },
                 "required": ["entities", "from_time", "to_time"]
             }
+        },
+        # Phase 2: Episode Clustering Tools
+        "get_clustered_timeline": {
+            "name": "get_clustered_timeline",
+            "description": "Get semantic + temporally compressed timeline for an entity. Clusters similar episodes within 45-day windows using 0.78 similarity threshold. Reduces noise and improves signal quality.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "entity_id": {
+                        "type": "string",
+                        "description": "Entity identifier (name or neo4j_id)"
+                    },
+                    "entity_name": {
+                        "type": "string",
+                        "description": "Entity display name (optional)"
+                    },
+                    "from_time": {
+                        "type": "string",
+                        "description": "ISO timestamp start of time window (optional)"
+                    },
+                    "to_time": {
+                        "type": "string",
+                        "description": "ISO timestamp end of time window (optional)"
+                    },
+                    "time_window_days": {
+                        "type": "number",
+                        "description": "Temporal window in days for clustering (default: 45)",
+                        "default": 45
+                    },
+                    "similarity_threshold": {
+                        "type": "number",
+                        "description": "Cosine similarity threshold for clustering (default: 0.78)",
+                        "default": 0.78
+                    }
+                },
+                "required": ["entity_id"]
+            }
+        },
+        "cluster_episodes": {
+            "name": "cluster_episodes",
+            "description": "Cluster episodes for an entity using semantic embeddings and temporal proximity. Returns compressed episodes with similarity scores.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "entity_id": {
+                        "type": "string",
+                        "description": "Entity identifier"
+                    },
+                    "entity_name": {
+                        "type": "string",
+                        "description": "Entity display name"
+                    },
+                    "from_time": {
+                        "type": "string",
+                        "description": "ISO timestamp start (optional)"
+                    },
+                    "to_time": {
+                        "type": "string",
+                        "description": "ISO timestamp end (optional)"
+                    },
+                    "episode_types": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Optional filter by episode types"
+                    },
+                    "time_window_days": {
+                        "type": "number",
+                        "description": "Temporal window in days (default: 45)",
+                        "default": 45
+                    },
+                    "similarity_threshold": {
+                        "type": "number",
+                        "description": "Similarity threshold (default: 0.78)",
+                        "default": 0.78
+                    }
+                },
+                "required": ["entity_id"]
+            }
         }
     }
 
@@ -793,7 +992,10 @@ async def main():
         "query_episodes": query_episodes,
         "get_entity_state_at_time": get_entity_state_at_time,
         "compute_entity_diff": compute_entity_diff,
-        "build_temporal_narrative": build_temporal_narrative
+        "build_temporal_narrative": build_temporal_narrative,
+        # Phase 2: Episode clustering tools
+        "get_clustered_timeline": get_clustered_timeline,
+        "cluster_episodes": cluster_episodes
     }
 
     # Read from stdin, write to stdout
