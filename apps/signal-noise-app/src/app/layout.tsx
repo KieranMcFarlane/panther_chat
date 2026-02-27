@@ -12,6 +12,18 @@ import { CopilotKit } from "@copilotkit/react-core"
 import "@copilotkit/react-ui/styles.css"
 import dynamic from 'next/dynamic'
 import { TemporalIntelligenceTools } from '@/components/temporal/TemporalIntelligenceTools'
+import { BetterAuthProvider } from '@/components/providers/BetterAuthProvider'
+import { UserMenu } from '@/components/auth/UserMenu'
+import { SignInLink } from '@/components/auth/SignInLink'
+
+function AuthMenu() {
+  return (
+    <>
+      <UserMenu />
+      <SignInLink />
+    </>
+  )
+}
 
 const SimpleStreamingChat = dynamic(() => import('@/components/chat/SimpleStreamingChat'), {
   ssr: false,
@@ -48,31 +60,33 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} antialiased`} suppressHydrationWarning={true}>
         <BackgroundAnimation />
-        <UserProvider>
-          <TabProvider>
-            <ThreadProvider>
-              <SWRProvider>
-                <CopilotKit
-                  runtimeUrl="/api/copilotkit"
-                  publicApiKey={process.env.NEXT_PUBLIC_COPILOTKIT_API_KEY}
-                  properties={{
-                    agentConfig: SPORTS_AGENT_CONFIG
-                  }}
-                  enableAGUI={true}
-                  showInspector={process.env.NODE_ENV === 'development'}
-                >
-                  <TemporalIntelligenceTools />
-                  <SharedCopilotProvider>
-                    <AppNavigation>
-                      {children}
-                    </AppNavigation>
-                    <SimpleStreamingChat />
-                  </SharedCopilotProvider>
-                </CopilotKit>
-              </SWRProvider>
-            </ThreadProvider>
-          </TabProvider>
-        </UserProvider>
+        <BetterAuthProvider>
+          <UserProvider>
+            <TabProvider>
+              <ThreadProvider>
+                <SWRProvider>
+                  <CopilotKit
+                    runtimeUrl="/api/copilotkit"
+                    publicApiKey={process.env.NEXT_PUBLIC_COPILOTKIT_API_KEY}
+                    properties={{
+                      agentConfig: SPORTS_AGENT_CONFIG
+                    }}
+                    enableAGUI={true}
+                    showInspector={process.env.NODE_ENV === 'development'}
+                  >
+                    <TemporalIntelligenceTools />
+                    <SharedCopilotProvider>
+                      <AppNavigation authMenu={<AuthMenu />}>
+                        {children}
+                      </AppNavigation>
+                      <SimpleStreamingChat />
+                    </SharedCopilotProvider>
+                  </CopilotKit>
+                </SWRProvider>
+              </ThreadProvider>
+            </TabProvider>
+          </UserProvider>
+        </BetterAuthProvider>
       </body>
     </html>
   )
