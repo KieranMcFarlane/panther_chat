@@ -573,28 +573,42 @@ async def generate_dossier(request: DossierRequest):
                     cached_dossier = cached.data[0]
                     expires_at = cached_dossier.get("expires_at")
                     cache_status = cached_dossier.get("cache_status", "STALE")
+                    cached_entity_type = (
+                        cached_dossier.get("dossier_data", {})
+                        .get("metadata", {})
+                        .get("entity_type")
+                    )
 
-                    # Check if cache is still fresh
-                    if expires_at and cache_status == "FRESH":
-                        from datetime import datetime
-                        expires_dt = datetime.fromisoformat(expires_at.replace("Z", "+00:00"))
-                        if expires_dt > datetime.now(expires_dt.tzinfo):
-                            logger.info(f"✅ Returning cached dossier (expires: {expires_at})")
-                            return DossierResponse(
-                                entity_id=cached_dossier["entity_id"],
-                                entity_name=cached_dossier["entity_name"],
-                                dossier_data=cached_dossier["dossier_data"],
-                                metadata={
-                                    "tier": cached_dossier.get("tier"),
-                                    "priority_score": cached_dossier.get("priority_score"),
-                                    "generation_time_seconds": cached_dossier.get("generation_time_seconds"),
-                                    "total_cost_usd": cached_dossier.get("total_cost_usd"),
-                                    "hypothesis_count": cached_dossier.get("dossier_data", {}).get("metadata", {}).get("hypothesis_count", 0),
-                                    "signal_count": cached_dossier.get("dossier_data", {}).get("metadata", {}).get("signal_count", 0)
-                                },
-                                cache_status="CACHED",
-                                generated_at=cached_dossier["generated_at"]
-                            )
+                    if cached_entity_type and cached_entity_type != request.entity_type:
+                        logger.info(
+                            "🔄 Cached dossier entity_type mismatch for %s: cached=%s requested=%s. Regenerating.",
+                            request.entity_id,
+                            cached_entity_type,
+                            request.entity_type,
+                        )
+                    else:
+
+                        # Check if cache is still fresh
+                        if expires_at and cache_status == "FRESH":
+                            from datetime import datetime
+                            expires_dt = datetime.fromisoformat(expires_at.replace("Z", "+00:00"))
+                            if expires_dt > datetime.now(expires_dt.tzinfo):
+                                logger.info(f"✅ Returning cached dossier (expires: {expires_at})")
+                                return DossierResponse(
+                                    entity_id=cached_dossier["entity_id"],
+                                    entity_name=cached_dossier["entity_name"],
+                                    dossier_data=cached_dossier["dossier_data"],
+                                    metadata={
+                                        "tier": cached_dossier.get("tier"),
+                                        "priority_score": cached_dossier.get("priority_score"),
+                                        "generation_time_seconds": cached_dossier.get("generation_time_seconds"),
+                                        "total_cost_usd": cached_dossier.get("total_cost_usd"),
+                                        "hypothesis_count": cached_dossier.get("dossier_data", {}).get("metadata", {}).get("hypothesis_count", 0),
+                                        "signal_count": cached_dossier.get("dossier_data", {}).get("metadata", {}).get("signal_count", 0)
+                                    },
+                                    cache_status="CACHED",
+                                    generated_at=cached_dossier["generated_at"]
+                                )
             except Exception as e:
                 logger.warning(f"⚠️  Cache check failed: {e}. Proceeding with generation.")
 

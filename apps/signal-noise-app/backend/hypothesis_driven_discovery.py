@@ -50,6 +50,27 @@ from collections import OrderedDict
 logger = logging.getLogger(__name__)
 
 
+DEFAULT_DISCOVERY_TEMPLATE_ID = "yellow_panther_agency"
+
+
+def resolve_template_id(template_id: Optional[str], entity_type: Optional[str] = None) -> str:
+    """Return an available template id for discovery initialization."""
+    from template_loader import TemplateLoader
+
+    loader = TemplateLoader()
+    requested = template_id or ""
+    if requested and loader.get_template(requested):
+        return requested
+
+    logger.warning(
+        "Requested discovery template unavailable, falling back to %s (requested=%s, entity_type=%s)",
+        DEFAULT_DISCOVERY_TEMPLATE_ID,
+        requested or None,
+        entity_type,
+    )
+    return DEFAULT_DISCOVERY_TEMPLATE_ID
+
+
 # Import PDF extractor for DOCUMENT hop type
 try:
     from pdf_extractor import get_pdf_extractor
@@ -740,6 +761,8 @@ class HypothesisDrivenDiscovery:
             max_depth = self.max_depth
         if max_cost_usd is None:
             max_cost_usd = self.max_cost_per_entity
+
+        template_id = resolve_template_id(template_id, getattr(self, "current_entity_type", None))
 
         logger.info(f"🔍 Starting hypothesis-driven discovery for {entity_name}")
         logger.info(f"   Template: {template_id}")
@@ -3578,7 +3601,10 @@ Return JSON:
             return await self.run_discovery(
                 entity_id=entity_id,
                 entity_name=entity_name,
-                template_id='tier_1_club_centralized_procurement',  # Default template
+                template_id=resolve_template_id(
+                    dossier.get('metadata', {}).get('template_id'),
+                    dossier.get('metadata', {}).get('entity_type'),
+                ),
                 max_iterations=max_iterations
             )
 

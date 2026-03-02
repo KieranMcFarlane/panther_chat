@@ -242,7 +242,7 @@ class EntityDossierGenerator:
         if DATA_COLLECTOR_AVAILABLE:
             logger.info(f"🔍 Collecting entity data for {entity_name}")
             collector = DossierDataCollector()
-            dossier_data_obj = await collector.collect_all(entity_id, entity_name)
+            dossier_data_obj = await collector.collect_all(entity_id, entity_name, entity_type=entity_type)
 
             # Convert DossierData object to dict format for compatibility
             entity_data = self._dossier_data_to_dict(dossier_data_obj)
@@ -313,7 +313,7 @@ Website: N/A
             entity_data["entity_capacity"] = entity_data.get("capacity")
             entity_data["entity_website"] = entity_data.get("website")
             entity_data["entity_employees"] = entity_data.get("employees")
-            entity_data["entity_type"] = entity_type if 'entity_type' in entity_data else 'CLUB'
+            entity_data["entity_type"] = entity_data.get("entity_type") or entity_type or 'CLUB'
 
             if DATA_COLLECTOR_AVAILABLE:
                 logger.info("⚠️ Using placeholder data (FalkorDB unavailable)")
@@ -1593,7 +1593,7 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
         # Collect entity data if not provided
         if entity_data is None and DATA_COLLECTOR_AVAILABLE:
             collector = DossierDataCollector()
-            dossier_data_obj = await collector.collect_all(entity_id, entity_name)
+            dossier_data_obj = await collector.collect_all(entity_id, entity_name, entity_type=entity_type)
             entity_data = self._dossier_data_to_dict(dossier_data_obj)
         elif entity_data is None:
             # Fallback to minimal data

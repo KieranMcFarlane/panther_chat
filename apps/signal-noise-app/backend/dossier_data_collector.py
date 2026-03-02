@@ -204,7 +204,7 @@ class DossierDataCollector:
             logger.error(f"❌ FalkorDB connection failed: {e}")
             return False
 
-    async def collect_all(self, entity_id: str, entity_name: str = None) -> DossierData:
+    async def collect_all(self, entity_id: str, entity_name: str = None, entity_type: str = "CLUB") -> DossierData:
         """
         Collect all available data for dossier generation
 
@@ -238,7 +238,7 @@ class DossierDataCollector:
             dossier_data.metadata = EntityMetadata(
                 entity_id=entity_id,
                 entity_name=entity_name or entity_id.replace("-", " ").title(),
-                entity_type="CLUB",
+                entity_type=entity_type,
                 data_source="Generated"
             )
 
@@ -494,7 +494,7 @@ If a field is not found, use null. Return ONLY valid JSON, no other text."""
                 max_tokens=500
             )
 
-            response_text = result.get('content', '')
+            response_text = result.get('content', '') or ''
 
             # Parse JSON response
             import json
