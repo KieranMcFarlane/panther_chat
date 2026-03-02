@@ -2,6 +2,7 @@ import json
 import logging
 from typing import Dict, Any, Optional, List, Tuple
 import os
+import asyncio
 from datetime import datetime
 from dataclasses import dataclass
 import httpx
@@ -361,6 +362,8 @@ class ClaudeClient:
         self.api_key = api_key or self._resolve_api_key()
         self.base_url = base_url or self._resolve_base_url()
         self.chutes_model = os.getenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+        self.chutes_timeout_seconds = float(os.getenv("CHUTES_TIMEOUT_SECONDS", "45"))
+        self.chutes_max_retries = int(os.getenv("CHUTES_MAX_RETRIES", "1"))
 
         disable_flag = (os.getenv("DISABLE_CLAUDE_API") or "").strip().lower()
         if disable_flag in {"1", "true", "yes", "on"}:
@@ -585,38 +588,52 @@ class ClaudeClient:
             "Content-Type": "application/json",
         }
 
-        try:
-            async with httpx.AsyncClient(timeout=120.0) as client:
-                response = await client.post(
-                    f"{self.base_url.rstrip('/')}/chat/completions",
-                    headers=headers,
-                    json=payload,
+        last_error: Optional[Exception] = None
+
+        for attempt in range(self.chutes_max_retries + 1):
+            try:
+                async with httpx.AsyncClient(timeout=self.chutes_timeout_seconds) as client:
+                    response = await client.post(
+                        f"{self.base_url.rstrip('/')}/chat/completions",
+                        headers=headers,
+                        json=payload,
+                    )
+                    response.raise_for_status()
+
+                data = response.json()
+                choice = (data.get("choices") or [{}])[0]
+                message = choice.get("message") or {}
+                content = message.get("content", "")
+                usage = data.get("usage", {})
+
+                return {
+                    "content": content,
+                    "model_used": model,
+                    "provider": self.provider,
+                    "raw_response": data,
+                    "tokens_used": {
+                        "input_tokens": usage.get("prompt_tokens"),
+                        "output_tokens": usage.get("completion_tokens"),
+                        "total_tokens": usage.get("total_tokens"),
+                    },
+                    "stop_reason": choice.get("finish_reason"),
+                }
+            except Exception as e:
+                last_error = e
+                logger.error(
+                    f"Chutes API request failed (attempt {attempt + 1}/{self.chutes_max_retries + 1}): {e}"
                 )
-                response.raise_for_status()
+                if self._is_insufficient_balance_error(e):
+                    self._disable_api("insufficient balance")
+                    raise
 
-            data = response.json()
-            choice = (data.get("choices") or [{}])[0]
-            message = choice.get("message") or {}
-            content = message.get("content", "")
-            usage = data.get("usage", {})
+                is_retryable = isinstance(e, (httpx.TimeoutException, httpx.TransportError))
+                if not is_retryable or attempt >= self.chutes_max_retries:
+                    raise
 
-            return {
-                "content": content,
-                "model_used": model,
-                "provider": self.provider,
-                "raw_response": data,
-                "tokens_used": {
-                    "input_tokens": usage.get("prompt_tokens"),
-                    "output_tokens": usage.get("completion_tokens"),
-                    "total_tokens": usage.get("total_tokens"),
-                },
-                "stop_reason": choice.get("finish_reason"),
-            }
-        except Exception as e:
-            logger.error(f"Chutes API request failed: {e}")
-            if self._is_insufficient_balance_error(e):
-                self._disable_api("insufficient balance")
-            raise
+                await asyncio.sleep(min(2 ** attempt, 2))
+
+        raise last_error
 
     async def get_embedding(
         self,

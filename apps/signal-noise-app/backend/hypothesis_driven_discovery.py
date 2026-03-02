@@ -38,6 +38,7 @@ Usage:
     )
 """
 
+import json
 import logging
 import time
 from datetime import datetime, timezone, timedelta
@@ -2328,7 +2329,6 @@ Return JSON:
             response_text = response.get('content', '') or response.get('text', '')
 
             # Parse JSON response (existing code)
-            import json
             import re
 
             json_match = re.search(r'\{[^}]*"decision"[^}]*\}', response_text, re.DOTALL)
