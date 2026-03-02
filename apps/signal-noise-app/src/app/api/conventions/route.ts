@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Neo4jService } from '@/lib/neo4j'
 
+export const dynamic = 'force-dynamic';
+
 const neo4jService = new Neo4jService()
 
 // Sample sports conventions data with federation intelligence

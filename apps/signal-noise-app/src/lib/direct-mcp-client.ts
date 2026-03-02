@@ -15,6 +15,7 @@ interface MCPToolResult {
 class DirectMCPClient {
   private isConnected = false;
   private baseUrl = 'http://localhost:3005';
+  private connectPromise: Promise<void> | null = null;
 
   async connect(): Promise<void> {
     try {
@@ -38,7 +39,23 @@ class DirectMCPClient {
     }
   }
 
+  private async ensureConnected(): Promise<void> {
+    if (this.isConnected) {
+      return;
+    }
+
+    if (!this.connectPromise) {
+      this.connectPromise = this.connect().finally(() => {
+        this.connectPromise = null;
+      });
+    }
+
+    await this.connectPromise;
+  }
+
   async callTool(toolName: string, args: any): Promise<MCPToolResult> {
+    await this.ensureConnected();
+
     if (!this.isConnected || !this.client) {
       throw new Error('MCP client not connected');
     }
@@ -69,6 +86,8 @@ class DirectMCPClient {
   }
 
   async getAvailableTools(): Promise<any[]> {
+    await this.ensureConnected();
+
     if (!this.isConnected || !this.client) {
       throw new Error('MCP client not connected');
     }
@@ -113,6 +132,3 @@ class DirectMCPClient {
 
 // Create singleton instance
 export const directMCPClient = new DirectMCPClient();
-
-// Auto-connect on module import
-directMCPClient.connect().catch(console.error);

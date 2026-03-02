@@ -10,6 +10,8 @@ import { getSupabaseAdmin, supabase } from '@/lib/supabase-client';
 import { comprehensiveRfpOpportunities } from '@/lib/comprehensive-rfp-opportunities';
 import digitalRfpOpportunities from '@/lib/digital-rfp-opportunities';
 
+export const dynamic = 'force-dynamic';
+
 // Import digital-first opportunities for optimal Yellow Panther alignment
 let alignedOpportunities;
 try {

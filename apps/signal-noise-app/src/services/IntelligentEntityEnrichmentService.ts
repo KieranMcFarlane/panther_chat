@@ -48,10 +48,7 @@ class IntelligentEntityEnrichmentService {
   // Fix the method naming conflict - use different property name
   private _isEnrichmentRunning = false;
   private claudeAgent: any = null;
-
-  constructor() {
-    this.initializeClaudeAgent();
-  }
+  private claudeAgentInitialization: Promise<void> | null = null;
 
   private async initializeClaudeAgent() {
     try {
@@ -129,7 +126,23 @@ class IntelligentEntityEnrichmentService {
     }
   }
 
+  private async ensureClaudeAgentInitialized() {
+    if (this.claudeAgent) {
+      return;
+    }
+
+    if (!this.claudeAgentInitialization) {
+      this.claudeAgentInitialization = this.initializeClaudeAgent().finally(() => {
+        this.claudeAgentInitialization = null;
+      });
+    }
+
+    await this.claudeAgentInitialization;
+  }
+
   async startIntelligentEnrichment(): Promise<EnrichmentBatch> {
+    await this.ensureClaudeAgentInitialized();
+
     if (this._isEnrichmentRunning) {
       throw new Error('Claude Agent enrichment is already running');
     }

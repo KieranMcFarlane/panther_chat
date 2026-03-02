@@ -345,9 +345,6 @@ const [filterSource, setFilterSource] = useState('all');
     return matchesSearch && matchesStatus;
   });
 
-  console.log(`🔍 Filter results: ${filteredOpportunities.length} of ${opportunities.length} opportunities (filter: ${filterStatus}, search: "${searchTerm}")`);
-  console.log('🔍 Debug: opportunities.length =', opportunities.length);
-
   // Filter detected RFPs
   const filteredDetectedRFPs = detectedRFPs.filter(rfp => {
     const matchesSearch = searchTerm === '' || 

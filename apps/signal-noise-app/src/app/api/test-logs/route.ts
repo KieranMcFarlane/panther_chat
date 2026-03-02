@@ -5,6 +5,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { liveLogService } from '@/services/LiveLogService';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     // Add a test log to verify in-memory storage

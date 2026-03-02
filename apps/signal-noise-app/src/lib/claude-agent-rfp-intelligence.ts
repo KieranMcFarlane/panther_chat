@@ -84,6 +84,7 @@ class RFPIntelligenceAgent {
   private processingQueue: BatchJob[] = [];
   private webhookHandlers: Map<string, Function> = new Map();
   private mcpConfig: any = {};
+  private mcpConfigPromise: Promise<void> | null = null;
   private batchCache: TokenOptimizedBatch = {
     entities: new Map(),
     processingThreshold: 10, // Process when 10 entities need updates
@@ -93,7 +94,6 @@ class RFPIntelligenceAgent {
 
   constructor() {
     this.initializeWebhookHandlers();
-    this.loadMCPConfig();
   }
 
   /**
@@ -118,10 +118,26 @@ class RFPIntelligenceAgent {
     }
   }
 
+  private async ensureMCPConfigLoaded(): Promise<void> {
+    if (Object.keys(this.mcpConfig).length > 0) {
+      return;
+    }
+
+    if (!this.mcpConfigPromise) {
+      this.mcpConfigPromise = this.loadMCPConfig().finally(() => {
+        this.mcpConfigPromise = null;
+      });
+    }
+
+    await this.mcpConfigPromise;
+  }
+
   /**
    * 🎯 Analyze RFP for strategic fit and opportunity using Claude Agent with MCP tools
    */
   async analyzeRFP(rfp: RFPData, entityContext?: Entity): Promise<any> {
+    await this.ensureMCPConfigLoaded();
+
     const prompt = `Analyze this RFP for Yellow Panther strategic fit and business opportunity:
       
 Title: ${rfp.title}
@@ -263,6 +279,8 @@ Format your response as structured JSON with the following schema:
    * 🧠 Reason about alerts using Claude Agent with MCP tools for context
    */
   async reasonAboutAlert(alert: AlertData, entityContext: Entity): Promise<any> {
+    await this.ensureMCPConfigLoaded();
+
     const prompt = `Analyze this business alert for strategic significance and opportunity:
 
 Alert Details:
@@ -336,6 +354,8 @@ Provide structured analysis in JSON format:
    * 🔄 Process webhooks with Claude Agent intelligence
    */
   async processWebhook(webhookType: string, payload: any): Promise<any> {
+    await this.ensureMCPConfigLoaded();
+
     console.log(`🔄 Processing webhook: ${webhookType}`, payload);
     
     const handler = this.webhookHandlers.get(webhookType);

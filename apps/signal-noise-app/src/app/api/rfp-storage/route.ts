@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getRFPStorageService } from '@/services/RFPStorageService';
 import { Neo4jService } from '@/lib/neo4j';
 
+export const dynamic = 'force-dynamic';
+
 interface RFPDetectionRequest {
   rfpData: {
     rfpId: string;

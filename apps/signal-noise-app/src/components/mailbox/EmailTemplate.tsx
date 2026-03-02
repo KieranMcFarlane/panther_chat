@@ -4,7 +4,7 @@ import {
   Container,
   Head,
   Heading,
-  Html,
+  Html as EmailHtml,
   Img,
   Preview,
   Section,
@@ -35,7 +35,7 @@ export const EmailTemplate = ({
   const previewText = body.replace(/<[^>]*>/g, '').substring(0, 150);
 
   return (
-    <Html>
+    <EmailHtml>
       <Head />
       <Preview>{previewText}</Preview>
       <Tailwind>
@@ -90,12 +90,11 @@ export const EmailTemplate = ({
           </Container>
         </Body>
       </Tailwind>
-    </Html>
+    </EmailHtml>
   );
 };
 
 export default EmailTemplate;
-
 
 
 

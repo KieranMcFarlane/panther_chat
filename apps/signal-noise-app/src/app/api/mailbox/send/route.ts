@@ -3,6 +3,7 @@ import { Resend } from 'resend';
 import { createClient } from '@supabase/supabase-js';
 import { render } from '@react-email/render';
 import EmailTemplate from '@/components/mailbox/EmailTemplate';
+import { UnauthorizedError, requireApiSession } from '@/lib/server-auth';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -26,6 +27,8 @@ interface SendEmailRequest {
 
 export async function POST(request: NextRequest) {
   try {
+    await requireApiSession(request);
+
     const body: SendEmailRequest = await request.json();
     const { to, subject, body: emailBody, textBody, from, replyTo, cc, bcc, tags } = body;
 
@@ -126,6 +129,15 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json(
+        {
+          error: error.message,
+        },
+        { status: 401 }
+      );
+    }
+
     console.error('Email send error:', error);
     return NextResponse.json(
       {

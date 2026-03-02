@@ -40,6 +40,8 @@ export function useEntity(entityId: string | null) {
 export function useEntitySummaries(url: string | null) {
   const { data, error, isLoading } = useSWR(url, fetcher, {
     revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    dedupingInterval: 300000,
     errorRetryCount: 1
   })
 

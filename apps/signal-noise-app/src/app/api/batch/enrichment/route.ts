@@ -3,6 +3,8 @@ import { Neo4jService } from '@/lib/neo4j';
 import { supabase } from '@/lib/supabase-client';
 import { query } from '@anthropic-ai/claude-agent-sdk';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * Batch Enrichment API for Tier 2 & 3 Entities
  * Processes queued entities in batches with delta detection

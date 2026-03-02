@@ -22,12 +22,12 @@ from datetime import datetime, timezone
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
 
-from schemas import EntityDossier, DossierSection, DossierTier, CacheStatus
-from claude_client import ClaudeClient
+from backend.schemas import EntityDossier, DossierSection, DossierTier, CacheStatus
+from backend.claude_client import ClaudeClient
 
 # Import data collector
 try:
-    from dossier_data_collector import DossierDataCollector, DossierData, EntityMetadata
+    from backend.dossier_data_collector import DossierDataCollector, DossierData, EntityMetadata
     DATA_COLLECTOR_AVAILABLE = True
 except ImportError:
     DATA_COLLECTOR_AVAILABLE = False
@@ -150,7 +150,6 @@ class EntityDossierGenerator:
                 "quick_actions",
                 "contact_information",
                 "recent_news",
-                "current_performance",
                 "leadership",
                 "digital_maturity",
                 "outreach_strategy"  # NEW for STANDARD
@@ -160,7 +159,6 @@ class EntityDossierGenerator:
                 "quick_actions",
                 "contact_information",
                 "recent_news",
-                "current_performance",
                 "leadership",
                 "digital_maturity",
                 "ai_reasoner_assessment",
@@ -242,7 +240,10 @@ class EntityDossierGenerator:
         if DATA_COLLECTOR_AVAILABLE:
             logger.info(f"🔍 Collecting entity data for {entity_name}")
             collector = DossierDataCollector()
-            dossier_data_obj = await collector.collect_all(entity_id, entity_name)
+            try:
+                dossier_data_obj = await collector.collect_all(entity_id, entity_name)
+            finally:
+                await collector.close()
 
             # Convert DossierData object to dict format for compatibility
             entity_data = self._dossier_data_to_dict(dossier_data_obj)
@@ -269,6 +270,73 @@ class EntityDossierGenerator:
                 entity_data["sources_used"] = multi_source_data.get("sources_used", [])
 
                 logger.info(f"✅ Multi-source data collected: {', '.join(multi_source_data.get('sources_used', []))}")
+
+            # PHASE 0 ENHANCEMENT: Collect leadership data for real decision maker names
+            if hasattr(collector, 'collect_leadership'):
+                logger.info(f"🎯 Collecting leadership data for {entity_name}")
+
+                leadership_data = await collector.collect_leadership(entity_id, entity_name)
+
+                # Add leadership data to entity_data for prompt interpolation
+                entity_data["leadership_names"] = ", ".join([
+                    dm.get("name", "unknown") for dm in leadership_data.get("decision_makers", [])
+                ]) if leadership_data.get("decision_makers") else "unknown"
+
+                entity_data["leadership_roles"] = ", ".join([
+                    dm.get("role", "unknown") for dm in leadership_data.get("decision_makers", [])
+                ]) if leadership_data.get("decision_makers") else "unknown"
+
+                entity_data["leadership_linkedins"] = ", ".join([
+                    dm.get("linkedin_url", "") for dm in leadership_data.get("decision_makers", []) if dm.get("linkedin_url")
+                ]) if leadership_data.get("decision_makers") else ""
+
+                entity_data["leadership_count"] = len(leadership_data.get("decision_makers", []))
+                entity_data["leadership_sources"] = ", ".join(leadership_data.get("sources_used", []))
+                entity_data["leadership_fresh_signals"] = leadership_data.get("fresh_signals_count", 0)
+
+                # Store raw leadership data for reference
+                entity_data["leadership_data"] = leadership_data
+
+                # Format leadership data for Connections section
+                if leadership_data.get("decision_makers"):
+                    personnel_summary = []
+                    for dm in leadership_data["decision_makers"]:
+                        personnel_summary.append(
+                            f"- {dm.get('name', 'unknown')}: {dm.get('role', 'unknown')} - "
+                            f"LinkedIn: {dm.get('linkedin_url', 'N/A')} - "
+                            f"Influence: {dm.get('influence_level', 'UNKNOWN')}"
+                        )
+                    entity_data["target_personnel_data"] = "\n".join(personnel_summary)
+                else:
+                    entity_data["target_personnel_data"] = "No target personnel data available"
+
+                # Add bridge contacts data (currently placeholder)
+                entity_data["bridge_contacts_data"] = "No bridge contacts data currently available"
+
+                logger.info(f"✅ Leadership data collected: {entity_data['leadership_count']} decision makers")
+
+            # PHASE 0 ENHANCEMENT: Collect Yellow Panther team data for Connections analysis
+            try:
+                from backend.connections_analyzer import YELLOW_PANTHER_TEAM, format_connections_for_dossier
+
+                # Add YP team data for Connections section
+                yp_team_summary = []
+                for yp_member in YELLOW_PANTHER_TEAM:
+                    yp_team_summary.append(f"""
+- {yp_member['yp_name']} ({yp_member['yp_role']}): {yp_member.get('yp_expertise_1', '')}, {yp_member.get('yp_expertise_2', '')}, {yp_member.get('yp_expertise_3', '')}
+  LinkedIn: {yp_member.get('yp_linkedin', 'N/A')}
+  Weight: {yp_member.get('yp_weight', 1.0)}
+""")
+
+                entity_data["yp_team_data"] = "\n".join(yp_team_summary)
+                entity_data["yp_team_members"] = len(YELLOW_PANTHER_TEAM)
+
+                logger.info(f"✅ Yellow Panther team data added: {entity_data['yp_team_members']} members")
+
+            except Exception as e:
+                logger.warning(f"⚠️ Could not load YP team data: {e}")
+                entity_data["yp_team_data"] = "Yellow Panther team data not available"
+                entity_data["yp_team_members"] = 0
         elif entity_data is None:
             # Fallback: create minimal entity data dict
             logger.warning("DossierDataCollector unavailable, using placeholder data")
@@ -355,7 +423,7 @@ Website: N/A
 
         # Extract questions from sections (for discovery feedback loop)
         try:
-            from dossier_question_extractor import DossierQuestionExtractor
+            from backend.dossier_question_extractor import DossierQuestionExtractor
             question_extractor = DossierQuestionExtractor(self.claude_client)
             dossier.questions = await question_extractor.extract_questions_from_dossier(
                 dossier.sections,
@@ -447,7 +515,7 @@ Website: N/A
             raise ValueError(f"Unknown section ID: {section_id}")
 
         # Load prompt template
-        from dossier_templates import get_prompt_template
+        from backend.dossier_templates import get_prompt_template
         prompt_template = get_prompt_template(
             template_info["prompt_template"],
             model
@@ -479,10 +547,34 @@ Website: N/A
             import json
             import re
 
-            # Extract JSON from response
-            json_match = re.search(r'\{[\s\S]*\}', content_text)
+            # Try to extract JSON from response - more robust pattern matching
+            # First, remove markdown code blocks if present
+            markdown_pattern = r'```(?:json)?\s*\n?([\s\S]*?)\n?```'
+            markdown_match = re.search(markdown_pattern, content_text)
+            if markdown_match:
+                content_text = markdown_match.group(1)
+
+            # Look for a complete JSON object (could be an object or array)
+            json_match = re.search(r'\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}', content_text, re.DOTALL)
+            if not json_match:
+                # Try array pattern
+                json_match = re.search(r'\[[^\[\]]*(?:\[[^\[\]]*\][^\[\]]*)*\]', content_text, re.DOTALL)
+
             if json_match:
-                section_data = json.loads(json_match.group(0))
+                try:
+                    section_data = json.loads(json_match.group(0))
+                except json.JSONDecodeError as je:
+                    logger.warning(f"JSON parsing error for {section_id}: {je}")
+                    # Try to fix common JSON issues (trailing commas, unquoted keys)
+                    json_str = json_match.group(0)
+                    # Remove trailing commas
+                    json_str = re.sub(r',\s*([}\]])', r'\1', json_str)
+                    try:
+                        section_data = json.loads(json_str)
+                    except Exception as e2:
+                        logger.warning(f"JSON repair failed for {section_id}: {e2}")
+                        # Final fallback - use raw content
+                        section_data = {"content": [content_text]}
             else:
                 # Fallback: treat entire response as content
                 section_data = {"content": [content_text]}
@@ -586,6 +678,20 @@ Website: N/A
                 "entity_description": metadata.description,
             })
 
+            # Add scraped properties (founded, stadium, website, etc.)
+            if metadata.founded:
+                entity_dict["founded"] = metadata.founded
+            if metadata.stadium:
+                entity_dict["stadium"] = metadata.stadium
+            if metadata.capacity:
+                entity_dict["capacity"] = metadata.capacity
+            if metadata.website:
+                entity_dict["website"] = metadata.website
+            if metadata.employees:
+                entity_dict["employees"] = metadata.employees
+            if metadata.headquarters:
+                entity_dict["hq"] = metadata.headquarters
+
         # Add scraped content if available
         if dossier_data.scraped_content:
             entity_dict["scraped_content"] = dossier_data.scraped_content
@@ -595,6 +701,47 @@ Website: N/A
         if dossier_data.hypothesis_signals:
             entity_dict["hypothesis_signals"] = dossier_data.hypothesis_signals
             entity_dict["has_hypothesis_signals"] = True
+
+        # Phase 0: Add enhanced section data
+        # Section 2: Digital Transformation
+        if dossier_data.digital_transformation:
+            entity_dict["digital_transformation"] = dossier_data.digital_transformation
+            if dossier_data.digital_transformation.get("tech_stack"):
+                tech = dossier_data.digital_transformation["tech_stack"]
+                entity_dict["detected_tech_stack"] = tech
+                entity_dict["frontend_framework"] = tech.get("frontend", "unknown")
+                entity_dict["analytics_platform"] = tech.get("analytics", "none")
+                entity_dict["crm_system"] = tech.get("crm", "unknown")
+
+        # Section 4: Strategic Opportunities
+        if dossier_data.strategic_opportunities:
+            entity_dict["strategic_opportunities"] = dossier_data.strategic_opportunities
+            opps = dossier_data.strategic_opportunities.get("opportunities", [])
+            entity_dict["detected_opportunities"] = opps
+            entity_dict["opportunity_count"] = len(opps)
+
+        # Section 5: Leadership
+        if dossier_data.leadership:
+            entity_dict["leadership_data"] = dossier_data.leadership
+            dms = dossier_data.leadership.get("decision_makers", [])
+            entity_dict["leadership_names"] = ", ".join([dm.get("name", "") for dm in dms if dm.get("name")])
+            entity_dict["leadership_roles"] = ", ".join([dm.get("role", "") for dm in dms if dm.get("role")])
+            entity_dict["leadership_linkedins"] = ", ".join([dm.get("linkedin_url", "") for dm in dms if dm.get("linkedin_url")])
+            entity_dict["leadership_count"] = len(dms)
+
+        # Section 7: Recent News
+        if dossier_data.recent_news:
+            entity_dict["recent_news"] = dossier_data.recent_news
+            news_items = dossier_data.recent_news.get("news_items", [])
+            entity_dict["news_items"] = news_items
+            entity_dict["news_count"] = len(news_items)
+
+        # Section 8: Performance
+        if dossier_data.performance:
+            entity_dict["performance"] = dossier_data.performance
+            entity_dict["league_position"] = dossier_data.performance.get("league_position", "unknown")
+            entity_dict["points"] = dossier_data.performance.get("points", "unknown")
+            entity_dict["recent_form"] = dossier_data.performance.get("recent_form", [])
 
         return entity_dict
 
@@ -771,7 +918,7 @@ Generate a comprehensive dossier that identifies:
 CRITICAL REQUIREMENTS:
 - DO NOT copy example content literally
 - Generate entity-specific analysis using ONLY the provided entity data
-- Use placeholders when specific information is unavailable
+- LEADERSHIP DATA: If currentData contains leadership_names, leadership_roles, or target_personnel, USE REAL NAMES. Only use placeholders like {ROLE} when no real names are available.
 - Assign confidence scores (0-100) to all assertions
 - Tag each insight with signal type: [PROCUREMENT] [CAPABILITY] [TIMING] [CONTACT]
 
@@ -901,8 +1048,8 @@ OUTPUT STRUCTURE:
   "leadership_analysis": {
     "decision_makers": [
       {
-        "name": "specific if known, else {ROLE}",
-        "title": "specific title",
+        "name": "USE REAL NAME from currentData.leadership_names if available, else 'unknown' (NEVER use {ROLE} placeholder)",
+        "title": "specific title from currentData.leadership_roles if available",
         "responsibility_scope": "what they control",
         "influence_level": "HIGH|MEDIUM|LOW",
         "communication_style": "analytical|relationship|story-driven|direct",
@@ -1216,7 +1363,12 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
             "capacity": entity_data.get("capacity") or entity_data.get("entity_capacity"),
             "founded": entity_data.get("founded") or entity_data.get("entity_founded"),
             "has_scraped_content": entity_data.get("has_scraped_content", False),
-            "has_hypothesis_signals": entity_data.get("has_hypothesis_signals", False)
+            "has_hypothesis_signals": entity_data.get("has_hypothesis_signals", False),
+            # PHASE 0: Add real leadership data if available
+            "leadership_names": entity_data.get("leadership_names"),
+            "leadership_roles": entity_data.get("leadership_roles"),
+            "leadership_linkedins": entity_data.get("leadership_linkedins"),
+            "target_personnel": entity_data.get("target_personnel_data", [])
         }
 
         # Remove None values
@@ -1255,6 +1407,14 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
         Returns:
             Generated dossier as dictionary
         """
+        if getattr(self.claude_client, "_get_disabled_reason", None):
+            disabled_reason = self.claude_client._get_disabled_reason()
+            if disabled_reason:
+                logger.warning(
+                    f"⚠️ Claude API disabled ({disabled_reason}); returning minimal dossier for {entity_name}"
+                )
+                return self._create_minimal_dossier(entity_name)
+
         # Determine max tokens based on tier
         max_tokens_by_tier = {
             "BASIC": 2000,
@@ -1590,11 +1750,59 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
         tier = self._determine_tier(priority_score)
         logger.info(f"📊 Generating {tier} dossier for {entity_name} (priority: {priority_score})")
 
+        claude_disabled_reason = None
+        if getattr(self.claude_client, "_get_disabled_reason", None):
+            claude_disabled_reason = self.claude_client._get_disabled_reason()
+
+        if claude_disabled_reason and entity_data is None:
+            logger.warning(
+                f"⚠️ Claude API disabled ({claude_disabled_reason}); skipping data collection and returning minimal dossier for {entity_name}"
+            )
+            dossier = self._create_minimal_dossier(entity_name)
+            dossier["metadata"]["entity_id"] = entity_id
+            dossier["metadata"]["entity_name"] = entity_name
+            dossier["metadata"]["generated_at"] = start_time.isoformat()
+            dossier["metadata"]["tier"] = tier
+            dossier["metadata"]["priority_score"] = priority_score
+            dossier["metadata"]["hypothesis_count"] = 0
+            dossier["metadata"]["signal_count"] = 0
+            dossier["generation_time_seconds"] = (datetime.now(timezone.utc) - start_time).total_seconds()
+            dossier["extracted_hypotheses"] = []
+            dossier["extracted_signals"] = []
+            return dossier
+
         # Collect entity data if not provided
         if entity_data is None and DATA_COLLECTOR_AVAILABLE:
             collector = DossierDataCollector()
-            dossier_data_obj = await collector.collect_all(entity_id, entity_name)
-            entity_data = self._dossier_data_to_dict(dossier_data_obj)
+            try:
+                dossier_data_obj = await collector.collect_all(entity_id, entity_name)
+                entity_data = self._dossier_data_to_dict(dossier_data_obj)
+
+                # PHASE 0 ENHANCEMENT: Collect real leadership data
+                if hasattr(collector, 'collect_leadership') and not claude_disabled_reason:
+                    try:
+                        leadership_data = await collector.collect_leadership(entity_id, entity_name)
+                        # Add leadership data to entity_data for prompt interpolation
+                        if leadership_data.get("decision_makers"):
+                            entity_data["leadership_names"] = ", ".join(
+                                [dm.get("name", "") for dm in leadership_data.get("decision_makers", []) if dm.get("name") and dm.get("name") != "unknown"]
+                            )
+                            entity_data["leadership_roles"] = ", ".join(
+                                [dm.get("role", "") for dm in leadership_data.get("decision_makers", []) if dm.get("role") and dm.get("role") != "unknown"]
+                            )
+                            entity_data["leadership_linkedins"] = ", ".join(
+                                [dm.get("linkedin_url", "") for dm in leadership_data.get("decision_makers", []) if dm.get("linkedin_url")]
+                            )
+                            entity_data["target_personnel_data"] = leadership_data.get("decision_makers", [])
+                            logger.info(f"✅ Collected {len(leadership_data.get('decision_makers', []))} leadership profiles")
+                    except Exception as e:
+                        logger.warning(f"⚠️  Leadership data collection failed: {e}")
+                elif claude_disabled_reason:
+                    logger.warning(
+                        f"⚠️ Claude API disabled ({claude_disabled_reason}); skipping leadership enrichment for {entity_name}"
+                    )
+            finally:
+                await collector.close()
         elif entity_data is None:
             # Fallback to minimal data
             entity_data = {
@@ -1622,11 +1830,20 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
 
         # Add metadata
         dossier["metadata"]["entity_id"] = entity_id
+        dossier["metadata"]["entity_name"] = entity_name
         dossier["metadata"]["generated_at"] = start_time.isoformat()
         dossier["metadata"]["tier"] = tier
         dossier["metadata"]["priority_score"] = priority_score
         dossier["metadata"]["hypothesis_count"] = len(hypotheses)
         dossier["metadata"]["signal_count"] = len(signals)
+
+        # Add core entity metadata from entity_data (scraped fields)
+        if entity_data:
+            core_fields = ["founded", "stadium", "capacity", "website", "employees", "hq", "headquarters",
+                          "entity_type", "sport", "country", "league_or_competition"]
+            for field in core_fields:
+                if field in entity_data:
+                    dossier["metadata"][field] = entity_data[field]
 
         # Attach hypotheses and signals
         dossier["extracted_hypotheses"] = hypotheses
@@ -1650,7 +1867,7 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
 # Example usage
 async def main():
     """Example dossier generation"""
-    from claude_client import ClaudeClient
+    from backend.claude_client import ClaudeClient
 
     # Initialize
     claude = ClaudeClient()

@@ -62,6 +62,7 @@ class EntityScalingManager {
   private activeScrapers: Map<string, NodeJS.Timeout> = new Map();
   private historicalRFPs: HistoricalRFP[] = [];
   private isInitialized = false;
+  private isMonitoringStarted = false;
 
   constructor(config?: Partial<ScalingConfig>) {
     this.config = {
@@ -76,28 +77,24 @@ class EntityScalingManager {
       ...config
     };
 
-    this.initialize();
   }
 
-  private async initialize() {
+  private initialize() {
     if (this.isInitialized) return;
 
     console.log('🚀 Initializing Entity Scaling Manager...');
     
     // Load entities from database/API
-    await this.loadEntitiesFromDatabase();
+    this.loadEntitiesFromDatabase();
     
     // Load historical RFP data
-    await this.loadHistoricalRFPData();
-    
-    // Start monitoring based on tiers
-    await this.startTieredMonitoring();
+    this.loadHistoricalRFPData();
     
     this.isInitialized = true;
     console.log(`✅ Entity Scaling Manager initialized with ${this.entities.size} entities`);
   }
 
-  private async loadEntitiesFromDatabase() {
+  private loadEntitiesFromDatabase() {
     try {
       // In production, this would load from your entity database
       // For now, we'll simulate a large entity database
@@ -123,14 +120,14 @@ class EntityScalingManager {
       });
 
       // Generate scaled entity database
-      await this.generateScaledEntityDatabase();
+      this.generateScaledEntityDatabase();
       
     } catch (error) {
       console.error('Error loading entities:', error);
     }
   }
 
-  private async generateScaledEntityDatabase() {
+  private generateScaledEntityDatabase() {
     // Generate realistic entity database with thousands of entries
     const industries = ['Technology', 'Sports', 'Finance', 'Healthcare', 'Manufacturing', 'Retail', 'Energy', 'Education'];
     const companySuffixes = ['Inc', 'LLC', 'Corp', 'Ltd', 'GmbH', 'SA', 'AG', 'Pty Ltd'];
@@ -207,7 +204,7 @@ class EntityScalingManager {
     console.log(`📊 Generated ${this.entities.size} entities for monitoring`);
   }
 
-  private async loadHistoricalRFPData() {
+  private loadHistoricalRFPData() {
     try {
       // Load historical RFPs going back 1 year
       const lookbackDate = new Date();
@@ -248,6 +245,10 @@ class EntityScalingManager {
   }
 
   private async startTieredMonitoring() {
+    if (this.isMonitoringStarted) {
+      return;
+    }
+
     const entitiesByTier = {
       golden: Array.from(this.entities.values()).filter(e => e.tier === 'golden' && e.status === 'active'),
       standard: Array.from(this.entities.values()).filter(e => e.tier === 'standard' && e.status === 'active'),
@@ -268,6 +269,7 @@ class EntityScalingManager {
     
     // Start Economy Tier monitoring (1 hour)
     await this.startTierMonitoring('economy', entitiesByTier.economy, 60); // 1 hour
+    this.isMonitoringStarted = true;
   }
 
   private async startTierMonitoring(tier: string, entities: Entity[], intervalMinutes: number) {
@@ -369,10 +371,12 @@ class EntityScalingManager {
 
   // Public methods
   getEntitiesByTier(tier: string): Entity[] {
+    this.initialize();
     return Array.from(this.entities.values()).filter(e => e.tier === tier && e.status === 'active');
   }
 
   getHistoricalRFPs(days?: number): HistoricalRFP[] {
+    this.initialize();
     if (!days) return this.historicalRFPs;
     
     const cutoffDate = new Date();
@@ -382,6 +386,7 @@ class EntityScalingManager {
   }
 
   getScalingStats() {
+    this.initialize();
     const stats = {
       totalEntities: this.entities.size,
       activeEntities: Array.from(this.entities.values()).filter(e => e.status === 'active').length,
@@ -396,6 +401,11 @@ class EntityScalingManager {
     };
 
     return stats;
+  }
+
+  async startMonitoring(): Promise<void> {
+    this.initialize();
+    await this.startTieredMonitoring();
   }
 
   // Helper methods
@@ -548,6 +558,7 @@ class EntityScalingManager {
     this.activeScrapers.forEach(interval => clearInterval(interval));
     this.activeScrapers.clear();
     this.isInitialized = false;
+    this.isMonitoringStarted = false;
   }
 }
 

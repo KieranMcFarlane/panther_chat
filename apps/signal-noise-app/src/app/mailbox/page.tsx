@@ -1,6 +1,5 @@
-'use client';
-
 import { Mailbox } from '@/components/mailbox/Mailbox';
+import { requirePageSession } from '@/lib/server-auth';
 
 // Sample email data matching the Sales Intelligence design
 const sampleEmails = [
@@ -71,11 +70,12 @@ MLS Club CTO`,
   },
 ];
 
-export default function MailboxPage() {
+export default async function MailboxPage() {
+  await requirePageSession('/mailbox');
+
   return (
     <div className="h-full w-full">
       <Mailbox initialEmails={sampleEmails} />
     </div>
   );
 }
-

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { emailVersions, emailThreads } from '@/lib/email-storage';
 
+export const dynamic = 'force-dynamic';
+
 // Get or create email thread and save version
 export async function POST(request: NextRequest) {
   try {

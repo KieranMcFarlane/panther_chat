@@ -11,6 +11,8 @@ import { activityLogger } from '@/lib/activity-log-service';
 import { RFPOpportunityDetector } from '@/lib/rfp-opportunity-detector';
 import crypto from 'crypto';
 
+export const dynamic = 'force-dynamic';
+
 // Enhanced webhook payload interface (compatible with Zod validation)
 interface WebhookPayload {
   source: 'linkedin' | 'news' | 'web' | 'procurement' | 'api' | 'job_postings';

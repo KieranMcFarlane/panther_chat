@@ -6,7 +6,11 @@ import LeagueNavSimple from './LeagueNavSimple';
 import Notifications from './Notifications';
 import SearchBox from './SearchBox';
 
-export default function Header() {
+interface HeaderProps {
+  currentEntity?: any | null;
+}
+
+export default function Header({ currentEntity = null }: HeaderProps) {
   // Track hydration without time to avoid hydration mismatches
   useEffect(() => {
     console.log('🔥 HEADER COMPONENT HYDRATED ON CLIENT!')
@@ -22,7 +26,7 @@ export default function Header() {
           {/* Left side: History navigation and club filters */}
           <div className="flex items-center gap-4">
             <HistoryNav />
-            <LeagueNavSimple />
+            <LeagueNavSimple currentEntity={currentEntity} />
           </div>
 
           {/* Right side: Search and notifications */}

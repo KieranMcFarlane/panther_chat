@@ -273,7 +273,7 @@ class HypothesisManager:
         Returns:
             List of initialized Hypothesis objects
         """
-        from template_loader import TemplateLoader
+        from backend.template_loader import TemplateLoader
 
         logger.info(f"🔬 Initializing hypotheses for {entity_name} from {template_id}")
 

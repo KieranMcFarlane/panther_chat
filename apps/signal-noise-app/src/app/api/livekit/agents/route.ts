@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { SignJWT } from 'jose';
 
 // LiveKit Cloud configuration
 const LIVEKIT_HOST = 'https://yellow-panther-8i644ma6.livekit.cloud';
@@ -87,9 +88,7 @@ export async function GET() {
 }
 
 // Generate LiveKit token for API authentication
-function generateLiveKitToken() {
-  const jwt = require('jsonwebtoken');
-  
+async function generateLiveKitToken() {
   const payload = {
     iss: LIVEKIT_API_KEY,
     sub: LIVEKIT_API_KEY,
@@ -97,7 +96,19 @@ function generateLiveKitToken() {
     iat: Math.floor(Date.now() / 1000),
   };
 
-  return jwt.sign(payload, LIVEKIT_API_SECRET);
+  if (!LIVEKIT_API_SECRET) {
+    throw new Error('LIVEKIT_API_SECRET is not configured');
+  }
+
+  const secret = new TextEncoder().encode(LIVEKIT_API_SECRET);
+
+  return await new SignJWT({})
+    .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
+    .setIssuer(payload.iss)
+    .setSubject(payload.sub)
+    .setIssuedAt(payload.iat)
+    .setExpirationTime(payload.exp)
+    .sign(secret);
 }
 
 // Stop/remove agent
@@ -112,10 +123,10 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const deleteResponse = await fetch(`${LIVEKIT_HOST}/agents/${agentId}`, {
+        const deleteResponse = await fetch(`${LIVEKIT_HOST}/agents/${agentId}`, {
       method: 'DELETE',
       headers: {
-        'Authorization': `Bearer ${generateLiveKitToken()}`,
+        'Authorization': `Bearer ${await generateLiveKitToken()}`,
       },
     });
 

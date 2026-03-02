@@ -305,19 +305,34 @@ export function detectEntityType(entity: Entity): EntityType {
 
 export function getEntityPriority(entity: Entity): number {
   const properties = entity.properties || {}
-  
+
   // Direct priority scores
   if (properties.yellowPantherPriority) {
     return parseInt(formatValue(properties.yellowPantherPriority)) || 0
   }
-  
+
   if (properties.opportunityScore) {
     return parseInt(formatValue(properties.opportunityScore)) || 0
   }
-  
+
+  // Handle string-based priority property (e.g., "CRITICAL", "HIGH", "MEDIUM", "LOW")
+  if (properties.priority) {
+    const priorityStr = String(properties.priority).toUpperCase()
+    switch (priorityStr) {
+      case 'CRITICAL': return 95
+      case 'HIGH': return 75
+      case 'MEDIUM': return 50
+      case 'LOW': return 25
+      default:
+        // Try to parse as number
+        const num = parseInt(formatValue(properties.priority))
+        if (!isNaN(num)) return num
+    }
+  }
+
   // Calculate priority based on various factors
   let priority = 0
-  
+
   // Type-based priority
   const entityType = detectEntityType(entity)
   switch (entityType) {
@@ -327,19 +342,19 @@ export function getEntityPriority(entity: Entity): number {
     case 'Partner': priority += 35; break
     default: priority += 10; break
   }
-  
+
   // Property-based priority
   if (properties.estimatedValue) {
     const value = parseFloat(formatValue(properties.estimatedValue).replace(/[^\d.]/g, ''))
     if (value > 1000000) priority += 30 // £1M+
     else if (value > 100000) priority += 20 // £100K+
   }
-  
+
   if (properties.digitalMaturity) {
     const maturity = parseInt(formatValue(properties.digitalMaturity))
     priority += Math.min(maturity / 10, 10) // Up to 10 points for digital maturity
   }
-  
+
   return Math.min(priority, 100)
 }
 

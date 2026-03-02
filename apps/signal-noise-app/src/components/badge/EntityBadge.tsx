@@ -39,6 +39,28 @@ export function EntityBadge({ entity, size = 'md', showFallback = true, classNam
 
         console.log(`🏷️ Loading badge for: ${entity?.properties?.name || entity?.id}`)
 
+        const explicitBadgeUrl =
+          entity?.badge_s3_url ||
+          entity?.properties?.badge_s3_url ||
+          entity?.properties?.badge_path ||
+          null
+        const isBadgeLookupComplete =
+          entity?.badge_lookup_complete ||
+          entity?.properties?.badge_lookup_complete ||
+          false
+
+        if (explicitBadgeUrl) {
+          setBadgeUrl(explicitBadgeUrl)
+          setBadgeSource('s3')
+          return
+        }
+
+        if (isBadgeLookupComplete) {
+          setBadgeUrl(null)
+          setBadgeSource('fallback')
+          return
+        }
+
         // Get badge mapping from service (now uses local files)
         const badgeMapping = await getBadgeForEntity(entity?.id?.toString() || 'unknown', entity?.properties?.name || 'Unknown Entity')
 
@@ -64,7 +86,7 @@ export function EntityBadge({ entity, size = 'md', showFallback = true, classNam
     }
 
     loadBadge()
-  }, [entity?.id])
+  }, [entity?.id, entity?.badge_lookup_complete, entity?.badge_s3_url, entity?.properties?.badge_lookup_complete, entity?.properties?.badge_s3_url, entity?.properties?.badge_path])
 
   const handleClick = () => {
     if (!entity || !entity?.id) return
@@ -278,6 +300,45 @@ function CompactEntityBadge({ entity, size = 'sm', className, onClick }: BadgeCo
         className="object-cover rounded-full"
         sizes={`${sizeClasses[size].split(' ')[0].replace('w-', '')}px`}
       />
+    </div>
+  )
+}
+
+export function EntityBadgeGrid({
+  entities,
+  size = 'md',
+  className,
+  maxItems
+}: {
+  entities: any[]
+  size?: BadgeSize
+  className?: string
+  maxItems?: number
+}) {
+  const displayEntities = maxItems ? entities.slice(0, maxItems) : entities
+
+  return (
+    <div className={cn('grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4', className)}>
+      {displayEntities.map((entity) => (
+        <div key={entity.id} className="flex flex-col items-center space-y-2">
+          <EntityBadge entity={entity} size={size} />
+          <div className="text-xs text-center text-gray-600 font-medium line-clamp-2">
+            {entity.properties?.name || entity.name || entity.id}
+          </div>
+        </div>
+      ))}
+      {maxItems && entities.length > maxItems && (
+        <div className="flex flex-col items-center justify-center">
+          <div
+            className={cn(
+              'flex items-center justify-center rounded-full border-2 border-dashed border-gray-300 bg-gray-50 font-semibold text-gray-500',
+              sizeClasses[size]
+            )}
+          >
+            +{entities.length - maxItems}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

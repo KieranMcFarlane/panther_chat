@@ -8,6 +8,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { entityScalingManager } from '@/lib/entity-scaling-manager';
 import { alertReasoningEngine } from '@/lib/alert-reasoning-engine';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -128,6 +130,7 @@ export async function POST(request: NextRequest) {
     switch (action) {
       case 'start-monitoring':
         // Start monitoring for specific entities
+        await entityScalingManager.startMonitoring();
         return NextResponse.json({
           success: true,
           message: 'Entity monitoring initiated',

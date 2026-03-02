@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useState, useMemo, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { EntityBadge } from '@/components/badge/EntityBadge';
 import { useEntitySummaries, useEntity } from '@/lib/swr-config';
+import { formatValue } from '@/lib/formatValue';
+import { getCanonicalEntityKey } from '@/lib/entity-canonicalization';
 import { useVectorSearch } from '@/hooks/useVectorSearch';
 import {
   Dialog,
@@ -24,6 +26,8 @@ interface SportData {
 
 interface LeagueData {
   league: string;
+  groupType: 'league' | 'federation' | 'organization' | 'tournament' | 'club' | 'general';
+  sport: string;
   popularity: number;
   country: string;
   clubs: Club[];
@@ -39,6 +43,15 @@ interface Club {
     country?: string;
     type: string;
   };
+}
+
+interface EntityGroupInfo {
+  groupName: string;
+  groupType: LeagueData['groupType'];
+}
+
+interface LeagueNavSimpleProps {
+  currentEntity?: any | null;
 }
 
 // Sport popularity and country dominance for real-world ordering
@@ -279,10 +292,100 @@ function getSportPopularity(sport: string): number {
   return sportData ? Math.max(...sportData.map(s => s.priority)) : 20;
 }
 
-export default function LeagueNavSimple() {
+function getMeaningfulValue(value: unknown): string {
+  const normalized = formatValue(value).trim()
+
+  if (!normalized) return ''
+  if (/^(n\/a|unknown|null|none)$/i.test(normalized)) return ''
+
+  return normalized
+}
+
+function getEntityGroupInfo(entity: Club): EntityGroupInfo {
+  const entityType = entity.properties.type;
+  const leagueName = getMeaningfulValue(entity.properties.league) || getMeaningfulValue(entity.properties.level);
+
+  if (leagueName) {
+    return {
+      groupName: leagueName,
+      groupType: 'league' as const,
+    };
+  }
+
+  if (entityType === 'Federation') {
+    return {
+      groupName: 'Federations',
+      groupType: 'federation' as const,
+    };
+  }
+
+  if (entityType === 'Organization') {
+    return {
+      groupName: 'Organizations',
+      groupType: 'organization' as const,
+    };
+  }
+
+  if (entityType === 'Tournament') {
+    return {
+      groupName: 'Tournaments',
+      groupType: 'tournament' as const,
+    };
+  }
+
+  if (entityType === 'League') {
+    return {
+      groupName: 'Leagues',
+      groupType: 'league' as const,
+    };
+  }
+
+  if (entityType === 'Club') {
+    return {
+      groupName: 'Clubs',
+      groupType: 'club' as const,
+    };
+  }
+
+  return {
+    groupName: 'General',
+    groupType: 'general' as const,
+  };
+}
+
+function getGroupTypeLabel(groupType?: LeagueData['groupType']) {
+  switch (groupType) {
+    case 'league':
+      return 'League';
+    case 'federation':
+      return 'Federation';
+    case 'organization':
+      return 'Organization';
+    case 'tournament':
+      return 'Tournament';
+    case 'club':
+      return 'Club';
+    default:
+      return 'Group';
+  }
+}
+
+function getEntitySubtitle(entity: Club, fallbackGroup?: LeagueData | null) {
+  const subtitleParts = [
+    getMeaningfulValue(entity.properties.type) || 'Entity',
+    getMeaningfulValue(entity.properties.league) || getMeaningfulValue(entity.properties.level) || fallbackGroup?.league || getGroupTypeLabel(fallbackGroup?.groupType),
+    getMeaningfulValue(entity.properties.country) || fallbackGroup?.country || 'International',
+  ].filter(Boolean)
+
+  return subtitleParts.join(' • ')
+}
+
+export default function LeagueNavSimple({ currentEntity = null }: LeagueNavSimpleProps) {
   const router = useRouter()
   const params = useParams()
+  const pathname = usePathname()
   const entityId = params.entityId as string || '197'
+  const isDossierRoute = pathname?.includes('/dossier') ?? false
   
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
@@ -290,10 +393,12 @@ export default function LeagueNavSimple() {
   const [selectedLeague, setSelectedLeague] = useState<LeagueData | null>(null)
   const [currentClubIndex, setCurrentClubIndex] = useState(0)
   const [isNavigating, setIsNavigating] = useState(false)
+  const shouldLoadSummaries = !isDossierRoute || isModalOpen
   
   // API calls - use lightweight summaries for navigation, full entity data only when needed
-  const currentEntityData = useEntity(entityId).entity
-  const { summaries, error: summaryError, isLoading: summariesLoading } = useEntitySummaries('/api/entities/summary')
+  const fetchedCurrentEntityData = useEntity(currentEntity ? null : entityId).entity
+  const currentEntityData = currentEntity ?? fetchedCurrentEntityData
+  const { summaries, error: summaryError, isLoading: summariesLoading } = useEntitySummaries(shouldLoadSummaries ? '/api/entities/summary' : null)
   
   // Cache for full entity data to avoid re-fetching
   const [fullEntitiesCache, setFullEntitiesCache] = useState<Map<string, any>>(new Map())
@@ -342,7 +447,7 @@ export default function LeagueNavSimple() {
         type: summary.type,
         sport: summary.sport,
         country: summary.country,
-        league: summary.league,
+        league: summary.league || summary.level,
         level: summary.level
       }
     }))
@@ -362,26 +467,14 @@ export default function LeagueNavSimple() {
       
       const sportLeagues = sportMap.get(sport)!
       
-      // Determine group name based on entity type
-      let groupName = 'General'
-      if (entity.properties.league) {
-        groupName = entity.properties.league
-      } else if (entity.properties.type === 'Federation') {
-        groupName = 'Federations'
-      } else if (entity.properties.type === 'Organization') {
-        groupName = 'Organizations'
-      } else if (entity.properties.type === 'Tournament') {
-        groupName = 'Tournaments'
-      } else if (entity.properties.type === 'League') {
-        groupName = 'Leagues'
-      } else if (entity.properties.type === 'Club') {
-        groupName = entity.properties.league || 'Clubs'
-      }
+      const { groupName, groupType } = getEntityGroupInfo(entity)
       
       let league = sportLeagues.find(l => l.league === groupName)
       if (!league) {
         league = {
           league: groupName,
+          groupType,
+          sport,
           popularity: getLeaguePopularity(groupName),
           country: entity.properties.country || 'International',
           clubs: []
@@ -398,7 +491,7 @@ export default function LeagueNavSimple() {
         league.clubs.sort((a, b) => {
           const aName = a.properties?.name || ''
           const bName = b.properties?.name || ''
-          return aName.localeCompare(bName)
+          return formatValue(aName).localeCompare(formatValue(bName))
         })
       })
       // Sort leagues by popularity within each sport
@@ -455,26 +548,40 @@ export default function LeagueNavSimple() {
   
   const currentLeague = useMemo(() => {
     if (!currentClub) return null
-    
-    const leagueName = currentClub.properties?.league || currentClub.league
-    if (!leagueName) return null
-    
+    const currentGroup = getEntityGroupInfo(currentClub)
+    const currentSport = getMeaningfulValue(currentClub.properties?.sport) || 'Other Sports'
+    const currentClubKey = getCanonicalEntityKey(currentClub)
+
     for (const sport of sportsData) {
-      const league = sport.leagues.find(l => l.league === leagueName)
+      if (sport.sport !== currentSport) continue
+
+      const league = sport.leagues.find((group) =>
+        group.groupType === currentGroup.groupType &&
+        group.league === currentGroup.groupName
+      )
       if (league) return league
     }
+
+    for (const sport of sportsData) {
+      const league = sport.leagues.find((group) =>
+        group.clubs.some((club) => club.id === currentClub.id || getCanonicalEntityKey(club) === currentClubKey)
+      )
+      if (league) return league
+    }
+
     return null
   }, [sportsData, currentClub])
   
   // Set current club index based on URL
   useEffect(() => {
     if (currentLeague && !isNavigating) {
-      const index = currentLeague.clubs.findIndex(club => club.id === entityId)
+      const currentClubKey = getCanonicalEntityKey(currentClub)
+      const index = currentLeague.clubs.findIndex((club) => club.id === entityId || getCanonicalEntityKey(club) === currentClubKey)
       if (index !== -1) {
         setCurrentClubIndex(index)
       }
     }
-  }, [currentLeague, entityId, isNavigating])
+  }, [currentLeague, currentClub, entityId, isNavigating])
   
   // Navigation handlers with lazy loading
   const navigateToClub = async (club: Club | any) => {
@@ -540,7 +647,7 @@ export default function LeagueNavSimple() {
         .map(league => ({
           ...league,
           clubs: league.clubs.filter(club => 
-            club.properties.name.toLowerCase().includes(term) ||
+            formatValue(club.properties.name).toLowerCase().includes(term) ||
             league.league.toLowerCase().includes(term)
           )
         }))
@@ -573,6 +680,11 @@ export default function LeagueNavSimple() {
   
   const displayLeague = selectedLeague || currentLeague
   const displaySport = selectedSport || currentLeague?.sport
+  const currentGroupLabel =
+    currentLeague?.league ||
+    getMeaningfulValue(currentClub?.properties?.league) ||
+    getMeaningfulValue(currentClub?.properties?.level) ||
+    getGroupTypeLabel(currentLeague?.groupType)
   
   return (
     <div className="flex items-center gap-2">
@@ -580,12 +692,18 @@ export default function LeagueNavSimple() {
         <DialogContent className="sm:max-w-[500px] bg-header-bg">
           <DialogHeader>
             <DialogTitle>
-              {displaySport ? `${displaySport} → ${displayLeague?.league}` : 'Select Sport'}
+              {!displaySport
+                ? 'Select Sport'
+                : selectedLeague
+                ? `${displaySport} → ${displayLeague?.league} → Entities`
+                : `${displaySport} → ${displayLeague?.league || 'Groups'}`}
             </DialogTitle>
             <DialogDescription>
-              {displaySport 
-                ? `Browse ${displayLeague?.clubs?.length || 0} clubs in ${displayLeague?.league}`
-                : 'Choose a sport to browse leagues and clubs'
+              {!displaySport
+                ? 'Choose a sport to browse leagues, federations, and entities'
+                : selectedLeague
+                ? `Browse ${selectedLeague.clubs.length} entities in ${selectedLeague.league}`
+                : `Choose a league, federation, or organization in ${displaySport}`
               }
             </DialogDescription>
           </DialogHeader>
@@ -595,7 +713,7 @@ export default function LeagueNavSimple() {
             <div className="relative">
               <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground ${isVectorSearching ? 'animate-pulse' : ''}`} />
               <Input
-                placeholder="Search clubs, leagues, or type for similar entities..."
+                placeholder="Search entities, groups, or similar organizations..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyDown={handleSearchSubmit}
@@ -610,14 +728,20 @@ export default function LeagueNavSimple() {
             </div>
             
             {/* Navigation */}
-            {selectedSport && (
+            {(selectedSport || selectedLeague) && (
               <Button 
                 variant="ghost" 
-                onClick={() => setSelectedSport(null)}
+                onClick={() => {
+                  if (selectedLeague) {
+                    setSelectedLeague(null)
+                    return
+                  }
+                  setSelectedSport(null)
+                }}
                 className="text-white hover:bg-white/10"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                All Sports
+                {selectedLeague ? 'Back to Groups' : 'All Sports'}
               </Button>
             )}
             
@@ -650,9 +774,9 @@ export default function LeagueNavSimple() {
                     }}
                   >
                     <div>
-                      <div className="font-medium">{result.entity.properties.name}</div>
+                      <div className="font-medium">{formatValue(result.entity.properties.name)}</div>
                       <div className="text-sm text-white/60">
-                        {result.entity.properties.league} • {result.entity.properties.country}
+                        {formatValue(result.entity.properties.league)} • {formatValue(result.entity.properties.country)}
                       </div>
                       <div className="text-xs text-yellow-400">
                         {Math.round(result.similarity * 100)}% match
@@ -674,15 +798,15 @@ export default function LeagueNavSimple() {
                     <div>
                       <div className="font-medium">{sport.sport}</div>
                       <div className="text-sm text-white/60">
-                        {sport.leagues.length} leagues • {sport.leagues.reduce((sum, l) => sum + l.clubs.length, 0)} clubs
+                        {sport.leagues.length} groups • {sport.leagues.reduce((sum, l) => sum + l.clubs.length, 0)} entities
                       </div>
                     </div>
                     <div className="text-sm text-white/60">→</div>
                   </div>
                 ))}
               </div>
-            ) : (
-              // Leagues view for selected sport
+            ) : !selectedLeague ? (
+              // Group view for selected sport
               <div className="max-h-[400px] overflow-y-auto space-y-2">
                 {searchResults.data
                   .find((s: any) => s.sport === selectedSport)
@@ -696,22 +820,43 @@ export default function LeagueNavSimple() {
                       }`}
                       onClick={() => {
                         setSelectedLeague(league)
-                        setSelectedSport(null)
-                        // Navigate to first club in league
-                        if (league.clubs.length > 0) {
-                          navigateToClub(league.clubs[0])
-                        }
                       }}
                     >
                       <div>
                         <div className="font-medium">{league.league}</div>
                         <div className="text-sm text-white/60">
-                          {league.country} • {league.clubs.length} clubs
+                          {getGroupTypeLabel(league.groupType)} • {league.country} • {league.clubs.length} entities
                         </div>
                       </div>
                       <div className="text-sm text-white/60">→</div>
                     </div>
                   ))}
+              </div>
+            ) : (
+              <div className="max-h-[400px] overflow-y-auto space-y-2">
+                {selectedLeague.clubs.map((club: any) => (
+                  <div
+                    key={club.id}
+                    className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors ${
+                      currentClub?.id === club.id
+                        ? 'bg-blue-600 text-white'
+                        : 'hover:bg-white/10 text-white'
+                    }`}
+                    onClick={() => {
+                      navigateToClub(club)
+                      setIsModalOpen(false)
+                      setSearchTerm('')
+                    }}
+                  >
+                    <div>
+                      <div className="font-medium">{formatValue(club.properties.name)}</div>
+                      <div className="text-sm text-white/60">
+                        {getEntitySubtitle(club, selectedLeague)}
+                      </div>
+                    </div>
+                    <div className="text-sm text-white/60">→</div>
+                  </div>
+                ))}
               </div>
             )}
             
@@ -721,8 +866,8 @@ export default function LeagueNavSimple() {
                 {searchResults.type === 'vector' 
                   ? `Found ${searchResults.data.length} similar entities for "${searchTerm}"`
                   : searchTerm
-                  ? `Found ${searchResults.data.reduce((sum: any, s: any) => sum + s.leagues.length, 0)} leagues in ${searchResults.data.length} sports`
-                  : `Browsing: ${displaySport || 'All Sports'}`
+                  ? `Found ${searchResults.data.reduce((sum: any, s: any) => sum + s.leagues.length, 0)} groups in ${searchResults.data.length} sports`
+                  : `Browsing: ${displaySport ? `${displaySport}${selectedLeague ? ` / ${selectedLeague.league}` : ''}` : 'All Sports'}`
                 }
               </div>
               <Button onClick={() => setIsModalOpen(false)}>
@@ -751,7 +896,7 @@ export default function LeagueNavSimple() {
           variant="ghost"
           size="sm"
           onClick={handleUp}
-          disabled={!currentLeague || currentClubIndex === 0 || isNavigating}
+          disabled={!currentLeague || isNavigating}
           className="text-white hover:bg-white/10 disabled:opacity-50"
         >
           <ChevronUp className="h-4 w-4" />
@@ -761,7 +906,7 @@ export default function LeagueNavSimple() {
           variant="ghost"
           size="sm"
           onClick={handleDown}
-          disabled={!currentLeague || currentClubIndex === currentLeague.clubs.length - 1 || isNavigating}
+          disabled={!currentLeague || isNavigating}
           className="text-white hover:bg-white/10 disabled:opacity-50"
         >
           <ChevronDown className="h-4 w-4" />
@@ -771,10 +916,10 @@ export default function LeagueNavSimple() {
       {/* Club info */}
       <div className="min-w-[120px]">
         <div className="text-white text-3xl font-extrabold mb-1">
-          {currentClub?.properties?.name || 'Loading...'}
+          {formatValue(currentClub?.properties?.name) || 'Loading...'}
         </div>
         <div className="text-white/60 text-xl">
-          {currentLeague?.league} / {currentClub?.properties?.country}
+          {currentGroupLabel} / {formatValue(currentClub?.properties?.country)}
         </div>
       </div>
     </div>

@@ -16,22 +16,17 @@ interface RFPProgress {
 }
 
 export default function PersistentRFPDashboard() {
-  console.log('🎯 [PersistentRFPDashboard] Component mounting...');
-  
   const [progress, setProgress] = useState<RFPProgress | null>(null);
   const [logs, setLogs] = useState<string[]>([]);
   const [isAutoStart, setIsAutoStart] = useState(true); // Re-enable auto-start now that NaN issue is fixed
   const [isClient, setIsClient] = useState(false);
   
-  console.log('🔧 [PersistentRFPDashboard] Getting service instance...');
   const rfpService = PersistentRFPService.getInstance();
-  console.log('✅ [PersistentRFPDashboard] Service instance obtained');
 
   const addLog = useCallback((message: string) => {
     const timestamp = new Date().toLocaleTimeString();
     const formattedMessage = `[${timestamp}] ${message}`;
     setLogs(prev => [...prev.slice(-100), formattedMessage]); // Keep last 100 logs
-    console.log(formattedMessage);
   }, []);
 
   // Auto-start on page load (client-side only)

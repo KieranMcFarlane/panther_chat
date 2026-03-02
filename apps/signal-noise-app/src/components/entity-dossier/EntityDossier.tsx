@@ -159,6 +159,19 @@ const EntityDossier: React.FC<EntityDossierProps> = ({
     }
   };
 
+  // Safe getters for potentially undefined dossier properties
+  const safeGet = (obj: any, key: string, defaultValue: any = '') => {
+    return obj && obj[key] !== undefined ? obj[key] : defaultValue;
+  };
+
+  const safeScores = dossier?.scores || { opportunityScore: 0, connectionScore: 0, finalScore: 0 };
+  const safeStatus = dossier?.status || 'cold';
+  const safeSignals = dossier?.signals || [];
+  const safePOIs = dossier?.topPOIs || [];
+  const safeConnections = dossier?.connectionPaths || [];
+  const safeActions = dossier?.recommendedActions || [];
+  const safeOutreach = dossier?.outreachTemplate;
+
   if (loading) {
     return (
       <div className="w-full max-w-6xl mx-auto p-6">
@@ -235,9 +248,11 @@ const EntityDossier: React.FC<EntityDossierProps> = ({
                         <span>{dossier.entityCountry}</span>
                       </Badge>
                     )}
-                    <Badge className={`${getStatusColor(dossier.status)} text-white`}>
-                      {dossier.status.toUpperCase()}
-                    </Badge>
+                    {safeStatus && (
+                      <Badge className={`${getStatusColor(safeStatus)} text-white`}>
+                        {safeStatus.toUpperCase()}
+                      </Badge>
+                    )}
                   </div>
                 </div>
               </div>
@@ -271,36 +286,36 @@ const EntityDossier: React.FC<EntityDossierProps> = ({
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">Opportunity Score</p>
-                    <p className={`text-2xl font-bold ${getScoreColor(dossier.scores.opportunityScore)}`}>
-                      {dossier.scores.opportunityScore}/100
+                    <p className={`text-2xl font-bold ${getScoreColor(safeScores.opportunityScore)}`}>
+                      {safeScores.opportunityScore}/100
                     </p>
                   </div>
                   <Target className="h-8 w-8 text-muted-foreground" />
                 </div>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">Connection Score</p>
-                    <p className={`text-2xl font-bold ${getScoreColor(dossier.scores.connectionScore)}`}>
-                      {dossier.scores.connectionScore}/100
+                    <p className={`text-2xl font-bold ${getScoreColor(safeScores.connectionScore)}`}>
+                      {safeScores.connectionScore}/100
                     </p>
                   </div>
                   <Users className="h-8 w-8 text-muted-foreground" />
                 </div>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">Final Score</p>
-                    <p className={`text-2xl font-bold ${getScoreColor(dossier.scores.finalScore)}`}>
-                      {dossier.scores.finalScore}/100
+                    <p className={`text-2xl font-bold ${getScoreColor(safeScores.finalScore)}`}>
+                      {safeScores.finalScore}/100
                     </p>
                   </div>
                   <Star className="h-8 w-8 text-muted-foreground" />
@@ -350,13 +365,13 @@ const EntityDossier: React.FC<EntityDossierProps> = ({
               <div className="flex items-center space-x-2">
                 <Calendar className="h-4 w-4" />
                 <span className="text-sm text-muted-foreground">
-                  Last updated: {new Date(dossier.lastUpdated).toLocaleString()}
+                  Last updated: {dossier?.lastUpdated ? new Date(dossier.lastUpdated).toLocaleString() : 'Unknown'}
                 </span>
               </div>
             </CardContent>
           </Card>
 
-          {dossier.outreachTemplate && (
+          {safeOutreach && (
             <Card>
               <CardHeader>
                 <CardTitle>Outreach Template</CardTitle>
@@ -365,13 +380,13 @@ const EntityDossier: React.FC<EntityDossierProps> = ({
                 <div className="space-y-4">
                   <div>
                     <h4 className="font-medium">Subject:</h4>
-                    <p className="text-sm text-muted-foreground">{dossier.outreachTemplate.subject}</p>
+                    <p className="text-sm text-muted-foreground">{safeOutreach.subject || 'No subject'}</p>
                   </div>
                   <div>
                     <h4 className="font-medium">Body:</h4>
                     <div className="bg-muted/50 rounded-lg p-4 text-sm">
                       <pre className="whitespace-pre-wrap font-sans">
-                        {dossier.outreachTemplate.body}
+                        {safeOutreach.body || 'No body'}
                       </pre>
                     </div>
                   </div>
@@ -388,7 +403,7 @@ const EntityDossier: React.FC<EntityDossierProps> = ({
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {dossier.topPOIs.map((poi, index) => (
+                {safePOIs.map((poi, index) => (
                   <div key={poi.id} className="border rounded-lg p-4">
                     <div className="flex items-start justify-between">
                       <div className="flex items-start space-x-3">
@@ -455,7 +470,7 @@ const EntityDossier: React.FC<EntityDossierProps> = ({
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {dossier.connectionPaths.map((path, index) => (
+                {safeConnections.map((path, index) => (
                   <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center space-x-3">
                       <Users className="h-5 w-5 text-muted-foreground" />
@@ -481,7 +496,7 @@ const EntityDossier: React.FC<EntityDossierProps> = ({
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {dossier.signals.map((signal, index) => (
+                {safeSignals.map((signal, index) => (
                   <div key={index} className="flex items-start space-x-3 p-4 border rounded-lg">
                     {getSeverityIcon(signal.severity)}
                     <div className="flex-1">
@@ -505,7 +520,7 @@ const EntityDossier: React.FC<EntityDossierProps> = ({
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {dossier.recommendedActions.map((action, index) => (
+                {safeActions.map((action, index) => (
                   <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center space-x-3">
                       <input type="checkbox" className="rounded" />

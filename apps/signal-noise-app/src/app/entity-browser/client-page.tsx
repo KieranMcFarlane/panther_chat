@@ -46,7 +46,6 @@ interface EntityBrowserResponse {
 }
 
 export default function EntityBrowserClientPage() {
-  console.log("🔍 EntityBrowserPage: Component mounting")
   const router = useRouter()
   const searchParams = useSearchParams()
   const initialPageFromUrl = Number.parseInt(searchParams.get('page') || '1', 10)

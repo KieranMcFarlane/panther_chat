@@ -8,6 +8,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { rfpIntelligenceAgent } from '@/lib/claude-agent-rfp-intelligence';
 
+export const dynamic = 'force-dynamic';
+
 interface BatchJobRequest {
   type: 'enrichment' | 'analysis' | 'reasoning' | 'classification' | 'market_intelligence';
   data: any[];

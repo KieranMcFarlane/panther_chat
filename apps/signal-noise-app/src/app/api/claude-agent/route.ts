@@ -3,6 +3,12 @@ import { HeadlessClaudeAgentService } from '@/services/HeadlessClaudeAgentServic
 import { ClaudeAgentCronScheduler } from '@/services/ClaudeAgentCronScheduler';
 import { liveLogService } from '@/services/LiveLogService';
 
+export const dynamic = 'force-dynamic';
+
+function isBuildPhase() {
+  return process.env.NEXT_PHASE === 'phase-production-build';
+}
+
 // Global instances (in production, use dependency injection)
 let claudeService: HeadlessClaudeAgentService | null = null;
 let cronScheduler: ClaudeAgentCronScheduler | null = null;
@@ -248,11 +254,13 @@ export async function POST(request: NextRequest) {
  */
 if (typeof window === 'undefined') {
   // Only run on server side
-  try {
-    const { cronScheduler } = initializeServices();
-    cronScheduler.start();
-    console.log('Claude Agent cron scheduler initialized successfully');
-  } catch (error) {
-    console.error('Failed to initialize Claude Agent cron scheduler:', error);
+  if (!isBuildPhase()) {
+    try {
+      const { cronScheduler } = initializeServices();
+      cronScheduler.start();
+      console.log('Claude Agent cron scheduler initialized successfully');
+    } catch (error) {
+      console.error('Failed to initialize Claude Agent cron scheduler:', error);
+    }
   }
 }

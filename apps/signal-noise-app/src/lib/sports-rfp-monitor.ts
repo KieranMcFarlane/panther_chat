@@ -5,6 +5,10 @@ Replaces generic business alerts with sports-specific RFP opportunity monitoring
 
 import { Neo4jService } from '@/lib/neo4j';
 
+function isBuildPhase(): boolean {
+  return process.env.NEXT_PHASE === 'phase-production-build';
+}
+
 interface SportsRFPAlert {
   id: string;
   type: 'rfp_detected' | 'tender_announced' | 'procurement_planning' | 'digital_transformation' | 'technology_upgrade' | 'fan_engagement' | 'analytics_platform';
@@ -31,12 +35,12 @@ class SportsRFPMonitor {
   private alerts: SportsRFPAlert[] = [];
   private callbacks: ((alert: SportsRFPAlert) => void)[] = [];
   private isRunning = false;
+  private initialized = false;
   private neo4jService: Neo4jService;
   private monitoredEntities: any[] = [];
 
   constructor() {
     this.neo4jService = new Neo4jService();
-    this.initializeWithSportsData();
   }
 
   // Start sports-focused monitoring
@@ -70,9 +74,19 @@ class SportsRFPMonitor {
 
   // Get current alerts
   getAlerts(): SportsRFPAlert[] {
+    this.ensureInitialized();
     return this.alerts.sort((a, b) => 
       new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
+  }
+
+  private ensureInitialized() {
+    if (this.initialized) {
+      return;
+    }
+
+    this.initializeWithSportsData();
+    this.initialized = true;
   }
 
   private async loadSportsEntities() {
@@ -416,7 +430,9 @@ class SportsRFPMonitor {
     ];
 
     this.alerts = initialAlerts;
-    console.log(`🏆 Initialized with ${initialAlerts.length} sports RFP opportunities`);
+    if (!isBuildPhase()) {
+      console.log(`🏆 Initialized with ${initialAlerts.length} sports RFP opportunities`);
+    }
   }
 }
 

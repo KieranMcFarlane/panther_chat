@@ -15,11 +15,20 @@ import { useHypothesisStates, formatHypothesisStates, recalculateHypothesisState
 
 interface HypothesisStatesPanelProps {
   entityId: string;
+  enabled?: boolean;
   className?: string;
 }
 
-export function HypothesisStatesPanel({ entityId, className = '' }: HypothesisStatesPanelProps) {
-  const { data, error, isLoading, mutate } = useHypothesisStates(entityId);
+export function HypothesisStatesPanel({
+  entityId,
+  enabled = true,
+  className = '',
+}: HypothesisStatesPanelProps) {
+  const { data, error, isLoading, mutate } = useHypothesisStates(entityId, { enabled });
+
+  if (!enabled) {
+    return null;
+  }
 
   const handleRefresh = async () => {
     try {

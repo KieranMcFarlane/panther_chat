@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { neo4jService } from '@/lib/neo4j';
 import neo4j from 'neo4j-driver';
 
+export const dynamic = 'force-dynamic';
+
 // Helper function to convert Neo4j entity to graph format
 function convertNeo4jToGraphEntity(node: any): any {
   const properties = node.properties || {};

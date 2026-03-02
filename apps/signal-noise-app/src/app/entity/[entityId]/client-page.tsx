@@ -136,7 +136,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
   if (isLoadingTimeout && isLoading) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
+        <Header currentEntity={entity} />
         <div className="container mx-auto px-4 py-8 bg-[#1c1e2d]">
           <div className="rounded-lg bg-card text-card-foreground mb-8 border-2 shadow-lg p-6">
             <div className="text-center py-8">
@@ -178,7 +178,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
   if (showSkeleton && isLoading) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
+        <Header currentEntity={entity} />
         <div className="container mx-auto px-4 py-8 bg-[#1c1e2d]">
           {/* Header skeleton */}
           <div className="rounded-lg bg-card text-card-foreground mb-8 border-2 shadow-lg">
@@ -435,7 +435,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
   return (
     <div className="min-h-screen flex flex-col">
       {/* Fixed Header at Top */}
-      <Header />
+      <Header currentEntity={entity} />
 
       {/* Main Content Area with smooth fade-in */}
       <div className={`flex-1 bg-[#1c1e2d] transition-opacity duration-150 ${showSkeleton ? 'opacity-0' : 'opacity-100'}`}>

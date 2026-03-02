@@ -1,10 +1,11 @@
 import { Network, Users, Building, FileText, Target } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { db, Entity } from '@/lib/database';
-import { neo4jClient } from '@/lib/neo4j';
+import { Entity } from '@/lib/database';
 import GraphWrapper from '@/components/graph/GraphWrapper';
 import { GraphNode, GraphEdge } from '@/components/graph/graph-types';
 import { EntityCacheService } from '@/services/EntityCacheService';
+
+export const dynamic = 'force-dynamic';
 
 // Helper function to get relationship colors
 function getRelationshipColor(relationshipType: string): string {
@@ -28,17 +29,10 @@ function getRelationshipColor(relationshipType: string): string {
 
 // Server-side data fetching function
 async function fetchGraphData() {
-  console.log('🔧 SERVER SIDE: Fetching graph data from Supabase cache...');
-  
   try {
     // Initialize the EntityCacheService to access Supabase cache with 4,422 entities
     const cacheService = new EntityCacheService();
     await cacheService.initialize();
-    
-    console.log('📊 Fetching ALL entities from Supabase cache (4,422 total expected)...');
-    
-    // Get entities mentioned in relationships first, then fill with more entities
-    console.log('🔍 Getting relationship mapping strategy...');
     
     // First, get all relationships from cache to know which entities to prioritize
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3005';
@@ -48,8 +42,6 @@ async function fetchGraphData() {
     
     const relationshipsData = relationshipsResponse.ok ? await relationshipsResponse.json() : {};
     const allRelationships = relationshipsData.relationships || [];
-    console.log(`📊 Found ${allRelationships.length} total cached relationships`);
-    
     // Extract unique entity names from relationships
     const relationshipEntityNames = new Set<string>();
     allRelationships.forEach((rel: any) => {
@@ -57,18 +49,12 @@ async function fetchGraphData() {
       relationshipEntityNames.add(rel.target_name);
     });
     
-    console.log(`🎯 Found ${relationshipEntityNames.size} unique entities in relationships`);
-    
-    // Get entities from Supabase cache with performance optimization
-    console.log('📊 Loading entities from Supabase cache with performance optimization...');
-    
     let entities: Entity[] = [];
     let totalAvailable = 0; // Initialize totalAvailable outside the if block
     const INITIAL_LIMIT = 100; // Start with smaller subset for better visualization
     const MAX_ENTITIES = 500; // Cap for interactive performance
     
     // Load initial batch for immediate display
-    console.log(`🚀 Loading initial batch of ${INITIAL_LIMIT} entities for performance...`);
     const initialCacheResult = await cacheService.getCachedEntities({
       page: 1,
       limit: INITIAL_LIMIT,
@@ -133,15 +119,9 @@ async function fetchGraphData() {
           };
         });
       
-      console.log(`✅ PERFORMANCE: Loaded initial ${entities.length} entities for interactive graph`);
-      
       // Get total count of available entities
       const cacheStats = await cacheService.getCacheStats();
       totalAvailable = cacheStats.totalCached || 4422; // Fallback to expected count
-      console.log(`📊 Total available entities in cache: ${totalAvailable}`);
-      
-      // Optional: Load additional entities in background for expansion, but don't display immediately
-      console.log(`📊 Background loading additional entities up to ${MAX_ENTITIES} limit...`);
       
       let currentPage = 2; // Start from page 2 since we loaded page 1
       let backgroundEntities = [];
@@ -204,7 +184,6 @@ async function fetchGraphData() {
           });
           
           backgroundEntities.push(...additionalBatch);
-          console.log(`🌐 Background batch loaded: ${additionalBatch.length} additional entities`);
         }
         
         currentPage++;
@@ -213,11 +192,10 @@ async function fetchGraphData() {
         await new Promise(resolve => setTimeout(resolve, 50));
       }
       
-      console.log(`📈 PERFORMANCE: Ready with ${entities.length} primary + ${backgroundEntities.length} background entities`);
     }
     
     if (entities.length === 0) {
-      console.warn('❌ SERVER SIDE: No entities found in Supabase cache, falling back to Neo4j API');
+      console.warn('No entities found in Supabase cache, falling back to Neo4j API');
       
       // Fallback to Neo4j API if Supabase cache is empty
       const fallbackResponse = await fetch(`${baseUrl}/api/sports-entities?limit=1000`, {
@@ -571,12 +549,6 @@ async function fetchGraphData() {
 export default async function EnhancedGraphPage() {
   // Fetch data on server side
   const graphData = await fetchGraphData();
-  
-  console.log('🎯 SERVER COMPONENT: Rendering with data:', {
-    nodes: graphData.nodes.length,
-    edges: graphData.edges.length,
-    totalAvailable: graphData.totalAvailable
-  });
 
   return (
     <div className="max-w-7xl overflow-hidden rounded-lg mx-auto space-y-6 h-full" style={{ 

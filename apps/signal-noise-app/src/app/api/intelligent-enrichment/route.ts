@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cleanClaudeAgentService } from '@/services/CleanClaudeAgentService';
 import { intelligentEnrichmentScheduler } from '@/services/IntelligentEnrichmentScheduler';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * API endpoint for intelligent entity enrichment using Claude Agent SDK + MCP
  */

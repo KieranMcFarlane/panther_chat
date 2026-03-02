@@ -2,3 +2,14 @@
 .env.backup
 .env.bak
 .env.ralph
+.data/
+.next/
+tsconfig.tsbuildinfo
+backend/data/dossiers/
+data/dossiers/
+docs/data/demo_steps/
+backend/data/dossiers/_batch_summary_*.json
+backend/data/dossiers/_intermediate_results.json
+end_to_end_demo_results.json
+test_rfp_detection_results_*.json
+coventry_city_fc_dossier.md

@@ -34,10 +34,6 @@ class IntelligentEnrichmentScheduler {
   private intervals: Map<string, NodeJS.Timeout> = new Map();
   private isInitialized = false;
 
-  constructor() {
-    this.initializeDefaultSchedules();
-  }
-
   private initializeDefaultSchedules() {
     // Default enrichment schedules
     const defaultSchedules: EnrichmentSchedule[] = [
@@ -129,6 +125,12 @@ class IntelligentEnrichmentScheduler {
     });
   }
 
+  private ensureInitialized() {
+    if (!this.isInitialized) {
+      this.initializeDefaultSchedules();
+    }
+  }
+
   private calculateNextRun(schedule: EnrichmentSchedule) {
     const now = new Date();
     const nextRun = new Date(now);
@@ -150,6 +152,8 @@ class IntelligentEnrichmentScheduler {
   }
 
   async triggerEnrichment(scheduleId: string, config?: any): Promise<any> {
+    this.ensureInitialized();
+
     const schedule = this.schedules.get(scheduleId);
     if (!schedule) {
       throw new Error(`Schedule ${scheduleId} not found`);
@@ -233,6 +237,8 @@ class IntelligentEnrichmentScheduler {
   }
 
   toggleSchedule(scheduleId: string, enabled: boolean) {
+    this.ensureInitialized();
+
     const schedule = this.schedules.get(scheduleId);
     if (!schedule) {
       throw new Error(`Schedule ${scheduleId} not found`);
@@ -297,14 +303,17 @@ class IntelligentEnrichmentScheduler {
   }
 
   getSchedules(): EnrichmentSchedule[] {
+    this.ensureInitialized();
     return Array.from(this.schedules.values());
   }
 
   getSchedule(scheduleId: string): EnrichmentSchedule | null {
+    this.ensureInitialized();
     return this.schedules.get(scheduleId) || null;
   }
 
   getCurrentEnrichmentStatus() {
+    this.ensureInitialized();
     const currentBatch = cleanClaudeAgentService.getCurrentBatch();
     const isRunning = cleanClaudeAgentService.isRunning();
 
