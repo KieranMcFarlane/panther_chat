@@ -62,6 +62,17 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
   const pathname = usePathname();
   const isDossierRoute = pathname?.includes('/dossier') ?? false;
   const isEntityBrowserRoute = pathname?.startsWith('/entity-browser') ?? false;
+  const isFullScreenAuthRoute = pathname === '/sign-in' || pathname === '/login';
+
+  if (isFullScreenAuthRoute) {
+    return (
+      <div className="min-h-screen">
+        <PageTransition>
+          {children}
+        </PageTransition>
+      </div>
+    );
+  }
 
   const renderNavItem = (item: typeof navItems[0]) => {
     const [isOpen, setIsOpen] = useState(false);

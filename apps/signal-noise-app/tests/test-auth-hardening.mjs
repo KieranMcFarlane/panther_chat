@@ -19,6 +19,14 @@ const authClientSource = readFileSync(
   new URL('../src/lib/auth-client.ts', import.meta.url),
   'utf8'
 )
+const appNavigationSource = readFileSync(
+  new URL('../src/components/layout/AppNavigation.tsx', import.meta.url),
+  'utf8'
+)
+const signInFormSource = readFileSync(
+  new URL('../src/components/auth/SignInForm.tsx', import.meta.url),
+  'utf8'
+)
 const packageSource = readFileSync(
   new URL('../package.json', import.meta.url),
   'utf8'
@@ -73,4 +81,17 @@ test('auth client falls back to the browser origin when a localhost auth URL lea
   assert.match(authClientSource, /window\.location\.origin/)
   assert.match(authClientSource, /isLocalhostUrl/)
   assert.match(authClientSource, /resolveAuthBaseUrl/)
+})
+
+test('full-screen auth routes bypass the dashboard shell container', () => {
+  assert.match(appNavigationSource, /pathname === '\/sign-in'/)
+  assert.match(appNavigationSource, /pathname === '\/login'/)
+  assert.match(appNavigationSource, /if \(isFullScreenAuthRoute\)/)
+})
+
+test('sign-in form supports password reset requests from the auth page', () => {
+  assert.match(signInFormSource, /request-password-reset/)
+  assert.match(signInFormSource, /Forgot your password\?/)
+  assert.match(signInFormSource, /setMode\("reset"\)/)
+  assert.match(signInFormSource, /mode !== "reset"/)
 })
