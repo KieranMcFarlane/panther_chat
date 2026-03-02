@@ -10,6 +10,18 @@ import sys
 import logging
 from typing import Dict, Any, Optional, List
 from datetime import datetime
+from pathlib import Path
+
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    env_path = Path(__file__).parent.parent / '.env'
+    load_dotenv(env_path)
+    logging.info(f"Loaded environment variables from {env_path}")
+except ImportError:
+    logging.warning("python-dotenv not available, environment variables may not be loaded")
+except Exception as e:
+    logging.warning(f"Failed to load .env file: {e}")
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -29,6 +41,11 @@ app = FastAPI(
     description="AI-powered dossier enrichment system with temporal intelligence",
     version="2.0.0"
 )
+
+# Configure timeout for long-running requests (5 minutes for dossier generation)
+# This is handled at the HTTP server level (uvicorn)
+# Default timeout is 30s, but dossier generation can take 2-3 minutes
+# Start server with: uvicorn main:app --timeout-keep-alive 300
 
 # Add CORS middleware
 app.add_middleware(
@@ -482,6 +499,28 @@ class DossierResponse(BaseModel):
     generated_at: str
 
 
+class EntityPipelineRequest(BaseModel):
+    """Request for running one entity through the full intelligence pipeline."""
+    entity_id: str = Field(..., description="Entity ID (e.g., 'arsenal-fc')")
+    entity_name: str = Field(..., description="Entity display name")
+    entity_type: str = Field(default="CLUB", description="Entity type")
+    priority_score: int = Field(default=50, ge=0, le=100, description="Priority score")
+    batch_id: Optional[str] = Field(default=None, description="Optional import batch ID for live phase updates")
+
+
+class EntityPipelineResponse(BaseModel):
+    """Response from the canonical entity pipeline."""
+    entity_id: str
+    entity_name: str
+    phases: Dict[str, Any]
+    validated_signal_count: int
+    capability_signal_count: int
+    rfp_count: int
+    sales_readiness: Optional[str] = None
+    artifacts: Dict[str, Any]
+    completed_at: str
+
+
 @app.post("/api/dossiers/generate", response_model=DossierResponse)
 async def generate_dossier(request: DossierRequest):
     """
@@ -511,14 +550,14 @@ async def generate_dossier(request: DossierRequest):
         import os
         from supabase import create_client, Client
 
-        # Initialize Supabase client
-        supabase_url = os.getenv("SUPABASE_URL")
-        supabase_key = os.getenv("SUPABASE_ANON_KEY")
+        # Initialize Supabase client (try both SUPABASE_URL and NEXT_PUBLIC_SUPABASE_URL)
+        supabase_url = os.getenv("SUPABASE_URL") or os.getenv("NEXT_PUBLIC_SUPABASE_URL")
+        supabase_key = os.getenv("SUPABASE_ANON_KEY") or os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
 
         if not supabase_url or not supabase_key:
             raise HTTPException(
                 status_code=500,
-                detail="Supabase credentials not configured. Set SUPABASE_URL and SUPABASE_ANON_KEY environment variables."
+                detail="Supabase credentials not configured. Set SUPABASE_URL/NEXT_PUBLIC_SUPABASE_URL and SUPABASE_ANON_KEY/NEXT_PUBLIC_SUPABASE_ANON_KEY environment variables."
             )
 
         supabase: Client = create_client(supabase_url, supabase_key)
@@ -664,6 +703,111 @@ async def generate_dossier(request: DossierRequest):
     except Exception as e:
         logger.error(f"❌ Unexpected error in dossier generation: {e}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+
+@app.post("/api/pipeline/run-entity", response_model=EntityPipelineResponse)
+async def run_entity_pipeline(request: EntityPipelineRequest):
+    """
+    Run one entity through the canonical dossier -> discovery -> Ralph -> temporal -> scoring pipeline.
+
+    Phase 0 dossier generation is delegated to the existing dossier endpoint so dossier persistence stays
+    consistent with the rest of the system. The remaining phases are then executed in-process.
+    """
+    try:
+        from datetime import datetime
+        from backend.brightdata_sdk_client import BrightDataSDKClient
+        from backend.claude_client import ClaudeClient
+        from backend.dashboard_scorer import DashboardScorer
+        from backend.dossier_generator import UniversalDossierGenerator
+        from backend.graphiti_service import GraphitiService
+        from backend.hypothesis_driven_discovery import HypothesisDrivenDiscovery
+        from backend.pipeline_orchestrator import PipelineOrchestrator
+        from backend.ralph_loop import RalphLoop
+        from supabase import create_client, Client
+
+        supabase_url = os.getenv("SUPABASE_URL") or os.getenv("NEXT_PUBLIC_SUPABASE_URL")
+        supabase_key = os.getenv("SUPABASE_ANON_KEY") or os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
+        pipeline_supabase: Optional[Client] = None
+        if request.batch_id and supabase_url and supabase_key:
+            pipeline_supabase = create_client(supabase_url, supabase_key)
+
+        async def emit_phase_update(phase: str, payload: Dict[str, Any]) -> None:
+            if not pipeline_supabase or not request.batch_id:
+                return
+
+            update_payload = {
+                "phase": phase,
+                "status": payload.get("status", "running"),
+                "completed_at": datetime.now().isoformat() if payload.get("status") == "completed" else None,
+                "metadata": {
+                    "phase_details": payload,
+                },
+            }
+
+            try:
+                pipeline_supabase.table("entity_pipeline_runs") \
+                    .update(update_payload) \
+                    .eq("batch_id", request.batch_id) \
+                    .eq("entity_id", request.entity_id) \
+                    .execute()
+            except Exception as phase_error:
+                logger.warning(f"⚠️ Failed to emit phase update for {request.entity_id}/{phase}: {phase_error}")
+
+        await emit_phase_update("dossier_generation", {"status": "running"})
+
+        dossier_response = await generate_dossier(
+            DossierRequest(
+                entity_id=request.entity_id,
+                entity_name=request.entity_name,
+                entity_type=request.entity_type,
+                priority_score=request.priority_score,
+                force_refresh=False,
+            )
+        )
+        await emit_phase_update(
+            "dossier_generation",
+            {
+                "status": "completed",
+                "hypothesis_count": dossier_response.metadata.get("hypothesis_count", 0),
+                "signal_count": dossier_response.metadata.get("signal_count", 0),
+            },
+        )
+
+        claude = ClaudeClient()
+        brightdata = BrightDataSDKClient()
+
+        active_graphiti_service = graphiti_service
+        if active_graphiti_service is None:
+            active_graphiti_service = GraphitiService()
+            await active_graphiti_service.initialize()
+
+        orchestrator = PipelineOrchestrator(
+            dossier_generator=UniversalDossierGenerator(claude),
+            discovery=HypothesisDrivenDiscovery(claude, brightdata),
+            ralph_validator=RalphLoop(claude, active_graphiti_service),
+            graphiti_service=active_graphiti_service,
+            dashboard_scorer=DashboardScorer(),
+        )
+
+        result = await orchestrator.run_entity_pipeline(
+            entity_id=request.entity_id,
+            entity_name=request.entity_name,
+            entity_type=request.entity_type,
+            priority_score=request.priority_score,
+            initial_dossier=dossier_response.dossier_data,
+            phase_callback=emit_phase_update,
+        )
+
+        return EntityPipelineResponse(**result)
+
+    except HTTPException:
+        raise
+    except ImportError as e:
+        logger.error(f"❌ Pipeline import failed: {e}")
+        raise HTTPException(status_code=501, detail=f"Pipeline dependency unavailable: {str(e)}")
+    except Exception as e:
+        logger.error(f"❌ Pipeline run failed for {request.entity_id}: {e}")
+        raise HTTPException(status_code=500, detail=f"Pipeline run failed: {str(e)}")
 
 
 # =============================================================================

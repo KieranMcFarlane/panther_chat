@@ -59,8 +59,8 @@ except ImportError:
 
 # Import Phase 6 components
 try:
-    from parameter_tuning import ParameterConfig
-    from eig_calculator import EIGConfig
+    from backend.parameter_tuning import ParameterConfig
+    from backend.eig_calculator import EIGConfig
     PARAMETER_TUNING_AVAILABLE = True
 except ImportError:
     PARAMETER_TUNING_AVAILABLE = False
@@ -492,8 +492,8 @@ class HypothesisDrivenDiscovery:
             config: Optional ParameterConfig for Phase 6 parameter tuning
             cache_enabled: Enable Phase 5 LRU cache (default: True)
         """
-        from hypothesis_manager import HypothesisManager
-        from eig_calculator import EIGCalculator
+        from backend.hypothesis_manager import HypothesisManager
+        from backend.eig_calculator import EIGCalculator
 
         self.claude_client = claude_client
         self.brightdata_client = brightdata_client
@@ -540,7 +540,7 @@ class HypothesisDrivenDiscovery:
         # Initialize search result validator for post-search validation
         self.search_validator = None
         try:
-            from search_result_validator import SearchResultValidator
+            from backend.search_result_validator import SearchResultValidator
             self.search_validator = SearchResultValidator(claude_client)
             logger.info("✅ Search result validator initialized")
         except ImportError:
@@ -575,6 +575,9 @@ class HypothesisDrivenDiscovery:
 
         # Track cost
         self.total_cost_usd = 0.0
+
+        # Dossier hypotheses cache for warm-start discovery
+        self._dossier_hypotheses_cache = {}
 
         logger.info("🔍 HypothesisDrivenDiscovery initialized")
 
@@ -711,7 +714,7 @@ class HypothesisDrivenDiscovery:
         Returns:
             DiscoveryResult with final assessment
         """
-        from schemas import RalphState
+        from backend.schemas import RalphState
 
         # Use config values if not specified (Phase 6 parameter tuning)
         if max_iterations is None:
@@ -887,7 +890,7 @@ class HypothesisDrivenDiscovery:
         Returns:
             HopType to execute (highest scored option)
         """
-        from sources.mcp_source_priorities import (
+        from backend.sources.mcp_source_priorities import (
             get_source_config,
             calculate_channel_score,
             ChannelBlacklist,
@@ -1890,7 +1893,7 @@ class HypothesisDrivenDiscovery:
         template_id = hypothesis.metadata.get('template_id', '')
 
         # Load template to get early_indicators and keywords
-        from template_loader import TemplateLoader
+        from backend.template_loader import TemplateLoader
         loader = TemplateLoader()
         template = loader.get_template(template_id) if template_id else None
 
@@ -2189,7 +2192,7 @@ Return JSON:
             result: Hop execution result
             state: Current RalphState
         """
-        from sources.mcp_source_priorities import SourceType
+        from backend.sources.mcp_source_priorities import SourceType
 
         # Ensure result has required keys
         if 'decision' not in result:
@@ -2286,7 +2289,7 @@ Return JSON:
         Returns:
             Signal object if criteria met, None otherwise
         """
-        from schemas import Signal, Evidence, SignalType, SignalSubtype
+        from backend.schemas import Signal, Evidence, SignalType, SignalSubtype
 
         decision = result.get('decision', 'NO_PROGRESS')
 
@@ -2465,7 +2468,7 @@ Return JSON:
         Returns:
             List of signal dictionaries (for DiscoveryResult output)
         """
-        from schemas import Signal, Evidence, SignalType, SignalSubtype
+        from backend.schemas import Signal, Evidence, SignalType, SignalSubtype
 
         signals = []
         raw_signals = []
@@ -2725,7 +2728,7 @@ Return JSON:
         Returns:
             Dict mapping category -> {maturity_score, activity_score, state, ...}
         """
-        from ralph_loop import classify_signal, recalculate_hypothesis_state
+        from backend.ralph_loop import classify_signal, recalculate_hypothesis_state
 
         # Group signals by category
         category_signals = {
@@ -2739,7 +2742,7 @@ Return JSON:
             decision = result.get('decision', '')
 
             # Convert decision to RalphDecisionType
-            from schemas import RalphDecisionType
+            from backend.schemas import RalphDecisionType
             if decision == 'ACCEPT':
                 ralph_decision = RalphDecisionType.ACCEPT
             elif decision == 'WEAK_ACCEPT':
@@ -2917,7 +2920,7 @@ Return JSON:
             logger.warning("entity_type_dossier_questions not available - question initialization skipped")
             return 0
 
-        from hypothesis_manager import Hypothesis
+        from backend.hypothesis_manager import Hypothesis
 
         # Generate hypotheses from question templates
         hypotheses = generate_hypothesis_batch(
@@ -2997,7 +3000,7 @@ Return JSON:
         Returns:
             Number of hypotheses successfully added
         """
-        from hypothesis_manager import Hypothesis
+        from backend.hypothesis_manager import Hypothesis
 
         added_count = 0
 
@@ -3186,12 +3189,24 @@ Return JSON:
         # Extract procurement signals from dossier
         procurement_signals = []
         capability_signals = []
+        extracted_signals = dossier.get('extracted_signals', [])
 
-        for signal in dossier.get('procurement_signals', []):
-            if signal.get('type') == '[PROCUREMENT]':
-                procurement_signals.append(signal)
-            elif signal.get('type') == '[CAPABILITY]':
-                capability_signals.append(signal)
+        for raw_signal in extracted_signals:
+            normalized_signal = self._normalize_dossier_signal(raw_signal)
+            if not normalized_signal:
+                continue
+
+            if normalized_signal.get('type') == '[PROCUREMENT]':
+                procurement_signals.append(normalized_signal)
+            elif normalized_signal.get('type') == '[CAPABILITY]':
+                capability_signals.append(normalized_signal)
+
+        procurement_signal_block = dossier.get('procurement_signals', {})
+        upcoming_opportunities = procurement_signal_block.get('upcoming_opportunities', [])
+        for opportunity in upcoming_opportunities:
+            opportunity_signal = self._normalize_dossier_opportunity_signal(opportunity)
+            if opportunity_signal:
+                procurement_signals.append(opportunity_signal)
 
         logger.info(f"📋 Found {len(procurement_signals)} procurement signals")
         logger.info(f"📋 Found {len(capability_signals)} capability signals")
@@ -3232,7 +3247,7 @@ Return JSON:
 
         for signal in capability_signals:
             # Create verification search for capabilities
-            query = f'{entity_name}" {signal.get("text", "")} platform'
+            query = f'"{entity_name}" {signal.get("text", "")} platform'
             targeted_queries.append(query)
 
         logger.info(f"🔍 Generated {len(targeted_queries)} targeted search queries")
@@ -3259,7 +3274,7 @@ Return JSON:
         logger.info(f"🔍 Total search results: {len(search_results)}")
 
         # Initialize state and run discovery
-        from schemas import RalphState
+        from backend.schemas import RalphState
 
         state = RalphState(
             entity_id=entity_id,
@@ -3388,6 +3403,57 @@ Return JSON:
                 break
 
         return await self._build_final_result(state, hypotheses)
+
+    def _normalize_dossier_signal(self, signal: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Normalize dossier signal variants into the discovery signal contract."""
+        if not isinstance(signal, dict):
+            return None
+
+        signal_type = signal.get('type') or signal.get('signal_type') or ''
+        text = signal.get('text') or signal.get('statement') or signal.get('insight') or signal.get('opportunity') or ''
+        confidence = signal.get('confidence', 0.50)
+
+        if not text:
+            return None
+
+        if isinstance(confidence, (int, float)) and confidence > 1:
+            confidence = confidence / 100.0
+
+        return {
+            'type': signal_type,
+            'text': text,
+            'confidence': confidence,
+            'source': signal.get('source', 'dossier_generation'),
+        }
+
+    def _normalize_dossier_opportunity_signal(self, opportunity: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Convert dossier procurement opportunity blocks into procurement signals."""
+        if not isinstance(opportunity, dict):
+            return None
+
+        opportunity_name = opportunity.get('opportunity') or opportunity.get('title') or ''
+        if not opportunity_name:
+            return None
+
+        confidence = opportunity.get('rfp_probability', 0.50)
+        if isinstance(confidence, (int, float)) and confidence > 1:
+            confidence = confidence / 100.0
+
+        timeline = opportunity.get('timeline')
+        opportunity_type = opportunity.get('type')
+
+        text = f"Opportunity: {opportunity_name}"
+        if opportunity_type:
+            text = f"{text} ({opportunity_type})"
+        if timeline:
+            text = f"{text} timeline {timeline}"
+
+        return {
+            'type': '[PROCUREMENT]',
+            'text': text,
+            'confidence': confidence,
+            'source': 'dossier_generation',
+        }
 
     def _map_signal_to_category(self, signal_type: str) -> str:
         """
