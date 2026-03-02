@@ -44,6 +44,8 @@ test('entity import run route proxies queued entities into the backend pipeline 
   assert.match(runRouteSource, /\/api\/pipeline\/run-entity/)
   assert.match(runRouteSource, /activeBatchRuns = new Map/)
   assert.match(runRouteSource, /enqueueBatchRun/)
+  assert.match(runRouteSource, /ENTITY_IMPORT_QUEUE_MODE/)
+  assert.match(runRouteSource, /durable_worker/)
   assert.match(runRouteSource, /status: 202/)
   assert.match(runRouteSource, /batch_id:\s*batchId/)
   assert.match(runRouteSource, /updateEntityPipelineRun/)

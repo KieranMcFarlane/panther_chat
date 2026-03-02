@@ -9,6 +9,7 @@ import { promoteImportedEntityRfps } from '@/lib/entity-import-rfp'
 
 const FASTAPI_URL = process.env.FASTAPI_URL || process.env.PYTHON_BACKEND_URL || 'http://localhost:8000'
 const PIPELINE_TIMEOUT_MS = Number(process.env.ENTITY_PIPELINE_TIMEOUT_MS || 300000)
+const ENTITY_IMPORT_QUEUE_MODE = process.env.ENTITY_IMPORT_QUEUE_MODE || 'in_process'
 const activeBatchRuns = new Map<string, Promise<void>>()
 
 type PipelineRunResponse = {
@@ -23,7 +24,9 @@ type PipelineRunResponse = {
 }
 
 async function syncEntityPipelineArtifacts(
+  batchId: string,
   entityId: string,
+  status: string,
   salesReadiness: string | null | undefined,
   rfpCount: number,
   dossier: Record<string, unknown> | null | undefined,
@@ -41,6 +44,9 @@ async function syncEntityPipelineArtifacts(
   properties.dossier_data = dossier ? JSON.stringify(dossier) : properties.dossier_data ?? null
   properties.sales_readiness = salesReadiness ?? null
   properties.rfp_count = rfpCount
+  properties.last_pipeline_batch_id = batchId
+  properties.last_pipeline_run_detail_url = `/entity-import/${batchId}/${entityId}`
+  properties.last_pipeline_status = status
   properties.last_pipeline_run_at = new Date().toISOString()
 
   await supabase
@@ -106,7 +112,9 @@ async function processBatch(batchId: string) {
 
       const promotedRfps = await promoteImportedEntityRfps(batchId, run, result)
       await syncEntityPipelineArtifacts(
+        batchId,
         run.entity_id,
+        'completed',
         result.sales_readiness,
         result.rfp_count ?? 0,
         (result.artifacts?.dossier as Record<string, unknown> | null | undefined) ?? null,
@@ -130,6 +138,14 @@ async function processBatch(batchId: string) {
       })
     } catch (error) {
       failedRuns += 1
+      await syncEntityPipelineArtifacts(
+        batchId,
+        run.entity_id,
+        'failed',
+        run.sales_readiness,
+        run.rfp_count ?? 0,
+        null,
+      )
       await updateEntityPipelineRun(batchId, run.entity_id, {
         status: 'failed',
         phase: run.phase,
@@ -195,14 +211,25 @@ export async function POST(
       )
     }
 
-    enqueueBatchRun(params.batchId)
+    await updateEntityImportBatch(params.batchId, {
+      status: 'queued',
+      metadata: {
+        ...(status.batch.metadata ?? {}),
+        queue_mode: ENTITY_IMPORT_QUEUE_MODE,
+        queued_at: new Date().toISOString(),
+      },
+    })
+
+    if (ENTITY_IMPORT_QUEUE_MODE !== 'durable_worker') {
+      enqueueBatchRun(params.batchId)
+    }
 
     const queuedStatus = await getEntityImportBatchStatus(params.batchId)
     return NextResponse.json(
       {
         ...queuedStatus,
         execution: {
-          mode: 'async',
+          mode: ENTITY_IMPORT_QUEUE_MODE === 'durable_worker' ? 'durable_worker' : 'async',
           state: 'queued',
         },
       },
