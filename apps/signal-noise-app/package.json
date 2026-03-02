@@ -19,6 +19,7 @@
     "test:memory-optimized": "node run-memory-tests.js",
     "test:watch": "nodemon --watch src --watch tests --ext '.js,.mjs,.ts,.tsx' --exec 'npm run test'",
     "test:coverage": "npm run test && node tests/generate-coverage-report.mjs",
+    "worker:entity-pipeline": "python3 backend/entity_pipeline_worker.py",
     "sync:check": "node automated-database-sync-mcp.js check",
     "sync:health": "node automated-database-sync-mcp.js health",
     "sync:monitor": "node automated-database-sync-mcp.js monitor",

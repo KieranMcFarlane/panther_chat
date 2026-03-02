@@ -9,6 +9,7 @@ import { EntityBadge } from "@/components/badge/EntityBadge"
 import { useRouter } from "next/navigation"
 import { prefetchEntity } from "@/lib/swr-config"
 import { useEffect } from "react"
+import Link from "next/link"
 
 interface EntityCardProps {
   entity: Entity
@@ -107,6 +108,10 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
     const currentPage = urlParams.get('page') || '1'
     router.push(`/entity/${entity.neo4j_id}?from=${currentPage}`)
   }
+
+  const latestPipelineRunUrl = typeof entity.properties.last_pipeline_run_detail_url === 'string'
+    ? entity.properties.last_pipeline_run_detail_url
+    : null
 
 
   return (
@@ -216,6 +221,21 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
         {entity.properties.location && (
           <div className="text-sm">
             <span className="font-medium">Location:</span> {entity.properties.location}
+          </div>
+        )}
+
+        {latestPipelineRunUrl && (
+          <div className="pt-2">
+            <Link
+              href={latestPipelineRunUrl}
+              className="inline-flex items-center gap-2 text-sm font-medium text-sky-700 underline underline-offset-2"
+              onClick={(e) => {
+                e.stopPropagation()
+              }}
+            >
+              <FileText className="h-4 w-4" />
+              Latest pipeline run
+            </Link>
           </div>
         )}
 
