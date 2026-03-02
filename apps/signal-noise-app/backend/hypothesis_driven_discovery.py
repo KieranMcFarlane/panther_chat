@@ -39,6 +39,7 @@ Usage:
 """
 
 import logging
+import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass, field
@@ -436,6 +437,7 @@ class DiscoveryResult:
     signals_discovered: List[Dict[str, Any]]
     raw_signals: List[Any] = field(default_factory=list)  # Signal objects for Ralph Loop
     hypothesis_states: Dict[str, Dict[str, Any]] = field(default_factory=dict)  # Category -> state data
+    performance_summary: Dict[str, Any] = field(default_factory=dict)
     timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -453,6 +455,7 @@ class DiscoveryResult:
             'signals_discovered': self.signals_discovered,
             'raw_signals_count': len(self.raw_signals),  # Include count for wrapper
             'hypothesis_states': self.hypothesis_states,  # New: hypothesis state data
+            'performance_summary': self.performance_summary,
             'timestamp': self.timestamp.isoformat()
         }
 
@@ -609,16 +612,21 @@ class HypothesisDrivenDiscovery:
         if entity_slug in url_lower:
             score += 0.2
 
-        # LinkedIn bonus for RFP/procurement hops (ACE RFP was found on LinkedIn)
+        procurement_keywords = {'rfp', 'request for proposal', 'procurement', 'tender', 'vendor', 'supplier'}
+
+        # LinkedIn can surface real opportunities, but treat it as weak evidence unless
+        # the result explicitly reads like a procurement announcement.
         if hop_type in [HopType.RFP_PAGE, HopType.TENDERS_PAGE, HopType.PROCUREMENT_PAGE]:
             if 'linkedin.com' in url_lower:
-                # Check if it's a company post (not a job posting)
                 if '/posts/' in url_lower or '/activity/' in url_lower:
-                    # Give LinkedIn a baseline score since it's a high-value source for RFP announcements
-                    score += 0.3
-                    # Additional bonus if RFP-related keywords are in title
-                    if any(kw in title_lower for kw in ['rfp', 'request for proposal', 'procurement', 'tender', 'digital transformation']):
-                        score += 0.3
+                    procurement_language = (
+                        any(kw in title_lower for kw in procurement_keywords) or
+                        any(kw in snippet_lower for kw in procurement_keywords)
+                    )
+                    if procurement_language:
+                        score += 0.15
+                    else:
+                        score -= 0.35
 
         # Hop-type-specific scoring
         if hop_type == HopType.RFP_PAGE:
@@ -645,12 +653,20 @@ class HypothesisDrivenDiscovery:
                 score += 0.2
             if 'procurement' in snippet_lower or 'vendor' in snippet_lower:
                 score += 0.1
+            if not any(kw in f"{title_lower} {snippet_lower}" for kw in procurement_keywords):
+                score -= 0.2
 
         # Penalty for generic/low-value paths (but not for LinkedIn posts)
         if 'linkedin.com' not in url_lower:
             avoid_paths = {'/news/', '/blog/', '/about/', '/contact/', '/events/', '/media/'}
             if any(path in url_lower for path in avoid_paths):
                 score -= 0.5
+
+        # Social and generic press/news results are too noisy for procurement discovery.
+        weak_domains = {'linkedin.com', 'facebook.com', 'instagram.com', 'x.com', 'twitter.com'}
+        if hop_type in HIGH_VALUE_HOPS and any(domain in url_lower for domain in weak_domains):
+            if not any(kw in f"{title_lower} {snippet_lower}" for kw in procurement_keywords):
+                score -= 0.25
 
         # Bonus for corporate/official paths
         good_paths = {'/procurement/', '/vendors/', '/suppliers/', '/rfp/', '/tenders/'}
@@ -759,7 +775,10 @@ class HypothesisDrivenDiscovery:
         self.current_hypothesis_context = f"Searching for procurement signals and RFP opportunities"
 
         # Main iteration loop
+        discovery_started_at = time.perf_counter()
+
         for iteration in range(1, max_iterations + 1):
+            iteration_started_at = time.perf_counter()
             logger.info(f"\n--- Iteration {iteration} ---")
 
             # Phase A: Re-score hypotheses by EIG
@@ -814,6 +833,7 @@ class HypothesisDrivenDiscovery:
                 'hop_type': hop_type.value if hasattr(hop_type, 'value') else str(hop_type),
                 'depth': state.current_depth,
                 'timestamp': datetime.now(timezone.utc).isoformat(),
+                'duration_ms': round((time.perf_counter() - iteration_started_at) * 1000, 2),
                 'result': result
             }
             state.iteration_results.append(iteration_record)
@@ -824,7 +844,11 @@ class HypothesisDrivenDiscovery:
                 break
 
         # Build final result
-        return await self._build_final_result(state, hypotheses)
+        return await self._build_final_result(
+            state,
+            hypotheses,
+            total_duration_ms=round((time.perf_counter() - discovery_started_at) * 1000, 2)
+        )
 
     async def _rescore_hypotheses_by_eig(self, hypotheses: List):
         """
@@ -982,12 +1006,43 @@ class HypothesisDrivenDiscovery:
             Hop result with decision and confidence delta
         """
         logger.info(f"🔎 Executing hop: {hop_type}")
+        hop_started_at = time.perf_counter()
+        performance = {
+            'hop_type': hop_type.value if hasattr(hop_type, 'value') else str(hop_type),
+            'started_at': datetime.now(timezone.utc).isoformat()
+        }
+
+        def build_no_progress_result(justification: str, scrape_data: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+            performance['total_duration_ms'] = round((time.perf_counter() - hop_started_at) * 1000, 2)
+            logger.info(
+                "⏱️ Hop timing %s: total=%sms url=%sms scrape=%sms eval=%sms",
+                hop_type.value,
+                performance['total_duration_ms'],
+                performance.get('url_resolution_ms', 0.0),
+                performance.get('scrape_ms', 0.0),
+                performance.get('evaluation_ms', 0.0)
+            )
+            return {
+                'hop_type': hop_type.value,
+                'url': url if 'url' in locals() else None,
+                'decision': 'NO_PROGRESS',
+                'confidence_delta': 0.0,
+                'justification': justification,
+                'evidence_found': '',
+                'cost_usd': 0.0,
+                'scrape_data': scrape_data or {},
+                'performance': performance
+            }
 
         # Track depth iteration
         state.increment_depth_count(state.current_depth)
 
         # Get URL based on hop type
+        url_resolution_started_at = time.perf_counter()
         url = await self._get_url_for_hop(hop_type, hypothesis, state)
+        performance['url_resolution_ms'] = round((time.perf_counter() - url_resolution_started_at) * 1000, 2)
+        if hasattr(self, '_last_url_resolution_metrics'):
+            performance['url_resolution'] = self._last_url_resolution_metrics
 
         if not url:
             # Record hop failure
@@ -1004,7 +1059,7 @@ class HypothesisDrivenDiscovery:
                 state.last_failed_hop = hop_type_str
 
             logger.warning(f"Could not determine URL for hop type: {hop_type} (consecutive failures: {state.hop_failure_counts[hop_type_str]})")
-            return None
+            return build_no_progress_result("No URL found for hop")
 
         logger.info(f"🔎 Scraping: {url}")
 
@@ -1016,7 +1071,9 @@ class HypothesisDrivenDiscovery:
             if is_pdf and self.pdf_extractor:
                 # Extract PDF content
                 logger.info(f"📄 PDF detected, extracting with pdf_extractor...")
+                scrape_started_at = time.perf_counter()
                 extract_result = await self.pdf_extractor.extract(url)
+                performance['scrape_ms'] = round((time.perf_counter() - scrape_started_at) * 1000, 2)
 
                 if extract_result.get('status') == 'success':
                     content = extract_result.get('content', '')
@@ -1035,18 +1092,27 @@ class HypothesisDrivenDiscovery:
                     }
                 else:
                     logger.error(f"PDF extraction failed: {extract_result.get('error', 'Unknown error')}")
-                    return None
+                    return build_no_progress_result(
+                        f"PDF extraction failed: {extract_result.get('error', 'Unknown error')}"
+                    )
             else:
                 # Scrape HTML content
                 if is_pdf and not self.pdf_extractor:
                     logger.warning("⚠️ PDF detected but pdf_extractor not available, skipping...")
-                    return None
+                    return build_no_progress_result("PDF detected but extractor unavailable")
 
+                scrape_started_at = time.perf_counter()
                 content_result = await self.brightdata_client.scrape_as_markdown(url)
+                performance['scrape_ms'] = round((time.perf_counter() - scrape_started_at) * 1000, 2)
 
                 if content_result.get('status') != 'success':
                     logger.error(f"Scraping failed: {content_result.get('error', 'Unknown error')}")
-                    return None
+                    return build_no_progress_result(
+                        f"Scraping failed: {content_result.get('error', 'Unknown error')}",
+                        scrape_data={
+                            'url': url
+                        }
+                    )
 
                 content = content_result.get('content', '')
                 content_text = content if isinstance(content, str) else ''
@@ -1070,6 +1136,10 @@ class HypothesisDrivenDiscovery:
                             'timestamp': content_result.get('timestamp'),
                             'url': content_result.get('url'),
                             'word_count': content_result.get('metadata', {}).get('word_count')
+                        },
+                        'performance': {
+                            **performance,
+                            'total_duration_ms': round((time.perf_counter() - hop_started_at) * 1000, 2)
                         }
                     }
 
@@ -1095,7 +1165,9 @@ class HypothesisDrivenDiscovery:
 
                             # Extract PDF content
                             if self.pdf_extractor:
+                                pdf_extract_started_at = time.perf_counter()
                                 extract_result = await self.pdf_extractor.extract(best_pdf_url)
+                                performance['tender_pdf_extract_ms'] = round((time.perf_counter() - pdf_extract_started_at) * 1000, 2)
                                 if extract_result.get('status') == 'success':
                                     content = extract_result.get('content', '')
                                     method = extract_result.get('method', 'unknown')
@@ -1118,12 +1190,14 @@ class HypothesisDrivenDiscovery:
                                     url = best_pdf_url
 
             # Evaluate content with Claude
+            evaluation_started_at = time.perf_counter()
             evaluation = await self._evaluate_content_with_claude(
                 content=content,
                 hypothesis=hypothesis,
                 hop_type=hop_type,
                 content_metadata=content_metadata
             )
+            performance['evaluation_ms'] = round((time.perf_counter() - evaluation_started_at) * 1000, 2)
 
             # Add cost tracking
             hop_cost = 0.001  # TODO: Track actual cost
@@ -1136,6 +1210,17 @@ class HypothesisDrivenDiscovery:
                 if state.last_failed_hop == hop_type_str:
                     state.last_failed_hop = None
                 logger.debug(f"Reset failure counter for {hop_type_str} (successful execution)")
+
+            total_duration_ms = round((time.perf_counter() - hop_started_at) * 1000, 2)
+            performance['total_duration_ms'] = total_duration_ms
+            logger.info(
+                "⏱️ Hop timing %s: total=%sms url=%sms scrape=%sms eval=%sms",
+                hop_type.value,
+                total_duration_ms,
+                performance.get('url_resolution_ms', 0.0),
+                performance.get('scrape_ms', 0.0),
+                performance.get('evaluation_ms', 0.0)
+            )
 
             return {
                 'hop_type': hop_type.value,
@@ -1150,12 +1235,13 @@ class HypothesisDrivenDiscovery:
                     'timestamp': content_result.get('timestamp'),
                     'url': content_result.get('url'),
                     'word_count': content_result.get('metadata', {}).get('word_count')
-                }
+                },
+                'performance': performance
             }
 
         except Exception as e:
             logger.error(f"Hop execution error: {e}")
-            return None
+            return build_no_progress_result(f"Hop execution error: {e}")
 
     def _get_fallback_queries(self, hop_type: HopType, entity_name: str) -> list[str]:
         """
@@ -1382,6 +1468,17 @@ class HypothesisDrivenDiscovery:
             URL to scrape or None
         """
         entity_name = state.entity_name
+        search_started_at = time.perf_counter()
+        metrics = {
+            'primary_query': None,
+            'engines_tried': [],
+            'search_calls': 0,
+            'search_calls_ms': 0.0,
+            'validation_calls': 0,
+            'validation_ms': 0.0,
+            'fallback_queries_tried': 0,
+            'site_specific_attempted': False
+        }
 
         # Special handling for DOCUMENT hop type - use optimized PDF search
         if hop_type == HopType.DOCUMENT:
@@ -1410,9 +1507,12 @@ class HypothesisDrivenDiscovery:
 
         # Get primary query for this hop type
         primary_query = primary_queries.get(hop_type)
+        metrics['primary_query'] = primary_query
 
         if not primary_query:
             logger.warning(f"No primary query defined for hop type: {hop_type}")
+            metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
+            self._last_url_resolution_metrics = metrics
             return None
 
         # Get engines to try for this hop type
@@ -1423,17 +1523,21 @@ class HypothesisDrivenDiscovery:
 
         # Try each engine
         for engine in engines:
+            metrics['engines_tried'].append(engine)
             # Check cache first
             cached_result = await self._get_cached_search(primary_query, engine)
             if cached_result:
                 search_result = cached_result
             else:
                 # Perform search
+                engine_started_at = time.perf_counter()
                 search_result = await self.brightdata_client.search_engine(
                     query=primary_query,
                     engine=engine,
                     num_results=num_results
                 )
+                metrics['search_calls'] += 1
+                metrics['search_calls_ms'] += (time.perf_counter() - engine_started_at) * 1000
                 # Cache the result
                 if search_result.get('status') == 'success':
                     await self._cache_search_result(primary_query, engine, search_result)
@@ -1459,12 +1563,33 @@ class HypothesisDrivenDiscovery:
                         )
                         logger.debug(f"URL score: {score} for {url}")
                         # Keep results with minimum threshold
-                        if score >= 0.3:
+                        min_score = 0.5 if hop_type in HIGH_VALUE_HOPS else 0.3
+                        if score >= min_score:
                             item['_url_score'] = score
                             scored_results.append(item)
 
                     # Second pass: Claude validation if we have multiple candidates
                     if len(scored_results) > 1 and self.search_validator:
+                        scored_results.sort(key=lambda x: x.get('_url_score', 0), reverse=True)
+                        top_score = scored_results[0].get('_url_score', 0)
+                        second_score = scored_results[1].get('_url_score', 0)
+
+                        # If the best result is already clearly dominant, skip LLM validation.
+                        if top_score >= 0.75 and (top_score - second_score) >= 0.25:
+                            best_url = scored_results[0].get('url')
+                            logger.info(
+                                f"✅ {engine} search found dominant URL without validation "
+                                f"(score {top_score}, delta {top_score - second_score:.2f}): {best_url}"
+                            )
+                            metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
+                            self._last_url_resolution_metrics = {
+                                **metrics,
+                                'search_calls_ms': round(metrics['search_calls_ms'], 2),
+                                'validation_ms': round(metrics['validation_ms'], 2)
+                            }
+                            return best_url
+
+                        validation_started_at = time.perf_counter()
                         valid_results, rejected_results = await self._validate_search_results(
                             results=scored_results,
                             entity_name=entity_name,
@@ -1472,6 +1597,8 @@ class HypothesisDrivenDiscovery:
                             search_query=primary_query,
                             hypothesis_context=getattr(self, 'current_hypothesis_context', None)
                         )
+                        metrics['validation_calls'] += 1
+                        metrics['validation_ms'] += (time.perf_counter() - validation_started_at) * 1000
 
                         # Return best valid result by URL score
                         if valid_results:
@@ -1492,8 +1619,20 @@ class HypothesisDrivenDiscovery:
                                     tender_page_url = await self._try_find_tender_page(entity_name, best_url)
                                     if tender_page_url:
                                         logger.info(f"🎯 Found tender page, using instead of direct PDF: {tender_page_url}")
+                                        metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
+                                        self._last_url_resolution_metrics = {
+                                            **metrics,
+                                            'search_calls_ms': round(metrics['search_calls_ms'], 2),
+                                            'validation_ms': round(metrics['validation_ms'], 2)
+                                        }
                                         return tender_page_url
 
+                            metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
+                            self._last_url_resolution_metrics = {
+                                **metrics,
+                                'search_calls_ms': round(metrics['search_calls_ms'], 2),
+                                'validation_ms': round(metrics['validation_ms'], 2)
+                            }
                             return best_url
 
                     # Fallback: return best scored result without validation
@@ -1511,14 +1650,32 @@ class HypothesisDrivenDiscovery:
                                 tender_page_url = await self._try_find_tender_page(entity_name, best_url)
                                 if tender_page_url:
                                     logger.info(f"🎯 Found tender page, using instead of direct PDF: {tender_page_url}")
+                                    metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
+                                    self._last_url_resolution_metrics = {
+                                        **metrics,
+                                        'search_calls_ms': round(metrics['search_calls_ms'], 2),
+                                        'validation_ms': round(metrics['validation_ms'], 2)
+                                    }
                                     return tender_page_url
 
+                        metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
+                        self._last_url_resolution_metrics = {
+                            **metrics,
+                            'search_calls_ms': round(metrics['search_calls_ms'], 2),
+                            'validation_ms': round(metrics['validation_ms'], 2)
+                        }
                         return best_url
                 else:
                     # For low-value hops, return first result
                     url = results[0].get('url')
                     if url:
                         logger.info(f"✅ {engine} search found URL: {url}")
+                        metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
+                        self._last_url_resolution_metrics = {
+                            **metrics,
+                            'search_calls_ms': round(metrics['search_calls_ms'], 2),
+                            'validation_ms': round(metrics['validation_ms'], 2)
+                        }
                         return url
 
         # All engines failed, try fallback queries
@@ -1528,29 +1685,52 @@ class HypothesisDrivenDiscovery:
 
         for i, fallback_query in enumerate(fallback_queries, 1):
             logger.debug(f"Fallback {i}/{len(fallback_queries)}: {fallback_query}")
+            metrics['fallback_queries_tried'] += 1
 
             for engine in engines:
+                engine_started_at = time.perf_counter()
                 search_result = await self.brightdata_client.search_engine(
                     query=fallback_query,
                     engine=engine,
                     num_results=1
                 )
+                metrics['search_calls'] += 1
+                metrics['search_calls_ms'] += (time.perf_counter() - engine_started_at) * 1000
 
                 if search_result.get('status') == 'success' and search_result.get('results'):
                     url = search_result['results'][0].get('url')
                     if url:
                         logger.info(f"✅ Fallback {i} ({engine}) found URL: {url}")
+                        metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
+                        self._last_url_resolution_metrics = {
+                            **metrics,
+                            'search_calls_ms': round(metrics['search_calls_ms'], 2),
+                            'validation_ms': round(metrics['validation_ms'], 2)
+                        }
                         return url
 
         # FINAL FALLBACK: Try site-specific search for RFP-related hops
         # This addresses cases like ACE/MLC where RFP was on entity's own domain
         if hop_type in [HopType.RFP_PAGE, HopType.TENDERS_PAGE, HopType.PROCUREMENT_PAGE]:
             logger.info("🔄 Trying site-specific search as final fallback...")
+            metrics['site_specific_attempted'] = True
             site_url = await self._try_site_specific_search(entity_name, hop_type)
             if site_url:
+                metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
+                self._last_url_resolution_metrics = {
+                    **metrics,
+                    'search_calls_ms': round(metrics['search_calls_ms'], 2),
+                    'validation_ms': round(metrics['validation_ms'], 2)
+                }
                 return site_url
 
         logger.error(f"❌ All search queries failed for {hop_type}")
+        metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
+        self._last_url_resolution_metrics = {
+            **metrics,
+            'search_calls_ms': round(metrics['search_calls_ms'], 2),
+            'validation_ms': round(metrics['validation_ms'], 2)
+        }
         return None
 
     async def _try_site_specific_search(
@@ -2229,6 +2409,33 @@ Return JSON:
             evidence_ref=result.get('url', '')
         )
 
+        if updated_hypothesis is None:
+            logger.warning(
+                "Hypothesis manager returned no persisted state for %s; applying in-memory fallback",
+                hypothesis.hypothesis_id
+            )
+            updated_hypothesis = hypothesis
+            updated_hypothesis.iterations_attempted += 1
+            decision = result.get('decision', 'NO_PROGRESS')
+            if decision == "ACCEPT":
+                updated_hypothesis.iterations_accepted += 1
+                updated_hypothesis.reinforced_count += 1
+            elif decision == "WEAK_ACCEPT":
+                updated_hypothesis.iterations_weak_accept += 1
+            elif decision == "REJECT":
+                updated_hypothesis.iterations_rejected += 1
+                updated_hypothesis.weakened_count += 1
+            elif decision == "NO_PROGRESS":
+                updated_hypothesis.iterations_no_progress += 1
+
+            old_confidence = updated_hypothesis.confidence
+            updated_hypothesis.confidence = max(
+                0.0,
+                min(1.0, updated_hypothesis.confidence + result.get('confidence_delta', 0.0))
+            )
+            updated_hypothesis.last_delta = updated_hypothesis.confidence - old_confidence
+            updated_hypothesis.last_updated = datetime.now(timezone.utc)
+
         # Update state confidence
         state.update_confidence(updated_hypothesis.confidence)
         state.iterations_completed += 1
@@ -2839,7 +3046,8 @@ Return JSON:
     async def _build_final_result(
         self,
         state,
-        hypotheses: List
+        hypotheses: List,
+        total_duration_ms: Optional[float] = None
     ) -> DiscoveryResult:
         """
         Build final discovery result (async to support episode storage)
@@ -2866,6 +3074,8 @@ Return JSON:
         # Store discovery as temporal episode for future temporal intelligence
         await self._store_discovery_episode(state, signals_discovered)
 
+        performance_summary = self._build_performance_summary(state, total_duration_ms)
+
         return DiscoveryResult(
             entity_id=state.entity_id,
             entity_name=state.entity_name,
@@ -2879,8 +3089,53 @@ Return JSON:
             signals_discovered=signals_discovered,
             raw_signals=getattr(state, 'raw_signals', []),  # Signal objects for Ralph Loop
             hypothesis_states=hypothesis_states,  # New: hypothesis state data
+            performance_summary=performance_summary,
             timestamp=datetime.now(timezone.utc)
         )
+
+    def _build_performance_summary(
+        self,
+        state,
+        total_duration_ms: Optional[float]
+    ) -> Dict[str, Any]:
+        """Summarize discovery timings so live runs expose the slowest hop."""
+        hop_records = []
+        slowest_hop = None
+        slowest_iteration = None
+
+        for iteration_record in getattr(state, 'iteration_results', []):
+            result = iteration_record.get('result', {})
+            performance = result.get('performance')
+            if not performance:
+                continue
+
+            record = {
+                'iteration': iteration_record.get('iteration'),
+                'hop_type': iteration_record.get('hop_type'),
+                'duration_ms': performance.get('total_duration_ms', 0.0),
+                'url_resolution_ms': performance.get('url_resolution_ms', 0.0),
+                'scrape_ms': performance.get('scrape_ms', 0.0),
+                'evaluation_ms': performance.get('evaluation_ms', 0.0),
+                'validation_ms': performance.get('url_resolution', {}).get('validation_ms', 0.0),
+                'decision': result.get('decision')
+            }
+            hop_records.append(record)
+
+            if slowest_hop is None or record['duration_ms'] > slowest_hop['duration_ms']:
+                slowest_hop = record
+                slowest_iteration = iteration_record
+
+        return {
+            'total_duration_ms': total_duration_ms,
+            'iterations_with_timings': len(hop_records),
+            'slowest_hop': slowest_hop,
+            'slowest_iteration': {
+                'iteration': slowest_iteration.get('iteration'),
+                'hypothesis_id': slowest_iteration.get('hypothesis_id'),
+                'hop_type': slowest_iteration.get('hop_type')
+            } if slowest_iteration else None,
+            'hop_timings': hop_records
+        }
 
     def _build_failure_result(
         self,
@@ -2900,6 +3155,7 @@ Return JSON:
             hypotheses=[],
             depth_stats={},
             signals_discovered=[],
+            performance_summary={},
             timestamp=datetime.now(timezone.utc)
         )
 
@@ -3366,7 +3622,10 @@ Return JSON:
         """
         hypotheses = state.active_hypotheses
 
+        discovery_started_at = time.perf_counter()
+
         for iteration in range(1, max_iterations + 1):
+            iteration_started_at = time.perf_counter()
             logger.info(f"\n--- Iteration {iteration} ---")
 
             # Re-score hypotheses by EIG
@@ -3414,6 +3673,7 @@ Return JSON:
                 'hop_type': hop_type.value if hasattr(hop_type, 'value') else str(hop_type),
                 'depth': state.current_depth,
                 'timestamp': datetime.now(timezone.utc).isoformat(),
+                'duration_ms': round((time.perf_counter() - iteration_started_at) * 1000, 2),
                 'result': result
             }
             state.iteration_results.append(iteration_record)
@@ -3423,7 +3683,11 @@ Return JSON:
                 logger.info(f"Stopping condition met at iteration {iteration}")
                 break
 
-        return await self._build_final_result(state, hypotheses)
+        return await self._build_final_result(
+            state,
+            hypotheses,
+            total_duration_ms=round((time.perf_counter() - discovery_started_at) * 1000, 2)
+        )
 
     def _normalize_dossier_signal(self, signal: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Normalize dossier signal variants into the discovery signal contract."""

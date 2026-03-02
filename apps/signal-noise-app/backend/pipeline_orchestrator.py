@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import asyncio
 import os
+import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any, Awaitable, Callable, Dict, List, Optional
@@ -45,6 +46,7 @@ class PipelineOrchestrator:
         self.dashboard_scorer = dashboard_scorer
         self.discovery_timeout_seconds = int(os.getenv("ENTITY_DISCOVERY_TIMEOUT_SECONDS", "90"))
         self.discovery_max_iterations = int(os.getenv("ENTITY_DISCOVERY_MAX_ITERATIONS", "8"))
+        self.discovery_hard_timeout = os.getenv("ENTITY_DISCOVERY_HARD_TIMEOUT", "0").lower() in {"1", "true", "yes"}
 
     async def run_entity_pipeline(
         self,
@@ -103,11 +105,13 @@ class PipelineOrchestrator:
                 entity_name=entity_name,
                 dossier=dossier,
             )
+            discovery_budget = getattr(self, "_last_discovery_budget", {})
             raw_signals = self._extract_raw_signals(discovery_result)
             phase_results["discovery"] = {
                 "status": "completed",
                 "signals_discovered": len(raw_signals),
                 "final_confidence": getattr(discovery_result, "final_confidence", None),
+                **discovery_budget,
             }
             await self._emit_phase_update(phase_callback, "discovery", phase_results["discovery"])
 
@@ -215,15 +219,29 @@ class PipelineOrchestrator:
         entity_name: str,
         dossier: Dict[str, Any],
     ):
-        return await asyncio.wait_for(
-            self.discovery.run_discovery_with_dossier_context(
-                entity_id=entity_id,
-                entity_name=entity_name,
-                dossier=dossier,
-                max_iterations=self.discovery_max_iterations,
-            ),
-            timeout=self.discovery_timeout_seconds,
+        started_at = time.perf_counter()
+        discovery_coro = self.discovery.run_discovery_with_dossier_context(
+            entity_id=entity_id,
+            entity_name=entity_name,
+            dossier=dossier,
+            max_iterations=self.discovery_max_iterations,
         )
+
+        if self.discovery_hard_timeout:
+            result = await asyncio.wait_for(discovery_coro, timeout=self.discovery_timeout_seconds)
+        else:
+            result = await discovery_coro
+
+        elapsed_seconds = round(time.perf_counter() - started_at, 2)
+        budget_exceeded = elapsed_seconds > self.discovery_timeout_seconds
+        self._last_discovery_budget = {
+            "duration_seconds": elapsed_seconds,
+            "budget_seconds": self.discovery_timeout_seconds,
+            "budget_exceeded": budget_exceeded,
+            "timeout_mode": "hard" if self.discovery_hard_timeout else "soft",
+        }
+
+        return result
 
     async def _run_ralph_validation(
         self,
@@ -368,6 +386,7 @@ class PipelineOrchestrator:
             "iterations_completed": getattr(discovery_result, "iterations_completed", None),
             "signals_discovered": getattr(discovery_result, "signals_discovered", []),
             "hypotheses": getattr(discovery_result, "hypotheses", []),
+            "performance_summary": getattr(discovery_result, "performance_summary", {}),
         }
 
     def _build_unified_rfp_record(

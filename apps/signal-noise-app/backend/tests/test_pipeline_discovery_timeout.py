@@ -57,6 +57,7 @@ class FakeDashboardScorer:
 async def test_pipeline_marks_discovery_failed_on_timeout(monkeypatch):
     monkeypatch.setenv("ENTITY_DISCOVERY_TIMEOUT_SECONDS", "0")
     monkeypatch.setenv("ENTITY_DISCOVERY_MAX_ITERATIONS", "2")
+    monkeypatch.setenv("ENTITY_DISCOVERY_HARD_TIMEOUT", "1")
 
     orchestrator = PipelineOrchestrator(
         dossier_generator=FakeDossierGenerator(),

@@ -9,6 +9,8 @@ from types import SimpleNamespace
 import pytest
 
 backend_dir = Path(__file__).parent.parent
+app_dir = backend_dir.parent
+sys.path.insert(0, str(app_dir))
 sys.path.insert(0, str(backend_dir))
 
 from hypothesis_driven_discovery import HypothesisDrivenDiscovery, HopType
@@ -65,3 +67,128 @@ async def test_execute_hop_returns_no_progress_for_empty_scrape_content():
     assert result["decision"] == "NO_PROGRESS"
     assert result["justification"] == "No content returned from scrape"
     assert result["url"] == "https://example.com/rfp"
+    assert result["performance"]["total_duration_ms"] >= 0
+
+
+@pytest.mark.asyncio
+async def test_execute_hop_returns_timed_no_progress_for_scrape_failure():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.pdf_extractor = None
+    discovery.total_cost_usd = 0.0
+    discovery.brightdata_client = SimpleNamespace()
+
+    async def fake_get_url_for_hop(hop_type, hypothesis, state):
+        return "https://example.com/failure"
+
+    async def fake_scrape_as_markdown(url):
+        return {
+            "status": "error",
+            "error": "No content returned (data was None or empty)",
+            "url": url,
+        }
+
+    discovery._get_url_for_hop = fake_get_url_for_hop
+    discovery._is_pdf_url = lambda url: False
+    discovery.brightdata_client.scrape_as_markdown = fake_scrape_as_markdown
+    discovery._evaluate_content_with_claude = None
+
+    state = SimpleNamespace(
+        current_depth=0,
+        last_failed_hop=None,
+        hop_failure_counts={},
+    )
+    state.increment_depth_count = lambda depth: None
+
+    hypothesis = SimpleNamespace(metadata={"entity_name": "Arsenal FC"})
+
+    result = await discovery._execute_hop(HopType.RFP_PAGE, hypothesis, state)
+
+    assert result["decision"] == "NO_PROGRESS"
+    assert "Scraping failed" in result["justification"]
+    assert result["url"] == "https://example.com/failure"
+    assert result["performance"]["scrape_ms"] >= 0
+    assert result["performance"]["total_duration_ms"] >= result["performance"]["scrape_ms"]
+
+
+def test_score_url_penalizes_weak_linkedin_rfp_results():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+
+    weak_score = discovery._score_url(
+        url="https://www.linkedin.com/posts/example-company_random-post",
+        hop_type=HopType.RFP_PAGE,
+        entity_name="Arsenal FC",
+        title="Partnership update",
+        snippet="A general commercial update with no procurement signal",
+    )
+    strong_score = discovery._score_url(
+        url="https://vendor.example.com/tenders/arsenal-rfp.pdf",
+        hop_type=HopType.RFP_PAGE,
+        entity_name="Arsenal FC",
+        title="Arsenal FC digital transformation RFP",
+        snippet="Request for proposal for CRM and fan engagement platform",
+    )
+
+    assert weak_score < 0.5
+    assert strong_score >= 0.5
+
+
+@pytest.mark.asyncio
+async def test_update_hypothesis_state_falls_back_to_in_memory_hypothesis():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.hypothesis_manager = SimpleNamespace()
+    discovery._create_signal_from_hop_result = lambda **kwargs: None
+
+    async def fake_update_hypothesis(**kwargs):
+        return None
+
+    discovery.hypothesis_manager.update_hypothesis = fake_update_hypothesis
+
+    class FakeBlacklist:
+        def record_failure(self, source_type):
+            return None
+        def record_success(self, source_type):
+            return None
+        def get_failure_count(self, source_type):
+            return 0
+
+    state = SimpleNamespace(
+        entity_id="arsenal-fc",
+        entity_name="Arsenal FC",
+        channel_blacklist=FakeBlacklist(),
+        current_depth=1,
+        iterations_completed=0,
+        raw_signals=[],
+    )
+    state.update_confidence = lambda confidence: setattr(state, "updated_confidence", confidence)
+    state.should_dig_deeper = lambda updated_hypothesis: False
+
+    hypothesis = SimpleNamespace(
+        hypothesis_id="h1",
+        confidence=0.61,
+        iterations_attempted=0,
+        iterations_accepted=0,
+        iterations_weak_accept=0,
+        iterations_rejected=0,
+        iterations_no_progress=0,
+        reinforced_count=0,
+        weakened_count=0,
+        last_delta=0.0,
+        last_updated=None,
+        category="procurement",
+        metadata={},
+        statement="Potential procurement activity",
+    )
+
+    await discovery._update_hypothesis_state(
+        hypothesis=hypothesis,
+        result={
+            "decision": "NO_PROGRESS",
+            "confidence_delta": 0.0,
+            "hop_type": "rfp_page",
+        },
+        state=state,
+    )
+
+    assert hypothesis.iterations_attempted == 1
+    assert hypothesis.iterations_no_progress == 1
+    assert state.updated_confidence == hypothesis.confidence
