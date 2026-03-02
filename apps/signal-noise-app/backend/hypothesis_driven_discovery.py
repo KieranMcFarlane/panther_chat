@@ -38,11 +38,12 @@ Usage:
     )
 """
 
+import asyncio
 import json
 import logging
 import time
 from datetime import datetime, timezone, timedelta
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Dict, List, Optional, Any, Tuple, Callable, Awaitable
 from dataclasses import dataclass, field
 from enum import Enum
 from collections import OrderedDict
@@ -603,6 +604,10 @@ class HypothesisDrivenDiscovery:
 
         # Dossier hypotheses cache for warm-start discovery
         self._dossier_hypotheses_cache = {}
+        self.max_consecutive_no_progress_iterations = 4
+        self.search_timeout_seconds = 12.0
+        self.search_validation_timeout_seconds = 8.0
+        self.url_resolution_timeout_seconds = 20.0
 
         logger.info("🔍 HypothesisDrivenDiscovery initialized")
 
@@ -726,7 +731,8 @@ class HypothesisDrivenDiscovery:
         template_id: str,
         max_iterations: int = None,
         max_depth: int = None,
-        max_cost_usd: float = None
+        max_cost_usd: float = None,
+        progress_callback: Optional[Callable[[Dict[str, Any]], Awaitable[None]]] = None,
     ) -> DiscoveryResult:
         """
         Run hypothesis-driven discovery for entity
@@ -798,80 +804,14 @@ class HypothesisDrivenDiscovery:
         self.current_entity_type = self._extract_entity_type_from_template(template_id)
         self.current_hypothesis_context = f"Searching for procurement signals and RFP opportunities"
 
-        # Main iteration loop
         discovery_started_at = time.perf_counter()
-
-        for iteration in range(1, max_iterations + 1):
-            iteration_started_at = time.perf_counter()
-            logger.info(f"\n--- Iteration {iteration} ---")
-
-            # Phase A: Re-score hypotheses by EIG
-            await self._rescore_hypotheses_by_eig(hypotheses)
-
-            # Phase B: Select top hypothesis (runtime enforced)
-            top_hypothesis = await self._select_top_hypothesis(hypotheses, state)
-
-            if not top_hypothesis:
-                logger.info("No active hypotheses remaining")
-                break
-
-            logger.info(
-                f"   Top hypothesis: {top_hypothesis.hypothesis_id} "
-                f"(EIG: {top_hypothesis.expected_information_gain:.3f}, "
-                f"Confidence: {top_hypothesis.confidence:.2f})"
-            )
-
-            # Phase C: Choose hop type (within strategy rails)
-            hop_type = self._choose_next_hop(top_hypothesis, state)
-
-            logger.info(f"   Hop type: {hop_type} (depth: {state.current_depth})")
-
-            # Update hypothesis context for post-search validation
-            self.current_hypothesis_context = (
-                f"Testing hypothesis: {top_hypothesis.statement} "
-                f"(category: {top_hypothesis.category}, hop: {hop_type.value})"
-            )
-
-            # Phase D: Execute hop (scrape + evaluate)
-            result = await self._execute_hop(
-                hop_type=hop_type,
-                hypothesis=top_hypothesis,
-                state=state
-            )
-
-            if not result:
-                logger.warning(f"Hop execution failed for {hop_type}")
-                continue
-
-            # Phase E: Update state
-            await self._update_hypothesis_state(
-                hypothesis=top_hypothesis,
-                result=result,
-                state=state
-            )
-
-            # Track iteration result for signal extraction
-            iteration_record = {
-                'iteration': iteration,
-                'hypothesis_id': top_hypothesis.hypothesis_id,
-                'hop_type': hop_type.value if hasattr(hop_type, 'value') else str(hop_type),
-                'depth': state.current_depth,
-                'timestamp': datetime.now(timezone.utc).isoformat(),
-                'duration_ms': round((time.perf_counter() - iteration_started_at) * 1000, 2),
-                'result': result
-            }
-            state.iteration_results.append(iteration_record)
-
-            # Phase F: Check stopping conditions
-            if self._should_stop(state, iteration, max_depth, top_hypothesis):
-                logger.info(f"Stopping condition met at iteration {iteration}")
-                break
-
-        # Build final result
-        return await self._build_final_result(
+        return await self._run_discovery_iterations(
             state,
             hypotheses,
-            total_duration_ms=round((time.perf_counter() - discovery_started_at) * 1000, 2)
+            max_iterations=max_iterations,
+            max_depth=max_depth,
+            discovery_started_at=discovery_started_at,
+            progress_callback=progress_callback,
         )
 
     async def _rescore_hypotheses_by_eig(self, hypotheses: List):
@@ -1063,7 +1003,20 @@ class HypothesisDrivenDiscovery:
 
         # Get URL based on hop type
         url_resolution_started_at = time.perf_counter()
-        url = await self._get_url_for_hop(hop_type, hypothesis, state)
+        url_resolution_timeout_seconds = getattr(self, "url_resolution_timeout_seconds", 20.0)
+        try:
+            url = await asyncio.wait_for(
+                self._get_url_for_hop(hop_type, hypothesis, state),
+                timeout=url_resolution_timeout_seconds,
+            )
+        except asyncio.TimeoutError:
+            logger.warning(
+                "URL resolution timed out after %.1fs for hop %s",
+                url_resolution_timeout_seconds,
+                hop_type,
+            )
+            performance['url_resolution_ms'] = round((time.perf_counter() - url_resolution_started_at) * 1000, 2)
+            return build_no_progress_result("URL resolution timed out")
         performance['url_resolution_ms'] = round((time.perf_counter() - url_resolution_started_at) * 1000, 2)
         if hasattr(self, '_last_url_resolution_metrics'):
             performance['url_resolution'] = self._last_url_resolution_metrics
@@ -1555,7 +1508,7 @@ class HypothesisDrivenDiscovery:
             else:
                 # Perform search
                 engine_started_at = time.perf_counter()
-                search_result = await self.brightdata_client.search_engine(
+                search_result = await self._search_engine_with_timeout(
                     query=primary_query,
                     engine=engine,
                     num_results=num_results
@@ -1713,7 +1666,7 @@ class HypothesisDrivenDiscovery:
 
             for engine in engines:
                 engine_started_at = time.perf_counter()
-                search_result = await self.brightdata_client.search_engine(
+                search_result = await self._search_engine_with_timeout(
                     query=fallback_query,
                     engine=engine,
                     num_results=1
@@ -1786,7 +1739,7 @@ class HypothesisDrivenDiscovery:
 
         # Step 1: Find official site domain
         try:
-            official_site_result = await self.brightdata_client.search_engine(
+            official_site_result = await self._search_engine_with_timeout(
                 query=f'"{entity_name}" official website',
                 engine='google',
                 num_results=1
@@ -1838,10 +1791,10 @@ class HypothesisDrivenDiscovery:
             try:
                 logger.debug(f"Site search: {query}")
 
-                search_result = await self.brightdata_client.search_engine(
+                search_result = await self._search_engine_with_timeout(
                     query=query,
                     engine='google',
-                    num_results=3  # Get more results for site-specific search
+                    num_results=3
                 )
 
                 if search_result.get('status') == 'success' and search_result.get('results'):
@@ -1986,12 +1939,15 @@ class HypothesisDrivenDiscovery:
             return [], []
 
         try:
-            valid, rejected = await self.search_validator.validate_search_results(
-                results=results,
-                entity_name=entity_name,
-                entity_type=entity_type,
-                search_query=search_query,
-                hypothesis_context=hypothesis_context
+            valid, rejected = await asyncio.wait_for(
+                self.search_validator.validate_search_results(
+                    results=results,
+                    entity_name=entity_name,
+                    entity_type=entity_type,
+                    search_query=search_query,
+                    hypothesis_context=hypothesis_context
+                ),
+                timeout=getattr(self, "search_validation_timeout_seconds", 8.0),
             )
 
             logger.info(
@@ -2007,9 +1963,40 @@ class HypothesisDrivenDiscovery:
 
             return valid, rejected
 
+        except asyncio.TimeoutError:
+            logger.warning(
+                "⚠️ Search result validation timed out after %.1fs, using all results",
+                getattr(self, "search_validation_timeout_seconds", 8.0),
+            )
+            return results, []
         except Exception as e:
             logger.warning(f"⚠️ Search result validation failed: {e}, using all results")
             return results, []
+
+    async def _search_engine_with_timeout(
+        self,
+        *,
+        query: str,
+        engine: str,
+        num_results: int,
+    ) -> Dict[str, Any]:
+        try:
+            return await asyncio.wait_for(
+                self.brightdata_client.search_engine(
+                    query=query,
+                    engine=engine,
+                    num_results=num_results,
+                ),
+                timeout=getattr(self, "search_timeout_seconds", 12.0),
+            )
+        except asyncio.TimeoutError:
+            logger.warning(
+                "⚠️ Search timed out after %.1fs (engine=%s, query=%s)",
+                getattr(self, "search_timeout_seconds", 12.0),
+                engine,
+                query,
+            )
+            return {"status": "error", "error": "Search timeout", "results": []}
 
     def _extract_entity_type_from_template(self, template_id: str) -> str:
         """
@@ -3468,7 +3455,8 @@ Return JSON:
         entity_id: str,
         entity_name: str,
         dossier: Dict[str, Any],
-        max_iterations: int = 30
+        max_iterations: int = 30,
+        progress_callback: Optional[Callable[[Dict[str, Any]], Awaitable[None]]] = None,
     ) -> DiscoveryResult:
         """
         Run hypothesis-driven discovery with dossier-generated context
@@ -3607,7 +3595,8 @@ Return JSON:
                     dossier.get('metadata', {}).get('template_id'),
                     dossier.get('metadata', {}).get('entity_type'),
                 ),
-                max_iterations=max_iterations
+                max_iterations=max_iterations,
+                progress_callback=progress_callback,
             )
 
         state.active_hypotheses = active_hypotheses
@@ -3615,7 +3604,8 @@ Return JSON:
         # Run standard discovery loop with dossier-enhanced hypotheses
         result = await self._run_discovery_loop(
             state=state,
-            max_iterations=max_iterations
+            max_iterations=max_iterations,
+            progress_callback=progress_callback,
         )
 
         # Enhance result with dossier context
@@ -3636,7 +3626,8 @@ Return JSON:
     async def _run_discovery_loop(
         self,
         state,
-        max_iterations: int
+        max_iterations: int,
+        progress_callback: Optional[Callable[[Dict[str, Any]], Awaitable[None]]] = None,
     ) -> DiscoveryResult:
         """
         Internal method to run discovery loop with pre-initialized state
@@ -3649,17 +3640,32 @@ Return JSON:
             DiscoveryResult
         """
         hypotheses = state.active_hypotheses
-
         discovery_started_at = time.perf_counter()
+        return await self._run_discovery_iterations(
+            state,
+            hypotheses,
+            max_iterations=max_iterations,
+            max_depth=self.max_depth,
+            discovery_started_at=discovery_started_at,
+            progress_callback=progress_callback,
+        )
+
+    async def _run_discovery_iterations(
+        self,
+        state,
+        hypotheses: List,
+        max_iterations: int,
+        max_depth: int,
+        discovery_started_at: float,
+        progress_callback: Optional[Callable[[Dict[str, Any]], Awaitable[None]]] = None,
+    ) -> DiscoveryResult:
+        consecutive_no_progress = 0
 
         for iteration in range(1, max_iterations + 1):
             iteration_started_at = time.perf_counter()
             logger.info(f"\n--- Iteration {iteration} ---")
 
-            # Re-score hypotheses by EIG
             await self._rescore_hypotheses_by_eig(hypotheses)
-
-            # Select top hypothesis
             top_hypothesis = await self._select_top_hypothesis(hypotheses, state)
 
             if not top_hypothesis:
@@ -3672,11 +3678,25 @@ Return JSON:
                 f"Confidence: {top_hypothesis.confidence:.2f})"
             )
 
-            # Choose hop type
             hop_type = self._choose_next_hop(top_hypothesis, state)
             logger.info(f"   Hop type: {hop_type} (depth: {state.current_depth})")
 
-            # Execute hop
+            if hasattr(top_hypothesis, "statement"):
+                self.current_hypothesis_context = (
+                    f"Testing hypothesis: {top_hypothesis.statement} "
+                    f"(category: {getattr(top_hypothesis, 'category', '')}, hop: {hop_type.value})"
+                )
+
+            if progress_callback:
+                await progress_callback({
+                    "status": "running",
+                    "iteration": iteration,
+                    "hypothesis_id": top_hypothesis.hypothesis_id,
+                    "hop_type": hop_type.value if hasattr(hop_type, 'value') else str(hop_type),
+                    "current_confidence": getattr(top_hypothesis, "confidence", None),
+                    "depth": state.current_depth,
+                })
+
             result = await self._execute_hop(
                 hop_type=hop_type,
                 hypothesis=top_hypothesis,
@@ -3687,14 +3707,12 @@ Return JSON:
                 logger.warning(f"Hop execution failed for {hop_type}")
                 continue
 
-            # Update state
             await self._update_hypothesis_state(
                 hypothesis=top_hypothesis,
                 result=result,
                 state=state
             )
 
-            # Track iteration
             iteration_record = {
                 'iteration': iteration,
                 'hypothesis_id': top_hypothesis.hypothesis_id,
@@ -3706,9 +3724,40 @@ Return JSON:
             }
             state.iteration_results.append(iteration_record)
 
-            # Check stopping conditions
-            if self._should_stop(state, iteration, self.max_depth, top_hypothesis):
+            decision = result.get('decision')
+            consecutive_no_progress = consecutive_no_progress + 1 if decision == 'NO_PROGRESS' else 0
+
+            if progress_callback:
+                await progress_callback({
+                    "status": "running",
+                    "iteration": iteration,
+                    "decision": decision,
+                    "hop_type": hop_type.value if hasattr(hop_type, 'value') else str(hop_type),
+                    "duration_ms": iteration_record['duration_ms'],
+                    "current_confidence": getattr(state, "current_confidence", None),
+                    "consecutive_no_progress": consecutive_no_progress,
+                })
+
+            if consecutive_no_progress >= self.max_consecutive_no_progress_iterations:
+                logger.info(f"Stopping discovery after {consecutive_no_progress} consecutive NO_PROGRESS iterations")
+                if progress_callback:
+                    await progress_callback({
+                        "status": "completed",
+                        "stop_reason": "consecutive_no_progress",
+                        "iteration": iteration,
+                        "consecutive_no_progress": consecutive_no_progress,
+                    })
+                break
+
+            if self._should_stop(state, iteration, max_depth, top_hypothesis):
                 logger.info(f"Stopping condition met at iteration {iteration}")
+                if progress_callback:
+                    await progress_callback({
+                        "status": "completed",
+                        "stop_reason": "standard_stop_condition",
+                        "iteration": iteration,
+                        "current_confidence": getattr(state, "current_confidence", None),
+                    })
                 break
 
         return await self._build_final_result(

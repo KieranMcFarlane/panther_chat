@@ -244,3 +244,84 @@ async def test_update_hypothesis_state_falls_back_to_in_memory_hypothesis():
     assert hypothesis.iterations_attempted == 1
     assert hypothesis.iterations_no_progress == 1
     assert state.updated_confidence == hypothesis.confidence
+
+
+@pytest.mark.asyncio
+async def test_validate_search_results_returns_original_results_on_timeout():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.search_validation_timeout_seconds = 0.01
+
+    class SlowValidator:
+        async def validate_search_results(self, **kwargs):
+            import asyncio
+            await asyncio.sleep(0.1)
+            return [], kwargs["results"]
+
+    discovery.search_validator = SlowValidator()
+
+    results = [{"url": "https://example.com/rfp", "title": "RFP"}]
+
+    valid, rejected = await discovery._validate_search_results(
+        results=results,
+        entity_name="International Canoe Federation",
+        entity_type="SPORT_FEDERATION",
+        search_query="icf rfp",
+        hypothesis_context="procurement",
+    )
+
+    assert valid == results
+    assert rejected == []
+
+
+@pytest.mark.asyncio
+async def test_search_engine_with_timeout_returns_error_result():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.search_timeout_seconds = 0.01
+
+    class SlowBrightData:
+        async def search_engine(self, **kwargs):
+            import asyncio
+            await asyncio.sleep(0.1)
+            return {"status": "success", "results": [{"url": "https://example.com"}]}
+
+    discovery.brightdata_client = SlowBrightData()
+
+    result = await discovery._search_engine_with_timeout(
+        query="icf rfp",
+        engine="google",
+        num_results=3,
+    )
+
+    assert result["status"] == "error"
+    assert result["error"] == "Search timeout"
+
+
+@pytest.mark.asyncio
+async def test_execute_hop_returns_no_progress_when_url_resolution_times_out():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.url_resolution_timeout_seconds = 0.01
+    discovery.pdf_extractor = None
+    discovery.total_cost_usd = 0.0
+    discovery.brightdata_client = SimpleNamespace()
+
+    async def slow_get_url_for_hop(hop_type, hypothesis, state):
+        import asyncio
+        await asyncio.sleep(0.1)
+        return "https://example.com/slow"
+
+    discovery._get_url_for_hop = slow_get_url_for_hop
+    discovery._is_pdf_url = lambda url: False
+
+    state = SimpleNamespace(
+        current_depth=0,
+        last_failed_hop=None,
+        hop_failure_counts={},
+    )
+    state.increment_depth_count = lambda depth: None
+
+    hypothesis = SimpleNamespace(metadata={"entity_name": "International Canoe Federation"})
+
+    result = await discovery._execute_hop(HopType.RFP_PAGE, hypothesis, state)
+
+    assert result["decision"] == "NO_PROGRESS"
+    assert "URL resolution timed out" in result["justification"]

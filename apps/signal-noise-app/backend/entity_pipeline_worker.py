@@ -1,6 +1,7 @@
 import json
 import os
 import socket
+import threading
 import time
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
@@ -48,6 +49,55 @@ def build_run_detail_url(batch_id: str, entity_id: str) -> str:
     return f"/entity-import/{batch_id}/{entity_id}"
 
 
+def build_batch_claim_metadata(existing_metadata: Optional[Dict[str, Any]], *, worker_id: str, now_iso: str) -> Dict[str, Any]:
+    metadata = deepcopy(existing_metadata or {})
+    metadata.update(
+        {
+            "queue_mode": "durable_worker",
+            "worker_id": worker_id,
+            "claimed_at": now_iso,
+            "heartbeat_at": now_iso,
+        }
+    )
+    return metadata
+
+
+def build_batch_heartbeat_metadata(existing_metadata: Optional[Dict[str, Any]], *, now_iso: str) -> Dict[str, Any]:
+    metadata = deepcopy(existing_metadata or {})
+    metadata["heartbeat_at"] = now_iso
+    return metadata
+
+
+def build_batch_running_update(existing_metadata: Optional[Dict[str, Any]], *, now_iso: str) -> Dict[str, Any]:
+    return {
+        "status": "running",
+        "metadata": build_batch_heartbeat_metadata(existing_metadata, now_iso=now_iso),
+    }
+
+
+def merge_pipeline_run_metadata(
+    existing_metadata: Optional[Dict[str, Any]],
+    *,
+    phases: Optional[Dict[str, Any]] = None,
+    scores: Optional[Dict[str, Any]] = None,
+    performance_summary: Optional[Dict[str, Any]] = None,
+    promoted_rfp_ids: Optional[list[str]] = None,
+    completed_at: Optional[str] = None,
+) -> Dict[str, Any]:
+    metadata = deepcopy(existing_metadata or {})
+    if phases is not None:
+        metadata["phases"] = phases
+    if scores is not None:
+        metadata["scores"] = scores
+    if performance_summary is not None:
+        metadata["performance_summary"] = performance_summary
+    if promoted_rfp_ids is not None:
+        metadata["promoted_rfp_ids"] = promoted_rfp_ids
+    if completed_at is not None:
+        metadata["completed_at"] = completed_at
+    return metadata
+
+
 def merge_cached_entity_properties(
     existing_properties: Optional[Dict[str, Any]],
     *,
@@ -93,6 +143,25 @@ class EntityPipelineWorker:
         metadata = batch.get("metadata") or {}
         return metadata if isinstance(metadata, dict) else {}
 
+    def refresh_batch_heartbeat(self, batch_id: str, metadata: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        heartbeat_metadata = build_batch_heartbeat_metadata(metadata, now_iso=self._now_iso())
+        self.supabase.table("entity_import_batches").update(build_batch_running_update(metadata, now_iso=heartbeat_metadata["heartbeat_at"])).eq(
+            "id", batch_id
+        ).execute()
+        return heartbeat_metadata
+
+    def _start_batch_heartbeat(self, batch_id: str, metadata: Optional[Dict[str, Any]]) -> tuple[threading.Event, threading.Thread]:
+        stop_event = threading.Event()
+
+        def heartbeat_loop() -> None:
+            current_metadata = deepcopy(metadata or {})
+            while not stop_event.wait(POLL_INTERVAL_SECONDS):
+                current_metadata = self.refresh_batch_heartbeat(batch_id, current_metadata)
+
+        thread = threading.Thread(target=heartbeat_loop, daemon=True)
+        thread.start()
+        return stop_event, thread
+
     def recover_stale_batches(self) -> None:
         response = (
             self.supabase.table("entity_import_batches")
@@ -133,14 +202,7 @@ class EntityPipelineWorker:
             return None
         batch = batches[0]
         metadata = self._batch_metadata(batch)
-        metadata.update(
-            {
-                "queue_mode": "durable_worker",
-                "worker_id": self.worker_id,
-                "claimed_at": self._now_iso(),
-                "heartbeat_at": self._now_iso(),
-            }
-        )
+        metadata = build_batch_claim_metadata(metadata, worker_id=self.worker_id, now_iso=self._now_iso())
         self.supabase.table("entity_import_batches").update(
             {"status": "running", "metadata": metadata}
         ).eq("id", batch["id"]).execute()
@@ -205,6 +267,7 @@ class EntityPipelineWorker:
     def process_batch(self, batch: Dict[str, Any]) -> None:
         batch_id = batch["id"]
         failed_runs = 0
+        heartbeat_stop, heartbeat_thread = self._start_batch_heartbeat(batch_id, self._batch_metadata(batch))
         for run in self.get_batch_runs(batch_id):
             if run.get("status") == "completed":
                 continue
@@ -222,14 +285,22 @@ class EntityPipelineWorker:
                 phases = result.get("phases") or {}
                 completed_phases = [name for name, detail in phases.items() if detail.get("status") == "completed"]
                 last_phase = completed_phases[-1] if completed_phases else "dashboard_scoring"
-                metadata = deepcopy(run.get("metadata") or {})
-                metadata.update(
-                    {
-                        "phases": phases,
-                        "scores": ((result.get("artifacts") or {}).get("scores")),
-                        "performance_summary": (((result.get("artifacts") or {}).get("discovery_result") or {}).get("performance_summary")),
-                        "completed_at": result.get("completed_at"),
-                    }
+                current_run = (
+                    self.supabase.table("entity_pipeline_runs")
+                    .select("metadata")
+                    .eq("batch_id", batch_id)
+                    .eq("entity_id", run["entity_id"])
+                    .limit(1)
+                    .execute()
+                )
+                latest_metadata = ((current_run.data or [{}])[0]).get("metadata")
+                metadata = merge_pipeline_run_metadata(
+                    latest_metadata if isinstance(latest_metadata, dict) else run.get("metadata"),
+                    phases=phases,
+                    scores=((result.get("artifacts") or {}).get("scores")),
+                    performance_summary=(((result.get("artifacts") or {}).get("discovery_result") or {}).get("performance_summary")),
+                    promoted_rfp_ids=[],
+                    completed_at=result.get("completed_at"),
                 )
                 self.sync_cached_entity(batch_id, run, result, "completed")
                 self.update_run(
@@ -257,13 +328,15 @@ class EntityPipelineWorker:
                         "completed_at": self._now_iso(),
                     },
                 )
-            metadata = self._batch_metadata(batch)
-            metadata["heartbeat_at"] = self._now_iso()
-            self.supabase.table("entity_import_batches").update({"metadata": metadata}).eq(
-                "id", batch_id
-            ).execute()
+            batch["metadata"] = self.refresh_batch_heartbeat(batch_id, self._batch_metadata(batch))
+        heartbeat_stop.set()
+        heartbeat_thread.join(timeout=1)
         self.supabase.table("entity_import_batches").update(
-            {"status": "failed" if failed_runs > 0 else "completed", "completed_at": self._now_iso()}
+            {
+                "status": "failed" if failed_runs > 0 else "completed",
+                "completed_at": self._now_iso(),
+                "metadata": build_batch_heartbeat_metadata(self._batch_metadata(batch), now_iso=self._now_iso()),
+            }
         ).eq("id", batch_id).execute()
 
     def run_forever(self) -> None:

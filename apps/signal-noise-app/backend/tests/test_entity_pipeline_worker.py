@@ -5,9 +5,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from entity_pipeline_worker import (
+    build_batch_claim_metadata,
+    build_batch_heartbeat_metadata,
+    build_batch_running_update,
     choose_supabase_key,
     build_run_detail_url,
     load_worker_environment,
+    merge_pipeline_run_metadata,
     merge_cached_entity_properties,
     should_process_in_process,
 )
@@ -64,3 +68,58 @@ def test_load_worker_environment_reads_local_dotenv(tmp_path, monkeypatch):
 
     assert os.environ["ENTITY_IMPORT_QUEUE_MODE"] == "durable_worker"
     assert os.environ["SUPABASE_ANON_KEY"] == "anon-key"
+
+
+def test_build_batch_claim_metadata_sets_worker_and_heartbeat_fields():
+    metadata = build_batch_claim_metadata({"source": "single_entity_trigger"}, worker_id="worker-1", now_iso="2026-03-02T15:00:00+00:00")
+
+    assert metadata["worker_id"] == "worker-1"
+    assert metadata["claimed_at"] == "2026-03-02T15:00:00+00:00"
+    assert metadata["heartbeat_at"] == "2026-03-02T15:00:00+00:00"
+    assert metadata["queue_mode"] == "durable_worker"
+
+
+def test_build_batch_heartbeat_metadata_preserves_existing_claim_data():
+    metadata = build_batch_heartbeat_metadata(
+        {
+            "worker_id": "worker-1",
+            "claimed_at": "2026-03-02T15:00:00+00:00",
+            "queue_mode": "durable_worker",
+        },
+        now_iso="2026-03-02T15:01:00+00:00",
+    )
+
+    assert metadata["worker_id"] == "worker-1"
+    assert metadata["claimed_at"] == "2026-03-02T15:00:00+00:00"
+    assert metadata["heartbeat_at"] == "2026-03-02T15:01:00+00:00"
+
+
+def test_build_batch_running_update_keeps_batch_in_running_state():
+    update = build_batch_running_update(
+        {
+            "worker_id": "worker-1",
+            "claimed_at": "2026-03-02T15:00:00+00:00",
+            "queue_mode": "durable_worker",
+        },
+        now_iso="2026-03-02T15:01:00+00:00",
+    )
+
+    assert update["status"] == "running"
+    assert update["metadata"]["heartbeat_at"] == "2026-03-02T15:01:00+00:00"
+
+
+def test_merge_pipeline_run_metadata_preserves_phase_details_and_adds_scores():
+    merged = merge_pipeline_run_metadata(
+        {"phase_details": {"status": "running", "iteration": 2}},
+        phases={"discovery": {"status": "completed"}},
+        scores={"sales_readiness": "MONITOR"},
+        performance_summary={"slowest_hop": {"hop_type": "rfp_page"}},
+        promoted_rfp_ids=["rfp-1"],
+        completed_at="2026-03-02T15:10:00+00:00",
+    )
+
+    assert merged["phase_details"]["iteration"] == 2
+    assert merged["phases"]["discovery"]["status"] == "completed"
+    assert merged["scores"]["sales_readiness"] == "MONITOR"
+    assert merged["performance_summary"]["slowest_hop"]["hop_type"] == "rfp_page"
+    assert merged["promoted_rfp_ids"] == ["rfp-1"]
