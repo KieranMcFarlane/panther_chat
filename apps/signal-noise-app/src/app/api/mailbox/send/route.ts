@@ -5,13 +5,23 @@ import { render } from '@react-email/render';
 import EmailTemplate from '@/components/mailbox/EmailTemplate';
 import { UnauthorizedError, requireApiSession } from '@/lib/server-auth';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+export const dynamic = 'force-dynamic';
 
 // Initialize Supabase client
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || '',
   process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 );
+
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY;
+
+  if (!apiKey) {
+    throw new Error('RESEND_API_KEY is not configured');
+  }
+
+  return new Resend(apiKey);
+}
 
 interface SendEmailRequest {
   to: string | string[];
@@ -82,7 +92,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Send email via Resend
-    const { data, error } = await resend.emails.send(emailData);
+    const { data, error } = await getResendClient().emails.send(emailData);
 
     if (error) {
       console.error('Resend error:', error);

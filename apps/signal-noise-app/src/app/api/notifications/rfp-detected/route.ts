@@ -26,13 +26,23 @@ interface SlackNotificationData {
   attachments?: any[];
 }
 
+export const dynamic = 'force-dynamic';
+
 class RFPNotificationProcessor {
-  private readonly resend: Resend;
   private readonly slackWebhookUrl: string;
 
   constructor() {
-    this.resend = new Resend(process.env.RESEND_API_KEY);
     this.slackWebhookUrl = process.env.SLACK_WEBHOOK_URL || '';
+  }
+
+  private getResendClient() {
+    const apiKey = process.env.RESEND_API_KEY;
+
+    if (!apiKey) {
+      throw new Error('RESEND_API_KEY is not configured');
+    }
+
+    return new Resend(apiKey);
   }
 
   async processRFPNotification(payload: RFPDNotificationPayload): Promise<{
@@ -73,7 +83,7 @@ class RFPNotificationProcessor {
     try {
       const emailHtml = this.generateRFPEmailHTML(payload);
       
-      await this.resend.emails.send({
+      await this.getResendClient().emails.send({
         from: 'RFP Alerts <rfp-alerts@yellow-panther.com>',
         to: ['sales@yellow-panther.com', 'opportunities@yellow-panther.com'],
         subject: `🚨 HIGH PRIORITY RFP DETECTED: ${payload.organization}`,
@@ -376,4 +386,3 @@ export async function GET() {
     ]
   });
 }
-
