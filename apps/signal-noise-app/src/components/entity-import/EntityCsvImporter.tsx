@@ -33,6 +33,10 @@ type BatchStatus = {
     rfp_count: number
     metadata: Record<string, unknown>
   }>
+  execution?: {
+    mode: string
+    state: string
+  }
 }
 
 export default function EntityCsvImporter() {
@@ -180,6 +184,11 @@ export default function EntityCsvImporter() {
           <p>acceptedRows: {acceptedRows}</p>
           <p>rejectedRows: {rejectedRows.length}</p>
           <p>status: {batchStatus?.batch?.status ?? 'Waiting for batch'}</p>
+          <p>execution: {batchStatus?.execution?.state ?? (pipelineStarted ? 'queued' : 'idle')}</p>
+          <p className="text-xs text-slate-500">
+            Imports run asynchronously. This page polls the batch record while dossier, discovery, Ralph, temporal,
+            and scoring phases complete in the background.
+          </p>
           {importError ? <p className="text-red-600">{importError}</p> : null}
         </div>
 
