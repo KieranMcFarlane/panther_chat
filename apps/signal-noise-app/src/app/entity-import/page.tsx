@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import EntityCsvImporter from '@/components/entity-import/EntityCsvImporter'
 
 export default function EntityImportPage() {
@@ -13,6 +14,20 @@ export default function EntityImportPage() {
             Use this page to upload new entities, map the required fields, and register them for the
             end-to-end intelligence pipeline.
           </p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <Link
+              href="/entity-browser"
+              className="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
+            >
+              Open entity browser
+            </Link>
+            <Link
+              href="/rfps"
+              className="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
+            >
+              Open RFP page
+            </Link>
+          </div>
         </div>
 
         <EntityCsvImporter />

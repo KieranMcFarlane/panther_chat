@@ -228,11 +228,21 @@ export default function EntityCsvImporter() {
                           ) : null}
                         </td>
                         <td className="py-3 pr-4">{run.sales_readiness ?? 'Pending'}</td>
-                        <td className="py-3 pr-4">{run.rfp_count}</td>
+                        <td className="py-3 pr-4">
+                          <div>{run.rfp_count}</div>
+                          {run.rfp_count > 0 ? (
+                            <a
+                              href="/rfps"
+                              className="mt-1 inline-block text-xs text-sky-700 underline underline-offset-2"
+                            >
+                              View RFPs
+                            </a>
+                          ) : null}
+                        </td>
                         <td className="py-3 pr-4">
                           {run.dossier_id ? (
                             <a
-                              href={`/entity-dossiers/${run.dossier_id}`}
+                              href={`/entity-browser/${run.entity_id}/dossier?from=1`}
                               className="text-sky-700 underline underline-offset-2"
                             >
                               Open dossier

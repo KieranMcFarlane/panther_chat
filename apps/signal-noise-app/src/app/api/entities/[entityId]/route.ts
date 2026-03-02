@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
+
+export const dynamic = 'force-dynamic';
 
 // Dynamic dossier generation function
 async function generateComprehensiveDossier(entity: any, supabase: any) {
@@ -233,9 +235,26 @@ async function generateLinkedInAnalysis(entityName: string, entityType: string) 
   }
 }
 
-const supabaseUrl = 'https://itlcuazbybqlkicsaola.supabase.co'
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml0bGN1YXpieWJxbGtpY3Nhb2xhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkwOTc0MTQsImV4cCI6MjA3NDY3MzQxNH0.UXXSbe1Kk0CH7NkIGnwo3_qmJVV3VUbJz4Dw8lBGcKU'
-const supabase = createClient(supabaseUrl, supabaseKey)
+async function getPersistedDossier(entityId: string) {
+  try {
+    const { data, error } = await supabase
+      .from('entity_dossiers')
+      .select('dossier_data')
+      .eq('entity_id', entityId)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+
+    if (error || !data?.dossier_data) {
+      return null
+    }
+
+    return data.dossier_data
+  } catch (error) {
+    console.log('⚠️ Persisted dossier lookup failed:', error)
+    return null
+  }
+}
 
 interface Entity {
   id: string
@@ -282,7 +301,7 @@ export async function GET(
               badge_s3_url
             )
           `)
-          .or(`id.eq.${entityId},neo4j_id.eq.${entityId}`)
+          .or(`id.eq.${entityId},neo4j_id.eq.${entityId},name.ilike.%${entityId}%`)
           .single()
 
         if (!teamError && teamData) {
@@ -356,33 +375,32 @@ export async function GET(
             source = 'supabase'
           } else {
             // Fallback to cached_entities for other entity types
-            // Try UUID first, then Neo4j ID
+            // Try multiple matching strategies
             let { data: cachedEntity, error: cacheError } = await supabase
               .from('cached_entities')
               .select('*')
-              .eq('id', entityId)
+              .or(`id.eq.${entityId},neo4j_id.eq.${entityId},neo4j_id.eq.${parseInt(entityId) || entityId}`)
+              .limit(1)
               .single()
 
-            // If not found by UUID, try by Neo4j ID
-            if (cacheError) {
-              const result = await supabase
-                .from('cached_entities')
-                .select('*')
-                .eq('neo4j_id', entityId)
-                .single()
-              cachedEntity = result.data
-              cacheError = result.error
-            }
+            // If not found by direct IDs, try by name (handle dashes, spaces)
+            if (!cachedEntity || cacheError) {
+              const normalizedName = entityId
+                .replace(/-/g, ' ')
+                .replace(/_/g, ' ')
+                .replace(/%26/g, '&')
 
-            // If still not found, try Neo4j ID as number
-            if (cacheError) {
               const result = await supabase
                 .from('cached_entities')
                 .select('*')
-                .eq('neo4j_id', parseInt(entityId))
+                .ilike('properties->>name', `%${normalizedName}%`)
+                .limit(1)
                 .single()
-              cachedEntity = result.data
-              cacheError = result.error
+
+              if (result.data) {
+                cachedEntity = result.data
+                cacheError = null
+              }
             }
 
             if (!cacheError && cachedEntity) {
@@ -425,6 +443,10 @@ export async function GET(
       } catch (error) {
         console.log('⚠️ Invalid dossier_data, skipping dossier generation')
       }
+    }
+
+    if (!comprehensiveDossier) {
+      comprehensiveDossier = await getPersistedDossier(entity.id?.toString() || entityId)
     }
 
     return NextResponse.json({

@@ -10,6 +10,8 @@ const componentSource = readFileSync(componentPath, 'utf8')
 
 test('entity import page renders the CSV importer component', () => {
   assert.match(pageSource, /import EntityCsvImporter from ["']@\/components\/entity-import\/EntityCsvImporter["']/)
+  assert.match(pageSource, /href="\/entity-browser"/)
+  assert.match(pageSource, /href="\/rfps"/)
   assert.match(pageSource, /export default function EntityImportPage/)
   assert.match(pageSource, /<EntityCsvImporter \/>/)
 })

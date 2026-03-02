@@ -4,6 +4,7 @@ import {
   updateEntityImportBatch,
   updateEntityPipelineRun,
 } from '@/lib/entity-import-jobs'
+import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { promoteImportedEntityRfps } from '@/lib/entity-import-rfp'
 
 const FASTAPI_URL = process.env.FASTAPI_URL || process.env.PYTHON_BACKEND_URL || 'http://localhost:8000'
@@ -18,6 +19,33 @@ type PipelineRunResponse = {
     dossier_id?: string | null
     scores?: Record<string, unknown>
   }
+}
+
+async function syncEntityPipelineArtifacts(
+  entityId: string,
+  salesReadiness: string | null | undefined,
+  rfpCount: number,
+  dossier: Record<string, unknown> | null | undefined,
+) {
+  const { data: cachedEntity } = await supabase
+    .from('cached_entities')
+    .select('properties')
+    .eq('neo4j_id', entityId)
+    .maybeSingle()
+
+  const properties = typeof cachedEntity?.properties === 'object' && cachedEntity.properties !== null
+    ? { ...cachedEntity.properties }
+    : {}
+
+  properties.dossier_data = dossier ? JSON.stringify(dossier) : properties.dossier_data ?? null
+  properties.sales_readiness = salesReadiness ?? null
+  properties.rfp_count = rfpCount
+  properties.last_pipeline_run_at = new Date().toISOString()
+
+  await supabase
+    .from('cached_entities')
+    .update({ properties })
+    .eq('neo4j_id', entityId)
 }
 
 export async function POST(
@@ -80,6 +108,12 @@ export async function POST(
           .at(-1) || 'dashboard_scoring'
 
         const promotedRfps = await promoteImportedEntityRfps(params.batchId, run, result)
+        await syncEntityPipelineArtifacts(
+          run.entity_id,
+          result.sales_readiness,
+          result.rfp_count ?? 0,
+          (result.artifacts?.dossier as Record<string, unknown> | null | undefined) ?? null,
+        )
 
         await updateEntityPipelineRun(params.batchId, run.entity_id, {
           status: 'completed',
