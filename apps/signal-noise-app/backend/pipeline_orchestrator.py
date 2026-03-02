@@ -103,6 +103,7 @@ class PipelineOrchestrator:
             discovery_result = await self._run_discovery(
                 entity_id=entity_id,
                 entity_name=entity_name,
+                entity_type=entity_type,
                 dossier=dossier,
                 phase_callback=phase_callback,
             )
@@ -218,6 +219,7 @@ class PipelineOrchestrator:
         self,
         entity_id: str,
         entity_name: str,
+        entity_type: str,
         dossier: Dict[str, Any],
         phase_callback: Optional[Callable[[str, Dict[str, Any]], Awaitable[None]]] = None,
     ):
@@ -230,6 +232,7 @@ class PipelineOrchestrator:
             entity_id=entity_id,
             entity_name=entity_name,
             dossier=dossier,
+            entity_type=entity_type,
             max_iterations=self.discovery_max_iterations,
             progress_callback=emit_discovery_progress,
         )
