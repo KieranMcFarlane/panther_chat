@@ -158,6 +158,9 @@ Snippet: {snippet}""")
         """
         decisions = {}
 
+        if not isinstance(response_text, str) or not response_text.strip():
+            return decisions
+
         lines = response_text.strip().split('\n')
 
         for line in lines:

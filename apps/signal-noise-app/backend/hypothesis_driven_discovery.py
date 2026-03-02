@@ -1049,10 +1049,31 @@ class HypothesisDrivenDiscovery:
                     return None
 
                 content = content_result.get('content', '')
+                content_text = content if isinstance(content, str) else ''
                 content_metadata = {
                     'content_type': 'text/html',
-                    'char_count': len(content)
+                    'char_count': len(content_text)
                 }
+
+                if not content_text.strip():
+                    logger.warning("Scraping returned empty content; treating hop as NO_PROGRESS")
+                    return {
+                        'hop_type': hop_type.value,
+                        'url': url,
+                        'decision': 'NO_PROGRESS',
+                        'confidence_delta': 0.0,
+                        'justification': 'No content returned from scrape',
+                        'evidence_found': '',
+                        'cost_usd': 0.0,
+                        'scrape_data': {
+                            'publication_date': content_result.get('publication_date'),
+                            'timestamp': content_result.get('timestamp'),
+                            'url': content_result.get('url'),
+                            'word_count': content_result.get('metadata', {}).get('word_count')
+                        }
+                    }
+
+                content = content_text
 
                 # ENHANCEMENT: Extract PDF links from tender pages
                 # This addresses the ICF case where /tenders page contained links to multiple RFP PDFs
