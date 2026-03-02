@@ -12,6 +12,8 @@ This is the single backend entry point intended to run an entity through:
 
 from __future__ import annotations
 
+import asyncio
+import os
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any, Awaitable, Callable, Dict, List, Optional
@@ -41,6 +43,8 @@ class PipelineOrchestrator:
         self.ralph_validator = ralph_validator
         self.graphiti_service = graphiti_service
         self.dashboard_scorer = dashboard_scorer
+        self.discovery_timeout_seconds = int(os.getenv("ENTITY_DISCOVERY_TIMEOUT_SECONDS", "90"))
+        self.discovery_max_iterations = int(os.getenv("ENTITY_DISCOVERY_MAX_ITERATIONS", "8"))
 
     async def run_entity_pipeline(
         self,
@@ -136,7 +140,8 @@ class PipelineOrchestrator:
             }
             await self._emit_phase_update(phase_callback, "temporal_persistence", phase_results["temporal_persistence"])
         except Exception as exc:
-            phase_results["discovery"] = {"status": "failed", "error": str(exc)}
+            error_message = "Discovery timed out" if isinstance(exc, TimeoutError) else str(exc)
+            phase_results["discovery"] = {"status": "failed", "error": error_message}
             phase_results["ralph_validation"] = {"status": "skipped", "reason": "discovery_failed"}
             phase_results["temporal_persistence"] = {"status": "skipped", "reason": "discovery_failed"}
             await self._emit_phase_update(phase_callback, "discovery", phase_results["discovery"])
@@ -210,10 +215,14 @@ class PipelineOrchestrator:
         entity_name: str,
         dossier: Dict[str, Any],
     ):
-        return await self.discovery.run_discovery_with_dossier_context(
-            entity_id=entity_id,
-            entity_name=entity_name,
-            dossier=dossier,
+        return await asyncio.wait_for(
+            self.discovery.run_discovery_with_dossier_context(
+                entity_id=entity_id,
+                entity_name=entity_name,
+                dossier=dossier,
+                max_iterations=self.discovery_max_iterations,
+            ),
+            timeout=self.discovery_timeout_seconds,
         )
 
     async def _run_ralph_validation(
