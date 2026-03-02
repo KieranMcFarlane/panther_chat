@@ -4,6 +4,7 @@ from typing import Dict, Any, Optional, List, Tuple
 import os
 from datetime import datetime
 from dataclasses import dataclass
+import httpx
 
 try:
     from anthropic import Anthropic
@@ -343,6 +344,11 @@ class ClaudeClient:
     3. If still insufficient, fallback to Opus
     """
 
+    _api_disabled_reason: Optional[str] = None
+
+    PROVIDER_ANTHROPIC = "anthropic"
+    PROVIDER_CHUTES_OPENAI = "chutes_openai"
+
     def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None):
         """
         Initialize Claude client
@@ -351,16 +357,63 @@ class ClaudeClient:
             api_key: Anthropic API key (default: from ANTHROPIC_API_KEY env)
             base_url: Custom base URL (default: from ANTHROPIC_BASE_URL env)
         """
-        self.api_key = api_key or os.getenv("ANTHROPIC_API_KEY")
-        self.base_url = base_url or os.getenv("ANTHROPIC_BASE_URL", "https://api.anthropic.com")
+        self.provider = self._resolve_provider()
+        self.api_key = api_key or self._resolve_api_key()
+        self.base_url = base_url or self._resolve_base_url()
+        self.chutes_model = os.getenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+
+        disable_flag = (os.getenv("DISABLE_CLAUDE_API") or "").strip().lower()
+        if disable_flag in {"1", "true", "yes", "on"}:
+            self._disable_api("disabled by environment")
 
         if not self.api_key:
-            logger.warning("⚠️ ANTHROPIC_API_KEY not set - client will fail")
+            logger.warning("⚠️ No LLM API key configured for selected provider - client will fail")
 
         self.default_model = "haiku"
         self.cascade_order = ["haiku", "sonnet", "opus"]
 
-        logger.info(f"🤖 ClaudeClient initialized (default: {self.default_model})")
+        logger.info(f"🤖 ClaudeClient initialized (provider: {self.provider}, default: {self.default_model})")
+
+    def _resolve_provider(self) -> str:
+        provider = (os.getenv("LLM_PROVIDER") or "").strip().lower()
+        if provider in {self.PROVIDER_ANTHROPIC, self.PROVIDER_CHUTES_OPENAI}:
+            return provider
+
+        if os.getenv("CHUTES_API_KEY"):
+            return self.PROVIDER_CHUTES_OPENAI
+
+        return self.PROVIDER_ANTHROPIC
+
+    def _resolve_api_key(self) -> Optional[str]:
+        if self.provider == self.PROVIDER_CHUTES_OPENAI:
+            return os.getenv("CHUTES_API_KEY")
+
+        return os.getenv("ANTHROPIC_API_KEY")
+
+    def _resolve_base_url(self) -> str:
+        if self.provider == self.PROVIDER_CHUTES_OPENAI:
+            return os.getenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+
+        return os.getenv("ANTHROPIC_BASE_URL", "https://api.anthropic.com")
+
+    @classmethod
+    def _get_disabled_reason(cls) -> Optional[str]:
+        return cls._api_disabled_reason
+
+    @classmethod
+    def _disable_api(cls, reason: str):
+        if not cls._api_disabled_reason:
+            cls._api_disabled_reason = reason
+            logger.warning(f"⚠️ Disabling Claude API for current process: {reason}")
+
+    @staticmethod
+    def _is_insufficient_balance_error(error: Exception) -> bool:
+        message = str(error).lower()
+        return "429" in message and (
+            "insufficient balance" in message or
+            "no resource package" in message or
+            "please recharge" in message
+        )
 
     async def query_with_cascade(
         self,
@@ -438,8 +491,20 @@ class ClaudeClient:
         Returns:
             Response dict with content, tokens_used, etc.
         """
+        if self.provider == self.PROVIDER_CHUTES_OPENAI:
+            return await self._query_chutes(
+                prompt=prompt,
+                model=model,
+                max_tokens=max_tokens,
+                system_prompt=system_prompt,
+            )
+
         if not ANTHROPIC_SDK_AVAILABLE:
             raise ImportError("anthropic package is required. Install with: pip install anthropic")
+
+        disabled_reason = self._get_disabled_reason()
+        if disabled_reason:
+            raise RuntimeError(f"Claude API disabled: {disabled_reason}")
 
         model_config = ModelRegistry.get_model(model)
 
@@ -478,6 +543,79 @@ class ClaudeClient:
 
         except Exception as e:
             logger.error(f"Claude API request failed: {e}")
+            if self._is_insufficient_balance_error(e):
+                self._disable_api("insufficient balance")
+            raise
+
+    async def _query_chutes(
+        self,
+        prompt: str,
+        model: str,
+        max_tokens: int,
+        system_prompt: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """
+        Query a Chutes OpenAI-compatible model endpoint.
+
+        The pipeline still calls this through the Claude client interface, but the
+        transport is OpenAI chat completions and the model is configured via CHUTES_MODEL.
+        """
+        disabled_reason = self._get_disabled_reason()
+        if disabled_reason:
+            raise RuntimeError(f"Claude API disabled: {disabled_reason}")
+
+        if not self.api_key:
+            raise RuntimeError("CHUTES_API_KEY not configured")
+
+        messages: List[Dict[str, str]] = []
+        if system_prompt:
+            messages.append({"role": "system", "content": system_prompt})
+        messages.append({"role": "user", "content": prompt})
+
+        payload = {
+            "model": self.chutes_model,
+            "messages": messages,
+            "max_tokens": max_tokens,
+            "temperature": 0.7 if system_prompt is None else 0.4,
+            "stream": False,
+        }
+
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+        }
+
+        try:
+            async with httpx.AsyncClient(timeout=120.0) as client:
+                response = await client.post(
+                    f"{self.base_url.rstrip('/')}/chat/completions",
+                    headers=headers,
+                    json=payload,
+                )
+                response.raise_for_status()
+
+            data = response.json()
+            choice = (data.get("choices") or [{}])[0]
+            message = choice.get("message") or {}
+            content = message.get("content", "")
+            usage = data.get("usage", {})
+
+            return {
+                "content": content,
+                "model_used": model,
+                "provider": self.provider,
+                "raw_response": data,
+                "tokens_used": {
+                    "input_tokens": usage.get("prompt_tokens"),
+                    "output_tokens": usage.get("completion_tokens"),
+                    "total_tokens": usage.get("total_tokens"),
+                },
+                "stop_reason": choice.get("finish_reason"),
+            }
+        except Exception as e:
+            logger.error(f"Chutes API request failed: {e}")
+            if self._is_insufficient_balance_error(e):
+                self._disable_api("insufficient balance")
             raise
 
     async def get_embedding(
