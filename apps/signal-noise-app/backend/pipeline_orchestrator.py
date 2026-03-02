@@ -104,6 +104,7 @@ class PipelineOrchestrator:
                 entity_id=entity_id,
                 entity_name=entity_name,
                 dossier=dossier,
+                phase_callback=phase_callback,
             )
             discovery_budget = getattr(self, "_last_discovery_budget", {})
             raw_signals = self._extract_raw_signals(discovery_result)
@@ -218,13 +219,19 @@ class PipelineOrchestrator:
         entity_id: str,
         entity_name: str,
         dossier: Dict[str, Any],
+        phase_callback: Optional[Callable[[str, Dict[str, Any]], Awaitable[None]]] = None,
     ):
         started_at = time.perf_counter()
+
+        async def emit_discovery_progress(payload: Dict[str, Any]) -> None:
+            await self._emit_phase_update(phase_callback, "discovery", payload)
+
         discovery_coro = self.discovery.run_discovery_with_dossier_context(
             entity_id=entity_id,
             entity_name=entity_name,
             dossier=dossier,
             max_iterations=self.discovery_max_iterations,
+            progress_callback=emit_discovery_progress,
         )
 
         if self.discovery_hard_timeout:
