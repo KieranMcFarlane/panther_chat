@@ -11,6 +11,8 @@ import { RFPOpportunityDetector } from '@/lib/rfp-opportunity-detector';
 import { realRFPDataSource } from '@/lib/real-rfp-data-sources';
 import { realRFPMonitor, RFPAlert } from '@/lib/real-rfp-monitor';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);

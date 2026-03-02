@@ -80,6 +80,10 @@ interface MCPResult {
   isError?: boolean;
 }
 
+function isBuildPhase(): boolean {
+  return process.env.NEXT_PHASE === 'phase-production-build';
+}
+
 export class MCPClientBus {
   private clients: Map<string, Client> = new Map();
   private processes: Map<string, any> = new Map();
@@ -88,7 +92,7 @@ export class MCPClientBus {
 
   constructor(private servers: MCPServerConfig[]) {
     // Deprecation warning on instantiation
-    if (typeof window === 'undefined') {
+    if (typeof window === 'undefined' && !isBuildPhase()) {
       console.warn('⚠️  WARNING: MCPClientBus is deprecated. Use Claude Agent SDK directly.');
       console.warn('   See migration guide in file header.');
     }
@@ -99,27 +103,37 @@ export class MCPClientBus {
    * Initialize all MCP server connections
    */
   async initialize(): Promise<void> {
-    console.warn('⚠️  MCPClientBus.initialize() is deprecated. Use Claude Agent SDK instead.');
+    if (!isBuildPhase()) {
+      console.warn('⚠️  MCPClientBus.initialize() is deprecated. Use Claude Agent SDK instead.');
+    }
 
     if (this.isInitialized) {
       return;
     }
 
-    console.log('🔌 Initializing MCP Client Bus...');
+    if (!isBuildPhase()) {
+      console.log('🔌 Initializing MCP Client Bus...');
+    }
     
     for (const serverConfig of this.servers) {
       try {
         await this.connectServer(serverConfig);
-        console.log(`✅ Connected to MCP server: ${serverConfig.name}`);
+        if (!isBuildPhase()) {
+          console.log(`✅ Connected to MCP server: ${serverConfig.name}`);
+        }
       } catch (error) {
-        console.error(`❌ Failed to connect to MCP server ${serverConfig.name}:`, error);
+        if (!isBuildPhase()) {
+          console.error(`❌ Failed to connect to MCP server ${serverConfig.name}:`, error);
+        }
         // Continue with other servers even if one fails
       }
     }
 
     await this.loadTools();
     this.isInitialized = true;
-    console.log(`🎉 MCP Client Bus initialized with ${this.clients.size} servers and ${this.tools.size} tools`);
+    if (!isBuildPhase()) {
+      console.log(`🎉 MCP Client Bus initialized with ${this.clients.size} servers and ${this.tools.size} tools`);
+    }
   }
 
   /**
@@ -372,6 +386,3 @@ export const MCP_SERVERS: MCPServerConfig[] = [
 
 // Create singleton instance
 export const mcpBus = new MCPClientBus(MCP_SERVERS);
-
-// Initialize MCP bus on module import
-mcpBus.initialize().catch(console.error);

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createSportsIntelligenceQuery } from '@/lib/claude-agent-manager';
 import { EmailCampaignService } from '@/services/email/email-campaign-service';
 
+export const dynamic = 'force-dynamic';
+
 interface GenerateEmailRequest {
   entityId: string;
   stageId: string;

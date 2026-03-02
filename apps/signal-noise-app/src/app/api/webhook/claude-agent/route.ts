@@ -7,6 +7,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { rfpIntelligenceAgent } from '@/lib/claude-agent-rfp-intelligence';
 
+export const dynamic = 'force-dynamic';
+
 interface WebhookPayload {
   type: 'rfp_alert' | 'entity_alert' | 'entity_enrichment' | 'market_intelligence' | 'batch_job';
   data: any;

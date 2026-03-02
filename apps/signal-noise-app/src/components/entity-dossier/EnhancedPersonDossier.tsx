@@ -14,6 +14,7 @@ import {
   Phone,
   Calendar,
   Building,
+  MapPin,
   TrendingUp,
   AlertTriangle,
   CheckCircle,

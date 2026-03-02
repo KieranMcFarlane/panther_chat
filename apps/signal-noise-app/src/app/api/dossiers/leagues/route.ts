@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
+export const dynamic = 'force-dynamic';
+
 const DOSSIERS_DIR = path.join(process.cwd(), 'dossiers', 'leagues');
 
 export async function GET(request: NextRequest) {

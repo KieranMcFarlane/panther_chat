@@ -20,6 +20,7 @@ Usage:
 import os
 import sys
 import logging
+import urllib.parse
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass, asdict
@@ -187,6 +188,20 @@ class GraphitiService:
 
         logger.info(f"🔗 Initializing GraphitiService (Supabase: {self.use_supabase})")
 
+    @staticmethod
+    def _get_neo4j_driver_uri(uri: Optional[str]) -> Optional[str]:
+        """
+        Return a Neo4j-driver-compatible URI, or None for Falkor redis schemes.
+        """
+        if not uri:
+            return None
+
+        parsed = urllib.parse.urlparse(uri)
+        if parsed.scheme in {"redis", "rediss"}:
+            return None
+
+        return uri
+
     async def initialize(self) -> bool:
         """
         Initialize the service and build indices/constraints
@@ -196,14 +211,19 @@ class GraphitiService:
         """
         try:
             # Initialize FalkorDB driver if available
-            if GraphDatabase and self.falkordb_uri:
+            driver_uri = self._get_neo4j_driver_uri(self.falkordb_uri)
+
+            if GraphDatabase and driver_uri:
                 self.driver = GraphDatabase.driver(
-                    self.falkordb_uri,
+                    driver_uri,
                     auth=(self.falkordb_user, self.falkordb_password)
                 )
                 self.driver.verify_connectivity()
                 logger.info("✅ FalkorDB connection established")
                 self.initialized = True
+            elif self.falkordb_uri and not driver_uri:
+                logger.info("ℹ️ Skipping Neo4j driver init for FalkorDB redis URI; using Supabase/native fallbacks")
+                self.initialized = self.use_supabase
             elif self.use_supabase:
                 logger.info("✅ Using Supabase for temporal tracking")
                 self.initialized = True
@@ -385,6 +405,77 @@ class GraphitiService:
             'timestamp': detected_at,
             'status': 'created'
         }
+
+    async def persist_unified_rfp(self, rfp_data: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Persist a validated RFP into the shared unified RFP table when available.
+
+        Falls back to the RFP tracking table if the unified table is unavailable.
+        """
+        if not self.supabase_client:
+            return {
+                'rfp_id': rfp_data.get('rfp_id'),
+                'status': 'skipped',
+                'reason': 'supabase_unavailable',
+            }
+
+        unified_payload = {
+            'title': rfp_data.get('title') or 'Validated RFP signal',
+            'organization': rfp_data.get('organization'),
+            'description': rfp_data.get('description'),
+            'location': rfp_data.get('location'),
+            'source': rfp_data.get('source', 'ai-detected'),
+            'source_url': rfp_data.get('source_url'),
+            'category': rfp_data.get('category'),
+            'status': rfp_data.get('status', 'detected'),
+            'priority': rfp_data.get('priority', 'medium'),
+            'priority_score': rfp_data.get('priority_score', 5),
+            'confidence_score': rfp_data.get('confidence_score'),
+            'confidence': rfp_data.get('confidence'),
+            'yellow_panther_fit': rfp_data.get('yellow_panther_fit'),
+            'entity_id': rfp_data.get('entity_id'),
+            'entity_name': rfp_data.get('entity_name'),
+            'entity_type': rfp_data.get('entity_type'),
+            'estimated_value': rfp_data.get('estimated_value'),
+            'requirements': rfp_data.get('requirements'),
+            'agent_notes': rfp_data.get('agent_notes'),
+            'contact_info': rfp_data.get('contact_info'),
+            'competition_info': rfp_data.get('competition_info'),
+            'metadata': {
+                **(rfp_data.get('metadata') or {}),
+                'rfp_id': rfp_data.get('rfp_id'),
+            },
+            'tags': rfp_data.get('tags'),
+            'keywords': rfp_data.get('keywords'),
+        }
+
+        try:
+            result = self.supabase_client.table('rfp_opportunities_unified').insert(unified_payload).execute()
+            inserted = result.data[0] if getattr(result, 'data', None) else {}
+            return {
+                'rfp_id': rfp_data.get('rfp_id'),
+                'status': 'inserted',
+                'record_id': inserted.get('id'),
+            }
+        except Exception as exc:
+            logger.warning(f"⚠️ Failed to write unified RFP table, falling back to rfp_tracking: {exc}")
+            fallback_payload = {
+                'rfp_id': rfp_data.get('rfp_id'),
+                'title': rfp_data.get('title'),
+                'description': rfp_data.get('description'),
+                'organization': rfp_data.get('organization'),
+                'source': rfp_data.get('source', 'ai-detected'),
+                'url': rfp_data.get('source_url'),
+                'category': rfp_data.get('category'),
+                'estimated_value': rfp_data.get('estimated_value'),
+                'detection_confidence': rfp_data.get('confidence_score'),
+                'metadata': rfp_data.get('metadata', {}),
+            }
+            self.supabase_client.table('rfp_tracking').upsert(fallback_payload).execute()
+            return {
+                'rfp_id': rfp_data.get('rfp_id'),
+                'status': 'fallback_tracking',
+            }
 
     async def add_discovery_episode(
         self,

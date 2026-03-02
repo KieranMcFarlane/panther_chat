@@ -66,6 +66,30 @@ export function ClubDossier({ entity, onEmailEntity }: ClubDossierProps) {
   
   const props = entity.properties
   const priority = getEntityPriority(entity)
+
+  // Extract leadership data from dossier file if available
+  const getLeadershipFromDossier = () => {
+    if (props.dossier_data) {
+      try {
+        const dossier = JSON.parse(props.dossier_data)
+        // Check for leadership_profile or sections with leadership data
+        const leadershipData = dossier.leadership_profile?.decision_makers
+        const leadershipSection = dossier.sections?.find((s: any) => s.id === 'leadership')?.content?.decision_makers
+
+        if (leadershipData && leadershipData.length > 0) {
+          return leadershipData
+        }
+        if (leadershipSection && leadershipSection.length > 0) {
+          return leadershipSection
+        }
+      } catch (e) {
+        console.log('Could not parse dossier_data:', e)
+      }
+    }
+    return null
+  }
+
+  const dossierLeadership = getLeadershipFromDossier()
   
   // Load real Perplexity data for any club entity
   useEffect(() => {
@@ -759,32 +783,34 @@ export function ClubDossier({ entity, onEmailEntity }: ClubDossierProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors cursor-pointer" onClick={() => navigateToPerson('Eduardo Gaspar')}>
-                    <User className="h-8 w-8 text-green-600" />
-                    <div className="flex-1">
-                      <div className="font-medium">Technical Director</div>
-                      <div className="text-sm text-blue-600 hover:text-blue-800">{createPersonLink('Eduardo Gaspar', 'Technical Director')}</div>
-                    </div>
-                    <ExternalLink className="h-4 w-4 text-gray-400" />
+                {dossierLeadership && dossierLeadership.length > 0 ? (
+                  <div className="space-y-3">
+                    {dossierLeadership.map((person: any, index: number) => (
+                      <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                        <User className="h-8 w-8 text-gray-600" />
+                        <div className="flex-1">
+                          <div className="font-medium">{person.name}</div>
+                          <div className="text-sm text-blue-600">{person.role}</div>
+                          {person.linkedin_url && (
+                            <a href={person.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 hover:text-blue-600">
+                              View LinkedIn →
+                            </a>
+                          )}
+                        </div>
+                        {person.confidence && (
+                          <Badge variant={person.confidence >= 80 ? 'default' : 'secondary'} className="text-xs">
+                            {person.confidence}% confident
+                          </Badge>
+                        )}
+                      </div>
+                    ))}
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors cursor-pointer" onClick={() => navigateToPerson('Mikel Arteta')}>
-                    <User className="h-8 w-8 text-blue-600" />
-                    <div className="flex-1">
-                      <div className="font-medium">Manager</div>
-                      <div className="text-sm text-blue-600 hover:text-blue-800">{createPersonLink('Mikel Arteta', 'Manager')}</div>
-                    </div>
-                    <ExternalLink className="h-4 w-4 text-gray-400" />
+                ) : (
+                  <div className="text-center py-8 text-gray-500">
+                    <p>No leadership data available for this entity.</p>
+                    <p className="text-sm mt-2">Generate a dossier to see decision makers.</p>
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors cursor-pointer" onClick={() => navigateToPerson('Vinai Venkatesham')}>
-                    <User className="h-8 w-8 text-purple-600" />
-                    <div className="flex-1">
-                      <div className="font-medium">CEO</div>
-                      <div className="text-sm text-blue-600 hover:text-blue-800">{createPersonLink('Vinai Venkatesham', 'CEO')}</div>
-                    </div>
-                    <ExternalLink className="h-4 w-4 text-gray-400" />
-                  </div>
-                </div>
+                )}
               </CardContent>
             </Card>
 
@@ -794,42 +820,12 @@ export function ClubDossier({ entity, onEmailEntity }: ClubDossierProps) {
                 <CardTitle className="flex items-center gap-2">
                   <Star className="h-5 w-5 text-yellow-600" />
                   Notable Players
-                  <Badge className="ml-2 bg-green-100 text-green-800 border-green-200">
-                    Clickable Profiles
-                  </Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3 p-3 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors cursor-pointer" onClick={() => navigateToPerson('Martin Ødegaard')}>
-                    <User className="h-8 w-8 text-yellow-600" />
-                    <div className="flex-1">
-                      <div className="font-medium">Team Captain</div>
-                      <div className="text-sm text-blue-600 hover:text-blue-800">{createPersonLink('Martin Ødegaard', 'Team Captain')}</div>
-                    </div>
-                    <ExternalLink className="h-4 w-4 text-gray-400" />
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-colors cursor-pointer" onClick={() => navigateToPerson('Bukayo Saka')}>
-                    <User className="h-8 w-8 text-red-600" />
-                    <div className="flex-1">
-                      <div className="font-medium">Key Player</div>
-                      <div className="text-sm text-blue-600 hover:text-blue-800">{createPersonLink('Bukayo Saka', 'Winger/Forward')}</div>
-                    </div>
-                    <ExternalLink className="h-4 w-4 text-gray-400" />
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors cursor-pointer" onClick={() => navigateToPerson('William Saliba')}>
-                    <User className="h-8 w-8 text-blue-600" />
-                    <div className="flex-1">
-                      <div className="font-medium">Defensive Leader</div>
-                      <div className="text-sm text-blue-600 hover:text-blue-800">{createPersonLink('William Saliba', 'Center Back')}</div>
-                    </div>
-                    <ExternalLink className="h-4 w-4 text-gray-400" />
-                  </div>
-                </div>
-                <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                  <p className="text-sm text-blue-700">
-                    💡 <strong>Tip:</strong> Click on any person's name to view their detailed profile page with career information and intelligence data.
-                  </p>
+                <div className="text-center py-8 text-gray-500">
+                  <p>Player data will be available when a full dossier is generated.</p>
+                  <p className="text-sm mt-2">Leadership data is shown above for decision makers.</p>
                 </div>
               </CardContent>
             </Card>

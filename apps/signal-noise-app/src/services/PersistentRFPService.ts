@@ -25,6 +25,16 @@ interface RFPSessionState {
   };
 }
 
+function shouldDebugPersistentRfp(): boolean {
+  return typeof window !== 'undefined' && process.env.NEXT_PUBLIC_DEBUG_PERSISTENT_RFP === '1';
+}
+
+function debugPersistentRfp(...args: unknown[]) {
+  if (shouldDebugPersistentRfp()) {
+    console.log(...args);
+  }
+}
+
 class PersistentRFPService {
   private static instance: PersistentRFPService;
   private sessionState: RFPSessionState;
@@ -40,18 +50,17 @@ class PersistentRFPService {
   private async initializeEntityCount(): Promise<void> {
     // Only run on client side
     if (typeof window === 'undefined') {
-      console.log('🖥️ [PersistentRFPService] initializeEntityCount: Skipping on server-side');
       return;
     }
 
     // Prevent multiple simultaneous initializations
     if (this.sessionState.progress.totalEntities > 0) {
-      console.log(`✅ [PersistentRFPService] initializeEntityCount: Already have entity count: ${this.sessionState.progress.totalEntities}, skipping`);
+      debugPersistentRfp(`✅ [PersistentRFPService] initializeEntityCount: Already have entity count: ${this.sessionState.progress.totalEntities}, skipping`);
       return;
     }
 
     try {
-      console.log('🔍 [PersistentRFPService] Initializing entity count from Neo4j...');
+      debugPersistentRfp('🔍 [PersistentRFPService] Initializing entity count from Neo4j...');
       
       const response = await fetch('/api/neo4j-query', {
         method: 'POST',
@@ -73,8 +82,7 @@ class PersistentRFPService {
         // Update the session with the real entity count
         this.sessionState.progress.totalEntities = totalCount;
         
-        console.log(`✅ [PersistentRFPService] Fetched real entity count: ${totalCount} entities`);
-        console.log('📊 [PersistentRFPService] Updated session with real entity count, notifying listeners...');
+        debugPersistentRfp(`✅ [PersistentRFPService] Fetched real entity count: ${totalCount} entities`);
         
         // Save the updated session state
         this.saveSessionState();
@@ -83,7 +91,7 @@ class PersistentRFPService {
       } else {
         console.warn('⚠️ [PersistentRFPService] Failed to fetch entity count, using fallback');
         this.sessionState.progress.totalEntities = 1478; // Known fallback count
-        console.log(`📊 [PersistentRFPService] Using fallback count: ${this.sessionState.progress.totalEntities} entities`);
+        debugPersistentRfp(`📊 [PersistentRFPService] Using fallback count: ${this.sessionState.progress.totalEntities} entities`);
         this.saveSessionState();
         this.notifyListeners();
       }
@@ -91,15 +99,13 @@ class PersistentRFPService {
       console.error('❌ [PersistentRFPService] Error fetching entity count:', error);
       // Use known fallback count
       this.sessionState.progress.totalEntities = 1478;
-      console.log(`📊 [PersistentRFPService] Using fallback count after error: ${this.sessionState.progress.totalEntities} entities`);
+      debugPersistentRfp(`📊 [PersistentRFPService] Using fallback count after error: ${this.sessionState.progress.totalEntities} entities`);
       this.saveSessionState();
       this.notifyListeners();
     }
   }
 
   private constructor() {
-    console.log('🏗️ [PersistentRFPService] Constructor: Initializing service...');
-    
     this.sessionState = {
       progress: {
         sessionId: '',
@@ -120,32 +126,21 @@ class PersistentRFPService {
     };
     
     const isClientSide = typeof window !== 'undefined';
-    console.log(`🖥️ [PersistentRFPService] Constructor: Running on ${isClientSide ? 'client-side' : 'server-side'}`);
-    
+
     if (isClientSide) {
-      console.log('📦 [PersistentRFPService] Constructor: Loading session state from localStorage...');
       // Load session state from localStorage
       this.loadSessionState();
-      
-      console.log(`📊 [PersistentRFPService] Constructor: Initial state - totalEntities: ${this.sessionState.progress.totalEntities}, status: ${this.sessionState.progress.status}`);
-      
+
       // If we don't have a valid entity count, fetch it from Neo4j
       if (this.sessionState.progress.totalEntities === 0) {
-        console.log('🔄 [PersistentRFPService] Constructor: No entity count found, initializing from Neo4j...');
         this.initializeEntityCount();
-      } else {
-        console.log(`✅ [PersistentRFPService] Constructor: Using existing entity count: ${this.sessionState.progress.totalEntities}`);
       }
-    } else {
-      console.log('🖥️ [PersistentRFPService] Constructor: Server-side initialization, deferring to client-side');
     }
-    
-    console.log('🚀 [PersistentRFPService] Constructor: Service initialized successfully');
   }
 
   // Public method to manually re-initialize entity count (for client-side fallback)
   public async reinitializeEntityCount(): Promise<void> {
-    console.log('🔄 [PersistentRFPService] Manual reinitialization requested');
+    debugPersistentRfp('🔄 [PersistentRFPService] Manual reinitialization requested');
     this.sessionState.progress.totalEntities = 0; // Force re-fetch
     await this.initializeEntityCount();
   }
@@ -153,29 +148,20 @@ class PersistentRFPService {
   // Initialize client-side functionality
   private async initializeClientSide(): Promise<void> {
     if (this.isClientInitialized) {
-      console.log('✅ [PersistentRFPService] Client already initialized, skipping');
+      debugPersistentRfp('✅ [PersistentRFPService] Client already initialized, skipping');
       return;
     }
 
-    console.log('🖥️ [PersistentRFPService] initializeClientSide: Starting client-side initialization...');
-    
     try {
       // Load session state from localStorage
       this.loadSessionState();
-      
-      console.log(`📊 [PersistentRFPService] initializeClientSide: Loaded state - totalEntities: ${this.sessionState.progress.totalEntities}, status: ${this.sessionState.progress.status}`);
-      
+
       // If we don't have a valid entity count, fetch it from Neo4j
       if (this.sessionState.progress.totalEntities === 0) {
-        console.log('🔄 [PersistentRFPService] initializeClientSide: No entity count found, fetching from Neo4j...');
         await this.initializeEntityCount();
-      } else {
-        console.log(`✅ [PersistentRFPService] initializeClientSide: Using existing entity count: ${this.sessionState.progress.totalEntities}`);
       }
-      
+
       this.isClientInitialized = true;
-      console.log('🚀 [PersistentRFPService] initializeClientSide: Client-side initialization completed');
-      
     } catch (error) {
       console.error('❌ [PersistentRFPService] initializeClientSide: Initialization failed:', error);
     }
@@ -188,7 +174,6 @@ class PersistentRFPService {
     
     // Ensure client-side initialization happens when accessed on client
     if (typeof window !== 'undefined' && !PersistentRFPService.instance.isClientInitialized) {
-      console.log('🔄 [PersistentRFPService] getInstance: Triggering client-side initialization...');
       PersistentRFPService.instance.initializeClientSide();
     }
     
@@ -211,13 +196,12 @@ class PersistentRFPService {
   private loadSessionState() {
     // Only access localStorage on client side
     if (typeof window === 'undefined') {
-      console.log('🖥️ [PersistentRFPService] loadSessionState: Running on server-side, skipping localStorage');
       return;
     }
     
     try {
       const saved = localStorage.getItem('rfp-intelligence-session');
-      console.log(`📦 [PersistentRFPService] loadSessionState: Found saved data: ${saved ? 'YES' : 'NO'}`);
+      debugPersistentRfp(`📦 [PersistentRFPService] loadSessionState: Found saved data: ${saved ? 'YES' : 'NO'}`);
       
       if (saved) {
         const parsed = JSON.parse(saved);

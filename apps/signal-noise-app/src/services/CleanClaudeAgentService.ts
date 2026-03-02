@@ -47,10 +47,7 @@ class CleanClaudeAgentService {
   private currentBatch: EnrichmentBatch | null = null;
   private enrichmentInProgress = false;
   private claudeAgent: any = null;
-
-  constructor() {
-    this.initializeClaudeAgent();
-  }
+  private claudeAgentInitialization: Promise<void> | null = null;
 
   private async initializeClaudeAgent() {
     try {
@@ -126,7 +123,23 @@ class CleanClaudeAgentService {
     }
   }
 
+  private async ensureClaudeAgentInitialized() {
+    if (this.claudeAgent) {
+      return;
+    }
+
+    if (!this.claudeAgentInitialization) {
+      this.claudeAgentInitialization = this.initializeClaudeAgent().finally(() => {
+        this.claudeAgentInitialization = null;
+      });
+    }
+
+    await this.claudeAgentInitialization;
+  }
+
   async startEnrichment(): Promise<EnrichmentBatch> {
+    await this.ensureClaudeAgentInitialized();
+
     if (this.enrichmentInProgress) {
       throw new Error('Claude Agent enrichment is already running');
     }

@@ -50,6 +50,10 @@ import {
 import { OutreachStrategyPanel } from './OutreachStrategyPanel'
 import { HypothesisStatesPanel } from './HypothesisStatesPanel'
 
+const premiumDossierRequests = new Map<string, Promise<any | null>>()
+const premiumDossierResults = new Map<string, any | null>()
+const PREMIUM_DOSSIER_TABS = new Set(['procurement', 'leadership', 'connections', 'outreach'])
+
 interface EnhancedClubDossierProps {
   entity: Entity
   onEmailEntity: () => void
@@ -67,47 +71,214 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
   const [isLoadingIntelligence, setIsLoadingIntelligence] = useState(false)
   const [connectionAnalysis, setConnectionAnalysis] = useState<any>(null)
   const [isInitialized, setIsInitialized] = useState(false)
+  const [hasLoadedPremiumDossier, setHasLoadedPremiumDossier] = useState(false)
   const [hypotheses, setHypotheses] = useState<any[]>([])
   const [signals, setSignals] = useState<any[]>([])
   
   const props = entity.properties
   const priority = parseInt(String(getEntityPriority(entity))) || 0
+  const shouldLoadPremiumDossier = PREMIUM_DOSSIER_TABS.has(activeTab)
+  const displayValue = (value: any, fallback: string) => formatValue(value) || fallback
+  const displayName = formatValue(enhancedData?.coreInfo?.name) || formatValue(props.name) || 'Club Entity'
+  const displayType = formatValue(enhancedData?.coreInfo?.type) || formatValue(props.type) || 'Club'
+  const displayLeague = formatValue(enhancedData?.coreInfo?.league) || formatValue(props.level) || 'Championship'
+  const displayHq = formatValue(enhancedData?.coreInfo?.hq) || formatValue(props.country) || 'England'
+
+  const getEmbeddedDossier = () => {
+    if (dossier && Object.keys(dossier).length > 0) {
+      return dossier
+    }
+
+    if (typeof props.dossier_data === 'string') {
+      try {
+        return JSON.parse(props.dossier_data)
+      } catch (error) {
+        console.error('Error parsing embedded dossier_data:', error)
+      }
+    }
+
+    return null
+  }
+
+  // Debug: Log priority calculation
+  console.log('📊 Priority calculation:', {
+    entityName: props.name,
+    priorityProp: props.priority,
+    calculatedPriority: getEntityPriority(entity),
+    finalPriority: priority,
+    tier: priority >= 80 ? 'PREMIUM' : priority >= 50 ? 'STANDARD' : 'BASIC'
+  })
+
+  // Fetch PREMIUM dossier from Python backend (with real leadership data)
+  const fetchPremiumDossier = async () => {
+    const nameSlug = props.name?.toLowerCase().replace(/\s+/g, '-') || ''
+    const possibleIds = Array.from(new Set([
+      entity.id?.toString(),
+      props.neo4j_id?.toString(),
+      nameSlug,
+    ].filter(Boolean)))
+    const cacheKey = `${possibleIds[0] || props.name || 'unknown'}:${priority}`
+
+    if (premiumDossierResults.has(cacheKey)) {
+      return premiumDossierResults.get(cacheKey) ?? null
+    }
+
+    const existingRequest = premiumDossierRequests.get(cacheKey)
+    if (existingRequest) {
+      return existingRequest
+    }
+
+    console.log('🔍 Trying Python backend for dossier with possible IDs:', possibleIds, 'and priority:', priority)
+
+    const requestPromise = (async () => {
+      for (const entityIdForPython of possibleIds) {
+        try {
+          const pythonResponse = await fetch('/api/dossiers/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              entity_id: entityIdForPython,
+              entity_name: props.name || 'Unknown Entity',
+              priority_score: priority,
+              tier: 'PREMIUM'
+            })
+          })
+
+          if (pythonResponse.ok) {
+            const data = await pythonResponse.json()
+            const dossier = data.dossier_data || data.dossier
+            if (dossier && Object.keys(dossier).length > 0) {
+              console.log('✅ Loaded PREMIUM dossier from Python backend with ID:', entityIdForPython)
+              premiumDossierResults.set(cacheKey, dossier)
+              return dossier
+            }
+          }
+
+          if (pythonResponse.status >= 500) {
+            console.log('⚠️ Python backend unavailable, skipping remaining ID attempts')
+            break
+          }
+        } catch (pythonError) {
+          console.log('⚠️ Python backend error for ID:', entityIdForPython, pythonError)
+          break
+        }
+      }
+
+      console.log('⚠️ Python backend not available for any ID, trying file fallback')
+
+      // Fallback to file-based dossier
+      const fileIds = Array.from(new Set([
+        entity.id,
+        entity.neo4j_id,
+        props.neo4j_id,
+        props.name?.toLowerCase().replace(/\s+/g, '_'),
+        props.name?.toLowerCase().replace(/\s+/g, '-')
+      ].filter(Boolean)))
+
+      console.log('🔍 Trying file-based dossier for IDs:', fileIds)
+
+      for (const fileId of fileIds) {
+        const response = await fetch(`/api/dossier/file?entity_id=${fileId}&tier=premium`)
+        if (response.ok) {
+          const data = await response.json()
+          console.log('✅ Loaded PREMIUM dossier from file:', fileId)
+          premiumDossierResults.set(cacheKey, data.dossier)
+          return data.dossier
+        }
+      }
+
+      console.log('⚠️ No PREMIUM dossier found, using fallback')
+      return null
+    })()
+
+    premiumDossierRequests.set(cacheKey, requestPromise)
+
+    try {
+      return await requestPromise
+    } finally {
+      premiumDossierRequests.delete(cacheKey)
+    }
+  }
 
   useEffect(() => {
     if (!entity) return
 
-    // If we have dossier data from the API, use it directly
-    if (dossier && Object.keys(dossier).length > 0) {
-      // Map the API response structure to the expected EnhancedClubDossier format
-      const mappedDossier = mapApiDossierToEnhancedDossier(dossier)
-      setEnhancedData(mappedDossier)
-      setConnectionAnalysis(dossier.linkedin_connection_analysis)
+    const embeddedDossier = getEmbeddedDossier()
 
-      // Extract hypotheses and signals from dossier
-      if (dossier.hypotheses) {
-        setHypotheses(dossier.hypotheses)
-      }
-      if (dossier.signals) {
-        setSignals(dossier.signals)
+    if (embeddedDossier) {
+      setHasLoadedPremiumDossier(true)
+
+      if (embeddedDossier.core_info || embeddedDossier.entity || embeddedDossier.strategic_analysis) {
+        const mappedDossier = mapApiDossierToEnhancedDossier(embeddedDossier)
+        setEnhancedData(mappedDossier)
+        setConnectionAnalysis(embeddedDossier.linkedin_connection_analysis)
+
+        if (embeddedDossier.hypotheses) {
+          setHypotheses(embeddedDossier.hypotheses)
+        }
+        if (embeddedDossier.signals) {
+          setSignals(embeddedDossier.signals)
+        }
+      } else {
+        generateEnhancedDossier()
       }
 
       setIsInitialized(true)
-    } else {
-      // Otherwise generate it locally from entity properties
+      return
+    }
+
+    if (!shouldLoadPremiumDossier) {
       generateEnhancedDossier()
       generateConnectionAnalysis()
       setIsInitialized(true)
+      return
     }
-  }, [entity, dossier])
+
+    setIsInitialized(true)
+  }, [entity, dossier, shouldLoadPremiumDossier])
+
+  useEffect(() => {
+    if (!entity) return
+    if (!shouldLoadPremiumDossier || hasLoadedPremiumDossier) return
+    if (getEmbeddedDossier()) return
+
+    const loadPremiumDossier = async () => {
+      const premiumDossier = await fetchPremiumDossier()
+
+      if (!premiumDossier) {
+        setHasLoadedPremiumDossier(true)
+        return
+      }
+
+      const { mapPremiumDossierToEnhanced } = await import('@/lib/dossier-mapper')
+      const mappedDossier = mapPremiumDossierToEnhanced(premiumDossier, entity.properties)
+      setEnhancedData(mappedDossier)
+
+      if (premiumDossier.extracted_hypotheses) {
+        setHypotheses(premiumDossier.extracted_hypotheses)
+      }
+      if (premiumDossier.extracted_signals) {
+        setSignals(premiumDossier.extracted_signals)
+      }
+
+      setHasLoadedPremiumDossier(true)
+    }
+
+    loadPremiumDossier()
+  }, [entity, shouldLoadPremiumDossier, hasLoadedPremiumDossier])
 
   const mapApiDossierToEnhancedDossier = (apiDossier: any): EnhancedClubDossier => {
+    const entityName = apiDossier.core_info?.name || apiDossier.entity?.name || formatValue(props.name) || 'Club Entity'
+    const entityLeague = apiDossier.core_info?.league || formatValue(props.level) || 'League not identified'
+    const entityHq = apiDossier.core_info?.hq || formatValue(props.country) || 'Unknown'
+
     return {
       coreInfo: {
-        name: apiDossier.core_info?.name || apiDossier.entity?.name || props.name || 'Unknown',
+        name: entityName,
         type: apiDossier.core_info?.type || apiDossier.entity?.type || props.type || 'Club',
-        league: apiDossier.core_info?.league || props.level || 'Unknown',
+        league: entityLeague,
         founded: apiDossier.core_info?.founded || 'Unknown',
-        hq: apiDossier.core_info?.hq || props.country || 'Unknown',
+        hq: entityHq,
         stadium: apiDossier.core_info?.stadium || 'Unknown',
         website: apiDossier.core_info?.website || props.website,
         employeeRange: apiDossier.core_info?.employee_range || 'Unknown'
@@ -125,7 +296,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
       },
       aiReasonerFeedback: {
         overallAssessment: apiDossier.strategic_analysis?.overall_assessment || 'Digital transformation opportunities identified',
-        yellowPantherOpportunity: apiDossier.strategic_analysis?.opportunity_scoring?.immediate_launch?.[0]?.opportunity || 'AI-Powered Fan Engagement Platform partnership available',
+        yellowPantherOpportunity: apiDossier.strategic_analysis?.opportunity_scoring?.immediate_launch?.[0]?.opportunity || `Discovery and pilot work for ${entityName}`,
         engagementStrategy: apiDossier.strategic_analysis?.recommended_approach || 'Direct engagement through available channels',
         riskFactors: ['Vendor lock-in', 'Change resistance', 'Budget constraints'],
         competitiveAdvantages: ['Brand strength', 'Digital readiness', 'Innovation culture'],
@@ -191,9 +362,9 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
           goalsAgainst: 4
         },
         miniTable: [
-          { position: 1, club: 'Manchester City', points: 19, goalDifference: 15 },
-          { position: 2, club: apiDossier.entity?.name || 'Arsenal', points: 17, goalDifference: 8 },
-          { position: 3, club: 'Liverpool', points: 16, goalDifference: 7 }
+          { position: 1, club: 'Top competitor', points: 19, goalDifference: 15 },
+          { position: 2, club: entityName, points: 17, goalDifference: 8 },
+          { position: 3, club: 'Peer club', points: 16, goalDifference: 7 }
         ]
       },
       status: {
@@ -239,8 +410,8 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
             ]
           },
           aiReasonerFeedback: {
-            overallAssessment: parsedDossier.strategic_analysis?.overall_assessment || 'Sunderland presents significant partnership opportunities with strong digital transformation potential and market position.',
-            yellowPantherOpportunity: parsedDossier.strategic_analysis?.opportunity_scoring?.immediate_launch?.[0]?.opportunity || 'AI-Powered Fan Engagement Platform partnership available',
+            overallAssessment: parsedDossier.strategic_analysis?.overall_assessment || `${parsedDossier.entity.name} presents partnership opportunities with strong digital transformation potential.`,
+            yellowPantherOpportunity: parsedDossier.strategic_analysis?.opportunity_scoring?.immediate_launch?.[0]?.opportunity || `AI-powered engagement opportunities for ${parsedDossier.entity.name}`,
             engagementStrategy: parsedDossier.strategic_analysis?.recommended_approach || 'Direct engagement through Yellow Panther UK team networks with focus on sports technology partnerships',
             riskFactors: ['Championship-level budget constraints', 'Change management resistance', 'Vendor integration complexity'],
             competitiveAdvantages: ['Strong fan base engagement', 'Digital readiness indicators', 'Leadership openness to innovation'],
@@ -271,7 +442,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
           recentNews: [
             {
               date: '2025-09-28',
-              headline: 'Sunderland announces digital transformation initiative',
+              headline: `${parsedDossier.entity.name} explores digital transformation initiative`,
               source: 'Official Club Site',
               category: 'technology',
               relevanceScore: 95
@@ -285,7 +456,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
             },
             {
               date: '2025-08-22',
-              headline: 'Sunderland supporters show strong engagement with digital content',
+              headline: `${parsedDossier.entity.name} supporters show strong engagement with digital content`,
               source: 'The Guardian',
               category: 'sports',
               relevanceScore: 92
@@ -316,9 +487,9 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
           goalsAgainst: 4
         },
         miniTable: [
-          { position: 1, club: 'Manchester City', points: 19, goalDifference: 15 },
-          { position: 2, club: 'Arsenal', points: 17, goalDifference: 8 },
-          { position: 3, club: 'Liverpool', points: 16, goalDifference: 7 }
+          { position: 1, club: 'Top competitor', points: 19, goalDifference: 15 },
+          { position: 2, club: parsedDossier.entity.name, points: 17, goalDifference: 8 },
+          { position: 3, club: 'Peer club', points: 16, goalDifference: 7 }
         ]
       },
       status: {
@@ -342,140 +513,83 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
   }
 
   const generateDefaultDossier = (): EnhancedClubDossier => {
-    // Generate comprehensive dossier data following the ASCII wireframe structure
+    const entityName = formatValue(props.name) || 'Club Entity'
+    const entityLeague = formatValue(props.level) || formatValue(props.type) || 'League not identified'
+    const entityCountry = formatValue(props.country) || formatValue(props.location) || 'Country not identified'
+    const entityHq = formatValue(props.headquarters) || entityCountry
+    const entityStadium = formatValue(props.stadium) || 'Stadium not identified'
+    const entityWebsite = formatValue(props.website) || 'Website not identified'
+    const foundedYear = parseInt(formatValue(props.founded)) || new Date().getFullYear()
+
     return {
       coreInfo: {
-        name: formatValue(props.name) || 'Club Entity',
+        name: entityName,
         type: 'Club',
-        league: formatValue(props.level) || 'Premier League',
-        founded: parseInt(formatValue(props.founded)) || 1886,
-        hq: formatValue(props.headquarters) || 'London, England',
-        stadium: formatValue(props.stadium) || 'Emirates Stadium',
-        website: formatValue(props.website) || 'https://www.arsenal.com',
-        employeeRange: '501–1,000'
+        league: entityLeague,
+        founded: foundedYear,
+        hq: entityHq,
+        stadium: entityStadium,
+        website: entityWebsite,
+        employeeRange: 'Not identified'
       },
       digitalTransformation: {
-        digitalMaturity: 25,
-        transformationScore: 80,
-        websiteModernness: 7,
-        currentPartner: 'NTT DATA',
-        keyWeaknesses: ['Vendor lock-in via NTT DATA', 'Legacy systems integration challenges'],
+        digitalMaturity: 50,
+        transformationScore: 50,
+        websiteModernness: entityWebsite === 'Website not identified' ? 0 : 5,
+        currentPartner: 'Not identified',
+        keyWeaknesses: [
+          'Digital supplier landscape not yet verified',
+          'Technology stack and internal process maturity require validation'
+        ],
         strategicOpportunities: [
-          'Expand women\'s football digital ecosystem',
-          'Integrate fan wellness/mental health platform',
-          'Create AR-enhanced supporter engagement experiences',
-          'Pilot modular fan data integration layer for personalization'
+          `Audit ${entityName}'s supporter-facing digital journey`,
+          `Identify quick-win modernization projects for ${entityLeague}`,
+          'Validate data, content, and commercial workflow bottlenecks',
+          'Assess opportunities for modular experimentation before platform-scale change'
         ]
       },
       aiReasonerFeedback: {
-        overallAssessment: 'Arsenal\'s digital structure is mature but rigid. Their reliance on NTT DATA constrains innovation velocity.',
-        yellowPantherOpportunity: 'Position Yellow Panther as a "lightweight experimental R&D wing" for pilot projects that NTT cannot deliver quickly.',
-        engagementStrategy: 'Target Juliet Slot (Commercial Director) and Mark Gonnella (Comms) with proposals around "next-gen fan micro-experiences" aligned with Arsenal\'s CSR.',
-        riskFactors: ['Vendor lock-in', 'Change resistance', 'Budget constraints'],
-        competitiveAdvantages: ['Brand strength', 'Digital readiness', 'Innovation culture'],
-        recommendedApproach: 'Start with small pilot projects, prove value quickly, then expand scope based on success metrics.'
+        overallAssessment: `${entityName} does not yet have a verified enhanced dossier, so this view is using a neutral fallback summary.`,
+        yellowPantherOpportunity: `Position Yellow Panther around fast discovery work for ${entityName}: audit, prototype, and prove value before larger transformation commitments.`,
+        engagementStrategy: `Start with a compact discovery engagement focused on ${entityName}'s digital priorities, commercial workflows, and supporter experience gaps.`,
+        riskFactors: ['Unverified stakeholder map', 'Limited confirmed systems data', 'Budget and prioritization unknown'],
+        competitiveAdvantages: ['Lightweight pilot delivery', 'Rapid discovery capability', 'Clearer decision support for future initiatives'],
+        recommendedApproach: 'Begin with evidence gathering, confirm stakeholders, and scope one measurable pilot before proposing broader platform work.'
       },
       strategicOpportunities: {
         immediateLaunch: [
-          '"Digital Twin of the Emirates" (interactive data portal)',
-          'AI-powered RFP tracking dashboard as white-label pilot'
+          'Digital experience and commercial stack audit',
+          'Rapid prototype for a supporter or partner-facing workflow improvement'
         ],
         mediumTermPartnerships: [
-          'Partner with Arsenal Women for bilingual fan content testing',
-          'Seasonal intelligence subscription for commercial team'
+          'Commercial intelligence support for sponsorship and partnership planning',
+          'Operational analytics for content, fan engagement, or procurement teams'
         ],
         longTermInitiatives: [
-          'Full-stack fan engagement platform',
-          'Global youth academy intelligence system'
+          'Unified fan and partner engagement platform',
+          'Longer-term data and workflow modernization program'
         ],
         opportunityScores: {
-          'Digital Twin Portal': 85,
-          'RFP Dashboard': 90,
-          'Women\'s Football Partnership': 75,
-          'Fan Engagement Platform': 80
+          'Discovery Audit': 72,
+          'Workflow Prototype': 76,
+          'Commercial Intelligence Support': 68,
+          'Fan Engagement Platform': 64
         }
       },
-      recentNews: [
-        {
-          date: '2025-09-28',
-          headline: 'Arsenal and Emirates renew sustainability partnership',
-          source: 'Official Club Site',
-          category: 'partnership',
-          relevanceScore: 85
-        },
-        {
-          date: '2025-09-10',
-          headline: 'Arsenal Women reach record 17,000 season ticket sales',
-          source: 'BBC Sport',
-          category: 'sports',
-          relevanceScore: 90
-        },
-        {
-          date: '2025-08-22',
-          headline: 'Club launches "Arsenal Mind" mental health campaign',
-          source: 'The Guardian',
-          category: 'operations',
-          relevanceScore: 95
-        }
-      ],
-      keyDecisionMakers: [
-        {
-          name: 'Juliet Slot',
-          role: 'Commercial Director',
-          influenceLevel: 'HIGH',
-          decisionScope: ['Global partnerships', 'Brand activations', 'Revenue diversification'],
-          relationshipMapping: {
-            reportsTo: 'Richard Garlick',
-            collaboratesWith: ['Mark Gonnella', 'Edu Gaspar']
-          },
-          communicationProfile: {
-            tone: 'Professional, outcome-driven, values storytelling',
-            riskProfile: 'LOW',
-            preferredContact: 'Formal proposal with case studies'
-          },
-          strategicHooks: [
-            'Arsenal Mind → propose emotional analytics integration pilot',
-            'Emirates partnership → sustainability data storytelling layer',
-            'Arsenal Women → test "global community engagement dashboard"'
-          ]
-        },
-        {
-          name: 'Mark Gonnella',
-          role: 'Media & Communications Director',
-          influenceLevel: 'HIGH',
-          decisionScope: ['Brand messaging', 'Content strategy', 'Media relations'],
-          relationshipMapping: {
-            reportsTo: 'Vinai Venkatesham',
-            collaboratesWith: ['Juliet Slot', 'Josh Kroenke']
-          },
-          communicationProfile: {
-            tone: 'Story-driven, brand-focused, audience engagement',
-            riskProfile: 'MEDIUM',
-            preferredContact: 'Creative pitch with brand alignment examples'
-          },
-          strategicHooks: [
-            'Content intelligence for fan engagement optimization',
-            'Brand sentiment analysis across social platforms',
-            'Narrative analytics for storytelling effectiveness'
-          ]
-        }
-      ],
+      recentNews: [],
+      keyDecisionMakers: [],
       leagueContext: {
-        currentPosition: 2,
-        currentPoints: 17,
-        recentForm: ['W', 'D', 'W', 'W', 'W'],
+        currentPosition: 0,
+        currentPoints: 0,
+        recentForm: [],
         keyStatistics: {
-          wins: 5,
-          draws: 2,
+          wins: 0,
+          draws: 0,
           losses: 0,
-          goalsFor: 12,
-          goalsAgainst: 4
+          goalsFor: 0,
+          goalsAgainst: 0
         },
-        miniTable: [
-          { position: 1, club: 'Manchester City', points: 19, goalDifference: 15 },
-          { position: 2, club: 'Arsenal', points: 17, goalDifference: 8 },
-          { position: 3, club: 'Liverpool', points: 16, goalDifference: 7 }
-        ]
+        miniTable: []
       },
       status: {
         watchlist: true,
@@ -544,9 +658,6 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
         analysisData = createGenericAnalysis();
       }
       
-      // Simulate processing delay for UX
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
       setConnectionAnalysis(analysisData);
     } catch (error) {
       console.error('Error in connection analysis:', error);
@@ -557,6 +668,9 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
   const createGenericAnalysis = () => {
     // Create generic analysis for entities without specific LinkedIn data
     const entityName = formatValue(props.name) || 'Unknown Entity';
+    const primaryTeamMember = 'Yellow Panther lead contact';
+    const secondaryTeamMember = 'Yellow Panther commercial contact';
+    const tertiaryTeamMember = 'Yellow Panther technical contact';
     
     return {
         status: 'completed',
@@ -567,24 +681,24 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
             yellow_panther_uk_team: {
               team_members: [
                 {
-                  name: 'Stuart Cope',
-                  linkedin_url: 'https://uk.linkedin.com/in/stuart-cope-54392b16/',
-                  role: 'Co-Founder & COO',
+                  name: primaryTeamMember,
+                  linkedin_url: '',
+                  role: 'Lead relationship owner',
                   connection_count: 2,
                   is_primary: true,
                   strongest_connection: 'Leadership team via industry consultant'
                 },
                 {
-                  name: 'Gunjan Parikh',
-                  linkedin_url: 'https://www.linkedin.com/in/gunjan-parikh-a26a1ba9/',
-                  role: 'Founder & CEO',
+                  name: secondaryTeamMember,
+                  linkedin_url: '',
+                  role: 'Commercial contact',
                   connection_count: 1,
                   is_primary: false
                 },
                 {
-                  name: 'Elliott Hillman',
-                  linkedin_url: 'https://uk.linkedin.com/in/elliott-rj-hillman/',
-                  role: 'Senior Client Partner',
+                  name: tertiaryTeamMember,
+                  linkedin_url: '',
+                  role: 'Technical contact',
                   connection_count: 1,
                   is_primary: false
                 }
@@ -594,7 +708,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
             },
             introduction_paths: [
               {
-                yellow_panther_contact: 'Stuart Cope',
+                yellow_panther_contact: primaryTeamMember,
                 target_decision_maker: 'Commercial Leadership Team',
                 connection_strength: 'STRONG',
                 connection_type: 'MUTUAL_CONNECTION',
@@ -607,7 +721,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                     relationship_context: 'Former colleague at Sky Sports',
                     recency_years: 2,
                     strength_rating: 9,
-                    yellow_panther_proximity: 'Stuart Cope'
+                    yellow_panther_proximity: primaryTeamMember
                   },
                   {
                     name: 'James Wilson',
@@ -615,7 +729,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                     relationship_context: 'University alumni network',
                     recency_years: 5,
                     strength_rating: 7,
-                    yellow_panther_proximity: 'Stuart Cope'
+                    yellow_panther_proximity: primaryTeamMember
                   }
                 ],
                 connection_context: 'Strong mutual connections through sports industry network with recent professional interactions',
@@ -626,8 +740,8 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                 ]
               },
               {
-                yellow_panther_contact: 'Stuart Cope',
-                target_decision_maker: 'Mark Gonnella (Former) - Media & Communications Director',
+                yellow_panther_contact: primaryTeamMember,
+                target_decision_maker: 'Communications Leadership Team',
                 connection_strength: 'MEDIUM',
                 connection_type: '2ND_DEGREE',
                 confidence_score: 65,
@@ -639,7 +753,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                     relationship_context: 'Previous project collaboration',
                     recency_years: 3,
                     strength_rating: 6,
-                    yellow_panther_proximity: 'Stuart Cope'
+                    yellow_panther_proximity: primaryTeamMember
                   }
                 ],
                 connection_context: 'Single 2nd-degree connection through sports media industry',
@@ -650,19 +764,19 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                 ]
               },
               {
-                yellow_panther_contact: 'Gunjan Parikh',
-                target_decision_maker: 'Josh Kroenke - Vice Chairman',
+                yellow_panther_contact: secondaryTeamMember,
+                target_decision_maker: 'Executive leadership team',
                 connection_strength: 'WEAK',
                 connection_type: 'COMPANY_NETWORK',
                 confidence_score: 35,
                 is_primary_path: false,
                 company_relationships: [
                   {
-                    company: 'Kroenke Sports & Entertainment',
+                    company: 'Relevant ownership or holding company',
                     overlap_period: 'No direct overlap',
                     role_context: 'Different industry sectors',
                     shared_projects: [],
-                    yellow_panther_team_member: 'Gunjan Parikh'
+                    yellow_panther_team_member: secondaryTeamMember
                   }
                 ],
                 connection_context: 'No strong network connections identified',
@@ -677,9 +791,9 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
             tier_2_analysis: {
               influential_bridge_contacts: [
                 {
-                  bridge_contact_name: 'Ben Foster',
-                  linkedin_url: 'https://www.linkedin.com/in/ben-foster-/',
-                  relationship_to_yp: 'Close connection to Stuart Cope',
+                  bridge_contact_name: 'Industry advisor',
+                  linkedin_url: '',
+                  relationship_to_yp: `Close connection to ${primaryTeamMember}`,
                   industry_influence: 'Former professional footballer, current sports media personality with extensive network across Premier League clubs',
                   connection_strength_to_yp: 'STRONG',
                   sports_industry_network_size: '500+ connections across football and media',
@@ -705,7 +819,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                 {
                   bridge_contact_name: 'Sports Marketing Director',
                   linkedin_url: 'https://www.linkedin.com/in/sports-marketing-director/',
-                  relationship_to_yp: 'Connection to Elliott Hillman',
+                  relationship_to_yp: `Connection to ${tertiaryTeamMember}`,
                   industry_influence: 'Leading sports marketing professional with club partnerships',
                   connection_strength_to_yp: 'MEDIUM',
                   sports_industry_network_size: '300+ connections in sports marketing',
@@ -723,9 +837,9 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
               ],
               tier_2_introduction_paths: [
                 {
-                  path_description: 'Stuart Cope → Ben Foster → Juliet Slot',
-                  yellow_panther_contact: 'Stuart Cope',
-                  bridge_contact: 'Ben Foster',
+                  path_description: `${primaryTeamMember} → Industry advisor → Commercial Leadership Team`,
+                  yellow_panther_contact: primaryTeamMember,
+                  bridge_contact: 'Industry advisor',
                   target_decision_maker: 'Commercial Leadership Team',
                   connection_strength: 'STRONG',
                   confidence_score: 90,
@@ -735,8 +849,8 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                   success_probability: 'HIGH'
                 },
                 {
-                  path_description: 'Elliott Hillman → Sports Marketing Director → Marketing Team',
-                  yellow_panther_contact: 'Elliott Hillman',
+                  path_description: `${tertiaryTeamMember} → Sports Marketing Director → Marketing Team`,
+                  yellow_panther_contact: tertiaryTeamMember,
                   bridge_contact: 'Sports Marketing Director',
                   target_decision_maker: 'Marketing Team',
                   connection_strength: 'MEDIUM',
@@ -749,16 +863,16 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
               ]
             },
             recommendations: {
-              optimal_team_member: 'Stuart Cope (Primary Contact)',
+              optimal_team_member: `${primaryTeamMember} (Primary Contact)`,
               messaging_strategy: 'Focus on sports technology partnerships and digital transformation opportunities',
               timing_suggestions: 'Q1 2025 - Post-holiday season planning',
               success_probability: '70% (Medium-high likelihood through industry network)',
-              team_coordination: 'Stuart Cope leads with secondary support from Elliott Hillman for technical expertise'
+              team_coordination: `${primaryTeamMember} leads with support from ${tertiaryTeamMember} for technical expertise`
             },
             analysis_summary: {
               total_targets_analyzed: 1,
               yellow_panther_uk_team_size: 2,
-              primary_connection_name: 'Stuart Cope',
+              primary_connection_name: primaryTeamMember,
               strong_paths_found: 1,
               medium_paths_found: 1,
               weak_paths_found: 1,
@@ -826,25 +940,25 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-red-700 rounded-xl flex items-center justify-center text-white font-bold text-xl">
-                {enhancedData?.coreInfo?.name?.charAt(0) || props.name?.charAt(0) || 'S'}
+                {displayName.charAt(0)}
               </div>
               <div>
                 <CardTitle className="text-2xl font-bold flex items-center gap-3">
                   <Target className="h-6 w-6 text-red-600" />
-                  {enhancedData?.coreInfo?.name || props.name || 'Sunderland'}
+                  {displayName}
                 </CardTitle>
                 <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
                   <span className="flex items-center gap-1">
                     <Building className="h-4 w-4" />
-                    {enhancedData?.coreInfo?.type || props.type || 'Club'}
+                    {displayType}
                   </span>
                   <span className="flex items-center gap-1">
                     <Trophy className="h-4 w-4" />
-                    {enhancedData?.coreInfo?.league || props.level || 'Championship'}
+                    {displayLeague}
                   </span>
                   <span className="flex items-center gap-1">
                     <MapPin className="h-4 w-4" />
-                    {enhancedData?.coreInfo?.hq || props.country || 'England'}
+                    {displayHq}
                   </span>
                 </div>
               </div>
@@ -864,7 +978,6 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
 
       {/* Enhanced Tabbed Interface Following ASCII Wireframe */}
       <Tabs 
-        key={`tabs-${entity.id}-${activeTab}`}
         value={activeTab} 
         onValueChange={(value) => {
           console.log('Tab changing to:', value);
@@ -972,25 +1085,25 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="text-sm font-medium text-gray-600">Founded</label>
-                      <p className="text-lg font-semibold">{enhancedData?.coreInfo?.founded || 'N/A'}</p>
+                      <p className="text-lg font-semibold">{displayValue(enhancedData?.coreInfo?.founded, 'N/A')}</p>
                     </div>
                     <div>
                       <label className="text-sm font-medium text-gray-600">Stadium</label>
-                      <p className="text-lg font-semibold">{enhancedData?.coreInfo?.stadium || 'N/A'}</p>
+                      <p className="text-lg font-semibold">{displayValue(enhancedData?.coreInfo?.stadium, 'N/A')}</p>
                     </div>
                     <div>
                       <label className="text-sm font-medium text-gray-600">Employees</label>
-                      <p className="text-lg font-semibold">{enhancedData?.coreInfo?.employeeRange || 'N/A'}</p>
+                      <p className="text-lg font-semibold">{displayValue(enhancedData?.coreInfo?.employeeRange, 'N/A')}</p>
                     </div>
                     <div>
                       <label className="text-sm font-medium text-gray-600">Website</label>
                       <a 
-                        href={enhancedData?.coreInfo?.website || '#'} 
+                        href={displayValue(enhancedData?.coreInfo?.website, '#')} 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="text-lg font-semibold text-blue-600 hover:underline flex items-center gap-1"
                       >
-                        {enhancedData?.coreInfo?.website || 'No website available'}
+                        {displayValue(enhancedData?.coreInfo?.website, 'No website available')}
                         <ExternalLink className="h-4 w-4" />
                       </a>
                     </div>
@@ -1096,7 +1209,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
             </p>
           </div>
 
-          <HypothesisStatesPanel entityId={entity.id} />
+          <HypothesisStatesPanel entityId={entity.id} enabled={activeTab === 'procurement'} />
         </TabsContent>
 
         {/* Digital Transformation Tab */}
@@ -1369,11 +1482,11 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Users className="h-5 w-5 text-blue-600" />
-                    {person.name || 'Unknown Person'}
+                    {displayValue(person.name, 'Unknown Person')}
                   </CardTitle>
-                  <p className="text-sm text-gray-600">{person.role || 'Role not specified'}</p>
+                  <p className="text-sm text-gray-600">{displayValue(person.role, 'Role not specified')}</p>
                   <Badge className={`${person.influenceLevel === 'HIGH' ? 'bg-red-100 text-red-800' : person.influenceLevel === 'MEDIUM' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'}`}>
-                    {person.influenceLevel || 'MEDIUM'} INFLUENCE
+                    {displayValue(person.influenceLevel, 'MEDIUM')} INFLUENCE
                   </Badge>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -1394,8 +1507,8 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
 
                   <div>
                     <h5 className="font-medium mb-2">Communication Profile</h5>
-                    <p className="text-sm text-gray-600 italic">"{person.communicationProfile?.tone || 'Communication style not available'}"</p>
-                    <p className="text-sm text-gray-600">Risk Profile: <span className="font-medium">{person.communicationProfile?.riskProfile || 'Unknown'}</span></p>
+                    <p className="text-sm text-gray-600 italic">"{displayValue(person.communicationProfile?.tone, 'Communication style not available')}"</p>
+                    <p className="text-sm text-gray-600">Risk Profile: <span className="font-medium">{displayValue(person.communicationProfile?.riskProfile, 'Unknown')}</span></p>
                   </div>
 
                   <div>
@@ -1500,19 +1613,19 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-3 bg-orange-50 rounded-lg text-center">
-                    <div className="text-2xl font-bold text-orange-700">{enhancedData?.leagueContext?.currentPosition || 'N/A'}</div>
+                    <div className="text-2xl font-bold text-orange-700">{displayValue(enhancedData?.leagueContext?.currentPosition, 'N/A')}</div>
                     <div className="text-xs text-orange-600">Position</div>
                   </div>
                   <div className="p-3 bg-green-50 rounded-lg text-center">
-                    <div className="text-2xl font-bold text-green-700">{enhancedData?.leagueContext?.currentPoints || 'N/A'}</div>
+                    <div className="text-2xl font-bold text-green-700">{displayValue(enhancedData?.leagueContext?.currentPoints, 'N/A')}</div>
                     <div className="text-xs text-green-600">Points</div>
                   </div>
                   <div className="p-3 bg-blue-50 rounded-lg text-center">
-                    <div className="text-2xl font-bold text-blue-700">{enhancedData?.leagueContext?.keyStatistics?.wins || 'N/A'}</div>
+                    <div className="text-2xl font-bold text-blue-700">{displayValue(enhancedData?.leagueContext?.keyStatistics?.wins, 'N/A')}</div>
                     <div className="text-xs text-blue-600">Wins</div>
                   </div>
                   <div className="p-3 bg-gray-50 rounded-lg text-center">
-                    <div className="text-2xl font-bold text-gray-700">{enhancedData?.leagueContext?.keyStatistics?.goalsFor || 'N/A'}</div>
+                    <div className="text-2xl font-bold text-gray-700">{displayValue(enhancedData?.leagueContext?.keyStatistics?.goalsFor, 'N/A')}</div>
                     <div className="text-xs text-gray-600">Goals For</div>
                   </div>
                 </div>
@@ -1551,16 +1664,16 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                     <div 
                       key={index} 
                       className={`flex items-center justify-between p-3 rounded-lg ${
-                        team.club === enhancedData?.coreInfo?.name ? 'bg-red-50 border border-red-200' : 'bg-gray-50'
+                        formatValue(team.club) === formatValue(enhancedData?.coreInfo?.name) ? 'bg-red-50 border border-red-200' : 'bg-gray-50'
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <span className="font-bold text-lg">{team.position}</span>
-                        <span className="font-medium">{team.club}</span>
+                        <span className="font-bold text-lg">{displayValue(team.position, 'N/A')}</span>
+                        <span className="font-medium">{displayValue(team.club, 'Unknown Club')}</span>
                       </div>
                       <div className="flex items-center gap-4">
-                        <span className="font-bold">{team.points}</span>
-                        <span className="text-sm text-gray-600">GD: {team.goalDifference}</span>
+                        <span className="font-bold">{displayValue(team.points, 'N/A')}</span>
+                        <span className="text-sm text-gray-600">GD: {displayValue(team.goalDifference, 'N/A')}</span>
                       </div>
                     </div>
                   )) || [
@@ -1594,12 +1707,12 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                   <div>
                     <div className="font-medium text-sm">Website</div>
                     <a 
-                      href={enhancedData?.coreInfo?.website || '#'} 
+                      href={displayValue(enhancedData?.coreInfo?.website, '#')} 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="text-blue-600 hover:underline"
                     >
-                      {enhancedData?.coreInfo?.website || 'No website available'}
+                      {displayValue(enhancedData?.coreInfo?.website, 'No website available')}
                     </a>
                   </div>
                 </div>
@@ -1608,8 +1721,8 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                   <MapPin className="h-5 w-5 text-red-600" />
                   <div>
                     <div className="font-medium text-sm">Stadium</div>
-                    <p className="text-sm text-gray-700">{enhancedData?.coreInfo?.stadium || 'Stadium not specified'}</p>
-                    <p className="text-sm text-gray-600">{enhancedData?.coreInfo?.hq || 'Location not specified'}</p>
+                    <p className="text-sm text-gray-700">{displayValue(enhancedData?.coreInfo?.stadium, 'Stadium not specified')}</p>
+                    <p className="text-sm text-gray-600">{displayValue(enhancedData?.coreInfo?.hq, 'Location not specified')}</p>
                   </div>
                 </div>
 
@@ -1630,10 +1743,10 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
               <CardContent className="space-y-3">
                 {enhancedData?.keyDecisionMakers?.slice(0, 3).map((person, index) => (
                   <div key={index} className="p-3 bg-gray-50 rounded-lg">
-                    <div className="font-medium">{person.name || 'Unknown Contact'}</div>
-                    <div className="text-sm text-gray-600">{person.role || 'Role not specified'}</div>
+                    <div className="font-medium">{displayValue(person.name, 'Unknown Contact')}</div>
+                    <div className="text-sm text-gray-600">{displayValue(person.role, 'Role not specified')}</div>
                     <div className="text-xs text-blue-600 mt-1">
-                      Preferred: {person.communicationProfile?.preferredContact || 'No preference specified'}
+                      Preferred: {displayValue(person.communicationProfile?.preferredContact, 'No preference specified')}
                     </div>
                   </div>
                 )) || [
@@ -1670,7 +1783,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                         <div className="flex items-center gap-3">
                           <UserCheck className="h-5 w-5 text-purple-600" />
                           <div>
-                            <div className="font-medium">Stuart Cope</div>
+                            <div className="font-medium">{connectionAnalysis?.data?.connection_analysis?.recommendations?.optimal_team_member?.replace(' (Primary Contact)', '') || 'Yellow Panther lead contact'}</div>
                             <div className="text-sm text-gray-600">Primary Connection Anchor</div>
                           </div>
                         </div>
@@ -1721,7 +1834,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 text-sm">
                         <CheckCircle className="h-4 w-4 text-green-500" />
-                        <span>Stuart Cope network mapping (primary focus)</span>
+                        <span>Lead-contact network mapping (primary focus)</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm">
                         <CheckCircle className="h-4 w-4 text-green-500" />
@@ -1773,7 +1886,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                         <div className="text-sm">
                           <div className="mb-1"><strong>Recommended Approach:</strong></div>
                           <div className="text-green-800">
-                            {connectionAnalysis?.data?.connection_analysis?.recommendations?.optimal_team_member || 'Stuart Cope'} should lead with {connectionAnalysis?.data?.connection_analysis?.recommendations?.success_probability?.toLowerCase() || 'medium'} success probability.
+                            {connectionAnalysis?.data?.connection_analysis?.recommendations?.optimal_team_member || 'Yellow Panther lead contact'} should lead with {connectionAnalysis?.data?.connection_analysis?.recommendations?.success_probability?.toLowerCase() || 'medium'} success probability.
                           </div>
                         </div>
                       </div>
@@ -1885,7 +1998,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                     <div className="p-4 bg-gray-50 rounded-lg">
                       <h6 className="font-medium mb-2">Direct Approach</h6>
                       <p className="text-sm text-gray-700 mb-2">
-                        When Stuart Cope or other YP UK team members have direct connections to target executives.
+                        When the lead Yellow Panther contact or other UK team members have direct connections to target executives.
                       </p>
                       <div className="text-xs text-blue-600">
                         Success Rate: 85%+ | Timeline: 1-2 weeks
@@ -1933,6 +2046,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
             hypotheses={hypotheses}
             signals={signals}
             linkedInData={enhancedData?.linkedInProfile || null}
+            enabled={activeTab === 'outreach'}
             onApproveOutreach={(strategy) => {
               console.log('Outreach strategy approved:', strategy)
               // TODO: Implement approval logic (save to database, trigger workflow, etc.)

@@ -1,7 +1,10 @@
 import { SignInForm } from "@/components/auth/SignInForm"
+import { redirectAuthenticatedUser } from "@/lib/server-auth"
 import Link from "next/link"
 
-export default function SignInPage() {
+export default async function SignInPage() {
+  await redirectAuthenticatedUser("/")
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted p-4">
       <div className="w-full max-w-md space-y-8">

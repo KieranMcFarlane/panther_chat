@@ -71,7 +71,8 @@ def test_falkordb_connection():
         print(f"   Connecting to: {host}:{port}")
 
         # Test connection
-        db = FalkorDB(host=host, port=port, username=username, password=password, ssl=True)
+        # IMPORTANT: FalkorDB Cloud uses redis:// protocol, NOT SSL/TLS
+        db = FalkorDB(host=host, port=port, username=username, password=password, ssl=False)
 
         # Select graph and test query
         g = db.select_graph(database)

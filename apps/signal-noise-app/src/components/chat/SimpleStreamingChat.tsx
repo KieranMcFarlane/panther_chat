@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown';
 
 interface SimpleStreamingChatProps {
   className?: string;
+  initialOpen?: boolean;
 }
 
 interface Message {
@@ -15,9 +16,9 @@ interface Message {
   timestamp: Date;
 }
 
-export function SimpleStreamingChat({ className }: SimpleStreamingChatProps) {
+export function SimpleStreamingChat({ className, initialOpen = false }: SimpleStreamingChatProps) {
   const { userId } = useUser();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(initialOpen);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);

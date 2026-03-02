@@ -1,0 +1,37 @@
+import Link from 'next/link'
+import EntityCsvImporter from '@/components/entity-import/EntityCsvImporter'
+
+export default function EntityImportPage() {
+  return (
+    <main className="min-h-screen bg-slate-100 px-6 py-10">
+      <div className="mx-auto max-w-5xl">
+        <div className="mb-8">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">
+            Intake pipeline
+          </p>
+          <h1 className="mt-2 text-4xl font-semibold text-slate-950">Import entities from CSV</h1>
+          <p className="mt-3 max-w-3xl text-base text-slate-600">
+            Use this page to upload new entities, map the required fields, and register them for the
+            end-to-end intelligence pipeline.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <Link
+              href="/entity-browser"
+              className="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
+            >
+              Open entity browser
+            </Link>
+            <Link
+              href="/rfps"
+              className="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
+            >
+              Open RFP page
+            </Link>
+          </div>
+        </div>
+
+        <EntityCsvImporter />
+      </div>
+    </main>
+  )
+}

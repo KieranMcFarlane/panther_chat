@@ -46,23 +46,53 @@ interface VerificationResult {
   error?: string;
 }
 
+function isBuildPhase(): boolean {
+  return process.env.NEXT_PHASE === 'phase-production-build';
+}
+
 class RealHeadlessVerifier {
   private browser: any = null;
+  private initialized = false;
+  private initializationPromise: Promise<void> | null = null;
 
   async initialize(): Promise<void> {
+    if (this.initialized) {
+      return;
+    }
+
     try {
-      console.log('🤖 Initializing real headless verifier...');
+      if (!isBuildPhase()) {
+        console.log('🤖 Initializing real headless verifier...');
+      }
       
       // For now, skip actual browser initialization due to Puppeteer installation issues
       // We'll implement realistic mock behavior
-      console.log('✅ Real headless verifier initialized (mock mode for demo)');
+      if (!isBuildPhase()) {
+        console.log('✅ Real headless verifier initialized (mock mode for demo)');
+      }
+      this.initialized = true;
     } catch (error) {
       console.error('❌ Failed to initialize headless verifier:', error);
       throw error;
     }
   }
 
+  private async ensureInitialized(): Promise<void> {
+    if (this.initialized) {
+      return;
+    }
+
+    if (!this.initializationPromise) {
+      this.initializationPromise = this.initialize().finally(() => {
+        this.initializationPromise = null;
+      });
+    }
+
+    await this.initializationPromise;
+  }
+
   async verifyRFPWithBrowser(config: VerificationConfig): Promise<{ verification_result: VerificationResult }> {
+    await this.ensureInitialized();
     console.log(`🔍 Verifying RFP: ${config.rfp_url}`);
     
     // Simulate realistic verification process
@@ -125,6 +155,7 @@ class RealHeadlessVerifier {
   }
 
   async batchVerifyRFPs(config: BatchVerificationConfig): Promise<{ batch_results: any[], summary: any }> {
+    await this.ensureInitialized();
     console.log(`📦 Batch verifying ${config.rfp_configs.length} RFPs`);
     
     const results = [];
@@ -229,6 +260,3 @@ class RealHeadlessVerifier {
 
 // Create singleton instance
 export const realHeadlessVerifier = new RealHeadlessVerifier();
-
-// Auto-initialize
-realHeadlessVerifier.initialize().catch(console.error);

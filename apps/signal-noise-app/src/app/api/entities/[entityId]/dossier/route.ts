@@ -12,10 +12,6 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// Debug Supabase connection
-console.log('🔧 Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? '✅ Set' : '❌ Missing');
-console.log('🔧 Supabase Service Role Key:', process.env.SUPABASE_SERVICE_ROLE_KEY ? '✅ Set' : '❌ Missing');
-
 interface DossierRequest {
   includeSignals?: boolean;
   includeConnections?: boolean;
@@ -31,8 +27,6 @@ export async function GET(
     const { entityId } = params;
     const searchParams = request.nextUrl.searchParams;
     
-    console.log(`📋 Dossier request for entity: ${entityId}`);
-    
     const options: DossierRequest = {
       includeSignals: searchParams.get('includeSignals') !== 'false',
       includeConnections: searchParams.get('includeConnections') !== 'false',
@@ -40,12 +34,9 @@ export async function GET(
       deepResearch: searchParams.get('deepResearch') === 'true'
     };
 
-    console.log(`📋 Dossier options:`, options);
-
     // Check if we have a recent cached dossier
     const cachedDossier = await getCachedDossier(entityId);
     if (cachedDossier && !isStale(cachedDossier.lastUpdated)) {
-      console.log(`📋 Returning cached dossier for entity: ${entityId}`);
       return NextResponse.json({
         success: true,
         dossier: cachedDossier,
@@ -53,14 +44,12 @@ export async function GET(
       });
     }
 
-    console.log(`📋 Generating new dossier for entity: ${entityId}`);
     // Generate new dossier using Claude agent
     const dossier = await generateEntityDossier(entityId, options);
     
     // Cache the generated dossier
     await cacheDossier(entityId, dossier);
 
-    console.log(`📋 Successfully generated dossier for entity: ${entityId}`);
     return NextResponse.json({
       success: true,
       dossier,

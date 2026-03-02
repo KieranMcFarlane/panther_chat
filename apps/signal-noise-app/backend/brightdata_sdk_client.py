@@ -72,7 +72,8 @@ class BrightDataSDKClient:
         if self._client is None:
             try:
                 from brightdata import BrightDataClient
-                self._client = await BrightDataClient(self.token).__aenter__()
+                self._client_manager = BrightDataClient(self.token)
+                self._client = await self._client_manager.__aenter__()
                 logger.info("✅ BrightData SDK client initialized")
             except Exception as e:
                 logger.warning(f"⚠️ BrightData SDK initialization failed: {e}")
@@ -82,6 +83,14 @@ class BrightDataSDKClient:
         if self._client is False:
             raise RuntimeError("BrightData SDK unavailable, fallback will be used")
         return self._client
+
+    async def close(self):
+        """Close the BrightData SDK client session if it was initialized."""
+        client_manager = getattr(self, "_client_manager", None)
+        if client_manager is not None and self._client not in (None, False):
+            await client_manager.__aexit__(None, None, None)
+        self._client_manager = None
+        self._client = None
 
     @property
     def client(self):
@@ -143,8 +152,8 @@ class BrightDataSDKClient:
                     "engine": engine
                 }
 
-            # Check if result has data
-            if not result or not hasattr(result, 'data'):
+            # Check if result has data and data is not None
+            if not result or not hasattr(result, 'data') or result.data is None:
                 return {
                     "status": "error",
                     "error": "No results returned",
@@ -154,7 +163,7 @@ class BrightDataSDKClient:
 
             # Format results based on data structure
             results = []
-            content = result.data if hasattr(result, 'data') else []
+            content = result.data
 
             # Handle data format (list of dicts)
             if isinstance(content, list):
@@ -226,7 +235,14 @@ class BrightDataSDKClient:
 
             # Convert HTML to markdown
             from bs4 import BeautifulSoup
-            html_content = result.data if hasattr(result, 'data') else ""
+            # Check if result has data AND data is not None
+            html_content = (result.data if hasattr(result, 'data') and result.data is not None else "")
+            if not html_content:
+                return {
+                    "status": "error",
+                    "error": "No content returned (data was None or empty)",
+                    "url": url
+                }
             soup = BeautifulSoup(html_content, 'html.parser')
 
             # Remove scripts/styles
@@ -307,7 +323,7 @@ class BrightDataSDKClient:
             # Handle results
             if isinstance(results, list):
                 for idx, result in enumerate(results):
-                    if result and hasattr(result, 'data'):
+                    if result and hasattr(result, 'data') and result.data is not None:
                         # Convert to markdown
                         from bs4 import BeautifulSoup
                         soup = BeautifulSoup(result.data, 'html.parser')

@@ -84,6 +84,7 @@ export interface OutreachStrategyPanelProps {
   hypotheses: Hypothesis[];
   signals: Signal[];
   linkedInData: LinkedInData | null;
+  enabled?: boolean;
   onApproveOutreach: (strategy: OutreachStrategy) => void;
 }
 
@@ -288,6 +289,7 @@ export function OutreachStrategyPanel({
   hypotheses,
   signals,
   linkedInData,
+  enabled = true,
   onApproveOutreach
 }: OutreachStrategyPanelProps) {
   const [intelligence, setIntelligence] = useState<OutreachIntelligence | null>(null);
@@ -299,6 +301,11 @@ export function OutreachStrategyPanel({
 
   // Fetch outreach intelligence
   useEffect(() => {
+    if (!enabled) {
+      setLoading(false);
+      return;
+    }
+
     const fetchIntelligence = async () => {
       setLoading(true);
       setError(null);
@@ -342,7 +349,11 @@ export function OutreachStrategyPanel({
     };
 
     fetchIntelligence();
-  }, [entity.id, signals, hypotheses, linkedInData, dossier]);
+  }, [enabled, entity.id, signals, hypotheses, linkedInData, dossier]);
+
+  if (!enabled) {
+    return null;
+  }
 
   const handleApproveOutreach = async () => {
     if (!intelligence || !selectedApproach || !message.trim()) {

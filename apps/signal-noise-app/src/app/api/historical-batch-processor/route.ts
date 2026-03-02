@@ -7,6 +7,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { enhancedHistoricalBatchProcessor } from '@/lib/enhanced-historical-batch-processor';
 
+export const dynamic = 'force-dynamic';
+
 interface HistoricalBatchRequest {
   entities: Array<{
     id: string;

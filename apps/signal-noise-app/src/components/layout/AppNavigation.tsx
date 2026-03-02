@@ -38,7 +38,6 @@ import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import PageTransition from './PageTransition';
 import VectorSearchDebounced from '@/components/ui/VectorSearch-debounced';
-import { authClient } from '@/lib/auth-client';
 
 // Navigation items - Core demo functionality only
 const navItems = [
@@ -55,11 +54,14 @@ const navItems = [
 
 interface AppNavigationProps {
   children: React.ReactNode;
+  authMenu?: React.ReactNode;
 }
 
-export default function AppNavigation({ children }: AppNavigationProps) {
+export default function AppNavigation({ children, authMenu }: AppNavigationProps) {
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const pathname = usePathname();
+  const isDossierRoute = pathname?.includes('/dossier') ?? false;
+  const isEntityBrowserRoute = pathname?.startsWith('/entity-browser') ?? false;
 
   const renderNavItem = (item: typeof navItems[0]) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -274,6 +276,11 @@ export default function AppNavigation({ children }: AppNavigationProps) {
                 {renderNavItem(item)}
               </div>
             ))}
+            {authMenu && !isDossierRoute && !isEntityBrowserRoute && (
+              <div className="pt-4 border-t border-custom-border">
+                {authMenu}
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -8,13 +8,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-client';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET endpoint to verify Perplexity RFP storage
  */
 export async function GET(request: NextRequest) {
   try {
-    console.log('🔍 Verifying Perplexity RFP storage...');
-
     // Query for RFPs with detection_strategy in metadata
     const { data: perplexityRFPs, error } = await supabase
       .from('rfp_opportunities')

@@ -22,6 +22,7 @@ export interface BadgeComponentProps {
     id: string | number
     neo4j_id: string | number
     badge_s3_url?: string
+    badge_lookup_complete?: boolean
     labels: string[]
     properties: Record<string, any>
   }

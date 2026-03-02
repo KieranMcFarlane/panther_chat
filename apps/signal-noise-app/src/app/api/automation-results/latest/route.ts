@@ -9,6 +9,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 
+export const dynamic = 'force-dynamic';
+
 interface Opportunity {
   id: string;
   entity_name: string;
@@ -53,6 +55,21 @@ interface AutomationResults {
   last_updated: string;
 }
 
+function isBuildPhase(): boolean {
+  return process.env.NEXT_PHASE === 'phase-production-build';
+}
+
+function tryParseJson(content: string, filename: string) {
+  try {
+    return JSON.parse(content);
+  } catch (error) {
+    if (!isBuildPhase()) {
+      console.warn(`Skipping invalid automation results file ${filename}:`, error);
+    }
+    return null;
+  }
+}
+
 export async function GET(request: NextRequest) {
   try {
     // Get latest results from RFP analysis files
@@ -88,7 +105,10 @@ export async function GET(request: NextRequest) {
       try {
         const filePath = path.join(resultsDir, filename);
         const fileContent = await fs.readFile(filePath, 'utf-8');
-        const data = JSON.parse(fileContent);
+        const data = tryParseJson(fileContent, filename);
+        if (!data) {
+          continue;
+        }
 
         // Extract opportunities from different file formats
         if (data.comprehensive_rfp_analysis_fourth_batch_250_entities) {
@@ -141,7 +161,9 @@ export async function GET(request: NextRequest) {
           });
         }
       } catch (error) {
-        console.warn(`Failed to process file ${filename}:`, error);
+        if (!isBuildPhase()) {
+          console.warn(`Failed to process file ${filename}:`, error);
+        }
         continue;
       }
     }

@@ -49,6 +49,7 @@ const fetcher = async (url: string): Promise<HypothesisStatesResponse> => {
 export function useHypothesisStates(
   entityId: string,
   options?: {
+    enabled?: boolean;
     refreshInterval?: number;
     revalidateOnFocus?: boolean;
   }
@@ -56,11 +57,12 @@ export function useHypothesisStates(
   const url = `/api/scoring/${encodeURIComponent(entityId)}`;
 
   const { data, error, isLoading, mutate } = useSWR<HypothesisStatesResponse>(
-    entityId ? url : null,
+    entityId && options?.enabled !== false ? url : null,
     fetcher,
     {
-      refreshInterval: options?.refreshInterval || 60000, // Default: refresh every minute
-      revalidateOnFocus: options?.revalidateOnFocus ?? true,
+      refreshInterval: options?.refreshInterval ?? 0,
+      revalidateOnFocus: options?.revalidateOnFocus ?? false,
+      revalidateOnReconnect: false,
     }
   );
 
@@ -86,6 +88,7 @@ export function useHypothesisState(
   entityId: string,
   category: string,
   options?: {
+    enabled?: boolean;
     refreshInterval?: number;
     revalidateOnFocus?: boolean;
   }
@@ -93,11 +96,12 @@ export function useHypothesisState(
   const url = `/api/scoring/${encodeURIComponent(entityId)}?category=${encodeURIComponent(category)}`;
 
   const { data, error, isLoading, mutate } = useSWR<HypothesisStatesResponse>(
-    entityId && category ? url : null,
+    entityId && category && options?.enabled !== false ? url : null,
     fetcher,
     {
-      refreshInterval: options?.refreshInterval || 60000,
-      revalidateOnFocus: options?.revalidateOnFocus ?? true,
+      refreshInterval: options?.refreshInterval ?? 0,
+      revalidateOnFocus: options?.revalidateOnFocus ?? false,
+      revalidateOnReconnect: false,
     }
   );
 

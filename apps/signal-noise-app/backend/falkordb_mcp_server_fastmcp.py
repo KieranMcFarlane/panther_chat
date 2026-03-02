@@ -76,7 +76,8 @@ def get_falkordb_client():
     port = parsed.port or 6379
 
     try:
-        db = FalkorDB(host=host, port=port, username=username, password=password, ssl=True)
+        # IMPORTANT: FalkorDB Cloud uses redis:// protocol, NOT SSL/TLS
+        db = FalkorDB(host=host, port=port, username=username, password=password, ssl=False)
         # Test connection
         g = db.select_graph(database)
         g.query("RETURN 1 AS test")

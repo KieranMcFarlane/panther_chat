@@ -71,7 +71,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 # Import schemas for type checking
-from schemas import RalphDecisionType, SignalClass, HypothesisState
+from backend.schemas import RalphDecisionType, SignalClass, HypothesisState
 
 # FastAPI imports
 from fastapi import FastAPI, HTTPException
@@ -957,7 +957,7 @@ async def run_ralph_iteration_with_state(
     4. Detects category saturation for early stopping
     5. Enforces WEAK_ACCEPT guardrails
     """
-    from schemas import (
+    from backend.schemas import (
         RalphDecisionType,
         RalphIterationOutput,
         RalphState,
@@ -1046,7 +1046,7 @@ async def run_ralph_iteration_with_state(
     # For now, we create a placeholder entry for the confidence change
     # Full hypothesis tracking will be implemented in future iterations
     from datetime import datetime, timezone
-    from schemas import BeliefLedgerEntry, HypothesisAction
+    from backend.schemas import BeliefLedgerEntry, HypothesisAction
 
     if applied_delta != 0.0:
         # Create a belief ledger entry for this confidence change
@@ -1153,7 +1153,7 @@ class RalphLoop:
 
         Only signals that survive all 3 passes are classified and returned.
         """
-        from schemas import Signal
+        from backend.schemas import Signal
 
         logger.info(f"🔁 Starting Ralph Loop for {entity_id} with {len(raw_signals)} raw signals")
 
@@ -1298,7 +1298,7 @@ class RalphLoop:
         - Confidence threshold
         - Basic data validation
         """
-        from schemas import Signal, Evidence, SignalType
+        from backend.schemas import Signal, Evidence, SignalType
 
         filtered = []
 
@@ -1450,7 +1450,7 @@ class RalphLoop:
         - Plausibility check
         - Confidence score appropriateness (NEW)
         """
-        from schemas import ConfidenceValidation
+        from backend.schemas import ConfidenceValidation
 
         # Get existing signals for context
         try:
@@ -1606,7 +1606,7 @@ Be strict but fair. Only reject signals that are clearly duplicates or inconsist
         """
         import json
         import re
-        from schemas import ConfidenceValidation
+        from backend.schemas import ConfidenceValidation
 
         try:
             # Extract JSON from response (more flexible regex - handle multiline JSON)
@@ -1829,7 +1829,7 @@ if __name__ == "__main__":
         async def test():
             from claude_client import ClaudeClient
             from graphiti_service import GraphitiService
-            from schemas import SignalType
+            from backend.schemas import SignalType
 
             # Initialize
             claude = ClaudeClient()

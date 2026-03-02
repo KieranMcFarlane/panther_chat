@@ -59,6 +59,8 @@ class EnhancedHistoricalBatchProcessor {
   private processingQueue: HistoricalEntity[] = [];
   private results: BatchAnalysisResult[] = [];
   private mcpConfig: any = {};
+  private claudeAgentPromise: Promise<void> | null = null;
+  private mcpConfigPromise: Promise<void> | null = null;
   private memoryStats = {
     peakUsage: 0,
     currentUsage: 0,
@@ -66,11 +68,6 @@ class EnhancedHistoricalBatchProcessor {
   };
   private enableRecovery = true;
   private checkpointInterval = 5; // Save checkpoint every 5 batches
-
-  constructor() {
-    this.initializeClaudeAgent();
-    this.loadMCPConfig();
-  }
 
   private async initializeClaudeAgent(): Promise<void> {
     try {
@@ -100,10 +97,32 @@ class EnhancedHistoricalBatchProcessor {
     }
   }
 
+  private async ensureRuntimeDependencies(): Promise<void> {
+    if (!this.claudeAgent) {
+      if (!this.claudeAgentPromise) {
+        this.claudeAgentPromise = this.initializeClaudeAgent().finally(() => {
+          this.claudeAgentPromise = null;
+        });
+      }
+      await this.claudeAgentPromise;
+    }
+
+    if (Object.keys(this.mcpConfig).length === 0) {
+      if (!this.mcpConfigPromise) {
+        this.mcpConfigPromise = this.loadMCPConfig().finally(() => {
+          this.mcpConfigPromise = null;
+        });
+      }
+      await this.mcpConfigPromise;
+    }
+  }
+
   /**
    * 📊 Process historical entities with Claude Agent analysis (Memory-Optimized)
    */
   async processHistoricalEntities(entities: HistoricalEntity[]): Promise<ClaudeBatchSummary> {
+    await this.ensureRuntimeDependencies();
+
     const batchId = `hist_batch_${Date.now()}`;
     const startTime = Date.now();
 

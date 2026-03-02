@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { EntityCacheService } from '@/services/EntityCacheService'
 
+export const dynamic = 'force-dynamic';
+
 const cacheService = new EntityCacheService()
 
 // Smart entity loading endpoint with priority-based caching

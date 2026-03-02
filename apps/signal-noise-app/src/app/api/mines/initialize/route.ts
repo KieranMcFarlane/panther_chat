@@ -5,6 +5,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { keywordMinesService } from '@/services/KeywordMinesService';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * Initialize keyword mines for all entities in the system
  */

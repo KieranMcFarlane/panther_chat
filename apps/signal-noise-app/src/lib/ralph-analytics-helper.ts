@@ -7,6 +7,7 @@
 
 import fs from 'fs/promises';
 import path from 'path';
+import { constants as fsConstants } from 'fs';
 
 // ============================================================================
 // Type Definitions
@@ -281,6 +282,7 @@ export async function loadAllRalphStates(): Promise<RalphState[]> {
   const bindingsDir = path.join(process.cwd(), 'data', 'runtime_bindings');
 
   try {
+    await fs.access(bindingsDir, fsConstants.F_OK);
     const files = await fs.readdir(bindingsDir);
     const jsonFiles = files.filter(f => f.endsWith('.json'));
 
@@ -303,6 +305,9 @@ export async function loadAllRalphStates(): Promise<RalphState[]> {
 
     return states;
   } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      return [];
+    }
     console.error('Error loading runtime bindings:', error);
     throw error;
   }

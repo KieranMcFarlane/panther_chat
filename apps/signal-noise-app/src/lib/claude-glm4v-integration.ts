@@ -32,10 +32,7 @@ interface StadiumOpportunity {
 
 export class ClaudeGLM4VIntegration {
   private mcpAvailable = false;
-
-  constructor() {
-    this.initializeMCP();
-  }
+  private mcpInitializationPromise: Promise<void> | null = null;
 
   private async initializeMCP() {
     try {
@@ -48,6 +45,24 @@ export class ClaudeGLM4VIntegration {
     }
   }
 
+  private async ensureMCPAvailable(): Promise<void> {
+    if (this.mcpAvailable) {
+      return;
+    }
+
+    if (!this.mcpInitializationPromise) {
+      this.mcpInitializationPromise = this.initializeMCP().finally(() => {
+        this.mcpInitializationPromise = null;
+      });
+    }
+
+    await this.mcpInitializationPromise;
+
+    if (!this.mcpAvailable) {
+      throw new Error('GLM-4.5V MCP not available');
+    }
+  }
+
   /**
    * Enhanced RFP analysis using both Claude and GLM-4.5V
    */
@@ -56,9 +71,7 @@ export class ClaudeGLM4VIntegration {
     analysisType: 'requirements' | 'compliance' | 'scoring' | 'deadlines',
     context?: string
   ): Promise<RFPDocumentAnalysis> {
-    if (!this.mcpAvailable) {
-      throw new Error('GLM-4.5V MCP not available');
-    }
+    await this.ensureMCPAvailable();
 
     try {
       // First, get visual analysis from GLM-4.5V
@@ -86,9 +99,7 @@ export class ClaudeGLM4VIntegration {
     organizationType: 'club' | 'league' | 'federation' | 'venue',
     focusArea: 'partnerships' | 'digital_transformation' | 'procurement_signals' | 'technology_stack'
   ): Promise<WebpageIntelligence> {
-    if (!this.mcpAvailable) {
-      throw new Error('GLM-4.5V MCP not available');
-    }
+    await this.ensureMCPAvailable();
 
     try {
       const intelligence = await mcpBus.callTool('glm4v_extract_webpage_intelligence', {
@@ -118,9 +129,7 @@ export class ClaudeGLM4VIntegration {
     competitorScreenshots: string[],
     analysisFramework: 'digital_maturity' | 'partnership_strategy' | 'technology_adoption' | 'fan_engagement'
   ): Promise<any> {
-    if (!this.mcpAvailable) {
-      throw new Error('GLM-4.5V MCP not available');
-    }
+    await this.ensureMCPAvailable();
 
     try {
       const competitorAnalysis = await mcpBus.callTool('glm4v_analyze_competitor_landscape', {
@@ -157,9 +166,7 @@ export class ClaudeGLM4VIntegration {
     recommendation: string;
     confidence: number;
   }> {
-    if (!this.mcpAvailable) {
-      throw new Error('GLM-4.5V MCP not available');
-    }
+    await this.ensureMCPAvailable();
 
     try {
       const validation = await mcpBus.callTool('glm4v_validate_opportunity_authenticity', {
@@ -195,9 +202,7 @@ export class ClaudeGLM4VIntegration {
     venueImages: string[],
     opportunityFocus: 'digital_signage' | 'wifi_infrastructure' | 'fan_experience' | 'sponsorship_activation'
   ): Promise<StadiumOpportunity[]> {
-    if (!this.mcpAvailable) {
-      throw new Error('GLM-4.5V MCP not available');
-    }
+    await this.ensureMCPAvailable();
 
     try {
       const venueAnalysis = await mcpBus.callTool('glm4v_process_stadium_visuals', {

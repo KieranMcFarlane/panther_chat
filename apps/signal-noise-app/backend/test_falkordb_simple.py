@@ -27,7 +27,7 @@ print(f'Database: {database}')
 
 try:
     print('\nConnecting to FalkorDB...')
-    db = FalkorDB(host=host, port=port, username=username, password=password, ssl=True)
+    db = FalkorDB(host=host, port=port, username=username, password=password, ssl=False)
     g = db.select_graph(database)
     result = g.query('RETURN 1 as test')
     print(f'✓ SUCCESS: {result}')

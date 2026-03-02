@@ -5,6 +5,10 @@ export class BadgeManager {
   private static instance: BadgeManager
   private mappings: BadgeMapping[] = []
 
+  private isBrowserStorageAvailable() {
+    return typeof window !== 'undefined' && typeof localStorage !== 'undefined'
+  }
+
   private constructor() {
     this.loadMappings()
   }
@@ -17,22 +21,25 @@ export class BadgeManager {
   }
 
   private loadMappings() {
-    // Load from localStorage if available
+    if (!this.isBrowserStorageAvailable()) {
+      this.initializeDefaultMappings(false)
+      return
+    }
+
     try {
       const saved = localStorage.getItem('badge-mappings')
       if (saved) {
         this.mappings = JSON.parse(saved)
       } else {
-        // Initialize with default mappings
-        this.initializeDefaultMappings()
+        this.initializeDefaultMappings(true)
       }
     } catch (error) {
       console.error('Failed to load badge mappings:', error)
-      this.initializeDefaultMappings()
+      this.initializeDefaultMappings(true)
     }
   }
 
-  private initializeDefaultMappings() {
+  private initializeDefaultMappings(shouldPersist: boolean = true) {
     this.mappings = [
       {
         entityId: '139',
@@ -107,10 +114,16 @@ export class BadgeManager {
         source: 'local'
       }
     ]
-    this.saveMappings()
+    if (shouldPersist) {
+      this.saveMappings()
+    }
   }
 
   private saveMappings() {
+    if (!this.isBrowserStorageAvailable()) {
+      return
+    }
+
     try {
       localStorage.setItem('badge-mappings', JSON.stringify(this.mappings))
     } catch (error) {

@@ -5,6 +5,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { notificationService } from '@/services/NotificationService';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * Send notification through multiple channels
  */

@@ -36,6 +36,10 @@ export class ActivityLogger {
   private static instance: ActivityLogger;
   private logs: ActivityLog[] = [];
 
+  private isBrowserStorageAvailable(): boolean {
+    return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
+  }
+
   static getInstance(): ActivityLogger {
     if (!ActivityLogger.instance) {
       ActivityLogger.instance = new ActivityLogger();
@@ -275,6 +279,10 @@ export class ActivityLogger {
    * Persist logs to localStorage
    */
   private persistToStorage(): void {
+    if (!this.isBrowserStorageAvailable()) {
+      return;
+    }
+
     try {
       const dataToStore = this.logs.slice(0, 1000); // Limit storage
       localStorage.setItem('rfp_activity_logs', JSON.stringify(dataToStore));
@@ -287,6 +295,10 @@ export class ActivityLogger {
    * Load logs from localStorage
    */
   private loadFromStorage(): void {
+    if (!this.isBrowserStorageAvailable()) {
+      return;
+    }
+
     try {
       const stored = localStorage.getItem('rfp_activity_logs');
       if (stored) {

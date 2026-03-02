@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readFile } from 'fs/promises';
 import { join } from 'path';
+import { createClient } from '@supabase/supabase-js';
 
 // Mark route as dynamic to prevent static generation
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || ''
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || ''
+const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null
 
 export async function GET(request: NextRequest) {
   try {
@@ -12,6 +17,31 @@ export async function GET(request: NextRequest) {
     const action = searchParams.get('action') || 'opportunities';
     
     if (action === 'latest-rfps') {
+      if (supabase) {
+        const { data, error } = await supabase
+          .from('rfp_opportunities_unified')
+          .select('*')
+          .order('detected_at', { ascending: false })
+          .limit(50)
+
+        if (!error && data) {
+          const opportunities = data.map((rfp) => ({
+            ...rfp,
+            deadline: rfp.deadline || null,
+            published: rfp.published || rfp.detected_at,
+            type: 'RFP',
+            confidence: rfp.confidence_score ?? (typeof rfp.confidence === 'number' ? rfp.confidence / 100 : null),
+          }))
+
+          return NextResponse.json({
+            success: true,
+            opportunities,
+            metadata: { source: 'supabase-unified', totalFound: opportunities.length },
+            total: opportunities.length
+          })
+        }
+      }
+
       // Load RFP results from our analysis
       const rfpResultsPath = join(process.cwd(), 'rfp-results.json');
       

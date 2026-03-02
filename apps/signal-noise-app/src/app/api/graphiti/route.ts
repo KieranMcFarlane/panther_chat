@@ -14,6 +14,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 // GraphRAG search configuration
 const GRAPH_RAG_CONFIG = {
   maxResults: 10,

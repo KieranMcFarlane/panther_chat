@@ -98,13 +98,26 @@ function getDatabaseName(): string {
          'neo4j'
 }
 
+function isBuildPhase(): boolean {
+  return process.env.NEXT_PHASE === 'phase-production-build'
+}
+
 export class Neo4jService {
-  private driver: any
+  private driver: any | null = null
   private initialized = false
   private readonly uri: string
   private readonly databaseName: string
 
   public getDriver() {
+    if (!this.driver) {
+      this.driver = neo4j.driver(
+        this.uri,
+        neo4j.auth.basic(
+          getDatabaseUser(),
+          getDatabasePassword()
+        )
+      )
+    }
     return this.driver
   }
 
@@ -113,29 +126,25 @@ export class Neo4jService {
     this.databaseName = getDatabaseName()
 
     // Log which database backend we're connecting to
-    if (this.uri.includes('localhost') || this.uri.includes('127.0.0.1') || this.uri.includes('falkordb')) {
-      console.log('🔗 Connecting to FalkorDB (Neo4j-compatible)')
-    } else {
-      console.log('🔗 Connecting to Neo4j AuraDB')
+    if (!isBuildPhase()) {
+      if (this.uri.includes('localhost') || this.uri.includes('127.0.0.1') || this.uri.includes('falkordb')) {
+        console.log('🔗 Connecting to FalkorDB (Neo4j-compatible)')
+      } else {
+        console.log('🔗 Connecting to Neo4j AuraDB')
+      }
     }
 
-    this.driver = neo4j.driver(
-      this.uri,
-      neo4j.auth.basic(
-        getDatabaseUser(),
-        getDatabasePassword()
-      )
-    )
   }
 
   async initialize() {
     if (this.initialized) return
 
     try {
-      await this.driver.verifyConnectivity()
+      const driver = this.getDriver()
+      await driver.verifyConnectivity()
 
       // Create vector index if it doesn't exist
-      const session = this.driver.session({ database: this.databaseName })
+      const session = driver.session({ database: this.databaseName })
       try {
         await session.run(`
           CREATE VECTOR INDEX entity_embeddings IF NOT EXISTS
@@ -155,7 +164,11 @@ export class Neo4jService {
 
       this.initialized = true
     } catch (error) {
-      console.error('❌ Failed to initialize Neo4j/FalkorDB:', error)
+      if (isBuildPhase()) {
+        console.warn('Skipping Neo4j initialization during build:', error instanceof Error ? error.message : String(error))
+      } else {
+        console.error('❌ Failed to initialize Neo4j/FalkorDB:', error)
+      }
       throw error
     }
   }
@@ -347,4 +360,10 @@ export class Neo4jService {
 
 // Export singleton instance for backward compatibility
 export const neo4jService = new Neo4jService()
-export const neo4jClient = neo4jService.getDriver()
+export const neo4jClient = new Proxy({} as any, {
+  get(_target, prop, receiver) {
+    const driver = neo4jService.getDriver()
+    const value = Reflect.get(driver, prop, receiver)
+    return typeof value === 'function' ? value.bind(driver) : value
+  }
+})

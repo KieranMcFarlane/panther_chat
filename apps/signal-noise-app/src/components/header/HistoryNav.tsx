@@ -1,19 +1,79 @@
 'use client';
 
-import { useState, memo } from 'react';
+import { useEffect, useState, memo } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 
 function HistoryNav() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const isDossierRoute = pathname?.includes('/dossier') ?? false;
+  const isEntityBrowserRoute = pathname?.startsWith('/entity-browser') ?? false;
   const [canGoBack, setCanGoBack] = useState(true);
   const [canGoForward, setCanGoForward] = useState(false);
 
+  useEffect(() => {
+    if (isEntityBrowserRoute) {
+      const rawStack = sessionStorage.getItem('entityBrowserHistoryStack');
+      const rawIndex = sessionStorage.getItem('entityBrowserHistoryIndex');
+      const historyStack = rawStack ? JSON.parse(rawStack) as string[] : [];
+      const currentIndex = rawIndex ? Number.parseInt(rawIndex, 10) : -1;
+
+      setCanGoBack(currentIndex > 0);
+      setCanGoForward(currentIndex >= 0 && currentIndex < historyStack.length - 1);
+      return;
+    }
+
+    setCanGoBack(window.history.length > 1 || isDossierRoute);
+    setCanGoForward(false);
+  }, [isDossierRoute, isEntityBrowserRoute, pathname]);
+
   const handleBack = () => {
+    if (!canGoBack) return;
+
+    if (isDossierRoute) {
+      const storedEntityBrowserUrl = sessionStorage.getItem('lastEntityBrowserUrl');
+      const fallbackPage = new URLSearchParams(window.location.search).get('from') || '1';
+      router.push(storedEntityBrowserUrl || `/entity-browser?page=${fallbackPage}`);
+      return;
+    }
+
+    if (isEntityBrowserRoute) {
+      const rawStack = sessionStorage.getItem('entityBrowserHistoryStack');
+      const rawIndex = sessionStorage.getItem('entityBrowserHistoryIndex');
+      const historyStack = rawStack ? JSON.parse(rawStack) as string[] : [];
+      const currentIndex = rawIndex ? Number.parseInt(rawIndex, 10) : -1;
+      const previousBrowserUrl = currentIndex > 0 ? historyStack[currentIndex - 1] : null;
+
+      if (previousBrowserUrl) {
+        sessionStorage.setItem('entityBrowserHistoryIndex', String(currentIndex - 1));
+        router.push(previousBrowserUrl);
+      }
+      return;
+    }
+
     if (canGoBack) {
       window.history.back();
     }
   };
 
   const handleForward = () => {
+    if (isEntityBrowserRoute) {
+      const rawStack = sessionStorage.getItem('entityBrowserHistoryStack');
+      const rawIndex = sessionStorage.getItem('entityBrowserHistoryIndex');
+      const historyStack = rawStack ? JSON.parse(rawStack) as string[] : [];
+      const currentIndex = rawIndex ? Number.parseInt(rawIndex, 10) : -1;
+      const nextBrowserUrl = currentIndex >= 0 && currentIndex < historyStack.length - 1
+        ? historyStack[currentIndex + 1]
+        : null;
+
+      if (nextBrowserUrl) {
+        sessionStorage.setItem('entityBrowserHistoryIndex', String(currentIndex + 1));
+        router.push(nextBrowserUrl);
+      }
+      return;
+    }
+
     if (canGoForward) {
       window.history.forward();
     }

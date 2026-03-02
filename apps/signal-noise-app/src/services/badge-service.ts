@@ -2,7 +2,10 @@ import { BadgeMapping, BadgeConfig, BadgeServiceConfig, BadgeSize, BadgeSource }
 
 class BadgeService {
   private config: BadgeServiceConfig
-  private cache: Map<string, { data: BadgeMapping; timestamp: number }> = new Map()
+  private cache: Map<string, { data: BadgeMapping | null; timestamp: number }> = new Map()
+  private inFlightRequests: Map<string, Promise<BadgeMapping | null>> = new Map()
+  private badgeExistenceCache: Map<string, { exists: boolean; timestamp: number }> = new Map()
+  private inFlightBadgeExistenceChecks: Map<string, Promise<boolean>> = new Map()
   private mappings: BadgeMapping[] = []
 
 
@@ -53,6 +56,33 @@ class BadgeService {
       }
     }
 
+    const inFlightRequest = this.inFlightRequests.get(cacheKey)
+    if (inFlightRequest) {
+      return inFlightRequest
+    }
+
+    const lookupPromise = this.lookupBadgeMapping(entityId, entityName, cacheKey)
+    this.inFlightRequests.set(cacheKey, lookupPromise)
+
+    try {
+      return await lookupPromise
+    } finally {
+      this.inFlightRequests.delete(cacheKey)
+    }
+  }
+
+  private async lookupBadgeMapping(entityId: string | number, entityName: string, cacheKey: string): Promise<BadgeMapping | null> {
+    const cacheMapping = (mapping: BadgeMapping | null) => {
+      if (this.config.enableCaching) {
+        this.cache.set(cacheKey, {
+          data: mapping,
+          timestamp: Date.now()
+        })
+      }
+
+      return mapping
+    }
+
     const normalizedEntityName = entityName.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim()
 
     // Special case: Union Berlin (override to use correct badge name)
@@ -65,9 +95,8 @@ class BadgeService {
         lastUpdated: new Date().toISOString(),
         source: 'local'
       }
-      this.cache.set(cacheKey, { data: mapping, timestamp: Date.now() })
       console.log(`✅ Badge override for Union Berlin: union-berlin-badge.png`)
-      return mapping
+      return cacheMapping(mapping)
     }
 
     // Special case: 1. FC Köln (umlaut variations)
@@ -80,9 +109,8 @@ class BadgeService {
         lastUpdated: new Date().toISOString(),
         source: 'local'
       }
-      this.cache.set(cacheKey, { data: mapping, timestamp: Date.now() })
       console.log(`✅ Badge override for 1. FC Köln: 1-fc-kln-badge.png`)
-      return mapping
+      return cacheMapping(mapping)
     }
 
     // Try to find existing mapping - check for partial match on entity name
@@ -106,15 +134,7 @@ class BadgeService {
       }
     }
 
-    // Cache the result
-    if (mapping && this.config.enableCaching) {
-      this.cache.set(cacheKey, {
-        data: mapping,
-        timestamp: Date.now()
-      })
-    }
-
-    return mapping || null
+    return cacheMapping(mapping || null)
   }
 
   // Generate badge mapping based on naming conventions
@@ -142,12 +162,12 @@ class BadgeService {
       .replace(/-+/g, '-')
 
     // List of possible badge filenames to try (in order of preference)
-    const possibleBadges = [
+    const possibleBadges = Array.from(new Set([
       `${normalizedName}-badge.png`,              // Main name
       `${fullNameNormalized}-badge.png`,          // Full name
       `${normalizedName}.png`,                    // Without -badge suffix
       `${fullNameNormalized}.png`,                // Full name without -badge suffix
-    ]
+    ]))
 
     // Try each badge to see if it exists
     for (const badgeFilename of possibleBadges) {
@@ -173,11 +193,42 @@ class BadgeService {
   private async badgeFileExists(badgeFilename: string): Promise<boolean> {
     // In browser environment, try to fetch the badge
     if (typeof window !== 'undefined') {
+      const cachedExistence = this.badgeExistenceCache.get(badgeFilename)
+      if (cachedExistence && Date.now() - cachedExistence.timestamp < this.config.cacheTTL!) {
+        return cachedExistence.exists
+      }
+
+      const inFlightCheck = this.inFlightBadgeExistenceChecks.get(badgeFilename)
+      if (inFlightCheck) {
+        return inFlightCheck
+      }
+
+      const existenceCheck = (async () => {
+        try {
+          const response = await fetch(`/badges/${badgeFilename}`, { method: 'HEAD' })
+          const exists = response.ok
+          this.badgeExistenceCache.set(badgeFilename, {
+            exists,
+            timestamp: Date.now()
+          })
+          return exists
+        } catch {
+          this.badgeExistenceCache.set(badgeFilename, {
+            exists: false,
+            timestamp: Date.now()
+          })
+          return false
+        } finally {
+          this.inFlightBadgeExistenceChecks.delete(badgeFilename)
+        }
+      })()
+
+      this.inFlightBadgeExistenceChecks.set(badgeFilename, existenceCheck)
+
       try {
-        const response = await fetch(`/badges/${badgeFilename}`, { method: 'HEAD' })
-        return response.ok
-      } catch {
-        return false
+        return await existenceCheck
+      } finally {
+        this.inFlightBadgeExistenceChecks.delete(badgeFilename)
       }
     }
 
