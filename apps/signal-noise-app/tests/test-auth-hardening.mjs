@@ -27,6 +27,14 @@ const signInFormSource = readFileSync(
   new URL('../src/components/auth/SignInForm.tsx', import.meta.url),
   'utf8'
 )
+const signInPageSource = readFileSync(
+  new URL('../src/app/sign-in/page.tsx', import.meta.url),
+  'utf8'
+)
+const mailboxPageSource = readFileSync(
+  new URL('../src/app/mailbox/page.tsx', import.meta.url),
+  'utf8'
+)
 const packageSource = readFileSync(
   new URL('../package.json', import.meta.url),
   'utf8'
@@ -94,4 +102,9 @@ test('sign-in form supports password reset requests from the auth page', () => {
   assert.match(signInFormSource, /Forgot your password\?/)
   assert.match(signInFormSource, /setMode\("reset"\)/)
   assert.match(signInFormSource, /mode !== "reset"/)
+})
+
+test('auth-backed pages opt out of static prerendering', () => {
+  assert.match(signInPageSource, /export const dynamic = ["']force-dynamic["']/)
+  assert.match(mailboxPageSource, /export const dynamic = ["']force-dynamic["']/)
 })

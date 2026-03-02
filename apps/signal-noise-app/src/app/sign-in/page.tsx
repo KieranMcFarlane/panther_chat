@@ -2,6 +2,8 @@ import { SignInForm } from "@/components/auth/SignInForm"
 import { redirectAuthenticatedUser } from "@/lib/server-auth"
 import Link from "next/link"
 
+export const dynamic = "force-dynamic"
+
 export default async function SignInPage() {
   await redirectAuthenticatedUser("/")
 

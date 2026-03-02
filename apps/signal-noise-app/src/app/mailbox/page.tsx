@@ -1,6 +1,8 @@
 import { Mailbox } from '@/components/mailbox/Mailbox';
 import { requirePageSession } from '@/lib/server-auth';
 
+export const dynamic = 'force-dynamic';
+
 // Sample email data matching the Sales Intelligence design
 const sampleEmails = [
   {
