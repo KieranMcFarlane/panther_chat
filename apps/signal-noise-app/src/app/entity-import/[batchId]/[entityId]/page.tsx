@@ -36,6 +36,21 @@ export default async function EntityImportRunDetailPage(
     ? (performanceSummary.slowest_hop as Record<string, unknown>)
     : null
 
+  const slowestIteration = typeof performanceSummary?.slowest_iteration === 'object' && performanceSummary?.slowest_iteration !== null
+    ? (performanceSummary.slowest_iteration as Record<string, unknown>)
+    : null
+
+  const discoveryPhase = typeof phaseMap.discovery === 'object' && phaseMap.discovery !== null
+    ? phaseMap.discovery
+    : null
+
+  const budgetExceeded = Boolean(discoveryPhase?.budget_exceeded)
+  const timeoutMode = discoveryPhase?.timeout_mode ? String(discoveryPhase.timeout_mode) : 'n/a'
+  const budgetSeconds = discoveryPhase?.budget_seconds ? String(discoveryPhase.budget_seconds) : 'n/a'
+  const validationTimeoutMs = hopTimings.length
+    ? Math.max(...hopTimings.map((hop) => Number(hop.validation_ms ?? 0)))
+    : 0
+
   return (
     <main className="min-h-screen bg-slate-100 px-6 py-10">
       <div className="mx-auto max-w-5xl space-y-6">
@@ -108,10 +123,27 @@ export default async function EntityImportRunDetailPage(
           <h2 className="text-lg font-semibold text-slate-950">Discovery timing</h2>
           {performanceSummary ? (
             <div className="mt-4 space-y-4">
-              <div className="grid gap-3 text-sm text-slate-700 md:grid-cols-3">
+              <div className="grid gap-3 text-sm text-slate-700 md:grid-cols-4">
                 <p>total duration: {String(performanceSummary.total_duration_ms ?? 'n/a')}ms</p>
                 <p>iterations with timings: {String(performanceSummary.iterations_with_timings ?? 0)}</p>
                 <p>slowest hop: {String(slowestHop?.hop_type ?? 'n/a')}</p>
+                <p>validation timeout: {validationTimeoutMs}ms</p>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Budget exceeded</p>
+                  <p className="mt-2 text-lg font-semibold text-slate-950">{budgetExceeded ? 'Yes' : 'No'}</p>
+                  <p className="mt-1">timeout mode: {timeoutMode}</p>
+                  <p>budget seconds: {budgetSeconds}</p>
+                </div>
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Slowest iteration</p>
+                  <p className="mt-2 text-lg font-semibold text-slate-950">
+                    {String(slowestIteration?.iteration ?? 'n/a')}
+                  </p>
+                  <p className="mt-1">hop type: {String(slowestIteration?.hop_type ?? 'n/a')}</p>
+                  <p>hypothesis: {String(slowestIteration?.hypothesis_id ?? 'n/a')}</p>
+                </div>
               </div>
               {slowestHop ? (
                 <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">

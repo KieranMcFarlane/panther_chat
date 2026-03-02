@@ -41,6 +41,7 @@ Usage:
 import asyncio
 import json
 import logging
+import os
 import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional, Any, Tuple, Callable, Awaitable
@@ -604,10 +605,10 @@ class HypothesisDrivenDiscovery:
 
         # Dossier hypotheses cache for warm-start discovery
         self._dossier_hypotheses_cache = {}
-        self.max_consecutive_no_progress_iterations = 4
-        self.search_timeout_seconds = 12.0
-        self.search_validation_timeout_seconds = 8.0
-        self.url_resolution_timeout_seconds = 20.0
+        self.max_consecutive_no_progress_iterations = int(os.getenv("DISCOVERY_MAX_CONSECUTIVE_NO_PROGRESS", "3"))
+        self.search_timeout_seconds = float(os.getenv("DISCOVERY_SEARCH_TIMEOUT_SECONDS", "12"))
+        self.search_validation_timeout_seconds = float(os.getenv("DISCOVERY_SEARCH_VALIDATION_TIMEOUT_SECONDS", "5"))
+        self.url_resolution_timeout_seconds = float(os.getenv("DISCOVERY_URL_RESOLUTION_TIMEOUT_SECONDS", "12"))
 
         logger.info("🔍 HypothesisDrivenDiscovery initialized")
 
