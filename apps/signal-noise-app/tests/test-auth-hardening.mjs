@@ -68,3 +68,9 @@ test('better auth dash support is installed and configured', () => {
   assert.match(authClientSource, /plugins:\s*\[/)
   assert.match(authClientSource, /sentinelClient\(\)/)
 })
+
+test('auth client falls back to the browser origin when a localhost auth URL leaks into production', () => {
+  assert.match(authClientSource, /window\.location\.origin/)
+  assert.match(authClientSource, /isLocalhostUrl/)
+  assert.match(authClientSource, /resolveAuthBaseUrl/)
+})

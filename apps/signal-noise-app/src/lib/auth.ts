@@ -1,5 +1,5 @@
 import { mkdirSync } from "node:fs";
-import { join } from "node:path";
+import { basename, join, resolve } from "node:path";
 
 import { betterAuth } from "better-auth";
 import { memoryAdapter } from "better-auth/adapters/memory";
@@ -26,11 +26,45 @@ function isBuildPhase() {
   return process.env.NEXT_PHASE === "phase-production-build";
 }
 
+function isHostedProductionRuntime() {
+  return process.env.NODE_ENV === "production" || process.env.VERCEL === "1" || process.env.VERCEL_ENV === "production";
+}
+
 function normalizeBaseUrl(value?: string | null) {
   return value?.trim().replace(/\/+$/, "");
 }
 
+function isLocalhostUrl(value?: string | null) {
+  if (!value) {
+    return false;
+  }
+
+  try {
+    const url = new URL(value);
+    return ["localhost", "127.0.0.1"].includes(url.hostname);
+  } catch {
+    return false;
+  }
+}
+
 function getSqliteDatabasePath() {
+  const configuredDatabaseUrl = process.env.DATABASE_URL?.trim();
+  if (configuredDatabaseUrl?.startsWith("file:")) {
+    const configuredPath = configuredDatabaseUrl.slice("file:".length) || "better-auth.db";
+
+    if (isHostedProductionRuntime()) {
+      return join("/tmp", basename(configuredPath));
+    }
+
+    return configuredPath.startsWith("/")
+      ? configuredPath
+      : resolve(process.cwd(), configuredPath);
+  }
+
+  if (isHostedProductionRuntime()) {
+    return join("/tmp", "better-auth.db");
+  }
+
   const dataDir = join(process.cwd(), ".data");
   mkdirSync(dataDir, { recursive: true });
   return join(dataDir, "better-auth.db");
@@ -54,6 +88,10 @@ function getDatabase(): AuthDatabaseConfig {
     }
   }
 
+  if (isHostedProductionRuntime()) {
+    throw new Error("Better Auth: no durable database available in production");
+  }
+
   if (!isBuildPhase()) {
     console.warn("Better Auth: Falling back to in-memory adapter");
   }
@@ -65,11 +103,16 @@ function getDatabase(): AuthDatabaseConfig {
 }
 
 const databaseConfig = getDatabase();
-const authBaseUrl = normalizeBaseUrl(process.env.BETTER_AUTH_URL)
-  || normalizeBaseUrl(process.env.NEXT_PUBLIC_APP_URL)
-  || "http://localhost:3005";
+const authBaseUrl = [
+  normalizeBaseUrl(process.env.BETTER_AUTH_URL),
+  normalizeBaseUrl(process.env.NEXT_PUBLIC_BETTER_AUTH_URL),
+  normalizeBaseUrl(process.env.NEXT_PUBLIC_APP_URL),
+  normalizeBaseUrl(process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined),
+  "http://localhost:3005",
+].find((value) => value && !(isHostedProductionRuntime() && isLocalhostUrl(value)));
 const trustedOrigins = Array.from(new Set([
   "http://localhost:3005",
+  normalizeBaseUrl(process.env.NEXT_PUBLIC_BETTER_AUTH_URL),
   normalizeBaseUrl(process.env.NEXT_PUBLIC_APP_URL),
   authBaseUrl,
 ].filter(Boolean))) as string[];

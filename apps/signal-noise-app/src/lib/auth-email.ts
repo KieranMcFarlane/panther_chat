@@ -6,9 +6,19 @@ interface AuthEmailInput {
   url: string;
 }
 
+function isValidEmailAddress(value?: string | null) {
+  if (!value) {
+    return false;
+  }
+
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
 function getAuthEmailConfig() {
   const apiKey = process.env.RESEND_API_KEY;
-  const fromEmail = process.env.AUTH_EMAIL_FROM || process.env.RESEND_FROM_EMAIL;
+  const fromEmail = isValidEmailAddress(process.env.AUTH_EMAIL_FROM)
+    ? process.env.AUTH_EMAIL_FROM
+    : (isValidEmailAddress(process.env.RESEND_FROM_EMAIL) ? process.env.RESEND_FROM_EMAIL : undefined);
   const fromName = process.env.AUTH_EMAIL_FROM_NAME || process.env.RESEND_FROM_NAME || "Signal Noise";
   const configured = Boolean(apiKey && fromEmail);
 
