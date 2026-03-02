@@ -123,6 +123,8 @@ async function processBatch(batchId: string) {
           ...run.metadata,
           phases: result.phases,
           scores: result.artifacts?.scores ?? null,
+          performance_summary: result.artifacts?.discovery_result?.performance_summary ?? null,
+          completed_at: result.completed_at ?? null,
           promoted_rfp_ids: promotedRfps.map((rfp) => rfp.id),
         },
       })

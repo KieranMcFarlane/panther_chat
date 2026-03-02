@@ -34,6 +34,7 @@ test('entity import page polls the status route and renders per-entity phase pro
   assert.match(importerSource, /phaseEntries/)
   assert.match(importerSource, /run\.metadata\?\.phases/)
   assert.match(importerSource, /Object\.entries\(phaseMap\)/)
+  assert.match(importerSource, /\/entity-import\/\$\{batchId\}\/\$\{run\.entity_id\}/)
   assert.match(importerSource, /\/entity-browser\/\$\{run\.entity_id\}\/dossier\?from=1/)
   assert.match(importerSource, /href="\/rfps"/)
 })
@@ -51,6 +52,7 @@ test('entity import run route proxies queued entities into the backend pipeline 
   assert.match(runRouteSource, /from\('cached_entities'\)/)
   assert.match(runRouteSource, /sales_readiness/)
   assert.match(runRouteSource, /rfp_count/)
+  assert.match(runRouteSource, /performance_summary/)
 })
 
 test('entity import RFP helper promotes validated signals into the unified rfp_opportunities table', () => {
