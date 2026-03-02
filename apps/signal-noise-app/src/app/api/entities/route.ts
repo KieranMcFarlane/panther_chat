@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import neo4j from 'neo4j-driver'
 import { Neo4jService } from '@/lib/neo4j'
 import { EntityCacheService } from '@/services/EntityCacheService'
+import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 
 export async function GET(request: NextRequest) {
   try {
@@ -16,12 +17,6 @@ export async function GET(request: NextRequest) {
 
     console.log(`📖 Fetching entities from Supabase: page=${page}, limit=${limit}, search=${search || 'none'}`)
 
-    // Use Supabase as primary source (FalkorDB connection issues)
-    const { createClient } = await import('@supabase/supabase-js')
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://itlcuazbybqlkicsaola.supabase.co'
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml0bGN1YXpieWJxbGtpY3Nhb2xhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkwOTc0MTQsImV4cCI6MjA3NDY3MzQxNH0.UXXSbe1Kk0CH7NkIGnwo3_qmJVV3VUbJz4Dw8lBGcKU'
-    const supabase = createClient(supabaseUrl, supabaseKey)
-
     // Build the base query
     let query = supabase
       .from('cached_entities')
@@ -29,7 +24,7 @@ export async function GET(request: NextRequest) {
 
     // Apply search filter if provided
     if (search) {
-      query = query.or(`name.ilike.%${search}%,properties->>type.ilike.%${search}%,properties->>sport.ilike.%${search}%,properties->>country.ilike.%${search}%,properties->>description.ilike.%${search}%`)
+      query = query.or(`properties->>name.ilike.%${search}%,properties->>type.ilike.%${search}%,properties->>sport.ilike.%${search}%,properties->>country.ilike.%${search}%,properties->>description.ilike.%${search}%`)
     }
 
     // Apply entity type filter if provided

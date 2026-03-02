@@ -4,12 +4,25 @@ import socket
 import time
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 from typing import Any, Dict, Optional
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
+from dotenv import load_dotenv
 from supabase import create_client
 
+
+DEFAULT_ENV_PATH = Path(__file__).resolve().parents[1] / ".env"
+
+
+def load_worker_environment(env_path: Optional[Path] = None) -> None:
+    dotenv_path = env_path or DEFAULT_ENV_PATH
+    if dotenv_path.exists():
+        load_dotenv(dotenv_path=dotenv_path, override=False)
+
+
+load_worker_environment()
 
 FASTAPI_URL = os.getenv("FASTAPI_URL") or os.getenv("PYTHON_BACKEND_URL") or "http://localhost:8000"
 PIPELINE_TIMEOUT_SECONDS = int(os.getenv("ENTITY_PIPELINE_TIMEOUT_SECONDS", "300"))
@@ -20,6 +33,15 @@ STALE_MINUTES = int(os.getenv("ENTITY_PIPELINE_STALE_MINUTES", "30"))
 
 def should_process_in_process(queue_mode: Optional[str]) -> bool:
     return (queue_mode or "in_process") != "durable_worker"
+
+
+def choose_supabase_key(
+    *,
+    service_role_key: Optional[str],
+    anon_key: Optional[str],
+    public_anon_key: Optional[str],
+) -> Optional[str]:
+    return anon_key or public_anon_key or service_role_key
 
 
 def build_run_detail_url(batch_id: str, entity_id: str) -> str:
@@ -38,7 +60,7 @@ def merge_cached_entity_properties(
 ) -> Dict[str, Any]:
     properties = deepcopy(existing_properties or {})
     if dossier:
-      properties["dossier_data"] = json.dumps(dossier)
+        properties["dossier_data"] = json.dumps(dossier)
     properties["sales_readiness"] = sales_readiness
     properties["rfp_count"] = rfp_count
     properties["last_pipeline_batch_id"] = batch_id
@@ -54,10 +76,10 @@ class EntityPipelineWorker:
             os.getenv("SUPABASE_URL")
             or os.getenv("NEXT_PUBLIC_SUPABASE_URL")
         )
-        supabase_key = (
-            os.getenv("SUPABASE_SERVICE_ROLE_KEY")
-            or os.getenv("SUPABASE_ANON_KEY")
-            or os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
+        supabase_key = choose_supabase_key(
+            service_role_key=os.getenv("SUPABASE_SERVICE_ROLE_KEY"),
+            anon_key=os.getenv("SUPABASE_ANON_KEY"),
+            public_anon_key=os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY"),
         )
         if not supabase_url or not supabase_key:
             raise RuntimeError("Supabase credentials are required for entity pipeline worker")
