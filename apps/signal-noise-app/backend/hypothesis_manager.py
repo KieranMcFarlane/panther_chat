@@ -280,6 +280,10 @@ class HypothesisManager:
         # Load template
         loader = TemplateLoader()
         template = loader.get_template(template_id)
+        if not template and template_id != "yellow_panther_agency":
+            logger.warning("Primary template unavailable, retrying with yellow_panther_agency")
+            template_id = "yellow_panther_agency"
+            template = loader.get_template(template_id)
 
         if not template:
             logger.error(f"Template not found: {template_id}")
