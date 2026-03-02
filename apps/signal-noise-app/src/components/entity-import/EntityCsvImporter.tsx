@@ -198,6 +198,7 @@ export default function EntityCsvImporter() {
               <thead>
                 <tr className="border-b border-slate-200 text-xs uppercase tracking-wide text-slate-500">
                   <th className="py-2 pr-4">Entity</th>
+                  <th className="py-2 pr-4">Run detail</th>
                   <th className="py-2 pr-4">Phase</th>
                   <th className="py-2 pr-4">Status</th>
                   <th className="py-2 pr-4">Sales readiness</th>
@@ -216,6 +217,14 @@ export default function EntityCsvImporter() {
                     return (
                       <tr key={run.id} className="border-b border-slate-100 align-top">
                         <td className="py-3 pr-4">{run.entity_name}</td>
+                        <td className="py-3 pr-4">
+                          <a
+                            href={`/entity-import/${batchId}/${run.entity_id}`}
+                            className="text-sky-700 underline underline-offset-2"
+                          >
+                            Open run
+                          </a>
+                        </td>
                         <td className="py-3 pr-4">
                           <div>{run.phase}</div>
                           {phaseEntries.length ? (

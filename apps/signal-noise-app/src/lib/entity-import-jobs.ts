@@ -181,6 +181,16 @@ export async function getEntityImportBatchStatus(batch_id: string) {
   }
 }
 
+export async function getEntityPipelineRun(batch_id: string, entity_id: string) {
+  const status = await getEntityImportBatchStatus(batch_id)
+  const run = (status.pipeline_runs ?? []).find((item) => item.entity_id === entity_id) ?? null
+
+  return {
+    batch: status.batch,
+    run,
+  }
+}
+
 export async function storeFallbackEntityImportState(
   batch: EntityImportBatchRecord,
   runs: EntityPipelineRunRecord[],
