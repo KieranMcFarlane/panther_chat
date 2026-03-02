@@ -14,6 +14,7 @@ Usage:
     data = await collector.collect_all(entity_id="arsenal-fc", entity_name="Arsenal FC")
 """
 
+import asyncio
 import os
 import logging
 import urllib.parse
@@ -154,6 +155,7 @@ class DossierDataCollector:
         self._falkordb_connected = False
         self._brightdata_available = False
         self._hypothesis_available = False
+        self.source_timeout_seconds = float(os.getenv("DOSSIER_SOURCE_TIMEOUT_SECONDS", "20"))
 
     async def _connect_falkordb(self):
         """Connect to FalkorDB using native Python client"""
@@ -561,59 +563,57 @@ If a field is not found, use null. Return ONLY valid JSON, no other text."""
             "freshness_score": 0
         }
 
-        # Source 1: Official website
-        try:
-            logger.info(f"📄 Scraping official website for {entity_name}")
-            site_result = await self._scrape_official_site(entity_name)
-            if site_result:
-                results["official_site"] = site_result
-                results["sources_used"].append("official_website")
-                logger.info(f"✅ Official website scraped: {site_result.get('url')}")
-        except Exception as e:
-            logger.warning(f"⚠️ Official website scraping failed: {e}")
+        source_results = await asyncio.gather(
+            self._run_multi_source_task("official_website", self._scrape_official_site(entity_name)),
+            self._run_multi_source_task(
+                "job_postings",
+                self.brightdata_client.scrape_jobs_board(
+                    entity_name=entity_name,
+                    keywords=["CRM", "Digital", "Data", "Analytics", "Marketing", "Technology", "CRM", "Cloud"],
+                ),
+            ),
+            self._run_multi_source_task(
+                "press_releases",
+                self.brightdata_client.scrape_press_release(entity_name=entity_name),
+            ),
+            self._run_multi_source_task(
+                "linkedin",
+                self.brightdata_client.search_engine(
+                    query=f'"{entity_name}" site:linkedin.com/company',
+                    engine='google',
+                    num_results=5,
+                ),
+            ),
+        )
 
-        # Source 2: Job postings (digital/tech roles)
-        try:
-            logger.info(f"💼 Scraping job postings for {entity_name}")
-            jobs_result = await self.brightdata_client.scrape_jobs_board(
-                entity_name=entity_name,
-                keywords=["CRM", "Digital", "Data", "Analytics", "Marketing", "Technology", "CRM", "Cloud"]
-            )
-            if jobs_result.get('status') == 'success':
-                jobs = jobs_result.get('results', [])[:10]  # Limit to 10 most recent
+        for source_name, payload in source_results:
+            if not payload:
+                continue
+
+            if source_name == "official_website":
+                results["official_site"] = payload
+                results["sources_used"].append(source_name)
+                logger.info(f"✅ Official website scraped: {payload.get('url')}")
+                continue
+
+            if payload.get('status') != 'success':
+                continue
+
+            if source_name == "job_postings":
+                jobs = payload.get('results', [])[:10]
                 results["job_postings"] = jobs
-                results["sources_used"].append("job_postings")
+                results["sources_used"].append(source_name)
                 logger.info(f"✅ Found {len(jobs)} relevant job postings")
-        except Exception as e:
-            logger.warning(f"⚠️ Job posting scraping failed: {e}")
-
-        # Source 3: Press releases and news
-        try:
-            logger.info(f"📰 Scraping press releases for {entity_name}")
-            press_result = await self.brightdata_client.scrape_press_release(entity_name=entity_name)
-            if press_result.get('status') == 'success':
-                press = press_result.get('results', [])[:10]  # Limit to 10 most recent
+            elif source_name == "press_releases":
+                press = payload.get('results', [])[:10]
                 results["press_releases"] = press
-                results["sources_used"].append("press_releases")
+                results["sources_used"].append(source_name)
                 logger.info(f"✅ Found {len(press)} press releases")
-        except Exception as e:
-            logger.warning(f"⚠️ Press release scraping failed: {e}")
-
-        # Source 4: LinkedIn (company page and posts)
-        try:
-            logger.info(f"💼 Searching LinkedIn for {entity_name}")
-            linkedin_search = await self.brightdata_client.search_engine(
-                query=f'"{entity_name}" site:linkedin.com/company',
-                engine='google',
-                num_results=5
-            )
-            if linkedin_search.get('status') == 'success':
-                linkedin_results = linkedin_search.get('results', [])
+            elif source_name == "linkedin":
+                linkedin_results = payload.get('results', [])
                 results["linkedin_posts"] = linkedin_results
-                results["sources_used"].append("linkedin")
+                results["sources_used"].append(source_name)
                 logger.info(f"✅ Found {len(linkedin_results)} LinkedIn references")
-        except Exception as e:
-            logger.warning(f"⚠️ LinkedIn scraping failed: {e}")
 
         # Calculate freshness score based on recency and source count
         freshness_score = self._calculate_freshness_score(results)
@@ -622,6 +622,18 @@ If a field is not found, use null. Return ONLY valid JSON, no other text."""
         logger.info(f"✅ Multi-source collection complete: {len(results['sources_used'])} sources, freshness: {freshness_score}/100")
 
         return results
+
+    async def _run_multi_source_task(self, source_name: str, coro):
+        try:
+            logger.info(f"🔎 Collecting {source_name} for dossier enrichment")
+            payload = await asyncio.wait_for(coro, timeout=self.source_timeout_seconds)
+            return source_name, payload
+        except asyncio.TimeoutError:
+            logger.warning(f"⚠️ {source_name} timed out after {self.source_timeout_seconds:.1f}s")
+            return source_name, None
+        except Exception as e:
+            logger.warning(f"⚠️ {source_name} collection failed: {e}")
+            return source_name, None
 
     async def _scrape_official_site(self, entity_name: str) -> Optional[Dict[str, Any]]:
         """

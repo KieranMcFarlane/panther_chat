@@ -133,6 +133,58 @@ def test_score_url_penalizes_weak_linkedin_rfp_results():
 
 
 @pytest.mark.asyncio
+async def test_evaluate_content_with_claude_returns_fallback_when_query_raises():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+
+    class FailingClaudeClient:
+        async def query(self, *args, **kwargs):
+            raise RuntimeError("transport failed")
+
+    discovery.claude_client = FailingClaudeClient()
+    discovery._format_early_indicators = lambda indicators: ""
+    discovery._fallback_result = lambda: {
+        "decision": "NO_PROGRESS",
+        "confidence_delta": 0.0,
+        "justification": "fallback",
+        "evidence_found": "",
+    }
+    discovery._build_evaluation_context = lambda **kwargs: SimpleNamespace(
+        entity_name="International Canoe Federation",
+        hypothesis_statement="Potential procurement activity",
+        hypothesis_category="procurement",
+        pattern_name="test-pattern",
+        current_confidence=0.5,
+        iterations_attempted=0,
+        early_indicators=[],
+        keywords=[],
+        recent_history=[],
+        last_decision=None,
+        hop_type=HopType.RFP_PAGE,
+        channel_guidance="Search for procurement signals",
+        min_evidence_strength="medium",
+        temporal_requirements="recent_12mo",
+    )
+
+    hypothesis = SimpleNamespace(
+        metadata={"entity_name": "International Canoe Federation"},
+        category="procurement",
+        confidence=0.5,
+        iterations_attempted=0,
+        statement="Potential procurement activity",
+    )
+
+    result = await discovery._evaluate_content_with_claude(
+        content="Example content",
+        hypothesis=hypothesis,
+        hop_type=HopType.RFP_PAGE,
+        content_metadata={},
+    )
+
+    assert result["decision"] == "NO_PROGRESS"
+    assert result["justification"] == "fallback"
+
+
+@pytest.mark.asyncio
 async def test_update_hypothesis_state_falls_back_to_in_memory_hypothesis():
     discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
     discovery.hypothesis_manager = SimpleNamespace()

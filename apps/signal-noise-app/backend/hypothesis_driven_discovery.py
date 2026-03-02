@@ -2338,6 +2338,8 @@ Return JSON:
 }}
 """
 
+        response_text = ""
+
         # Step 5: Call Claude API (existing implementation continues...)
         try:
             # Use ClaudeClient.query() instead of Anthropic SDK

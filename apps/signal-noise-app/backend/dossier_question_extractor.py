@@ -21,6 +21,7 @@ Questions are categorized by type:
 
 import logging
 import re
+import asyncio
 from datetime import datetime, timezone
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
@@ -220,12 +221,16 @@ class DossierQuestionExtractor:
         """
         all_questions = []
 
-        for section in sections:
-            questions = await self.extract_questions_from_section(
+        section_results = await asyncio.gather(*[
+            self.extract_questions_from_section(
                 section,
                 entity_name,
                 max_per_section
             )
+            for section in sections
+        ])
+
+        for questions in section_results:
             all_questions.extend(questions)
 
         logger.info(f"Extracted {len(all_questions)} total questions from {len(sections)} sections")
@@ -418,10 +423,11 @@ Questions:"""
                 model="haiku",
                 max_tokens=500
             )
+            response_text = response.get("content", "") if isinstance(response, dict) else str(response)
 
             # Parse response
             questions = []
-            for i, line in enumerate(response.strip().split('\n')[:count]):
+            for i, line in enumerate(response_text.strip().split('\n')[:count]):
                 question_text = line.strip()
 
                 # Skip empty lines
