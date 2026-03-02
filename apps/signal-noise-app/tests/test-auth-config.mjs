@@ -19,3 +19,11 @@ test('better auth honors DATABASE_URL sqlite paths and refuses memory fallback i
   assert.match(authSource, /join\("\/tmp",\s*basename\(configuredPath\)\)/)
   assert.match(authSource, /no durable database available in production/)
 })
+
+test('better auth supports postgres-backed storage for hosted production', () => {
+  assert.match(authSource, /Kysely/)
+  assert.match(authSource, /PostgresDialect/)
+  assert.match(authSource, /new Pool/)
+  assert.match(authSource, /type:\s*"postgres"/)
+  assert.match(authSource, /casing:\s*"snake"/)
+})

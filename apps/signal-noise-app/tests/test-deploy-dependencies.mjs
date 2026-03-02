@@ -17,4 +17,16 @@ test("better-auth deploy dependency versions are compatible", () => {
     "^12.0.0",
     "better-sqlite3 should satisfy Better Auth's deploy-time peer expectation",
   );
+
+  assert.equal(
+    packageJson.dependencies["kysely"],
+    "^0.28.8",
+    "kysely should be present for Better Auth Postgres storage",
+  );
+
+  assert.equal(
+    packageJson.dependencies["pg"],
+    "^8.16.3",
+    "pg should be present for Better Auth Postgres storage",
+  );
 });

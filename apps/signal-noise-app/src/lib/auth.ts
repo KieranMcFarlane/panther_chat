@@ -5,12 +5,14 @@ import { betterAuth } from "better-auth";
 import { memoryAdapter } from "better-auth/adapters/memory";
 import { dash } from "@better-auth/infra";
 import Database from "better-sqlite3";
+import { Kysely, PostgresDialect } from "kysely";
+import { Pool } from "pg";
 
 import { sendAuthResetPasswordEmail, sendAuthVerificationEmail } from "@/lib/auth-email";
 
 type AuthDatabaseConfig =
   | {
-      database: Database.Database;
+      database: Database.Database | { db: Kysely<unknown>; type: "postgres"; casing: "snake" };
       label: string;
       runMigrations: boolean;
     }
@@ -21,6 +23,8 @@ type AuthDatabaseConfig =
     };
 
 let sqliteHandle: Database.Database | null = null;
+let postgresKysely: Kysely<unknown> | null = null;
+let postgresPool: Pool | null = null;
 
 function isBuildPhase() {
   return process.env.NEXT_PHASE === "phase-production-build";
@@ -32,6 +36,14 @@ function isHostedProductionRuntime() {
 
 function normalizeBaseUrl(value?: string | null) {
   return value?.trim().replace(/\/+$/, "");
+}
+
+function getDatabaseUrl() {
+  return process.env.DATABASE_URL?.trim() || "";
+}
+
+function isPostgresDatabaseUrl(value?: string | null) {
+  return /^(postgres(ql)?):\/\//i.test(value?.trim() || "");
 }
 
 function isLocalhostUrl(value?: string | null) {
@@ -48,7 +60,7 @@ function isLocalhostUrl(value?: string | null) {
 }
 
 function getSqliteDatabasePath() {
-  const configuredDatabaseUrl = process.env.DATABASE_URL?.trim();
+  const configuredDatabaseUrl = getDatabaseUrl();
   if (configuredDatabaseUrl?.startsWith("file:")) {
     const configuredPath = configuredDatabaseUrl.slice("file:".length) || "better-auth.db";
 
@@ -71,6 +83,41 @@ function getSqliteDatabasePath() {
 }
 
 function getDatabase(): AuthDatabaseConfig {
+  const configuredDatabaseUrl = getDatabaseUrl();
+
+  if (isPostgresDatabaseUrl(configuredDatabaseUrl)) {
+    try {
+      postgresPool = postgresPool ?? new Pool({
+        connectionString: configuredDatabaseUrl,
+        ssl: isHostedProductionRuntime() ? { rejectUnauthorized: false } : undefined,
+        max: 5,
+      });
+      postgresKysely = postgresKysely ?? new Kysely({
+        dialect: new PostgresDialect({
+          pool: postgresPool,
+        }),
+      });
+
+      if (!isBuildPhase()) {
+        console.log("Better Auth: Using Postgres database");
+      }
+
+      return {
+        database: {
+          db: postgresKysely,
+          type: "postgres",
+          casing: "snake",
+        },
+        label: "postgres",
+        runMigrations: true,
+      };
+    } catch (error) {
+      if (!isBuildPhase()) {
+        console.warn("Better Auth: Could not initialize Postgres database", error);
+      }
+    }
+  }
+
   try {
     const sqlitePath = getSqliteDatabasePath();
     sqliteHandle = sqliteHandle ?? new Database(sqlitePath);
@@ -180,7 +227,7 @@ async function runAuthMigrations() {
 
 export const authReady = runAuthMigrations()
   .then(() => {
-    if (databaseConfig.label === "sqlite" && !isBuildPhase()) {
+    if ((databaseConfig.label === "sqlite" || databaseConfig.label === "postgres") && !isBuildPhase()) {
       console.log("Better Auth: Database migrations ready");
     }
   })
