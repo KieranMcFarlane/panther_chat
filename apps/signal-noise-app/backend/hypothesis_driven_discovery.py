@@ -43,6 +43,7 @@ import json
 import logging
 import os
 import time
+from importlib import import_module
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional, Any, Tuple, Callable, Awaitable
 from dataclasses import dataclass, field
@@ -53,6 +54,15 @@ logger = logging.getLogger(__name__)
 
 
 DEFAULT_DISCOVERY_TEMPLATE_ID = "yellow_panther_agency"
+
+
+def _load_backend_attr(module_name: str, attr_name: str):
+    """Load backend modules whether imported as a package or from the backend cwd."""
+    try:
+        module = import_module(f"backend.{module_name}")
+    except ImportError:
+        module = import_module(module_name)
+    return getattr(module, attr_name)
 
 
 def resolve_template_id(template_id: Optional[str], entity_type: Optional[str] = None) -> str:
@@ -84,8 +94,8 @@ except ImportError:
 
 # Import Phase 6 components
 try:
-    from backend.parameter_tuning import ParameterConfig
-    from backend.eig_calculator import EIGConfig
+    ParameterConfig = _load_backend_attr("parameter_tuning", "ParameterConfig")
+    EIGConfig = _load_backend_attr("eig_calculator", "EIGConfig")
     PARAMETER_TUNING_AVAILABLE = True
 except ImportError:
     PARAMETER_TUNING_AVAILABLE = False
@@ -519,8 +529,8 @@ class HypothesisDrivenDiscovery:
             config: Optional ParameterConfig for Phase 6 parameter tuning
             cache_enabled: Enable Phase 5 LRU cache (default: True)
         """
-        from backend.hypothesis_manager import HypothesisManager
-        from backend.eig_calculator import EIGCalculator
+        HypothesisManager = _load_backend_attr("hypothesis_manager", "HypothesisManager")
+        EIGCalculator = _load_backend_attr("eig_calculator", "EIGCalculator")
 
         self.claude_client = claude_client
         self.brightdata_client = brightdata_client
@@ -567,7 +577,7 @@ class HypothesisDrivenDiscovery:
         # Initialize search result validator for post-search validation
         self.search_validator = None
         try:
-            from backend.search_result_validator import SearchResultValidator
+            SearchResultValidator = _load_backend_attr("search_result_validator", "SearchResultValidator")
             self.search_validator = SearchResultValidator(claude_client)
             logger.info("✅ Search result validator initialized")
         except ImportError:
@@ -703,6 +713,24 @@ class HypothesisDrivenDiscovery:
 
         return max(0.0, score)  # Ensure non-negative
 
+    def _apply_entity_type_hop_bias(self, hop_type: HopType, depth: int) -> float:
+        entity_type = str(getattr(self, "current_entity_type", "") or "").upper()
+
+        if "FEDERATION" not in entity_type and "GOVERN" not in entity_type:
+            return 0.0
+
+        first_hop = depth <= 1
+        early_stage = depth <= 2
+        if hop_type == HopType.OFFICIAL_SITE:
+            return 0.8 if first_hop else (0.45 if early_stage else 0.2)
+        if hop_type == HopType.PRESS_RELEASE:
+            return 0.5 if first_hop else (0.3 if early_stage else 0.15)
+        if hop_type == HopType.CAREERS_PAGE:
+            return 0.2 if early_stage else 0.05
+        if hop_type in [HopType.RFP_PAGE, HopType.TENDERS_PAGE, HopType.PROCUREMENT_PAGE]:
+            return -1.1 if first_hop else (-0.55 if early_stage else -0.15)
+        return 0.0
+
     async def _get_cached_search(self, query: str, engine: str) -> Optional[Dict[str, Any]]:
         """Get cached search result if available and not expired"""
         cache_key = f"{engine}:{query}"
@@ -759,7 +787,7 @@ class HypothesisDrivenDiscovery:
         Returns:
             DiscoveryResult with final assessment
         """
-        from backend.schemas import RalphState
+        RalphState = _load_backend_attr("schemas", "RalphState")
 
         # Use config values if not specified (Phase 6 parameter tuning)
         if max_iterations is None:
@@ -802,7 +830,7 @@ class HypothesisDrivenDiscovery:
         self.current_entity_name = entity_name
         self.current_entity_id = entity_id
         # Extract entity type from template ID or hypotheses
-        self.current_entity_type = self._extract_entity_type_from_template(template_id)
+        self.current_entity_type = getattr(self, "current_entity_type", None) or self._extract_entity_type_from_template(template_id)
         self.current_hypothesis_context = f"Searching for procurement signals and RFP opportunities"
 
         discovery_started_at = time.perf_counter()
@@ -879,12 +907,10 @@ class HypothesisDrivenDiscovery:
         Returns:
             HopType to execute (highest scored option)
         """
-        from backend.sources.mcp_source_priorities import (
-            get_source_config,
-            calculate_channel_score,
-            ChannelBlacklist,
-            SourceType
-        )
+        get_source_config = _load_backend_attr("sources.mcp_source_priorities", "get_source_config")
+        calculate_channel_score = _load_backend_attr("sources.mcp_source_priorities", "calculate_channel_score")
+        ChannelBlacklist = _load_backend_attr("sources.mcp_source_priorities", "ChannelBlacklist")
+        SourceType = _load_backend_attr("sources.mcp_source_priorities", "SourceType")
 
         # Get or create channel blacklist from state metadata
         if not hasattr(state, 'channel_blacklist') or state.channel_blacklist is None:
@@ -930,6 +956,7 @@ class HypothesisDrivenDiscovery:
                 blacklist=state.channel_blacklist,
                 base_eig=base_eig
             )
+            score += self._apply_entity_type_hop_bias(hop_type, getattr(state, "current_depth", 1))
             hop_scores[hop_type] = score
 
         # Select highest scoring hop
@@ -2106,7 +2133,7 @@ class HypothesisDrivenDiscovery:
         template_id = hypothesis.metadata.get('template_id', '')
 
         # Load template to get early_indicators and keywords
-        from backend.template_loader import TemplateLoader
+        TemplateLoader = _load_backend_attr("template_loader", "TemplateLoader")
         loader = TemplateLoader()
         template = loader.get_template(template_id) if template_id else None
 
@@ -2406,7 +2433,7 @@ Return JSON:
             result: Hop execution result
             state: Current RalphState
         """
-        from backend.sources.mcp_source_priorities import SourceType
+        SourceType = _load_backend_attr("sources.mcp_source_priorities", "SourceType")
 
         # Ensure result has required keys
         if 'decision' not in result:
@@ -2530,7 +2557,10 @@ Return JSON:
         Returns:
             Signal object if criteria met, None otherwise
         """
-        from backend.schemas import Signal, Evidence, SignalType, SignalSubtype
+        Signal = _load_backend_attr("schemas", "Signal")
+        Evidence = _load_backend_attr("schemas", "Evidence")
+        SignalType = _load_backend_attr("schemas", "SignalType")
+        SignalSubtype = _load_backend_attr("schemas", "SignalSubtype")
 
         decision = result.get('decision', 'NO_PROGRESS')
 
@@ -2709,7 +2739,10 @@ Return JSON:
         Returns:
             List of signal dictionaries (for DiscoveryResult output)
         """
-        from backend.schemas import Signal, Evidence, SignalType, SignalSubtype
+        Signal = _load_backend_attr("schemas", "Signal")
+        Evidence = _load_backend_attr("schemas", "Evidence")
+        SignalType = _load_backend_attr("schemas", "SignalType")
+        SignalSubtype = _load_backend_attr("schemas", "SignalSubtype")
 
         signals = []
         raw_signals = []
@@ -2969,7 +3002,8 @@ Return JSON:
         Returns:
             Dict mapping category -> {maturity_score, activity_score, state, ...}
         """
-        from backend.ralph_loop import classify_signal, recalculate_hypothesis_state
+        classify_signal = _load_backend_attr("ralph_loop", "classify_signal")
+        recalculate_hypothesis_state = _load_backend_attr("ralph_loop", "recalculate_hypothesis_state")
 
         # Group signals by category
         category_signals = {
@@ -2983,7 +3017,7 @@ Return JSON:
             decision = result.get('decision', '')
 
             # Convert decision to RalphDecisionType
-            from backend.schemas import RalphDecisionType
+            RalphDecisionType = _load_backend_attr("schemas", "RalphDecisionType")
             if decision == 'ACCEPT':
                 ralph_decision = RalphDecisionType.ACCEPT
             elif decision == 'WEAK_ACCEPT':
@@ -3210,7 +3244,7 @@ Return JSON:
             logger.warning("entity_type_dossier_questions not available - question initialization skipped")
             return 0
 
-        from backend.hypothesis_manager import Hypothesis
+        Hypothesis = _load_backend_attr("hypothesis_manager", "Hypothesis")
 
         # Generate hypotheses from question templates
         hypotheses = generate_hypothesis_batch(
@@ -3290,7 +3324,7 @@ Return JSON:
         Returns:
             Number of hypotheses successfully added
         """
-        from backend.hypothesis_manager import Hypothesis
+        Hypothesis = _load_backend_attr("hypothesis_manager", "Hypothesis")
 
         added_count = 0
 
@@ -3456,6 +3490,7 @@ Return JSON:
         entity_id: str,
         entity_name: str,
         dossier: Dict[str, Any],
+        entity_type: Optional[str] = None,
         max_iterations: int = 30,
         progress_callback: Optional[Callable[[Dict[str, Any]], Awaitable[None]]] = None,
     ) -> DiscoveryResult:
@@ -3476,6 +3511,9 @@ Return JSON:
             DiscoveryResult with enhanced dossier context
         """
         logger.info(f"📋 Running dossier-context discovery for {entity_name}")
+        resolved_entity_type = entity_type or dossier.get('metadata', {}).get('entity_type') or getattr(self, "current_entity_type", None)
+        if resolved_entity_type:
+            self.current_entity_type = resolved_entity_type
 
         # Extract procurement signals from dossier
         procurement_signals = []
@@ -3565,7 +3603,7 @@ Return JSON:
         logger.info(f"🔍 Total search results: {len(search_results)}")
 
         # Initialize state and run discovery
-        from backend.schemas import RalphState
+        RalphState = _load_backend_attr("schemas", "RalphState")
 
         state = RalphState(
             entity_id=entity_id,
@@ -3594,7 +3632,7 @@ Return JSON:
                 entity_name=entity_name,
                 template_id=resolve_template_id(
                     dossier.get('metadata', {}).get('template_id'),
-                    dossier.get('metadata', {}).get('entity_type'),
+                    resolved_entity_type,
                 ),
                 max_iterations=max_iterations,
                 progress_callback=progress_callback,
