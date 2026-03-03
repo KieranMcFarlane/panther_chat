@@ -1,0 +1,158 @@
+{
+  "template_name": "Federation Governing Body Procurement",
+  "template_id": "federation_governing_body",
+  "description": "Discovery template for international federations and governing bodies seeking digital platforms, member systems, event technology, data programmes, and procurement support.",
+  "entity_type": "FEDERATION",
+  "ideal_for": "International federations, governing bodies, and sport administrators",
+  "estimated_cost": 3.0,
+  "estimated_duration": "6-10 iterations (1-2 minutes)",
+  "created_at": "2026-03-03",
+  "created_by": "Yellow Panther Intelligence System",
+  "version": "1.0.0",
+  "signal_patterns": [
+    {
+      "pattern_name": "Federation Procurement Programme",
+      "category": "Procurement",
+      "statement": "Federation is planning a formal procurement or supplier selection programme",
+      "weight": 0.78,
+      "discovery_strategy": "official_sources_first",
+      "early_indicators": [
+        "Procurement policy or tender notice on official site",
+        "Board or council approval for technology investment",
+        "Vendor registration or supplier portal references",
+        "Expressions of interest for digital services"
+      ],
+      "keywords": [
+        "procurement",
+        "tender",
+        "request for proposal",
+        "supplier",
+        "vendor",
+        "expression of interest",
+        "invitation to tender"
+      ],
+      "search_queries": [
+        "{entity} procurement policy",
+        "{entity} tender digital platform",
+        "{entity} request for proposal technology",
+        "{entity} supplier portal",
+        "{entity} invitation to tender"
+      ]
+    },
+    {
+      "pattern_name": "Membership CRM Modernisation",
+      "category": "Digital Transformation",
+      "statement": "Federation is modernising membership, CRM, or stakeholder management systems",
+      "weight": 0.72,
+      "discovery_strategy": "official_sources_first",
+      "early_indicators": [
+        "Member services transformation programme",
+        "CRM replacement or federation database migration",
+        "New athlete, federation, or event management platform",
+        "Digital roadmap referencing stakeholder systems"
+      ],
+      "keywords": [
+        "CRM",
+        "membership",
+        "stakeholder management",
+        "member federation",
+        "database migration",
+        "participant management",
+        "registration platform"
+      ],
+      "search_queries": [
+        "{entity} membership platform",
+        "{entity} CRM transformation",
+        "{entity} registration platform upgrade",
+        "{entity} stakeholder management system",
+        "{entity} federation database migration"
+      ]
+    },
+    {
+      "pattern_name": "Event Operations Platform",
+      "category": "Events",
+      "statement": "Federation is seeking technology for event operations, accreditation, or competition delivery",
+      "weight": 0.68,
+      "discovery_strategy": "official_sources_first",
+      "early_indicators": [
+        "Event hosting platform procurement",
+        "Accreditation or scheduling platform modernisation",
+        "Competition management system rollout",
+        "Broadcast, results, or timing platform integration"
+      ],
+      "keywords": [
+        "event management",
+        "competition management",
+        "accreditation",
+        "results platform",
+        "timing",
+        "scheduling",
+        "host city systems"
+      ],
+      "search_queries": [
+        "{entity} event management platform",
+        "{entity} competition management system",
+        "{entity} accreditation platform",
+        "{entity} results technology procurement",
+        "{entity} scheduling system tender"
+      ]
+    },
+    {
+      "pattern_name": "Data Governance And Analytics",
+      "category": "Data",
+      "statement": "Federation is investing in data governance, analytics, or reporting infrastructure",
+      "weight": 0.64,
+      "discovery_strategy": "press_and_reports",
+      "early_indicators": [
+        "Performance data programme announced",
+        "Data warehouse or analytics partner engagement",
+        "Reporting and governance framework updates",
+        "Digital strategy mentioning insights or intelligence"
+      ],
+      "keywords": [
+        "analytics",
+        "data governance",
+        "data platform",
+        "dashboard",
+        "business intelligence",
+        "reporting",
+        "data warehouse"
+      ],
+      "search_queries": [
+        "{entity} analytics platform",
+        "{entity} data governance programme",
+        "{entity} business intelligence federation",
+        "{entity} reporting platform",
+        "{entity} data strategy"
+      ]
+    },
+    {
+      "pattern_name": "Digital Leadership Hire",
+      "category": "Leadership",
+      "statement": "Federation is hiring digital or commercial leaders consistent with procurement activity",
+      "weight": 0.58,
+      "discovery_strategy": "careers_then_press",
+      "early_indicators": [
+        "Head of Digital, Technology Director, or Commercial Systems role",
+        "Transformation programme manager role",
+        "Procurement or vendor management responsibilities in leadership jobs",
+        "Technology governance or systems leadership role"
+      ],
+      "keywords": [
+        "head of digital",
+        "technology director",
+        "digital transformation",
+        "systems manager",
+        "vendor management",
+        "procurement manager"
+      ],
+      "search_queries": [
+        "{entity} head of digital job",
+        "{entity} technology director vacancy",
+        "{entity} procurement manager technology",
+        "{entity} transformation manager federation",
+        "{entity} systems leadership role"
+      ]
+    }
+  ]
+}

@@ -50,5 +50,5 @@ async def test_dossier_context_fallback_uses_explicit_entity_type():
     )
 
     assert result == {"status": "ok"}
-    assert captured["template_id"] == "yellow_panther_agency"
+    assert captured["template_id"] == "federation_governing_body"
     assert discovery.current_entity_type == "FEDERATION"
