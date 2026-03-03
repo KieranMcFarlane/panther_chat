@@ -126,6 +126,40 @@ def build_batch_retry_update(
     }
 
 
+def build_batch_completed_update(
+    existing_metadata: Optional[Dict[str, Any]],
+    *,
+    worker_id: str,
+    now_iso: str,
+) -> Dict[str, Any]:
+    metadata = deepcopy(existing_metadata or {})
+    metadata["worker_id"] = worker_id
+    metadata["heartbeat_at"] = now_iso
+    metadata["completed_at"] = now_iso
+    metadata["lease_expires_at"] = None
+    metadata["retry_state"] = "completed"
+    return {
+        "status": "completed",
+        "completed_at": now_iso,
+        "metadata": metadata,
+    }
+
+
+def build_batch_failed_update(
+    existing_metadata: Optional[Dict[str, Any]],
+    *,
+    now_iso: str,
+) -> Dict[str, Any]:
+    metadata = build_batch_heartbeat_metadata(existing_metadata, now_iso=now_iso)
+    metadata["lease_expires_at"] = None
+    metadata["retry_state"] = "failed"
+    return {
+        "status": "failed",
+        "completed_at": now_iso,
+        "metadata": metadata,
+    }
+
+
 def build_run_start_metadata(
     existing_metadata: Optional[Dict[str, Any]],
     *,
@@ -334,6 +368,17 @@ class EntityPipelineWorker:
         metadata = ((response.data or [{}])[0]).get("metadata")
         return metadata if isinstance(metadata, dict) else {}
 
+    def _get_batch_metadata(self, batch_id: str) -> Dict[str, Any]:
+        response = (
+            self.supabase.table("entity_import_batches")
+            .select("metadata")
+            .eq("id", batch_id)
+            .limit(1)
+            .execute()
+        )
+        metadata = ((response.data or [{}])[0]).get("metadata")
+        return metadata if isinstance(metadata, dict) else {}
+
     def _classify_error(self, error: Exception) -> tuple[bool, str]:
         if isinstance(error, TimeoutError):
             return True, "timeout"
@@ -466,11 +511,10 @@ class EntityPipelineWorker:
         elif any(run.get("status") == "failed" for run in final_runs):
             self._safe_execute(
                 lambda: self.supabase.table("entity_import_batches").update(
-                    {
-                        "status": "failed",
-                        "completed_at": self._now_iso(),
-                        "metadata": build_batch_heartbeat_metadata(self._batch_metadata(batch), now_iso=self._now_iso()),
-                    }
+                    build_batch_failed_update(
+                        self._batch_metadata(batch),
+                        now_iso=self._now_iso(),
+                    )
                 ).eq("id", batch_id).execute(),
                 context=f"finalize failed batch {batch_id}",
             )
@@ -481,6 +525,25 @@ class EntityPipelineWorker:
                     {"batch_id": batch_id, "worker_id": worker_id},
                 ).execute(),
                 context=f"finalize batch {batch_id}",
+            )
+            latest_batch_metadata = self._batch_metadata(batch)
+            try:
+                fetched_batch_metadata = self._get_batch_metadata(batch_id)
+                if fetched_batch_metadata:
+                    latest_batch_metadata = fetched_batch_metadata
+            except Exception as error:
+                logger.warning("Failed to fetch batch metadata for normalization %s: %s", batch_id, error)
+            completed_update = build_batch_completed_update(
+                latest_batch_metadata,
+                worker_id=worker_id,
+                now_iso=self._now_iso(),
+            )
+            batch["metadata"] = completed_update["metadata"]
+            self._safe_execute(
+                lambda: self.supabase.table("entity_import_batches").update(
+                    completed_update
+                ).eq("id", batch_id).execute(),
+                context=f"normalize completed batch metadata {batch_id}",
             )
 
     def run_forever(self) -> None:

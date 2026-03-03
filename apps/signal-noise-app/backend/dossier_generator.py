@@ -569,6 +569,9 @@ Website: N/A
         entity_dict = {
             "entity_name": dossier_data.entity_name,
             "entity_id": dossier_data.entity_id,
+            "sources_used": list(dossier_data.data_sources_used),
+            "source_count": len(dossier_data.data_sources_used),
+            "collected_at": dossier_data.collected_at.isoformat(),
         }
 
         # Add metadata if available
@@ -1591,9 +1594,15 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
         logger.info(f"📊 Generating {tier} dossier for {entity_name} (priority: {priority_score})")
 
         # Collect entity data if not provided
+        collection_started_at = datetime.now(timezone.utc)
+        collection_duration_seconds: Optional[float] = None
         if entity_data is None and DATA_COLLECTOR_AVAILABLE:
             collector = DossierDataCollector()
             dossier_data_obj = await collector.collect_all(entity_id, entity_name, entity_type=entity_type)
+            collection_duration_seconds = round(
+                (datetime.now(timezone.utc) - collection_started_at).total_seconds(),
+                2,
+            )
             entity_data = self._dossier_data_to_dict(dossier_data_obj)
         elif entity_data is None:
             # Fallback to minimal data
@@ -1627,6 +1636,11 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
         dossier["metadata"]["priority_score"] = priority_score
         dossier["metadata"]["hypothesis_count"] = len(hypotheses)
         dossier["metadata"]["signal_count"] = len(signals)
+        dossier["metadata"]["sources_used"] = list(entity_data.get("sources_used") or [])
+        dossier["metadata"]["source_count"] = int(entity_data.get("source_count") or len(entity_data.get("sources_used") or []))
+        dossier["metadata"]["collected_at"] = entity_data.get("collected_at")
+        if collection_duration_seconds is not None:
+            dossier["metadata"]["collection_time_seconds"] = collection_duration_seconds
 
         # Attach hypotheses and signals
         dossier["extracted_hypotheses"] = hypotheses

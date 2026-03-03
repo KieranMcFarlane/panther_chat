@@ -66,26 +66,45 @@ class PipelineOrchestrator:
         }
         dossier = initial_dossier
         if dossier is None:
-            await self._emit_phase_update(phase_callback, "dossier_generation", {"status": "running"})
+            await self._emit_phase_update(
+                phase_callback,
+                "dossier_generation",
+                {
+                    "status": "running",
+                    "entity_type": entity_type,
+                    "priority_score": priority_score,
+                },
+            )
             dossier = await self._run_dossier_generation(
                 entity_id=entity_id,
                 entity_name=entity_name,
                 entity_type=entity_type,
                 priority_score=priority_score,
             )
+            dossier_metadata = dossier.get("metadata", {})
             await self._emit_phase_update(
                 phase_callback,
                 "dossier_generation",
                 {
                     "status": "completed",
-                    "hypothesis_count": dossier.get("metadata", {}).get("hypothesis_count", 0),
-                    "signal_count": dossier.get("metadata", {}).get("signal_count", 0),
+                    "hypothesis_count": dossier_metadata.get("hypothesis_count", 0),
+                    "signal_count": dossier_metadata.get("signal_count", 0),
+                    "tier": dossier_metadata.get("tier"),
+                    "duration_seconds": dossier.get("generation_time_seconds"),
+                    "collection_time_seconds": dossier_metadata.get("collection_time_seconds"),
+                    "source_count": dossier_metadata.get("source_count", 0),
+                    "sources_used": dossier_metadata.get("sources_used", []),
                 },
             )
             phase_results["dossier_generation"] = {
                 "status": "completed",
-                "hypothesis_count": dossier.get("metadata", {}).get("hypothesis_count", 0),
-                "signal_count": dossier.get("metadata", {}).get("signal_count", 0),
+                "hypothesis_count": dossier_metadata.get("hypothesis_count", 0),
+                "signal_count": dossier_metadata.get("signal_count", 0),
+                "tier": dossier_metadata.get("tier"),
+                "duration_seconds": dossier.get("generation_time_seconds"),
+                "collection_time_seconds": dossier_metadata.get("collection_time_seconds"),
+                "source_count": dossier_metadata.get("source_count", 0),
+                "sources_used": dossier_metadata.get("sources_used", []),
             }
         else:
             phase_results["dossier_generation"] = {"status": "completed"}

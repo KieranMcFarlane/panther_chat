@@ -10,6 +10,8 @@ from entity_pipeline_worker import (
     build_batch_claim_metadata,
     build_batch_heartbeat_metadata,
     build_batch_retry_update,
+    build_batch_completed_update,
+    build_batch_failed_update,
     build_batch_running_update,
     build_run_start_metadata,
     build_run_success_metadata,
@@ -175,6 +177,30 @@ def test_build_batch_retry_update_requeues_batch_and_records_error():
     assert update["status"] == "queued"
     assert update["metadata"]["retry_state"] == "retrying"
     assert update["metadata"]["last_error"] == "Retrying one or more pipeline runs"
+    assert update["metadata"]["lease_expires_at"] is None
+
+
+def test_build_batch_completed_update_clears_lease_and_sets_completed_state():
+    update = build_batch_completed_update(
+        {"retry_state": "running", "lease_expires_at": "2026-03-02T15:10:00+00:00"},
+        worker_id="worker-1",
+        now_iso="2026-03-02T15:11:00+00:00",
+    )
+
+    assert update["status"] == "completed"
+    assert update["metadata"]["completed_at"] == "2026-03-02T15:11:00+00:00"
+    assert update["metadata"]["retry_state"] == "completed"
+    assert update["metadata"]["lease_expires_at"] is None
+
+
+def test_build_batch_failed_update_clears_lease_and_sets_failed_state():
+    update = build_batch_failed_update(
+        {"retry_state": "running", "lease_expires_at": "2026-03-02T15:10:00+00:00"},
+        now_iso="2026-03-02T15:11:00+00:00",
+    )
+
+    assert update["status"] == "failed"
+    assert update["metadata"]["retry_state"] == "failed"
     assert update["metadata"]["lease_expires_at"] is None
 
 
@@ -534,6 +560,23 @@ def test_process_batch_marks_batch_completed_after_successful_retry():
             return FakeRpcQuery(name, params)
         def table(self, _name):
             class FakeTable:
+                def select(self, _fields):
+                    class FakeSelect:
+                        def eq(self, *_args, **_kwargs):
+                            return self
+                        def limit(self, *_args, **_kwargs):
+                            return self
+                        def execute(self):
+                            return SimpleNamespace(data=[{
+                                "metadata": {
+                                    "queue_mode": "durable_worker",
+                                    "worker_id": "worker-1",
+                                    "attempt_count": 1,
+                                    "retry_state": "running",
+                                    "lease_expires_at": "2026-03-03T04:11:00+00:00",
+                                }
+                            }])
+                    return FakeSelect()
                 def update(self, payload):
                     batch_updates.append(payload)
                     return self
@@ -554,4 +597,6 @@ def test_process_batch_marks_batch_completed_after_successful_retry():
     assert run_updates[-1]["metadata"]["retry_state"] == "completed"
     assert run_updates[-1]["metadata"]["last_error"] is None
     assert complete_calls[-1]["batch_id"] == "batch-1"
-    assert not batch_updates
+    assert batch_updates[-1]["status"] == "completed"
+    assert batch_updates[-1]["metadata"]["retry_state"] == "completed"
+    assert batch_updates[-1]["metadata"]["lease_expires_at"] is None

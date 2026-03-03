@@ -21,7 +21,12 @@ class FakeDossierGenerator:
                 "entity_id": kwargs["entity_id"],
                 "hypothesis_count": 1,
                 "signal_count": 1,
+                "tier": "PREMIUM",
+                "source_count": 2,
+                "sources_used": ["FalkorDB", "BrightData"],
+                "collection_time_seconds": 4.5,
             },
+            "generation_time_seconds": 12.3,
             "procurement_signals": {
                 "upcoming_opportunities": [
                     {
@@ -136,6 +141,9 @@ async def test_pipeline_orchestrator_runs_phases_and_returns_artifacts():
 
     assert result["entity_id"] == "arsenal-fc"
     assert result["phases"]["dossier_generation"]["status"] == "completed"
+    assert result["phases"]["dossier_generation"]["duration_seconds"] == 12.3
+    assert result["phases"]["dossier_generation"]["collection_time_seconds"] == 4.5
+    assert result["phases"]["dossier_generation"]["source_count"] == 2
     assert result["phases"]["discovery"]["status"] == "completed"
     assert result["phases"]["ralph_validation"]["status"] == "completed"
     assert result["phases"]["temporal_persistence"]["status"] == "completed"
