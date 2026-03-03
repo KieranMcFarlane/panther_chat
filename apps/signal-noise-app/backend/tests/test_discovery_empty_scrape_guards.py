@@ -428,6 +428,76 @@ async def test_official_site_evaluation_uses_reduced_prompt_budget():
 
 
 @pytest.mark.asyncio
+async def test_official_site_evaluation_uses_compact_evidence_pack():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+
+    captured = {}
+
+    class RecordingClaudeClient:
+        async def query(self, prompt, model, max_tokens):
+            captured["prompt"] = prompt
+            return {
+                "content": '{"decision":"NO_PROGRESS","confidence_delta":0.0,"justification":"none","evidence_found":"","temporal_score":"older"}'
+            }
+
+    discovery.claude_client = RecordingClaudeClient()
+    discovery._format_early_indicators = lambda indicators: ""
+    discovery._fallback_result = lambda: {
+        "decision": "NO_PROGRESS",
+        "confidence_delta": 0.0,
+        "justification": "fallback",
+        "evidence_found": "",
+    }
+    discovery._build_evaluation_context = lambda **kwargs: SimpleNamespace(
+        entity_name="International Canoe Federation",
+        hypothesis_statement="Potential procurement activity",
+        hypothesis_category="procurement",
+        pattern_name="federation_procurement_programme",
+        current_confidence=0.78,
+        iterations_attempted=0,
+        early_indicators=["digital transformation"],
+        keywords=["procurement", "roadmap"],
+        recent_history=[],
+        last_decision=None,
+        hop_type=HopType.OFFICIAL_SITE,
+        channel_guidance="Search for federation strategy signals",
+        min_evidence_strength="medium",
+        temporal_requirements="recent_12mo",
+    )
+
+    hypothesis = SimpleNamespace(
+        metadata={"entity_name": "International Canoe Federation"},
+        category="procurement",
+        confidence=0.78,
+        iterations_attempted=0,
+        statement="Potential procurement activity",
+    )
+
+    content = "\n".join(
+        [
+            "Welcome to the federation.",
+            "General history section.",
+            "Digital transformation roadmap for the next three seasons.",
+            "This procurement programme will modernise the platform stack.",
+            "Leadership team overview.",
+            "Archived supporter story.",
+        ]
+    )
+
+    result = await discovery._evaluate_content_with_claude(
+        content=content,
+        hypothesis=hypothesis,
+        hop_type=HopType.OFFICIAL_SITE,
+        content_metadata={},
+    )
+
+    assert result["decision"] == "NO_PROGRESS"
+    assert "Digital transformation roadmap" in captured["prompt"]
+    assert "procurement programme" in captured["prompt"]
+    assert "Archived supporter story." not in captured["prompt"]
+
+
+@pytest.mark.asyncio
 async def test_update_hypothesis_state_falls_back_to_in_memory_hypothesis():
     discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
     discovery.hypothesis_manager = SimpleNamespace()

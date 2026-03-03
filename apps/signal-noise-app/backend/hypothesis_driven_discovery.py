@@ -2373,6 +2373,65 @@ class HypothesisDrivenDiscovery:
             'evidence_type': None
         }
 
+    def _extract_evidence_pack(
+        self,
+        content: str,
+        hop_type: HopType,
+        context: EvaluationContext,
+        content_limit: int,
+    ) -> str:
+        lines = [line.strip() for line in str(content or "").splitlines() if line.strip()]
+        if not lines:
+            return str(content or "")[:content_limit]
+
+        keyword_candidates = set()
+        keyword_candidates.update(k.lower() for k in (context.keywords or []) if k)
+        keyword_candidates.update(ind.lower() for ind in (context.early_indicators or []) if ind)
+        keyword_candidates.update(
+            {
+                "procurement",
+                "tender",
+                "rfp",
+                "request for proposal",
+                "partnership",
+                "digital",
+                "transformation",
+                "platform",
+                "vendor",
+                "supplier",
+            }
+        )
+        if hop_type == HopType.PRESS_RELEASE:
+            keyword_candidates.update({"news", "announcement", "launch"})
+        elif hop_type == HopType.OFFICIAL_SITE:
+            keyword_candidates.update({"strategy", "programme", "roadmap", "about"})
+        elif hop_type in HIGH_VALUE_HOPS:
+            keyword_candidates.update({"quotation", "deadline", "submission"})
+
+        matched_indexes = []
+        for index, line in enumerate(lines):
+            line_lower = line.lower()
+            if any(keyword in line_lower for keyword in keyword_candidates):
+                matched_indexes.append(index)
+
+        if not matched_indexes:
+            compact = "\n".join(lines)
+            return compact[:content_limit]
+
+        selected_indexes = set()
+        for index in matched_indexes:
+            start = max(0, index - 1)
+            end = min(len(lines), index + 2)
+            selected_indexes.update(range(start, end))
+
+        ordered_lines = [lines[index] for index in sorted(selected_indexes)]
+        compact = "\n".join(ordered_lines)
+
+        if len(compact) <= content_limit:
+            return compact
+
+        return compact[:content_limit]
+
     async def _evaluate_content_with_claude(
         self,
         content: str,
@@ -2440,7 +2499,12 @@ Pay special attention to:
 """
 
         content_limit = self._get_prompt_content_limit(hop_type)
-        content_excerpt = content[:content_limit]
+        content_excerpt = self._extract_evidence_pack(
+            content=content,
+            hop_type=hop_type,
+            context=context,
+            content_limit=content_limit,
+        )
         prompt = f"""
 # Hypothesis-Driven Discovery Evaluation
 
