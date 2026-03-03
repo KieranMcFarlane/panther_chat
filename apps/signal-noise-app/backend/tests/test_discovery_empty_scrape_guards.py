@@ -110,6 +110,60 @@ async def test_execute_hop_returns_timed_no_progress_for_scrape_failure():
     assert result["performance"]["total_duration_ms"] >= result["performance"]["scrape_ms"]
 
 
+@pytest.mark.asyncio
+async def test_execute_hop_reuses_official_site_scrape_cache():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.pdf_extractor = None
+    discovery.total_cost_usd = 0.0
+    discovery.brightdata_client = SimpleNamespace()
+    discovery._official_site_content_cache = {}
+
+    scrape_calls = {"count": 0}
+
+    async def fake_get_url_for_hop(hop_type, hypothesis, state):
+        return "https://www.canoeicf.com/home"
+
+    async def fake_scrape_as_markdown(url):
+        scrape_calls["count"] += 1
+        return {
+            "status": "success",
+            "content": "Official federation site content",
+            "url": url,
+            "timestamp": "2026-03-03T10:00:00Z",
+            "metadata": {"word_count": 4},
+        }
+
+    async def fake_evaluate_content_with_claude(**kwargs):
+        return {
+            "decision": "NO_PROGRESS",
+            "confidence_delta": 0.0,
+            "justification": "No signal",
+            "evidence_found": "",
+        }
+
+    discovery._get_url_for_hop = fake_get_url_for_hop
+    discovery._is_pdf_url = lambda url: False
+    discovery.brightdata_client.scrape_as_markdown = fake_scrape_as_markdown
+    discovery._evaluate_content_with_claude = fake_evaluate_content_with_claude
+
+    state = SimpleNamespace(
+        current_depth=0,
+        last_failed_hop=None,
+        hop_failure_counts={},
+    )
+    state.increment_depth_count = lambda depth: None
+
+    hypothesis = SimpleNamespace(metadata={"entity_name": "International Canoe Federation"})
+
+    first = await discovery._execute_hop(HopType.OFFICIAL_SITE, hypothesis, state)
+    second = await discovery._execute_hop(HopType.OFFICIAL_SITE, hypothesis, state)
+
+    assert first["decision"] == "NO_PROGRESS"
+    assert second["decision"] == "NO_PROGRESS"
+    assert scrape_calls["count"] == 1
+    assert second["performance"]["scrape_ms"] == 0.0
+
+
 def test_score_url_penalizes_weak_linkedin_rfp_results():
     discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
 

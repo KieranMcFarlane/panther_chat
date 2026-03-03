@@ -629,6 +629,7 @@ class HypothesisDrivenDiscovery:
 
         # Dossier hypotheses cache for warm-start discovery
         self._dossier_hypotheses_cache = {}
+        self._official_site_content_cache: Dict[str, Dict[str, Any]] = {}
         self.max_consecutive_no_progress_iterations = int(os.getenv("DISCOVERY_MAX_CONSECUTIVE_NO_PROGRESS", "3"))
         self.search_timeout_seconds = float(os.getenv("DISCOVERY_SEARCH_TIMEOUT_SECONDS", "12"))
         self.search_validation_timeout_seconds = float(os.getenv("DISCOVERY_SEARCH_VALIDATION_TIMEOUT_SECONDS", "5"))
@@ -1138,9 +1139,21 @@ class HypothesisDrivenDiscovery:
                     logger.warning("⚠️ PDF detected but pdf_extractor not available, skipping...")
                     return build_no_progress_result("PDF detected but extractor unavailable")
 
-                scrape_started_at = time.perf_counter()
-                content_result = await self.brightdata_client.scrape_as_markdown(url)
-                performance['scrape_ms'] = round((time.perf_counter() - scrape_started_at) * 1000, 2)
+                use_official_site_cache = hop_type == HopType.OFFICIAL_SITE
+                cached_content_result = None
+                if use_official_site_cache:
+                    cached_content_result = getattr(self, "_official_site_content_cache", {}).get(url)
+
+                if cached_content_result is not None:
+                    content_result = cached_content_result
+                    performance['scrape_ms'] = 0.0
+                    performance['scrape_cache_hit'] = True
+                else:
+                    scrape_started_at = time.perf_counter()
+                    content_result = await self.brightdata_client.scrape_as_markdown(url)
+                    performance['scrape_ms'] = round((time.perf_counter() - scrape_started_at) * 1000, 2)
+                    if use_official_site_cache and content_result.get('status') == 'success':
+                        self._official_site_content_cache[url] = content_result
 
                 if content_result.get('status') != 'success':
                     logger.error(f"Scraping failed: {content_result.get('error', 'Unknown error')}")
