@@ -5,7 +5,7 @@ import { betterAuth } from "better-auth";
 import { memoryAdapter } from "better-auth/adapters/memory";
 import { dash } from "@better-auth/infra";
 import Database from "better-sqlite3";
-import LibsqlDatabase from "libsql";
+import { LibsqlDialect } from "@libsql/kysely-libsql";
 import { Kysely, PostgresDialect } from "kysely";
 import { Pool } from "pg";
 
@@ -16,7 +16,7 @@ type AuthDatabaseConfig =
       database:
         | Database.Database
         | { db: Kysely<unknown>; type: "postgres"; casing: "snake" }
-        | InstanceType<typeof LibsqlDatabase>;
+        | { db: Kysely<unknown>; type: "sqlite" };
       label: string;
       runMigrations: boolean;
     }
@@ -27,7 +27,7 @@ type AuthDatabaseConfig =
     };
 
 let sqliteHandle: Database.Database | null = null;
-let libsqlHandle: InstanceType<typeof LibsqlDatabase> | null = null;
+let libsqlKysely: Kysely<unknown> | null = null;
 let postgresKysely: Kysely<unknown> | null = null;
 let postgresPool: Pool | null = null;
 
@@ -106,8 +106,11 @@ function getDatabase(): AuthDatabaseConfig {
 
   if (isLibsqlDatabaseUrl(tursoDatabaseUrl)) {
     try {
-      libsqlHandle = libsqlHandle ?? new LibsqlDatabase(tursoDatabaseUrl, {
-        authToken: tursoAuthToken || undefined,
+      libsqlKysely = libsqlKysely ?? new Kysely({
+        dialect: new LibsqlDialect({
+          url: tursoDatabaseUrl,
+          authToken: tursoAuthToken || undefined,
+        }),
       });
 
       if (!isBuildPhase()) {
@@ -115,7 +118,10 @@ function getDatabase(): AuthDatabaseConfig {
       }
 
       return {
-        database: libsqlHandle,
+        database: {
+          db: libsqlKysely,
+          type: "sqlite",
+        },
         label: "libsql",
         runMigrations: true,
       };

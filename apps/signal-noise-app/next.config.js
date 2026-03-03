@@ -2,6 +2,20 @@
 const nextConfig = {
   // output: 'standalone',  // Disabled to avoid static generation timeouts
   // Skip API routes that cause build issues
+  webpack(config) {
+    config.module.rules.push(
+      {
+        test: /\.md$/i,
+        type: 'asset/source',
+      },
+      {
+        test: /LICENSE$/i,
+        type: 'asset/source',
+      }
+    )
+
+    return config
+  },
   images: {
     domains: [
       'r2.thesportsdb.com',

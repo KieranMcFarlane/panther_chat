@@ -45,6 +45,7 @@
     "@copilotkit/runtime": "^1.10.5",
     "@inboundemail/sdk": "^4.3.0",
     "@libsql/client": "^0.15.14",
+    "@libsql/kysely-libsql": "^0.4.1",
     "@livekit/agents": "^1.0.17",
     "@livekit/agents-plugin-openai": "^1.0.17",
     "@livekit/components-react": "^2.9.15",
