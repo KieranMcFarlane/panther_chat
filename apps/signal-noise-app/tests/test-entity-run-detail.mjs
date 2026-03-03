@@ -7,6 +7,10 @@ const source = readFileSync(pagePath, 'utf8')
 
 test('entity import run detail page renders phase data and discovery timing', () => {
   assert.match(source, /getEntityPipelineRun/)
+  assert.match(source, /discoveryContext/)
+  assert.match(source, /Discovery summary/i)
+  assert.match(source, /Template/i)
+  assert.match(source, /Active hypothesis/i)
   assert.match(source, /performanceSummary/)
   assert.match(source, /slowest hop/i)
   assert.match(source, /hopTimings/)

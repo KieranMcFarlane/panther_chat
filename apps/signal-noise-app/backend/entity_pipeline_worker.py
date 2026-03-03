@@ -3,6 +3,7 @@ import os
 import socket
 import threading
 import time
+import logging
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -13,6 +14,7 @@ from urllib.request import Request, urlopen
 from dotenv import load_dotenv
 from supabase import create_client
 
+logger = logging.getLogger(__name__)
 
 DEFAULT_ENV_PATH = Path(__file__).resolve().parents[1] / ".env"
 
@@ -143,11 +145,22 @@ class EntityPipelineWorker:
         metadata = batch.get("metadata") or {}
         return metadata if isinstance(metadata, dict) else {}
 
+    def _safe_execute(self, operation, *, context: str) -> bool:
+        try:
+            operation()
+            return True
+        except Exception as error:
+            logger.warning("Worker Supabase operation failed during %s: %s", context, error)
+            return False
+
     def refresh_batch_heartbeat(self, batch_id: str, metadata: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         heartbeat_metadata = build_batch_heartbeat_metadata(metadata, now_iso=self._now_iso())
-        self.supabase.table("entity_import_batches").update(build_batch_running_update(metadata, now_iso=heartbeat_metadata["heartbeat_at"])).eq(
-            "id", batch_id
-        ).execute()
+        self._safe_execute(
+            lambda: self.supabase.table("entity_import_batches").update(
+                build_batch_running_update(metadata, now_iso=heartbeat_metadata["heartbeat_at"])
+            ).eq("id", batch_id).execute(),
+            context=f"heartbeat refresh for {batch_id}",
+        )
         return heartbeat_metadata
 
     def _start_batch_heartbeat(self, batch_id: str, metadata: Optional[Dict[str, Any]]) -> tuple[threading.Event, threading.Thread]:
@@ -183,9 +196,12 @@ class EntityPipelineWorker:
                 continue
             metadata["recovered_at"] = self._now_iso()
             metadata["queue_mode"] = "durable_worker"
-            self.supabase.table("entity_import_batches").update(
-                {"status": "queued", "metadata": metadata}
-            ).eq("id", batch["id"]).execute()
+            self._safe_execute(
+                lambda: self.supabase.table("entity_import_batches").update(
+                    {"status": "queued", "metadata": metadata}
+                ).eq("id", batch["id"]).execute(),
+                context=f"stale batch recovery for {batch['id']}",
+            )
 
     def claim_next_batch(self) -> Optional[Dict[str, Any]]:
         self.recover_stale_batches()
@@ -203,9 +219,14 @@ class EntityPipelineWorker:
         batch = batches[0]
         metadata = self._batch_metadata(batch)
         metadata = build_batch_claim_metadata(metadata, worker_id=self.worker_id, now_iso=self._now_iso())
-        self.supabase.table("entity_import_batches").update(
-            {"status": "running", "metadata": metadata}
-        ).eq("id", batch["id"]).execute()
+        claimed = self._safe_execute(
+            lambda: self.supabase.table("entity_import_batches").update(
+                {"status": "running", "metadata": metadata}
+            ).eq("id", batch["id"]).execute(),
+            context=f"claim batch {batch['id']}",
+        )
+        if not claimed:
+            return None
         batch["metadata"] = metadata
         batch["status"] = "running"
         return batch
@@ -255,14 +276,20 @@ class EntityPipelineWorker:
             rfp_count=int((result or {}).get("rfp_count") or 0),
             dossier=((result or {}).get("artifacts") or {}).get("dossier"),
         )
-        self.supabase.table("cached_entities").update({"properties": properties}).eq(
-            "neo4j_id", run["entity_id"]
-        ).execute()
+        self._safe_execute(
+            lambda: self.supabase.table("cached_entities").update({"properties": properties}).eq(
+                "neo4j_id", run["entity_id"]
+            ).execute(),
+            context=f"sync cached entity {run['entity_id']}",
+        )
 
     def update_run(self, batch_id: str, entity_id: str, updates: Dict[str, Any]) -> None:
-        self.supabase.table("entity_pipeline_runs").update(updates).eq(
-            "batch_id", batch_id
-        ).eq("entity_id", entity_id).execute()
+        self._safe_execute(
+            lambda: self.supabase.table("entity_pipeline_runs").update(updates).eq(
+                "batch_id", batch_id
+            ).eq("entity_id", entity_id).execute(),
+            context=f"update run {batch_id}/{entity_id}",
+        )
 
     def process_batch(self, batch: Dict[str, Any]) -> None:
         batch_id = batch["id"]
@@ -331,13 +358,16 @@ class EntityPipelineWorker:
             batch["metadata"] = self.refresh_batch_heartbeat(batch_id, self._batch_metadata(batch))
         heartbeat_stop.set()
         heartbeat_thread.join(timeout=1)
-        self.supabase.table("entity_import_batches").update(
-            {
-                "status": "failed" if failed_runs > 0 else "completed",
-                "completed_at": self._now_iso(),
-                "metadata": build_batch_heartbeat_metadata(self._batch_metadata(batch), now_iso=self._now_iso()),
-            }
-        ).eq("id", batch_id).execute()
+        self._safe_execute(
+            lambda: self.supabase.table("entity_import_batches").update(
+                {
+                    "status": "failed" if failed_runs > 0 else "completed",
+                    "completed_at": self._now_iso(),
+                    "metadata": build_batch_heartbeat_metadata(self._batch_metadata(batch), now_iso=self._now_iso()),
+                }
+            ).eq("id", batch_id).execute(),
+            context=f"finalize batch {batch_id}",
+        )
 
     def run_forever(self) -> None:
         while True:

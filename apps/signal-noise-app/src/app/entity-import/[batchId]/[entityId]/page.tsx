@@ -27,6 +27,9 @@ export default async function EntityImportRunDetailPage(
   const performanceSummary = typeof run.metadata?.performance_summary === 'object' && run.metadata?.performance_summary !== null
     ? (run.metadata.performance_summary as Record<string, unknown>)
     : null
+  const discoveryContext = typeof run.metadata?.discovery_context === 'object' && run.metadata?.discovery_context !== null
+    ? (run.metadata.discovery_context as Record<string, unknown>)
+    : null
 
   const hopTimings = Array.isArray(performanceSummary?.hop_timings)
     ? (performanceSummary?.hop_timings as Array<Record<string, unknown>>)
@@ -96,6 +99,28 @@ export default async function EntityImportRunDetailPage(
               {run.error_message}
             </p>
           ) : null}
+        </section>
+
+        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="text-lg font-semibold text-slate-950">Discovery summary</h2>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Template</p>
+              <p className="mt-2 text-lg font-semibold text-slate-950">
+                {String(discoveryContext?.template_id ?? 'n/a')}
+              </p>
+              <p className="mt-1">lead hypothesis: {String(discoveryContext?.lead_hypothesis_id ?? 'n/a')}</p>
+              <p>pattern: {String(discoveryContext?.lead_pattern_name ?? 'n/a')}</p>
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Active hypothesis</p>
+              <p className="mt-2 text-lg font-semibold text-slate-950">
+                {String(discoveryContext?.slowest_hypothesis_id ?? discoveryContext?.lead_hypothesis_id ?? 'n/a')}
+              </p>
+              <p className="mt-1">slowest hop type: {String(discoveryContext?.slowest_hop_type ?? 'n/a')}</p>
+              <p>lead confidence: {String(discoveryContext?.lead_confidence ?? 'n/a')}</p>
+            </div>
+          </div>
         </section>
 
         <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">

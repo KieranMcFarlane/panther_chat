@@ -20,6 +20,45 @@ type PipelineRunResponse = {
   artifacts?: {
     dossier_id?: string | null
     scores?: Record<string, unknown>
+    discovery_result?: {
+      hypotheses?: Array<Record<string, unknown>>
+      performance_summary?: Record<string, unknown>
+    }
+  }
+}
+
+function deriveDiscoveryContext(result: PipelineRunResponse) {
+  const discoveryResult = result.artifacts?.discovery_result
+  const hypotheses = Array.isArray(discoveryResult?.hypotheses)
+    ? discoveryResult.hypotheses
+    : []
+  const performanceSummary = discoveryResult?.performance_summary
+  const slowestIteration = typeof performanceSummary?.slowest_iteration === 'object' && performanceSummary?.slowest_iteration !== null
+    ? performanceSummary.slowest_iteration as Record<string, unknown>
+    : null
+
+  const leadHypothesis = hypotheses[0] ?? null
+  const slowestHypothesis = slowestIteration?.hypothesis_id
+    ? hypotheses.find((hypothesis) => String(hypothesis?.hypothesis_id ?? '') === String(slowestIteration.hypothesis_id))
+    : null
+
+  const templateId = String(
+    slowestHypothesis?.metadata && typeof slowestHypothesis.metadata === 'object'
+      ? (slowestHypothesis.metadata as Record<string, unknown>).template_id ?? ''
+      : leadHypothesis?.metadata && typeof leadHypothesis.metadata === 'object'
+        ? (leadHypothesis.metadata as Record<string, unknown>).template_id ?? ''
+        : ''
+  ) || null
+
+  return {
+    template_id: templateId,
+    lead_hypothesis_id: leadHypothesis ? String(leadHypothesis.hypothesis_id ?? '') || null : null,
+    lead_pattern_name: leadHypothesis?.metadata && typeof leadHypothesis.metadata === 'object'
+      ? String((leadHypothesis.metadata as Record<string, unknown>).pattern_name ?? '') || null
+      : null,
+    lead_confidence: leadHypothesis ? Number(leadHypothesis.confidence ?? 0) || null : null,
+    slowest_hypothesis_id: slowestIteration ? String(slowestIteration.hypothesis_id ?? '') || null : null,
+    slowest_hop_type: slowestIteration ? String(slowestIteration.hop_type ?? '') || null : null,
   }
 }
 
@@ -132,6 +171,7 @@ async function processBatch(batchId: string) {
           phases: result.phases,
           scores: result.artifacts?.scores ?? null,
           performance_summary: result.artifacts?.discovery_result?.performance_summary ?? null,
+          discovery_context: deriveDiscoveryContext(result),
           completed_at: result.completed_at ?? null,
           promoted_rfp_ids: promotedRfps.map((rfp) => rfp.id),
         },

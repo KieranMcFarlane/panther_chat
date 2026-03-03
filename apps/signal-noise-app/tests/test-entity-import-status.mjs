@@ -55,6 +55,8 @@ test('entity import run route proxies queued entities into the backend pipeline 
   assert.match(runRouteSource, /sales_readiness/)
   assert.match(runRouteSource, /rfp_count/)
   assert.match(runRouteSource, /performance_summary/)
+  assert.match(runRouteSource, /discovery_context/)
+  assert.match(runRouteSource, /deriveDiscoveryContext/)
 })
 
 test('entity import RFP helper promotes validated signals into the unified rfp_opportunities table', () => {

@@ -1,6 +1,7 @@
 import os
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -14,6 +15,7 @@ from entity_pipeline_worker import (
     merge_pipeline_run_metadata,
     merge_cached_entity_properties,
     should_process_in_process,
+    EntityPipelineWorker,
 )
 
 
@@ -123,3 +125,28 @@ def test_merge_pipeline_run_metadata_preserves_phase_details_and_adds_scores():
     assert merged["scores"]["sales_readiness"] == "MONITOR"
     assert merged["performance_summary"]["slowest_hop"]["hop_type"] == "rfp_page"
     assert merged["promoted_rfp_ids"] == ["rfp-1"]
+
+
+def test_refresh_batch_heartbeat_tolerates_transient_supabase_failure():
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+
+    class FailingQuery:
+        def eq(self, *_args, **_kwargs):
+            return self
+        def execute(self):
+            raise OSError("No route to host")
+
+    class FakeTable:
+        def update(self, *_args, **_kwargs):
+            return FailingQuery()
+
+    worker.supabase = SimpleNamespace(table=lambda _name: FakeTable())
+    worker._now_iso = lambda: "2026-03-03T02:15:00+00:00"
+
+    metadata = worker.refresh_batch_heartbeat(
+        "batch-1",
+        {"worker_id": "worker-1", "claimed_at": "2026-03-03T02:00:00+00:00"},
+    )
+
+    assert metadata["heartbeat_at"] == "2026-03-03T02:15:00+00:00"
+    assert metadata["worker_id"] == "worker-1"
