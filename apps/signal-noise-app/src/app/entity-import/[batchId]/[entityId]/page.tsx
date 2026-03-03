@@ -62,6 +62,7 @@ export default async function EntityImportRunDetailPage(
   const budgetExceeded = Boolean(discoveryPhase?.budget_exceeded)
   const timeoutMode = discoveryPhase?.timeout_mode ? String(discoveryPhase.timeout_mode) : 'n/a'
   const budgetSeconds = discoveryPhase?.budget_seconds ? String(discoveryPhase.budget_seconds) : 'n/a'
+  const discoveryStopReason = discoveryPhase?.stop_reason ? String(discoveryPhase.stop_reason) : 'n/a'
   const validationTimeoutMs = hopTimings.length
     ? Math.max(...hopTimings.map((hop) => Number(hop.validation_ms ?? 0)))
     : 0
@@ -194,6 +195,7 @@ export default async function EntityImportRunDetailPage(
                   <p className="mt-2 text-lg font-semibold text-slate-950">{budgetExceeded ? 'Yes' : 'No'}</p>
                   <p className="mt-1">timeout mode: {timeoutMode}</p>
                   <p>budget seconds: {budgetSeconds}</p>
+                  <p>stop reason: {discoveryStopReason}</p>
                 </div>
                 <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Slowest iteration</p>
@@ -224,6 +226,7 @@ export default async function EntityImportRunDetailPage(
                         <th className="py-2 pr-4">Validation</th>
                         <th className="py-2 pr-4">Scrape cache</th>
                         <th className="py-2 pr-4">Eval cache</th>
+                        <th className="py-2 pr-4">Content hash</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -239,6 +242,7 @@ export default async function EntityImportRunDetailPage(
                           <td className="py-2 pr-4">{String(hop.validation_ms ?? '')}ms</td>
                           <td className="py-2 pr-4">{String(hop.scrape_cache_hit ?? '')}</td>
                           <td className="py-2 pr-4">{String(hop.evaluation_cache_hit ?? '')}</td>
+                          <td className="py-2 pr-4">{String(hop.content_hash ?? '')}</td>
                         </tr>
                       ))}
                     </tbody>

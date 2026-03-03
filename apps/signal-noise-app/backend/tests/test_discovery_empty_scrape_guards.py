@@ -298,7 +298,7 @@ async def test_evaluate_content_with_claude_returns_fallback_when_query_raises()
     )
 
     assert result["decision"] == "NO_PROGRESS"
-    assert result["justification"] == "fallback"
+    assert result["justification"] == "Evaluation error"
 
 
 @pytest.mark.asyncio
@@ -495,6 +495,52 @@ async def test_official_site_evaluation_uses_compact_evidence_pack():
     assert "Digital transformation roadmap" in captured["prompt"]
     assert "procurement programme" in captured["prompt"]
     assert "Archived supporter story." not in captured["prompt"]
+
+
+@pytest.mark.asyncio
+async def test_evaluate_content_returns_quiet_fallback_for_empty_model_response():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+
+    class EmptyClaudeClient:
+        async def query(self, prompt, model, max_tokens):
+            return {"content": ""}
+
+    discovery.claude_client = EmptyClaudeClient()
+    discovery._format_early_indicators = lambda indicators: ""
+    discovery._build_evaluation_context = lambda **kwargs: SimpleNamespace(
+        entity_name="International Canoe Federation",
+        hypothesis_statement="Potential procurement activity",
+        hypothesis_category="procurement",
+        pattern_name="federation_procurement_programme",
+        current_confidence=0.78,
+        iterations_attempted=0,
+        early_indicators=[],
+        keywords=[],
+        recent_history=[],
+        last_decision=None,
+        hop_type=HopType.OFFICIAL_SITE,
+        channel_guidance="Search for federation strategy signals",
+        min_evidence_strength="medium",
+        temporal_requirements="recent_12mo",
+    )
+
+    hypothesis = SimpleNamespace(
+        metadata={"entity_name": "International Canoe Federation"},
+        category="procurement",
+        confidence=0.78,
+        iterations_attempted=0,
+        statement="Potential procurement activity",
+    )
+
+    result = await discovery._evaluate_content_with_claude(
+        content="Digital transformation roadmap",
+        hypothesis=hypothesis,
+        hop_type=HopType.OFFICIAL_SITE,
+        content_metadata={},
+    )
+
+    assert result["decision"] == "NO_PROGRESS"
+    assert result["justification"] == "Empty model response"
 
 
 @pytest.mark.asyncio

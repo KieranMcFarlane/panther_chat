@@ -2376,6 +2376,11 @@ class HypothesisDrivenDiscovery:
             'evidence_type': None
         }
 
+    def _fallback_result_with_reason(self, reason: str) -> Dict[str, Any]:
+        result = self._fallback_result()
+        result['justification'] = reason
+        return result
+
     def _extract_evidence_pack(
         self,
         content: str,
@@ -2581,6 +2586,9 @@ Return JSON:
             # Extract text from response
             # ClaudeClient.query() returns 'content' key, not 'text'
             response_text = response.get('content', '') or response.get('text', '')
+            if not str(response_text or "").strip():
+                logger.info("Claude evaluation returned empty response; using NO_PROGRESS fallback")
+                return self._fallback_result_with_reason("Empty model response")
 
             # Parse JSON response (existing code)
             import re
@@ -2606,7 +2614,7 @@ Return JSON:
                 return result
             else:
                 logger.warning(f"Could not parse Claude response: {response_text}")
-                return self._fallback_result()
+                return self._fallback_result_with_reason("Unparseable model response")
         except json.JSONDecodeError as e:
             logger.error(f"JSON parsing error: {e}")
             logger.debug(f"Response text that failed to parse: {response_text[:500]}")
@@ -2622,11 +2630,11 @@ Return JSON:
                     'evidence_found': '',
                     'evidence_type': 'fallback'
                 }
-            return self._fallback_result()
+            return self._fallback_result_with_reason("JSON parsing error")
         except Exception as e:
             logger.error(f"Claude evaluation error: {e}")
             logger.debug(f"Response text: {response_text[:500] if response_text else 'empty'}")
-            return self._fallback_result()
+            return self._fallback_result_with_reason("Evaluation error")
 
     async def _update_hypothesis_state(
         self,
