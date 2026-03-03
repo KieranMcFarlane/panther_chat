@@ -5,6 +5,7 @@ import { betterAuth } from "better-auth";
 import { memoryAdapter } from "better-auth/adapters/memory";
 import { dash } from "@better-auth/infra";
 import Database from "better-sqlite3";
+import { LibsqlDialect } from "@libsql/kysely-libsql";
 import { Kysely, PostgresDialect } from "kysely";
 import { Pool } from "pg";
 
@@ -12,7 +13,10 @@ import { sendAuthResetPasswordEmail, sendAuthVerificationEmail } from "@/lib/aut
 
 type AuthDatabaseConfig =
   | {
-      database: Database.Database | { db: Kysely<unknown>; type: "postgres"; casing: "snake" };
+      database:
+        | Database.Database
+        | { db: Kysely<unknown>; type: "postgres"; casing: "snake" }
+        | { db: Kysely<unknown>; type: "sqlite" };
       label: string;
       runMigrations: boolean;
     }
@@ -23,6 +27,7 @@ type AuthDatabaseConfig =
     };
 
 let sqliteHandle: Database.Database | null = null;
+let libsqlKysely: Kysely<unknown> | null = null;
 let postgresKysely: Kysely<unknown> | null = null;
 let postgresPool: Pool | null = null;
 
@@ -42,8 +47,20 @@ function getDatabaseUrl() {
   return process.env.DATABASE_URL?.trim() || "";
 }
 
+function getTursoDatabaseUrl() {
+  return process.env.TURSO_DATABASE_URL?.trim() || "";
+}
+
+function getTursoAuthToken() {
+  return process.env.TURSO_AUTH_TOKEN?.trim() || "";
+}
+
 function isPostgresDatabaseUrl(value?: string | null) {
   return /^(postgres(ql)?):\/\//i.test(value?.trim() || "");
+}
+
+function isLibsqlDatabaseUrl(value?: string | null) {
+  return /^libsql:\/\//i.test(value?.trim() || "");
 }
 
 function isLocalhostUrl(value?: string | null) {
@@ -83,7 +100,37 @@ function getSqliteDatabasePath() {
 }
 
 function getDatabase(): AuthDatabaseConfig {
+  const tursoDatabaseUrl = getTursoDatabaseUrl();
+  const tursoAuthToken = getTursoAuthToken();
   const configuredDatabaseUrl = getDatabaseUrl();
+
+  if (isLibsqlDatabaseUrl(tursoDatabaseUrl)) {
+    try {
+      libsqlKysely = libsqlKysely ?? new Kysely({
+        dialect: new LibsqlDialect({
+          url: tursoDatabaseUrl,
+          authToken: tursoAuthToken || undefined,
+        }),
+      });
+
+      if (!isBuildPhase()) {
+        console.log("Better Auth: Using Turso/LibSQL database");
+      }
+
+      return {
+        database: {
+          db: libsqlKysely,
+          type: "sqlite",
+        },
+        label: "libsql",
+        runMigrations: true,
+      };
+    } catch (error) {
+      if (!isBuildPhase()) {
+        console.warn("Better Auth: Could not initialize Turso/LibSQL database", error);
+      }
+    }
+  }
 
   if (isPostgresDatabaseUrl(configuredDatabaseUrl)) {
     try {
@@ -227,7 +274,7 @@ async function runAuthMigrations() {
 
 export const authReady = runAuthMigrations()
   .then(() => {
-    if ((databaseConfig.label === "sqlite" || databaseConfig.label === "postgres") && !isBuildPhase()) {
+    if ((databaseConfig.label === "sqlite" || databaseConfig.label === "postgres" || databaseConfig.label === "libsql") && !isBuildPhase()) {
       console.log("Better Auth: Database migrations ready");
     }
   })

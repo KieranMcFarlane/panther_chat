@@ -25,6 +25,12 @@ test("better-auth deploy dependency versions are compatible", () => {
   );
 
   assert.equal(
+    packageJson.dependencies["@libsql/kysely-libsql"],
+    "^0.4.1",
+    "LibSQL Kysely dialect should be present for Turso-backed Better Auth storage",
+  );
+
+  assert.equal(
     packageJson.dependencies["pg"],
     "^8.16.3",
     "pg should be present for Better Auth Postgres storage",
