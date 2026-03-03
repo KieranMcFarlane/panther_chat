@@ -74,6 +74,10 @@ def _default_template_id_for_entity_type(entity_type: Optional[str]) -> str:
     return DEFAULT_DISCOVERY_TEMPLATE_ID
 
 
+get_page_rank = _load_backend_attr("discovery_page_registry", "get_page_rank")
+get_site_path_shortcuts = _load_backend_attr("discovery_page_registry", "get_site_path_shortcuts")
+
+
 def resolve_template_id(template_id: Optional[str], entity_type: Optional[str] = None) -> str:
     """Return an available template id for discovery initialization."""
     from template_loader import TemplateLoader
@@ -732,20 +736,25 @@ class HypothesisDrivenDiscovery:
 
     def _apply_entity_type_hop_bias(self, hop_type: HopType, depth: int) -> float:
         entity_type = str(getattr(self, "current_entity_type", "") or "").upper()
-
-        if "FEDERATION" not in entity_type and "GOVERN" not in entity_type:
+        if not entity_type:
             return 0.0
 
+        rank = get_page_rank(entity_type, hop_type.value)
         first_hop = depth <= 1
         early_stage = depth <= 2
-        if hop_type == HopType.OFFICIAL_SITE:
+        if rank == 0:
             return 0.8 if first_hop else (0.45 if early_stage else 0.2)
-        if hop_type == HopType.PRESS_RELEASE:
-            return 0.5 if first_hop else (0.3 if early_stage else 0.15)
-        if hop_type == HopType.CAREERS_PAGE:
+        if rank == 1:
+            return 0.45 if first_hop else (0.25 if early_stage else 0.1)
+        if rank == 2:
             return 0.2 if early_stage else 0.05
-        if hop_type in [HopType.RFP_PAGE, HopType.TENDERS_PAGE, HopType.PROCUREMENT_PAGE]:
-            return -1.1 if first_hop else (-0.55 if early_stage else -0.15)
+        if hop_type == HopType.PRESS_RELEASE:
+            return 0.15 if early_stage else 0.05
+
+        if first_hop and rank >= 4:
+            return -0.65
+        if early_stage and rank >= 5:
+            return -0.25
         return 0.0
 
     def _get_prompt_content_limit(self, hop_type: HopType) -> int:
@@ -1353,6 +1362,62 @@ class HypothesisDrivenDiscovery:
 
         return False
 
+    async def _resolve_official_site_url(self, entity_name: str) -> Optional[str]:
+        official_site_result = await self._search_engine_with_timeout(
+            query=f'"{entity_name}" official website',
+            engine='google',
+            num_results=1
+        )
+
+        if official_site_result.get('status') != 'success' or not official_site_result.get('results'):
+            return None
+
+        return official_site_result['results'][0].get('url')
+
+    async def _try_direct_site_paths(
+        self,
+        base_url: str,
+        hop_type: HopType,
+    ) -> Optional[str]:
+        from urllib.parse import urlparse
+
+        parsed = urlparse(base_url)
+        if not parsed.scheme or not parsed.netloc:
+            return None
+
+        entity_type = getattr(self, "current_entity_type", None)
+        shortcuts = get_site_path_shortcuts(entity_type, hop_type.value)
+        if not shortcuts:
+            return None
+
+        base_origin = f"{parsed.scheme}://{parsed.netloc}"
+        content_markers = {
+            HopType.TENDERS_PAGE: ["tender", "procurement", "request for proposal", "vendor"],
+            HopType.PROCUREMENT_PAGE: ["procurement", "supplier", "vendor", "purchasing"],
+            HopType.PRESS_RELEASE: ["news", "press", "announcement", "media"],
+            HopType.DOCUMENT: ["document", "pdf", "resource", "download"],
+            HopType.OFFICIAL_SITE: ["about", "federation", "official", "organisation"],
+        }
+        expected_markers = content_markers.get(hop_type, [])
+
+        for path in shortcuts:
+            candidate_url = f"{base_origin}{path}" if path != "/" else f"{base_origin}/"
+            try:
+                check_result = await self.brightdata_client.scrape_as_markdown(candidate_url)
+            except Exception as exc:
+                logger.debug("Direct path check failed for %s: %s", candidate_url, exc)
+                continue
+
+            if check_result.get('status') != 'success':
+                continue
+
+            content = str(check_result.get('content') or "").lower()
+            if not expected_markers or any(marker in content for marker in expected_markers):
+                logger.info("✅ Direct site path matched for %s: %s", hop_type.value, candidate_url)
+                return candidate_url
+
+        return None
+
     def _extract_pdf_links_from_content(
         self,
         html_content: str,
@@ -1558,6 +1623,25 @@ class HypothesisDrivenDiscovery:
 
             # Fall through to standard search if optimized search fails
             logger.warning("Optimized PDF search failed, falling back to standard search")
+
+        if hop_type in {
+            HopType.TENDERS_PAGE,
+            HopType.PROCUREMENT_PAGE,
+            HopType.PRESS_RELEASE,
+            HopType.DOCUMENT,
+        }:
+            official_url = await self._resolve_official_site_url(entity_name)
+            if official_url:
+                direct_path_url = await self._try_direct_site_paths(official_url, hop_type)
+                if direct_path_url:
+                    metrics['site_specific_attempted'] = True
+                    metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
+                    self._last_url_resolution_metrics = {
+                        **metrics,
+                        'search_calls_ms': round(metrics['search_calls_ms'], 2),
+                        'validation_ms': round(metrics['validation_ms'], 2)
+                    }
+                    return direct_path_url
 
         # Define primary search query for each hop type
         primary_queries = {
@@ -1829,19 +1913,14 @@ class HypothesisDrivenDiscovery:
 
         # Step 1: Find official site domain
         try:
-            official_site_result = await self._search_engine_with_timeout(
-                query=f'"{entity_name}" official website',
-                engine='google',
-                num_results=1
-            )
-
-            if official_site_result.get('status') != 'success' or not official_site_result.get('results'):
+            official_url = await self._resolve_official_site_url(entity_name)
+            if not official_url:
                 logger.warning("Could not find official site for site-specific search")
                 return None
 
-            official_url = official_site_result['results'][0].get('url', '')
-            if not official_url:
-                return None
+            direct_path_url = await self._try_direct_site_paths(official_url, hop_type)
+            if direct_path_url:
+                return direct_path_url
 
             # Extract domain from URL
             from urllib.parse import urlparse
@@ -1876,6 +1955,10 @@ class HypothesisDrivenDiscovery:
             f'site:{domain}/press/ RFP',
             f'site:{domain}/press/ "request for proposal"'
         ]
+        for path in get_site_path_shortcuts(getattr(self, "current_entity_type", None), hop_type.value):
+            normalized_path = path if path.startswith("/") else f"/{path}"
+            site_search_queries.insert(0, f"site:{domain}{normalized_path} procurement")
+            site_search_queries.insert(0, f"site:{domain}{normalized_path} tender")
 
         for query in site_search_queries:
             try:
