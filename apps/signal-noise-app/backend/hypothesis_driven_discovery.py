@@ -749,7 +749,7 @@ class HypothesisDrivenDiscovery:
         if hop_type == HopType.PRESS_RELEASE:
             return 900
         if hop_type == HopType.OFFICIAL_SITE:
-            return 1200
+            return 1000
         if hop_type in HIGH_VALUE_HOPS:
             return 2000
         return 1400
@@ -757,7 +757,9 @@ class HypothesisDrivenDiscovery:
     def _get_evaluation_max_tokens(self, hop_type: HopType) -> int:
         if hop_type == HopType.PRESS_RELEASE:
             return 250
-        if hop_type in {HopType.OFFICIAL_SITE, HopType.CAREERS_PAGE, HopType.ANNUAL_REPORT}:
+        if hop_type == HopType.OFFICIAL_SITE:
+            return 280
+        if hop_type in {HopType.CAREERS_PAGE, HopType.ANNUAL_REPORT}:
             return 320
         return 500
 

@@ -215,3 +215,96 @@ def test_run_forever_recovers_from_claim_error(monkeypatch):
     assert calls["claim"] >= 2
     assert calls["sleep"] >= 1
     assert calls["process"] == 1
+
+
+def test_process_batch_persists_discovery_context(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker._now_iso = lambda: "2026-03-03T03:30:00+00:00"
+    worker._batch_metadata = lambda batch: batch.get("metadata", {})
+    worker.refresh_batch_heartbeat = lambda batch_id, metadata=None: {**(metadata or {}), "heartbeat_at": "2026-03-03T03:30:00+00:00"}
+    worker._start_batch_heartbeat = lambda batch_id, metadata=None: (SimpleNamespace(set=lambda: None), SimpleNamespace(join=lambda timeout=1: None))
+
+    run = {
+        "entity_id": "international-canoe-federation",
+        "entity_name": "International Canoe Federation",
+        "status": "queued",
+        "phase": "entity_registration",
+        "metadata": {"entity_type": "FEDERATION"},
+    }
+    worker.get_batch_runs = lambda batch_id: [run]
+    worker.sync_cached_entity = lambda batch_id, run, result, status: None
+
+    updates = []
+    worker.update_run = lambda batch_id, entity_id, payload: updates.append((batch_id, entity_id, payload))
+
+    class FakeSelectQuery:
+        def __init__(self, data):
+            self.data = data
+        def eq(self, *_args, **_kwargs):
+            return self
+        def limit(self, *_args, **_kwargs):
+            return self
+        def execute(self):
+            return SimpleNamespace(data=self.data)
+
+    class FakeUpdateQuery:
+        def eq(self, *_args, **_kwargs):
+            return self
+        def execute(self):
+            return SimpleNamespace(data=[])
+
+    class FakeTable:
+        def select(self, _fields):
+            return FakeSelectQuery([{"metadata": {"phase_details": {"status": "running"}}}])
+        def update(self, _payload):
+            return FakeUpdateQuery()
+
+    worker.supabase = SimpleNamespace(table=lambda _name: FakeTable())
+    worker.call_pipeline = lambda run, batch_id: {
+        "sales_readiness": "MONITOR",
+        "rfp_count": 0,
+        "completed_at": "2026-03-03T03:29:00+00:00",
+        "phases": {
+            "discovery": {"status": "completed"},
+            "dashboard_scoring": {"status": "completed"},
+        },
+        "artifacts": {
+            "dossier_id": "international-canoe-federation",
+            "scores": {"sales_readiness": "MONITOR"},
+            "discovery_result": {
+                "performance_summary": {
+                    "slowest_iteration": {
+                        "hypothesis_id": "international-canoe-federation_digital_leadership_hire",
+                        "hop_type": "official_site",
+                    }
+                },
+                "hypotheses": [
+                    {
+                        "hypothesis_id": "international-canoe-federation_federation_procurement_programme",
+                        "confidence": 0.78,
+                        "metadata": {
+                            "template_id": "federation_governing_body",
+                            "pattern_name": "Federation Procurement Programme",
+                        },
+                    },
+                    {
+                        "hypothesis_id": "international-canoe-federation_digital_leadership_hire",
+                        "confidence": 0.58,
+                        "metadata": {
+                            "template_id": "federation_governing_body",
+                            "pattern_name": "Digital Leadership Hire",
+                        },
+                    },
+                ],
+            },
+        },
+    }
+
+    batch = {"id": "batch-1", "metadata": {"queue_mode": "durable_worker"}}
+    worker.process_batch(batch)
+
+    completed_update = updates[-1][2]
+    discovery_context = completed_update["metadata"]["discovery_context"]
+    assert discovery_context["template_id"] == "federation_governing_body"
+    assert discovery_context["lead_hypothesis_id"] == "international-canoe-federation_federation_procurement_programme"
+    assert discovery_context["slowest_hypothesis_id"] == "international-canoe-federation_digital_leadership_hire"
