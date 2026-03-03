@@ -78,6 +78,31 @@ class FakeDiscovery:
         return FakeDiscoveryResult()
 
 
+class FakeBaselineMonitoring:
+    async def run_monitoring(self, **kwargs):
+        return {
+            "pages_fetched": 2,
+            "pages_changed": 1,
+            "pages_unchanged": 1,
+            "candidate_count": 1,
+            "candidates": [
+                {
+                    "entity_id": kwargs["entity_id"],
+                    "batch_id": kwargs["batch_id"],
+                    "run_id": kwargs["run_id"],
+                    "page_class": "official_site",
+                    "url": "https://example.com/rfp",
+                    "content_hash": "hash-1",
+                    "candidate_type": "procurement_signal",
+                    "score": 0.82,
+                    "evidence_excerpt": "Confirmed procurement activity",
+                    "metadata": {},
+                }
+            ],
+            "snapshots": [],
+        }
+
+
 class FakeRalph:
     async def validate_signals(self, raw_signals, entity_id):
         return [
@@ -131,6 +156,7 @@ async def test_pipeline_orchestrator_runs_phases_and_returns_artifacts():
 
     orchestrator = PipelineOrchestrator(
         dossier_generator=FakeDossierGenerator(),
+        baseline_monitoring_runner=FakeBaselineMonitoring(),
         discovery=FakeDiscovery(),
         ralph_validator=FakeRalph(),
         graphiti_service=FakeGraphiti(),
@@ -151,7 +177,9 @@ async def test_pipeline_orchestrator_runs_phases_and_returns_artifacts():
     assert result["phases"]["dossier_generation"]["collection_time_seconds"] == 4.5
     assert result["phases"]["dossier_generation"]["source_count"] == 2
     assert result["phases"]["dossier_generation"]["canonical_sources"]["official_site"] == "https://www.arsenal.com"
-    assert result["phases"]["discovery"]["status"] == "completed"
+    assert result["phases"]["baseline_monitoring"]["status"] == "completed"
+    assert result["phases"]["baseline_monitoring"]["candidate_count"] == 1
+    assert result["phases"]["discovery"]["status"] == "skipped"
     assert result["phases"]["ralph_validation"]["status"] == "completed"
     assert result["phases"]["temporal_persistence"]["status"] == "completed"
     assert result["phases"]["dashboard_scoring"]["status"] == "completed"
@@ -159,7 +187,8 @@ async def test_pipeline_orchestrator_runs_phases_and_returns_artifacts():
     assert result["rfp_count"] == 1
     assert result["sales_readiness"] == "LIVE"
     assert result["artifacts"]["dossier"]["metadata"]["canonical_sources"]["press_release"] == "https://www.arsenal.com/news"
-    assert ("discovery", "running") in phase_events
+    assert result["artifacts"]["monitoring_result"]["candidate_count"] == 1
+    assert ("baseline_monitoring", "running") in phase_events
     assert ("dashboard_scoring", "completed") in phase_events
 
 
@@ -167,6 +196,7 @@ async def test_pipeline_orchestrator_runs_phases_and_returns_artifacts():
 async def test_pipeline_orchestrator_preserves_prefetched_dossier_phase_metadata():
     orchestrator = PipelineOrchestrator(
         dossier_generator=FakeDossierGenerator(),
+        baseline_monitoring_runner=FakeBaselineMonitoring(),
         discovery=FakeDiscovery(),
         ralph_validator=FakeRalph(),
         graphiti_service=FakeGraphiti(),

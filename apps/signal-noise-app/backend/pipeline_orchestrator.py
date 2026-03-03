@@ -38,8 +38,10 @@ class PipelineOrchestrator:
         ralph_validator,
         graphiti_service,
         dashboard_scorer,
+        baseline_monitoring_runner=None,
     ):
         self.dossier_generator = dossier_generator
+        self.baseline_monitoring_runner = baseline_monitoring_runner
         self.discovery = discovery
         self.ralph_validator = ralph_validator
         self.graphiti_service = graphiti_service
@@ -59,6 +61,7 @@ class PipelineOrchestrator:
     ) -> Dict[str, Any]:
         phase_results: Dict[str, Dict[str, Any]] = {
             "dossier_generation": {"status": "pending"},
+            "baseline_monitoring": {"status": "pending"},
             "discovery": {"status": "pending"},
             "ralph_validation": {"status": "pending"},
             "temporal_persistence": {"status": "pending"},
@@ -123,6 +126,14 @@ class PipelineOrchestrator:
             }
 
         discovery_result: Any = {"signals_discovered": [], "hypotheses": []}
+        monitoring_result: Dict[str, Any] = {
+            "pages_fetched": 0,
+            "pages_changed": 0,
+            "pages_unchanged": 0,
+            "candidate_count": 0,
+            "candidates": [],
+            "snapshots": [],
+        }
         raw_signals: List[Dict[str, Any]] = []
         ralph_result: Dict[str, Any] = self._coerce_ralph_result([])
         validated_signals: List[Dict[str, Any]] = []
@@ -131,23 +142,58 @@ class PipelineOrchestrator:
         episodes: List[Dict[str, Any]] = []
 
         try:
-            await self._emit_phase_update(phase_callback, "discovery", {"status": "running"})
-            discovery_result = await self._run_discovery(
-                entity_id=entity_id,
-                entity_name=entity_name,
-                entity_type=entity_type,
-                dossier=dossier,
-                phase_callback=phase_callback,
-            )
-            discovery_budget = getattr(self, "_last_discovery_budget", {})
-            raw_signals = self._extract_raw_signals(discovery_result)
-            phase_results["discovery"] = {
-                "status": "completed",
-                "signals_discovered": len(raw_signals),
-                "final_confidence": getattr(discovery_result, "final_confidence", None),
-                **discovery_budget,
-            }
-            await self._emit_phase_update(phase_callback, "discovery", phase_results["discovery"])
+            if self.baseline_monitoring_runner is not None:
+                await self._emit_phase_update(phase_callback, "baseline_monitoring", {"status": "running"})
+                monitoring_result = await self._run_baseline_monitoring(
+                    entity_id=entity_id,
+                    batch_id=entity_id,
+                    run_id=f"{entity_id}-baseline",
+                    dossier=dossier,
+                )
+                raw_signals = self._extract_monitoring_signals(monitoring_result, entity_type)
+                phase_results["baseline_monitoring"] = {
+                    "status": "completed",
+                    "pages_fetched": monitoring_result.get("pages_fetched", 0),
+                    "pages_changed": monitoring_result.get("pages_changed", 0),
+                    "pages_unchanged": monitoring_result.get("pages_unchanged", 0),
+                    "candidate_count": monitoring_result.get("candidate_count", 0),
+                }
+                phase_results["discovery"] = {"status": "skipped", "reason": "baseline_monitoring_default"}
+                await self._emit_phase_update(
+                    phase_callback,
+                    "baseline_monitoring",
+                    phase_results["baseline_monitoring"],
+                )
+                await self._emit_phase_update(phase_callback, "discovery", phase_results["discovery"])
+                discovery_result = {
+                    "signals_discovered": raw_signals,
+                    "hypotheses": [],
+                    "performance_summary": {},
+                }
+            else:
+                phase_results["baseline_monitoring"] = {"status": "skipped", "reason": "runner_unavailable"}
+                await self._emit_phase_update(
+                    phase_callback,
+                    "baseline_monitoring",
+                    phase_results["baseline_monitoring"],
+                )
+                await self._emit_phase_update(phase_callback, "discovery", {"status": "running"})
+                discovery_result = await self._run_discovery(
+                    entity_id=entity_id,
+                    entity_name=entity_name,
+                    entity_type=entity_type,
+                    dossier=dossier,
+                    phase_callback=phase_callback,
+                )
+                discovery_budget = getattr(self, "_last_discovery_budget", {})
+                raw_signals = self._extract_raw_signals(discovery_result)
+                phase_results["discovery"] = {
+                    "status": "completed",
+                    "signals_discovered": len(raw_signals),
+                    "final_confidence": getattr(discovery_result, "final_confidence", None),
+                    **discovery_budget,
+                }
+                await self._emit_phase_update(phase_callback, "discovery", phase_results["discovery"])
 
             await self._emit_phase_update(phase_callback, "ralph_validation", {"status": "running"})
             raw_ralph_result = await self._run_ralph_validation(
@@ -179,10 +225,22 @@ class PipelineOrchestrator:
             await self._emit_phase_update(phase_callback, "temporal_persistence", phase_results["temporal_persistence"])
         except Exception as exc:
             error_message = "Discovery timed out" if isinstance(exc, TimeoutError) else str(exc)
-            phase_results["discovery"] = {"status": "failed", "error": error_message}
-            phase_results["ralph_validation"] = {"status": "skipped", "reason": "discovery_failed"}
-            phase_results["temporal_persistence"] = {"status": "skipped", "reason": "discovery_failed"}
-            await self._emit_phase_update(phase_callback, "discovery", phase_results["discovery"])
+            if self.baseline_monitoring_runner is not None:
+                phase_results["baseline_monitoring"] = {"status": "failed", "error": error_message}
+                phase_results["discovery"] = {"status": "skipped", "reason": "baseline_monitoring_failed"}
+                phase_results["ralph_validation"] = {"status": "skipped", "reason": "baseline_monitoring_failed"}
+                phase_results["temporal_persistence"] = {"status": "skipped", "reason": "baseline_monitoring_failed"}
+                await self._emit_phase_update(
+                    phase_callback,
+                    "baseline_monitoring",
+                    phase_results["baseline_monitoring"],
+                )
+                await self._emit_phase_update(phase_callback, "discovery", phase_results["discovery"])
+            else:
+                phase_results["discovery"] = {"status": "failed", "error": error_message}
+                phase_results["ralph_validation"] = {"status": "skipped", "reason": "discovery_failed"}
+                phase_results["temporal_persistence"] = {"status": "skipped", "reason": "discovery_failed"}
+                await self._emit_phase_update(phase_callback, "discovery", phase_results["discovery"])
             await self._emit_phase_update(phase_callback, "ralph_validation", phase_results["ralph_validation"])
             await self._emit_phase_update(phase_callback, "temporal_persistence", phase_results["temporal_persistence"])
 
@@ -223,6 +281,7 @@ class PipelineOrchestrator:
             "artifacts": {
                 "dossier_id": entity_id,
                 "dossier": dossier,
+                "monitoring_result": monitoring_result,
                 "discovery_result": self._serialize_discovery_result(discovery_result),
                 "validated_signals": validated_signals,
                 "capability_signals": capability_signals,
@@ -245,6 +304,22 @@ class PipelineOrchestrator:
             entity_name=entity_name,
             entity_type=entity_type,
             priority_score=priority_score,
+        )
+
+    async def _run_baseline_monitoring(
+        self,
+        entity_id: str,
+        batch_id: str,
+        run_id: str,
+        dossier: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        dossier_metadata = dossier.get("metadata", {}) if isinstance(dossier, dict) else {}
+        canonical_sources = dossier_metadata.get("canonical_sources", {}) or {}
+        return await self.baseline_monitoring_runner.run_monitoring(
+            entity_id=entity_id,
+            batch_id=batch_id,
+            run_id=run_id,
+            canonical_sources=canonical_sources,
         )
 
     async def _run_discovery(
@@ -363,6 +438,28 @@ class PipelineOrchestrator:
         if isinstance(discovery_result, dict):
             return discovery_result.get("signals_discovered", [])
         return getattr(discovery_result, "signals_discovered", [])
+
+    def _extract_monitoring_signals(
+        self,
+        monitoring_result: Dict[str, Any],
+        entity_type: str,
+    ) -> List[Dict[str, Any]]:
+        raw_signals: List[Dict[str, Any]] = []
+        for candidate in monitoring_result.get("candidates", []):
+            raw_signals.append(
+                {
+                    "id": f"{candidate.get('run_id')}-{candidate.get('page_class')}",
+                    "type": "PROCUREMENT_SIGNAL",
+                    "subtype": candidate.get("candidate_type"),
+                    "confidence": candidate.get("score"),
+                    "statement": candidate.get("evidence_excerpt"),
+                    "text": candidate.get("evidence_excerpt"),
+                    "url": candidate.get("url"),
+                    "entity_type": entity_type,
+                    "metadata": candidate.get("metadata", {}),
+                }
+            )
+        return raw_signals
 
     async def _emit_phase_update(
         self,

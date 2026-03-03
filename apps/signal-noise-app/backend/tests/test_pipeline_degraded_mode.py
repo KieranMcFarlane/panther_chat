@@ -61,6 +61,7 @@ async def test_pipeline_degrades_cleanly_when_discovery_is_unavailable():
 
     orchestrator = PipelineOrchestrator(
         dossier_generator=FakeDossierGenerator(),
+        baseline_monitoring_runner=None,
         discovery=FailingDiscovery(),
         ralph_validator=UnusedRalph(),
         graphiti_service=FakeGraphiti(),
@@ -74,6 +75,7 @@ async def test_pipeline_degrades_cleanly_when_discovery_is_unavailable():
     )
 
     assert result["phases"]["dossier_generation"]["status"] == "completed"
+    assert result["phases"]["baseline_monitoring"]["status"] == "skipped"
     assert result["phases"]["discovery"]["status"] == "failed"
     assert result["phases"]["ralph_validation"]["status"] == "skipped"
     assert result["phases"]["temporal_persistence"]["status"] == "skipped"

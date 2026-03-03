@@ -61,6 +61,7 @@ async def test_pipeline_marks_discovery_failed_on_timeout(monkeypatch):
 
     orchestrator = PipelineOrchestrator(
         dossier_generator=FakeDossierGenerator(),
+        baseline_monitoring_runner=None,
         discovery=SlowDiscovery(),
         ralph_validator=UnusedRalph(),
         graphiti_service=FakeGraphiti(),
