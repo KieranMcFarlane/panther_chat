@@ -94,6 +94,7 @@ class PipelineOrchestrator:
                     "collection_time_seconds": dossier_metadata.get("collection_time_seconds"),
                     "source_count": dossier_metadata.get("source_count", 0),
                     "sources_used": dossier_metadata.get("sources_used", []),
+                    "canonical_sources": dossier_metadata.get("canonical_sources", {}),
                 },
             )
             phase_results["dossier_generation"] = {
@@ -105,6 +106,7 @@ class PipelineOrchestrator:
                 "collection_time_seconds": dossier_metadata.get("collection_time_seconds"),
                 "source_count": dossier_metadata.get("source_count", 0),
                 "sources_used": dossier_metadata.get("sources_used", []),
+                "canonical_sources": dossier_metadata.get("canonical_sources", {}),
             }
         else:
             dossier_metadata = dossier.get("metadata", {}) if isinstance(dossier, dict) else {}
@@ -117,6 +119,7 @@ class PipelineOrchestrator:
                 "collection_time_seconds": dossier_metadata.get("collection_time_seconds"),
                 "source_count": dossier_metadata.get("source_count", 0),
                 "sources_used": dossier_metadata.get("sources_used", []),
+                "canonical_sources": dossier_metadata.get("canonical_sources", {}),
             }
 
         discovery_result: Any = {"signals_discovered": [], "hypotheses": []}

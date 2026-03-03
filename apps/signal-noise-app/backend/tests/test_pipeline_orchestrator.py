@@ -25,6 +25,12 @@ class FakeDossierGenerator:
                 "source_count": 2,
                 "sources_used": ["FalkorDB", "BrightData"],
                 "collection_time_seconds": 4.5,
+                "canonical_sources": {
+                    "official_site": "https://www.arsenal.com",
+                    "press_release": "https://www.arsenal.com/news",
+                    "careers_page": "https://www.arsenal.com/careers",
+                    "document": "https://www.arsenal.com/documents",
+                },
             },
             "generation_time_seconds": 12.3,
             "procurement_signals": {
@@ -144,6 +150,7 @@ async def test_pipeline_orchestrator_runs_phases_and_returns_artifacts():
     assert result["phases"]["dossier_generation"]["duration_seconds"] == 12.3
     assert result["phases"]["dossier_generation"]["collection_time_seconds"] == 4.5
     assert result["phases"]["dossier_generation"]["source_count"] == 2
+    assert result["phases"]["dossier_generation"]["canonical_sources"]["official_site"] == "https://www.arsenal.com"
     assert result["phases"]["discovery"]["status"] == "completed"
     assert result["phases"]["ralph_validation"]["status"] == "completed"
     assert result["phases"]["temporal_persistence"]["status"] == "completed"
@@ -151,6 +158,7 @@ async def test_pipeline_orchestrator_runs_phases_and_returns_artifacts():
     assert result["validated_signal_count"] == 1
     assert result["rfp_count"] == 1
     assert result["sales_readiness"] == "LIVE"
+    assert result["artifacts"]["dossier"]["metadata"]["canonical_sources"]["press_release"] == "https://www.arsenal.com/news"
     assert ("discovery", "running") in phase_events
     assert ("dashboard_scoring", "completed") in phase_events
 
@@ -186,3 +194,4 @@ async def test_pipeline_orchestrator_preserves_prefetched_dossier_phase_metadata
     assert dossier_phase["collection_time_seconds"] == 4.5
     assert dossier_phase["source_count"] == 2
     assert dossier_phase["sources_used"] == ["FalkorDB", "BrightData"]
+    assert dossier_phase["canonical_sources"]["document"] == "https://www.arsenal.com/documents"

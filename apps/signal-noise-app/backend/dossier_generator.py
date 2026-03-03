@@ -21,6 +21,7 @@ import re
 from datetime import datetime, timezone
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
+from urllib.parse import urlparse
 
 from schemas import EntityDossier, DossierSection, DossierTier, CacheStatus
 from claude_client import ClaudeClient
@@ -1639,6 +1640,7 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
         dossier["metadata"]["sources_used"] = list(entity_data.get("sources_used") or [])
         dossier["metadata"]["source_count"] = int(entity_data.get("source_count") or len(entity_data.get("sources_used") or []))
         dossier["metadata"]["collected_at"] = entity_data.get("collected_at")
+        dossier["metadata"]["canonical_sources"] = self._derive_canonical_sources(entity_data)
         if collection_duration_seconds is not None:
             dossier["metadata"]["collection_time_seconds"] = collection_duration_seconds
 
@@ -1659,6 +1661,39 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
         )
 
         return dossier
+
+    def _derive_canonical_sources(self, entity_data: Dict[str, Any]) -> Dict[str, str]:
+        official_site = (
+            entity_data.get("official_site_url")
+            or entity_data.get("website")
+            or entity_data.get("entity_website")
+        )
+        if not official_site or not isinstance(official_site, str):
+            return {}
+
+        official_site = official_site.strip().rstrip("/")
+        if not official_site:
+            return {}
+
+        parsed_url = urlparse(official_site if "://" in official_site else f"https://{official_site}")
+        if not parsed_url.netloc:
+            return {}
+
+        base_url = f"{parsed_url.scheme or 'https'}://{parsed_url.netloc}"
+        canonical_sources: Dict[str, str] = {
+            "official_site": official_site if "://" in official_site else base_url,
+        }
+
+        path_shortcuts = {
+            "press_release": "/news",
+            "careers_page": "/careers",
+            "document": "/documents",
+        }
+
+        for page_class, path in path_shortcuts.items():
+            canonical_sources[page_class] = f"{base_url}{path}"
+
+        return canonical_sources
 
 
 # Example usage
