@@ -30,6 +30,18 @@ export default async function EntityImportRunDetailPage(
   const discoveryContext = typeof run.metadata?.discovery_context === 'object' && run.metadata?.discovery_context !== null
     ? (run.metadata.discovery_context as Record<string, unknown>)
     : null
+  const scores = typeof run.metadata?.scores === 'object' && run.metadata?.scores !== null
+    ? (run.metadata.scores as Record<string, unknown>)
+    : null
+  const maturityBreakdown = typeof scores?.breakdown === 'object' && scores?.breakdown !== null
+    ? ((scores.breakdown as Record<string, unknown>).maturity as Record<string, unknown> | undefined)
+    : null
+  const probabilityBreakdown = typeof scores?.breakdown === 'object' && scores?.breakdown !== null
+    ? ((scores.breakdown as Record<string, unknown>).probability as Record<string, unknown> | undefined)
+    : null
+  const batchMetadata = typeof batch.metadata === 'object' && batch.metadata !== null
+    ? (batch.metadata as Record<string, unknown>)
+    : {}
 
   const hopTimings = Array.isArray(performanceSummary?.hop_timings)
     ? (performanceSummary?.hop_timings as Array<Record<string, unknown>>)
@@ -69,6 +81,10 @@ export default async function EntityImportRunDetailPage(
             <p>phase: {run.phase}</p>
             <p>sales readiness: {run.sales_readiness ?? 'Pending'}</p>
             <p>rfp count: {run.rfp_count}</p>
+            <p>queue mode: {String(batchMetadata.queue_mode ?? 'n/a')}</p>
+            <p>worker id: {String(batchMetadata.worker_id ?? 'n/a')}</p>
+            <p>heartbeat: {String(batchMetadata.heartbeat_at ?? 'n/a')}</p>
+            <p>attempt count: {String(run.metadata?.attempt_count ?? batchMetadata.attempt_count ?? 'n/a')}</p>
           </div>
 
           <div className="mt-4 flex flex-wrap gap-3">
@@ -119,6 +135,24 @@ export default async function EntityImportRunDetailPage(
               </p>
               <p className="mt-1">slowest hop type: {String(discoveryContext?.slowest_hop_type ?? 'n/a')}</p>
               <p>lead confidence: {String(discoveryContext?.lead_confidence ?? 'n/a')}</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="text-lg font-semibold text-slate-950">Score weighting</h2>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Maturity weighting</p>
+              <p className="mt-2">validated signals: {String(maturityBreakdown?.validated_signal_weight ?? 'n/a')}</p>
+              <p>temporal evidence: {String(maturityBreakdown?.temporal_weight ?? 'n/a')}</p>
+              <p>hypothesis prior: {String(maturityBreakdown?.hypothesis_prior_weight ?? 'n/a')}</p>
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Probability weighting</p>
+              <p className="mt-2">validated signals: {String(probabilityBreakdown?.validated_signal_weight ?? 'n/a')}</p>
+              <p>temporal evidence: {String(probabilityBreakdown?.temporal_weight ?? 'n/a')}</p>
+              <p>hypothesis prior: {String(probabilityBreakdown?.hypothesis_prior_weight ?? 'n/a')}</p>
             </div>
           </div>
         </section>
@@ -188,6 +222,8 @@ export default async function EntityImportRunDetailPage(
                         <th className="py-2 pr-4">Scrape</th>
                         <th className="py-2 pr-4">Eval</th>
                         <th className="py-2 pr-4">Validation</th>
+                        <th className="py-2 pr-4">Scrape cache</th>
+                        <th className="py-2 pr-4">Eval cache</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -201,6 +237,8 @@ export default async function EntityImportRunDetailPage(
                           <td className="py-2 pr-4">{String(hop.scrape_ms ?? '')}ms</td>
                           <td className="py-2 pr-4">{String(hop.evaluation_ms ?? '')}ms</td>
                           <td className="py-2 pr-4">{String(hop.validation_ms ?? '')}ms</td>
+                          <td className="py-2 pr-4">{String(hop.scrape_cache_hit ?? '')}</td>
+                          <td className="py-2 pr-4">{String(hop.evaluation_cache_hit ?? '')}</td>
                         </tr>
                       ))}
                     </tbody>

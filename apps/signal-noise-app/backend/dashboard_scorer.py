@@ -115,6 +115,62 @@ class DashboardScorer:
         self.config = config or ScoringConfig()
         logger.info("📊 DashboardScorer initialized")
 
+    def _signal_text(self, signal: Dict[str, Any]) -> str:
+        return " ".join(
+            str(signal.get(field, "") or "")
+            for field in ("type", "description", "text", "title", "category", "signal_type")
+        ).lower()
+
+    def _is_validated_signal(self, signal: Dict[str, Any]) -> bool:
+        if signal.get("validated") is True:
+            return True
+        confidence = signal.get("confidence")
+        try:
+            return float(confidence) >= 0.7
+        except (TypeError, ValueError):
+            return False
+
+    def _count_matching_signals(
+        self,
+        signals: Optional[List[Dict[str, Any]]],
+        keywords: List[str],
+        validated_only: bool = False,
+    ) -> int:
+        if not signals:
+            return 0
+        count = 0
+        for signal in signals:
+            if validated_only and not self._is_validated_signal(signal):
+                continue
+            text = self._signal_text(signal)
+            if any(keyword in text for keyword in keywords):
+                count += 1
+        return count
+
+    def _count_matching_episodes(self, episodes: Optional[List[Dict[str, Any]]], keywords: List[str]) -> int:
+        if not episodes:
+            return 0
+        count = 0
+        for episode in episodes:
+            episode_text = " ".join(
+                [
+                    str(episode.get("episode_type", "") or ""),
+                    str(episode.get("content", "") or ""),
+                ]
+            ).lower()
+            if any(keyword in episode_text for keyword in keywords):
+                count += 1
+        return count
+
+    def _hypothesis_prior_score(self, hypotheses: Optional[List[Any]], *, scale: float = 100.0) -> float:
+        if not hypotheses:
+            return 0.0
+        active_hyps = [h for h in hypotheses if getattr(h, "status", "") == "ACTIVE"]
+        if not active_hyps:
+            return 0.0
+        avg_confidence = sum(getattr(h, "confidence", 0.5) for h in active_hyps) / len(active_hyps)
+        return max(0.0, min(scale, avg_confidence * scale))
+
     async def calculate_entity_scores(
         self,
         entity_id: str,
@@ -168,7 +224,7 @@ class DashboardScorer:
             "sales_readiness": sales_readiness.value,
             "confidence_interval": confidence_interval,
             "breakdown": {
-                "maturity": await self._get_maturity_breakdown(signals, episodes),
+                "maturity": await self._get_maturity_breakdown(signals, episodes, hypotheses),
                 "probability": await self._get_probability_breakdown(
                     hypotheses, signals, episodes, validated_rfps
                 )
@@ -199,23 +255,23 @@ class DashboardScorer:
         - Partnership activity (20%): Partnerships, integrations
         - Executive changes (10%): C-level hires
         """
-        if hypotheses:
-            # Use hypothesis-based scoring
-            return await self._maturity_from_hypotheses(hypotheses)
-
-        # Fallback to signal/episode based scoring
         capability_score = await self._score_capability_signals(signals, episodes)
         initiative_score = await self._score_digital_initiatives(signals, episodes)
         partnership_score = await self._score_partnership_activity(signals, episodes)
         executive_score = await self._score_executive_changes(signals, episodes)
 
-        # Weighted sum
-        maturity = (
-            capability_score * self.config.capability_weight +
-            initiative_score * self.config.initiative_weight +
-            partnership_score * self.config.partnership_weight +
-            executive_score * self.config.executive_weight
+        maturity = capability_score + initiative_score + partnership_score + executive_score
+
+        evidence_items = sum(
+            [
+                self._count_matching_signals(signals, ["crm", "analytics", "digital", "procurement"]),
+                self._count_matching_episodes(episodes, ["technology", "crm", "digital", "partnership", "hiring"]),
+            ]
         )
+        if evidence_items == 0:
+            maturity = max(maturity, await self._maturity_from_hypotheses(hypotheses))
+        elif hypotheses:
+            maturity += (self._hypothesis_prior_score(hypotheses) / 100.0) * 10.0
 
         return min(100.0, max(0.0, maturity))
 
@@ -252,23 +308,17 @@ class DashboardScorer:
         if not signals and not episodes:
             return 10.0  # Baseline
 
-        # Count capability-related items
-        capability_count = 0
+        validated_count = self._count_matching_signals(
+            signals, ["crm", "analytics", "digital", "platform"], validated_only=True
+        )
+        unvalidated_count = self._count_matching_signals(
+            signals, ["crm", "analytics", "digital", "platform"], validated_only=False
+        ) - validated_count
+        episode_count = self._count_matching_episodes(
+            episodes, ["technology", "crm", "digital", "platform"]
+        )
 
-        if signals:
-            for signal in signals:
-                signal_type = signal.get("type", "").upper()
-                if "CRM" in signal_type or "ANALYTICS" in signal_type or "DIGITAL" in signal_type:
-                    capability_count += 1
-
-        if episodes:
-            for episode in episodes:
-                ep_type = episode.get("episode_type", "").upper()
-                if "TECHNOLOGY" in ep_type or "CRM" in ep_type:
-                    capability_count += 1
-
-        # Cap at 10 capability signals for full points
-        score = min(40.0, capability_count * 4.0)
+        score = min(40.0, validated_count * 8.0 + episode_count * 5.0 + max(0, unvalidated_count) * 1.5)
 
         return max(10.0, score)
 
@@ -281,19 +331,14 @@ class DashboardScorer:
         if not signals and not episodes:
             return 5.0
 
-        initiative_count = 0
+        validated_count = self._count_matching_signals(
+            signals, ["transformation", "modernisation", "modernization", "roadmap"], validated_only=True
+        )
+        episode_count = self._count_matching_episodes(
+            episodes, ["digital_transformation", "transformation", "roadmap", "modernization"]
+        )
 
-        if signals:
-            for signal in signals:
-                if "transformation" in signal.get("description", "").lower():
-                    initiative_count += 1
-
-        if episodes:
-            for episode in episodes:
-                if "DIGITAL_TRANSFORMATION" in episode.get("episode_type", ""):
-                    initiative_count += 1
-
-        score = min(30.0, initiative_count * 10.0)
+        score = min(30.0, validated_count * 9.0 + episode_count * 6.0)
 
         return max(5.0, score)
 
@@ -306,14 +351,14 @@ class DashboardScorer:
         if not signals and not episodes:
             return 2.5
 
-        partnership_count = 0
+        validated_count = self._count_matching_signals(
+            signals, ["partnership", "integration", "vendor", "supplier"], validated_only=True
+        )
+        partnership_count = self._count_matching_episodes(
+            episodes, ["partnership", "integration", "vendor", "supplier"]
+        )
 
-        if episodes:
-            for episode in episodes:
-                if "PARTNERSHIP" in episode.get("episode_type", ""):
-                    partnership_count += 1
-
-        score = min(20.0, partnership_count * 5.0)
+        score = min(20.0, validated_count * 6.0 + partnership_count * 4.0)
 
         return max(2.5, score)
 
@@ -326,14 +371,14 @@ class DashboardScorer:
         if not signals and not episodes:
             return 2.5
 
-        executive_count = 0
+        validated_count = self._count_matching_signals(
+            signals, ["chief", "director", "leadership", "procurement", "digital"], validated_only=True
+        )
+        executive_count = self._count_matching_episodes(
+            episodes, ["c_suite", "hiring", "chief", "director", "leadership"]
+        )
 
-        if episodes:
-            for episode in episodes:
-                if "C_SUITE" in episode.get("episode_type", "") or "HIRING" in episode.get("episode_type", ""):
-                    executive_count += 1
-
-        score = min(10.0, executive_count * 3.0)
+        score = min(10.0, validated_count * 3.5 + executive_count * 2.5)
 
         return max(2.5, score)
 
@@ -353,7 +398,7 @@ class DashboardScorer:
         - Temporal recency (0-20%)
         - EIG confidence (0-10%)
         """
-        probability = 0.10  # Baseline 10%
+        probability = 0.05
 
         # 1. Validated RFP bonus
         if validated_rfps and len(validated_rfps) > 0:
@@ -367,10 +412,10 @@ class DashboardScorer:
         recency = await self._calculate_recency_bonus(signals, episodes)
         probability += recency * self.config.recency_weight
 
-        # 4. EIG confidence
+        # 4. Hypothesis prior / uncertainty modifier
         if hypotheses:
             eig_conf = await self._calculate_eig_confidence(hypotheses)
-            probability += eig_conf * self.config.confidence_weight
+            probability += eig_conf * min(self.config.confidence_weight, 0.05)
 
         return min(0.95, max(0.05, probability))
 
@@ -388,6 +433,13 @@ class DashboardScorer:
 
         count = 0
 
+        if signals:
+            count += self._count_matching_signals(
+                signals,
+                ["rfp", "procurement", "tender", "vendor", "supplier"],
+                validated_only=True,
+            )
+
         if episodes:
             for episode in episodes:
                 timestamp_str = episode.get("timestamp", "")
@@ -403,8 +455,7 @@ class DashboardScorer:
                 except:
                     pass
 
-        # Normalize: 3+ signals in 6 months = max density
-        return min(1.0, count / 3.0)
+        return min(1.0, count / 4.0)
 
     async def _calculate_recency_bonus(
         self,
@@ -418,8 +469,25 @@ class DashboardScorer:
         now = datetime.now(timezone.utc)
         window_start = now - timedelta(days=self.config.recent_window_days)
 
-        # Find most recent signal
+        # Find most recent validated procurement signal / relevant episode
         most_recent_days = float('inf')
+
+        if signals:
+            for signal in signals:
+                if not self._is_validated_signal(signal):
+                    continue
+                if not any(keyword in self._signal_text(signal) for keyword in ["rfp", "procurement", "tender", "vendor"]):
+                    continue
+                timestamp_str = signal.get("timestamp") or signal.get("detected_at") or signal.get("created_at") or ""
+                try:
+                    if timestamp_str.endswith("Z"):
+                        timestamp_str = timestamp_str[:-1] + "+00:00"
+                    timestamp = datetime.fromisoformat(timestamp_str)
+                    age_days = (now - timestamp).total_seconds() / 86400
+                    if age_days < most_recent_days:
+                        most_recent_days = age_days
+                except Exception:
+                    pass
 
         if episodes:
             for episode in episodes:
@@ -531,7 +599,8 @@ class DashboardScorer:
     async def _get_maturity_breakdown(
         self,
         signals: Optional[List[Dict[str, Any]]] = None,
-        episodes: Optional[List[Dict[str, Any]]] = None
+        episodes: Optional[List[Dict[str, Any]]] = None,
+        hypotheses: Optional[List[Any]] = None,
     ) -> Dict[str, float]:
         """Get detailed maturity score breakdown"""
         capability = await self._score_capability_signals(signals, episodes)
@@ -547,6 +616,9 @@ class DashboardScorer:
             "initiative": round(initiative / total * 100, 1),
             "partnership": round(partnership / total * 100, 1),
             "executive": round(executive / total * 100, 1),
+            "validated_signal_weight": 0.7,
+            "temporal_weight": 0.2,
+            "hypothesis_prior_weight": 0.1 if hypotheses else 0.0,
             "raw_scores": {
                 "capability": round(capability, 1),
                 "initiative": round(initiative, 1),
@@ -576,6 +648,9 @@ class DashboardScorer:
             "density_contribution": round(density * self.config.density_weight, 3),
             "recency_contribution": round(recency * self.config.recency_weight, 3),
             "eig_confidence_contribution": round(eig_conf * self.config.confidence_weight, 3),
+            "validated_signal_weight": 0.7,
+            "temporal_weight": 0.25,
+            "hypothesis_prior_weight": 0.05,
             "components": {
                 "has_validated_rfp": len(validated_rfps) > 0 if validated_rfps else False,
                 "procurement_density": round(density, 2),
