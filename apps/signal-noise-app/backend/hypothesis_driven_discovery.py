@@ -761,7 +761,7 @@ class HypothesisDrivenDiscovery:
         if hop_type == HopType.PRESS_RELEASE:
             return 900
         if hop_type == HopType.OFFICIAL_SITE:
-            return 1000
+            return 800
         if hop_type in HIGH_VALUE_HOPS:
             return 2000
         return 1400
@@ -770,7 +770,7 @@ class HypothesisDrivenDiscovery:
         if hop_type == HopType.PRESS_RELEASE:
             return 250
         if hop_type == HopType.OFFICIAL_SITE:
-            return 280
+            return 220
         if hop_type in {HopType.CAREERS_PAGE, HopType.ANNUAL_REPORT}:
             return 320
         return 500
@@ -2412,24 +2412,50 @@ class HypothesisDrivenDiscovery:
         if hop_type == HopType.PRESS_RELEASE:
             keyword_candidates.update({"news", "announcement", "launch"})
         elif hop_type == HopType.OFFICIAL_SITE:
-            keyword_candidates.update({"strategy", "programme", "roadmap", "about"})
+            keyword_candidates.update(
+                {
+                    "strategy",
+                    "programme",
+                    "roadmap",
+                    "leadership",
+                    "technology",
+                    "platform",
+                    "transformation",
+                    "partnership",
+                }
+            )
         elif hop_type in HIGH_VALUE_HOPS:
             keyword_candidates.update({"quotation", "deadline", "submission"})
 
         matched_indexes = []
+        scored_matches = []
         for index, line in enumerate(lines):
             line_lower = line.lower()
             if any(keyword in line_lower for keyword in keyword_candidates):
                 matched_indexes.append(index)
+                scored_matches.append((self._score_evidence_line(line_lower, hop_type, keyword_candidates), index))
 
         if not matched_indexes:
             compact = "\n".join(lines)
             return compact[:content_limit]
 
+        if hop_type == HopType.OFFICIAL_SITE:
+            top_indexes = [
+                index
+                for score, index in sorted(scored_matches, key=lambda item: (-item[0], item[1]))
+                if score > 0
+            ][:4]
+            if top_indexes:
+                matched_indexes = top_indexes
+
         selected_indexes = set()
         for index in matched_indexes:
-            start = max(0, index - 1)
-            end = min(len(lines), index + 2)
+            if hop_type == HopType.OFFICIAL_SITE:
+                start = index
+                end = min(len(lines), index + 1)
+            else:
+                start = max(0, index - 1)
+                end = min(len(lines), index + 2)
             selected_indexes.update(range(start, end))
 
         ordered_lines = [lines[index] for index in sorted(selected_indexes)]
@@ -2439,6 +2465,50 @@ class HypothesisDrivenDiscovery:
             return compact
 
         return compact[:content_limit]
+
+    def _score_evidence_line(
+        self,
+        line_lower: str,
+        hop_type: HopType,
+        keyword_candidates: set[str],
+    ) -> int:
+        score = 0
+
+        score += sum(3 for keyword in keyword_candidates if keyword in line_lower)
+
+        if hop_type == HopType.OFFICIAL_SITE:
+            high_value_keywords = (
+                "procurement",
+                "tender",
+                "rfp",
+                "request for proposal",
+                "vendor",
+                "supplier",
+                "digital",
+                "transformation",
+                "roadmap",
+                "platform",
+                "technology",
+                "partnership",
+                "leadership",
+            )
+            noise_keywords = (
+                "supporter",
+                "fan",
+                "ticket",
+                "fixture",
+                "match",
+                "shop",
+                "merchandise",
+                "gallery",
+                "history",
+                "stadium",
+                "highlights",
+            )
+            score += sum(4 for keyword in high_value_keywords if keyword in line_lower)
+            score -= sum(4 for keyword in noise_keywords if keyword in line_lower)
+
+        return score
 
     async def _evaluate_content_with_claude(
         self,

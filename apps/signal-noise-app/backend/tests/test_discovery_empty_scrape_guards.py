@@ -422,7 +422,7 @@ async def test_official_site_evaluation_uses_reduced_prompt_budget():
     )
 
     assert result["decision"] == "NO_PROGRESS"
-    assert captured["max_tokens"] == 280
+    assert captured["max_tokens"] == 220
     assert "OFFICIAL_TAIL" not in captured["prompt"]
     assert "B" * 1300 not in captured["prompt"]
 
@@ -495,6 +495,82 @@ async def test_official_site_evaluation_uses_compact_evidence_pack():
     assert "Digital transformation roadmap" in captured["prompt"]
     assert "procurement programme" in captured["prompt"]
     assert "Archived supporter story." not in captured["prompt"]
+
+
+@pytest.mark.asyncio
+async def test_official_site_evidence_pack_prioritizes_high_value_lines():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+
+    captured = {}
+
+    class RecordingClaudeClient:
+        async def query(self, prompt, model, max_tokens):
+            captured["prompt"] = prompt
+            captured["max_tokens"] = max_tokens
+            return {
+                "content": '{"decision":"NO_PROGRESS","confidence_delta":0.0,"justification":"none","evidence_found":"","temporal_score":"older"}'
+            }
+
+    discovery.claude_client = RecordingClaudeClient()
+    discovery._format_early_indicators = lambda indicators: ""
+    discovery._fallback_result = lambda: {
+        "decision": "NO_PROGRESS",
+        "confidence_delta": 0.0,
+        "justification": "fallback",
+        "evidence_found": "",
+    }
+    discovery._build_evaluation_context = lambda **kwargs: SimpleNamespace(
+        entity_name="FIBA",
+        hypothesis_statement="Potential federation procurement activity",
+        hypothesis_category="procurement",
+        pattern_name="federation_procurement_programme",
+        current_confidence=0.78,
+        iterations_attempted=0,
+        early_indicators=["digital transformation", "leadership"],
+        keywords=["procurement", "roadmap", "vendor"],
+        recent_history=[],
+        last_decision=None,
+        hop_type=HopType.OFFICIAL_SITE,
+        channel_guidance="Search for federation strategy signals",
+        min_evidence_strength="medium",
+        temporal_requirements="recent_12mo",
+    )
+
+    hypothesis = SimpleNamespace(
+        metadata={"entity_name": "FIBA"},
+        category="procurement",
+        confidence=0.78,
+        iterations_attempted=0,
+        statement="Potential federation procurement activity",
+    )
+
+    content = "\n".join(
+        [
+            "Welcome to FIBA.",
+            "Read the history of the federation.",
+            "Supporter gallery and ticket information.",
+            "Digital transformation roadmap for our global basketball platform.",
+            "Vendor procurement programme for new technology partners.",
+            "Leadership team expanding digital operations.",
+            "Match highlights and fixtures archive.",
+            "Fan shop and merchandise catalogue.",
+        ]
+    )
+
+    result = await discovery._evaluate_content_with_claude(
+        content=content,
+        hypothesis=hypothesis,
+        hop_type=HopType.OFFICIAL_SITE,
+        content_metadata={},
+    )
+
+    assert result["decision"] == "NO_PROGRESS"
+    assert captured["max_tokens"] == 220
+    assert "Digital transformation roadmap" in captured["prompt"]
+    assert "Vendor procurement programme" in captured["prompt"]
+    assert "Leadership team expanding digital operations." in captured["prompt"]
+    assert "ticket information" not in captured["prompt"]
+    assert "shop and merchandise" not in captured["prompt"]
 
 
 @pytest.mark.asyncio
