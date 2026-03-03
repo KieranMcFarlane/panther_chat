@@ -12,6 +12,7 @@ from entity_pipeline_worker import (
     build_batch_retry_update,
     build_batch_running_update,
     build_run_start_metadata,
+    build_run_success_metadata,
     build_run_retry_metadata,
     choose_supabase_key,
     build_run_detail_url,
@@ -116,6 +117,23 @@ def test_build_run_start_metadata_sets_lease_state():
     assert metadata["lease_owner"] == "worker-1"
     assert metadata["lease_expires_at"] is not None
     assert metadata["retry_state"] == "running"
+
+
+def test_build_run_success_metadata_clears_retry_error_fields():
+    metadata = build_run_success_metadata(
+        {
+            "retryable": True,
+            "retry_state": "retrying",
+            "last_error": "timed out",
+            "last_error_type": "timeout",
+            "last_error_at": "2026-03-02T15:01:00+00:00",
+        }
+    )
+
+    assert metadata["retryable"] is False
+    assert metadata["retry_state"] == "completed"
+    assert metadata["last_error"] is None
+    assert metadata["last_error_type"] is None
 
 
 def test_build_batch_heartbeat_metadata_preserves_existing_claim_data():
@@ -422,7 +440,6 @@ def test_process_batch_requeues_batch_when_run_is_retryable():
         "phase": "entity_registration",
         "metadata": {"entity_type": "FEDERATION", "attempt_count": 0},
     }
-    worker.get_batch_runs = lambda batch_id: [run]
     worker.sync_cached_entity = lambda *args, **kwargs: None
     worker.call_pipeline = lambda run, batch_id: (_ for _ in ()).throw(TimeoutError("temporary timeout"))
     worker._get_run_metadata = lambda batch_id, entity_id: {"attempt_count": 0}
@@ -456,6 +473,8 @@ def test_process_batch_requeues_batch_when_run_is_retryable():
             return FakeRpcQuery()
 
     worker.supabase = FakeSupabase()
+    states = [[run], [{"entity_id": "international-canoe-federation", "status": "retrying"}]]
+    worker.get_batch_runs = lambda batch_id: states.pop(0)
 
     batch = {"id": "batch-1", "metadata": {"queue_mode": "durable_worker"}}
     worker.process_batch(batch)
@@ -463,3 +482,76 @@ def test_process_batch_requeues_batch_when_run_is_retryable():
     assert run_updates[-1]["status"] == "retrying"
     assert batch_updates[-1]["status"] == "queued"
     assert batch_updates[-1]["metadata"]["retry_state"] == "retrying"
+
+
+def test_process_batch_marks_batch_completed_after_successful_retry():
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker._now_iso = lambda: "2026-03-03T04:10:00+00:00"
+    worker._batch_metadata = lambda batch: batch.get("metadata", {})
+    worker.refresh_batch_heartbeat = lambda batch_id, metadata=None: {**(metadata or {}), "heartbeat_at": "2026-03-03T04:10:00+00:00"}
+    worker._start_batch_heartbeat = lambda batch_id, metadata=None: (SimpleNamespace(set=lambda: None), SimpleNamespace(join=lambda timeout=1: None))
+    worker.worker_id = "worker-1"
+    worker.lease_seconds = 60
+    worker.max_run_attempts = 2
+
+    run = {
+        "entity_id": "fiba",
+        "entity_name": "FIBA",
+        "status": "retrying",
+        "phase": "discovery",
+        "metadata": {"entity_type": "FEDERATION", "attempt_count": 1, "retryable": True, "retry_state": "retrying"},
+    }
+    worker.sync_cached_entity = lambda *args, **kwargs: None
+    worker.call_pipeline = lambda run, batch_id: {
+        "sales_readiness": "MONITOR",
+        "rfp_count": 0,
+        "completed_at": "2026-03-03T04:09:00+00:00",
+        "phases": {
+            "discovery": {"status": "completed"},
+            "dashboard_scoring": {"status": "completed"},
+        },
+        "artifacts": {"scores": {"sales_readiness": "MONITOR"}, "discovery_result": {"performance_summary": {}}, "dossier_id": "fiba"},
+    }
+
+    run_updates = []
+    worker.update_run = lambda batch_id, entity_id, payload: run_updates.append(payload)
+    worker._get_run_metadata = lambda batch_id, entity_id: {"attempt_count": 2, "retryable": True, "retry_state": "retrying", "last_error": "timed out"}
+
+    batch_updates = []
+    complete_calls = []
+
+    class FakeRpcQuery:
+        def __init__(self, name, params):
+            self.name = name
+            self.params = params
+        def execute(self):
+            if self.name == "complete_entity_import_batch":
+                complete_calls.append(self.params)
+            return SimpleNamespace(data=[])
+
+    class FakeSupabase:
+        def rpc(self, name, params):
+            return FakeRpcQuery(name, params)
+        def table(self, _name):
+            class FakeTable:
+                def update(self, payload):
+                    batch_updates.append(payload)
+                    return self
+                def eq(self, *_args, **_kwargs):
+                    return self
+                def execute(self):
+                    return SimpleNamespace(data=[])
+            return FakeTable()
+
+    states = [[run], [{"entity_id": "fiba", "status": "completed"}]]
+    worker.get_batch_runs = lambda batch_id: states.pop(0)
+    worker.supabase = FakeSupabase()
+
+    batch = {"id": "batch-1", "metadata": {"queue_mode": "durable_worker"}}
+    worker.process_batch(batch)
+
+    assert run_updates[-1]["status"] == "completed"
+    assert run_updates[-1]["metadata"]["retry_state"] == "completed"
+    assert run_updates[-1]["metadata"]["last_error"] is None
+    assert complete_calls[-1]["batch_id"] == "batch-1"
+    assert not batch_updates

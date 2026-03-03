@@ -141,6 +141,16 @@ def build_run_start_metadata(
     return metadata
 
 
+def build_run_success_metadata(existing_metadata: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    metadata = deepcopy(existing_metadata or {})
+    metadata["retryable"] = False
+    metadata["retry_state"] = "completed"
+    metadata["last_error"] = None
+    metadata["last_error_at"] = None
+    metadata["last_error_type"] = None
+    return metadata
+
+
 def merge_cached_entity_properties(
     existing_properties: Optional[Dict[str, Any]],
     *,
@@ -339,8 +349,6 @@ class EntityPipelineWorker:
 
     def process_batch(self, batch: Dict[str, Any]) -> None:
         batch_id = batch["id"]
-        failed_runs = 0
-        retrying_runs = 0
         max_run_attempts = getattr(self, "max_run_attempts", MAX_RUN_ATTEMPTS)
         lease_seconds = getattr(self, "lease_seconds", LEASE_SECONDS)
         worker_id = getattr(self, "worker_id", "worker-test")
@@ -356,7 +364,6 @@ class EntityPipelineWorker:
             run_metadata = run.get("metadata") if isinstance(run.get("metadata"), dict) else {}
             attempt_count = int(run_metadata.get("attempt_count", 0) or 0)
             if attempt_count >= max_run_attempts and run.get("status") in {"failed", "retrying"}:
-                failed_runs += 1
                 continue
             now_iso = self._now_iso()
             self.update_run(
@@ -381,7 +388,7 @@ class EntityPipelineWorker:
                 last_phase = completed_phases[-1] if completed_phases else "dashboard_scoring"
                 latest_metadata = self._get_run_metadata(batch_id, run["entity_id"])
                 metadata = merge_pipeline_run_metadata(
-                    latest_metadata if isinstance(latest_metadata, dict) else run_metadata,
+                    build_run_success_metadata(latest_metadata if isinstance(latest_metadata, dict) else run_metadata),
                     phases=phases,
                     scores=((result.get("artifacts") or {}).get("scores")),
                     performance_summary=(((result.get("artifacts") or {}).get("discovery_result") or {}).get("performance_summary")),
@@ -417,10 +424,7 @@ class EntityPipelineWorker:
                 should_retry = retryable and attempts < max_run_attempts
                 next_status = "retrying" if should_retry else "failed"
                 if next_status == "failed":
-                    failed_runs += 1
                     self.sync_cached_entity(batch_id, run, None, "failed")
-                else:
-                    retrying_runs += 1
                 self.update_run(
                     batch_id,
                     run["entity_id"],
@@ -447,7 +451,8 @@ class EntityPipelineWorker:
             batch["metadata"] = self.refresh_batch_heartbeat(batch_id, self._batch_metadata(batch))
         heartbeat_stop.set()
         heartbeat_thread.join(timeout=1)
-        if retrying_runs > 0:
+        final_runs = self.get_batch_runs(batch_id)
+        if any(run.get("status") == "retrying" for run in final_runs):
             self._safe_execute(
                 lambda: self.supabase.table("entity_import_batches").update(
                     build_batch_retry_update(
@@ -458,7 +463,7 @@ class EntityPipelineWorker:
                 ).eq("id", batch_id).execute(),
                 context=f"requeue batch {batch_id}",
             )
-        elif failed_runs > 0:
+        elif any(run.get("status") == "failed" for run in final_runs):
             self._safe_execute(
                 lambda: self.supabase.table("entity_import_batches").update(
                     {
