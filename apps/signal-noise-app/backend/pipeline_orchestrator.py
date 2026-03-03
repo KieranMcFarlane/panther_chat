@@ -107,7 +107,17 @@ class PipelineOrchestrator:
                 "sources_used": dossier_metadata.get("sources_used", []),
             }
         else:
-            phase_results["dossier_generation"] = {"status": "completed"}
+            dossier_metadata = dossier.get("metadata", {}) if isinstance(dossier, dict) else {}
+            phase_results["dossier_generation"] = {
+                "status": "completed",
+                "hypothesis_count": dossier_metadata.get("hypothesis_count", 0),
+                "signal_count": dossier_metadata.get("signal_count", 0),
+                "tier": dossier_metadata.get("tier"),
+                "duration_seconds": dossier.get("generation_time_seconds") if isinstance(dossier, dict) else None,
+                "collection_time_seconds": dossier_metadata.get("collection_time_seconds"),
+                "source_count": dossier_metadata.get("source_count", 0),
+                "sources_used": dossier_metadata.get("sources_used", []),
+            }
 
         discovery_result: Any = {"signals_discovered": [], "hypotheses": []}
         raw_signals: List[Dict[str, Any]] = []

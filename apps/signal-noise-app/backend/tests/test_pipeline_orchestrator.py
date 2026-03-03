@@ -153,3 +153,36 @@ async def test_pipeline_orchestrator_runs_phases_and_returns_artifacts():
     assert result["sales_readiness"] == "LIVE"
     assert ("discovery", "running") in phase_events
     assert ("dashboard_scoring", "completed") in phase_events
+
+
+@pytest.mark.asyncio
+async def test_pipeline_orchestrator_preserves_prefetched_dossier_phase_metadata():
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=FakeDossierGenerator(),
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+    )
+
+    initial_dossier = await FakeDossierGenerator().generate_universal_dossier(
+        entity_id="fiba",
+        entity_name="FIBA",
+        entity_type="FEDERATION",
+        priority_score=88,
+    )
+
+    result = await orchestrator.run_entity_pipeline(
+        entity_id="fiba",
+        entity_name="FIBA",
+        entity_type="FEDERATION",
+        priority_score=88,
+        initial_dossier=initial_dossier,
+    )
+
+    dossier_phase = result["phases"]["dossier_generation"]
+    assert dossier_phase["status"] == "completed"
+    assert dossier_phase["duration_seconds"] == 12.3
+    assert dossier_phase["collection_time_seconds"] == 4.5
+    assert dossier_phase["source_count"] == 2
+    assert dossier_phase["sources_used"] == ["FalkorDB", "BrightData"]
