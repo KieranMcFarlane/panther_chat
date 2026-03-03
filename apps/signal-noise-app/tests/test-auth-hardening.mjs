@@ -27,6 +27,10 @@ const signInFormSource = readFileSync(
   new URL('../src/components/auth/SignInForm.tsx', import.meta.url),
   'utf8'
 )
+const appShellSource = readFileSync(
+  new URL('../src/components/layout/AppShell.tsx', import.meta.url),
+  'utf8'
+)
 const signInPageSource = readFileSync(
   new URL('../src/app/sign-in/page.tsx', import.meta.url),
   'utf8'
@@ -107,4 +111,11 @@ test('sign-in form supports password reset requests from the auth page', () => {
 test('auth-backed pages opt out of static prerendering', () => {
   assert.match(signInPageSource, /export const dynamic = ["']force-dynamic["']/)
   assert.match(mailboxPageSource, /export const dynamic = ["']force-dynamic["']/)
+})
+
+test('app shell uses a single mounted auth menu branch to avoid hydration mismatch', () => {
+  assert.match(appShellSource, /const \{ data: session \} = authClient\.useSession\(\)/)
+  assert.match(appShellSource, /const \[isMounted, setIsMounted\] = useState\(false\)/)
+  assert.match(appShellSource, /if \(!isMounted\) \{\s*return null/s)
+  assert.doesNotMatch(appShellSource, /<SignInLink \/>/)
 })

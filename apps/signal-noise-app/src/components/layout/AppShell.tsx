@@ -1,16 +1,18 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useState } from 'react'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { CopilotKit } from '@copilotkit/react-core'
-import { MessageSquare } from 'lucide-react'
+import { LogIn, MessageSquare } from 'lucide-react'
 
 import AppNavigation from '@/components/layout/AppNavigation'
 import { UserMenu } from '@/components/auth/UserMenu'
-import { SignInLink } from '@/components/auth/SignInLink'
 import { SharedCopilotProvider } from '@/contexts/SharedCopilotContext'
 import { TemporalIntelligenceTools } from '@/components/temporal/TemporalIntelligenceTools'
+import { Button } from '@/components/ui/button'
+import { authClient } from '@/lib/auth-client'
 
 const SimpleStreamingChat = dynamic(() => import('@/components/chat/SimpleStreamingChat'), {
   ssr: false,
@@ -25,11 +27,28 @@ const SPORTS_AGENT_CONFIG = {
 }
 
 function AuthMenu() {
+  const { data: session } = authClient.useSession()
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  if (!isMounted) {
+    return null
+  }
+
+  if (session?.user) {
+    return <UserMenu />
+  }
+
   return (
-    <>
-      <UserMenu />
-      <SignInLink />
-    </>
+    <Button variant="ghost" size="sm" asChild>
+      <Link href="/sign-in">
+        <LogIn className="mr-2 h-4 w-4" />
+        Sign In
+      </Link>
+    </Button>
   )
 }
 
