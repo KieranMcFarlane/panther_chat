@@ -164,6 +164,69 @@ async def test_execute_hop_reuses_official_site_scrape_cache():
     assert second["performance"]["scrape_ms"] == 0.0
 
 
+@pytest.mark.asyncio
+async def test_execute_hop_reuses_official_site_evaluation_for_unchanged_content():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.pdf_extractor = None
+    discovery.total_cost_usd = 0.0
+    discovery.brightdata_client = SimpleNamespace()
+    discovery._official_site_content_cache = {}
+    discovery._official_site_evaluation_cache = {}
+
+    scrape_calls = {"count": 0}
+    evaluation_calls = {"count": 0}
+
+    async def fake_get_url_for_hop(hop_type, hypothesis, state):
+        return "https://www.canoeicf.com/home"
+
+    async def fake_scrape_as_markdown(url):
+        scrape_calls["count"] += 1
+        return {
+            "status": "success",
+            "content": "Official federation site content that does not change",
+            "url": url,
+            "timestamp": "2026-03-03T10:00:00Z",
+            "metadata": {"word_count": 8},
+        }
+
+    async def fake_evaluate_content_with_claude(**kwargs):
+        evaluation_calls["count"] += 1
+        return {
+            "decision": "WEAK_ACCEPT",
+            "confidence_delta": 0.02,
+            "justification": "Stable digital transformation signal",
+            "evidence_found": "Digital transformation roadmap",
+        }
+
+    discovery._get_url_for_hop = fake_get_url_for_hop
+    discovery._is_pdf_url = lambda url: False
+    discovery.brightdata_client.scrape_as_markdown = fake_scrape_as_markdown
+    discovery._evaluate_content_with_claude = fake_evaluate_content_with_claude
+
+    state = SimpleNamespace(
+        current_depth=0,
+        last_failed_hop=None,
+        hop_failure_counts={},
+    )
+    state.increment_depth_count = lambda depth: None
+
+    hypothesis = SimpleNamespace(
+        hypothesis_id="icf_digital_programme",
+        metadata={"entity_name": "International Canoe Federation"},
+    )
+
+    first = await discovery._execute_hop(HopType.OFFICIAL_SITE, hypothesis, state)
+    second = await discovery._execute_hop(HopType.OFFICIAL_SITE, hypothesis, state)
+
+    assert first["decision"] == "WEAK_ACCEPT"
+    assert second["decision"] == "WEAK_ACCEPT"
+    assert scrape_calls["count"] == 1
+    assert evaluation_calls["count"] == 1
+    assert second["performance"]["scrape_ms"] == 0.0
+    assert second["performance"]["evaluation_ms"] == 0.0
+    assert second["performance"]["evaluation_cache_hit"] is True
+
+
 def test_score_url_penalizes_weak_linkedin_rfp_results():
     discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
 

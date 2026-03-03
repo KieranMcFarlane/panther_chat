@@ -39,6 +39,7 @@ Usage:
 """
 
 import asyncio
+import hashlib
 import json
 import logging
 import os
@@ -630,6 +631,7 @@ class HypothesisDrivenDiscovery:
         # Dossier hypotheses cache for warm-start discovery
         self._dossier_hypotheses_cache = {}
         self._official_site_content_cache: Dict[str, Dict[str, Any]] = {}
+        self._official_site_evaluation_cache: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
         self.max_consecutive_no_progress_iterations = int(os.getenv("DISCOVERY_MAX_CONSECUTIVE_NO_PROGRESS", "3"))
         self.search_timeout_seconds = float(os.getenv("DISCOVERY_SEARCH_TIMEOUT_SECONDS", "12"))
         self.search_validation_timeout_seconds = float(os.getenv("DISCOVERY_SEARCH_VALIDATION_TIMEOUT_SECONDS", "5"))
@@ -1239,15 +1241,30 @@ class HypothesisDrivenDiscovery:
                                     # Update URL for tracking
                                     url = best_pdf_url
 
-            # Evaluate content with Claude
-            evaluation_started_at = time.perf_counter()
-            evaluation = await self._evaluate_content_with_claude(
-                content=content,
-                hypothesis=hypothesis,
-                hop_type=hop_type,
-                content_metadata=content_metadata
-            )
-            performance['evaluation_ms'] = round((time.perf_counter() - evaluation_started_at) * 1000, 2)
+            use_official_site_evaluation_cache = hop_type == HopType.OFFICIAL_SITE and isinstance(content, str)
+            evaluation_cache_key = None
+            evaluation = None
+            if use_official_site_evaluation_cache:
+                hypothesis_id = getattr(hypothesis, 'hypothesis_id', '') or hypothesis.metadata.get('hypothesis_id', '')
+                content_hash = hashlib.sha256(content.encode('utf-8')).hexdigest()
+                evaluation_cache_key = (url, hypothesis_id, content_hash)
+                cached_evaluation = getattr(self, "_official_site_evaluation_cache", {}).get(evaluation_cache_key)
+                if cached_evaluation is not None:
+                    evaluation = dict(cached_evaluation)
+                    performance['evaluation_ms'] = 0.0
+                    performance['evaluation_cache_hit'] = True
+
+            if evaluation is None:
+                evaluation_started_at = time.perf_counter()
+                evaluation = await self._evaluate_content_with_claude(
+                    content=content,
+                    hypothesis=hypothesis,
+                    hop_type=hop_type,
+                    content_metadata=content_metadata
+                )
+                performance['evaluation_ms'] = round((time.perf_counter() - evaluation_started_at) * 1000, 2)
+                if evaluation_cache_key is not None:
+                    self._official_site_evaluation_cache[evaluation_cache_key] = dict(evaluation)
 
             # Add cost tracking
             hop_cost = 0.001  # TODO: Track actual cost
