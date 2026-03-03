@@ -2,6 +2,16 @@
 const nextConfig = {
   // output: 'standalone',  // Disabled to avoid static generation timeouts
   // Skip API routes that cause build issues
+  experimental: {
+    serverComponentsExternalPackages: [
+      '@libsql/client',
+      '@libsql/kysely-libsql',
+      '@libsql/core',
+      '@libsql/hrana-client',
+      '@libsql/isomorphic-ws',
+      'libsql',
+    ],
+  },
   webpack(config) {
     config.module.rules.push(
       {
