@@ -43,6 +43,17 @@ app = FastAPI(
     version="2.0.0"
 )
 
+try:
+    from backend.dossier_outreach_api import (
+        OutreachIntelligenceRequest,
+        OutreachIntelligenceResponse,
+        get_outreach_intelligence as dossier_outreach_handler,
+    )
+except ImportError:
+    OutreachIntelligenceRequest = None
+    OutreachIntelligenceResponse = None
+    dossier_outreach_handler = None
+
 # Configure timeout for long-running requests (5 minutes for dossier generation)
 # This is handled at the HTTP server level (uvicorn)
 # Default timeout is 30s, but dossier generation can take 2-3 minutes
@@ -108,6 +119,12 @@ class EpisodeResponse(BaseModel):
     organization: str
     timestamp: str
     status: str
+
+
+if dossier_outreach_handler and OutreachIntelligenceRequest and OutreachIntelligenceResponse:
+    @app.post("/api/dossier-outreach-intelligence", response_model=OutreachIntelligenceResponse)
+    async def dossier_outreach_intelligence_proxy(request: OutreachIntelligenceRequest):
+        return await dossier_outreach_handler(request)
 
 
 # =============================================================================

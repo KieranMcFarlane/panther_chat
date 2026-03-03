@@ -636,6 +636,7 @@ class HypothesisDrivenDiscovery:
         self._dossier_hypotheses_cache = {}
         self._official_site_content_cache: Dict[str, Dict[str, Any]] = {}
         self._official_site_evaluation_cache: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
+        self.current_official_site_url: Optional[str] = None
         self.max_consecutive_no_progress_iterations = int(os.getenv("DISCOVERY_MAX_CONSECUTIVE_NO_PROGRESS", "3"))
         self.search_timeout_seconds = float(os.getenv("DISCOVERY_SEARCH_TIMEOUT_SECONDS", "12"))
         self.search_validation_timeout_seconds = float(os.getenv("DISCOVERY_SEARCH_VALIDATION_TIMEOUT_SECONDS", "5"))
@@ -1366,6 +1367,10 @@ class HypothesisDrivenDiscovery:
         return False
 
     async def _resolve_official_site_url(self, entity_name: str) -> Optional[str]:
+        known_official_url = getattr(self, "current_official_site_url", None)
+        if isinstance(known_official_url, str) and known_official_url.startswith(("http://", "https://")):
+            return known_official_url
+
         official_site_result = await self._search_engine_with_timeout(
             query=f'"{entity_name}" official website',
             engine='google',
@@ -1614,6 +1619,18 @@ class HypothesisDrivenDiscovery:
             'fallback_queries_tried': 0,
             'site_specific_attempted': False
         }
+
+        if hop_type == HopType.OFFICIAL_SITE:
+            official_url = await self._resolve_official_site_url(entity_name)
+            if official_url:
+                metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
+                self._last_url_resolution_metrics = {
+                    **metrics,
+                    'search_calls_ms': round(metrics['search_calls_ms'], 2),
+                    'validation_ms': round(metrics['validation_ms'], 2),
+                    'used_known_official_site': bool(getattr(self, "current_official_site_url", None)),
+                }
+                return official_url
 
         # Special handling for DOCUMENT hop type - use optimized PDF search
         if hop_type == HopType.DOCUMENT:
@@ -3809,6 +3826,7 @@ Return JSON:
         resolved_entity_type = entity_type or dossier.get('metadata', {}).get('entity_type') or getattr(self, "current_entity_type", None)
         if resolved_entity_type:
             self.current_entity_type = resolved_entity_type
+        self.current_official_site_url = self._extract_official_site_url_from_dossier(dossier)
 
         # Extract procurement signals from dossier
         procurement_signals = []
@@ -3956,6 +3974,25 @@ Return JSON:
 
         logger.info(f"✅ Dossier-context discovery complete: {result.final_confidence:.2f} confidence")
         return result
+
+    def _extract_official_site_url_from_dossier(self, dossier: Dict[str, Any]) -> Optional[str]:
+        if not isinstance(dossier, dict):
+            return None
+
+        metadata = dossier.get("metadata", {}) or {}
+        candidate_urls = [
+            metadata.get("website"),
+            metadata.get("entity_website"),
+            dossier.get("official_site_url"),
+            dossier.get("entity_website"),
+            dossier.get("website"),
+        ]
+
+        for candidate in candidate_urls:
+            if isinstance(candidate, str) and candidate.startswith(("http://", "https://")):
+                return candidate
+
+        return None
 
     async def _run_discovery_loop(
         self,

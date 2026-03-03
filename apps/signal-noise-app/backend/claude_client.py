@@ -418,6 +418,15 @@ class ClaudeClient:
             "please recharge" in message
         )
 
+    @staticmethod
+    def _is_retryable_chutes_error(error: Exception) -> bool:
+        if isinstance(error, (httpx.TimeoutException, httpx.TransportError)):
+            return True
+        if isinstance(error, httpx.HTTPStatusError):
+            status_code = error.response.status_code if error.response is not None else None
+            return status_code == 429 or (status_code is not None and status_code >= 500)
+        return False
+
     async def query_with_cascade(
         self,
         prompt: str,
@@ -627,11 +636,21 @@ class ClaudeClient:
                     self._disable_api("insufficient balance")
                     raise
 
-                is_retryable = isinstance(e, (httpx.TimeoutException, httpx.TransportError))
+                is_retryable = self._is_retryable_chutes_error(e)
                 if not is_retryable or attempt >= self.chutes_max_retries:
                     raise
 
-                await asyncio.sleep(min(2 ** attempt, 2))
+                retry_after_header = None
+                if isinstance(e, httpx.HTTPStatusError) and e.response is not None:
+                    retry_after_header = e.response.headers.get("Retry-After")
+
+                try:
+                    retry_after_seconds = float(retry_after_header) if retry_after_header else None
+                except (TypeError, ValueError):
+                    retry_after_seconds = None
+
+                backoff_seconds = retry_after_seconds or min(2 ** attempt, 4)
+                await asyncio.sleep(backoff_seconds)
 
         raise last_error
 

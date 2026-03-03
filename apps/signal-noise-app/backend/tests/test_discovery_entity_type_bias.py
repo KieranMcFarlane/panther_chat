@@ -60,13 +60,24 @@ async def test_dossier_context_fallback_uses_explicit_entity_type():
         entity_id="international-canoe-federation",
         entity_name="International Canoe Federation",
         entity_type="FEDERATION",
-        dossier={"metadata": {}},
+        dossier={"metadata": {"website": "https://www.canoeicf.com"}},
         max_iterations=5,
     )
 
     assert result == {"status": "ok"}
     assert captured["template_id"] == "federation_governing_body"
     assert discovery.current_entity_type == "FEDERATION"
+    assert discovery.current_official_site_url == "https://www.canoeicf.com"
+
+
+@pytest.mark.asyncio
+async def test_resolve_official_site_url_uses_known_dossier_url():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.current_official_site_url = "https://www.fiba.basketball"
+
+    result = await discovery._resolve_official_site_url("FIBA")
+
+    assert result == "https://www.fiba.basketball"
 
 
 @pytest.mark.asyncio
