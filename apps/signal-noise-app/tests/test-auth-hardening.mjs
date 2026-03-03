@@ -106,6 +106,8 @@ test('sign-in form supports password reset requests from the auth page', () => {
   assert.match(signInFormSource, /Forgot your password\?/)
   assert.match(signInFormSource, /setMode\("reset"\)/)
   assert.match(signInFormSource, /mode !== "reset"/)
+  assert.match(signInFormSource, /window\.location\.href = "\/"/)
+  assert.doesNotMatch(signInFormSource, /Account created\. Sign in with your new credentials\./)
 })
 
 test('auth-backed pages opt out of static prerendering', () => {

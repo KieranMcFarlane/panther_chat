@@ -43,8 +43,7 @@ export function SignInForm() {
         if (result.error) {
           setError(result.error.message || "Sign up failed")
         } else {
-          setMessage("Account created. Sign in with your new credentials.")
-          setMode("signIn") // Switch to sign in after successful sign up
+          window.location.href = "/" // Better Auth establishes a live session on sign up
         }
       } else {
         const response = await fetch("/api/auth/request-password-reset", {
