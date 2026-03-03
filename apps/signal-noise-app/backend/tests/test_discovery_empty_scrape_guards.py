@@ -185,6 +185,69 @@ async def test_evaluate_content_with_claude_returns_fallback_when_query_raises()
 
 
 @pytest.mark.asyncio
+async def test_press_release_evaluation_uses_reduced_prompt_budget():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+
+    captured = {}
+
+    class RecordingClaudeClient:
+        async def query(self, prompt, model, max_tokens):
+            captured["prompt"] = prompt
+            captured["model"] = model
+            captured["max_tokens"] = max_tokens
+            return {
+                "content": '{"decision":"NO_PROGRESS","confidence_delta":0.0,"justification":"none","evidence_found":"","temporal_score":"older"}'
+            }
+
+    discovery.claude_client = RecordingClaudeClient()
+    discovery._format_early_indicators = lambda indicators: ""
+    discovery._fallback_result = lambda: {
+        "decision": "NO_PROGRESS",
+        "confidence_delta": 0.0,
+        "justification": "fallback",
+        "evidence_found": "",
+    }
+    discovery._build_evaluation_context = lambda **kwargs: SimpleNamespace(
+        entity_name="International Canoe Federation",
+        hypothesis_statement="Potential procurement activity",
+        hypothesis_category="procurement",
+        pattern_name="federation_procurement_programme",
+        current_confidence=0.5,
+        iterations_attempted=0,
+        early_indicators=[],
+        keywords=[],
+        recent_history=[],
+        last_decision=None,
+        hop_type=HopType.PRESS_RELEASE,
+        channel_guidance="Search for federation strategy signals",
+        min_evidence_strength="medium",
+        temporal_requirements="recent_12mo",
+    )
+
+    hypothesis = SimpleNamespace(
+        metadata={"entity_name": "International Canoe Federation"},
+        category="procurement",
+        confidence=0.5,
+        iterations_attempted=0,
+        statement="Potential procurement activity",
+    )
+
+    content = "A" * 4000 + "TAIL_MARKER"
+
+    result = await discovery._evaluate_content_with_claude(
+        content=content,
+        hypothesis=hypothesis,
+        hop_type=HopType.PRESS_RELEASE,
+        content_metadata={},
+    )
+
+    assert result["decision"] == "NO_PROGRESS"
+    assert captured["max_tokens"] == 250
+    assert "TAIL_MARKER" not in captured["prompt"]
+    assert "A" * 1500 not in captured["prompt"]
+
+
+@pytest.mark.asyncio
 async def test_update_hypothesis_state_falls_back_to_in_memory_hypothesis():
     discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
     discovery.hypothesis_manager = SimpleNamespace()

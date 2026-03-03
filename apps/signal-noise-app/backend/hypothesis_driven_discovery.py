@@ -54,6 +54,7 @@ logger = logging.getLogger(__name__)
 
 
 DEFAULT_DISCOVERY_TEMPLATE_ID = "yellow_panther_agency"
+FEDERATION_DISCOVERY_TEMPLATE_ID = "federation_governing_body"
 
 
 def _load_backend_attr(module_name: str, attr_name: str):
@@ -65,6 +66,13 @@ def _load_backend_attr(module_name: str, attr_name: str):
     return getattr(module, attr_name)
 
 
+def _default_template_id_for_entity_type(entity_type: Optional[str]) -> str:
+    normalized = str(entity_type or "").upper()
+    if "FEDERATION" in normalized or "GOVERN" in normalized:
+        return FEDERATION_DISCOVERY_TEMPLATE_ID
+    return DEFAULT_DISCOVERY_TEMPLATE_ID
+
+
 def resolve_template_id(template_id: Optional[str], entity_type: Optional[str] = None) -> str:
     """Return an available template id for discovery initialization."""
     from template_loader import TemplateLoader
@@ -74,13 +82,19 @@ def resolve_template_id(template_id: Optional[str], entity_type: Optional[str] =
     if requested and loader.get_template(requested):
         return requested
 
+    default_template_id = _default_template_id_for_entity_type(entity_type)
+    if loader.get_template(default_template_id):
+        fallback_template_id = default_template_id
+    else:
+        fallback_template_id = DEFAULT_DISCOVERY_TEMPLATE_ID
+
     logger.warning(
         "Requested discovery template unavailable, falling back to %s (requested=%s, entity_type=%s)",
-        DEFAULT_DISCOVERY_TEMPLATE_ID,
+        fallback_template_id,
         requested or None,
         entity_type,
     )
-    return DEFAULT_DISCOVERY_TEMPLATE_ID
+    return fallback_template_id
 
 
 # Import PDF extractor for DOCUMENT hop type
@@ -730,6 +744,22 @@ class HypothesisDrivenDiscovery:
         if hop_type in [HopType.RFP_PAGE, HopType.TENDERS_PAGE, HopType.PROCUREMENT_PAGE]:
             return -1.1 if first_hop else (-0.55 if early_stage else -0.15)
         return 0.0
+
+    def _get_prompt_content_limit(self, hop_type: HopType) -> int:
+        if hop_type == HopType.PRESS_RELEASE:
+            return 900
+        if hop_type == HopType.OFFICIAL_SITE:
+            return 1200
+        if hop_type in HIGH_VALUE_HOPS:
+            return 2000
+        return 1400
+
+    def _get_evaluation_max_tokens(self, hop_type: HopType) -> int:
+        if hop_type == HopType.PRESS_RELEASE:
+            return 250
+        if hop_type in {HopType.OFFICIAL_SITE, HopType.CAREERS_PAGE, HopType.ANNUAL_REPORT}:
+            return 320
+        return 500
 
     async def _get_cached_search(self, query: str, engine: str) -> Optional[Dict[str, Any]]:
         """Get cached search result if available and not expired"""
@@ -2294,6 +2324,8 @@ Pay special attention to:
 - Budget/timeline information
 """
 
+        content_limit = self._get_prompt_content_limit(hop_type)
+        content_excerpt = content[:content_limit]
         prompt = f"""
 # Hypothesis-Driven Discovery Evaluation
 
@@ -2322,7 +2354,7 @@ Last Decision: {context.last_decision if context.last_decision else 'N/A'}
 
 ## Content to Evaluate
 ```markdown
-{content[:2000]}
+{content_excerpt}
 ```
 
 ## MCP Pattern Insights
@@ -2361,7 +2393,7 @@ Return JSON:
             response = await self.claude_client.query(
                 prompt=prompt,
                 model="haiku",
-                max_tokens=500
+                max_tokens=self._get_evaluation_max_tokens(hop_type)
             )
 
             # Extract text from response
