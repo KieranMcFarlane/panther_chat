@@ -63,6 +63,7 @@ class BrightDataSDKClient:
 
         self.token = token
         self._client = None
+        self._client_context = None
 
         if not self.token:
             logger.warning("⚠️ BRIGHTDATA_API_TOKEN not found in environment")
@@ -72,16 +73,32 @@ class BrightDataSDKClient:
         if self._client is None:
             try:
                 from brightdata import BrightDataClient
-                self._client = await BrightDataClient(self.token).__aenter__()
+                self._client_context = BrightDataClient(self.token)
+                self._client = await self._client_context.__aenter__()
                 logger.info("✅ BrightData SDK client initialized")
             except Exception as e:
                 logger.warning(f"⚠️ BrightData SDK initialization failed: {e}")
                 logger.info("ℹ️ Will use fallback httpx client for scraping")
                 # Set to None to indicate SDK unavailable
                 self._client = False
+                self._client_context = None
         if self._client is False:
             raise RuntimeError("BrightData SDK unavailable, fallback will be used")
         return self._client
+
+    async def close(self) -> None:
+        """Close the underlying BrightData SDK session if one was opened."""
+        if self._client_context is None or self._client is False:
+            self._client = None if self._client is not False else False
+            return
+
+        try:
+            await self._client_context.__aexit__(None, None, None)
+        except Exception as e:
+            logger.warning(f"⚠️ BrightData SDK client close failed: {e}")
+        finally:
+            self._client = None
+            self._client_context = None
 
     @property
     def client(self):

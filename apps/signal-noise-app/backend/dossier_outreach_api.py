@@ -66,6 +66,7 @@ async def get_outreach_intelligence(request: OutreachIntelligenceRequest) -> Out
         Mutual connections, conversation starters, current providers,
         recommended approach with confidence and explanation
     """
+    brightdata = None
     try:
         logger.info(f"🔍 Collecting outreach intelligence for {request.entity_name}")
 
@@ -191,6 +192,9 @@ async def get_outreach_intelligence(request: OutreachIntelligenceRequest) -> Out
     except Exception as e:
         logger.error(f"❌ Failed to collect outreach intelligence: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        if brightdata is not None:
+            await brightdata.close()
 
 
 def _determine_recommended_approach(
