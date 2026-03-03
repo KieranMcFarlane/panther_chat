@@ -4,7 +4,7 @@ import type { ImportedEntityRow } from '@/lib/entity-import-schema'
 export interface EntityImportBatchRecord {
   id: string
   filename: string | null
-  status: 'queued' | 'running' | 'completed' | 'failed'
+  status: 'queued' | 'claiming' | 'running' | 'retrying' | 'completed' | 'failed'
   total_rows: number
   created_rows: number
   updated_rows: number
@@ -19,7 +19,7 @@ export interface EntityPipelineRunRecord {
   batch_id: string
   entity_id: string
   entity_name: string
-  status: 'queued' | 'running' | 'completed' | 'failed'
+  status: 'queued' | 'claiming' | 'running' | 'retrying' | 'completed' | 'failed'
   phase: string
   error_message: string | null
   dossier_id: string | null
@@ -189,6 +189,67 @@ export async function getEntityPipelineRun(batch_id: string, entity_id: string) 
     batch: status.batch,
     run,
   }
+}
+
+export async function findActivePipelineRunByEntityId(entity_id: string) {
+  const fallbackRun = [...entityPipelineRunsMemoryStore.values()]
+    .flat()
+    .find((run) => run.entity_id === entity_id && ['queued', 'claiming', 'running', 'retrying'].includes(run.status))
+
+  const fallbackBatch = fallbackRun
+    ? entityImportBatchesMemoryStore.get(fallbackRun.batch_id) ?? null
+    : null
+
+  try {
+    const { data: runData } = await supabase
+      .from('entity_pipeline_runs')
+      .select('*')
+      .eq('entity_id', entity_id)
+      .in('status', ['queued', 'claiming', 'running', 'retrying'])
+      .order('started_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+
+    if (runData) {
+      const { data: batchData } = await supabase
+        .from('entity_import_batches')
+        .select('*')
+        .eq('id', runData.batch_id)
+        .maybeSingle()
+
+      return {
+        batch: (batchData ?? null) as EntityImportBatchRecord | null,
+        run: runData as EntityPipelineRunRecord,
+      }
+    }
+  } catch {
+    // fall through to memory store
+  }
+
+  return {
+    batch: fallbackBatch,
+    run: fallbackRun ?? null,
+  }
+}
+
+export async function queueEntityImportBatch(
+  batch_id: string,
+  metadata: Record<string, unknown> = {},
+) {
+  const status = await getEntityImportBatchStatus(batch_id)
+  if (!status.batch) {
+    return { batch: null, pipeline_runs: [] }
+  }
+
+  await updateEntityImportBatch(batch_id, {
+    status: 'queued',
+    metadata: {
+      ...(status.batch.metadata ?? {}),
+      ...metadata,
+    },
+  })
+
+  return getEntityImportBatchStatus(batch_id)
 }
 
 export async function storeFallbackEntityImportState(

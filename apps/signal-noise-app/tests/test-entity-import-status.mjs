@@ -41,22 +41,15 @@ test('entity import page polls the status route and renders per-entity phase pro
 
 test('entity import run route proxies queued entities into the backend pipeline endpoint', () => {
   assert.match(runRouteSource, /export async function POST/)
-  assert.match(runRouteSource, /\/api\/pipeline\/run-entity/)
-  assert.match(runRouteSource, /activeBatchRuns = new Map/)
-  assert.match(runRouteSource, /enqueueBatchRun/)
   assert.match(runRouteSource, /ENTITY_IMPORT_QUEUE_MODE/)
   assert.match(runRouteSource, /durable_worker/)
   assert.match(runRouteSource, /status: 202/)
-  assert.match(runRouteSource, /batch_id:\s*batchId/)
+  assert.match(runRouteSource, /queueEntityImportBatch/)
+  assert.doesNotMatch(runRouteSource, /\/api\/pipeline\/run-entity/)
+  assert.doesNotMatch(runRouteSource, /enqueueBatchRun/)
+  assert.doesNotMatch(runRouteSource, /activeBatchRuns = new Map/)
   assert.match(runRouteSource, /updateEntityPipelineRun/)
-  assert.match(runRouteSource, /promoteImportedEntityRfps/)
-  assert.match(runRouteSource, /syncEntityPipelineArtifacts/)
-  assert.match(runRouteSource, /from\('cached_entities'\)/)
-  assert.match(runRouteSource, /sales_readiness/)
-  assert.match(runRouteSource, /rfp_count/)
-  assert.match(runRouteSource, /performance_summary/)
-  assert.match(runRouteSource, /discovery_context/)
-  assert.match(runRouteSource, /deriveDiscoveryContext/)
+  assert.match(runRouteSource, /queue_mode:\s*ENTITY_IMPORT_QUEUE_MODE/)
 })
 
 test('entity import RFP helper promotes validated signals into the unified rfp_opportunities table', () => {

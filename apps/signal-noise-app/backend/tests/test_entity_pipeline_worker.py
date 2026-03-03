@@ -10,6 +10,7 @@ from entity_pipeline_worker import (
     build_batch_claim_metadata,
     build_batch_heartbeat_metadata,
     build_batch_running_update,
+    build_run_retry_metadata,
     choose_supabase_key,
     build_run_detail_url,
     load_worker_environment,
@@ -81,6 +82,22 @@ def test_build_batch_claim_metadata_sets_worker_and_heartbeat_fields():
     assert metadata["claimed_at"] == "2026-03-02T15:00:00+00:00"
     assert metadata["heartbeat_at"] == "2026-03-02T15:00:00+00:00"
     assert metadata["queue_mode"] == "durable_worker"
+
+
+def test_build_run_retry_metadata_increments_attempt_count_and_flags_retryable():
+    metadata = build_run_retry_metadata(
+        {"attempt_count": 1},
+        retryable=True,
+        error_type="transport",
+        error_message="temporary timeout",
+        now_iso="2026-03-02T15:01:00+00:00",
+    )
+
+    assert metadata["attempt_count"] == 2
+    assert metadata["retryable"] is True
+    assert metadata["last_error_type"] == "transport"
+    assert metadata["last_error"] == "temporary timeout"
+    assert metadata["last_error_at"] == "2026-03-02T15:01:00+00:00"
 
 
 def test_build_batch_heartbeat_metadata_preserves_existing_claim_data():
@@ -215,6 +232,53 @@ def test_run_forever_recovers_from_claim_error(monkeypatch):
     assert calls["claim"] >= 2
     assert calls["sleep"] >= 1
     assert calls["process"] == 1
+
+
+def test_claim_next_batch_uses_rpc_claim_function():
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+
+    class FakeRpcQuery:
+        def execute(self):
+            return SimpleNamespace(data=[{"id": "batch-1", "status": "running", "metadata": {"worker_id": "worker-1"}}])
+
+    class FakeSupabase:
+        def rpc(self, name, params):
+            assert name == "claim_next_entity_import_batch"
+            assert params["worker_id"] == "worker-1"
+            assert params["lease_seconds"] > 0
+            return FakeRpcQuery()
+
+    worker.supabase = FakeSupabase()
+    worker.worker_id = "worker-1"
+    worker.recover_stale_batches = lambda: None
+    worker.lease_seconds = 60
+
+    claimed = worker.claim_next_batch()
+
+    assert claimed["id"] == "batch-1"
+
+
+def test_recover_stale_batches_uses_rpc_requeue():
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    captured = {}
+
+    class FakeRpcQuery:
+        def execute(self):
+            captured["executed"] = True
+            return SimpleNamespace(data=[{"id": "batch-1"}])
+
+    class FakeSupabase:
+        def rpc(self, name, params):
+            captured["name"] = name
+            captured["params"] = params
+            return FakeRpcQuery()
+
+    worker.supabase = FakeSupabase()
+
+    worker.recover_stale_batches()
+
+    assert captured["name"] == "requeue_stale_entity_import_batches"
+    assert "stale_before" in captured["params"]
 
 
 def test_process_batch_persists_discovery_context(monkeypatch):

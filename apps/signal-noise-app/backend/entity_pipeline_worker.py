@@ -32,6 +32,8 @@ PIPELINE_TIMEOUT_SECONDS = int(os.getenv("ENTITY_PIPELINE_TIMEOUT_SECONDS", "300
 QUEUE_MODE = os.getenv("ENTITY_IMPORT_QUEUE_MODE", "in_process")
 POLL_INTERVAL_SECONDS = int(os.getenv("ENTITY_PIPELINE_WORKER_POLL_SECONDS", "10"))
 STALE_MINUTES = int(os.getenv("ENTITY_PIPELINE_STALE_MINUTES", "30"))
+LEASE_SECONDS = int(os.getenv("ENTITY_PIPELINE_LEASE_SECONDS", "90"))
+MAX_RUN_ATTEMPTS = int(os.getenv("ENTITY_PIPELINE_MAX_RUN_ATTEMPTS", "2"))
 
 
 def should_process_in_process(queue_mode: Optional[str]) -> bool:
@@ -61,6 +63,23 @@ def build_batch_claim_metadata(existing_metadata: Optional[Dict[str, Any]], *, w
             "heartbeat_at": now_iso,
         }
     )
+    return metadata
+
+
+def build_run_retry_metadata(
+    existing_metadata: Optional[Dict[str, Any]],
+    *,
+    retryable: bool,
+    error_type: str,
+    error_message: str,
+    now_iso: str,
+) -> Dict[str, Any]:
+    metadata = deepcopy(existing_metadata or {})
+    metadata["attempt_count"] = int(metadata.get("attempt_count", 0) or 0) + 1
+    metadata["retryable"] = retryable
+    metadata["last_error_type"] = error_type
+    metadata["last_error"] = error_message
+    metadata["last_error_at"] = now_iso
     return metadata
 
 
@@ -174,6 +193,8 @@ class EntityPipelineWorker:
             raise RuntimeError("Supabase credentials are required for entity pipeline worker")
         self.supabase = create_client(supabase_url, supabase_key)
         self.worker_id = f"{socket.gethostname()}-{os.getpid()}"
+        self.lease_seconds = LEASE_SECONDS
+        self.max_run_attempts = MAX_RUN_ATTEMPTS
 
     def _now_iso(self) -> str:
         return datetime.now(timezone.utc).isoformat()
@@ -193,9 +214,14 @@ class EntityPipelineWorker:
     def refresh_batch_heartbeat(self, batch_id: str, metadata: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         heartbeat_metadata = build_batch_heartbeat_metadata(metadata, now_iso=self._now_iso())
         self._safe_execute(
-            lambda: self.supabase.table("entity_import_batches").update(
-                build_batch_running_update(metadata, now_iso=heartbeat_metadata["heartbeat_at"])
-            ).eq("id", batch_id).execute(),
+            lambda: self.supabase.rpc(
+                "renew_entity_import_batch_lease",
+                {
+                    "batch_id": batch_id,
+                    "worker_id": self.worker_id,
+                    "lease_seconds": self.lease_seconds,
+                },
+            ).execute(),
             context=f"heartbeat refresh for {batch_id}",
         )
         return heartbeat_metadata
@@ -213,60 +239,28 @@ class EntityPipelineWorker:
         return stop_event, thread
 
     def recover_stale_batches(self) -> None:
-        response = (
-            self.supabase.table("entity_import_batches")
-            .select("*")
-            .eq("status", "running")
-            .execute()
+        stale_before = (datetime.now(timezone.utc) - timedelta(minutes=STALE_MINUTES)).isoformat()
+        self._safe_execute(
+            lambda: self.supabase.rpc(
+                "requeue_stale_entity_import_batches",
+                {"stale_before": stale_before},
+            ).execute(),
+            context="stale batch recovery",
         )
-        cutoff = datetime.now(timezone.utc) - timedelta(minutes=STALE_MINUTES)
-        for batch in response.data or []:
-            metadata = self._batch_metadata(batch)
-            heartbeat_at = metadata.get("heartbeat_at") or metadata.get("claimed_at")
-            if not heartbeat_at:
-                continue
-            try:
-                heartbeat_dt = datetime.fromisoformat(str(heartbeat_at).replace("Z", "+00:00"))
-            except ValueError:
-                continue
-            if heartbeat_dt >= cutoff:
-                continue
-            metadata["recovered_at"] = self._now_iso()
-            metadata["queue_mode"] = "durable_worker"
-            self._safe_execute(
-                lambda: self.supabase.table("entity_import_batches").update(
-                    {"status": "queued", "metadata": metadata}
-                ).eq("id", batch["id"]).execute(),
-                context=f"stale batch recovery for {batch['id']}",
-            )
 
     def claim_next_batch(self) -> Optional[Dict[str, Any]]:
         self.recover_stale_batches()
-        response = (
-            self.supabase.table("entity_import_batches")
-            .select("*")
-            .eq("status", "queued")
-            .order("started_at")
-            .limit(1)
-            .execute()
-        )
+        response = self.supabase.rpc(
+            "claim_next_entity_import_batch",
+            {
+                "worker_id": self.worker_id,
+                "lease_seconds": self.lease_seconds,
+            },
+        ).execute()
         batches = response.data or []
         if not batches:
             return None
-        batch = batches[0]
-        metadata = self._batch_metadata(batch)
-        metadata = build_batch_claim_metadata(metadata, worker_id=self.worker_id, now_iso=self._now_iso())
-        claimed = self._safe_execute(
-            lambda: self.supabase.table("entity_import_batches").update(
-                {"status": "running", "metadata": metadata}
-            ).eq("id", batch["id"]).execute(),
-            context=f"claim batch {batch['id']}",
-        )
-        if not claimed:
-            return None
-        batch["metadata"] = metadata
-        batch["status"] = "running"
-        return batch
+        return batches[0]
 
     def get_batch_runs(self, batch_id: str) -> list[Dict[str, Any]]:
         response = (
@@ -328,12 +322,45 @@ class EntityPipelineWorker:
             context=f"update run {batch_id}/{entity_id}",
         )
 
+    def _get_run_metadata(self, batch_id: str, entity_id: str) -> Dict[str, Any]:
+        response = (
+            self.supabase.table("entity_pipeline_runs")
+            .select("metadata")
+            .eq("batch_id", batch_id)
+            .eq("entity_id", entity_id)
+            .limit(1)
+            .execute()
+        )
+        metadata = ((response.data or [{}])[0]).get("metadata")
+        return metadata if isinstance(metadata, dict) else {}
+
+    def _classify_error(self, error: Exception) -> tuple[bool, str]:
+        if isinstance(error, TimeoutError):
+            return True, "timeout"
+        if isinstance(error, URLError):
+            return True, "network"
+        if isinstance(error, HTTPError):
+            return error.code >= 500, f"http_{error.code}"
+        if isinstance(error, json.JSONDecodeError):
+            return False, "json_decode"
+        if isinstance(error, ValueError):
+            return False, "value_error"
+        return False, error.__class__.__name__.lower()
+
     def process_batch(self, batch: Dict[str, Any]) -> None:
         batch_id = batch["id"]
         failed_runs = 0
+        max_run_attempts = getattr(self, "max_run_attempts", MAX_RUN_ATTEMPTS)
+        lease_seconds = getattr(self, "lease_seconds", LEASE_SECONDS)
+        worker_id = getattr(self, "worker_id", "worker-test")
         heartbeat_stop, heartbeat_thread = self._start_batch_heartbeat(batch_id, self._batch_metadata(batch))
         for run in self.get_batch_runs(batch_id):
             if run.get("status") == "completed":
+                continue
+            run_metadata = run.get("metadata") if isinstance(run.get("metadata"), dict) else {}
+            attempt_count = int(run_metadata.get("attempt_count", 0) or 0)
+            if attempt_count >= max_run_attempts and run.get("status") == "failed":
+                failed_runs += 1
                 continue
             self.update_run(
                 batch_id,
@@ -342,6 +369,11 @@ class EntityPipelineWorker:
                     "status": "running",
                     "phase": "dossier_generation",
                     "error_message": None,
+                        "metadata": {
+                            **run_metadata,
+                            "lease_owner": worker_id,
+                            "lease_expires_at": (datetime.now(timezone.utc) + timedelta(seconds=lease_seconds)).isoformat(),
+                        },
                 },
             )
             try:
@@ -349,17 +381,9 @@ class EntityPipelineWorker:
                 phases = result.get("phases") or {}
                 completed_phases = [name for name, detail in phases.items() if detail.get("status") == "completed"]
                 last_phase = completed_phases[-1] if completed_phases else "dashboard_scoring"
-                current_run = (
-                    self.supabase.table("entity_pipeline_runs")
-                    .select("metadata")
-                    .eq("batch_id", batch_id)
-                    .eq("entity_id", run["entity_id"])
-                    .limit(1)
-                    .execute()
-                )
-                latest_metadata = ((current_run.data or [{}])[0]).get("metadata")
+                latest_metadata = self._get_run_metadata(batch_id, run["entity_id"])
                 metadata = merge_pipeline_run_metadata(
-                    latest_metadata if isinstance(latest_metadata, dict) else run.get("metadata"),
+                    latest_metadata if isinstance(latest_metadata, dict) else run_metadata,
                     phases=phases,
                     scores=((result.get("artifacts") or {}).get("scores")),
                     performance_summary=(((result.get("artifacts") or {}).get("discovery_result") or {}).get("performance_summary")),
@@ -382,30 +406,65 @@ class EntityPipelineWorker:
                     },
                 )
             except (HTTPError, URLError, TimeoutError, json.JSONDecodeError, ValueError) as error:
-                failed_runs += 1
-                self.sync_cached_entity(batch_id, run, None, "failed")
+                retryable, error_type = self._classify_error(error)
+                latest_metadata = self._get_run_metadata(batch_id, run["entity_id"])
+                retry_metadata = build_run_retry_metadata(
+                    latest_metadata if isinstance(latest_metadata, dict) else run_metadata,
+                    retryable=retryable,
+                    error_type=error_type,
+                    error_message=str(error),
+                    now_iso=self._now_iso(),
+                )
+                attempts = int(retry_metadata.get("attempt_count", 0) or 0)
+                next_status = "queued" if retryable and attempts < max_run_attempts else "failed"
+                if next_status == "failed":
+                    failed_runs += 1
+                    self.sync_cached_entity(batch_id, run, None, "failed")
                 self.update_run(
                     batch_id,
                     run["entity_id"],
                     {
-                        "status": "failed",
+                        "status": next_status,
+                        "phase": run.get("phase") or "entity_registration",
                         "error_message": str(error),
-                        "completed_at": self._now_iso(),
+                        "completed_at": None if next_status == "queued" else self._now_iso(),
+                        "metadata": retry_metadata,
                     },
+                )
+                self._safe_execute(
+                    lambda: self.supabase.rpc(
+                        "fail_entity_pipeline_run",
+                        {
+                            "batch_id": batch_id,
+                            "entity_id": run["entity_id"],
+                            "error_message": str(error),
+                            "retryable": retryable,
+                        },
+                    ).execute(),
+                    context=f"mark run failure {batch_id}/{run['entity_id']}",
                 )
             batch["metadata"] = self.refresh_batch_heartbeat(batch_id, self._batch_metadata(batch))
         heartbeat_stop.set()
         heartbeat_thread.join(timeout=1)
-        self._safe_execute(
-            lambda: self.supabase.table("entity_import_batches").update(
-                {
-                    "status": "failed" if failed_runs > 0 else "completed",
-                    "completed_at": self._now_iso(),
-                    "metadata": build_batch_heartbeat_metadata(self._batch_metadata(batch), now_iso=self._now_iso()),
-                }
-            ).eq("id", batch_id).execute(),
-            context=f"finalize batch {batch_id}",
-        )
+        if failed_runs > 0:
+            self._safe_execute(
+                lambda: self.supabase.table("entity_import_batches").update(
+                    {
+                        "status": "failed",
+                        "completed_at": self._now_iso(),
+                        "metadata": build_batch_heartbeat_metadata(self._batch_metadata(batch), now_iso=self._now_iso()),
+                    }
+                ).eq("id", batch_id).execute(),
+                context=f"finalize failed batch {batch_id}",
+            )
+        else:
+            self._safe_execute(
+                lambda: self.supabase.rpc(
+                    "complete_entity_import_batch",
+                    {"batch_id": batch_id, "worker_id": worker_id},
+                ).execute(),
+                context=f"finalize batch {batch_id}",
+            )
 
     def run_forever(self) -> None:
         while True:
