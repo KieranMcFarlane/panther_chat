@@ -29,9 +29,9 @@ test('better auth supports postgres-backed storage for hosted production', () =>
 })
 
 test('better auth prefers Turso LibSQL storage when configured', () => {
-  assert.match(authSource, /LibsqlDialect/)
+  assert.match(authSource, /LibsqlDatabase/)
   assert.match(authSource, /process\.env\.TURSO_DATABASE_URL/)
   assert.match(authSource, /process\.env\.TURSO_AUTH_TOKEN/)
-  assert.match(authSource, /type:\s*"sqlite"/)
+  assert.match(authSource, /new LibsqlDatabase/)
   assert.match(authSource, /Using Turso\/LibSQL database/)
 })
