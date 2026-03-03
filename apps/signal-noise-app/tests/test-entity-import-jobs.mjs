@@ -4,9 +4,11 @@ import { readFileSync } from 'node:fs'
 
 const jobsPath = new URL('../src/lib/entity-import-jobs.ts', import.meta.url)
 const migrationPath = new URL('../supabase/migrations/20260302_create_entity_import_tables.sql', import.meta.url)
+const sourceRegistryMigrationPath = new URL('../supabase/migrations/20260303_entity_source_registry.sql', import.meta.url)
 
 const jobsSource = readFileSync(jobsPath, 'utf8')
 const migrationSource = readFileSync(migrationPath, 'utf8')
+const sourceRegistryMigrationSource = readFileSync(sourceRegistryMigrationPath, 'utf8')
 
 test('entity import jobs module defines batch and pipeline run persistence helpers', () => {
   assert.match(jobsSource, /export async function createEntityImportBatch/)
@@ -22,4 +24,14 @@ test('import job migration defines batch and pipeline run tables', () => {
   assert.match(migrationSource, /batch_id/)
   assert.match(migrationSource, /sales_readiness/)
   assert.match(migrationSource, /rfp_count/)
+})
+
+test('source registry migration defines baseline monitoring tables', () => {
+  assert.match(sourceRegistryMigrationSource, /CREATE TABLE IF NOT EXISTS entity_source_registry/i)
+  assert.match(sourceRegistryMigrationSource, /CREATE TABLE IF NOT EXISTS entity_source_snapshots/i)
+  assert.match(sourceRegistryMigrationSource, /CREATE TABLE IF NOT EXISTS entity_monitoring_candidates/i)
+  assert.match(sourceRegistryMigrationSource, /page_class/i)
+  assert.match(sourceRegistryMigrationSource, /content_hash/i)
+  assert.match(sourceRegistryMigrationSource, /candidate_type/i)
+  assert.match(sourceRegistryMigrationSource, /is_canonical/i)
 })
