@@ -83,6 +83,7 @@ def merge_pipeline_run_metadata(
     phases: Optional[Dict[str, Any]] = None,
     scores: Optional[Dict[str, Any]] = None,
     performance_summary: Optional[Dict[str, Any]] = None,
+    discovery_context: Optional[Dict[str, Any]] = None,
     promoted_rfp_ids: Optional[list[str]] = None,
     completed_at: Optional[str] = None,
 ) -> Dict[str, Any]:
@@ -93,6 +94,8 @@ def merge_pipeline_run_metadata(
         metadata["scores"] = scores
     if performance_summary is not None:
         metadata["performance_summary"] = performance_summary
+    if discovery_context is not None:
+        metadata["discovery_context"] = discovery_context
     if promoted_rfp_ids is not None:
         metadata["promoted_rfp_ids"] = promoted_rfp_ids
     if completed_at is not None:
@@ -120,6 +123,40 @@ def merge_cached_entity_properties(
     properties["last_pipeline_status"] = status
     properties["last_pipeline_run_at"] = datetime.now(timezone.utc).isoformat()
     return properties
+
+
+def derive_discovery_context(result: Dict[str, Any]) -> Dict[str, Any]:
+    discovery_result = ((result.get("artifacts") or {}).get("discovery_result") or {})
+    hypotheses = discovery_result.get("hypotheses") or []
+    if not isinstance(hypotheses, list):
+        hypotheses = []
+    performance_summary = discovery_result.get("performance_summary") or {}
+    slowest_iteration = performance_summary.get("slowest_iteration") or {}
+
+    lead_hypothesis = hypotheses[0] if hypotheses else None
+    slowest_hypothesis = None
+    if slowest_iteration.get("hypothesis_id"):
+        for hypothesis in hypotheses:
+            if str(hypothesis.get("hypothesis_id") or "") == str(slowest_iteration.get("hypothesis_id")):
+                slowest_hypothesis = hypothesis
+                break
+
+    lead_metadata = lead_hypothesis.get("metadata") if isinstance(lead_hypothesis, dict) else {}
+    slowest_metadata = slowest_hypothesis.get("metadata") if isinstance(slowest_hypothesis, dict) else {}
+
+    template_id = (
+        (slowest_metadata or {}).get("template_id")
+        or (lead_metadata or {}).get("template_id")
+    )
+
+    return {
+        "template_id": template_id,
+        "lead_hypothesis_id": lead_hypothesis.get("hypothesis_id") if isinstance(lead_hypothesis, dict) else None,
+        "lead_pattern_name": (lead_metadata or {}).get("pattern_name"),
+        "lead_confidence": lead_hypothesis.get("confidence") if isinstance(lead_hypothesis, dict) else None,
+        "slowest_hypothesis_id": slowest_iteration.get("hypothesis_id"),
+        "slowest_hop_type": slowest_iteration.get("hop_type"),
+    }
 
 
 class EntityPipelineWorker:
@@ -326,6 +363,7 @@ class EntityPipelineWorker:
                     phases=phases,
                     scores=((result.get("artifacts") or {}).get("scores")),
                     performance_summary=(((result.get("artifacts") or {}).get("discovery_result") or {}).get("performance_summary")),
+                    discovery_context=derive_discovery_context(result),
                     promoted_rfp_ids=[],
                     completed_at=result.get("completed_at"),
                 )

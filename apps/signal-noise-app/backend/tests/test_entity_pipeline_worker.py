@@ -14,6 +14,7 @@ from entity_pipeline_worker import (
     load_worker_environment,
     merge_pipeline_run_metadata,
     merge_cached_entity_properties,
+    derive_discovery_context,
     should_process_in_process,
     EntityPipelineWorker,
 )
@@ -125,6 +126,38 @@ def test_merge_pipeline_run_metadata_preserves_phase_details_and_adds_scores():
     assert merged["scores"]["sales_readiness"] == "MONITOR"
     assert merged["performance_summary"]["slowest_hop"]["hop_type"] == "rfp_page"
     assert merged["promoted_rfp_ids"] == ["rfp-1"]
+
+
+def test_derive_discovery_context_extracts_template_and_hypothesis_summary():
+    context = derive_discovery_context(
+        {
+            "artifacts": {
+                "discovery_result": {
+                    "hypotheses": [
+                        {
+                            "hypothesis_id": "international-canoe-federation_digital_leadership_hire",
+                            "confidence": 0.58,
+                            "metadata": {
+                                "template_id": "federation_governing_body",
+                                "pattern_name": "Digital Leadership Hire",
+                            },
+                        }
+                    ],
+                    "performance_summary": {
+                        "slowest_iteration": {
+                            "hypothesis_id": "international-canoe-federation_digital_leadership_hire",
+                            "hop_type": "official_site",
+                        }
+                    },
+                }
+            }
+        }
+    )
+
+    assert context["template_id"] == "federation_governing_body"
+    assert context["lead_hypothesis_id"] == "international-canoe-federation_digital_leadership_hire"
+    assert context["lead_pattern_name"] == "Digital Leadership Hire"
+    assert context["slowest_hop_type"] == "official_site"
 
 
 def test_refresh_batch_heartbeat_tolerates_transient_supabase_failure():
