@@ -3228,7 +3228,9 @@ Return JSON:
                 'scrape_ms': performance.get('scrape_ms', 0.0),
                 'evaluation_ms': performance.get('evaluation_ms', 0.0),
                 'validation_ms': performance.get('url_resolution', {}).get('validation_ms', 0.0),
-                'decision': result.get('decision')
+                'decision': result.get('decision'),
+                'scrape_cache_hit': bool(performance.get('scrape_cache_hit', False)),
+                'evaluation_cache_hit': bool(performance.get('evaluation_cache_hit', False)),
             }
             hop_records.append(record)
 

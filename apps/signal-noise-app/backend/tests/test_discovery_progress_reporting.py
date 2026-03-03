@@ -29,7 +29,11 @@ async def test_run_discovery_loop_emits_progress_updates_and_stops_after_consecu
             "justification": "No useful evidence",
             "evidence_found": "",
             "hop_type": HopType.RFP_PAGE.value,
-            "performance": {"total_duration_ms": 10.0},
+            "performance": {
+                "total_duration_ms": 10.0,
+                "scrape_cache_hit": True,
+                "evaluation_cache_hit": True,
+            },
         }
 
     async def update_state(hypothesis, result, state):
@@ -88,6 +92,8 @@ async def test_run_discovery_loop_emits_progress_updates_and_stops_after_consecu
     assert progress_events[1]["performance_summary"]["iterations_with_timings"] == 1
     assert progress_events[1]["performance_summary"]["hop_timings"][0]["iteration"] == 1
     assert progress_events[1]["performance_summary"]["hop_timings"][0]["duration_ms"] == 10.0
+    assert progress_events[1]["performance_summary"]["hop_timings"][0]["scrape_cache_hit"] is True
+    assert progress_events[1]["performance_summary"]["hop_timings"][0]["evaluation_cache_hit"] is True
     assert progress_events[2]["iteration"] == 2
     assert progress_events[3]["performance_summary"]["iterations_with_timings"] == 2
     assert progress_events[-1]["stop_reason"] == "consecutive_no_progress"
