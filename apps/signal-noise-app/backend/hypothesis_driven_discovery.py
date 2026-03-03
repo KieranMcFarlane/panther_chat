@@ -1253,6 +1253,7 @@ class HypothesisDrivenDiscovery:
             use_official_site_evaluation_cache = hop_type == HopType.OFFICIAL_SITE and isinstance(content, str)
             evaluation_cache_key = None
             evaluation = None
+            content_hash = None
             if use_official_site_evaluation_cache:
                 hypothesis_id = getattr(hypothesis, 'hypothesis_id', '') or hypothesis.metadata.get('hypothesis_id', '')
                 content_hash = hashlib.sha256(content.encode('utf-8')).hexdigest()
@@ -1262,6 +1263,7 @@ class HypothesisDrivenDiscovery:
                     evaluation = dict(cached_evaluation)
                     performance['evaluation_ms'] = 0.0
                     performance['evaluation_cache_hit'] = True
+                    performance['content_hash'] = content_hash
 
             if evaluation is None:
                 evaluation_started_at = time.perf_counter()
@@ -1274,6 +1276,7 @@ class HypothesisDrivenDiscovery:
                 performance['evaluation_ms'] = round((time.perf_counter() - evaluation_started_at) * 1000, 2)
                 if evaluation_cache_key is not None:
                     self._official_site_evaluation_cache[evaluation_cache_key] = dict(evaluation)
+                    performance['content_hash'] = content_hash
 
             # Add cost tracking
             hop_cost = 0.001  # TODO: Track actual cost
@@ -3378,6 +3381,7 @@ Return JSON:
                 'decision': result.get('decision'),
                 'scrape_cache_hit': bool(performance.get('scrape_cache_hit', False)),
                 'evaluation_cache_hit': bool(performance.get('evaluation_cache_hit', False)),
+                'content_hash': performance.get('content_hash'),
             }
             hop_records.append(record)
 
@@ -3912,6 +3916,7 @@ Return JSON:
         progress_callback: Optional[Callable[[Dict[str, Any]], Awaitable[None]]] = None,
     ) -> DiscoveryResult:
         consecutive_no_progress = 0
+        repeated_unchanged_official_site_no_progress = 0
 
         for iteration in range(1, max_iterations + 1):
             iteration_started_at = time.perf_counter()
@@ -3978,6 +3983,16 @@ Return JSON:
 
             decision = result.get('decision')
             consecutive_no_progress = consecutive_no_progress + 1 if decision == 'NO_PROGRESS' else 0
+            performance = result.get("performance") or {}
+            repeated_unchanged_official_site = (
+                hop_type == HopType.OFFICIAL_SITE
+                and decision == 'NO_PROGRESS'
+                and bool(performance.get('scrape_cache_hit'))
+                and bool(performance.get('evaluation_cache_hit'))
+            )
+            repeated_unchanged_official_site_no_progress = (
+                repeated_unchanged_official_site_no_progress + 1 if repeated_unchanged_official_site else 0
+            )
 
             if progress_callback:
                 elapsed_duration_ms = round((time.perf_counter() - discovery_started_at) * 1000, 2)
@@ -3989,8 +4004,21 @@ Return JSON:
                     "duration_ms": iteration_record['duration_ms'],
                     "current_confidence": getattr(state, "current_confidence", None),
                     "consecutive_no_progress": consecutive_no_progress,
+                    "repeated_unchanged_official_site_no_progress": repeated_unchanged_official_site_no_progress,
                     "performance_summary": self._build_performance_summary(state, elapsed_duration_ms),
                 })
+
+            if repeated_unchanged_official_site_no_progress >= 1:
+                logger.info("Stopping discovery after repeated unchanged official_site NO_PROGRESS iteration")
+                if progress_callback:
+                    await progress_callback({
+                        "status": "completed",
+                        "stop_reason": "repeated_unchanged_official_site_no_progress",
+                        "iteration": iteration,
+                        "consecutive_no_progress": consecutive_no_progress,
+                        "repeated_unchanged_official_site_no_progress": repeated_unchanged_official_site_no_progress,
+                    })
+                break
 
             if consecutive_no_progress >= self.max_consecutive_no_progress_iterations:
                 logger.info(f"Stopping discovery after {consecutive_no_progress} consecutive NO_PROGRESS iterations")

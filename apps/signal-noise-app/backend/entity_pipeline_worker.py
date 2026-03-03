@@ -56,12 +56,15 @@ def build_run_detail_url(batch_id: str, entity_id: str) -> str:
 
 def build_batch_claim_metadata(existing_metadata: Optional[Dict[str, Any]], *, worker_id: str, now_iso: str) -> Dict[str, Any]:
     metadata = deepcopy(existing_metadata or {})
+    metadata["attempt_count"] = int(metadata.get("attempt_count", 0) or 0) + 1
     metadata.update(
         {
             "queue_mode": "durable_worker",
             "worker_id": worker_id,
             "claimed_at": now_iso,
             "heartbeat_at": now_iso,
+            "lease_expires_at": (datetime.fromisoformat(now_iso) + timedelta(seconds=LEASE_SECONDS)).isoformat(),
+            "last_error": None,
         }
     )
     return metadata
@@ -81,12 +84,19 @@ def build_run_retry_metadata(
     metadata["last_error_type"] = error_type
     metadata["last_error"] = error_message
     metadata["last_error_at"] = now_iso
+    metadata["retry_state"] = "retrying" if retryable else "failed"
     return metadata
 
 
-def build_batch_heartbeat_metadata(existing_metadata: Optional[Dict[str, Any]], *, now_iso: str) -> Dict[str, Any]:
+def build_batch_heartbeat_metadata(
+    existing_metadata: Optional[Dict[str, Any]],
+    *,
+    now_iso: str,
+    lease_seconds: int = LEASE_SECONDS,
+) -> Dict[str, Any]:
     metadata = deepcopy(existing_metadata or {})
     metadata["heartbeat_at"] = now_iso
+    metadata["lease_expires_at"] = (datetime.fromisoformat(now_iso) + timedelta(seconds=lease_seconds)).isoformat()
     return metadata
 
 
@@ -95,6 +105,40 @@ def build_batch_running_update(existing_metadata: Optional[Dict[str, Any]], *, n
         "status": "running",
         "metadata": build_batch_heartbeat_metadata(existing_metadata, now_iso=now_iso),
     }
+
+
+def build_batch_retry_update(
+    existing_metadata: Optional[Dict[str, Any]],
+    *,
+    now_iso: str,
+    error_message: str,
+) -> Dict[str, Any]:
+    metadata = deepcopy(existing_metadata or {})
+    metadata["heartbeat_at"] = now_iso
+    metadata["lease_expires_at"] = None
+    metadata["last_error"] = error_message
+    metadata["last_error_at"] = now_iso
+    metadata["retry_state"] = "retrying"
+    return {
+        "status": "queued",
+        "completed_at": None,
+        "metadata": metadata,
+    }
+
+
+def build_run_start_metadata(
+    existing_metadata: Optional[Dict[str, Any]],
+    *,
+    worker_id: str,
+    now_iso: str,
+    lease_seconds: int,
+) -> Dict[str, Any]:
+    metadata = deepcopy(existing_metadata or {})
+    metadata["lease_owner"] = worker_id
+    metadata["lease_expires_at"] = (datetime.fromisoformat(now_iso) + timedelta(seconds=lease_seconds)).isoformat()
+    metadata["retryable"] = False
+    metadata["retry_state"] = "running"
+    return metadata
 
 
 def merge_cached_entity_properties(
@@ -152,14 +196,20 @@ class EntityPipelineWorker:
             return False
 
     def refresh_batch_heartbeat(self, batch_id: str, metadata: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-        heartbeat_metadata = build_batch_heartbeat_metadata(metadata, now_iso=self._now_iso())
+        lease_seconds = getattr(self, "lease_seconds", LEASE_SECONDS)
+        worker_id = getattr(self, "worker_id", "worker-test")
+        heartbeat_metadata = build_batch_heartbeat_metadata(
+            metadata,
+            now_iso=self._now_iso(),
+            lease_seconds=lease_seconds,
+        )
         self._safe_execute(
             lambda: self.supabase.rpc(
                 "renew_entity_import_batch_lease",
                 {
                     "batch_id": batch_id,
-                    "worker_id": self.worker_id,
-                    "lease_seconds": self.lease_seconds,
+                    "worker_id": worker_id,
+                    "lease_seconds": lease_seconds,
                 },
             ).execute(),
             context=f"heartbeat refresh for {batch_id}",
@@ -290,18 +340,25 @@ class EntityPipelineWorker:
     def process_batch(self, batch: Dict[str, Any]) -> None:
         batch_id = batch["id"]
         failed_runs = 0
+        retrying_runs = 0
         max_run_attempts = getattr(self, "max_run_attempts", MAX_RUN_ATTEMPTS)
         lease_seconds = getattr(self, "lease_seconds", LEASE_SECONDS)
         worker_id = getattr(self, "worker_id", "worker-test")
+        batch["metadata"] = build_batch_claim_metadata(
+            self._batch_metadata(batch),
+            worker_id=worker_id,
+            now_iso=self._now_iso(),
+        )
         heartbeat_stop, heartbeat_thread = self._start_batch_heartbeat(batch_id, self._batch_metadata(batch))
         for run in self.get_batch_runs(batch_id):
             if run.get("status") == "completed":
                 continue
             run_metadata = run.get("metadata") if isinstance(run.get("metadata"), dict) else {}
             attempt_count = int(run_metadata.get("attempt_count", 0) or 0)
-            if attempt_count >= max_run_attempts and run.get("status") == "failed":
+            if attempt_count >= max_run_attempts and run.get("status") in {"failed", "retrying"}:
                 failed_runs += 1
                 continue
+            now_iso = self._now_iso()
             self.update_run(
                 batch_id,
                 run["entity_id"],
@@ -309,11 +366,12 @@ class EntityPipelineWorker:
                     "status": "running",
                     "phase": "dossier_generation",
                     "error_message": None,
-                        "metadata": {
-                            **run_metadata,
-                            "lease_owner": worker_id,
-                            "lease_expires_at": (datetime.now(timezone.utc) + timedelta(seconds=lease_seconds)).isoformat(),
-                        },
+                    "metadata": build_run_start_metadata(
+                        run_metadata,
+                        worker_id=worker_id,
+                        now_iso=now_iso,
+                        lease_seconds=lease_seconds,
+                    ),
                 },
             )
             try:
@@ -356,10 +414,13 @@ class EntityPipelineWorker:
                     now_iso=self._now_iso(),
                 )
                 attempts = int(retry_metadata.get("attempt_count", 0) or 0)
-                next_status = "queued" if retryable and attempts < max_run_attempts else "failed"
+                should_retry = retryable and attempts < max_run_attempts
+                next_status = "retrying" if should_retry else "failed"
                 if next_status == "failed":
                     failed_runs += 1
                     self.sync_cached_entity(batch_id, run, None, "failed")
+                else:
+                    retrying_runs += 1
                 self.update_run(
                     batch_id,
                     run["entity_id"],
@@ -386,7 +447,18 @@ class EntityPipelineWorker:
             batch["metadata"] = self.refresh_batch_heartbeat(batch_id, self._batch_metadata(batch))
         heartbeat_stop.set()
         heartbeat_thread.join(timeout=1)
-        if failed_runs > 0:
+        if retrying_runs > 0:
+            self._safe_execute(
+                lambda: self.supabase.table("entity_import_batches").update(
+                    build_batch_retry_update(
+                        self._batch_metadata(batch),
+                        now_iso=self._now_iso(),
+                        error_message="Retrying one or more pipeline runs",
+                    )
+                ).eq("id", batch_id).execute(),
+                context=f"requeue batch {batch_id}",
+            )
+        elif failed_runs > 0:
             self._safe_execute(
                 lambda: self.supabase.table("entity_import_batches").update(
                     {

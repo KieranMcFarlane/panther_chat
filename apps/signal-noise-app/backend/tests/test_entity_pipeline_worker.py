@@ -9,7 +9,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from entity_pipeline_worker import (
     build_batch_claim_metadata,
     build_batch_heartbeat_metadata,
+    build_batch_retry_update,
     build_batch_running_update,
+    build_run_start_metadata,
     build_run_retry_metadata,
     choose_supabase_key,
     build_run_detail_url,
@@ -82,6 +84,8 @@ def test_build_batch_claim_metadata_sets_worker_and_heartbeat_fields():
     assert metadata["claimed_at"] == "2026-03-02T15:00:00+00:00"
     assert metadata["heartbeat_at"] == "2026-03-02T15:00:00+00:00"
     assert metadata["queue_mode"] == "durable_worker"
+    assert metadata["attempt_count"] == 1
+    assert metadata["lease_expires_at"] is not None
 
 
 def test_build_run_retry_metadata_increments_attempt_count_and_flags_retryable():
@@ -98,6 +102,20 @@ def test_build_run_retry_metadata_increments_attempt_count_and_flags_retryable()
     assert metadata["last_error_type"] == "transport"
     assert metadata["last_error"] == "temporary timeout"
     assert metadata["last_error_at"] == "2026-03-02T15:01:00+00:00"
+    assert metadata["retry_state"] == "retrying"
+
+
+def test_build_run_start_metadata_sets_lease_state():
+    metadata = build_run_start_metadata(
+        {"attempt_count": 1},
+        worker_id="worker-1",
+        now_iso="2026-03-02T15:01:00+00:00",
+        lease_seconds=60,
+    )
+
+    assert metadata["lease_owner"] == "worker-1"
+    assert metadata["lease_expires_at"] is not None
+    assert metadata["retry_state"] == "running"
 
 
 def test_build_batch_heartbeat_metadata_preserves_existing_claim_data():
@@ -127,6 +145,19 @@ def test_build_batch_running_update_keeps_batch_in_running_state():
 
     assert update["status"] == "running"
     assert update["metadata"]["heartbeat_at"] == "2026-03-02T15:01:00+00:00"
+
+
+def test_build_batch_retry_update_requeues_batch_and_records_error():
+    update = build_batch_retry_update(
+        {"worker_id": "worker-1", "attempt_count": 2},
+        now_iso="2026-03-02T15:02:00+00:00",
+        error_message="Retrying one or more pipeline runs",
+    )
+
+    assert update["status"] == "queued"
+    assert update["metadata"]["retry_state"] == "retrying"
+    assert update["metadata"]["last_error"] == "Retrying one or more pipeline runs"
+    assert update["metadata"]["lease_expires_at"] is None
 
 
 def test_merge_pipeline_run_metadata_preserves_phase_details_and_adds_scores():
@@ -372,3 +403,63 @@ def test_process_batch_persists_discovery_context(monkeypatch):
     assert discovery_context["template_id"] == "federation_governing_body"
     assert discovery_context["lead_hypothesis_id"] == "international-canoe-federation_federation_procurement_programme"
     assert discovery_context["slowest_hypothesis_id"] == "international-canoe-federation_digital_leadership_hire"
+
+
+def test_process_batch_requeues_batch_when_run_is_retryable():
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker._now_iso = lambda: "2026-03-03T04:00:00+00:00"
+    worker._batch_metadata = lambda batch: batch.get("metadata", {})
+    worker.refresh_batch_heartbeat = lambda batch_id, metadata=None: {**(metadata or {}), "heartbeat_at": "2026-03-03T04:00:00+00:00"}
+    worker._start_batch_heartbeat = lambda batch_id, metadata=None: (SimpleNamespace(set=lambda: None), SimpleNamespace(join=lambda timeout=1: None))
+    worker.worker_id = "worker-1"
+    worker.lease_seconds = 60
+    worker.max_run_attempts = 2
+
+    run = {
+        "entity_id": "international-canoe-federation",
+        "entity_name": "International Canoe Federation",
+        "status": "queued",
+        "phase": "entity_registration",
+        "metadata": {"entity_type": "FEDERATION", "attempt_count": 0},
+    }
+    worker.get_batch_runs = lambda batch_id: [run]
+    worker.sync_cached_entity = lambda *args, **kwargs: None
+    worker.call_pipeline = lambda run, batch_id: (_ for _ in ()).throw(TimeoutError("temporary timeout"))
+    worker._get_run_metadata = lambda batch_id, entity_id: {"attempt_count": 0}
+
+    run_updates = []
+    worker.update_run = lambda batch_id, entity_id, payload: run_updates.append(payload)
+
+    batch_updates = []
+
+    class FakeRpcQuery:
+        def execute(self):
+            return SimpleNamespace(data=[])
+
+    class FakeUpdateQuery:
+        def __init__(self, payload):
+            self.payload = payload
+        def eq(self, *_args, **_kwargs):
+            return self
+        def execute(self):
+            batch_updates.append(self.payload)
+            return SimpleNamespace(data=[])
+
+    class FakeTable:
+        def update(self, payload):
+            return FakeUpdateQuery(payload)
+
+    class FakeSupabase:
+        def table(self, _name):
+            return FakeTable()
+        def rpc(self, *_args, **_kwargs):
+            return FakeRpcQuery()
+
+    worker.supabase = FakeSupabase()
+
+    batch = {"id": "batch-1", "metadata": {"queue_mode": "durable_worker"}}
+    worker.process_batch(batch)
+
+    assert run_updates[-1]["status"] == "retrying"
+    assert batch_updates[-1]["status"] == "queued"
+    assert batch_updates[-1]["metadata"]["retry_state"] == "retrying"
