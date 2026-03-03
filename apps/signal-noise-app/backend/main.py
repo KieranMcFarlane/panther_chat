@@ -8,6 +8,7 @@ Enhanced with Graphiti temporal knowledge graph capabilities
 import os
 import sys
 import logging
+from copy import deepcopy
 from typing import Dict, Any, Optional, List
 from datetime import datetime
 from pathlib import Path
@@ -34,6 +35,16 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+
+def merge_pipeline_phase_metadata(existing_metadata: Optional[Dict[str, Any]], payload: Dict[str, Any]) -> Dict[str, Any]:
+    metadata = deepcopy(existing_metadata or {})
+    metadata["phase_details"] = payload
+    if payload.get("performance_summary") is not None:
+        metadata["performance_summary"] = payload.get("performance_summary")
+    if payload.get("discovery_context") is not None:
+        metadata["discovery_context"] = payload.get("discovery_context")
+    return metadata
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -749,13 +760,25 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             if not pipeline_supabase or not request.batch_id:
                 return
 
+            existing_metadata: Dict[str, Any] = {}
+            try:
+                existing = pipeline_supabase.table("entity_pipeline_runs") \
+                    .select("metadata") \
+                    .eq("batch_id", request.batch_id) \
+                    .eq("entity_id", request.entity_id) \
+                    .limit(1) \
+                    .execute()
+                current_metadata = ((existing.data or [{}])[0]).get("metadata")
+                if isinstance(current_metadata, dict):
+                    existing_metadata = current_metadata
+            except Exception as fetch_error:
+                logger.warning(f"⚠️ Failed to fetch existing phase metadata for {request.entity_id}/{phase}: {fetch_error}")
+
             update_payload = {
                 "phase": phase,
                 "status": payload.get("status", "running"),
                 "completed_at": datetime.now().isoformat() if payload.get("status") == "completed" else None,
-                "metadata": {
-                    "phase_details": payload,
-                },
+                "metadata": merge_pipeline_phase_metadata(existing_metadata, payload),
             }
 
             try:
