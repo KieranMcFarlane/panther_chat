@@ -409,11 +409,22 @@ class EntityPipelineWorker:
 
     def run_forever(self) -> None:
         while True:
-            batch = self.claim_next_batch()
+            try:
+                batch = self.claim_next_batch()
+            except Exception as error:
+                logger.warning("Worker claim cycle failed: %s", error)
+                time.sleep(POLL_INTERVAL_SECONDS)
+                continue
             if not batch:
                 time.sleep(POLL_INTERVAL_SECONDS)
                 continue
-            self.process_batch(batch)
+            logger.info("Worker claimed batch %s", batch.get("id"))
+            try:
+                self.process_batch(batch)
+                logger.info("Worker finished batch %s", batch.get("id"))
+            except Exception as error:
+                logger.exception("Worker failed while processing batch %s: %s", batch.get("id"), error)
+                time.sleep(POLL_INTERVAL_SECONDS)
 
 
 def main() -> None:

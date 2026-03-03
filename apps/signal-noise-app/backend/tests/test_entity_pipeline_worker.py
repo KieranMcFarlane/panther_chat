@@ -2,6 +2,7 @@ import os
 import sys
 from pathlib import Path
 from types import SimpleNamespace
+import time
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -183,3 +184,34 @@ def test_refresh_batch_heartbeat_tolerates_transient_supabase_failure():
 
     assert metadata["heartbeat_at"] == "2026-03-03T02:15:00+00:00"
     assert metadata["worker_id"] == "worker-1"
+
+
+def test_run_forever_recovers_from_claim_error(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    calls = {"claim": 0, "process": 0, "sleep": 0}
+
+    def fake_claim_next_batch():
+        calls["claim"] += 1
+        if calls["claim"] == 1:
+            raise OSError("temporary network issue")
+        return {"id": "batch-1"}
+
+    def fake_process_batch(batch):
+        calls["process"] += 1
+        raise KeyboardInterrupt()
+
+    def fake_sleep(_seconds):
+        calls["sleep"] += 1
+
+    worker.claim_next_batch = fake_claim_next_batch
+    worker.process_batch = fake_process_batch
+    monkeypatch.setattr(time, "sleep", fake_sleep)
+
+    try:
+        worker.run_forever()
+    except KeyboardInterrupt:
+        pass
+
+    assert calls["claim"] >= 2
+    assert calls["sleep"] >= 1
+    assert calls["process"] == 1
