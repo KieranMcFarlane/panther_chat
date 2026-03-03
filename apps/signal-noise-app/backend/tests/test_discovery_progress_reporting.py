@@ -85,5 +85,9 @@ async def test_run_discovery_loop_emits_progress_updates_and_stops_after_consecu
     assert progress_events[0]["status"] == "running"
     assert progress_events[0]["iteration"] == 1
     assert progress_events[1]["status"] == "running"
+    assert progress_events[1]["performance_summary"]["iterations_with_timings"] == 1
+    assert progress_events[1]["performance_summary"]["hop_timings"][0]["iteration"] == 1
+    assert progress_events[1]["performance_summary"]["hop_timings"][0]["duration_ms"] == 10.0
     assert progress_events[2]["iteration"] == 2
+    assert progress_events[3]["performance_summary"]["iterations_with_timings"] == 2
     assert progress_events[-1]["stop_reason"] == "consecutive_no_progress"

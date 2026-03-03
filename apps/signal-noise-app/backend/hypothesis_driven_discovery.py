@@ -3831,6 +3831,7 @@ Return JSON:
             consecutive_no_progress = consecutive_no_progress + 1 if decision == 'NO_PROGRESS' else 0
 
             if progress_callback:
+                elapsed_duration_ms = round((time.perf_counter() - discovery_started_at) * 1000, 2)
                 await progress_callback({
                     "status": "running",
                     "iteration": iteration,
@@ -3839,6 +3840,7 @@ Return JSON:
                     "duration_ms": iteration_record['duration_ms'],
                     "current_confidence": getattr(state, "current_confidence", None),
                     "consecutive_no_progress": consecutive_no_progress,
+                    "performance_summary": self._build_performance_summary(state, elapsed_duration_ms),
                 })
 
             if consecutive_no_progress >= self.max_consecutive_no_progress_iterations:
