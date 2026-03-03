@@ -8,7 +8,6 @@ Enhanced with Graphiti temporal knowledge graph capabilities
 import os
 import sys
 import logging
-from copy import deepcopy
 from typing import Dict, Any, Optional, List
 from datetime import datetime
 from pathlib import Path
@@ -35,16 +34,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-
-def merge_pipeline_phase_metadata(existing_metadata: Optional[Dict[str, Any]], payload: Dict[str, Any]) -> Dict[str, Any]:
-    metadata = deepcopy(existing_metadata or {})
-    metadata["phase_details"] = payload
-    if payload.get("performance_summary") is not None:
-        metadata["performance_summary"] = payload.get("performance_summary")
-    if payload.get("discovery_context") is not None:
-        metadata["discovery_context"] = payload.get("discovery_context")
-    return metadata
+from pipeline_run_metadata import merge_pipeline_phase_metadata
 
 # Initialize FastAPI app
 app = FastAPI(
