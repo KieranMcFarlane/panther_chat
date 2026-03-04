@@ -352,6 +352,85 @@ class EntityPipelineWorker:
             context=f"sync cached entity {run['entity_id']}",
         )
 
+    def persist_monitoring_outputs(self, batch_id: str, run: Dict[str, Any], result: Dict[str, Any]) -> None:
+        artifacts = (result or {}).get("artifacts") or {}
+        dossier = artifacts.get("dossier") or {}
+        dossier_metadata = dossier.get("metadata") if isinstance(dossier, dict) else {}
+        monitoring_result = artifacts.get("monitoring_result") or {}
+
+        canonical_sources = dossier_metadata.get("canonical_sources") if isinstance(dossier_metadata, dict) else {}
+        if isinstance(canonical_sources, dict) and canonical_sources:
+            registry_rows = [
+                {
+                    "entity_id": run["entity_id"],
+                    "page_class": page_class,
+                    "url": url,
+                    "source": "dossier_generation",
+                    "confidence": 0.9,
+                    "is_canonical": True,
+                    "last_verified_at": self._now_iso(),
+                    "metadata": {
+                        "batch_id": batch_id,
+                        "run_id": run.get("id") or f"{batch_id}_{run['entity_id']}",
+                    },
+                }
+                for page_class, url in canonical_sources.items()
+                if isinstance(url, str) and url.strip()
+            ]
+            if registry_rows:
+                self._safe_execute(
+                    lambda: self.supabase.table("entity_source_registry").upsert(
+                        registry_rows,
+                        on_conflict="entity_id,page_class,url",
+                    ).execute(),
+                    context=f"persist source registry {run['entity_id']}",
+                )
+
+        snapshots = monitoring_result.get("snapshots") or []
+        if snapshots:
+            snapshot_rows = [
+                {
+                    "entity_id": snapshot.get("entity_id") or run["entity_id"],
+                    "page_class": snapshot.get("page_class"),
+                    "url": snapshot.get("url"),
+                    "content_hash": snapshot.get("content_hash"),
+                    "fetched_at": snapshot.get("fetched_at"),
+                    "changed": bool(snapshot.get("changed")),
+                    "metadata": snapshot.get("metadata") or {},
+                }
+                for snapshot in snapshots
+                if snapshot.get("page_class") and snapshot.get("url") and snapshot.get("content_hash")
+            ]
+            if snapshot_rows:
+                self._safe_execute(
+                    lambda: self.supabase.table("entity_source_snapshots").insert(snapshot_rows).execute(),
+                    context=f"persist source snapshots {run['entity_id']}",
+                )
+
+        candidates = monitoring_result.get("candidates") or []
+        if candidates:
+            candidate_rows = [
+                {
+                    "entity_id": candidate.get("entity_id") or run["entity_id"],
+                    "batch_id": candidate.get("batch_id") or batch_id,
+                    "run_id": candidate.get("run_id") or run.get("id") or f"{batch_id}_{run['entity_id']}",
+                    "page_class": candidate.get("page_class"),
+                    "url": candidate.get("url"),
+                    "content_hash": candidate.get("content_hash"),
+                    "candidate_type": candidate.get("candidate_type"),
+                    "score": candidate.get("score") or 0,
+                    "evidence_excerpt": candidate.get("evidence_excerpt"),
+                    "metadata": candidate.get("metadata") or {},
+                }
+                for candidate in candidates
+                if candidate.get("page_class") and candidate.get("url") and candidate.get("candidate_type")
+            ]
+            if candidate_rows:
+                self._safe_execute(
+                    lambda: self.supabase.table("entity_monitoring_candidates").insert(candidate_rows).execute(),
+                    context=f"persist monitoring candidates {run['entity_id']}",
+                )
+
     def update_run(self, batch_id: str, entity_id: str, updates: Dict[str, Any]) -> None:
         self._safe_execute(
             lambda: self.supabase.table("entity_pipeline_runs").update(updates).eq(
@@ -447,6 +526,7 @@ class EntityPipelineWorker:
                     promoted_rfp_ids=[],
                     completed_at=result.get("completed_at"),
                 )
+                self.persist_monitoring_outputs(batch_id, run, result)
                 self.sync_cached_entity(batch_id, run, result, "completed")
                 self.update_run(
                     batch_id,

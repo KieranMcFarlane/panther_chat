@@ -395,10 +395,13 @@ def test_process_batch_persists_discovery_context(monkeypatch):
         "entity_name": "International Canoe Federation",
         "status": "queued",
         "phase": "entity_registration",
+        "id": "batch-1_international-canoe-federation",
         "metadata": {"entity_type": "FEDERATION"},
     }
     worker.get_batch_runs = lambda batch_id: [run]
     worker.sync_cached_entity = lambda batch_id, run, result, status: None
+    persisted_monitoring = []
+    worker.persist_monitoring_outputs = lambda batch_id, run, result: persisted_monitoring.append((batch_id, run, result))
 
     updates = []
     worker.update_run = lambda batch_id, entity_id, payload: updates.append((batch_id, entity_id, payload))
@@ -436,7 +439,46 @@ def test_process_batch_persists_discovery_context(monkeypatch):
         },
         "artifacts": {
             "dossier_id": "international-canoe-federation",
+            "dossier": {
+                "metadata": {
+                    "canonical_sources": {
+                        "official_site": "https://www.canoeicf.com",
+                        "press_release": "https://www.canoeicf.com/news",
+                    }
+                }
+            },
             "scores": {"sales_readiness": "MONITOR"},
+            "monitoring_result": {
+                "pages_fetched": 2,
+                "pages_changed": 1,
+                "pages_unchanged": 1,
+                "candidate_count": 1,
+                "snapshots": [
+                    {
+                        "entity_id": "international-canoe-federation",
+                        "page_class": "official_site",
+                        "url": "https://www.canoeicf.com",
+                        "content_hash": "hash-1",
+                        "fetched_at": "2026-03-03T03:20:00+00:00",
+                        "changed": True,
+                        "metadata": {"content_length": 500},
+                    }
+                ],
+                "candidates": [
+                    {
+                        "entity_id": "international-canoe-federation",
+                        "batch_id": "batch-1",
+                        "run_id": "batch-1_international-canoe-federation",
+                        "page_class": "official_site",
+                        "url": "https://www.canoeicf.com",
+                        "content_hash": "hash-1",
+                        "candidate_type": "procurement_signal",
+                        "score": 0.82,
+                        "evidence_excerpt": "Confirmed procurement activity",
+                        "metadata": {},
+                    }
+                ],
+            },
             "discovery_result": {
                 "performance_summary": {
                     "slowest_iteration": {
@@ -474,6 +516,8 @@ def test_process_batch_persists_discovery_context(monkeypatch):
     assert discovery_context["template_id"] == "federation_governing_body"
     assert discovery_context["lead_hypothesis_id"] == "international-canoe-federation_federation_procurement_programme"
     assert discovery_context["slowest_hypothesis_id"] == "international-canoe-federation_digital_leadership_hire"
+    assert completed_update["metadata"]["monitoring_summary"]["pages_fetched"] == 2
+    assert persisted_monitoring and persisted_monitoring[0][0] == "batch-1"
 
 
 def test_process_batch_requeues_batch_when_run_is_retryable():
