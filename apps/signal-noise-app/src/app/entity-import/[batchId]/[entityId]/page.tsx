@@ -73,6 +73,9 @@ export default async function EntityImportRunDetailPage(
   const dossierPhase = typeof phaseMap.dossier_generation === 'object' && phaseMap.dossier_generation !== null
     ? phaseMap.dossier_generation
     : null
+  const dossierSourceTimings = typeof dossierPhase?.source_timings === 'object' && dossierPhase?.source_timings !== null
+    ? (dossierPhase.source_timings as Record<string, unknown>)
+    : null
 
   const budgetExceeded = Boolean(discoveryPhase?.budget_exceeded)
   const timeoutMode = discoveryPhase?.timeout_mode ? String(discoveryPhase.timeout_mode) : 'n/a'
@@ -151,6 +154,17 @@ export default async function EntityImportRunDetailPage(
               </p>
               <p className="mt-1">sources: {Array.isArray(dossierPhase?.sources_used) ? dossierPhase?.sources_used.join(', ') : 'n/a'}</p>
               <p>hypotheses extracted: {String(dossierPhase?.hypothesis_count ?? 'n/a')}</p>
+              <p>
+                source timings:{' '}
+                {dossierSourceTimings
+                  ? Object.entries(dossierSourceTimings)
+                      .map(([key, value]) => {
+                        const timing = typeof value === 'object' && value !== null ? (value as Record<string, unknown>) : null
+                        return `${key}:${String(timing?.duration_seconds ?? 'n/a')}s`
+                      })
+                      .join(', ')
+                  : 'n/a'}
+              </p>
             </div>
           </div>
         </section>

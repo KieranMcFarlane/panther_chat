@@ -25,6 +25,10 @@ class FakeDossierGenerator:
                 "source_count": 2,
                 "sources_used": ["FalkorDB", "BrightData"],
                 "collection_time_seconds": 4.5,
+                "source_timings": {
+                    "official_website": {"duration_seconds": 1.2, "status": "success"},
+                    "job_postings": {"duration_seconds": 0.8, "status": "success"},
+                },
                 "canonical_sources": {
                     "official_site": "https://www.arsenal.com",
                     "press_release": "https://www.arsenal.com/news",
@@ -236,6 +240,7 @@ async def test_pipeline_orchestrator_runs_phases_and_returns_artifacts():
     assert result["phases"]["dossier_generation"]["duration_seconds"] == 12.3
     assert result["phases"]["dossier_generation"]["collection_time_seconds"] == 4.5
     assert result["phases"]["dossier_generation"]["source_count"] == 2
+    assert result["phases"]["dossier_generation"]["source_timings"]["official_website"]["duration_seconds"] == 1.2
     assert result["phases"]["dossier_generation"]["canonical_sources"]["official_site"] == "https://www.arsenal.com"
     assert result["phases"]["dossier_generation"]["canonical_sources"]["jobs_board"] == "https://jobs.arsenal.com"
     assert result["phases"]["baseline_monitoring"]["status"] == "completed"
@@ -285,6 +290,7 @@ async def test_pipeline_orchestrator_preserves_prefetched_dossier_phase_metadata
     assert dossier_phase["collection_time_seconds"] == 4.5
     assert dossier_phase["source_count"] == 2
     assert dossier_phase["sources_used"] == ["FalkorDB", "BrightData"]
+    assert dossier_phase["source_timings"]["job_postings"]["duration_seconds"] == 0.8
     assert dossier_phase["canonical_sources"]["linkedin_company"] == "https://www.linkedin.com/company/arsenal-fc"
     assert dossier_phase["canonical_sources"]["document"] == "https://www.arsenal.com/documents"
 

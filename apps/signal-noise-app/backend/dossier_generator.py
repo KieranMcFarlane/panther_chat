@@ -575,6 +575,7 @@ Website: N/A
             "sources_used": list(dossier_data.data_sources_used),
             "source_count": len(dossier_data.data_sources_used),
             "collected_at": dossier_data.collected_at.isoformat(),
+            "source_timings": dict(dossier_data.source_timings or {}),
         }
 
         # Add metadata if available
@@ -1642,6 +1643,7 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
         dossier["metadata"]["sources_used"] = list(entity_data.get("sources_used") or [])
         dossier["metadata"]["source_count"] = int(entity_data.get("source_count") or len(entity_data.get("sources_used") or []))
         dossier["metadata"]["collected_at"] = entity_data.get("collected_at")
+        dossier["metadata"]["source_timings"] = entity_data.get("source_timings") or {}
         dossier["metadata"]["canonical_sources"] = self._derive_canonical_sources(entity_data)
         if collection_duration_seconds is not None:
             dossier["metadata"]["collection_time_seconds"] = collection_duration_seconds

@@ -127,6 +127,7 @@ class DossierData:
     # Collection metadata
     collected_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     data_sources_used: List[str] = field(default_factory=list)
+    source_timings: Dict[str, Dict[str, Any]] = field(default_factory=dict)
 
 
 # =============================================================================
@@ -231,7 +232,12 @@ class DossierDataCollector:
 
         # Collect entity metadata from FalkorDB
         if self._falkordb_connected:
+            metadata_started_at = time.perf_counter()
             metadata = await self._get_entity_metadata(entity_id)
+            dossier_data.source_timings["falkordb_metadata"] = {
+                "duration_seconds": round(time.perf_counter() - metadata_started_at, 3),
+                "status": "success" if metadata else "empty",
+            }
             if metadata:
                 dossier_data.metadata = metadata
                 dossier_data.data_sources_used.append("FalkorDB")
@@ -247,7 +253,12 @@ class DossierDataCollector:
 
         # Scrape additional data from web (Phase 2)
         if self._brightdata_available:
+            scrape_started_at = time.perf_counter()
             scrape_result = await self._get_scraped_content(entity_id, dossier_data.entity_name)
+            dossier_data.source_timings["brightdata_scrape"] = {
+                "duration_seconds": round(time.perf_counter() - scrape_started_at, 3),
+                "status": "success" if scrape_result else "empty",
+            }
 
             if scrape_result:
                 scraped_content, extracted_data = scrape_result

@@ -97,6 +97,7 @@ class PipelineOrchestrator:
                     "collection_time_seconds": dossier_metadata.get("collection_time_seconds"),
                     "source_count": dossier_metadata.get("source_count", 0),
                     "sources_used": dossier_metadata.get("sources_used", []),
+                    "source_timings": dossier_metadata.get("source_timings", {}),
                     "canonical_sources": dossier_metadata.get("canonical_sources", {}),
                 },
             )
@@ -109,6 +110,7 @@ class PipelineOrchestrator:
                 "collection_time_seconds": dossier_metadata.get("collection_time_seconds"),
                 "source_count": dossier_metadata.get("source_count", 0),
                 "sources_used": dossier_metadata.get("sources_used", []),
+                "source_timings": dossier_metadata.get("source_timings", {}),
                 "canonical_sources": dossier_metadata.get("canonical_sources", {}),
             }
         else:
@@ -122,6 +124,7 @@ class PipelineOrchestrator:
                 "collection_time_seconds": dossier_metadata.get("collection_time_seconds"),
                 "source_count": dossier_metadata.get("source_count", 0),
                 "sources_used": dossier_metadata.get("sources_used", []),
+                "source_timings": dossier_metadata.get("source_timings", {}),
                 "canonical_sources": dossier_metadata.get("canonical_sources", {}),
             }
 
