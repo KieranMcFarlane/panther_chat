@@ -190,6 +190,7 @@ def build_run_start_metadata(
     lease_seconds: int,
 ) -> Dict[str, Any]:
     metadata = deepcopy(existing_metadata or {})
+    metadata["attempt_count"] = int(metadata.get("attempt_count", 0) or 0) + 1
     metadata["lease_owner"] = worker_id
     metadata["lease_expires_at"] = (datetime.fromisoformat(now_iso) + timedelta(seconds=lease_seconds)).isoformat()
     metadata["retryable"] = False
@@ -375,6 +376,14 @@ class EntityPipelineWorker:
             "entity_type": str((run.get("metadata") or {}).get("entity_type") or "CLUB"),
             "priority_score": int((run.get("metadata") or {}).get("priority_score") or 50),
         }
+        started_at = time.perf_counter()
+        logger.info(
+            "Calling pipeline endpoint for batch=%s entity=%s phase=%s timeout_seconds=%s",
+            batch_id,
+            run.get("entity_id"),
+            run.get("phase"),
+            PIPELINE_TIMEOUT_SECONDS,
+        )
         request = Request(
             f"{FASTAPI_URL}/api/pipeline/run-entity",
             data=json.dumps(payload).encode("utf-8"),
@@ -382,7 +391,14 @@ class EntityPipelineWorker:
             method="POST",
         )
         with urlopen(request, timeout=resolve_pipeline_timeout(PIPELINE_TIMEOUT_SECONDS)) as response:
-            return json.loads(response.read().decode("utf-8"))
+            response_body = json.loads(response.read().decode("utf-8"))
+        logger.info(
+            "Pipeline response received for batch=%s entity=%s duration_seconds=%.2f",
+            batch_id,
+            run.get("entity_id"),
+            time.perf_counter() - started_at,
+        )
+        return response_body
 
     def sync_cached_entity(self, batch_id: str, run: Dict[str, Any], result: Optional[Dict[str, Any]], status: str) -> None:
         lookup = (
