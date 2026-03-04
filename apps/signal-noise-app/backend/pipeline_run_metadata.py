@@ -91,10 +91,15 @@ def derive_discovery_context(result: Dict[str, Any]) -> Dict[str, Any]:
 
 def derive_monitoring_summary(result: Dict[str, Any]) -> Dict[str, Any]:
     monitoring_result = ((result.get("artifacts") or {}).get("monitoring_result") or {})
+    candidate_types: Dict[str, int] = {}
+    for candidate in monitoring_result.get("candidates") or []:
+        candidate_type = str(candidate.get("candidate_type") or "unknown")
+        candidate_types[candidate_type] = candidate_types.get(candidate_type, 0) + 1
     return {
         "pages_fetched": monitoring_result.get("pages_fetched", 0),
         "pages_changed": monitoring_result.get("pages_changed", 0),
         "pages_unchanged": monitoring_result.get("pages_unchanged", 0),
         "candidate_count": monitoring_result.get("candidate_count", 0),
         "snapshot_count": len(monitoring_result.get("snapshots") or []),
+        "candidate_types": candidate_types,
     }

@@ -246,6 +246,8 @@ def test_derive_monitoring_summary_extracts_monitoring_counts():
     assert summary["pages_unchanged"] == 3
     assert summary["candidate_count"] == 2
     assert summary["snapshot_count"] == 2
+    assert summary["candidate_types"]["social_signal"] == 1
+    assert summary["candidate_types"]["hiring_signal"] == 1
 
 
 def test_derive_discovery_context_extracts_template_and_hypothesis_summary():

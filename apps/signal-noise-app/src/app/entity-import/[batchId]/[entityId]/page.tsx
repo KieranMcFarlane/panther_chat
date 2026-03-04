@@ -36,6 +36,9 @@ export default async function EntityImportRunDetailPage(
   const escalationReason = typeof run.metadata?.escalation_reason === 'string'
     ? run.metadata.escalation_reason
     : null
+  const candidateTypes = typeof monitoringSummary?.candidate_types === 'object' && monitoringSummary?.candidate_types !== null
+    ? (monitoringSummary.candidate_types as Record<string, unknown>)
+    : null
   const scores = typeof run.metadata?.scores === 'object' && run.metadata?.scores !== null
     ? (run.metadata.scores as Record<string, unknown>)
     : null
@@ -159,6 +162,7 @@ export default async function EntityImportRunDetailPage(
               <p>pages unchanged: {String(monitoringSummary?.pages_unchanged ?? 'n/a')}</p>
               <p>candidate count: {String(monitoringSummary?.candidate_count ?? 'n/a')}</p>
               <p>snapshot count: {String(monitoringSummary?.snapshot_count ?? 'n/a')}</p>
+              <p>candidate types: {candidateTypes ? Object.entries(candidateTypes).map(([key, value]) => `${key}:${String(value)}`).join(', ') : 'n/a'}</p>
             </div>
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Escalation reason</p>

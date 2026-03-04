@@ -131,6 +131,9 @@ async def test_baseline_monitoring_emits_jobs_candidates_for_relevant_hiring_sig
     assert candidate["candidate_type"] == "hiring_signal"
     assert candidate["score"] >= 0.5
     assert "Head of Procurement" in candidate["evidence_excerpt"]
+    assert candidate["metadata"]["validation_mode"] == "jobs_compact"
+    assert candidate["metadata"]["requires_llm_validation"] is True
+    assert "head of procurement" in candidate["metadata"]["evidence_pack"]["signals"]
 
 
 @pytest.mark.asyncio
@@ -157,3 +160,6 @@ async def test_baseline_monitoring_emits_linkedin_candidates_for_procurement_adj
     assert candidate["candidate_type"] == "social_signal"
     assert candidate["score"] >= 0.5
     assert "digital transformation partnership" in candidate["evidence_excerpt"]
+    assert candidate["metadata"]["validation_mode"] == "social_compact"
+    assert candidate["metadata"]["requires_llm_validation"] is True
+    assert "digital transformation" in candidate["metadata"]["evidence_pack"]["signals"]

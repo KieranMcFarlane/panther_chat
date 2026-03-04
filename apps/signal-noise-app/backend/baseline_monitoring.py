@@ -168,6 +168,11 @@ class BaselineMonitoringRunner:
             metadata_keywords = {**keyword_weights, **jobs_keywords}
         elif page_class in {"linkedin_posts", "linkedin_company", "linkedin_executive"}:
             metadata_keywords = {**keyword_weights, **linkedin_keywords}
+        validation_payload = self._build_validation_payload(
+            page_class=page_class,
+            excerpt=excerpt,
+            lowered=lowered,
+        )
 
         return [
             {
@@ -186,6 +191,9 @@ class BaselineMonitoringRunner:
                         for keyword in metadata_keywords
                         if keyword in lowered
                     ],
+                    "validation_mode": validation_payload["validation_mode"],
+                    "requires_llm_validation": validation_payload["requires_llm_validation"],
+                    "evidence_pack": validation_payload["evidence_pack"],
                 },
             }
         ]
@@ -200,3 +208,66 @@ class BaselineMonitoringRunner:
         if page_class in {"linkedin_posts", "linkedin_company", "linkedin_executive"}:
             return "social_signal"
         return "procurement_signal"
+
+    def _build_validation_payload(
+        self,
+        *,
+        page_class: str,
+        excerpt: str,
+        lowered: str,
+    ) -> Dict[str, Any]:
+        if page_class == "jobs_board":
+            return {
+                "validation_mode": "jobs_compact",
+                "requires_llm_validation": True,
+                "evidence_pack": {
+                    "source_type": "jobs_board",
+                    "focus": "hiring_and_buying_signal",
+                    "excerpt": excerpt,
+                    "signals": [
+                        keyword
+                        for keyword in (
+                            "head of procurement",
+                            "procurement manager",
+                            "crm manager",
+                            "digital transformation",
+                            "vendor",
+                        )
+                        if keyword in lowered
+                    ],
+                },
+            }
+
+        if page_class in {"linkedin_posts", "linkedin_company", "linkedin_executive"}:
+            return {
+                "validation_mode": "social_compact",
+                "requires_llm_validation": True,
+                "evidence_pack": {
+                    "source_type": page_class,
+                    "focus": "social_procurement_signal",
+                    "excerpt": excerpt,
+                    "signals": [
+                        keyword
+                        for keyword in (
+                            "we are hiring",
+                            "partnership",
+                            "procurement",
+                            "tender",
+                            "rfp",
+                            "vendor",
+                            "digital transformation",
+                        )
+                        if keyword in lowered
+                    ],
+                },
+            }
+
+        return {
+            "validation_mode": "page_compact",
+            "requires_llm_validation": False,
+            "evidence_pack": {
+                "source_type": page_class,
+                "focus": "page_procurement_signal",
+                "excerpt": excerpt,
+            },
+        }
