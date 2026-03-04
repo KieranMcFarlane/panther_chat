@@ -103,6 +103,32 @@ class FakeBaselineMonitoring:
         }
 
 
+
+
+class EscalatingBaselineMonitoring:
+    async def run_monitoring(self, **kwargs):
+        return {
+            "pages_fetched": 1,
+            "pages_changed": 1,
+            "pages_unchanged": 0,
+            "candidate_count": 1,
+            "candidates": [
+                {
+                    "entity_id": kwargs["entity_id"],
+                    "batch_id": kwargs["batch_id"],
+                    "run_id": kwargs["run_id"],
+                    "page_class": "official_site",
+                    "url": "https://example.com/ambiguous",
+                    "content_hash": "hash-2",
+                    "candidate_type": "procurement_signal",
+                    "score": 0.61,
+                    "evidence_excerpt": "Potential procurement activity",
+                    "metadata": {"requires_escalation": True},
+                }
+            ],
+            "snapshots": [],
+        }
+
 class FakeRalph:
     async def validate_signals(self, raw_signals, entity_id):
         return [
@@ -225,3 +251,37 @@ async def test_pipeline_orchestrator_preserves_prefetched_dossier_phase_metadata
     assert dossier_phase["source_count"] == 2
     assert dossier_phase["sources_used"] == ["FalkorDB", "BrightData"]
     assert dossier_phase["canonical_sources"]["document"] == "https://www.arsenal.com/documents"
+
+
+@pytest.mark.asyncio
+async def test_pipeline_orchestrator_escalates_selected_baseline_runs_into_discovery():
+    phase_events = []
+
+    async def phase_callback(phase, payload):
+        phase_events.append((phase, payload))
+
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=FakeDossierGenerator(),
+        baseline_monitoring_runner=EscalatingBaselineMonitoring(),
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+    )
+
+    result = await orchestrator.run_entity_pipeline(
+        entity_id="fiba",
+        entity_name="FIBA",
+        entity_type="FEDERATION",
+        priority_score=70,
+        phase_callback=phase_callback,
+    )
+
+    assert result["artifacts"]["escalation_reason"] == "baseline_monitoring_ambiguous"
+    assert result["phases"]["baseline_monitoring"]["escalation_reason"] == "baseline_monitoring_ambiguous"
+    assert result["phases"]["discovery"]["status"] == "completed"
+    assert result["phases"]["discovery"]["reason"] == "baseline_monitoring_ambiguous"
+    assert any(
+        phase == "discovery" and payload.get("status") == "running" and payload.get("reason") == "baseline_monitoring_ambiguous"
+        for phase, payload in phase_events
+    )

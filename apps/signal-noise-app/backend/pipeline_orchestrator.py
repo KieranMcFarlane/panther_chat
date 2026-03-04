@@ -140,6 +140,7 @@ class PipelineOrchestrator:
         capability_signals: List[Dict[str, Any]] = []
         validated_rfps: List[Dict[str, Any]] = []
         episodes: List[Dict[str, Any]] = []
+        escalation_reason: Optional[str] = None
 
         try:
             if self.baseline_monitoring_runner is not None:
@@ -172,12 +173,47 @@ class PipelineOrchestrator:
                     "baseline_monitoring",
                     phase_results["baseline_monitoring"],
                 )
-                await self._emit_phase_update(phase_callback, "discovery", phase_results["discovery"])
-                discovery_result = {
-                    "signals_discovered": raw_signals,
-                    "hypotheses": [],
-                    "performance_summary": {},
-                }
+                escalation_reason = self._determine_escalation_reason(
+                    monitoring_result=monitoring_result,
+                    priority_score=priority_score,
+                )
+                if escalation_reason:
+                    phase_results["baseline_monitoring"]["escalation_reason"] = escalation_reason
+                    await self._emit_phase_update(
+                        phase_callback,
+                        "baseline_monitoring",
+                        phase_results["baseline_monitoring"],
+                    )
+                    await self._emit_phase_update(
+                        phase_callback,
+                        "discovery",
+                        {"status": "running", "reason": escalation_reason},
+                    )
+                    discovery_result = await self._run_discovery(
+                        entity_id=entity_id,
+                        entity_name=entity_name,
+                        entity_type=entity_type,
+                        dossier=dossier,
+                        phase_callback=phase_callback,
+                    )
+                    discovery_budget = getattr(self, "_last_discovery_budget", {})
+                    discovery_signals = self._extract_raw_signals(discovery_result)
+                    raw_signals = self._merge_raw_signals(raw_signals, discovery_signals)
+                    phase_results["discovery"] = {
+                        "status": "completed",
+                        "signals_discovered": len(discovery_signals),
+                        "final_confidence": getattr(discovery_result, "final_confidence", None),
+                        "reason": escalation_reason,
+                        **discovery_budget,
+                    }
+                    await self._emit_phase_update(phase_callback, "discovery", phase_results["discovery"])
+                else:
+                    await self._emit_phase_update(phase_callback, "discovery", phase_results["discovery"])
+                    discovery_result = {
+                        "signals_discovered": raw_signals,
+                        "hypotheses": [],
+                        "performance_summary": {},
+                    }
             else:
                 phase_results["baseline_monitoring"] = {"status": "skipped", "reason": "runner_unavailable"}
                 await self._emit_phase_update(
@@ -290,6 +326,7 @@ class PipelineOrchestrator:
                 "dossier_id": entity_id,
                 "dossier": dossier,
                 "monitoring_result": monitoring_result,
+                "escalation_reason": escalation_reason,
                 "discovery_result": self._serialize_discovery_result(discovery_result),
                 "validated_signals": validated_signals,
                 "capability_signals": capability_signals,
@@ -468,6 +505,43 @@ class PipelineOrchestrator:
                 }
             )
         return raw_signals
+
+    def _merge_raw_signals(
+        self,
+        baseline_signals: List[Dict[str, Any]],
+        discovery_signals: List[Dict[str, Any]],
+    ) -> List[Dict[str, Any]]:
+        merged: List[Dict[str, Any]] = []
+        seen_keys = set()
+        for signal in [*baseline_signals, *discovery_signals]:
+            key = (
+                signal.get("id"),
+                signal.get("url"),
+                signal.get("statement") or signal.get("text"),
+            )
+            if key in seen_keys:
+                continue
+            seen_keys.add(key)
+            merged.append(signal)
+        return merged
+
+    def _determine_escalation_reason(
+        self,
+        *,
+        monitoring_result: Dict[str, Any],
+        priority_score: int,
+    ) -> Optional[str]:
+        candidates = monitoring_result.get("candidates") or []
+        if not candidates:
+            return None
+
+        if any(bool((candidate.get("metadata") or {}).get("requires_escalation")) for candidate in candidates):
+            return "baseline_monitoring_ambiguous"
+
+        if priority_score >= 90 and int(monitoring_result.get("candidate_count") or 0) > 0:
+            return "high_priority_candidate_detected"
+
+        return None
 
     async def _emit_phase_update(
         self,
