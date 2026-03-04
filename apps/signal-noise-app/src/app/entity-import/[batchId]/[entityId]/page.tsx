@@ -57,6 +57,12 @@ export default async function EntityImportRunDetailPage(
   const runMetadata = typeof run.metadata === 'object' && run.metadata !== null
     ? (run.metadata as Record<string, unknown>)
     : {}
+  const livePhaseDetails = typeof runMetadata.phase_details === 'object' && runMetadata.phase_details !== null
+    ? (runMetadata.phase_details as Record<string, unknown>)
+    : null
+  const phase0Substeps = typeof livePhaseDetails?.phase0_substeps === 'object' && livePhaseDetails.phase0_substeps !== null
+    ? (livePhaseDetails.phase0_substeps as Record<string, unknown>)
+    : null
 
   const hopTimings = Array.isArray(performanceSummary?.hop_timings)
     ? (performanceSummary?.hop_timings as Array<Record<string, unknown>>)
@@ -144,6 +150,22 @@ export default async function EntityImportRunDetailPage(
 
         <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-slate-950">Dossier phase</h2>
+          {phase0Substeps ? (
+            <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Phase 0 substeps</p>
+              <p className="mt-1">current: {String(livePhaseDetails?.current_substep ?? 'n/a')}</p>
+              <ul className="mt-2 space-y-1">
+                {Object.entries(phase0Substeps).map(([step, value]) => {
+                  const detail = typeof value === 'object' && value !== null ? (value as Record<string, unknown>) : null
+                  return (
+                    <li key={step}>
+                      {step}: {String(detail?.status ?? 'unknown')}
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          ) : null}
           <div className="mt-4 grid gap-4 md:grid-cols-2">
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Generation timing</p>

@@ -93,3 +93,6 @@ def test_build_dossier_running_phase_metadata_includes_known_phase0_context():
     assert payload["entity_name"] == "ICF Verification Alpha"
     assert payload["entity_type"] == "FEDERATION"
     assert payload["priority_score"] == 85
+    assert payload["current_substep"] == "cache_lookup"
+    assert payload["phase0_substeps"]["cache_lookup"]["status"] == "pending"
+    assert payload["phase0_substeps"]["persist_dossier"]["status"] == "pending"
