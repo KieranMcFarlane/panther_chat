@@ -141,6 +141,7 @@ def test_build_run_start_metadata_sets_lease_state():
     assert metadata["lease_owner"] == "worker-1"
     assert metadata["lease_expires_at"] is not None
     assert metadata["retry_state"] == "running"
+    assert metadata["attempt_count"] == 2
 
 
 def test_build_run_success_metadata_clears_retry_error_fields():
