@@ -191,6 +191,31 @@ def build_run_start_metadata(
     return metadata
 
 
+def build_run_phase_start_metadata(
+    existing_metadata: Optional[Dict[str, Any]],
+    *,
+    worker_id: str,
+    now_iso: str,
+    lease_seconds: int,
+    phase: str,
+    entity_name: str,
+) -> Dict[str, Any]:
+    metadata = build_run_start_metadata(
+        existing_metadata,
+        worker_id=worker_id,
+        now_iso=now_iso,
+        lease_seconds=lease_seconds,
+    )
+    metadata["phase_details"] = {
+        "status": "running",
+        "phase": phase,
+        "entity_name": entity_name,
+        "entity_type": metadata.get("entity_type"),
+        "priority_score": metadata.get("priority_score"),
+    }
+    return metadata
+
+
 def build_run_success_metadata(existing_metadata: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     metadata = deepcopy(existing_metadata or {})
     metadata["retryable"] = False
@@ -548,11 +573,13 @@ class EntityPipelineWorker:
                     "status": "running",
                     "phase": "dossier_generation",
                     "error_message": None,
-                    "metadata": build_run_start_metadata(
+                    "metadata": build_run_phase_start_metadata(
                         run_metadata,
                         worker_id=worker_id,
                         now_iso=now_iso,
                         lease_seconds=lease_seconds,
+                        phase="dossier_generation",
+                        entity_name=run["entity_name"],
                     ),
                 },
             )

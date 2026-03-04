@@ -14,6 +14,7 @@ from entity_pipeline_worker import (
     build_batch_failed_update,
     build_batch_running_update,
     build_run_start_metadata,
+    build_run_phase_start_metadata,
     build_run_success_metadata,
     build_run_exhausted_retry_metadata,
     build_run_retry_metadata,
@@ -169,6 +170,27 @@ def test_build_run_exhausted_retry_metadata_marks_run_as_failed():
     assert metadata["last_error"] == "timed out"
     assert metadata["last_error_type"] == "timeout"
     assert metadata["last_error_at"] == "2026-03-04T12:00:00+00:00"
+
+
+def test_build_run_phase_start_metadata_seeds_phase_details():
+    metadata = build_run_phase_start_metadata(
+        {
+            "entity_type": "FEDERATION",
+            "priority_score": 85,
+        },
+        worker_id="worker-1",
+        now_iso="2026-03-04T12:05:00+00:00",
+        lease_seconds=60,
+        phase="dossier_generation",
+        entity_name="ICF Verification Beta",
+    )
+
+    assert metadata["retry_state"] == "running"
+    assert metadata["phase_details"]["status"] == "running"
+    assert metadata["phase_details"]["phase"] == "dossier_generation"
+    assert metadata["phase_details"]["entity_name"] == "ICF Verification Beta"
+    assert metadata["phase_details"]["entity_type"] == "FEDERATION"
+    assert metadata["phase_details"]["priority_score"] == 85
 
 
 def test_build_batch_heartbeat_metadata_preserves_existing_claim_data():
