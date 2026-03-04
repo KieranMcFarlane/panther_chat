@@ -30,6 +30,12 @@ export default async function EntityImportRunDetailPage(
   const discoveryContext = typeof run.metadata?.discovery_context === 'object' && run.metadata?.discovery_context !== null
     ? (run.metadata.discovery_context as Record<string, unknown>)
     : null
+  const monitoringSummary = typeof run.metadata?.monitoring_summary === 'object' && run.metadata?.monitoring_summary !== null
+    ? (run.metadata.monitoring_summary as Record<string, unknown>)
+    : null
+  const escalationReason = typeof run.metadata?.escalation_reason === 'string'
+    ? run.metadata.escalation_reason
+    : null
   const scores = typeof run.metadata?.scores === 'object' && run.metadata?.scores !== null
     ? (run.metadata.scores as Record<string, unknown>)
     : null
@@ -139,6 +145,27 @@ export default async function EntityImportRunDetailPage(
               </p>
               <p className="mt-1">sources: {Array.isArray(dossierPhase?.sources_used) ? dossierPhase?.sources_used.join(', ') : 'n/a'}</p>
               <p>hypotheses extracted: {String(dossierPhase?.hypothesis_count ?? 'n/a')}</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="text-lg font-semibold text-slate-950">Baseline monitoring</h2>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Monitoring summary</p>
+              <p className="mt-2">pages fetched: {String(monitoringSummary?.pages_fetched ?? 'n/a')}</p>
+              <p>pages changed: {String(monitoringSummary?.pages_changed ?? 'n/a')}</p>
+              <p>pages unchanged: {String(monitoringSummary?.pages_unchanged ?? 'n/a')}</p>
+              <p>candidate count: {String(monitoringSummary?.candidate_count ?? 'n/a')}</p>
+              <p>snapshot count: {String(monitoringSummary?.snapshot_count ?? 'n/a')}</p>
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Escalation reason</p>
+              <p className="mt-2 text-lg font-semibold text-slate-950">
+                {escalationReason ?? 'None'}
+              </p>
+              <p className="mt-1">default path: baseline monitoring</p>
             </div>
           </div>
         </section>

@@ -12,6 +12,10 @@ from typing import Any, Dict, Optional
 def merge_pipeline_phase_metadata(existing_metadata: Optional[Dict[str, Any]], payload: Dict[str, Any]) -> Dict[str, Any]:
     metadata = deepcopy(existing_metadata or {})
     metadata["phase_details"] = payload
+    if payload.get("monitoring_summary") is not None:
+        metadata["monitoring_summary"] = payload.get("monitoring_summary")
+    if payload.get("escalation_reason") is not None:
+        metadata["escalation_reason"] = payload.get("escalation_reason")
     if payload.get("performance_summary") is not None:
         metadata["performance_summary"] = payload.get("performance_summary")
     if payload.get("discovery_context") is not None:
@@ -24,6 +28,8 @@ def merge_pipeline_run_metadata(
     *,
     phases: Optional[Dict[str, Any]] = None,
     scores: Optional[Dict[str, Any]] = None,
+    monitoring_summary: Optional[Dict[str, Any]] = None,
+    escalation_reason: Optional[str] = None,
     performance_summary: Optional[Dict[str, Any]] = None,
     discovery_context: Optional[Dict[str, Any]] = None,
     promoted_rfp_ids: Optional[list[str]] = None,
@@ -34,6 +40,10 @@ def merge_pipeline_run_metadata(
         metadata["phases"] = phases
     if scores is not None:
         metadata["scores"] = scores
+    if monitoring_summary is not None:
+        metadata["monitoring_summary"] = monitoring_summary
+    if escalation_reason is not None:
+        metadata["escalation_reason"] = escalation_reason
     if performance_summary is not None:
         metadata["performance_summary"] = performance_summary
     if discovery_context is not None:
@@ -76,4 +86,15 @@ def derive_discovery_context(result: Dict[str, Any]) -> Dict[str, Any]:
         "lead_confidence": lead_hypothesis.get("confidence") if isinstance(lead_hypothesis, dict) else None,
         "slowest_hypothesis_id": slowest_iteration.get("hypothesis_id"),
         "slowest_hop_type": slowest_iteration.get("hop_type"),
+    }
+
+
+def derive_monitoring_summary(result: Dict[str, Any]) -> Dict[str, Any]:
+    monitoring_result = ((result.get("artifacts") or {}).get("monitoring_result") or {})
+    return {
+        "pages_fetched": monitoring_result.get("pages_fetched", 0),
+        "pages_changed": monitoring_result.get("pages_changed", 0),
+        "pages_unchanged": monitoring_result.get("pages_unchanged", 0),
+        "candidate_count": monitoring_result.get("candidate_count", 0),
+        "snapshot_count": len(monitoring_result.get("snapshots") or []),
     }

@@ -157,6 +157,14 @@ class PipelineOrchestrator:
                     "pages_changed": monitoring_result.get("pages_changed", 0),
                     "pages_unchanged": monitoring_result.get("pages_unchanged", 0),
                     "candidate_count": monitoring_result.get("candidate_count", 0),
+                    "monitoring_summary": {
+                        "pages_fetched": monitoring_result.get("pages_fetched", 0),
+                        "pages_changed": monitoring_result.get("pages_changed", 0),
+                        "pages_unchanged": monitoring_result.get("pages_unchanged", 0),
+                        "candidate_count": monitoring_result.get("candidate_count", 0),
+                        "snapshot_count": len(monitoring_result.get("snapshots") or []),
+                    },
+                    "escalation_reason": None,
                 }
                 phase_results["discovery"] = {"status": "skipped", "reason": "baseline_monitoring_default"}
                 await self._emit_phase_update(

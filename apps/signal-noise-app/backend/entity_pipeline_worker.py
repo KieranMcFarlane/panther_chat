@@ -13,7 +13,11 @@ from urllib.request import Request, urlopen
 
 from dotenv import load_dotenv
 from supabase import create_client
-from pipeline_run_metadata import derive_discovery_context, merge_pipeline_run_metadata
+from pipeline_run_metadata import (
+    derive_discovery_context,
+    derive_monitoring_summary,
+    merge_pipeline_run_metadata,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -436,6 +440,8 @@ class EntityPipelineWorker:
                     build_run_success_metadata(latest_metadata if isinstance(latest_metadata, dict) else run_metadata),
                     phases=phases,
                     scores=((result.get("artifacts") or {}).get("scores")),
+                    monitoring_summary=derive_monitoring_summary(result),
+                    escalation_reason=(result.get("artifacts") or {}).get("escalation_reason"),
                     performance_summary=(((result.get("artifacts") or {}).get("discovery_result") or {}).get("performance_summary")),
                     discovery_context=derive_discovery_context(result),
                     promoted_rfp_ids=[],

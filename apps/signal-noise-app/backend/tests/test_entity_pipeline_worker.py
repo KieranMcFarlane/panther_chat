@@ -22,6 +22,7 @@ from entity_pipeline_worker import (
     merge_pipeline_run_metadata,
     merge_cached_entity_properties,
     derive_discovery_context,
+    derive_monitoring_summary,
     should_process_in_process,
     EntityPipelineWorker,
 )
@@ -209,6 +210,8 @@ def test_merge_pipeline_run_metadata_preserves_phase_details_and_adds_scores():
         {"phase_details": {"status": "running", "iteration": 2}},
         phases={"discovery": {"status": "completed"}},
         scores={"sales_readiness": "MONITOR"},
+        monitoring_summary={"pages_fetched": 3, "candidate_count": 1},
+        escalation_reason="baseline_monitoring_ambiguous",
         performance_summary={"slowest_hop": {"hop_type": "rfp_page"}},
         promoted_rfp_ids=["rfp-1"],
         completed_at="2026-03-02T15:10:00+00:00",
@@ -217,8 +220,32 @@ def test_merge_pipeline_run_metadata_preserves_phase_details_and_adds_scores():
     assert merged["phase_details"]["iteration"] == 2
     assert merged["phases"]["discovery"]["status"] == "completed"
     assert merged["scores"]["sales_readiness"] == "MONITOR"
+    assert merged["monitoring_summary"]["pages_fetched"] == 3
+    assert merged["escalation_reason"] == "baseline_monitoring_ambiguous"
     assert merged["performance_summary"]["slowest_hop"]["hop_type"] == "rfp_page"
     assert merged["promoted_rfp_ids"] == ["rfp-1"]
+
+
+def test_derive_monitoring_summary_extracts_monitoring_counts():
+    summary = derive_monitoring_summary(
+        {
+            "artifacts": {
+                "monitoring_result": {
+                    "pages_fetched": 4,
+                    "pages_changed": 1,
+                    "pages_unchanged": 3,
+                    "candidate_count": 2,
+                    "snapshots": [{}, {}],
+                }
+            }
+        }
+    )
+
+    assert summary["pages_fetched"] == 4
+    assert summary["pages_changed"] == 1
+    assert summary["pages_unchanged"] == 3
+    assert summary["candidate_count"] == 2
+    assert summary["snapshot_count"] == 2
 
 
 def test_derive_discovery_context_extracts_template_and_hypothesis_summary():
