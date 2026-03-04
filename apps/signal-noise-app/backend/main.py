@@ -8,6 +8,7 @@ Enhanced with Graphiti temporal knowledge graph capabilities
 import os
 import sys
 import logging
+import asyncio
 from contextvars import ContextVar
 from copy import deepcopy
 from typing import Dict, Any, Optional, List, Callable, Awaitable
@@ -928,19 +929,46 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             ),
         )
 
+        dossier_generation_request = DossierRequest(
+            entity_id=request.entity_id,
+            entity_name=request.entity_name,
+            entity_type=request.entity_type,
+            priority_score=request.priority_score,
+            force_refresh=False,
+        )
+        dossier_timeout_seconds = float(os.getenv("DOSSIER_PHASE0_TIMEOUT_SECONDS", "180"))
         callback_token = _pipeline_phase_callback_ctx.set(emit_phase_update)
         try:
-            dossier_response = await generate_dossier(
-                DossierRequest(
-                    entity_id=request.entity_id,
-                    entity_name=request.entity_name,
-                    entity_type=request.entity_type,
-                    priority_score=request.priority_score,
-                    force_refresh=False,
+            try:
+                if dossier_timeout_seconds > 0:
+                    dossier_response = await asyncio.wait_for(
+                        generate_dossier(dossier_generation_request),
+                        timeout=dossier_timeout_seconds,
+                    )
+                else:
+                    dossier_response = await generate_dossier(dossier_generation_request)
+            except asyncio.TimeoutError:
+                logger.error(
+                    "⏱️ Dossier generation timed out after %.2fs for entity %s",
+                    dossier_timeout_seconds,
+                    request.entity_id,
                 )
-            )
+                await emit_phase_update(
+                    "dossier_generation",
+                    {
+                        "status": "failed",
+                        "error": "Phase 0 timeout",
+                        "reason": "dossier_generation_timeout",
+                        "timeout_seconds": dossier_timeout_seconds,
+                    },
+                )
+                raise HTTPException(
+                    status_code=504,
+                    detail="Dossier generation timed out during phase 0",
+                )
         finally:
             _pipeline_phase_callback_ctx.reset(callback_token)
+
         await emit_phase_update(
             "dossier_generation",
             {
