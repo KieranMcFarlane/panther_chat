@@ -563,6 +563,20 @@ def build_dossier_response_metadata(
     }
 
 
+def build_dossier_running_phase_metadata(
+    *,
+    entity_name: str,
+    entity_type: str,
+    priority_score: int,
+) -> Dict[str, Any]:
+    return {
+        "status": "running",
+        "entity_name": entity_name,
+        "entity_type": entity_type,
+        "priority_score": priority_score,
+    }
+
+
 @app.post("/api/dossiers/generate", response_model=DossierResponse)
 async def generate_dossier(request: DossierRequest):
     """
@@ -820,7 +834,14 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             except Exception as phase_error:
                 logger.warning(f"⚠️ Failed to emit phase update for {request.entity_id}/{phase}: {phase_error}")
 
-        await emit_phase_update("dossier_generation", {"status": "running"})
+        await emit_phase_update(
+            "dossier_generation",
+            build_dossier_running_phase_metadata(
+                entity_name=request.entity_name,
+                entity_type=request.entity_type,
+                priority_score=request.priority_score,
+            ),
+        )
 
         dossier_response = await generate_dossier(
             DossierRequest(

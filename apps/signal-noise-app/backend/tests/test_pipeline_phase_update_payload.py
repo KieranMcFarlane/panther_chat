@@ -9,7 +9,7 @@ from pathlib import Path
 backend_dir = Path(__file__).parent.parent
 sys.path.insert(0, str(backend_dir))
 
-from main import build_dossier_response_metadata
+from main import build_dossier_response_metadata, build_dossier_running_phase_metadata
 from pipeline_run_metadata import merge_pipeline_phase_metadata
 
 
@@ -80,3 +80,16 @@ def test_build_dossier_response_metadata_includes_phase0_source_details():
     assert metadata["source_timings"]["official_website"]["duration_seconds"] == 2.1
     assert metadata["collection_time_seconds"] == 7.8
     assert metadata["canonical_sources"]["official_site"] == "https://www.canoeicf.com"
+
+
+def test_build_dossier_running_phase_metadata_includes_known_phase0_context():
+    payload = build_dossier_running_phase_metadata(
+        entity_name="ICF Verification Alpha",
+        entity_type="FEDERATION",
+        priority_score=85,
+    )
+
+    assert payload["status"] == "running"
+    assert payload["entity_name"] == "ICF Verification Alpha"
+    assert payload["entity_type"] == "FEDERATION"
+    assert payload["priority_score"] == 85
