@@ -163,6 +163,8 @@ export default async function EntityImportRunDetailPage(
               <p>candidate count: {String(monitoringSummary?.candidate_count ?? 'n/a')}</p>
               <p>snapshot count: {String(monitoringSummary?.snapshot_count ?? 'n/a')}</p>
               <p>candidate types: {candidateTypes ? Object.entries(candidateTypes).map(([key, value]) => `${key}:${String(value)}`).join(', ') : 'n/a'}</p>
+              <p>LLM validated: {String(monitoringSummary?.llm_validated_count ?? 'n/a')}</p>
+              <p>escalation recommended: {String(monitoringSummary?.escalation_recommended_count ?? 'n/a')}</p>
             </div>
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Escalation reason</p>

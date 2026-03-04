@@ -6,16 +6,19 @@ Baseline monitoring runner for deterministic, hash-based source checks.
 from __future__ import annotations
 
 import hashlib
+import json
 from datetime import datetime, timezone
 from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 
 ScrapeFunc = Callable[[str], Awaitable[Dict[str, Any]]]
+ValidateFunc = Callable[[Dict[str, Any]], Awaitable[Dict[str, Any]]]
 
 
 class BaselineMonitoringRunner:
-    def __init__(self, scrape_func: ScrapeFunc):
+    def __init__(self, scrape_func: ScrapeFunc, validate_func: Optional[ValidateFunc] = None):
         self.scrape_func = scrape_func
+        self.validate_func = validate_func
 
     async def run_monitoring(
         self,
@@ -65,15 +68,18 @@ class BaselineMonitoringRunner:
                 continue
 
             changed_pages += 1
+            extracted_candidates = self._extract_candidates(
+                entity_id=entity_id,
+                batch_id=batch_id,
+                run_id=run_id,
+                page_class=page_class,
+                url=url,
+                content=content,
+                content_hash=content_hash,
+            )
             candidates.extend(
-                self._extract_candidates(
-                    entity_id=entity_id,
-                    batch_id=batch_id,
-                    run_id=run_id,
-                    page_class=page_class,
-                    url=url,
-                    content=content,
-                    content_hash=content_hash,
+                await self._validate_candidates(
+                    extracted_candidates,
                 )
             )
 
@@ -271,3 +277,78 @@ class BaselineMonitoringRunner:
                 "excerpt": excerpt,
             },
         }
+
+    async def _validate_candidates(self, candidates: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        if not candidates or self.validate_func is None:
+            return candidates
+
+        validated_candidates: List[Dict[str, Any]] = []
+        for candidate in candidates:
+            metadata = candidate.get("metadata") or {}
+            if not metadata.get("requires_llm_validation"):
+                validated_candidates.append(candidate)
+                continue
+
+            validation_result = await self.validate_func(candidate)
+            merged_candidate = dict(candidate)
+            merged_metadata = dict(metadata)
+            merged_metadata["validation_result"] = validation_result
+            merged_candidate["metadata"] = merged_metadata
+            validated_candidates.append(merged_candidate)
+
+        return validated_candidates
+
+
+def build_compact_candidate_validator(claude_client: Any) -> ValidateFunc:
+    async def validate_candidate(candidate: Dict[str, Any]) -> Dict[str, Any]:
+        metadata = candidate.get("metadata") or {}
+        evidence_pack = metadata.get("evidence_pack") or {}
+        prompt = (
+            "Assess whether this shortlisted monitoring candidate indicates a real procurement or commercial opportunity. "
+            "Return strict JSON with keys: verdict, confidence, reason, should_escalate.\n"
+            f"Candidate type: {candidate.get('candidate_type')}\n"
+            f"Validation mode: {metadata.get('validation_mode')}\n"
+            f"Evidence pack: {json.dumps(evidence_pack, ensure_ascii=True)}"
+        )
+
+        try:
+            response = await claude_client.query(
+                prompt=prompt,
+                model="haiku",
+                max_tokens=220,
+            )
+            content = (response or {}).get("content", "").strip()
+            if not content:
+                return {
+                    "verdict": "unknown",
+                    "confidence": 0.0,
+                    "reason": "Empty validator response",
+                    "should_escalate": False,
+                }
+
+            start = content.find("{")
+            end = content.rfind("}")
+            if start != -1 and end != -1 and end > start:
+                parsed = json.loads(content[start : end + 1])
+                return {
+                    "verdict": parsed.get("verdict", "unknown"),
+                    "confidence": parsed.get("confidence", 0.0),
+                    "reason": parsed.get("reason", ""),
+                    "should_escalate": bool(parsed.get("should_escalate", False)),
+                }
+        except Exception as exc:
+            return {
+                "verdict": "unknown",
+                "confidence": 0.0,
+                "reason": f"Validator failed: {exc}",
+                "should_escalate": False,
+            }
+
+        return {
+            "verdict": "unknown",
+            "confidence": 0.0,
+            "reason": "Could not parse validator response",
+            "should_escalate": False,
+        }
+
+    return validate_candidate

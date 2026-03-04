@@ -749,6 +749,7 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
         from datetime import datetime
         from backend.brightdata_sdk_client import BrightDataSDKClient
         from backend.baseline_monitoring import BaselineMonitoringRunner
+        from backend.baseline_monitoring import build_compact_candidate_validator
         from backend.claude_client import ClaudeClient
         from backend.dashboard_scorer import DashboardScorer
         from backend.dossier_generator import UniversalDossierGenerator
@@ -828,7 +829,10 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
 
         orchestrator = PipelineOrchestrator(
             dossier_generator=UniversalDossierGenerator(claude),
-            baseline_monitoring_runner=BaselineMonitoringRunner(brightdata.scrape_as_markdown),
+            baseline_monitoring_runner=BaselineMonitoringRunner(
+                brightdata.scrape_as_markdown,
+                validate_func=build_compact_candidate_validator(claude),
+            ),
             discovery=HypothesisDrivenDiscovery(claude, brightdata),
             ralph_validator=RalphLoop(claude, active_graphiti_service),
             graphiti_service=active_graphiti_service,
