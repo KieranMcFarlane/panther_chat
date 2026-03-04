@@ -13,6 +13,7 @@ Architecture:
 
 import asyncio
 import logging
+import os
 from typing import Dict, List, Any, Optional
 from datetime import datetime
 
@@ -62,11 +63,15 @@ class BrightDataSDKClient:
             token = os.getenv('BRIGHTDATA_API_TOKEN')
 
         self.token = token
+        self.request_timeout_seconds = float(os.getenv("BRIGHTDATA_SDK_TIMEOUT_SECONDS", "45"))
         self._client = None
         self._client_context = None
 
         if not self.token:
             logger.warning("⚠️ BRIGHTDATA_API_TOKEN not found in environment")
+
+    async def _with_timeout(self, awaitable):
+        return await asyncio.wait_for(awaitable, timeout=self.request_timeout_seconds)
 
     async def _get_client(self):
         """Get or create async client context"""
@@ -74,7 +79,7 @@ class BrightDataSDKClient:
             try:
                 from brightdata import BrightDataClient
                 self._client_context = BrightDataClient(self.token)
-                self._client = await self._client_context.__aenter__()
+                self._client = await self._with_timeout(self._client_context.__aenter__())
                 logger.info("✅ BrightData SDK client initialized")
             except Exception as e:
                 logger.warning(f"⚠️ BrightData SDK initialization failed: {e}")
@@ -136,21 +141,27 @@ class BrightDataSDKClient:
 
             # Call search directly (SDK methods are async)
             if engine.lower() == "google":
-                result = await client.search.google(
-                    query=query,
-                    country=country,
-                    num=num_results
+                result = await self._with_timeout(
+                    client.search.google(
+                        query=query,
+                        country=country,
+                        num=num_results,
+                    )
                 )
             elif engine.lower() == "bing":
-                result = await client.search.bing(
-                    query=query,
-                    country=country,
-                    num=num_results
+                result = await self._with_timeout(
+                    client.search.bing(
+                        query=query,
+                        country=country,
+                        num=num_results,
+                    )
                 )
             elif engine.lower() == "yandex":
-                result = await client.search.yandex(
-                    query=query,
-                    num=num_results
+                result = await self._with_timeout(
+                    client.search.yandex(
+                        query=query,
+                        num=num_results,
+                    )
                 )
             else:
                 return {
@@ -228,9 +239,11 @@ class BrightDataSDKClient:
                 url = f'https://{url}'
 
             # Async scraping (SDK method is async)
-            result = await client.scrape_url(
-                url,
-                response_format='raw'
+            result = await self._with_timeout(
+                client.scrape_url(
+                    url,
+                    response_format='raw',
+                )
             )
 
             # Check result
@@ -313,9 +326,11 @@ class BrightDataSDKClient:
                 cleaned_urls.append(url)
 
             # Use SDK batch scraping (async mode for concurrent)
-            results = await client.scrape_url(
-                cleaned_urls,
-                mode='async'
+            results = await self._with_timeout(
+                client.scrape_url(
+                    cleaned_urls,
+                    mode='async',
+                )
             )
 
             successful_results = []
