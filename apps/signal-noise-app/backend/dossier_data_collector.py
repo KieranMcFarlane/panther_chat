@@ -221,14 +221,29 @@ class DossierDataCollector:
         """
         logger.info(f"🔍 Collecting dossier data for {entity_name or entity_id}")
 
+        collect_started_at = time.perf_counter()
+
         # Connect to all data sources
+        connect_falkordb_started_at = time.perf_counter()
         await self._connect_falkordb()
+        connect_falkordb_duration = round(time.perf_counter() - connect_falkordb_started_at, 3)
+
+        connect_brightdata_started_at = time.perf_counter()
         await self._connect_brightdata()
+        connect_brightdata_duration = round(time.perf_counter() - connect_brightdata_started_at, 3)
 
         dossier_data = DossierData(
             entity_id=entity_id,
             entity_name=entity_name or entity_id.replace("-", " ").title()
         )
+        dossier_data.source_timings["connect_falkordb"] = {
+            "duration_seconds": connect_falkordb_duration,
+            "status": "success" if self._falkordb_connected else "skipped",
+        }
+        dossier_data.source_timings["connect_brightdata"] = {
+            "duration_seconds": connect_brightdata_duration,
+            "status": "success" if self._brightdata_available else "skipped",
+        }
 
         # Collect entity metadata from FalkorDB
         if self._falkordb_connected:
@@ -255,13 +270,18 @@ class DossierDataCollector:
         if self._brightdata_available:
             scrape_started_at = time.perf_counter()
             scrape_result = await self._get_scraped_content(entity_id, dossier_data.entity_name)
+            scrape_step_timings: Dict[str, Any] = {}
+            if isinstance(scrape_result, tuple) and len(scrape_result) >= 3 and isinstance(scrape_result[2], dict):
+                scrape_step_timings = scrape_result[2]
             dossier_data.source_timings["brightdata_scrape"] = {
                 "duration_seconds": round(time.perf_counter() - scrape_started_at, 3),
                 "status": "success" if scrape_result else "empty",
+                "steps": scrape_step_timings,
             }
 
             if scrape_result:
-                scraped_content, extracted_data = scrape_result
+                scraped_content = scrape_result[0]
+                extracted_data = scrape_result[1]
 
                 # Add scraped content to dossier
                 dossier_data.scraped_content.append(scraped_content)
@@ -285,6 +305,11 @@ class DossierDataCollector:
                         dossier_data.metadata.country = extracted_data['country']
 
                     logger.info(f"✅ Enhanced metadata with BrightData data")
+
+        dossier_data.source_timings["collect_all_total"] = {
+            "duration_seconds": round(time.perf_counter() - collect_started_at, 3),
+            "status": "success",
+        }
 
         logger.info(f"✅ Collected data from {len(dossier_data.data_sources_used)} sources")
         return dossier_data
@@ -380,7 +405,7 @@ class DossierDataCollector:
             logger.error(f"❌ BrightData SDK connection failed: {e}")
             return False
 
-    async def _get_scraped_content(self, entity_id: str, entity_name: str) -> Optional[ScrapedContent]:
+    async def _get_scraped_content(self, entity_id: str, entity_name: str) -> Optional[tuple[ScrapedContent, Dict[str, Any], Dict[str, Any]]]:
         """
         Scrape official website for entity details
 
@@ -396,13 +421,17 @@ class DossierDataCollector:
             return None
 
         try:
+            step_timings: Dict[str, Any] = {}
+
             # Step 1: Search for official website
             logger.info(f"🔍 Searching for official website: {entity_name}")
+            search_started_at = time.perf_counter()
             search_results = await self.brightdata_client.search_engine(
                 query=f'"{entity_name}" official website',
                 engine="google",
                 num_results=5
             )
+            step_timings["search"] = round(time.perf_counter() - search_started_at, 3)
 
             if search_results.get('status') != 'success':
                 logger.warning(f"Search failed for {entity_name}")
@@ -414,6 +443,7 @@ class DossierDataCollector:
                 return None
 
             # Step 2: Find official website URL
+            url_select_started_at = time.perf_counter()
             official_url = None
             for result in results[:5]:
                 url = result.get('url', '')
@@ -432,10 +462,13 @@ class DossierDataCollector:
                 # Fallback: use first result
                 official_url = results[0].get('url', '')
                 logger.info(f"⚠️ Using fallback URL: {official_url}")
+            step_timings["url_select"] = round(time.perf_counter() - url_select_started_at, 3)
 
             # Step 3: Scrape official website content
             logger.info(f"📄 Scraping content from {official_url}")
+            scrape_started_at = time.perf_counter()
             scrape_result = await self.brightdata_client.scrape_as_markdown(official_url)
+            step_timings["scrape"] = round(time.perf_counter() - scrape_started_at, 3)
 
             if scrape_result.get('status') != 'success':
                 logger.warning(f"Scraping failed for {official_url}")
@@ -447,7 +480,9 @@ class DossierDataCollector:
                 return None
 
             # Step 4: Extract entity properties using AI
+            extract_started_at = time.perf_counter()
             extracted_data = await self._extract_entity_properties(content, entity_name)
+            step_timings["extract"] = round(time.perf_counter() - extract_started_at, 3)
 
             scraped_content = ScrapedContent(
                 url=official_url,
@@ -462,7 +497,8 @@ class DossierDataCollector:
             logger.info(f"   Extracted properties: {list(extracted_data.keys())}")
 
             # Merge scraped data into metadata
-            return scraped_content, extracted_data
+            step_timings["total"] = round(sum(step_timings.values()), 3)
+            return scraped_content, extracted_data, step_timings
 
         except Exception as e:
             logger.error(f"❌ Web scraping failed: {e}")

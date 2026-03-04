@@ -54,6 +54,9 @@ export default async function EntityImportRunDetailPage(
   const batchMetadata = typeof batch.metadata === 'object' && batch.metadata !== null
     ? (batch.metadata as Record<string, unknown>)
     : {}
+  const runMetadata = typeof run.metadata === 'object' && run.metadata !== null
+    ? (run.metadata as Record<string, unknown>)
+    : {}
 
   const hopTimings = Array.isArray(performanceSummary?.hop_timings)
     ? (performanceSummary?.hop_timings as Array<Record<string, unknown>>)
@@ -103,7 +106,10 @@ export default async function EntityImportRunDetailPage(
             <p>queue mode: {String(batchMetadata.queue_mode ?? 'n/a')}</p>
             <p>worker id: {String(batchMetadata.worker_id ?? 'n/a')}</p>
             <p>heartbeat: {String(batchMetadata.heartbeat_at ?? 'n/a')}</p>
-            <p>attempt count: {String(run.metadata?.attempt_count ?? batchMetadata.attempt_count ?? 'n/a')}</p>
+            <p>attempt count: {String(runMetadata.attempt_count ?? batchMetadata.attempt_count ?? 'n/a')}</p>
+            <p>retry state: {String(runMetadata.retry_state ?? batchMetadata.retry_state ?? 'n/a')}</p>
+            <p>lease owner: {String(runMetadata.lease_owner ?? batchMetadata.worker_id ?? 'n/a')}</p>
+            <p>lease expires: {String(runMetadata.lease_expires_at ?? batchMetadata.lease_expires_at ?? 'n/a')}</p>
           </div>
 
           <div className="mt-4 flex flex-wrap gap-3">
@@ -154,17 +160,27 @@ export default async function EntityImportRunDetailPage(
               </p>
               <p className="mt-1">sources: {Array.isArray(dossierPhase?.sources_used) ? dossierPhase?.sources_used.join(', ') : 'n/a'}</p>
               <p>hypotheses extracted: {String(dossierPhase?.hypothesis_count ?? 'n/a')}</p>
-              <p>
-                source timings:{' '}
-                {dossierSourceTimings
-                  ? Object.entries(dossierSourceTimings)
-                      .map(([key, value]) => {
-                        const timing = typeof value === 'object' && value !== null ? (value as Record<string, unknown>) : null
-                        return `${key}:${String(timing?.duration_seconds ?? 'n/a')}s`
-                      })
-                      .join(', ')
-                  : 'n/a'}
-              </p>
+              <p>source timings:</p>
+              {dossierSourceTimings ? (
+                <ul className="mt-1 space-y-1">
+                  {Object.entries(dossierSourceTimings).map(([key, value]) => {
+                    const timing = typeof value === 'object' && value !== null ? (value as Record<string, unknown>) : null
+                    const stepTimings = typeof timing?.steps === 'object' && timing.steps !== null
+                      ? Object.entries(timing.steps as Record<string, unknown>)
+                          .map(([step, duration]) => `${step}:${String(duration)}s`)
+                          .join(', ')
+                      : null
+                    return (
+                      <li key={key}>
+                        {key}: {String(timing?.duration_seconds ?? 'n/a')}s ({String(timing?.status ?? timing?.outcome ?? 'n/a')})
+                        {stepTimings ? ` [${stepTimings}]` : ''}
+                      </li>
+                    )
+                  })}
+                </ul>
+              ) : (
+                <p>n/a</p>
+              )}
             </div>
           </div>
         </section>
