@@ -7,6 +7,12 @@ export type EntitySourcePageClass =
   | 'press_release'
   | 'careers_page'
   | 'document'
+  | 'linkedin_company'
+  | 'linkedin_posts'
+  | 'linkedin_executive'
+  | 'jobs_board'
+  | 'procurement_portal'
+  | 'presswire'
 
 export interface EntitySourceRegistryEntry {
   entity_id: string

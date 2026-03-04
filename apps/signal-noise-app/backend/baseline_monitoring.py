@@ -120,19 +120,55 @@ class BaselineMonitoringRunner:
             "platform": 0.1,
             "digital": 0.1,
         }
+        jobs_keywords = {
+            "hiring": 0.2,
+            "head of procurement": 0.45,
+            "procurement manager": 0.45,
+            "crm manager": 0.3,
+            "digital transformation": 0.25,
+            "vendor": 0.15,
+            "platform": 0.1,
+        }
+        linkedin_keywords = {
+            "we are hiring": 0.2,
+            "partnership": 0.2,
+            "procurement": 0.3,
+            "tender": 0.35,
+            "rfp": 0.35,
+            "vendor": 0.15,
+            "platform": 0.1,
+            "digital transformation": 0.2,
+        }
 
         score = 0.0
         for keyword, weight in keyword_weights.items():
             if keyword in lowered:
                 score += weight
 
-        if page_class in {"tenders_page", "procurement_page", "document"}:
+        if page_class == "jobs_board":
+            for keyword, weight in jobs_keywords.items():
+                if keyword in lowered:
+                    score += weight
+
+        if page_class in {"linkedin_posts", "linkedin_company", "linkedin_executive"}:
+            for keyword, weight in linkedin_keywords.items():
+                if keyword in lowered:
+                    score += weight
+
+        if page_class in {"tenders_page", "procurement_page", "document", "procurement_portal"}:
             score += 0.15
 
         if score < 0.5:
             return []
 
         excerpt = self._build_excerpt(content)
+        candidate_type = self._candidate_type_for_page_class(page_class)
+        metadata_keywords = keyword_weights
+        if page_class == "jobs_board":
+            metadata_keywords = {**keyword_weights, **jobs_keywords}
+        elif page_class in {"linkedin_posts", "linkedin_company", "linkedin_executive"}:
+            metadata_keywords = {**keyword_weights, **linkedin_keywords}
+
         return [
             {
                 "entity_id": entity_id,
@@ -141,13 +177,13 @@ class BaselineMonitoringRunner:
                 "page_class": page_class,
                 "url": url,
                 "content_hash": content_hash,
-                "candidate_type": "procurement_signal",
+                "candidate_type": candidate_type,
                 "score": round(min(score, 1.0), 2),
                 "evidence_excerpt": excerpt,
                 "metadata": {
                     "matched_keywords": [
                         keyword
-                        for keyword in keyword_weights
+                        for keyword in metadata_keywords
                         if keyword in lowered
                     ],
                 },
@@ -157,3 +193,10 @@ class BaselineMonitoringRunner:
     def _build_excerpt(self, content: str) -> str:
         normalized = " ".join(content.split())
         return normalized[:240]
+
+    def _candidate_type_for_page_class(self, page_class: str) -> str:
+        if page_class == "jobs_board":
+            return "hiring_signal"
+        if page_class in {"linkedin_posts", "linkedin_company", "linkedin_executive"}:
+            return "social_signal"
+        return "procurement_signal"

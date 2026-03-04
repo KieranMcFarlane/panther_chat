@@ -105,3 +105,55 @@ async def test_baseline_monitoring_emits_candidates_when_changed_content_has_pro
     assert candidate["candidate_type"] == "procurement_signal"
     assert candidate["score"] >= 0.8
     assert "Tender notice" in candidate["evidence_excerpt"]
+
+
+@pytest.mark.asyncio
+async def test_baseline_monitoring_emits_jobs_candidates_for_relevant_hiring_signals():
+    scraper = FakeScraper(
+        {
+            "https://jobs.example.com": {
+                "content": "We are hiring a Head of Procurement and CRM Manager to lead vendor selection and digital transformation."
+            },
+        }
+    )
+    runner = BaselineMonitoringRunner(scrape_func=scraper.scrape)
+
+    result = await runner.run_monitoring(
+        entity_id="example-fc",
+        batch_id="batch-4",
+        run_id="run-4",
+        canonical_sources={"jobs_board": "https://jobs.example.com"},
+    )
+
+    assert result["candidate_count"] == 1
+    candidate = result["candidates"][0]
+    assert candidate["page_class"] == "jobs_board"
+    assert candidate["candidate_type"] == "hiring_signal"
+    assert candidate["score"] >= 0.5
+    assert "Head of Procurement" in candidate["evidence_excerpt"]
+
+
+@pytest.mark.asyncio
+async def test_baseline_monitoring_emits_linkedin_candidates_for_procurement_adjacent_posts():
+    scraper = FakeScraper(
+        {
+            "https://linkedin.example.com/posts/example": {
+                "content": "We are hiring and launching a digital transformation partnership. Procurement and vendor platform decisions follow next quarter."
+            },
+        }
+    )
+    runner = BaselineMonitoringRunner(scrape_func=scraper.scrape)
+
+    result = await runner.run_monitoring(
+        entity_id="example-fc",
+        batch_id="batch-5",
+        run_id="run-5",
+        canonical_sources={"linkedin_posts": "https://linkedin.example.com/posts/example"},
+    )
+
+    assert result["candidate_count"] == 1
+    candidate = result["candidates"][0]
+    assert candidate["page_class"] == "linkedin_posts"
+    assert candidate["candidate_type"] == "social_signal"
+    assert candidate["score"] >= 0.5
+    assert "digital transformation partnership" in candidate["evidence_excerpt"]
