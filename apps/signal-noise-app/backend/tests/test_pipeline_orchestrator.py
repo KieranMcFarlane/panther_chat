@@ -132,6 +132,37 @@ class EscalatingBaselineMonitoring:
             "snapshots": [],
         }
 
+
+class ValidatorEscalatingBaselineMonitoring:
+    async def run_monitoring(self, **kwargs):
+        return {
+            "pages_fetched": 1,
+            "pages_changed": 1,
+            "pages_unchanged": 0,
+            "candidate_count": 1,
+            "candidates": [
+                {
+                    "entity_id": kwargs["entity_id"],
+                    "batch_id": kwargs["batch_id"],
+                    "run_id": kwargs["run_id"],
+                    "page_class": "linkedin_posts",
+                    "url": "https://example.com/social",
+                    "content_hash": "hash-3",
+                    "candidate_type": "social_signal",
+                    "score": 0.64,
+                    "evidence_excerpt": "Potential procurement activity",
+                    "metadata": {
+                        "validation_result": {
+                            "verdict": "interesting",
+                            "confidence": 0.7,
+                            "should_escalate": True,
+                        }
+                    },
+                }
+            ],
+            "snapshots": [],
+        }
+
 class FakeRalph:
     async def validate_signals(self, raw_signals, entity_id):
         return [
@@ -290,3 +321,26 @@ async def test_pipeline_orchestrator_escalates_selected_baseline_runs_into_disco
         phase == "discovery" and payload.get("status") == "running" and payload.get("reason") == "baseline_monitoring_ambiguous"
         for phase, payload in phase_events
     )
+
+
+@pytest.mark.asyncio
+async def test_pipeline_orchestrator_prefers_validator_recommended_escalation():
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=FakeDossierGenerator(),
+        baseline_monitoring_runner=ValidatorEscalatingBaselineMonitoring(),
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+    )
+
+    result = await orchestrator.run_entity_pipeline(
+        entity_id="fiba",
+        entity_name="FIBA",
+        entity_type="FEDERATION",
+        priority_score=40,
+    )
+
+    assert result["artifacts"]["escalation_reason"] == "validator_recommended_escalation"
+    assert result["phases"]["baseline_monitoring"]["escalation_reason"] == "validator_recommended_escalation"
+    assert result["phases"]["discovery"]["status"] == "completed"

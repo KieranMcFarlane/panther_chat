@@ -535,6 +535,12 @@ class PipelineOrchestrator:
         if not candidates:
             return None
 
+        if any(
+            bool((((candidate.get("metadata") or {}).get("validation_result") or {}).get("should_escalate")))
+            for candidate in candidates
+        ):
+            return "validator_recommended_escalation"
+
         if any(bool((candidate.get("metadata") or {}).get("requires_escalation")) for candidate in candidates):
             return "baseline_monitoring_ambiguous"
 
