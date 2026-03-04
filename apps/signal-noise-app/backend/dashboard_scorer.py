@@ -124,6 +124,17 @@ class DashboardScorer:
     def _is_validated_signal(self, signal: Dict[str, Any]) -> bool:
         if signal.get("validated") is True:
             return True
+        validation_result = ((signal.get("metadata") or {}).get("validation_result") or {})
+        if validation_result:
+            verdict = str(validation_result.get("verdict") or "").lower()
+            if verdict in {"relevant", "validated", "interesting", "strong_signal"}:
+                return True
+            confidence = validation_result.get("confidence")
+            try:
+                if float(confidence) >= 0.7:
+                    return True
+            except (TypeError, ValueError):
+                pass
         confidence = signal.get("confidence")
         try:
             return float(confidence) >= 0.7
@@ -314,11 +325,22 @@ class DashboardScorer:
         unvalidated_count = self._count_matching_signals(
             signals, ["crm", "analytics", "digital", "platform"], validated_only=False
         ) - validated_count
+        validated_procurement_candidates = sum(
+            1
+            for signal in (signals or [])
+            if self._is_validated_signal(signal) and str(signal.get("candidate_type") or "") == "procurement_signal"
+        )
         episode_count = self._count_matching_episodes(
             episodes, ["technology", "crm", "digital", "platform"]
         )
 
-        score = min(40.0, validated_count * 8.0 + episode_count * 5.0 + max(0, unvalidated_count) * 1.5)
+        score = min(
+            40.0,
+            validated_count * 8.0
+            + episode_count * 5.0
+            + max(0, unvalidated_count) * 1.5
+            + validated_procurement_candidates * 6.0,
+        )
 
         return max(10.0, score)
 

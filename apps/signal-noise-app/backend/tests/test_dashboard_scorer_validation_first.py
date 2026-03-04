@@ -109,3 +109,48 @@ async def test_breakdowns_expose_evidence_source_weights():
     assert "validated_signal_weight" in probability
     assert "temporal_weight" in probability
     assert "hypothesis_prior_weight" in probability
+
+
+@pytest.mark.asyncio
+async def test_validator_backed_monitoring_candidates_count_as_validated_evidence():
+    scorer = DashboardScorer()
+    now = datetime.now(timezone.utc)
+    signals = [
+        {
+            "type": "MONITORING_CANDIDATE",
+            "candidate_type": "procurement_signal",
+            "description": "Procurement modernization tender programme for fan engagement platform",
+            "confidence": 0.25,
+            "validated": False,
+            "timestamp": (now - timedelta(days=2)).isoformat(),
+            "metadata": {
+                "validation_result": {
+                    "verdict": "relevant",
+                    "confidence": 0.91,
+                    "reason": "Clear procurement and modernization language",
+                    "should_escalate": True,
+                }
+            },
+        }
+    ]
+
+    maturity = await scorer._calculate_maturity_score(
+        signals=signals,
+        episodes=[],
+        hypotheses=[],
+    )
+    probability = await scorer._calculate_active_probability(
+        hypotheses=[],
+        signals=signals,
+        episodes=[],
+        validated_rfps=None,
+    )
+    baseline_probability = await scorer._calculate_active_probability(
+        hypotheses=[],
+        signals=[],
+        episodes=[],
+        validated_rfps=None,
+    )
+
+    assert maturity > 25.0
+    assert probability > baseline_probability
