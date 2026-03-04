@@ -75,6 +75,12 @@ def test_resolve_fastapi_url_prefers_ipv4_loopback_default():
     assert resolve_fastapi_url("http://localhost:8000", None) == "http://127.0.0.1:8000"
 
 
+def test_worker_module_uses_longer_default_pipeline_timeout():
+    import entity_pipeline_worker as worker_module
+
+    assert worker_module.PIPELINE_TIMEOUT_SECONDS == 900
+
+
 def test_load_worker_environment_reads_local_dotenv(tmp_path, monkeypatch):
     env_file = tmp_path / ".env"
     env_file.write_text("ENTITY_IMPORT_QUEUE_MODE=durable_worker\nSUPABASE_ANON_KEY=anon-key\n", encoding="utf-8")
