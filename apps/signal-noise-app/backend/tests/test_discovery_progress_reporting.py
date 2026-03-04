@@ -263,7 +263,7 @@ async def test_run_discovery_loop_stops_after_one_official_site_content_change_r
         progress_callback=progress_callback,
     )
 
-    assert result["iterations_completed"] == 2
+    assert result["iterations_completed"] == 3
     assert progress_events[1]["performance_summary"]["hop_timings"][0]["content_hash"] == "hash-v1"
     assert progress_events[-1]["stop_reason"] == "repeated_changed_official_site_content"
-    assert calls["count"] == 2
+    assert calls["count"] == 3

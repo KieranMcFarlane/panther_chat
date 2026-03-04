@@ -4032,10 +4032,12 @@ Return JSON:
     ) -> DiscoveryResult:
         consecutive_no_progress = 0
         repeated_unchanged_official_site_no_progress = 0
+        repeated_changed_official_site_no_progress = False
         official_site_state = {
             "last_content_hash": None,
             "same_hash_no_progress_count": 0,
             "changed_content_count": 0,
+            "changed_content_reevaluation_budget": 0,
         }
 
         for iteration in range(1, max_iterations + 1):
@@ -4108,24 +4110,37 @@ Return JSON:
                 hop_type == HopType.OFFICIAL_SITE
                 and decision == 'NO_PROGRESS'
             )
+            repeated_changed_official_site_no_progress = False
             if repeated_unchanged_official_site:
                 content_hash = performance.get('content_hash')
                 if content_hash:
                     last_hash = official_site_state["last_content_hash"]
+                    pre_change_budget = official_site_state["changed_content_reevaluation_budget"]
                     if last_hash is None:
                         official_site_state["last_content_hash"] = content_hash
                         official_site_state["same_hash_no_progress_count"] = 0
+                        official_site_state["changed_content_reevaluation_budget"] = 0
                     elif content_hash == last_hash:
-                        official_site_state["same_hash_no_progress_count"] += 1
+                        if pre_change_budget > 0:
+                            # Allow exactly one re-evaluation pass after content changes.
+                            repeated_changed_official_site_no_progress = True
+                            official_site_state["changed_content_reevaluation_budget"] = 0
+                        else:
+                            official_site_state["same_hash_no_progress_count"] += 1
                     else:
                         official_site_state["changed_content_count"] += 1
                         official_site_state["last_content_hash"] = content_hash
                         official_site_state["same_hash_no_progress_count"] = 0
+                        official_site_state["changed_content_reevaluation_budget"] = 1
 
             repeated_unchanged_official_site_no_progress = (
                 official_site_state["same_hash_no_progress_count"]
                 if repeated_unchanged_official_site
                 else 0
+            )
+            repeated_official_site_no_progress = (
+                repeated_unchanged_official_site_no_progress >= 1
+                or repeated_changed_official_site_no_progress
             )
 
             if progress_callback:
@@ -4142,10 +4157,7 @@ Return JSON:
                     "performance_summary": self._build_performance_summary(state, elapsed_duration_ms),
                 })
 
-            if repeated_unchanged_official_site and (
-                repeated_unchanged_official_site_no_progress >= 1
-                or official_site_state["changed_content_count"] > 0
-            ):
+            if repeated_unchanged_official_site and repeated_official_site_no_progress:
                 stop_reason = (
                     "repeated_unchanged_official_site_no_progress"
                     if repeated_unchanged_official_site_no_progress >= 1
