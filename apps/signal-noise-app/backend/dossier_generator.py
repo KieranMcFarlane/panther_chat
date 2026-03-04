@@ -262,10 +262,12 @@ class EntityDossierGenerator:
                 entity_data["official_site_url"] = multi_source_data.get("official_site", {}).get("url", "")
                 entity_data["job_postings_summary"] = self._summarize_job_postings(multi_source_data.get("job_postings", []))
                 entity_data["job_postings_count"] = len(multi_source_data.get("job_postings", []))
+                entity_data["jobs_board_url"] = self._extract_first_url(multi_source_data.get("job_postings", []))
                 entity_data["press_releases_summary"] = self._summarize_press_releases(multi_source_data.get("press_releases", []))
                 entity_data["press_releases_count"] = len(multi_source_data.get("press_releases", []))
                 entity_data["linkedin_posts_summary"] = self._summarize_linkedin_posts(multi_source_data.get("linkedin_posts", []))
                 entity_data["linkedin_posts_count"] = len(multi_source_data.get("linkedin_posts", []))
+                entity_data["linkedin_company_url"] = self._extract_first_url(multi_source_data.get("linkedin_posts", []))
                 entity_data["data_freshness"] = multi_source_data.get("freshness_score", 50)
                 entity_data["sources_used"] = multi_source_data.get("sources_used", [])
 
@@ -1687,13 +1689,37 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
         path_shortcuts = {
             "press_release": "/news",
             "careers_page": "/careers",
+            "jobs_board": "/jobs",
             "document": "/documents",
+            "procurement_portal": "/procurement",
         }
 
         for page_class, path in path_shortcuts.items():
             canonical_sources[page_class] = f"{base_url}{path}"
 
+        linkedin_company_url = entity_data.get("linkedin_company_url")
+        if isinstance(linkedin_company_url, str) and linkedin_company_url.strip():
+            canonical_sources["linkedin_company"] = linkedin_company_url.strip()
+            canonical_sources["linkedin_posts"] = linkedin_company_url.strip()
+
+        jobs_board_url = entity_data.get("jobs_board_url")
+        if isinstance(jobs_board_url, str) and jobs_board_url.strip():
+            canonical_sources["jobs_board"] = jobs_board_url.strip()
+
         return canonical_sources
+
+    def _extract_first_url(self, items: Any) -> Optional[str]:
+        if not isinstance(items, list):
+            return None
+
+        for item in items:
+            if isinstance(item, dict):
+                for key in ("url", "link", "job_url"):
+                    value = item.get(key)
+                    if isinstance(value, str) and value.strip():
+                        return value.strip()
+
+        return None
 
 
 # Example usage

@@ -29,6 +29,9 @@ class FakeDossierGenerator:
                     "official_site": "https://www.arsenal.com",
                     "press_release": "https://www.arsenal.com/news",
                     "careers_page": "https://www.arsenal.com/careers",
+                    "jobs_board": "https://jobs.arsenal.com",
+                    "linkedin_company": "https://www.linkedin.com/company/arsenal-fc",
+                    "linkedin_posts": "https://www.linkedin.com/company/arsenal-fc/posts",
                     "document": "https://www.arsenal.com/documents",
                 },
             },
@@ -203,6 +206,7 @@ async def test_pipeline_orchestrator_runs_phases_and_returns_artifacts():
     assert result["phases"]["dossier_generation"]["collection_time_seconds"] == 4.5
     assert result["phases"]["dossier_generation"]["source_count"] == 2
     assert result["phases"]["dossier_generation"]["canonical_sources"]["official_site"] == "https://www.arsenal.com"
+    assert result["phases"]["dossier_generation"]["canonical_sources"]["jobs_board"] == "https://jobs.arsenal.com"
     assert result["phases"]["baseline_monitoring"]["status"] == "completed"
     assert result["phases"]["baseline_monitoring"]["candidate_count"] == 1
     assert result["phases"]["discovery"]["status"] == "skipped"
@@ -250,6 +254,7 @@ async def test_pipeline_orchestrator_preserves_prefetched_dossier_phase_metadata
     assert dossier_phase["collection_time_seconds"] == 4.5
     assert dossier_phase["source_count"] == 2
     assert dossier_phase["sources_used"] == ["FalkorDB", "BrightData"]
+    assert dossier_phase["canonical_sources"]["linkedin_company"] == "https://www.linkedin.com/company/arsenal-fc"
     assert dossier_phase["canonical_sources"]["document"] == "https://www.arsenal.com/documents"
 
 
