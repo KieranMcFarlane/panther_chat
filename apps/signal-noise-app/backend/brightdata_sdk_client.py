@@ -75,6 +75,7 @@ class BrightDataSDKClient:
             token = os.getenv('BRIGHTDATA_API_TOKEN')
 
         self.token = token
+        self.request_timeout_seconds = float(os.getenv("BRIGHTDATA_SDK_TIMEOUT_SECONDS", "45"))
         self._client = None
         self._invalid_request_zones = set()
         self._zone_cooldowns: Dict[str, float] = {}
@@ -84,13 +85,16 @@ class BrightDataSDKClient:
         if not self.token:
             logger.warning("⚠️ BRIGHTDATA_API_TOKEN not found in environment")
 
+    async def _with_timeout(self, awaitable):
+        return await asyncio.wait_for(awaitable, timeout=self.request_timeout_seconds)
+
     async def _get_client(self):
         """Get or create async client context"""
         if self._client is None:
             try:
                 from brightdata import BrightDataClient
                 self._client_manager = BrightDataClient(self.token)
-                self._client = await self._client_manager.__aenter__()
+                self._client = await self._with_timeout(self._client_manager.__aenter__())
                 logger.info("✅ BrightData SDK client initialized")
             except ImportError as e:
                 logger.warning(f"⚠️ BrightData SDK client class unavailable: {e}")
@@ -155,7 +159,7 @@ class BrightDataSDKClient:
                     client.search.google(
                         query=query,
                         country=country,
-                        num=num_results
+                        num=num_results,
                     ),
                     timeout=search_timeout,
                 )
@@ -164,7 +168,7 @@ class BrightDataSDKClient:
                     client.search.bing(
                         query=query,
                         country=country,
-                        num=num_results
+                        num=num_results,
                     ),
                     timeout=search_timeout,
                 )
@@ -172,7 +176,7 @@ class BrightDataSDKClient:
                 result = await asyncio.wait_for(
                     client.search.yandex(
                         query=query,
-                        num=num_results
+                        num=num_results,
                     ),
                     timeout=search_timeout,
                 )
@@ -261,7 +265,7 @@ class BrightDataSDKClient:
             result = await asyncio.wait_for(
                 client.scrape_url(
                     url,
-                    response_format='raw'
+                    response_format='raw',
                 ),
                 timeout=scrape_timeout,
             )
@@ -424,9 +428,11 @@ class BrightDataSDKClient:
                 cleaned_urls.append(url)
 
             # Use SDK batch scraping (async mode for concurrent)
-            results = await client.scrape_url(
-                cleaned_urls,
-                mode='async'
+            results = await self._with_timeout(
+                client.scrape_url(
+                    cleaned_urls,
+                    mode='async',
+                )
             )
 
             successful_results = []
