@@ -8,7 +8,9 @@ Enhanced with Graphiti temporal knowledge graph capabilities
 import os
 import sys
 import logging
-from typing import Dict, Any, Optional, List
+from contextvars import ContextVar
+from copy import deepcopy
+from typing import Dict, Any, Optional, List, Callable, Awaitable
 from datetime import datetime
 from pathlib import Path
 
@@ -34,6 +36,21 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+from pipeline_run_metadata import merge_pipeline_phase_metadata
+
+PipelinePhaseCallback = Callable[[str, Dict[str, Any]], Awaitable[None]]
+_pipeline_phase_callback_ctx: ContextVar[Optional[PipelinePhaseCallback]] = ContextVar(
+    "pipeline_phase_callback_ctx",
+    default=None,
+)
+
+PHASE0_SUBSTEP_ORDER = [
+    "cache_lookup",
+    "collect_entity_data",
+    "generate_dossier_content",
+    "persist_dossier",
+    "finalize_response",
+]
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -41,6 +58,17 @@ app = FastAPI(
     description="AI-powered dossier enrichment system with temporal intelligence",
     version="2.0.0"
 )
+
+try:
+    from backend.dossier_outreach_api import (
+        OutreachIntelligenceRequest,
+        OutreachIntelligenceResponse,
+        get_outreach_intelligence as dossier_outreach_handler,
+    )
+except ImportError:
+    OutreachIntelligenceRequest = None
+    OutreachIntelligenceResponse = None
+    dossier_outreach_handler = None
 
 # Configure timeout for long-running requests (5 minutes for dossier generation)
 # This is handled at the HTTP server level (uvicorn)
@@ -107,6 +135,12 @@ class EpisodeResponse(BaseModel):
     organization: str
     timestamp: str
     status: str
+
+
+if dossier_outreach_handler and OutreachIntelligenceRequest and OutreachIntelligenceResponse:
+    @app.post("/api/dossier-outreach-intelligence", response_model=OutreachIntelligenceResponse)
+    async def dossier_outreach_intelligence_proxy(request: OutreachIntelligenceRequest):
+        return await dossier_outreach_handler(request)
 
 
 # =============================================================================
@@ -545,6 +579,40 @@ def build_dossier_response_metadata(
     }
 
 
+def build_dossier_running_phase_metadata(
+    *,
+    entity_name: str,
+    entity_type: str,
+    priority_score: int,
+    phase0_substeps: Optional[Dict[str, Dict[str, Any]]] = None,
+    current_substep: Optional[str] = None,
+) -> Dict[str, Any]:
+    substeps: Dict[str, Dict[str, Any]] = {}
+    for step in PHASE0_SUBSTEP_ORDER:
+        substeps[step] = {"status": "pending"}
+
+    if phase0_substeps:
+        for step, value in phase0_substeps.items():
+            if step in substeps and isinstance(value, dict):
+                substeps[step] = deepcopy(value)
+
+    active_step = current_substep or next(
+        (step for step, value in substeps.items() if value.get("status") == "running"),
+        None,
+    )
+    if active_step is None:
+        active_step = PHASE0_SUBSTEP_ORDER[0]
+
+    return {
+        "status": "running",
+        "entity_name": entity_name,
+        "entity_type": entity_type,
+        "priority_score": priority_score,
+        "current_substep": active_step,
+        "phase0_substeps": substeps,
+    }
+
+
 @app.post("/api/dossiers/generate", response_model=DossierResponse)
 async def generate_dossier(request: DossierRequest):
     """
@@ -587,8 +655,33 @@ async def generate_dossier(request: DossierRequest):
         supabase: Client = create_client(supabase_url, supabase_key)
 
         logger.info(f"📊 Dossier generation requested for {request.entity_name} (entity_id: {request.entity_id})")
+        phase0_substeps: Dict[str, Dict[str, Any]] = {
+            step: {"status": "pending"} for step in PHASE0_SUBSTEP_ORDER
+        }
+
+        async def emit_dossier_substep(step: str, status: str, **details: Any) -> None:
+            if step not in phase0_substeps:
+                return
+
+            phase0_substeps[step] = {"status": status, **details}
+
+            callback = _pipeline_phase_callback_ctx.get()
+            if callback is None:
+                return
+
+            await callback(
+                "dossier_generation",
+                build_dossier_running_phase_metadata(
+                    entity_name=request.entity_name,
+                    entity_type=request.entity_type,
+                    priority_score=request.priority_score,
+                    phase0_substeps=phase0_substeps,
+                    current_substep=step if status == "running" else None,
+                ),
+            )
 
         # Step 1: Check Supabase cache
+        await emit_dossier_substep("cache_lookup", "running")
         if not request.force_refresh:
             try:
                 cached = supabase.table("entity_dossiers").select("*").eq("entity_id", request.entity_id).execute()
@@ -597,30 +690,50 @@ async def generate_dossier(request: DossierRequest):
                     cached_dossier = cached.data[0]
                     expires_at = cached_dossier.get("expires_at")
                     cache_status = cached_dossier.get("cache_status", "STALE")
+                    cached_entity_type = (
+                        cached_dossier.get("dossier_data", {})
+                        .get("metadata", {})
+                        .get("entity_type")
+                    )
 
-                    # Check if cache is still fresh
-                    if expires_at and cache_status == "FRESH":
-                        from datetime import datetime
-                        expires_dt = datetime.fromisoformat(expires_at.replace("Z", "+00:00"))
-                        if expires_dt > datetime.now(expires_dt.tzinfo):
-                            logger.info(f"✅ Returning cached dossier (expires: {expires_at})")
-                            return DossierResponse(
-                                entity_id=cached_dossier["entity_id"],
-                                entity_name=cached_dossier["entity_name"],
-                                dossier_data=cached_dossier["dossier_data"],
-                                metadata={
-                                    "tier": cached_dossier.get("tier"),
-                                    "priority_score": cached_dossier.get("priority_score"),
-                                    "generation_time_seconds": cached_dossier.get("generation_time_seconds"),
-                                    "total_cost_usd": cached_dossier.get("total_cost_usd"),
-                                    "hypothesis_count": cached_dossier.get("dossier_data", {}).get("metadata", {}).get("hypothesis_count", 0),
-                                    "signal_count": cached_dossier.get("dossier_data", {}).get("metadata", {}).get("signal_count", 0)
-                                },
-                                cache_status="CACHED",
-                                generated_at=cached_dossier["generated_at"]
-                            )
+                    if cached_entity_type and cached_entity_type != request.entity_type:
+                        logger.info(
+                            "🔄 Cached dossier entity_type mismatch for %s: cached=%s requested=%s. Regenerating.",
+                            request.entity_id,
+                            cached_entity_type,
+                            request.entity_type,
+                        )
+                    else:
+
+                        # Check if cache is still fresh
+                        if expires_at and cache_status == "FRESH":
+                            from datetime import datetime
+                            expires_dt = datetime.fromisoformat(expires_at.replace("Z", "+00:00"))
+                            if expires_dt > datetime.now(expires_dt.tzinfo):
+                                await emit_dossier_substep("cache_lookup", "completed", cache_hit=True)
+                                await emit_dossier_substep("collect_entity_data", "skipped", reason="served_from_cache")
+                                await emit_dossier_substep("generate_dossier_content", "skipped", reason="served_from_cache")
+                                await emit_dossier_substep("persist_dossier", "skipped", reason="served_from_cache")
+                                await emit_dossier_substep("finalize_response", "completed", cache_status="CACHED")
+                                logger.info(f"✅ Returning cached dossier (expires: {expires_at})")
+                                return DossierResponse(
+                                    entity_id=cached_dossier["entity_id"],
+                                    entity_name=cached_dossier["entity_name"],
+                                    dossier_data=cached_dossier["dossier_data"],
+                                    metadata={
+                                        "tier": cached_dossier.get("tier"),
+                                        "priority_score": cached_dossier.get("priority_score"),
+                                        "generation_time_seconds": cached_dossier.get("generation_time_seconds"),
+                                        "total_cost_usd": cached_dossier.get("total_cost_usd"),
+                                        "hypothesis_count": cached_dossier.get("dossier_data", {}).get("metadata", {}).get("hypothesis_count", 0),
+                                        "signal_count": cached_dossier.get("dossier_data", {}).get("metadata", {}).get("signal_count", 0)
+                                    },
+                                    cache_status="CACHED",
+                                    generated_at=cached_dossier["generated_at"]
+                                )
             except Exception as e:
                 logger.warning(f"⚠️  Cache check failed: {e}. Proceeding with generation.")
+        await emit_dossier_substep("cache_lookup", "completed", cache_hit=False)
 
         # Step 2: Generate new dossier
         logger.info(f"🔄 Generating new dossier with priority_score={request.priority_score}")
@@ -632,19 +745,33 @@ async def generate_dossier(request: DossierRequest):
             # Initialize generator (ClaudeClient initializes in constructor)
             claude = ClaudeClient()
             generator = UniversalDossierGenerator(claude)
+            await emit_dossier_substep("collect_entity_data", "running")
 
             # Generate dossier
             dossier = await generator.generate_universal_dossier(
                 entity_id=request.entity_id,
                 entity_name=request.entity_name,
                 entity_type=request.entity_type,
-                priority_score=request.priority_score
+                priority_score=request.priority_score,
+                progress_callback=emit_dossier_substep,
+            )
+            await emit_dossier_substep(
+                "collect_entity_data",
+                "completed",
+                source_count=(dossier.get("metadata") or {}).get("source_count", 0),
+            )
+            await emit_dossier_substep(
+                "generate_dossier_content",
+                "completed",
+                hypothesis_count=(dossier.get("metadata") or {}).get("hypothesis_count", 0),
+                signal_count=(dossier.get("metadata") or {}).get("signal_count", 0),
             )
 
             logger.info(f"✅ Dossier generated: {dossier.get('metadata', {}).get('hypothesis_count', 0)} hypotheses, "
                        f"{dossier.get('metadata', {}).get('signal_count', 0)} signals")
 
             # Step 3: Persist to Supabase
+            await emit_dossier_substep("persist_dossier", "running")
             logger.info("💾 Persisting dossier to Supabase...")
 
             from datetime import datetime, timedelta
@@ -689,12 +816,16 @@ async def generate_dossier(request: DossierRequest):
                     # Insert new
                     supabase.table("entity_dossiers").insert(dossier_record).execute()
                     logger.info("✅ Inserted new dossier to Supabase")
+                await emit_dossier_substep("persist_dossier", "completed")
 
             except Exception as e:
                 logger.error(f"❌ Supabase persistence failed: {e}")
+                await emit_dossier_substep("persist_dossier", "failed", error=str(e))
                 # Continue anyway - we have the dossier
 
             # Step 4: Return response
+            await emit_dossier_substep("finalize_response", "running")
+            await emit_dossier_substep("finalize_response", "completed", cache_status="FRESH")
             return DossierResponse(
                 entity_id=request.entity_id,
                 entity_name=request.entity_name,
@@ -737,6 +868,8 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
     try:
         from datetime import datetime
         from backend.brightdata_sdk_client import BrightDataSDKClient
+        from backend.baseline_monitoring import BaselineMonitoringRunner
+        from backend.baseline_monitoring import build_compact_candidate_validator
         from backend.claude_client import ClaudeClient
         from backend.dashboard_scorer import DashboardScorer
         from backend.dossier_generator import UniversalDossierGenerator
@@ -756,13 +889,25 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             if not pipeline_supabase or not request.batch_id:
                 return
 
+            existing_metadata: Dict[str, Any] = {}
+            try:
+                existing = pipeline_supabase.table("entity_pipeline_runs") \
+                    .select("metadata") \
+                    .eq("batch_id", request.batch_id) \
+                    .eq("entity_id", request.entity_id) \
+                    .limit(1) \
+                    .execute()
+                current_metadata = ((existing.data or [{}])[0]).get("metadata")
+                if isinstance(current_metadata, dict):
+                    existing_metadata = current_metadata
+            except Exception as fetch_error:
+                logger.warning(f"⚠️ Failed to fetch existing phase metadata for {request.entity_id}/{phase}: {fetch_error}")
+
             update_payload = {
                 "phase": phase,
                 "status": payload.get("status", "running"),
                 "completed_at": datetime.now().isoformat() if payload.get("status") == "completed" else None,
-                "metadata": {
-                    "phase_details": payload,
-                },
+                "metadata": merge_pipeline_phase_metadata(existing_metadata, payload),
             }
 
             try:
@@ -774,17 +919,28 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             except Exception as phase_error:
                 logger.warning(f"⚠️ Failed to emit phase update for {request.entity_id}/{phase}: {phase_error}")
 
-        await emit_phase_update("dossier_generation", {"status": "running"})
-
-        dossier_response = await generate_dossier(
-            DossierRequest(
-                entity_id=request.entity_id,
+        await emit_phase_update(
+            "dossier_generation",
+            build_dossier_running_phase_metadata(
                 entity_name=request.entity_name,
                 entity_type=request.entity_type,
                 priority_score=request.priority_score,
-                force_refresh=False,
-            )
+            ),
         )
+
+        callback_token = _pipeline_phase_callback_ctx.set(emit_phase_update)
+        try:
+            dossier_response = await generate_dossier(
+                DossierRequest(
+                    entity_id=request.entity_id,
+                    entity_name=request.entity_name,
+                    entity_type=request.entity_type,
+                    priority_score=request.priority_score,
+                    force_refresh=False,
+                )
+            )
+        finally:
+            _pipeline_phase_callback_ctx.reset(callback_token)
         await emit_phase_update(
             "dossier_generation",
             {
@@ -811,6 +967,10 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
 
         orchestrator = PipelineOrchestrator(
             dossier_generator=UniversalDossierGenerator(claude),
+            baseline_monitoring_runner=BaselineMonitoringRunner(
+                brightdata.scrape_as_markdown,
+                validate_func=build_compact_candidate_validator(claude),
+            ),
             discovery=HypothesisDrivenDiscovery(claude, brightdata),
             ralph_validator=RalphLoop(claude, active_graphiti_service),
             graphiti_service=active_graphiti_service,
