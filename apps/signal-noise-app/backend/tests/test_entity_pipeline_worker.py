@@ -23,6 +23,7 @@ from entity_pipeline_worker import (
     merge_cached_entity_properties,
     derive_discovery_context,
     derive_monitoring_summary,
+    resolve_fastapi_url,
     should_process_in_process,
     EntityPipelineWorker,
 )
@@ -66,6 +67,11 @@ def test_choose_supabase_key_prefers_anon_key_when_service_role_missing():
         anon_key="anon-key",
         public_anon_key="public-anon-key",
     ) == "anon-key"
+
+
+def test_resolve_fastapi_url_prefers_ipv4_loopback_default():
+    assert resolve_fastapi_url(None, None) == "http://127.0.0.1:8000"
+    assert resolve_fastapi_url("http://localhost:8000", None) == "http://127.0.0.1:8000"
 
 
 def test_load_worker_environment_reads_local_dotenv(tmp_path, monkeypatch):

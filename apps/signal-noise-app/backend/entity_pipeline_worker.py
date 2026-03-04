@@ -20,6 +20,10 @@ from pipeline_run_metadata import (
 )
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=os.getenv("ENTITY_PIPELINE_WORKER_LOG_LEVEL", "INFO"),
+    format="%(asctime)s %(levelname)s %(name)s %(message)s",
+)
 
 DEFAULT_ENV_PATH = Path(__file__).resolve().parents[1] / ".env"
 
@@ -32,7 +36,15 @@ def load_worker_environment(env_path: Optional[Path] = None) -> None:
 
 load_worker_environment()
 
-FASTAPI_URL = os.getenv("FASTAPI_URL") or os.getenv("PYTHON_BACKEND_URL") or "http://localhost:8000"
+def resolve_fastapi_url(
+    fastapi_url: Optional[str],
+    python_backend_url: Optional[str],
+) -> str:
+    url = fastapi_url or python_backend_url or "http://127.0.0.1:8000"
+    return url.replace("http://localhost:", "http://127.0.0.1:")
+
+
+FASTAPI_URL = resolve_fastapi_url(os.getenv("FASTAPI_URL"), os.getenv("PYTHON_BACKEND_URL"))
 PIPELINE_TIMEOUT_SECONDS = int(os.getenv("ENTITY_PIPELINE_TIMEOUT_SECONDS", "300"))
 QUEUE_MODE = os.getenv("ENTITY_IMPORT_QUEUE_MODE", "in_process")
 POLL_INTERVAL_SECONDS = int(os.getenv("ENTITY_PIPELINE_WORKER_POLL_SECONDS", "10"))
@@ -656,10 +668,18 @@ class EntityPipelineWorker:
 
 
 def main() -> None:
-    if should_process_in_process(QUEUE_MODE):
-        raise SystemExit("ENTITY_IMPORT_QUEUE_MODE must be 'durable_worker' to run this worker")
-    worker = EntityPipelineWorker()
-    worker.run_forever()
+    try:
+        logger.info("Starting entity pipeline worker")
+        logger.info("Worker queue mode=%s fastapi_url=%s", QUEUE_MODE, FASTAPI_URL)
+        if should_process_in_process(QUEUE_MODE):
+            raise SystemExit("ENTITY_IMPORT_QUEUE_MODE must be 'durable_worker' to run this worker")
+        worker = EntityPipelineWorker()
+        worker.run_forever()
+    except SystemExit:
+        raise
+    except Exception as error:
+        logger.exception("Entity pipeline worker crashed: %s", error)
+        raise
 
 
 if __name__ == "__main__":
