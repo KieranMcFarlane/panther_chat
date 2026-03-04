@@ -39,6 +39,9 @@ export default async function EntityImportRunDetailPage(
   const candidateTypes = typeof monitoringSummary?.candidate_types === 'object' && monitoringSummary?.candidate_types !== null
     ? (monitoringSummary.candidate_types as Record<string, unknown>)
     : null
+  const validatedCandidateTypes = typeof monitoringSummary?.validated_candidate_types === 'object' && monitoringSummary?.validated_candidate_types !== null
+    ? (monitoringSummary.validated_candidate_types as Record<string, unknown>)
+    : null
   const scores = typeof run.metadata?.scores === 'object' && run.metadata?.scores !== null
     ? (run.metadata.scores as Record<string, unknown>)
     : null
@@ -163,6 +166,7 @@ export default async function EntityImportRunDetailPage(
               <p>candidate count: {String(monitoringSummary?.candidate_count ?? 'n/a')}</p>
               <p>snapshot count: {String(monitoringSummary?.snapshot_count ?? 'n/a')}</p>
               <p>candidate types: {candidateTypes ? Object.entries(candidateTypes).map(([key, value]) => `${key}:${String(value)}`).join(', ') : 'n/a'}</p>
+              <p>validated candidate types: {validatedCandidateTypes ? Object.entries(validatedCandidateTypes).map(([key, value]) => `${key}:${String(value)}`).join(', ') : 'n/a'}</p>
               <p>LLM validated: {String(monitoringSummary?.llm_validated_count ?? 'n/a')}</p>
               <p>escalation recommended: {String(monitoringSummary?.escalation_recommended_count ?? 'n/a')}</p>
             </div>

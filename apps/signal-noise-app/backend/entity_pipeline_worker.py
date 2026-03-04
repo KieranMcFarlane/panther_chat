@@ -420,7 +420,10 @@ class EntityPipelineWorker:
                     "candidate_type": candidate.get("candidate_type"),
                     "score": candidate.get("score") or 0,
                     "evidence_excerpt": candidate.get("evidence_excerpt"),
-                    "metadata": candidate.get("metadata") or {},
+                    "metadata": {
+                        **(candidate.get("metadata") or {}),
+                        "validation_result": ((candidate.get("metadata") or {}).get("validation_result") or None),
+                    },
                 }
                 for candidate in candidates
                 if candidate.get("page_class") and candidate.get("url") and candidate.get("candidate_type")

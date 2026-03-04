@@ -248,8 +248,86 @@ def test_derive_monitoring_summary_extracts_monitoring_counts():
     assert summary["snapshot_count"] == 2
     assert summary["candidate_types"]["social_signal"] == 1
     assert summary["candidate_types"]["hiring_signal"] == 1
+    assert summary["validated_candidate_types"]["social_signal"] == 1
+    assert summary["validated_candidate_types"]["hiring_signal"] == 1
     assert summary["llm_validated_count"] == 2
     assert summary["escalation_recommended_count"] == 1
+
+
+def test_persist_monitoring_outputs_keeps_validation_result_in_candidate_metadata():
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker._now_iso = lambda: "2026-03-04T10:00:00+00:00"
+
+    recorded_operations = []
+
+    class FakeExecute:
+        def __init__(self, table_name, action, payload):
+            self.table_name = table_name
+            self.action = action
+            self.payload = payload
+
+        def execute(self):
+            recorded_operations.append(
+                {
+                    "table": self.table_name,
+                    "action": self.action,
+                    "payload": self.payload,
+                }
+            )
+            return SimpleNamespace(data=[])
+
+    class FakeTable:
+        def __init__(self, table_name):
+            self.table_name = table_name
+
+        def upsert(self, payload, on_conflict=None):
+            return FakeExecute(self.table_name, "upsert", payload)
+
+        def insert(self, payload):
+            return FakeExecute(self.table_name, "insert", payload)
+
+    worker.supabase = SimpleNamespace(table=lambda name: FakeTable(name))
+    worker._safe_execute = lambda operation, **_kwargs: (operation(), True)[1]
+
+    run = {
+        "entity_id": "international-canoe-federation",
+        "id": "batch-1_international-canoe-federation",
+    }
+    result = {
+        "artifacts": {
+            "dossier": {"metadata": {"canonical_sources": {}}},
+            "monitoring_result": {
+                "snapshots": [],
+                "candidates": [
+                    {
+                        "entity_id": "international-canoe-federation",
+                        "batch_id": "batch-1",
+                        "run_id": "batch-1_international-canoe-federation",
+                        "page_class": "linkedin_posts",
+                        "url": "https://www.linkedin.com/company/international-canoe-federation/posts",
+                        "content_hash": "hash-social",
+                        "candidate_type": "social_signal",
+                        "score": 0.73,
+                        "evidence_excerpt": "Potential procurement activity",
+                        "metadata": {
+                            "validation_result": {
+                                "verdict": "interesting",
+                                "confidence": 0.68,
+                                "should_escalate": True,
+                            }
+                        },
+                    }
+                ],
+            },
+        }
+    }
+
+    worker.persist_monitoring_outputs("batch-1", run, result)
+
+    candidate_op = next(op for op in recorded_operations if op["table"] == "entity_monitoring_candidates")
+    validation_result = candidate_op["payload"][0]["metadata"]["validation_result"]
+    assert validation_result["verdict"] == "interesting"
+    assert validation_result["should_escalate"] is True
 
 
 def test_derive_discovery_context_extracts_template_and_hypothesis_summary():

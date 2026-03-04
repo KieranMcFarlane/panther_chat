@@ -94,12 +94,14 @@ def derive_monitoring_summary(result: Dict[str, Any]) -> Dict[str, Any]:
     candidate_types: Dict[str, int] = {}
     llm_validated_count = 0
     escalation_recommended_count = 0
+    validated_candidate_types: Dict[str, int] = {}
     for candidate in monitoring_result.get("candidates") or []:
         candidate_type = str(candidate.get("candidate_type") or "unknown")
         candidate_types[candidate_type] = candidate_types.get(candidate_type, 0) + 1
         validation_result = (candidate.get("metadata") or {}).get("validation_result") or {}
         if validation_result:
             llm_validated_count += 1
+            validated_candidate_types[candidate_type] = validated_candidate_types.get(candidate_type, 0) + 1
             if validation_result.get("should_escalate"):
                 escalation_recommended_count += 1
     return {
@@ -109,6 +111,7 @@ def derive_monitoring_summary(result: Dict[str, Any]) -> Dict[str, Any]:
         "candidate_count": monitoring_result.get("candidate_count", 0),
         "snapshot_count": len(monitoring_result.get("snapshots") or []),
         "candidate_types": candidate_types,
+        "validated_candidate_types": validated_candidate_types,
         "llm_validated_count": llm_validated_count,
         "escalation_recommended_count": escalation_recommended_count,
     }
