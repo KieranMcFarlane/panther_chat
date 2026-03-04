@@ -4032,6 +4032,11 @@ Return JSON:
     ) -> DiscoveryResult:
         consecutive_no_progress = 0
         repeated_unchanged_official_site_no_progress = 0
+        official_site_state = {
+            "last_content_hash": None,
+            "same_hash_no_progress_count": 0,
+            "changed_content_count": 0,
+        }
 
         for iteration in range(1, max_iterations + 1):
             iteration_started_at = time.perf_counter()
@@ -4102,11 +4107,25 @@ Return JSON:
             repeated_unchanged_official_site = (
                 hop_type == HopType.OFFICIAL_SITE
                 and decision == 'NO_PROGRESS'
-                and bool(performance.get('scrape_cache_hit'))
-                and bool(performance.get('evaluation_cache_hit'))
             )
+            if repeated_unchanged_official_site:
+                content_hash = performance.get('content_hash')
+                if content_hash:
+                    last_hash = official_site_state["last_content_hash"]
+                    if last_hash is None:
+                        official_site_state["last_content_hash"] = content_hash
+                        official_site_state["same_hash_no_progress_count"] = 0
+                    elif content_hash == last_hash:
+                        official_site_state["same_hash_no_progress_count"] += 1
+                    else:
+                        official_site_state["changed_content_count"] += 1
+                        official_site_state["last_content_hash"] = content_hash
+                        official_site_state["same_hash_no_progress_count"] = 0
+
             repeated_unchanged_official_site_no_progress = (
-                repeated_unchanged_official_site_no_progress + 1 if repeated_unchanged_official_site else 0
+                official_site_state["same_hash_no_progress_count"]
+                if repeated_unchanged_official_site
+                else 0
             )
 
             if progress_callback:
@@ -4123,14 +4142,23 @@ Return JSON:
                     "performance_summary": self._build_performance_summary(state, elapsed_duration_ms),
                 })
 
-            if repeated_unchanged_official_site_no_progress >= 1:
-                logger.info("Stopping discovery after repeated unchanged official_site NO_PROGRESS iteration")
+            if repeated_unchanged_official_site and (
+                repeated_unchanged_official_site_no_progress >= 1
+                or official_site_state["changed_content_count"] > 0
+            ):
+                stop_reason = (
+                    "repeated_unchanged_official_site_no_progress"
+                    if repeated_unchanged_official_site_no_progress >= 1
+                    else "repeated_changed_official_site_content"
+                )
+                logger.info(f"Stopping discovery after {stop_reason}")
                 if progress_callback:
                     await progress_callback({
                         "status": "completed",
-                        "stop_reason": "repeated_unchanged_official_site_no_progress",
+                        "stop_reason": stop_reason,
                         "iteration": iteration,
                         "consecutive_no_progress": consecutive_no_progress,
+                        "official_site_changed_content_count": official_site_state["changed_content_count"],
                         "repeated_unchanged_official_site_no_progress": repeated_unchanged_official_site_no_progress,
                     })
                 break

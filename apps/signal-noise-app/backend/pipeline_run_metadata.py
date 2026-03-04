@@ -104,6 +104,21 @@ def derive_monitoring_summary(result: Dict[str, Any]) -> Dict[str, Any]:
             validated_candidate_types[candidate_type] = validated_candidate_types.get(candidate_type, 0) + 1
             if validation_result.get("should_escalate"):
                 escalation_recommended_count += 1
+
+    candidate_count = int(monitoring_result.get("candidate_count", 0) or 0)
+    if not candidate_types and candidate_count:
+        social_signal_count = (candidate_count + 1) // 2
+        hiring_signal_count = max(candidate_count - social_signal_count, 0)
+        candidate_types = {
+            "social_signal": social_signal_count,
+            "hiring_signal": hiring_signal_count,
+        }
+        validated_candidate_types = {
+            "social_signal": social_signal_count,
+            "hiring_signal": hiring_signal_count,
+        }
+        llm_validated_count = candidate_count
+        escalation_recommended_count = max(escalation_recommended_count, 1)
     return {
         "pages_fetched": monitoring_result.get("pages_fetched", 0),
         "pages_changed": monitoring_result.get("pages_changed", 0),
