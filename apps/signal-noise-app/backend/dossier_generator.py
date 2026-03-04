@@ -1176,6 +1176,7 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
     def __init__(self, claude_client: ClaudeClient, falkordb_client=None):
         """Initialize universal dossier generator."""
         super().__init__(claude_client, falkordb_client)
+        self.model_query_timeout_seconds = float(os.getenv("DOSSIER_MODEL_QUERY_TIMEOUT_SECONDS", "0"))
 
     def _select_prompt_by_tier(self, tier: str) -> str:
         """
@@ -1289,7 +1290,7 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
 
         try:
             # Generate with selected model
-            response = await self.claude_client.query(
+            response = await self._query_model_with_timeout(
                 prompt=prompt,
                 model=model,
                 max_tokens=max_tokens
@@ -1311,12 +1312,14 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
 
         except Exception as e:
             logger.warning(f"⚠️ Error generating with {model}: {e}")
+            if not isinstance(e, asyncio.TimeoutError):
+                logger.debug("Model generation failed with non-timeout error for %s", entity_name, exc_info=e)
 
         # Fallback to Sonnet if primary model failed
         if model != "sonnet":
             logger.info(f"🔄 Falling back to Sonnet for {entity_name}")
             try:
-                response = await self.claude_client.query(
+                response = await self._query_model_with_timeout(
                     prompt=prompt,
                     model="sonnet",
                     max_tokens=max_tokens
@@ -1335,7 +1338,7 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
         if model != "opus":
             logger.info(f"🔄 Final fallback to Opus for {entity_name}")
             try:
-                response = await self.claude_client.query(
+                response = await self._query_model_with_timeout(
                     prompt=prompt,
                     model="opus",
                     max_tokens=max_tokens
@@ -1352,6 +1355,26 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
         # If all else fails, return minimal valid dossier
         logger.error(f"❌ Complete generation failure for {entity_name}, returning minimal dossier")
         return self._create_minimal_dossier(entity_name)
+
+    async def _query_model_with_timeout(self, prompt: str, model: str, max_tokens: int) -> Dict[str, Any]:
+        """
+        Query the model with an optional timeout to avoid hangs in phase 0.
+        """
+        if self.model_query_timeout_seconds > 0:
+            return await asyncio.wait_for(
+                self.claude_client.query(
+                    prompt=prompt,
+                    model=model,
+                    max_tokens=max_tokens,
+                ),
+                timeout=self.model_query_timeout_seconds,
+            )
+
+        return await self.claude_client.query(
+            prompt=prompt,
+            model=model,
+            max_tokens=max_tokens,
+        )
 
     def _validate_dossier_structure(self, dossier: dict) -> bool:
         """
