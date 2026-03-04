@@ -15,6 +15,7 @@ from entity_pipeline_worker import (
     build_batch_running_update,
     build_run_start_metadata,
     build_run_success_metadata,
+    build_run_exhausted_retry_metadata,
     build_run_retry_metadata,
     choose_supabase_key,
     build_run_detail_url,
@@ -143,6 +144,25 @@ def test_build_run_success_metadata_clears_retry_error_fields():
     assert metadata["retry_state"] == "completed"
     assert metadata["last_error"] is None
     assert metadata["last_error_type"] is None
+
+
+def test_build_run_exhausted_retry_metadata_marks_run_as_failed():
+    metadata = build_run_exhausted_retry_metadata(
+        {
+            "attempt_count": 2,
+            "retryable": True,
+            "retry_state": "retrying",
+            "last_error": "timed out",
+            "last_error_type": "timeout",
+        },
+        now_iso="2026-03-04T12:00:00+00:00",
+    )
+
+    assert metadata["retryable"] is False
+    assert metadata["retry_state"] == "failed"
+    assert metadata["last_error"] == "timed out"
+    assert metadata["last_error_type"] == "timeout"
+    assert metadata["last_error_at"] == "2026-03-04T12:00:00+00:00"
 
 
 def test_build_batch_heartbeat_metadata_preserves_existing_claim_data():
@@ -861,3 +881,83 @@ def test_process_batch_marks_batch_completed_after_successful_retry():
     assert batch_updates[-1]["status"] == "completed"
     assert batch_updates[-1]["metadata"]["retry_state"] == "completed"
     assert batch_updates[-1]["metadata"]["lease_expires_at"] is None
+
+
+def test_process_batch_marks_exhausted_retrying_run_failed_and_fails_batch():
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker._now_iso = lambda: "2026-03-04T12:10:00+00:00"
+    worker._batch_metadata = lambda batch: batch.get("metadata", {})
+    worker.refresh_batch_heartbeat = lambda batch_id, metadata=None: {
+        **(metadata or {}),
+        "heartbeat_at": "2026-03-04T12:10:00+00:00",
+    }
+    worker._start_batch_heartbeat = lambda batch_id, metadata=None: (
+        SimpleNamespace(set=lambda: None),
+        SimpleNamespace(join=lambda timeout=1: None),
+    )
+    worker.worker_id = "worker-1"
+    worker.lease_seconds = 60
+    worker.max_run_attempts = 2
+
+    run = {
+        "entity_id": "icf",
+        "entity_name": "International Canoe Federation",
+        "status": "retrying",
+        "phase": "entity_registration",
+        "metadata": {
+            "entity_type": "FEDERATION",
+            "attempt_count": 2,
+            "retryable": True,
+            "retry_state": "retrying",
+            "last_error": "timed out",
+            "last_error_type": "timeout",
+        },
+    }
+
+    run_updates = []
+    worker.update_run = lambda batch_id, entity_id, payload: run_updates.append(payload)
+    sync_calls = []
+    worker.sync_cached_entity = lambda *args, **kwargs: sync_calls.append((args, kwargs))
+    worker._get_run_metadata = lambda batch_id, entity_id: run["metadata"]
+
+    batch_updates = []
+
+    class FakeRpcQuery:
+        def __init__(self, name, params):
+            self.name = name
+            self.params = params
+
+        def execute(self):
+            return SimpleNamespace(data=[])
+
+    class FakeTable:
+        def update(self, payload):
+            batch_updates.append(payload)
+            return self
+
+        def eq(self, *_args, **_kwargs):
+            return self
+
+        def execute(self):
+            return SimpleNamespace(data=[])
+
+    class FakeSupabase:
+        def rpc(self, name, params):
+            return FakeRpcQuery(name, params)
+
+        def table(self, _name):
+            return FakeTable()
+
+    worker.supabase = FakeSupabase()
+    states = [[run], [{"entity_id": "icf", "status": "failed", "metadata": run["metadata"]}]]
+    worker.get_batch_runs = lambda batch_id: states.pop(0)
+
+    batch = {"id": "batch-1", "metadata": {"queue_mode": "durable_worker"}}
+    worker.process_batch(batch)
+
+    assert run_updates[-1]["status"] == "failed"
+    assert run_updates[-1]["metadata"]["retry_state"] == "failed"
+    assert run_updates[-1]["error_message"] == "timed out"
+    assert sync_calls, "expected failed cached-entity sync for exhausted retry"
+    assert batch_updates[-1]["status"] == "failed"
+    assert batch_updates[-1]["metadata"]["retry_state"] == "failed"

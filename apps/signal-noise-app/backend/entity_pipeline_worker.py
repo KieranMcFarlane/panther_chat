@@ -201,6 +201,20 @@ def build_run_success_metadata(existing_metadata: Optional[Dict[str, Any]]) -> D
     return metadata
 
 
+def build_run_exhausted_retry_metadata(
+    existing_metadata: Optional[Dict[str, Any]],
+    *,
+    now_iso: str,
+) -> Dict[str, Any]:
+    metadata = deepcopy(existing_metadata or {})
+    metadata["retryable"] = False
+    metadata["retry_state"] = "failed"
+    metadata["last_error"] = metadata.get("last_error") or "Retry attempts exhausted"
+    metadata["last_error_type"] = metadata.get("last_error_type") or "retry_exhausted"
+    metadata["last_error_at"] = metadata.get("last_error_at") or now_iso
+    return metadata
+
+
 def merge_cached_entity_properties(
     existing_properties: Optional[Dict[str, Any]],
     *,
@@ -506,7 +520,25 @@ class EntityPipelineWorker:
                 continue
             run_metadata = run.get("metadata") if isinstance(run.get("metadata"), dict) else {}
             attempt_count = int(run_metadata.get("attempt_count", 0) or 0)
-            if attempt_count >= max_run_attempts and run.get("status") in {"failed", "retrying"}:
+            if attempt_count >= max_run_attempts and run.get("status") == "retrying":
+                exhausted_metadata = build_run_exhausted_retry_metadata(
+                    run_metadata,
+                    now_iso=self._now_iso(),
+                )
+                self.sync_cached_entity(batch_id, run, None, "failed")
+                self.update_run(
+                    batch_id,
+                    run["entity_id"],
+                    {
+                        "status": "failed",
+                        "phase": run.get("phase") or "entity_registration",
+                        "error_message": exhausted_metadata.get("last_error"),
+                        "completed_at": self._now_iso(),
+                        "metadata": exhausted_metadata,
+                    },
+                )
+                continue
+            if attempt_count >= max_run_attempts and run.get("status") == "failed":
                 continue
             now_iso = self._now_iso()
             self.update_run(
