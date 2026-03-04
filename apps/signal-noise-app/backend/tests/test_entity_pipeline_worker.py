@@ -520,6 +520,108 @@ def test_process_batch_persists_discovery_context(monkeypatch):
     assert persisted_monitoring and persisted_monitoring[0][0] == "batch-1"
 
 
+def test_persist_monitoring_outputs_upserts_expanded_source_registry_entries():
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker._now_iso = lambda: "2026-03-04T10:00:00+00:00"
+
+    recorded_operations = []
+
+    class FakeExecute:
+        def __init__(self, table_name, action, payload, conflict=None):
+            self.table_name = table_name
+            self.action = action
+            self.payload = payload
+            self.conflict = conflict
+
+        def execute(self):
+            recorded_operations.append(
+                {
+                    "table": self.table_name,
+                    "action": self.action,
+                    "payload": self.payload,
+                    "conflict": self.conflict,
+                }
+            )
+            return SimpleNamespace(data=[])
+
+    class FakeTable:
+        def __init__(self, table_name):
+            self.table_name = table_name
+
+        def upsert(self, payload, on_conflict=None):
+            return FakeExecute(self.table_name, "upsert", payload, on_conflict)
+
+        def insert(self, payload):
+            return FakeExecute(self.table_name, "insert", payload)
+
+    worker.supabase = SimpleNamespace(table=lambda name: FakeTable(name))
+    worker._safe_execute = lambda operation, **_kwargs: (operation(), True)[1]
+
+    run = {
+        "entity_id": "international-canoe-federation",
+        "id": "batch-1_international-canoe-federation",
+    }
+    result = {
+        "artifacts": {
+            "dossier": {
+                "metadata": {
+                    "canonical_sources": {
+                        "official_site": "https://www.canoeicf.com",
+                        "jobs_board": "https://jobs.example.com/icf",
+                        "linkedin_company": "https://www.linkedin.com/company/international-canoe-federation",
+                        "linkedin_posts": "https://www.linkedin.com/company/international-canoe-federation/posts",
+                    }
+                }
+            },
+            "monitoring_result": {
+                "snapshots": [
+                    {
+                        "entity_id": "international-canoe-federation",
+                        "page_class": "linkedin_posts",
+                        "url": "https://www.linkedin.com/company/international-canoe-federation/posts",
+                        "content_hash": "hash-social",
+                        "fetched_at": "2026-03-04T09:58:00+00:00",
+                        "changed": True,
+                        "metadata": {"content_length": 120},
+                    }
+                ],
+                "candidates": [
+                    {
+                        "entity_id": "international-canoe-federation",
+                        "batch_id": "batch-1",
+                        "run_id": "batch-1_international-canoe-federation",
+                        "page_class": "jobs_board",
+                        "url": "https://jobs.example.com/icf",
+                        "content_hash": "hash-jobs",
+                        "candidate_type": "hiring_signal",
+                        "score": 0.77,
+                        "evidence_excerpt": "Head of Procurement role opened",
+                        "metadata": {"matched_keywords": ["head of procurement"]},
+                    }
+                ],
+            },
+        }
+    }
+
+    worker.persist_monitoring_outputs("batch-1", run, result)
+
+    registry_op = next(op for op in recorded_operations if op["table"] == "entity_source_registry")
+    snapshot_op = next(op for op in recorded_operations if op["table"] == "entity_source_snapshots")
+    candidate_op = next(op for op in recorded_operations if op["table"] == "entity_monitoring_candidates")
+
+    registry_classes = {row["page_class"] for row in registry_op["payload"]}
+    assert registry_op["action"] == "upsert"
+    assert registry_op["conflict"] == "entity_id,page_class,url"
+    assert {"official_site", "jobs_board", "linkedin_company", "linkedin_posts"} <= registry_classes
+
+    assert snapshot_op["action"] == "insert"
+    assert snapshot_op["payload"][0]["page_class"] == "linkedin_posts"
+
+    assert candidate_op["action"] == "insert"
+    assert candidate_op["payload"][0]["page_class"] == "jobs_board"
+    assert candidate_op["payload"][0]["candidate_type"] == "hiring_signal"
+
+
 def test_process_batch_requeues_batch_when_run_is_retryable():
     worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
     worker._now_iso = lambda: "2026-03-03T04:00:00+00:00"
