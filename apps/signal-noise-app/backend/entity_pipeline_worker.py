@@ -45,7 +45,7 @@ def resolve_fastapi_url(
 
 
 FASTAPI_URL = resolve_fastapi_url(os.getenv("FASTAPI_URL"), os.getenv("PYTHON_BACKEND_URL"))
-PIPELINE_TIMEOUT_SECONDS = int(os.getenv("ENTITY_PIPELINE_TIMEOUT_SECONDS", "900"))
+PIPELINE_TIMEOUT_SECONDS = int(os.getenv("ENTITY_PIPELINE_TIMEOUT_SECONDS", "1800"))
 QUEUE_MODE = os.getenv("ENTITY_IMPORT_QUEUE_MODE", "in_process")
 POLL_INTERVAL_SECONDS = int(os.getenv("ENTITY_PIPELINE_WORKER_POLL_SECONDS", "10"))
 STALE_MINUTES = int(os.getenv("ENTITY_PIPELINE_STALE_MINUTES", "30"))
@@ -68,6 +68,12 @@ def choose_supabase_key(
 
 def build_run_detail_url(batch_id: str, entity_id: str) -> str:
     return f"/entity-import/{batch_id}/{entity_id}"
+
+
+def resolve_pipeline_timeout(timeout_seconds: int) -> Optional[int]:
+    if timeout_seconds <= 0:
+        return None
+    return timeout_seconds
 
 
 def build_batch_claim_metadata(existing_metadata: Optional[Dict[str, Any]], *, worker_id: str, now_iso: str) -> Dict[str, Any]:
@@ -350,7 +356,7 @@ class EntityPipelineWorker:
             headers={"Content-Type": "application/json"},
             method="POST",
         )
-        with urlopen(request, timeout=PIPELINE_TIMEOUT_SECONDS) as response:
+        with urlopen(request, timeout=resolve_pipeline_timeout(PIPELINE_TIMEOUT_SECONDS)) as response:
             return json.loads(response.read().decode("utf-8"))
 
     def sync_cached_entity(self, batch_id: str, run: Dict[str, Any], result: Optional[Dict[str, Any]], status: str) -> None:

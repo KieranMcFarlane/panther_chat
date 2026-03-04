@@ -24,6 +24,7 @@ from entity_pipeline_worker import (
     merge_cached_entity_properties,
     derive_discovery_context,
     derive_monitoring_summary,
+    resolve_pipeline_timeout,
     resolve_fastapi_url,
     should_process_in_process,
     EntityPipelineWorker,
@@ -78,7 +79,14 @@ def test_resolve_fastapi_url_prefers_ipv4_loopback_default():
 def test_worker_module_uses_longer_default_pipeline_timeout():
     import entity_pipeline_worker as worker_module
 
-    assert worker_module.PIPELINE_TIMEOUT_SECONDS == 900
+    assert worker_module.PIPELINE_TIMEOUT_SECONDS == 1800
+
+
+def test_resolve_pipeline_timeout_supports_no_timeout_mode():
+    assert resolve_pipeline_timeout(1800) == 1800
+    assert resolve_pipeline_timeout(1) == 1
+    assert resolve_pipeline_timeout(0) is None
+    assert resolve_pipeline_timeout(-1) is None
 
 
 def test_load_worker_environment_reads_local_dotenv(tmp_path, monkeypatch):
