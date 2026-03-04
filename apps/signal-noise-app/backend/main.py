@@ -521,6 +521,30 @@ class EntityPipelineResponse(BaseModel):
     completed_at: str
 
 
+def build_dossier_response_metadata(
+    dossier: Dict[str, Any],
+    *,
+    tier: str,
+    priority_score: int,
+    total_cost_usd: float,
+) -> Dict[str, Any]:
+    dossier_metadata = dossier.get("metadata", {}) if isinstance(dossier, dict) else {}
+    return {
+        "tier": tier,
+        "priority_score": priority_score,
+        "generation_time_seconds": dossier.get("generation_time_seconds", 0),
+        "total_cost_usd": total_cost_usd,
+        "hypothesis_count": dossier_metadata.get("hypothesis_count", 0),
+        "signal_count": dossier_metadata.get("signal_count", 0),
+        "data_freshness": dossier_metadata.get("data_freshness", 0),
+        "source_count": dossier_metadata.get("source_count", 0),
+        "sources_used": dossier_metadata.get("sources_used", []),
+        "source_timings": dossier_metadata.get("source_timings", {}),
+        "collection_time_seconds": dossier_metadata.get("collection_time_seconds"),
+        "canonical_sources": dossier_metadata.get("canonical_sources", {}),
+    }
+
+
 @app.post("/api/dossiers/generate", response_model=DossierResponse)
 async def generate_dossier(request: DossierRequest):
     """
@@ -675,15 +699,12 @@ async def generate_dossier(request: DossierRequest):
                 entity_id=request.entity_id,
                 entity_name=request.entity_name,
                 dossier_data=dossier,
-                metadata={
-                    "tier": tier,
-                    "priority_score": request.priority_score,
-                    "generation_time_seconds": dossier.get("generation_time_seconds", 0),
-                    "total_cost_usd": dossier_record["total_cost_usd"],
-                    "hypothesis_count": dossier.get("metadata", {}).get("hypothesis_count", 0),
-                    "signal_count": dossier.get("metadata", {}).get("signal_count", 0),
-                    "data_freshness": dossier.get("metadata", {}).get("data_freshness", 0)
-                },
+                metadata=build_dossier_response_metadata(
+                    dossier,
+                    tier=tier,
+                    priority_score=request.priority_score,
+                    total_cost_usd=dossier_record["total_cost_usd"],
+                ),
                 cache_status="FRESH",
                 generated_at=dossier_record["generated_at"]
             )
@@ -770,6 +791,13 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
                 "status": "completed",
                 "hypothesis_count": dossier_response.metadata.get("hypothesis_count", 0),
                 "signal_count": dossier_response.metadata.get("signal_count", 0),
+                "tier": dossier_response.metadata.get("tier"),
+                "duration_seconds": dossier_response.metadata.get("generation_time_seconds"),
+                "collection_time_seconds": dossier_response.metadata.get("collection_time_seconds"),
+                "source_count": dossier_response.metadata.get("source_count", 0),
+                "sources_used": dossier_response.metadata.get("sources_used", []),
+                "source_timings": dossier_response.metadata.get("source_timings", {}),
+                "canonical_sources": dossier_response.metadata.get("canonical_sources", {}),
             },
         )
 
