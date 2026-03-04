@@ -9,6 +9,7 @@ from pathlib import Path
 backend_dir = Path(__file__).parent.parent
 sys.path.insert(0, str(backend_dir))
 
+from main import build_dossier_response_metadata
 from pipeline_run_metadata import merge_pipeline_phase_metadata
 
 
@@ -45,3 +46,37 @@ def test_merge_pipeline_phase_metadata_preserves_existing_fields_and_adds_discov
     assert merged["escalation_reason"] == "baseline_monitoring_ambiguous"
     assert merged["performance_summary"]["iterations_with_timings"] == 1
     assert merged["discovery_context"]["template_id"] == "federation_governing_body"
+
+
+def test_build_dossier_response_metadata_includes_phase0_source_details():
+    metadata = build_dossier_response_metadata(
+        {
+            "generation_time_seconds": 42.5,
+            "metadata": {
+                "hypothesis_count": 3,
+                "signal_count": 2,
+                "data_freshness": 95,
+                "source_count": 4,
+                "sources_used": ["official_website", "job_postings"],
+                "source_timings": {
+                    "official_website": {"duration_seconds": 2.1, "status": "success"},
+                },
+                "collection_time_seconds": 7.8,
+                "canonical_sources": {
+                    "official_site": "https://www.canoeicf.com",
+                },
+            },
+        },
+        tier="STANDARD",
+        priority_score=85,
+        total_cost_usd=0.42,
+    )
+
+    assert metadata["tier"] == "STANDARD"
+    assert metadata["priority_score"] == 85
+    assert metadata["generation_time_seconds"] == 42.5
+    assert metadata["source_count"] == 4
+    assert metadata["sources_used"] == ["official_website", "job_postings"]
+    assert metadata["source_timings"]["official_website"]["duration_seconds"] == 2.1
+    assert metadata["collection_time_seconds"] == 7.8
+    assert metadata["canonical_sources"]["official_site"] == "https://www.canoeicf.com"
