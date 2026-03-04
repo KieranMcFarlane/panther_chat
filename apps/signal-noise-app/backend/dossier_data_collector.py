@@ -17,6 +17,7 @@ Usage:
 import asyncio
 import os
 import logging
+import time
 import urllib.parse
 from typing import Dict, List, Optional, Any
 from datetime import datetime, timezone
@@ -560,7 +561,8 @@ If a field is not found, use null. Return ONLY valid JSON, no other text."""
             "press_releases": [],
             "linkedin_posts": [],
             "sources_used": [],
-            "freshness_score": 0
+            "freshness_score": 0,
+            "source_timings": {},
         }
 
         source_results = await asyncio.gather(
@@ -586,7 +588,8 @@ If a field is not found, use null. Return ONLY valid JSON, no other text."""
             ),
         )
 
-        for source_name, payload in source_results:
+        for source_name, payload, timing in source_results:
+            results["source_timings"][source_name] = timing
             if not payload:
                 continue
 
@@ -624,16 +627,27 @@ If a field is not found, use null. Return ONLY valid JSON, no other text."""
         return results
 
     async def _run_multi_source_task(self, source_name: str, coro):
+        started_at = time.perf_counter()
         try:
             logger.info(f"🔎 Collecting {source_name} for dossier enrichment")
             payload = await asyncio.wait_for(coro, timeout=self.source_timeout_seconds)
-            return source_name, payload
+            return source_name, payload, {
+                "duration_seconds": round(time.perf_counter() - started_at, 3),
+                "status": "success",
+            }
         except asyncio.TimeoutError:
             logger.warning(f"⚠️ {source_name} timed out after {self.source_timeout_seconds:.1f}s")
-            return source_name, None
+            return source_name, None, {
+                "duration_seconds": round(time.perf_counter() - started_at, 3),
+                "status": "timeout",
+            }
         except Exception as e:
             logger.warning(f"⚠️ {source_name} collection failed: {e}")
-            return source_name, None
+            return source_name, None, {
+                "duration_seconds": round(time.perf_counter() - started_at, 3),
+                "status": "failed",
+                "error": str(e),
+            }
 
     async def _scrape_official_site(self, entity_name: str) -> Optional[Dict[str, Any]]:
         """

@@ -50,6 +50,13 @@ async def test_multi_source_collection_runs_sources_concurrently():
         "press_releases",
         "linkedin",
     }
+    assert set(result["source_timings"].keys()) == {
+        "official_website",
+        "job_postings",
+        "press_releases",
+        "linkedin",
+    }
+    assert all(timing["duration_seconds"] >= 0 for timing in result["source_timings"].values())
 
 
 class _ClaudeStub:
