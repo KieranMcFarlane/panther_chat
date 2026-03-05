@@ -83,6 +83,7 @@ def build_batch_claim_metadata(existing_metadata: Optional[Dict[str, Any]], *, w
         {
             "queue_mode": "durable_worker",
             "worker_id": worker_id,
+            "lease_owner": worker_id,
             "claimed_at": now_iso,
             "heartbeat_at": now_iso,
             "lease_expires_at": (datetime.fromisoformat(now_iso) + timedelta(seconds=LEASE_SECONDS)).isoformat(),
@@ -156,6 +157,7 @@ def build_batch_completed_update(
 ) -> Dict[str, Any]:
     metadata = deepcopy(existing_metadata or {})
     metadata["worker_id"] = worker_id
+    metadata["lease_owner"] = worker_id
     metadata["heartbeat_at"] = now_iso
     metadata["completed_at"] = now_iso
     metadata["lease_expires_at"] = None

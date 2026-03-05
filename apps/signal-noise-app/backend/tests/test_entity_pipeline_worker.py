@@ -107,6 +107,7 @@ def test_build_batch_claim_metadata_sets_worker_and_heartbeat_fields():
     metadata = build_batch_claim_metadata({"source": "single_entity_trigger"}, worker_id="worker-1", now_iso="2026-03-02T15:00:00+00:00")
 
     assert metadata["worker_id"] == "worker-1"
+    assert metadata["lease_owner"] == "worker-1"
     assert metadata["claimed_at"] == "2026-03-02T15:00:00+00:00"
     assert metadata["heartbeat_at"] == "2026-03-02T15:00:00+00:00"
     assert metadata["queue_mode"] == "durable_worker"
@@ -252,6 +253,7 @@ def test_build_batch_completed_update_clears_lease_and_sets_completed_state():
     )
 
     assert update["status"] == "completed"
+    assert update["metadata"]["lease_owner"] == "worker-1"
     assert update["metadata"]["completed_at"] == "2026-03-02T15:11:00+00:00"
     assert update["metadata"]["retry_state"] == "completed"
     assert update["metadata"]["lease_expires_at"] is None
