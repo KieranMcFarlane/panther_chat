@@ -1174,6 +1174,17 @@ Include:
 Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
 """
 
+    COMPACT_TIMEOUT_FALLBACK_PROMPT = """
+Generate a COMPACT dossier for {name} optimized for timeout fallback conditions.
+
+Hard requirements:
+1. Return valid JSON only
+2. Include: metadata, executive_summary, quick_actions
+3. Keep response concise and high-signal
+4. Prioritize concrete procurement indicators and immediate next steps
+5. Use {currentData} only (do not assume unavailable sources)
+"""
+
     def __init__(self, claude_client: ClaudeClient, falkordb_client=None):
         """Initialize universal dossier generator."""
         super().__init__(claude_client, falkordb_client)
@@ -1247,7 +1258,8 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
         self,
         prompt: str,
         entity_name: str,
-        tier: str
+        tier: str,
+        max_tokens_override: Optional[int] = None,
     ) -> dict:
         """
         Generate dossier using model cascade strategy for cost optimization.
@@ -1272,6 +1284,8 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
             "PREMIUM": 8000
         }
         max_tokens = max_tokens_by_tier.get(tier, 4000)
+        if max_tokens_override is not None and max_tokens_override > 0:
+            max_tokens = max_tokens_override
 
         # Model cascade: Try Haiku first (80% of cases)
         rollout = random.random()
@@ -1622,6 +1636,7 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
         # Determine tier
         tier = self._determine_tier(priority_score)
         logger.info(f"📊 Generating {tier} dossier for {entity_name} (priority: {priority_score})")
+        phase0_collection_timed_out = bool(entity_data and entity_data.get("collection_timed_out"))
 
         # Collect entity data if not provided
         collection_started_at = datetime.now(timezone.utc)
@@ -1665,10 +1680,12 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
                     entity_id,
                     collection_timeout_seconds,
                 )
+                phase0_collection_timed_out = True
                 entity_data = {
                     "entity_id": entity_id,
                     "entity_name": entity_name,
                     "entity_type": entity_type,
+                    "collection_timed_out": True,
                 }
                 if progress_callback:
                     await progress_callback(
@@ -1704,9 +1721,21 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
             await progress_callback("collect_entity_data", "completed", source="preloaded_entity_data")
 
         # Select prompt based on tier
+        generation_mode = "standard"
+        max_tokens_override: Optional[int] = None
+        if phase0_collection_timed_out:
+            generation_mode = "compact_timeout_fallback"
+            prompt_template = self.COMPACT_TIMEOUT_FALLBACK_PROMPT
+            max_tokens_override = int(os.getenv("DOSSIER_COMPACT_MAX_TOKENS", "1200"))
+        else:
+            prompt_template = self._select_prompt_by_tier(tier)
         if progress_callback:
-            await progress_callback("generate_dossier_content", "running")
-        prompt_template = self._select_prompt_by_tier(tier)
+            await progress_callback(
+                "generate_dossier_content",
+                "running",
+                generation_mode=generation_mode,
+                model_max_tokens=max_tokens_override,
+            )
 
         # Interpolate prompt with entity data
         interpolated_prompt = self._interpolate_prompt(prompt_template, entity_data)
@@ -1715,7 +1744,8 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
         dossier = await self._generate_with_model_cascade(
             prompt=interpolated_prompt,
             entity_name=entity_name,
-            tier=tier
+            tier=tier,
+            max_tokens_override=max_tokens_override,
         )
 
         # Extract hypotheses and signals
@@ -1734,6 +1764,9 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
         dossier["metadata"]["collected_at"] = entity_data.get("collected_at")
         dossier["metadata"]["source_timings"] = entity_data.get("source_timings") or {}
         dossier["metadata"]["canonical_sources"] = self._derive_canonical_sources(entity_data)
+        dossier["metadata"]["generation_mode"] = generation_mode
+        dossier["metadata"]["collection_timed_out"] = bool(phase0_collection_timed_out)
+        dossier["metadata"]["model_max_tokens"] = max_tokens_override
         if collection_duration_seconds is not None:
             dossier["metadata"]["collection_time_seconds"] = collection_duration_seconds
 

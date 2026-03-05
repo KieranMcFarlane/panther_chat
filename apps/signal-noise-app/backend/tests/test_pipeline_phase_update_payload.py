@@ -65,6 +65,9 @@ def test_build_dossier_response_metadata_includes_phase0_source_details():
                 "canonical_sources": {
                     "official_site": "https://www.canoeicf.com",
                 },
+                "generation_mode": "compact_timeout_fallback",
+                "collection_timed_out": True,
+                "model_max_tokens": 900,
             },
         },
         tier="STANDARD",
@@ -80,6 +83,9 @@ def test_build_dossier_response_metadata_includes_phase0_source_details():
     assert metadata["source_timings"]["official_website"]["duration_seconds"] == 2.1
     assert metadata["collection_time_seconds"] == 7.8
     assert metadata["canonical_sources"]["official_site"] == "https://www.canoeicf.com"
+    assert metadata["generation_mode"] == "compact_timeout_fallback"
+    assert metadata["collection_timed_out"] is True
+    assert metadata["model_max_tokens"] == 900
 
 
 def test_build_dossier_running_phase_metadata_includes_known_phase0_context():
@@ -96,3 +102,5 @@ def test_build_dossier_running_phase_metadata_includes_known_phase0_context():
     assert payload["current_substep"] == "cache_lookup"
     assert payload["phase0_substeps"]["cache_lookup"]["status"] == "pending"
     assert payload["phase0_substeps"]["persist_dossier"]["status"] == "pending"
+    assert "inference_runtime" in payload
+    assert payload["inference_runtime"]["provider"] in {"anthropic", "chutes_openai"}
