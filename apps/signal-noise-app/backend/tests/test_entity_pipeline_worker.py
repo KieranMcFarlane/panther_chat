@@ -4,6 +4,8 @@ from pathlib import Path
 from types import SimpleNamespace
 import time
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from entity_pipeline_worker import (
@@ -78,6 +80,38 @@ def test_choose_supabase_key_prefers_service_role_key_when_available():
         anon_key="anon-key",
         public_anon_key="public-anon-key",
     ) == "service-key"
+
+
+def test_worker_init_fails_fast_when_supabase_key_is_invalid(monkeypatch):
+    class FakeQuery:
+        def execute(self):
+            raise RuntimeError("Invalid API key")
+
+    class FakeTable:
+        def select(self, *_args, **_kwargs):
+            return self
+
+        def limit(self, *_args, **_kwargs):
+            return self
+
+        def execute(self):
+            return FakeQuery().execute()
+
+    class FakeSupabase:
+        def table(self, _name):
+            return FakeTable()
+
+    monkeypatch.setenv("SUPABASE_URL", "https://invalid.supabase.co")
+    monkeypatch.setenv("SUPABASE_SERVICE_ROLE_KEY", "bad-service-key")
+    monkeypatch.setenv("SUPABASE_ANON_KEY", "")
+    monkeypatch.setenv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "")
+
+    import entity_pipeline_worker as worker_module
+
+    monkeypatch.setattr(worker_module, "create_client", lambda *_args, **_kwargs: FakeSupabase())
+
+    with pytest.raises(RuntimeError, match="Supabase credentials are invalid"):
+        worker_module.EntityPipelineWorker()
 
 
 def test_resolve_fastapi_url_prefers_ipv4_loopback_default():

@@ -293,6 +293,17 @@ class EntityPipelineWorker:
         self.worker_id = f"{socket.gethostname()}-{os.getpid()}"
         self.lease_seconds = LEASE_SECONDS
         self.max_run_attempts = MAX_RUN_ATTEMPTS
+        self._validate_supabase_connection(supabase_url, supabase_key)
+
+    def _validate_supabase_connection(self, supabase_url: str, supabase_key: str) -> None:
+        try:
+            self.supabase.table("entity_import_batches").select("id").limit(1).execute()
+        except Exception as error:
+            logger.error("Supabase credential validation failed for %s: %s", supabase_url, error)
+            raise RuntimeError(
+                "Supabase credentials are invalid or permissions are insufficient. "
+                "Verify SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY."
+            ) from error
 
     def _now_iso(self) -> str:
         return datetime.now(timezone.utc).isoformat()
