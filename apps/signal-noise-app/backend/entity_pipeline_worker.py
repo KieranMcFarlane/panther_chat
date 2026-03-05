@@ -560,10 +560,10 @@ class EntityPipelineWorker:
     def _classify_error(self, error: Exception) -> tuple[bool, str]:
         if isinstance(error, TimeoutError):
             return True, "timeout"
-        if isinstance(error, URLError):
-            return True, "network"
         if isinstance(error, HTTPError):
             return error.code >= 500, f"http_{error.code}"
+        if isinstance(error, URLError):
+            return True, "network"
         if isinstance(error, json.JSONDecodeError):
             return False, "json_decode"
         if isinstance(error, ValueError):
@@ -689,7 +689,7 @@ class EntityPipelineWorker:
                             "batch_id": batch_id,
                             "entity_id": run["entity_id"],
                             "error_message": str(error),
-                            "retryable": retryable,
+                            "retryable": should_retry,
                         },
                     ).execute(),
                     context=f"mark run failure {batch_id}/{run['entity_id']}",
