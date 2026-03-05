@@ -11,6 +11,23 @@ type PhaseDetail = {
   [key: string]: unknown
 }
 
+function formatSubstepDetails(detail: Record<string, unknown> | null): string {
+  if (!detail) {
+    return ''
+  }
+
+  const entries = Object.entries(detail)
+    .filter(([key, value]) => key !== 'status' && value !== undefined && value !== null)
+    .map(([key, value]) => {
+      if (typeof value === 'object') {
+        return `${key}=${JSON.stringify(value)}`
+      }
+      return `${key}=${String(value)}`
+    })
+
+  return entries.join(', ')
+}
+
 export default async function EntityImportRunDetailPage(
   { params }: { params: { batchId: string; entityId: string } },
 ) {
@@ -157,9 +174,11 @@ export default async function EntityImportRunDetailPage(
               <ul className="mt-2 space-y-1">
                 {Object.entries(phase0Substeps).map(([step, value]) => {
                   const detail = typeof value === 'object' && value !== null ? (value as Record<string, unknown>) : null
+                  const extras = formatSubstepDetails(detail)
                   return (
                     <li key={step}>
                       {step}: {String(detail?.status ?? 'unknown')}
+                      {extras ? ` (${extras})` : ''}
                     </li>
                   )
                 })}
