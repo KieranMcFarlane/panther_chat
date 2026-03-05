@@ -19,6 +19,7 @@ import logging
 import os
 import random
 import re
+import threading
 from datetime import datetime, timezone
 from typing import Dict, List, Optional, Any, Callable, Awaitable
 from dataclasses import dataclass
@@ -1631,10 +1632,33 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
             collector = DossierDataCollector()
             collection_timeout_seconds = int(os.getenv("DOSSIER_COLLECTION_TIMEOUT_SECONDS", "180"))
             try:
-                dossier_data_obj = await asyncio.wait_for(
-                    collector.collect_all(entity_id, entity_name, entity_type=entity_type),
-                    timeout=collection_timeout_seconds,
-                )
+                # Run collect_all in a daemon thread so phase-0 can enforce a hard wall-clock timeout
+                # even if downstream I/O blocks and never yields back to the event loop.
+                result_box: Dict[str, Any] = {}
+                error_box: Dict[str, Exception] = {}
+                completion = threading.Event()
+
+                def _collect_all_worker() -> None:
+                    try:
+                        result_box["value"] = asyncio.run(
+                            collector.collect_all(entity_id, entity_name, entity_type=entity_type),
+                        )
+                    except Exception as error:  # noqa: BLE001
+                        error_box["error"] = error
+                    finally:
+                        completion.set()
+
+                threading.Thread(
+                    target=_collect_all_worker,
+                    name=f"dossier-collect-{entity_id}",
+                    daemon=True,
+                ).start()
+                finished = await asyncio.to_thread(completion.wait, collection_timeout_seconds)
+                if not finished:
+                    raise asyncio.TimeoutError()
+                if "error" in error_box:
+                    raise error_box["error"]
+                dossier_data_obj = result_box.get("value")
             except asyncio.TimeoutError:
                 logger.warning(
                     "⚠️ collect_entity_data timed out for %s after %ss; continuing with minimal data",
