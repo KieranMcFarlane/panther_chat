@@ -556,6 +556,14 @@ class EntityPipelineResponse(BaseModel):
     completed_at: str
 
 
+def determine_dossier_tier_from_priority(priority_score: int) -> str:
+    if priority_score <= 20:
+        return "BASIC"
+    if priority_score <= 50:
+        return "STANDARD"
+    return "PREMIUM"
+
+
 def build_dossier_response_metadata(
     dossier: Dict[str, Any],
     *,
@@ -628,6 +636,57 @@ def build_inference_runtime_metadata() -> Dict[str, Any]:
         "chutes_timeout_seconds": float(os.getenv("CHUTES_TIMEOUT_SECONDS", "45")),
         "chutes_max_retries": int(os.getenv("CHUTES_MAX_RETRIES", "1")),
     }
+
+
+def build_timeout_fallback_dossier_response(request: EntityPipelineRequest) -> DossierResponse:
+    generated_at = datetime.now().isoformat()
+    tier = determine_dossier_tier_from_priority(request.priority_score)
+    dossier_data = {
+        "metadata": {
+            "entity_id": request.entity_id,
+            "generated_at": generated_at,
+            "tier": tier,
+            "priority_score": request.priority_score,
+            "hypothesis_count": 0,
+            "signal_count": 0,
+            "source_count": 0,
+            "sources_used": [],
+            "source_timings": {},
+            "canonical_sources": {},
+            "generation_mode": "timeout_degraded",
+            "collection_timed_out": True,
+            "model_max_tokens": int(os.getenv("DOSSIER_COMPACT_MAX_TOKENS", "1200")),
+        },
+        "executive_summary": {
+            "overall_assessment": {
+                "digital_maturity": {
+                    "score": 0,
+                    "trend": "unknown",
+                    "key_strengths": [],
+                    "key_gaps": [],
+                }
+            },
+            "quick_actions": [],
+            "key_insights": [],
+        },
+        "extracted_hypotheses": [],
+        "extracted_signals": [],
+        "procurement_signals": {"upcoming_opportunities": []},
+        "generation_time_seconds": 0,
+    }
+    return DossierResponse(
+        entity_id=request.entity_id,
+        entity_name=request.entity_name,
+        dossier_data=dossier_data,
+        metadata=build_dossier_response_metadata(
+            dossier_data,
+            tier=tier,
+            priority_score=request.priority_score,
+            total_cost_usd=0,
+        ),
+        cache_status="TIMEOUT_DEGRADED",
+        generated_at=generated_at,
+    )
 
 
 @app.post("/api/dossiers/generate", response_model=DossierResponse)
@@ -884,7 +943,6 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
     """
     try:
         from datetime import datetime
-        from backend.brightdata_sdk_client import BrightDataSDKClient
         from backend.baseline_monitoring import BaselineMonitoringRunner
         from backend.baseline_monitoring import build_compact_candidate_validator
         from backend.claude_client import ClaudeClient
@@ -953,6 +1011,7 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             force_refresh=False,
         )
         dossier_timeout_seconds = float(os.getenv("DOSSIER_PHASE0_TIMEOUT_SECONDS", "180"))
+        phase0_timeout_mode = (os.getenv("PIPELINE_PHASE0_TIMEOUT_MODE") or "fail").strip().lower()
         callback_token = _pipeline_phase_callback_ctx.set(emit_phase_update)
         try:
             try:
@@ -969,20 +1028,33 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
                     dossier_timeout_seconds,
                     request.entity_id,
                 )
-                await emit_phase_update(
-                    "dossier_generation",
-                    {
-                        "status": "failed",
-                        "error": "Phase 0 timeout",
-                        "reason": "dossier_generation_timeout",
-                        "timeout_seconds": dossier_timeout_seconds,
-                        "inference_runtime": build_inference_runtime_metadata(),
-                    },
-                )
-                raise HTTPException(
-                    status_code=504,
-                    detail="Dossier generation timed out during phase 0",
-                )
+                if phase0_timeout_mode == "degraded":
+                    await emit_phase_update(
+                        "dossier_generation",
+                        {
+                            "status": "completed",
+                            "reason": "dossier_generation_timeout_degraded",
+                            "timeout_seconds": dossier_timeout_seconds,
+                            "degraded_mode": True,
+                            "inference_runtime": build_inference_runtime_metadata(),
+                        },
+                    )
+                    dossier_response = build_timeout_fallback_dossier_response(request)
+                else:
+                    await emit_phase_update(
+                        "dossier_generation",
+                        {
+                            "status": "failed",
+                            "error": "Phase 0 timeout",
+                            "reason": "dossier_generation_timeout",
+                            "timeout_seconds": dossier_timeout_seconds,
+                            "inference_runtime": build_inference_runtime_metadata(),
+                        },
+                    )
+                    raise HTTPException(
+                        status_code=504,
+                        detail="Dossier generation timed out during phase 0",
+                    )
         finally:
             _pipeline_phase_callback_ctx.reset(callback_token)
 
@@ -999,11 +1071,41 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
                 "sources_used": dossier_response.metadata.get("sources_used", []),
                 "source_timings": dossier_response.metadata.get("source_timings", {}),
                 "canonical_sources": dossier_response.metadata.get("canonical_sources", {}),
+                "generation_mode": dossier_response.metadata.get("generation_mode"),
+                "collection_timed_out": dossier_response.metadata.get("collection_timed_out"),
+                "model_max_tokens": dossier_response.metadata.get("model_max_tokens"),
+                "inference_runtime": build_inference_runtime_metadata(),
             },
         )
 
         claude = ClaudeClient()
-        brightdata = BrightDataSDKClient()
+        try:
+            from backend.brightdata_sdk_client import BrightDataSDKClient
+
+            brightdata = BrightDataSDKClient()
+        except Exception as brightdata_error:  # noqa: BLE001
+            logger.warning("⚠️ BrightData SDK unavailable for pipeline run, using fallback client: %s", brightdata_error)
+
+            class _FallbackBrightDataClient:
+                async def scrape_as_markdown(self, _url: str):
+                    return {
+                        "content": "",
+                        "metadata": {
+                            "source": "fallback",
+                            "warning": "brightdata_sdk_unavailable",
+                        },
+                    }
+
+                async def search_engine(self, _query: str, **_kwargs):
+                    return {
+                        "results": [],
+                        "metadata": {
+                            "source": "fallback",
+                            "warning": "brightdata_sdk_unavailable",
+                        },
+                    }
+
+            brightdata = _FallbackBrightDataClient()
 
         active_graphiti_service = graphiti_service
         if active_graphiti_service is None:

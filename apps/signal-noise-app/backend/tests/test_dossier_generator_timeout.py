@@ -69,3 +69,27 @@ async def test_run_entity_pipeline_times_out_with_clear_http_error(monkeypatch):
 
     assert exc_info.value.status_code == 504
     assert "timed out" in str(exc_info.value.detail).lower()
+
+
+@pytest.mark.asyncio
+async def test_run_entity_pipeline_degrades_when_phase0_timeout_mode_is_degraded(monkeypatch):
+    monkeypatch.setenv("DOSSIER_PHASE0_TIMEOUT_SECONDS", "0.01")
+    monkeypatch.setenv("PIPELINE_PHASE0_TIMEOUT_MODE", "degraded")
+
+    async def slow_generate_dossier(*_args, **_kwargs):
+        await asyncio.sleep(0.1)
+        raise RuntimeError("should not return")
+
+    monkeypatch.setattr("main.generate_dossier", slow_generate_dossier)
+
+    result = await run_entity_pipeline(
+        EntityPipelineRequest(
+            entity_id="icf-degraded",
+            entity_name="International Canoe Federation",
+            entity_type="FEDERATION",
+            priority_score=85,
+        )
+    )
+
+    assert result.phases["dossier_generation"]["status"] in {"completed", "failed"}
+    assert result.artifacts["dossier"]["metadata"]["generation_mode"] == "timeout_degraded"
