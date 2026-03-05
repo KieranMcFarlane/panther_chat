@@ -232,6 +232,22 @@ def test_build_batch_running_update_keeps_batch_in_running_state():
     assert update["metadata"]["heartbeat_at"] == "2026-03-02T15:01:00+00:00"
 
 
+def test_build_batch_heartbeat_metadata_marks_running_lease_state():
+    metadata = build_batch_heartbeat_metadata(
+        {
+            "worker_id": "worker-1",
+            "retry_state": "retrying",
+            "lease_owner": "old-owner",
+        },
+        now_iso="2026-03-02T15:12:00+00:00",
+        lease_seconds=120,
+    )
+
+    assert metadata["retry_state"] == "running"
+    assert metadata["lease_owner"] == "old-owner"
+    assert metadata["heartbeat_at"] == "2026-03-02T15:12:00+00:00"
+
+
 def test_build_batch_retry_update_requeues_batch_and_records_error():
     update = build_batch_retry_update(
         {"worker_id": "worker-1", "attempt_count": 2},
@@ -450,6 +466,36 @@ def test_refresh_batch_heartbeat_tolerates_transient_supabase_failure():
 
     assert metadata["heartbeat_at"] == "2026-03-03T02:15:00+00:00"
     assert metadata["worker_id"] == "worker-1"
+
+
+def test_refresh_batch_heartbeat_calls_rpc_with_worker_and_lease_seconds():
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    calls = {}
+
+    class FakeRpcQuery:
+        def execute(self):
+            return SimpleNamespace(data=None)
+
+    class FakeSupabase:
+        def rpc(self, name, params):
+            calls["name"] = name
+            calls["params"] = params
+            return FakeRpcQuery()
+
+    worker.supabase = FakeSupabase()
+    worker.worker_id = "worker-1"
+    worker.lease_seconds = 90
+
+    metadata = worker.refresh_batch_heartbeat(
+        "batch-1",
+        {"worker_id": "worker-1", "lease_owner": "worker-1", "heartbeat_at": "2026-03-03T01:00:00+00:00"},
+    )
+
+    assert calls["name"] == "renew_entity_import_batch_lease"
+    assert calls["params"]["batch_id"] == "batch-1"
+    assert calls["params"]["worker_id"] == "worker-1"
+    assert calls["params"]["lease_seconds"] == 90
+    assert metadata["retry_state"] == "running"
 
 
 def test_run_forever_recovers_from_claim_error(monkeypatch):

@@ -118,7 +118,9 @@ def build_batch_heartbeat_metadata(
     lease_seconds: int = LEASE_SECONDS,
 ) -> Dict[str, Any]:
     metadata = deepcopy(existing_metadata or {})
+    metadata["retry_state"] = "running"
     metadata["heartbeat_at"] = now_iso
+    metadata["lease_owner"] = metadata.get("lease_owner") or metadata.get("worker_id")
     metadata["lease_expires_at"] = (datetime.fromisoformat(now_iso) + timedelta(seconds=lease_seconds)).isoformat()
     return metadata
 
