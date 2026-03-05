@@ -448,11 +448,35 @@ class ClaudeClient:
             return True
         if isinstance(error, httpx.HTTPStatusError):
             status = error.response.status_code if error.response else None
-            return status in {408, 409, 429} or (status is not None and status >= 500)
+            return status in {408, 409, 425, 429} or (status is not None and status >= 500)
         if isinstance(error, ValueError):
             msg = str(error).lower()
             return "empty response content" in msg
         return False
+
+    @staticmethod
+    def _format_chutes_error(error: Exception) -> str:
+        if isinstance(error, httpx.HTTPStatusError):
+            status_code = error.response.status_code if error.response is not None else "unknown"
+            body_preview = ""
+            if error.response is not None:
+                try:
+                    body_preview = (error.response.text or "").strip()
+                except Exception:  # noqa: BLE001
+                    body_preview = ""
+            if body_preview:
+                body_preview = body_preview[:300]
+                return f"http_status={status_code} body={body_preview}"
+            return f"http_status={status_code}"
+
+        if isinstance(error, httpx.TimeoutException):
+            return f"{error.__class__.__name__}: timed out after request timeout"
+
+        if isinstance(error, httpx.RequestError):
+            request_url = getattr(getattr(error, "request", None), "url", None)
+            return f"{error.__class__.__name__}: request_url={request_url or 'unknown'} detail={str(error) or 'request failed'}"
+
+        return f"{error.__class__.__name__}: {str(error) or 'unknown error'}"
 
     @staticmethod
     def _extract_retry_after_seconds(error: Exception) -> Optional[float]:
@@ -471,6 +495,7 @@ class ClaudeClient:
         except Exception:
             return None
         return None
+
 
     @staticmethod
     def _coerce_message_text(value: Any) -> str:
@@ -677,7 +702,11 @@ class ClaudeClient:
 
         for attempt in range(self.chutes_max_retries + 1):
             try:
-                async with httpx.AsyncClient(timeout=self.chutes_timeout_seconds) as client:
+                timeout = httpx.Timeout(
+                    timeout=self.chutes_timeout_seconds,
+                    connect=min(self.chutes_timeout_seconds, 15.0),
+                )
+                async with httpx.AsyncClient(timeout=timeout) as client:
                     response = await client.post(
                         f"{self.base_url.rstrip('/')}/chat/completions",
                         headers=headers,
@@ -713,16 +742,20 @@ class ClaudeClient:
                 }
             except Exception as e:
                 last_error = e
+                error_detail = self._format_chutes_error(e)
                 logger.error(
-                    f"Chutes API request failed (attempt {attempt + 1}/{self.chutes_max_retries + 1}): {e}"
+                    "Chutes API request failed (attempt %s/%s): %s",
+                    attempt + 1,
+                    self.chutes_max_retries + 1,
+                    error_detail,
                 )
                 if self._is_insufficient_balance_error(e):
                     self._disable_api("insufficient balance")
-                    raise
+                    raise RuntimeError(f"Chutes insufficient balance: {error_detail}") from e
 
                 is_retryable = self._is_retryable_chutes_error(e)
                 if not is_retryable or attempt >= self.chutes_max_retries:
-                    raise
+                    raise RuntimeError(f"Chutes request failed (retryable={is_retryable}): {error_detail}") from e
 
                 if payload["model"] != self.chutes_fallback_model:
                     status_code = None
@@ -744,7 +777,10 @@ class ClaudeClient:
                     sleep_seconds = backoff + jitter
                 await asyncio.sleep(sleep_seconds)
 
-        raise last_error
+        raise RuntimeError(
+            f"Chutes request failed after {self.chutes_max_retries + 1} attempts: "
+            f"{self._format_chutes_error(last_error) if last_error else 'unknown error'}"
+        )
 
     async def get_embedding(
         self,
