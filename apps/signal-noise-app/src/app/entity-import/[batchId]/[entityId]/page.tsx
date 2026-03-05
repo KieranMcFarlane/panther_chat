@@ -80,6 +80,9 @@ export default async function EntityImportRunDetailPage(
   const phase0Substeps = typeof livePhaseDetails?.phase0_substeps === 'object' && livePhaseDetails.phase0_substeps !== null
     ? (livePhaseDetails.phase0_substeps as Record<string, unknown>)
     : null
+  const inferenceRuntime = typeof livePhaseDetails?.inference_runtime === 'object' && livePhaseDetails.inference_runtime !== null
+    ? (livePhaseDetails.inference_runtime as Record<string, unknown>)
+    : null
 
   const hopTimings = Array.isArray(performanceSummary?.hop_timings)
     ? (performanceSummary?.hop_timings as Array<Record<string, unknown>>)
@@ -193,6 +196,10 @@ export default async function EntityImportRunDetailPage(
               </p>
               <p className="mt-1">collection time: {String(dossierPhase?.collection_time_seconds ?? 'n/a')}s</p>
               <p>tier: {String(dossierPhase?.tier ?? 'n/a')}</p>
+              <p>inference provider: {String(inferenceRuntime?.provider ?? 'n/a')}</p>
+              <p>model: {String(inferenceRuntime?.chutes_model ?? 'n/a')}</p>
+              <p>model timeout: {String(inferenceRuntime?.chutes_timeout_seconds ?? 'n/a')}s</p>
+              <p>max retries: {String(inferenceRuntime?.chutes_max_retries ?? 'n/a')}</p>
             </div>
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Source coverage</p>

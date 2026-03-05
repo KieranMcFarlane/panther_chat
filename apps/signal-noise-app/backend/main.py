@@ -577,6 +577,9 @@ def build_dossier_response_metadata(
         "source_timings": dossier_metadata.get("source_timings", {}),
         "collection_time_seconds": dossier_metadata.get("collection_time_seconds"),
         "canonical_sources": dossier_metadata.get("canonical_sources", {}),
+        "generation_mode": dossier_metadata.get("generation_mode"),
+        "collection_timed_out": bool(dossier_metadata.get("collection_timed_out", False)),
+        "model_max_tokens": dossier_metadata.get("model_max_tokens"),
     }
 
 
@@ -611,6 +614,19 @@ def build_dossier_running_phase_metadata(
         "priority_score": priority_score,
         "current_substep": active_step,
         "phase0_substeps": substeps,
+        "inference_runtime": build_inference_runtime_metadata(),
+    }
+
+
+def build_inference_runtime_metadata() -> Dict[str, Any]:
+    provider = (os.getenv("LLM_PROVIDER") or "").strip().lower()
+    if not provider:
+        provider = "chutes_openai" if os.getenv("CHUTES_API_KEY") else "anthropic"
+    return {
+        "provider": provider,
+        "chutes_model": os.getenv("CHUTES_MODEL"),
+        "chutes_timeout_seconds": float(os.getenv("CHUTES_TIMEOUT_SECONDS", "45")),
+        "chutes_max_retries": int(os.getenv("CHUTES_MAX_RETRIES", "1")),
     }
 
 
@@ -960,6 +976,7 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
                         "error": "Phase 0 timeout",
                         "reason": "dossier_generation_timeout",
                         "timeout_seconds": dossier_timeout_seconds,
+                        "inference_runtime": build_inference_runtime_metadata(),
                     },
                 )
                 raise HTTPException(
