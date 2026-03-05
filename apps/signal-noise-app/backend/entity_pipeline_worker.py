@@ -63,7 +63,11 @@ def choose_supabase_key(
     anon_key: Optional[str],
     public_anon_key: Optional[str],
 ) -> Optional[str]:
-    return anon_key or public_anon_key or service_role_key
+    if service_role_key:
+        return service_role_key
+    if anon_key:
+        return anon_key
+    return public_anon_key
 
 
 def build_run_detail_url(batch_id: str, entity_id: str) -> str:

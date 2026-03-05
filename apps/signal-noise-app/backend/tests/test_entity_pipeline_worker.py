@@ -72,6 +72,14 @@ def test_choose_supabase_key_prefers_anon_key_when_service_role_missing():
     ) == "anon-key"
 
 
+def test_choose_supabase_key_prefers_service_role_key_when_available():
+    assert choose_supabase_key(
+        service_role_key="service-key",
+        anon_key="anon-key",
+        public_anon_key="public-anon-key",
+    ) == "service-key"
+
+
 def test_resolve_fastapi_url_prefers_ipv4_loopback_default():
     assert resolve_fastapi_url(None, None) == "http://127.0.0.1:8000"
     assert resolve_fastapi_url("http://localhost:8000", None) == "http://127.0.0.1:8000"
