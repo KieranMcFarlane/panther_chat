@@ -1170,7 +1170,7 @@ Best regards,
                   AI Assistant Ready
                 </Badge>
                 <span className="text-xs text-muted-foreground">
-                  Ask: "Help me write a professional email" or "Improve the tone"
+                  Ask: &quot;Help me write a professional email&quot; or &quot;Improve the tone&quot;
                 </span>
               </div>
               <div className="flex items-center gap-1">

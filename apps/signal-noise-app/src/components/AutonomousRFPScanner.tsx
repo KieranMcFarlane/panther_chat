@@ -205,7 +205,7 @@ export function AutonomousRFPScanner() {
                 Digital Transformation
               </Badge>
               <p className="text-sm text-gray-300">
-                "invites proposals from digital transformation agencies to spearhead comprehensive initiatives"
+                &quot;invites proposals from digital transformation agencies to spearhead comprehensive initiatives&quot;
               </p>
             </div>
             <div className="space-y-2">
@@ -213,7 +213,7 @@ export function AutonomousRFPScanner() {
                 Ticketing Systems
               </Badge>
               <p className="text-sm text-gray-300">
-                "soliciting proposals from ticketing service providers to implement fully integrated systems"
+                &quot;soliciting proposals from ticketing service providers to implement fully integrated systems&quot;
               </p>
             </div>
             <div className="space-y-2">
@@ -221,7 +221,7 @@ export function AutonomousRFPScanner() {
                 Mobile App Development
               </Badge>
               <p className="text-sm text-gray-300">
-                "request for proposals for mobile application development and fan engagement platforms"
+                &quot;request for proposals for mobile application development and fan engagement platforms&quot;
               </p>
             </div>
             <div className="space-y-2">
@@ -229,7 +229,7 @@ export function AutonomousRFPScanner() {
                 Web Platform Redesign
               </Badge>
               <p className="text-sm text-gray-300">
-                "invitation to tender for website redesign and digital platform modernization"
+                &quot;invitation to tender for website redesign and digital platform modernization&quot;
               </p>
             </div>
           </div>

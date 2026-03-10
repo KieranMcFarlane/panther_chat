@@ -564,10 +564,10 @@ Format your response as JSON:
             </p>
             <div className="space-y-2 text-xs text-blue-700">
               <div className="bg-white p-2 rounded border">
-                "Generate a partnership introduction email with professional tone, highlighting our digital transformation expertise"
+                &quot;Generate a partnership introduction email with professional tone, highlighting our digital transformation expertise&quot;
               </div>
               <div className="bg-white p-2 rounded border">
-                "Create a follow-up email regarding our sports technology solutions, friendly tone"
+                &quot;Create a follow-up email regarding our sports technology solutions, friendly tone&quot;
               </div>
             </div>
           </div>

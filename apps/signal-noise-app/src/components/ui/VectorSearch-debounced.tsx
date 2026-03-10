@@ -375,7 +375,7 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 									<p className="text-sm mb-6">Search across clubs, players, tenders, and contacts</p>
 									<div className="space-y-2 text-xs text-fm-light-grey bg-custom-bg/50 rounded-lg p-4 mx-auto max-w-md">
 										<p>💡 <strong>Debounced Search:</strong> Results appear 200ms after you stop typing</p>
-										<p>🧪 <strong>Test it:</strong> Type "football" then wait 200ms before typing "club"</p>
+											<p>🧪 <strong>Test it:</strong> Type &quot;football&quot; then wait 200ms before typing &quot;club&quot;</p>
 										<p>⚡ <strong>Smart Matching:</strong> Finds entities by name, type, and metadata</p>
 									</div>
 								</div>

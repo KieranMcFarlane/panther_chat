@@ -47,7 +47,7 @@ export function VectorSearch() {
             </div>
           </div>
           <p className="text-muted-foreground">
-            AI-powered semantic search across your Neo4j knowledge graph
+            AI-powered semantic search across your graph intelligence store
           </p>
         </div>
       </div>
@@ -179,7 +179,7 @@ export function VectorSearch() {
           <Card>
             <CardContent className="flex flex-col items-center justify-center py-12">
               <RefreshCw className="h-8 w-8 animate-spin text-primary mb-4" />
-              <h3 className="text-lg font-medium mb-2">Searching Knowledge Graph...</h3>
+              <h3 className="text-lg font-medium mb-2">Searching Graph Intelligence Store...</h3>
               <p className="text-muted-foreground">
                 {searchType === 'vector' 
                   ? 'Running AI-powered semantic search across your data' 
@@ -206,7 +206,7 @@ export function VectorSearch() {
                 Search Results
               </h2>
               <p className="text-sm text-muted-foreground">
-                Found {results.length} entities matching "{query}"
+                Found {results.length} entities matching &quot;{query}&quot;
               </p>
             </div>
             
@@ -231,7 +231,7 @@ export function VectorSearch() {
               <div className="text-6xl mb-4">🔍</div>
               <h3 className="text-xl font-medium mb-2">No Results Found</h3>
               <p className="text-muted-foreground text-center max-w-md">
-                We couldn't find any entities matching "{query}". Try:
+                We couldn&apos;t find any entities matching &quot;{query}&quot;. Try:
               </p>
               <ul className="text-sm text-muted-foreground mt-4 text-center space-y-1">
                 <li>• Using different keywords</li>
@@ -248,18 +248,18 @@ export function VectorSearch() {
           <Card>
             <CardContent className="flex flex-col items-center justify-center py-12">
               <div className="text-6xl mb-4">🧠</div>
-              <h3 className="text-2xl font-bold mb-4">Welcome to Knowledge Graph Search</h3>
+              <h3 className="text-2xl font-bold mb-4">Welcome to Graph Intelligence Search</h3>
               <p className="text-muted-foreground text-center max-w-2xl mb-6">
-                This interface allows you to search through your Neo4j knowledge graph using AI-powered vector search. 
+                This interface allows you to search through your graph intelligence store using AI-powered vector search. 
                 Find similar entities, discover relationships, and explore your data in new ways.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left max-w-2xl">
                 <div className="space-y-2">
                   <h4 className="font-medium">Try searching for:</h4>
                   <ul className="text-sm text-muted-foreground space-y-1">
-                    <li>• "Arsenal commercial director"</li>
-                    <li>• "Sports intelligence contacts"</li>
-                    <li>• "Premier League digital teams"</li>
+                    <li>• &quot;Arsenal commercial director&quot;</li>
+                    <li>• &quot;Sports intelligence contacts&quot;</li>
+                    <li>• &quot;Premier League digital teams&quot;</li>
                   </ul>
                 </div>
                 <div className="space-y-2">
