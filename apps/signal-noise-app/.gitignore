@@ -2,3 +2,9 @@
 .env.backup
 .env.bak
 .env.ralph
+.vercel
+.next.preclean*
+.pytest_cache/
+.venv*
+backend/data/dossiers/*
+!backend/data/dossiers/.gitkeep

@@ -15,15 +15,20 @@ shared-config.env
 # Logs
 *.log
 logs/
+!apps/signal-noise-app/src/app/api/logs/
+!apps/signal-noise-app/src/app/api/logs/**
 
 # Dependencies
 node_modules/
 venv/
+.venv*/
+.pytest_cache/
 __pycache__/
 *.pyc
 
 # Build outputs
 .next/
+.next.preclean*
 build/
 dist/
 
@@ -44,3 +49,6 @@ Thumbs.db
 
 badges/
 .worktrees/
+.vercel
+apps/signal-noise-app/backend/data/dossiers/*
+!apps/signal-noise-app/backend/data/dossiers/.gitkeep
