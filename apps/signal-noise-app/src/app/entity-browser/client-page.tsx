@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useState, useEffect, useCallback, useRef } from "react"
+import { useState, useEffect, useCallback, useRef, useDeferredValue, startTransition } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { FixedSizeList, type ListChildComponentProps } from "react-window"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -11,7 +11,6 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { EntityCard } from "@/components/EntityCard"
 import { EmailComposeModal } from "@/components/email/EmailComposeModal"
-import { formatValue } from "@/lib/formatValue"
 import {
   Database,
   Search,
@@ -24,7 +23,7 @@ import {
 
 interface Entity {
   id: string
-  neo4j_id: string | number
+  graph_id?: string | number
   labels: string[]
   properties: Record<string, any>
 }
@@ -46,6 +45,13 @@ interface EntityBrowserResponse {
   }
 }
 
+interface AutocompleteEntity {
+  id: string
+  graph_id?: string | number
+  name: string
+  type?: string
+}
+
 export default function EntityBrowserClientPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -56,9 +62,12 @@ export default function EntityBrowserClientPage() {
   const [initialLoading, setInitialLoading] = useState(true)
   const [gridLoading, setGridLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [dataSource, setDataSource] = useState<'cache' | 'neo4j' | null>(null)
+  const [dataSource, setDataSource] = useState<'cache' | 'supabase' | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("")
+  const [appliedSearchTerm, setAppliedSearchTerm] = useState("")
+  const deferredSearchTerm = useDeferredValue(searchTerm)
+  const [autocompleteLoading, setAutocompleteLoading] = useState(false)
+  const [autocompleteEntities, setAutocompleteEntities] = useState<AutocompleteEntity[]>([])
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null)
   const [currentPage, setCurrentPage] = useState(initialPageFromUrl)
@@ -67,8 +76,8 @@ export default function EntityBrowserClientPage() {
 
   const [filters, setFilters] = useState({
     entityType: "all",
-    sortBy: "name",
-    sortOrder: "asc" as "asc" | "desc",
+    sortBy: "popular",
+    sortOrder: "desc" as "asc" | "desc",
     limit: "10"
   })
 
@@ -101,7 +110,7 @@ export default function EntityBrowserClientPage() {
     sessionStorage.setItem('entityBrowserHistoryIndex', String(nextHistoryStack.length - 1))
   }, [])
 
-  const buildEntityQueryParams = useCallback((page: number) => {
+  const buildEntityQueryParams = useCallback((page: number, searchValue: string) => {
     const params = new URLSearchParams({
       page: page.toString(),
       limit: filters.limit,
@@ -110,12 +119,12 @@ export default function EntityBrowserClientPage() {
       sortOrder: filters.sortOrder
     })
 
-    if (debouncedSearchTerm.trim()) {
-      params.append('search', debouncedSearchTerm.trim())
+    if (searchValue.trim()) {
+      params.append('search', searchValue.trim())
     }
 
     return params
-  }, [debouncedSearchTerm, filters.entityType, filters.limit, filters.sortBy, filters.sortOrder])
+  }, [filters.entityType, filters.limit, filters.sortBy, filters.sortOrder])
 
   const fetchEntities = useCallback(async (page: number, isInitial: boolean = false) => {
     if (isInitial) {
@@ -123,10 +132,10 @@ export default function EntityBrowserClientPage() {
     } else {
       setGridLoading(true)
     }
-    setError(null)
+      setError(null)
 
     try {
-      const params = buildEntityQueryParams(page)
+      const params = buildEntityQueryParams(page, appliedSearchTerm)
       const response = await fetch(`/api/entities?${params}`)
       if (!response.ok) {
         throw new Error(`Failed to fetch entities: ${response.status}`)
@@ -144,7 +153,7 @@ export default function EntityBrowserClientPage() {
         setGridLoading(false)
       }
     }
-  }, [buildEntityQueryParams])
+  }, [appliedSearchTerm, buildEntityQueryParams])
 
   const updateFilters = useCallback((updater: (prev: typeof filters) => typeof filters) => {
     setCurrentPage(1)
@@ -186,22 +195,61 @@ export default function EntityBrowserClientPage() {
     syncEntityBrowserHistory(browserUrl)
   }, [currentPage, searchParams, syncEntityBrowserHistory])
 
+  const applyFilters = useCallback(() => {
+    setAppliedSearchTerm(searchTerm)
+    setCurrentPage(1)
+    startTransition(() => {
+      fetchEntities(1)
+    })
+  }, [fetchEntities, searchTerm])
+
   const resetAndReload = useCallback(() => {
     setCurrentPage(1)
-    fetchEntities(1)
+    startTransition(() => {
+      fetchEntities(1)
+    })
   }, [fetchEntities])
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm)
-    }, 500)
+    const term = deferredSearchTerm.trim()
+    if (term.length < 2) {
+      setAutocompleteEntities([])
+      setAutocompleteLoading(false)
+      return
+    }
 
-    return () => clearTimeout(timer)
-  }, [searchTerm])
+    const controller = new AbortController()
+    const loadAutocomplete = async () => {
+      setAutocompleteLoading(true)
+      try {
+        const params = new URLSearchParams({
+          mode: 'autocomplete',
+          search: term,
+          limit: '8'
+        })
+        const response = await fetch(`/api/entities/search?mode=autocomplete&${params.toString()}`, { signal: controller.signal })
+        if (!response.ok) {
+          throw new Error(`Autocomplete request failed: ${response.status}`)
+        }
+        const result = await response.json()
+        const nextItems = Array.isArray(result.entities) ? result.entities.slice(0, 8) : []
+        setAutocompleteEntities(nextItems)
+      } catch (err) {
+        if ((err as Error).name !== 'AbortError') {
+          setAutocompleteEntities([])
+        }
+      } finally {
+        setAutocompleteLoading(false)
+      }
+    }
+
+    loadAutocomplete()
+    return () => controller.abort()
+  }, [deferredSearchTerm])
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const requestKey = buildEntityQueryParams(currentPage).toString()
+      const requestKey = buildEntityQueryParams(currentPage, appliedSearchTerm).toString()
       if (lastFetchedRequestKeyRef.current === requestKey) {
         return
       }
@@ -210,7 +258,7 @@ export default function EntityBrowserClientPage() {
       const isInitial = !data
       fetchEntities(currentPage, isInitial)
     }
-  }, [buildEntityQueryParams, currentPage, data, fetchEntities])
+  }, [appliedSearchTerm, buildEntityQueryParams, currentPage, data, fetchEntities])
 
   useEffect(() => {
     const element = gridContainerRef.current
@@ -307,7 +355,7 @@ export default function EntityBrowserClientPage() {
             </div>
           </div>
           <p className="text-muted-foreground">
-            Browse all entities in your Neo4j knowledge graph with their complete schemas
+            Browse all entities in your graph intelligence store with their complete schemas
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             <Button asChild variant="outline" size="sm">
@@ -330,8 +378,38 @@ export default function EntityBrowserClientPage() {
                   placeholder="Search entities..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      applyFilters()
+                    }
+                  }}
                   className="pl-10"
                 />
+                {(autocompleteLoading || autocompleteEntities.length > 0) && (
+                  <div className="absolute z-20 mt-1 w-full rounded-md border bg-background p-2 shadow-lg">
+                    {autocompleteLoading ? (
+                      <p className="text-xs text-muted-foreground px-1 py-1">Loading suggestions...</p>
+                    ) : (
+                      autocompleteEntities.map((entity) => (
+                        <button
+                          key={entity.id}
+                          className="flex w-full items-center justify-between rounded-sm px-2 py-1 text-left text-sm hover:bg-accent"
+                          onClick={() => {
+                            setSearchTerm(entity.name || "")
+                            setAppliedSearchTerm(entity.name || "")
+                            setAutocompleteEntities([])
+                            setCurrentPage(1)
+                            startTransition(() => fetchEntities(1))
+                          }}
+                          type="button"
+                        >
+                          <span className="truncate">{entity.name}</span>
+                          <span className="ml-2 text-xs text-muted-foreground">{entity.type || "Entity"}</span>
+                        </button>
+                      ))
+                    )}
+                  </div>
+                )}
               </div>
 
               <Select value={filters.entityType} onValueChange={(value) => updateFilters(prev => ({ ...prev, entityType: value }))}>
@@ -353,6 +431,7 @@ export default function EntityBrowserClientPage() {
                   <SelectValue placeholder="Sort By" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="popular">Popular</SelectItem>
                   <SelectItem value="name">Name</SelectItem>
                   <SelectItem value="type">Type</SelectItem>
                   <SelectItem value="sport">Sport</SelectItem>
@@ -387,9 +466,12 @@ export default function EntityBrowserClientPage() {
             </div>
 
             <div className="flex gap-2 mt-4">
-              <Button onClick={resetAndReload} variant="outline" size="sm">
+              <Button onClick={applyFilters} variant="outline" size="sm">
                 <Filter className="h-4 w-4 mr-2" />
                 Apply Filters
+              </Button>
+              <Button onClick={resetAndReload} variant="outline" size="sm">
+                Reset
               </Button>
               <Button onClick={exportToJSON} variant="outline" size="sm">
                 <Download className="h-4 w-4 mr-2" />
