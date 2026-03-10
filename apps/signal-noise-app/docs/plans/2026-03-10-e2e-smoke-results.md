@@ -73,3 +73,26 @@ Result highlights:
 
 Interpretation:
 - Runtime metadata wiring is now stable even when dossier output falls back to minimal structured content.
+
+## Queue-Backed Pipeline Revalidation
+
+Follow-up queue-backed import run:
+- `batchId=import_1773158839056`
+- `entityId=pipeline-streaming-check-fc`
+- terminal: `status=completed`, `phase=dashboard_scoring`
+
+Validated dossier phase runtime diagnostics from:
+`metadata.phase_details_by_phase.dossier_generation.inference_runtime`
+
+Observed values:
+- `provider="chutes_openai"`
+- `model_used="zai-org/GLM-5-TEE"`
+- `streaming=true`
+- `fallback_used=false`
+- `chunk_count=1196`
+- `answer_channel_chars=12372`
+- `reasoning_channel_chars=3851`
+- `stop_reason="stop"`
+
+Conclusion:
+- Queue-backed pipeline metadata now carries the expected non-null streaming diagnostics through to terminal run records.
