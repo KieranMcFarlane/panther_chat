@@ -11,6 +11,7 @@ import {
   Clock, 
   Star, 
   Archive, 
+  History,
   Download,
   Filter,
   Trash2,

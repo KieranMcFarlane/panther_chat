@@ -13,6 +13,7 @@ import {
   Mail,
   Phone,
   Calendar,
+  MapPin,
   Building,
   TrendingUp,
   AlertTriangle,
@@ -388,7 +389,7 @@ export function EnhancedPersonDossier({ entity, onEmailEntity }: EnhancedPersonD
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="p-5 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-200">
                   <h5 className="font-semibold text-blue-900 mb-3">Communication Tone</h5>
-                  <p className="text-blue-700 italic">"{enhancedData.aiCommunicationAnalysis.tone}"</p>
+                  <p className="text-blue-700 italic">&quot;{enhancedData.aiCommunicationAnalysis.tone}&quot;</p>
                   <div className="mt-3">
                     <Badge className="bg-blue-100 text-blue-800">
                       {enhancedData.aiCommunicationAnalysis.tone.includes('Professional') ? 'Formal' : 'Casual'}

@@ -27,6 +27,7 @@ import {
   Target,
   Brain,
   Trophy,
+  Upload,
   ChevronDown,
   ChevronRight,
   Bot,
@@ -44,6 +45,7 @@ import { authClient } from '@/lib/auth-client';
 const navItems = [
   { icon: Home, label: 'Home', href: '/' },
   { icon: Database, label: 'Entities', href: '/entity-browser' },
+  { icon: Upload, label: 'CSV Import', href: '/entity-import' },
   { icon: FileText, label: "RFP's/Tenders", href: '/tenders' },
   {
     icon: Search,
@@ -61,7 +63,7 @@ export default function AppNavigation({ children }: AppNavigationProps) {
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const pathname = usePathname();
 
-  const renderNavItem = (item: typeof navItems[0]) => {
+  const NavItem = ({ item }: { item: (typeof navItems)[number] }) => {
     const [isOpen, setIsOpen] = useState(false);
     const isActive = pathname === item.href || (item.hasSubmenu && pathname.startsWith(item.href));
     
@@ -271,7 +273,7 @@ export default function AppNavigation({ children }: AppNavigationProps) {
           <div className="space-y-2">
             {navItems.map((item) => (
               <div key={item.href}>
-                {renderNavItem(item)}
+                <NavItem item={item} />
               </div>
             ))}
           </div>
