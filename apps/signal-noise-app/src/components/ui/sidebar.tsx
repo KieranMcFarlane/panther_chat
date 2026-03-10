@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
+import { Skeleton } from "@/components/ui/skeleton"
 
 // Simple custom sidebar context since @radix-ui/react-sidebar doesn't exist
 const SidebarContext = React.createContext<{
