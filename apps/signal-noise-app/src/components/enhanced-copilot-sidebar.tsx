@@ -46,8 +46,8 @@ const actionVerbs = [
 ];
 
 const toolActionMap: { [key: string]: string[] } = {
-  "mcp__neo4j-mcp__execute_query": ["Querying", "Analyzing", "Investigating"],
-  "mcp__neo4j-mcp__search_nodes": ["Searching", "Finding", "Discovering"],
+  "mcp__graph-mcp__execute_query": ["Querying", "Analyzing", "Investigating"],
+  "mcp__graph-mcp__search_nodes": ["Searching", "Finding", "Discovering"],
   "mcp__brightData__search_engine": ["Searching", "Scouring", "Exploring"],
   "mcp__brightData__scrape_as_markdown": ["Scraping", "Gathering", "Collecting"],
   "mcp__perplexity-mcp__chat_completion": ["Analyzing", "Reasoning", "Synthesizing"],
@@ -266,7 +266,7 @@ export default function EnhancedCopilotSidebar({
     handler: async ({ companyName }) => {
       setIsProcessing(true);
       setStatusMessage(`Analyzing ${companyName} RFP opportunity...`);
-      setCurrentTool("mcp__neo4j-mcp__execute_query");
+      setCurrentTool("mcp__graph-mcp__execute_query");
       
       const alert = mockRFPAlerts.find(a => a.company.toLowerCase().includes(companyName.toLowerCase()));
       if (alert) {
@@ -339,7 +339,7 @@ export default function EnhancedCopilotSidebar({
         <ResizableBox
           width={width}
           height={window.innerHeight}
-          minConstraints={350, 400]}
+          minConstraints={[350, 400]}
           maxConstraints={800, window.innerHeight}
           className="fixed right-0 top-0 h-full flex z-50"
           handle={
@@ -405,10 +405,10 @@ export default function EnhancedCopilotSidebar({
                         initial: "Hi! 👋 I'm your Sports Intelligence AI. I can help you analyze sports entities, find business opportunities, and identify key decision makers. How can I assist you today?",
                         placeholder: "Ask about sports clubs, business opportunities, or decision makers..."
                       }}
-                      instructions="You are a Sports Intelligence AI assistant powered by Claude Agent SDK with access to powerful MCP tools:
+                      instructions={`You are a Sports Intelligence AI assistant powered by Claude Agent SDK with access to powerful MCP tools:
 
-🔍 **Database Tools:**
-- Neo4j database with 3,325+ sports entities (clubs, players, competitions, relationships)
+🔍 **Graph Tools:**
+- Graph database with 3,325+ sports entities (clubs, players, competitions, relationships)
 - Execute Cypher queries for complex sports data analysis
 
 🌐 **Real-time Intelligence:**
@@ -440,7 +440,7 @@ export default function EnhancedCopilotSidebar({
 - Twickenham Stadium (72% fit, £250K-£500K, Head of Digital)
 - Leicester City FC (currently analyzing, Digital Director)
 
-I can automatically use these tools when you ask questions about sports entities, need current information, or want detailed analysis. Just ask naturally!"
+I can automatically use these tools when you ask questions about sports entities, need current information, or want detailed analysis. Just ask naturally!`}
                       context={{
                         ...context,
                         userId: userId || contextUserId,
@@ -554,7 +554,7 @@ I can automatically use these tools when you ask questions about sports entities
                       <CardContent className="p-4">
                         <div className="space-y-3">
                           <div className="flex items-center justify-between">
-                            <span className="text-fm-light-grey">Neo4j Database</span>
+                            <span className="text-fm-light-grey">Graph Database</span>
                             <div className="flex items-center gap-2">
                               <CheckCircle className="w-4 h-4 text-fm-green" />
                               <span className="text-fm-green text-sm">Connected</span>

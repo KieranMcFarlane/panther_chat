@@ -496,6 +496,7 @@ export function TabbedChatSidebar({
                         </motion.div>
                       )}
                     </AnimatePresence>
+                  </AnimatePresence>
                 </div>
               </div>
 
@@ -582,7 +583,7 @@ export function TabbedChatSidebar({
                             <div className="flex-1">
                               <div className="font-medium text-gray-900 mb-1">Assistant</div>
                               <div className="text-sm text-gray-700">
-                                Hello! I'm your {agentTypes[activeInstance.agentType].name.toLowerCase()} assistant. 
+                                Hello! I&apos;m your {agentTypes[activeInstance.agentType].name.toLowerCase()} assistant. 
                                 I can help you with {agentTypes[activeInstance.agentType].description.toLowerCase()}. 
                                 How can I assist you today?
                               </div>
@@ -727,7 +728,7 @@ export function TabbedChatSidebar({
                     </h4>
 
                     {[
-                      { name: 'Neo4j Database', status: 'Connected', color: 'text-green-600' },
+                      { name: 'Graph Intelligence Store', status: 'Connected', color: 'text-green-600' },
                       { name: 'BrightData Scraper', status: 'Ready', color: 'text-yellow-600' },
                       { name: 'Perplexity AI', status: 'Available', color: 'text-green-600' },
                       { name: 'Claude Agent SDK', status: 'Active', color: 'text-green-600' },
