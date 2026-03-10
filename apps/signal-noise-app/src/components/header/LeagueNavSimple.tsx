@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { EntityBadge } from '@/components/badge/EntityBadge';
 import { useEntitySummaries, useEntity } from '@/lib/swr-config';
 import { useVectorSearch } from '@/hooks/useVectorSearch';
+import { resolveGraphId } from '@/lib/graph-id';
 import {
   Dialog,
   DialogContent,
@@ -31,7 +32,7 @@ interface LeagueData {
 
 interface Club {
   id: string;
-  neo4j_id: string;
+  graph_id?: string;
   properties: {
     name: string;
     league?: string;
@@ -336,7 +337,7 @@ export default function LeagueNavSimple() {
     // Convert summaries to entity format for processing
     const entities = summaries.map(summary => ({
       id: summary.id,
-      neo4j_id: summary.neo4j_id,
+      graph_id: resolveGraphId(summary) || summary.id,
       properties: {
         name: summary.name,
         type: summary.type,
@@ -626,7 +627,7 @@ export default function LeagueNavSimple() {
               // Vector search results
               <div className="max-h-[400px] overflow-y-auto space-y-2">
                 <div className="text-sm text-white/60 mb-2">
-                  Vector search results for "{searchTerm}"
+                  Vector search results for &quot;{searchTerm}&quot;
                 </div>
                 {searchResults.data.map((result: any, index: number) => (
                   <div

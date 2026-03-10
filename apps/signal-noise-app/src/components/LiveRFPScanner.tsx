@@ -13,36 +13,6 @@ export default function LiveRFPScanner() {
   const [runHistory, setRunHistory] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState<'execute' | 'integrity' | 'history'>('execute');
 
-  const executeRFPScan = async () => {
-    setIsRunning(true);
-    
-    try {
-      const response = await fetch('/api/rfp-execute', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      const result = await response.json();
-      
-      if (result.success) {
-        setCurrentRun(result);
-        setRunHistory(prev => [result, ...prev.slice(0, 9)]); // Keep last 10 runs
-        
-        // Show success message
-        alert(`✅ RFP Scan Complete!\n\nRun ID: ${result.runId}\nOutput File: ${result.outputFile}\n\nDuration: ${(result.duration / 1000).toFixed(1)}s\nEntities Processed: ${result.metrics.entitiesProcessed}`);
-      } else {
-        alert(`❌ Scan Failed: ${result.error}`);
-      }
-    } catch (error) {
-      console.error('Scan error:', error);
-      alert('❌ Failed to execute RFP scan');
-    } finally {
-      setIsRunning(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gray-900 text-white p-8">
       <div className="max-w-6xl mx-auto space-y-8">
@@ -91,34 +61,26 @@ export default function LiveRFPScanner() {
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-600">
               <h3 className="text-lg font-semibold mb-2">📋 What This Does:</h3>
               <ul className="text-sm text-gray-300 space-y-1">
-                <li>🧠 Loads <code className="bg-gray-800 px-2 py-1 rounded">COMPLETE-RFP-MONITORING-SYSTEM.md</code> blueprint</li>
-                <li>🔧 Registers MCP servers (Neo4j, BrightData, Perplexity)</li>
-                <li>🗃️ Queries Neo4j AuraDB for real sports entities (2,997 total)</li>
-                <li>🔍 Performs live BrightData web searches for RFP opportunities</li>
-                <li>📊 Cross-references with Perplexity AI-powered market intelligence</li>
-                <li>📝 Generates execution log in <code className="bg-gray-800 px-2 py-1 rounded">RUN_LOGS/</code> folder</li>
-                <li>⚡ Reports actual findings with URLs and confidence scores</li>
+                <li>⚠️ The legacy direct execution scan has been retired</li>
+                <li>✅ Raw Neo4j and embedded-secret runtime paths were removed</li>
+                <li>✅ Use the newer Claude Agent and RFP monitoring flows instead</li>
+                <li>📝 Historical logs remain in <code className="bg-gray-800 px-2 py-1 rounded">RUN_LOGS/</code> for reference</li>
               </ul>
             </div>
 
             <Button 
-              onClick={executeRFPScan}
-              disabled={isRunning}
+              disabled
               className="w-full py-3 text-lg"
               size="lg"
             >
-              {isRunning ? '🔄 Executing Scan...' : '🚀 Execute Live RFP Intelligence Scan'}
+              Retired
             </Button>
 
-            {isRunning && (
-              <div className="bg-blue-900/20 border border-blue-700 rounded-lg p-3">
-                <p className="text-blue-300 text-sm">
-                  ⏳ Claude Agent is currently executing the RFP scan...
-                  <br />
-                  Check the <code className="bg-blue-800 px-2 py-1 rounded">RUN_LOGS/</code> folder for real-time output.
-                </p>
-              </div>
-            )}
+            <div className="bg-blue-900/20 border border-blue-700 rounded-lg p-3">
+              <p className="text-blue-300 text-sm">
+                This panel is preserved for historical context only. Trigger scans through the active agent and monitoring endpoints instead.
+              </p>
+            </div>
           </CardContent>
         </Card>
 
@@ -214,7 +176,7 @@ export default function LiveRFPScanner() {
                       <div>└── ... (archived runs)</div>
                     </div>
                     <div className="mt-3 text-xs text-gray-500">
-                      Each file contains the complete execution trace: Claude's reasoning, tool calls, search results, and discovered opportunities.
+                      Each file contains the complete execution trace: Claude&apos;s reasoning, tool calls, search results, and discovered opportunities.
                     </div>
                   </div>
                 </CardContent>
@@ -226,7 +188,7 @@ export default function LiveRFPScanner() {
               <CardHeader>
                 <CardTitle className="text-white">📈 Run History</CardTitle>
                 <CardDescription className="text-gray-300">
-                  Click "Blueprint Integrity" tab for detailed history and statistics
+                  Click &quot;Blueprint Integrity&quot; tab for detailed history and statistics
                 </CardDescription>
               </CardHeader>
               <CardContent>

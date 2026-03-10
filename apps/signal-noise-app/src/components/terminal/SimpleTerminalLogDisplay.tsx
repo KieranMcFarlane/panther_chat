@@ -134,7 +134,7 @@ export default function TerminalLogDisplay({ logs, isStreaming = false }: Termin
             </span>
             {log.content?.message && (
               <div className="text-gray-400 mt-1 italic text-xs">
-                "{typeof log.content.message === 'string' ? log.content.message : JSON.stringify(log.content.message)}"
+                &quot;{typeof log.content.message === 'string' ? log.content.message : JSON.stringify(log.content.message)}&quot;
               </div>
             )}
           </span>

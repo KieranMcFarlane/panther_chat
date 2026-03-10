@@ -118,7 +118,7 @@ export default function TabbedChatInterface({ className = '' }: TabbedChatInterf
         
         <div className="flex items-center gap-4">
           {state.searchQuery && (
-            <span>Search: "{state.searchQuery}"</span>
+            <span>Search: &quot;{state.searchQuery}&quot;</span>
           )}
           {state.filterType !== 'all' && (
             <span>Filter: {state.filterType}</span>

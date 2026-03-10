@@ -255,7 +255,7 @@ function RoomContent({
                 Talk directly with Claude AI about sports entities, RFP opportunities, and market intelligence.
               </p>
               <div className="text-xs text-gray-500 max-w-md mx-auto space-y-2">
-                <div>🎤 <strong>Voice Commands</strong> - "Tell me about Arsenal FC"</div>
+                <div>🎤 <strong>Voice Commands</strong> - &quot;Tell me about Arsenal FC&quot;</div>
                 <div>🧠 <strong>Claude Reasoning</strong> - Powered by your knowledge graph</div>
                 <div>📊 <strong>Real-time Analysis</strong> - MCP tools integrated</div>
               </div>
