@@ -139,7 +139,7 @@ export default function SimpleSSETest() {
         </div>
 
         <div className="mt-6 bg-gray-900 border border-gray-700 rounded-lg p-4">
-          <h3 className="text-lg font-semibold mb-2 text-green-300">What You're Seeing:</h3>
+          <h3 className="text-lg font-semibold mb-2 text-green-300">What You&apos;re Seeing:</h3>
           <div className="text-sm text-gray-400 space-y-1">
             <div>🔍 <strong>REAL BrightData API searches</strong> for sports entities</div>
             <div>✅ <strong>REAL search completion</strong> with actual results</div>

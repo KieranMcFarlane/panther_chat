@@ -210,7 +210,7 @@ export default function WorkingSSETest() {
           <div className="bg-gray-900 rounded p-4 h-96 overflow-y-auto font-mono text-xs space-y-1">
             {logs.length === 0 ? (
               <div className="text-gray-500 text-center py-8">
-                Click "Start Real Test" to begin REAL entity processing with BrightData API
+                Click &quot;Start Real Test&quot; to begin REAL entity processing with BrightData API
               </div>
             ) : (
               logs.map((log, index) => {
@@ -241,7 +241,7 @@ export default function WorkingSSETest() {
 
         {/* Info Panel */}
         <div className="mt-6 bg-gray-800 rounded-lg p-4 text-sm text-gray-400">
-          <h3 className="text-lg font-semibold text-green-400 mb-2">What You'll See:</h3>
+          <h3 className="text-lg font-semibold text-green-400 mb-2">What You&apos;ll See:</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <div className="font-semibold text-blue-400">🔍 Real Entity Searches:</div>

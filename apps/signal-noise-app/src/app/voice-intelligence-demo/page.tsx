@@ -197,7 +197,7 @@ export default function VoiceIntelligenceDemo() {
                 </div>
                 <div>
                   <div className="font-medium text-gray-900">3. Start Voice Chat</div>
-                  <div className="text-xs text-gray-600">Click "🎙️ Voice" mode and hold to talk</div>
+                  <div className="text-xs text-gray-600">Click &quot;🎙️ Voice&quot; mode and hold to talk</div>
                 </div>
                 <div>
                   <div className="font-medium text-gray-900">4. View Analytics</div>

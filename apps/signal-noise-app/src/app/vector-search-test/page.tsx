@@ -265,7 +265,7 @@ export default function VectorSearchTestPage() {
             {!loading && !error && manualQuery && manualResults.length === 0 && (
               <div className="text-center py-8">
                 <Search className="w-12 h-12 mx-auto mb-4 text-fm-medium-grey opacity-50" />
-                <p className="text-fm-medium-grey">No results found for "{manualQuery}"</p>
+                <p className="text-fm-medium-grey">No results found for &quot;{manualQuery}&quot;</p>
                 <p className="text-fm-medium-grey text-sm mt-2">Try different keywords or check spelling</p>
               </div>
             )}
@@ -286,8 +286,8 @@ export default function VectorSearchTestPage() {
           <CardContent>
             <div className="bg-black/30 p-4 rounded-md font-mono text-sm">
               <p className="text-fm-light-grey mb-2">curl -X POST http://localhost:3005/api/vector-search \</p>
-              <p className="text-fm-light-grey mb-2">  -H "Content-Type: application/json" \</p>
-              <p className="text-fm-light-grey">  -d '{JSON.stringify({query: "football club in London", limit: 5})}'</p>
+              <p className="text-fm-light-grey mb-2">  -H &quot;Content-Type: application/json&quot; \</p>
+              <p className="text-fm-light-grey">{`  -d '${JSON.stringify({ query: "football club in London", limit: 5 })}'`}</p>
             </div>
           </CardContent>
         </Card>

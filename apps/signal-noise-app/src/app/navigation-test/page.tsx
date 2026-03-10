@@ -136,10 +136,10 @@ export default function NavigationTestPage() {
             </div>
             <div className="mt-4 p-4 bg-gray-700 rounded-lg">
               <p className="text-sm text-gray-300 mb-2">
-                <strong>Manual Test:</strong> Try searching for "Arsenal FC" and click the result
+                <strong>Manual Test:</strong> Try searching for &quot;Arsenal FC&quot; and click the result
               </p>
               <p className="text-sm text-gray-300">
-                <strong>Automated Test:</strong> Click the "Run Navigation Tests" button below
+                <strong>Automated Test:</strong> Click the &quot;Run Navigation Tests&quot; button below
               </p>
             </div>
           </CardContent>

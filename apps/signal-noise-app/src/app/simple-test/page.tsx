@@ -145,7 +145,7 @@ export default function SimpleVectorSearchTestPage() {
           <Card className="bg-gray-800 border-gray-700">
             <CardContent className="p-8 text-center">
               <Search className="w-12 h-12 mx-auto mb-4 text-gray-500" />
-              <p className="text-gray-400">No results found for "{query}"</p>
+              <p className="text-gray-400">No results found for &quot;{query}&quot;</p>
             </CardContent>
           </Card>
         )}

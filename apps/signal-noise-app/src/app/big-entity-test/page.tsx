@@ -165,7 +165,7 @@ export default function BigEntitySSETest() {
           <div className="bg-gray-900 rounded p-4 h-96 overflow-y-auto font-mono text-xs space-y-1">
             {logs.length === 0 ? (
               <div className="text-gray-500 text-center py-8">
-                Click "Test Large Entities" to search for REAL RFP opportunities from major sports organizations
+                Click &quot;Test Large Entities&quot; to search for REAL RFP opportunities from major sports organizations
               </div>
             ) : (
               logs.map((log, index) => {

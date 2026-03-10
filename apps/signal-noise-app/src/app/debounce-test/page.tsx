@@ -88,7 +88,7 @@ export default function DebounceTestPage() {
                   <li>• Immediate results</li>
                   <li>• Higher API usage</li>
                   <li>• Potential rate limiting</li>
-                  <li>• Can feel "jumpy"</li>
+                  <li>• Can feel &quot;jumpy&quot;</li>
                 </ul>
               </div>
             </div>
@@ -109,7 +109,7 @@ export default function DebounceTestPage() {
             </div>
             <div className="mt-4 p-4 bg-gray-700 rounded-lg">
               <p className="text-sm text-gray-300">
-                <strong>Test it:</strong> Type "football" then wait 500ms before typing "club"
+                <strong>Test it:</strong> Type &quot;football&quot; then wait 500ms before typing &quot;club&quot;
               </p>
             </div>
           </CardContent>
@@ -181,7 +181,7 @@ export default function DebounceTestPage() {
             {!loading && !error && manualQuery && manualResults.length === 0 && (
               <div className="text-center py-8">
                 <Search className="w-12 h-12 mx-auto mb-4 text-gray-500" />
-                <p className="text-gray-400">No results found for "{manualQuery}"</p>
+                <p className="text-gray-400">No results found for &quot;{manualQuery}&quot;</p>
               </div>
             )}
           </CardContent>

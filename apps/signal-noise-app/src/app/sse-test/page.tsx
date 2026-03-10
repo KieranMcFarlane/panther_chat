@@ -133,7 +133,7 @@ export default function SSETestPage() {
           <h2 className="text-xl font-semibold mb-4">Live Event Stream</h2>
           <div className="bg-black rounded-lg p-4 h-96 overflow-y-auto font-mono text-xs">
             {logs.length === 0 ? (
-              <div className="text-gray-500">Click "Start SSE Test" to begin monitoring events...</div>
+              <div className="text-gray-500">Click &quot;Start SSE Test&quot; to begin monitoring events...</div>
             ) : (
               logs.map((log, index) => (
                 <div key={index} className={log.includes('ERROR') || log.includes('❌') ? 'text-red-400' : 

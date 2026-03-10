@@ -161,12 +161,12 @@ export default function RawSSEViewer() {
           >
             {rawEvents.length === 0 ? (
               <div className="text-gray-500">
-                Click "Start Stream" to begin receiving raw SSE events...
+                Click &quot;Start Stream&quot; to begin receiving raw SSE events...
                 
                 <div className="mt-4 text-sm">
                   <div className="text-green-300 mb-2">Example curl equivalent:</div>
                   <div className="bg-gray-800 p-2 rounded border border-green-600">
-                    curl -N "http://localhost:3005/api/claude-agent-demo/stream?service={service}&query=Sports%20RFP%20opportunities&mode=batch&entityLimit={entityLimit}"
+                    curl -N &quot;http://localhost:3005/api/claude-agent-demo/stream?service={service}&query=Sports%20RFP%20opportunities&mode=batch&entityLimit={entityLimit}&quot;
                   </div>
                 </div>
               </div>
@@ -187,7 +187,7 @@ export default function RawSSEViewer() {
             <li>Shows event types: connected, log, progress, heartbeat, result, completed, error</li>
             <li>Timestamps show when each event was received</li>
             <li>Auto-scrolls to show latest events</li>
-            <li>Identical output to: <code className="bg-gray-800 px-1 rounded">curl -N "..."</code></li>
+            <li>Identical output to: <code className="bg-gray-800 px-1 rounded">curl -N &quot;...&quot;</code></li>
           </ul>
         </div>
       </div>
