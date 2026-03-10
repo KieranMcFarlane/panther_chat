@@ -7,7 +7,7 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { DossierAccordion, DossierSection } from './DossierAccordion';
 import { DossierSkeleton } from './DossierSkeleton';
 import { DossierError } from './DossierError';
@@ -43,7 +43,7 @@ export function DynamicEntityDossier({
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
 
-  const fetchDossier = async (force = false) => {
+  const fetchDossier = useCallback(async (force = false) => {
     setLoading(true);
     setError(null);
 
@@ -65,11 +65,11 @@ export function DynamicEntityDossier({
       setLoading(false);
       setRefreshing(false);
     }
-  };
+  }, [entityId]);
 
   useEffect(() => {
-    fetchDossier(forceRegenerate);
-  }, [entityId, forceRegenerate]);
+    void fetchDossier(forceRegenerate);
+  }, [fetchDossier, forceRegenerate]);
 
   const handleRefresh = () => {
     setRefreshing(true);

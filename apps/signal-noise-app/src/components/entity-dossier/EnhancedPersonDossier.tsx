@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -47,13 +47,7 @@ export function EnhancedPersonDossier({ entity, onEmailEntity }: EnhancedPersonD
   const props = entity.properties
   const priority = getEntityPriority(entity)
 
-  useEffect(() => {
-    if (entity) {
-      generateEnhancedPersonDossier()
-    }
-  }, [entity])
-
-  const generateEnhancedPersonDossier = () => {
+  const generateEnhancedPersonDossier = useCallback(() => {
     // Generate comprehensive person dossier data
     const dossierData: EnhancedPersonDossier = {
       coreInfo: {
@@ -110,7 +104,13 @@ export function EnhancedPersonDossier({ entity, onEmailEntity }: EnhancedPersonD
     }
     
     setEnhancedData(dossierData)
-  }
+  }, [props.location, props.name, props.organization, props.role, props.since])
+
+  useEffect(() => {
+    if (entity) {
+      generateEnhancedPersonDossier()
+    }
+  }, [entity, generateEnhancedPersonDossier])
 
   const getStatusBadge = () => {
     if (enhancedData?.status.activeDeal) return { text: 'ACTIVE DEAL', color: 'bg-green-100 text-green-800 border-green-200' }
