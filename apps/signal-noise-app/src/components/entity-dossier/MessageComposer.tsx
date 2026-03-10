@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
@@ -59,17 +59,7 @@ export function MessageComposer({
   const [warnings, setWarnings] = useState<AntiPatternWarning[]>([]);
   const [showPreview, setShowPreview] = useState(true);
 
-  // Generate message on mount
-  useEffect(() => {
-    generateMessage();
-  }, [approach, entity, contact]);
-
-  // Validate for anti-patterns
-  useEffect(() => {
-    validateMessage();
-  }, [subject, body]);
-
-  const generateMessage = async () => {
+  const generateMessage = useCallback(async () => {
     setIsGenerating(true);
     try {
       // Simulate AI generation (in real app, call API)
@@ -98,9 +88,9 @@ Best regards,
     } finally {
       setIsGenerating(false);
     }
-  };
+  }, [contact?.name, entity.name]);
 
-  const validateMessage = () => {
+  const validateMessage = useCallback(() => {
     const newWarnings: AntiPatternWarning[] = [];
 
     // Check for generic language
@@ -165,7 +155,17 @@ Best regards,
     }
 
     setWarnings(newWarnings);
-  };
+  }, [body, contact, entity.name]);
+
+  // Generate message on mount
+  useEffect(() => {
+    void generateMessage();
+  }, [generateMessage, approach, entity, contact]);
+
+  // Validate for anti-patterns
+  useEffect(() => {
+    validateMessage();
+  }, [validateMessage, subject, body]);
 
   const handleSaveDraft = () => {
     setIsSaving(true);

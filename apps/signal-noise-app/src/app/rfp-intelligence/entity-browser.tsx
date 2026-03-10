@@ -41,7 +41,8 @@ import {
 
 interface Entity {
   id: string
-  neo4j_id: string | number
+  graph_id?: string | number
+  neo4j_id?: string | number
   labels: string[]
   properties: Record<string, any>
 }
@@ -89,6 +90,7 @@ export default function RFPIntelligenceEntityBrowser() {
   const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null)
   const [rfpAnalyses, setRfpAnalyses] = useState<Record<string, RFPAnalysis>>({})
   const [analyzingEntities, setAnalyzingEntities] = useState<Set<string>>(new Set())
+  const hasFetchedInitialRef = useRef(false)
 
   const [currentPage, setCurrentPage] = useState(1)
 
@@ -220,10 +222,11 @@ export default function RFPIntelligenceEntityBrowser() {
   // Fetch entities when page or filters change
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const isInitial = !data
-      fetchEntities(currentPage, isInitial)
+      void fetchEntities(currentPage, !hasFetchedInitialRef.current).finally(() => {
+        hasFetchedInitialRef.current = true
+      })
     }
-  }, [currentPage, filters.entityType, filters.sortBy, filters.sortOrder, filters.limit, debouncedSearchTerm])
+  }, [currentPage, filters.entityType, filters.sortBy, filters.sortOrder, filters.limit, debouncedSearchTerm, fetchEntities])
 
   // Email handling functions
   const handleEmailEntity = (entity: Entity) => {
@@ -457,7 +460,7 @@ export default function RFPIntelligenceEntityBrowser() {
             ))
           ) : (
             entities.map((entity) => (
-              <Card key={`${entity.id}-${entity.neo4j_id}`} className="relative">
+              <Card key={`${entity.id}-${String(entity.graph_id ?? entity.id)}`} className="relative">
                 <CardHeader className="pb-3">
                   <div className="flex items-start gap-4">
                     <EntityBadge 

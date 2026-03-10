@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -42,21 +42,14 @@ interface PersonDossierProps {
 }
 
 export function PersonDossier({ entity, onEmailEntity }: PersonDossierProps) {
-  // ASCII functionality disabled - enhanced view only
+  const [activeView, setActiveView] = useState<'enhanced' | 'ascii'>('enhanced')
   const [perplexityData, setPerplexityData] = useState<PersonIntelligence | null>(null)
   const [isLoadingResearch, setIsLoadingResearch] = useState(false)
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
   
   const props = entity.properties
-  
-  // Load real Perplexity data for any person entity
-  useEffect(() => {
-    if (entity) {
-      loadPerplexityData()
-    }
-  }, [entity])
 
-  const loadPerplexityData = async () => {
+  const loadPerplexityData = useCallback(async () => {
     console.log(`👤 Loading Perplexity intelligence for person: ${props.name}`)
     setIsLoadingResearch(true)
     
@@ -75,7 +68,14 @@ export function PersonDossier({ entity, onEmailEntity }: PersonDossierProps) {
     } finally {
       setIsLoadingResearch(false)
     }
-  }
+  }, [entity, props.name])
+  
+  // Load real Perplexity data for any person entity
+  useEffect(() => {
+    if (entity) {
+      void loadPerplexityData()
+    }
+  }, [entity, loadPerplexityData])
   
   const generateMockPerplexityData = () => {
     const mockData: PersonIntelligence = {
