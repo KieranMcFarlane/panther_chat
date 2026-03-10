@@ -828,7 +828,7 @@ export function ClubDossier({ entity, onEmailEntity }: ClubDossierProps) {
                 </div>
                 <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
                   <p className="text-sm text-blue-700">
-                    💡 <strong>Tip:</strong> Click on any person's name to view their detailed profile page with career information and intelligence data.
+                    💡 <strong>Tip:</strong> Click on any person&apos;s name to view their detailed profile page with career information and intelligence data.
                   </p>
                 </div>
               </CardContent>

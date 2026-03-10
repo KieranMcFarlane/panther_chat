@@ -37,14 +37,16 @@ import digitalRfpOpportunities from '@/lib/digital-rfp-opportunities';
 const alignedOpportunities = digitalRfpOpportunities;
 
 export default function TendersPage() {
-  const [opportunities, setOpportunities] = useState([]);
-  const [detectedRFPs, setDetectedRFPs] = useState([]);
+  const [opportunities, setOpportunities] = useState<any[]>([]);
+  const [detectedRFPs, setDetectedRFPs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [dataLoadedAt, setDataLoadedAt] = useState(null);
+  const [dataLoadedAt, setDataLoadedAt] = useState<Date | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
-  const [showDetectedOnly, setShowDetectedOnly] = useState(false);
-const [filterSource, setFilterSource] = useState('all');
+  const [filterSource, setFilterSource] = useState('all');
+  const [selectedOpportunity, setSelectedOpportunity] = useState<any | null>(null);
+  const [filterSport, setFilterSport] = useState('all');
+  const [sportsOptions, setSportsOptions] = useState<string[]>([]);
   const [rfpStats, setRfpStats] = useState({ total: 0, recent: 0 });
   const [a2aRunning, setA2aRunning] = useState(false);
   const [a2aStatus, setA2aStatus] = useState(null);
@@ -265,6 +267,7 @@ const [filterSource, setFilterSource] = useState('all');
           const digitalData = alignedOpportunities.map(opp => ({
             ...opp,
             source_url: opp.url || null, // Map 'url' field to 'source_url' for consistency
+            sport: opp.sport || opp.sports_category || opp.category || null,
             deadline: opp.deadline || null,
             posted_date: opp.posted || null,
             yellow_panther_fit: opp.yellow_panther_fit || 85,
@@ -301,6 +304,25 @@ const [filterSource, setFilterSource] = useState('all');
     
     console.log('🚀 Tenders useEffect running - about to load real data');
     loadData();
+  }, []);
+
+  useEffect(() => {
+    const loadSportTaxonomy = async () => {
+      try {
+        const response = await fetch('/api/entities/taxonomy');
+        if (!response.ok) {
+          return;
+        }
+        const payload = await response.json();
+        const sports = Array.isArray(payload?.sports) ? payload.sports : [];
+        if (sports.length > 0) {
+          setSportsOptions(sports);
+        }
+      } catch {
+        // Non-blocking: fall back to deriving from opportunities below
+      }
+    };
+    loadSportTaxonomy();
   }, []);
 
   const filteredOpportunities = opportunities.filter(opp => {
@@ -342,7 +364,10 @@ const [filterSource, setFilterSource] = useState('all');
       }
     }
     
-    return matchesSearch && matchesStatus;
+    const derivedSport = String(opp.sport || opp.sports_category || opp.category || '').trim();
+    const matchesSport = filterSport === 'all' || derivedSport.toLowerCase() === filterSport.toLowerCase();
+
+    return matchesSearch && matchesStatus && matchesSport;
   });
 
   console.log(`🔍 Filter results: ${filteredOpportunities.length} of ${opportunities.length} opportunities (filter: ${filterStatus}, search: "${searchTerm}")`);
@@ -366,6 +391,14 @@ const [filterSource, setFilterSource] = useState('all');
   // Combine results based on source selection
   const displayOpportunities = filterSource === 'ai-detected' ? [] : filteredOpportunities;
   const displayRFPs = filterSource === 'ai-detected' ? filteredDetectedRFPs : [];
+  const derivedSportsFromData = Array.from(
+    new Set(
+      opportunities
+        .map((opp) => String(opp.sport || opp.sports_category || opp.category || '').trim())
+        .filter(Boolean)
+    )
+  ).sort((a, b) => a.localeCompare(b));
+  const availableSports = sportsOptions.length > 0 ? sportsOptions : derivedSportsFromData;
 
   const getFitColor = (fit: number) => {
     if (fit >= 90) return 'bg-green-500';
@@ -405,6 +438,19 @@ const [filterSource, setFilterSource] = useState('all');
     if (status.toUpperCase().includes('ACTIVE')) return 'default';
     if (status.toUpperCase().includes('EMERGING')) return 'secondary';
     return 'outline';
+  };
+
+  const exportFilteredData = () => {
+    const params = new URLSearchParams({
+      action: 'export',
+      status: filterStatus,
+      source: filterSource,
+      sport: filterSport
+    });
+    if (searchTerm.trim()) {
+      params.set('search', searchTerm.trim());
+    }
+    window.open(`/api/tenders?${params.toString()}`, '_blank');
   };
 
   // Helper function to generate tender cards
@@ -473,7 +519,7 @@ const [filterSource, setFilterSource] = useState('all');
               </Badge>
             </div>
             <div className="flex gap-2">
-              <Button size="sm" variant="outline">
+              <Button size="sm" variant="outline" onClick={() => setSelectedOpportunity(opportunity)}>
                 <Eye className="w-4 h-4 mr-1" />
                 View
               </Button>
@@ -492,7 +538,7 @@ const [filterSource, setFilterSource] = useState('all');
                   </a>
                 </Button>
                 ) : (
-                  <Button size="sm" variant="outline" disabled title={`No source URL available. URL values: source_url="${opportunity.source_url}", url="${opportunity.url}"`}>
+                  <Button size="sm" variant="outline" disabled title="No source link is available for this opportunity">
                     <ExternalLink className="w-4 h-4 mr-1" />
                     Source
                   </Button>
@@ -626,7 +672,7 @@ const [filterSource, setFilterSource] = useState('all');
           <div className="text-6xl mb-4">🔍</div>
           <h2 className="text-xl font-semibold mb-2">No Quality Opportunities Available</h2>
           <p className="text-muted-foreground mb-4">
-            We've filtered out opportunities with broken source URLs to ensure the best user experience.
+            We&apos;ve filtered out opportunities with broken source URLs to ensure the best user experience.
           </p>
           <Button onClick={() => window.location.reload()}>
             <RefreshCw className="w-4 h-4 mr-2" />
@@ -645,14 +691,17 @@ const [filterSource, setFilterSource] = useState('all');
           <div>
             <h1 className="text-3xl font-bold mb-2">🏆 Live Tender Opportunities</h1>
             <p className="text-muted-foreground">
-              🎯 Comprehensive RFP intelligence from Yellow Panther analysis • {opportunities.length} curated opportunities
+              📈 Live opportunity intelligence • {opportunities.length} curated opportunities
               {opportunities.length > 0 ? ` • High-value opportunities with verified source links` : ''}
             </p>
           </div>
+          <Button onClick={exportFilteredData} variant="outline">
+            Export CSV
+          </Button>
         </div>
       </div>
 
-      {/* A2A System Status */}
+      {/* Autonomous Discovery Status */}
       {a2aRunning && (
         <Card className="mb-6 border-purple-200 bg-purple-50">
           <CardContent className="p-6">
@@ -662,10 +711,10 @@ const [filterSource, setFilterSource] = useState('all');
                 <div>
                   <h3 className="font-semibold text-purple-900 flex items-center gap-2">
                     <Sparkles className="w-4 h-4" />
-                    A2A Autonomous Discovery Active
+                    Automated Discovery Active
                   </h3>
                   <p className="text-sm text-purple-700">
-                    AI agents are scanning Neo4j entities with yellowPantherPriority ≤ 5 for RFP opportunities
+                    Background agents are scanning priority entities for new opportunities
                   </p>
                 </div>
               </div>
@@ -689,7 +738,7 @@ const [filterSource, setFilterSource] = useState('all');
               </div>
             </div>
             <div className="mt-3 text-xs text-purple-600">
-              🎯 Discovered opportunities will automatically appear below and be stored to the database
+              New opportunities will appear automatically once processing completes
             </div>
           </CardContent>
         </Card>
@@ -700,8 +749,8 @@ const [filterSource, setFilterSource] = useState('all');
         <Card className="mb-6 border-blue-200 bg-blue-50">
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              {filterStatus === 'active_rfp' && <><Target className="w-4 h-4 text-blue-600" /><span className="font-medium text-blue-900">🎯 ACTIVE_RFP Filter: Showing real procurement opportunities with official deadlines and verified sources</span></>}
-              {filterStatus === 'signal' && <><TrendingUp className="w-4 h-4 text-green-600" /><span className="font-medium text-green-900">📡 SIGNAL Filter: Showing market intelligence, partnerships, and strategic opportunities</span></>}
+              {filterStatus === 'active_rfp' && <><Target className="w-4 h-4 text-blue-600" /><span className="font-medium text-blue-900">Live procurement opportunities with active deadlines and valid source links</span></>}
+              {filterStatus === 'signal' && <><TrendingUp className="w-4 h-4 text-green-600" /><span className="font-medium text-green-900">Market signals and strategic partnership opportunities</span></>}
               {filterStatus === 'qualified' && <><span className="font-medium">✅ Qualified Filter: Showing pre-qualified opportunities</span></>}
               {filterStatus === 'expired' && <><span className="font-medium">⚰️ Expired Filter: Showing past opportunities</span></>}
               {filterStatus === 'emerging' && <><span className="font-medium">🌱 Emerging Filter: Showing potential opportunities</span></>}
@@ -775,25 +824,34 @@ const [filterSource, setFilterSource] = useState('all');
               className="px-3 py-2 border border-input bg-background rounded-md"
             >
               <option value="all">All Status</option>
-              <option value="active_rfp">🎯 ACTIVE_RFP</option>
-              <option value="signal">📡 SIGNAL</option>
+              <option value="active_rfp">Live Procurement</option>
+              <option value="signal">Market Signals</option>
               <option value="qualified">Qualified</option>
               <option value="expired">Expired</option>
               <option value="emerging">Emerging</option>
               <option value="active">Active</option>
             </select>
             <select
+              value={filterSport}
+              onChange={(e) => setFilterSport(e.target.value)}
+              className="px-3 py-2 border border-input bg-background rounded-md"
+            >
+              <option value="all">All Sports</option>
+              {availableSports.map((sport) => (
+                <option key={sport} value={sport}>{sport}</option>
+              ))}
+            </select>
+            <select
               value={filterSource}
               onChange={(e) => {
                 const value = e.target.value;
                 setFilterSource(value);
-                setShowDetectedOnly(value === 'ai-detected');
               }}
               className="px-3 py-2 border border-input bg-background rounded-md"
             >
-              <option value="all">All Opportunities</option>
-              <option value="rfp_opportunities">RFP Opportunities</option>
-              <option value="ai-detected">AI-Detected RFPs</option>
+              <option value="all">All Sources</option>
+              <option value="rfp_opportunities">Published Opportunities</option>
+              <option value="ai-detected">Detected Opportunities</option>
             </select>
           </div>
         </CardContent>
@@ -803,9 +861,9 @@ const [filterSource, setFilterSource] = useState('all');
       {filterSource === 'ai-detected' && displayRFPs.length > 0 && (
         <>
           <div className="mb-4">
-            <h2 className="text-xl font-semibold text-green-700 mb-2">🎯 AI-Detected RFP Opportunities</h2>
+            <h2 className="text-xl font-semibold text-green-700 mb-2">Detected Opportunities</h2>
             <p className="text-sm text-muted-foreground">
-              {displayRFPs.length} opportunities detected by our autonomous A2A system
+              {displayRFPs.length} opportunities detected by background monitoring
             </p>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
@@ -819,9 +877,9 @@ const [filterSource, setFilterSource] = useState('all');
           {displayRFPs.length > 0 && (
             <>
               <div className="mb-4">
-                <h2 className="text-xl font-semibold text-green-700 mb-2">🎯 AI-Detected RFP Opportunities</h2>
+                <h2 className="text-xl font-semibold text-green-700 mb-2">Detected Opportunities</h2>
                 <p className="text-sm text-muted-foreground">
-                  {displayRFPs.length} opportunities detected by our autonomous A2A system
+                  {displayRFPs.length} opportunities detected by background monitoring
                 </p>
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
@@ -833,7 +891,7 @@ const [filterSource, setFilterSource] = useState('all');
           {displayOpportunities.length > 0 && (
             <>
               <div className="mb-4">
-                <h2 className="text-xl font-semibold text-blue-700 mb-2">📊 RFP Opportunities</h2>
+                <h2 className="text-xl font-semibold text-blue-700 mb-2">Published Opportunities</h2>
                 <p className="text-sm text-muted-foreground">
                   {displayOpportunities.length} live opportunities from our database of {stats.total_opportunities || 325} total records
                 </p>
@@ -849,7 +907,7 @@ const [filterSource, setFilterSource] = useState('all');
       {(filterSource === 'rfp_opportunities') && displayOpportunities.length > 0 && (
         <>
           <div className="mb-4">
-            <h2 className="text-xl font-semibold text-blue-700 mb-2">📊 RFP Opportunities</h2>
+            <h2 className="text-xl font-semibold text-blue-700 mb-2">Published Opportunities</h2>
             <p className="text-sm text-muted-foreground">
               {displayOpportunities.length} live opportunities from our database of {stats.total_opportunities || 325} total records
             </p>
@@ -870,6 +928,53 @@ const [filterSource, setFilterSource] = useState('all');
               : "No opportunities found matching your criteria."
             }
           </p>
+        </div>
+      )}
+
+      {selectedOpportunity && (
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
+          <Card className="w-full max-w-2xl max-h-[85vh] overflow-y-auto">
+            <CardHeader className="flex flex-row items-start justify-between gap-4">
+              <div>
+                <CardTitle className="text-xl">{toSentenceCase(selectedOpportunity.title)}</CardTitle>
+                <p className="text-sm text-muted-foreground mt-1">{selectedOpportunity.organization}</p>
+              </div>
+              <Button variant="outline" size="sm" onClick={() => setSelectedOpportunity(null)}>
+                Close
+              </Button>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                <div><span className="font-medium">Location:</span> {selectedOpportunity.location || 'Unknown'}</div>
+                <div><span className="font-medium">Category:</span> {selectedOpportunity.category || 'General'}</div>
+                <div><span className="font-medium">Sport:</span> {selectedOpportunity.sport || selectedOpportunity.sports_category || 'Unspecified'}</div>
+                <div><span className="font-medium">Value:</span> {selectedOpportunity.value || 'Not specified'}</div>
+                <div><span className="font-medium">Deadline:</span> {selectedOpportunity.deadline ? new Date(selectedOpportunity.deadline).toLocaleDateString() : 'No deadline'}</div>
+                <div><span className="font-medium">Fit Score:</span> {selectedOpportunity.yellow_panther_fit || 0}%</div>
+              </div>
+              <div>
+                <h4 className="font-medium mb-2">Opportunity Summary</h4>
+                <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                  {selectedOpportunity.description || 'No summary available.'}
+                </p>
+              </div>
+              <div className="flex gap-2 justify-end">
+                {selectedOpportunity.source_url ? (
+                  <Button asChild>
+                    <a href={selectedOpportunity.source_url} target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      Open Source
+                    </a>
+                  </Button>
+                ) : (
+                  <Button disabled variant="outline">
+                    <ExternalLink className="w-4 h-4 mr-2" />
+                    No source link available
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       )}
     </div>

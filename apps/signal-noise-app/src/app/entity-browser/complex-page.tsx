@@ -30,10 +30,10 @@ import {
 import { useRouter } from "next/navigation"
 import { useEntities, prefetchEntity } from "@/lib/swr-config"
 import { useDossierCopilotActions } from "@/lib/dossier-copilot-actions"
-import { Entity as BaseEntity } from "@/lib/neo4j"
+import { Entity as BaseEntity } from "@/lib/graph-store"
 
 interface Entity extends BaseEntity {
-  neo4j_id: string | number
+  graph_id?: string | number
 }
 
 interface EntityBrowserResponse {
@@ -249,7 +249,7 @@ function EntityBrowserPageContent() {
       entitiesToPrefetch.forEach((entity, index) => {
         const batchIndex = Math.floor(index / batchSize)
         setTimeout(() => {
-          prefetchEntity(entity.neo4j_id.toString())
+          prefetchEntity(String(entity.graph_id ?? entity.id))
         }, batchIndex * 50) // Small delay between batches (50ms)
       })
     }
@@ -318,7 +318,7 @@ function EntityBrowserPageContent() {
             </div>
           </div>
           <p className="text-muted-foreground">
-            Browse all entities in your Neo4j knowledge graph with their complete schemas
+            Browse all entities in your graph intelligence store with their complete schemas
           </p>
           
           {/* Intelligence Features */}
@@ -328,7 +328,7 @@ function EntityBrowserPageContent() {
               Intelligence Dossiers Available
             </Badge>
             <span className="text-sm text-muted-foreground">
-              Click "Generate Intelligence Dossier" on any entity card for comprehensive analysis
+              Click &quot;Generate Intelligence Dossier&quot; on any entity card for comprehensive analysis
             </span>
           </div>
         </div>
@@ -507,7 +507,7 @@ function EntityBrowserPageContent() {
           {isLoading && displayEntities.length > 0 ? (
             // Show loading overlay while keeping existing data
             displayEntities.map((entity) => (
-              <div key={`${entity.id}-${entity.neo4j_id}`} className="relative">
+              <div key={`${entity.id}-${String(entity.graph_id ?? entity.id)}`} className="relative">
                 <EntityCard entity={entity} />
                 {isLoading && (
                   <div className="absolute inset-0 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
@@ -519,7 +519,7 @@ function EntityBrowserPageContent() {
           ) : (
             displayEntities.map((entity) => (
               <EntityCard
-                key={`${entity.id}-${entity.neo4j_id}`}
+                key={`${entity.id}-${String(entity.graph_id ?? entity.id)}`}
                 entity={entity}
               />
             ))

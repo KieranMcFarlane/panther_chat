@@ -101,6 +101,32 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
   }, [entity, dossier])
 
   const mapApiDossierToEnhancedDossier = (apiDossier: any): EnhancedClubDossier => {
+    const apiNews = Array.isArray(apiDossier.recent_news)
+      ? apiDossier.recent_news
+      : Array.isArray(apiDossier.news)
+        ? apiDossier.news
+        : []
+
+    const mappedNews = apiNews.map((item: any) => {
+      const category = String(item?.category || 'operations').toLowerCase()
+      const safeCategory =
+        category === 'partnership' ||
+        category === 'technology' ||
+        category === 'financial' ||
+        category === 'sports'
+          ? category
+          : 'operations'
+
+      return {
+        date: item?.date || item?.published_at || '',
+        headline: item?.headline || item?.title || 'Untitled update',
+        source: item?.source || item?.publisher || 'Unknown source',
+        sourceUrl: item?.source_url || item?.url || item?.link || undefined,
+        category: safeCategory as 'partnership' | 'technology' | 'financial' | 'sports' | 'operations',
+        relevanceScore: Number(item?.relevance_score || item?.relevanceScore || 0)
+      }
+    })
+
     return {
       coreInfo: {
         name: apiDossier.core_info?.name || apiDossier.entity?.name || props.name || 'Unknown',
@@ -150,25 +176,11 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
           'Stadium Technology Modernization': 78
         }
       },
-      recentNews: [
-        {
-          date: '2025-09-28',
-          headline: apiDossier.entity?.name + ' announces digital transformation initiative',
-          source: 'Official Club Site',
-          category: 'technology',
-          relevanceScore: 95
-        },
-        {
-          date: '2025-09-10',
-          headline: 'Club explores fan engagement partnerships',
-          source: 'BBC Sport',
-          category: 'partnership',
-          relevanceScore: 88
-        }
-      ],
+      recentNews: mappedNews,
       keyDecisionMakers: apiDossier.key_personnel?.map((person: any) => ({
         name: person.name,
         role: person.role,
+        profileUrl: person.profile_url || person.linkedin_url || person.link || undefined,
         influenceLevel: person.influence_level || 'MEDIUM',
         decisionScope: [person.decision_scope || 'General management'],
         relationshipMapping: {},
@@ -206,139 +218,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
   }
 
   const generateEnhancedDossier = () => {
-    // Check if entity has comprehensive dossier_data from Neo4j
-    let dossierData: EnhancedClubDossier
-    
-    if (props.dossier_data) {
-      try {
-        // Parse the comprehensive dossier data from Neo4j
-        const parsedDossier = JSON.parse(props.dossier_data)
-        
-        dossierData = {
-          coreInfo: {
-            name: parsedDossier.entity.name,
-            type: parsedDossier.entity.type,
-            league: parsedDossier.core_info?.league || formatValue(props.level) || parsedDossier.entity.level,
-            founded: parsedDossier.core_info?.founded || parsedDossier.entity.founded || 'Unknown',
-            hq: parsedDossier.core_info?.hq || formatValue(props.hq) || 'Unknown',
-            stadium: parsedDossier.core_info?.stadium || parsedDossier.entity.stadium || 'Unknown',
-            website: parsedDossier.core_info?.website || parsedDossier.entity.website || formatValue(props.website),
-            employeeRange: parsedDossier.core_info?.employee_range || formatValue(props.employee_range) || 'Unknown'
-          },
-          digitalTransformation: {
-            digitalMaturity: parsedDossier.digital_transformation?.digital_maturity || 58,
-            transformationScore: parsedDossier.digital_transformation?.transformation_score || 85,
-            websiteModernness: parsedDossier.digital_transformation?.website_moderness || 8,
-            currentPartner: parsedDossier.digital_transformation?.current_tech_partners?.[0] || 'Standard sports tech providers',
-            keyWeaknesses: parsedDossier.digital_transformation?.digital_weaknesses || ['Legacy systems integration challenges', 'Data silos across departments', 'Limited mobile capabilities'],
-            strategicOpportunities: parsedDossier.digital_transformation?.strategic_opportunities || [
-              'Expand digital fan engagement platforms',
-              'Implement advanced analytics capabilities', 
-              'Enhance mobile experience for supporters',
-              'Modernize stadium technology infrastructure'
-            ]
-          },
-          aiReasonerFeedback: {
-            overallAssessment: parsedDossier.strategic_analysis?.overall_assessment || 'Sunderland presents significant partnership opportunities with strong digital transformation potential and market position.',
-            yellowPantherOpportunity: parsedDossier.strategic_analysis?.opportunity_scoring?.immediate_launch?.[0]?.opportunity || 'AI-Powered Fan Engagement Platform partnership available',
-            engagementStrategy: parsedDossier.strategic_analysis?.recommended_approach || 'Direct engagement through Yellow Panther UK team networks with focus on sports technology partnerships',
-            riskFactors: ['Championship-level budget constraints', 'Change management resistance', 'Vendor integration complexity'],
-            competitiveAdvantages: ['Strong fan base engagement', 'Digital readiness indicators', 'Leadership openness to innovation'],
-            recommendedApproach: 'Start with fan analytics pilot project, prove ROI quickly, then expand to comprehensive digital transformation partnership.'
-          },
-          strategicOpportunities: {
-            immediateLaunch: parsedDossier.strategic_analysis?.opportunity_scoring?.immediate_launch?.map(opp => opp.opportunity) || [
-              'AI-Powered Fan Engagement Platform',
-              'Stadium Technology Modernization'
-            ],
-            mediumTermPartnerships: parsedDossier.strategic_analysis?.opportunity_scoring?.medium_term_partnerships?.map(opp => opp.opportunity) || [
-              'Data Analytics Expansion',
-              'Mobile App Enhancement'
-            ],
-            longTermInitiatives: parsedDossier.strategic_analysis?.opportunity_scoring?.long_term_initiatives?.map(opp => opp.opportunity) || [
-              'Comprehensive Digital Transformation',
-              'Advanced Fan Analytics Platform'
-            ],
-            opportunityScores: parsedDossier.strategic_analysis?.opportunity_scoring?.immediate_launch?.reduce((acc, opp) => {
-              acc[opp.opportunity] = opp.score;
-              return acc;
-            }, {} as Record<string, number>) || {
-              'AI-Powered Fan Engagement Platform': 79,
-              'Stadium Technology Modernization': 78,
-              'Data Analytics Expansion': 82
-            }
-          },
-          recentNews: [
-            {
-              date: '2025-09-28',
-              headline: 'Sunderland announces digital transformation initiative',
-              source: 'Official Club Site',
-              category: 'technology',
-              relevanceScore: 95
-            },
-            {
-              date: '2025-09-10', 
-              headline: 'Championship club explores fan engagement partnerships',
-              source: 'BBC Sport',
-              category: 'partnership',
-              relevanceScore: 88
-            },
-            {
-              date: '2025-08-22',
-              headline: 'Sunderland supporters show strong engagement with digital content',
-              source: 'The Guardian',
-              category: 'sports',
-              relevanceScore: 92
-            }
-          ],
-          keyDecisionMakers: (parsedDossier.key_personnel || []).map(person => ({
-            name: person.name,
-            role: person.role,
-            influenceLevel: person.influence_level || 'MEDIUM',
-            decisionScope: [person.decision_scope || 'General management'],
-            relationshipMapping: {},
-            communicationProfile: {
-              tone: 'Professional',
-              riskProfile: 'MEDIUM',
-            preferredContact: 'Formal proposal'
-          },
-          strategicHooks: []
-        })) || [],
-      leagueContext: {
-        currentPosition: 2,
-        currentPoints: 17,
-        recentForm: ['W', 'D', 'W', 'W', 'W'],
-        keyStatistics: {
-          wins: 5,
-          draws: 2,
-          losses: 0,
-          goalsFor: 12,
-          goalsAgainst: 4
-        },
-        miniTable: [
-          { position: 1, club: 'Manchester City', points: 19, goalDifference: 15 },
-          { position: 2, club: 'Arsenal', points: 17, goalDifference: 8 },
-          { position: 3, club: 'Liverpool', points: 16, goalDifference: 7 }
-        ]
-      },
-      status: {
-        watchlist: true,
-        activeDeal: false,
-        noEntry: false,
-        lastUpdated: new Date().toISOString()
-      }
-        }
-      } catch (error) {
-        console.error('Error parsing dossier_data:', error)
-        // Fall back to default data generation
-        dossierData = generateDefaultDossier()
-      }
-    } else {
-      // Generate default data when no dossier_data is available
-      dossierData = generateDefaultDossier()
-    }
-    
-    setEnhancedData(dossierData)
+    setEnhancedData(generateDefaultDossier())
   }
 
   const generateDefaultDossier = (): EnhancedClubDossier => {
@@ -491,58 +371,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
       // Set loading state
       setConnectionAnalysis({ status: 'loading' });
       
-      // Check if entity has comprehensive LinkedIn connection data
-      let analysisData;
-      
-      if (props.dossier_data) {
-        try {
-          // Parse the comprehensive dossier data from Neo4j
-          const parsedDossier = JSON.parse(props.dossier_data);
-          
-          if (parsedDossier.linkedin_connection_analysis) {
-            console.log(`🔍 Using LinkedIn connection data for ${parsedDossier.entity.name}...`);
-            
-            // Convert entity's LinkedIn data to the expected format
-            analysisData = {
-              status: 'completed',
-              data: {
-                connection_analysis: {
-                  target_entity: parsedDossier.entity.name,
-                  analysis_date: new Date().toISOString().split('T')[0],
-                  yellow_panther_uk_team: {
-                    team_members: parsedDossier.linkedin_connection_analysis.yellow_panther_uk_team?.team_members || [],
-                    total_connections_found: parsedDossier.linkedin_connection_analysis.yellow_panther_uk_team?.total_connections_found || 0,
-                    network_diversity_score: parsedDossier.linkedin_connection_analysis.yellow_panther_uk_team?.network_diversity_score || 0
-                  },
-                  tier_1_analysis: {
-                    introduction_paths: parsedDossier.linkedin_connection_analysis.tier_1_analysis?.introduction_paths || [],
-                    total_paths: parsedDossier.linkedin_connection_analysis.tier_1_analysis?.introduction_paths?.length || 0
-                  },
-                  tier_2_analysis: {
-                    tier_2_introduction_paths: parsedDossier.linkedin_connection_analysis.tier_2_analysis?.tier_2_introduction_paths || [],
-                    bridge_contacts: parsedDossier.linkedin_connection_analysis.tier_2_analysis?.influential_bridge_contacts || [],
-                    total_paths: parsedDossier.linkedin_connection_analysis.tier_2_analysis?.tier_2_introduction_paths?.length || 0
-                  },
-                  recommendations: {
-                    success_probability: parsedDossier.linkedin_connection_analysis.recommendations?.success_probability || 'Medium',
-                    recommended_approach: parsedDossier.linkedin_connection_analysis.recommendations?.recommended_approach || 'Direct outreach',
-                    confidence_level: parsedDossier.linkedin_connection_analysis.recommendations?.confidence_level || 'Medium'
-                  }
-                }
-              }
-            };
-          } else {
-            // No LinkedIn data available, create generic analysis
-            analysisData = createGenericAnalysis();
-          }
-        } catch (error) {
-          console.error('Error parsing LinkedIn data:', error);
-          analysisData = createGenericAnalysis();
-        }
-      } else {
-        // No dossier_data available, create generic analysis
-        analysisData = createGenericAnalysis();
-      }
+      const analysisData = createGenericAnalysis();
       
       // Simulate processing delay for UX
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -1043,7 +872,13 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                     <FileText className="h-4 w-4 mr-2" />
                     Export Dossier
                   </Button>
-                  <Button variant="outline" className="w-full">
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => setActiveTab('leadership')}
+                    disabled={!enhancedData?.keyDecisionMakers || enhancedData.keyDecisionMakers.length === 0}
+                    title={enhancedData?.keyDecisionMakers?.length ? 'Open leadership details' : 'No personnel records available'}
+                  >
                     <Users className="h-4 w-4 mr-2" />
                     View Personnel
                   </Button>
@@ -1394,7 +1229,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
 
                   <div>
                     <h5 className="font-medium mb-2">Communication Profile</h5>
-                    <p className="text-sm text-gray-600 italic">"{person.communicationProfile?.tone || 'Communication style not available'}"</p>
+                    <p className="text-sm text-gray-600 italic">&quot;{person.communicationProfile?.tone || 'Communication style not available'}&quot;</p>
                     <p className="text-sm text-gray-600">Risk Profile: <span className="font-medium">{person.communicationProfile?.riskProfile || 'Unknown'}</span></p>
                   </div>
 
@@ -1414,10 +1249,19 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                     </div>
                   </div>
 
-                  <Button variant="outline" size="sm" className="w-full">
-                    <Eye className="h-4 w-4 mr-2" />
-                    View Full Profile
-                  </Button>
+                  {person.profileUrl ? (
+                    <Button variant="outline" size="sm" className="w-full" asChild>
+                      <a href={person.profileUrl} target="_blank" rel="noopener noreferrer">
+                        <Eye className="h-4 w-4 mr-2" />
+                        View Profile
+                      </a>
+                    </Button>
+                  ) : (
+                    <Button variant="outline" size="sm" className="w-full" disabled title="No profile link available">
+                      <Eye className="h-4 w-4 mr-2" />
+                      No profile link available
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             )) || [
@@ -1425,7 +1269,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                 <CardContent className="p-8 text-center">
                   <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">No Leadership Data Available</h3>
-                  <p className="text-gray-600">Key decision makers haven't been identified for this entity yet.</p>
+                  <p className="text-gray-600">Key decision makers haven&apos;t been identified for this entity yet.</p>
                 </CardContent>
               </Card>
             ]}
@@ -1469,6 +1313,19 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                     <div className="flex items-center gap-4 text-sm text-gray-600">
                       <span>{news.date || 'No date'}</span>
                       <span>Source: {news.source || 'Unknown'}</span>
+                      {news.sourceUrl ? (
+                        <a
+                          href={news.sourceUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-blue-600 hover:underline"
+                        >
+                          <ExternalLink className="h-3 w-3" />
+                          Read source
+                        </a>
+                      ) : (
+                        <span className="text-xs text-gray-500">No source link available</span>
+                      )}
                     </div>
                   </div>
                 )) || [

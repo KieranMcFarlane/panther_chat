@@ -23,7 +23,7 @@ import {
 
 interface Entity {
   id: string
-  neo4j_id: string | number
+  graph_id?: string | number
   labels: string[]
   properties: Record<string, any>
 }
@@ -593,7 +593,7 @@ export function EntityDetailTabs({ entity, onEmailEntity }: EntityDetailTabsProp
                     <AlertTriangle className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
                     <h3 className="text-lg font-medium mb-2">No Contacts Available</h3>
                     <p className="text-muted-foreground mb-4">
-                      Key contact information hasn't been enriched for this entity yet.
+                      Key contact information hasn&apos;t been enriched for this entity yet.
                     </p>
                     <Button onClick={onEmailEntity} className="flex items-center gap-2">
                       <Mail className="h-4 w-4" />
