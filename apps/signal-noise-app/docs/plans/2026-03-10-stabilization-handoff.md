@@ -63,3 +63,9 @@ npm run build
 1. Add committed ESLint config so `npm run lint` is non-interactive in CI/local.
 2. Raise/segment Phase 0 timeout strategy so at least one non-degraded smoke run captures streaming diagnostics fields.
 3. Add a targeted smoke for `inference_runtime.streaming=true` + `model_used` + `chunk_count` in run metadata.
+
+## Lint Gate Policy (Current)
+
+- `npm run lint` is intentionally scoped to active stabilization surfaces.
+- `npm run lint:full` remains available for full-repo lint debt cleanup.
+- This keeps release gates deterministic for active runtime changes while legacy/demo lint backlog is burned down in separate slices.
