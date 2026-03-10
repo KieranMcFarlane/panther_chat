@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -76,27 +76,17 @@ export default function ControlledRFPScanner() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [entityLimit, setEntityLimit] = useState(500);
   const [showDetailedLogs, setShowDetailedLogs] = useState(false);
+  const scanStatusRef = useRef(scanStatus);
 
-  // Poll for status updates every second when running
   useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
-
-    if (scanStatus.status === 'running') {
-      interval = setInterval(() => {
-        fetchScanStatus();
-      }, 1000);
-    }
-
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [scanStatus.status]);
+    scanStatusRef.current = scanStatus;
+  }, [scanStatus]);
 
   const fetchScanStatus = useCallback(async () => {
     try {
       // Only show loading state if it's taking longer than 300ms or if status is 'running'
       const loadingTimer = setTimeout(() => {
-        if (scanStatus.status === 'running') {
+        if (scanStatusRef.current.status === 'running') {
           setIsUpdating(true);
         }
       }, 300);
@@ -138,15 +128,13 @@ export default function ControlledRFPScanner() {
       }
       
       clearTimeout(loadingTimer);
-      
-      // Only update if data actually changed to prevent unnecessary re-renders
-      const hasChanged = JSON.stringify(status) !== JSON.stringify(scanStatus);
-      if (hasChanged) {
-        setScanStatus(status);
-      }
+
+      setScanStatus(prev =>
+        JSON.stringify(status) !== JSON.stringify(prev) ? status : prev
+      );
       
       // Brief loading indicator only for running scans
-      if (scanStatus.status === 'running') {
+      if (scanStatusRef.current.status === 'running') {
         setIsUpdating(true);
         setTimeout(() => setIsUpdating(false), 200);
       }
@@ -155,7 +143,22 @@ export default function ControlledRFPScanner() {
       setIsUpdating(false);
       // Don't show error to user for temporary fetch issues, just log it
     }
-  }, [scanStatus.status]);
+  }, []);
+
+  // Poll for status updates every second when running
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+
+    if (scanStatus.status === 'running') {
+      interval = setInterval(() => {
+        void fetchScanStatus();
+      }, 1000);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [fetchScanStatus, scanStatus.status]);
 
   const executeScanAction = async (action: string, config?: any) => {
     try {

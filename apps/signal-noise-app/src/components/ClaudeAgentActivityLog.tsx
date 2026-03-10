@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface LogEntry {
   id: string;
@@ -39,116 +39,11 @@ export default function ClaudeAgentActivityLog({
     }
   }, [logs, autoScroll]);
 
-  // Connect to Claude Agent SDK activity stream
-  useEffect(() => {
-    const connectToActivityStream = () => {
-      setConnectionStatus('connecting');
-      
-      // Build URL for activity stream
-      const params = new URLSearchParams({
-        session_id: sessionId,
-        stream_type: 'claude-agent-activity'
-      });
-      
-      const eventSource = new EventSource(`/api/claude-agent/activity?${params}`);
-      eventSourceRef.current = eventSource;
-
-      eventSource.onopen = () => {
-        setConnectionStatus('connected');
-        setIsConnected(true);
-        // Add initial connection message but make it subtle
-        addLog({
-          id: `conn-${Date.now()}`,
-          timestamp: new Date().toISOString(),
-          type: 'system',
-          message: '🔗 Claude Agent SDK connected',
-          sessionId
-        });
-      };
-
-      eventSource.onmessage = (event) => {
-        try {
-          // Skip empty or invalid messages
-          if (!event.data || event.data.trim() === '') {
-            return;
-          }
-          
-          const data = JSON.parse(event.data);
-          
-          // Validate parsed data
-          if (!data || typeof data !== 'object') {
-            console.warn('Invalid message format received:', event.data);
-            return;
-          }
-          
-          switch (data.type) {
-            case 'sdk_message':
-              handleSDKMessage(data);
-              break;
-              
-            case 'tool_execution':
-              handleToolExecution(data);
-              break;
-              
-            case 'mcp_activity':
-              handleMCPActivity(data);
-              break;
-              
-            case 'session_event':
-              handleSessionEvent(data);
-              break;
-              
-            case 'error':
-              handleError(data);
-              break;
-              
-            default:
-              handleGenericMessage(data);
-          }
-        } catch (error) {
-          console.error('Failed to parse activity stream message:', error);
-          console.error('Raw message data:', event.data);
-          
-          addLog({
-            id: `parse-error-${Date.now()}`,
-            timestamp: new Date().toISOString(),
-            type: 'error',
-            message: `⚠️ Failed to parse stream message: ${error.message}`,
-            details: { 
-              rawMessage: event.data,
-              errorMessage: error.message,
-              errorStack: error.stack
-            }
-          });
-        }
-      };
-
-      eventSource.onerror = () => {
-        setConnectionStatus('error');
-        setIsConnected(false);
-        addLog({
-          id: `conn-error-${Date.now()}`,
-          timestamp: new Date().toISOString(),
-          type: 'error',
-          message: '🔴 Connection to Claude Agent SDK lost'
-        });
-      };
-    };
-
-    connectToActivityStream();
-
-    return () => {
-      if (eventSourceRef.current) {
-        eventSourceRef.current.close();
-      }
-    };
-  }, [sessionId]);
-
-  const addLog = (entry: LogEntry) => {
+  const addLog = useCallback((entry: LogEntry) => {
     setLogs(prev => [...prev.slice(-500), entry]); // Keep last 500 logs
-  };
+  }, []);
 
-  const handleSDKMessage = (data: any) => {
+  const handleSDKMessage = useCallback((data: any) => {
     // The actual message is in data.data, not data.message
     const message = data.data;
     
@@ -232,9 +127,9 @@ export default function ClaudeAgentActivityLog({
           details: message
         });
     }
-  };
+  }, [addLog]);
 
-  const handleToolExecution = (data: any) => {
+  const handleToolExecution = useCallback((data: any) => {
     const { toolName, action, input, output, duration, error } = data;
     
     addLog({
@@ -251,9 +146,9 @@ export default function ClaudeAgentActivityLog({
       toolName,
       duration
     });
-  };
+  }, [addLog]);
 
-  const handleMCPActivity = (data: any) => {
+  const handleMCPActivity = useCallback((data: any) => {
     const { server, action, tool, status } = data;
     
     addLog({
@@ -266,9 +161,9 @@ export default function ClaudeAgentActivityLog({
         status
       }
     });
-  };
+  }, [addLog]);
 
-  const handleSessionEvent = (data: any) => {
+  const handleSessionEvent = useCallback((data: any) => {
     const { event, reason } = data;
     
     // Filter out all system/connection messages to reduce noise
@@ -298,9 +193,9 @@ export default function ClaudeAgentActivityLog({
       message: `📋 Session: ${event}${reason ? ` (${reason})` : ''}`,
       details: data
     });
-  };
+  }, [addLog]);
 
-  const handleError = (data: any) => {
+  const handleError = useCallback((data: any) => {
     const { error, context } = data;
     
     addLog({
@@ -310,9 +205,9 @@ export default function ClaudeAgentActivityLog({
       message: `❌ Error: ${error}`,
       details: context
     });
-  };
+  }, [addLog]);
 
-  const handleGenericMessage = (data: any) => {
+  const handleGenericMessage = useCallback((data: any) => {
     // Filter out generic system messages as well
     if (data.type === 'session_event' || data.message?.includes('heartbeat') || data.message?.includes('connected')) {
       return;
@@ -325,7 +220,113 @@ export default function ClaudeAgentActivityLog({
       message: `📄 ${data.message || 'Unknown event'}`,
       details: data
     });
-  };
+  }, [addLog]);
+
+  // Connect to Claude Agent SDK activity stream
+  useEffect(() => {
+    const connectToActivityStream = () => {
+      setConnectionStatus('connecting');
+      
+      // Build URL for activity stream
+      const params = new URLSearchParams({
+        session_id: sessionId,
+        stream_type: 'claude-agent-activity'
+      });
+      
+      const eventSource = new EventSource(`/api/claude-agent/activity?${params}`);
+      eventSourceRef.current = eventSource;
+
+      eventSource.onopen = () => {
+        setConnectionStatus('connected');
+        setIsConnected(true);
+        // Add initial connection message but make it subtle
+        addLog({
+          id: `conn-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          type: 'system',
+          message: '🔗 Claude Agent SDK connected',
+          sessionId
+        });
+      };
+
+      eventSource.onmessage = (event) => {
+        try {
+          // Skip empty or invalid messages
+          if (!event.data || event.data.trim() === '') {
+            return;
+          }
+          
+          const data = JSON.parse(event.data);
+          
+          // Validate parsed data
+          if (!data || typeof data !== 'object') {
+            console.warn('Invalid message format received:', event.data);
+            return;
+          }
+          
+          switch (data.type) {
+            case 'sdk_message':
+              handleSDKMessage(data);
+              break;
+              
+            case 'tool_execution':
+              handleToolExecution(data);
+              break;
+              
+            case 'mcp_activity':
+              handleMCPActivity(data);
+              break;
+              
+            case 'session_event':
+              handleSessionEvent(data);
+              break;
+              
+            case 'error':
+              handleError(data);
+              break;
+              
+            default:
+              handleGenericMessage(data);
+          }
+        } catch (error) {
+          console.error('Failed to parse activity stream message:', error);
+          console.error('Raw message data:', event.data);
+          const parseError = error as Error;
+          
+          addLog({
+            id: `parse-error-${Date.now()}`,
+            timestamp: new Date().toISOString(),
+            type: 'error',
+            message: `⚠️ Failed to parse stream message: ${parseError.message}`,
+            details: { 
+              rawMessage: event.data,
+              errorMessage: parseError.message,
+              errorStack: parseError.stack
+            }
+          });
+        }
+      };
+
+      eventSource.onerror = () => {
+        setConnectionStatus('error');
+        setIsConnected(false);
+        addLog({
+          id: `conn-error-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          type: 'error',
+          message: '🔴 Connection to Claude Agent SDK lost'
+        });
+      };
+    };
+
+    connectToActivityStream();
+
+    return () => {
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+      }
+    };
+  }, [addLog, handleError, handleGenericMessage, handleMCPActivity, handleSDKMessage, handleSessionEvent, handleToolExecution, sessionId]);
 
   const getLogIcon = (type: LogEntry['type']) => {
     switch (type) {
