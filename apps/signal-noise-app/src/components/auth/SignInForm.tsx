@@ -102,7 +102,7 @@ export function SignInForm() {
           <div className="text-sm text-center">
             {mode === "signIn" ? (
               <>
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <button
                   type="button"
                   onClick={() => setMode("signUp")}

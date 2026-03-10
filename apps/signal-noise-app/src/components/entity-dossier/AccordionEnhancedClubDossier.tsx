@@ -208,7 +208,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity }: EnhancedClubDossi
               >
                 <div className="space-y-4">
                   <p className="text-purple-700">
-                    Arsenal's digital structure is mature but rigid. Their reliance on NTT DATA constrains innovation velocity while providing stability.
+                    Arsenal&apos;s digital structure is mature but rigid. Their reliance on NTT DATA constrains innovation velocity while providing stability.
                   </p>
                   
                   <div className="space-y-3">
@@ -250,7 +250,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity }: EnhancedClubDossi
                 <div className="space-y-4">
                   <h6 className="font-semibold text-purple-900">Yellow Panther Opportunity</h6>
                   <p className="text-purple-700">
-                    Position Yellow Panther as a "lightweight experimental R&D wing" for pilot projects that NTT cannot deliver quickly.
+                    Position Yellow Panther as a &quot;lightweight experimental R&amp;D wing&quot; for pilot projects that NTT cannot deliver quickly.
                   </p>
                   
                   <h6 className="font-semibold text-purple-900">Recommended Approach</h6>
@@ -292,7 +292,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity }: EnhancedClubDossi
                     <div>
                       <h6 className="font-semibold text-green-900 mb-2">Strategic Opportunities</h6>
                       <ul className="space-y-1 text-sm text-green-700">
-                        <li>• Expand women's football digital ecosystem</li>
+                        <li>• Expand women&apos;s football digital ecosystem</li>
                         <li>• Integrate fan wellness/mental health platform</li>
                         <li>• Create AR-enhanced supporter experiences</li>
                         <li>• Pilot modular fan data integration layer</li>
@@ -412,14 +412,14 @@ export function EnhancedClubDossier({ entity, onEmailEntity }: EnhancedClubDossi
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <h6 className="font-semibold text-blue-900 mb-2">Overall Assessment</h6>
                 <p className="text-blue-700">
-                  Arsenal's digital structure is mature but rigid. Their reliance on NTT DATA constrains innovation velocity.
+                  Arsenal&apos;s digital structure is mature but rigid. Their reliance on NTT DATA constrains innovation velocity.
                 </p>
               </div>
               
               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                 <h6 className="font-semibold text-green-900 mb-2">Yellow Panther Opportunity</h6>
                 <p className="text-green-700">
-                  Position Yellow Panther as a "lightweight experimental R&D wing" for pilot projects that NTT cannot deliver quickly.
+                  Position Yellow Panther as a &quot;lightweight experimental R&amp;D wing&quot; for pilot projects that NTT cannot deliver quickly.
                 </p>
               </div>
               
@@ -536,7 +536,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity }: EnhancedClubDossi
                   
                   <div>
                     <p className="text-sm font-medium text-purple-700">Communication Profile:</p>
-                    <p className="text-sm text-purple-600">"Professional, outcome-driven, values storytelling"</p>
+                    <p className="text-sm text-purple-600">&quot;Professional, outcome-driven, values storytelling&quot;</p>
                   </div>
                   
                   <div>

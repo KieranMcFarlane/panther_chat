@@ -828,7 +828,7 @@ function EnhancedArsenalDossier({
               <div>
                 <h3 className="font-semibold text-gray-900 mb-1">Strategic Assessment</h3>
                 <p className="text-sm text-gray-700 max-w-3xl">
-                  Arsenal's digital structure is mature but rigid. Their reliance on NTT DATA constrains innovation velocity, 
+                  Arsenal&apos;s digital structure is mature but rigid. Their reliance on NTT DATA constrains innovation velocity, 
                   creating opportunities for Yellow Panther to position as a lightweight experimental R&D wing for pilot projects.
                 </p>
               </div>
@@ -977,7 +977,7 @@ function EnhancedArsenalDossier({
                 </div>
                 <div className="p-4 border rounded-lg">
                   <h4 className="font-semibold mb-2">Arsenal Women reach record 17,000 season ticket sales</h4>
-                  <p className="text-sm text-gray-600 mb-2">Historic milestone for women's football demonstrates commercial growth.</p>
+                  <p className="text-sm text-gray-600 mb-2">Historic milestone for women&apos;s football demonstrates commercial growth.</p>
                   <div className="flex items-center gap-2">
                     <Badge variant="outline">Sports</Badge>
                     <span className="text-xs text-gray-500">September 2024</span>
