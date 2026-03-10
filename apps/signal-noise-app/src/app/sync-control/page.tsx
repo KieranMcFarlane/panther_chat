@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -333,7 +333,7 @@ export default function SyncControlCenter() {
   const [refreshInterval, setRefreshInterval] = useState<NodeJS.Timeout | null>(null);
 
   // Fetch sync status
-  const fetchSyncStatus = async () => {
+  const fetchSyncStatus = useCallback(async () => {
     try {
       const response = await fetch('/api/sync-control');
       if (response.ok) {
@@ -343,10 +343,10 @@ export default function SyncControlCenter() {
     } catch (error) {
       console.error('Error fetching sync status:', error);
     }
-  };
+  }, []);
 
   // Fetch logs
-  const fetchLogs = async () => {
+  const fetchLogs = useCallback(async () => {
     try {
       const response = await fetch(`/api/sync-logs?type=${logType}&lines=100`);
       if (response.ok) {
@@ -356,7 +356,7 @@ export default function SyncControlCenter() {
     } catch (error) {
       console.error('Error fetching logs:', error);
     }
-  };
+  }, [logType]);
 
   // Control sync
   const controlSync = async (action: string, params?: any) => {
@@ -385,14 +385,14 @@ export default function SyncControlCenter() {
 
   // Initial data fetch
   useEffect(() => {
-    fetchSyncStatus();
-    fetchLogs();
+    void fetchSyncStatus();
+    void fetchLogs();
 
     // Set up auto-refresh
     const interval = setInterval(() => {
-      fetchSyncStatus();
+      void fetchSyncStatus();
       if (syncState.isRunning || syncState.isPaused) {
-        fetchLogs();
+        void fetchLogs();
       }
     }, 5000);
 
@@ -401,7 +401,7 @@ export default function SyncControlCenter() {
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [logType, syncState.isRunning, syncState.isPaused]);
+  }, [fetchLogs, fetchSyncStatus, syncState.isPaused, syncState.isRunning]);
 
   const getStatusBadge = () => {
     const statusConfig = {

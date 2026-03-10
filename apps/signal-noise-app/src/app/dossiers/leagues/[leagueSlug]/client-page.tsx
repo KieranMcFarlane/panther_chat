@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -206,7 +206,10 @@ export default function LeagueDossierClient({ leagueSlug }: { leagueSlug: string
       });
   };
 
-  const parsedContent = dossierContent ? parseDossierContent(dossierContent.content) : {};
+  const parsedContent = useMemo(
+    () => (dossierContent ? parseDossierContent(dossierContent.content) : {}),
+    [dossierContent]
+  );
   
   // Debug: Log parsed content to verify extraction
   useEffect(() => {
