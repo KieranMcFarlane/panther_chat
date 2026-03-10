@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   MessageCircle, 
@@ -87,6 +87,42 @@ export function TabbedChatSidebar({
   const { userId: contextUserId } = useUser();
   const menuRef = useRef<HTMLDivElement>(null);
 
+  const createNewInstance = useCallback((agentType: ClaudeAgentInstance['agentType']) => {
+    const newInstance: ClaudeAgentInstance = {
+      id: uuidv4(),
+      name: `${agentTypes[agentType].name} ${instances.filter(i => i.agentType === agentType).length + 1}`,
+      isActive: true,
+      conversationHistory: [],
+      createdAt: new Date(),
+      lastActive: new Date(),
+      agentType
+    };
+
+    setInstances(prev => [...prev, newInstance]);
+    setActiveInstanceId(newInstance.id);
+    setActiveTab('chat');
+    setShowNewInstanceMenu(false);
+  }, [instances]);
+
+  const startNewConversation = useCallback((instanceId: string) => {
+    const sourceInstance = instances.find(i => i.id === instanceId);
+    const newInstance: ClaudeAgentInstance = {
+      id: uuidv4(),
+      name: `${sourceInstance?.name || 'New'} - New Chat`,
+      isActive: true,
+      conversationHistory: [],
+      createdAt: new Date(),
+      lastActive: new Date(),
+      agentType: sourceInstance?.agentType || 'sports-intelligence',
+      isArchived: false,
+      conversationCount: 0
+    };
+
+    setInstances(prev => [...prev, newInstance]);
+    setActiveInstanceId(newInstance.id);
+    setActiveTab('chat');
+  }, [instances]);
+
   // Load saved instances on mount
   useEffect(() => {
     const savedInstances = localStorage.getItem(`claude-agent-instances-${userId || contextUserId}`);
@@ -102,7 +138,18 @@ export function TabbedChatSidebar({
       }
     } else {
       // Create default instance
-      createNewInstance('sports-intelligence');
+      const defaultInstance: ClaudeAgentInstance = {
+        id: uuidv4(),
+        name: `${agentTypes['sports-intelligence'].name} 1`,
+        isActive: true,
+        conversationHistory: [],
+        createdAt: new Date(),
+        lastActive: new Date(),
+        agentType: 'sports-intelligence'
+      };
+      setInstances([defaultInstance]);
+      setActiveInstanceId(defaultInstance.id);
+      setActiveTab('chat');
     }
   }, [userId, contextUserId]);
 
@@ -153,24 +200,7 @@ export function TabbedChatSidebar({
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [instances, activeInstance, activeInstanceId]);
-
-  const createNewInstance = (agentType: ClaudeAgentInstance['agentType']) => {
-    const newInstance: ClaudeAgentInstance = {
-      id: uuidv4(),
-      name: `${agentTypes[agentType].name} ${instances.filter(i => i.agentType === agentType).length + 1}`,
-      isActive: true,
-      conversationHistory: [],
-      createdAt: new Date(),
-      lastActive: new Date(),
-      agentType
-    };
-
-    setInstances(prev => [...prev, newInstance]);
-    setActiveInstanceId(newInstance.id);
-    setActiveTab('chat');
-    setShowNewInstanceMenu(false);
-  };
+  }, [instances, activeInstance, startNewConversation]);
 
   const closeInstance = (instanceId: string) => {
     if (instances.length <= 1) return;
@@ -225,24 +255,6 @@ export function TabbedChatSidebar({
         ? { ...inst, conversationHistory: [], lastActive: new Date(), conversationCount: 0 }
         : inst
     ));
-  };
-
-  const startNewConversation = (instanceId: string) => {
-    const newInstance = {
-      id: uuidv4(),
-      name: `${instances.find(i => i.id === instanceId)?.name || 'New'} - New Chat`,
-      isActive: true,
-      conversationHistory: [],
-      createdAt: new Date(),
-      lastActive: new Date(),
-      agentType: instances.find(i => i.id === instanceId)?.agentType || 'sports-intelligence',
-      isArchived: false,
-      conversationCount: 0
-    };
-
-    setInstances(prev => [...prev, newInstance]);
-    setActiveInstanceId(newInstance.id);
-    setActiveTab('chat');
   };
 
   const startFromTemplate = (template: string, agentType: ClaudeAgentInstance['agentType']) => {

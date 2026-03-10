@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -65,43 +65,10 @@ export function ClubDossier({ entity, onEmailEntity }: ClubDossierProps) {
   const [activeTab, setActiveTab] = useState('overview')
   
   const props = entity.properties
+  const entityName = props.name
   const priority = getEntityPriority(entity)
-  
-  // Load real Perplexity data for any club entity
-  useEffect(() => {
-    if (entity) {
-      loadPerplexityData()
-      
-      // Auto-generate comprehensive mock data for Arsenal to showcase full schema
-      if (props.name === 'Arsenal') {
-        console.log(`🏆 Generating comprehensive dossier schema for Arsenal`)
-        generateComprehensiveArsenalDossier()
-      }
-    }
-  }, [entity])
 
-  const loadPerplexityData = async () => {
-    console.log(`🔍 Loading Perplexity intelligence for: ${props.name}`)
-    setIsLoadingResearch(true)
-    
-    try {
-      const result = await perplexityService.enrichEntityData(entity)
-      
-      if (result.perplexityIntelligence) {
-        console.log(`✅ Loaded Perplexity intelligence for ${props.name}:`, result.perplexityIntelligence)
-        setPerplexityData(result.perplexityIntelligence)
-        setLastUpdated(new Date())
-      } else {
-        console.log(`⚠️ No Perplexity intelligence available for ${props.name}`)
-      }
-    } catch (error) {
-      console.error(`❌ Error loading Perplexity data for ${props.name}:`, error)
-    } finally {
-      setIsLoadingResearch(false)
-    }
-  }
-  
-  const generateComprehensiveArsenalDossier = () => {
+  const generateComprehensiveArsenalDossier = useCallback(() => {
     const comprehensiveData: PerplexityIntelligence = {
       financialPerformance: {
         revenue: '£520M+ (2023/24) - 5th highest in Premier League',
@@ -130,7 +97,43 @@ export function ClubDossier({ entity, onEmailEntity }: ClubDossierProps) {
     
     setPerplexityData(comprehensiveData)
     setLastUpdated(new Date())
-  }
+  }, [])
+
+  const loadPerplexityData = useCallback(async () => {
+    if (!entity) return
+
+    console.log(`🔍 Loading Perplexity intelligence for: ${entityName}`)
+    setIsLoadingResearch(true)
+    
+    try {
+      const result = await perplexityService.enrichEntityData(entity)
+      
+      if (result.perplexityIntelligence) {
+        console.log(`✅ Loaded Perplexity intelligence for ${entityName}:`, result.perplexityIntelligence)
+        setPerplexityData(result.perplexityIntelligence)
+        setLastUpdated(new Date())
+      } else {
+        console.log(`⚠️ No Perplexity intelligence available for ${entityName}`)
+      }
+    } catch (error) {
+      console.error(`❌ Error loading Perplexity data for ${entityName}:`, error)
+    } finally {
+      setIsLoadingResearch(false)
+    }
+  }, [entity, entityName])
+  
+  // Load real Perplexity data for any club entity
+  useEffect(() => {
+    if (entity) {
+      loadPerplexityData()
+      
+      // Auto-generate comprehensive mock data for Arsenal to showcase full schema
+      if (entityName === 'Arsenal') {
+        console.log(`🏆 Generating comprehensive dossier schema for Arsenal`)
+        generateComprehensiveArsenalDossier()
+      }
+    }
+  }, [entity, entityName, generateComprehensiveArsenalDossier, loadPerplexityData])
 
   const generateMockPerplexityData = () => {
     const mockData: PerplexityIntelligence = {

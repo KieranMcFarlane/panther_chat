@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -73,34 +73,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
   const props = entity.properties
   const priority = parseInt(String(getEntityPriority(entity))) || 0
 
-  useEffect(() => {
-    if (!entity) return
-
-    // If we have dossier data from the API, use it directly
-    if (dossier && Object.keys(dossier).length > 0) {
-      // Map the API response structure to the expected EnhancedClubDossier format
-      const mappedDossier = mapApiDossierToEnhancedDossier(dossier)
-      setEnhancedData(mappedDossier)
-      setConnectionAnalysis(dossier.linkedin_connection_analysis)
-
-      // Extract hypotheses and signals from dossier
-      if (dossier.hypotheses) {
-        setHypotheses(dossier.hypotheses)
-      }
-      if (dossier.signals) {
-        setSignals(dossier.signals)
-      }
-
-      setIsInitialized(true)
-    } else {
-      // Otherwise generate it locally from entity properties
-      generateEnhancedDossier()
-      generateConnectionAnalysis()
-      setIsInitialized(true)
-    }
-  }, [entity, dossier])
-
-  const mapApiDossierToEnhancedDossier = (apiDossier: any): EnhancedClubDossier => {
+  const mapApiDossierToEnhancedDossier = useCallback((apiDossier: any): EnhancedClubDossier => {
     const apiNews = Array.isArray(apiDossier.recent_news)
       ? apiDossier.recent_news
       : Array.isArray(apiDossier.news)
@@ -215,13 +188,9 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
         lastUpdated: new Date().toISOString()
       }
     }
-  }
+  }, [props.country, props.name, props.type, props.website, props.yellowPantherPriority?.low, props.level])
 
-  const generateEnhancedDossier = () => {
-    setEnhancedData(generateDefaultDossier())
-  }
-
-  const generateDefaultDossier = (): EnhancedClubDossier => {
+  const generateDefaultDossier = useCallback((): EnhancedClubDossier => {
     // Generate comprehensive dossier data following the ASCII wireframe structure
     return {
       coreInfo: {
@@ -364,26 +333,9 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
         lastUpdated: new Date().toISOString()
       }
     }
-  }
+  }, [props.founded, props.headquarters, props.level, props.name, props.stadium, props.website])
 
-  const generateConnectionAnalysis = async () => {
-    try {
-      // Set loading state
-      setConnectionAnalysis({ status: 'loading' });
-      
-      const analysisData = createGenericAnalysis();
-      
-      // Simulate processing delay for UX
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setConnectionAnalysis(analysisData);
-    } catch (error) {
-      console.error('Error in connection analysis:', error);
-      setConnectionAnalysis({ status: 'error', error: error.message });
-    }
-  };
-
-  const createGenericAnalysis = () => {
+  const createGenericAnalysis = useCallback(() => {
     // Create generic analysis for entities without specific LinkedIn data
     const entityName = formatValue(props.name) || 'Unknown Entity';
     
@@ -596,7 +548,55 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
           }
         }
       };
-  };
+  }, [props.name]);
+
+  const generateEnhancedDossier = useCallback(() => {
+    setEnhancedData(generateDefaultDossier())
+  }, [generateDefaultDossier])
+
+  const generateConnectionAnalysis = useCallback(async () => {
+    try {
+      // Set loading state
+      setConnectionAnalysis({ status: 'loading' });
+      
+      const analysisData = createGenericAnalysis();
+      
+      // Simulate processing delay for UX
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      setConnectionAnalysis(analysisData);
+    } catch (error) {
+      console.error('Error in connection analysis:', error);
+      setConnectionAnalysis({ status: 'error', error: error.message });
+    }
+  }, [createGenericAnalysis]);
+
+  useEffect(() => {
+    if (!entity) return
+
+    // If we have dossier data from the API, use it directly
+    if (dossier && Object.keys(dossier).length > 0) {
+      // Map the API response structure to the expected EnhancedClubDossier format
+      const mappedDossier = mapApiDossierToEnhancedDossier(dossier)
+      setEnhancedData(mappedDossier)
+      setConnectionAnalysis(dossier.linkedin_connection_analysis)
+
+      // Extract hypotheses and signals from dossier
+      if (dossier.hypotheses) {
+        setHypotheses(dossier.hypotheses)
+      }
+      if (dossier.signals) {
+        setSignals(dossier.signals)
+      }
+
+      setIsInitialized(true)
+    } else {
+      // Otherwise generate it locally from entity properties
+      generateEnhancedDossier()
+      generateConnectionAnalysis()
+      setIsInitialized(true)
+    }
+  }, [dossier, entity, generateConnectionAnalysis, generateEnhancedDossier, mapApiDossierToEnhancedDossier])
 
   const getStatusBadge = () => {
     if (enhancedData?.status?.activeDeal) return { text: 'ACTIVE DEAL', color: 'bg-green-100 text-green-800 border-green-200' }
