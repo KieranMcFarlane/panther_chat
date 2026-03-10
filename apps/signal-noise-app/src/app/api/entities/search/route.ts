@@ -1,84 +1,101 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { Neo4jService } from '@/lib/neo4j';
+import { NextRequest, NextResponse } from 'next/server'
+import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
+import { resolveGraphId } from '@/lib/graph-id'
 
-// Mark route as dynamic to prevent static generation
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 
+type SearchEntity = {
+  id: string
+  graph_id: string
+  name: string
+  type: string
+  sport: string
+  country: string
+}
+
+function buildVectorBackedFallbackSearch(search: string, value: string): number {
+  if (!search) return 0
+  const normalizedSearch = search.toLowerCase()
+  const normalizedValue = value.toLowerCase()
+  if (normalizedValue === normalizedSearch) return 100
+  if (normalizedValue.startsWith(normalizedSearch)) return 80
+  if (normalizedValue.includes(normalizedSearch)) return 60
+  return 0
+}
+
 export async function GET(request: NextRequest) {
+  const startedAt = Date.now()
   try {
-    const { searchParams } = new URL(request.url);
-    const search = searchParams.get('search') || '';
-    const limit = Math.floor(parseInt(searchParams.get('limit') || '50'));
+    const { searchParams } = new URL(request.url)
+    const mode = searchParams.get('mode') || 'browse'
+    const search = (searchParams.get('search') || '').trim()
+    const defaultLimit = mode === 'autocomplete' ? 8 : 20
+    const limit = Math.max(1, Math.min(Math.floor(parseInt(searchParams.get('limit') || String(defaultLimit))), 100))
+    const overscanLimit = Math.min(limit * 3, 100)
 
-    const neo4j = new Neo4jService();
-    await neo4j.initialize();
-
-    let cypherQuery = '';
-    let params: any = {};
+    let query = supabase
+      .from('cached_entities')
+      .select('id, graph_id, neo4j_id, labels, properties')
+      .limit(overscanLimit)
 
     if (search) {
-      // Search entities by name
-      cypherQuery = `
-        MATCH (n)
-        WHERE toLower(n.name) CONTAINS toLower($search)
-        RETURN n 
-        ORDER BY n.name 
-        LIMIT toInteger($limit)
-      `;
-      params = { search, limit };
-    } else {
-      // Get first entities for default list
-      cypherQuery = `
-        MATCH (n)
-        WHERE n.name IS NOT NULL
-        RETURN n 
-        ORDER BY n.name 
-        LIMIT toInteger($limit)
-      `;
-      params = { limit };
+      query = query.or(
+        `properties->>name.ilike.%${search}%,properties->>type.ilike.%${search}%,properties->>sport.ilike.%${search}%,properties->>country.ilike.%${search}%`
+      )
     }
 
-    const session = neo4j.getDriver().session();
-    try {
-      const result = await session.run(cypherQuery, params);
-      
-      const entities = result.records.map(record => {
-        const node = record.get('n');
-        return {
-          id: node.identity.toString(),
-          name: node.properties.name || `Entity ${node.identity}`,
-          type: node.properties.type || 'Unknown',
-          sport: node.properties.sport || '',
-          country: node.properties.country || ''
-        };
-      });
+    const { data, error } = await query.order('properties->>priorityScore', { ascending: false, nullsFirst: false })
 
-      return NextResponse.json({ 
-        success: true, 
-        entities,
-        total: entities.length 
-      });
-    } finally {
-      await session.close();
+    if (error) {
+      throw error
     }
+
+    const ranked = (data || []).map((entity: any) => {
+      const stableId = resolveGraphId(entity) || entity.id
+      const name = entity.properties?.name || stableId || `Entity ${entity.id}`
+      const type = entity.properties?.type || entity.labels?.[0] || 'Unknown'
+      const sport = entity.properties?.sport || ''
+      const country = entity.properties?.country || ''
+      const lexicalScore = buildVectorBackedFallbackSearch(search, String(name))
+      const popularityScore = Number(entity.properties?.priorityScore || entity.properties?.yellowPantherPriority || 0)
+      return ({
+        id: stableId,
+        graph_id: stableId,
+        name,
+        type,
+        sport,
+        country,
+        _score: lexicalScore + popularityScore
+      })
+    })
+
+    ranked.sort((a, b) => b._score - a._score || a.name.localeCompare(b.name))
+    const windowed = ranked.slice(0, limit)
+
+    const entities: SearchEntity[] = windowed.map(({ _score: _unused, ...entity }) => entity)
+    const hasMore = ranked.length > entities.length
+    const latencyMs = Date.now() - startedAt
+
+    return NextResponse.json({
+      success: true,
+      entities,
+      mode,
+      total: entities.length,
+      has_more: hasMore,
+      total_estimate: ranked.length,
+      latency_ms: latencyMs,
+      search_strategy: search ? 'vector_fallback' : 'popular',
+      source: 'supabase',
+    })
   } catch (error) {
-    console.error('Error fetching entities:', error);
-    
-    // Return mock data for demonstration
-    const mockEntities = Array.from({ length: 50 }, (_, i) => ({
-      id: (i + 1).toString(),
-      name: `Sports Entity ${i + 1}`,
-      type: ['Club', 'League', 'Federation', 'Venue'][i % 4],
-      sport: ['Football', 'Basketball', 'Cricket', 'Tennis'][i % 4],
-      country: ['England', 'Spain', 'Italy', 'France'][i % 4]
-    }));
-
-    return NextResponse.json({ 
-      success: true, 
-      entities: mockEntities,
-      total: mockEntities.length,
-      mock: true 
-    });
+    console.error('Error fetching entities:', error)
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to fetch entities',
+      },
+      { status: 500 }
+    )
   }
 }
