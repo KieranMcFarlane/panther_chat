@@ -48,6 +48,12 @@ _pipeline_phase_callback_ctx: ContextVar[Optional[PipelinePhaseCallback]] = Cont
 PHASE0_SUBSTEP_ORDER = [
     "cache_lookup",
     "collect_entity_data",
+    "connect_falkordb",
+    "fetch_falkordb_metadata",
+    "connect_brightdata",
+    "brightdata_search_official",
+    "brightdata_scrape_official",
+    "extract_entity_properties",
     "generate_dossier_content",
     "persist_dossier",
     "finalize_response",
@@ -520,7 +526,7 @@ class DossierRequest(BaseModel):
     entity_id: str = Field(..., description="Entity ID (e.g., 'arsenal-fc')")
     entity_name: str = Field(..., description="Entity display name")
     entity_type: str = Field(default="CLUB", description="Entity type (CLUB, LEAGUE, ORG, etc.)")
-    priority_score: int = Field(default=50, ge=0, le=100, description="Priority score for tier determination")
+    priority_score: int = Field(default=85, ge=0, le=100, description="Priority score for tier determination")
     force_refresh: bool = Field(default=False, description="Force regeneration even if cache is fresh")
 
 
@@ -539,7 +545,7 @@ class EntityPipelineRequest(BaseModel):
     entity_id: str = Field(..., description="Entity ID (e.g., 'arsenal-fc')")
     entity_name: str = Field(..., description="Entity display name")
     entity_type: str = Field(default="CLUB", description="Entity type")
-    priority_score: int = Field(default=50, ge=0, le=100, description="Priority score")
+    priority_score: int = Field(default=85, ge=0, le=100, description="Priority score")
     batch_id: Optional[str] = Field(default=None, description="Optional import batch ID for live phase updates")
 
 
@@ -588,6 +594,7 @@ def build_dossier_response_metadata(
         "generation_mode": dossier_metadata.get("generation_mode"),
         "collection_timed_out": bool(dossier_metadata.get("collection_timed_out", False)),
         "model_max_tokens": dossier_metadata.get("model_max_tokens"),
+        "inference_runtime": dossier_metadata.get("inference_runtime"),
     }
 
 
@@ -598,6 +605,7 @@ def build_dossier_running_phase_metadata(
     priority_score: int,
     phase0_substeps: Optional[Dict[str, Dict[str, Any]]] = None,
     current_substep: Optional[str] = None,
+    inference_runtime: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     substeps: Dict[str, Dict[str, Any]] = {}
     for step in PHASE0_SUBSTEP_ORDER:
@@ -605,14 +613,16 @@ def build_dossier_running_phase_metadata(
 
     if phase0_substeps:
         for step, value in phase0_substeps.items():
-            if step in substeps and isinstance(value, dict):
+            if isinstance(value, dict):
+                if step not in substeps:
+                    substeps[step] = {"status": "pending"}
                 substeps[step] = deepcopy(value)
 
     active_step = current_substep or next(
         (step for step, value in substeps.items() if value.get("status") == "running"),
         None,
     )
-    if active_step is None:
+    if active_step is None and PHASE0_SUBSTEP_ORDER:
         active_step = PHASE0_SUBSTEP_ORDER[0]
 
     return {
@@ -622,19 +632,44 @@ def build_dossier_running_phase_metadata(
         "priority_score": priority_score,
         "current_substep": active_step,
         "phase0_substeps": substeps,
-        "inference_runtime": build_inference_runtime_metadata(),
+        "inference_runtime": inference_runtime or build_inference_runtime_metadata(),
     }
 
 
-def build_inference_runtime_metadata() -> Dict[str, Any]:
-    provider = (os.getenv("LLM_PROVIDER") or "").strip().lower()
+def build_inference_runtime_metadata(claude_client: Optional[Any] = None) -> Dict[str, Any]:
+    provider = str(getattr(claude_client, "provider", "") or "").strip().lower()
     if not provider:
         provider = "chutes_openai" if os.getenv("CHUTES_API_KEY") else "anthropic"
+    stream_enabled = getattr(claude_client, "chutes_stream_enabled", None)
+    if stream_enabled is None:
+        stream_enabled = (os.getenv("CHUTES_STREAM_ENABLED", "true").strip().lower() in {"1", "true", "yes", "on"})
     return {
         "provider": provider,
-        "chutes_model": os.getenv("CHUTES_MODEL"),
-        "chutes_timeout_seconds": float(os.getenv("CHUTES_TIMEOUT_SECONDS", "45")),
-        "chutes_max_retries": int(os.getenv("CHUTES_MAX_RETRIES", "1")),
+        "chutes_model": getattr(claude_client, "chutes_model", None) or os.getenv("CHUTES_MODEL"),
+        "chutes_fallback_model": (
+            getattr(claude_client, "chutes_fallback_model", None) or os.getenv("CHUTES_FALLBACK_MODEL")
+        ),
+        "chutes_timeout_seconds": float(
+            getattr(claude_client, "chutes_timeout_seconds", os.getenv("CHUTES_TIMEOUT_SECONDS", "45"))
+        ),
+        "chutes_fallback_timeout_seconds": float(
+            getattr(
+                claude_client,
+                "chutes_fallback_timeout_seconds",
+                os.getenv("CHUTES_FALLBACK_TIMEOUT_SECONDS", "90"),
+            )
+        ),
+        "chutes_stream_idle_timeout_seconds": float(
+            getattr(
+                claude_client,
+                "chutes_stream_idle_timeout_seconds",
+                os.getenv("CHUTES_STREAM_IDLE_TIMEOUT_SECONDS", os.getenv("CHUTES_TIMEOUT_SECONDS", "45")),
+            )
+        ),
+        "chutes_max_retries": int(
+            getattr(claude_client, "chutes_max_retries", os.getenv("CHUTES_MAX_RETRIES", "1"))
+        ),
+        "chutes_stream_enabled": bool(stream_enabled),
     }
 
 
@@ -734,11 +769,14 @@ async def generate_dossier(request: DossierRequest):
         phase0_substeps: Dict[str, Dict[str, Any]] = {
             step: {"status": "pending"} for step in PHASE0_SUBSTEP_ORDER
         }
+        runtime_client: Optional[Any] = None
+        try:
+            from backend.claude_client import ClaudeClient as RuntimeClaudeClient
+            runtime_client = RuntimeClaudeClient()
+        except Exception as runtime_error:  # noqa: BLE001
+            logger.warning("⚠️ Failed to initialize runtime client for phase metadata: %s", runtime_error)
 
         async def emit_dossier_substep(step: str, status: str, **details: Any) -> None:
-            if step not in phase0_substeps:
-                return
-
             phase0_substeps[step] = {"status": status, **details}
 
             callback = _pipeline_phase_callback_ctx.get()
@@ -753,6 +791,7 @@ async def generate_dossier(request: DossierRequest):
                     priority_score=request.priority_score,
                     phase0_substeps=phase0_substeps,
                     current_substep=step if status == "running" else None,
+                    inference_runtime=build_inference_runtime_metadata(runtime_client),
                 ),
             )
 
@@ -816,10 +855,11 @@ async def generate_dossier(request: DossierRequest):
 
         try:
             from backend.dossier_generator import UniversalDossierGenerator
-            from backend.claude_client import ClaudeClient
+            from backend.claude_client import ClaudeClient, LLMRequestError
 
             # Initialize generator (ClaudeClient initializes in constructor)
-            claude = ClaudeClient()
+            claude = runtime_client if runtime_client is not None else ClaudeClient()
+            runtime_client = claude
             generator = UniversalDossierGenerator(claude)
             await emit_dossier_substep("collect_entity_data", "running")
 
@@ -853,12 +893,7 @@ async def generate_dossier(request: DossierRequest):
             from datetime import datetime, timedelta
 
             # Determine tier based on priority_score
-            if request.priority_score >= 80:
-                tier = "PREMIUM"
-            elif request.priority_score >= 50:
-                tier = "STANDARD"
-            else:
-                tier = "BASIC"
+            tier = determine_dossier_tier_from_priority(request.priority_score)
 
             # Calculate expiration (7 days from now)
             expires_at = datetime.now() + timedelta(days=7)
@@ -922,6 +957,17 @@ async def generate_dossier(request: DossierRequest):
                 status_code=501,
                 detail=f"Dossier generator not available: {str(e)}. Ensure backend/dossier_generator.py and backend/claude_client.py exist."
             )
+        except LLMRequestError as e:
+            await emit_dossier_substep(
+                "generate_dossier_content",
+                "failed",
+                error=str(e),
+                retryable=getattr(e, "retryable", False),
+                provider=getattr(e, "provider", None),
+            )
+            if getattr(e, "retryable", False):
+                raise HTTPException(status_code=503, detail=f"inference_capacity_retryable: {e}") from e
+            raise HTTPException(status_code=422, detail=f"inference_request_non_retryable: {e}") from e
         except Exception as e:
             logger.error(f"❌ Dossier generation failed: {e}")
             raise HTTPException(status_code=500, detail=f"Dossier generation failed: {str(e)}")
@@ -982,7 +1028,7 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
                 "phase": phase,
                 "status": payload.get("status", "running"),
                 "completed_at": datetime.now().isoformat() if payload.get("status") == "completed" else None,
-                "metadata": merge_pipeline_phase_metadata(existing_metadata, payload),
+                "metadata": merge_pipeline_phase_metadata(existing_metadata, phase, payload),
             }
 
             try:
@@ -994,12 +1040,14 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             except Exception as phase_error:
                 logger.warning(f"⚠️ Failed to emit phase update for {request.entity_id}/{phase}: {phase_error}")
 
+        phase0_runtime = build_inference_runtime_metadata(ClaudeClient())
         await emit_phase_update(
             "dossier_generation",
             build_dossier_running_phase_metadata(
                 entity_name=request.entity_name,
                 entity_type=request.entity_type,
                 priority_score=request.priority_score,
+                inference_runtime=phase0_runtime,
             ),
         )
 
@@ -1008,10 +1056,12 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             entity_name=request.entity_name,
             entity_type=request.entity_type,
             priority_score=request.priority_score,
-            force_refresh=False,
+            force_refresh=True,
         )
         dossier_timeout_seconds = float(os.getenv("DOSSIER_PHASE0_TIMEOUT_SECONDS", "180"))
-        phase0_timeout_mode = (os.getenv("PIPELINE_PHASE0_TIMEOUT_MODE") or "fail").strip().lower()
+        queue_mode = (os.getenv("ENTITY_IMPORT_QUEUE_MODE") or "durable_worker").strip().lower()
+        default_timeout_mode = "degraded" if queue_mode == "durable_worker" else "fail"
+        phase0_timeout_mode = (os.getenv("PIPELINE_PHASE0_TIMEOUT_MODE") or default_timeout_mode).strip().lower()
         callback_token = _pipeline_phase_callback_ctx.set(emit_phase_update)
         try:
             try:
@@ -1055,9 +1105,41 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
                         status_code=504,
                         detail="Dossier generation timed out during phase 0",
                     )
+            except HTTPException as phase0_http_error:
+                detail_text = str(getattr(phase0_http_error, "detail", "") or "")
+                is_retryable_inference = (
+                    phase0_http_error.status_code in {429, 503, 504}
+                    and "inference_capacity_retryable" in detail_text
+                )
+                if phase0_timeout_mode == "degraded" and is_retryable_inference:
+                    await emit_phase_update(
+                        "dossier_generation",
+                        {
+                            "status": "completed",
+                            "reason": "dossier_generation_retryable_inference_degraded",
+                            "degraded_mode": True,
+                            "upstream_status_code": phase0_http_error.status_code,
+                            "upstream_error": detail_text,
+                            "inference_runtime": build_inference_runtime_metadata(),
+                        },
+                    )
+                    dossier_response = build_timeout_fallback_dossier_response(request)
+                else:
+                    await emit_phase_update(
+                        "dossier_generation",
+                        {
+                            "status": "failed",
+                            "error": detail_text,
+                            "reason": "dossier_generation_http_error",
+                            "upstream_status_code": phase0_http_error.status_code,
+                            "inference_runtime": build_inference_runtime_metadata(),
+                        },
+                    )
+                    raise
         finally:
             _pipeline_phase_callback_ctx.reset(callback_token)
 
+        phase0_runtime = build_inference_runtime_metadata(ClaudeClient())
         await emit_phase_update(
             "dossier_generation",
             {
@@ -1074,7 +1156,7 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
                 "generation_mode": dossier_response.metadata.get("generation_mode"),
                 "collection_timed_out": dossier_response.metadata.get("collection_timed_out"),
                 "model_max_tokens": dossier_response.metadata.get("model_max_tokens"),
-                "inference_runtime": build_inference_runtime_metadata(),
+                "inference_runtime": dossier_response.metadata.get("inference_runtime") or phase0_runtime,
             },
         )
 
