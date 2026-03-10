@@ -99,7 +99,7 @@ export default function NotificationCenter() {
               <div className="p-8 text-center text-slate-400">
                 <Bell className="h-8 w-8 mx-auto mb-2 opacity-50" />
                 <p>No new notifications</p>
-                <p className="text-xs mt-1">You're all caught up!</p>
+                <p className="text-xs mt-1">You&apos;re all caught up!</p>
               </div>
             ) : (
               <div className="divide-y divide-slate-700">

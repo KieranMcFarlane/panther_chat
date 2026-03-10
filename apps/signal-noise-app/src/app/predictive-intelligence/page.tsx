@@ -423,7 +423,7 @@ export default function PredictiveIntelligencePage() {
           <AlertDescription className="text-gray-300">
             <strong>🔮 Predictive Intelligence System:</strong> Goes beyond reactive RFP detection to provide 
             <strong>60-90 day competitive advantage</strong>. Based on your proven historical analysis (85% accuracy), 
-            this system predicts opportunities before they're announced using pattern recognition, theory generation, 
+            this system predicts opportunities before they&apos;re announced using pattern recognition, theory generation, 
             and evidence validation. Currently tracking {status?.activePatterns || 0} patterns with 
             {(status?.modelAccuracy || 0)}% prediction accuracy.
           </AlertDescription>

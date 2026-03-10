@@ -213,7 +213,7 @@ export default function ARGraphPage() {
                 <Eye className="w-16 h-16 mx-auto text-purple-400" />
                 <p className="text-white">AR Preview</p>
                 <p className="text-fm-light-grey text-sm">
-                  Click "Start AR" to enable camera and begin AR experience
+                  Click &quot;Start AR&quot; to enable camera and begin AR experience
                 </p>
               </div>
             )}

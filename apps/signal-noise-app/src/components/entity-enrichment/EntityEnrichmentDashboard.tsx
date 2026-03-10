@@ -338,7 +338,7 @@ export default function EntityEnrichmentDashboard() {
               <h4 className="font-medium text-yellow-800 mb-2">Before You Start</h4>
               <ul className="text-sm text-yellow-700 space-y-1">
                 <li>• Ensure BrightData and Perplexity API keys are configured</li>
-                <li>• The process will enrich entities that haven't been updated in 7+ days</li>
+                <li>• The process will enrich entities that haven&apos;t been updated in 7+ days</li>
                 <li>• Processing is conservative (3 entities per batch) to avoid rate limits</li>
                 <li>• Each entity takes ~30-60 seconds to enrich with both services</li>
               </ul>

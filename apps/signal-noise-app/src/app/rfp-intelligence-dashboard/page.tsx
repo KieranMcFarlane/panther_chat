@@ -371,7 +371,7 @@ export default function RFPIntelligenceDashboard() {
           <div className="bg-yellow-900/20 border border-yellow-600/30 rounded-lg p-4 mb-4">
             <p className="text-yellow-400 text-sm">
               <strong>📌 Note:</strong> If the scan progress gets stuck at 0%, the backend is still processing. 
-              Click "🔍 Check Results" after 2-3 minutes to see completed analysis.
+              Click &quot;🔍 Check Results&quot; after 2-3 minutes to see completed analysis.
             </p>
           </div>
         </div>

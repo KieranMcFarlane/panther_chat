@@ -207,7 +207,7 @@ export default function VRGraphPage() {
         <CardContent>
           <div className="space-y-4 text-fm-light-grey">
             <p>
-              To experience the VR knowledge graph visualization, you'll need:
+              To experience the VR knowledge graph visualization, you&apos;ll need:
             </p>
             <ol className="list-decimal list-inside space-y-2 ml-4">
               <li>A VR-compatible browser (Chrome, Firefox, or Edge)</li>

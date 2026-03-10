@@ -677,7 +677,7 @@ export default function ControlledRFPScanner() {
               <h4 className="font-semibold text-green-400">Starting a Scan</h4>
               <ul className="text-gray-300 space-y-1">
                 <li>• Choose entity limit (10-100 entities)</li>
-                <li>• Click "Start RFP Scan" to begin</li>
+                <li>• Click &quot;Start RFP Scan&quot; to begin</li>
                 <li>• System processes entities sequentially</li>
                 <li>• Real-time progress updates provided</li>
               </ul>

@@ -535,7 +535,7 @@ function FocusPanel() {
   return (
     <Card className="shadow-sm bg-white/95 backdrop-blur-sm w-full overflow-hidden">
       <CardHeader className="pb-2">
-        <CardTitle className="text-lg flex items-center gap-2"><Bell className="h-5 w-5" /> Today's Focus</CardTitle>
+        <CardTitle className="text-lg flex items-center gap-2"><Bell className="h-5 w-5" /> Today&apos;s Focus</CardTitle>
       </CardHeader>
       <Separator />
       <CardContent className="p-4 grid gap-3">
@@ -598,4 +598,3 @@ export default function SalesIntelligenceHome() {
     </div>
   );
 }
-

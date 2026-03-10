@@ -311,7 +311,7 @@ export default function PersistentRFPDashboard() {
             <div className="bg-yellow-900 border border-yellow-700 rounded-lg p-4 mb-6">
               <div className="text-yellow-300 font-semibold mb-2">⚠️ Initialization Required</div>
               <div className="text-yellow-200 text-sm">
-                Click the "🔄 Reinitialize Count" button below to fetch the entity count from Neo4j, then enable auto-start for future sessions.
+                Click the &quot;🔄 Reinitialize Count&quot; button below to fetch the entity count from Neo4j, then enable auto-start for future sessions.
               </div>
             </div>
             <div className="space-x-4">

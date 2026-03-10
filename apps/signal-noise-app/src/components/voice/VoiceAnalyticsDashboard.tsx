@@ -347,7 +347,7 @@ export default function VoiceAnalyticsDashboard({
                         </div>
                         {conversation.claude_response && (
                           <div className="mt-2 pt-2 border-t border-current/20 text-xs opacity-75">
-                            <strong>Claude's Response:</strong> {conversation.claude_response}
+                            <strong>Claude&apos;s Response:</strong> {conversation.claude_response}
                           </div>
                         )}
                       </div>
