@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import GraphVisualizationClient from './GraphVisualizationClient';
 import { GraphNode, GraphEdge } from './graph-types';
-import { EntityCacheService } from '@/services/EntityCacheService';
+import { resolveGraphId } from '@/lib/graph-id';
 
 interface GraphWrapperProps {
   initialNodes: GraphNode[];
@@ -24,17 +24,18 @@ export default function GraphWrapper({
     console.log(`🔄 Loading ${count} more nodes...`);
     
     try {
-      const cacheService = new EntityCacheService();
-      await cacheService.initialize();
-      
       // Calculate current page based on existing nodes
       const currentPage = Math.floor(nodes.length / 500) + 1;
-      
-      const additionalResult = await cacheService.getCachedEntities({
-        page: currentPage,
-        limit: count,
-        entityType: 'all'
+      const params = new URLSearchParams({
+        page: String(currentPage),
+        limit: String(Math.max(1, count)),
+        entityType: 'all',
       });
+      const response = await fetch(`/api/entities?${params.toString()}`);
+      if (!response.ok) {
+        throw new Error(`Failed to load entities: ${response.status}`);
+      }
+      const additionalResult = await response.json();
       
       if (additionalResult.entities && additionalResult.entities.length > 0) {
         // Convert new entities to graph nodes
@@ -78,14 +79,14 @@ export default function GraphWrapper({
           }
           
           return {
-            id: cachedEntity.neo4j_id || cachedEntity.id,
+            id: resolveGraphId(cachedEntity) || cachedEntity.id,
             label: properties.name || 'Unknown Entity',
             type: entityType,
             color,
             size,
             description: properties.description || `${entityType} entity`,
             properties: {
-              entity_id: cachedEntity.neo4j_id || cachedEntity.id,
+              entity_id: resolveGraphId(cachedEntity) || cachedEntity.id,
               entity_type: entityType,
               name: properties.name || 'Unknown Entity',
               description: properties.description || '',

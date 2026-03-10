@@ -1,336 +1,151 @@
-# 🚀 Signal Noise App
+# Signal Noise App Docs
 
-AI-powered dossier enrichment system that orchestrates multiple MCP (Model Context Protocol) servers to collect, analyze, and synthesize business intelligence signals.
+Current production architecture in this repo is FalkorDB + Supabase.
 
-## 🎯 Overview
+Historical Neo4j-era scripts, reports, and docs are preserved under [`legacy/neo4j/`](/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/legacy/neo4j) and should not be treated as active setup guidance.
 
-The Signal Noise App is a FastAPI-based system that:
+## Overview
 
-- **Collects signals** from Bright Data (web scraping) and Perplexity (AI analysis)
-- **Synthesizes insights** using Claude Code reasoning
-- **Updates knowledge graphs** via Neo4j MCP integration
-- **Processes tasks asynchronously** using Celery workers
-- **Provides RESTful API** for dossier requests and retrieval
+The active stack is:
+- Next.js app routes and UI under `src/`
+- FastAPI dossier and pipeline services under `backend/`
+- Supabase as the canonical entity, dossier, event, and cache store
+- FalkorDB as the active graph backend
+- MCP integrations for graph queries, Bright Data, and external analysis services
 
-## 🏗️ Architecture
+## Active Architecture
 
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   FastAPI App   │    │   Celery Worker │    │   Redis Broker  │
-│   (Port 3000)   │◄──►│   (Background)  │◄──►│   (Port 6379)   │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │
-         ▼                       ▼
-┌─────────────────┐    ┌─────────────────┐
-│   SQLite DB     │    │   Neo4j Graph   │
-│   (Tasks)       │    │   (Knowledge)   │
-└─────────────────┘    └─────────────────┘
-         │                       │
-         ▼                       ▼
-┌─────────────────┐    ┌─────────────────┐
-│   MCP Servers   │    │   Claude Code   │
-│   (Bright Data, │    │   (Reasoning)   │
-│    Perplexity)  │    └─────────────────┘
-└─────────────────┘
+```text
+Next.js UI/API
+  -> Supabase (canonical entities, dossiers, cache, events)
+  -> FalkorDB (graph traversal and relationship queries)
+  -> FastAPI pipeline + workers
+  -> MCP services (graph, Bright Data, Perplexity, LLM providers)
 ```
 
-## 🚀 Quick Start
+## Local Setup
 
 ### Prerequisites
 
-- Python 3.8+
-- Docker and Docker Compose
-- Neo4j instance (or use included Docker setup)
+- Node.js and npm
+- Python 3.12+ recommended for backend services
+- Redis for worker or broker flows when those paths are needed
+- Supabase project credentials
+- FalkorDB connection details
 
-### 1. Clone and Setup
+### Environment
+
+Use `.env` or `.env.local` with graph-aligned settings. The active graph-related variables are:
 
 ```bash
-git clone <repository-url>
-cd signal-noise-app
+FALKORDB_URI=redis://...
+FALKORDB_USER=default
+FALKORDB_PASSWORD=...
+FALKORDB_DATABASE=graph
 
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+GRAPH_MCP_URL=http://localhost:3004
 
-# Install dependencies
+SUPABASE_URL=...
+SUPABASE_SERVICE_ROLE_KEY=...
+SUPABASE_ANON_KEY=...
+```
+
+Some compatibility flows still read `neo4j_id` as a legacy entity property or graph key. That is historical identity data, not a signal that Neo4j is still the live backend.
+
+## Running the App
+
+### Frontend
+
+```bash
+npm run dev
+```
+
+### Backend
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
+uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-### 2. Start Infrastructure
+### Worker
 
 ```bash
-# Start Redis (required for Celery)
-docker-compose up -d redis
-
-# Optional: Start Neo4j (if not using external instance)
-docker-compose up -d neo4j
-```
-
-### 3. Configure Environment
-
-Create a `.env` file in the root directory:
-
-```bash
-# Neo4j Configuration
-NEO4J_URI=bolt://localhost:7687
-NEO4J_USER=neo4j
-NEO4J_PASSWORD=pantherpassword
-NEO4J_DATABASE=neo4j
-
-# MCP Server URLs (optional - will use mock data if not set)
-BRIGHTDATA_MCP_URL=http://localhost:3001
-PERPLEXITY_MCP_URL=http://localhost:3002
-CLAUDE_CODE_URL=http://localhost:3003
-NEO4J_MCP_URL=http://localhost:3004
-
-# API Keys (optional - will use mock data if not set)
-BRIGHTDATA_API_KEY=your_brightdata_key
-PERPLEXITY_API_KEY=your_perplexity_key
-CLAUDE_CODE_API_KEY=your_claude_key
-NEO4J_MCP_API_KEY=your_neo4j_mcp_key
-
-# Celery Configuration
-CELERY_BROKER_URL=redis://localhost:6379/0
-CELERY_RESULT_BACKEND=redis://localhost:6379/0
-```
-
-### 4. Start the Application
-
-```bash
-# Terminal 1: Start FastAPI server
-uvicorn backend.main:app --reload --host 0.0.0.0 --port 3000
-
-# Terminal 2: Start Celery worker
 celery -A backend.worker worker --loglevel=info
-
-# Terminal 3: Start Celery monitor (optional)
-celery -A backend.worker flower --port=5555
 ```
 
-### 5. Test the API
+## Verification
+
+Core repo guard:
 
 ```bash
-# Health check
-curl http://localhost:3000/health
+node --test tests/test-falkordb-graph-rewire.mjs
+```
 
-# Request dossier enrichment
-curl -X POST http://localhost:3000/dossier/request \
-  -H "Content-Type: application/json" \
+Useful focused checks:
+
+```bash
+node --test tests/test-entity-dossier-generation-route.mjs
+pytest backend/tests
+```
+
+## Local Pipeline Verification Runbook
+
+Use this sequence for a quick Phase 0 to final pipeline check:
+
+```bash
+# 1) Start app/backend/worker
+npm run dev
+python backend/main.py
+python backend/entity_pipeline_worker.py
+
+# 2) Queue one entity run
+curl -sS -X POST http://localhost:3005/api/entity-pipeline \
+  -H 'Content-Type: application/json' \
   -d '{
-    "entity_type": "company",
-    "entity_name": "Tesla Inc",
-    "priority": "high"
+    "entity_id":"pipeline-smoke-local",
+    "name":"Pipeline Smoke Local FC",
+    "entity_type":"Club",
+    "sport":"Football",
+    "country":"England",
+    "source":"manual_smoke"
   }'
 
-# Check dossier status (replace with actual task_id)
-curl http://localhost:3000/dossier/{task_id}
+# 3) Poll status
+curl -sS http://localhost:3005/api/entity-import/<batchId>
 ```
 
-## 📚 API Documentation
+Expected terminal state:
+- `batch.status=completed`
+- `pipeline_runs[0].status=completed`
+- `pipeline_runs[0].phase=dashboard_scoring`
 
-### Endpoints
+## Troubleshooting
 
-#### POST `/dossier/request`
-Request dossier enrichment for an entity.
+### FalkorDB
 
-**Request Body:**
-```json
-{
-  "entity_type": "company",
-  "entity_name": "Tesla Inc",
-  "priority": "high",
-  "metadata": {
-    "source": "manual",
-    "notes": "Strategic analysis needed"
-  }
-}
-```
+- Verify `FALKORDB_URI`, user, and password are correct.
+- Confirm the URI scheme matches the deployment: `redis://` vs `rediss://`.
+- Check whether the database is cold-starting before treating timeouts as application bugs.
 
-**Response:**
-```json
-{
-  "status": "accepted",
-  "task_id": "uuid-1234-5678-90ab",
-  "message": "Dossier enrichment started for Tesla Inc"
-}
-```
+### Supabase
 
-#### GET `/dossier/{task_id}`
-Get dossier status and results.
+- Confirm service-role credentials are set for server-side write paths.
+- Verify canonical entity rows exist in `cached_entities`.
+- Inspect `entity_dossiers` and `entity_relationships` when dossier or graph-backed pages look incomplete.
 
-**Response:**
-```json
-{
-  "task_id": "uuid-1234-5678-90ab",
-  "entity_type": "company",
-  "entity_name": "Tesla Inc",
-  "status": "complete",
-  "progress": "100%",
-  "signals": {
-    "brightdata": { /* web scraping data */ },
-    "perplexity": { /* AI analysis data */ }
-  },
-  "summary": "Tesla Inc demonstrates strong market position...",
-  "graph_updates": [ /* Cypher operations */ ],
-  "created_at": "2024-01-15T10:30:00Z",
-  "completed_at": "2024-01-15T10:35:00Z"
-}
-```
+### Pipeline
 
-#### GET `/health`
-Health check endpoint.
+- Use canonical entity UUIDs as the source of truth for dossier persistence.
+- Inspect `entity_pipeline_runs` metadata before assuming a phase actually regenerated content.
+- Check provider-specific runtime metadata when LLM results are unexpectedly minimal.
 
-**Response:**
-```json
-{
-  "status": "healthy",
-  "service": "signal-noise-app"
-}
-```
+## Archive Boundary
 
-## 🔧 Configuration
+Do not use root-level historical deployment or migration notes as active instructions unless they have been explicitly moved back out of [`legacy/neo4j/`](/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/legacy/neo4j).
 
-### Environment Variables
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `NEO4J_URI` | Neo4j connection URI | `bolt://localhost:7687` |
-| `NEO4J_USER` | Neo4j username | `neo4j` |
-| `NEO4J_PASSWORD` | Neo4j password | `pantherpassword` |
-| `CELERY_BROKER_URL` | Redis broker URL | `redis://localhost:6379/0` |
-| `CELERY_RESULT_BACKEND` | Redis result backend | `redis://localhost:6379/0` |
-
-### MCP Server Configuration
-
-The system can work with or without MCP servers:
-
-- **With MCP servers**: Full integration with external services
-- **Without MCP servers**: Mock data for development and testing
-
-## 🧪 Testing
-
-### Run Tests
-
-```bash
-# Install test dependencies
-pip install pytest pytest-asyncio httpx
-
-# Run tests
-pytest tests/
-```
-
-### Test Individual Components
-
-```bash
-# Test Bright Data client
-python -m backend.brightdata_client
-
-# Test Perplexity client
-python -m backend.perplexity_client
-
-# Test Claude Code client
-python -m backend.claude_client
-
-# Test Neo4j client
-python -m backend.neo4j_client
-```
-
-## 📊 Monitoring
-
-### Celery Monitoring
-
-Access Flower (Celery monitoring) at: http://localhost:5555
-
-### Health Checks
-
-- **API Health**: `GET /health`
-- **Neo4j Health**: Check logs for connection status
-- **Redis Health**: `docker exec signal-noise-redis redis-cli ping`
-
-### Logs
-
-All components use structured logging. Check logs for:
-- Task execution status
-- MCP server communication
-- Database operations
-- Error details
-
-## 🚀 Deployment
-
-### Production Considerations
-
-1. **Database**: Use PostgreSQL instead of SQLite
-2. **Redis**: Use managed Redis service or cluster
-3. **Neo4j**: Use managed Neo4j service
-4. **Security**: Implement proper authentication and authorization
-5. **Monitoring**: Add Prometheus metrics and Grafana dashboards
-6. **Scaling**: Use multiple Celery workers and load balancers
-
-### Docker Deployment
-
-```bash
-# Build and run with Docker Compose
-docker-compose -f docker-compose.prod.yml up -d
-
-# Scale workers
-docker-compose -f docker-compose.prod.yml up -d --scale worker=3
-```
-
-### Environment-Specific Configs
-
-- `docker-compose.yml` - Development
-- `docker-compose.prod.yml` - Production
-- `docker-compose.test.yml` - Testing
-
-## 🔍 Troubleshooting
-
-### Common Issues
-
-1. **Redis Connection Failed**
-   - Check if Redis container is running
-   - Verify Redis port (6379) is accessible
-
-2. **Neo4j Connection Failed**
-   - Check Neo4j credentials
-   - Verify Neo4j is running and accessible
-   - Check firewall settings
-
-3. **Celery Worker Not Processing Tasks**
-   - Check worker logs for errors
-   - Verify Redis connection
-   - Check task routing configuration
-
-4. **MCP Calls Failing**
-   - Check MCP server URLs and API keys
-   - Verify MCP servers are running
-   - Check network connectivity
-
-### Debug Mode
-
-Enable debug logging by setting environment variable:
-```bash
-export LOG_LEVEL=DEBUG
-```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
-
-For support and questions:
-- Create an issue in the repository
-- Check the documentation
-- Review the troubleshooting section
-
----
-
-**Built with ❤️ using FastAPI, Celery, Neo4j, and Claude Code**
+If you need to revive an archived flow:
+- rework it to FalkorDB + Supabase first
+- remove hardcoded credentials
+- add it back through the active guard suite before treating it as supported

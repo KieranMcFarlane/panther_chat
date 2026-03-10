@@ -7,7 +7,8 @@ import { HeadlessClaudeAgentService } from './HeadlessClaudeAgentService';
 import { PredictiveIntelligenceAgent } from './PredictiveIntelligenceAgent';
 import { liveLogService } from './LiveLogService';
 import { notificationService } from './NotificationService';
-import { Neo4jService } from '@/lib/neo4j';
+import { supabase } from '@/lib/supabase-client';
+import { buildLegacyRelationshipGraphFilter, resolveGraphId, withRelationshipGraphIds } from '@/lib/graph-id';
 import fs from 'fs/promises';
 import path from 'path';
 import cron from 'node-cron';
@@ -37,7 +38,6 @@ export class AutonomousRFPManager {
   private config: AutonomousConfig;
   private headlessService: HeadlessClaudeAgentService;
   private predictiveAgent: PredictiveIntelligenceAgent;
-  private neo4jService: Neo4jService;
   private isActive: boolean = false;
   private metrics = {
     totalOpportunities: 0,
@@ -46,20 +46,16 @@ export class AutonomousRFPManager {
     systemUptime: 0,
     predictiveAccuracy: 0,
     entitiesProcessed: 0,
-    neo4jRelationshipsCreated: 0
+    graphRelationshipsCreated: 0
   };
 
   constructor() {
     this.config = this.buildOptimizedConfig();
     this.headlessService = new HeadlessClaudeAgentService(this.buildServiceConfig());
     this.predictiveAgent = new PredictiveIntelligenceAgent();
-    this.neo4jService = new Neo4jService();
-    
-    // Initialize Neo4j connection
-    this.neo4jService.initialize();
-    
-    // Populate standard entities from Neo4j
-    this.populateEntitiesFromNeo4j();
+
+    // Populate standard entities from the canonical cache
+    void this.populateEntitiesFromGraphCache();
   }
 
   /**
@@ -75,8 +71,8 @@ export class AutonomousRFPManager {
       'Liverpool FC', 'Chelsea FC', 'Manchester City', 'PSG', 'Juventus'
     ];
 
-    // Standard entities from Neo4j with yellowPantherPriority scoring
-    // Will be populated dynamically from Neo4j query
+    // Standard entities are populated dynamically from the canonical graph-backed cache.
+    const standardEntities: string[] = [];
 
     return {
       priorityEntities,
@@ -102,9 +98,9 @@ export class AutonomousRFPManager {
     return {
       brightdataApiKey: process.env.BRIGHTDATA_API_TOKEN!,
       brightdataZone: process.env.BRIGHTDATA_ZONE || 'linkedin_posts_monitor',
-      neo4jUri: process.env.NEO4J_URI!,
-      neo4jUsername: process.env.NEO4J_USERNAME!,
-      neo4jPassword: process.env.NEO4J_PASSWORD!,
+      graphUri: process.env.FALKORDB_URI!,
+      graphUsername: process.env.FALKORDB_USER!,
+      graphPassword: process.env.FALKORDB_PASSWORD!,
       teamsWebhookUrl: process.env.TEAMS_WEBHOOK_URL || '',
       perplexityApiKey: process.env.PERPLEXITY_API_KEY!,
       
@@ -344,44 +340,43 @@ export class AutonomousRFPManager {
   }
 
   /**
-   * Process a batch of entities efficiently with Neo4j integration
+   * Process a batch of entities efficiently with graph-backed cache integration
    */
   private async processEntityBatch(entities: string[]): Promise<any[]> {
     const batchResults = [];
-    const session = this.neo4jService.getDriver().session();
     
     try {
-      await liveLogService.info('🔄 Processing entity batch with Neo4j traversal', {
-        category: 'neo4j',
+      await liveLogService.info('🔄 Processing entity batch with graph traversal', {
+        category: 'graph',
         source: 'AutonomousRFPManager',
         message: `Processing batch of ${entities.length} entities`,
         data: {
           entities: entities.length,
           batchId: `batch_${Date.now()}`
         },
-        tags: ['neo4j-processing', 'batch-analysis']
+        tags: ['graph-processing', 'batch-analysis']
       });
 
       // Process each entity in the batch
       for (const entityName of entities) {
         try {
-          // 1. Find entity in Neo4j
-          const neo4jEntity = await this.findEntityInNeo4j(entityName, session);
+          // 1. Find entity in canonical cache
+          const graphEntity = await this.findEntityInCache(entityName);
           
-          if (neo4jEntity) {
+          if (graphEntity) {
             // 2. Get entity relationships and context
-            const relationships = await this.getEntityRelationships(neo4jEntity.id, session);
-            const context = await this.getEntityContext(neo4jEntity.id, session);
+            const relationships = await this.getEntityRelationships(graphEntity.id);
+            const context = await this.getEntityContext(graphEntity.id);
             
             // 3. Analyze entity for RFP potential using existing data
-            const rfpAnalysis = await this.analyzeEntityForRFP(neo4jEntity, relationships, context);
+            const rfpAnalysis = await this.analyzeEntityForRFP(graphEntity, relationships, context);
             
-            // 4. Store enhanced entity data in Neo4j
-            await this.storeEnhancedEntityData(neo4jEntity, rfpAnalysis, relationships, session);
+            // 4. Store enhanced entity data in canonical cache
+            await this.storeEnhancedEntityData(graphEntity, rfpAnalysis, relationships);
             
             // 5. Add to results
             batchResults.push({
-              entity: neo4jEntity,
+              entity: graphEntity,
               rfpAnalysis,
               relationships: relationships,
               context: context,
@@ -390,10 +385,10 @@ export class AutonomousRFPManager {
 
             // Update metrics
             this.metrics.entitiesProcessed++;
-            this.metrics.neo4jRelationshipsCreated += relationships.length;
+            this.metrics.graphRelationshipsCreated += relationships.length;
 
             await liveLogService.info('✅ Entity processed successfully', {
-              category: 'neo4j',
+              category: 'graph',
               source: 'AutonomousRFPManager',
               message: `Processed ${entityName}: ${rfpAnalysis.opportunitiesFound} opportunities`,
               data: {
@@ -401,19 +396,19 @@ export class AutonomousRFPManager {
                 opportunitiesFound: rfpAnalysis.opportunitiesFound,
                 relationshipsCount: relationships.length
               },
-              tags: ['neo4j-processing', 'entity-success']
+              tags: ['graph-processing', 'entity-success']
             });
 
           } else {
-            // Entity not found in Neo4j, create new entity entry
-            await this.createNewEntityEntry(entityName, session);
+            // Entity not found in cache, create new canonical entry
+            await this.createNewEntityEntry(entityName);
             
             await liveLogService.info('🆕 Created new entity entry', {
-              category: 'neo4j',
+              category: 'graph',
               source: 'AutonomousRFPManager',
               message: `New entity created: ${entityName}`,
               data: { entity: entityName },
-              tags: ['neo4j-processing', 'entity-created']
+              tags: ['graph-processing', 'entity-created']
             });
           }
           
@@ -426,138 +421,174 @@ export class AutonomousRFPManager {
               entity: entityName,
               error: error.message
             },
-            tags: ['neo4j-processing', 'entity-error']
+            tags: ['graph-processing', 'entity-error']
           });
         }
       }
       
       // 6. Save batch results to JSON
       await this.saveBatchResultsToJSON(batchResults, `batch_${Date.now()}`);
-      
-    } finally {
-      await session.close();
+    } catch (error) {
+      await liveLogService.error('Batch entity processing failed', {
+        category: 'error',
+        source: 'AutonomousRFPManager',
+        message: `Batch processing error: ${error instanceof Error ? error.message : String(error)}`,
+        data: {
+          entities: entities.length
+        },
+        tags: ['graph-processing', 'batch-error']
+      });
     }
     
     return batchResults;
   }
 
   /**
-   * Populate entities from Neo4j using the original methodology criteria
+   * Populate entities from the canonical cache using the original methodology criteria
    */
-  private async populateEntitiesFromNeo4j(): Promise<void> {
+  private async populateEntitiesFromGraphCache(): Promise<void> {
     try {
-      const session = this.neo4jService.getDriver().session();
-      
-      // Query for entities matching COMPREHENSIVE-RFP-MONITORING-SYSTEM.md criteria
-      const query = `
-        MATCH (e:Entity)
-        WHERE e.yellowPantherPriority <= 5
-        AND e.type IN ['Club', 'League', 'Federation', 'Tournament', 'International Federation', 'Sports Federation', 'Professional Football League']
-        AND e.digitalTransformationScore >= 60
-        RETURN e.name as name
-        ORDER BY e.yellowPantherPriority ASC, e.digitalTransformationScore DESC
-        LIMIT 1000
-      `;
-      
-      const result = await session.run(query);
-      const entityNames = result.records.map(record => record.get('name'));
+      const allowedLabels = [
+        'Club',
+        'League',
+        'Federation',
+        'Tournament',
+        'International Federation',
+        'Sports Federation',
+        'Professional Football League'
+      ];
+
+      const labelFilter = allowedLabels.map((label) => `labels.cs.{${label}}`).join(',');
+      const { data, error } = await supabase
+        .from('cached_entities')
+        .select('name, labels, properties')
+        .or(labelFilter)
+        .limit(1000);
+
+      if (error) {
+        throw error;
+      }
+
+      const entityNames = (data || [])
+        .filter((entity: any) => {
+          const priority = Number(entity.properties?.yellowPantherPriority ?? entity.properties?.yellow_panther_priority ?? 999);
+          const digitalScore = Number(entity.properties?.digitalTransformationScore ?? entity.properties?.digital_transformation_score ?? 0);
+          return priority <= 5 && digitalScore >= 60;
+        })
+        .map((entity: any) => entity.name || entity.properties?.official_name || entity.properties?.name)
+        .filter(Boolean);
       
       // Update the config with dynamically fetched entities
       this.config.standardEntities = entityNames;
-      
-      await session.close();
-      
-      await liveLogService.info('Populated entities from Neo4j', {
-        category: 'neo4j',
+
+      await liveLogService.info('Populated entities from graph cache', {
+        category: 'graph',
         source: 'AutonomousRFPManager',
-        message: `Loaded ${entityNames.length} high-priority entities from Neo4j`,
+        message: `Loaded ${entityNames.length} high-priority entities from graph cache`,
         data: {
           totalEntities: entityNames.length,
           priorityCriteria: 'yellowPantherPriority <= 5',
           digitalScoreCriteria: 'digitalTransformationScore >= 60'
         },
-        tags: ['neo4j-population', 'entity-loading']
+        tags: ['graph-population', 'entity-loading']
       });
       
     } catch (error) {
-      await liveLogService.error('Failed to populate entities from Neo4j', {
+      await liveLogService.error('Failed to populate entities from graph cache', {
         category: 'error',
         source: 'AutonomousRFPManager',
-        message: `Neo4j population error: ${error.message}`,
+        message: `Graph cache population error: ${error.message}`,
         data: { error: error.message },
-        tags: ['neo4j-population', 'error']
+        tags: ['graph-population', 'error']
       });
     }
   }
 
   /**
-   * Find entity in Neo4j database
+   * Find entity in canonical cache
    */
-  private async findEntityInNeo4j(entityName: string, session: any): Promise<any> {
-    const query = `
-      MATCH (e:Entity)
-      WHERE e.name CONTAINS $entityName OR e.official_name CONTAINS $entityName
-      RETURN e LIMIT 1
-    `;
-    
-    const result = await session.run(query, { entityName });
-    
-    if (result.records.length > 0) {
-      const entityNode = result.records[0].get('e');
-      return {
-        id: entityNode.identity.toString(),
-        labels: entityNode.labels,
-        properties: entityNode.properties
-      };
+  private async findEntityInCache(entityName: string): Promise<any> {
+    const { data, error } = await supabase
+      .from('cached_entities')
+      .select('id, graph_id, neo4j_id, name, labels, properties')
+      .or(`name.ilike.%${entityName}%,properties->>official_name.ilike.%${entityName}%`)
+      .limit(1)
+      .maybeSingle();
+
+    if (error) {
+      throw error;
     }
-    
-    return null;
-  }
 
-  /**
-   * Get entity relationships from Neo4j
-   */
-  private async getEntityRelationships(entityId: string, session: any): Promise<any[]> {
-    const query = `
-      MATCH (e:Entity)-[r]-(related:Entity)
-      WHERE id(e) = $entityId
-      RETURN r, related.name as relatedName, labels(related) as relatedLabels
-      ORDER BY r.strength DESC
-      LIMIT 20
-    `;
-    
-    const result = await session.run(query, { entityId });
-    
-    return result.records.map(record => ({
-      relationship: record.get('r').type,
-      relatedName: record.get('relatedName'),
-      relatedLabels: record.get('relatedLabels'),
-      strength: record.get('r').properties?.strength || 1
-    }));
-  }
+    if (!data) {
+      return null;
+    }
 
-  /**
-   * Get entity context from Neo4j
-   */
-  private async getEntityContext(entityId: string, session: any): Promise<any> {
-    const query = `
-      MATCH (e:Entity)
-      WHERE id(e) = $entityId
-      OPTIONAL MATCH (e)-[:MEMBER_OF|:PARTicipates_IN|:LOCATED_IN]->(org:Organization)
-      OPTIONAL MATCH (e)-[:HAS_STAFF]->(person:Person)
-      RETURN e, org, person
-    `;
-    
-    const result = await session.run(query, { entityId });
-    
-    const entityNode = result.records[0]?.get('e');
-    const organizationNode = result.records[0]?.get('org');
-    const staffNode = result.records[0]?.get('person');
-    
     return {
-      entity: entityNode?.properties,
-      organization: organizationNode?.properties,
-      keyStaff: staffNode?.properties
+      id: resolveGraphId(data) || data.id,
+      graph_id: resolveGraphId(data) || data.id,
+      name: data.name,
+      labels: data.labels || [],
+      properties: data.properties || {}
+    };
+  }
+
+  /**
+   * Get entity relationships from cached relationship store
+   */
+  private async getEntityRelationships(entityId: string): Promise<any[]> {
+    const { data: entity, error: entityError } = await supabase
+      .from('cached_entities')
+      .select('id, graph_id, neo4j_id')
+      .eq('id', entityId)
+      .maybeSingle();
+
+    if (entityError) {
+      throw entityError;
+    }
+
+    const graphKey = resolveGraphId(entity) || entityId;
+    const { data, error } = await supabase
+      .from('entity_relationships')
+      .select('relationship_type, target_name, target_labels, relationship_properties, confidence_score, weight')
+      .or(buildLegacyRelationshipGraphFilter(graphKey))
+      .eq('is_active', true)
+      .order('created_at', { ascending: false })
+      .limit(20);
+
+    if (error) {
+      throw error;
+    }
+
+    return (data || []).map((rawRelationship: any) => {
+      const relationship = withRelationshipGraphIds(rawRelationship)
+      return ({
+      source_graph_id: relationship.source_graph_id,
+      target_graph_id: relationship.target_graph_id,
+      relationship: relationship.relationship_type,
+      relatedName: relationship.target_name,
+      relatedLabels: relationship.target_labels || [],
+      strength: relationship.relationship_properties?.strength || relationship.weight || relationship.confidence_score || 1
+    })});
+  }
+
+  /**
+   * Get entity context from canonical cache
+   */
+  private async getEntityContext(entityId: string): Promise<any> {
+    const { data, error } = await supabase
+      .from('cached_entities')
+      .select('properties')
+      .eq('id', entityId)
+      .maybeSingle();
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      entity: data?.properties || {},
+      organization: data?.properties?.organization || null,
+      keyStaff: data?.properties?.keyStaff || data?.properties?.leadership || null
     };
   }
 
@@ -601,50 +632,59 @@ export class AutonomousRFPManager {
       opportunitiesFound,
       confidence: Math.min(95, 70 + (strongRelationships * 5)),
       lastUpdated: new Date().toISOString(),
-      analysisMethod: 'neo4j-relationship-analysis'
+      analysisMethod: 'graph-relationship-analysis'
     };
   }
 
   /**
-   * Store enhanced entity data in Neo4j
+   * Store enhanced entity data in canonical cache
    */
-  private async storeEnhancedEntityData(entity: any, rfpAnalysis: any, relationships: any[], session: any): Promise<void> {
-    const query = `
-      MATCH (e:Entity)
-      WHERE id(e) = $entityId
-      SET e.last_rfp_analysis = $rfpAnalysis,
-          e.rfp_probability = $rfpProbability,
-          e.opportunities_found = $opportunitiesFound,
-          e.estimated_value = $estimatedValue,
-          e.last_analyzed = datetime()
-    `;
-    
-    await session.run(query, {
-      entityId: entity.id,
-      rfpAnalysis: JSON.stringify(rfpAnalysis),
-      rfpProbability: rfpAnalysis.rfpProbability,
-      opportunitiesFound: rfpAnalysis.opportunitiesFound,
-      estimatedValue: rfpAnalysis.estimatedValue
-    });
+  private async storeEnhancedEntityData(entity: any, rfpAnalysis: any, relationships: any[]): Promise<void> {
+    const nextProperties = {
+      ...(entity.properties || {}),
+      last_rfp_analysis: JSON.stringify(rfpAnalysis),
+      rfp_probability: rfpAnalysis.rfpProbability,
+      opportunities_found: rfpAnalysis.opportunitiesFound,
+      estimated_value: rfpAnalysis.estimatedValue,
+      relationship_snapshot_count: relationships.length,
+      last_analyzed: new Date().toISOString()
+    };
+
+    const { error } = await supabase
+      .from('cached_entities')
+      .update({
+        properties: nextProperties,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', entity.id);
+
+    if (error) {
+      throw error;
+    }
   }
 
   /**
-   * Create new entity entry in Neo4j
+   * Create new entity entry in canonical cache
    */
-  private async createNewEntityEntry(entityName: string, session: any): Promise<void> {
-    const query = `
-      CREATE (e:Entity {
-        name: $entityName,
-        created_at: datetime(),
-        last_analyzed: datetime(),
-        status: 'new',
-        rfp_probability: 0.0104,
-        opportunities_found: 0,
-        estimated_value: '£300K-£700K'
-      })
-    `;
-    
-    await session.run(query, { entityName });
+  private async createNewEntityEntry(entityName: string): Promise<void> {
+    const { error } = await supabase
+      .from('cached_entities')
+      .insert({
+        name: entityName,
+        labels: ['Entity'],
+        properties: {
+          name: entityName,
+          status: 'new',
+          rfp_probability: 0.0104,
+          opportunities_found: 0,
+          estimated_value: '£300K-£700K',
+          last_analyzed: new Date().toISOString()
+        }
+      });
+
+    if (error) {
+      throw error;
+    }
   }
 
   /**
@@ -669,14 +709,14 @@ export class AutonomousRFPManager {
           averageConfidence: Math.round(results.reduce((sum, r) => sum + r.rfpAnalysis.confidence, 0) / results.length),
           totalEstimatedValue: this.calculateTotalEstimatedValue(results)
         },
-        neo4jIntegration: {
-          entitiesFoundInNeo4j: results.filter(r => r.entity).length,
+        graphIntegration: {
+          entitiesFoundInGraph: results.filter(r => r.entity).length,
           relationshipsAnalyzed: results.reduce((sum, r) => sum + r.relationships.length, 0),
           entitiesStored: results.length
         },
         systemMetrics: {
           totalEntitiesProcessed: this.metrics.entitiesProcessed,
-          totalNeo4jRelationshipsCreated: this.metrics.neo4jRelationshipsCreated,
+          totalGraphRelationshipsCreated: this.metrics.graphRelationshipsCreated,
           systemUptime: this.metrics.systemUptime
         },
         detailedResults: results
