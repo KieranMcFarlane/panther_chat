@@ -241,7 +241,7 @@ export default function ClaudeChat({
               Ask me about sports clubs, business opportunities, or decision makers!
             </p>
             <div className="text-xs text-gray-500 max-w-md mx-auto">
-              Try: "Analyze Manchester United", "find football clubs in England", or "execute Neo4j queries"
+              Try: &quot;Analyze Manchester United&quot;, &quot;find football clubs in England&quot;, or &quot;query graph relationships&quot;
             </div>
           </div>
         )}

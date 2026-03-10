@@ -395,7 +395,7 @@ export function StreamingChatSidebar({
                 <h4 className="font-semibold mb-2">Sports Intelligence Assistant</h4>
                 <p className="text-sm">I can help you analyze sports entities, find business opportunities, and provide real-time insights using advanced AI tools.</p>
                 <div className="mt-4 text-xs text-gray-400">
-                  <p>🔍 Neo4j Database: 3,325+ sports entities</p>
+                  <p>🔍 Graph Intelligence Store: 3,325+ sports entities</p>
                   <p>🌐 Real-time web search via BrightData</p>
                   <p>🤖 AI-powered analysis with Perplexity</p>
                   <p>📝 Markdown formatting supported</p>
@@ -403,10 +403,10 @@ export function StreamingChatSidebar({
                 <div className="mt-4 p-3 bg-gray-50 rounded-lg text-left">
                   <p className="text-xs font-semibold text-gray-700 mb-2">Try asking:</p>
                   <ul className="text-xs text-gray-600 space-y-1">
-                    <li>• "Analyze Manchester United's decision makers"</li>
-                    <li>• "Find Premier League clubs under $100M valuation"</li>
-                    <li>• "Search for recent football transfer news"</li>
-                    <li>• "Show me top 5 valuable sports leagues"</li>
+                    <li>• &quot;Analyze Manchester United&apos;s decision makers&quot;</li>
+                    <li>• &quot;Find Premier League clubs under $100M valuation&quot;</li>
+                    <li>• &quot;Search for recent football transfer news&quot;</li>
+                    <li>• &quot;Show me top 5 valuable sports leagues&quot;</li>
                   </ul>
                 </div>
               </div>

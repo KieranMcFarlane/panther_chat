@@ -123,7 +123,7 @@ export default function ClaudeChat({
       const assistantMessage: Message = {
         id: `assistant_${Date.now()}`,
         type: 'assistant',
-        content: `🤖 **Claude Agent SDK Response**: Processing your request about "${messageText}"\n\n📊 **Session**: ${sessionId}\n🔗 **Status**: Connected to real Claude API\n⚡ **Tools**: Neo4j, BrightData, Perplexity MCP servers\n\nReal response streaming will appear in the activity panel above.`,
+        content: `🤖 **Claude Agent SDK Response**: Processing your request about "${messageText}"\n\n📊 **Session**: ${sessionId}\n🔗 **Status**: Connected to real Claude API\n⚡ **Tools**: Graph MCP, BrightData, Perplexity MCP servers\n\nReal response streaming will appear in the activity panel above.`,
         timestamp: new Date()
       };
       setLocalMessages(prev => [...prev, assistantMessage]);
@@ -216,13 +216,13 @@ export default function ClaudeChat({
           <div className="text-center py-8">
             <h3 className="text-lg font-semibold mb-2">🤖 Claude Agent SDK - Sports Intelligence</h3>
             <p className="text-gray-600 mb-4">
-              Real AI assistant powered by Claude Agent SDK with Neo4j, BrightData & Perplexity tools
+              Real AI assistant powered by Claude Agent SDK with Graph MCP, BrightData & Perplexity tools
             </p>
             <div className="text-xs text-gray-500 max-w-md mx-auto space-y-2">
               <div>✅ <strong>Real Claude API</strong> - No simulated responses</div>
-              <div>🔍 <strong>Knowledge Graph</strong> - 3,325+ sports entities</div>
+              <div>🔍 <strong>Graph Intelligence Store</strong> - 3,325+ sports entities</div>
               <div>🌐 <strong>Live Research</strong> - Web scraping & market intelligence</div>
-              <div className="pt-2 font-medium">Try: "What does the knowledge graph say about Arsenal?"</div>
+              <div className="pt-2 font-medium">Try: &quot;What does the graph intelligence store say about Arsenal?&quot;</div>
             </div>
           </div>
         )}
@@ -339,7 +339,7 @@ export default function ClaudeChat({
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Try: 'What does the knowledge graph say about Arsenal?' or 'Search for football clubs in London'"
+            placeholder="Try: 'What does the graph intelligence store say about Arsenal?' or 'Search for football clubs in London'"
             className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
             disabled={isLoading || isProcessing}
           />

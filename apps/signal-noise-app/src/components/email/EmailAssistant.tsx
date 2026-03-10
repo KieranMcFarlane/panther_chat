@@ -342,7 +342,7 @@ Please provide the improved version with both subject and body. Format clearly.`
     }
   });
 
-  const useTemplate = (template: EmailTemplate) => {
+  const applyTemplate = (template: EmailTemplate) => {
     setEmailData({
       subject: template.subject,
       body: template.body
@@ -392,13 +392,13 @@ Please provide the improved version with both subject and body. Format clearly.`
           <p>💡 Ask me to generate emails by saying:</p>
           <div className="space-y-1 text-xs">
             <div className="bg-white p-2 rounded border-l-4 border-purple-300">
-              <strong>"Generate a partnership introduction email with professional tone"</strong>
+              <strong>&quot;Generate a partnership introduction email with professional tone&quot;</strong>
             </div>
             <div className="bg-white p-2 rounded border-l-4 border-blue-300">
-              <strong>"Create a follow-up email emphasizing our analytics capabilities"</strong>
+              <strong>&quot;Create a follow-up email emphasizing our analytics capabilities&quot;</strong>
             </div>
             <div className="bg-white p-2 rounded border-l-4 border-green-300">
-              <strong>"Refine this email to be more concise and impactful"</strong>
+              <strong>&quot;Refine this email to be more concise and impactful&quot;</strong>
             </div>
           </div>
         </div>
@@ -415,7 +415,7 @@ Please provide the improved version with both subject and body. Format clearly.`
             <div
               key={index}
               className="border border-gray-200 rounded-lg p-3 hover:border-blue-300 cursor-pointer transition-colors"
-              onClick={() => useTemplate(template)}
+              onClick={() => applyTemplate(template)}
             >
               <div className="flex items-center justify-between">
                 <div>

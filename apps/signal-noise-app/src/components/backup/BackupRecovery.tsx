@@ -34,7 +34,8 @@ import {
   Server,
   Archive,
   RotateCcw,
-  TestTube
+  TestTube,
+  Plus
 } from 'lucide-react';
 import { backupManager } from '@/services/backup-manager';
 import { 
