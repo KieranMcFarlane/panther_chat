@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -91,36 +91,8 @@ export default function AutomationResultsPage() {
   const [recentRFPs, setRecentRFPs] = useState([])
   const [liveRFPCount, setLiveRFPCount] = useState(0)
 
-  // Fetch automation results
-  const fetchResults = async () => {
-    try {
-      setIsLoading(true)
-      
-      // Fetch system status and metrics
-      const statusResponse = await fetch('/api/autonomous-rfp/status')
-      const statusData = await statusResponse.json()
-      
-      // Fetch historical results from files
-      const resultsResponse = await fetch('/api/automation-results/latest')
-      const resultsData = await resultsResponse.json()
-      
-      setSystemMetrics(statusData.metrics || statusData.performance)
-      setOpportunities(resultsData.opportunities || [])
-      setGeographicData(resultsData.geographic_distribution || [])
-      setLastUpdate(new Date().toLocaleTimeString())
-      
-    } catch (error) {
-      console.error('Failed to fetch automation results:', error)
-      
-      // Load demo data if API fails
-      loadDemoData()
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
   // Load demo data for development
-  const loadDemoData = () => {
+  const loadDemoData = useCallback(() => {
     const demoOpportunities: Opportunity[] = [
       {
         id: 'CWI_DIGITAL_TRANSFORMATION_2025_001',
@@ -184,7 +156,35 @@ export default function AutomationResultsPage() {
     setOpportunities(demoOpportunities)
     setSystemMetrics(demoMetrics)
     setGeographicData(demoGeographicData)
-  }
+  }, [])
+
+  // Fetch automation results
+  const fetchResults = useCallback(async () => {
+    try {
+      setIsLoading(true)
+      
+      // Fetch system status and metrics
+      const statusResponse = await fetch('/api/autonomous-rfp/status')
+      const statusData = await statusResponse.json()
+      
+      // Fetch historical results from files
+      const resultsResponse = await fetch('/api/automation-results/latest')
+      const resultsData = await resultsResponse.json()
+      
+      setSystemMetrics(statusData.metrics || statusData.performance)
+      setOpportunities(resultsData.opportunities || [])
+      setGeographicData(resultsData.geographic_distribution || [])
+      setLastUpdate(new Date().toLocaleTimeString())
+      
+    } catch (error) {
+      console.error('Failed to fetch automation results:', error)
+      
+      // Load demo data if API fails
+      loadDemoData()
+    } finally {
+      setIsLoading(false)
+    }
+  }, [loadDemoData])
 
   // Filter opportunities based on selected criteria
   const filteredOpportunities = opportunities.filter(opp => {
@@ -258,11 +258,11 @@ export default function AutomationResultsPage() {
 
   // Auto-refresh data
   useEffect(() => {
-    fetchResults()
+    void fetchResults()
     const interval = setInterval(fetchResults, 30000) // Update every 30 seconds
     
     return () => clearInterval(interval)
-  }, [selectedTimeRange, selectedPriority])
+  }, [fetchResults, selectedTimeRange, selectedPriority])
 
   if (isLoading && !systemMetrics) {
     return (
