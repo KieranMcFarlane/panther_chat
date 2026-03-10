@@ -78,7 +78,7 @@ function EntityBrowserPageContent() {
   })
 
   // Memoize filters to prevent unnecessary re-fetches
-  const memoizedFilters = useMemo(() => filters, [filters.entityType, filters.sortBy, filters.sortOrder, filters.limit])
+  const memoizedFilters = useMemo(() => filters, [filters])
 
   // Use SWR for paginated entities - simplified approach
   console.log("🔍 SWR hook call parameters:", {
@@ -187,7 +187,7 @@ function EntityBrowserPageContent() {
   // Reset to page 1 when search term or filters change
   useEffect(() => {
     updatePageInUrl(1)
-  }, [debouncedSearchTerm, filters.entityType, filters.sortBy, filters.sortOrder, filters.limit])
+  }, [debouncedSearchTerm, filters.entityType, filters.sortBy, filters.sortOrder, filters.limit, updatePageInUrl])
 
   // Reset and reload when filters change
   const resetAndReload = useCallback(() => {
@@ -221,11 +221,18 @@ function EntityBrowserPageContent() {
   }
 
   // Use direct fetch data as fallback if SWR is not working
-  const displayEntities = entities.length > 0 ? entities : (directData?.entities || [])
-  const displayPagination = pagination || directData?.pagination
+  const displayEntities = useMemo(
+    () => (entities.length > 0 ? entities : (directData?.entities || [])),
+    [entities, directData]
+  )
+  const displayPagination = useMemo(
+    () => (pagination || directData?.pagination),
+    [pagination, directData]
+  )
   const displayLoading = isLoading || directLoading
   const displayError = error || directError
   const displayDataSource = directData?.source || 'SWR'
+  const displayData = entities.length > 0 ? { entities, pagination } : directData
 
   // Update debug info with direct fetch info
   useEffect(() => {

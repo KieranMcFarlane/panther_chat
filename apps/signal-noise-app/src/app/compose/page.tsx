@@ -91,7 +91,7 @@ export default function ComposePage() {
 
   // ---------- Sales Pipeline Analysis ----------
 
-  const analyzeSalesPipeline = async (thread: typeof messageThread) => {
+  const analyzeSalesPipeline = useCallback(async (thread: typeof messageThread) => {
     if (thread.length === 0) return null
     setIsAnalyzingPipeline(true)
 
@@ -116,7 +116,7 @@ export default function ComposePage() {
     } finally {
       setIsAnalyzingPipeline(false)
     }
-  }
+  }, [content, to])
 
   useEffect(() => {
     if (messageThread.length === 0) return
@@ -124,7 +124,7 @@ export default function ComposePage() {
       analyzeSalesPipeline(messageThread)
     }, 1500)
     return () => clearTimeout(timer)
-  }, [messageThread, to, content])
+  }, [messageThread, analyzeSalesPipeline])
 
   // ---------- ByteRover Contact Intelligence ----------
 
@@ -163,7 +163,7 @@ export default function ComposePage() {
     }, 800)
 
     return () => clearTimeout(timer)
-  }, [to])
+  }, [to, content])
 
   // ---------- Version History ----------
 
@@ -171,7 +171,7 @@ export default function ComposePage() {
     if (to && to.includes('@')) {
       versionHistory.loadHistory(undefined, to, subject)
     }
-  }, [to, subject])
+  }, [to, subject, versionHistory])
 
   useEffect(() => {
     if (!to || !content.trim()) return
@@ -188,7 +188,7 @@ export default function ComposePage() {
     }, 2000)
 
     return () => clearTimeout(timer)
-  }, [to, subject, content])
+  }, [to, subject, content, versionHistory])
 
   // ---------- AG-UI Events (for monitoring Claude Agent) ----------
 

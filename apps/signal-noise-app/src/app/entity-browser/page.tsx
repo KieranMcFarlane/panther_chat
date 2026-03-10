@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback, useRef } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -10,7 +10,6 @@ import { EntityBadge } from "@/components/badge/EntityBadge"
 import { EntityCard } from "@/components/EntityCard"
 // import { SimpleEntityCard } from "@/components/SimpleEntityCard"
 import { EmailComposeModal } from "@/components/email/EmailComposeModal"
-import { formatValue } from "@/lib/formatValue"
 import { 
   Database, 
   Search, 
@@ -26,12 +25,13 @@ import {
   ChevronRight,
   Settings,
   Mail,
-  ExternalLink
+  ExternalLink,
+  Sparkles
 } from "lucide-react"
 
 interface Entity {
   id: string
-  neo4j_id: string | number
+  graph_id?: string | number
   labels: string[]
   properties: Record<string, any>
 }
@@ -48,9 +48,30 @@ interface EntityBrowserResponse {
   }
   filters: {
     entityType: string
+    sport?: string
+    league?: string
+    country?: string
+    entityClass?: string
     sortBy: string
     sortOrder: string
   }
+}
+
+interface EntityTaxonomyResponse {
+  sports: string[]
+  leagues: string[]
+  countries: string[]
+  entityClasses: string[]
+  leaguesBySport: Record<string, string[]>
+}
+
+interface SearchSuggestion {
+  id: string
+  name: string
+  type?: string
+  sport?: string
+  country?: string
+  source: "lexical" | "semantic"
 }
 
 export default function EntityBrowserPage() {
@@ -60,19 +81,33 @@ export default function EntityBrowserPage() {
   const [initialLoading, setInitialLoading] = useState(true)
   const [gridLoading, setGridLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [dataSource, setDataSource] = useState<'cache' | 'neo4j' | null>(null)
+  const [dataSource, setDataSource] = useState<'cache' | 'supabase' | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("")
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null)
+  const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([])
+  const [suggestionsLoading, setSuggestionsLoading] = useState(false)
+  const [showSuggestions, setShowSuggestions] = useState(false)
 
   const [currentPage, setCurrentPage] = useState(1)
+  const [taxonomy, setTaxonomy] = useState<EntityTaxonomyResponse>({
+    sports: [],
+    leagues: [],
+    countries: [],
+    entityClasses: [],
+    leaguesBySport: {}
+  })
 
   // Filter and sort state
   const [filters, setFilters] = useState({
     entityType: "all",
-    sortBy: "name",
-    sortOrder: "asc" as "asc" | "desc",
+    sport: "all",
+    league: "all",
+    country: "all",
+    entityClass: "all",
+    sortBy: "popular",
+    sortOrder: "desc" as "asc" | "desc",
     limit: "10" // Show 10 per page
   })
 
@@ -89,6 +124,10 @@ export default function EntityBrowserPage() {
         page: page.toString(),
         limit: filters.limit,
         entityType: filters.entityType,
+        sport: filters.sport,
+        league: filters.league,
+        country: filters.country,
+        entityClass: filters.entityClass,
         sortBy: filters.sortBy,
         sortOrder: filters.sortOrder
         // useCache defaults to true
@@ -117,7 +156,27 @@ export default function EntityBrowserPage() {
         setGridLoading(false)
       }
     }
-  }, [currentPage, filters.entityType, filters.sortBy, filters.sortOrder, filters.limit, debouncedSearchTerm])
+  }, [currentPage, filters.entityType, filters.sport, filters.league, filters.country, filters.entityClass, filters.sortBy, filters.sortOrder, filters.limit, debouncedSearchTerm])
+
+  useEffect(() => {
+    const loadTaxonomy = async () => {
+      try {
+        const response = await fetch('/api/entities/taxonomy')
+        if (!response.ok) return
+        const payload = await response.json()
+        setTaxonomy({
+          sports: Array.isArray(payload.sports) ? payload.sports : [],
+          leagues: Array.isArray(payload.leagues) ? payload.leagues : [],
+          countries: Array.isArray(payload.countries) ? payload.countries : [],
+          entityClasses: Array.isArray(payload.entityClasses) ? payload.entityClasses : [],
+          leaguesBySport: payload.leaguesBySport || {}
+        })
+      } catch {
+        // Non-blocking: filters still work with free text and type selector
+      }
+    }
+    loadTaxonomy()
+  }, [])
 
   // Reset and reload when filters change
   const resetAndReload = useCallback(() => {
@@ -139,15 +198,90 @@ export default function EntityBrowserPage() {
     if (typeof window !== 'undefined') {
       setCurrentPage(1)
     }
-  }, [filters.entityType, filters.sortBy, filters.sortOrder, filters.limit, debouncedSearchTerm])
+  }, [filters.entityType, filters.sport, filters.league, filters.country, filters.entityClass, filters.sortBy, filters.sortOrder, filters.limit, debouncedSearchTerm])
 
   // Fetch entities when page or filters change
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const isInitial = !data
+      const isInitial = initialLoading && currentPage === 1
       fetchEntities(currentPage, isInitial)
     }
-  }, [currentPage, filters.entityType, filters.sortBy, filters.sortOrder, filters.limit, debouncedSearchTerm])
+  }, [currentPage, fetchEntities, initialLoading])
+
+  useEffect(() => {
+    if (filters.sortBy === 'popular' && filters.sortOrder !== 'desc') {
+      setFilters((prev) => ({ ...prev, sortOrder: 'desc' }))
+    }
+  }, [filters.sortBy, filters.sortOrder])
+
+  useEffect(() => {
+    const query = debouncedSearchTerm.trim()
+    if (query.length < 2) {
+      setSuggestions([])
+      setSuggestionsLoading(false)
+      return
+    }
+
+    const controller = new AbortController()
+    setSuggestionsLoading(true)
+
+    const loadSuggestions = async () => {
+      try {
+        const [lexicalRes, semanticRes] = await Promise.all([
+          fetch(`/api/entities/search?search=${encodeURIComponent(query)}&limit=6`, { signal: controller.signal }),
+          fetch('/api/vector-search', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              query,
+              limit: 6,
+              score_threshold: 0.15
+            }),
+            signal: controller.signal
+          })
+        ])
+
+        const lexicalPayload = lexicalRes.ok ? await lexicalRes.json() : { entities: [] }
+        const semanticPayload = semanticRes.ok ? await semanticRes.json() : { results: [] }
+
+        const lexical: SearchSuggestion[] = (lexicalPayload.entities || []).map((entity: any) => ({
+          id: String(entity.graph_id || entity.id || entity.entity_id || entity.name),
+          name: String(entity.name || 'Unknown'),
+          type: entity.type || '',
+          sport: entity.sport || '',
+          country: entity.country || '',
+          source: 'lexical'
+        }))
+
+        const semantic: SearchSuggestion[] = (semanticPayload.results || []).map((result: any) => ({
+          id: String(result.entity_id || result.id || result.name),
+          name: String(result.name || 'Unknown'),
+          type: result.type || '',
+          source: 'semantic'
+        }))
+
+        const merged = [...lexical, ...semantic]
+        const deduped: SearchSuggestion[] = []
+        const seen = new Set<string>()
+        for (const item of merged) {
+          const key = `${item.id}::${item.name}`.toLowerCase()
+          if (!seen.has(key)) {
+            seen.add(key)
+            deduped.push(item)
+          }
+          if (deduped.length >= 8) break
+        }
+        setSuggestions(deduped)
+      } catch {
+        setSuggestions([])
+      } finally {
+        setSuggestionsLoading(false)
+      }
+    }
+
+    loadSuggestions()
+    return () => controller.abort()
+  }, [debouncedSearchTerm])
 
   // Email handling functions
   const handleEmailEntity = (entity: Entity) => {
@@ -211,6 +345,9 @@ export default function EntityBrowserPage() {
   }
 
   const entities = data.entities || []
+  const sportScopedLeagues = filters.sport !== 'all'
+    ? (taxonomy.leaguesBySport?.[filters.sport] || [])
+    : taxonomy.leagues
 
   return (
     <div className="min-h-screen bg-background">
@@ -224,7 +361,7 @@ export default function EntityBrowserPage() {
             </div>
           </div>
           <p className="text-muted-foreground">
-            Browse all entities in your Neo4j knowledge graph with their complete schemas
+            Browse all entities in your graph intelligence store with their complete schemas
           </p>
         </div>
       </div>
@@ -233,7 +370,7 @@ export default function EntityBrowserPage() {
         {/* Controls */}
         <Card className="mb-6">
           <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-4">
               {/* Search */}
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -241,8 +378,49 @@ export default function EntityBrowserPage() {
                   placeholder="Search entities..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
+                  onFocus={() => setShowSuggestions(true)}
+                  onBlur={() => {
+                    // Delay allows suggestion click to register first.
+                    setTimeout(() => setShowSuggestions(false), 150)
+                  }}
                   className="pl-10"
                 />
+                {showSuggestions && (searchTerm.trim().length >= 2 || suggestionsLoading) && (
+                  <div className="absolute z-30 mt-1 w-full rounded-md border bg-background shadow-lg">
+                    {suggestionsLoading ? (
+                      <div className="px-3 py-2 text-xs text-muted-foreground">Searching...</div>
+                    ) : suggestions.length > 0 ? (
+                      <div className="max-h-72 overflow-y-auto">
+                        {suggestions.map((suggestion) => (
+                          <button
+                            key={`${suggestion.source}-${suggestion.id}-${suggestion.name}`}
+                            className="w-full px-3 py-2 text-left hover:bg-accent"
+                            onMouseDown={(event) => {
+                              event.preventDefault()
+                              setSearchTerm(suggestion.name)
+                              setDebouncedSearchTerm(suggestion.name)
+                              setCurrentPage(1)
+                              setShowSuggestions(false)
+                            }}
+                          >
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="truncate text-sm font-medium">{suggestion.name}</span>
+                              <span className="inline-flex items-center text-[10px] text-muted-foreground">
+                                {suggestion.source === 'semantic' && <Sparkles className="h-3 w-3 mr-1" />}
+                                {suggestion.source}
+                              </span>
+                            </div>
+                            <div className="truncate text-xs text-muted-foreground">
+                              {[suggestion.type, suggestion.sport, suggestion.country].filter(Boolean).join(' • ')}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="px-3 py-2 text-xs text-muted-foreground">No suggestions found</div>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Entity Type Filter */}
@@ -260,12 +438,65 @@ export default function EntityBrowserPage() {
                 </SelectContent>
               </Select>
 
+              {/* Sport Filter */}
+              <Select value={filters.sport} onValueChange={(value) => setFilters(prev => ({ ...prev, sport: value, league: 'all' }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Sport" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Sports</SelectItem>
+                  {taxonomy.sports.map((sport) => (
+                    <SelectItem key={sport} value={sport}>{sport}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {/* League Filter */}
+              <Select value={filters.league} onValueChange={(value) => setFilters(prev => ({ ...prev, league: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="League" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Leagues</SelectItem>
+                  {sportScopedLeagues.map((league) => (
+                    <SelectItem key={league} value={league}>{league}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {/* Entity Class Filter */}
+              <Select value={filters.entityClass} onValueChange={(value) => setFilters(prev => ({ ...prev, entityClass: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Class" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Classes</SelectItem>
+                  {taxonomy.entityClasses.map((entityClass) => (
+                    <SelectItem key={entityClass} value={entityClass}>{entityClass}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {/* Country Filter */}
+              <Select value={filters.country} onValueChange={(value) => setFilters(prev => ({ ...prev, country: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Country" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Countries</SelectItem>
+                  {taxonomy.countries.map((country) => (
+                    <SelectItem key={country} value={country}>{country}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
               {/* Sort By */}
               <Select value={filters.sortBy} onValueChange={(value) => setFilters(prev => ({ ...prev, sortBy: value }))}>
                 <SelectTrigger>
                   <SelectValue placeholder="Sort By" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="popular">Most Popular</SelectItem>
                   <SelectItem value="name">Name</SelectItem>
                   <SelectItem value="type">Type</SelectItem>
                   <SelectItem value="sport">Sport</SelectItem>
@@ -344,13 +575,23 @@ export default function EntityBrowserPage() {
           ) : (
             entities.map((entity) => (
               <EntityCard
-                key={`${entity.id}-${formatValue(entity.neo4j_id)}`}
+                key={`${entity.id}-${String(entity.graph_id ?? entity.id)}`}
                 entity={entity}
                 onEmailEntity={handleEmailEntity}
               />
             ))
           )}
         </div>
+
+        {!gridLoading && entities.length === 0 && (
+          <Card className="mt-6">
+            <CardContent className="p-6 text-center">
+              <p className="text-sm text-muted-foreground">
+                No entities matched this filter combination. Try broadening sport, league, or class filters.
+              </p>
+            </CardContent>
+          </Card>
+        )}
 
 
         {/* Traditional Pagination (for accessibility) */}

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { FileText } from "lucide-react"
 
 import EntityDossierRouter from "@/components/entity-dossier/EntityDossierRouter"
+import { DossierError } from "@/components/entity-dossier/DossierError"
 import Header from "@/components/header/Header"
 import EmailComposeModal from "@/components/email/EmailComposeModal"
 import type { Entity } from "@/lib/entity-loader"
@@ -37,28 +38,82 @@ export default function EntityDossierClientPage({
   const router = useRouter()
   const entity = initialEntity
   const dossierKey = 0
+  const [dossier, setDossier] = useState(initialDossier)
   const [generationMessage, setGenerationMessage] = useState<string | null>(null)
+  const [generationError, setGenerationError] = useState<string | null>(null)
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [generationAttempt, setGenerationAttempt] = useState(0)
   const [showEmailModal, setShowEmailModal] = useState(false)
 
   useEffect(() => {
-    if (!shouldGenerate || !entity) return
+    setDossier(initialDossier)
+  }, [initialDossier])
 
-    const generationOptions = {
-      includeSignals,
-      includeConnections,
-      deepResearch,
-      forceRegeneration: true
+  // Intentionally exclude `dossier` from deps to avoid regeneration loops after a successful generation.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!entity) return
+    if (!shouldGenerate && dossier) return
+
+    const controller = new AbortController()
+
+    async function generateDossier() {
+      setIsGenerating(true)
+      setGenerationError(null)
+      setGenerationMessage(`Analyzing opportunities, connections, and signals for ${entity.properties.name}...`)
+
+      const searchParams = new URLSearchParams({
+        includeSignals: String(includeSignals),
+        includeConnections: String(includeConnections),
+        includePOIs: 'true',
+        deepResearch: String(deepResearch)
+      })
+
+      try {
+        const response = await fetch(`/api/entities/${entityId}/dossier?${searchParams.toString()}`, {
+          method: shouldGenerate ? 'POST' : 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: shouldGenerate ? JSON.stringify({
+            includeSignals,
+            includeConnections,
+            includePOIs: true,
+            deepResearch
+          }) : undefined,
+          signal: controller.signal
+        })
+
+        if (!response.ok) {
+          throw new Error(`Failed to generate dossier (${response.status})`)
+        }
+
+        const data = await response.json()
+        setDossier(data.dossier ?? null)
+      } catch (error) {
+        if (controller.signal.aborted) {
+          return
+        }
+
+        console.error('Failed to generate dossier:', error)
+        setGenerationError(error instanceof Error ? error.message : 'Failed to generate dossier')
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsGenerating(false)
+          setGenerationMessage(null)
+        }
+      }
     }
 
-    console.log('📋 Dossier generation options:', generationOptions)
-    setGenerationMessage(`📊 Analyzing opportunities, connections, and signals for ${entity.properties.name}...`)
+    generateDossier()
 
-    const timer = setTimeout(() => {
-      setGenerationMessage(null)
-    }, 5000)
+    return () => controller.abort()
+  }, [entity, entityId, shouldGenerate, includeSignals, includeConnections, deepResearch, generationAttempt]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    return () => clearTimeout(timer)
-  }, [shouldGenerate, entity, includeSignals, includeConnections, deepResearch])
+  const handleRetryGeneration = () => {
+    setGenerationError(null)
+    setGenerationAttempt((attempt) => attempt + 1)
+  }
 
   const handleEmailEntity = () => {
     setShowEmailModal(true)
@@ -118,11 +173,17 @@ export default function EntityDossierClientPage({
             </div>
           )}
 
+          {generationError && !dossier && !isGenerating && (
+            <div className="mb-6">
+              <DossierError entityId={entityId} error={generationError} onRetry={handleRetryGeneration} />
+            </div>
+          )}
+
           <EntityDossierRouter
             key={dossierKey}
             entity={entity}
             onEmailEntity={handleEmailEntity}
-            dossier={initialDossier}
+            dossier={dossier}
           />
         </div>
       </div>

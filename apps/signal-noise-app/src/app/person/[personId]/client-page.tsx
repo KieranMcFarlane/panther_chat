@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -23,7 +23,7 @@ import {
 
 interface PersonProfile {
   id: string;
-  neo4j_id: string | number;
+  graph_id?: string | number;
   labels: string[];
   properties: {
     name: string;
@@ -99,14 +99,7 @@ export default function PersonProfileClient({ entityId }: { entityId: string }) 
     responseRate: 0
   });
 
-  useEffect(() => {
-    if (entity?.properties?.aiAgentConfig) {
-      setAiAgentEnabled(entity.properties.aiAgentConfig.enabled);
-    }
-    calculateEmailStats();
-  }, [entity]);
-
-  const calculateEmailStats = () => {
+  const calculateEmailStats = useCallback(() => {
     const emails = entity?.properties?.contactHistory || [];
     const sent = emails.filter((e: EmailRecord) => e.direction === 'outbound').length;
     const received = emails.filter((e: EmailRecord) => e.direction === 'inbound').length;
@@ -119,7 +112,14 @@ export default function PersonProfileClient({ entityId }: { entityId: string }) 
       received,
       responseRate
     });
-  };
+  }, [entity]);
+
+  useEffect(() => {
+    if (entity?.properties?.aiAgentConfig) {
+      setAiAgentEnabled(entity.properties.aiAgentConfig.enabled);
+    }
+    calculateEmailStats();
+  }, [entity, calculateEmailStats]);
 
   const handleSendEmail = async (emailData: { to: string; subject: string; body: string }) => {
     try {
