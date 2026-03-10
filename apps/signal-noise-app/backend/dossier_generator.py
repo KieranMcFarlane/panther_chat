@@ -1858,9 +1858,12 @@ Hard requirements:
         dossier["metadata"]["collection_timed_out"] = bool(phase0_collection_timed_out)
         dossier["metadata"]["model_max_tokens"] = max_tokens_override
         inference_diagnostics = dossier["metadata"].get("inference_diagnostics")
+        runtime_provider = str(getattr(self.claude_client, "provider", "") or "").strip().lower() or None
+        runtime_stream_enabled = bool(getattr(self.claude_client, "chutes_stream_enabled", False))
+        runtime_model = getattr(self.claude_client, "chutes_model", None)
         dossier["metadata"]["inference_runtime"] = {
-            "provider": str(getattr(self.claude_client, "provider", "") or "").strip().lower() or None,
-            "chutes_model": getattr(self.claude_client, "chutes_model", None),
+            "provider": runtime_provider,
+            "chutes_model": runtime_model,
             "chutes_fallback_model": getattr(self.claude_client, "chutes_fallback_model", None),
             "chutes_timeout_seconds": getattr(self.claude_client, "chutes_timeout_seconds", None),
             "chutes_fallback_timeout_seconds": getattr(self.claude_client, "chutes_fallback_timeout_seconds", None),
@@ -1871,32 +1874,32 @@ Hard requirements:
                 None,
             ),
             "chutes_max_retries": getattr(self.claude_client, "chutes_max_retries", None),
-            "model_used": dossier["metadata"].get("model_used"),
+            "model_used": dossier["metadata"].get("model_used") or runtime_model,
             "stop_reason": dossier["metadata"].get("stop_reason"),
             "streaming": (
                 bool(inference_diagnostics.get("streaming"))
                 if isinstance(inference_diagnostics, dict)
-                else None
+                else (runtime_stream_enabled if runtime_provider in {"chutes_openai", "chutes_anthropic"} else None)
             ),
             "fallback_used": (
                 bool(inference_diagnostics.get("fallback_used"))
                 if isinstance(inference_diagnostics, dict)
-                else None
+                else False
             ),
             "chunk_count": (
                 inference_diagnostics.get("chunk_count")
                 if isinstance(inference_diagnostics, dict)
-                else None
+                else 0
             ),
             "answer_channel_chars": (
                 inference_diagnostics.get("answer_channel_chars")
                 if isinstance(inference_diagnostics, dict)
-                else None
+                else 0
             ),
             "reasoning_channel_chars": (
                 inference_diagnostics.get("reasoning_channel_chars")
                 if isinstance(inference_diagnostics, dict)
-                else None
+                else 0
             ),
         }
         if collection_duration_seconds is not None:

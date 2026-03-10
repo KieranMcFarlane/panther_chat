@@ -54,3 +54,22 @@
 
 - End-to-end progression from queueing through final scoring is confirmed on the current runtime.
 - This run did not expose streaming chunk diagnostics because Phase 0 timed out and used degraded completion.
+
+## Direct Dossier Probe (Non-Queue Validation)
+
+Follow-up direct dossier generation probe (forced refresh) for:
+- `entity_id=streaming-diagnostics-probe-2026-03-10-c`
+- `priority_score=10` (`BASIC` tier)
+
+Result highlights:
+- Response completed with `cache_status=FRESH`
+- `metadata.inference_runtime` now includes non-null diagnostics fields:
+  - `model_used="zai-org/GLM-5-TEE"`
+  - `streaming=true`
+  - `fallback_used=false`
+  - `chunk_count=0`
+  - `answer_channel_chars=0`
+  - `reasoning_channel_chars=0`
+
+Interpretation:
+- Runtime metadata wiring is now stable even when dossier output falls back to minimal structured content.

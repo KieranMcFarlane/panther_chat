@@ -40,6 +40,7 @@ test('entities search route supports bounded first-load metadata and autocomplet
   assert.match(entitySearchRouteSource, /has_more:/)
   assert.match(entitySearchRouteSource, /total_estimate:/)
   assert.match(entitySearchRouteSource, /latency_ms:/)
+  assert.match(entitySearchRouteSource, /search_strategy:/)
 })
 
 test('entity browser uses autocomplete endpoint and defers full dataset refresh until apply', () => {
