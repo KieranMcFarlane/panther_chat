@@ -18,15 +18,17 @@ import json
 import logging
 import os
 import random
-import re
-import threading
 from datetime import datetime, timezone
 from typing import Dict, List, Optional, Any, Callable, Awaitable
 from dataclasses import dataclass
 from urllib.parse import urlparse
 
 from schemas import EntityDossier, DossierSection, DossierTier, CacheStatus
-from claude_client import ClaudeClient
+try:
+    # Prefer package-qualified import so exception classes match backend.main imports.
+    from backend.claude_client import ClaudeClient, LLMRequestError
+except ImportError:
+    from claude_client import ClaudeClient, LLMRequestError
 
 # Import data collector
 try:
@@ -481,13 +483,10 @@ Website: N/A
             content_text = response.get("content", "")
 
             # Parse response (expect JSON)
-            import json
-            import re
-
-            # Extract JSON from response
-            json_match = re.search(r'\{[\s\S]*\}', content_text)
-            if json_match:
-                section_data = json.loads(json_match.group(0))
+            section_data = self._extract_last_valid_json_block(content_text)
+            if section_data is not None:
+                if isinstance(section_data, list):
+                    section_data = {"content": section_data}
             else:
                 # Fallback: treat entire response as content
                 section_data = {"content": [content_text]}
@@ -1287,6 +1286,52 @@ Hard requirements:
         if max_tokens_override is not None and max_tokens_override > 0:
             max_tokens = max_tokens_override
 
+        provider = str(getattr(self.claude_client, "provider", "") or "").strip().lower()
+        if provider in {"chutes_openai", "chutes_anthropic"}:
+            logical_model_by_tier = {
+                "BASIC": "haiku",
+                "STANDARD": "sonnet",
+                "PREMIUM": "opus",
+            }
+            logical_model = logical_model_by_tier.get(tier, "sonnet")
+            runtime_model = str(getattr(self.claude_client, "chutes_model", "") or "configured_chutes_model")
+            logger.info(
+                "🎯 Using single-model runtime %s for %s (%s tier, requested=%s)",
+                runtime_model,
+                entity_name,
+                tier,
+                logical_model,
+            )
+            try:
+                response = await self._query_model_with_timeout(
+                    prompt=prompt,
+                    model=logical_model,
+                    max_tokens=max_tokens,
+                )
+                content_text = response.get("content", "")
+                dossier = self._extract_last_valid_json_block(content_text)
+                if isinstance(dossier, list):
+                    dossier = None
+                if dossier:
+                    if self._validate_dossier_structure(dossier):
+                        inference_diagnostics = response.get("inference_diagnostics")
+                        if isinstance(inference_diagnostics, dict):
+                            dossier.setdefault("metadata", {})
+                            dossier["metadata"]["inference_diagnostics"] = inference_diagnostics
+                            dossier["metadata"]["model_used"] = response.get("model_used")
+                            dossier["metadata"]["stop_reason"] = response.get("stop_reason")
+                        logger.info("✅ Generated %s dossier with single-model runtime %s", entity_name, runtime_model)
+                        return dossier
+                logger.warning("⚠️ Invalid dossier structure from single-model runtime for %s", entity_name)
+            except LLMRequestError:
+                # Provider/runtime failures should be surfaced to worker retry logic.
+                raise
+            except Exception as e:
+                raise RuntimeError(f"Single-model dossier generation failed for {entity_name}: {e}") from e
+
+            logger.error("❌ Single-model generated invalid output for %s, returning minimal dossier", entity_name)
+            return self._create_minimal_dossier(entity_name)
+
         # Model cascade: Try Haiku first (80% of cases)
         rollout = random.random()
 
@@ -1314,9 +1359,10 @@ Hard requirements:
             content_text = response.get("content", "")
 
             # Parse JSON response
-            json_match = re.search(r'\{[\s\S]*\}', content_text)
-            if json_match:
-                dossier = json.loads(json_match.group(0))
+            dossier = self._extract_last_valid_json_block(content_text)
+            if isinstance(dossier, list):
+                dossier = None
+            if dossier:
 
                 # Validate required structure
                 if self._validate_dossier_structure(dossier):
@@ -1340,9 +1386,10 @@ Hard requirements:
                     max_tokens=max_tokens
                 )
                 content_text = response.get("content", "")
-                json_match = re.search(r'\{[\s\S]*\}', content_text)
-                if json_match:
-                    dossier = json.loads(json_match.group(0))
+                dossier = self._extract_last_valid_json_block(content_text)
+                if isinstance(dossier, list):
+                    dossier = None
+                if dossier:
                     if self._validate_dossier_structure(dossier):
                         logger.info(f"✅ Generated {entity_name} dossier with Sonnet (fallback)")
                         return dossier
@@ -1359,9 +1406,10 @@ Hard requirements:
                     max_tokens=max_tokens
                 )
                 content_text = response.get("content", "")
-                json_match = re.search(r'\{[\s\S]*\}', content_text)
-                if json_match:
-                    dossier = json.loads(json_match.group(0))
+                dossier = self._extract_last_valid_json_block(content_text)
+                if isinstance(dossier, list):
+                    dossier = None
+                if dossier:
                     logger.info(f"✅ Generated {entity_name} dossier with Opus (final fallback)")
                     return dossier
             except Exception as e:
@@ -1390,6 +1438,66 @@ Hard requirements:
             model=model,
             max_tokens=max_tokens,
         )
+
+    def _extract_last_valid_json_block(self, text: str) -> Optional[Any]:
+        """
+        Extract the last valid JSON object or array from model output.
+
+        This intentionally ignores earlier JSON fragments and prefers the terminal
+        valid block to stabilize reasoning-model outputs that stream partial JSON.
+        """
+        if not isinstance(text, str) or not text:
+            return None
+
+        stack: List[str] = []
+        start_idx: Optional[int] = None
+        in_string = False
+        escape_next = False
+        last_valid: Optional[Any] = None
+        matching = {"{": "}", "[": "]"}
+
+        for idx, char in enumerate(text):
+            if in_string:
+                if escape_next:
+                    escape_next = False
+                elif char == "\\":
+                    escape_next = True
+                elif char == '"':
+                    in_string = False
+                continue
+
+            if char == '"':
+                in_string = True
+                continue
+
+            if char in {"{", "["}:
+                if not stack:
+                    start_idx = idx
+                stack.append(char)
+                continue
+
+            if char in {"}", "]"}:
+                if not stack:
+                    start_idx = None
+                    continue
+
+                opener = stack[-1]
+                expected = matching[opener]
+                if char != expected:
+                    stack = []
+                    start_idx = None
+                    continue
+
+                stack.pop()
+                if not stack and start_idx is not None:
+                    candidate = text[start_idx:idx + 1]
+                    try:
+                        last_valid = json.loads(candidate)
+                    except json.JSONDecodeError:
+                        pass
+                    start_idx = None
+
+        return last_valid
 
     def _validate_dossier_structure(self, dossier: dict) -> bool:
         """
@@ -1647,33 +1755,15 @@ Hard requirements:
             collector = DossierDataCollector()
             collection_timeout_seconds = int(os.getenv("DOSSIER_COLLECTION_TIMEOUT_SECONDS", "180"))
             try:
-                # Run collect_all in a daemon thread so phase-0 can enforce a hard wall-clock timeout
-                # even if downstream I/O blocks and never yields back to the event loop.
-                result_box: Dict[str, Any] = {}
-                error_box: Dict[str, Exception] = {}
-                completion = threading.Event()
-
-                def _collect_all_worker() -> None:
-                    try:
-                        result_box["value"] = asyncio.run(
-                            collector.collect_all(entity_id, entity_name, entity_type=entity_type),
-                        )
-                    except Exception as error:  # noqa: BLE001
-                        error_box["error"] = error
-                    finally:
-                        completion.set()
-
-                threading.Thread(
-                    target=_collect_all_worker,
-                    name=f"dossier-collect-{entity_id}",
-                    daemon=True,
-                ).start()
-                finished = await asyncio.to_thread(completion.wait, collection_timeout_seconds)
-                if not finished:
-                    raise asyncio.TimeoutError()
-                if "error" in error_box:
-                    raise error_box["error"]
-                dossier_data_obj = result_box.get("value")
+                dossier_data_obj = await asyncio.wait_for(
+                    collector.collect_all(
+                        entity_id,
+                        entity_name,
+                        entity_type=entity_type,
+                        progress_callback=progress_callback,
+                    ),
+                    timeout=collection_timeout_seconds,
+                )
             except asyncio.TimeoutError:
                 logger.warning(
                     "⚠️ collect_entity_data timed out for %s after %ss; continuing with minimal data",
@@ -1767,6 +1857,48 @@ Hard requirements:
         dossier["metadata"]["generation_mode"] = generation_mode
         dossier["metadata"]["collection_timed_out"] = bool(phase0_collection_timed_out)
         dossier["metadata"]["model_max_tokens"] = max_tokens_override
+        inference_diagnostics = dossier["metadata"].get("inference_diagnostics")
+        dossier["metadata"]["inference_runtime"] = {
+            "provider": str(getattr(self.claude_client, "provider", "") or "").strip().lower() or None,
+            "chutes_model": getattr(self.claude_client, "chutes_model", None),
+            "chutes_fallback_model": getattr(self.claude_client, "chutes_fallback_model", None),
+            "chutes_timeout_seconds": getattr(self.claude_client, "chutes_timeout_seconds", None),
+            "chutes_fallback_timeout_seconds": getattr(self.claude_client, "chutes_fallback_timeout_seconds", None),
+            "chutes_stream_enabled": getattr(self.claude_client, "chutes_stream_enabled", None),
+            "chutes_stream_idle_timeout_seconds": getattr(
+                self.claude_client,
+                "chutes_stream_idle_timeout_seconds",
+                None,
+            ),
+            "chutes_max_retries": getattr(self.claude_client, "chutes_max_retries", None),
+            "model_used": dossier["metadata"].get("model_used"),
+            "stop_reason": dossier["metadata"].get("stop_reason"),
+            "streaming": (
+                bool(inference_diagnostics.get("streaming"))
+                if isinstance(inference_diagnostics, dict)
+                else None
+            ),
+            "fallback_used": (
+                bool(inference_diagnostics.get("fallback_used"))
+                if isinstance(inference_diagnostics, dict)
+                else None
+            ),
+            "chunk_count": (
+                inference_diagnostics.get("chunk_count")
+                if isinstance(inference_diagnostics, dict)
+                else None
+            ),
+            "answer_channel_chars": (
+                inference_diagnostics.get("answer_channel_chars")
+                if isinstance(inference_diagnostics, dict)
+                else None
+            ),
+            "reasoning_channel_chars": (
+                inference_diagnostics.get("reasoning_channel_chars")
+                if isinstance(inference_diagnostics, dict)
+                else None
+            ),
+        }
         if collection_duration_seconds is not None:
             dossier["metadata"]["collection_time_seconds"] = collection_duration_seconds
 
@@ -1857,7 +1989,10 @@ Hard requirements:
 # Example usage
 async def main():
     """Example dossier generation"""
-    from claude_client import ClaudeClient
+    try:
+        from backend.claude_client import ClaudeClient
+    except ImportError:
+        from claude_client import ClaudeClient
 
     # Initialize
     claude = ClaudeClient()

@@ -17,6 +17,27 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 
+class LLMRequestError(RuntimeError):
+    """Structured LLM request failure with retryability metadata."""
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        retryable: bool,
+        provider: str,
+        requested_model: Optional[str] = None,
+        runtime_model: Optional[str] = None,
+        status_code: Optional[int] = None,
+    ) -> None:
+        super().__init__(message)
+        self.retryable = retryable
+        self.provider = provider
+        self.requested_model = requested_model
+        self.runtime_model = runtime_model
+        self.status_code = status_code
+
+
 # =============================================================================
 # Model Cascade Configuration
 # =============================================================================
@@ -349,6 +370,7 @@ class ClaudeClient:
 
     PROVIDER_ANTHROPIC = "anthropic"
     PROVIDER_CHUTES_OPENAI = "chutes_openai"
+    PROVIDER_CHUTES_ANTHROPIC = "chutes_anthropic"
 
     def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None):
         """
@@ -361,8 +383,14 @@ class ClaudeClient:
         self.provider = self._resolve_provider()
         self.api_key = api_key or self._resolve_api_key()
         self.base_url = base_url or self._resolve_base_url()
-        self.chutes_model = os.getenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+        self.chutes_model = os.getenv("CHUTES_MODEL", "moonshotai/Kimi-K2.5-TEE")
+        self.chutes_fallback_model = os.getenv("CHUTES_FALLBACK_MODEL", "moonshotai/Kimi-K2.5-TEE")
         self.chutes_timeout_seconds = float(os.getenv("CHUTES_TIMEOUT_SECONDS", "45"))
+        self.chutes_fallback_timeout_seconds = float(os.getenv("CHUTES_FALLBACK_TIMEOUT_SECONDS", "90"))
+        self.chutes_stream_idle_timeout_seconds = float(
+            os.getenv("CHUTES_STREAM_IDLE_TIMEOUT_SECONDS", str(self.chutes_timeout_seconds))
+        )
+        self.chutes_stream_enabled = self._parse_bool_env(os.getenv("CHUTES_STREAM_ENABLED"), default=True)
         self.chutes_max_retries = int(os.getenv("CHUTES_MAX_RETRIES", "1"))
 
         disable_flag = (os.getenv("DISABLE_CLAUDE_API") or "").strip().lower()
@@ -377,9 +405,20 @@ class ClaudeClient:
 
         logger.info(f"🤖 ClaudeClient initialized (provider: {self.provider}, default: {self.default_model})")
 
+    @staticmethod
+    def _parse_bool_env(value: Optional[str], *, default: bool) -> bool:
+        if value is None:
+            return default
+        normalized = value.strip().lower()
+        if normalized in {"1", "true", "yes", "on"}:
+            return True
+        if normalized in {"0", "false", "no", "off"}:
+            return False
+        return default
+
     def _resolve_provider(self) -> str:
         provider = (os.getenv("LLM_PROVIDER") or "").strip().lower()
-        if provider in {self.PROVIDER_ANTHROPIC, self.PROVIDER_CHUTES_OPENAI}:
+        if provider in {self.PROVIDER_ANTHROPIC, self.PROVIDER_CHUTES_OPENAI, self.PROVIDER_CHUTES_ANTHROPIC}:
             return provider
 
         if os.getenv("CHUTES_API_KEY"):
@@ -388,7 +427,7 @@ class ClaudeClient:
         return self.PROVIDER_ANTHROPIC
 
     def _resolve_api_key(self) -> Optional[str]:
-        if self.provider == self.PROVIDER_CHUTES_OPENAI:
+        if self.provider in {self.PROVIDER_CHUTES_OPENAI, self.PROVIDER_CHUTES_ANTHROPIC}:
             return os.getenv("CHUTES_API_KEY")
 
         return os.getenv("ANTHROPIC_API_KEY")
@@ -396,6 +435,13 @@ class ClaudeClient:
     def _resolve_base_url(self) -> str:
         if self.provider == self.PROVIDER_CHUTES_OPENAI:
             return os.getenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+
+        if self.provider == self.PROVIDER_CHUTES_ANTHROPIC:
+            return (
+                os.getenv("CHUTES_ANTHROPIC_BASE_URL")
+                or os.getenv("CHUTES_BASE_URL")
+                or "https://llm.chutes.ai/v1"
+            )
 
         return os.getenv("ANTHROPIC_BASE_URL", "https://api.anthropic.com")
 
@@ -477,6 +523,18 @@ class ClaudeClient:
             - tool_results: Results of tool use (if any)
             - tokens_used: Input/output tokens
         """
+        if self.provider in {self.PROVIDER_CHUTES_OPENAI, self.PROVIDER_CHUTES_ANTHROPIC}:
+            # Chutes runs a single configured model; avoid logical cascade retries.
+            result = await self._query(
+                prompt=prompt,
+                model=self.default_model,
+                max_tokens=max_tokens,
+                tools=tools,
+                system_prompt=system_prompt,
+            )
+            result["cascade_attempts"] = 1
+            return result
+
         for model_name in self.cascade_order:
             try:
                 logger.info(f"🔄 Trying model: {model_name}")
@@ -529,6 +587,13 @@ class ClaudeClient:
         """
         if self.provider == self.PROVIDER_CHUTES_OPENAI:
             return await self._query_chutes(
+                prompt=prompt,
+                model=model,
+                max_tokens=max_tokens,
+                system_prompt=system_prompt,
+            )
+        if self.provider == self.PROVIDER_CHUTES_ANTHROPIC:
+            return await self._query_chutes_anthropic(
                 prompt=prompt,
                 model=model,
                 max_tokens=max_tokens,
@@ -613,7 +678,7 @@ class ClaudeClient:
             "messages": messages,
             "max_tokens": max_tokens,
             "temperature": 0.7 if system_prompt is None else 0.4,
-            "stream": False,
+            "stream": self.chutes_stream_enabled,
         }
 
         headers = {
@@ -625,35 +690,67 @@ class ClaudeClient:
 
         for attempt in range(self.chutes_max_retries + 1):
             try:
-                timeout = httpx.Timeout(
-                    timeout=self.chutes_timeout_seconds,
-                    connect=min(self.chutes_timeout_seconds, 15.0),
+                using_fallback_model = (
+                    payload["model"] == self.chutes_fallback_model and payload["model"] != self.chutes_model
                 )
-                async with httpx.AsyncClient(timeout=timeout) as client:
-                    response = await client.post(
-                        f"{self.base_url.rstrip('/')}/chat/completions",
+                request_timeout_seconds = (
+                    max(self.chutes_timeout_seconds, self.chutes_fallback_timeout_seconds)
+                    if using_fallback_model
+                    else self.chutes_timeout_seconds
+                )
+                timeout = httpx.Timeout(
+                    timeout=request_timeout_seconds,
+                    connect=min(request_timeout_seconds, 15.0),
+                    read=min(request_timeout_seconds, self.chutes_stream_idle_timeout_seconds),
+                )
+                if self.chutes_stream_enabled:
+                    data = await self._query_chutes_streaming(
+                        payload=payload,
                         headers=headers,
-                        json=payload,
+                        timeout=timeout,
                     )
-                    response.raise_for_status()
+                else:
+                    data = await self._query_chutes_non_stream(
+                        payload=payload,
+                        headers=headers,
+                        timeout=timeout,
+                    )
 
-                data = response.json()
-                choice = (data.get("choices") or [{}])[0]
-                message = choice.get("message") or {}
-                content = message.get("content", "")
+                content = data.get("answer_text", "")
+                reasoning_content = data.get("reasoning_text", "")
                 usage = data.get("usage", {})
+                stop_reason = data.get("stop_reason")
+                chunk_count = int(data.get("chunk_count", 0) or 0)
+
+                if not content and self.chutes_fallback_model and payload["model"] != self.chutes_fallback_model:
+                    logger.warning(
+                        "Chutes response returned empty content for model=%s finish_reason=%s; retrying with fallback model=%s",
+                        payload["model"],
+                        stop_reason,
+                        self.chutes_fallback_model,
+                    )
+                    payload["model"] = self.chutes_fallback_model
+                    continue
 
                 return {
                     "content": content,
-                    "model_used": model,
+                    "model_used": payload["model"],
+                    "requested_model": model,
                     "provider": self.provider,
-                    "raw_response": data,
+                    "raw_response": data.get("raw_response"),
                     "tokens_used": {
                         "input_tokens": usage.get("prompt_tokens"),
                         "output_tokens": usage.get("completion_tokens"),
                         "total_tokens": usage.get("total_tokens"),
                     },
-                    "stop_reason": choice.get("finish_reason"),
+                    "stop_reason": stop_reason,
+                    "inference_diagnostics": {
+                        "streaming": bool(self.chutes_stream_enabled),
+                        "fallback_used": bool(payload["model"] != self.chutes_model),
+                        "chunk_count": chunk_count,
+                        "answer_channel_chars": len(content),
+                        "reasoning_channel_chars": len(reasoning_content),
+                    },
                 }
             except Exception as e:
                 last_error = e
@@ -666,11 +763,37 @@ class ClaudeClient:
                 )
                 if self._is_insufficient_balance_error(e):
                     self._disable_api("insufficient balance")
-                    raise RuntimeError(f"Chutes insufficient balance: {error_detail}") from e
+                    raise LLMRequestError(
+                        f"Chutes insufficient balance: {error_detail}",
+                        retryable=False,
+                        provider=self.provider,
+                        requested_model=model,
+                        runtime_model=self.chutes_model,
+                        status_code=(e.response.status_code if isinstance(e, httpx.HTTPStatusError) and e.response is not None else None),
+                    ) from e
 
                 is_retryable = self._is_retryable_chutes_error(e)
+                if (
+                    is_retryable
+                    and self.chutes_fallback_model
+                    and payload["model"] != self.chutes_fallback_model
+                ):
+                    logger.warning(
+                        "Retryable Chutes error for model=%s; switching to fallback model=%s",
+                        payload["model"],
+                        self.chutes_fallback_model,
+                    )
+                    payload["model"] = self.chutes_fallback_model
+                    continue
                 if not is_retryable or attempt >= self.chutes_max_retries:
-                    raise RuntimeError(f"Chutes request failed (retryable={is_retryable}): {error_detail}") from e
+                    raise LLMRequestError(
+                        f"Chutes request failed (retryable={is_retryable}): {error_detail}",
+                        retryable=is_retryable,
+                        provider=self.provider,
+                        requested_model=model,
+                        runtime_model=self.chutes_model,
+                        status_code=(e.response.status_code if isinstance(e, httpx.HTTPStatusError) and e.response is not None else None),
+                    ) from e
 
                 retry_after_header = None
                 if isinstance(e, httpx.HTTPStatusError) and e.response is not None:
@@ -684,9 +807,250 @@ class ClaudeClient:
                 backoff_seconds = retry_after_seconds or min(2 ** attempt, 4)
                 await asyncio.sleep(backoff_seconds)
 
-        raise RuntimeError(
+        raise LLMRequestError(
             f"Chutes request failed after {self.chutes_max_retries + 1} attempts: "
-            f"{self._format_chutes_error(last_error) if last_error else 'unknown error'}"
+            f"{self._format_chutes_error(last_error) if last_error else 'unknown error'}",
+            retryable=self._is_retryable_chutes_error(last_error) if last_error is not None else False,
+            provider=self.provider,
+            requested_model=model,
+            runtime_model=self.chutes_model,
+            status_code=(
+                last_error.response.status_code
+                if isinstance(last_error, httpx.HTTPStatusError) and last_error.response is not None
+                else None
+            ),
+        )
+
+    async def _query_chutes_non_stream(
+        self,
+        *,
+        payload: Dict[str, Any],
+        headers: Dict[str, str],
+        timeout: httpx.Timeout,
+    ) -> Dict[str, Any]:
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            response = await client.post(
+                f"{self.base_url.rstrip('/')}/chat/completions",
+                headers=headers,
+                json={**payload, "stream": False},
+            )
+            response.raise_for_status()
+
+        data = response.json()
+        choice = (data.get("choices") or [{}])[0]
+        message = choice.get("message") or {}
+        raw_content = message.get("content", "")
+        content = raw_content
+        if isinstance(raw_content, list):
+            content = "".join(
+                part.get("text", "")
+                for part in raw_content
+                if isinstance(part, dict) and part.get("type") == "text"
+            )
+        reasoning_content = message.get("reasoning_content", "")
+        if isinstance(reasoning_content, list):
+            reasoning_content = "".join(
+                part.get("text", "")
+                for part in reasoning_content
+                if isinstance(part, dict) and part.get("type") == "text"
+            )
+        return {
+            "answer_text": content if isinstance(content, str) else "",
+            "reasoning_text": reasoning_content if isinstance(reasoning_content, str) else "",
+            "stop_reason": choice.get("finish_reason"),
+            "usage": data.get("usage", {}),
+            "chunk_count": 1,
+            "raw_response": data,
+        }
+
+    async def _query_chutes_streaming(
+        self,
+        *,
+        payload: Dict[str, Any],
+        headers: Dict[str, str],
+        timeout: httpx.Timeout,
+    ) -> Dict[str, Any]:
+        answer_parts: List[str] = []
+        reasoning_parts: List[str] = []
+        usage: Dict[str, Any] = {}
+        stop_reason: Optional[str] = None
+        chunk_count = 0
+        raw_events: List[Dict[str, Any]] = []
+
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            async with client.stream(
+                "POST",
+                f"{self.base_url.rstrip('/')}/chat/completions",
+                headers=headers,
+                json={**payload, "stream": True},
+            ) as response:
+                response.raise_for_status()
+                async for line in response.aiter_lines():
+                    if not line:
+                        continue
+                    if not line.startswith("data:"):
+                        continue
+                    data_line = line[len("data:"):].strip()
+                    if not data_line:
+                        continue
+                    if data_line == "[DONE]":
+                        break
+                    try:
+                        event = json.loads(data_line)
+                    except json.JSONDecodeError:
+                        continue
+                    if isinstance(event, dict):
+                        raw_events.append(event)
+                    choice = (event.get("choices") or [{}])[0] if isinstance(event, dict) else {}
+                    delta = choice.get("delta") or {}
+                    content_piece = delta.get("content")
+                    if isinstance(content_piece, str) and content_piece:
+                        answer_parts.append(content_piece)
+                    reasoning_piece = delta.get("reasoning_content")
+                    if isinstance(reasoning_piece, str) and reasoning_piece:
+                        reasoning_parts.append(reasoning_piece)
+                    if choice.get("finish_reason") is not None:
+                        stop_reason = choice.get("finish_reason")
+                    if isinstance(event, dict) and isinstance(event.get("usage"), dict):
+                        usage = event["usage"]
+                    chunk_count += 1
+
+        return {
+            "answer_text": "".join(answer_parts),
+            "reasoning_text": "".join(reasoning_parts),
+            "stop_reason": stop_reason,
+            "usage": usage,
+            "chunk_count": chunk_count,
+            "raw_response": {"events": raw_events},
+        }
+
+    async def _query_chutes_anthropic(
+        self,
+        prompt: str,
+        model: str,
+        max_tokens: int,
+        system_prompt: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Query a Chutes Anthropic-compatible messages endpoint."""
+        disabled_reason = self._get_disabled_reason()
+        if disabled_reason:
+            raise RuntimeError(f"Claude API disabled: {disabled_reason}")
+
+        if not self.api_key:
+            raise RuntimeError("CHUTES_API_KEY not configured")
+
+        payload: Dict[str, Any] = {
+            "model": self.chutes_model,
+            "messages": [{"role": "user", "content": prompt}],
+            "max_tokens": max_tokens,
+        }
+        if system_prompt:
+            payload["system"] = system_prompt
+
+        headers = {
+            "x-api-key": self.api_key,
+            "anthropic-version": os.getenv("CHUTES_ANTHROPIC_VERSION", "2023-06-01"),
+            "content-type": "application/json",
+        }
+
+        last_error: Optional[Exception] = None
+
+        for attempt in range(self.chutes_max_retries + 1):
+            try:
+                timeout = httpx.Timeout(
+                    timeout=self.chutes_timeout_seconds,
+                    connect=min(self.chutes_timeout_seconds, 15.0),
+                )
+                async with httpx.AsyncClient(timeout=timeout) as client:
+                    response = await client.post(
+                        f"{self.base_url.rstrip('/')}/messages",
+                        headers=headers,
+                        json=payload,
+                    )
+                    response.raise_for_status()
+
+                data = response.json()
+                content_blocks = data.get("content") or []
+                content = "".join(
+                    block.get("text", "")
+                    for block in content_blocks
+                    if isinstance(block, dict) and block.get("type") == "text"
+                )
+                usage = data.get("usage", {})
+                input_tokens = usage.get("input_tokens")
+                output_tokens = usage.get("output_tokens")
+                total_tokens = usage.get("total_tokens")
+                if total_tokens is None and input_tokens is not None and output_tokens is not None:
+                    total_tokens = input_tokens + output_tokens
+
+                return {
+                    "content": content,
+                    "model_used": self.chutes_model,
+                    "requested_model": model,
+                    "provider": self.provider,
+                    "raw_response": data,
+                    "tokens_used": {
+                        "input_tokens": input_tokens,
+                        "output_tokens": output_tokens,
+                        "total_tokens": total_tokens,
+                    },
+                    "stop_reason": data.get("stop_reason"),
+                }
+            except Exception as e:
+                last_error = e
+                error_detail = self._format_chutes_error(e)
+                logger.error(
+                    "Chutes Anthropic API request failed (attempt %s/%s): %s",
+                    attempt + 1,
+                    self.chutes_max_retries + 1,
+                    error_detail,
+                )
+                if self._is_insufficient_balance_error(e):
+                    self._disable_api("insufficient balance")
+                    raise LLMRequestError(
+                        f"Chutes Anthropic insufficient balance: {error_detail}",
+                        retryable=False,
+                        provider=self.provider,
+                        requested_model=model,
+                        runtime_model=self.chutes_model,
+                        status_code=(e.response.status_code if isinstance(e, httpx.HTTPStatusError) and e.response is not None else None),
+                    ) from e
+
+                is_retryable = self._is_retryable_chutes_error(e)
+                if not is_retryable or attempt >= self.chutes_max_retries:
+                    raise LLMRequestError(
+                        f"Chutes Anthropic request failed (retryable={is_retryable}): {error_detail}",
+                        retryable=is_retryable,
+                        provider=self.provider,
+                        requested_model=model,
+                        runtime_model=self.chutes_model,
+                        status_code=(e.response.status_code if isinstance(e, httpx.HTTPStatusError) and e.response is not None else None),
+                    ) from e
+
+                retry_after_header = None
+                if isinstance(e, httpx.HTTPStatusError) and e.response is not None:
+                    retry_after_header = e.response.headers.get("Retry-After")
+
+                try:
+                    retry_after_seconds = float(retry_after_header) if retry_after_header else None
+                except (TypeError, ValueError):
+                    retry_after_seconds = None
+
+                backoff_seconds = retry_after_seconds or min(2 ** attempt, 4)
+                await asyncio.sleep(backoff_seconds)
+
+        raise LLMRequestError(
+            f"Chutes Anthropic request failed after {self.chutes_max_retries + 1} attempts: "
+            f"{self._format_chutes_error(last_error) if last_error else 'unknown error'}",
+            retryable=self._is_retryable_chutes_error(last_error) if last_error is not None else False,
+            provider=self.provider,
+            requested_model=model,
+            runtime_model=self.chutes_model,
+            status_code=(
+                last_error.response.status_code
+                if isinstance(last_error, httpx.HTTPStatusError) and last_error.response is not None
+                else None
+            ),
         )
 
     async def get_embedding(
