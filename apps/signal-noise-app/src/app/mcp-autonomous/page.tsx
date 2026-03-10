@@ -97,18 +97,66 @@ export default function MCPAutonomousDashboard() {
   const [mcpServers, setMcpServers] = useState<MCPServerStatus[]>([]);
   const [testResults, setTestResults] = useState<any>(null);
 
+  const fetchSystemStatus = useCallback(async () => {
+    try {
+      const response = await fetch('/api/mcp-autonomous/start');
+      const data = await response.json();
+      
+      if (data.success && data.systemInfo) {
+        setSystemStatus(prev => ({
+          ...prev,
+          ...data.systemInfo,
+          metrics: {
+            ...prev.metrics,
+            ...(data.systemInfo.metrics || {})
+          },
+          config: {
+            ...prev.config,
+            ...(data.systemInfo.config || {})
+          }
+        }));
+        
+        // Only update MCP servers if not already set to prevent loops
+        if (mcpServers.length === 0) {
+          setMcpServers([
+            {
+              tool: 'graph-mcp',
+              status: 'success',
+              responseTime: 45,
+              lastCall: new Date().toISOString()
+            },
+            {
+              tool: 'brightdata-mcp', 
+              status: 'success',
+              responseTime: 1200,
+              lastCall: new Date().toISOString()
+            },
+            {
+              tool: 'perplexity-mcp',
+              status: 'success', 
+              responseTime: 2100,
+              lastCall: new Date().toISOString()
+            }
+          ]);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch system status:', error);
+    }
+  }, [mcpServers.length]);
+
   // Fetch initial system status
   useEffect(() => {
-    fetchSystemStatus();
+    void fetchSystemStatus();
     
     // Set up status polling only when not streaming
     const interval = setInterval(() => {
       if (!isStreaming) {
-        fetchSystemStatus();
+        void fetchSystemStatus();
       }
     }, 10000);
     return () => clearInterval(interval);
-  }, [isStreaming]);
+  }, [fetchSystemStatus, isStreaming]);
 
   // Start SSE streaming for real-time logs
   const startLogStreaming = useCallback(() => {
@@ -157,55 +205,7 @@ export default function MCPAutonomousDashboard() {
   useEffect(() => {
     const cleanup = startLogStreaming();
     return cleanup;
-  }, []); // Remove dependency to prevent re-renders
-
-  const fetchSystemStatus = async () => {
-    try {
-      const response = await fetch('/api/mcp-autonomous/start');
-      const data = await response.json();
-      
-      if (data.success && data.systemInfo) {
-        setSystemStatus(prev => ({
-          ...prev,
-          ...data.systemInfo,
-          metrics: {
-            ...prev.metrics,
-            ...(data.systemInfo.metrics || {})
-          },
-          config: {
-            ...prev.config,
-            ...(data.systemInfo.config || {})
-          }
-        }));
-        
-        // Only update MCP servers if not already set to prevent loops
-        if (mcpServers.length === 0) {
-          setMcpServers([
-            {
-              tool: 'neo4j-mcp',
-              status: 'success',
-              responseTime: 45,
-              lastCall: new Date().toISOString()
-            },
-            {
-              tool: 'brightdata-mcp', 
-              status: 'success',
-              responseTime: 1200,
-              lastCall: new Date().toISOString()
-            },
-            {
-              tool: 'perplexity-mcp',
-              status: 'success', 
-              responseTime: 2100,
-              lastCall: new Date().toISOString()
-            }
-          ]);
-        }
-      }
-    } catch (error) {
-      console.error('Failed to fetch system status:', error);
-    }
-  };
+  }, [startLogStreaming]);
 
   const startMCPAutonomous = async () => {
     if (isStarting) return;
@@ -333,7 +333,7 @@ export default function MCPAutonomousDashboard() {
 
   const getMCPToolIcon = (tool?: string) => {
     switch (tool) {
-      case 'neo4j-mcp': return <Database className="h-3 w-3" />;
+      case 'graph-mcp': return <Database className="h-3 w-3" />;
       case 'brightdata-mcp': return <Search className="h-3 w-3" />;
       case 'perplexity-mcp': return <Brain className="h-3 w-3" />;
       case 'system': return <Cpu className="h-3 w-3" />;
@@ -353,7 +353,7 @@ export default function MCPAutonomousDashboard() {
               MCP-Enabled Autonomous RFP System
             </h1>
             <p className="text-gray-400 mt-2">
-              Direct MCP Integration: Neo4j + BrightData + Perplexity
+              Direct MCP Integration: FalkorDB Graph + BrightData + Perplexity
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -612,7 +612,7 @@ export default function MCPAutonomousDashboard() {
                 <div>
                   <div className="text-sm text-gray-400 mb-1">MCP Integration</div>
                   <div className="space-y-1">
-                    <div className="text-xs text-green-400">• Neo4j (Knowledge Graph)</div>
+                    <div className="text-xs text-green-400">• FalkorDB Graph</div>
                     <div className="text-xs text-green-400">• BrightData (Web Research)</div>
                     <div className="text-xs text-green-400">• Perplexity (Market Intelligence)</div>
                   </div>
@@ -681,8 +681,8 @@ export default function MCPAutonomousDashboard() {
         <Alert className="bg-gray-800 border-gray-700">
           <Network className="h-4 w-4" />
           <AlertDescription className="text-gray-300">
-            <strong>🔌 MCP-Enabled Autonomous System:</strong> Direct integration with Neo4j, BrightData, and Perplexity MCP tools 
-            for intelligent entity processing and RFP detection. System traverses knowledge graph relationships, performs 
+            <strong>🔌 MCP-Enabled Autonomous System:</strong> Direct integration with FalkorDB graph, BrightData, and Perplexity MCP tools 
+            for intelligent entity processing and RFP detection. System traverses graph relationships, performs 
             web research, and generates market intelligence - saving all results to structured JSON format for 24/7 autonomous operation.
             Currently monitoring with {systemStatus?.metrics.totalMcpCalls || 0} MCP tool calls and {systemStatus?.metrics.entitiesProcessed || 0} entities processed.
           </AlertDescription>

@@ -6,7 +6,7 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -271,7 +271,7 @@ export default function RFPDetectionsList() {
   });
 
   // Data fetching functions
-  const fetchDetections = async () => {
+  const fetchDetections = useCallback(async () => {
     try {
       const params = new URLSearchParams({
         limit: '50',
@@ -320,9 +320,9 @@ export default function RFPDetectionsList() {
       setDetections(mockDetections);
       setUsingRealData(false);
     }
-  };
+  }, [filterStatus]);
 
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     try {
       console.log('📊 Fetching real RFP stats from database...');
       const response = await fetch('/api/rfp-intelligence/real-data?includeStats=true&limit=100');
@@ -358,7 +358,7 @@ export default function RFPDetectionsList() {
         average_fit_score: mockDetections.reduce((acc, d) => acc + d.yellow_panther_fit, 0) / mockDetections.length
       });
     }
-  };
+  }, []);
 
   // Initial data load
   useEffect(() => {
@@ -370,8 +370,8 @@ export default function RFPDetectionsList() {
       ]);
       setLoading(false);
     };
-    loadData();
-  }, [filterStatus, filterCategory, sortBy, sortOrder]);
+    void loadData();
+  }, [fetchDetections, fetchStats, filterCategory, sortBy, sortOrder]);
 
   const filteredDetections = detections.filter(detection => {
     const matchesSearch = detection.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -384,10 +384,14 @@ export default function RFPDetectionsList() {
 
   const handleRefresh = async () => {
     setLoading(true);
-    await Promise.all([
-      fetchDetections(),
-      fetchStats()
-    ]);
+    try {
+      await Promise.all([
+        fetchDetections(),
+        fetchStats()
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleExport = () => {
