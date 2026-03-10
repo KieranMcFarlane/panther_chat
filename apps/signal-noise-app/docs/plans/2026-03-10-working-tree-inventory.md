@@ -1,0 +1,467 @@
+# Working Tree Inventory
+
+Generated on 2026-03-10
+
+## api (0)
+(none)
+
+## ui (0)
+(none)
+
+## backend (2)
+ D src/backend/deploy.sh
+ D src/backend/enhanced_rfp_intelligence_backend.py
+
+## tests (3)
+ M backend/tests/test_dossier_phase0_runtime.py
+ M backend/tests/test_entity_pipeline_worker.py
+?? backend/tests/test_graph_identity_alignment.py
+
+## docs (0)
+(none)
+
+## scripts (13)
+ M claude-code-rfp-automation-fixed.sh
+ M claude-code-rfp-automation.sh
+ M deploy-to-ec2.sh
+ M deploy-to-vps.sh
+ M docs/end-to-end-system-demo/scripts/run_end_to_end_demo.py
+ D restore-complete-neo4j.sh
+ D restore-comprehensive-neo4j.sh
+ D restore-neo4j-from-supabase.sh
+ D restore-sample-neo4j.sh
+ M test-ssh-connection.sh
+ D verify-neo4j-20-entities.sh
+?? run-perplexity-hybrid-rfp.sh
+?? scripts/check-pipeline-runtime.sh
+
+## other (429)
+ M ../../.DS_Store
+ M ../../.gitignore
+ M .env.local.example
+ M .env.production
+ M .gitignore
+ M .mcp.json
+ M .serena/project.yml
+ D DEPLOYMENT-GUIDE.md
+ D ENRICHMENT_IMPLEMENTATION.md
+ D FINAL-PHASE-DEPLOYMENT-STRATEGY.md
+ D OPTIMIZED-RFP-SYSTEM-SUMMARY.md
+ D RFP-INTELLIGENCE-DEPLOYMENT.md
+ D RFP_MONITORING_EXECUTION_REPORT_2025-11-02.json
+ D RFP_MONITORING_REPORT_2025-10-28.json
+ D RFP_MONITORING_RESULTS_2025-10-28.json
+ D add-sunderland-to-neo4j.js
+ D assign-neo4j-ids.js
+ M automated-database-sync-mcp.js
+ D automated-database-sync.js
+ D backend/batch_test_log.txt
+ M backend/brightdata_sdk_client.py
+ M backend/dossier_data_collector.py
+ D backend/enrich_formula1_yellow_panther.py
+ D backend/enrich_golf_premium_yellow_panther.py
+ D backend/enrich_league_one_yellow_panther.py
+ D backend/enrich_league_two_yellow_panther.py
+ D backend/enrich_olympic_linkedin_brightdata.py
+ D backend/enrich_olympic_sports_yellow_panther.py
+ D backend/enrich_poi_brightdata.py
+ D backend/enrich_specific_brightdata.py
+ D backend/enrich_teams_real.py
+ M backend/entity_pipeline_worker.py
+ M backend/extract_from_supabase.py
+ M backend/falkordb_cloud_import.py
+ D backend/import_tenders_from_json.py
+ M backend/import_to_falkordb.py
+ D backend/neo4j_client.py
+ M backend/pipeline_run_metadata.py
+ D backend/requirements.ralph.txt
+ D backend/requirements.txt
+ D backend/seed_linkedin_tenders.py
+ D backend/seed_sports_entities.py
+ D backend/test_db_connection.py
+ D backend/test_golf_enrichment.py
+ D backend/test_setup.py
+ D check-neo4j-database.js
+ D check-neo4j-id-coverage.js
+ D docs/DUAL-STORAGE-STRUCTURE.md
+ D docs/GOLF_ENRICHMENT_IMPLEMENTATION.md
+ D docs/LINKEDIN_CONNECTION_ANALYSIS_SPEC.md
+ M docs/README.md
+ D docs/SETUP_SUMMARY.md
+ D docs/SMART-SYNC-CRON.md
+ D docs/fix-mcp-params.md
+ D explore-neo4j-basic.js
+ D explore-neo4j-simple.js
+ D full-migration-neo4j.js
+ M mcp-config-perplexity-rfp.json
+ M migrate-entities.js
+ D migrate-neo4j-direct.js
+ D migrate-supabase-to-neo4j-fixed.js
+ D migrate-supabase-to-neo4j.js
+ D missing-entity-analysis-1760941553483.json
+ D neo4j-database-analysis-1760940113922.json
+ D neo4j-mcp-server.js
+ D neo4j-migration-report-1760938486860.json
+ D neo4j-migration.js
+ D neo4j-rfp-detector.js
+ D neo4j-schema-level3.cypher
+ D neo4j-supabase-badge-sync.json
+ M next-env.d.ts
+ M package-lock.json
+ M package.json
+ M production-deploy/README.md
+ D query-sports-entities-neo4j.js
+ D rfp-monitor-neo4j-mcp.js
+ M run_end_to_end_demo.py
+ D scripts/live-neo4j-rfp-demo.js
+ D scripts/live-rfp-capture-neo4j.js
+ D scripts/rfp-neo4j-integration.js
+ D scripts/test-neo4j.js
+ D signal-noise-app.tar.gz
+ D simple-neo4j-test.js
+ M src/app/api/activities/route.ts
+ M src/app/api/ai-agent/config/route.ts
+ M src/app/api/ai-agent/process/route.ts
+ M src/app/api/ai-agent/test/route.ts
+ M src/app/api/analyze-sales-pipeline/route.ts
+ M src/app/api/auth/[...all]/route.ts
+ M src/app/api/automation-results/latest/route.ts
+ M src/app/api/autonomous-rfp/start/route.ts
+ M src/app/api/autonomous-rfp/status/route.ts
+ M src/app/api/batch-process/route.ts
+ M src/app/api/batch/enrichment/route.ts
+ M src/app/api/claude-agent-demo/execute/route.ts
+ D src/app/api/claude-agent-demo/stream/route-old.ts
+ M src/app/api/claude-agent-demo/stream/route.ts
+ M src/app/api/claude-agent/activity/route.ts
+ M src/app/api/claude-agent/chat/route.ts
+ M src/app/api/claude-agent/execute/route.ts
+ M src/app/api/claude-agent/route.ts
+ M src/app/api/claude-agents/enrichment/route.ts
+ M src/app/api/claude-agents/slash/route.ts
+ M src/app/api/conventions/route.ts
+ M src/app/api/copilotkit/route.ts
+ M src/app/api/demo-claude-scan/route.ts
+ M src/app/api/dossier/route.ts
+ M src/app/api/enrich-entity/route.ts
+ M src/app/api/entities/[entityId]/dossier/route.ts
+ M src/app/api/entities/[entityId]/route.ts
+ M src/app/api/entities/cache-sync/route.ts
+ M src/app/api/entities/route.ts
+ M src/app/api/entities/search/route.ts
+ M src/app/api/entities/summary/route.ts
+ M src/app/api/entity-dossiers/sunderland/route.ts
+ M src/app/api/entity-import/route.ts
+ M src/app/api/entity-pipeline/route.ts
+ M src/app/api/entity-scaling/route.ts
+ M src/app/api/get-system-summary/route.ts
+ M src/app/api/graph/relationships-cache/route.ts
+ M src/app/api/graph/relationships/route.ts
+ M src/app/api/graphrag/route.ts
+ M src/app/api/health/route.ts
+ M src/app/api/historical-batch-processor/route.ts
+ M src/app/api/home/metrics/route.ts
+ M src/app/api/intelligent-enrichment/route.ts
+ M src/app/api/knowledge-graph/enrich/route.ts
+ M src/app/api/mailbox/get/route.ts
+ M src/app/api/mailbox/list/route.ts
+ M src/app/api/mcp-autonomous/start/route.ts
+ M src/app/api/mcp-autonomous/stream/route.ts
+ M src/app/api/mcp-autonomous/test/route.ts
+ M src/app/api/mcp-autonomous/validate/route.ts
+ M src/app/api/mcp-debug/route.ts
+ M src/app/api/mcp-direct/test/route.ts
+ M src/app/api/mcp/neo4j/route.ts
+ M src/app/api/mcp/neo4j/search/route.ts
+ M src/app/api/migration/complete-restore-server-action/route.ts
+ M src/app/api/migration/complete-restore/route.ts
+ M src/app/api/migration/full-restore/route.ts
+ M src/app/api/migration/get-batch/route.ts
+ M src/app/api/migration/neo4j-restore/route.ts
+ M src/app/api/migration/sample-restore/route.ts
+ M src/app/api/neo4j-query/route.ts
+ M src/app/api/person/[personId]/route.ts
+ M src/app/api/ralph/analytics/evidence-impact/route.ts
+ M src/app/api/rfp-autonomous-scan/route.ts
+ M src/app/api/rfp-execute/route.ts
+ M src/app/api/rfp-intelligence/analyze/route.ts
+ M src/app/api/rfp-intelligence/real-data/route.ts
+ M src/app/api/rfp-scan-control/route.ts
+ M src/app/api/rfp-storage/route.ts
+ M src/app/api/rfp-vision-analysis/route.ts
+ M src/app/api/run-agent/route.ts
+ M src/app/api/search/route.ts
+ M src/app/api/setup-connection-mines/activate/route.ts
+ M src/app/api/sports-entities/route.ts
+ M src/app/api/sync/incremental/route.ts
+ M src/app/api/sync/neo4j-to-supabase/route.ts
+ M src/app/api/temporal/patterns/route.ts
+ M src/app/api/tenders/route.ts
+ D src/app/api/tenders/route.ts.bak
+ M src/app/api/test-claude-agent/route.ts
+ M src/app/api/test-direct-rfp-search/route.ts
+ M src/app/api/test-final-rfp-verification/route.ts
+ M src/app/api/test-headless-mcp-bus/route.ts
+ M src/app/api/test-mcp-headless/route.ts
+ M src/app/api/traversal-enrichment/route.ts
+ M src/app/api/verification/route.ts
+ M src/app/api/verify-perplexity-rfps/route.ts
+ M src/app/api/webhook/enhanced-rfp-monitoring/route.ts
+ M src/app/api/webhook/linkedin-connection-analysis/route.ts
+ D src/app/api/webhook/linkedin-procurement/route.ts.backup
+ M src/app/api/webhook/linkedin-rfp-claude/route.ts
+ M src/app/api/webhook/network-monitoring/route.ts
+ M src/app/api/webhook/setup-connection-mines/route.ts
+ M src/app/entity-browser/[entityId]/dossier/client-page.tsx
+ M src/app/entity-browser/client-page.tsx
+ M src/app/entity-browser/complex-page.tsx
+ M src/app/entity-browser/page.tsx
+ M src/app/entity-browser/simple-test-with-email.tsx
+ M src/app/entity-import/[batchId]/[entityId]/page.tsx
+ M src/app/entity/[entityId]/client-page.tsx
+ M src/app/entity/[entityId]/page.tsx
+ M src/app/globals.css
+ M src/app/graph/page.tsx
+ M src/app/layout.tsx
+ M src/app/mcp-autonomous/page.tsx
+ M src/app/mcp-test/page.tsx
+ M src/app/person/[personId]/client-page.tsx
+ M src/app/rfp-intelligence/entity-browser.tsx
+ M src/app/sports-dashboard/page.tsx
+ M src/app/tenders/page.tsx
+ D src/app/tenders/page.tsx.bak
+ M src/components/ClaudeChat.tsx
+ M src/components/ClaudeChatCopilotKit.tsx
+ M src/components/EntityCard.tsx
+ M src/components/LeagueNavigator.tsx
+ M src/components/LiveRFPScanner.tsx
+ M src/components/SystemSummary.tsx
+ M src/components/ThinkingDisplay.tsx
+ M src/components/VectorSearch.tsx
+ M src/components/badge/BadgeManagementDashboard.tsx
+ M src/components/badge/BadgeUsageExamples.tsx
+ M src/components/badge/EntityBadge.tsx
+ D src/components/badge/EntityBadge.tsx.backup
+ M src/components/calendar/ConventionCalendar.tsx
+ M src/components/chat/StreamingChatSidebar.tsx
+ M src/components/chat/TabbedChatSidebar.tsx
+ M src/components/claude-agent/ClaudeAgentDashboard.tsx
+ M src/components/copilotkit/ClaudeCopilotSidebar.tsx
+ M src/components/enhanced-copilot-sidebar.tsx
+ M src/components/entity-detail-tabs/EntityDetailTabs.tsx
+ M src/components/entity-dossier/EnhancedClubDossier.tsx
+ M src/components/entity-dossier/dossier-schema.json
+ M src/components/entity-dossier/types.ts
+ M src/components/entity-import/SingleEntityPipelineForm.tsx
+ D src/components/graph/GraphVisualizationClient.tsx.backup
+ M src/components/graph/GraphWrapper.tsx
+ M src/components/header/LeagueNav.tsx
+ M src/components/header/LeagueNavSimple.tsx
+ M src/components/home/FeatureCards.tsx
+ M src/components/home/QuickActions.tsx
+ M src/components/home/SystemStatusPanel.tsx
+ M src/components/layout/AppNavigation.tsx
+ M src/components/layout/EnhancedSidebar.tsx
+ M src/components/mcp/MCPActions.tsx
+ M src/components/styled-copilot-sidebar.tsx
+ M src/components/sync/SyncDashboard.tsx
+ M src/components/temporal/TemporalIntelligenceTools.tsx
+ M src/contexts/ClubNavigationContext.tsx
+ M src/lib/activity-logger.ts
+ M src/lib/agents/StreamingClaudeAgent.ts
+ M src/lib/auth-client.ts
+ M src/lib/auth.ts
+ M src/lib/claude-agent-actions.ts
+ M src/lib/claude-agent-rfp-intelligence.ts
+ M src/lib/claude-glm4v-integration.ts
+ M src/lib/direct-mcp-client.ts
+ M src/lib/enhanced-historical-batch-processor.ts
+ M src/lib/entity-import-mapper.ts
+ M src/lib/entity-import-schema.ts
+ M src/lib/entity-loader.ts
+ M src/lib/entity-scaling-manager.ts
+ M src/lib/mcp-registration.ts
+ M src/lib/mcp-tool-executor.ts
+ M src/lib/mcp/DirectMCPIntegration.ts
+ M src/lib/mcp/FixedMCPClientBus.ts
+ M src/lib/mcp/HTTPMCPClient.ts
+ M src/lib/mcp/MCPClientBus.ts
+ M src/lib/mcp/StreamingDirectMCP.ts
+ M src/lib/mcp/index.ts
+ D src/lib/neo4j.ts
+ M src/lib/ralph-analytics-helper.ts
+ M src/lib/real-headless-verifier.ts
+ M src/lib/scalable-retroactive-discovery.ts
+ M src/lib/sports-rfp-monitor.ts
+ M src/lib/supabase-cache.ts
+ M src/mastra/agents/index.ts
+ D src/mastra/tools/neo4j-helper.ts
+ D src/mastra/tools/neo4j-tools.ts
+ M src/mastra/tools/sports-intelligence-tools.ts
+ M src/mcp/claude-agent-mcp-config.ts
+ M src/services/AutonomousRFPManager.ts
+ M src/services/ClaudeAgentCronScheduler.ts
+ M src/services/ClaudeAgentSDKService.ts
+ M src/services/ClaudeAgentScheduler.ts
+ M src/services/CleanClaudeAgentService.ts
+ M src/services/ConnectionIntelligenceAgent.ts
+ M src/services/ContinuousReasoningService.ts
+ M src/services/EntityCacheService.ts
+ M src/services/EntityDossierEnrichmentService.ts
+ M src/services/HeadlessClaudeAgentService.ts
+ M src/services/HeadlessClaudeAgentServiceFixed.ts
+ M src/services/IntelligentEnrichmentScheduler.ts
+ M src/services/IntelligentEntityEnrichmentService.ts
+ M src/services/KeywordMinesService.ts
+ M src/services/LiveLogService.ts
+ M src/services/MCPEnabledAutonomousRFPManager.ts
+ M src/services/ParallelClaudeAgentService.ts
+ M src/services/PersistentRFPService.ts
+ M src/services/PredictiveReasoningEngine.ts
+ M src/services/RFPStorageService.ts
+ M src/services/RealtimeSyncService.ts
+ M src/services/ReliableClaudeService.ts
+ M src/services/SharedClaudeAgentManager.ts
+ M src/services/WorkingIntelligentEntityEnrichmentService.ts
+ M src/services/badge-manager.ts
+ M src/types/badge.ts
+ M src/types/tab-system.ts
+ M src/types/thread-system.ts
+ D sync-neo4j-badges.js
+ D test-correct-neo4j.js
+ D test-full-neo4j.js
+ D test-neo4j-connection.js
+ D test-neo4j-count.js
+ D test-neo4j-mcp-debug.js
+ D test-neo4j-mcp.js
+ M tests/test-entity-dossier-surfacing.mjs
+ M tests/test-entity-import-schema.mjs
+ M tests/test-entity-pipeline-api.mjs
+ M tests/test-entity-pipeline-page.mjs
+ M tests/test-entity-run-detail.mjs
+ m ../sports-intelligence-investigation
+ m ../yellow-panther-ai/unified-sports-intelligence/crawl4ai-rag
+ m ../../archive/canvas-with-mastra-reference
+?? .data/
+?? .next.preclean.1772524736/
+?? .next.preclean.1773125797/
+?? .pytest_cache/
+?? .venv/
+?? .venv312/
+?? BATCH_GENERATOR_SUPABASE_INTEGRATION.md
+?? COVENTRY_CITY_TEST_SUMMARY.md
+?? DOSSIER-SCALABLE-SYSTEM-IMPLEMENTATION.md
+?? DOSSIER-SYSTEM-QUICK-REF.md
+?? DOSSIER-SYSTEM-SUMMARY.md
+?? ENHANCED_PERPLEXITY_RFP_SYSTEM_README.md
+?? ENTITY-JOURNEY-WALKTHROUGH.md
+?? IMPLEMENTATION_COMPLETE.md
+?? INTEGRATION_GUIDE.md
+?? PERPLEXITY_HYBRID_RFP_README.md
+?? RFP_QUICK_REFERENCE.md
+?? SUPABASE_DOSSIER_COLLECTOR_SUMMARY.md
+?? backend/data/dossiers/_batch_summary_20260222_175703.json
+?? backend/data/dossiers/_batch_summary_20260222_180803.json
+?? backend/data/dossiers/_batch_summary_20260222_183140.json
+?? backend/data/dossiers/_batch_summary_20260222_183838.json
+?? backend/data/dossiers/_intermediate_results.json
+?? backend/data/dossiers/basic/
+?? backend/data/dossiers/coventry-city-fc_discovery_20260227_071908.json
+?? backend/data/dossiers/coventry-city-fc_discovery_fixed_20260227_075257.json
+?? backend/data/dossiers/coventry-city-fc_discovery_fixed_20260227_080022.json
+?? backend/data/dossiers/coventry-city-fc_discovery_fixed_20260227_080603.json
+?? backend/data/dossiers/coventry-city-fc_discovery_fixed_20260227_082557.json
+?? backend/data/dossiers/coventry-city-fc_discovery_fixed_20260227_083906.json
+?? backend/data/dossiers/coventry-city-fc_dossier_enriched_20260227_071908.json
+?? backend/data/dossiers/coventry-city-fc_dossier_fixed_20260227_075257.json
+?? backend/data/dossiers/coventry-city-fc_dossier_fixed_20260227_080022.json
+?? backend/data/dossiers/coventry-city-fc_dossier_fixed_20260227_080603.json
+?? backend/data/dossiers/coventry-city-fc_dossier_fixed_20260227_082557.json
+?? backend/data/dossiers/coventry-city-fc_dossier_fixed_20260227_083906.json
+?? backend/data/dossiers/coventry-city-fc_scores_20260227_071908.json
+?? backend/data/dossiers/coventry-city-fc_scores_fixed_20260227_075257.json
+?? backend/data/dossiers/coventry-city-fc_scores_fixed_20260227_080022.json
+?? backend/data/dossiers/coventry-city-fc_scores_fixed_20260227_080603.json
+?? backend/data/dossiers/coventry-city-fc_scores_fixed_20260227_082557.json
+?? backend/data/dossiers/coventry-city-fc_scores_fixed_20260227_083906.json
+?? backend/data/dossiers/premium/
+?? backend/data/dossiers/standard/
+?? coventry_city_fc_dossier.md
+?? data/dossier_templates/
+?? data/dossiers/
+?? docs/DOSSIER-SYSTEM-COMPLETE-GUIDE.md
+?? docs/DOSSIER-SYSTEM-IDENTIFICATION.md
+?? docs/data/demo_steps/01_coventry-city-fc_20260226_044301.json
+?? docs/data/demo_steps/01_coventry-city-fc_20260226_045644.json
+?? docs/data/demo_steps/02_coventry-city-fc_20260226_044542.json
+?? docs/data/demo_steps/02_coventry-city-fc_20260226_050201.json
+?? docs/data/demo_steps/03_coventry-city-fc_20260226_044542.json
+?? docs/data/demo_steps/03_coventry-city-fc_20260226_050201.json
+?? docs/data/demo_steps/04_coventry-city-fc_20260226_044542.json
+?? docs/data/demo_steps/04_coventry-city-fc_20260226_050202.json
+?? docs/data/demo_steps/05_coventry-city-fc_20260226_044542.json
+?? docs/data/demo_steps/05_coventry-city-fc_20260226_050202.json
+?? docs/data/demo_steps/06_coventry-city-fc_20260226_044542.json
+?? docs/data/demo_steps/06_coventry-city-fc_20260226_050202.json
+?? docs/data/end_to_end_results.json
+?? docs/plans/2026-02-28-browser-noise-history-cleanup.md
+?? docs/plans/2026-03-05-phase0-blocker-and-full-pipeline-plan.md
+?? docs/plans/2026-03-10-pipeline-stabilization-and-e2e-validation.md
+?? docs/plans/graph-id-storage-migration.md
+?? end_to_end_demo_results.json
+?? generate_coventry_dossier.py
+?? legacy/
+?? run_dossier_first_pipeline.py
+?? run_enhanced_perplexity_hybrid_system.py
+?? run_fixed_dossier_pipeline.py
+?? run_perplexity_hybrid_detector.py
+?? run_perplexity_hybrid_rfp_detector.py
+?? scripts/check-pipeline-env.mjs
+?? src/app/api/admin/
+?? src/app/api/entities/taxonomy/
+?? src/app/api/logs/
+?? src/app/api/sync/graph-to-supabase/
+?? src/app/not-found.tsx
+?? src/components/layout/AppShell.tsx
+?? src/lib/auth-url.ts
+?? src/lib/dossier-entity.ts
+?? src/lib/entity-lookup.ts
+?? src/lib/falkordb.ts
+?? src/lib/feature-flags.ts
+?? src/lib/graph-id.ts
+?? src/lib/graph-store.ts
+?? src/mastra/tools/graph-helper.ts
+?? src/mastra/tools/graph-tools.ts
+?? src/middleware.ts
+?? src/pages/
+?? supabase/migrations/20260303_backfill_entity_dossier_canonical_ids.sql
+?? supabase/migrations/20260303_cleanup_cached_entity_identity_props.sql
+?? supabase/migrations/20260303_cleanup_legacy_embedded_and_orphan_dossiers.sql
+?? supabase/migrations/20260309_add_graph_id_dual_write_columns.sql
+?? supabase/migrations/20260309_backfill_relationship_element_graph_ids.sql
+?? test_rfp_detection_results_20260223_031345.json
+?? test_rfp_detection_results_20260223_031501.json
+?? tests/test-api-build-guards.mjs
+?? tests/test-auth-middleware.mjs
+?? tests/test-auth-url-config.mjs
+?? tests/test-badge-management-build-guards.mjs
+?? tests/test-build-config-fallbacks.mjs
+?? tests/test-build-noise-guards.mjs
+?? tests/test-cached-entity-identity-cleanup-migration.mjs
+?? tests/test-dependency-guards.mjs
+?? tests/test-dossier-canonical-backfill-migration.mjs
+?? tests/test-dossier-canonical-entity-id.mjs
+?? tests/test-dossier-cleanup-migration.mjs
+?? tests/test-dynamic-route-guards.mjs
+?? tests/test-entity-cache-neo4j-id-sync.mjs
+?? tests/test-entity-dossier-generation-route.mjs
+?? tests/test-entity-lookup-filters.mjs
+?? tests/test-entity-route-compatibility.mjs
+?? tests/test-falkordb-graph-rewire.mjs
+?? tests/test-feedback-remediation-contracts.mjs
+?? tests/test-mcp-build-guards.mjs
+?? tests/test-pages-compatibility.mjs
+?? tests/test-ralph-analytics-build-guards.mjs
+?? tests/test-ralph-evidence-impact-build-guards.mjs
+?? tests/test-runtime-side-effect-guards.mjs
+?? tsconfig.tsbuildinfo
