@@ -1,5 +1,6 @@
 import builtins
 import asyncio
+import json
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -127,6 +128,18 @@ async def test_phase2_seeds_discovery_official_site_from_generator_cache():
     assert pipeline.discovery.current_official_site_url == "https://www.ccfc.co.uk"
     assert captured["dossier"]["metadata"]["website"] == "https://www.ccfc.co.uk"
     assert captured["dossier"]["metadata"]["canonical_sources"]["official_site"] == "https://www.ccfc.co.uk"
+
+
+def test_lookup_official_site_from_recent_artifacts_uses_latest_entry(tmp_path):
+    pipeline = FixedDossierFirstPipeline.__new__(FixedDossierFirstPipeline)
+    pipeline.output_dir = tmp_path
+
+    older = tmp_path / "coventry-city-fc_dossier_fixed_20260310_010101.json"
+    latest = tmp_path / "coventry-city-fc_dossier_fixed_20260311_020202.json"
+    older.write_text(json.dumps({"metadata": {"canonical_sources": {"official_site": "https://old.example.com"}}}))
+    latest.write_text(json.dumps({"metadata": {"canonical_sources": {"official_site": "www.ccfc.co.uk"}}}))
+
+    assert pipeline._lookup_official_site_from_recent_artifacts("coventry-city-fc") == "https://www.ccfc.co.uk"
 
 
 def test_extract_publication_date_handles_missing_dateutil(monkeypatch):

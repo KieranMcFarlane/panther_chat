@@ -45,6 +45,7 @@ import logging
 import os
 import time
 from importlib import import_module
+from pathlib import Path
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional, Any, Tuple, Callable, Awaitable
 from dataclasses import dataclass, field
@@ -637,6 +638,7 @@ class HypothesisDrivenDiscovery:
         self._official_site_content_cache: Dict[str, Dict[str, Any]] = {}
         self._official_site_evaluation_cache: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
         self._resolved_url_context: Dict[str, Dict[str, str]] = {}
+        self._official_site_url_cache = self._load_official_site_url_cache()
         self.current_official_site_url: Optional[str] = None
         self.max_consecutive_no_progress_iterations = int(os.getenv("DISCOVERY_MAX_CONSECUTIVE_NO_PROGRESS", "3"))
         self.search_timeout_seconds = float(os.getenv("DISCOVERY_SEARCH_TIMEOUT_SECONDS", "12"))
@@ -1394,6 +1396,11 @@ class HypothesisDrivenDiscovery:
             self.current_official_site_url = known_official_url
             return known_official_url
 
+        cached_url = self._get_cached_official_site_url(entity_name)
+        if cached_url:
+            self.current_official_site_url = cached_url
+            return cached_url
+
         official_site_result = await self._search_engine_with_timeout(
             query=f'"{entity_name}" official website',
             engine='google',
@@ -1408,6 +1415,7 @@ class HypothesisDrivenDiscovery:
         if resolved_url:
             self._cache_resolved_url_context(resolved_url, best_result)
             self.current_official_site_url = resolved_url
+            self._store_cached_official_site_url(entity_name, resolved_url)
         return resolved_url
 
     async def _try_direct_site_paths(
@@ -2667,6 +2675,60 @@ class HypothesisDrivenDiscovery:
         if not title and not snippet:
             return
         self._resolved_url_context[url] = {"title": title, "snippet": snippet}
+
+    def _official_site_cache_file(self) -> Path:
+        cache_path = os.getenv("DISCOVERY_OFFICIAL_SITE_CACHE_PATH", "backend/data/dossiers/official_site_cache.json")
+        return Path(cache_path)
+
+    def _load_official_site_url_cache(self) -> Dict[str, str]:
+        cache_file = self._official_site_cache_file()
+        try:
+            if not cache_file.exists():
+                return {}
+            payload = json.loads(cache_file.read_text())
+            if not isinstance(payload, dict):
+                return {}
+            cache: Dict[str, str] = {}
+            for key, value in payload.items():
+                if not isinstance(key, str):
+                    continue
+                normalized = self._normalize_http_url(value)
+                if normalized:
+                    cache[key] = normalized
+            return cache
+        except Exception:
+            return {}
+
+    def _get_cached_official_site_url(self, entity_name: str) -> Optional[str]:
+        if not isinstance(entity_name, str):
+            return None
+        normalized_key = entity_name.strip().casefold()
+        if not normalized_key:
+            return None
+        cache = getattr(self, "_official_site_url_cache", None)
+        if not isinstance(cache, dict):
+            return None
+        value = cache.get(normalized_key)
+        return self._normalize_http_url(value)
+
+    def _store_cached_official_site_url(self, entity_name: str, url: str) -> None:
+        normalized_key = entity_name.strip().casefold() if isinstance(entity_name, str) else ""
+        normalized_url = self._normalize_http_url(url)
+        if not normalized_key or not normalized_url:
+            return
+
+        cache = getattr(self, "_official_site_url_cache", None)
+        if not isinstance(cache, dict):
+            cache = {}
+            self._official_site_url_cache = cache
+
+        cache[normalized_key] = normalized_url
+        cache_file = self._official_site_cache_file()
+        try:
+            cache_file.parent.mkdir(parents=True, exist_ok=True)
+            cache_file.write_text(json.dumps(cache, indent=2, sort_keys=True))
+        except Exception as cache_error:
+            logger.debug("Failed to persist official-site cache: %s", cache_error)
 
     async def _evaluate_content_with_claude(
         self,

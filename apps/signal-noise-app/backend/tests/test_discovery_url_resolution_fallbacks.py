@@ -1,4 +1,5 @@
 import sys
+import json
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -114,3 +115,33 @@ def test_fallback_result_with_reason_detects_careers_terms_without_context_keywo
 
     assert result["decision"] == "WEAK_ACCEPT"
     assert result["confidence_delta"] > 0
+
+
+@pytest.mark.asyncio
+async def test_resolve_official_site_url_uses_persistent_cache_before_search():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.current_official_site_url = None
+    discovery._official_site_url_cache = {"coventry city fc": "https://www.ccfc.co.uk"}
+
+    async def _unexpected_search(*args, **kwargs):  # pragma: no cover - should never run
+        raise AssertionError("search should not be called when cache has official URL")
+
+    discovery._search_engine_with_timeout = _unexpected_search
+
+    resolved = await discovery._resolve_official_site_url("Coventry City FC")
+    assert resolved == "https://www.ccfc.co.uk"
+    assert discovery.current_official_site_url == "https://www.ccfc.co.uk"
+
+
+def test_store_cached_official_site_url_persists_to_disk(tmp_path, monkeypatch):
+    cache_file = tmp_path / "official_site_cache.json"
+    monkeypatch.setenv("DISCOVERY_OFFICIAL_SITE_CACHE_PATH", str(cache_file))
+
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery._official_site_url_cache = {}
+
+    discovery._store_cached_official_site_url("Coventry City FC", "www.ccfc.co.uk")
+
+    assert cache_file.exists()
+    payload = json.loads(cache_file.read_text())
+    assert payload["coventry city fc"] == "https://www.ccfc.co.uk"

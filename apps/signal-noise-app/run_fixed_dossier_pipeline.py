@@ -211,6 +211,8 @@ class FixedDossierFirstPipeline:
                     known_official_site = getter(entity_id)
                 except Exception as seed_error:  # noqa: BLE001
                     logger.debug("Could not fetch seeded official site for %s: %s", entity_id, seed_error)
+            if not known_official_site:
+                known_official_site = self._lookup_official_site_from_recent_artifacts(entity_id)
 
             if isinstance(known_official_site, str) and known_official_site.strip():
                 metadata = dossier_payload.setdefault("metadata", {})
@@ -272,6 +274,48 @@ class FixedDossierFirstPipeline:
         logger.info(f"   - Signals: {len(result.signals_discovered)}")
 
         return result
+
+    def _lookup_official_site_from_recent_artifacts(self, entity_id: str) -> str | None:
+        """Load the most recent official site URL from saved dossier artifacts."""
+        output_dir = Path(getattr(self, "output_dir", "backend/data/dossiers"))
+        if not output_dir.exists():
+            return None
+
+        pattern = f"{entity_id}_dossier_fixed_*.json"
+        for dossier_path in sorted(output_dir.glob(pattern), reverse=True):
+            try:
+                payload = json.loads(dossier_path.read_text())
+            except Exception:
+                continue
+
+            metadata = payload.get("metadata") if isinstance(payload, dict) else None
+            canonical_sources = metadata.get("canonical_sources") if isinstance(metadata, dict) else None
+            candidates = [
+                canonical_sources.get("official_site") if isinstance(canonical_sources, dict) else None,
+                metadata.get("website") if isinstance(metadata, dict) else None,
+                payload.get("official_site_url") if isinstance(payload, dict) else None,
+                payload.get("website") if isinstance(payload, dict) else None,
+            ]
+            for candidate in candidates:
+                normalized = self._normalize_http_url(candidate)
+                if normalized:
+                    logger.info("♻️ Using official-site fallback from artifact: %s", normalized)
+                    return normalized
+
+        return None
+
+    @staticmethod
+    def _normalize_http_url(candidate: Any) -> str | None:
+        if not isinstance(candidate, str):
+            return None
+        value = candidate.strip()
+        if not value:
+            return None
+        if value.startswith(("http://", "https://")):
+            return value.rstrip("/")
+        if value.startswith("www.") or "." in value:
+            return f"https://{value.lstrip('/').rstrip('/')}"
+        return None
 
     async def _phase_3_calculate_scores(
         self,
