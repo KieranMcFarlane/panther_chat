@@ -175,3 +175,38 @@ async def test_execute_hop_increments_failure_counts_on_url_resolution_timeout()
     assert result["decision"] == "NO_PROGRESS"
     assert state.hop_failure_counts.get("official_site") == 1
     assert state.last_failed_hop == "official_site"
+
+
+@pytest.mark.asyncio
+async def test_execute_hop_increments_failure_counts_on_scrape_failure():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.url_resolution_timeout_seconds = 1.0
+    discovery._last_url_resolution_metrics = {}
+    discovery._resolved_url_context = {}
+    discovery.total_cost_usd = 0.0
+    discovery.max_content_chars_for_evaluation = 2000
+    discovery.pdf_extractor = None
+
+    async def _get_url_for_hop(*_args, **_kwargs):
+        return "https://www.ccfc.co.uk/"
+
+    class _FailingBrightDataClient:
+        async def scrape_as_markdown(self, _url):
+            return {"status": "error", "error": "timeout"}
+
+    discovery._get_url_for_hop = _get_url_for_hop
+    discovery.brightdata_client = _FailingBrightDataClient()
+
+    state = SimpleNamespace(
+        current_depth=1,
+        increment_depth_count=lambda _depth: None,
+        hop_failure_counts={},
+        last_failed_hop=None,
+    )
+    hypothesis = SimpleNamespace(metadata={})
+
+    result = await discovery._execute_hop(HopType.OFFICIAL_SITE, hypothesis, state)
+
+    assert result["decision"] == "NO_PROGRESS"
+    assert state.hop_failure_counts.get("official_site") == 1
+    assert state.last_failed_hop == "official_site"

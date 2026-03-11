@@ -1074,6 +1074,19 @@ class HypothesisDrivenDiscovery:
                 'performance': performance
             }
 
+        def record_hop_failure() -> int:
+            hop_type_str = hop_type.value if hasattr(hop_type, 'value') else str(hop_type)
+            if not hasattr(state, 'hop_failure_counts'):
+                state.hop_failure_counts = {}
+            if not hasattr(state, 'last_failed_hop'):
+                state.last_failed_hop = None
+            if hop_type_str == state.last_failed_hop:
+                state.hop_failure_counts[hop_type_str] = state.hop_failure_counts.get(hop_type_str, 0) + 1
+            else:
+                state.hop_failure_counts[hop_type_str] = 1
+                state.last_failed_hop = hop_type_str
+            return state.hop_failure_counts.get(hop_type_str, 1)
+
         # Track depth iteration
         state.increment_depth_count(state.current_depth)
 
@@ -1086,21 +1099,12 @@ class HypothesisDrivenDiscovery:
                 timeout=url_resolution_timeout_seconds,
             )
         except asyncio.TimeoutError:
-            hop_type_str = hop_type.value if hasattr(hop_type, 'value') else str(hop_type)
-            if not hasattr(state, 'hop_failure_counts'):
-                state.hop_failure_counts = {}
-            if not hasattr(state, 'last_failed_hop'):
-                state.last_failed_hop = None
-            if hop_type_str == state.last_failed_hop:
-                state.hop_failure_counts[hop_type_str] = state.hop_failure_counts.get(hop_type_str, 0) + 1
-            else:
-                state.hop_failure_counts[hop_type_str] = 1
-                state.last_failed_hop = hop_type_str
+            consecutive_failures = record_hop_failure()
             logger.warning(
                 "URL resolution timed out after %.1fs for hop %s (consecutive failures: %s)",
                 url_resolution_timeout_seconds,
                 hop_type,
-                state.hop_failure_counts.get(hop_type_str, 1),
+                consecutive_failures,
             )
             performance['url_resolution_ms'] = round((time.perf_counter() - url_resolution_started_at) * 1000, 2)
             return build_no_progress_result("URL resolution timed out")
@@ -1109,20 +1113,8 @@ class HypothesisDrivenDiscovery:
             performance['url_resolution'] = self._last_url_resolution_metrics
 
         if not url:
-            # Record hop failure
-            hop_type_str = hop_type.value if hasattr(hop_type, 'value') else str(hop_type)
-            if not hasattr(state, 'hop_failure_counts'):
-                state.hop_failure_counts = {}
-
-            # Increment consecutive failure counter
-            if hop_type_str == state.last_failed_hop:
-                state.hop_failure_counts[hop_type_str] = state.hop_failure_counts.get(hop_type_str, 0) + 1
-            else:
-                # Reset counter if different hop type failed
-                state.hop_failure_counts[hop_type_str] = 1
-                state.last_failed_hop = hop_type_str
-
-            logger.warning(f"Could not determine URL for hop type: {hop_type} (consecutive failures: {state.hop_failure_counts[hop_type_str]})")
+            consecutive_failures = record_hop_failure()
+            logger.warning(f"Could not determine URL for hop type: {hop_type} (consecutive failures: {consecutive_failures})")
             return build_no_progress_result("No URL found for hop")
 
         logger.info(f"🔎 Scraping: {url}")
@@ -1182,9 +1174,13 @@ class HypothesisDrivenDiscovery:
                         self._official_site_content_cache[url] = content_result
 
                 if content_result.get('status') != 'success':
+                    consecutive_failures = record_hop_failure()
                     logger.error(f"Scraping failed: {content_result.get('error', 'Unknown error')}")
                     return build_no_progress_result(
-                        f"Scraping failed: {content_result.get('error', 'Unknown error')}",
+                        (
+                            f"Scraping failed: {content_result.get('error', 'Unknown error')}"
+                            f" (consecutive failures: {consecutive_failures})"
+                        ),
                         scrape_data={
                             'url': url
                         }
@@ -1211,6 +1207,7 @@ class HypothesisDrivenDiscovery:
                         ).strip()
                         content_metadata['char_count'] = len(content_text)
                     else:
+                        record_hop_failure()
                         logger.warning("Scraping returned empty content; treating hop as NO_PROGRESS")
                         return {
                             'hop_type': hop_type.value,
