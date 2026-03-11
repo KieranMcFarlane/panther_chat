@@ -72,6 +72,8 @@ class BrightDataSDKClient:
         self.serp_zone = os.getenv("BRIGHTDATA_SERP_ZONE")
         self.unlocker_zone = os.getenv("BRIGHTDATA_UNLOCKER_ZONE")
         self.serp_timeout_seconds = float(os.getenv("BRIGHTDATA_SERP_TIMEOUT_SECONDS", "30"))
+        self.serp_poll_attempts = int(os.getenv("BRIGHTDATA_SERP_POLL_ATTEMPTS", "6"))
+        self.serp_poll_interval_seconds = float(os.getenv("BRIGHTDATA_SERP_POLL_INTERVAL_SECONDS", "1.2"))
         self._client = None
         self._client_context = None
 
@@ -485,6 +487,7 @@ class BrightDataSDKClient:
                             payload: Dict[str, Any] = {
                                 "zone": zone,
                                 "query": {"q": query},
+                                "brd_json": "json",
                             }
                             if country:
                                 payload["query"]["country"] = country
@@ -524,6 +527,27 @@ class BrightDataSDKClient:
 
                             raw = response.json()
                             normalized_results = self._normalize_serp_results(raw, num_results=num_results)
+                            if not normalized_results and isinstance(raw, dict):
+                                response_id = raw.get("response_id")
+                                if isinstance(response_id, str) and response_id.strip():
+                                    raw = await self._poll_serp_result_payload(
+                                        client=client,
+                                        response_id=response_id.strip(),
+                                        zone=zone,
+                                    )
+                                    normalized_results = self._normalize_serp_results(raw, num_results=num_results)
+
+                            if not normalized_results:
+                                attempts.append(
+                                    {
+                                        "endpoint": endpoint,
+                                        "zone": zone,
+                                        "status_code": response.status_code,
+                                        "preview": "empty normalized results",
+                                    }
+                                )
+                                continue
+
                             return {
                                 "status": "success",
                                 "engine": engine,
@@ -535,6 +559,7 @@ class BrightDataSDKClient:
                                     "zone": zone,
                                     "endpoint": endpoint,
                                     "country": country,
+                                    "async_polling": True,
                                     "raw_result_count": len(raw.get("results", [])) if isinstance(raw, dict) else None,
                                 },
                             }
@@ -597,6 +622,48 @@ class BrightDataSDKClient:
                 unique.append(zone)
         return unique or ["sdk_serp", "google_search"]
 
+    async def _poll_serp_result_payload(self, client, response_id: str, zone: str) -> Dict[str, Any]:
+        """Poll BrightData async SERP results for a response_id."""
+        endpoint = f"{self.api_url.rstrip('/')}/serp/get_result"
+        headers = {"Authorization": f"Bearer {self.token}"}
+        params = {"response_id": response_id}
+        if zone:
+            params["zone"] = zone
+
+        last_payload: Dict[str, Any] = {}
+        for attempt in range(max(self.serp_poll_attempts, 1)):
+            try:
+                response = await client.get(endpoint, headers=headers, params=params)
+                if response.status_code == 202:
+                    if attempt < self.serp_poll_attempts - 1:
+                        await asyncio.sleep(self.serp_poll_interval_seconds)
+                        continue
+                    return {"status": "pending", "response_id": response_id}
+                if response.status_code >= 500:
+                    await asyncio.sleep(self.serp_poll_interval_seconds)
+                    continue
+                if response.status_code >= 400:
+                    # 404 can occur while result is still warming up.
+                    if response.status_code == 404 and attempt < self.serp_poll_attempts - 1:
+                        await asyncio.sleep(self.serp_poll_interval_seconds)
+                        continue
+                    return {"status": "error", "error": response.text[:220], "response_id": response_id}
+
+                payload = response.json() if response.text else {}
+                if isinstance(payload, dict):
+                    last_payload = payload
+                    if self._normalize_serp_results(payload, num_results=10):
+                        return payload
+                await asyncio.sleep(self.serp_poll_interval_seconds)
+            except Exception as poll_error:
+                logger.debug("SERP get_result polling failed (attempt=%s): %s", attempt + 1, poll_error)
+                if attempt < self.serp_poll_attempts - 1:
+                    await asyncio.sleep(self.serp_poll_interval_seconds)
+
+        if last_payload:
+            return last_payload
+        return {"status": "error", "error": "SERP polling exhausted", "response_id": response_id}
+
     def _resolve_unlocker_zone_candidates(self) -> List[str]:
         """Choose request/unlocker zones to try for direct URL scraping."""
         zones: List[str] = []
@@ -617,10 +684,7 @@ class BrightDataSDKClient:
         base = self.api_url.rstrip("/")
         if base.endswith("/serp") or base.endswith("/serp/req"):
             return [base]
-        return [
-            f"{base}/serp/req",
-            f"{base}/serp",
-        ]
+        return [f"{base}/serp/req"]
 
     def _normalize_serp_results(self, payload: Any, num_results: int) -> List[Dict[str, Any]]:
         """Normalize BrightData SERP payloads into pipeline result schema."""

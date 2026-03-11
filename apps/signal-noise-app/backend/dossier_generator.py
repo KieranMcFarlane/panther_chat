@@ -746,6 +746,65 @@ Website: {metadata.website or 'N/A'}
         count = len(posts)
         return f"{count} recent LinkedIn posts/references found"
 
+    def _extract_last_valid_json_block(self, text: str) -> Optional[Any]:
+        """
+        Extract the last valid JSON object or array from model output.
+
+        Prefers the terminal valid block to handle streamed partial JSON.
+        """
+        if not isinstance(text, str) or not text:
+            return None
+
+        stack: List[str] = []
+        start_idx: Optional[int] = None
+        in_string = False
+        escape_next = False
+        last_valid: Optional[Any] = None
+        matching = {"{": "}", "[": "]"}
+
+        for idx, char in enumerate(text):
+            if in_string:
+                if escape_next:
+                    escape_next = False
+                elif char == "\\":
+                    escape_next = True
+                elif char == '"':
+                    in_string = False
+                continue
+
+            if char == '"':
+                in_string = True
+                continue
+
+            if char in {"{", "["}:
+                if not stack:
+                    start_idx = idx
+                stack.append(char)
+                continue
+
+            if char in {"}", "]"}:
+                if not stack:
+                    start_idx = None
+                    continue
+
+                opener = stack[-1]
+                expected = matching[opener]
+                if char != expected:
+                    stack = []
+                    start_idx = None
+                    continue
+
+                stack.pop()
+                if not stack and start_idx is not None:
+                    candidate = text[start_idx:idx + 1]
+                    try:
+                        last_valid = json.loads(candidate)
+                    except json.JSONDecodeError:
+                        pass
+                    start_idx = None
+
+        return last_valid
+
     def _extract_first_url(self, items: Any) -> Optional[str]:
         """Extract first usable URL from a list of dict records."""
         if not isinstance(items, list):
