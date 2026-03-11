@@ -8,6 +8,7 @@ verifies retry/circuit-break diagnostics, then exercises discovery evaluation fa
 from __future__ import annotations
 
 import asyncio
+import argparse
 import json
 import os
 import sys
@@ -21,6 +22,11 @@ ROOT = Path(__file__).resolve().parents[1]
 BACKEND_DIR = ROOT / "backend"
 if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
+
+try:
+    from dotenv import load_dotenv
+except Exception:  # noqa: BLE001
+    load_dotenv = None
 
 import claude_client as claude_client_module
 from claude_client import ClaudeClient, LLMRequestError
@@ -50,10 +56,12 @@ class _AlwaysQuota429AsyncClient:
         raise httpx.HTTPStatusError("429 Too Many Requests", request=request, response=response)
 
 
-async def _run() -> int:
-    # Deterministic Chutes config for this smoke.
+async def _run(*, live: bool) -> int:
+    if load_dotenv:
+        load_dotenv(ROOT / ".env")
+
+    # Chutes config for smoke runs.
     os.environ.setdefault("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
-    os.environ.setdefault("CHUTES_API_KEY", "smoke-test-key")
     os.environ.setdefault("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
     os.environ.setdefault("CHUTES_MODEL", "zai-org/GLM-5-TEE")
     os.environ.setdefault("CHUTES_FALLBACK_MODEL", "moonshotai/Kimi-K2.5-TEE")
@@ -63,6 +71,8 @@ async def _run() -> int:
     os.environ.setdefault("CHUTES_CIRCUIT_BREAK_ON_QUOTA", "true")
     os.environ.setdefault("LLM_PROVIDER_VALIDATION_STRICT", "true")
     os.environ.setdefault("DISCOVERY_HEURISTIC_FALLBACK_ON_LLM_UNAVAILABLE", "true")
+    os.environ.setdefault("CHUTES_TIMEOUT_SECONDS", "20")
+    os.environ.setdefault("CHUTES_FALLBACK_TIMEOUT_SECONDS", "30")
 
     # Patch network + sleep for bounded runtime.
     original_async_client = claude_client_module.httpx.AsyncClient
@@ -72,8 +82,12 @@ async def _run() -> int:
     async def _fake_sleep(seconds):
         slept.append(float(seconds))
 
-    claude_client_module.httpx.AsyncClient = _AlwaysQuota429AsyncClient
-    claude_client_module.asyncio.sleep = _fake_sleep
+    if not live:
+        os.environ.setdefault("CHUTES_API_KEY", "smoke-test-key")
+        claude_client_module.httpx.AsyncClient = _AlwaysQuota429AsyncClient
+        claude_client_module.asyncio.sleep = _fake_sleep
+    elif not os.getenv("CHUTES_API_KEY"):
+        raise SystemExit("CHUTES_API_KEY is required for --live mode")
 
     try:
         client = ClaudeClient()
@@ -125,6 +139,7 @@ async def _run() -> int:
 
         artifact = {
             "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            "mode": "live" if live else "mocked_429",
             "llm_query_error": llm_error,
             "llm_sleep_profile_seconds": slept,
             "llm_runtime_diagnostics": client.get_runtime_diagnostics(),
@@ -146,9 +161,13 @@ async def _run() -> int:
 
         return 0
     finally:
-        claude_client_module.httpx.AsyncClient = original_async_client
-        claude_client_module.asyncio.sleep = original_sleep
+        if not live:
+            claude_client_module.httpx.AsyncClient = original_async_client
+            claude_client_module.asyncio.sleep = original_sleep
 
 
 if __name__ == "__main__":
-    raise SystemExit(asyncio.run(_run()))
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--live", action="store_true", help="Run against real Chutes API instead of mocked 429s")
+    args = parser.parse_args()
+    raise SystemExit(asyncio.run(_run(live=args.live)))
