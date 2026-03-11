@@ -727,6 +727,15 @@ class DossierDataCollector:
             parsed = urllib.parse.urlparse(uri.replace("rediss://", "http://"))
             host = parsed.hostname or "localhost"
             port = parsed.port or 6379
+            parsed_scheme = urllib.parse.urlparse(uri).scheme.lower()
+            use_ssl = parsed_scheme == "rediss"
+            ssl_override = os.getenv("FALKORDB_SSL")
+            if isinstance(ssl_override, str) and ssl_override.strip():
+                normalized_override = ssl_override.strip().lower()
+                if normalized_override in {"1", "true", "yes", "on"}:
+                    use_ssl = True
+                elif normalized_override in {"0", "false", "no", "off"}:
+                    use_ssl = False
 
             logger.info(f"🔗 Connecting to FalkorDB at {host}:{port}...")
 
@@ -737,7 +746,7 @@ class DossierDataCollector:
                 port=port,
                 username=username,
                 password=password,
-                ssl=False
+                ssl=use_ssl,
             )
 
             # Test connection
