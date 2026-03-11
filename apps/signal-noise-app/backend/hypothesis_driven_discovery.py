@@ -732,6 +732,69 @@ class HypothesisDrivenDiscovery:
         output["llm_disable_reason"] = diag.get("llm_disable_reason")
         return output
 
+    @staticmethod
+    def _extract_balanced_json_object(text: str, *, required_key: str = "decision") -> Optional[Dict[str, Any]]:
+        """Extract and parse the first balanced JSON object containing required_key."""
+        if not isinstance(text, str) or not text:
+            return None
+
+        key_token = f'"{required_key}"'
+        starts = [idx for idx, ch in enumerate(text) if ch == "{"] if "{" in text else []
+        for start in starts:
+            depth = 0
+            in_string = False
+            escape = False
+            for idx in range(start, len(text)):
+                ch = text[idx]
+                if in_string:
+                    if escape:
+                        escape = False
+                    elif ch == "\\":
+                        escape = True
+                    elif ch == '"':
+                        in_string = False
+                    continue
+
+                if ch == '"':
+                    in_string = True
+                    continue
+                if ch == "{":
+                    depth += 1
+                    continue
+                if ch == "}":
+                    depth -= 1
+                    if depth == 0:
+                        candidate = text[start : idx + 1]
+                        if key_token not in candidate:
+                            break
+                        try:
+                            parsed = json.loads(candidate)
+                        except Exception:  # noqa: BLE001
+                            break
+                        if isinstance(parsed, dict) and required_key in parsed:
+                            return parsed
+                        break
+        return None
+
+    def _parse_evaluation_response_json(self, response_text: str) -> Optional[Dict[str, Any]]:
+        """Parse evaluator JSON from plain text, fenced blocks, or mixed responses."""
+        if not isinstance(response_text, str):
+            return None
+
+        direct = self._extract_balanced_json_object(response_text, required_key="decision")
+        if direct:
+            return direct
+
+        import re
+
+        fenced_blocks = re.findall(r"```(?:json)?\s*([\s\S]*?)```", response_text, flags=re.IGNORECASE)
+        for block in fenced_blocks:
+            parsed = self._extract_balanced_json_object(block, required_key="decision")
+            if parsed:
+                return parsed
+
+        return None
+
     def _score_url(self, url: str, hop_type: HopType, entity_name: str, title: str = "", snippet: str = "") -> float:
         """
         Score URL relevance for a specific hop type
@@ -3103,7 +3166,8 @@ Return JSON:
             response = await self.claude_client.query(
                 prompt=prompt,
                 model="haiku",
-                max_tokens=self._get_evaluation_max_tokens(hop_type)
+                max_tokens=self._get_evaluation_max_tokens(hop_type),
+                json_mode=True,
             )
             response_diag = response.get("inference_diagnostics", {}) if isinstance(response, dict) else {}
             self._update_llm_runtime_diagnostics(
@@ -3132,13 +3196,8 @@ Return JSON:
                 )
                 return self._decorate_evaluation_result(fallback, evaluation_mode="heuristic")
 
-            # Parse JSON response (existing code)
-            import re
-
-            json_match = re.search(r'\{[^}]*"decision"[^}]*\}', response_text, re.DOTALL)
-
-            if json_match:
-                result = json.loads(json_match.group(0))
+            result = self._parse_evaluation_response_json(response_text)
+            if result is not None:
 
                 # Ensure result has required 'decision' key
                 if 'decision' not in result:
@@ -3160,6 +3219,54 @@ Return JSON:
 
                 return self._decorate_evaluation_result(result, evaluation_mode="llm")
             else:
+                import re
+                decision_match = re.search(r'"decision"\s*:\s*"([A-Z_]+)"', response_text)
+                if decision_match:
+                    recovered_decision = decision_match.group(1)
+                    if recovered_decision in {"ACCEPT", "WEAK_ACCEPT", "REJECT", "NO_PROGRESS"}:
+                        confidence_match = re.search(r'"confidence_delta"\s*:\s*([0-9]+(?:\.[0-9]+)?)', response_text)
+                        recovered_delta = 0.0
+                        if confidence_match:
+                            try:
+                                recovered_delta = float(confidence_match.group(1))
+                            except Exception:  # noqa: BLE001
+                                recovered_delta = 0.0
+                        self._update_llm_runtime_diagnostics(
+                            llm_last_status="partial_json_recovered",
+                            evaluation_mode="llm",
+                        )
+                        return self._decorate_evaluation_result(
+                            {
+                                "decision": recovered_decision,
+                                "confidence_delta": recovered_delta,
+                                "justification": "Recovered decision from partial JSON response",
+                                "evidence_found": "",
+                                "evidence_type": "partial_json_recovery",
+                                "temporal_score": "unknown",
+                            },
+                            evaluation_mode="llm",
+                        )
+                heading_match = re.search(
+                    r"(?is)\bdecision\b\s*[:\-]\s*(?:\*\*)?\s*(ACCEPT|WEAK_ACCEPT|REJECT|NO_PROGRESS)\b",
+                    response_text,
+                )
+                if heading_match:
+                    recovered_decision = heading_match.group(1).upper()
+                    self._update_llm_runtime_diagnostics(
+                        llm_last_status="text_decision_recovered",
+                        evaluation_mode="llm",
+                    )
+                    return self._decorate_evaluation_result(
+                        {
+                            "decision": recovered_decision,
+                            "confidence_delta": 0.06 if recovered_decision == "ACCEPT" else 0.0,
+                            "justification": "Recovered decision label from narrative model response",
+                            "evidence_found": "",
+                            "evidence_type": "text_decision_recovery",
+                            "temporal_score": "unknown",
+                        },
+                        evaluation_mode="llm",
+                    )
                 logger.warning(f"Could not parse Claude response: {response_text}")
                 fallback = self._fallback_result_with_reason(
                     "Unparseable model response",
@@ -3176,6 +3283,7 @@ Return JSON:
             logger.error(f"JSON parsing error: {e}")
             logger.debug(f"Response text that failed to parse: {response_text[:500]}")
             # Try to extract decision with simpler regex
+            import re
             simple_match = re.search(r'"decision"\s*:\s*"(\w+)"', response_text)
             if simple_match:
                 decision = simple_match.group(1)

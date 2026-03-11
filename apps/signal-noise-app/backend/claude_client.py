@@ -728,7 +728,8 @@ class ClaudeClient:
         model: str = "haiku",
         max_tokens: int = 2000,
         tools: Optional[List[Dict]] = None,
-        system_prompt: Optional[str] = None
+        system_prompt: Optional[str] = None,
+        json_mode: bool = False,
     ) -> Dict[str, Any]:
         """
         Query Claude with specific model using Anthropic SDK
@@ -749,6 +750,7 @@ class ClaudeClient:
                 model=model,
                 max_tokens=max_tokens,
                 system_prompt=system_prompt,
+                json_mode=json_mode,
             )
         if self.provider == self.PROVIDER_CHUTES_ANTHROPIC:
             return await self._query_chutes_anthropic(
@@ -756,6 +758,7 @@ class ClaudeClient:
                 model=model,
                 max_tokens=max_tokens,
                 system_prompt=system_prompt,
+                json_mode=json_mode,
             )
 
         if not ANTHROPIC_SDK_AVAILABLE:
@@ -812,6 +815,7 @@ class ClaudeClient:
         model: str,
         max_tokens: int,
         system_prompt: Optional[str] = None,
+        json_mode: bool = False,
     ) -> Dict[str, Any]:
         """
         Query a Chutes OpenAI-compatible model endpoint.
@@ -838,6 +842,8 @@ class ClaudeClient:
             "temperature": 0.7 if system_prompt is None else 0.4,
             "stream": self.chutes_stream_enabled,
         }
+        if json_mode:
+            payload["response_format"] = {"type": "json_object"}
 
         headers = {
             "Authorization": f"Bearer {self.api_key}",
@@ -1154,6 +1160,7 @@ class ClaudeClient:
         model: str,
         max_tokens: int,
         system_prompt: Optional[str] = None,
+        json_mode: bool = False,
     ) -> Dict[str, Any]:
         """Query a Chutes Anthropic-compatible messages endpoint."""
         disabled_reason = self._get_disabled_reason()

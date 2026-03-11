@@ -387,3 +387,165 @@ def test_performance_summary_includes_llm_runtime_diagnostics():
     assert summary["llm_circuit_broken"] is True
     assert summary["llm_disable_reason"] == "insufficient balance"
     assert summary["evaluation_mode"] == "heuristic"
+
+
+def test_parse_evaluation_response_json_extracts_fenced_json_block():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    response_text = """
+I evaluated the page.
+
+```json
+{
+  "decision": "WEAK_ACCEPT",
+  "confidence_delta": 0.06,
+  "justification": "evidence found",
+  "evidence_found": "procurement tender",
+  "evidence_type": "PROCUREMENT_SIGNAL",
+  "temporal_score": "recent_12mo"
+}
+```
+"""
+    parsed = discovery._parse_evaluation_response_json(response_text)
+    assert parsed is not None
+    assert parsed["decision"] == "WEAK_ACCEPT"
+    assert parsed["confidence_delta"] == 0.06
+
+
+@pytest.mark.asyncio
+async def test_evaluate_content_requests_json_mode_and_parses_embedded_json():
+    class _ClaudeStub:
+        provider = "chutes_openai"
+
+        def __init__(self):
+            self.last_kwargs = None
+
+        async def query(self, **kwargs):
+            self.last_kwargs = kwargs
+            return {
+                "content": 'Analysis done. {"decision":"ACCEPT","confidence_delta":0.12,"justification":"Clear tender","evidence_found":"Procurement tender launched","evidence_type":"PROCUREMENT_SIGNAL","temporal_score":"recent_12mo"}',
+                "inference_diagnostics": {"llm_retry_attempts": 0, "llm_last_status": "ok"},
+            }
+
+    claude_stub = _ClaudeStub()
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.claude_client = claude_stub
+    discovery.heuristic_fallback_on_llm_unavailable = True
+    discovery.evaluation_max_tokens_default = 640
+    discovery.evaluation_max_tokens_press_release = 384
+    discovery.evaluation_max_tokens_official_site = 384
+    discovery.evaluation_max_tokens_careers_annual_report = 448
+
+    hypothesis = SimpleNamespace(
+        statement="Coventry City FC is actively running procurement",
+        category="procurement",
+        metadata={"entity_name": "Coventry City FC", "template_id": ""},
+        prior_probability=0.5,
+        confidence=0.5,
+        iterations_attempted=0,
+        iterations_accepted=0,
+        iterations_weak_accept=0,
+        iterations_rejected=0,
+        iterations_no_progress=0,
+        last_delta=0.0,
+    )
+
+    result = await discovery._evaluate_content_with_claude(
+        content="The club has launched a procurement tender and supplier onboarding process.",
+        hypothesis=hypothesis,
+        hop_type=HopType.OFFICIAL_SITE,
+        content_metadata={"content_type": "text/html"},
+    )
+
+    assert claude_stub.last_kwargs is not None
+    assert claude_stub.last_kwargs.get("json_mode") is True
+    assert result["decision"] == "ACCEPT"
+    assert result["evaluation_mode"] == "llm"
+
+
+@pytest.mark.asyncio
+async def test_evaluate_content_recovers_partial_json_decision():
+    class _ClaudeStub:
+        provider = "chutes_openai"
+
+        async def query(self, **kwargs):
+            return {
+                "content": '{"decision":"ACCEPT","confidence_delta":0.08,"justification":"truncated',
+                "inference_diagnostics": {"llm_retry_attempts": 0, "llm_last_status": "ok"},
+            }
+
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.claude_client = _ClaudeStub()
+    discovery.heuristic_fallback_on_llm_unavailable = True
+    discovery.evaluation_max_tokens_default = 640
+    discovery.evaluation_max_tokens_press_release = 384
+    discovery.evaluation_max_tokens_official_site = 384
+    discovery.evaluation_max_tokens_careers_annual_report = 448
+
+    hypothesis = SimpleNamespace(
+        statement="Coventry City FC is actively running procurement",
+        category="procurement",
+        metadata={"entity_name": "Coventry City FC", "template_id": ""},
+        prior_probability=0.5,
+        confidence=0.5,
+        iterations_attempted=0,
+        iterations_accepted=0,
+        iterations_weak_accept=0,
+        iterations_rejected=0,
+        iterations_no_progress=0,
+        last_delta=0.0,
+    )
+
+    result = await discovery._evaluate_content_with_claude(
+        content="The club has launched a procurement tender.",
+        hypothesis=hypothesis,
+        hop_type=HopType.OFFICIAL_SITE,
+        content_metadata={"content_type": "text/html"},
+    )
+
+    assert result["decision"] == "ACCEPT"
+    assert result["confidence_delta"] == 0.08
+    assert result["evaluation_mode"] == "llm"
+
+
+@pytest.mark.asyncio
+async def test_evaluate_content_recovers_decision_from_narrative_heading():
+    class _ClaudeStub:
+        provider = "chutes_openai"
+
+        async def query(self, **kwargs):
+            return {
+                "content": "Decision: ACCEPT\\nThe content clearly shows active procurement tender activity.",
+                "inference_diagnostics": {"llm_retry_attempts": 0, "llm_last_status": "ok"},
+            }
+
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.claude_client = _ClaudeStub()
+    discovery.heuristic_fallback_on_llm_unavailable = True
+    discovery.evaluation_max_tokens_default = 640
+    discovery.evaluation_max_tokens_press_release = 384
+    discovery.evaluation_max_tokens_official_site = 384
+    discovery.evaluation_max_tokens_careers_annual_report = 448
+
+    hypothesis = SimpleNamespace(
+        statement="Coventry City FC is actively running procurement",
+        category="procurement",
+        metadata={"entity_name": "Coventry City FC", "template_id": ""},
+        prior_probability=0.5,
+        confidence=0.5,
+        iterations_attempted=0,
+        iterations_accepted=0,
+        iterations_weak_accept=0,
+        iterations_rejected=0,
+        iterations_no_progress=0,
+        last_delta=0.0,
+    )
+
+    result = await discovery._evaluate_content_with_claude(
+        content="The club has launched a procurement tender.",
+        hypothesis=hypothesis,
+        hop_type=HopType.OFFICIAL_SITE,
+        content_metadata={"content_type": "text/html"},
+    )
+
+    assert result["decision"] == "ACCEPT"
+    assert result["evaluation_mode"] == "llm"

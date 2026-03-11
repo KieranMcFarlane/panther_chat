@@ -106,6 +106,10 @@ async def _run(*, live: bool) -> int:
         discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
         discovery.claude_client = client
         discovery.heuristic_fallback_on_llm_unavailable = True
+        discovery.evaluation_max_tokens_default = 640
+        discovery.evaluation_max_tokens_press_release = 384
+        discovery.evaluation_max_tokens_official_site = 384
+        discovery.evaluation_max_tokens_careers_annual_report = 448
         discovery._llm_runtime_diagnostics = {
             **client.get_runtime_diagnostics(),
             "evaluation_mode": "llm",
