@@ -167,6 +167,27 @@ def test_extract_text_and_publication_date_uses_script_fallback_for_js_heavy_pag
     assert publication_date is None
 
 
+def test_normalize_serp_results_unwraps_google_redirect_urls():
+    client = BrightDataSDKClient(token="test-token")
+
+    normalized = client._normalize_serp_results(
+        payload={
+            "organic": [
+                {
+                    "position": 1,
+                    "title": "Coventry City FC Official Site",
+                    "url": "https://www.google.com/goto?url=https%3A%2F%2Fwww.ccfc.co.uk%2F",
+                    "description": "Official website",
+                }
+            ]
+        },
+        num_results=5,
+    )
+
+    assert normalized
+    assert normalized[0]["url"] == "https://www.ccfc.co.uk/"
+
+
 def test_dossier_generator_get_last_official_site_url_normalizes_domain():
     generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
     generator._last_entity_data_by_id = {

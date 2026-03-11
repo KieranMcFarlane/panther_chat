@@ -16,7 +16,7 @@ import logging
 import os
 from typing import Dict, List, Any, Optional
 from datetime import datetime
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, unquote, urlparse
 
 logger = logging.getLogger(__name__)
 
@@ -751,17 +751,14 @@ class BrightDataSDKClient:
         for idx, item in enumerate(candidates[:max(num_results, 1)]):
             if not isinstance(item, dict):
                 continue
-            url = (
+            raw_url = (
                 item.get("url")
                 or item.get("link")
                 or item.get("displayed_link")
                 or item.get("domain")
                 or ""
             )
-            if url and not str(url).startswith(("http://", "https://")):
-                parsed = str(url).strip("/")
-                if "." in parsed:
-                    url = f"https://{parsed}"
+            url = self._normalize_serp_result_url(raw_url)
 
             snippet = (
                 item.get("description")
@@ -783,6 +780,38 @@ class BrightDataSDKClient:
             )
 
         return normalized
+
+    def _normalize_serp_result_url(self, raw_url: Any) -> str:
+        """Normalize SERP URLs and unwrap common Google redirect wrappers."""
+        url = str(raw_url or "").strip()
+        if not url:
+            return ""
+
+        for _ in range(2):
+            parsed = urlparse(url)
+            host = (parsed.netloc or "").lower()
+            if host.startswith("www."):
+                host = host[4:]
+            if host != "google.com":
+                break
+            query = parse_qs(parsed.query or "")
+            wrapped = None
+            for key in ("url", "q", "adurl", "imgurl"):
+                values = query.get(key, [])
+                if values and values[0]:
+                    wrapped = unquote(str(values[0]).strip())
+                    break
+            if not wrapped:
+                break
+            if wrapped.startswith("//"):
+                wrapped = f"https:{wrapped}"
+            url = wrapped
+
+        if url and not url.startswith(("http://", "https://")):
+            parsed = url.strip("/")
+            if "." in parsed:
+                url = f"https://{parsed}"
+        return url
 
     async def _scrape_as_markdown_fallback(self, url: str) -> Dict[str, Any]:
         """Fallback: Try BrightData HTTP request API, then plain httpx."""
