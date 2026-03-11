@@ -16,6 +16,7 @@ import logging
 import os
 from typing import Dict, List, Any, Optional
 from datetime import datetime
+from urllib.parse import urlparse
 
 logger = logging.getLogger(__name__)
 
@@ -44,19 +45,21 @@ class BrightDataSDKClient:
         Args:
             token: Optional API token. If not provided, loads from BRIGHTDATA_API_TOKEN env var
         """
-        from brightdata import BrightDataClient
-        from dotenv import load_dotenv
-        from pathlib import Path
-        import os
+        try:
+            from dotenv import load_dotenv
+            from pathlib import Path
 
-        # Try current directory first, then parent directory
-        env_loaded = load_dotenv()  # Current directory
+            # Try current directory first, then parent directory
+            load_dotenv()  # Current directory
 
-        # Also try parent directory explicitly (for backend/ scripts)
-        parent_env = Path(__file__).parent.parent / '.env'
-        if parent_env.exists():
-            load_dotenv(parent_env, override=True)
-            logger.info(f"✅ Loaded .env from parent directory: {parent_env}")
+            # Also try parent directory explicitly (for backend/ scripts)
+            parent_env = Path(__file__).parent.parent / '.env'
+            if parent_env.exists():
+                load_dotenv(parent_env, override=True)
+                logger.info(f"✅ Loaded .env from parent directory: {parent_env}")
+        except Exception:
+            # dotenv is optional in production envs where variables are already injected
+            logger.debug("python-dotenv unavailable; relying on process environment")
 
         # Store token from environment if not provided
         if token is None:
@@ -64,6 +67,11 @@ class BrightDataSDKClient:
 
         self.token = token
         self.request_timeout_seconds = float(os.getenv("BRIGHTDATA_SDK_TIMEOUT_SECONDS", "45"))
+        self.api_url = os.getenv("BRIGHTDATA_API_URL", "https://api.brightdata.com").rstrip("/")
+        self.default_zone = os.getenv("BRIGHTDATA_ZONE")
+        self.serp_zone = os.getenv("BRIGHTDATA_SERP_ZONE")
+        self.unlocker_zone = os.getenv("BRIGHTDATA_UNLOCKER_ZONE")
+        self.serp_timeout_seconds = float(os.getenv("BRIGHTDATA_SERP_TIMEOUT_SECONDS", "30"))
         self._client = None
         self._client_context = None
 
@@ -445,42 +453,302 @@ class BrightDataSDKClient:
         country: str = "us",
         num_results: int = 10
     ) -> Dict[str, Any]:
-        """Fallback: Use search APIs when SDK unavailable"""
-        # For now, return mock results
-        # In production, you could use SerpAPI, Google Custom Search API, etc.
-        logger.warning(f"⚠️ Using fallback search (not BrightData): {query}")
+        """Fallback: Use BrightData SERP HTTP API when SDK unavailable."""
+        import httpx
 
-        return {
-            "status": "success",
-            "engine": engine,
-            "query": query,
-            "results": [
-                {
-                    "position": i + 1,
-                    "title": f"Result {i + 1} for {query}",
-                    "url": f"https://example.com/result{i + 1}",
-                    "snippet": f"This is a fallback result for {query}"
-                }
-                for i in range(min(num_results, 3))
-            ],
-            "timestamp": datetime.now().isoformat(),
-            "metadata": {
-                "source": "fallback",
-                "warning": "BrightData SDK unavailable, using mock results"
+        if not self.token:
+            return {
+                "status": "error",
+                "error": "BRIGHTDATA_API_TOKEN not configured",
+                "query": query,
+                "engine": engine,
+                "metadata": {
+                    "source": "brightdata_http_fallback",
+                },
             }
+
+        zone_candidates = self._resolve_serp_zone_candidates(engine=engine, query=query)
+        endpoint_candidates = self._resolve_serp_endpoint_candidates()
+        attempts: List[Dict[str, Any]] = []
+
+        logger.info(
+            "🔍 BrightData HTTP fallback search: %s (zones=%s, endpoints=%s)",
+            query,
+            zone_candidates,
+            endpoint_candidates,
+        )
+        try:
+            async with httpx.AsyncClient(timeout=self.serp_timeout_seconds) as client:
+                for endpoint in endpoint_candidates:
+                    for zone in zone_candidates:
+                        if endpoint.rstrip("/").endswith("/serp/req"):
+                            payload: Dict[str, Any] = {
+                                "zone": zone,
+                                "query": {"q": query},
+                            }
+                            if country:
+                                payload["query"]["country"] = country
+                            if num_results:
+                                payload["query"]["num"] = num_results
+                        else:
+                            payload = {
+                                "query": query,
+                                "format": "json",
+                                "zone": zone,
+                            }
+                            if country:
+                                payload["country"] = country
+                            if num_results:
+                                payload["num_results"] = num_results
+
+                        try:
+                            response = await client.post(
+                                endpoint,
+                                headers={
+                                    "Authorization": f"Bearer {self.token}",
+                                    "Content-Type": "application/json",
+                                },
+                                json=payload,
+                            )
+                            if response.status_code >= 400:
+                                preview = response.text[:220]
+                                attempts.append(
+                                    {
+                                        "endpoint": endpoint,
+                                        "zone": zone,
+                                        "status_code": response.status_code,
+                                        "preview": preview,
+                                    }
+                                )
+                                continue
+
+                            raw = response.json()
+                            normalized_results = self._normalize_serp_results(raw, num_results=num_results)
+                            return {
+                                "status": "success",
+                                "engine": engine,
+                                "query": query,
+                                "results": normalized_results,
+                                "timestamp": datetime.now().isoformat(),
+                                "metadata": {
+                                    "source": "brightdata_http_fallback",
+                                    "zone": zone,
+                                    "endpoint": endpoint,
+                                    "country": country,
+                                    "raw_result_count": len(raw.get("results", [])) if isinstance(raw, dict) else None,
+                                },
+                            }
+                        except Exception as endpoint_error:
+                            attempts.append(
+                                {
+                                    "endpoint": endpoint,
+                                    "zone": zone,
+                                    "error": str(endpoint_error)[:220],
+                                }
+                            )
+        except Exception as e:
+            logger.error("❌ BrightData HTTP fallback client exception: %s", e)
+            return {
+                "status": "error",
+                "error": str(e),
+                "query": query,
+                "engine": engine,
+                "metadata": {
+                    "source": "brightdata_http_fallback",
+                    "attempts": attempts[:6],
+                },
+            }
+
+        logger.error("❌ BrightData HTTP fallback exhausted all endpoint/zone candidates")
+        return {
+            "status": "error",
+            "error": "BrightData SERP fallback exhausted endpoint/zone candidates",
+            "query": query,
+            "engine": engine,
+            "metadata": {
+                "source": "brightdata_http_fallback",
+                "attempts": attempts[:8],
+            },
         }
 
+    def _resolve_serp_zone_candidates(self, engine: str, query: str) -> List[str]:
+        """Choose SERP zones to try for HTTP fallback based on query intent and engine."""
+        query_l = (query or "").lower()
+        zones: List[str] = []
+        if self.serp_zone:
+            zones.append(self.serp_zone)
+        if self.default_zone:
+            zones.append(self.default_zone)
+        zones.append("sdk_serp")
+
+        if "linkedin.com" in query_l or "linkedin " in query_l:
+            zones.append("linkedin_posts_monitor")
+        elif engine.lower() == "bing":
+            zones.append("bing_search")
+        elif engine.lower() == "yandex":
+            zones.append("yandex_search")
+        else:
+            zones.append("google_search")
+
+        # Preserve order and drop empties/duplicates
+        unique: List[str] = []
+        for zone in zones:
+            if zone and zone not in unique:
+                unique.append(zone)
+        return unique or ["sdk_serp", "google_search"]
+
+    def _resolve_unlocker_zone_candidates(self) -> List[str]:
+        """Choose request/unlocker zones to try for direct URL scraping."""
+        zones: List[str] = []
+        if self.unlocker_zone:
+            zones.append(self.unlocker_zone)
+        if self.default_zone:
+            zones.append(self.default_zone)
+        zones.extend(["sdk_unlocker", "mcp_unlocker"])
+
+        unique: List[str] = []
+        for zone in zones:
+            if zone and zone not in unique:
+                unique.append(zone)
+        return unique or ["sdk_unlocker"]
+
+    def _resolve_serp_endpoint_candidates(self) -> List[str]:
+        """Resolve BrightData SERP endpoint candidates for account/API variants."""
+        base = self.api_url.rstrip("/")
+        if base.endswith("/serp") or base.endswith("/serp/req"):
+            return [base]
+        return [
+            f"{base}/serp/req",
+            f"{base}/serp",
+        ]
+
+    def _normalize_serp_results(self, payload: Any, num_results: int) -> List[Dict[str, Any]]:
+        """Normalize BrightData SERP payloads into pipeline result schema."""
+        if isinstance(payload, list):
+            candidates = payload
+        elif isinstance(payload, dict):
+            if isinstance(payload.get("results"), list):
+                candidates = payload.get("results", [])
+            elif isinstance(payload.get("organic_results"), list):
+                candidates = payload.get("organic_results", [])
+            elif isinstance(payload.get("organic"), list):
+                candidates = payload.get("organic", [])
+            elif isinstance(payload.get("items"), list):
+                candidates = payload.get("items", [])
+            else:
+                candidates = []
+        else:
+            candidates = []
+
+        normalized: List[Dict[str, Any]] = []
+        for idx, item in enumerate(candidates[:max(num_results, 1)]):
+            if not isinstance(item, dict):
+                continue
+            url = (
+                item.get("url")
+                or item.get("link")
+                or item.get("displayed_link")
+                or item.get("domain")
+                or ""
+            )
+            if url and not str(url).startswith(("http://", "https://")):
+                parsed = str(url).strip("/")
+                if "." in parsed:
+                    url = f"https://{parsed}"
+
+            snippet = (
+                item.get("description")
+                or item.get("snippet")
+                or item.get("body")
+                or item.get("text")
+                or ""
+            )
+            title = item.get("title") or item.get("name") or str(urlparse(url).netloc or "Untitled")
+            position = item.get("position") or item.get("rank") or (idx + 1)
+
+            normalized.append(
+                {
+                    "position": position,
+                    "title": str(title),
+                    "url": str(url),
+                    "snippet": str(snippet),
+                }
+            )
+
+        return normalized
+
     async def _scrape_as_markdown_fallback(self, url: str) -> Dict[str, Any]:
-        """Fallback: Use httpx + BeautifulSoup when SDK unavailable"""
+        """Fallback: Try BrightData HTTP request API, then plain httpx."""
         import httpx
         from bs4 import BeautifulSoup
 
-        logger.warning(f"⚠️ Using fallback scraping (not BrightData): {url}")
+        logger.warning(f"⚠️ BrightData SDK unavailable, trying HTTP request fallback: {url}")
 
         try:
             # Ensure URL has protocol
             if not url.startswith(('http://', 'https://')):
                 url = f'https://{url}'
+
+            # First: try BrightData request API using known unlocker-capable zones
+            if self.token:
+                zone_candidates = self._resolve_unlocker_zone_candidates()
+                async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as api_client:
+                    for zone in zone_candidates:
+                        try:
+                            bd_response = await api_client.post(
+                                f"{self.api_url.rstrip('/')}/request",
+                                headers={
+                                    "Authorization": f"Bearer {self.token}",
+                                    "Content-Type": "application/json",
+                                },
+                                json={
+                                    "zone": zone,
+                                    "url": url,
+                                    "format": "raw",
+                                },
+                            )
+                            if bd_response.status_code >= 400:
+                                logger.debug(
+                                    "BrightData request fallback failed: zone=%s status=%s preview=%s",
+                                    zone,
+                                    bd_response.status_code,
+                                    bd_response.text[:160],
+                                )
+                                continue
+
+                            html_body = bd_response.text
+                            if html_body:
+                                soup = BeautifulSoup(html_body, 'html.parser')
+
+                                for tag in soup(["script", "style", "nav", "footer", "header"]):
+                                    tag.decompose()
+
+                                main = soup.find('main') or soup.find('article') or soup.body
+                                if main:
+                                    content = self._html_to_text(main)
+                                else:
+                                    content = soup.get_text(separator='\n', strip=True)
+
+                                lines = [line.strip() for line in content.split('\n') if line.strip()]
+                                content = '\n'.join(lines)
+                                publication_date = self._extract_publication_date(soup, html_body, url)
+
+                                return {
+                                    "status": "success",
+                                    "url": url,
+                                    "content": content,
+                                    "raw_html": html_body,
+                                    "timestamp": datetime.now().isoformat(),
+                                    "publication_date": publication_date.isoformat() if publication_date else None,
+                                    "metadata": {
+                                        "word_count": len(content.split()),
+                                        "source": "brightdata_http_request_fallback",
+                                        "zone": zone,
+                                        "has_publication_date": publication_date is not None
+                                    }
+                                }
+                        except Exception as zone_error:
+                            logger.debug("BrightData request fallback exception (zone=%s): %s", zone, zone_error)
 
             async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
                 response = await client.get(url)
