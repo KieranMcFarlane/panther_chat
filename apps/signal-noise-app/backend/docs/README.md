@@ -65,6 +65,10 @@ Yellow Panther profiling and temporal intelligence (12 documents)
 Arsenal FC profiling results
 - `arsenal_report_20260207_124436.md` - Latest profiling report
 
+### **runtime tuning**
+Runtime setup and provider tuning notes
+- `CHUTES_BRIGHTDATA_OPTIMAL_SETUP.md` - Recommended Chutes/BrightData runtime settings (Mar 11)
+
 ---
 
 ## 📅 Timeline
