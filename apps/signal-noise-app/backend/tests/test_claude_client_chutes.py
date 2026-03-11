@@ -148,6 +148,49 @@ async def test_claude_client_queries_chutes_chat_completions(monkeypatch):
 
 
 @pytest.mark.asyncio
+async def test_claude_client_sets_json_response_format_when_json_mode_enabled(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_STREAM_ENABLED", "false")
+
+    request_capture = {}
+
+    class FakeResponse:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {
+                "choices": [{"message": {"content": '{"decision":"NO_PROGRESS","confidence_delta":0.0}'}, "finish_reason": "stop"}],
+                "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2},
+            }
+
+    class FakeAsyncClient:
+        def __init__(self, timeout):
+            self.timeout = timeout
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            request_capture["json"] = json
+            return FakeResponse()
+
+    monkeypatch.setattr(claude_client_module.httpx, "AsyncClient", FakeAsyncClient)
+
+    client = ClaudeClient()
+    result = await client.query(prompt="return json", model="haiku", max_tokens=64, json_mode=True)
+
+    assert result["content"]
+    assert request_capture["json"]["response_format"] == {"type": "json_object"}
+
+
+@pytest.mark.asyncio
 async def test_claude_client_queries_chutes_anthropic_messages(monkeypatch):
     monkeypatch.setenv("LLM_PROVIDER", "chutes_anthropic")
     monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
