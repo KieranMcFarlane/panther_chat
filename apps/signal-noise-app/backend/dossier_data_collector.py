@@ -218,6 +218,52 @@ class DossierDataCollector:
         except Exception as error:  # noqa: BLE001
             logger.debug("Failed persisting official-site cache %s: %s", cache_file, error)
 
+    def _official_site_fallback_urls(self, official_url: str) -> List[str]:
+        parsed = urllib.parse.urlparse(official_url)
+        if not parsed.scheme or not parsed.netloc:
+            return []
+
+        root = f"{parsed.scheme}://{parsed.netloc}"
+        candidates = [
+            root,
+            urllib.parse.urljoin(root + "/", "news"),
+            urllib.parse.urljoin(root + "/", "about"),
+            urllib.parse.urljoin(root + "/", "club"),
+            urllib.parse.urljoin(root + "/", "latest-news"),
+        ]
+        primary = official_url.rstrip("/")
+        unique: List[str] = []
+        for candidate in candidates:
+            candidate = candidate.rstrip("/")
+            if not candidate or candidate == primary or candidate in unique:
+                continue
+            unique.append(candidate)
+        return unique
+
+    async def _scrape_official_url_with_fallback(self, official_url: str) -> tuple[str, Dict[str, Any]]:
+        if not self.brightdata_client:
+            return official_url, {"status": "error", "error": "BrightData client unavailable"}
+
+        attempt_urls = [official_url.rstrip("/")] + self._official_site_fallback_urls(official_url)
+        last_result: Dict[str, Any] = {"status": "error", "error": "No scrape attempts executed"}
+        selected_url = official_url.rstrip("/")
+
+        for idx, candidate_url in enumerate(attempt_urls):
+            selected_url = candidate_url
+            scrape_result = await self.brightdata_client.scrape_as_markdown(candidate_url)
+            if not isinstance(scrape_result, dict):
+                last_result = {"status": "error", "error": "Invalid scrape payload"}
+                continue
+
+            last_result = scrape_result
+            content = str(scrape_result.get("content") or "").strip()
+            if scrape_result.get("status") == "success" and content:
+                if idx > 0:
+                    logger.info("♻️ Official-site scrape recovered content via fallback URL: %s", candidate_url)
+                return candidate_url, scrape_result
+
+        return selected_url, last_result
+
     def _choose_official_site_url(self, entity_name: str, results: List[Dict[str, Any]]) -> str:
         """Choose the best official-site candidate while demoting ecommerce domains."""
         if not results:
@@ -583,17 +629,18 @@ class DossierDataCollector:
             # Step 3: Scrape official website content
             logger.info(f"📄 Scraping content from {official_url}")
             scrape_started_at = time.perf_counter()
-            scrape_result = await self.brightdata_client.scrape_as_markdown(official_url)
+            scraped_url, scrape_result = await self._scrape_official_url_with_fallback(official_url)
             step_timings["scrape"] = round(time.perf_counter() - scrape_started_at, 3)
 
             if scrape_result.get('status') != 'success':
-                logger.warning(f"Scraping failed for {official_url}")
+                logger.warning(f"Scraping failed for {scraped_url}")
                 return None
 
             content = scrape_result.get('content', '')
             if not content:
-                logger.warning(f"No content scraped from {official_url}")
+                logger.warning(f"No content scraped from {scraped_url}")
                 return None
+            official_url = scraped_url
 
             # Step 4: Extract entity properties using AI
             extract_started_at = time.perf_counter()
@@ -849,7 +896,7 @@ If a field is not found, use null. Return ONLY valid JSON, no other text."""
                 return None
 
             # Scrape official website content
-            scrape_result = await self.brightdata_client.scrape_as_markdown(official_url)
+            scraped_url, scrape_result = await self._scrape_official_url_with_fallback(official_url)
 
             if scrape_result.get('status') != 'success':
                 return None
@@ -857,6 +904,7 @@ If a field is not found, use null. Return ONLY valid JSON, no other text."""
             content = scrape_result.get('content', '')
             if not content:
                 return None
+            official_url = scraped_url
 
             # Generate summary (first 500 chars)
             summary = content[:500] + "..." if len(content) > 500 else content

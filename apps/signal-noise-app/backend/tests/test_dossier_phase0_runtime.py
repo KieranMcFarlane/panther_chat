@@ -157,9 +157,52 @@ async def test_get_scraped_content_reuses_cached_official_url_when_search_fails(
 
     assert scrape_result is not None
     scraped_content, extracted, timings = scrape_result
-    assert scraped_content.url == "https://www.ccfc.co.uk/"
+    assert scraped_content.url.rstrip("/") == "https://www.ccfc.co.uk"
     assert extracted == {}
     assert "search" in timings
-    assert stub.scrape_urls == ["https://www.ccfc.co.uk/"]
+    assert [url.rstrip("/") for url in stub.scrape_urls] == ["https://www.ccfc.co.uk"]
     persisted = json.loads(cache_file.read_text())
     assert persisted.get("coventry city fc") == "https://www.ccfc.co.uk/"
+
+
+@pytest.mark.asyncio
+async def test_get_scraped_content_falls_back_to_subpaths_when_homepage_is_empty():
+    collector = DossierDataCollector()
+
+    class _EmptyHomepageStub:
+        def __init__(self):
+            self.scrape_urls = []
+
+        async def search_engine(self, **kwargs):
+            return {
+                "status": "success",
+                "results": [{"title": "Coventry City FC", "url": "https://www.ccfc.co.uk/"}],
+            }
+
+        async def scrape_as_markdown(self, url):
+            self.scrape_urls.append(url)
+            if url.rstrip("/") == "https://www.ccfc.co.uk":
+                return {"status": "success", "content": ""}
+            if url.rstrip("/") == "https://www.ccfc.co.uk/news":
+                return {"status": "success", "content": "Latest club updates"}
+            return {"status": "error", "error": "not found"}
+
+    stub = _EmptyHomepageStub()
+    collector.brightdata_client = stub
+    collector._brightdata_available = True
+
+    async def fake_extract_entity_properties(_content, _entity_name):
+        return {}
+
+    collector._extract_entity_properties = fake_extract_entity_properties
+    scrape_result = await collector._get_scraped_content("coventry-city-fc", "Coventry City FC")
+
+    assert scrape_result is not None
+    scraped_content, extracted, timings = scrape_result
+    assert scraped_content.url.rstrip("/") == "https://www.ccfc.co.uk/news"
+    assert extracted == {}
+    assert "scrape" in timings
+    assert [url.rstrip("/") for url in stub.scrape_urls[:2]] == [
+        "https://www.ccfc.co.uk",
+        "https://www.ccfc.co.uk/news",
+    ]
