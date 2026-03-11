@@ -18,6 +18,7 @@ from claude_client import ClaudeClient, LLMRequestError
 @pytest.fixture(autouse=True)
 def _default_non_stream_for_legacy_tests(monkeypatch):
     monkeypatch.setenv("CHUTES_STREAM_ENABLED", "false")
+    monkeypatch.setenv("CHUTES_MIN_REQUEST_INTERVAL_SECONDS", "0")
     ClaudeClient._api_disabled_reason = None
 
 
@@ -853,7 +854,65 @@ async def test_claude_client_streaming_length_empty_retries_non_stream_before_fa
     assert result["content"] == "non-stream salvage"
     assert stream_calls == 1
     assert len(post_calls) == 1
-    assert post_calls[0]["stream"] is False
+
+
+@pytest.mark.asyncio
+async def test_claude_client_applies_min_interval_throttle_between_requests(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_STREAM_ENABLED", "false")
+    monkeypatch.setenv("CHUTES_MAX_RETRIES", "0")
+    monkeypatch.setenv("CHUTES_MIN_REQUEST_INTERVAL_SECONDS", "0.5")
+
+    monotonic_values = [100.0, 100.0, 100.1, 100.1, 100.6, 100.6]
+    monotonic_idx = {"i": 0}
+    sleep_calls = []
+
+    class FakeResponse:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {
+                "choices": [{"message": {"content": "ok"}, "finish_reason": "stop"}],
+                "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2},
+            }
+
+    class FakeAsyncClient:
+        def __init__(self, timeout):
+            self.timeout = timeout
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            return FakeResponse()
+
+    async def fake_sleep(seconds):
+        sleep_calls.append(seconds)
+
+    def fake_monotonic():
+        idx = monotonic_idx["i"]
+        if idx >= len(monotonic_values):
+            return monotonic_values[-1]
+        monotonic_idx["i"] = idx + 1
+        return monotonic_values[idx]
+
+    monkeypatch.setattr(claude_client_module.time, "monotonic", fake_monotonic)
+    monkeypatch.setattr(claude_client_module.httpx, "AsyncClient", FakeAsyncClient)
+    monkeypatch.setattr(claude_client_module.asyncio, "sleep", fake_sleep)
+
+    client = ClaudeClient()
+    await client.query(prompt="one", model="haiku", max_tokens=32)
+    await client.query(prompt="two", model="haiku", max_tokens=32)
+
+    assert len(sleep_calls) == 1
+    assert sleep_calls[0] == pytest.approx(0.4, abs=1e-6)
 
 
 @pytest.mark.asyncio

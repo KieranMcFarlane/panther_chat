@@ -4,6 +4,7 @@ from typing import Dict, Any, Optional, List, Tuple
 import os
 import asyncio
 import random
+import time
 from datetime import datetime
 from dataclasses import dataclass
 import httpx
@@ -396,6 +397,14 @@ class ClaudeClient:
         )
         self.chutes_stream_enabled = self._parse_bool_env(os.getenv("CHUTES_STREAM_ENABLED"), default=True)
         self.chutes_max_retries = int(os.getenv("CHUTES_MAX_RETRIES", "3"))
+        self.chutes_min_request_interval_seconds = max(
+            0.0,
+            float(os.getenv("CHUTES_MIN_REQUEST_INTERVAL_SECONDS", "0.2")),
+        )
+        self.chutes_max_concurrent_requests = max(
+            1,
+            int(os.getenv("CHUTES_MAX_CONCURRENT_REQUESTS", "3")),
+        )
         self.chutes_429_policy = os.getenv("CHUTES_429_POLICY", "header_exponential").strip().lower()
         self.chutes_circuit_break_on_quota = self._parse_bool_env(
             os.getenv("CHUTES_CIRCUIT_BREAK_ON_QUOTA"),
@@ -424,6 +433,9 @@ class ClaudeClient:
 
         self.default_model = "haiku"
         self.cascade_order = ["haiku", "sonnet", "opus"]
+        self._chutes_rate_lock = asyncio.Lock()
+        self._chutes_last_request_monotonic = 0.0
+        self._chutes_request_semaphore = asyncio.Semaphore(self.chutes_max_concurrent_requests)
 
         logger.info(f"🤖 ClaudeClient initialized (provider: {self.provider}, default: {self.default_model})")
 
@@ -570,6 +582,19 @@ class ClaudeClient:
         base = min(2 ** max(attempt, 0), max(self.chutes_retry_backoff_cap_seconds, 0.0))
         jitter = random.uniform(0.0, max(self.chutes_retry_jitter_seconds, 0.0))
         return max(0.0, base + jitter)
+
+    async def _apply_chutes_request_throttle(self) -> None:
+        """Apply client-side pacing to reduce bursty 429 rate-limit responses."""
+        if self.chutes_min_request_interval_seconds <= 0.0:
+            return
+
+        async with self._chutes_rate_lock:
+            now = time.monotonic()
+            elapsed = now - self._chutes_last_request_monotonic
+            wait_seconds = self.chutes_min_request_interval_seconds - elapsed
+            if wait_seconds > 0:
+                await asyncio.sleep(wait_seconds)
+            self._chutes_last_request_monotonic = time.monotonic()
 
     def _set_last_request_diagnostics(
         self,
@@ -836,29 +861,31 @@ class ClaudeClient:
                     connect=min(request_timeout_seconds, 15.0),
                     read=min(request_timeout_seconds, self.chutes_stream_idle_timeout_seconds),
                 )
-                if self.chutes_stream_enabled:
-                    data = await self._query_chutes_streaming(
-                        payload=payload,
-                        headers=headers,
-                        timeout=timeout,
-                    )
-                    # Some providers emit no answer deltas in stream mode when truncated.
-                    if not data.get("answer_text") and data.get("stop_reason") == "length":
-                        logger.warning(
-                            "Chutes streaming returned empty answer with finish_reason=length for model=%s; retrying non-stream",
-                            payload["model"],
+                async with self._chutes_request_semaphore:
+                    await self._apply_chutes_request_throttle()
+                    if self.chutes_stream_enabled:
+                        data = await self._query_chutes_streaming(
+                            payload=payload,
+                            headers=headers,
+                            timeout=timeout,
                         )
+                        # Some providers emit no answer deltas in stream mode when truncated.
+                        if not data.get("answer_text") and data.get("stop_reason") == "length":
+                            logger.warning(
+                                "Chutes streaming returned empty answer with finish_reason=length for model=%s; retrying non-stream",
+                                payload["model"],
+                            )
+                            data = await self._query_chutes_non_stream(
+                                payload=payload,
+                                headers=headers,
+                                timeout=timeout,
+                            )
+                    else:
                         data = await self._query_chutes_non_stream(
                             payload=payload,
                             headers=headers,
                             timeout=timeout,
                         )
-                else:
-                    data = await self._query_chutes_non_stream(
-                        payload=payload,
-                        headers=headers,
-                        timeout=timeout,
-                    )
 
                 answer_content = data.get("answer_text", "")
                 reasoning_content = data.get("reasoning_text", "")
@@ -1158,13 +1185,15 @@ class ClaudeClient:
                     timeout=self.chutes_timeout_seconds,
                     connect=min(self.chutes_timeout_seconds, 15.0),
                 )
-                async with httpx.AsyncClient(timeout=timeout) as client:
-                    response = await client.post(
-                        f"{self.base_url.rstrip('/')}/messages",
-                        headers=headers,
-                        json=payload,
-                    )
-                    response.raise_for_status()
+                async with self._chutes_request_semaphore:
+                    await self._apply_chutes_request_throttle()
+                    async with httpx.AsyncClient(timeout=timeout) as client:
+                        response = await client.post(
+                            f"{self.base_url.rstrip('/')}/messages",
+                            headers=headers,
+                            json=payload,
+                        )
+                        response.raise_for_status()
 
                 data = response.json()
                 content_blocks = data.get("content") or []
