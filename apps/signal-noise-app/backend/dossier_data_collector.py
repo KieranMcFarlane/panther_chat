@@ -19,6 +19,7 @@ import os
 import logging
 import time
 import urllib.parse
+import json
 from typing import Dict, List, Optional, Any
 from datetime import datetime, timezone
 from dataclasses import dataclass, field
@@ -158,6 +159,64 @@ class DossierDataCollector:
         self._brightdata_available = False
         self._hypothesis_available = False
         self.source_timeout_seconds = float(os.getenv("DOSSIER_SOURCE_TIMEOUT_SECONDS", "20"))
+        self._official_site_url_cache = self._load_official_site_url_cache()
+
+    def _official_site_cache_file(self) -> Path:
+        cache_path = os.getenv(
+            "DOSSIER_OFFICIAL_SITE_CACHE_PATH",
+            "backend/data/dossiers/official_site_cache.json",
+        )
+        path = Path(cache_path)
+        if not path.is_absolute():
+            path = Path(__file__).resolve().parent.parent / cache_path
+        return path
+
+    def _normalize_official_site_cache_key(self, entity_name: str) -> str:
+        return " ".join((entity_name or "").strip().lower().split())
+
+    def _load_official_site_url_cache(self) -> Dict[str, str]:
+        cache_file = self._official_site_cache_file()
+        try:
+            if not cache_file.exists():
+                return {}
+            raw = json.loads(cache_file.read_text(encoding="utf-8"))
+            if not isinstance(raw, dict):
+                return {}
+            cache: Dict[str, str] = {}
+            for key, value in raw.items():
+                if isinstance(key, str) and isinstance(value, str) and value.strip():
+                    cache[self._normalize_official_site_cache_key(key)] = value.strip()
+            return cache
+        except Exception as error:  # noqa: BLE001
+            logger.debug("Failed loading official-site cache %s: %s", cache_file, error)
+            return {}
+
+    def _get_cached_official_site_url(self, entity_name: str) -> Optional[str]:
+        key = self._normalize_official_site_cache_key(entity_name)
+        if not key:
+            return None
+        value = self._official_site_url_cache.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+        return None
+
+    def _store_cached_official_site_url(self, entity_name: str, url: str) -> None:
+        normalized_url = str(url or "").strip()
+        key = self._normalize_official_site_cache_key(entity_name)
+        if not key or not normalized_url:
+            return
+
+        self._official_site_url_cache[key] = normalized_url
+
+        cache_file = self._official_site_cache_file()
+        try:
+            cache_file.parent.mkdir(parents=True, exist_ok=True)
+            cache_file.write_text(
+                json.dumps(self._official_site_url_cache, indent=2, sort_keys=True),
+                encoding="utf-8",
+            )
+        except Exception as error:  # noqa: BLE001
+            logger.debug("Failed persisting official-site cache %s: %s", cache_file, error)
 
     def _choose_official_site_url(self, entity_name: str, results: List[Dict[str, Any]]) -> str:
         """Choose the best official-site candidate while demoting ecommerce domains."""
@@ -328,7 +387,7 @@ class DossierDataCollector:
             )
 
         # Scrape additional data from web (Phase 2)
-        if self._brightdata_available:
+        if self.brightdata_client:
             scrape_started_at = time.perf_counter()
             scrape_result = await self._get_scraped_content(entity_id, dossier_data.entity_name)
             scrape_step_timings: Dict[str, Any] = {}
@@ -477,7 +536,7 @@ class DossierDataCollector:
         Returns:
             ScrapedContent with entity details or None
         """
-        if not self._brightdata_available or not self.brightdata_client:
+        if not self.brightdata_client:
             logger.warning("BrightData not available for scraping")
             return None
 
@@ -494,21 +553,30 @@ class DossierDataCollector:
             )
             step_timings["search"] = round(time.perf_counter() - search_started_at, 3)
 
-            if search_results.get('status') != 'success':
-                logger.warning(f"Search failed for {entity_name}")
-                return None
+            official_url = ""
+            if search_results.get('status') == 'success':
+                results = search_results.get('results', [])
+                if results:
+                    # Step 2: Find official website URL
+                    url_select_started_at = time.perf_counter()
+                    official_url = self._choose_official_site_url(entity_name, results)
+                    step_timings["url_select"] = round(time.perf_counter() - url_select_started_at, 3)
+                    if official_url:
+                        self._store_cached_official_site_url(entity_name, official_url)
 
-            results = search_results.get('results', [])
-            if not results:
-                logger.warning(f"No search results for {entity_name}")
-                return None
-
-            # Step 2: Find official website URL
-            url_select_started_at = time.perf_counter()
-            official_url = self._choose_official_site_url(entity_name, results)
             if not official_url:
-                logger.warning(f"Could not select official website URL for {entity_name}")
+                official_url = self._get_cached_official_site_url(entity_name) or ""
+                if official_url:
+                    logger.info("♻️ Reusing cached official website URL for %s: %s", entity_name, official_url)
+
+            if not official_url:
+                if search_results.get('status') != 'success':
+                    logger.warning(f"Search failed for {entity_name}")
+                else:
+                    logger.warning(f"No search results for {entity_name}")
                 return None
+
+            url_select_started_at = time.perf_counter()
             logger.info(f"✅ Found official website: {official_url}")
             step_timings["url_select"] = round(time.perf_counter() - url_select_started_at, 3)
 
@@ -636,8 +704,8 @@ If a field is not found, use null. Return ONLY valid JSON, no other text."""
         """
         # Ensure BrightData is connected
         if not self._brightdata_available:
-            connected = await self._connect_brightdata()
-            if not connected or not self.brightdata_client:
+            await self._connect_brightdata()
+            if not self.brightdata_client:
                 logger.warning("BrightData not available for multi-source collection")
                 return {
                     "official_site": {},
@@ -754,7 +822,7 @@ If a field is not found, use null. Return ONLY valid JSON, no other text."""
         Returns:
             Dict with url, content, summary, and metadata
         """
-        if not self._brightdata_available or not self.brightdata_client:
+        if not self.brightdata_client:
             return None
 
         try:
@@ -765,15 +833,18 @@ If a field is not found, use null. Return ONLY valid JSON, no other text."""
                 num_results=5
             )
 
-            if search_results.get('status') != 'success':
-                return None
+            official_url = ""
+            if search_results.get('status') == 'success':
+                results = search_results.get('results', [])
+                if results:
+                    official_url = self._choose_official_site_url(entity_name, results)
+                    if official_url:
+                        self._store_cached_official_site_url(entity_name, official_url)
 
-            results = search_results.get('results', [])
-            if not results:
-                return None
-
-            # Find official website URL
-            official_url = self._choose_official_site_url(entity_name, results)
+            if not official_url:
+                official_url = self._get_cached_official_site_url(entity_name) or ""
+                if official_url:
+                    logger.info("♻️ Reusing cached official website URL for %s: %s", entity_name, official_url)
             if not official_url:
                 return None
 

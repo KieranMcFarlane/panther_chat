@@ -2,6 +2,7 @@ import asyncio
 import sys
 import time
 from pathlib import Path
+import json
 
 import pytest
 
@@ -123,3 +124,42 @@ async def test_question_extraction_runs_sections_concurrently_and_parses_dict_re
     assert elapsed < 0.45
     assert len(questions) == 6
     assert all(question.question_text.endswith("?") for question in questions)
+
+
+@pytest.mark.asyncio
+async def test_get_scraped_content_reuses_cached_official_url_when_search_fails(tmp_path, monkeypatch):
+    cache_file = tmp_path / "official_site_cache.json"
+    monkeypatch.setenv("DOSSIER_OFFICIAL_SITE_CACHE_PATH", str(cache_file))
+
+    collector = DossierDataCollector()
+    collector._brightdata_available = False
+
+    class _FallbackBrightDataStub:
+        def __init__(self):
+            self.scrape_urls = []
+
+        async def search_engine(self, **kwargs):
+            return {"status": "error", "results": []}
+
+        async def scrape_as_markdown(self, url):
+            self.scrape_urls.append(url)
+            return {"status": "success", "content": "Cached official site content"}
+
+    stub = _FallbackBrightDataStub()
+    collector.brightdata_client = stub
+    collector._store_cached_official_site_url("Coventry City FC", "https://www.ccfc.co.uk/")
+
+    async def fake_extract_entity_properties(_content, _entity_name):
+        return {}
+
+    collector._extract_entity_properties = fake_extract_entity_properties
+    scrape_result = await collector._get_scraped_content("coventry-city-fc", "Coventry City FC")
+
+    assert scrape_result is not None
+    scraped_content, extracted, timings = scrape_result
+    assert scraped_content.url == "https://www.ccfc.co.uk/"
+    assert extracted == {}
+    assert "search" in timings
+    assert stub.scrape_urls == ["https://www.ccfc.co.uk/"]
+    persisted = json.loads(cache_file.read_text())
+    assert persisted.get("coventry city fc") == "https://www.ccfc.co.uk/"
