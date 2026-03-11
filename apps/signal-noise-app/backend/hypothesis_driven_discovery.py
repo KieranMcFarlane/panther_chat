@@ -1380,7 +1380,10 @@ class HypothesisDrivenDiscovery:
         if official_site_result.get('status') != 'success' or not official_site_result.get('results'):
             return None
 
-        return official_site_result['results'][0].get('url')
+        resolved_url = official_site_result['results'][0].get('url')
+        if isinstance(resolved_url, str) and resolved_url.startswith(("http://", "https://")):
+            self.current_official_site_url = resolved_url
+        return resolved_url
 
     async def _try_direct_site_paths(
         self,
@@ -1848,6 +1851,18 @@ class HypothesisDrivenDiscovery:
                             'validation_ms': round(metrics['validation_ms'], 2)
                         }
                         return url
+
+        if hop_type == HopType.OFFICIAL_SITE:
+            logger.warning(
+                "⚠️ Official-site primary search failed; skipping fallback query loop to preserve timeout budget"
+            )
+            metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
+            self._last_url_resolution_metrics = {
+                **metrics,
+                'search_calls_ms': round(metrics['search_calls_ms'], 2),
+                'validation_ms': round(metrics['validation_ms'], 2)
+            }
+            return None
 
         # All engines failed, try fallback queries
         logger.warning(f"⚠️ All search engines failed for {hop_type}, trying fallbacks")
