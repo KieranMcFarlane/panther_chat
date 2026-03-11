@@ -13,6 +13,7 @@ Pipeline:
 """
 
 import asyncio
+import inspect
 import json
 import logging
 import os
@@ -192,13 +193,22 @@ class FixedDossierFirstPipeline:
 
         # Try with dossier context first, fall back to standard discovery
         try:
-            result = await self.discovery.run_discovery_with_dossier_context(
-                entity_id=entity_id,
-                entity_name=entity_name,
-                dossier=dossier.to_dict() if hasattr(dossier, 'to_dict') else {},
-                max_iterations=max_iterations,
-                template_id=template_id
+            context_kwargs = {
+                "entity_id": entity_id,
+                "entity_name": entity_name,
+                "dossier": dossier.to_dict() if hasattr(dossier, 'to_dict') else {},
+                "max_iterations": max_iterations,
+            }
+            context_method = self.discovery.run_discovery_with_dossier_context
+            context_signature = inspect.signature(context_method)
+            supports_kwargs = any(
+                param.kind == inspect.Parameter.VAR_KEYWORD
+                for param in context_signature.parameters.values()
             )
+            if supports_kwargs or "template_id" in context_signature.parameters:
+                context_kwargs["template_id"] = template_id
+
+            result = await context_method(**context_kwargs)
         except Exception as e:
             logger.warning(f"⚠️ Dossier-context discovery failed: {e}")
             logger.info("🔄 Falling back to standard discovery...")
