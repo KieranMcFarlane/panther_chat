@@ -134,6 +134,62 @@ async def test_resolve_official_site_url_uses_persistent_cache_before_search():
     assert discovery.current_official_site_url == "https://www.ccfc.co.uk"
 
 
+@pytest.mark.asyncio
+async def test_resolve_official_site_url_uses_mapped_domain_before_search():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.current_official_site_url = None
+    discovery._official_site_url_cache = {}
+    discovery._official_site_domain_map = {
+        "coventry city football club": "https://www.ccfc.co.uk"
+    }
+    discovery._official_site_resolution_failures = {}
+    discovery.official_site_resolution_cooldown_seconds = 180.0
+
+    async def _unexpected_search(*args, **kwargs):  # pragma: no cover - should never run
+        raise AssertionError("search should not be called when mapped URL exists")
+
+    discovery._search_engine_with_timeout = _unexpected_search
+
+    resolved = await discovery._resolve_official_site_url("Coventry City FC")
+    assert resolved == "https://www.ccfc.co.uk"
+    assert discovery.current_official_site_url == "https://www.ccfc.co.uk"
+
+
+def test_get_cached_official_site_url_reuses_alias_signature():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery._official_site_url_cache = {
+        "coventry city football club": "https://www.ccfc.co.uk",
+    }
+
+    resolved = discovery._get_cached_official_site_url("Coventry City FC")
+    assert resolved == "https://www.ccfc.co.uk"
+
+
+@pytest.mark.asyncio
+async def test_resolve_official_site_url_uses_cooldown_after_search_failure():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.current_official_site_url = None
+    discovery._official_site_url_cache = {}
+    discovery._official_site_domain_map = {}
+    discovery._official_site_resolution_failures = {}
+    discovery.official_site_resolution_cooldown_seconds = 180.0
+
+    calls = {"search": 0}
+
+    async def _failing_search(*, query, engine, num_results):
+        calls["search"] += 1
+        return {"status": "error", "results": []}
+
+    discovery._search_engine_with_timeout = _failing_search
+
+    first = await discovery._resolve_official_site_url("Coventry City FC")
+    second = await discovery._resolve_official_site_url("Coventry City FC")
+
+    assert first is None
+    assert second is None
+    assert calls["search"] == 1
+
+
 def test_store_cached_official_site_url_persists_to_disk(tmp_path, monkeypatch):
     cache_file = tmp_path / "official_site_cache.json"
     monkeypatch.setenv("DISCOVERY_OFFICIAL_SITE_CACHE_PATH", str(cache_file))

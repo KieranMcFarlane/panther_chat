@@ -639,11 +639,16 @@ class HypothesisDrivenDiscovery:
         self._official_site_evaluation_cache: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
         self._resolved_url_context: Dict[str, Dict[str, str]] = {}
         self._official_site_url_cache = self._load_official_site_url_cache()
+        self._official_site_domain_map = self._load_official_site_domain_map()
+        self._official_site_resolution_failures: Dict[str, float] = {}
         self.current_official_site_url: Optional[str] = None
         self.max_consecutive_no_progress_iterations = int(os.getenv("DISCOVERY_MAX_CONSECUTIVE_NO_PROGRESS", "3"))
         self.search_timeout_seconds = float(os.getenv("DISCOVERY_SEARCH_TIMEOUT_SECONDS", "12"))
         self.search_validation_timeout_seconds = float(os.getenv("DISCOVERY_SEARCH_VALIDATION_TIMEOUT_SECONDS", "5"))
         self.url_resolution_timeout_seconds = float(os.getenv("DISCOVERY_URL_RESOLUTION_TIMEOUT_SECONDS", "12"))
+        self.official_site_resolution_cooldown_seconds = float(
+            os.getenv("DISCOVERY_OFFICIAL_SITE_RESOLUTION_COOLDOWN_SECONDS", "180")
+        )
 
         logger.info("🔍 HypothesisDrivenDiscovery initialized")
 
@@ -1409,6 +1414,20 @@ class HypothesisDrivenDiscovery:
             self.current_official_site_url = cached_url
             return cached_url
 
+        mapped_url = self._get_mapped_official_site_url(entity_name)
+        if mapped_url:
+            self.current_official_site_url = mapped_url
+            self._store_cached_official_site_url(entity_name, mapped_url)
+            logger.info("♻️ Reusing mapped official-site URL for %s: %s", entity_name, mapped_url)
+            return mapped_url
+
+        if self._is_official_site_resolution_in_cooldown(entity_name):
+            logger.info(
+                "⏭️ Skipping official-site search due to active cooldown for %s",
+                entity_name,
+            )
+            return None
+
         official_site_result = await self._search_engine_with_timeout(
             query=f'"{entity_name}" official website',
             engine='google',
@@ -1416,6 +1435,7 @@ class HypothesisDrivenDiscovery:
         )
 
         if official_site_result.get('status') != 'success' or not official_site_result.get('results'):
+            self._mark_official_site_resolution_failure(entity_name)
             return None
 
         best_result = official_site_result['results'][0]
@@ -1424,6 +1444,9 @@ class HypothesisDrivenDiscovery:
             self._cache_resolved_url_context(resolved_url, best_result)
             self.current_official_site_url = resolved_url
             self._store_cached_official_site_url(entity_name, resolved_url)
+            failures = getattr(self, "_official_site_resolution_failures", None)
+            if isinstance(failures, dict):
+                failures.pop(self._normalize_entity_cache_key(entity_name), None)
         return resolved_url
 
     async def _try_direct_site_paths(
@@ -2686,7 +2709,35 @@ class HypothesisDrivenDiscovery:
 
     def _official_site_cache_file(self) -> Path:
         cache_path = os.getenv("DISCOVERY_OFFICIAL_SITE_CACHE_PATH", "backend/data/dossiers/official_site_cache.json")
-        return Path(cache_path)
+        path = Path(cache_path)
+        if not path.is_absolute():
+            path = Path(__file__).resolve().parent.parent / cache_path
+        return path
+
+    def _official_site_domain_map_file(self) -> Path:
+        domain_map_path = os.getenv(
+            "DISCOVERY_OFFICIAL_DOMAIN_MAP_PATH",
+            "backend/data/dossiers/official_domain_map.json",
+        )
+        path = Path(domain_map_path)
+        if not path.is_absolute():
+            path = Path(__file__).resolve().parent.parent / domain_map_path
+        return path
+
+    def _normalize_entity_cache_key(self, entity_name: Any) -> str:
+        if not isinstance(entity_name, str):
+            return ""
+        return entity_name.strip().casefold()
+
+    def _canonical_entity_signature(self, entity_name: Any) -> str:
+        if not isinstance(entity_name, str):
+            return ""
+        cleaned = "".join(ch if ch.isalnum() or ch.isspace() else " " for ch in entity_name.casefold())
+        stopwords = {"the", "fc", "afc", "cf", "club", "football", "sports", "sport", "team", "association"}
+        tokens = [token for token in cleaned.split() if token and token not in stopwords]
+        if not tokens:
+            return ""
+        return "".join(tokens)
 
     def _load_official_site_url_cache(self) -> Dict[str, str]:
         cache_file = self._official_site_cache_file()
@@ -2702,25 +2753,56 @@ class HypothesisDrivenDiscovery:
                     continue
                 normalized = self._normalize_http_url(value)
                 if normalized:
-                    cache[key] = normalized
+                    cache[self._normalize_entity_cache_key(key)] = normalized
             return cache
         except Exception:
             return {}
 
+    def _load_official_site_domain_map(self) -> Dict[str, str]:
+        domain_map_file = self._official_site_domain_map_file()
+        try:
+            if not domain_map_file.exists():
+                return {}
+            payload = json.loads(domain_map_file.read_text())
+            if not isinstance(payload, dict):
+                return {}
+            mapping: Dict[str, str] = {}
+            for key, value in payload.items():
+                normalized_url = self._normalize_http_url(value)
+                normalized_key = self._normalize_entity_cache_key(key)
+                if normalized_key and normalized_url:
+                    mapping[normalized_key] = normalized_url
+            return mapping
+        except Exception:
+            return {}
+
     def _get_cached_official_site_url(self, entity_name: str) -> Optional[str]:
-        if not isinstance(entity_name, str):
-            return None
-        normalized_key = entity_name.strip().casefold()
+        normalized_key = self._normalize_entity_cache_key(entity_name)
         if not normalized_key:
             return None
         cache = getattr(self, "_official_site_url_cache", None)
         if not isinstance(cache, dict):
             return None
         value = cache.get(normalized_key)
-        return self._normalize_http_url(value)
+        normalized_value = self._normalize_http_url(value)
+        if normalized_value:
+            return normalized_value
+
+        # Deterministic alias matching lets "Coventry City FC" reuse prior URLs
+        # stored under equivalent names such as "Coventry City Football Club".
+        target_signature = self._canonical_entity_signature(entity_name)
+        if not target_signature:
+            return None
+        for cached_key, cached_url in cache.items():
+            if self._canonical_entity_signature(cached_key) != target_signature:
+                continue
+            normalized_cached = self._normalize_http_url(cached_url)
+            if normalized_cached:
+                return normalized_cached
+        return None
 
     def _store_cached_official_site_url(self, entity_name: str, url: str) -> None:
-        normalized_key = entity_name.strip().casefold() if isinstance(entity_name, str) else ""
+        normalized_key = self._normalize_entity_cache_key(entity_name)
         normalized_url = self._normalize_http_url(url)
         if not normalized_key or not normalized_url:
             return
@@ -2737,6 +2819,53 @@ class HypothesisDrivenDiscovery:
             cache_file.write_text(json.dumps(cache, indent=2, sort_keys=True))
         except Exception as cache_error:
             logger.debug("Failed to persist official-site cache: %s", cache_error)
+
+    def _get_mapped_official_site_url(self, entity_name: str) -> Optional[str]:
+        normalized_key = self._normalize_entity_cache_key(entity_name)
+        if not normalized_key:
+            return None
+        mapping = getattr(self, "_official_site_domain_map", None)
+        if not isinstance(mapping, dict):
+            return None
+        mapped_url = self._normalize_http_url(mapping.get(normalized_key))
+        if mapped_url:
+            return mapped_url
+
+        target_signature = self._canonical_entity_signature(entity_name)
+        if not target_signature:
+            return None
+        for mapped_key, mapped_value in mapping.items():
+            if self._canonical_entity_signature(mapped_key) != target_signature:
+                continue
+            resolved = self._normalize_http_url(mapped_value)
+            if resolved:
+                return resolved
+        return None
+
+    def _is_official_site_resolution_in_cooldown(self, entity_name: str) -> bool:
+        cooldown = float(getattr(self, "official_site_resolution_cooldown_seconds", 0.0))
+        if cooldown <= 0:
+            return False
+        normalized_key = self._normalize_entity_cache_key(entity_name)
+        if not normalized_key:
+            return False
+        failures = getattr(self, "_official_site_resolution_failures", None)
+        if not isinstance(failures, dict):
+            return False
+        last_failed_at = failures.get(normalized_key)
+        if not isinstance(last_failed_at, (int, float)):
+            return False
+        return (time.time() - last_failed_at) < cooldown
+
+    def _mark_official_site_resolution_failure(self, entity_name: str) -> None:
+        normalized_key = self._normalize_entity_cache_key(entity_name)
+        if not normalized_key:
+            return
+        failures = getattr(self, "_official_site_resolution_failures", None)
+        if not isinstance(failures, dict):
+            failures = {}
+            self._official_site_resolution_failures = failures
+        failures[normalized_key] = time.time()
 
     async def _evaluate_content_with_claude(
         self,
