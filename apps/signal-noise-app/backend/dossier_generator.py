@@ -247,35 +247,43 @@ class EntityDossierGenerator:
         if DATA_COLLECTOR_AVAILABLE:
             logger.info(f"🔍 Collecting entity data for {entity_name}")
             collector = DossierDataCollector()
-            dossier_data_obj = await collector.collect_all(entity_id, entity_name, entity_type=entity_type)
+            try:
+                dossier_data_obj = await collector.collect_all(entity_id, entity_name, entity_type=entity_type)
 
-            # Convert DossierData object to dict format for compatibility
-            entity_data = self._dossier_data_to_dict(dossier_data_obj)
+                # Convert DossierData object to dict format for compatibility
+                entity_data = self._dossier_data_to_dict(dossier_data_obj)
 
-            logger.info(f"✅ Data sources used: {', '.join(dossier_data_obj.data_sources_used)}")
+                logger.info(f"✅ Data sources used: {', '.join(dossier_data_obj.data_sources_used)}")
 
-            # ENHANCED: Collect multi-source intelligence using BrightData SDK
-            if hasattr(collector, '_collect_multi_source_intelligence'):
-                logger.info(f"🌐 Collecting multi-source intelligence for {entity_name}")
+                # ENHANCED: Collect multi-source intelligence using BrightData SDK
+                if hasattr(collector, '_collect_multi_source_intelligence'):
+                    logger.info(f"🌐 Collecting multi-source intelligence for {entity_name}")
 
-                # Collect real-time data
-                multi_source_data = await collector._collect_multi_source_intelligence(entity_name)
+                    # Collect real-time data
+                    multi_source_data = await collector._collect_multi_source_intelligence(entity_name)
 
-                # Add to entity_data for prompt interpolation
-                entity_data["official_site_summary"] = multi_source_data.get("official_site", {}).get("summary", "")
-                entity_data["official_site_url"] = multi_source_data.get("official_site", {}).get("url", "")
-                entity_data["job_postings_summary"] = self._summarize_job_postings(multi_source_data.get("job_postings", []))
-                entity_data["job_postings_count"] = len(multi_source_data.get("job_postings", []))
-                entity_data["jobs_board_url"] = self._extract_first_url(multi_source_data.get("job_postings", []))
-                entity_data["press_releases_summary"] = self._summarize_press_releases(multi_source_data.get("press_releases", []))
-                entity_data["press_releases_count"] = len(multi_source_data.get("press_releases", []))
-                entity_data["linkedin_posts_summary"] = self._summarize_linkedin_posts(multi_source_data.get("linkedin_posts", []))
-                entity_data["linkedin_posts_count"] = len(multi_source_data.get("linkedin_posts", []))
-                entity_data["linkedin_company_url"] = self._extract_first_url(multi_source_data.get("linkedin_posts", []))
-                entity_data["data_freshness"] = multi_source_data.get("freshness_score", 50)
-                entity_data["sources_used"] = multi_source_data.get("sources_used", [])
+                    # Add to entity_data for prompt interpolation
+                    entity_data["official_site_summary"] = multi_source_data.get("official_site", {}).get("summary", "")
+                    entity_data["official_site_url"] = multi_source_data.get("official_site", {}).get("url", "")
+                    entity_data["job_postings_summary"] = self._summarize_job_postings(multi_source_data.get("job_postings", []))
+                    entity_data["job_postings_count"] = len(multi_source_data.get("job_postings", []))
+                    entity_data["jobs_board_url"] = self._extract_first_url(multi_source_data.get("job_postings", []))
+                    entity_data["press_releases_summary"] = self._summarize_press_releases(multi_source_data.get("press_releases", []))
+                    entity_data["press_releases_count"] = len(multi_source_data.get("press_releases", []))
+                    entity_data["linkedin_posts_summary"] = self._summarize_linkedin_posts(multi_source_data.get("linkedin_posts", []))
+                    entity_data["linkedin_posts_count"] = len(multi_source_data.get("linkedin_posts", []))
+                    entity_data["linkedin_company_url"] = self._extract_first_url(multi_source_data.get("linkedin_posts", []))
+                    entity_data["data_freshness"] = multi_source_data.get("freshness_score", 50)
+                    entity_data["sources_used"] = multi_source_data.get("sources_used", [])
 
-                logger.info(f"✅ Multi-source data collected: {', '.join(multi_source_data.get('sources_used', []))}")
+                    logger.info(f"✅ Multi-source data collected: {', '.join(multi_source_data.get('sources_used', []))}")
+            finally:
+                close_fn = getattr(getattr(collector, "brightdata_client", None), "close", None)
+                if callable(close_fn):
+                    try:
+                        await close_fn()
+                    except Exception as close_error:  # noqa: BLE001
+                        logger.warning("⚠️ Failed to close collector BrightData client: %s", close_error)
         elif entity_data is None:
             # Fallback: create minimal entity data dict
             logger.warning("DossierDataCollector unavailable, using placeholder data")
