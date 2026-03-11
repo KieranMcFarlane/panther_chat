@@ -679,3 +679,124 @@ async def test_claude_client_streaming_falls_back_when_answer_channel_empty(monk
     assert result["content"] == "fallback answer"
     assert result["model_used"] == "moonshotai/Kimi-K2.5-TEE"
     assert result["inference_diagnostics"]["fallback_used"] is True
+
+
+@pytest.mark.asyncio
+async def test_claude_client_streaming_parses_list_content_parts(monkeypatch):
+    monkeypatch.setenv("CHUTES_STREAM_ENABLED", "true")
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+
+    class FakeStreamResponse:
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        def raise_for_status(self):
+            return None
+
+        async def aiter_lines(self):
+            lines = [
+                'data: {"choices":[{"delta":{"content":[{"type":"text","text":"Hello "}]}}]}',
+                'data: {"choices":[{"delta":{"content":[{"type":"text","text":"world"}],"reasoning":[{"type":"text","text":"r"}]},"finish_reason":"stop"}],"usage":{"prompt_tokens":1,"completion_tokens":2,"total_tokens":3}}',
+                "data: [DONE]",
+            ]
+            for line in lines:
+                yield line
+
+    class FakeAsyncClient:
+        def __init__(self, timeout):
+            self.timeout = timeout
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        def stream(self, method, url, headers=None, json=None):
+            return FakeStreamResponse()
+
+    monkeypatch.setattr(claude_client_module.httpx, "AsyncClient", FakeAsyncClient)
+
+    client = ClaudeClient()
+    result = await client.query(prompt="hello", model="haiku", max_tokens=64)
+
+    assert result["content"] == "Hello world"
+
+
+@pytest.mark.asyncio
+async def test_claude_client_streaming_length_empty_retries_non_stream_before_fallback(monkeypatch):
+    monkeypatch.setenv("CHUTES_STREAM_ENABLED", "true")
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_FALLBACK_MODEL", "moonshotai/Kimi-K2.5-TEE")
+    monkeypatch.setenv("CHUTES_MAX_RETRIES", "1")
+
+    stream_calls = 0
+    post_calls = []
+
+    class FakeStreamResponse:
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        def raise_for_status(self):
+            return None
+
+        async def aiter_lines(self):
+            lines = [
+                'data: {"choices":[{"delta":{"reasoning_content":"thinking"},"finish_reason":"length"}]}',
+                "data: [DONE]",
+            ]
+            for line in lines:
+                yield line
+
+    class FakeAsyncClient:
+        def __init__(self, timeout):
+            self.timeout = timeout
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        def stream(self, method, url, headers=None, json=None):
+            nonlocal stream_calls
+            stream_calls += 1
+            return FakeStreamResponse()
+
+        async def post(self, url, headers=None, json=None):
+            post_calls.append(json)
+            return httpx.Response(
+                200,
+                request=httpx.Request("POST", url),
+                json={
+                    "choices": [
+                        {
+                            "message": {"content": "non-stream salvage"},
+                            "finish_reason": "stop",
+                        }
+                    ],
+                    "usage": {"prompt_tokens": 1, "completion_tokens": 2, "total_tokens": 3},
+                },
+            )
+
+    monkeypatch.setattr(claude_client_module.httpx, "AsyncClient", FakeAsyncClient)
+
+    client = ClaudeClient()
+    result = await client.query(prompt="hello", model="haiku", max_tokens=64)
+
+    assert result["content"] == "non-stream salvage"
+    assert stream_calls == 1
+    assert len(post_calls) == 1
+    assert post_calls[0]["stream"] is False

@@ -71,6 +71,7 @@ class BrightDataSDKClient:
         self.default_zone = os.getenv("BRIGHTDATA_ZONE")
         self.serp_zone = os.getenv("BRIGHTDATA_SERP_ZONE")
         self.unlocker_zone = os.getenv("BRIGHTDATA_UNLOCKER_ZONE")
+        self.browser_zone = os.getenv("BRIGHTDATA_BROWSER_ZONE")
         self.serp_timeout_seconds = float(os.getenv("BRIGHTDATA_SERP_TIMEOUT_SECONDS", "30"))
         self.serp_poll_attempts = int(os.getenv("BRIGHTDATA_SERP_POLL_ATTEMPTS", "6"))
         self.serp_poll_interval_seconds = float(os.getenv("BRIGHTDATA_SERP_POLL_INTERVAL_SECONDS", "1.2"))
@@ -90,7 +91,10 @@ class BrightDataSDKClient:
             if self._client is None:
                 try:
                     from brightdata import BrightDataClient
-                    self._client_context = BrightDataClient(self.token)
+                    init_kwargs: Dict[str, Any] = {}
+                    if self.browser_zone:
+                        init_kwargs["browser_zone"] = self.browser_zone
+                    self._client_context = BrightDataClient(self.token, **init_kwargs)
                     self._client = await self._with_timeout(self._client_context.__aenter__())
                     logger.info("✅ BrightData SDK client initialized")
                 except Exception as e:
@@ -258,6 +262,7 @@ class BrightDataSDKClient:
                     response_format='raw',
                 )
             )
+            final_result = result
 
             # Check result
             if not result or not hasattr(result, 'data'):
@@ -267,34 +272,51 @@ class BrightDataSDKClient:
                     "url": url
                 }
 
-            # Convert HTML to markdown
-            from bs4 import BeautifulSoup
-            html_content = result.data if hasattr(result, 'data') else ""
-            soup = BeautifulSoup(html_content, 'html.parser')
-
-            # Remove scripts/styles
-            for tag in soup(["script", "style", "nav", "footer", "header"]):
-                tag.decompose()
-
-            # Extract main content
-            main = soup.find('main') or soup.find('article') or soup.body
-            if main:
-                content = self._html_to_text(main)
-            else:
-                content = soup.get_text(separator='\n', strip=True)
-
-            # Clean up
-            lines = [line.strip() for line in content.split('\n') if line.strip()]
-            content = '\n'.join(lines)
+            html_content = self._extract_html_from_scrape_payload(result.data if hasattr(result, 'data') else "")
+            content, publication_date = self._extract_text_and_publication_date(html_content, url)
 
             if not content:
-                logger.warning("⚠️ SDK scrape returned empty content for %s, falling back to HTTP request path", url)
-                return await self._scrape_as_markdown_fallback(url)
+                # JS-heavy pages often need browser rendering rather than unlocker HTML.
+                browser_zone_used: Optional[str] = None
+                browser_attempts: List[Dict[str, str]] = []
+                for browser_zone in self._resolve_browser_zone_candidates():
+                    try:
+                        browser_result = await self._with_timeout(
+                            client.scrape_url(
+                                url,
+                                zone=browser_zone,
+                                response_format='raw',
+                            )
+                        )
+                        browser_html = self._extract_html_from_scrape_payload(
+                            browser_result.data if hasattr(browser_result, 'data') else ""
+                        )
+                        content, publication_date = self._extract_text_and_publication_date(browser_html, url)
+                        if content:
+                            html_content = browser_html
+                            final_result = browser_result
+                            browser_zone_used = browser_zone
+                            break
+                        browser_attempts.append({"zone": browser_zone, "status": "empty"})
+                    except Exception as browser_error:
+                        browser_attempts.append({"zone": browser_zone, "status": f"error: {str(browser_error)[:120]}"})
+                        logger.debug(
+                            "Browser-zone SDK scrape failed for %s via zone=%s: %s",
+                            url,
+                            browser_zone,
+                            browser_error,
+                        )
+
+                if not content:
+                    logger.warning(
+                        "⚠️ SDK scrape returned empty content for %s after browser zone attempts=%s; falling back to HTTP request path",
+                        url,
+                        browser_attempts,
+                    )
+                    return await self._scrape_as_markdown_fallback(url)
+                logger.info("✅ Browser-zone scrape recovered content for %s (zone=%s)", url, browser_zone_used)
 
             logger.info(f"✅ Scraped {len(content)} characters")
-
-            # Extract publication date from HTML metadata
-            publication_date = self._extract_publication_date(soup, html_content, url)
 
             return {
                 "status": "success",
@@ -306,6 +328,7 @@ class BrightDataSDKClient:
                 "metadata": {
                     "word_count": len(content.split()),
                     "source": "brightdata_sdk",
+                    "method": getattr(final_result, "method", None) if final_result is not None else None,
                     "has_publication_date": publication_date is not None
                 }
             }
@@ -686,6 +709,19 @@ class BrightDataSDKClient:
                 unique.append(zone)
         return unique or ["sdk_unlocker"]
 
+    def _resolve_browser_zone_candidates(self) -> List[str]:
+        """Choose browser-rendering zones to try for JS-heavy pages."""
+        zones: List[str] = []
+        if self.browser_zone:
+            zones.append(self.browser_zone)
+        zones.extend(["mcp_browser", "browser_api"])
+
+        unique: List[str] = []
+        for zone in zones:
+            if zone and zone not in unique:
+                unique.append(zone)
+        return unique
+
     def _resolve_serp_endpoint_candidates(self) -> List[str]:
         """Resolve BrightData SERP endpoint candidates for account/API variants."""
         base = self.api_url.rstrip("/")
@@ -787,22 +823,15 @@ class BrightDataSDKClient:
                                 )
                                 continue
 
-                            html_body = bd_response.text
+                            html_body = self._extract_html_from_scrape_payload(bd_response.text)
                             if html_body:
-                                soup = BeautifulSoup(html_body, 'html.parser')
-
-                                for tag in soup(["script", "style", "nav", "footer", "header"]):
-                                    tag.decompose()
-
-                                main = soup.find('main') or soup.find('article') or soup.body
-                                if main:
-                                    content = self._html_to_text(main)
-                                else:
-                                    content = soup.get_text(separator='\n', strip=True)
-
-                                lines = [line.strip() for line in content.split('\n') if line.strip()]
-                                content = '\n'.join(lines)
-                                publication_date = self._extract_publication_date(soup, html_body, url)
+                                content, publication_date = self._extract_text_and_publication_date(html_body, url)
+                                if not content:
+                                    logger.debug(
+                                        "BrightData request fallback returned empty parsed content (zone=%s), trying next strategy",
+                                        zone,
+                                    )
+                                    continue
 
                                 return {
                                     "status": "success",
@@ -966,6 +995,159 @@ class BrightDataSDKClient:
                     lines.append(f"[{text}]({href})")
 
         return '\n\n'.join(lines) if lines else element.get_text(separator='\n', strip=True)
+
+    def _extract_html_from_scrape_payload(self, payload: Any) -> str:
+        """Extract HTML-like text from BrightData SDK/HTTP payload variants."""
+        if isinstance(payload, str):
+            candidate = payload.strip()
+            if not candidate:
+                return ""
+            if candidate.startswith("{") or candidate.startswith("["):
+                try:
+                    import json
+                    decoded = json.loads(candidate)
+                    nested = self._extract_html_from_scrape_payload(decoded)
+                    if nested:
+                        return nested
+                except Exception:
+                    pass
+            return candidate
+
+        if isinstance(payload, dict):
+            for key in ("html", "body", "content", "page", "result", "data"):
+                nested = payload.get(key)
+                extracted = self._extract_html_from_scrape_payload(nested)
+                if extracted:
+                    return extracted
+            return ""
+
+        if isinstance(payload, list):
+            for item in payload:
+                extracted = self._extract_html_from_scrape_payload(item)
+                if extracted:
+                    return extracted
+            return ""
+
+        return ""
+
+    def _extract_text_and_publication_date(self, html_content: str, url: str) -> tuple[str, Optional[datetime]]:
+        """Parse HTML to textual content and publication date metadata."""
+        from bs4 import BeautifulSoup
+
+        soup_raw = BeautifulSoup(html_content or "", 'html.parser')
+        soup = BeautifulSoup(html_content or "", 'html.parser')
+        for tag in soup(["script", "style", "nav", "footer", "header"]):
+            tag.decompose()
+
+        main = soup.find('main') or soup.find('article') or soup.body
+        if main:
+            content = self._html_to_text(main)
+        else:
+            content = soup.get_text(separator='\n', strip=True)
+
+        lines = [line.strip() for line in content.split('\n') if line.strip()]
+        cleaned = '\n'.join(lines)
+        if not cleaned:
+            cleaned = self._extract_metadata_fallback_text(soup_raw)
+        publication_date = self._extract_publication_date(soup_raw, html_content, url)
+        return cleaned, publication_date
+
+    def _extract_metadata_fallback_text(self, soup) -> str:
+        """Extract minimal meaningful text from head metadata when body text is unavailable."""
+        snippets: List[str] = []
+
+        title = soup.title.get_text(strip=True) if soup.title else ""
+        if title:
+            snippets.append(f"Title: {title}")
+
+        meta_names = [
+            ("description", "Description"),
+            ("og:title", "OG Title"),
+            ("og:description", "OG Description"),
+            ("twitter:title", "Twitter Title"),
+            ("twitter:description", "Twitter Description"),
+        ]
+        for meta_key, label in meta_names:
+            tag = soup.find("meta", attrs={"name": meta_key}) or soup.find("meta", property=meta_key)
+            if tag and tag.get("content"):
+                text = str(tag.get("content")).strip()
+                if text:
+                    snippets.append(f"{label}: {text}")
+
+        # JSON-LD can still include valuable non-rendered text blocks on JS-heavy pages.
+        for script in soup.find_all("script", attrs={"type": "application/ld+json"}):
+            raw = script.string or script.get_text() or ""
+            raw = raw.strip()
+            if not raw:
+                continue
+            try:
+                import json
+                payload = json.loads(raw)
+                fields: List[str] = []
+
+                def _walk(node: Any) -> None:
+                    if isinstance(node, dict):
+                        for key in ("name", "headline", "description", "about", "text", "articleBody"):
+                            value = node.get(key)
+                            if isinstance(value, str) and value.strip():
+                                fields.append(value.strip())
+                        for value in node.values():
+                            _walk(value)
+                    elif isinstance(node, list):
+                        for item in node:
+                            _walk(item)
+
+                _walk(payload)
+                if fields:
+                    snippets.append(f"Structured data: {' | '.join(fields[:3])[:400]}")
+            except Exception:
+                continue
+
+        # JS-heavy apps (Nuxt/Next) may not expose body text in static HTML responses.
+        script_fallback = self._extract_script_fallback_text(soup)
+        if script_fallback:
+            snippets.append(script_fallback)
+
+        return "\n".join(snippets[:8]).strip()
+
+    def _extract_script_fallback_text(self, soup) -> str:
+        """Extract a concise text summary from inline script payloads."""
+        import re
+
+        tokens: List[str] = []
+        seen: set[str] = set()
+
+        def _add_token(value: str) -> None:
+            cleaned = value.strip()
+            if not cleaned:
+                return
+            if len(cleaned) < 12:
+                return
+            if cleaned in seen:
+                return
+            seen.add(cleaned)
+            tokens.append(cleaned)
+
+        # Pull meaningful URLs from script payloads.
+        for script in soup.find_all("script"):
+            raw = (script.string or script.get_text() or "").strip()
+            if not raw:
+                continue
+
+            for url in re.findall(r"https?://[^\\s\"'<>\\)]+", raw):
+                _add_token(url[:180])
+
+            # Extract quoted text chunks that look human-readable.
+            for match in re.findall(r"[\"']([^\"'\\n]{20,160})[\"']", raw):
+                if any(ch.isalpha() for ch in match) and not match.startswith("http"):
+                    _add_token(match)
+
+            if len(tokens) >= 10:
+                break
+
+        if not tokens:
+            return ""
+        return "Script data: " + " | ".join(tokens[:8])
 
     def _extract_publication_date(
         self,

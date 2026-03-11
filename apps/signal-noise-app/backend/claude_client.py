@@ -514,6 +514,22 @@ class ClaudeClient:
 
         return f"{error.__class__.__name__}: {str(error) or 'unknown error'}"
 
+    @staticmethod
+    def _extract_text_parts(value: Any) -> str:
+        """Normalize OpenAI-compatible content deltas into plain text."""
+        if isinstance(value, str):
+            return value
+        if isinstance(value, dict):
+            return str(value.get("text", "") or "")
+        if isinstance(value, list):
+            parts: List[str] = []
+            for item in value:
+                text = ClaudeClient._extract_text_parts(item)
+                if text:
+                    parts.append(text)
+            return "".join(parts)
+        return ""
+
     async def query_with_cascade(
         self,
         prompt: str,
@@ -726,6 +742,17 @@ class ClaudeClient:
                         headers=headers,
                         timeout=timeout,
                     )
+                    # Some providers emit no answer deltas in stream mode when truncated.
+                    if not data.get("answer_text") and data.get("stop_reason") == "length":
+                        logger.warning(
+                            "Chutes streaming returned empty answer with finish_reason=length for model=%s; retrying non-stream",
+                            payload["model"],
+                        )
+                        data = await self._query_chutes_non_stream(
+                            payload=payload,
+                            headers=headers,
+                            timeout=timeout,
+                        )
                 else:
                     data = await self._query_chutes_non_stream(
                         payload=payload,
@@ -860,20 +887,9 @@ class ClaudeClient:
         choice = (data.get("choices") or [{}])[0]
         message = choice.get("message") or {}
         raw_content = message.get("content", "")
-        content = raw_content
-        if isinstance(raw_content, list):
-            content = "".join(
-                part.get("text", "")
-                for part in raw_content
-                if isinstance(part, dict) and part.get("type") == "text"
-            )
+        content = self._extract_text_parts(raw_content)
         reasoning_content = message.get("reasoning_content", "")
-        if isinstance(reasoning_content, list):
-            reasoning_content = "".join(
-                part.get("text", "")
-                for part in reasoning_content
-                if isinstance(part, dict) and part.get("type") == "text"
-            )
+        reasoning_content = self._extract_text_parts(reasoning_content)
         return {
             "answer_text": content if isinstance(content, str) else "",
             "reasoning_text": reasoning_content if isinstance(reasoning_content, str) else "",
@@ -924,11 +940,17 @@ class ClaudeClient:
                     choice = (event.get("choices") or [{}])[0] if isinstance(event, dict) else {}
                     delta = choice.get("delta") or {}
                     content_piece = delta.get("content")
-                    if isinstance(content_piece, str) and content_piece:
-                        answer_parts.append(content_piece)
+                    content_text = self._extract_text_parts(content_piece)
+                    if content_text:
+                        answer_parts.append(content_text)
                     reasoning_piece = delta.get("reasoning_content")
-                    if isinstance(reasoning_piece, str) and reasoning_piece:
-                        reasoning_parts.append(reasoning_piece)
+                    reasoning_text = self._extract_text_parts(reasoning_piece)
+                    if reasoning_text:
+                        reasoning_parts.append(reasoning_text)
+                    alt_reasoning_piece = delta.get("reasoning")
+                    alt_reasoning_text = self._extract_text_parts(alt_reasoning_piece)
+                    if alt_reasoning_text:
+                        reasoning_parts.append(alt_reasoning_text)
                     if choice.get("finish_reason") is not None:
                         stop_reason = choice.get("finish_reason")
                     if isinstance(event, dict) and isinstance(event.get("usage"), dict):

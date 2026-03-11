@@ -87,3 +87,81 @@ async def test_search_engine_fallback_resolves_async_serp_response_id(monkeypatc
     assert result["results"]
     assert result["results"][0]["url"] == "https://www.ccfc.co.uk/"
     assert result["metadata"]["endpoint"].endswith("/serp/req")
+
+
+@pytest.mark.asyncio
+async def test_scrape_as_markdown_uses_browser_zone_when_initial_sdk_result_is_empty(monkeypatch):
+    class _FakeResult:
+        def __init__(self, data, method="web_unlocker"):
+            self.data = data
+            self.method = method
+
+    class _FakeClient:
+        def __init__(self):
+            self.calls = []
+
+        async def scrape_url(self, url, response_format="raw", zone=None):
+            self.calls.append({"url": url, "response_format": response_format, "zone": zone})
+            if zone is None:
+                # Empty after script/style cleanup.
+                return _FakeResult("<html><body><script>boot()</script></body></html>", method="web_unlocker")
+            return _FakeResult("<html><body><main><p>Rendered page content</p></main></body></html>", method="browser_api")
+
+    fake_client = _FakeClient()
+    client = BrightDataSDKClient(token="test-token")
+    client.browser_zone = "mcp_browser"
+
+    async def _fake_get_client():
+        return fake_client
+
+    monkeypatch.setattr(client, "_get_client", _fake_get_client)
+
+    result = await client.scrape_as_markdown("https://example.com")
+
+    assert result["status"] == "success"
+    assert "Rendered page content" in result["content"]
+    assert result["metadata"]["method"] == "browser_api"
+    assert any(call.get("zone") == "mcp_browser" for call in fake_client.calls)
+
+
+def test_extract_text_and_publication_date_uses_metadata_when_body_is_empty():
+    client = BrightDataSDKClient(token="test-token")
+    html = """
+    <html>
+      <head>
+        <title>Coventry City FC</title>
+        <meta name="description" content="Official Coventry City FC website" />
+      </head>
+      <body>
+        <script>window.__APP__ = true;</script>
+      </body>
+    </html>
+    """
+
+    content, publication_date = client._extract_text_and_publication_date(html, "https://www.ccfc.co.uk/")
+    assert "Coventry City FC" in content
+    assert "Official Coventry City FC website" in content
+    assert publication_date is None
+
+
+def test_extract_text_and_publication_date_uses_script_fallback_for_js_heavy_pages():
+    client = BrightDataSDKClient(token="test-token")
+    html = """
+    <html>
+      <head></head>
+      <body>
+        <script>
+          window.__NUXT__={};
+          window.__NUXT__.config={public:{
+            VUE_APP_SITE_DOMAIN:"https://cms.gc.coventrycityfcservices.co.uk",
+            VUE_APP_FIXTURE:"https://matches.football.admin.gc.coventrycityfcservices.co.uk"
+          }};
+        </script>
+      </body>
+    </html>
+    """
+
+    content, publication_date = client._extract_text_and_publication_date(html, "https://www.ccfc.co.uk/")
+    assert "Script data:" in content
+    assert "https://" in content
+    assert publication_date is None

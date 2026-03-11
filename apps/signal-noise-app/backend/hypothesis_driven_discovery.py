@@ -636,6 +636,7 @@ class HypothesisDrivenDiscovery:
         self._dossier_hypotheses_cache = {}
         self._official_site_content_cache: Dict[str, Dict[str, Any]] = {}
         self._official_site_evaluation_cache: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
+        self._resolved_url_context: Dict[str, Dict[str, str]] = {}
         self.current_official_site_url: Optional[str] = None
         self.max_consecutive_no_progress_iterations = int(os.getenv("DISCOVERY_MAX_CONSECUTIVE_NO_PROGRESS", "3"))
         self.search_timeout_seconds = float(os.getenv("DISCOVERY_SEARCH_TIMEOUT_SECONDS", "12"))
@@ -1178,32 +1179,53 @@ class HypothesisDrivenDiscovery:
 
                 content = content_result.get('content', '')
                 content_text = content if isinstance(content, str) else ''
+                resolved_context = self._resolved_url_context.get(url, {})
+                context_title = str(resolved_context.get("title") or "").strip()
+                context_snippet = str(resolved_context.get("snippet") or "").strip()
                 content_metadata = {
                     'content_type': 'text/html',
                     'char_count': len(content_text)
                 }
 
                 if not content_text.strip():
-                    logger.warning("Scraping returned empty content; treating hop as NO_PROGRESS")
-                    return {
-                        'hop_type': hop_type.value,
-                        'url': url,
-                        'decision': 'NO_PROGRESS',
-                        'confidence_delta': 0.0,
-                        'justification': 'No content returned from scrape',
-                        'evidence_found': '',
-                        'cost_usd': 0.0,
-                        'scrape_data': {
-                            'publication_date': content_result.get('publication_date'),
-                            'timestamp': content_result.get('timestamp'),
-                            'url': content_result.get('url'),
-                            'word_count': content_result.get('metadata', {}).get('word_count')
-                        },
-                        'performance': {
-                            **performance,
-                            'total_duration_ms': round((time.perf_counter() - hop_started_at) * 1000, 2)
+                    if context_title or context_snippet:
+                        logger.warning(
+                            "Scraping returned empty content; falling back to search-result context for URL=%s",
+                            url,
+                        )
+                        content_text = "\n".join(
+                            part for part in [context_title, context_snippet] if part
+                        ).strip()
+                        content_metadata['char_count'] = len(content_text)
+                    else:
+                        logger.warning("Scraping returned empty content; treating hop as NO_PROGRESS")
+                        return {
+                            'hop_type': hop_type.value,
+                            'url': url,
+                            'decision': 'NO_PROGRESS',
+                            'confidence_delta': 0.0,
+                            'justification': 'No content returned from scrape',
+                            'evidence_found': '',
+                            'cost_usd': 0.0,
+                            'scrape_data': {
+                                'publication_date': content_result.get('publication_date'),
+                                'timestamp': content_result.get('timestamp'),
+                                'url': content_result.get('url'),
+                                'word_count': content_result.get('metadata', {}).get('word_count')
+                            },
+                            'performance': {
+                                **performance,
+                                'total_duration_ms': round((time.perf_counter() - hop_started_at) * 1000, 2)
+                            }
                         }
-                    }
+
+                # JS-heavy pages often yield short script-only text. Blend cached SERP context
+                # to improve downstream evaluation signal quality.
+                if content_text.strip() and len(content_text) < 300 and (context_title or context_snippet):
+                    merged = "\n".join([context_title, context_snippet, content_text]).strip()
+                    if merged and merged != content_text:
+                        content_text = merged
+                        content_metadata['char_count'] = len(content_text)
 
                 content = content_text
 
@@ -1367,8 +1389,9 @@ class HypothesisDrivenDiscovery:
         return False
 
     async def _resolve_official_site_url(self, entity_name: str) -> Optional[str]:
-        known_official_url = getattr(self, "current_official_site_url", None)
-        if isinstance(known_official_url, str) and known_official_url.startswith(("http://", "https://")):
+        known_official_url = self._normalize_http_url(getattr(self, "current_official_site_url", None))
+        if known_official_url:
+            self.current_official_site_url = known_official_url
             return known_official_url
 
         official_site_result = await self._search_engine_with_timeout(
@@ -1380,8 +1403,10 @@ class HypothesisDrivenDiscovery:
         if official_site_result.get('status') != 'success' or not official_site_result.get('results'):
             return None
 
-        resolved_url = official_site_result['results'][0].get('url')
-        if isinstance(resolved_url, str) and resolved_url.startswith(("http://", "https://")):
+        best_result = official_site_result['results'][0]
+        resolved_url = self._normalize_http_url(best_result.get('url'))
+        if resolved_url:
+            self._cache_resolved_url_context(resolved_url, best_result)
             self.current_official_site_url = resolved_url
         return resolved_url
 
@@ -1778,12 +1803,14 @@ class HypothesisDrivenDiscovery:
                         if valid_results:
                             # Sort by URL score if available
                             valid_results.sort(key=lambda x: x.get('_url_score', 0), reverse=True)
-                            best_url = valid_results[0].get('url')
+                            best_result = valid_results[0]
+                            best_url = best_result.get('url')
                             best_score = valid_results[0].get('_url_score', 0)
                             logger.info(
                                 f"✅ {engine} search found best URL after validation "
                                 f"(score {best_score}): {best_url}"
                             )
+                            self._cache_resolved_url_context(best_url, best_result)
 
                             # ENHANCEMENT: If best URL is a PDF, check if there's a tender page
                             # that might contain multiple RFPs (like ICF's /tenders page)
@@ -1812,9 +1839,11 @@ class HypothesisDrivenDiscovery:
                     # Fallback: return best scored result without validation
                     if scored_results:
                         scored_results.sort(key=lambda x: x.get('_url_score', 0), reverse=True)
-                        best_url = scored_results[0].get('url')
+                        best_result = scored_results[0]
+                        best_url = best_result.get('url')
                         best_score = scored_results[0].get('_url_score', 0)
                         logger.info(f"✅ {engine} search found best URL (score {best_score}): {best_url}")
+                        self._cache_resolved_url_context(best_url, best_result)
 
                         # ENHANCEMENT: If best URL is a PDF, check if there's a tender page
                         # that might contain multiple RFPs (like ICF's /tenders page)
@@ -1843,6 +1872,7 @@ class HypothesisDrivenDiscovery:
                     # For low-value hops, return first result
                     url = results[0].get('url')
                     if url:
+                        self._cache_resolved_url_context(url, results[0])
                         logger.info(f"✅ {engine} search found URL: {url}")
                         metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
                         self._last_url_resolution_metrics = {
@@ -1886,6 +1916,7 @@ class HypothesisDrivenDiscovery:
                 if search_result.get('status') == 'success' and search_result.get('results'):
                     url = search_result['results'][0].get('url')
                     if url:
+                        self._cache_resolved_url_context(url, search_result['results'][0])
                         logger.info(f"✅ Fallback {i} ({engine}) found URL: {url}")
                         metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
                         self._last_url_resolution_metrics = {
@@ -2408,10 +2439,95 @@ class HypothesisDrivenDiscovery:
             'evidence_type': None
         }
 
-    def _fallback_result_with_reason(self, reason: str) -> Dict[str, Any]:
+    def _fallback_result_with_reason(
+        self,
+        reason: str,
+        *,
+        content: Optional[str] = None,
+        hop_type: Optional[HopType] = None,
+        context: Optional[EvaluationContext] = None,
+    ) -> Dict[str, Any]:
+        heuristic = self._heuristic_result_from_content(
+            content=content,
+            hop_type=hop_type,
+            context=context,
+            fallback_reason=reason,
+        )
+        if heuristic is not None:
+            return heuristic
+
         result = self._fallback_result()
         result['justification'] = reason
         return result
+
+    def _heuristic_result_from_content(
+        self,
+        *,
+        content: Optional[str],
+        hop_type: Optional[HopType],
+        context: Optional[EvaluationContext],
+        fallback_reason: str,
+    ) -> Optional[Dict[str, Any]]:
+        """Fallback evaluator for cases where model output is unavailable."""
+        if not content or not context or not hop_type:
+            return None
+
+        lines = [line.strip() for line in str(content).splitlines() if line.strip()]
+        if not lines:
+            return None
+
+        candidates: List[str] = []
+        candidates.extend(str(k).strip().lower() for k in (context.keywords or []) if str(k).strip())
+        candidates.extend(str(i).strip().lower() for i in (context.early_indicators or []) if str(i).strip())
+        candidates.extend(
+            [
+                "rfp",
+                "request for proposal",
+                "procurement",
+                "tender",
+                "vendor",
+                "supplier",
+                "digital",
+                "platform",
+                "transformation",
+                "partnership",
+                "career",
+                "careers",
+                "vacancy",
+                "vacancies",
+                "job",
+                "hiring",
+            ]
+        )
+
+        matches: List[str] = []
+        evidence_line = ""
+        for line in lines:
+            line_lower = line.lower()
+            line_matches = [keyword for keyword in candidates if keyword and keyword in line_lower]
+            if not line_matches:
+                continue
+            if not evidence_line:
+                evidence_line = line
+            for keyword in line_matches:
+                if keyword not in matches:
+                    matches.append(keyword)
+            if len(matches) >= 4:
+                break
+
+        if not matches:
+            return None
+
+        confidence_delta = min(0.06, 0.02 * len(matches))
+        return {
+            'decision': 'WEAK_ACCEPT',
+            'confidence_delta': round(confidence_delta, 3),
+            'justification': f"{fallback_reason}; heuristic keyword evidence used",
+            'evidence_found': evidence_line,
+            'evidence_type': 'heuristic_keyword_fallback',
+            'temporal_score': 'unknown',
+            'heuristic_matches': matches[:5],
+        }
 
     def _extract_evidence_pack(
         self,
@@ -2541,6 +2657,16 @@ class HypothesisDrivenDiscovery:
             score -= sum(4 for keyword in noise_keywords if keyword in line_lower)
 
         return score
+
+    def _cache_resolved_url_context(self, url: Optional[str], result: Optional[Dict[str, Any]]) -> None:
+        """Cache lightweight search context (title/snippet) for resolved URLs."""
+        if not url or not isinstance(result, dict):
+            return
+        title = str(result.get("title") or "").strip()
+        snippet = str(result.get("snippet") or "").strip()
+        if not title and not snippet:
+            return
+        self._resolved_url_context[url] = {"title": title, "snippet": snippet}
 
     async def _evaluate_content_with_claude(
         self,
@@ -2689,8 +2815,13 @@ Return JSON:
             # ClaudeClient.query() returns 'content' key, not 'text'
             response_text = response.get('content', '') or response.get('text', '')
             if not str(response_text or "").strip():
-                logger.info("Claude evaluation returned empty response; using NO_PROGRESS fallback")
-                return self._fallback_result_with_reason("Empty model response")
+                logger.info("Claude evaluation returned empty response; using heuristic fallback")
+                return self._fallback_result_with_reason(
+                    "Empty model response",
+                    content=content,
+                    hop_type=hop_type,
+                    context=context,
+                )
 
             # Parse JSON response (existing code)
             import re
@@ -2716,7 +2847,12 @@ Return JSON:
                 return result
             else:
                 logger.warning(f"Could not parse Claude response: {response_text}")
-                return self._fallback_result_with_reason("Unparseable model response")
+                return self._fallback_result_with_reason(
+                    "Unparseable model response",
+                    content=content,
+                    hop_type=hop_type,
+                    context=context,
+                )
         except json.JSONDecodeError as e:
             logger.error(f"JSON parsing error: {e}")
             logger.debug(f"Response text that failed to parse: {response_text[:500]}")
@@ -2732,11 +2868,21 @@ Return JSON:
                     'evidence_found': '',
                     'evidence_type': 'fallback'
                 }
-            return self._fallback_result_with_reason("JSON parsing error")
+            return self._fallback_result_with_reason(
+                "JSON parsing error",
+                content=content,
+                hop_type=hop_type,
+                context=context,
+            )
         except Exception as e:
             logger.error(f"Claude evaluation error: {e}")
             logger.debug(f"Response text: {response_text[:500] if response_text else 'empty'}")
-            return self._fallback_result_with_reason("Evaluation error")
+            return self._fallback_result_with_reason(
+                "Evaluation error",
+                content=content,
+                hop_type=hop_type,
+                context=context,
+            )
 
     async def _update_hypothesis_state(
         self,
@@ -4004,9 +4150,23 @@ Return JSON:
         ]
 
         for candidate in candidate_urls:
-            if isinstance(candidate, str) and candidate.startswith(("http://", "https://")):
-                return candidate
+            normalized = self._normalize_http_url(candidate)
+            if normalized:
+                return normalized
 
+        return None
+
+    def _normalize_http_url(self, candidate: Any) -> Optional[str]:
+        """Normalize known website strings into absolute HTTP(S) URLs."""
+        if not isinstance(candidate, str):
+            return None
+        value = candidate.strip()
+        if not value:
+            return None
+        if value.startswith(("http://", "https://")):
+            return value
+        if value.startswith("www.") or "." in value:
+            return f"https://{value.lstrip('/')}"
         return None
 
     async def _run_discovery_loop(
