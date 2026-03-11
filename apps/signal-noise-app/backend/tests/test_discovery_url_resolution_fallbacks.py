@@ -1,3 +1,4 @@
+import asyncio
 import sys
 import json
 from pathlib import Path
@@ -145,3 +146,32 @@ def test_store_cached_official_site_url_persists_to_disk(tmp_path, monkeypatch):
     assert cache_file.exists()
     payload = json.loads(cache_file.read_text())
     assert payload["coventry city fc"] == "https://www.ccfc.co.uk"
+
+
+@pytest.mark.asyncio
+async def test_execute_hop_increments_failure_counts_on_url_resolution_timeout():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.url_resolution_timeout_seconds = 0.01
+    discovery._last_url_resolution_metrics = {}
+    discovery.max_content_chars_for_evaluation = 2000
+    discovery.total_cost_usd = 0.0
+
+    async def _slow_get_url_for_hop(*_args, **_kwargs):
+        await asyncio.sleep(0.2)
+        return "https://example.com"
+
+    discovery._get_url_for_hop = _slow_get_url_for_hop
+
+    state = SimpleNamespace(
+        current_depth=1,
+        increment_depth_count=lambda _depth: None,
+        hop_failure_counts={},
+        last_failed_hop=None,
+    )
+    hypothesis = SimpleNamespace(metadata={})
+
+    result = await discovery._execute_hop(HopType.OFFICIAL_SITE, hypothesis, state)
+
+    assert result["decision"] == "NO_PROGRESS"
+    assert state.hop_failure_counts.get("official_site") == 1
+    assert state.last_failed_hop == "official_site"
