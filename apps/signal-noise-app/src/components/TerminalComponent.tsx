@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { WebLinksAddon } from '@xterm/addon-web-links';
@@ -94,7 +94,7 @@ export default function TerminalComponent({ onLog, isPaused = false }: TerminalC
   }, []);
 
   // Function to write to terminal
-  const writeToTerminal = (message: string, color = '\x1b[0m') => {
+  const writeToTerminal = useCallback((message: string, color = '\x1b[0m') => {
     if (terminalInstance.current && !isPaused) {
       try {
         terminalInstance.current.writeln(`${color}${message}\x1b[0m`);
@@ -102,10 +102,10 @@ export default function TerminalComponent({ onLog, isPaused = false }: TerminalC
         console.log('Terminal write error:', error);
       }
     }
-  };
+  }, [isPaused]);
 
   // Function to clear terminal
-  const clearTerminal = () => {
+  const clearTerminal = useCallback(() => {
     if (terminalInstance.current) {
       try {
         terminalInstance.current.clear();
@@ -113,7 +113,7 @@ export default function TerminalComponent({ onLog, isPaused = false }: TerminalC
         console.log('Terminal clear error:', error);
       }
     }
-  };
+  }, []);
 
   // Expose write function to parent
   useEffect(() => {
@@ -133,7 +133,7 @@ export default function TerminalComponent({ onLog, isPaused = false }: TerminalC
         }
       });
     }
-  }, [onLog, isPaused]);
+  }, [clearTerminal, isPaused, onLog, writeToTerminal]);
 
   // Cleanup on unmount
   useEffect(() => {

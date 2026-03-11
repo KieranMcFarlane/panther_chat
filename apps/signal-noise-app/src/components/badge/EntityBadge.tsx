@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import NextImage from 'next/image'
 import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
@@ -28,43 +28,45 @@ export function EntityBadge({ entity, size = 'md', showFallback = true, classNam
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [badgeSource, setBadgeSource] = useState<BadgeSource>('fallback')
+  const entityId = entity?.id?.toString() || 'unknown'
+  const entityName = entity?.properties?.name || 'Unknown Entity'
 
-  useEffect(() => {
+  const loadBadge = useCallback(async () => {
     if (!entity) return
 
-    const loadBadge = async () => {
-      try {
-        setLoading(true)
-        setError(false)
+    try {
+      setLoading(true)
+      setError(false)
 
-        console.log(`🏷️ Loading badge for: ${entity?.properties?.name || entity?.id}`)
+      console.log(`🏷️ Loading badge for: ${entityName}`)
 
-        // Get badge mapping from service (now uses local files)
-        const badgeMapping = await getBadgeForEntity(entity?.id?.toString() || 'unknown', entity?.properties?.name || 'Unknown Entity')
+      // Get badge mapping from service (now uses local files)
+      const badgeMapping = await getBadgeForEntity(entityId, entityName)
 
-        if (badgeMapping?.s3Url) {
-          // Badge found - use the local path
-          console.log(`✅ Badge found: ${badgeMapping.s3Url}`)
-          setBadgeUrl(badgeMapping.s3Url)
-          setBadgeSource('s3')
-        } else {
-          // No badge found - will show fallback
-          console.log(`⚠️ No badge found for: ${entity?.properties?.name}`)
-          setBadgeUrl(null)
-          setBadgeSource('fallback')
-        }
-      } catch (err) {
-        console.error(`❌ Failed to load badge for ${entity?.properties?.name || entity?.id}:`, err)
-        setError(true)
+      if (badgeMapping?.s3Url) {
+        // Badge found - use the local path
+        console.log(`✅ Badge found: ${badgeMapping.s3Url}`)
+        setBadgeUrl(badgeMapping.s3Url)
+        setBadgeSource('s3')
+      } else {
+        // No badge found - will show fallback
+        console.log(`⚠️ No badge found for: ${entityName}`)
         setBadgeUrl(null)
         setBadgeSource('fallback')
-      } finally {
-        setLoading(false)
       }
+    } catch (err) {
+      console.error(`❌ Failed to load badge for ${entityName}:`, err)
+      setError(true)
+      setBadgeUrl(null)
+      setBadgeSource('fallback')
+    } finally {
+      setLoading(false)
     }
+  }, [entity, entityId, entityName])
 
-    loadBadge()
-  }, [entity?.id])
+  useEffect(() => {
+    void loadBadge()
+  }, [loadBadge])
 
   const handleClick = () => {
     if (!entity || !entity?.id) return
@@ -188,6 +190,8 @@ function CompactEntityBadge({ entity, size = 'sm', className, onClick }: BadgeCo
   const [badgeUrl, setBadgeUrl] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
+  const entityId = entity?.id?.toString() || 'unknown'
+  const entityName = entity?.properties?.name || 'Unknown Entity'
 
   // Unified navigation handler for compact badge
   const handleCompactBadgeClick = () => {
@@ -203,34 +207,34 @@ function CompactEntityBadge({ entity, size = 'sm', className, onClick }: BadgeCo
     }
   }
 
-  useEffect(() => {
+  const loadCompactBadge = useCallback(async () => {
     if (!entity) return
 
-    const loadCompactBadge = async () => {
-      try {
-        setLoading(true)
-        setError(false)
+    try {
+      setLoading(true)
+      setError(false)
 
-        // Try to get S3 badge URL first (from Supabase cache)
-        const cachedBadge = await getBadgeForEntity(entity?.id?.toString() || 'unknown', entity?.properties?.name || 'Unknown Entity')
+      // Try to get S3 badge URL first (from Supabase cache)
+      const cachedBadge = await getBadgeForEntity(entityId, entityName)
 
-        if (cachedBadge?.s3Url) {
-          // Use cached S3 URL
-          setBadgeUrl(cachedBadge.s3Url)
-        } else {
-          // Use local fallback
-          setBadgeUrl(`/badges/default-badge.png`)
-        }
-      } catch (err) {
-        console.error(`Failed to load compact badge for ${entity?.properties?.name || entity?.id}:`, err)
-        setError(true)
-      } finally {
-        setLoading(false)
+      if (cachedBadge?.s3Url) {
+        // Use cached S3 URL
+        setBadgeUrl(cachedBadge.s3Url)
+      } else {
+        // Use local fallback
+        setBadgeUrl(`/badges/default-badge.png`)
       }
+    } catch (err) {
+      console.error(`Failed to load compact badge for ${entityName}:`, err)
+      setError(true)
+    } finally {
+      setLoading(false)
     }
+  }, [entity, entityId, entityName])
 
-    loadCompactBadge()
-  }, [entity?.id])
+  useEffect(() => {
+    void loadCompactBadge()
+  }, [loadCompactBadge])
 
   const initials = getEntityInitials(entity?.properties?.name || entity?.id?.toString() || 'Unknown')
 
@@ -278,6 +282,45 @@ function CompactEntityBadge({ entity, size = 'sm', className, onClick }: BadgeCo
         className="object-cover rounded-full"
         sizes={`${sizeClasses[size].split(' ')[0].replace('w-', '')}px`}
       />
+    </div>
+  )
+}
+
+export function EntityBadgeGrid({
+  entities,
+  size = 'md',
+  className,
+  maxItems
+}: {
+  entities: any[]
+  size?: BadgeSize
+  className?: string
+  maxItems?: number
+}) {
+  const displayEntities = maxItems ? entities.slice(0, maxItems) : entities
+
+  return (
+    <div className={cn('grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4', className)}>
+      {displayEntities.map((entity) => (
+        <div key={entity.id} className="flex flex-col items-center space-y-2">
+          <EntityBadge entity={entity} size={size} />
+          <div className="text-xs text-center text-gray-600 font-medium line-clamp-2">
+            {entity.properties?.name || entity.name || entity.id}
+          </div>
+        </div>
+      ))}
+      {maxItems && entities.length > maxItems && (
+        <div className="flex flex-col items-center justify-center">
+          <div
+            className={cn(
+              'flex items-center justify-center rounded-full border-2 border-dashed border-gray-300 bg-gray-50 font-semibold text-gray-500',
+              sizeClasses[size]
+            )}
+          >
+            +{entities.length - maxItems}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
