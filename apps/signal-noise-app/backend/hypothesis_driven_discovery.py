@@ -646,6 +646,12 @@ class HypothesisDrivenDiscovery:
         self.search_timeout_seconds = float(os.getenv("DISCOVERY_SEARCH_TIMEOUT_SECONDS", "12"))
         self.search_validation_timeout_seconds = float(os.getenv("DISCOVERY_SEARCH_VALIDATION_TIMEOUT_SECONDS", "5"))
         self.url_resolution_timeout_seconds = float(os.getenv("DISCOVERY_URL_RESOLUTION_TIMEOUT_SECONDS", "12"))
+        self.evaluation_max_tokens_default = int(os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_DEFAULT", "640"))
+        self.evaluation_max_tokens_press_release = int(os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_PRESS_RELEASE", "384"))
+        self.evaluation_max_tokens_official_site = int(os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_OFFICIAL_SITE", "384"))
+        self.evaluation_max_tokens_careers_annual_report = int(
+            os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_CAREERS_ANNUAL_REPORT", "448")
+        )
         self.heuristic_fallback_on_llm_unavailable = self._parse_bool_env(
             os.getenv("DISCOVERY_HEURISTIC_FALLBACK_ON_LLM_UNAVAILABLE"),
             default=True,
@@ -851,12 +857,12 @@ class HypothesisDrivenDiscovery:
 
     def _get_evaluation_max_tokens(self, hop_type: HopType) -> int:
         if hop_type == HopType.PRESS_RELEASE:
-            return 250
+            return self.evaluation_max_tokens_press_release
         if hop_type == HopType.OFFICIAL_SITE:
-            return 220
+            return self.evaluation_max_tokens_official_site
         if hop_type in {HopType.CAREERS_PAGE, HopType.ANNUAL_REPORT}:
-            return 320
-        return 500
+            return self.evaluation_max_tokens_careers_annual_report
+        return self.evaluation_max_tokens_default
 
     async def _get_cached_search(self, query: str, engine: str) -> Optional[Dict[str, Any]]:
         """Get cached search result if available and not expired"""
