@@ -60,6 +60,15 @@ class FixedDossierFirstPipeline:
 
         logger.info("✅ Pipeline initialized")
 
+    async def close(self) -> None:
+        """Close pipeline-owned clients."""
+        close_fn = getattr(self.brightdata, "close", None)
+        if callable(close_fn):
+            try:
+                await close_fn()
+            except Exception as close_error:  # noqa: BLE001
+                logger.warning("⚠️ Failed to close BrightData client: %s", close_error)
+
     async def run_pipeline(
         self,
         entity_id: str,
@@ -320,14 +329,16 @@ async def main():
 
     # Create and run pipeline
     pipeline = FixedDossierFirstPipeline()
-
-    result = await pipeline.run_pipeline(
-        entity_id="coventry-city-fc",
-        entity_name="Coventry City FC",
-        tier_score=75,  # PREMIUM tier for richer data
-        max_discovery_iterations=15,
-        template_id="yellow_panther_agency"  # Use working template
-    )
+    try:
+        result = await pipeline.run_pipeline(
+            entity_id="coventry-city-fc",
+            entity_name="Coventry City FC",
+            tier_score=75,  # PREMIUM tier for richer data
+            max_discovery_iterations=15,
+            template_id="yellow_panther_agency"  # Use working template
+        )
+    finally:
+        await pipeline.close()
 
     print("\n" + "=" * 60)
     print("📋 PIPELINE SUMMARY")

@@ -1,4 +1,5 @@
 import builtins
+import asyncio
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -36,6 +37,22 @@ async def test_phase2_uses_passed_max_iterations():
 
     assert result.final_confidence == 0.7
     assert captured["max_iterations"] == 7
+
+
+@pytest.mark.asyncio
+async def test_pipeline_close_closes_brightdata_client():
+    closed = False
+
+    class _BrightData:
+        async def close(self):
+            nonlocal closed
+            closed = True
+
+    pipeline = FixedDossierFirstPipeline.__new__(FixedDossierFirstPipeline)
+    pipeline.brightdata = _BrightData()
+    await pipeline.close()
+
+    assert closed is True
 
 
 @pytest.mark.asyncio
@@ -101,3 +118,64 @@ def test_extract_publication_date_handles_missing_dateutil(monkeypatch):
     assert dt.year == 2025
     assert dt.month == 1
     assert dt.day == 15
+
+
+@pytest.mark.asyncio
+async def test_brightdata_sdk_client_initializes_once_under_concurrency(monkeypatch):
+    enter_calls = 0
+    shared_client = object()
+
+    class _FakeBrightDataClient:
+        def __init__(self, token):
+            self.token = token
+
+        async def __aenter__(self):
+            nonlocal enter_calls
+            enter_calls += 1
+            await asyncio.sleep(0.01)
+            return shared_client
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+    monkeypatch.setitem(sys.modules, "brightdata", SimpleNamespace(BrightDataClient=_FakeBrightDataClient))
+
+    client = BrightDataSDKClient(token="test-token")
+    clients = await asyncio.gather(client._get_client(), client._get_client(), client._get_client())
+
+    assert enter_calls == 1
+    assert clients[0] is shared_client
+    assert clients[1] is shared_client
+    assert clients[2] is shared_client
+    await client.close()
+
+
+@pytest.mark.asyncio
+async def test_scrape_as_markdown_falls_back_when_sdk_content_is_empty(monkeypatch):
+    class _Result:
+        data = "<html><body><script>window.__APP__ = true;</script></body></html>"
+
+    class _Client:
+        async def scrape_url(self, url, response_format="raw"):
+            return _Result()
+
+    client = BrightDataSDKClient(token="test-token")
+
+    async def _fake_get_client():
+        return _Client()
+
+    async def _fake_fallback(url):
+        return {
+            "status": "success",
+            "url": url,
+            "content": "fallback content",
+            "metadata": {"source": "test_fallback"},
+        }
+
+    monkeypatch.setattr(client, "_get_client", _fake_get_client)
+    monkeypatch.setattr(client, "_scrape_as_markdown_fallback", _fake_fallback)
+
+    result = await client.scrape_as_markdown("https://example.com")
+    assert result["status"] == "success"
+    assert result["content"] == "fallback content"
+    assert result["metadata"]["source"] == "test_fallback"
