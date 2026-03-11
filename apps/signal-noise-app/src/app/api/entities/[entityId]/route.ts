@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
+import { getDossierLookupEntityIds, resolveEntityForDossier } from '@/lib/dossier-entity'
+import { resolveGraphId } from '@/lib/graph-id'
 
 export const dynamic = 'force-dynamic';
 
@@ -14,7 +16,7 @@ async function generateComprehensiveDossier(entity: any, supabase: any) {
     // Base dossier structure
     const dossier = {
       entity: {
-        neo4j_id: entity.neo4j_id,
+        graph_id: entity.graph_id || entity.id,
         name: entityName,
         type: entityType,
         sport: entity.properties.sport || 'Unknown',
@@ -111,7 +113,7 @@ async function generateComprehensiveDossier(entity: any, supabase: any) {
         generated_date: new Date().toISOString(),
         analyst: 'Yellow Panther Intelligence System',
         schema_version: '2.0',
-        data_sources: ['Neo4j Database', 'Industry Analysis', 'Dynamic Generation'],
+        data_sources: ['FalkorDB Graph Store', 'Industry Analysis', 'Dynamic Generation'],
         confidence_score: 0.85,
         information_freshness: 'Current as of ' + new Date().toISOString().split('T')[0],
         next_review_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString()
@@ -235,12 +237,16 @@ async function generateLinkedInAnalysis(entityName: string, entityType: string) 
   }
 }
 
-async function getPersistedDossier(entityId: string) {
+async function getPersistedDossier(entityIds: string[]) {
   try {
+    if (!entityIds || entityIds.length === 0) {
+      return null
+    }
+
     const { data, error } = await supabase
       .from('entity_dossiers')
       .select('dossier_data')
-      .eq('entity_id', entityId)
+      .in('entity_id', entityIds)
       .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle()
@@ -258,7 +264,7 @@ async function getPersistedDossier(entityId: string) {
 
 interface Entity {
   id: string
-  neo4j_id: string | number
+  graph_id?: string | number
   labels: string[]
   properties: Record<string, any>
 }
@@ -286,137 +292,9 @@ export async function GET(
 
     console.log(`📖 Fetching entity ${entityId} from Supabase`)
 
-    // Try to get from Supabase teams and leagues tables first (new structure)
     if (useCache) {
-      try {
-        // First check if it's a team
-        const { data: teamData, error: teamError } = await supabase
-          .from('teams')
-          .select(`
-            *,
-            leagues:league_id (
-              id,
-              name,
-              badge_path,
-              badge_s3_url
-            )
-          `)
-          .or(`id.eq.${entityId},neo4j_id.eq.${entityId},name.ilike.%${entityId}%`)
-          .single()
-
-        if (!teamError && teamData) {
-          // Convert team data to entity format
-          entity = {
-            id: teamData.id,
-            neo4j_id: teamData.neo4j_id || teamData.id,
-            labels: ['Team'],
-            properties: {
-              name: teamData.name,
-              type: 'Team',
-              sport: teamData.sport,
-              country: teamData.country,
-              founded: teamData.founded,
-              headquarters: teamData.headquarters,
-              website: teamData.website,
-              linkedin: teamData.linkedin,
-              about: teamData.about,
-              company_size: teamData.company_size,
-              priority: teamData.priority,
-              estimated_value: teamData.estimated_value,
-              opportunity_score: teamData.opportunity_score,
-              digital_maturity_score: teamData.digital_maturity_score,
-              website_moderness_score: teamData.website_moderness_score,
-              digital_transformation_score: teamData.digital_transformation_score,
-              procurement_status: teamData.procurement_status,
-              enrichment_status: teamData.enrichment_status,
-              badge_path: teamData.badge_path,
-              badge_s3_url: teamData.badge_s3_url,
-              level: teamData.level,
-              tier: teamData.tier,
-              league_id: teamData.league_id,
-              league_name: teamData.leagues?.name,
-              league_badge_path: teamData.leagues?.badge_path,
-              league_badge_s3_url: teamData.leagues?.badge_s3_url
-            }
-          }
-          source = 'supabase'
-        } else {
-          // Check if it's a league
-          const { data: leagueData, error: leagueError } = await supabase
-            .from('leagues')
-            .select('*')
-            .or(`id.eq.${entityId},neo4j_id.eq.${entityId}`)
-            .single()
-
-          if (!leagueError && leagueData) {
-            // Convert league data to entity format
-            entity = {
-              id: leagueData.id,
-              neo4j_id: leagueData.neo4j_id || leagueData.id,
-              labels: ['League'],
-              properties: {
-                name: leagueData.name,
-                type: 'League',
-                sport: leagueData.sport,
-                country: leagueData.country,
-                website: leagueData.website,
-                linkedin: leagueData.linkedin,
-                description: leagueData.description,
-                digital_maturity_score: leagueData.digital_maturity_score,
-                estimated_value: leagueData.estimated_value,
-                priority_score: leagueData.priority_score,
-                badge_path: leagueData.badge_path,
-                badge_s3_url: leagueData.badge_s3_url,
-                tier: leagueData.tier,
-                original_name: leagueData.original_name,
-                league_id: leagueData.league_id
-              }
-            }
-            source = 'supabase'
-          } else {
-            // Fallback to cached_entities for other entity types
-            // Try multiple matching strategies
-            let { data: cachedEntity, error: cacheError } = await supabase
-              .from('cached_entities')
-              .select('*')
-              .or(`id.eq.${entityId},neo4j_id.eq.${entityId},neo4j_id.eq.${parseInt(entityId) || entityId}`)
-              .limit(1)
-              .single()
-
-            // If not found by direct IDs, try by name (handle dashes, spaces)
-            if (!cachedEntity || cacheError) {
-              const normalizedName = entityId
-                .replace(/-/g, ' ')
-                .replace(/_/g, ' ')
-                .replace(/%26/g, '&')
-
-              const result = await supabase
-                .from('cached_entities')
-                .select('*')
-                .ilike('properties->>name', `%${normalizedName}%`)
-                .limit(1)
-                .single()
-
-              if (result.data) {
-                cachedEntity = result.data
-                cacheError = null
-              }
-            }
-
-            if (!cacheError && cachedEntity) {
-              entity = {
-                id: cachedEntity.id,
-                neo4j_id: cachedEntity.neo4j_id,
-                labels: cachedEntity.labels,
-                properties: cachedEntity.properties
-              }
-              source = 'supabase'
-            }
-          }
-        }
-      } catch (cacheError) {
-        console.log('⚠️ Supabase query error:', cacheError)
-      }
+      entity = await resolveEntityForDossier(entityId) as Entity | null
+      source = entity ? 'supabase' : null
     }
 
     if (!entity) {
@@ -432,25 +310,14 @@ export async function GET(
       )
     }
 
-    // Skip automatic dossier generation for performance
-    let comprehensiveDossier = null
-    
-    // Only return existing dossier_data if it exists, don't generate new ones
-    if (entity.properties.dossier_data) {
-      try {
-        comprehensiveDossier = JSON.parse(entity.properties.dossier_data)
-        console.log(`✅ Using existing dossier for ${entity.properties.name}`)
-      } catch (error) {
-        console.log('⚠️ Invalid dossier_data, skipping dossier generation')
-      }
-    }
-
-    if (!comprehensiveDossier) {
-      comprehensiveDossier = await getPersistedDossier(entity.id?.toString() || entityId)
-    }
+    const dossierLookupIds = getDossierLookupEntityIds(entity, entityId)
+    const comprehensiveDossier = await getPersistedDossier(dossierLookupIds)
 
     return NextResponse.json({
-      entity,
+      entity: {
+        ...entity,
+        graph_id: resolveGraphId(entity) || entity.id,
+      },
       source,
       dossier: comprehensiveDossier
     })

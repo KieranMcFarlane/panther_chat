@@ -4,23 +4,34 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { Neo4jService } from '@/lib/neo4j';
-import { createClient } from '@supabase/supabase-js';
+import { buildLegacyRelationshipGraphFilter, resolveGraphId, withRelationshipGraphIds } from '@/lib/graph-id';
+import { getSupabaseAdmin } from '@/lib/supabase-client';
+import { getCanonicalDossierEntityId, getDossierLookupEntityIds, resolveEntityForDossier } from '@/lib/dossier-entity';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+const supabase = getSupabaseAdmin();
+
+const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build' ||
+  process.env.npm_lifecycle_event === 'build';
 
 // Debug Supabase connection
-console.log('🔧 Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? '✅ Set' : '❌ Missing');
-console.log('🔧 Supabase Service Role Key:', process.env.SUPABASE_SERVICE_ROLE_KEY ? '✅ Set' : '❌ Missing');
+if (!isBuildPhase) {
+  console.log('🔧 Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL ? '✅ Set' : '❌ Missing');
+  console.log('🔧 Supabase Service Role Key:', process.env.SUPABASE_SERVICE_ROLE_KEY ? '✅ Set' : '❌ Missing');
+}
 
 interface DossierRequest {
   includeSignals?: boolean;
   includeConnections?: boolean;
   includePOIs?: boolean;
   deepResearch?: boolean;
+}
+
+async function resolveDossierCacheKeys(entityId: string) {
+  const entity = await resolveEntityForDossier(entityId);
+  return {
+    canonicalEntityId: getCanonicalDossierEntityId(entity, entityId),
+    lookupEntityIds: getDossierLookupEntityIds(entity, entityId),
+  }
 }
 
 export async function GET(
@@ -30,6 +41,7 @@ export async function GET(
   try {
     const { entityId } = params;
     const searchParams = request.nextUrl.searchParams;
+    const { canonicalEntityId, lookupEntityIds } = await resolveDossierCacheKeys(entityId);
     
     console.log(`📋 Dossier request for entity: ${entityId}`);
     
@@ -43,7 +55,7 @@ export async function GET(
     console.log(`📋 Dossier options:`, options);
 
     // Check if we have a recent cached dossier
-    const cachedDossier = await getCachedDossier(entityId);
+    const cachedDossier = await getCachedDossier(lookupEntityIds);
     if (cachedDossier && !isStale(cachedDossier.lastUpdated)) {
       console.log(`📋 Returning cached dossier for entity: ${entityId}`);
       return NextResponse.json({
@@ -58,7 +70,7 @@ export async function GET(
     const dossier = await generateEntityDossier(entityId, options);
     
     // Cache the generated dossier
-    await cacheDossier(entityId, dossier);
+    await cacheDossier(canonicalEntityId, dossier);
 
     console.log(`📋 Successfully generated dossier for entity: ${entityId}`);
     return NextResponse.json({
@@ -87,10 +99,11 @@ export async function POST(
   try {
     const { entityId } = params;
     const body = await request.json();
+    const { canonicalEntityId } = await resolveDossierCacheKeys(entityId);
     
     // Force regeneration of dossier
     const dossier = await generateEntityDossier(entityId, body);
-    await cacheDossier(entityId, dossier);
+    await cacheDossier(canonicalEntityId, dossier);
 
     return NextResponse.json({
       success: true,
@@ -110,12 +123,16 @@ export async function POST(
   }
 }
 
-async function getCachedDossier(entityId: string) {
+async function getCachedDossier(entityIds: string[]) {
   try {
+    if (!entityIds || entityIds.length === 0) {
+      return null;
+    }
+
     const { data, error } = await supabase
       .from('entity_dossiers')
       .select('*')
-      .eq('entity_id', entityId)
+      .in('entity_id', entityIds)
       .order('created_at', { ascending: false })
       .limit(1)
       .single();
@@ -140,6 +157,8 @@ async function cacheDossier(entityId: string, dossier: any) {
         entity_id: entityId,
         dossier_data: dossier,
         created_at: new Date().toISOString()
+      }, {
+        onConflict: 'entity_id'
       });
 
     if (error) {
@@ -160,12 +179,12 @@ function isStale(lastUpdated: string): boolean {
 async function generateEntityDossier(entityId: string, options: DossierRequest) {
   console.log(`📋 Starting dossier generation for entity: ${entityId}`);
   
-  // Fetch entity data from Neo4j
+  // Fetch entity data from canonical cache
   const entityData = await fetchEntityData(entityId);
   console.log(`📋 Entity data fetched:`, entityData?.name || 'Unknown');
   
   if (!entityData) {
-    console.log(`❌ Entity ${entityId} not found in Neo4j, trying fallback methods`);
+    console.log(`❌ Entity ${entityId} not found in canonical cache, trying fallback methods`);
     
     // Try the working entity API as a fallback
     try {
@@ -184,16 +203,18 @@ async function generateEntityDossier(entityId: string, options: DossierRequest) 
     throw new Error(`Entity ${entityId} not found`);
   }
 
+  const canonicalLookupId = String(entityData.id || entityId);
+
   // Fetch recent signals/events
-  const signals = options.includeSignals ? await fetchEntitySignals(entityId) : [];
+  const signals = options.includeSignals ? await fetchEntitySignals(canonicalLookupId) : [];
   console.log(`📋 Signals fetched:`, signals.length);
   
   // Fetch persons of interest
-  const pois = options.includePOIs ? await fetchPersonsOfInterest(entityId) : [];
+  const pois = options.includePOIs ? await fetchPersonsOfInterest(entityData) : [];
   console.log(`📋 POIs fetched:`, pois.length);
   
   // Fetch connection paths
-  const connections = options.includeConnections ? await fetchConnectionPaths(entityId) : [];
+  const connections = options.includeConnections ? await fetchConnectionPaths(canonicalLookupId) : [];
   console.log(`📋 Connections fetched:`, connections.length);
   
   // Calculate scores
@@ -232,14 +253,22 @@ async function generateDossierFromEntityData(entity: any, options: DossierReques
   console.log(`📋 Generating dossier from fallback entity data for: ${entity.properties?.name || 'Unknown'}`);
   
   const entityData = entity.properties;
-  const entityId = entity.id.toString();
+  const graphId = resolveGraphId(entity);
+  const entityLookup = {
+    id: String(entity.id),
+    graph_id: graphId,
+    name: entity.properties?.name || entity.name,
+    labels: entity.labels || [],
+    ...entityData
+  };
+  const entityId = String(entity.id);
   
   // Fetch recent signals/events
   const signals = options.includeSignals ? await fetchEntitySignals(entityId) : [];
   console.log(`📋 Signals fetched:`, signals.length);
   
   // Fetch persons of interest
-  const pois = options.includePOIs ? await fetchPersonsOfInterest(entityId) : [];
+  const pois = options.includePOIs ? await fetchPersonsOfInterest(entityLookup) : [];
   console.log(`📋 POIs fetched:`, pois.length);
   
   // Fetch connection paths
@@ -279,39 +308,22 @@ async function generateDossierFromEntityData(entity: any, options: DossierReques
 }
 
 async function fetchEntityData(entityId: string) {
-  const neo4jService = new Neo4jService();
-  await neo4jService.initialize();
-  const session = neo4jService.getDriver().session();
   try {
     console.log(`🔍 Fetching entity data for ID: ${entityId}`);
-    
-    const result = await session.run(
-      `
-      MATCH (e) 
-      WHERE id(e) = $entityId
-      OPTIONAL MATCH (e)-[:ASSOCIATED_WITH]->(c:Club)
-      RETURN e, c as club, id(e) as internalId
-      `,
-      { entityId: parseInt(entityId) || 0 }
-    );
+    const entity = await resolveEntityForDossier(entityId);
 
-    console.log(`📊 Found ${result.records.length} records for entity ${entityId}`);
-
-    if (result.records.length === 0) {
-      console.log(`❌ No records found for entity ${entityId}`);
+    if (!entity) {
+      console.log(`❌ No cached entity found for entity ${entityId}`);
       return null;
     }
 
-    const record = result.records[0];
-    const entityNode = record.get('e');
-    const club = record.get('club')?.properties || {};
-    const internalId = record.get('internalId');
-
     const entityData = {
-      ...entityNode.properties,
-      club: club.name || null,
-      id: internalId.toString(),
-      labels: entityNode.labels
+      ...entity.properties,
+      id: String(entity.id),
+      graph_id: resolveGraphId(entity),
+      labels: entity.labels,
+      name: entity.properties?.name || 'Unknown',
+      club: entity.properties?.club || entity.properties?.club_name || null
     };
 
     console.log(`✅ Successfully fetched entity: ${entityData.name || 'Unknown'}`);
@@ -319,8 +331,6 @@ async function fetchEntityData(entityId: string) {
   } catch (error) {
     console.error(`❌ Error fetching entity ${entityId}:`, error);
     return null;
-  } finally {
-    await session.close();
   }
 }
 
@@ -350,49 +360,63 @@ async function fetchEntitySignals(entityId: string) {
   }
 }
 
-async function fetchPersonsOfInterest(entityId: string) {
-  const neo4jService = new Neo4jService();
-  await neo4jService.initialize();
-  const session = neo4jService.getDriver().session();
+async function fetchPersonsOfInterest(entityData: { id?: string; graph_id?: string | number; name?: string }) {
   try {
-    console.log(`👥 Fetching persons of interest for entity: ${entityId}`);
-    
-    const result = await session.run(
-      `
-      MATCH (e)-[:ASSOCIATED_WITH]->(:Club)<-[:WORKED_AT]-(p:Person)
-      WHERE id(e) = $entityId
-      OPTIONAL MATCH (p)-[:CONNECTED_TO]-(other:Person)
-      WITH p, count(other) as connectionCount
-      RETURN p, connectionCount, id(p) as personId
-      ORDER BY connectionCount DESC, p.role DESC
-      LIMIT 10
-      `,
-      { entityId: parseInt(entityId) || 0 }
-    );
+    const canonicalId = String(entityData.id || '');
+    const graphKey = resolveGraphId(entityData) || canonicalId;
+    console.log(`👥 Fetching persons of interest for entity: ${canonicalId || graphKey}`);
 
-    const persons = result.records.map(record => {
-      const personNode = record.get('p');
-      const person = personNode.properties;
-      const connectionCount = record.get('connectionCount');
-      const personId = record.get('personId');
-      
-      return {
+    const { data, error } = await supabase
+      .from('entity_relationships')
+      .select('source_graph_id, target_graph_id, source_neo4j_id, target_neo4j_id, source_name, target_name, source_labels, target_labels, relationship_type, relationship_properties, confidence_score, weight')
+      .or(buildLegacyRelationshipGraphFilter(graphKey))
+      .eq('is_active', true)
+      .limit(100);
+
+    if (error) {
+      throw error;
+    }
+
+    const personMap = new Map<string, any>();
+    for (const rawRelationship of data || []) {
+      const relationship = withRelationshipGraphIds(rawRelationship);
+      const sourceIsPerson = Array.isArray(relationship.source_labels) && relationship.source_labels.includes('Person');
+      const targetIsPerson = Array.isArray(relationship.target_labels) && relationship.target_labels.includes('Person');
+      const personId = sourceIsPerson ? relationship.source_graph_id : targetIsPerson ? relationship.target_graph_id : null;
+      const personName = sourceIsPerson ? relationship.source_name : targetIsPerson ? relationship.target_name : null;
+
+      if (!personId || !personName) {
+        continue;
+      }
+
+      const existing = personMap.get(personId) || {
         id: personId,
-        name: person.name || 'Unknown',
-        role: person.role || 'Unknown',
-        source: 'Neo4j Graph',
-        profileUrl: person.profile_url,
-        emailGuess: generateEmailGuess(person.name, entityId),
+        name: personName || 'Unknown',
+        role: relationship.relationship_properties?.role || 'Unknown',
+        source: 'Supabase Relationship Cache',
+        profileUrl: relationship.relationship_properties?.profile_url || relationship.relationship_properties?.linkedin_url || null,
+        emailGuess: generateEmailGuess(personName, canonicalId || graphKey),
         emailConfidence: 0.6,
-        connectionStrength: Math.min(connectionCount / 5, 1) * 10,
-        notes: person.notes || ''
+        connectionStrength: 0,
+        notes: relationship.relationship_properties?.notes || ''
       };
-    });
+
+      existing.connectionStrength += Math.min(
+        Number(relationship.relationship_properties?.strength || relationship.weight || relationship.confidence_score || 1),
+        10
+      );
+      personMap.set(personId, existing);
+    }
+
+    const persons = Array.from(personMap.values())
+      .sort((a, b) => b.connectionStrength - a.connectionStrength)
+      .slice(0, 10);
     
-    console.log(`✅ Found ${persons.length} persons of interest for entity ${entityId}`);
+    console.log(`✅ Found ${persons.length} persons of interest for entity ${canonicalId || graphKey}`);
     return persons;
-  } finally {
-    await session.close();
+  } catch (error) {
+    console.error(`❌ Error fetching persons of interest for entity ${entityData.id || entityData.graph_id}:`, error);
+    return [];
   }
 }
 
@@ -434,7 +458,9 @@ function calculateScores(entityData: any, signals: any[], pois: any[], connectio
 
   // Connection Score calculation
   const teamConnectionStrength = connections.reduce((sum, conn) => sum + conn.strength, 0);
-  const contactability = pois.reduce((sum, poi) => sum + (poi.emailConfidence || 0), 0) / pois.length;
+  const contactability = pois.length > 0
+    ? pois.reduce((sum, poi) => sum + (poi.emailConfidence || 0), 0) / pois.length
+    : 0;
 
   const connectionScore = Math.min(
     Math.round(teamConnectionStrength * (1 + 0.5 * contactability)),
