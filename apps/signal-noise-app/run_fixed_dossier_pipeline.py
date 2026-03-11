@@ -202,10 +202,29 @@ class FixedDossierFirstPipeline:
 
         # Try with dossier context first, fall back to standard discovery
         try:
+            dossier_payload = dossier.to_dict() if hasattr(dossier, 'to_dict') else {}
+            known_official_site = None
+            generator = getattr(self, "dossier_generator", None)
+            getter = getattr(generator, "get_last_official_site_url", None)
+            if callable(getter):
+                try:
+                    known_official_site = getter(entity_id)
+                except Exception as seed_error:  # noqa: BLE001
+                    logger.debug("Could not fetch seeded official site for %s: %s", entity_id, seed_error)
+
+            if isinstance(known_official_site, str) and known_official_site.strip():
+                metadata = dossier_payload.setdefault("metadata", {})
+                if isinstance(metadata, dict):
+                    metadata.setdefault("website", known_official_site)
+                    canonical_sources = metadata.setdefault("canonical_sources", {})
+                    if isinstance(canonical_sources, dict):
+                        canonical_sources.setdefault("official_site", known_official_site)
+                self.discovery.current_official_site_url = known_official_site
+
             context_kwargs = {
                 "entity_id": entity_id,
                 "entity_name": entity_name,
-                "dossier": dossier.to_dict() if hasattr(dossier, 'to_dict') else {},
+                "dossier": dossier_payload,
                 "max_iterations": max_iterations,
             }
             context_method = self.discovery.run_discovery_with_dossier_context

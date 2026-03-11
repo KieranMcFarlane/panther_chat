@@ -59,6 +59,7 @@ class EntityDossierGenerator:
         """
         self.claude_client = claude_client
         self.falkordb_client = falkordb_client
+        self._last_entity_data_by_id: Dict[str, Dict[str, Any]] = {}
 
         # Section templates with model assignments
         self.section_templates = {
@@ -395,7 +396,39 @@ Website: N/A
             f"${dossier.total_cost_usd:.4f}"
         )
 
+        if isinstance(entity_data, dict):
+            self._last_entity_data_by_id[entity_id] = dict(entity_data)
+
         return dossier
+
+    def get_last_official_site_url(self, entity_id: str) -> Optional[str]:
+        """Return the most recent known official URL for an entity from phase-1 collection."""
+        entity_data = self._last_entity_data_by_id.get(entity_id)
+        if not isinstance(entity_data, dict):
+            return None
+
+        candidates = [
+            entity_data.get("official_site_url"),
+            entity_data.get("website"),
+            entity_data.get("entity_website"),
+        ]
+        for candidate in candidates:
+            normalized = self._normalize_http_url(candidate)
+            if normalized:
+                return normalized
+        return None
+
+    def _normalize_http_url(self, candidate: Any) -> Optional[str]:
+        if not isinstance(candidate, str):
+            return None
+        value = candidate.strip()
+        if not value:
+            return None
+        if value.startswith(("http://", "https://")):
+            return value.rstrip("/")
+        if value.startswith("www.") or "." in value:
+            return f"https://{value.lstrip('/').rstrip('/')}"
+        return None
 
     async def _generate_sections_parallel(
         self,

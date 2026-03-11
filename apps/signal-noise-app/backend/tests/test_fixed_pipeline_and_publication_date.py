@@ -95,6 +95,40 @@ async def test_phase2_handles_discovery_signature_without_template_id():
     assert captured["dossier"] == {"x": 2}
 
 
+@pytest.mark.asyncio
+async def test_phase2_seeds_discovery_official_site_from_generator_cache():
+    pipeline = FixedDossierFirstPipeline.__new__(FixedDossierFirstPipeline)
+    captured = {}
+
+    class _Discovery:
+        current_official_site_url = None
+
+        async def run_discovery_with_dossier_context(self, **kwargs):
+            captured.update(kwargs)
+            return SimpleNamespace(final_confidence=0.6, iterations_completed=1, signals_discovered=[])
+
+    class _Generator:
+        def get_last_official_site_url(self, entity_id):
+            assert entity_id == "coventry-city-fc"
+            return "https://www.ccfc.co.uk"
+
+    pipeline.discovery = _Discovery()
+    pipeline.dossier_generator = _Generator()
+
+    result = await pipeline._phase_2_run_discovery(
+        entity_id="coventry-city-fc",
+        entity_name="Coventry City FC",
+        dossier=SimpleNamespace(to_dict=lambda: {"entity_id": "coventry-city-fc"}),
+        max_iterations=5,
+        template_id="yellow_panther_agency",
+    )
+
+    assert result.final_confidence == 0.6
+    assert pipeline.discovery.current_official_site_url == "https://www.ccfc.co.uk"
+    assert captured["dossier"]["metadata"]["website"] == "https://www.ccfc.co.uk"
+    assert captured["dossier"]["metadata"]["canonical_sources"]["official_site"] == "https://www.ccfc.co.uk"
+
+
 def test_extract_publication_date_handles_missing_dateutil(monkeypatch):
     client = BrightDataSDKClient(token="test-token")
     soup = BeautifulSoup("<html><head></head><body><h1>No date</h1></body></html>", "html.parser")

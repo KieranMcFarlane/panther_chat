@@ -165,3 +165,12 @@ def test_extract_text_and_publication_date_uses_script_fallback_for_js_heavy_pag
     assert "Script data:" in content
     assert "https://" in content
     assert publication_date is None
+
+
+def test_dossier_generator_get_last_official_site_url_normalizes_domain():
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator._last_entity_data_by_id = {
+        "coventry-city-fc": {"official_site_url": "www.ccfc.co.uk"}
+    }
+
+    assert generator.get_last_official_site_url("coventry-city-fc") == "https://www.ccfc.co.uk"
