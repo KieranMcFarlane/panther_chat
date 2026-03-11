@@ -19,7 +19,7 @@ import os
 import logging
 import time
 import urllib.parse
-from typing import Dict, List, Optional, Any, Callable, Awaitable
+from typing import Dict, List, Optional, Any
 from datetime import datetime, timezone
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -153,7 +153,6 @@ class DossierDataCollector:
         self.falkordb_client = falkordb_client
         self.brightdata_client = brightdata_client
         self.hypothesis_manager = hypothesis_manager
-        self._owns_brightdata_client = brightdata_client is None
 
         self._falkordb_connected = False
         self._brightdata_available = False
@@ -161,16 +160,15 @@ class DossierDataCollector:
         self.source_timeout_seconds = float(os.getenv("DOSSIER_SOURCE_TIMEOUT_SECONDS", "20"))
 
     def _choose_official_site_url(self, entity_name: str, results: List[Dict[str, Any]]) -> str:
-        """Choose best official-site URL from SERP results while demoting store/ticket domains."""
+        """Choose the best official-site candidate while demoting ecommerce domains."""
         if not results:
             return ""
 
         compact_name = "".join(ch for ch in entity_name.lower() if ch.isalnum())
-        token_stop_words = {"the", "club", "football", "fc", "cf", "afc"}
         entity_tokens = [
             token
             for token in entity_name.lower().replace("&", " ").replace("-", " ").split()
-            if len(token) >= 3 and token not in token_stop_words
+            if len(token) >= 3 and token not in {"the", "club", "football", "fc", "cf", "afc"}
         ]
         blocked_domains = ("wikipedia.org", "espn.com", "facebook.com", "linkedin.com", "twitter.com", "x.com")
         ecommerce_terms = ("store", "shop", "ticket", "tickets", "merch", "retail")
@@ -181,6 +179,7 @@ class DossierDataCollector:
             url = str(result.get("url") or "").strip()
             if not url:
                 continue
+
             lowered_url = url.lower()
             title = str(result.get("title") or "").lower()
             snippet = str(result.get("snippet") or "").lower()
@@ -192,11 +191,10 @@ class DossierDataCollector:
             score = 0.0
             if compact_name and compact_name in "".join(ch for ch in lowered_url if ch.isalnum()):
                 score += 4.0
-            token_matches = sum(1 for token in entity_tokens if token in text)
-            score += min(token_matches, 3)
+            score += min(sum(1 for token in entity_tokens if token in text), 3)
             if "official" in title or "official" in snippet:
                 score += 3.0
-            if host.endswith(".co.uk") or host.endswith(".com") or host.endswith(".org"):
+            if host.endswith((".co.uk", ".com", ".org")):
                 score += 1.0
             if any(domain in host for domain in blocked_domains):
                 score -= 8.0
@@ -212,113 +210,6 @@ class DossierDataCollector:
             return best_url
         return str(results[0].get("url") or "").strip()
 
-    async def _emit_progress(
-        self,
-        progress_callback: Optional[Callable[..., Awaitable[None]]],
-        step: str,
-        status: str,
-        **details: Any,
-    ) -> None:
-        """Emit optional source-level progress events for phase-0 observability."""
-        if progress_callback is None:
-            return
-        try:
-            await progress_callback(step, status, **details)
-        except Exception as emit_error:  # noqa: BLE001
-            logger.warning("⚠️ Failed to emit collector progress for %s: %s", step, emit_error)
-
-    async def _run_with_timeout(
-        self,
-        operation_name: str,
-        operation,
-        default_result=None,
-    ):
-        """
-        Run an async operation with timeout and collect timing metadata.
-
-        BrightData/FalkorDB calls can intermittently hang. This helper guarantees
-        bounded execution and consistent status timing for phase-0 observability.
-        """
-        start_at = time.perf_counter()
-        try:
-            result = await asyncio.wait_for(operation, timeout=self.source_timeout_seconds)
-            return (
-                result,
-                {
-                    "duration_seconds": round(time.perf_counter() - start_at, 3),
-                    "status": "success",
-                },
-            )
-        except asyncio.TimeoutError:
-            logger.warning(
-                "⚠️ %s timed out after %.1fs",
-                operation_name,
-                self.source_timeout_seconds,
-            )
-            return (
-                default_result,
-                {
-                    "duration_seconds": round(time.perf_counter() - start_at, 3),
-                    "status": "timeout",
-                },
-            )
-        except Exception as error:  # noqa: BLE001
-            logger.warning("⚠️ %s failed: %s", operation_name, error)
-            return (
-                default_result,
-                {
-                    "duration_seconds": round(time.perf_counter() - start_at, 3),
-                    "status": "failed",
-                    "error": str(error),
-                },
-            )
-
-    async def _resolve_neo4j_id_for_entity(self, entity_id: str) -> Optional[str]:
-        """Resolve canonical UUID-backed entities to their graph neo4j_id via Supabase."""
-        identity = await self._resolve_cached_entity_identity(entity_id)
-        neo4j_id = identity.get("neo4j_id") if identity else None
-        return str(neo4j_id) if neo4j_id is not None else None
-
-    async def _resolve_cached_entity_identity(self, entity_id: str) -> Optional[Dict[str, str]]:
-        """Resolve canonical entity identity details from Supabase for graph fallback validation."""
-        try:
-            from supabase import create_client
-        except Exception:  # noqa: BLE001
-            return None
-
-        supabase_url = os.getenv("SUPABASE_URL") or os.getenv("NEXT_PUBLIC_SUPABASE_URL")
-        supabase_key = (
-            os.getenv("SUPABASE_SERVICE_ROLE_KEY")
-            or os.getenv("SUPABASE_ANON_KEY")
-            or os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
-        )
-        if not supabase_url or not supabase_key:
-            return None
-
-        try:
-            client = create_client(supabase_url, supabase_key)
-            response = (
-                client.table("cached_entities")
-                .select("id, neo4j_id, properties")
-                .eq("id", entity_id)
-                .limit(1)
-                .execute()
-            )
-            row = (response.data or [None])[0]
-            if not isinstance(row, dict):
-                return None
-
-            properties = row.get("properties") if isinstance(row.get("properties"), dict) else {}
-            neo4j_id = row.get("neo4j_id")
-            name = properties.get("name") if isinstance(properties, dict) else None
-            return {
-                "id": str(row.get("id") or entity_id),
-                "neo4j_id": str(neo4j_id) if neo4j_id is not None else "",
-                "name": str(name) if name is not None else "",
-            }
-        except Exception:  # noqa: BLE001
-            return None
-
     async def _connect_falkordb(self):
         """Connect to FalkorDB using native Python client"""
         if self._falkordb_connected:
@@ -329,8 +220,8 @@ class DossierDataCollector:
 
             # Load from environment (already loaded in module header)
             uri = os.getenv("FALKORDB_URI")
-            username = os.getenv("FALKORDB_USER") or None
-            password = os.getenv("FALKORDB_PASSWORD") or None
+            username = os.getenv("FALKORDB_USER", "falkordb")
+            password = os.getenv("FALKORDB_PASSWORD")
             database = os.getenv("FALKORDB_DATABASE", "sports_intelligence")
 
             if not uri:
@@ -341,27 +232,21 @@ class DossierDataCollector:
             parsed = urllib.parse.urlparse(uri.replace("rediss://", "http://"))
             host = parsed.hostname or "localhost"
             port = parsed.port or 6379
-            use_ssl = uri.startswith("rediss://")
 
             logger.info(f"🔗 Connecting to FalkorDB at {host}:{port}...")
 
-            # Execute connection + test query in a worker thread because FalkorDB query API is sync.
-            def _connect_and_test():
-                connection_kwargs = {
-                    "host": host,
-                    "port": port,
-                    "ssl": use_ssl,
-                }
-                if username is not None:
-                    connection_kwargs["username"] = username
-                if password is not None:
-                    connection_kwargs["password"] = password
-                client = FalkorDB(**connection_kwargs)
-                g = client.select_graph(database)
-                g.query("RETURN 1 AS test")
-                return client
+            # Connect
+            self.falkordb_client = FalkorDB(
+                host=host,
+                port=port,
+                username=username,
+                password=password,
+                ssl=True
+            )
 
-            self.falkordb_client = await asyncio.to_thread(_connect_and_test)
+            # Test connection
+            g = self.falkordb_client.select_graph(database)
+            g.query("RETURN 1 AS test")
 
             self._falkordb_connected = True
             logger.info("✅ FalkorDB connected")
@@ -374,13 +259,7 @@ class DossierDataCollector:
             logger.error(f"❌ FalkorDB connection failed: {e}")
             return False
 
-    async def collect_all(
-        self,
-        entity_id: str,
-        entity_name: str = None,
-        entity_type: str = "CLUB",
-        progress_callback: Optional[Callable[..., Awaitable[None]]] = None,
-    ) -> DossierData:
+    async def collect_all(self, entity_id: str, entity_name: str = None, entity_type: str = "CLUB") -> DossierData:
         """
         Collect all available data for dossier generation
 
@@ -394,177 +273,97 @@ class DossierDataCollector:
         logger.info(f"🔍 Collecting dossier data for {entity_name or entity_id}")
 
         collect_started_at = time.perf_counter()
-        try:
-            # Connect to all data sources
-            connect_falkordb_started_at = time.perf_counter()
-            await self._emit_progress(progress_callback, "connect_falkordb", "running")
-            connect_falkordb_result, connect_falkordb_timing = await self._run_with_timeout(
-                "connect_falkordb",
-                self._connect_falkordb(),
-                default_result=False,
-            )
-            connect_falkordb_duration = round(time.perf_counter() - connect_falkordb_started_at, 3)
-            connect_falkordb_status = (
-                "completed"
-                if connect_falkordb_timing.get("status") == "success" and bool(connect_falkordb_result)
-                else ("skipped" if connect_falkordb_timing.get("status") == "success" else connect_falkordb_timing.get("status", "failed"))
-            )
-            await self._emit_progress(
-                progress_callback,
-                "connect_falkordb",
-                connect_falkordb_status,
-                duration_seconds=connect_falkordb_duration,
-                details=connect_falkordb_timing,
-            )
-            connect_brightdata_started_at = time.perf_counter()
-            await self._emit_progress(progress_callback, "connect_brightdata", "running")
-            connect_brightdata_result, connect_brightdata_timing = await self._run_with_timeout(
-                "connect_brightdata",
-                self._connect_brightdata(),
-                default_result=False,
-            )
-            connect_brightdata_duration = round(time.perf_counter() - connect_brightdata_started_at, 3)
-            connect_brightdata_status = (
-                "completed"
-                if connect_brightdata_timing.get("status") == "success" and bool(connect_brightdata_result)
-                else ("skipped" if connect_brightdata_timing.get("status") == "success" else connect_brightdata_timing.get("status", "failed"))
-            )
-            await self._emit_progress(
-                progress_callback,
-                "connect_brightdata",
-                connect_brightdata_status,
-                duration_seconds=connect_brightdata_duration,
-                details=connect_brightdata_timing,
-            )
 
-            dossier_data = DossierData(
+        # Connect to all data sources
+        connect_falkordb_started_at = time.perf_counter()
+        await self._connect_falkordb()
+        connect_falkordb_duration = round(time.perf_counter() - connect_falkordb_started_at, 3)
+
+        connect_brightdata_started_at = time.perf_counter()
+        await self._connect_brightdata()
+        connect_brightdata_duration = round(time.perf_counter() - connect_brightdata_started_at, 3)
+
+        dossier_data = DossierData(
+            entity_id=entity_id,
+            entity_name=entity_name or entity_id.replace("-", " ").title()
+        )
+        dossier_data.source_timings["connect_falkordb"] = {
+            "duration_seconds": connect_falkordb_duration,
+            "status": "success" if self._falkordb_connected else "skipped",
+        }
+        dossier_data.source_timings["connect_brightdata"] = {
+            "duration_seconds": connect_brightdata_duration,
+            "status": "success" if self._brightdata_available else "skipped",
+        }
+
+        # Collect entity metadata from FalkorDB
+        if self._falkordb_connected:
+            metadata_started_at = time.perf_counter()
+            metadata = await self._get_entity_metadata(entity_id)
+            dossier_data.source_timings["falkordb_metadata"] = {
+                "duration_seconds": round(time.perf_counter() - metadata_started_at, 3),
+                "status": "success" if metadata else "empty",
+            }
+            if metadata:
+                dossier_data.metadata = metadata
+                dossier_data.data_sources_used.append("FalkorDB")
+        else:
+            # Create basic metadata if FalkorDB unavailable
+            logger.info("📝 Creating basic metadata (FalkorDB unavailable)")
+            dossier_data.metadata = EntityMetadata(
                 entity_id=entity_id,
-                entity_name=entity_name or entity_id.replace("-", " ").title()
+                entity_name=entity_name or entity_id.replace("-", " ").title(),
+                entity_type=entity_type,
+                data_source="Generated"
             )
-            dossier_data.source_timings["connect_falkordb"] = {
-                "duration_seconds": connect_falkordb_duration,
-                "status": connect_falkordb_timing.get("status", "skipped"),
-                "details": connect_falkordb_timing,
-            }
-            dossier_data.source_timings["connect_brightdata"] = {
-                "duration_seconds": connect_brightdata_duration,
-                "status": connect_brightdata_timing.get("status", "skipped"),
-                "details": connect_brightdata_timing,
-            }
 
-            # Collect entity metadata from FalkorDB
-            if self._falkordb_connected:
-                metadata_started_at = time.perf_counter()
-                await self._emit_progress(progress_callback, "fetch_falkordb_metadata", "running")
-                metadata, metadata_timing = await self._run_with_timeout(
-                    "fetch_falkordb_metadata",
-                    self._get_entity_metadata(entity_id),
-                    default_result=None,
-                )
-                metadata_duration = round(time.perf_counter() - metadata_started_at, 3)
-                dossier_data.source_timings["falkordb_metadata"] = {
-                    "duration_seconds": metadata_duration,
-                    "status": metadata_timing.get("status", "failed"),
-                    "details": metadata_timing,
-                }
-                await self._emit_progress(
-                    progress_callback,
-                    "fetch_falkordb_metadata",
-                    "completed" if metadata_timing.get("status") == "success" else metadata_timing.get("status", "failed"),
-                    duration_seconds=metadata_duration,
-                    found=metadata is not None,
-                    details=metadata_timing,
-                )
-                if metadata:
-                    dossier_data.metadata = metadata
-                    dossier_data.data_sources_used.append("FalkorDB")
-                else:
-                    logger.warning("⚠️ No metadata found for %s in FalkorDB", entity_id)
-            else:
-                # Create basic metadata if FalkorDB unavailable
-                logger.info("📝 Creating basic metadata (FalkorDB unavailable)")
-                dossier_data.metadata = EntityMetadata(
-                    entity_id=entity_id,
-                    entity_name=entity_name or entity_id.replace("-", " ").title(),
-                    entity_type=entity_type,
-                    data_source="Generated"
-                )
-
-            # Scrape additional data from web (Phase 2)
-            if self._brightdata_available:
-                scrape_started_at = time.perf_counter()
-                scrape_result, scrape_timing = await self._run_with_timeout(
-                    "brightdata_scrape",
-                    self._get_scraped_content(
-                        entity_id,
-                        dossier_data.entity_name,
-                        progress_callback=progress_callback,
-                    ),
-                    default_result=None,
-                )
-                scrape_step_timings: Dict[str, Any] = {}
-                if isinstance(scrape_result, tuple) and len(scrape_result) >= 3 and isinstance(scrape_result[2], dict):
-                    scrape_step_timings = scrape_result[2]
-                dossier_data.source_timings["brightdata_scrape"] = {
-                    "duration_seconds": round(time.perf_counter() - scrape_started_at, 3),
-                    "status": scrape_timing.get("status", "failed" if scrape_result is None else "success"),
-                    "details": scrape_timing,
-                    "steps": scrape_step_timings,
-                }
-                scrape_progress_status = scrape_timing.get("status", "failed")
-                if scrape_progress_status == "success":
-                    scrape_progress_status = "completed" if scrape_result else "failed"
-                await self._emit_progress(
-                    progress_callback,
-                    "collect_entity_data",
-                    scrape_progress_status,
-                    source="BrightData",
-                    duration_seconds=round(time.perf_counter() - scrape_started_at, 3),
-                    details=scrape_timing,
-                )
-
-                if scrape_result:
-                    scraped_content = scrape_result[0]
-                    extracted_data = scrape_result[1]
-
-                    # Add scraped content to dossier
-                    dossier_data.scraped_content.append(scraped_content)
-                    dossier_data.data_sources_used.append("BrightData")
-
-                    # Update metadata with scraped properties
-                    if dossier_data.metadata and extracted_data:
-                        if extracted_data.get('founded'):
-                            dossier_data.metadata.founded = extracted_data['founded']
-                        if extracted_data.get('stadium'):
-                            dossier_data.metadata.stadium = extracted_data['stadium']
-                        if extracted_data.get('capacity'):
-                            dossier_data.metadata.capacity = extracted_data['capacity']
-                        if extracted_data.get('website'):
-                            dossier_data.metadata.website = extracted_data['website']
-                        if extracted_data.get('employees'):
-                            dossier_data.metadata.employees = extracted_data['employees']
-                        if extracted_data.get('league'):
-                            dossier_data.metadata.league_or_competition = extracted_data['league']
-                        if extracted_data.get('country'):
-                            dossier_data.metadata.country = extracted_data['country']
-
-                        logger.info(f"✅ Enhanced metadata with BrightData data")
-
-            dossier_data.source_timings["collect_all_total"] = {
-                "duration_seconds": round(time.perf_counter() - collect_started_at, 3),
-                "status": "success",
+        # Scrape additional data from web (Phase 2)
+        if self._brightdata_available:
+            scrape_started_at = time.perf_counter()
+            scrape_result = await self._get_scraped_content(entity_id, dossier_data.entity_name)
+            scrape_step_timings: Dict[str, Any] = {}
+            if isinstance(scrape_result, tuple) and len(scrape_result) >= 3 and isinstance(scrape_result[2], dict):
+                scrape_step_timings = scrape_result[2]
+            dossier_data.source_timings["brightdata_scrape"] = {
+                "duration_seconds": round(time.perf_counter() - scrape_started_at, 3),
+                "status": "success" if scrape_result else "empty",
+                "steps": scrape_step_timings,
             }
 
-            logger.info(f"✅ Collected data from {len(dossier_data.data_sources_used)} sources")
-            return dossier_data
-        finally:
-            if self._owns_brightdata_client and self.brightdata_client is not None:
-                close_fn = getattr(self.brightdata_client, "close", None)
-                if callable(close_fn):
-                    try:
-                        await close_fn()
-                    except Exception as close_error:  # noqa: BLE001
-                        logger.warning("⚠️ Failed to close BrightData client cleanly: %s", close_error)
+            if scrape_result:
+                scraped_content = scrape_result[0]
+                extracted_data = scrape_result[1]
+
+                # Add scraped content to dossier
+                dossier_data.scraped_content.append(scraped_content)
+                dossier_data.data_sources_used.append("BrightData")
+
+                # Update metadata with scraped properties
+                if dossier_data.metadata and extracted_data:
+                    if extracted_data.get('founded'):
+                        dossier_data.metadata.founded = extracted_data['founded']
+                    if extracted_data.get('stadium'):
+                        dossier_data.metadata.stadium = extracted_data['stadium']
+                    if extracted_data.get('capacity'):
+                        dossier_data.metadata.capacity = extracted_data['capacity']
+                    if extracted_data.get('website'):
+                        dossier_data.metadata.website = extracted_data['website']
+                    if extracted_data.get('employees'):
+                        dossier_data.metadata.employees = extracted_data['employees']
+                    if extracted_data.get('league'):
+                        dossier_data.metadata.league_or_competition = extracted_data['league']
+                    if extracted_data.get('country'):
+                        dossier_data.metadata.country = extracted_data['country']
+
+                    logger.info(f"✅ Enhanced metadata with BrightData data")
+
+        dossier_data.source_timings["collect_all_total"] = {
+            "duration_seconds": round(time.perf_counter() - collect_started_at, 3),
+            "status": "success",
+        }
+
+        logger.info(f"✅ Collected data from {len(dossier_data.data_sources_used)} sources")
+        return dossier_data
 
     async def _get_entity_metadata(self, entity_id: str) -> Optional[EntityMetadata]:
         """
@@ -582,6 +381,7 @@ class DossierDataCollector:
 
         try:
             database = os.getenv("FALKORDB_DATABASE", "sports_intelligence")
+            g = self.falkordb_client.select_graph(database)
 
             # Query entity metadata (matches schema from load_all_entities.py)
             cypher = """
@@ -598,58 +398,14 @@ class DossierDataCollector:
                 e.digital_maturity as digital_maturity,
                 e.description as description
             """
-            def _query_metadata():
-                g = self.falkordb_client.select_graph(database)
-                return g.query(cypher, {"entity_id": entity_id})
 
-            # FalkorDB graph query is synchronous: run in worker thread.
-            result = await asyncio.to_thread(_query_metadata)
-
-            if not result.result_set:
-                canonical_identity = await self._resolve_cached_entity_identity(entity_id)
-                expected_entity_name = canonical_identity.get("name") if canonical_identity else None
-                neo4j_id = canonical_identity.get("neo4j_id") if canonical_identity else None
-                if not neo4j_id:
-                    neo4j_id = await self._resolve_neo4j_id_for_entity(entity_id)
-                if neo4j_id:
-                    legacy_cypher = """
-                    MATCH (e:Entity {neo4j_id: $neo4j_id})
-                    RETURN
-                        e.neo4j_id as entity_id,
-                        e.name as name,
-                        e.sport as sport,
-                        e.country as country,
-                        e.league_or_competition as league_or_competition,
-                        e.ownership_type as ownership_type,
-                        e.org_type as org_type,
-                        e.type as entity_type,
-                        e.estimated_revenue_band as estimated_revenue_band,
-                        e.digital_maturity as digital_maturity
-                    """
-
-                    def _query_legacy_metadata():
-                        g = self.falkordb_client.select_graph(database)
-                        return g.query(legacy_cypher, {"neo4j_id": neo4j_id})
-
-                    result = await asyncio.to_thread(_query_legacy_metadata)
-            else:
-                canonical_identity = None
-                expected_entity_name = None
+            result = g.query(cypher, {"entity_id": entity_id})
 
             if result.result_set:
                 row = result.result_set[0]
-                resolved_name = row[1] or entity_id.replace("-", " ").title()
-                if expected_entity_name and resolved_name and resolved_name.strip().casefold() != expected_entity_name.strip().casefold():
-                    logger.warning(
-                        "⚠️ Ignoring FalkorDB metadata for %s because graph name %r does not match canonical entity name %r",
-                        entity_id,
-                        resolved_name,
-                        expected_entity_name,
-                    )
-                    return None
                 return EntityMetadata(
                     entity_id=row[0] or entity_id,
-                    entity_name=resolved_name,
+                    entity_name=row[1] or entity_id.replace("-", " ").title(),
                     entity_type=row[7] or "CLUB",  # org_type
                     sport=row[2],
                     country=row[3],
@@ -676,9 +432,7 @@ class DossierDataCollector:
         try:
             from brightdata_sdk_client import BrightDataSDKClient
 
-            if self.brightdata_client is None:
-                self.brightdata_client = BrightDataSDKClient()
-                self._owns_brightdata_client = True
+            self.brightdata_client = BrightDataSDKClient()
 
             # Test connection with a simple search
             test_result = await self.brightdata_client.search_engine(
@@ -702,12 +456,7 @@ class DossierDataCollector:
             logger.error(f"❌ BrightData SDK connection failed: {e}")
             return False
 
-    async def _get_scraped_content(
-        self,
-        entity_id: str,
-        entity_name: str,
-        progress_callback: Optional[Callable[..., Awaitable[None]]] = None,
-    ) -> Optional[tuple[ScrapedContent, Dict[str, Any], Dict[str, Any]]]:
+    async def _get_scraped_content(self, entity_id: str, entity_name: str) -> Optional[tuple[ScrapedContent, Dict[str, Any], Dict[str, Any]]]:
         """
         Scrape official website for entity details
 
@@ -728,35 +477,12 @@ class DossierDataCollector:
             # Step 1: Search for official website
             logger.info(f"🔍 Searching for official website: {entity_name}")
             search_started_at = time.perf_counter()
-            await self._emit_progress(progress_callback, "brightdata_search_official", "running")
-            try:
-                search_results = await asyncio.wait_for(
-                    self.brightdata_client.search_engine(
-                        query=f'"{entity_name}" official website',
-                        engine="google",
-                        num_results=5
-                    ),
-                    timeout=self.source_timeout_seconds,
-                )
-            except asyncio.TimeoutError:
-                duration = round(time.perf_counter() - search_started_at, 3)
-                await self._emit_progress(
-                    progress_callback,
-                    "brightdata_search_official",
-                    "timeout",
-                    duration_seconds=duration,
-                    timeout_seconds=self.source_timeout_seconds,
-                )
-                return None
-            step_timings["search"] = round(time.perf_counter() - search_started_at, 3)
-            await self._emit_progress(
-                progress_callback,
-                "brightdata_search_official",
-                "completed" if search_results.get('status') == 'success' else "failed",
-                duration_seconds=step_timings["search"],
-                result_count=len(search_results.get("results", [])),
-                metadata=search_results.get("metadata", {}),
+            search_results = await self.brightdata_client.search_engine(
+                query=f'"{entity_name}" official website',
+                engine="google",
+                num_results=5
             )
+            step_timings["search"] = round(time.perf_counter() - search_started_at, 3)
 
             if search_results.get('status') != 'success':
                 logger.warning(f"Search failed for {entity_name}")
@@ -770,47 +496,17 @@ class DossierDataCollector:
             # Step 2: Find official website URL
             url_select_started_at = time.perf_counter()
             official_url = self._choose_official_site_url(entity_name, results)
-            if official_url:
-                logger.info(f"✅ Found official website: {official_url}")
-            else:
-                logger.warning("⚠️ Could not select official website URL from search results")
+            if not official_url:
+                logger.warning(f"Could not select official website URL for {entity_name}")
                 return None
+            logger.info(f"✅ Found official website: {official_url}")
             step_timings["url_select"] = round(time.perf_counter() - url_select_started_at, 3)
 
             # Step 3: Scrape official website content
             logger.info(f"📄 Scraping content from {official_url}")
             scrape_started_at = time.perf_counter()
-            await self._emit_progress(
-                progress_callback,
-                "brightdata_scrape_official",
-                "running",
-                url=official_url,
-            )
-            try:
-                scrape_result = await asyncio.wait_for(
-                    self.brightdata_client.scrape_as_markdown(official_url),
-                    timeout=self.source_timeout_seconds,
-                )
-            except asyncio.TimeoutError:
-                duration = round(time.perf_counter() - scrape_started_at, 3)
-                await self._emit_progress(
-                    progress_callback,
-                    "brightdata_scrape_official",
-                    "timeout",
-                    url=official_url,
-                    duration_seconds=duration,
-                    timeout_seconds=self.source_timeout_seconds,
-                )
-                return None
+            scrape_result = await self.brightdata_client.scrape_as_markdown(official_url)
             step_timings["scrape"] = round(time.perf_counter() - scrape_started_at, 3)
-            await self._emit_progress(
-                progress_callback,
-                "brightdata_scrape_official",
-                "completed" if scrape_result.get("status") == "success" else "failed",
-                url=official_url,
-                duration_seconds=step_timings["scrape"],
-                metadata=scrape_result.get("metadata", {}),
-            )
 
             if scrape_result.get('status') != 'success':
                 logger.warning(f"Scraping failed for {official_url}")
@@ -823,24 +519,8 @@ class DossierDataCollector:
 
             # Step 4: Extract entity properties using AI
             extract_started_at = time.perf_counter()
-            await self._emit_progress(progress_callback, "extract_entity_properties", "running")
-            try:
-                extracted_data = await asyncio.wait_for(
-                    self._extract_entity_properties(content, entity_name),
-                    timeout=self.source_timeout_seconds,
-                )
-                extract_status = "completed"
-            except asyncio.TimeoutError:
-                extracted_data = {}
-                extract_status = "timeout"
+            extracted_data = await self._extract_entity_properties(content, entity_name)
             step_timings["extract"] = round(time.perf_counter() - extract_started_at, 3)
-            await self._emit_progress(
-                progress_callback,
-                "extract_entity_properties",
-                extract_status,
-                duration_seconds=step_timings["extract"],
-                extracted_fields=list((extracted_data or {}).keys()),
-            )
 
             scraped_content = ScrapedContent(
                 url=official_url,
