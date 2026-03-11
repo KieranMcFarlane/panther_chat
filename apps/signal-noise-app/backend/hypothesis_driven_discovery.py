@@ -3167,6 +3167,11 @@ Return JSON:
                 prompt=prompt,
                 model="haiku",
                 max_tokens=self._get_evaluation_max_tokens(hop_type),
+                system_prompt=(
+                    "Return ONLY valid JSON. No prose, no markdown, no code fences. "
+                    "The JSON must contain: decision, confidence_delta, justification, "
+                    "evidence_found, evidence_type, temporal_score."
+                ),
                 json_mode=True,
             )
             response_diag = response.get("inference_diagnostics", {}) if isinstance(response, dict) else {}
@@ -3263,6 +3268,54 @@ Return JSON:
                             "justification": "Recovered decision label from narrative model response",
                             "evidence_found": "",
                             "evidence_type": "text_decision_recovery",
+                            "temporal_score": "unknown",
+                        },
+                            evaluation_mode="llm",
+                        )
+                text_lower = response_text.lower()
+                no_progress_markers = [
+                    "no relevant evidence",
+                    "doesn't indicate",
+                    "does not indicate",
+                    "no procurement activity",
+                    "no rfp",
+                    "no job postings",
+                    "not enough evidence",
+                    "this is just script data",
+                ]
+                accept_markers = [
+                    "direct evidence of active procurement",
+                    "clear evidence of active procurement",
+                    "launched a procurement tender",
+                ]
+                if any(marker in text_lower for marker in no_progress_markers):
+                    self._update_llm_runtime_diagnostics(
+                        llm_last_status="text_no_progress_recovered",
+                        evaluation_mode="llm",
+                    )
+                    return self._decorate_evaluation_result(
+                        {
+                            "decision": "NO_PROGRESS",
+                            "confidence_delta": 0.0,
+                            "justification": "Recovered NO_PROGRESS from narrative model response",
+                            "evidence_found": "",
+                            "evidence_type": "text_no_progress_recovery",
+                            "temporal_score": "unknown",
+                        },
+                        evaluation_mode="llm",
+                    )
+                if any(marker in text_lower for marker in accept_markers):
+                    self._update_llm_runtime_diagnostics(
+                        llm_last_status="text_accept_recovered",
+                        evaluation_mode="llm",
+                    )
+                    return self._decorate_evaluation_result(
+                        {
+                            "decision": "ACCEPT",
+                            "confidence_delta": 0.06,
+                            "justification": "Recovered ACCEPT from narrative model response",
+                            "evidence_found": "",
+                            "evidence_type": "text_accept_recovery",
                             "temporal_score": "unknown",
                         },
                         evaluation_mode="llm",

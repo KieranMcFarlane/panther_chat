@@ -549,3 +549,47 @@ async def test_evaluate_content_recovers_decision_from_narrative_heading():
 
     assert result["decision"] == "ACCEPT"
     assert result["evaluation_mode"] == "llm"
+
+
+@pytest.mark.asyncio
+async def test_evaluate_content_recovers_no_progress_from_narrative_text():
+    class _ClaudeStub:
+        provider = "chutes_openai"
+
+        async def query(self, **kwargs):
+            return {
+                "content": "This is just script data and does not indicate procurement activity. No relevant evidence found.",
+                "inference_diagnostics": {"llm_retry_attempts": 0, "llm_last_status": "ok"},
+            }
+
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.claude_client = _ClaudeStub()
+    discovery.heuristic_fallback_on_llm_unavailable = True
+    discovery.evaluation_max_tokens_default = 640
+    discovery.evaluation_max_tokens_press_release = 384
+    discovery.evaluation_max_tokens_official_site = 384
+    discovery.evaluation_max_tokens_careers_annual_report = 448
+
+    hypothesis = SimpleNamespace(
+        statement="Coventry City FC is actively running procurement",
+        category="procurement",
+        metadata={"entity_name": "Coventry City FC", "template_id": ""},
+        prior_probability=0.5,
+        confidence=0.5,
+        iterations_attempted=0,
+        iterations_accepted=0,
+        iterations_weak_accept=0,
+        iterations_rejected=0,
+        iterations_no_progress=0,
+        last_delta=0.0,
+    )
+
+    result = await discovery._evaluate_content_with_claude(
+        content="Script data: ...",
+        hypothesis=hypothesis,
+        hop_type=HopType.OFFICIAL_SITE,
+        content_metadata={"content_type": "text/html"},
+    )
+
+    assert result["decision"] == "NO_PROGRESS"
+    assert result["evaluation_mode"] == "llm"
