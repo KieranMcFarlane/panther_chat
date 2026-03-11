@@ -860,11 +860,12 @@ class ClaudeClient:
                         timeout=timeout,
                     )
 
-                content = data.get("answer_text", "")
+                answer_content = data.get("answer_text", "")
                 reasoning_content = data.get("reasoning_text", "")
                 usage = data.get("usage", {})
                 stop_reason = data.get("stop_reason")
                 chunk_count = int(data.get("chunk_count", 0) or 0)
+                content = answer_content or reasoning_content
 
                 if not content and self.chutes_fallback_model and payload["model"] != self.chutes_fallback_model:
                     logger.warning(
@@ -910,7 +911,7 @@ class ClaudeClient:
                         "streaming": bool(self.chutes_stream_enabled),
                         "fallback_used": bool(payload["model"] != self.chutes_model),
                         "chunk_count": chunk_count,
-                        "answer_channel_chars": len(content),
+                        "answer_channel_chars": len(answer_content),
                         "reasoning_channel_chars": len(reasoning_content),
                         "llm_retry_attempts": attempt,
                         "llm_last_status": "ok",

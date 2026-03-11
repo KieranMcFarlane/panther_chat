@@ -240,7 +240,7 @@ async def test_claude_client_retries_retryable_chutes_errors(monkeypatch):
 
 
 @pytest.mark.asyncio
-async def test_claude_client_returns_empty_when_only_reasoning_content_present(monkeypatch):
+async def test_claude_client_uses_reasoning_content_when_answer_channel_empty(monkeypatch):
     monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
     monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
     monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
@@ -287,7 +287,7 @@ async def test_claude_client_returns_empty_when_only_reasoning_content_present(m
     client = ClaudeClient()
     result = await client.query(prompt="retry me", model="haiku", max_tokens=64)
 
-    assert result["content"] == ""
+    assert result["content"] == "Fallback reasoning content"
     assert result["inference_diagnostics"]["answer_channel_chars"] == 0
     assert result["inference_diagnostics"]["reasoning_channel_chars"] > 0
 
@@ -677,7 +677,7 @@ async def test_claude_client_streaming_parser_uses_answer_channel_and_tracks_rea
 
 
 @pytest.mark.asyncio
-async def test_claude_client_streaming_falls_back_when_answer_channel_empty(monkeypatch):
+async def test_claude_client_streaming_uses_reasoning_when_answer_channel_empty(monkeypatch):
     monkeypatch.setenv("CHUTES_STREAM_ENABLED", "true")
     monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
     monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
@@ -702,16 +702,10 @@ async def test_claude_client_streaming_falls_back_when_answer_channel_empty(monk
             return None
 
         async def aiter_lines(self):
-            if self.model == "zai-org/GLM-5-TEE":
-                lines = [
-                    'data: {"choices":[{"delta":{"reasoning_content":"thinking only"},"finish_reason":"stop"}]}',
-                    "data: [DONE]",
-                ]
-            else:
-                lines = [
-                    'data: {"choices":[{"delta":{"content":"fallback answer"},"finish_reason":"stop"}]}',
-                    "data: [DONE]",
-                ]
+            lines = [
+                'data: {"choices":[{"delta":{"reasoning_content":"thinking only"},"finish_reason":"stop"}]}',
+                "data: [DONE]",
+            ]
             for line in lines:
                 yield line
 
@@ -735,10 +729,10 @@ async def test_claude_client_streaming_falls_back_when_answer_channel_empty(monk
     client = ClaudeClient()
     result = await client.query(prompt="hello", model="haiku", max_tokens=64)
 
-    assert request_models == ["zai-org/GLM-5-TEE", "moonshotai/Kimi-K2.5-TEE"]
-    assert result["content"] == "fallback answer"
-    assert result["model_used"] == "moonshotai/Kimi-K2.5-TEE"
-    assert result["inference_diagnostics"]["fallback_used"] is True
+    assert request_models == ["zai-org/GLM-5-TEE"]
+    assert result["content"] == "thinking only"
+    assert result["model_used"] == "zai-org/GLM-5-TEE"
+    assert result["inference_diagnostics"]["fallback_used"] is False
 
 
 @pytest.mark.asyncio
