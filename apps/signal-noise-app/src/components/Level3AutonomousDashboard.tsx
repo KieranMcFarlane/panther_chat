@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -34,7 +34,23 @@ export default function Level3AutonomousDashboard() {
   const [lastVerification, setLastVerification] = useState<string>('');
 
   // Run full system verification
-  const runFullVerification = async () => {
+  const fetchAutonomousMetrics = useCallback(async () => {
+    try {
+      // Mock metrics for now - would come from actual system
+      setAutonomousMetrics({
+        operational_hours: 168, // 1 week
+        autonomous_decisions: 1247,
+        learning_cycles: 89,
+        human_interventions: 12,
+        success_rate: 87.5,
+        confidence_improvement: 23.4
+      });
+    } catch (error) {
+      console.error('Failed to fetch metrics:', error);
+    }
+  }, []);
+
+  const runFullVerification = useCallback(async () => {
     setIsVerifying(true);
     try {
       const response = await fetch('/api/verification?check=all');
@@ -51,24 +67,7 @@ export default function Level3AutonomousDashboard() {
     } finally {
       setIsVerifying(false);
     }
-  };
-
-  // Fetch autonomous metrics
-  const fetchAutonomousMetrics = async () => {
-    try {
-      // Mock metrics for now - would come from actual system
-      setAutonomousMetrics({
-        operational_hours: 168, // 1 week
-        autonomous_decisions: 1247,
-        learning_cycles: 89,
-        human_interventions: 12,
-        success_rate: 87.5,
-        confidence_improvement: 23.4
-      });
-    } catch (error) {
-      console.error('Failed to fetch metrics:', error);
-    }
-  };
+  }, [fetchAutonomousMetrics]);
 
   // Test specific component
   const testComponent = async (component: string) => {
@@ -83,10 +82,12 @@ export default function Level3AutonomousDashboard() {
 
   // Auto-verify on mount
   useEffect(() => {
-    runFullVerification();
-    const interval = setInterval(fetchAutonomousMetrics, 30000); // Update every 30 seconds
+    void runFullVerification();
+    const interval = setInterval(() => {
+      void fetchAutonomousMetrics();
+    }, 30000); // Update every 30 seconds
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchAutonomousMetrics, runFullVerification]);
 
   const getStatusColor = (status: string) => {
     switch (status) {

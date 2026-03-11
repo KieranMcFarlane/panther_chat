@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface LogEntry {
   id: string;
@@ -23,13 +23,13 @@ export default function SimpleLogViewer({ onLog, isPaused = false, maxHeight = '
   const logContainerRef = useRef<HTMLDivElement>(null);
   const [logs, setLogs] = useState<LogEntry[]>([]);
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     if (logContainerRef.current) {
       logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
     }
-  };
+  }, []);
 
-  const addLog = (log: LogEntry) => {
+  const addLog = useCallback((log: LogEntry) => {
     if (!isPaused) {
       setLogs(prev => {
         // Keep only last 500 logs to prevent memory issues
@@ -37,13 +37,13 @@ export default function SimpleLogViewer({ onLog, isPaused = false, maxHeight = '
         return newLogs.slice(-500);
       });
     }
-  };
+  }, [isPaused]);
 
-  const clearLogs = () => {
+  const clearLogs = useCallback(() => {
     setLogs([]);
-  };
+  }, []);
 
-  const writeLog = (message: string, level: 'info' | 'warn' | 'error' | 'debug' = 'info', source = 'System') => {
+  const writeLog = useCallback((message: string, level: 'info' | 'warn' | 'error' | 'debug' = 'info', source = 'System') => {
     const log: LogEntry = {
       id: `log_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       timestamp: new Date().toISOString(),
@@ -53,7 +53,7 @@ export default function SimpleLogViewer({ onLog, isPaused = false, maxHeight = '
       message
     };
     addLog(log);
-  };
+  }, [addLog]);
 
   // Expose functions to parent
   useEffect(() => {
@@ -65,12 +65,12 @@ export default function SimpleLogViewer({ onLog, isPaused = false, maxHeight = '
         logs: logs
       });
     }
-  }, [onLog, isPaused, logs]);
+  }, [addLog, clearLogs, logs, onLog, writeLog]);
 
   // Auto-scroll when new logs are added
   useEffect(() => {
     scrollToBottom();
-  }, [logs]);
+  }, [logs, scrollToBottom]);
 
   // Clear logs when paused state changes
   useEffect(() => {
@@ -79,7 +79,7 @@ export default function SimpleLogViewer({ onLog, isPaused = false, maxHeight = '
     } else {
       writeLog('▶️ Log streaming resumed', 'info', 'LogViewer');
     }
-  }, [isPaused]);
+  }, [isPaused, writeLog]);
 
   const getLogIcon = (level: string, category: string) => {
     if (level === 'error' || level === 'critical') return '🔥';
