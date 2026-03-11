@@ -46,6 +46,7 @@ import re
 import asyncio
 import time
 from importlib import import_module
+from pathlib import Path
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass, field
@@ -4315,6 +4316,60 @@ class HypothesisDrivenDiscovery:
                     await asyncio.sleep(backoff_delay)
 
         raise TimeoutError(f"Evaluator model query timed out after {timeout_seconds:.2f}s")
+
+    def _official_site_cache_file(self) -> Path:
+        cache_path = os.getenv("DISCOVERY_OFFICIAL_SITE_CACHE_PATH", "backend/data/dossiers/official_site_cache.json")
+        return Path(cache_path)
+
+    def _load_official_site_url_cache(self) -> Dict[str, str]:
+        cache_file = self._official_site_cache_file()
+        try:
+            if not cache_file.exists():
+                return {}
+            payload = json.loads(cache_file.read_text())
+            if not isinstance(payload, dict):
+                return {}
+            cache: Dict[str, str] = {}
+            for key, value in payload.items():
+                if not isinstance(key, str):
+                    continue
+                normalized = self._normalize_http_url(value)
+                if normalized:
+                    cache[key] = normalized
+            return cache
+        except Exception:
+            return {}
+
+    def _get_cached_official_site_url(self, entity_name: str) -> Optional[str]:
+        if not isinstance(entity_name, str):
+            return None
+        normalized_key = entity_name.strip().casefold()
+        if not normalized_key:
+            return None
+        cache = getattr(self, "_official_site_url_cache", None)
+        if not isinstance(cache, dict):
+            return None
+        value = cache.get(normalized_key)
+        return self._normalize_http_url(value)
+
+    def _store_cached_official_site_url(self, entity_name: str, url: str) -> None:
+        normalized_key = entity_name.strip().casefold() if isinstance(entity_name, str) else ""
+        normalized_url = self._normalize_http_url(url)
+        if not normalized_key or not normalized_url:
+            return
+
+        cache = getattr(self, "_official_site_url_cache", None)
+        if not isinstance(cache, dict):
+            cache = {}
+            self._official_site_url_cache = cache
+
+        cache[normalized_key] = normalized_url
+        cache_file = self._official_site_cache_file()
+        try:
+            cache_file.parent.mkdir(parents=True, exist_ok=True)
+            cache_file.write_text(json.dumps(cache, indent=2, sort_keys=True))
+        except Exception as cache_error:
+            logger.debug("Failed to persist official-site cache: %s", cache_error)
 
     async def _evaluate_content_with_claude(
         self,
