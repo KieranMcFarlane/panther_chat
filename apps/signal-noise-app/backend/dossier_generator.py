@@ -886,6 +886,20 @@ Website: {metadata.website or 'N/A'}
         count = len(posts)
         return f"{count} recent LinkedIn posts/references found"
 
+    def _extract_first_url(self, items: Any) -> Optional[str]:
+        """Extract first usable URL from a list of dict records."""
+        if not isinstance(items, list):
+            return None
+
+        for item in items:
+            if isinstance(item, dict):
+                for key in ("url", "link", "job_url"):
+                    value = item.get(key)
+                    if isinstance(value, str) and value.strip():
+                        return value.strip()
+
+        return None
+
 
 class UniversalDossierGenerator(EntityDossierGenerator):
     """
