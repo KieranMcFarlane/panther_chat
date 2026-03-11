@@ -206,3 +206,48 @@ async def test_get_scraped_content_falls_back_to_subpaths_when_homepage_is_empty
         "https://www.ccfc.co.uk",
         "https://www.ccfc.co.uk/news",
     ]
+
+
+@pytest.mark.asyncio
+async def test_get_scraped_content_uses_cached_content_snapshot_when_live_pages_are_empty(tmp_path, monkeypatch):
+    content_cache_file = tmp_path / "official_site_content_cache.json"
+    monkeypatch.setenv("DOSSIER_OFFICIAL_SITE_CONTENT_CACHE_PATH", str(content_cache_file))
+
+    collector = DossierDataCollector()
+
+    class _AlwaysEmptyStub:
+        def __init__(self):
+            self.scrape_urls = []
+
+        async def search_engine(self, **kwargs):
+            return {
+                "status": "success",
+                "results": [{"title": "Coventry City FC", "url": "https://www.ccfc.co.uk/"}],
+            }
+
+        async def scrape_as_markdown(self, url):
+            self.scrape_urls.append(url)
+            return {"status": "success", "content": ""}
+
+    stub = _AlwaysEmptyStub()
+    collector.brightdata_client = stub
+    collector._brightdata_available = True
+    collector._store_cached_official_site_content(
+        "Coventry City FC",
+        "https://www.ccfc.co.uk/",
+        {"content": "Cached historical official content", "metadata": {"word_count": 4}},
+    )
+
+    async def fake_extract_entity_properties(_content, _entity_name):
+        return {}
+
+    collector._extract_entity_properties = fake_extract_entity_properties
+    scrape_result = await collector._get_scraped_content("coventry-city-fc", "Coventry City FC")
+
+    assert scrape_result is not None
+    scraped_content, extracted, _timings = scrape_result
+    assert scraped_content.url.rstrip("/") == "https://www.ccfc.co.uk"
+    assert "Cached historical official content" in scraped_content.content
+    assert extracted == {}
+    persisted = json.loads(content_cache_file.read_text())
+    assert persisted

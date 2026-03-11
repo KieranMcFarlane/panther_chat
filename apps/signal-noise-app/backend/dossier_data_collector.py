@@ -160,11 +160,22 @@ class DossierDataCollector:
         self._hypothesis_available = False
         self.source_timeout_seconds = float(os.getenv("DOSSIER_SOURCE_TIMEOUT_SECONDS", "20"))
         self._official_site_url_cache = self._load_official_site_url_cache()
+        self._official_site_content_cache = self._load_official_site_content_cache()
 
     def _official_site_cache_file(self) -> Path:
         cache_path = os.getenv(
             "DOSSIER_OFFICIAL_SITE_CACHE_PATH",
             "backend/data/dossiers/official_site_cache.json",
+        )
+        path = Path(cache_path)
+        if not path.is_absolute():
+            path = Path(__file__).resolve().parent.parent / cache_path
+        return path
+
+    def _official_site_content_cache_file(self) -> Path:
+        cache_path = os.getenv(
+            "DOSSIER_OFFICIAL_SITE_CONTENT_CACHE_PATH",
+            "backend/data/dossiers/official_site_content_cache.json",
         )
         path = Path(cache_path)
         if not path.is_absolute():
@@ -189,6 +200,26 @@ class DossierDataCollector:
             return cache
         except Exception as error:  # noqa: BLE001
             logger.debug("Failed loading official-site cache %s: %s", cache_file, error)
+            return {}
+
+    def _load_official_site_content_cache(self) -> Dict[str, Dict[str, Any]]:
+        cache_file = self._official_site_content_cache_file()
+        try:
+            if not cache_file.exists():
+                return {}
+            raw = json.loads(cache_file.read_text(encoding="utf-8"))
+            if not isinstance(raw, dict):
+                return {}
+            cache: Dict[str, Dict[str, Any]] = {}
+            for key, value in raw.items():
+                if isinstance(key, str) and isinstance(value, dict):
+                    content = value.get("content")
+                    url = value.get("url")
+                    if isinstance(content, str) and content.strip() and isinstance(url, str) and url.strip():
+                        cache[key] = value
+            return cache
+        except Exception as error:  # noqa: BLE001
+            logger.debug("Failed loading official-site content cache %s: %s", cache_file, error)
             return {}
 
     def _get_cached_official_site_url(self, entity_name: str) -> Optional[str]:
@@ -218,6 +249,69 @@ class DossierDataCollector:
         except Exception as error:  # noqa: BLE001
             logger.debug("Failed persisting official-site cache %s: %s", cache_file, error)
 
+    def _official_site_content_cache_key(self, entity_name: str, url: str) -> str:
+        parsed = urllib.parse.urlparse(str(url or "").strip())
+        host = parsed.netloc.lower()
+        if host.startswith("www."):
+            host = host[4:]
+        entity_key = self._normalize_official_site_cache_key(entity_name)
+        return f"{entity_key}|{host}"
+
+    def _store_cached_official_site_content(self, entity_name: str, url: str, scrape_result: Dict[str, Any]) -> None:
+        content = str(scrape_result.get("content") or "").strip()
+        normalized_url = str(url or "").strip()
+        if not content or not normalized_url:
+            return
+        key = self._official_site_content_cache_key(entity_name, normalized_url)
+        if not key:
+            return
+
+        metadata = scrape_result.get("metadata")
+        if not isinstance(metadata, dict):
+            metadata = {}
+        snapshot = {
+            "url": normalized_url,
+            "content": content[:50000],
+            "metadata": metadata,
+            "publication_date": scrape_result.get("publication_date"),
+            "cached_at": datetime.now(timezone.utc).isoformat(),
+        }
+        self._official_site_content_cache[key] = snapshot
+
+        cache_file = self._official_site_content_cache_file()
+        try:
+            cache_file.parent.mkdir(parents=True, exist_ok=True)
+            cache_file.write_text(
+                json.dumps(self._official_site_content_cache, indent=2, sort_keys=True),
+                encoding="utf-8",
+            )
+        except Exception as error:  # noqa: BLE001
+            logger.debug("Failed persisting official-site content cache %s: %s", cache_file, error)
+
+    def _get_cached_official_site_content(self, entity_name: str, url: str) -> Optional[Dict[str, Any]]:
+        key = self._official_site_content_cache_key(entity_name, url)
+        snapshot = self._official_site_content_cache.get(key)
+        if not isinstance(snapshot, dict):
+            return None
+        content = snapshot.get("content")
+        cached_url = snapshot.get("url")
+        if not isinstance(content, str) or not content.strip() or not isinstance(cached_url, str) or not cached_url.strip():
+            return None
+        metadata = snapshot.get("metadata") if isinstance(snapshot.get("metadata"), dict) else {}
+        return {
+            "status": "success",
+            "url": cached_url,
+            "content": content,
+            "publication_date": snapshot.get("publication_date"),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "metadata": {
+                **metadata,
+                "source": "official_site_content_cache",
+                "cached_snapshot": True,
+                "cached_at": snapshot.get("cached_at"),
+            },
+        }
+
     def _official_site_fallback_urls(self, official_url: str) -> List[str]:
         parsed = urllib.parse.urlparse(official_url)
         if not parsed.scheme or not parsed.netloc:
@@ -240,7 +334,11 @@ class DossierDataCollector:
             unique.append(candidate)
         return unique
 
-    async def _scrape_official_url_with_fallback(self, official_url: str) -> tuple[str, Dict[str, Any]]:
+    async def _scrape_official_url_with_fallback(
+        self,
+        entity_name: str,
+        official_url: str,
+    ) -> tuple[str, Dict[str, Any]]:
         if not self.brightdata_client:
             return official_url, {"status": "error", "error": "BrightData client unavailable"}
 
@@ -260,7 +358,18 @@ class DossierDataCollector:
             if scrape_result.get("status") == "success" and content:
                 if idx > 0:
                     logger.info("♻️ Official-site scrape recovered content via fallback URL: %s", candidate_url)
+                self._store_cached_official_site_content(entity_name, candidate_url, scrape_result)
                 return candidate_url, scrape_result
+
+        cached_snapshot = self._get_cached_official_site_content(entity_name, official_url)
+        if cached_snapshot is not None:
+            cached_url = str(cached_snapshot.get("url") or official_url)
+            logger.info(
+                "♻️ Reusing cached official-site content snapshot for %s from %s",
+                entity_name,
+                cached_url,
+            )
+            return cached_url, cached_snapshot
 
         return selected_url, last_result
 
@@ -629,7 +738,7 @@ class DossierDataCollector:
             # Step 3: Scrape official website content
             logger.info(f"📄 Scraping content from {official_url}")
             scrape_started_at = time.perf_counter()
-            scraped_url, scrape_result = await self._scrape_official_url_with_fallback(official_url)
+            scraped_url, scrape_result = await self._scrape_official_url_with_fallback(entity_name, official_url)
             step_timings["scrape"] = round(time.perf_counter() - scrape_started_at, 3)
 
             if scrape_result.get('status') != 'success':
@@ -896,7 +1005,7 @@ If a field is not found, use null. Return ONLY valid JSON, no other text."""
                 return None
 
             # Scrape official website content
-            scraped_url, scrape_result = await self._scrape_official_url_with_fallback(official_url)
+            scraped_url, scrape_result = await self._scrape_official_url_with_fallback(entity_name, official_url)
 
             if scrape_result.get('status') != 'success':
                 return None
