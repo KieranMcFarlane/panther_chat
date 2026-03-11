@@ -3,6 +3,7 @@ import sys
 import time
 from pathlib import Path
 import json
+import types
 
 import pytest
 
@@ -254,3 +255,67 @@ async def test_get_scraped_content_uses_cached_content_snapshot_when_live_pages_
     assert _timings["official_content_source"] == "cached_snapshot"
     persisted = json.loads(content_cache_file.read_text())
     assert persisted
+
+
+@pytest.mark.asyncio
+async def test_connect_falkordb_uses_ssl_false_for_redis_scheme(monkeypatch):
+    monkeypatch.setenv("FALKORDB_URI", "redis://example.com:6379")
+    monkeypatch.setenv("FALKORDB_USER", "falkordb")
+    monkeypatch.setenv("FALKORDB_PASSWORD", "secret")
+    monkeypatch.setenv("FALKORDB_DATABASE", "sports_intelligence")
+    monkeypatch.delenv("FALKORDB_SSL", raising=False)
+
+    captured = {}
+
+    class _Graph:
+        def query(self, _q):
+            return None
+
+    class _FakeFalkorDB:
+        def __init__(self, **kwargs):
+            captured.update(kwargs)
+
+        def select_graph(self, _db):
+            return _Graph()
+
+    monkeypatch.setitem(sys.modules, "falkordb", types.SimpleNamespace(FalkorDB=_FakeFalkorDB))
+
+    collector = DossierDataCollector()
+    ok = await collector._connect_falkordb()
+    assert ok is True
+    assert captured["ssl"] is False
+
+
+@pytest.mark.asyncio
+async def test_connect_falkordb_respects_rediss_and_ssl_override(monkeypatch):
+    monkeypatch.setenv("FALKORDB_URI", "rediss://secure.example.com:6380")
+    monkeypatch.setenv("FALKORDB_USER", "falkordb")
+    monkeypatch.setenv("FALKORDB_PASSWORD", "secret")
+    monkeypatch.setenv("FALKORDB_DATABASE", "sports_intelligence")
+
+    captured = {}
+
+    class _Graph:
+        def query(self, _q):
+            return None
+
+    class _FakeFalkorDB:
+        def __init__(self, **kwargs):
+            captured.update(kwargs)
+
+        def select_graph(self, _db):
+            return _Graph()
+
+    monkeypatch.setitem(sys.modules, "falkordb", types.SimpleNamespace(FalkorDB=_FakeFalkorDB))
+
+    collector = DossierDataCollector()
+    ok = await collector._connect_falkordb()
+    assert ok is True
+    assert captured["ssl"] is True
+
+    monkeypatch.setenv("FALKORDB_SSL", "false")
+    captured.clear()
+    collector = DossierDataCollector()
+    ok = await collector._connect_falkordb()
+    assert ok is True
+    assert captured["ssl"] is False
