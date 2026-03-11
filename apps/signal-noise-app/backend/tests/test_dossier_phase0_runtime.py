@@ -160,6 +160,7 @@ async def test_get_scraped_content_reuses_cached_official_url_when_search_fails(
     assert scraped_content.url.rstrip("/") == "https://www.ccfc.co.uk"
     assert extracted == {}
     assert "search" in timings
+    assert timings["official_content_source"] == "live"
     assert [url.rstrip("/") for url in stub.scrape_urls] == ["https://www.ccfc.co.uk"]
     persisted = json.loads(cache_file.read_text())
     assert persisted.get("coventry city fc") == "https://www.ccfc.co.uk/"
@@ -202,6 +203,7 @@ async def test_get_scraped_content_falls_back_to_subpaths_when_homepage_is_empty
     assert scraped_content.url.rstrip("/") == "https://www.ccfc.co.uk/news"
     assert extracted == {}
     assert "scrape" in timings
+    assert timings["official_content_source"] == "subpath"
     assert [url.rstrip("/") for url in stub.scrape_urls[:2]] == [
         "https://www.ccfc.co.uk",
         "https://www.ccfc.co.uk/news",
@@ -249,5 +251,6 @@ async def test_get_scraped_content_uses_cached_content_snapshot_when_live_pages_
     assert scraped_content.url.rstrip("/") == "https://www.ccfc.co.uk"
     assert "Cached historical official content" in scraped_content.content
     assert extracted == {}
+    assert _timings["official_content_source"] == "cached_snapshot"
     persisted = json.loads(content_cache_file.read_text())
     assert persisted

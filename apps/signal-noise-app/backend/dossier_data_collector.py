@@ -338,9 +338,9 @@ class DossierDataCollector:
         self,
         entity_name: str,
         official_url: str,
-    ) -> tuple[str, Dict[str, Any]]:
+    ) -> tuple[str, Dict[str, Any], str]:
         if not self.brightdata_client:
-            return official_url, {"status": "error", "error": "BrightData client unavailable"}
+            return official_url, {"status": "error", "error": "BrightData client unavailable"}, "none"
 
         attempt_urls = [official_url.rstrip("/")] + self._official_site_fallback_urls(official_url)
         last_result: Dict[str, Any] = {"status": "error", "error": "No scrape attempts executed"}
@@ -359,7 +359,7 @@ class DossierDataCollector:
                 if idx > 0:
                     logger.info("♻️ Official-site scrape recovered content via fallback URL: %s", candidate_url)
                 self._store_cached_official_site_content(entity_name, candidate_url, scrape_result)
-                return candidate_url, scrape_result
+                return candidate_url, scrape_result, ("subpath" if idx > 0 else "live")
 
         cached_snapshot = self._get_cached_official_site_content(entity_name, official_url)
         if cached_snapshot is not None:
@@ -369,9 +369,9 @@ class DossierDataCollector:
                 entity_name,
                 cached_url,
             )
-            return cached_url, cached_snapshot
+            return cached_url, cached_snapshot, "cached_snapshot"
 
-        return selected_url, last_result
+        return selected_url, last_result, "none"
 
     def _choose_official_site_url(self, entity_name: str, results: List[Dict[str, Any]]) -> str:
         """Choose the best official-site candidate while demoting ecommerce domains."""
@@ -738,8 +738,10 @@ class DossierDataCollector:
             # Step 3: Scrape official website content
             logger.info(f"📄 Scraping content from {official_url}")
             scrape_started_at = time.perf_counter()
-            scraped_url, scrape_result = await self._scrape_official_url_with_fallback(entity_name, official_url)
+            scraped_url, scrape_result, content_source = await self._scrape_official_url_with_fallback(entity_name, official_url)
             step_timings["scrape"] = round(time.perf_counter() - scrape_started_at, 3)
+            step_timings["official_content_source"] = content_source
+            logger.info("📊 Official content source for %s: %s", entity_name, content_source)
 
             if scrape_result.get('status') != 'success':
                 logger.warning(f"Scraping failed for {scraped_url}")
@@ -769,7 +771,10 @@ class DossierDataCollector:
             logger.info(f"   Extracted properties: {list(extracted_data.keys())}")
 
             # Merge scraped data into metadata
-            step_timings["total"] = round(sum(step_timings.values()), 3)
+            step_timings["total"] = round(
+                sum(value for value in step_timings.values() if isinstance(value, (int, float))),
+                3,
+            )
             return scraped_content, extracted_data, step_timings
 
         except Exception as e:
@@ -1005,7 +1010,8 @@ If a field is not found, use null. Return ONLY valid JSON, no other text."""
                 return None
 
             # Scrape official website content
-            scraped_url, scrape_result = await self._scrape_official_url_with_fallback(entity_name, official_url)
+            scraped_url, scrape_result, content_source = await self._scrape_official_url_with_fallback(entity_name, official_url)
+            logger.info("📊 Official content source for %s: %s", entity_name, content_source)
 
             if scrape_result.get('status') != 'success':
                 return None
@@ -1024,6 +1030,7 @@ If a field is not found, use null. Return ONLY valid JSON, no other text."""
                 "summary": summary,
                 "word_count": len(content.split()),
                 "source": "official_website",
+                "content_source": content_source,
                 "context": "Official website provides current technology stack, vendor mentions, and strategic messaging",
                 "freshness": "real-time",
                 "confidence_explanation": "Directly from entity's official communications"
