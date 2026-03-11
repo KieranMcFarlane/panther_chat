@@ -20,6 +20,7 @@ import logging
 import time
 import urllib.parse
 import json
+import re
 from typing import Dict, List, Optional, Any
 from datetime import datetime, timezone
 from dataclasses import dataclass, field
@@ -403,6 +404,7 @@ class DossierDataCollector:
             if host.startswith("www."):
                 host = host[4:]
             path = (parsed_url.path or "").strip("/")
+            host_tokens = [token for token in re.split(r"[^a-z0-9]+", host) if token]
 
             score = 0.0
             if compact_name and compact_name in "".join(ch for ch in lowered_url if ch.isalnum()):
@@ -416,6 +418,9 @@ class DossierDataCollector:
                 score -= 8.0
             if any(term in text for term in ecommerce_terms):
                 score -= 5.0
+            # Domain-level commerce indicators are much stronger than snippet words.
+            if any(term in host_tokens for term in ecommerce_terms):
+                score -= 9.0
             # Prefer root/home pages over deep content routes when selecting an official site.
             if not path:
                 score += 1.5
