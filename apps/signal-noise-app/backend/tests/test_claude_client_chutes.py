@@ -402,6 +402,65 @@ async def test_claude_client_applies_jittered_backoff_without_retry_after(monkey
 
 
 @pytest.mark.asyncio
+async def test_claude_client_retries_empty_length_responses_with_backoff(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_FALLBACK_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_MAX_RETRIES", "1")
+    monkeypatch.setenv("CHUTES_RETRY_JITTER_SECONDS", "0")
+
+    attempts = {"count": 0}
+    sleeps = []
+
+    class FakeResponse:
+        def __init__(self, attempt: int):
+            self.attempt = attempt
+
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            if self.attempt == 1:
+                return {
+                    "choices": [{"message": {"content": None}, "finish_reason": "length"}],
+                    "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2},
+                }
+            return {
+                "choices": [{"message": {"content": "Recovered after empty-length retry"}, "finish_reason": "stop"}],
+                "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2},
+            }
+
+    class FakeAsyncClient:
+        def __init__(self, timeout):
+            self.timeout = timeout
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            attempts["count"] += 1
+            return FakeResponse(attempts["count"])
+
+    async def fake_sleep(seconds):
+        sleeps.append(seconds)
+
+    monkeypatch.setattr(claude_client_module.httpx, "AsyncClient", FakeAsyncClient)
+    monkeypatch.setattr(claude_client_module.asyncio, "sleep", fake_sleep)
+
+    client = ClaudeClient()
+    result = await client.query(prompt="retry me", model="haiku", max_tokens=64)
+
+    assert attempts["count"] == 2
+    assert sleeps == [1.0]
+    assert result["content"] == "Recovered after empty-length retry"
+
+
+@pytest.mark.asyncio
 async def test_claude_client_falls_back_to_kimi_when_content_empty(monkeypatch):
     monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
     monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")

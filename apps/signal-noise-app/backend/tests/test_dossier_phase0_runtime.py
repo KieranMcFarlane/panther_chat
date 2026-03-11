@@ -78,6 +78,25 @@ def test_choose_official_site_url_prefers_primary_domain_over_store_domains():
     assert official_url == "https://www.ccfc.co.uk/"
 
 
+def test_choose_official_site_url_prefers_root_homepage_over_deep_news_path():
+    collector = DossierDataCollector()
+    results = [
+        {
+            "title": "Coventry City FC News",
+            "url": "https://www.ccfc.co.uk/news/",
+            "snippet": "Latest updates",
+        },
+        {
+            "title": "Coventry City FC",
+            "url": "https://www.ccfc.co.uk/",
+            "snippet": "Club homepage",
+        },
+    ]
+
+    official_url = collector._choose_official_site_url("Coventry City FC", results)
+    assert official_url == "https://www.ccfc.co.uk/"
+
+
 class _ClaudeStub:
     async def query(self, *args, **kwargs):
         await asyncio.sleep(0.2)

@@ -775,6 +775,18 @@ class ClaudeClient:
                     )
                     payload["model"] = self.chutes_fallback_model
                     continue
+                if not content and stop_reason == "length" and attempt < self.chutes_max_retries:
+                    backoff_seconds = self._compute_chutes_backoff_seconds(
+                        attempt=attempt,
+                        retry_after_seconds=None,
+                    )
+                    logger.warning(
+                        "Chutes response returned empty content with finish_reason=length for model=%s; retrying in %.2fs",
+                        payload["model"],
+                        backoff_seconds,
+                    )
+                    await asyncio.sleep(backoff_seconds)
+                    continue
 
                 return {
                     "content": content,

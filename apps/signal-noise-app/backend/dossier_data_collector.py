@@ -184,9 +184,11 @@ class DossierDataCollector:
             title = str(result.get("title") or "").lower()
             snippet = str(result.get("snippet") or "").lower()
             text = f"{lowered_url} {title} {snippet}"
-            host = urllib.parse.urlparse(url).netloc.lower()
+            parsed_url = urllib.parse.urlparse(url)
+            host = parsed_url.netloc.lower()
             if host.startswith("www."):
                 host = host[4:]
+            path = (parsed_url.path or "").strip("/")
 
             score = 0.0
             if compact_name and compact_name in "".join(ch for ch in lowered_url if ch.isalnum()):
@@ -200,6 +202,14 @@ class DossierDataCollector:
                 score -= 8.0
             if any(term in text for term in ecommerce_terms):
                 score -= 5.0
+            # Prefer root/home pages over deep content routes when selecting an official site.
+            if not path:
+                score += 1.5
+            else:
+                first_segment = path.split("/", 1)[0]
+                score -= min(len(path.split("/")), 3) * 0.6
+                if first_segment in {"news", "blog", "press", "updates", "fixtures", "results"}:
+                    score -= 1.0
             score -= idx * 0.1
 
             if score > best_score:
