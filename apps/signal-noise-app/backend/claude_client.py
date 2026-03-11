@@ -435,6 +435,8 @@ class ClaudeClient:
         self.chutes_fallback_model = os.getenv("CHUTES_FALLBACK_MODEL", "moonshotai/Kimi-K2.5-TEE")
         self.chutes_timeout_seconds = float(os.getenv("CHUTES_TIMEOUT_SECONDS", "45"))
         self.chutes_fallback_timeout_seconds = float(os.getenv("CHUTES_FALLBACK_TIMEOUT_SECONDS", "90"))
+        self.chutes_retry_backoff_cap_seconds = float(os.getenv("CHUTES_RETRY_BACKOFF_CAP_SECONDS", "4"))
+        self.chutes_retry_jitter_seconds = float(os.getenv("CHUTES_RETRY_JITTER_SECONDS", "0.35"))
         self.chutes_stream_idle_timeout_seconds = float(
             os.getenv("CHUTES_STREAM_IDLE_TIMEOUT_SECONDS", str(self.chutes_timeout_seconds))
         )
@@ -726,6 +728,20 @@ class ClaudeClient:
             status_code = error.response.status_code if error.response is not None else None
             return status_code in {408, 425, 429} or (status_code is not None and status_code >= 500)
         return False
+
+    def _compute_chutes_backoff_seconds(
+        self,
+        *,
+        attempt: int,
+        retry_after_seconds: Optional[float],
+    ) -> float:
+        """Compute retry delay with optional jitter for rate-limit resilience."""
+        if retry_after_seconds is not None and retry_after_seconds > 0:
+            return retry_after_seconds
+
+        base = min(2 ** max(attempt, 0), max(self.chutes_retry_backoff_cap_seconds, 0.0))
+        jitter = random.uniform(0.0, max(self.chutes_retry_jitter_seconds, 0.0))
+        return max(0.0, base + jitter)
 
     @staticmethod
     def _extract_http_error_text(error: Exception) -> str:
