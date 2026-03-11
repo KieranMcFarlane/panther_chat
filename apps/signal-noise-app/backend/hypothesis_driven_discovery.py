@@ -1712,6 +1712,7 @@ class HypothesisDrivenDiscovery:
             logger.warning("Optimized PDF search failed, falling back to standard search")
 
         if hop_type in {
+            HopType.RFP_PAGE,
             HopType.TENDERS_PAGE,
             HopType.PROCUREMENT_PAGE,
             HopType.PRESS_RELEASE,
@@ -4210,6 +4211,11 @@ Return JSON:
             if opportunity_signal:
                 procurement_signals.append(opportunity_signal)
 
+        if not procurement_signals and not capability_signals:
+            section_procurement, section_capabilities = self._derive_signals_from_dossier_sections(dossier)
+            procurement_signals.extend(section_procurement)
+            capability_signals.extend(section_capabilities)
+
         logger.info(f"📋 Found {len(procurement_signals)} procurement signals")
         logger.info(f"📋 Found {len(capability_signals)} capability signals")
 
@@ -4334,6 +4340,88 @@ Return JSON:
 
         logger.info(f"✅ Dossier-context discovery complete: {result.final_confidence:.2f} confidence")
         return result
+
+    def _derive_signals_from_dossier_sections(
+        self,
+        dossier: Dict[str, Any],
+    ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+        """Fallback signal extraction for dossiers that only contain section blocks."""
+        sections = dossier.get("sections", [])
+        if not isinstance(sections, list):
+            return [], []
+
+        procurement_keywords = (
+            "procurement",
+            "tender",
+            "rfp",
+            "request for proposal",
+            "vendor",
+            "supplier",
+            "partnership",
+            "outsourc",
+            "platform migration",
+            "digital transformation",
+        )
+        capability_keywords = (
+            "crm",
+            "data",
+            "analytics",
+            "ai",
+            "automation",
+            "mobile app",
+            "cloud",
+            "integration",
+            "ticketing",
+            "engagement",
+            "website",
+        )
+
+        def _to_confidence(raw_value: Any) -> float:
+            if isinstance(raw_value, (int, float)):
+                value = float(raw_value)
+                if value > 1:
+                    value = value / 100.0
+                return max(0.35, min(value, 0.85))
+            return 0.5
+
+        procurement_signals: List[Dict[str, Any]] = []
+        capability_signals: List[Dict[str, Any]] = []
+        seen_text: set[str] = set()
+
+        for section in sections:
+            if not isinstance(section, dict):
+                continue
+            section_confidence = _to_confidence(section.get("confidence"))
+            candidates: List[str] = []
+            for key in ("insights", "recommendations", "content"):
+                value = section.get(key)
+                if isinstance(value, list):
+                    candidates.extend(str(item).strip() for item in value if str(item).strip())
+                elif isinstance(value, str) and value.strip():
+                    candidates.append(value.strip())
+
+            for text in candidates:
+                lowered = text.casefold()
+                if len(lowered) < 24:
+                    continue
+                if lowered in seen_text:
+                    continue
+                seen_text.add(lowered)
+
+                if any(keyword in lowered for keyword in procurement_keywords):
+                    procurement_signals.append(
+                        {"type": "[PROCUREMENT]", "text": text[:220], "confidence": section_confidence}
+                    )
+                    continue
+                if any(keyword in lowered for keyword in capability_keywords):
+                    capability_signals.append(
+                        {"type": "[CAPABILITY]", "text": text[:220], "confidence": section_confidence}
+                    )
+
+                if len(procurement_signals) >= 10 and len(capability_signals) >= 10:
+                    break
+
+        return procurement_signals, capability_signals
 
     def _extract_official_site_url_from_dossier(self, dossier: Dict[str, Any]) -> Optional[str]:
         if not isinstance(dossier, dict):

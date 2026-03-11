@@ -75,6 +75,41 @@ async def test_official_site_hop_skips_fallback_query_loop_on_primary_failure():
     assert calls["search"] == 1
 
 
+@pytest.mark.asyncio
+async def test_rfp_hop_prefers_direct_site_path_before_primary_search():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.current_official_site_url = "https://www.ccfc.co.uk/"
+    discovery._last_url_resolution_metrics = {}
+
+    calls = {"search": 0}
+
+    async def fake_search_engine_with_timeout(*, query, engine, num_results):
+        calls["search"] += 1
+        return {"status": "error", "results": []}
+
+    async def fake_get_cached_search(_query, _engine):
+        return None
+
+    async def fake_resolve_official_site_url(_entity_name):
+        return "https://www.ccfc.co.uk/"
+
+    async def fake_try_direct_site_paths(_official_url, hop_type):
+        assert hop_type == HopType.RFP_PAGE
+        return "https://www.ccfc.co.uk/procurement"
+
+    discovery._search_engine_with_timeout = fake_search_engine_with_timeout
+    discovery._get_cached_search = fake_get_cached_search
+    discovery._resolve_official_site_url = fake_resolve_official_site_url
+    discovery._try_direct_site_paths = fake_try_direct_site_paths
+
+    state = SimpleNamespace(entity_name="Coventry City FC")
+    hypothesis = SimpleNamespace()
+
+    resolved = await discovery._get_url_for_hop(HopType.RFP_PAGE, hypothesis, state)
+    assert resolved == "https://www.ccfc.co.uk/procurement"
+    assert calls["search"] == 0
+
+
 def test_normalize_http_url_adds_https_for_bare_domain():
     discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
     assert discovery._normalize_http_url("www.ccfc.co.uk") == "https://www.ccfc.co.uk"
@@ -266,3 +301,27 @@ async def test_execute_hop_increments_failure_counts_on_scrape_failure():
     assert result["decision"] == "NO_PROGRESS"
     assert state.hop_failure_counts.get("official_site") == 1
     assert state.last_failed_hop == "official_site"
+
+
+def test_derive_signals_from_dossier_sections_extracts_procurement_and_capability():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    dossier = {
+        "sections": [
+            {
+                "title": "Digital transformation",
+                "confidence": 72,
+                "insights": [
+                    "The club is evaluating a CRM and data analytics stack upgrade this season."
+                ],
+                "recommendations": [
+                    "Run a structured procurement tender for supplier onboarding and integration."
+                ],
+            }
+        ]
+    }
+
+    procurement, capabilities = discovery._derive_signals_from_dossier_sections(dossier)
+    assert procurement
+    assert capabilities
+    assert procurement[0]["type"] == "[PROCUREMENT]"
+    assert capabilities[0]["type"] == "[CAPABILITY]"
