@@ -988,8 +988,38 @@ class BrightDataSDKClient:
             datetime object if found, None otherwise
         """
         from datetime import datetime
+        from email.utils import parsedate_to_datetime
         import re
-        from dateutil import parser as date_parser
+
+        try:
+            from dateutil import parser as date_parser  # type: ignore
+        except Exception:
+            date_parser = None
+
+        def _parse_date(value: Any) -> Optional[datetime]:
+            if value is None:
+                return None
+            raw = str(value).strip()
+            if not raw:
+                return None
+
+            if date_parser is not None:
+                try:
+                    return date_parser.parse(raw)
+                except Exception:
+                    pass
+
+            # Fallback parser path when python-dateutil is unavailable.
+            try:
+                return datetime.fromisoformat(raw.replace("Z", "+00:00"))
+            except Exception:
+                pass
+
+            try:
+                parsed = parsedate_to_datetime(raw)
+                return parsed
+            except Exception:
+                return None
 
         date_formats = [
             # ISO 8601 formats
@@ -1009,23 +1039,19 @@ class BrightDataSDKClient:
             if meta:
                 content = meta.get('content', '')
                 if content:
-                    try:
-                        dt = date_parser.parse(content)
+                    dt = _parse_date(content)
+                    if dt is not None:
                         logger.debug(f"Found publication date in {meta_name}: {dt}")
                         return dt
-                    except:
-                        continue
 
         # 2. Check <time> tags
         for time_tag in soup.find_all('time'):
             datetime_attr = time_tag.get('datetime')
             if datetime_attr:
-                try:
-                    dt = date_parser.parse(datetime_attr)
+                dt = _parse_date(datetime_attr)
+                if dt is not None:
                     logger.debug(f"Found publication date in <time>: {dt}")
                     return dt
-                except:
-                    continue
 
         # 3. Check JSON-LD schema.org data
         for script in soup.find_all('script', type='application/ld+json'):
@@ -1039,12 +1065,10 @@ class BrightDataSDKClient:
                         # Check for datePublished or dateModified
                         for date_field in ['datePublished', 'dateModified', 'uploadDate', 'publicationDate']:
                             if date_field in item:
-                                try:
-                                    dt = date_parser.parse(item[date_field])
+                                dt = _parse_date(item[date_field])
+                                if dt is not None:
                                     logger.debug(f"Found publication date in JSON-LD {date_field}: {dt}")
                                     return dt
-                                except:
-                                    continue
             except:
                 continue
 
@@ -1053,12 +1077,10 @@ class BrightDataSDKClient:
         if og_article:
             content = og_article.get('content', '')
             if content:
-                try:
-                    dt = date_parser.parse(content)
+                dt = _parse_date(content)
+                if dt is not None:
                     logger.debug(f"Found publication date in OG article:published_time: {dt}")
                     return dt
-                except:
-                    pass
 
         # 5. Extract date from URL patterns (e.g., /2024/01/15/article-slug)
         url_date_match = re.search(r'/(\d{4})/(\d{1,2})/(\d{1,2})/', url)
@@ -1104,14 +1126,11 @@ class BrightDataSDKClient:
             # Pattern: "Published January 15, 2024" or similar
             date_match = re.search(r'(?:published|posted|updated|on)\s+([A-Za-z]+\s+\d{1,2},?\s+\d{4})', text, re.IGNORECASE)
             if date_match:
-                try:
-                    dt = date_parser.parse(date_match.group(1))
-                    # Sanity check: date shouldn't be in the future
-                    if dt.year <= datetime.now().year + 1:  # Allow for timezone differences
-                        logger.debug(f"Found publication date in heading: {dt}")
-                        return dt
-                except:
-                    pass
+                dt = _parse_date(date_match.group(1))
+                # Sanity check: date shouldn't be in the future
+                if dt is not None and dt.year <= datetime.now().year + 1:  # Allow for timezone differences
+                    logger.debug(f"Found publication date in heading: {dt}")
+                    return dt
 
         logger.debug("No publication date found in HTML")
         return None

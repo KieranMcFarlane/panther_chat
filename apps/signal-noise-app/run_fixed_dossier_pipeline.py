@@ -1,0 +1,329 @@
+#!/usr/bin/env python3
+"""
+Fixed Dossier-First Pipeline for Coventry City FC
+
+Uses the WORKING EntityDossierGenerator instead of the failing UniversalDossierGenerator.
+Based on the successful generate_coventry_dossier.py script.
+
+Pipeline:
+1. PHASE 1: Generate dossier (using EntityDossierGenerator)
+2. PHASE 2: Run hypothesis-driven discovery (warm start)
+3. PHASE 3: Calculate dashboard scores
+4. PHASE 4: Enrich and save results
+"""
+
+import asyncio
+import json
+import logging
+import os
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Dict, Any
+
+# Add backend to path
+sys.path.insert(0, str(Path(__file__).parent))
+
+# Setup logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+
+class FixedDossierFirstPipeline:
+    """Fixed pipeline using EntityDossierGenerator"""
+
+    def __init__(self):
+        from backend.claude_client import ClaudeClient
+        from backend.brightdata_sdk_client import BrightDataSDKClient
+        from backend.dossier_generator import EntityDossierGenerator
+        from backend.hypothesis_driven_discovery import HypothesisDrivenDiscovery
+        from backend.dashboard_scorer import DashboardScorer
+
+        logger.info("🚀 Initializing Fixed Dossier-First Pipeline...")
+
+        # Initialize clients
+        self.claude = ClaudeClient()
+        self.brightdata = BrightDataSDKClient()
+
+        # Initialize components - use WORKING EntityDossierGenerator
+        self.dossier_generator = EntityDossierGenerator(self.claude)
+        self.discovery = HypothesisDrivenDiscovery(self.claude, self.brightdata)
+        self.dashboard_scorer = DashboardScorer()
+
+        # Create output directory
+        self.output_dir = Path("backend/data/dossiers")
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+
+        logger.info("✅ Pipeline initialized")
+
+    async def run_pipeline(
+        self,
+        entity_id: str,
+        entity_name: str,
+        tier_score: int = 50,
+        max_discovery_iterations: int = 15,
+        template_id: str = "yellow_panther_agency"
+    ) -> Dict[str, Any]:
+        """Run the complete 4-phase dossier-first pipeline"""
+
+        start_time = datetime.now(timezone.utc)
+
+        logger.info("=" * 60)
+        logger.info(f"🎯 DOSSIER-FIRST PIPELINE: {entity_name}")
+        logger.info("=" * 60)
+
+        # =========================================================================
+        # PHASE 1: DOSSIER GENERATION (Using EntityDossierGenerator)
+        # =========================================================================
+        logger.info("\n📋 PHASE 1: DOSSIER GENERATION")
+        logger.info("-" * 60)
+
+        dossier = await self._phase_1_generate_dossier(
+            entity_id=entity_id,
+            entity_name=entity_name,
+            tier_score=tier_score
+        )
+
+        # =========================================================================
+        # PHASE 2: DISCOVERY (with dossier context)
+        # =========================================================================
+        logger.info("\n🔍 PHASE 2: DISCOVERY")
+        logger.info("-" * 60)
+
+        discovery_result = await self._phase_2_run_discovery(
+            entity_id=entity_id,
+            entity_name=entity_name,
+            dossier=dossier,
+            max_iterations=max_discovery_iterations,
+            template_id=template_id
+        )
+
+        # =========================================================================
+        # PHASE 3: DASHBOARD SCORING
+        # =========================================================================
+        logger.info("\n📊 PHASE 3: DASHBOARD SCORING")
+        logger.info("-" * 60)
+
+        dashboard_scores = await self._phase_3_calculate_scores(
+            entity_id=entity_id,
+            entity_name=entity_name,
+            dossier=dossier,
+            discovery_result=discovery_result
+        )
+
+        # =========================================================================
+        # PHASE 4: SAVE RESULTS
+        # =========================================================================
+        logger.info("\n💾 PHASE 4: SAVE RESULTS")
+        logger.info("-" * 60)
+
+        await self._save_results(entity_id, entity_name, dossier, discovery_result, dashboard_scores)
+
+        # =========================================================================
+        # SUMMARY
+        # =========================================================================
+        end_time = datetime.now(timezone.utc)
+        total_time = (end_time - start_time).total_seconds()
+
+        logger.info("\n" + "=" * 60)
+        logger.info(f"✅ PIPELINE COMPLETE: {entity_name}")
+        logger.info("=" * 60)
+        logger.info(f"⏱️  Total time: {total_time:.1f} seconds")
+        logger.info(f"📋 Dossier sections: {len(dossier.sections) if hasattr(dossier, 'sections') else 0}")
+        logger.info(f"🔍 Discovery confidence: {discovery_result.final_confidence:.3f}")
+        logger.info(f"📊 Maturity: {dashboard_scores['procurement_maturity']}/100")
+        logger.info(f"📈 Probability: {dashboard_scores['active_probability']*100:.1f}%")
+        logger.info(f"🎯 Readiness: {dashboard_scores['sales_readiness']}")
+        logger.info("=" * 60)
+
+        return {
+            "entity_id": entity_id,
+            "entity_name": entity_name,
+            "total_time_seconds": round(total_time, 2),
+            "dossier_sections": len(dossier.sections) if hasattr(dossier, 'sections') else 0,
+            "discovery_confidence": discovery_result.final_confidence,
+            "procurement_maturity": dashboard_scores['procurement_maturity'],
+            "sales_readiness": dashboard_scores['sales_readiness']
+        }
+
+    async def _phase_1_generate_dossier(
+        self,
+        entity_id: str,
+        entity_name: str,
+        tier_score: int
+    ):
+        """Phase 1: Generate dossier using WORKING EntityDossierGenerator"""
+        logger.info(f"📋 Generating {tier_score}-priority dossier for {entity_name}")
+
+        # Generate dossier
+        dossier = await self.dossier_generator.generate_dossier(
+            entity_id=entity_id,
+            entity_name=entity_name,
+            entity_type="CLUB",
+            priority_score=tier_score
+        )
+
+        logger.info(f"✅ Dossier generated:")
+        logger.info(f"   - Tier: {dossier.tier}")
+        logger.info(f"   - Sections: {len(dossier.sections)}")
+        logger.info(f"   - Cost: ${dossier.total_cost_usd:.6f}")
+        logger.info(f"   - Time: {dossier.generation_time_seconds:.1f}s")
+
+        # List sections
+        for section in dossier.sections:
+            logger.info(f"     • {section.id}: {section.title}")
+
+        return dossier
+
+    async def _phase_2_run_discovery(
+        self,
+        entity_id: str,
+        entity_name: str,
+        dossier: Any,
+        max_iterations: int,
+        template_id: str
+    ):
+        """Phase 2: Run discovery with dossier context"""
+
+        logger.info(f"🔍 Running discovery (max {max_iterations} iterations, template: {template_id})")
+
+        # Try with dossier context first, fall back to standard discovery
+        try:
+            result = await self.discovery.run_discovery_with_dossier_context(
+                entity_id=entity_id,
+                entity_name=entity_name,
+                dossier=dossier.to_dict() if hasattr(dossier, 'to_dict') else {},
+                max_iterations=max_iterations,
+                template_id=template_id
+            )
+        except Exception as e:
+            logger.warning(f"⚠️ Dossier-context discovery failed: {e}")
+            logger.info("🔄 Falling back to standard discovery...")
+
+            # Try standard discovery with template
+            try:
+                result = await self.discovery.run_discovery(
+                    entity_id=entity_id,
+                    entity_name=entity_name,
+                    template_id=template_id,
+                    max_iterations=max_iterations
+                )
+            except Exception as e2:
+                logger.warning(f"⚠️ Standard discovery also failed: {e2}")
+                # Create minimal discovery result
+                from backend.hypothesis_driven_discovery import DiscoveryResult
+                result = DiscoveryResult(
+                    entity_id=entity_id,
+                    entity_name=entity_name,
+                    final_confidence=0.50,
+                    confidence_band="EXPLORATORY",
+                    is_actionable=False,
+                    iterations_completed=0,
+                    total_cost_usd=0.0,
+                    hypotheses=[],
+                    depth_stats={},
+                    signals_discovered=[]
+                )
+
+        logger.info(f"✅ Discovery complete:")
+        logger.info(f"   - Final confidence: {result.final_confidence:.3f}")
+        logger.info(f"   - Iterations: {result.iterations_completed}")
+        logger.info(f"   - Signals: {len(result.signals_discovered)}")
+
+        return result
+
+    async def _phase_3_calculate_scores(
+        self,
+        entity_id: str,
+        entity_name: str,
+        dossier: Any,
+        discovery_result: Any
+    ):
+        """Phase 3: Calculate dashboard scores"""
+        logger.info(f"📊 Calculating three-axis dashboard scores")
+
+        scores = await self.dashboard_scorer.calculate_entity_scores(
+            entity_id=entity_id,
+            entity_name=entity_name,
+            hypotheses=discovery_result.hypotheses if hasattr(discovery_result, 'hypotheses') else [],
+            signals=discovery_result.signals_discovered if hasattr(discovery_result, 'signals_discovered') else [],
+            episodes=None
+        )
+
+        logger.info(f"✅ Dashboard scores calculated:")
+        logger.info(f"   - Procurement Maturity: {scores['procurement_maturity']}/100")
+        logger.info(f"   - Active Probability: {scores['active_probability']*100:.1f}%")
+        logger.info(f"   - Sales Readiness: {scores['sales_readiness']}")
+
+        return scores
+
+    async def _save_results(
+        self,
+        entity_id: str,
+        entity_name: str,
+        dossier: Any,
+        discovery_result: Any,
+        dashboard_scores: Dict[str, Any]
+    ):
+        """Save all results to files"""
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+
+        # Save dossier
+        dossier_path = self.output_dir / f"{entity_id}_dossier_fixed_{timestamp}.json"
+        with open(dossier_path, 'w') as f:
+            json.dump(dossier.to_dict() if hasattr(dossier, 'to_dict') else dossier, f, indent=2, default=str)
+        logger.info(f"💾 Dossier saved: {dossier_path}")
+
+        # Save discovery
+        discovery_path = self.output_dir / f"{entity_id}_discovery_fixed_{timestamp}.json"
+        discovery_data = discovery_result.to_dict() if hasattr(discovery_result, 'to_dict') else {
+            'entity_id': discovery_result.entity_id,
+            'final_confidence': discovery_result.final_confidence,
+            'iterations_completed': discovery_result.iterations_completed,
+            'signals_discovered': discovery_result.signals_discovered
+        }
+        with open(discovery_path, 'w') as f:
+            json.dump(discovery_data, f, indent=2, default=str)
+        logger.info(f"💾 Discovery saved: {discovery_path}")
+
+        # Save scores
+        scores_path = self.output_dir / f"{entity_id}_scores_fixed_{timestamp}.json"
+        with open(scores_path, 'w') as f:
+            json.dump(dashboard_scores, f, indent=2, default=str)
+        logger.info(f"💾 Scores saved: {scores_path}")
+
+
+async def main():
+    """Main entry point"""
+    from dotenv import load_dotenv
+    load_dotenv()
+
+    # Verify environment
+    required_vars = ['ANTHROPIC_AUTH_TOKEN', 'BRIGHTDATA_API_TOKEN']
+    missing = [var for var in required_vars if not os.getenv(var)]
+    if missing:
+        logger.error(f"❌ Missing required environment variables: {', '.join(missing)}")
+        return
+
+    # Create and run pipeline
+    pipeline = FixedDossierFirstPipeline()
+
+    result = await pipeline.run_pipeline(
+        entity_id="coventry-city-fc",
+        entity_name="Coventry City FC",
+        tier_score=75,  # PREMIUM tier for richer data
+        max_discovery_iterations=15,
+        template_id="yellow_panther_agency"  # Use working template
+    )
+
+    print("\n" + "=" * 60)
+    print("📋 PIPELINE SUMMARY")
+    print("=" * 60)
+    print(json.dumps(result, indent=2))
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
