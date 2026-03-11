@@ -2370,7 +2370,31 @@ class HypothesisDrivenDiscovery:
 
         # Get URL based on hop type
         url_resolution_started_at = time.perf_counter()
-        url = await self._get_url_for_hop(hop_type, hypothesis, state)
+        url_resolution_timeout_seconds = getattr(self, "url_resolution_timeout_seconds", 20.0)
+        try:
+            url = await asyncio.wait_for(
+                self._get_url_for_hop(hop_type, hypothesis, state),
+                timeout=url_resolution_timeout_seconds,
+            )
+        except asyncio.TimeoutError:
+            hop_type_str = hop_type.value if hasattr(hop_type, 'value') else str(hop_type)
+            if not hasattr(state, 'hop_failure_counts'):
+                state.hop_failure_counts = {}
+            if not hasattr(state, 'last_failed_hop'):
+                state.last_failed_hop = None
+            if hop_type_str == state.last_failed_hop:
+                state.hop_failure_counts[hop_type_str] = state.hop_failure_counts.get(hop_type_str, 0) + 1
+            else:
+                state.hop_failure_counts[hop_type_str] = 1
+                state.last_failed_hop = hop_type_str
+            logger.warning(
+                "URL resolution timed out after %.1fs for hop %s (consecutive failures: %s)",
+                url_resolution_timeout_seconds,
+                hop_type,
+                state.hop_failure_counts.get(hop_type_str, 1),
+            )
+            performance['url_resolution_ms'] = round((time.perf_counter() - url_resolution_started_at) * 1000, 2)
+            return build_no_progress_result("URL resolution timed out")
         performance['url_resolution_ms'] = round((time.perf_counter() - url_resolution_started_at) * 1000, 2)
         if hasattr(self, '_last_url_resolution_metrics'):
             performance['url_resolution'] = self._last_url_resolution_metrics
