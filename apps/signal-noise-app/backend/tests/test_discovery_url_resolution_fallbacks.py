@@ -325,3 +325,65 @@ def test_derive_signals_from_dossier_sections_extracts_procurement_and_capabilit
     assert capabilities
     assert procurement[0]["type"] == "[PROCUREMENT]"
     assert capabilities[0]["type"] == "[CAPABILITY]"
+
+
+@pytest.mark.asyncio
+async def test_evaluate_content_uses_heuristic_mode_when_llm_is_circuit_broken():
+    class _ClaudeDisabledStub:
+        provider = "chutes_openai"
+
+        @staticmethod
+        def _get_disabled_reason():
+            return "insufficient balance"
+
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.claude_client = _ClaudeDisabledStub()
+    discovery.heuristic_fallback_on_llm_unavailable = True
+
+    hypothesis = SimpleNamespace(
+        statement="Coventry City FC is actively running procurement",
+        category="procurement",
+        metadata={"entity_name": "Coventry City FC", "template_id": ""},
+        prior_probability=0.5,
+        confidence=0.5,
+        iterations_attempted=0,
+        iterations_accepted=0,
+        iterations_weak_accept=0,
+        iterations_rejected=0,
+        iterations_no_progress=0,
+        last_delta=0.0,
+    )
+
+    result = await discovery._evaluate_content_with_claude(
+        content="The club has launched a procurement tender and supplier onboarding process.",
+        hypothesis=hypothesis,
+        hop_type=HopType.OFFICIAL_SITE,
+        content_metadata={"content_type": "text/html"},
+    )
+
+    assert result["decision"] == "WEAK_ACCEPT"
+    assert result["evaluation_mode"] == "heuristic"
+    assert result["llm_disable_reason"] == "insufficient balance"
+
+
+def test_performance_summary_includes_llm_runtime_diagnostics():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery._llm_runtime_diagnostics = {
+        "llm_provider": "chutes_openai",
+        "llm_retry_attempts": 3,
+        "llm_last_status": "quota_exhausted",
+        "llm_circuit_broken": True,
+        "llm_disable_reason": "insufficient balance",
+        "evaluation_mode": "heuristic",
+    }
+
+    state = SimpleNamespace(iteration_results=[])
+
+    summary = discovery._build_performance_summary(state, total_duration_ms=12.3)
+
+    assert summary["llm_provider"] == "chutes_openai"
+    assert summary["llm_retry_attempts"] == 3
+    assert summary["llm_last_status"] == "quota_exhausted"
+    assert summary["llm_circuit_broken"] is True
+    assert summary["llm_disable_reason"] == "insufficient balance"
+    assert summary["evaluation_mode"] == "heuristic"

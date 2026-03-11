@@ -646,11 +646,85 @@ class HypothesisDrivenDiscovery:
         self.search_timeout_seconds = float(os.getenv("DISCOVERY_SEARCH_TIMEOUT_SECONDS", "12"))
         self.search_validation_timeout_seconds = float(os.getenv("DISCOVERY_SEARCH_VALIDATION_TIMEOUT_SECONDS", "5"))
         self.url_resolution_timeout_seconds = float(os.getenv("DISCOVERY_URL_RESOLUTION_TIMEOUT_SECONDS", "12"))
+        self.heuristic_fallback_on_llm_unavailable = self._parse_bool_env(
+            os.getenv("DISCOVERY_HEURISTIC_FALLBACK_ON_LLM_UNAVAILABLE"),
+            default=True,
+        )
         self.official_site_resolution_cooldown_seconds = float(
             os.getenv("DISCOVERY_OFFICIAL_SITE_RESOLUTION_COOLDOWN_SECONDS", "180")
         )
+        self._llm_runtime_diagnostics: Dict[str, Any] = {
+            "llm_provider": getattr(self.claude_client, "provider", "unknown"),
+            "llm_retry_attempts": 0,
+            "llm_last_status": "not_started",
+            "llm_circuit_broken": bool(self._get_claude_disabled_reason()),
+            "llm_disable_reason": self._get_claude_disabled_reason(),
+            "evaluation_mode": "llm",
+        }
 
         logger.info("🔍 HypothesisDrivenDiscovery initialized")
+
+    @staticmethod
+    def _parse_bool_env(value: Optional[str], *, default: bool) -> bool:
+        if value is None:
+            return default
+        normalized = value.strip().lower()
+        if normalized in {"1", "true", "yes", "on"}:
+            return True
+        if normalized in {"0", "false", "no", "off"}:
+            return False
+        return default
+
+    def _get_claude_disabled_reason(self) -> Optional[str]:
+        getter = getattr(self.claude_client, "_get_disabled_reason", None)
+        if callable(getter):
+            try:
+                reason = getter()
+                return str(reason) if reason else None
+            except Exception:  # noqa: BLE001
+                return None
+        return None
+
+    def _update_llm_runtime_diagnostics(self, **kwargs: Any) -> None:
+        diag = getattr(self, "_llm_runtime_diagnostics", None)
+        if not isinstance(diag, dict):
+            diag = {
+                "llm_provider": getattr(self.claude_client, "provider", "unknown"),
+                "llm_retry_attempts": 0,
+                "llm_last_status": "not_started",
+                "llm_circuit_broken": False,
+                "llm_disable_reason": None,
+                "evaluation_mode": "llm",
+            }
+            self._llm_runtime_diagnostics = diag
+
+        for key, value in kwargs.items():
+            if value is None:
+                continue
+            if key == "llm_retry_attempts":
+                current = diag.get("llm_retry_attempts", 0)
+                try:
+                    diag[key] = max(int(current), int(value))
+                except Exception:  # noqa: BLE001
+                    continue
+            else:
+                diag[key] = value
+
+    def _decorate_evaluation_result(
+        self,
+        result: Dict[str, Any],
+        *,
+        evaluation_mode: str,
+    ) -> Dict[str, Any]:
+        output = dict(result)
+        diag = dict(getattr(self, "_llm_runtime_diagnostics", {}) or {})
+        output["evaluation_mode"] = evaluation_mode
+        output["llm_provider"] = diag.get("llm_provider")
+        output["llm_retry_attempts"] = diag.get("llm_retry_attempts", 0)
+        output["llm_last_status"] = diag.get("llm_last_status", "unknown")
+        output["llm_circuit_broken"] = bool(diag.get("llm_circuit_broken", False))
+        output["llm_disable_reason"] = diag.get("llm_disable_reason")
+        return output
 
     def _score_url(self, url: str, hop_type: HopType, entity_name: str, title: str = "", snippet: str = "") -> float:
         """
@@ -2903,6 +2977,21 @@ class HypothesisDrivenDiscovery:
             content=content,
             entity_name=entity_name
         )
+        disabled_reason = self._get_claude_disabled_reason()
+        if self.heuristic_fallback_on_llm_unavailable and disabled_reason:
+            self._update_llm_runtime_diagnostics(
+                llm_last_status="disabled",
+                llm_circuit_broken=True,
+                llm_disable_reason=disabled_reason,
+                evaluation_mode="heuristic",
+            )
+            fallback = self._fallback_result_with_reason(
+                f"LLM unavailable ({disabled_reason})",
+                content=content,
+                hop_type=hop_type,
+                context=context,
+            )
+            return self._decorate_evaluation_result(fallback, evaluation_mode="heuristic")
 
         # Step 2: MCP pattern matching (existing logic)
         mcp_matches = match_evidence_type(content, extract_metadata=True)
@@ -3010,18 +3099,32 @@ Return JSON:
                 model="haiku",
                 max_tokens=self._get_evaluation_max_tokens(hop_type)
             )
+            response_diag = response.get("inference_diagnostics", {}) if isinstance(response, dict) else {}
+            self._update_llm_runtime_diagnostics(
+                llm_provider=getattr(self.claude_client, "provider", "unknown"),
+                llm_retry_attempts=response_diag.get("llm_retry_attempts", 0),
+                llm_last_status=response_diag.get("llm_last_status", "ok"),
+                llm_circuit_broken=bool(response_diag.get("llm_circuit_broken", False)),
+                llm_disable_reason=response_diag.get("llm_disable_reason"),
+                evaluation_mode="llm",
+            )
 
             # Extract text from response
             # ClaudeClient.query() returns 'content' key, not 'text'
             response_text = response.get('content', '') or response.get('text', '')
             if not str(response_text or "").strip():
                 logger.info("Claude evaluation returned empty response; using heuristic fallback")
-                return self._fallback_result_with_reason(
+                fallback = self._fallback_result_with_reason(
                     "Empty model response",
                     content=content,
                     hop_type=hop_type,
                     context=context,
                 )
+                self._update_llm_runtime_diagnostics(
+                    llm_last_status="empty_response",
+                    evaluation_mode="heuristic",
+                )
+                return self._decorate_evaluation_result(fallback, evaluation_mode="heuristic")
 
             # Parse JSON response (existing code)
             import re
@@ -3034,7 +3137,12 @@ Return JSON:
                 # Ensure result has required 'decision' key
                 if 'decision' not in result:
                     logger.warning(f"Parsed JSON missing 'decision' key: {result}")
-                    return self._fallback_result()
+                    fallback = self._fallback_result()
+                    self._update_llm_runtime_diagnostics(
+                        llm_last_status="invalid_model_payload",
+                        evaluation_mode="heuristic",
+                    )
+                    return self._decorate_evaluation_result(fallback, evaluation_mode="heuristic")
 
                 # Enhance with MCP-derived confidence if not provided
                 if mcp_matches and result.get('confidence_delta', 0) == 0.0:
@@ -3044,15 +3152,20 @@ Return JSON:
                     result['mcp_matches'] = mcp_matches
                     result['mcp_confidence'] = mcp_confidence
 
-                return result
+                return self._decorate_evaluation_result(result, evaluation_mode="llm")
             else:
                 logger.warning(f"Could not parse Claude response: {response_text}")
-                return self._fallback_result_with_reason(
+                fallback = self._fallback_result_with_reason(
                     "Unparseable model response",
                     content=content,
                     hop_type=hop_type,
                     context=context,
                 )
+                self._update_llm_runtime_diagnostics(
+                    llm_last_status="unparseable_response",
+                    evaluation_mode="heuristic",
+                )
+                return self._decorate_evaluation_result(fallback, evaluation_mode="heuristic")
         except json.JSONDecodeError as e:
             logger.error(f"JSON parsing error: {e}")
             logger.debug(f"Response text that failed to parse: {response_text[:500]}")
@@ -3061,28 +3174,45 @@ Return JSON:
             if simple_match:
                 decision = simple_match.group(1)
                 logger.info(f"Fallback extracted decision: {decision}")
-                return {
+                self._update_llm_runtime_diagnostics(
+                    llm_last_status="json_parse_error",
+                    evaluation_mode="heuristic",
+                )
+                return self._decorate_evaluation_result({
                     'decision': decision,
                     'confidence_delta': 0.05 if decision == 'ACCEPT' else 0.0,
                     'justification': 'Extracted via fallback parsing',
                     'evidence_found': '',
                     'evidence_type': 'fallback'
-                }
-            return self._fallback_result_with_reason(
+                }, evaluation_mode="heuristic")
+            fallback = self._fallback_result_with_reason(
                 "JSON parsing error",
                 content=content,
                 hop_type=hop_type,
                 context=context,
             )
+            self._update_llm_runtime_diagnostics(
+                llm_last_status="json_parse_error",
+                evaluation_mode="heuristic",
+            )
+            return self._decorate_evaluation_result(fallback, evaluation_mode="heuristic")
         except Exception as e:
             logger.error(f"Claude evaluation error: {e}")
             logger.debug(f"Response text: {response_text[:500] if response_text else 'empty'}")
-            return self._fallback_result_with_reason(
+            disabled_reason = self._get_claude_disabled_reason()
+            self._update_llm_runtime_diagnostics(
+                llm_last_status="request_error",
+                llm_circuit_broken=bool(disabled_reason),
+                llm_disable_reason=disabled_reason,
+                evaluation_mode="heuristic",
+            )
+            fallback = self._fallback_result_with_reason(
                 "Evaluation error",
                 content=content,
                 hop_type=hop_type,
                 context=context,
             )
+            return self._decorate_evaluation_result(fallback, evaluation_mode="heuristic")
 
     async def _update_hypothesis_state(
         self,
@@ -3845,6 +3975,7 @@ Return JSON:
                 slowest_hop = record
                 slowest_iteration = iteration_record
 
+        llm_diag = dict(getattr(self, "_llm_runtime_diagnostics", {}) or {})
         return {
             'total_duration_ms': total_duration_ms,
             'iterations_with_timings': len(hop_records),
@@ -3854,7 +3985,13 @@ Return JSON:
                 'hypothesis_id': slowest_iteration.get('hypothesis_id'),
                 'hop_type': slowest_iteration.get('hop_type')
             } if slowest_iteration else None,
-            'hop_timings': hop_records
+            'hop_timings': hop_records,
+            'llm_provider': llm_diag.get('llm_provider'),
+            'llm_retry_attempts': llm_diag.get('llm_retry_attempts', 0),
+            'llm_last_status': llm_diag.get('llm_last_status'),
+            'llm_circuit_broken': bool(llm_diag.get('llm_circuit_broken', False)),
+            'llm_disable_reason': llm_diag.get('llm_disable_reason'),
+            'evaluation_mode': llm_diag.get('evaluation_mode'),
         }
 
     def _build_failure_result(

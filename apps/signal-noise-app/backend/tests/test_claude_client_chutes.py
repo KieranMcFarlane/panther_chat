@@ -18,6 +18,7 @@ from claude_client import ClaudeClient, LLMRequestError
 @pytest.fixture(autouse=True)
 def _default_non_stream_for_legacy_tests(monkeypatch):
     monkeypatch.setenv("CHUTES_STREAM_ENABLED", "false")
+    ClaudeClient._api_disabled_reason = None
 
 
 def test_claude_client_prefers_chutes_when_configured(monkeypatch):
@@ -397,7 +398,7 @@ async def test_claude_client_applies_jittered_backoff_without_retry_after(monkey
     result = await client.query(prompt="retry me", model="haiku", max_tokens=64)
 
     assert attempts["count"] == 2
-    assert sleeps == [1.25]
+    assert sleeps == [3.25]
     assert result["content"] == "Recovered after jitter backoff"
 
 
@@ -859,3 +860,181 @@ async def test_claude_client_streaming_length_empty_retries_non_stream_before_fa
     assert stream_calls == 1
     assert len(post_calls) == 1
     assert post_calls[0]["stream"] is False
+
+
+@pytest.mark.asyncio
+async def test_chutes_429_retries_three_times_with_retry_after_header(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_MAX_RETRIES", "3")
+    monkeypatch.setenv("CHUTES_429_POLICY", "header_exponential")
+
+    attempts = {"count": 0}
+    sleeps = []
+
+    class SuccessResponse:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {
+                "choices": [{"message": {"content": "Recovered on fourth call"}, "finish_reason": "stop"}],
+                "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2},
+            }
+
+    class FakeAsyncClient:
+        def __init__(self, timeout):
+            self.timeout = timeout
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            attempts["count"] += 1
+            if attempts["count"] <= 3:
+                request = httpx.Request("POST", url)
+                response = httpx.Response(429, request=request, headers={"Retry-After": "2"})
+                raise httpx.HTTPStatusError("429 Too Many Requests", request=request, response=response)
+            return SuccessResponse()
+
+    async def fake_sleep(seconds):
+        sleeps.append(seconds)
+
+    monkeypatch.setattr(claude_client_module.httpx, "AsyncClient", FakeAsyncClient)
+    monkeypatch.setattr(claude_client_module.asyncio, "sleep", fake_sleep)
+
+    client = ClaudeClient()
+    result = await client.query(prompt="retry me", model="haiku", max_tokens=32)
+
+    assert attempts["count"] == 4
+    assert sleeps == [2.0, 2.0, 2.0]
+    assert result["content"] == "Recovered on fourth call"
+
+
+@pytest.mark.asyncio
+async def test_chutes_429_uses_3_7_15_backoff_without_retry_after(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_MAX_RETRIES", "3")
+    monkeypatch.setenv("CHUTES_RETRY_JITTER_SECONDS", "0")
+    monkeypatch.setenv("CHUTES_429_POLICY", "header_exponential")
+
+    attempts = {"count": 0}
+    sleeps = []
+
+    class SuccessResponse:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {
+                "choices": [{"message": {"content": "Recovered after profile backoff"}, "finish_reason": "stop"}],
+                "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2},
+            }
+
+    class FakeAsyncClient:
+        def __init__(self, timeout):
+            self.timeout = timeout
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            attempts["count"] += 1
+            if attempts["count"] <= 3:
+                request = httpx.Request("POST", url)
+                response = httpx.Response(429, request=request)
+                raise httpx.HTTPStatusError("429 Too Many Requests", request=request, response=response)
+            return SuccessResponse()
+
+    async def fake_sleep(seconds):
+        sleeps.append(seconds)
+
+    monkeypatch.setattr(claude_client_module.httpx, "AsyncClient", FakeAsyncClient)
+    monkeypatch.setattr(claude_client_module.asyncio, "sleep", fake_sleep)
+
+    client = ClaudeClient()
+    result = await client.query(prompt="retry me", model="haiku", max_tokens=32)
+
+    assert attempts["count"] == 4
+    assert sleeps == [3.0, 7.0, 15.0]
+    assert result["content"] == "Recovered after profile backoff"
+
+
+@pytest.mark.asyncio
+async def test_chutes_insufficient_balance_circuit_breaks_after_retry_budget(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_MAX_RETRIES", "2")
+    monkeypatch.setenv("CHUTES_CIRCUIT_BREAK_ON_QUOTA", "true")
+    monkeypatch.setenv("CHUTES_RETRY_JITTER_SECONDS", "0")
+
+    attempts = {"count": 0}
+
+    class FakeAsyncClient:
+        def __init__(self, timeout):
+            self.timeout = timeout
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            attempts["count"] += 1
+            request = httpx.Request("POST", url)
+            response = httpx.Response(
+                429,
+                request=request,
+                text='{"error":{"code":"1113","message":"Insufficient balance or no resource package. Please recharge."}}',
+            )
+            raise httpx.HTTPStatusError("429 Too Many Requests", request=request, response=response)
+
+    async def fake_sleep(_seconds):
+        return None
+
+    monkeypatch.setattr(claude_client_module.httpx, "AsyncClient", FakeAsyncClient)
+    monkeypatch.setattr(claude_client_module.asyncio, "sleep", fake_sleep)
+
+    client = ClaudeClient()
+    with pytest.raises(LLMRequestError) as exc_info:
+        await client.query(prompt="quota me", model="haiku", max_tokens=32)
+
+    assert attempts["count"] == 3
+    assert exc_info.value.retryable is False
+    assert ClaudeClient._get_disabled_reason() == "insufficient balance"
+
+
+def test_chutes_openai_provider_rejects_anthropic_base_when_strict(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/anthropic")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("LLM_PROVIDER_VALIDATION_STRICT", "true")
+
+    with pytest.raises(ValueError):
+        ClaudeClient()
+
+
+def test_chutes_anthropic_provider_rejects_v1_base_when_strict(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_ANTHROPIC)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_ANTHROPIC_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL", "moonshotai/Kimi-K2.5-TEE")
+    monkeypatch.setenv("LLM_PROVIDER_VALIDATION_STRICT", "true")
+
+    with pytest.raises(ValueError):
+        ClaudeClient()
