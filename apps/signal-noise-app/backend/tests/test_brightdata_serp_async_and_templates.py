@@ -25,6 +25,17 @@ def test_entity_dossier_generator_exposes_json_extraction_helper():
     assert hasattr(EntityDossierGenerator, "_extract_last_valid_json_block")
 
 
+def test_section_data_needs_repair_for_markdown_json_blob():
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    section_data = {
+        "content": [
+            "```json\n{\"content\": [\"Signal\"], \"confidence\": 0.8\n```"
+        ]
+    }
+
+    assert generator._section_data_needs_repair(section_data) is True
+
+
 @pytest.mark.asyncio
 async def test_search_engine_fallback_resolves_async_serp_response_id(monkeypatch):
     class _FakeResponse:
@@ -333,3 +344,46 @@ async def test_generate_sections_parallel_falls_back_when_json_repair_fails():
     assert len(sections) == 1
     assert sections[0].content == ["Section generation failed. Please try again later."]
     assert sections[0].confidence == 0.0
+
+
+@pytest.mark.asyncio
+async def test_generate_section_uses_heuristic_when_json_repair_still_unstructured():
+    class _FakeClaude:
+        def __init__(self):
+            self.calls = 0
+
+        async def query(self, prompt, model, max_tokens):
+            self.calls += 1
+            if self.calls == 1:
+                return {"content": "Analyze the request and return JSON."}
+            return {
+                "content": (
+                    "Please review the request context.\n"
+                    "FIBA is headquartered in Mies, Switzerland.\n"
+                    "The official website is https://www.fiba.basketball/en."
+                )
+            }
+
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.claude_client = _FakeClaude()
+    generator.section_max_tokens_cap = 0
+    generator.section_parallelism = 1
+    generator.section_json_repair_attempt = True
+    generator.section_templates = {
+        "core_information": {
+            "model": "haiku",
+            "prompt_template": "core_info_template",
+            "max_tokens": 1200,
+            "description": "Basic entity information",
+        }
+    }
+
+    section = await generator._generate_section(
+        section_id="core_information",
+        entity_data={"entity_name": "FIBA"},
+        model="haiku",
+    )
+
+    assert section.confidence > 0.0
+    assert any("FIBA is headquartered" in item for item in section.content)
+    assert generator.claude_client.calls == 2

@@ -18,6 +18,7 @@ import json
 import logging
 import os
 import random
+import re
 from datetime import datetime, timezone
 from typing import Dict, List, Optional, Any, Callable, Awaitable
 from dataclasses import dataclass
@@ -591,7 +592,15 @@ Website: N/A
                 repaired_text = repair_response.get("content", "")
                 section_data = self._extract_section_data(repaired_text)
                 if self._section_data_needs_repair(section_data):
-                    raise ValueError(f"Section {section_id} JSON repair failed")
+                    heuristic_data = self._coerce_unstructured_section_data(repaired_text or content_text)
+                    if heuristic_data:
+                        logger.warning(
+                            "⚠️ Section %s JSON repair failed; using heuristic content fallback",
+                            section_id,
+                        )
+                        section_data = heuristic_data
+                    else:
+                        raise ValueError(f"Section {section_id} JSON repair failed")
 
             # Create DossierSection
             section = DossierSection(
@@ -644,7 +653,16 @@ Website: N/A
             "request context",
             "return valid json",
         )
-        return any(marker in normalized for marker in instruction_markers)
+        if any(marker in normalized for marker in instruction_markers):
+            return True
+
+        # Raw markdown/code-fenced JSON indicates parse failure and requires repair.
+        if normalized.startswith("```"):
+            return True
+        if normalized.startswith("{") or normalized.startswith("["):
+            return True
+
+        return False
 
     @staticmethod
     def _build_section_json_repair_prompt(raw_output: str) -> str:
@@ -655,6 +673,63 @@ Website: N/A
             "Do not include markdown, commentary, or extra text.\n\n"
             f"RAW_OUTPUT:\n{raw_output}"
         )
+
+    @staticmethod
+    def _coerce_unstructured_section_data(raw_output: str) -> Optional[Dict[str, Any]]:
+        """Best-effort fallback when model output is non-JSON after repair."""
+        if not isinstance(raw_output, str) or not raw_output.strip():
+            return None
+
+        marker_patterns = (
+            "analyze the request",
+            "the user wants",
+            "request context",
+            "return valid json",
+            "instruction",
+            "task:",
+            "please review",
+        )
+
+        content_items: List[str] = []
+        for raw_line in raw_output.splitlines():
+            line = raw_line.strip()
+            if not line or line.startswith("```"):
+                continue
+
+            lowered = line.lower()
+            if any(marker in lowered for marker in marker_patterns):
+                continue
+
+            line = re.sub(r"^\d+[\.\)]\s*", "", line)
+            line = re.sub(r"^[-*•]\s*", "", line).strip()
+
+            if line in {"{", "}", "[", "]"}:
+                continue
+            if len(line) < 24 and "http" not in line:
+                continue
+
+            content_items.append(line)
+
+        deduped: List[str] = []
+        seen = set()
+        for item in content_items:
+            if item in seen:
+                continue
+            seen.add(item)
+            deduped.append(item)
+            if len(deduped) >= 6:
+                break
+
+        if not deduped:
+            return None
+
+        return {
+            "content": deduped,
+            "metrics": [],
+            "insights": [],
+            "recommendations": [],
+            "confidence": 0.55,
+        }
 
     def _estimate_section_cost(self, model: str, max_tokens: int) -> float:
         """
