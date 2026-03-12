@@ -1,4 +1,5 @@
 import sys
+import asyncio
 from pathlib import Path
 
 import pytest
@@ -195,3 +196,70 @@ def test_dossier_generator_get_last_official_site_url_normalizes_domain():
     }
 
     assert generator.get_last_official_site_url("coventry-city-fc") == "https://www.ccfc.co.uk"
+
+
+def test_dossier_generator_respects_disable_question_extraction_env(monkeypatch):
+    monkeypatch.setenv("DOSSIER_DISABLE_QUESTION_EXTRACTION", "true")
+    generator = EntityDossierGenerator(claude_client=object())
+    assert generator.disable_question_extraction is True
+
+
+@pytest.mark.asyncio
+async def test_generate_sections_parallel_respects_section_parallelism():
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.section_parallelism = 1
+    generator.section_max_tokens_cap = 0
+    peak = 0
+    active = 0
+
+    async def _fake_generate_section(section_id, entity_data, model):
+        nonlocal active, peak
+        active += 1
+        peak = max(peak, active)
+        await asyncio.sleep(0.01)
+        active -= 1
+        return section_id
+
+    generator._generate_section = _fake_generate_section
+
+    results = await generator._generate_sections_parallel(
+        section_ids=["a", "b", "c"],
+        entity_data={},
+        model="haiku",
+    )
+
+    assert peak == 1
+    assert results == []
+
+
+@pytest.mark.asyncio
+async def test_generate_section_applies_max_tokens_cap():
+    class _FakeClaude:
+        def __init__(self):
+            self.max_tokens_seen = None
+
+        async def query(self, prompt, model, max_tokens):
+            self.max_tokens_seen = max_tokens
+            return {"content": "{\"content\": [\"ok\"], \"confidence\": 0.8}"}
+
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.claude_client = _FakeClaude()
+    generator.section_max_tokens_cap = 1200
+    generator.section_parallelism = 1
+    generator.section_templates = {
+        "core_information": {
+            "model": "haiku",
+            "prompt_template": "core_info_template",
+            "max_tokens": 4000,
+            "description": "Basic entity information",
+        }
+    }
+
+    section = await generator._generate_section(
+        section_id="core_information",
+        entity_data={"entity_name": "Coventry City FC"},
+        model="haiku",
+    )
+
+    assert generator.claude_client.max_tokens_seen == 1200
+    assert section.id == "core_information"
