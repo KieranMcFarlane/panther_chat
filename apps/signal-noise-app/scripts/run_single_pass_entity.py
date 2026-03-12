@@ -24,6 +24,16 @@ for p in (REPO_ROOT, APP_ROOT, BACKEND_ROOT):
     if p_str not in sys.path:
         sys.path.insert(0, p_str)
 
+try:
+    from dotenv import load_dotenv
+except Exception:  # noqa: BLE001
+    load_dotenv = None
+
+if load_dotenv is not None:
+    env_path = APP_ROOT / ".env"
+    if env_path.exists():
+        load_dotenv(env_path, override=False)
+
 
 from backend.claude_client import ClaudeClient
 from backend.brightdata_sdk_client import BrightDataSDKClient
@@ -40,6 +50,8 @@ def _set_single_pass_runtime(profile: str, strict_gate: bool, min_confidence: fl
     os.environ["DISCOVERY_PROFILE"] = profile
     os.environ["DISCOVERY_STRICT_PROMOTION_GATE"] = "true" if strict_gate else "false"
     os.environ["DISCOVERY_PROMOTION_MIN_CONFIDENCE"] = f"{min_confidence:.2f}"
+    os.environ["LLM_PROVIDER"] = os.getenv("LLM_PROVIDER", "chutes_openai")
+    os.environ.setdefault("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
     os.environ.setdefault("DISCOVERY_HEURISTIC_FALLBACK_ON_LLM_UNAVAILABLE", "true")
     os.environ.setdefault("DISCOVERY_JSON_REPAIR_ATTEMPT", "true")
 
