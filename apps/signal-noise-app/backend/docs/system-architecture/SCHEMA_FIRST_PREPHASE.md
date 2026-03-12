@@ -55,6 +55,7 @@ This gives discovery a stable official-site seed without overriding stronger dos
 
 In `run_fixed_dossier_pipeline.py`:
 - schema-first `official_site` is merged into dossier metadata canonical sources.
+- phase-1 collector now receives schema-first `official_site` as a preferred seed before BrightData search, so official-site scraping starts from that deterministic URL when available.
 - discovery official-site seeding also falls back to schema-first when generator cache/artifact lookup does not return a URL.
 
 ## Phase/Artifact Shape

@@ -60,6 +60,7 @@ class EntityDossierGenerator:
         self.claude_client = claude_client
         self.falkordb_client = falkordb_client
         self._last_entity_data_by_id: Dict[str, Dict[str, Any]] = {}
+        self._seed_official_site_by_name: Dict[str, str] = {}
         self.section_parallelism = max(
             1,
             int(os.getenv("DOSSIER_SECTION_PARALLELISM", "2")),
@@ -265,6 +266,9 @@ class EntityDossierGenerator:
             logger.info(f"🔍 Collecting entity data for {entity_name}")
             collector = DossierDataCollector()
             try:
+                seeded_url = self._apply_seeded_official_site_to_collector(collector, entity_name)
+                if seeded_url:
+                    logger.info("🎯 Seeded preferred official-site for %s: %s", entity_name, seeded_url)
                 dossier_data_obj = await collector.collect_all(entity_id, entity_name, entity_type=entity_type)
 
                 # Convert DossierData object to dict format for compatibility
@@ -436,6 +440,31 @@ Website: N/A
             normalized = self._normalize_http_url(candidate)
             if normalized:
                 return normalized
+        return None
+
+    def seed_official_site_url(self, entity_name: str, url: str) -> Optional[str]:
+        """Seed a preferred official-site URL for subsequent collector runs."""
+        normalized = self._normalize_http_url(url)
+        key = " ".join((entity_name or "").strip().lower().split())
+        if not normalized or not key:
+            return None
+        self._seed_official_site_by_name[key] = normalized
+        return normalized
+
+    def _apply_seeded_official_site_to_collector(self, collector: Any, entity_name: str) -> Optional[str]:
+        key = " ".join((entity_name or "").strip().lower().split())
+        seeded_url = self._seed_official_site_by_name.get(key)
+        if not seeded_url:
+            return None
+
+        seed_fn = getattr(collector, "seed_official_site_url", None)
+        if callable(seed_fn):
+            return seed_fn(entity_name, seeded_url, persist_cache=True)
+
+        fallback_store_fn = getattr(collector, "_store_cached_official_site_url", None)
+        if callable(fallback_store_fn):
+            fallback_store_fn(entity_name, seeded_url)
+            return seeded_url
         return None
 
     def _normalize_http_url(self, candidate: Any) -> Optional[str]:

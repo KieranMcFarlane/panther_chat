@@ -118,6 +118,7 @@ class FixedDossierFirstPipeline:
             except Exception as schema_error:  # noqa: BLE001
                 logger.warning("⚠️ Schema-first prepass failed; continuing pipeline: %s", schema_error)
                 self.schema_first_result = None
+        self._seed_phase1_official_site(entity_name)
 
         # =========================================================================
         # PHASE 1: DOSSIER GENERATION (Using EntityDossierGenerator)
@@ -367,6 +368,17 @@ class FixedDossierFirstPipeline:
             metadata["canonical_sources"] = canonical_sources
         canonical_sources.setdefault("official_site", official_site)
         metadata.setdefault("schema_first", self.schema_first_result or {})
+
+    def _seed_phase1_official_site(self, entity_name: str) -> None:
+        official_site = self._schema_first_official_site()
+        if not official_site:
+            return
+        seed_fn = getattr(getattr(self, "dossier_generator", None), "seed_official_site_url", None)
+        if not callable(seed_fn):
+            return
+        seeded = seed_fn(entity_name, official_site)
+        if seeded:
+            logger.info("🎯 Seeded phase-1 official-site from schema-first: %s", seeded)
 
     def _lookup_official_site_from_recent_artifacts(self, entity_id: str) -> str | None:
         """Load the most recent official site URL from saved dossier artifacts."""

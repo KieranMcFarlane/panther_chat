@@ -167,6 +167,7 @@ class DossierDataCollector:
             os.getenv("DOSSIER_BRIGHTDATA_CONNECT_PROBE"),
             default=False,
         )
+        self._preferred_official_site_urls: Dict[str, str] = {}
         self._official_site_url_cache = self._load_official_site_url_cache()
         self._official_site_content_cache = self._load_official_site_content_cache()
 
@@ -203,6 +204,18 @@ class DossierDataCollector:
 
     def _normalize_official_site_cache_key(self, entity_name: str) -> str:
         return " ".join((entity_name or "").strip().lower().split())
+
+    def _normalize_http_url(self, candidate: Optional[str]) -> Optional[str]:
+        if not isinstance(candidate, str):
+            return None
+        value = candidate.strip()
+        if not value:
+            return None
+        if value.startswith(("http://", "https://")):
+            return value.rstrip("/")
+        if value.startswith("www.") or "." in value:
+            return f"https://{value.lstrip('/').rstrip('/')}"
+        return None
 
     def _load_official_site_url_cache(self) -> Dict[str, str]:
         cache_file = self._official_site_cache_file()
@@ -251,7 +264,7 @@ class DossierDataCollector:
         return None
 
     def _store_cached_official_site_url(self, entity_name: str, url: str) -> None:
-        normalized_url = str(url or "").strip()
+        normalized_url = self._normalize_http_url(url)
         key = self._normalize_official_site_cache_key(entity_name)
         if not key or not normalized_url:
             return
@@ -267,6 +280,32 @@ class DossierDataCollector:
             )
         except Exception as error:  # noqa: BLE001
             logger.debug("Failed persisting official-site cache %s: %s", cache_file, error)
+
+    def seed_official_site_url(
+        self,
+        entity_name: str,
+        url: str,
+        *,
+        persist_cache: bool = True,
+    ) -> Optional[str]:
+        normalized_url = self._normalize_http_url(url)
+        key = self._normalize_official_site_cache_key(entity_name)
+        if not key or not normalized_url:
+            return None
+
+        self._preferred_official_site_urls[key] = normalized_url
+        if persist_cache:
+            self._store_cached_official_site_url(entity_name, normalized_url)
+        return normalized_url
+
+    def _get_preferred_official_site_url(self, entity_name: str) -> Optional[str]:
+        key = self._normalize_official_site_cache_key(entity_name)
+        if not key:
+            return None
+        value = self._preferred_official_site_urls.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+        return None
 
     def _official_site_content_cache_key(self, entity_name: str, url: str) -> str:
         parsed = urllib.parse.urlparse(str(url or "").strip())
@@ -762,26 +801,35 @@ class DossierDataCollector:
         try:
             step_timings: Dict[str, Any] = {}
 
-            # Step 1: Search for official website
-            logger.info(f"🔍 Searching for official website: {entity_name}")
-            search_started_at = time.perf_counter()
-            search_results = await self.brightdata_client.search_engine(
-                query=f'"{entity_name}" official website',
-                engine="google",
-                num_results=5
-            )
-            step_timings["search"] = round(time.perf_counter() - search_started_at, 3)
-
             official_url = ""
-            if search_results.get('status') == 'success':
-                results = search_results.get('results', [])
-                if results:
-                    # Step 2: Find official website URL
-                    url_select_started_at = time.perf_counter()
-                    official_url = self._choose_official_site_url(entity_name, results)
-                    step_timings["url_select"] = round(time.perf_counter() - url_select_started_at, 3)
-                    if official_url:
-                        self._store_cached_official_site_url(entity_name, official_url)
+            search_results: Dict[str, Any] = {"status": "seeded", "results": []}
+            preferred_url = self._get_preferred_official_site_url(entity_name)
+            if preferred_url:
+                official_url = preferred_url
+                step_timings["search"] = 0.0
+                step_timings["url_select"] = 0.0
+                step_timings["official_site_source"] = "seeded_preferred"
+                logger.info("🎯 Using seeded official website for %s: %s", entity_name, official_url)
+            else:
+                # Step 1: Search for official website
+                logger.info(f"🔍 Searching for official website: {entity_name}")
+                search_started_at = time.perf_counter()
+                search_results = await self.brightdata_client.search_engine(
+                    query=f'"{entity_name}" official website',
+                    engine="google",
+                    num_results=5
+                )
+                step_timings["search"] = round(time.perf_counter() - search_started_at, 3)
+
+                if search_results.get('status') == 'success':
+                    results = search_results.get('results', [])
+                    if results:
+                        # Step 2: Find official website URL
+                        url_select_started_at = time.perf_counter()
+                        official_url = self._choose_official_site_url(entity_name, results)
+                        step_timings["url_select"] = round(time.perf_counter() - url_select_started_at, 3)
+                        if official_url:
+                            self._store_cached_official_site_url(entity_name, official_url)
 
             if not official_url:
                 official_url = self._get_cached_official_site_url(entity_name) or ""
@@ -1051,20 +1099,26 @@ If a field is not found, use null. Return ONLY valid JSON, no other text."""
             return None
 
         try:
-            # Search for official website
-            search_results = await self.brightdata_client.search_engine(
-                query=f'"{entity_name}" official website',
-                engine="google",
-                num_results=5
-            )
-
             official_url = ""
-            if search_results.get('status') == 'success':
-                results = search_results.get('results', [])
-                if results:
-                    official_url = self._choose_official_site_url(entity_name, results)
-                    if official_url:
-                        self._store_cached_official_site_url(entity_name, official_url)
+            search_results: Dict[str, Any] = {"status": "seeded", "results": []}
+            preferred_url = self._get_preferred_official_site_url(entity_name)
+            if preferred_url:
+                official_url = preferred_url
+                logger.info("🎯 Using seeded official website for %s: %s", entity_name, official_url)
+            else:
+                # Search for official website
+                search_results = await self.brightdata_client.search_engine(
+                    query=f'"{entity_name}" official website',
+                    engine="google",
+                    num_results=5
+                )
+
+                if search_results.get('status') == 'success':
+                    results = search_results.get('results', [])
+                    if results:
+                        official_url = self._choose_official_site_url(entity_name, results)
+                        if official_url:
+                            self._store_cached_official_site_url(entity_name, official_url)
 
             if not official_url:
                 official_url = self._get_cached_official_site_url(entity_name) or ""

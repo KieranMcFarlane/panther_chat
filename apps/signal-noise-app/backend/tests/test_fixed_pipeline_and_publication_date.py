@@ -123,6 +123,53 @@ async def test_run_pipeline_executes_schema_first_prepass_when_enabled():
 
 
 @pytest.mark.asyncio
+async def test_run_pipeline_seeds_phase1_official_site_from_schema_first():
+    pipeline = FixedDossierFirstPipeline.__new__(FixedDossierFirstPipeline)
+    pipeline.output_dir = Path("/tmp")
+    pipeline.schema_first_enabled = True
+    pipeline.schema_first_result = None
+    captured = {"seeded": None}
+
+    class _Generator:
+        def seed_official_site_url(self, entity_name, url):
+            captured["seeded"] = (entity_name, url)
+            return url
+
+    async def _run_schema_first_prepass(*, entity_id, entity_name, entity_type):
+        return {"fields": {"official_site": {"value": "https://www.fiba.basketball/en"}}}
+
+    async def _phase_1_generate_dossier(*, entity_id, entity_name, entity_type, tier_score):
+        return SimpleNamespace(sections=[], metadata={"canonical_sources": {}})
+
+    async def _phase_2_run_discovery(*, entity_id, entity_name, dossier, max_iterations, template_id):
+        return SimpleNamespace(final_confidence=0.5, iterations_completed=1, signals_discovered=[])
+
+    async def _phase_3_calculate_scores(*, entity_id, entity_name, dossier, discovery_result):
+        return {"procurement_maturity": 40, "active_probability": 0.05, "sales_readiness": "NOT_READY"}
+
+    async def _save_results(*args, **kwargs):
+        return None
+
+    pipeline.dossier_generator = _Generator()
+    pipeline._run_schema_first_prepass = _run_schema_first_prepass
+    pipeline._phase_1_generate_dossier = _phase_1_generate_dossier
+    pipeline._phase_2_run_discovery = _phase_2_run_discovery
+    pipeline._phase_3_calculate_scores = _phase_3_calculate_scores
+    pipeline._save_results = _save_results
+
+    await pipeline.run_pipeline(
+        entity_id="fiba",
+        entity_name="FIBA",
+        entity_type="FEDERATION",
+        tier_score=50,
+        max_discovery_iterations=1,
+        template_id="federation_procurement_template",
+    )
+
+    assert captured["seeded"] == ("FIBA", "https://www.fiba.basketball/en")
+
+
+@pytest.mark.asyncio
 async def test_pipeline_close_closes_brightdata_client():
     closed = False
 
