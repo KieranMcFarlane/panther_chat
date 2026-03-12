@@ -381,6 +381,41 @@ async def test_try_site_specific_search_respects_max_queries():
     assert calls["search"] == 2
 
 
+@pytest.mark.asyncio
+async def test_run_discovery_resets_official_site_context_between_entities():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.current_official_site_url = "https://www.ccfc.co.uk/"
+    discovery._resolved_url_context = {"https://www.ccfc.co.uk/": {"title": "Coventry"}}
+    discovery.max_iterations = 1
+    discovery.max_depth = 1
+    discovery.max_cost_per_entity = 2.0
+    discovery.current_entity_type = None
+    discovery._llm_runtime_diagnostics = {}
+
+    class _HypothesisManagerStub:
+        async def initialize_hypotheses(self, **_kwargs):
+            return [SimpleNamespace(status="ACTIVE", expected_information_gain=0.5)]
+
+    async def fake_run_discovery_iterations(state, hypotheses, **_kwargs):
+        return {"ok": True, "entity": state.entity_name, "hypothesis_count": len(hypotheses)}
+
+    discovery.hypothesis_manager = _HypothesisManagerStub()
+    discovery._run_discovery_iterations = fake_run_discovery_iterations
+    discovery._extract_entity_type_from_template = lambda _template_id: "SPORT_CLUB"
+
+    result = await discovery.run_discovery(
+        entity_id="arsenal-fc",
+        entity_name="Arsenal FC",
+        template_id="yellow_panther_agency",
+        max_iterations=1,
+        max_depth=1,
+    )
+
+    assert result["ok"] is True
+    assert discovery.current_official_site_url is None
+    assert discovery._resolved_url_context == {}
+
+
 def test_derive_signals_from_dossier_sections_extracts_procurement_and_capability():
     discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
     dossier = {
