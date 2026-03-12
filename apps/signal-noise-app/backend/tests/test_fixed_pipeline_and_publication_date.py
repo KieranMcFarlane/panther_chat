@@ -41,6 +41,42 @@ async def test_phase2_uses_passed_max_iterations():
 
 
 @pytest.mark.asyncio
+async def test_run_pipeline_passes_entity_type_to_phase1():
+    pipeline = FixedDossierFirstPipeline.__new__(FixedDossierFirstPipeline)
+    pipeline.output_dir = Path("/tmp")
+    captured = {}
+
+    async def _phase_1_generate_dossier(*, entity_id, entity_name, entity_type, tier_score):
+        captured["entity_type"] = entity_type
+        return SimpleNamespace(sections=[])
+
+    async def _phase_2_run_discovery(*, entity_id, entity_name, dossier, max_iterations, template_id):
+        return SimpleNamespace(final_confidence=0.5, iterations_completed=1, signals_discovered=[])
+
+    async def _phase_3_calculate_scores(*, entity_id, entity_name, dossier, discovery_result):
+        return {"procurement_maturity": 40, "active_probability": 0.05, "sales_readiness": "NOT_READY"}
+
+    async def _save_results(*args, **kwargs):
+        return None
+
+    pipeline._phase_1_generate_dossier = _phase_1_generate_dossier
+    pipeline._phase_2_run_discovery = _phase_2_run_discovery
+    pipeline._phase_3_calculate_scores = _phase_3_calculate_scores
+    pipeline._save_results = _save_results
+
+    await pipeline.run_pipeline(
+        entity_id="fiba",
+        entity_name="FIBA",
+        entity_type="FEDERATION",
+        tier_score=50,
+        max_discovery_iterations=1,
+        template_id="federation_procurement_template",
+    )
+
+    assert captured["entity_type"] == "FEDERATION"
+
+
+@pytest.mark.asyncio
 async def test_pipeline_close_closes_brightdata_client():
     closed = False
 

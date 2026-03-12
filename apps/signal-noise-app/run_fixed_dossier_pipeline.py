@@ -73,6 +73,7 @@ class FixedDossierFirstPipeline:
         self,
         entity_id: str,
         entity_name: str,
+        entity_type: str = "CLUB",
         tier_score: int = 50,
         max_discovery_iterations: int = 15,
         template_id: str = "yellow_panther_agency"
@@ -94,6 +95,7 @@ class FixedDossierFirstPipeline:
         dossier = await self._phase_1_generate_dossier(
             entity_id=entity_id,
             entity_name=entity_name,
+            entity_type=entity_type,
             tier_score=tier_score
         )
 
@@ -163,6 +165,7 @@ class FixedDossierFirstPipeline:
         self,
         entity_id: str,
         entity_name: str,
+        entity_type: str,
         tier_score: int
     ):
         """Phase 1: Generate dossier using WORKING EntityDossierGenerator"""
@@ -172,7 +175,7 @@ class FixedDossierFirstPipeline:
         dossier = await self.dossier_generator.generate_dossier(
             entity_id=entity_id,
             entity_name=entity_name,
-            entity_type="CLUB",
+            entity_type=entity_type,
             priority_score=tier_score
         )
 
