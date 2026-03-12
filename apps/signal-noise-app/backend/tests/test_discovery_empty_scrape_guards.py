@@ -4,6 +4,7 @@ Regression tests for discovery behavior when scrape or validation inputs are emp
 """
 
 import sys
+import asyncio
 from pathlib import Path
 from types import SimpleNamespace
 import pytest
@@ -299,6 +300,27 @@ async def test_evaluate_content_with_claude_returns_fallback_when_query_raises()
 
     assert result["decision"] == "NO_PROGRESS"
     assert result["justification"] == "Evaluation error"
+
+
+@pytest.mark.asyncio
+async def test_query_evaluator_model_honors_timeout_budget():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.evaluation_query_timeout_seconds = 0.01
+
+    class SlowClaudeClient:
+        async def query(self, *args, **kwargs):
+            await asyncio.sleep(0.05)
+            return {"content": "{}"}
+
+    discovery.claude_client = SlowClaudeClient()
+
+    with pytest.raises(TimeoutError):
+        await discovery._query_evaluator_model(
+            prompt="Timeout test",
+            max_tokens=64,
+            system_prompt="Return JSON only",
+            json_mode=True,
+        )
 
 
 @pytest.mark.asyncio

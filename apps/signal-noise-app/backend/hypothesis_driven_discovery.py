@@ -680,11 +680,14 @@ class HypothesisDrivenDiscovery:
             for engine in (os.getenv("DISCOVERY_OFFICIAL_SITE_RESOLUTION_ENGINES", "google,bing") or "").split(",")
             if engine.strip()
         ] or ["google"]
-        self.evaluation_max_tokens_default = int(os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_DEFAULT", "640"))
-        self.evaluation_max_tokens_press_release = int(os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_PRESS_RELEASE", "384"))
-        self.evaluation_max_tokens_official_site = int(os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_OFFICIAL_SITE", "384"))
+        self.evaluation_query_timeout_seconds = float(
+            os.getenv("DISCOVERY_EVALUATION_QUERY_TIMEOUT_SECONDS", "30")
+        )
+        self.evaluation_max_tokens_default = int(os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_DEFAULT", "360"))
+        self.evaluation_max_tokens_press_release = int(os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_PRESS_RELEASE", "250"))
+        self.evaluation_max_tokens_official_site = int(os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_OFFICIAL_SITE", "220"))
         self.evaluation_max_tokens_careers_annual_report = int(
-            os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_CAREERS_ANNUAL_REPORT", "448")
+            os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_CAREERS_ANNUAL_REPORT", "300")
         )
         self.evaluation_json_repair_attempt = self._parse_bool_env(
             os.getenv("DISCOVERY_JSON_REPAIR_ATTEMPT"),
@@ -790,6 +793,7 @@ class HypothesisDrivenDiscovery:
             "unparseable_response": "heuristic_fallback",
             "json_parse_error": "heuristic_fallback",
             "request_error": "heuristic_fallback",
+            "request_timeout": "heuristic_fallback",
             "disabled": "heuristic_fallback",
             "strict_json_enforced": "heuristic_fallback",
             "empty_response": "heuristic_fallback",
@@ -958,22 +962,36 @@ class HypothesisDrivenDiscovery:
         if not callable(query_fn):
             raise RuntimeError("Claude client query method is unavailable")
 
+        timeout_seconds = float(getattr(self, "evaluation_query_timeout_seconds", 30.0) or 30.0)
+        if timeout_seconds <= 0:
+            timeout_seconds = 30.0
+
+        async def _await_query(coro):
+            try:
+                return await asyncio.wait_for(coro, timeout=timeout_seconds)
+            except asyncio.TimeoutError as timeout_error:
+                raise TimeoutError(
+                    f"Evaluator model query timed out after {timeout_seconds:.2f}s"
+                ) from timeout_error
+
         try:
-            return await query_fn(
+            query_coro = query_fn(
                 prompt=prompt,
                 model="haiku",
                 max_tokens=max_tokens,
                 system_prompt=system_prompt,
                 json_mode=json_mode,
             )
+            return await _await_query(query_coro)
         except TypeError as type_error:
             message = str(type_error).lower()
             if "unexpected keyword argument" in message:
-                return await query_fn(
+                fallback_coro = query_fn(
                     prompt=prompt,
                     model="haiku",
                     max_tokens=max_tokens,
                 )
+                return await _await_query(fallback_coro)
             raise
 
     @staticmethod
@@ -3753,6 +3771,22 @@ Return JSON:
             self._update_llm_runtime_diagnostics(
                 llm_last_status="json_parse_error",
                 evaluation_mode="heuristic",
+            )
+            return self._decorate_evaluation_result(fallback, evaluation_mode="heuristic")
+        except TimeoutError as e:
+            logger.warning(f"Claude evaluation timeout: {e}")
+            disabled_reason = self._get_claude_disabled_reason()
+            self._update_llm_runtime_diagnostics(
+                llm_last_status="request_timeout",
+                llm_circuit_broken=bool(disabled_reason),
+                llm_disable_reason=disabled_reason,
+                evaluation_mode="heuristic",
+            )
+            fallback = self._fallback_result_with_reason(
+                "Evaluation timeout",
+                content=content,
+                hop_type=hop_type,
+                context=context,
             )
             return self._decorate_evaluation_result(fallback, evaluation_mode="heuristic")
         except Exception as e:

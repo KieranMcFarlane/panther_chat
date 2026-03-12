@@ -56,6 +56,24 @@ Return valid JSON only.
     assert any("FIBA is headquartered" in line for line in content)
 
 
+def test_sanitize_section_content_strips_json_scaffolding_meta_lines():
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    cleaned = generator._sanitize_section_content(
+        [
+            "Information Retrieval:** Facts about FIBA.",
+            "Drafting Content:** Bullet points.",
+            "Drafting Insights:** Strategic observations.",
+            "`content`: array of strings.",
+            "I need to complete this JSON object based on the keys requested.",
+            "Let's analyze the input:",
+            "Therefore, I must generate these missing keys.",
+            "FIBA is headquartered in Mies, Switzerland.",
+        ]
+    )
+
+    assert cleaned == ["FIBA is headquartered in Mies, Switzerland."]
+
+
 def test_resolve_sdk_variant_detects_legacy_and_functional_layouts():
     class _LegacyClient:
         pass

@@ -35,6 +35,7 @@ def test_discovery_runtime_limits_can_be_configured_from_env():
             "DISCOVERY_CONTENT_MIN_TEXT_CHARS": "260",
             "DISCOVERY_CONTENT_MAX_SCRIPT_DENSITY": "0.15",
             "DISCOVERY_CONTENT_MIN_KEYWORD_SENTENCES": "2",
+            "DISCOVERY_EVALUATION_QUERY_TIMEOUT_SECONDS": "18",
         },
         clear=False,
     ):
@@ -61,6 +62,7 @@ def test_discovery_runtime_limits_can_be_configured_from_env():
     assert discovery.content_min_text_chars == 260
     assert discovery.content_max_script_density == 0.15
     assert discovery.content_min_keyword_sentences == 2
+    assert discovery.evaluation_query_timeout_seconds == 18.0
     assert discovery.evaluation_max_tokens_default == 700
     assert discovery.evaluation_max_tokens_press_release == 410
     assert discovery.evaluation_max_tokens_official_site == 420

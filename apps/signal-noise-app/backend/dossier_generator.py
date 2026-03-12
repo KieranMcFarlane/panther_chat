@@ -602,6 +602,31 @@ Website: N/A
                     else:
                         raise ValueError(f"Section {section_id} JSON repair failed")
 
+            # Final normalization pass before persisting section content.
+            normalized_content = self._sanitize_section_content(section_data.get("content", []))
+            if not normalized_content:
+                fallback_content = self._coerce_unstructured_section_data(
+                    "\n".join(
+                        item for item in section_data.get("content", []) if isinstance(item, str)
+                    )
+                )
+                if fallback_content and fallback_content.get("content"):
+                    normalized_content = fallback_content["content"]
+                    try:
+                        section_data["confidence"] = min(
+                            float(section_data.get("confidence", 0.55) or 0.55),
+                            float(fallback_content.get("confidence", 0.55) or 0.55),
+                        )
+                    except Exception:  # noqa: BLE001
+                        section_data["confidence"] = 0.55
+                else:
+                    normalized_content = ["Section content unavailable after normalization."]
+                    try:
+                        section_data["confidence"] = min(float(section_data.get("confidence", 0.55) or 0.55), 0.4)
+                    except Exception:  # noqa: BLE001
+                        section_data["confidence"] = 0.4
+            section_data["content"] = normalized_content
+
             # Create DossierSection
             section = DossierSection(
                 id=section_id,
@@ -642,27 +667,127 @@ Website: N/A
         if not first_text:
             return True
 
-        normalized = first_text.strip().lower()
-        instruction_markers = (
-            "analyze the request",
-            "the user wants",
-            "task:",
-            "instruction",
-            "evaluate whether",
-            "please review",
-            "request context",
-            "return valid json",
-        )
-        if any(marker in normalized for marker in instruction_markers):
+        if self._is_section_meta_line(first_text.strip()):
             return True
 
         # Raw markdown/code-fenced JSON indicates parse failure and requires repair.
+        normalized = first_text.strip().lower()
         if normalized.startswith("```"):
             return True
         if normalized.startswith("{") or normalized.startswith("["):
             return True
 
         return False
+
+    @staticmethod
+    def _is_section_meta_line(line: str) -> bool:
+        if not isinstance(line, str):
+            return False
+        normalized = line.strip().lower()
+        if not normalized:
+            return True
+        if normalized.startswith("```"):
+            return True
+        if normalized in {"{", "}", "[", "]"}:
+            return True
+
+        instruction_markers = (
+            "analyze the request",
+            "the user wants",
+            "information retrieval",
+            "drafting content",
+            "drafting metrics",
+            "drafting insights",
+            "drafting recommendations",
+            "task:",
+            "instruction",
+            "evaluate whether",
+            "analyze the input",
+            "let's analyze the input",
+            "please review",
+            "request context",
+            "return valid json",
+            "return a single json object",
+            "single json object",
+            "single json object with keys",
+            "json object with keys",
+            "output format",
+            "raw_output",
+            "raw output",
+            "user specifically requested",
+            "final polish",
+            "refining the json",
+            "json structure",
+            "schema:",
+            "structure:",
+            "i need to complete this json object",
+            "based on the keys requested",
+            "input json has",
+            "the input json has",
+            "determining confidence",
+            "score calculation",
+            "missing keys",
+            "i must generate",
+            "i need to",
+            "therefore, i",
+        )
+        if any(marker in normalized for marker in instruction_markers):
+            return True
+
+        marker_prefixes = (
+            "input:",
+            "**input:",
+            "output:",
+            "json:",
+            "content:",
+            "metrics:",
+            "insights:",
+            "recommendations:",
+            "confidence:",
+            "structure:",
+            "schema:",
+        )
+        if normalized.startswith(marker_prefixes):
+            return True
+
+        if re.match(r"^`?(content|metrics|insights|recommendations|confidence)`?\s*:", normalized):
+            return True
+        if re.match(r"^`?[a-z_ ]+`?\s*:\s*(array of|object|number|string)\b", normalized):
+            return True
+        if re.search(r"`(?:content|metrics|insights|recommendations|confidence)`.*array of", normalized):
+            return True
+        if re.match(r'^"?[a-z_ ]{2,40}"?\s*:\s*[\[{"]?$', normalized):
+            return True
+        return False
+
+    @classmethod
+    def _sanitize_section_content(cls, content_items: Any) -> List[str]:
+        if not isinstance(content_items, list):
+            return []
+
+        cleaned: List[str] = []
+        seen = set()
+        for item in content_items:
+            if not isinstance(item, str):
+                continue
+            for raw_line in item.splitlines():
+                line = raw_line.strip()
+                if not line:
+                    continue
+                line = re.sub(r"^\*+\s*", "", line)
+                line = re.sub(r"\s*\*+$", "", line).strip()
+                line = re.sub(r"^\d+[\.\)]\s*", "", line).strip()
+                line = re.sub(r"^[-*•]\s*", "", line).strip()
+                if not line:
+                    continue
+                if cls._is_section_meta_line(line):
+                    continue
+                key = line.lower()
+                if key in seen:
+                    continue
+                seen.add(key)
+                cleaned.append(line)
+        return cleaned
 
     @staticmethod
     def _build_section_json_repair_prompt(raw_output: str) -> str:
@@ -680,34 +805,6 @@ Website: N/A
         if not isinstance(raw_output, str) or not raw_output.strip():
             return None
 
-        marker_patterns = (
-            "analyze the request",
-            "the user wants",
-            "request context",
-            "return valid json",
-            "instruction",
-            "task:",
-            "please review",
-            "output format",
-            "raw_output",
-            "final polish",
-            "refining the json",
-            "json structure",
-        )
-        marker_prefixes = (
-            "input:",
-            "**input:",
-            "raw_output:",
-            "output:",
-            "schema:",
-            "json:",
-            "confidence:",
-            "metrics:",
-            "insights:",
-            "recommendations:",
-            "content:",
-        )
-
         content_items: List[str] = []
         for raw_line in raw_output.splitlines():
             line = raw_line.strip()
@@ -717,19 +814,13 @@ Website: N/A
             # Drop common markdown emphasis wrappers before pattern checks.
             line = re.sub(r"^\*+\s*", "", line)
             line = re.sub(r"\s*\*+$", "", line)
-            lowered = line.lower()
-            if any(marker in lowered for marker in marker_patterns):
-                continue
-            if lowered.startswith(marker_prefixes):
-                continue
 
             line = re.sub(r"^\d+[\.\)]\s*", "", line)
             line = re.sub(r"^[-*•]\s*", "", line).strip()
+            if EntityDossierGenerator._is_section_meta_line(line):
+                continue
 
             if line in {"{", "}", "[", "]"}:
-                continue
-            # Skip schema fragments and key/value scaffolding noise.
-            if re.match(r'^"?[a-z_ ]{2,40}"?\s*:\s*[\[{"]?$', line.lower()):
                 continue
             if len(line) < 24 and "http" not in line:
                 continue
