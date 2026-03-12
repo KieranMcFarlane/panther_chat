@@ -122,6 +122,15 @@ def _trusted_source_signal(result: Dict[str, Any]) -> bool:
     return False
 
 
+def _has_deterministic_trusted_evidence(result: Dict[str, Any]) -> bool:
+    for signal in result.get("signals_discovered", []):
+        evidence_type = str(signal.get("evidence_type") or "").strip().lower()
+        hop = str(signal.get("hop_type") or "").strip().lower()
+        if evidence_type.startswith("deterministic_") and hop in {"official_site", "press_release", "careers_page", "annual_report"}:
+            return True
+    return False
+
+
 def _extract_last_decision(result: Dict[str, Any]) -> str:
     hop_timings = (result.get("performance_summary") or {}).get("hop_timings") or []
     if hop_timings:
@@ -165,9 +174,11 @@ def _evaluate_gate(
     last_decision = str(result.get("decision") or _extract_last_decision(result)).strip().upper()
     confidence = float(result.get("final_confidence") or 0.0)
     trusted = _trusted_source_signal(result)
+    deterministic_trusted = _has_deterministic_trusted_evidence(result)
+    heuristic_trusted_signal = trusted and last_decision != "NO_PROGRESS" and len(result.get("signals_discovered") or []) > 0
 
     reasons = []
-    if strict_gate and evaluation_mode != "llm":
+    if strict_gate and evaluation_mode != "llm" and not (deterministic_trusted or heuristic_trusted_signal):
         reasons.append("evaluation_mode_not_llm")
     if last_decision == "NO_PROGRESS":
         reasons.append("last_decision_no_progress")
@@ -180,6 +191,8 @@ def _evaluate_gate(
         "promotion_gate_passed": len(reasons) == 0,
         "promotion_gate_reasons": reasons,
         "trusted_source_signal": trusted,
+        "deterministic_trusted_evidence": deterministic_trusted,
+        "heuristic_trusted_signal": heuristic_trusted_signal,
         "evaluation_mode": evaluation_mode,
         "last_decision": last_decision,
     }

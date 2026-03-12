@@ -151,3 +151,32 @@ def test_trusted_source_signal_accepts_hop_type():
         ]
     }
     assert runner._trusted_source_signal(result) is True
+
+
+def test_evaluate_gate_allows_deterministic_heuristic_promotion():
+    result = {
+        "final_confidence": 0.58,
+        "decision": "WEAK_ACCEPT",
+        "evaluation_mode": "heuristic",
+        "signals_discovered": [
+            {
+                "hop_type": "careers_page",
+                "evidence_type": "deterministic_careers_signal",
+            }
+        ],
+    }
+    gate = runner._evaluate_gate(result, min_confidence=0.55, strict_gate=True)
+    assert gate["promotion_gate_passed"] is True
+    assert "evaluation_mode_not_llm" not in gate["promotion_gate_reasons"]
+
+
+def test_evaluate_gate_allows_heuristic_trusted_signal_without_evidence_type():
+    result = {
+        "final_confidence": 0.58,
+        "decision": "WEAK_ACCEPT",
+        "evaluation_mode": "heuristic",
+        "signals_discovered": [{"hop_type": "careers_page"}],
+    }
+    gate = runner._evaluate_gate(result, min_confidence=0.55, strict_gate=True)
+    assert gate["promotion_gate_passed"] is True
+    assert gate["heuristic_trusted_signal"] is True
