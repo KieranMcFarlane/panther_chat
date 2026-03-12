@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 import pytest
 import httpx
+import time
 
 backend_dir = Path(__file__).parent.parent
 sys.path.insert(0, str(backend_dir))
@@ -20,6 +21,22 @@ def _default_non_stream_for_legacy_tests(monkeypatch):
     monkeypatch.setenv("CHUTES_STREAM_ENABLED", "false")
     monkeypatch.setenv("CHUTES_MIN_REQUEST_INTERVAL_SECONDS", "0")
     ClaudeClient._api_disabled_reason = None
+    ClaudeClient._api_disabled_at_monotonic = None
+
+
+def test_chutes_circuit_breaker_reason_expires_after_ttl(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_CIRCUIT_TTL_SECONDS", "1")
+
+    ClaudeClient._api_disabled_reason = "insufficient balance"
+    ClaudeClient._api_disabled_at_monotonic = time.monotonic() - 5.0
+
+    client = ClaudeClient()
+    assert client._get_effective_disabled_reason() is None
+    assert ClaudeClient._api_disabled_reason is None
+    assert ClaudeClient._api_disabled_at_monotonic is None
 
 
 def test_claude_client_prefers_chutes_when_configured(monkeypatch):

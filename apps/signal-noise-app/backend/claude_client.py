@@ -370,6 +370,7 @@ class ClaudeClient:
     """
 
     _api_disabled_reason: Optional[str] = None
+    _api_disabled_at_monotonic: Optional[float] = None
 
     PROVIDER_ANTHROPIC = "anthropic"
     PROVIDER_CHUTES_OPENAI = "chutes_openai"
@@ -410,6 +411,9 @@ class ClaudeClient:
             os.getenv("CHUTES_CIRCUIT_BREAK_ON_QUOTA"),
             default=True,
         )
+        self.chutes_circuit_ttl_seconds = float(
+            os.getenv("CHUTES_CIRCUIT_TTL_SECONDS", "180")
+        )
         self.llm_provider_validation_strict = self._parse_bool_env(
             os.getenv("LLM_PROVIDER_VALIDATION_STRICT"),
             default=True,
@@ -418,8 +422,8 @@ class ClaudeClient:
             "llm_provider": self.provider,
             "llm_retry_attempts": 0,
             "llm_last_status": "not_started",
-            "llm_circuit_broken": bool(self._get_disabled_reason()),
-            "llm_disable_reason": self._get_disabled_reason(),
+            "llm_circuit_broken": bool(self._get_effective_disabled_reason()),
+            "llm_disable_reason": self._get_effective_disabled_reason(),
         }
 
         disable_flag = (os.getenv("DISABLE_CLAUDE_API") or "").strip().lower()
@@ -520,7 +524,36 @@ class ClaudeClient:
     def _disable_api(cls, reason: str):
         if not cls._api_disabled_reason:
             cls._api_disabled_reason = reason
+            cls._api_disabled_at_monotonic = time.monotonic()
             logger.warning(f"⚠️ Disabling Claude API for current process: {reason}")
+
+    @classmethod
+    def _clear_disabled_reason(cls) -> None:
+        cls._api_disabled_reason = None
+        cls._api_disabled_at_monotonic = None
+
+    def _get_effective_disabled_reason(self) -> Optional[str]:
+        reason = self._get_disabled_reason()
+        if not reason:
+            return None
+
+        if self.provider not in {self.PROVIDER_CHUTES_OPENAI, self.PROVIDER_CHUTES_ANTHROPIC}:
+            return reason
+
+        ttl = float(getattr(self, "chutes_circuit_ttl_seconds", 0.0) or 0.0)
+        if ttl <= 0:
+            return reason
+
+        disabled_at = getattr(self.__class__, "_api_disabled_at_monotonic", None)
+        if disabled_at is None:
+            return reason
+
+        if (time.monotonic() - disabled_at) >= ttl:
+            logger.info("♻️ Clearing expired Chutes circuit-break disable reason after %.1fs TTL", ttl)
+            self._clear_disabled_reason()
+            return None
+
+        return reason
 
     @staticmethod
     def _is_insufficient_balance_error(error: Exception) -> bool:
@@ -764,7 +797,7 @@ class ClaudeClient:
         if not ANTHROPIC_SDK_AVAILABLE:
             raise ImportError("anthropic package is required. Install with: pip install anthropic")
 
-        disabled_reason = self._get_disabled_reason()
+        disabled_reason = self._get_effective_disabled_reason()
         if disabled_reason:
             raise RuntimeError(f"Claude API disabled: {disabled_reason}")
 
@@ -823,7 +856,7 @@ class ClaudeClient:
         The pipeline still calls this through the Claude client interface, but the
         transport is OpenAI chat completions and the model is configured via CHUTES_MODEL.
         """
-        disabled_reason = self._get_disabled_reason()
+        disabled_reason = self._get_effective_disabled_reason()
         if disabled_reason:
             raise RuntimeError(f"Claude API disabled: {disabled_reason}")
 
@@ -980,7 +1013,7 @@ class ClaudeClient:
                         retry_attempts=attempt,
                         last_status="quota_exhausted",
                         circuit_broken=bool(self.chutes_circuit_break_on_quota),
-                        disable_reason=self._get_disabled_reason(),
+                        disable_reason=self._get_effective_disabled_reason(),
                     )
                     raise LLMRequestError(
                         f"Chutes insufficient balance: {error_detail}",
@@ -1008,8 +1041,8 @@ class ClaudeClient:
                     self._set_last_request_diagnostics(
                         retry_attempts=attempt,
                         last_status="request_failed",
-                        circuit_broken=bool(self._get_disabled_reason()),
-                        disable_reason=self._get_disabled_reason(),
+                        circuit_broken=bool(self._get_effective_disabled_reason()),
+                        disable_reason=self._get_effective_disabled_reason(),
                     )
                     raise LLMRequestError(
                         f"Chutes request failed (retryable={is_retryable}): {error_detail}",
@@ -1039,8 +1072,8 @@ class ClaudeClient:
         self._set_last_request_diagnostics(
             retry_attempts=self.chutes_max_retries,
             last_status="request_failed",
-            circuit_broken=bool(self._get_disabled_reason()),
-            disable_reason=self._get_disabled_reason(),
+            circuit_broken=bool(self._get_effective_disabled_reason()),
+            disable_reason=self._get_effective_disabled_reason(),
         )
         raise LLMRequestError(
             f"Chutes request failed after {self.chutes_max_retries + 1} attempts: "
@@ -1163,7 +1196,7 @@ class ClaudeClient:
         json_mode: bool = False,
     ) -> Dict[str, Any]:
         """Query a Chutes Anthropic-compatible messages endpoint."""
-        disabled_reason = self._get_disabled_reason()
+        disabled_reason = self._get_effective_disabled_reason()
         if disabled_reason:
             raise RuntimeError(f"Claude API disabled: {disabled_reason}")
 
@@ -1268,7 +1301,7 @@ class ClaudeClient:
                         retry_attempts=attempt,
                         last_status="quota_exhausted",
                         circuit_broken=bool(self.chutes_circuit_break_on_quota),
-                        disable_reason=self._get_disabled_reason(),
+                        disable_reason=self._get_effective_disabled_reason(),
                     )
                     raise LLMRequestError(
                         f"Chutes Anthropic insufficient balance: {error_detail}",
@@ -1282,8 +1315,8 @@ class ClaudeClient:
                     self._set_last_request_diagnostics(
                         retry_attempts=attempt,
                         last_status="request_failed",
-                        circuit_broken=bool(self._get_disabled_reason()),
-                        disable_reason=self._get_disabled_reason(),
+                        circuit_broken=bool(self._get_effective_disabled_reason()),
+                        disable_reason=self._get_effective_disabled_reason(),
                     )
                     raise LLMRequestError(
                         f"Chutes Anthropic request failed (retryable={is_retryable}): {error_detail}",
@@ -1313,8 +1346,8 @@ class ClaudeClient:
         self._set_last_request_diagnostics(
             retry_attempts=self.chutes_max_retries,
             last_status="request_failed",
-            circuit_broken=bool(self._get_disabled_reason()),
-            disable_reason=self._get_disabled_reason(),
+            circuit_broken=bool(self._get_effective_disabled_reason()),
+            disable_reason=self._get_effective_disabled_reason(),
         )
         raise LLMRequestError(
             f"Chutes Anthropic request failed after {self.chutes_max_retries + 1} attempts: "
