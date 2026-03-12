@@ -905,7 +905,10 @@ class DossierDataCollector:
             Dictionary with extracted properties
         """
         try:
-            from claude_client import ClaudeClient
+            try:
+                from backend.claude_client import ClaudeClient
+            except ImportError:  # pragma: no cover - fallback for direct backend module execution
+                from .claude_client import ClaudeClient
 
             client = ClaudeClient()
 
