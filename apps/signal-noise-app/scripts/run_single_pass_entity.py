@@ -7,9 +7,10 @@ import argparse
 import asyncio
 import json
 import os
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Iterator, Optional
 
 
 SCRIPT_PATH = Path(__file__).resolve()
@@ -54,6 +55,33 @@ def _set_single_pass_runtime(profile: str, strict_gate: bool, min_confidence: fl
     os.environ.setdefault("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
     os.environ.setdefault("DISCOVERY_HEURISTIC_FALLBACK_ON_LLM_UNAVAILABLE", "true")
     os.environ.setdefault("DISCOVERY_JSON_REPAIR_ATTEMPT", "true")
+
+
+def _recovery_overrides() -> Dict[str, str]:
+    return {
+        "DISCOVERY_CONTENT_MIN_TEXT_CHARS": "120",
+        "DISCOVERY_CONTENT_MIN_KEYWORD_SENTENCES": "0",
+        "DISCOVERY_URL_RESOLUTION_MAX_FALLBACK_QUERIES_SINGLE_PASS": "2",
+        "DISCOVERY_URL_RESOLUTION_MAX_SITE_SPECIFIC_QUERIES_SINGLE_PASS": "4",
+        "DISCOVERY_DOSSIER_CONTEXT_TARGETED_SEARCH_ENABLED": "true",
+        "DISCOVERY_DOSSIER_CONTEXT_MAX_TARGETED_QUERIES_SINGLE_PASS": "2",
+    }
+
+
+@contextmanager
+def _temporary_env(overrides: Dict[str, str]) -> Iterator[None]:
+    previous: Dict[str, Optional[str]] = {}
+    for key, value in overrides.items():
+        previous[key] = os.environ.get(key)
+        os.environ[key] = value
+    try:
+        yield
+    finally:
+        for key, value in previous.items():
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
 
 
 def _trusted_source_signal(result: Dict[str, Any]) -> bool:
@@ -128,6 +156,33 @@ def _evaluate_gate(
     }
 
 
+def _should_run_recovery(gate: Dict[str, Any], strict_gate: bool) -> bool:
+    if not strict_gate:
+        return False
+    if gate.get("promotion_gate_passed"):
+        return False
+    reasons = set(gate.get("promotion_gate_reasons") or [])
+    return "last_decision_no_progress" in reasons
+
+
+def _result_score(result: Dict[str, Any]) -> tuple:
+    return (
+        1 if result.get("promotion_gate_passed") else 0,
+        1 if result.get("trusted_source_signal") else 0,
+        float(result.get("final_confidence") or 0.0),
+        len(result.get("signals_discovered") or []),
+    )
+
+
+def _artifact_path_string(path: Path) -> str:
+    if not path.is_absolute():
+        return str(path)
+    try:
+        return str(path.relative_to(REPO_ROOT))
+    except ValueError:
+        return str(path)
+
+
 async def _resolve_entity(
     entity_id: str,
     entity_name: Optional[str],
@@ -142,6 +197,48 @@ async def _resolve_entity(
     return entity.name
 
 
+async def _run_discovery_attempt(
+    *,
+    entity_id: str,
+    entity_name: str,
+    template_id: str,
+    profile: str,
+    min_confidence: float,
+    strict_gate: bool,
+    max_iterations: int,
+    max_depth: int,
+    attempt_label: str,
+) -> Dict[str, Any]:
+    claude = ClaudeClient()
+    brightdata = BrightDataSDKClient()
+    discovery = HypothesisDrivenDiscovery(claude_client=claude, brightdata_client=brightdata)
+    try:
+        result_obj = await discovery.run_discovery(
+            entity_id=entity_id,
+            entity_name=entity_name,
+            template_id=template_id,
+            max_iterations=max_iterations,
+            max_depth=max_depth,
+        )
+    finally:
+        close_fn = getattr(brightdata, "close", None)
+        if callable(close_fn):
+            await close_fn()
+
+    result = result_obj.to_dict() if hasattr(result_obj, "to_dict") else dict(result_obj)
+    result["run_mode"] = "single_pass"
+    result["run_profile"] = profile
+    result["attempt_label"] = attempt_label
+    result["parse_path"] = _extract_parse_path(result)
+
+    gate = _evaluate_gate(result, min_confidence, strict_gate)
+    result.update(gate)
+    result["decision"] = gate["last_decision"]
+    result["min_confidence"] = min_confidence
+    result["hold_status"] = "READY_FOR_PHASE1_PLUS" if gate["promotion_gate_passed"] else "HOLD_SINGLE_PASS"
+    return result
+
+
 async def run_single_pass(args: argparse.Namespace) -> Dict[str, Any]:
     _set_single_pass_runtime(args.profile, args.strict_gate, args.min_confidence)
 
@@ -151,33 +248,50 @@ async def run_single_pass(args: argparse.Namespace) -> Dict[str, Any]:
         fetch_timeout_seconds=args.fetch_timeout_seconds,
     )
 
-    claude = ClaudeClient()
-    brightdata = BrightDataSDKClient()
-    discovery = HypothesisDrivenDiscovery(claude_client=claude, brightdata_client=brightdata)
+    primary_result = await _run_discovery_attempt(
+        entity_id=args.entity_id,
+        entity_name=resolved_name,
+        template_id=args.template_id,
+        profile=args.profile,
+        min_confidence=args.min_confidence,
+        strict_gate=args.strict_gate,
+        max_iterations=1,
+        max_depth=1,
+        attempt_label="primary",
+    )
 
-    try:
-        result_obj = await discovery.run_discovery(
-            entity_id=args.entity_id,
-            entity_name=resolved_name,
-            template_id=args.template_id,
-            max_iterations=1,
-            max_depth=1,
-        )
-    finally:
-        close_fn = getattr(brightdata, "close", None)
-        if callable(close_fn):
-            await close_fn()
+    attempts = [primary_result]
+    recovery_attempted = False
+    if _should_run_recovery(primary_result, bool(args.strict_gate)):
+        recovery_attempted = True
+        with _temporary_env(_recovery_overrides()):
+            recovery_result = await _run_discovery_attempt(
+                entity_id=args.entity_id,
+                entity_name=resolved_name,
+                template_id=args.template_id,
+                profile=args.profile,
+                min_confidence=args.min_confidence,
+                strict_gate=args.strict_gate,
+                max_iterations=3,
+                max_depth=1,
+                attempt_label="targeted_recovery",
+            )
+        attempts.append(recovery_result)
 
-    result = result_obj.to_dict() if hasattr(result_obj, "to_dict") else dict(result_obj)
-    result["run_mode"] = "single_pass"
-    result["run_profile"] = args.profile
-    result["parse_path"] = _extract_parse_path(result)
-
-    gate = _evaluate_gate(result, args.min_confidence, args.strict_gate)
-    result.update(gate)
-    result["decision"] = gate["last_decision"]
-    result["min_confidence"] = args.min_confidence
-    result["hold_status"] = "READY_FOR_PHASE1_PLUS" if gate["promotion_gate_passed"] else "HOLD_SINGLE_PASS"
+    result = max(attempts, key=_result_score)
+    result["recovery_attempted"] = recovery_attempted
+    result["recovery_attempts"] = [
+        {
+            "attempt_label": attempt.get("attempt_label"),
+            "evaluation_mode": attempt.get("evaluation_mode"),
+            "decision": attempt.get("decision"),
+            "final_confidence": attempt.get("final_confidence"),
+            "signals_count": len(attempt.get("signals_discovered") or []),
+            "parse_path": attempt.get("parse_path"),
+            "promotion_gate_passed": bool(attempt.get("promotion_gate_passed")),
+        }
+        for attempt in attempts
+    ]
 
     slug = args.entity_id
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
@@ -190,7 +304,7 @@ async def run_single_pass(args: argparse.Namespace) -> Dict[str, Any]:
     summary = {
         "entity_id": args.entity_id,
         "entity_name": resolved_name,
-        "artifact": str(out_path.relative_to(REPO_ROOT)) if out_path.is_absolute() else str(out_path),
+        "artifact": _artifact_path_string(out_path),
         "final_confidence": float(result.get("final_confidence") or 0.0),
         "evaluation_mode": result.get("evaluation_mode"),
         "last_decision": result.get("decision"),
@@ -199,6 +313,7 @@ async def run_single_pass(args: argparse.Namespace) -> Dict[str, Any]:
         "promotion_gate_reasons": result.get("promotion_gate_reasons") or [],
         "parse_path": result.get("parse_path"),
         "run_profile": result.get("run_profile"),
+        "recovery_attempted": bool(result.get("recovery_attempted")),
     }
     return summary
 
