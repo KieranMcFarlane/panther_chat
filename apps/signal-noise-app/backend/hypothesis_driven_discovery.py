@@ -842,14 +842,22 @@ class HypothesisDrivenDiscovery:
             "analytics": ["data", "analytics", "platform", "integration"],
             "member": ["member", "crm", "engagement", "portal"],
         }
-        keywords = keywords_by_category.get(str(hypothesis_category or "").lower(), keywords_by_category["procurement"])
+        category_key = str(hypothesis_category or "").lower().strip()
+        if category_key not in keywords_by_category:
+            return None
+
+        minimum_keyword_sentences = max(0, int(getattr(self, "content_min_keyword_sentences", 1)))
+        if minimum_keyword_sentences == 0:
+            return None
+
+        keywords = keywords_by_category[category_key]
         sentence_count = 0
-        for line in text.splitlines():
-            line_lower = line.lower()
-            if any(kw in line_lower for kw in keywords):
+        for sentence in re.split(r"[.!?\\n]+", text):
+            sentence_lower = sentence.lower().strip()
+            if sentence_lower and any(kw in sentence_lower for kw in keywords):
                 sentence_count += 1
-        if sentence_count < max(0, int(getattr(self, "content_min_keyword_sentences", 1))):
-            return f"keyword_sentences<{int(getattr(self, 'content_min_keyword_sentences', 1))}"
+        if sentence_count < minimum_keyword_sentences:
+            return f"keyword_sentences<{minimum_keyword_sentences}"
         return None
 
     def _decorate_evaluation_result(

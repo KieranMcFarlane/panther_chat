@@ -781,3 +781,19 @@ def test_assess_low_yield_content_detects_script_heavy_page():
     )
     assert isinstance(reason, str)
     assert "script_density" in reason or "text_chars" in reason
+
+
+def test_assess_low_yield_content_skips_keyword_gate_for_unknown_category():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.content_min_text_chars = 240
+    discovery.content_max_script_density = 0.12
+    discovery.content_min_keyword_sentences = 1
+
+    long_text = "Arsenal official club news and fixtures. " * 40
+    reason = discovery._assess_low_yield_content(
+        content_text=long_text,
+        raw_html="<html><body><p>Arsenal official club news and fixtures.</p></body></html>",
+        hypothesis_category="ui/ux_design_project",
+    )
+
+    assert reason is None
