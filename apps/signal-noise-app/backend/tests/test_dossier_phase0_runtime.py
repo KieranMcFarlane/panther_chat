@@ -338,3 +338,53 @@ async def test_connect_falkordb_respects_rediss_and_ssl_override(monkeypatch):
     ok = await collector._connect_falkordb()
     assert ok is True
     assert captured["ssl"] is False
+
+
+@pytest.mark.asyncio
+async def test_connect_falkordb_does_not_retry_after_failed_attempt(monkeypatch):
+    monkeypatch.setenv("FALKORDB_URI", "redis://example.com:6379")
+    monkeypatch.setenv("FALKORDB_USER", "falkordb")
+    monkeypatch.setenv("FALKORDB_PASSWORD", "secret")
+    monkeypatch.setenv("FALKORDB_DATABASE", "sports_intelligence")
+
+    calls = {"init": 0}
+
+    class _FailingFalkorDB:
+        def __init__(self, **_kwargs):
+            calls["init"] += 1
+            raise RuntimeError("connect failed")
+
+    monkeypatch.setitem(sys.modules, "falkordb", types.SimpleNamespace(FalkorDB=_FailingFalkorDB))
+
+    collector = DossierDataCollector()
+    first = await collector._connect_falkordb()
+    second = await collector._connect_falkordb()
+
+    assert first is False
+    assert second is False
+    assert calls["init"] == 1
+
+
+@pytest.mark.asyncio
+async def test_connect_brightdata_skips_probe_by_default(monkeypatch):
+    monkeypatch.delenv("DOSSIER_BRIGHTDATA_CONNECT_PROBE", raising=False)
+
+    calls = {"search": 0}
+
+    class _FakeBrightDataClient:
+        async def search_engine(self, **_kwargs):
+            calls["search"] += 1
+            return {"status": "success", "results": []}
+
+    monkeypatch.setitem(
+        sys.modules,
+        "brightdata_sdk_client",
+        types.SimpleNamespace(BrightDataSDKClient=_FakeBrightDataClient),
+    )
+
+    collector = DossierDataCollector()
+    ok = await collector._connect_brightdata()
+
+    assert ok is True
+    assert collector._brightdata_available is True
+    assert calls["search"] == 0

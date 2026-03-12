@@ -160,8 +160,26 @@ class DossierDataCollector:
         self._brightdata_available = False
         self._hypothesis_available = False
         self.source_timeout_seconds = float(os.getenv("DOSSIER_SOURCE_TIMEOUT_SECONDS", "20"))
+        self.connect_timeout_seconds = float(os.getenv("DOSSIER_CONNECT_TIMEOUT_SECONDS", "6"))
+        self._falkordb_connect_attempted = False
+        self._brightdata_connect_attempted = False
+        self._brightdata_connect_probe_enabled = self._parse_bool_env(
+            os.getenv("DOSSIER_BRIGHTDATA_CONNECT_PROBE"),
+            default=False,
+        )
         self._official_site_url_cache = self._load_official_site_url_cache()
         self._official_site_content_cache = self._load_official_site_content_cache()
+
+    @staticmethod
+    def _parse_bool_env(value: Optional[str], *, default: bool) -> bool:
+        if value is None:
+            return default
+        normalized = value.strip().lower()
+        if normalized in {"1", "true", "yes", "on"}:
+            return True
+        if normalized in {"0", "false", "no", "off"}:
+            return False
+        return default
 
     def _official_site_cache_file(self) -> Path:
         cache_path = os.getenv(
@@ -443,6 +461,9 @@ class DossierDataCollector:
         """Connect to FalkorDB using native Python client"""
         if self._falkordb_connected:
             return True
+        if self._falkordb_connect_attempted:
+            return False
+        self._falkordb_connect_attempted = True
 
         try:
             from falkordb import FalkorDB
@@ -473,23 +494,33 @@ class DossierDataCollector:
 
             logger.info(f"🔗 Connecting to FalkorDB at {host}:{port}...")
 
-            # Connect
-            self.falkordb_client = FalkorDB(
-                host=host,
-                port=port,
-                username=username,
-                password=password,
-                ssl=use_ssl,
-            )
+            def _connect_and_test():
+                client = FalkorDB(
+                    host=host,
+                    port=port,
+                    username=username,
+                    password=password,
+                    ssl=use_ssl,
+                )
+                g = client.select_graph(database)
+                g.query("RETURN 1 AS test")
+                return client
 
-            # Test connection
-            g = self.falkordb_client.select_graph(database)
-            g.query("RETURN 1 AS test")
+            self.falkordb_client = await asyncio.wait_for(
+                asyncio.to_thread(_connect_and_test),
+                timeout=self.connect_timeout_seconds,
+            )
 
             self._falkordb_connected = True
             logger.info("✅ FalkorDB connected")
             return True
 
+        except asyncio.TimeoutError:
+            logger.error(
+                "❌ FalkorDB connection timed out after %.1fs",
+                self.connect_timeout_seconds,
+            )
+            return False
         except ImportError:
             logger.warning("⚠️ falkordb not installed - FalkorDB integration disabled")
             return False
@@ -556,7 +587,7 @@ class DossierDataCollector:
             )
 
         # Scrape additional data from web (Phase 2)
-        if self.brightdata_client:
+        if self.brightdata_client and self._brightdata_available:
             scrape_started_at = time.perf_counter()
             scrape_result = await self._get_scraped_content(entity_id, dossier_data.entity_name)
             scrape_step_timings: Dict[str, Any] = {}
@@ -666,17 +697,30 @@ class DossierDataCollector:
         """Initialize BrightData SDK client"""
         if self._brightdata_available:
             return True
+        if self._brightdata_connect_attempted:
+            return False
+        self._brightdata_connect_attempted = True
 
         try:
             from brightdata_sdk_client import BrightDataSDKClient
 
-            self.brightdata_client = BrightDataSDKClient()
+            if not self.brightdata_client:
+                self.brightdata_client = BrightDataSDKClient()
+
+            if not self._brightdata_connect_probe_enabled:
+                self._brightdata_available = self.brightdata_client is not None
+                if self._brightdata_available:
+                    logger.info("✅ BrightData SDK client ready (probe skipped)")
+                return self._brightdata_available
 
             # Test connection with a simple search
-            test_result = await self.brightdata_client.search_engine(
-                query="test",
-                engine="google",
-                num_results=1
+            test_result = await asyncio.wait_for(
+                self.brightdata_client.search_engine(
+                    query="test",
+                    engine="google",
+                    num_results=1,
+                ),
+                timeout=self.connect_timeout_seconds,
             )
 
             if test_result.get('status') == 'success':
@@ -687,6 +731,12 @@ class DossierDataCollector:
                 logger.warning("⚠️ BrightData SDK test failed")
                 return False
 
+        except asyncio.TimeoutError:
+            logger.error(
+                "❌ BrightData connect probe timed out after %.1fs",
+                self.connect_timeout_seconds,
+            )
+            return False
         except ImportError:
             logger.warning("⚠️ brightdata_sdk_client not installed - web scraping disabled")
             return False

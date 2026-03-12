@@ -441,14 +441,6 @@ FALLBACK_QUERIES = {
         '{entity} procurement policy',
         '{entity} vendor information'
     ],
-    HopType.CAREERS_PAGE: [
-        '{entity} "head of procurement" careers',
-        '{entity} "director of digital" careers',
-        '{entity} CRM manager careers',
-        '{entity} "procurement director" careers',
-        '{entity} careers jobs',
-        '{entity} work at'
-    ],
     HopType.DOCUMENT: [
         '{entity} filetype:pdf ecosystem',
         '{entity} filetype:pdf RFP',
@@ -646,6 +638,47 @@ class HypothesisDrivenDiscovery:
         self.search_timeout_seconds = float(os.getenv("DISCOVERY_SEARCH_TIMEOUT_SECONDS", "12"))
         self.search_validation_timeout_seconds = float(os.getenv("DISCOVERY_SEARCH_VALIDATION_TIMEOUT_SECONDS", "5"))
         self.url_resolution_timeout_seconds = float(os.getenv("DISCOVERY_URL_RESOLUTION_TIMEOUT_SECONDS", "12"))
+        self.url_resolution_max_fallback_queries = max(
+            1,
+            int(os.getenv("DISCOVERY_URL_RESOLUTION_MAX_FALLBACK_QUERIES", "3")),
+        )
+        self.url_resolution_max_fallback_queries_single_pass = max(
+            1,
+            int(os.getenv("DISCOVERY_URL_RESOLUTION_MAX_FALLBACK_QUERIES_SINGLE_PASS", "1")),
+        )
+        self.url_resolution_max_site_specific_queries = max(
+            1,
+            int(os.getenv("DISCOVERY_URL_RESOLUTION_MAX_SITE_SPECIFIC_QUERIES", "6")),
+        )
+        self.url_resolution_max_site_specific_queries_single_pass = max(
+            1,
+            int(os.getenv("DISCOVERY_URL_RESOLUTION_MAX_SITE_SPECIFIC_QUERIES_SINGLE_PASS", "2")),
+        )
+        self.dossier_context_targeted_search_enabled = self._parse_bool_env(
+            os.getenv("DISCOVERY_DOSSIER_CONTEXT_TARGETED_SEARCH_ENABLED"),
+            default=True,
+        )
+        self.dossier_context_max_targeted_queries = max(
+            0,
+            int(os.getenv("DISCOVERY_DOSSIER_CONTEXT_MAX_TARGETED_QUERIES", "3")),
+        )
+        self.dossier_context_max_targeted_queries_single_pass = max(
+            0,
+            int(os.getenv("DISCOVERY_DOSSIER_CONTEXT_MAX_TARGETED_QUERIES_SINGLE_PASS", "0")),
+        )
+        self.dossier_context_targeted_search_concurrency = max(
+            1,
+            int(os.getenv("DISCOVERY_DOSSIER_CONTEXT_TARGETED_SEARCH_CONCURRENCY", "2")),
+        )
+        self.official_site_resolution_num_results = max(
+            1,
+            int(os.getenv("DISCOVERY_OFFICIAL_SITE_RESOLUTION_NUM_RESULTS", "3")),
+        )
+        self.official_site_resolution_engines = [
+            engine.strip().lower()
+            for engine in (os.getenv("DISCOVERY_OFFICIAL_SITE_RESOLUTION_ENGINES", "google,bing") or "").split(",")
+            if engine.strip()
+        ] or ["google"]
         self.evaluation_max_tokens_default = int(os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_DEFAULT", "640"))
         self.evaluation_max_tokens_press_release = int(os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_PRESS_RELEASE", "384"))
         self.evaluation_max_tokens_official_site = int(os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_OFFICIAL_SITE", "384"))
@@ -666,6 +699,8 @@ class HypothesisDrivenDiscovery:
             "llm_circuit_broken": bool(self._get_claude_disabled_reason()),
             "llm_disable_reason": self._get_claude_disabled_reason(),
             "evaluation_mode": "llm",
+            "run_profile": os.getenv("DISCOVERY_PROFILE", "continuous"),
+            "run_mode": os.getenv("DISCOVERY_RUN_MODE", "phase1_plus"),
         }
 
         logger.info("🔍 HypothesisDrivenDiscovery initialized")
@@ -691,6 +726,15 @@ class HypothesisDrivenDiscovery:
                 return None
         return None
 
+    def _current_run_mode(self) -> str:
+        mode = str(os.getenv("DISCOVERY_RUN_MODE", "phase1_plus") or "phase1_plus").strip().lower()
+        if mode not in {"single_pass", "phase1_plus"}:
+            mode = "phase1_plus"
+        return mode
+
+    def _is_single_pass_mode(self) -> bool:
+        return self._current_run_mode() == "single_pass"
+
     def _update_llm_runtime_diagnostics(self, **kwargs: Any) -> None:
         diag = getattr(self, "_llm_runtime_diagnostics", None)
         if not isinstance(diag, dict):
@@ -701,6 +745,8 @@ class HypothesisDrivenDiscovery:
                 "llm_circuit_broken": False,
                 "llm_disable_reason": None,
                 "evaluation_mode": "llm",
+                "run_profile": os.getenv("DISCOVERY_PROFILE", "continuous"),
+                "run_mode": os.getenv("DISCOVERY_RUN_MODE", "phase1_plus"),
             }
             self._llm_runtime_diagnostics = diag
 
@@ -716,6 +762,27 @@ class HypothesisDrivenDiscovery:
             else:
                 diag[key] = value
 
+    @staticmethod
+    def _map_status_to_parse_path(status: Optional[str]) -> str:
+        status_value = str(status or "").strip().lower()
+        mapping = {
+            "ok": "json_direct",
+            "partial_json_recovered": "partial_json_recovered",
+            "text_decision_recovered": "text_decision_recovered",
+            "text_no_progress_recovered": "text_no_progress_recovered",
+            "text_accept_recovered": "text_decision_recovered",
+            "invalid_model_payload": "heuristic_fallback",
+            "unparseable_response": "heuristic_fallback",
+            "json_parse_error": "heuristic_fallback",
+            "request_error": "heuristic_fallback",
+            "disabled": "heuristic_fallback",
+            "empty_response": "heuristic_fallback",
+            "skipped_no_content": "skipped_no_evaluation",
+            "skipped_low_yield": "skipped_no_evaluation",
+            "skipped_no_evaluation": "skipped_no_evaluation",
+        }
+        return mapping.get(status_value, "heuristic_fallback")
+
     def _decorate_evaluation_result(
         self,
         result: Dict[str, Any],
@@ -730,6 +797,9 @@ class HypothesisDrivenDiscovery:
         output["llm_last_status"] = diag.get("llm_last_status", "unknown")
         output["llm_circuit_broken"] = bool(diag.get("llm_circuit_broken", False))
         output["llm_disable_reason"] = diag.get("llm_disable_reason")
+        output["parse_path"] = output.get("parse_path") or self._map_status_to_parse_path(diag.get("llm_last_status"))
+        output["run_profile"] = diag.get("run_profile")
+        output["run_mode"] = diag.get("run_mode")
         return output
 
     @staticmethod
@@ -778,11 +848,13 @@ class HypothesisDrivenDiscovery:
 
     def _parse_evaluation_response_json(self, response_text: str) -> Optional[Dict[str, Any]]:
         """Parse evaluator JSON from plain text, fenced blocks, or mixed responses."""
+        self._last_parse_path = None
         if not isinstance(response_text, str):
             return None
 
         direct = self._extract_balanced_json_object(response_text, required_key="decision")
         if direct:
+            self._last_parse_path = "json_direct"
             return direct
 
         import re
@@ -791,6 +863,7 @@ class HypothesisDrivenDiscovery:
         for block in fenced_blocks:
             parsed = self._extract_balanced_json_object(block, required_key="decision")
             if parsed:
+                self._last_parse_path = "json_fenced"
                 return parsed
 
         return None
@@ -1356,6 +1429,10 @@ class HypothesisDrivenDiscovery:
                         content_metadata['char_count'] = len(content_text)
                     else:
                         record_hop_failure()
+                        self._update_llm_runtime_diagnostics(
+                            llm_last_status="skipped_no_content",
+                            evaluation_mode="heuristic",
+                        )
                         logger.warning("Scraping returned empty content; treating hop as NO_PROGRESS")
                         return {
                             'hop_type': hop_type.value,
@@ -1571,17 +1648,46 @@ class HypothesisDrivenDiscovery:
             )
             return None
 
-        official_site_result = await self._search_engine_with_timeout(
-            query=f'"{entity_name}" official website',
-            engine='google',
-            num_results=1
-        )
+        search_query = f'"{entity_name}" official website'
+        engines = getattr(self, "official_site_resolution_engines", None) or ["google"]
+        num_results = int(getattr(self, "official_site_resolution_num_results", 1) or 1)
+        best_result = None
+        best_score = -1.0
 
-        if official_site_result.get('status') != 'success' or not official_site_result.get('results'):
+        for engine in engines:
+            official_site_result = await self._search_engine_with_timeout(
+                query=search_query,
+                engine=engine,
+                num_results=num_results,
+            )
+            if official_site_result.get("status") != "success":
+                continue
+            for candidate in official_site_result.get("results", []) or []:
+                candidate_url = self._normalize_http_url(candidate.get("url"))
+                if not candidate_url:
+                    continue
+                score = self._score_url(
+                    candidate_url,
+                    HopType.OFFICIAL_SITE,
+                    entity_name,
+                    title=candidate.get("title", ""),
+                    snippet=candidate.get("snippet", ""),
+                )
+                title_lower = str(candidate.get("title", "") or "").lower()
+                snippet_lower = str(candidate.get("snippet", "") or "").lower()
+                if "official site" in title_lower:
+                    score += 0.15
+                if any(token in f"{candidate_url} {title_lower} {snippet_lower}" for token in ("store", "shop")):
+                    score -= 0.35
+                if score > best_score:
+                    best_score = score
+                    best_result = dict(candidate)
+                    best_result["url"] = candidate_url
+
+        if not best_result:
             self._mark_official_site_resolution_failure(entity_name)
             return None
 
-        best_result = official_site_result['results'][0]
         resolved_url = self._normalize_http_url(best_result.get('url'))
         if resolved_url:
             self._cache_resolved_url_context(resolved_url, best_result)
@@ -2081,6 +2187,12 @@ class HypothesisDrivenDiscovery:
         logger.warning(f"⚠️ All search engines failed for {hop_type}, trying fallbacks")
 
         fallback_queries = self._get_fallback_queries(hop_type, entity_name)
+        fallback_limit = (
+            getattr(self, "url_resolution_max_fallback_queries_single_pass", 1)
+            if self._is_single_pass_mode()
+            else getattr(self, "url_resolution_max_fallback_queries", 3)
+        )
+        fallback_queries = fallback_queries[: max(1, int(fallback_limit))]
 
         for i, fallback_query in enumerate(fallback_queries, 1):
             logger.debug(f"Fallback {i}/{len(fallback_queries)}: {fallback_query}")
@@ -2114,7 +2226,16 @@ class HypothesisDrivenDiscovery:
         if hop_type in [HopType.RFP_PAGE, HopType.TENDERS_PAGE, HopType.PROCUREMENT_PAGE]:
             logger.info("🔄 Trying site-specific search as final fallback...")
             metrics['site_specific_attempted'] = True
-            site_url = await self._try_site_specific_search(entity_name, hop_type)
+            site_query_limit = (
+                getattr(self, "url_resolution_max_site_specific_queries_single_pass", 2)
+                if self._is_single_pass_mode()
+                else getattr(self, "url_resolution_max_site_specific_queries", 6)
+            )
+            site_url = await self._try_site_specific_search(
+                entity_name,
+                hop_type,
+                max_queries=max(1, int(site_query_limit)),
+            )
             if site_url:
                 metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
                 self._last_url_resolution_metrics = {
@@ -2136,7 +2257,8 @@ class HypothesisDrivenDiscovery:
     async def _try_site_specific_search(
         self,
         entity_name: str,
-        hop_type: HopType
+        hop_type: HopType,
+        max_queries: Optional[int] = None,
     ) -> Optional[str]:
         """
         Try site-specific search as a last resort for RFP/procurement hops
@@ -2208,6 +2330,13 @@ class HypothesisDrivenDiscovery:
             normalized_path = path if path.startswith("/") else f"/{path}"
             site_search_queries.insert(0, f"site:{domain}{normalized_path} procurement")
             site_search_queries.insert(0, f"site:{domain}{normalized_path} tender")
+
+        if max_queries is not None:
+            try:
+                query_cap = max(1, int(max_queries))
+            except Exception:  # noqa: BLE001
+                query_cap = 1
+            site_search_queries = site_search_queries[:query_cap]
 
         for query in site_search_queries:
             try:
@@ -3203,6 +3332,8 @@ Return JSON:
 
             result = self._parse_evaluation_response_json(response_text)
             if result is not None:
+                if isinstance(getattr(self, "_last_parse_path", None), str):
+                    result["parse_path"] = self._last_parse_path
 
                 # Ensure result has required 'decision' key
                 if 'decision' not in result:
@@ -4132,6 +4263,7 @@ Return JSON:
                 'evaluation_ms': performance.get('evaluation_ms', 0.0),
                 'validation_ms': performance.get('url_resolution', {}).get('validation_ms', 0.0),
                 'decision': result.get('decision'),
+                'parse_path': result.get('parse_path'),
                 'scrape_cache_hit': bool(performance.get('scrape_cache_hit', False)),
                 'evaluation_cache_hit': bool(performance.get('evaluation_cache_hit', False)),
                 'content_hash': performance.get('content_hash'),
@@ -4159,6 +4291,8 @@ Return JSON:
             'llm_circuit_broken': bool(llm_diag.get('llm_circuit_broken', False)),
             'llm_disable_reason': llm_diag.get('llm_disable_reason'),
             'evaluation_mode': llm_diag.get('evaluation_mode'),
+            'run_profile': llm_diag.get('run_profile'),
+            'run_mode': llm_diag.get('run_mode'),
         }
 
     def _build_failure_result(
@@ -4488,6 +4622,9 @@ Return JSON:
             DiscoveryResult with enhanced dossier context
         """
         logger.info(f"📋 Running dossier-context discovery for {entity_name}")
+        run_mode = self._current_run_mode()
+        run_profile = str(os.getenv("DISCOVERY_PROFILE", "continuous") or "continuous").strip().lower()
+        self._update_llm_runtime_diagnostics(run_mode=run_mode, run_profile=run_profile)
         resolved_entity_type = entity_type or dossier.get('metadata', {}).get('entity_type') or getattr(self, "current_entity_type", None)
         if resolved_entity_type:
             self.current_entity_type = resolved_entity_type
@@ -4562,26 +4699,59 @@ Return JSON:
             query = f'"{entity_name}" {signal.get("text", "")} platform'
             targeted_queries.append(query)
 
+        targeted_queries = list(dict.fromkeys(q for q in targeted_queries if isinstance(q, str) and q.strip()))
         logger.info(f"🔍 Generated {len(targeted_queries)} targeted search queries")
 
-        # Use BrightData SDK to search for specific opportunities
         search_results = []
+        targeted_searches_count = 0
+        targeted_searches_skipped = False
+        targeted_search_skip_reason = None
+        if not self.dossier_context_targeted_search_enabled:
+            targeted_searches_skipped = True
+            targeted_search_skip_reason = "disabled_by_config"
+        elif run_mode == "single_pass":
+            targeted_searches_skipped = True
+            targeted_search_skip_reason = "single_pass_mode"
+        elif self.current_official_site_url:
+            targeted_searches_skipped = True
+            targeted_search_skip_reason = "official_site_already_known"
 
-        for query in targeted_queries[:5]:  # Limit to 5 searches to control cost
-            try:
-                result = await self.brightdata_client.search_engine(
-                    query=query,
-                    engine='google',
-                    num_results=3
+        if not targeted_searches_skipped:
+            query_cap = (
+                self.dossier_context_max_targeted_queries_single_pass
+                if run_mode == "single_pass"
+                else self.dossier_context_max_targeted_queries
+            )
+            limited_queries = targeted_queries[: max(0, int(query_cap))]
+            targeted_searches_count = len(limited_queries)
+            if limited_queries:
+                sem = asyncio.Semaphore(max(1, int(self.dossier_context_targeted_search_concurrency)))
+
+                async def _run_targeted_query(query: str) -> List[Dict[str, Any]]:
+                    async with sem:
+                        result = await self._search_engine_with_timeout(
+                            query=query,
+                            engine='google',
+                            num_results=3,
+                        )
+                        if result.get('status') == 'success':
+                            rows = result.get('results', [])
+                            logger.info("✅ Search found %s results: %s", len(rows), query)
+                            return rows
+                        return []
+
+                query_results = await asyncio.gather(
+                    *[_run_targeted_query(query) for query in limited_queries],
+                    return_exceptions=True,
                 )
-
-                if result.get('status') == 'success':
-                    search_results.extend(result.get('results', []))
-                    logger.info(f"✅ Search found {len(result.get('results', []))} results: {query}")
-
-            except Exception as e:
-                logger.warning(f"⚠️ Search failed for query: {query} - {e}")
-                continue
+                for row in query_results:
+                    if isinstance(row, Exception):
+                        logger.warning("⚠️ Targeted search query failed: %s", row)
+                        continue
+                    if isinstance(row, list):
+                        search_results.extend(row)
+        else:
+            logger.info("⏭️ Skipping targeted dossier-context searches (%s)", targeted_search_skip_reason)
 
         logger.info(f"🔍 Total search results: {len(search_results)}")
 
@@ -4599,8 +4769,12 @@ Return JSON:
         state.iteration_results.append({
             'stage': 'dossier_initialization',
             'dossier_signals_count': len(dossier_hypotheses),
-            'targeted_searches_count': len(targeted_queries),
+            'targeted_searches_count': targeted_searches_count,
+            'targeted_searches_skipped': targeted_searches_skipped,
+            'targeted_search_skip_reason': targeted_search_skip_reason,
             'search_results_count': len(search_results),
+            'run_mode': run_mode,
+            'run_profile': run_profile,
             'source': 'dossier_context'
         })
 

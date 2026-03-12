@@ -19,8 +19,20 @@ async def test_resolve_official_site_url_caches_discovered_url():
     discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
     discovery.current_official_site_url = None
     discovery._resolved_url_context = {}
+    discovery.official_site_resolution_engines = ["google", "bing"]
+    discovery.official_site_resolution_num_results = 2
 
     async def fake_search_engine_with_timeout(*, query, engine, num_results):
+        assert num_results == 2
+        if engine == "google":
+            return {
+                "status": "success",
+                "results": [{
+                    "url": "https://shop.ccfc.co.uk/",
+                    "title": "Coventry City FC Official Store",
+                    "snippet": "Official Coventry City FC store",
+                }],
+            }
         return {
             "status": "success",
             "results": [{
@@ -73,6 +85,43 @@ async def test_official_site_hop_skips_fallback_query_loop_on_primary_failure():
     assert resolved is None
     # Official-site path should fail fast without burning retries on fallback queries.
     assert calls["search"] == 1
+
+
+@pytest.mark.asyncio
+async def test_single_pass_mode_caps_fallback_query_attempts(monkeypatch):
+    monkeypatch.setenv("DISCOVERY_RUN_MODE", "single_pass")
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.current_official_site_url = None
+    discovery.url_resolution_max_fallback_queries = 4
+    discovery.url_resolution_max_fallback_queries_single_pass = 1
+    discovery.url_resolution_max_site_specific_queries = 6
+    discovery.url_resolution_max_site_specific_queries_single_pass = 2
+    discovery._last_url_resolution_metrics = {}
+
+    calls = {"search": 0}
+
+    async def fake_search_engine_with_timeout(*, query, engine, num_results):
+        calls["search"] += 1
+        return {"status": "error", "results": []}
+
+    async def fake_get_cached_search(_query, _engine):
+        return None
+
+    async def fake_cache_search_result(_query, _engine, _result):
+        return None
+
+    discovery._search_engine_with_timeout = fake_search_engine_with_timeout
+    discovery._get_cached_search = fake_get_cached_search
+    discovery._cache_search_result = fake_cache_search_result
+
+    state = SimpleNamespace(entity_name="Coventry City FC")
+    hypothesis = SimpleNamespace()
+    resolved = await discovery._get_url_for_hop(HopType.CAREERS_PAGE, hypothesis, state)
+
+    assert resolved is None
+    # Single-pass mode should cap fallback exploration to one query.
+    assert discovery._last_url_resolution_metrics.get("fallback_queries_tried") == 1
+    assert calls["search"] >= 2
 
 
 @pytest.mark.asyncio
@@ -303,6 +352,35 @@ async def test_execute_hop_increments_failure_counts_on_scrape_failure():
     assert state.last_failed_hop == "official_site"
 
 
+@pytest.mark.asyncio
+async def test_try_site_specific_search_respects_max_queries():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    calls = {"search": 0}
+
+    async def fake_resolve_official_site_url(_entity_name):
+        return "https://www.ccfc.co.uk/"
+
+    async def fake_try_direct_site_paths(_official_url, _hop_type):
+        return None
+
+    async def fake_search_engine_with_timeout(*, query, engine, num_results):
+        calls["search"] += 1
+        return {"status": "error", "results": []}
+
+    discovery._resolve_official_site_url = fake_resolve_official_site_url
+    discovery._try_direct_site_paths = fake_try_direct_site_paths
+    discovery._search_engine_with_timeout = fake_search_engine_with_timeout
+    discovery.current_entity_type = "SPORT_CLUB"
+
+    result = await discovery._try_site_specific_search(
+        "Coventry City FC",
+        HopType.RFP_PAGE,
+        max_queries=2,
+    )
+    assert result is None
+    assert calls["search"] == 2
+
+
 def test_derive_signals_from_dossier_sections_extracts_procurement_and_capability():
     discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
     dossier = {
@@ -375,6 +453,8 @@ def test_performance_summary_includes_llm_runtime_diagnostics():
         "llm_circuit_broken": True,
         "llm_disable_reason": "insufficient balance",
         "evaluation_mode": "heuristic",
+        "run_profile": "test",
+        "run_mode": "single_pass",
     }
 
     state = SimpleNamespace(iteration_results=[])
@@ -387,6 +467,8 @@ def test_performance_summary_includes_llm_runtime_diagnostics():
     assert summary["llm_circuit_broken"] is True
     assert summary["llm_disable_reason"] == "insufficient balance"
     assert summary["evaluation_mode"] == "heuristic"
+    assert summary["run_profile"] == "test"
+    assert summary["run_mode"] == "single_pass"
 
 
 def test_parse_evaluation_response_json_extracts_fenced_json_block():
@@ -409,6 +491,7 @@ I evaluated the page.
     assert parsed is not None
     assert parsed["decision"] == "WEAK_ACCEPT"
     assert parsed["confidence_delta"] == 0.06
+    assert discovery._last_parse_path in {"json_direct", "json_fenced"}
 
 
 @pytest.mark.asyncio
@@ -460,6 +543,7 @@ async def test_evaluate_content_requests_json_mode_and_parses_embedded_json():
     assert claude_stub.last_kwargs.get("json_mode") is True
     assert result["decision"] == "ACCEPT"
     assert result["evaluation_mode"] == "llm"
+    assert result["parse_path"] == "json_direct"
 
 
 @pytest.mark.asyncio
