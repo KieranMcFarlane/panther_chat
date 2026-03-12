@@ -850,6 +850,10 @@ class HypothesisDrivenDiscovery:
         minimum_keyword_sentences = max(0, int(getattr(self, "content_min_keyword_sentences", 1)))
         if minimum_keyword_sentences == 0:
             return None
+        # Long pages frequently contain rich navigation/footer text where strict keyword
+        # sentence matching is noisy; skip this gate when page text is already substantial.
+        if text_chars >= 5000:
+            return None
 
         keywords = keywords_by_category[category_key]
         sentence_count = 0
@@ -859,6 +863,59 @@ class HypothesisDrivenDiscovery:
                 sentence_count += 1
         if sentence_count < minimum_keyword_sentences:
             return f"keyword_sentences<{minimum_keyword_sentences}"
+        return None
+
+    def _extract_deterministic_trusted_signal(
+        self,
+        *,
+        content_text: str,
+        hop_type: HopType,
+    ) -> Optional[Dict[str, str]]:
+        text = str(content_text or "")
+        lowered = text.lower()
+        if not lowered:
+            return None
+
+        procurement_terms = {
+            "procurement", "tender", "rfp", "supplier", "vendor", "commercial partner",
+            "partnership", "implementation", "rollout", "contract",
+        }
+        careers_terms = {"careers", "vacancies", "job", "hiring", "apply now"}
+        hiring_signal_terms = {
+            "procurement manager", "commercial manager", "head of procurement", "digital",
+            "manager", "director", "officer", "specialist", "engineer", "analyst",
+        }
+
+        def _first_evidence_line(term_set: set[str]) -> Optional[str]:
+            for line in text.splitlines():
+                line_clean = line.strip()
+                if not line_clean:
+                    continue
+                ll = line_clean.lower()
+                if any(term in ll for term in term_set):
+                    return line_clean[:220]
+            return None
+
+        if hop_type == HopType.CAREERS_PAGE:
+            careers_line = _first_evidence_line(careers_terms)
+            hiring_line = _first_evidence_line(hiring_signal_terms)
+            if careers_line and (hiring_line or len(text) > 600):
+                return {
+                    "justification": "Careers page includes hiring signals aligned to procurement or digital delivery.",
+                    "evidence_found": f"{careers_line} | {(hiring_line or 'role listings present')}",
+                    "evidence_type": "deterministic_careers_signal",
+                }
+            return None
+
+        if hop_type in {HopType.OFFICIAL_SITE, HopType.PRESS_RELEASE, HopType.ANNUAL_REPORT}:
+            evidence_line = _first_evidence_line(procurement_terms)
+            if evidence_line:
+                return {
+                    "justification": "Trusted-source content contains explicit procurement/commercial delivery language.",
+                    "evidence_found": evidence_line,
+                    "evidence_type": "deterministic_trusted_source_signal",
+                }
+
         return None
 
     def _decorate_evaluation_result(
@@ -1276,6 +1333,19 @@ class HypothesisDrivenDiscovery:
         if not hasattr(state, 'last_failed_hop'):
             state.last_failed_hop = None
 
+        forced_sequence = [
+            token.strip().lower()
+            for token in str(os.getenv("DISCOVERY_FORCED_HOP_SEQUENCE", "") or "").split(",")
+            if token.strip()
+        ]
+        if forced_sequence:
+            hop_name = forced_sequence[min(state.iterations_completed, len(forced_sequence) - 1)]
+            hop_lookup = {hop.value: hop for hop in HopType}
+            forced_hop = hop_lookup.get(hop_name)
+            if forced_hop is not None:
+                logger.info("   Forced hop selection: %s", forced_hop.value)
+                return forced_hop
+
         # Score all possible hop types, excluding those with too many consecutive failures
         hop_scores = {}
         max_consecutive_failures = 2  # Skip hop type after 2 consecutive failures
@@ -1378,6 +1448,21 @@ class HypothesisDrivenDiscovery:
                 'cost_usd': 0.0,
                 'scrape_data': scrape_data or {},
                 'performance': performance
+            }
+
+        def build_weak_accept_result(justification: str, evidence_found: str, evidence_type: str) -> Dict[str, Any]:
+            performance['evaluation_ms'] = 0.0
+            performance['total_duration_ms'] = round((time.perf_counter() - hop_started_at) * 1000, 2)
+            return {
+                'hop_type': hop_type.value,
+                'url': url if 'url' in locals() else None,
+                'decision': 'WEAK_ACCEPT',
+                'confidence_delta': 0.06,
+                'justification': justification,
+                'evidence_found': evidence_found,
+                'evidence_type': evidence_type,
+                'cost_usd': 0.0,
+                'performance': performance,
             }
 
         def record_hop_failure() -> int:
@@ -1548,6 +1633,21 @@ class HypothesisDrivenDiscovery:
                         content_metadata['char_count'] = len(content_text)
 
                 content = content_text
+                deterministic_signal = self._extract_deterministic_trusted_signal(
+                    content_text=content_text,
+                    hop_type=hop_type,
+                )
+                if deterministic_signal:
+                    self._update_llm_runtime_diagnostics(
+                        llm_last_status="deterministic_signal_extracted",
+                        evaluation_mode="heuristic",
+                    )
+                    logger.info("Deterministic trusted signal extracted: %s", deterministic_signal["evidence_type"])
+                    return build_weak_accept_result(
+                        deterministic_signal["justification"],
+                        deterministic_signal["evidence_found"],
+                        deterministic_signal["evidence_type"],
+                    )
                 low_yield_reason = self._assess_low_yield_content(
                     content_text=content_text,
                     raw_html=content_result.get("raw_html"),

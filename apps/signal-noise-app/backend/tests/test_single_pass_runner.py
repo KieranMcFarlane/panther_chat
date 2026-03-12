@@ -137,3 +137,17 @@ def test_resolve_single_pass_template_prefers_federation_template():
         entity_name="International Canoe Federation",
     )
     assert template_id == "federation_governing_body"
+
+
+def test_recovery_overrides_include_forced_hop_sequence():
+    overrides = runner._recovery_overrides()
+    assert overrides["DISCOVERY_FORCED_HOP_SEQUENCE"] == "official_site,press_release,careers_page"
+
+
+def test_trusted_source_signal_accepts_hop_type():
+    result = {
+        "signals_discovered": [
+            {"hop_type": "careers_page", "source_url": "https://example.com/careers"}
+        ]
+    }
+    assert runner._trusted_source_signal(result) is True

@@ -66,6 +66,7 @@ def _recovery_overrides() -> Dict[str, str]:
         "DISCOVERY_URL_RESOLUTION_MAX_SITE_SPECIFIC_QUERIES_SINGLE_PASS": "4",
         "DISCOVERY_DOSSIER_CONTEXT_TARGETED_SEARCH_ENABLED": "true",
         "DISCOVERY_DOSSIER_CONTEXT_MAX_TARGETED_QUERIES_SINGLE_PASS": "2",
+        "DISCOVERY_FORCED_HOP_SEQUENCE": "official_site,press_release,careers_page",
     }
 
 
@@ -115,7 +116,8 @@ def _trusted_source_signal(result: Dict[str, Any]) -> bool:
     trusted = {"official_site", "press_release", "careers_page", "annual_report"}
     for signal in result.get("signals_discovered", []):
         source = str(signal.get("source_type") or signal.get("source") or "").strip().lower()
-        if source in trusted:
+        hop = str(signal.get("hop_type") or "").strip().lower()
+        if source in trusted or hop in trusted:
             return True
     return False
 
@@ -301,7 +303,7 @@ async def run_single_pass(args: argparse.Namespace) -> Dict[str, Any]:
                 min_confidence=args.min_confidence,
                 strict_gate=args.strict_gate,
                 max_iterations=3,
-                max_depth=1,
+                max_depth=3,
                 attempt_label="targeted_recovery",
             )
         attempts.append(recovery_result)

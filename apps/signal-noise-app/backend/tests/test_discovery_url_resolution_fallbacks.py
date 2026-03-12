@@ -797,3 +797,39 @@ def test_assess_low_yield_content_skips_keyword_gate_for_unknown_category():
     )
 
     assert reason is None
+
+
+def test_assess_low_yield_content_skips_keyword_gate_for_long_procurement_page():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.content_min_text_chars = 240
+    discovery.content_max_script_density = 0.12
+    discovery.content_min_keyword_sentences = 1
+
+    long_text = ("Arsenal official site navigation and fixtures content. " * 200).strip()
+    reason = discovery._assess_low_yield_content(
+        content_text=long_text,
+        raw_html="<html><body><p>Arsenal official site navigation and fixtures content.</p></body></html>",
+        hypothesis_category="procurement",
+    )
+
+    assert reason is None
+
+
+def test_extract_deterministic_trusted_signal_detects_press_language():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    signal = discovery._extract_deterministic_trusted_signal(
+        content_text="Official announcement: strategic partnership signed with supplier for platform rollout.",
+        hop_type=HopType.PRESS_RELEASE,
+    )
+    assert signal is not None
+    assert signal["evidence_type"] == "deterministic_trusted_source_signal"
+
+
+def test_extract_deterministic_trusted_signal_detects_careers_language():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    signal = discovery._extract_deterministic_trusted_signal(
+        content_text="Careers at Example Club\\nOpen vacancies\\nCommercial Manager\\nApply now",
+        hop_type=HopType.CAREERS_PAGE,
+    )
+    assert signal is not None
+    assert signal["evidence_type"] == "deterministic_careers_signal"
