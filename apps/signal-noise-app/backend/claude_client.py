@@ -423,6 +423,20 @@ class ClaudeClient:
         self.chutes_circuit_ttl_multiplier = float(
             os.getenv("CHUTES_CIRCUIT_TTL_MULTIPLIER", "2.0")
         )
+        self.chutes_circuit_canary_enabled = self._parse_bool_env(
+            os.getenv("CHUTES_CIRCUIT_CANARY_ENABLED"),
+            default=True,
+        )
+        self.chutes_circuit_canary_prompt = os.getenv(
+            "CHUTES_CIRCUIT_CANARY_PROMPT",
+            "Reply with OK only.",
+        )
+        self.chutes_circuit_canary_max_tokens = int(
+            os.getenv("CHUTES_CIRCUIT_CANARY_MAX_TOKENS", "12")
+        )
+        self.chutes_circuit_canary_timeout_seconds = float(
+            os.getenv("CHUTES_CIRCUIT_CANARY_TIMEOUT_SECONDS", "12")
+        )
         self.llm_provider_validation_strict = self._parse_bool_env(
             os.getenv("LLM_PROVIDER_VALIDATION_STRICT"),
             default=True,
@@ -447,6 +461,7 @@ class ClaudeClient:
         self.default_model = "haiku"
         self.cascade_order = ["haiku", "sonnet", "opus"]
         self._chutes_rate_lock = asyncio.Lock()
+        self._chutes_circuit_probe_lock = asyncio.Lock()
         self._chutes_last_request_monotonic = 0.0
         self._chutes_request_semaphore = asyncio.Semaphore(self.chutes_max_concurrent_requests)
 
@@ -537,13 +552,22 @@ class ClaudeClient:
         kind: str = "runtime",
         cooldown_seconds: Optional[float] = None,
     ):
+        now = time.monotonic()
         if not cls._api_disabled_reason:
             cls._api_disabled_reason = reason
-            cls._api_disabled_at_monotonic = time.monotonic()
+            cls._api_disabled_at_monotonic = now
             cls._api_disabled_kind = kind
             if kind == "quota" and cooldown_seconds is not None and cooldown_seconds > 0:
-                cls._api_disabled_until_monotonic = cls._api_disabled_at_monotonic + cooldown_seconds
+                cls._api_disabled_until_monotonic = now + cooldown_seconds
             logger.warning(f"⚠️ Disabling Claude API for current process: {reason}")
+            return
+
+        if kind == "quota":
+            cls._api_disabled_reason = reason
+            cls._api_disabled_kind = kind
+            cls._api_disabled_at_monotonic = now
+            if cooldown_seconds is not None and cooldown_seconds > 0:
+                cls._api_disabled_until_monotonic = now + cooldown_seconds
 
     @classmethod
     def _clear_disabled_reason(cls) -> None:
@@ -583,10 +607,6 @@ class ClaudeClient:
         if kind == "quota":
             disabled_until = getattr(self.__class__, "_api_disabled_until_monotonic", None)
             if disabled_until is not None:
-                if time.monotonic() >= disabled_until:
-                    logger.info("♻️ Clearing expired Chutes quota circuit-break window")
-                    self._clear_disabled_reason()
-                    return None
                 return reason
 
         ttl = float(getattr(self, "chutes_circuit_ttl_seconds", 0.0) or 0.0)
@@ -617,6 +637,60 @@ class ClaudeClient:
         if ttl <= 0:
             return None
         return max(0.0, ttl - (time.monotonic() - disabled_at))
+
+    def _quota_probe_due(self) -> bool:
+        if getattr(self.__class__, "_api_disabled_kind", None) != "quota":
+            return False
+        disabled_until = getattr(self.__class__, "_api_disabled_until_monotonic", None)
+        if disabled_until is None:
+            return False
+        return time.monotonic() >= disabled_until
+
+    async def _attempt_quota_canary_probe_openai(self, headers: Dict[str, str]) -> bool:
+        async with self._chutes_circuit_probe_lock:
+            if not self._quota_probe_due():
+                return self._get_disabled_reason() is None
+            try:
+                timeout_seconds = max(self.chutes_circuit_canary_timeout_seconds, 1.0)
+                timeout = httpx.Timeout(
+                    timeout=timeout_seconds,
+                    connect=min(timeout_seconds, 8.0),
+                )
+                payload = {
+                    "model": self.chutes_model,
+                    "messages": [{"role": "user", "content": self.chutes_circuit_canary_prompt}],
+                    "max_tokens": max(1, int(self.chutes_circuit_canary_max_tokens)),
+                    "temperature": 0,
+                    "stream": False,
+                }
+                async with self._chutes_request_semaphore:
+                    await self._apply_chutes_request_throttle()
+                    probe = await self._query_chutes_non_stream(
+                        payload=payload,
+                        headers=headers,
+                        timeout=timeout,
+                    )
+                content = str(probe.get("answer_text") or probe.get("reasoning_text") or "").strip()
+                if not content:
+                    raise RuntimeError("quota canary returned empty response")
+                self._clear_disabled_reason()
+                self._reset_quota_circuit()
+                logger.info("♻️ Re-enabled Chutes after successful quota canary probe")
+                return True
+            except Exception as exc:  # noqa: BLE001
+                self.__class__._quota_circuit_trip_count += 1
+                cooldown = self._compute_quota_cooldown_seconds()
+                self._disable_api(
+                    "insufficient balance",
+                    kind="quota",
+                    cooldown_seconds=cooldown,
+                )
+                logger.warning(
+                    "Quota canary probe failed; keeping circuit open for %.1fs: %s",
+                    cooldown,
+                    self._format_chutes_error(exc),
+                )
+                return False
 
     @staticmethod
     def _is_insufficient_balance_error(error: Exception) -> bool:
@@ -929,11 +1003,19 @@ class ClaudeClient:
         transport is OpenAI chat completions and the model is configured via CHUTES_MODEL.
         """
         disabled_reason = self._get_effective_disabled_reason()
-        if disabled_reason:
-            raise RuntimeError(f"Claude API disabled: {disabled_reason}")
-
         if not self.api_key:
             raise RuntimeError("CHUTES_API_KEY not configured")
+
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+        }
+        if disabled_reason:
+            if self.chutes_circuit_canary_enabled and self._quota_probe_due():
+                await self._attempt_quota_canary_probe_openai(headers)
+                disabled_reason = self._get_effective_disabled_reason()
+            if disabled_reason:
+                raise RuntimeError(f"Claude API disabled: {disabled_reason}")
 
         messages: List[Dict[str, str]] = []
         if system_prompt:
@@ -949,11 +1031,6 @@ class ClaudeClient:
         }
         if json_mode:
             payload["response_format"] = {"type": "json_object"}
-
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json",
-        }
 
         last_error: Optional[Exception] = None
 

@@ -27,7 +27,7 @@ def _default_non_stream_for_legacy_tests(monkeypatch):
     ClaudeClient._quota_circuit_trip_count = 0
 
 
-def test_chutes_circuit_breaker_reason_expires_after_ttl(monkeypatch):
+def test_chutes_quota_circuit_requires_probe_after_cooldown(monkeypatch):
     monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
     monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
     monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
@@ -39,10 +39,8 @@ def test_chutes_circuit_breaker_reason_expires_after_ttl(monkeypatch):
     ClaudeClient._api_disabled_until_monotonic = time.monotonic() - 0.5
 
     client = ClaudeClient()
-    assert client._get_effective_disabled_reason() is None
-    assert ClaudeClient._api_disabled_reason is None
-    assert ClaudeClient._api_disabled_at_monotonic is None
-    assert ClaudeClient._api_disabled_kind is None
+    assert client._get_effective_disabled_reason() == "insufficient balance"
+    assert client._quota_probe_due() is True
 
 
 def test_chutes_env_disable_does_not_auto_expire(monkeypatch):
@@ -76,6 +74,93 @@ def test_chutes_quota_cooldown_grows_with_trip_count(monkeypatch):
     assert client._compute_quota_cooldown_seconds() == 120.0
     ClaudeClient._quota_circuit_trip_count = 5
     assert client._compute_quota_cooldown_seconds() == 300.0
+
+
+@pytest.mark.asyncio
+async def test_chutes_quota_circuit_uses_canary_to_reopen(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_STREAM_ENABLED", "false")
+    monkeypatch.setenv("CHUTES_CIRCUIT_CANARY_ENABLED", "true")
+    monkeypatch.setenv("CHUTES_CIRCUIT_CANARY_PROMPT", "CANARY_OK")
+
+    calls = {"canary": 0, "main": 0}
+
+    async def fake_non_stream(self, *, payload, headers, timeout):
+        prompt = payload["messages"][-1]["content"]
+        if prompt == "CANARY_OK":
+            calls["canary"] += 1
+            return {
+                "answer_text": "ok",
+                "reasoning_text": "",
+                "stop_reason": "stop",
+                "usage": {},
+                "raw_response": {},
+                "chunk_count": 1,
+            }
+        calls["main"] += 1
+        return {
+            "answer_text": "main response",
+            "reasoning_text": "",
+            "stop_reason": "stop",
+            "usage": {},
+            "raw_response": {},
+            "chunk_count": 1,
+        }
+
+    monkeypatch.setattr(ClaudeClient, "_query_chutes_non_stream", fake_non_stream)
+
+    client = ClaudeClient()
+    ClaudeClient._api_disabled_reason = "insufficient balance"
+    ClaudeClient._api_disabled_kind = "quota"
+    ClaudeClient._api_disabled_at_monotonic = time.monotonic() - 60
+    ClaudeClient._api_disabled_until_monotonic = time.monotonic() - 1
+    ClaudeClient._quota_circuit_trip_count = 1
+
+    result = await client.query(prompt="REAL_REQUEST", model="haiku", max_tokens=32)
+    assert result["content"] == "main response"
+    assert calls["canary"] == 1
+    assert calls["main"] == 1
+    assert ClaudeClient._api_disabled_reason is None
+    assert ClaudeClient._api_disabled_kind is None
+
+
+@pytest.mark.asyncio
+async def test_chutes_quota_circuit_canary_failure_rearms_cooldown(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_STREAM_ENABLED", "false")
+    monkeypatch.setenv("CHUTES_CIRCUIT_CANARY_ENABLED", "true")
+    monkeypatch.setenv("CHUTES_CIRCUIT_CANARY_PROMPT", "CANARY_FAIL")
+    monkeypatch.setenv("CHUTES_CIRCUIT_TTL_SECONDS", "60")
+    monkeypatch.setenv("CHUTES_CIRCUIT_TTL_MULTIPLIER", "2.0")
+    monkeypatch.setenv("CHUTES_CIRCUIT_TTL_MAX_SECONDS", "300")
+
+    async def fake_non_stream(self, *, payload, headers, timeout):
+        request = httpx.Request("POST", "https://llm.chutes.ai/v1/chat/completions")
+        response = httpx.Response(429, request=request, text='{"error":{"code":"1113","message":"Insufficient balance"}}')
+        raise httpx.HTTPStatusError("429 Too Many Requests", request=request, response=response)
+
+    monkeypatch.setattr(ClaudeClient, "_query_chutes_non_stream", fake_non_stream)
+
+    client = ClaudeClient()
+    ClaudeClient._api_disabled_reason = "insufficient balance"
+    ClaudeClient._api_disabled_kind = "quota"
+    ClaudeClient._api_disabled_at_monotonic = time.monotonic() - 60
+    ClaudeClient._api_disabled_until_monotonic = time.monotonic() - 1
+    ClaudeClient._quota_circuit_trip_count = 1
+
+    with pytest.raises(RuntimeError):
+        await client.query(prompt="REAL_REQUEST", model="haiku", max_tokens=32)
+
+    assert ClaudeClient._api_disabled_reason == "insufficient balance"
+    assert ClaudeClient._api_disabled_kind == "quota"
+    assert ClaudeClient._api_disabled_until_monotonic is not None
+    assert ClaudeClient._api_disabled_until_monotonic > time.monotonic()
 
 
 def test_claude_client_prefers_chutes_when_configured(monkeypatch):
