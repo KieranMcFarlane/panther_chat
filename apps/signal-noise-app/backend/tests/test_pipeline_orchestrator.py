@@ -211,6 +211,45 @@ class FakeDashboardScorer:
         }
 
 
+class SparseCanonicalDossierGenerator:
+    async def generate_universal_dossier(self, **kwargs):
+        return {
+            "metadata": {
+                "entity_id": kwargs["entity_id"],
+                "hypothesis_count": 0,
+                "signal_count": 0,
+                "tier": "STANDARD",
+                "source_count": 1,
+                "sources_used": ["BrightData"],
+                "collection_time_seconds": 1.1,
+                "source_timings": {},
+                "canonical_sources": {},
+            },
+            "generation_time_seconds": 2.4,
+            "procurement_signals": {"upcoming_opportunities": []},
+            "extracted_signals": [],
+        }
+
+
+class FakeSchemaFirstRunner:
+    async def run(self, **kwargs):
+        return {
+            "entity_id": kwargs["entity_id"],
+            "entity_name": kwargs["entity_name"],
+            "fields": {
+                "official_site": {
+                    "value": "https://www.fiba.basketball/en",
+                    "url": "https://www.fiba.basketball/en",
+                    "confidence": 0.88,
+                },
+                "founded_year": {"value": "1932", "url": "https://en.wikipedia.org/wiki/FIBA", "confidence": 0.71},
+            },
+            "unanswered_fields": [],
+            "artifact_path": "backend/data/dossiers/fiba_schema_first_20260312_141925.json",
+            "run_mode": "schema_first_pilot",
+        }
+
+
 @pytest.mark.asyncio
 async def test_pipeline_orchestrator_runs_phases_and_returns_artifacts():
     phase_events = []
@@ -231,7 +270,7 @@ async def test_pipeline_orchestrator_runs_phases_and_returns_artifacts():
         entity_id="arsenal-fc",
         entity_name="Arsenal FC",
         entity_type="CLUB",
-        priority_score=90,
+        priority_score=80,
         phase_callback=phase_callback,
     )
 
@@ -256,6 +295,69 @@ async def test_pipeline_orchestrator_runs_phases_and_returns_artifacts():
     assert result["artifacts"]["monitoring_result"]["candidate_count"] == 1
     assert ("baseline_monitoring", "running") in phase_events
     assert ("dashboard_scoring", "completed") in phase_events
+
+
+@pytest.mark.asyncio
+async def test_pipeline_orchestrator_runs_schema_first_prephase_when_enabled(monkeypatch):
+    monkeypatch.setenv("PIPELINE_SCHEMA_FIRST_ENABLED", "true")
+    phase_events = []
+
+    async def phase_callback(phase, payload):
+        phase_events.append((phase, payload["status"]))
+
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=SparseCanonicalDossierGenerator(),
+        baseline_monitoring_runner=None,
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        schema_first_runner=FakeSchemaFirstRunner(),
+    )
+
+    result = await orchestrator.run_entity_pipeline(
+        entity_id="fiba",
+        entity_name="FIBA",
+        entity_type="FEDERATION",
+        priority_score=60,
+        phase_callback=phase_callback,
+    )
+
+    schema_phase = result["phases"]["schema_first"]
+    assert schema_phase["status"] == "completed"
+    assert schema_phase["answered_fields"] == 2
+    assert schema_phase["unanswered_fields"] == []
+    assert schema_phase["artifact_path"].endswith(".json")
+    assert result["artifacts"]["schema_first"]["fields"]["official_site"]["value"] == "https://www.fiba.basketball/en"
+    assert result["artifacts"]["dossier"]["metadata"]["canonical_sources"]["official_site"] == "https://www.fiba.basketball/en"
+    assert ("schema_first", "running") in phase_events
+    assert ("schema_first", "completed") in phase_events
+
+
+@pytest.mark.asyncio
+async def test_pipeline_orchestrator_marks_schema_first_skipped_when_disabled(monkeypatch):
+    monkeypatch.delenv("PIPELINE_SCHEMA_FIRST_ENABLED", raising=False)
+
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=FakeDossierGenerator(),
+        baseline_monitoring_runner=None,
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        schema_first_runner=FakeSchemaFirstRunner(),
+    )
+
+    result = await orchestrator.run_entity_pipeline(
+        entity_id="fiba",
+        entity_name="FIBA",
+        entity_type="FEDERATION",
+        priority_score=60,
+    )
+
+    assert result["phases"]["schema_first"]["status"] == "skipped"
+    assert result["phases"]["schema_first"]["reason"] == "disabled"
+    assert result["artifacts"]["schema_first"] is None
 
 
 @pytest.mark.asyncio

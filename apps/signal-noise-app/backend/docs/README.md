@@ -13,6 +13,7 @@ System architecture, analysis, and usage guides
 - `SYSTEM-ARCHITECTURE-ANALYSIS.md` - Deep dive into system architecture (Feb 6)
 - `HOW-TO-USE-SYSTEM.md` - User guide for the system (Feb 6)
 - `WHAT-WE-USE-VS-WHAT-WE-DONT-NEED.md` - Technology stack decisions (Feb 6)
+- `SCHEMA_FIRST_PREPHASE.md` - Optional schema-first BrightData pre-phase for canonical pipeline (Mar 12)
 
 ### **multi-pass/**
 Multi-pass Ralph loop implementation documentation

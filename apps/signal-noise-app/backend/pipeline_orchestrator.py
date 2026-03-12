@@ -21,6 +21,10 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 from urllib.parse import urlparse
 
 
+def _bool_env(value: str) -> bool:
+    return str(value).strip().lower() in {"1", "true", "yes", "on"}
+
+
 @dataclass
 class PipelineArtifacts:
     dossier: Dict[str, Any]
@@ -39,9 +43,11 @@ class PipelineOrchestrator:
         graphiti_service,
         dashboard_scorer,
         baseline_monitoring_runner=None,
+        schema_first_runner=None,
     ):
         self.dossier_generator = dossier_generator
         self.baseline_monitoring_runner = baseline_monitoring_runner
+        self.schema_first_runner = schema_first_runner
         self.discovery = discovery
         self.ralph_validator = ralph_validator
         self.graphiti_service = graphiti_service
@@ -49,6 +55,15 @@ class PipelineOrchestrator:
         self.discovery_timeout_seconds = int(os.getenv("ENTITY_DISCOVERY_TIMEOUT_SECONDS", "90"))
         self.discovery_max_iterations = int(os.getenv("ENTITY_DISCOVERY_MAX_ITERATIONS", "8"))
         self.discovery_hard_timeout = os.getenv("ENTITY_DISCOVERY_HARD_TIMEOUT", "0").lower() in {"1", "true", "yes"}
+        self.schema_first_enabled = _bool_env(os.getenv("PIPELINE_SCHEMA_FIRST_ENABLED", "false"))
+        self.schema_first_output_dir = os.getenv("PIPELINE_SCHEMA_FIRST_OUTPUT_DIR", "backend/data/dossiers")
+        self.schema_first_max_results = max(1, int(os.getenv("PIPELINE_SCHEMA_FIRST_MAX_RESULTS", "8")))
+        self.schema_first_max_candidates_per_query = max(
+            1,
+            int(os.getenv("PIPELINE_SCHEMA_FIRST_MAX_CANDIDATES_PER_QUERY", "4")),
+        )
+        fields_env = str(os.getenv("PIPELINE_SCHEMA_FIRST_FIELDS", "") or "").strip()
+        self.schema_first_fields = [field.strip() for field in fields_env.split(",") if field.strip()] if fields_env else None
 
     async def run_entity_pipeline(
         self,
@@ -60,6 +75,7 @@ class PipelineOrchestrator:
         phase_callback: Optional[Callable[[str, Dict[str, Any]], Awaitable[None]]] = None,
     ) -> Dict[str, Any]:
         phase_results: Dict[str, Dict[str, Any]] = {
+            "schema_first": {"status": "pending"},
             "dossier_generation": {"status": "pending"},
             "baseline_monitoring": {"status": "pending"},
             "discovery": {"status": "pending"},
@@ -67,6 +83,32 @@ class PipelineOrchestrator:
             "temporal_persistence": {"status": "pending"},
             "dashboard_scoring": {"status": "pending"},
         }
+        schema_first_result: Optional[Dict[str, Any]] = None
+        if self.schema_first_enabled:
+            await self._emit_phase_update(
+                phase_callback,
+                "schema_first",
+                {
+                    "status": "running",
+                    "run_mode": "schema_first_pilot",
+                },
+            )
+            try:
+                schema_first_result = await self._run_schema_first(
+                    entity_id=entity_id,
+                    entity_name=entity_name,
+                    entity_type=entity_type,
+                )
+                schema_phase = self._summarize_schema_first_result(schema_first_result)
+                phase_results["schema_first"] = schema_phase
+                await self._emit_phase_update(phase_callback, "schema_first", schema_phase)
+            except Exception as exc:  # noqa: BLE001
+                schema_phase = {"status": "failed", "error": str(exc)}
+                phase_results["schema_first"] = schema_phase
+                await self._emit_phase_update(phase_callback, "schema_first", schema_phase)
+        else:
+            phase_results["schema_first"] = {"status": "skipped", "reason": "disabled"}
+
         dossier = initial_dossier
         if dossier is None:
             await self._emit_phase_update(
@@ -84,6 +126,8 @@ class PipelineOrchestrator:
                 entity_type=entity_type,
                 priority_score=priority_score,
             )
+            if schema_first_result:
+                self._merge_schema_first_into_dossier(dossier, schema_first_result)
             dossier_metadata = dossier.get("metadata", {})
             await self._emit_phase_update(
                 phase_callback,
@@ -114,6 +158,8 @@ class PipelineOrchestrator:
                 "canonical_sources": dossier_metadata.get("canonical_sources", {}),
             }
         else:
+            if schema_first_result:
+                self._merge_schema_first_into_dossier(dossier, schema_first_result)
             dossier_metadata = dossier.get("metadata", {}) if isinstance(dossier, dict) else {}
             phase_results["dossier_generation"] = {
                 "status": "completed",
@@ -330,6 +376,7 @@ class PipelineOrchestrator:
                 "dossier": dossier,
                 "monitoring_result": monitoring_result,
                 "escalation_reason": escalation_reason,
+                "schema_first": schema_first_result,
                 "discovery_result": self._serialize_discovery_result(discovery_result),
                 "validated_signals": validated_signals,
                 "capability_signals": capability_signals,
@@ -353,6 +400,87 @@ class PipelineOrchestrator:
             entity_type=entity_type,
             priority_score=priority_score,
         )
+
+    async def _run_schema_first(
+        self,
+        *,
+        entity_id: str,
+        entity_name: str,
+        entity_type: str,
+    ) -> Dict[str, Any]:
+        payload = {
+            "entity_name": entity_name,
+            "entity_id": entity_id,
+            "entity_type": entity_type,
+            "output_dir": self.schema_first_output_dir,
+            "max_results": self.schema_first_max_results,
+            "max_candidates_per_query": self.schema_first_max_candidates_per_query,
+            "field_names": self.schema_first_fields,
+        }
+
+        if self.schema_first_runner is not None:
+            runner = self.schema_first_runner
+            if hasattr(runner, "run"):
+                return await runner.run(**payload)
+            if callable(runner):
+                return await runner(**payload)
+            raise RuntimeError("schema_first_runner is not callable")
+
+        from schema_first_pilot import run_schema_first_pilot
+
+        return await run_schema_first_pilot(**payload)
+
+    def _summarize_schema_first_result(self, result: Dict[str, Any]) -> Dict[str, Any]:
+        fields = result.get("fields", {}) if isinstance(result, dict) else {}
+        answered_fields = [
+            field_name
+            for field_name, value in fields.items()
+            if isinstance(value, dict) and str(value.get("value") or "").strip()
+        ]
+        unanswered_fields = result.get("unanswered_fields")
+        if not isinstance(unanswered_fields, list):
+            unanswered_fields = [name for name in fields.keys() if name not in answered_fields]
+        return {
+            "status": "completed",
+            "run_mode": result.get("run_mode", "schema_first_pilot"),
+            "answered_fields": len(answered_fields),
+            "unanswered_fields": unanswered_fields,
+            "artifact_path": result.get("artifact_path"),
+        }
+
+    def _merge_schema_first_into_dossier(
+        self,
+        dossier: Dict[str, Any],
+        schema_first_result: Dict[str, Any],
+    ) -> None:
+        if not isinstance(dossier, dict) or not isinstance(schema_first_result, dict):
+            return
+
+        metadata = dossier.setdefault("metadata", {})
+        if not isinstance(metadata, dict):
+            return
+        canonical_sources = metadata.setdefault("canonical_sources", {})
+        if not isinstance(canonical_sources, dict):
+            canonical_sources = {}
+            metadata["canonical_sources"] = canonical_sources
+
+        fields = schema_first_result.get("fields", {})
+        if not isinstance(fields, dict):
+            fields = {}
+
+        official_site_value = None
+        official_site_record = fields.get("official_site")
+        if isinstance(official_site_record, dict):
+            official_site_value = official_site_record.get("value")
+        if isinstance(official_site_value, str) and official_site_value.strip() and not canonical_sources.get("official_site"):
+            canonical_sources["official_site"] = official_site_value.strip()
+
+        metadata["schema_first"] = {
+            "run_mode": schema_first_result.get("run_mode", "schema_first_pilot"),
+            "artifact_path": schema_first_result.get("artifact_path"),
+            "fields": fields,
+            "unanswered_fields": schema_first_result.get("unanswered_fields", []),
+        }
 
     async def _run_baseline_monitoring(
         self,

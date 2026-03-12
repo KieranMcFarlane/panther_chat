@@ -47,6 +47,12 @@ DISCOVERY_SEARCH_TIMEOUT_SECONDS=12
 DISCOVERY_SEARCH_VALIDATION_TIMEOUT_SECONDS=5
 DISCOVERY_URL_RESOLUTION_TIMEOUT_SECONDS=12
 DISCOVERY_HEURISTIC_FALLBACK_ON_LLM_UNAVAILABLE=true
+
+# Optional canonical pipeline pre-phase
+PIPELINE_SCHEMA_FIRST_ENABLED=true
+PIPELINE_SCHEMA_FIRST_OUTPUT_DIR=backend/data/dossiers
+PIPELINE_SCHEMA_FIRST_MAX_RESULTS=8
+PIPELINE_SCHEMA_FIRST_MAX_CANDIDATES_PER_QUERY=4
 ```
 
 ## Why These Values
@@ -61,6 +67,7 @@ DISCOVERY_HEURISTIC_FALLBACK_ON_LLM_UNAVAILABLE=true
 - A successful LLM response resets quota trip-count and circuit state.
 - `BRIGHTDATA_*_TIMEOUT` and `SERP_POLL_*`: gives async SERP results enough time to materialize without stalling the pipeline.
 - Explicit `BRIGHTDATA_SERP_ZONE` and `BRIGHTDATA_UNLOCKER_ZONE`: avoids cross-zone mismatches between `/serp/req` and `/request`.
+- Optional `PIPELINE_SCHEMA_FIRST_*`: runs a non-blocking schema-first pass that can seed `canonical_sources.official_site` before discovery.
 
 ## Trial Evidence (Current Branch)
 
