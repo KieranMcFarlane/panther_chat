@@ -1,6 +1,7 @@
 import sys
 import asyncio
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -34,6 +35,39 @@ def test_section_data_needs_repair_for_markdown_json_blob():
     }
 
     assert generator._section_data_needs_repair(section_data) is True
+
+
+def test_coerce_unstructured_section_data_filters_meta_instruction_lines():
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    coerced = generator._coerce_unstructured_section_data(
+        """
+Input: A partial JSON string labeled RAW_OUTPUT.
+The user wants a role-specific outreach strategy.
+FIBA is headquartered in Mies, Switzerland.
+Official site: https://www.fiba.basketball/en.
+Return valid JSON only.
+        """
+    )
+
+    assert coerced is not None
+    content = coerced["content"]
+    assert all("input:" not in line.lower() for line in content)
+    assert all("the user wants" not in line.lower() for line in content)
+    assert any("FIBA is headquartered" in line for line in content)
+
+
+def test_resolve_sdk_variant_detects_legacy_and_functional_layouts():
+    class _LegacyClient:
+        pass
+
+    legacy_module = SimpleNamespace(BrightDataClient=_LegacyClient)
+    functional_module = SimpleNamespace(scrape_url_async=lambda *args, **kwargs: None)
+
+    legacy_variant, _ = BrightDataSDKClient._resolve_sdk_variant(legacy_module)
+    functional_variant, _ = BrightDataSDKClient._resolve_sdk_variant(functional_module)
+
+    assert legacy_variant == "legacy_client"
+    assert functional_variant == "functional_api"
 
 
 @pytest.mark.asyncio

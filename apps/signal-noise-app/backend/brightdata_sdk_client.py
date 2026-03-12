@@ -78,6 +78,22 @@ class BrightDataSDKClient:
         self._client = None
         self._client_context = None
         self._client_lock = asyncio.Lock()
+        self._sdk_variant = "unknown"
+        self._sdk_variant_reason: Optional[str] = None
+        self._sdk_variant, self._sdk_variant_reason = self._detect_sdk_variant()
+
+        if self._sdk_variant == "legacy_client":
+            logger.info("✅ BrightData SDK legacy client API detected")
+        elif self._sdk_variant == "functional_api":
+            logger.info(
+                "ℹ️ BrightData SDK functional API detected (no BrightDataClient); "
+                "using HTTP fallback transport for compatibility"
+            )
+        else:
+            logger.warning(
+                "⚠️ BrightData SDK client API unavailable; fallback transport will be used (%s)",
+                self._sdk_variant_reason or "unknown reason",
+            )
 
         if not self.token:
             logger.warning("⚠️ BRIGHTDATA_API_TOKEN not found in environment")
@@ -85,10 +101,37 @@ class BrightDataSDKClient:
     async def _with_timeout(self, awaitable):
         return await asyncio.wait_for(awaitable, timeout=self.request_timeout_seconds)
 
+    @staticmethod
+    def _resolve_sdk_variant(brightdata_module: Any) -> tuple[str, Optional[str]]:
+        """Resolve which BrightData SDK layout is installed."""
+        if brightdata_module is None:
+            return ("unavailable", "brightdata module not importable")
+        if hasattr(brightdata_module, "BrightDataClient"):
+            return ("legacy_client", None)
+        if any(hasattr(brightdata_module, attr) for attr in ("scrape_url_async", "scrape_url", "crawl_url")):
+            return (
+                "functional_api",
+                "function-style SDK detected without BrightDataClient",
+            )
+        return ("unavailable", "unsupported brightdata module layout")
+
+    def _detect_sdk_variant(self) -> tuple[str, Optional[str]]:
+        try:
+            import brightdata
+        except Exception as e:  # noqa: BLE001
+            return ("unavailable", f"import error: {e}")
+        return self._resolve_sdk_variant(brightdata)
+
     async def _get_client(self):
         """Get or create async client context"""
         async with self._client_lock:
             if self._client is None:
+                if self._sdk_variant != "legacy_client":
+                    self._client = False
+                    self._client_context = None
+                    raise RuntimeError(
+                        f"BrightData SDK client API unavailable ({self._sdk_variant_reason or self._sdk_variant})"
+                    )
                 try:
                     from brightdata import BrightDataClient
                     init_kwargs: Dict[str, Any] = {}
@@ -222,7 +265,8 @@ class BrightDataSDKClient:
                 "timestamp": datetime.now().isoformat(),
                 "metadata": {
                     "source": "brightdata_sdk",
-                    "country": country
+                    "country": country,
+                    "sdk_variant": self._sdk_variant,
                 }
             }
 
@@ -328,6 +372,7 @@ class BrightDataSDKClient:
                 "metadata": {
                     "word_count": len(content.split()),
                     "source": "brightdata_sdk",
+                    "sdk_variant": self._sdk_variant,
                     "method": getattr(final_result, "method", None) if final_result is not None else None,
                     "has_publication_date": publication_date is not None
                 }

@@ -688,6 +688,24 @@ Website: N/A
             "instruction",
             "task:",
             "please review",
+            "output format",
+            "raw_output",
+            "final polish",
+            "refining the json",
+            "json structure",
+        )
+        marker_prefixes = (
+            "input:",
+            "**input:",
+            "raw_output:",
+            "output:",
+            "schema:",
+            "json:",
+            "confidence:",
+            "metrics:",
+            "insights:",
+            "recommendations:",
+            "content:",
         )
 
         content_items: List[str] = []
@@ -696,14 +714,22 @@ Website: N/A
             if not line or line.startswith("```"):
                 continue
 
+            # Drop common markdown emphasis wrappers before pattern checks.
+            line = re.sub(r"^\*+\s*", "", line)
+            line = re.sub(r"\s*\*+$", "", line)
             lowered = line.lower()
             if any(marker in lowered for marker in marker_patterns):
+                continue
+            if lowered.startswith(marker_prefixes):
                 continue
 
             line = re.sub(r"^\d+[\.\)]\s*", "", line)
             line = re.sub(r"^[-*•]\s*", "", line).strip()
 
             if line in {"{", "}", "[", "]"}:
+                continue
+            # Skip schema fragments and key/value scaffolding noise.
+            if re.match(r'^"?[a-z_ ]{2,40}"?\s*:\s*[\[{"]?$', line.lower()):
                 continue
             if len(line) < 24 and "http" not in line:
                 continue

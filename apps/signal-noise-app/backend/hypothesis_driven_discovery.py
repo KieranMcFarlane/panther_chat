@@ -690,6 +690,10 @@ class HypothesisDrivenDiscovery:
             os.getenv("DISCOVERY_JSON_REPAIR_ATTEMPT"),
             default=True,
         )
+        self.strict_evaluator_json_response = self._parse_bool_env(
+            os.getenv("DISCOVERY_STRICT_EVALUATOR_JSON"),
+            default=True,
+        )
         self.content_min_text_chars = int(os.getenv("DISCOVERY_CONTENT_MIN_TEXT_CHARS", "240"))
         self.content_max_script_density = float(os.getenv("DISCOVERY_CONTENT_MAX_SCRIPT_DENSITY", "0.12"))
         self.content_min_keyword_sentences = int(os.getenv("DISCOVERY_CONTENT_MIN_KEYWORD_SENTENCES", "1"))
@@ -725,7 +729,8 @@ class HypothesisDrivenDiscovery:
         return default
 
     def _get_claude_disabled_reason(self) -> Optional[str]:
-        getter = getattr(self.claude_client, "_get_disabled_reason", None)
+        claude_client = getattr(self, "claude_client", None)
+        getter = getattr(claude_client, "_get_disabled_reason", None)
         if callable(getter):
             try:
                 reason = getter()
@@ -746,8 +751,9 @@ class HypothesisDrivenDiscovery:
     def _update_llm_runtime_diagnostics(self, **kwargs: Any) -> None:
         diag = getattr(self, "_llm_runtime_diagnostics", None)
         if not isinstance(diag, dict):
+            claude_client = getattr(self, "claude_client", None)
             diag = {
-                "llm_provider": getattr(self.claude_client, "provider", "unknown"),
+                "llm_provider": getattr(claude_client, "provider", "unknown"),
                 "llm_retry_attempts": 0,
                 "llm_last_status": "not_started",
                 "llm_circuit_broken": False,
@@ -785,6 +791,7 @@ class HypothesisDrivenDiscovery:
             "json_parse_error": "heuristic_fallback",
             "request_error": "heuristic_fallback",
             "disabled": "heuristic_fallback",
+            "strict_json_enforced": "heuristic_fallback",
             "empty_response": "heuristic_fallback",
             "skipped_no_content": "skipped_no_evaluation",
             "skipped_low_yield": "skipped_no_evaluation",
@@ -801,9 +808,8 @@ class HypothesisDrivenDiscovery:
             f"Output:\n{response_text[:2000]}"
         )
         try:
-            repair = await self.claude_client.query(
+            repair = await self._query_evaluator_model(
                 prompt=repair_prompt,
-                model="haiku",
                 max_tokens=220,
                 system_prompt=(
                     "Return ONLY valid JSON. No prose, no markdown, no code fences. "
@@ -829,14 +835,16 @@ class HypothesisDrivenDiscovery:
     ) -> Optional[str]:
         text = str(content_text or "").strip()
         text_chars = len(text)
-        if text_chars < max(0, int(getattr(self, "content_min_text_chars", 240))):
-            return f"text_chars<{int(getattr(self, 'content_min_text_chars', 240))}"
+        min_text_chars = max(0, int(getattr(self, "content_min_text_chars", 0)))
+        if text_chars < min_text_chars:
+            return f"text_chars<{min_text_chars}"
 
         html = str(raw_html or "")
         script_count = html.lower().count("<script")
+        max_script_density = float(getattr(self, "content_max_script_density", 0.12))
         script_density = script_count / max(text_chars, 1)
-        if script_density > float(getattr(self, "content_max_script_density", 0.12)):
-            return f"script_density>{float(getattr(self, 'content_max_script_density', 0.12)):.2f}"
+        if script_density > max_script_density:
+            return f"script_density>{max_script_density:.2f}"
 
         keywords_by_category = {
             "procurement": ["procurement", "tender", "rfp", "vendor", "supplier"],
@@ -847,7 +855,7 @@ class HypothesisDrivenDiscovery:
         if category_key not in keywords_by_category:
             return None
 
-        minimum_keyword_sentences = max(0, int(getattr(self, "content_min_keyword_sentences", 1)))
+        minimum_keyword_sentences = max(0, int(getattr(self, "content_min_keyword_sentences", 0)))
         if minimum_keyword_sentences == 0:
             return None
         # Long pages frequently contain rich navigation/footer text where strict keyword
@@ -936,6 +944,37 @@ class HypothesisDrivenDiscovery:
         output["run_profile"] = diag.get("run_profile")
         output["run_mode"] = diag.get("run_mode")
         return output
+
+    async def _query_evaluator_model(
+        self,
+        *,
+        prompt: str,
+        max_tokens: int,
+        system_prompt: Optional[str] = None,
+        json_mode: bool = False,
+    ) -> Dict[str, Any]:
+        """Query evaluator model with compatibility fallback for minimal stubs."""
+        query_fn = getattr(getattr(self, "claude_client", None), "query", None)
+        if not callable(query_fn):
+            raise RuntimeError("Claude client query method is unavailable")
+
+        try:
+            return await query_fn(
+                prompt=prompt,
+                model="haiku",
+                max_tokens=max_tokens,
+                system_prompt=system_prompt,
+                json_mode=json_mode,
+            )
+        except TypeError as type_error:
+            message = str(type_error).lower()
+            if "unexpected keyword argument" in message:
+                return await query_fn(
+                    prompt=prompt,
+                    model="haiku",
+                    max_tokens=max_tokens,
+                )
+            raise
 
     @staticmethod
     def _extract_balanced_json_object(text: str, *, required_key: str = "decision") -> Optional[Dict[str, Any]]:
@@ -1127,13 +1166,17 @@ class HypothesisDrivenDiscovery:
         return 1400
 
     def _get_evaluation_max_tokens(self, hop_type: HopType) -> int:
+        press_release_tokens = int(getattr(self, "evaluation_max_tokens_press_release", 250))
+        official_site_tokens = int(getattr(self, "evaluation_max_tokens_official_site", 220))
+        careers_annual_report_tokens = int(getattr(self, "evaluation_max_tokens_careers_annual_report", 300))
+        default_tokens = int(getattr(self, "evaluation_max_tokens_default", 300))
         if hop_type == HopType.PRESS_RELEASE:
-            return self.evaluation_max_tokens_press_release
+            return press_release_tokens
         if hop_type == HopType.OFFICIAL_SITE:
-            return self.evaluation_max_tokens_official_site
+            return official_site_tokens
         if hop_type in {HopType.CAREERS_PAGE, HopType.ANNUAL_REPORT}:
-            return self.evaluation_max_tokens_careers_annual_report
-        return self.evaluation_max_tokens_default
+            return careers_annual_report_tokens
+        return default_tokens
 
     async def _get_cached_search(self, query: str, engine: str) -> Optional[Dict[str, Any]]:
         """Get cached search result if available and not expired"""
@@ -1579,7 +1622,7 @@ class HypothesisDrivenDiscovery:
 
                 content = content_result.get('content', '')
                 content_text = content if isinstance(content, str) else ''
-                resolved_context = self._resolved_url_context.get(url, {})
+                resolved_context = getattr(self, "_resolved_url_context", {}).get(url, {})
                 context_title = str(resolved_context.get("title") or "").strip()
                 context_snippet = str(resolved_context.get("snippet") or "").strip()
                 content_metadata = {
@@ -3373,7 +3416,7 @@ class HypothesisDrivenDiscovery:
             entity_name=entity_name
         )
         disabled_reason = self._get_claude_disabled_reason()
-        if self.heuristic_fallback_on_llm_unavailable and disabled_reason:
+        if getattr(self, "heuristic_fallback_on_llm_unavailable", True) and disabled_reason:
             self._update_llm_runtime_diagnostics(
                 llm_last_status="disabled",
                 llm_circuit_broken=True,
@@ -3489,9 +3532,8 @@ Return JSON:
         # Step 5: Call Claude API (existing implementation continues...)
         try:
             # Use ClaudeClient.query() instead of Anthropic SDK
-            response = await self.claude_client.query(
+            response = await self._query_evaluator_model(
                 prompt=prompt,
-                model="haiku",
                 max_tokens=self._get_evaluation_max_tokens(hop_type),
                 system_prompt=(
                     "Return ONLY valid JSON. No prose, no markdown, no code fences. "
@@ -3515,12 +3557,8 @@ Return JSON:
             response_text = response.get('content', '') or response.get('text', '')
             if not str(response_text or "").strip():
                 logger.info("Claude evaluation returned empty response; using heuristic fallback")
-                fallback = self._fallback_result_with_reason(
-                    "Empty model response",
-                    content=content,
-                    hop_type=hop_type,
-                    context=context,
-                )
+                fallback = self._fallback_result()
+                fallback["justification"] = "Empty model response"
                 self._update_llm_runtime_diagnostics(
                     llm_last_status="empty_response",
                     evaluation_mode="heuristic",
@@ -3559,6 +3597,25 @@ Return JSON:
                         evaluation_mode="llm",
                     )
                     return self._decorate_evaluation_result(repaired, evaluation_mode="llm")
+                strict_json = bool(getattr(self, "strict_evaluator_json_response", False))
+                response_preview = str(response_text or "")[:600]
+                if strict_json:
+                    logger.warning(
+                        "Strict evaluator JSON mode: response remained non-JSON after repair pass; "
+                        "using heuristic fallback (preview=%s)",
+                        response_preview,
+                    )
+                    fallback = self._fallback_result_with_reason(
+                        "Strict JSON mode enforced (non-JSON model response)",
+                        content=content,
+                        hop_type=hop_type,
+                        context=context,
+                    )
+                    self._update_llm_runtime_diagnostics(
+                        llm_last_status="strict_json_enforced",
+                        evaluation_mode="heuristic",
+                    )
+                    return self._decorate_evaluation_result(fallback, evaluation_mode="heuristic")
                 import re
                 decision_match = re.search(r'"decision"\s*:\s*"([A-Z_]+)"', response_text)
                 if decision_match:
@@ -3655,7 +3712,7 @@ Return JSON:
                         },
                         evaluation_mode="llm",
                     )
-                logger.warning(f"Could not parse Claude response: {response_text}")
+                logger.warning("Could not parse Claude response (preview=%s)", response_preview)
                 fallback = self._fallback_result_with_reason(
                     "Unparseable model response",
                     content=content,
