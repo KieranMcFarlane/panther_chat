@@ -5,6 +5,7 @@ import os
 import asyncio
 import random
 import time
+from collections import deque
 from datetime import datetime
 from dataclasses import dataclass
 import httpx
@@ -405,6 +406,37 @@ class ClaudeClient:
             0.0,
             float(os.getenv("CHUTES_MIN_REQUEST_INTERVAL_SECONDS", "0.2")),
         )
+        self.chutes_adaptive_pacing_enabled = self._parse_bool_env(
+            os.getenv("CHUTES_ADAPTIVE_PACING_ENABLED"),
+            default=True,
+        )
+        self.chutes_adaptive_interval_max_seconds = max(
+            0.0,
+            float(os.getenv("CHUTES_ADAPTIVE_INTERVAL_MAX_SECONDS", "17.3")),
+        )
+        self.chutes_adaptive_rate_limit_multiplier = max(
+            1.0,
+            float(os.getenv("CHUTES_ADAPTIVE_RATE_LIMIT_MULTIPLIER", "2.0")),
+        )
+        self.chutes_adaptive_error_multiplier = max(
+            1.0,
+            float(os.getenv("CHUTES_ADAPTIVE_ERROR_MULTIPLIER", "1.35")),
+        )
+        self.chutes_adaptive_recovery_factor = min(
+            1.0,
+            max(
+                0.0,
+                float(os.getenv("CHUTES_ADAPTIVE_RECOVERY_FACTOR", "0.9")),
+            ),
+        )
+        self.chutes_adaptive_window_seconds = max(
+            60.0,
+            float(os.getenv("CHUTES_ADAPTIVE_WINDOW_SECONDS", "600")),
+        )
+        self.chutes_adaptive_log_every_events = max(
+            1,
+            int(os.getenv("CHUTES_ADAPTIVE_LOG_EVERY_EVENTS", "10")),
+        )
         self.chutes_max_concurrent_requests = max(
             1,
             int(os.getenv("CHUTES_MAX_CONCURRENT_REQUESTS", "3")),
@@ -463,6 +495,9 @@ class ClaudeClient:
         self._chutes_rate_lock = asyncio.Lock()
         self._chutes_circuit_probe_lock = asyncio.Lock()
         self._chutes_last_request_monotonic = 0.0
+        self._chutes_effective_min_interval_seconds = self.chutes_min_request_interval_seconds
+        self._chutes_event_history = deque(maxlen=512)
+        self._chutes_event_counter = 0
         self._chutes_request_semaphore = asyncio.Semaphore(self.chutes_max_concurrent_requests)
 
         logger.info(f"🤖 ClaudeClient initialized (provider: {self.provider}, default: {self.default_model})")
@@ -753,17 +788,131 @@ class ClaudeClient:
         jitter = random.uniform(0.0, max(self.chutes_retry_jitter_seconds, 0.0))
         return max(0.0, base + jitter)
 
+    def _effective_chutes_min_interval_seconds(self) -> float:
+        if not self.chutes_adaptive_pacing_enabled:
+            return max(0.0, float(self.chutes_min_request_interval_seconds or 0.0))
+        return max(0.0, float(self._chutes_effective_min_interval_seconds or 0.0))
+
+    def _prune_chutes_event_history(self, now: Optional[float] = None) -> None:
+        if not self.chutes_adaptive_pacing_enabled:
+            return
+        if now is None:
+            now = time.monotonic()
+        cutoff = now - float(self.chutes_adaptive_window_seconds)
+        while self._chutes_event_history and self._chutes_event_history[0]["time"] < cutoff:
+            self._chutes_event_history.popleft()
+
+    def _record_chutes_event(
+        self,
+        status: str,
+        *,
+        wait_seconds: float = 0.0,
+        status_code: Optional[int] = None,
+    ) -> None:
+        if not self.chutes_adaptive_pacing_enabled:
+            return
+        now = time.monotonic()
+        self._chutes_event_history.append(
+            {
+                "time": now,
+                "status": str(status or "unknown"),
+                "wait_seconds": max(0.0, float(wait_seconds or 0.0)),
+                "status_code": status_code,
+            }
+        )
+        self._chutes_event_counter += 1
+        self._prune_chutes_event_history(now=now)
+
+    def _get_chutes_pacing_snapshot(self) -> Dict[str, Any]:
+        if self.chutes_adaptive_pacing_enabled:
+            self._prune_chutes_event_history()
+            events = list(self._chutes_event_history)
+        else:
+            events = []
+
+        window_seconds = float(self.chutes_adaptive_window_seconds)
+        event_count = len(events)
+        requests_per_minute = (event_count / window_seconds) * 60.0 if window_seconds > 0 else 0.0
+        rate_limit_events = sum(1 for event in events if event.get("status") == "rate_limit")
+        retryable_error_events = sum(1 for event in events if event.get("status") == "retryable_error")
+        success_events = sum(1 for event in events if event.get("status") == "success")
+        success_ratio = (success_events / event_count) if event_count else 0.0
+
+        return {
+            "chutes_effective_min_interval_seconds": round(self._effective_chutes_min_interval_seconds(), 4),
+            "chutes_window_requests_per_minute": round(requests_per_minute, 4),
+            "chutes_window_rate_limit_events": int(rate_limit_events),
+            "chutes_window_error_events": int(retryable_error_events),
+            "chutes_window_success_ratio": round(success_ratio, 4),
+        }
+
+    def _set_chutes_effective_min_interval(self, interval_seconds: float) -> None:
+        base = max(0.0, float(self.chutes_min_request_interval_seconds or 0.0))
+        if not self.chutes_adaptive_pacing_enabled:
+            self._chutes_effective_min_interval_seconds = base
+            return
+        ceiling = max(base, float(self.chutes_adaptive_interval_max_seconds or 0.0))
+        bounded = min(max(float(interval_seconds or 0.0), base), ceiling)
+        self._chutes_effective_min_interval_seconds = bounded
+
+    def _apply_chutes_adaptive_penalty(self, *, is_rate_limit: bool) -> None:
+        if not self.chutes_adaptive_pacing_enabled:
+            return
+        base = max(0.0, float(self.chutes_min_request_interval_seconds or 0.0))
+        floor = max(base, 0.05)
+        current = max(float(self._chutes_effective_min_interval_seconds or 0.0), floor)
+        multiplier = (
+            float(self.chutes_adaptive_rate_limit_multiplier)
+            if is_rate_limit
+            else float(self.chutes_adaptive_error_multiplier)
+        )
+        self._set_chutes_effective_min_interval(current * max(multiplier, 1.0))
+
+    def _apply_chutes_adaptive_recovery(self) -> None:
+        if not self.chutes_adaptive_pacing_enabled:
+            return
+        base = max(0.0, float(self.chutes_min_request_interval_seconds or 0.0))
+        current = max(float(self._chutes_effective_min_interval_seconds or 0.0), base)
+        if current <= base:
+            return
+        factor = min(1.0, max(0.0, float(self.chutes_adaptive_recovery_factor or 0.9)))
+        self._set_chutes_effective_min_interval(current * factor)
+
+    def _log_chutes_pacing_snapshot(
+        self,
+        *,
+        reason: str,
+        backoff_seconds: Optional[float] = None,
+        status_code: Optional[int] = None,
+    ) -> None:
+        if not self.chutes_adaptive_pacing_enabled:
+            return
+        snapshot = self._get_chutes_pacing_snapshot()
+        logger.info(
+            "Chutes pacing update: reason=%s status_code=%s backoff=%.2fs effective_min_interval=%.2fs rpm=%.2f rate_limits=%s retryable_errors=%s success_ratio=%.2f",
+            reason,
+            status_code,
+            float(backoff_seconds or 0.0),
+            float(snapshot["chutes_effective_min_interval_seconds"]),
+            float(snapshot["chutes_window_requests_per_minute"]),
+            int(snapshot["chutes_window_rate_limit_events"]),
+            int(snapshot["chutes_window_error_events"]),
+            float(snapshot["chutes_window_success_ratio"]),
+        )
+
     async def _apply_chutes_request_throttle(self) -> None:
         """Apply client-side pacing to reduce bursty 429 rate-limit responses."""
-        if self.chutes_min_request_interval_seconds <= 0.0:
+        min_interval_seconds = self._effective_chutes_min_interval_seconds()
+        if min_interval_seconds <= 0.0:
             return
 
         async with self._chutes_rate_lock:
             now = time.monotonic()
             elapsed = now - self._chutes_last_request_monotonic
-            wait_seconds = self.chutes_min_request_interval_seconds - elapsed
+            wait_seconds = min_interval_seconds - elapsed
             if wait_seconds > 0:
                 await asyncio.sleep(wait_seconds)
+                self._record_chutes_event("throttle_wait", wait_seconds=wait_seconds)
             self._chutes_last_request_monotonic = time.monotonic()
 
     def _set_last_request_diagnostics(
@@ -774,6 +923,7 @@ class ClaudeClient:
         circuit_broken: bool = False,
         disable_reason: Optional[str] = None,
     ) -> None:
+        pacing_snapshot = self._get_chutes_pacing_snapshot()
         self._last_request_diagnostics = {
             "llm_provider": self.provider,
             "llm_retry_attempts": max(0, int(retry_attempts)),
@@ -782,6 +932,7 @@ class ClaudeClient:
             "llm_disable_reason": disable_reason,
             "llm_circuit_seconds_remaining": self._current_circuit_remaining_seconds(),
             "llm_circuit_kind": getattr(self.__class__, "_api_disabled_kind", None),
+            **pacing_snapshot,
         }
         if last_status == "ok":
             self._reset_quota_circuit()
@@ -1104,6 +1255,14 @@ class ClaudeClient:
                     await asyncio.sleep(backoff_seconds)
                     continue
 
+                self._record_chutes_event("success")
+                self._apply_chutes_adaptive_recovery()
+                if (
+                    self.chutes_adaptive_pacing_enabled
+                    and (self._chutes_event_counter % self.chutes_adaptive_log_every_events == 0)
+                ):
+                    self._log_chutes_pacing_snapshot(reason="periodic_success")
+                pacing_snapshot = self._get_chutes_pacing_snapshot()
                 self._set_last_request_diagnostics(
                     retry_attempts=attempt,
                     last_status="ok",
@@ -1132,6 +1291,7 @@ class ClaudeClient:
                         "llm_last_status": "ok",
                         "llm_circuit_broken": False,
                         "llm_disable_reason": None,
+                        **pacing_snapshot,
                     },
                 }
             except Exception as e:
@@ -1154,6 +1314,16 @@ class ClaudeClient:
                             retry_after_seconds=None,
                             is_http_429=True,
                         )
+                        self._record_chutes_event(
+                            "quota_retry",
+                            wait_seconds=backoff_seconds,
+                            status_code=status_code,
+                        )
+                        self._log_chutes_pacing_snapshot(
+                            reason="quota_retry",
+                            backoff_seconds=backoff_seconds,
+                            status_code=status_code,
+                        )
                         await asyncio.sleep(backoff_seconds)
                         continue
                     if self.chutes_circuit_break_on_quota:
@@ -1163,6 +1333,11 @@ class ClaudeClient:
                             kind="quota",
                             cooldown_seconds=self._compute_quota_cooldown_seconds(),
                         )
+                    self._record_chutes_event("quota_exhausted", status_code=status_code)
+                    self._log_chutes_pacing_snapshot(
+                        reason="quota_exhausted",
+                        status_code=status_code,
+                    )
                     self._set_last_request_diagnostics(
                         retry_attempts=attempt,
                         last_status="quota_exhausted",
@@ -1184,6 +1359,12 @@ class ClaudeClient:
                     and self.chutes_fallback_model
                     and payload["model"] != self.chutes_fallback_model
                 ):
+                    self._apply_chutes_adaptive_penalty(is_rate_limit=False)
+                    self._record_chutes_event("retryable_error", status_code=status_code)
+                    self._log_chutes_pacing_snapshot(
+                        reason="fallback_switch",
+                        status_code=status_code,
+                    )
                     logger.warning(
                         "Retryable Chutes error for model=%s; switching to fallback model=%s",
                         payload["model"],
@@ -1198,6 +1379,7 @@ class ClaudeClient:
                         circuit_broken=bool(self._get_effective_disabled_reason()),
                         disable_reason=self._get_effective_disabled_reason(),
                     )
+                    self._record_chutes_event("request_failed", status_code=status_code)
                     raise LLMRequestError(
                         f"Chutes request failed (retryable={is_retryable}): {error_detail}",
                         retryable=is_retryable,
@@ -1220,6 +1402,17 @@ class ClaudeClient:
                     attempt=attempt,
                     retry_after_seconds=retry_after_seconds,
                     is_http_429=status_code == 429,
+                )
+                self._apply_chutes_adaptive_penalty(is_rate_limit=(status_code == 429))
+                self._record_chutes_event(
+                    "rate_limit" if status_code == 429 else "retryable_error",
+                    wait_seconds=backoff_seconds,
+                    status_code=status_code,
+                )
+                self._log_chutes_pacing_snapshot(
+                    reason="retry_backoff",
+                    backoff_seconds=backoff_seconds,
+                    status_code=status_code,
                 )
                 await asyncio.sleep(backoff_seconds)
 
@@ -1403,6 +1596,14 @@ class ClaudeClient:
                 if total_tokens is None and input_tokens is not None and output_tokens is not None:
                     total_tokens = input_tokens + output_tokens
 
+                self._record_chutes_event("success")
+                self._apply_chutes_adaptive_recovery()
+                if (
+                    self.chutes_adaptive_pacing_enabled
+                    and (self._chutes_event_counter % self.chutes_adaptive_log_every_events == 0)
+                ):
+                    self._log_chutes_pacing_snapshot(reason="periodic_success")
+                pacing_snapshot = self._get_chutes_pacing_snapshot()
                 self._set_last_request_diagnostics(
                     retry_attempts=attempt,
                     last_status="ok",
@@ -1426,6 +1627,7 @@ class ClaudeClient:
                         "llm_last_status": "ok",
                         "llm_circuit_broken": False,
                         "llm_disable_reason": None,
+                        **pacing_snapshot,
                     },
                 }
             except Exception as e:
@@ -1447,6 +1649,16 @@ class ClaudeClient:
                             retry_after_seconds=None,
                             is_http_429=True,
                         )
+                        self._record_chutes_event(
+                            "quota_retry",
+                            wait_seconds=backoff_seconds,
+                            status_code=status_code,
+                        )
+                        self._log_chutes_pacing_snapshot(
+                            reason="quota_retry",
+                            backoff_seconds=backoff_seconds,
+                            status_code=status_code,
+                        )
                         await asyncio.sleep(backoff_seconds)
                         continue
                     if self.chutes_circuit_break_on_quota:
@@ -1456,6 +1668,11 @@ class ClaudeClient:
                             kind="quota",
                             cooldown_seconds=self._compute_quota_cooldown_seconds(),
                         )
+                    self._record_chutes_event("quota_exhausted", status_code=status_code)
+                    self._log_chutes_pacing_snapshot(
+                        reason="quota_exhausted",
+                        status_code=status_code,
+                    )
                     self._set_last_request_diagnostics(
                         retry_attempts=attempt,
                         last_status="quota_exhausted",
@@ -1477,6 +1694,7 @@ class ClaudeClient:
                         circuit_broken=bool(self._get_effective_disabled_reason()),
                         disable_reason=self._get_effective_disabled_reason(),
                     )
+                    self._record_chutes_event("request_failed", status_code=status_code)
                     raise LLMRequestError(
                         f"Chutes Anthropic request failed (retryable={is_retryable}): {error_detail}",
                         retryable=is_retryable,
@@ -1499,6 +1717,17 @@ class ClaudeClient:
                     attempt=attempt,
                     retry_after_seconds=retry_after_seconds,
                     is_http_429=status_code == 429,
+                )
+                self._apply_chutes_adaptive_penalty(is_rate_limit=(status_code == 429))
+                self._record_chutes_event(
+                    "rate_limit" if status_code == 429 else "retryable_error",
+                    wait_seconds=backoff_seconds,
+                    status_code=status_code,
+                )
+                self._log_chutes_pacing_snapshot(
+                    reason="retry_backoff",
+                    backoff_seconds=backoff_seconds,
+                    status_code=status_code,
                 )
                 await asyncio.sleep(backoff_seconds)
 

@@ -20,6 +20,7 @@ from claude_client import ClaudeClient, LLMRequestError
 def _default_non_stream_for_legacy_tests(monkeypatch):
     monkeypatch.setenv("CHUTES_STREAM_ENABLED", "false")
     monkeypatch.setenv("CHUTES_MIN_REQUEST_INTERVAL_SECONDS", "0")
+    monkeypatch.setenv("CHUTES_ADAPTIVE_PACING_ENABLED", "false")
     ClaudeClient._api_disabled_reason = None
     ClaudeClient._api_disabled_at_monotonic = None
     ClaudeClient._api_disabled_kind = None
@@ -1253,6 +1254,118 @@ async def test_chutes_insufficient_balance_circuit_breaks_after_retry_budget(mon
     assert attempts["count"] == 3
     assert exc_info.value.retryable is False
     assert ClaudeClient._get_disabled_reason() == "insufficient balance"
+
+
+@pytest.mark.asyncio
+async def test_chutes_adaptive_pacing_increases_after_rate_limit_and_recovers(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_MAX_RETRIES", "1")
+    monkeypatch.setenv("CHUTES_RETRY_JITTER_SECONDS", "0")
+    monkeypatch.setenv("CHUTES_MIN_REQUEST_INTERVAL_SECONDS", "0")
+    monkeypatch.setenv("CHUTES_ADAPTIVE_PACING_ENABLED", "true")
+    monkeypatch.setenv("CHUTES_ADAPTIVE_RATE_LIMIT_MULTIPLIER", "2.0")
+    monkeypatch.setenv("CHUTES_ADAPTIVE_ERROR_MULTIPLIER", "1.5")
+    monkeypatch.setenv("CHUTES_ADAPTIVE_RECOVERY_FACTOR", "0.8")
+    monkeypatch.setenv("CHUTES_ADAPTIVE_INTERVAL_MAX_SECONDS", "1.0")
+
+    attempts = {"count": 0}
+
+    class SuccessResponse:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {
+                "choices": [{"message": {"content": "ok"}, "finish_reason": "stop"}],
+                "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2},
+            }
+
+    class FakeAsyncClient:
+        def __init__(self, timeout):
+            self.timeout = timeout
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            attempts["count"] += 1
+            if attempts["count"] == 1:
+                request = httpx.Request("POST", url)
+                response = httpx.Response(429, request=request)
+                raise httpx.HTTPStatusError("429 Too Many Requests", request=request, response=response)
+            return SuccessResponse()
+
+    async def fake_sleep(_seconds):
+        return None
+
+    monkeypatch.setattr(claude_client_module.httpx, "AsyncClient", FakeAsyncClient)
+    monkeypatch.setattr(claude_client_module.asyncio, "sleep", fake_sleep)
+
+    client = ClaudeClient()
+    await client.query(prompt="first", model="haiku", max_tokens=32)
+    interval_after_rate_limit = client._chutes_effective_min_interval_seconds
+
+    await client.query(prompt="second", model="haiku", max_tokens=32)
+    interval_after_success = client._chutes_effective_min_interval_seconds
+
+    assert interval_after_rate_limit > 0.0
+    assert interval_after_success < interval_after_rate_limit
+    assert interval_after_success >= 0.0
+
+
+@pytest.mark.asyncio
+async def test_chutes_adaptive_pacing_surfaces_rate_telemetry_in_diagnostics(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_MAX_RETRIES", "0")
+    monkeypatch.setenv("CHUTES_MIN_REQUEST_INTERVAL_SECONDS", "0")
+    monkeypatch.setenv("CHUTES_ADAPTIVE_PACING_ENABLED", "true")
+
+    class SuccessResponse:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {
+                "choices": [{"message": {"content": "ok"}, "finish_reason": "stop"}],
+                "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2},
+            }
+
+    class FakeAsyncClient:
+        def __init__(self, timeout):
+            self.timeout = timeout
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            return SuccessResponse()
+
+    monkeypatch.setattr(claude_client_module.httpx, "AsyncClient", FakeAsyncClient)
+
+    client = ClaudeClient()
+    result = await client.query(prompt="diag", model="haiku", max_tokens=32)
+    diag = result.get("inference_diagnostics", {})
+    runtime_diag = client.get_runtime_diagnostics()
+
+    assert "chutes_effective_min_interval_seconds" in diag
+    assert "chutes_window_requests_per_minute" in diag
+    assert "chutes_window_rate_limit_events" in diag
+    assert "chutes_window_error_events" in diag
+    assert "chutes_window_success_ratio" in diag
+    assert "chutes_effective_min_interval_seconds" in runtime_diag
+    assert "chutes_window_requests_per_minute" in runtime_diag
 
 
 def test_chutes_openai_provider_rejects_anthropic_base_when_strict(monkeypatch):
