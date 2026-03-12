@@ -371,6 +371,9 @@ class ClaudeClient:
 
     _api_disabled_reason: Optional[str] = None
     _api_disabled_at_monotonic: Optional[float] = None
+    _api_disabled_kind: Optional[str] = None
+    _api_disabled_until_monotonic: Optional[float] = None
+    _quota_circuit_trip_count: int = 0
 
     PROVIDER_ANTHROPIC = "anthropic"
     PROVIDER_CHUTES_OPENAI = "chutes_openai"
@@ -412,7 +415,13 @@ class ClaudeClient:
             default=True,
         )
         self.chutes_circuit_ttl_seconds = float(
-            os.getenv("CHUTES_CIRCUIT_TTL_SECONDS", "180")
+            os.getenv("CHUTES_CIRCUIT_TTL_SECONDS", "300")
+        )
+        self.chutes_circuit_ttl_max_seconds = float(
+            os.getenv("CHUTES_CIRCUIT_TTL_MAX_SECONDS", "1800")
+        )
+        self.chutes_circuit_ttl_multiplier = float(
+            os.getenv("CHUTES_CIRCUIT_TTL_MULTIPLIER", "2.0")
         )
         self.llm_provider_validation_strict = self._parse_bool_env(
             os.getenv("LLM_PROVIDER_VALIDATION_STRICT"),
@@ -428,7 +437,7 @@ class ClaudeClient:
 
         disable_flag = (os.getenv("DISABLE_CLAUDE_API") or "").strip().lower()
         if disable_flag in {"1", "true", "yes", "on"}:
-            self._disable_api("disabled by environment")
+            self._disable_api("disabled by environment", kind="env")
 
         if not self.api_key:
             logger.warning("⚠️ No LLM API key configured for selected provider - client will fail")
@@ -521,24 +530,64 @@ class ClaudeClient:
         return cls._api_disabled_reason
 
     @classmethod
-    def _disable_api(cls, reason: str):
+    def _disable_api(
+        cls,
+        reason: str,
+        *,
+        kind: str = "runtime",
+        cooldown_seconds: Optional[float] = None,
+    ):
         if not cls._api_disabled_reason:
             cls._api_disabled_reason = reason
             cls._api_disabled_at_monotonic = time.monotonic()
+            cls._api_disabled_kind = kind
+            if kind == "quota" and cooldown_seconds is not None and cooldown_seconds > 0:
+                cls._api_disabled_until_monotonic = cls._api_disabled_at_monotonic + cooldown_seconds
             logger.warning(f"⚠️ Disabling Claude API for current process: {reason}")
 
     @classmethod
     def _clear_disabled_reason(cls) -> None:
         cls._api_disabled_reason = None
         cls._api_disabled_at_monotonic = None
+        cls._api_disabled_kind = None
+        cls._api_disabled_until_monotonic = None
+
+    @classmethod
+    def _reset_quota_circuit(cls) -> None:
+        cls._quota_circuit_trip_count = 0
+        if cls._api_disabled_kind == "quota":
+            cls._clear_disabled_reason()
+
+    def _compute_quota_cooldown_seconds(self) -> float:
+        base = max(float(self.chutes_circuit_ttl_seconds or 0.0), 0.0)
+        if base <= 0.0:
+            return 0.0
+        multiplier = max(float(self.chutes_circuit_ttl_multiplier or 1.0), 1.0)
+        trips = max(int(getattr(self.__class__, "_quota_circuit_trip_count", 0)), 0)
+        cooldown = base * (multiplier ** max(trips - 1, 0))
+        max_cooldown = max(float(self.chutes_circuit_ttl_max_seconds or 0.0), base)
+        return min(cooldown, max_cooldown)
 
     def _get_effective_disabled_reason(self) -> Optional[str]:
         reason = self._get_disabled_reason()
         if not reason:
             return None
 
+        kind = getattr(self.__class__, "_api_disabled_kind", None)
+        if kind == "env":
+            return reason
+
         if self.provider not in {self.PROVIDER_CHUTES_OPENAI, self.PROVIDER_CHUTES_ANTHROPIC}:
             return reason
+
+        if kind == "quota":
+            disabled_until = getattr(self.__class__, "_api_disabled_until_monotonic", None)
+            if disabled_until is not None:
+                if time.monotonic() >= disabled_until:
+                    logger.info("♻️ Clearing expired Chutes quota circuit-break window")
+                    self._clear_disabled_reason()
+                    return None
+                return reason
 
         ttl = float(getattr(self, "chutes_circuit_ttl_seconds", 0.0) or 0.0)
         if ttl <= 0:
@@ -554,6 +603,20 @@ class ClaudeClient:
             return None
 
         return reason
+
+    def _current_circuit_remaining_seconds(self) -> Optional[float]:
+        if self._get_disabled_reason() is None:
+            return None
+        disabled_until = getattr(self.__class__, "_api_disabled_until_monotonic", None)
+        if disabled_until is not None:
+            return max(0.0, disabled_until - time.monotonic())
+        disabled_at = getattr(self.__class__, "_api_disabled_at_monotonic", None)
+        if disabled_at is None:
+            return None
+        ttl = float(getattr(self, "chutes_circuit_ttl_seconds", 0.0) or 0.0)
+        if ttl <= 0:
+            return None
+        return max(0.0, ttl - (time.monotonic() - disabled_at))
 
     @staticmethod
     def _is_insufficient_balance_error(error: Exception) -> bool:
@@ -643,7 +706,11 @@ class ClaudeClient:
             "llm_last_status": last_status,
             "llm_circuit_broken": bool(circuit_broken),
             "llm_disable_reason": disable_reason,
+            "llm_circuit_seconds_remaining": self._current_circuit_remaining_seconds(),
+            "llm_circuit_kind": getattr(self.__class__, "_api_disabled_kind", None),
         }
+        if last_status == "ok":
+            self._reset_quota_circuit()
 
     def get_runtime_diagnostics(self) -> Dict[str, Any]:
         return dict(self._last_request_diagnostics)
@@ -839,7 +906,12 @@ class ClaudeClient:
         except Exception as e:
             logger.error(f"Claude API request failed: {e}")
             if self._is_insufficient_balance_error(e):
-                self._disable_api("insufficient balance")
+                self.__class__._quota_circuit_trip_count += 1
+                self._disable_api(
+                    "insufficient balance",
+                    kind="quota",
+                    cooldown_seconds=self._compute_quota_cooldown_seconds(),
+                )
             raise
 
     async def _query_chutes(
@@ -1008,7 +1080,12 @@ class ClaudeClient:
                         await asyncio.sleep(backoff_seconds)
                         continue
                     if self.chutes_circuit_break_on_quota:
-                        self._disable_api("insufficient balance")
+                        self.__class__._quota_circuit_trip_count += 1
+                        self._disable_api(
+                            "insufficient balance",
+                            kind="quota",
+                            cooldown_seconds=self._compute_quota_cooldown_seconds(),
+                        )
                     self._set_last_request_diagnostics(
                         retry_attempts=attempt,
                         last_status="quota_exhausted",
@@ -1296,7 +1373,12 @@ class ClaudeClient:
                         await asyncio.sleep(backoff_seconds)
                         continue
                     if self.chutes_circuit_break_on_quota:
-                        self._disable_api("insufficient balance")
+                        self.__class__._quota_circuit_trip_count += 1
+                        self._disable_api(
+                            "insufficient balance",
+                            kind="quota",
+                            cooldown_seconds=self._compute_quota_cooldown_seconds(),
+                        )
                     self._set_last_request_diagnostics(
                         retry_attempts=attempt,
                         last_status="quota_exhausted",

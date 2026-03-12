@@ -22,6 +22,9 @@ def _default_non_stream_for_legacy_tests(monkeypatch):
     monkeypatch.setenv("CHUTES_MIN_REQUEST_INTERVAL_SECONDS", "0")
     ClaudeClient._api_disabled_reason = None
     ClaudeClient._api_disabled_at_monotonic = None
+    ClaudeClient._api_disabled_kind = None
+    ClaudeClient._api_disabled_until_monotonic = None
+    ClaudeClient._quota_circuit_trip_count = 0
 
 
 def test_chutes_circuit_breaker_reason_expires_after_ttl(monkeypatch):
@@ -32,11 +35,47 @@ def test_chutes_circuit_breaker_reason_expires_after_ttl(monkeypatch):
 
     ClaudeClient._api_disabled_reason = "insufficient balance"
     ClaudeClient._api_disabled_at_monotonic = time.monotonic() - 5.0
+    ClaudeClient._api_disabled_kind = "quota"
+    ClaudeClient._api_disabled_until_monotonic = time.monotonic() - 0.5
 
     client = ClaudeClient()
     assert client._get_effective_disabled_reason() is None
     assert ClaudeClient._api_disabled_reason is None
     assert ClaudeClient._api_disabled_at_monotonic is None
+    assert ClaudeClient._api_disabled_kind is None
+
+
+def test_chutes_env_disable_does_not_auto_expire(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_CIRCUIT_TTL_SECONDS", "1")
+
+    ClaudeClient._api_disabled_reason = "disabled by environment"
+    ClaudeClient._api_disabled_at_monotonic = time.monotonic() - 100.0
+    ClaudeClient._api_disabled_kind = "env"
+    ClaudeClient._api_disabled_until_monotonic = time.monotonic() - 99.0
+
+    client = ClaudeClient()
+    assert client._get_effective_disabled_reason() == "disabled by environment"
+    assert ClaudeClient._api_disabled_reason == "disabled by environment"
+
+
+def test_chutes_quota_cooldown_grows_with_trip_count(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_CIRCUIT_TTL_SECONDS", "60")
+    monkeypatch.setenv("CHUTES_CIRCUIT_TTL_MULTIPLIER", "2")
+    monkeypatch.setenv("CHUTES_CIRCUIT_TTL_MAX_SECONDS", "300")
+
+    client = ClaudeClient()
+    ClaudeClient._quota_circuit_trip_count = 1
+    assert client._compute_quota_cooldown_seconds() == 60.0
+    ClaudeClient._quota_circuit_trip_count = 2
+    assert client._compute_quota_cooldown_seconds() == 120.0
+    ClaudeClient._quota_circuit_trip_count = 5
+    assert client._compute_quota_cooldown_seconds() == 300.0
 
 
 def test_claude_client_prefers_chutes_when_configured(monkeypatch):
