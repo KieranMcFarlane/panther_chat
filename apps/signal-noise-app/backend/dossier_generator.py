@@ -68,6 +68,10 @@ class EntityDossierGenerator:
             0,
             int(os.getenv("DOSSIER_SECTION_MAX_TOKENS_CAP", "0")),
         )
+        repair_env = os.getenv("DOSSIER_SECTION_JSON_REPAIR_ATTEMPT")
+        self.section_json_repair_attempt = (
+            str(repair_env if repair_env is not None else "true").strip().lower() in {"1", "true", "yes", "on"}
+        )
         disable_question_extraction_env = os.getenv("DOSSIER_DISABLE_QUESTION_EXTRACTION")
         self.disable_question_extraction = (
             str(disable_question_extraction_env or "").strip().lower() in {"1", "true", "yes", "on"}
@@ -545,14 +549,20 @@ Website: N/A
 
             content_text = response.get("content", "")
 
-            # Parse response (expect JSON)
-            section_data = self._extract_last_valid_json_block(content_text)
-            if section_data is not None:
-                if isinstance(section_data, list):
-                    section_data = {"content": section_data}
-            else:
-                # Fallback: treat entire response as content
-                section_data = {"content": [content_text]}
+            section_data = self._extract_section_data(content_text)
+            if self._section_data_needs_repair(section_data):
+                if not self.section_json_repair_attempt:
+                    raise ValueError(f"Section {section_id} returned non-JSON or instruction-echo output")
+                repair_prompt = self._build_section_json_repair_prompt(content_text)
+                repair_response = await self.claude_client.query(
+                    prompt=repair_prompt,
+                    model=claude_model,
+                    max_tokens=min(max_tokens, 600),
+                )
+                repaired_text = repair_response.get("content", "")
+                section_data = self._extract_section_data(repaired_text)
+                if self._section_data_needs_repair(section_data):
+                    raise ValueError(f"Section {section_id} JSON repair failed")
 
             # Create DossierSection
             section = DossierSection(
@@ -575,6 +585,47 @@ Website: N/A
         except Exception as e:
             logger.error(f"Error generating section {section_id} with {model}: {e}")
             raise
+
+    def _extract_section_data(self, content_text: str) -> Dict[str, Any]:
+        """Extract structured section data from model output."""
+        section_data = self._extract_last_valid_json_block(content_text)
+        if isinstance(section_data, list):
+            return {"content": section_data}
+        if isinstance(section_data, dict):
+            return section_data
+        return {"content": [content_text]}
+
+    def _section_data_needs_repair(self, section_data: Dict[str, Any]) -> bool:
+        content = section_data.get("content")
+        if not isinstance(content, list) or not content:
+            return True
+
+        first_text = next((item for item in content if isinstance(item, str) and item.strip()), "")
+        if not first_text:
+            return True
+
+        normalized = first_text.strip().lower()
+        instruction_markers = (
+            "analyze the request",
+            "the user wants",
+            "task:",
+            "instruction",
+            "evaluate whether",
+            "please review",
+            "request context",
+            "return valid json",
+        )
+        return any(marker in normalized for marker in instruction_markers)
+
+    @staticmethod
+    def _build_section_json_repair_prompt(raw_output: str) -> str:
+        return (
+            "Rewrite the following output as strict JSON only.\n"
+            "Return a single JSON object with keys: content (array of strings), metrics (array), "
+            "insights (array), recommendations (array), confidence (number 0-1).\n"
+            "Do not include markdown, commentary, or extra text.\n\n"
+            f"RAW_OUTPUT:\n{raw_output}"
+        )
 
     def _estimate_section_cost(self, model: str, max_tokens: int) -> float:
         """

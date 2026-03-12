@@ -209,6 +209,7 @@ async def test_generate_sections_parallel_respects_section_parallelism():
     generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
     generator.section_parallelism = 1
     generator.section_max_tokens_cap = 0
+    generator.section_json_repair_attempt = True
     peak = 0
     active = 0
 
@@ -246,6 +247,7 @@ async def test_generate_section_applies_max_tokens_cap():
     generator.claude_client = _FakeClaude()
     generator.section_max_tokens_cap = 1200
     generator.section_parallelism = 1
+    generator.section_json_repair_attempt = True
     generator.section_templates = {
         "core_information": {
             "model": "haiku",
@@ -263,3 +265,71 @@ async def test_generate_section_applies_max_tokens_cap():
 
     assert generator.claude_client.max_tokens_seen == 1200
     assert section.id == "core_information"
+
+
+@pytest.mark.asyncio
+async def test_generate_section_repairs_prompt_echo_response_with_json_retry():
+    class _FakeClaude:
+        def __init__(self):
+            self.calls = 0
+
+        async def query(self, prompt, model, max_tokens):
+            self.calls += 1
+            if self.calls == 1:
+                return {"content": "1. **Analyze the Request:** this is instruction echo, not section output."}
+            return {"content": "{\"content\":[\"Recovered section content\"],\"confidence\":0.82}"}
+
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.claude_client = _FakeClaude()
+    generator.section_max_tokens_cap = 0
+    generator.section_parallelism = 1
+    generator.section_json_repair_attempt = True
+    generator.section_templates = {
+        "core_information": {
+            "model": "haiku",
+            "prompt_template": "core_info_template",
+            "max_tokens": 1200,
+            "description": "Basic entity information",
+        }
+    }
+
+    section = await generator._generate_section(
+        section_id="core_information",
+        entity_data={"entity_name": "FIBA"},
+        model="haiku",
+    )
+
+    assert section.content == ["Recovered section content"]
+    assert section.confidence == 0.82
+    assert generator.claude_client.calls == 2
+
+
+@pytest.mark.asyncio
+async def test_generate_sections_parallel_falls_back_when_json_repair_fails():
+    class _FakeClaude:
+        async def query(self, prompt, model, max_tokens):
+            return {"content": "Please review the request context and produce output."}
+
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.claude_client = _FakeClaude()
+    generator.section_max_tokens_cap = 0
+    generator.section_parallelism = 1
+    generator.section_json_repair_attempt = True
+    generator.section_templates = {
+        "core_information": {
+            "model": "haiku",
+            "prompt_template": "core_info_template",
+            "max_tokens": 1200,
+            "description": "Basic entity information",
+        }
+    }
+
+    sections = await generator._generate_sections_parallel(
+        section_ids=["core_information"],
+        entity_data={"entity_name": "FIBA"},
+        model="haiku",
+    )
+
+    assert len(sections) == 1
+    assert sections[0].content == ["Section generation failed. Please try again later."]
+    assert sections[0].confidence == 0.0
