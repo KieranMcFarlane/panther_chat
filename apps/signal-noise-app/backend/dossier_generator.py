@@ -55,6 +55,19 @@ class EntityDossierGenerator:
         """
         self.claude_client = claude_client
         self.falkordb_client = falkordb_client
+        self._last_entity_data_by_id: Dict[str, Dict[str, Any]] = {}
+        self.section_parallelism = max(
+            1,
+            int(os.getenv("DOSSIER_SECTION_PARALLELISM", "2")),
+        )
+        self.section_max_tokens_cap = max(
+            0,
+            int(os.getenv("DOSSIER_SECTION_MAX_TOKENS_CAP", "0")),
+        )
+        disable_question_extraction_env = os.getenv("DOSSIER_DISABLE_QUESTION_EXTRACTION")
+        self.disable_question_extraction = (
+            str(disable_question_extraction_env or "").strip().lower() in {"1", "true", "yes", "on"}
+        )
 
         # Section templates with model assignments
         self.section_templates = {
@@ -423,18 +436,22 @@ Website: N/A
             dossier.sections.extend(opus_results)
 
         # Extract questions from sections (for discovery feedback loop)
-        try:
-            from backend.dossier_question_extractor import DossierQuestionExtractor
-            question_extractor = DossierQuestionExtractor(self.claude_client)
-            dossier.questions = await question_extractor.extract_questions_from_dossier(
-                dossier.sections,
-                entity_name,
-                max_per_section=3
-            )
-            logger.info(f"Extracted {len(dossier.questions)} questions from dossier sections")
-        except Exception as e:
-            logger.warning(f"Could not extract questions from dossier: {e}")
+        if self.disable_question_extraction:
+            logger.info("Skipping dossier question extraction (DOSSIER_DISABLE_QUESTION_EXTRACTION=true)")
             dossier.questions = []
+        else:
+            try:
+                from dossier_question_extractor import DossierQuestionExtractor
+                question_extractor = DossierQuestionExtractor(self.claude_client)
+                dossier.questions = await question_extractor.extract_questions_from_dossier(
+                    dossier.sections,
+                    entity_name,
+                    max_per_section=3
+                )
+                logger.info(f"Extracted {len(dossier.questions)} questions from dossier sections")
+            except Exception as e:
+                logger.warning(f"Could not extract questions from dossier: {e}")
+                dossier.questions = []
 
         # Calculate metrics
         end_time = datetime.now(timezone.utc)
@@ -468,15 +485,18 @@ Website: N/A
         Returns:
             List of generated DossierSection objects
         """
-        # Create tasks for parallel execution
-        tasks = [
-            self._generate_section(
-                section_id=section_id,
-                entity_data=entity_data,
-                model=model
-            )
-            for section_id in section_ids
-        ]
+        semaphore = asyncio.Semaphore(self.section_parallelism)
+
+        async def _run(section_id: str):
+            async with semaphore:
+                return await self._generate_section(
+                    section_id=section_id,
+                    entity_data=entity_data,
+                    model=model,
+                )
+
+        # Create tasks for parallel execution with bounded concurrency.
+        tasks = [_run(section_id) for section_id in section_ids]
 
         # Execute in parallel
         results = await asyncio.gather(*tasks, return_exceptions=True)
@@ -514,6 +534,9 @@ Website: N/A
         template_info = self.section_templates.get(section_id)
         if not template_info:
             raise ValueError(f"Unknown section ID: {section_id}")
+        max_tokens = int(template_info["max_tokens"])
+        if self.section_max_tokens_cap > 0:
+            max_tokens = min(max_tokens, self.section_max_tokens_cap)
 
         # Load prompt template
         from backend.dossier_templates import get_prompt_template
@@ -539,7 +562,7 @@ Website: N/A
             response = await self.claude_client.query(
                 prompt=prompt,
                 model=claude_model,
-                max_tokens=template_info["max_tokens"]
+                max_tokens=max_tokens
             )
 
             content_text = response.get("content", "")
@@ -593,7 +616,7 @@ Website: N/A
             )
 
             # Track cost (approximate)
-            section_cost = self._estimate_section_cost(model, template_info["max_tokens"])
+            section_cost = self._estimate_section_cost(model, max_tokens)
             section.total_cost_usd = section_cost
 
             return section
