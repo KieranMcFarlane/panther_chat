@@ -20,7 +20,8 @@ export interface BadgeMapping {
 export interface BadgeComponentProps {
   entity: {
     id: string | number
-    neo4j_id: string | number
+    graph_id?: string | number
+    neo4j_id?: string | number
     badge_s3_url?: string
     labels: string[]
     properties: Record<string, any>

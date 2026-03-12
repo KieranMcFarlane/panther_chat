@@ -67,7 +67,7 @@ export function FeatureCards() {
     {
       icon: Database,
       title: 'Entity Browser',
-      description: 'Comprehensive sports entity database with Neo4j knowledge graph integration',
+      description: 'Comprehensive sports entity database with graph-backed intelligence integration',
       stats: '4,422+ entities | Real-time search',
       href: '/entity-browser',
       color: 'text-blue-400',
@@ -137,7 +137,6 @@ export function FeatureCards() {
     </div>
   )
 }
-
 
 
 

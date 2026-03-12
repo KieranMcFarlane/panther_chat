@@ -704,5 +704,36 @@ body.static-bg {
   }
 }
 
+/* Runtime chat context: render as a compact absolute dialog, not a top-page overlay */
+.chat-context-strip {
+  position: absolute !important;
+  top: 0.75rem !important;
+  right: 0.75rem !important;
+  left: auto !important;
+  width: min(32rem, calc(100vw - 1.5rem)) !important;
+  max-height: 40vh !important;
+  overflow: auto !important;
+  z-index: 30 !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.35rem !important;
+  padding: 0.5rem 0.6rem !important;
+  border-radius: 0.6rem !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  background: rgba(15, 23, 42, 0.92) !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+.chat-context-strip > span {
+  font-size: 0.72rem !important;
+  line-height: 1.2 !important;
+  color: #e5e7eb !important;
+  background: rgba(30, 41, 59, 0.85) !important;
+  border: 1px solid rgba(148, 163, 184, 0.24) !important;
+  border-radius: 9999px !important;
+  padding: 0.2rem 0.5rem !important;
+  white-space: nowrap !important;
+}
 
 

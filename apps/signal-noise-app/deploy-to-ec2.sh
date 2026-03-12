@@ -87,7 +87,7 @@ FILES_TO_COPY=(
     "requirements-webhook.txt"
     ".env.example"
     ".mcp.json"
-    "neo4j-mcp-server.js"
+    "backend/falkordb_mcp_server_fastmcp.py"
 )
 
 # Create temporary directory for packaging
@@ -189,10 +189,10 @@ ssh -i "$PEM_FILE" "$VPS_USER@$VPS_IP" << EOF
     cat > .env << 'ENVEOF'
 ANTHROPIC_BASE_URL=https://api.z.ai/api/anthropic
 ANTHROPIC_AUTH_TOKEN=c4b860075e254d219887557d13477116.e8Gtsb5sXuDggh2c
-NEO4J_URI=neo4j+s://demo.databases.neo4j.io
-NEO4J_USERNAME=neo4j
-NEO4J_PASSWORD=
-NEO4J_DATABASE=neo4j
+FALKORDB_URI=redis://demo-falkordb:6379
+FALKORDB_USER=
+FALKORDB_PASSWORD=
+FALKORDB_DATABASE=neo4j
 PORT=8001
 HOST=0.0.0.0
 ENVEOF

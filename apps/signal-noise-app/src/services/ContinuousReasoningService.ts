@@ -2,12 +2,13 @@
  * Continuous Reasoning Service - 24/7 AI-powered monitoring and analysis
  */
 
-import { Neo4jService } from '@/lib/neo4j';
 import { supabase } from '@/lib/supabase-client';
 import { Anthropic } from '@anthropic-ai/sdk';
 import { query } from '@anthropic-ai/claude-agent-sdk';
 import { z } from 'zod';
 import { keywordMinesService } from './KeywordMinesService';
+import { EntityCacheService } from './EntityCacheService';
+import { buildAnyGraphEntityLookupFilter, buildGraphEntityLookupFilter, resolveGraphId, withRelationshipGraphIds } from '@/lib/graph-id';
 import { OptimizedPrompts, OptimizedPromptConfig, PromptOptimizer } from '@/lib/optimized-prompts';
 import fs from 'fs/promises';
 import path from 'path';
@@ -130,8 +131,16 @@ interface Recommendation {
   timeline: string;
 }
 
+interface CachedEntityRecord {
+  graph_id?: string;
+  neo4j_id?: string;
+  labels: string[];
+  properties: Record<string, any>;
+  updated_at?: string;
+}
+
 export class ContinuousReasoningService {
-  private neo4jService: Neo4jService;
+  private entityCacheService: EntityCacheService;
   private anthropic: Anthropic;
   private claudeAgent: any;
   private isRunning = false;
@@ -140,7 +149,7 @@ export class ContinuousReasoningService {
   private totalEntities = 4422; // Updated from 3,311 to 4,422 total entities
 
   constructor() {
-    this.neo4jService = new Neo4jService();
+    this.entityCacheService = new EntityCacheService();
     this.anthropic = new Anthropic({
       apiKey: process.env.ANTHROPIC_API_KEY || ''
     });
@@ -162,7 +171,7 @@ export class ContinuousReasoningService {
             systemPrompt: {
               type: 'preset',
               preset: 'claude_code',
-              append: `You are an advanced Sports Intelligence AI assistant with access to a Neo4j database containing ${this.totalEntities}+ sports entities. 
+              append: `You are an advanced Sports Intelligence AI assistant with access to a FalkorDB-backed graph and Supabase cache containing ${this.totalEntities}+ sports entities. 
               
               Your capabilities include:
               - Analyzing sports entities for business opportunities
@@ -247,7 +256,8 @@ export class ContinuousReasoningService {
     this.isRunning = true;
 
     // Initialize services
-    await this.neo4jService.initialize();
+    await this.entityCacheService.initialize();
+    await this.refreshTotalEntities();
     await this.initializeClaudeAgent();
     
     // Schedule periodic tasks
@@ -315,42 +325,30 @@ export class ContinuousReasoningService {
    */
   private async scheduleHighPriorityEntityAnalysis(): Promise<void> {
     try {
-      const session = this.neo4jService.getDriver().session();
-      try {
-        const result = await session.run(`
-          MATCH (n)
-          WHERE n.priorityScore >= 8
-            AND (n:Entity OR n:Organization OR n:RFP)
-          RETURN n, labels(n) as labels
-          ORDER BY n.priorityScore DESC, n.last_updated DESC
-          LIMIT 25
-        `);
+      const entities = await this.getSchedulableEntities({
+        minPriority: 8,
+        limit: 25
+      });
 
-        for (const record of result.records) {
-          const node = record.get('n');
-          const labels = record.get('labels');
-          const entityId = node.identity.toString();
-          
-          // Check if entity was analyzed recently
-          const lastAnalysis = this.analysisHistory.get(entityId);
-          const now = new Date();
-          
-          if (!lastAnalysis || (now.getTime() - new Date(lastAnalysis).getTime()) > 15 * 60 * 1000) {
-            await this.queueAnalysisTask({
-              id: `task_${entityId}_${Date.now()}`,
-              entity_id: entityId,
-              entity_name: node.properties.name || 'Unknown',
-              task_type: 'periodic_analysis',
-              priority: 'high',
-              data: { entity: node.properties, labels },
-              scheduled_at: new Date().toISOString(),
-              retry_count: 0,
-              max_retries: 3
-            });
-          }
+      for (const entity of entities) {
+        const entityId = resolveGraphId(entity);
+        if (!entityId) continue;
+        const lastAnalysis = this.analysisHistory.get(entityId);
+        const now = new Date();
+
+        if (!lastAnalysis || (now.getTime() - new Date(lastAnalysis).getTime()) > 15 * 60 * 1000) {
+          await this.queueAnalysisTask({
+            id: `task_${entityId}_${Date.now()}`,
+            entity_id: entityId,
+            entity_name: entity.properties?.name || 'Unknown',
+            task_type: 'periodic_analysis',
+            priority: 'high',
+            data: { entity: entity.properties || {}, labels: entity.labels || [] },
+            scheduled_at: new Date().toISOString(),
+            retry_count: 0,
+            max_retries: 3
+          });
         }
-      } finally {
-        await session.close();
       }
     } catch (error) {
       console.error('❌ Failed to schedule high priority analysis:', error);
@@ -362,41 +360,31 @@ export class ContinuousReasoningService {
    */
   private async scheduleMediumPriorityEntityAnalysis(): Promise<void> {
     try {
-      const session = this.neo4jService.getDriver().session();
-      try {
-        const result = await session.run(`
-          MATCH (n)
-          WHERE n.priorityScore >= 5 AND n.priorityScore < 8
-            AND (n:Entity OR n:Organization OR n:RFP)
-          RETURN n, labels(n) as labels
-          ORDER BY n.priorityScore DESC, n.last_updated DESC
-          LIMIT 75
-        `);
+      const entities = await this.getSchedulableEntities({
+        minPriority: 5,
+        maxPriorityExclusive: 8,
+        limit: 75
+      });
 
-        for (const record of result.records) {
-          const node = record.get('n');
-          const labels = record.get('labels');
-          const entityId = node.identity.toString();
-          
-          const lastAnalysis = this.analysisHistory.get(entityId);
-          const now = new Date();
-          
-          if (!lastAnalysis || (now.getTime() - new Date(lastAnalysis).getTime()) > 1 * 60 * 60 * 1000) {
-            await this.queueAnalysisTask({
-              id: `task_${entityId}_${Date.now()}`,
-              entity_id: entityId,
-              entity_name: node.properties.name || 'Unknown',
-              task_type: 'periodic_analysis',
-              priority: 'medium',
-              data: { entity: node.properties, labels },
-              scheduled_at: new Date().toISOString(),
-              retry_count: 0,
-              max_retries: 2
-            });
-          }
+      for (const entity of entities) {
+        const entityId = resolveGraphId(entity);
+        if (!entityId) continue;
+        const lastAnalysis = this.analysisHistory.get(entityId);
+        const now = new Date();
+
+        if (!lastAnalysis || (now.getTime() - new Date(lastAnalysis).getTime()) > 1 * 60 * 60 * 1000) {
+          await this.queueAnalysisTask({
+            id: `task_${entityId}_${Date.now()}`,
+            entity_id: entityId,
+            entity_name: entity.properties?.name || 'Unknown',
+            task_type: 'periodic_analysis',
+            priority: 'medium',
+            data: { entity: entity.properties || {}, labels: entity.labels || [] },
+            scheduled_at: new Date().toISOString(),
+            retry_count: 0,
+            max_retries: 2
+          });
         }
-      } finally {
-        await session.close();
       }
     } catch (error) {
       console.error('❌ Failed to schedule medium priority analysis:', error);
@@ -408,41 +396,31 @@ export class ContinuousReasoningService {
    */
   private async scheduleLowPriorityEntityAnalysis(): Promise<void> {
     try {
-      const session = this.neo4jService.getDriver().session();
-      try {
-        const result = await session.run(`
-          MATCH (n)
-          WHERE n.priorityScore < 5 OR n.priorityScore IS NULL
-            AND (n:Entity OR n:Organization OR n:RFP)
-          RETURN n, labels(n) as labels
-          ORDER BY n.last_updated DESC
-          LIMIT 150
-        `);
+      const entities = await this.getSchedulableEntities({
+        maxPriorityExclusive: 5,
+        includeNullPriority: true,
+        limit: 150
+      });
 
-        for (const record of result.records) {
-          const node = record.get('n');
-          const labels = record.get('labels');
-          const entityId = node.identity.toString();
-          
-          const lastAnalysis = this.analysisHistory.get(entityId);
-          const now = new Date();
-          
-          if (!lastAnalysis || (now.getTime() - new Date(lastAnalysis).getTime()) > 6 * 60 * 60 * 1000) {
-            await this.queueAnalysisTask({
-              id: `task_${entityId}_${Date.now()}`,
-              entity_id: entityId,
-              entity_name: node.properties.name || 'Unknown',
-              task_type: 'periodic_analysis',
-              priority: 'low',
-              data: { entity: node.properties, labels },
-              scheduled_at: new Date().toISOString(),
-              retry_count: 0,
-              max_retries: 1
-            });
-          }
+      for (const entity of entities) {
+        const entityId = resolveGraphId(entity);
+        if (!entityId) continue;
+        const lastAnalysis = this.analysisHistory.get(entityId);
+        const now = new Date();
+
+        if (!lastAnalysis || (now.getTime() - new Date(lastAnalysis).getTime()) > 6 * 60 * 60 * 1000) {
+          await this.queueAnalysisTask({
+            id: `task_${entityId}_${Date.now()}`,
+            entity_id: entityId,
+            entity_name: entity.properties?.name || 'Unknown',
+            task_type: 'periodic_analysis',
+            priority: 'low',
+            data: { entity: entity.properties || {}, labels: entity.labels || [] },
+            scheduled_at: new Date().toISOString(),
+            retry_count: 0,
+            max_retries: 1
+          });
         }
-      } finally {
-        await session.close();
       }
     } catch (error) {
       console.error('❌ Failed to schedule low priority analysis:', error);
@@ -454,36 +432,23 @@ export class ContinuousReasoningService {
    */
   private async scheduleRelationshipAnalysis(): Promise<void> {
     try {
-      const session = this.neo4jService.getDriver().session();
-      try {
-        // Find entities with recent relationship changes
-        const result = await session.run(`
-          MATCH (n)-[r]-(m)
-          WHERE n:Entity OR n:Organization OR n:RFP
-            AND (r.last_updated IS NULL OR r.last_updated > datetime() - duration('PT4H'))
-          RETURN DISTINCT n, labels(n) as labels
-          LIMIT 30
-        `);
+      const entities = await this.getEntitiesWithRelationshipActivity(30);
 
-        for (const record of result.records) {
-          const node = record.get('n');
-          const labels = record.get('labels');
-          const entityId = node.identity.toString();
-          
-          await this.queueAnalysisTask({
-            id: `rel_task_${entityId}_${Date.now()}`,
-            entity_id: entityId,
-            entity_name: node.properties.name || 'Unknown',
-            task_type: 'relationship_analysis',
-            priority: 'medium',
-            data: { entity: node.properties, labels },
-            scheduled_at: new Date().toISOString(),
-            retry_count: 0,
-            max_retries: 2
-          });
-        }
-      } finally {
-        await session.close();
+      for (const entity of entities) {
+        const entityId = resolveGraphId(entity);
+        if (!entityId) continue;
+
+        await this.queueAnalysisTask({
+          id: `rel_task_${entityId}_${Date.now()}`,
+          entity_id: entityId,
+          entity_name: entity.properties?.name || 'Unknown',
+          task_type: 'relationship_analysis',
+          priority: 'medium',
+          data: { entity: entity.properties || {}, labels: entity.labels || [] },
+          scheduled_at: new Date().toISOString(),
+          retry_count: 0,
+          max_retries: 2
+        });
       }
     } catch (error) {
       console.error('❌ Failed to schedule relationship analysis:', error);
@@ -690,12 +655,11 @@ export class ContinuousReasoningService {
    * Perform relationship analysis on an entity
    */
   private async performRelationshipAnalysis(task: ReasoningTask): Promise<AnalysisResult> {
-    const { entity, labels } = task.data;
     const entityId = task.entity_id;
     const entityName = task.entity_name;
 
     // Get relationship network
-    const relationships = await this.neo4jService.getEntityRelationships(entityId);
+    const relationships = await this.entityCacheService.getRelationshipsForEntity(entityId);
     
     // Analyze network patterns
     const networkAnalysis = await this.analyzeRelationshipNetwork(entityId, relationships);
@@ -803,27 +767,23 @@ export class ContinuousReasoningService {
    */
   private async gatherEntityContext(entityId: string): Promise<any> {
     try {
-      const session = this.neo4jService.getDriver().session();
-      try {
-        const result = await session.run(`
-          MATCH (n)
-          WHERE id(n) = $entityId
-          OPTIONAL MATCH (n)-[r]-(related)
-          RETURN n, collect({
-            relationship: type(r),
-            target: related.name,
-            type: labels(related)[0]
-          }) as relationships
-        `, { entityId: parseInt(entityId) });
+      const entity = await this.getEntityById(entityId);
+      const relationships = await this.entityCacheService.getRelationshipsForEntity(entityId);
 
-        return result.records[0] ? {
-          entity: result.records[0].get('n').properties,
-          relationships: result.records[0].get('relationships')
-        } : {};
-
-      } finally {
-        await session.close();
-      }
+      return entity ? {
+        entity: entity.properties,
+        relationships: relationships.map((rawRelationship) => {
+          const relationship = withRelationshipGraphIds(rawRelationship);
+          return ({
+          relationship: relationship.relationship_type,
+          target: relationship.source_graph_id === entityId
+            ? relationship.target_name
+            : relationship.source_name,
+          type: relationship.source_graph_id === entityId
+            ? relationship.target_labels?.[0]
+            : relationship.source_labels?.[0]
+        })})
+      } : {};
     } catch (error) {
       console.error('Failed to gather entity context:', error);
       return {};
@@ -976,28 +936,50 @@ export class ContinuousReasoningService {
    */
   private async findEntitiesForKeywords(keywords: string[]): Promise<any[]> {
     try {
-      const session = this.neo4jService.getDriver().session();
-      try {
-        const result = await session.run(`
-          MATCH (n)
-          WHERE n.name IS NOT NULL 
-            AND (n:Entity OR n:Organization OR n:Person OR n:RFP)
-            AND ($keywords IN [n.name] OR ANY(keyword IN $keywords WHERE toLower(keyword) IN toLower(n.name) OR toLower(keyword) IN toLower(n.sport) OR toLower(keyword) IN toLower(n.country)))
-          RETURN DISTINCT n, labels(n) as labels, n.name as entity_name
-          ORDER BY n.priorityScore DESC, n.name ASC
-          LIMIT 20
-        `, { keywords });
+      const normalizedKeywords = keywords
+        .map((keyword) => keyword.trim().toLowerCase())
+        .filter(Boolean);
 
-        return result.records.map(record => ({
-          id: record.get('n').identity.toString(),
-          name: record.get('entity_name'),
-          properties: record.get('n').properties,
-          labels: record.get('labels')
-        }));
+      const { data, error } = await supabase
+        .from('cached_entities')
+        .select('graph_id, neo4j_id, labels, properties')
+        .limit(200);
 
-      } finally {
-        await session.close();
+      if (error) {
+        throw error;
       }
+
+      return (data || [])
+        .filter((entity: CachedEntityRecord) => {
+          const haystack = [
+            entity.properties?.name,
+            entity.properties?.sport,
+            entity.properties?.country,
+            entity.properties?.type
+          ]
+            .filter(Boolean)
+            .join(' ')
+            .toLowerCase();
+
+          return normalizedKeywords.some((keyword) => haystack.includes(keyword));
+        })
+        .sort((left: CachedEntityRecord, right: CachedEntityRecord) => {
+          const leftPriority = Number(left.properties?.priorityScore ?? 0);
+          const rightPriority = Number(right.properties?.priorityScore ?? 0);
+          if (leftPriority !== rightPriority) {
+            return rightPriority - leftPriority;
+          }
+
+          return String(left.properties?.name || '').localeCompare(String(right.properties?.name || ''));
+        })
+        .slice(0, 20)
+        .map((entity: CachedEntityRecord) => ({
+          id: entity.graph_id || entity.neo4j_id,
+          graph_id: entity.graph_id || entity.neo4j_id,
+          name: entity.properties?.name || entity.graph_id || entity.neo4j_id,
+          properties: entity.properties || {},
+          labels: entity.labels || []
+        }));
     } catch (error) {
       console.error('❌ Failed to find entities for keywords:', error);
       return [];
@@ -1019,6 +1001,132 @@ export class ContinuousReasoningService {
     if (webhookData.confidence && webhookData.confidence > 0.8) return 'high';
     if (webhookData.source === 'procurement') return 'high';
     return 'medium';
+  }
+
+  private async refreshTotalEntities(): Promise<void> {
+    const { count, error } = await supabase
+      .from('cached_entities')
+      .select('*', { count: 'exact', head: true });
+
+    if (!error && typeof count === 'number') {
+      this.totalEntities = count;
+    }
+  }
+
+  private async getSchedulableEntities(options: {
+    minPriority?: number;
+    maxPriorityExclusive?: number;
+    includeNullPriority?: boolean;
+    limit: number;
+  }): Promise<CachedEntityRecord[]> {
+    const { limit, minPriority, maxPriorityExclusive, includeNullPriority = false } = options;
+    const { data, error } = await supabase
+      .from('cached_entities')
+      .select('graph_id, neo4j_id, labels, properties, updated_at')
+      .limit(Math.max(limit * 3, limit));
+
+    if (error) {
+      throw error;
+    }
+
+    return (data || [])
+      .filter((entity: CachedEntityRecord) => this.isSchedulableEntity(entity))
+      .filter((entity: CachedEntityRecord) => {
+        const priority = this.getEntityPriorityScore(entity);
+
+        if (priority === null) {
+          return includeNullPriority;
+        }
+
+        if (typeof minPriority === 'number' && priority < minPriority) {
+          return false;
+        }
+
+        if (typeof maxPriorityExclusive === 'number' && priority >= maxPriorityExclusive) {
+          return false;
+        }
+
+        return true;
+      })
+      .sort((left: CachedEntityRecord, right: CachedEntityRecord) => {
+        const priorityDiff = (this.getEntityPriorityScore(right) ?? -1) - (this.getEntityPriorityScore(left) ?? -1);
+        if (priorityDiff !== 0) {
+          return priorityDiff;
+        }
+
+        return new Date(right.updated_at || 0).getTime() - new Date(left.updated_at || 0).getTime();
+      })
+      .slice(0, limit);
+  }
+
+  private async getEntitiesWithRelationshipActivity(limit: number): Promise<CachedEntityRecord[]> {
+    const cutoff = new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString();
+    const { data, error } = await supabase
+      .from('entity_relationships')
+      .select('source_graph_id, target_graph_id, source_neo4j_id, target_neo4j_id')
+      .eq('is_active', true)
+      .or(`updated_at.gte.${cutoff},last_synced_at.gte.${cutoff}`)
+      .limit(limit * 4);
+
+    if (error) {
+      throw error;
+    }
+
+    const entityIds = Array.from(new Set(
+      (data || [])
+        .map((relationship: any) => withRelationshipGraphIds(relationship))
+        .flatMap((relationship: any) => [
+          relationship.source_graph_id,
+          relationship.target_graph_id,
+        ])
+        .filter(Boolean)
+    ));
+
+    if (entityIds.length === 0) {
+      return [];
+    }
+
+    const { data: entities, error: entitiesError } = await supabase
+      .from('cached_entities')
+      .select('graph_id, neo4j_id, labels, properties, updated_at')
+      .or(buildAnyGraphEntityLookupFilter(entityIds.slice(0, limit * 2)));
+
+    if (entitiesError) {
+      throw entitiesError;
+    }
+
+    return (entities || [])
+      .filter((entity: CachedEntityRecord) => this.isSchedulableEntity(entity))
+      .slice(0, limit);
+  }
+
+  private async getEntityById(entityId: string): Promise<CachedEntityRecord | null> {
+    const { data, error } = await supabase
+      .from('cached_entities')
+      .select('graph_id, neo4j_id, labels, properties, updated_at')
+      .or(buildGraphEntityLookupFilter(entityId))
+      .maybeSingle();
+
+    if (error) {
+      throw error;
+    }
+
+    return data || null;
+  }
+
+  private isSchedulableEntity(entity: CachedEntityRecord): boolean {
+    const labels = entity.labels || [];
+    return labels.includes('Entity') || labels.includes('Organization') || labels.includes('RFP');
+  }
+
+  private getEntityPriorityScore(entity: CachedEntityRecord): number | null {
+    const rawPriority = entity.properties?.priorityScore;
+    if (rawPriority === null || rawPriority === undefined || rawPriority === '') {
+      return null;
+    }
+
+    const numericPriority = Number(rawPriority);
+    return Number.isFinite(numericPriority) ? numericPriority : null;
   }
 }
 

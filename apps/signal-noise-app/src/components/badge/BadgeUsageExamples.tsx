@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { EntityBadge, CompactEntityBadge } from '@/components/badge/EntityBadge'
-import { Entity } from '@/lib/neo4j'
+import { Entity } from '@/lib/graph-store'
 import { ExternalLink, Copy, Check } from 'lucide-react'
 
 interface BadgeExampleProps {

@@ -49,8 +49,9 @@ async function migrateEntities() {
       
       const entities = result.records.map(record => {
         const node = record.get('n')
+        const stableNeo4jId = String(node.properties.neo4j_id ?? node.identity.toString())
         return {
-          neo4j_id: node.identity.toString(),
+          neo4j_id: stableNeo4jId,
           labels: node.labels,
           properties: node.properties,
           created_at: new Date().toISOString(),

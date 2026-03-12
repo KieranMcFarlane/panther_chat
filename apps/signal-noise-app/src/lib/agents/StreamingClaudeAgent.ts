@@ -35,14 +35,14 @@ export class StreamingClaudeAgent {
     yield { type: 'start', data: '🤖 Starting Streaming Claude Agent...', timestamp: new Date().toISOString(), message: 'Initializing agent workflow' };
     
     try {
-      // Step 1: Entity Analysis via Neo4j MCP
-      yield { type: 'mcp_start', data: '🔍 Analyzing entity in knowledge graph...', timestamp: new Date().toISOString(), message: 'Querying Neo4j for entity data' };
+      // Step 1: Entity Analysis via graph MCP
+      yield { type: 'mcp_start', data: '🔍 Analyzing entity in graph cache...', timestamp: new Date().toISOString(), message: 'Querying graph data for entity context' };
       
       let mcpResults: any[] = [];
       
       if (config.entityId) {
         // Get entity details
-        for await (const chunk of StreamingDirectMCP.executeNeo4jQueryStream(
+        for await (const chunk of StreamingDirectMCP.executeGraphQueryStream(
           `MATCH (n) WHERE n.id = '${config.entityId}' RETURN n LIMIT 1`
         )) {
           const logData = chunk.type === 'data' ? {
@@ -59,12 +59,12 @@ export class StreamingClaudeAgent {
             timestamp: chunk.timestamp,
             tool: chunk.tool,
             server: chunk.server,
-            message: chunk.type === 'data' ? `Entity ${config.entityId} data retrieved from Neo4j` : undefined
+            message: chunk.type === 'data' ? `Entity ${config.entityId} data retrieved from graph cache` : undefined
           };
           
           if (chunk.type === 'data') {
             mcpResults.push({
-              source: 'neo4j',
+              source: 'graph',
               type: 'entity_data',
               data: chunk.data,
               entityId: config.entityId
@@ -73,7 +73,7 @@ export class StreamingClaudeAgent {
         }
       } else {
         // Get entity counts and overview
-        for await (const chunk of StreamingDirectMCP.executeNeo4jQueryStream(
+        for await (const chunk of StreamingDirectMCP.executeGraphQueryStream(
           'MATCH (n:Entity) RETURN count(n) as totalEntities LIMIT 1'
         )) {
           const logData = chunk.type === 'data' ? {
@@ -95,7 +95,7 @@ export class StreamingClaudeAgent {
           
           if (chunk.type === 'data') {
             mcpResults.push({
-              source: 'neo4j',
+              source: 'graph',
               type: 'entity_statistics',
               data: chunk.data
             });
@@ -299,7 +299,7 @@ export class StreamingClaudeAgent {
       console.error('AI API error, falling back to simulation:', error);
       const fallbackResponses = [
         "📊 Analyzing sports intelligence data...\n\n",
-        "Based on the knowledge graph analysis, I've identified:\n\n",
+        "Based on the graph analysis, I've identified:\n\n",
         "🎯 **Key Opportunities:**\n",
         "1. Digital Transformation Projects: Multiple sports organizations are actively seeking technology solutions\n",
         "2. Technology Partnerships: Strong interest in analytics platforms and fan engagement systems\n",
@@ -334,7 +334,7 @@ export class StreamingClaudeAgent {
     
     if (analysisType === 'quick') {
       // Quick analysis: just basic entity info
-      for await (const chunk of StreamingDirectMCP.executeNeo4jQueryStream(
+      for await (const chunk of StreamingDirectMCP.executeGraphQueryStream(
         `MATCH (n) WHERE n.id = '${entityId}' RETURN n.name as name, n.type as type LIMIT 1`
       )) {
         yield {
@@ -367,7 +367,7 @@ export class StreamingClaudeAgent {
     yield { type: 'start', data: '🔍 Starting daily RFP intelligence scan...', timestamp: new Date().toISOString() };
     
     // 1. Scan for new entities
-    for await (const chunk of StreamingDirectMCP.executeNeo4jQueryStream(
+    for await (const chunk of StreamingDirectMCP.executeGraphQueryStream(
       'MATCH (n:Entity) WHERE n.last_analyzed < date() - 1 RETURN count(n) as entitiesToAnalyze'
     )) {
       yield {

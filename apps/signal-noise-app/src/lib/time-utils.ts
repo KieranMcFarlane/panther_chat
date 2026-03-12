@@ -54,25 +54,25 @@ export function formatTime(timestamp: Date | string | number, options?: {
 }
 
 // Server-safe time display component
-export function TimeDisplay({ 
-  timestamp, 
-  format = 'time' 
-}: { 
-  timestamp?: Date | string | number; 
+export function TimeDisplay({
+  timestamp,
+  format = 'time'
+}: {
+  timestamp?: Date | string | number;
   format?: 'time' | 'date' | 'datetime' | 'short';
 }) {
   const timeData = useTimeDisplay(timestamp);
   
   switch (format) {
     case 'time':
-      return <>{timeData.timeString}</>;
+      return timeData.timeString;
     case 'date':
-      return <>{timeData.dateString}</>;
+      return timeData.dateString;
     case 'datetime':
-      return <>{timeData.formatted}</>;
+      return timeData.formatted;
     case 'short':
-      return <>{formatTime(timestamp || new Date(), { short: true })}</>;
+      return formatTime(timestamp || new Date(), { short: true });
     default:
-      return <>{timeData.timeString}</>;
+      return timeData.timeString;
   }
 }

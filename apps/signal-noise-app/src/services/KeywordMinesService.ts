@@ -6,7 +6,6 @@
  * notifications and detailed logging.
  */
 
-import { Neo4jService } from '@/lib/neo4j';
 import { supabase } from '@/lib/supabase-client';
 import { Anthropic } from '@anthropic-ai/sdk';
 import { z } from 'zod';
@@ -120,13 +119,11 @@ const WebhookDetectionSchema = z.object({
 });
 
 export class KeywordMinesService {
-  private neo4jService: Neo4jService;
   private anthropic: Anthropic;
   private monitoringIntervals: Map<string, NodeJS.Timeout> = new Map();
   private totalEntities = 4422; // Updated from 3,311 to 4,422
 
   constructor() {
-    this.neo4jService = new Neo4jService();
     this.anthropic = new Anthropic({
       apiKey: process.env.ANTHROPIC_API_KEY || ''
     });
@@ -163,42 +160,49 @@ export class KeywordMinesService {
     const results = { created: 0, updated: 0, failed: 0 };
 
     try {
-      await this.neo4jService.initialize();
-      const session = this.neo4jService.getDriver().session();
+      const { data, error } = await supabase
+        .from('cached_entities')
+        .select('id, graph_id, neo4j_id, name, labels, properties')
+        .not('name', 'is', null)
+        .order('name', { ascending: true })
+        .limit(this.totalEntities);
 
-      try {
-        // Get all entities that should be monitored
-        const result = await session.run(`
-          MATCH (n)
-          WHERE n.name IS NOT NULL 
-            AND (n:Entity OR n:Organization OR n:Person OR n:RFP OR n:DecisionMaker)
-          RETURN n, labels(n) as labels
-          ORDER BY n.priorityScore DESC, n.name ASC
-        `);
-
-        for (const record of result.records) {
-          const node = record.get('n');
-          const labels = record.get('labels');
-          
-          try {
-            const mine = await this.createOrUpdateMine(node, labels);
-            if (mine.isNew) {
-              results.created++;
-            } else {
-              results.updated++;
-            }
-          } catch (error) {
-            console.error(`Failed to create mine for ${node.properties.name}:`, error);
-            results.failed++;
-          }
-        }
-
-        console.log(`🚀 Mines initialization complete for ${this.totalEntities} entities: ${results.created} created, ${results.updated} updated, ${results.failed} failed`);
-        return results;
-
-      } finally {
-        await session.close();
+      if (error) {
+        throw error;
       }
+
+      for (const record of data || []) {
+        const node = {
+          identity: {
+            toString: () => String(record.id)
+          },
+          properties: {
+            ...(record.properties || {}),
+            name: record.name || record.properties?.name,
+            priorityScore: record.properties?.priorityScore
+              ?? record.properties?.priority_score
+              ?? record.properties?.yellowPantherPriority
+              ?? record.properties?.yellow_panther_priority
+              ?? 0
+          }
+        };
+        const labels = record.labels || [];
+
+        try {
+          const mine = await this.createOrUpdateMine(node, labels);
+          if (mine.isNew) {
+            results.created++;
+          } else {
+            results.updated++;
+          }
+        } catch (error) {
+          console.error(`Failed to create mine for ${node.properties.name}:`, error);
+          results.failed++;
+        }
+      }
+
+      console.log(`🚀 Mines initialization complete for ${this.totalEntities} entities: ${results.created} created, ${results.updated} updated, ${results.failed} failed`);
+      return results;
     } catch (error) {
       console.error('❌ Failed to initialize mines:', error);
       throw error;

@@ -315,7 +315,7 @@ export async function GET(request: NextRequest) {
             'Memory-optimized batch processing (3 entities per batch)',
             'Automatic checkpoint and recovery system',
             'Claude Agent SDK integration for advanced analysis',
-            'MCP tools: Neo4j, BrightData, Perplexity, Better Auth',
+            'MCP tools: Graph MCP, BrightData, Perplexity, Better Auth',
             'Real-time memory monitoring and adaptive delays',
             'Progress tracking with automatic resumption',
             'Garbage collection and memory cleanup',

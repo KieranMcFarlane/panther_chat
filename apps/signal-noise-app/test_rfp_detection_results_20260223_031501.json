@@ -1,0 +1,109 @@
+{
+  "total_rfps_detected": 2,
+  "verified_rfps": 2,
+  "rejected_rfps": 0,
+  "entities_checked": 5,
+  "highlights": [
+    {
+      "organization": "Arsenal FC",
+      "src_link": "https://arsenal.com/procurement/digital-2026",
+      "source_type": "official_website",
+      "discovery_source": "perplexity_priority_3",
+      "discovery_method": "perplexity_discovery",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-02-01",
+      "deadline": "2026-04-15",
+      "deadline_days_remaining": 45,
+      "estimated_rfp_date": null,
+      "budget": "\u00a3150,000-250,000",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - Arsenal FC",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 85,
+        "source_quality": 0.9
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://arsenal.com/procurement/digital-2026"
+        ]
+      },
+      "competitive_intel": null
+    },
+    {
+      "organization": "NBA",
+      "src_link": "https://nba.com/procurement/digital-2026",
+      "source_type": "official_website",
+      "discovery_source": "perplexity_priority_3",
+      "discovery_method": "perplexity_discovery",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-02-01",
+      "deadline": "2026-04-15",
+      "deadline_days_remaining": 45,
+      "estimated_rfp_date": null,
+      "budget": "\u00a3150,000-250,000",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - NBA",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 85,
+        "source_quality": 0.9
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://nba.com/procurement/digital-2026"
+        ]
+      },
+      "competitive_intel": null
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.85,
+    "avg_fit_score": 85.0,
+    "top_opportunity": "Arsenal FC"
+  },
+  "quality_metrics": {
+    "brightdata_detections": 0,
+    "perplexity_verifications": 0,
+    "verified_rate": 0.4,
+    "placeholder_urls_rejected": 0,
+    "expired_rfps_rejected": 0,
+    "competitive_intel_gathered": 0
+  },
+  "discovery_breakdown": {
+    "linkedin_posts": 0,
+    "linkedin_jobs": 0,
+    "tender_platforms": 0,
+    "sports_news_sites": 0,
+    "official_websites": 0,
+    "linkedin_success_rate": 0.0,
+    "tender_platform_success_rate": 0.0
+  },
+  "perplexity_usage": {
+    "discovery_queries": 0,
+    "validation_queries": 0,
+    "competitive_intel_queries": 0,
+    "total_queries": 0,
+    "estimated_cost": 0.0
+  },
+  "brightdata_usage": {
+    "targeted_domain_queries": 0,
+    "broad_web_queries": 0,
+    "total_queries": 0,
+    "estimated_cost": 0.0
+  },
+  "cost_comparison": {
+    "total_cost": 0.0,
+    "cost_per_verified_rfp": 0.0,
+    "estimated_old_system_cost": 20.0,
+    "savings_vs_old_system": 20.0
+  }
+}

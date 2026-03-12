@@ -1,19 +1,20 @@
 /**
  * MCP Tool Definitions for Claude Agent SDK
  * 
- * Creates tool definitions for Neo4j, BrightData, and Perplexity APIs
+ * Creates tool definitions for graph, BrightData, and Perplexity APIs
  * Uses the official MCP server configurations
  */
 
 import { tool } from '@anthropic-ai/claude-agent-sdk';
+import { falkorGraphClient } from '@/lib/falkordb';
 
 // Create tool definitions for Claude Agent SDK
 export const createMCPTools = () => {
   console.log('🔧 Creating MCP tools for Claude Agent SDK...');
   
-  // Neo4j Query Tool
-  const neo4jExecuteQuery = tool('mcp__neo4j-mcp__execute_query', 
-    'Execute Cypher queries against Neo4j AuraDB to get sports entities and relationships',
+  // Graph Query Tool
+  const graphExecuteQuery = tool('mcp__graph-mcp__execute_query', 
+    'Execute Cypher queries against FalkorDB to get sports entities and relationships',
     {
       query: {
         type: 'string',
@@ -27,23 +28,14 @@ export const createMCPTools = () => {
       }
     },
     async ({ query, params = {} }) => {
-      console.log(`🔍 NEO4J MCP: ${query}`);
-      
-      const neo4j = require('neo4j-driver');
-      const driver = neo4j.driver(
-        'neo4j+s://cce1f84b.databases.neo4j.io',
-        neo4j.auth.basic('neo4j', 'process.env.NEO4J_PASSWORD || ""')
-      );
-      
-      const session = driver.session();
+      console.log(`🔍 GRAPH MCP: ${query}`);
+
       try {
-        const result = await session.run(query, params);
-        const records = result.records.map(record => record.toObject());
-        console.log(`✅ NEO4J MCP RESULT: ${records.length} records`);
+        const records = await falkorGraphClient.queryRows(query);
+        console.log(`✅ GRAPH MCP RESULT: ${records.length} records`);
         return { success: true, data: records, count: records.length };
       } finally {
-        await session.close();
-        await driver.close();
+        await falkorGraphClient.close();
       }
     }
   );
@@ -72,7 +64,7 @@ export const createMCPTools = () => {
       console.log(`🔍 BRIGHTDATA MCP: Searching for "${query}"`);
       
       const apiUrl = 'https://api.brightdata.com/serp';
-      const apiToken = 'bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4';
+      const apiToken = process.env.BRIGHTDATA_API_TOKEN || '';
       
       const searchParams = new URLSearchParams({
         q: query,
@@ -84,7 +76,7 @@ export const createMCPTools = () => {
         const response = await fetch(`${apiUrl}?${searchParams}`, {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${apiToken}`,
+            ...(apiToken ? { 'Authorization': `Bearer ${apiToken}` } : {}),
             'Content-Type': 'application/json'
           }
         });
@@ -172,12 +164,12 @@ export const createMCPTools = () => {
   );
 
   console.log('✅ MCP tools created successfully:');
-  console.log('  - mcp__neo4j-mcp__execute_query');
+  console.log('  - mcp__graph-mcp__execute_query');
   console.log('  - mcp__brightdata-mcp__search_engine');
   console.log('  - mcp__perplexity-mcp__chat_completion');
 
   return [
-    neo4jExecuteQuery,
+    graphExecuteQuery,
     brightdataSearchEngine,
     perplexityChatCompletion
   ];

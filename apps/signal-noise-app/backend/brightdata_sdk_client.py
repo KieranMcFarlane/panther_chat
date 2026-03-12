@@ -14,6 +14,7 @@ Architecture:
 import asyncio
 import logging
 import os
+import random
 from typing import Dict, List, Any, Optional
 from datetime import datetime
 from urllib.parse import parse_qs, unquote, urlparse
@@ -75,9 +76,26 @@ class BrightDataSDKClient:
         self.serp_timeout_seconds = float(os.getenv("BRIGHTDATA_SERP_TIMEOUT_SECONDS", "30"))
         self.serp_poll_attempts = int(os.getenv("BRIGHTDATA_SERP_POLL_ATTEMPTS", "6"))
         self.serp_poll_interval_seconds = float(os.getenv("BRIGHTDATA_SERP_POLL_INTERVAL_SECONDS", "1.2"))
+        self.request_fallback_timeout_seconds = float(
+            os.getenv("BRIGHTDATA_REQUEST_FALLBACK_TIMEOUT_SECONDS", "20")
+        )
+        self.request_fallback_max_retries = max(
+            0,
+            int(os.getenv("BRIGHTDATA_REQUEST_FALLBACK_MAX_RETRIES", "2")),
+        )
+        self.request_fallback_backoff_base_seconds = float(
+            os.getenv("BRIGHTDATA_REQUEST_FALLBACK_BACKOFF_BASE_SECONDS", "1.5")
+        )
+        self.request_fallback_backoff_cap_seconds = float(
+            os.getenv("BRIGHTDATA_REQUEST_FALLBACK_BACKOFF_CAP_SECONDS", "8")
+        )
+        self.enable_browser_api_fallback = str(
+            os.getenv("BRIGHTDATA_ENABLE_BROWSER_API_FALLBACK", "false")
+        ).strip().lower() in {"1", "true", "yes", "on"}
         self._client = None
         self._client_context = None
         self._client_lock = asyncio.Lock()
+        self._sdk_mode = "uninitialized"
 
         if not self.token:
             logger.warning("⚠️ BRIGHTDATA_API_TOKEN not found in environment")
@@ -96,13 +114,34 @@ class BrightDataSDKClient:
                         init_kwargs["browser_zone"] = self.browser_zone
                     self._client_context = BrightDataClient(self.token, **init_kwargs)
                     self._client = await self._with_timeout(self._client_context.__aenter__())
+                    self._sdk_mode = "legacy_client"
                     logger.info("✅ BrightData SDK client initialized")
-                except Exception as e:
-                    logger.warning(f"⚠️ BrightData SDK initialization failed: {e}")
-                    logger.info("ℹ️ Will use fallback httpx client for scraping")
-                    # Set to None to indicate SDK unavailable
-                    self._client = False
-                    self._client_context = None
+                except Exception as legacy_error:
+                    try:
+                        from brightdata import BrowserAPI, scrape_url_async, scrape_urls_async
+                        self._client = {
+                            "mode": "auto_sdk",
+                            "scrape_url_async": scrape_url_async,
+                            "scrape_urls_async": scrape_urls_async,
+                            "browser_api_cls": BrowserAPI,
+                        }
+                        self._client_context = None
+                        self._sdk_mode = "auto_sdk"
+                        logger.info(
+                            "✅ BrightData SDK auto-mode initialized (legacy client unavailable: %s)",
+                            legacy_error,
+                        )
+                    except Exception as auto_error:
+                        logger.warning(
+                            "⚠️ BrightData SDK initialization failed (legacy=%s, auto=%s)",
+                            legacy_error,
+                            auto_error,
+                        )
+                        logger.info("ℹ️ Will use fallback httpx client for scraping")
+                        # Set to None to indicate SDK unavailable
+                        self._client = False
+                        self._client_context = None
+                        self._sdk_mode = "http_fallback"
         if self._client is False:
             raise RuntimeError("BrightData SDK unavailable, fallback will be used")
         return self._client
@@ -121,6 +160,7 @@ class BrightDataSDKClient:
             finally:
                 self._client = None
                 self._client_context = None
+                self._sdk_mode = "uninitialized"
 
     @property
     def client(self):
@@ -154,6 +194,10 @@ class BrightDataSDKClient:
             except RuntimeError:
                 # SDK unavailable, use fallback directly
                 logger.info("ℹ️ Using fallback search (SDK unavailable)")
+                return await self._search_engine_fallback(query, engine, country, num_results)
+            if isinstance(client, dict) and client.get("mode") == "auto_sdk":
+                # Auto SDK package does not expose SERP APIs; use HTTP fallback for search.
+                logger.info("ℹ️ Auto SDK mode: routing search to HTTP SERP fallback")
                 return await self._search_engine_fallback(query, engine, country, num_results)
 
             # Call search directly (SDK methods are async)
@@ -250,6 +294,8 @@ class BrightDataSDKClient:
                 # SDK unavailable, use fallback directly
                 logger.info("ℹ️ Using fallback scrape (SDK unavailable)")
                 return await self._scrape_as_markdown_fallback(url)
+            if isinstance(client, dict) and client.get("mode") == "auto_sdk":
+                return await self._scrape_as_markdown_auto_sdk(url=url, auto_client=client)
 
             # Ensure URL has protocol
             if not url.startswith(('http://', 'https://')):
@@ -357,6 +403,8 @@ class BrightDataSDKClient:
                 # SDK unavailable, use fallback directly
                 logger.info("ℹ️ Using fallback batch scrape (SDK unavailable)")
                 return await self._scrape_batch_fallback(urls)
+            if isinstance(client, dict) and client.get("mode") == "auto_sdk":
+                return await self._scrape_batch_auto_sdk(urls=urls, auto_client=client)
 
             # Ensure all URLs have protocol
             cleaned_urls = []
@@ -474,6 +522,125 @@ class BrightDataSDKClient:
         """Convenience method: Search press releases"""
         query = f'"{entity_name}" press release announcement news'
         return await self.search_engine(query, engine="google")
+
+    async def _scrape_as_markdown_auto_sdk(
+        self,
+        *,
+        url: str,
+        auto_client: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Scrape using BrightData auto SDK (`scrape_url_async` + optional BrowserAPI fallback)."""
+        if not url.startswith(('http://', 'https://')):
+            url = f'https://{url}'
+
+        scrape_url_async = auto_client.get("scrape_url_async")
+        browser_api_cls = auto_client.get("browser_api_cls")
+        if not callable(scrape_url_async):
+            return await self._scrape_as_markdown_fallback(url)
+
+        poll_timeout = max(int(self.request_timeout_seconds * 2), 60)
+        raw_result = await asyncio.wait_for(
+            scrape_url_async(
+                url,
+                bearer_token=self.token,
+                poll_timeout=poll_timeout,
+                flexible_timeout=True,
+                fallback_to_browser_api=self.enable_browser_api_fallback,
+            ),
+            timeout=max(self.request_timeout_seconds, float(poll_timeout) + 15.0),
+        )
+
+        html_payload = self._extract_html_from_scrape_payload(self._extract_scrape_result_data(raw_result))
+        content, publication_date = self._extract_text_and_publication_date(html_payload, url)
+
+        if not content and self.enable_browser_api_fallback and browser_api_cls is not None:
+            browser = browser_api_cls()
+            try:
+                browser_result = await self._with_timeout(browser.fetch_async(url))
+                html_payload = self._extract_html_from_scrape_payload(
+                    self._extract_scrape_result_data(browser_result)
+                )
+                content, publication_date = self._extract_text_and_publication_date(html_payload, url)
+            finally:
+                close_fn = getattr(browser, "close", None)
+                if callable(close_fn):
+                    maybe_coro = close_fn()
+                    if asyncio.iscoroutine(maybe_coro):
+                        await maybe_coro
+
+        if not content:
+            return await self._scrape_as_markdown_fallback(url)
+
+        return {
+            "status": "success",
+            "url": url,
+            "content": content,
+            "raw_html": html_payload,
+            "timestamp": datetime.now().isoformat(),
+            "publication_date": publication_date.isoformat() if publication_date else None,
+            "metadata": {
+                "word_count": len(content.split()),
+                "source": "brightdata_auto_sdk",
+                "has_publication_date": publication_date is not None,
+            }
+        }
+
+    async def _scrape_batch_auto_sdk(
+        self,
+        *,
+        urls: List[str],
+        auto_client: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Batch scrape using auto SDK by fan-out to single-url helper."""
+        tasks = [self._scrape_as_markdown_auto_sdk(url=url, auto_client=auto_client) for url in urls]
+        outputs = await asyncio.gather(*tasks, return_exceptions=True)
+
+        results: List[Dict[str, Any]] = []
+        failed_count = 0
+        for idx, output in enumerate(outputs):
+            input_url = urls[idx]
+            if isinstance(output, Exception):
+                failed_count += 1
+                results.append({"url": input_url, "status": "error", "error": str(output)})
+                continue
+            if not isinstance(output, dict) or output.get("status") != "success":
+                failed_count += 1
+                results.append({
+                    "url": input_url,
+                    "status": "error",
+                    "error": str((output or {}).get("error", "Auto SDK scrape failed")),
+                })
+                continue
+            results.append({
+                "url": output.get("url", input_url),
+                "status": "success",
+                "content": output.get("content", ""),
+                "metadata": output.get("metadata", {}),
+            })
+
+        successful = len([r for r in results if r.get("status") == "success"])
+        return {
+            "status": "success",
+            "total_urls": len(urls),
+            "successful": successful,
+            "failed": failed_count,
+            "results": results,
+            "timestamp": datetime.now().isoformat(),
+            "metadata": {"source": "brightdata_auto_sdk"},
+        }
+
+    def _extract_scrape_result_data(self, payload: Any) -> Any:
+        """Unwrap BrightData auto-SDK result objects/dicts to raw HTML-compatible payload."""
+        if payload is None:
+            return ""
+        if hasattr(payload, "data"):
+            return getattr(payload, "data")
+        if isinstance(payload, dict):
+            for value in payload.values():
+                unwrapped = self._extract_scrape_result_data(value)
+                if unwrapped:
+                    return unwrapped
+        return payload
 
     # ============== FALLBACK METHODS (httpx) ==============
     # These are used when BrightData SDK is unavailable
@@ -813,6 +980,12 @@ class BrightDataSDKClient:
                 url = f"https://{parsed}"
         return url
 
+    def _compute_request_fallback_backoff_seconds(self, attempt: int) -> float:
+        base = max(self.request_fallback_backoff_base_seconds, 0.0) * (2 ** max(attempt, 0))
+        bounded = min(base, max(self.request_fallback_backoff_cap_seconds, 0.0))
+        jitter = random.uniform(0.0, 0.35)
+        return max(0.0, bounded + jitter)
+
     async def _scrape_as_markdown_fallback(self, url: str) -> Dict[str, Any]:
         """Fallback: Try BrightData HTTP request API, then plain httpx."""
         import httpx
@@ -828,56 +1001,72 @@ class BrightDataSDKClient:
             # First: try BrightData request API using known unlocker-capable zones
             if self.token:
                 zone_candidates = self._resolve_unlocker_zone_candidates()
-                async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as api_client:
+                async with httpx.AsyncClient(
+                    timeout=self.request_fallback_timeout_seconds,
+                    follow_redirects=True,
+                ) as api_client:
                     for zone in zone_candidates:
-                        try:
-                            bd_response = await api_client.post(
-                                f"{self.api_url.rstrip('/')}/request",
-                                headers={
-                                    "Authorization": f"Bearer {self.token}",
-                                    "Content-Type": "application/json",
-                                },
-                                json={
-                                    "zone": zone,
-                                    "url": url,
-                                    "format": "raw",
-                                },
-                            )
-                            if bd_response.status_code >= 400:
-                                logger.debug(
-                                    "BrightData request fallback failed: zone=%s status=%s preview=%s",
-                                    zone,
-                                    bd_response.status_code,
-                                    bd_response.text[:160],
+                        for attempt in range(self.request_fallback_max_retries + 1):
+                            try:
+                                bd_response = await api_client.post(
+                                    f"{self.api_url.rstrip('/')}/request",
+                                    headers={
+                                        "Authorization": f"Bearer {self.token}",
+                                        "Content-Type": "application/json",
+                                    },
+                                    json={
+                                        "zone": zone,
+                                        "url": url,
+                                        "format": "raw",
+                                    },
                                 )
-                                continue
-
-                            html_body = self._extract_html_from_scrape_payload(bd_response.text)
-                            if html_body:
-                                content, publication_date = self._extract_text_and_publication_date(html_body, url)
-                                if not content:
+                                if bd_response.status_code >= 400:
                                     logger.debug(
-                                        "BrightData request fallback returned empty parsed content (zone=%s), trying next strategy",
+                                        "BrightData request fallback failed: zone=%s attempt=%s status=%s preview=%s",
                                         zone,
+                                        attempt + 1,
+                                        bd_response.status_code,
+                                        bd_response.text[:160],
                                     )
+                                    if attempt < self.request_fallback_max_retries and bd_response.status_code >= 500:
+                                        await asyncio.sleep(self._compute_request_fallback_backoff_seconds(attempt))
+                                        continue
                                     continue
 
-                                return {
-                                    "status": "success",
-                                    "url": url,
-                                    "content": content,
-                                    "raw_html": html_body,
-                                    "timestamp": datetime.now().isoformat(),
-                                    "publication_date": publication_date.isoformat() if publication_date else None,
-                                    "metadata": {
-                                        "word_count": len(content.split()),
-                                        "source": "brightdata_http_request_fallback",
-                                        "zone": zone,
-                                        "has_publication_date": publication_date is not None
+                                html_body = self._extract_html_from_scrape_payload(bd_response.text)
+                                if html_body:
+                                    content, publication_date = self._extract_text_and_publication_date(html_body, url)
+                                    if not content:
+                                        logger.debug(
+                                            "BrightData request fallback returned empty parsed content (zone=%s), trying next strategy",
+                                            zone,
+                                        )
+                                        continue
+
+                                    return {
+                                        "status": "success",
+                                        "url": url,
+                                        "content": content,
+                                        "raw_html": html_body,
+                                        "timestamp": datetime.now().isoformat(),
+                                        "publication_date": publication_date.isoformat() if publication_date else None,
+                                        "metadata": {
+                                            "word_count": len(content.split()),
+                                            "source": "brightdata_http_request_fallback",
+                                            "zone": zone,
+                                            "request_attempt": attempt + 1,
+                                            "has_publication_date": publication_date is not None
+                                        }
                                     }
-                                }
-                        except Exception as zone_error:
-                            logger.debug("BrightData request fallback exception (zone=%s): %s", zone, zone_error)
+                            except Exception as zone_error:
+                                logger.debug(
+                                    "BrightData request fallback exception (zone=%s attempt=%s): %s",
+                                    zone,
+                                    attempt + 1,
+                                    zone_error,
+                                )
+                                if attempt < self.request_fallback_max_retries:
+                                    await asyncio.sleep(self._compute_request_fallback_backoff_seconds(attempt))
 
             async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
                 response = await client.get(url)

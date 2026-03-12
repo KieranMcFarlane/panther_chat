@@ -1,6 +1,6 @@
 /**
  * Persistent RFP Intelligence Service
- * Handles all entities from Neo4j with pause/resume and reconnection capabilities
+ * Handles cached entities with pause/resume and reconnection capabilities
  */
 
 interface RFPProgress {
@@ -36,7 +36,7 @@ class PersistentRFPService {
   private heartbeatTimeout = 30000; // 30 seconds
   private isClientInitialized = false;
 
-  // Initialize entity count from Neo4j
+  // Initialize entity count from cached entity API
   private async initializeEntityCount(): Promise<void> {
     // Only run on client side
     if (typeof window === 'undefined') {
@@ -51,24 +51,13 @@ class PersistentRFPService {
     }
 
     try {
-      console.log('🔍 [PersistentRFPService] Initializing entity count from Neo4j...');
+      console.log('🔍 [PersistentRFPService] Initializing entity count from cached entity API...');
       
-      const response = await fetch('/api/neo4j-query', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query: `
-            MATCH (e:Entity) 
-            WHERE e.type IN ['Club', 'League', 'Venue', 'Federation', 'Organization']
-            RETURN count(e) as totalEntities
-          `,
-          params: {}
-        })
-      });
+      const response = await fetch('/api/entities?page=1&limit=1');
 
       if (response.ok) {
         const result = await response.json();
-        const totalCount = result.data?.[0]?.totalEntities?.low || 1478; // Fallback to known count
+        const totalCount = result.pagination?.total || 1478; // Fallback to known count
         
         // Update the session with the real entity count
         this.sessionState.progress.totalEntities = totalCount;
@@ -129,9 +118,9 @@ class PersistentRFPService {
       
       console.log(`📊 [PersistentRFPService] Constructor: Initial state - totalEntities: ${this.sessionState.progress.totalEntities}, status: ${this.sessionState.progress.status}`);
       
-      // If we don't have a valid entity count, fetch it from Neo4j
+      // If we don't have a valid entity count, fetch it from the cached entity API
       if (this.sessionState.progress.totalEntities === 0) {
-        console.log('🔄 [PersistentRFPService] Constructor: No entity count found, initializing from Neo4j...');
+        console.log('🔄 [PersistentRFPService] Constructor: No entity count found, initializing from cached entity API...');
         this.initializeEntityCount();
       } else {
         console.log(`✅ [PersistentRFPService] Constructor: Using existing entity count: ${this.sessionState.progress.totalEntities}`);
@@ -165,9 +154,9 @@ class PersistentRFPService {
       
       console.log(`📊 [PersistentRFPService] initializeClientSide: Loaded state - totalEntities: ${this.sessionState.progress.totalEntities}, status: ${this.sessionState.progress.status}`);
       
-      // If we don't have a valid entity count, fetch it from Neo4j
+      // If we don't have a valid entity count, fetch it from the cached entity API
       if (this.sessionState.progress.totalEntities === 0) {
-        console.log('🔄 [PersistentRFPService] initializeClientSide: No entity count found, fetching from Neo4j...');
+        console.log('🔄 [PersistentRFPService] initializeClientSide: No entity count found, fetching from cached entity API...');
         await this.initializeEntityCount();
       } else {
         console.log(`✅ [PersistentRFPService] initializeClientSide: Using existing entity count: ${this.sessionState.progress.totalEntities}`);
@@ -278,7 +267,7 @@ class PersistentRFPService {
     }
   }
 
-  // Start processing all entities from Neo4j
+  // Start processing all entities from the cached entity API
   async startProcessing(): Promise<void> {
     console.log(`🚀 [PersistentRFPService] startProcessing called - current status: ${this.sessionState.progress.status}, totalEntities: ${this.sessionState.progress.totalEntities}`);
     
@@ -292,38 +281,27 @@ class PersistentRFPService {
     console.log('✅ [PersistentRFPService] Manual pause flag reset');
 
     try {
-      // First try to fetch total entity count from Neo4j
+      // First try to fetch total entity count from the cached entity API
       let totalEntities = 0;
       try {
-        const response = await fetch('/api/neo4j-query', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            query: `
-              MATCH (e:Entity) 
-              WHERE e.type IN ['Club', 'League', 'Venue', 'Federation', 'Organization']
-              RETURN count(e) as totalEntities
-            `,
-            params: {}
-          })
-        });
+        const response = await fetch('/api/entities?page=1&limit=1');
 
         if (response.ok) {
           const result = await response.json();
-          totalEntities = result.data[0]?.totalEntities || 0;
-          console.log(`Found ${totalEntities} entities in Neo4j database`);
+          totalEntities = result.pagination?.total || 0;
+          console.log(`Found ${totalEntities} entities in cached entity API`);
         } else {
-          throw new Error('Failed to fetch entity count from Neo4j');
+          throw new Error('Failed to fetch entity count from cached entity API');
         }
       } catch (error) {
         console.error('Failed to fetch entity count:', error);
         // Fallback to a reasonable default
         totalEntities = 50;
-        this.sessionState.progress.errors.push(`Neo4j query failed, using fallback: ${error.message}`);
+        this.sessionState.progress.errors.push(`Entity count query failed, using fallback: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
 
       if (totalEntities === 0) {
-        throw new Error('No entities found in Neo4j database');
+        throw new Error('No entities found in cached entity API');
       }
 
       // Ensure we have a valid entity count

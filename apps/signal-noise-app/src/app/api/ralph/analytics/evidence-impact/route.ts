@@ -12,6 +12,8 @@ import {
   getEvidenceImpact
 } from '@/lib/ralph-analytics-helper';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: Request) {
   try {
     // Load all Ralph states
@@ -58,7 +60,7 @@ export async function GET(request: Request) {
 
     const bestSource = impact[0];
     const mostCostEffective = [...impact].sort((a, b) =>
-      (a.total_impact / a.count) - (b.total_impact / b.count)
+      (a.count > 0 ? a.total_impact / a.count : 0) - (b.count > 0 ? b.total_impact / b.count : 0)
     )[0];
 
     const sourceTypeRecommendation = impact.reduce((acc, item) => {
@@ -67,18 +69,22 @@ export async function GET(request: Request) {
     }, {} as Record<string, number>);
 
     const totalTypeImpact = Object.values(sourceTypeRecommendation).reduce((a, b) => a + b, 0);
-    const budgetAllocation = Object.entries(sourceTypeRecommendation).map(([type, impact]) =>
-      `${type}: ${((impact / totalTypeImpact) * 100).toFixed(0)}%`
-    ).join(", ");
+    const budgetAllocation = totalTypeImpact > 0
+      ? Object.entries(sourceTypeRecommendation).map(([type, impact]) =>
+          `${type}: ${((impact / totalTypeImpact) * 100).toFixed(0)}%`
+        ).join(", ")
+      : "No evidence sources available";
 
     const summary = {
       total_sources: impact.length,
       total_evidence_processed: totalEvidence,
       total_confidence_impact: totalImpact,
       overall_avg_impact: overallAvgImpact,
-      best_source: `${bestSource.source} (${bestSource.avg_impact.toFixed(3)} avg impact)`,
+      best_source: bestSource
+        ? `${bestSource.source} (${bestSource.avg_impact.toFixed(3)} avg impact)`
+        : "N/A",
       most_cost_effective: mostCostEffective
-        ? `${mostCostEffective.source_type} (${(mostCostEffective.total_impact / mostCostEffective.count).toFixed(3)} per evidence)`
+        ? `${mostCostEffective.source_type} (${(mostCostEffective.count > 0 ? mostCostEffective.total_impact / mostCostEffective.count : 0).toFixed(3)} per evidence)`
         : "N/A",
       recommendation: `Allocate scanning budget: ${budgetAllocation}`
     };

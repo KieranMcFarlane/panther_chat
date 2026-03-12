@@ -104,7 +104,7 @@ export function SystemStatusPanel() {
 
   const components = [
     { name: 'Backend API', key: 'backend' },
-    { name: 'Neo4j Database', key: 'neo4j' },
+    { name: 'Graph Store', key: 'neo4j' },
     { name: 'Supabase', key: 'supabase' },
     { name: 'Redis Cache', key: 'redis' },
     { name: 'BrightData MCP', key: 'brightdata' }
@@ -176,7 +176,6 @@ export function SystemStatusPanel() {
     </Card>
   )
 }
-
 
 
 

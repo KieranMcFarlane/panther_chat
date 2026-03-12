@@ -18,6 +18,7 @@ try {
   console.warn('Could not load digital-rfp-opportunities, using comprehensive opportunities as fallback');
   alignedOpportunities = comprehensiveRfpOpportunities;
 }
+const realOpportunities = alignedOpportunities;
 
 export async function GET(request: NextRequest) {
   try {
@@ -256,6 +257,7 @@ async function handleGetOpportunities(searchParams: URLSearchParams) {
       deadline: opp.deadline || null,
       posted_date: opp.posted_date || opp.created_at,
       category: opp.category || 'General',
+      sport: opp.sport || opp.sports_category || opp.category || null,
       subcategory: opp.subcategory || null,
       status: opp.status || 'active',
       priority: opp.priority || 'medium',
@@ -672,7 +674,7 @@ async function handleSystemStatus() {
         system_status: {
           health_score: 100,
           last_update: new Date().toISOString(),
-          data_sources: ['BrightData RFP Analysis', 'Neo4j Knowledge Graph', 'Manual Research'],
+          data_sources: ['BrightData RFP Analysis', 'FalkorDB Graph Intelligence', 'Manual Research'],
           total_opportunities: realOpportunities.length,
           analysis_methods: ['Keyword Detection', 'Semantic Analysis', 'Service Alignment', 'Pattern Recognition'],
           webhook_status: 'Active',
@@ -693,12 +695,54 @@ async function handleSystemStatus() {
  */
 async function handleExport(searchParams: URLSearchParams) {
   try {
-    console.log('📤 TENDERS API: Exporting real RFP opportunities data');
-    
+    console.log('📤 TENDERS API: Exporting opportunities from canonical runtime dataset');
+
+    const status = searchParams.get('status') || undefined;
+    const source = searchParams.get('source') || undefined;
+    const sport = searchParams.get('sport') || undefined;
+    const search = searchParams.get('search') || undefined;
+
+    const { data: rows, error } = await supabase
+      .from('rfp_opportunities')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(5000);
+
+    if (error) {
+      throw error;
+    }
+
+    const opportunities = (rows || []).map((opp: any) => ({
+      title: opp.title || 'Untitled Opportunity',
+      organization: opp.organization || 'Unknown Organization',
+      value: opp.value || '',
+      status: opp.status || 'active',
+      source: opp.source || 'rfp_opportunities',
+      deadline: opp.deadline || '',
+      category: opp.category || 'General',
+      sport: opp.sport || opp.sports_category || opp.category || '',
+      yellow_panther_fit: opp.yellow_panther_fit || 0,
+      confidence: opp.confidence_score ? Math.round(Number(opp.confidence_score) * 100) : '',
+      priority_score: opp.priority_score || '',
+      contact: opp.contact_info || '',
+      source_url: opp.source_url || ''
+    }));
+
+    const filtered = opportunities.filter((opp: any) => {
+      if (status && status !== 'all' && String(opp.status).toLowerCase() !== status.toLowerCase()) return false;
+      if (source && source !== 'all' && String(opp.source).toLowerCase() !== source.toLowerCase()) return false;
+      if (sport && sport !== 'all' && String(opp.sport).toLowerCase() !== sport.toLowerCase()) return false;
+      if (search) {
+        const haystack = `${opp.title} ${opp.organization} ${opp.category}`.toLowerCase();
+        if (!haystack.includes(search.toLowerCase())) return false;
+      }
+      return true;
+    });
+
     const csvContent = [
-      'Title,Organization,Value,Status,Source,Deadline,Category,Yellow Panther Fit,Confidence,Priority Score,Contact,URL',
-      ...realOpportunities.map(opp => 
-        `"${opp.title}","${opp.organization}","${opp.value}","${opp.status}","${opp.source}","${opp.deadline || 'No deadline'}","${opp.category}","${opp.yellow_panther_fit}%","${opp.confidence || 'N/A'}","${opp.priority_score}","${opp.contact || 'N/A'}","${opp.url || 'N/A'}"`
+      'title,organization,value,status,source,deadline,category,sport,yellow_panther_fit,confidence,priority_score,contact,source_url',
+      ...filtered.map((opp: any) =>
+        `"${String(opp.title).replaceAll('"', '""')}","${String(opp.organization).replaceAll('"', '""')}","${String(opp.value).replaceAll('"', '""')}","${String(opp.status).replaceAll('"', '""')}","${String(opp.source).replaceAll('"', '""')}","${String(opp.deadline).replaceAll('"', '""')}","${String(opp.category).replaceAll('"', '""')}","${String(opp.sport).replaceAll('"', '""')}","${String(opp.yellow_panther_fit).replaceAll('"', '""')}","${String(opp.confidence).replaceAll('"', '""')}","${String(opp.priority_score).replaceAll('"', '""')}","${String(opp.contact).replaceAll('"', '""')}","${String(opp.source_url).replaceAll('"', '""')}"`
       )
     ].join('\n');
 

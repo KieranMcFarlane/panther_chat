@@ -81,7 +81,6 @@ export default function ConventionCalendar({ onSelectEvent, onCreateEvent }: Con
     try {
       setLoading(true)
       const searchParams = new URLSearchParams({
-        year: currentDate.getFullYear().toString(),
         ...(filters.type && { type: filters.type }),
         ...(filters.location && { location: filters.location }),
         ...(filters.federation && { federation: filters.federation })
@@ -277,6 +276,22 @@ export default function ConventionCalendar({ onSelectEvent, onCreateEvent }: Con
     )
   }
 
+  const startOfCurrentWeek = startOfWeek(currentDate, { locale: enUS })
+  const endOfCurrentWeek = new Date(startOfCurrentWeek)
+  endOfCurrentWeek.setDate(endOfCurrentWeek.getDate() + 7)
+
+  const windowConventions = conventions.filter((convention) => {
+    const start = convention.start
+    if (currentView === Views.MONTH) {
+      return start.getMonth() === currentDate.getMonth() && start.getFullYear() === currentDate.getFullYear()
+    }
+    if (currentView === Views.WEEK) {
+      return start >= startOfCurrentWeek && start < endOfCurrentWeek
+    }
+    // List view is treated as the current filtered set
+    return true
+  })
+
   return (
     <div className="space-y-6">
       {/* Header with Filters */}
@@ -284,6 +299,7 @@ export default function ConventionCalendar({ onSelectEvent, onCreateEvent }: Con
         <div>
           <h1 className="text-3xl font-bold text-white mb-2 page-title">Sports Convention Calendar</h1>
           <p className="text-fm-light-grey">Track key sports industry events and networking opportunities</p>
+          <p className="text-xs text-fm-medium-grey mt-1">View controls are always available above the calendar: Month, Week, List.</p>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
@@ -301,13 +317,6 @@ export default function ConventionCalendar({ onSelectEvent, onCreateEvent }: Con
               className="bg-custom-box border-custom-border text-white placeholder:text-fm-medium-grey w-48"
             />
           </div>
-          <Button 
-            onClick={() => setCurrentView(currentView === Views.MONTH ? Views.AGENDA : Views.MONTH)}
-            className="bg-yellow-500 text-black hover:bg-yellow-400"
-          >
-            <CalendarIcon className="w-4 h-4 mr-2" />
-            Toggle View
-          </Button>
         </div>
       </div>
 
@@ -472,22 +481,22 @@ export default function ConventionCalendar({ onSelectEvent, onCreateEvent }: Con
 
             {/* Quick Stats */}
             <Card className="bg-custom-box border border-custom-border p-4">
-              <h3 className="text-white font-semibold mb-3">This Month</h3>
+              <h3 className="text-white font-semibold mb-3">Selected Window</h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-fm-light-grey">Total Events</span>
-                  <span className="text-white">{conventions.length}</span>
+                  <span className="text-white">{windowConventions.length}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-fm-light-grey">High Value (8+ score)</span>
                   <span className="text-green-400">
-                    {conventions.filter(c => c.networkingScore >= 8).length}
+                    {windowConventions.filter(c => c.networkingScore >= 8).length}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-fm-light-grey">UK Based</span>
                   <span className="text-blue-400">
-                    {conventions.filter(c => c.location.toLowerCase().includes('london') || c.location.toLowerCase().includes('manchester')).length}
+                    {windowConventions.filter(c => c.location.toLowerCase().includes('london') || c.location.toLowerCase().includes('manchester')).length}
                   </span>
                 </div>
               </div>

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { Neo4jService } from '@/lib/neo4j';
+import { supabase } from '@/lib/supabase-client';
+import { resolveEntityForDossier } from '@/lib/dossier-entity';
+import { buildLegacyRelationshipGraphFilter, resolveGraphId } from '@/lib/graph-id';
 import { 
   calculateRFPScore, 
   generateOptimizedSearchQueries, 
@@ -16,7 +18,7 @@ import {
  * 20% detection rate with 92% accuracy validated
  * Integrates with Connection Intelligence for network advantage scoring
  * 
- * Architecture: BrightData → Optimized Analysis → Connection Intelligence → Neo4j Storage → Dashboard
+ * Architecture: BrightData → Optimized Analysis → Connection Intelligence → Supabase Cache → Dashboard
  */
 
 interface EnhancedRFPMonitoringPayload {
@@ -49,6 +51,7 @@ interface EnhancedRFPMonitoringPayload {
 interface EnhancedRFPAnalysis {
   analysis_id: string;
   entity_information: {
+    graph_id?: string;
     name: string;
     type: string;
     sport?: string;
@@ -114,12 +117,6 @@ interface EnhancedRFPAnalysis {
 }
 
 class EnhancedRFPMonitoringService {
-  private neo4jService: Neo4jService;
-
-  constructor() {
-    this.neo4jService = new Neo4jService();
-  }
-
   async processEnhancedRFP(payload: EnhancedRFPMonitoringPayload): Promise<EnhancedRFPAnalysis> {
     const startTime = Date.now();
     
@@ -204,7 +201,7 @@ class EnhancedRFPMonitoringService {
         }
       };
       
-      // Step 9: Store analysis in Neo4j
+      // Step 9: Store analysis in Supabase cache
       await this.storeEnhancedAnalysis(analysis, payload);
       
       // Step 10: Trigger real-time notifications for high-value opportunities
@@ -231,29 +228,24 @@ class EnhancedRFPMonitoringService {
 
   private async extractEntityInformation(entityName: string): Promise<any> {
     try {
-      // Try to find exact match in Neo4j
-      const cypher = `
-        MATCH (e:Entity)
-        WHERE toLower(e.name) = toLower($entity_name)
-        RETURN e.name as name,
-               e.id as id,
-               e.type as type,
-               e.sport as sport,
-               e.country as country,
-               e.linkedin as linkedin,
-               e.yellowPantherPriority as priority,
-               e.digitalTransformationScore as digital_score,
-               e.yellowPantherFit as fit_score
-        LIMIT 1
-      `;
-      
-      const result = await this.neo4jService.executeQuery(cypher, { entity_name: entityName });
-      
-      if (result.length > 0) {
-        return result[0].toObject();
+      const entity = await resolveEntityForDossier(entityName);
+
+      if (entity) {
+        return {
+          id: entity.id,
+          graph_id: resolveGraphId(entity),
+          name: entity.properties?.name || entityName,
+          type: entity.properties?.type || entity.labels?.[0] || 'Unknown',
+          sport: entity.properties?.sport,
+          country: entity.properties?.country,
+          linkedin: entity.properties?.linkedin,
+          priority: entity.properties?.yellowPantherPriority ?? entity.properties?.yellow_panther_priority ?? null,
+          digital_score: entity.properties?.digitalTransformationScore ?? entity.properties?.digital_transformation_score ?? 50,
+          fit_score: entity.properties?.yellowPantherFit ?? entity.properties?.yellow_panther_fit ?? 70
+        };
       }
       
-      // If not found in Neo4j, create basic entity info
+      // If not found in cache, create basic entity info
       return {
         name: entityName,
         type: 'Unknown',
@@ -317,7 +309,7 @@ class EnhancedRFPMonitoringService {
     });
     
     return {
-      total_matches,
+      total_matches: totalMatches,
       matched_categories: matchedCategories.sort((a, b) => b.contribution_to_score - a.contribution_to_score),
       high_value_keywords: [],
       category_distribution: this.calculateCategoryDistribution(matchedCategories),
@@ -528,21 +520,21 @@ class EnhancedRFPMonitoringService {
     return actions;
   }
 
-  private performCompetitiveAnalysis(payload: EnhancedRFPMonitoringPayload, rfpScore: any, keywordAnalysis: EnhancedRFP_analysis['keyword_analysis']): EnhancedRFP_analysis['competitive_analysis'] {
-  const marketPosition = this.assessMarketPosition(rfpScore, keywordAnalysis);
-  const differentiators = this.identifyYellowPantherDifferentiators();
-  const timingAdvantage = this.assessTimingAdvantage(payload);
-  const riskFactors = this.identifyRiskFactors(rfpScore);
-  
-  return {
-    market_position,
-    differentiators,
-    timing_advantage,
-    risk_factors
-  };
+  private performCompetitiveAnalysis(payload: EnhancedRFPMonitoringPayload, rfpScore: any, keywordAnalysis: EnhancedRFPAnalysis['keyword_analysis']): EnhancedRFPAnalysis['competitive_analysis'] {
+    const marketPosition = this.assessMarketPosition(rfpScore, keywordAnalysis);
+    const differentiators = this.identifyYellowPantherDifferentiators();
+    const timingAdvantage = this.assessTimingAdvantage(payload);
+    const riskFactors = this.identifyRiskFactors(rfpScore);
+    
+    return {
+      market_position: marketPosition,
+      differentiators,
+      timing_advantage: timingAdvantage,
+      risk_factors: riskFactors
+    };
   }
 
-  private assessMarketPosition(rfpScore: any, keywordAnalysis: EnhancedRFP_analysis['keyword_analysis']): string {
+  private assessMarketPosition(rfpScore: any, keywordAnalysis: EnhancedRFPAnalysis['keyword_analysis']): string {
     if (rfpScore.confidence_score >= 90) return 'Market leader position';
     if (rfpScore.confidence_score >= 80) return 'Strong competitive position';
     if (rfpScore.confidence_score >= 70) return 'Favorable position with network advantage';
@@ -588,28 +580,44 @@ class EnhancedRFPMonitoringService {
     return risks;
   }
 
-  private async getExistingConnections(entityId?: string): EnhancedRFP_analysis['entity_information']['existing_connections'] {
+  private async getExistingConnections(entityId?: string): Promise<EnhancedRFPAnalysis['entity_information']['existing_connections']> {
     if (!entityId) {
       return { direct_connections: 0, mutual_connections: 0, network_strength: 0 };
     }
     
     try {
-      const cypher = `
-        MATCH (e:Entity {id: $entity_id})
-        OPTIONAL MATCH (e)-[:HAS_DIRECT_CONNECTION]->(yp:YellowPantherPerson)
-        OPTIONAL MATCH (e)-[:HAS_MUTUAL_CONNECTION]->(mc:MutualConnection)
-        OPTIONAL MATCH (e)-[:HAS_STRATEGIC_RELATIONSHIP]->(sr:StrategicRelationship)
-        RETURN 
-          count(DISTINCT yp) as direct_connections,
-          count(DISTINCT mc) as mutual_connections,
-          (count(DISTINCT yp) * 20 + count(DISTINCT mc) * 10 + count(DISTINCT sr) * 15) as network_strength
-      `;
-      
-      const result = await this.neo4jService.executeQuery(cypher, { entity_id });
-      
-      if (result.length > 0) {
-        return result[0].toObject();
+      const { data: entity } = await supabase
+        .from('cached_entities')
+        .select('graph_id, neo4j_id')
+        .eq('id', entityId)
+        .maybeSingle();
+
+      const graphKey = resolveGraphId(entity) || String(entityId);
+      const { data, error } = await supabase
+        .from('entity_relationships')
+        .select('relationship_type, source_labels, target_labels')
+        .or(buildLegacyRelationshipGraphFilter(graphKey))
+        .eq('is_active', true);
+
+      if (error) {
+        throw error;
       }
+
+      const directConnections = (data || []).filter((row: any) =>
+        row.relationship_type === 'HAS_DIRECT_CONNECTION'
+      ).length;
+      const mutualConnections = (data || []).filter((row: any) =>
+        row.relationship_type === 'HAS_MUTUAL_CONNECTION'
+      ).length;
+      const strategicRelationships = (data || []).filter((row: any) =>
+        row.relationship_type === 'HAS_STRATEGIC_RELATIONSHIP'
+      ).length;
+
+      return {
+        direct_connections: directConnections,
+        mutual_connections: mutualConnections,
+        network_strength: directConnections * 20 + mutualConnections * 10 + strategicRelationships * 15
+      };
       
     } catch (error) {
       console.error('Failed to get existing connections:', error);
@@ -620,36 +628,29 @@ class EnhancedRFPMonitoringService {
 
   private async storeEnhancedAnalysis(analysis: EnhancedRFPAnalysis, payload: EnhancedRFPMonitoringPayload): Promise<void> {
     try {
-      const cypher = `
-        MERGE (e:Entity {name: $entity_name})
-        CREATE (e)-[:HAS_ENHANCED_RFP_ANALYSIS]->(era:EnhancedRFPAnalysis {
-          id: $analysis_id,
-          source_platform: $source_platform,
-          source_url: $source_url,
-          detection_timestamp: datetime($detection_timestamp),
-          rfp_assessment: $rfp_assessment,
-          keyword_analysis: $keyword_analysis,
-          connection_intelligence: $connection_intelligence,
-          recommended_actions: $recommended_actions,
-          competitive_analysis: $competitive_analysis,
-          processing_metadata: $processing_metadata,
-          created_at: datetime()
-        })
-      `;
-      
-      await this.neo4jService.executeQuery(cypher, {
-        entity_name: analysis.entity_information.name,
-        analysis_id: analysis.analysis_id,
-        source_platform: payload.source_platform,
-        source_url: payload.content_analysis.url,
-        detection_timestamp: payload.timestamp,
-        rfp_assessment: JSON.stringify(analysis.rfp_assessment),
-        keyword_analysis: JSON.stringify(analysis.keyword_analysis),
-        connection_intelligence: JSON.stringify(analysis.connection_intelligence),
-        recommended_actions: JSON.stringify(analysis.recommended_actions),
-        competitive_analysis: JSON.stringify(analysis.competitive_analysis),
-        processing_metadata: JSON.stringify(analysis.metadata)
-      });
+      const { error } = await supabase
+        .from('entity_cache')
+        .upsert({
+          id: `enhanced_rfp_analysis:${analysis.analysis_id}`,
+          entity_id: String(analysis.entity_information.id || analysis.entity_information.graph_id || analysis.entity_information.name),
+          entity_type: 'enhanced_rfp_analysis',
+          organization: analysis.entity_information.name,
+          status: 'completed',
+          data: {
+            ...analysis,
+            payload_metadata: payload.metadata,
+            source_platform: payload.source_platform,
+            source_url: payload.content_analysis.url,
+            detection_timestamp: payload.timestamp
+          },
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'id'
+        });
+
+      if (error) {
+        throw error;
+      }
       
     } catch (error) {
       console.error('Failed to store enhanced analysis:', error);

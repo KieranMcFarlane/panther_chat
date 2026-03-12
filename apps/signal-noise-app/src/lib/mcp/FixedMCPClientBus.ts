@@ -416,16 +416,14 @@ export class FixedMCPClientBus {
 // Fixed MCP server configurations
 export const FIXED_MCP_SERVERS: MCPServerConfig[] = [
   {
-    name: 'neo4j-mcp',
-    command: 'npx',
-    args: ['-y', '@alanse/mcp-neo4j-server'],
+    name: 'graph-mcp',
+    command: 'python3',
+    args: ['backend/falkordb_mcp_server_fastmcp.py'],
     env: {
-      NEO4J_URI: process.env.NEO4J_URI || 'neo4j+s://cce1f84b.databases.neo4j.io',
-      NEO4J_USERNAME: process.env.NEO4J_USERNAME || 'neo4j',
-      NEO4J_PASSWORD: process.env.NEO4J_PASSWORD || '',
-      NEO4J_DATABASE: process.env.NEO4J_DATABASE || 'neo4j',
-      AURA_INSTANCEID: process.env.AURA_INSTANCEID || 'cce1f84b',
-      AURA_INSTANCENAME: process.env.AURA_INSTANCENAME || 'Instance01'
+      FALKORDB_URI: process.env.FALKORDB_URI || '',
+      FALKORDB_USER: process.env.FALKORDB_USER || '',
+      FALKORDB_PASSWORD: process.env.FALKORDB_PASSWORD || '',
+      FALKORDB_DATABASE: process.env.FALKORDB_DATABASE || '',
     }
   },
   {

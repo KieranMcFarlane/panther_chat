@@ -76,10 +76,9 @@ class EntityScalingManager {
       ...config
     };
 
-    this.initialize();
   }
 
-  private async initialize() {
+  async initialize() {
     if (this.isInitialized) return;
 
     console.log('🚀 Initializing Entity Scaling Manager...');

@@ -5,9 +5,9 @@ import { liveLogService } from './LiveLogService';
 interface ClaudeAgentConfig {
   brightdataApiKey: string;
   brightdataZone: string;
-  neo4jUri: string;
-  neo4jUsername: string;
-  neo4jPassword: string;
+  graphUri: string;
+  graphUsername: string;
+  graphPassword: string;
   teamsWebhookUrl: string;
   perplexityApiKey: string;
   searchQueries: string[];
@@ -647,7 +647,7 @@ Enrich all 4,000+ sports entities using the complete schema from ENTITY_SCHEMA_D
 🔍 Enrichment Sources:
 - BrightData MCP: Web scraping, company research, market data
 - Perplexity MCP: Strategic analysis, market insights, competitive intelligence  
-- Neo4j MCP: Relationship mapping, knowledge graph integration
+- Graph MCP: Relationship mapping and graph intelligence integration
 
 📊 Processing:
 - Batch size: 50 entities per cycle
@@ -655,7 +655,7 @@ Enrich all 4,000+ sports entities using the complete schema from ENTITY_SCHEMA_D
 - Quality threshold: 80% completion minimum
 - Duplicate detection and conflict resolution
 
-💾 Store enriched data in Neo4j with Supabase caching for performance.
+💾 Store enriched data in the graph store with Supabase caching for performance.
 
 Current Session: Enrichment Agent Operational
 Agent Type: Comprehensive Entity Enrichment
@@ -671,12 +671,12 @@ Mode: Batch Processing with Quality Assurance`,
 1. Begin batch processing of sports entities (target: 50 entities per batch)
 2. Apply ENTITY_SCHEMA_DEFINITION.md for complete coverage
 3. Use available MCP tools for data enrichment:
-   - Neo4j MCP: Query existing relationships and entity data
+   - Graph MCP: Query existing relationships and entity data
    - BrightData MCP: Research current information and web data
    - Perplexity MCP: Get market insights and strategic analysis
 4. Enrich key schema fields: digital maturity, contacts, financial data, market position
 5. Ensure 80%+ completion rate with quality validation
-6. Store results in Neo4j with proper relationship mapping
+6. Store results in the graph store with proper relationship mapping
 
 Start with the highest priority sports clubs and organizations, then proceed through leagues, venues, and personnel. Focus on actionable intelligence for business development.`);
 
@@ -904,9 +904,9 @@ Start with the highest priority sports clubs and organizations, then proceed thr
     const config: ClaudeAgentConfig = {
       brightdataApiKey: process.env.BRIGHTDATA_API_TOKEN || '',
       brightdataZone: process.env.BRIGHTDATA_ZONE || 'linkedin_posts_monitor',
-      neo4jUri: process.env.NEO4J_URI || '',
-      neo4jUsername: process.env.NEO4J_USERNAME || '',
-      neo4jPassword: process.env.NEO4J_PASSWORD || '',
+      graphUri: process.env.FALKORDB_URI || '',
+      graphUsername: process.env.FALKORDB_USER || '',
+      graphPassword: process.env.FALKORDB_PASSWORD || '',
       teamsWebhookUrl: process.env.TEAMS_WEBHOOK_URL || '',
       perplexityApiKey: process.env.PERPLEXITY_API_KEY || '',
       searchQueries: [
@@ -933,8 +933,8 @@ Start with the highest priority sports clubs and organizations, then proceed thr
       throw new Error('BRIGHTDATA_API_TOKEN environment variable is required');
     }
 
-    if (!config.neo4jUri || !config.neo4jUsername || !config.neo4jPassword) {
-      throw new Error('Neo4j configuration (NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD) is required');
+    if (!config.graphUri || !config.graphUsername || !config.graphPassword) {
+      throw new Error('Graph store configuration (FALKORDB_URI, FALKORDB_USER, FALKORDB_PASSWORD) is required');
     }
 
     if (!config.perplexityApiKey) {

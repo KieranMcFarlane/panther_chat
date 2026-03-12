@@ -32,10 +32,7 @@ interface StadiumOpportunity {
 
 export class ClaudeGLM4VIntegration {
   private mcpAvailable = false;
-
-  constructor() {
-    this.initializeMCP();
-  }
+  private initializationPromise: Promise<void> | null = null;
 
   private async initializeMCP() {
     try {
@@ -48,6 +45,14 @@ export class ClaudeGLM4VIntegration {
     }
   }
 
+  private async ensureInitialized() {
+    if (!this.initializationPromise) {
+      this.initializationPromise = this.initializeMCP();
+    }
+
+    await this.initializationPromise;
+  }
+
   /**
    * Enhanced RFP analysis using both Claude and GLM-4.5V
    */
@@ -56,6 +61,8 @@ export class ClaudeGLM4VIntegration {
     analysisType: 'requirements' | 'compliance' | 'scoring' | 'deadlines',
     context?: string
   ): Promise<RFPDocumentAnalysis> {
+    await this.ensureInitialized();
+
     if (!this.mcpAvailable) {
       throw new Error('GLM-4.5V MCP not available');
     }
@@ -86,6 +93,8 @@ export class ClaudeGLM4VIntegration {
     organizationType: 'club' | 'league' | 'federation' | 'venue',
     focusArea: 'partnerships' | 'digital_transformation' | 'procurement_signals' | 'technology_stack'
   ): Promise<WebpageIntelligence> {
+    await this.ensureInitialized();
+
     if (!this.mcpAvailable) {
       throw new Error('GLM-4.5V MCP not available');
     }
@@ -118,6 +127,8 @@ export class ClaudeGLM4VIntegration {
     competitorScreenshots: string[],
     analysisFramework: 'digital_maturity' | 'partnership_strategy' | 'technology_adoption' | 'fan_engagement'
   ): Promise<any> {
+    await this.ensureInitialized();
+
     if (!this.mcpAvailable) {
       throw new Error('GLM-4.5V MCP not available');
     }
@@ -157,6 +168,8 @@ export class ClaudeGLM4VIntegration {
     recommendation: string;
     confidence: number;
   }> {
+    await this.ensureInitialized();
+
     if (!this.mcpAvailable) {
       throw new Error('GLM-4.5V MCP not available');
     }
@@ -195,6 +208,8 @@ export class ClaudeGLM4VIntegration {
     venueImages: string[],
     opportunityFocus: 'digital_signage' | 'wifi_infrastructure' | 'fan_experience' | 'sponsorship_activation'
   ): Promise<StadiumOpportunity[]> {
+    await this.ensureInitialized();
+
     if (!this.mcpAvailable) {
       throw new Error('GLM-4.5V MCP not available');
     }

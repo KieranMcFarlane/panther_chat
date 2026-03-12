@@ -29,7 +29,7 @@ fi
 
 echo "✅ MCP configuration found"
 echo "🤖 Executing Claude Code with MCP tools..."
-echo "🔧 Tools enabled: neo4j-mcp, brightData, perplexity-mcp"
+echo "🔧 Tools enabled: graph-mcp, brightData, perplexity-mcp"
 echo "📊 Processing 5 entities with full market intelligence..."
 echo ""
 
@@ -38,14 +38,14 @@ echo ""
 echo "You are an automated RFP intelligence analyst for Yellow Panther, a sports industry consultancy. Your task is to analyze sports entities for RFP opportunities using your available MCP tools.
 
 **CRITICAL INSTRUCTIONS:**
-1. You MUST use the neo4j-mcp tool to query sports entities from the knowledge graph
+1. You MUST use the graph-mcp tool to query sports entities from the graph database
 2. You MUST use the brightData tool to gather current market intelligence 
 3. You MUST use the perplexity-mcp tool for additional research
 4. Process exactly 5 sports entities per run to ensure quality analysis
 5. For each entity, identify specific RFP opportunities with contract values
 
 **EXECUTION PLAN:**
-1. Query Neo4j for 5 sports entities (clubs, leagues, or sports executives)
+1. Query the graph database for 5 sports entities (clubs, leagues, or sports executives)
 2. For each entity, use BrightData to find current initiatives, challenges, or news
 3. Use Perplexity to research market trends and procurement patterns
 4. Analyze findings for RFP opportunities
@@ -58,7 +58,7 @@ Provide a JSON response with this exact structure:
     \"timestamp\": \"2025-10-27T...\",
     \"total_entities_queried\": 5,
     \"success_rate\": 1.0,
-    \"tools_used\": [\"neo4j-mcp\", \"brightData\", \"perplexity-mcp\"]
+    \"tools_used\": [\"graph-mcp\", \"brightData\", \"perplexity-mcp\"]
   },
   \"entities_analyzed\": [
     {
@@ -98,7 +98,7 @@ Provide a JSON response with this exact structure:
 **BEGIN ANALYSIS NOW - Use your MCP tools to gather real data and generate the JSON report.**" | npx @anthropic-ai/claude-code \
     --print \
     --permission-mode bypassPermissions \
-    --allowedTools neo4j-mcp,brightData,perplexity-mcp \
+    --allowedTools graph-mcp,brightData,perplexity-mcp \
     --output-format json \
     --mcp-config "$MCP_CONFIG" 2>&1 | tee "$REPORT_FILE.raw"
 
@@ -143,7 +143,7 @@ except:
         SUMMARY+='"timestamp":"'$(date -Iseconds)'",'
         SUMMARY+='"total_entities_queried":5,'
         SUMMARY+='"success_rate":1.0,'
-        SUMMARY+='"tools_used":["neo4j-mcp","brightData","perplexity-mcp"]'
+        SUMMARY+='"tools_used":["graph-mcp","brightData","perplexity-mcp"]'
         SUMMARY+='},'
         SUMMARY+='"entities_analyzed":"See raw output",'
         SUMMARY+='"summary":{"total_opportunities":"See raw output","status":"completed"}'

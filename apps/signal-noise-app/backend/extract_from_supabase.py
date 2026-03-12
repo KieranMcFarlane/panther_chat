@@ -166,7 +166,8 @@ class SupabaseExtractor:
                         properties = {}
 
                 # Get neo4j_id
-                neo4j_id = entity.get('neo4j_id') or str(entity.get('id', ''))
+                stable_property_id = properties.get('neo4j_id') if isinstance(properties, dict) else None
+                neo4j_id = stable_property_id or entity.get('neo4j_id') or str(entity.get('id', ''))
                 if not neo4j_id:
                     logger.warning(f"⚠️  Entity missing neo4j_id, skipping: {properties.get('name', 'Unknown')}")
                     continue

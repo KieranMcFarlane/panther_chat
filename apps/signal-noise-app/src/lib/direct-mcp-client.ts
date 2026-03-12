@@ -12,11 +12,20 @@ interface MCPToolResult {
   isError?: boolean;
 }
 
+function isBuildPhase(): boolean {
+  return process.env.NEXT_PHASE === 'phase-production-build' ||
+    process.env.npm_lifecycle_event === 'build';
+}
+
 class DirectMCPClient {
   private isConnected = false;
   private baseUrl = 'http://localhost:3005';
 
   async connect(): Promise<void> {
+    if (isBuildPhase()) {
+      return;
+    }
+
     try {
       console.log('🔌 Checking for existing Headless Verifier MCP server...');
       
@@ -115,4 +124,6 @@ class DirectMCPClient {
 export const directMCPClient = new DirectMCPClient();
 
 // Auto-connect on module import
-directMCPClient.connect().catch(console.error);
+if (!isBuildPhase()) {
+  directMCPClient.connect().catch(console.error);
+}

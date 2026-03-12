@@ -12,9 +12,9 @@ export async function POST(request: NextRequest) {
     const config = {
       brightdataApiKey: process.env.BRIGHTDATA_API_TOKEN,
       brightdataZone: process.env.BRIGHTDATA_ZONE || 'linkedin_posts_monitor',
-      neo4jUri: process.env.NEO4J_URI,
-      neo4jUsername: process.env.NEO4J_USERNAME,
-      neo4jPassword: process.env.NEO4J_PASSWORD,
+      graphUri: process.env.FALKORDB_URI,
+      graphUsername: process.env.FALKORDB_USER,
+      graphPassword: process.env.FALKORDB_PASSWORD,
       teamsWebhookUrl: process.env.TEAMS_WEBHOOK_URL,
       searchQueries: [
         'sports technology RFP',
@@ -43,10 +43,10 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
-    if (!config.neo4jUri || !config.neo4jUsername || !config.neo4jPassword) {
+    if (!config.graphUri || !config.graphUsername || !config.graphPassword) {
       return NextResponse.json({
         success: false,
-        error: 'Neo4j configuration (NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD) is required'
+        error: 'Graph store configuration (FALKORDB_URI, FALKORDB_USER, FALKORDB_PASSWORD) is required'
       }, { status: 400 });
     }
 
@@ -99,7 +99,7 @@ export async function GET() {
     message: 'Claude Agent test endpoint is ready',
     environment: {
       hasBrightDataToken: !!process.env.BRIGHTDATA_API_TOKEN,
-      hasNeo4jConfig: !!(process.env.NEO4J_URI && process.env.NEO4J_USERNAME),
+      hasGraphConfig: !!(process.env.FALKORDB_URI && process.env.FALKORDB_USER),
       hasTeamsWebhook: !!process.env.TEAMS_WEBHOOK_URL,
       cronEnabled: process.env.CLAUDE_AGENT_CRON_ENABLED === 'true'
     }

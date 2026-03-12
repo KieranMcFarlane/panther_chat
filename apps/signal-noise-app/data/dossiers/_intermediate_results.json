@@ -1,0 +1,43 @@
+{
+  "timestamp": "2026-02-22T18:57:39.937368+00:00",
+  "outputs": [
+    {
+      "entity_id": null,
+      "entity_name": "Suntory Sunbirds",
+      "tier": "PREMIUM",
+      "success": true,
+      "dossier_data": {
+        "metadata": {
+          "entity_id": null,
+          "generated_at": "2026-02-22T18:57:02.716818+00:00",
+          "data_freshness": 0,
+          "confidence_overall": 0,
+          "priority_signals": [],
+          "tier": "STANDARD",
+          "priority_score": 50,
+          "hypothesis_count": 0,
+          "signal_count": 0
+        },
+        "executive_summary": {
+          "overall_assessment": {
+            "digital_maturity": {
+              "score": 0,
+              "trend": "unknown",
+              "key_strengths": [],
+              "key_gaps": []
+            }
+          },
+          "quick_actions": [],
+          "key_insights": []
+        },
+        "extracted_hypotheses": [],
+        "extracted_signals": [],
+        "generation_time_seconds": 37.213989
+      },
+      "error": null,
+      "generation_time": 37.21563792228699,
+      "cost_usd": 0.057,
+      "timestamp": "2026-02-22T18:57:39.935069+00:00"
+    }
+  ]
+}

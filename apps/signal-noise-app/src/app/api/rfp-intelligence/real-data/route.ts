@@ -134,7 +134,7 @@ function getLiveA2AMCPResults() {
       mcpServersUsed: 4,
       mcpCalls: 12,
       discoveryDuration: '2m 45s',
-      realMCPServers: ['brightdata-mcp', 'neo4j-mcp', 'supabase-mcp', 'byterover-mcp']
+      realMCPServers: ['brightdata-mcp', 'graph-mcp', 'supabase-mcp', 'byterover-mcp']
     }
   };
 }

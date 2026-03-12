@@ -7,14 +7,14 @@
     "Entity": {
       "type": "object",
       "properties": {
-        "neo4j_id": {
+        "graph_id": {
           "type": ["string", "null"],
-          "description": "Neo4j database identifier"
+          "description": "Graph database identifier"
         },
         "labels": {
           "type": "array",
           "items": { "type": "string" },
-          "description": "Neo4j node labels for entity classification"
+          "description": "Graph node labels for entity classification"
         },
         "properties": {
           "type": "object",
@@ -55,7 +55,7 @@
           "description": "Calculated priority score (0-100)"
         }
       },
-      "required": ["neo4j_id", "labels", "properties"]
+      "required": ["graph_id", "labels", "properties"]
     },
     "EntityType": {
       "type": "string",
@@ -341,7 +341,7 @@
   "examples": [
     {
       "entity": {
-        "neo4j_id": "197",
+        "graph_id": "197",
         "labels": ["Club"],
         "properties": {
           "name": "Arsenal FC",

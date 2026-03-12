@@ -209,7 +209,7 @@ class IntelligentEnrichmentScheduler {
         scheduleName: schedule.name,
         result,
         processingTime: Date.now() - startTime,
-        aiPower: 'Claude Agent SDK + MCP Tools'
+        aiPower: 'Claude Agent SDK + Graph MCP Tools'
       };
 
     } catch (error) {
@@ -316,7 +316,7 @@ class IntelligentEnrichmentScheduler {
       nextScheduledRun: this.getNextScheduledRun(),
       schedulerHealth: this.isInitialized ? 'healthy' : 'initializing',
       claudeAgentStatus: 'ready',
-      availableTools: ['neo4j-mcp', 'brightdata-mcp', 'supabase-mcp', 'perplexity-mcp'],
+      availableTools: ['graph-mcp', 'brightdata-mcp', 'supabase-mcp', 'perplexity-mcp'],
       timestamp: new Date().toISOString()
     };
   }

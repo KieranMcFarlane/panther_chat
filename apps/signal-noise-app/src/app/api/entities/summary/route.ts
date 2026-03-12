@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getSupabaseAdmin } from '@/lib/supabase-client'
+import { resolveGraphId } from '@/lib/graph-id'
+
+export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const sport = searchParams.get('sport') || ''
-    
-    // Load environment variables manually
-    const { createClient } = await import('@supabase/supabase-js')
-    const supabaseUrl = 'https://itlcuazbybqlkicsaola.supabase.co'
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml0bGN1YXpieWJxbGtpY3Nhb2xhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkwOTc0MTQsImV4cCI6MjA3NDY3MzQxNH0.UXXSbe1Kk0CH7NkIGnwo3_qmJVV3VUbJz4Dw8lBGcKU'
-    const supabase = createClient(supabaseUrl, supabaseKey)
+    const supabase = getSupabaseAdmin()
     
     console.log(`📊 Summary API: Fetching entity summaries for sport: ${sport || 'all'}`)
     
@@ -18,6 +17,7 @@ export async function GET(request: NextRequest) {
       .from('cached_entities')
       .select(`
         id,
+        graph_id,
         neo4j_id,
         properties->>name,
         properties->>type,
@@ -47,6 +47,7 @@ export async function GET(request: NextRequest) {
         .from('cached_entities')
         .select(`
           id,
+          graph_id,
           neo4j_id,
           properties->>name,
           properties->>type,
@@ -98,7 +99,16 @@ export async function GET(request: NextRequest) {
     
     // Return lightweight entity summaries
     return NextResponse.json({
-      entities: allData || [],
+      entities: (allData || []).map((entity: any) => ({
+        id: entity.id,
+        graph_id: resolveGraphId(entity) || entity.id,
+        name: entity.name,
+        type: entity.type,
+        sport: entity.sport,
+        country: entity.country,
+        level: entity.level,
+        league: entity.league,
+      })),
       summary: {
         count: allData?.length || 0,
         total: count || 0,

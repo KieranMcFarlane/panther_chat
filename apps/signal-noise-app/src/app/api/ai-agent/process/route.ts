@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Inbound } from '@inboundemail/sdk';
 
+export const dynamic = 'force-dynamic';
+
 const inbound = new Inbound(process.env.INBOUND_API_KEY || 'demoZddUekPUOokPVAIgILCUkljUXaLsKPWAKCSlYZBwyFntfqegGIsRBxVyjKvSkPjN');
 
 interface AIEmailRequest {

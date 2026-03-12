@@ -13,8 +13,8 @@ export async function GET(request: NextRequest) {
     const relationshipType = searchParams.get('relationshipType') || ''
     const sourceName = searchParams.get('sourceName') || ''
     const targetName = searchParams.get('targetName') || ''
-    const sourceNeo4jId = searchParams.get('sourceNeo4jId') || ''
-    const targetNeo4jId = searchParams.get('targetNeo4jId') || ''
+    const sourceGraphId = searchParams.get('sourceGraphId') || searchParams.get('sourceNeo4jId') || ''
+    const targetGraphId = searchParams.get('targetGraphId') || searchParams.get('targetNeo4jId') || ''
     const sortBy = searchParams.get('sortBy') || 'relationship_type'
     const sortOrder = searchParams.get('sortOrder') as 'asc' | 'desc' || 'asc'
 
@@ -29,8 +29,8 @@ export async function GET(request: NextRequest) {
       relationshipType,
       sourceName,
       targetName,
-      sourceNeo4jId,
-      targetNeo4jId,
+      sourceGraphId,
+      targetGraphId,
       sortBy,
       sortOrder
     })
@@ -59,12 +59,12 @@ export async function POST(request: NextRequest) {
     const { action = 'sync', options = {} } = body
     
     if (action === 'sync') {
-      console.log('🔄 API: Syncing relationships from Neo4j to Supabase cache')
+      console.log('🔄 API: Syncing relationships from FalkorDB to Supabase cache')
       
       const cacheService = new EntityCacheService()
       await cacheService.initialize()
       
-      const result = await cacheService.syncRelationshipsFromNeo4j(options)
+      const result = await cacheService.syncRelationshipsFromGraph(options)
       
       console.log(`✅ API: Relationship sync complete: ${result.synced} synced, ${result.errors} errors`)
       

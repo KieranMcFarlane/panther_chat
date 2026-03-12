@@ -4,12 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ExternalLink, Mail, Linkedin, ArrowRight, FileText, Target } from "lucide-react"
-import { Entity, Connection } from "@/lib/neo4j"
+import { Entity, Connection } from "@/lib/graph-store"
 import { EntityBadge } from "@/components/badge/EntityBadge"
 import { useRouter } from "next/navigation"
 import { prefetchEntity } from "@/lib/swr-config"
 import { useEffect } from "react"
 import Link from "next/link"
+import { resolveGraphId } from "@/lib/graph-id"
 
 interface EntityCardProps {
   entity: Entity
@@ -21,18 +22,22 @@ interface EntityCardProps {
 
 export function EntityCard({ entity, similarity, connections, rank, onEmailEntity }: EntityCardProps) {
   const router = useRouter()
+  const entityGraphId = resolveGraphId(entity)
+
+  const buildEntityDossierUrl = (currentPage: string) =>
+    `/entity-browser/${entityGraphId}/dossier?from=${currentPage}`
 
   // Prefetch entity detail data when card mounts
   useEffect(() => {
-    if (entity?.neo4j_id) {
+    if (entityGraphId) {
       // Add small delay to avoid thundering herd
       const timer = setTimeout(() => {
-        prefetchEntity(entity.neo4j_id.toString())
+        prefetchEntity(entityGraphId.toString())
       }, Math.random() * 500) // Stagger prefetches 0-500ms
 
       return () => clearTimeout(timer)
     }
-  }, [entity?.neo4j_id])
+  }, [entityGraphId])
 
   const getSimilarityColor = (score: number) => {
     if (score >= 0.9) return "bg-green-500"
@@ -106,7 +111,7 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
     // Get current page from URL and pass it to the entity profile
     const urlParams = new URLSearchParams(window.location.search)
     const currentPage = urlParams.get('page') || '1'
-    router.push(`/entity/${entity.neo4j_id}?from=${currentPage}`)
+    router.push(buildEntityDossierUrl(currentPage))
   }
 
   const latestPipelineRunUrl = typeof entity.properties.last_pipeline_run_detail_url === 'string'
@@ -267,13 +272,13 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
             variant="outline" 
             size="sm" 
             className="w-full"
-            onClick={(e) => {
-              e.stopPropagation()
-              // Get current page from URL and pass it to the entity profile
-              const urlParams = new URLSearchParams(window.location.search)
-              const currentPage = urlParams.get('page') || '1'
-              router.push(`/entity/${entity.neo4j_id}?from=${currentPage}`)
-            }}
+              onClick={(e) => {
+                e.stopPropagation()
+                // Get current page from URL and pass it to the entity profile
+                const urlParams = new URLSearchParams(window.location.search)
+                const currentPage = urlParams.get('page') || '1'
+                router.push(buildEntityDossierUrl(currentPage))
+              }}
           >
             View Full Profile
             <ArrowRight className="h-4 w-4 ml-2" />

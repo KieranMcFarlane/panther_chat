@@ -2,8 +2,8 @@
 // Integrates Claude Agent SDK, Perplexity, and BrightData for comprehensive entity analysis
 
 import { NextRequest, NextResponse } from 'next/server'
-import { neo4jService, neo4jClient } from '@/lib/neo4j'
 import { supabase } from '@/lib/supabase-client'
+import { buildGraphEntityLookupFilter, resolveGraphId } from '@/lib/graph-id'
 
 // BrightData scraping implementation
 async function performBrightDataScraping(entity: any): Promise<any> {
@@ -331,118 +331,83 @@ async function performPerplexityResearch(entity: any): Promise<any> {
 }
 
 // Database operations
-async function getEntityFromNeo4j(entity_id: string) {
-  const driver = neo4jClient;
-  const session = driver.session();
-  
+async function getEntityFromSupabase(entity_id: string) {
   try {
-    console.log(`🔍 Querying Neo4j for entity_id: ${entity_id}`);
-    
-    // First try the exact ID matches
-    let query = `
-      MATCH (e) 
-      WHERE elementId(e) = $entity_id 
-      RETURN e {
-        id: elementId(e),
-        labels: labels(e),
-        properties: properties(e)
-      } as entity
-    `;
-    
-    let result = await session.run(query, { entity_id });
-    console.log(`📊 ElementId query returned ${result.records.length} records`);
-    
-    // If no match, try to match by string ID property (for API IDs)
-    if (result.records.length === 0) {
-      console.log(`🔄 Trying fallback query with string ID matching`);
-      query = `
-        MATCH (e) 
-        WHERE e.id = $entity_id OR toString(e.neo4j_id) = $entity_id
-        RETURN e {
-          id: elementId(e),
-          labels: labels(e),
-          properties: properties(e)
-        } as entity
-      `;
-      
-      result = await session.run(query, { entity_id });
-      console.log(`📊 Fallback query returned ${result.records.length} records`);
-    }
-    
-    // If still no match, try name-based matching for common sports entities
-    if (result.records.length === 0) {
-      console.log(`🔄 No ID match found, trying name-based matching`);
-      
-      // Try to match by common sports entity names
+    console.log(`🔍 Querying Supabase cached_entities for entity_id: ${entity_id}`);
+
+    const exactIdQuery = supabase
+      .from('cached_entities')
+      .select('id, graph_id, neo4j_id, labels, properties')
+      .or(buildGraphEntityLookupFilter(entity_id))
+      .limit(1);
+
+    let { data, error } = await exactIdQuery;
+    if (error) throw error;
+
+    if ((!data || data.length === 0) && entity_id.trim()) {
       const possibleNames = [
         entity_id.toLowerCase(),
         entity_id.replace(/[-_]/g, ' ').toLowerCase(),
-        entity_id.includes('manchester') ? entity_id.toLowerCase() : null
       ].filter(Boolean);
-      
-      if (possibleNames.length > 0) {
-        query = `
-          MATCH (e) 
-          WHERE toLower(e.name) CONTAINS $possibleNames[0] OR toLower(e.name) CONTAINS $possibleNames[1] OR toLower(e.name) CONTAINS $possibleNames[2]
-          RETURN e {
-            id: elementId(e),
-            labels: labels(e),
-            properties: properties(e)
-          } as entity
-          LIMIT 1
-        `;
-        
-        result = await session.run(query, { possibleNames });
-        console.log(`📊 Name-based query returned ${result.records.length} records`);
-      }
+
+      const fallbackTerm = possibleNames[1] || possibleNames[0];
+      const fallbackQuery = supabase
+        .from('cached_entities')
+        .select('id, graph_id, neo4j_id, labels, properties')
+        .ilike('properties->>name', `%${fallbackTerm}%`)
+        .limit(1);
+
+      const fallbackResult = await fallbackQuery;
+      data = fallbackResult.data;
+      error = fallbackResult.error;
+      if (error) throw error;
     }
-    
-    if (result.records.length === 0) {
+
+    if (!data || data.length === 0) {
       console.log(`❌ No entity found with ID: ${entity_id}`);
       return null;
     }
-    
-    const entity = result.records[0].get('entity');
-    console.log(`✅ Found entity: ${entity.properties?.name || 'Unknown'} with elementId: ${entity.id}`);
-    return entity;
+
+    const entity = data[0];
+    const normalizedEntity = {
+      id: entity.id,
+      graph_id: resolveGraphId(entity),
+      labels: entity.labels || [],
+      properties: entity.properties || {}
+    };
+
+    console.log(`✅ Found entity: ${normalizedEntity.properties?.name || 'Unknown'} with canonical id: ${normalizedEntity.id}`);
+    return normalizedEntity;
   } catch (error) {
-    console.error(`❌ Error in getEntityFromNeo4j:`, error);
+    console.error(`❌ Error in getEntityFromSupabase:`, error);
     return null;
-  } finally {
-    await session.close();
   }
 }
 
-async function updateEntityInNeo4j(entity_id: string, enrichmentData: any) {
-  const driver = neo4jClient;
-  const session = driver.session();
-  
+async function updateEntityInSupabase(entity: any, enrichmentData: any) {
   try {
-    // Try to match by elementId first (for internal Neo4j IDs)
-    let query = `
-      MATCH (e) 
-      WHERE elementId(e) = $entity_id 
-      SET e += $enrichmentData,
-          e.last_enriched = datetime()
-    `;
-    
-    let result = await session.run(query, { entity_id, enrichmentData });
-    
-    // If no match, try to match by string ID property (for API IDs)
-    if (result.summary.counters.updates() === 0) {
-      query = `
-        MATCH (e) 
-        WHERE e.id = $entity_id OR toString(e.neo4j_id) = $entity_id
-        SET e += $enrichmentData,
-            e.last_enriched = datetime()
-      `;
-      
-      await session.run(query, { entity_id, enrichmentData });
+    const mergedProperties = {
+      ...(entity.properties || {}),
+      ...enrichmentData,
+      last_enriched: new Date().toISOString()
+    };
+
+    const { error } = await supabase
+      .from('cached_entities')
+      .update({
+        properties: mergedProperties,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', entity.id);
+
+    if (error) {
+      throw error;
     }
-    
-    console.log(`✅ Updated Neo4j entity ${enrichmentData.name}`);
-  } finally {
-    await session.close();
+
+    console.log(`✅ Updated Supabase cached entity ${enrichmentData.name}`);
+  } catch (error) {
+    console.error('❌ Failed to update canonical cached entity:', error);
+    throw error;
   }
 }
 
@@ -482,7 +447,7 @@ function createFlattenedEnrichmentData(
   flattened.name = entity.properties.name || 'Unknown';
   flattened.type = entity.properties.type || 'unknown';
   flattened.entity_id = entity.id;
-  flattened.neo4j_id = entity.neo4j_id;
+  flattened.graph_id = resolveGraphId(entity) || entity.id;
   
   // AI Analysis Scores
   flattened.opportunity_score = claudeAnalysis.opportunity_score || 70;
@@ -564,9 +529,9 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
     
-    // Get entity from Neo4j
+    // Get entity from canonical Supabase cache
     console.log(`🔍 Looking for entity with ID: ${entity_id}`);
-    const entity = await getEntityFromNeo4j(entity_id);
+    const entity = await getEntityFromSupabase(entity_id);
     if (!entity) {
       console.log(`❌ Entity not found with ID: ${entity_id}`);
       return NextResponse.json({ 
@@ -614,7 +579,7 @@ export async function POST(request: NextRequest) {
         console.log(`⏭️ Skipping BrightData scraping (disabled or no API key)`);
       }
       
-      // Step 4: Create flattened enrichment data for Neo4j
+      // Step 4: Create flattened enrichment data for canonical storage
       const flattenedEnrichmentData = createFlattenedEnrichmentData(
         entity, 
         claudeAnalysis, 
@@ -622,9 +587,9 @@ export async function POST(request: NextRequest) {
         brightdataResult
       );
       
-      // Step 5: Update Neo4j with flattened enrichment data
-      console.log(`💾 Updating Neo4j with enrichment data...`);
-      await updateEntityInNeo4j(entity_id, flattenedEnrichmentData);
+      // Step 5: Update canonical Supabase cache with flattened enrichment data
+      console.log(`💾 Updating canonical cached entity with enrichment data...`);
+      await updateEntityInSupabase(entity, flattenedEnrichmentData);
       
       // Step 6: Update Supabase cache
       console.log(`🗄️ Updating Supabase cache...`);

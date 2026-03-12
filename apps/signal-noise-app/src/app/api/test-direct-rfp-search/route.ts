@@ -25,8 +25,8 @@ export async function POST(request: NextRequest) {
         command: 'node',
         args: ['src/mcp-brightdata-server.js'],
         env: {
-          BRIGHTDATA_API_TOKEN: process.env.BRIGHTDATA_API_TOKEN || 'bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4',
-          BRIGHTDATA_TOKEN: process.env.BRIGHTDATA_API_TOKEN || 'bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4',
+          BRIGHTDATA_API_TOKEN: process.env.BRIGHTDATA_API_TOKEN || '',
+          BRIGHTDATA_TOKEN: process.env.BRIGHTDATA_API_TOKEN || '',
           BRIGHTDATA_ZONE: 'linkedin_posts_monitor'
         }
       }

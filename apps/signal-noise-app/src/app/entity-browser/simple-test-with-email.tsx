@@ -10,7 +10,7 @@ import { EmailComposeModal } from "@/components/email/EmailComposeModal"
 
 interface Entity {
   id: string
-  neo4j_id: string
+  graph_id?: string
   labels: string[]
   properties: Record<string, any>
 }

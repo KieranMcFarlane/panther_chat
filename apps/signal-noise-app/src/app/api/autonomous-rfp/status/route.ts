@@ -6,6 +6,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { AutonomousRFPManager } from '@/services/AutonomousRFPManager';
 import { liveLogService } from '@/services/LiveLogService';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     // Get system status

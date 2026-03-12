@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { normalizeImportedEntityRow, REQUIRED_ENTITY_IMPORT_COLUMNS } from '@/lib/entity-import-schema'
 import { mapImportedEntityRowToCachedEntity } from '@/lib/entity-import-mapper'
+import { resolveEntityForDossier } from '@/lib/dossier-entity'
 import {
   createEntityImportBatch,
   createEntityPipelineRuns,
@@ -28,7 +29,22 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const row = normalized.row
+    const requestedEntityId = String(body.entity_id ?? '').trim()
+    const existingEntity = await resolveEntityForDossier(requestedEntityId || normalized.row.name)
+
+    const row = existingEntity
+      ? {
+          ...normalized.row,
+          entity_id: existingEntity.id,
+          name: String(existingEntity.properties.name || normalized.row.name),
+          entity_type: String(existingEntity.properties.type || normalized.row.entity_type),
+          sport: String(existingEntity.properties.sport || normalized.row.sport),
+          country: String(existingEntity.properties.country || normalized.row.country),
+          website: String(existingEntity.properties.website || normalized.row.website || '') || undefined,
+          league: String(existingEntity.properties.level || normalized.row.league || '') || undefined,
+        }
+      : normalized.row
+
     const activeRun = await findActivePipelineRunByEntityId(row.entity_id)
     if (activeRun.run && activeRun.batch) {
       return NextResponse.json(
@@ -58,9 +74,11 @@ export async function POST(request: NextRequest) {
     const pipelineRuns = await createEntityPipelineRuns(batch.id, [row])
     await storeFallbackEntityImportState(batch, pipelineRuns)
 
-    await supabase
-      .from('cached_entities')
-      .upsert([mapImportedEntityRowToCachedEntity(row)], { onConflict: 'neo4j_id' })
+    if (!existingEntity) {
+      await supabase
+        .from('cached_entities')
+        .upsert([mapImportedEntityRowToCachedEntity(row)], { onConflict: 'graph_id' })
+    }
 
     await queueEntityImportBatch(batch.id, {
       queue_mode: ENTITY_IMPORT_QUEUE_MODE,

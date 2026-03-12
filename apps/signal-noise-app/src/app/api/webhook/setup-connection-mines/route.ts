@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Neo4jService } from '@/lib/neo4j';
 import { ConnectionIntelligenceAgent } from '@/services/ConnectionIntelligenceAgent';
 import crypto from 'crypto';
+import { supabase } from '@/lib/supabase-client';
+import { resolveGraphId } from '@/lib/graph-id';
 
 /**
  * Connection Mines Setup Webhook
  * 
- * Creates passive "mines" for all entities in Neo4j database:
+ * Creates passive "mines" for all entities in the canonical entity cache:
  * - 1st degree: Direct Yellow Panther team connections
  * - 2nd degree: Mutual connections through Yellow Panther team  
  * - 3rd degree: Extended network through bridge contacts
@@ -71,11 +72,9 @@ interface ConnectionMine {
 }
 
 class ConnectionMineSetupService {
-  private neo4jService: Neo4jService;
   private connectionAgent: ConnectionIntelligenceAgent;
 
   constructor() {
-    this.neo4jService = new Neo4jService();
     this.connectionAgent = new ConnectionIntelligenceAgent();
   }
 
@@ -88,9 +87,9 @@ class ConnectionMineSetupService {
     const startTime = Date.now();
     
     try {
-      console.log('🎯 Starting Connection Mine Setup for Neo4j entities');
+      console.log('🎯 Starting Connection Mine Setup for cached entities');
       
-      // Get entities from Neo4j based on filter
+      // Get entities from cached_entities based on filter
       const entities = await this.getEntitiesForMining(config.entity_filter);
       console.log(`📊 Found ${entities.length} entities for connection mining`);
       
@@ -112,8 +111,8 @@ class ConnectionMineSetupService {
         });
       }
       
-      // Store mines in Neo4j
-      await this.storeMinesInNeo4j(mines);
+      // Store mines in Supabase cache
+      await this.storeMinesInSupabase(mines);
       
       const processingTime = Date.now() - startTime;
       
@@ -137,39 +136,48 @@ class ConnectionMineSetupService {
   }
 
   private async getEntitiesForMining(filter?: ConnectionMineSetup['entity_filter']): Promise<any[]> {
-    let cypher = `
-      MATCH (e:Entity)
-      WHERE e.yellowPantherPriority IS NOT NULL
-    `;
-    
-    const params: any = {};
-    
-    if (filter?.entity_types && filter.entity_types.length > 0) {
-      cypher += ` AND e.type IN $entity_types `;
-      params.entity_types = filter.entity_types;
+    const { data, error } = await supabase
+      .from('cached_entities')
+      .select('id, graph_id, neo4j_id, name, labels, properties')
+      .limit(1000);
+
+    if (error) {
+      throw error;
     }
-    
-    if (filter?.yellow_panther_priority) {
-      cypher += ` AND e.yellowPantherPriority <= $priority `;
-      params.priority = filter.yellow_panther_priority;
-    }
-    
-    if (filter?.sports && filter.sports.length > 0) {
-      cypher += ` AND e.sport IN $sports `;
-      params.sports = filter.sports;
-    }
-    
-    cypher += `
-      RETURN e.name as name, e.id as id, e.type as type, e.sport as sport, 
-             e.yellowPantherPriority as priority, e.linkedin as linkedin,
-             e.digitalTransformationScore as digital_score,
-             e.yellowPantherFit as fit_score
-      ORDER BY e.yellowPantherPriority ASC, e.digitalTransformationScore DESC
-      LIMIT 1000
-    `;
-    
-    const result = await this.neo4jService.executeQuery(cypher, params);
-    return result.map(record => record.toObject());
+
+    return (data || [])
+      .map((entity: any) => {
+        const stableId = resolveGraphId(entity) || entity.id;
+        return ({
+        id: String(entity.id),
+        graph_id: stableId,
+        name: entity.name || entity.properties?.name,
+        type: entity.properties?.type || entity.labels?.[0] || 'Entity',
+        sport: entity.properties?.sport || null,
+        priority: Number(entity.properties?.yellowPantherPriority ?? entity.properties?.yellow_panther_priority ?? 999),
+        linkedin: entity.properties?.linkedin || null,
+        digital_score: Number(entity.properties?.digitalTransformationScore ?? entity.properties?.digital_transformation_score ?? 0),
+        fit_score: Number(entity.properties?.yellowPantherFit ?? entity.properties?.yellow_panther_fit ?? 50)
+      })})
+      .filter((entity: any) => entity.name)
+      .filter((entity: any) => {
+        if (filter?.entity_types?.length && !filter.entity_types.includes(entity.type)) {
+          return false;
+        }
+        if (filter?.yellow_panther_priority && entity.priority > filter.yellow_panther_priority) {
+          return false;
+        }
+        if (filter?.sports?.length && !filter.sports.includes(entity.sport)) {
+          return false;
+        }
+        return true;
+      })
+      .sort((a: any, b: any) => {
+        if (a.priority !== b.priority) {
+          return a.priority - b.priority;
+        }
+        return b.digital_score - a.digital_score;
+      });
   }
 
   private async processEntityBatch(
@@ -304,7 +312,7 @@ class ConnectionMineSetupService {
     }
     
     try {
-      // Analyze historical patterns from Neo4j
+      // Analyze historical patterns from cached events
       const historicalPatterns = await this.analyzeHistoricalPatterns(entity.id, config.predictive_reasoning.lookback_days || 180);
       predictiveData.historical_patterns = historicalPatterns;
       
@@ -327,63 +335,59 @@ class ConnectionMineSetupService {
     confidence: number;
     next_predicted?: string;
   }>> {
-    const cypher = `
-      MATCH (e:Entity {id: $entityId})
-      OPTIONAL MATCH (e)-[r:HAS_OPPORTUNITY]->(o:Opportunity)
-      WHERE o.created_at > datetime() - duration({days: $lookbackDays})
-      
-      // Personnel change patterns
-      OPTIONAL MATCH (e)-[:HAS_PERSONNEL]->(p:Person)
-      WHERE p.role_change_date > datetime() - duration({days: $lookbackDays})
-      
-      // Digital transformation patterns
-      OPTIONAL MATCH (e)-[:HAS_DIGITAL_INITIATIVE]->(d:DigitalInitiative)
-      WHERE d.launch_date > datetime() - duration({days: $lookbackDays})
-      
-      RETURN 
-        count(DISTINCT o) as opportunity_count,
-        count(DISTINCT p) as personnel_changes,
-        count(DISTINCT d) as digital_initiatives,
-        collect(DISTINCT o.type) as opportunity_types,
-        collect(DISTINCT p.new_role) as role_types
-    `;
-    
-    const result = await this.neo4jService.executeQuery(cypher, { entityId, lookbackDays });
-    
-    if (result.length === 0) {
+    const since = new Date(Date.now() - lookbackDays * 24 * 60 * 60 * 1000).toISOString();
+    const { data, error } = await supabase
+      .from('events')
+      .select('event_type, payload')
+      .eq('entity_id', entityId)
+      .gte('received_at', since);
+
+    if (error || !data) {
       return [];
     }
-    
-    const data = result[0].toObject();
+
+    const opportunityCount = data.filter((event: any) =>
+      String(event.event_type || '').toLowerCase().includes('opportunity') ||
+      String(event.payload?.type || '').toLowerCase().includes('opportunity')
+    ).length;
+    const personnelChanges = data.filter((event: any) =>
+      String(event.event_type || '').toLowerCase().includes('personnel') ||
+      String(event.event_type || '').toLowerCase().includes('job_change')
+    ).length;
+    const digitalInitiatives = data.filter((event: any) =>
+      String(event.event_type || '').toLowerCase().includes('digital') ||
+      String(event.payload?.type || '').toLowerCase().includes('digital')
+    ).length;
+
     const patterns = [];
     
     // Opportunity patterns
-    if (data.opportunity_count > 0) {
+    if (opportunityCount > 0) {
       patterns.push({
         pattern_type: 'rfp_opportunities',
-        frequency: data.opportunity_count,
-        confidence: Math.min(data.opportunity_count * 20, 90),
-        next_predicted: this.predictNextOccurrence(data.opportunity_count, lookbackDays)
+        frequency: opportunityCount,
+        confidence: Math.min(opportunityCount * 20, 90),
+        next_predicted: this.predictNextOccurrence(opportunityCount, lookbackDays)
       });
     }
     
     // Personnel change patterns
-    if (data.personnel_changes > 0) {
+    if (personnelChanges > 0) {
       patterns.push({
         pattern_type: 'personnel_changes',
-        frequency: data.personnel_changes,
-        confidence: Math.min(data.personnel_changes * 25, 85),
-        next_predicted: this.predictNextOccurrence(data.personnel_changes, lookbackDays)
+        frequency: personnelChanges,
+        confidence: Math.min(personnelChanges * 25, 85),
+        next_predicted: this.predictNextOccurrence(personnelChanges, lookbackDays)
       });
     }
     
     // Digital initiative patterns
-    if (data.digital_initiatives > 0) {
+    if (digitalInitiatives > 0) {
       patterns.push({
         pattern_type: 'digital_transformations',
-        frequency: data.digital_initiatives,
-        confidence: Math.min(data.digital_initiatives * 30, 95),
-        next_predicted: this.predictNextOccurrence(data.digital_initiatives, lookbackDays)
+        frequency: digitalInitiatives,
+        confidence: Math.min(digitalInitiatives * 30, 95),
+        next_predicted: this.predictNextOccurrence(digitalInitiatives, lookbackDays)
       });
     }
     
@@ -464,36 +468,26 @@ class ConnectionMineSetupService {
     return nextDate.toISOString().split('T')[0]; // Return just the date
   }
 
-  private async storeMinesInNeo4j(mines: ConnectionMine[]): Promise<void> {
+  private async storeMinesInSupabase(mines: ConnectionMine[]): Promise<void> {
     for (const mine of mines) {
       try {
-        const cypher = `
-          MERGE (cm:ConnectionMine {entity_id: $entity_id})
-          SET cm.id = $id,
-              cm.entity_name = $entity_name,
-              cm.entity_type = $entity_type,
-              cm.connection_depth = $connection_depth,
-              cm.yellow_panther_connections = $connections,
-              cm.monitoring_webhooks = $webhooks,
-              cm.predictive_data = $predictive_data,
-              cm.created_at = datetime($created_at),
-              cm.last_updated = datetime($last_updated),
-              cm.active = $active
-        `;
-        
-        await this.neo4jService.executeQuery(cypher, {
-          entity_id: mine.entity_id,
-          id: mine.id,
-          entity_name: mine.entity_name,
-          entity_type: mine.entity_type,
-          connection_depth: mine.connection_depth,
-          connections: JSON.stringify(mine.yellow_panther_connections),
-          webhooks: JSON.stringify(mine.monitoring_webhooks),
-          predictive_data: JSON.stringify(mine.predictive_data),
-          created_at: mine.created_at,
-          last_updated: mine.last_updated,
-          active: mine.active
-        });
+        const { error } = await supabase
+          .from('entity_cache')
+          .upsert({
+            id: `connection_mine:${mine.entity_id}`,
+            entity_id: mine.entity_id,
+            entity_type: 'connection_mine',
+            organization: mine.entity_name,
+            status: mine.active ? 'active' : 'inactive',
+            data: mine,
+            updated_at: mine.last_updated
+          }, {
+            onConflict: 'id'
+          });
+
+        if (error) {
+          throw error;
+        }
         
       } catch (error) {
         console.error(`❌ Failed to store mine for ${mine.entity_name}:`, error);
@@ -534,28 +528,26 @@ export async function POST(request: NextRequest) {
 // Get existing mines status
 export async function GET() {
   try {
-    const neo4jService = new Neo4jService();
-    
-    const cypher = `
-      MATCH (cm:ConnectionMine)
-      WHERE cm.active = true
-      RETURN 
-        count(cm) as total_mines,
-        cm.connection_depth as depth,
-        count(cm) as mines_at_depth
-      ORDER BY depth
-    `;
-    
-    const result = await neo4jService.executeQuery(cypher);
-    
+    const { data, error } = await supabase
+      .from('entity_cache')
+      .select('data')
+      .eq('entity_type', 'connection_mine')
+      .eq('status', 'active');
+
+    if (error) {
+      throw error;
+    }
+
     const depthDistribution: Record<number, number> = {};
     let totalMines = 0;
     
-    result.forEach(record => {
-      const depth = record.get('depth');
-      const count = record.get('mines_at_depth');
-      depthDistribution[depth] = count;
-      totalMines += count;
+    (data || []).forEach((record: any) => {
+      const depth = Number(record.data?.connection_depth || 0);
+      if (!depth) {
+        return;
+      }
+      depthDistribution[depth] = (depthDistribution[depth] || 0) + 1;
+      totalMines += 1;
     });
     
     return NextResponse.json({

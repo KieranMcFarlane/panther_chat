@@ -13,9 +13,9 @@ import { liveLogService } from "./LiveLogService";
 interface DailyRFPConfig {
   brightdataApiKey: string;
   brightdataZone: string;
-  neo4jUri: string;
-  neo4jUsername: string;
-  neo4jPassword: string;
+  graphUri: string;
+  graphUsername: string;
+  graphPassword: string;
   teamsWebhookUrl: string;
   perplexityApiKey: string;
   searchQueries: string[];
@@ -122,10 +122,10 @@ export class HeadlessClaudeAgentService {
       }
     );
 
-    // Neo4j Storage Tool (simplified to avoid hanging)
-    const neo4jStorage = tool(
+    // Graph storage tool (simplified to avoid hanging)
+    const graphStorage = tool(
       "store_rfp_result",
-      "Store RFP results in Neo4j database",
+      "Store RFP results in the graph store",
       {
         title: "string",
         description: "string",
@@ -136,20 +136,20 @@ export class HeadlessClaudeAgentService {
       },
       async (args) => {
         try {
-          // Simulate Neo4j storage without actual database call to prevent hanging
+          // Simulate graph storage without actual database call to prevent hanging
           await new Promise(resolve => setTimeout(resolve, 500)); // 500ms delay
           
           return {
             content: [{
               type: "text",
-              text: `Simulated storing RFP: ${args.title} with ${args.entities.length} related entities in Neo4j database`
+              text: `Simulated storing RFP: ${args.title} with ${args.entities.length} related entities in the graph store`
             }]
           };
         } catch (error) {
           return {
             content: [{
               type: "text",
-              text: `Error storing RFP in Neo4j: ${error.message}`
+              text: `Error storing RFP in graph store: ${error.message}`
             }],
             is_error: true
           };
@@ -382,7 +382,7 @@ Format as strategic RFP analysis report with clear recommendations.`
     return createSdkMcpServer({
       name: "rfp-intelligence-tools",
       version: "1.0.0",
-      tools: [linkedinSearch, webNewsSearch, neo4jStorage, marketResearch, companyIntelligence, rfpAnalysis]
+      tools: [linkedinSearch, webNewsSearch, graphStorage, marketResearch, companyIntelligence, rfpAnalysis]
     });
   }
 
@@ -462,7 +462,7 @@ Format as strategic RFP analysis report with clear recommendations.`
             1. Search LinkedIn and web news for each query
             2. Analyze results for relevance to sports industry and target industries
             3. Extract key entities (companies, organizations, locations)
-            4. Store relevant findings in Neo4j database
+            4. Store relevant findings in the graph store
             5. Provide summary of findings
             
             Focus areas: Sports technology, venue management, event services, digital transformation, sponsorships.

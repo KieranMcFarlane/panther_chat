@@ -8,6 +8,13 @@
 import { rfpIntelligenceAgent } from './claude-agent-rfp-intelligence';
 import { query } from '@anthropic-ai/claude-agent-sdk';
 import { batchRecoveryManager } from './batch-recovery-manager';
+import fs from 'fs/promises';
+import path from 'path';
+
+function isBuildPhase(): boolean {
+  return process.env.NEXT_PHASE === 'phase-production-build' ||
+    process.env.npm_lifecycle_event === 'build';
+}
 
 interface HistoricalEntity {
   id: string;
@@ -59,6 +66,7 @@ class EnhancedHistoricalBatchProcessor {
   private processingQueue: HistoricalEntity[] = [];
   private results: BatchAnalysisResult[] = [];
   private mcpConfig: any = {};
+  private mcpConfigPromise: Promise<void> | null = null;
   private memoryStats = {
     peakUsage: 0,
     currentUsage: 0,
@@ -69,41 +77,52 @@ class EnhancedHistoricalBatchProcessor {
 
   constructor() {
     this.initializeClaudeAgent();
-    this.loadMCPConfig();
   }
 
   private async initializeClaudeAgent(): Promise<void> {
     try {
       // The Claude Agent is already initialized in rfpIntelligenceAgent
       this.claudeAgent = rfpIntelligenceAgent;
-      console.log('✅ Claude Agent initialized for historical batch processing');
+      if (!isBuildPhase()) {
+        console.log('✅ Claude Agent initialized for historical batch processing');
+      }
     } catch (error) {
-      console.warn('⚠️ Failed to initialize Claude Agent:', error);
+      if (!isBuildPhase()) {
+        console.warn('⚠️ Failed to initialize Claude Agent:', error);
+      }
     }
   }
 
   private async loadMCPConfig(): Promise<void> {
     try {
-      const baseUrl = process.env.NODE_ENV === 'production' 
-        ? 'https://your-domain.com' 
-        : 'http://localhost:3005';
-      
-      const response = await fetch(`${baseUrl}/api/mcp-config`);
-      if (response.ok) {
-        const data = await response.json();
-        this.mcpConfig = data.mcpServers || {};
+      const mcpConfigPath = path.join(process.cwd(), '.mcp.json');
+      const mcpConfig = JSON.parse(await fs.readFile(mcpConfigPath, 'utf-8'));
+      this.mcpConfig = mcpConfig.mcpServers || {};
+      if (!isBuildPhase()) {
         console.log('✅ MCP Config loaded for historical processing:', Object.keys(this.mcpConfig));
       }
     } catch (error) {
-      console.warn('⚠️ Failed to load MCP config:', error);
+      if (!isBuildPhase()) {
+        console.warn('⚠️ Failed to load MCP config:', error);
+      }
       this.mcpConfig = {};
     }
+  }
+
+  private async ensureMCPConfigLoaded(): Promise<void> {
+    if (!this.mcpConfigPromise) {
+      this.mcpConfigPromise = this.loadMCPConfig();
+    }
+
+    await this.mcpConfigPromise;
   }
 
   /**
    * 📊 Process historical entities with Claude Agent analysis (Memory-Optimized)
    */
   async processHistoricalEntities(entities: HistoricalEntity[]): Promise<ClaudeBatchSummary> {
+    await this.ensureMCPConfigLoaded();
+
     const batchId = `hist_batch_${Date.now()}`;
     const startTime = Date.now();
 
@@ -290,7 +309,7 @@ Provide structured analysis in JSON format:
         options: {
           mcpServers: this.mcpConfig,
           allowedTools: [
-            'mcp__neo4j-mcp__execute_query',
+            'mcp__graph-mcp__execute_query',
             'mcp__brightdata-mcp__search_engine',
             'mcp__perplexity-mcp__chat_completion',
             'mcp__better-auth__search'
@@ -455,9 +474,9 @@ Provide structured analysis in JSON format:
       console.log(`   - ${summary.totalOpportunities} opportunities`);
       console.log(`   - ${summary.estimatedValue} estimated value`);
 
-      // Store individual entity analyses in Neo4j via MCP
-      if (this.mcpConfig['neo4j-mcp']) {
-        await this.storeAnalysesInNeo4j(results);
+      // Store individual entity analyses in the graph intelligence store via MCP
+      if (this.mcpConfig['graph-mcp']) {
+        await this.storeAnalysesInGraph(results);
       }
 
     } catch (error) {
@@ -466,12 +485,12 @@ Provide structured analysis in JSON format:
   }
 
   /**
-   * 🗃️ Store individual analyses in Neo4j knowledge graph
+   * 🗃️ Store individual analyses in the graph intelligence store
    */
-  private async storeAnalysesInNeo4j(results: BatchAnalysisResult[]): Promise<void> {
+  private async storeAnalysesInGraph(results: BatchAnalysisResult[]): Promise<void> {
     try {
       for (const result of results) {
-        const prompt = `Update the Neo4j knowledge graph with this AI analysis:
+        const prompt = `Update the graph intelligence store with this AI analysis:
 
 Entity: ${result.entityName} (ID: ${result.entityId})
 Analysis: ${JSON.stringify(result.analysis, null, 2)}
@@ -490,13 +509,13 @@ Please:
           prompt,
           options: {
             mcpServers: this.mcpConfig,
-            allowedTools: ['mcp__neo4j-mcp__execute_query'],
+            allowedTools: ['mcp__graph-mcp__execute_query'],
             maxTurns: 2
           }
         });
       }
     } catch (error) {
-      console.warn('⚠️ Failed to store analyses in Neo4j:', error);
+      console.warn('⚠️ Failed to store analyses in the graph intelligence store:', error);
     }
   }
 

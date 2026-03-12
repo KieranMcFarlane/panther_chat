@@ -48,14 +48,20 @@ interface VerificationResult {
 
 class RealHeadlessVerifier {
   private browser: any = null;
+  private initialized = false;
 
   async initialize(): Promise<void> {
+    if (this.initialized) {
+      return;
+    }
+
     try {
       console.log('🤖 Initializing real headless verifier...');
       
       // For now, skip actual browser initialization due to Puppeteer installation issues
       // We'll implement realistic mock behavior
       console.log('✅ Real headless verifier initialized (mock mode for demo)');
+      this.initialized = true;
     } catch (error) {
       console.error('❌ Failed to initialize headless verifier:', error);
       throw error;
@@ -229,6 +235,3 @@ class RealHeadlessVerifier {
 
 // Create singleton instance
 export const realHeadlessVerifier = new RealHeadlessVerifier();
-
-// Auto-initialize
-realHeadlessVerifier.initialize().catch(console.error);

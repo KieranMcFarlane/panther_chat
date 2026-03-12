@@ -3,7 +3,12 @@
 Replaces generic business alerts with sports-specific RFP opportunity monitoring
 **/
 
-import { Neo4jService } from '@/lib/neo4j';
+import { GraphStoreService } from '@/lib/graph-store';
+
+function isBuildPhase(): boolean {
+  return process.env.NEXT_PHASE === 'phase-production-build' ||
+    process.env.npm_lifecycle_event === 'build';
+}
 
 interface SportsRFPAlert {
   id: string;
@@ -31,11 +36,11 @@ class SportsRFPMonitor {
   private alerts: SportsRFPAlert[] = [];
   private callbacks: ((alert: SportsRFPAlert) => void)[] = [];
   private isRunning = false;
-  private neo4jService: Neo4jService;
+  private graphStoreService: GraphStoreService;
   private monitoredEntities: any[] = [];
 
   constructor() {
-    this.neo4jService = new Neo4jService();
+    this.graphStoreService = new GraphStoreService();
     this.initializeWithSportsData();
   }
 
@@ -44,9 +49,11 @@ class SportsRFPMonitor {
     if (this.isRunning) return;
     
     this.isRunning = true;
-    console.log('🏆 Starting sports-focused RFP intelligence monitoring...');
+    if (!isBuildPhase()) {
+      console.log('🏆 Starting sports-focused RFP intelligence monitoring...');
+    }
 
-    // Load sports entities from Neo4j
+    // Load sports entities from the graph store
     await this.loadSportsEntities();
     
     // Schedule monitoring for sports-specific opportunities
@@ -60,7 +67,9 @@ class SportsRFPMonitor {
       clearInterval(this.scrapeInterval);
       this.scrapeInterval = null;
     }
-    console.log('⏹️ Sports RFP monitoring stopped');
+    if (!isBuildPhase()) {
+      console.log('⏹️ Sports RFP monitoring stopped');
+    }
   }
 
   // Subscribe to new alerts
@@ -77,8 +86,8 @@ class SportsRFPMonitor {
 
   private async loadSportsEntities() {
     try {
-      await this.neo4jService.initialize();
-      const session = this.neo4jService.getDriver().session();
+      await this.graphStoreService.initialize();
+      const session = this.graphStoreService.getDriver().session();
       
       const result = await session.run(`
         MATCH (e:Entity)
@@ -98,14 +107,18 @@ class SportsRFPMonitor {
         rfpCount: record.get('rfpCount').toNumber()
       }));
       
-      console.log(`📊 Loaded ${this.monitoredEntities.length} sports entities for monitoring`);
-      console.log(`   Premier League/Formula 1: ${this.monitoredEntities.filter(e => e.tier === 1).length}`);
-      console.log(`   Championship/Major: ${this.monitoredEntities.filter(e => e.tier === 2).length}`);
-      console.log(`   Other Sports Orgs: ${this.monitoredEntities.filter(e => e.tier === 3).length}`);
+      if (!isBuildPhase()) {
+        console.log(`📊 Loaded ${this.monitoredEntities.length} sports entities for monitoring`);
+        console.log(`   Premier League/Formula 1: ${this.monitoredEntities.filter(e => e.tier === 1).length}`);
+        console.log(`   Championship/Major: ${this.monitoredEntities.filter(e => e.tier === 2).length}`);
+        console.log(`   Other Sports Orgs: ${this.monitoredEntities.filter(e => e.tier === 3).length}`);
+      }
       
       await session.close();
     } catch (error) {
-      console.error('❌ Failed to load sports entities from Neo4j:', error);
+      if (!isBuildPhase()) {
+        console.error('❌ Failed to load sports entities from graph store:', error);
+      }
       // Fallback to default sports entities
       this.monitoredEntities = this.getDefaultSportsEntities();
     }
@@ -165,7 +178,9 @@ class SportsRFPMonitor {
       await this.scanForStadiumTechnology(this.monitoredEntities.filter(e => e.type === 'venue'));
       
     } catch (error) {
-      console.error('❌ Sports RFP scraping error:', error);
+      if (!isBuildPhase()) {
+        console.error('❌ Sports RFP scraping error:', error);
+      }
     }
   }
 
@@ -366,7 +381,9 @@ class SportsRFPMonitor {
       // Notify subscribers
       this.callbacks.forEach(callback => callback(alert));
       
-      console.log(`🏆 Sports RFP Alert: ${alert.entity} - ${alert.description.substring(0, 50)}... (${alert.details.estimatedValue})`);
+      if (!isBuildPhase()) {
+        console.log(`🏆 Sports RFP Alert: ${alert.entity} - ${alert.description.substring(0, 50)}... (${alert.details.estimatedValue})`);
+      }
     }
   }
 
@@ -416,7 +433,9 @@ class SportsRFPMonitor {
     ];
 
     this.alerts = initialAlerts;
-    console.log(`🏆 Initialized with ${initialAlerts.length} sports RFP opportunities`);
+    if (!isBuildPhase()) {
+      console.log(`🏆 Initialized with ${initialAlerts.length} sports RFP opportunities`);
+    }
   }
 }
 

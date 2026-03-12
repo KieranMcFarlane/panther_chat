@@ -116,7 +116,7 @@ URL: ${analysisRequest.url}
    - Urgency level and deadline indicators
    - Technical requirements and business objectives
 
-3. **RELATIONSHIP ANALYSIS** (Use Neo4j)
+3. **RELATIONSHIP ANALYSIS** (Use the graph store)
    - Search for existing connections to this organization
    - Identify warm introduction paths
    - Map competitor relationships
@@ -217,14 +217,14 @@ Use your MCP tools to research and enrich this analysis. Be thorough but practic
               prompt: comprehensivePrompt,
               options: {
                 mcpServers: {
-                  "neo4j-mcp": {
+                  "graph-mcp": {
                     "command": "npx",
                     "args": ["-y", "@alanse/mcp-neo4j-server"],
                     "env": {
-                      "NEO4J_URI": process.env.NEO4J_URI || "",
-                      "NEO4J_USERNAME": process.env.NEO4J_USERNAME || "",
-                      "NEO4J_PASSWORD": process.env.NEO4J_PASSWORD || "",
-                      "NEO4J_DATABASE": process.env.NEO4J_DATABASE || "neo4j"
+                      "FALKORDB_URI": process.env.FALKORDB_URI || "",
+                      "FALKORDB_USER": process.env.FALKORDB_USER || "",
+                      "FALKORDB_PASSWORD": process.env.FALKORDB_PASSWORD || "",
+                      "FALKORDB_DATABASE": process.env.FALKORDB_DATABASE || "neo4j"
                     }
                   },
                   "brightData": {
@@ -244,9 +244,9 @@ Use your MCP tools to research and enrich this analysis. Be thorough but practic
                   }
                 },
                 allowedTools: [
-                  "mcp__neo4j-mcp__execute_query",
-                  "mcp__neo4j-mcp__create_node",
-                  "mcp__neo4j-mcp__create_relationship", 
+                  "mcp__graph-mcp__execute_query",
+                  "mcp__graph-mcp__create_node",
+                  "mcp__graph-mcp__create_relationship", 
                   "mcp__brightData__scrape_as_markdown",
                   "mcp__perplexity-mcp__chat_completion",
                   "mcp__brightData__search_engine",
@@ -437,9 +437,9 @@ Always provide structured, actionable intelligence with clear confidence scoring
 
 function getToolDescription(toolName: string): string {
   const descriptions: Record<string, string> = {
-    'mcp__neo4j-mcp__execute_query': 'Querying knowledge graph for relationships',
-    'mcp__neo4j-mcp__create_node': 'Creating new entity in knowledge graph',
-    'mcp__neo4j-mcp__create_relationship': 'Mapping relationship in knowledge graph',
+    'mcp__graph-mcp__execute_query': 'Querying graph relationships',
+    'mcp__graph-mcp__create_node': 'Creating new entity in graph store',
+    'mcp__graph-mcp__create_relationship': 'Mapping relationship in graph store',
     'mcp__brightData__scrape_as_markdown': 'Researching organization website',
     'mcp__perplexity-mcp__chat_completion': 'Researching market intelligence',
     'mcp__brightData__search_engine': 'Searching for company information',

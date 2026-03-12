@@ -1,34 +1,32 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 /**
  * Incremental sync - finds and syncs only missing entities
  */
 export async function POST() {
   try {
-    console.log('🔄 Starting incremental sync for missing entities...');
-    
-    const startTime = Date.now();
+    console.log('🔄 Starting incremental sync assessment for graph coverage gaps...');
     
     // Get entity counts from both systems
-    const supabaseResponse = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3007'}/api/sync/neo4j-to-supabase`, {
+    const supabaseResponse = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3007'}/api/sync/graph-to-supabase`, {
       method: 'GET'
     });
     const supabaseStatus = await supabaseResponse.json();
     
-    // Get Neo4j count directly via MCP (simulated)
-    const neo4jCount = 4422; // We know this from previous checks
+    const graphCount = supabaseStatus.status?.lastSync?.source_count || 0;
+    const supabaseCount = supabaseStatus.status?.lastSync?.target_count || 0;
     
     return NextResponse.json({
       success: true,
-      message: 'Incremental sync logic ready - implement targeted sync for missing entities',
+      message: 'Incremental graph sync assessment ready - implement targeted coverage refresh next',
       data: {
-        neo4jCount,
-        supabaseCount: supabaseStatus.status?.lastSync?.target_count || 4414,
-        missingEntities: neo4jCount - (supabaseStatus.status?.lastSync?.target_count || 4414),
+        graphCount,
+        supabaseCount,
+        missingEntities: Math.max(graphCount - supabaseCount, 0),
         recommendations: [
-          'Implement targeted entity lookup by neo4j_id',
-          'Use batch processing for missing entities only',
-          'Set up automatic periodic syncs'
+          'Implement targeted graph coverage lookup by stable entity ID',
+          'Use batch processing for missing graph relationships only',
+          'Set up automatic periodic sync tracker refreshes'
         ]
       }
     });

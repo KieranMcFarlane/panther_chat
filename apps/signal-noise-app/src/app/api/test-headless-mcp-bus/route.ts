@@ -40,18 +40,19 @@ async function testWithDirectMCP(testQuery: string) {
       command: 'node',
       args: ['src/mcp-brightdata-server.js'],
       env: {
-        BRIGHTDATA_API_TOKEN: process.env.BRIGHTDATA_API_TOKEN || 'bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4',
-        BRIGHTDATA_TOKEN: process.env.BRIGHTDATA_API_TOKEN || 'bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4',
+        BRIGHTDATA_API_TOKEN: process.env.BRIGHTDATA_API_TOKEN || '',
+        BRIGHTDATA_TOKEN: process.env.BRIGHTDATA_API_TOKEN || '',
         BRIGHTDATA_ZONE: 'linkedin_posts_monitor'
       }
     },
-    'neo4j-mcp': {
-      command: 'node',
-      args: ['neo4j-mcp-server.js'],
+    'graph-mcp': {
+      command: 'python3',
+      args: ['backend/falkordb_mcp_server_fastmcp.py'],
       env: {
-        NEO4J_URI: process.env.NEO4J_URI || 'neo4j+s://e6bb5665.databases.neo4j.io',
-        NEO4J_USERNAME: process.env.NEO4J_USERNAME || 'neo4j',
-        NEO4J_PASSWORD: process.env.NEO4J_PASSWORD || 'NeO4jPaSSworD!'
+        FALKORDB_URI: process.env.FALKORDB_URI || '',
+        FALKORDB_USER: process.env.FALKORDB_USER || '',
+        FALKORDB_PASSWORD: process.env.FALKORDB_PASSWORD || '',
+        FALKORDB_DATABASE: process.env.FALKORDB_DATABASE || ''
       }
     }
   };
@@ -59,18 +60,18 @@ async function testWithDirectMCP(testQuery: string) {
   const allowedTools = [
     'mcp__brightdata-mcp__search_engine',
     'mcp__brightdata-mcp__scrape_as_markdown',
-    'mcp__neo4j-mcp__execute_query',
-    'mcp__neo4j-mcp__search_sports_entities',
+    'mcp__graph-mcp__execute_query',
+    'mcp__graph-mcp__search_sports_entities',
     'Read', 'Write', 'Grep', 'Bash'
   ];
 
   const systemPrompt = {
     type: "preset" as const,
     preset: "claude_code" as const,
-    append: `You are an expert RFP Intelligence Analyst with access to Neo4j knowledge graph and BrightData web search.
+    append: `You are an expert RFP Intelligence Analyst with access to graph-backed entity intelligence and BrightData web search.
 
 CAPABILITIES:
-1. Neo4j MCP tools: Query sports entities and relationships
+1. Graph MCP tools: Query sports entities and relationships
 2. BrightData MCP tools: Search for RFP opportunities and procurement signals
 3. Analysis: Extract actionable intelligence from combined data sources
 
@@ -140,13 +141,14 @@ async function testWithMcpBus(testQuery: string) {
     // Use our WORKING MCP server configurations instead of external packages
     const customMcpServers = [
       {
-        name: 'neo4j-mcp',
-        command: 'node',
-        args: ['neo4j-mcp-server.js'],
+        name: 'graph-mcp',
+        command: 'python3',
+        args: ['backend/falkordb_mcp_server_fastmcp.py'],
         env: {
-          NEO4J_URI: process.env.NEO4J_URI || 'neo4j+s://e6bb5665.databases.neo4j.io',
-          NEO4J_USERNAME: process.env.NEO4J_USERNAME || 'neo4j',
-          NEO4J_PASSWORD: process.env.NEO4J_PASSWORD || 'NeO4jPaSSworD!'
+          FALKORDB_URI: process.env.FALKORDB_URI || '',
+          FALKORDB_USER: process.env.FALKORDB_USER || '',
+          FALKORDB_PASSWORD: process.env.FALKORDB_PASSWORD || '',
+          FALKORDB_DATABASE: process.env.FALKORDB_DATABASE || ''
         }
       },
       {
@@ -154,8 +156,8 @@ async function testWithMcpBus(testQuery: string) {
         command: 'node',
         args: ['src/mcp-brightdata-server.js'],
         env: {
-          BRIGHTDATA_API_TOKEN: process.env.BRIGHTDATA_API_TOKEN || 'bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4',
-          BRIGHTDATA_TOKEN: process.env.BRIGHTDATA_API_TOKEN || 'bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4',
+          BRIGHTDATA_API_TOKEN: process.env.BRIGHTDATA_API_TOKEN || '',
+          BRIGHTDATA_TOKEN: process.env.BRIGHTDATA_API_TOKEN || '',
           BRIGHTDATA_ZONE: 'linkedin_posts_monitor'
         }
       }

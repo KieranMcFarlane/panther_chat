@@ -1,13 +1,14 @@
 import { liveLogService } from './LiveLogService';
 import { notificationService } from './NotificationService';
+import { resolveGraphId } from '@/lib/graph-id';
 
 interface EnrichmentConfig {
   brightdataApiKey: string;
   brightdataZone: string;
   perplexityApiKey: string;
-  neo4jUri: string;
-  neo4jUsername: string;
-  neo4jPassword: string;
+  graphUri: string;
+  graphUsername: string;
+  graphPassword: string;
   batchSize: number;
   delayBetweenRequests: number; // milliseconds
 }
@@ -238,7 +239,7 @@ export class EntityDossierEnrichmentService {
    */
   private async enrichSingleEntity(entity: any): Promise<EnrichmentResult> {
     const startTime = Date.now();
-    const entityId = entity.id || entity.neo4j_id;
+    const entityId = resolveGraphId(entity) || entity.id;
     const entityName = entity.properties?.name || entity.name;
     
     const result: EnrichmentResult = {
@@ -258,7 +259,7 @@ export class EntityDossierEnrichmentService {
       const perplexityResults = await this.enrichWithPerplexity(entity, brightdataResults);
       result.perplexityResults = perplexityResults;
 
-      // Step 3: Update entity in Neo4j with combined results
+      // Step 3: Update entity with combined graph-backed enrichment results
       await this.updateEntityWithEnrichment(entityId, {
         brightdata: brightdataResults,
         perplexity: perplexityResults,
@@ -313,7 +314,7 @@ export class EntityDossierEnrichmentService {
     
     // Call existing BrightData enrichment endpoint
     const requestBody = {
-      entity_id: entity.id || entity.neo4j_id,
+      entity_id: resolveGraphId(entity) || entity.id,
       entityName,
       entityWebsite,
       sources: ['linkedin', 'crunchbase', 'web']
@@ -497,9 +498,9 @@ Focus on actionable business intelligence for technology vendors and service pro
       brightdataApiKey: process.env.BRIGHTDATA_API_TOKEN || '',
       brightdataZone: process.env.BRIGHTDATA_ZONE || 'linkedin_posts_monitor',
       perplexityApiKey: process.env.PERPLEXITY_API_KEY || '',
-      neo4jUri: process.env.NEO4J_URI || '',
-      neo4jUsername: process.env.NEO4J_USERNAME || '',
-      neo4jPassword: process.env.NEO4J_PASSWORD || '',
+      graphUri: process.env.FALKORDB_URI || '',
+      graphUsername: process.env.FALKORDB_USER || '',
+      graphPassword: process.env.FALKORDB_PASSWORD || '',
       batchSize: 3, // Conservative batch size
       delayBetweenRequests: 2000 // 2 seconds between requests
     };

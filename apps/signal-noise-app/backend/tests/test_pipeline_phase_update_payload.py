@@ -204,6 +204,44 @@ def test_build_inference_runtime_metadata_prefers_runtime_client_over_env(monkey
     assert runtime["chutes_max_retries"] == 3
 
 
+def test_merge_pipeline_phase_metadata_keeps_non_null_dossier_inference_runtime_fields():
+    existing_metadata = {
+        "phase_details_by_phase": {
+            "dossier_generation": {
+                "status": "running",
+                "current_substep": "generate_dossier_content",
+            },
+        },
+    }
+    payload = {
+        "status": "completed",
+        "reason": None,
+        "inference_runtime": {
+            "provider": "chutes_openai",
+            "model_used": "zai-org/GLM-5-TEE",
+            "streaming": True,
+            "fallback_used": False,
+            "chunk_count": 1196,
+            "answer_channel_chars": 12372,
+            "reasoning_channel_chars": 3851,
+            "stop_reason": "stop",
+        },
+    }
+
+    merged = merge_pipeline_phase_metadata(existing_metadata, "dossier_generation", payload)
+    dossier_phase = merged["phase_details_by_phase"]["dossier_generation"]
+    inference_runtime = dossier_phase["inference_runtime"]
+
+    assert inference_runtime["provider"] == "chutes_openai"
+    assert inference_runtime["model_used"] == "zai-org/GLM-5-TEE"
+    assert inference_runtime["streaming"] is True
+    assert inference_runtime["fallback_used"] is False
+    assert inference_runtime["chunk_count"] > 0
+    assert inference_runtime["answer_channel_chars"] > 0
+    assert inference_runtime["reasoning_channel_chars"] >= 0
+    assert isinstance(inference_runtime["stop_reason"], str)
+
+
 def test_generate_dossier_route_uses_shared_tier_helper_for_persistence():
     assert 'tier = determine_dossier_tier_from_priority(request.priority_score)' in main_source
 

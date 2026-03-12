@@ -1,6 +1,6 @@
 /**
  * MCP Tools Test and Validation Suite
- * Tests real integration with neo4j-mcp, brightdata-mcp, and perplexity-mcp
+ * Tests real integration with graph-mcp, brightdata-mcp, and perplexity-mcp
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -39,9 +39,9 @@ export async function POST(request: NextRequest) {
 
     const results: MCPTestResult[] = [];
 
-    // Test Neo4j MCP
-    if (testType === 'all' || testType === 'neo4j') {
-      results.push(await testNeo4jMCP());
+    // Test Graph MCP
+    if (testType === 'all' || testType === 'graph') {
+      results.push(await testGraphMCP());
     }
 
     // Test BrightData MCP
@@ -120,18 +120,18 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * Test Neo4j MCP Tool Integration
+ * Test Graph MCP Tool Integration
  */
-async function testNeo4jMCP(): Promise<MCPTestResult> {
+async function testGraphMCP(): Promise<MCPTestResult> {
   const startTime = Date.now();
   
   try {
     await liveLogService.log({
       level: 'info',
-      message: '🔍 Testing Neo4j MCP Tool...',
+      message: '🔍 Testing Graph MCP Tool...',
       source: 'MCP Tools Test',
       category: 'api',
-      metadata: { mcpTool: 'neo4j-mcp', testType: 'connection' }
+      metadata: { mcpTool: 'graph-mcp', testType: 'connection' }
     });
 
     // Real MCP tool call
@@ -152,11 +152,11 @@ async function testNeo4jMCP(): Promise<MCPTestResult> {
 
     await liveLogService.log({
       level: 'info',
-      message: `✅ Neo4j MCP Test Successful: ${entityCount} entities found`,
+      message: `✅ Graph MCP Test Successful: ${entityCount} entities found`,
       source: 'MCP Tools Test',
       category: 'api',
       metadata: {
-        mcpTool: 'neo4j-mcp',
+        mcpTool: 'graph-mcp',
         responseTime,
         entityCount,
         query: 'MATCH (n:Entity) RETURN count(n) as entityCount LIMIT 1'
@@ -164,7 +164,7 @@ async function testNeo4jMCP(): Promise<MCPTestResult> {
     });
 
     return {
-      tool: 'neo4j-mcp',
+      tool: 'graph-mcp',
       status: 'success',
       responseTime,
       result: {
@@ -186,25 +186,25 @@ async function testNeo4jMCP(): Promise<MCPTestResult> {
     
     await liveLogService.log({
       level: 'error',
-      message: `❌ Neo4j MCP Test Failed: ${errorMessage}`,
+      message: `❌ Graph MCP Test Failed: ${errorMessage}`,
       source: 'MCP Tools Test',
       category: 'api',
       metadata: {
-        mcpTool: 'neo4j-mcp',
+        mcpTool: 'graph-mcp',
         responseTime,
         error: errorMessage
       }
     });
 
     return {
-      tool: 'neo4j-mcp',
+      tool: 'graph-mcp',
       status: 'error',
       responseTime,
       error: errorMessage,
       details: {
         troubleshooting: [
-          'Check Neo4j database connection',
-          'Verify neo4j-mcp server is running',
+          'Check graph database connection',
+          'Verify graph-mcp server is running',
           'Confirm MCP client bus initialization',
           'Test database credentials and access'
         ]

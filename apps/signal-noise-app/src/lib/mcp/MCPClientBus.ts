@@ -59,6 +59,11 @@ import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 import { spawn } from 'child_process';
 
+function isBuildPhase(): boolean {
+  return process.env.NEXT_PHASE === 'phase-production-build' ||
+    process.env.npm_lifecycle_event === 'build';
+}
+
 interface MCPServerConfig {
   name: string;
   command: string;
@@ -88,7 +93,7 @@ export class MCPClientBus {
 
   constructor(private servers: MCPServerConfig[]) {
     // Deprecation warning on instantiation
-    if (typeof window === 'undefined') {
+    if (typeof window === 'undefined' && !isBuildPhase()) {
       console.warn('⚠️  WARNING: MCPClientBus is deprecated. Use Claude Agent SDK directly.');
       console.warn('   See migration guide in file header.');
     }
@@ -99,27 +104,37 @@ export class MCPClientBus {
    * Initialize all MCP server connections
    */
   async initialize(): Promise<void> {
-    console.warn('⚠️  MCPClientBus.initialize() is deprecated. Use Claude Agent SDK instead.');
+    if (!isBuildPhase()) {
+      console.warn('⚠️  MCPClientBus.initialize() is deprecated. Use Claude Agent SDK instead.');
+    }
 
     if (this.isInitialized) {
       return;
     }
 
-    console.log('🔌 Initializing MCP Client Bus...');
+    if (!isBuildPhase()) {
+      console.log('🔌 Initializing MCP Client Bus...');
+    }
     
     for (const serverConfig of this.servers) {
       try {
         await this.connectServer(serverConfig);
-        console.log(`✅ Connected to MCP server: ${serverConfig.name}`);
+        if (!isBuildPhase()) {
+          console.log(`✅ Connected to MCP server: ${serverConfig.name}`);
+        }
       } catch (error) {
-        console.error(`❌ Failed to connect to MCP server ${serverConfig.name}:`, error);
+        if (!isBuildPhase()) {
+          console.error(`❌ Failed to connect to MCP server ${serverConfig.name}:`, error);
+        }
         // Continue with other servers even if one fails
       }
     }
 
     await this.loadTools();
     this.isInitialized = true;
-    console.log(`🎉 MCP Client Bus initialized with ${this.clients.size} servers and ${this.tools.size} tools`);
+    if (!isBuildPhase()) {
+      console.log(`🎉 MCP Client Bus initialized with ${this.clients.size} servers and ${this.tools.size} tools`);
+    }
   }
 
   /**
@@ -161,11 +176,15 @@ export class MCPClientBus {
 
     // Handle process errors
     serverProcess.on('error', (error) => {
-      console.error(`MCP server ${config.name} process error:`, error);
+      if (!isBuildPhase()) {
+        console.error(`MCP server ${config.name} process error:`, error);
+      }
     });
 
     serverProcess.on('exit', (code) => {
-      console.log(`MCP server ${config.name} process exited with code ${code}`);
+      if (!isBuildPhase()) {
+        console.log(`MCP server ${config.name} process exited with code ${code}`);
+      }
       this.clients.delete(config.name);
     });
   }
@@ -192,7 +211,9 @@ export class MCPClientBus {
           }
         }
       } catch (error) {
-        console.error(`Failed to load tools from ${serverName}:`, error);
+        if (!isBuildPhase()) {
+          console.error(`Failed to load tools from ${serverName}:`, error);
+        }
       }
     }
   }
@@ -330,16 +351,14 @@ export class MCPClientBus {
 // Official MCP server configurations
 export const MCP_SERVERS: MCPServerConfig[] = [
   {
-    name: 'neo4j-mcp',
-    command: 'npx',
-    args: ['-y', '@alanse/mcp-neo4j-server'],
+    name: 'graph-mcp',
+    command: 'python3',
+    args: ['backend/falkordb_mcp_server_fastmcp.py'],
     env: {
-      NEO4J_URI: process.env.NEO4J_URI || 'neo4j+s://cce1f84b.databases.neo4j.io',
-      NEO4J_USERNAME: process.env.NEO4J_USERNAME || 'neo4j',
-      NEO4J_PASSWORD: process.env.NEO4J_PASSWORD || '',
-      NEO4J_DATABASE: process.env.NEO4J_DATABASE || 'neo4j',
-      AURA_INSTANCEID: process.env.AURA_INSTANCEID || 'cce1f84b',
-      AURA_INSTANCENAME: process.env.AURA_INSTANCENAME || 'Instance01'
+      FALKORDB_URI: process.env.FALKORDB_URI || '',
+      FALKORDB_USER: process.env.FALKORDB_USER || '',
+      FALKORDB_PASSWORD: process.env.FALKORDB_PASSWORD || '',
+      FALKORDB_DATABASE: process.env.FALKORDB_DATABASE || '',
     }
   },
   {
@@ -372,6 +391,3 @@ export const MCP_SERVERS: MCPServerConfig[] = [
 
 // Create singleton instance
 export const mcpBus = new MCPClientBus(MCP_SERVERS);
-
-// Initialize MCP bus on module import
-mcpBus.initialize().catch(console.error);

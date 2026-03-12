@@ -1,0 +1,650 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-02-26T05:02:02.388340",
+  "total_duration_ms": 317830,
+  "total_cost_usd": 0.0,
+  "entities": [
+    {
+      "entity_id": "coventry-city-fc",
+      "entity_name": "Coventry City FC",
+      "entity_type": "SPORT_CLUB",
+      "started_at": "2026-02-26T04:56:44.557634+00:00",
+      "completed_at": "2026-02-26T05:02:02.388308+00:00",
+      "duration_ms": 317830,
+      "cost_usd": 0.0,
+      "steps": [
+        {
+          "step_number": 1,
+          "step_name": "Question-First Dossier",
+          "entity_id": "coventry-city-fc",
+          "entity_name": "Coventry City FC",
+          "entity_type": "SPORT_CLUB",
+          "started_at": "2026-02-26T04:56:44.557722+00:00",
+          "completed_at": "2026-02-26T04:56:44.560375+00:00",
+          "duration_ms": 2,
+          "cost_usd": 0.0,
+          "status": "success",
+          "input_data": {
+            "entity_id": "coventry-city-fc",
+            "entity_name": "Coventry City FC",
+            "entity_type": "SPORT_CLUB"
+          },
+          "output_data": {
+            "questions_count": 7,
+            "hypotheses": [
+              {
+                "hypothesis_id": "coventry-city-fc_sc_mobile_fan_platform",
+                "entity_id": "coventry-city-fc",
+                "entity_name": "Coventry City FC",
+                "statement": "Coventry City FC will issue mobile app RFP (\u00a380K-\u00a3300K budget) within 6-18 months",
+                "category": "mobile",
+                "prior_probability": 0.65,
+                "confidence": 0.65,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sc_mobile_fan_platform",
+                  "yp_service_fit": [
+                    "MOBILE_APPS",
+                    "FAN_ENGAGEMENT"
+                  ],
+                  "budget_range": "\u00a380K-\u00a3300K",
+                  "yp_advantage": "Team GB Olympic mobile app delivery, STA Award 2024 winner",
+                  "positioning_strategy": "SOLUTION_PROVIDER",
+                  "next_signals": [
+                    "Job postings: Mobile Developer, iOS Developer, Product Manager - Mobile",
+                    "RFP keywords: mobile app, fan app, official app, React Native, RFP, Request for Proposal, tender, procurement, EOI, RFI",
+                    "Announcements: Digital transformation initiatives, fan engagement strategy"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE"
+                  ],
+                  "accept_criteria": "Any mention of mobile platform development or fan app in official channels",
+                  "confidence_boost": 0.15
+                }
+              },
+              {
+                "hypothesis_id": "coventry-city-fc_sc_digital_transformation",
+                "entity_id": "coventry-city-fc",
+                "entity_name": "Coventry City FC",
+                "statement": "Coventry City FC is seeking digital transformation partner (\u00a3150K-\u00a3500K) for modernization project",
+                "category": "digital",
+                "prior_probability": 0.7,
+                "confidence": 0.7,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sc_digital_transformation",
+                  "yp_service_fit": [
+                    "DIGITAL_TRANSFORMATION"
+                  ],
+                  "budget_range": "\u00a3150K-\u00a3500K",
+                  "yp_advantage": "3-year partnership track record (Premier Padel), end-to-end transformation expertise",
+                  "positioning_strategy": "STRATEGIC_PARTNER",
+                  "next_signals": [
+                    "Job postings: CTO, CIO, Digital Transformation Manager, Cloud Architect",
+                    "RFP keywords: digital transformation, cloud migration, modernization, RFP, Request for Proposal, tender, ITT, procurement, vendor portal",
+                    "Strategic announcements: Digital modernization, cloud migration, legacy system refresh",
+                    "Partnership announcements: Technology consulting partners"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE",
+                    "OFFICIAL_SITE"
+                  ],
+                  "accept_criteria": "Mentions of modernization, cloud migration, or technology overhaul initiatives",
+                  "confidence_boost": 0.2
+                }
+              },
+              {
+                "hypothesis_id": "coventry-city-fc_sc_ticketing_ecommerce",
+                "entity_id": "coventry-city-fc",
+                "entity_name": "Coventry City FC",
+                "statement": "Coventry City FC will replace ticketing/e-commerce platform (\u00a380K-\u00a3250K) within 12 months",
+                "category": "ticketing",
+                "prior_probability": 0.65,
+                "confidence": 0.65,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sc_ticketing_ecommerce",
+                  "yp_service_fit": [
+                    "ECOMMERCE",
+                    "FAN_ENGAGEMENT"
+                  ],
+                  "budget_range": "\u00a380K-\u00a3250K",
+                  "yp_advantage": "BNP Paribas Open ticketing platform experience, high-volume e-commerce delivery",
+                  "positioning_strategy": "SOLUTION_PROVIDER",
+                  "next_signals": [
+                    "Fan complaints: Ticketing issues, checkout problems, mobile ticketing",
+                    "Job postings: E-commerce Manager, Head of Ticketing, CRM Manager",
+                    "RFP keywords: ticketing system, e-commerce platform, POS system, RFP, Request for Proposal, tender, RFQ, supplier portal",
+                    "Partnership changes: New ticketing provider partnerships"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE"
+                  ],
+                  "accept_criteria": "Evidence of ticketing issues or job postings for e-commerce roles",
+                  "confidence_boost": 0.15
+                }
+              },
+              {
+                "hypothesis_id": "coventry-city-fc_sc_analytics_data_platform",
+                "entity_id": "coventry-city-fc",
+                "entity_name": "Coventry City FC",
+                "statement": "Coventry City FC will invest in analytics/data platform (\u00a3100K-\u00a3400K) for performance/fan insights",
+                "category": "analytics",
+                "prior_probability": 0.62,
+                "confidence": 0.62,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sc_analytics_data_platform",
+                  "yp_service_fit": [
+                    "ANALYTICS"
+                  ],
+                  "budget_range": "\u00a3100K-\u00a3400K",
+                  "yp_advantage": "ISU skating analytics platform, sports analytics expertise",
+                  "positioning_strategy": "CAPABILITY_PARTNER",
+                  "next_signals": [
+                    "Job postings: Data Analyst, Data Engineer, BI Developer, Analytics Manager",
+                    "RFP keywords: analytics platform, BI system, data warehouse, CRM analytics, RFP, Request for Proposal, tender, RFQ",
+                    "Partnerships: Analytics providers, BI platform announcements",
+                    "Strategic mentions: Data-driven decisions, fan insights, performance analytics"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE",
+                    "OFFICIAL_SITE"
+                  ],
+                  "accept_criteria": "Job postings for analytics roles or data platform announcements",
+                  "confidence_boost": 0.12
+                }
+              },
+              {
+                "hypothesis_id": "coventry-city-fc_sc_fan_engagement_gaps",
+                "entity_id": "coventry-city-fc",
+                "entity_name": "Coventry City FC",
+                "statement": "Coventry City FC will seek fan engagement solution (\u00a380K-\u00a3300K) to improve supporter experience",
+                "category": "fan",
+                "prior_probability": 0.6,
+                "confidence": 0.6,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sc_fan_engagement_gaps",
+                  "yp_service_fit": [
+                    "FAN_ENGAGEMENT",
+                    "MOBILE_APPS"
+                  ],
+                  "budget_range": "\u00a380K-\u00a3300K",
+                  "yp_advantage": "FIBA 3\u00d73 fan engagement platform, multi-federation experience",
+                  "positioning_strategy": "INNOVATION_PARTNER",
+                  "next_signals": [
+                    "Season ticket holder feedback: Engagement complaints, communication issues",
+                    "Job postings: Fan Engagement Manager, Head of Supporter Services",
+                    "RFP keywords: fan engagement platform, CRM system, loyalty platform, RFP, Request for Proposal, tender, EOI",
+                    "Initiatives: Fan experience programs, loyalty scheme launches"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE",
+                    "OFFICIAL_SITE"
+                  ],
+                  "accept_criteria": "Fan engagement initiatives or related job postings",
+                  "confidence_boost": 0.1
+                }
+              },
+              {
+                "hypothesis_id": "coventry-city-fc_sc_stadium_technology",
+                "entity_id": "coventry-city-fc",
+                "entity_name": "Coventry City FC",
+                "statement": "Coventry City FC will upgrade stadium technology (\u00a3100K-\u00a3400K) for matchday experience",
+                "category": "stadium",
+                "prior_probability": 0.62,
+                "confidence": 0.62,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sc_stadium_technology",
+                  "yp_service_fit": [
+                    "MOBILE_APPS",
+                    "UI_UX_DESIGN",
+                    "ECOMMERCE"
+                  ],
+                  "budget_range": "\u00a3100K-\u00a3400K",
+                  "yp_advantage": "Olympic venue app experience, large-scale deployment capability",
+                  "positioning_strategy": "STRATEGIC_PARTNER",
+                  "next_signals": [
+                    "Stadium announcements: WiFi upgrades, mobile ordering, seat upgrades",
+                    "Job postings: Stadium Technology Manager, Venue Operations Director",
+                    "RFP keywords: stadium technology, venue WiFi, mobile ordering, RFP, Request for Proposal, tender, ITT, supplier portal",
+                    "Partnerships: Stadium technology providers, connectivity partners"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "PRESS_RELEASE",
+                    "CAREERS_PAGE"
+                  ],
+                  "accept_criteria": "Stadium technology initiatives or related partnerships",
+                  "confidence_boost": 0.12
+                }
+              },
+              {
+                "hypothesis_id": "coventry-city-fc_sc_legacy_replacement",
+                "entity_id": "coventry-city-fc",
+                "entity_name": "Coventry City FC",
+                "statement": "Coventry City FC will initiate legacy system replacement (\u00a3150K-\u00a3500K) within 6-12 months",
+                "category": "legacy",
+                "prior_probability": 0.6799999999999999,
+                "confidence": 0.6799999999999999,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sc_legacy_replacement",
+                  "yp_service_fit": [
+                    "DIGITAL_TRANSFORMATION",
+                    "ANALYTICS"
+                  ],
+                  "budget_range": "\u00a3150K-\u00a3500K",
+                  "yp_advantage": "End-to-end digital transformation, legacy migration expertise",
+                  "positioning_strategy": "SOLUTION_PROVIDER",
+                  "next_signals": [
+                    "Partnership changes: Ending vendor relationships",
+                    "Strategic announcements: System modernization, platform migration",
+                    "RFP keywords: system migration, legacy replacement, platform modernization, RFP, Request for Proposal, tender, ITT, RFQ",
+                    "Job postings: Migration specialists, system architects"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "PRESS_RELEASE",
+                    "CAREERS_PAGE"
+                  ],
+                  "accept_criteria": "Evidence of vendor changes or modernization initiatives",
+                  "confidence_boost": 0.18
+                }
+              }
+            ],
+            "yp_service_mappings": [
+              {
+                "question": "What mobile app or fan engagement platform investments are planned by {entity}?",
+                "services": [
+                  "MOBILE_APPS",
+                  "FAN_ENGAGEMENT"
+                ]
+              },
+              {
+                "question": "What digital transformation initiatives is {entity} undertaking or planning?",
+                "services": [
+                  "DIGITAL_TRANSFORMATION"
+                ]
+              },
+              {
+                "question": "What ticketing or e-commerce pain points indicate replacement needs at {entity}?",
+                "services": [
+                  "ECOMMERCE",
+                  "FAN_ENGAGEMENT"
+                ]
+              },
+              {
+                "question": "What analytics or data platform needs does {entity} have for performance or fan insights?",
+                "services": [
+                  "ANALYTICS"
+                ]
+              },
+              {
+                "question": "What fan engagement strategy gaps or opportunities exist at {entity}?",
+                "services": [
+                  "FAN_ENGAGEMENT",
+                  "MOBILE_APPS"
+                ]
+              },
+              {
+                "question": "What stadium or venue technology upgrades is {entity} planning?",
+                "services": [
+                  "MOBILE_APPS",
+                  "UI_UX_DESIGN",
+                  "ECOMMERCE"
+                ]
+              },
+              {
+                "question": "What legacy system replacement signals is {entity} showing?",
+                "services": [
+                  "DIGITAL_TRANSFORMATION",
+                  "ANALYTICS"
+                ]
+              }
+            ],
+            "budget_ranges": [],
+            "starting_confidence": 0.55,
+            "yp_profile": {
+              "ideal_budget_range": "\u00a380K-\u00a3500K",
+              "ideal_timeline": "3-12 months",
+              "team_size": "2-8 developers",
+              "case_studies": {
+                "team_gb": {
+                  "service": "MOBILE_APPS",
+                  "description": "Olympic mobile app delivery",
+                  "achievement": "STA Award 2024 winner",
+                  "budget": "~\u00a3300K",
+                  "relevance": "Shows Olympic-scale delivery capability"
+                },
+                "premier_padel": {
+                  "service": "DIGITAL_TRANSFORMATION",
+                  "description": "3-year strategic partnership",
+                  "achievement": "End-to-end digital transformation",
+                  "budget": "~\u00a3500K/year",
+                  "relevance": "Long-term federation partnership model"
+                },
+                "fiba_3x3": {
+                  "service": "FAN_ENGAGEMENT",
+                  "description": "FIBA 3\u00d73 Basketball platform",
+                  "achievement": "Multi-federation engagement platform",
+                  "budget": "~\u00a3200K",
+                  "relevance": "Federation member management experience"
+                },
+                "isu": {
+                  "service": "ANALYTICS",
+                  "description": "International Skating Union data platform",
+                  "achievement": "Sports analytics implementation",
+                  "budget": "~\u00a3150K",
+                  "relevance": "International federation analytics"
+                },
+                "lnb": {
+                  "service": "MOBILE_APPS",
+                  "description": "Ligue Nationale de Basket mobile platform",
+                  "achievement": "French basketball federation app",
+                  "budget": "~\u00a3250K",
+                  "relevance": "Federation-wide mobile deployment"
+                },
+                "bnpp_paribas": {
+                  "service": "ECOMMERCE",
+                  "description": "BNP Paribas Open ticketing platform",
+                  "achievement": "Major event e-commerce delivery",
+                  "budget": "~\u00a3200K",
+                  "relevance": "High-volume ticketing/e-commerce"
+                }
+              },
+              "competitive_differentiators": [
+                "Wild Creativity \u00d7 Boundless Technology approach",
+                "Agile 2-8 developer team structure",
+                "Proven sports industry experience",
+                "Multi-federation partnership track record",
+                "Olympic-scale delivery capability (Team GB)",
+                "End-to-end digital transformation expertise"
+              ]
+            }
+          },
+          "details": "Step 1: Question-First Dossier Generation\n\nEntity: Coventry City FC (coventry-city-fc)\nType: SPORT_CLUB\n\nGenerated 7 questions:\n\n1. What mobile app or fan engagement platform investments are planned by {entity}?...\n2. What digital transformation initiatives is {entity} undertaking or planning?...\n3. What ticketing or e-commerce pain points indicate replacement needs at {entity}?...\n4. What analytics or data platform needs does {entity} have for performance or fan insights?...\n5. What fan engagement strategy gaps or opportunities exist at {entity}?...\n6. What stadium or venue technology upgrades is {entity} planning?...\n7. What legacy system replacement signals is {entity} showing?...\n\nYP Service Mappings: 7\nBudget Indicators: 0\nStarting Confidence: 0.55\n\nYP Profile Services: ['team_gb', 'premier_padel', 'fiba_3x3', 'isu', 'lnb', 'bnpp_paribas']\n",
+          "logs": [
+            "Importing entity_type_dossier_questions module...",
+            "Generating questions for entity type: SPORT_CLUB",
+            "Generated 7 questions",
+            "Generated 7 hypotheses",
+            "Question-first dossier generation completed successfully"
+          ],
+          "metrics": {
+            "questions_generated": 7,
+            "hypotheses_created": 7,
+            "starting_confidence": 0.55
+          }
+        },
+        {
+          "step_number": 2,
+          "step_name": "Hypothesis-Driven Discovery",
+          "entity_id": "coventry-city-fc",
+          "entity_name": "Coventry City FC",
+          "entity_type": "SPORT_CLUB",
+          "started_at": "2026-02-26T04:56:44.561204+00:00",
+          "completed_at": "2026-02-26T05:02:01.821173+00:00",
+          "duration_ms": 317259,
+          "cost_usd": 0.0,
+          "status": "success",
+          "input_data": {
+            "entity_id": "coventry-city-fc",
+            "entity_name": "Coventry City FC",
+            "entity_type": "SPORT_CLUB",
+            "hypotheses_count": 7,
+            "max_iterations": 10
+          },
+          "output_data": {
+            "final_confidence": 0.2,
+            "iterations_completed": 0,
+            "validated_signals": [],
+            "total_cost_usd": 0.0,
+            "hops_executed": {
+              "1": 10
+            },
+            "confidence_progression": [],
+            "decisions": []
+          },
+          "details": "Step 2: Hypothesis-Driven Discovery\n\nEntity: Coventry City FC\nTemplate: yellow_panther_agency\nIterations: 0\nMax Depth: 3\n\nFinal Confidence: 0.20\nTotal Cost: $0.0000\n\nValidated Signals: 0\nRaw Signal Objects: 0\n\n\nHypotheses Generated: 10\n\nDepth Statistics:\n  Depth 1: 10 iterations\n",
+          "logs": [
+            "Importing hypothesis_driven_discovery module...",
+            "Initializing HypothesisDrivenDiscovery...",
+            "Running discovery for Coventry City FC (max 10 iterations)...",
+            "Discovery completed: 0 iterations",
+            "Hypothesis-driven discovery completed successfully"
+          ],
+          "metrics": {
+            "final_confidence": 0.2,
+            "iterations": 0,
+            "signals_validated": 0,
+            "total_cost_usd": 0.0
+          }
+        },
+        {
+          "step_number": 3,
+          "step_name": "Ralph Loop Validation",
+          "entity_id": "coventry-city-fc",
+          "entity_name": "Coventry City FC",
+          "entity_type": "SPORT_CLUB",
+          "started_at": "2026-02-26T05:02:01.823052+00:00",
+          "completed_at": "2026-02-26T05:02:01.824461+00:00",
+          "duration_ms": 1,
+          "cost_usd": 0.0,
+          "status": "success",
+          "input_data": {
+            "entity_id": "coventry-city-fc",
+            "entity_name": "Coventry City FC",
+            "entity_type": "SPORT_CLUB",
+            "signals_count": 0
+          },
+          "output_data": {
+            "pass_1_results": [],
+            "pass_2_results": [],
+            "pass_3_results": [],
+            "validated_signals": [],
+            "rejected_count": 0,
+            "validation_rate": 0
+          },
+          "details": "Step 3: Ralph Loop Validation (SIMULATED MODE)\n\nEntity: Coventry City FC\nSignals Processed: 0\n\n\u26a0\ufe0f NOTE: This is SIMULATED data. Real Ralph Loop validation requires:\n   - ANTHROPIC_API_KEY environment variable\n   - FalkorDB/Neo4j database connection\n   - Graphiti service initialized\n\nPass 1 (Rule-based Filtering): 0 results\n  - ACCEPT: 0\n  - WEAK_ACCEPT: 0\n  - REJECT: 0\n\nPass 2 (Claude Validation): 0 results\n  - Signals forwarded to Pass 3: 0\n\nPass 3 (Final Confirmation): 0 results\n  - Validated: 0\n  - Rejected: 0\n\nValidated Signals: 0\nRejected: 0\nValidation Rate: 0.0%\n",
+          "logs": [
+            "Running Ralph Loop validation for 0 signals...",
+            "Ralph Loop execution error: 'str' object has no attribute 'id' - falling back to simulated mode",
+            "Running in SIMULATED mode (mock validation)",
+            "Simulated validation complete: 0/0 signals validated",
+            "Simulated Ralph Loop validation completed"
+          ],
+          "metrics": {
+            "signals_input": 0,
+            "signals_validated": 0,
+            "signals_rejected": 0,
+            "validation_rate": 0
+          }
+        },
+        {
+          "step_number": 4,
+          "step_name": "Temporal Intelligence",
+          "entity_id": "coventry-city-fc",
+          "entity_name": "Coventry City FC",
+          "entity_type": "SPORT_CLUB",
+          "started_at": "2026-02-26T05:02:01.825103+00:00",
+          "completed_at": "2026-02-26T05:02:02.242026+00:00",
+          "duration_ms": 416,
+          "cost_usd": 0.0,
+          "status": "success",
+          "input_data": {
+            "entity_id": "coventry-city-fc",
+            "entity_name": "Coventry City FC",
+            "entity_type": "SPORT_CLUB"
+          },
+          "output_data": {
+            "timeline_episodes": 2,
+            "time_span_days": 0,
+            "patterns_detected": [],
+            "episode_types": {
+              "OTHER": 2
+            },
+            "similar_entities": [],
+            "temporal_fit_score": 0.5
+          },
+          "details": "Step 4: Temporal Intelligence Analysis\n\nEntity: Coventry City FC\nTimeline Episodes: 2\nTime Span: 0 days\n\nPatterns Detected:\n\nEpisode Types:\n  - OTHER: 2\n\nTemporal Fit Score: 0.50\n  (Based on RFP history, timeline depth, and pattern diversity)",
+          "logs": [
+            "Fetching entity timeline from Graphiti...",
+            "Retrieved 2 timeline episodes",
+            "Temporal analysis complete: fit_score=0.50",
+            "Temporal intelligence analysis completed successfully"
+          ],
+          "metrics": {
+            "timeline_episodes": 2,
+            "time_span_days": 0,
+            "patterns_detected": 0,
+            "temporal_fit_score": 0.5
+          }
+        },
+        {
+          "step_number": 5,
+          "step_name": "Narrative Builder",
+          "entity_id": "coventry-city-fc",
+          "entity_name": "Coventry City FC",
+          "entity_type": "SPORT_CLUB",
+          "started_at": "2026-02-26T05:02:02.244515+00:00",
+          "completed_at": "2026-02-26T05:02:02.369536+00:00",
+          "duration_ms": 125,
+          "cost_usd": 0.0,
+          "status": "success",
+          "input_data": {
+            "entity_id": "coventry-city-fc",
+            "entity_name": "Coventry City FC",
+            "entity_type": "SPORT_CLUB",
+            "max_tokens": 2000
+          },
+          "output_data": {
+            "narrative": "# Temporal Narrative (2 episodes: 2026-02-26T04:45:41.528216+00:00 to 2026-02-26T05:02:00.983255+00:00)\n\n## Other\n\n- **2026-02-26** (Unknown): Discovery run completed with 0 iterations. Final confidence: 0.20. No signals detected.\n- **2026-02-26** (Unknown): Discovery run completed with 0 iterations. Final confidence: 0.20. No signals detected.\n",
+            "episode_count": 2,
+            "total_episodes": 2,
+            "estimated_tokens": 86,
+            "truncated": false
+          },
+          "details": "Step 5: Narrative Builder\n\nEntity: Coventry City FC\nEpisodes Available: 2\nEpisodes Included: 2\nEstimated Tokens: 86\nTruncated: False\n\nNarrative Preview (first 500 chars):\n# Temporal Narrative (2 episodes: 2026-02-26T04:45:41.528216+00:00 to 2026-02-26T05:02:00.983255+00:00)\n\n## Other\n\n- **2026-02-26** (Unknown): Discovery run completed with 0 iterations. Final confidence: 0.20. No signals detected.\n- **2026-02-26** (Unknown): Discovery run completed with 0 iterations. Final confidence: 0.20. No signals detected.\n...\n",
+          "logs": [
+            "Fetching episodes for narrative building...",
+            "Retrieved 2 episodes",
+            "Narrative built: 86 tokens",
+            "Narrative builder completed successfully"
+          ],
+          "metrics": {
+            "episodes_available": 2,
+            "episodes_included": 2,
+            "estimated_tokens": 86,
+            "truncated": false
+          }
+        },
+        {
+          "step_number": 6,
+          "step_name": "Yellow Panther Scoring",
+          "entity_id": "coventry-city-fc",
+          "entity_name": "Coventry City FC",
+          "entity_type": "SPORT_CLUB",
+          "started_at": "2026-02-26T05:02:02.371061+00:00",
+          "completed_at": "2026-02-26T05:02:02.387910+00:00",
+          "duration_ms": 16,
+          "cost_usd": 0.0,
+          "status": "success",
+          "input_data": {
+            "entity_id": "coventry-city-fc",
+            "entity_name": "Coventry City FC",
+            "entity_type": "SPORT_CLUB",
+            "signals_count": 0,
+            "temporal_fit": 0.5
+          },
+          "output_data": {
+            "fit_score": 35.0,
+            "priority": "TIER_4",
+            "budget_alignment": "MARGINAL",
+            "service_alignment": [],
+            "positioning_strategy": "Position based on signal type and entity",
+            "recommendations": [
+              "Monitor for additional signals",
+              "Add to watch list for future opportunities"
+            ],
+            "scoring_breakdown": {
+              "service_match": 0.0,
+              "budget": 12.5,
+              "timeline": 7.5,
+              "entity_size": 8.0,
+              "geographic": 7.0
+            }
+          },
+          "details": "Step 6: Yellow Panther Fit Scoring\n\nEntity: Coventry City FC\nEntity Type: SPORT_CLUB\n\nYP Fit Score: 35.0/100\nPriority Tier: PriorityTier.TIER_4\nBudget Alignment: BudgetAlignment.MARGINAL\n\nService Alignment:\n\nRecommendations:\n  - Monitor for additional signals\n  - Add to watch list for future opportunities\n\nScoring Breakdown:\n  - service_match: 0.0 points\n  - budget: 12.5 points\n  - timeline: 7.5 points\n  - entity_size: 8.0 points\n  - geographic: 7.0 points\n",
+          "logs": [
+            "Importing yellow_panther_scorer module...",
+            "Scoring entity against YP profile...",
+            "YP Fit Score: 35.0/100",
+            "Priority: PriorityTier.TIER_4",
+            "Yellow Panther scoring completed successfully"
+          ],
+          "metrics": {
+            "fit_score": 35.0,
+            "priority": "TIER_4",
+            "budget_alignment": "MARGINAL",
+            "service_alignment_count": 0,
+            "recommendations_count": 2
+          }
+        }
+      ],
+      "final_confidence": 0.2,
+      "total_signals": 0,
+      "procurement_signals": 0,
+      "capability_signals": 0,
+      "confidence_band": "EXPLORATORY",
+      "estimated_value": "$0",
+      "recommendations": [
+        {
+          "text": "Monitor for additional signals"
+        },
+        {
+          "text": "Add to watch list for future opportunities"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_entities": 1,
+    "successful_entities": 1,
+    "total_steps": 6,
+    "successful_steps": 6,
+    "success_rate": 1.0,
+    "avg_confidence": 0.2,
+    "max_confidence": 0.2,
+    "min_confidence": 0.2,
+    "total_cost_usd": 0.0,
+    "avg_cost_usd": 0.0,
+    "total_signals": 0,
+    "procurement_signals": 0,
+    "capability_signals": 0,
+    "avg_duration_ms": 317830.0,
+    "total_duration_ms": 317830,
+    "confidence_bands": {
+      "EXPLORATORY": 1
+    }
+  }
+}

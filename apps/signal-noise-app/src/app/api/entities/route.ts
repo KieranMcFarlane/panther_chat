@@ -1,69 +1,117 @@
 import { NextRequest, NextResponse } from 'next/server'
-import neo4j from 'neo4j-driver'
-import { Neo4jService } from '@/lib/neo4j'
-import { EntityCacheService } from '@/services/EntityCacheService'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
+import { resolveGraphId } from '@/lib/graph-id'
+import { canonicalEntityType, readLeague } from '@/lib/entity-search-utils.js'
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const page = parseInt(searchParams.get('page') || '1')
-    const limit = parseInt(searchParams.get('limit') || '20')
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1'))
+    const limit = Math.max(5, Math.min(50, parseInt(searchParams.get('limit') || '10')))
     let entityType = searchParams.get('entityType') || ''
     if (entityType === 'all') entityType = ''
-    const sortBy = searchParams.get('sortBy') || 'name'
-    const sortOrder = searchParams.get('sortOrder') || 'asc'
+    const sortBy = searchParams.get('sortBy') || 'popular'
+    const sortOrder = searchParams.get('sortOrder') || (sortBy === 'popular' ? 'desc' : 'asc')
     const search = searchParams.get('search') || ''
+    const sport = (searchParams.get('sport') || '').trim()
+    const league = (searchParams.get('league') || '').trim()
+    const country = (searchParams.get('country') || '').trim()
+    const entityClass = (searchParams.get('entityClass') || '').trim()
 
-    console.log(`📖 Fetching entities from Supabase: page=${page}, limit=${limit}, search=${search || 'none'}`)
+    console.log(`📖 Fetching entities from Supabase: page=${page}, limit=${limit}, search=${search || 'none'}, sport=${sport || 'all'}, league=${league || 'all'}, country=${country || 'all'}, entityClass=${entityClass || 'all'}`)
 
-    // Build the base query
     let query = supabase
       .from('cached_entities')
-      .select('*', { count: 'exact' })
+      .select('id, graph_id, neo4j_id, labels, properties', { count: 'exact' })
 
-    // Apply search filter if provided
-    if (search) {
-      query = query.or(`properties->>name.ilike.%${search}%,properties->>type.ilike.%${search}%,properties->>sport.ilike.%${search}%,properties->>country.ilike.%${search}%,properties->>description.ilike.%${search}%`)
+    const wildcard = (value: string) => `%${value.replace(/%/g, '')}%`
+
+    if (entityType) {
+      query = query.contains('labels', [entityType])
     }
 
-    // Apply entity type filter if provided
-    if (entityType && entityType !== 'all') {
-      query = query.filter('labels', 'cs', `[\"${entityType}\"]`)
+    if (sport && sport !== 'all') {
+      query = query.ilike('properties->>sport', wildcard(sport))
+    }
+    if (league && league !== 'all') {
+      const leaguePattern = wildcard(league)
+      query = query.or(`properties->>league.ilike.${leaguePattern},properties->>level.ilike.${leaguePattern}`)
+    }
+    if (country && country !== 'all') {
+      query = query.ilike('properties->>country', wildcard(country))
+    }
+    if (entityClass && entityClass !== 'all') {
+      const entityClassPattern = wildcard(entityClass)
+      query = query.or(
+        `properties->>entityClass.ilike.${entityClassPattern},properties->>entity_class.ilike.${entityClassPattern},properties->>type.ilike.${entityClassPattern}`
+      )
     }
 
-    // Apply ordering
-    const sortField = 'properties->>name'
+    if (search.trim()) {
+      const searchPattern = wildcard(search.trim())
+      query = query.or(
+        `properties->>name.ilike.${searchPattern},properties->>type.ilike.${searchPattern},properties->>sport.ilike.${searchPattern},properties->>league.ilike.${searchPattern},properties->>country.ilike.${searchPattern},properties->>description.ilike.${searchPattern},properties->>aliases.ilike.${searchPattern},properties->>alias.ilike.${searchPattern}`
+      )
+    }
+
     const ascending = sortOrder.toLowerCase() !== 'desc'
-    query = query.order(sortField, { ascending })
+    const sortFieldMap: Record<string, string> = {
+      name: 'properties->>name',
+      type: 'properties->>type',
+      sport: 'properties->>sport',
+      country: 'properties->>country',
+      league: 'properties->>league',
+      priorityScore: 'properties->>priorityScore',
+      estimatedValue: 'properties->>estimatedValue'
+    }
 
-    // Apply pagination
+    if (sortBy === 'popular') {
+      query = query
+        .order('properties->>yellowPantherPriority', { ascending: false, nullsFirst: false })
+        .order('properties->>priorityScore', { ascending: false, nullsFirst: false })
+        .order('properties->>priority_score', { ascending: false, nullsFirst: false })
+        .order('properties->>name', { ascending: true, nullsFirst: false })
+    } else {
+      const orderField = sortFieldMap[sortBy] || sortFieldMap.name
+      query = query.order(orderField, { ascending, nullsFirst: false })
+    }
+
     const start = (page - 1) * limit
-    query = query.range(start, start + limit - 1)
+    const end = start + limit - 1
+    query = query.range(start, end)
 
     const { data, error, count } = await query
-
     if (error) {
       console.error('❌ Supabase query error:', error)
       throw error
     }
 
-    const entities = data || []
-    const total = count || 0
+    const paginated = data || []
 
-    console.log(`✅ Supabase query successful: ${entities.length} entities, total: ${total}`)
+    const total = count ?? paginated.length
+    console.log(`✅ Supabase query successful: ${paginated.length} entities, total: ${total}`)
 
     // Transform to match expected format
-    const transformedEntities = entities.map((entity: any) => ({
-      id: entity.id,
-      neo4j_id: entity.neo4j_id,
-      labels: entity.labels || [],
-      properties: {
-        ...entity.properties,
-        name: entity.properties?.name || entity.neo4j_id,
-        type: entity.properties?.type || entity.labels?.[0] || 'ENTITY'
+    const transformedEntities = paginated.map((entity: any) => {
+      const stableId = resolveGraphId(entity) || entity.id
+      return {
+        id: entity.id,
+        graph_id: stableId,
+        labels: entity.labels || [],
+        properties: {
+          ...entity.properties,
+          name: entity.properties?.name || stableId,
+          type: canonicalEntityType(entity),
+          league: readLeague(entity.properties || {}),
+          priorityScore: Number(
+            entity.properties?.priorityScore ||
+            entity.properties?.priority_score ||
+            entity.properties?.yellowPantherPriority ||
+            0
+          )
+        }
       }
-    }))
+    })
 
     return NextResponse.json({
       entities: transformedEntities,
@@ -71,12 +119,16 @@ export async function GET(request: NextRequest) {
         page,
         limit,
         total,
-        totalPages: Math.ceil(total / limit),
+        totalPages: Math.max(1, Math.ceil(total / limit)),
         hasNext: start + limit < total,
         hasPrev: page > 1
       },
       filters: {
         entityType,
+        sport,
+        league,
+        country,
+        entityClass,
         sortBy,
         sortOrder
       },

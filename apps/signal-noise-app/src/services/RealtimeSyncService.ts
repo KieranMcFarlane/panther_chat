@@ -1,15 +1,19 @@
 /**
- * Realtime Neo4j to Supabase Sync Service
- * Uses MCP tools to keep databases synchronized
+ * Realtime FalkorDB to Supabase sync service.
+ *
+ * Supabase is the canonical entity catalogue. FalkorDB is used to track graph
+ * presence and relationship coverage, not to overwrite canonical entity rows.
  */
 
-import { createClient } from '@supabase/supabase-js';
-import { Neo4jService } from '@/lib/neo4j';
+import { createClient } from '@supabase/supabase-js'
+import { falkorGraphClient } from '@/lib/falkordb'
+import { resolveGraphId } from '@/lib/graph-id'
+import { EntityCacheService } from '@/services/EntityCacheService'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+)
 
 interface SyncResult {
   success: boolean;
@@ -17,105 +21,100 @@ interface SyncResult {
   entitiesAdded: number;
   entitiesUpdated: number;
   entitiesRemoved: number;
+  relationshipsSynced: number;
   duration: number;
   error?: string;
 }
 
-interface Neo4jEntity {
+interface GraphEntity {
   id: string;
-  neo4j_id: string;
+  graph_id: string;
+  neo4j_id?: string;
   labels: string[];
   properties: Record<string, any>;
 }
 
 export class RealtimeSyncService {
-  private neo4jService: Neo4jService;
-
-  constructor() {
-    this.neo4jService = new Neo4jService();
-  }
-
   async initialize() {
-    await this.neo4jService.initialize();
+    await falkorGraphClient.initialize()
   }
 
   /**
-   * Perform a full sync of all entities from Neo4j to Supabase
+   * Refresh graph coverage metadata without mutating canonical cached_entities rows.
    */
   async performFullSync(): Promise<SyncResult> {
-    const startTime = Date.now();
-    let syncLogId: string | null = null;
+    const startTime = Date.now()
+    let syncLogId: string | null = null
 
     try {
-      console.log('🔄 Starting full Neo4j to Supabase sync...');
+      console.log('🔄 Starting FalkorDB to Supabase sync tracker refresh...')
 
-      // Create sync log entry
       const { data: syncLog } = await supabase
         .from('sync_log')
         .insert({
           sync_type: 'full',
-          source_count: 0, // Will update later
-          target_count: 0, // Will update later
+          source_count: 0,
+          target_count: 0,
           status: 'running'
         })
         .select('id')
-        .single();
+        .single()
 
-      syncLogId = syncLog?.id;
+      syncLogId = syncLog?.id ?? null
 
-      // Get all entities from Neo4j
-      const neo4jEntities = await this.getAllNeo4jEntities();
-      console.log(`📊 Found ${neo4jEntities.length} entities in Neo4j`);
+      const existingEntities = await this.getExistingSupabaseEntities()
+      const graphEntities = await this.getAllGraphEntities()
 
-      // Get existing entities from Supabase
-      const existingEntities = await this.getExistingSupabaseEntities();
-      console.log(`📊 Found ${existingEntities.length} entities in Supabase`);
+      console.log(`📊 Found ${existingEntities.length} entities in Supabase`)
+      console.log(`📊 Found ${graphEntities.length} entities in FalkorDB`)
 
-      // Calculate differences
-      const existingNeo4jIds = new Set(existingEntities.map(e => e.neo4j_id));
-      const newEntities = neo4jEntities.filter(e => !existingNeo4jIds.has(e.neo4j_id));
-      
-      const neo4jIds = new Set(neo4jEntities.map(e => e.neo4j_id));
-      const entitiesToRemove = existingEntities.filter(e => !neo4jIds.has(e.neo4j_id));
+      const graphEntityMap = new Map(
+        graphEntities
+          .map((entity) => [resolveGraphId(entity), entity] as const)
+          .filter((entry): entry is [string, GraphEntity] => Boolean(entry[0])),
+      )
 
-      // Sync new entities
-      let entitiesAdded = 0;
-      for (const entity of newEntities) {
-        await this.upsertEntityToSupabase(entity);
-        entitiesAdded++;
-      }
+      let entitiesAdded = 0
+      let entitiesUpdated = 0
+      let entitiesRemoved = 0
 
-      // Update existing entities (check for changes)
-      let entitiesUpdated = 0;
-      for (const entity of neo4jEntities) {
-        if (existingNeo4jIds.has(entity.neo4j_id)) {
-          const existing = existingEntities.find(e => e.neo4j_id === entity.neo4j_id);
-          if (await this.hasEntityChanged(entity, existing)) {
-            await this.upsertEntityToSupabase(entity);
-            entitiesUpdated++;
-          }
+      for (const entity of existingEntities) {
+        const entityGraphId = resolveGraphId(entity)
+        const graphEntity = entityGraphId ? graphEntityMap.get(entityGraphId) : null
+        if (!graphEntity) {
+          await this.upsertSyncTracker(entityGraphId, null, false)
+          entitiesRemoved++
+          continue
+        }
+
+        const changed = await this.hasEntityChanged(graphEntity)
+        await this.upsertSyncTracker(entityGraphId, graphEntity, true)
+        if (changed) {
+          entitiesUpdated++
         }
       }
 
-      // Remove entities that no longer exist in Neo4j
-      let entitiesRemoved = 0;
-      for (const entityToRemove of entitiesToRemove) {
-        await supabase
-          .from('cached_entities')
-          .delete()
-          .eq('neo4j_id', entityToRemove.neo4j_id);
-        entitiesRemoved++;
+      let relationshipsSynced = 0
+      try {
+        const relationshipCacheService = new EntityCacheService()
+        await relationshipCacheService.initialize()
+        const relationshipSyncResult = await relationshipCacheService.syncRelationshipsFromGraph({
+          batchSize: Number(process.env.RELATIONSHIP_SYNC_BATCH_SIZE || 5000),
+          forceRefresh: true,
+        })
+        relationshipsSynced = relationshipSyncResult.synced
+      } catch (relationshipError) {
+        console.error('⚠️ Relationship sync failed during full sync:', relationshipError)
       }
 
-      const duration = Date.now() - startTime;
+      const duration = Date.now() - startTime
 
-      // Update sync log
       if (syncLogId) {
         await supabase
           .from('sync_log')
           .update({
-            source_count: neo4jEntities.length,
-            target_count: neo4jEntities.length,
+            source_count: graphEntities.length,
+            target_count: existingEntities.length,
             entities_added: entitiesAdded,
             entities_updated: entitiesUpdated,
             entities_removed: entitiesRemoved,
@@ -123,24 +122,23 @@ export class RealtimeSyncService {
             status: 'completed',
             completed_at: new Date().toISOString()
           })
-          .eq('id', syncLogId);
+          .eq('id', syncLogId)
       }
 
-      console.log(`✅ Full sync completed: ${entitiesAdded} added, ${entitiesUpdated} updated, ${entitiesRemoved} removed`);
+      console.log(`✅ Sync tracker refresh completed: ${entitiesUpdated} updated, ${entitiesRemoved} missing from graph`)
 
       return {
         success: true,
-        entitiesProcessed: neo4jEntities.length,
+        entitiesProcessed: existingEntities.length,
         entitiesAdded,
         entitiesUpdated,
         entitiesRemoved,
+        relationshipsSynced,
         duration
-      };
-
+      }
     } catch (error) {
-      console.error('❌ Full sync failed:', error);
+      console.error('❌ FalkorDB sync tracker refresh failed:', error)
 
-      // Update sync log with error
       if (syncLogId) {
         await supabase
           .from('sync_log')
@@ -149,7 +147,7 @@ export class RealtimeSyncService {
             error_message: error instanceof Error ? error.message : 'Unknown error',
             completed_at: new Date().toISOString()
           })
-          .eq('id', syncLogId);
+          .eq('id', syncLogId)
       }
 
       return {
@@ -158,110 +156,83 @@ export class RealtimeSyncService {
         entitiesAdded: 0,
         entitiesUpdated: 0,
         entitiesRemoved: 0,
+        relationshipsSynced: 0,
         duration: Date.now() - startTime,
         error: error instanceof Error ? error.message : 'Unknown error'
-      };
+      }
     }
   }
 
-  /**
-   * Get all entities from Neo4j
-   */
-  private async getAllNeo4jEntities(): Promise<Neo4jEntity[]> {
-    const session = this.neo4jService.getDriver().session();
-    try {
-      const result = await session.run(`
-        MATCH (n)
-        RETURN n, id(n) as internal_id
-        ORDER BY n.name
-      `);
+  private async getAllGraphEntities(): Promise<GraphEntity[]> {
+    const rows = await falkorGraphClient.queryRows<{
+      graph_id: string
+      labels: string[]
+      properties: Record<string, any>
+    }>(`
+      MATCH (n)
+      RETURN coalesce(n.neo4j_id, n.entity_id, n.name) as graph_id,
+             labels(n) as labels,
+             properties(n) as properties
+      ORDER BY n.name
+    `)
 
-      return result.records.map(record => ({
-        id: record.get('internal_id').toString(),
-        neo4j_id: record.get('internal_id').toString(),
-        labels: record.get('n').labels,
-        properties: record.get('n').properties
-      }));
-    } finally {
-      await session.close();
-    }
+    return rows
+      .filter((row) => row.graph_id)
+      .map((row) => ({
+        id: String(row.graph_id),
+        graph_id: String(row.graph_id),
+        labels: Array.isArray(row.labels) ? row.labels : [],
+        properties: (row.properties as Record<string, any>) || {}
+      }))
   }
 
-  /**
-   * Get existing entities from Supabase
-   */
   private async getExistingSupabaseEntities() {
     const { data, error } = await supabase
       .from('cached_entities')
-      .select('neo4j_id, properties, updated_at');
+      .select('id, graph_id, neo4j_id, properties, updated_at')
 
-    if (error) throw error;
-    return data || [];
+    if (error) throw error
+    return data || []
   }
 
-  /**
-   * Check if an entity has changed since last sync
-   */
-  private async hasEntityChanged(neo4jEntity: Neo4jEntity, existingEntity: any): Promise<boolean> {
-    const currentChecksum = this.calculateChecksum(neo4jEntity.properties);
-    
-    // Check sync tracker
+  private async hasEntityChanged(graphEntity: GraphEntity): Promise<boolean> {
+    const currentChecksum = this.calculateChecksum(graphEntity.properties)
+    const graphId = resolveGraphId(graphEntity)
+
     const { data: tracker } = await supabase
       .from('entity_sync_tracker')
       .select('checksum')
-      .eq('neo4j_id', neo4jEntity.neo4j_id)
-      .single();
+      .eq('graph_id', graphId)
+      .single()
 
-    if (!tracker) return true;
-    return tracker.checksum !== currentChecksum;
+    if (!tracker) return true
+    return tracker.checksum !== currentChecksum
   }
 
-  /**
-   * Calculate checksum for entity properties
-   */
   private calculateChecksum(properties: Record<string, any>): string {
-    const crypto = require('crypto');
-    const sortedProps = JSON.stringify(properties, Object.keys(properties).sort());
-    return crypto.createHash('md5').update(sortedProps).digest('hex');
+    const crypto = require('crypto')
+    const sortedProps = JSON.stringify(properties, Object.keys(properties).sort())
+    return crypto.createHash('md5').update(sortedProps).digest('hex')
   }
 
-  /**
-   * Upsert entity to Supabase
-   */
-  private async upsertEntityToSupabase(entity: Neo4jEntity) {
-    const checksum = this.calculateChecksum(entity.properties);
-    
-    // Upsert cached entity
-    await supabase
-      .from('cached_entities')
-      .upsert({
-        neo4j_id: entity.neo4j_id,
-        labels: entity.labels,
-        properties: entity.properties,
-        cache_version: 1,
-        updated_at: new Date().toISOString()
-      }, {
-        onConflict: 'neo4j_id'
-      });
+  private async upsertSyncTracker(graphId: string, entity: GraphEntity | null, isActive: boolean) {
+    const checksum = entity ? this.calculateChecksum(entity.properties) : null
 
-    // Update sync tracker
     await supabase
       .from('entity_sync_tracker')
       .upsert({
-        neo4j_id: entity.neo4j_id,
-        neo4j_internal_id: parseInt(entity.id),
+        graph_id: graphId,
+        neo4j_id: graphId,
+        neo4j_internal_id: entity && /^\d+$/.test(entity.id) ? parseInt(entity.id, 10) : null,
         last_synced_at: new Date().toISOString(),
         sync_version: 1,
-        checksum: checksum,
-        is_active: true
+        checksum,
+        is_active: isActive
       }, {
-        onConflict: 'neo4j_id'
-      });
+        onConflict: 'graph_id'
+      })
   }
 
-  /**
-   * Get sync status
-   */
   async getSyncStatus() {
     const { data: lastSync } = await supabase
       .from('sync_log')
@@ -269,18 +240,18 @@ export class RealtimeSyncService {
       .eq('status', 'completed')
       .order('started_at', { ascending: false })
       .limit(1)
-      .single();
+      .single()
 
     const { data: stats } = await supabase
       .from('sync_log')
       .select('status')
       .order('started_at', { ascending: false })
-      .limit(10);
+      .limit(10)
 
     return {
       lastSync,
       recentStatuses: stats || [],
-      isHealthy: lastSync && (Date.now() - new Date(lastSync.started_at).getTime()) < 24 * 60 * 60 * 1000 // 24 hours
-    };
+      isHealthy: lastSync && (Date.now() - new Date(lastSync.started_at).getTime()) < 24 * 60 * 60 * 1000
+    }
   }
 }

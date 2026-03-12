@@ -9,7 +9,8 @@ import { notificationService } from './NotificationService';
 
 interface Entity {
   id: string;
-  neo4j_id: string;
+  graph_id?: string;
+  neo4j_id?: string;
   labels: string[];
   properties: {
     name: string;
@@ -70,8 +71,8 @@ class WorkingIntelligentEntityEnrichmentService {
         temperature: 0.3,
         tools: [
           {
-            name: 'neo4j_query',
-            description: 'Query Neo4j knowledge graph for entity relationships and data',
+            name: 'graph_query',
+            description: 'Query graph-backed entity relationships and data',
             input_schema: {
               type: 'object',
               properties: {
@@ -116,7 +117,7 @@ class WorkingIntelligentEntityEnrichmentService {
         category: 'claude-agent',
         source: 'IntelligentEntityEnrichmentService',
         data: { 
-          tools: ['neo4j_query', 'brightdata_scrape', 'supabase_query'],
+          tools: ['graph_query', 'brightdata_scrape', 'supabase_query'],
           timestamp: new Date().toISOString()
         }
       });
@@ -300,7 +301,7 @@ Country: ${entity.properties.country}
 Current Website: ${entity.properties.website || 'None'}
 
 Use available tools to:
-1. Query Neo4j for existing relationships and connections
+1. Query the graph cache for existing relationships and connections
 2. Use BrightData to scrape current information from LinkedIn, company websites, and news sources
 3. Check Supabase for any cached analysis or historical data
 4. Synthesize all information into a comprehensive enrichment
@@ -317,7 +318,7 @@ Provide structured output with actionable insights for business development team
 
       const response = await this.claudeAgent!.complete({
         prompt,
-        tools: ['neo4j_query', 'brightdata_scrape', 'supabase_query'],
+        tools: ['graph_query', 'brightdata_scrape', 'supabase_query'],
         tool_choice: 'auto'
       });
 
@@ -444,7 +445,7 @@ Provide structured output with actionable insights for business development team
     return [
       {
         id: '1',
-        neo4j_id: '1',
+        graph_id: '1',
         labels: ['Entity', 'Club'],
         properties: {
           name: 'Manchester United',
@@ -456,7 +457,7 @@ Provide structured output with actionable insights for business development team
       },
       {
         id: '2',
-        neo4j_id: '2',
+        graph_id: '2',
         labels: ['Entity', 'Club'],
         properties: {
           name: 'Real Madrid',
@@ -468,7 +469,7 @@ Provide structured output with actionable insights for business development team
       },
       {
         id: '3',
-        neo4j_id: '3',
+        graph_id: '3',
         labels: ['Entity', 'League'],
         properties: {
           name: 'Premier League',

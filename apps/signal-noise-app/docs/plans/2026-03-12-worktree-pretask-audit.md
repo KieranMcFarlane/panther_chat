@@ -1,0 +1,317 @@
+# Worktree Pre-Task Audit (March 12, 2026)
+
+- Generated at: `2026-03-12T06:41:29.980118+00:00`
+- Branch: `codex/csv-pipeline-next-steps` @ `2f8ae79`
+- Total changed paths: `400`
+
+## Summary
+
+- ` M`: `217`
+- ` D`: `83`
+- `??`: `100`
+
+## Top Impact Areas (Path Prefix)
+
+- `apps/signal-noise-app/src`: `202`
+- `apps/signal-noise-app/backend`: `33`
+- `apps/signal-noise-app/docs`: `28`
+- `apps/signal-noise-app/tests`: `25`
+- `apps/signal-noise-app/scripts`: `13`
+- `apps/signal-noise-app/supabase`: `6`
+- `apps/signal-noise-app/data`: `2`
+- `.DS_Store`: `1`
+- `apps/signal-noise-app/.env.local.example`: `1`
+- `apps/signal-noise-app/.env.production`: `1`
+- `apps/signal-noise-app/.env.required`: `1`
+- `apps/signal-noise-app/.mcp.json`: `1`
+- `apps/signal-noise-app/.serena`: `1`
+- `apps/signal-noise-app/DEPLOYMENT-GUIDE.md`: `1`
+- `apps/signal-noise-app/ENRICHMENT_IMPLEMENTATION.md`: `1`
+- `apps/signal-noise-app/FINAL-PHASE-DEPLOYMENT-STRATEGY.md`: `1`
+- `apps/signal-noise-app/OPTIMIZED-RFP-SYSTEM-SUMMARY.md`: `1`
+- `apps/signal-noise-app/RFP-INTELLIGENCE-DEPLOYMENT.md`: `1`
+- `apps/signal-noise-app/RFP_MONITORING_EXECUTION_REPORT_2025-11-02.json`: `1`
+- `apps/signal-noise-app/RFP_MONITORING_REPORT_2025-10-28.json`: `1`
+
+### Modified Paths (217)
+- ` M` `.DS_Store`
+- ` M` `apps/signal-noise-app/.env.local.example`
+- ` M` `apps/signal-noise-app/.env.production`
+- ` M` `apps/signal-noise-app/.env.required`
+- ` M` `apps/signal-noise-app/.mcp.json`
+- ` M` `apps/signal-noise-app/.serena/project.yml`
+- ` M` `apps/signal-noise-app/automated-database-sync-mcp.js`
+- ` M` `apps/signal-noise-app/backend/brightdata_sdk_client.py`
+- ` M` `apps/signal-noise-app/backend/claude_client.py`
+- ` M` `apps/signal-noise-app/backend/entity_pipeline_worker.py`
+- ` M` `apps/signal-noise-app/backend/extract_from_supabase.py`
+- ` M` `apps/signal-noise-app/backend/falkordb_cloud_import.py`
+- ` M` `apps/signal-noise-app/backend/hypothesis_driven_discovery.py`
+- ` M` `apps/signal-noise-app/backend/import_to_falkordb.py`
+- ` M` `apps/signal-noise-app/backend/pipeline_run_metadata.py`
+- ` M` `apps/signal-noise-app/backend/tests/test_claude_client_chutes.py`
+- ` M` `apps/signal-noise-app/backend/tests/test_discovery_url_resolution_fallbacks.py`
+- ` M` `apps/signal-noise-app/backend/tests/test_entity_pipeline_worker.py`
+- ` M` `apps/signal-noise-app/backend/tests/test_pipeline_phase_update_payload.py`
+- ` M` `apps/signal-noise-app/claude-code-rfp-automation-fixed.sh`
+- ` M` `apps/signal-noise-app/claude-code-rfp-automation.sh`
+- ` M` `apps/signal-noise-app/deploy-to-ec2.sh`
+- ` M` `apps/signal-noise-app/deploy-to-vps.sh`
+- ` M` `apps/signal-noise-app/docs/CRON-SETUP.md`
+- ` M` `apps/signal-noise-app/docs/end-to-end-system-demo/scripts/run_end_to_end_demo.py`
+- ` M` `apps/signal-noise-app/mcp-config-perplexity-rfp.json`
+- ` M` `apps/signal-noise-app/migrate-entities.js`
+- ` M` `apps/signal-noise-app/next-env.d.ts`
+- ` M` `apps/signal-noise-app/package-lock.json`
+- ` M` `apps/signal-noise-app/package.json`
+- ` M` `apps/signal-noise-app/production-deploy/README.md`
+- ` M` `apps/signal-noise-app/run_end_to_end_demo.py`
+- ` M` `apps/signal-noise-app/scripts/check-brightdata-hello.py`
+- ` M` `apps/signal-noise-app/src/app/api/activities/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/ai-agent/config/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/ai-agent/process/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/ai-agent/test/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/analyze-sales-pipeline/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/auth/[...all]/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/automation-results/latest/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/autonomous-rfp/start/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/autonomous-rfp/status/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/batch-process/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/batch/enrichment/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/claude-agent-demo/execute/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/claude-agent-demo/stream/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/claude-agent/activity/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/claude-agent/chat/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/claude-agent/execute/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/claude-agent/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/claude-agents/enrichment/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/claude-agents/slash/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/conventions/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/copilotkit/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/demo-claude-scan/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/dossier/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/enrich-entity/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/entities/cache-sync/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/entities/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/entities/search/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/entities/summary/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/entity-dossiers/sunderland/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/entity-import/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/entity-pipeline/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/entity-scaling/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/get-system-summary/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/graph/relationships-cache/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/graph/relationships/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/graphrag/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/health/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/historical-batch-processor/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/home/metrics/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/intelligent-enrichment/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/knowledge-graph/enrich/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/mailbox/get/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/mailbox/list/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/mcp-autonomous/start/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/mcp-autonomous/stream/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/mcp-autonomous/test/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/mcp-autonomous/validate/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/mcp-debug/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/mcp-direct/test/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/mcp/neo4j/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/mcp/neo4j/search/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/migration/complete-restore-server-action/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/migration/complete-restore/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/migration/full-restore/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/migration/get-batch/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/migration/neo4j-restore/route.ts`
+- ` M` `apps/signal-noise-app/src/app/api/migration/sample-restore/route.ts`
+- `...` `127 more`
+
+### Deleted Paths (83)
+- ` D` `apps/signal-noise-app/DEPLOYMENT-GUIDE.md`
+- ` D` `apps/signal-noise-app/ENRICHMENT_IMPLEMENTATION.md`
+- ` D` `apps/signal-noise-app/FINAL-PHASE-DEPLOYMENT-STRATEGY.md`
+- ` D` `apps/signal-noise-app/OPTIMIZED-RFP-SYSTEM-SUMMARY.md`
+- ` D` `apps/signal-noise-app/RFP-INTELLIGENCE-DEPLOYMENT.md`
+- ` D` `apps/signal-noise-app/RFP_MONITORING_EXECUTION_REPORT_2025-11-02.json`
+- ` D` `apps/signal-noise-app/RFP_MONITORING_REPORT_2025-10-28.json`
+- ` D` `apps/signal-noise-app/RFP_MONITORING_RESULTS_2025-10-28.json`
+- ` D` `apps/signal-noise-app/add-sunderland-to-neo4j.js`
+- ` D` `apps/signal-noise-app/assign-neo4j-ids.js`
+- ` D` `apps/signal-noise-app/automated-database-sync.js`
+- ` D` `apps/signal-noise-app/backend/batch_test_log.txt`
+- ` D` `apps/signal-noise-app/backend/enrich_formula1_yellow_panther.py`
+- ` D` `apps/signal-noise-app/backend/enrich_golf_premium_yellow_panther.py`
+- ` D` `apps/signal-noise-app/backend/enrich_league_one_yellow_panther.py`
+- ` D` `apps/signal-noise-app/backend/enrich_league_two_yellow_panther.py`
+- ` D` `apps/signal-noise-app/backend/enrich_olympic_linkedin_brightdata.py`
+- ` D` `apps/signal-noise-app/backend/enrich_olympic_sports_yellow_panther.py`
+- ` D` `apps/signal-noise-app/backend/enrich_poi_brightdata.py`
+- ` D` `apps/signal-noise-app/backend/enrich_specific_brightdata.py`
+- ` D` `apps/signal-noise-app/backend/enrich_teams_real.py`
+- ` D` `apps/signal-noise-app/backend/import_tenders_from_json.py`
+- ` D` `apps/signal-noise-app/backend/neo4j_client.py`
+- ` D` `apps/signal-noise-app/backend/requirements.ralph.txt`
+- ` D` `apps/signal-noise-app/backend/requirements.txt`
+- ` D` `apps/signal-noise-app/backend/seed_linkedin_tenders.py`
+- ` D` `apps/signal-noise-app/backend/seed_sports_entities.py`
+- ` D` `apps/signal-noise-app/backend/test_db_connection.py`
+- ` D` `apps/signal-noise-app/backend/test_golf_enrichment.py`
+- ` D` `apps/signal-noise-app/backend/test_setup.py`
+- ` D` `apps/signal-noise-app/check-neo4j-database.js`
+- ` D` `apps/signal-noise-app/check-neo4j-id-coverage.js`
+- ` D` `apps/signal-noise-app/docs/DUAL-STORAGE-STRUCTURE.md`
+- ` D` `apps/signal-noise-app/docs/GOLF_ENRICHMENT_IMPLEMENTATION.md`
+- ` D` `apps/signal-noise-app/docs/LINKEDIN_CONNECTION_ANALYSIS_SPEC.md`
+- ` D` `apps/signal-noise-app/docs/SETUP_SUMMARY.md`
+- ` D` `apps/signal-noise-app/docs/SMART-SYNC-CRON.md`
+- ` D` `apps/signal-noise-app/docs/fix-mcp-params.md`
+- ` D` `apps/signal-noise-app/explore-neo4j-basic.js`
+- ` D` `apps/signal-noise-app/explore-neo4j-simple.js`
+- ` D` `apps/signal-noise-app/full-migration-neo4j.js`
+- ` D` `apps/signal-noise-app/migrate-neo4j-direct.js`
+- ` D` `apps/signal-noise-app/migrate-supabase-to-neo4j-fixed.js`
+- ` D` `apps/signal-noise-app/migrate-supabase-to-neo4j.js`
+- ` D` `apps/signal-noise-app/missing-entity-analysis-1760941553483.json`
+- ` D` `apps/signal-noise-app/neo4j-database-analysis-1760940113922.json`
+- ` D` `apps/signal-noise-app/neo4j-mcp-server.js`
+- ` D` `apps/signal-noise-app/neo4j-migration-report-1760938486860.json`
+- ` D` `apps/signal-noise-app/neo4j-migration.js`
+- ` D` `apps/signal-noise-app/neo4j-rfp-detector.js`
+- ` D` `apps/signal-noise-app/neo4j-schema-level3.cypher`
+- ` D` `apps/signal-noise-app/neo4j-supabase-badge-sync.json`
+- ` D` `apps/signal-noise-app/query-sports-entities-neo4j.js`
+- ` D` `apps/signal-noise-app/restore-complete-neo4j.sh`
+- ` D` `apps/signal-noise-app/restore-comprehensive-neo4j.sh`
+- ` D` `apps/signal-noise-app/restore-neo4j-from-supabase.sh`
+- ` D` `apps/signal-noise-app/restore-sample-neo4j.sh`
+- ` D` `apps/signal-noise-app/rfp-monitor-neo4j-mcp.js`
+- ` D` `apps/signal-noise-app/scripts/live-neo4j-rfp-demo.js`
+- ` D` `apps/signal-noise-app/scripts/live-rfp-capture-neo4j.js`
+- ` D` `apps/signal-noise-app/scripts/rfp-neo4j-integration.js`
+- ` D` `apps/signal-noise-app/scripts/test-neo4j.js`
+- ` D` `apps/signal-noise-app/signal-noise-app.tar.gz`
+- ` D` `apps/signal-noise-app/simple-neo4j-test.js`
+- ` D` `apps/signal-noise-app/src/app/api/claude-agent-demo/stream/route-old.ts`
+- ` D` `apps/signal-noise-app/src/app/api/tenders/route.ts.bak`
+- ` D` `apps/signal-noise-app/src/app/api/webhook/linkedin-procurement/route.ts.backup`
+- ` D` `apps/signal-noise-app/src/app/tenders/page.tsx.bak`
+- ` D` `apps/signal-noise-app/src/backend/deploy.sh`
+- ` D` `apps/signal-noise-app/src/backend/enhanced_rfp_intelligence_backend.py`
+- ` D` `apps/signal-noise-app/src/components/badge/EntityBadge.tsx.backup`
+- ` D` `apps/signal-noise-app/src/components/graph/GraphVisualizationClient.tsx.backup`
+- ` D` `apps/signal-noise-app/src/lib/neo4j.ts`
+- ` D` `apps/signal-noise-app/src/mastra/tools/neo4j-helper.ts`
+- ` D` `apps/signal-noise-app/src/mastra/tools/neo4j-tools.ts`
+- ` D` `apps/signal-noise-app/sync-neo4j-badges.js`
+- ` D` `apps/signal-noise-app/test-correct-neo4j.js`
+- ` D` `apps/signal-noise-app/test-full-neo4j.js`
+- ` D` `apps/signal-noise-app/test-neo4j-connection.js`
+- ` D` `apps/signal-noise-app/test-neo4j-count.js`
+- ` D` `apps/signal-noise-app/test-neo4j-mcp-debug.js`
+- ` D` `apps/signal-noise-app/test-neo4j-mcp.js`
+- ` D` `apps/signal-noise-app/verify-neo4j-20-entities.sh`
+
+### Untracked Paths (100)
+- `??` `apps/signal-noise-app/.data/`
+- `??` `apps/signal-noise-app/BATCH_GENERATOR_SUPABASE_INTEGRATION.md`
+- `??` `apps/signal-noise-app/COVENTRY_CITY_TEST_SUMMARY.md`
+- `??` `apps/signal-noise-app/DOSSIER-SCALABLE-SYSTEM-IMPLEMENTATION.md`
+- `??` `apps/signal-noise-app/DOSSIER-SYSTEM-QUICK-REF.md`
+- `??` `apps/signal-noise-app/DOSSIER-SYSTEM-SUMMARY.md`
+- `??` `apps/signal-noise-app/ENHANCED_PERPLEXITY_RFP_SYSTEM_README.md`
+- `??` `apps/signal-noise-app/ENTITY-JOURNEY-WALKTHROUGH.md`
+- `??` `apps/signal-noise-app/IMPLEMENTATION_COMPLETE.md`
+- `??` `apps/signal-noise-app/INTEGRATION_GUIDE.md`
+- `??` `apps/signal-noise-app/PERPLEXITY_HYBRID_RFP_README.md`
+- `??` `apps/signal-noise-app/RFP_QUICK_REFERENCE.md`
+- `??` `apps/signal-noise-app/SUPABASE_DOSSIER_COLLECTOR_SUMMARY.md`
+- `??` `apps/signal-noise-app/backend/tests/test_graph_identity_alignment.py`
+- `??` `apps/signal-noise-app/backend/tests/test_single_pass_promotion_gate.py`
+- `??` `apps/signal-noise-app/coventry_city_fc_dossier.md`
+- `??` `apps/signal-noise-app/data/dossier_templates/`
+- `??` `apps/signal-noise-app/data/dossiers/`
+- `??` `apps/signal-noise-app/docs/DOSSIER-SYSTEM-COMPLETE-GUIDE.md`
+- `??` `apps/signal-noise-app/docs/DOSSIER-SYSTEM-IDENTIFICATION.md`
+- `??` `apps/signal-noise-app/docs/GRAPH_SYNC_RECONCILIATION_OPS.md`
+- `??` `apps/signal-noise-app/docs/data/demo_steps/01_coventry-city-fc_20260226_044301.json`
+- `??` `apps/signal-noise-app/docs/data/demo_steps/01_coventry-city-fc_20260226_045644.json`
+- `??` `apps/signal-noise-app/docs/data/demo_steps/02_coventry-city-fc_20260226_044542.json`
+- `??` `apps/signal-noise-app/docs/data/demo_steps/02_coventry-city-fc_20260226_050201.json`
+- `??` `apps/signal-noise-app/docs/data/demo_steps/03_coventry-city-fc_20260226_044542.json`
+- `??` `apps/signal-noise-app/docs/data/demo_steps/03_coventry-city-fc_20260226_050201.json`
+- `??` `apps/signal-noise-app/docs/data/demo_steps/04_coventry-city-fc_20260226_044542.json`
+- `??` `apps/signal-noise-app/docs/data/demo_steps/04_coventry-city-fc_20260226_050202.json`
+- `??` `apps/signal-noise-app/docs/data/demo_steps/05_coventry-city-fc_20260226_044542.json`
+- `??` `apps/signal-noise-app/docs/data/demo_steps/05_coventry-city-fc_20260226_050202.json`
+- `??` `apps/signal-noise-app/docs/data/demo_steps/06_coventry-city-fc_20260226_044542.json`
+- `??` `apps/signal-noise-app/docs/data/demo_steps/06_coventry-city-fc_20260226_050202.json`
+- `??` `apps/signal-noise-app/docs/data/end_to_end_results.json`
+- `??` `apps/signal-noise-app/docs/plans/2026-02-28-browser-noise-history-cleanup.md`
+- `??` `apps/signal-noise-app/docs/plans/2026-03-05-phase0-blocker-and-full-pipeline-plan.md`
+- `??` `apps/signal-noise-app/docs/plans/2026-03-11-repo-stabilization-and-cleanup-plan.md`
+- `??` `apps/signal-noise-app/docs/plans/graph-id-storage-migration.md`
+- `??` `apps/signal-noise-app/end_to_end_demo_results.json`
+- `??` `apps/signal-noise-app/generate_coventry_dossier.py`
+- `??` `apps/signal-noise-app/legacy/`
+- `??` `apps/signal-noise-app/run-perplexity-hybrid-rfp.sh`
+- `??` `apps/signal-noise-app/run_dossier_first_pipeline.py`
+- `??` `apps/signal-noise-app/run_enhanced_perplexity_hybrid_system.py`
+- `??` `apps/signal-noise-app/run_perplexity_hybrid_detector.py`
+- `??` `apps/signal-noise-app/run_perplexity_hybrid_rfp_detector.py`
+- `??` `apps/signal-noise-app/scripts/check-pipeline-env.mjs`
+- `??` `apps/signal-noise-app/scripts/check-pipeline-runtime.sh`
+- `??` `apps/signal-noise-app/scripts/graph-sync-scheduler.mjs`
+- `??` `apps/signal-noise-app/scripts/reconcile-entity-index.mjs`
+- `??` `apps/signal-noise-app/scripts/reconciliation-monitor.mjs`
+- `??` `apps/signal-noise-app/scripts/repair-embedding-id-collisions.mjs`
+- `??` `apps/signal-noise-app/scripts/run_single_pass_batch.py`
+- `??` `apps/signal-noise-app/scripts/run_single_pass_entity.py`
+- `??` `apps/signal-noise-app/src/app/api/admin/`
+- `??` `apps/signal-noise-app/src/app/api/logs/`
+- `??` `apps/signal-noise-app/src/app/api/sync/graph-to-supabase/`
+- `??` `apps/signal-noise-app/src/app/not-found.tsx`
+- `??` `apps/signal-noise-app/src/components/layout/AppShell.tsx`
+- `??` `apps/signal-noise-app/src/lib/auth-url.ts`
+- `??` `apps/signal-noise-app/src/lib/entity-lookup.ts`
+- `??` `apps/signal-noise-app/src/lib/entity-search-utils.js`
+- `??` `apps/signal-noise-app/src/lib/falkordb.ts`
+- `??` `apps/signal-noise-app/src/lib/feature-flags.ts`
+- `??` `apps/signal-noise-app/src/lib/graph-id.ts`
+- `??` `apps/signal-noise-app/src/lib/graph-store.ts`
+- `??` `apps/signal-noise-app/src/mastra/tools/graph-helper.ts`
+- `??` `apps/signal-noise-app/src/mastra/tools/graph-tools.ts`
+- `??` `apps/signal-noise-app/src/middleware.ts`
+- `??` `apps/signal-noise-app/src/pages/`
+- `??` `apps/signal-noise-app/supabase/migrations/20260303_backfill_entity_dossier_canonical_ids.sql`
+- `??` `apps/signal-noise-app/supabase/migrations/20260303_cleanup_cached_entity_identity_props.sql`
+- `??` `apps/signal-noise-app/supabase/migrations/20260303_cleanup_legacy_embedded_and_orphan_dossiers.sql`
+- `??` `apps/signal-noise-app/supabase/migrations/20260309_add_graph_id_dual_write_columns.sql`
+- `??` `apps/signal-noise-app/supabase/migrations/20260309_backfill_relationship_element_graph_ids.sql`
+- `??` `apps/signal-noise-app/supabase/migrations/20260311_entity_relationships_on_update_cascade.sql`
+- `??` `apps/signal-noise-app/test_rfp_detection_results_20260223_031345.json`
+- `??` `apps/signal-noise-app/test_rfp_detection_results_20260223_031501.json`
+- `??` `apps/signal-noise-app/tests/entity-search-utils.test.mjs`
+- `??` `apps/signal-noise-app/tests/test-api-build-guards.mjs`
+- `??` `apps/signal-noise-app/tests/test-auth-middleware.mjs`
+- `??` `apps/signal-noise-app/tests/test-auth-url-config.mjs`
+- `??` `apps/signal-noise-app/tests/test-badge-management-build-guards.mjs`
+- `??` `apps/signal-noise-app/tests/test-build-config-fallbacks.mjs`
+- `??` `apps/signal-noise-app/tests/test-cached-entity-identity-cleanup-migration.mjs`
+- `??` `apps/signal-noise-app/tests/test-dependency-guards.mjs`
+- `??` `apps/signal-noise-app/tests/test-dossier-canonical-backfill-migration.mjs`
+- `??` `apps/signal-noise-app/tests/test-dossier-canonical-entity-id.mjs`
+- `??` `apps/signal-noise-app/tests/test-dossier-cleanup-migration.mjs`
+- `??` `apps/signal-noise-app/tests/test-dynamic-route-guards.mjs`
+- `...` `10 more`
+
+## Pre-Task Recommendation
+
+- Create a safety snapshot branch from this exact state.
+- Commit the entire current worktree as a WIP checkpoint.
+- Push snapshot branch to origin for recovery.
+- Return to `codex/csv-pipeline-next-steps` clean for targeted pipeline optimization work.
+
+## Notes
+
+- This tree mixes backend pipeline work, frontend/API changes, docs cleanup, and untracked migration/test assets.
+- Keeping this as one checkpoint avoids accidental loss while we resume focused backend changes.

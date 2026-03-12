@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { query } from '@anthropic-ai/claude-agent-sdk';
-import { Neo4jService } from '@/lib/neo4j';
+import { supabase } from '@/lib/supabase-client';
 
 /**
  * LinkedIn Connection Analysis Webhook
@@ -123,23 +123,12 @@ class LinkedInConnectionAnalyzer {
         env: {
           API_TOKEN: process.env.BRIGHTDATA_API_TOKEN
         }
-      },
-      "neo4j-mcp": {
-        command: "npx", 
-        args: ["-y", "@alanse/mcp-neo4j-server"],
-        env: {
-          NEO4J_URI: process.env.NEO4J_URI,
-          NEO4J_USERNAME: process.env.NEO4J_USERNAME,
-          NEO4J_PASSWORD: process.env.NEO4J_PASSWORD
-        }
       }
     },
     
     allowedTools: [
       "mcp__brightdata__scrape_as_markdown",
-      "mcp__brightdata__search_engine", 
-      "mcp__neo4j-mcp__execute_query",
-      "mcp__neo4j-mcp__create_relationship"
+      "mcp__brightdata__search_engine"
     ],
     
     maxTurns: 8,
@@ -164,7 +153,7 @@ class LinkedInConnectionAnalyzer {
       // Parse and structure the response
       const structuredResponse = this.parseAnalysisResult(result, request, processingTime);
       
-      // Store in Neo4j for future reference
+      // Store in the graph-backed cache for future reference
       await this.storeAnalysisResults(structuredResponse);
       
       console.log(`✅ Connection Analysis completed in ${processingTime}s - ${structuredResponse.yellow_panther_team_analysis.total_connections_found} connections found`);
@@ -208,7 +197,7 @@ ${contextSection}
 YELLOW PANTHER UK TEAM:
 
 PRIMARY CONNECTION (highest priority):
-- Stuart Cope: ${YELLOW_PANTHER_UK_TEAM.primary.linkedin_url} (${YELLOW_PANTHER_UK_PRIMARY.primary.role}) - Weight: 1.5x
+- Stuart Cope: ${YELLOW_PANTHER_UK_TEAM.primary.linkedin_url} (${YELLOW_PANTHER_UK_TEAM.primary.role}) - Weight: 1.5x
 
 SECONDARY CONNECTIONS:
 ${yellowPantherTeamText}
@@ -353,32 +342,23 @@ Focus on ACTIONABLE insights that can be used immediately to secure warm introdu
 
   private async storeAnalysisResults(response: ConnectionAnalysisResponse): Promise<void> {
     try {
-      const neo4jService = new Neo4jService();
-      
-      // Create/update connection analysis node
-      const cypher = `
-        MERGE (ca:ConnectionAnalysis {request_id: $request_id})
-        SET ca.target_organization = $target_organization,
-            ca.analysis_timestamp = $analysis_timestamp,
-            ca.total_connections = $total_connections,
-            ca.primary_connection_available = $primary_connection_available,
-            ca.connection_boost = $connection_boost,
-            ca.success_probability = $success_probability,
-            ca.final_score = $final_score,
-            ca.optimal_paths = $optimal_paths
-      `;
-      
-      await neo4jService.executeQuery(cypher, {
-        request_id: response.request_id,
-        target_organization: response.target_organization,
-        analysis_timestamp: response.analysis_timestamp,
-        total_connections: response.yellow_panther_team_analysis.total_connections_found,
-        primary_connection_available: response.yellow_panther_team_analysis.primary_connection_available,
-        connection_boost: response.opportunity_enhancement.connection_boost,
-        success_probability: response.opportunity_enhancement.success_probability,
-        final_score: response.opportunity_enhancement.final_score,
-        optimal_paths: JSON.stringify(response.optimal_introduction_paths)
-      });
+      const { error } = await supabase
+        .from('entity_cache')
+        .upsert({
+          id: `connection_analysis:${response.request_id}`,
+          entity_id: response.request_id,
+          entity_type: 'connection_analysis',
+          organization: response.target_organization,
+          status: 'completed',
+          data: response,
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'id'
+        });
+
+      if (error) {
+        throw error;
+      }
       
     } catch (error) {
       console.error('Error storing analysis results:', error);

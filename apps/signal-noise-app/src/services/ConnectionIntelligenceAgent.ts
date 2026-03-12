@@ -6,7 +6,7 @@
  */
 
 import { query } from '@anthropic-ai/claude-agent-sdk';
-import { Neo4jService } from '@/lib/neo4j';
+import { supabase } from '@/lib/supabase-client';
 import { liveLogService } from './LiveLogService';
 
 interface ConnectionRequest {
@@ -81,25 +81,13 @@ export class ConnectionIntelligenceAgent {
         env: {
           API_TOKEN: process.env.BRIGHTDATA_API_TOKEN
         }
-      },
-      "neo4j-mcp": {
-        command: "npx",
-        args: ["-y", "@alanse/mcp-neo4j-server"],
-        env: {
-          NEO4J_URI: process.env.NEO4J_URI,
-          NEO4J_USERNAME: process.env.NEO4J_USERNAME,
-          NEO4J_PASSWORD: process.env.NEO4J_PASSWORD
-        }
       }
     },
     
     allowedTools: [
       "mcp__brightdata__scrape_as_markdown",
       "mcp__brightdata__search_engine",
-      "mcp__brightdata__scrape_batch",
-      "mcp__neo4j-mcp__execute_query",
-      "mcp__neo4j-mcp__create_relationship",
-      "mcp__neo4j-mcp__create_node"
+      "mcp__brightdata__scrape_batch"
     ],
     
     maxTurns: 10,
@@ -156,12 +144,6 @@ export class ConnectionIntelligenceAgent {
     ]
   };
 
-  private neo4jService: Neo4jService;
-
-  constructor() {
-    this.neo4jService = new Neo4jService();
-  }
-
   /**
    * Analyze LinkedIn connections for optimal introduction paths
    */
@@ -189,7 +171,7 @@ export class ConnectionIntelligenceAgent {
       const processingTime = Date.now() - startTime;
       const analysis = this.parseAndStructureResponse(result, request, processingTime);
       
-      // Store analysis results in Neo4j
+      // Store analysis results in Supabase cache
       await this.persistAnalysisResults(analysis);
       
       // Log completion
@@ -220,33 +202,23 @@ export class ConnectionIntelligenceAgent {
    */
   async getCachedAnalysis(organization: string, maxAgeHours: number = 72): Promise<ConnectionAnalysis | null> {
     try {
-      const cypher = `
-        MATCH (ca:ConnectionAnalysis)
-        WHERE ca.target_organization = $organization
-        AND ca.analysis_timestamp > datetime() - duration({hours: $maxAge})
-        RETURN ca
-        ORDER BY ca.analysis_timestamp DESC
-        LIMIT 1
-      `;
-      
-      const result = await this.neo4jService.executeQuery(cypher, {
-        organization,
-        maxAge: maxAgeHours
-      });
-      
-      if (result.length > 0) {
-        const cachedData = result[0].ca.properties;
-        return {
-          request_id: cachedData.request_id,
-          target_organization: cachedData.target_organization,
-          analysis_timestamp: cachedData.analysis_timestamp,
-          processing_time_ms: cachedData.processing_time_ms || 0,
-          
-          team_connections: JSON.parse(cachedData.team_connections || '{}'),
-          optimal_introduction_paths: JSON.parse(cachedData.optimal_introduction_paths || '[]'),
-          opportunity_enhancement: JSON.parse(cachedData.opportunity_enhancement || '{}'),
-          actionable_next_steps: JSON.parse(cachedData.actionable_next_steps || '[]')
-        };
+      const minCreatedAt = new Date(Date.now() - maxAgeHours * 60 * 60 * 1000).toISOString();
+      const { data, error } = await supabase
+        .from('entity_cache')
+        .select('data, updated_at, created_at')
+        .eq('entity_type', 'connection_analysis')
+        .eq('organization', organization)
+        .gte('created_at', minCreatedAt)
+        .order('updated_at', { ascending: false })
+        .limit(1);
+
+      if (error) {
+        throw error;
+      }
+
+      const cachedAnalysis = data?.[0]?.data as ConnectionAnalysis | undefined;
+      if (cachedAnalysis) {
+        return cachedAnalysis;
       }
       
       return null;
@@ -399,7 +371,7 @@ FOCUS AREAS:
 LINKEDIN CONNECTION INTELLIGENCE ANALYSIS
 
 TARGET: ${request.organization}
-LINKEDIN: ${request.linkedinin_url || 'To be discovered'}
+LINKEDIN: ${request.linkedin_url || 'To be discovered'}
 PRIORITY: ${request.priority}
 REQUEST ID: ${request.request_id}
 TRIGGER: ${request.trigger_source}
@@ -414,7 +386,7 @@ ${outputFormat}
 
 EXECUTION REQUIREMENTS:
 1. Use BrightData tools to scrape LinkedIn profiles and company pages
-2. Use Neo4j to store relationship mappings and historical data
+2. Use cached relationship and analysis history where available
 3. Cross-reference with existing Yellow Panther network data
 4. Prioritize Stuart Cope connections with 1.5x scoring weight
 5. Focus on ACTIONABLE insights that can be used immediately
@@ -557,36 +529,34 @@ TIMING: This analysis supports an active business opportunity. Provide results t
   }
 
   /**
-   * Persist analysis results in Neo4j for future reference
+   * Persist analysis results in Supabase cache for future reference
    */
   private async persistAnalysisResults(analysis: ConnectionAnalysis): Promise<void> {
     try {
-      const cypher = `
-        MERGE (ca:ConnectionAnalysis {request_id: $request_id})
-        SET ca.target_organization = $target_organization,
-            ca.analysis_timestamp = $analysis_timestamp,
-            ca.processing_time_ms = $processing_time_ms,
-            ca.team_connections = $team_connections,
-            ca.optimal_introduction_paths = $optimal_introduction_paths,
-            ca.opportunity_enhancement = $opportunity_enhancement,
-            ca.actionable_next_steps = $actionable_next_steps,
-            ca.last_updated = datetime()
-        
-        // Create relationship to target organization if it exists
-        MATCH (e:Entity {name: $target_organization})
-        MERGE (e)-[r:HAS_CONNECTION_ANALYSIS]->(ca)
-        SET r.last_analyzed = datetime()
-      `;
-      
-      await this.neo4jService.executeQuery(cypher, {
+      const expiresAt = new Date(Date.now() + 72 * 60 * 60 * 1000).toISOString();
+      const { error } = await supabase
+        .from('entity_cache')
+        .upsert({
+          id: `connection_analysis:${analysis.request_id}`,
+          entity_id: analysis.request_id,
+          entity_type: 'connection_analysis',
+          organization: analysis.target_organization,
+          status: 'completed',
+          data: analysis,
+          expires_at: expiresAt,
+          created_at: analysis.analysis_timestamp,
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'id'
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      liveLogService.info('💾 Persisted connection analysis in Supabase cache', {
         request_id: analysis.request_id,
-        target_organization: analysis.target_organization,
-        analysis_timestamp: analysis.analysis_timestamp,
-        processing_time_ms: analysis.processing_time_ms,
-        team_connections: JSON.stringify(analysis.team_connections),
-        optimal_introduction_paths: JSON.stringify(analysis.optimal_introduction_paths),
-        opportunity_enhancement: JSON.stringify(analysis.opportunity_enhancement),
-        actionable_next_steps: JSON.stringify(analysis.actionable_next_steps)
+        target_organization: analysis.target_organization
       });
       
     } catch (error) {
@@ -603,21 +573,36 @@ TIMING: This analysis supports an active business opportunity. Provide results t
    */
   async getAnalysisStats(timeframeDays: number = 30): Promise<any> {
     try {
-      const cypher = `
-        MATCH (ca:ConnectionAnalysis)
-        WHERE ca.analysis_timestamp > datetime() - duration({days: $days})
-        OPTIONAL MATCH (ca)<-[r:HAS_CONNECTION_ANALYSIS]-(e:Entity)
-        RETURN 
-          count(ca) as total_analyses,
-          count(DISTINCT ca.target_organization) as unique_organizations,
-          avg(ca.team_connections.total_connections) as avg_connections,
-          sum(ca.team_connections.stuart_cope_connections) as stuart_connections,
-          avg(ca.opportunity_enhancement.network_boost) as avg_network_boost,
-          avg(ca.opportunity_enhancement.success_probability) as avg_success_probability
-      `;
-      
-      const result = await this.neo4jService.executeQuery(cypher, { days: timeframeDays });
-      return result[0] || {};
+      const minCreatedAt = new Date(Date.now() - timeframeDays * 24 * 60 * 60 * 1000).toISOString();
+      const { data, error } = await supabase
+        .from('entity_cache')
+        .select('organization, data, created_at')
+        .eq('entity_type', 'connection_analysis')
+        .gte('created_at', minCreatedAt);
+
+      if (error) {
+        throw error;
+      }
+
+      const analyses = (data || []).map((row: any) => row.data as ConnectionAnalysis);
+      if (analyses.length === 0) {
+        return {};
+      }
+
+      const uniqueOrganizations = new Set(analyses.map((analysis) => analysis.target_organization)).size;
+      const totalConnections = analyses.reduce((sum, analysis) => sum + (analysis.team_connections.total_team_connections || 0), 0);
+      const stuartConnections = analyses.reduce((sum, analysis) => sum + (analysis.team_connections.stuart_cope_connections || 0), 0);
+      const networkBoostTotal = analyses.reduce((sum, analysis) => sum + (analysis.opportunity_enhancement.network_boost || 0), 0);
+      const successProbabilityTotal = analyses.reduce((sum, analysis) => sum + (analysis.opportunity_enhancement.success_probability || 0), 0);
+
+      return {
+        total_analyses: analyses.length,
+        unique_organizations: uniqueOrganizations,
+        avg_connections: totalConnections / analyses.length,
+        stuart_connections: stuartConnections,
+        avg_network_boost: networkBoostTotal / analyses.length,
+        avg_success_probability: successProbabilityTotal / analyses.length
+      };
       
     } catch (error) {
       liveLogService.error('❌ Failed to get analysis stats', {

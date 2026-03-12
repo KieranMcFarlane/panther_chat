@@ -6,6 +6,7 @@ import {
   Home,
   Search,
   FileText,
+  Upload,
   Brain,
   BarChart3,
   ChevronDown,
@@ -40,13 +41,18 @@ import {
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { isFeatureExperimentalGraphEnabled, isFeatureTechPagesEnabled } from '@/lib/feature-flags';
 
-// Enhanced navigation items with graph submenu
+const includeTechPages = isFeatureTechPagesEnabled();
+const includeExperimentalGraph = isFeatureExperimentalGraphEnabled();
+
+// Business-first navigation; technical and experimental routes are feature-gated.
 const navItems = [
   { icon: Home, label: 'Home', href: '/' },
   { icon: Search, label: 'Entities', href: '/entity-browser' },
+  { icon: Upload, label: 'Entity Import', href: '/entity-import' },
   { icon: FileText, label: 'Tenders', href: '/tenders' },
-  { icon: Brain, label: 'RFP Intelligence', href: '/rfp-intelligence' },
+  ...(includeTechPages ? [{ icon: Brain, label: 'RFP Intelligence', href: '/rfp-intelligence' }] : []),
   { icon: Mail, label: 'Mailbox', href: '/mailbox' },
   { 
     icon: BarChart3, 
@@ -55,8 +61,12 @@ const navItems = [
     isCollapsible: true,
     subItems: [
       { icon: Network, label: '2D Network', href: '/graph', description: 'Interactive 2D force graph' },
-      { icon: Monitor, label: 'VR Visualization', href: '/graph/vr', description: 'Immersive VR experience (coming soon)' },
-      { icon: Eye, label: 'AR Visualization', href: '/graph/ar', description: 'Augmented reality overlay (coming soon)' },
+      ...(includeExperimentalGraph
+        ? [
+            { icon: Monitor, label: 'VR Visualization', href: '/graph/vr', description: 'Immersive VR experience (coming soon)' },
+            { icon: Eye, label: 'AR Visualization', href: '/graph/ar', description: 'Augmented reality overlay (coming soon)' },
+          ]
+        : []),
     ]
   },
 ];

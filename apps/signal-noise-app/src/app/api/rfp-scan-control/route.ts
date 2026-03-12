@@ -347,7 +347,7 @@ async function startScan(config: any = {}) {
     rfpOpportunitiesFound: 0,
     timeElapsed: 0,
     estimatedTimeRemaining: 0,
-    currentStage: 'Initializing Neo4j connection...',
+    currentStage: 'Initializing graph connection...',
     results: [],
     detailedLogs: [],
     rfpOpportunities: [], // Explicitly initialize the RFP opportunities array
@@ -358,7 +358,7 @@ async function startScan(config: any = {}) {
   // Add initial log entries
   addDetailedLog(`🚀 Starting RFP scan ${activeScan.id}`, 'info');
   addDetailedLog(`📊 Target: ${activeScan.totalEntities} entities`, 'info');
-  addDetailedLog(`🔧 Initializing Neo4j connection...`, 'info');
+  addDetailedLog(`🔧 Initializing graph connection...`, 'info');
 
   // Start progress tracking
   startProgressTracking();
@@ -483,7 +483,7 @@ function startProgressTracking() {
       if (currentLogCount > lastActivityCount) {
         // There's activity, logs are updating
         lastActivityCount = currentLogCount;
-      } else if (activeScan.timeElapsed > 5000 && activeScan.currentStage === 'Initializing Neo4j connection...') {
+      } else if (activeScan.timeElapsed > 5000 && activeScan.currentStage === 'Initializing graph connection...') {
         // If stuck for more than 5 seconds, update based on recent logs
         const recentLogs = activeScan.detailedLogs.slice(-3);
         if (recentLogs.some(log => log.includes('Database query'))) {
@@ -518,21 +518,22 @@ async function executeRFPScan(config: any, signal: AbortSignal) {
 
     // Configure MCP servers
     const mcpServers = {
-      'neo4j-mcp': {
-        command: 'node',
-        args: ['neo4j-mcp-server.js'],
+      'graph-mcp': {
+        command: 'python3',
+        args: ['backend/falkordb_mcp_server_fastmcp.py'],
         env: {
-          NEO4J_URI: process.env.NEO4J_URI || 'neo4j+s://e6bb5665.databases.neo4j.io',
-          NEO4J_USERNAME: process.env.NEO4J_USERNAME || 'neo4j',
-          NEO4J_PASSWORD: process.env.NEO4J_PASSWORD || 'NeO4jPaSSworD!'
+          FALKORDB_URI: process.env.FALKORDB_URI || '',
+          FALKORDB_USER: process.env.FALKORDB_USER || '',
+          FALKORDB_PASSWORD: process.env.FALKORDB_PASSWORD || '',
+          FALKORDB_DATABASE: process.env.FALKORDB_DATABASE || ''
         }
       },
       'brightdata-mcp': {
         command: 'node',
         args: ['src/mcp-brightdata-server.js'],
         env: {
-          BRIGHTDATA_API_TOKEN: process.env.BRIGHTDATA_API_TOKEN || 'bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4',
-          BRIGHTDATA_TOKEN: process.env.BRIGHTDATA_API_TOKEN || 'bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4',
+          BRIGHTDATA_API_TOKEN: process.env.BRIGHTDATA_API_TOKEN || '',
+          BRIGHTDATA_TOKEN: process.env.BRIGHTDATA_API_TOKEN || '',
           BRIGHTDATA_ZONE: 'linkedin_posts_monitor'
         }
       }
@@ -585,9 +586,9 @@ IMPORTANT: Start by announcing the total database entity count and connection st
 
 Process entities sequentially and provide regular progress updates.
 
-1. First, connect to Neo4j and query for TOTAL entity count in the database
+1. First, connect to the graph and query for TOTAL entity count in the database
    - Execute: MATCH (e:Entity) RETURN count(e) as totalEntities
-   - Announce: "Neo4j connected successfully - Found X total entities in database"
+   - Announce: "Graph connected successfully - Found X total entities in database"
 
 2. Then query for ${activeScan.totalEntities} high-priority sports entities with yellowPantherPriority <= 5
    - Execute: MATCH (e:Entity) WHERE exists(e.yellowPantherPriority) AND e.yellowPantherPriority <= 5 RETURN e.name, e.yellowPantherPriority LIMIT ${activeScan.totalEntities}
@@ -607,13 +608,13 @@ Process entities sequentially and provide regular progress updates.
 
 6. Focus on real RFPs with deadlines, contact info, and submission details.
 
-Start the scan now and provide regular progress updates, beginning with the Neo4j entity count announcement.`,
+Start the scan now and provide regular progress updates, beginning with the graph entity count announcement.`,
       options: {
         systemPrompt,
         mcpServers,
         allowedTools: [
-          'mcp__neo4j-mcp__execute_query',
-          'mcp__neo4j-mcp__search_sports_entities',
+          'mcp__graph-mcp__execute_query',
+          'mcp__graph-mcp__search_sports_entities',
           'mcp__brightdata-mcp__search_engine',
           'mcp__brightdata-mcp__scrape_as_markdown',
           'Read', 'Write', 'Grep', 'Bash'
@@ -650,11 +651,11 @@ Start the scan now and provide regular progress updates, beginning with the Neo4
               // Parse tool arguments to extract specific details
               const args = JSON.parse(toolArgs);
               
-              if (toolName === 'mcp__neo4j-mcp__execute_query') {
+              if (toolName === 'mcp__graph-mcp__execute_query') {
                 const query = args.query || '';
                 const cleanQuery = query.length > 150 ? query.substring(0, 150) + '...' : query;
-                addDetailedLog(`🗃️ Neo4j Query: ${cleanQuery}`, 'info');
-              } else if (toolName === 'mcp__neo4j-mcp__search_sports_entities') {
+                addDetailedLog(`🗃️ Graph query: ${cleanQuery}`, 'info');
+              } else if (toolName === 'mcp__graph-mcp__search_sports_entities') {
                 const searchParams = Object.keys(args).join(', ');
                 addDetailedLog(`🔍 Entity Search: ${searchParams}`, 'info');
               } else if (toolName === 'mcp__brightdata-mcp__search_engine') {
@@ -703,7 +704,7 @@ Start the scan now and provide regular progress updates, beginning with the Neo4
             
             // Enhanced detection for database connection announcements
             if (content.includes('connected') && content.includes('found') && content.includes('entities')) {
-              addDetailedLog('🔗 DATABASE CONNECTION: Neo4j connection established', 'success');
+              addDetailedLog('🔗 DATABASE CONNECTION: Graph connection established', 'success');
             }
             if (content.includes('total entities') || content.includes('entity count')) {
               addDetailedLog('📊 DATABASE STATUS: Entity count verification complete', 'info');
@@ -809,7 +810,7 @@ Start the scan now and provide regular progress updates, beginning with the Neo4
         const toolName = message.name || 'unknown_tool';
         const result = message.result || {};
         
-        if (toolName === 'mcp__neo4j-mcp__execute_query' && result.results) {
+        if (toolName === 'mcp__graph-mcp__execute_query' && result.results) {
           const entityCount = Array.isArray(result.results) ? result.results.length : 'unknown';
           
           // Check if this is a total count query
@@ -817,10 +818,10 @@ Start the scan now and provide regular progress updates, beginning with the Neo4
           if (query.includes('count(e)') || query.includes('totalEntities')) {
             const totalCount = Array.isArray(result.results) && result.results[0]?.totalEntities ? 
               result.results[0].totalEntities : entityCount;
-            addDetailedLog(`🎯 DATABASE STATUS: Neo4j connected - Found ${totalCount} total entities in database`, 'success');
-            addDetailedLog(`✅ Neo4j connection verified - Database contains ${totalCount} entities`, 'success');
+            addDetailedLog(`🎯 DATABASE STATUS: Graph connected - Found ${totalCount} total entities in database`, 'success');
+            addDetailedLog(`✅ Graph connection verified - Database contains ${totalCount} entities`, 'success');
           } else {
-            addDetailedLog(`📊 Neo4j Query Result: ${entityCount} entities returned`, 'success');
+            addDetailedLog(`📊 Graph query result: ${entityCount} entities returned`, 'success');
           }
         } else if (toolName === 'mcp__brightdata-mcp__search_engine' && result.results) {
           const searchResults = Array.isArray(result.results) ? result.results : [];

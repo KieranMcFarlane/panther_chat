@@ -75,9 +75,9 @@ export class ReliableClaudeService {
   }
 
   /**
-   * Fetch actual sports entities from Neo4j database
+   * Fetch actual sports entities from cached entity APIs
    */
-  private async fetchEntitiesFromNeo4j(limit: number, startEntityId: number = 0): Promise<string[]> {
+  private async fetchEntitiesFromCache(limit: number, startEntityId: number = 0): Promise<string[]> {
     try {
       // Use absolute URL for server-side fetch
       const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3005';
@@ -87,47 +87,35 @@ export class ReliableClaudeService {
       const safeSkip = Math.max(0, Math.floor(startEntityId) || 0);
       
       console.log(`Fetching entities: LIMIT ${safeLimit}, SKIP ${safeSkip}`);
-      const response = await fetch(`${baseUrl}/api/neo4j-query`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: `
-            MATCH (e:Entity) 
-            WHERE e.type IN ['Club', 'League', 'Venue', 'Federation', 'Organization']
-            RETURN e.name as entityName, e.type as entityType, e.sport as sport
-            SKIP ${safeSkip}
-            LIMIT ${safeLimit}
-          `,
-          params: {}
-        })
-      });
+      const response = await fetch(`${baseUrl}/api/entities?page=1&limit=${safeSkip + safeLimit}`);
 
       if (!response.ok) {
-        console.error('Failed to fetch entities from Neo4j:', await response.text());
+        console.error('Failed to fetch entities from cached API:', await response.text());
         return this.getFallbackEntities(safeLimit);
       }
 
       const result = await response.json();
-      const entities = result.data.map(record => record.entityName).filter(name => name && name.trim());
+      const entities = (result.entities || [])
+        .map((record: any) => record.properties?.name)
+        .filter((name: string | undefined) => name && name.trim())
+        .slice(safeSkip, safeSkip + safeLimit);
       
       if (entities.length === 0) {
-        console.log('No entities found in Neo4j, using fallback');
+        console.log('No entities found in cached API, using fallback');
         return this.getFallbackEntities(limit);
       }
 
-      console.log(`Found ${entities.length} entities in Neo4j:`, entities);
+      console.log(`Found ${entities.length} entities in cached API:`, entities);
       return entities.slice(0, limit);
       
     } catch (error) {
-      console.error('Error fetching entities from Neo4j:', error);
+      console.error('Error fetching entities from cached API:', error);
       return this.getFallbackEntities(limit);
     }
   }
 
   /**
-   * Fallback entities when Neo4j is unavailable
+   * Fallback entities when graph-backed discovery is unavailable
    */
   private getFallbackEntities(limit: number): string[] {
     return [
@@ -302,18 +290,19 @@ Do NOT simply acknowledge searches or provide general information. You must extr
               command: 'node',
               args: ['src/mcp-brightdata-server.js'],
               env: {
-                BRIGHTDATA_API_TOKEN: process.env.BRIGHTDATA_API_TOKEN || 'bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4',
-                BRIGHTDATA_TOKEN: process.env.BRIGHTDATA_API_TOKEN || 'bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4',
+                BRIGHTDATA_API_TOKEN: process.env.BRIGHTDATA_API_TOKEN || '',
+                BRIGHTDATA_TOKEN: process.env.BRIGHTDATA_API_TOKEN || '',
                 BRIGHTDATA_ZONE: 'linkedin_posts_monitor'
               }
             },
-            'neo4j-mcp': {
-              command: 'node',
-              args: ['neo4j-mcp-server.js'],
+            'graph-mcp': {
+              command: 'python3',
+              args: ['backend/falkordb_mcp_server_fastmcp.py'],
               env: {
-                NEO4J_URI: process.env.NEO4J_URI || 'neo4j+s://e6bb5665.databases.neo4j.io',
-                NEO4J_USERNAME: process.env.NEO4J_USERNAME || 'neo4j',
-                NEO4J_PASSWORD: process.env.NEO4J_PASSWORD || 'NeO4jPaSSworD!'
+                FALKORDB_URI: process.env.FALKORDB_URI || '',
+                FALKORDB_USER: process.env.FALKORDB_USER || '',
+                FALKORDB_PASSWORD: process.env.FALKORDB_PASSWORD || '',
+                FALKORDB_DATABASE: process.env.FALKORDB_DATABASE || ''
               }
             }
           },
@@ -322,10 +311,10 @@ Do NOT simply acknowledge searches or provide general information. You must extr
             'mcp__brightdata-mcp__search_engine',
             'mcp__brightdata-mcp__scrape_as_markdown', 
             'mcp__brightdata-mcp__scrape_batch',
-            // Neo4j MCP tools for entity analysis
-            'mcp__neo4j-mcp__execute_query',
-            'mcp__neo4j-mcp__search_sports_entities',
-            'mcp__neo4j-mcp__get_entity_details',
+            // Graph MCP tools for entity analysis
+            'mcp__graph-mcp__execute_query',
+            'mcp__graph-mcp__search_sports_entities',
+            'mcp__graph-mcp__get_entity_details',
             // Also allow standard tools for analysis
             'Read', 'Write', 'Grep', 'Bash'
           ],
@@ -355,14 +344,14 @@ Do NOT simply acknowledge searches or provide general information. You must extr
         } else if (message.type === 'tool_use' && message.name === 'mcp__brightdata-mcp__scrape_batch') {
           console.log(`🔧 [PROPER MCP] BrightData MCP scrape_batch tool execution detected`);
           console.log(`🔍 [DEBUG] Batch scrape URLs:`, JSON.stringify(message.input, null, 2));
-        } else if (message.type === 'tool_use' && message.name === 'mcp__neo4j-mcp__execute_query') {
-          console.log(`🔧 [PROPER MCP] Neo4j MCP execute_query tool execution detected`);
+        } else if (message.type === 'tool_use' && message.name === 'mcp__graph-mcp__execute_query') {
+          console.log(`🔧 [PROPER MCP] Graph MCP execute_query tool execution detected`);
           console.log(`🔍 [DEBUG] Query params:`, JSON.stringify(message.input, null, 2));
-        } else if (message.type === 'tool_use' && message.name === 'mcp__neo4j-mcp__search_sports_entities') {
-          console.log(`🔧 [PROPER MCP] Neo4j MCP search_sports_entities tool execution detected`);
+        } else if (message.type === 'tool_use' && message.name === 'mcp__graph-mcp__search_sports_entities') {
+          console.log(`🔧 [PROPER MCP] Graph MCP search_sports_entities tool execution detected`);
           console.log(`🔍 [DEBUG] Entity search params:`, JSON.stringify(message.input, null, 2));
-        } else if (message.type === 'tool_use' && message.name === 'mcp__neo4j-mcp__get_entity_details') {
-          console.log(`🔧 [PROPER MCP] Neo4j MCP get_entity_details tool execution detected`);
+        } else if (message.type === 'tool_use' && message.name === 'mcp__graph-mcp__get_entity_details') {
+          console.log(`🔧 [PROPER MCP] Graph MCP get_entity_details tool execution detected`);
           console.log(`🔍 [DEBUG] Entity details params:`, JSON.stringify(message.input, null, 2));
         } else if (message.type === 'tool_result') {
           console.log(`🔧 [PROPER MCP] Tool result received`);
@@ -426,7 +415,7 @@ Do NOT simply acknowledge searches or provide general information. You must extr
    */
   private async useRealBrightDataAPI(query: string): Promise<string> {
     try {
-      const brightdataToken = process.env.BRIGHTDATA_API_TOKEN || 'bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4';
+      const brightdataToken = process.env.BRIGHTDATA_API_TOKEN || '';
       
       // Correct BrightData API endpoint from documentation
       const apiUrl = 'https://api.brightdata.com/request';
@@ -647,8 +636,8 @@ Do NOT simply acknowledge searches or provide general information. You must extr
         sessionState: { sessionId, entityLimit }
       });
 
-      // Fetch actual sports entities from Neo4j database autonomously
-      const entityNames = await this.fetchEntitiesFromNeo4j(entityLimit, startEntityId);
+      // Fetch actual sports entities from cached entity APIs autonomously
+      const entityNames = await this.fetchEntitiesFromCache(entityLimit, startEntityId);
       
       const prompt = `Analyze these specific sports entities for RFP opportunities:
 ${entityNames.map(name => `- ${name}`).join('\n')}

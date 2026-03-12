@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
+import { buildAnyGraphEntityLookupFilter, resolveGraphId } from '@/lib/graph-id'
 import { normalizeImportedEntityRow, REQUIRED_ENTITY_IMPORT_COLUMNS } from '@/lib/entity-import-schema'
 import { mapImportedEntityRowToCachedEntity } from '@/lib/entity-import-mapper'
 import {
@@ -68,8 +69,8 @@ export async function POST(request: NextRequest) {
     const entityIds = validRows.map((row) => row.entity_id)
     const { data: existingRows, error: existingError } = await supabase
       .from('cached_entities')
-      .select('neo4j_id')
-      .in('neo4j_id', entityIds)
+      .select('id, graph_id, neo4j_id')
+      .or(buildAnyGraphEntityLookupFilter(entityIds))
 
     if (existingError) {
       return NextResponse.json(
@@ -78,12 +79,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const existingIds = new Set((existingRows || []).map((row: { neo4j_id: string }) => row.neo4j_id))
+    const existingIds = new Set((existingRows || []).map((row: { id?: string; graph_id?: string; neo4j_id?: string }) => resolveGraphId(row)).filter(Boolean))
     const payload = validRows.map((row) => mapImportedEntityRowToCachedEntity(row))
 
     const { error: upsertError } = await supabase
       .from('cached_entities')
-      .upsert(payload, { onConflict: 'neo4j_id' })
+      .upsert(payload, { onConflict: 'graph_id' })
 
     if (upsertError) {
       return NextResponse.json(

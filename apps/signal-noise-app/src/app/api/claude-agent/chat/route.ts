@@ -84,10 +84,10 @@ function getMCPToolsForTab(tools: string[]) {
   // Define available MCP tools based on tab configuration
   const availableTools = [];
 
-  if (tools.includes('neo4j-mcp')) {
+  if (tools.includes('neo4j-mcp') || tools.includes('graph-mcp')) {
     availableTools.push({
-      name: 'neo4j_query',
-      description: 'Execute Neo4j queries on the knowledge graph',
+      name: 'graph_query',
+      description: 'Query graph-backed relationships on the knowledge graph',
       input_schema: {
         type: 'object',
         properties: {
@@ -228,7 +228,7 @@ function generateContextualResponse(userMessage: string, context: ChatRequest['c
       return `Regarding your sports intelligence query: "${userMessage}", I can help you analyze sports entities, clubs, leagues, and business opportunities. I have access to comprehensive sports data and can provide detailed insights about organizations, relationships, and market trends.`;
 
     case 'knowledge-graph':
-      return `For your knowledge graph exploration: "${userMessage}", I can execute Neo4j queries to analyze complex entity relationships in our sports intelligence database. I can help you traverse connections, identify patterns, and extract meaningful insights from the graph structure.`;
+      return `For your knowledge graph exploration: "${userMessage}", I can query graph-backed relationships to analyze complex entity connections in our sports intelligence database. I can help you traverse connections, identify patterns, and extract meaningful insights from the graph structure.`;
 
     case 'custom':
       return `I've received your custom query: "${userMessage}". With my configurable toolset, I can assist you with various tasks including web research, data analysis, and knowledge graph queries. How would you like me to help you with this request?`;

@@ -59,7 +59,7 @@ COMPANY: ${webhookData.meta?.company}
 Tasks:
 1. Verify this is genuine procurement
 2. Extract: organization, sport type, estimated value, urgency
-3. Use Neo4j to check existing relationships
+3. Use the graph store to check existing relationships
 4. Calculate Yellow Panther fit score (0-100)
 5. Provide strategic recommendations
 
@@ -84,20 +84,20 @@ Return structured JSON with confidence scoring.`;
               prompt: analysisPrompt,
               options: {
                 mcpServers: {
-                  "neo4j-mcp": {
+                  "graph-mcp": {
                     "command": "npx",
                     "args": ["-y", "@alanse/mcp-neo4j-server"],
                     "env": {
-                      "NEO4J_URI": process.env.NEO4J_URI || "",
-                      "NEO4J_USERNAME": process.env.NEO4J_USERNAME || "",
-                      "NEO4J_PASSWORD": process.env.NEO4J_PASSWORD || "",
-                      "NEO4J_DATABASE": process.env.NEO4J_DATABASE || "neo4j"
+                      "FALKORDB_URI": process.env.FALKORDB_URI || "",
+                      "FALKORDB_USER": process.env.FALKORDB_USER || "",
+                      "FALKORDB_PASSWORD": process.env.FALKORDB_PASSWORD || "",
+                      "FALKORDB_DATABASE": process.env.FALKORDB_DATABASE || "neo4j"
                     }
                   }
                 },
                 allowedTools: [
-                  "mcp__neo4j-mcp__execute_query",
-                  "mcp__neo4j-mcp__create_node"
+                  "mcp__graph-mcp__execute_query",
+                  "mcp__graph-mcp__create_node"
                 ],
                 maxTurns: 5
               }

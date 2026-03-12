@@ -44,7 +44,7 @@ export type EntityType = 'Club' | 'Person' | 'League' | 'Partner' | 'Organizatio
 
 export interface Entity {
   id: string
-  neo4j_id: string | number
+  graph_id?: string | number
   labels: string[]
   properties: Record<string, any>
 }
@@ -111,6 +111,7 @@ export interface RecentNews {
   date: string
   headline: string
   source: string
+  sourceUrl?: string
   category: 'partnership' | 'technology' | 'financial' | 'sports' | 'operations'
   relevanceScore: number // 0-100
 }
@@ -136,6 +137,7 @@ export interface LeagueContext {
 
 export interface KeyDecisionMaker {
   id?: string | number // Add optional ID for Neo4j entities
+  profileUrl?: string
   name: string
   role: string
   influenceLevel: 'HIGH' | 'MEDIUM' | 'LOW'

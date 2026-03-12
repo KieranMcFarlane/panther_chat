@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { EntityBadge } from '@/components/badge/EntityBadge';
 import { useEntities, useEntity } from '@/lib/swr-config';
+import { resolveGraphId } from '@/lib/graph-id';
 import {
   Dialog,
   DialogContent,
@@ -19,7 +20,7 @@ import { ChevronUp, ChevronDown, Search } from 'lucide-react';
 
 interface Club {
   id: string
-  neo4j_id: string
+  graph_id?: string
   labels: string[]
   properties: {
     name: string
@@ -65,7 +66,7 @@ export default function LeagueNav() {
   // Navigation handlers
   const handleClubSelect = (club: Club) => {
     setIsNavigating(true)
-    router.push(`/entity/${club.id}`)
+    router.push(`/entity/${resolveGraphId(club) || club.id}`)
     setIsModalOpen(false)
     setTimeout(() => setIsNavigating(false), 500)
   }
@@ -232,6 +233,7 @@ export default function LeagueNav() {
     }
     
     const currentClub = currentEntityData.entity as Club
+    const currentClubGraphId = resolveGraphId(currentClub)
     let currentClubLeague = currentClub.properties?.level || currentClub.properties?.league || currentClub.properties?.competition
     const currentClubName = currentClub.properties?.name
     
@@ -252,7 +254,7 @@ export default function LeagueNav() {
     
     console.log('🏆 Calculating indices for:', {
       currentClubId: currentClub.id,
-      currentClubNeo4jId: currentClub.neo4j_id,
+      currentClubGraphId,
       currentClubName,
       currentClubLeague,
       sportsDataLength: sportsData.length,
@@ -270,13 +272,13 @@ export default function LeagueNav() {
         if (league.league === currentClubLeague) {
           // Try multiple ID matching strategies
           const clubIndex = league.clubs.findIndex(club => {
+            const clubGraphId = resolveGraphId(club)
             // Direct ID match
             if (club.id === currentClub.id) return true
-            // Neo4j ID match  
-            if (club.neo4j_id === currentClub.neo4j_id) return true
+            if (clubGraphId === currentClubGraphId) return true
             // Cross-format ID match (numeric vs UUID)
             if (club.id === entityId) return true
-            if (club.neo4j_id === entityId) return true
+            if (clubGraphId === entityId) return true
             // Name-based fallback
             if (club.properties?.name === currentClubName) return true
             return false
@@ -292,11 +294,11 @@ export default function LeagueNav() {
               leagueName: league.league,
               clubName: foundClub?.properties?.name,
               clubId: foundClub?.id,
-              clubNeo4jId: foundClub?.neo4j_id,
+              clubGraphId: foundClub ? resolveGraphId(foundClub) : null,
               matchType: foundClub?.id === currentClub.id ? 'direct_id' :
-                        foundClub?.neo4j_id === currentClub.neo4j_id ? 'neo4j_id' :
+                        resolveGraphId(foundClub) === currentClubGraphId ? 'graph_id' :
                         foundClub?.id === entityId ? 'entity_id' :
-                        foundClub?.neo4j_id === entityId ? 'entity_neo4j_id' :
+                        resolveGraphId(foundClub) === entityId ? 'entity_graph_id' :
                         'name_match',
               clubsInLeague: league.clubs.length
             })
@@ -308,17 +310,17 @@ export default function LeagueNav() {
     
     console.log('🏆 Calculated indices: No match found, returning defaults', {
       currentClubId: currentClub.id,
-      currentClubNeo4jId: currentClub.neo4j_id,
+      currentClubGraphId,
       currentClubName,
       currentClubLeague,
       entityId,
       availableLeagues: sportsData.flatMap(s => s.leagues.map(l => l.league)),
       debugInfo: {
         hasCurrentClubId: !!currentClub.id,
-        hasCurrentClubNeo4jId: !!currentClub.neo4j_id,
+        hasCurrentClubGraphId: !!currentClubGraphId,
         entityIdValue: entityId,
         idMatch: currentClub.id === entityId,
-        neo4jIdMatch: currentClub.neo4j_id === entityId
+        graphIdMatch: currentClubGraphId === entityId
       }
     })
     return { currentSportIndex: 0, currentLeagueIndex: 0, currentClubIndex: 0 }

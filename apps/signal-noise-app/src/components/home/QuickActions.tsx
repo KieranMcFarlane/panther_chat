@@ -6,9 +6,11 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { isFeatureExperimentalGraphEnabled } from '@/lib/feature-flags'
 
 export function QuickActions() {
   const router = useRouter()
+  const includeExperimentalGraph = isFeatureExperimentalGraphEnabled()
 
   const actions = [
     {
@@ -28,14 +30,16 @@ export function QuickActions() {
       color: 'text-green-400',
       bgColor: 'bg-green-500/20'
     },
-    {
-      icon: Network,
-      label: 'Explore Graph',
-      description: 'View relationships',
-      href: '/graph',
-      color: 'text-purple-400',
-      bgColor: 'bg-purple-500/20'
-    },
+    ...(includeExperimentalGraph
+      ? [{
+          icon: Network,
+          label: 'Explore Graph',
+          description: 'View relationships',
+          href: '/graph',
+          color: 'text-purple-400',
+          bgColor: 'bg-purple-500/20'
+        }]
+      : []),
     {
       icon: Calendar,
       label: 'Conventions',
@@ -86,7 +90,6 @@ export function QuickActions() {
     </Card>
   )
 }
-
 
 
 

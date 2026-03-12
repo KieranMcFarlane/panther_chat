@@ -2,6 +2,11 @@
  * Live Log Service - Real-time system activity logging and monitoring (Pure In-Memory)
  */
 
+function isBuildPhase(): boolean {
+  return process.env.NEXT_PHASE === 'phase-production-build' ||
+    process.env.npm_lifecycle_event === 'build';
+}
+
 // In-memory log storage for real-time performance
 class InMemoryLogStore {
   private logs: LogEntry[] = [];
@@ -117,7 +122,9 @@ export class LiveLogService {
 
     // Store directly in in-memory store for real-time access
     inMemoryStore.addLog(logEntry);
-    console.log(`📝 Log added to in-memory store: ${logEntry.message} (${logEntry.category})`);
+    if (!isBuildPhase()) {
+      console.log(`📝 Log added to in-memory store: ${logEntry.message} (${logEntry.category})`);
+    }
   }
 
   /**
@@ -340,7 +347,9 @@ export class LiveLogService {
     tags?: string[];
   } = {}): Promise<LogEntry[]> {
     // Use in-memory store as primary for real-time performance
-    console.log('📊 getLogs using in-memory store with filters:', filters);
+    if (!isBuildPhase()) {
+      console.log('📊 getLogs using in-memory store with filters:', filters);
+    }
     
     // Apply time-based filtering for hours parameter
     let since: number | undefined;
@@ -374,7 +383,9 @@ export class LiveLogService {
       );
     }
 
-    console.log('📊 In-memory store returned:', filteredLogs.length, 'logs');
+    if (!isBuildPhase()) {
+      console.log('📊 In-memory store returned:', filteredLogs.length, 'logs');
+    }
     return filteredLogs;
   }
 
@@ -389,7 +400,9 @@ export class LiveLogService {
     tags?: string[];
   } = {}): Promise<LogEntry[]> {
     // Use in-memory store for real-time streaming
-    console.log('📊 getRecentLogs using in-memory store with filters:', filters);
+    if (!isBuildPhase()) {
+      console.log('📊 getRecentLogs using in-memory store with filters:', filters);
+    }
     
     const memoryLogs = inMemoryStore.getLogs({
       limit: filters.limit,
@@ -406,7 +419,9 @@ export class LiveLogService {
       );
     }
 
-    console.log('📊 In-memory store returned:', filteredLogs.length, 'logs');
+    if (!isBuildPhase()) {
+      console.log('📊 In-memory store returned:', filteredLogs.length, 'logs');
+    }
     return filteredLogs;
   }
 

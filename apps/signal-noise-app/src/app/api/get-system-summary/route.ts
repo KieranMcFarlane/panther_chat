@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
         summary: `# 🎯 RFP Intelligence System
 
 **Core Capabilities:**
-- Neo4j Knowledge Graph with sports entities
+- FalkorDB graph intelligence with sports entities
 - BrightData Web Scraping & Search Intelligence  
 - Perplexity Market Intelligence Analysis
 - Claude Agent SDK for Reasoning & Analysis
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
 **Error loading system specification.** Please check if COMPREHENSIVE-RFP-MONITORING-SYSTEM.md exists.
 
 **Core Components:**
-- Neo4j Knowledge Graph Integration
+- FalkorDB Graph Integration
 - BrightData Web Intelligence
 - Claude Agent SDK Analysis
 - Real-time RFP Detection`
@@ -107,7 +107,7 @@ function extractSystemSummary(content: string): string {
 Core monitoring system for sports industry RFP detection.
 
 **Key Features:**
-- Neo4j Knowledge Graph Integration
+- FalkorDB Graph Integration
 - BrightData Web Intelligence
 - Claude Agent SDK Analysis
 - Real-time Opportunity Detection

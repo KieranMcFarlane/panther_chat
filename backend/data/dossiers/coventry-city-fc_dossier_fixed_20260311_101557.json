@@ -1,0 +1,460 @@
+{
+  "entity_id": "coventry-city-fc",
+  "entity_name": "Coventry City FC",
+  "entity_type": "CLUB",
+  "priority_score": 75,
+  "tier": "PREMIUM",
+  "sections": [
+    {
+      "id": "core_information",
+      "title": "Basic entity information",
+      "content": [
+        " ```json\n{\n  \"content\": [\n    \"Founded in 1883 as Singers FC, renamed Coventry City in 1898; nicknamed 'The Sky Blues'\",\n    \"Home ground: Coventry Building Society Arena (32,609 capacity), returned to city in 2014 after groundsharing at Northampton Town and Birmingham City due to stadium disputes\",\n    \"Currently competes in EFL Championship (Tier 2), promoted via 2020 League One play-offs under manager Mark Robins\",\n    \"FA Cup winners 1987 (defeated Tottenham Hotspur 3-2); spent 34 consecutive years in top flight (1967-2001)\",\n    \"Experienced financial administration in 2013 and ownership instability; current majority owner Doug King acquired club in January 2023\",\n    \"Reached 2023 EFL Championship play-off final, losing to Luton Town on penalties\"\n  ],\n  \"metrics\": [\n    {\"label\": \"Founded\", \"value\": \"1883 (141 years)\"},\n    {\"label\": \"Stadium Capacity\", \"value\": \"32,609\"},\n    {\"label\": \"Current League\", \"value\": \"EFL Championship (Tier 2)\"},\n    {\"label\": \"Major Honours\", \"value\": \"1 FA Cup (1987)\"},\n    {\"label\": \"Top Flight Seasons\", \"value\": \"34 (1967-2001)\"},\n    {\"label\": \"Current Manager\", \"value\": \"Mark Robins"
+      ],
+      "metrics": [],
+      "insights": [],
+      "recommendations": [],
+      "confidence": 0.7,
+      "generated_by": "haiku",
+      "generated_at": "2026-03-11T10:10:40.428012+00:00"
+    },
+    {
+      "id": "quick_actions",
+      "title": "Immediate action recommendations",
+      "content": [
+        "```json\n{\n  \"content\": [\n    \"Launch 'Playoff Push' ticket drive targeting lapsed members with discounted multi-game bundles for remaining home fixtures.\",\n    \"Initiate contract extension dialogue with key assets (e.g., Ben Sheaf) to prevent summer transfer window speculation destabilizing the squad.\",\n    \"Activate community outreach program in Hillfields and city center to maintain local engagement and drive walk-up attendance.\",\n    \"Scout and identify potential outbound loan moves for U21 fringe players to secure game time and development pathways.\",\n    \"Engage primary stakeholders regarding CBS Arena pitch maintenance to ensure optimal playing surface for tactical setup.\"\n  ],\n  \"metrics\": [\n    {\n      \"label\": \"Current League Position\",\n      \"value\": \"Top 10\"\n    },\n    {\n      \"label\": \"Average Home Attendance\",\n      \"value\": \"~94% Capacity\"\n    },\n    {\n      \"label\": \"Goal Difference\",\n      \"value\": \"Positive\"\n    },\n    {\n      \"label\": \"Points Per Game"
+      ],
+      "metrics": [],
+      "insights": [],
+      "recommendations": [],
+      "confidence": 0.7,
+      "generated_by": "haiku",
+      "generated_at": "2026-03-11T10:09:11.701128+00:00"
+    },
+    {
+      "id": "contact_information",
+      "title": "Contact details and locations",
+      "content": [
+        ""
+      ],
+      "metrics": [],
+      "insights": [],
+      "recommendations": [],
+      "confidence": 0.7,
+      "generated_by": "haiku",
+      "generated_at": "2026-03-11T10:10:19.801839+00:00"
+    },
+    {
+      "id": "recent_news",
+      "title": "Recent news and developments",
+      "content": [
+        "Coventry City finished the 2023/24 Championship season in 9th place with 64 points, narrowly missing out on the play-offs after a strong previous campaign.",
+        "Manager Mark Robins is preparing for a summer rebuild, with the club already linked with moves for players like Jack Rudoni from Huddersfield Town.",
+        "The future of star midfielder Callum O'Hare remains uncertain as he enters the final weeks of his contract, attracting interest from Premier League clubs.",
+        "The club released their retained list, confirming the departures of several players including Jamie Allen and Kasey Palmer, though negotiations continue for others.",
+        "Striker Haji Wright finished the season as the club's top scorer with 19 goals across all competitions."
+      ],
+      "metrics": [
+        {
+          "label": "Final League Position",
+          "value": "9th"
+        },
+        {
+          "label": "Total Points",
+          "value": "64"
+        },
+        {
+          "label": "Top Scorer",
+          "value": "Haji Wright (19 goals)"
+        },
+        {
+          "label": "Goals For",
+          "value": "68"
+        },
+        {
+          "label": "Goals Against",
+          "value": "57"
+        }
+      ],
+      "insights": [
+        "The team struggled with consistency early in the season following the sales of key players Gus Hamer and Viktor Gy\u00f6keres, which ultimately cost them a play-off spot.",
+        "Squad depth will be a critical issue this summer, as the front office faces pressure to replace outgoing players and secure the signature of Callum O'Hare to maintain momentum."
+      ],
+      "recommendations": [
+        "Prioritize resolving the Callum O'Hare contract situation immediately to avoid losing a key creative asset on a free transfer.",
+        "Focus recruitment on defensive reinforcements and a proven goalscorer to support Haji Wright, addressing the inconsistency in front of goal."
+      ],
+      "confidence": 0.9,
+      "generated_by": "haiku",
+      "generated_at": "2026-03-11T10:09:28.128531+00:00"
+    },
+    {
+      "id": "current_performance",
+      "title": "Current performance metrics",
+      "content": [
+        "```json\n{\n  \"content\": [\n    \"Finished 9th in the EFL Championship for the 2023/24 season with 64 points, missing the playoffs by a narrow margin.\",\n    \"Reached the FA Cup Semi-Finals at Wembley, notably defeating Premier League side Wolverhampton Wanderers before losing on penalties to Manchester United.\",\n    \"Demonstrated strong attacking form, scoring 68 league goals, with significant contributions from Haji Wright and Ellis Simms.\",\n    \"Mark Robins continues his long tenure as manager, solidifying the club's status as a stable Championship outfit.\"\n  ],\n  \"metrics\": [\n    {\n      \"label\": \"Final League Position\",\n      \"value\": \"9"
+      ],
+      "metrics": [],
+      "insights": [],
+      "recommendations": [],
+      "confidence": 0.7,
+      "generated_by": "haiku",
+      "generated_at": "2026-03-11T10:09:25.381541+00:00"
+    },
+    {
+      "id": "leadership",
+      "title": "Leadership team analysis",
+      "content": [
+        "Strategic pivot from long-term stability under Mark Robins to high-profile, immediate impact leadership with Frank Lampard.",
+        "Focus on securing the long-term future of the Coventry Building Society Arena, moving away from previous ownership's stadium disputes.",
+        "Investment in first-team squad depth to transition from a 'development and sell' model to a 'promotion-chasing' model.",
+        "Rebuilding trust with the fanbase through transparent communication and visible infrastructure improvements."
+      ],
+      "metrics": [
+        {
+          "label": "Ownership Tenure (Doug King)",
+          "value": "Since January 2023"
+        },
+        {
+          "label": "Managerial Change",
+          "value": "Nov 2024 (Robins out, Lampard in)"
+        },
+        {
+          "label": "Season Objective",
+          "value": "Play-off/Promotion Contention"
+        }
+      ],
+      "insights": [
+        "The ruthless decision to sack the club's most successful modern manager highlights an intolerance for stagnation and a desperate need for Premier League revenue.",
+        "Doug King's administration prioritizes 'off-pitch' stability (stadium, training ground) as a platform for 'on-pitch' success, reversing the SISU era's neglect."
+      ],
+      "recommendations": [
+        "Provide significant backing in the transfer market for experienced Championship players to support the new manager's style.",
+        "Accelerate plans for training ground upgrades to attract higher-caliber players.",
+        "Maintain a clear Director of Football structure to ensure recruitment continuity despite the managerial change."
+      ],
+      "confidence": 0.85,
+      "generated_by": "sonnet",
+      "generated_at": "2026-03-11T10:11:58.117591+00:00"
+    },
+    {
+      "id": "digital_maturity",
+      "title": "Digital maturity assessment",
+      "content": [
+        "Coventry City FC is currently in a 'Developing' to 'Defined' stage of digital maturity, heavily influenced by recent ownership transitions and infrastructure limitations.",
+        "The club demonstrates high maturity in specific verticals, notably data analytics for player recruitment and performance, aligning with a modern 'Moneyball' approach.",
+        "Fan engagement is primarily channelled through standard social media platforms and third-party ticketing solutions, lacking a proprietary, unified digital ecosystem.",
+        "Digital matchday experience is constrained by the infrastructure of the CBS Arena, limiting the deployment of advanced IoT and mobile connectivity solutions compared to purpose-built modern stadiums.",
+        "The transformation posture is 'Reactive-Strategic'; while there is a clear intent to modernize under new ownership, execution is often paced by external factors like stadium negotiations and Championship financial pressures."
+      ],
+      "metrics": [
+        {
+          "label": "Digital Maturity Level",
+          "value": "Developing (Stage 2/5)"
+        },
+        {
+          "label": "Social Media Engagement Rate",
+          "value": "High (Top 10 Championship)"
+        },
+        {
+          "label": "Data Analytics Utilization",
+          "value": "Advanced (Recruitment)"
+        },
+        {
+          "label": "E-Commerce Integration",
+          "value": "Standard (Third-party)"
+        },
+        {
+          "label": "Stadium Tech Infrastructure",
+          "value": "Legacy/Constrained"
+        }
+      ],
+      "insights": [
+        "A distinct 'Digital Divide' exists between the club's back-office operations (advanced data scouting) and front-office fan engagement (standard social media, basic app), representing an untapped synergy.",
+        "The reliance on the CBS Arena rather than a owned, purpose-built stadium creates a significant barrier to holistic digital transformation, specifically regarding matchday connectivity and smart stadium features.",
+        "New ownership structures present a critical window for digital investment, shifting the posture from maintenance to innovation, particularly in CRM and fan data monetization."
+      ],
+      "recommendations": [
+        "Implement a unified Customer Relationship Management (CRM) platform to consolidate fan data from ticketing, retail, and digital channels, moving away from siloed databases.",
+        "Develop a robust 'Second Screen' matchday experience within the official club app to mitigate physical infrastructure limitations at the arena.",
+        "Leverage the existing high competency in performance data analytics to create unique, behind-the-scenes digital content for fans, bridging the gap between recruitment and engagement.",
+        "Explore 'Frictionless' retail and ticketing technologies (e.g., mobile-first entry) that can operate independently of heavy stadium infrastructure upgrades."
+      ],
+      "confidence": 0.75,
+      "generated_by": "sonnet",
+      "generated_at": "2026-03-11T10:11:53.837502+00:00"
+    },
+    {
+      "id": "ai_reasoner_assessment",
+      "title": "AI reasoner assessment",
+      "content": [
+        "Current infrastructure relies heavily on third-party analytics platforms (e.g., Opta, Wyscout) rather than proprietary AI models.",
+        "Recent ownership transition provides a strategic window for investment in digital transformation and data infrastructure.",
+        "Recruitment strategy focusing on undervalued assets creates a high-value use case for predictive AI analytics.",
+        "Fan engagement channels currently lack advanced personalization or automated support features compared to top-tier competitors."
+      ],
+      "metrics": [
+        {
+          "label": "Data Infrastructure Maturity",
+          "value": "Moderate"
+        },
+        {
+          "label": "Automation Potential (Recruitment)",
+          "value": "High"
+        },
+        {
+          "label": "Fan Engagement Tech Stack",
+          "value": "Basic"
+        },
+        {
+          "label": "AI Readiness Score",
+          "value": "3.5/10"
+        }
+      ],
+      "insights": [
+        "The club's recruitment model is well-suited for Machine Learning algorithms designed to identify undervalued talent and optimize transfer fees.",
+        "Operational efficiency can be significantly improved by automating ticketing inquiries and retail inventory management.",
+        "Shared stadium arrangements present integration challenges for IoT and smart stadium automation initiatives."
+      ],
+      "recommendations": [
+        "Implement AI-driven scouting tools to augment the identification of transfer targets in global markets.",
+        "Deploy NLP-based chatbots to handle peak-volume ticketing and FAQ requests, reducing staff workload.",
+        "Adopt predictive modeling for injury prevention using GPS vest data to optimize player availability.",
+        "Centralize data silos into a cloud-based warehouse to enable advanced analytics across commercial and sporting departments."
+      ],
+      "confidence": 0.75,
+      "generated_by": "sonnet",
+      "generated_at": "2026-03-11T10:11:39.371852+00:00"
+    },
+    {
+      "id": "challenges_opportunities",
+      "title": "Challenges and opportunities",
+      "content": [
+        "Stadium uncertainty remains a primary challenge, with the club needing a long-term solution at the Coventry Building Society Arena to secure revenue streams.",
+        "Financial disparity in the Championship creates a hurdle, as the club competes against teams receiving Premier League parachute payments.",
+        "Replacing the output of key player sales (e.g., Viktor Gyokeres and Gustavo Hamer) challenges the squad's ability to maintain playoff contention.",
+        "New ownership under Doug King provides a significant opportunity for financial stability and strategic infrastructure investment.",
+        "The club's proven recruitment model offers an opportunity to reinvest transfer fees effectively and sustain competitiveness."
+      ],
+      "metrics": [
+        {
+          "label": "League Status",
+          "value": "EFL Championship"
+        },
+        {
+          "label": "2022/23 Finish",
+          "value": "5th (Play-off Final)"
+        },
+        {
+          "label": "Stadium Capacity",
+          "value": "32,609"
+        }
+      ],
+      "insights": [
+        "The club has successfully pivoted from existential threats to on-pitch success, largely due to managerial consistency and smart recruitment.",
+        "Commercial growth is currently capped by the stadium ownership situation, limiting matchday revenue compared to competitors."
+      ],
+      "recommendations": [
+        "Negotiate a long-term, binding agreement for the CBS Arena to prevent future ground-sharing scenarios.",
+        "Continue reinvesting player sales revenue into the academy and first-team squad to bridge the financial gap with relegated Premier League teams."
+      ],
+      "confidence": 0.85,
+      "generated_by": "sonnet",
+      "generated_at": "2026-03-11T10:11:38.194081+00:00"
+    },
+    {
+      "id": "outreach_strategy",
+      "title": "Outreach strategy with conversation trees",
+      "content": [
+        "Fan Re-engagement: Deploy 'Welcome Home' outreach campaigns targeting lapsed supporters, specifically addressing the resolved stadium situation at the Coventry Building Society Arena to rebuild trust lost during the exile years.",
+        "Commercial Outreach: Pitch 'Business Club' memberships to local SMEs, focusing on the networking utility of the Arena facilities and Coventry's growing economy rather than just brand visibility.",
+        "Media Strategy: Proactively pitch 'The Underdog Story' narrative to national outlets, focusing on the manager's philosophy and academy graduates to humanize the club and attract neutral support.",
+        "Conversation Tactics: Train front-of-house and social media teams to use 'active listening' scripts when dealing with fan grievances regarding matchday experience, turning complaints into constructive feedback loops."
+      ],
+      "metrics": [
+        {
+          "label": "Target Fan Engagement Rate",
+          "value": "+12% YoY"
+        },
+        {
+          "label": "Season Card Retention",
+          "value": ">85%"
+        },
+        {
+          "label": "Sponsorship Renewal Rate",
+          "value": "90%"
+        },
+        {
+          "label": "Average Home Attendance",
+          "value": ">25,000"
+        }
+      ],
+      "insights": [
+        "The recent resolution of the stadium dispute offers a unique 'fresh start' psychological trigger to win back fans who disengaged during the Birmingham City and Northampton exile periods.",
+        "Coventry's demographic skews younger than the national average, making platforms like TikTok critical for matchday activation and merchandise drops.",
+        "The club's data-driven recruitment model creates a compelling 'Moneyball' narrative that appeals to potential partners in the technology and analytics sectors."
+      ],
+      "recommendations": [
+        "Create a dedicated 'Local Heroes' sponsorship tier specifically for Coventry-based businesses to foster community economic integration.",
+        "Implement a closed-loop feedback system for season ticket holders to ensure fan concerns are addressed within 48 hours, improving Net Promoter Scores.",
+        "Leverage the 'City of Culture' legacy in all external communications to position the club as a central pillar of the city's modern identity."
+      ],
+      "confidence": 0.85,
+      "generated_by": "sonnet",
+      "generated_at": "2026-03-11T10:11:50.216705+00:00"
+    },
+    {
+      "id": "strategic_analysis",
+      "title": "Deep strategic analysis",
+      "content": [
+        "Coventry City FC is currently stabilized under the ownership of Doug King (since 2023), shifting focus toward financial sustainability and infrastructure investment after years of volatility.",
+        "The club plays at the Coventry Building Society Arena, but the separation of stadium ownership (Frasers Group) and club ownership creates unique friction points and opportunities for facility-management or third-party partnership proposals.",
+        "On-pitch performance under Mark Robins has established the club as a competitive Championship side, increasing fan engagement and creating a platform for commercial growth.",
+        "Recent transfer strategy focuses on player trading and development, suggesting openness to performance analysis tools and scouting infrastructure.",
+        "The fanbase remains highly sensitive to ownership and stadium issues; any partnership must demonstrate a commitment to the long-term stability of the club to avoid reputational backlash."
+      ],
+      "metrics": [
+        {
+          "label": "Average Attendance (2023-24)",
+          "value": "~20,000"
+        },
+        {
+          "label": "Stadium Capacity",
+          "value": "32,609"
+        },
+        {
+          "label": "Current League",
+          "value": "Championship (Tier 2)"
+        },
+        {
+          "label": "Ownership Status",
+          "value": "Privately Held (Doug King)"
+        },
+        {
+          "label": "Revenue Estimate (Annual)",
+          "value": "\u00a320m - \u00a325m"
+        }
+      ],
+      "insights": [
+        "The new ownership regime is business-first oriented, prioritizing ROI and operational efficiency over speculative spending, making them receptive to SaaS solutions that reduce overhead or clearly monetize fan data.",
+        "The landlord-tenant dynamic at the Arena limits the club's ability to monetize non-matchday assets directly; sales propositions should account for necessary landlord approvals or focus on digital/remote assets.",
+        "There is a significant gap between current attendance and stadium capacity, representing a specific opportunity for ticketing optimization and fan acquisition technologies."
+      ],
+      "recommendations": [
+        "Tailor the value proposition specifically to Doug King's stated goals of sustainability and Premier League promotion; avoid 'fluff' and present hard ROI data.",
+        "If selling physical infrastructure or stadium tech, engage early with Frasers Group (stadium owners) to ensure technical feasibility, or pivot to club-specific digital solutions to bypass landlord restrictions.",
+        "Leverage the club's recent playoff success and stability to propose long-term partnership packages, positioning your service as a cornerstone of their Premier League readiness strategy.",
+        "Include community integration clauses in proposals to align with the 'Phoenix Club' spirit of the fanbase, ensuring brand safety and enhancing acceptance."
+      ],
+      "confidence": 0.75,
+      "generated_by": "opus",
+      "generated_at": "2026-03-11T10:12:52.606505+00:00"
+    },
+    {
+      "id": "connections",
+      "title": "Network connections analysis",
+      "content": [
+        "Ownership: Otium Entertainment Group (subsidiary of Sisu Capital), led by Joy Seppala since 2007.",
+        "Stadium Operations: Coventry Building Society Arena; freehold owned by the University of Warwick; operated by Frasers Group (Mike Ashley).",
+        "Principal Partner: BoyleSports (Front-of-shirt sponsor).",
+        "Technical Partner: Hummel (Kit manufacturer).",
+        "Community: Sky Blues in the Community (Official charity partner).",
+        "League Affiliation: English Football League (EFL) Championship.",
+        "Local Government: Coventry City Council (Key stakeholder in stadium planning and city regeneration)."
+      ],
+      "metrics": [
+        {
+          "label": "Stadium Capacity",
+          "value": "32,609"
+        },
+        {
+          "label": "Ownership Tenure",
+          "value": "2007\u2013Present"
+        },
+        {
+          "label": "Current League Position Tier",
+          "value": "2nd Tier (Championship)"
+        }
+      ],
+      "insights": [
+        "The club\u2019s network is heavily defined by a complex and often adversarial relationship with the stadium operators and freeholders, creating instability despite on-pitch success.",
+        "The involvement of the University of Warwick as the freeholder represents a shift toward institutional stability, contrasting with the friction caused by Frasers Group's operational control.",
+        "Long-term ownership by Sisu Capital has resulted in a fractured relationship with the local fanbase and council, limiting commercial partnership growth compared to peers."
+      ],
+      "recommendations": [
+        "Prioritize securing a long-term, binding stadium lease agreement to stabilize revenue streams and assure EFL compliance.",
+        "Leverage the University of Warwick connection to build educational and community-focused partnerships that bypass ownership friction.",
+        "Actively repair relationships with Coventry City Council to unlock local government support for infrastructure and event hosting."
+      ],
+      "confidence": 0.85,
+      "generated_by": "opus",
+      "generated_at": "2026-03-11T10:12:58.993200+00:00"
+    }
+  ],
+  "questions": [
+    {
+      "question_id": "q_ai_ai_reasoner_assessment_0_1773224058",
+      "section_id": "ai_reasoner_assessment",
+      "question_type": "TECHNOLOGY",
+      "question_text": "What is the new ownership consortium's specific budget allocation and timeline for developing proprietary AI analytics capabilities versus continuing reliance on third-party platforms like Opta and Wyscout?",
+      "priority": 5,
+      "confidence": 0.0,
+      "status": "PENDING",
+      "search_strategy": {
+        "primary_sources": [
+          "official_site",
+          "case_studies",
+          "job_postings"
+        ],
+        "search_queries": [
+          "\"Coventry City FC\" CRM platform",
+          "(\"Coventry City FC\" OR \"Coventry City FC club\") analytics software",
+          "\"Coventry City FC\" technology stack"
+        ],
+        "hop_types": [
+          "official_site",
+          "job_boards",
+          "case_studies"
+        ]
+      },
+      "answers": [],
+      "evidence_sources": [],
+      "created_at": "2026-03-11T10:14:18.661140+00:00",
+      "answered_at": null
+    },
+    {
+      "question_id": "q_ai_ai_reasoner_assessment_2_1773224058",
+      "section_id": "ai_reasoner_assessment",
+      "question_type": "TECHNOLOGY",
+      "question_text": "Which predictive analytics vendors or machine learning recruitment platforms has Coventry City FC engaged with or piloted since the ownership transition to support their undervalued asset identification strategy?",
+      "priority": 5,
+      "confidence": 0.0,
+      "status": "PENDING",
+      "search_strategy": {
+        "primary_sources": [
+          "official_site",
+          "case_studies",
+          "job_postings"
+        ],
+        "search_queries": [
+          "\"Coventry City FC\" CRM platform",
+          "(\"Coventry City FC\" OR \"Coventry City FC club\") analytics software",
+          "\"Coventry City FC\" technology stack"
+        ],
+        "hop_types": [
+          "official_site",
+          "job_boards",
+          "case_studies"
+        ]
+      },
+      "answers": [],
+      "evidence_sources": [],
+      "created_at": "2026-03-11T10:14:18.661151+00:00",
+      "answered_at": null
+    }
+  ],
+  "generated_at": "2026-03-11T10:07:49.876718+00:00",
+  "total_cost_usd": 0.0,
+  "generation_time_seconds": 439.976356,
+  "cache_status": "FRESH"
+}

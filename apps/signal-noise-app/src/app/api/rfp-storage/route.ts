@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getRFPStorageService } from '@/services/RFPStorageService';
-import { Neo4jService } from '@/lib/neo4j';
 
 interface RFPDetectionRequest {
   rfpData: {
@@ -33,14 +32,9 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
-    // Initialize Neo4j service
-    const neo4j = new Neo4jService();
-    await neo4j.initialize();
+    const rfpStorage = getRFPStorageService();
 
-    // Get RFP storage service
-    const rfpStorage = getRFPStorageService(neo4j);
-
-    // Store RFPs in Neo4j
+    // Store RFPs in the canonical graph-backed store
     const results = await rfpStorage.storeMultipleRFPs(rfpData);
 
     // Generate summary
@@ -74,11 +68,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const action = searchParams.get('action');
 
-    // Initialize Neo4j service
-    const neo4j = new Neo4jService();
-    await neo4j.initialize();
-
-    const rfpStorage = getRFPStorageService(neo4j);
+    const rfpStorage = getRFPStorageService();
 
     switch (action) {
       case 'active':
@@ -152,11 +142,7 @@ export async function PATCH(request: NextRequest) {
       }, { status: 400 });
     }
 
-    // Initialize Neo4j service
-    const neo4j = new Neo4jService();
-    await neo4j.initialize();
-
-    const rfpStorage = getRFPStorageService(neo4j);
+    const rfpStorage = getRFPStorageService();
 
     const success = await rfpStorage.updateRFPStatus(rfpId, status, notes);
 

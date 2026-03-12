@@ -6,12 +6,10 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { buildGraphEntityLookupFilter, resolveGraphId } from '@/lib/graph-id';
+import { getSupabaseAdmin } from '@/lib/supabase-client';
 
-// Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabase = getSupabaseAdmin();
 
 /**
  * GET /api/dossier?entity_id={id}&force={true|false}
@@ -171,11 +169,12 @@ async function generateDossier(
     // Step 1: Get entity info from Supabase cached_entities
     const { data: entity } = await supabase
       .from('cached_entities')
-      .select('properties')
-      .eq('neo4j_id', entityId)
+      .select('id, graph_id, neo4j_id, properties')
+      .or(buildGraphEntityLookupFilter(entityId))
       .maybeSingle();
 
     // Extract entity name from properties
+    const canonicalEntityId = resolveGraphId(entity) || entityId;
     let entityName = entityId.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     let entityType = 'CLUB';
 
@@ -184,7 +183,7 @@ async function generateDossier(
       entityType = entity.properties.type || entityType;
     }
 
-    console.log(`📊 Calling backend for dossier: ${entityName} (${entityId})`);
+    console.log(`📊 Calling backend for dossier: ${entityName} (${canonicalEntityId})`);
 
     // Step 2: Call Python backend service
     const backendUrl = process.env.FASTAPI_URL || 'http://localhost:8000';
@@ -192,7 +191,7 @@ async function generateDossier(
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        entity_id: entityId,
+        entity_id: canonicalEntityId,
         entity_name: entityName,
         entity_type: entityType,
         priority_score: 70, // STANDARD tier (includes outreach_strategy)

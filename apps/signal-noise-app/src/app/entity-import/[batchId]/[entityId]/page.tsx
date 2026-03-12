@@ -74,14 +74,22 @@ export default async function EntityImportRunDetailPage(
   const runMetadata = typeof run.metadata === 'object' && run.metadata !== null
     ? (run.metadata as Record<string, unknown>)
     : {}
+  const phaseDetailsByPhase = typeof runMetadata.phase_details_by_phase === 'object' && runMetadata.phase_details_by_phase !== null
+    ? (runMetadata.phase_details_by_phase as Record<string, unknown>)
+    : null
   const livePhaseDetails = typeof runMetadata.phase_details === 'object' && runMetadata.phase_details !== null
     ? (runMetadata.phase_details as Record<string, unknown>)
     : null
-  const phase0Substeps = typeof livePhaseDetails?.phase0_substeps === 'object' && livePhaseDetails.phase0_substeps !== null
-    ? (livePhaseDetails.phase0_substeps as Record<string, unknown>)
+  const dossierLiveDetails = typeof phaseDetailsByPhase?.dossier_generation === 'object' && phaseDetailsByPhase?.dossier_generation !== null
+    ? (phaseDetailsByPhase.dossier_generation as Record<string, unknown>)
     : null
-  const inferenceRuntime = typeof livePhaseDetails?.inference_runtime === 'object' && livePhaseDetails.inference_runtime !== null
-    ? (livePhaseDetails.inference_runtime as Record<string, unknown>)
+  const phase0Substeps = typeof (livePhaseDetails?.phase0_substeps ?? dossierLiveDetails?.phase0_substeps) === 'object'
+    && (livePhaseDetails?.phase0_substeps ?? dossierLiveDetails?.phase0_substeps) !== null
+    ? ((livePhaseDetails?.phase0_substeps ?? dossierLiveDetails?.phase0_substeps) as Record<string, unknown>)
+    : null
+  const inferenceRuntime = typeof (livePhaseDetails?.inference_runtime ?? dossierLiveDetails?.inference_runtime) === 'object'
+    && (livePhaseDetails?.inference_runtime ?? dossierLiveDetails?.inference_runtime) !== null
+    ? ((livePhaseDetails?.inference_runtime ?? dossierLiveDetails?.inference_runtime) as Record<string, unknown>)
     : null
 
   const hopTimings = Array.isArray(performanceSummary?.hop_timings)
@@ -173,7 +181,7 @@ export default async function EntityImportRunDetailPage(
           {phase0Substeps ? (
             <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Phase 0 substeps</p>
-              <p className="mt-1">current: {String(livePhaseDetails?.current_substep ?? 'n/a')}</p>
+              <p className="mt-1">current: {String(livePhaseDetails?.current_substep ?? dossierLiveDetails?.current_substep ?? 'n/a')}</p>
               <ul className="mt-2 space-y-1">
                 {Object.entries(phase0Substeps).map(([step, value]) => {
                   const detail = typeof value === 'object' && value !== null ? (value as Record<string, unknown>) : null

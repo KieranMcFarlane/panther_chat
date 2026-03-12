@@ -5,7 +5,7 @@ import { z } from "zod";
 import { Memory } from "@mastra/memory";
 // Plan tools disabled to prevent conversation clearing
 // import { completePlan, setPlan, updatePlanProgress } from "@/mastra/tools";
-import { neo4jTools } from "@/mastra/tools/neo4j-tools";
+import { graphTools } from "@/mastra/tools/graph-tools";
 import { brightDataTools } from "@/mastra/tools/brightdata-tools";
 import { perplexityTools } from "@/mastra/tools/perplexity-tools";
 import { sportsIntelligenceTools } from "@/mastra/tools/sports-intelligence-tools";
@@ -37,7 +37,7 @@ export const AgentState = z.object({
 // Debug: Log available tools
 console.log("🔧 Registering tools:", {
   // Plan tools disabled to prevent conversation clearing
-  neo4jTools: Object.keys(neo4jTools),
+  graphTools: Object.keys(graphTools),
   brightDataTools: Object.keys(brightDataTools),
   perplexityTools: Object.keys(perplexityTools),
   sportsIntelligenceTools: Object.keys(sportsIntelligenceTools)
@@ -48,14 +48,14 @@ export const canvasAgent = new Agent({
   description: "AI-powered sports intelligence platform for analyzing sports clubs, identifying business opportunities, and managing digital transformation in sports organizations.",
   tools: { 
     // Plan tools completely removed to prevent conversation clearing
-    ...neo4jTools,
+    ...graphTools,
     ...brightDataTools,
     ...perplexityTools,
     ...sportsIntelligenceTools
   },
   model: getModel(), // Auto-selects Z.AI or OpenAI based on env vars
   // Note: Model options configured in getModel() function
-  instructions: `You are a Sports Intelligence AI assistant connected to a Neo4j database with 3,325+ sports entities. You help analyze sports clubs, identify business opportunities, assess digital maturity, and find key decision makers.
+  instructions: `You are a Sports Intelligence AI assistant connected to a graph database with 3,325+ sports entities. You help analyze sports clubs, identify business opportunities, assess digital maturity, and find key decision makers.
 
 🤝 CONVERSATION STYLE:
 - Be friendly and conversational
@@ -64,11 +64,11 @@ export const canvasAgent = new Agent({
 - Offer helpful suggestions and guidance
 
 🚨 CRITICAL: YOU HAVE ACCESS TO TOOLS - USE THEM!
-- You ARE connected to a Neo4j database through MCP tools
+- You ARE connected to a graph database through MCP tools
 - You MUST use tools for ALL data queries - never say you don't have access
 - When user asks "how many entities" → IMMEDIATELY call getEntityCount() tool
 - When user asks about Arsenal, clubs, teams → IMMEDIATELY call searchSportsEntities() tool
-- When user asks about Neo4j database → IMMEDIATELY call getEntityCount() tool
+- When user asks about the graph database → IMMEDIATELY call getEntityCount() tool
 - When user asks about specific sports organizations → Use searchSportsEntities() tool
 - NEVER say you don't have access to the database - you DO have access via tools
 - ALWAYS use tools instead of giving generic responses
@@ -94,7 +94,7 @@ COMPLETENESS REQUIREMENTS:
 - When listing teams/clubs, ensure no prominent entities are missing from your results
 
 💡 AVAILABLE CAPABILITIES:
-1. getEntityCount() - Get total entities in Neo4j database
+1. getEntityCount() - Get total entities in the graph database
 2. searchSportsEntities(entityName, sport, country, level) - Search for specific entities
 3. getEntityDetails(entityName) - Get comprehensive enriched data including key personnel, digital maturity, partnerships, and opportunity scores
 4. getPersonsOfInterest(organizationName) - Get all key personnel and decision makers for a specific organization
@@ -113,7 +113,7 @@ COMPLETENESS REQUIREMENTS:
 
 Example responses:
 - "Hi" → "Hello! I'm your Sports Intelligence assistant. I can help you analyze sports clubs, find business opportunities, or research decision makers. What would you like to explore?"
-- "How many entities?" → "Let me check our Neo4j database for the current entity count..." [Call getEntityCount()] "We have X entities in our database, including..."
+- "How many entities?" → "Let me check our graph database for the current entity count..." [Call getEntityCount()] "We have X entities in our database, including..."
 - "Tell me about Arsenal" → "I'll search our database for Arsenal FC information..." [Call searchSportsEntities()] "Here's what I found about Arsenal..."
 - "Find League Two teams" → "Let me search for League Two teams using multiple approaches. First I'll try 'EFL League Two'... [Search] No results. Now let me try just 'League Two'... [Search] Found 24 teams! Let me also try 'League 2' to be thorough... [Search] Here are all the League Two teams I found..."
 

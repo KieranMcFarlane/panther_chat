@@ -1,0 +1,607 @@
+{
+  "timestamp": "2026-02-21T23:19:30.371563+00:00",
+  "variance_metrics": {
+    "activity_variance": 0.277,
+    "maturity_variance": 0.313,
+    "total_clubs": 4,
+    "total_signals": 44,
+    "total_categories": 16
+  },
+  "clubs": {
+    "arsenal-fc": {
+      "entity_id": "arsenal-fc",
+      "entity_name": "Arsenal FC",
+      "total_signals": 11,
+      "capability_count": 3,
+      "procurement_indicator_count": 8,
+      "validated_rfp_count": 0,
+      "classified_signals": {
+        "CAPABILITY": [
+          {
+            "title": "Mic Conetta - Head of CRM @ Arsenal Football Club",
+            "url": "https://www.crunchbase.com/person/mic-conetta",
+            "decision": "WEAK_ACCEPT",
+            "confidence": 0.558,
+            "class": "CAPABILITY",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2026-01-31 23:16:34.659037+00:00",
+            "first_seen": "2026-01-31 23:16:34.659037+00:00"
+          },
+          {
+            "title": "Christopher Palmer - Head of Digital & CRM | Global D2C ...",
+            "url": "https://uk.linkedin.com/in/christopherantonpalmer",
+            "decision": "WEAK_ACCEPT",
+            "confidence": 0.651,
+            "class": "CAPABILITY",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2025-12-02 23:16:34.659148+00:00",
+            "first_seen": "2025-12-02 23:16:34.659148+00:00"
+          },
+          {
+            "title": "Notes from the Future of Customer Engagement Client ...",
+            "url": "https://dma.org.uk/article/notes-from-the-future-of-customer-engagement-client-roundtable-2019",
+            "decision": "WEAK_ACCEPT",
+            "confidence": 0.62,
+            "class": "CAPABILITY",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2026-01-21 23:16:34.659159+00:00",
+            "first_seen": "2026-01-21 23:16:34.659159+00:00"
+          }
+        ],
+        "PROCUREMENT_INDICATOR": [
+          {
+            "title": "Best CRM System For Small Business in UK \u2013 CRM Online",
+            "url": "https://crm53.wordpress.com/2024/09/21/best-crm-system-for-small-business-in-uk-crm-online-3/",
+            "decision": "ACCEPT",
+            "confidence": 0.559,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2025-12-05 23:16:37.019330+00:00",
+            "first_seen": "2025-12-05 23:16:37.019330+00:00"
+          },
+          {
+            "title": "Sales Pipeline Management",
+            "url": "https://www.salesforce.com/eu/blog/mastering-sales-pipeline-management-with-salesforce-sales-cloud-how-to-boost-efficiency-and-drive-revenue/",
+            "decision": "ACCEPT",
+            "confidence": 0.697,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2025-12-16 23:16:37.019400+00:00",
+            "first_seen": "2025-12-16 23:16:37.019400+00:00"
+          },
+          {
+            "title": "Best Sales CRM for Small Business: A Comprehensive Guide",
+            "url": "https://vocal.media/education/best-sales-crm-for-small-business-a-comprehensive-guide",
+            "decision": "ACCEPT",
+            "confidence": 0.62,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2025-12-12 23:16:37.019434+00:00",
+            "first_seen": "2025-12-12 23:16:37.019434+00:00"
+          },
+          {
+            "title": "Arsenal and NTT DATA announce official partnership",
+            "url": "https://www.arsenal.com/news/arsenal-and-ntt-data-announce-official-partnership",
+            "decision": "ACCEPT",
+            "confidence": 0.61,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "ANALYTICS_PLATFORM",
+            "collected_at": "2026-01-22 23:16:39.338853+00:00",
+            "first_seen": "2026-01-22 23:16:39.338853+00:00"
+          },
+          {
+            "title": "StreamElements and Arsenal.gg report shows more growth for ...",
+            "url": "https://dotesports.com/streaming/news/streamelements-and-arsenal-gg-report-shows-more-growth-for-streaming-in-april",
+            "decision": "ACCEPT",
+            "confidence": 0.592,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "ANALYTICS_PLATFORM",
+            "collected_at": "2025-11-23 23:16:55.170349+00:00",
+            "first_seen": "2025-11-23 23:16:55.170349+00:00"
+          },
+          {
+            "title": "Error messages buying tickets on the Online Box Office",
+            "url": "https://help.arsenal.com/support/solutions/articles/101000466576-error-messages-buying-tickets-on-the-online-box-office",
+            "decision": "ACCEPT",
+            "confidence": 0.697,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "TICKETING_SYSTEM",
+            "collected_at": "2026-01-08 23:16:57.586463+00:00",
+            "first_seen": "2026-01-08 23:16:57.586463+00:00"
+          },
+          {
+            "title": "Digital Ticketing - FAQs - Arsenal.com",
+            "url": "https://www.arsenal.com/digitalticketingfaqs#:~:text=Your%20digital%20pass%20is%20an,turnstile%20to%20enter%20Emirates%20Stadium.",
+            "decision": "ACCEPT",
+            "confidence": 0.618,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "TICKETING_SYSTEM",
+            "collected_at": "2025-11-25 23:17:04.078314+00:00",
+            "first_seen": "2025-11-25 23:17:04.078314+00:00"
+          },
+          {
+            "title": "Arsenal and NTT DATA announce official partnership",
+            "url": "https://www.arsenal.com/news/arsenal-and-ntt-data-announce-official-partnership",
+            "decision": "ACCEPT",
+            "confidence": 0.639,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "DIGITAL_TRANSFORMATION",
+            "collected_at": "2026-01-26 23:17:10.112935+00:00",
+            "first_seen": "2026-01-26 23:17:10.112935+00:00"
+          }
+        ],
+        "VALIDATED_RFP": []
+      },
+      "hypothesis_states": {
+        "CRM_UPGRADE": {
+          "maturity_score": 0.225,
+          "activity_score": 0.101,
+          "state": "MONITOR"
+        },
+        "DIGITAL_TRANSFORMATION": {
+          "maturity_score": 0.0,
+          "activity_score": 0.085,
+          "state": "MONITOR"
+        },
+        "TICKETING_SYSTEM": {
+          "maturity_score": 0.0,
+          "activity_score": 0.085,
+          "state": "MONITOR"
+        },
+        "ANALYTICS_PLATFORM": {
+          "maturity_score": 0.0,
+          "activity_score": 0.1,
+          "state": "MONITOR"
+        }
+      }
+    },
+    "chelsea-fc": {
+      "entity_id": "chelsea-fc",
+      "entity_name": "Chelsea FC",
+      "total_signals": 11,
+      "capability_count": 3,
+      "procurement_indicator_count": 8,
+      "validated_rfp_count": 0,
+      "classified_signals": {
+        "CAPABILITY": [
+          {
+            "title": "Ian Turner - IT Strategy and Implementation Manager at ...",
+            "url": "https://uk.linkedin.com/in/turnerim",
+            "decision": "WEAK_ACCEPT",
+            "confidence": 0.671,
+            "class": "CAPABILITY",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2025-11-30 23:17:14.177070+00:00",
+            "first_seen": "2025-11-30 23:17:14.177070+00:00"
+          },
+          {
+            "title": "Jerry Newman - Building and scaling monetisable media, ...",
+            "url": "https://fr.linkedin.com/in/jerrynewman81",
+            "decision": "WEAK_ACCEPT",
+            "confidence": 0.556,
+            "class": "CAPABILITY",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2026-02-08 23:17:14.177135+00:00",
+            "first_seen": "2026-02-08 23:17:14.177135+00:00"
+          },
+          {
+            "title": "Chelsea Football Club \u2013 www.karlhudsonsport.us",
+            "url": "http://www.karlhudsonsport.us/portfolio/chelsea-football-club/",
+            "decision": "WEAK_ACCEPT",
+            "confidence": 0.656,
+            "class": "CAPABILITY",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2026-02-15 23:17:14.177153+00:00",
+            "first_seen": "2026-02-15 23:17:14.177153+00:00"
+          }
+        ],
+        "PROCUREMENT_INDICATOR": [
+          {
+            "title": "Chelsea Hughes - Operations Leader | Salesforce & CRM ...",
+            "url": "https://www.linkedin.com/in/chelsea-hughes-b26a7b42",
+            "decision": "ACCEPT",
+            "confidence": 0.608,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2026-02-10 23:17:27.034541+00:00",
+            "first_seen": "2026-02-10 23:17:27.034541+00:00"
+          },
+          {
+            "title": "CRM Automation Services in Kensington And Chelsea, England ...",
+            "url": "https://www.goddigitalmarketing.com/uk/england/greater-london/kensington-and-chelsea/crm-automation/",
+            "decision": "ACCEPT",
+            "confidence": 0.607,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2026-01-20 23:17:27.034710+00:00",
+            "first_seen": "2026-01-20 23:17:27.034710+00:00"
+          },
+          {
+            "title": "The Future of Sports Marketing: CRM Tools Every Club ...",
+            "url": "https://www.wedocrm.co/blog/the-future-of-sports-marketing-crm/",
+            "decision": "ACCEPT",
+            "confidence": 0.686,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2026-02-17 23:17:27.034729+00:00",
+            "first_seen": "2026-02-17 23:17:27.034729+00:00"
+          },
+          {
+            "title": "Chelsea selects world-class technology partner FPT to ...",
+            "url": "https://www.chelseafc.com/en/news/article/chelsea-selects-world-class-technology-partner-fpt",
+            "decision": "ACCEPT",
+            "confidence": 0.667,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "ANALYTICS_PLATFORM",
+            "collected_at": "2026-01-04 23:17:32.790975+00:00",
+            "first_seen": "2026-01-04 23:17:32.790975+00:00"
+          },
+          {
+            "title": "Chelsea welcomes long-term partnership with FICO to ...",
+            "url": "https://www.chelseafc.com/en/news/article/chelsea-welcomes-long-term-partnership-with-fico-to-champion-financial",
+            "decision": "ACCEPT",
+            "confidence": 0.559,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "ANALYTICS_PLATFORM",
+            "collected_at": "2026-01-30 23:17:35.381923+00:00",
+            "first_seen": "2026-01-30 23:17:35.381923+00:00"
+          },
+          {
+            "title": "Club Chelsea Ticketing System | Official Site",
+            "url": "https://www.chelseafc.com/en/club-chelsea-ticketing-system",
+            "decision": "ACCEPT",
+            "confidence": 0.641,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "TICKETING_SYSTEM",
+            "collected_at": "2025-11-28 23:17:38.010340+00:00",
+            "first_seen": "2025-11-28 23:17:38.010340+00:00"
+          },
+          {
+            "title": "Digital tickets now available on the Chelsea Official App",
+            "url": "https://www.chelseafc.com/en/news/article/digital-tickets-now-available-on-the-chelsea-official-app",
+            "decision": "ACCEPT",
+            "confidence": 0.641,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "TICKETING_SYSTEM",
+            "collected_at": "2026-01-05 23:17:47.673532+00:00",
+            "first_seen": "2026-01-05 23:17:47.673532+00:00"
+          },
+          {
+            "title": "BREAKING! Chelsea have announced a multi-year global ...",
+            "url": "https://www.facebook.com/justchelseafc/posts/breaking-chelsea-have-announced-a-multi-year-global-partnership-with-ifs-the-wor/1355963319879310/#:~:text=%F0%9F%92%99%F0%9F%87%BB%F0%9F%87%B3%20Chelsea%20Football,for%20the%202025%2F26%20campaign.",
+            "decision": "ACCEPT",
+            "confidence": 0.648,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "DIGITAL_TRANSFORMATION",
+            "collected_at": "2026-02-08 23:17:51.041665+00:00",
+            "first_seen": "2026-02-08 23:17:51.041665+00:00"
+          }
+        ],
+        "VALIDATED_RFP": []
+      },
+      "hypothesis_states": {
+        "CRM_UPGRADE": {
+          "maturity_score": 0.221,
+          "activity_score": 0.321,
+          "state": "MONITOR"
+        },
+        "DIGITAL_TRANSFORMATION": {
+          "maturity_score": 0.0,
+          "activity_score": 0.11,
+          "state": "MONITOR"
+        },
+        "TICKETING_SYSTEM": {
+          "maturity_score": 0.0,
+          "activity_score": 0.082,
+          "state": "MONITOR"
+        },
+        "ANALYTICS_PLATFORM": {
+          "maturity_score": 0.0,
+          "activity_score": 0.144,
+          "state": "MONITOR"
+        }
+      }
+    },
+    "liverpool-fc": {
+      "entity_id": "liverpool-fc",
+      "entity_name": "Liverpool FC",
+      "total_signals": 11,
+      "capability_count": 3,
+      "procurement_indicator_count": 8,
+      "validated_rfp_count": 0,
+      "classified_signals": {
+        "CAPABILITY": [
+          {
+            "title": "Helen Bennett - Liverpool Football Club",
+            "url": "https://uk.linkedin.com/in/helen-bennett-4a652224",
+            "decision": "WEAK_ACCEPT",
+            "confidence": 0.659,
+            "class": "CAPABILITY",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2026-02-13 23:18:02.319345+00:00",
+            "first_seen": "2026-02-13 23:18:02.319345+00:00"
+          },
+          {
+            "title": "Jamie Allen - Head of Marketing & Communications at LFC ...",
+            "url": "https://uk.linkedin.com/in/jamie-allen",
+            "decision": "WEAK_ACCEPT",
+            "confidence": 0.616,
+            "class": "CAPABILITY",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2026-01-13 23:18:02.320040+00:00",
+            "first_seen": "2026-01-13 23:18:02.320040+00:00"
+          },
+          {
+            "title": "Head of CRM Job Vacancies Liverpool",
+            "url": "https://www.totaljobs.com/jobs/head-of-crm/in-liverpool",
+            "decision": "WEAK_ACCEPT",
+            "confidence": 0.611,
+            "class": "CAPABILITY",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2026-02-08 23:18:02.320059+00:00",
+            "first_seen": "2026-02-08 23:18:02.320059+00:00"
+          }
+        ],
+        "PROCUREMENT_INDICATOR": [
+          {
+            "title": "Salesforce Setup in Liverpool & CRM Implementation - M4B",
+            "url": "https://m4b.co.uk/what-we-do/crm-salesforce/salesforce-crm-setup-in-liverpool/",
+            "decision": "ACCEPT",
+            "confidence": 0.64,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2025-12-18 23:18:05.075842+00:00",
+            "first_seen": "2025-12-18 23:18:05.075842+00:00"
+          },
+          {
+            "title": "Top CRM Consultants in Liverpool - Feb 2026 Rankings",
+            "url": "https://clutch.co/it-services/crm/uk/england/liverpool?page=1",
+            "decision": "ACCEPT",
+            "confidence": 0.691,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2026-01-20 23:18:05.076023+00:00",
+            "first_seen": "2026-01-20 23:18:05.076023+00:00"
+          },
+          {
+            "title": "Bespoke CRM and ERP Systems | Liverpool UK",
+            "url": "https://starlinkglobal.co.uk/bespoke-crm-erp-systems",
+            "decision": "ACCEPT",
+            "confidence": 0.558,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2026-02-10 23:18:05.076047+00:00",
+            "first_seen": "2026-02-10 23:18:05.076047+00:00"
+          },
+          {
+            "title": "SAS Becomes Liverpool FC's Official AI Partner",
+            "url": "https://technologymagazine.com/news/sas-becomes-liverpool-fcs-official-ai-partner",
+            "decision": "ACCEPT",
+            "confidence": 0.653,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "ANALYTICS_PLATFORM",
+            "collected_at": "2025-12-28 23:18:09.778783+00:00",
+            "first_seen": "2025-12-28 23:18:09.778783+00:00"
+          },
+          {
+            "title": "Liverpool FC welcomes SAS as global partner",
+            "url": "https://www.liverpoolfc.com/news/liverpool-fc-welcomes-sas-global-partner",
+            "decision": "ACCEPT",
+            "confidence": 0.628,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "ANALYTICS_PLATFORM",
+            "collected_at": "2025-12-27 23:18:14.700177+00:00",
+            "first_seen": "2025-12-27 23:18:14.700177+00:00"
+          },
+          {
+            "title": "Liverpool FC ticket changes for 2025/26 - club announce ...",
+            "url": "https://www.thisisanfield.com/2025/06/liverpool-fc-ticket-changes-for-2025-26-club-announce-important-update/",
+            "decision": "ACCEPT",
+            "confidence": 0.555,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "TICKETING_SYSTEM",
+            "collected_at": "2025-12-14 23:18:18.176559+00:00",
+            "first_seen": "2025-12-14 23:18:18.176559+00:00"
+          },
+          {
+            "title": "NFC Guide",
+            "url": "https://www.liverpoolfc.com/nfc-guide",
+            "decision": "ACCEPT",
+            "confidence": 0.603,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "TICKETING_SYSTEM",
+            "collected_at": "2026-02-09 23:18:31.655170+00:00",
+            "first_seen": "2026-02-09 23:18:31.655170+00:00"
+          },
+          {
+            "title": "Strategic Partnership with Liverpool Football Club",
+            "url": "https://www.orioninc.com/strategic-partnership-with-liverpool-football-club/",
+            "decision": "ACCEPT",
+            "confidence": 0.596,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "DIGITAL_TRANSFORMATION",
+            "collected_at": "2026-01-12 23:18:35.480523+00:00",
+            "first_seen": "2026-01-12 23:18:35.480523+00:00"
+          }
+        ],
+        "VALIDATED_RFP": []
+      },
+      "hypothesis_states": {
+        "CRM_UPGRADE": {
+          "maturity_score": 0.313,
+          "activity_score": 0.226,
+          "state": "MONITOR"
+        },
+        "DIGITAL_TRANSFORMATION": {
+          "maturity_score": 0.0,
+          "activity_score": 0.063,
+          "state": "MONITOR"
+        },
+        "TICKETING_SYSTEM": {
+          "maturity_score": 0.0,
+          "activity_score": 0.145,
+          "state": "MONITOR"
+        },
+        "ANALYTICS_PLATFORM": {
+          "maturity_score": 0.0,
+          "activity_score": 0.094,
+          "state": "MONITOR"
+        }
+      }
+    },
+    "manchester-city-fc": {
+      "entity_id": "manchester-city-fc",
+      "entity_name": "Manchester City FC",
+      "total_signals": 11,
+      "capability_count": 3,
+      "procurement_indicator_count": 8,
+      "validated_rfp_count": 0,
+      "classified_signals": {
+        "CAPABILITY": [
+          {
+            "title": "Matthew Watts - Head of CRM & Consumer Lifecycle ...",
+            "url": "https://uk.linkedin.com/in/matthew-watts-8909433a",
+            "decision": "WEAK_ACCEPT",
+            "confidence": 0.546,
+            "class": "CAPABILITY",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2026-01-12 23:18:38.657945+00:00",
+            "first_seen": "2026-01-12 23:18:38.657945+00:00"
+          },
+          {
+            "title": "Marketing Manager",
+            "url": "https://pt.mancity.com/-/media/vacancies/2019/october/marketing-manager-jd.ashx?la=pt-pt",
+            "decision": "WEAK_ACCEPT",
+            "confidence": 0.615,
+            "class": "CAPABILITY",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2025-12-03 23:18:38.659027+00:00",
+            "first_seen": "2025-12-03 23:18:38.659027+00:00"
+          },
+          {
+            "title": "Ankur Chuni - CRM Campaign Lead",
+            "url": "https://uk.linkedin.com/in/ankur-chuni-66731255",
+            "decision": "WEAK_ACCEPT",
+            "confidence": 0.578,
+            "class": "CAPABILITY",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2025-12-05 23:18:38.659118+00:00",
+            "first_seen": "2025-12-05 23:18:38.659118+00:00"
+          }
+        ],
+        "PROCUREMENT_INDICATOR": [
+          {
+            "title": "Customer Relationship Management (CRM) System, ...",
+            "url": "https://www.manchester.gov.uk/egov_downloads/9.0_CC_and_CRM_Scrutiny_090521_v0.5.pdf",
+            "decision": "ACCEPT",
+            "confidence": 0.565,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2025-12-06 23:18:44.999528+00:00",
+            "first_seen": "2025-12-06 23:18:44.999528+00:00"
+          },
+          {
+            "title": "The Ultimate Guide to Using a CRM System: Man City vs ...",
+            "url": "https://blog.multiable.com/2024/09/30/the-ultimate-guide-to-using-a-crm-system-man-city-vs-watford-clashes-and-beyond",
+            "decision": "ACCEPT",
+            "confidence": 0.657,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2025-12-07 23:18:44.999568+00:00",
+            "first_seen": "2025-12-07 23:18:44.999568+00:00"
+          },
+          {
+            "title": "Manchester City Council Report for Information Report to",
+            "url": "https://democracy.manchester.gov.uk/documents/s43564/Item%20for%20Information%20RBDxP%20Progress%20Update.pdf",
+            "decision": "ACCEPT",
+            "confidence": 0.583,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "CRM_UPGRADE",
+            "collected_at": "2025-12-01 23:18:44.999574+00:00",
+            "first_seen": "2025-12-01 23:18:44.999574+00:00"
+          },
+          {
+            "title": "SAP data analytics helps measure how football is changing ...",
+            "url": "https://www.mancity.com/citytv/mens/sap-cityzens-giving-data-analytics-63756834",
+            "decision": "ACCEPT",
+            "confidence": 0.552,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "ANALYTICS_PLATFORM",
+            "collected_at": "2025-12-20 23:18:49.723841+00:00",
+            "first_seen": "2025-12-20 23:18:49.723841+00:00"
+          },
+          {
+            "title": "Man City Analytics",
+            "url": "https://lt.linkedin.com/company/man-city-analytics",
+            "decision": "ACCEPT",
+            "confidence": 0.664,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "ANALYTICS_PLATFORM",
+            "collected_at": "2025-12-05 23:18:55.130272+00:00",
+            "first_seen": "2025-12-05 23:18:55.130272+00:00"
+          },
+          {
+            "title": "City Matters: Ticketing Points Issue : r/MCFC",
+            "url": "https://www.reddit.com/r/MCFC/comments/tol3xv/city_matters_ticketing_points_issue/",
+            "decision": "ACCEPT",
+            "confidence": 0.555,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "TICKETING_SYSTEM",
+            "collected_at": "2026-01-28 23:19:20.117616+00:00",
+            "first_seen": "2026-01-28 23:19:20.117616+00:00"
+          },
+          {
+            "title": "What are NFC mobile tickets? | Man City Help Centre",
+            "url": "https://www.mancity.com/help/article/what-are-nfc-mobile-tickets-44967747281684#:~:text=All%20tickets%20at%20the%20Etihad,(Near%20Field%20Communication)%20technology.",
+            "decision": "ACCEPT",
+            "confidence": 0.687,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "TICKETING_SYSTEM",
+            "collected_at": "2025-12-20 23:19:23.476238+00:00",
+            "first_seen": "2025-12-20 23:19:23.476238+00:00"
+          },
+          {
+            "title": "Manchester City announce global partnership with Publicis ...",
+            "url": "https://www.mancity.com/news/club/man-city-publicis-sapient-partnership-announcement-63875679",
+            "decision": "ACCEPT",
+            "confidence": 0.564,
+            "class": "PROCUREMENT_INDICATOR",
+            "category": "DIGITAL_TRANSFORMATION",
+            "collected_at": "2025-12-26 23:19:28.871723+00:00",
+            "first_seen": "2025-12-26 23:19:28.871723+00:00"
+          }
+        ],
+        "VALIDATED_RFP": []
+      },
+      "hypothesis_states": {
+        "CRM_UPGRADE": {
+          "maturity_score": 0.154,
+          "activity_score": 0.088,
+          "state": "MONITOR"
+        },
+        "DIGITAL_TRANSFORMATION": {
+          "maturity_score": 0.0,
+          "activity_score": 0.044,
+          "state": "MONITOR"
+        },
+        "TICKETING_SYSTEM": {
+          "maturity_score": 0.0,
+          "activity_score": 0.126,
+          "state": "MONITOR"
+        },
+        "ANALYTICS_PLATFORM": {
+          "maturity_score": 0.0,
+          "activity_score": 0.069,
+          "state": "MONITOR"
+        }
+      }
+    }
+  },
+  "summary": {
+    "activity_variance": 0.277,
+    "maturity_variance": 0.313,
+    "total_clubs": 4,
+    "total_signals": 44,
+    "total_categories": 16
+  }
+}

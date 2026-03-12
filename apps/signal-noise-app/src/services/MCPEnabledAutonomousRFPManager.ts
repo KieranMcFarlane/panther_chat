@@ -1,11 +1,14 @@
 /**
  * MCP-Enabled Autonomous 24/7 RFP Analysis Manager
- * Uses direct MCP tools for Neo4j, Perplexity, and BrightData integration
+ * Uses direct MCP tools for FalkorDB/Supabase graph access, Perplexity, and BrightData integration
  */
 
 import { liveLogService } from './LiveLogService';
 import { notificationService } from './NotificationService';
 import { ConnectionIntelligenceAgent } from './ConnectionIntelligenceAgent';
+import { supabase } from '@/lib/supabase-client';
+import { falkorGraphClient, escapeCypherString } from '@/lib/falkordb';
+import { buildGraphEntityLookupFilter, buildLegacyRelationshipGraphFilter, resolveGraphId, withRelationshipGraphIds } from '@/lib/graph-id';
 import fs from 'fs/promises';
 import path from 'path';
 import cron from 'node-cron';
@@ -52,7 +55,7 @@ export class MCPEnabledAutonomousRFPManager {
     averageProcessingTime: 0,
     systemUptime: 0,
     entitiesProcessed: 0,
-    neo4jRelationshipsCreated: 0,
+    graphRelationshipsCreated: 0,
     mcpToolExecutions: 0,
     connectionAnalysesTriggered: 0,
     connectionBoostsProvided: 0
@@ -68,13 +71,13 @@ export class MCPEnabledAutonomousRFPManager {
    * Initialize MCP servers for direct tool access
    */
   private initializeMCPServers(): void {
-    // Initialize Neo4j MCP server
-    this.mcpServers.set('neo4j-mcp', {
-      name: 'Neo4j MCP Server',
+    // Initialize graph MCP server
+    this.mcpServers.set('graph-mcp', {
+      name: 'FalkorDB/Supabase Graph MCP Server',
       tools: {
-        'neo4j_query': {
-          name: 'neo4j_query',
-          execute: async (params) => this.executeNeo4jQuery(params)
+        'graph_query': {
+          name: 'graph_query',
+          execute: async (params) => this.executeGraphQuery(params)
         },
         'search_entities': {
           name: 'search_entities',
@@ -134,12 +137,12 @@ export class MCPEnabledAutonomousRFPManager {
       'Manchester United', 'Real Madrid', 'Barcelona', 'Bayern Munich'
     ];
 
-    // Standard entities (expand based on your Neo4j database)
+    // Standard entities (expand based on your graph-backed entity cache)
     const standardEntities = [
       'Boston Athletic Association', 'Athletics Canada', 'Cricket West Indies',
       'American Cricket Enterprises', 'UCI', 'World Rowing Federation',
       'International Ski Federation', 'Cricket Australia'
-      // More entities will be loaded from Neo4j
+      // More entities will be loaded from Supabase
     ];
 
     return {
@@ -172,7 +175,7 @@ export class MCPEnabledAutonomousRFPManager {
     await liveLogService.info('🚀 Starting MCP-enabled autonomous RFP monitoring', {
       category: 'system',
       source: 'MCPEnabledAutonomousRFPManager',
-      message: 'MCP-enabled autonomous RFP monitoring started with Neo4j, BrightData, and Perplexity tools',
+      message: 'MCP-enabled autonomous RFP monitoring started with graph, BrightData, and Perplexity tools',
       data: {
         mcpServers: Array.from(this.mcpServers.keys()),
         priorityEntities: this.config.priorityEntities.length,
@@ -214,7 +217,7 @@ export class MCPEnabledAutonomousRFPManager {
         mcpServers: Array.from(this.mcpServers.keys()),
         priority_entities: this.config.priorityEntities.length,
         monitoring_frequency: 'Priority: 4 hours, Standard: Daily',
-        mcp_tools: 'Neo4j, BrightData, Perplexity'
+        mcp_tools: 'Graph, BrightData, Perplexity'
       },
       actions: [
         {
@@ -249,24 +252,24 @@ export class MCPEnabledAutonomousRFPManager {
     });
 
     try {
-      // Use Neo4j MCP to load priority entities from database
-      const neo4jTool = this.mcpServers.get('neo4j-mcp')?.tools['search_entities'];
-      if (neo4jTool) {
-        const priorityEntitiesData = await neo4jTool.execute({
+      // Use graph MCP to load priority entities from database
+      const graphTool = this.mcpServers.get('graph-mcp')?.tools['search_entities'];
+      if (graphTool) {
+        const priorityEntitiesData = await graphTool.execute({
           limit: 50,
           entityTypes: ['Federation', 'League', 'Organization'],
           sortBy: 'rfp_probability'
         });
         
-        await liveLogService.info('📊 Neo4j MCP: Loaded priority entities from database', {
-          category: 'neo4j',
+        await liveLogService.info('📊 Graph MCP: Loaded priority entities from database', {
+          category: 'graph',
           source: 'MCPEnabledAutonomousRFPManager',
-          message: `Loaded ${priorityEntitiesData?.results?.length || 0} priority entities from Neo4j`,
+          message: `Loaded ${priorityEntitiesData?.results?.length || 0} priority entities from graph cache`,
           data: {
             entitiesFound: priorityEntitiesData?.results?.length || 0,
-            source: 'neo4j-mcp'
+            source: 'graph-mcp'
           },
-          tags: ['neo4j-mcp', 'entity-loading']
+          tags: ['graph-mcp', 'entity-loading']
         });
       }
 
@@ -306,7 +309,7 @@ export class MCPEnabledAutonomousRFPManager {
           entities_processed: this.config.priorityEntities.length,
           total_opportunities: batchResults.length,
           processing_time: Date.now() - startTime,
-          mcp_tools_used: 'Neo4j, BrightData, Perplexity'
+          mcp_tools_used: 'Graph, BrightData, Perplexity'
         },
         tags: ['priority-monitoring', 'completed']
       });
@@ -342,17 +345,17 @@ export class MCPEnabledAutonomousRFPManager {
     });
 
     try {
-      // Use Neo4j MCP to load all entities from database
-      const neo4jTool = this.mcpServers.get('neo4j-mcp')?.tools['search_entities'];
+      // Use graph MCP to load all entities from database
+      const graphTool = this.mcpServers.get('graph-mcp')?.tools['search_entities'];
       let allEntities = [];
       
-      if (neo4jTool) {
+      if (graphTool) {
         // Get all entities in batches
         let offset = 0;
         const batchSize = 100;
         
         while (true) {
-          const batchResult = await neo4jTool.execute({
+          const batchResult = await graphTool.execute({
             limit: batchSize,
             offset: offset,
             sortBy: 'name'
@@ -430,7 +433,7 @@ export class MCPEnabledAutonomousRFPManager {
           entities_processed: this.config.standardEntities.length,
           total_opportunities: batchResults.length,
           processing_time: Date.now() - startTime,
-          mcp_tools_used: 'Neo4j, BrightData, Perplexity',
+          mcp_tools_used: 'Graph, BrightData, Perplexity',
           batches_processed: Math.ceil(this.config.standardEntities.length / batchSize)
         },
         tags: ['standard-monitoring', 'completed']
@@ -459,10 +462,10 @@ export class MCPEnabledAutonomousRFPManager {
     await liveLogService.info('🔄 Processing entity with MCP tools', {
       category: 'mcp',
       source: 'MCPEnabledAutonomousRFPManager',
-      message: `Processing ${entityName} with Neo4j, BrightData, and Perplexity MCP tools`,
+      message: `Processing ${entityName} with graph, BrightData, and Perplexity MCP tools`,
       data: {
         entity: entityName,
-        tools: ['neo4j-mcp', 'brightdata-mcp', 'perplexity-mcp']
+        tools: ['graph-mcp', 'brightdata-mcp', 'perplexity-mcp']
       },
       tags: ['mcp-processing', entity]
     });
@@ -479,30 +482,30 @@ export class MCPEnabledAutonomousRFPManager {
     };
 
     try {
-      // 1. Neo4j MCP: Find entity and get relationships
-      const neo4jTool = this.mcpServers.get('neo4j-mcp')?.tools['search_entities'];
-      if (neo4jTool) {
-        const neo4jResult = await neo4jTool.execute({
+      // 1. Graph MCP: Find entity and get relationships
+      const graphTool = this.mcpServers.get('graph-mcp')?.tools['search_entities'];
+      if (graphTool) {
+        const graphResult = await graphTool.execute({
           query: entityName,
           exactMatch: true
         });
         
-        if (neo4jResult.results && neo4jResult.results.length > 0) {
-          const entity = neo4jResult.results[0];
+        if (graphResult.results && graphResult.results.length > 0) {
+          const entity = graphResult.results[0];
           
           // Get entity details
-          const detailsTool = this.mcpServers.get('neo4j-mcp')?.tools['get_entity_details'];
+          const detailsTool = this.mcpServers.get('graph-mcp')?.tools['get_entity_details'];
           if (detailsTool) {
             const details = await detailsTool.execute({ 
               entityId: entity.id 
             });
             mcpResults.entity = entity;
-            mcpResults.neo4jId = entity.id;
-            mcpResults.neo4jDetails = details;
+            mcpResults.graphId = entity.id;
+            mcpResults.graphDetails = details;
           }
           
           // Get entity relationships
-          const relationshipTool = this.mcpServers.get('neo4j-mcp')?.tools['create_relationship'];
+          const relationshipTool = this.mcpServers.get('graph-mcp')?.tools['create_relationship'];
           if (relationshipTool) {
             const relationships = await relationshipTool.execute({
               fromEntityId: entity.id,
@@ -513,7 +516,7 @@ export class MCPEnabledAutonomousRFPManager {
         }
         
         this.metrics.mcpToolExecutions++;
-        this.metrics.neo4jRelationshipsCreated += mcpResults.relationships.length;
+        this.metrics.graphRelationshipsCreated += mcpResults.relationships.length;
       }
 
       // 2. BrightData MCP: Web research and LinkedIn monitoring
@@ -583,11 +586,11 @@ export class MCPEnabledAutonomousRFPManager {
         mcpResults.connectionAnalysis = await this.performConnectionIntelligenceAnalysis(entityName, mcpResults);
       }
 
-      // 5. Store enhanced data back in Neo4j
-      const updateTool = this.mcpServers.get('neo4j-mcp')?.tools['create_relationship'];
-      if (updateTool && mcpResults.neo4jId) {
+      // 5. Store enhanced data back in canonical cache
+      const updateTool = this.mcpServers.get('graph-mcp')?.tools['create_relationship'];
+      if (updateTool && mcpResults.graphId) {
         await updateTool.execute({
-          fromEntityId: mcpResults.neo4jId,
+          fromEntityId: mcpResults.graphId,
           updateData: {
             last_mcp_analysis: JSON.stringify(mcpResults),
             rfp_probability: mcpResults.rfpAnalysis?.rfpProbability || 0.0104,
@@ -633,50 +636,138 @@ export class MCPEnabledAutonomousRFPManager {
   }
 
   /**
-   * Execute Neo4j query via MCP
+   * Execute graph query via MCP
    */
-  private async executeNeo4jQuery(params: any): Promise<any> {
-    // This will call the Neo4j MCP server
-    // Implementation depends on your Neo4j MCP server setup
-    return {
-      query: params.query,
-      results: [],
-      executionTime: Date.now()
-    };
+  private async executeGraphQuery(params: any): Promise<any> {
+    const query = String(params.query || '').trim();
+    if (!query) {
+      return { query, results: [], executionTime: Date.now() };
+    }
+
+    const results = await falkorGraphClient.queryRows(query);
+    return { query, results, executionTime: Date.now() };
   }
 
   /**
-   * Search entities via Neo4j MCP
+   * Search entities via Supabase cache
    */
   private async searchEntities(params: any): Promise<any> {
-    // This will call the Neo4j MCP server
+    let query = supabase
+      .from('cached_entities')
+      .select('id, graph_id, neo4j_id, name, labels, properties', { count: 'exact' });
+
+    if (params.query) {
+      const search = String(params.query).trim();
+      query = query.or(`name.ilike.%${search}%,properties->>official_name.ilike.%${search}%`);
+    }
+
+    if (Array.isArray(params.entityTypes) && params.entityTypes.length > 0) {
+      const labelsFilter = params.entityTypes.map((type: string) => `labels.cs.{${type}}`).join(',');
+      query = query.or(labelsFilter);
+    }
+
+    const limit = Math.min(Number(params.limit || 50), 200);
+    const offset = Math.max(Number(params.offset || 0), 0);
+    const sortBy = params.sortBy === 'name' ? 'name' : 'updated_at';
+    const ascending = params.sortBy === 'name';
+
+    const { data, error, count } = await query
+      .order(sortBy, { ascending })
+      .range(offset, offset + limit - 1);
+
+    if (error) {
+      throw error;
+    }
+
     return {
-      results: [],
-      totalFound: 0,
+      results: (data || []).map((entity: any) => ({
+        id: resolveGraphId(entity) || entity.id,
+        graph_id: resolveGraphId(entity) || entity.id,
+        name: entity.name || entity.properties?.official_name || entity.properties?.name,
+        official_name: entity.properties?.official_name,
+        labels: entity.labels || [],
+        properties: entity.properties || {}
+      })),
+      totalFound: count || 0,
       executionTime: Date.now()
     };
   }
 
   /**
-   * Get entity details via Neo4j MCP
+   * Get entity details via Supabase + FalkorDB-backed relationships
    */
   private async getEntityDetails(params: any): Promise<any> {
-    // This will call the Neo4j MCP server
+    const entityId = String(params.entityId || '').trim();
+    if (!entityId) {
+      return { entity: null, relationships: [], properties: {}, executionTime: Date.now() };
+    }
+
+    const { data: entity, error } = await supabase
+      .from('cached_entities')
+      .select('id, graph_id, neo4j_id, name, labels, properties')
+      .or(buildGraphEntityLookupFilter(entityId))
+      .maybeSingle();
+
+    if (error) {
+      throw error;
+    }
+
+    const graphKey = resolveGraphId(entity) || entityId;
+    const { data: relationships } = await supabase
+      .from('entity_relationships')
+      .select('*')
+      .or(buildLegacyRelationshipGraphFilter(graphKey))
+      .eq('is_active', true)
+      .limit(25);
+
     return {
-      entity: null,
-      relationships: [],
-      properties: {},
+      entity: entity ? {
+        ...entity,
+        graph_id: resolveGraphId(entity) || entity.id,
+      } : null,
+      relationships: (relationships || []).map((relationship: any) => withRelationshipGraphIds(relationship)),
+      properties: entity?.properties || {},
       executionTime: Date.now()
     };
   }
 
   /**
-   * Create relationships via Neo4j MCP
+   * Persist graph-adjacent updates via Supabase
    */
   private async createRelationship(params: any): Promise<any> {
-    // This will call the Neo4j MCP server
+    if (params.updateData && params.fromEntityId) {
+      const entityId = String(params.fromEntityId);
+      const { data: existing, error: existingError } = await supabase
+        .from('cached_entities')
+        .select('id, properties')
+        .or(buildGraphEntityLookupFilter(entityId))
+        .maybeSingle();
+
+      if (existingError) {
+        throw existingError;
+      }
+
+      if (!existing) {
+        return { relationshipsCreated: 0, executionTime: Date.now() };
+      }
+
+      const mergedProperties = {
+        ...(existing.properties || {}),
+        ...(params.updateData || {})
+      };
+
+      const { error } = await supabase
+        .from('cached_entities')
+        .update({ properties: mergedProperties, updated_at: new Date().toISOString() })
+        .eq('id', existing.id);
+
+      if (error) {
+        throw error;
+      }
+    }
+
     return {
-      relationshipsCreated: 0,
+      relationshipsCreated: Array.isArray(params.toEntities) ? params.toEntities.length : 0,
       executionTime: Date.now()
     };
   }
@@ -753,7 +844,7 @@ export class MCPEnabledAutonomousRFPManager {
       estimatedValue = '£200K-£500K';
     }
     
-    // Adjust based on relationships (Neo4j data)
+    // Adjust based on relationships (graph data)
     if (relationshipsCount > 10) {
       rfpProbability += 0.003;
     }
@@ -786,7 +877,7 @@ export class MCPEnabledAutonomousRFPManager {
     } else if (mcpResults.entity && (mcpResults.webData || mcpResults.marketIntelligence)) {
       confidence = 80; // Has 2 data sources
     } else if (mcpResults.entity) {
-      confidence = 75; // Has Neo4j data only
+      confidence = 75; // Has graph cache data only
     }
     
     return {
@@ -799,11 +890,11 @@ export class MCPEnabledAutonomousRFPManager {
       lastUpdated: new Date().toISOString(),
       dataSource: 'mcp-integrated',
       dataSources: {
-        neo4j: !!mcpResults.entity,
+        graph: !!mcpResults.entity,
         brightData: !!mcpResults.webData,
         perplexity: !!mcpResults.marketIntelligence
       },
-      mcpToolsUsed: ['neo4j-mcp', 'brightdata-mcp', 'perplexity-mcp']
+      mcpToolsUsed: ['graph-mcp', 'brightdata-mcp', 'perplexity-mcp']
     };
   }
 
@@ -831,13 +922,13 @@ export class MCPEnabledAutonomousRFPManager {
           averageProcessingTime: results.length > 0 ? Math.round(results.reduce((sum, r) => sum + r.processingTime, 0) / results.length) : 0
         },
         mcpIntegration: {
-          neo4jQueries: results.filter(r => r.mcpResults.neo4jId).length,
+          graphQueries: results.filter(r => r.mcpResults.graphId).length,
           brightDataSearches: results.filter(r => r.mcpResults.webData).length,
           perplexityAnalyses: results.filter(r => r.mcpResults.marketIntelligence).length,
           totalMCPToolExecutions: results.reduce((sum, r) => sum + (r.mcpResults.mcpToolsUsed?.length || 0), 0)
         },
-        neo4jDetails: {
-          entitiesFoundInNeo4j: results.filter(r => r.mcpResults.entity).length,
+        graphDetails: {
+          entitiesFoundInGraph: results.filter(r => r.mcpResults.entity).length,
           relationshipsAnalyzed: results.reduce((sum, r) => sum + r.mcpResults.relationships.length, 0),
           entitiesEnhanced: results.filter(r => r.mcpResults.rfpAnalysis).length
         },
@@ -1122,7 +1213,7 @@ export class MCPEnabledAutonomousRFPManager {
         mcpToolExecutions: this.metrics.mcpToolExecutions,
         activeMCPTools: this.mcpServers.size,
         tools: {
-          neo4j: Object.keys(this.mcpServers.get('neo4j-mcp')?.tools || {}),
+          graph: Object.keys(this.mcpServers.get('graph-mcp')?.tools || {}),
           brightdata: Object.keys(this.mcpServers.get('brightdata-mcp')?.tools || {}),
           perplexity: Object.keys(this.mcpServers.get('perplexity-mcp')?.tools || {})
         }

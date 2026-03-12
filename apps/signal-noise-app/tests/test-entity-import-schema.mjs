@@ -21,6 +21,6 @@ test('entity import schema defines required and optional CSV columns', () => {
 test('entity import schema exposes normalization helpers for row validation', () => {
   assert.match(source, /export function slugifyImportedEntityName/)
   assert.match(source, /export function normalizeImportedEntityRow/)
-  assert.match(source, /priority_score: .*50/)
+  assert.match(source, /priority_score: .*85/)
   assert.match(source, /missing required columns/i)
 })

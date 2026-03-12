@@ -22,7 +22,7 @@ const DEFAULT_FORM_STATE: PipelineFormState = {
   source: 'single_entity_form',
   website: '',
   league: '',
-  priority_score: '50',
+  priority_score: '85',
 }
 
 export default function SingleEntityPipelineForm() {
@@ -44,7 +44,7 @@ export default function SingleEntityPipelineForm() {
         },
         body: JSON.stringify({
           ...formState,
-          priority_score: Number(formState.priority_score || 50),
+          priority_score: Number(formState.priority_score || 85),
         }),
       })
 

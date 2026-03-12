@@ -20,7 +20,7 @@ export function TemporalIntelligenceTools() {
       {
         name: 'entity_id',
         type: 'string',
-        description: 'Entity identifier (name or neo4j_id)',
+        description: 'Entity identifier (name or legacy graph ID)',
         required: true
       },
       {
@@ -47,7 +47,7 @@ export function TemporalIntelligenceTools() {
       {
         name: 'entity_id',
         type: 'string',
-        description: 'Entity identifier (name or neo4j_id)',
+        description: 'Entity identifier (name or legacy graph ID)',
         required: true
       },
       {

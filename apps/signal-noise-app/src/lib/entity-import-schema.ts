@@ -101,7 +101,7 @@ export function normalizeImportedEntityRow(
     }
   }
 
-  const parsedPriorityScore = Number.parseInt(normalizeText(input.priority_score) || '50', 10)
+  const parsedPriorityScore = Number.parseInt(normalizeText(input.priority_score) || '85', 10)
 
   const row: ImportedEntityRow = {
     name,
@@ -117,7 +117,7 @@ export function normalizeImportedEntityRow(
     stadium_name: normalizeText(input.stadium_name) || undefined,
     capacity: normalizeText(input.capacity) || undefined,
     description: normalizeText(input.description) || undefined,
-    priority_score: Number.isNaN(parsedPriorityScore) ? 50 : parsedPriorityScore,
+    priority_score: Number.isNaN(parsedPriorityScore) ? 85 : parsedPriorityScore,
     badge_url: normalizeText(input.badge_url) || undefined,
     entity_id,
   }

@@ -83,13 +83,28 @@ export default function SportsDashboard() {
   const fetchData = async () => {
     try {
       setLoading(true)
-      console.log('Fetching data from sports-entities endpoint...')
-      const response = await fetch('http://localhost:3000/sports-entities')
+      console.log('Fetching data from /api/sports-entities endpoint...')
+      const response = await fetch('/api/sports-entities?limit=500')
       console.log('Response status:', response.status)
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
-      const result = await response.json()
+      const entities = await response.json()
+      const enrichedCount = Array.isArray(entities)
+        ? entities.filter((entity: any) => Boolean(entity.description || entity.notes)).length
+        : 0
+      const result = {
+        status: 'ok',
+        database_overview: {
+          total_entities: Array.isArray(entities) ? entities.length : 0,
+          sports_entities_count: Array.isArray(entities) ? entities.length : 0,
+          enriched_count: enrichedCount,
+          success_rate: Array.isArray(entities) && entities.length > 0
+            ? `${Math.round((enrichedCount / entities.length) * 100)}%`
+            : '0%'
+        },
+        sports_entities: Array.isArray(entities) ? entities : []
+      }
       console.log('Fetched data:', result)
       setData(result)
       setOriginalData(result)
@@ -746,6 +761,5 @@ export default function SportsDashboard() {
     </div>
   )
 }
-
 
 

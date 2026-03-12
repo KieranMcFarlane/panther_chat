@@ -4,7 +4,8 @@ import { createContext, useContext, useState, useCallback, ReactNode } from 'rea
 
 interface Club {
   id: string
-  neo4j_id: string
+  graph_id?: string
+  neo4j_id?: string
   labels: string[]
   properties: {
     name: string

@@ -153,7 +153,7 @@ else
     echo "3. Verify network connectivity"
     echo "4. Try alternative deployment methods (see Step 6)"
     echo ""
-    echo "📖 Full deployment guide: DEPLOYMENT-GUIDE.md"
+    echo "📖 Historical deployment guide: legacy/neo4j/docs/DEPLOYMENT-GUIDE.md"
 fi
 
 echo ""

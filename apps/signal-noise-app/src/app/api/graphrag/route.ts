@@ -73,9 +73,9 @@ export async function GET(request: NextRequest) {
       console.warn('Failed to reach Graphiti service:', fetchError);
     }
 
-    // Fallback: Query Neo4j directly if Graphiti service is unavailable
+    // Fallback: use embedded results if Graphiti service is unavailable
     if (results.length === 0) {
-      results = await queryNeo4jDirect(query, numResults, entityId);
+      results = getFallbackResults(query, numResults);
     }
 
     return NextResponse.json({
@@ -147,48 +147,9 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * Fallback: Query Neo4j directly using Cypher
- * This is used when the Graphiti service is unavailable
+ * Embedded fallback results used when the Graphiti service is unavailable
  */
-async function queryNeo4jDirect(
-  query: string,
-  numResults: number,
-  entityId: string | null
-): Promise<any[]> {
-  const neo4jUri = process.env.NEO4J_URI;
-  const neo4jUser = process.env.NEO4J_USERNAME || process.env.NEO4J_USER;
-  const neo4jPassword = process.env.NEO4J_PASSWORD;
-
-  if (!neo4jUri || !neo4jUser || !neo4jPassword) {
-    // Return mock results for demonstration
-    return getMockResults(query, numResults);
-  }
-
-  try {
-    // Simple keyword-based Cypher query
-    const keywords = query.toLowerCase().split(/\s+/).filter((w) => w.length > 3);
-
-    const cypher = `
-      MATCH (e:Entity)
-      WHERE any(keyword IN $keywords WHERE toLower(e.name) CONTAINS keyword)
-         OR any(keyword IN $keywords WHERE toLower(coalesce(e.description, '')) CONTAINS keyword)
-      RETURN e.name as name, e.description as description, labels(e)[0] as type
-      LIMIT $limit
-    `;
-
-    // Note: This would require a Neo4j driver on the server side
-    // For now, return mock results
-    return getMockResults(query, numResults);
-  } catch (error) {
-    console.error('Neo4j query error:', error);
-    return getMockResults(query, numResults);
-  }
-}
-
-/**
- * Mock results for demonstration when no backend is available
- */
-function getMockResults(query: string, numResults: number): any[] {
+function getFallbackResults(query: string, numResults: number): any[] {
   const lowerQuery = query.toLowerCase();
 
   const mockData = [

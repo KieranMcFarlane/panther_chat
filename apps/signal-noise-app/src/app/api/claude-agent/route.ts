@@ -3,6 +3,9 @@ import { HeadlessClaudeAgentService } from '@/services/HeadlessClaudeAgentServic
 import { ClaudeAgentCronScheduler } from '@/services/ClaudeAgentCronScheduler';
 import { liveLogService } from '@/services/LiveLogService';
 
+const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build' ||
+  process.env.npm_lifecycle_event === 'build';
+
 // Global instances (in production, use dependency injection)
 let claudeService: HeadlessClaudeAgentService | null = null;
 let cronScheduler: ClaudeAgentCronScheduler | null = null;
@@ -18,9 +21,9 @@ function initializeServices() {
   const config = {
     brightdataApiKey: process.env.BRIGHTDATA_API_TOKEN,
     brightdataZone: process.env.BRIGHTDATA_ZONE || 'linkedin_posts_monitor',
-    neo4jUri: process.env.NEO4J_URI,
-    neo4jUsername: process.env.NEO4J_USERNAME,
-    neo4jPassword: process.env.NEO4J_PASSWORD,
+    graphUri: process.env.FALKORDB_URI,
+    graphUsername: process.env.FALKORDB_USER,
+    graphPassword: process.env.FALKORDB_PASSWORD,
     teamsWebhookUrl: process.env.TEAMS_WEBHOOK_URL,
     searchQueries: [
       'sports technology RFP',
@@ -77,7 +80,7 @@ export async function GET(request: NextRequest) {
             environment: {
               cronEnabled: process.env.CLAUDE_AGENT_CRON_ENABLED === 'true',
               brightdataConfigured: !!process.env.BRIGHTDATA_API_TOKEN,
-              neo4jConfigured: !!(process.env.NEO4J_URI && process.env.NEO4J_USERNAME),
+              graphConfigured: !!(process.env.FALKORDB_URI && process.env.FALKORDB_USER),
               teamsConfigured: !!process.env.TEAMS_WEBHOOK_URL
             }
           }
@@ -251,8 +254,12 @@ if (typeof window === 'undefined') {
   try {
     const { cronScheduler } = initializeServices();
     cronScheduler.start();
-    console.log('Claude Agent cron scheduler initialized successfully');
+    if (!isBuildPhase) {
+      console.log('Claude Agent cron scheduler initialized successfully');
+    }
   } catch (error) {
-    console.error('Failed to initialize Claude Agent cron scheduler:', error);
+    if (!isBuildPhase) {
+      console.error('Failed to initialize Claude Agent cron scheduler:', error);
+    }
   }
 }

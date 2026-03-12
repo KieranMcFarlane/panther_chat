@@ -35,11 +35,13 @@ interface ActivitySummary {
 export class ActivityLogger {
   private static instance: ActivityLogger;
   private logs: ActivityLog[] = [];
+  private storageLoaded = false;
 
   static getInstance(): ActivityLogger {
     if (!ActivityLogger.instance) {
       ActivityLogger.instance = new ActivityLogger();
     }
+    ActivityLogger.instance.ensureStorageLoaded();
     return ActivityLogger.instance;
   }
 
@@ -275,6 +277,10 @@ export class ActivityLogger {
    * Persist logs to localStorage
    */
   private persistToStorage(): void {
+    if (typeof localStorage === 'undefined') {
+      return;
+    }
+
     try {
       const dataToStore = this.logs.slice(0, 1000); // Limit storage
       localStorage.setItem('rfp_activity_logs', JSON.stringify(dataToStore));
@@ -287,6 +293,10 @@ export class ActivityLogger {
    * Load logs from localStorage
    */
   private loadFromStorage(): void {
+    if (typeof localStorage === 'undefined') {
+      return;
+    }
+
     try {
       const stored = localStorage.getItem('rfp_activity_logs');
       if (stored) {
@@ -295,6 +305,15 @@ export class ActivityLogger {
     } catch (error) {
       console.warn('Failed to load activity logs:', error);
     }
+  }
+
+  private ensureStorageLoaded(): void {
+    if (this.storageLoaded) {
+      return;
+    }
+
+    this.storageLoaded = true;
+    this.loadFromStorage();
   }
 
   /**
@@ -319,15 +338,7 @@ export class ActivityLogger {
     }
   }
 
-  /**
-   * Initialize the logger
-   */
-  static initialize(): ActivityLogger {
-    const logger = ActivityLogger.getInstance();
-    logger.loadFromStorage();
-    return logger;
-  }
 }
 
 // Export singleton instance
-export const activityLogger = ActivityLogger.initialize();
+export const activityLogger = ActivityLogger.getInstance();

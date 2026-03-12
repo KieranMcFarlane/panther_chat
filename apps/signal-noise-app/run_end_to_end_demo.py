@@ -8,7 +8,7 @@ Demonstrates the complete signal classification system across 4 Premier League c
 3. Liverpool FC
 4. Manchester City FC
 
-For each club, the demo will:
+For each entity, the demo will:
 1. Run signal discovery via BrightData search
 2. Classify signals (CAPABILITY, PROCUREMENT_INDICATOR, VALIDATED_RFP)
 3. Calculate hypothesis states (maturity, activity, sales readiness)
@@ -70,7 +70,7 @@ CLUBS = [
         'entity_name': 'Liverpool FC',
         'search_keywords': {
             'CRM_UPGRADE': ['Liverpool FC CRM "Head of"', 'Liverpool "CRM system" salesforce'],
-            'ANALYTICS_PLATFORM': ['Liverpool FC "data analytics" platform', 'Liverpool "analytics partner"'],
+            'ANALYTICS_PLATFORM': ['Liverpool FC "data analytics" platform', 'Liverpool "analytics partner' ],
             'TICKETING_SYSTEM': ['Liverpool FC "ticketing system" procurement', 'Liverpool "season ticket" technology'],
             'DIGITAL_TRANSFORMATION': ['Liverpool FC "digital transformation" partnership'],
         }
@@ -80,7 +80,7 @@ CLUBS = [
         'entity_name': 'Manchester City FC',
         'search_keywords': {
             'CRM_UPGRADE': ['Man City CRM "Head of"', 'Manchester City "CRM system"'],
-            'ANALYTICS_PLATFORM': ['Man City "data analytics" platform', 'Manchester City "analytics partner"'],
+            'ANALYTICS_PLATFORM': ['Man City "data analytics" platform', 'Manchester City "analytics partner'],
             'TICKETING_SYSTEM': ['Man City "ticketing system" procurement', 'Manchester City "season ticket" technology'],
             'DIGITAL_TRANSFORMATION': ['Manchester City "digital transformation" partnership'],
         }

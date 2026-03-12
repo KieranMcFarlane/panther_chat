@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     
     await cacheService.initialize()
     
-    const result = await cacheService.syncEntitiesFromNeo4j({
+    const result = await cacheService.syncEntitiesFromGraph({
       entityType: entityType || 'all',
       batchSize: batchSize || 100,
       forceRefresh: forceRefresh || false

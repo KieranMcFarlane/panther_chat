@@ -27,22 +27,20 @@ export interface MCPStreamChunk {
 export class StreamingDirectMCP {
   
   /**
-   * Execute Neo4j MCP tool with streaming
+   * Execute graph MCP tool with streaming
    */
-  static async* executeNeo4jQueryStream(query: string): AsyncGenerator<MCPStreamChunk> {
-    yield { type: 'start', data: 'Starting Neo4j query...', timestamp: new Date().toISOString() };
+  static async* executeGraphQueryStream(query: string): AsyncGenerator<MCPStreamChunk> {
+    yield { type: 'start', data: 'Starting graph query...', timestamp: new Date().toISOString() };
     
     try {
       const env = {
-        NEO4J_URI: process.env.NEO4J_URI || 'neo4j+s://cce1f84b.databases.neo4j.io',
-        NEO4J_USERNAME: process.env.NEO4J_USERNAME || 'neo4j',
-        NEO4J_PASSWORD: process.env.NEO4J_PASSWORD || 'llNASCzMWGT-nTt-JkD9Qk_4W6PpJrv39X0PuYAIKV0',
-        NEO4J_DATABASE: process.env.NEO4J_DATABASE || 'neo4j',
-        AURA_INSTANCEID: process.env.AURA_INSTANCEID || 'cce1f84b',
-        AURA_INSTANCENAME: process.env.AURA_INSTANCENAME || 'Instance01'
+        FALKORDB_URI: process.env.FALKORDB_URI || '',
+        FALKORDB_USER: process.env.FALKORDB_USER || '',
+        FALKORDB_PASSWORD: process.env.FALKORDB_PASSWORD || '',
+        FALKORDB_DATABASE: process.env.FALKORDB_DATABASE || '',
       };
 
-      yield { type: 'progress', data: 'Connecting to Neo4j MCP server...', timestamp: new Date().toISOString() };
+      yield { type: 'progress', data: 'Connecting to graph MCP server...', timestamp: new Date().toISOString() };
 
       const request = {
         jsonrpc: "2.0",
@@ -56,14 +54,14 @@ export class StreamingDirectMCP {
 
       // Use direct execution for now (since MCP servers aren't running as HTTP)
       // In production, these would be actual HTTP endpoints
-      const result = await this.executeMCPCommandStream('npx', ['-y', '@alanse/mcp-neo4j-server'], request, env, 'neo4j-mcp');
+      const result = await this.executeMCPCommandStream('python3', ['backend/falkordb_mcp_server_fastmcp.py'], request, env, 'graph-mcp');
       
-      yield { type: 'progress', data: 'Neo4j query completed', timestamp: new Date().toISOString() };
-      yield { type: 'data', data: result, timestamp: new Date().toISOString(), tool: 'execute_query', server: 'neo4j-mcp' };
-      yield { type: 'complete', data: 'Neo4j query executed successfully', timestamp: new Date().toISOString() };
+      yield { type: 'progress', data: 'Graph query completed', timestamp: new Date().toISOString() };
+      yield { type: 'data', data: result, timestamp: new Date().toISOString(), tool: 'execute_query', server: 'graph-mcp' };
+      yield { type: 'complete', data: 'Graph query executed successfully', timestamp: new Date().toISOString() };
 
     } catch (error) {
-      yield { type: 'error', data: `Neo4j query failed: ${error.message}`, timestamp: new Date().toISOString(), tool: 'execute_query', server: 'neo4j-mcp' };
+      yield { type: 'error', data: `Graph query failed: ${error.message}`, timestamp: new Date().toISOString(), tool: 'execute_query', server: 'graph-mcp' };
     }
   }
 
@@ -252,8 +250,8 @@ export class StreamingDirectMCP {
     return [
       {
         name: 'execute_query',
-        description: 'Execute Cypher query on Neo4j database',
-        server: 'neo4j-mcp'
+        description: 'Execute Cypher query on the graph database',
+        server: 'graph-mcp'
       },
       {
         name: 'search_engine',

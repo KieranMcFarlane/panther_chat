@@ -1,6 +1,6 @@
 // Relationship-based Entity Traversal and Enrichment API
 import { NextRequest, NextResponse } from 'next/server';
-import { neo4jService } from '@/lib/neo4j';
+import { falkorGraphClient } from '@/lib/falkordb';
 
 // Mark route as dynamic to prevent static generation
 export const dynamic = 'force-dynamic'
@@ -20,7 +20,7 @@ interface EntityTraversal {
   entity_id: string;
   entity_name: string;
   entity_type: string;
-  neo4j_id: string;
+  graph_id: string;
   relationships: Array<{
     target_id: string;
     target_name: string;
@@ -41,112 +41,73 @@ export async function POST(request: NextRequest) {
     console.log(`🔍 Starting relationship-based entity traversal from: ${start_from}`);
     console.log(`🧠 Enrichment options:`, enrichment_options);
 
-    // Get Neo4j session
-    const session = neo4jService.getDriver().session();
-    
-    try {
-      let entities: EntityTraversal[] = [];
+    let entities: EntityTraversal[] = []
+    const filters: string[] = []
+    if (start_from === 'leagues') {
+      filters.push(`toLower(coalesce(n.type, n.entity_type, '')) CONTAINS 'league'`)
+    } else if (start_from === 'unenriched') {
+      filters.push(`(n.enrichment_version IS NULL OR n.enrichment_version < '2.0')`)
+    }
 
-      if (start_from === 'all') {
-        // Get all entities with their relationships
-        const result = await session.run(`
-          MATCH (n:Entity)
-          OPTIONAL MATCH (n)-[r]->(m:Entity)
-          WITH n, collect({
-            target_id: id(m),
-            target_name: m.name,
-            target_type: m.type,
-            relationship_type: type(r)
-          }) as relationships
-          RETURN id(n) as neo4j_id, n.name as entity_name, n.type as entity_type,
-                 n.enrichment_version as enrichment_version, relationships
-          ORDER BY n.type, n.name
-        `);
+    const whereClause = filters.length > 0 ? `WHERE ${filters.join(' AND ')}` : ''
+    const rows = await falkorGraphClient.queryRows<{
+      entity_id: string
+      entity_name: string
+      entity_type: string
+      enrichment_version: string | null
+      target_id: string | null
+      target_name: string | null
+      target_type: string | null
+      relationship_type: string | null
+    }>(`
+      MATCH (n:Entity)
+      ${whereClause}
+      OPTIONAL MATCH (n)-[r]->(m:Entity)
+      RETURN coalesce(n.neo4j_id, n.entity_id, n.name) as entity_id,
+             n.name as entity_name,
+             coalesce(n.type, n.entity_type, labels(n)[0], 'Entity') as entity_type,
+             n.enrichment_version as enrichment_version,
+             coalesce(m.neo4j_id, m.entity_id, m.name) as target_id,
+             m.name as target_name,
+             coalesce(m.type, m.entity_type, labels(m)[0], 'Entity') as target_type,
+             type(r) as relationship_type
+      ORDER BY entity_type, entity_name
+    `)
 
-        entities = result.records.map(record => ({
-          entity_id: record.get('neo4j_id').toString(),
-          entity_name: record.get('entity_name'),
-          entity_type: record.get('entity_type'),
-          neo4j_id: record.get('neo4j_id').toString(),
-          relationships: record.get('relationships').filter((r: any) => r.target_id),
-          enrichment_status: getEnrichmentStatus(record.get('enrichment_version')),
-          processing_priority: calculatePriority(record.get('entity_type'), record.get('enrichment_version'))
-        }));
+    const entityMap = new Map<string, EntityTraversal>()
+    for (const row of rows) {
+      const entityId = String(row.entity_id || '')
+      if (!entityId) continue
 
-      } else if (start_from === 'leagues') {
-        // Start from leagues and traverse down to clubs
-        const result = await session.run(`
-          MATCH (league:Entity {type: 'league'})
-          OPTIONAL MATCH (league)<-[r:MEMBER_OF]-(club:Entity)
-          OPTIONAL MATCH (club)-[r2]-(other:Entity)
-          RETURN id(league) as neo4j_id, league.name as entity_name, league.type as entity_type,
-                 league.enrichment_version as enrichment_version,
-                 collect({
-                   target_id: id(club),
-                   target_name: club.name,
-                   target_type: club.type,
-                   relationship_type: 'MEMBER_OF'
-                 }) as club_relationships
-          ORDER BY league.name
-        `);
-
-        entities = result.records.map(record => ({
-          entity_id: record.get('neo4j_id').toString(),
-          entity_name: record.get('entity_name'),
-          entity_type: record.get('entity_type'),
-          neo4j_id: record.get('neo4j_id').toString(),
-          relationships: record.get('club_relationships').filter((r: any) => r.target_id),
-          enrichment_status: getEnrichmentStatus(record.get('enrichment_version')),
-          processing_priority: 100 // Leagues get highest priority
-        }));
-
-        // Also add the clubs for processing
-        const clubsResult = await session.run(`
-          MATCH (club:Entity {type: 'club'})-[:MEMBER_OF]->(league:Entity {type: 'league'})
-          RETURN id(club) as neo4j_id, club.name as entity_name, club.type as entity_type,
-                 club.enrichment_version as enrichment_version
-          ORDER BY club.name
-        `);
-
-        const clubs = clubsResult.records.map(record => ({
-          entity_id: record.get('neo4j_id').toString(),
-          entity_name: record.get('entity_name'),
-          entity_type: record.get('entity_type'),
-          neo4j_id: record.get('neo4j_id').toString(),
+      if (!entityMap.has(entityId)) {
+        const entityType = String(row.entity_type || 'Entity')
+        const enrichmentVersion = row.enrichment_version == null ? undefined : String(row.enrichment_version)
+        entityMap.set(entityId, {
+          entity_id: entityId,
+          entity_name: String(row.entity_name || entityId),
+          entity_type: entityType,
+          graph_id: entityId,
           relationships: [],
-          enrichment_status: getEnrichmentStatus(record.get('enrichment_version')),
-          processing_priority: 80 // Clubs get high priority
-        }));
-
-        entities = [...entities, ...clubs];
-
-      } else if (start_from === 'unenriched') {
-        // Only get entities that haven't been enriched to version 2.0
-        const result = await session.run(`
-          MATCH (n:Entity)
-          WHERE n.enrichment_version IS NULL OR n.enrichment_version < '2.0'
-          OPTIONAL MATCH (n)-[r]->(m:Entity)
-          WITH n, collect({
-            target_id: id(m),
-            target_name: m.name,
-            target_type: m.type,
-            relationship_type: type(r)
-          }) as relationships
-          RETURN id(n) as neo4j_id, n.name as entity_name, n.type as entity_type,
-                 n.enrichment_version as enrichment_version, relationships
-          ORDER BY n.type, n.name
-        `);
-
-        entities = result.records.map(record => ({
-          entity_id: record.get('neo4j_id').toString(),
-          entity_name: record.get('entity_name'),
-          entity_type: record.get('entity_type'),
-          neo4j_id: record.get('neo4j_id').toString(),
-          relationships: record.get('relationships').filter((r: any) => r.target_id),
-          enrichment_status: getEnrichmentStatus(record.get('enrichment_version')),
-          processing_priority: 90 // Unenriched entities get very high priority
-        }));
+          enrichment_status: getEnrichmentStatus(enrichmentVersion),
+          processing_priority: start_from === 'leagues'
+            ? 100
+            : start_from === 'unenriched'
+              ? 90
+              : calculatePriority(entityType, enrichmentVersion),
+        })
       }
+
+      if (row.target_id && row.relationship_type) {
+        entityMap.get(entityId)?.relationships.push({
+          target_id: String(row.target_id),
+          target_name: String(row.target_name || ''),
+          target_type: String(row.target_type || ''),
+          relationship_type: String(row.relationship_type),
+        })
+      }
+    }
+
+    entities = Array.from(entityMap.values())
 
       // Sort by processing priority
       entities.sort((a, b) => b.processing_priority - a.processing_priority);
@@ -290,10 +251,6 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json(finalResults);
 
-    } finally {
-      await session.close();
-    }
-
   } catch (error) {
     console.error('Relationship traversal error:', error);
     return NextResponse.json({
@@ -348,7 +305,7 @@ export async function GET() {
       'unenriched': 'Process only entities not enriched to version 2.0'
     },
     features: [
-      'Neo4j relationship traversal',
+      'Graph relationship traversal',
       'Priority-based processing',
       'Economical batch processing',
       'BrightData web scraping integration',

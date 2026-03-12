@@ -1,0 +1,28 @@
+{
+  "metadata": {
+    "entity_id": null,
+    "generated_at": "2026-02-22T19:10:17.971452+00:00",
+    "data_freshness": 0,
+    "confidence_overall": 0,
+    "priority_signals": [],
+    "tier": "STANDARD",
+    "priority_score": 50,
+    "hypothesis_count": 0,
+    "signal_count": 0
+  },
+  "executive_summary": {
+    "overall_assessment": {
+      "digital_maturity": {
+        "score": 0,
+        "trend": "unknown",
+        "key_strengths": [],
+        "key_gaps": []
+      }
+    },
+    "quick_actions": [],
+    "key_insights": []
+  },
+  "extracted_hypotheses": [],
+  "extracted_signals": [],
+  "generation_time_seconds": 67.939402
+}

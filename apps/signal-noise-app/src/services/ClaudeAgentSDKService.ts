@@ -47,7 +47,7 @@ export class ClaudeAgentSDKService {
             tools: options.allowedTools || ['Read', 'Write', 'Bash', 'Grep', 'Glob'],
             permission_mode: 'default',
             mcp_servers: [
-              { name: 'neo4j-mcp', status: 'connected' },
+              { name: 'graph-mcp', status: 'connected' },
               { name: 'perplexity-mcp', status: 'connected' },
               { name: 'brightdata', status: 'connected' }
             ]
@@ -214,8 +214,8 @@ export class ClaudeAgentSDKService {
   }
 
   private async processRelationshipAnalysis(sessionId: string, data: any): Promise<any> {
-    // Simulate real Neo4j MCP integration for relationship analysis
-    console.log(`🕸️ Analyzing relationships for ${data.entity.name} using Neo4j MCP`)
+    // Simulate real graph MCP integration for relationship analysis
+    console.log(`🕸️ Analyzing relationships for ${data.entity.name} using graph MCP`)
     
     return {
       opportunity_signals: true,
@@ -397,9 +397,9 @@ Your goal is to identify high-value procurement opportunities and provide action
   private getSystemPrompt(): string {
     return `You are a Sports Intelligence AI assistant powered by Claude Agent SDK with access to powerful MCP tools:
 
-🔍 Database Tools:
-- Neo4j database with 3,325+ sports entities (clubs, players, competitions, relationships)
-- Execute Cypher queries for complex sports data analysis
+🔍 Graph Tools:
+- FalkorDB graph store with 3,325+ sports entities (clubs, players, competitions, relationships)
+- Execute graph queries for complex sports data analysis
 
 🌐 Real-time Intelligence:
 - BrightData web scraping for current sports news and market information

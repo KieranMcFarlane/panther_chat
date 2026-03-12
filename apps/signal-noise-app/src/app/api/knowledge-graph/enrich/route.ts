@@ -3,7 +3,7 @@ import { query } from "@anthropic-ai/claude-agent-sdk";
 
 /**
  * Knowledge Graph Enrichment Pipeline
- * Automatically stores RFP analysis results in Neo4j for future reference
+ * Automatically stores RFP analysis results in the graph store for future reference
  */
 
 interface RFPEnrichmentRequest {
@@ -75,7 +75,7 @@ ${JSON.stringify(enrichmentRequest.source_webhook, null, 2)}
    - Competitive relationships
    - Partnership opportunities
 
-Return structured JSON for Neo4j storage:
+Return structured JSON for graph storage:
 
 {
   "organizations": [
@@ -138,21 +138,21 @@ Focus on entities that will be valuable for future RFP analysis and relationship
               prompt: entityExtractionPrompt,
               options: {
                 mcpServers: {
-                  "neo4j-mcp": {
+                  "graph-mcp": {
                     "command": "npx",
                     "args": ["-y", "@alanse/mcp-neo4j-server"],
                     "env": {
-                      "NEO4J_URI": process.env.NEO4J_URI || "",
-                      "NEO4J_USERNAME": process.env.NEO4J_USERNAME || "",
-                      "NEO4J_PASSWORD": process.env.NEO4J_PASSWORD || "",
-                      "NEO4J_DATABASE": process.env.NEO4J_DATABASE || "neo4j"
+                      "FALKORDB_URI": process.env.FALKORDB_URI || "",
+                      "FALKORDB_USER": process.env.FALKORDB_USER || "",
+                      "FALKORDB_PASSWORD": process.env.FALKORDB_PASSWORD || "",
+                      "FALKORDB_DATABASE": process.env.FALKORDB_DATABASE || "neo4j"
                     }
                   }
                 },
                 allowedTools: [
-                  "mcp__neo4j-mcp__execute_query",
-                  "mcp__neo4j-mcp__create_node",
-                  "mcp__neo4j-mcp__create_relationship"
+                  "mcp__graph-mcp__execute_query",
+                  "mcp__graph-mcp__create_node",
+                  "mcp__graph-mcp__create_relationship"
                 ],
                 maxTurns: 8
               },
@@ -188,11 +188,11 @@ Focus on accuracy and completeness of contact information and relationships.`
               throw new Error('Failed to extract entities from analysis');
             }
             
-            // Stage 2: Store entities in Neo4j
+            // Stage 2: Store entities in the graph store
             const storageChunk = {
               type: 'stage_update',
               stage: 'graph_storage',
-              message: 'Storing entities and relationships in Neo4j knowledge graph...',
+              message: 'Storing entities and relationships in the graph store...',
               timestamp: new Date().toISOString()
             };
             controller.enqueue(encoder.encode(`data: ${JSON.stringify(storageChunk)}\n\n`));
@@ -200,11 +200,11 @@ Focus on accuracy and completeness of contact information and relationships.`
             // Create Cypher queries for entity storage
             const storageQueries = generateStorageQueries(extractedEntities, enrichmentRequest);
             
-            // Execute storage queries using Neo4j MCP
+            // Execute storage queries using Graph MCP
             let storageResults = [];
             for (const query of storageQueries) {
               try {
-                const result = await executeNeo4jQuery(query.cypher, query.parameters);
+                const result = await executeGraphQuery(query.cypher, query.parameters);
                 storageResults.push(result);
                 
                 const progressChunk = {
@@ -415,8 +415,8 @@ function generateStorageQueries(entities: any, enrichmentRequest: RFPEnrichmentR
   return queries;
 }
 
-async function executeNeo4jQuery(cypher: string, parameters: any): Promise<any> {
-  // This would use the Neo4j MCP server to execute queries
+async function executeGraphQuery(cypher: string, parameters: any): Promise<any> {
+  // This would use the graph MCP server to execute queries
   // For now, return a mock result
   return {
     summary: {
@@ -429,7 +429,7 @@ async function executeNeo4jQuery(cypher: string, parameters: any): Promise<any> 
 }
 
 async function mapExistingRelationships(extractedEntities: any): Promise<any[]> {
-  // This would query Neo4j to find existing entities and create relationships
+  // This would query the graph store to find existing entities and create relationships
   // For now, return mock results
   return [
     {

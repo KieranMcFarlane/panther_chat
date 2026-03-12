@@ -5,6 +5,7 @@
  */
 
 import { mcpRegistrationService } from './mcp-registration';
+import { falkorGraphClient } from '@/lib/falkordb';
 
 export class MCPToolExecutor {
   private static instance: MCPToolExecutor;
@@ -24,10 +25,10 @@ export class MCPToolExecutor {
 
     try {
       switch (toolName) {
-        case 'mcp__neo4j-mcp__execute_query':
-          return await this.executeNeo4jQuery(args);
+        case 'mcp__graph-mcp__execute_query':
+          return await this.executeGraphQuery(args);
         
-        case 'mcp__neo4j-mcp__search_sports_entities':
+        case 'mcp__graph-mcp__search_sports_entities':
           return await this.searchSportsEntities(args);
         
         case 'mcp__brightdata-mcp__search_engine':
@@ -56,24 +57,13 @@ export class MCPToolExecutor {
   }
 
   /**
-   * Execute Neo4j Cypher query
+   * Execute graph Cypher query
    */
-  private async executeNeo4jQuery(args: { query: string; params?: any }) {
+  private async executeGraphQuery(args: { query: string; params?: any }) {
     const { query: cypherQuery, params } = args;
-    
-    // Import Neo4j driver dynamically
-    const neo4j = require('neo4j-driver');
-    
-    const driver = neo4j.driver(
-      'neo4j+s://cce1f84b.databases.neo4j.io',
-      neo4j.auth.basic('neo4j', 'llNASCzMWGT-nTt-JkD9Qk_4W6PpJrv39X0PuYAIKV0')
-    );
-    
-    const session = driver.session();
-    
+
     try {
-      const result = await session.run(cypherQuery, params || {});
-      const records = result.records.map(record => record.toObject());
+      const records = await falkorGraphClient.queryRows(cypherQuery);
       
       return {
         success: true,
@@ -82,8 +72,7 @@ export class MCPToolExecutor {
         query: cypherQuery
       };
     } finally {
-      await session.close();
-      await driver.close();
+      await falkorGraphClient.close();
     }
   }
 
@@ -100,7 +89,7 @@ export class MCPToolExecutor {
       LIMIT $limit
     `;
     
-    return await this.executeNeo4jQuery({ query, params: { entityType, limit } });
+    return await this.executeGraphQuery({ query, params: { entityType, limit } });
   }
 
   /**
@@ -111,7 +100,7 @@ export class MCPToolExecutor {
     
     // Use BrightData API directly
     const apiUrl = 'https://api.brightdata.com/serp';
-    const apiToken = 'bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4';
+    const apiToken = process.env.BRIGHTDATA_API_TOKEN || '';
     
     const searchParams = new URLSearchParams({
       q: query,
@@ -123,7 +112,7 @@ export class MCPToolExecutor {
       const response = await fetch(`${apiUrl}?${searchParams}`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${apiToken}`,
+          ...(apiToken ? { 'Authorization': `Bearer ${apiToken}` } : {}),
           'Content-Type': 'application/json'
         }
       });

@@ -48,7 +48,7 @@ const parseThinkingContent = (thinking: ThinkingStep[] | string[]): ThinkingStep
       step = {
         step: step.step,
         action: '🔗 Connecting to Database',
-        reasoning: 'Establishing connection to Neo4j graph database via MCP',
+        reasoning: 'Establishing connection to the graph intelligence store via MCP',
       };
     } else if (content.includes('Allowed tools')) {
       step = {
@@ -73,7 +73,7 @@ const parseThinkingContent = (thinking: ThinkingStep[] | string[]): ThinkingStep
             step: step.step,
             action: '📝 Executing Cypher Query',
             reasoning: `Running query: ${queryData.query || 'Unknown query'}`,
-            tool: 'Neo4j Database',
+            tool: 'Graph Store',
           };
         }
       } catch (e) {
@@ -81,7 +81,7 @@ const parseThinkingContent = (thinking: ThinkingStep[] | string[]): ThinkingStep
           step: step.step,
           action: '📝 Executing Query',
           reasoning: 'Running Cypher query on sports database',
-          tool: 'Neo4j Database',
+          tool: 'Graph Store',
         };
       }
     } else if (content.includes('QUERY EXECUTED SUCCESSFULLY')) {
@@ -89,7 +89,7 @@ const parseThinkingContent = (thinking: ThinkingStep[] | string[]): ThinkingStep
         step: step.step,
         action: '✅ Query Successful',
         reasoning: 'Database query completed successfully, processing results',
-        tool: 'Neo4j Database',
+        tool: 'Graph Store',
       };
     } else if (content.includes('Results:')) {
       step = {
@@ -108,7 +108,7 @@ const parseThinkingContent = (thinking: ThinkingStep[] | string[]): ThinkingStep
       step = {
         step: step.step,
         action: '🛠️ Tools Ready',
-        reasoning: 'Neo4j database tools are available for intelligence gathering',
+        reasoning: 'Graph intelligence tools are available for intelligence gathering',
       };
     } else if (content.includes('AI Response:')) {
       step = {
@@ -196,5 +196,4 @@ export const ThinkingDisplay: React.FC<ThinkingDisplayProps> = ({ thinking, isVi
 };
 
 export default ThinkingDisplay;
-
 

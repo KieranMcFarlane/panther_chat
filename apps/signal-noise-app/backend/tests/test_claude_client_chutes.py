@@ -1134,3 +1134,35 @@ def test_chutes_anthropic_provider_rejects_v1_base_when_strict(monkeypatch):
 
     with pytest.raises(ValueError):
         ClaudeClient()
+
+
+def test_claude_client_continuous_profile_defaults(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("DISCOVERY_PROFILE", "continuous")
+    monkeypatch.delenv("CHUTES_MIN_REQUEST_INTERVAL_SECONDS", raising=False)
+    monkeypatch.delenv("CHUTES_MAX_CONCURRENT_REQUESTS", raising=False)
+
+    client = ClaudeClient()
+
+    assert client.discovery_profile == "continuous"
+    assert client.chutes_min_request_interval_seconds == 17.3
+    assert client.chutes_max_concurrent_requests == 1
+
+
+def test_claude_client_test_profile_defaults(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("DISCOVERY_PROFILE", "test")
+    monkeypatch.delenv("CHUTES_MIN_REQUEST_INTERVAL_SECONDS", raising=False)
+    monkeypatch.delenv("CHUTES_MAX_CONCURRENT_REQUESTS", raising=False)
+
+    client = ClaudeClient()
+
+    assert client.discovery_profile == "test"
+    assert client.chutes_min_request_interval_seconds == 0.75
+    assert client.chutes_max_concurrent_requests == 1

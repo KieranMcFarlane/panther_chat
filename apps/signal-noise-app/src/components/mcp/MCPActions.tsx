@@ -9,19 +9,19 @@ interface MCPTool {
   parameters: Record<string, any>;
 }
 
-// Neo4j MCP Tools
-const neo4jTools: MCPTool[] = [
+// Graph MCP Tools
+const graphTools: MCPTool[] = [
   {
-    name: 'neo4j_query',
-    description: 'Execute Cypher queries on Neo4j database to search sports entities',
+    name: 'graph_query',
+    description: 'Query graph-backed relationship data for sports entities',
     parameters: {
-      query: { type: 'string', description: 'Cypher query to execute' },
-      database: { type: 'string', description: 'Database name (optional)', default: 'neo4j' }
+      entityId: { type: 'string', description: 'Entity id or legacy graph ID to inspect' },
+      limit: { type: 'number', description: 'Maximum number of relationships (optional)', default: 25 }
     }
   },
   {
-    name: 'neo4j_search_entities',
-    description: 'Search for sports entities in the Neo4j database',
+    name: 'graph_search_entities',
+    description: 'Search for sports entities in the graph-backed cache',
     parameters: {
       entityType: { type: 'string', description: 'Type of entity (club, player, competition, etc.)' },
       name: { type: 'string', description: 'Name to search for (optional)' },
@@ -62,51 +62,54 @@ const perplexityTools: MCPTool[] = [
 ];
 
 // Combined MCP tools
-const allMCPTools = [...neo4jTools, ...brightDataTools, ...perplexityTools];
+const allMCPTools = [...graphTools, ...brightDataTools, ...perplexityTools];
 
 export function MCPActions() {
-  // Register Neo4j actions
+  // Register graph actions
   useCopilotAction({
-    name: 'neo4j_query',
-    description: 'Execute Cypher queries on Neo4j sports database',
-    parameters: ['query', 'database'],
-    handler: async ({ query, database }) => {
+    name: 'graph_query',
+    description: 'Fetch graph-backed relationships for an entity',
+    parameters: ['entityId', 'limit'],
+    handler: async ({ entityId, limit = 25 }) => {
       try {
-        const response = await fetch('/api/mcp/neo4j', {
+        const response = await fetch('/api/graph/relationships', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ query, database: database || 'neo4j' })
+          body: JSON.stringify({ entityId, limit })
         });
         
-        if (!response.ok) throw new Error('Neo4j query failed');
+        if (!response.ok) throw new Error('Graph query failed');
         
         const result = await response.json();
         return result;
       } catch (error) {
-        console.error('Neo4j action error:', error);
-        return { error: 'Failed to execute Neo4j query', details: error };
+        console.error('Graph action error:', error);
+        return { error: 'Failed to execute graph query', details: error };
       }
     }
   });
 
   useCopilotAction({
-    name: 'neo4j_search_entities', 
-    description: 'Search for sports entities in Neo4j database',
+    name: 'graph_search_entities', 
+    description: 'Search for sports entities in graph-backed cache',
     parameters: ['entityType', 'name', 'limit'],
     handler: async ({ entityType, name, limit = 10 }) => {
       try {
-        const response = await fetch('/api/mcp/neo4j/search', {
+        const query = new URLSearchParams();
+        if (name) query.set('query', name);
+        query.set('limit', String(limit));
+        const response = await fetch(`/api/entities/search?${query.toString()}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ entityType, name, limit })
         });
         
-        if (!response.ok) throw new Error('Neo4j search failed');
+        if (!response.ok) throw new Error('Graph search failed');
         
         const result = await response.json();
         return result;
       } catch (error) {
-        console.error('Neo4j search error:', error);
+        console.error('Graph search error:', error);
         return { error: 'Failed to search entities', details: error };
       }
     }
@@ -163,4 +166,4 @@ export function MCPActions() {
   return null; // This component only registers actions
 }
 
-export { allMCPTools, neo4jTools, brightDataTools, perplexityTools };
+export { allMCPTools, graphTools, brightDataTools, perplexityTools };

@@ -140,3 +140,14 @@ crontab backup-crontab.txt
 3. **Monitor logs** for first few executions
 4. **Set up notifications** (optional) for successful/failed runs
 5. **Review metrics** weekly to fine-tune timing
+
+## Graph Sync + Reconciliation
+
+For entity congruence monitoring and graph cache sync operations, use:
+- [GRAPH_SYNC_RECONCILIATION_OPS.md](/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/docs/GRAPH_SYNC_RECONCILIATION_OPS.md)
+
+Primary commands:
+```bash
+npm run sync:schedule
+npm run reconciliation:monitor
+```

@@ -29,7 +29,7 @@ export async function GET() {
 async function checkDatabaseConnection() {
   try {
     // For now, return healthy status
-    // In production, you would check actual Neo4j connection
+    // In production, you would check the actual graph database connection
     return {
       status: 'connected',
       message: 'Database connection healthy'
@@ -42,4 +42,3 @@ async function checkDatabaseConnection() {
     };
   }
 }
-

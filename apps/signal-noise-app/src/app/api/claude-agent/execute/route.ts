@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
 async function handleRelationshipAnalysis(params: any) {
   const { person_id, timeframe } = params;
   
-  // Mock analysis - in production, query Neo4j and email data
+  // Mock analysis - in production, query the graph-backed relationship store and email data
   return {
     healthScore: Math.floor(Math.random() * 30) + 70, // 70-100
     responseRate: Math.floor(Math.random() * 40) + 60, // 60-100%
@@ -196,7 +196,7 @@ async function handleSendEmail(params: any) {
 async function handleDatabaseUpdate(params: any) {
   const { operation, data } = params;
   
-  // Mock database operation - in production, update Neo4j
+  // Mock database operation - in production, update the graph-backed data store
   return {
     operation,
     recordsAffected: 1,

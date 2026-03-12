@@ -1,13 +1,12 @@
 /**
- * 🎯 RFP Storage Service - Hybrid Supabase + Neo4j Storage
- * 
- * This service provides intelligent RFP storage across multiple systems:
- * - Supabase: Primary storage for UI cards and real-time display in /tenders
- * - Neo4j: Relationship mapping and knowledge graph integration
- * - MCP Integration: Both storage systems accessible via MCP tools
+ * 🎯 RFP Storage Service - Supabase-backed storage
+ *
+ * Canonical storage lives in Supabase. Graph enrichment is optional and should
+ * not be required for core RFP ingestion, listing, and analytics.
  */
 
 import { supabase } from '@/lib/supabase-client';
+import { buildGraphEntityLookupFilter } from '@/lib/graph-id';
 
 export interface RFPData {
   title: string;
@@ -27,7 +26,6 @@ export interface RFPData {
 
 export interface StoredRFP {
   supabaseId: string;
-  neo4jId?: string;
   filePath: string;
   cardData: RFPCardData;
 }
@@ -73,12 +71,7 @@ export interface RFPStorageResult {
 }
 
 export class RFPStorageService {
-  private neo4j: any;
   private isInitialized: boolean = false;
-
-  constructor(neo4jService?: any) {
-    this.neo4j = neo4jService;
-  }
 
   /**
    * Initialize the storage service
@@ -87,9 +80,6 @@ export class RFPStorageService {
     if (this.isInitialized) return;
 
     try {
-      if (this.neo4j) {
-        await this.neo4j.initialize();
-      }
       this.isInitialized = true;
       console.log('✅ RFPStorageService initialized successfully');
     } catch (error) {
@@ -99,7 +89,7 @@ export class RFPStorageService {
   }
 
   /**
-   * Save RFP to both Supabase (UI) and Neo4j (relationships) - NEW HYBRID METHOD
+   * Save RFP to canonical Supabase storage.
    */
   async saveRFP(rfpData: RFPData): Promise<StoredRFP> {
     await this.initialize();
@@ -110,18 +100,11 @@ export class RFPStorageService {
       // 1. Save to Supabase (primary UI storage)
       const supabaseResult = await this.saveToSupabase(rfpData);
       
-      // 2. Save to Neo4j (relationship mapping) - if available
-      let neo4jResult = null;
-      if (this.neo4j) {
-        neo4jResult = await this.saveToNeo4j(rfpData, supabaseResult.id);
-      }
-      
-      // 3. Format for card display
+      // 2. Format for card display
       const cardData = this.formatForCard(supabaseResult, rfpData);
       
       const result: StoredRFP = {
         supabaseId: supabaseResult.id,
-        neo4jId: neo4jResult?.rfpId,
         filePath: `/tenders#${supabaseResult.id}`,
         cardData
       };
@@ -171,7 +154,7 @@ export class RFPStorageService {
       entity_id: rfpData.entityId,
       entity_name: null, // Will be populated from cached_entities
       entity_type: null, // Will be populated from cached_entities
-      neo4j_id: null, // Will be set after Neo4j creation
+      graph_id: null,
       batch_id: rfpData.batchId || null,
       requirements: null, // Will be populated if available
       agent_notes: rfpData.agentNotes || {},
@@ -210,105 +193,6 @@ export class RFPStorageService {
     data.priority = priority;
 
     return data;
-  }
-
-  /**
-   * Save RFP to Neo4j for relationship mapping (Updated for Unified System)
-   */
-  private async saveToNeo4j(rfpData: RFPData, supabaseId: string) {
-    try {
-      const session = this.neo4j.getDriver().session();
-      const rfpId = `rfp-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-      
-      try {
-        // Create or update the entity if it doesn't exist
-        const entityResult = await session.run(`
-          MATCH (e:Entity {id: $entityId})
-          RETURN e
-        `, {
-          entityId: rfpData.entityId
-        });
-
-        if (entityResult.records.length === 0) {
-          console.warn(`Entity ${rfpData.entityId} not found in Neo4j, skipping relationship creation`);
-          return null;
-        }
-
-        // Create the RFP node with unified structure
-        const rfpResult = await session.run(`
-          CREATE (rfp:RFP {
-            id: $rfpId,
-            title: $title,
-            organization: $organization,
-            description: $description,
-            estimatedValue: $estimatedValue,
-            deadline: $deadline,
-            confidence: $confidence,
-            source: $source,
-            supabaseId: $supabaseId,
-            detectedAt: datetime(),
-            status: 'detected',
-            category: $category,
-            subcategory: $subcategory,
-            priority: $priority,
-            priorityScore: $priorityScore,
-            yellowPantherFit: $yellowPantherFit,
-            batchId: $batchId,
-            agentNotes: $agentNotes,
-            contactInfo: $contactInfo,
-            competitionInfo: $competitionInfo,
-            conversionStage: $conversionStage
-          })
-          RETURN rfp
-        `, {
-          rfpId: rfpId,
-          title: rfpData.title,
-          organization: rfpData.organization,
-          description: rfpData.description || '',
-          estimatedValue: rfpData.estimatedValue || '',
-          deadline: rfpData.deadline || null,
-          confidence: rfpData.confidence || 0.5,
-          source: rfpData.source || 'ai-detected',
-          supabaseId: supabaseId,
-          category: rfpData.category || 'general',
-          subcategory: null, // Will be populated if available
-          priority: 'medium', // Will be calculated
-          priorityScore: 5, // Will be calculated
-          yellowPantherFit: Math.round((rfpData.confidence || 0.5) * 100),
-          batchId: rfpData.batchId || null,
-          agentNotes: rfpData.agentNotes || {},
-          contactInfo: rfpData.contactInfo || {},
-          competitionInfo: rfpData.competitionInfo || {},
-          conversionStage: 'opportunity'
-        });
-
-        // Create relationship between entity and RFP
-        await session.run(`
-          MATCH (e:Entity {id: $entityId})
-          MATCH (rfp:RFP {id: $rfpId})
-          MERGE (e)-[:HAS_RFP {detectedAt: datetime()}]->(rfp)
-        `, {
-          entityId: rfpData.entityId,
-          rfpId: rfpId
-        });
-
-        // Update Supabase record with Neo4j ID
-        await supabase
-          .from('rfp_opportunities_unified')
-          .update({ neo4j_id: rfpId })
-          .eq('id', supabaseId);
-
-        console.log(`🔗 Neo4j relationship created: ${rfpData.entityId} -> HAS_RFP -> ${rfpId}`);
-        return { rfpId };
-
-      } finally {
-        await session.close();
-      }
-
-    } catch (neo4jError) {
-      console.warn('⚠️ Neo4j storage failed (continuing with Supabase only):', neo4jError);
-      return null; // Continue without failing the entire operation
-    }
   }
 
   /**
@@ -373,7 +257,7 @@ export class RFPStorageService {
       const { data: entityData, error } = await supabase
         .from('cached_entities')
         .select('properties, labels')
-        .eq('neo4j_id', entityId)
+        .or(buildGraphEntityLookupFilter(entityId))
         .single();
 
       if (error || !entityData) {
@@ -552,23 +436,6 @@ export class RFPStorageService {
         throw new Error(`Failed to update unified RFP status: ${error.message}`);
       }
 
-      // Also update Neo4j if available
-      if (this.neo4j) {
-        try {
-          const session = this.neo4j.getDriver().session();
-          try {
-            await session.run(
-              'MATCH (rfp:RFP {supabaseId: $rfpId}) SET rfp.status = $status, rfp.conversionStage = $conversionStage RETURN rfp',
-              { rfpId, status, conversionStage: this.mapStatusToConversionStage(status) }
-            );
-          } finally {
-            await session.close();
-          }
-        } catch (neo4jError) {
-          console.warn('Failed to update Neo4j status:', neo4jError);
-        }
-      }
-
       return data;
 
     } catch (error) {
@@ -623,116 +490,58 @@ export class RFPStorageService {
   }
 
   /**
-   * Store a detected RFP opportunity in Neo4j
+   * Store a detected RFP opportunity in canonical Supabase storage.
    */
   async storeRFP(detection: RFPDetection): Promise<RFPStorageResult> {
-    const session = this.neo4j.getDriver().session();
     try {
-      // Create or update the entity if it doesn't exist
-      const entityResult = await session.run(`
-        MERGE (e:Entity {name: $entityName})
-        ON CREATE SET 
-          e.type = $entityType,
-          e.last_updated = datetime(),
-          e.created_at = COALESCE(e.created_at, datetime()),
-          e.enrichmentStatus = 'RFP_DETECTED'
-        ON MATCH SET 
-          e.last_updated = datetime(),
-          e.enrichmentStatus = 'RFP_DETECTED'
-        RETURN e
-      `, {
-        entityName: detection.entityName,
-        entityType: detection.entityType
-      });
+      const actionItems = Array.isArray(detection.recommendedActions)
+        ? detection.recommendedActions.filter(Boolean)
+        : [];
 
-      const entity = entityResult.records[0].get('e');
+      const { data, error } = await supabase
+        .from('rfp_opportunities_unified')
+        .upsert({
+          id: detection.rfpId,
+          title: detection.title,
+          organization: detection.entityName,
+          description: detection.description,
+          estimated_value: detection.estimatedValue || null,
+          currency: this.extractCurrency(detection.estimatedValue),
+          value_numeric: this.parseValue(detection.estimatedValue),
+          deadline: detection.submissionDeadline ? new Date(detection.submissionDeadline).toISOString().split('T')[0] : null,
+          detected_at: detection.detectedAt || new Date().toISOString(),
+          source: 'rfp-detection',
+          category: detection.entityType || 'general',
+          status: 'ACTIVE',
+          priority: detection.priorityLevel?.toLowerCase() || 'medium',
+          priority_score: this.mapPriorityLevelToScore(detection.priorityLevel),
+          confidence_score: detection.confidenceScore || 0,
+          confidence: Math.round((detection.confidenceScore || 0) * 100),
+          yellow_panther_fit: detection.yellowPantherFit || 0,
+          entity_id: detection.rfpId,
+          entity_name: detection.entityName,
+          entity_type: detection.entityType,
+          requirements: actionItems,
+          metadata: {
+            keywords: detection.keywords || [],
+            competitive_advantage: detection.competitiveAdvantage || '',
+            recommended_actions: actionItems
+          },
+          notes: detection.competitiveAdvantage || null,
+          conversion_stage: 'opportunity'
+        }, { onConflict: 'id' })
+        .select('id')
+        .single();
 
-      // Create the RFP node
-      const rfpResult = await session.run(`
-        MERGE (r:RFP {id: $rfpId})
-        SET 
-          r.title = $title,
-          r.description = $description,
-          r.estimatedValue = $estimatedValue,
-          r.submissionDeadline = $submissionDeadline,
-          r.priorityLevel = $priorityLevel,
-          r.confidenceScore = $confidenceScore,
-          r.yellowPantherFit = $yellowPantherFit,
-          r.competitiveAdvantage = $competitiveAdvantage,
-          r.detectedAt = datetime($detectedAt),
-          r.status = 'ACTIVE',
-          r.keywords = $keywords,
-          r.last_updated = datetime(),
-          r.created_at = COALESCE(r.created_at, datetime())
-        RETURN r
-      `, {
-        rfpId: detection.rfpId,
-        title: detection.title,
-        description: detection.description,
-        estimatedValue: detection.estimatedValue,
-        submissionDeadline: detection.submissionDeadline,
-        priorityLevel: detection.priorityLevel,
-        confidenceScore: detection.confidenceScore,
-        yellowPantherFit: detection.yellowPantherFit,
-        competitiveAdvantage: detection.competitiveAdvantage,
-        detectedAt: detection.detectedAt,
-        keywords: detection.keywords
-      });
-
-      const rfp = rfpResult.records[0].get('r');
-
-      // Create relationship between entity and RFP
-      await session.run(`
-        MATCH (e:Entity {name: $entityName})
-        MATCH (r:RFP {id: $rfpId})
-        MERGE (e)-[:ISSUED_RFP {detectedAt: datetime($detectedAt)}]->(r)
-      `, {
-        entityName: detection.entityName,
-        rfpId: detection.rfpId,
-        detectedAt: detection.detectedAt
-      });
-
-      // Create recommended actions
-      let relationshipsCreated = 1; // Entity-RFP relationship
-      for (let i = 0; i < detection.recommendedActions.length; i++) {
-        await session.run(`
-          MERGE (a:RecommendedAction {id: $actionId})
-          SET a.action = $actionText,
-              a.created_at = COALESCE(a.created_at, datetime())
-        `, {
-          actionId: `${detection.rfpId}_action_${i + 1}`,
-          actionText: detection.recommendedActions[i]
-        });
-
-        await session.run(`
-          MATCH (r:RFP {id: $rfpId})
-          MATCH (a:RecommendedAction {id: $actionId})
-          MERGE (r)-[:REQUIRES_ACTION]->(a)
-        `, {
-          rfpId: detection.rfpId,
-          actionId: `${detection.rfpId}_action_${i + 1}`
-        });
-
-        relationshipsCreated++;
+      if (error) {
+        throw error;
       }
-
-      // Add RFP to appropriate sport/domain categories
-      await session.run(`
-        MATCH (r:RFP {id: $rfpId})
-        MATCH (e:Entity {name: $entityName})
-        WITH r, e, e.sport as sport
-        CALL apoc.create.addLabels(r, [CASE WHEN sport IS NOT NULL THEN 'RFP_' + sport ELSE 'RFP_General' END]) YIELD node
-        RETURN node
-      `, {
-        rfpId: detection.rfpId,
-        entityName: detection.entityName
-      });
 
       return {
         success: true,
         rfpId: detection.rfpId,
-        entityId: entity.identity.toString(),
-        relationshipsCreated: relationshipsCreated + 1
+        entityId: data.id,
+        relationshipsCreated: actionItems.length
       };
 
     } catch (error) {
@@ -742,8 +551,6 @@ export class RFPStorageService {
         rfpId: detection.rfpId,
         error: error instanceof Error ? error.message : 'Unknown error'
       };
-    } finally {
-      await session.close();
     }
   }
 
@@ -768,48 +575,38 @@ export class RFPStorageService {
    * Get all active RFPs with entity information
    */
   async getActiveRFPs(): Promise<any[]> {
-    const session = this.neo4j.getDriver().session();
     try {
-      const result = await session.run(`
-        MATCH (e:Entity)-[:ISSUED_RFP]->(r:RFP {status: 'ACTIVE'})
-        RETURN 
-          r.id as rfpId,
-          r.title as title,
-          r.description as description,
-          r.estimatedValue as estimatedValue,
-          r.submissionDeadline as submissionDeadline,
-          r.priorityLevel as priorityLevel,
-          r.confidenceScore as confidenceScore,
-          r.yellowPantherFit as yellowPantherFit,
-          r.keywords as keywords,
-          e.name as entityName,
-          e.type as entityType,
-          e.sport as sport,
-          r.detectedAt as detectedAt
-        ORDER BY 
-          r.priorityLevel DESC,
-          r.estimatedValue DESC,
-          r.detectedAt DESC
-      `);
+      const { data, error } = await supabase
+        .from('rfp_opportunities_unified')
+        .select('id, title, description, estimated_value, deadline, priority, confidence_score, yellow_panther_fit, metadata, entity_name, entity_type, detected_at')
+        .in('status', ['ACTIVE', 'active', 'detected', 'qualified', 'pursuing'])
+        .order('priority_score', { ascending: false })
+        .order('value_numeric', { ascending: false })
+        .order('detected_at', { ascending: false });
 
-      return result.records.map(record => ({
-        rfpId: record.get('rfpId'),
-        title: record.get('title'),
-        description: record.get('description'),
-        estimatedValue: record.get('estimatedValue'),
-        submissionDeadline: record.get('submissionDeadline'),
-        priorityLevel: record.get('priorityLevel'),
-        confidenceScore: record.get('confidenceScore'),
-        yellowPantherFit: record.get('yellowPantherFit'),
-        keywords: record.get('keywords'),
-        entityName: record.get('entityName'),
-        entityType: record.get('entityType'),
-        sport: record.get('sport'),
-        detectedAt: record.get('detectedAt')
+      if (error) {
+        throw error;
+      }
+
+      return (data || []).map((row: any) => ({
+        rfpId: row.id,
+        title: row.title,
+        description: row.description,
+        estimatedValue: row.estimated_value,
+        submissionDeadline: row.deadline,
+        priorityLevel: String(row.priority || 'medium').toUpperCase(),
+        confidenceScore: row.confidence_score,
+        yellowPantherFit: row.yellow_panther_fit,
+        keywords: row.metadata?.keywords || [],
+        entityName: row.entity_name,
+        entityType: row.entity_type,
+        sport: row.entity_type,
+        detectedAt: row.detected_at
       }));
 
-    } finally {
-      await session.close();
+    } catch (error) {
+      console.error('Error fetching active RFPs:', error);
+      return [];
     }
   }
 
@@ -817,21 +614,26 @@ export class RFPStorageService {
    * Get recommended actions for a specific RFP
    */
   async getRFPActions(rfpId: string): Promise<any[]> {
-    const session = this.neo4j.getDriver().session();
     try {
-      const result = await session.run(`
-        MATCH (r:RFP {id: $rfpId})-[:REQUIRES_ACTION]->(a:RecommendedAction)
-        RETURN a.action as action, a.id as actionId
-        ORDER BY a.id
-      `, { rfpId });
+      const { data, error } = await supabase
+        .from('rfp_opportunities_unified')
+        .select('metadata')
+        .eq('id', rfpId)
+        .single();
 
-      return result.records.map(record => ({
-        actionId: record.get('actionId'),
-        action: record.get('action')
+      if (error) {
+        throw error;
+      }
+
+      const actions = data?.metadata?.recommended_actions || data?.metadata?.actions || [];
+      return actions.map((action: string, index: number) => ({
+        actionId: `${rfpId}_action_${index + 1}`,
+        action
       }));
 
-    } finally {
-      await session.close();
+    } catch (error) {
+      console.error('Error fetching RFP actions:', error);
+      return [];
     }
   }
 
@@ -839,32 +641,27 @@ export class RFPStorageService {
    * Update RFP status (e.g., when pursued, won, or lost)
    */
   async updateRFPStatus(rfpId: string, status: string, notes?: string): Promise<boolean> {
-    const session = this.neo4j.getDriver().session();
     try {
-      const updateQuery = `
-        MATCH (r:RFP {id: $rfpId})
-        SET r.status = $status,
-            r.last_updated = datetime()
-      `;
-
-      const params = { rfpId, status };
+      const updateData: Record<string, any> = {
+        status,
+        updated_at: new Date().toISOString(),
+        conversion_stage: this.mapStatusToConversionStage(status)
+      };
 
       if (notes) {
-        await session.run(`
-          ${updateQuery}
-          SET r.notes = COALESCE(r.notes, '') + '\\n' + $notes
-        `, { ...params, notes });
-      } else {
-        await session.run(updateQuery, params);
+        updateData.notes = notes;
       }
 
-      return true;
+      const { error } = await supabase
+        .from('rfp_opportunities_unified')
+        .update(updateData)
+        .eq('id', rfpId);
+
+      return !error;
 
     } catch (error) {
       console.error('Error updating RFP status:', error);
       return false;
-    } finally {
-      await session.close();
     }
   }
 
@@ -872,40 +669,56 @@ export class RFPStorageService {
    * Get RFP analytics and metrics
    */
   async getRFPAnalytics(): Promise<any> {
-    const session = this.neo4j.getDriver().session();
     try {
-      const result = await session.run(`
-        MATCH (r:RFP)
-        OPTIONAL MATCH (e:Entity)-[:ISSUED_RFP]->(r)
-        RETURN 
-          COUNT(r) as totalRFPs,
-          COUNT(CASE WHEN r.status = 'ACTIVE' THEN 1 END) as activeRFPs,
-          COUNT(DISTINCT e.type) as entityTypes,
-          COUNT(DISTINCT e.sport) as sportsCovered,
-          SUM(CASE WHEN r.priorityLevel = 'CRITICAL' THEN 1 ELSE 0 END) as criticalRFPs,
-          SUM(CASE WHEN r.priorityLevel = 'MEDIUM' THEN 1 ELSE 0 END) as mediumRFPs,
-          SUM(CASE WHEN r.priorityLevel = 'LOW' THEN 1 ELSE 0 END) as lowRFPs,
-          AVG(r.confidenceScore) as avgConfidence,
-          AVG(r.yellowPantherFit) as avgFitScore
-      `);
+      const { data, error } = await supabase
+        .from('rfp_opportunities_unified')
+        .select('status, priority, confidence_score, yellow_panther_fit, entity_type');
 
-      const record = result.records[0];
+      if (error) {
+        throw error;
+      }
+
+      const rows = data || [];
       return {
-        totalRFPs: record.get('totalRFPs').toNumber(),
-        activeRFPs: record.get('activeRFPs').toNumber(),
-        entityTypes: record.get('entityTypes').toNumber(),
-        sportsCovered: record.get('sportsCovered').toNumber(),
+        totalRFPs: rows.length,
+        activeRFPs: rows.filter((row: any) => ['ACTIVE', 'active', 'detected', 'qualified', 'pursuing'].includes(row.status)).length,
+        entityTypes: new Set(rows.map((row: any) => row.entity_type).filter(Boolean)).size,
+        sportsCovered: new Set(rows.map((row: any) => row.entity_type).filter(Boolean)).size,
         priorityBreakdown: {
-          critical: record.get('criticalRFPs').toNumber(),
-          medium: record.get('mediumRFPs').toNumber(),
-          low: record.get('lowRFPs').toNumber()
+          critical: rows.filter((row: any) => String(row.priority || '').toLowerCase() === 'critical').length,
+          medium: rows.filter((row: any) => String(row.priority || '').toLowerCase() === 'medium').length,
+          low: rows.filter((row: any) => String(row.priority || '').toLowerCase() === 'low').length
         },
-        avgConfidence: record.get('avgConfidence') || 0,
-        avgFitScore: record.get('avgFitScore') || 0
+        avgConfidence: rows.length > 0 ? rows.reduce((sum: number, row: any) => sum + (row.confidence_score || 0), 0) / rows.length : 0,
+        avgFitScore: rows.length > 0 ? rows.reduce((sum: number, row: any) => sum + (row.yellow_panther_fit || 0), 0) / rows.length : 0
       };
 
-    } finally {
-      await session.close();
+    } catch (error) {
+      console.error('Error getting RFP analytics:', error);
+      return {
+        totalRFPs: 0,
+        activeRFPs: 0,
+        entityTypes: 0,
+        sportsCovered: 0,
+        priorityBreakdown: { critical: 0, medium: 0, low: 0 },
+        avgConfidence: 0,
+        avgFitScore: 0
+      };
+    }
+  }
+
+  private mapPriorityLevelToScore(priorityLevel?: string): number {
+    switch (String(priorityLevel || '').toUpperCase()) {
+      case 'CRITICAL':
+        return 10;
+      case 'HIGH':
+        return 8;
+      case 'MEDIUM':
+        return 6;
+      case 'LOW':
+        return 3;
+      default:
+        return 5;
     }
   }
 }
@@ -913,9 +726,9 @@ export class RFPStorageService {
 // Singleton instances for easy import
 let rfpStorageInstance: RFPStorageService | null = null;
 
-export function getRFPStorageService(neo4jService?: any): RFPStorageService {
+export function getRFPStorageService(): RFPStorageService {
   if (!rfpStorageInstance) {
-    rfpStorageInstance = new RFPStorageService(neo4jService);
+    rfpStorageInstance = new RFPStorageService();
   }
   return rfpStorageInstance;
 }

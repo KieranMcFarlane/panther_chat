@@ -8,6 +8,11 @@
 import fs from 'fs/promises';
 import path from 'path';
 
+function isBuildPhase(): boolean {
+  return process.env.NEXT_PHASE === 'phase-production-build' ||
+    process.env.npm_lifecycle_event === 'build';
+}
+
 // ============================================================================
 // Type Definitions
 // ============================================================================
@@ -296,15 +301,26 @@ export async function loadAllRalphStates(): Promise<RalphState[]> {
           states.push(binding.ralph_state);
         }
       } catch (error) {
-        console.error(`Error loading ${file}:`, error);
+        if (!isBuildPhase()) {
+          console.error(`Error loading ${file}:`, error);
+        }
         // Continue loading other files
       }
     }
 
     return states;
   } catch (error) {
-    console.error('Error loading runtime bindings:', error);
-    throw error;
+    if ((error as NodeJS.ErrnoException)?.code === 'ENOENT') {
+      if (!isBuildPhase()) {
+        console.warn('Runtime bindings directory not found, returning empty Ralph analytics dataset');
+      }
+      return [];
+    }
+
+    if (!isBuildPhase()) {
+      console.error('Error loading runtime bindings:', error);
+    }
+    return [];
   }
 }
 

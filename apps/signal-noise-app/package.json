@@ -30,6 +30,8 @@
     "sync:monitor": "node automated-database-sync-mcp.js monitor",
     "sync:once": "node automated-database-sync-mcp.js once",
     "sync:report": "node automated-database-sync-mcp.js report",
+    "sync:schedule": "node scripts/graph-sync-scheduler.mjs",
+    "reconciliation:monitor": "node scripts/reconciliation-monitor.mjs",
     "vector-search:setup": "bash scripts/setup-vector-search.sh",
     "vector-search:init": "node scripts/initialize-embeddings.js",
     "embeddings": "node scripts/initialize-embeddings.js",

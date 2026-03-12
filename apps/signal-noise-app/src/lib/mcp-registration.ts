@@ -47,13 +47,13 @@ export class MCPRegistrationService {
     console.log('🔧 Registering MCP servers...');
     
     const registrations = await Promise.allSettled([
-      this.registerNeo4jServer(),
+      this.registerGraphServer(),
       this.registerBrightDataServer(),
       this.registerPerplexityServer()
     ]);
 
     registrations.forEach((result, index) => {
-      const serverNames = ['neo4j-mcp', 'brightdata', 'perplexity-mcp'];
+      const serverNames = ['graph-mcp', 'brightdata', 'perplexity-mcp'];
       if (result.status === 'fulfilled') {
         console.log(`✅ ${serverNames[index]} registered successfully`);
       } else {
@@ -65,20 +65,20 @@ export class MCPRegistrationService {
   }
 
   /**
-   * Register Neo4j MCP Server
+   * Register graph MCP Server
    */
-  private async registerNeo4jServer() {
-    const serverConfig = this.config.mcpServers['neo4j-mcp'];
-    if (!serverConfig) throw new Error('Neo4j MCP server configuration not found');
+  private async registerGraphServer() {
+    const serverConfig = this.config.mcpServers['graph-mcp'];
+    if (!serverConfig) throw new Error('Graph MCP server configuration not found');
 
     // Create mock registration for now - in real implementation this would 
     // interface with the actual MCP server process
-    const neo4jRegistration = {
-      name: 'neo4j-mcp',
+    const graphRegistration = {
+      name: 'graph-mcp',
       tools: [
         {
-          name: 'mcp__neo4j-mcp__execute_query',
-          description: 'Execute Cypher queries against Neo4j database',
+          name: 'mcp__graph-mcp__execute_query',
+          description: 'Execute Cypher queries against the graph database',
           inputSchema: {
             type: 'object',
             properties: {
@@ -89,8 +89,8 @@ export class MCPRegistrationService {
           }
         },
         {
-          name: 'mcp__neo4j-mcp__search_sports_entities',
-          description: 'Search for sports entities in the knowledge graph',
+          name: 'mcp__graph-mcp__search_sports_entities',
+          description: 'Search for sports entities in the graph cache',
           inputSchema: {
             type: 'object',
             properties: {
@@ -103,8 +103,8 @@ export class MCPRegistrationService {
       config: serverConfig
     };
 
-    this.registeredServers.set('neo4j-mcp', neo4jRegistration);
-    return neo4jRegistration;
+    this.registeredServers.set('graph-mcp', graphRegistration);
+    return graphRegistration;
   }
 
   /**

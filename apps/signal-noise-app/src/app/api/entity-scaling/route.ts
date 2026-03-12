@@ -10,6 +10,8 @@ import { alertReasoningEngine } from '@/lib/alert-reasoning-engine';
 
 export async function GET(request: NextRequest) {
   try {
+    await entityScalingManager.initialize();
+
     const { searchParams } = new URL(request.url);
     const action = searchParams.get('action');
     const tier = searchParams.get('tier');
@@ -122,6 +124,8 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    await entityScalingManager.initialize();
+
     const body = await request.json();
     const { action, entityData, alertData } = body;
 

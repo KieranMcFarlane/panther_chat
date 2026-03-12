@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 /**
  * Activate Connection Mines API
  * 
- * One-click activation to set up connection mines for all entities in Neo4j database
+ * One-click activation to set up connection mines for all entities in the graph-backed entity store
  * Creates passive monitoring webhooks for 1st, 2nd, and 3rd degree connections
  * Enables predictive reasoning for all monitored entities
  */
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
     const startTime = Date.now();
     
     // Step 1: Get entities for mine setup
-    console.log('📊 Step 1: Fetching entities from Neo4j...');
+    console.log('📊 Step 1: Fetching entities from the graph-backed entity store...');
     const entitiesResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/entities/all`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }

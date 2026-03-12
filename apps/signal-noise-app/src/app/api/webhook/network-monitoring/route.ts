@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { Neo4jService } from '@/lib/neo4j';
 import { query } from '@anthropic-ai/claude-agent-sdk';
+import { supabase } from '@/lib/supabase-client';
+import { resolveEntityForDossier } from '@/lib/dossier-entity';
+import { buildLegacyRelationshipGraphFilter, resolveGraphId } from '@/lib/graph-id';
 
 /**
  * Network Monitoring Webhook
@@ -116,12 +118,6 @@ interface NetworkAnalysisResult {
 }
 
 class NetworkMonitoringService {
-  private neo4jService: Neo4jService;
-
-  constructor() {
-    this.neo4jService = new Neo4jService();
-  }
-
   async processNetworkChange(payload: NetworkMonitoringPayload): Promise<NetworkAnalysisResult> {
     const startTime = Date.now();
     
@@ -163,12 +159,12 @@ class NetworkMonitoringService {
         processing_metadata: {
           analysis_duration_ms: processingTime,
           ai_confidence: payload.metadata.confidence_score,
-          data_sources_used: [payload.metadata.source, 'neo4j_network_graph'],
+          data_sources_used: [payload.metadata.source, 'supabase_relationship_cache'],
           next_review_date: this.calculateNextReviewDate(payload.monitoring_type)
         }
       };
       
-      // Store analysis in Neo4j
+      // Store analysis in the graph-backed cache
       await this.storeNetworkAnalysis(result, payload);
       
       // Trigger connection intelligence if high impact
@@ -187,51 +183,59 @@ class NetworkMonitoringService {
   }
 
   private async getCurrentNetworkState(entityId: string): Promise<any> {
-    const cypher = `
-      MATCH (e:Entity {id: $entityId})
-      
-      // Count direct Yellow Panther connections (1st degree)
-      OPTIONAL MATCH (e)-[:HAS_DIRECT_CONNECTION]->(yp:YellowPantherPerson)
-      WITH e, count(DISTINCT yp) as direct_connections
-      
-      // Count mutual connections (2nd degree)
-      OPTIONAL MATCH (e)-[:HAS_MUTUAL_CONNECTION]->(mc:MutualConnection)
-      WITH e, direct_connections, count(DISTINCT mc) as mutual_connections
-      
-      // Count strategic relationships
-      OPTIONAL MATCH (e)-[:HAS_STRATEGIC_RELATIONSHIP]->(sr:StrategicRelationship)
-      WITH e, direct_connections, mutual_connections, count(DISTINCT sr) as strategic_relationships
-      
-      // Calculate strategic importance score
-      OPTIONAL MATCH (e)-[:HAS_OPPORTUNITY]->(o:Opportunity)
-      WHERE o.created_at > datetime() - duration({days: 365})
-      
-      RETURN e.name as entity_name,
-             e.type as entity_type,
-             e.yellowPantherFit as fit_score,
-             e.digitalTransformationScore as digital_score,
-             direct_connections,
-             mutual_connections,
-             strategic_relationships,
-             count(DISTINCT o) as recent_opportunities,
-             (direct_connections * 10 + mutual_connections * 5 + strategic_relationships * 15) as strategic_importance
-    `;
-    
-    const result = await this.neo4jService.executeQuery(cypher, { entityId });
-    return result.length > 0 ? result[0].toObject() : null;
+    const entity = await resolveEntityForDossier(entityId);
+    if (!entity) {
+      return null;
+    }
+
+    const graphKey = resolveGraphId(entity) || String(entity.id);
+    const [{ data: relationships }, { data: events }] = await Promise.all([
+      supabase
+        .from('entity_relationships')
+        .select('relationship_type')
+        .or(buildLegacyRelationshipGraphFilter(graphKey))
+        .eq('is_active', true),
+      supabase
+        .from('events')
+        .select('id')
+        .eq('entity_id', String(entity.id))
+        .gte('received_at', new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString())
+    ]);
+
+    const directConnections = (relationships || []).filter((row: any) => row.relationship_type === 'HAS_DIRECT_CONNECTION').length;
+    const mutualConnections = (relationships || []).filter((row: any) => row.relationship_type === 'HAS_MUTUAL_CONNECTION').length;
+    const strategicRelationships = (relationships || []).filter((row: any) => row.relationship_type === 'HAS_STRATEGIC_RELATIONSHIP').length;
+    const recentOpportunities = (events || []).length;
+
+    return {
+      entity_name: entity.properties?.name || String(entity.id),
+      entity_type: entity.properties?.type || entity.labels?.[0] || 'Entity',
+      fit_score: Number(entity.properties?.yellowPantherFit ?? entity.properties?.yellow_panther_fit ?? 50),
+      digital_score: Number(entity.properties?.digitalTransformationScore ?? entity.properties?.digital_transformation_score ?? 50),
+      direct_connections: directConnections,
+      mutual_connections: mutualConnections,
+      strategic_relationships: strategicRelationships,
+      recent_opportunities: recentOpportunities,
+      strategic_importance: directConnections * 10 + mutualConnections * 5 + strategicRelationships * 15
+    };
   }
 
   private async getPreviousNetworkState(entityId: string): Promise<any> {
-    const cypher = `
-      MATCH (e:Entity {id: $entityId})-[r:HAS_NETWORK_STATE]->(ns:NetworkState)
-      WHERE ns.recorded_at > datetime() - duration({days: 30})
-      RETURN ns.*
-      ORDER BY ns.recorded_at DESC
-      LIMIT 1
-    `;
-    
-    const result = await this.neo4jService.executeQuery(cypher, { entityId });
-    return result.length > 0 ? result[0].get('ns').properties : null;
+    const { data, error } = await supabase
+      .from('entity_cache')
+      .select('data')
+      .eq('entity_type', 'network_analysis')
+      .eq('entity_id', entityId)
+      .gte('updated_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString())
+      .order('updated_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error || !data?.data?.network_evolution?.current_state) {
+      return null;
+    }
+
+    return data.data.network_evolution.current_state;
   }
 
   private analyzeNetworkEvolution(previousState: any, currentState: any, payload: NetworkMonitoringPayload): any {
@@ -444,34 +448,23 @@ class NetworkMonitoringService {
 
   private async storeNetworkAnalysis(result: NetworkAnalysisResult, payload: NetworkMonitoringPayload): Promise<void> {
     try {
-      const cypher = `
-        MATCH (e:Entity {id: $entity_id})
-        CREATE (e)-[:HAS_NETWORK_ANALYSIS]->(na:NetworkAnalysis {
-          id: $analysis_id,
-          monitoring_depth: $monitoring_depth,
-          change_type: $change_type,
-          impact_assessment: $impact_assessment,
-          strategic_value: $strategic_value,
-          network_evolution: $network_evolution,
-          predictive_insights: $predictive_insights,
-          recommended_actions: $recommended_actions,
-          processing_metadata: $processing_metadata,
-          created_at: datetime()
-        })
-      `;
-      
-      await this.neo4jService.executeQuery(cypher, {
-        entity_id: payload.entity_id,
-        analysis_id: result.analysis_id,
-        monitoring_depth: result.monitoring_depth,
-        change_type: result.change_detected.type,
-        impact_assessment: result.change_detected.impact_assessment,
-        strategic_value: result.change_detected.strategic_value,
-        network_evolution: JSON.stringify(result.network_evolution),
-        predictive_insights: JSON.stringify(result.predictive_insights),
-        recommended_actions: JSON.stringify(result.recommended_actions),
-        processing_metadata: JSON.stringify(result.processing_metadata)
-      });
+      const { error } = await supabase
+        .from('entity_cache')
+        .upsert({
+          id: `network_analysis:${payload.entity_id}`,
+          entity_id: payload.entity_id,
+          entity_type: 'network_analysis',
+          organization: payload.entity_name,
+          status: 'completed',
+          data: result,
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'id'
+        });
+
+      if (error) {
+        throw error;
+      }
       
     } catch (error) {
       console.error('Failed to store network analysis:', error);

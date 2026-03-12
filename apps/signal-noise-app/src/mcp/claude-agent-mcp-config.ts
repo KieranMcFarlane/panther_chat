@@ -159,7 +159,12 @@ export async function initializeClaudeAgentWithMCP(
   sessionManager: any;
   toolRegistry: any;
 }> {
-  console.log(`Initializing Claude Agent SDK with official MCP servers for session ${sessionId}`);
+  const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build' ||
+    process.env.npm_lifecycle_event === 'build';
+
+  if (!isBuildPhase) {
+    console.log(`Initializing Claude Agent SDK with official MCP servers for session ${sessionId}`);
+  }
   
   try {
     // Validate MCP servers are available
@@ -169,7 +174,9 @@ export async function initializeClaudeAgentWithMCP(
       if (serverConfig.enabled) {
         try {
           // Test server availability
-          console.log(`Testing MCP server availability: ${serverConfig.name}`);
+          if (!isBuildPhase) {
+            console.log(`Testing MCP server availability: ${serverConfig.name}`);
+          }
           
           // Basic health check - try to call a stats or info method
           if (serverConfig.name === 'better-auth-mcp') {
@@ -182,9 +189,13 @@ export async function initializeClaudeAgentWithMCP(
           }
           
           initializedServers.push(serverConfig);
-          console.log(`✓ MCP server initialized: ${serverConfig.name}`);
+          if (!isBuildPhase) {
+            console.log(`✓ MCP server initialized: ${serverConfig.name}`);
+          }
         } catch (error) {
-          console.error(`✗ Failed to initialize MCP server ${serverConfig.name}:`, error);
+          if (!isBuildPhase) {
+            console.error(`✗ Failed to initialize MCP server ${serverConfig.name}:`, error);
+          }
           if (serverConfig.name === 'better-auth-mcp' || serverConfig.name === 'byte-rover-mcp') {
             // Essential servers - rethrow error
             throw error;

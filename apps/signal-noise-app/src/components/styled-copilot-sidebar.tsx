@@ -48,8 +48,8 @@ const actionVerbs = [
 ];
 
 const toolActionMap: { [key: string]: string[] } = {
-  "mcp__neo4j-mcp__execute_query": ["Querying", "Analyzing", "Investigating"],
-  "mcp__neo4j-mcp__search_nodes": ["Searching", "Finding", "Discovering"],
+  "mcp__graph-mcp__execute_query": ["Querying", "Analyzing", "Investigating"],
+  "mcp__graph-mcp__search_nodes": ["Searching", "Finding", "Discovering"],
   "mcp__brightData__search_engine": ["Searching", "Scouring", "Exploring"],
   "mcp__brightData__scrape_as_markdown": ["Scraping", "Gathering", "Collecting"],
   "mcp__perplexity-mcp__chat_completion": ["Analyzing", "Reasoning", "Synthesizing"],
@@ -260,7 +260,7 @@ export default function StyledCopilotSidebar({
     handler: async ({ companyName }) => {
       setIsProcessing(true);
       setStatusMessage(`Analyzing ${companyName} RFP opportunity...`);
-      setCurrentTool("mcp__neo4j-mcp__execute_query");
+      setCurrentTool("mcp__graph-mcp__execute_query");
       
       const alert = mockRFPAlerts.find(a => a.company.toLowerCase().includes(companyName.toLowerCase()));
       if (alert) {
@@ -344,8 +344,8 @@ export default function StyledCopilotSidebar({
 
   const defaultInstructions = instructions || `You are a Sports Intelligence AI assistant powered by Claude Agent SDK with access to powerful MCP tools:
 
-🔍 **Database Tools:**
-- Neo4j database with 3,325+ sports entities (clubs, players, competitions, relationships)
+🔍 **Graph Tools:**
+- Graph database with 3,325+ sports entities (clubs, players, competitions, relationships)
 - Execute Cypher queries for complex sports data analysis
 
 🌐 **Real-time Intelligence:**
@@ -555,7 +555,7 @@ I can automatically use these tools when you ask questions about sports entities
                   <h4 className="font-semibold text-gray-900 mb-3">Tool Status</h4>
                   <div className="space-y-3">
                     <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <span className="text-gray-700">Neo4j Database</span>
+                      <span className="text-gray-700">Graph Database</span>
                       <div className="flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 text-green-500" />
                         <span className="text-sm text-green-600">Connected</span>

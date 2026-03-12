@@ -10,9 +10,9 @@ import { liveLogService } from "./LiveLogService";
 interface DailyRFPConfig {
   brightdataApiKey: string;
   brightdataZone: string;
-  neo4jUri: string;
-  neo4jUsername: string;
-  neo4jPassword: string;
+  graphUri: string;
+  graphUsername: string;
+  graphPassword: string;
   teamsWebhookUrl: string;
   perplexityApiKey: string;
   searchQueries: string[];
@@ -105,10 +105,10 @@ export class HeadlessClaudeAgentServiceFixed {
       }
     );
 
-    // Real Neo4j Knowledge Graph Tool
-    const neo4jQuery = tool(
+    // Real graph database tool
+    const graphQuery = tool(
       "query_sports_entities",
-      "Query Neo4j knowledge graph for sports entities and relationships",
+      "Query the graph database for sports entities and relationships",
       {
         cypher_query: "string",
         entity_type: "string",
@@ -116,16 +116,16 @@ export class HeadlessClaudeAgentServiceFixed {
       },
       async (args) => {
         try {
-          liveLogService.info('Querying Neo4j knowledge graph', {
+          liveLogService.info('Querying graph database', {
             category: 'api',
             source: 'HeadlessClaudeAgentServiceFixed',
-            message: `Executing Neo4j query for ${args.entity_type || 'entities'}`,
+            message: `Executing graph query for ${args.entity_type || 'entities'}`,
             data: { query: args.cypher_query, entityType: args.entity_type },
-            tags: ['neo4j', 'knowledge-graph', 'query']
+            tags: ['graph', 'database', 'query']
           });
 
-          // Use real Neo4j MCP tool
-          const queryResults = await mcp__neo4j_mcp__execute_query({
+          // Use real graph MCP tool
+          const queryResults = await mcp__graph_mcp__execute_query({
             query: args.cypher_query || 
                    `MATCH (e:${args.entity_type || 'Entity'}) 
                     WHERE e.name IS NOT NULL 
@@ -135,34 +135,34 @@ export class HeadlessClaudeAgentServiceFixed {
 
           const entities = queryResults || [];
           
-          liveLogService.info('Neo4j query completed', {
+          liveLogService.info('Graph query completed', {
             category: 'api',
             source: 'HeadlessClaudeAgentServiceFixed',
-            message: `Found ${entities.length} entities in knowledge graph`,
+            message: `Found ${entities.length} entities in graph database`,
             data: { entitiesCount: entities.length, entityType: args.entity_type },
-            tags: ['neo4j', 'knowledge-graph', 'completed']
+            tags: ['graph', 'database', 'completed']
           });
 
           return {
             content: [{
               type: "text",
-              text: `Neo4j results for ${args.entity_type || 'entities'}:\n\n` +
+              text: `Graph results for ${args.entity_type || 'entities'}:\n\n` +
                      JSON.stringify(entities, null, 2)
             }]
           };
         } catch (error) {
-          liveLogService.error('Neo4j query failed', {
+          liveLogService.error('Graph query failed', {
             category: 'api',
             source: 'HeadlessClaudeAgentServiceFixed',
-            message: `Neo4j query failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+            message: `Graph query failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
             data: { query: args.cypher_query, error: error instanceof Error ? error.message : 'Unknown error' },
-            tags: ['neo4j', 'knowledge-graph', 'error']
+            tags: ['graph', 'database', 'error']
           });
 
           return {
             content: [{
               type: "text",
-              text: `Neo4j query failed. Error: ${error instanceof Error ? error.message : 'Unknown error'}`
+              text: `Graph query failed. Error: ${error instanceof Error ? error.message : 'Unknown error'}`
             }]
           };
         }
@@ -231,7 +231,7 @@ export class HeadlessClaudeAgentServiceFixed {
 
     return createSdkMcpServer({
       "search-rfp": brightDataSearch,
-      "query-neo4j": neo4jQuery,
+      "query-graph": graphQuery,
       "retrieve-knowledge": retrieveKnowledge
     });
   }
@@ -332,14 +332,14 @@ ${this.config.searchQueries.map(q => `- ${q}`).join('\n')}`;
         // Build comprehensive entity processing prompt
         const entityProcessingPrompt = `You are an elite RFP intelligence analyst working for Yellow Panther.
 
-MISSION: Process sports entities from our knowledge graph to find RFP opportunities.
+MISSION: Process sports entities from our graph database to find RFP opportunities.
 
 TARGET INDUSTRIES: ${this.config.targetIndustries.join(', ')}
 
 SEARCH QUERIES: ${this.config.searchQueries.join(', ')}
 
 EXECUTION PLAN:
-1. Use query-neo4j to fetch sports entities from knowledge graph
+1. Use query-graph to fetch sports entities from the graph database
 2. For each entity found (up to 10):
    - Use search-rfp to find RFP opportunities for that entity
    - Use retrieve-knowledge to get historical insights
@@ -364,14 +364,14 @@ Process entities systematically and report findings for each one.`;
             mcpServers: {
               "claude-agent-tools": mcpServer
             },
-            allowedTools: ['search-rfp', 'query-neo4j', 'retrieve-knowledge'],
+            allowedTools: ['search-rfp', 'query-graph', 'retrieve-knowledge'],
             maxTurns: 15, // Allow more turns for comprehensive processing
             systemPrompt: {
               type: "text",
               text: `You are an elite RFP intelligence analyst working for Yellow Panther sports consultancy.
 
 CRITICAL INSTRUCTIONS:
-1. Use query-neo4j FIRST to get sports entities from knowledge graph
+1. Use query-graph FIRST to get sports entities from the graph database
 2. Process EACH entity individually (max 10 entities)
 3. For each entity: search-rfp + retrieve-knowledge
 4. Take time to analyze each entity thoroughly
@@ -516,7 +516,7 @@ Return structured results for each entity with:
             results.push({
               id: `entity_analysis_${Date.now()}_${matchCount}`,
               title: `${entityName} - RFP Analysis`,
-              description: `Claude Agent analyzed ${entityName} using Neo4j knowledge graph, BrightData search, and historical knowledge retrieval.`,
+              description: `Claude Agent analyzed ${entityName} using the graph database, BrightData search, and historical knowledge retrieval.`,
               source: 'claude_agent_entity_iteration',
               url: `https://claude-agent.entity/${matchCount}`,
               detectedAt: new Date(),
@@ -538,7 +538,7 @@ Return structured results for each entity with:
           results.push({
             id: `entity_summary_${Date.now()}_${i}`,
             title: `Sports Entity ${i + 1} - RFP Intelligence Complete`,
-            description: `Claude Agent processed sports entities using Neo4j, BrightData, and knowledge retrieval tools.`,
+            description: `Claude Agent processed sports entities using graph, BrightData, and knowledge retrieval tools.`,
             source: 'claude_agent_entity_iteration',
             url: `https://claude-agent.entity-summary/${i}`,
             detectedAt: new Date(),
@@ -555,7 +555,7 @@ Return structured results for each entity with:
         results.push({
           id: `entity_fallback_${Date.now()}_${i}`,
           title: `Entity Analysis ${i + 1} Completed`,
-          description: 'Claude Agent completed entity processing using MCP tools (Neo4j, BrightData, Knowledge Retrieval).',
+          description: 'Claude Agent completed entity processing using MCP tools (graph, BrightData, Knowledge Retrieval).',
           source: 'claude_agent_entity_iteration',
           url: `https://claude-agent.result/${i}`,
           detectedAt: new Date(),
@@ -609,7 +609,7 @@ Return structured results for each entity with:
         results.push({
           id: `claude_summary_${Date.now()}`,
           title: 'RFP Intelligence Analysis Complete',
-          description: `Claude Agent analyzed ${this.config.searchQueries.length} search queries using BrightData, Neo4j, and knowledge retrieval tools.`,
+          description: `Claude Agent analyzed ${this.config.searchQueries.length} search queries using BrightData, graph, and knowledge retrieval tools.`,
           source: 'claude_agent_mcp',
           url: `https://claude-agent.analysis/${Date.now()}`,
           detectedAt: new Date(),
@@ -624,7 +624,7 @@ Return structured results for each entity with:
       results.push({
         id: `claude_fallback_${Date.now()}`,
         title: 'RFP Analysis Completed',
-        description: 'Claude Agent completed analysis using MCP tools (BrightData, Neo4j, Knowledge Retrieval).',
+        description: 'Claude Agent completed analysis using MCP tools (BrightData, graph, Knowledge Retrieval).',
         source: 'claude_agent_mcp',
         url: `https://claude-agent.result/${Date.now()}`,
         detectedAt: new Date(),

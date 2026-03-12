@@ -1,5 +1,5 @@
 // AUTOMATED SYNC SYSTEM - MCP VERSION
-// Uses MCP tools for database sync (bypasses API key issues)
+// Uses graph-backed MCP tools for sync visibility
 
 console.log('🔄 AUTOMATED DATABASE SYNC SYSTEM - MCP VERSION');
 console.log('=' .repeat(80));
@@ -38,8 +38,8 @@ class MCPDatabaseSync {
       // Get League One teams from cached_entities (via MCP)
       const cachedEntitiesCount = 25; // We know this from previous analysis
       
-      // Get League One teams from Neo4j (via MCP)
-      const neo4jQuery = `
+      // Get League One teams from the graph store (via MCP)
+      const graphQuery = `
         MATCH (e:Entity {sport: "Football"})
         WHERE e.league = "League One" OR e.level = "Tier 3"
         RETURN count(e) as count
@@ -50,11 +50,11 @@ class MCPDatabaseSync {
       
       // In a real implementation, we would use the MCP Supabase tools here
       // but since they have API key issues, we'll use our known values
-      const neo4jCount = 24; // From our previous sync
+      const graphCount = 24; // From our previous sync
       
-      const isConsistent = Math.abs(cachedEntitiesCount - neo4jCount) <= 1; // Allow 1 team difference
+      const isConsistent = Math.abs(cachedEntitiesCount - graphCount) <= 1; // Allow 1 team difference
       
-      console.log(`   • Neo4j: ${neo4jCount} teams`);
+      console.log(`   • Graph store: ${graphCount} teams`);
       console.log(`   • Consistency: ${isConsistent ? '✅ Consistent' : '⚠️  Inconsistent'}`);
       
       if (!isConsistent) {
@@ -66,8 +66,8 @@ class MCPDatabaseSync {
       return {
         consistent: isConsistent,
         cached: cachedEntitiesCount,
-        neo4j: neo4jCount,
-        difference: Math.abs(cachedEntitiesCount - neo4jCount)
+        graph: graphCount,
+        difference: Math.abs(cachedEntitiesCount - graphCount)
       };
       
     } catch (error) {
@@ -86,18 +86,18 @@ class MCPDatabaseSync {
       console.log('\n🏥 RUNNING DATABASE HEALTH CHECK...');
       
       // In a real implementation, we would check:
-      // 1. Neo4j connectivity (via MCP)
+      // 1. Graph store connectivity (via MCP)
       // 2. Supabase connectivity (via MCP)
       // 3. Network latency
       // 4. Database response times
       
-      console.log('   • Neo4j: ✅ Connected (MCP available)');
+      console.log('   • Graph store: ✅ Connected (MCP available)');
       console.log('   • Supabase: ✅ Connected (MCP available)');
       console.log('   • Network: ✅ Stable');
       console.log('   • Memory: ✅ Adequate');
       
       return {
-        neo4j: true,
+        graph: true,
         supabase: true,
         network: true,
         timestamp: new Date()
@@ -106,7 +106,7 @@ class MCPDatabaseSync {
     } catch (error) {
       console.error('❌ Health check failed:', error);
       return { 
-        neo4j: false, 
+        graph: false, 
         supabase: false, 
         error: error.message 
       };
@@ -149,7 +149,7 @@ class MCPDatabaseSync {
       // Run health check
       const health = await this.runHealthCheck();
       
-      if (health.neo4j && health.supabase) {
+      if (health.graph && health.supabase) {
         // Run consistency check
         const consistency = await this.runConsistencyCheck();
         
@@ -220,7 +220,7 @@ class MCPDatabaseSync {
     console.log('🔄 RUNNING ONE-TIME SYNC CHECK...');
     
     const health = await this.runHealthCheck();
-    if (!health.neo4j || !health.supabase) {
+    if (!health.graph || !health.supabase) {
       throw new Error('Database health check failed');
     }
     

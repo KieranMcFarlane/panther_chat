@@ -1,6 +1,11 @@
 import cron from 'node-cron';
 import { HeadlessClaudeAgentService } from '../services/HeadlessClaudeAgentService';
 
+function isBuildPhase(): boolean {
+  return process.env.NEXT_PHASE === 'phase-production-build' ||
+    process.env.npm_lifecycle_event === 'build';
+}
+
 interface CronJobConfig {
   schedule: string; // cron expression
   enabled: boolean;
@@ -22,7 +27,9 @@ export class ClaudeAgentCronScheduler {
    */
   start(): void {
     if (!this.config.enabled) {
-      console.log('Claude Agent cron scheduler is disabled');
+      if (!isBuildPhase()) {
+        console.log('Claude Agent cron scheduler is disabled');
+      }
       return;
     }
 
@@ -55,13 +62,17 @@ export class ClaudeAgentCronScheduler {
       async () => {
         await this.executeWithRetry('hourly-monitoring', async () => {
           // Quick check for urgent opportunities
-          console.log('Running hourly high-priority RFP monitoring');
+          if (!isBuildPhase()) {
+            console.log('Running hourly high-priority RFP monitoring');
+          }
           return [];
         });
       }
     );
 
-    console.log(`Claude Agent cron scheduler started with ${this.jobs.size} jobs`);
+    if (!isBuildPhase()) {
+      console.log(`Claude Agent cron scheduler started with ${this.jobs.size} jobs`);
+    }
   }
 
   /**
@@ -69,7 +80,9 @@ export class ClaudeAgentCronScheduler {
    */
   private scheduleJob(name: string, schedule: string, task: () => Promise<void>): void {
     if (this.jobs.has(name)) {
-      console.warn(`Job ${name} is already scheduled`);
+      if (!isBuildPhase()) {
+        console.warn(`Job ${name} is already scheduled`);
+      }
       return;
     }
 
@@ -80,9 +93,13 @@ export class ClaudeAgentCronScheduler {
       });
 
       this.jobs.set(name, job);
-      console.log(`Scheduled job: ${name} with schedule: ${schedule}`);
+      if (!isBuildPhase()) {
+        console.log(`Scheduled job: ${name} with schedule: ${schedule}`);
+      }
     } catch (error) {
-      console.error(`Failed to schedule job ${name}:`, error);
+      if (!isBuildPhase()) {
+        console.error(`Failed to schedule job ${name}:`, error);
+      }
     }
   }
 
@@ -94,23 +111,33 @@ export class ClaudeAgentCronScheduler {
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
-        console.log(`Executing ${jobName} (attempt ${attempt}/${maxRetries})`);
+        if (!isBuildPhase()) {
+          console.log(`Executing ${jobName} (attempt ${attempt}/${maxRetries})`);
+        }
         const result = await task();
-        console.log(`Successfully completed ${jobName} on attempt ${attempt}`);
+        if (!isBuildPhase()) {
+          console.log(`Successfully completed ${jobName} on attempt ${attempt}`);
+        }
         return;
       } catch (error) {
         lastError = error;
-        console.error(`Attempt ${attempt} failed for ${jobName}:`, error.message);
+        if (!isBuildPhase()) {
+          console.error(`Attempt ${attempt} failed for ${jobName}:`, error.message);
+        }
         
         if (attempt < maxRetries) {
           const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
-          console.log(`Retrying ${jobName} in ${delay}ms...`);
+          if (!isBuildPhase()) {
+            console.log(`Retrying ${jobName} in ${delay}ms...`);
+          }
           await new Promise(resolve => setTimeout(resolve, delay));
         }
       }
     }
 
-    console.error(`All ${maxRetries} attempts failed for ${jobName}. Last error:`, lastError.message);
+    if (!isBuildPhase()) {
+      console.error(`All ${maxRetries} attempts failed for ${jobName}. Last error:`, lastError.message);
+    }
     
     // Send error notification to Teams
     try {
@@ -130,7 +157,9 @@ export class ClaudeAgentCronScheduler {
         }
       });
     } catch (notificationError) {
-      console.error('Failed to send error notification:', notificationError);
+      if (!isBuildPhase()) {
+        console.error('Failed to send error notification:', notificationError);
+      }
     }
   }
 
@@ -140,10 +169,14 @@ export class ClaudeAgentCronScheduler {
   stop(): void {
     this.jobs.forEach((job, name) => {
       job.stop();
-      console.log(`Stopped job: ${name}`);
+      if (!isBuildPhase()) {
+        console.log(`Stopped job: ${name}`);
+      }
     });
     this.jobs.clear();
-    console.log('Claude Agent cron scheduler stopped');
+    if (!isBuildPhase()) {
+      console.log('Claude Agent cron scheduler stopped');
+    }
   }
 
   /**
@@ -154,7 +187,9 @@ export class ClaudeAgentCronScheduler {
     if (job) {
       job.stop();
       this.jobs.delete(name);
-      console.log(`Stopped job: ${name}`);
+      if (!isBuildPhase()) {
+        console.log(`Stopped job: ${name}`);
+      }
       return true;
     }
     return false;
@@ -171,17 +206,25 @@ export class ClaudeAgentCronScheduler {
           await this.claudeService.runDailyRFPScraping();
           break;
         case 'hourly-monitoring':
-          console.log('Running manual hourly monitoring');
+          if (!isBuildPhase()) {
+            console.log('Running manual hourly monitoring');
+          }
           break;
         default:
-          console.error(`Unknown job: ${name}`);
+          if (!isBuildPhase()) {
+            console.error(`Unknown job: ${name}`);
+          }
           return false;
       }
       
-      console.log(`Manually triggered job: ${name}`);
+      if (!isBuildPhase()) {
+        console.log(`Manually triggered job: ${name}`);
+      }
       return true;
     } catch (error) {
-      console.error(`Failed to trigger job ${name}:`, error);
+      if (!isBuildPhase()) {
+        console.error(`Failed to trigger job ${name}:`, error);
+      }
       return false;
     }
   }

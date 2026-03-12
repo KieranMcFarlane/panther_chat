@@ -3,7 +3,7 @@ import { ReliableClaudeService } from '@/services/ReliableClaudeService';
 
 /**
  * Test route for headless Claude agent with MCP integration
- * Tests both BrightData and Neo4j MCP tools
+ * Tests both BrightData and Graph MCP tools
  */
 
 export async function POST(request: NextRequest) {
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
       test_results: {
         query: searchQuery,
         entities: entities,
-        mcp_tools_used: ['brightdata-mcp', 'neo4j-mcp'],
+        mcp_tools_used: ['brightdata-mcp', 'graph-mcp'],
         analysis_result: result,
         timestamp: new Date().toISOString()
       }
@@ -63,7 +63,7 @@ export async function GET() {
     available_tests: [
       'Entity RFP search: POST with entities array',
       'Direct query search: POST with searchQuery',
-      'MCP tools: brightdata-mcp, neo4j-mcp'
+      'MCP tools: brightdata-mcp, graph-mcp'
     ]
   });
 }

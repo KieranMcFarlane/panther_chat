@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { queryNeo4j, createNeo4jNode } from './neo4j-helper';
+import { queryGraph, createGraphNode } from './graph-helper';
 
 // Sports Intelligence Schema Integration
 export interface SportsClub {
@@ -38,7 +38,7 @@ export interface ClubInsights {
 
 export const sportsIntelligenceTools = {
   getEntityCount: {
-    description: "Get the total number of entities in the Neo4j knowledge graph with detailed enrichment statistics",
+    description: "Get the total number of entities in the graph database with detailed enrichment statistics",
     parameters: z.object({}),
     execute: async () => {
       try {
@@ -49,7 +49,7 @@ export const sportsIntelligenceTools = {
                              count(CASE WHEN n.digitalMaturityScore IS NOT NULL THEN 1 END) as entitiesWithDigitalScores,
                              count(CASE WHEN n.opportunityScore IS NOT NULL THEN 1 END) as entitiesWithOpportunityScores`;
         
-        const data = await queryNeo4j(query, {});
+        const data = await queryGraph(query, {});
         const stats = data[0];
         const enrichmentRate = stats.totalEntities > 0 ? Math.round((stats.enrichedEntities / stats.totalEntities) * 100) : 0;
         
@@ -60,13 +60,13 @@ export const sportsIntelligenceTools = {
           entitiesWithDigitalScores: stats.entitiesWithDigitalScores || 0,
           entitiesWithOpportunityScores: stats.entitiesWithOpportunityScores || 0,
           enrichmentRate: enrichmentRate,
-          source: 'Neo4j MCP (native)',
-          message: `Found ${stats.totalEntities} entities in the Neo4j knowledge graph. Enrichment: ${stats.enrichedEntities} entities (${enrichmentRate}%), ${stats.entitiesWithPersonnel} with key personnel, ${stats.entitiesWithDigitalScores} with digital scores.`
+          source: 'Graph MCP (native)',
+          message: `Found ${stats.totalEntities} entities in the graph database. Enrichment: ${stats.enrichedEntities} entities (${enrichmentRate}%), ${stats.entitiesWithPersonnel} with key personnel, ${stats.entitiesWithDigitalScores} with digital scores.`
         };
       } catch (error) {
-        console.error('Error fetching entity count from Neo4j MCP:', error);
+        console.error('Error fetching entity count from graph MCP:', error);
         return { 
-          error: `Failed to fetch entity count from Neo4j database: ${error instanceof Error ? error.message : 'Unknown error'}`,
+          error: `Failed to fetch entity count from graph database: ${error instanceof Error ? error.message : 'Unknown error'}`,
           totalEntities: 0,
           source: 'Error'
         };
@@ -75,7 +75,7 @@ export const sportsIntelligenceTools = {
   },
 
   searchSportsEntities: {
-    description: "Search for sports entities by name, sport, country, or level directly in the Neo4j database with comprehensive filtering",
+    description: "Search for sports entities by name, sport, country, or level directly in the graph database with comprehensive filtering",
     parameters: z.object({
       entityName: z.string().optional().describe("Name of the entity to search for"),
       sport: z.string().optional().describe("Sport type (e.g., Football, Basketball)"),
@@ -129,7 +129,7 @@ export const sportsIntelligenceTools = {
           LIMIT ${limit}
         `;
         
-        const entities = await queryNeo4j(cypherQuery, queryParams);
+        const entities = await queryGraph(cypherQuery, queryParams);
         
         if (!entities || entities.length === 0) {
           return {
@@ -160,13 +160,13 @@ export const sportsIntelligenceTools = {
           matchingEntities: enrichedEntities,
           totalMatches: enrichedEntities.length,
           searchCriteria: params,
-          dataSource: 'Neo4j MCP (native)',
+          dataSource: 'Graph MCP (native)',
           hasEnrichedData: enrichedEntities.some(e => e.enrichmentLevel === 'ENRICHED')
         };
       } catch (error) {
-        console.error('Error searching entities in Neo4j:', error);
+        console.error('Error searching entities in graph database:', error);
         return { 
-          error: `Failed to search entities in Neo4j database: ${error instanceof Error ? error.message : 'Unknown error'}`,
+          error: `Failed to search entities in graph database: ${error instanceof Error ? error.message : 'Unknown error'}`,
           matchingEntities: [],
           totalMatches: 0
         };
@@ -175,16 +175,16 @@ export const sportsIntelligenceTools = {
   },
 
   getEntityDetails: {
-    description: "Get detailed enriched information about a specific sports entity directly from Neo4j database including key personnel, digital maturity, partnerships, and opportunity scores",
+    description: "Get detailed enriched information about a specific sports entity directly from the graph database including key personnel, digital maturity, partnerships, and opportunity scores",
     parameters: z.object({
       entityName: z.string().describe("Name of the entity to get details for (e.g., 'Arsenal', 'Manchester United')")
     }),
     execute: async (params: { entityName: string }) => {
       try {
-        const NEO4J_MCP_URL = process.env.NEO4J_MCP_URL || 'http://localhost:3004';
+        const GRAPH_MCP_URL = process.env.GRAPH_MCP_URL || 'http://localhost:3004';
         
-        // Query Neo4j directly for comprehensive entity data
-        const response = await fetch(`${NEO4J_MCP_URL}/mcp`, {
+        // Query the graph directly for comprehensive entity data
+        const response = await fetch(`${GRAPH_MCP_URL}/mcp`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -203,7 +203,7 @@ export const sportsIntelligenceTools = {
         });
 
         if (!response.ok) {
-          throw new Error(`Neo4j MCP error: ${response.status}`);
+          throw new Error(`graph MCP error: ${response.status}`);
         }
 
         const data = await response.json();
@@ -212,7 +212,7 @@ export const sportsIntelligenceTools = {
         if (!resultText) {
           return {
             found: false,
-            error: `No entity found matching "${params.entityName}" in Neo4j database`
+            error: `No entity found matching "${params.entityName}" in the graph database`
           };
         }
 
@@ -275,21 +275,21 @@ export const sportsIntelligenceTools = {
           },
           enrichmentStatus: entity.enrichmentStatus || 'Not enriched',
           lastUpdated: entity.lastEnriched || entity.lastEnrichmentDate || 'Unknown',
-          dataSource: 'Neo4j MCP (live enriched data)',
+          dataSource: 'Graph MCP (live enriched data)',
           hasEnrichedData: !!(entity.keyPersonnel || entity.digitalMaturityScore || entity.partnerships)
         };
       } catch (error) {
-        console.error('Error fetching entity details from Neo4j:', error);
+        console.error('Error fetching entity details from graph database:', error);
         return {
           found: false,
-          error: `Failed to fetch entity details from Neo4j: ${error instanceof Error ? error.message : 'Unknown error'}`
+          error: `Failed to fetch entity details from graph database: ${error instanceof Error ? error.message : 'Unknown error'}`
         };
       }
     }
   },
 
   getPersonsOfInterest: {
-    description: "Get all persons of interest (key personnel) for a specific sports organization from the Neo4j database",
+    description: "Get all persons of interest (key personnel) for a specific sports organization from the graph database",
     parameters: z.object({
       organizationName: z.string().describe("Name of the organization (e.g., 'Arsenal', 'Manchester United')")
     }),
@@ -301,7 +301,7 @@ export const sportsIntelligenceTools = {
                              n.notes as accessibilityNotes
                       LIMIT 1`;
         
-        const results = await queryNeo4j(query, { organizationName: params.organizationName });
+        const results = await queryGraph(query, { organizationName: params.organizationName });
         
         if (!results || results.length === 0) {
           return {
@@ -320,10 +320,10 @@ export const sportsIntelligenceTools = {
           personsOfInterest: keyPersonnel,
           accessibilityNotes: org.accessibilityNotes || 'No specific accessibility information available',
           message: `Found ${keyPersonnel.length} persons of interest for ${org.organizationName}`,
-          dataSource: 'Neo4j MCP (native)'
+          dataSource: 'Graph MCP (native)'
         };
       } catch (error) {
-        console.error('Error fetching persons of interest from Neo4j:', error);
+        console.error('Error fetching persons of interest from graph database:', error);
         return {
           found: false,
           error: `Failed to fetch persons of interest: ${error instanceof Error ? error.message : 'Unknown error'}`

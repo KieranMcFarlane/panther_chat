@@ -388,22 +388,34 @@ class ClaudeClient:
         self.base_url = base_url or self._resolve_base_url()
         self.chutes_model = os.getenv("CHUTES_MODEL", "moonshotai/Kimi-K2.5-TEE")
         self.chutes_fallback_model = os.getenv("CHUTES_FALLBACK_MODEL", "moonshotai/Kimi-K2.5-TEE")
-        self.chutes_timeout_seconds = float(os.getenv("CHUTES_TIMEOUT_SECONDS", "45"))
-        self.chutes_fallback_timeout_seconds = float(os.getenv("CHUTES_FALLBACK_TIMEOUT_SECONDS", "90"))
+        self.discovery_profile = (os.getenv("DISCOVERY_PROFILE", "continuous") or "continuous").strip().lower()
+        if self.discovery_profile not in {"continuous", "test"}:
+            self.discovery_profile = "continuous"
+        profile_defaults = self._get_discovery_profile_defaults(self.discovery_profile)
+
+        self.chutes_timeout_seconds = float(
+            os.getenv("CHUTES_TIMEOUT_SECONDS", str(profile_defaults["timeout_seconds"]))
+        )
+        self.chutes_fallback_timeout_seconds = float(
+            os.getenv("CHUTES_FALLBACK_TIMEOUT_SECONDS", str(profile_defaults["fallback_timeout_seconds"]))
+        )
         self.chutes_retry_backoff_cap_seconds = float(os.getenv("CHUTES_RETRY_BACKOFF_CAP_SECONDS", "15"))
         self.chutes_retry_jitter_seconds = float(os.getenv("CHUTES_RETRY_JITTER_SECONDS", "0.35"))
         self.chutes_stream_idle_timeout_seconds = float(
             os.getenv("CHUTES_STREAM_IDLE_TIMEOUT_SECONDS", str(self.chutes_timeout_seconds))
         )
-        self.chutes_stream_enabled = self._parse_bool_env(os.getenv("CHUTES_STREAM_ENABLED"), default=True)
+        self.chutes_stream_enabled = self._parse_bool_env(
+            os.getenv("CHUTES_STREAM_ENABLED"),
+            default=bool(profile_defaults["stream_enabled"]),
+        )
         self.chutes_max_retries = int(os.getenv("CHUTES_MAX_RETRIES", "3"))
         self.chutes_min_request_interval_seconds = max(
             0.0,
-            float(os.getenv("CHUTES_MIN_REQUEST_INTERVAL_SECONDS", "0.2")),
+            float(os.getenv("CHUTES_MIN_REQUEST_INTERVAL_SECONDS", str(profile_defaults["min_interval_seconds"]))),
         )
         self.chutes_max_concurrent_requests = max(
             1,
-            int(os.getenv("CHUTES_MAX_CONCURRENT_REQUESTS", "3")),
+            int(os.getenv("CHUTES_MAX_CONCURRENT_REQUESTS", str(profile_defaults["max_concurrent_requests"]))),
         )
         self.chutes_429_policy = os.getenv("CHUTES_429_POLICY", "header_exponential").strip().lower()
         self.chutes_circuit_break_on_quota = self._parse_bool_env(
@@ -420,6 +432,7 @@ class ClaudeClient:
             "llm_last_status": "not_started",
             "llm_circuit_broken": bool(self._get_disabled_reason()),
             "llm_disable_reason": self._get_disabled_reason(),
+            "run_profile": self.discovery_profile,
         }
 
         disable_flag = (os.getenv("DISABLE_CLAUDE_API") or "").strip().lower()
@@ -437,7 +450,7 @@ class ClaudeClient:
         self._chutes_last_request_monotonic = 0.0
         self._chutes_request_semaphore = asyncio.Semaphore(self.chutes_max_concurrent_requests)
 
-        logger.info(f"🤖 ClaudeClient initialized (provider: {self.provider}, default: {self.default_model})")
+        logger.info(f"🤖 ClaudeClient initialized (provider: {self.provider}, profile: {self.discovery_profile}, default: {self.default_model})")
 
     @staticmethod
     def _parse_bool_env(value: Optional[str], *, default: bool) -> bool:
@@ -449,6 +462,26 @@ class ClaudeClient:
         if normalized in {"0", "false", "no", "off"}:
             return False
         return default
+
+    @staticmethod
+    def _get_discovery_profile_defaults(profile: str) -> Dict[str, Any]:
+        profiles = {
+            "continuous": {
+                "timeout_seconds": 60.0,
+                "fallback_timeout_seconds": 90.0,
+                "min_interval_seconds": 17.3,
+                "max_concurrent_requests": 1,
+                "stream_enabled": False,
+            },
+            "test": {
+                "timeout_seconds": 45.0,
+                "fallback_timeout_seconds": 60.0,
+                "min_interval_seconds": 0.75,
+                "max_concurrent_requests": 1,
+                "stream_enabled": False,
+            },
+        }
+        return dict(profiles.get(profile, profiles["continuous"]))
 
     def _resolve_provider(self) -> str:
         provider = (os.getenv("LLM_PROVIDER") or "").strip().lower()
@@ -610,6 +643,7 @@ class ClaudeClient:
             "llm_last_status": last_status,
             "llm_circuit_broken": bool(circuit_broken),
             "llm_disable_reason": disable_reason,
+            "run_profile": self.discovery_profile,
         }
 
     def get_runtime_diagnostics(self) -> Dict[str, Any]:
@@ -950,6 +984,7 @@ class ClaudeClient:
                         "llm_last_status": "ok",
                         "llm_circuit_broken": False,
                         "llm_disable_reason": None,
+                        "run_profile": self.discovery_profile,
                     },
                 }
             except Exception as e:
@@ -1239,6 +1274,7 @@ class ClaudeClient:
                         "llm_last_status": "ok",
                         "llm_circuit_broken": False,
                         "llm_disable_reason": None,
+                        "run_profile": self.discovery_profile,
                     },
                 }
             except Exception as e:

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 interface PersonProfile {
   id: string;
-  neo4j_id: string | number;
+  graph_id?: string | number;
   labels: string[];
   properties: {
     name: string;
@@ -61,10 +61,10 @@ export async function GET(
   try {
     const personId = params.personId;
 
-    // Mock person data - in production, fetch from Neo4j database
+    // Mock person data - in production, fetch from the graph-backed profile store
     const mockPerson: PersonProfile = {
       id: personId,
-      neo4j_id: personId,
+      graph_id: personId,
       labels: ['Person'],
       properties: {
         name: 'Sarah Johnson',
@@ -203,7 +203,7 @@ export async function POST(
     const personId = params.personId;
     const updates = await request.json();
 
-    // In production, update person in Neo4j database
+    // In production, update person in the graph-backed profile store
     // await updatePersonProfile(personId, updates);
 
     return NextResponse.json({

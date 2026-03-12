@@ -5,31 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function MCPTestPage() {
-  const [testResults, setTestResults] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-
   const [claudeAgentResults, setClaudeAgentResults] = useState<any>(null);
   const [claudeAgentLoading, setClaudeAgentLoading] = useState(false);
-
-  const testMCPIntegration = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch('/api/rfp-execute', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      const result = await response.json();
-      setTestResults(result);
-    } catch (error) {
-      console.error('Test failed:', error);
-      setTestResults({ error: error.message });
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const testClaudeAgentIntegration = async () => {
     setClaudeAgentLoading(true);
@@ -63,28 +40,25 @@ export default function MCPTestPage() {
 
         <Card className="bg-gray-800 border-gray-700">
           <CardHeader>
-            <CardTitle className="text-white">🔧 Direct API Test (Fixed Phantom Execution)</CardTitle>
+            <CardTitle className="text-white">🔧 Direct API Test (Retired)</CardTitle>
             <CardDescription className="text-gray-300">
-              Direct API calls bypassing Claude Agent abstraction layer
+              The old direct Neo4j/BrightData/Perplexity test path has been removed from the runtime surface.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <ul className="text-sm text-gray-300 space-y-1">
-              <li>✅ Direct Neo4j queries to get real sports entities</li>
-              <li>✅ Direct BrightData searches for RFP opportunities</li>
-              <li>✅ Direct Perplexity analysis for intelligence</li>
-              <li>✅ No abstraction layers - actual API execution</li>
-              <li>✅ Honest reporting of results and errors</li>
+              <li>✅ Raw Neo4j query endpoints have been retired</li>
+              <li>✅ Secret-bearing direct execution paths have been removed</li>
+              <li>✅ Use the Claude Agent SDK test below for active verification</li>
             </ul>
 
             <Button 
-              onClick={testMCPIntegration}
-              disabled={loading}
+              disabled
               className="w-full"
               size="lg"
               variant="outline"
             >
-              {loading ? '🔄 Testing Direct APIs...' : '🔧 Test Direct API Execution'}
+              Retired
             </Button>
           </CardContent>
         </Card>
@@ -115,60 +89,6 @@ export default function MCPTestPage() {
             </Button>
           </CardContent>
         </Card>
-
-        {testResults && (
-          <Card className="bg-gray-800 border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-white">📊 Direct API Results</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {testResults.success ? (
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-gray-900 rounded p-3">
-                      <div className="text-lg font-bold text-green-400">
-                        {testResults.results?.entitiesProcessed || 0}
-                      </div>
-                      <div className="text-sm text-gray-400">Entities Processed</div>
-                    </div>
-                    <div className="bg-gray-900 rounded p-3">
-                      <div className="text-lg font-bold text-blue-400">
-                        {testResults.results?.searchesPerformed || 0}
-                      </div>
-                      <div className="text-sm text-gray-400">Searches Performed</div>
-                    </div>
-                    <div className="bg-gray-900 rounded p-3">
-                      <div className="text-lg font-bold text-purple-400">
-                        {testResults.results?.neo4jQueries || 0}
-                      </div>
-                      <div className="text-sm text-gray-400">Neo4j Queries</div>
-                    </div>
-                    <div className="bg-gray-900 rounded p-3">
-                      <div className="text-lg font-bold text-yellow-400">
-                        {testResults.results?.executionTime || 0}s
-                      </div>
-                      <div className="text-sm text-gray-400">Duration</div>
-                    </div>
-                  </div>
-
-                  <div className="bg-gray-900 rounded p-4">
-                    <h3 className="font-semibold mb-2">Log File:</h3>
-                    <code className="text-green-300 text-sm">{testResults.results?.logFile}</code>
-                  </div>
-
-                  <div className="bg-gray-900 rounded p-4">
-                    <h3 className="font-semibold mb-2">Status:</h3>
-                    <p className="text-green-300">{testResults.message}</p>
-                  </div>
-                </div>
-              ) : (
-                <div className="bg-red-900/20 border border-red-700 rounded p-4">
-                  <p className="text-red-300">❌ Direct API Test Failed: {testResults.error}</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
 
         {claudeAgentResults && (
           <Card className="bg-gray-800 border-gray-700">
@@ -242,13 +162,12 @@ export default function MCPTestPage() {
               <pre className="text-gray-300">
 {`{
   "mcpServers": {
-    "neo4j-mcp": {
-      "command": "npx",
-      "args": ["-y", "@alanse/mcp-neo4j-server"],
+    "graph-mcp": {
+      "command": "node",
+      "args": ["src/mcp-falkordb-server.js"],
       "env": {
-        "NEO4J_URI": "neo4j+s://cce1f84b.databases.neo4j.io",
-        "NEO4J_USERNAME": "neo4j",
-        "NEO4J_DATABASE": "neo4j"
+        "FALKORDB_URL": "redis://graph-host:6379",
+        "FALKORDB_GRAPH": "signal_noise"
       }
     },
     "brightData": {

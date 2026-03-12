@@ -5,6 +5,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { mcpBus } from '@/lib/mcp/MCPClientBus';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     console.log('🔍 Debugging MCP connections...');

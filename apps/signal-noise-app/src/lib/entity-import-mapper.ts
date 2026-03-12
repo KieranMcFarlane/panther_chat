@@ -19,6 +19,7 @@ function labelsForEntityType(entityType: string): string[] {
 
 export function mapImportedEntityRowToCachedEntity(row: ImportedEntityRow) {
   return {
+    graph_id: row.entity_id,
     neo4j_id: row.entity_id,
     labels: labelsForEntityType(row.entity_type),
     badge_s3_url: row.badge_url ?? null,

@@ -1,0 +1,51 @@
+{
+  "entity_id": "coventry-city-fc",
+  "entity_name": "Coventry City FC",
+  "procurement_maturity": 66.0,
+  "active_probability": 0.066,
+  "sales_readiness": "MONITOR",
+  "confidence_interval": {
+    "confidence_level": 0.95,
+    "maturity_range": [
+      65.5,
+      66.5
+    ],
+    "probability_range": [
+      0.061,
+      0.071
+    ]
+  },
+  "breakdown": {
+    "maturity": {
+      "capability": 50.0,
+      "initiative": 25.0,
+      "partnership": 12.5,
+      "executive": 12.5,
+      "validated_signal_weight": 0.7,
+      "temporal_weight": 0.2,
+      "hypothesis_prior_weight": 0.1,
+      "raw_scores": {
+        "capability": 10.0,
+        "initiative": 5.0,
+        "partnership": 2.5,
+        "executive": 2.5
+      }
+    },
+    "probability": {
+      "rfp_bonus_contribution": 0.0,
+      "density_contribution": 0.0,
+      "recency_contribution": 0.0,
+      "eig_confidence_contribution": 0.032,
+      "validated_signal_weight": 0.7,
+      "temporal_weight": 0.25,
+      "hypothesis_prior_weight": 0.05,
+      "components": {
+        "has_validated_rfp": false,
+        "procurement_density": 0.0,
+        "recency_score": 0.0,
+        "eig_confidence": 0.32
+      }
+    }
+  },
+  "calculated_at": "2026-03-11T09:37:50.650063+00:00"
+}

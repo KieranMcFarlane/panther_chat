@@ -26,19 +26,17 @@ interface MCPResult {
 export class DirectMCPIntegration {
   
   /**
-   * Execute Neo4j MCP tool directly
+   * Execute graph MCP tool directly
    */
-  async executeNeo4jQuery(query: string): Promise<MCPResult> {
-    console.log(`🔍 Executing Neo4j query: ${query}`);
+  async executeGraphQuery(query: string): Promise<MCPResult> {
+    console.log(`🔍 Executing graph query: ${query}`);
     
     try {
       const env = {
-        NEO4J_URI: process.env.NEO4J_URI || 'neo4j+s://cce1f84b.databases.neo4j.io',
-        NEO4J_USERNAME: process.env.NEO4J_USERNAME || 'neo4j',
-        NEO4J_PASSWORD: process.env.NEO4J_PASSWORD || '',
-        NEO4J_DATABASE: process.env.NEO4J_DATABASE || 'neo4j',
-        AURA_INSTANCEID: process.env.AURA_INSTANCEID || 'cce1f84b',
-        AURA_INSTANCENAME: process.env.AURA_INSTANCENAME || 'Instance01'
+        FALKORDB_URI: process.env.FALKORDB_URI || '',
+        FALKORDB_USER: process.env.FALKORDB_USER || '',
+        FALKORDB_PASSWORD: process.env.FALKORDB_PASSWORD || '',
+        FALKORDB_DATABASE: process.env.FALKORDB_DATABASE || '',
       };
 
       const request = {
@@ -51,7 +49,7 @@ export class DirectMCPIntegration {
         }
       };
 
-      const result = await this.executeMCPCommand('npx', ['-y', '@alanse/mcp-neo4j-server'], request, env);
+      const result = await this.executeMCPCommand('python3', ['backend/falkordb_mcp_server_fastmcp.py'], request, env);
       
       return {
         content: [{
@@ -62,11 +60,11 @@ export class DirectMCPIntegration {
       };
 
     } catch (error) {
-      console.error(`Neo4j MCP error:`, error);
+      console.error(`Graph MCP error:`, error);
       return {
         content: [{
           type: 'text',
-          text: `Neo4j query failed: ${error.message}`
+          text: `Graph query failed: ${error.message}`
         }],
         isError: true
       };
@@ -81,7 +79,7 @@ export class DirectMCPIntegration {
     
     try {
       const env = {
-        API_TOKEN: process.env.BRIGHTDATA_API_TOKEN || 'bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4',
+        API_TOKEN: process.env.BRIGHTDATA_API_TOKEN || '',
         PRO_MODE: 'true'
       };
 
@@ -271,29 +269,30 @@ export class DirectMCPIntegration {
   async getAvailableTools(): Promise<any[]> {
     const tools = [];
 
-    // Neo4j tools
+    // Graph tools
     try {
-      const neo4jRequest = {
+      const graphRequest = {
         jsonrpc: "2.0",
         id: 1,
         method: "tools/list",
         params: {}
       };
 
-      const neo4jResult = await this.executeMCPCommand('npx', ['-y', '@alanse/mcp-neo4j-server'], neo4jRequest, {
-        NEO4J_URI: process.env.NEO4J_URI || 'neo4j+s://cce1f84b.databases.neo4j.io',
-        NEO4J_USERNAME: process.env.NEO4J_USERNAME || 'neo4j',
-        NEO4J_PASSWORD: process.env.NEO4J_PASSWORD || ''
+      const graphResult = await this.executeMCPCommand('python3', ['backend/falkordb_mcp_server_fastmcp.py'], graphRequest, {
+        FALKORDB_URI: process.env.FALKORDB_URI || '',
+        FALKORDB_USER: process.env.FALKORDB_USER || '',
+        FALKORDB_PASSWORD: process.env.FALKORDB_PASSWORD || '',
+        FALKORDB_DATABASE: process.env.FALKORDB_DATABASE || '',
       });
 
-      if (neo4jResult.result?.tools) {
-        tools.push(...neo4jResult.result.tools.map(tool => ({
+      if (graphResult.result?.tools) {
+        tools.push(...graphResult.result.tools.map(tool => ({
           ...tool,
-          server: 'neo4j-mcp'
+          server: 'graph-mcp'
         })));
       }
     } catch (error) {
-      console.error('Failed to get Neo4j tools:', error);
+      console.error('Failed to get graph tools:', error);
     }
 
     // BrightData tools
@@ -306,7 +305,7 @@ export class DirectMCPIntegration {
       };
 
       const brightdataResult = await this.executeMCPCommand('npx', ['-y', '@brightdata/mcp'], brightdataRequest, {
-        API_TOKEN: process.env.BRIGHTDATA_API_TOKEN || 'bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4'
+        API_TOKEN: process.env.BRIGHTDATA_API_TOKEN || ''
       });
 
       if (brightdataResult.result?.tools) {
@@ -351,12 +350,12 @@ export class DirectMCPIntegration {
   async healthCheck(): Promise<Record<string, boolean>> {
     const results: Record<string, boolean> = {};
 
-    // Test Neo4j
+    // Test graph
     try {
-      const neo4jTest = await this.executeNeo4jQuery('MATCH (n) RETURN count(n) as count LIMIT 1');
-      results['neo4j-mcp'] = !neo4jTest.isError;
+      const graphTest = await this.executeGraphQuery('MATCH (n) RETURN count(n) as count LIMIT 1');
+      results['graph-mcp'] = !graphTest.isError;
     } catch (error) {
-      results['neo4j-mcp'] = false;
+      results['graph-mcp'] = false;
     }
 
     // Test BrightData

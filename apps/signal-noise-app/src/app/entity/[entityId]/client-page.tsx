@@ -52,7 +52,8 @@ import {
 
 interface Entity {
   id: string
-  neo4j_id: string | number
+  graph_id?: string | number
+  neo4j_id?: string | number
   labels: string[]
   properties: Record<string, any>
 }
@@ -88,7 +89,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
   useCopilotReadable({
     description: "Current sports entity being viewed by the user",
     value: entity ? {
-      id: entity.neo4j_id,
+      id: entity.graph_id || entity.id,
       name: entity.properties?.name || entity.properties?.title || 'Unknown',
       type: entity.labels?.join(', ') || 'Entity',
       sport: entity.properties?.sport,

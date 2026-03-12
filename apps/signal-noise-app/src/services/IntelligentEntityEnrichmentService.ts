@@ -8,7 +8,8 @@ import { notificationService } from './NotificationService';
 
 interface Entity {
   id: string;
-  neo4j_id: string;
+  graph_id?: string;
+  neo4j_id?: string;
   labels: string[];
   properties: {
     name: string;
@@ -60,7 +61,7 @@ class IntelligentEntityEnrichmentService {
         source: 'IntelligentEntityEnrichmentService',
         data: { 
           timestamp: new Date().toISOString(),
-          tools: ['neo4j-mcp', 'brightdata-mcp', 'supabase-mcp', 'perplexity-mcp']
+          tools: ['graph-mcp', 'brightdata-mcp', 'supabase-mcp', 'perplexity-mcp']
         }
       });
 
@@ -97,7 +98,7 @@ class IntelligentEntityEnrichmentService {
                 "web_data": "Recent news and announcements found",
                 "sources_found": 3
               },
-              "neo4j_relationships": {
+              "graph_relationships": {
                 "new_connections": 5,
                 "existing_partners": 12,
                 "competitor_links": 8
@@ -301,7 +302,7 @@ Sport: ${entity.properties.sport}
 Country: ${entity.properties.country}
 Website: ${entity.properties.website || 'None'}
 
-Using available MCP tools (neo4j-mcp, brightdata-mcp, supabase-mcp, perplexity-mcp), provide:
+Using available MCP tools (graph-mcp, brightdata-mcp, supabase-mcp, perplexity-mcp), provide:
 1. Executive leadership and key personnel updates
 2. Recent business developments and partnerships
 3. Digital presence analysis and improvements
@@ -325,14 +326,14 @@ Focus on actionable intelligence for business development and sponsorship opport
 
       const response = await this.claudeAgent.complete({
         prompt,
-        tools: ['neo4j_query', 'brightdata_scrape', 'supabase_query', 'perplexity_search'],
+        tools: ['graph_query', 'brightdata_scrape', 'supabase_query', 'perplexity_search'],
         tool_choice: 'auto'
       });
 
       const enrichmentData = this.parseClaudeResponse(response.content, entity);
 
-      // Simulate updating Neo4j with enriched data
-      await this.updateEntityInNeo4j(entity, enrichmentData);
+      // Simulate updating the graph-backed cache with enriched data
+      await this.updateEntityInGraphStore(entity, enrichmentData);
 
       const processingTime = Date.now() - startTime;
 
@@ -366,7 +367,7 @@ Focus on actionable intelligence for business development and sponsorship opport
         risk_factors: []
       },
       mcp_tool_results: {
-        neo4j_data: {},
+        graph_data: {},
         brightdata_scraping: {},
         supabase_cache: {},
         perplexity_intelligence: {}
@@ -396,11 +397,11 @@ Focus on actionable intelligence for business development and sponsorship opport
     return enrichmentData;
   }
 
-  private async updateEntityInNeo4j(entity: Entity, enrichmentData: Record<string, any>) {
-    // Simulate Neo4j update using MCP tools
-    liveLogService.info(`💾 Updating Neo4j with enriched data for ${entity.properties.name}`, {
+  private async updateEntityInGraphStore(entity: Entity, enrichmentData: Record<string, any>) {
+    // Simulate graph-backed update using MCP tools
+    liveLogService.info(`💾 Updating graph store with enriched data for ${entity.properties.name}`, {
       category: 'database',
-      source: 'Neo4jMCP',
+      source: 'GraphMCP',
       entity_name: entity.properties.name,
       data: { 
         entityId: entity.id,
@@ -409,19 +410,19 @@ Focus on actionable intelligence for business development and sponsorship opport
       }
     });
 
-    // In production, this would use the neo4j-mcp tool:
-    // await this.claudeAgent.callTool('neo4j_query', {
+    // In production, this would use the graph-mcp tool:
+    // await this.claudeAgent.callTool('graph_query', {
     //   query: 'MATCH (e:Entity {id: $entityId}) SET e.enriched_data = $data RETURN e',
     //   params: { entityId: entity.id, data: enrichmentData }
     // });
   }
 
   private async getEntitiesForEnrichment(): Promise<Entity[]> {
-    // Mock entities for demonstration - in production this would use Neo4j MCP
+    // Mock entities for demonstration - in production this would use graph MCP
     return [
       {
         id: '1',
-        neo4j_id: '1',
+        graph_id: '1',
         labels: ['Entity', 'Club'],
         properties: {
           name: 'Manchester United',
@@ -433,7 +434,7 @@ Focus on actionable intelligence for business development and sponsorship opport
       },
       {
         id: '2',
-        neo4j_id: '2',
+        graph_id: '2',
         labels: ['Entity', 'Club'],
         properties: {
           name: 'Real Madrid',
@@ -445,7 +446,7 @@ Focus on actionable intelligence for business development and sponsorship opport
       },
       {
         id: '3',
-        neo4j_id: '3',
+        graph_id: '3',
         labels: ['Entity', 'League'],
         properties: {
           name: 'Premier League',

@@ -15,13 +15,13 @@ export async function POST(request: NextRequest) {
 
     // Use the working MCP configuration
     const mcpServers = {
-      'neo4j-mcp': {
-        command: 'node',
-        args: ['neo4j-mcp-server.js'],
+      'graph-mcp': {
+        command: 'python3',
+        args: ['backend/falkordb_mcp_server_fastmcp.py'],
         env: {
-          NEO4J_URI: process.env.NEO4J_URI || 'neo4j+s://e6bb5665.databases.neo4j.io',
-          NEO4J_USERNAME: process.env.NEO4J_USERNAME || 'neo4j',
-          NEO4J_PASSWORD: process.env.NEO4J_PASSWORD || 'NeO4jPaSSworD!'
+          FALKORDB_URI: process.env.FALKORDB_URI || '',
+          FALKORDB_USER: process.env.FALKORDB_USER || '',
+          FALKORDB_PASSWORD: process.env.FALKORDB_PASSWORD || ''
         }
       }
     };
@@ -29,20 +29,20 @@ export async function POST(request: NextRequest) {
     const systemPrompt = {
       type: "preset" as const,
       preset: "claude_code" as const,
-      append: `You are an expert RFP Intelligence Analyst with access to sports entities from Neo4j knowledge graph.
+      append: `You are an expert RFP Intelligence Analyst with access to sports entities from the FalkorDB graph store.
 
 Your task is to analyze this comprehensive RFP test demonstration:
 
 SYSTEM CAPABILITIES VERIFIED:
 ✅ Headless Claude Agent SDK working
 ✅ MCP tool integration functional  
-✅ Neo4j knowledge graph access available
-✅ Tool naming pattern confirmed (mcp__neo4j-mcp__*)
+✅ Graph store access available
+✅ Tool naming pattern confirmed (mcp__graph-mcp__*)
 ✅ Real-time monitoring and logging active
 ✅ Structured analysis workflow implemented
 
 CURRENT RFP INTELLIGENCE CAPABILITIES:
-1. Entity relationship mapping from Neo4j
+1. Entity relationship mapping from the graph store
 2. Structured RFP opportunity analysis
 3. Confidence scoring and fit assessment  
 4. Yellow Panther service alignment
@@ -50,7 +50,7 @@ CURRENT RFP INTELLIGENCE CAPABILITIES:
 
 DEMONSTRATION: Show the system can extract structured RFP intelligence from the sports entities database.
 
-Use the Neo4j MCP tools to:
+Use the Graph MCP tools to:
 1. Query sports entities and their relationships
 2. Identify potential RFP opportunities based on entity characteristics
 3. Provide structured analysis with confidence scores
@@ -63,14 +63,14 @@ Return a comprehensive analysis showing the system's RFP discovery capabilities.
     let rfpOpportunitiesFound = 0;
 
     for await (const message of query({
-      prompt: "Analyze the sports entities database to identify 5 potential RFP opportunities. Use Neo4j tools to query entities, then analyze each for procurement signals and provide structured RFP intelligence with confidence scores.",
+      prompt: "Analyze the sports entities database to identify 5 potential RFP opportunities. Use Graph MCP tools to query entities, then analyze each for procurement signals and provide structured RFP intelligence with confidence scores.",
       options: {
         systemPrompt,
         mcpServers,
         allowedTools: [
-          'mcp__neo4j-mcp__execute_query',
-          'mcp__neo4j-mcp__search_sports_entities',
-          'mcp__neo4j-mcp__get_entity_details',
+          'mcp__graph-mcp__execute_query',
+          'mcp__graph-mcp__search_sports_entities',
+          'mcp__graph-mcp__get_entity_details',
           'Read', 'Write', 'Grep', 'Bash'
         ],
         maxTurns: 8,
@@ -88,9 +88,9 @@ Return a comprehensive analysis showing the system's RFP discovery capabilities.
           timestamp: new Date().toISOString()
         });
         
-        if (message.name === 'mcp__neo4j-mcp__execute_query' || 
-            message.name === 'mcp__neo4j-mcp__search_sports_entities') {
-          console.log(`✅ [FINAL VERIFICATION] Neo4j MCP tool working: ${message.name}`);
+        if (message.name === 'mcp__graph-mcp__execute_query' || 
+            message.name === 'mcp__graph-mcp__search_sports_entities') {
+          console.log(`✅ [FINAL VERIFICATION] Graph MCP tool working: ${message.name}`);
         }
       } else if (message.type === 'tool_result') {
         console.log(`✅ [FINAL VERIFICATION] Tool result received`);
@@ -137,20 +137,20 @@ Return a comprehensive analysis showing the system's RFP discovery capabilities.
       verification_results: {
         system_status: "HEADLESS CLAUDE + MCP INTEGRATION WORKING",
         mcp_integration: "✅ FUNCTIONAL",
-        neo4j_connectivity: "✅ VERIFIED", 
+        graph_connectivity: "✅ VERIFIED", 
         tool_execution: "✅ OPERATIONAL",
         analysis_workflow: "✅ IMPLEMENTED"
       },
       technical_capabilities: {
         headless_claude_agent_sdk: "✅ WORKING",
         mcp_server_configuration: "✅ WORKING", 
-        neo4j_knowledge_graph: "✅ CONNECTED",
-        tool_naming_pattern: "✅ mcp__neo4j-mcp__* CONFIRMED",
+        graph_store: "✅ CONNECTED",
+        tool_naming_pattern: "✅ mcp__graph-mcp__* CONFIRMED",
         real_time_monitoring: "✅ ACTIVE"
       },
       rfp_intelligence_demo: {
         tools_used: results.filter(r => r.type === 'tool_use').map(r => r.tool),
-        neo4j_queries_executed: results.filter(r => r.tool_name?.includes('neo4j')).length,
+        graph_queries_executed: results.filter(r => r.tool?.includes('graph-mcp')).length,
         analysis_generated: results.filter(r => r.type === 'assistant_analysis').length,
         rfp_opportunities_identified: Math.max(1, Math.min(5, rfpOpportunitiesFound)),
         structured_analysis: "✅ DEMONSTRATED"
@@ -191,7 +191,7 @@ export async function GET() {
     purpose: 'Verify complete RFP intelligence system functionality',
     what_this_proves: [
       'Headless Claude Agent SDK works with MCP tools',
-      'Neo4j MCP server integration is functional', 
+      'Graph MCP server integration is functional', 
       'Tool naming pattern (mcp__*) is correct',
       'Real-time RFP analysis workflow operational',
       'Structured intelligence extraction capability'

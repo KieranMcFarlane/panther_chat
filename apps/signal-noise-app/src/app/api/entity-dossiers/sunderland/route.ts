@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Neo4jService } from '@/lib/neo4j';
+import { buildGraphEntityLookupFilter } from '@/lib/graph-id';
+import { getSupabaseAdmin } from '@/lib/supabase-client';
 
 // Mark route as dynamic to prevent static generation
 export const dynamic = 'force-dynamic'
@@ -10,15 +11,16 @@ import sunderlandDossierData from '../../../../../dossiers/sunderland-fc-intelli
 import fs from 'fs';
 import path from 'path';
 
+function readSunderlandMarkdown() {
+  const markdownPath = path.join(process.cwd(), 'dossiers/sunderland-fc-intelligence-dossier.md');
+  return fs.readFileSync(markdownPath, 'utf8');
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const format = searchParams.get('format') || 'summary';
-    const neo4j_id = 148; // Sunderland's ID
-
-    // Read markdown dossier
-    const markdownPath = path.join(process.cwd(), 'dossiers/sunderland-fc-intelligence-dossier.md');
-    const sunderlandDossierMarkdown = fs.readFileSync(markdownPath, 'utf8');
+    const sunderlandDossierMarkdown = readSunderlandMarkdown();
 
     if (format === 'complete') {
       // Return complete dossier data
@@ -37,7 +39,7 @@ export async function GET(request: NextRequest) {
     } else {
       // Return summary for quick display
       const summary = {
-        neo4j_id: sunderlandDossierData.neo4j_id,
+        graph_id: sunderlandDossierData.neo4j_id,
         name: sunderlandDossierData.entity.name,
         type: sunderlandDossierData.entity.type,
         opportunity_score: sunderlandDossierData.strategic_analysis.opportunity_scoring.overall_score,
@@ -76,67 +78,14 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const { action } = await request.json();
-
-    // Lazy-load clients only when needed (not during build)
-    const { createClient } = await import('@supabase/supabase-js');
-    const { Neo4jService } = await import('@/lib/neo4j');
-    
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    
-    if (!supabaseUrl || !supabaseKey) {
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: 'Supabase configuration missing. Please set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY environment variables.'
-        },
-        { status: 500 }
-      );
-    }
-    
-    const supabase = createClient(supabaseUrl, supabaseKey);
-    const neo4jService = new Neo4jService();
+    const supabase = getSupabaseAdmin();
 
     if (action === 'store') {
-      // Store Sunderland dossier in both databases
       const neo4j_id = 148;
+      const sunderlandDossierMarkdown = readSunderlandMarkdown();
 
-      // Read markdown dossier
-      const markdownPath = path.join(process.cwd(), 'dossiers/sunderland-fc-intelligence-dossier.md');
-      const sunderlandDossierMarkdown = fs.readFileSync(markdownPath, 'utf8');
-
-      // 1. Store in Neo4j
-      const neo4jQuery = `
-        MERGE (e:Entity:Club:PremierLeague:Enriched {neo4j_id: $neo4j_id})
-        SET e += $properties
-        SET e.last_updated = datetime()
-        RETURN e
-      `;
-
-      const neo4jResult = await neo4jService.run(neo4jQuery, {
-        neo4j_id,
-        properties: {
-          name: sunderlandDossierData.entity.name,
-          type: sunderlandDossierData.entity.type,
-          sport: sunderlandDossierData.entity.sport,
-          country: sunderlandDossierData.entity.country,
-          level: sunderlandDossierData.entity.level,
-          website: sunderlandDossierData.entity.website,
-          founded: sunderlandDossierData.entity.founded,
-          stadium: sunderlandDossierData.entity.stadium,
-          opportunity_score: sunderlandDossierData.strategic_analysis.opportunity_scoring.overall_score,
-          digital_maturity: sunderlandDossierData.digital_transformation.digital_maturity,
-          confidence_score: sunderlandDossierData.entity.confidence_score,
-          dossier_data: JSON.stringify(sunderlandDossierData),
-          dossier_markdown: sunderlandDossierMarkdown,
-          last_enriched: new Date().toISOString(),
-          schema_version: '2.0'
-        }
-      });
-
-      // 2. Store in Supabase
       const supabaseData = {
-        neo4j_id: sunderlandDossierData.neo4j_id,
+        graph_id: sunderlandDossierData.neo4j_id,
         name: sunderlandDossierData.entity.name,
         type: sunderlandDossierData.entity.type,
         sport: sunderlandDossierData.entity.sport,
@@ -179,7 +128,6 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // 3. Create connection paths in Supabase
       const connectionPaths = [
         ...sunderlandDossierData.linkedin_connection_analysis.tier_1_analysis.introduction_paths.map(path => ({
           entity_dossier_id: data.id,
@@ -220,7 +168,6 @@ export async function POST(request: NextRequest) {
         // Don't fail the whole operation if connection paths fail
       }
 
-      // 4. Create opportunity assessments in Supabase
       const opportunityAssessments = [
         ...sunderlandDossierData.strategic_analysis.opportunity_scoring.immediate_launch.map(opp => ({
           entity_dossier_id: data.id,
@@ -262,11 +209,10 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         success: true,
-        message: 'Sunderland AFC dossier stored successfully in both databases',
+        message: 'Sunderland AFC dossier stored successfully in Supabase-backed stores',
         data: {
           neo4j_id,
           supabase_id: data.id,
-          neo4j_result: neo4jResult,
           connection_paths_stored: connectionPaths.length,
           opportunities_stored: opportunityAssessments.length,
           last_updated: new Date().toISOString()
@@ -274,22 +220,12 @@ export async function POST(request: NextRequest) {
       });
 
     } else if (action === 'test-retrieval') {
-      // Test retrieval from both databases
       const neo4j_id = 148;
 
-      // Retrieve from Neo4j
-      const neo4jQuery = `
-        MATCH (e:Entity:Club:PremierLeague:Enriched {neo4j_id: $neo4j_id})
-        RETURN e.name, e.opportunity_score, e.digital_maturity, e.confidence_score, e.last_updated
-      `;
-
-      const neo4jResult = await neo4jService.run(neo4jQuery, { neo4j_id });
-
-      // Retrieve from Supabase
       const { data: supabaseData, error: supabaseError } = await supabase
         .from('entity_dossiers')
-        .select('name, opportunity_score, digital_maturity, confidence_score, last_updated')
-        .eq('neo4j_id', neo4j_id)
+        .select('id, name, opportunity_score, digital_maturity, confidence_score, last_updated')
+        .or(buildGraphEntityLookupFilter(String(neo4j_id)))
         .single();
 
       if (supabaseError) {
@@ -317,16 +253,15 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         success: true,
-        message: 'Retrieval test successful',
+        message: 'Supabase retrieval test successful',
         data: {
-          neo4j_data: neo4jResult.records[0],
           supabase_data: supabaseData,
           connection_paths: connectionPaths || [],
           opportunities: opportunities || [],
           consistency_check: {
-            opportunity_score_match: neo4jResult.records[0].e.opportunity_score === supabaseData.opportunity_score,
-            digital_maturity_match: neo4jResult.records[0].e.digital_maturity === supabaseData.digital_maturity,
-            confidence_score_match: Math.abs(neo4jResult.records[0].e.confidence_score - supabaseData.confidence_score) < 0.01
+            opportunity_score_match: sunderlandDossierData.strategic_analysis.opportunity_scoring.overall_score === supabaseData.opportunity_score,
+            digital_maturity_match: sunderlandDossierData.digital_transformation.digital_maturity === supabaseData.digital_maturity,
+            confidence_score_match: Math.abs(sunderlandDossierData.entity.confidence_score - supabaseData.confidence_score) < 0.01
           }
         }
       });
@@ -347,7 +282,7 @@ export async function POST(request: NextRequest) {
       { 
         success: false, 
         error: 'Internal server error',
-        details: error.message
+        details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     );

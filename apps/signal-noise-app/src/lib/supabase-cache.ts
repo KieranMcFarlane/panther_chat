@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { Neo4jService } from './neo4j';
+import { GraphStoreService } from './graph-store';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -25,10 +25,10 @@ export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey || sup
 });
 
 /**
- * Enhanced Supabase caching service with Neo4j synchronization
+ * Enhanced Supabase caching service with graph synchronization
  */
 export class SupabaseCacheService {
-  private neo4jService: Neo4jService;
+  private graphStoreService: GraphStoreService;
   private cacheExpiry = {
     tier1: 5 * 60, // 5 minutes for Tier 1
     tier2: 30 * 60, // 30 minutes for Tier 2
@@ -37,15 +37,15 @@ export class SupabaseCacheService {
   };
 
   constructor() {
-    this.neo4jService = new Neo4jService();
+    this.graphStoreService = new GraphStoreService();
   }
 
   /**
-   * Initialize cache service and set up Neo4j connection
+   * Initialize cache service and set up graph store connection
    */
   async initialize(): Promise<void> {
     try {
-      await this.neo4jService.initialize();
+      await this.graphStoreService.initialize();
       console.log('✅ Supabase Cache Service initialized');
     } catch (error) {
       console.error('❌ Cache service initialization failed:', error);
@@ -73,7 +73,7 @@ export class SupabaseCacheService {
         status: entity.status,
         entity_tier: tier,
         data: entity,
-        neo4j_synced: false,
+        graph_synced: false,
         expires_at: expiresAt.toISOString(),
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
@@ -89,9 +89,9 @@ export class SupabaseCacheService {
         throw error;
       }
 
-      // Sync to Neo4j asynchronously
-      this.syncToNeo4j(cacheKey, entity, tier).catch(error => {
-        console.error('Neo4j sync failed:', error);
+      // Sync to the graph store asynchronously
+      this.syncToGraphStore(cacheKey, entity, tier).catch(error => {
+        console.error('Graph sync failed:', error);
       });
 
       console.log(`📦 Cached entity: ${entity.organization} (Tier ${tier})`);
@@ -215,16 +215,16 @@ export class SupabaseCacheService {
   }
 
   /**
-   * Sync cached entity to Neo4j Knowledge Graph
+   * Sync cached entity to the graph store
    */
-  private async syncToNeo4j(cacheKey: string, entity: any, tier: number): Promise<void> {
+  private async syncToGraphStore(cacheKey: string, entity: any, tier: number): Promise<void> {
     try {
-      await this.neo4jService.initialize();
+      await this.graphStoreService.initialize();
       
-      const session = this.neo4jService.getDriver().session();
+      const session = this.graphStoreService.getDriver().session();
       try {
-        // Create or update entity in Neo4j
-        const result = await session.run(`
+        // Create or update entity in the graph store
+        await session.run(`
           MERGE (e:Entity {id: $entityId})
           SET e += $properties,
               e.tier = $tier,
@@ -244,25 +244,25 @@ export class SupabaseCacheService {
         // Update cache to mark as synced
         await supabaseAdmin
           .from('entity_cache')
-          .update({ neo4j_synced: true })
+          .update({ graph_synced: true })
           .eq('id', cacheKey);
 
-        console.log(`🔄 Synced to Neo4j: ${entity.organization}`);
+        console.log(`🔄 Synced to graph store: ${entity.organization}`);
 
       } finally {
         await session.close();
       }
 
     } catch (error) {
-      console.error('Neo4j sync failed:', error);
+      console.error('Graph sync failed:', error);
       throw error;
     }
   }
 
   /**
-   * Perform bulk sync of cache to Neo4j
+   * Perform bulk sync of cache to the graph store
    */
-  async bulkSyncToNeo4j(limit = 100): Promise<{ synced: number; failed: number }> {
+  async bulkSyncToGraphStore(limit = 100): Promise<{ synced: number; failed: number }> {
     const results = { synced: 0, failed: 0 };
 
     try {
@@ -270,7 +270,7 @@ export class SupabaseCacheService {
       const { data: unsyncedEntities, error } = await supabaseAdmin
         .from('entity_cache')
         .select('*')
-        .eq('neo4j_synced', false)
+        .eq('graph_synced', false)
         .limit(limit);
 
       if (error) {
@@ -278,8 +278,8 @@ export class SupabaseCacheService {
         return results;
       }
 
-      await this.neo4jService.initialize();
-      const session = this.neo4jService.getDriver().session();
+      await this.graphStoreService.initialize();
+      const session = this.graphStoreService.getDriver().session();
 
       try {
         for (const entity of unsyncedEntities || []) {
@@ -303,7 +303,7 @@ export class SupabaseCacheService {
             // Mark as synced
             await supabaseAdmin
               .from('entity_cache')
-              .update({ neo4j_synced: true })
+              .update({ graph_synced: true })
               .eq('id', entity.id);
 
             results.synced++;
@@ -390,7 +390,7 @@ export class SupabaseCacheService {
       const { count: unsynced } = await supabase
         .from('entity_cache')
         .select('*', { count: 'exact', head: true })
-        .eq('neo4j_synced', false);
+        .eq('graph_synced', false);
 
       // Expired entries
       const { count: expired } = await supabase

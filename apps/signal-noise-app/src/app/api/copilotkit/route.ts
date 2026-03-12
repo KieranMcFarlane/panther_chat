@@ -10,12 +10,12 @@
  * MCP SERVERS (Official Graphiti Only):
  * - graphiti: Official Graphiti MCP from github.com/getzep/graphiti
  *   Location: backend/graphiti_mcp_server_official/
- *   Backend: Neo4j Aura (cloud graph database)
+ *   Backend: FalkorDB graph database
  *   Capabilities:
  *     - Episode management (add, retrieve, delete)
  *     - Entity management and relationship handling
  *     - Semantic and hybrid search for facts and nodes
- *     - Temporal knowledge graph for AI agents
+ *     - Temporal graph memory for AI agents
  *
  * REMOVED (Previous Architecture):
  * - falkordb-mcp: Replaced by official Graphiti
@@ -26,7 +26,7 @@
  *
  * GRAPH INTELLIGENCE:
  * - Entity/Signal/Evidence/Relationship schema in Supabase
- * - Temporal knowledge graph via Graphiti (Neo4j backend)
+ * - Temporal graph intelligence via Graphiti
  * - RFP detection and pattern analysis
  * - Semantic search over entity relationships
  *
@@ -138,7 +138,7 @@ function getMCPServerConfig() {
         "args": ["backend/graphiti_mcp_server.py"],
         "env": {
           "FALKORDB_URI": process.env.FALKORDB_URI || "",
-          "FALKORDB_USER": process.env.FALKORDB_USER || "neo4j",
+          "FALKORDB_USER": process.env.FALKORDB_USER || "",
           "FALKORDB_PASSWORD": process.env.FALKORDB_PASSWORD || "",
           "FALKORDB_DATABASE": process.env.FALKORDB_DATABASE || "sports_intelligence"
         }
@@ -152,7 +152,7 @@ const ALLOWED_TOOLS: string[] = [
   // =============================================================================
   // OFFICIAL GRAPHITI MCP TOOLS (Low-Level Graph Operations Only)
   // =============================================================================
-  // Graphiti provides temporally-aware knowledge graph capabilities
+  // Graphiti provides temporally-aware graph intelligence capabilities
   // Semantic helpers (search_entities, get_entity_signals) live in service layer
 
   // Memory ingestion
@@ -178,7 +178,7 @@ const ALLOWED_TOOLS: string[] = [
   // Single MCP Server: Official Graphiti from github.com/getzep/graphiti
   // Location: backend/graphiti_mcp_server_official/
   //
-  // Graphiti provides temporally-aware knowledge graph capabilities:
+  // Graphiti provides temporally-aware graph intelligence capabilities:
   // - Episode management (add, retrieve, delete)
   // - Entity management and relationship handling
   // - Semantic and hybrid search
@@ -189,7 +189,7 @@ const ALLOWED_TOOLS: string[] = [
   //   Example: mcp__graphiti__add_memory
   //
   // Previous Architecture (DEPRECATED):
-  // - falkordb-mcp: Replaced by Graphiti Neo4j backend
+  // - falkordb-mcp: Replaced by the Graphiti-backed graph service
   // - temporal-intelligence: Replaced by Graphiti episodes
   // - brightData: Removed (scraping not needed for core intelligence)
   // - perplexity-mcp: Removed (use Claude's built-in knowledge)
@@ -211,7 +211,7 @@ const temporalTools = {
   'get_entity_timeline': {
     description: "Get temporal history of an entity including RFPs, partnerships, changes, and other events over time",
     parameters: {
-      entity_id: { type: "string", description: "Entity identifier (name or neo4j_id)" },
+      entity_id: { type: "string", description: "Entity identifier (name or legacy graph ID)" },
       limit: { type: "number", description: "Number of events to return (default: 50)" }
     },
     handler: async (args: { entity_id: string; limit?: number }) => {
@@ -233,7 +233,7 @@ const temporalTools = {
   'analyze_temporal_fit': {
     description: "Analyze how well an entity fits an RFP opportunity based on their temporal patterns, past RFP history, and trends",
     parameters: {
-      entity_id: { type: "string", description: "Entity to analyze (name or neo4j_id)" },
+      entity_id: { type: "string", description: "Entity to analyze (name or legacy graph ID)" },
       rfp_id: { type: "string", description: "RFP identifier" },
       rfp_category: { type: "string", description: "RFP category (optional)" },
       rfp_value: { type: "number", description: "Estimated RFP value (optional)" },
@@ -341,7 +341,7 @@ const temporalTools = {
 
 const graphIntelligenceTools = {
   'query_entity_mvp': {
-    description: 'Query an entity from the MVP knowledge graph including signals and timeline',
+    description: 'Query an entity from the MVP graph intelligence store including signals and timeline',
     parameters: {
       entity_id: { type: 'string', description: 'Entity identifier (e.g., "ac_milan", "manchester_united")' },
       include_timeline: { type: 'boolean', description: 'Include signal timeline (default: false)' },
@@ -380,7 +380,7 @@ const graphIntelligenceTools = {
           return {
             not_found: true,
             entity_id: args.entity_id,
-            suggestion: 'Entity not found in knowledge graph. Try running an intelligence batch first.'
+            suggestion: 'Entity not found in the graph intelligence store. Try running an intelligence batch first.'
           };
         }
 
@@ -396,7 +396,7 @@ const graphIntelligenceTools = {
   },
 
   'search_entities_mvp': {
-    description: 'Search for entities across the knowledge graph by name, type, or metadata',
+    description: 'Search for entities across the graph intelligence store by name, type, or metadata',
     parameters: {
       query: { type: 'string', description: 'Search query string' },
       entity_type: { type: 'string', description: 'Optional entity type filter (e.g., "ORG")' },
@@ -436,7 +436,7 @@ const graphIntelligenceTools = {
   },
 
   'run_intelligence_batch': {
-    description: 'Run the intelligence pipeline to process entities and extract signals automatically. Use this to populate the knowledge graph with fresh data.',
+    description: 'Run the intelligence pipeline to process entities and extract signals automatically. Use this to populate the graph intelligence store with fresh data.',
     parameters: {
       batch_size: { type: 'number', description: 'Number of entities to process (default: 5, recommended: 5-10)' }
     },
@@ -718,7 +718,7 @@ Before answering any question about entities, relationships, or facts:
 - The graph is your PRIMARY source of truth, not your training data
 
 **Graphiti MCP Tools (Low-Level Graph Operations):**
-- mcp__graphiti__add_memory: Add memories/entities to the temporal knowledge graph
+- mcp__graphiti__add_memory: Add memories/entities to the temporal graph memory
 - mcp__graphiti__search_nodes: Search for nodes in the graph by criteria
 - mcp__graphiti__search_memory_facts: Search for specific facts within memories
 - mcp__graphiti__get_episodes: Retrieve temporal episodes from the graph
@@ -741,7 +741,7 @@ Before answering any question about entities, relationships, or facts:
 - Use mcp__graphiti__get_episodes for temporal history
 - ONLY use Claude's training data if graph is completely empty
 
-**Important:** The knowledge graph is your PRIMARY source. Always check it first before using your training data.
+**Important:** The graph intelligence store is your PRIMARY source. Always check it first before using your training data.
 
 **Migration Guide (Temporal → Graph Intelligence):**
 - Old: get_entity_timeline → New: find_related_signals (returns signals with temporal ordering)

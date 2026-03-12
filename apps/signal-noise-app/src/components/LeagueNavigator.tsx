@@ -2,13 +2,14 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { useEntities } from '@/lib/swr-config'
+import { resolveGraphId } from '@/lib/graph-id'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ChevronUp, ChevronDown } from 'lucide-react'
 
 interface Club {
   id: string
-  neo4j_id: string
+  graph_id?: string
   labels: string[]
   properties: {
     name: string
@@ -51,6 +52,11 @@ export function LeagueNavigator() {
     const leagueMap = new Map<string, Club[]>()
     
     clubs.forEach(club => {
+      const clubGraphId = resolveGraphId(club) || club.id
+      if (!clubGraphId) {
+        return
+      }
+
       const league = club.properties.level
       if (!leagueMap.has(league)) {
         leagueMap.set(league, [])
@@ -78,6 +84,7 @@ export function LeagueNavigator() {
   
   const currentLeague = leaguesData[currentLeagueIndex]
   const currentClub = currentLeague?.clubs[currentClubIndex]
+  const currentClubGraphId = currentClub ? resolveGraphId(currentClub) : null
   
   // Reset club index when changing leagues
   useEffect(() => {
@@ -139,7 +146,7 @@ export function LeagueNavigator() {
   }
   
   return (
-    <Card className="w-80">
+    <Card className="w-80" data-graph-id={currentClubGraphId || currentClub.id}>
       <CardContent className="p-4 space-y-4">
         {/* Navigation Controls */}
         <div className="flex justify-center">

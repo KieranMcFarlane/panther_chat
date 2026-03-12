@@ -27,9 +27,9 @@ export async function POST(request: NextRequest) {
 
     const results: any[] = [];
 
-    // Test Neo4j MCP
-    if (testType === 'all' || testType === 'neo4j') {
-      results.push(await testNeo4jDirect());
+    // Test graph MCP
+    if (testType === 'all' || testType === 'graph') {
+      results.push(await testGraphDirect());
     }
 
     // Test BrightData MCP
@@ -102,22 +102,22 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * Test Neo4j Direct MCP Integration
+ * Test graph direct MCP integration
  */
-async function testNeo4jDirect(): Promise<any> {
+async function testGraphDirect(): Promise<any> {
   const startTime = Date.now();
   
   try {
     await liveLogService.log({
       level: 'info',
-      message: '🔍 Testing Direct Neo4j MCP...',
+      message: '🔍 Testing Direct Graph MCP...',
       source: 'Direct MCP Test',
       category: 'api',
-      metadata: { mcpTool: 'neo4j-direct', testType: 'query' }
+      metadata: { mcpTool: 'graph-direct', testType: 'query' }
     });
 
     // Test simple entity count query
-    const result = await directMCP.executeNeo4jQuery('MATCH (n:Entity) RETURN count(n) as entityCount LIMIT 1');
+    const result = await directMCP.executeGraphQuery('MATCH (n:Entity) RETURN count(n) as entityCount LIMIT 1');
     const responseTime = Date.now() - startTime;
 
     if (result.isError) {
@@ -126,18 +126,18 @@ async function testNeo4jDirect(): Promise<any> {
 
     await liveLogService.log({
       level: 'info',
-      message: `✅ Direct Neo4j MCP Test Successful`,
+      message: `✅ Direct Graph MCP Test Successful`,
       source: 'Direct MCP Test',
       category: 'api',
       metadata: {
-        mcpTool: 'neo4j-direct',
+        mcpTool: 'graph-direct',
         responseTime,
         query: 'Entity count query'
       }
     });
 
     return {
-      tool: 'neo4j-direct',
+      tool: 'graph-direct',
       status: 'success',
       responseTime,
       result: {
@@ -157,27 +157,27 @@ async function testNeo4jDirect(): Promise<any> {
     
     await liveLogService.log({
       level: 'error',
-      message: `❌ Direct Neo4j MCP Test Failed: ${errorMessage}`,
+      message: `❌ Direct Graph MCP Test Failed: ${errorMessage}`,
       source: 'Direct MCP Test',
       category: 'api',
       metadata: {
-        mcpTool: 'neo4j-direct',
+        mcpTool: 'graph-direct',
         responseTime,
         error: errorMessage
       }
     });
 
     return {
-      tool: 'neo4j-direct',
+      tool: 'graph-direct',
       status: 'error',
       responseTime,
       error: errorMessage,
       details: {
         method: 'Direct npx execution',
         troubleshooting: [
-          'Check Neo4j database connection',
+          'Check graph database connection',
           'Verify environment variables',
-          'Test database credentials and access'
+          'Test graph credentials and access'
         ]
       }
     };

@@ -1,16 +1,6 @@
 {
   "mcpServers": {
-    "neo4j-mcp": {
-      "command": "npx",
-      "args": ["-y", "@anthropic-ai/mcp-server-neo4j"],
-      "env": {
-        "NEO4J_URI": "${NEO4J_URI}",
-        "NEO4J_USERNAME": "${NEO4J_USERNAME}",
-        "NEO4J_PASSWORD": "${NEO4J_PASSWORD}",
-        "NEO4J_DATABASE": "${NEO4J_DATABASE:neo4j}"
-      }
-    },
-    "falkordb-mcp": {
+    "graph-mcp": {
       "command": "python3",
       "args": ["backend/falkordb_mcp_server_fastmcp.py"],
       "env": {
@@ -66,5 +56,5 @@
       }
     }
   },
-  "_comment": "Complete MCP configuration for Perplexity-first RFP detection system"
+  "_comment": "Complete MCP configuration for the graph-backed Perplexity-first RFP detection system"
 }

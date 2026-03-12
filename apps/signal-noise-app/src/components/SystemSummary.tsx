@@ -24,7 +24,7 @@ export default function SystemSummary() {
         setSystemDoc(`## 🎯 RFP Intelligence System
 
 **Core Capabilities:**
-- Neo4j Knowledge Graph (2,997 sports entities)
+- FalkorDB Graph Store (2,997 sports entities)
 - BrightData Web Scraping & Search
 - Perplexity Market Intelligence
 - Claude Agent SDK Analysis

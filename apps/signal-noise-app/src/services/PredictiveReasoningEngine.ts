@@ -8,8 +8,9 @@
  * - Strategic relationship development
  */
 
-import { Neo4jService } from '@/lib/neo4j';
 import { query } from '@anthropic-ai/claude-agent-sdk';
+import { supabase } from '@/lib/supabase-client';
+import { resolveEntityForDossier } from '@/lib/dossier-entity';
 
 interface PredictiveAnalysis {
   entity_id: string;
@@ -77,12 +78,6 @@ interface HistoricalDataPoint {
 }
 
 export class PredictiveReasoningEngine {
-  private neo4jService: Neo4jService;
-
-  constructor() {
-    this.neo4jService = new Neo4jService();
-  }
-
   async generatePredictiveAnalysis(entityId: string, lookbackDays: number = 365): Promise<PredictiveAnalysis> {
     try {
       console.log(`🔮 Starting predictive analysis for entity ${entityId}`);
@@ -124,7 +119,7 @@ export class PredictiveReasoningEngine {
         predictive_confidence: confidence
       };
       
-      // Store analysis in Neo4j
+      // Store analysis in canonical cache
       await this.storePredictiveAnalysis(analysis);
       
       console.log(`✅ Predictive analysis completed for ${entityInfo.name}`);
@@ -138,50 +133,27 @@ export class PredictiveReasoningEngine {
   }
 
   private async gatherHistoricalData(entityId: string, lookbackDays: number): Promise<HistoricalDataPoint[]> {
-    const cypher = `
-      MATCH (e:Entity {id: $entityId})
-      
-      // Get RFP opportunities
-      OPTIONAL MATCH (e)-[:HAS_OPPORTUNITY]->(o:Opportunity)
-      WHERE o.created_at > datetime() - duration({days: $lookback_days})
-      
-      // Get personnel changes
-      OPTIONAL MATCH (e)-[:HAS_PERSONNEL_CHANGE]->(pc:PersonnelChange)
-      WHERE pc.change_date > datetime() - duration({days: $lookback_days})
-      
-      // Get digital initiatives
-      OPTIONAL MATCH (e)-[:HAS_DIGITAL_INITIATIVE]->(di:DigitalInitiative)
-      WHERE di.launch_date > datetime() - duration({days: $lookback_days})
-      
-      // Get network changes
-      OPTIONAL MATCH (e)-[:HAS_NETWORK_CHANGE]->(nc:NetworkChange)
-      WHERE nc.change_date > datetime() - duration({days: $lookback_days})
-      
-      // Get partnership announcements
-      OPTIONAL MATCH (e)-[:HAS_PARTNERSHIP]->(p:Partnership)
-      WHERE p.announced_date > datetime() - duration({days: $lookback_days})
-      
-      RETURN collect({
-        timestamp: coalesce(o.created_at, pc.change_date, di.launch_date, nc.change_date, p.announced_date),
-        event_type: coalesce(o.type, pc.type, di.type, nc.type, p.type),
-        impact_score: coalesce(o.impact_score, pc.impact_score, di.impact_score, nc.impact_score, p.impact_score, 50),
-        context: coalesce(o.properties, pc.properties, di.properties, nc.properties, p.properties, {})
-      }) as events
-    `;
-    
-    const result = await this.neo4jService.executeQuery(cypher, { entityId, lookback_days });
-    
-    if (result.length === 0) {
+    const entityInfo = await this.getEntityInfo(entityId);
+    const lookupId = String(entityInfo.id || entityId);
+    const startDate = new Date(Date.now() - lookbackDays * 24 * 60 * 60 * 1000).toISOString();
+
+    const { data, error } = await supabase
+      .from('events')
+      .select('received_at, event_type, payload')
+      .eq('entity_id', lookupId)
+      .gte('received_at', startDate)
+      .order('received_at', { ascending: true });
+
+    if (error || !data) {
       return [];
     }
-    
-    const events = result[0].get('events');
-    return events.map((event: any) => ({
-      timestamp: event.timestamp.toISOString(),
-      event_type: event.event_type,
-      entity_id: entityId,
-      impact_score: event.impact_score,
-      context: event.context
+
+    return data.map((event: any) => ({
+      timestamp: event.received_at,
+      event_type: event.event_type || 'unknown',
+      entity_id: lookupId,
+      impact_score: Number(event.payload?.impact_score || event.payload?.score || 50),
+      context: event.payload || {}
     }));
   }
 
@@ -623,50 +595,47 @@ export class PredictiveReasoningEngine {
   }
 
   private async getEntityInfo(entityId: string): Promise<any> {
-    const cypher = `
-      MATCH (e:Entity {id: $entityId})
-      RETURN e.name as name,
-             e.type as type,
-             e.sport as sport,
-             e.yellowPantherFit as fit_score,
-             e.digitalTransformationScore as digital_score,
-             e.yellowPantherPriority as priority,
-             e.linkedin as linkedin
-    `;
-    
-    const result = await this.neo4jService.executeQuery(cypher, { entityId });
-    return result.length > 0 ? result[0].toObject() : {};
+    const entity = await resolveEntityForDossier(entityId);
+    if (!entity) {
+      return {};
+    }
+
+    const properties = entity.properties || {};
+    return {
+      id: entity.id,
+      graph_id: entity.graph_id || entity.id,
+      name: properties.name || 'Unknown',
+      type: properties.type || entity.labels?.[0] || 'Entity',
+      sport: properties.sport || null,
+      fit_score: Number(properties.yellowPantherFit ?? properties.yellow_panther_fit ?? properties.fit_score ?? 50),
+      digital_score: Number(properties.digitalTransformationScore ?? properties.digital_transformation_score ?? 50),
+      priority: Number(properties.yellowPantherPriority ?? properties.yellow_panther_priority ?? 999),
+      linkedin: properties.linkedin || null
+    };
   }
 
   private async storePredictiveAnalysis(analysis: PredictiveAnalysis): Promise<void> {
     try {
-      const cypher = `
-        MATCH (e:Entity {id: $entity_id})
-        MERGE (e)-[:HAS_PREDICTIVE_ANALYSIS]->(pa:PredictiveAnalysis {
-          id: $analysis_id,
-          entity_name: $entity_name,
-          analysis_period: $analysis_period,
-          historical_patterns: $historical_patterns,
-          network_evolution_predictions: $network_evolution_predictions,
-          opportunity_forecast: $opportunity_forecast,
-          strategic_recommendations: $strategic_recommendations,
-          predictive_confidence: $predictive_confidence,
-          created_at: datetime(),
-          valid_until: datetime() + duration({days: 90})
-        })
-      `;
-      
-      await this.neo4jService.executeQuery(cypher, {
-        entity_id: analysis.entity_id,
-        analysis_id: `pred_${analysis.entity_id}_${Date.now()}`,
-        entity_name: analysis.entity_name,
-        analysis_period: JSON.stringify(analysis.analysis_period),
-        historical_patterns: JSON.stringify(analysis.historical_patterns),
-        network_evolution_predictions: JSON.stringify(analysis.network_evolution_predictions),
-        opportunity_forecast: JSON.stringify(analysis.opportunity_forecast),
-        strategic_recommendations: JSON.stringify(analysis.strategic_recommendations),
-        predictive_confidence: JSON.stringify(analysis.predictive_confidence)
-      });
+      const expiresAt = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString();
+      const cacheId = `predictive_analysis:${analysis.entity_id}`;
+      const { error } = await supabase
+        .from('entity_cache')
+        .upsert({
+          id: cacheId,
+          entity_id: analysis.entity_id,
+          entity_type: 'predictive_analysis',
+          organization: analysis.entity_name,
+          status: 'active',
+          data: analysis,
+          expires_at: expiresAt,
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'id'
+        });
+
+      if (error) {
+        throw error;
+      }
       
     } catch (error) {
       console.error('Failed to store predictive analysis:', error);
@@ -678,16 +647,23 @@ export class PredictiveReasoningEngine {
    */
   async getActivePredictiveAnalyses(): Promise<PredictiveAnalysis[]> {
     try {
-      const cypher = `
-        MATCH (e:Entity)-[:HAS_PREDICTIVE_ANALYSIS]->(pa:PredictiveAnalysis)
-        WHERE pa.valid_until > datetime()
-        RETURN pa.*, e.id as entity_id
-        ORDER BY pa.created_at DESC
-        LIMIT 50
-      `;
-      
-      const result = await this.neo4jService.executeQuery(cypher);
-      return result.map(record => record.get('pa').properties);
+      const now = new Date().toISOString();
+      const { data, error } = await supabase
+        .from('entity_cache')
+        .select('data')
+        .eq('entity_type', 'predictive_analysis')
+        .eq('status', 'active')
+        .gte('expires_at', now)
+        .order('updated_at', { ascending: false })
+        .limit(50);
+
+      if (error) {
+        throw error;
+      }
+
+      return (data || [])
+        .map((record: any) => record.data as PredictiveAnalysis)
+        .filter(Boolean);
       
     } catch (error) {
       console.error('Failed to get active predictive analyses:', error);

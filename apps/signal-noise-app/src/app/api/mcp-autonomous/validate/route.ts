@@ -141,7 +141,7 @@ async function validateJSONSchema(): Promise<ValidationResult> {
     timestamp: new Date().toISOString(),
     processingConfig: {
       entityBatchSize: 3,
-      mcpTools: ['neo4j-mcp', 'brightdata-mcp', 'perplexity-mcp'],
+      mcpTools: ['graph-mcp', 'brightdata-mcp', 'perplexity-mcp'],
       processingTime: '00:02:45'
     },
     entitiesProcessed: 3,
@@ -153,7 +153,7 @@ async function validateJSONSchema(): Promise<ValidationResult> {
         sport: 'Football',
         processingStatus: 'completed',
         mcpAnalysis: {
-          neo4jAnalysis: {
+          graphAnalysis: {
             relationshipsFound: 5,
             connectedEntities: 12,
             relationshipTypes: ['PARTNERSHIP', 'COMPETES_IN', 'EMPLOYED_BY'],
@@ -238,7 +238,7 @@ async function validateJSONSchema(): Promise<ValidationResult> {
   });
 
   // Validate MCP analysis structure
-  const mcpChecks = ['neo4jAnalysis', 'brightDataAnalysis', 'perplexityAnalysis'];
+  const mcpChecks = ['graphAnalysis', 'brightDataAnalysis', 'perplexityAnalysis'];
   mcpChecks.forEach(mcpTool => {
     if (!(mcpTool in sampleEntity.mcpAnalysis)) {
       issues.push(`Missing MCP tool analysis: ${mcpTool}`);
@@ -275,7 +275,7 @@ async function testEntityTraversal(entityCount: number): Promise<any> {
     // Create test manager
     const manager = new MCPEnabledAutonomousRFPManager();
     
-    // Get test entities from Neo4j (simulated)
+    // Get test entities from the graph-backed store (simulated)
     const testEntities = Array.from({ length: Math.min(entityCount, 3) }, (_, i) => ({
       id: `test_entity_${i + 1}`,
       name: `Test Entity ${i + 1}`,
@@ -300,7 +300,7 @@ async function testEntityTraversal(entityCount: number): Promise<any> {
         sport: entity.properties.sport,
         processingStatus: 'completed',
         mcpAnalysis: {
-          neo4jAnalysis: {
+          graphAnalysis: {
             relationshipsFound: Math.floor(Math.random() * 10) + 1,
             connectedEntities: Math.floor(Math.random() * 20) + 5,
             relationshipTypes: ['PARTNERSHIP', 'COMPETES_IN'],
@@ -376,7 +376,7 @@ async function testSampleProcessing(): Promise<any> {
 
     // Simulate MCP processing
     const mockProcessing = {
-      neo4j: {
+      graph: {
         relationships: 8,
         connections: 15,
         keyPartners: ['Stadium Partner', 'Kit Supplier'],

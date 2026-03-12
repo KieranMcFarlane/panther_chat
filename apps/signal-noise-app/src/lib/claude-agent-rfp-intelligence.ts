@@ -7,6 +7,8 @@
 
 import { query, tool } from '@anthropic-ai/claude-agent-sdk';
 import { copilotKitAgent } from './copilotkit-claude-agent';
+import fs from 'fs/promises';
+import path from 'path';
 
 interface Entity {
   id: string;
@@ -84,6 +86,7 @@ class RFPIntelligenceAgent {
   private processingQueue: BatchJob[] = [];
   private webhookHandlers: Map<string, Function> = new Map();
   private mcpConfig: any = {};
+  private mcpConfigPromise: Promise<void> | null = null;
   private batchCache: TokenOptimizedBatch = {
     entities: new Map(),
     processingThreshold: 10, // Process when 10 entities need updates
@@ -93,7 +96,6 @@ class RFPIntelligenceAgent {
 
   constructor() {
     this.initializeWebhookHandlers();
-    this.loadMCPConfig();
   }
 
   /**
@@ -101,27 +103,30 @@ class RFPIntelligenceAgent {
    */
   private async loadMCPConfig(): Promise<void> {
     try {
-      // Use absolute URL to fix server-side rendering issue
-      const baseUrl = process.env.NODE_ENV === 'production' 
-        ? 'https://your-domain.com' 
-        : 'http://localhost:3005';
-      
-      const response = await fetch(`${baseUrl}/api/mcp-config`);
-      if (response.ok) {
-        const data = await response.json();
-        this.mcpConfig = data.mcpServers || {};
-        console.log('✅ MCP Config loaded for RFP Intelligence:', Object.keys(this.mcpConfig));
-      }
+      const mcpConfigPath = path.join(process.cwd(), '.mcp.json');
+      const mcpConfig = JSON.parse(await fs.readFile(mcpConfigPath, 'utf-8'));
+      this.mcpConfig = mcpConfig.mcpServers || {};
+      console.log('✅ MCP Config loaded for RFP Intelligence:', Object.keys(this.mcpConfig));
     } catch (error) {
       console.warn('⚠️ Failed to load MCP config:', error);
       this.mcpConfig = {};
     }
   }
 
+  private async ensureMCPConfigLoaded(): Promise<void> {
+    if (!this.mcpConfigPromise) {
+      this.mcpConfigPromise = this.loadMCPConfig();
+    }
+
+    await this.mcpConfigPromise;
+  }
+
   /**
    * 🎯 Analyze RFP for strategic fit and opportunity using Claude Agent with MCP tools
    */
   async analyzeRFP(rfp: RFPData, entityContext?: Entity): Promise<any> {
+    await this.ensureMCPConfigLoaded();
+
     const prompt = `Analyze this RFP for Yellow Panther strategic fit and business opportunity:
       
 Title: ${rfp.title}

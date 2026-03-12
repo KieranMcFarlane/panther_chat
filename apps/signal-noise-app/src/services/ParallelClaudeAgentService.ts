@@ -154,7 +154,7 @@ export class ParallelClaudeAgentService {
       });
     }
 
-    if (threadConfig.tools?.includes('neo4j-mcp')) {
+    if (threadConfig.tools?.includes('graph-mcp')) {
       steps.push({
         name: 'knowledge_graph_query',
         description: 'Querying knowledge graph for relevant information',
@@ -162,13 +162,13 @@ export class ParallelClaudeAgentService {
         execute: async (threadId: string, context: any) => {
           await this.updateExecutionProgress(threadId, 'Querying knowledge graph...', 60);
           
-          // Generate relevant Neo4j queries based on context
-          const queries = this.generateNeo4jQueries(context.userMessage, context.entities);
+          // Generate relevant graph queries based on context
+          const queries = this.generateGraphQueries(context.userMessage, context.entities);
           
           const graphResults = [];
           for (const query of queries) {
-            // In real implementation, call Neo4j MCP
-            const result = await this.callNeo4jMCP(query);
+            // In real implementation, call Graph MCP
+            const result = await this.callGraphMCP(query);
             graphResults.push(result);
           }
           
@@ -353,7 +353,7 @@ export class ParallelClaudeAgentService {
     return queries;
   }
 
-  private generateNeo4jQueries(message: string, entities: any[]): string[] {
+  private generateGraphQueries(message: string, entities: any[]): string[] {
     const queries = [];
     
     // Generate queries based on entities found
@@ -370,8 +370,8 @@ export class ParallelClaudeAgentService {
   }
 
   // Mock MCP calls (in real implementation, these would call actual MCP tools)
-  private async callNeo4jMCP(query: string): Promise<any> {
-    console.log(`Calling Neo4j MCP with query: ${query}`);
+  private async callGraphMCP(query: string): Promise<any> {
+    console.log(`Calling Graph MCP with query: ${query}`);
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     return {

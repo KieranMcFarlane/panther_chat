@@ -1,0 +1,10 @@
+# Target Entity Personnel Template (For Connections Analysis)
+# Description: LinkedIn URLs and personnel data for connections analysis
+# Priority: PREMIUM
+# Freshness: Refresh every 60 days
+# This data is used to analyze connections between YP team members and target entity personnel
+entity_id,person_name,role,linkedin_url,mutual_connections_yp,count_second_degree_paths
+"arsenal-fc","Juliet Slot","Commercial Director","https://uk.linkedin.com/in/juliet-slot","Stuart Cope","2"
+"arsenal-fc","Mark Gonnella","Comms Director","https://uk.linkedin.com/in/mark-gonnella","Tom Richardson","1"
+"arsenal-fc","Josh Kroenke","Vice Chairman","https://uk.linkedin.com/in/josh-kroenke","None","0"
+"chelsea-fc","[Example Name]","Commercial Director","https://uk.linkedin.com/in/","",""

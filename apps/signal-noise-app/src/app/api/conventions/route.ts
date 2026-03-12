@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { Neo4jService } from '@/lib/neo4j'
-
-const neo4jService = new Neo4jService()
+import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
+import { resolveGraphId } from '@/lib/graph-id'
 
 // Sample sports conventions data with federation intelligence
 const DEFAULT_CONVENTIONS = [
@@ -127,92 +126,73 @@ const DEFAULT_CONVENTIONS = [
   }
 ]
 
+async function findRelatedEntitiesForConvention(convention: typeof DEFAULT_CONVENTIONS[number]) {
+  const federationTerms = convention.federations
+    .map((name) => name.trim())
+    .filter(Boolean)
+
+  if (federationTerms.length === 0) {
+    return []
+  }
+
+  const { data, error } = await supabase
+    .from('cached_entities')
+    .select('id, graph_id, neo4j_id, labels, properties')
+    .limit(150)
+
+  if (error) {
+    throw error
+  }
+
+  const matches = (data || []).filter((entity: any) => {
+    const name = String(entity.properties?.name || '').toLowerCase()
+    return federationTerms.some((term) => name.includes(term.toLowerCase()) || term.toLowerCase().includes(name))
+  })
+
+  return matches.slice(0, 10).map((entity: any) => {
+    const stableId = resolveGraphId(entity) || entity.id
+    return ({
+    id: stableId,
+    graph_id: stableId,
+    name: entity.properties?.name || stableId,
+    type: entity.properties?.type || entity.labels?.[0] || 'Entity',
+    labels: entity.labels || []
+  })})
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const year = searchParams.get('year') || new Date().getFullYear().toString()
-    const month = searchParams.get('month') // 0-indexed month
+    const year = searchParams.get('year')
+    const month = searchParams.get('month')
     const type = searchParams.get('type') || ''
     const location = searchParams.get('location') || ''
     const federation = searchParams.get('federation') || ''
 
-    // Filter conventions based on parameters
     let filteredConventions = DEFAULT_CONVENTIONS.filter(convention => {
       const conventionDate = new Date(convention.start)
-      
-      // Year filter
-      if (conventionDate.getFullYear().toString() !== year) return false
-      
-      // Month filter (if specified)
+
+      if (year && conventionDate.getFullYear().toString() !== year) return false
       if (month && conventionDate.getMonth() !== parseInt(month)) return false
-      
-      // Type filter
       if (type && convention.type !== type) return false
-      
-      // Location filter
       if (location && !convention.location.toLowerCase().includes(location.toLowerCase())) return false
-      
-      // Federation filter
-      if (federation && !convention.federations.some(fed => 
-        fed.toLowerCase().includes(federation.toLowerCase())
-      )) return false
-      
+      if (federation && !convention.federations.some(fed => fed.toLowerCase().includes(federation.toLowerCase()))) return false
+
       return true
     })
 
-    // Sort by start date
     filteredConventions.sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
 
-    // Try to get additional data from Neo4j (optional, with timeout)
-    let enhancedConventions = filteredConventions
-    try {
-      await neo4jService.initialize()
-      const session = neo4jService.getDriver().session()
-      
-      try {
-        // For each convention, try to find related entities in our database
-        enhancedConventions = await Promise.all(
-          filteredConventions.map(async (convention) => {
-            let relatedEntities = []
-            
-            // Try to find federations mentioned in the convention data
-            for (const federationName of convention.federations) {
-              try {
-                const result = await session.run(
-                  'MATCH (n) WHERE toLower(n.name) CONTAINS toLower($fedName) RETURN n LIMIT 3',
-                  { fedName: federationName }
-                )
-                
-                const entities = result.records.map(record => {
-                  const node = record.get('n')
-                  return {
-                    id: node.identity.toString(),
-                    name: node.properties.name,
-                    type: node.properties.type || node.labels[0],
-                    labels: node.labels
-                  }
-                })
-                
-                relatedEntities.push(...entities)
-              } catch (err) {
-                console.warn('Error finding federation entities:', err)
-              }
-            }
-            
-            return {
-              ...convention,
-              relatedEntities: relatedEntities.slice(0, 10), // Limit to 10 related entities
-              hasRelatedEntities: relatedEntities.length > 0
-            }
-          })
-        )
-      } finally {
-        await session.close()
-      }
-    } catch (neo4jError) {
-      console.warn('Neo4j enhancement failed, using base data:', neo4jError)
-      // Continue with base convention data if Neo4j fails
-    }
+    const enhancedConventions = await Promise.all(
+      filteredConventions.map(async (convention) => {
+        const relatedEntities = await findRelatedEntitiesForConvention(convention)
+        return {
+          ...convention,
+          relatedEntities,
+          hasRelatedEntities: relatedEntities.length > 0
+        }
+      })
+    )
 
     return NextResponse.json({
       conventions: enhancedConventions,
@@ -225,17 +205,16 @@ export async function GET(request: NextRequest) {
       },
       meta: {
         total: enhancedConventions.length,
-        year,
+        year: year || 'all',
         source: 'api'
       }
     })
-
   } catch (error) {
     console.error('❌ Failed to fetch conventions:', error)
     return NextResponse.json(
-      { 
+      {
         error: error instanceof Error ? error.message : 'Failed to fetch conventions',
-        conventions: [] // Fallback to empty array
+        conventions: []
       },
       { status: 500 }
     )
@@ -245,8 +224,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    
-    // Validate required fields
+
     const requiredFields = ['title', 'start', 'end', 'location', 'type']
     for (const field of requiredFields) {
       if (!body[field]) {
@@ -257,7 +235,6 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Create new convention
     const newConvention = {
       id: `custom-${Date.now()}`,
       ...body,
@@ -265,14 +242,10 @@ export async function POST(request: NextRequest) {
       source: 'user_added'
     }
 
-    // In a real implementation, you'd save this to Neo4j or another database
-    // For now, just return the created convention
-    
     return NextResponse.json({
       convention: newConvention,
       message: 'Convention created successfully'
     }, { status: 201 })
-
   } catch (error) {
     console.error('Error creating convention:', error)
     return NextResponse.json(

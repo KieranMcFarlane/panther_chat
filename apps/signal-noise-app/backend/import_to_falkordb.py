@@ -177,7 +177,7 @@ class FalkorDBImporter:
         """Import a single entity node"""
         labels = entity.get('labels', ['Entity'])
         props = entity.get('properties', {})
-        neo4j_id = entity.get('neo4j_id')
+        neo4j_id = props.get('neo4j_id') or entity.get('neo4j_id')
 
         if not neo4j_id:
             raise ValueError("Entity missing neo4j_id")

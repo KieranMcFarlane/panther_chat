@@ -1,11 +1,11 @@
 /**
  * Scalable Retroactive RFP Discovery Service
  * 
- * Processes thousands of Neo4j entities for potential RFP opportunities
+ * Processes thousands of graph entities for potential RFP opportunities
  * using webhook detection simulation and intelligent scraping
  */
 
-import { Neo4jService } from './neo4j';
+import { GraphStoreService } from './graph-store';
 import { linkVerificationService } from './link-verification';
 import { supabase } from './supabase-client';
 
@@ -59,7 +59,7 @@ interface RfpOpportunity {
 }
 
 class ScalableRetroactiveDiscovery {
-  private neo4jService: Neo4jService;
+  private graphStoreService: GraphStoreService;
   private config: RetroactiveConfig;
   private processingStats: DiscoveryStats;
   private isProcessing = false;
@@ -67,7 +67,7 @@ class ScalableRetroactiveDiscovery {
   private abortController: AbortController | null = null;
 
   constructor(config: Partial<RetroactiveConfig> = {}) {
-    this.neo4jService = new Neo4jService();
+    this.graphStoreService = new GraphStoreService();
     this.config = {
       batchSize: 50,
       maxConcurrent: 3,
@@ -568,12 +568,12 @@ class ScalableRetroactiveDiscovery {
   }
 
   /**
-   * Get total entity count from Neo4j
+   * Get total entity count from the graph store
    */
   private async getTotalEntityCount(): Promise<number> {
     try {
-      await this.neo4jService.initialize();
-      const session = this.neo4jService.getDriver().session();
+      await this.graphStoreService.initialize();
+      const session = this.graphStoreService.getDriver().session();
       
       try {
         const result = await session.run(`
@@ -594,12 +594,12 @@ class ScalableRetroactiveDiscovery {
   }
 
   /**
-   * Get a batch of entities from Neo4j
+   * Get a batch of entities from the graph store
    */
   private async getEntityBatch(offset: number, limit: number): Promise<any[]> {
     try {
-      await this.neo4jService.initialize();
-      const session = this.neo4jService.getDriver().session();
+      await this.graphStoreService.initialize();
+      const session = this.graphStoreService.getDriver().session();
       
       try {
         const result = await session.run(`

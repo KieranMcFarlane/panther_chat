@@ -75,6 +75,11 @@ ENTITIES = [
         "entity_id": "fulham-fc",
         "entity_name": "Fulham FC",
         "entity_type": "SPORT_CLUB"
+    },
+    {
+        "entity_id": "coventry-city-fc",
+        "entity_name": "Coventry City FC",
+        "entity_type": "SPORT_CLUB"
     }
 ]
 

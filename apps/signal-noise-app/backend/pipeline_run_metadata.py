@@ -9,9 +9,40 @@ from copy import deepcopy
 from typing import Any, Dict, Optional
 
 
-def merge_pipeline_phase_metadata(existing_metadata: Optional[Dict[str, Any]], payload: Dict[str, Any]) -> Dict[str, Any]:
+def _merge_phase_payload(existing_phase_payload: Optional[Dict[str, Any]], payload: Dict[str, Any]) -> Dict[str, Any]:
+    merged = deepcopy(existing_phase_payload or {})
+    if not isinstance(payload, dict):
+        return merged
+
+    for key, value in payload.items():
+        if (
+            key == "phase0_substeps"
+            and isinstance(value, dict)
+            and isinstance(merged.get("phase0_substeps"), dict)
+        ):
+            substeps = deepcopy(merged.get("phase0_substeps") or {})
+            substeps.update(value)
+            merged["phase0_substeps"] = substeps
+            continue
+        merged[key] = value
+    return merged
+
+
+def merge_pipeline_phase_metadata(
+    existing_metadata: Optional[Dict[str, Any]],
+    phase: str,
+    payload: Dict[str, Any],
+) -> Dict[str, Any]:
     metadata = deepcopy(existing_metadata or {})
-    metadata["phase_details"] = payload
+    phase_details_by_phase = metadata.get("phase_details_by_phase")
+    if not isinstance(phase_details_by_phase, dict):
+        phase_details_by_phase = {}
+    existing_phase_payload = phase_details_by_phase.get(phase)
+    merged_phase_payload = _merge_phase_payload(existing_phase_payload, payload)
+    phase_details_by_phase[phase] = merged_phase_payload
+
+    metadata["phase_details_by_phase"] = phase_details_by_phase
+    metadata["phase_details"] = merged_phase_payload
     if payload.get("monitoring_summary") is not None:
         metadata["monitoring_summary"] = payload.get("monitoring_summary")
     if payload.get("escalation_reason") is not None:

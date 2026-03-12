@@ -1,0 +1,8 @@
+# Strategic Partnership Opportunities Template
+# Description: Identified partnership and procurement opportunities
+# Priority: PREMIUM
+# Freshness: Refresh every 30 days
+entity_id,opportunity_name,opportunity_type,timeline_months,estimated_budget,probability_score,yp_service_fit,strategic_importance
+"arsenal-fc","Digital Twin Stadium","immediate_launch","3-6","£1M-£2M","85","Venue Technology,Data Visualization","HIGH"
+"arsenal-fc","Women's Football Digital Platform","medium_term","6-12","£500K-£1M","75","Content Platform,Analytics","MEDIUM"
+"arsenal-fc","CRM System Replacement","long_term","12-18","£200K-£500K","60","DIGITAL_TRANSFORMATION,ANALYTICS","MEDIUM"

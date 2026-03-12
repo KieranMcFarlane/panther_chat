@@ -33,7 +33,7 @@ interface ClaudeAgentStatus {
   environment: {
     cronEnabled: boolean;
     brightdataConfigured: boolean;
-    neo4jConfigured: boolean;
+    graphConfigured: boolean;
     teamsConfigured: boolean;
   };
 }
@@ -288,7 +288,7 @@ export function ClaudeAgentDashboard() {
     const issues = [];
     
     if (!env.brightdataConfigured) issues.push('BrightData');
-    if (!env.neo4jConfigured) issues.push('Neo4j');
+    if (!env.graphConfigured) issues.push('Graph Store');
     if (!env.teamsConfigured) issues.push('Teams');
     
     if (issues.length === 0) {
@@ -424,8 +424,8 @@ export function ClaudeAgentDashboard() {
                 <span className="text-xs">BrightData</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className={`h-2 w-2 rounded-full ${status.environment.neo4jConfigured ? 'bg-green-500' : 'bg-red-500'}`} />
-                <span className="text-xs">Neo4j</span>
+                <div className={`h-2 w-2 rounded-full ${status.environment.graphConfigured ? 'bg-green-500' : 'bg-red-500'}`} />
+                <span className="text-xs">Graph Store</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className={`h-2 w-2 rounded-full ${status.environment.teamsConfigured ? 'bg-green-500' : 'bg-red-500'}`} />

@@ -9,6 +9,11 @@ import {
 import { betterAuthMcpServer } from '@/mcp/better-auth-mcp-server';
 import { byteRoverMcpServer } from '@/mcp/byte-rover-mcp-server';
 
+function isBuildPhase(): boolean {
+  return process.env.NEXT_PHASE === 'phase-production-build' ||
+    process.env.npm_lifecycle_event === 'build';
+}
+
 interface ClaudeAgentInstance {
   id: string;
   threadId: string;
@@ -45,18 +50,24 @@ class SharedClaudeAgentManager implements SharedClaudeAgentManagerType {
   instances: Map<string, ClaudeAgentInstance> = new Map();
   
   constructor() {
-    console.log('Shared Claude Agent Manager initialized');
+    if (!isBuildPhase()) {
+      console.log('Shared Claude Agent Manager initialized');
+    }
   }
 
   async createInstance(threadId: string, thread: ConversationThread): Promise<ClaudeAgentInstance> {
     // Check if instance already exists
     const existing = this.instances.get(threadId);
     if (existing) {
-      console.log(`Claude Agent instance already exists for thread ${threadId}`);
+      if (!isBuildPhase()) {
+        console.log(`Claude Agent instance already exists for thread ${threadId}`);
+      }
       return existing;
     }
 
-    console.log(`Creating Claude Agent instance for thread ${threadId} (${thread.type})`);
+    if (!isBuildPhase()) {
+      console.log(`Creating Claude Agent instance for thread ${threadId} (${thread.type})`);
+    }
 
     // Create new Claude Agent SDK instance
     const instance = await this.initializeClaudeAgentSDK(thread);
@@ -74,7 +85,9 @@ class SharedClaudeAgentManager implements SharedClaudeAgentManagerType {
     };
 
     this.instances.set(threadId, claudeAgentInstance);
-    console.log(`Created Claude Agent instance ${claudeAgentInstance.id}`);
+    if (!isBuildPhase()) {
+      console.log(`Created Claude Agent instance ${claudeAgentInstance.id}`);
+    }
     
     return claudeAgentInstance;
   }
@@ -101,7 +114,7 @@ class SharedClaudeAgentManager implements SharedClaudeAgentManagerType {
         temperature: 0.7,
         enableMCP: true,
         mcpServers: [
-          'neo4j-mcp',
+          'graph-mcp',
           'brightdata', 
           'perplexity-mcp',
           'better-auth-mcp',
@@ -115,7 +128,9 @@ class SharedClaudeAgentManager implements SharedClaudeAgentManagerType {
       }
     };
 
-    console.log(`Initializing Claude Agent SDK with official MCP servers:`, config);
+    if (!isBuildPhase()) {
+      console.log(`Initializing Claude Agent SDK with official MCP servers:`, config);
+    }
     
     // Simulate SDK initialization with MCP servers
     await new Promise(resolve => setTimeout(resolve, 100));
@@ -133,15 +148,15 @@ class SharedClaudeAgentManager implements SharedClaudeAgentManagerType {
   }
 
   private getToolsForThreadType(threadType: string): string[] {
-    const baseTools = ['neo4j-mcp', 'better-auth-mcp', 'byte-rover-mcp'];
+    const baseTools = ['graph-mcp', 'better-auth-mcp', 'byte-rover-mcp'];
     
     switch (threadType) {
       case 'rfp_analysis':
         return [...baseTools, 'brightdata', 'perplexity-mcp'];
       case 'sports_intelligence':
-        return [...baseTools, 'neo4j-mcp', 'brightdata'];
+        return [...baseTools, 'brightdata'];
       case 'knowledge_graph':
-        return [...baseTools, 'neo4j-mcp'];
+        return baseTools;
       case 'quick_research':
         return [...baseTools, 'perplexity-mcp', 'brightdata'];
       case 'general':
@@ -151,13 +166,17 @@ class SharedClaudeAgentManager implements SharedClaudeAgentManagerType {
   }
 
   private async executeWithMCP(request: ClaudeAgentRequest): Promise<ClaudeAgentResponse> {
-    console.log(`Executing Claude Agent task with official MCP servers:`, request);
+    if (!isBuildPhase()) {
+      console.log(`Executing Claude Agent task with official MCP servers:`, request);
+    }
     
     const startTime = Date.now();
     
     try {
       // First, retrieve relevant global insights from ByteRover MCP
-      console.log('Retrieving global insights from ByteRover MCP server...');
+      if (!isBuildPhase()) {
+        console.log('Retrieving global insights from ByteRover MCP server...');
+      }
       const globalInsightsResult = await byteRoverMcpServer.callTool('byterover-retrieve-global-insights', {
         query: request.query || request.context || '',
         limit: 5,
@@ -171,7 +190,9 @@ class SharedClaudeAgentManager implements SharedClaudeAgentManagerType {
         const insightsText = globalInsightsResult.content[0]?.text || '';
         globalContextText = `\n\nEnhanced with global knowledge base insights:\n${insightsText}`;
         globalInsightsCount = insightsText.split('\n').length;
-        console.log(`Enhanced analysis with ${globalInsightsCount} global insights`);
+        if (!isBuildPhase()) {
+          console.log(`Enhanced analysis with ${globalInsightsCount} global insights`);
+        }
       }
 
       // Simulate enhanced processing time with MCP integration

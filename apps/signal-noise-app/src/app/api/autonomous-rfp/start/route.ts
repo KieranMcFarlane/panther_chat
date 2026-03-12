@@ -5,6 +5,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { AutonomousRFPManager } from '@/services/AutonomousRFPManager';
 
+export const dynamic = 'force-dynamic';
+
 // Global instance for persistence
 let autonomousManager: AutonomousRFPManager | null = null;
 

@@ -146,7 +146,7 @@ export async function GET(request: NextRequest) {
         const envCheck = {
           hasAnthropic: !!process.env.ANTHROPIC_API_KEY,
           hasBrightData: !!process.env.BRIGHTDATA_API_TOKEN,
-          hasNeo4j: !!process.env.NEO4J_URI && !!process.env.NEO4J_USERNAME && !!process.env.NEO4J_PASSWORD,
+          hasGraph: !!process.env.FALKORDB_URI && !!process.env.FALKORDB_USER && !!process.env.FALKORDB_PASSWORD,
           hasPerplexity: !!process.env.PERPLEXITY_API_KEY,
           hasClaudeCode: true // Claude Code CLI is now available locally
         };

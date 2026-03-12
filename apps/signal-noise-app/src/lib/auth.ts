@@ -1,5 +1,10 @@
 import { betterAuth } from "better-auth";
 import { createClient } from "@libsql/client";
+import { memoryAdapter } from "better-auth/adapters/memory";
+import { resolveServerAuthBaseUrl, resolveTrustedOrigins } from "@/lib/auth-url";
+
+const buildSafeSecret = process.env.BETTER_AUTH_SECRET ||
+  (process.env.npm_lifecycle_event === "build" ? "local-build-secret-panther-chat-2026" : undefined);
 
 // Create LibSQL client for persistent session storage
 // Falls back to in-memory Map if connection fails
@@ -13,18 +18,25 @@ const getDatabase = () => {
         url,
         authToken,
       });
-      console.log("Better Auth: Using LibSQL database");
+      if (process.env.npm_lifecycle_event !== "build") {
+        console.log("Better Auth: Using LibSQL database");
+      }
       return client;
     }
   } catch (error) {
-    console.warn("Better Auth: Could not connect to LibSQL, using in-memory storage", error);
+    if (process.env.npm_lifecycle_event !== "build") {
+      console.warn("Better Auth: Could not connect to LibSQL, using in-memory storage", error);
+    }
   }
 
-  console.log("Better Auth: Using in-memory Map database (development mode)");
-  return new Map();
+  if (process.env.npm_lifecycle_event !== "build") {
+    console.log("Better Auth: Using in-memory adapter (development mode)");
+  }
+  return memoryAdapter({});
 };
 
 export const auth = betterAuth({
+  secret: buildSafeSecret,
   database: getDatabase(),
   emailAndPassword: {
     enabled: true,
@@ -61,9 +73,6 @@ export const auth = betterAuth({
     },
     cookiePrefix: "signal_noise",
   },
-  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3005",
-  trustedOrigins: [
-    "http://localhost:3005",
-    process.env.NEXT_PUBLIC_APP_URL,
-  ].filter(Boolean) as string[],
+  baseURL: resolveServerAuthBaseUrl(),
+  trustedOrigins: resolveTrustedOrigins(),
 });

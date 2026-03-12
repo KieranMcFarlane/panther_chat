@@ -9,6 +9,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 
+const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build' ||
+  process.env.npm_lifecycle_event === 'build';
+
 interface Opportunity {
   id: string;
   entity_name: string;
@@ -83,6 +86,8 @@ export async function GET(request: NextRequest) {
       }
     };
 
+    let malformedFileCount = 0;
+
     // Process each analysis file
     for (const filename of recentFiles) {
       try {
@@ -141,9 +146,17 @@ export async function GET(request: NextRequest) {
           });
         }
       } catch (error) {
-        console.warn(`Failed to process file ${filename}:`, error);
+        malformedFileCount++;
+        if (!isBuildPhase) {
+          const message = error instanceof Error ? error.message : String(error);
+          console.warn(`Skipping malformed automation results file ${filename}: ${message}`);
+        }
         continue;
       }
+    }
+
+    if (malformedFileCount > 0 && !isBuildPhase) {
+      console.warn(`Skipped ${malformedFileCount} malformed automation results file(s)`);
     }
 
     // Remove duplicates based on ID

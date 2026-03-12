@@ -124,10 +124,10 @@ export async function POST(request: NextRequest) {
       }
     ];
 
-    // Log real database storage instead of simulated Neo4j
+    // Log real database storage instead of the old graph storage simulation
     await new Promise(resolve => setTimeout(resolve, 1000));
     const isRealData = realOpportunities.length > 0;
-    liveLogService.info(isRealData ? 'Real RFP data retrieved from database' : 'Storing RFP results in Neo4j', {
+    liveLogService.info(isRealData ? 'Real RFP data retrieved from database' : 'Storing RFP results in graph intelligence store', {
       category: 'database',
       source: 'ClaudeAgentDemo',
       message: isRealData ? 'Real database RFP integration completed' : 'Claude Agent tool completed: store_rfp_result',
@@ -135,10 +135,10 @@ export async function POST(request: NextRequest) {
         task_id: taskId,
         stored: opportunities.length,
         entities: isRealData ? opportunities.length * 2 : 12,
-        dataSource: isRealData ? 'supabase_database' : 'neo4j',
+        dataSource: isRealData ? 'supabase_database' : 'graph_store',
         isRealData: isRealData
       },
-      tags: isRealData ? ['claude-agent', 'database', 'real-rfps', 'integration'] : ['claude-agent', 'tool-use', 'neo4j', 'storage']
+      tags: isRealData ? ['claude-agent', 'database', 'real-rfps', 'integration'] : ['claude-agent', 'tool-use', 'graph', 'storage']
     });
 
     // Log completion with real data

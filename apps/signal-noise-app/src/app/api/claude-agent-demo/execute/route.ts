@@ -21,9 +21,9 @@ export async function POST(request: NextRequest) {
           const agentService = new HeadlessClaudeAgentService({
             brightdataApiKey: process.env.BRIGHTDATA_API_TOKEN!,
             brightdataZone: process.env.BRIGHTDATA_ZONE || 'linkedin_posts_monitor',
-            neo4jUri: process.env.NEO4J_URI!,
-            neo4jUsername: process.env.NEO4J_USERNAME!,
-            neo4jPassword: process.env.NEO4J_PASSWORD!,
+            graphUri: process.env.FALKORDB_URI!,
+            graphUsername: process.env.FALKORDB_USER!,
+            graphPassword: process.env.FALKORDB_PASSWORD!,
             teamsWebhookUrl: process.env.TEAMS_WEBHOOK_URL || '',
             perplexityApiKey: process.env.PERPLEXITY_API_KEY!,
             searchQueries: parameters?.query ? [parameters.query] : ['Formula 1 procurement opportunities', 'F1 sponsorship contracts', 'Formula 1 tenders'],

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Neo4jService } from '@/lib/neo4j';
 import { supabase } from '@/lib/supabase-client';
 import { query } from '@anthropic-ai/claude-agent-sdk';
+import { buildGraphEntityLookupFilter, resolveGraphId } from '@/lib/graph-id';
 
 /**
  * Batch Enrichment API for Tier 2 & 3 Entities
@@ -28,12 +28,6 @@ interface DeltaDetectionResult {
 }
 
 class BatchEnrichmentService {
-  private neo4jService: Neo4jService;
-
-  constructor() {
-    this.neo4jService = new Neo4jService();
-  }
-
   /**
    * Process batch queue for Tier 2 & 3 entities
    */
@@ -41,9 +35,6 @@ class BatchEnrichmentService {
     const results = { processed: 0, failed: 0, skipped: 0 };
 
     try {
-      // Initialize Neo4j
-      await this.neo4jService.initialize();
-
       // Get pending items from queue
       const pendingItems = await this.getPendingBatchItems();
       
@@ -68,8 +59,8 @@ class BatchEnrichmentService {
           const enrichmentResult = await this.enrichEntity(item, deltaResult);
           
           if (enrichmentResult) {
-            // Update Neo4j with enriched data
-            await this.updateNeo4jEntity(item, enrichmentResult);
+            // Update canonical cached entity with enriched data
+            await this.updateCanonicalEntity(item, enrichmentResult);
             
             // Update Supabase cache
             await this.updateSupabaseCache(item, enrichmentResult);
@@ -137,55 +128,47 @@ class BatchEnrichmentService {
    */
   private async performDeltaDetection(item: BatchQueueItem): Promise<DeltaDetectionResult> {
     try {
-      const session = this.neo4jService.getDriver().session();
-      try {
-        // Get existing entity from Neo4j
-        const result = await session.run(`
-          MATCH (e) WHERE e.id = $entityId OR e.name = $entityName
-          RETURN e
-        `, {
-          entityId: item.entity_id,
-          entityName: item.data.organization
-        });
+      const { data, error } = await supabase
+        .from('cached_entities')
+        .select('id, graph_id, neo4j_id, properties')
+        .or(`${buildGraphEntityLookupFilter(item.entity_id)},properties->>name.ilike.%${item.data.organization}%`)
+        .limit(1);
 
-        if (result.records.length === 0) {
-          // New entity
-          return {
-            has_changes: true,
-            changed_fields: Object.keys(item.data),
-            confidence_delta: 1.0
-          };
-        }
+      if (error) {
+        throw error;
+      }
 
-        const existingEntity = result.records[0].get('e').properties;
-        const changedFields: string[] = [];
-        let confidenceDelta = 0;
+      if (!data || data.length === 0) {
+        return {
+          has_changes: true,
+          changed_fields: Object.keys(item.data),
+          confidence_delta: 1.0
+        };
+      }
 
-        // Compare key fields
-        const keyFields = ['yellow_panther_fit', 'urgency', 'status', 'requirements', 'estimated_value'];
-        
-        for (const field of keyFields) {
-          if (existingEntity[field] !== item.data[field]) {
-            changedFields.push(field);
-            
-            // Calculate confidence impact
-            if (field === 'yellow_panther_fit') {
-              confidenceDelta += Math.abs((existingEntity[field] || 0) - (item.data[field] || 0)) / 100;
-            } else {
-              confidenceDelta += 0.2;
-            }
+      const existingEntity = data[0].properties || {};
+      const changedFields: string[] = [];
+      let confidenceDelta = 0;
+
+      const keyFields = ['yellow_panther_fit', 'urgency', 'status', 'requirements', 'estimated_value'];
+      
+      for (const field of keyFields) {
+        if (existingEntity[field] !== item.data[field]) {
+          changedFields.push(field);
+          
+          if (field === 'yellow_panther_fit') {
+            confidenceDelta += Math.abs((existingEntity[field] || 0) - (item.data[field] || 0)) / 100;
+          } else {
+            confidenceDelta += 0.2;
           }
         }
-
-        return {
-          has_changes: changedFields.length > 0,
-          changed_fields: changedFields,
-          confidence_delta: Math.min(confidenceDelta, 1.0)
-        };
-
-      } finally {
-        await session.close();
       }
+
+      return {
+        has_changes: changedFields.length > 0,
+        changed_fields: changedFields,
+        confidence_delta: Math.min(confidenceDelta, 1.0)
+      };
     } catch (error) {
       console.error('Delta detection failed:', error);
       return {
@@ -212,7 +195,7 @@ DELTA ANALYSIS FOCUS:
 ${deltaResult.changed_fields.map(field => `- ${field}: Updated from previous value`).join('\n')}
 
 Tasks:
-1. Use Neo4j to understand entity relationships and history
+1. Use the provided entity context and cached history to understand entity changes
 2. Research updated information for changed fields
 3. Summarize key changes and implications
 4. Update strategic recommendations if needed
@@ -224,16 +207,6 @@ Return structured JSON focusing on changes and updated recommendations.`;
         prompt: enrichmentPrompt,
         options: {
           mcpServers: {
-            "neo4j-mcp": {
-              "command": "npx",
-              "args": ["-y", "@alanse/mcp-neo4j-server"],
-              "env": {
-                "NEO4J_URI": process.env.NEO4J_URI || "",
-                "NEO4J_USERNAME": process.env.NEO4J_USERNAME || "",
-                "NEO4J_PASSWORD": process.env.NEO4J_PASSWORD || "",
-                "NEO4J_DATABASE": process.env.NEO4J_DATABASE || "neo4j"
-              }
-            },
             "brightdata": {
               "command": "npx",
               "args": ["-y", "@brightdata/mcp"],
@@ -243,8 +216,6 @@ Return structured JSON focusing on changes and updated recommendations.`;
             }
           },
           allowedTools: [
-            "mcp__neo4j-mcp__execute_query",
-            "mcp__neo4j-mcp__create_relationship",
             "mcp__brightdata__scrape_as_markdown",
             "mcp__brightdata__search_engine"
           ],
@@ -261,30 +232,49 @@ Return structured JSON focusing on changes and updated recommendations.`;
   }
 
   /**
-   * Update Neo4j entity with enriched data
+   * Update canonical cached entity with enriched data
    */
-  private async updateNeo4jEntity(item: BatchQueueItem, enrichment: any): Promise<void> {
+  private async updateCanonicalEntity(item: BatchQueueItem, enrichment: any): Promise<void> {
     try {
-      const session = this.neo4jService.getDriver().session();
-      try {
-        await session.run(`
-          MATCH (e) WHERE e.id = $entityId OR e.name = $entityName
-          SET e.enriched_data = $enrichment,
-              e.last_enriched = datetime(),
-              e.enrichment_count = coalesce(e.enrichment_count, 0) + 1,
-              e.entity_tier = $tier,
-              e.status = 'ENRICHED'
-        `, {
-          entityId: item.entity_id,
-          entityName: item.data.organization,
-          enrichment: enrichment,
-          tier: item.entity_tier
-        });
-      } finally {
-        await session.close();
+      const { data, error: lookupError } = await supabase
+        .from('cached_entities')
+        .select('id, graph_id, neo4j_id, properties')
+        .or(`${buildGraphEntityLookupFilter(item.entity_id)},properties->>name.ilike.%${item.data.organization}%`)
+        .limit(1);
+
+      if (lookupError) {
+        throw lookupError;
+      }
+
+      if (!data || data.length === 0) {
+        console.warn(`No canonical cached entity found for batch item ${item.entity_id}`);
+        return;
+      }
+
+      const entity = data[0];
+      const mergedProperties = {
+        ...(entity.properties || {}),
+        enriched_data: enrichment,
+        graph_id: resolveGraphId(entity),
+        last_enriched: new Date().toISOString(),
+        enrichment_count: ((entity.properties?.enrichment_count as number) || 0) + 1,
+        entity_tier: item.entity_tier,
+        status: 'ENRICHED'
+      };
+
+      const { error } = await supabase
+        .from('cached_entities')
+        .update({
+          properties: mergedProperties,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', entity.id);
+
+      if (error) {
+        throw error;
       }
     } catch (error) {
-      console.error('Neo4j update failed:', error);
+      console.error('Canonical cached entity update failed:', error);
     }
   }
 

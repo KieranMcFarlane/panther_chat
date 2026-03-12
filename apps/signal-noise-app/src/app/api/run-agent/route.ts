@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
 
     // 🧩 2. Create MCP Tools
     await log(`## 🔧 Creating MCP Tools`);
-    await log(`*Creating Neo4j, BrightData, and Perplexity tool definitions...*`);
+    await log(`*Creating graph, BrightData, and Perplexity tool definitions...*`);
     
     let mcpTools = [];
     try {
@@ -73,13 +73,13 @@ export async function POST(req: NextRequest) {
 You are an expert RFP Intelligence Agent conducting live monitoring for sports industry opportunities.
 
 PRIMARY MISSION:
-- Query Neo4j database to get sports entities (clubs, leagues, organizations)
+- Query the graph-backed entity catalog to get sports entities (clubs, leagues, organizations)
 - Use BrightData search to find real RFP opportunities 
 - Use Perplexity analysis for market intelligence
 - Report actual findings with URLs, confidence scores, and strategic insights
 
 EXECUTION STEPS:
-1. Use mcp__neo4j-mcp__execute_query to get sports entities
+1. Use the graph query tool to get sports entities
 2. Use mcp__brightdata-mcp__search_engine to search for RFP opportunities
 3. Use mcp__perplexity-mcp__chat_completion for analysis
 
@@ -169,7 +169,7 @@ Verify that the data is real by checking for actual domain names and search resu
           await log(``);
 
           // Track specific metrics
-          if (toolName === "mcp__neo4j-mcp__execute_query") {
+          if (/graph/i.test(toolName) && /query|search/i.test(toolName)) {
             // We'll track actual entities processed when we get the result
           } else if (toolName === "mcp__brightdata-mcp__search_engine") {
             results.searchesPerformed++;
@@ -193,8 +193,8 @@ Verify that the data is real by checking for actual domain names and search resu
             await log(``);
           }
           
-          // Track entities processed from Neo4j results
-          if (toolName === "mcp__neo4j-mcp__execute_query" && resultData) {
+          // Track entities processed from graph-backed entity lookup results
+          if (/graph/i.test(toolName) && /query|search/i.test(toolName) && resultData) {
             if (resultData.data && Array.isArray(resultData.data)) {
               results.entitiesProcessed = resultData.data.length;
               await log(`**Entities Found:** ${resultData.data.length}`);

@@ -8,12 +8,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-client';
 
+const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build' ||
+  process.env.npm_lifecycle_event === 'build';
+
 /**
  * GET endpoint to verify Perplexity RFP storage
  */
 export async function GET(request: NextRequest) {
   try {
-    console.log('🔍 Verifying Perplexity RFP storage...');
+    if (!isBuildPhase) {
+      console.log('🔍 Verifying Perplexity RFP storage...');
+    }
 
     // Query for RFPs with detection_strategy in metadata
     const { data: perplexityRFPs, error } = await supabase

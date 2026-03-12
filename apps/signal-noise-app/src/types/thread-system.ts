@@ -240,8 +240,8 @@ export const THREAD_TEMPLATES = {
       model: 'claude-3-sonnet-20240229',
       temperature: 0.3,
       maxTokens: 4000,
-      tools: ['brightdata', 'neo4j-mcp'],
-      systemPrompt: 'You are a research assistant. Use BrightData MCP to find current information and Neo4j to connect with existing knowledge.',
+      tools: ['brightdata', 'graph-mcp'],
+      systemPrompt: 'You are a research assistant. Use BrightData MCP to find current information and the graph cache to connect with existing knowledge.',
       enableParallelProcessing: true
     },
     tags: ['research', 'quick']
@@ -254,7 +254,7 @@ export const THREAD_TEMPLATES = {
       model: 'claude-3-sonnet-20240229',
       temperature: 0.2,
       maxTokens: 8000,
-      tools: ['brightdata', 'neo4j-mcp', 'perplexity-mcp'],
+      tools: ['brightdata', 'graph-mcp', 'perplexity-mcp'],
       systemPrompt: 'You are an analyst. Perform deep research using all available tools and contribute findings to the Teams Store.',
       enableParallelProcessing: true
     },
@@ -268,7 +268,7 @@ export const THREAD_TEMPLATES = {
       model: 'claude-3-sonnet-20240229',
       temperature: 0.4,
       maxTokens: 6000,
-      tools: ['brightdata', 'neo4j-mcp'],
+      tools: ['brightdata', 'graph-mcp'],
       systemPrompt: 'You are an RFP intelligence specialist. Monitor procurement opportunities and add them to the Teams Store.',
       enableParallelProcessing: true
     },
@@ -282,8 +282,8 @@ export const THREAD_TEMPLATES = {
       model: 'claude-3-sonnet-20240229',
       temperature: 0.1,
       maxTokens: 4000,
-      tools: ['neo4j-mcp'],
-      systemPrompt: 'You are a knowledge graph specialist. Map entity relationships and update the Teams Store.',
+      tools: ['graph-mcp'],
+      systemPrompt: 'You are a graph specialist. Map entity relationships and update the Teams Store.',
       enableParallelProcessing: true
     },
     tags: ['entities', 'mapping', 'knowledge-graph']

@@ -9,7 +9,7 @@ This is the complete production deployment package for the **Level 3 Autonomous 
 - **🤖 Fully Autonomous**: 24/7 operation with self-adjusting strategies
 - **🧠 AI-Powered**: Claude Agent SDK with advanced reasoning capabilities
 - **📊 Multi-Source Monitoring**: LinkedIn, government portals, web scraping
-- **🔗 Knowledge Graph**: Neo4j relationship mapping and analysis
+- **🔗 Graph Intelligence**: FalkorDB-backed relationship mapping and analysis
 - **📈 Learning System**: Continuous improvement from outcomes
 - **📧 Intelligent Outreach**: AI-generated personalized responses
 - **🔄 Real-time Processing**: Live streaming and instant notifications
@@ -28,7 +28,7 @@ production-deploy/
 │   ├── monitor-system.sh          # System monitoring script
 │   └── backup-system.sh           # Automated backup script
 ├── README.md                      # This file
-└── DEPLOYMENT-GUIDE.md            # Detailed deployment guide
+└── ../legacy/neo4j/docs/DEPLOYMENT-GUIDE.md  # Historical deployment guide
 ```
 
 ## ⚡ Quick Deployment
@@ -105,10 +105,11 @@ ANTHROPIC_BASE_URL=https://api.z.ai/api/anthropic
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
-# Neo4j Knowledge Graph
-NEO4J_URI=neo4j+s://your-instance.databases.neo4j.io
-NEO4J_USERNAME=neo4j
-NEO4J_PASSWORD=your-password
+# FalkorDB Graph
+FALKORDB_URI=redis://your-instance
+FALKORDB_USER=default
+FALKORDB_PASSWORD=your-password
+FALKORDB_DATABASE=sports_intelligence
 
 # MCP Tools
 BRIGHTDATA_API_TOKEN=your-brightdata-token
@@ -137,10 +138,10 @@ NEXTAUTH_SECRET=$(openssl rand -base64 32)
 2. Run the schema: `supabase-schema-level3.sql`
 3. Get connection details and update environment
 
-#### Neo4j Setup
+#### FalkorDB Setup
 
-1. Create a Neo4j Aura or self-hosted instance
-2. Run the schema: `neo4j-schema-level3.cypher`
+1. Create or provision a FalkorDB instance
+2. Run the graph schema or import flow that matches your deployment
 3. Update environment with connection details
 
 ## 🏥 Verification
@@ -301,7 +302,7 @@ pm2 start ecosystem.config.js
 ### Database Scaling
 
 - **Supabase**: Upgrade to larger compute tier
-- **Neo4j**: Scale cluster or add memory
+- **FalkorDB**: Scale graph capacity or add memory
 - **Redis**: Add caching layer for frequent queries
 
 ## 🔄 Updates
@@ -369,7 +370,7 @@ Your Level 3 Autonomous System is working when:
 
 - ✅ **Application**: Responds on port 3000 with health checks passing
 - ✅ **Autonomous Agents**: Claude Agent SDK and MCP tools operational  
-- ✅ **Database**: Supabase and Neo4j connections working
+- ✅ **Database**: Supabase and FalkorDB connections working
 - ✅ **Monitoring**: System monitoring and backups scheduled
 - ✅ **Web Server**: Nginx reverse proxy serving traffic
 - ✅ **Learning**: Autonomous agents learning from outcomes
@@ -389,4 +390,4 @@ Your Level 3 Autonomous System is working when:
 
 **🎉 Congratulations!** Your Level 3 Autonomous RFP System is now ready to transform your business development process with 24/7 intelligent automation.
 
-For detailed troubleshooting and advanced configuration, see [DEPLOYMENT-GUIDE.md](DEPLOYMENT-GUIDE.md).
+For the archived Neo4j-era deployment notes, see [`../legacy/neo4j/docs/DEPLOYMENT-GUIDE.md`](/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/legacy/neo4j/docs/DEPLOYMENT-GUIDE.md).

@@ -77,7 +77,7 @@ export async function GET() {
       enrichmentSources: [
         'BrightData MCP: Web scraping, company research',
         'Perplexity MCP: Strategic analysis, market insights',
-        'Neo4j MCP: Relationship mapping, knowledge graph'
+        'Graph MCP: Relationship mapping, graph intelligence'
       ],
       successCriteria: [
         'All 4,000+ entities processed with core enrichment',

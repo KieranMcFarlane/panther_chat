@@ -104,7 +104,7 @@ export async function GET(request: NextRequest) {
             },
             scheduler: schedulerStatus,
             capabilities: {
-              tools: ['neo4j-mcp', 'brightdata-mcp', 'perplexity-mcp', 'supabase-mcp'],
+              tools: ['graph-mcp', 'brightdata-mcp', 'perplexity-mcp', 'supabase-mcp'],
               strategies: ['intensive', 'standard', 'quick'],
               features: [
                 'Intelligent entity selection',

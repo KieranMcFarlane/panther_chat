@@ -1,10 +1,35 @@
 import { Network, Users, Building, FileText, Target } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { db, Entity } from '@/lib/database';
-import { neo4jClient } from '@/lib/neo4j';
+import { graphStoreClient } from '@/lib/graph-store';
+import { resolveGraphId } from '@/lib/graph-id';
 import GraphWrapper from '@/components/graph/GraphWrapper';
 import { GraphNode, GraphEdge } from '@/components/graph/graph-types';
 import { EntityCacheService } from '@/services/EntityCacheService';
+
+function isBuildPhase(): boolean {
+  return process.env.NEXT_PHASE === 'phase-production-build' ||
+    process.env.npm_lifecycle_event === 'build';
+}
+
+function createFallbackGraphData() {
+  const fallbackNodes: GraphNode[] = [
+    { id: '1', label: 'Manchester United', type: 'club', color: '#3b82f6', size: 16, description: 'Premier League club' },
+    { id: '2', label: 'Marcus Rashford', type: 'sportsperson', color: '#10b981', size: 14, description: 'Professional footballer' },
+    { id: '3', label: 'Premier League', type: 'league', color: '#ef4444', size: 18, description: 'Top English football league' }
+  ];
+
+  const fallbackEdges: GraphEdge[] = [
+    { source: '1', target: '2', strength: 0.9, label: 'Player of', color: '#6b7280' },
+    { source: '1', target: '3', strength: 0.8, label: 'Member of', color: '#6b7280' }
+  ];
+
+  return {
+    nodes: fallbackNodes,
+    edges: fallbackEdges,
+    totalAvailable: fallbackNodes.length
+  };
+}
 
 // Helper function to get relationship colors
 function getRelationshipColor(relationshipType: string): string {
@@ -28,6 +53,10 @@ function getRelationshipColor(relationshipType: string): string {
 
 // Server-side data fetching function
 async function fetchGraphData() {
+  if (isBuildPhase()) {
+    return createFallbackGraphData();
+  }
+
   console.log('🔧 SERVER SIDE: Fetching graph data from Supabase cache...');
   
   try {
@@ -99,20 +128,15 @@ async function fetchGraphData() {
             entityType = 'sportsperson';
           }
           
-          // For proper relationship mapping, we need to handle ID compatibility
-          // The relationships API returns Neo4j elementIds, but cached entities use neo4j_id
-          let entity_id = cachedEntity.neo4j_id || cachedEntity.id;
+          let entity_id = resolveGraphId(cachedEntity) || cachedEntity.id;
           
-          // Check if this is a simple numeric ID that needs to be converted to Neo4j elementId format
-          // Since we can't easily convert back to elementId, we'll need to handle this in the relationship mapping
-          if (entity_id && !entity_id.includes(':')) {
-            // This is a simple ID from cache, we'll need special handling for relationships
-            entity_id = cachedEntity.neo4j_id || entity_id;
+          if (entity_id && !String(entity_id).includes(':')) {
+            entity_id = resolveGraphId(cachedEntity) || entity_id;
           }
           
           return {
             entity_id: entity_id,
-            neo4j_id: cachedEntity.neo4j_id, // Keep both for different mapping purposes
+            graph_id: resolveGraphId(cachedEntity),
             cache_id: cachedEntity.id, // Keep the cache ID as backup
             entity_type: entityType,
             name: properties.name || 'Unknown Entity',
@@ -176,14 +200,14 @@ async function fetchGraphData() {
               entityType = 'sportsperson';
             }
             
-            let entity_id = cachedEntity.neo4j_id || cachedEntity.id;
-            if (entity_id && !entity_id.includes(':')) {
-              entity_id = cachedEntity.neo4j_id || entity_id;
+            let entity_id = resolveGraphId(cachedEntity) || cachedEntity.id;
+            if (entity_id && !String(entity_id).includes(':')) {
+              entity_id = resolveGraphId(cachedEntity) || entity_id;
             }
             
             return {
               entity_id: entity_id,
-              neo4j_id: cachedEntity.neo4j_id,
+              graph_id: resolveGraphId(cachedEntity),
               cache_id: cachedEntity.id,
               entity_type: entityType,
               name: properties.name || 'Unknown Entity',
@@ -217,7 +241,7 @@ async function fetchGraphData() {
     }
     
     if (entities.length === 0) {
-      console.warn('❌ SERVER SIDE: No entities found in Supabase cache, falling back to Neo4j API');
+      console.warn('❌ SERVER SIDE: No entities found in Supabase cache, falling back to graph entity API');
       
       // Fallback to Neo4j API if Supabase cache is empty
       const fallbackResponse = await fetch(`${baseUrl}/api/sports-entities?limit=1000`, {
@@ -227,7 +251,7 @@ async function fetchGraphData() {
       if (fallbackResponse.ok) {
         const data = await fallbackResponse.json();
         entities = Array.isArray(data) ? data : (data?.entities ?? []);
-        console.log('✅ SERVER SIDE: Fallback loaded entities from Neo4j API:', entities.length);
+        console.log('✅ SERVER SIDE: Fallback loaded entities from graph entity API:', entities.length);
         totalAvailable = entities.length; // Set totalAvailable for fallback case
       }
     }
@@ -528,43 +552,7 @@ async function fetchGraphData() {
     console.error('❌ SERVER SIDE: Error fetching graph data:', error);
     
     // Return fallback data
-    const fallbackNodes: GraphNode[] = [
-      { 
-        id: '1', 
-        label: 'Manchester United', 
-        type: 'club', 
-        color: '#3b82f6', 
-        size: 16,
-        description: 'Premier League club'
-      },
-      { 
-        id: '2', 
-        label: 'Marcus Rashford', 
-        type: 'sportsperson', 
-        color: '#10b981', 
-        size: 14,
-        description: 'Professional footballer'
-      },
-      { 
-        id: '3', 
-        label: 'Premier League', 
-        type: 'league', 
-        color: '#ef4444', 
-        size: 18,
-        description: 'Top English football league'
-      }
-    ];
-    
-    const fallbackEdges: GraphEdge[] = [
-      { source: '1', target: '2', strength: 0.9, label: 'Player of', color: '#6b7280' },
-      { source: '1', target: '3', strength: 0.8, label: 'Member of', color: '#6b7280' }
-    ];
-    
-    return {
-      nodes: fallbackNodes,
-      edges: fallbackEdges,
-      totalAvailable: fallbackNodes.length
-    };
+    return createFallbackGraphData();
   }
 }
 
@@ -572,12 +560,6 @@ export default async function EnhancedGraphPage() {
   // Fetch data on server side
   const graphData = await fetchGraphData();
   
-  console.log('🎯 SERVER COMPONENT: Rendering with data:', {
-    nodes: graphData.nodes.length,
-    edges: graphData.edges.length,
-    totalAvailable: graphData.totalAvailable
-  });
-
   return (
     <div className="max-w-7xl overflow-hidden rounded-lg mx-auto space-y-6 h-full" style={{ 
       backgroundColor: '#242834',

@@ -1,6 +1,6 @@
 /**
  * Start MCP-Enabled Autonomous RFP Monitoring System
- * Uses direct MCP tools: neo4j-mcp, brightdata-mcp, perplexity-mcp
+ * Uses direct MCP tools: graph-mcp, brightdata-mcp, perplexity-mcp
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -48,11 +48,11 @@ export async function POST(request: NextRequest) {
         
         await liveLogService.addLog({
           level: 'INFO',
-          message: `✅ Neo4j MCP: Found ${Math.floor(Math.random() * 20) + 5} relationships`,
+          message: `✅ Graph MCP: Found ${Math.floor(Math.random() * 20) + 5} relationships`,
           source: 'MCP Autonomous System',
           category: 'autonomous',
           metadata: {
-            mcpTool: 'neo4j-mcp',
+            mcpTool: 'graph-mcp',
             responseTime: Math.floor(Math.random() * 100) + 20
           }
         });
@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
         startupTime: `${startupTime}ms`,
         isRunning: true,
         mcpTools: {
-          neo4j: 'neo4j-mcp (direct)',
+          graph: 'graph-mcp (direct)',
           brightdata: 'brightdata-mcp (direct)', 
           perplexity: 'perplexity-mcp (direct)'
         }
@@ -168,10 +168,10 @@ export async function POST(request: NextRequest) {
       message: errorMessage,
       details: {
         startupTime: `${Date.now() - startTime}ms`,
-        mcpTools: ['neo4j-mcp', 'brightdata-mcp', 'perplexity-mcp'],
+        mcpTools: ['graph-mcp', 'brightdata-mcp', 'perplexity-mcp'],
         troubleshooting: [
           'Check MCP server configurations',
-          'Verify Neo4j connection',
+          'Verify graph connection',
           'Confirm BrightData MCP server status',
           'Validate Perplexity API credentials',
           'Review entity processing permissions'
@@ -195,8 +195,8 @@ export async function GET(request: NextRequest) {
         canStart: true,
         capabilities: {
           directMCPIntegration: true,
-          supportedMCPTools: ['neo4j-mcp', 'brightdata-mcp', 'perplexity-mcp'],
-          entityProcessing: 'Neo4j traversal with relationship analysis',
+          supportedMCPTools: ['graph-mcp', 'brightdata-mcp', 'perplexity-mcp'],
+          entityProcessing: 'Graph traversal with relationship analysis',
           dataOutput: 'Structured JSON format',
           operationMode: '24/7 autonomous with cron scheduling'
         },
@@ -280,7 +280,7 @@ export async function GET(request: NextRequest) {
         entityBatchSize: systemStatus.config.entityBatchSize,
         monitoringCycle: systemStatus.config.monitoringCycle,
         outputDirectory: systemStatus.config.outputDirectory,
-        mcpServers: ['neo4j-mcp', 'brightdata-mcp', 'perplexity-mcp']
+        mcpServers: ['graph-mcp', 'brightdata-mcp', 'perplexity-mcp']
       },
       performance: mcpPerformance,
       recentActivity: {
@@ -294,8 +294,8 @@ export async function GET(request: NextRequest) {
       },
       capabilities: {
         directMCPIntegration: true,
-        supportedMCPTools: ['neo4j-mcp', 'brightdata-mcp', 'perplexity-mcp'],
-        entityProcessing: 'Neo4j traversal with relationship analysis',
+        supportedMCPTools: ['graph-mcp', 'brightdata-mcp', 'perplexity-mcp'],
+        entityProcessing: 'Graph traversal with relationship analysis',
         dataOutput: 'Structured JSON format',
         operationMode: '24/7 autonomous with cron scheduling',
         realTimeLogs: true,
@@ -327,7 +327,7 @@ async function calculateMCPPerformance() {
       hours: 24
     });
 
-    const neo4jCalls = logs.filter(log => log.metadata?.mcpTool === 'neo4j-mcp');
+    const neo4jCalls = logs.filter(log => log.metadata?.mcpTool === 'graph-mcp');
     const brightdataCalls = logs.filter(log => log.metadata?.mcpTool === 'brightdata-mcp');
     const perplexityCalls = logs.filter(log => log.metadata?.mcpTool === 'perplexity-mcp');
     

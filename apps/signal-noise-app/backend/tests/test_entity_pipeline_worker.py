@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 from types import SimpleNamespace
 import time
+from urllib.error import HTTPError
 
 import pytest
 
@@ -753,6 +754,84 @@ def test_process_batch_persists_discovery_context(monkeypatch):
     assert discovery_context["slowest_hypothesis_id"] == "international-canoe-federation_digital_leadership_hire"
     assert completed_update["metadata"]["monitoring_summary"]["pages_fetched"] == 2
     assert persisted_monitoring and persisted_monitoring[0][0] == "batch-1"
+
+
+def test_process_batch_records_dossier_generation_phase_on_retryable_failure():
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker.worker_id = "worker-1"
+    worker.lease_seconds = 60
+    worker.max_run_attempts = 3
+    worker._now_iso = lambda: "2026-03-10T13:05:00+00:00"
+    worker._batch_metadata = lambda batch: batch.get("metadata", {})
+    worker.refresh_batch_heartbeat = lambda _batch_id, metadata=None: (metadata or {})
+    worker._start_batch_heartbeat = lambda _batch_id, _metadata=None: (
+        SimpleNamespace(set=lambda: None),
+        SimpleNamespace(join=lambda timeout=1: None),
+    )
+    worker.sync_cached_entity = lambda *_args, **_kwargs: None
+    worker.persist_monitoring_outputs = lambda *_args, **_kwargs: None
+    worker._safe_execute = lambda operation, **_kwargs: operation()
+    worker._get_run_metadata = lambda _batch_id, _entity_id: {"attempt_count": 0}
+
+    update_payloads = []
+    worker.update_run = lambda _batch_id, _entity_id, payload: update_payloads.append(payload)
+
+    class _NoopQuery:
+        def eq(self, *_args, **_kwargs):
+            return self
+        def execute(self):
+            return SimpleNamespace(data=[])
+
+    class _NoopTable:
+        def update(self, *_args, **_kwargs):
+            return _NoopQuery()
+
+    class _NoopRPC:
+        def execute(self):
+            return SimpleNamespace(data=[])
+
+    class _NoopSupabase:
+        def table(self, _name):
+            return _NoopTable()
+        def rpc(self, *_args, **_kwargs):
+            return _NoopRPC()
+
+    worker.supabase = _NoopSupabase()
+
+    run = {
+        "entity_id": "entity-1",
+        "entity_name": "Entity 1",
+        "status": "queued",
+        "phase": "entity_registration",
+        "metadata": {"entity_type": "CLUB"},
+    }
+
+    calls = {"count": 0}
+    def get_batch_runs(_batch_id):
+        calls["count"] += 1
+        if calls["count"] == 1:
+            return [run]
+        return [{"status": "retrying"}]
+
+    worker.get_batch_runs = get_batch_runs
+
+    def fail_call_pipeline(_run, _batch_id):
+        raise HTTPError(
+            url="http://127.0.0.1:8000/api/pipeline/run-entity",
+            code=503,
+            msg="Service Unavailable",
+            hdrs=None,
+            fp=None,
+        )
+
+    worker.call_pipeline = fail_call_pipeline
+
+    worker.process_batch({"id": "batch-1", "metadata": {"queue_mode": "durable_worker"}})
+
+    # first payload sets running dossier generation, second payload is failure/retry update
+    assert update_payloads[0]["phase"] == "dossier_generation"
+    assert update_payloads[1]["status"] == "retrying"
+    assert update_payloads[1]["phase"] == "dossier_generation"
 
 
 def test_persist_monitoring_outputs_upserts_expanded_source_registry_entries():

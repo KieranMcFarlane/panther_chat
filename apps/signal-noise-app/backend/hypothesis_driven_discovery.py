@@ -638,11 +638,50 @@ class HypothesisDrivenDiscovery:
         self._official_site_content_cache: Dict[str, Dict[str, Any]] = {}
         self._official_site_evaluation_cache: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
         self._resolved_url_context: Dict[str, Dict[str, str]] = {}
+        self._brightdata_hop_exhaustions: Dict[Tuple[str, str], int] = {}
         self._official_site_url_cache = self._load_official_site_url_cache()
         self._official_site_domain_map = self._load_official_site_domain_map()
         self._official_site_resolution_failures: Dict[str, float] = {}
         self.current_official_site_url: Optional[str] = None
         self.max_consecutive_no_progress_iterations = int(os.getenv("DISCOVERY_MAX_CONSECUTIVE_NO_PROGRESS", "3"))
+        self.discovery_run_mode = (os.getenv("DISCOVERY_RUN_MODE", "phase1_plus") or "phase1_plus").strip().lower()
+        if self.discovery_run_mode not in {"single_pass", "phase1_plus"}:
+            self.discovery_run_mode = "phase1_plus"
+        self.discovery_profile = (os.getenv("DISCOVERY_PROFILE", "continuous") or "continuous").strip().lower()
+        if self.discovery_profile not in {"continuous", "test"}:
+            self.discovery_profile = "continuous"
+        self.discovery_strict_promotion_gate = self._parse_bool_env(
+            os.getenv("DISCOVERY_STRICT_PROMOTION_GATE"),
+            default=True,
+        )
+        self.discovery_promotion_min_confidence = float(
+            os.getenv("DISCOVERY_PROMOTION_MIN_CONFIDENCE", "0.55")
+        )
+        self.discovery_content_min_text_chars = int(
+            os.getenv("DISCOVERY_CONTENT_MIN_TEXT_CHARS", "240")
+        )
+        self.discovery_content_max_script_density = float(
+            os.getenv("DISCOVERY_CONTENT_MAX_SCRIPT_DENSITY", "0.45")
+        )
+        self.discovery_content_min_keyword_sentences = int(
+            os.getenv("DISCOVERY_CONTENT_MIN_KEYWORD_SENTENCES", "1")
+        )
+        self.discovery_json_repair_attempt = self._parse_bool_env(
+            os.getenv("DISCOVERY_JSON_REPAIR_ATTEMPT"),
+            default=True,
+        )
+        self.discovery_low_yield_context_eval = self._parse_bool_env(
+            os.getenv("DISCOVERY_LOW_YIELD_CONTEXT_EVAL"),
+            default=True,
+        )
+        self.discovery_brightdata_hop_max_exhaustions = max(
+            1,
+            int(os.getenv("DISCOVERY_BRIGHTDATA_HOP_MAX_EXHAUSTIONS", "2")),
+        )
+        self.discovery_alternate_url_max_queries = max(
+            1,
+            int(os.getenv("DISCOVERY_ALTERNATE_URL_MAX_QUERIES", "2")),
+        )
         self.search_timeout_seconds = float(os.getenv("DISCOVERY_SEARCH_TIMEOUT_SECONDS", "12"))
         self.search_validation_timeout_seconds = float(os.getenv("DISCOVERY_SEARCH_VALIDATION_TIMEOUT_SECONDS", "5"))
         self.url_resolution_timeout_seconds = float(os.getenv("DISCOVERY_URL_RESOLUTION_TIMEOUT_SECONDS", "12"))
@@ -666,6 +705,8 @@ class HypothesisDrivenDiscovery:
             "llm_circuit_broken": bool(self._get_claude_disabled_reason()),
             "llm_disable_reason": self._get_claude_disabled_reason(),
             "evaluation_mode": "llm",
+            "parse_path": "not_started",
+            "run_profile": getattr(self, "discovery_profile", "continuous"),
         }
 
         logger.info("🔍 HypothesisDrivenDiscovery initialized")
@@ -701,6 +742,8 @@ class HypothesisDrivenDiscovery:
                 "llm_circuit_broken": False,
                 "llm_disable_reason": None,
                 "evaluation_mode": "llm",
+                "parse_path": "not_started",
+                "run_profile": getattr(self, "discovery_profile", "continuous"),
             }
             self._llm_runtime_diagnostics = diag
 
@@ -716,6 +759,27 @@ class HypothesisDrivenDiscovery:
             else:
                 diag[key] = value
 
+        if not diag.get("parse_path"):
+            diag["parse_path"] = self._map_status_to_parse_path(diag.get("llm_last_status"))
+
+    @staticmethod
+    def _map_status_to_parse_path(status: Optional[str]) -> str:
+        status_value = str(status or "").strip().lower()
+        mapping = {
+            "ok": "json_direct",
+            "json_direct": "json_direct",
+            "json_fenced": "json_fenced",
+            "partial_json_recovered": "partial_json_recovered",
+            "text_decision_recovered": "text_decision_recovered",
+            "text_no_progress_recovered": "text_no_progress_recovered",
+            "text_accept_recovered": "text_decision_recovered",
+        }
+        if status_value in mapping:
+            return mapping[status_value]
+        if "heuristic" in status_value or "fallback" in status_value:
+            return "heuristic_fallback"
+        return "heuristic_fallback"
+
     def _decorate_evaluation_result(
         self,
         result: Dict[str, Any],
@@ -730,6 +794,10 @@ class HypothesisDrivenDiscovery:
         output["llm_last_status"] = diag.get("llm_last_status", "unknown")
         output["llm_circuit_broken"] = bool(diag.get("llm_circuit_broken", False))
         output["llm_disable_reason"] = diag.get("llm_disable_reason")
+        output["parse_path"] = output.get("parse_path") or diag.get("parse_path") or self._map_status_to_parse_path(
+            diag.get("llm_last_status")
+        )
+        output["run_profile"] = diag.get("run_profile", getattr(self, "discovery_profile", "continuous"))
         return output
 
     @staticmethod
@@ -778,11 +846,13 @@ class HypothesisDrivenDiscovery:
 
     def _parse_evaluation_response_json(self, response_text: str) -> Optional[Dict[str, Any]]:
         """Parse evaluator JSON from plain text, fenced blocks, or mixed responses."""
+        self._last_parse_path = None
         if not isinstance(response_text, str):
             return None
 
         direct = self._extract_balanced_json_object(response_text, required_key="decision")
         if direct:
+            self._last_parse_path = "json_direct"
             return direct
 
         import re
@@ -791,6 +861,7 @@ class HypothesisDrivenDiscovery:
         for block in fenced_blocks:
             parsed = self._extract_balanced_json_object(block, required_key="decision")
             if parsed:
+                self._last_parse_path = "json_fenced"
                 return parsed
 
         return None
@@ -927,6 +998,180 @@ class HypothesisDrivenDiscovery:
             return self.evaluation_max_tokens_careers_annual_report
         return self.evaluation_max_tokens_default
 
+    def _derive_hop_keywords(self, hypothesis, hop_type: HopType) -> List[str]:
+        keywords: List[str] = []
+        raw_keywords = getattr(hypothesis, "keywords", None)
+        if isinstance(raw_keywords, list):
+            keywords.extend(str(item).strip().lower() for item in raw_keywords if str(item).strip())
+        metadata = getattr(hypothesis, "metadata", {}) or {}
+        metadata_keywords = metadata.get("keywords") if isinstance(metadata, dict) else None
+        if isinstance(metadata_keywords, list):
+            keywords.extend(str(item).strip().lower() for item in metadata_keywords if str(item).strip())
+
+        hop_defaults = {
+            HopType.OFFICIAL_SITE: ["procurement", "vendor", "supplier", "digital", "platform"],
+            HopType.PRESS_RELEASE: ["announcement", "partnership", "contract", "procurement"],
+            HopType.CAREERS_PAGE: ["hiring", "job", "vacancy", "digital", "technology"],
+            HopType.ANNUAL_REPORT: ["investment", "strategy", "transformation", "procurement"],
+            HopType.RFP_PAGE: ["rfp", "tender", "request for proposal", "vendor"],
+            HopType.TENDERS_PAGE: ["tender", "procurement", "supplier", "opportunity"],
+            HopType.PROCUREMENT_PAGE: ["procurement", "supplier", "vendor", "purchasing"],
+        }
+        keywords.extend(hop_defaults.get(hop_type, []))
+        return sorted({kw for kw in keywords if kw})
+
+    def _assess_content_quality(self, *, content: str, keywords: List[str]) -> Dict[str, Any]:
+        text = str(content or "")
+        stripped = text.strip()
+        lines = [line.strip().lower() for line in stripped.splitlines() if line.strip()]
+        total_lines = len(lines)
+        script_lines = 0
+        link_lines = 0
+        for line in lines:
+            if any(token in line for token in ["<script", "javascript", ".js", "src=", "webpack"]):
+                script_lines += 1
+            if "http" in line or "www." in line:
+                link_lines += 1
+
+        denominator = max(total_lines, 1)
+        script_density = min(1.0, float(script_lines + link_lines) / float(denominator))
+
+        import re
+
+        sentences = [part.strip().lower() for part in re.split(r"[\n\.!?]+", stripped) if part.strip()]
+        keyword_sentence_count = 0
+        if keywords:
+            for sentence in sentences:
+                if any(keyword in sentence for keyword in keywords):
+                    keyword_sentence_count += 1
+
+        reasons: List[str] = []
+        if len(stripped) < self.discovery_content_min_text_chars:
+            reasons.append(f"text_too_short:{len(stripped)}<{self.discovery_content_min_text_chars}")
+        if script_density > self.discovery_content_max_script_density:
+            reasons.append(
+                f"script_density_high:{script_density:.2f}>{self.discovery_content_max_script_density:.2f}"
+            )
+        if keyword_sentence_count < self.discovery_content_min_keyword_sentences:
+            reasons.append(
+                "keyword_sentences_low:"
+                f"{keyword_sentence_count}<{self.discovery_content_min_keyword_sentences}"
+            )
+
+        return {
+            "text_chars": len(stripped),
+            "script_density": round(script_density, 4),
+            "keyword_sentence_count": keyword_sentence_count,
+            "low_yield": bool(reasons),
+            "low_yield_reasons": reasons,
+        }
+
+    def _build_low_yield_context_payload(
+        self,
+        *,
+        url: str,
+        content: str,
+        hop_type: HopType,
+        low_yield_reasons: List[str],
+    ) -> str:
+        """Build compact, non-script context so low-yield hops still get one LLM eval."""
+        resolved_context = self._resolved_url_context.get(url, {}) if hasattr(self, "_resolved_url_context") else {}
+        title = str(resolved_context.get("title") or "").strip()
+        snippet = str(resolved_context.get("snippet") or "").strip()
+
+        cleaned_lines: List[str] = []
+        for line in str(content or "").splitlines():
+            line_clean = line.strip()
+            if not line_clean:
+                continue
+            line_lower = line_clean.lower()
+            if any(token in line_lower for token in ("<script", "javascript", ".js", "webpack", "src=")):
+                continue
+            cleaned_lines.append(line_clean)
+            if len(cleaned_lines) >= 25:
+                break
+
+        cleaned_text = "\n".join(cleaned_lines).strip()
+        sections = [
+            "Low-yield scrape fallback context",
+            f"URL: {url}",
+            f"Hop: {hop_type.value}",
+            f"Reasons: {', '.join(low_yield_reasons)}",
+        ]
+        if title:
+            sections.append(f"Title: {title}")
+        if snippet:
+            sections.append(f"Snippet: {snippet}")
+        if cleaned_text:
+            sections.append(f"Cleaned Content:\\n{cleaned_text[:1600]}")
+
+        payload = "\n\n".join(sections).strip()
+        return payload if len(payload) > 80 else ""
+
+    async def _find_alternate_url_for_hop(
+        self,
+        *,
+        hop_type: HopType,
+        entity_name: str,
+        current_url: str,
+        entity_id: Optional[str] = None,
+    ) -> Optional[str]:
+        try:
+            official_url = await self._resolve_official_site_url(entity_name)
+            if official_url:
+                alt_direct = await self._try_direct_site_paths(official_url, hop_type)
+                if alt_direct and alt_direct != current_url:
+                    return alt_direct
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("alternate direct-path lookup failed: %s", exc)
+
+        fallback_queries = self._get_fallback_queries(hop_type, entity_name)
+        max_queries = int(getattr(self, "discovery_alternate_url_max_queries", 2) or 2)
+        for fallback_query in fallback_queries[:max_queries]:
+            result = await self._search_engine_with_timeout(
+                query=fallback_query,
+                engine='google',
+                num_results=1,
+            )
+            if result.get("status") != "success":
+                err = str(result.get("error", "")).lower()
+                if "exhausted endpoint/zone candidates" in err and entity_id:
+                    self._record_brightdata_exhaustion(entity_id, hop_type)
+                    if self._is_brightdata_hop_circuit_open(entity_id, hop_type):
+                        return None
+            if result.get('status') != 'success' or not result.get('results'):
+                continue
+            candidate = str((result.get('results') or [{}])[0].get('url') or '').strip()
+            if candidate and candidate != current_url:
+                return candidate
+        return None
+
+    def _brightdata_hop_key(self, entity_id: Any, hop_type: HopType) -> Tuple[str, str]:
+        return (str(entity_id or ""), hop_type.value if hasattr(hop_type, "value") else str(hop_type))
+
+    def _record_brightdata_exhaustion(self, entity_id: Any, hop_type: HopType) -> int:
+        key = self._brightdata_hop_key(entity_id, hop_type)
+        counts = getattr(self, "_brightdata_hop_exhaustions", None)
+        if not isinstance(counts, dict):
+            counts = {}
+            self._brightdata_hop_exhaustions = counts
+        counts[key] = int(counts.get(key, 0)) + 1
+        return counts[key]
+
+    def _reset_brightdata_exhaustion(self, entity_id: Any, hop_type: HopType) -> None:
+        key = self._brightdata_hop_key(entity_id, hop_type)
+        counts = getattr(self, "_brightdata_hop_exhaustions", None)
+        if isinstance(counts, dict):
+            counts.pop(key, None)
+
+    def _is_brightdata_hop_circuit_open(self, entity_id: Any, hop_type: HopType) -> bool:
+        key = self._brightdata_hop_key(entity_id, hop_type)
+        counts = getattr(self, "_brightdata_hop_exhaustions", None)
+        if not isinstance(counts, dict):
+            return False
+        threshold = int(getattr(self, "discovery_brightdata_hop_max_exhaustions", 2) or 2)
+        return int(counts.get(key, 0)) >= max(1, threshold)
+
     async def _get_cached_search(self, query: str, engine: str) -> Optional[Dict[str, Any]]:
         """Get cached search result if available and not expired"""
         cache_key = f"{engine}:{query}"
@@ -992,6 +1237,10 @@ class HypothesisDrivenDiscovery:
             max_depth = self.max_depth
         if max_cost_usd is None:
             max_cost_usd = self.max_cost_per_entity
+
+        if self.discovery_run_mode == "single_pass":
+            max_iterations = min(int(max_iterations), 1)
+            max_depth = min(int(max_depth), 1)
 
         template_id = resolve_template_id(template_id, getattr(self, "current_entity_type", None))
 
@@ -1160,6 +1409,23 @@ class HypothesisDrivenDiscovery:
             logger.warning("No hop types available, defaulting to PRESS_RELEASE")
             return HopType.PRESS_RELEASE
 
+        run_mode = getattr(self, "discovery_run_mode", "phase1_plus")
+        initial_iteration = int(getattr(state, "iterations_completed", 0) or 0) == 0
+        if run_mode == "single_pass" and initial_iteration:
+            single_pass_priority = (
+                HopType.RFP_PAGE,
+                HopType.TENDERS_PAGE,
+                HopType.PROCUREMENT_PAGE,
+            )
+            for prioritized_hop in single_pass_priority:
+                if prioritized_hop in hop_scores:
+                    logger.info(
+                        "   Single-pass priority hop override: %s (score: %.3f)",
+                        prioritized_hop.value,
+                        hop_scores[prioritized_hop],
+                    )
+                    return prioritized_hop
+
         best_hop = max(hop_scores.items(), key=lambda x: x[1])[0]
         best_score = hop_scores[best_hop]
 
@@ -1234,6 +1500,12 @@ class HypothesisDrivenDiscovery:
                 state.hop_failure_counts[hop_type_str] = 1
                 state.last_failed_hop = hop_type_str
             return state.hop_failure_counts.get(hop_type_str, 1)
+
+        entity_id_for_hop = getattr(state, "entity_id", "")
+        if self._is_brightdata_hop_circuit_open(entity_id_for_hop, hop_type):
+            return build_no_progress_result(
+                f"BrightData circuit open for hop {hop_type.value}; skipping repeated exhausted attempts"
+            )
 
         # Track depth iteration
         state.increment_depth_count(state.current_depth)
@@ -1323,6 +1595,10 @@ class HypothesisDrivenDiscovery:
 
                 if content_result.get('status') != 'success':
                     consecutive_failures = record_hop_failure()
+                    error_text = str(content_result.get('error', 'Unknown error'))
+                    if "exhausted endpoint/zone candidates" in error_text.lower():
+                        exhaustion_count = self._record_brightdata_exhaustion(entity_id_for_hop, hop_type)
+                        performance["brightdata_exhaustion_count"] = exhaustion_count
                     logger.error(f"Scraping failed: {content_result.get('error', 'Unknown error')}")
                     return build_no_progress_result(
                         (
@@ -1431,6 +1707,84 @@ class HypothesisDrivenDiscovery:
                                     # Update URL for tracking
                                     url = best_pdf_url
 
+            low_yield_reasons: List[str] = []
+            if isinstance(content, str):
+                hop_keywords = self._derive_hop_keywords(hypothesis, hop_type)
+                content_quality = self._assess_content_quality(content=content, keywords=hop_keywords)
+                performance['content_quality'] = content_quality
+                if content_quality.get('low_yield'):
+                    low_yield_reasons = list(content_quality.get('low_yield_reasons') or [])
+                    performance['low_yield_reasons'] = low_yield_reasons
+                    alternate_url = await self._find_alternate_url_for_hop(
+                        hop_type=hop_type,
+                        entity_name=getattr(state, 'entity_name', ''),
+                        current_url=url,
+                        entity_id=entity_id_for_hop,
+                    )
+                    if alternate_url and alternate_url != url:
+                        performance['alternate_url_attempted'] = alternate_url
+                        alt_scrape_started_at = time.perf_counter()
+                        alternate_result = await self.brightdata_client.scrape_as_markdown(alternate_url)
+                        performance['alternate_scrape_ms'] = round((time.perf_counter() - alt_scrape_started_at) * 1000, 2)
+                        if alternate_result.get('status') == 'success':
+                            alternate_content = str(alternate_result.get('content') or '')
+                            alt_quality = self._assess_content_quality(content=alternate_content, keywords=hop_keywords)
+                            performance['alternate_content_quality'] = alt_quality
+                            if not alt_quality.get('low_yield') and alternate_content.strip():
+                                url = alternate_url
+                                content = alternate_content
+                                content_metadata = {
+                                    **(content_metadata or {}),
+                                    'char_count': len(alternate_content),
+                                    'alternate_selected': True,
+                                }
+                                low_yield_reasons = []
+                            else:
+                                low_yield_reasons = list(alt_quality.get('low_yield_reasons') or low_yield_reasons)
+                        else:
+                            alt_error_text = str(alternate_result.get("error", ""))
+                            if "exhausted endpoint/zone candidates" in alt_error_text.lower():
+                                exhaustion_count = self._record_brightdata_exhaustion(entity_id_for_hop, hop_type)
+                                performance["brightdata_exhaustion_count"] = exhaustion_count
+
+                if low_yield_reasons:
+                    allow_context_eval = getattr(self, "discovery_low_yield_context_eval", True)
+                    context_payload = ""
+                    if allow_context_eval:
+                        context_payload = self._build_low_yield_context_payload(
+                            url=url,
+                            content=str(content or ""),
+                            hop_type=hop_type,
+                            low_yield_reasons=low_yield_reasons,
+                        )
+                    if context_payload:
+                        performance["low_yield_context_eval"] = True
+                        performance["low_yield_context_eval_chars"] = len(context_payload)
+                        content = context_payload
+                        content_metadata = {
+                            **(content_metadata or {}),
+                            "low_yield_context_eval": True,
+                            "low_yield_reasons": list(low_yield_reasons),
+                            "char_count": len(context_payload),
+                        }
+                        low_yield_reasons = []
+                    else:
+                        performance['total_duration_ms'] = round((time.perf_counter() - hop_started_at) * 1000, 2)
+                        return {
+                            'hop_type': hop_type.value,
+                            'url': url,
+                            'decision': 'NO_PROGRESS',
+                            'confidence_delta': 0.0,
+                            'justification': f"Low-yield content: {', '.join(low_yield_reasons)}",
+                            'evidence_found': '',
+                            'cost_usd': 0.0,
+                            'scrape_data': {
+                                'url': url,
+                            },
+                            'low_yield_reasons': low_yield_reasons,
+                            'performance': performance,
+                        }
+
             use_official_site_evaluation_cache = hop_type == HopType.OFFICIAL_SITE and isinstance(content, str)
             evaluation_cache_key = None
             evaluation = None
@@ -1470,6 +1824,7 @@ class HypothesisDrivenDiscovery:
                 if state.last_failed_hop == hop_type_str:
                     state.last_failed_hop = None
                 logger.debug(f"Reset failure counter for {hop_type_str} (successful execution)")
+            self._reset_brightdata_exhaustion(entity_id_for_hop, hop_type)
 
             total_duration_ms = round((time.perf_counter() - hop_started_at) * 1000, 2)
             performance['total_duration_ms'] = total_duration_ms
@@ -3046,6 +3401,7 @@ class HypothesisDrivenDiscovery:
             content=content,
             entity_name=entity_name
         )
+        self._update_llm_runtime_diagnostics(parse_path="not_started", run_profile=getattr(self, "discovery_profile", "continuous"))
         disabled_reason = self._get_claude_disabled_reason()
         if self.heuristic_fallback_on_llm_unavailable and disabled_reason:
             self._update_llm_runtime_diagnostics(
@@ -3222,8 +3578,24 @@ Return JSON:
                     result['mcp_matches'] = mcp_matches
                     result['mcp_confidence'] = mcp_confidence
 
+                parse_path = getattr(self, "_last_parse_path", None) or "json_direct"
+                self._update_llm_runtime_diagnostics(
+                    llm_last_status=parse_path,
+                    parse_path=parse_path,
+                    evaluation_mode="llm",
+                )
                 return self._decorate_evaluation_result(result, evaluation_mode="llm")
             else:
+                if getattr(self, "discovery_json_repair_attempt", True):
+                    repaired = await self._attempt_json_repair_response(response_text)
+                    if repaired is not None and 'decision' in repaired:
+                        self._update_llm_runtime_diagnostics(
+                            llm_last_status="json_direct",
+                            parse_path="json_direct",
+                            evaluation_mode="llm",
+                        )
+                        return self._decorate_evaluation_result(repaired, evaluation_mode="llm")
+
                 import re
                 decision_match = re.search(r'"decision"\s*:\s*"([A-Z_]+)"', response_text)
                 if decision_match:
@@ -3238,6 +3610,7 @@ Return JSON:
                                 recovered_delta = 0.0
                         self._update_llm_runtime_diagnostics(
                             llm_last_status="partial_json_recovered",
+                            parse_path="partial_json_recovered",
                             evaluation_mode="llm",
                         )
                         return self._decorate_evaluation_result(
@@ -3259,6 +3632,7 @@ Return JSON:
                     recovered_decision = heading_match.group(1).upper()
                     self._update_llm_runtime_diagnostics(
                         llm_last_status="text_decision_recovered",
+                        parse_path="text_decision_recovered",
                         evaluation_mode="llm",
                     )
                     return self._decorate_evaluation_result(
@@ -3291,6 +3665,7 @@ Return JSON:
                 if any(marker in text_lower for marker in no_progress_markers):
                     self._update_llm_runtime_diagnostics(
                         llm_last_status="text_no_progress_recovered",
+                        parse_path="text_no_progress_recovered",
                         evaluation_mode="llm",
                     )
                     return self._decorate_evaluation_result(
@@ -3329,6 +3704,7 @@ Return JSON:
                 )
                 self._update_llm_runtime_diagnostics(
                     llm_last_status="unparseable_response",
+                    parse_path="heuristic_fallback",
                     evaluation_mode="heuristic",
                 )
                 return self._decorate_evaluation_result(fallback, evaluation_mode="heuristic")
@@ -3343,6 +3719,7 @@ Return JSON:
                 logger.info(f"Fallback extracted decision: {decision}")
                 self._update_llm_runtime_diagnostics(
                     llm_last_status="json_parse_error",
+                    parse_path="heuristic_fallback",
                     evaluation_mode="heuristic",
                 )
                 return self._decorate_evaluation_result({
@@ -3360,6 +3737,7 @@ Return JSON:
             )
             self._update_llm_runtime_diagnostics(
                 llm_last_status="json_parse_error",
+                parse_path="heuristic_fallback",
                 evaluation_mode="heuristic",
             )
             return self._decorate_evaluation_result(fallback, evaluation_mode="heuristic")
@@ -3369,6 +3747,7 @@ Return JSON:
             disabled_reason = self._get_claude_disabled_reason()
             self._update_llm_runtime_diagnostics(
                 llm_last_status="request_error",
+                parse_path="heuristic_fallback",
                 llm_circuit_broken=bool(disabled_reason),
                 llm_disable_reason=disabled_reason,
                 evaluation_mode="heuristic",
@@ -3380,6 +3759,40 @@ Return JSON:
                 context=context,
             )
             return self._decorate_evaluation_result(fallback, evaluation_mode="heuristic")
+
+    async def _attempt_json_repair_response(self, response_text: str) -> Optional[Dict[str, Any]]:
+        """One-shot repair pass for evaluator responses that missed JSON formatting."""
+        repair_prompt = (
+            "Convert the content below into valid JSON only with keys: "
+            "decision, confidence_delta, justification, evidence_found, evidence_type, temporal_score. "
+            "Allowed decisions: ACCEPT, WEAK_ACCEPT, REJECT, NO_PROGRESS. "
+            "If no evidence is present, set decision to NO_PROGRESS and confidence_delta to 0.0.\n\n"
+            f"CONTENT:\n{str(response_text or '')[:1800]}"
+        )
+        try:
+            repair_response = await self.claude_client.query(
+                prompt=repair_prompt,
+                model="haiku",
+                max_tokens=220,
+                system_prompt="Return only valid JSON object.",
+                json_mode=True,
+            )
+            repaired_text = ""
+            if isinstance(repair_response, dict):
+                repaired_text = str(repair_response.get("content") or repair_response.get("text") or "")
+            parsed = self._parse_evaluation_response_json(repaired_text)
+            if parsed is not None:
+                return parsed
+            try:
+                loaded = json.loads(repaired_text)
+            except Exception:  # noqa: BLE001
+                return None
+            if isinstance(loaded, dict) and "decision" in loaded:
+                return loaded
+            return None
+        except Exception as exc:  # noqa: BLE001
+            logger.debug("JSON repair pass failed: %s", exc)
+            return None
 
     async def _update_hypothesis_state(
         self,
@@ -3448,7 +3861,7 @@ Return JSON:
         state.iterations_completed += 1
 
         # Track channel failure/success for MCP-guided hop selection
-        if hasattr(state, 'channel_blacklist'):
+        if hasattr(state, 'channel_blacklist') and state.channel_blacklist is not None:
             # Map hop type to source type
             hop_type_to_source = {
                 "official_site": SourceType.TECH_NEWS_ARTICLES,
@@ -4159,6 +4572,9 @@ Return JSON:
             'llm_circuit_broken': bool(llm_diag.get('llm_circuit_broken', False)),
             'llm_disable_reason': llm_diag.get('llm_disable_reason'),
             'evaluation_mode': llm_diag.get('evaluation_mode'),
+            'parse_path': llm_diag.get('parse_path') or self._map_status_to_parse_path(llm_diag.get('llm_last_status')),
+            'run_profile': llm_diag.get('run_profile', getattr(self, 'discovery_profile', 'continuous')),
+            'run_mode': getattr(self, 'discovery_run_mode', 'phase1_plus'),
         }
 
     def _build_failure_result(

@@ -393,7 +393,7 @@ class EntityPipelineWorker:
             "entity_id": run["entity_id"],
             "entity_name": run["entity_name"],
             "entity_type": str((run.get("metadata") or {}).get("entity_type") or "CLUB"),
-            "priority_score": int((run.get("metadata") or {}).get("priority_score") or 50),
+            "priority_score": int((run.get("metadata") or {}).get("priority_score") or 85),
         }
         started_at = time.perf_counter()
         logger.info(
@@ -659,6 +659,18 @@ class EntityPipelineWorker:
             except (HTTPError, URLError, TimeoutError, json.JSONDecodeError, ValueError) as error:
                 retryable, error_type = self._classify_error(error)
                 latest_metadata = self._get_run_metadata(batch_id, run["entity_id"])
+                active_phase = (
+                    ((latest_metadata.get("phase_details") or {}).get("phase"))
+                    if isinstance(latest_metadata, dict)
+                    else None
+                )
+                if not active_phase:
+                    prior_phase = run.get("phase")
+                    active_phase = (
+                        prior_phase
+                        if prior_phase and prior_phase != "entity_registration"
+                        else "dossier_generation"
+                    )
                 retry_metadata = build_run_retry_metadata(
                     latest_metadata if isinstance(latest_metadata, dict) else run_metadata,
                     retryable=retryable,
@@ -676,7 +688,7 @@ class EntityPipelineWorker:
                     run["entity_id"],
                     {
                         "status": next_status,
-                        "phase": run.get("phase") or "entity_registration",
+                        "phase": active_phase,
                         "error_message": str(error),
                         "completed_at": None if next_status == "queued" else self._now_iso(),
                         "metadata": retry_metadata,
