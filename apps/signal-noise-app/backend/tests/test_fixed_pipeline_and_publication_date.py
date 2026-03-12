@@ -44,6 +44,8 @@ async def test_phase2_uses_passed_max_iterations():
 async def test_run_pipeline_passes_entity_type_to_phase1():
     pipeline = FixedDossierFirstPipeline.__new__(FixedDossierFirstPipeline)
     pipeline.output_dir = Path("/tmp")
+    pipeline.schema_first_enabled = False
+    pipeline.schema_first_result = None
     captured = {}
 
     async def _phase_1_generate_dossier(*, entity_id, entity_name, entity_type, tier_score):
@@ -74,6 +76,50 @@ async def test_run_pipeline_passes_entity_type_to_phase1():
     )
 
     assert captured["entity_type"] == "FEDERATION"
+
+
+@pytest.mark.asyncio
+async def test_run_pipeline_executes_schema_first_prepass_when_enabled():
+    pipeline = FixedDossierFirstPipeline.__new__(FixedDossierFirstPipeline)
+    pipeline.output_dir = Path("/tmp")
+    pipeline.schema_first_enabled = True
+    pipeline.schema_first_result = None
+    captured = {"schema": 0}
+
+    async def _run_schema_first_prepass(*, entity_id, entity_name, entity_type):
+        captured["schema"] += 1
+        return {"fields": {"official_site": {"value": "https://www.ccfc.co.uk"}}}
+
+    async def _phase_1_generate_dossier(*, entity_id, entity_name, entity_type, tier_score):
+        return SimpleNamespace(sections=[], metadata={"canonical_sources": {}})
+
+    async def _phase_2_run_discovery(*, entity_id, entity_name, dossier, max_iterations, template_id):
+        return SimpleNamespace(final_confidence=0.5, iterations_completed=1, signals_discovered=[])
+
+    async def _phase_3_calculate_scores(*, entity_id, entity_name, dossier, discovery_result):
+        return {"procurement_maturity": 40, "active_probability": 0.05, "sales_readiness": "NOT_READY"}
+
+    async def _save_results(*args, **kwargs):
+        return None
+
+    pipeline._run_schema_first_prepass = _run_schema_first_prepass
+    pipeline._phase_1_generate_dossier = _phase_1_generate_dossier
+    pipeline._phase_2_run_discovery = _phase_2_run_discovery
+    pipeline._phase_3_calculate_scores = _phase_3_calculate_scores
+    pipeline._save_results = _save_results
+
+    await pipeline.run_pipeline(
+        entity_id="coventry-city-fc",
+        entity_name="Coventry City FC",
+        entity_type="CLUB",
+        tier_score=50,
+        max_discovery_iterations=1,
+        template_id="yellow_panther_agency",
+    )
+
+    assert captured["schema"] == 1
+    assert pipeline.schema_first_result is not None
+    assert pipeline.schema_first_result["fields"]["official_site"]["value"] == "https://www.ccfc.co.uk"
 
 
 @pytest.mark.asyncio
@@ -163,6 +209,40 @@ async def test_phase2_seeds_discovery_official_site_from_generator_cache():
     assert result.final_confidence == 0.6
     assert pipeline.discovery.current_official_site_url == "https://www.ccfc.co.uk"
     assert captured["dossier"]["metadata"]["website"] == "https://www.ccfc.co.uk"
+    assert captured["dossier"]["metadata"]["canonical_sources"]["official_site"] == "https://www.ccfc.co.uk"
+
+
+@pytest.mark.asyncio
+async def test_phase2_uses_schema_first_official_site_when_generator_cache_missing():
+    pipeline = FixedDossierFirstPipeline.__new__(FixedDossierFirstPipeline)
+    pipeline.schema_first_result = {"fields": {"official_site": {"value": "https://www.ccfc.co.uk"}}}
+    captured = {}
+
+    class _Discovery:
+        current_official_site_url = None
+
+        async def run_discovery_with_dossier_context(self, **kwargs):
+            captured.update(kwargs)
+            return SimpleNamespace(final_confidence=0.6, iterations_completed=1, signals_discovered=[])
+
+    class _Generator:
+        def get_last_official_site_url(self, entity_id):
+            return None
+
+    pipeline.discovery = _Discovery()
+    pipeline.dossier_generator = _Generator()
+    pipeline._lookup_official_site_from_recent_artifacts = lambda _entity_id: None
+
+    result = await pipeline._phase_2_run_discovery(
+        entity_id="coventry-city-fc",
+        entity_name="Coventry City FC",
+        dossier=SimpleNamespace(to_dict=lambda: {"entity_id": "coventry-city-fc"}),
+        max_iterations=5,
+        template_id="yellow_panther_agency",
+    )
+
+    assert result.final_confidence == 0.6
+    assert pipeline.discovery.current_official_site_url == "https://www.ccfc.co.uk"
     assert captured["dossier"]["metadata"]["canonical_sources"]["official_site"] == "https://www.ccfc.co.uk"
 
 

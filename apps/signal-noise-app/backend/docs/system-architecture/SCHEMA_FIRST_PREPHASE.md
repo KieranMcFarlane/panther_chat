@@ -18,6 +18,8 @@ When enabled, canonical `PipelineOrchestrator` now runs:
 
 If disabled, `schema_first` is marked as `skipped`.
 
+For `run_fixed_dossier_pipeline.py`, the same feature is enabled with the same env flags as a pre-phase before phase 1 dossier generation.
+
 ## Runtime Configuration
 
 ```bash
@@ -50,6 +52,10 @@ After dossier generation, schema-first output is merged into dossier metadata:
 - `metadata.canonical_sources.official_site` is populated from schema-first if dossier did not already provide it.
 
 This gives discovery a stable official-site seed without overriding stronger dossier-provided canonical sources.
+
+In `run_fixed_dossier_pipeline.py`:
+- schema-first `official_site` is merged into dossier metadata canonical sources.
+- discovery official-site seeding also falls back to schema-first when generator cache/artifact lookup does not return a URL.
 
 ## Phase/Artifact Shape
 

@@ -33,6 +33,10 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+def _bool_env(value: str) -> bool:
+    return str(value).strip().lower() in {"1", "true", "yes", "on"}
+
+
 class FixedDossierFirstPipeline:
     """Fixed pipeline using EntityDossierGenerator"""
 
@@ -53,6 +57,16 @@ class FixedDossierFirstPipeline:
         self.dossier_generator = EntityDossierGenerator(self.claude)
         self.discovery = HypothesisDrivenDiscovery(self.claude, self.brightdata)
         self.dashboard_scorer = DashboardScorer()
+        self.schema_first_enabled = _bool_env(os.getenv("PIPELINE_SCHEMA_FIRST_ENABLED", "false"))
+        self.schema_first_output_dir = os.getenv("PIPELINE_SCHEMA_FIRST_OUTPUT_DIR", str(self.output_dir if hasattr(self, "output_dir") else "backend/data/dossiers"))
+        self.schema_first_max_results = max(1, int(os.getenv("PIPELINE_SCHEMA_FIRST_MAX_RESULTS", "8")))
+        self.schema_first_max_candidates_per_query = max(
+            1,
+            int(os.getenv("PIPELINE_SCHEMA_FIRST_MAX_CANDIDATES_PER_QUERY", "4")),
+        )
+        fields_env = str(os.getenv("PIPELINE_SCHEMA_FIRST_FIELDS", "") or "").strip()
+        self.schema_first_fields = [f.strip() for f in fields_env.split(",") if f.strip()] if fields_env else None
+        self.schema_first_result: Dict[str, Any] | None = None
 
         # Create output directory
         self.output_dir = Path("backend/data/dossiers")
@@ -86,6 +100,25 @@ class FixedDossierFirstPipeline:
         logger.info(f"🎯 DOSSIER-FIRST PIPELINE: {entity_name}")
         logger.info("=" * 60)
 
+        if getattr(self, "schema_first_enabled", False):
+            logger.info("\n🧭 PRE-PHASE: SCHEMA-FIRST")
+            logger.info("-" * 60)
+            try:
+                self.schema_first_result = await self._run_schema_first_prepass(
+                    entity_id=entity_id,
+                    entity_name=entity_name,
+                    entity_type=entity_type,
+                )
+                answered = sum(
+                    1
+                    for value in (self.schema_first_result or {}).get("fields", {}).values()
+                    if isinstance(value, dict) and str(value.get("value") or "").strip()
+                )
+                logger.info("✅ Schema-first prepass complete (answered_fields=%s)", answered)
+            except Exception as schema_error:  # noqa: BLE001
+                logger.warning("⚠️ Schema-first prepass failed; continuing pipeline: %s", schema_error)
+                self.schema_first_result = None
+
         # =========================================================================
         # PHASE 1: DOSSIER GENERATION (Using EntityDossierGenerator)
         # =========================================================================
@@ -98,6 +131,7 @@ class FixedDossierFirstPipeline:
             entity_type=entity_type,
             tier_score=tier_score
         )
+        self._merge_schema_first_into_dossier(dossier)
 
         # =========================================================================
         # PHASE 2: DISCOVERY (with dossier context)
@@ -216,6 +250,8 @@ class FixedDossierFirstPipeline:
                     logger.debug("Could not fetch seeded official site for %s: %s", entity_id, seed_error)
             if not known_official_site:
                 known_official_site = self._lookup_official_site_from_recent_artifacts(entity_id)
+            if not known_official_site:
+                known_official_site = self._schema_first_official_site()
 
             if isinstance(known_official_site, str) and known_official_site.strip():
                 metadata = dossier_payload.setdefault("metadata", {})
@@ -277,6 +313,60 @@ class FixedDossierFirstPipeline:
         logger.info(f"   - Signals: {len(result.signals_discovered)}")
 
         return result
+
+    async def _run_schema_first_prepass(
+        self,
+        *,
+        entity_id: str,
+        entity_name: str,
+        entity_type: str,
+    ) -> Dict[str, Any]:
+        from backend.schema_first_pilot import run_schema_first_pilot
+
+        return await run_schema_first_pilot(
+            entity_name=entity_name,
+            entity_id=entity_id,
+            entity_type=entity_type,
+            output_dir=str(getattr(self, "schema_first_output_dir", self.output_dir)),
+            max_results=int(getattr(self, "schema_first_max_results", 8)),
+            max_candidates_per_query=int(getattr(self, "schema_first_max_candidates_per_query", 4)),
+            field_names=getattr(self, "schema_first_fields", None),
+        )
+
+    def _schema_first_official_site(self) -> str | None:
+        payload = getattr(self, "schema_first_result", None)
+        if not isinstance(payload, dict):
+            return None
+        fields = payload.get("fields")
+        if not isinstance(fields, dict):
+            return None
+        official = fields.get("official_site")
+        if not isinstance(official, dict):
+            return None
+        return self._normalize_http_url(official.get("value"))
+
+    def _merge_schema_first_into_dossier(self, dossier: Any) -> None:
+        official_site = self._schema_first_official_site()
+        if not official_site:
+            return
+
+        metadata: Dict[str, Any] | None = None
+        if isinstance(dossier, dict):
+            metadata = dossier.setdefault("metadata", {})
+        elif hasattr(dossier, "metadata"):
+            metadata = getattr(dossier, "metadata", None)
+            if metadata is None:
+                metadata = {}
+                setattr(dossier, "metadata", metadata)
+        if not isinstance(metadata, dict):
+            return
+
+        canonical_sources = metadata.setdefault("canonical_sources", {})
+        if not isinstance(canonical_sources, dict):
+            canonical_sources = {}
+            metadata["canonical_sources"] = canonical_sources
+        canonical_sources.setdefault("official_site", official_site)
+        metadata.setdefault("schema_first", self.schema_first_result or {})
 
     def _lookup_official_site_from_recent_artifacts(self, entity_id: str) -> str | None:
         """Load the most recent official site URL from saved dossier artifacts."""
