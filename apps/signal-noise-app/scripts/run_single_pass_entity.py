@@ -17,6 +17,7 @@ SCRIPT_PATH = Path(__file__).resolve()
 APP_ROOT = SCRIPT_PATH.parents[1]
 REPO_ROOT = SCRIPT_PATH.parents[3]
 BACKEND_ROOT = APP_ROOT / "backend"
+TEMPLATE_DIR = BACKEND_ROOT / "bootstrapped_templates"
 
 import sys
 
@@ -66,6 +67,32 @@ def _recovery_overrides() -> Dict[str, str]:
         "DISCOVERY_DOSSIER_CONTEXT_TARGETED_SEARCH_ENABLED": "true",
         "DISCOVERY_DOSSIER_CONTEXT_MAX_TARGETED_QUERIES_SINGLE_PASS": "2",
     }
+
+
+def _template_exists(template_id: str) -> bool:
+    return bool(template_id) and (TEMPLATE_DIR / f"{template_id}.json").exists()
+
+
+def _resolve_single_pass_template(requested_template_id: str, entity_name: str) -> str:
+    requested = str(requested_template_id or "").strip()
+    if requested and requested != "yellow_panther_agency":
+        return requested
+
+    forced = str(os.getenv("DISCOVERY_SINGLE_PASS_TEMPLATE_DEFAULT", "")).strip()
+    if forced and _template_exists(forced):
+        return forced
+
+    name = str(entity_name or "").lower()
+    if any(token in name for token in (" fc", "football club", " club")) and _template_exists(
+        "tier_1_club_centralized_procurement"
+    ):
+        return "tier_1_club_centralized_procurement"
+    if any(token in name for token in ("federation", "association")) and _template_exists(
+        "federation_governing_body"
+    ):
+        return "federation_governing_body"
+
+    return "yellow_panther_agency"
 
 
 @contextmanager
@@ -247,11 +274,12 @@ async def run_single_pass(args: argparse.Namespace) -> Dict[str, Any]:
         entity_name=args.entity_name,
         fetch_timeout_seconds=args.fetch_timeout_seconds,
     )
+    template_id = _resolve_single_pass_template(args.template_id, resolved_name)
 
     primary_result = await _run_discovery_attempt(
         entity_id=args.entity_id,
         entity_name=resolved_name,
-        template_id=args.template_id,
+        template_id=template_id,
         profile=args.profile,
         min_confidence=args.min_confidence,
         strict_gate=args.strict_gate,
@@ -268,7 +296,7 @@ async def run_single_pass(args: argparse.Namespace) -> Dict[str, Any]:
             recovery_result = await _run_discovery_attempt(
                 entity_id=args.entity_id,
                 entity_name=resolved_name,
-                template_id=args.template_id,
+                template_id=template_id,
                 profile=args.profile,
                 min_confidence=args.min_confidence,
                 strict_gate=args.strict_gate,
@@ -304,6 +332,7 @@ async def run_single_pass(args: argparse.Namespace) -> Dict[str, Any]:
     summary = {
         "entity_id": args.entity_id,
         "entity_name": resolved_name,
+        "template_id": template_id,
         "artifact": _artifact_path_string(out_path),
         "final_confidence": float(result.get("final_confidence") or 0.0),
         "evaluation_mode": result.get("evaluation_mode"),

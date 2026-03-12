@@ -121,3 +121,19 @@ async def test_single_pass_skips_recovery_when_initial_gate_passes(monkeypatch, 
 
     assert calls["count"] == 1
     assert summary["promotion_gate_passed"] is True
+
+
+def test_resolve_single_pass_template_prefers_club_procurement_template():
+    template_id = runner._resolve_single_pass_template(
+        requested_template_id="yellow_panther_agency",
+        entity_name="Arsenal FC",
+    )
+    assert template_id == "tier_1_club_centralized_procurement"
+
+
+def test_resolve_single_pass_template_prefers_federation_template():
+    template_id = runner._resolve_single_pass_template(
+        requested_template_id="yellow_panther_agency",
+        entity_name="International Canoe Federation",
+    )
+    assert template_id == "federation_governing_body"

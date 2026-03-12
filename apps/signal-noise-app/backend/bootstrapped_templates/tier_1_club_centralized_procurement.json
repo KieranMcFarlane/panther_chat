@@ -1,0 +1,63 @@
+{
+  "template_name": "Tier 1 Club Centralized Procurement",
+  "template_id": "tier_1_club_centralized_procurement",
+  "description": "Procurement-focused template for high-maturity clubs with centralized buying patterns.",
+  "entity_type": "CLUB",
+  "signal_patterns": [
+    {
+      "pattern_name": "multi_year_partnership",
+      "category": "procurement",
+      "weight": 0.7,
+      "keywords": ["multi-year", "partnership", "strategic partnership", "vendor", "supplier"],
+      "early_indicators": [
+        "Official press release announcing strategic partnership",
+        "Annual report references long-term vendor agreement",
+        "Club site procurement or commercial updates"
+      ]
+    },
+    {
+      "pattern_name": "recent_deployment",
+      "category": "procurement",
+      "weight": 0.62,
+      "keywords": ["deployment", "implementation", "platform", "integrated"],
+      "early_indicators": [
+        "Case study notes new platform deployment",
+        "Press release references implementation milestone",
+        "Technology partner announcement with rollout timeline"
+      ]
+    },
+    {
+      "pattern_name": "procurement_roles",
+      "category": "procurement",
+      "weight": 0.58,
+      "keywords": ["procurement manager", "head of procurement", "commercial director", "tender"],
+      "early_indicators": [
+        "Careers page includes procurement/commercial leadership role",
+        "Leadership update adds procurement or commercial remit",
+        "Job description mentions vendor sourcing or RFP"
+      ]
+    },
+    {
+      "pattern_name": "digital_transformation_budget",
+      "category": "procurement",
+      "weight": 0.55,
+      "keywords": ["digital transformation", "modernization", "budget", "investment"],
+      "early_indicators": [
+        "Annual report outlines digital investment plan",
+        "Official site discusses modernization programme",
+        "Board statement references technology investment"
+      ]
+    },
+    {
+      "pattern_name": "legacy_replacement_opportunity",
+      "category": "procurement",
+      "weight": 0.52,
+      "keywords": ["legacy", "migration", "replace", "upgrade"],
+      "early_indicators": [
+        "Migration from legacy system disclosed",
+        "Platform replacement or upgrade project announced",
+        "Vendor transition timeline published"
+      ]
+    }
+  ]
+}
