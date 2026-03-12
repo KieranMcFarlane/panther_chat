@@ -31,6 +31,10 @@ def test_discovery_runtime_limits_can_be_configured_from_env():
             "DISCOVERY_EVALUATION_MAX_TOKENS_PRESS_RELEASE": "410",
             "DISCOVERY_EVALUATION_MAX_TOKENS_OFFICIAL_SITE": "420",
             "DISCOVERY_EVALUATION_MAX_TOKENS_CAREERS_ANNUAL_REPORT": "460",
+            "DISCOVERY_JSON_REPAIR_ATTEMPT": "true",
+            "DISCOVERY_CONTENT_MIN_TEXT_CHARS": "260",
+            "DISCOVERY_CONTENT_MAX_SCRIPT_DENSITY": "0.15",
+            "DISCOVERY_CONTENT_MIN_KEYWORD_SENTENCES": "2",
         },
         clear=False,
     ):
@@ -53,6 +57,10 @@ def test_discovery_runtime_limits_can_be_configured_from_env():
     assert discovery.dossier_context_targeted_search_concurrency == 3
     assert discovery.official_site_resolution_num_results == 4
     assert discovery.official_site_resolution_engines == ["google", "bing"]
+    assert discovery.evaluation_json_repair_attempt is True
+    assert discovery.content_min_text_chars == 260
+    assert discovery.content_max_script_density == 0.15
+    assert discovery.content_min_keyword_sentences == 2
     assert discovery.evaluation_max_tokens_default == 700
     assert discovery.evaluation_max_tokens_press_release == 410
     assert discovery.evaluation_max_tokens_official_site == 420

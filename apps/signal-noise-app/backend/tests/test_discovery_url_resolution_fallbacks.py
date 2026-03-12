@@ -712,3 +712,72 @@ async def test_evaluate_content_recovers_no_progress_from_narrative_text():
 
     assert result["decision"] == "NO_PROGRESS"
     assert result["evaluation_mode"] == "llm"
+
+
+@pytest.mark.asyncio
+async def test_evaluate_content_uses_json_repair_pass_for_unparseable_response():
+    class _ClaudeStub:
+        provider = "chutes_openai"
+
+        def __init__(self):
+            self.calls = 0
+
+        async def query(self, **kwargs):
+            self.calls += 1
+            if self.calls == 1:
+                return {
+                    "content": "Narrative only. This appears to indicate procurement progress but not in JSON.",
+                    "inference_diagnostics": {"llm_retry_attempts": 0, "llm_last_status": "ok"},
+                }
+            return {
+                "content": '{"decision":"WEAK_ACCEPT","confidence_delta":0.05,"justification":"repair","evidence_found":"signal","evidence_type":"PROCUREMENT_SIGNAL","temporal_score":"recent_12mo"}',
+                "inference_diagnostics": {"llm_retry_attempts": 0, "llm_last_status": "ok"},
+            }
+
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.claude_client = _ClaudeStub()
+    discovery.heuristic_fallback_on_llm_unavailable = True
+    discovery.evaluation_max_tokens_default = 640
+    discovery.evaluation_max_tokens_press_release = 384
+    discovery.evaluation_max_tokens_official_site = 384
+    discovery.evaluation_max_tokens_careers_annual_report = 448
+    discovery.evaluation_json_repair_attempt = True
+
+    hypothesis = SimpleNamespace(
+        statement="Coventry City FC is actively running procurement",
+        category="procurement",
+        metadata={"entity_name": "Coventry City FC", "template_id": ""},
+        prior_probability=0.5,
+        confidence=0.5,
+        iterations_attempted=0,
+        iterations_accepted=0,
+        iterations_weak_accept=0,
+        iterations_rejected=0,
+        iterations_no_progress=0,
+        last_delta=0.0,
+    )
+
+    result = await discovery._evaluate_content_with_claude(
+        content="Some noisy site copy with weak structure.",
+        hypothesis=hypothesis,
+        hop_type=HopType.OFFICIAL_SITE,
+        content_metadata={"content_type": "text/html"},
+    )
+
+    assert discovery.claude_client.calls == 2
+    assert result["decision"] == "WEAK_ACCEPT"
+    assert result["evaluation_mode"] == "llm"
+
+
+def test_assess_low_yield_content_detects_script_heavy_page():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.content_min_text_chars = 240
+    discovery.content_max_script_density = 0.12
+    discovery.content_min_keyword_sentences = 1
+    reason = discovery._assess_low_yield_content(
+        content_text="window.__DATA__ = {};\nvar x=1;\n",
+        raw_html="<html><script>one</script><script>two</script><script>three</script><p>x</p></html>",
+        hypothesis_category="procurement",
+    )
+    assert isinstance(reason, str)
+    assert "script_density" in reason or "text_chars" in reason

@@ -685,6 +685,13 @@ class HypothesisDrivenDiscovery:
         self.evaluation_max_tokens_careers_annual_report = int(
             os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_CAREERS_ANNUAL_REPORT", "448")
         )
+        self.evaluation_json_repair_attempt = self._parse_bool_env(
+            os.getenv("DISCOVERY_JSON_REPAIR_ATTEMPT"),
+            default=True,
+        )
+        self.content_min_text_chars = int(os.getenv("DISCOVERY_CONTENT_MIN_TEXT_CHARS", "240"))
+        self.content_max_script_density = float(os.getenv("DISCOVERY_CONTENT_MAX_SCRIPT_DENSITY", "0.12"))
+        self.content_min_keyword_sentences = int(os.getenv("DISCOVERY_CONTENT_MIN_KEYWORD_SENTENCES", "1"))
         self.heuristic_fallback_on_llm_unavailable = self._parse_bool_env(
             os.getenv("DISCOVERY_HEURISTIC_FALLBACK_ON_LLM_UNAVAILABLE"),
             default=True,
@@ -771,6 +778,7 @@ class HypothesisDrivenDiscovery:
             "text_decision_recovered": "text_decision_recovered",
             "text_no_progress_recovered": "text_no_progress_recovered",
             "text_accept_recovered": "text_decision_recovered",
+            "json_repair_recovered": "json_repair_recovered",
             "invalid_model_payload": "heuristic_fallback",
             "unparseable_response": "heuristic_fallback",
             "json_parse_error": "heuristic_fallback",
@@ -782,6 +790,67 @@ class HypothesisDrivenDiscovery:
             "skipped_no_evaluation": "skipped_no_evaluation",
         }
         return mapping.get(status_value, "heuristic_fallback")
+
+    async def _attempt_json_repair_pass(self, response_text: str) -> Optional[Dict[str, Any]]:
+        if not getattr(self, "evaluation_json_repair_attempt", True):
+            return None
+        repair_prompt = (
+            "Convert the following evaluator output into strict JSON only with keys: "
+            "decision, confidence_delta, justification, evidence_found, evidence_type, temporal_score.\n\n"
+            f"Output:\n{response_text[:2000]}"
+        )
+        try:
+            repair = await self.claude_client.query(
+                prompt=repair_prompt,
+                model="haiku",
+                max_tokens=220,
+                system_prompt=(
+                    "Return ONLY valid JSON. No prose, no markdown, no code fences. "
+                    "Include keys: decision, confidence_delta, justification, evidence_found, evidence_type, temporal_score."
+                ),
+                json_mode=True,
+            )
+        except Exception:  # noqa: BLE001
+            return None
+        repair_text = (repair or {}).get("content", "") if isinstance(repair, dict) else ""
+        parsed = self._parse_evaluation_response_json(str(repair_text or ""))
+        if isinstance(parsed, dict) and "decision" in parsed:
+            parsed["parse_path"] = "json_repair_recovered"
+            return parsed
+        return None
+
+    def _assess_low_yield_content(
+        self,
+        *,
+        content_text: str,
+        raw_html: Optional[str],
+        hypothesis_category: str,
+    ) -> Optional[str]:
+        text = str(content_text or "").strip()
+        text_chars = len(text)
+        if text_chars < max(0, int(getattr(self, "content_min_text_chars", 240))):
+            return f"text_chars<{int(getattr(self, 'content_min_text_chars', 240))}"
+
+        html = str(raw_html or "")
+        script_count = html.lower().count("<script")
+        script_density = script_count / max(text_chars, 1)
+        if script_density > float(getattr(self, "content_max_script_density", 0.12)):
+            return f"script_density>{float(getattr(self, 'content_max_script_density', 0.12)):.2f}"
+
+        keywords_by_category = {
+            "procurement": ["procurement", "tender", "rfp", "vendor", "supplier"],
+            "analytics": ["data", "analytics", "platform", "integration"],
+            "member": ["member", "crm", "engagement", "portal"],
+        }
+        keywords = keywords_by_category.get(str(hypothesis_category or "").lower(), keywords_by_category["procurement"])
+        sentence_count = 0
+        for line in text.splitlines():
+            line_lower = line.lower()
+            if any(kw in line_lower for kw in keywords):
+                sentence_count += 1
+        if sentence_count < max(0, int(getattr(self, "content_min_keyword_sentences", 1))):
+            return f"keyword_sentences<{int(getattr(self, 'content_min_keyword_sentences', 1))}"
+        return None
 
     def _decorate_evaluation_result(
         self,
@@ -1470,6 +1539,18 @@ class HypothesisDrivenDiscovery:
                         content_metadata['char_count'] = len(content_text)
 
                 content = content_text
+                low_yield_reason = self._assess_low_yield_content(
+                    content_text=content_text,
+                    raw_html=content_result.get("raw_html"),
+                    hypothesis_category=getattr(hypothesis, "category", ""),
+                )
+                if low_yield_reason:
+                    self._update_llm_runtime_diagnostics(
+                        llm_last_status="skipped_low_yield",
+                        evaluation_mode="heuristic",
+                    )
+                    logger.info("Skipping evaluation for low-yield content (%s): %s", low_yield_reason, url)
+                    return build_no_progress_result(f"Low-yield content skipped: {low_yield_reason}")
 
                 # ENHANCEMENT: Extract PDF links from tender pages
                 # This addresses the ICF case where /tenders page contained links to multiple RFP PDFs
@@ -3362,6 +3443,13 @@ Return JSON:
 
                 return self._decorate_evaluation_result(result, evaluation_mode="llm")
             else:
+                repaired = await self._attempt_json_repair_pass(response_text)
+                if repaired is not None:
+                    self._update_llm_runtime_diagnostics(
+                        llm_last_status="json_repair_recovered",
+                        evaluation_mode="llm",
+                    )
+                    return self._decorate_evaluation_result(repaired, evaluation_mode="llm")
                 import re
                 decision_match = re.search(r'"decision"\s*:\s*"([A-Z_]+)"', response_text)
                 if decision_match:
