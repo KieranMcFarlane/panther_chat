@@ -1976,6 +1976,14 @@ class HypothesisDrivenDiscovery:
         if max_cost_usd is None:
             max_cost_usd = self.max_cost_per_entity
 
+        template_id = resolve_template_id(template_id, getattr(self, "current_entity_type", None))
+        # Entity runs must not inherit official-site context from prior entities.
+        self.current_official_site_url = None
+        self._resolved_url_context = {}
+        self._update_llm_runtime_diagnostics(
+            run_mode=self._current_run_mode(),
+            run_profile=str(os.getenv("DISCOVERY_PROFILE", "continuous") or "continuous").strip().lower(),
+        )
         logger.info(f"🔍 Starting hypothesis-driven discovery for {entity_name}")
         logger.info(f"   Template: {template_id}")
         logger.info(f"   Max iterations: {max_iterations}")
