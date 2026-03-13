@@ -28,7 +28,9 @@
     "vector-search:init": "node scripts/initialize-embeddings.js",
     "embeddings": "node scripts/initialize-embeddings.js",
     "embed:supabase": "node scripts/embed-supabase-tables.js",
-    "discover:tables": "bash scripts/discover-supabase-tables.sh"
+    "discover:tables": "bash scripts/discover-supabase-tables.sh",
+    "qa:vector-search-benchmark": "node scripts/qa-vector-search-benchmark.mjs",
+    "predeploy:entity-data": "npm run qa:vector-search-benchmark"
   },
   "dependencies": {
     "@better-auth/infra": "^0.1.7",
