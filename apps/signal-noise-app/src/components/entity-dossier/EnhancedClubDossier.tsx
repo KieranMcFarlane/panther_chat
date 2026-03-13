@@ -1,5 +1,6 @@
 "use client"
 
+import dynamic from "next/dynamic"
 import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -47,8 +48,26 @@ import {
   LeagueContext,
   KeyDecisionMaker
 } from './types'
-import { OutreachStrategyPanel } from './OutreachStrategyPanel'
-import { HypothesisStatesPanel } from './HypothesisStatesPanel'
+const OutreachStrategyPanel = dynamic(() => import("./OutreachStrategyPanel"), {
+  loading: () => (
+    <div className="rounded-lg border border-slate-700 bg-slate-900 p-6">
+      <div className="h-5 w-40 bg-slate-700 rounded animate-pulse mb-3" />
+      <div className="h-4 w-full bg-slate-800 rounded animate-pulse mb-2" />
+      <div className="h-4 w-5/6 bg-slate-800 rounded animate-pulse" />
+    </div>
+  ),
+  ssr: false,
+})
+const HypothesisStatesPanel = dynamic(() => import("./HypothesisStatesPanel"), {
+  loading: () => (
+    <div className="rounded-lg border border-slate-700 bg-slate-900 p-6">
+      <div className="h-5 w-48 bg-slate-700 rounded animate-pulse mb-3" />
+      <div className="h-4 w-full bg-slate-800 rounded animate-pulse mb-2" />
+      <div className="h-4 w-4/6 bg-slate-800 rounded animate-pulse" />
+    </div>
+  ),
+  ssr: false,
+})
 
 interface EnhancedClubDossierProps {
   entity: Entity
@@ -177,7 +196,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
         },
         miniTable: [
           { position: 1, club: 'Manchester City', points: 19, goalDifference: 15 },
-          { position: 2, club: apiDossier.entity?.name || 'Arsenal', points: 17, goalDifference: 8 },
+          { position: 2, club: apiDossier.entity?.name || 'Club', points: 17, goalDifference: 8 },
           { position: 3, club: 'Liverpool', points: 16, goalDifference: 7 }
         ]
       },
@@ -191,46 +210,52 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
   }, [props.country, props.name, props.type, props.website, props.yellowPantherPriority?.low, props.level])
 
   const generateDefaultDossier = useCallback((): EnhancedClubDossier => {
+    const clubName = formatValue(props.name) || 'Club Entity'
+    const leagueName = formatValue(props.level) || 'Unknown League'
+    const headquarters = formatValue(props.headquarters) || `${formatValue(props.country) || 'Unknown'}, ${leagueName}`
+    const stadium = formatValue(props.stadium) || 'N/A'
+    const website = formatValue(props.website) || 'N/A'
+
     // Generate comprehensive dossier data following the ASCII wireframe structure
     return {
       coreInfo: {
-        name: formatValue(props.name) || 'Club Entity',
+        name: clubName,
         type: 'Club',
-        league: formatValue(props.level) || 'Premier League',
+        league: leagueName,
         founded: parseInt(formatValue(props.founded)) || 1886,
-        hq: formatValue(props.headquarters) || 'London, England',
-        stadium: formatValue(props.stadium) || 'Emirates Stadium',
-        website: formatValue(props.website) || 'https://www.arsenal.com',
+        hq: headquarters,
+        stadium,
+        website,
         employeeRange: '501–1,000'
       },
       digitalTransformation: {
         digitalMaturity: 25,
         transformationScore: 80,
         websiteModernness: 7,
-        currentPartner: 'NTT DATA',
-        keyWeaknesses: ['Vendor lock-in via NTT DATA', 'Legacy systems integration challenges'],
+        currentPartner: 'N/A',
+        keyWeaknesses: ['Unclear procurement ownership', 'Limited publicly visible digital roadmap'],
         strategicOpportunities: [
-          'Expand women\'s football digital ecosystem',
-          'Integrate fan wellness/mental health platform',
+          'Modernize supporter digital journeys',
+          'Improve cross-channel fan data activation',
           'Create AR-enhanced supporter engagement experiences',
           'Pilot modular fan data integration layer for personalization'
         ]
       },
       aiReasonerFeedback: {
-        overallAssessment: 'Arsenal\'s digital structure is mature but rigid. Their reliance on NTT DATA constrains innovation velocity.',
-        yellowPantherOpportunity: 'Position Yellow Panther as a "lightweight experimental R&D wing" for pilot projects that NTT cannot deliver quickly.',
-        engagementStrategy: 'Target Juliet Slot (Commercial Director) and Mark Gonnella (Comms) with proposals around "next-gen fan micro-experiences" aligned with Arsenal\'s CSR.',
-        riskFactors: ['Vendor lock-in', 'Change resistance', 'Budget constraints'],
-        competitiveAdvantages: ['Brand strength', 'Digital readiness', 'Innovation culture'],
+        overallAssessment: `${clubName}'s digital profile suggests an opportunity to improve delivery speed through focused pilot programs and measurable quick wins.`,
+        yellowPantherOpportunity: `Position Yellow Panther as a practical pilot partner for ${clubName}, validating value quickly before broader rollout.`,
+        engagementStrategy: `Lead with 1-2 scoped use cases for ${clubName} in fan engagement and commercial intelligence, with clear KPIs and 60-90 day outcomes.`,
+        riskFactors: ['Procurement cycle length', 'Internal change management', 'Budget timing'],
+        competitiveAdvantages: ['Targeted delivery model', 'Speed to pilot', 'Data-led recommendations'],
         recommendedApproach: 'Start with small pilot projects, prove value quickly, then expand scope based on success metrics.'
       },
       strategicOpportunities: {
         immediateLaunch: [
-          '"Digital Twin of the Emirates" (interactive data portal)',
+          `"Digital Twin" concept for ${clubName} venue and supporter touchpoints`,
           'AI-powered RFP tracking dashboard as white-label pilot'
         ],
         mediumTermPartnerships: [
-          'Partner with Arsenal Women for bilingual fan content testing',
+          `Partner with ${clubName} commercial and media teams for fan content optimization`,
           'Seasonal intelligence subscription for commercial team'
         ],
         longTermInitiatives: [
@@ -247,22 +272,22 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
       recentNews: [
         {
           date: '2025-09-28',
-          headline: 'Arsenal and Emirates renew sustainability partnership',
-          source: 'Official Club Site',
+          headline: `${clubName} commercial partnership update under review`,
+          source: 'Club Communications',
           category: 'partnership',
           relevanceScore: 85
         },
         {
           date: '2025-09-10',
-          headline: 'Arsenal Women reach record 17,000 season ticket sales',
-          source: 'BBC Sport',
+          headline: `${clubName} reports supporter engagement growth`,
+          source: 'Sports Media',
           category: 'sports',
           relevanceScore: 90
         },
         {
           date: '2025-08-22',
-          headline: 'Club launches "Arsenal Mind" mental health campaign',
-          source: 'The Guardian',
+          headline: `${clubName} launches new digital supporter initiative`,
+          source: 'Industry News',
           category: 'operations',
           relevanceScore: 95
         }
@@ -283,9 +308,9 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
             preferredContact: 'Formal proposal with case studies'
           },
           strategicHooks: [
-            'Arsenal Mind → propose emotional analytics integration pilot',
+            `${clubName} supporter wellbeing initiative → propose analytics integration pilot`,
             'Emirates partnership → sustainability data storytelling layer',
-            'Arsenal Women → test "global community engagement dashboard"'
+            `${clubName} community program → test "global engagement dashboard"`
           ]
         },
         {
@@ -322,7 +347,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
         },
         miniTable: [
           { position: 1, club: 'Manchester City', points: 19, goalDifference: 15 },
-          { position: 2, club: 'Arsenal', points: 17, goalDifference: 8 },
+          { position: 2, club: clubName, points: 17, goalDifference: 8 },
           { position: 3, club: 'Liverpool', points: 16, goalDifference: 7 }
         ]
       },
@@ -333,7 +358,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
         lastUpdated: new Date().toISOString()
       }
     }
-  }, [props.founded, props.headquarters, props.level, props.name, props.stadium, props.website])
+  }, [props.country, props.founded, props.headquarters, props.level, props.name, props.stadium, props.website])
 
   const createGenericAnalysis = useCallback(() => {
     // Create generic analysis for entities without specific LinkedIn data

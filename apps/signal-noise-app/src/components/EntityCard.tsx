@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation"
 import { prefetchEntity } from "@/lib/swr-config"
 import { useEffect } from "react"
 import Link from "next/link"
+import { rememberEntityBrowserUrl } from "@/lib/entity-browser-history"
 
 interface EntityCardProps {
   entity: Entity
@@ -33,11 +34,13 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
       // Add small delay to avoid thundering herd
       const timer = setTimeout(() => {
         prefetchEntity(stableEntityId)
+        router.prefetch(`/entity/${stableEntityId}`)
+        router.prefetch(`/entity-browser/${stableEntityId}/dossier`)
       }, Math.random() * 500) // Stagger prefetches 0-500ms
 
       return () => clearTimeout(timer)
     }
-  }, [stableEntityId])
+  }, [router, stableEntityId])
 
   const getSimilarityColor = (score: number) => {
     if (score >= 0.9) return "bg-green-500"
@@ -112,6 +115,7 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
     // Get current page from URL and pass it to the entity profile
     const urlParams = new URLSearchParams(window.location.search)
     const currentPage = urlParams.get('page') || '1'
+    rememberEntityBrowserUrl()
     router.push(`/entity/${stableEntityId}?from=${currentPage}`)
   }
 
@@ -273,14 +277,15 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
             variant="outline" 
             size="sm" 
             className="w-full"
-            onClick={(e) => {
-              e.stopPropagation()
-              if (!stableEntityId) return
-              // Get current page from URL and pass it to the entity profile
-              const urlParams = new URLSearchParams(window.location.search)
-              const currentPage = urlParams.get('page') || '1'
-              router.push(`/entity/${stableEntityId}?from=${currentPage}`)
-            }}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  if (!stableEntityId) return
+                  // Get current page from URL and pass it to the entity profile
+                  const urlParams = new URLSearchParams(window.location.search)
+                  const currentPage = urlParams.get('page') || '1'
+                  rememberEntityBrowserUrl()
+                  router.push(`/entity/${stableEntityId}?from=${currentPage}`)
+                }}
           >
             View Full Profile
             <ArrowRight className="h-4 w-4 ml-2" />

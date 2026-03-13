@@ -468,3 +468,5 @@ export function OutreachStrategyPanel({
     </div>
   );
 }
+
+export default OutreachStrategyPanel;

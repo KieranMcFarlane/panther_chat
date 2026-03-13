@@ -1,15 +1,15 @@
 "use client"
 
 import Link from "next/link"
-import { useState, useEffect, useCallback, useRef, useDeferredValue, startTransition } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import dynamic from "next/dynamic"
+import { useState, useEffect, useCallback, useRef, useDeferredValue, startTransition, type ReactNode } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { EntityCard } from "@/components/EntityCard"
-import { EmailComposeModal } from "@/components/email/EmailComposeModal"
+import { rememberEntityBrowserUrl } from "@/lib/entity-browser-history"
 import {
   Database,
   Search,
@@ -20,6 +20,75 @@ import {
   Download,
   X
 } from "lucide-react"
+
+const EmailComposeModal = dynamic(
+  () => import("@/components/email/EmailComposeModal"),
+  { ssr: false }
+)
+
+const DEFAULT_FILTERS = {
+  entityType: "all",
+  sport: "all",
+  league: "all",
+  sortBy: "name",
+  sortOrder: "desc" as "asc" | "desc",
+  limit: "10",
+}
+
+type BrowserFilters = typeof DEFAULT_FILTERS
+
+function getInitialBrowserState() {
+  if (typeof window === "undefined") {
+    return {
+      page: 1,
+      searchTerm: "",
+      appliedSearchTerm: "",
+      filters: DEFAULT_FILTERS,
+    }
+  }
+
+  const params = new URLSearchParams(window.location.search)
+  const parsedPage = Number.parseInt(params.get("page") || "1", 10)
+  const page = Number.isNaN(parsedPage) || parsedPage < 1 ? 1 : parsedPage
+  const appliedSearchTerm = params.get("search")?.trim() || ""
+  const searchTerm = appliedSearchTerm
+
+  const entityType = params.get("entityType") || DEFAULT_FILTERS.entityType
+  const sport = params.get("sport") || DEFAULT_FILTERS.sport
+  const league = params.get("league") || DEFAULT_FILTERS.league
+  const sortBy = params.get("sortBy") || DEFAULT_FILTERS.sortBy
+  const sortOrder = params.get("sortOrder") === "asc" ? "asc" : "desc"
+  const limit = params.get("limit") || DEFAULT_FILTERS.limit
+
+  return {
+    page,
+    searchTerm,
+    appliedSearchTerm,
+    filters: {
+      entityType,
+      sport,
+      league,
+      sortBy,
+      sortOrder,
+      limit,
+    } satisfies BrowserFilters,
+  }
+}
+
+function buildBrowserUrlFromState(page: number, filters: BrowserFilters, appliedSearchTerm: string) {
+  const params = new URLSearchParams()
+  if (page > 1) params.set("page", String(page))
+  if (filters.limit !== DEFAULT_FILTERS.limit) params.set("limit", filters.limit)
+  if (filters.entityType !== DEFAULT_FILTERS.entityType) params.set("entityType", filters.entityType)
+  if (filters.sport !== DEFAULT_FILTERS.sport) params.set("sport", filters.sport)
+  if (filters.league !== DEFAULT_FILTERS.league) params.set("league", filters.league)
+  if (filters.sortBy !== DEFAULT_FILTERS.sortBy) params.set("sortBy", filters.sortBy)
+  if (filters.sortOrder !== DEFAULT_FILTERS.sortOrder) params.set("sortOrder", filters.sortOrder)
+  if (appliedSearchTerm.trim()) params.set("search", appliedSearchTerm.trim())
+
+  const query = params.toString()
+  return `/entity-browser${query ? `?${query}` : ""}`
+}
 
 interface Entity {
   id: string
@@ -54,26 +123,67 @@ interface AutocompleteEntity {
   type?: string
 }
 
+function ViewportDeferredCard({ children }: { children: ReactNode }) {
+  const [isVisible, setIsVisible] = useState(false)
+  const cardRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    const element = cardRef.current
+    if (!element) return
+    if (typeof IntersectionObserver === "undefined") {
+      setIsVisible(true)
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries
+        if (entry?.isIntersecting) {
+          setIsVisible(true)
+          observer.disconnect()
+        }
+      },
+      { rootMargin: "300px 0px" }
+    )
+
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <div ref={cardRef}>
+      {isVisible ? children : (
+        <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-6 h-[220px] animate-pulse">
+          <div className="h-5 w-3/4 bg-gray-200 rounded mb-3" />
+          <div className="h-4 w-1/2 bg-gray-200 rounded mb-6" />
+          <div className="h-10 w-full bg-gray-200 rounded" />
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function EntityBrowserClientPage() {
-  console.log("🔍 EntityBrowserPage: Component mounting")
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const initialPageFromUrl = Number.parseInt(searchParams.get('page') || '1', 10)
+  const initialState = getInitialBrowserState()
   const lastFetchedRequestKeyRef = useRef<string | null>(null)
+  const inMemoryResponseCacheRef = useRef<Map<string, EntityBrowserResponse>>(new Map())
+  const inFlightControllerRef = useRef<AbortController | null>(null)
 
   const [data, setData] = useState<EntityBrowserResponse | null>(null)
   const [initialLoading, setInitialLoading] = useState(true)
   const [gridLoading, setGridLoading] = useState(false)
+  const [showGridSkeleton, setShowGridSkeleton] = useState(false)
+  const [visibleCount, setVisibleCount] = useState(12)
   const [error, setError] = useState<string | null>(null)
   const [dataSource, setDataSource] = useState<'cache' | 'supabase' | null>(null)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [appliedSearchTerm, setAppliedSearchTerm] = useState("")
+  const [searchTerm, setSearchTerm] = useState(initialState.searchTerm)
+  const [appliedSearchTerm, setAppliedSearchTerm] = useState(initialState.appliedSearchTerm)
   const deferredSearchTerm = useDeferredValue(searchTerm)
   const [autocompleteLoading, setAutocompleteLoading] = useState(false)
   const [autocompleteEntities, setAutocompleteEntities] = useState<AutocompleteEntity[]>([])
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null)
-  const [currentPage, setCurrentPage] = useState(initialPageFromUrl)
+  const [currentPage, setCurrentPage] = useState(initialState.page)
 
   const [taxonomy, setTaxonomy] = useState<{
     sports: string[]
@@ -85,14 +195,7 @@ export default function EntityBrowserClientPage() {
     leaguesBySport: {},
   })
 
-  const [filters, setFilters] = useState({
-    entityType: "all",
-    sport: "all",
-    league: "all",
-    sortBy: "name",
-    sortOrder: "desc" as "asc" | "desc",
-    limit: "10"
-  })
+  const [filters, setFilters] = useState<BrowserFilters>(initialState.filters)
 
   const syncEntityBrowserHistory = useCallback((browserUrl: string) => {
     const rawStack = sessionStorage.getItem('entityBrowserHistoryStack')
@@ -161,30 +264,55 @@ export default function EntityBrowserClientPage() {
   }, [])
 
   const fetchEntities = useCallback(async (page: number, isInitial: boolean = false) => {
+    const params = buildEntityQueryParams(page, appliedSearchTerm)
+    const requestKey = params.toString()
+    const cached = inMemoryResponseCacheRef.current.get(requestKey)
+    if (cached) {
+      setData(cached)
+      setDataSource((cached as any).source || null)
+      setError(null)
+      if (isInitial) {
+        setInitialLoading(false)
+      } else {
+        setGridLoading(false)
+      }
+      return
+    }
+
+    inFlightControllerRef.current?.abort()
+    const controller = new AbortController()
+    inFlightControllerRef.current = controller
+
     if (isInitial) {
       setInitialLoading(true)
     } else {
       setGridLoading(true)
     }
-      setError(null)
+    setError(null)
 
     try {
-      const params = buildEntityQueryParams(page, appliedSearchTerm)
-      const response = await fetch(`/api/entities?${params}`)
+      const response = await fetch(`/api/entities?${requestKey}`, { signal: controller.signal })
       if (!response.ok) {
         throw new Error(`Failed to fetch entities: ${response.status}`)
       }
 
       const result = await response.json()
+      inMemoryResponseCacheRef.current.set(requestKey, result)
       setData(result)
       setDataSource(result.source || null)
     } catch (err) {
+      if ((err as Error).name === 'AbortError') {
+        return
+      }
       setError(err instanceof Error ? err.message : "Failed to fetch entities")
     } finally {
       if (isInitial) {
         setInitialLoading(false)
       } else {
         setGridLoading(false)
+      }
+      if (inFlightControllerRef.current === controller) {
+        inFlightControllerRef.current = null
       }
     }
   }, [appliedSearchTerm, buildEntityQueryParams])
@@ -195,39 +323,29 @@ export default function EntityBrowserClientPage() {
   }, [])
 
   useEffect(() => {
-    const nextPage = Number.parseInt(searchParams.get('page') || '1', 10)
-    if (nextPage !== currentPage) {
-      setCurrentPage(nextPage)
+    const onPopState = () => {
+      const next = getInitialBrowserState()
+      setCurrentPage(next.page)
+      setSearchTerm(next.searchTerm)
+      setAppliedSearchTerm(next.appliedSearchTerm)
+      setFilters(next.filters)
+      lastFetchedRequestKeyRef.current = null
     }
-  }, [currentPage, searchParams])
+    window.addEventListener('popstate', onPopState)
+    return () => window.removeEventListener('popstate', onPopState)
+  }, [])
 
   useEffect(() => {
-    const params = new URLSearchParams(searchParams.toString())
-    if (currentPage === 1) {
-      params.delete('page')
-    } else {
-      params.set('page', currentPage.toString())
+    const browserUrl = buildBrowserUrlFromState(currentPage, filters, appliedSearchTerm)
+    const currentUrl = `${window.location.pathname}${window.location.search}`
+
+    if (browserUrl !== currentUrl) {
+      window.history.pushState({ ...(window.history.state || {}), entityBrowserUrl: browserUrl }, '', browserUrl)
     }
 
-    const currentUrl = `/entity-browser${searchParams.toString() ? `?${searchParams.toString()}` : ''}`
-    const nextUrl = `/entity-browser${params.toString() ? `?${params.toString()}` : ''}`
-    if (nextUrl !== currentUrl) {
-      router.push(nextUrl, { scroll: false })
-    }
-  }, [currentPage, router, searchParams])
-
-  useEffect(() => {
-    const params = new URLSearchParams(searchParams.toString())
-    if (currentPage === 1) {
-      params.delete('page')
-    } else {
-      params.set('page', currentPage.toString())
-    }
-
-    const browserUrl = `/entity-browser${params.toString() ? `?${params.toString()}` : ''}`
-    sessionStorage.setItem('lastEntityBrowserUrl', browserUrl)
+    rememberEntityBrowserUrl(browserUrl)
     syncEntityBrowserHistory(browserUrl)
-  }, [currentPage, searchParams, syncEntityBrowserHistory])
+  }, [appliedSearchTerm, currentPage, filters, syncEntityBrowserHistory])
 
   const applyFilters = useCallback(() => {
     setAppliedSearchTerm(searchTerm)
@@ -241,14 +359,7 @@ export default function EntityBrowserClientPage() {
     setSearchTerm("")
     setAppliedSearchTerm("")
     lastFetchedRequestKeyRef.current = null
-    setFilters({
-      entityType: "all",
-      sport: "all",
-      league: "all",
-      sortBy: "name",
-      sortOrder: "desc",
-      limit: "10",
-    })
+    setFilters(DEFAULT_FILTERS)
     setCurrentPage(1)
   }, [])
 
@@ -301,6 +412,54 @@ export default function EntityBrowserClientPage() {
       fetchEntities(currentPage, isInitial)
     }
   }, [appliedSearchTerm, buildEntityQueryParams, currentPage, data, fetchEntities])
+
+  useEffect(() => {
+    if (!gridLoading) {
+      setShowGridSkeleton(false)
+      return
+    }
+    const timeout = setTimeout(() => setShowGridSkeleton(true), 140)
+    return () => clearTimeout(timeout)
+  }, [gridLoading])
+
+  useEffect(() => {
+    setVisibleCount(12)
+  }, [data?.pagination?.page, data?.pagination?.total, filters.limit, showGridSkeleton])
+
+  useEffect(() => {
+    if (showGridSkeleton) return
+    const total = data?.entities?.length ?? 0
+    if (visibleCount >= total) return
+
+    let timeout: ReturnType<typeof setTimeout> | null = null
+    timeout = setTimeout(() => {
+      setVisibleCount((prev) => Math.min(total, prev + 12))
+    }, 32)
+
+    return () => {
+      if (timeout) clearTimeout(timeout)
+    }
+  }, [data?.entities?.length, showGridSkeleton, visibleCount])
+
+  useEffect(() => {
+    if (!data?.pagination?.hasNext) return
+    const nextPage = data.pagination.page + 1
+    const params = buildEntityQueryParams(nextPage, appliedSearchTerm)
+    const requestKey = params.toString()
+    if (inMemoryResponseCacheRef.current.has(requestKey)) return
+
+    const controller = new AbortController()
+    fetch(`/api/entities?${requestKey}`, { signal: controller.signal })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((result) => {
+        if (result) {
+          inMemoryResponseCacheRef.current.set(requestKey, result)
+        }
+      })
+      .catch(() => {})
+
+    return () => controller.abort()
+  }, [appliedSearchTerm, buildEntityQueryParams, data?.pagination?.hasNext, data?.pagination?.page])
 
   const handleEmailEntity = (entity: Entity) => {
     setSelectedEntity(entity)
@@ -363,6 +522,7 @@ export default function EntityBrowserClientPage() {
   }
 
   const entities = data.entities || []
+  const visibleEntities = entities.slice(0, visibleCount)
   const availableLeagues = filters.sport !== 'all'
     ? taxonomy.leaguesBySport[filters.sport] || []
     : taxonomy.leagues
@@ -625,7 +785,7 @@ export default function EntityBrowserClientPage() {
         </Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {gridLoading ? (
+          {showGridSkeleton ? (
             Array.from({ length: parseInt(filters.limit, 10) || 10 }).map((_, index) => (
               <div key={index} className="rounded-lg border bg-card text-card-foreground shadow-sm">
                 <div className="flex flex-col space-y-1.5 p-6 pb-3">
@@ -646,15 +806,16 @@ export default function EntityBrowserClientPage() {
               </div>
             ))
           ) : (
-            entities.map((entity) => (
-              <EntityCard
-                key={`${entity.id}-${String(entity.graph_id ?? entity.id)}`}
-                entity={entity}
-                onEmailEntity={handleEmailEntity}
-              />
-            ))
-          )}
-        </div>
+                visibleEntities.map((entity) => (
+                  <ViewportDeferredCard key={`${entity.id}-${String(entity.graph_id ?? entity.id)}`}>
+                    <EntityCard
+                      entity={entity}
+                      onEmailEntity={handleEmailEntity}
+                    />
+                  </ViewportDeferredCard>
+                ))
+              )}
+            </div>
 
         <div className="flex items-center justify-between mt-8">
           <Button

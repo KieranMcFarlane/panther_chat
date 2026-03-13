@@ -1,16 +1,28 @@
 'use client'
 
-import { useState, useEffect } from "react"
+import dynamic from "next/dynamic"
+import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { FileText } from "lucide-react"
+import { ArrowLeft, FileText } from "lucide-react"
 
-import EntityDossierRouter from "@/components/entity-dossier/EntityDossierRouter"
 import { DossierError } from "@/components/entity-dossier/DossierError"
-import Header from "@/components/header/Header"
-import EmailComposeModal from "@/components/email/EmailComposeModal"
+import { resolveEntityBrowserReturnUrl } from "@/lib/entity-browser-history"
 import type { Entity } from "@/lib/entity-loader"
+
+const Header = dynamic(() => import("@/components/header/Header"), { ssr: false })
+const EmailComposeModal = dynamic(() => import("@/components/email/EmailComposeModal"), { ssr: false })
+const EntityDossierRouter = dynamic(() => import("@/components/entity-dossier/EntityDossierRouter"), {
+  loading: () => (
+    <div className="rounded-lg border border-gray-700 bg-[#1c1e2d] p-6">
+      <div className="h-6 w-48 bg-gray-600 rounded animate-pulse mb-4" />
+      <div className="h-4 w-full bg-gray-700 rounded animate-pulse mb-2" />
+      <div className="h-4 w-5/6 bg-gray-700 rounded animate-pulse mb-2" />
+      <div className="h-4 w-3/6 bg-gray-700 rounded animate-pulse" />
+    </div>
+  )
+})
 
 interface EntityDossierClientPageProps {
   entityId: string
@@ -44,6 +56,9 @@ export default function EntityDossierClientPage({
   const [isGenerating, setIsGenerating] = useState(false)
   const [generationAttempt, setGenerationAttempt] = useState(0)
   const [showEmailModal, setShowEmailModal] = useState(false)
+  const backToEntityBrowser = useCallback(() => {
+    router.push(resolveEntityBrowserReturnUrl(fromPage))
+  }, [fromPage, router])
 
   useEffect(() => {
     setDossier(initialDossier)
@@ -148,7 +163,7 @@ export default function EntityDossierClientPage({
             <h2 className="text-xl font-semibold mb-2">Error Loading Entity</h2>
             <p className="text-muted-foreground mb-4">{initialError || `Entity ${entityId} not found`}</p>
             <div className="space-y-2">
-              <Button onClick={() => router.push(`/entity-browser${fromPage !== '1' ? `?page=${fromPage}` : ''}`)} variant="outline" className="w-full">
+              <Button onClick={backToEntityBrowser} variant="outline" className="w-full">
                 Back to Entity Browser
               </Button>
             </div>
@@ -164,6 +179,12 @@ export default function EntityDossierClientPage({
 
       <div className="flex-1 bg-[#1c1e2d]">
         <div className="container mx-auto px-4 py-8">
+          <div className="mb-4">
+            <Button onClick={backToEntityBrowser} variant="outline" size="sm">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Entity Browser
+            </Button>
+          </div>
           {generationMessage && (
             <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
               <div className="flex items-center gap-2 text-blue-800">
