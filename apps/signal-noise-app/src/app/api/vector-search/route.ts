@@ -30,6 +30,47 @@ type QueryIntent = {
   impliedEntityType?: string
 }
 
+function boundedLevenshtein(a: string, b: string, maxDistance = 3): number {
+  if (a === b) return 0
+  const alen = a.length
+  const blen = b.length
+  if (Math.abs(alen - blen) > maxDistance) return maxDistance + 1
+
+  const prev = new Array(blen + 1)
+  const curr = new Array(blen + 1)
+  for (let j = 0; j <= blen; j += 1) prev[j] = j
+
+  for (let i = 1; i <= alen; i += 1) {
+    curr[0] = i
+    let rowMin = curr[0]
+    for (let j = 1; j <= blen; j += 1) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1
+      curr[j] = Math.min(
+        prev[j] + 1,
+        curr[j - 1] + 1,
+        prev[j - 1] + cost,
+      )
+      rowMin = Math.min(rowMin, curr[j])
+    }
+    if (rowMin > maxDistance) return maxDistance + 1
+    for (let j = 0; j <= blen; j += 1) prev[j] = curr[j]
+  }
+
+  return prev[blen]
+}
+
+function fuzzySimilarity(query: string, value: string): number {
+  const q = normalize(query)
+  const v = normalize(value)
+  if (!q || !v) return 0
+  if (q.length < 4 || v.length < 4) return 0
+  const maxLen = Math.max(q.length, v.length)
+  const maxDistance = Math.min(4, Math.floor(maxLen * 0.35))
+  const distance = boundedLevenshtein(q, v, maxDistance)
+  if (distance > maxDistance) return 0
+  return Math.max(0, 1 - distance / maxLen)
+}
+
 function normalize(value: string | null | undefined): string {
   return String(value || '')
     .toLowerCase()
@@ -54,6 +95,12 @@ function lexicalScore(query: string, name: string, aliases: string[] = []): numb
   if (aliases.some((alias) => normalize(alias).startsWith(q))) return 76
   if (n.includes(q)) return 64
   if (aliases.some((alias) => normalize(alias).includes(q))) return 56
+  const fuzzy = Math.max(
+    fuzzySimilarity(q, n),
+    ...aliases.map((alias) => fuzzySimilarity(q, alias)),
+  )
+  if (fuzzy >= 0.84) return 48
+  if (fuzzy >= 0.74) return 36
   return 0
 }
 
@@ -144,14 +191,15 @@ async function loadLexicalCandidates(
   let rows = data
   if (rows.length === 0) {
     const intent = deriveIntent(query)
-    if (intent.impliedLeague || intent.impliedEntityType) {
-      let fallbackQuery = supabase.from('canonical_entities').select('*').limit(poolSize)
-      if (filters.sport) fallbackQuery = fallbackQuery.ilike('sport', `%${filters.sport}%`)
-      if (intent.impliedLeague) fallbackQuery = fallbackQuery.ilike('league', `%${intent.impliedLeague}%`)
-      if (intent.impliedEntityType) fallbackQuery = fallbackQuery.eq('entity_type', intent.impliedEntityType)
-      const { data: fallbackRows, error: fallbackError } = await fallbackQuery.order('quality_score', { ascending: false })
-      if (!fallbackError && fallbackRows) rows = fallbackRows
-    }
+    let fallbackQuery = supabase.from('canonical_entities').select('*').limit(poolSize)
+    if (filters.sport) fallbackQuery = fallbackQuery.ilike('sport', `%${filters.sport}%`)
+    if (filters.league) fallbackQuery = fallbackQuery.ilike('league', `%${filters.league}%`)
+    if (filters.country) fallbackQuery = fallbackQuery.ilike('country', `%${filters.country}%`)
+    if (filters.entity_type) fallbackQuery = fallbackQuery.ilike('entity_type', `%${filters.entity_type}%`)
+    if (intent.impliedLeague) fallbackQuery = fallbackQuery.ilike('league', `%${intent.impliedLeague}%`)
+    if (intent.impliedEntityType) fallbackQuery = fallbackQuery.eq('entity_type', intent.impliedEntityType)
+    const { data: fallbackRows, error: fallbackError } = await fallbackQuery.order('quality_score', { ascending: false })
+    if (!fallbackError && fallbackRows) rows = fallbackRows
   }
 
   return rows.map((row: any) => {
@@ -183,6 +231,8 @@ async function loadLexicalCandidates(
 }
 
 export async function POST(request: NextRequest) {
+  const request_started_at = Date.now()
+  const request_id = globalThis.crypto?.randomUUID?.() || `vs_${request_started_at}`
   try {
     const body = await request.json()
     const query = String(body?.query || '').trim()
@@ -196,6 +246,17 @@ export async function POST(request: NextRequest) {
       league: body?.league || null,
       country: body?.country || null,
     }
+
+    console.info(
+      JSON.stringify({
+        event: 'vector_search_request',
+        request_id,
+        query,
+        limit,
+        score_threshold,
+        filters,
+      }),
+    )
 
     if (!query) {
       return NextResponse.json({
@@ -276,6 +337,22 @@ export async function POST(request: NextRequest) {
       .sort((a, b) => b.final_score - a.final_score || b.lexical_score - a.lexical_score || a.name.localeCompare(b.name))
       .slice(0, limit)
 
+    const duration_ms = Date.now() - request_started_at
+    console.info(
+      JSON.stringify({
+        event: 'vector_search_response',
+        request_id,
+        query,
+        duration_ms,
+        semantic_enabled,
+        lexical_candidates: lexicalCandidates.length,
+        semantic_candidates: semanticCandidates.length,
+        merged_candidates: merged.size,
+        returned: ranked.length,
+        top_result: ranked[0]?.name || null,
+      }),
+    )
+
     return NextResponse.json({
       query,
       total: ranked.length,
@@ -296,7 +373,15 @@ export async function POST(request: NextRequest) {
       })),
     })
   } catch (error: any) {
-    console.error('❌ Vector search error:', error)
+    const duration_ms = Date.now() - request_started_at
+    console.error(
+      JSON.stringify({
+        event: 'vector_search_error',
+        request_id,
+        duration_ms,
+        error: error?.message || 'Unknown error',
+      }),
+    )
     return NextResponse.json(
       {
         results: [],

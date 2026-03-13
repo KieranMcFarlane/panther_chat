@@ -14,6 +14,11 @@ const CASES = [
     top1: ['Rajasthan Royals'],
   },
   {
+    name: 'typo_tolerance_rajasthan_royals',
+    body: { query: 'Rajasthn Royls', limit: 5, sport: 'Cricket', entity_type: 'team' },
+    top5: ['Rajasthan Royals'],
+  },
+  {
     name: 'semantic_athletics_governing_body',
     body: { query: 'athletics governing body', limit: 5 },
     top5: ['World Athletics'],

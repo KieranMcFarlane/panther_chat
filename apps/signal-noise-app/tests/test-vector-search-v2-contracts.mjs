@@ -19,6 +19,9 @@ const vectorSearchComponentSource = readFileSync(
   new URL('../src/components/VectorSearch.tsx', import.meta.url),
   'utf8',
 )
+const packageJson = JSON.parse(
+  readFileSync(new URL('../package.json', import.meta.url), 'utf8'),
+)
 
 test('vector search route exposes hybrid v2 strategy with lexical + semantic merge', () => {
   assert.match(vectorSearchRouteSource, /hybrid_v2/)
@@ -34,6 +37,14 @@ test('vector search route supports facet-aware filtering inputs', () => {
   assert.match(vectorSearchRouteSource, /league/)
   assert.match(vectorSearchRouteSource, /country/)
   assert.match(vectorSearchRouteSource, /entity_type/)
+})
+
+test('vector search route includes typo-tolerant fuzzy matching and observability logs', () => {
+  assert.match(vectorSearchRouteSource, /fuzzySimilarity/)
+  assert.match(vectorSearchRouteSource, /boundedLevenshtein/)
+  assert.match(vectorSearchRouteSource, /vector_search_request/)
+  assert.match(vectorSearchRouteSource, /vector_search_response/)
+  assert.match(vectorSearchRouteSource, /vector_search_error/)
 })
 
 test('embeddings route does not return random dummy embeddings on failure', () => {
@@ -82,6 +93,11 @@ test('vector benchmark script exists with core regression queries', () => {
   assert.match(benchmarkSource, /Rajasthan Royals/)
   assert.match(benchmarkSource, /athletics governing body/)
   assert.match(benchmarkSource, /IPL franchise/)
+  assert.match(benchmarkSource, /Rajasthn Royls/)
   assert.match(benchmarkSource, /top1/)
   assert.match(benchmarkSource, /top5/)
+})
+
+test('verify entity data script includes vector benchmark deploy gate', () => {
+  assert.match(packageJson.scripts['verify:entity-data'], /qa:vector-search-benchmark/)
 })
