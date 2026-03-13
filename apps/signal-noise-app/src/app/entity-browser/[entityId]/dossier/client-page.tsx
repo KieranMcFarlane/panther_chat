@@ -9,6 +9,7 @@ import { ArrowLeft, FileText } from "lucide-react"
 
 import { DossierError } from "@/components/entity-dossier/DossierError"
 import { resolveEntityBrowserReturnUrl } from "@/lib/entity-browser-history"
+import { pushWithViewTransition } from "@/lib/view-transition"
 import type { Entity } from "@/lib/entity-loader"
 
 const Header = dynamic(() => import("@/components/header/Header"), { ssr: false })
@@ -56,13 +57,21 @@ export default function EntityDossierClientPage({
   const [isGenerating, setIsGenerating] = useState(false)
   const [generationAttempt, setGenerationAttempt] = useState(0)
   const [showEmailModal, setShowEmailModal] = useState(false)
+  const [isContentTransitioning, setIsContentTransitioning] = useState(false)
   const backToEntityBrowser = useCallback(() => {
-    router.push(resolveEntityBrowserReturnUrl(fromPage))
+    const currentFrom = new URLSearchParams(window.location.search).get('from') || fromPage
+    pushWithViewTransition(router, resolveEntityBrowserReturnUrl(currentFrom))
   }, [fromPage, router])
 
   useEffect(() => {
     setDossier(initialDossier)
   }, [initialDossier])
+
+  useEffect(() => {
+    setIsContentTransitioning(true)
+    const timeout = setTimeout(() => setIsContentTransitioning(false), 160)
+    return () => clearTimeout(timeout)
+  }, [entityId])
 
   // Intentionally exclude `dossier` from deps to avoid regeneration loops after a successful generation.
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -200,12 +209,17 @@ export default function EntityDossierClientPage({
             </div>
           )}
 
-          <EntityDossierRouter
-            key={dossierKey}
-            entity={entity}
-            onEmailEntity={handleEmailEntity}
-            dossier={dossier}
-          />
+          <div
+            className={`transition-opacity duration-200 ${isContentTransitioning ? 'opacity-0' : 'opacity-100'}`}
+            style={{ viewTransitionName: "dossier-content" }}
+          >
+            <EntityDossierRouter
+              key={dossierKey}
+              entity={entity}
+              onEmailEntity={handleEmailEntity}
+              dossier={dossier}
+            />
+          </div>
         </div>
       </div>
 

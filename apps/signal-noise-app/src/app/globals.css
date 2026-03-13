@@ -704,5 +704,12 @@ body.static-bg {
   }
 }
 
+@supports (view-transition-name: none) {
+  ::view-transition-old(dossier-content),
+  ::view-transition-new(dossier-content) {
+    animation-duration: 180ms;
+    animation-timing-function: ease;
+  }
+}
 
 

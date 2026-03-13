@@ -22,6 +22,10 @@ const enhancedClubDossierSource = readFileSync(
   new URL('../src/components/entity-dossier/EnhancedClubDossier.tsx', import.meta.url),
   'utf8',
 )
+const viewTransitionSource = readFileSync(
+  new URL('../src/lib/view-transition.ts', import.meta.url),
+  'utf8',
+)
 
 test('entity browser uses history API for pagination URL sync', () => {
   assert.match(entityBrowserSource, /window\.history\.pushState/)
@@ -40,6 +44,15 @@ test('entity profile and dossier page resolve entity-browser return URL from sha
 test('entity profile lazy loads heavy dossier and email modules', () => {
   assert.match(entityPageSource, /dynamic\(\(\) => import\("@\/components\/entity-dossier"\)/)
   assert.match(entityPageSource, /dynamic\(\(\) => import\("@\/components\/email\/EmailComposeModal"\)/)
+})
+
+test('entity profile and dossier pages use content-level fade transitions', () => {
+  assert.match(entityPageSource, /isContentTransitioning/)
+  assert.match(entityPageSource, /transition-opacity duration-200/)
+  assert.match(entityPageSource, /viewTransitionName: "dossier-content"/)
+  assert.match(dossierPageSource, /isContentTransitioning/)
+  assert.match(dossierPageSource, /transition-opacity duration-200/)
+  assert.match(dossierPageSource, /viewTransitionName: "dossier-content"/)
 })
 
 test('entity card prefetches dossier/profile routes for faster transitions', () => {
@@ -65,4 +78,11 @@ test('enhanced dossier tabs lazy-load heavy tab panels', () => {
 test('entity browser uses react-window virtualization for rendered cards', () => {
   assert.match(entityBrowserSource, /from "react-window"/)
   assert.match(entityBrowserSource, /FixedSizeList/)
+})
+
+test('navigation uses View Transitions API helper when available', () => {
+  assert.match(viewTransitionSource, /startViewTransition/)
+  assert.match(entityCardSource, /pushWithViewTransition/)
+  assert.match(entityPageSource, /pushWithViewTransition/)
+  assert.match(dossierPageSource, /pushWithViewTransition/)
 })

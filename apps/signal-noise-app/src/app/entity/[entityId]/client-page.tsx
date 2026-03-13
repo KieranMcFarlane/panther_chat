@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { useEntity } from "@/lib/swr-config"
 import { resolveEntityBrowserReturnUrl } from "@/lib/entity-browser-history"
+import { pushWithViewTransition } from "@/lib/view-transition"
 import { useCopilotReadable } from "@copilotkit/react-core"
 // import { useClubNavigation } from "@/contexts/ClubNavigationContext"
 // import { EntityProfileSkeleton, BadgeSkeleton } from "@/components/ui/skeleton"
@@ -90,6 +91,8 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
 
   // Smooth transition state
   const [showSkeleton, setShowSkeleton] = useState(false)
+  const [displayEntity, setDisplayEntity] = useState<Entity | null>(null)
+  const [isContentTransitioning, setIsContentTransitioning] = useState(false)
 
   // Email modal state
   const [showEmailModal, setShowEmailModal] = useState(false)
@@ -103,7 +106,8 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
   }, [])
 
   const backToEntityBrowser = useCallback(() => {
-    router.push(resolveEntityBrowserReturnUrl(fromPage))
+    const currentFrom = new URLSearchParams(window.location.search).get('from') || fromPage
+    pushWithViewTransition(router, resolveEntityBrowserReturnUrl(currentFrom))
   }, [fromPage, router])
 
   // Expose current entity context to CopilotKit for AI awareness
@@ -149,6 +153,25 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
     const timeout = setTimeout(() => setShowSkeleton(false), 60)
     return () => clearTimeout(timeout)
   }, [isLoading])
+
+  useEffect(() => {
+    if (!entity || isLoading) return
+    if (!displayEntity) {
+      setDisplayEntity(entity)
+      setIsContentTransitioning(false)
+      return
+    }
+    if (displayEntity.id === entity.id) {
+      setIsContentTransitioning(false)
+      return
+    }
+    setIsContentTransitioning(true)
+    const timeout = setTimeout(() => {
+      setDisplayEntity(entity)
+      setIsContentTransitioning(false)
+    }, 140)
+    return () => clearTimeout(timeout)
+  }, [displayEntity, entity, isLoading])
   
   // Show error state if timeout occurs
   if (isLoadingTimeout && isLoading) {
@@ -258,7 +281,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
     )
   }
 
-  if (isLoading && !entity) {
+  if (isLoading && !displayEntity && !entity) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
@@ -402,7 +425,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
     )
   }
 
-  if (!isLoading && !entity) {
+  if (!isLoading && !entity && !displayEntity) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Card className="w-full max-w-md">
@@ -419,8 +442,13 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
     )
   }
 
-  const EntityIcon = getEntityIcon(entity.labels)
-  const properties = entity.properties
+  const activeEntity = displayEntity || entity
+  if (!activeEntity) {
+    return null
+  }
+
+  const EntityIcon = getEntityIcon(activeEntity.labels)
+  const properties = activeEntity.properties
 
   // Email handler
   const handleEmailEntity = () => {
@@ -429,11 +457,11 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
 
   // Convert entity to contact format for EmailComposeModal
   const getContactFromEntity = () => {
-    if (!entity) return null
+    if (!activeEntity) return null
     
     return {
-      id: entity.id,
-      name: properties.name || `Entity ${entity.id}`,
+      id: activeEntity.id,
+      name: properties.name || `Entity ${activeEntity.id}`,
       email: properties.email || 'contact@' + (properties.name?.toLowerCase().replace(/\s+/g, '-') || 'unknown') + '.com',
       role: properties.type || 'Professional',
       affiliation: properties.sport ? `${properties.sport} Organization` : 'Sports Organization',
@@ -451,14 +479,17 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
       {/* Fixed Header at Top */}
       <Header />
 
-      {/* Main Content Area with smooth fade-in */}
-      <div className={`flex-1 bg-[#1c1e2d] transition-opacity duration-150 ${showSkeleton ? 'opacity-0' : 'opacity-100'}`}>
+      {/* Main Content Area: keep shell stable and only cross-fade dossier contents */}
+      <div className="flex-1 bg-[#1c1e2d]">
         <div className="container mx-auto px-4 py-8">
 
           {/* Entity Dossier Content */}
-          <div className="space-y-6">
+          <div
+            className={`space-y-6 transition-opacity duration-200 ${isContentTransitioning ? 'opacity-0' : 'opacity-100'}`}
+            style={{ viewTransitionName: "dossier-content" }}
+          >
             <EntityDossierRouter 
-              entity={entity} 
+              entity={activeEntity} 
               onEmailEntity={handleEmailEntity}
               dossier={dossier}
             />
@@ -470,7 +501,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
       {showEmailModal && (
         <EmailComposeModal
           contact={getContactFromEntity()}
-          entity={entity}
+          entity={activeEntity}
           isOpen={showEmailModal}
           onClose={() => setShowEmailModal(false)}
         />

@@ -1,3 +1,7 @@
+function isEntityBrowserListUrl(url: string): boolean {
+  return /^\/entity-browser(?:$|\?)/.test(url)
+}
+
 export function rememberEntityBrowserUrl(url?: string): void {
   if (typeof window === 'undefined') return
 
@@ -6,7 +10,7 @@ export function rememberEntityBrowserUrl(url?: string): void {
     `${window.location.pathname}${window.location.search}${window.location.hash}` ||
     ''
 
-  if (!candidate || !candidate.startsWith('/entity-browser')) return
+  if (!candidate || !isEntityBrowserListUrl(candidate)) return
 
   try {
     sessionStorage.setItem('lastEntityBrowserUrl', candidate)
@@ -19,14 +23,25 @@ export function rememberEntityBrowserUrl(url?: string): void {
 
 export function resolveEntityBrowserReturnUrl(fromPage: string = '1'): string {
   const fallback = fromPage !== '1' ? `/entity-browser?page=${fromPage}` : '/entity-browser'
+  const preferFallbackForPagedFrom = fromPage !== '1'
   if (typeof window === 'undefined') return fallback
 
   try {
     const stateUrl = String((window.history.state as any)?.entityBrowserUrl || '').trim()
-    if (stateUrl.startsWith('/entity-browser')) return stateUrl
+    if (isEntityBrowserListUrl(stateUrl)) {
+      if (preferFallbackForPagedFrom && !stateUrl.includes('?')) {
+        return fallback
+      }
+      return stateUrl
+    }
 
     const sessionUrl = String(sessionStorage.getItem('lastEntityBrowserUrl') || '').trim()
-    if (sessionUrl.startsWith('/entity-browser')) return sessionUrl
+    if (isEntityBrowserListUrl(sessionUrl)) {
+      if (preferFallbackForPagedFrom && !sessionUrl.includes('?')) {
+        return fallback
+      }
+      return sessionUrl
+    }
   } catch {
     // ignore storage access issues
   }

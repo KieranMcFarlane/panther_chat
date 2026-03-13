@@ -11,6 +11,7 @@ import { prefetchEntity } from "@/lib/swr-config"
 import { useEffect } from "react"
 import Link from "next/link"
 import { rememberEntityBrowserUrl } from "@/lib/entity-browser-history"
+import { pushWithViewTransition } from "@/lib/view-transition"
 
 interface EntityCardProps {
   entity: Entity
@@ -116,7 +117,7 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
     const urlParams = new URLSearchParams(window.location.search)
     const currentPage = urlParams.get('page') || '1'
     rememberEntityBrowserUrl()
-    router.push(`/entity/${stableEntityId}?from=${currentPage}`)
+    pushWithViewTransition(router, `/entity/${stableEntityId}?from=${currentPage}`)
   }
 
   const latestPipelineRunUrl = typeof entity.properties.last_pipeline_run_detail_url === 'string'
@@ -284,7 +285,7 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
                   const urlParams = new URLSearchParams(window.location.search)
                   const currentPage = urlParams.get('page') || '1'
                   rememberEntityBrowserUrl()
-                  router.push(`/entity/${stableEntityId}?from=${currentPage}`)
+                  pushWithViewTransition(router, `/entity/${stableEntityId}?from=${currentPage}`)
                 }}
           >
             View Full Profile

@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { EntityBadge } from "@/components/badge/EntityBadge"
 import { EntityCard } from "@/components/EntityCard"
+import { rememberEntityBrowserUrl } from "@/lib/entity-browser-history"
+import { useSearchParams } from "next/navigation"
 // import { SimpleEntityCard } from "@/components/SimpleEntityCard"
 import { EmailComposeModal } from "@/components/email/EmailComposeModal"
 import { 
@@ -74,23 +76,87 @@ interface SearchSuggestion {
   source: "lexical" | "semantic"
 }
 
+const DEFAULT_FILTERS = {
+  entityType: "all",
+  sport: "all",
+  league: "all",
+  country: "all",
+  entityClass: "all",
+  sortBy: "popular",
+  sortOrder: "desc" as "asc" | "desc",
+  limit: "10",
+}
+
+type BrowserFilters = typeof DEFAULT_FILTERS
+
+function getInitialBrowserState() {
+  if (typeof window === "undefined") {
+    return {
+      page: 1,
+      searchTerm: "",
+      debouncedSearchTerm: "",
+      filters: DEFAULT_FILTERS,
+    }
+  }
+
+  const params = new URLSearchParams(window.location.search)
+  const parsedPage = Number.parseInt(params.get("page") || "1", 10)
+  const page = Number.isNaN(parsedPage) || parsedPage < 1 ? 1 : parsedPage
+  const searchValue = params.get("search")?.trim() || ""
+  const sortOrder = params.get("sortOrder") === "asc" ? "asc" : "desc"
+
+  return {
+    page,
+    searchTerm: searchValue,
+    debouncedSearchTerm: searchValue,
+    filters: {
+      entityType: params.get("entityType") || DEFAULT_FILTERS.entityType,
+      sport: params.get("sport") || DEFAULT_FILTERS.sport,
+      league: params.get("league") || DEFAULT_FILTERS.league,
+      country: params.get("country") || DEFAULT_FILTERS.country,
+      entityClass: params.get("entityClass") || DEFAULT_FILTERS.entityClass,
+      sortBy: params.get("sortBy") || DEFAULT_FILTERS.sortBy,
+      sortOrder,
+      limit: params.get("limit") || DEFAULT_FILTERS.limit,
+    } satisfies BrowserFilters,
+  }
+}
+
+function buildBrowserUrlFromState(page: number, filters: BrowserFilters, searchValue: string) {
+  const params = new URLSearchParams()
+  if (page > 1) params.set("page", String(page))
+  if (searchValue.trim()) params.set("search", searchValue.trim())
+  if (filters.entityType !== DEFAULT_FILTERS.entityType) params.set("entityType", filters.entityType)
+  if (filters.sport !== DEFAULT_FILTERS.sport) params.set("sport", filters.sport)
+  if (filters.league !== DEFAULT_FILTERS.league) params.set("league", filters.league)
+  if (filters.country !== DEFAULT_FILTERS.country) params.set("country", filters.country)
+  if (filters.entityClass !== DEFAULT_FILTERS.entityClass) params.set("entityClass", filters.entityClass)
+  if (filters.sortBy !== DEFAULT_FILTERS.sortBy) params.set("sortBy", filters.sortBy)
+  if (filters.sortOrder !== DEFAULT_FILTERS.sortOrder) params.set("sortOrder", filters.sortOrder)
+  if (filters.limit !== DEFAULT_FILTERS.limit) params.set("limit", filters.limit)
+  const query = params.toString()
+  return `/entity-browser${query ? `?${query}` : ""}`
+}
+
 export default function EntityBrowserPage() {
-  console.log("🔍 EntityBrowserPage: Component mounting")
+  const initialState = getInitialBrowserState()
+  const searchParams = useSearchParams()
   
   const [data, setData] = useState<EntityBrowserResponse | null>(null)
   const [initialLoading, setInitialLoading] = useState(true)
   const [gridLoading, setGridLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [dataSource, setDataSource] = useState<'cache' | 'supabase' | null>(null)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("")
+  const [searchTerm, setSearchTerm] = useState(initialState.searchTerm)
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(initialState.debouncedSearchTerm)
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null)
   const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([])
   const [suggestionsLoading, setSuggestionsLoading] = useState(false)
   const [showSuggestions, setShowSuggestions] = useState(false)
+  const [isUrlStateReady, setIsUrlStateReady] = useState(false)
 
-  const [currentPage, setCurrentPage] = useState(1)
+  const [currentPage, setCurrentPage] = useState(initialState.page)
   const [taxonomy, setTaxonomy] = useState<EntityTaxonomyResponse>({
     sports: [],
     leagues: [],
@@ -100,18 +166,9 @@ export default function EntityBrowserPage() {
   })
 
   // Filter and sort state
-  const [filters, setFilters] = useState({
-    entityType: "all",
-    sport: "all",
-    league: "all",
-    country: "all",
-    entityClass: "all",
-    sortBy: "popular",
-    sortOrder: "desc" as "asc" | "desc",
-    limit: "10" // Show 10 per page
-  })
+  const [filters, setFilters] = useState<BrowserFilters>(initialState.filters)
 
-  const fetchEntities = useCallback(async (page: number = currentPage, isInitial: boolean = false) => {
+  const fetchEntities = useCallback(async (page: number, isInitial: boolean = false) => {
     if (isInitial) {
       setInitialLoading(true)
     } else {
@@ -156,7 +213,7 @@ export default function EntityBrowserPage() {
         setGridLoading(false)
       }
     }
-  }, [currentPage, filters.entityType, filters.sport, filters.league, filters.country, filters.entityClass, filters.sortBy, filters.sortOrder, filters.limit, debouncedSearchTerm])
+  }, [filters.entityType, filters.sport, filters.league, filters.country, filters.entityClass, filters.sortBy, filters.sortOrder, filters.limit, debouncedSearchTerm])
 
   useEffect(() => {
     const loadTaxonomy = async () => {
@@ -181,8 +238,7 @@ export default function EntityBrowserPage() {
   // Reset and reload when filters change
   const resetAndReload = useCallback(() => {
     setCurrentPage(1)
-    fetchEntities(1)
-  }, [fetchEntities])
+  }, [])
 
   // Debounce search term to prevent excessive API calls
   useEffect(() => {
@@ -193,13 +249,6 @@ export default function EntityBrowserPage() {
     return () => clearTimeout(timer)
   }, [searchTerm])
 
-  // Reset page when filters change
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setCurrentPage(1)
-    }
-  }, [filters.entityType, filters.sport, filters.league, filters.country, filters.entityClass, filters.sortBy, filters.sortOrder, filters.limit, debouncedSearchTerm])
-
   // Fetch entities when page or filters change
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -207,6 +256,48 @@ export default function EntityBrowserPage() {
       fetchEntities(currentPage, isInitial)
     }
   }, [currentPage, fetchEntities, initialLoading])
+
+  useEffect(() => {
+    if (!isUrlStateReady) return
+    const browserUrl = buildBrowserUrlFromState(currentPage, filters, debouncedSearchTerm)
+    const currentUrl = `${window.location.pathname}${window.location.search}`
+    if (browserUrl !== currentUrl) {
+      window.history.pushState({ ...(window.history.state || {}), entityBrowserUrl: browserUrl }, "", browserUrl)
+    }
+    rememberEntityBrowserUrl(browserUrl)
+  }, [currentPage, debouncedSearchTerm, filters, isUrlStateReady])
+
+  useEffect(() => {
+    const onPopState = () => {
+      const next = getInitialBrowserState()
+      setCurrentPage(next.page)
+      setSearchTerm(next.searchTerm)
+      setDebouncedSearchTerm(next.debouncedSearchTerm)
+      setFilters(next.filters)
+    }
+    window.addEventListener("popstate", onPopState)
+    return () => window.removeEventListener("popstate", onPopState)
+  }, [])
+
+  useEffect(() => {
+    const next = getInitialBrowserState()
+    setCurrentPage((prev) => (prev === next.page ? prev : next.page))
+    setSearchTerm((prev) => (prev === next.searchTerm ? prev : next.searchTerm))
+    setDebouncedSearchTerm((prev) => (prev === next.debouncedSearchTerm ? prev : next.debouncedSearchTerm))
+    setFilters((prev) => {
+      const same =
+        prev.entityType === next.filters.entityType &&
+        prev.sport === next.filters.sport &&
+        prev.league === next.filters.league &&
+        prev.country === next.filters.country &&
+        prev.entityClass === next.filters.entityClass &&
+        prev.sortBy === next.filters.sortBy &&
+        prev.sortOrder === next.filters.sortOrder &&
+        prev.limit === next.filters.limit
+      return same ? prev : next.filters
+    })
+    setIsUrlStateReady(true)
+  }, [searchParams])
 
   useEffect(() => {
     if (filters.sortBy === 'popular' && filters.sortOrder !== 'desc') {
