@@ -1488,6 +1488,7 @@ class HypothesisDrivenDiscovery:
             'hop_type': hop_type.value if hasattr(hop_type, 'value') else str(hop_type),
             'started_at': datetime.now(timezone.utc).isoformat()
         }
+        evaluation_hop_type = hop_type
 
         def build_no_progress_result(justification: str, scrape_data: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
             performance['total_duration_ms'] = round((time.perf_counter() - hop_started_at) * 1000, 2)
@@ -1715,12 +1716,116 @@ class HypothesisDrivenDiscovery:
                     hypothesis_category=getattr(hypothesis, "category", ""),
                 )
                 if low_yield_reason:
-                    self._update_llm_runtime_diagnostics(
-                        llm_last_status="skipped_low_yield",
-                        evaluation_mode="heuristic",
-                    )
-                    logger.info("Skipping evaluation for low-yield content (%s): %s", low_yield_reason, url)
-                    return build_no_progress_result(f"Low-yield content skipped: {low_yield_reason}")
+                    recovery_info: Dict[str, Any] = {
+                        "triggered": True,
+                        "initial_hop": hop_type.value,
+                        "initial_url": url,
+                        "initial_reason": low_yield_reason,
+                        "attempted_hops": [],
+                    }
+                    performance["low_yield_recovery"] = recovery_info
+                    pivot_applied = False
+
+                    procurement_hops = {HopType.RFP_PAGE, HopType.TENDERS_PAGE, HopType.PROCUREMENT_PAGE}
+                    if hop_type in procurement_hops:
+                        for pivot_hop in (HopType.PRESS_RELEASE, HopType.CAREERS_PAGE):
+                            recovery_info["attempted_hops"].append(pivot_hop.value)
+                            try:
+                                pivot_url = await asyncio.wait_for(
+                                    self._get_url_for_hop(pivot_hop, hypothesis, state),
+                                    timeout=url_resolution_timeout_seconds,
+                                )
+                            except asyncio.TimeoutError:
+                                logger.debug(
+                                    "Low-yield recovery URL resolution timed out for pivot hop %s",
+                                    pivot_hop.value,
+                                )
+                                continue
+
+                            if not pivot_url or pivot_url == url:
+                                continue
+
+                            pivot_scrape_started_at = time.perf_counter()
+                            pivot_result = await self.brightdata_client.scrape_as_markdown(pivot_url)
+                            recovery_info["pivot_scrape_ms"] = round(
+                                (time.perf_counter() - pivot_scrape_started_at) * 1000, 2
+                            )
+                            if pivot_result.get("status") != "success":
+                                continue
+
+                            pivot_content = pivot_result.get("content", "")
+                            pivot_content_text = pivot_content if isinstance(pivot_content, str) else ""
+                            if not pivot_content_text.strip():
+                                continue
+
+                            pivot_low_yield_reason = self._assess_low_yield_content(
+                                content_text=pivot_content_text,
+                                raw_html=pivot_result.get("raw_html"),
+                                hypothesis_category=getattr(hypothesis, "category", ""),
+                            )
+                            if pivot_low_yield_reason:
+                                recovery_info["pivot_low_yield_reason"] = pivot_low_yield_reason
+                                continue
+
+                            pivot_signal = self._extract_deterministic_trusted_signal(
+                                content_text=pivot_content_text,
+                                hop_type=pivot_hop,
+                            )
+                            if pivot_signal:
+                                url = pivot_url
+                                content_result = pivot_result
+                                recovery_info.update(
+                                    {
+                                        "pivot_hop": pivot_hop.value,
+                                        "pivot_url": pivot_url,
+                                        "pivot_applied": True,
+                                        "result_mode": "deterministic_signal",
+                                    }
+                                )
+                                self._update_llm_runtime_diagnostics(
+                                    llm_last_status="deterministic_signal_extracted",
+                                    evaluation_mode="heuristic",
+                                )
+                                logger.info(
+                                    "Deterministic trusted signal extracted after low-yield recovery via %s",
+                                    pivot_hop.value,
+                                )
+                                return build_weak_accept_result(
+                                    pivot_signal["justification"],
+                                    pivot_signal["evidence_found"],
+                                    pivot_signal["evidence_type"],
+                                )
+
+                            url = pivot_url
+                            content_result = pivot_result
+                            content = pivot_content_text
+                            content_metadata = {
+                                "content_type": "text/html",
+                                "char_count": len(pivot_content_text),
+                            }
+                            evaluation_hop_type = pivot_hop
+                            recovery_info.update(
+                                {
+                                    "pivot_hop": pivot_hop.value,
+                                    "pivot_url": pivot_url,
+                                    "pivot_applied": True,
+                                    "result_mode": "llm_evaluation",
+                                }
+                            )
+                            pivot_applied = True
+                            break
+
+                    if not pivot_applied:
+                        self._update_llm_runtime_diagnostics(
+                            llm_last_status="skipped_low_yield",
+                            evaluation_mode="heuristic",
+                        )
+                        logger.info(
+                            "Skipping evaluation for low-yield content (%s): %s",
+                            low_yield_reason,
+                            url,
+                        )
+                        return build_no_progress_result(f"Low-yield content skipped: {low_yield_reason}")
 
                 # ENHANCEMENT: Extract PDF links from tender pages
                 # This addresses the ICF case where /tenders page contained links to multiple RFP PDFs
@@ -1786,7 +1891,7 @@ class HypothesisDrivenDiscovery:
                 evaluation = await self._evaluate_content_with_claude(
                     content=content,
                     hypothesis=hypothesis,
-                    hop_type=hop_type,
+                    hop_type=evaluation_hop_type,
                     content_metadata=content_metadata
                 )
                 performance['evaluation_ms'] = round((time.perf_counter() - evaluation_started_at) * 1000, 2)

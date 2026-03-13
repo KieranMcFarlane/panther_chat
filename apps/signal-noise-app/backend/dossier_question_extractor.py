@@ -199,6 +199,15 @@ class DossierQuestionExtractor:
             )
             questions.extend(ai_questions)
 
+        if len(questions) == 0:
+            template_questions = self._generate_template_fallback_questions(
+                section=section,
+                entity_name=entity_name,
+                max_questions=max_questions,
+                question_types=question_types,
+            )
+            questions.extend(template_questions)
+
         logger.info(f"Extracted {len(questions)} questions from section {section.id}")
         return questions
 
@@ -463,6 +472,78 @@ Questions:"""
         except Exception as e:
             logger.error(f"Failed to generate AI questions: {e}")
             return []
+
+    def _generate_template_fallback_questions(
+        self,
+        *,
+        section: DossierSection,
+        entity_name: str,
+        max_questions: int,
+        question_types: List[DossierQuestionType],
+    ) -> List[DossierQuestion]:
+        section_template = self.section_question_templates.get(section.id, {})
+        templates = section_template.get("templates", [])
+        if not templates:
+            return []
+
+        class _SafeFormatDict(dict):
+            def __missing__(self, key):
+                return key.replace("_", " ")
+
+        substitutions = _SafeFormatDict(
+            entity=entity_name,
+            role="technology lead",
+            domain="digital strategy",
+            initiative_type="digital initiatives",
+            platform_type="digital",
+            timeframe="the next 12 months",
+            area="digital engagement",
+            category="digital transformation",
+        )
+        questions: List[DossierQuestion] = []
+        seen: set[str] = set()
+        for idx, template in enumerate(templates):
+            if len(questions) >= max_questions:
+                break
+            try:
+                question_text = str(template).format_map(substitutions).strip()
+            except Exception:
+                question_text = str(template).strip()
+            if not question_text:
+                continue
+            if not question_text.endswith("?"):
+                question_text = f"{question_text}?"
+            if entity_name and entity_name.lower() not in question_text.lower():
+                question_text = f"{question_text.rstrip('?')} for {entity_name}?"
+            normalized = question_text.lower().strip()
+            if normalized in seen or len(question_text) < 15:
+                continue
+            seen.add(normalized)
+            question_type = (
+                question_types[idx % len(question_types)]
+                if question_types
+                else DossierQuestionType.GENERAL
+            )
+            question_id = f"q_tpl_{section.id}_{idx}_{int(datetime.now(timezone.utc).timestamp())}"
+            questions.append(
+                DossierQuestion(
+                    question_id=question_id,
+                    section_id=section.id,
+                    question_type=question_type,
+                    question_text=question_text,
+                    priority=max(3, self._calculate_priority(question_text, section.id)),
+                    confidence=0.0,
+                    status=DossierQuestionStatus.PENDING,
+                    search_strategy=self._generate_search_strategy(question_text, question_type, entity_name),
+                )
+            )
+
+        logger.info(
+            "Template fallback generated %s question(s) for section %s",
+            len(questions),
+            section.id,
+        )
+        return questions
 
     def prioritize_questions(
         self,

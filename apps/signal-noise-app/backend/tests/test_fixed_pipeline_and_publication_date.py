@@ -34,10 +34,12 @@ async def test_phase2_uses_passed_max_iterations():
         dossier=SimpleNamespace(to_dict=lambda: {"x": 1}),
         max_iterations=7,
         template_id="yellow_panther_agency",
+        entity_type="FEDERATION",
     )
 
     assert result.final_confidence == 0.7
     assert captured["max_iterations"] == 7
+    assert captured["entity_type"] == "FEDERATION"
 
 
 @pytest.mark.asyncio
@@ -52,7 +54,7 @@ async def test_run_pipeline_passes_entity_type_to_phase1():
         captured["entity_type"] = entity_type
         return SimpleNamespace(sections=[])
 
-    async def _phase_2_run_discovery(*, entity_id, entity_name, dossier, max_iterations, template_id):
+    async def _phase_2_run_discovery(*, entity_id, entity_name, dossier, max_iterations, template_id, entity_type=None):
         return SimpleNamespace(final_confidence=0.5, iterations_completed=1, signals_discovered=[])
 
     async def _phase_3_calculate_scores(*, entity_id, entity_name, dossier, discovery_result):
@@ -93,7 +95,7 @@ async def test_run_pipeline_executes_schema_first_prepass_when_enabled():
     async def _phase_1_generate_dossier(*, entity_id, entity_name, entity_type, tier_score):
         return SimpleNamespace(sections=[], metadata={"canonical_sources": {}})
 
-    async def _phase_2_run_discovery(*, entity_id, entity_name, dossier, max_iterations, template_id):
+    async def _phase_2_run_discovery(*, entity_id, entity_name, dossier, max_iterations, template_id, entity_type=None):
         return SimpleNamespace(final_confidence=0.5, iterations_completed=1, signals_discovered=[])
 
     async def _phase_3_calculate_scores(*, entity_id, entity_name, dossier, discovery_result):
@@ -174,7 +176,7 @@ async def test_run_pipeline_seeds_phase1_official_site_from_schema_first():
     async def _phase_1_generate_dossier(*, entity_id, entity_name, entity_type, tier_score):
         return SimpleNamespace(sections=[], metadata={"canonical_sources": {}})
 
-    async def _phase_2_run_discovery(*, entity_id, entity_name, dossier, max_iterations, template_id):
+    async def _phase_2_run_discovery(*, entity_id, entity_name, dossier, max_iterations, template_id, entity_type=None):
         return SimpleNamespace(final_confidence=0.5, iterations_completed=1, signals_discovered=[])
 
     async def _phase_3_calculate_scores(*, entity_id, entity_name, dossier, discovery_result):

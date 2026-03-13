@@ -146,7 +146,8 @@ class FixedDossierFirstPipeline:
             entity_name=entity_name,
             dossier=dossier,
             max_iterations=max_discovery_iterations,
-            template_id=template_id
+            template_id=template_id,
+            entity_type=entity_type,
         )
 
         # =========================================================================
@@ -233,7 +234,8 @@ class FixedDossierFirstPipeline:
         entity_name: str,
         dossier: Any,
         max_iterations: int,
-        template_id: str
+        template_id: str,
+        entity_type: str | None = None,
     ):
         """Phase 2: Run discovery with dossier context"""
 
@@ -278,6 +280,8 @@ class FixedDossierFirstPipeline:
             )
             if supports_kwargs or "template_id" in context_signature.parameters:
                 context_kwargs["template_id"] = template_id
+            if entity_type and (supports_kwargs or "entity_type" in context_signature.parameters):
+                context_kwargs["entity_type"] = entity_type
 
             result = await context_method(**context_kwargs)
         except Exception as e:
@@ -286,6 +290,8 @@ class FixedDossierFirstPipeline:
 
             # Try standard discovery with template
             try:
+                if entity_type:
+                    self.discovery.current_entity_type = entity_type
                 result = await self.discovery.run_discovery(
                     entity_id=entity_id,
                     entity_name=entity_name,

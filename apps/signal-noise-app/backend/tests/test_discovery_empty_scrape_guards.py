@@ -228,6 +228,79 @@ async def test_execute_hop_reuses_official_site_evaluation_for_unchanged_content
     assert second["performance"]["evaluation_cache_hit"] is True
 
 
+@pytest.mark.asyncio
+async def test_execute_hop_pivots_from_low_yield_rfp_to_press_release():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.pdf_extractor = None
+    discovery.total_cost_usd = 0.0
+    discovery.brightdata_client = SimpleNamespace()
+    discovery._official_site_content_cache = {}
+    discovery._official_site_evaluation_cache = {}
+    discovery._update_llm_runtime_diagnostics = lambda **kwargs: None
+    discovery._extract_deterministic_trusted_signal = lambda **kwargs: None
+    discovery._extract_pdf_links_from_content = lambda **kwargs: []
+    discovery._prioritize_pdf_links = lambda pdf_links, hypothesis: []
+
+    async def fake_get_url_for_hop(hop_type, hypothesis, state):
+        if hop_type == HopType.RFP_PAGE:
+            return "https://example.com/partners"
+        if hop_type == HopType.PRESS_RELEASE:
+            return "https://example.com/news"
+        return None
+
+    async def fake_scrape_as_markdown(url):
+        if url.endswith("/partners"):
+            return {
+                "status": "success",
+                "content": "LOW_YIELD_PAGE",
+                "raw_html": "<script>track()</script>",
+                "url": url,
+                "metadata": {},
+            }
+        return {
+            "status": "success",
+            "content": "Official announcement: digital transformation procurement programme.",
+            "raw_html": "<p>Official announcement: digital transformation procurement programme.</p>",
+            "url": url,
+            "metadata": {"word_count": 7},
+        }
+
+    async def fake_evaluate_content_with_claude(**kwargs):
+        return {
+            "decision": "WEAK_ACCEPT",
+            "confidence_delta": 0.08,
+            "justification": "Procurement signal from official press release",
+            "evidence_found": "digital transformation procurement programme",
+        }
+
+    def fake_assess_low_yield_content(**kwargs):
+        content = kwargs.get("content_text") or ""
+        if "LOW_YIELD_PAGE" in content:
+            return "script_density>0.12"
+        return None
+
+    discovery._get_url_for_hop = fake_get_url_for_hop
+    discovery._is_pdf_url = lambda url: False
+    discovery.brightdata_client.scrape_as_markdown = fake_scrape_as_markdown
+    discovery._evaluate_content_with_claude = fake_evaluate_content_with_claude
+    discovery._assess_low_yield_content = fake_assess_low_yield_content
+
+    state = SimpleNamespace(
+        current_depth=0,
+        last_failed_hop=None,
+        hop_failure_counts={},
+    )
+    state.increment_depth_count = lambda depth: None
+
+    hypothesis = SimpleNamespace(metadata={"entity_name": "FIBA"}, category="digital_transformation")
+
+    result = await discovery._execute_hop(HopType.RFP_PAGE, hypothesis, state)
+
+    assert result["decision"] == "WEAK_ACCEPT"
+    assert result["url"] == "https://example.com/news"
+    assert result["performance"]["low_yield_recovery"]["pivot_hop"] == HopType.PRESS_RELEASE.value
+
+
 def test_score_url_penalizes_weak_linkedin_rfp_results():
     discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
 
