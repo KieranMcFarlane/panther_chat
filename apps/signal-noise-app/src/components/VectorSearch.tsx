@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { useRouter } from "next/navigation"
 import { useVectorSearch, VectorSearchOptions } from "@/hooks/useVectorSearch"
 import { EntityCard } from "@/components/EntityCard"
 import { Input } from "@/components/ui/input"
@@ -8,9 +9,11 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Search, Filter, RefreshCw, Database, Zap, Grid3X3, CheckCircle2, Circle, Loader2 } from "lucide-react"
+import { pushWithViewTransition } from "@/lib/view-transition"
 
 
 export function VectorSearch() {
+  const router = useRouter()
   const planSteps = [
     "Interpret customer intent",
     "Evaluate matching inventory",
@@ -72,7 +75,7 @@ export function VectorSearch() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => window.location.href = '/entity-browser'}
+                onClick={() => pushWithViewTransition(router, '/entity-browser')}
                 className="flex items-center gap-2"
               >
                 <Grid3X3 className="h-4 w-4" />

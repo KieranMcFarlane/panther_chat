@@ -69,3 +69,19 @@ test('search loading UI includes staged plan steps with completion semantics', (
   assert.match(vectorSearchComponentSource, /Response composer/)
   assert.match(vectorSearchComponentSource, /planCompletedCount/)
 })
+
+test('search page uses view transition helper for entity browser navigation', () => {
+  assert.match(vectorSearchComponentSource, /pushWithViewTransition/)
+  assert.doesNotMatch(vectorSearchComponentSource, /window\.location\.href\s*=\s*['"`]\/entity-browser['"`]/)
+})
+
+test('vector benchmark script exists with core regression queries', () => {
+  const benchmarkPath = new URL('../scripts/qa-vector-search-benchmark.mjs', import.meta.url)
+  assert.equal(existsSync(benchmarkPath), true)
+  const benchmarkSource = readFileSync(benchmarkPath, 'utf8')
+  assert.match(benchmarkSource, /Rajasthan Royals/)
+  assert.match(benchmarkSource, /athletics governing body/)
+  assert.match(benchmarkSource, /IPL franchise/)
+  assert.match(benchmarkSource, /top1/)
+  assert.match(benchmarkSource, /top5/)
+})

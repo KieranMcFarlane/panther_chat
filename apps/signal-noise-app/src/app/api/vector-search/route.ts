@@ -25,6 +25,11 @@ type Candidate = {
   final_score: number
 }
 
+type QueryIntent = {
+  impliedLeague?: string
+  impliedEntityType?: string
+}
+
 function normalize(value: string | null | undefined): string {
   return String(value || '')
     .toLowerCase()
@@ -87,6 +92,29 @@ function buildKey(name: string, type: string): string {
   return `${normalize(name)}::${normalize(type)}`
 }
 
+function deriveIntent(query: string): QueryIntent {
+  const normalized = normalize(query)
+  const intent: QueryIntent = {}
+
+  if (/\bipl\b/.test(normalized) || normalized.includes('indian premier league')) {
+    intent.impliedLeague = 'Indian Premier League'
+  } else if (/\bepl\b/.test(normalized) || normalized.includes('premier league')) {
+    intent.impliedLeague = 'Premier League'
+  }
+
+  if (
+    normalized.includes('franchise') ||
+    normalized.includes('team') ||
+    normalized.includes('teams') ||
+    normalized.includes('clubs') ||
+    normalized.includes('club')
+  ) {
+    intent.impliedEntityType = 'team'
+  }
+
+  return intent
+}
+
 async function loadLexicalCandidates(
   query: string,
   filters: FilterInput,
@@ -113,7 +141,20 @@ async function loadLexicalCandidates(
   const { data, error } = await dbQuery.order('quality_score', { ascending: false })
   if (error || !data) return []
 
-  return data.map((row: any) => {
+  let rows = data
+  if (rows.length === 0) {
+    const intent = deriveIntent(query)
+    if (intent.impliedLeague || intent.impliedEntityType) {
+      let fallbackQuery = supabase.from('canonical_entities').select('*').limit(poolSize)
+      if (filters.sport) fallbackQuery = fallbackQuery.ilike('sport', `%${filters.sport}%`)
+      if (intent.impliedLeague) fallbackQuery = fallbackQuery.ilike('league', `%${intent.impliedLeague}%`)
+      if (intent.impliedEntityType) fallbackQuery = fallbackQuery.eq('entity_type', intent.impliedEntityType)
+      const { data: fallbackRows, error: fallbackError } = await fallbackQuery.order('quality_score', { ascending: false })
+      if (!fallbackError && fallbackRows) rows = fallbackRows
+    }
+  }
+
+  return rows.map((row: any) => {
     const metadata = {
       ...(row.properties || {}),
       sport: row.sport || '',

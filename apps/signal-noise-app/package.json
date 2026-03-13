@@ -39,6 +39,7 @@
     "remediate:taxonomy-hygiene": "node scripts/remediate-taxonomy-hygiene.mjs",
     "qa:canonical-congruence": "node scripts/qa-canonical-congruence.mjs",
     "qa:canonical-congruence:soft": "node scripts/qa-canonical-congruence.mjs --no-fail",
+    "qa:vector-search-benchmark": "node scripts/qa-vector-search-benchmark.mjs",
     "sync:post-import": "npm run remediate:canonical-congruence && npm run remediate:taxonomy-hygiene && npm run qa:canonical-congruence",
     "verify:canonical-congruence": "npm run canonical:rebuild && npm run sync:post-import",
     "qa:league-synonyms": "node scripts/audit-league-synonyms.mjs",
