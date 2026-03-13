@@ -45,6 +45,7 @@ import logging
 import os
 import re
 import time
+import urllib.parse
 from importlib import import_module
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
@@ -700,6 +701,26 @@ class HypothesisDrivenDiscovery:
         self.content_min_text_chars = int(os.getenv("DISCOVERY_CONTENT_MIN_TEXT_CHARS", "240"))
         self.content_max_script_density = float(os.getenv("DISCOVERY_CONTENT_MAX_SCRIPT_DENSITY", "0.12"))
         self.content_min_keyword_sentences = int(os.getenv("DISCOVERY_CONTENT_MIN_KEYWORD_SENTENCES", "1"))
+        self.official_site_multi_page_sweep_enabled = self._parse_bool_env(
+            os.getenv("DISCOVERY_OFFICIAL_SITE_MULTI_PAGE_SWEEP_ENABLED"),
+            default=True,
+        )
+        self.official_site_sweep_max_pages = max(
+            1,
+            int(os.getenv("DISCOVERY_OFFICIAL_SITE_SWEEP_MAX_PAGES", "4")),
+        )
+        sweep_paths_env = os.getenv(
+            "DISCOVERY_OFFICIAL_SITE_SWEEP_PATHS",
+            "/,/about,/{locale}/,/{locale}/about,/{locale}/news,/news,/press,/careers",
+        )
+        self.official_site_sweep_paths = [
+            value.strip()
+            for value in str(sweep_paths_env or "").split(",")
+            if value.strip()
+        ] or ["/", "/about", "/news", "/press", "/careers"]
+        self.official_site_sweep_scrape_timeout_seconds = float(
+            os.getenv("DISCOVERY_OFFICIAL_SITE_SWEEP_SCRAPE_TIMEOUT_SECONDS", "10")
+        )
         self.heuristic_fallback_on_llm_unavailable = self._parse_bool_env(
             os.getenv("DISCOVERY_HEURISTIC_FALLBACK_ON_LLM_UNAVAILABLE"),
             default=True,
@@ -784,9 +805,11 @@ class HypothesisDrivenDiscovery:
         status_value = str(status or "").strip().lower()
         mapping = {
             "ok": "json_direct",
+            "key_value_recovered": "key_value_recovered",
             "partial_json_recovered": "partial_json_recovered",
             "text_decision_recovered": "text_decision_recovered",
             "text_no_progress_recovered": "text_no_progress_recovered",
+            "strict_text_no_progress_recovered": "text_no_progress_recovered",
             "text_accept_recovered": "text_decision_recovered",
             "json_repair_recovered": "json_repair_recovered",
             "invalid_model_payload": "heuristic_fallback",
@@ -876,6 +899,201 @@ class HypothesisDrivenDiscovery:
         if sentence_count < minimum_keyword_sentences:
             return f"keyword_sentences<{minimum_keyword_sentences}"
         return None
+
+    def _build_official_site_sweep_candidates(self, base_url: str) -> List[str]:
+        parsed = urllib.parse.urlparse(str(base_url or "").strip())
+        if not parsed.scheme or not parsed.netloc:
+            return [base_url] if isinstance(base_url, str) and base_url.strip() else []
+
+        base_origin = f"{parsed.scheme}://{parsed.netloc}"
+        path_segments = [segment for segment in (parsed.path or "").split("/") if segment]
+        locale_segment = ""
+        if path_segments:
+            candidate = path_segments[0].strip().lower()
+            if re.match(r"^[a-z]{2,5}(?:-[a-z]{2,5})?$", candidate):
+                locale_segment = candidate
+
+        raw_paths = list(getattr(self, "official_site_sweep_paths", []) or [])
+        if not raw_paths:
+            raw_paths = ["/", "/about", "/news", "/press", "/careers"]
+
+        candidates: List[str] = []
+        seen = set()
+
+        def _add(url: str) -> None:
+            normalized = self._normalize_http_url(url)
+            if not normalized or normalized in seen:
+                return
+            seen.add(normalized)
+            candidates.append(normalized)
+
+        _add(base_url)
+
+        for raw_path in raw_paths:
+            path = str(raw_path or "").strip()
+            if not path:
+                continue
+            if "{locale}" in path:
+                replacement = locale_segment or ""
+                path = path.replace("{locale}", replacement)
+            path = re.sub(r"/{2,}", "/", path)
+            if not path.startswith("/"):
+                path = f"/{path}"
+            if path != "/" and path.endswith("/"):
+                path = path.rstrip("/")
+            _add(f"{base_origin}{path}")
+
+        max_pages = max(1, int(getattr(self, "official_site_sweep_max_pages", 4) or 4))
+        return candidates[:max_pages]
+
+    def _score_official_site_content_candidate(
+        self,
+        *,
+        content_text: str,
+        raw_html: Optional[str],
+        hypothesis_category: str,
+        url: str,
+    ) -> Tuple[float, Optional[str]]:
+        text = str(content_text or "")
+        reason = self._assess_low_yield_content(
+            content_text=text,
+            raw_html=raw_html,
+            hypothesis_category=hypothesis_category,
+        )
+
+        score = 0.0
+        if reason is None:
+            score += 45.0
+        else:
+            score -= 20.0
+
+        score += min(len(text), 6000) / 120.0
+
+        lower_text = text.lower()
+        keywords_by_category = {
+            "procurement": ["procurement", "tender", "rfp", "vendor", "supplier"],
+            "analytics": ["analytics", "data", "platform", "integration", "roadmap"],
+            "member": ["member", "engagement", "crm", "portal", "digital"],
+        }
+        category_key = str(hypothesis_category or "").lower().strip()
+        keywords = keywords_by_category.get(category_key, ["digital", "platform", "strategy"])
+        keyword_hits = sum(1 for keyword in keywords if keyword in lower_text)
+        score += min(keyword_hits, 8) * 3.0
+
+        lowered_url = str(url or "").lower()
+        if any(token in lowered_url for token in ("/about", "/news", "/press", "/careers", "/jobs")):
+            score += 2.0
+        if any(token in lowered_url for token in ("/shop", "/store", "/tickets")):
+            score -= 6.0
+
+        return score, reason
+
+    async def _apply_official_site_multi_page_sweep(
+        self,
+        *,
+        initial_url: str,
+        initial_content_result: Dict[str, Any],
+        hypothesis,
+    ) -> Tuple[str, Dict[str, Any], Dict[str, Any]]:
+        candidates = self._build_official_site_sweep_candidates(initial_url)
+        if not candidates:
+            return initial_url, initial_content_result, {
+                "enabled": True,
+                "applied": False,
+                "attempted_urls": [],
+                "selected_url": initial_url,
+            }
+
+        attempted_urls: List[str] = []
+
+        initial_content = str(initial_content_result.get("content") or "")
+        best_url = initial_url
+        best_result = initial_content_result
+        best_score, initial_reason = self._score_official_site_content_candidate(
+            content_text=initial_content,
+            raw_html=initial_content_result.get("raw_html"),
+            hypothesis_category=getattr(hypothesis, "category", ""),
+            url=initial_url,
+        )
+        baseline_score = best_score
+        attempted_urls.append(initial_url)
+
+        scrape_timeout = float(getattr(self, "official_site_sweep_scrape_timeout_seconds", 10.0) or 10.0)
+
+        for candidate_url in candidates:
+            if candidate_url == initial_url:
+                continue
+            attempted_urls.append(candidate_url)
+            try:
+                candidate_result = await asyncio.wait_for(
+                    self.brightdata_client.scrape_as_markdown(candidate_url),
+                    timeout=scrape_timeout,
+                )
+            except asyncio.TimeoutError:
+                continue
+            except Exception:  # noqa: BLE001
+                continue
+
+            if not isinstance(candidate_result, dict) or candidate_result.get("status") != "success":
+                continue
+
+            candidate_content = str(candidate_result.get("content") or "")
+            if not candidate_content.strip():
+                continue
+
+            score, _ = self._score_official_site_content_candidate(
+                content_text=candidate_content,
+                raw_html=candidate_result.get("raw_html"),
+                hypothesis_category=getattr(hypothesis, "category", ""),
+                url=candidate_url,
+            )
+            if score > best_score:
+                best_score = score
+                best_url = candidate_url
+                best_result = candidate_result
+
+            if isinstance(getattr(self, "_official_site_content_cache", None), dict):
+                self._official_site_content_cache[candidate_url] = candidate_result
+
+        return best_url, best_result, {
+            "enabled": True,
+            "applied": best_url != initial_url,
+            "attempted_urls": attempted_urls,
+            "selected_url": best_url,
+            "baseline_score": round(baseline_score, 3),
+            "selected_score": round(best_score, 3),
+            "initial_low_yield_reason": initial_reason,
+        }
+
+    def _recover_strict_no_progress_from_narrative(self, response_text: str) -> Optional[Dict[str, Any]]:
+        text = str(response_text or "").strip().lower()
+        if not text:
+            return None
+
+        markers = (
+            "no relevant evidence",
+            "doesn't indicate",
+            "does not indicate",
+            "no procurement activity",
+            "not enough evidence",
+            "insufficient evidence",
+            "mostly navigation",
+            "promotional content",
+            "no clear signal",
+            "no rfp",
+        )
+        if not any(marker in text for marker in markers):
+            return None
+
+        return {
+            "decision": "NO_PROGRESS",
+            "confidence_delta": 0.0,
+            "justification": "Recovered NO_PROGRESS from strict narrative response",
+            "evidence_found": "",
+            "evidence_type": "strict_text_no_progress_recovery",
+            "temporal_score": "unknown",
+            "parse_path": "text_no_progress_recovered",
+        }
 
     def _extract_deterministic_trusted_signal(
         self,
@@ -1773,6 +1991,26 @@ class HypothesisDrivenDiscovery:
                     if merged and merged != content_text:
                         content_text = merged
                         content_metadata['char_count'] = len(content_text)
+
+                if hop_type == HopType.OFFICIAL_SITE and bool(
+                    getattr(self, "official_site_multi_page_sweep_enabled", False)
+                ):
+                    sweep_url, sweep_content_result, sweep_meta = await self._apply_official_site_multi_page_sweep(
+                        initial_url=url,
+                        initial_content_result=content_result,
+                        hypothesis=hypothesis,
+                    )
+                    performance["official_site_sweep"] = sweep_meta
+                    if sweep_url != url:
+                        url = sweep_url
+                        content_result = sweep_content_result
+                        content_text = str(content_result.get("content") or "")
+                        content_metadata = {
+                            "content_type": "text/html",
+                            "char_count": len(content_text),
+                        }
+                        if isinstance(getattr(self, "_official_site_content_cache", None), dict):
+                            self._official_site_content_cache[url] = content_result
 
                 content = content_text
                 deterministic_signal = self._extract_deterministic_trusted_signal(
@@ -3803,6 +4041,13 @@ Return JSON:
                 strict_json = bool(getattr(self, "strict_evaluator_json_response", False))
                 response_preview = str(response_text or "")[:600]
                 if strict_json:
+                    strict_recovered = self._recover_strict_no_progress_from_narrative(response_text)
+                    if strict_recovered is not None:
+                        self._update_llm_runtime_diagnostics(
+                            llm_last_status="strict_text_no_progress_recovered",
+                            evaluation_mode="llm",
+                        )
+                        return self._decorate_evaluation_result(strict_recovered, evaluation_mode="llm")
                     logger.warning(
                         "Strict evaluator JSON mode: response remained non-JSON after repair pass; "
                         "using heuristic fallback (preview=%s)",

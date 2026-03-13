@@ -301,6 +301,89 @@ async def test_execute_hop_pivots_from_low_yield_rfp_to_press_release():
     assert result["performance"]["low_yield_recovery"]["pivot_hop"] == HopType.PRESS_RELEASE.value
 
 
+@pytest.mark.asyncio
+async def test_execute_hop_official_site_sweep_promotes_higher_yield_subpage():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.pdf_extractor = None
+    discovery.total_cost_usd = 0.0
+    discovery.brightdata_client = SimpleNamespace()
+    discovery._official_site_content_cache = {}
+    discovery._official_site_evaluation_cache = {}
+    discovery.official_site_multi_page_sweep_enabled = True
+    discovery.official_site_sweep_max_pages = 3
+    discovery.official_site_sweep_paths = ["/", "/about", "/news"]
+    discovery._update_llm_runtime_diagnostics = lambda **kwargs: None
+    discovery._extract_deterministic_trusted_signal = lambda **kwargs: None
+    discovery._extract_pdf_links_from_content = lambda **kwargs: []
+    discovery._prioritize_pdf_links = lambda pdf_links, hypothesis: []
+
+    async def fake_get_url_for_hop(hop_type, hypothesis, state):
+        return "https://example.com/"
+
+    async def fake_scrape_as_markdown(url):
+        normalized = url.rstrip("/")
+        if normalized.endswith("/about"):
+            content = (
+                "Digital transformation roadmap for federation systems. "
+                "Procurement programme and vendor transition details."
+            )
+        elif normalized.endswith("/news"):
+            content = "News archive."
+        else:
+            content = "Welcome home."
+        return {
+            "status": "success",
+            "content": content,
+            "raw_html": "<p>%s</p>" % content,
+            "url": url,
+            "metadata": {"word_count": len(content.split())},
+        }
+
+    async def fake_evaluate_content_with_claude(**kwargs):
+        content = kwargs.get("content") or ""
+        if "vendor transition" in content:
+            return {
+                "decision": "WEAK_ACCEPT",
+                "confidence_delta": 0.08,
+                "justification": "High-yield official about-page signal",
+                "evidence_found": "Procurement programme and vendor transition details",
+            }
+        return {
+            "decision": "NO_PROGRESS",
+            "confidence_delta": 0.0,
+            "justification": "Low signal",
+            "evidence_found": "",
+        }
+
+    def fake_assess_low_yield_content(**kwargs):
+        content = kwargs.get("content_text") or ""
+        if "Welcome home." in content or "News archive." in content:
+            return "text_chars<240"
+        return None
+
+    discovery._get_url_for_hop = fake_get_url_for_hop
+    discovery._is_pdf_url = lambda url: False
+    discovery.brightdata_client.scrape_as_markdown = fake_scrape_as_markdown
+    discovery._evaluate_content_with_claude = fake_evaluate_content_with_claude
+    discovery._assess_low_yield_content = fake_assess_low_yield_content
+
+    state = SimpleNamespace(
+        current_depth=0,
+        last_failed_hop=None,
+        hop_failure_counts={},
+    )
+    state.increment_depth_count = lambda depth: None
+
+    hypothesis = SimpleNamespace(metadata={"entity_name": "FIBA"}, category="digital_transformation")
+
+    result = await discovery._execute_hop(HopType.OFFICIAL_SITE, hypothesis, state)
+
+    assert result["decision"] == "WEAK_ACCEPT"
+    assert result["url"] == "https://example.com/about"
+    assert result["performance"]["official_site_sweep"]["applied"] is True
+    assert result["performance"]["official_site_sweep"]["selected_url"] == "https://example.com/about"
+
+
 def test_score_url_penalizes_weak_linkedin_rfp_results():
     discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
 

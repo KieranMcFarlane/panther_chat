@@ -772,6 +772,57 @@ async def test_evaluate_content_strict_json_mode_recovers_structured_key_value_p
 
 
 @pytest.mark.asyncio
+async def test_evaluate_content_strict_json_mode_recovers_no_progress_from_narrative_markers():
+    class _ClaudeStub:
+        provider = "chutes_openai"
+
+        async def query(self, **kwargs):
+            return {
+                "content": (
+                    "This appears to be mostly navigation and promotional content. "
+                    "No relevant evidence of procurement activity was found in this page."
+                ),
+                "inference_diagnostics": {"llm_retry_attempts": 0, "llm_last_status": "ok"},
+            }
+
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.claude_client = _ClaudeStub()
+    discovery.heuristic_fallback_on_llm_unavailable = True
+    discovery.evaluation_max_tokens_default = 640
+    discovery.evaluation_max_tokens_press_release = 384
+    discovery.evaluation_max_tokens_official_site = 384
+    discovery.evaluation_max_tokens_careers_annual_report = 448
+    discovery.evaluation_json_repair_attempt = True
+    discovery.strict_evaluator_json_response = True
+
+    hypothesis = SimpleNamespace(
+        statement="Coventry City FC is actively running procurement",
+        category="procurement",
+        metadata={"entity_name": "Coventry City FC", "template_id": ""},
+        prior_probability=0.5,
+        confidence=0.5,
+        iterations_attempted=0,
+        iterations_accepted=0,
+        iterations_weak_accept=0,
+        iterations_rejected=0,
+        iterations_no_progress=0,
+        last_delta=0.0,
+    )
+
+    result = await discovery._evaluate_content_with_claude(
+        content="Fixture list and score updates for home and away matches.",
+        hypothesis=hypothesis,
+        hop_type=HopType.OFFICIAL_SITE,
+        content_metadata={"content_type": "text/html"},
+    )
+
+    assert result["evaluation_mode"] == "llm"
+    assert result["decision"] == "NO_PROGRESS"
+    assert result["parse_path"] == "text_no_progress_recovered"
+    assert result["llm_last_status"] == "strict_text_no_progress_recovered"
+
+
+@pytest.mark.asyncio
 async def test_evaluate_content_recovers_no_progress_from_narrative_text():
     class _ClaudeStub:
         provider = "chutes_openai"

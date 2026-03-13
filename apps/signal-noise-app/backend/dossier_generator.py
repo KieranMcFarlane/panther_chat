@@ -88,7 +88,7 @@ class EntityDossierGenerator:
         )
         strict_sections_env = (
             os.getenv("DOSSIER_STRICT_QA_SECTION_IDS")
-            or "core_information,recent_news,current_performance,leadership"
+            or "core_information,quick_actions,digital_maturity,recent_news,current_performance,leadership"
         )
         self.strict_section_qa_ids = {
             section_id.strip()
@@ -802,6 +802,12 @@ Website: N/A
             "json-like structure",
             "truncated at the end",
             "let's extract the content strings",
+            "constraint checklist",
+            "confidence score",
+            "input has:",
+            "step-by-step extraction",
+            "schema requirements",
+            "let's look at the schema requirements",
         )
         blocked_meta_patterns = (
             r"\bjson\b.{0,60}\bmust\b.{0,120}\b(content|metrics|insights|recommendations|confidence)\b",
@@ -813,6 +819,11 @@ Website: N/A
             r"\blet'?s\s+extract\s+the\s+content\s+strings\b",
             r"\binput\s+provided\s+is\s+a\s+json\b",
             r"\bjson-?like\s+structure\b.{0,60}\btruncated\b",
+            r"\bconstraint\s+checklist\b",
+            r"\bconfidence\s+score\b",
+            r"^input\s+has\s*:",
+            r"^step-?by-?step\s+extraction\s*:",
+            r"\bschema\s+requirements\b",
         )
         placeholder_patterns = (
             r"\bitem\s+\d+\s*:",
@@ -899,6 +910,18 @@ Website: N/A
             if not self._has_core_profile_signal(content):
                 issues.append("core_information_missing_profile_fields")
 
+        if section_id == "quick_actions":
+            if not self._has_quick_actions_signal(content, section_data.get("recommendations", [])):
+                issues.append("quick_actions_missing_actionable_recommendations")
+
+        if section_id == "digital_maturity":
+            if not self._has_digital_maturity_signal(
+                content,
+                section_data.get("insights", []),
+                section_data.get("metrics", []),
+            ):
+                issues.append("digital_maturity_missing_assessment_signal")
+
         # Preserve deterministic order while de-duplicating.
         deduped_issues: List[str] = []
         seen = set()
@@ -984,6 +1007,91 @@ Website: N/A
         if any(token in text for token in ("country", "located", "switzerland", "city", "region")):
             checks += 1
         return checks >= 2
+
+    @staticmethod
+    def _has_quick_actions_signal(content: List[str], recommendations: Any) -> bool:
+        if isinstance(recommendations, list):
+            if any(isinstance(item, str) and len(item.strip()) >= 12 for item in recommendations):
+                return True
+
+        action_verbs = (
+            "prioritize",
+            "launch",
+            "implement",
+            "establish",
+            "build",
+            "deploy",
+            "audit",
+            "define",
+            "create",
+            "optimize",
+            "improve",
+            "schedule",
+            "assign",
+            "partner",
+        )
+        timebox_terms = (
+            "30-day",
+            "60-day",
+            "90-day",
+            "next quarter",
+            "this month",
+            "next month",
+            "within",
+            "timeline",
+            "sprint",
+        )
+        for line in content:
+            normalized = (line or "").strip().lower()
+            if not normalized:
+                continue
+            if any(normalized.startswith(verb) for verb in action_verbs):
+                return True
+            if any(verb in normalized for verb in action_verbs) and any(term in normalized for term in timebox_terms):
+                return True
+        return False
+
+    @classmethod
+    def _has_digital_maturity_signal(cls, content: List[str], insights: Any, metrics: Any) -> bool:
+        text = " ".join(line.lower() for line in content if isinstance(line, str))
+        has_domain_context = any(
+            token in text
+            for token in (
+                "digital",
+                "platform",
+                "data",
+                "analytics",
+                "automation",
+                "stack",
+                "infrastructure",
+                "cloud",
+                "crm",
+                "ai",
+                "social",
+                "app",
+            )
+        )
+        has_assessment_cue = any(
+            token in text
+            for token in (
+                "maturity",
+                "readiness",
+                "capability",
+                "adoption",
+                "roadmap",
+                "gap",
+                "benchmark",
+                "score",
+                "baseline",
+            )
+        )
+        if has_domain_context and has_assessment_cue:
+            return True
+
+        if isinstance(insights, list) and any(isinstance(item, str) and cls._line_has_numeric_claim(item) for item in insights):
+            return True
+
+        return isinstance(metrics, list) and any(isinstance(item, dict) for item in metrics)
 
     @staticmethod
     def _build_section_qa_regeneration_prompt(
@@ -1081,6 +1189,12 @@ Website: N/A
             "rewrite as strict json only",
             "the user's prompt explicitly asks for",
             "handle missing/incomplete data",
+            "constraint checklist",
+            "confidence score",
+            "input has:",
+            "step-by-step extraction",
+            "schema requirements",
+            "let's look at the schema requirements",
         )
         if any(marker in normalized for marker in instruction_markers):
             return True
@@ -1097,6 +1211,7 @@ Website: N/A
             "confidence:",
             "structure:",
             "schema:",
+            "input has:",
         )
         if normalized.startswith(marker_prefixes):
             return True

@@ -346,6 +346,42 @@ def test_collect_section_quality_issues_rejects_handle_missing_incomplete_scaffo
     assert "meta_text_leak" in issues
 
 
+@pytest.mark.parametrize("section_id", ["core_information", "quick_actions", "digital_maturity"])
+def test_collect_section_quality_issues_rejects_constraint_checklist_and_input_has_scaffolding(section_id: str):
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.strict_section_qa_enabled = True
+    generator.strict_section_qa_ids = {"core_information"}
+    generator.strict_numeric_claim_source_required = True
+
+    section_data = {
+        "content": [
+            "Constraint Checklist & Confidence Score:",
+            "Input has: website and headquarters fields, but no citation metadata.",
+        ]
+    }
+
+    issues = generator._collect_section_quality_issues(section_id, section_data)
+    assert "meta_text_leak" in issues
+
+
+@pytest.mark.parametrize("section_id", ["core_information", "contact_information"])
+def test_collect_section_quality_issues_rejects_step_by_step_and_schema_requirement_scaffolding(section_id: str):
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.strict_section_qa_enabled = True
+    generator.strict_section_qa_ids = {"core_information"}
+    generator.strict_numeric_claim_source_required = True
+
+    section_data = {
+        "content": [
+            "Step-by-step extraction:",
+            "Let's look at the schema requirements:",
+        ]
+    }
+
+    issues = generator._collect_section_quality_issues(section_id, section_data)
+    assert "meta_text_leak" in issues
+
+
 def test_collect_section_quality_issues_requires_named_leadership_roles():
     generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
     generator.strict_section_qa_enabled = True
@@ -360,6 +396,52 @@ def test_collect_section_quality_issues_requires_named_leadership_roles():
 
     issues = generator._collect_section_quality_issues("leadership", section_data)
     assert "leadership_missing_named_roles" in issues
+
+
+def test_collect_section_quality_issues_requires_actionable_quick_actions_when_strict():
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.strict_section_qa_enabled = True
+    generator.strict_section_qa_ids = {"quick_actions"}
+    generator.strict_numeric_claim_source_required = True
+
+    section_data = {
+        "content": [
+            "The organization has many priorities and broad ambitions for digital growth.",
+            "Stakeholders are generally interested in modernization themes.",
+        ],
+        "recommendations": [],
+    }
+
+    issues = generator._collect_section_quality_issues("quick_actions", section_data)
+    assert "quick_actions_missing_actionable_recommendations" in issues
+
+
+def test_collect_section_quality_issues_requires_assessment_signal_for_digital_maturity_when_strict():
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.strict_section_qa_enabled = True
+    generator.strict_section_qa_ids = {"digital_maturity"}
+    generator.strict_numeric_claim_source_required = True
+
+    section_data = {
+        "content": [
+            "The organization has a rich sporting heritage and broad community engagement.",
+            "Its brand is globally recognized among fans and partners.",
+        ],
+        "insights": [],
+        "metrics": [],
+    }
+
+    issues = generator._collect_section_quality_issues("digital_maturity", section_data)
+    assert "digital_maturity_missing_assessment_signal" in issues
+
+
+def test_dossier_generator_default_strict_sections_include_quick_actions_and_digital_maturity(monkeypatch):
+    monkeypatch.delenv("DOSSIER_STRICT_QA_SECTION_IDS", raising=False)
+    generator = EntityDossierGenerator(SimpleNamespace(query=None))
+
+    assert "core_information" in generator.strict_section_qa_ids
+    assert "quick_actions" in generator.strict_section_qa_ids
+    assert "digital_maturity" in generator.strict_section_qa_ids
 
 
 def test_collect_section_quality_issues_requires_dated_recent_news():
