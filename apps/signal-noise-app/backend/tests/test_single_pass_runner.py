@@ -72,6 +72,7 @@ async def test_single_pass_runs_recovery_when_initial_gate_fails(monkeypatch, tm
         profile="test",
         output_dir=str(REPO_ROOT / "apps" / "signal-noise-app" / "backend" / "data" / "dossiers"),
         min_confidence=0.55,
+        min_verified_claims=1,
         strict_gate=True,
         fetch_timeout_seconds=1.0,
     )
@@ -113,6 +114,7 @@ async def test_single_pass_skips_recovery_when_initial_gate_passes(monkeypatch, 
         profile="test",
         output_dir=str(REPO_ROOT / "apps" / "signal-noise-app" / "backend" / "data" / "dossiers"),
         min_confidence=0.55,
+        min_verified_claims=1,
         strict_gate=True,
         fetch_timeout_seconds=1.0,
     )
@@ -165,9 +167,10 @@ def test_evaluate_gate_allows_deterministic_heuristic_promotion():
             }
         ],
     }
-    gate = runner._evaluate_gate(result, min_confidence=0.55, strict_gate=True)
+    gate = runner._evaluate_gate(result, min_confidence=0.55, strict_gate=True, min_verified_claims=1)
     assert gate["promotion_gate_passed"] is True
     assert "evaluation_mode_not_llm" not in gate["promotion_gate_reasons"]
+    assert gate["verified_claims_count"] >= 1
 
 
 def test_evaluate_gate_allows_heuristic_trusted_signal_without_evidence_type():
@@ -177,6 +180,25 @@ def test_evaluate_gate_allows_heuristic_trusted_signal_without_evidence_type():
         "evaluation_mode": "heuristic",
         "signals_discovered": [{"hop_type": "careers_page"}],
     }
-    gate = runner._evaluate_gate(result, min_confidence=0.55, strict_gate=True)
+    gate = runner._evaluate_gate(result, min_confidence=0.55, strict_gate=True, min_verified_claims=1)
     assert gate["promotion_gate_passed"] is True
     assert gate["heuristic_trusted_signal"] is True
+    assert gate["verified_claims_count"] >= 1
+
+
+def test_evaluate_gate_blocks_when_verified_claim_count_below_minimum():
+    result = {
+        "final_confidence": 0.62,
+        "decision": "WEAK_ACCEPT",
+        "evaluation_mode": "llm",
+        "signals_discovered": [{"hop_type": "careers_page", "confidence": 0.56}],
+    }
+    gate = runner._evaluate_gate(
+        result,
+        min_confidence=0.55,
+        strict_gate=True,
+        min_verified_claims=2,
+    )
+    assert gate["promotion_gate_passed"] is False
+    assert "verified_claims_below_min" in gate["promotion_gate_reasons"]
+    assert gate["verified_claims_count"] == 1

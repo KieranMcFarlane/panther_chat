@@ -47,11 +47,17 @@ def _bool_env(value: str) -> bool:
     return str(value).strip().lower() in {"1", "true", "yes", "on"}
 
 
-def _set_single_pass_runtime(profile: str, strict_gate: bool, min_confidence: float) -> None:
+def _set_single_pass_runtime(
+    profile: str,
+    strict_gate: bool,
+    min_confidence: float,
+    min_verified_claims: int,
+) -> None:
     os.environ["DISCOVERY_RUN_MODE"] = "single_pass"
     os.environ["DISCOVERY_PROFILE"] = profile
     os.environ["DISCOVERY_STRICT_PROMOTION_GATE"] = "true" if strict_gate else "false"
     os.environ["DISCOVERY_PROMOTION_MIN_CONFIDENCE"] = f"{min_confidence:.2f}"
+    os.environ["DISCOVERY_PROMOTION_MIN_VERIFIED_CLAIMS"] = str(max(0, int(min_verified_claims)))
     os.environ["LLM_PROVIDER"] = os.getenv("LLM_PROVIDER", "chutes_openai")
     os.environ.setdefault("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
     os.environ.setdefault("DISCOVERY_HEURISTIC_FALLBACK_ON_LLM_UNAVAILABLE", "true")
@@ -122,6 +128,38 @@ def _trusted_source_signal(result: Dict[str, Any]) -> bool:
     return False
 
 
+def _count_verified_claims(result: Dict[str, Any]) -> int:
+    trusted = {"official_site", "press_release", "careers_page", "annual_report"}
+    count = 0
+    for signal in result.get("signals_discovered", []):
+        source = str(signal.get("source_type") or signal.get("source") or "").strip().lower()
+        hop = str(signal.get("hop_type") or "").strip().lower()
+        if source not in trusted and hop not in trusted:
+            continue
+
+        evidence_type = str(signal.get("evidence_type") or "").strip().lower()
+        if evidence_type.startswith("deterministic_"):
+            count += 1
+            continue
+
+        evidence = signal.get("evidence")
+        has_evidence = bool(signal.get("source_url"))
+        if isinstance(evidence, list) and evidence:
+            has_evidence = True
+
+        score = signal.get("confidence")
+        if score is None:
+            score = signal.get("confidence_delta")
+        try:
+            score_value = float(score or 0.0)
+        except (TypeError, ValueError):
+            score_value = 0.0
+        if not has_evidence and score is not None and score_value < 0.5:
+            continue
+        count += 1
+    return count
+
+
 def _has_deterministic_trusted_evidence(result: Dict[str, Any]) -> bool:
     for signal in result.get("signals_discovered", []):
         evidence_type = str(signal.get("evidence_type") or "").strip().lower()
@@ -169,6 +207,7 @@ def _evaluate_gate(
     result: Dict[str, Any],
     min_confidence: float,
     strict_gate: bool,
+    min_verified_claims: int,
 ) -> Dict[str, Any]:
     evaluation_mode = str(result.get("evaluation_mode") or ((result.get("performance_summary") or {}).get("evaluation_mode") or "unknown")).strip().lower()
     last_decision = str(result.get("decision") or _extract_last_decision(result)).strip().upper()
@@ -176,6 +215,7 @@ def _evaluate_gate(
     trusted = _trusted_source_signal(result)
     deterministic_trusted = _has_deterministic_trusted_evidence(result)
     heuristic_trusted_signal = trusted and last_decision != "NO_PROGRESS" and len(result.get("signals_discovered") or []) > 0
+    verified_claims_count = _count_verified_claims(result)
 
     reasons = []
     if strict_gate and evaluation_mode != "llm" and not (deterministic_trusted or heuristic_trusted_signal):
@@ -186,6 +226,8 @@ def _evaluate_gate(
         reasons.append("no_trusted_source_signal")
     if confidence < min_confidence:
         reasons.append("confidence_below_min")
+    if verified_claims_count < max(0, int(min_verified_claims)):
+        reasons.append("verified_claims_below_min")
 
     return {
         "promotion_gate_passed": len(reasons) == 0,
@@ -195,6 +237,8 @@ def _evaluate_gate(
         "heuristic_trusted_signal": heuristic_trusted_signal,
         "evaluation_mode": evaluation_mode,
         "last_decision": last_decision,
+        "verified_claims_count": verified_claims_count,
+        "min_verified_claims": max(0, int(min_verified_claims)),
     }
 
 
@@ -246,6 +290,7 @@ async def _run_discovery_attempt(
     template_id: str,
     profile: str,
     min_confidence: float,
+    min_verified_claims: int,
     strict_gate: bool,
     max_iterations: int,
     max_depth: int,
@@ -273,16 +318,17 @@ async def _run_discovery_attempt(
     result["attempt_label"] = attempt_label
     result["parse_path"] = _extract_parse_path(result)
 
-    gate = _evaluate_gate(result, min_confidence, strict_gate)
+    gate = _evaluate_gate(result, min_confidence, strict_gate, min_verified_claims)
     result.update(gate)
     result["decision"] = gate["last_decision"]
     result["min_confidence"] = min_confidence
+    result["min_verified_claims"] = max(0, int(min_verified_claims))
     result["hold_status"] = "READY_FOR_PHASE1_PLUS" if gate["promotion_gate_passed"] else "HOLD_SINGLE_PASS"
     return result
 
 
 async def run_single_pass(args: argparse.Namespace) -> Dict[str, Any]:
-    _set_single_pass_runtime(args.profile, args.strict_gate, args.min_confidence)
+    _set_single_pass_runtime(args.profile, args.strict_gate, args.min_confidence, args.min_verified_claims)
 
     resolved_name = await _resolve_entity(
         entity_id=args.entity_id,
@@ -297,6 +343,7 @@ async def run_single_pass(args: argparse.Namespace) -> Dict[str, Any]:
         template_id=template_id,
         profile=args.profile,
         min_confidence=args.min_confidence,
+        min_verified_claims=args.min_verified_claims,
         strict_gate=args.strict_gate,
         max_iterations=1,
         max_depth=1,
@@ -314,6 +361,7 @@ async def run_single_pass(args: argparse.Namespace) -> Dict[str, Any]:
                 template_id=template_id,
                 profile=args.profile,
                 min_confidence=args.min_confidence,
+                min_verified_claims=args.min_verified_claims,
                 strict_gate=args.strict_gate,
                 max_iterations=3,
                 max_depth=3,
@@ -332,6 +380,7 @@ async def run_single_pass(args: argparse.Namespace) -> Dict[str, Any]:
             "signals_count": len(attempt.get("signals_discovered") or []),
             "parse_path": attempt.get("parse_path"),
             "promotion_gate_passed": bool(attempt.get("promotion_gate_passed")),
+            "verified_claims_count": int(attempt.get("verified_claims_count") or 0),
         }
         for attempt in attempts
     ]
@@ -355,6 +404,8 @@ async def run_single_pass(args: argparse.Namespace) -> Dict[str, Any]:
         "signals_count": len(result.get("signals_discovered") or []),
         "promotion_gate_passed": bool(result.get("promotion_gate_passed")),
         "promotion_gate_reasons": result.get("promotion_gate_reasons") or [],
+        "verified_claims_count": int(result.get("verified_claims_count") or 0),
+        "min_verified_claims": int(result.get("min_verified_claims") or 0),
         "parse_path": result.get("parse_path"),
         "run_profile": result.get("run_profile"),
         "recovery_attempted": bool(result.get("recovery_attempted")),
@@ -370,6 +421,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--profile", choices=["continuous", "test"], default=os.getenv("DISCOVERY_PROFILE", "test"), help="Runtime profile for pacing/diagnostics")
     parser.add_argument("--output-dir", default=str(BACKEND_ROOT / "data" / "dossiers"), help="Where to write single-pass artifact")
     parser.add_argument("--min-confidence", type=float, default=float(os.getenv("DISCOVERY_PROMOTION_MIN_CONFIDENCE", "0.55")), help="Promotion gate confidence floor")
+    parser.add_argument("--min-verified-claims", type=int, default=int(os.getenv("DISCOVERY_PROMOTION_MIN_VERIFIED_CLAIMS", "1")), help="Promotion gate verified-claims floor")
     parser.add_argument("--strict-gate", type=_bool_env, default=_bool_env(os.getenv("DISCOVERY_STRICT_PROMOTION_GATE", "true")), help="Require strict promotion gate")
     parser.add_argument("--fetch-timeout-seconds", type=float, default=8.0, help="Max wait for FalkorDB entity lookup when entity name is not provided")
     return parser
