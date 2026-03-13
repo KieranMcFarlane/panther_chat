@@ -123,6 +123,39 @@ async def test_run_pipeline_executes_schema_first_prepass_when_enabled():
 
 
 @pytest.mark.asyncio
+async def test_run_schema_first_prepass_dispatches_to_schema_sweep_when_enabled(monkeypatch):
+    calls = {}
+
+    async def _fake_schema_sweep(**kwargs):
+        calls["kwargs"] = kwargs
+        return {"run_mode": "schema_sweep_single_pass", "fields": {}}
+
+    monkeypatch.setitem(
+        sys.modules,
+        "backend.schema_sweep_runner",
+        SimpleNamespace(run_schema_sweep=_fake_schema_sweep),
+    )
+
+    pipeline = FixedDossierFirstPipeline.__new__(FixedDossierFirstPipeline)
+    pipeline.schema_sweep_enabled = True
+    pipeline.schema_first_output_dir = "/tmp"
+    pipeline.schema_first_max_results = 5
+    pipeline.schema_first_max_candidates_per_query = 2
+    pipeline.schema_first_fields = ["official_site"]
+    pipeline.output_dir = Path("/tmp")
+
+    result = await pipeline._run_schema_first_prepass(
+        entity_id="fiba",
+        entity_name="FIBA",
+        entity_type="FEDERATION",
+    )
+
+    assert result["run_mode"] == "schema_sweep_single_pass"
+    assert calls["kwargs"]["entity_id"] == "fiba"
+    assert calls["kwargs"]["field_names"] == ["official_site"]
+
+
+@pytest.mark.asyncio
 async def test_run_pipeline_seeds_phase1_official_site_from_schema_first():
     pipeline = FixedDossierFirstPipeline.__new__(FixedDossierFirstPipeline)
     pipeline.output_dir = Path("/tmp")

@@ -58,6 +58,7 @@ class FixedDossierFirstPipeline:
         self.discovery = HypothesisDrivenDiscovery(self.claude, self.brightdata)
         self.dashboard_scorer = DashboardScorer()
         self.schema_first_enabled = _bool_env(os.getenv("PIPELINE_SCHEMA_FIRST_ENABLED", "false"))
+        self.schema_sweep_enabled = _bool_env(os.getenv("PIPELINE_SCHEMA_SWEEP_ENABLED", "false"))
         self.schema_first_output_dir = os.getenv("PIPELINE_SCHEMA_FIRST_OUTPUT_DIR", str(self.output_dir if hasattr(self, "output_dir") else "backend/data/dossiers"))
         self.schema_first_max_results = max(1, int(os.getenv("PIPELINE_SCHEMA_FIRST_MAX_RESULTS", "8")))
         self.schema_first_max_candidates_per_query = max(
@@ -322,9 +323,16 @@ class FixedDossierFirstPipeline:
         entity_name: str,
         entity_type: str,
     ) -> Dict[str, Any]:
-        from backend.schema_first_pilot import run_schema_first_pilot
+        if getattr(self, "schema_sweep_enabled", False):
+            from backend.schema_sweep_runner import run_schema_sweep
 
-        return await run_schema_first_pilot(
+            runner = run_schema_sweep
+        else:
+            from backend.schema_first_pilot import run_schema_first_pilot
+
+            runner = run_schema_first_pilot
+
+        return await runner(
             entity_name=entity_name,
             entity_id=entity_id,
             entity_type=entity_type,
