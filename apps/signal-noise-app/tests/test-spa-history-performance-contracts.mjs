@@ -61,3 +61,8 @@ test('enhanced dossier tabs lazy-load heavy tab panels', () => {
   assert.match(enhancedClubDossierSource, /dynamic\(\(\) => import\("\.\/OutreachStrategyPanel"\)/)
   assert.match(enhancedClubDossierSource, /dynamic\(\(\) => import\("\.\/HypothesisStatesPanel"\)/)
 })
+
+test('entity browser uses react-window virtualization for rendered cards', () => {
+  assert.match(entityBrowserSource, /from "react-window"/)
+  assert.match(entityBrowserSource, /FixedSizeList/)
+})

@@ -3,6 +3,7 @@
 import Link from "next/link"
 import dynamic from "next/dynamic"
 import { useState, useEffect, useCallback, useRef, useDeferredValue, startTransition, type ReactNode } from "react"
+import { FixedSizeList, type ListChildComponentProps } from "react-window"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -184,6 +185,8 @@ export default function EntityBrowserClientPage() {
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null)
   const [currentPage, setCurrentPage] = useState(initialState.page)
+  const [gridWidth, setGridWidth] = useState(0)
+  const gridContainerRef = useRef<HTMLDivElement | null>(null)
 
   const [taxonomy, setTaxonomy] = useState<{
     sports: string[]
@@ -461,6 +464,23 @@ export default function EntityBrowserClientPage() {
     return () => controller.abort()
   }, [appliedSearchTerm, buildEntityQueryParams, data?.pagination?.hasNext, data?.pagination?.page])
 
+  useEffect(() => {
+    const element = gridContainerRef.current
+    if (!element) return
+
+    const updateWidth = () => setGridWidth(element.clientWidth)
+    updateWidth()
+
+    if (typeof ResizeObserver === "undefined") {
+      window.addEventListener("resize", updateWidth)
+      return () => window.removeEventListener("resize", updateWidth)
+    }
+
+    const observer = new ResizeObserver(() => updateWidth())
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [])
+
   const handleEmailEntity = (entity: Entity) => {
     setSelectedEntity(entity)
     setShowEmailModal(true)
@@ -523,6 +543,11 @@ export default function EntityBrowserClientPage() {
 
   const entities = data.entities || []
   const visibleEntities = entities.slice(0, visibleCount)
+  const columnCount = gridWidth >= 1280 ? 3 : gridWidth >= 1024 ? 2 : 1
+  const rowCount = Math.ceil(visibleEntities.length / columnCount)
+  const rowHeight = 360
+  const listHeight = Math.min(900, Math.max(rowHeight, rowCount * rowHeight))
+  const columnGap = 24
   const availableLeagues = filters.sport !== 'all'
     ? taxonomy.leaguesBySport[filters.sport] || []
     : taxonomy.leagues
@@ -784,7 +809,7 @@ export default function EntityBrowserClientPage() {
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div ref={gridContainerRef} className="w-full">
           {showGridSkeleton ? (
             Array.from({ length: parseInt(filters.limit, 10) || 10 }).map((_, index) => (
               <div key={index} className="rounded-lg border bg-card text-card-foreground shadow-sm">
@@ -805,17 +830,49 @@ export default function EntityBrowserClientPage() {
                 </div>
               </div>
             ))
-          ) : (
-                visibleEntities.map((entity) => (
-                  <ViewportDeferredCard key={`${entity.id}-${String(entity.graph_id ?? entity.id)}`}>
-                    <EntityCard
-                      entity={entity}
-                      onEmailEntity={handleEmailEntity}
-                    />
-                  </ViewportDeferredCard>
-                ))
-              )}
-            </div>
+          ) : rowCount === 0 ? null : (
+            <FixedSizeList
+              height={listHeight}
+              width={gridWidth || 1}
+              itemCount={rowCount}
+              itemSize={rowHeight}
+            >
+              {({ index, style }: ListChildComponentProps) => {
+                const rowStart = index * columnCount
+                const rowItems = visibleEntities.slice(rowStart, rowStart + columnCount)
+                const widthForCols = gridWidth || 1
+                const computedColumnWidth = Math.max(
+                  280,
+                  Math.floor((widthForCols - (columnCount - 1) * columnGap) / columnCount)
+                )
+
+                return (
+                  <div
+                    style={style}
+                    className="grid"
+                    data-row={index}
+                  >
+                    <div
+                      className="grid gap-6"
+                      style={{
+                        gridTemplateColumns: `repeat(${columnCount}, minmax(0, ${computedColumnWidth}px))`,
+                      }}
+                    >
+                      {rowItems.map((entity) => (
+                        <ViewportDeferredCard key={`${entity.id}-${String(entity.graph_id ?? entity.id)}`}>
+                          <EntityCard
+                            entity={entity}
+                            onEmailEntity={handleEmailEntity}
+                          />
+                        </ViewportDeferredCard>
+                      ))}
+                    </div>
+                  </div>
+                )
+              }}
+            </FixedSizeList>
+          )}
+        </div>
 
         <div className="flex items-center justify-between mt-8">
           <Button
