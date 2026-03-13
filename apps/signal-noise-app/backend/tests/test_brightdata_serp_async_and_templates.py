@@ -137,6 +137,58 @@ def test_create_fallback_section_uses_deterministic_recent_news_when_strict():
     assert any("March 2026" in line for line in section.content)
 
 
+def test_create_fallback_section_uses_deterministic_contact_information_when_enabled():
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.strict_section_qa_enabled = True
+    generator.strict_section_qa_ids = {"core_information"}
+    generator.deterministic_fallback_section_ids = {"contact_information"}
+    generator.section_templates = {
+        "contact_information": {
+            "description": "Contact details and locations",
+        }
+    }
+
+    section = generator._create_fallback_section(
+        "contact_information",
+        "haiku",
+        entity_data={
+            "entity_name": "FIBA",
+            "official_site_url": "https://www.fiba.basketball/en",
+            "entity_country": "Switzerland",
+        },
+    )
+
+    assert section.confidence > 0.0
+    assert "Section generation failed" not in " ".join(section.content)
+    assert any("https://www.fiba.basketball/en" in line for line in section.content)
+
+
+def test_create_fallback_section_uses_deterministic_outreach_strategy_when_enabled():
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.strict_section_qa_enabled = True
+    generator.strict_section_qa_ids = {"core_information"}
+    generator.deterministic_fallback_section_ids = {"outreach_strategy"}
+    generator.section_templates = {
+        "outreach_strategy": {
+            "description": "Outreach strategy with conversation trees",
+        }
+    }
+
+    section = generator._create_fallback_section(
+        "outreach_strategy",
+        "sonnet",
+        entity_data={
+            "entity_name": "FIBA",
+            "entity_type": "FEDERATION",
+            "entity_country": "Switzerland",
+        },
+    )
+
+    assert section.confidence > 0.0
+    assert "Section generation failed" not in " ".join(section.content)
+    assert any("outreach" in line.lower() or "contact" in line.lower() for line in section.content)
+
+
 def test_collect_section_quality_issues_detects_meta_and_placeholder_leaks():
     generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
     generator.strict_section_qa_enabled = True
@@ -463,6 +515,7 @@ async def test_generate_section_repairs_prompt_echo_response_with_json_retry():
     generator.section_max_tokens_cap = 0
     generator.section_parallelism = 1
     generator.section_json_repair_attempt = True
+    generator.deterministic_fallback_section_ids = set()
     generator.section_templates = {
         "core_information": {
             "model": "haiku",
@@ -559,6 +612,7 @@ async def test_generate_sections_parallel_falls_back_when_json_repair_fails():
     generator.section_max_tokens_cap = 0
     generator.section_parallelism = 1
     generator.section_json_repair_attempt = True
+    generator.deterministic_fallback_section_ids = set()
     generator.section_templates = {
         "core_information": {
             "model": "haiku",

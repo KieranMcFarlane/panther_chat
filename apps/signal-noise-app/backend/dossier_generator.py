@@ -95,6 +95,15 @@ class EntityDossierGenerator:
             for section_id in strict_sections_env.split(",")
             if section_id.strip()
         }
+        deterministic_fallback_env = (
+            os.getenv("DOSSIER_DETERMINISTIC_FALLBACK_SECTION_IDS")
+            or "core_information,recent_news,current_performance,leadership,contact_information,digital_maturity,outreach_strategy"
+        )
+        self.deterministic_fallback_section_ids = {
+            section_id.strip()
+            for section_id in deterministic_fallback_env.split(",")
+            if section_id.strip()
+        }
         self.strict_numeric_claim_source_required = (
             str(os.getenv("DOSSIER_STRICT_NUMERIC_SOURCE_REQUIRED", "true")).strip().lower()
             in {"1", "true", "yes", "on"}
@@ -776,6 +785,11 @@ Website: N/A
             "keys required",
             "array of strings",
             "must end with metadata tags",
+            "content items (observations)",
+            "let me construct the json",
+            "the context is",
+            "analysis of requirements",
+            "research notes",
         )
         placeholder_patterns = (
             r"\bitem\s+\d+\s*:",
@@ -1004,6 +1018,12 @@ Website: N/A
             "hard output rules",
             "do not invent numbers",
             "keep claims concise",
+            "clearly distinguish observations from inferred analysis",
+            "content items (observations)",
+            "let me construct the json",
+            "the context is",
+            "analysis of requirements",
+            "research notes",
         )
         if any(marker in normalized for marker in instruction_markers):
             return True
@@ -1054,6 +1074,8 @@ Website: N/A
                 line = re.sub(r"\s*\*+$", "", line).strip()
                 line = re.sub(r"^\d+[\.\)]\s*", "", line).strip()
                 line = re.sub(r"^[-*•]\s*", "", line).strip()
+                line = line.strip().strip('"').strip("'")
+                line = re.sub(r",$", "", line).strip()
                 if not line:
                     continue
                 if cls._is_section_meta_line(line):
@@ -1196,7 +1218,16 @@ Website: N/A
         section_id: str,
         entity_data: Dict[str, Any],
     ) -> Optional[Dict[str, Any]]:
-        if not self._requires_strict_section_qa(section_id):
+        deterministic_ids = getattr(self, "deterministic_fallback_section_ids", None)
+        if deterministic_ids is None:
+            strict_ids = getattr(self, "strict_section_qa_ids", set()) or set()
+            deterministic_ids = set(strict_ids) if strict_ids else {
+                "core_information",
+                "recent_news",
+                "current_performance",
+                "leadership",
+            }
+        if section_id not in deterministic_ids:
             return None
 
         if section_id == "core_information":
@@ -1207,6 +1238,12 @@ Website: N/A
             return self._build_current_performance_fallback(entity_data)
         if section_id == "leadership":
             return self._build_leadership_fallback(entity_data)
+        if section_id == "contact_information":
+            return self._build_contact_information_fallback(entity_data)
+        if section_id == "digital_maturity":
+            return self._build_digital_maturity_fallback(entity_data)
+        if section_id == "outreach_strategy":
+            return self._build_outreach_strategy_fallback(entity_data)
         return None
 
     def _build_core_information_fallback(self, entity_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -1385,6 +1422,139 @@ Website: N/A
             "insights": [],
             "recommendations": [],
             "confidence": 0.44 if known_people else 0.4,
+        }
+
+    def _build_contact_information_fallback(self, entity_data: Dict[str, Any]) -> Dict[str, Any]:
+        entity_name = str(entity_data.get("entity_name") or "This entity").strip()
+        country = (
+            entity_data.get("entity_country")
+            or entity_data.get("country")
+            or "Unknown"
+        )
+        official_site = self._normalize_http_url(
+            entity_data.get("official_site_url")
+            or entity_data.get("website")
+            or entity_data.get("entity_website")
+        )
+
+        contact_hint = f"{official_site}/contact" if official_site else "Unknown"
+        content = [
+            self._format_evidence_line(
+                f"{entity_name} country/region context: {country}.",
+                evidence_level="inferred",
+                source_type="internal_analysis",
+                needs_review=True,
+            ),
+            self._format_evidence_line(
+                f"Official website for contact routing: {official_site or 'Unknown'}.",
+                evidence_level="verified" if official_site else "inferred",
+                source_type="official" if official_site else "internal_analysis",
+                needs_review=not bool(official_site),
+            ),
+            self._format_evidence_line(
+                f"Suggested primary contact path: {contact_hint}.",
+                evidence_level="inferred",
+                source_type="internal_analysis",
+                needs_review=True,
+            ),
+        ]
+        return {
+            "content": content,
+            "metrics": [],
+            "insights": [],
+            "recommendations": [],
+            "confidence": 0.45,
+        }
+
+    def _build_digital_maturity_fallback(self, entity_data: Dict[str, Any]) -> Dict[str, Any]:
+        freshness = entity_data.get("data_freshness")
+        sources_used = entity_data.get("sources_used") if isinstance(entity_data.get("sources_used"), list) else []
+        press_count = entity_data.get("press_releases_count")
+        jobs_count = entity_data.get("job_postings_count")
+
+        content = [
+            self._format_evidence_line(
+                "Digital maturity assessment is inferred from available web and activity signals, not a confirmed internal audit.",
+                evidence_level="inferred",
+                source_type="internal_analysis",
+                needs_review=True,
+            )
+        ]
+        if freshness is not None:
+            content.append(
+                self._format_evidence_line(
+                    f"Observed collection freshness score: {freshness}.",
+                    evidence_level="verified",
+                    source_type="internal_analysis",
+                    needs_review=True,
+                )
+            )
+        if press_count is not None or jobs_count is not None:
+            content.append(
+                self._format_evidence_line(
+                    f"Signal coverage observed: press_releases={press_count if press_count is not None else 'Unknown'}, job_postings={jobs_count if jobs_count is not None else 'Unknown'}.",
+                    evidence_level="verified",
+                    source_type="internal_analysis",
+                    needs_review=True,
+                )
+            )
+        if sources_used:
+            content.append(
+                self._format_evidence_line(
+                    f"Assessment source mix: {', '.join(str(item) for item in sources_used[:5])}.",
+                    evidence_level="verified",
+                    source_type="internal_analysis",
+                    needs_review=True,
+                )
+            )
+        return {
+            "content": content,
+            "metrics": [],
+            "insights": [],
+            "recommendations": [],
+            "confidence": 0.45,
+        }
+
+    def _build_outreach_strategy_fallback(self, entity_data: Dict[str, Any]) -> Dict[str, Any]:
+        entity_name = str(entity_data.get("entity_name") or "This entity").strip()
+        entity_type = str(entity_data.get("entity_type") or "organization").strip().lower()
+        country = (
+            entity_data.get("entity_country")
+            or entity_data.get("country")
+            or "Unknown"
+        )
+        official_site = self._normalize_http_url(
+            entity_data.get("official_site_url")
+            or entity_data.get("website")
+            or entity_data.get("entity_website")
+        )
+
+        content = [
+            self._format_evidence_line(
+                f"Start outreach with a discovery email tailored to {entity_name} as a {entity_type} in {country}.",
+                evidence_level="inferred",
+                source_type="internal_analysis",
+                needs_review=True,
+            ),
+            self._format_evidence_line(
+                "Position the first call as a requirements-gathering conversation and avoid unverified ROI claims.",
+                evidence_level="inferred",
+                source_type="internal_analysis",
+                needs_review=True,
+            ),
+            self._format_evidence_line(
+                f"Use official channels first ({official_site or 'Unknown official site'}) and capture gaps for manual verification.",
+                evidence_level="verified" if official_site else "inferred",
+                source_type="official" if official_site else "internal_analysis",
+                needs_review=not bool(official_site),
+            ),
+        ]
+        return {
+            "content": content,
+            "metrics": [],
+            "insights": [],
+            "recommendations": [],
+            "confidence": 0.5,
         }
 
     @classmethod
