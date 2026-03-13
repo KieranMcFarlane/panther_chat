@@ -1,6 +1,5 @@
-import { Neo4jService } from '@/lib/neo4j'
+import { FalkorRedisGraphService } from '@/lib/falkor-redis-graph'
 import { createClient } from '@supabase/supabase-js'
-import neo4j from 'neo4j-driver'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -39,50 +38,38 @@ export interface CachedRelationship {
 }
 
 export class EntityCacheService {
-  private neo4jService: Neo4jService
+  private graphService: FalkorRedisGraphService
   private readonly CACHE_TTL = 30 * 60 * 1000 // 30 minutes
   private readonly BATCH_SIZE = 100
   public isInitialized = false
 
   constructor() {
-    this.neo4jService = new Neo4jService()
+    this.graphService = new FalkorRedisGraphService()
   }
 
   async initialize() {
-    await this.neo4jService.initialize()
+    await this.graphService.initialize()
     this.isInitialized = true
   }
 
-  async syncEntitiesFromNeo4j(options: {
+  async syncEntitiesFromGraph(options: {
     entityType?: string
     batchSize?: number
     forceRefresh?: boolean
   } = {}) {
     const { entityType = '', batchSize = this.BATCH_SIZE, forceRefresh = false } = options
     
-    console.log('🔄 Starting entity sync from Neo4j to Supabase...')
-    
-    const session = await this.neo4jService.getDriver().session()
+    console.log('🔄 Starting entity sync from Falkor/Redis graph to Supabase...')
     
     try {
-      // Get total count
-      let countQuery = 'MATCH (n) RETURN count(n) as total'
-      let countParams: any = {}
-      
-      if (entityType && entityType !== 'all') {
-        countQuery = 'MATCH (n) WHERE ($entityType IN labels(n) OR n.type = $entityType) RETURN count(n) as total'
-        countParams = { entityType }
-      }
-      
-      const countResult = await session.run(countQuery, countParams)
-      const total = countResult.records[0].get('total').toNumber()
+      const total = await this.graphService.countEntities(entityType)
       console.log(`📊 Found ${total} entities to sync`)
 
       let syncedCount = 0
       let skip = 0
       
       while (skip < total) {
-        const entities = await this.getEntityBatch(session, skip, batchSize, entityType)
+        const entities = await this.getEntityBatch(skip, batchSize, entityType)
         
         if (entities.length === 0) break
         
@@ -106,50 +93,29 @@ export class EntityCacheService {
     } catch (error) {
       console.error('❌ Failed to sync entities:', error)
       throw error
-    } finally {
-      await session.close()
     }
   }
 
-  private async getEntityBatch(session: any, skip: number, limit: number, entityType: string) {
-    let query = `
-      MATCH (n)
-      RETURN n
-      ORDER BY n.name
-      SKIP $skip
-      LIMIT $limit
-    `
-    let params: any = { skip: skip, limit: limit }
-    
-    if (entityType && entityType !== 'all') {
-      query = `
-        MATCH (n)
-        WHERE ($entityType IN labels(n) OR n.type = $entityType)
-        RETURN n
-        ORDER BY n.name
-        SKIP $skip
-        LIMIT $limit
-      `
-      params.entityType = entityType
-    }
-    
-    const result = await session.run(query, {
-      skip: neo4j.int(skip),
-      limit: neo4j.int(limit),
-      ...(entityType && entityType !== 'all' && { entityType })
-    })
-    
-    return result.records.map((record: any) => {
-      const node = record.get('n')
-      return {
-        neo4j_id: node.identity.toString(),
-        labels: node.labels,
-        properties: node.properties,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        cache_version: 1
-      }
-    })
+  async syncEntitiesFromNeo4j(options: {
+    entityType?: string
+    batchSize?: number
+    forceRefresh?: boolean
+  } = {}) {
+    console.warn('⚠️ syncEntitiesFromNeo4j is deprecated; using syncEntitiesFromGraph')
+    return this.syncEntitiesFromGraph(options)
+  }
+
+  private async getEntityBatch(skip: number, limit: number, entityType: string) {
+    const rows = await this.graphService.getEntitiesBatch(skip, limit, entityType)
+
+    return rows.map((row: any) => ({
+      neo4j_id: String(row.neo4j_id),
+      labels: row.labels || [],
+      properties: row.properties || {},
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      cache_version: 1,
+    }))
   }
 
   private async upsertEntitiesToSupabase(entities: any[], forceRefresh: boolean): Promise<number> {
@@ -641,14 +607,14 @@ export class EntityCacheService {
     }
   }
 
-  async syncRelationshipsFromNeo4j(options: {
+  async syncRelationshipsFromGraph(options: {
     batchSize?: number
     forceRefresh?: boolean
   } = {}) {
     const { batchSize = 100, forceRefresh = false } = options
     const integerBatchSize = parseInt(Math.floor(batchSize).toString(), 10)
     
-    console.log('🔄 Starting relationship sync from Neo4j to Supabase...')
+    console.log('🔄 Starting relationship sync from Falkor/Redis graph to Supabase...')
     
     if (forceRefresh) {
       console.log('🗑️ Clearing existing relationships cache...')
@@ -658,53 +624,34 @@ export class EntityCacheService {
         .neq('id', '00000000-0000-0000-0000-000000000000') // Delete all
     }
     
-    const session = this.neo4jService.getDriver().session()
-    
     try {
-      // Get relationships from Neo4j
-      const relationshipsQuery = `
-        MATCH (n1)-[r]->(n2)
-        RETURN 
-          elementId(n1) as source_element_id,
-          n1.neo4j_id as source_neo4j_id,
-          labels(n1) as source_labels,
-          n1.name as source_name,
-          type(r) as relationship_type,
-          properties(r) as relationship_properties,
-          elementId(n2) as target_element_id,
-          n2.neo4j_id as target_neo4j_id,
-          labels(n2) as target_labels,
-          n2.name as target_name
-        LIMIT ${integerBatchSize}
-      `
-      
-      const result = await session.run(relationshipsQuery)
-      
-      if (result.records.length === 0) {
+      const relationships = await this.graphService.getRelationshipsBatch(integerBatchSize)
+
+      if (relationships.length === 0) {
         console.log('✅ No relationships found in Neo4j')
         return { synced: 0, updated: 0, errors: 0 }
       }
-      
-      console.log(`📊 Found ${result.records.length} relationships in Neo4j`)
+
+      console.log(`📊 Found ${relationships.length} relationships in graph source`)
       
       let synced = 0
       let updated = 0
       let errors = 0
       
       // Process relationships in batches
-      for (const record of result.records) {
+      for (const record of relationships) {
         try {
           const relationship = {
-            source_neo4j_id: record.get('source_neo4j_id'),
-            target_neo4j_id: record.get('target_neo4j_id'),
-            relationship_type: record.get('relationship_type'),
-            source_element_id: record.get('source_element_id'),
-            target_element_id: record.get('target_element_id'),
-            source_labels: record.get('source_labels'),
-            target_labels: record.get('target_labels'),
-            source_name: record.get('source_name'),
-            target_name: record.get('target_name'),
-            relationship_properties: record.get('relationship_properties') || {},
+            source_neo4j_id: String(record.source_neo4j_id),
+            target_neo4j_id: String(record.target_neo4j_id),
+            relationship_type: String(record.relationship_type),
+            source_element_id: String(record.source_element_id || record.source_neo4j_id),
+            target_element_id: String(record.target_element_id || record.target_neo4j_id),
+            source_labels: Array.isArray(record.source_labels) ? record.source_labels : [],
+            target_labels: Array.isArray(record.target_labels) ? record.target_labels : [],
+            source_name: String(record.source_name || ''),
+            target_name: String(record.target_name || ''),
+            relationship_properties: record.relationship_properties || {},
             direction: 'outgoing' as const,
             confidence_score: 100,
             weight: 1.0
@@ -713,13 +660,13 @@ export class EntityCacheService {
           // Check if both entities exist in cache
           const { data: sourceCheck } = await supabase
             .from('cached_entities')
-            .select('neo4j_id')
+            .select('neo4j_id, graph_id')
             .eq('neo4j_id', relationship.source_neo4j_id)
             .single()
           
           const { data: targetCheck } = await supabase
             .from('cached_entities')
-            .select('neo4j_id')
+            .select('neo4j_id, graph_id')
             .eq('neo4j_id', relationship.target_neo4j_id)
             .single()
           
@@ -727,11 +674,33 @@ export class EntityCacheService {
             console.log(`⚠️ Skipping relationship - missing entities: ${relationship.source_name} -> ${relationship.target_name}`)
             continue
           }
+
+          const { data: sourceCanonical } = await supabase
+            .from('canonical_entities')
+            .select('id')
+            .contains('source_neo4j_ids', [relationship.source_neo4j_id])
+            .limit(1)
+            .maybeSingle()
+
+          const { data: targetCanonical } = await supabase
+            .from('canonical_entities')
+            .select('id')
+            .contains('source_neo4j_ids', [relationship.target_neo4j_id])
+            .limit(1)
+            .maybeSingle()
+
+          const enrichedRelationship = {
+            ...relationship,
+            source_graph_id: sourceCheck.graph_id || null,
+            target_graph_id: targetCheck.graph_id || null,
+            source_canonical_entity_id: sourceCanonical?.id || null,
+            target_canonical_entity_id: targetCanonical?.id || null,
+          }
           
           // Insert or update relationship
           const { error: insertError } = await supabase
             .from('entity_relationships')
-            .upsert(relationship, {
+            .upsert(enrichedRelationship, {
               onConflict: 'source_element_id,target_element_id,relationship_type'
             })
           
@@ -755,9 +724,15 @@ export class EntityCacheService {
     } catch (error) {
       console.error('❌ Failed to sync relationships from Neo4j:', error)
       throw error
-    } finally {
-      await session.close()
     }
+  }
+
+  async syncRelationshipsFromNeo4j(options: {
+    batchSize?: number
+    forceRefresh?: boolean
+  } = {}) {
+    console.warn('⚠️ syncRelationshipsFromNeo4j is deprecated; using syncRelationshipsFromGraph')
+    return this.syncRelationshipsFromGraph(options)
   }
 
   // ========== ENHANCED PRIORITY-BASED METHODS ==========
