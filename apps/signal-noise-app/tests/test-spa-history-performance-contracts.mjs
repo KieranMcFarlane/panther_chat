@@ -42,6 +42,10 @@ const rfpIntelligencePageSource = readFileSync(
   new URL('../src/app/rfp-intelligence/page.tsx', import.meta.url),
   'utf8',
 )
+const rfpIntelligenceDashboardPageSource = readFileSync(
+  new URL('../src/app/rfp-intelligence-dashboard/page.tsx', import.meta.url),
+  'utf8',
+)
 
 test('entity browser uses history API for pagination URL sync', () => {
   assert.match(entityBrowserSource, /window\.history\.pushState/)
@@ -130,4 +134,15 @@ test('rfp intelligence page uses content-level fade transitions for tab switches
   assert.match(rfpIntelligencePageSource, /isContentTransitioning/)
   assert.match(rfpIntelligencePageSource, /transition-opacity duration-200/)
   assert.match(rfpIntelligencePageSource, /viewTransitionName: "dossier-content"/)
+})
+
+test('rfp intelligence dashboard page syncs results tabs with History API', () => {
+  assert.match(rfpIntelligenceDashboardPageSource, /window\.history\.(replaceState|pushState)/)
+  assert.match(rfpIntelligenceDashboardPageSource, /window\.addEventListener\('popstate'/)
+})
+
+test('rfp intelligence dashboard page uses content-level fade transitions for tab switches', () => {
+  assert.match(rfpIntelligenceDashboardPageSource, /isResultsContentTransitioning/)
+  assert.match(rfpIntelligenceDashboardPageSource, /transition-opacity duration-200/)
+  assert.match(rfpIntelligenceDashboardPageSource, /viewTransitionName: "dossier-content"/)
 })

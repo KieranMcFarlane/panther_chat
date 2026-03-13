@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -43,6 +43,60 @@ export default function RFPIntelligenceDashboard() {
   const [opportunities, setOpportunities] = useState<RFPOpportunity[]>([]);
   const [scanProgress, setScanProgress] = useState(0);
   const [liveLogs, setLiveLogs] = useState<string[]>([]);
+  const [activeResultsTab, setActiveResultsTab] = useState<'opportunities' | 'analysis' | 'insights'>('opportunities');
+  const [isResultsContentTransitioning, setIsResultsContentTransitioning] = useState(false);
+  const previousResultsTabRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get('resultsTab');
+    if (tab === 'opportunities' || tab === 'analysis' || tab === 'insights') {
+      setActiveResultsTab(tab);
+    }
+
+    const handlePopState = () => {
+      const nextParams = new URLSearchParams(window.location.search);
+      const nextTab = nextParams.get('resultsTab');
+      if (nextTab === 'opportunities' || nextTab === 'analysis' || nextTab === 'insights') {
+        setActiveResultsTab(nextTab);
+        return;
+      }
+      setActiveResultsTab('opportunities');
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const url = new URL(window.location.href);
+    url.searchParams.set('resultsTab', activeResultsTab);
+    window.history.replaceState({}, '', url.toString());
+  }, [activeResultsTab]);
+
+  useEffect(() => {
+    if (previousResultsTabRef.current === null) {
+      previousResultsTabRef.current = activeResultsTab;
+      return;
+    }
+    if (previousResultsTabRef.current !== activeResultsTab) {
+      setIsResultsContentTransitioning(true);
+      const timeout = setTimeout(() => setIsResultsContentTransitioning(false), 200);
+      previousResultsTabRef.current = activeResultsTab;
+      return () => clearTimeout(timeout);
+    }
+  }, [activeResultsTab]);
+
+  const handleResultsTabChange = (nextTab: string) => {
+    const normalized = (nextTab === 'analysis' || nextTab === 'insights') ? nextTab : 'opportunities';
+    setActiveResultsTab(normalized);
+    if (typeof window === 'undefined') return;
+    const url = new URL(window.location.href);
+    url.searchParams.set('resultsTab', normalized);
+    window.history.pushState({}, '', url.toString());
+  };
 
   const addLog = (message: string) => {
     const timestamp = new Date().toLocaleTimeString();
@@ -479,155 +533,159 @@ export default function RFPIntelligenceDashboard() {
 
         {/* Opportunities Grid */}
         {opportunities.length > 0 && (
-          <Tabs defaultValue="opportunities" className="mb-8">
+          <Tabs value={activeResultsTab} onValueChange={handleResultsTabChange} className="mb-8">
             <TabsList className="bg-gray-900 border-gray-800">
               <TabsTrigger value="opportunities">Opportunities</TabsTrigger>
               <TabsTrigger value="analysis">Analysis Details</TabsTrigger>
               <TabsTrigger value="insights">Strategic Insights</TabsTrigger>
             </TabsList>
-            
-            <TabsContent value="opportunities" className="mt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {opportunities.map((opportunity) => (
-                  <Card key={opportunity.id} className="bg-gray-900 border-gray-800 hover:border-blue-600 transition-colors">
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg">{opportunity.title}</CardTitle>
-                        <Badge className={getPriorityColor(opportunity.priority)}>
-                          {opportunity.priority}
-                        </Badge>
-                      </div>
-                      <CardDescription className="text-gray-400">
-                        {opportunity.entityName}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        <div>
-                          <div className="text-sm text-gray-400 mb-1">Estimated Value</div>
-                          <div className="text-xl font-bold text-green-400">
-                            {opportunity.estimatedValue}
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <div className="text-sm text-gray-400 mb-1">Type</div>
-                          <Badge variant="outline" className="border-blue-600 text-blue-400">
-                            {opportunity.rfpType}
+            <div
+              className={`transition-opacity duration-200 ${isResultsContentTransitioning ? 'opacity-0' : 'opacity-100'}`}
+              style={{ viewTransitionName: "dossier-content" }}
+            >
+              <TabsContent value="opportunities" className="mt-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {opportunities.map((opportunity) => (
+                    <Card key={opportunity.id} className="bg-gray-900 border-gray-800 hover:border-blue-600 transition-colors">
+                      <CardHeader>
+                        <div className="flex items-center justify-between">
+                          <CardTitle className="text-lg">{opportunity.title}</CardTitle>
+                          <Badge className={getPriorityColor(opportunity.priority)}>
+                            {opportunity.priority}
                           </Badge>
                         </div>
-                        
-                        <div>
-                          <div className="text-sm text-gray-400 mb-1">Strategic Value</div>
-                          <div className="w-full bg-gray-800 rounded-full h-2">
-                            <div 
-                              className="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full"
-                              style={{ width: `${opportunity.strategicValue}%` }}
-                            />
-                          </div>
-                        </div>
-                        
-                        {opportunity.nextSteps && opportunity.nextSteps.length > 0 && (
+                        <CardDescription className="text-gray-400">
+                          {opportunity.entityName}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
                           <div>
-                            <div className="text-sm text-gray-400 mb-2">Next Steps</div>
-                            <ul className="text-sm space-y-1">
-                              {opportunity.nextSteps.map((step, index) => (
-                                <li key={index} className="flex items-center gap-2">
-                                  <span className="text-blue-400">•</span>
-                                  {step}
-                                </li>
-                              ))}
-                            </ul>
+                            <div className="text-sm text-gray-400 mb-1">Estimated Value</div>
+                            <div className="text-xl font-bold text-green-400">
+                              {opportunity.estimatedValue}
+                            </div>
                           </div>
-                        )}
+                          
+                          <div>
+                            <div className="text-sm text-gray-400 mb-1">Type</div>
+                            <Badge variant="outline" className="border-blue-600 text-blue-400">
+                              {opportunity.rfpType}
+                            </Badge>
+                          </div>
+                          
+                          <div>
+                            <div className="text-sm text-gray-400 mb-1">Strategic Value</div>
+                            <div className="w-full bg-gray-800 rounded-full h-2">
+                              <div 
+                                className="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full"
+                                style={{ width: `${opportunity.strategicValue}%` }}
+                              />
+                            </div>
+                          </div>
+                          
+                          {opportunity.nextSteps && opportunity.nextSteps.length > 0 && (
+                            <div>
+                              <div className="text-sm text-gray-400 mb-2">Next Steps</div>
+                              <ul className="text-sm space-y-1">
+                                {opportunity.nextSteps.map((step, index) => (
+                                  <li key={index} className="flex items-center gap-2">
+                                    <span className="text-blue-400">•</span>
+                                    {step}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="analysis" className="mt-6">
+                <Card className="bg-gray-900 border-gray-800">
+                  <CardHeader>
+                    <CardTitle>Detailed Analysis Results</CardTitle>
+                    <CardDescription>
+                      Raw AI analysis from the intelligence scan
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {currentResults?.results?.map((result: any, index: number) => (
+                      <div key={index} className="mb-6 p-4 bg-gray-800 rounded-lg">
+                        <h3 className="font-bold mb-2">Chunk {result.chunk}: {result.entities}</h3>
+                        <p className="text-gray-300 whitespace-pre-wrap">{result.analysis}</p>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              
+              <TabsContent value="insights" className="mt-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <Card className="bg-gray-900 border-gray-800">
+                    <CardHeader>
+                      <CardTitle>🎯 Top Opportunities</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        {opportunities
+                          .filter(opp => opp.priority === 'HIGH')
+                          .slice(0, 5)
+                          .map((opp) => (
+                            <div key={opp.id} className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
+                              <div>
+                                <div className="font-semibold">{opp.title}</div>
+                                <div className="text-sm text-gray-400">{opp.entityName}</div>
+                              </div>
+                              <div className="text-right">
+                                <div className="font-bold text-green-400">{opp.estimatedValue}</div>
+                                <div className="text-xs text-gray-400">{opp.rfpType}</div>
+                              </div>
+                            </div>
+                          ))}
                       </div>
                     </CardContent>
                   </Card>
-                ))}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="analysis" className="mt-6">
-              <Card className="bg-gray-900 border-gray-800">
-                <CardHeader>
-                  <CardTitle>Detailed Analysis Results</CardTitle>
-                  <CardDescription>
-                    Raw AI analysis from the intelligence scan
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {currentResults?.results?.map((result: any, index: number) => (
-                    <div key={index} className="mb-6 p-4 bg-gray-800 rounded-lg">
-                      <h3 className="font-bold mb-2">Chunk {result.chunk}: {result.entities}</h3>
-                      <p className="text-gray-300 whitespace-pre-wrap">{result.analysis}</p>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="insights" className="mt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card className="bg-gray-900 border-gray-800">
-                  <CardHeader>
-                    <CardTitle>🎯 Top Opportunities</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      {opportunities
-                        .filter(opp => opp.priority === 'HIGH')
-                        .slice(0, 5)
-                        .map((opp, index) => (
-                          <div key={opp.id} className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
-                            <div>
-                              <div className="font-semibold">{opp.title}</div>
-                              <div className="text-sm text-gray-400">{opp.entityName}</div>
-                            </div>
-                            <div className="text-right">
-                              <div className="font-bold text-green-400">{opp.estimatedValue}</div>
-                              <div className="text-xs text-gray-400">{opp.rfpType}</div>
-                            </div>
-                          </div>
-                        ))}
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card className="bg-gray-900 border-gray-800">
-                  <CardHeader>
-                    <CardTitle>📊 Intelligence Summary</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">High Priority Opportunities</span>
-                        <span className="font-bold">
-                          {opportunities.filter(opp => opp.priority === 'HIGH').length}
-                        </span>
+                  
+                  <Card className="bg-gray-900 border-gray-800">
+                    <CardHeader>
+                      <CardTitle>📊 Intelligence Summary</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">High Priority Opportunities</span>
+                          <span className="font-bold">
+                            {opportunities.filter(opp => opp.priority === 'HIGH').length}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Digital Transformation Projects</span>
+                          <span className="font-bold">
+                            {opportunities.filter(opp => opp.rfpType === 'Digital Transformation').length}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Average Strategic Value</span>
+                          <span className="font-bold">
+                            {Math.round(opportunities.reduce((sum, opp) => sum + opp.strategicValue, 0) / opportunities.length)}%
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Processing Efficiency</span>
+                          <span className="font-bold">
+                            {Math.round((currentResults?.entitiesProcessed || 0) / ((currentResults?.processingTime || 1) / 1000))} entities/min
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Digital Transformation Projects</span>
-                        <span className="font-bold">
-                          {opportunities.filter(opp => opp.rfpType === 'Digital Transformation').length}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Average Strategic Value</span>
-                        <span className="font-bold">
-                          {Math.round(opportunities.reduce((sum, opp) => sum + opp.strategicValue, 0) / opportunities.length)}%
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Processing Efficiency</span>
-                        <span className="font-bold">
-                          {Math.round((currentResults?.entitiesProcessed || 0) / ((currentResults?.processingTime || 1) / 1000))} entities/min
-                        </span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+            </div>
           </Tabs>
         )}
 
