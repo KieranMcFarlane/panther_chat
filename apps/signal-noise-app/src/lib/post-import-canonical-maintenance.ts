@@ -71,6 +71,9 @@ function runShellCommand(command: string, cwd: string): Promise<MaintenanceStep>
 export async function runPostImportCanonicalMaintenance(trigger: string): Promise<PostImportCanonicalMaintenanceResult> {
   const isDisabled = process.env.SKIP_CANONICAL_POST_IMPORT_MAINTENANCE === '1'
   const cwd = resolveAppCwd()
+  if (isDisabled && process.env.NODE_ENV === 'production') {
+    throw new Error('SKIP_CANONICAL_POST_IMPORT_MAINTENANCE cannot be enabled in production')
+  }
   if (isDisabled) {
     return {
       skipped: true,
