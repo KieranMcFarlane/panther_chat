@@ -1089,7 +1089,15 @@ class HypothesisDrivenDiscovery:
             "no rfp",
         )
         if not any(marker in text for marker in markers):
-            return None
+            # Common strict-mode narrative pattern from evaluator models:
+            # checklist blocks with repeated "<indicator>: NOT FOUND" lines.
+            not_found_count = 0
+            for raw_line in str(response_text or "").splitlines():
+                line = str(raw_line or "").strip().lower()
+                if ":" in line and "not found" in line:
+                    not_found_count += 1
+            if not_found_count < 3:
+                return None
 
         return {
             "decision": "NO_PROGRESS",
@@ -1335,7 +1343,8 @@ class HypothesisDrivenDiscovery:
             if active_key in multiline_keys:
                 values[active_key] = f"{values.get(active_key, '').strip()} {line}".strip()
 
-        if not all(values.get(key) for key in required_keys):
+        minimal_required_keys = ("decision", "confidence_delta")
+        if not all(values.get(key) for key in minimal_required_keys):
             return None
 
         decision = str(values.get("decision") or "").strip().upper()
@@ -1351,16 +1360,17 @@ class HypothesisDrivenDiscovery:
         except Exception:  # noqa: BLE001
             return None
 
-        temporal_score = str(values.get("temporal_score") or "").strip()
-        if not temporal_score:
-            temporal_score = "unknown"
+        temporal_score = str(values.get("temporal_score") or "").strip() or "unknown"
+        justification = str(values.get("justification") or "").strip() or "Recovered structured key-value response"
+        evidence_found = str(values.get("evidence_found") or "").strip()
+        evidence_type = str(values.get("evidence_type") or "").strip() or "unknown"
 
         return {
             "decision": decision,
             "confidence_delta": confidence_delta,
-            "justification": str(values.get("justification") or "").strip(),
-            "evidence_found": str(values.get("evidence_found") or "").strip(),
-            "evidence_type": str(values.get("evidence_type") or "").strip(),
+            "justification": justification,
+            "evidence_found": evidence_found,
+            "evidence_type": evidence_type,
             "temporal_score": temporal_score,
         }
 
