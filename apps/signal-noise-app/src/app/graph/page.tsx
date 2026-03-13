@@ -6,6 +6,8 @@ import GraphWrapper from '@/components/graph/GraphWrapper';
 import { GraphNode, GraphEdge } from '@/components/graph/graph-types';
 import { EntityCacheService } from '@/services/EntityCacheService';
 
+export const dynamic = 'force-dynamic';
+
 // Helper function to get relationship colors
 function getRelationshipColor(relationshipType: string): string {
   switch (relationshipType?.toUpperCase()) {

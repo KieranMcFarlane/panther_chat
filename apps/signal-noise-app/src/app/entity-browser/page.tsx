@@ -1,4 +1,5 @@
 "use client"
+export const dynamic = 'force-dynamic'
 
 import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,7 +10,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { EntityBadge } from "@/components/badge/EntityBadge"
 import { EntityCard } from "@/components/EntityCard"
 import { rememberEntityBrowserUrl } from "@/lib/entity-browser-history"
-import { useSearchParams } from "next/navigation"
 // import { SimpleEntityCard } from "@/components/SimpleEntityCard"
 import { EmailComposeModal } from "@/components/email/EmailComposeModal"
 import { 
@@ -140,7 +140,6 @@ function buildBrowserUrlFromState(page: number, filters: BrowserFilters, searchV
 
 export default function EntityBrowserPage() {
   const initialState = getInitialBrowserState()
-  const searchParams = useSearchParams()
   
   const [data, setData] = useState<EntityBrowserResponse | null>(null)
   const [initialLoading, setInitialLoading] = useState(true)
@@ -297,7 +296,7 @@ export default function EntityBrowserPage() {
       return same ? prev : next.filters
     })
     setIsUrlStateReady(true)
-  }, [searchParams])
+  }, [])
 
   useEffect(() => {
     if (filters.sortBy === 'popular' && filters.sortOrder !== 'desc') {

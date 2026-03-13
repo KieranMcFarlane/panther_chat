@@ -1,10 +1,19 @@
 "use client";
+export const dynamic = 'force-dynamic';
 
 import { useEffect, useRef, useState } from 'react';
-import EnhancedRFPMonitoringDashboard from '@/components/rfp/EnhancedRFPMonitoringDashboard';
-import RFPIntelligenceEntityBrowser from './entity-browser';
-import RFPDetectionsList from './rfp-detections-list';
+import dynamicImport from 'next/dynamic';
 import { Brain, Database, Trophy, Search, List } from 'lucide-react';
+
+const EnhancedRFPMonitoringDashboard = dynamicImport(() => import('@/components/rfp/EnhancedRFPMonitoringDashboard'), {
+  ssr: false
+});
+const RFPIntelligenceEntityBrowser = dynamicImport(() => import('./entity-browser'), {
+  ssr: false
+});
+const RFPDetectionsList = dynamicImport(() => import('./rfp-detections-list'), {
+  ssr: false
+});
 
 export default function RFPIntelligencePage() {
   const [activeTab, setActiveTab] = useState('dashboard');

@@ -11,6 +11,8 @@ import {
   getBandDistribution
 } from '@/lib/ralph-analytics-helper';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: Request) {
   try {
     // Load all Ralph states from runtime bindings

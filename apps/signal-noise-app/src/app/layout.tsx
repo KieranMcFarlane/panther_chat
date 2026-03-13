@@ -10,11 +10,13 @@ import { ThreadProvider } from '@/contexts/ThreadContext'
 import { SharedCopilotProvider } from '@/contexts/SharedCopilotContext'
 import { CopilotKit } from "@copilotkit/react-core"
 import "@copilotkit/react-ui/styles.css"
-import dynamic from 'next/dynamic'
+import dynamicImport from 'next/dynamic'
 import { TemporalIntelligenceTools } from '@/components/temporal/TemporalIntelligenceTools'
 import { BetterAuthProvider } from '@/components/providers/BetterAuthProvider'
 import { UserMenu } from '@/components/auth/UserMenu'
 import { SignInLink } from '@/components/auth/SignInLink'
+
+export const dynamic = 'force-dynamic'
 
 function AuthMenu() {
   return (
@@ -25,7 +27,7 @@ function AuthMenu() {
   )
 }
 
-const SimpleStreamingChat = dynamic(() => import('@/components/chat/SimpleStreamingChat'), {
+const SimpleStreamingChat = dynamicImport(() => import('@/components/chat/SimpleStreamingChat'), {
   ssr: false,
   loading: () => null
 })
@@ -91,6 +93,4 @@ export default function RootLayout({
     </html>
   )
 }
-
-
 

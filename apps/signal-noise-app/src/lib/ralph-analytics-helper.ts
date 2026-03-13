@@ -303,6 +303,9 @@ export async function loadAllRalphStates(): Promise<RalphState[]> {
 
     return states;
   } catch (error) {
+    if ((error as NodeJS.ErrnoException)?.code === 'ENOENT') {
+      return [];
+    }
     console.error('Error loading runtime bindings:', error);
     throw error;
   }

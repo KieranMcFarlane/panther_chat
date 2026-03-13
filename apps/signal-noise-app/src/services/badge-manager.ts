@@ -17,6 +17,12 @@ export class BadgeManager {
   }
 
   private loadMappings() {
+    // localStorage is unavailable during SSR/build.
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      this.initializeDefaultMappings(false);
+      return;
+    }
+
     // Load from localStorage if available
     try {
       const saved = localStorage.getItem('badge-mappings')
@@ -32,7 +38,7 @@ export class BadgeManager {
     }
   }
 
-  private initializeDefaultMappings() {
+  private initializeDefaultMappings(shouldPersist: boolean = true) {
     this.mappings = [
       {
         entityId: '139',
@@ -107,10 +113,11 @@ export class BadgeManager {
         source: 'local'
       }
     ]
-    this.saveMappings()
+    if (shouldPersist) this.saveMappings()
   }
 
   private saveMappings() {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') return;
     try {
       localStorage.setItem('badge-mappings', JSON.stringify(this.mappings))
     } catch (error) {

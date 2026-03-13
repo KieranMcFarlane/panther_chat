@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase-client';
 import { EntityCacheService } from '@/services/EntityCacheService';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * Home Page Metrics API
  * Aggregates metrics from all platform sources for the home page dashboard
@@ -309,4 +311,3 @@ async function getActivityFeed() {
     return [];
   }
 }
-

@@ -13,6 +13,8 @@ import {
   getClusterHealth
 } from '@/lib/ralph-analytics-helper';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: Request) {
   try {
     // Load all required data
