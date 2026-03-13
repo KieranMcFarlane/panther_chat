@@ -19,6 +19,14 @@ const vectorSearchComponentSource = readFileSync(
   new URL('../src/components/VectorSearch.tsx', import.meta.url),
   'utf8',
 )
+const vectorObservabilityRouteSource = readFileSync(
+  new URL('../src/app/api/admin/vector-search-observability/route.ts', import.meta.url),
+  'utf8',
+)
+const vectorObservabilityLibSource = readFileSync(
+  new URL('../src/lib/vector-search-observability.ts', import.meta.url),
+  'utf8',
+)
 const packageJson = JSON.parse(
   readFileSync(new URL('../package.json', import.meta.url), 'utf8'),
 )
@@ -45,6 +53,8 @@ test('vector search route includes typo-tolerant fuzzy matching and observabilit
   assert.match(vectorSearchRouteSource, /vector_search_request/)
   assert.match(vectorSearchRouteSource, /vector_search_response/)
   assert.match(vectorSearchRouteSource, /vector_search_error/)
+  assert.match(vectorSearchRouteSource, /recordVectorSearchMetric/)
+  assert.match(vectorObservabilityLibSource, /vector_search_alert/)
 })
 
 test('embeddings route does not return random dummy embeddings on failure', () => {
@@ -100,4 +110,10 @@ test('vector benchmark script exists with core regression queries', () => {
 
 test('verify entity data script includes vector benchmark deploy gate', () => {
   assert.match(packageJson.scripts['verify:entity-data'], /qa:vector-search-benchmark/)
+})
+
+test('vector search observability admin endpoint exists', () => {
+  assert.match(vectorObservabilityRouteSource, /getVectorSearchObservabilitySnapshot/)
+  assert.match(vectorObservabilityRouteSource, /snapshot:/)
+  assert.match(vectorObservabilityRouteSource, /ok:\s*true/)
 })

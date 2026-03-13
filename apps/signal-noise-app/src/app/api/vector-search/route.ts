@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { searchEntityEmbeddings } from '@/lib/embeddings'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
+import { recordVectorSearchMetric } from '@/lib/vector-search-observability'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
@@ -160,6 +161,15 @@ function deriveIntent(query: string): QueryIntent {
   }
 
   return intent
+}
+
+function isMeaningfulCandidate(candidate: Candidate): boolean {
+  return (
+    candidate.lexical_score >= 20 ||
+    candidate.semantic_score >= 8 ||
+    candidate.metadata_boost >= 20 ||
+    candidate.final_score >= 8
+  )
 }
 
 async function loadLexicalCandidates(
@@ -334,10 +344,17 @@ export async function POST(request: NextRequest) {
     }
 
     const ranked = Array.from(merged.values())
+      .filter((candidate) => isMeaningfulCandidate(candidate))
       .sort((a, b) => b.final_score - a.final_score || b.lexical_score - a.lexical_score || a.name.localeCompare(b.name))
       .slice(0, limit)
 
     const duration_ms = Date.now() - request_started_at
+    const observability = recordVectorSearchMetric({
+      duration_ms,
+      result_count: ranked.length,
+      top_score: ranked[0]?.final_score || 0,
+      semantic_enabled,
+    })
     console.info(
       JSON.stringify({
         event: 'vector_search_response',
@@ -350,6 +367,7 @@ export async function POST(request: NextRequest) {
         merged_candidates: merged.size,
         returned: ranked.length,
         top_result: ranked[0]?.name || null,
+        observability,
       }),
     )
 

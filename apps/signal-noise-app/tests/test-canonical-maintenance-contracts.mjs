@@ -40,8 +40,8 @@ const adminAuditPageSource = readFileSync(
 
 test('entity routing uses canonical stable id rather than neo4j_id-specific navigation', () => {
   assert.match(entityCardSource, /stableEntityId/)
-  assert.match(entityCardSource, /router\.push\(`\/entity\/\$\{stableEntityId\}/)
-  assert.doesNotMatch(entityCardSource, /router\.push\(`\/entity\/\$\{entity\.neo4j_id\}/)
+  assert.match(entityCardSource, /pushWithViewTransition\(router,\s*`\/entity\/\$\{stableEntityId\}/)
+  assert.doesNotMatch(entityCardSource, /\/entity\/\$\{entity\.neo4j_id\}/)
   assert.match(entityPageSource, /id:\s*entity\.id,/)
 })
 
