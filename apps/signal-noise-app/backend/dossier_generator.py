@@ -97,7 +97,7 @@ class EntityDossierGenerator:
         }
         deterministic_fallback_env = (
             os.getenv("DOSSIER_DETERMINISTIC_FALLBACK_SECTION_IDS")
-            or "core_information,recent_news,current_performance,leadership,contact_information,digital_maturity,outreach_strategy"
+            or "core_information,quick_actions,recent_news,current_performance,leadership,contact_information,digital_maturity,outreach_strategy"
         )
         self.deterministic_fallback_section_ids = {
             section_id.strip()
@@ -793,10 +793,26 @@ Website: N/A
             "json must have specific keys",
             "must have specific keys",
             "confidence is a number between 0-1",
+            "content extraction:",
+            "topic:**",
+            "key is missing from the input",
+            "missing from the input",
+            "raw_input",
+            "input provided is a json object",
+            "json-like structure",
+            "truncated at the end",
+            "let's extract the content strings",
         )
         blocked_meta_patterns = (
             r"\bjson\b.{0,60}\bmust\b.{0,120}\b(content|metrics|insights|recommendations|confidence)\b",
             r"`?confidence`?\s+is\s+a\s+number\s+between\s+0-1",
+            r"\bcontent\s+extraction\s*:\*?",
+            r"\btopic\s*:\*+",
+            r"`?confidence`?\s+key\s+is\s+missing\s+from\s+the\s+input",
+            r"\braw_input\b",
+            r"\blet'?s\s+extract\s+the\s+content\s+strings\b",
+            r"\binput\s+provided\s+is\s+a\s+json\b",
+            r"\bjson-?like\s+structure\b.{0,60}\btruncated\b",
         )
         placeholder_patterns = (
             r"\bitem\s+\d+\s*:",
@@ -1242,6 +1258,8 @@ Website: N/A
 
         if section_id == "core_information":
             return self._build_core_information_fallback(entity_data)
+        if section_id == "quick_actions":
+            return self._build_quick_actions_fallback(entity_data)
         if section_id == "recent_news":
             return self._build_recent_news_fallback(entity_data)
         if section_id == "current_performance":
@@ -1298,6 +1316,51 @@ Website: N/A
             "insights": [],
             "recommendations": [],
             "confidence": 0.48,
+        }
+
+    def _build_quick_actions_fallback(self, entity_data: Dict[str, Any]) -> Dict[str, Any]:
+        entity_name = str(entity_data.get("entity_name") or "this entity").strip()
+        official_site = self._normalize_http_url(
+            entity_data.get("official_site_url")
+            or entity_data.get("website")
+            or entity_data.get("entity_website")
+        )
+        jobs_count = entity_data.get("job_postings_count")
+        press_count = entity_data.get("press_releases_count")
+
+        content = [
+            self._format_evidence_line(
+                f"Validate {entity_name}'s procurement and partnership contact paths on official channels before outreach.",
+                evidence_level="inferred",
+                source_type="internal_analysis",
+                needs_review=True,
+            ),
+            self._format_evidence_line(
+                f"Prioritize timeline discovery via careers and newsroom pages linked from {official_site or 'official sources not yet verified'}.",
+                evidence_level="verified" if official_site else "inferred",
+                source_type="official" if official_site else "internal_analysis",
+                needs_review=not bool(official_site),
+            ),
+            self._format_evidence_line(
+                f"Use available signal inventory to guide first-pass outreach (press_releases={press_count if press_count is not None else 'Unknown'}, job_postings={jobs_count if jobs_count is not None else 'Unknown'}).",
+                evidence_level="verified",
+                source_type="internal_analysis",
+                needs_review=True,
+            ),
+        ]
+
+        recommendations = [
+            "Run a focused official-site sweep for procurement, partners, and careers pages before escalation.",
+            "Escalate to manual verification if no named owners or dated procurement signals are found.",
+            "Keep first outreach factual and evidence-led; avoid ROI assertions without cited source lines.",
+        ]
+
+        return {
+            "content": content,
+            "metrics": [],
+            "insights": [],
+            "recommendations": recommendations,
+            "confidence": 0.52,
         }
 
     def _build_recent_news_fallback(self, entity_data: Dict[str, Any]) -> Dict[str, Any]:

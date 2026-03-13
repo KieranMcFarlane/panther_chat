@@ -51,6 +51,14 @@ class DossierQuestionExtractor:
 
         # Section-specific question templates
         self.section_question_templates = {
+            "core_information": {
+                "types": [DossierQuestionType.GENERAL, DossierQuestionType.STRATEGY],
+                "templates": [
+                    "What is the confirmed official website for {entity}?",
+                    "What verified profile fields are missing for {entity}?",
+                    "What governance or competition context should be confirmed for {entity}?",
+                ],
+            },
             "leadership": {
                 "types": [DossierQuestionType.LEADERSHIP],
                 "templates": [
@@ -115,6 +123,38 @@ class DossierQuestionExtractor:
                     "What is the budget range for {category}?",
                     "What is the typical procurement cycle duration?"
                 ]
+            },
+            "contact_information": {
+                "types": [DossierQuestionType.GENERAL, DossierQuestionType.LEADERSHIP],
+                "templates": [
+                    "What is the best verified contact channel for procurement conversations at {entity}?",
+                    "Which office location or business unit should be targeted first at {entity}?",
+                    "Who is the named contact owner for partnerships at {entity}?",
+                ],
+            },
+            "recent_news": {
+                "types": [DossierQuestionType.STRATEGY, DossierQuestionType.COMPETITIVE],
+                "templates": [
+                    "What are the most recent dated announcements from {entity} relevant to procurement or technology?",
+                    "Which news items indicate active digital or platform initiatives at {entity}?",
+                    "What upcoming milestones are confirmed in recent coverage for {entity}?",
+                ],
+            },
+            "current_performance": {
+                "types": [DossierQuestionType.COMPETITIVE, DossierQuestionType.BUDGET],
+                "templates": [
+                    "What current KPI or ranking metrics can be verified for {entity}?",
+                    "Which financial or operational performance indicators are publicly available for {entity}?",
+                    "What recent trend signals suggest budget or procurement readiness at {entity}?",
+                ],
+            },
+            "outreach_strategy": {
+                "types": [DossierQuestionType.STRATEGY, DossierQuestionType.PROCUREMENT_TIMING],
+                "templates": [
+                    "Which outreach narrative should be prioritized for {entity} based on verified evidence?",
+                    "What is the best first conversation path to confirm procurement timing at {entity}?",
+                    "Which stakeholder sequence should be used for a first-pass engagement with {entity}?",
+                ],
             }
         }
 

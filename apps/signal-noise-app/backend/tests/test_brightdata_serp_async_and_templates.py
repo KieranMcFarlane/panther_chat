@@ -189,6 +189,33 @@ def test_create_fallback_section_uses_deterministic_outreach_strategy_when_enabl
     assert any("outreach" in line.lower() or "contact" in line.lower() for line in section.content)
 
 
+def test_create_fallback_section_uses_deterministic_quick_actions_when_enabled():
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.strict_section_qa_enabled = True
+    generator.strict_section_qa_ids = {"core_information"}
+    generator.deterministic_fallback_section_ids = {"quick_actions"}
+    generator.section_templates = {
+        "quick_actions": {
+            "description": "Immediate action recommendations",
+        }
+    }
+
+    section = generator._create_fallback_section(
+        "quick_actions",
+        "haiku",
+        entity_data={
+            "entity_name": "FIBA",
+            "entity_type": "FEDERATION",
+            "official_site_url": "https://www.fiba.basketball/en",
+        },
+    )
+
+    assert section.confidence > 0.0
+    assert "Section generation failed" not in " ".join(section.content)
+    assert any("FIBA" in line for line in section.content)
+    assert any("procurement" in line.lower() or "timeline" in line.lower() for line in section.content)
+
+
 def test_collect_section_quality_issues_detects_meta_and_placeholder_leaks():
     generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
     generator.strict_section_qa_enabled = True
@@ -223,6 +250,45 @@ def test_collect_section_quality_issues_rejects_schema_instruction_leakage():
     }
 
     issues = generator._collect_section_quality_issues("current_performance", section_data)
+    assert "meta_text_leak" in issues
+
+
+def test_collect_section_quality_issues_rejects_prompt_scaffolding_phrases():
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.strict_section_qa_enabled = True
+    generator.strict_section_qa_ids = {"core_information"}
+    generator.strict_numeric_claim_source_required = True
+
+    section_data = {
+        "content": [
+            "Content Extraction:* The input lists specific outbound actions in step 7.",
+            "Topic:** Contact channels for FIBA.",
+            "Also, the `confidence` key is missing from the input.",
+            "Let's extract the content strings from the RAW_INPUT:",
+            "The input provided is a JSON object, but it seems incomplete.",
+            "The input is a JSON-like structure but it is truncated at the end.",
+        ]
+    }
+
+    issues = generator._collect_section_quality_issues("quick_actions", section_data)
+    assert "meta_text_leak" in issues
+
+
+def test_collect_section_quality_issues_rejects_raw_input_scaffolding_phrases():
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.strict_section_qa_enabled = True
+    generator.strict_section_qa_ids = {"core_information"}
+    generator.strict_numeric_claim_source_required = True
+
+    section_data = {
+        "content": [
+            "Let's extract the content strings from the RAW_INPUT:",
+            "The input provided is a JSON object, but it seems incomplete.",
+            "The input is a JSON-like structure but it is truncated at the end.",
+        ]
+    }
+
+    issues = generator._collect_section_quality_issues("quick_actions", section_data)
     assert "meta_text_leak" in issues
 
 

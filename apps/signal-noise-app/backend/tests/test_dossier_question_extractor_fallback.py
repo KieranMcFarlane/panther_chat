@@ -43,3 +43,43 @@ async def test_question_extractor_uses_template_fallback_when_ai_returns_no_ques
     assert len(questions) >= 1
     assert all(q.question_text.endswith("?") for q in questions)
     assert any("FIBA" in q.question_text for q in questions)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("section_id", "section_title", "section_content"),
+    [
+        (
+            "core_information",
+            "Basic entity information",
+            ["FIBA is an international federation based in Switzerland."],
+        ),
+        (
+            "current_performance",
+            "Current performance metrics",
+            ["Current KPI coverage is limited in this run."],
+        ),
+        (
+            "outreach_strategy",
+            "Outreach strategy with conversation trees",
+            ["Use partner channels and procurement context to open discovery conversations."],
+        ),
+    ],
+)
+async def test_question_extractor_template_fallback_covers_additional_sections(
+    section_id,
+    section_title,
+    section_content,
+):
+    extractor = DossierQuestionExtractor(_FakeClaude())
+    section = DossierSection(id=section_id, title=section_title, content=section_content)
+
+    questions = await extractor.extract_questions_from_section(
+        section=section,
+        entity_name="FIBA",
+        max_questions=3,
+    )
+
+    assert len(questions) >= 1
+    assert all(q.question_text.endswith("?") for q in questions)
+    assert any("FIBA" in q.question_text for q in questions)
