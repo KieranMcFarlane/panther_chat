@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { EntityCacheService } from '@/services/EntityCacheService'
+import { runPostImportCanonicalMaintenance } from '@/lib/post-import-canonical-maintenance'
 
 const cacheService = new EntityCacheService()
 
@@ -10,15 +11,17 @@ export async function POST(request: NextRequest) {
     
     await cacheService.initialize()
     
-    const result = await cacheService.syncEntitiesFromNeo4j({
+    const result = await cacheService.syncEntitiesFromGraph({
       entityType: entityType || 'all',
       batchSize: batchSize || 100,
       forceRefresh: forceRefresh || false
     })
+    const canonicalMaintenance = await runPostImportCanonicalMaintenance('entities-cache-sync')
     
     return NextResponse.json({
       message: 'Entity cache sync completed successfully',
-      ...result
+      ...result,
+      canonicalMaintenance
     })
     
   } catch (error) {

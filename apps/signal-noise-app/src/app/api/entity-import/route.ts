@@ -8,6 +8,7 @@ import {
   storeFallbackEntityImportState,
   updateEntityImportBatch,
 } from '@/lib/entity-import-jobs'
+import { runPostImportCanonicalMaintenance } from '@/lib/post-import-canonical-maintenance'
 
 export async function POST(request: NextRequest) {
   try {
@@ -101,6 +102,8 @@ export async function POST(request: NextRequest) {
       updated_rows,
     })
 
+    const canonicalMaintenance = await runPostImportCanonicalMaintenance('entity-import')
+
     return NextResponse.json({
       batchId: batch.id,
       requiredColumns: REQUIRED_ENTITY_IMPORT_COLUMNS,
@@ -108,6 +111,7 @@ export async function POST(request: NextRequest) {
       updated_rows,
       invalid_rows,
       acceptedRows: validRows.length,
+      canonicalMaintenance,
     })
   } catch (error) {
     return NextResponse.json(

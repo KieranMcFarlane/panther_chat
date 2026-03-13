@@ -21,18 +21,23 @@ interface EntityCardProps {
 
 export function EntityCard({ entity, similarity, connections, rank, onEmailEntity }: EntityCardProps) {
   const router = useRouter()
+  const stableEntityId = String(
+    (entity as any)?.id ??
+    (entity as any)?.graph_id ??
+    ''
+  ).trim()
 
   // Prefetch entity detail data when card mounts
   useEffect(() => {
-    if (entity?.neo4j_id) {
+    if (stableEntityId) {
       // Add small delay to avoid thundering herd
       const timer = setTimeout(() => {
-        prefetchEntity(entity.neo4j_id.toString())
+        prefetchEntity(stableEntityId)
       }, Math.random() * 500) // Stagger prefetches 0-500ms
 
       return () => clearTimeout(timer)
     }
-  }, [entity?.neo4j_id])
+  }, [stableEntityId])
 
   const getSimilarityColor = (score: number) => {
     if (score >= 0.9) return "bg-green-500"
@@ -103,10 +108,11 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
   }
 
   const handleCardClick = () => {
+    if (!stableEntityId) return
     // Get current page from URL and pass it to the entity profile
     const urlParams = new URLSearchParams(window.location.search)
     const currentPage = urlParams.get('page') || '1'
-    router.push(`/entity/${entity.neo4j_id}?from=${currentPage}`)
+    router.push(`/entity/${stableEntityId}?from=${currentPage}`)
   }
 
   const latestPipelineRunUrl = typeof entity.properties.last_pipeline_run_detail_url === 'string'
@@ -269,10 +275,11 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
             className="w-full"
             onClick={(e) => {
               e.stopPropagation()
+              if (!stableEntityId) return
               // Get current page from URL and pass it to the entity profile
               const urlParams = new URLSearchParams(window.location.search)
               const currentPage = urlParams.get('page') || '1'
-              router.push(`/entity/${entity.neo4j_id}?from=${currentPage}`)
+              router.push(`/entity/${stableEntityId}?from=${currentPage}`)
             }}
           >
             View Full Profile

@@ -9,6 +9,7 @@ import {
   queueEntityImportBatch,
   storeFallbackEntityImportState,
 } from '@/lib/entity-import-jobs'
+import { runPostImportCanonicalMaintenance } from '@/lib/post-import-canonical-maintenance'
 
 const ENTITY_IMPORT_QUEUE_MODE = process.env.ENTITY_IMPORT_QUEUE_MODE || 'durable_worker'
 
@@ -67,6 +68,8 @@ export async function POST(request: NextRequest) {
       queued_at: new Date().toISOString(),
     })
 
+    const canonicalMaintenance = await runPostImportCanonicalMaintenance('entity-pipeline')
+
     return NextResponse.json(
       {
         batchId: batch.id,
@@ -75,6 +78,7 @@ export async function POST(request: NextRequest) {
         runDetailUrl: `/entity-import/${batch.id}/${row.entity_id}`,
         dossierUrl: `/entity-browser/${row.entity_id}/dossier?from=1`,
         rfpUrl: '/rfps',
+        canonicalMaintenance,
       },
       { status: 202 },
     )

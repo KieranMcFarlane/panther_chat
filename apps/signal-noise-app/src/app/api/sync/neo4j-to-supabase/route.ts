@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { RealtimeSyncService } from '@/services/RealtimeSyncService';
+import { runPostImportCanonicalMaintenance } from '@/lib/post-import-canonical-maintenance'
 
 export async function POST() {
   try {
@@ -10,6 +11,10 @@ export async function POST() {
     
     const result = await syncService.performFullSync();
     
+    const canonicalMaintenance = result.success
+      ? await runPostImportCanonicalMaintenance('sync-neo4j-to-supabase')
+      : null
+
     return NextResponse.json({
       success: result.success,
       message: result.success ? 'Sync completed successfully' : 'Sync failed',
@@ -21,7 +26,8 @@ export async function POST() {
         duration: result.duration,
         durationFormatted: `${Math.round(result.duration / 1000)}s`
       },
-      error: result.error
+      error: result.error,
+      canonicalMaintenance,
     });
 
   } catch (error) {
