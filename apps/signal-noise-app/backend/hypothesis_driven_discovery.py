@@ -485,6 +485,9 @@ class DiscoveryResult:
     signals_discovered: List[Dict[str, Any]]
     raw_signals: List[Any] = field(default_factory=list)  # Signal objects for Ralph Loop
     hypothesis_states: Dict[str, Dict[str, Any]] = field(default_factory=dict)  # Category -> state data
+    field_statuses: Dict[str, str] = field(default_factory=dict)  # schema-first field status diagnostics
+    claims_count: int = 0
+    verified_fields_count: int = 0
     performance_summary: Dict[str, Any] = field(default_factory=dict)
     timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
@@ -503,6 +506,9 @@ class DiscoveryResult:
             'signals_discovered': self.signals_discovered,
             'raw_signals_count': len(self.raw_signals),  # Include count for wrapper
             'hypothesis_states': self.hypothesis_states,  # New: hypothesis state data
+            'field_statuses': self.field_statuses,
+            'claims_count': self.claims_count,
+            'verified_fields_count': self.verified_fields_count,
             'performance_summary': self.performance_summary,
             'timestamp': self.timestamp.isoformat()
         }
@@ -1564,6 +1570,7 @@ class HypothesisDrivenDiscovery:
         # Entity runs must not inherit official-site context from prior entities.
         self.current_official_site_url = None
         self._resolved_url_context = {}
+        self._initialize_schema_first_runtime()
         self._update_llm_runtime_diagnostics(
             run_mode=self._current_run_mode(),
             run_profile=str(os.getenv("DISCOVERY_PROFILE", "continuous") or "continuous").strip().lower(),
@@ -1692,6 +1699,8 @@ class HypothesisDrivenDiscovery:
         if not hasattr(state, 'last_failed_hop'):
             state.last_failed_hop = None
 
+        force_non_official_next_hop = bool(getattr(state, "force_non_official_next_hop", False))
+
         forced_sequence = [
             token.strip().lower()
             for token in str(os.getenv("DISCOVERY_FORCED_HOP_SEQUENCE", "") or "").split(",")
@@ -1702,8 +1711,26 @@ class HypothesisDrivenDiscovery:
             hop_lookup = {hop.value: hop for hop in HopType}
             forced_hop = hop_lookup.get(hop_name)
             if forced_hop is not None:
-                logger.info("   Forced hop selection: %s", forced_hop.value)
-                return forced_hop
+                if force_non_official_next_hop and forced_hop == HopType.OFFICIAL_SITE:
+                    logger.info(
+                        "   Ignoring forced official_site hop due to diversification override"
+                    )
+                else:
+                    if force_non_official_next_hop and forced_hop != HopType.OFFICIAL_SITE:
+                        state.force_non_official_next_hop = False
+                    logger.info("   Forced hop selection: %s", forced_hop.value)
+                    return forced_hop
+
+        schema_first_hop = self._choose_schema_first_hop(state)
+        if schema_first_hop is not None:
+            if force_non_official_next_hop and schema_first_hop != HopType.OFFICIAL_SITE:
+                state.force_non_official_next_hop = False
+            logger.info("   Schema-first hop selection: %s", schema_first_hop.value)
+            return schema_first_hop
+
+        # Fallback guard if schema-first did not provide a diversified source.
+        if force_non_official_next_hop:
+            logger.info("   Diversification override active: avoiding official_site once")
 
         # Score all possible hop types, excluding those with too many consecutive failures
         hop_scores = {}
@@ -1749,6 +1776,15 @@ class HypothesisDrivenDiscovery:
 
         best_hop = max(hop_scores.items(), key=lambda x: x[1])[0]
         best_score = hop_scores[best_hop]
+        if force_non_official_next_hop and best_hop == HopType.OFFICIAL_SITE:
+            non_official_scores = {
+                hop: score for hop, score in hop_scores.items() if hop != HopType.OFFICIAL_SITE
+            }
+            if non_official_scores:
+                best_hop = max(non_official_scores.items(), key=lambda x: x[1])[0]
+                best_score = non_official_scores[best_hop]
+        if force_non_official_next_hop and best_hop != HopType.OFFICIAL_SITE:
+            state.force_non_official_next_hop = False
 
         logger.info(
             f"   MCP-guided hop selection: {best_hop.value} "
@@ -1762,6 +1798,44 @@ class HypothesisDrivenDiscovery:
             return HopType.PRESS_RELEASE
 
         return best_hop
+
+    def _choose_schema_first_hop(self, state) -> Optional[HopType]:
+        planner = getattr(self, "_active_field_planner", None)
+        fields = list(getattr(self, "_active_schema_fields", []) or [])
+        if planner is None or not fields:
+            return None
+
+        source_to_hop = {
+            "official_site": HopType.OFFICIAL_SITE,
+            "press_release": HopType.PRESS_RELEASE,
+            "careers_page": HopType.CAREERS_PAGE,
+            "annual_report": HopType.ANNUAL_REPORT,
+            "verified_news": HopType.PRESS_RELEASE,
+            "linkedin_company": HopType.LINKEDIN_JOB,
+        }
+        failure_counts = getattr(state, "hop_failure_counts", {}) or {}
+        force_non_official_next_hop = bool(getattr(state, "force_non_official_next_hop", False))
+        max_consecutive_failures = 2
+        ranked_fields = fields
+        rank_fn = getattr(planner, "rank_fields_for_attempt", None)
+        if callable(rank_fn):
+            ranked_fields = rank_fn(fields)
+
+        for field_id in ranked_fields:
+            if not planner.can_attempt(field_id):
+                continue
+            plan = planner.build_field_plan(field_id)
+            for source_class in plan.source_classes:
+                hop = source_to_hop.get(source_class)
+                if hop is None:
+                    continue
+                if force_non_official_next_hop and hop == HopType.OFFICIAL_SITE:
+                    continue
+                hop_key = hop.value if hasattr(hop, "value") else str(hop)
+                if int(failure_counts.get(hop_key, 0) or 0) >= max_consecutive_failures:
+                    continue
+                return hop
+        return None
 
     async def _execute_hop(
         self,
@@ -4945,6 +5019,7 @@ Return JSON:
         await self._store_discovery_episode(state, signals_discovered)
 
         performance_summary = self._build_performance_summary(state, total_duration_ms)
+        schema_metrics = self._schema_first_metrics()
 
         return DiscoveryResult(
             entity_id=state.entity_id,
@@ -4959,9 +5034,111 @@ Return JSON:
             signals_discovered=signals_discovered,
             raw_signals=getattr(state, 'raw_signals', []),  # Signal objects for Ralph Loop
             hypothesis_states=hypothesis_states,  # New: hypothesis state data
+            field_statuses=schema_metrics.get('field_statuses', {}),
+            claims_count=schema_metrics.get('claims_count', 0),
+            verified_fields_count=schema_metrics.get('verified_fields_count', 0),
             performance_summary=performance_summary,
             timestamp=datetime.now(timezone.utc)
         )
+
+    def _initialize_schema_first_runtime(self) -> None:
+        ClaimStore = _load_backend_attr("claim_store", "ClaimStore")
+        FieldCoveragePlanner = _load_backend_attr("field_coverage_planner", "FieldCoveragePlanner")
+        if not hasattr(self, "_active_claim_store") or self._active_claim_store is None:
+            self._active_claim_store = ClaimStore()
+        if not hasattr(self, "_active_field_planner") or self._active_field_planner is None:
+            self._active_field_planner = FieldCoveragePlanner()
+        if not hasattr(self, "_active_schema_fields") or not self._active_schema_fields:
+            self._active_schema_fields = [
+                "core_information",
+                "quick_actions",
+                "contact_information",
+                "recent_news",
+                "current_performance",
+                "leadership",
+                "digital_maturity",
+            ]
+
+    def _field_id_for_hop_type(self, hop_type: Any) -> str:
+        hop_value = hop_type.value if hasattr(hop_type, "value") else str(hop_type)
+        mapping = {
+            "official_site": "core_information",
+            "press_release": "recent_news",
+            "careers_page": "contact_information",
+            "annual_report": "current_performance",
+            "linkedin_job_posting": "contact_information",
+        }
+        return mapping.get(str(hop_value or "").strip().lower(), "core_information")
+
+    def _record_schema_first_claim_from_iteration(
+        self,
+        *,
+        state: Any,
+        hypothesis: Any,
+        hop_type: Any,
+        result: Dict[str, Any],
+    ) -> None:
+        self._initialize_schema_first_runtime()
+
+        decision = str(result.get("decision") or "NO_PROGRESS").upper()
+        success = decision in {"ACCEPT", "WEAK_ACCEPT"}
+        field_id = self._field_id_for_hop_type(hop_type)
+        self._active_field_planner.record_attempt(field_id, success=success)
+
+        if not success:
+            return
+
+        Claim = _load_backend_attr("claim_store", "Claim")
+        url = str(result.get("url") or "").strip()
+        evidence_found = str(result.get("evidence_found") or getattr(hypothesis, "statement", "") or "").strip()
+        confidence = float(
+            result.get("confidence")
+            if result.get("confidence") is not None
+            else result.get("confidence_delta", 0.0) or 0.0
+        )
+        if confidence <= 0:
+            confidence = float(getattr(hypothesis, "confidence", 0.5) or 0.5)
+
+        claim_id = f"{state.entity_id}:{field_id}:{getattr(hypothesis, 'hypothesis_id', 'unknown')}"
+        claim = Claim(
+            claim_id=claim_id,
+            field_id=field_id,
+            statement=evidence_found or "Evidence signal discovered",
+            confidence=max(0.0, min(confidence, 1.0)),
+            evidence_ids=[f"url:{url}"] if url else [f"iter:{state.iterations_completed}"],
+            source_tier="official" if field_id in {"core_information", "contact_information"} else "news",
+            needs_review=decision == "WEAK_ACCEPT",
+        )
+        self._active_claim_store.upsert_claim(claim)
+
+    def _schema_first_metrics(self) -> Dict[str, Any]:
+        planner = getattr(self, "_active_field_planner", None)
+        claim_store = getattr(self, "_active_claim_store", None)
+        fields = list(getattr(self, "_active_schema_fields", []) or [])
+        if not fields:
+            return {"field_statuses": {}, "claims_count": 0, "verified_fields_count": 0}
+
+        statuses: Dict[str, str] = {}
+        verified_count = 0
+        for field_id in fields:
+            if planner is not None:
+                status = planner.get_field_status(field_id)
+                status_value = status.value if hasattr(status, "value") else str(status)
+            else:
+                status_value = "pending"
+            statuses[field_id] = status_value
+            if status_value == "verified":
+                verified_count += 1
+
+        claims_count = 0
+        if claim_store is not None:
+            claims_count = len(getattr(claim_store, "_claims_by_id", {}) or {})
+
+        return {
+            "field_statuses": statuses,
+            "claims_count": claims_count,
+            "verified_fields_count": verified_count,
+        }
 
     def _build_performance_summary(
         self,
@@ -5000,6 +5177,7 @@ Return JSON:
                 slowest_iteration = iteration_record
 
         llm_diag = dict(getattr(self, "_llm_runtime_diagnostics", {}) or {})
+        schema_metrics = self._schema_first_metrics()
         return {
             'total_duration_ms': total_duration_ms,
             'iterations_with_timings': len(hop_records),
@@ -5018,6 +5196,9 @@ Return JSON:
             'evaluation_mode': llm_diag.get('evaluation_mode'),
             'run_profile': llm_diag.get('run_profile'),
             'run_mode': llm_diag.get('run_mode'),
+            'field_statuses': schema_metrics.get('field_statuses', {}),
+            'claims_count': schema_metrics.get('claims_count', 0),
+            'verified_fields_count': schema_metrics.get('verified_fields_count', 0),
         }
 
     def _build_failure_result(
@@ -5027,6 +5208,7 @@ Return JSON:
         error_message: str
     ) -> DiscoveryResult:
         """Build failure result"""
+        schema_metrics = self._schema_first_metrics()
         return DiscoveryResult(
             entity_id=entity_id,
             entity_name=entity_name,
@@ -5038,6 +5220,9 @@ Return JSON:
             hypotheses=[],
             depth_stats={},
             signals_discovered=[],
+            field_statuses=schema_metrics.get('field_statuses', {}),
+            claims_count=schema_metrics.get('claims_count', 0),
+            verified_fields_count=schema_metrics.get('verified_fields_count', 0),
             performance_summary={},
             timestamp=datetime.now(timezone.utc)
         )
@@ -5116,12 +5301,8 @@ Return JSON:
                     }
                 )
 
-                # Store in instance cache
-                if not hasattr(self, '_dossier_hypotheses_cache'):
-                    self._dossier_hypotheses_cache = {}
-                if entity_id not in self._dossier_hypotheses_cache:
-                    self._dossier_hypotheses_cache[entity_id] = []
-                self._dossier_hypotheses_cache[entity_id].append(hypothesis)
+                # Store in instance cache (upsert by hypothesis_id)
+                self._upsert_dossier_hypothesis_cache(entity_id, hypothesis)
 
                 added_count += 1
 
@@ -5136,6 +5317,14 @@ Return JSON:
                 continue
 
         logger.info(f"📋 Question initialization complete: {added_count}/{len(hypotheses)} hypotheses added")
+        manager = getattr(self, "hypothesis_manager", None)
+        register_fn = getattr(manager, "register_hypotheses", None)
+        if callable(register_fn):
+            await register_fn(
+                entity_id,
+                list((self._dossier_hypotheses_cache or {}).get(entity_id, [])),
+                persist=False,
+            )
         return added_count
 
     async def initialize_from_dossier(
@@ -5203,12 +5392,8 @@ Return JSON:
                     metadata=metadata
                 )
 
-                # Store in instance cache for retrieval
-                if not hasattr(self, '_dossier_hypotheses_cache'):
-                    self._dossier_hypotheses_cache = {}
-                if entity_id not in self._dossier_hypotheses_cache:
-                    self._dossier_hypotheses_cache[entity_id] = []
-                self._dossier_hypotheses_cache[entity_id].append(hypothesis)
+                # Store in instance cache for retrieval (upsert by hypothesis_id)
+                self._upsert_dossier_hypothesis_cache(entity_id, hypothesis)
 
                 added_count += 1
 
@@ -5222,7 +5407,25 @@ Return JSON:
                 continue
 
         logger.info(f"📋 Dossier initialization complete: {added_count}/{len(dossier_hypotheses)} hypotheses added")
+        manager = getattr(self, "hypothesis_manager", None)
+        register_fn = getattr(manager, "register_hypotheses", None)
+        if callable(register_fn):
+            await register_fn(
+                entity_id,
+                list((self._dossier_hypotheses_cache or {}).get(entity_id, [])),
+                persist=False,
+            )
         return added_count
+
+    def _upsert_dossier_hypothesis_cache(self, entity_id: str, hypothesis) -> None:
+        if not hasattr(self, "_dossier_hypotheses_cache") or not isinstance(self._dossier_hypotheses_cache, dict):
+            self._dossier_hypotheses_cache = {}
+        bucket = self._dossier_hypotheses_cache.setdefault(entity_id, [])
+        for idx, existing in enumerate(bucket):
+            if getattr(existing, "hypothesis_id", None) == getattr(hypothesis, "hypothesis_id", None):
+                bucket[idx] = hypothesis
+                return
+        bucket.append(hypothesis)
 
     def plan_hops_from_hypothesis(
         self,
@@ -5354,6 +5557,7 @@ Return JSON:
         if resolved_entity_type:
             self.current_entity_type = resolved_entity_type
         self.current_official_site_url = self._extract_official_site_url_from_dossier(dossier)
+        self._initialize_schema_first_runtime()
 
         # Extract procurement signals from dossier
         procurement_signals = []
@@ -5756,6 +5960,12 @@ Return JSON:
                 result=result,
                 state=state
             )
+            self._record_schema_first_claim_from_iteration(
+                state=state,
+                hypothesis=top_hypothesis,
+                hop_type=hop_type,
+                result=result,
+            )
 
             iteration_record = {
                 'iteration': iteration,
@@ -5823,6 +6033,12 @@ Return JSON:
                 })
 
             if repeated_unchanged_official_site and repeated_official_site_no_progress:
+                if not bool(getattr(state, "force_non_official_next_hop", False)):
+                    state.force_non_official_next_hop = True
+                    logger.info(
+                        "Official-site NO_PROGRESS repeated; forcing one non-official hop before stop"
+                    )
+                    continue
                 stop_reason = (
                     "repeated_unchanged_official_site_no_progress"
                     if repeated_unchanged_official_site_no_progress >= 1

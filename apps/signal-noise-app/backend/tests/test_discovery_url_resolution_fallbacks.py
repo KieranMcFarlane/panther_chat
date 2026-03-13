@@ -219,6 +219,52 @@ async def test_resolve_official_site_url_uses_persistent_cache_before_search():
 
 
 @pytest.mark.asyncio
+async def test_initialize_from_dossier_registers_hypotheses_with_manager_and_dedupes_ids():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery._dossier_hypotheses_cache = {}
+
+    class _HypothesisManagerStub:
+        def __init__(self):
+            self.calls = []
+
+        async def register_hypotheses(self, entity_id, hypotheses, persist=False):
+            self.calls.append((entity_id, hypotheses, persist))
+
+    manager = _HypothesisManagerStub()
+    discovery.hypothesis_manager = manager
+
+    dossier_hypotheses = [
+        {
+            "statement": "Potential procurement opportunity for CRM.",
+            "category": "procurement_opportunity",
+            "confidence": 0.55,
+            "signal_type": "RFP_SIGNAL",
+            "pattern": "procurement_pattern",
+        },
+        {
+            "statement": "Potential procurement opportunity for CRM duplicate.",
+            "category": "procurement_opportunity",
+            "confidence": 0.65,
+            "signal_type": "RFP_SIGNAL",
+            "pattern": "procurement_pattern",
+        },
+    ]
+
+    added = await discovery.initialize_from_dossier("coventry-city-fc", dossier_hypotheses)
+    assert added == 2
+    assert "coventry-city-fc" in discovery._dossier_hypotheses_cache
+    cached = discovery._dossier_hypotheses_cache["coventry-city-fc"]
+    assert len(cached) == 1
+    assert cached[0].confidence == pytest.approx(0.65, rel=1e-6)
+
+    assert len(manager.calls) == 1
+    call_entity_id, call_hypotheses, call_persist = manager.calls[0]
+    assert call_entity_id == "coventry-city-fc"
+    assert call_persist is False
+    assert len(call_hypotheses) == 1
+
+
+@pytest.mark.asyncio
 async def test_resolve_official_site_url_uses_mapped_domain_before_search():
     discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
     discovery.current_official_site_url = None
@@ -504,6 +550,65 @@ def test_performance_summary_includes_llm_runtime_diagnostics():
     assert summary["evaluation_mode"] == "heuristic"
     assert summary["run_profile"] == "test"
     assert summary["run_mode"] == "single_pass"
+    assert "field_statuses" in summary
+    assert "claims_count" in summary
+    assert "verified_fields_count" in summary
+
+
+def test_failure_result_includes_schema_first_metrics_defaults():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    result = discovery._build_failure_result("entity-1", "Entity One", "failed")
+    result_dict = result.to_dict()
+    assert result_dict["field_statuses"] == {}
+    assert result_dict["claims_count"] == 0
+    assert result_dict["verified_fields_count"] == 0
+
+
+def test_record_schema_first_claim_from_iteration_populates_metrics_on_success():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    state = SimpleNamespace(entity_id="entity-1", iterations_completed=1)
+    hypothesis = SimpleNamespace(
+        hypothesis_id="entity-1_hypothesis",
+        statement="Entity is recruiting for digital procurement roles",
+        confidence=0.62,
+    )
+    result = {
+        "decision": "WEAK_ACCEPT",
+        "url": "https://example.com/careers",
+        "evidence_found": "Careers page lists digital procurement manager role.",
+    }
+
+    discovery._record_schema_first_claim_from_iteration(
+        state=state,
+        hypothesis=hypothesis,
+        hop_type=HopType.CAREERS_PAGE,
+        result=result,
+    )
+    metrics = discovery._schema_first_metrics()
+    assert metrics["claims_count"] == 1
+    assert metrics["verified_fields_count"] == 1
+    assert metrics["field_statuses"]["contact_information"] == "verified"
+
+
+def test_choose_schema_first_hop_prioritizes_lowest_attempt_pending_field():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery._initialize_schema_first_runtime()
+    discovery._active_schema_fields = ["core_information", "recent_news"]
+    discovery._active_field_planner.record_attempt("core_information", success=False)
+
+    state = SimpleNamespace(hop_failure_counts={})
+    hop = discovery._choose_schema_first_hop(state)
+    assert hop == HopType.PRESS_RELEASE
+
+
+def test_choose_schema_first_hop_skips_official_site_when_diversification_forced():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery._initialize_schema_first_runtime()
+    discovery._active_schema_fields = ["core_information"]
+
+    state = SimpleNamespace(hop_failure_counts={}, force_non_official_next_hop=True)
+    hop = discovery._choose_schema_first_hop(state)
+    assert hop == HopType.ANNUAL_REPORT
 
 
 def test_parse_evaluation_response_json_extracts_fenced_json_block():
