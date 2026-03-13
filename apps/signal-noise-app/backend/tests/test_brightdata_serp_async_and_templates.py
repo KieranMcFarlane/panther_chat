@@ -209,6 +209,23 @@ def test_collect_section_quality_issues_detects_meta_and_placeholder_leaks():
     assert "numeric_claim_without_source" in issues
 
 
+def test_collect_section_quality_issues_rejects_schema_instruction_leakage():
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.strict_section_qa_enabled = True
+    generator.strict_section_qa_ids = {"current_performance"}
+    generator.strict_numeric_claim_source_required = True
+
+    section_data = {
+        "content": [
+            "The JSON must have specific keys: `content`, `metrics`, `insights`, `recommendations`, `confidence`.",
+            "`confidence` is a number between 0-1.",
+        ]
+    }
+
+    issues = generator._collect_section_quality_issues("current_performance", section_data)
+    assert "meta_text_leak" in issues
+
+
 def test_collect_section_quality_issues_requires_named_leadership_roles():
     generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
     generator.strict_section_qa_enabled = True

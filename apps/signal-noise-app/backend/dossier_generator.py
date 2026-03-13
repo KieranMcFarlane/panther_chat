@@ -790,6 +790,13 @@ Website: N/A
             "the context is",
             "analysis of requirements",
             "research notes",
+            "json must have specific keys",
+            "must have specific keys",
+            "confidence is a number between 0-1",
+        )
+        blocked_meta_patterns = (
+            r"\bjson\b.{0,60}\bmust\b.{0,120}\b(content|metrics|insights|recommendations|confidence)\b",
+            r"`?confidence`?\s+is\s+a\s+number\s+between\s+0-1",
         )
         placeholder_patterns = (
             r"\bitem\s+\d+\s*:",
@@ -802,6 +809,9 @@ Website: N/A
         for line in content:
             normalized = line.strip().lower()
             if any(marker in normalized for marker in blocked_meta_markers):
+                issues.append("meta_text_leak")
+                break
+            if any(re.search(pattern, normalized) for pattern in blocked_meta_patterns):
                 issues.append("meta_text_leak")
                 break
 
