@@ -1,16 +1,22 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useVectorSearch, VectorSearchOptions } from "@/hooks/useVectorSearch"
 import { EntityCard } from "@/components/EntityCard"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Search, Filter, RefreshCw, Database, Zap, Grid3X3 } from "lucide-react"
+import { Search, Filter, RefreshCw, Database, Zap, Grid3X3, CheckCircle2, Circle, Loader2 } from "lucide-react"
 
 
 export function VectorSearch() {
+  const planSteps = [
+    "Interpret customer intent",
+    "Evaluate matching inventory",
+    "Prepare recommendation shortlist",
+    "Return actionable next steps",
+  ]
   const [query, setQuery] = useState("")
   const [searchType, setSearchType] = useState<'vector' | 'text'>('vector')
   const [filters, setFilters] = useState<VectorSearchOptions>({
@@ -18,8 +24,39 @@ export function VectorSearch() {
     threshold: 0.7,
     entityType: ''
   })
+  const [planCompletedCount, setPlanCompletedCount] = useState(0)
+  const [showCompletionState, setShowCompletionState] = useState(false)
+  const [showPlanSteps, setShowPlanSteps] = useState(true)
+  const previousLoadingRef = useRef(false)
   
   const { results, loading, error } = useVectorSearch(query, filters, searchType)
+
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval> | undefined
+    let completionTimer: ReturnType<typeof setTimeout> | undefined
+
+    if (loading && query.trim()) {
+      setShowCompletionState(false)
+      setPlanCompletedCount(0)
+      interval = setInterval(() => {
+        setPlanCompletedCount((current) => Math.min(current + 1, planSteps.length))
+      }, 350)
+    } else if (!loading && previousLoadingRef.current && query.trim()) {
+      setPlanCompletedCount(planSteps.length)
+      setShowCompletionState(true)
+      completionTimer = setTimeout(() => setShowCompletionState(false), 1200)
+    }
+
+    previousLoadingRef.current = loading
+    return () => {
+      if (interval) clearInterval(interval)
+      if (completionTimer) clearTimeout(completionTimer)
+    }
+  }, [loading, query, planSteps.length])
+
+  const showPlanner = (loading || showCompletionState) && query.trim().length > 0
+  const thinkingCompleted = !loading && (showCompletionState || results.length > 0 || Boolean(error))
+  const responseComposerCompleted = thinkingCompleted
   
   return (
     <div className="bg-background">
@@ -175,17 +212,55 @@ export function VectorSearch() {
         </Card>
 
         {/* Results Section */}
-        {loading && (
+        {showPlanner && (
           <Card>
             <CardContent className="flex flex-col items-center justify-center py-12">
-              <RefreshCw className="h-8 w-8 animate-spin text-primary mb-4" />
-              <h3 className="text-lg font-medium mb-2">Searching Graph Intelligence Store...</h3>
-              <p className="text-muted-foreground">
-                {searchType === 'vector' 
-                  ? 'Running AI-powered semantic search across your data' 
-                  : 'Searching through entity names and descriptions'
-                }
-              </p>
+              <div className="w-full max-w-2xl rounded-lg border bg-muted/30 p-4">
+                <div className="mb-3 flex items-center justify-between">
+                  <div className="font-medium">Plan</div>
+                  <Button variant="ghost" size="sm" onClick={() => setShowPlanSteps((value) => !value)}>
+                    {showPlanSteps ? 'Hide steps' : 'Show steps'}
+                  </Button>
+                </div>
+                {showPlanSteps && (
+                  <ul className="space-y-2 text-sm">
+                    {planSteps.map((step, index) => {
+                      const complete = index < planCompletedCount
+                      const active = !complete && loading && index === planCompletedCount
+                      return (
+                        <li key={step} className="flex items-center gap-2">
+                          {complete ? (
+                            <CheckCircle2 className="h-4 w-4 text-green-500" />
+                          ) : active ? (
+                            <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                          ) : (
+                            <Circle className="h-4 w-4 text-muted-foreground" />
+                          )}
+                          <span>{step}</span>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                )}
+                <div className="mt-4 space-y-2 text-sm">
+                  <div className="flex items-center gap-2">
+                    {thinkingCompleted ? (
+                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                    ) : (
+                      <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                    )}
+                    <span>Thinking</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {responseComposerCompleted ? (
+                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                    ) : (
+                      <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                    )}
+                    <span>Response composer</span>
+                  </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
         )}

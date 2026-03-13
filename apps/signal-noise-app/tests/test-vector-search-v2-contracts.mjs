@@ -15,6 +15,10 @@ const appNavigationSource = readFileSync(
   new URL('../src/components/layout/AppNavigation.tsx', import.meta.url),
   'utf8',
 )
+const vectorSearchComponentSource = readFileSync(
+  new URL('../src/components/VectorSearch.tsx', import.meta.url),
+  'utf8',
+)
 
 test('vector search route exposes hybrid v2 strategy with lexical + semantic merge', () => {
   assert.match(vectorSearchRouteSource, /hybrid_v2/)
@@ -54,4 +58,14 @@ test('vector search can degrade to lexical-only mode when semantic embedding is 
 test('sidebar search item points to real /search route', () => {
   assert.match(appNavigationSource, /label:\s*'Search'/)
   assert.match(appNavigationSource, /href:\s*'\/search'/)
+})
+
+test('search loading UI includes staged plan steps with completion semantics', () => {
+  assert.match(vectorSearchComponentSource, /Interpret customer intent/)
+  assert.match(vectorSearchComponentSource, /Evaluate matching inventory/)
+  assert.match(vectorSearchComponentSource, /Prepare recommendation shortlist/)
+  assert.match(vectorSearchComponentSource, /Return actionable next steps/)
+  assert.match(vectorSearchComponentSource, /Thinking/)
+  assert.match(vectorSearchComponentSource, /Response composer/)
+  assert.match(vectorSearchComponentSource, /planCompletedCount/)
 })
