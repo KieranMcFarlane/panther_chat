@@ -544,7 +544,13 @@ Website: N/A
             if isinstance(result, Exception):
                 logger.error(f"Failed to generate section {section_ids[i]}: {result}")
                 # Create fallback section
-                sections.append(self._create_fallback_section(section_ids[i], model))
+                sections.append(
+                    self._create_fallback_section(
+                        section_ids[i],
+                        model,
+                        entity_data=entity_data,
+                    )
+                )
             elif isinstance(result, DossierSection):
                 sections.append(result)
 
@@ -1142,24 +1148,275 @@ Website: N/A
         cost_per_million = pricing.get(model, 0.25)
         return (estimated_tokens / 1_000_000) * cost_per_million
 
-    def _create_fallback_section(self, section_id: str, model: str) -> DossierSection:
+    def _create_fallback_section(
+        self,
+        section_id: str,
+        model: str,
+        entity_data: Optional[Dict[str, Any]] = None,
+    ) -> DossierSection:
         """
         Create fallback section when generation fails
 
         Args:
             section_id: Section identifier
             model: Model that was attempted
+            entity_data: Optional collected entity data for deterministic fallback
 
         Returns:
             Fallback DossierSection with error message
         """
         template_info = self.section_templates.get(section_id, {})
+        deterministic_payload = self._build_deterministic_section_fallback(
+            section_id=section_id,
+            entity_data=entity_data or {},
+        )
+        if deterministic_payload:
+            return DossierSection(
+                id=section_id,
+                title=template_info.get("description", section_id),
+                content=deterministic_payload.get("content", []),
+                metrics=deterministic_payload.get("metrics", []),
+                insights=deterministic_payload.get("insights", []),
+                recommendations=deterministic_payload.get("recommendations", []),
+                confidence=float(deterministic_payload.get("confidence", 0.45) or 0.45),
+                generated_by="deterministic_fallback",
+            )
+
         return DossierSection(
             id=section_id,
             title=template_info.get("description", section_id),
             content=[f"Section generation failed. Please try again later."],
             confidence=0.0,
             generated_by=model
+        )
+
+    def _build_deterministic_section_fallback(
+        self,
+        *,
+        section_id: str,
+        entity_data: Dict[str, Any],
+    ) -> Optional[Dict[str, Any]]:
+        if not self._requires_strict_section_qa(section_id):
+            return None
+
+        if section_id == "core_information":
+            return self._build_core_information_fallback(entity_data)
+        if section_id == "recent_news":
+            return self._build_recent_news_fallback(entity_data)
+        if section_id == "current_performance":
+            return self._build_current_performance_fallback(entity_data)
+        if section_id == "leadership":
+            return self._build_leadership_fallback(entity_data)
+        return None
+
+    def _build_core_information_fallback(self, entity_data: Dict[str, Any]) -> Dict[str, Any]:
+        entity_name = str(entity_data.get("entity_name") or "This entity").strip()
+        entity_type = str(entity_data.get("entity_type") or "organization").strip()
+        country = (
+            entity_data.get("entity_country")
+            or entity_data.get("country")
+            or "Unknown"
+        )
+        official_site = self._normalize_http_url(
+            entity_data.get("official_site_url")
+            or entity_data.get("website")
+            or entity_data.get("entity_website")
+        )
+        founded = entity_data.get("entity_founded") or entity_data.get("founded") or "Unknown"
+        league = entity_data.get("entity_league") or entity_data.get("league_or_competition") or "Unknown"
+
+        lines = [
+            self._format_evidence_line(
+                f"{entity_name} is a {entity_type.lower()} with country/region context: {country}.",
+                evidence_level="inferred",
+                source_type="internal_analysis",
+                needs_review=True,
+            ),
+            self._format_evidence_line(
+                f"Official website: {official_site or 'Unknown'}.",
+                evidence_level="verified" if official_site else "inferred",
+                source_type="official" if official_site else "internal_analysis",
+                needs_review=not bool(official_site),
+            ),
+            self._format_evidence_line(
+                f"Founded year: {founded}; competition/league context: {league}.",
+                evidence_level="inferred",
+                source_type="internal_analysis",
+                needs_review=True,
+            ),
+        ]
+        return {
+            "content": lines,
+            "metrics": [],
+            "insights": [],
+            "recommendations": [],
+            "confidence": 0.48,
+        }
+
+    def _build_recent_news_fallback(self, entity_data: Dict[str, Any]) -> Dict[str, Any]:
+        summary = entity_data.get("press_releases_summary") or ""
+        lines = self._extract_summary_lines(summary, max_items=3)
+        content: List[str] = []
+        if lines:
+            for line in lines:
+                content.append(
+                    self._format_evidence_line(
+                        line,
+                        evidence_level="verified",
+                        source_type="news",
+                        needs_review=True,
+                    )
+                )
+        else:
+            content.append(
+                self._format_evidence_line(
+                    "Recent dated news items were not reliably extracted from current sources.",
+                    evidence_level="inferred",
+                    source_type="internal_analysis",
+                    needs_review=True,
+                )
+            )
+        return {
+            "content": content,
+            "metrics": [],
+            "insights": [],
+            "recommendations": [],
+            "confidence": 0.46 if lines else 0.4,
+        }
+
+    def _build_current_performance_fallback(self, entity_data: Dict[str, Any]) -> Dict[str, Any]:
+        freshness = entity_data.get("data_freshness")
+        sources_used = entity_data.get("sources_used") if isinstance(entity_data.get("sources_used"), list) else []
+        press_count = entity_data.get("press_releases_count")
+        jobs_count = entity_data.get("job_postings_count")
+
+        content = [
+            self._format_evidence_line(
+                "Current competitive/financial KPIs are unavailable in reliably structured sources for this run.",
+                evidence_level="inferred",
+                source_type="internal_analysis",
+                needs_review=True,
+            )
+        ]
+        if freshness is not None:
+            content.append(
+                self._format_evidence_line(
+                    f"Collection freshness score observed: {freshness}.",
+                    evidence_level="verified",
+                    source_type="internal_analysis",
+                    needs_review=True,
+                )
+            )
+        if press_count is not None or jobs_count is not None:
+            content.append(
+                self._format_evidence_line(
+                    f"Signals available: press_releases={press_count if press_count is not None else 'Unknown'}, job_postings={jobs_count if jobs_count is not None else 'Unknown'}.",
+                    evidence_level="verified",
+                    source_type="internal_analysis",
+                    needs_review=True,
+                )
+            )
+        if sources_used:
+            content.append(
+                self._format_evidence_line(
+                    f"Sources used in this run: {', '.join(str(item) for item in sources_used[:5])}.",
+                    evidence_level="verified",
+                    source_type="internal_analysis",
+                    needs_review=True,
+                )
+            )
+        return {
+            "content": content,
+            "metrics": [],
+            "insights": [],
+            "recommendations": [],
+            "confidence": 0.42,
+        }
+
+    def _build_leadership_fallback(self, entity_data: Dict[str, Any]) -> Dict[str, Any]:
+        entity_name = str(entity_data.get("entity_name") or "This entity").strip()
+        official_site = self._normalize_http_url(
+            entity_data.get("official_site_url")
+            or entity_data.get("website")
+            or entity_data.get("entity_website")
+        )
+        known_people = entity_data.get("decision_makers")
+        content: List[str] = []
+
+        if isinstance(known_people, list) and known_people:
+            for person in known_people[:4]:
+                if isinstance(person, dict):
+                    name = person.get("name") or "Unknown"
+                    role = person.get("role") or "Unknown role"
+                    text = f"Leadership contact observed: {name} ({role})."
+                else:
+                    text = f"Leadership contact observed: {str(person).strip()}."
+                content.append(
+                    self._format_evidence_line(
+                        text,
+                        evidence_level="verified",
+                        source_type="news",
+                        needs_review=True,
+                    )
+                )
+        else:
+            content.append(
+                self._format_evidence_line(
+                    f"Named leadership roster for {entity_name} was not reliably extracted from current sources.",
+                    evidence_level="inferred",
+                    source_type="internal_analysis",
+                    needs_review=True,
+                )
+            )
+
+        if official_site:
+            content.append(
+                self._format_evidence_line(
+                    f"Recommended verification path: official governance/about pages at {official_site}.",
+                    evidence_level="verified",
+                    source_type="official",
+                    needs_review=False,
+                )
+            )
+
+        return {
+            "content": content,
+            "metrics": [],
+            "insights": [],
+            "recommendations": [],
+            "confidence": 0.44 if known_people else 0.4,
+        }
+
+    @classmethod
+    def _extract_summary_lines(cls, summary: Any, max_items: int = 3) -> List[str]:
+        if not isinstance(summary, str) or not summary.strip():
+            return []
+
+        lines = cls._sanitize_section_content([summary])
+        cleaned: List[str] = []
+        for line in lines:
+            normalized = line.strip().strip('",')
+            if not normalized:
+                continue
+            cleaned.append(normalized)
+            if len(cleaned) >= max_items:
+                break
+        return cleaned
+
+    @staticmethod
+    def _format_evidence_line(
+        text: str,
+        *,
+        evidence_level: str,
+        source_type: str,
+        last_verified_at: str = "unknown",
+        needs_review: bool = True,
+    ) -> str:
+        review_flag = "true" if needs_review else "false"
+        return (
+            f"{text} "
+            f"[evidence_level={evidence_level}; source_type={source_type}; "
+            f"last_verified_at={last_verified_at}; needs_review={review_flag}]"
         )
 
     def _dossier_data_to_dict(self, dossier_data: 'DossierData') -> Dict[str, Any]:

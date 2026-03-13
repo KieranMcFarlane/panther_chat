@@ -75,6 +75,68 @@ def test_sanitize_section_content_strips_json_scaffolding_meta_lines():
     assert cleaned == ["FIBA is headquartered in Mies, Switzerland."]
 
 
+def test_create_fallback_section_uses_deterministic_core_information_when_strict():
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.strict_section_qa_enabled = True
+    generator.strict_section_qa_ids = {
+        "core_information",
+        "recent_news",
+        "current_performance",
+        "leadership",
+    }
+    generator.section_templates = {
+        "core_information": {
+            "description": "Basic entity information",
+        }
+    }
+
+    section = generator._create_fallback_section(
+        "core_information",
+        "haiku",
+        entity_data={
+            "entity_name": "FIBA",
+            "entity_type": "FEDERATION",
+            "entity_country": "Switzerland",
+            "official_site_url": "https://www.fiba.basketball/en",
+        },
+    )
+
+    assert section.confidence > 0.0
+    assert "Section generation failed" not in " ".join(section.content)
+    assert any("FIBA" in line for line in section.content)
+    assert any("https://www.fiba.basketball/en" in line for line in section.content)
+
+
+def test_create_fallback_section_uses_deterministic_recent_news_when_strict():
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.strict_section_qa_enabled = True
+    generator.strict_section_qa_ids = {
+        "core_information",
+        "recent_news",
+        "current_performance",
+        "leadership",
+    }
+    generator.section_templates = {
+        "recent_news": {
+            "description": "Recent news and developments",
+        }
+    }
+
+    section = generator._create_fallback_section(
+        "recent_news",
+        "haiku",
+        entity_data={
+            "entity_name": "FIBA",
+            "press_releases_summary": "- March 2026: New competition format announced\n- February 2026: Governance update published",
+            "press_releases_count": 2,
+        },
+    )
+
+    assert section.confidence > 0.0
+    assert "Section generation failed" not in " ".join(section.content)
+    assert any("March 2026" in line for line in section.content)
+
+
 def test_collect_section_quality_issues_detects_meta_and_placeholder_leaks():
     generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
     generator.strict_section_qa_enabled = True
