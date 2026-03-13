@@ -4,6 +4,7 @@ Tests for the canonical entity pipeline orchestrator.
 """
 
 import sys
+import types
 from pathlib import Path
 from datetime import datetime, timezone
 import pytest
@@ -332,6 +333,67 @@ async def test_pipeline_orchestrator_runs_schema_first_prephase_when_enabled(mon
     assert result["artifacts"]["dossier"]["metadata"]["canonical_sources"]["official_site"] == "https://www.fiba.basketball/en"
     assert ("schema_first", "running") in phase_events
     assert ("schema_first", "completed") in phase_events
+
+
+@pytest.mark.asyncio
+async def test_pipeline_orchestrator_dispatches_to_schema_sweep_when_enabled(monkeypatch):
+    monkeypatch.setenv("PIPELINE_SCHEMA_FIRST_ENABLED", "true")
+    monkeypatch.setenv("PIPELINE_SCHEMA_SWEEP_ENABLED", "true")
+
+    calls = {}
+
+    async def fake_run_schema_sweep(**kwargs):
+        calls["payload"] = kwargs
+        return {
+            "entity_id": kwargs["entity_id"],
+            "entity_name": kwargs["entity_name"],
+            "fields": {
+                "official_site": {
+                    "value": "https://www.fiba.basketball/en",
+                    "url": "https://www.fiba.basketball/en",
+                    "confidence": 0.91,
+                    "status": "verified",
+                }
+            },
+            "unanswered_fields": [],
+            "artifact_path": "backend/data/dossiers/fiba_schema_sweep_20260313_101010.json",
+            "run_mode": "schema_sweep_single_pass",
+            "step_log_path": "backend/data/dossiers/fiba_schema_sweep_steps_20260313_101010.jsonl",
+        }
+
+    monkeypatch.setitem(
+        sys.modules,
+        "schema_sweep_runner",
+        types.SimpleNamespace(run_schema_sweep=fake_run_schema_sweep),
+    )
+
+    schema_payloads = []
+
+    async def phase_callback(phase, payload):
+        if phase == "schema_first":
+            schema_payloads.append(dict(payload))
+
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=SparseCanonicalDossierGenerator(),
+        baseline_monitoring_runner=None,
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+    )
+
+    result = await orchestrator.run_entity_pipeline(
+        entity_id="fiba",
+        entity_name="FIBA",
+        entity_type="FEDERATION",
+        priority_score=60,
+        phase_callback=phase_callback,
+    )
+
+    assert "payload" in calls
+    assert calls["payload"]["entity_id"] == "fiba"
+    assert schema_payloads[0]["run_mode"] == "schema_sweep_single_pass"
+    assert result["phases"]["schema_first"]["run_mode"] == "schema_sweep_single_pass"
 
 
 @pytest.mark.asyncio

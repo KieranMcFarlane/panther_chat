@@ -56,6 +56,7 @@ class PipelineOrchestrator:
         self.discovery_max_iterations = int(os.getenv("ENTITY_DISCOVERY_MAX_ITERATIONS", "8"))
         self.discovery_hard_timeout = os.getenv("ENTITY_DISCOVERY_HARD_TIMEOUT", "0").lower() in {"1", "true", "yes"}
         self.schema_first_enabled = _bool_env(os.getenv("PIPELINE_SCHEMA_FIRST_ENABLED", "false"))
+        self.schema_sweep_enabled = _bool_env(os.getenv("PIPELINE_SCHEMA_SWEEP_ENABLED", "false"))
         self.schema_first_output_dir = os.getenv("PIPELINE_SCHEMA_FIRST_OUTPUT_DIR", "backend/data/dossiers")
         self.schema_first_max_results = max(1, int(os.getenv("PIPELINE_SCHEMA_FIRST_MAX_RESULTS", "8")))
         self.schema_first_max_candidates_per_query = max(
@@ -85,12 +86,13 @@ class PipelineOrchestrator:
         }
         schema_first_result: Optional[Dict[str, Any]] = None
         if self.schema_first_enabled:
+            schema_run_mode = self._schema_prephase_mode()
             await self._emit_phase_update(
                 phase_callback,
                 "schema_first",
                 {
                     "status": "running",
-                    "run_mode": "schema_first_pilot",
+                    "run_mode": schema_run_mode,
                 },
             )
             try:
@@ -426,9 +428,17 @@ class PipelineOrchestrator:
                 return await runner(**payload)
             raise RuntimeError("schema_first_runner is not callable")
 
+        if self.schema_sweep_enabled:
+            from schema_sweep_runner import run_schema_sweep
+
+            return await run_schema_sweep(**payload)
+
         from schema_first_pilot import run_schema_first_pilot
 
         return await run_schema_first_pilot(**payload)
+
+    def _schema_prephase_mode(self) -> str:
+        return "schema_sweep_single_pass" if self.schema_sweep_enabled else "schema_first_pilot"
 
     def _summarize_schema_first_result(self, result: Dict[str, Any]) -> Dict[str, Any]:
         fields = result.get("fields", {}) if isinstance(result, dict) else {}

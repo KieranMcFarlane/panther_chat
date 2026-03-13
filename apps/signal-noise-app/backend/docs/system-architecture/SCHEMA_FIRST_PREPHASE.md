@@ -25,6 +25,7 @@ For `run_fixed_dossier_pipeline.py`, the same feature is enabled with the same e
 ```bash
 # Enable/disable schema-first pre-phase
 PIPELINE_SCHEMA_FIRST_ENABLED=true
+PIPELINE_SCHEMA_SWEEP_ENABLED=false
 
 # Artifact output location
 PIPELINE_SCHEMA_FIRST_OUTPUT_DIR=backend/data/dossiers
@@ -36,13 +37,24 @@ PIPELINE_SCHEMA_FIRST_MAX_CANDIDATES_PER_QUERY=4
 # Optional field subset (comma-separated)
 # Example: official_site,founded_year,headquarters
 PIPELINE_SCHEMA_FIRST_FIELDS=
+
+# Schema sweep runtime (only when PIPELINE_SCHEMA_SWEEP_ENABLED=true)
+SCHEMA_SWEEP_MAX_HOPS_PER_FIELD=3
+SCHEMA_SWEEP_MIN_FIELD_CONFIDENCE=0.55
+SCHEMA_SWEEP_SEARCH_ENGINE=google
+SCHEMA_SWEEP_SEARCH_COUNTRY=us
 ```
 
 Defaults:
 - `PIPELINE_SCHEMA_FIRST_ENABLED=false`
+- `PIPELINE_SCHEMA_SWEEP_ENABLED=false`
 - `PIPELINE_SCHEMA_FIRST_OUTPUT_DIR=backend/data/dossiers`
 - `PIPELINE_SCHEMA_FIRST_MAX_RESULTS=8`
 - `PIPELINE_SCHEMA_FIRST_MAX_CANDIDATES_PER_QUERY=4`
+- `SCHEMA_SWEEP_MAX_HOPS_PER_FIELD=3`
+- `SCHEMA_SWEEP_MIN_FIELD_CONFIDENCE=0.55`
+- `SCHEMA_SWEEP_SEARCH_ENGINE=google`
+- `SCHEMA_SWEEP_SEARCH_COUNTRY=us`
 
 ## What Gets Merged
 
@@ -62,12 +74,17 @@ In `run_fixed_dossier_pipeline.py`:
 
 `phases.schema_first` reports:
 - `status`
-- `run_mode`
+- `run_mode` (`schema_first_pilot` or `schema_sweep_single_pass`)
 - `answered_fields`
 - `unanswered_fields`
 - `artifact_path`
 
 `artifacts.schema_first` includes the raw schema-first output object (or `null` if skipped/failed).
+
+When schema sweep is enabled, artifact payload also includes:
+- `step_log_path` (JSONL of each tool action)
+- `cache_metrics` (search/scrape call counts and cache-hit counts)
+- `field_traces` (attempt-by-attempt trace per field)
 
 ## Failure Semantics
 
