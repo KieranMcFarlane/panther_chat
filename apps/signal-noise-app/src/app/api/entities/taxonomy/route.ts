@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
+import { dedupeCanonicalEntities } from '@/lib/entity-canonical'
+import { canonicalizeLeagueName } from '@/lib/entity-taxonomy'
 
 type CountMap = Record<string, number>
 
@@ -13,10 +15,21 @@ const isNonEmpty = (value: string): boolean => value.length > 0
 export async function GET() {
   const startedAt = Date.now()
   try {
-    const { data, error } = await supabase
-      .from('cached_entities')
-      .select('labels, properties')
-      .limit(10000)
+    const canonicalProbe = await supabase
+      .from('canonical_entities')
+      .select('id')
+      .limit(1)
+    const useCanonical = !canonicalProbe.error
+
+    const { data, error } = useCanonical
+      ? await supabase
+          .from('canonical_entities')
+          .select('entity_type, sport, league, country, name')
+          .limit(10000)
+      : await supabase
+          .from('cached_entities')
+          .select('labels, properties')
+          .limit(10000)
 
     if (error) {
       throw error
@@ -29,15 +42,19 @@ export async function GET() {
     const federationsRightsHolders: CountMap = {}
     const leaguesBySport: Record<string, Set<string>> = {}
 
-    for (const entity of data || []) {
-      const properties = entity?.properties || {}
-      const sport = normalizeLabel(properties.sport)
-      const league = normalizeLabel(properties.league)
-      const country = normalizeLabel(properties.country)
+    const canonicalRows = useCanonical ? (data || []) : dedupeCanonicalEntities(data || [])
+
+    for (const entity of canonicalRows) {
+      const properties = (entity as any)?.properties || {}
+      const sport = normalizeLabel(useCanonical ? (entity as any).sport : properties.sport)
+      const league = normalizeLabel(canonicalizeLeagueName(useCanonical ? (entity as any).league : properties.league))
+      const country = normalizeLabel(useCanonical ? (entity as any).country : properties.country)
       const entityClass = normalizeLabel(
-        properties.entityClass || properties.entity_class || properties.type || entity?.labels?.[0] || ''
+        useCanonical
+          ? (entity as any).entity_type
+          : properties.entityClass || properties.entity_class || properties.type || (entity as any)?.labels?.[0] || ''
       )
-      const entityName = normalizeLabel(properties.name)
+      const entityName = normalizeLabel(useCanonical ? (entity as any).name : properties.name)
       const lowerClass = entityClass.toLowerCase()
       const lowerName = entityName.toLowerCase()
 
@@ -80,6 +97,8 @@ export async function GET() {
       leaguesBySport: leagueMap,
       metadata: {
         scanned_entities: (data || []).length,
+        canonical_entities: canonicalRows.length,
+        source: useCanonical ? 'canonical_entities' : 'cached_entities',
         latency_ms: Date.now() - startedAt
       },
       counts: {

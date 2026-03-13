@@ -1,40 +1,86 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
+import { dedupeCanonicalEntities } from '@/lib/entity-canonical'
+import {
+  canonicalizeLeagueName,
+  canonicalizeEntityType,
+  getLeagueAliases,
+  getEntityLeague,
+  getEntitySport,
+  resolveStableEntityId,
+} from '@/lib/entity-taxonomy'
+
+function safeLikeTerm(value: string): string {
+  return value.replace(/[,%]/g, ' ').trim()
+}
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const sport = searchParams.get('sport') || ''
-    
-    // Load environment variables manually
-    const { createClient } = await import('@supabase/supabase-js')
-    const supabaseUrl = 'https://itlcuazbybqlkicsaola.supabase.co'
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml0bGN1YXpieWJxbGtpY3Nhb2xhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkwOTc0MTQsImV4cCI6MjA3NDY3MzQxNH0.UXXSbe1Kk0CH7NkIGnwo3_qmJVV3VUbJz4Dw8lBGcKU'
-    const supabase = createClient(supabaseUrl, supabaseKey)
+    const league = searchParams.get('league') || ''
+    const entityType = searchParams.get('entityType') || ''
     
     console.log(`📊 Summary API: Fetching entity summaries for sport: ${sport || 'all'}`)
-    
-    // Build the base query for lightweight entity summaries
-    let query = supabase
-      .from('cached_entities')
-      .select(`
-        id,
-        neo4j_id,
-        properties->>name,
-        properties->>type,
-        properties->>sport,
-        properties->>country,
-        properties->>level,
-        properties->>league
-      `, { count: 'exact' })
-    
-    // Apply sport filter if provided
-    if (sport && sport !== 'all') {
-      query = query.eq('properties->>sport', sport)
+
+    const canonicalProbe = await supabase
+      .from('canonical_entities')
+      .select('id')
+      .limit(1)
+    const useCanonical = !canonicalProbe.error
+
+    if (useCanonical) {
+      let canonicalQuery = supabase
+        .from('canonical_entities')
+        .select('*')
+        .limit(10000)
+
+      if (sport && sport !== 'all') {
+        canonicalQuery = canonicalQuery.ilike('sport', `%${safeLikeTerm(sport)}%`)
+      }
+
+      if (league && league !== 'all') {
+        const clauses = getLeagueAliases(league)
+          .map(safeLikeTerm)
+          .map((leagueTerm) => `league.ilike.%${leagueTerm}%`)
+        canonicalQuery = canonicalQuery.or(clauses.join(','))
+      }
+
+      if (entityType && entityType !== 'all') {
+        canonicalQuery = canonicalQuery.eq('entity_type', entityType)
+      }
+
+      const { data: canonicalData, error: canonicalError } = await canonicalQuery.order('name', { ascending: true })
+      if (canonicalError) throw canonicalError
+
+      const summaries = (canonicalData || []).map((entity: any) => ({
+        id: String(entity.id),
+        source_id: String(entity.id),
+        graph_id: String(entity.id),
+        neo4j_id: Array.isArray(entity.source_neo4j_ids) ? entity.source_neo4j_ids[0] : String(entity.id),
+        name: entity.name,
+        type: entity.entity_type,
+        entity_type: entity.entity_type,
+        sport: entity.sport || '',
+        country: entity.country || '',
+        level: entity.properties?.level || '',
+        league: canonicalizeLeagueName(entity.league || ''),
+      }))
+
+      return NextResponse.json({
+        entities: summaries,
+        summary: {
+          count: summaries.length,
+          total: summaries.length,
+          sport: sport || 'all',
+          league: league || 'all',
+          entityType: entityType || 'all',
+          timestamp: new Date().toISOString(),
+        },
+        source: 'canonical_entities',
+      })
     }
-    
-    // Apply ordering
-    query = query.order('properties->>name', { ascending: true })
-    
+
     // Fetch all entities using pagination since Supabase has default limits
     let allData: any[] = []
     let hasMore = true
@@ -45,20 +91,22 @@ export async function GET(request: NextRequest) {
       // Create a fresh query for each pagination request
       let pageQuery = supabase
         .from('cached_entities')
-        .select(`
-          id,
-          neo4j_id,
-          properties->>name,
-          properties->>type,
-          properties->>sport,
-          properties->>country,
-          properties->>level,
-          properties->>league
-        `)
+        .select('id, graph_id, neo4j_id, labels, properties')
       
       // Apply sport filter if provided
       if (sport && sport !== 'all') {
-        pageQuery = pageQuery.eq('properties->>sport', sport)
+        pageQuery = pageQuery.ilike('properties->>sport', `%${safeLikeTerm(sport)}%`)
+      }
+
+      if (league && league !== 'all') {
+        const clauses = getLeagueAliases(league)
+          .map(safeLikeTerm)
+          .flatMap((leagueTerm) => [
+            `properties->>league.ilike.%${leagueTerm}%`,
+            `properties->>parent_league.ilike.%${leagueTerm}%`,
+            `properties->>level.ilike.%${leagueTerm}%`,
+          ])
+        pageQuery = pageQuery.or(clauses.join(','))
       }
       
       // Apply ordering and pagination
@@ -88,21 +136,43 @@ export async function GET(request: NextRequest) {
         console.log(`✅ No more data, total fetched: ${allData.length}`)
       }
     }
+
+    const canonicalRows = dedupeCanonicalEntities(allData)
+
+    const filteredData = canonicalRows.filter((entity) => {
+      if (!entityType || entityType === 'all') return true
+      return canonicalizeEntityType(entity) === entityType
+    })
     
-    // Get total count
-    const { count } = await supabase
-      .from('cached_entities')
-      .select('*', { count: 'exact', head: true })
+    const summaries = filteredData.map((entity) => {
+      const stableId = resolveStableEntityId(entity) || String(entity.id)
+      const properties = entity.properties || {}
+      return {
+        id: stableId,
+        source_id: String(entity.id),
+        graph_id: stableId,
+        neo4j_id: entity.neo4j_id || stableId,
+        name: properties.name || stableId,
+        type: properties.type || entity.labels?.[0] || 'Entity',
+        entity_type: canonicalizeEntityType(entity),
+        sport: getEntitySport(entity),
+        country: properties.country || '',
+        level: properties.level || '',
+        league: canonicalizeLeagueName(getEntityLeague(entity)),
+      }
+    })
     
-    console.log(`✅ Summary API: Found ${allData?.length || 0} entity summaries, total: ${count || 0}`)
+    console.log(`✅ Summary API: Found ${summaries.length} canonical entity summaries`)
     
     // Return lightweight entity summaries
     return NextResponse.json({
-      entities: allData || [],
+      entities: summaries,
       summary: {
-        count: allData?.length || 0,
-        total: count || 0,
+        count: summaries.length,
+        total: summaries.length,
         sport: sport || 'all',
+        league: league || 'all',
+        entityType: entityType || 'all',
         timestamp: new Date().toISOString()
       }
     })
