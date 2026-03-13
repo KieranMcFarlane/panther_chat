@@ -292,6 +292,60 @@ def test_collect_section_quality_issues_rejects_raw_input_scaffolding_phrases():
     assert "meta_text_leak" in issues
 
 
+@pytest.mark.parametrize("section_id", ["core_information", "quick_actions", "digital_maturity"])
+def test_collect_section_quality_issues_rejects_section_specific_prompt_scaffolding(section_id: str):
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.strict_section_qa_enabled = True
+    generator.strict_section_qa_ids = {"core_information"}
+    generator.strict_numeric_claim_source_required = True
+
+    section_data = {
+        "content": [
+            "The output is a JSON object with specific keys and confidence guidance.",
+            "The user's prompt explicitly asks for a strict schema response.",
+        ]
+    }
+
+    issues = generator._collect_section_quality_issues(section_id, section_data)
+    assert "meta_text_leak" in issues
+
+
+@pytest.mark.parametrize("section_id", ["core_information", "quick_actions", "digital_maturity"])
+def test_collect_section_quality_issues_rejects_constraint_rewrite_scaffolding(section_id: str):
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.strict_section_qa_enabled = True
+    generator.strict_section_qa_ids = {"core_information"}
+    generator.strict_numeric_claim_source_required = True
+
+    section_data = {
+        "content": [
+            "Constraint: Rewrite as strict JSON only.",
+            "Then provide the final section output.",
+        ]
+    }
+
+    issues = generator._collect_section_quality_issues(section_id, section_data)
+    assert "meta_text_leak" in issues
+
+
+@pytest.mark.parametrize("section_id", ["core_information", "quick_actions", "digital_maturity"])
+def test_collect_section_quality_issues_rejects_handle_missing_incomplete_scaffolding(section_id: str):
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.strict_section_qa_enabled = True
+    generator.strict_section_qa_ids = {"core_information"}
+    generator.strict_numeric_claim_source_required = True
+
+    section_data = {
+        "content": [
+            "Handle Missing/Incomplete Data:",
+            "If unavailable, write placeholders and continue.",
+        ]
+    }
+
+    issues = generator._collect_section_quality_issues(section_id, section_data)
+    assert "meta_text_leak" in issues
+
+
 def test_collect_section_quality_issues_requires_named_leadership_roles():
     generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
     generator.strict_section_qa_enabled = True

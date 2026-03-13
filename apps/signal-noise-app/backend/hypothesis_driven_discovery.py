@@ -1058,7 +1058,87 @@ class HypothesisDrivenDiscovery:
                 self._last_parse_path = "json_fenced"
                 return parsed
 
+        key_value_payload = self._extract_evaluation_key_value_payload(response_text)
+        if key_value_payload:
+            self._last_parse_path = "key_value_recovered"
+            return key_value_payload
+
         return None
+
+    def _extract_evaluation_key_value_payload(self, response_text: str) -> Optional[Dict[str, Any]]:
+        """Recover evaluator payload from strict key:value lines when JSON formatting is missing."""
+        if not isinstance(response_text, str) or not response_text.strip():
+            return None
+
+        import re
+
+        required_keys = (
+            "decision",
+            "confidence_delta",
+            "justification",
+            "evidence_found",
+            "evidence_type",
+            "temporal_score",
+        )
+        multiline_keys = {"justification", "evidence_found"}
+
+        values: Dict[str, str] = {}
+        active_key: Optional[str] = None
+
+        for raw_line in response_text.splitlines():
+            line = str(raw_line or "").strip()
+            if not line:
+                continue
+
+            match = re.match(
+                r'^[\-\*\u2022]?\s*"?([a-z_]+)"?\s*[:=]\s*(.+?)\s*$',
+                line,
+                flags=re.IGNORECASE,
+            )
+            if match:
+                key = str(match.group(1) or "").strip().lower()
+                if key in required_keys:
+                    raw_value = str(match.group(2) or "").strip()
+                    cleaned = raw_value.strip("`").strip()
+                    if len(cleaned) >= 2 and cleaned[0] == cleaned[-1] and cleaned[0] in {'"', "'"}:
+                        cleaned = cleaned[1:-1].strip()
+                    values[key] = cleaned
+                    active_key = key
+                else:
+                    active_key = None
+                continue
+
+            if active_key in multiline_keys:
+                values[active_key] = f"{values.get(active_key, '').strip()} {line}".strip()
+
+        if not all(values.get(key) for key in required_keys):
+            return None
+
+        decision = str(values.get("decision") or "").strip().upper()
+        if decision not in {"ACCEPT", "WEAK_ACCEPT", "REJECT", "NO_PROGRESS"}:
+            return None
+
+        confidence_text = str(values.get("confidence_delta") or "").strip()
+        number_match = re.search(r"-?\d+(?:\.\d+)?", confidence_text)
+        if not number_match:
+            return None
+        try:
+            confidence_delta = float(number_match.group(0))
+        except Exception:  # noqa: BLE001
+            return None
+
+        temporal_score = str(values.get("temporal_score") or "").strip()
+        if not temporal_score:
+            temporal_score = "unknown"
+
+        return {
+            "decision": decision,
+            "confidence_delta": confidence_delta,
+            "justification": str(values.get("justification") or "").strip(),
+            "evidence_found": str(values.get("evidence_found") or "").strip(),
+            "evidence_type": str(values.get("evidence_type") or "").strip(),
+            "temporal_score": temporal_score,
+        }
 
     def _score_url(self, url: str, hop_type: HopType, entity_name: str, title: str = "", snippet: str = "") -> float:
         """

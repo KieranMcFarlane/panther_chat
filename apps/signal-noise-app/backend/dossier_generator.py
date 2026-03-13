@@ -821,6 +821,29 @@ Website: N/A
             r"\.\.\.",
             r"^\s*bullet\s+\d+\b",
         )
+        section_scaffold_markers = {
+            "core_information": (
+                "the user's prompt explicitly asks for",
+                "the output is a json object with specific keys",
+                "constraint: rewrite as strict json only",
+                "rewrite as strict json only",
+                "handle missing/incomplete data",
+            ),
+            "quick_actions": (
+                "the user's prompt explicitly asks for",
+                "the output is a json object with specific keys",
+                "constraint: rewrite as strict json only",
+                "rewrite as strict json only",
+                "handle missing/incomplete data",
+            ),
+            "digital_maturity": (
+                "the user's prompt explicitly asks for",
+                "the output is a json object with specific keys",
+                "constraint: rewrite as strict json only",
+                "rewrite as strict json only",
+                "handle missing/incomplete data",
+            ),
+        }
 
         for line in content:
             normalized = line.strip().lower()
@@ -828,6 +851,10 @@ Website: N/A
                 issues.append("meta_text_leak")
                 break
             if any(re.search(pattern, normalized) for pattern in blocked_meta_patterns):
+                issues.append("meta_text_leak")
+                break
+            section_markers = section_scaffold_markers.get(section_id, ())
+            if section_markers and any(marker in normalized for marker in section_markers):
                 issues.append("meta_text_leak")
                 break
 
@@ -1050,6 +1077,10 @@ Website: N/A
             "the context is",
             "analysis of requirements",
             "research notes",
+            "constraint: rewrite as strict json only",
+            "rewrite as strict json only",
+            "the user's prompt explicitly asks for",
+            "handle missing/incomplete data",
         )
         if any(marker in normalized for marker in instruction_markers):
             return True
