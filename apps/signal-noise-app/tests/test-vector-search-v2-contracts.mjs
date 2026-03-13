@@ -1,0 +1,41 @@
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import { existsSync, readFileSync } from 'node:fs'
+
+const vectorSearchRouteSource = readFileSync(
+  new URL('../src/app/api/vector-search/route.ts', import.meta.url),
+  'utf8',
+)
+
+const embeddingsRouteSource = readFileSync(
+  new URL('../src/app/api/embeddings/route.ts', import.meta.url),
+  'utf8',
+)
+
+test('vector search route exposes hybrid v2 strategy with lexical + semantic merge', () => {
+  assert.match(vectorSearchRouteSource, /hybrid_v2/)
+  assert.match(vectorSearchRouteSource, /lexical_score/)
+  assert.match(vectorSearchRouteSource, /semantic_score/)
+  assert.match(vectorSearchRouteSource, /final_score/)
+})
+
+test('vector search route supports facet-aware filtering inputs', () => {
+  assert.match(vectorSearchRouteSource, /sport/)
+  assert.match(vectorSearchRouteSource, /league/)
+  assert.match(vectorSearchRouteSource, /country/)
+  assert.match(vectorSearchRouteSource, /entity_type/)
+})
+
+test('embeddings route does not return random dummy embeddings on failure', () => {
+  assert.doesNotMatch(embeddingsRouteSource, /Math\.random\(\)/)
+  assert.match(embeddingsRouteSource, /OPENAI_API_KEY/)
+  assert.match(embeddingsRouteSource, /status:\s*503/)
+})
+
+test('search route page exists so sidebar search route is not a 404', () => {
+  const searchPagePath = new URL('../src/app/search/page.tsx', import.meta.url)
+  assert.equal(existsSync(searchPagePath), true)
+  const searchPageSource = readFileSync(searchPagePath, 'utf8')
+  assert.match(searchPageSource, /VectorSearch/)
+})
+

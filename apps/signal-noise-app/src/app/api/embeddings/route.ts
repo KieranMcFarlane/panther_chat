@@ -13,13 +13,12 @@ export async function POST(request: NextRequest) {
     }
     
     if (!process.env.OPENAI_API_KEY) {
-      // Return a dummy embedding for demo purposes
-      const dummyEmbedding = Array(1536).fill(0).map(() => Math.random())
-      return NextResponse.json({
-        embedding: dummyEmbedding,
-        model: 'dummy-model',
-        usage: { prompt_tokens: 0, total_tokens: 0 }
-      })
+      return NextResponse.json(
+        {
+          error: 'OPENAI_API_KEY is not configured for embedding generation'
+        },
+        { status: 503 }
+      )
     }
     
     // Lazy-load OpenAI client only when needed (not during build)
@@ -41,14 +40,12 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error('❌ Embedding generation failed:', error)
-    
-    // Return a dummy embedding for demo purposes
-    const dummyEmbedding = Array(1536).fill(0).map(() => Math.random())
-    return NextResponse.json({
-      embedding: dummyEmbedding,
-      model: 'fallback-dummy',
-      usage: { prompt_tokens: 0, total_tokens: 0 },
-      error: 'Failed to generate real embedding'
-    })
+
+    return NextResponse.json(
+      {
+        error: error instanceof Error ? error.message : 'Failed to generate embedding'
+      },
+      { status: 503 }
+    )
   }
 }
