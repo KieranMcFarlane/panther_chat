@@ -24,6 +24,7 @@ type PostImportCanonicalMaintenanceOptions = {
 
 const MAINTENANCE_COMMANDS = [
   'npm run remediate:canonical-congruence',
+  'npm run remediate:taxonomy-hygiene',
   'npm run qa:canonical-congruence',
 ]
 
@@ -119,6 +120,71 @@ async function persistMaintenanceAudit(params: {
   })
 }
 
+async function sendFailureAlerts(params: {
+  syncRunId: string
+  trigger: string
+  durationMs: number
+  steps: MaintenanceStep[]
+  errorMessage: string
+  metadata?: Record<string, unknown>
+}) {
+  const webhookUrl =
+    process.env.CANONICAL_MAINTENANCE_ALERT_WEBHOOK_URL ||
+    process.env.SLACK_WEBHOOK_URL ||
+    ''
+
+  const text = [
+    'Canonical maintenance failed',
+    `syncRunId=${params.syncRunId}`,
+    `trigger=${params.trigger}`,
+    `durationMs=${params.durationMs}`,
+    `error=${params.errorMessage}`,
+  ].join(' | ')
+
+  if (webhookUrl) {
+    try {
+      await fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          text,
+          syncRunId: params.syncRunId,
+          trigger: params.trigger,
+          durationMs: params.durationMs,
+          steps: params.steps,
+          error: params.errorMessage,
+          metadata: params.metadata || {},
+        }),
+      })
+    } catch (error) {
+      console.error('Failed to deliver canonical maintenance webhook alert', error)
+    }
+  }
+
+  const resendApiKey = process.env.RESEND_API_KEY || ''
+  const alertEmailTo = process.env.CANONICAL_MAINTENANCE_ALERT_EMAIL_TO || ''
+  const alertEmailFrom = process.env.CANONICAL_MAINTENANCE_ALERT_EMAIL_FROM || 'alerts@yellowpanther.ai'
+  if (resendApiKey && alertEmailTo) {
+    try {
+      await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${resendApiKey}`,
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: alertEmailFrom,
+          to: [alertEmailTo],
+          subject: `Canonical maintenance failed (${params.trigger})`,
+          text: `${text}\nsteps=${JSON.stringify(params.steps)}\nmetadata=${JSON.stringify(params.metadata || {})}`,
+        }),
+      })
+    } catch (error) {
+      console.error('Failed to deliver canonical maintenance email alert', error)
+    }
+  }
+}
+
 export async function runPostImportCanonicalMaintenanceWithOptions(
   trigger: string,
   options: PostImportCanonicalMaintenanceOptions,
@@ -190,6 +256,7 @@ export async function runPostImportCanonicalMaintenanceWithOptions(
     }
   } catch (error) {
     const durationMs = Date.now() - startedAt
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     if (syncRunId) {
       await persistMaintenanceAudit({
         syncRunId,
@@ -198,7 +265,16 @@ export async function runPostImportCanonicalMaintenanceWithOptions(
         startedAtIso,
         durationMs,
         steps,
-        errorMessage: error instanceof Error ? error.message : 'Unknown error',
+        errorMessage,
+        metadata: options.metadata,
+      })
+
+      await sendFailureAlerts({
+        syncRunId,
+        trigger,
+        durationMs,
+        steps,
+        errorMessage,
         metadata: options.metadata,
       })
     }
