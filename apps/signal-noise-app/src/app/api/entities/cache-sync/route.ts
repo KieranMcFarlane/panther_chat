@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { EntityCacheService } from '@/services/EntityCacheService'
-import { runPostImportCanonicalMaintenance } from '@/lib/post-import-canonical-maintenance'
+import { runPostImportCanonicalMaintenanceWithOptions } from '@/lib/post-import-canonical-maintenance'
+import { randomUUID } from 'node:crypto'
 
 const cacheService = new EntityCacheService()
 
@@ -16,10 +17,19 @@ export async function POST(request: NextRequest) {
       batchSize: batchSize || 100,
       forceRefresh: forceRefresh || false
     })
-    const canonicalMaintenance = await runPostImportCanonicalMaintenance('entities-cache-sync')
+    const syncRunId = randomUUID()
+    const canonicalMaintenance = await runPostImportCanonicalMaintenanceWithOptions('entities-cache-sync', {
+      syncRunId,
+      metadata: {
+        entityType: entityType || 'all',
+        batchSize: batchSize || 100,
+        forceRefresh: forceRefresh || false,
+      },
+    })
     
     return NextResponse.json({
       message: 'Entity cache sync completed successfully',
+      syncRunId,
       ...result,
       canonicalMaintenance
     })
