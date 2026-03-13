@@ -78,6 +78,31 @@ class EntityDossierGenerator:
         self.disable_question_extraction = (
             str(disable_question_extraction_env or "").strip().lower() in {"1", "true", "yes", "on"}
         )
+        strict_qa_env = os.getenv("DOSSIER_STRICT_QA_ENABLED")
+        self.strict_section_qa_enabled = (
+            str(strict_qa_env if strict_qa_env is not None else "true").strip().lower() in {"1", "true", "yes", "on"}
+        )
+        self.strict_section_qa_max_attempts = max(
+            1,
+            int(os.getenv("DOSSIER_STRICT_QA_MAX_ATTEMPTS", "2")),
+        )
+        strict_sections_env = (
+            os.getenv("DOSSIER_STRICT_QA_SECTION_IDS")
+            or "core_information,recent_news,current_performance,leadership"
+        )
+        self.strict_section_qa_ids = {
+            section_id.strip()
+            for section_id in strict_sections_env.split(",")
+            if section_id.strip()
+        }
+        self.strict_numeric_claim_source_required = (
+            str(os.getenv("DOSSIER_STRICT_NUMERIC_SOURCE_REQUIRED", "true")).strip().lower()
+            in {"1", "true", "yes", "on"}
+        )
+        self.section_base_qa_max_attempts = max(
+            1,
+            int(os.getenv("DOSSIER_BASE_QA_MAX_ATTEMPTS", "2")),
+        )
 
         # Section templates with model assignments
         self.section_templates = {
@@ -563,87 +588,118 @@ Website: N/A
         # Create safe entity data for formatting (remove entity_name to avoid duplicate)
         safe_entity_data = {k: v for k, v in entity_data.items() if k != "entity_name"}
 
-        prompt = prompt_template.format(entity_name=entity_name, **safe_entity_data)
+        base_prompt = prompt_template.format(entity_name=entity_name, **safe_entity_data)
+        prompt = base_prompt
+        base_attempts = int(getattr(self, "section_base_qa_max_attempts", 1) or 1)
+        strict_attempts = int(getattr(self, "strict_section_qa_max_attempts", 1) or 1)
+        attempts = max(
+            base_attempts,
+            strict_attempts if self._requires_strict_section_qa(section_id) else 1,
+        )
 
         # Call Claude with appropriate model
         try:
             # Select model based on cascade (use model names, not model IDs)
             claude_model = model  # haiku, sonnet, or opus
 
-            # Generate content using ClaudeClient.query()
-            response = await self.claude_client.query(
-                prompt=prompt,
-                model=claude_model,
-                max_tokens=max_tokens
-            )
-
-            content_text = response.get("content", "")
-
-            section_data = self._extract_section_data(content_text)
-            if self._section_data_needs_repair(section_data):
-                if not self.section_json_repair_attempt:
-                    raise ValueError(f"Section {section_id} returned non-JSON or instruction-echo output")
-                repair_prompt = self._build_section_json_repair_prompt(content_text)
-                repair_response = await self.claude_client.query(
-                    prompt=repair_prompt,
+            for attempt in range(1, attempts + 1):
+                # Generate content using ClaudeClient.query()
+                response = await self.claude_client.query(
+                    prompt=prompt,
                     model=claude_model,
-                    max_tokens=min(max_tokens, 600),
+                    max_tokens=max_tokens
                 )
-                repaired_text = repair_response.get("content", "")
-                section_data = self._extract_section_data(repaired_text)
+
+                content_text = response.get("content", "")
+
+                section_data = self._extract_section_data(content_text)
                 if self._section_data_needs_repair(section_data):
-                    heuristic_data = self._coerce_unstructured_section_data(repaired_text or content_text)
-                    if heuristic_data:
-                        logger.warning(
-                            "⚠️ Section %s JSON repair failed; using heuristic content fallback",
-                            section_id,
-                        )
-                        section_data = heuristic_data
-                    else:
-                        raise ValueError(f"Section {section_id} JSON repair failed")
-
-            # Final normalization pass before persisting section content.
-            normalized_content = self._sanitize_section_content(section_data.get("content", []))
-            if not normalized_content:
-                fallback_content = self._coerce_unstructured_section_data(
-                    "\n".join(
-                        item for item in section_data.get("content", []) if isinstance(item, str)
+                    if not self.section_json_repair_attempt:
+                        raise ValueError(f"Section {section_id} returned non-JSON or instruction-echo output")
+                    repair_prompt = self._build_section_json_repair_prompt(content_text)
+                    repair_response = await self.claude_client.query(
+                        prompt=repair_prompt,
+                        model=claude_model,
+                        max_tokens=min(max_tokens, 600),
                     )
-                )
-                if fallback_content and fallback_content.get("content"):
-                    normalized_content = fallback_content["content"]
-                    try:
-                        section_data["confidence"] = min(
-                            float(section_data.get("confidence", 0.55) or 0.55),
-                            float(fallback_content.get("confidence", 0.55) or 0.55),
+                    repaired_text = repair_response.get("content", "")
+                    section_data = self._extract_section_data(repaired_text)
+                    if self._section_data_needs_repair(section_data):
+                        heuristic_data = self._coerce_unstructured_section_data(repaired_text or content_text)
+                        if heuristic_data:
+                            logger.warning(
+                                "⚠️ Section %s JSON repair failed; using heuristic content fallback",
+                                section_id,
+                            )
+                            section_data = heuristic_data
+                        else:
+                            raise ValueError(f"Section {section_id} JSON repair failed")
+
+                # Final normalization pass before persisting section content.
+                normalized_content = self._sanitize_section_content(section_data.get("content", []))
+                if not normalized_content:
+                    fallback_content = self._coerce_unstructured_section_data(
+                        "\n".join(
+                            item for item in section_data.get("content", []) if isinstance(item, str)
                         )
-                    except Exception:  # noqa: BLE001
-                        section_data["confidence"] = 0.55
-                else:
-                    normalized_content = ["Section content unavailable after normalization."]
-                    try:
-                        section_data["confidence"] = min(float(section_data.get("confidence", 0.55) or 0.55), 0.4)
-                    except Exception:  # noqa: BLE001
-                        section_data["confidence"] = 0.4
-            section_data["content"] = normalized_content
+                    )
+                    if fallback_content and fallback_content.get("content"):
+                        normalized_content = fallback_content["content"]
+                        try:
+                            section_data["confidence"] = min(
+                                float(section_data.get("confidence", 0.55) or 0.55),
+                                float(fallback_content.get("confidence", 0.55) or 0.55),
+                            )
+                        except Exception:  # noqa: BLE001
+                            section_data["confidence"] = 0.55
+                    else:
+                        normalized_content = ["Section content unavailable after normalization."]
+                        try:
+                            section_data["confidence"] = min(float(section_data.get("confidence", 0.55) or 0.55), 0.4)
+                        except Exception:  # noqa: BLE001
+                            section_data["confidence"] = 0.4
+                section_data["content"] = normalized_content
 
-            # Create DossierSection
-            section = DossierSection(
-                id=section_id,
-                title=template_info["description"],
-                content=section_data.get("content", []),
-                metrics=section_data.get("metrics", []),
-                insights=section_data.get("insights", []),
-                recommendations=section_data.get("recommendations", []),
-                confidence=section_data.get("confidence", 0.7),
-                generated_by=model
-            )
+                qa_issues = self._collect_section_quality_issues(section_id, section_data)
+                if qa_issues:
+                    if attempt >= attempts:
+                        raise ValueError(
+                            f"Section {section_id} failed QA after {attempts} attempts: {', '.join(qa_issues)}"
+                        )
+                    logger.warning(
+                        "⚠️ Section %s failed QA attempt %s/%s (%s); regenerating",
+                        section_id,
+                        attempt,
+                        attempts,
+                        "; ".join(qa_issues),
+                    )
+                    prompt = self._build_section_qa_regeneration_prompt(
+                        section_id=section_id,
+                        base_prompt=base_prompt,
+                        previous_output=content_text,
+                        qa_issues=qa_issues,
+                    )
+                    continue
 
-            # Track cost (approximate)
-            section_cost = self._estimate_section_cost(model, max_tokens)
-            section.total_cost_usd = section_cost
+                # Create DossierSection
+                section = DossierSection(
+                    id=section_id,
+                    title=template_info["description"],
+                    content=section_data.get("content", []),
+                    metrics=section_data.get("metrics", []),
+                    insights=section_data.get("insights", []),
+                    recommendations=section_data.get("recommendations", []),
+                    confidence=section_data.get("confidence", 0.7),
+                    generated_by=model
+                )
 
-            return section
+                # Track cost (approximate)
+                section_cost = self._estimate_section_cost(model, max_tokens)
+                section.total_cost_usd = section_cost
+
+                return section
+
+            raise ValueError(f"Section {section_id} generation exhausted retry budget")
 
         except Exception as e:
             logger.error(f"Error generating section {section_id} with {model}: {e}")
@@ -678,6 +734,205 @@ Website: N/A
             return True
 
         return False
+
+    def _requires_strict_section_qa(self, section_id: str) -> bool:
+        if not getattr(self, "strict_section_qa_enabled", False):
+            return False
+        section_ids = getattr(self, "strict_section_qa_ids", set()) or set()
+        return section_id in section_ids
+
+    def _collect_section_quality_issues(self, section_id: str, section_data: Dict[str, Any]) -> List[str]:
+        strict_section = self._requires_strict_section_qa(section_id)
+
+        issues: List[str] = []
+        raw_content = section_data.get("content", [])
+        if isinstance(raw_content, list):
+            for item in raw_content:
+                if isinstance(item, str):
+                    for raw_line in item.splitlines():
+                        if self._is_section_meta_line(raw_line.strip()):
+                            issues.append("meta_text_leak")
+                            break
+                if "meta_text_leak" in issues:
+                    break
+        content = self._sanitize_section_content(raw_content)
+        if not content:
+            issues.append("content_empty_after_sanitization")
+            return issues
+
+        blocked_meta_markers = (
+            "no markdown",
+            "decision on truncation",
+            "option a",
+            "option b",
+            "extra text",
+            "invalid json",
+            "keys required",
+            "array of strings",
+            "must end with metadata tags",
+        )
+        placeholder_patterns = (
+            r"\bitem\s+\d+\s*:",
+            r"\btbd\b",
+            r"\bto be confirmed\b",
+            r"\.\.\.",
+            r"^\s*bullet\s+\d+\b",
+        )
+
+        for line in content:
+            normalized = line.strip().lower()
+            if any(marker in normalized for marker in blocked_meta_markers):
+                issues.append("meta_text_leak")
+                break
+
+        for line in content:
+            normalized = line.strip().lower()
+            if any(re.search(pattern, normalized) for pattern in placeholder_patterns):
+                issues.append("placeholder_text")
+                break
+
+        if strict_section and bool(getattr(self, "strict_numeric_claim_source_required", True)):
+            for line in content:
+                if self._line_has_numeric_claim(line) and not self._line_has_source_cue(line):
+                    issues.append("numeric_claim_without_source")
+                    break
+
+        if not strict_section:
+            # Baseline QA only for non-strict sections.
+            deduped_issues: List[str] = []
+            seen = set()
+            for issue in issues:
+                if issue in seen:
+                    continue
+                seen.add(issue)
+                deduped_issues.append(issue)
+            return deduped_issues
+
+        if section_id == "leadership":
+            if not self._has_named_leadership_signal(content):
+                issues.append("leadership_missing_named_roles")
+
+        if section_id == "current_performance":
+            if not self._has_current_performance_signal(content, section_data.get("metrics", [])):
+                issues.append("performance_missing_current_kpi")
+
+        if section_id == "recent_news":
+            if not self._has_recent_news_signal(content):
+                issues.append("recent_news_missing_dated_facts")
+            if self._has_self_contradictory_format_change(content):
+                issues.append("recent_news_self_contradiction")
+
+        if section_id == "core_information":
+            if not self._has_core_profile_signal(content):
+                issues.append("core_information_missing_profile_fields")
+
+        # Preserve deterministic order while de-duplicating.
+        deduped_issues: List[str] = []
+        seen = set()
+        for issue in issues:
+            if issue in seen:
+                continue
+            seen.add(issue)
+            deduped_issues.append(issue)
+        return deduped_issues
+
+    @staticmethod
+    def _line_has_numeric_claim(line: str) -> bool:
+        if not isinstance(line, str):
+            return False
+        return bool(
+            re.search(
+                r"\b\d[\d,]*(?:\.\d+)?(?:\s?(?:%|million|billion|trillion|m|bn|k))?\b",
+                line.lower(),
+            )
+        )
+
+    @staticmethod
+    def _line_has_source_cue(line: str) -> bool:
+        if not isinstance(line, str):
+            return False
+        normalized = line.lower()
+        cues = (
+            "source_type=",
+            "last_verified_at=",
+            "according to",
+            "reported by",
+            "as of",
+            "http://",
+            "https://",
+            "official",
+        )
+        return any(cue in normalized for cue in cues)
+
+    @staticmethod
+    def _has_named_leadership_signal(content: List[str]) -> bool:
+        name_role_pattern = re.compile(
+            r"\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,2}\b.{0,60}\b(ceo|chief|president|commissioner|director|chair|head)\b",
+            re.IGNORECASE,
+        )
+        return any(name_role_pattern.search(line or "") for line in content)
+
+    @classmethod
+    def _has_current_performance_signal(cls, content: List[str], metrics: Any) -> bool:
+        metric_keywords = ("rank", "ranking", "record", "kpi", "performance", "attendance", "revenue", "growth")
+        metric_line = any(
+            cls._line_has_numeric_claim(line) and any(keyword in (line or "").lower() for keyword in metric_keywords)
+            for line in content
+        )
+        if metric_line:
+            return True
+        return isinstance(metrics, list) and any(isinstance(item, dict) for item in metrics)
+
+    @staticmethod
+    def _has_recent_news_signal(content: List[str]) -> bool:
+        month_names = r"(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)"
+        iso_date = r"\b20\d{2}-\d{2}-\d{2}\b"
+        month_date = rf"\b{month_names}[a-z]*\s+\d{{1,2}},?\s+20\d{{2}}\b"
+        year_only = r"\b20\d{2}\b"
+        date_pattern = re.compile(rf"{iso_date}|{month_date}|{year_only}", re.IGNORECASE)
+        return any(date_pattern.search(line or "") for line in content)
+
+    @staticmethod
+    def _has_self_contradictory_format_change(content: List[str]) -> bool:
+        contradiction_pattern = re.compile(
+            r"\b(\d+)[-\s]?team\b.*\bup from (?:(?:the\s+)?previous\s+)?\1[-\s]?team\b",
+            re.IGNORECASE,
+        )
+        return any(contradiction_pattern.search(line or "") for line in content)
+
+    @staticmethod
+    def _has_core_profile_signal(content: List[str]) -> bool:
+        text = " ".join(line.lower() for line in content if isinstance(line, str))
+        checks = 0
+        if any(token in text for token in ("website", "http://", "https://")):
+            checks += 1
+        if any(token in text for token in ("founded", "established", "fifa", "fiba", "headquarters", "based in")):
+            checks += 1
+        if any(token in text for token in ("country", "located", "switzerland", "city", "region")):
+            checks += 1
+        return checks >= 2
+
+    @staticmethod
+    def _build_section_qa_regeneration_prompt(
+        *,
+        section_id: str,
+        base_prompt: str,
+        previous_output: str,
+        qa_issues: List[str],
+    ) -> str:
+        issues = "\n".join(f"- {issue}" for issue in qa_issues)
+        return (
+            f"{base_prompt}\n\n"
+            "Your previous output failed mandatory QA checks.\n"
+            f"Section ID: {section_id}\n"
+            "Failed checks:\n"
+            f"{issues}\n\n"
+            "Regenerate from scratch and fix every failed check.\n"
+            "Return JSON only. No markdown. No process notes. No placeholders.\n"
+            "If reliable data is unavailable, explicitly mark unknown values and reduce confidence."
+            "\n\nPREVIOUS_OUTPUT:\n"
+            f"{(previous_output or '')[:3000]}"
+        )
 
     @staticmethod
     def _is_section_meta_line(line: str) -> bool:
@@ -730,6 +985,19 @@ Website: N/A
             "i must generate",
             "i need to",
             "therefore, i",
+            "no markdown",
+            "decision on truncation",
+            "option a",
+            "option b",
+            "extra text",
+            "invalid json",
+            "no placeholders like",
+            "array of strings",
+            "must end with metadata tags",
+            "primary objective",
+            "hard output rules",
+            "do not invent numbers",
+            "keep claims concise",
         )
         if any(marker in normalized for marker in instruction_markers):
             return True
@@ -751,6 +1019,8 @@ Website: N/A
             return True
 
         if re.match(r"^`?(content|metrics|insights|recommendations|confidence)`?\s*:", normalized):
+            return True
+        if re.match(r"^`?(content|metrics|insights|recommendations|confidence)`?\s*\(array of strings\)", normalized):
             return True
         if re.match(r"^`?[a-z_ ]+`?\s*:\s*(array of|object|number|string)\b", normalized):
             return True

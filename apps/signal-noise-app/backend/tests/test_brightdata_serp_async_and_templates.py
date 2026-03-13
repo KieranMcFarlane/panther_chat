@@ -1,5 +1,6 @@
 import sys
 import asyncio
+import json
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -72,6 +73,59 @@ def test_sanitize_section_content_strips_json_scaffolding_meta_lines():
     )
 
     assert cleaned == ["FIBA is headquartered in Mies, Switzerland."]
+
+
+def test_collect_section_quality_issues_detects_meta_and_placeholder_leaks():
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.strict_section_qa_enabled = True
+    generator.strict_section_qa_ids = {"current_performance"}
+    generator.strict_numeric_claim_source_required = True
+
+    section_data = {
+        "content": [
+            "Constraints:** No markdown, extra text, or invalid JSON.",
+            "Item 1: Add growth assumptions.",
+            "5B annual views expected.",
+        ]
+    }
+
+    issues = generator._collect_section_quality_issues("current_performance", section_data)
+    assert "meta_text_leak" in issues
+    assert "placeholder_text" in issues
+    assert "numeric_claim_without_source" in issues
+
+
+def test_collect_section_quality_issues_requires_named_leadership_roles():
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.strict_section_qa_enabled = True
+    generator.strict_section_qa_ids = {"leadership"}
+    generator.strict_numeric_claim_source_required = True
+
+    section_data = {
+        "content": [
+            "Leadership focuses on digital growth [evidence_level=inferred; source_type=internal_analysis; last_verified_at=2026-03-10; needs_review=true]"
+        ]
+    }
+
+    issues = generator._collect_section_quality_issues("leadership", section_data)
+    assert "leadership_missing_named_roles" in issues
+
+
+def test_collect_section_quality_issues_requires_dated_recent_news():
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.strict_section_qa_enabled = True
+    generator.strict_section_qa_ids = {"recent_news"}
+    generator.strict_numeric_claim_source_required = True
+
+    section_data = {
+        "content": [
+            "FIBA announced expanded 24-team format up from previous 24-team structure [evidence_level=verified; source_type=news; last_verified_at=unknown; needs_review=true]"
+        ]
+    }
+
+    issues = generator._collect_section_quality_issues("recent_news", section_data)
+    assert "recent_news_missing_dated_facts" in issues
+    assert "recent_news_self_contradiction" in issues
 
 
 def test_resolve_sdk_variant_detects_legacy_and_functional_layouts():
@@ -365,6 +419,71 @@ async def test_generate_section_repairs_prompt_echo_response_with_json_retry():
     assert section.content == ["Recovered section content"]
     assert section.confidence == 0.82
     assert generator.claude_client.calls == 2
+
+
+@pytest.mark.asyncio
+async def test_generate_section_strict_qa_regenerates_on_invalid_current_performance():
+    class _FakeClaude:
+        def __init__(self):
+            self.calls = 0
+
+        async def query(self, prompt, model, max_tokens):
+            self.calls += 1
+            if self.calls == 1:
+                return {
+                    "content": json.dumps(
+                        {
+                            "content": [
+                                "Constraints:** No markdown. Option A only.",
+                                "5B+ annual content views",
+                            ],
+                            "metrics": [],
+                            "insights": [],
+                            "recommendations": [],
+                            "confidence": 0.9,
+                        }
+                    )
+                }
+            return {
+                "content": json.dumps(
+                    {
+                        "content": [
+                            "Revenue grew 7% as of 2025-12-31 (official annual report) [evidence_level=verified; source_type=official; last_verified_at=2026-03-01; needs_review=false]"
+                        ],
+                        "metrics": [{"label": "Revenue growth", "value": "7%"}],
+                        "insights": [],
+                        "recommendations": [],
+                        "confidence": 0.76,
+                    }
+                )
+            }
+
+    generator = EntityDossierGenerator.__new__(EntityDossierGenerator)
+    generator.claude_client = _FakeClaude()
+    generator.section_max_tokens_cap = 0
+    generator.section_parallelism = 1
+    generator.section_json_repair_attempt = True
+    generator.strict_section_qa_enabled = True
+    generator.strict_section_qa_max_attempts = 2
+    generator.strict_section_qa_ids = {"current_performance"}
+    generator.strict_numeric_claim_source_required = True
+    generator.section_templates = {
+        "current_performance": {
+            "model": "haiku",
+            "prompt_template": "performance_data_template",
+            "max_tokens": 1200,
+            "description": "Current performance metrics",
+        }
+    }
+
+    section = await generator._generate_section(
+        section_id="current_performance",
+        entity_data={"entity_name": "FIBA"},
+        model="haiku",
+    )
+
+    assert generator.claude_client.calls == 2
+    assert "Revenue grew 7%" in section.content[0]
 
 
 @pytest.mark.asyncio
