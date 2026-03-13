@@ -8,6 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { ExternalLink, FileText, RefreshCw, Search } from 'lucide-react'
+import { useEntitySummaries } from '@/lib/swr-config'
+import { canonicalizeEntityType, canonicalizeLeagueName } from '@/lib/entity-taxonomy'
 
 type RfpOpportunity = {
   id: string
@@ -28,6 +30,9 @@ type RfpOpportunity = {
   priority_score?: number | null
   detected_at?: string | null
   entity_id?: string | null
+  entity_graph_id?: string | null
+  graph_id?: string | null
+  neo4j_id?: string | null
   entity_name?: string | null
 }
 
@@ -36,6 +41,25 @@ type RfpResultsResponse = {
   opportunities?: RfpOpportunity[]
   metadata?: Record<string, unknown>
   total?: number
+}
+
+type EntitySummary = {
+  id: string
+  graph_id?: string | number
+  neo4j_id?: string | number
+  name: string
+  type?: string
+  entity_type?: string
+  sport?: string
+  country?: string
+  league?: string
+  level?: string
+}
+
+type EntityTaxonomyResponse = {
+  sports: string[]
+  leagues: string[]
+  leaguesBySport: Record<string, string[]>
 }
 
 function formatDate(value?: string | null) {
@@ -64,12 +88,36 @@ function formatConfidence(value?: number | null) {
   return `${Math.round(normalized)}%`
 }
 
+function resolveDossierEntityId(rfp: RfpOpportunity): string | null {
+  const candidate =
+    rfp.entity_graph_id ||
+    rfp.graph_id ||
+    rfp.entity_id ||
+    null
+
+  if (!candidate) {
+    return null
+  }
+
+  return String(candidate)
+}
+
 export default function UnifiedRfpPage() {
   const [rfps, setRfps] = useState<RfpOpportunity[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
+  const [sportFilter, setSportFilter] = useState('all')
+  const [entityTypeFilter, setEntityTypeFilter] = useState('all')
+  const [leagueFilter, setLeagueFilter] = useState('all')
+  const [taxonomy, setTaxonomy] = useState<EntityTaxonomyResponse>({
+    sports: [],
+    leagues: [],
+    leaguesBySport: {},
+  })
+
+  const { summaries } = useEntitySummaries('/api/entities/summary')
 
   const loadRfps = async () => {
     setLoading(true)
@@ -96,6 +144,55 @@ export default function UnifiedRfpPage() {
     void loadRfps()
   }, [])
 
+  useEffect(() => {
+    const loadTaxonomy = async () => {
+      try {
+        const response = await fetch('/api/entities/taxonomy')
+        if (!response.ok) return
+        const payload = await response.json()
+        setTaxonomy({
+          sports: Array.isArray(payload.sports) ? payload.sports : [],
+          leagues: Array.isArray(payload.leagues) ? payload.leagues : [],
+          leaguesBySport: payload.leaguesBySport || {},
+        })
+      } catch {
+        // non-blocking taxonomy fetch
+      }
+    }
+
+    void loadTaxonomy()
+  }, [])
+
+  const summaryById = useMemo(() => {
+    const map = new Map<string, EntitySummary>()
+    const rows = Array.isArray(summaries) ? (summaries as EntitySummary[]) : []
+    for (const row of rows) {
+      if (row.id) map.set(String(row.id), row)
+      if (row.graph_id) map.set(String(row.graph_id), row)
+      if (row.neo4j_id) map.set(String(row.neo4j_id), row)
+    }
+    return map
+  }, [summaries])
+
+  const rfpEntityMeta = useMemo(() => {
+    const meta = new Map<string, { sport: string; entityType: string; league: string }>()
+    for (const rfp of rfps) {
+      const lookupId = resolveDossierEntityId(rfp)
+      const summary = lookupId ? summaryById.get(lookupId) : null
+      const fallbackLeague = canonicalizeLeagueName(rfp.category || '')
+      meta.set(rfp.id, {
+        sport: String(summary?.sport || '').trim(),
+        entityType: summary ? canonicalizeEntityType({ properties: { entity_type: summary.entity_type, type: summary.type } }) : '',
+        league: canonicalizeLeagueName(summary?.league || summary?.level || fallbackLeague || ''),
+      })
+    }
+    return meta
+  }, [rfps, summaryById])
+
+  const availableLeagues = sportFilter !== 'all'
+    ? (taxonomy.leaguesBySport[sportFilter] || [])
+    : taxonomy.leagues
+
   const filteredRfps = useMemo(() => {
     return rfps.filter((rfp) => {
       const haystack = [
@@ -111,9 +208,13 @@ export default function UnifiedRfpPage() {
 
       const matchesSearch = haystack.includes(searchTerm.toLowerCase())
       const matchesStatus = statusFilter === 'all' || String(rfp.status || '').toLowerCase() === statusFilter
-      return matchesSearch && matchesStatus
+      const meta = rfpEntityMeta.get(rfp.id)
+      const matchesSport = sportFilter === 'all' || meta?.sport === sportFilter
+      const matchesType = entityTypeFilter === 'all' || meta?.entityType === entityTypeFilter
+      const matchesLeague = leagueFilter === 'all' || meta?.league === leagueFilter
+      return matchesSearch && matchesStatus && matchesSport && matchesType && matchesLeague
     })
-  }, [rfps, searchTerm, statusFilter])
+  }, [rfps, searchTerm, statusFilter, sportFilter, entityTypeFilter, leagueFilter, rfpEntityMeta])
 
   return (
     <main className="min-h-screen bg-slate-100 px-6 py-10">
@@ -139,7 +240,7 @@ export default function UnifiedRfpPage() {
           </div>
         </section>
 
-        <section className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:grid-cols-[1fr_220px]">
+        <section className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:grid-cols-2 lg:grid-cols-5">
           <div className="relative">
             <Search className="pointer-events-none absolute left-3 top-3.5 h-4 w-4 text-slate-400" />
             <Input
@@ -149,6 +250,48 @@ export default function UnifiedRfpPage() {
               className="pl-9"
             />
           </div>
+          <Select value={sportFilter} onValueChange={(value) => {
+            setSportFilter(value)
+            if (value === 'all') {
+              setLeagueFilter('all')
+            } else if (!(taxonomy.leaguesBySport[value] || []).includes(leagueFilter)) {
+              setLeagueFilter('all')
+            }
+          }}>
+            <SelectTrigger>
+              <SelectValue placeholder="Filter by sport" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Sports</SelectItem>
+              {taxonomy.sports.map((sport) => (
+                <SelectItem key={sport} value={sport}>{sport}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={entityTypeFilter} onValueChange={setEntityTypeFilter}>
+            <SelectTrigger>
+              <SelectValue placeholder="Filter by type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Types</SelectItem>
+              <SelectItem value="team">Team</SelectItem>
+              <SelectItem value="league">League</SelectItem>
+              <SelectItem value="federation">Federation</SelectItem>
+              <SelectItem value="rights_holder">Rights Holder</SelectItem>
+              <SelectItem value="organisation">Organisation</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={leagueFilter} onValueChange={setLeagueFilter}>
+            <SelectTrigger>
+              <SelectValue placeholder="Filter by league" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Leagues</SelectItem>
+              {availableLeagues.map((league) => (
+                <SelectItem key={league} value={league}>{league}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger>
               <SelectValue placeholder="Filter by status" />
@@ -184,7 +327,9 @@ export default function UnifiedRfpPage() {
         ) : null}
 
         <div className="grid gap-4">
-          {filteredRfps.map((rfp) => (
+          {filteredRfps.map((rfp) => {
+            const dossierEntityId = resolveDossierEntityId(rfp)
+            return (
             <Card key={rfp.id} className="border-slate-200 shadow-sm">
               <CardHeader className="gap-3">
                 <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
@@ -197,9 +342,9 @@ export default function UnifiedRfpPage() {
                     <p className="text-sm text-slate-600">{rfp.organization}</p>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    {rfp.entity_id ? (
+                    {dossierEntityId ? (
                       <Button asChild variant="outline">
-                        <Link href={`/entity-browser/${rfp.entity_id}/dossier?from=1`}>
+                        <Link href={`/entity-browser/${dossierEntityId}/dossier?from=1`}>
                           <FileText className="mr-2 h-4 w-4" />
                           Open dossier
                         </Link>
@@ -240,7 +385,8 @@ export default function UnifiedRfpPage() {
                 </div>
               </CardContent>
             </Card>
-          ))}
+            )
+          })}
         </div>
       </div>
     </main>
