@@ -436,6 +436,10 @@ class DossierDataCollector:
         if not results:
             return ""
 
+        max_candidates = max(
+            1,
+            int(os.getenv("DOSSIER_OFFICIAL_SITE_SELECTION_MAX_CANDIDATES", "10")),
+        )
         compact_name = "".join(ch for ch in entity_name.lower() if ch.isalnum())
         entity_tokens = [
             token
@@ -447,7 +451,7 @@ class DossierDataCollector:
 
         best_url = ""
         best_score = float("-inf")
-        for idx, result in enumerate(results[:5]):
+        for idx, result in enumerate(results[:max_candidates]):
             url = str(result.get("url") or "").strip()
             if not url:
                 continue
@@ -461,11 +465,19 @@ class DossierDataCollector:
             if host.startswith("www."):
                 host = host[4:]
             path = (parsed_url.path or "").strip("/")
+            host_labels = [label for label in host.split(".") if label]
+            domain_core = host_labels[-2] if len(host_labels) >= 2 else host
             host_tokens = [token for token in re.split(r"[^a-z0-9]+", host) if token]
 
             score = 0.0
             if compact_name and compact_name in "".join(ch for ch in lowered_url if ch.isalnum()):
                 score += 4.0
+            if compact_name and domain_core == compact_name:
+                score += 2.5
+            if compact_name and domain_core.startswith(compact_name) and domain_core != compact_name:
+                score -= 1.5
+            if compact_name and compact_name in domain_core and any(ch.isdigit() for ch in domain_core):
+                score -= 1.0
             score += min(sum(1 for token in entity_tokens if token in text), 3)
             if "official" in title or "official" in snippet:
                 score += 3.0

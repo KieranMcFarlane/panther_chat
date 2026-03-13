@@ -118,6 +118,62 @@ def test_choose_official_site_url_demotes_ecommerce_host_even_with_official_word
     assert official_url == "https://www.ccfc.co.uk/"
 
 
+def test_choose_official_site_url_prefers_canonical_acronym_domain_over_subbrand_domain():
+    collector = DossierDataCollector()
+    results = [
+        {
+            "title": "FIBA 3x3 | Official Site",
+            "url": "https://fiba3x3.com/en/index.html",
+            "snippet": "Official destination for 3x3 basketball events",
+        },
+        {
+            "title": "FIBA Basketball",
+            "url": "https://www.fiba.basketball/",
+            "snippet": "Official FIBA basketball portal",
+        },
+    ]
+
+    official_url = collector._choose_official_site_url("FIBA", results)
+    assert official_url == "https://www.fiba.basketball/"
+
+
+def test_choose_official_site_url_considers_candidates_beyond_top_five():
+    collector = DossierDataCollector()
+    noisy = [
+        {"title": f"Fan site {idx}", "url": f"https://fiba-fans{idx}.example.com/post", "snippet": "community forum"}
+        for idx in range(1, 6)
+    ]
+    results = noisy + [
+        {
+            "title": "FIBA Basketball Official Website",
+            "url": "https://www.fiba.basketball/",
+            "snippet": "Official federation portal",
+        }
+    ]
+
+    official_url = collector._choose_official_site_url("FIBA", results)
+    assert official_url == "https://www.fiba.basketball/"
+
+
+def test_choose_official_site_url_prefers_exact_acronym_domain_over_numeric_subbrand():
+    collector = DossierDataCollector()
+    results = [
+        {
+            "title": "The Home of FIBA Basketball",
+            "url": "https://www.fiba.basketball/en",
+            "snippet": "News, stats and games",
+        },
+        {
+            "title": "FIBA 3x3: HOME",
+            "url": "https://fiba3x3.com/en/index.html",
+            "snippet": "Official destination for 3x3 basketball events",
+        },
+    ]
+
+    official_url = collector._choose_official_site_url("FIBA", results)
+    assert official_url == "https://www.fiba.basketball/en"
+
+
 class _ClaudeStub:
     async def query(self, *args, **kwargs):
         await asyncio.sleep(0.2)
@@ -183,7 +239,7 @@ async def test_get_scraped_content_reuses_cached_official_url_when_search_fails(
     assert timings["official_content_source"] == "live"
     assert [url.rstrip("/") for url in stub.scrape_urls] == ["https://www.ccfc.co.uk"]
     persisted = json.loads(cache_file.read_text())
-    assert persisted.get("coventry city fc") == "https://www.ccfc.co.uk/"
+    assert str(persisted.get("coventry city fc") or "").rstrip("/") == "https://www.ccfc.co.uk"
 
 
 @pytest.mark.asyncio
