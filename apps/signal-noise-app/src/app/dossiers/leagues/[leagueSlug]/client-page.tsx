@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -40,6 +40,7 @@ import {
   Eye,
   FileText
 } from 'lucide-react';
+import { pushWithViewTransition } from '@/lib/view-transition';
 
 interface DossierContent {
   name: string;
@@ -57,10 +58,26 @@ export default function LeagueDossierClient({ leagueSlug }: { leagueSlug: string
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('overview');
+  const [isContentTransitioning, setIsContentTransitioning] = useState(false);
+  const previousSlugRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (actualLeagueSlug) {
       fetchDossierContent(actualLeagueSlug);
+    }
+  }, [actualLeagueSlug]);
+
+  useEffect(() => {
+    if (!actualLeagueSlug) return;
+    if (previousSlugRef.current === null) {
+      previousSlugRef.current = actualLeagueSlug;
+      return;
+    }
+    if (previousSlugRef.current !== actualLeagueSlug) {
+      setIsContentTransitioning(true);
+      const timeout = setTimeout(() => setIsContentTransitioning(false), 200);
+      previousSlugRef.current = actualLeagueSlug;
+      return () => clearTimeout(timeout);
     }
   }, [actualLeagueSlug]);
 
@@ -314,11 +331,11 @@ export default function LeagueDossierClient({ leagueSlug }: { leagueSlug: string
                 <h2 className="text-xl font-semibold mb-2">Dossier Not Found</h2>
                 <p className="text-fm-medium-grey mb-4">{error || 'The requested league dossier could not be found.'}</p>
                 <div className="flex gap-4 justify-center">
-                  <Button onClick={() => router.back()} variant="outline">
+                  <Button onClick={() => pushWithViewTransition(router, '/dossiers/leagues')} variant="outline">
                     <ArrowLeft className="w-4 h-4 mr-2" />
                     Go Back
                   </Button>
-                  <Button onClick={() => router.push('/dossiers/leagues')}>
+                  <Button onClick={() => pushWithViewTransition(router, '/dossiers/leagues')}>
                     View All Dossiers
                   </Button>
                 </div>
@@ -342,7 +359,7 @@ export default function LeagueDossierClient({ leagueSlug }: { leagueSlug: string
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => router.push('/dossiers/leagues')}
+              onClick={() => pushWithViewTransition(router, '/dossiers/leagues')}
               className="flex items-center gap-2"
             >
               <ArrowLeft className="h-4 w-4" />
@@ -387,7 +404,12 @@ export default function LeagueDossierClient({ leagueSlug }: { leagueSlug: string
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 bg-header-bg">
+      <div
+        className={`flex-1 bg-header-bg transition-opacity duration-200 ${
+          isContentTransitioning ? 'opacity-0' : 'opacity-100'
+        }`}
+        style={{ viewTransitionName: "dossier-content" }}
+      >
         <div className="container mx-auto px-4 py-6">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
             {/* Responsive Tab Navigation */}

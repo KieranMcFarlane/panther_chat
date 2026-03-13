@@ -26,6 +26,18 @@ const viewTransitionSource = readFileSync(
   new URL('../src/lib/view-transition.ts', import.meta.url),
   'utf8',
 )
+const leagueDossiersListSource = readFileSync(
+  new URL('../src/app/dossiers/leagues/page.tsx', import.meta.url),
+  'utf8',
+)
+const leagueDossierSource = readFileSync(
+  new URL('../src/app/dossiers/leagues/[leagueSlug]/client-page.tsx', import.meta.url),
+  'utf8',
+)
+const rfpEntityBrowserSource = readFileSync(
+  new URL('../src/app/rfp-intelligence/entity-browser.tsx', import.meta.url),
+  'utf8',
+)
 
 test('entity browser uses history API for pagination URL sync', () => {
   assert.match(entityBrowserSource, /window\.history\.pushState/)
@@ -85,4 +97,22 @@ test('navigation uses View Transitions API helper when available', () => {
   assert.match(entityCardSource, /pushWithViewTransition/)
   assert.match(entityPageSource, /pushWithViewTransition/)
   assert.match(dossierPageSource, /pushWithViewTransition/)
+})
+
+test('league dossiers list uses view-transition navigation helper instead of hard reloads', () => {
+  assert.match(leagueDossiersListSource, /pushWithViewTransition/)
+  assert.doesNotMatch(leagueDossiersListSource, /window\.location\.href\s*=\s*['"`]\/entity-browser['"`]/)
+  assert.doesNotMatch(leagueDossiersListSource, /window\.location\.href\s*=\s*`\/dossiers\/leagues\/\$\{dossier\.name\}`/)
+})
+
+test('league dossier page uses content-level fade transitions and view-transition navigation', () => {
+  assert.match(leagueDossierSource, /pushWithViewTransition/)
+  assert.match(leagueDossierSource, /isContentTransitioning/)
+  assert.match(leagueDossierSource, /transition-opacity duration-200/)
+  assert.match(leagueDossierSource, /viewTransitionName: "dossier-content"/)
+})
+
+test('rfp entity browser uses view-transition navigation back to dashboard', () => {
+  assert.match(rfpEntityBrowserSource, /pushWithViewTransition/)
+  assert.doesNotMatch(rfpEntityBrowserSource, /window\.location\.href\s*=\s*['"`]\/rfp-intelligence['"`]/)
 })

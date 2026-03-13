@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
+import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -9,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { EntityBadge } from "@/components/badge/EntityBadge"
 import { EntityCard } from "@/components/EntityCard"
 import { EmailComposeModal } from "@/components/email/EmailComposeModal"
+import { pushWithViewTransition } from "@/lib/view-transition"
 import { 
   Database, 
   Search, 
@@ -76,6 +78,7 @@ interface EntityBrowserResponse {
 }
 
 export default function RFPIntelligenceEntityBrowser() {
+  const router = useRouter()
   console.log("🎯 RFPIntelligenceEntityBrowser: Component mounting")
   
   const [data, setData] = useState<EntityBrowserResponse | null>(null)
@@ -320,7 +323,7 @@ export default function RFPIntelligenceEntityBrowser() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => window.location.href = '/rfp-intelligence'}
+                onClick={() => pushWithViewTransition(router, "/rfp-intelligence")}
                 className="flex items-center gap-2"
               >
                 <Trophy className="h-4 w-4" />

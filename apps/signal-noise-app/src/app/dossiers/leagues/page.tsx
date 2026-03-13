@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { pushWithViewTransition } from '@/lib/view-transition';
 import { AlertCircle, Download, Eye, FileText, Clock, TrendingUp, Globe, Database, Search, ExternalLink, Trophy, Building2, Target, BarChart3, Zap } from 'lucide-react';
 
 interface Dossier {
@@ -22,6 +24,7 @@ interface DossierData {
 }
 
 export default function LeagueDossiersPage() {
+  const router = useRouter();
   const [dossiers, setDossiers] = useState<DossierData | null>(null);
   const [selectedDossier, setSelectedDossier] = useState<string | null>(null);
   const [dossierContent, setDossierContent] = useState<string>('');
@@ -230,7 +233,7 @@ export default function LeagueDossiersPage() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => window.location.href = '/entity-browser'}
+                onClick={() => pushWithViewTransition(router, '/entity-browser')}
                 className="flex items-center gap-2"
               >
                 <Search className="h-4 w-4" />
@@ -377,7 +380,7 @@ export default function LeagueDossiersPage() {
                             <Button
                               variant="outline"
                               className="w-full"
-                              onClick={() => window.location.href = `/dossiers/leagues/${dossier.name}`}
+                              onClick={() => pushWithViewTransition(router, `/dossiers/leagues/${dossier.name}`)}
                             >
                               <Eye className="h-4 w-4 mr-2" />
                               View Full Dossier
@@ -442,7 +445,7 @@ export default function LeagueDossiersPage() {
                         <Button
                           variant="outline"
                           className="w-full"
-                          onClick={() => window.location.href = `/dossiers/leagues/${dossier.name}`}
+                          onClick={() => pushWithViewTransition(router, `/dossiers/leagues/${dossier.name}`)}
                         >
                           <Eye className="h-4 w-4 mr-2" />
                           View Commercial Analysis
@@ -511,7 +514,7 @@ export default function LeagueDossiersPage() {
                         <Button
                           variant="outline"
                           className="w-full"
-                          onClick={() => window.location.href = `/dossiers/leagues/${dossier.name}`}
+                          onClick={() => pushWithViewTransition(router, `/dossiers/leagues/${dossier.name}`)}
                         >
                           <Eye className="h-4 w-4 mr-2" />
                           View Digital Analysis
@@ -593,7 +596,7 @@ export default function LeagueDossiersPage() {
                         <Button
                           variant="outline"
                           className="w-full"
-                          onClick={() => window.location.href = `/dossiers/leagues/${dossier.name}`}
+                          onClick={() => pushWithViewTransition(router, `/dossiers/leagues/${dossier.name}`)}
                         >
                           <Eye className="h-4 w-4 mr-2" />
                           View Opportunity Analysis
