@@ -50,8 +50,7 @@ const navItems = [
   {
     icon: Search,
     label: 'Search',
-    href: '#',
-    isSearch: true
+    href: '/search',
   },
 ];
 

@@ -166,30 +166,22 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    if (!process.env.OPENAI_API_KEY) {
-      return NextResponse.json(
-        {
-          results: [],
-          total: 0,
-          query,
-          search_strategy: 'hybrid_v2',
-          note: 'missing_openai_api_key',
-          error: 'OPENAI_API_KEY is not configured for vector search',
-        },
-        { status: 503 }
-      )
-    }
-
     const requestedEntityTypes = [
       ...(filters.entity_types || []),
       ...(filters.entity_type ? [filters.entity_type] : []),
     ].filter(Boolean)
-
-    const semanticRows = await searchEntityEmbeddings(query, {
-      entityTypes: requestedEntityTypes.length > 0 ? requestedEntityTypes : undefined,
-      matchThreshold: Math.max(0.05, score_threshold * 0.7),
-      matchCount: Math.min(limit * 8, 80),
-    })
+    const semantic_enabled = Boolean(process.env.OPENAI_API_KEY)
+    let semanticRows: any[] = []
+    let note: string | undefined
+    if (semantic_enabled) {
+      semanticRows = await searchEntityEmbeddings(query, {
+        entityTypes: requestedEntityTypes.length > 0 ? requestedEntityTypes : undefined,
+        matchThreshold: Math.max(0.05, score_threshold * 0.7),
+        matchCount: Math.min(limit * 8, 80),
+      })
+    } else {
+      note = 'semantic_unavailable_lexical_only'
+    }
 
     const semanticCandidates: Candidate[] = semanticRows
       .map((row: any) => {
@@ -247,6 +239,8 @@ export async function POST(request: NextRequest) {
       query,
       total: ranked.length,
       search_strategy: 'hybrid_v2',
+      semantic_enabled,
+      ...(note ? { note } : {}),
       results: ranked.map((candidate) => ({
         id: candidate.id,
         entity_id: candidate.entity_id,
@@ -283,4 +277,3 @@ export async function GET() {
       'POST /api/vector-search { query, limit?, score_threshold?, entity_types?, entity_type?, sport?, league?, country? }',
   })
 }
-

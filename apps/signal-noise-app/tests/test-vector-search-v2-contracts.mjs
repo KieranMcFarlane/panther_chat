@@ -11,12 +11,18 @@ const embeddingsRouteSource = readFileSync(
   new URL('../src/app/api/embeddings/route.ts', import.meta.url),
   'utf8',
 )
+const appNavigationSource = readFileSync(
+  new URL('../src/components/layout/AppNavigation.tsx', import.meta.url),
+  'utf8',
+)
 
 test('vector search route exposes hybrid v2 strategy with lexical + semantic merge', () => {
   assert.match(vectorSearchRouteSource, /hybrid_v2/)
   assert.match(vectorSearchRouteSource, /lexical_score/)
   assert.match(vectorSearchRouteSource, /semantic_score/)
   assert.match(vectorSearchRouteSource, /final_score/)
+  assert.match(vectorSearchRouteSource, /canonical_entities/)
+  assert.match(vectorSearchRouteSource, /loadLexicalCandidates/)
 })
 
 test('vector search route supports facet-aware filtering inputs', () => {
@@ -36,6 +42,16 @@ test('search route page exists so sidebar search route is not a 404', () => {
   const searchPagePath = new URL('../src/app/search/page.tsx', import.meta.url)
   assert.equal(existsSync(searchPagePath), true)
   const searchPageSource = readFileSync(searchPagePath, 'utf8')
+  assert.match(searchPageSource, /Entity Browser Search/)
   assert.match(searchPageSource, /VectorSearch/)
 })
 
+test('vector search can degrade to lexical-only mode when semantic embedding is unavailable', () => {
+  assert.match(vectorSearchRouteSource, /semantic_unavailable_lexical_only/)
+  assert.match(vectorSearchRouteSource, /semantic_enabled/)
+})
+
+test('sidebar search item points to real /search route', () => {
+  assert.match(appNavigationSource, /label:\s*'Search'/)
+  assert.match(appNavigationSource, /href:\s*'\/search'/)
+})

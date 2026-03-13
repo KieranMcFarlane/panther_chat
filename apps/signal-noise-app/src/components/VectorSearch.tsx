@@ -22,7 +22,7 @@ export function VectorSearch() {
   const { results, loading, error } = useVectorSearch(query, filters, searchType)
   
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background">
       {/* Header */}
       <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4 py-6">
