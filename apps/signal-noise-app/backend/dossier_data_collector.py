@@ -484,6 +484,14 @@ class DossierDataCollector:
             aliases.append(all_initials)
 
         return any(alias in compact_host for alias in aliases if len(alias) >= 3)
+
+    def _is_binary_document_url(self, candidate_url: Optional[str]) -> bool:
+        normalized = self._normalize_http_url(candidate_url)
+        if not normalized:
+            return False
+        parsed = urllib.parse.urlparse(normalized.lower())
+        path = parsed.path or ""
+        return path.endswith((".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".zip"))
     def _load_official_site_url_cache(self) -> Dict[str, str]:
         cache_file = self._official_site_cache_file()
         try:
@@ -716,14 +724,19 @@ class DossierDataCollector:
             url = self._normalize_http_url(candidate.get("url"))
             if not url:
                 continue
+            if self._is_binary_document_url(url):
+                continue
             if not self._is_commerce_host(url) and self._looks_like_entity_domain(entity_name, url):
                 return url
 
-        return choose_canonical_official_site(
+        fallback_choice = choose_canonical_official_site(
             entity_name=entity_name,
             candidates=results,
             max_candidates=max_candidates,
         )
+        if self._is_binary_document_url(fallback_choice):
+            return ""
+        return fallback_choice
 
     async def _connect_falkordb(self):
         """Connect to FalkorDB using native Python client"""
