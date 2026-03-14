@@ -240,3 +240,34 @@ async def test_site_specific_search_uses_official_domain_not_store_domain():
     assert result is None
     assert any(q.startswith("site:ccfc.co.uk ") for q in captured_queries)
     assert not any(q.startswith("site:ccfcstore.com ") for q in captured_queries)
+
+
+@pytest.mark.asyncio
+async def test_dossier_context_fallback_uses_existing_default_template():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery._dossier_hypotheses_cache = {}
+    discovery.max_depth = 2
+    discovery.brightdata_client = SimpleNamespace()
+
+    async def fake_search_engine(**kwargs):
+        return {"status": "error", "results": []}
+
+    discovery.brightdata_client.search_engine = fake_search_engine
+
+    async def fake_initialize_from_dossier(entity_id, dossier_hypotheses):
+        return None
+
+    async def fake_run_discovery(entity_id, entity_name, template_id, max_iterations):
+        return {"template_id": template_id, "max_iterations": max_iterations}
+
+    discovery.initialize_from_dossier = fake_initialize_from_dossier
+    discovery.run_discovery = fake_run_discovery
+
+    result = await discovery.run_discovery_with_dossier_context(
+        entity_id="coventry-city-fc",
+        entity_name="Coventry City FC",
+        dossier={"extracted_signals": [], "procurement_signals": {"upcoming_opportunities": []}},
+        max_iterations=3,
+    )
+
+    assert result["template_id"] == "yellow_panther_agency"

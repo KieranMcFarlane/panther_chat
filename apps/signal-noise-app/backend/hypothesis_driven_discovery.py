@@ -3754,7 +3754,7 @@ Return JSON:
             return await self.run_discovery(
                 entity_id=entity_id,
                 entity_name=entity_name,
-                template_id='tier_1_club_centralized_procurement',  # Default template
+                template_id='yellow_panther_agency',  # Default template available in bootstrapped_templates
                 max_iterations=max_iterations
             )
 
