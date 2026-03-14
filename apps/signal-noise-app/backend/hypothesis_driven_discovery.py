@@ -46,6 +46,7 @@ from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass, field
 from enum import Enum
 from collections import OrderedDict
+from urllib.parse import urlparse
 
 logger = logging.getLogger(__name__)
 
@@ -3293,7 +3294,9 @@ Return JSON:
                 'scrape_ms': performance.get('scrape_ms', 0.0),
                 'evaluation_ms': performance.get('evaluation_ms', 0.0),
                 'validation_ms': performance.get('url_resolution', {}).get('validation_ms', 0.0),
-                'decision': result.get('decision')
+                'decision': result.get('decision'),
+                'selected_url': result.get('url'),
+                'selected_domain': urlparse(result.get('url')).netloc if result.get('url') else None,
             }
             hop_records.append(record)
 

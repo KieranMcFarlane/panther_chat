@@ -271,3 +271,33 @@ async def test_dossier_context_fallback_uses_existing_default_template():
     )
 
     assert result["template_id"] == "yellow_panther_agency"
+
+
+def test_performance_summary_includes_selected_url_and_domain():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    state = SimpleNamespace(
+        iteration_results=[
+            {
+                "iteration": 1,
+                "hop_type": "rfp_page",
+                "hypothesis_id": "h1",
+                "result": {
+                    "url": "https://www.ccfc.co.uk/news/2026/rfp",
+                    "decision": "NO_PROGRESS",
+                    "performance": {
+                        "total_duration_ms": 1234.0,
+                        "url_resolution_ms": 700.0,
+                        "scrape_ms": 500.0,
+                        "evaluation_ms": 34.0,
+                        "url_resolution": {"validation_ms": 0.0},
+                    },
+                },
+            }
+        ]
+    )
+
+    summary = discovery._build_performance_summary(state, total_duration_ms=1234.0)
+    first = summary["hop_timings"][0]
+
+    assert first["selected_url"] == "https://www.ccfc.co.uk/news/2026/rfp"
+    assert first["selected_domain"] == "www.ccfc.co.uk"
