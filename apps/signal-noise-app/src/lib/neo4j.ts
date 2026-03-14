@@ -40,14 +40,21 @@ function isNeo4jScheme(uri?: string): boolean {
 
 function getDatabaseUri(): string {
   const candidates = [
+    process.env.FALKORDB_BOLT_URI,
     process.env.FALKORDB_URI,
     process.env.NEO4J_URI,
+    process.env.NEXT_PUBLIC_FALKORDB_BOLT_URI,
     process.env.NEXT_PUBLIC_FALKORDB_URI,
     process.env.NEXT_PUBLIC_NEO4J_URI
   ].filter(Boolean) as string[]
 
   // Convert unsupported schemes to Neo4j-compatible schemes
   const converted = candidates.map(uri => {
+    if (uri.startsWith('redis://')) {
+      const converted = uri.replace('redis://', 'bolt://')
+      console.log(`🔄 Converting FALKORDB_URI from Redis protocol to Bolt: ${uri} → ${converted}`)
+      return converted
+    }
     if (uri.startsWith('rediss://')) {
       // Convert Redis SSL protocol to Neo4j secure protocol
       const converted = uri.replace('rediss://', 'neo4j+s://')
