@@ -1,0 +1,15 @@
+[
+  "src/app/api/migration/complete-restore-server-action/route.ts::@/services/mcp-service",
+  "src/app/entity-browser/complex-page.tsx::@/lib/graph-store",
+  "src/app/entity-browser/page.tsx::@/components/SimpleEntityCard",
+  "src/components/SimpleChatSidebar.tsx::./chat/EnhancedSimpleChatSidebar",
+  "src/components/entity-dossier/ClubDossier.tsx::./ascii-renderer",
+  "src/components/entity-dossier/PersonDossier.tsx::./ascii-renderer",
+  "src/components/entity-dossier/index.ts::./ascii-renderer",
+  "src/lib/brightdata-dossier-enhancer.ts::./mcp-client-bus",
+  "src/mcp/claude-agent-mcp-config.ts::./better-auth-mcp-server",
+  "src/mcp/claude-agent-mcp-config.ts::./byte-rover-mcp-server",
+  "src/services/DirectClaudeService.ts::./A2ASessionManager",
+  "src/services/SharedClaudeAgentManager.ts::@/mcp/better-auth-mcp-server",
+  "src/services/SharedClaudeAgentManager.ts::@/mcp/byte-rover-mcp-server"
+]
