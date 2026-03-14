@@ -167,6 +167,7 @@ async function run() {
   const presentEplCount = EPL_SEEDS.length - missingEplSeeds.length
   const missingBundesligaSeeds = BUNDESLIGA_SEEDS.filter((name) => !cachedNames.has(normalizeText(name)))
   const presentBundesligaCount = BUNDESLIGA_SEEDS.length - missingBundesligaSeeds.length
+  const overlapPctPoints = Number((overlapPct * 100).toFixed(2))
 
   const checks = [
     {
@@ -239,6 +240,7 @@ async function run() {
     })
   }
 
+  let drift = null
   if (baseline.data?.metrics && baseline.data?.allowed_regression) {
     const metrics = baseline.data.metrics
     const allowed = baseline.data.allowed_regression
@@ -257,13 +259,20 @@ async function run() {
     const allowedEplDrop = Number(allowed.epl_present ?? 0)
     const allowedBundesligaDrop = Number(allowed.bundesliga_present ?? 0)
 
-    const overlapPctPoints = Number((overlapPct * 100).toFixed(2))
     const overlapDrop = Number((baselineOverlapPct - overlapPctPoints).toFixed(2))
     const mismatchIncrease = idNameMismatches - baselineIdMismatch
     const missingNamesIncrease = missingByName.size - baselineMissingNames
     const iplDrop = baselineIplPresent - presentIplCount
     const eplDrop = baselineEplPresent - presentEplCount
     const bundesligaDrop = baselineBundesligaPresent - presentBundesligaCount
+    drift = {
+      id_name_mismatches_increase: mismatchIncrease,
+      normalized_names_missing_increase: missingNamesIncrease,
+      overlap_pct_points_drop: overlapDrop,
+      ipl_seed_drop: iplDrop,
+      epl_seed_drop: eplDrop,
+      bundesliga_seed_drop: bundesligaDrop,
+    }
 
     checks.push({
       id: 'baseline_drift_id_name_mismatches',
@@ -346,6 +355,7 @@ async function run() {
       overlap_by_graph_id: overlapById,
     },
     checks,
+    drift,
     baseline: baseline.data
       ? {
           path: baseline.path,
@@ -385,6 +395,14 @@ async function run() {
       `- IPL: ${byId.ipl_seed_presence?.details?.present ?? 'n/a'}/${byId.ipl_seed_presence?.details?.total ?? 'n/a'}`,
       `- EPL: ${byId.epl_seed_presence?.details?.present ?? 'n/a'}/${byId.epl_seed_presence?.details?.total ?? 'n/a'}`,
       `- Bundesliga: ${byId.bundesliga_seed_presence?.details?.present ?? 'n/a'}/${byId.bundesliga_seed_presence?.details?.total ?? 'n/a'}`,
+      '',
+      '### Baseline Drift',
+      `- ID/name mismatches increase: ${result.drift?.id_name_mismatches_increase ?? 'n/a'}`,
+      `- Missing normalized names increase: ${result.drift?.normalized_names_missing_increase ?? 'n/a'}`,
+      `- Overlap pct-point drop: ${result.drift?.overlap_pct_points_drop ?? 'n/a'}`,
+      `- IPL seed drop: ${result.drift?.ipl_seed_drop ?? 'n/a'}`,
+      `- EPL seed drop: ${result.drift?.epl_seed_drop ?? 'n/a'}`,
+      `- Bundesliga seed drop: ${result.drift?.bundesliga_seed_drop ?? 'n/a'}`,
       '',
     ]
     const summaryPath = path.resolve(SUMMARY_MD_PATH)
