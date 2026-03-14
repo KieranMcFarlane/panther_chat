@@ -378,7 +378,10 @@ FALLBACK_QUERIES = {
     HopType.OFFICIAL_SITE: [
         '{entity} official site',
         '{entity} website',
-        '{entity}.com'
+        '{entity}.com',
+        '{entity} official site procurement',
+        '{entity} official site vacancies',
+        '{entity} official site news press',
     ],
     HopType.CAREERS_PAGE: [
         '{entity} careers jobs',
@@ -799,6 +802,14 @@ class HypothesisDrivenDiscovery:
             except Exception:  # noqa: BLE001
                 return None
         return None
+
+    def _load_official_site_url_cache(self) -> Dict[str, Any]:
+        """Load official-site URL cache if configured; otherwise default to empty."""
+        return {}
+
+    def _load_official_site_domain_map(self) -> Dict[str, Any]:
+        """Load official-site domain map if configured; otherwise default to empty."""
+        return {}
 
     def _current_run_mode(self) -> str:
         mode = str(os.getenv("DISCOVERY_RUN_MODE", "phase1_plus") or "phase1_plus").strip().lower()
@@ -2075,6 +2086,7 @@ class HypothesisDrivenDiscovery:
             'hop_type': hop_type.value if hasattr(hop_type, 'value') else str(hop_type),
             'started_at': datetime.now(timezone.utc).isoformat()
         }
+        content_result: Dict[str, Any] = {}
 
         def build_no_progress_result(justification: str, scrape_data: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
             performance['total_duration_ms'] = round((time.perf_counter() - hop_started_at) * 1000, 2)
@@ -2118,6 +2130,7 @@ class HypothesisDrivenDiscovery:
                     scrape_started_at = time.perf_counter()
                     content_result = await self.brightdata_client.scrape_as_markdown(candidate_url)
                     candidate_record["scrape_ms"] = round((time.perf_counter() - scrape_started_at) * 1000, 2)
+                    candidate_record["brightdata"] = self._extract_brightdata_trace(content_result)
 
                     if content_result.get("status") != "success":
                         candidate_record["status"] = "scrape_failed"
@@ -2253,6 +2266,7 @@ class HypothesisDrivenDiscovery:
                 scrape_started_at = time.perf_counter()
                 content_result = await self.brightdata_client.scrape_as_markdown(url)
                 performance['scrape_ms'] = round((time.perf_counter() - scrape_started_at) * 1000, 2)
+                performance['brightdata_scrape'] = self._extract_brightdata_trace(content_result)
 
                 if content_result.get('status') != 'success':
                     logger.error(f"Scraping failed: {content_result.get('error', 'Unknown error')}")
@@ -2437,6 +2451,19 @@ class HypothesisDrivenDiscovery:
             logger.error(f"Hop execution error: {e}")
             return build_no_progress_result(f"Hop execution error: {e}")
 
+    def _extract_brightdata_trace(self, payload: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+        if not isinstance(payload, dict):
+            return {}
+        metadata = payload.get("metadata") if isinstance(payload.get("metadata"), dict) else {}
+        return {
+            "status": payload.get("status"),
+            "error": payload.get("error"),
+            "source": metadata.get("source"),
+            "zone": metadata.get("zone"),
+            "endpoint": metadata.get("endpoint"),
+            "extraction_mode": metadata.get("extraction_mode"),
+        }
+
     def _get_fallback_queries(self, hop_type: HopType, entity_name: str) -> list[str]:
         """
         Get fallback search queries for a hop type
@@ -2448,8 +2475,38 @@ class HypothesisDrivenDiscovery:
         Returns:
             List of fallback query strings
         """
-        queries = FALLBACK_QUERIES.get(hop_type, [])
-        return [q.format(entity=entity_name) for q in queries]
+        queries = [q.format(entity=entity_name) for q in FALLBACK_QUERIES.get(hop_type, [])]
+        if hop_type == HopType.OFFICIAL_SITE:
+            for domain in self._build_entity_domain_candidates(entity_name):
+                queries.extend(
+                    [
+                        f'site:{domain} "{entity_name}"',
+                        f'site:{domain} "{entity_name}" procurement',
+                        f'site:{domain} "{entity_name}" vacancies',
+                        f'site:{domain} "{entity_name}" news',
+                        f'site:{domain}/news "{entity_name}"',
+                        f'site:{domain}/careers "{entity_name}"',
+                        f'site:{domain}/about "{entity_name}"',
+                    ]
+                )
+        # Deduplicate while preserving order.
+        return list(dict.fromkeys([q for q in queries if q]))
+
+    def _build_entity_domain_candidates(self, entity_name: str) -> List[str]:
+        tokens = [part for part in re.split(r"[\s\-_/]+", str(entity_name or "").lower()) if part]
+        if not tokens:
+            return []
+        slug = "".join(ch for ch in "".join(tokens) if ch.isalnum())
+        initials = "".join(part[0] for part in tokens if part and part[0].isalnum())
+        domains: List[str] = []
+        if len(initials) >= 3:
+            domains.extend([f"{initials}.co.uk", f"{initials}.com"])
+        if slug:
+            domains.extend([f"{slug}.com", f"{slug}.co.uk"])
+            if len(tokens) >= 2:
+                joined_hyphen = "-".join(tokens)
+                domains.extend([f"{joined_hyphen}.com", f"{joined_hyphen}.co.uk"])
+        return list(dict.fromkeys(domains))
 
     def _is_pdf_url(self, url: str) -> bool:
         """
@@ -2887,7 +2944,8 @@ class HypothesisDrivenDiscovery:
             'validation_calls': 0,
             'validation_ms': 0.0,
             'fallback_queries_tried': 0,
-            'site_specific_attempted': False
+            'site_specific_attempted': False,
+            'search_diagnostics': [],
         }
         self._last_url_candidates = []
 
@@ -2905,7 +2963,7 @@ class HypothesisDrivenDiscovery:
 
         # Define primary search query for each hop type
         primary_queries = {
-            HopType.OFFICIAL_SITE: f'"{entity_name}" official website',
+            HopType.OFFICIAL_SITE: f'"{entity_name}" official website news careers procurement',
             HopType.CAREERS_PAGE: f'"{entity_name}" careers jobs',
             HopType.ANNUAL_REPORT: f'"{entity_name}" annual report 2024',
             HopType.PRESS_RELEASE: f'"{entity_name}" recent news press release',
@@ -2952,6 +3010,7 @@ class HypothesisDrivenDiscovery:
                 # Cache the result
                 if search_result.get('status') == 'success':
                     await self._cache_search_result(primary_query, engine, search_result)
+            self._append_search_diagnostic(metrics, engine, primary_query, search_result, stage="primary")
 
             # Process results
             if search_result.get('status') == 'success' and search_result.get('results'):
@@ -3127,6 +3186,7 @@ class HypothesisDrivenDiscovery:
                 )
                 metrics['search_calls'] += 1
                 metrics['search_calls_ms'] += (time.perf_counter() - engine_started_at) * 1000
+                self._append_search_diagnostic(metrics, engine, fallback_query, search_result, stage="fallback")
 
                 if search_result.get('status') == 'success' and search_result.get('results'):
                     url = search_result['results'][0].get('url')
@@ -3165,6 +3225,31 @@ class HypothesisDrivenDiscovery:
             'validation_ms': round(metrics['validation_ms'], 2)
         }
         return None
+
+    def _append_search_diagnostic(
+        self,
+        metrics: Dict[str, Any],
+        engine: str,
+        query: str,
+        search_result: Dict[str, Any],
+        *,
+        stage: str,
+    ) -> None:
+        diagnostics = metrics.setdefault("search_diagnostics", [])
+        metadata = (search_result or {}).get("metadata", {}) if isinstance(search_result, dict) else {}
+        diagnostics.append(
+            {
+                "stage": stage,
+                "engine": engine,
+                "query": query,
+                "status": (search_result or {}).get("status"),
+                "result_count": len((search_result or {}).get("results") or []),
+                "error": (search_result or {}).get("error"),
+                "source": metadata.get("source"),
+                "zone": metadata.get("zone"),
+                "endpoint": metadata.get("endpoint"),
+            }
+        )
 
     async def _try_site_specific_search(
         self,
@@ -4169,12 +4254,29 @@ Return JSON:
 
             structured_result = self._extract_structured_evaluation_payload(response)
             if structured_result is not None:
+                structured_result = self._normalize_evaluator_result(structured_result)
+                is_valid, schema_reason = self._validate_evaluator_schema(structured_result)
+                if not is_valid:
+                    self._update_llm_runtime_diagnostics(
+                        llm_last_status=f"schema_gate_fail:{schema_reason}",
+                        evaluation_mode="heuristic",
+                    )
+                    fallback = self._deterministic_fallback_classification(
+                        content=content,
+                        context=context,
+                        mcp_matches=mcp_matches,
+                    )
+                    fallback["parse_path"] = "schema_gate_deterministic_fallback"
+                    return self._decorate_evaluation_result(fallback, evaluation_mode="heuristic")
                 self._update_llm_runtime_diagnostics(
                     llm_last_status="structured_payload",
                     evaluation_mode="llm",
                 )
                 if mcp_matches and structured_result.get('confidence_delta', 0) == 0.0:
-                    from confidence.mcp_scorer import calculate_mcp_confidence_from_matches
+                    try:
+                        from backend.confidence.mcp_scorer import calculate_mcp_confidence_from_matches
+                    except ImportError:
+                        from confidence.mcp_scorer import calculate_mcp_confidence_from_matches
                     mcp_confidence = calculate_mcp_confidence_from_matches(mcp_matches)
                     structured_result['confidence_delta'] = max(0.0, mcp_confidence - 0.70)
                     structured_result['mcp_matches'] = mcp_matches
@@ -4201,131 +4303,101 @@ Return JSON:
             # Parse JSON response (existing code)
             import re
 
-            result = self._extract_evaluator_json(response_text)
+            result = self._parse_evaluation_response_json(response_text)
             if result:
                 result = self._normalize_evaluator_result(result)
+                is_valid, schema_reason = self._validate_evaluator_schema(result)
+                if not is_valid:
+                    result = None
+                    logger.warning(f"Evaluator schema gate rejected parsed payload: {schema_reason}")
 
-                # Ensure result has required 'decision' key
-                if 'decision' not in result:
-                    logger.warning(f"Parsed JSON missing 'decision' key: {result}")
-                    fallback = self._fallback_result_with_reason(
-                        "Model payload missing decision",
-                        content=content,
-                        hop_type=hop_type,
-                        context=context,
-                    )
-                    self._update_llm_runtime_diagnostics(
-                        llm_last_status="invalid_model_payload",
-                        evaluation_mode="heuristic",
-                    )
-                    return self._decorate_evaluation_result(fallback, evaluation_mode="heuristic")
-
-                if self._should_force_evidence_reask(result):
-                    try:
-                        evidence_reask_prompt = (
-                            "Your prior evaluator output is missing required evidence. "
-                            "Return EXACT JSON with keys: decision, confidence_delta, justification, evidence_found, evidence_type, temporal_score. "
-                            "Keep the same decision unless invalid. "
-                            "Provide a specific quoted evidence snippet in `evidence_found` (8-240 chars). "
-                            "Return only JSON."
+            if not result:
+                repaired = await self._attempt_json_repair_pass(str(response_text or ""))
+                if repaired:
+                    repaired = self._normalize_evaluator_result(repaired)
+                    is_valid, schema_reason = self._validate_evaluator_schema(repaired)
+                    if is_valid:
+                        result = repaired
+                        self._update_llm_runtime_diagnostics(
+                            llm_last_status="schema_repair_recovered",
+                            evaluation_mode="llm",
                         )
-                        evidence_response = await self._query_evaluator_model(
-                            prompt=evidence_reask_prompt + "\n\nOriginal output:\n" + str(response_text or "")[:1800],
-                            max_tokens=220,
-                            system_prompt="Return one valid JSON object only.",
-                            json_mode=True,
-                            requested_model="haiku",
-                        )
-                        evidence_text = evidence_response.get('content', '') or evidence_response.get('text', '')
-                        reask_result = self._extract_evaluator_json(str(evidence_text))
-                        if reask_result:
-                            result = self._normalize_evaluator_result(reask_result)
-                    except Exception:
-                        pass
+                    else:
+                        logger.warning(f"Evaluator schema gate rejected repaired payload: {schema_reason}")
 
-                # Enhance with MCP-derived confidence if not provided
-                if mcp_matches and result.get('confidence_delta', 0) == 0.0:
-                    try:
-                        from backend.confidence.mcp_scorer import calculate_mcp_confidence_from_matches
-                    except ImportError:
-                        from confidence.mcp_scorer import calculate_mcp_confidence_from_matches
-                    mcp_confidence = calculate_mcp_confidence_from_matches(mcp_matches)
-                    result['confidence_delta'] = max(0.0, mcp_confidence - 0.70)
-                    result['mcp_matches'] = mcp_matches
-                    result['mcp_confidence'] = mcp_confidence
-
-                if self._should_force_evidence_reask(result):
-                    return {
-                        'decision': 'NO_PROGRESS',
-                        'confidence_delta': 0.0,
-                        'justification': 'Evaluator decision lacked minimum evidence payload after re-ask',
-                        'evidence_found': '',
-                        'evidence_type': 'missing_evidence_payload',
-                        'temporal_score': result.get('temporal_score', 'unknown'),
-                        'parse_path': 'evidence_payload_gate',
-                    }
-
-                return result
-            else:
-                decision = self._extract_decision_token(str(response_text or ""))
-                if decision:
-                    logger.info(f"Fallback extracted decision token: {decision}")
-                    return {
-                        'decision': decision,
-                        'confidence_delta': 0.05 if decision == 'ACCEPT' else (0.02 if decision == 'WEAK_ACCEPT' else 0.0),
-                        'justification': 'Extracted from non-JSON evaluator response',
-                        'evidence_found': '',
-                        'evidence_type': 'fallback'
-                    }
-
-                # One-shot recovery: ask evaluator to reformat to strict JSON.
-                try:
-                    recovery_prompt = (
-                        "Convert the following evaluator output into EXACT JSON with keys: "
-                        "decision, confidence_delta, justification, evidence_found, evidence_type, temporal_score. "
-                        "Decision must be one of ACCEPT|WEAK_ACCEPT|REJECT|NO_PROGRESS. "
-                        "Return only JSON.\n\n"
-                        f"OUTPUT:\n{str(response_text or '')[:1600]}"
-                    )
-                    recovery_response = await self._query_evaluator_model(
-                        prompt=recovery_prompt,
-                        max_tokens=260,
-                        system_prompt="Return one valid JSON object only.",
-                        json_mode=True,
-                        requested_model="haiku",
-                    )
-                    recovery_text = recovery_response.get('content', '') or recovery_response.get('text', '')
-                    recovered = self._extract_evaluator_json(str(recovery_text))
-                    if recovered and 'decision' in recovered:
-                        return recovered
-                    recovery_decision = self._extract_decision_token(str(recovery_text or ""))
-                    if recovery_decision:
-                        return {
-                            'decision': recovery_decision,
-                            'confidence_delta': 0.05 if recovery_decision == 'ACCEPT' else (0.02 if recovery_decision == 'WEAK_ACCEPT' else 0.0),
-                            'justification': 'Extracted decision token from recovery response',
-                            'evidence_found': '',
-                            'evidence_type': 'fallback_recovery',
-                        }
-                except Exception:
-                    pass
-
+            if not result:
                 if low_signal_content:
-                    return {
+                    fallback = {
                         'decision': 'NO_PROGRESS',
                         'confidence_delta': 0.0,
                         'justification': 'Low-signal page content (navigation/error shell) yielded no procurement evidence',
                         'evidence_found': '',
                         'evidence_type': 'low_signal_content',
                         'temporal_score': 'older',
+                        'parse_path': 'schema_gate_low_signal',
                     }
-
-                logger.warning(f"Could not parse Claude response: {response_text}")
-                return self._deterministic_fallback_classification(
-                    content=content,
-                    context=context,
-                    mcp_matches=mcp_matches,
+                else:
+                    fallback = self._deterministic_fallback_classification(
+                        content=content,
+                        context=context,
+                        mcp_matches=mcp_matches,
+                    )
+                    fallback["parse_path"] = "schema_gate_deterministic_fallback"
+                self._update_llm_runtime_diagnostics(
+                    llm_last_status="schema_gate_fallback",
+                    evaluation_mode="heuristic",
                 )
+                return self._decorate_evaluation_result(fallback, evaluation_mode="heuristic")
+
+            if self._should_force_evidence_reask(result):
+                try:
+                    evidence_reask_prompt = (
+                        "Your prior evaluator output is missing required evidence. "
+                        "Return EXACT JSON with keys: decision, confidence_delta, justification, evidence_found, evidence_type, temporal_score. "
+                        "Keep the same decision unless invalid. "
+                        "Provide a specific quoted evidence snippet in `evidence_found` (8-240 chars). "
+                        "Return only JSON."
+                    )
+                    evidence_response = await self._query_evaluator_model(
+                        prompt=evidence_reask_prompt + "\n\nOriginal output:\n" + str(response_text or "")[:1800],
+                        max_tokens=220,
+                        system_prompt="Return one valid JSON object only.",
+                        json_mode=True,
+                        requested_model="haiku",
+                    )
+                    evidence_text = evidence_response.get('content', '') or evidence_response.get('text', '')
+                    reask_result = self._parse_evaluation_response_json(str(evidence_text))
+                    if reask_result:
+                        reask_result = self._normalize_evaluator_result(reask_result)
+                        is_valid, _ = self._validate_evaluator_schema(reask_result)
+                        if is_valid:
+                            result = reask_result
+                except Exception:
+                    pass
+
+            # Enhance with MCP-derived confidence if not provided
+            if mcp_matches and result.get('confidence_delta', 0) == 0.0:
+                try:
+                    from backend.confidence.mcp_scorer import calculate_mcp_confidence_from_matches
+                except ImportError:
+                    from confidence.mcp_scorer import calculate_mcp_confidence_from_matches
+                mcp_confidence = calculate_mcp_confidence_from_matches(mcp_matches)
+                result['confidence_delta'] = max(0.0, mcp_confidence - 0.70)
+                result['mcp_matches'] = mcp_matches
+                result['mcp_confidence'] = mcp_confidence
+
+            if self._should_force_evidence_reask(result):
+                return {
+                    'decision': 'NO_PROGRESS',
+                    'confidence_delta': 0.0,
+                    'justification': 'Evaluator decision lacked minimum evidence payload after re-ask',
+                    'evidence_found': '',
+                    'evidence_type': 'missing_evidence_payload',
+                    'temporal_score': result.get('temporal_score', 'unknown'),
+                    'parse_path': 'evidence_payload_gate',
+                }
+
+            return result
         except json.JSONDecodeError as e:
             logger.error(f"JSON parsing error: {e}")
             logger.debug(f"Response text that failed to parse: {response_text[:500]}")
@@ -4386,11 +4458,40 @@ Return JSON:
         normalized = dict(result or {})
         decision = str(normalized.get("decision", "")).strip().upper().replace("-", "_").replace(" ", "_")
         normalized["decision"] = decision
+        try:
+            normalized["confidence_delta"] = float(normalized.get("confidence_delta", 0.0))
+        except Exception:
+            normalized["confidence_delta"] = 0.0
         if "evidence_found" in normalized:
             normalized["evidence_found"] = str(normalized.get("evidence_found") or "").strip()
         if "justification" in normalized:
             normalized["justification"] = str(normalized.get("justification") or "").strip()
+        normalized["evidence_type"] = str(normalized.get("evidence_type") or "").strip() or "unknown"
+        normalized["temporal_score"] = str(normalized.get("temporal_score") or "").strip() or "unknown"
         return normalized
+
+    def _validate_evaluator_schema(self, result: Optional[Dict[str, Any]]) -> Tuple[bool, str]:
+        if not isinstance(result, dict):
+            return False, "result_not_dict"
+        required_keys = [
+            "decision",
+            "confidence_delta",
+            "justification",
+            "evidence_found",
+            "evidence_type",
+            "temporal_score",
+        ]
+        missing = [key for key in required_keys if key not in result]
+        if missing:
+            return False, f"missing_keys:{','.join(missing)}"
+        decision = str(result.get("decision") or "").strip().upper()
+        if decision not in {"ACCEPT", "WEAK_ACCEPT", "REJECT", "NO_PROGRESS"}:
+            return False, "invalid_decision"
+        try:
+            float(result.get("confidence_delta"))
+        except Exception:
+            return False, "invalid_confidence_delta"
+        return True, "ok"
 
     def _should_force_evidence_reask(self, result: Dict[str, Any]) -> bool:
         """
@@ -5154,6 +5255,8 @@ Return JSON:
         total_duration_ms: Optional[float]
     ) -> Dict[str, Any]:
         """Summarize discovery timings so live runs expose the slowest hop."""
+        llm_diag = dict(getattr(self, "_llm_runtime_diagnostics", {}) or {})
+        schema_metrics = dict(getattr(self, "_schema_metrics", {}) or {})
         hop_records = []
         slowest_hop = None
         slowest_iteration = None

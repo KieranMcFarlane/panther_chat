@@ -39,6 +39,20 @@ def test_claude_client_prefers_chutes_when_configured(monkeypatch):
     assert client.chutes_max_retries == 2
 
 
+def test_claude_client_default_chutes_tier_mapping(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.delenv("CHUTES_MODEL_HAIKU", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_SONNET", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_OPUS", raising=False)
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+
+    client = ClaudeClient()
+    assert client._resolve_chutes_runtime_model("haiku") == "zai-org/GLM-5-TEE"
+    assert client._resolve_chutes_runtime_model("sonnet") == "moonshotai/Kimi-K2.5-TEE"
+    assert client._resolve_chutes_runtime_model("opus") == "MiniMaxAI/MiniMax-M2.5-TEE"
+
+
 def test_claude_client_supports_explicit_chutes_anthropic_provider(monkeypatch):
     monkeypatch.setenv("LLM_PROVIDER", "chutes_anthropic")
     monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
