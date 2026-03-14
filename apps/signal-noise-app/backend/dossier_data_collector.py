@@ -53,6 +53,10 @@ for env_file in env_files:
 
 logger = logging.getLogger(__name__)
 
+try:
+    from official_site_resolver import choose_canonical_official_site, rank_official_site_candidates
+except ImportError:  # pragma: no cover - package import path fallback
+    from backend.official_site_resolver import choose_canonical_official_site, rank_official_site_candidates
 
 # =============================================================================
 # Data Structures
@@ -463,7 +467,6 @@ class DossierDataCollector:
             aliases.append(all_initials)
 
         return any(alias in compact_host for alias in aliases if len(alias) >= 3)
-
     def _load_official_site_url_cache(self) -> Dict[str, str]:
         cache_file = self._official_site_cache_file()
         try:
@@ -2144,6 +2147,19 @@ Return ONLY the value (no extra text).""",
 
             # Step 4: Extract entity properties using AI
             extracted_data = await self._extract_entity_properties(content, entity_name)
+
+            extracted_website = self._normalize_http_url(extracted_data.get("website"))
+            if extracted_website:
+                extracted_data["website"] = extracted_website
+                if self._is_commerce_host(official_url) and not self._is_commerce_host(extracted_website):
+                    logger.info(
+                        "♻️ Promoting extracted canonical website over commerce domain for %s: %s -> %s",
+                        entity_name,
+                        official_url,
+                        extracted_website,
+                    )
+                    official_url = extracted_website
+                    self._store_cached_official_site_url(entity_name, official_url)
 
             scraped_content = ScrapedContent(
                 url=official_url,
