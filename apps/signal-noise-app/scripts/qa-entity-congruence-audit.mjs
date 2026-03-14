@@ -10,6 +10,7 @@ const AS_JSON = args.includes('--json')
 const JSON_OUTPUT_PATH = readArgValue(args, '--out')
 const SUMMARY_MD_PATH = readArgValue(args, '--summary-md')
 const BASELINE_OVERRIDE_PATH = readArgValue(args, '--baseline')
+const REQUIRE_BASELINE = args.includes('--require-baseline')
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
 const SUPABASE_KEY =
@@ -226,6 +227,18 @@ async function run() {
   ]
 
   const baseline = readBaseline()
+  if (REQUIRE_BASELINE && !baseline.data) {
+    checks.push({
+      id: 'baseline_loaded',
+      ok: false,
+      details: {
+        required: true,
+        loaded: false,
+        path: baseline.path,
+      },
+    })
+  }
+
   if (baseline.data?.metrics && baseline.data?.allowed_regression) {
     const metrics = baseline.data.metrics
     const allowed = baseline.data.allowed_regression
@@ -310,6 +323,16 @@ async function run() {
         current_present: presentBundesligaCount,
         drop: bundesligaDrop,
         allowed_drop: allowedBundesligaDrop,
+      },
+    })
+  } else if (baseline.data && REQUIRE_BASELINE) {
+    checks.push({
+      id: 'baseline_schema_valid',
+      ok: false,
+      details: {
+        required: true,
+        path: baseline.path,
+        reason: 'baseline file missing metrics or allowed_regression sections',
       },
     })
   }
