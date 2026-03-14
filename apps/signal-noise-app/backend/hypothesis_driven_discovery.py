@@ -816,6 +816,7 @@ class HypothesisDrivenDiscovery:
             "text_decision_recovered": "text_decision_recovered",
             "text_no_progress_recovered": "text_no_progress_recovered",
             "strict_text_no_progress_recovered": "text_no_progress_recovered",
+            "strict_truncated_json_recovered": "json_truncated_recovered",
             "text_accept_recovered": "text_decision_recovered",
             "json_repair_recovered": "json_repair_recovered",
             "invalid_model_payload": "heuristic_fallback",
@@ -1109,6 +1110,43 @@ class HypothesisDrivenDiscovery:
             "parse_path": "text_no_progress_recovered",
         }
 
+    def _recover_strict_from_truncated_json_prefix(self, response_text: str) -> Optional[Dict[str, Any]]:
+        text = str(response_text or "").strip()
+        if not text:
+            return None
+        if not text.lstrip().startswith("{"):
+            return None
+
+        decision_match = re.search(
+            r'(?is)"?decision"?\s*:\s*"?(ACCEPT|WEAK_ACCEPT|REJECT|NO_PROGRESS)',
+            text,
+        )
+        if not decision_match:
+            return None
+        decision = decision_match.group(1).upper()
+        if decision not in {"ACCEPT", "WEAK_ACCEPT", "REJECT", "NO_PROGRESS"}:
+            return None
+
+        confidence_delta = 0.0
+        confidence_match = re.search(r'(?is)"?confidence_delta"?\s*:\s*(-?\d+(?:\.\d+)?)', text)
+        if confidence_match:
+            try:
+                confidence_delta = float(confidence_match.group(1))
+            except Exception:  # noqa: BLE001
+                confidence_delta = 0.0
+        elif decision == "ACCEPT":
+            confidence_delta = 0.06
+
+        return {
+            "decision": decision,
+            "confidence_delta": confidence_delta,
+            "justification": "Recovered decision from truncated JSON prefix",
+            "evidence_found": "",
+            "evidence_type": "strict_truncated_json_recovery",
+            "temporal_score": "unknown",
+            "parse_path": "json_truncated_recovered",
+        }
+
     def _extract_deterministic_trusted_signal(
         self,
         *,
@@ -1270,6 +1308,62 @@ class HypothesisDrivenDiscovery:
                         break
         return None
 
+    @staticmethod
+    def _normalize_evaluator_payload(payload: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        if not isinstance(payload, dict):
+            return None
+
+        decision = str(payload.get("decision") or "").strip().upper()
+        if decision not in {"ACCEPT", "WEAK_ACCEPT", "REJECT", "NO_PROGRESS"}:
+            return None
+
+        confidence_raw = payload.get("confidence_delta", 0.0)
+        try:
+            confidence_delta = float(confidence_raw)
+        except Exception:  # noqa: BLE001
+            confidence_delta = 0.0
+
+        return {
+            "decision": decision,
+            "confidence_delta": confidence_delta,
+            "justification": str(payload.get("justification") or "").strip() or "Recovered evaluator payload",
+            "evidence_found": str(payload.get("evidence_found") or "").strip(),
+            "evidence_type": str(payload.get("evidence_type") or "").strip() or "unknown",
+            "temporal_score": str(payload.get("temporal_score") or "").strip() or "unknown",
+        }
+
+    def _salvage_almost_json_object(self, response_text: str) -> Optional[Dict[str, Any]]:
+        if not isinstance(response_text, str) or not response_text.strip():
+            return None
+
+        start_index = response_text.find("{")
+        if start_index < 0:
+            return None
+
+        candidate = response_text[start_index:]
+        last_close_index = candidate.rfind("}")
+        if last_close_index >= 0:
+            candidate = candidate[: last_close_index + 1]
+
+        # Repair common LLM issues: dangling commas and missing closing braces.
+        candidate = re.sub(r",(\s*[}\]])", r"\1", candidate)
+        open_count = candidate.count("{")
+        close_count = candidate.count("}")
+        if open_count > close_count:
+            candidate = f"{candidate}{'}' * (open_count - close_count)}"
+        candidate = re.sub(r",(\s*[}\]])", r"\1", candidate)
+
+        direct = self._extract_balanced_json_object(candidate, required_key="decision")
+        normalized = self._normalize_evaluator_payload(direct) if direct else None
+        if normalized:
+            return normalized
+
+        try:
+            loaded = json.loads(candidate)
+        except Exception:  # noqa: BLE001
+            return None
+        return self._normalize_evaluator_payload(loaded)
+
     def _parse_evaluation_response_json(self, response_text: str) -> Optional[Dict[str, Any]]:
         """Parse evaluator JSON from plain text, fenced blocks, or mixed responses."""
         self._last_parse_path = None
@@ -1277,23 +1371,30 @@ class HypothesisDrivenDiscovery:
             return None
 
         direct = self._extract_balanced_json_object(response_text, required_key="decision")
-        if direct:
+        normalized_direct = self._normalize_evaluator_payload(direct) if direct else None
+        if normalized_direct:
             self._last_parse_path = "json_direct"
-            return direct
+            return normalized_direct
 
         import re
 
         fenced_blocks = re.findall(r"```(?:json)?\s*([\s\S]*?)```", response_text, flags=re.IGNORECASE)
         for block in fenced_blocks:
             parsed = self._extract_balanced_json_object(block, required_key="decision")
-            if parsed:
+            normalized_fenced = self._normalize_evaluator_payload(parsed) if parsed else None
+            if normalized_fenced:
                 self._last_parse_path = "json_fenced"
-                return parsed
+                return normalized_fenced
 
         key_value_payload = self._extract_evaluation_key_value_payload(response_text)
         if key_value_payload:
             self._last_parse_path = "key_value_recovered"
             return key_value_payload
+
+        salvaged_payload = self._salvage_almost_json_object(response_text)
+        if salvaged_payload:
+            self._last_parse_path = "json_salvaged"
+            return salvaged_payload
 
         return None
 
@@ -4125,6 +4226,13 @@ Return JSON:
                 strict_json = bool(getattr(self, "strict_evaluator_json_response", False))
                 response_preview = str(response_text or "")[:600]
                 if strict_json:
+                    strict_json_prefix_recovered = self._recover_strict_from_truncated_json_prefix(response_text)
+                    if strict_json_prefix_recovered is not None:
+                        self._update_llm_runtime_diagnostics(
+                            llm_last_status="strict_truncated_json_recovered",
+                            evaluation_mode="llm",
+                        )
+                        return self._decorate_evaluation_result(strict_json_prefix_recovered, evaluation_mode="llm")
                     strict_recovered = self._recover_strict_no_progress_from_narrative(response_text)
                     if strict_recovered is not None:
                         self._update_llm_runtime_diagnostics(

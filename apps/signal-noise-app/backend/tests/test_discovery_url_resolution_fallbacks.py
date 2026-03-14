@@ -634,6 +634,27 @@ I evaluated the page.
     assert discovery._last_parse_path in {"json_direct", "json_fenced"}
 
 
+def test_parse_evaluation_response_json_salvages_prose_and_trailing_comma():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    response_text = """
+Let me analyze this page and provide structured output.
+{
+  "decision": "NO_PROGRESS",
+  "confidence_delta": 0.0,
+  "justification": "No relevant procurement signals found.",
+  "evidence_found": "",
+  "evidence_type": "none",
+  "temporal_score": "unknown",
+}
+Additional explanation that should be ignored.
+"""
+    parsed = discovery._parse_evaluation_response_json(response_text)
+    assert parsed is not None
+    assert parsed["decision"] == "NO_PROGRESS"
+    assert parsed["temporal_score"] == "unknown"
+    assert discovery._last_parse_path == "json_salvaged"
+
+
 @pytest.mark.asyncio
 async def test_evaluate_content_requests_json_mode_and_parses_embedded_json():
     class _ClaudeStub:
@@ -729,6 +750,110 @@ async def test_evaluate_content_recovers_partial_json_decision():
     assert result["decision"] == "ACCEPT"
     assert result["confidence_delta"] == 0.08
     assert result["evaluation_mode"] == "llm"
+
+
+@pytest.mark.asyncio
+async def test_evaluate_content_strict_json_mode_salvages_truncated_json_before_fallback():
+    class _ClaudeStub:
+        provider = "chutes_openai"
+
+        async def query(self, **kwargs):
+            return {
+                "content": (
+                    "Quick assessment:\n"
+                    "{\n"
+                    "  \"decision\": \"NO_PROGRESS\",\n"
+                    "  \"confidence_delta\": 0.0,\n"
+                    "  \"justification\": \"No procurement evidence in this sports news content.\",\n"
+                    "  \"evidence_found\": \"\",\n"
+                    "  \"evidence_type\": \"none\",\n"
+                    "  \"temporal_score\": \"unknown\",\n"
+                ),
+                "inference_diagnostics": {"llm_retry_attempts": 0, "llm_last_status": "ok"},
+            }
+
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.claude_client = _ClaudeStub()
+    discovery.heuristic_fallback_on_llm_unavailable = True
+    discovery.evaluation_max_tokens_default = 640
+    discovery.evaluation_max_tokens_press_release = 384
+    discovery.evaluation_max_tokens_official_site = 384
+    discovery.evaluation_max_tokens_careers_annual_report = 448
+    discovery.evaluation_json_repair_attempt = True
+    discovery.strict_evaluator_json_response = True
+
+    hypothesis = SimpleNamespace(
+        statement="Coventry City FC is actively running procurement",
+        category="procurement",
+        metadata={"entity_name": "Coventry City FC", "template_id": ""},
+        prior_probability=0.5,
+        confidence=0.5,
+        iterations_attempted=0,
+        iterations_accepted=0,
+        iterations_weak_accept=0,
+        iterations_rejected=0,
+        iterations_no_progress=0,
+        last_delta=0.0,
+    )
+
+    result = await discovery._evaluate_content_with_claude(
+        content="Fixture list and score updates for home and away matches.",
+        hypothesis=hypothesis,
+        hop_type=HopType.OFFICIAL_SITE,
+        content_metadata={"content_type": "text/html"},
+    )
+
+    assert result["evaluation_mode"] == "llm"
+    assert result["decision"] == "NO_PROGRESS"
+    assert result["parse_path"] == "json_salvaged"
+
+
+@pytest.mark.asyncio
+async def test_evaluate_content_strict_json_mode_recovers_decision_from_hard_truncated_json_prefix():
+    class _ClaudeStub:
+        provider = "chutes_openai"
+
+        async def query(self, **kwargs):
+            return {
+                "content": '{"decision":"NO_PROGRESS","confidence_delta":',
+                "inference_diagnostics": {"llm_retry_attempts": 0, "llm_last_status": "ok"},
+            }
+
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    discovery.claude_client = _ClaudeStub()
+    discovery.heuristic_fallback_on_llm_unavailable = True
+    discovery.evaluation_max_tokens_default = 640
+    discovery.evaluation_max_tokens_press_release = 384
+    discovery.evaluation_max_tokens_official_site = 384
+    discovery.evaluation_max_tokens_careers_annual_report = 448
+    discovery.evaluation_json_repair_attempt = True
+    discovery.strict_evaluator_json_response = True
+
+    hypothesis = SimpleNamespace(
+        statement="Coventry City FC is actively running procurement",
+        category="procurement",
+        metadata={"entity_name": "Coventry City FC", "template_id": ""},
+        prior_probability=0.5,
+        confidence=0.5,
+        iterations_attempted=0,
+        iterations_accepted=0,
+        iterations_weak_accept=0,
+        iterations_rejected=0,
+        iterations_no_progress=0,
+        last_delta=0.0,
+    )
+
+    result = await discovery._evaluate_content_with_claude(
+        content="Fixture list and score updates for home and away matches.",
+        hypothesis=hypothesis,
+        hop_type=HopType.OFFICIAL_SITE,
+        content_metadata={"content_type": "text/html"},
+    )
+
+    assert result["evaluation_mode"] == "llm"
+    assert result["decision"] == "NO_PROGRESS"
+    assert result["parse_path"] == "json_truncated_recovered"
+    assert result["llm_last_status"] == "strict_truncated_json_recovered"
 
 
 @pytest.mark.asyncio
