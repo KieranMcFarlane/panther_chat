@@ -2280,6 +2280,27 @@ class HypothesisDrivenDiscovery:
             return "- No specific early indicators defined"
         return '\n'.join(f"- {ind}" for ind in indicators)
 
+    def _is_low_signal_content(self, content: str) -> bool:
+        """Detect low-signal page content (error/nav shells) for compact prompting."""
+        text = str(content or "").strip().lower()
+        if not text:
+            return True
+        words = text.split()
+        if len(words) < 80:
+            return True
+        low_signal_markers = [
+            "this endpoint is not supported",
+            "terms of use",
+            "privacy policy",
+            "accessibility",
+            "contact us",
+            "tickets",
+            "store",
+            "club site",
+        ]
+        marker_hits = sum(1 for marker in low_signal_markers if marker in text)
+        return marker_hits >= 2
+
     def _fallback_result(self) -> Dict[str, Any]:
         """Return fallback NO_PROGRESS result"""
         return {
@@ -2472,7 +2493,35 @@ Pay special attention to:
 - Budget/timeline information
 """
 
-        prompt = f"""
+        low_signal_content = self._is_low_signal_content(content)
+
+        if low_signal_content:
+            prompt = f"""
+# Discovery Evaluation (Low-Signal Content)
+
+Entity: {context.entity_name}
+Hypothesis: {context.hypothesis_statement}
+Category: {context.hypothesis_category}
+Hop Type: {context.hop_type.value.upper()}
+Keywords: {', '.join(context.keywords) if context.keywords else 'None'}
+
+Content:
+```markdown
+{content[:1200]}
+```
+
+Return strict JSON only:
+{{
+  "decision": "ACCEPT" | "WEAK_ACCEPT" | "REJECT" | "NO_PROGRESS",
+  "confidence_delta": 0.0,
+  "justification": "brief explanation",
+  "evidence_found": "exact quote or empty string",
+  "evidence_type": "{mcp_matches[0]['type'] if mcp_matches else 'null'}",
+  "temporal_score": "recent_6mo | recent_12mo | older"
+}}
+"""
+        else:
+            prompt = f"""
 # Hypothesis-Driven Discovery Evaluation
 
 You are evaluating whether {context.entity_name} shows procurement readiness signals.
@@ -2536,7 +2585,7 @@ Return JSON:
             # Use ClaudeClient.query() instead of Anthropic SDK
             response = await self._query_evaluator_model(
                 prompt=prompt,
-                max_tokens=500,
+                max_tokens=220 if low_signal_content else 500,
                 system_prompt=(
                     "You are a strict JSON evaluator. "
                     "Return only a single valid JSON object and no markdown, prose, or reasoning."
@@ -2613,6 +2662,16 @@ Return JSON:
                             return recovered
                 except Exception:
                     pass
+
+                if low_signal_content:
+                    return {
+                        'decision': 'NO_PROGRESS',
+                        'confidence_delta': 0.0,
+                        'justification': 'Low-signal page content (navigation/error shell) yielded no procurement evidence',
+                        'evidence_found': '',
+                        'evidence_type': 'low_signal_content',
+                        'temporal_score': 'older',
+                    }
 
                 logger.warning(f"Could not parse Claude response: {response_text}")
                 return self._fallback_result()
