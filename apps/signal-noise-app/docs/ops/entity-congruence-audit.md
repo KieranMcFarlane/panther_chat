@@ -33,6 +33,7 @@
   - `baseline_drift_ipl_seed_presence`
   - `baseline_drift_epl_seed_presence`
   - `baseline_drift_bundesliga_seed_presence`
+  - report includes a drift delta section (increase/drop values per tracked metric)
 
 ## CI Behavior
 - Workflow: `.github/workflows/entity-congruence-audit.yml`
