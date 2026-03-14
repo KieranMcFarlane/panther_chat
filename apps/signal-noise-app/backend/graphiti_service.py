@@ -274,7 +274,13 @@ class GraphitiService:
             return await self._add_rfp_episode_supabase(rfp_data)
 
         if not self.driver:
-            raise RuntimeError("Service not initialized - no Supabase or FalkorDB connection")
+            logger.warning("⚠️ No temporal backend available - RFP episode not stored")
+            return {
+                'episode_id': 'temp',
+                'organization': rfp_data.get('organization'),
+                'timestamp': datetime.now(timezone.utc).isoformat(),
+                'status': 'not_stored'
+            }
 
         # Fallback to FalkorDB implementation
         return await self._add_rfp_episode_falkordb(rfp_data)
@@ -665,7 +671,8 @@ class GraphitiService:
             return events
 
         if not self.driver:
-            raise RuntimeError("Service not initialized - no Supabase or FalkorDB connection")
+            logger.warning("⚠️ No temporal backend available - returning empty timeline")
+            return []
 
         with self.driver.session(database=self.graph_name) as session:
             # Query episodes for the entity
@@ -828,7 +835,22 @@ class GraphitiService:
             return result
 
         if not self.driver:
-            raise RuntimeError("Service not initialized - no Supabase or FalkorDB connection")
+            logger.warning("⚠️ No temporal backend available - returning neutral fit analysis")
+            return {
+                'entity_id': entity_id,
+                'rfp_id': rfp_id,
+                'fit_score': 0.5,
+                'confidence': 0.0,
+                'trend_analysis': {
+                    'rfp_count_last_90_days': 0,
+                    'time_horizon_days': time_horizon,
+                    'trend': 'unknown'
+                },
+                'key_factors': [],
+                'recommendations': ['Temporal backend unavailable; run with Supabase or FalkorDB for fit analysis.'],
+                'analyzed_at': datetime.now(timezone.utc).isoformat(),
+                'cached': False
+            }
 
         # Fallback to FalkorDB
         with self.driver.session(database=self.graph_name) as session:
@@ -1074,7 +1096,13 @@ class GraphitiService:
             }
 
         if not self.driver:
-            raise RuntimeError("Service not initialized - no Supabase or FalkorDB connection")
+            logger.warning("⚠️ No temporal backend available - returning empty temporal patterns")
+            return {
+                'time_horizon_days': time_horizon,
+                'episode_types': {},
+                'top_entities': [],
+                'total_episodes': 0,
+            }
 
         # Fallback to FalkorDB
         with self.driver.session(database=self.graph_name) as session:
