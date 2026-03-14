@@ -69,7 +69,7 @@ jobs:
           [ "$missing" -eq 0 ]
 
       - name: Run entity congruence audit
-        run: npm run qa:entity-congruence-audit
+        run: npm run qa:entity-congruence-audit -- --baseline config/entity-congruence-baseline.json
 
   congruence-audit-report:
     runs-on: ubuntu-latest
@@ -102,7 +102,7 @@ jobs:
       - name: Generate entity congruence JSON report
         run: |
           mkdir -p artifacts
-          npm run qa:entity-congruence-audit -- --json --no-fail --out artifacts/entity-congruence-audit.json --summary-md artifacts/entity-congruence-audit-summary.md
+          npm run qa:entity-congruence-audit -- --json --no-fail --require-baseline --baseline config/entity-congruence-baseline.json --out artifacts/entity-congruence-audit.json --summary-md artifacts/entity-congruence-audit-summary.md
 
       - name: Publish audit summary
         run: |
