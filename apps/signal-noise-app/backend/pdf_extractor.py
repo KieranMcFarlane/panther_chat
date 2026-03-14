@@ -114,6 +114,7 @@ class PDFExtractor:
             }
         """
         logger.info(f"📄 Attempting PDF extraction: {url}")
+        best_result: Optional[Dict[str, Any]] = None
 
         # Download PDF
         try:
@@ -134,12 +135,14 @@ class PDFExtractor:
         # Try pdfplumber first (best for digital PDFs)
         if self.has_pdfplumber:
             result = self._extract_with_pdfplumber(pdf_bytes, max_pages)
+            best_result = self._select_best_result(best_result, result)
             if result["status"] == "success" and result["char_count"] > self.ocr_threshold:
                 return result
 
         # Try PyMuPDF as fallback
         if self.has_fitz:
             result = self._extract_with_fitz(pdf_bytes, max_pages)
+            best_result = self._select_best_result(best_result, result)
             if result["status"] == "success" and result["char_count"] > self.ocr_threshold:
                 return result
 
@@ -147,15 +150,39 @@ class PDFExtractor:
         if self.has_ocr and self.enable_ocr:
             logger.info(f"  🔍 Native extraction below threshold ({self.ocr_threshold} chars), triggering OCR...")
             result = await self._extract_with_ocr(pdf_bytes, max_pages)
+            best_result = self._select_best_result(best_result, result)
             if result["status"] == "success" and result["char_count"] > self.ocr_threshold:
                 return result
 
-        # All methods failed
+        # Return best successful extraction, even if under threshold.
+        # This avoids false negatives for legitimately short PDFs.
+        if best_result and best_result.get("status") == "success":
+            best_result["below_threshold"] = True
+            best_result["threshold"] = self.ocr_threshold
+            logger.warning(
+                "  ⚠️ All extraction methods were below threshold; returning best available content "
+                f"({best_result.get('char_count', 0)} chars via {best_result.get('method')})"
+            )
+            return best_result
+
+        # All methods failed with no usable output
         logger.error("  ❌ All PDF extraction methods failed")
         return {
             "status": "failed",
             "error": "All extraction methods failed or returned insufficient text"
         }
+
+    @staticmethod
+    def _select_best_result(
+        best_result: Optional[Dict[str, Any]],
+        candidate: Optional[Dict[str, Any]]
+    ) -> Optional[Dict[str, Any]]:
+        """Select the successful result with the highest character count."""
+        if not candidate or candidate.get("status") != "success":
+            return best_result
+        if not best_result or best_result.get("status") != "success":
+            return candidate
+        return candidate if candidate.get("char_count", 0) > best_result.get("char_count", 0) else best_result
 
     def _extract_with_pdfplumber(
         self,
@@ -178,9 +205,22 @@ class PDFExtractor:
                 text = "\n".join(text_parts)
                 char_count = len(text.strip())
 
-                if char_count < 100:
+                if char_count == 0:
+                    logger.warning("  ⚠️ pdfplumber: No text extracted")
+                    return {"status": "failed", "error": "No text extracted"}
+                if char_count < self.ocr_threshold:
                     logger.warning(f"  ⚠️ pdfplumber: Only {char_count} chars extracted")
-                    return {"status": "failed", "error": "Insufficient text"}
+                    return {
+                        "status": "success",
+                        "method": "pdfplumber",
+                        "content": text,
+                        "char_count": char_count,
+                        "page_count": len(pages_to_process),
+                        "confidence": "low",
+                        "cost_usd": 0.0,
+                        "below_threshold": True,
+                        "threshold": self.ocr_threshold,
+                    }
 
                 logger.info(f"  ✅ pdfplumber: {char_count:,} chars from {len(pages_to_process)} pages")
 
@@ -225,9 +265,22 @@ class PDFExtractor:
             text = "\n".join(text_parts)
             char_count = len(text.strip())
 
-            if char_count < 100:
+            if char_count == 0:
+                logger.warning("  ⚠️ PyMuPDF: No text extracted")
+                return {"status": "failed", "error": "No text extracted"}
+            if char_count < self.ocr_threshold:
                 logger.warning(f"  ⚠️ PyMuPDF: Only {char_count} chars extracted")
-                return {"status": "failed", "error": "Insufficient text"}
+                return {
+                    "status": "success",
+                    "method": "fitz",
+                    "content": text,
+                    "char_count": char_count,
+                    "page_count": page_count,
+                    "confidence": "low",
+                    "cost_usd": 0.0,
+                    "below_threshold": True,
+                    "threshold": self.ocr_threshold,
+                }
 
             logger.info(f"  ✅ PyMuPDF: {char_count:,} chars from {page_count} pages")
 
@@ -273,9 +326,22 @@ class PDFExtractor:
             text = "\n".join(text_parts)
             char_count = len(text.strip())
 
-            if char_count < 100:
+            if char_count == 0:
+                logger.warning("  ⚠️ OCR: No text extracted")
+                return {"status": "failed", "error": "No text extracted"}
+            if char_count < self.ocr_threshold:
                 logger.warning(f"  ⚠️ OCR: Only {char_count} chars extracted")
-                return {"status": "failed", "error": "Insufficient text"}
+                return {
+                    "status": "success",
+                    "method": "ocr",
+                    "content": text,
+                    "char_count": char_count,
+                    "page_count": len(images),
+                    "confidence": "low",
+                    "cost_usd": 0.01,
+                    "below_threshold": True,
+                    "threshold": self.ocr_threshold,
+                }
 
             logger.info(f"  ✅ OCR: {char_count:,} chars from {len(images)} pages")
 
