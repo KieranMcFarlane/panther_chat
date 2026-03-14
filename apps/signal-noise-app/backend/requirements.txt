@@ -43,6 +43,10 @@ asyncio>=3.4.3
 python-dateutil>=2.8.2
 python-dotenv>=1.0.0
 tenacity>=8.2.0
+pdfplumber>=0.11.0
+pymupdf>=1.24.0
+pdf2image>=1.17.0
+pytesseract>=0.3.13
 
 # Database (SQLite for MVP, can be upgraded to PostgreSQL)
 # sqlite3 is included in Python standard library
