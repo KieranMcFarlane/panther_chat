@@ -278,6 +278,7 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
             variant="outline" 
             size="sm" 
             className="w-full"
+            data-testid="view-full-profile"
                 onClick={(e) => {
                   e.stopPropagation()
                   if (!stableEntityId) return

@@ -107,7 +107,15 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
 
   const backToEntityBrowser = useCallback(() => {
     const currentFrom = new URLSearchParams(window.location.search).get('from') || fromPage
-    pushWithViewTransition(router, resolveEntityBrowserReturnUrl(currentFrom))
+    const targetUrl = resolveEntityBrowserReturnUrl(currentFrom)
+    const beforeUrl = `${window.location.pathname}${window.location.search}`
+    pushWithViewTransition(router, targetUrl)
+    window.setTimeout(() => {
+      const afterUrl = `${window.location.pathname}${window.location.search}`
+      if (afterUrl === beforeUrl) {
+        window.location.assign(targetUrl)
+      }
+    }, 300)
   }, [fromPage, router])
 
   // Expose current entity context to CopilotKit for AI awareness

@@ -58,9 +58,24 @@ export default function EntityDossierClientPage({
   const [generationAttempt, setGenerationAttempt] = useState(0)
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [isContentTransitioning, setIsContentTransitioning] = useState(false)
+  const [backHref, setBackHref] = useState(fromPage !== '1' ? `/entity-browser?page=${fromPage}` : '/entity-browser')
+
+  useEffect(() => {
+    const currentFrom = new URLSearchParams(window.location.search).get('from') || fromPage
+    setBackHref(resolveEntityBrowserReturnUrl(currentFrom))
+  }, [fromPage])
+
   const backToEntityBrowser = useCallback(() => {
     const currentFrom = new URLSearchParams(window.location.search).get('from') || fromPage
-    pushWithViewTransition(router, resolveEntityBrowserReturnUrl(currentFrom))
+    const targetUrl = resolveEntityBrowserReturnUrl(currentFrom)
+    const beforeUrl = `${window.location.pathname}${window.location.search}`
+    pushWithViewTransition(router, targetUrl)
+    window.setTimeout(() => {
+      const afterUrl = `${window.location.pathname}${window.location.search}`
+      if (afterUrl === beforeUrl) {
+        window.location.assign(targetUrl)
+      }
+    }, 300)
   }, [fromPage, router])
 
   useEffect(() => {
@@ -172,8 +187,14 @@ export default function EntityDossierClientPage({
             <h2 className="text-xl font-semibold mb-2">Error Loading Entity</h2>
             <p className="text-muted-foreground mb-4">{initialError || `Entity ${entityId} not found`}</p>
             <div className="space-y-2">
-              <Button onClick={backToEntityBrowser} variant="outline" className="w-full">
-                Back to Entity Browser
+              <Button
+                onClick={backToEntityBrowser}
+                variant="outline"
+                className="w-full"
+                data-testid="back-to-entity-browser"
+                asChild
+              >
+                <a href={backHref}>Back to Entity Browser</a>
               </Button>
             </div>
           </CardContent>
@@ -189,9 +210,11 @@ export default function EntityDossierClientPage({
       <div className="flex-1 bg-[#1c1e2d]">
         <div className="container mx-auto px-4 py-8">
           <div className="mb-4">
-            <Button onClick={backToEntityBrowser} variant="outline" size="sm">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Entity Browser
+            <Button onClick={backToEntityBrowser} variant="outline" size="sm" data-testid="back-to-entity-browser" asChild>
+              <a href={backHref}>
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Entity Browser
+              </a>
             </Button>
           </div>
           {generationMessage && (
