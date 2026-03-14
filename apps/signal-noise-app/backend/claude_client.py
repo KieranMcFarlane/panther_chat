@@ -451,6 +451,31 @@ class ClaudeClient:
             return "empty response content" in msg
         return False
 
+    @staticmethod
+    def _coerce_message_text(value: Any) -> str:
+        """Coerce OpenAI-style message content variants into plain text."""
+        if value is None:
+            return ""
+        if isinstance(value, str):
+            return value
+        if isinstance(value, dict):
+            for key in ("text", "content"):
+                candidate = value.get(key)
+                if isinstance(candidate, str) and candidate.strip():
+                    return candidate
+            return ""
+        if isinstance(value, list):
+            parts: List[str] = []
+            for item in value:
+                if isinstance(item, str) and item.strip():
+                    parts.append(item.strip())
+                elif isinstance(item, dict):
+                    candidate = item.get("text") or item.get("content")
+                    if isinstance(candidate, str) and candidate.strip():
+                        parts.append(candidate.strip())
+            return "\n".join(parts).strip()
+        return str(value)
+
     async def query_with_cascade(
         self,
         prompt: str,
@@ -512,7 +537,8 @@ class ClaudeClient:
         model: str = "haiku",
         max_tokens: int = 2000,
         tools: Optional[List[Dict]] = None,
-        system_prompt: Optional[str] = None
+        system_prompt: Optional[str] = None,
+        json_mode: bool = False,
     ) -> Dict[str, Any]:
         """
         Query Claude with specific model using Anthropic SDK
@@ -533,6 +559,7 @@ class ClaudeClient:
                 model=model,
                 max_tokens=max_tokens,
                 system_prompt=system_prompt,
+                json_mode=json_mode,
             )
 
         if not ANTHROPIC_SDK_AVAILABLE:
@@ -589,6 +616,7 @@ class ClaudeClient:
         model: str,
         max_tokens: int,
         system_prompt: Optional[str] = None,
+        json_mode: bool = False,
     ) -> Dict[str, Any]:
         """
         Query a Chutes OpenAI-compatible model endpoint.
@@ -612,9 +640,11 @@ class ClaudeClient:
             "model": self._resolve_chutes_runtime_model(model),
             "messages": messages,
             "max_tokens": max_tokens,
-            "temperature": 0.7 if system_prompt is None else 0.4,
+            "temperature": 0.0 if json_mode else (0.7 if system_prompt is None else 0.4),
             "stream": False,
         }
+        if json_mode:
+            payload["response_format"] = {"type": "json_object"}
 
         headers = {
             "Authorization": f"Bearer {self.api_key}",
@@ -636,7 +666,12 @@ class ClaudeClient:
                 data = response.json()
                 choice = (data.get("choices") or [{}])[0]
                 message = choice.get("message") or {}
-                content = message.get("content", "")
+                content = self._coerce_message_text(message.get("content"))
+                if not content.strip():
+                    # Some providers return reasoning text while content is null/empty.
+                    content = self._coerce_message_text(
+                        message.get("reasoning_content") or message.get("reasoning")
+                    )
                 usage = data.get("usage", {})
                 if isinstance(content, str) and not content.strip():
                     raise ValueError("empty response content from chutes")

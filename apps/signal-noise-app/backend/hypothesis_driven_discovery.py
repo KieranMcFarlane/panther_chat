@@ -2537,6 +2537,11 @@ Return JSON:
             response = await self._query_evaluator_model(
                 prompt=prompt,
                 max_tokens=500,
+                system_prompt=(
+                    "You are a strict JSON evaluator. "
+                    "Return only a single valid JSON object and no markdown, prose, or reasoning."
+                ),
+                json_mode=True,
                 requested_model="haiku",
             )
 
@@ -2567,10 +2572,9 @@ Return JSON:
 
                 return result
             else:
-                logger.warning(f"Could not parse Claude response: {response_text}")
-                # Fallback: try to extract a plain-text decision token.
+                # Fallback: extract decision only from decision-specific patterns.
                 simple_match = re.search(
-                    r'\b(ACCEPT|WEAK_ACCEPT|REJECT|NO_PROGRESS)\b',
+                    r'(?:["\']?decision["\']?\s*[:=]\s*["\']?|decision\s+(?:is|should\s+be)\s+)(ACCEPT|WEAK_ACCEPT|REJECT|NO_PROGRESS)\b',
                     str(response_text or ""),
                     re.IGNORECASE
                 )
@@ -2584,6 +2588,7 @@ Return JSON:
                         'evidence_found': '',
                         'evidence_type': 'fallback'
                     }
+                logger.warning(f"Could not parse Claude response: {response_text}")
                 return self._fallback_result()
         except json.JSONDecodeError as e:
             logger.error(f"JSON parsing error: {e}")

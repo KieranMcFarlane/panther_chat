@@ -116,6 +116,49 @@ async def test_claude_client_queries_chutes_chat_completions(monkeypatch):
 
 
 @pytest.mark.asyncio
+async def test_claude_client_json_mode_sets_response_format(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+
+    request_capture = {}
+
+    class FakeResponse:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {
+                "choices": [{"message": {"content": "{\"decision\":\"NO_PROGRESS\"}"}, "finish_reason": "stop"}],
+                "usage": {"prompt_tokens": 2, "completion_tokens": 2, "total_tokens": 4},
+            }
+
+    class FakeAsyncClient:
+        def __init__(self, timeout):
+            self.timeout = timeout
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            request_capture["json"] = json
+            return FakeResponse()
+
+    monkeypatch.setattr(claude_client_module.httpx, "AsyncClient", FakeAsyncClient)
+
+    client = ClaudeClient()
+    result = await client.query(prompt="json please", model="haiku", max_tokens=64, json_mode=True)
+
+    assert request_capture["json"]["response_format"] == {"type": "json_object"}
+    assert request_capture["json"]["temperature"] == 0.0
+    assert result["content"] == "{\"decision\":\"NO_PROGRESS\"}"
+
+
+@pytest.mark.asyncio
 async def test_claude_client_retries_retryable_chutes_errors(monkeypatch):
     monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
     monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
@@ -222,3 +265,50 @@ async def test_claude_client_retries_when_chutes_response_is_empty(monkeypatch):
 
     assert attempts["count"] == 2
     assert result["content"] == "Recovered after empty"
+
+
+@pytest.mark.asyncio
+async def test_claude_client_uses_reasoning_content_when_message_content_none(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_MAX_RETRIES", "0")
+
+    class FakeResponse:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {
+                "choices": [
+                    {
+                        "message": {
+                            "content": None,
+                            "reasoning_content": "{\"decision\":\"NO_PROGRESS\"}",
+                        },
+                        "finish_reason": "length",
+                    }
+                ],
+                "usage": {"prompt_tokens": 3, "completion_tokens": 3, "total_tokens": 6},
+            }
+
+    class FakeAsyncClient:
+        def __init__(self, timeout):
+            self.timeout = timeout
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            return FakeResponse()
+
+    monkeypatch.setattr(claude_client_module.httpx, "AsyncClient", FakeAsyncClient)
+
+    client = ClaudeClient()
+    result = await client.query(prompt="probe", model="haiku", max_tokens=64)
+
+    assert result["content"] == "{\"decision\":\"NO_PROGRESS\"}"
