@@ -3,12 +3,15 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ExternalLink, Mail, Linkedin, ArrowRight, FileText, Target, Loader2 } from "lucide-react"
+import { ExternalLink, Mail, Linkedin, ArrowRight, FileText, Target } from "lucide-react"
 import { Entity, Connection } from "@/lib/neo4j"
 import { EntityBadge } from "@/components/badge/EntityBadge"
 import { useRouter } from "next/navigation"
-import { useRef, useState } from "react"
-import { getEntityBrowserDossierHref } from "@/lib/entity-routing"
+import { prefetchEntity } from "@/lib/swr-config"
+import { useEffect } from "react"
+import Link from "next/link"
+import { rememberEntityBrowserUrl } from "@/lib/entity-browser-history"
+import { pushWithViewTransition } from "@/lib/view-transition"
 
 interface EntityCardProps {
   entity: Entity
@@ -20,8 +23,25 @@ interface EntityCardProps {
 
 export function EntityCard({ entity, similarity, connections, rank, onEmailEntity }: EntityCardProps) {
   const router = useRouter()
-  const hasPrefetchedDossierRouteRef = useRef(false)
-  const [isProfileLoading, setIsProfileLoading] = useState(false)
+  const stableEntityId = String(
+    (entity as any)?.id ??
+    (entity as any)?.graph_id ??
+    ''
+  ).trim()
+
+  // Prefetch entity detail data when card mounts
+  useEffect(() => {
+    if (stableEntityId) {
+      // Add small delay to avoid thundering herd
+      const timer = setTimeout(() => {
+        prefetchEntity(stableEntityId)
+        router.prefetch(`/entity/${stableEntityId}`)
+        router.prefetch(`/entity-browser/${stableEntityId}/dossier`)
+      }, Math.random() * 500) // Stagger prefetches 0-500ms
+
+      return () => clearTimeout(timer)
+    }
+  }, [router, stableEntityId])
 
   const getSimilarityColor = (score: number) => {
     if (score >= 0.9) return "bg-green-500"
@@ -91,41 +111,24 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
     return formatted || ""
   }
 
-  const getCurrentPage = () => {
-    const urlParams = new URLSearchParams(window.location.search)
-    return urlParams.get('page') || '1'
-  }
-
-  const prefetchDossierRoute = () => {
-    if (hasPrefetchedDossierRouteRef.current) return
-
-    const currentPage = getCurrentPage()
-    const href = getEntityBrowserDossierHref(entity, currentPage)
-    if (!href) return
-
-    hasPrefetchedDossierRouteRef.current = true
-    router.prefetch(href)
-  }
-
   const handleCardClick = () => {
-    if (isProfileLoading) return
-
-    const currentPage = getCurrentPage()
-    const href = getEntityBrowserDossierHref(entity, currentPage)
-    if (href) {
-      setIsProfileLoading(true)
-      router.push(href)
-    }
+    if (!stableEntityId) return
+    // Get current page from URL and pass it to the entity profile
+    const urlParams = new URLSearchParams(window.location.search)
+    const currentPage = urlParams.get('page') || '1'
+    rememberEntityBrowserUrl()
+    pushWithViewTransition(router, `/entity/${stableEntityId}?from=${currentPage}`)
   }
+
+  const latestPipelineRunUrl = typeof entity.properties.last_pipeline_run_detail_url === 'string'
+    ? entity.properties.last_pipeline_run_detail_url
+    : null
 
 
   return (
     <Card 
       className="relative hover:shadow-lg transition-shadow cursor-pointer hover:scale-[1.02] transition-transform duration-200"
       onClick={handleCardClick}
-      onMouseEnter={prefetchDossierRoute}
-      onFocus={prefetchDossierRoute}
-      onTouchStart={prefetchDossierRoute}
     >
       {/* Similarity Score */}
       {similarity && (
@@ -232,6 +235,21 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
           </div>
         )}
 
+        {latestPipelineRunUrl && (
+          <div className="pt-2">
+            <Link
+              href={latestPipelineRunUrl}
+              className="inline-flex items-center gap-2 text-sm font-medium text-sky-700 underline underline-offset-2"
+              onClick={(e) => {
+                e.stopPropagation()
+              }}
+            >
+              <FileText className="h-4 w-4" />
+              Latest pipeline run
+            </Link>
+          </div>
+        )}
+
         {/* Connections */}
         {connections && connections.length > 0 && (
           <div className="border-t pt-3">
@@ -260,23 +278,19 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
             variant="outline" 
             size="sm" 
             className="w-full"
-            disabled={isProfileLoading}
+            data-testid="view-full-profile"
                 onClick={(e) => {
                   e.stopPropagation()
-                  handleCardClick()
+                  if (!stableEntityId) return
+                  // Get current page from URL and pass it to the entity profile
+                  const urlParams = new URLSearchParams(window.location.search)
+                  const currentPage = urlParams.get('page') || '1'
+                  rememberEntityBrowserUrl()
+                  pushWithViewTransition(router, `/entity/${stableEntityId}?from=${currentPage}`)
                 }}
           >
-            {isProfileLoading ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Loading Profile...
-              </>
-            ) : (
-              <>
-                View Full Profile
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </>
-            )}
+            View Full Profile
+            <ArrowRight className="h-4 w-4 ml-2" />
           </Button>
         </div>
 
