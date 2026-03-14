@@ -3,6 +3,54 @@ import { RealtimeSyncService } from '@/services/RealtimeSyncService';
 import { runPostImportCanonicalMaintenanceWithOptions } from '@/lib/post-import-canonical-maintenance'
 import { randomUUID } from 'node:crypto'
 
+type PostSyncReconciliationResult = {
+  attempted: boolean
+  ok: boolean
+  status?: number
+  payload?: unknown
+  error?: string
+}
+
+async function runPostSyncEntityReconciliation(): Promise<PostSyncReconciliationResult> {
+  const baseUrl =
+    process.env.INTERNAL_APP_URL ||
+    process.env.NEXT_PUBLIC_APP_URL ||
+    process.env.APP_URL ||
+    'http://localhost:3005'
+
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 10 * 60 * 1000)
+
+  try {
+    const response = await fetch(`${baseUrl}/api/admin/entity-reconciliation/remediate`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        strategy: 'semantic_merge',
+        dry_run: false,
+        limit: 5000,
+      }),
+      signal: controller.signal,
+      cache: 'no-store',
+    })
+    const payload = await response.json().catch(() => ({}))
+    return {
+      attempted: true,
+      ok: response.ok && Boolean(payload?.success ?? true),
+      status: response.status,
+      payload,
+    }
+  } catch (error) {
+    return {
+      attempted: true,
+      ok: false,
+      error: error instanceof Error ? error.message : 'post-sync reconciliation failed',
+    }
+  } finally {
+    clearTimeout(timeout)
+  }
+}
+
 export async function POST() {
   try {
     console.log('🚀 Triggering Neo4j to Supabase full sync...');
@@ -26,6 +74,10 @@ export async function POST() {
         })
       : null
 
+    const postSyncReconciliation = result.success
+      ? await runPostSyncEntityReconciliation()
+      : { attempted: false, ok: false } satisfies PostSyncReconciliationResult
+
     return NextResponse.json({
       success: result.success,
       syncRunId,
@@ -40,6 +92,7 @@ export async function POST() {
       },
       error: result.error,
       canonicalMaintenance,
+      postSyncReconciliation,
     });
 
   } catch (error) {

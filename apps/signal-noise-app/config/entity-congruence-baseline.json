@@ -1,0 +1,19 @@
+{
+  "generated_at": "2026-03-14T10:59:45.303Z",
+  "metrics": {
+    "id_name_mismatches": 1011,
+    "normalized_names_missing": 19,
+    "overlap_pct": 96.93,
+    "ipl_present": 10,
+    "epl_present": 5,
+    "bundesliga_present": 5
+  },
+  "allowed_regression": {
+    "id_name_mismatches": 150,
+    "normalized_names_missing": 10,
+    "overlap_pct": 1.5,
+    "ipl_present": 0,
+    "epl_present": 1,
+    "bundesliga_present": 1
+  }
+}

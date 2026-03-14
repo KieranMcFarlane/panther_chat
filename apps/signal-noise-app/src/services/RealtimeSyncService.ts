@@ -5,6 +5,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { Neo4jService } from '@/lib/neo4j';
+import { EntityCacheService } from '@/services/EntityCacheService';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -17,6 +18,8 @@ interface SyncResult {
   entitiesAdded: number;
   entitiesUpdated: number;
   entitiesRemoved: number;
+  relationshipsSynced?: number;
+  relationshipsErrors?: number;
   duration: number;
   error?: string;
 }
@@ -108,6 +111,14 @@ export class RealtimeSyncService {
       }
 
       const duration = Date.now() - startTime;
+      const entityCacheService = new EntityCacheService();
+      await entityCacheService.initialize();
+      const relationshipSync = await entityCacheService.syncRelationshipsFromGraph({
+        batchSize: 500,
+        forceRefresh: true,
+      });
+
+      const duration = Date.now() - startTime;
 
       // Update sync log
       if (syncLogId) {
@@ -134,6 +145,10 @@ export class RealtimeSyncService {
         entitiesAdded,
         entitiesUpdated,
         entitiesRemoved,
+        duration
+      };
+        relationshipsSynced: relationshipSync.synced,
+        relationshipsErrors: relationshipSync.errors,
         duration
       };
 
