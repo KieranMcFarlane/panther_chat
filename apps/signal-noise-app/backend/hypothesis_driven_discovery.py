@@ -727,6 +727,13 @@ class HypothesisDrivenDiscovery:
             0.0,
             float(os.getenv("DISCOVERY_EVALUATION_TIMEOUT_RETRY_JITTER_SECONDS", "0.35")),
         )
+        self.evaluation_timeout_model_escalation_enabled = self._parse_bool_env(
+            os.getenv("DISCOVERY_EVALUATION_TIMEOUT_MODEL_ESCALATION_ENABLED"),
+            default=True,
+        )
+        self.evaluation_timeout_escalation_model = str(
+            os.getenv("DISCOVERY_EVALUATION_TIMEOUT_ESCALATION_MODEL", "sonnet")
+        ).strip().lower() or "sonnet"
         self.evaluation_max_tokens_default = int(os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_DEFAULT", "360"))
         self.evaluation_max_tokens_press_release = int(os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_PRESS_RELEASE", "250"))
         self.evaluation_max_tokens_official_site = int(os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_OFFICIAL_SITE", "220"))
@@ -1431,6 +1438,7 @@ class HypothesisDrivenDiscovery:
         max_tokens: int,
         system_prompt: Optional[str] = None,
         json_mode: bool = False,
+        requested_model: str = "haiku",
     ) -> Dict[str, Any]:
         """Query evaluator model with compatibility fallback for minimal stubs."""
         query_fn = getattr(getattr(self, "claude_client", None), "query", None)
@@ -1453,6 +1461,13 @@ class HypothesisDrivenDiscovery:
             0.0,
             float(getattr(self, "evaluation_timeout_retry_jitter_seconds", 0.35) or 0.0),
         )
+        timeout_model_escalation_enabled = bool(
+            getattr(self, "evaluation_timeout_model_escalation_enabled", True)
+        )
+        timeout_escalation_model = str(
+            getattr(self, "evaluation_timeout_escalation_model", "sonnet") or "sonnet"
+        ).strip().lower() or "sonnet"
+        current_model = str(requested_model or "haiku").strip().lower() or "haiku"
         total_attempts = timeout_max_retries + 1
 
         async def _await_query(coro):
@@ -1467,7 +1482,7 @@ class HypothesisDrivenDiscovery:
             try:
                 query_coro = query_fn(
                     prompt=prompt,
-                    model="haiku",
+                    model=current_model,
                     max_tokens=max_tokens,
                     system_prompt=system_prompt,
                     json_mode=json_mode,
@@ -1478,7 +1493,7 @@ class HypothesisDrivenDiscovery:
                 if "unexpected keyword argument" in message:
                     fallback_coro = query_fn(
                         prompt=prompt,
-                        model="haiku",
+                        model=current_model,
                         max_tokens=max_tokens,
                     )
                     return await _await_query(fallback_coro)
@@ -1491,6 +1506,17 @@ class HypothesisDrivenDiscovery:
                 is_final_attempt = attempt_idx >= (total_attempts - 1)
                 if is_final_attempt:
                     raise
+                if (
+                    timeout_model_escalation_enabled
+                    and timeout_escalation_model
+                    and current_model != timeout_escalation_model
+                ):
+                    logger.warning(
+                        "Evaluator timeout on model=%s; escalating to model=%s",
+                        current_model,
+                        timeout_escalation_model,
+                    )
+                    current_model = timeout_escalation_model
                 backoff_delay = min(
                     timeout_backoff_cap_seconds,
                     timeout_backoff_seconds * (2 ** attempt_idx),
