@@ -44,6 +44,7 @@ import os
 import random
 import re
 import time
+from importlib import import_module
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass, field
@@ -54,6 +55,56 @@ from urllib.parse import urlparse
 logger = logging.getLogger(__name__)
 
 
+DEFAULT_DISCOVERY_TEMPLATE_ID = "yellow_panther_agency"
+FEDERATION_DISCOVERY_TEMPLATE_ID = "federation_governing_body"
+
+
+def _load_backend_attr(module_name: str, attr_name: str):
+    """Load backend modules whether imported as a package or from the backend cwd."""
+    try:
+        module = import_module(f"backend.{module_name}")
+    except ImportError:
+        module = import_module(module_name)
+    return getattr(module, attr_name)
+
+
+def _default_template_id_for_entity_type(entity_type: Optional[str]) -> str:
+    normalized = str(entity_type or "").upper()
+    if "FEDERATION" in normalized or "GOVERN" in normalized:
+        return FEDERATION_DISCOVERY_TEMPLATE_ID
+    return DEFAULT_DISCOVERY_TEMPLATE_ID
+
+
+get_page_rank = _load_backend_attr("discovery_page_registry", "get_page_rank")
+get_site_path_shortcuts = _load_backend_attr("discovery_page_registry", "get_site_path_shortcuts")
+rank_official_site_candidates = _load_backend_attr(
+    "official_site_resolver",
+    "rank_official_site_candidates",
+)
+
+
+def resolve_template_id(template_id: Optional[str], entity_type: Optional[str] = None) -> str:
+    """Return an available template id for discovery initialization."""
+    from template_loader import TemplateLoader
+
+    loader = TemplateLoader()
+    requested = template_id or ""
+    if requested and loader.get_template(requested):
+        return requested
+
+    default_template_id = _default_template_id_for_entity_type(entity_type)
+    if loader.get_template(default_template_id):
+        fallback_template_id = default_template_id
+    else:
+        fallback_template_id = DEFAULT_DISCOVERY_TEMPLATE_ID
+
+    logger.warning(
+        "Requested discovery template unavailable, falling back to %s (requested=%s, entity_type=%s)",
+        fallback_template_id,
+        requested or None,
+        entity_type,
+    )
+    return fallback_template_id
 # Import PDF extractor for DOCUMENT hop type
 try:
     from pdf_extractor import get_pdf_extractor
@@ -2397,6 +2448,196 @@ class HypothesisDrivenDiscovery:
 
         return False
 
+    async def _resolve_official_site_url(self, entity_name: str) -> Optional[str]:
+        started_at = time.perf_counter()
+        lane_trace: List[Dict[str, Any]] = []
+
+        def _record_lane(lane: str, status: str, **details: Any) -> None:
+            lane_trace.append(
+                {
+                    "lane": lane,
+                    "status": status,
+                    "details": details,
+                }
+            )
+
+        known_official_url = self._normalize_http_url(getattr(self, "current_official_site_url", None))
+        if known_official_url:
+            self.current_official_site_url = known_official_url
+            _record_lane("memory:current_official_site", "hit", url=known_official_url)
+            self._store_official_site_resolution_trace(entity_name, lane_trace, started_at)
+            return known_official_url
+
+        cached_url = self._get_cached_official_site_url(entity_name)
+        if cached_url:
+            self.current_official_site_url = cached_url
+            _record_lane("memory:persistent_cache", "hit", url=cached_url)
+            self._store_official_site_resolution_trace(entity_name, lane_trace, started_at)
+            return cached_url
+
+        mapped_url = self._get_mapped_official_site_url(entity_name)
+        if mapped_url:
+            self.current_official_site_url = mapped_url
+            self._store_cached_official_site_url(entity_name, mapped_url)
+            logger.info("♻️ Reusing mapped official-site URL for %s: %s", entity_name, mapped_url)
+            _record_lane("memory:domain_map", "hit", url=mapped_url)
+            self._store_official_site_resolution_trace(entity_name, lane_trace, started_at)
+            return mapped_url
+
+        if self._is_official_site_resolution_in_cooldown(entity_name):
+            logger.info(
+                "⏭️ Skipping official-site search due to active cooldown for %s",
+                entity_name,
+            )
+            _record_lane("guard:cooldown", "skipped")
+            self._store_official_site_resolution_trace(entity_name, lane_trace, started_at)
+            return None
+
+        search_query = f'"{entity_name}" official website'
+        engines = getattr(self, "official_site_resolution_engines", None) or ["google"]
+        num_results = int(getattr(self, "official_site_resolution_num_results", 1) or 1)
+        best_result = None
+        best_score = -1.0
+
+        engine_tasks = {
+            engine: asyncio.create_task(
+                self._search_engine_with_timeout(
+                    query=search_query,
+                    engine=engine,
+                    num_results=num_results,
+                )
+            )
+            for engine in engines
+        }
+        engine_results = await asyncio.gather(*engine_tasks.values(), return_exceptions=True)
+
+        for engine, result in zip(engine_tasks.keys(), engine_results):
+            lane_name = f"search:{engine}"
+            if isinstance(result, Exception):
+                _record_lane(lane_name, "error", error=str(result))
+                continue
+
+            if result.get("status") != "success":
+                _record_lane(lane_name, "miss", error=result.get("error", "search_failed"))
+                continue
+
+            candidates = result.get("results", []) or []
+            ranked_candidates = rank_official_site_candidates(
+                entity_name=entity_name,
+                candidates=candidates,
+                max_candidates=num_results,
+            )
+            if not ranked_candidates:
+                _record_lane(lane_name, "miss", reason="no_valid_candidates")
+                continue
+
+            lane_best = ranked_candidates[0]
+            lane_best_url = self._normalize_http_url(lane_best.get("url"))
+            if not lane_best_url:
+                _record_lane(lane_name, "miss", reason="unusable_top_candidate")
+                continue
+
+            lane_best_score = float(lane_best.get("score", -1.0))
+            lane_best_payload = {
+                "url": lane_best_url,
+                "title": lane_best.get("title", ""),
+                "snippet": lane_best.get("snippet", ""),
+                "resolver_reasons": lane_best.get("reasons", []),
+            }
+            _record_lane(
+                lane_name,
+                "hit",
+                url=lane_best_url,
+                score=round(lane_best_score, 3),
+                reasons=lane_best.get("reasons", []),
+            )
+            if lane_best_score > best_score:
+                best_score = lane_best_score
+                best_result = lane_best_payload
+
+        if not best_result:
+            self._mark_official_site_resolution_failure(entity_name)
+            self._store_official_site_resolution_trace(entity_name, lane_trace, started_at)
+            return None
+
+        resolved_url = self._normalize_http_url(best_result.get('url'))
+        if resolved_url:
+            self._cache_resolved_url_context(resolved_url, best_result)
+            self.current_official_site_url = resolved_url
+            self._store_cached_official_site_url(entity_name, resolved_url)
+            failures = getattr(self, "_official_site_resolution_failures", None)
+            if isinstance(failures, dict):
+                failures.pop(self._normalize_entity_cache_key(entity_name), None)
+            _record_lane("selection:best_candidate", "selected", url=resolved_url, score=round(best_score, 3))
+            self._store_official_site_resolution_trace(entity_name, lane_trace, started_at)
+        return resolved_url
+
+    def _store_official_site_resolution_trace(
+        self,
+        entity_name: str,
+        trace: List[Dict[str, Any]],
+        started_at: float,
+    ) -> None:
+        payload = {
+            "entity_name": entity_name,
+            "run_mode": self._current_run_mode(),
+            "duration_ms": round((time.perf_counter() - started_at) * 1000, 2),
+            "trace": trace,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        }
+        self._last_official_site_resolution_trace = list(trace)
+        log_store = getattr(self, "_official_site_resolution_trace_log", None)
+        if not isinstance(log_store, list):
+            log_store = []
+            self._official_site_resolution_trace_log = log_store
+        log_store.append(payload)
+        trace_limit = int(getattr(self, "official_site_resolution_trace_limit", 200))
+        if len(log_store) > trace_limit:
+            del log_store[:-trace_limit]
+
+    async def _try_direct_site_paths(
+        self,
+        base_url: str,
+        hop_type: HopType,
+    ) -> Optional[str]:
+        from urllib.parse import urlparse
+
+        parsed = urlparse(base_url)
+        if not parsed.scheme or not parsed.netloc:
+            return None
+
+        entity_type = getattr(self, "current_entity_type", None)
+        shortcuts = get_site_path_shortcuts(entity_type, hop_type.value)
+        if not shortcuts:
+            return None
+
+        base_origin = f"{parsed.scheme}://{parsed.netloc}"
+        content_markers = {
+            HopType.TENDERS_PAGE: ["tender", "procurement", "request for proposal", "vendor"],
+            HopType.PROCUREMENT_PAGE: ["procurement", "supplier", "vendor", "purchasing"],
+            HopType.PRESS_RELEASE: ["news", "press", "announcement", "media"],
+            HopType.DOCUMENT: ["document", "pdf", "resource", "download"],
+            HopType.OFFICIAL_SITE: ["about", "federation", "official", "organisation"],
+        }
+        expected_markers = content_markers.get(hop_type, [])
+
+        for path in shortcuts:
+            candidate_url = f"{base_origin}{path}" if path != "/" else f"{base_origin}/"
+            try:
+                check_result = await self.brightdata_client.scrape_as_markdown(candidate_url)
+            except Exception as exc:
+                logger.debug("Direct path check failed for %s: %s", candidate_url, exc)
+                continue
+
+            if check_result.get('status') != 'success':
+                continue
+
+            content = str(check_result.get('content') or "").lower()
+            if not expected_markers or any(marker in content for marker in expected_markers):
+                logger.info("✅ Direct site path matched for %s: %s", hop_type.value, candidate_url)
+                return candidate_url
+
+        return None
     def _extract_pdf_links_from_content(
         self,
         html_content: str,
