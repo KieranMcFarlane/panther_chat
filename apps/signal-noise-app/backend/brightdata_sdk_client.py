@@ -215,8 +215,12 @@ class BrightDataSDKClient:
             try:
                 client = await self._get_client()
             except RuntimeError:
-                # SDK unavailable, use fallback directly
-                logger.info("ℹ️ Using fallback scrape (SDK unavailable)")
+                # Legacy SDK client unavailable. Try modern brightdata auto API before http fallback.
+                logger.info("ℹ️ Legacy SDK unavailable, trying modern brightdata auto scrape path")
+                modern_result = await self._scrape_with_modern_sdk(url)
+                if modern_result and modern_result.get("status") == "success":
+                    return modern_result
+                logger.info("ℹ️ Modern SDK scrape unavailable/failed; using http fallback")
                 return await self._scrape_as_markdown_fallback(url)
 
             # Ensure URL has protocol
@@ -267,7 +271,11 @@ class BrightDataSDKClient:
             logger.info(f"✅ Scraped {len(content)} characters")
 
             # Extract publication date from HTML metadata
-            publication_date = self._extract_publication_date(soup, html_content, url)
+            try:
+                publication_date = self._extract_publication_date(soup, html_content, url)
+            except Exception as e:
+                logger.warning(f"⚠️ Publication date extraction failed: {e}")
+                publication_date = None
 
             return {
                 "status": "success",
@@ -287,6 +295,68 @@ class BrightDataSDKClient:
             logger.warning(f"⚠️ BrightData scrape failed, using fallback: {e}")
             # Fall back to httpx scraping
             return await self._scrape_as_markdown_fallback(url)
+
+    async def _scrape_with_modern_sdk(self, url: str) -> Optional[Dict[str, Any]]:
+        """
+        Scrape via modern brightdata package API (`scrape_url_async`) when
+        `BrightDataClient` class is unavailable in the installed package.
+        """
+        try:
+            from brightdata import scrape_url_async
+        except Exception:
+            return None
+
+        target_url = url if url.startswith(("http://", "https://")) else f"https://{url}"
+
+        try:
+            result = await scrape_url_async(
+                target_url,
+                bearer_token=self.token,
+                fallback_to_browser_api=True,
+                flexible_timeout=True,
+            )
+        except Exception as e:
+            logger.warning(f"⚠️ Modern brightdata auto scrape failed: {e}")
+            return None
+
+        if not result:
+            return None
+
+        # Result can be ScrapeResult, dict, or nested by url depending on SDK path.
+        if isinstance(result, dict):
+            if target_url in result:
+                result = result[target_url]
+            elif result:
+                result = next(iter(result.values()))
+
+        success = bool(getattr(result, "success", False))
+        html_content = getattr(result, "data", None)
+        if not success or not html_content:
+            return None
+
+        parse_result = self._extract_text_from_html(str(html_content))
+        content = parse_result["content"]
+        try:
+            publication_date = self._extract_publication_date(parse_result["soup"], str(html_content), target_url)
+        except Exception as e:
+            logger.warning(f"⚠️ Publication date extraction failed: {e}")
+            publication_date = None
+        method = getattr(result, "method", None)
+
+        return {
+            "status": "success",
+            "url": target_url,
+            "content": content,
+            "raw_html": str(html_content),
+            "timestamp": datetime.now().isoformat(),
+            "publication_date": publication_date.isoformat() if publication_date else None,
+            "metadata": {
+                "word_count": len(content.split()),
+                "source": "brightdata_sdk_auto",
+                "method": method,
+                "has_publication_date": publication_date is not None,
+            },
+        }
 
     async def scrape_batch(self, urls: List[str]) -> Dict[str, Any]:
         """
@@ -469,44 +539,64 @@ class BrightDataSDKClient:
             if not url.startswith(('http://', 'https://')):
                 url = f'https://{url}'
 
-            async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
-                response = await client.get(url)
-                response.raise_for_status()
+            try:
+                async with httpx.AsyncClient(timeout=30.0, follow_redirects=True, verify=True) as client:
+                    response = await client.get(url)
+                    response.raise_for_status()
+                insecure_ssl_used = False
+            except Exception as initial_error:
+                allow_insecure_retry = (os.getenv("BRIGHTDATA_FALLBACK_SSL_RETRY_INSECURE", "true").lower() in {"1", "true", "yes", "on"})
+                if not allow_insecure_retry:
+                    raise
+                err_text = str(initial_error).lower()
+                ssl_related = "certificate_verify_failed" in err_text or "ssl" in err_text
+                if not ssl_related:
+                    raise
+                logger.warning("⚠️ SSL verification failed during fallback scrape, retrying without verification")
+                async with httpx.AsyncClient(timeout=30.0, follow_redirects=True, verify=False) as client:
+                    response = await client.get(url)
+                    response.raise_for_status()
+                insecure_ssl_used = True
 
-                parse_result = self._extract_text_from_html(response.text)
-                content = parse_result["content"]
-                logger.info(f"✅ Fallback scraped {len(content)} characters")
+            parse_result = self._extract_text_from_html(response.text)
+            content = parse_result["content"]
+            logger.info(f"✅ Fallback scraped {len(content)} characters")
 
-                extraction_mode = "direct"
-                if self._should_retry_with_rendered_fallback(response.text, content):
-                    # JS-heavy pages often return shell HTML on first pass.
+            extraction_mode = "direct"
+            if self._should_retry_with_rendered_fallback(response.text, content):
+                # JS-heavy pages often return shell HTML on first pass.
+                async with httpx.AsyncClient(timeout=30.0, follow_redirects=True, verify=not insecure_ssl_used) as client:
                     rendered_response = await client.get(url)
                     rendered_response.raise_for_status()
-                    rendered_parse = self._extract_text_from_html(rendered_response.text)
-                    if len(rendered_parse["content"].strip()) > len(content.strip()):
-                        response = rendered_response
-                        parse_result = rendered_parse
-                        content = parse_result["content"]
-                        extraction_mode = "rendered_fallback"
+                rendered_parse = self._extract_text_from_html(rendered_response.text)
+                if len(rendered_parse["content"].strip()) > len(content.strip()):
+                    response = rendered_response
+                    parse_result = rendered_parse
+                    content = parse_result["content"]
+                    extraction_mode = "rendered_fallback"
 
+            try:
                 publication_date = self._extract_publication_date(parse_result["soup"], response.text, url)
+            except Exception as e:
+                logger.warning(f"⚠️ Publication date extraction failed: {e}")
+                publication_date = None
 
-                return {
-                    "status": "success",
-                    "url": url,
-                    "content": content,
-                    "raw_html": response.text,
-                    "timestamp": datetime.now().isoformat(),
-                    "publication_date": publication_date.isoformat() if publication_date else None,
-                    "metadata": {
-                        "word_count": len(content.split()),
-                        "source": "fallback_httpx",
-                        "warning": "BrightData SDK unavailable, using httpx",
-                        "has_publication_date": publication_date is not None,
-                        "extraction_mode": extraction_mode,
-                    }
+            return {
+                "status": "success",
+                "url": url,
+                "content": content,
+                "raw_html": response.text,
+                "timestamp": datetime.now().isoformat(),
+                "publication_date": publication_date.isoformat() if publication_date else None,
+                "metadata": {
+                    "word_count": len(content.split()),
+                    "source": "fallback_httpx",
+                    "warning": "BrightData SDK unavailable, using httpx",
+                    "has_publication_date": publication_date is not None,
+                    "extraction_mode": extraction_mode,
+                    "insecure_ssl_used": insecure_ssl_used,
                 }
-
+            }
         except Exception as e:
             logger.error(f"❌ Fallback scrape failed: {e}")
             return {
