@@ -2590,11 +2590,37 @@ class HypothesisDrivenDiscovery:
         trace: List[Dict[str, Any]],
         started_at: float,
     ) -> None:
+        lane_statuses: Dict[str, str] = {}
+        selected_url: Optional[str] = None
+        selected_score: Optional[float] = None
+        for entry in trace:
+            lane = str(entry.get("lane") or "").strip()
+            status = str(entry.get("status") or "").strip()
+            details = entry.get("details") if isinstance(entry.get("details"), dict) else {}
+            if lane:
+                lane_statuses[lane] = status
+            if lane == "selection:best_candidate":
+                selected_url = self._normalize_http_url(details.get("url"))
+                score_value = details.get("score")
+                if isinstance(score_value, (int, float)):
+                    selected_score = float(score_value)
+
+        if not selected_url:
+            for entry in trace:
+                details = entry.get("details") if isinstance(entry.get("details"), dict) else {}
+                candidate_url = self._normalize_http_url(details.get("url"))
+                if candidate_url:
+                    selected_url = candidate_url
+                    break
+
         payload = {
             "entity_name": entity_name,
             "run_mode": self._current_run_mode(),
             "duration_ms": round((time.perf_counter() - started_at) * 1000, 2),
             "trace": trace,
+            "lane_statuses": lane_statuses,
+            "selected_url": selected_url,
+            "selected_score": round(selected_score, 3) if isinstance(selected_score, float) else None,
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
         self._last_official_site_resolution_trace = list(trace)
@@ -4991,7 +5017,19 @@ Return JSON:
                 'hypothesis_id': slowest_iteration.get('hypothesis_id'),
                 'hop_type': slowest_iteration.get('hop_type')
             } if slowest_iteration else None,
-            'hop_timings': hop_records
+            'hop_timings': hop_records,
+            'llm_provider': llm_diag.get('llm_provider'),
+            'llm_retry_attempts': llm_diag.get('llm_retry_attempts', 0),
+            'llm_last_status': llm_diag.get('llm_last_status'),
+            'llm_circuit_broken': bool(llm_diag.get('llm_circuit_broken', False)),
+            'llm_disable_reason': llm_diag.get('llm_disable_reason'),
+            'evaluation_mode': llm_diag.get('evaluation_mode'),
+            'run_profile': llm_diag.get('run_profile'),
+            'run_mode': llm_diag.get('run_mode'),
+            'official_site_resolution_traces': list(getattr(self, "_official_site_resolution_trace_log", [])[-20:]),
+            'field_statuses': schema_metrics.get('field_statuses', {}),
+            'claims_count': schema_metrics.get('claims_count', 0),
+            'verified_fields_count': schema_metrics.get('verified_fields_count', 0),
         }
 
     def _build_failure_result(
