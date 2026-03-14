@@ -2574,7 +2574,7 @@ Return JSON:
             else:
                 # Fallback: extract decision only from decision-specific patterns.
                 simple_match = re.search(
-                    r'(?:["\']?decision["\']?\s*[:=]\s*["\']?|decision\s+(?:is|should\s+be)\s+)(ACCEPT|WEAK_ACCEPT|REJECT|NO_PROGRESS)\b',
+                    r'(?:["\']?decision["\']?\s*[:=]\s*["\']?|decision\s+(?:is|should\s+be)\s*:?\s*)(ACCEPT|WEAK_ACCEPT|REJECT|NO_PROGRESS)\b',
                     str(response_text or ""),
                     re.IGNORECASE
                 )
@@ -2588,6 +2588,32 @@ Return JSON:
                         'evidence_found': '',
                         'evidence_type': 'fallback'
                     }
+
+                # One-shot recovery: ask evaluator to reformat to strict JSON.
+                try:
+                    recovery_prompt = (
+                        "Convert the following evaluator output into EXACT JSON with keys: "
+                        "decision, confidence_delta, justification, evidence_found, evidence_type, temporal_score. "
+                        "Decision must be one of ACCEPT|WEAK_ACCEPT|REJECT|NO_PROGRESS. "
+                        "Return only JSON.\n\n"
+                        f"OUTPUT:\n{str(response_text or '')[:1600]}"
+                    )
+                    recovery_response = await self._query_evaluator_model(
+                        prompt=recovery_prompt,
+                        max_tokens=260,
+                        system_prompt="Return one valid JSON object only.",
+                        json_mode=True,
+                        requested_model="haiku",
+                    )
+                    recovery_text = recovery_response.get('content', '') or recovery_response.get('text', '')
+                    recovery_json_match = re.search(r'\{[^}]*"decision"[^}]*\}', str(recovery_text), re.DOTALL)
+                    if recovery_json_match:
+                        recovered = json.loads(recovery_json_match.group(0))
+                        if 'decision' in recovered:
+                            return recovered
+                except Exception:
+                    pass
+
                 logger.warning(f"Could not parse Claude response: {response_text}")
                 return self._fallback_result()
         except json.JSONDecodeError as e:
