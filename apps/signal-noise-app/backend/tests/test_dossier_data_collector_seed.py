@@ -41,6 +41,27 @@ def test_choose_official_site_url_prefers_non_commerce_candidate():
     assert chosen == "https://www.ccfc.co.uk/news"
 
 
+def test_choose_official_site_url_avoids_unrelated_media_domain():
+    collector = DossierDataCollector(brightdata_client=SimpleNamespace())
+    chosen = collector._choose_official_site_url(
+        "Coventry City FC",
+        [
+            {
+                "url": "https://www.ccfcstore.com/",
+                "title": "Official Coventry City Store",
+                "snippet": "Official shop",
+            },
+            {
+                "url": "https://www.coventrytelegraph.net/all-about/coventry-city-fc",
+                "title": "Coventry City FC News",
+                "snippet": "Local coverage and rumours",
+            },
+        ],
+    )
+
+    assert chosen == "https://www.ccfcstore.com/"
+
+
 @pytest.mark.asyncio
 async def test_get_scraped_content_prefers_seeded_official_site(monkeypatch):
     async def _unexpected_search(**_kwargs):  # pragma: no cover
