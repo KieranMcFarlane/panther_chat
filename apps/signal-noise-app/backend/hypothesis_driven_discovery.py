@@ -1507,7 +1507,6 @@ class HypothesisDrivenDiscovery:
                     await asyncio.sleep(backoff_delay)
 
         raise TimeoutError(f"Evaluator model query timed out after {timeout_seconds:.2f}s")
-
     def _extract_structured_evaluation_payload(self, response: Any) -> Optional[Dict[str, Any]]:
         """Prefer provider-native structured output payloads when available."""
         if not isinstance(response, dict):
