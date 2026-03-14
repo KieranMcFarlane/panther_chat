@@ -1,15 +1,15 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import dynamic from "next/dynamic"
+import { useState, useEffect, useCallback } from "react"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import Header from "@/components/header/Header"
 import { useEntity } from "@/lib/swr-config"
-import EmailComposeModal from "@/components/email/EmailComposeModal"
-import EntityDossierRouter from "@/components/entity-dossier"
+import { resolveEntityBrowserReturnUrl } from "@/lib/entity-browser-history"
+import { pushWithViewTransition } from "@/lib/view-transition"
 import { useCopilotReadable } from "@copilotkit/react-core"
 // import { useClubNavigation } from "@/contexts/ClubNavigationContext"
 // import { EntityProfileSkeleton, BadgeSkeleton } from "@/components/ui/skeleton"
@@ -50,6 +50,19 @@ import {
   Home
 } from "lucide-react"
 
+const Header = dynamic(() => import("@/components/header/Header"), { ssr: false })
+const EmailComposeModal = dynamic(() => import("@/components/email/EmailComposeModal"), { ssr: false })
+const EntityDossierRouter = dynamic(() => import("@/components/entity-dossier"), {
+  loading: () => (
+    <div className="rounded-lg border border-gray-700 bg-[#1c1e2d] p-6">
+      <div className="h-6 w-48 bg-gray-600 rounded animate-pulse mb-4" />
+      <div className="h-4 w-full bg-gray-700 rounded animate-pulse mb-2" />
+      <div className="h-4 w-5/6 bg-gray-700 rounded animate-pulse mb-2" />
+      <div className="h-4 w-4/6 bg-gray-700 rounded animate-pulse" />
+    </div>
+  )
+})
+
 interface Entity {
   id: string
   neo4j_id: string | number
@@ -67,6 +80,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
   const params = useParams()
   const router = useRouter()
   const actualEntityId = params.entityId as string || entityId
+  const [fromPage, setFromPage] = useState('1')
 
   // const { currentClub } = useClubNavigation()
   // const [isTransitioning, setIsTransitioning] = useState(false)
@@ -76,7 +90,9 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
   const [isLoadingTimeout, setIsLoadingTimeout] = useState(false)
 
   // Smooth transition state
-  const [showSkeleton, setShowSkeleton] = useState(true)
+  const [showSkeleton, setShowSkeleton] = useState(false)
+  const [displayEntity, setDisplayEntity] = useState<Entity | null>(null)
+  const [isContentTransitioning, setIsContentTransitioning] = useState(false)
 
   // Email modal state
   const [showEmailModal, setShowEmailModal] = useState(false)
@@ -84,11 +100,29 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
   // Use the actual entity ID for data fetching
   const { entity, error, isLoading } = useEntity(actualEntityId)
 
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search)
+    setFromPage(query.get('from') || '1')
+  }, [])
+
+  const backToEntityBrowser = useCallback(() => {
+    const currentFrom = new URLSearchParams(window.location.search).get('from') || fromPage
+    const targetUrl = resolveEntityBrowserReturnUrl(currentFrom)
+    const beforeUrl = `${window.location.pathname}${window.location.search}`
+    pushWithViewTransition(router, targetUrl)
+    window.setTimeout(() => {
+      const afterUrl = `${window.location.pathname}${window.location.search}`
+      if (afterUrl === beforeUrl) {
+        window.location.assign(targetUrl)
+      }
+    }, 300)
+  }, [fromPage, router])
+
   // Expose current entity context to CopilotKit for AI awareness
   useCopilotReadable({
     description: "Current sports entity being viewed by the user",
     value: entity ? {
-      id: entity.neo4j_id,
+      id: entity.id,
       name: entity.properties?.name || entity.properties?.title || 'Unknown',
       type: entity.labels?.join(', ') || 'Entity',
       sport: entity.properties?.sport,
@@ -118,25 +152,40 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
     }
   }, [isLoading])
 
-  // Smooth skeleton transition - keep skeleton visible briefly when data loads
+  // Show skeleton only when loading is sustained to avoid flicker on fast responses.
   useEffect(() => {
-    if (!isLoading && entity) {
-      // Small delay to fade out skeleton smoothly
-      const timeout = setTimeout(() => {
-        setShowSkeleton(false)
-      }, 100) // 100ms delay for smooth transition
-
+    if (isLoading) {
+      const timeout = setTimeout(() => setShowSkeleton(true), 180)
       return () => clearTimeout(timeout)
-    } else if (isLoading) {
-      setShowSkeleton(true)
     }
-  }, [isLoading, entity])
+    const timeout = setTimeout(() => setShowSkeleton(false), 60)
+    return () => clearTimeout(timeout)
+  }, [isLoading])
+
+  useEffect(() => {
+    if (!entity || isLoading) return
+    if (!displayEntity) {
+      setDisplayEntity(entity)
+      setIsContentTransitioning(false)
+      return
+    }
+    if (displayEntity.id === entity.id) {
+      setIsContentTransitioning(false)
+      return
+    }
+    setIsContentTransitioning(true)
+    const timeout = setTimeout(() => {
+      setDisplayEntity(entity)
+      setIsContentTransitioning(false)
+    }, 140)
+    return () => clearTimeout(timeout)
+  }, [displayEntity, entity, isLoading])
   
   // Show error state if timeout occurs
   if (isLoadingTimeout && isLoading) {
     return (
       <div className="min-h-screen bg-background">
-        <Header currentEntity={entity} />
+        <Header />
         <div className="container mx-auto px-4 py-8 bg-[#1c1e2d]">
           <div className="rounded-lg bg-card text-card-foreground mb-8 border-2 shadow-lg p-6">
             <div className="text-center py-8">
@@ -147,7 +196,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
                 <Button onClick={() => window.location.reload()} variant="default">
                   Refresh Page
                 </Button>
-                <Button onClick={() => router.push('/entity-browser')} variant="outline">
+                <Button onClick={backToEntityBrowser} variant="outline">
                   Back to Entity Browser
                 </Button>
               </div>
@@ -178,7 +227,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
   if (showSkeleton && isLoading) {
     return (
       <div className="min-h-screen bg-background">
-        <Header currentEntity={entity} />
+        <Header />
         <div className="container mx-auto px-4 py-8 bg-[#1c1e2d]">
           {/* Header skeleton */}
           <div className="rounded-lg bg-card text-card-foreground mb-8 border-2 shadow-lg">
@@ -240,19 +289,15 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
     )
   }
 
-  // Handle error state
-  if (error || !entity) {
+  if (isLoading && !displayEntity && !entity) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <h1 className="text-2xl font-bold">Entity Not Found</h1>
-          <p className="text-muted-foreground">
-            {error ? 'Error loading entity data.' : 'The requested entity could not be found.'}
-          </p>
-          <Button onClick={() => router.back()}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Go Back
-          </Button>
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="container mx-auto px-4 py-8 bg-[#1c1e2d]">
+          <div className="rounded-lg border border-gray-700 bg-card p-6">
+            <div className="h-6 w-56 bg-gray-600 rounded animate-pulse mb-3" />
+            <div className="h-4 w-4/5 bg-gray-700 rounded animate-pulse" />
+          </div>
         </div>
       </div>
     )
@@ -371,7 +416,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
   }
 
   
-  if (error) {
+  if (!isLoading && error) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Card className="w-full max-w-md">
@@ -379,7 +424,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
             <AlertTriangle className="h-12 w-12 text-destructive mx-auto mb-4" />
             <h2 className="text-xl font-semibold mb-2">Error Loading Entity</h2>
             <p className="text-muted-foreground mb-4">{error instanceof Error ? error.message : String(error)}</p>
-            <Button onClick={() => router.back()} variant="outline">
+            <Button onClick={backToEntityBrowser} variant="outline">
               Go Back
             </Button>
           </CardContent>
@@ -388,7 +433,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
     )
   }
 
-  if (!entity) {
+  if (!isLoading && !entity && !displayEntity) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Card className="w-full max-w-md">
@@ -396,7 +441,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
             <Info className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <h2 className="text-xl font-semibold mb-2">Entity Not Found</h2>
             <p className="text-muted-foreground mb-4">The requested entity could not be found.</p>
-            <Button onClick={() => router.back()} variant="outline">
+            <Button onClick={backToEntityBrowser} variant="outline">
               Go Back
             </Button>
           </CardContent>
@@ -405,8 +450,13 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
     )
   }
 
-  const EntityIcon = getEntityIcon(entity.labels)
-  const properties = entity.properties
+  const activeEntity = displayEntity || entity
+  if (!activeEntity) {
+    return null
+  }
+
+  const EntityIcon = getEntityIcon(activeEntity.labels)
+  const properties = activeEntity.properties
 
   // Email handler
   const handleEmailEntity = () => {
@@ -415,11 +465,11 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
 
   // Convert entity to contact format for EmailComposeModal
   const getContactFromEntity = () => {
-    if (!entity) return null
+    if (!activeEntity) return null
     
     return {
-      id: entity.id,
-      name: properties.name || `Entity ${entity.id}`,
+      id: activeEntity.id,
+      name: properties.name || `Entity ${activeEntity.id}`,
       email: properties.email || 'contact@' + (properties.name?.toLowerCase().replace(/\s+/g, '-') || 'unknown') + '.com',
       role: properties.type || 'Professional',
       affiliation: properties.sport ? `${properties.sport} Organization` : 'Sports Organization',
@@ -435,16 +485,19 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
   return (
     <div className="min-h-screen flex flex-col">
       {/* Fixed Header at Top */}
-      <Header currentEntity={entity} />
+      <Header />
 
-      {/* Main Content Area with smooth fade-in */}
-      <div className={`flex-1 bg-[#1c1e2d] transition-opacity duration-150 ${showSkeleton ? 'opacity-0' : 'opacity-100'}`}>
+      {/* Main Content Area: keep shell stable and only cross-fade dossier contents */}
+      <div className="flex-1 bg-[#1c1e2d]">
         <div className="container mx-auto px-4 py-8">
 
           {/* Entity Dossier Content */}
-          <div className="space-y-6">
+          <div
+            className={`space-y-6 transition-opacity duration-200 ${isContentTransitioning ? 'opacity-0' : 'opacity-100'}`}
+            style={{ viewTransitionName: "dossier-content" }}
+          >
             <EntityDossierRouter 
-              entity={entity} 
+              entity={activeEntity} 
               onEmailEntity={handleEmailEntity}
               dossier={dossier}
             />
@@ -456,7 +509,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
       {showEmailModal && (
         <EmailComposeModal
           contact={getContactFromEntity()}
-          entity={entity}
+          entity={activeEntity}
           isOpen={showEmailModal}
           onClose={() => setShowEmailModal(false)}
         />
