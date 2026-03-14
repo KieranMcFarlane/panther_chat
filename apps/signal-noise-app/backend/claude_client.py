@@ -409,6 +409,16 @@ class ClaudeClient:
 
         return os.getenv("ANTHROPIC_BASE_URL", "https://api.anthropic.com")
 
+    def _resolve_chutes_runtime_model(self, requested_model: Optional[str]) -> str:
+        normalized = str(requested_model or "haiku").strip().lower()
+        if normalized == "sonnet":
+            return self.chutes_model_sonnet
+        if normalized == "opus":
+            return self.chutes_model_opus
+        if normalized == "haiku":
+            return self.chutes_model_haiku
+        return self.chutes_model
+
     @classmethod
     def _get_disabled_reason(cls) -> Optional[str]:
         return cls._api_disabled_reason
@@ -586,7 +596,7 @@ class ClaudeClient:
         messages.append({"role": "user", "content": prompt})
 
         payload = {
-            "model": self.chutes_model,
+            "model": self._resolve_chutes_runtime_model(model),
             "messages": messages,
             "max_tokens": max_tokens,
             "temperature": 0.7 if system_prompt is None else 0.4,
