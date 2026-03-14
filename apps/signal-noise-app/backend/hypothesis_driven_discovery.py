@@ -850,6 +850,7 @@ class HypothesisDrivenDiscovery:
             "strict_truncated_json_recovered": "json_truncated_recovered",
             "text_accept_recovered": "text_decision_recovered",
             "json_repair_recovered": "json_repair_recovered",
+            "structured_payload": "structured_output",
             "invalid_model_payload": "heuristic_fallback",
             "unparseable_response": "heuristic_fallback",
             "json_parse_error": "heuristic_fallback",
@@ -1333,6 +1334,25 @@ class HypothesisDrivenDiscovery:
                     await asyncio.sleep(backoff_delay)
 
         raise TimeoutError(f"Evaluator model query timed out after {timeout_seconds:.2f}s")
+
+    def _extract_structured_evaluation_payload(self, response: Any) -> Optional[Dict[str, Any]]:
+        """Prefer provider-native structured output payloads when available."""
+        if not isinstance(response, dict):
+            return None
+
+        payload = response.get("structured_output")
+        normalized = None
+        if isinstance(payload, dict):
+            normalized = self._normalize_evaluator_payload(payload)
+        elif isinstance(payload, str) and payload.strip():
+            normalized = self._parse_evaluation_response_json(payload)
+
+        if normalized is None:
+            return None
+
+        normalized = dict(normalized)
+        normalized["parse_path"] = normalized.get("parse_path") or "structured_output"
+        return normalized
 
     @staticmethod
     def _extract_balanced_json_object(text: str, *, required_key: str = "decision") -> Optional[Dict[str, Any]]:
@@ -3677,6 +3697,114 @@ class HypothesisDrivenDiscovery:
         }
 
     def _deterministic_fallback_classification(
+    def _fallback_result_with_reason(
+        self,
+        reason: str,
+        *,
+        content: Optional[str] = None,
+        hop_type: Optional[HopType] = None,
+        context: Optional[EvaluationContext] = None,
+    ) -> Dict[str, Any]:
+        heuristic = self._heuristic_result_from_content(
+            content=content,
+            hop_type=hop_type,
+            context=context,
+            fallback_reason=reason,
+        )
+        if heuristic is not None:
+            return heuristic
+
+        result = self._fallback_result()
+        result['justification'] = reason
+        return result
+
+    def _heuristic_result_from_content(
+        self,
+        *,
+        content: Optional[str],
+        hop_type: Optional[HopType],
+        context: Optional[EvaluationContext],
+        fallback_reason: str,
+    ) -> Optional[Dict[str, Any]]:
+        """Fallback evaluator for cases where model output is unavailable."""
+        if not content or not context or not hop_type:
+            return None
+
+        lines = [line.strip() for line in str(content).splitlines() if line.strip()]
+        if not lines:
+            return None
+
+        candidates: List[str] = []
+        candidates.extend(str(k).strip().lower() for k in (context.keywords or []) if str(k).strip())
+        candidates.extend(str(i).strip().lower() for i in (context.early_indicators or []) if str(i).strip())
+        candidates.extend(
+            [
+                "rfp",
+                "request for proposal",
+                "procurement",
+                "tender",
+                "vendor",
+                "supplier",
+                "digital",
+                "platform",
+                "transformation",
+                "partnership",
+                "career",
+                "careers",
+                "vacancy",
+                "vacancies",
+                "job",
+                "hiring",
+            ]
+        )
+
+        matches: List[str] = []
+        evidence_line = ""
+        for line in lines:
+            line_lower = line.lower()
+            line_matches = [keyword for keyword in candidates if keyword and keyword in line_lower]
+            if not line_matches:
+                continue
+            if not evidence_line:
+                evidence_line = line
+            for keyword in line_matches:
+                if keyword not in matches:
+                    matches.append(keyword)
+            if len(matches) >= 4:
+                break
+
+        if not matches:
+            return None
+
+        strong_signal_keywords = {
+            "procurement",
+            "tender",
+            "rfp",
+            "request for proposal",
+            "vendor",
+            "supplier",
+            "career",
+            "careers",
+            "vacancy",
+            "vacancies",
+            "job",
+            "hiring",
+        }
+        if not any(keyword in strong_signal_keywords for keyword in matches):
+            return None
+
+        confidence_delta = min(0.06, 0.02 * len(matches))
+        return {
+            'decision': 'WEAK_ACCEPT',
+            'confidence_delta': round(confidence_delta, 3),
+            'justification': f"{fallback_reason}; heuristic keyword evidence used",
+            'evidence_found': evidence_line,
+            'evidence_type': 'heuristic_keyword_fallback',
+            'temporal_score': 'unknown',
+            'heuristic_matches': matches[:5],
+        }
+
+    def _extract_evidence_pack(
         self,
         content: str,
         context: EvaluationContext,
@@ -4030,9 +4158,36 @@ Return JSON:
                 requested_model="haiku",
             )
 
+            structured_result = self._extract_structured_evaluation_payload(response)
+            if structured_result is not None:
+                self._update_llm_runtime_diagnostics(
+                    llm_last_status="structured_payload",
+                    evaluation_mode="llm",
+                )
+                if mcp_matches and structured_result.get('confidence_delta', 0) == 0.0:
+                    from confidence.mcp_scorer import calculate_mcp_confidence_from_matches
+                    mcp_confidence = calculate_mcp_confidence_from_matches(mcp_matches)
+                    structured_result['confidence_delta'] = max(0.0, mcp_confidence - 0.70)
+                    structured_result['mcp_matches'] = mcp_matches
+                    structured_result['mcp_confidence'] = mcp_confidence
+                return self._decorate_evaluation_result(structured_result, evaluation_mode="llm")
+
             # Extract text from response
             # ClaudeClient.query() returns 'content' key, not 'text'
             response_text = response.get('content', '') or response.get('text', '')
+            if not str(response_text or "").strip():
+                logger.info("Claude evaluation returned empty response; using heuristic fallback")
+                fallback = self._fallback_result_with_reason(
+                    "Empty model response",
+                    content=content,
+                    hop_type=hop_type,
+                    context=context,
+                )
+                self._update_llm_runtime_diagnostics(
+                    llm_last_status="empty_response",
+                    evaluation_mode="heuristic",
+                )
+                return self._decorate_evaluation_result(fallback, evaluation_mode="heuristic")
 
             # Parse JSON response (existing code)
             import re
@@ -4044,7 +4199,17 @@ Return JSON:
                 # Ensure result has required 'decision' key
                 if 'decision' not in result:
                     logger.warning(f"Parsed JSON missing 'decision' key: {result}")
-                    return self._fallback_result()
+                    fallback = self._fallback_result_with_reason(
+                        "Model payload missing decision",
+                        content=content,
+                        hop_type=hop_type,
+                        context=context,
+                    )
+                    self._update_llm_runtime_diagnostics(
+                        llm_last_status="invalid_model_payload",
+                        evaluation_mode="heuristic",
+                    )
+                    return self._decorate_evaluation_result(fallback, evaluation_mode="heuristic")
 
                 if self._should_force_evidence_reask(result):
                     try:

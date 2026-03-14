@@ -497,6 +497,59 @@ class ClaudeClient:
 
         return f"{error.__class__.__name__}: {str(error) or 'unknown error'}"
 
+    @staticmethod
+    def _extract_text_parts(value: Any) -> str:
+        """Normalize OpenAI-compatible content deltas into plain text."""
+        if isinstance(value, str):
+            return value
+        if isinstance(value, dict):
+            return str(value.get("text", "") or "")
+        if isinstance(value, list):
+            parts: List[str] = []
+            for item in value:
+                text = ClaudeClient._extract_text_parts(item)
+                if text:
+                    parts.append(text)
+            return "".join(parts)
+        return ""
+
+    @staticmethod
+    def _extract_structured_output(value: Any) -> Optional[Dict[str, Any]]:
+        """Extract strict JSON payloads from model content when available."""
+        if isinstance(value, dict):
+            return dict(value)
+
+        candidates: List[str] = []
+        if isinstance(value, str):
+            candidates.append(value.strip())
+        elif isinstance(value, list):
+            for item in value:
+                if isinstance(item, dict):
+                    parsed_item = item.get("parsed")
+                    if isinstance(parsed_item, dict):
+                        return dict(parsed_item)
+                    text_value = item.get("text")
+                    if isinstance(text_value, str):
+                        candidates.append(text_value.strip())
+                    content_value = item.get("content")
+                    if isinstance(content_value, str):
+                        candidates.append(content_value.strip())
+                elif isinstance(item, str):
+                    candidates.append(item.strip())
+
+        for candidate in candidates:
+            if not candidate:
+                continue
+            trimmed = candidate.strip()
+            if not trimmed.startswith("{"):
+                continue
+            try:
+                parsed = json.loads(trimmed)
+            except Exception:  # noqa: BLE001
+                continue
+            if isinstance(parsed, dict):
+                return parsed
+        return None
     async def query_with_cascade(
         self,
         prompt: str,
@@ -737,6 +790,7 @@ class ClaudeClient:
                     "model_used": payload["model"],
                     "requested_model": model,
                     "provider": self.provider,
+                    "structured_output": data.get("structured_output"),
                     "raw_response": data.get("raw_response"),
                     "tokens_used": {
                         "input_tokens": usage.get("prompt_tokens"),
@@ -840,13 +894,10 @@ class ClaudeClient:
         choice = (data.get("choices") or [{}])[0]
         message = choice.get("message") or {}
         raw_content = message.get("content", "")
-        content = raw_content
-        if isinstance(raw_content, list):
-            content = "".join(
-                part.get("text", "")
-                for part in raw_content
-                if isinstance(part, dict) and part.get("type") == "text"
-            )
+        content = self._extract_text_parts(raw_content)
+        structured_output = self._extract_structured_output(message.get("parsed"))
+        if structured_output is None:
+            structured_output = self._extract_structured_output(raw_content)
         reasoning_content = message.get("reasoning_content", "")
         if isinstance(reasoning_content, list):
             reasoning_content = "".join(
@@ -861,6 +912,7 @@ class ClaudeClient:
             "usage": data.get("usage", {}),
             "chunk_count": 1,
             "raw_response": data,
+            "structured_output": structured_output,
         }
 
     async def _query_chutes_streaming(
@@ -980,6 +1032,9 @@ class ClaudeClient:
                 input_tokens = usage.get("input_tokens")
                 output_tokens = usage.get("output_tokens")
                 total_tokens = usage.get("total_tokens")
+                structured_output = self._extract_structured_output(content_blocks)
+                if structured_output is None:
+                    structured_output = self._extract_structured_output(content)
                 if total_tokens is None and input_tokens is not None and output_tokens is not None:
                     total_tokens = input_tokens + output_tokens
 
@@ -988,6 +1043,7 @@ class ClaudeClient:
                     "model_used": self.chutes_model,
                     "requested_model": model,
                     "provider": self.provider,
+                    "structured_output": structured_output,
                     "raw_response": data,
                     "tokens_used": {
                         "input_tokens": input_tokens,
