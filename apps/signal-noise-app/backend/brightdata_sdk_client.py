@@ -12,10 +12,12 @@ Architecture:
 """
 
 import asyncio
+import json
 import logging
 from typing import Dict, List, Any, Optional
 from datetime import datetime
 import os
+from urllib.parse import parse_qs, unquote, urlparse
 import httpx
 
 logger = logging.getLogger(__name__)
@@ -181,10 +183,11 @@ class BrightDataSDKClient:
             if isinstance(content, list):
                 for item in content:
                     if isinstance(item, dict):
+                        raw_url = item.get('url') or item.get('link') or ''
                         results.append({
                             "position": item.get('position'),
                             "title": item.get('title'),
-                            "url": item.get('url'),
+                            "url": self._normalize_search_result_url(raw_url),
                             "snippet": item.get('description', '') or item.get('snippet', '')
                         })
 
@@ -249,8 +252,6 @@ class BrightDataSDKClient:
                     "url": url
                 }
 
-            # Convert HTML to markdown
-            from bs4 import BeautifulSoup
             # Check if result has data AND data is not None
             html_content = (result.data if hasattr(result, 'data') and result.data is not None else "")
             if not html_content:
@@ -259,22 +260,28 @@ class BrightDataSDKClient:
                     "error": "No content returned (data was None or empty)",
                     "url": url
                 }
-            soup = BeautifulSoup(html_content, 'html.parser')
+            parse_result = self._extract_text_from_html(str(html_content))
+            soup = parse_result["soup"]
+            content = parse_result["content"]
+            extraction_mode = "sdk_direct"
 
-            # Remove scripts/styles
-            for tag in soup(["script", "style", "nav", "footer", "header"]):
-                tag.decompose()
-
-            # Extract main content
-            main = soup.find('main') or soup.find('article') or soup.body
-            if main:
-                content = self._html_to_text(main)
-            else:
-                content = soup.get_text(separator='\n', strip=True)
-
-            # Clean up
-            lines = [line.strip() for line in content.split('\n') if line.strip()]
-            content = '\n'.join(lines)
+            if self._should_retry_with_rendered_fallback(str(html_content), content):
+                modern_result = await self._scrape_with_modern_sdk(url)
+                if modern_result and modern_result.get("status") == "success":
+                    modern_content = modern_result.get("content", "")
+                    if len(modern_content.strip()) > len(content.strip()):
+                        content = modern_content
+                        html_content = modern_result.get("raw_html", html_content)
+                        parse_result = self._extract_text_from_html(str(html_content))
+                        soup = parse_result["soup"]
+                        extraction_mode = "sdk_rendered_fallback"
+                else:
+                    # Fall back to httpx-based extraction path if modern SDK rendering is unavailable.
+                    fallback_result = await self._scrape_as_markdown_fallback(url)
+                    if fallback_result.get("status") == "success":
+                        fallback_content = fallback_result.get("content", "")
+                        if len(fallback_content.strip()) > len(content.strip()):
+                            return fallback_result
 
             logger.info(f"✅ Scraped {len(content)} characters")
 
@@ -295,7 +302,8 @@ class BrightDataSDKClient:
                 "metadata": {
                     "word_count": len(content.split()),
                     "source": "brightdata_sdk",
-                    "has_publication_date": publication_date is not None
+                    "has_publication_date": publication_date is not None,
+                    "extraction_mode": extraction_mode,
                 }
             }
 
@@ -569,22 +577,33 @@ class BrightDataSDKClient:
             parse_result = self._extract_text_from_html(response.text)
             content = parse_result["content"]
             logger.info(f"✅ Fallback scraped {len(content)} characters")
+            raw_html_for_output = response.text
 
             extraction_mode = "direct"
             if self._should_retry_with_rendered_fallback(response.text, content):
                 # JS-heavy pages often return shell HTML on first pass.
-                async with httpx.AsyncClient(timeout=30.0, follow_redirects=True, verify=not insecure_ssl_used) as client:
-                    rendered_response = await client.get(url)
-                    rendered_response.raise_for_status()
-                rendered_parse = self._extract_text_from_html(rendered_response.text)
-                if len(rendered_parse["content"].strip()) > len(content.strip()):
-                    response = rendered_response
-                    parse_result = rendered_parse
-                    content = parse_result["content"]
-                    extraction_mode = "rendered_fallback"
+                # Prefer modern BrightData browser-capable scrape when available.
+                modern_result = await self._scrape_with_modern_sdk(url)
+                if modern_result and modern_result.get("status") == "success":
+                    modern_content = modern_result.get("content", "")
+                    if len(modern_content.strip()) > len(content.strip()):
+                        parse_result = self._extract_text_from_html(modern_result.get("raw_html", ""))
+                        content = modern_content
+                        raw_html_for_output = modern_result.get("raw_html", raw_html_for_output)
+                        extraction_mode = "rendered_fallback_modern_sdk"
+                else:
+                    async with httpx.AsyncClient(timeout=30.0, follow_redirects=True, verify=not insecure_ssl_used) as client:
+                        rendered_response = await client.get(url)
+                        rendered_response.raise_for_status()
+                    rendered_parse = self._extract_text_from_html(rendered_response.text)
+                    if len(rendered_parse["content"].strip()) > len(content.strip()):
+                        parse_result = rendered_parse
+                        content = parse_result["content"]
+                        raw_html_for_output = rendered_response.text
+                        extraction_mode = "rendered_fallback"
 
             try:
-                publication_date = self._extract_publication_date(parse_result["soup"], response.text, url)
+                publication_date = self._extract_publication_date(parse_result["soup"], raw_html_for_output, url)
             except Exception as e:
                 logger.warning(f"⚠️ Publication date extraction failed: {e}")
                 publication_date = None
@@ -593,7 +612,7 @@ class BrightDataSDKClient:
                 "status": "success",
                 "url": url,
                 "content": content,
-                "raw_html": response.text,
+                "raw_html": raw_html_for_output,
                 "timestamp": datetime.now().isoformat(),
                 "publication_date": publication_date.isoformat() if publication_date else None,
                 "metadata": {
@@ -613,9 +632,32 @@ class BrightDataSDKClient:
                 "url": url
             }
 
+    def _normalize_search_result_url(self, url: str) -> str:
+        """
+        Normalize SERP URLs and unwrap common Google redirect links.
+        """
+        if not url:
+            return url
+        try:
+            parsed = urlparse(url)
+            host = (parsed.netloc or "").lower()
+            if "google." in host and parsed.path in {"/url", "/goto"}:
+                params = parse_qs(parsed.query or "")
+                for key in ("url", "q"):
+                    values = params.get(key) or []
+                    if not values:
+                        continue
+                    candidate = unquote(values[0]).strip()
+                    if candidate.startswith(("http://", "https://")):
+                        return candidate
+        except Exception:
+            return url
+        return url
+
     def _extract_text_from_html(self, html: str) -> Dict[str, Any]:
         from bs4 import BeautifulSoup
 
+        original_soup = BeautifulSoup(html, 'html.parser')
         soup = BeautifulSoup(html, 'html.parser')
         for tag in soup(["script", "style", "nav", "footer", "header"]):
             tag.decompose()
@@ -628,12 +670,61 @@ class BrightDataSDKClient:
 
         lines = [line.strip() for line in content.split('\n') if line.strip()]
         content = '\n'.join(lines)
+
+        # Fallback for JS-heavy pages where strict pruning removes all meaningful text.
+        if len(content.split()) < 10:
+            permissive_soup = BeautifulSoup(html, 'html.parser')
+            for tag in permissive_soup(["script", "style", "noscript"]):
+                tag.decompose()
+            permissive_body = permissive_soup.body or permissive_soup
+            permissive_text = permissive_body.get_text(separator='\n', strip=True)
+            permissive_lines = [line.strip() for line in permissive_text.split('\n') if line.strip()]
+            permissive_content = '\n'.join(permissive_lines)
+            if len(permissive_content.split()) > len(content.split()):
+                content = permissive_content
+
+        # Final fallback: structured metadata if body text is still sparse.
+        if len(content.split()) < 10:
+            meta_parts = []
+            title_tag = original_soup.find("title")
+            if title_tag and title_tag.get_text(strip=True):
+                meta_parts.append(title_tag.get_text(strip=True))
+            for selector in [
+                ('meta', {'name': 'description'}),
+                ('meta', {'property': 'og:description'}),
+                ('meta', {'name': 'twitter:description'}),
+            ]:
+                tag = original_soup.find(selector[0], attrs=selector[1])
+                if tag and tag.get('content'):
+                    meta_parts.append(str(tag.get('content')).strip())
+
+            # Try JSON-LD extraction for JS-heavy sites.
+            for script in original_soup.find_all("script", attrs={"type": "application/ld+json"}):
+                raw = script.string or script.get_text(strip=True)
+                if not raw:
+                    continue
+                try:
+                    payload = json.loads(raw)
+                except Exception:
+                    continue
+                candidates = payload if isinstance(payload, list) else [payload]
+                for node in candidates:
+                    if not isinstance(node, dict):
+                        continue
+                    for key in ("headline", "description", "name"):
+                        value = node.get(key)
+                        if isinstance(value, str) and value.strip():
+                            meta_parts.append(value.strip())
+            if meta_parts:
+                content = '\n'.join(dict.fromkeys([p for p in meta_parts if p]))
+
         return {"soup": soup, "content": content}
 
     def _should_retry_with_rendered_fallback(self, html: str, content: str) -> bool:
         min_words = int(os.getenv("BRIGHTDATA_MIN_WORDS", "80"))
         word_count = len((content or "").split())
         html_lower = (html or "").lower()
+        html_len = len(html or "")
         js_shell_signals = (
             "__next_data__" in html_lower
             or "id=\"__next\"" in html_lower
@@ -642,7 +733,8 @@ class BrightDataSDKClient:
             or "id='app'" in html_lower
             or "window.__" in html_lower
         )
-        return word_count < min_words and js_shell_signals
+        large_but_empty = word_count == 0 and html_len > 10000
+        return word_count < min_words and (js_shell_signals or large_but_empty)
 
     async def _scrape_batch_fallback(self, urls: List[str]) -> Dict[str, Any]:
         """Fallback: Batch scrape with httpx"""

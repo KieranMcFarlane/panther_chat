@@ -605,10 +605,16 @@ class HypothesisDrivenDiscovery:
         url_lower = url.lower()
         title_lower = title.lower()
         snippet_lower = snippet.lower()
+        from urllib.parse import urlparse
+        parsed = urlparse(url_lower)
 
         # Domain authority signals
         if '.gov.' in url or '.org.' in url:
             score += 0.3
+
+        # Reject search-engine redirect wrappers; they are not target evidence pages.
+        if "google." in parsed.netloc and parsed.path in {"/url", "/goto"}:
+            return 0.0
 
         # Entity name match in domain
         entity_slug = entity_name.lower().replace(' ', '').replace('-', '')
@@ -622,8 +628,7 @@ class HypothesisDrivenDiscovery:
         # Official-site specific ranking to avoid store/merch domains becoming canonical.
         if hop_type == HopType.OFFICIAL_SITE:
             # Homepages on the entity domain are preferred.
-            from urllib.parse import urlparse
-            parsed_url = urlparse(url_lower)
+            parsed_url = parsed
             if entity_slug in url_lower and (parsed_url.path in {"", "/"}):
                 score += 0.35
             if len(initials) >= 3 and initials in url_lower and (parsed_url.path in {"", "/"}):
@@ -1150,26 +1155,41 @@ class HypothesisDrivenDiscovery:
                 }
 
                 if not content_text.strip():
-                    logger.warning("Scraping returned empty content; treating hop as NO_PROGRESS")
-                    return {
-                        'hop_type': hop_type.value,
-                        'url': url,
-                        'decision': 'NO_PROGRESS',
-                        'confidence_delta': 0.0,
-                        'justification': 'No content returned from scrape',
-                        'evidence_found': '',
-                        'cost_usd': 0.0,
-                        'scrape_data': {
-                            'publication_date': content_result.get('publication_date'),
-                            'timestamp': content_result.get('timestamp'),
-                            'url': content_result.get('url'),
-                            'word_count': content_result.get('metadata', {}).get('word_count')
-                        },
-                        'performance': {
-                            **performance,
-                            'total_duration_ms': round((time.perf_counter() - hop_started_at) * 1000, 2)
+                    fallback_entity_name = (
+                        getattr(state, 'entity_name', None)
+                        or getattr(hypothesis, 'entity_name', None)
+                        or (getattr(hypothesis, 'metadata', {}) or {}).get('entity_name')
+                        or ''
+                    )
+                    snippet_fallback = await self._build_snippet_fallback_content(url, fallback_entity_name)
+                    if snippet_fallback:
+                        logger.info("🧩 Using SERP snippet fallback content for empty scrape")
+                        content_text = snippet_fallback
+                        content_metadata = {
+                            'content_type': 'text/snippet_fallback',
+                            'char_count': len(content_text)
                         }
-                    }
+                    else:
+                        logger.warning("Scraping returned empty content; treating hop as NO_PROGRESS")
+                        return {
+                            'hop_type': hop_type.value,
+                            'url': url,
+                            'decision': 'NO_PROGRESS',
+                            'confidence_delta': 0.0,
+                            'justification': 'No content returned from scrape',
+                            'evidence_found': '',
+                            'cost_usd': 0.0,
+                            'scrape_data': {
+                                'publication_date': content_result.get('publication_date'),
+                                'timestamp': content_result.get('timestamp'),
+                                'url': content_result.get('url'),
+                                'word_count': content_result.get('metadata', {}).get('word_count')
+                            },
+                            'performance': {
+                                **performance,
+                                'total_duration_ms': round((time.perf_counter() - hop_started_at) * 1000, 2)
+                            }
+                        }
 
                 content = content_text
 
@@ -1911,6 +1931,36 @@ class HypothesisDrivenDiscovery:
         logger.info("Site-specific search found no suitable results")
         return None
 
+    async def _build_snippet_fallback_content(self, url: str, entity_name: str) -> Optional[str]:
+        """
+        Build minimal fallback content from SERP snippet when page scraping is empty.
+        """
+        try:
+            from urllib.parse import urlparse
+            domain = (urlparse(url).netloc or "").strip()
+            if not domain:
+                return None
+            query = f'site:{domain} "{entity_name}"'
+            search_result = await self.brightdata_client.search_engine(
+                query=query,
+                engine='google',
+                num_results=3
+            )
+            if search_result.get('status') != 'success':
+                return None
+            snippets = []
+            for item in search_result.get('results', []):
+                title = (item.get('title') or '').strip()
+                snippet = (item.get('snippet') or '').strip()
+                if title:
+                    snippets.append(title)
+                if snippet:
+                    snippets.append(snippet)
+            text = "\n".join(dict.fromkeys([s for s in snippets if s]))
+            return text if text.strip() else None
+        except Exception:
+            return None
+
     async def _try_find_tender_page(
         self,
         entity_name: str,
@@ -2518,6 +2568,22 @@ Return JSON:
                 return result
             else:
                 logger.warning(f"Could not parse Claude response: {response_text}")
+                # Fallback: try to extract a plain-text decision token.
+                simple_match = re.search(
+                    r'\b(ACCEPT|WEAK_ACCEPT|REJECT|NO_PROGRESS)\b',
+                    str(response_text or ""),
+                    re.IGNORECASE
+                )
+                if simple_match:
+                    decision = simple_match.group(1).upper()
+                    logger.info(f"Fallback extracted decision token: {decision}")
+                    return {
+                        'decision': decision,
+                        'confidence_delta': 0.05 if decision == 'ACCEPT' else (0.02 if decision == 'WEAK_ACCEPT' else 0.0),
+                        'justification': 'Extracted from non-JSON evaluator response',
+                        'evidence_found': '',
+                        'evidence_type': 'fallback'
+                    }
                 return self._fallback_result()
         except json.JSONDecodeError as e:
             logger.error(f"JSON parsing error: {e}")

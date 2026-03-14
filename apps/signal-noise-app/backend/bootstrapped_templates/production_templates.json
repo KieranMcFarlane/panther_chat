@@ -1,5 +1,6 @@
 [
   {
+    "template_id": "tier_1_club_centralized_procurement",
     "template_name": "Tier 1 Club Centralized Procurement",
     "template_confidence": 0.7,
     "applicable_entity_profile": {
