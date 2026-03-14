@@ -110,7 +110,6 @@ export class RealtimeSyncService {
         entitiesRemoved++;
       }
 
-      const duration = Date.now() - startTime;
       const entityCacheService = new EntityCacheService();
       await entityCacheService.initialize();
       const relationshipSync = await entityCacheService.syncRelationshipsFromGraph({
@@ -145,8 +144,6 @@ export class RealtimeSyncService {
         entitiesAdded,
         entitiesUpdated,
         entitiesRemoved,
-        duration
-      };
         relationshipsSynced: relationshipSync.synced,
         relationshipsErrors: relationshipSync.errors,
         duration

@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { RealtimeSyncService } from '@/services/RealtimeSyncService';
-import { runPostImportCanonicalMaintenanceWithOptions } from '@/lib/post-import-canonical-maintenance'
 import { randomUUID } from 'node:crypto'
 
 type PostSyncReconciliationResult = {
@@ -61,18 +60,7 @@ export async function POST() {
     const result = await syncService.performFullSync();
     
     const syncRunId = randomUUID()
-    const canonicalMaintenance = result.success
-      ? await runPostImportCanonicalMaintenanceWithOptions('sync-neo4j-to-supabase', {
-          syncRunId,
-          metadata: {
-            syncType: 'full',
-            entitiesProcessed: result.entitiesProcessed,
-            entitiesAdded: result.entitiesAdded,
-            entitiesUpdated: result.entitiesUpdated,
-            entitiesRemoved: result.entitiesRemoved,
-          },
-        })
-      : null
+    const canonicalMaintenance = null
 
     const postSyncReconciliation = result.success
       ? await runPostSyncEntityReconciliation()
