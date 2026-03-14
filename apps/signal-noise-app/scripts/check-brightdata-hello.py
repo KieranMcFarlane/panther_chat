@@ -9,6 +9,7 @@ import os
 import sys
 from pathlib import Path
 
+from dotenv import load_dotenv
 
 ROOT = Path(__file__).resolve().parent.parent
 BACKEND = ROOT / "backend"
@@ -18,6 +19,8 @@ from brightdata_sdk_client import BrightDataSDKClient  # noqa: E402
 
 
 async def main() -> int:
+    load_dotenv(ROOT / ".env", override=False)
+    load_dotenv(BACKEND / ".env", override=False)
     token_present = bool(os.getenv("BRIGHTDATA_API_TOKEN"))
     print(json.dumps({"check": "env", "brightdata_token_present": token_present}))
 

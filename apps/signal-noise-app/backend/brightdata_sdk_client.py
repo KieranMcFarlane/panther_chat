@@ -48,6 +48,14 @@ class BrightDataSDKClient:
         from dotenv import load_dotenv
         from pathlib import Path
 
+        # Ensure Python SSL trust store is initialized on macOS/Homebrew installs.
+        if "SSL_CERT_FILE" not in os.environ:
+            try:
+                import certifi
+                os.environ["SSL_CERT_FILE"] = certifi.where()
+            except Exception:
+                pass
+
         # Try current directory first, then parent directory
         env_loaded = load_dotenv()  # Current directory
 
@@ -761,7 +769,10 @@ class BrightDataSDKClient:
         """
         from datetime import datetime
         import re
-        from dateutil import parser as date_parser
+        try:
+            from dateutil import parser as date_parser
+        except Exception:
+            return None
 
         date_formats = [
             # ISO 8601 formats
