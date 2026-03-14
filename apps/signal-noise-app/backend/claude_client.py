@@ -362,6 +362,16 @@ class ClaudeClient:
         self.api_key = api_key or self._resolve_api_key()
         self.base_url = base_url or self._resolve_base_url()
         self.chutes_model = os.getenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+        self.chutes_model_haiku = os.getenv("CHUTES_MODEL_HAIKU", self.chutes_model)
+        self.chutes_model_sonnet = os.getenv(
+            "CHUTES_MODEL_SONNET",
+            os.getenv("CHUTES_MODEL_SECONDARY", "moonshotai/Kimi-K2.5-TEE"),
+        )
+        self.chutes_model_opus = os.getenv(
+            "CHUTES_MODEL_OPUS",
+            os.getenv("CHUTES_MODEL_TERTIARY", "MiniMaxAI/MiniMax-M2.5-TEE"),
+        )
+        self.chutes_fallback_model = os.getenv("CHUTES_FALLBACK_MODEL", "moonshotai/Kimi-K2.5-TEE")
         self.chutes_timeout_seconds = float(os.getenv("CHUTES_TIMEOUT_SECONDS", "45"))
         self.chutes_max_retries = int(os.getenv("CHUTES_MAX_RETRIES", "1"))
 
