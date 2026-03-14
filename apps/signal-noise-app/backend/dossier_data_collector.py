@@ -363,6 +363,348 @@ class DossierDataCollector:
             await self.brightdata_client.close()
         self.brightdata_client = None
 
+    @staticmethod
+    def _parse_bool_env(value: Optional[str], *, default: bool) -> bool:
+        if value is None:
+            return default
+        normalized = value.strip().lower()
+        if normalized in {"1", "true", "yes", "on"}:
+            return True
+        if normalized in {"0", "false", "no", "off"}:
+            return False
+        return default
+
+    def _official_site_cache_file(self) -> Path:
+        cache_path = os.getenv(
+            "DOSSIER_OFFICIAL_SITE_CACHE_PATH",
+            "backend/data/dossiers/official_site_cache.json",
+        )
+        path = Path(cache_path)
+        if not path.is_absolute():
+            path = Path(__file__).resolve().parent.parent / cache_path
+        return path
+
+    def _official_site_content_cache_file(self) -> Path:
+        cache_path = os.getenv(
+            "DOSSIER_OFFICIAL_SITE_CONTENT_CACHE_PATH",
+            "backend/data/dossiers/official_site_content_cache.json",
+        )
+        path = Path(cache_path)
+        if not path.is_absolute():
+            path = Path(__file__).resolve().parent.parent / cache_path
+        return path
+
+    def _normalize_official_site_cache_key(self, entity_name: str) -> str:
+        return " ".join((entity_name or "").strip().lower().split())
+
+    def _normalize_http_url(self, candidate: Optional[str]) -> Optional[str]:
+        if not isinstance(candidate, str):
+            return None
+        value = candidate.strip()
+        if not value:
+            return None
+        if value.startswith(("http://", "https://")):
+            return value.rstrip("/")
+        if value.startswith("www.") or "." in value:
+            return f"https://{value.lstrip('/').rstrip('/')}"
+        return None
+
+    def _host_from_url(self, candidate: Optional[str]) -> str:
+        normalized = self._normalize_http_url(candidate)
+        if not normalized:
+            return ""
+        parsed = urllib.parse.urlparse(normalized)
+        host = (parsed.netloc or "").strip().lower()
+        if host.startswith("www."):
+            host = host[4:]
+        return host
+
+    def _is_commerce_host(self, candidate: Optional[str]) -> bool:
+        host = self._host_from_url(candidate)
+        if not host:
+            return False
+        host_tokens = set(part for part in re.split(r"[^a-z0-9]+", host) if part)
+        commerce_tokens = {"store", "shop", "ticket", "tickets", "merch"}
+        if host_tokens & commerce_tokens:
+            return True
+        for token in host_tokens:
+            for commerce_token in commerce_tokens:
+                if commerce_token in token:
+                    return True
+        return False
+
+    def _looks_like_entity_domain(self, entity_name: str, candidate_url: Optional[str]) -> bool:
+        host = self._host_from_url(candidate_url)
+        if not host:
+            return False
+
+        compact_host = "".join(ch for ch in host if ch.isalnum())
+        tokens = [token for token in re.split(r"[^a-z0-9]+", (entity_name or "").lower()) if token]
+        if not tokens:
+            return False
+
+        stopwords = {"the", "club", "football", "sport", "sports", "association", "team", "official", "website"}
+        suffix_tokens = {"fc", "afc", "cf", "ac", "sc"}
+        informative = [token for token in tokens if token not in stopwords and token not in suffix_tokens and len(token) >= 3]
+
+        aliases: List[str] = []
+        full_compact = "".join(ch for ch in (entity_name or "").lower() if ch.isalnum())
+        if len(full_compact) >= 3:
+            aliases.append(full_compact)
+        informative_compact = "".join(informative)
+        if len(informative_compact) >= 3:
+            aliases.append(informative_compact)
+        informative_initials = "".join(token[0] for token in informative if token)
+        if len(informative_initials) >= 2:
+            aliases.append(informative_initials)
+            aliases.append(f"{informative_initials}fc")
+        all_initials = "".join(token[0] for token in tokens if token)
+        if len(all_initials) >= 2:
+            aliases.append(all_initials)
+
+        return any(alias in compact_host for alias in aliases if len(alias) >= 3)
+
+    def _load_official_site_url_cache(self) -> Dict[str, str]:
+        cache_file = self._official_site_cache_file()
+        try:
+            if not cache_file.exists():
+                return {}
+            raw = json.loads(cache_file.read_text(encoding="utf-8"))
+            if not isinstance(raw, dict):
+                return {}
+            cache: Dict[str, str] = {}
+            for key, value in raw.items():
+                if isinstance(key, str) and isinstance(value, str) and value.strip():
+                    cache[self._normalize_official_site_cache_key(key)] = value.strip()
+            return cache
+        except Exception as error:  # noqa: BLE001
+            logger.debug("Failed loading official-site cache %s: %s", cache_file, error)
+            return {}
+
+    def _load_official_site_content_cache(self) -> Dict[str, Dict[str, Any]]:
+        cache_file = self._official_site_content_cache_file()
+        try:
+            if not cache_file.exists():
+                return {}
+            raw = json.loads(cache_file.read_text(encoding="utf-8"))
+            if not isinstance(raw, dict):
+                return {}
+            cache: Dict[str, Dict[str, Any]] = {}
+            for key, value in raw.items():
+                if isinstance(key, str) and isinstance(value, dict):
+                    content = value.get("content")
+                    url = value.get("url")
+                    if isinstance(content, str) and content.strip() and isinstance(url, str) and url.strip():
+                        cache[key] = value
+            return cache
+        except Exception as error:  # noqa: BLE001
+            logger.debug("Failed loading official-site content cache %s: %s", cache_file, error)
+            return {}
+
+    def _get_cached_official_site_url(self, entity_name: str) -> Optional[str]:
+        key = self._normalize_official_site_cache_key(entity_name)
+        if not key:
+            return None
+        value = self._official_site_url_cache.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+        return None
+
+    def _store_cached_official_site_url(self, entity_name: str, url: str) -> None:
+        normalized_url = self._normalize_http_url(url)
+        key = self._normalize_official_site_cache_key(entity_name)
+        if not key or not normalized_url:
+            return
+
+        self._official_site_url_cache[key] = normalized_url
+
+        cache_file = self._official_site_cache_file()
+        try:
+            cache_file.parent.mkdir(parents=True, exist_ok=True)
+            cache_file.write_text(
+                json.dumps(self._official_site_url_cache, indent=2, sort_keys=True),
+                encoding="utf-8",
+            )
+        except Exception as error:  # noqa: BLE001
+            logger.debug("Failed persisting official-site cache %s: %s", cache_file, error)
+
+    def seed_official_site_url(
+        self,
+        entity_name: str,
+        url: str,
+        *,
+        persist_cache: bool = True,
+    ) -> Optional[str]:
+        normalized_url = self._normalize_http_url(url)
+        key = self._normalize_official_site_cache_key(entity_name)
+        if not key or not normalized_url:
+            return None
+
+        self._preferred_official_site_urls[key] = normalized_url
+        if persist_cache:
+            self._store_cached_official_site_url(entity_name, normalized_url)
+        return normalized_url
+
+    def _get_preferred_official_site_url(self, entity_name: str) -> Optional[str]:
+        key = self._normalize_official_site_cache_key(entity_name)
+        if not key:
+            return None
+        value = self._preferred_official_site_urls.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+        return None
+
+    def _official_site_content_cache_key(self, entity_name: str, url: str) -> str:
+        parsed = urllib.parse.urlparse(str(url or "").strip())
+        host = parsed.netloc.lower()
+        if host.startswith("www."):
+            host = host[4:]
+        entity_key = self._normalize_official_site_cache_key(entity_name)
+        return f"{entity_key}|{host}"
+
+    def _store_cached_official_site_content(self, entity_name: str, url: str, scrape_result: Dict[str, Any]) -> None:
+        content = str(scrape_result.get("content") or "").strip()
+        normalized_url = str(url or "").strip()
+        if not content or not normalized_url:
+            return
+        key = self._official_site_content_cache_key(entity_name, normalized_url)
+        if not key:
+            return
+
+        metadata = scrape_result.get("metadata")
+        if not isinstance(metadata, dict):
+            metadata = {}
+        snapshot = {
+            "url": normalized_url,
+            "content": content[:50000],
+            "metadata": metadata,
+            "publication_date": scrape_result.get("publication_date"),
+            "cached_at": datetime.now(timezone.utc).isoformat(),
+        }
+        self._official_site_content_cache[key] = snapshot
+
+        cache_file = self._official_site_content_cache_file()
+        try:
+            cache_file.parent.mkdir(parents=True, exist_ok=True)
+            cache_file.write_text(
+                json.dumps(self._official_site_content_cache, indent=2, sort_keys=True),
+                encoding="utf-8",
+            )
+        except Exception as error:  # noqa: BLE001
+            logger.debug("Failed persisting official-site content cache %s: %s", cache_file, error)
+
+    def _get_cached_official_site_content(self, entity_name: str, url: str) -> Optional[Dict[str, Any]]:
+        key = self._official_site_content_cache_key(entity_name, url)
+        snapshot = self._official_site_content_cache.get(key)
+        if not isinstance(snapshot, dict):
+            return None
+        content = snapshot.get("content")
+        cached_url = snapshot.get("url")
+        if not isinstance(content, str) or not content.strip() or not isinstance(cached_url, str) or not cached_url.strip():
+            return None
+        metadata = snapshot.get("metadata") if isinstance(snapshot.get("metadata"), dict) else {}
+        return {
+            "status": "success",
+            "url": cached_url,
+            "content": content,
+            "publication_date": snapshot.get("publication_date"),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "metadata": {
+                **metadata,
+                "source": "official_site_content_cache",
+                "cached_snapshot": True,
+                "cached_at": snapshot.get("cached_at"),
+            },
+        }
+
+    def _official_site_fallback_urls(self, official_url: str) -> List[str]:
+        parsed = urllib.parse.urlparse(official_url)
+        if not parsed.scheme or not parsed.netloc:
+            return []
+
+        root = f"{parsed.scheme}://{parsed.netloc}"
+        candidates = [
+            root,
+            urllib.parse.urljoin(root + "/", "news"),
+            urllib.parse.urljoin(root + "/", "about"),
+            urllib.parse.urljoin(root + "/", "club"),
+            urllib.parse.urljoin(root + "/", "latest-news"),
+        ]
+        primary = official_url.rstrip("/")
+        unique: List[str] = []
+        for candidate in candidates:
+            candidate = candidate.rstrip("/")
+            if not candidate or candidate == primary or candidate in unique:
+                continue
+            unique.append(candidate)
+        return unique
+
+    async def _scrape_official_url_with_fallback(
+        self,
+        entity_name: str,
+        official_url: str,
+    ) -> tuple[str, Dict[str, Any], str]:
+        if not self.brightdata_client:
+            return official_url, {"status": "error", "error": "BrightData client unavailable"}, "none"
+
+        attempt_urls = [official_url.rstrip("/")] + self._official_site_fallback_urls(official_url)
+        last_result: Dict[str, Any] = {"status": "error", "error": "No scrape attempts executed"}
+        selected_url = official_url.rstrip("/")
+
+        for idx, candidate_url in enumerate(attempt_urls):
+            selected_url = candidate_url
+            scrape_result = await self.brightdata_client.scrape_as_markdown(candidate_url)
+            if not isinstance(scrape_result, dict):
+                last_result = {"status": "error", "error": "Invalid scrape payload"}
+                continue
+
+            last_result = scrape_result
+            content = str(scrape_result.get("content") or "").strip()
+            if scrape_result.get("status") == "success" and content:
+                if idx > 0:
+                    logger.info("♻️ Official-site scrape recovered content via fallback URL: %s", candidate_url)
+                self._store_cached_official_site_content(entity_name, candidate_url, scrape_result)
+                return candidate_url, scrape_result, ("subpath" if idx > 0 else "live")
+
+        cached_snapshot = self._get_cached_official_site_content(entity_name, official_url)
+        if cached_snapshot is not None:
+            cached_url = str(cached_snapshot.get("url") or official_url)
+            logger.info(
+                "♻️ Reusing cached official-site content snapshot for %s from %s",
+                entity_name,
+                cached_url,
+            )
+            return cached_url, cached_snapshot, "cached_snapshot"
+
+        return selected_url, last_result, "none"
+
+    def _choose_official_site_url(self, entity_name: str, results: List[Dict[str, Any]]) -> str:
+        """Choose the best official-site candidate while demoting ecommerce domains."""
+        if not results:
+            return ""
+
+        max_candidates = max(
+            1,
+            int(os.getenv("DOSSIER_OFFICIAL_SITE_SELECTION_MAX_CANDIDATES", "10")),
+        )
+        ranked = rank_official_site_candidates(
+            entity_name=entity_name,
+            candidates=results,
+            max_candidates=max_candidates,
+        )
+        for candidate in ranked:
+            url = self._normalize_http_url(candidate.get("url"))
+            if not url:
+                continue
+            if not self._is_commerce_host(url) and self._looks_like_entity_domain(entity_name, url):
+                return url
+
+        return choose_canonical_official_site(
+            entity_name=entity_name,
+            candidates=results,
+            max_candidates=max_candidates,
+        )
+
     async def _connect_falkordb(self):
         """Connect to FalkorDB using native Python client"""
         if self._falkordb_connected:
