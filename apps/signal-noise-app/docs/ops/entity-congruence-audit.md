@@ -64,6 +64,9 @@
   - `config/entity-congruence-baseline.json`
 - Default behavior:
   - audit auto-loads this baseline file if present
+- CI gate behavior:
+  - baseline is required (`--require-baseline`)
+  - CI fails if baseline file is missing or malformed
 - Optional override:
   - `--baseline <path>`
 - Recommended baseline refresh process:
