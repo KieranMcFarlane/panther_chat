@@ -62,6 +62,43 @@ def test_choose_official_site_url_avoids_unrelated_media_domain():
     assert chosen == "https://www.ccfcstore.com/"
 
 
+def test_choose_official_site_url_avoids_binary_document_candidate():
+    collector = DossierDataCollector(brightdata_client=SimpleNamespace())
+    chosen = collector._choose_official_site_url(
+        "Coventry City FC",
+        [
+            {
+                "url": "https://images.gc.coventrycityfcservices.co.uk/asset.pdf",
+                "title": "Coventry City FC",
+                "snippet": "Official document",
+            },
+            {
+                "url": "https://www.ccfc.co.uk/",
+                "title": "Coventry City FC",
+                "snippet": "Official website",
+            },
+        ],
+    )
+
+    assert chosen == "https://www.ccfc.co.uk"
+
+
+def test_choose_official_site_url_rejects_binary_document_when_no_site_candidate():
+    collector = DossierDataCollector(brightdata_client=SimpleNamespace())
+    chosen = collector._choose_official_site_url(
+        "Coventry City FC",
+        [
+            {
+                "url": "https://images.gc.coventrycityfcservices.co.uk/asset.pdf",
+                "title": "Coventry City FC",
+                "snippet": "Official document",
+            }
+        ],
+    )
+
+    assert chosen == ""
+
+
 @pytest.mark.asyncio
 async def test_get_scraped_content_prefers_seeded_official_site(monkeypatch):
     async def _unexpected_search(**_kwargs):  # pragma: no cover
