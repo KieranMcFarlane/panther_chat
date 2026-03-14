@@ -41,6 +41,7 @@ Usage:
 import json
 import logging
 import os
+import random
 import re
 import time
 from datetime import datetime, timezone, timedelta
@@ -586,10 +587,900 @@ class HypothesisDrivenDiscovery:
 
         # Dossier hypotheses cache for warm-start discovery
         self._dossier_hypotheses_cache = {}
+        self._official_site_content_cache: Dict[str, Dict[str, Any]] = {}
+        self._official_site_evaluation_cache: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
+        self._resolved_url_context: Dict[str, Dict[str, str]] = {}
+        self._official_site_url_cache = self._load_official_site_url_cache()
+        self._official_site_domain_map = self._load_official_site_domain_map()
+        self._official_site_resolution_failures: Dict[str, float] = {}
+        self.current_official_site_url: Optional[str] = None
+        self.max_consecutive_no_progress_iterations = int(os.getenv("DISCOVERY_MAX_CONSECUTIVE_NO_PROGRESS", "3"))
+        self.search_timeout_seconds = float(os.getenv("DISCOVERY_SEARCH_TIMEOUT_SECONDS", "12"))
+        self.search_validation_timeout_seconds = float(os.getenv("DISCOVERY_SEARCH_VALIDATION_TIMEOUT_SECONDS", "5"))
+        self.url_resolution_timeout_seconds = float(os.getenv("DISCOVERY_URL_RESOLUTION_TIMEOUT_SECONDS", "12"))
+        self.url_resolution_max_fallback_queries = max(
+            1,
+            int(os.getenv("DISCOVERY_URL_RESOLUTION_MAX_FALLBACK_QUERIES", "3")),
+        )
+        self.url_resolution_max_fallback_queries_single_pass = max(
+            1,
+            int(os.getenv("DISCOVERY_URL_RESOLUTION_MAX_FALLBACK_QUERIES_SINGLE_PASS", "1")),
+        )
+        self.url_resolution_max_site_specific_queries = max(
+            1,
+            int(os.getenv("DISCOVERY_URL_RESOLUTION_MAX_SITE_SPECIFIC_QUERIES", "6")),
+        )
+        self.url_resolution_max_site_specific_queries_single_pass = max(
+            1,
+            int(os.getenv("DISCOVERY_URL_RESOLUTION_MAX_SITE_SPECIFIC_QUERIES_SINGLE_PASS", "2")),
+        )
+        self.dossier_context_targeted_search_enabled = self._parse_bool_env(
+            os.getenv("DISCOVERY_DOSSIER_CONTEXT_TARGETED_SEARCH_ENABLED"),
+            default=True,
+        )
+        self.dossier_context_max_targeted_queries = max(
+            0,
+            int(os.getenv("DISCOVERY_DOSSIER_CONTEXT_MAX_TARGETED_QUERIES", "3")),
+        )
+        self.dossier_context_max_targeted_queries_single_pass = max(
+            0,
+            int(os.getenv("DISCOVERY_DOSSIER_CONTEXT_MAX_TARGETED_QUERIES_SINGLE_PASS", "0")),
+        )
+        self.dossier_context_targeted_search_concurrency = max(
+            1,
+            int(os.getenv("DISCOVERY_DOSSIER_CONTEXT_TARGETED_SEARCH_CONCURRENCY", "2")),
+        )
+        self.official_site_resolution_num_results = max(
+            1,
+            int(os.getenv("DISCOVERY_OFFICIAL_SITE_RESOLUTION_NUM_RESULTS", "3")),
+        )
+        self.official_site_resolution_engines = [
+            engine.strip().lower()
+            for engine in (os.getenv("DISCOVERY_OFFICIAL_SITE_RESOLUTION_ENGINES", "google,bing") or "").split(",")
+            if engine.strip()
+        ] or ["google"]
+        self.evaluation_query_timeout_seconds = float(
+            os.getenv("DISCOVERY_EVALUATION_QUERY_TIMEOUT_SECONDS", "30")
+        )
+        self.evaluation_timeout_max_retries = max(
+            0,
+            int(os.getenv("DISCOVERY_EVALUATION_TIMEOUT_MAX_RETRIES", "2")),
+        )
+        self.evaluation_timeout_retry_backoff_seconds = max(
+            0.0,
+            float(os.getenv("DISCOVERY_EVALUATION_TIMEOUT_RETRY_BACKOFF_SECONDS", "1.5")),
+        )
+        self.evaluation_timeout_retry_backoff_cap_seconds = max(
+            0.0,
+            float(os.getenv("DISCOVERY_EVALUATION_TIMEOUT_RETRY_BACKOFF_CAP_SECONDS", "8")),
+        )
+        self.evaluation_timeout_retry_jitter_seconds = max(
+            0.0,
+            float(os.getenv("DISCOVERY_EVALUATION_TIMEOUT_RETRY_JITTER_SECONDS", "0.35")),
+        )
+        self.evaluation_max_tokens_default = int(os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_DEFAULT", "360"))
+        self.evaluation_max_tokens_press_release = int(os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_PRESS_RELEASE", "250"))
+        self.evaluation_max_tokens_official_site = int(os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_OFFICIAL_SITE", "220"))
+        self.evaluation_max_tokens_careers_annual_report = int(
+            os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_CAREERS_ANNUAL_REPORT", "300")
+        )
+        self.evaluation_json_repair_attempt = self._parse_bool_env(
+            os.getenv("DISCOVERY_JSON_REPAIR_ATTEMPT"),
+            default=True,
+        )
+        self.strict_evaluator_json_response = self._parse_bool_env(
+            os.getenv("DISCOVERY_STRICT_EVALUATOR_JSON"),
+            default=True,
+        )
+        self.content_min_text_chars = int(os.getenv("DISCOVERY_CONTENT_MIN_TEXT_CHARS", "240"))
+        self.content_max_script_density = float(os.getenv("DISCOVERY_CONTENT_MAX_SCRIPT_DENSITY", "0.12"))
+        self.content_min_keyword_sentences = int(os.getenv("DISCOVERY_CONTENT_MIN_KEYWORD_SENTENCES", "1"))
+        self.official_site_multi_page_sweep_enabled = self._parse_bool_env(
+            os.getenv("DISCOVERY_OFFICIAL_SITE_MULTI_PAGE_SWEEP_ENABLED"),
+            default=True,
+        )
+        self.official_site_sweep_max_pages = max(
+            1,
+            int(os.getenv("DISCOVERY_OFFICIAL_SITE_SWEEP_MAX_PAGES", "4")),
+        )
+        sweep_paths_env = os.getenv(
+            "DISCOVERY_OFFICIAL_SITE_SWEEP_PATHS",
+            "/,/about,/{locale}/,/{locale}/about,/{locale}/news,/news,/press,/careers",
+        )
+        self.official_site_sweep_paths = [
+            value.strip()
+            for value in str(sweep_paths_env or "").split(",")
+            if value.strip()
+        ] or ["/", "/about", "/news", "/press", "/careers"]
+        self.official_site_sweep_scrape_timeout_seconds = float(
+            os.getenv("DISCOVERY_OFFICIAL_SITE_SWEEP_SCRAPE_TIMEOUT_SECONDS", "10")
+        )
+        self.heuristic_fallback_on_llm_unavailable = self._parse_bool_env(
+            os.getenv("DISCOVERY_HEURISTIC_FALLBACK_ON_LLM_UNAVAILABLE"),
+            default=True,
+        )
+        self.official_site_resolution_cooldown_seconds = float(
+            os.getenv("DISCOVERY_OFFICIAL_SITE_RESOLUTION_COOLDOWN_SECONDS", "180")
+        )
+        self._llm_runtime_diagnostics: Dict[str, Any] = {
+            "llm_provider": getattr(self.claude_client, "provider", "unknown"),
+            "llm_retry_attempts": 0,
+            "llm_last_status": "not_started",
+            "llm_circuit_broken": bool(self._get_claude_disabled_reason()),
+            "llm_disable_reason": self._get_claude_disabled_reason(),
+            "evaluation_mode": "llm",
+            "run_profile": os.getenv("DISCOVERY_PROFILE", "continuous"),
+            "run_mode": os.getenv("DISCOVERY_RUN_MODE", "phase1_plus"),
+        }
         self._last_url_candidates: List[str] = []
 
         logger.info("🔍 HypothesisDrivenDiscovery initialized")
+    @staticmethod
+    def _parse_bool_env(value: Optional[str], *, default: bool) -> bool:
+        if value is None:
+            return default
+        normalized = value.strip().lower()
+        if normalized in {"1", "true", "yes", "on"}:
+            return True
+        if normalized in {"0", "false", "no", "off"}:
+            return False
+        return default
 
+    def _get_claude_disabled_reason(self) -> Optional[str]:
+        claude_client = getattr(self, "claude_client", None)
+        getter = getattr(claude_client, "_get_disabled_reason", None)
+        if callable(getter):
+            try:
+                reason = getter()
+                return str(reason) if reason else None
+            except Exception:  # noqa: BLE001
+                return None
+        return None
+
+    def _current_run_mode(self) -> str:
+        mode = str(os.getenv("DISCOVERY_RUN_MODE", "phase1_plus") or "phase1_plus").strip().lower()
+        if mode not in {"single_pass", "phase1_plus"}:
+            mode = "phase1_plus"
+        return mode
+
+    def _is_single_pass_mode(self) -> bool:
+        return self._current_run_mode() == "single_pass"
+
+    def _update_llm_runtime_diagnostics(self, **kwargs: Any) -> None:
+        diag = getattr(self, "_llm_runtime_diagnostics", None)
+        if not isinstance(diag, dict):
+            claude_client = getattr(self, "claude_client", None)
+            diag = {
+                "llm_provider": getattr(claude_client, "provider", "unknown"),
+                "llm_retry_attempts": 0,
+                "llm_last_status": "not_started",
+                "llm_circuit_broken": False,
+                "llm_disable_reason": None,
+                "evaluation_mode": "llm",
+                "run_profile": os.getenv("DISCOVERY_PROFILE", "continuous"),
+                "run_mode": os.getenv("DISCOVERY_RUN_MODE", "phase1_plus"),
+            }
+            self._llm_runtime_diagnostics = diag
+
+        for key, value in kwargs.items():
+            if value is None:
+                continue
+            if key == "llm_retry_attempts":
+                current = diag.get("llm_retry_attempts", 0)
+                try:
+                    diag[key] = max(int(current), int(value))
+                except Exception:  # noqa: BLE001
+                    continue
+            else:
+                diag[key] = value
+
+    @staticmethod
+    def _map_status_to_parse_path(status: Optional[str]) -> str:
+        status_value = str(status or "").strip().lower()
+        mapping = {
+            "ok": "json_direct",
+            "key_value_recovered": "key_value_recovered",
+            "partial_json_recovered": "partial_json_recovered",
+            "text_decision_recovered": "text_decision_recovered",
+            "text_no_progress_recovered": "text_no_progress_recovered",
+            "strict_text_no_progress_recovered": "text_no_progress_recovered",
+            "strict_truncated_json_recovered": "json_truncated_recovered",
+            "text_accept_recovered": "text_decision_recovered",
+            "json_repair_recovered": "json_repair_recovered",
+            "invalid_model_payload": "heuristic_fallback",
+            "unparseable_response": "heuristic_fallback",
+            "json_parse_error": "heuristic_fallback",
+            "request_error": "heuristic_fallback",
+            "request_timeout": "heuristic_fallback",
+            "disabled": "heuristic_fallback",
+            "strict_json_enforced": "heuristic_fallback",
+            "empty_response": "heuristic_fallback",
+            "skipped_no_content": "skipped_no_evaluation",
+            "skipped_low_yield": "skipped_no_evaluation",
+            "skipped_no_evaluation": "skipped_no_evaluation",
+        }
+        return mapping.get(status_value, "heuristic_fallback")
+
+    async def _attempt_json_repair_pass(self, response_text: str) -> Optional[Dict[str, Any]]:
+        if not getattr(self, "evaluation_json_repair_attempt", True):
+            return None
+        repair_prompt = (
+            "Convert the following evaluator output into strict JSON only with keys: "
+            "decision, confidence_delta, justification, evidence_found, evidence_type, temporal_score.\n\n"
+            f"Output:\n{response_text[:2000]}"
+        )
+        try:
+            repair = await self._query_evaluator_model(
+                prompt=repair_prompt,
+                max_tokens=220,
+                system_prompt=(
+                    "Return ONLY valid JSON. No prose, no markdown, no code fences. "
+                    "Include keys: decision, confidence_delta, justification, evidence_found, evidence_type, temporal_score."
+                ),
+                json_mode=True,
+            )
+        except Exception:  # noqa: BLE001
+            return None
+        repair_text = (repair or {}).get("content", "") if isinstance(repair, dict) else ""
+        parsed = self._parse_evaluation_response_json(str(repair_text or ""))
+        if isinstance(parsed, dict) and "decision" in parsed:
+            parsed["parse_path"] = "json_repair_recovered"
+            return parsed
+        return None
+
+    def _assess_low_yield_content(
+        self,
+        *,
+        content_text: str,
+        raw_html: Optional[str],
+        hypothesis_category: str,
+    ) -> Optional[str]:
+        text = str(content_text or "").strip()
+        text_chars = len(text)
+        min_text_chars = max(0, int(getattr(self, "content_min_text_chars", 0)))
+        if text_chars < min_text_chars:
+            return f"text_chars<{min_text_chars}"
+
+        html = str(raw_html or "")
+        script_count = html.lower().count("<script")
+        max_script_density = float(getattr(self, "content_max_script_density", 0.12))
+        script_density = script_count / max(text_chars, 1)
+        if script_density > max_script_density:
+            return f"script_density>{max_script_density:.2f}"
+
+        keywords_by_category = {
+            "procurement": ["procurement", "tender", "rfp", "vendor", "supplier"],
+            "analytics": ["data", "analytics", "platform", "integration"],
+            "member": ["member", "crm", "engagement", "portal"],
+        }
+        category_key = str(hypothesis_category or "").lower().strip()
+        if category_key not in keywords_by_category:
+            return None
+
+        minimum_keyword_sentences = max(0, int(getattr(self, "content_min_keyword_sentences", 0)))
+        if minimum_keyword_sentences == 0:
+            return None
+        # Long pages frequently contain rich navigation/footer text where strict keyword
+        # sentence matching is noisy; skip this gate when page text is already substantial.
+        if text_chars >= 5000:
+            return None
+
+        keywords = keywords_by_category[category_key]
+        sentence_count = 0
+        for sentence in re.split(r"[.!?\\n]+", text):
+            sentence_lower = sentence.lower().strip()
+            if sentence_lower and any(kw in sentence_lower for kw in keywords):
+                sentence_count += 1
+        if sentence_count < minimum_keyword_sentences:
+            return f"keyword_sentences<{minimum_keyword_sentences}"
+        return None
+
+    def _build_official_site_sweep_candidates(self, base_url: str) -> List[str]:
+        parsed = urllib.parse.urlparse(str(base_url or "").strip())
+        if not parsed.scheme or not parsed.netloc:
+            return [base_url] if isinstance(base_url, str) and base_url.strip() else []
+
+        base_origin = f"{parsed.scheme}://{parsed.netloc}"
+        path_segments = [segment for segment in (parsed.path or "").split("/") if segment]
+        locale_segment = ""
+        if path_segments:
+            candidate = path_segments[0].strip().lower()
+            if re.match(r"^[a-z]{2,5}(?:-[a-z]{2,5})?$", candidate):
+                locale_segment = candidate
+
+        raw_paths = list(getattr(self, "official_site_sweep_paths", []) or [])
+        if not raw_paths:
+            raw_paths = ["/", "/about", "/news", "/press", "/careers"]
+
+        candidates: List[str] = []
+        seen = set()
+
+        def _add(url: str) -> None:
+            normalized = self._normalize_http_url(url)
+            if not normalized or normalized in seen:
+                return
+            seen.add(normalized)
+            candidates.append(normalized)
+
+        _add(base_url)
+
+        for raw_path in raw_paths:
+            path = str(raw_path or "").strip()
+            if not path:
+                continue
+            if "{locale}" in path:
+                replacement = locale_segment or ""
+                path = path.replace("{locale}", replacement)
+            path = re.sub(r"/{2,}", "/", path)
+            if not path.startswith("/"):
+                path = f"/{path}"
+            if path != "/" and path.endswith("/"):
+                path = path.rstrip("/")
+            _add(f"{base_origin}{path}")
+
+        max_pages = max(1, int(getattr(self, "official_site_sweep_max_pages", 4) or 4))
+        return candidates[:max_pages]
+
+    def _score_official_site_content_candidate(
+        self,
+        *,
+        content_text: str,
+        raw_html: Optional[str],
+        hypothesis_category: str,
+        url: str,
+    ) -> Tuple[float, Optional[str]]:
+        text = str(content_text or "")
+        reason = self._assess_low_yield_content(
+            content_text=text,
+            raw_html=raw_html,
+            hypothesis_category=hypothesis_category,
+        )
+
+        score = 0.0
+        if reason is None:
+            score += 45.0
+        else:
+            score -= 20.0
+
+        score += min(len(text), 6000) / 120.0
+
+        lower_text = text.lower()
+        keywords_by_category = {
+            "procurement": ["procurement", "tender", "rfp", "vendor", "supplier"],
+            "analytics": ["analytics", "data", "platform", "integration", "roadmap"],
+            "member": ["member", "engagement", "crm", "portal", "digital"],
+        }
+        category_key = str(hypothesis_category or "").lower().strip()
+        keywords = keywords_by_category.get(category_key, ["digital", "platform", "strategy"])
+        keyword_hits = sum(1 for keyword in keywords if keyword in lower_text)
+        score += min(keyword_hits, 8) * 3.0
+
+        lowered_url = str(url or "").lower()
+        if any(token in lowered_url for token in ("/about", "/news", "/press", "/careers", "/jobs")):
+            score += 2.0
+        if any(token in lowered_url for token in ("/shop", "/store", "/tickets")):
+            score -= 6.0
+
+        return score, reason
+
+    async def _apply_official_site_multi_page_sweep(
+        self,
+        *,
+        initial_url: str,
+        initial_content_result: Dict[str, Any],
+        hypothesis,
+    ) -> Tuple[str, Dict[str, Any], Dict[str, Any]]:
+        candidates = self._build_official_site_sweep_candidates(initial_url)
+        if not candidates:
+            return initial_url, initial_content_result, {
+                "enabled": True,
+                "applied": False,
+                "attempted_urls": [],
+                "selected_url": initial_url,
+            }
+
+        attempted_urls: List[str] = []
+
+        initial_content = str(initial_content_result.get("content") or "")
+        best_url = initial_url
+        best_result = initial_content_result
+        best_score, initial_reason = self._score_official_site_content_candidate(
+            content_text=initial_content,
+            raw_html=initial_content_result.get("raw_html"),
+            hypothesis_category=getattr(hypothesis, "category", ""),
+            url=initial_url,
+        )
+        baseline_score = best_score
+        attempted_urls.append(initial_url)
+
+        scrape_timeout = float(getattr(self, "official_site_sweep_scrape_timeout_seconds", 10.0) or 10.0)
+
+        for candidate_url in candidates:
+            if candidate_url == initial_url:
+                continue
+            attempted_urls.append(candidate_url)
+            try:
+                candidate_result = await asyncio.wait_for(
+                    self.brightdata_client.scrape_as_markdown(candidate_url),
+                    timeout=scrape_timeout,
+                )
+            except asyncio.TimeoutError:
+                continue
+            except Exception:  # noqa: BLE001
+                continue
+
+            if not isinstance(candidate_result, dict) or candidate_result.get("status") != "success":
+                continue
+
+            candidate_content = str(candidate_result.get("content") or "")
+            if not candidate_content.strip():
+                continue
+
+            score, _ = self._score_official_site_content_candidate(
+                content_text=candidate_content,
+                raw_html=candidate_result.get("raw_html"),
+                hypothesis_category=getattr(hypothesis, "category", ""),
+                url=candidate_url,
+            )
+            if score > best_score:
+                best_score = score
+                best_url = candidate_url
+                best_result = candidate_result
+
+            if isinstance(getattr(self, "_official_site_content_cache", None), dict):
+                self._official_site_content_cache[candidate_url] = candidate_result
+
+        return best_url, best_result, {
+            "enabled": True,
+            "applied": best_url != initial_url,
+            "attempted_urls": attempted_urls,
+            "selected_url": best_url,
+            "baseline_score": round(baseline_score, 3),
+            "selected_score": round(best_score, 3),
+            "initial_low_yield_reason": initial_reason,
+        }
+
+    def _recover_strict_no_progress_from_narrative(self, response_text: str) -> Optional[Dict[str, Any]]:
+        text = str(response_text or "").strip().lower()
+        if not text:
+            return None
+
+        markers = (
+            "no relevant evidence",
+            "doesn't indicate",
+            "does not indicate",
+            "no procurement activity",
+            "not enough evidence",
+            "insufficient evidence",
+            "mostly navigation",
+            "promotional content",
+            "no clear signal",
+            "no rfp",
+        )
+        if not any(marker in text for marker in markers):
+            # Common strict-mode narrative pattern from evaluator models:
+            # checklist blocks with repeated "<indicator>: NOT FOUND" lines.
+            not_found_count = 0
+            for raw_line in str(response_text or "").splitlines():
+                line = str(raw_line or "").strip().lower()
+                if ":" in line and "not found" in line:
+                    not_found_count += 1
+            if not_found_count < 3:
+                return None
+
+        return {
+            "decision": "NO_PROGRESS",
+            "confidence_delta": 0.0,
+            "justification": "Recovered NO_PROGRESS from strict narrative response",
+            "evidence_found": "",
+            "evidence_type": "strict_text_no_progress_recovery",
+            "temporal_score": "unknown",
+            "parse_path": "text_no_progress_recovered",
+        }
+
+    def _recover_strict_from_truncated_json_prefix(self, response_text: str) -> Optional[Dict[str, Any]]:
+        text = str(response_text or "").strip()
+        if not text:
+            return None
+        if not text.lstrip().startswith("{"):
+            return None
+
+        decision_match = re.search(
+            r'(?is)"?decision"?\s*:\s*"?(ACCEPT|WEAK_ACCEPT|REJECT|NO_PROGRESS)',
+            text,
+        )
+        if not decision_match:
+            return None
+        decision = decision_match.group(1).upper()
+        if decision not in {"ACCEPT", "WEAK_ACCEPT", "REJECT", "NO_PROGRESS"}:
+            return None
+
+        confidence_delta = 0.0
+        confidence_match = re.search(r'(?is)"?confidence_delta"?\s*:\s*(-?\d+(?:\.\d+)?)', text)
+        if confidence_match:
+            try:
+                confidence_delta = float(confidence_match.group(1))
+            except Exception:  # noqa: BLE001
+                confidence_delta = 0.0
+        elif decision == "ACCEPT":
+            confidence_delta = 0.06
+
+        return {
+            "decision": decision,
+            "confidence_delta": confidence_delta,
+            "justification": "Recovered decision from truncated JSON prefix",
+            "evidence_found": "",
+            "evidence_type": "strict_truncated_json_recovery",
+            "temporal_score": "unknown",
+            "parse_path": "json_truncated_recovered",
+        }
+
+    def _extract_deterministic_trusted_signal(
+        self,
+        *,
+        content_text: str,
+        hop_type: HopType,
+    ) -> Optional[Dict[str, str]]:
+        text = str(content_text or "")
+        lowered = text.lower()
+        if not lowered:
+            return None
+
+        procurement_terms = {
+            "procurement", "tender", "rfp", "supplier", "vendor", "commercial partner",
+            "partnership", "implementation", "rollout", "contract",
+        }
+        careers_terms = {"careers", "vacancies", "job", "hiring", "apply now"}
+        hiring_signal_terms = {
+            "procurement manager", "commercial manager", "head of procurement", "digital",
+            "manager", "director", "officer", "specialist", "engineer", "analyst",
+        }
+
+        def _first_evidence_line(term_set: set[str]) -> Optional[str]:
+            for line in text.splitlines():
+                line_clean = line.strip()
+                if not line_clean:
+                    continue
+                ll = line_clean.lower()
+                if any(term in ll for term in term_set):
+                    return line_clean[:220]
+            return None
+
+        if hop_type == HopType.CAREERS_PAGE:
+            careers_line = _first_evidence_line(careers_terms)
+            hiring_line = _first_evidence_line(hiring_signal_terms)
+            if careers_line and (hiring_line or len(text) > 600):
+                return {
+                    "justification": "Careers page includes hiring signals aligned to procurement or digital delivery.",
+                    "evidence_found": f"{careers_line} | {(hiring_line or 'role listings present')}",
+                    "evidence_type": "deterministic_careers_signal",
+                }
+            return None
+
+        if hop_type in {HopType.OFFICIAL_SITE, HopType.PRESS_RELEASE, HopType.ANNUAL_REPORT}:
+            evidence_line = _first_evidence_line(procurement_terms)
+            if evidence_line:
+                return {
+                    "justification": "Trusted-source content contains explicit procurement/commercial delivery language.",
+                    "evidence_found": evidence_line,
+                    "evidence_type": "deterministic_trusted_source_signal",
+                }
+
+        return None
+
+    def _decorate_evaluation_result(
+        self,
+        result: Dict[str, Any],
+        *,
+        evaluation_mode: str,
+    ) -> Dict[str, Any]:
+        output = dict(result)
+        diag = dict(getattr(self, "_llm_runtime_diagnostics", {}) or {})
+        output["evaluation_mode"] = evaluation_mode
+        output["llm_provider"] = diag.get("llm_provider")
+        output["llm_retry_attempts"] = diag.get("llm_retry_attempts", 0)
+        output["llm_last_status"] = diag.get("llm_last_status", "unknown")
+        output["llm_circuit_broken"] = bool(diag.get("llm_circuit_broken", False))
+        output["llm_disable_reason"] = diag.get("llm_disable_reason")
+        output["parse_path"] = output.get("parse_path") or self._map_status_to_parse_path(diag.get("llm_last_status"))
+        output["run_profile"] = diag.get("run_profile")
+        output["run_mode"] = diag.get("run_mode")
+        return output
+
+    async def _query_evaluator_model(
+        self,
+        *,
+        prompt: str,
+        max_tokens: int,
+        system_prompt: Optional[str] = None,
+        json_mode: bool = False,
+    ) -> Dict[str, Any]:
+        """Query evaluator model with compatibility fallback for minimal stubs."""
+        query_fn = getattr(getattr(self, "claude_client", None), "query", None)
+        if not callable(query_fn):
+            raise RuntimeError("Claude client query method is unavailable")
+
+        timeout_seconds = float(getattr(self, "evaluation_query_timeout_seconds", 30.0) or 30.0)
+        if timeout_seconds <= 0:
+            timeout_seconds = 30.0
+        timeout_max_retries = max(0, int(getattr(self, "evaluation_timeout_max_retries", 2) or 0))
+        timeout_backoff_seconds = max(
+            0.0,
+            float(getattr(self, "evaluation_timeout_retry_backoff_seconds", 1.5) or 0.0),
+        )
+        timeout_backoff_cap_seconds = max(
+            0.0,
+            float(getattr(self, "evaluation_timeout_retry_backoff_cap_seconds", 8.0) or 0.0),
+        )
+        timeout_jitter_seconds = max(
+            0.0,
+            float(getattr(self, "evaluation_timeout_retry_jitter_seconds", 0.35) or 0.0),
+        )
+        total_attempts = timeout_max_retries + 1
+
+        async def _await_query(coro):
+            try:
+                return await asyncio.wait_for(coro, timeout=timeout_seconds)
+            except asyncio.TimeoutError as timeout_error:
+                raise TimeoutError(
+                    f"Evaluator model query timed out after {timeout_seconds:.2f}s"
+                ) from timeout_error
+
+        async def _invoke_once() -> Dict[str, Any]:
+            try:
+                query_coro = query_fn(
+                    prompt=prompt,
+                    model="haiku",
+                    max_tokens=max_tokens,
+                    system_prompt=system_prompt,
+                    json_mode=json_mode,
+                )
+                return await _await_query(query_coro)
+            except TypeError as type_error:
+                message = str(type_error).lower()
+                if "unexpected keyword argument" in message:
+                    fallback_coro = query_fn(
+                        prompt=prompt,
+                        model="haiku",
+                        max_tokens=max_tokens,
+                    )
+                    return await _await_query(fallback_coro)
+                raise
+
+        for attempt_idx in range(total_attempts):
+            try:
+                return await _invoke_once()
+            except TimeoutError:
+                is_final_attempt = attempt_idx >= (total_attempts - 1)
+                if is_final_attempt:
+                    raise
+                backoff_delay = min(
+                    timeout_backoff_cap_seconds,
+                    timeout_backoff_seconds * (2 ** attempt_idx),
+                )
+                if timeout_jitter_seconds > 0:
+                    backoff_delay += random.uniform(0.0, timeout_jitter_seconds)
+                logger.warning(
+                    "Evaluator request timed out (attempt %s/%s); retrying in %.2fs",
+                    attempt_idx + 1,
+                    total_attempts,
+                    backoff_delay,
+                )
+                if backoff_delay > 0:
+                    await asyncio.sleep(backoff_delay)
+
+        raise TimeoutError(f"Evaluator model query timed out after {timeout_seconds:.2f}s")
+
+    @staticmethod
+    def _extract_balanced_json_object(text: str, *, required_key: str = "decision") -> Optional[Dict[str, Any]]:
+        """Extract and parse the first balanced JSON object containing required_key."""
+        if not isinstance(text, str) or not text:
+            return None
+
+        key_token = f'"{required_key}"'
+        starts = [idx for idx, ch in enumerate(text) if ch == "{"] if "{" in text else []
+        for start in starts:
+            depth = 0
+            in_string = False
+            escape = False
+            for idx in range(start, len(text)):
+                ch = text[idx]
+                if in_string:
+                    if escape:
+                        escape = False
+                    elif ch == "\\":
+                        escape = True
+                    elif ch == '"':
+                        in_string = False
+                    continue
+
+                if ch == '"':
+                    in_string = True
+                    continue
+                if ch == "{":
+                    depth += 1
+                    continue
+                if ch == "}":
+                    depth -= 1
+                    if depth == 0:
+                        candidate = text[start : idx + 1]
+                        if key_token not in candidate:
+                            break
+                        try:
+                            parsed = json.loads(candidate)
+                        except Exception:  # noqa: BLE001
+                            break
+                        if isinstance(parsed, dict) and required_key in parsed:
+                            return parsed
+                        break
+        return None
+
+    @staticmethod
+    def _normalize_evaluator_payload(payload: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        if not isinstance(payload, dict):
+            return None
+
+        decision = str(payload.get("decision") or "").strip().upper()
+        if decision not in {"ACCEPT", "WEAK_ACCEPT", "REJECT", "NO_PROGRESS"}:
+            return None
+
+        confidence_raw = payload.get("confidence_delta", 0.0)
+        try:
+            confidence_delta = float(confidence_raw)
+        except Exception:  # noqa: BLE001
+            confidence_delta = 0.0
+
+        return {
+            "decision": decision,
+            "confidence_delta": confidence_delta,
+            "justification": str(payload.get("justification") or "").strip() or "Recovered evaluator payload",
+            "evidence_found": str(payload.get("evidence_found") or "").strip(),
+            "evidence_type": str(payload.get("evidence_type") or "").strip() or "unknown",
+            "temporal_score": str(payload.get("temporal_score") or "").strip() or "unknown",
+        }
+
+    def _salvage_almost_json_object(self, response_text: str) -> Optional[Dict[str, Any]]:
+        if not isinstance(response_text, str) or not response_text.strip():
+            return None
+
+        start_index = response_text.find("{")
+        if start_index < 0:
+            return None
+
+        candidate = response_text[start_index:]
+        last_close_index = candidate.rfind("}")
+        if last_close_index >= 0:
+            candidate = candidate[: last_close_index + 1]
+
+        # Repair common LLM issues: dangling commas and missing closing braces.
+        candidate = re.sub(r",(\s*[}\]])", r"\1", candidate)
+        open_count = candidate.count("{")
+        close_count = candidate.count("}")
+        if open_count > close_count:
+            candidate = f"{candidate}{'}' * (open_count - close_count)}"
+        candidate = re.sub(r",(\s*[}\]])", r"\1", candidate)
+
+        direct = self._extract_balanced_json_object(candidate, required_key="decision")
+        normalized = self._normalize_evaluator_payload(direct) if direct else None
+        if normalized:
+            return normalized
+
+        try:
+            loaded = json.loads(candidate)
+        except Exception:  # noqa: BLE001
+            return None
+        return self._normalize_evaluator_payload(loaded)
+
+    def _parse_evaluation_response_json(self, response_text: str) -> Optional[Dict[str, Any]]:
+        """Parse evaluator JSON from plain text, fenced blocks, or mixed responses."""
+        self._last_parse_path = None
+        if not isinstance(response_text, str):
+            return None
+
+        direct = self._extract_balanced_json_object(response_text, required_key="decision")
+        normalized_direct = self._normalize_evaluator_payload(direct) if direct else None
+        if normalized_direct:
+            self._last_parse_path = "json_direct"
+            return normalized_direct
+
+        import re
+
+        fenced_blocks = re.findall(r"```(?:json)?\s*([\s\S]*?)```", response_text, flags=re.IGNORECASE)
+        for block in fenced_blocks:
+            parsed = self._extract_balanced_json_object(block, required_key="decision")
+            normalized_fenced = self._normalize_evaluator_payload(parsed) if parsed else None
+            if normalized_fenced:
+                self._last_parse_path = "json_fenced"
+                return normalized_fenced
+
+        key_value_payload = self._extract_evaluation_key_value_payload(response_text)
+        if key_value_payload:
+            self._last_parse_path = "key_value_recovered"
+            return key_value_payload
+
+        salvaged_payload = self._salvage_almost_json_object(response_text)
+        if salvaged_payload:
+            self._last_parse_path = "json_salvaged"
+            return salvaged_payload
+
+        return None
+
+    def _extract_evaluation_key_value_payload(self, response_text: str) -> Optional[Dict[str, Any]]:
+        """Recover evaluator payload from strict key:value lines when JSON formatting is missing."""
+        if not isinstance(response_text, str) or not response_text.strip():
+            return None
+
+        import re
+
+        required_keys = (
+            "decision",
+            "confidence_delta",
+            "justification",
+            "evidence_found",
+            "evidence_type",
+            "temporal_score",
+        )
+        multiline_keys = {"justification", "evidence_found"}
+
+        values: Dict[str, str] = {}
+        active_key: Optional[str] = None
+
+        for raw_line in response_text.splitlines():
+            line = str(raw_line or "").strip()
+            if not line:
+                continue
+
+            match = re.match(
+                r'^[\-\*\u2022]?\s*"?([a-z_]+)"?\s*[:=]\s*(.+?)\s*$',
+                line,
+                flags=re.IGNORECASE,
+            )
+            if match:
+                key = str(match.group(1) or "").strip().lower()
+                if key in required_keys:
+                    raw_value = str(match.group(2) or "").strip()
+                    cleaned = raw_value.strip("`").strip()
+                    if len(cleaned) >= 2 and cleaned[0] == cleaned[-1] and cleaned[0] in {'"', "'"}:
+                        cleaned = cleaned[1:-1].strip()
+                    values[key] = cleaned
+                    active_key = key
+                else:
+                    active_key = None
+                continue
+
+            if active_key in multiline_keys:
+                values[active_key] = f"{values.get(active_key, '').strip()} {line}".strip()
+
+        minimal_required_keys = ("decision", "confidence_delta")
+        if not all(values.get(key) for key in minimal_required_keys):
+            return None
+
+        decision = str(values.get("decision") or "").strip().upper()
+        if decision not in {"ACCEPT", "WEAK_ACCEPT", "REJECT", "NO_PROGRESS"}:
+            return None
+
+        confidence_text = str(values.get("confidence_delta") or "").strip()
+        number_match = re.search(r"-?\d+(?:\.\d+)?", confidence_text)
+        if not number_match:
+            return None
+        try:
+            confidence_delta = float(number_match.group(0))
+        except Exception:  # noqa: BLE001
+            return None
+
+        temporal_score = str(values.get("temporal_score") or "").strip() or "unknown"
+        justification = str(values.get("justification") or "").strip() or "Recovered structured key-value response"
+        evidence_found = str(values.get("evidence_found") or "").strip()
+        evidence_type = str(values.get("evidence_type") or "").strip() or "unknown"
+
+        return {
+            "decision": decision,
+            "confidence_delta": confidence_delta,
+            "justification": justification,
+            "evidence_found": evidence_found,
+            "evidence_type": evidence_type,
+            "temporal_score": temporal_score,
+        }
     def _score_url(self, url: str, hop_type: HopType, entity_name: str, title: str = "", snippet: str = "") -> float:
         """
         Score URL relevance for a specific hop type
