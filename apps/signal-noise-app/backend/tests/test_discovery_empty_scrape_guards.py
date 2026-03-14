@@ -132,6 +132,27 @@ def test_score_url_penalizes_weak_linkedin_rfp_results():
     assert strong_score >= 0.5
 
 
+def test_score_url_prefers_official_domain_over_store_domain_for_official_site():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+
+    official_score = discovery._score_url(
+        url="https://www.ccfc.co.uk",
+        hop_type=HopType.OFFICIAL_SITE,
+        entity_name="Coventry City FC",
+        title="Coventry City FC | Official Site",
+        snippet="Official website for Coventry City FC",
+    )
+    store_score = discovery._score_url(
+        url="https://www.ccfcstore.com",
+        hop_type=HopType.OFFICIAL_SITE,
+        entity_name="Coventry City FC",
+        title="CCFC Store",
+        snippet="Official merchandise and ticketing store",
+    )
+
+    assert official_score > store_score
+
+
 @pytest.mark.asyncio
 async def test_update_hypothesis_state_falls_back_to_in_memory_hypothesis():
     discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
@@ -192,3 +213,30 @@ async def test_update_hypothesis_state_falls_back_to_in_memory_hypothesis():
     assert hypothesis.iterations_attempted == 1
     assert hypothesis.iterations_no_progress == 1
     assert state.updated_confidence == hypothesis.confidence
+
+
+@pytest.mark.asyncio
+async def test_site_specific_search_uses_official_domain_not_store_domain():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+    captured_queries = []
+
+    class FakeBrightData:
+        async def search_engine(self, query, engine="google", num_results=5):
+            captured_queries.append(query)
+            if query == '"Coventry City FC" official website':
+                return {
+                    "status": "success",
+                    "results": [
+                        {"url": "https://www.ccfcstore.com", "title": "CCFC Store", "snippet": "Official store"},
+                        {"url": "https://www.ccfc.co.uk", "title": "Coventry City FC Official Site", "snippet": "Official website"},
+                    ],
+                }
+            return {"status": "success", "results": []}
+
+    discovery.brightdata_client = FakeBrightData()
+
+    result = await discovery._try_site_specific_search("Coventry City FC", HopType.RFP_PAGE)
+
+    assert result is None
+    assert any(q.startswith("site:ccfc.co.uk ") for q in captured_queries)
+    assert not any(q.startswith("site:ccfcstore.com ") for q in captured_queries)

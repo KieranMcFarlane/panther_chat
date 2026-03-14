@@ -142,6 +142,7 @@ class EvaluationContext:
 
 # High-value hop types that need multiple results and scoring
 HIGH_VALUE_HOPS = {
+    HopType.OFFICIAL_SITE,
     HopType.RFP_PAGE,
     HopType.TENDERS_PAGE,
     HopType.PROCUREMENT_PAGE,
@@ -170,7 +171,7 @@ NUM_RESULTS_BY_HOP = {
     HopType.ANNUAL_REPORT: 3,
     HopType.PRESS_RELEASE: 2,
     HopType.CAREERS_PAGE: 1,
-    HopType.OFFICIAL_SITE: 1,
+    HopType.OFFICIAL_SITE: 5,
     HopType.LINKEDIN_JOB: 1,
 }
 
@@ -612,8 +613,33 @@ class HypothesisDrivenDiscovery:
         entity_slug = entity_name.lower().replace(' ', '').replace('-', '')
         if entity_slug in url_lower:
             score += 0.2
+        # Also support initialism-style club domains (e.g., Coventry City FC -> ccfc.co.uk).
+        initials = ''.join([part[0] for part in entity_name.lower().replace('-', ' ').split() if part])
+        if len(initials) >= 3 and initials in url_lower:
+            score += 0.2
+
+        # Official-site specific ranking to avoid store/merch domains becoming canonical.
+        if hop_type == HopType.OFFICIAL_SITE:
+            # Homepages on the entity domain are preferred.
+            from urllib.parse import urlparse
+            parsed_url = urlparse(url_lower)
+            if entity_slug in url_lower and (parsed_url.path in {"", "/"}):
+                score += 0.35
+            if len(initials) >= 3 and initials in url_lower and (parsed_url.path in {"", "/"}):
+                score += 0.25
+
+            # Demote commercial storefronts; they are often adjacent but not canonical.
+            commerce_tokens = {"store", "shop", "ticket", "tickets", "merch", "ecommerce"}
+            if any(token in url_lower for token in commerce_tokens):
+                score -= 0.7
+
+            # Demote encyclopedic/news mirrors for official-site discovery.
+            weak_official_domains = {"wikipedia.org", "espn.", "bbc.", "skysports.", "goal.com"}
+            if any(domain in url_lower for domain in weak_official_domains):
+                score -= 0.5
 
         procurement_keywords = {'rfp', 'request for proposal', 'procurement', 'tender', 'vendor', 'supplier'}
+        procurement_hops = {HopType.RFP_PAGE, HopType.TENDERS_PAGE, HopType.PROCUREMENT_PAGE, HopType.DOCUMENT}
 
         # LinkedIn can surface real opportunities, but treat it as weak evidence unless
         # the result explicitly reads like a procurement announcement.
@@ -649,7 +675,7 @@ class HypothesisDrivenDiscovery:
                     score += weight
 
         # Title and snippet relevance
-        if hop_type in HIGH_VALUE_HOPS:
+        if hop_type in procurement_hops:
             if 'procurement' in title_lower or 'rfp' in title_lower:
                 score += 0.2
             if 'procurement' in snippet_lower or 'vendor' in snippet_lower:
@@ -665,7 +691,7 @@ class HypothesisDrivenDiscovery:
 
         # Social and generic press/news results are too noisy for procurement discovery.
         weak_domains = {'linkedin.com', 'facebook.com', 'instagram.com', 'x.com', 'twitter.com'}
-        if hop_type in HIGH_VALUE_HOPS and any(domain in url_lower for domain in weak_domains):
+        if hop_type in procurement_hops and any(domain in url_lower for domain in weak_domains):
             if not any(kw in f"{title_lower} {snippet_lower}" for kw in procurement_keywords):
                 score -= 0.25
 
@@ -1766,14 +1792,37 @@ class HypothesisDrivenDiscovery:
             official_site_result = await self.brightdata_client.search_engine(
                 query=f'"{entity_name}" official website',
                 engine='google',
-                num_results=1
+                num_results=5
             )
 
             if official_site_result.get('status') != 'success' or not official_site_result.get('results'):
                 logger.warning("Could not find official site for site-specific search")
                 return None
 
-            official_url = official_site_result['results'][0].get('url', '')
+            official_results = official_site_result.get('results', [])[:5]
+            official_url = None
+            scored_candidates = []
+            for result in official_results:
+                candidate_url = result.get('url', '')
+                if not candidate_url:
+                    continue
+                scored_candidates.append(
+                    (
+                        self._score_url(
+                            url=candidate_url,
+                            hop_type=HopType.OFFICIAL_SITE,
+                            entity_name=entity_name,
+                            title=result.get('title', ''),
+                            snippet=result.get('snippet', ''),
+                        ),
+                        candidate_url,
+                    )
+                )
+            if scored_candidates:
+                scored_candidates.sort(key=lambda item: item[0], reverse=True)
+                official_url = scored_candidates[0][1]
+            else:
+                official_url = official_results[0].get('url', '')
             if not official_url:
                 return None
 
