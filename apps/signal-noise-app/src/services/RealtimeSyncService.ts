@@ -1,10 +1,10 @@
 /**
- * Realtime Neo4j to Supabase Sync Service
- * Uses MCP tools to keep databases synchronized
+ * Realtime FalkorDB to Supabase Sync Service
+ * Uses graph sync tools to keep databases synchronized
  */
 
 import { createClient } from '@supabase/supabase-js';
-import { Neo4jService } from '@/lib/neo4j';
+import { FalkorDBService } from '@/lib/falkordb';
 import { EntityCacheService } from '@/services/EntityCacheService';
 
 const supabase = createClient(
@@ -24,7 +24,7 @@ interface SyncResult {
   error?: string;
 }
 
-interface Neo4jEntity {
+interface GraphEntity {
   id: string;
   neo4j_id: string;
   labels: string[];
@@ -32,25 +32,25 @@ interface Neo4jEntity {
 }
 
 export class RealtimeSyncService {
-  private neo4jService: Neo4jService;
+  private falkorService: FalkorDBService;
 
   constructor() {
-    this.neo4jService = new Neo4jService();
+    this.falkorService = new FalkorDBService();
   }
 
   async initialize() {
-    await this.neo4jService.initialize();
+    await this.falkorService.initialize();
   }
 
   /**
-   * Perform a full sync of all entities from Neo4j to Supabase
+   * Perform a full sync of all entities from FalkorDB to Supabase
    */
   async performFullSync(): Promise<SyncResult> {
     const startTime = Date.now();
     let syncLogId: string | null = null;
 
     try {
-      console.log('🔄 Starting full Neo4j to Supabase sync...');
+      console.log('🔄 Starting full FalkorDB to Supabase sync...');
 
       // Create sync log entry
       const { data: syncLog } = await supabase
@@ -66,9 +66,9 @@ export class RealtimeSyncService {
 
       syncLogId = syncLog?.id;
 
-      // Get all entities from Neo4j
-      const neo4jEntities = await this.getAllNeo4jEntities();
-      console.log(`📊 Found ${neo4jEntities.length} entities in Neo4j`);
+      // Get all entities from graph source (FalkorDB)
+      const graphEntities = await this.getAllGraphEntities();
+      console.log(`📊 Found ${graphEntities.length} entities in FalkorDB`);
 
       // Get existing entities from Supabase
       const existingEntities = await this.getExistingSupabaseEntities();
@@ -76,9 +76,9 @@ export class RealtimeSyncService {
 
       // Calculate differences
       const existingNeo4jIds = new Set(existingEntities.map(e => e.neo4j_id));
-      const newEntities = neo4jEntities.filter(e => !existingNeo4jIds.has(e.neo4j_id));
+      const newEntities = graphEntities.filter(e => !existingNeo4jIds.has(e.neo4j_id));
       
-      const neo4jIds = new Set(neo4jEntities.map(e => e.neo4j_id));
+      const neo4jIds = new Set(graphEntities.map(e => e.neo4j_id));
       const entitiesToRemove = existingEntities.filter(e => !neo4jIds.has(e.neo4j_id));
 
       // Sync new entities
@@ -90,7 +90,7 @@ export class RealtimeSyncService {
 
       // Update existing entities (check for changes)
       let entitiesUpdated = 0;
-      for (const entity of neo4jEntities) {
+      for (const entity of graphEntities) {
         if (existingNeo4jIds.has(entity.neo4j_id)) {
           const existing = existingEntities.find(e => e.neo4j_id === entity.neo4j_id);
           if (await this.hasEntityChanged(entity, existing)) {
@@ -100,7 +100,7 @@ export class RealtimeSyncService {
         }
       }
 
-      // Remove entities that no longer exist in Neo4j
+      // Remove entities that no longer exist in FalkorDB
       let entitiesRemoved = 0;
       for (const entityToRemove of entitiesToRemove) {
         await supabase
@@ -124,8 +124,8 @@ export class RealtimeSyncService {
         await supabase
           .from('sync_log')
           .update({
-            source_count: neo4jEntities.length,
-            target_count: neo4jEntities.length,
+            source_count: graphEntities.length,
+            target_count: graphEntities.length,
             entities_added: entitiesAdded,
             entities_updated: entitiesUpdated,
             entities_removed: entitiesRemoved,
@@ -140,7 +140,7 @@ export class RealtimeSyncService {
 
       return {
         success: true,
-        entitiesProcessed: neo4jEntities.length,
+        entitiesProcessed: graphEntities.length,
         entitiesAdded,
         entitiesUpdated,
         entitiesRemoved,
@@ -177,10 +177,10 @@ export class RealtimeSyncService {
   }
 
   /**
-   * Get all entities from Neo4j
+   * Get all entities from graph source
    */
-  private async getAllNeo4jEntities(): Promise<Neo4jEntity[]> {
-    const session = this.neo4jService.getDriver().session();
+  private async getAllGraphEntities(): Promise<GraphEntity[]> {
+    const session = this.falkorService.getDriver().session();
     try {
       const result = await session.run(`
         MATCH (n)
@@ -214,7 +214,7 @@ export class RealtimeSyncService {
   /**
    * Check if an entity has changed since last sync
    */
-  private async hasEntityChanged(neo4jEntity: Neo4jEntity, existingEntity: any): Promise<boolean> {
+  private async hasEntityChanged(neo4jEntity: GraphEntity, existingEntity: any): Promise<boolean> {
     const currentChecksum = this.calculateChecksum(neo4jEntity.properties);
     
     // Check sync tracker
@@ -240,7 +240,7 @@ export class RealtimeSyncService {
   /**
    * Upsert entity to Supabase
    */
-  private async upsertEntityToSupabase(entity: Neo4jEntity) {
+  private async upsertEntityToSupabase(entity: GraphEntity) {
     const checksum = this.calculateChecksum(entity.properties);
     
     // Upsert cached entity

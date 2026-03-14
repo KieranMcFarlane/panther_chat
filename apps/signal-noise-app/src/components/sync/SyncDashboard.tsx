@@ -25,7 +25,7 @@ export default function SyncDashboard() {
 
   const fetchSyncStatus = async () => {
     try {
-      const response = await fetch('/api/sync/neo4j-to-supabase');
+      const response = await fetch('/api/sync/falkordb-to-supabase');
       const data = await response.json();
       setSyncStatus(data.status);
     } catch (error) {
@@ -38,7 +38,7 @@ export default function SyncDashboard() {
     setSyncResult(null);
     
     try {
-      const response = await fetch('/api/sync/neo4j-to-supabase', {
+      const response = await fetch('/api/sync/falkordb-to-supabase', {
         method: 'POST',
       });
       const data = await response.json();
@@ -74,7 +74,7 @@ export default function SyncDashboard() {
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Neo4j ↔ Supabase Sync</h1>
+        <h1 className="text-3xl font-bold">FalkorDB ↔ Supabase Sync</h1>
         <Button 
           onClick={triggerSync} 
           disabled={isSyncing}
@@ -131,7 +131,7 @@ export default function SyncDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-2 text-sm">
-              <div>Neo4j: ~4,422 entities</div>
+              <div>FalkorDB: ~4,422 entities</div>
               <div>Supabase: ~4,414 entities</div>
               <div className="text-yellow-600">~8 entities pending sync</div>
             </div>
@@ -171,7 +171,7 @@ export default function SyncDashboard() {
           <div>
             <h3 className="font-semibold mb-2">What this sync does:</h3>
             <ul className="list-disc list-inside space-y-1 text-sm text-gray-600">
-              <li>Keeps Supabase cached_entities table synchronized with Neo4j database</li>
+              <li>Keeps Supabase cached_entities table synchronized with FalkorDB</li>
               <li>Detects new, updated, and removed entities</li>
               <li>Maintains checksums to detect changes</li>
               <li>Provides comprehensive logging and monitoring</li>

@@ -1,1 +1,1 @@
-export { POST, GET } from '@/app/api/sync/neo4j-to-supabase/route';
+export { POST, GET } from '@/app/api/sync/falkordb-to-supabase/route';
