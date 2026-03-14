@@ -15,6 +15,8 @@ import asyncio
 import logging
 from typing import Dict, List, Any, Optional
 from datetime import datetime
+import os
+import httpx
 
 logger = logging.getLogger(__name__)
 
@@ -43,10 +45,8 @@ class BrightDataSDKClient:
         Args:
             token: Optional API token. If not provided, loads from BRIGHTDATA_API_TOKEN env var
         """
-        from brightdata import BrightDataClient
         from dotenv import load_dotenv
         from pathlib import Path
-        import os
 
         # Try current directory first, then parent directory
         env_loaded = load_dotenv()  # Current directory
@@ -75,6 +75,10 @@ class BrightDataSDKClient:
                 self._client_manager = BrightDataClient(self.token)
                 self._client = await self._client_manager.__aenter__()
                 logger.info("✅ BrightData SDK client initialized")
+            except ImportError as e:
+                logger.warning(f"⚠️ BrightData SDK client class unavailable: {e}")
+                logger.info("ℹ️ Installed brightdata package does not expose BrightDataClient; using fallback client")
+                self._client = False
             except Exception as e:
                 logger.warning(f"⚠️ BrightData SDK initialization failed: {e}")
                 logger.info("ℹ️ Will use fallback httpx client for scraping")
@@ -456,7 +460,6 @@ class BrightDataSDKClient:
 
     async def _scrape_as_markdown_fallback(self, url: str) -> Dict[str, Any]:
         """Fallback: Use httpx + BeautifulSoup when SDK unavailable"""
-        import httpx
         from bs4 import BeautifulSoup
 
         logger.warning(f"⚠️ Using fallback scraping (not BrightData): {url}")
@@ -470,41 +473,37 @@ class BrightDataSDKClient:
                 response = await client.get(url)
                 response.raise_for_status()
 
-                # Parse HTML
-                soup = BeautifulSoup(response.text, 'html.parser')
-
-                # Remove scripts/styles
-                for tag in soup(["script", "style", "nav", "footer", "header"]):
-                    tag.decompose()
-
-                # Extract main content
-                main = soup.find('main') or soup.find('article') or soup.body
-                if main:
-                    content = self._html_to_text(main)
-                else:
-                    content = soup.get_text(separator='\n', strip=True)
-
-                # Clean up
-                lines = [line.strip() for line in content.split('\n') if line.strip()]
-                content = '\n'.join(lines)
-
+                parse_result = self._extract_text_from_html(response.text)
+                content = parse_result["content"]
                 logger.info(f"✅ Fallback scraped {len(content)} characters")
 
-                # Extract publication date from HTML metadata
-                publication_date = self._extract_publication_date(soup, response.text, url)
+                extraction_mode = "direct"
+                if self._should_retry_with_rendered_fallback(response.text, content):
+                    # JS-heavy pages often return shell HTML on first pass.
+                    rendered_response = await client.get(url)
+                    rendered_response.raise_for_status()
+                    rendered_parse = self._extract_text_from_html(rendered_response.text)
+                    if len(rendered_parse["content"].strip()) > len(content.strip()):
+                        response = rendered_response
+                        parse_result = rendered_parse
+                        content = parse_result["content"]
+                        extraction_mode = "rendered_fallback"
+
+                publication_date = self._extract_publication_date(parse_result["soup"], response.text, url)
 
                 return {
                     "status": "success",
                     "url": url,
                     "content": content,
-                    "raw_html": response.text,  # Include raw HTML for PDF link extraction
+                    "raw_html": response.text,
                     "timestamp": datetime.now().isoformat(),
                     "publication_date": publication_date.isoformat() if publication_date else None,
                     "metadata": {
                         "word_count": len(content.split()),
                         "source": "fallback_httpx",
                         "warning": "BrightData SDK unavailable, using httpx",
-                        "has_publication_date": publication_date is not None
+                        "has_publication_date": publication_date is not None,
+                        "extraction_mode": extraction_mode,
                     }
                 }
 
@@ -515,6 +514,37 @@ class BrightDataSDKClient:
                 "error": str(e),
                 "url": url
             }
+
+    def _extract_text_from_html(self, html: str) -> Dict[str, Any]:
+        from bs4 import BeautifulSoup
+
+        soup = BeautifulSoup(html, 'html.parser')
+        for tag in soup(["script", "style", "nav", "footer", "header"]):
+            tag.decompose()
+
+        main = soup.find('main') or soup.find('article') or soup.body
+        if main:
+            content = self._html_to_text(main)
+        else:
+            content = soup.get_text(separator='\n', strip=True)
+
+        lines = [line.strip() for line in content.split('\n') if line.strip()]
+        content = '\n'.join(lines)
+        return {"soup": soup, "content": content}
+
+    def _should_retry_with_rendered_fallback(self, html: str, content: str) -> bool:
+        min_words = int(os.getenv("BRIGHTDATA_MIN_WORDS", "80"))
+        word_count = len((content or "").split())
+        html_lower = (html or "").lower()
+        js_shell_signals = (
+            "__next_data__" in html_lower
+            or "id=\"__next\"" in html_lower
+            or "id='__next'" in html_lower
+            or "id=\"app\"" in html_lower
+            or "id='app'" in html_lower
+            or "window.__" in html_lower
+        )
+        return word_count < min_words and js_shell_signals
 
     async def _scrape_batch_fallback(self, urls: List[str]) -> Dict[str, Any]:
         """Fallback: Batch scrape with httpx"""

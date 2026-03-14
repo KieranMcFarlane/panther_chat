@@ -3,6 +3,7 @@ import logging
 from typing import Dict, Any, Optional, List, Tuple
 import os
 import asyncio
+import random
 from datetime import datetime
 from dataclasses import dataclass
 import httpx
@@ -438,6 +439,18 @@ class ClaudeClient:
             "please recharge" in message
         )
 
+    @staticmethod
+    def _is_retryable_chutes_error(error: Exception) -> bool:
+        if isinstance(error, (httpx.TimeoutException, httpx.TransportError)):
+            return True
+        if isinstance(error, httpx.HTTPStatusError):
+            status = error.response.status_code if error.response else None
+            return status in {408, 409, 429} or (status is not None and status >= 500)
+        if isinstance(error, ValueError):
+            msg = str(error).lower()
+            return "empty response content" in msg
+        return False
+
     async def query_with_cascade(
         self,
         prompt: str,
@@ -625,6 +638,8 @@ class ClaudeClient:
                 message = choice.get("message") or {}
                 content = message.get("content", "")
                 usage = data.get("usage", {})
+                if isinstance(content, str) and not content.strip():
+                    raise ValueError("empty response content from chutes")
 
                 return {
                     "content": content,
@@ -647,11 +662,13 @@ class ClaudeClient:
                     self._disable_api("insufficient balance")
                     raise
 
-                is_retryable = isinstance(e, (httpx.TimeoutException, httpx.TransportError))
+                is_retryable = self._is_retryable_chutes_error(e)
                 if not is_retryable or attempt >= self.chutes_max_retries:
                     raise
 
-                await asyncio.sleep(min(2 ** attempt, 2))
+                backoff = min(2 ** attempt, 4)
+                jitter = random.uniform(0.0, 0.35)
+                await asyncio.sleep(backoff + jitter)
 
         raise last_error
 

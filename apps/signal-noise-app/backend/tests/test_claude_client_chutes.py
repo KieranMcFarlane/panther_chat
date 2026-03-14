@@ -163,3 +163,62 @@ async def test_claude_client_retries_retryable_chutes_errors(monkeypatch):
 
     assert attempts["count"] == 2
     assert result["content"] == "Recovered"
+
+
+@pytest.mark.asyncio
+async def test_claude_client_retries_when_chutes_response_is_empty(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_MAX_RETRIES", "1")
+
+    attempts = {"count": 0}
+
+    class FakeResponse:
+        def __init__(self, payload):
+            self._payload = payload
+
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return self._payload
+
+    class FakeAsyncClient:
+        def __init__(self, timeout):
+            self.timeout = timeout
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            attempts["count"] += 1
+            if attempts["count"] == 1:
+                return FakeResponse(
+                    {
+                        "choices": [{"message": {"content": "   "}, "finish_reason": "stop"}],
+                        "usage": {"prompt_tokens": 3, "completion_tokens": 0, "total_tokens": 3},
+                    }
+                )
+            return FakeResponse(
+                {
+                    "choices": [{"message": {"content": "Recovered after empty"}, "finish_reason": "stop"}],
+                    "usage": {"prompt_tokens": 5, "completion_tokens": 4, "total_tokens": 9},
+                }
+            )
+
+    async def fake_sleep(seconds):
+        return None
+
+    monkeypatch.setattr(claude_client_module.httpx, "AsyncClient", FakeAsyncClient)
+    monkeypatch.setattr(claude_client_module.asyncio, "sleep", fake_sleep)
+
+    client = ClaudeClient()
+    result = await client.query(prompt="retry-empty", model="haiku", max_tokens=64)
+
+    assert attempts["count"] == 2
+    assert result["content"] == "Recovered after empty"
