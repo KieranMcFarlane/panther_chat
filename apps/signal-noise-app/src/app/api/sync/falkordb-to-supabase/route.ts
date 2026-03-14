@@ -5,12 +5,13 @@ import { randomUUID } from 'node:crypto'
 type PostSyncReconciliationResult = {
   attempted: boolean
   ok: boolean
+  queued?: boolean
   status?: number
   payload?: unknown
   error?: string
 }
 
-async function runPostSyncEntityReconciliation(): Promise<PostSyncReconciliationResult> {
+function runPostSyncEntityReconciliationInBackground(): PostSyncReconciliationResult {
   const baseUrl =
     process.env.INTERNAL_APP_URL ||
     process.env.NEXT_PUBLIC_APP_URL ||
@@ -18,35 +19,37 @@ async function runPostSyncEntityReconciliation(): Promise<PostSyncReconciliation
     'http://localhost:3005'
 
   const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), 10 * 60 * 1000)
+  const timeout = setTimeout(() => controller.abort(), 5 * 60 * 1000)
 
-  try {
-    const response = await fetch(`${baseUrl}/api/admin/entity-reconciliation/remediate`, {
+  void fetch(`${baseUrl}/api/admin/entity-reconciliation/remediate`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         strategy: 'semantic_merge',
         dry_run: false,
-        limit: 5000,
+        limit: 10000,
       }),
       signal: controller.signal,
       cache: 'no-store',
     })
-    const payload = await response.json().catch(() => ({}))
-    return {
-      attempted: true,
-      ok: response.ok && Boolean(payload?.success ?? true),
-      status: response.status,
-      payload,
-    }
-  } catch (error) {
-    return {
-      attempted: true,
-      ok: false,
-      error: error instanceof Error ? error.message : 'post-sync reconciliation failed',
-    }
-  } finally {
-    clearTimeout(timeout)
+    .then(async (response) => {
+      const payload = await response.json().catch(() => ({}))
+      console.log('✅ Post-sync reconciliation completed', {
+        status: response.status,
+        success: Boolean(payload?.success ?? false),
+      })
+    })
+    .catch((error) => {
+      console.error('❌ Post-sync reconciliation failed', error)
+    })
+    .finally(() => {
+      clearTimeout(timeout)
+    })
+
+  return {
+    attempted: true,
+    ok: true,
+    queued: true,
   }
 }
 
@@ -63,7 +66,7 @@ export async function POST() {
     const canonicalMaintenance = null
 
     const postSyncReconciliation = result.success
-      ? await runPostSyncEntityReconciliation()
+      ? runPostSyncEntityReconciliationInBackground()
       : { attempted: false, ok: false } satisfies PostSyncReconciliationResult
     return NextResponse.json({
       success: result.success,
