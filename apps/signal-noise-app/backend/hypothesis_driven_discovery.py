@@ -2190,6 +2190,122 @@ class HypothesisDrivenDiscovery:
             'evidence_type': None
         }
 
+    async def _query_evaluator_model(
+        self,
+        prompt: str,
+        max_tokens: int,
+        system_prompt: Optional[str] = None,
+        json_mode: bool = False,
+        requested_model: str = "haiku",
+    ) -> Dict[str, Any]:
+        """Query evaluator model with bounded timeout retries and optional model escalation."""
+        import asyncio
+        import os
+        import random
+
+        query_fn = getattr(getattr(self, "claude_client", None), "query", None)
+        if not callable(query_fn):
+            raise RuntimeError("Claude client query method unavailable")
+
+        timeout_seconds = float(getattr(self, "evaluation_query_timeout_seconds", 30.0) or 30.0)
+        if timeout_seconds <= 0:
+            timeout_seconds = 30.0
+
+        timeout_max_retries = max(
+            0, int(getattr(self, "evaluation_timeout_max_retries", int(os.getenv("DISCOVERY_EVALUATION_TIMEOUT_MAX_RETRIES", "2"))) or 0)
+        )
+        timeout_backoff_seconds = max(
+            0.0,
+            float(getattr(self, "evaluation_timeout_retry_backoff_seconds", float(os.getenv("DISCOVERY_EVALUATION_TIMEOUT_RETRY_BACKOFF_SECONDS", "1.5"))) or 0.0),
+        )
+        timeout_backoff_cap_seconds = max(
+            0.0,
+            float(getattr(self, "evaluation_timeout_retry_backoff_cap_seconds", float(os.getenv("DISCOVERY_EVALUATION_TIMEOUT_RETRY_BACKOFF_CAP_SECONDS", "8"))) or 0.0),
+        )
+        timeout_jitter_seconds = max(
+            0.0,
+            float(getattr(self, "evaluation_timeout_retry_jitter_seconds", float(os.getenv("DISCOVERY_EVALUATION_TIMEOUT_RETRY_JITTER_SECONDS", "0.35"))) or 0.0),
+        )
+        timeout_model_escalation_enabled = bool(
+            getattr(
+                self,
+                "evaluation_timeout_model_escalation_enabled",
+                str(os.getenv("DISCOVERY_EVALUATION_TIMEOUT_MODEL_ESCALATION_ENABLED", "true")).lower() in {"1", "true", "yes", "on"},
+            )
+        )
+        timeout_escalation_model = str(
+            getattr(self, "evaluation_timeout_escalation_model", os.getenv("DISCOVERY_EVALUATION_TIMEOUT_ESCALATION_MODEL", "sonnet"))
+            or "sonnet"
+        ).strip().lower()
+
+        total_attempts = timeout_max_retries + 1
+        current_model = str(requested_model or "haiku").strip().lower() or "haiku"
+
+        async def _await_query(coro):
+            try:
+                return await asyncio.wait_for(coro, timeout=timeout_seconds)
+            except asyncio.TimeoutError as timeout_error:
+                raise TimeoutError(
+                    f"Evaluator model query timed out after {timeout_seconds:.2f}s"
+                ) from timeout_error
+
+        async def _invoke_once() -> Dict[str, Any]:
+            try:
+                query_coro = query_fn(
+                    prompt=prompt,
+                    model=current_model,
+                    max_tokens=max_tokens,
+                    system_prompt=system_prompt,
+                    json_mode=json_mode,
+                )
+                return await _await_query(query_coro)
+            except TypeError as type_error:
+                message = str(type_error).lower()
+                if "unexpected keyword argument" in message:
+                    fallback_coro = query_fn(
+                        prompt=prompt,
+                        model=current_model,
+                        max_tokens=max_tokens,
+                    )
+                    return await _await_query(fallback_coro)
+                raise
+
+        for attempt_idx in range(total_attempts):
+            try:
+                return await _invoke_once()
+            except TimeoutError:
+                if attempt_idx >= (total_attempts - 1):
+                    raise
+
+                if (
+                    timeout_model_escalation_enabled
+                    and timeout_escalation_model
+                    and current_model != timeout_escalation_model
+                ):
+                    logger.warning(
+                        "Evaluator timeout on model=%s; escalating to model=%s",
+                        current_model,
+                        timeout_escalation_model,
+                    )
+                    current_model = timeout_escalation_model
+
+                backoff_delay = min(
+                    timeout_backoff_cap_seconds,
+                    timeout_backoff_seconds * (2 ** attempt_idx),
+                )
+                if timeout_jitter_seconds > 0:
+                    backoff_delay += random.uniform(0.0, timeout_jitter_seconds)
+                logger.warning(
+                    "Evaluator request timed out (attempt %s/%s); retrying in %.2fs",
+                    attempt_idx + 1,
+                    total_attempts,
+                    backoff_delay,
+                )
+                if backoff_delay > 0:
+                    await asyncio.sleep(backoff_delay)
+
+        raise TimeoutError(f"Evaluator model query timed out after {timeout_seconds:.2f}s")
+
     async def _evaluate_content_with_claude(
         self,
         content: str,
@@ -2318,10 +2434,10 @@ Return JSON:
         # Step 5: Call Claude API (existing implementation continues...)
         try:
             # Use ClaudeClient.query() instead of Anthropic SDK
-            response = await self.claude_client.query(
+            response = await self._query_evaluator_model(
                 prompt=prompt,
-                model="haiku",
-                max_tokens=500
+                max_tokens=500,
+                requested_model="haiku",
             )
 
             # Extract text from response
@@ -2369,6 +2485,17 @@ Return JSON:
                     'evidence_type': 'fallback'
                 }
             return self._fallback_result()
+        except TimeoutError as e:
+            logger.warning(f"Claude evaluation timeout: {e}")
+            return {
+                'decision': 'NO_PROGRESS',
+                'confidence_delta': 0.0,
+                'justification': 'Evaluator timeout after retry budget; deferred without heuristic fallback',
+                'evidence_found': '',
+                'evidence_type': 'llm_timeout_deferred',
+                'temporal_score': 'unknown',
+                'parse_path': 'llm_timeout_deferred',
+            }
         except Exception as e:
             logger.error(f"Claude evaluation error: {e}")
             logger.debug(f"Response text: {response_text[:500] if response_text else 'empty'}")
