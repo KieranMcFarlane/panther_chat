@@ -2864,14 +2864,8 @@ Return JSON:
 
                 return result
             else:
-                # Fallback: extract decision only from decision-specific patterns.
-                simple_match = re.search(
-                    r'(?:["\']?decision["\']?\s*[:=]\s*["\']?|decision\s+(?:is|should\s+be)\s*:?\s*)(ACCEPT|WEAK_ACCEPT|REJECT|NO_PROGRESS)\b',
-                    str(response_text or ""),
-                    re.IGNORECASE
-                )
-                if simple_match:
-                    decision = simple_match.group(1).upper()
+                decision = self._extract_decision_token(str(response_text or ""))
+                if decision:
                     logger.info(f"Fallback extracted decision token: {decision}")
                     return {
                         'decision': decision,
@@ -2901,6 +2895,15 @@ Return JSON:
                     recovered = self._extract_evaluator_json(str(recovery_text))
                     if recovered and 'decision' in recovered:
                         return recovered
+                    recovery_decision = self._extract_decision_token(str(recovery_text or ""))
+                    if recovery_decision:
+                        return {
+                            'decision': recovery_decision,
+                            'confidence_delta': 0.05 if recovery_decision == 'ACCEPT' else (0.02 if recovery_decision == 'WEAK_ACCEPT' else 0.0),
+                            'justification': 'Extracted decision token from recovery response',
+                            'evidence_found': '',
+                            'evidence_type': 'fallback_recovery',
+                        }
                 except Exception:
                     pass
 
@@ -2924,9 +2927,8 @@ Return JSON:
             logger.error(f"JSON parsing error: {e}")
             logger.debug(f"Response text that failed to parse: {response_text[:500]}")
             # Try to extract decision with simpler regex
-            simple_match = re.search(r'"decision"\s*:\s*"(\w+)"', response_text)
-            if simple_match:
-                decision = simple_match.group(1)
+            decision = self._extract_decision_token(str(response_text or ""))
+            if decision:
                 logger.info(f"Fallback extracted decision: {decision}")
                 return {
                     'decision': decision,
@@ -2975,6 +2977,33 @@ Return JSON:
                     continue
                 if isinstance(obj, dict) and "decision" in obj:
                     return obj
+        return None
+
+    def _extract_decision_token(self, response_text: str) -> Optional[str]:
+        """Extract canonical decision token from free-form evaluator output."""
+        if not isinstance(response_text, str) or not response_text.strip():
+            return None
+
+        text = response_text.upper()
+
+        explicit_patterns = [
+            r'DECISION["\']?\s*[:=]\s*["\']?(ACCEPT|WEAK[_\s-]*ACCEPT|REJECT|NO[_\s-]*PROGRESS)',
+            r'\b(ACCEPT|WEAK[_\s-]*ACCEPT|REJECT|NO[_\s-]*PROGRESS)\b',
+        ]
+        for pattern in explicit_patterns:
+            match = re.search(pattern, text, re.IGNORECASE)
+            if not match:
+                continue
+            token = re.sub(r'[\s-]+', '_', match.group(1).upper())
+            token = token.replace("__", "_")
+            if token in {"ACCEPT", "WEAK_ACCEPT", "REJECT", "NO_PROGRESS"}:
+                return token
+
+        # Last-resort semantic hints when explicit tokens are absent.
+        if "INSUFFICIENT EVIDENCE" in text or "NO EVIDENCE" in text or "NO SIGNAL" in text:
+            return "NO_PROGRESS"
+        if "CONTRADICT" in text:
+            return "REJECT"
         return None
 
     async def _update_hypothesis_state(
