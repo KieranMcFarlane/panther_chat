@@ -640,11 +640,35 @@ class HypothesisDrivenDiscovery:
         mainstream_press_domains = {
             "bbc.", "skysports.", "espn.", "goal.com",
         }
+        encyclopedia_domains = {
+            "wikipedia.org", "wikidata.org", "britannica.com",
+        }
+        job_aggregator_domains = {
+            "indeed.", "glassdoor.", "totaljobs.", "reed.co.uk", "ziprecruiter.",
+            "monster.", "simplyhired.", "jobsora.", "jobrapido.", "adzuna.",
+        }
 
         if any(marker in host for marker in trusted_domain_markers):
             score += 0.2
         if any(domain in host for domain in low_quality_domains):
             score -= 0.5
+
+        # Source-priority shaping for discovery quality:
+        # prefer entity/official/procurement sources over encyclopedic and aggregator pages.
+        if any(domain in host for domain in encyclopedia_domains):
+            if hop_type in {HopType.RFP_PAGE, HopType.TENDERS_PAGE, HopType.PROCUREMENT_PAGE, HopType.OFFICIAL_SITE, HopType.DOCUMENT}:
+                score -= 0.8
+            else:
+                score -= 0.35
+
+        if any(domain in host for domain in job_aggregator_domains):
+            if hop_type == HopType.CAREERS_PAGE:
+                score -= 0.2
+            elif hop_type in {HopType.RFP_PAGE, HopType.TENDERS_PAGE, HopType.PROCUREMENT_PAGE, HopType.DOCUMENT, HopType.OFFICIAL_SITE}:
+                score -= 0.9
+            else:
+                score -= 0.5
+
         if hop_type in {HopType.RFP_PAGE, HopType.TENDERS_PAGE, HopType.PROCUREMENT_PAGE}:
             if any(domain in host for domain in mainstream_press_domains):
                 score -= 0.15
