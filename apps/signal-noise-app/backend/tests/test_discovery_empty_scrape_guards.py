@@ -153,6 +153,27 @@ def test_score_url_prefers_official_domain_over_store_domain_for_official_site()
     assert official_score > store_score
 
 
+def test_score_url_prefers_grounded_procurement_over_video_noise():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+
+    noisy_score = discovery._score_url(
+        url="https://www.youtube.com/watch?v=abcd1234",
+        hop_type=HopType.RFP_PAGE,
+        entity_name="Coventry City FC",
+        title="Coventry highlights and fan reactions",
+        snippet="Matchday analysis and fan commentary",
+    )
+    grounded_score = discovery._score_url(
+        url="https://www.coventry.gov.uk/procurement/tender-opportunity-123",
+        hop_type=HopType.RFP_PAGE,
+        entity_name="Coventry City FC",
+        title="Coventry City FC procurement tender opportunity",
+        snippet="Request for proposal and supplier submission deadline",
+    )
+
+    assert grounded_score > noisy_score
+
+
 @pytest.mark.asyncio
 async def test_update_hypothesis_state_falls_back_to_in_memory_hypothesis():
     discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)

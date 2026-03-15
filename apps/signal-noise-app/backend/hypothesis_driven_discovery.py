@@ -625,6 +625,36 @@ class HypothesisDrivenDiscovery:
         if len(initials) >= 3 and initials in url_lower:
             score += 0.2
 
+        # Source-quality adjustment by domain/content type
+        host = parsed.netloc.lower()
+        trusted_domain_markers = {
+            ".gov", ".org", "tenders", "procurement", "contracts",
+        }
+        low_quality_domains = {
+            "youtube.com", "youtu.be", "reddit.com", "tiktok.com",
+            "facebook.com", "instagram.com", "x.com", "twitter.com",
+        }
+        mainstream_press_domains = {
+            "bbc.", "skysports.", "espn.", "goal.com",
+        }
+
+        if any(marker in host for marker in trusted_domain_markers):
+            score += 0.2
+        if any(domain in host for domain in low_quality_domains):
+            score -= 0.5
+        if hop_type in {HopType.RFP_PAGE, HopType.TENDERS_PAGE, HopType.PROCUREMENT_PAGE}:
+            if any(domain in host for domain in mainstream_press_domains):
+                score -= 0.15
+
+            # Entity grounding in title/snippet boosts relevance for procurement hops.
+            text_blob = f"{title_lower} {snippet_lower}"
+            entity_tokens = [t for t in entity_name.lower().replace('-', ' ').split() if len(t) > 2]
+            grounded = any(tok in text_blob for tok in entity_tokens)
+            if grounded:
+                score += 0.15
+            else:
+                score -= 0.2
+
         # Official-site specific ranking to avoid store/merch domains becoming canonical.
         if hop_type == HopType.OFFICIAL_SITE:
             # Homepages on the entity domain are preferred.
@@ -1732,10 +1762,26 @@ class HypothesisDrivenDiscovery:
                         }
                         return best_url
                 else:
-                    # For low-value hops, return first result
-                    url = results[0].get('url')
+                    # For lower-priority hops, still rank by URL score instead of taking first result.
+                    scored_results = []
+                    for item in results:
+                        candidate_url = item.get('url', '')
+                        if not candidate_url:
+                            continue
+                        score = self._score_url(
+                            candidate_url,
+                            hop_type,
+                            entity_name,
+                            title=item.get('title', ''),
+                            snippet=item.get('snippet', '')
+                        )
+                        item['_url_score'] = score
+                        scored_results.append(item)
+                    scored_results.sort(key=lambda x: x.get('_url_score', 0), reverse=True)
+                    best = scored_results[0] if scored_results else None
+                    url = best.get('url') if best else None
                     if url:
-                        logger.info(f"✅ {engine} search found URL: {url}")
+                        logger.info(f"✅ {engine} search found URL (scored): {url}")
                         metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
                         self._last_url_resolution_metrics = {
                             **metrics,
