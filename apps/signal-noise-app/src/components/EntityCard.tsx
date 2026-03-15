@@ -3,12 +3,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ExternalLink, Mail, Linkedin, ArrowRight, FileText, Target } from "lucide-react"
+import { ExternalLink, Mail, Linkedin, ArrowRight, FileText, Target, Loader2 } from "lucide-react"
 import { Entity, Connection } from "@/lib/neo4j"
 import { EntityBadge } from "@/components/badge/EntityBadge"
 import { useRouter } from "next/navigation"
-import { prefetchEntity } from "@/lib/swr-config"
-import { useEffect } from "react"
+import { useRef, useState } from "react"
 import Link from "next/link"
 import { rememberEntityBrowserUrl } from "@/lib/entity-browser-history"
 import { pushWithViewTransition } from "@/lib/view-transition"
@@ -21,27 +20,40 @@ interface EntityCardProps {
   onEmailEntity?: (entity: Entity) => void
 }
 
-export function EntityCard({ entity, similarity, connections, rank, onEmailEntity }: EntityCardProps) {
-  const router = useRouter()
+function getEntityCurrentPage(): string {
+  const urlParams = new URLSearchParams(window.location.search)
+  return urlParams.get('page') || '1'
+}
+
+function getEntityBrowserDossierHref(entity: Entity, currentPage: string): string {
   const stableEntityId = String(
     (entity as any)?.id ??
     (entity as any)?.graph_id ??
     ''
   ).trim()
 
-  // Prefetch entity detail data when card mounts
-  useEffect(() => {
-    if (stableEntityId) {
-      // Add small delay to avoid thundering herd
-      const timer = setTimeout(() => {
-        prefetchEntity(stableEntityId)
-        router.prefetch(`/entity/${stableEntityId}`)
-        router.prefetch(`/entity-browser/${stableEntityId}/dossier`)
-      }, Math.random() * 500) // Stagger prefetches 0-500ms
+  return `/entity-browser/${stableEntityId}/dossier?from=${currentPage}`
+}
 
-      return () => clearTimeout(timer)
-    }
-  }, [router, stableEntityId])
+export function EntityCard({ entity, similarity, connections, rank, onEmailEntity }: EntityCardProps) {
+  const router = useRouter()
+  const [isProfileLoading, setIsProfileLoading] = useState(false)
+  const hasPrefetchedDossierRouteRef = useRef(false)
+  const stableEntityId = String(
+    (entity as any)?.id ??
+    (entity as any)?.graph_id ??
+    ''
+  ).trim()
+
+  const prefetchDossierRoute = () => {
+    if (!stableEntityId) return
+    if (hasPrefetchedDossierRouteRef.current) return
+
+    hasPrefetchedDossierRouteRef.current = true
+    const currentPage = getEntityCurrentPage()
+    const href = getEntityBrowserDossierHref(entity, currentPage)
+    router.prefetch(href)
+  }
 
   const getSimilarityColor = (score: number) => {
     if (score >= 0.9) return "bg-green-500"
@@ -113,9 +125,11 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
 
   const handleCardClick = () => {
     if (!stableEntityId) return
+    if (isProfileLoading) return
+
+    setIsProfileLoading(true)
     // Get current page from URL and pass it to the entity profile
-    const urlParams = new URLSearchParams(window.location.search)
-    const currentPage = urlParams.get('page') || '1'
+    const currentPage = getEntityCurrentPage()
     rememberEntityBrowserUrl()
     pushWithViewTransition(router, `/entity/${stableEntityId}?from=${currentPage}`)
   }
@@ -129,6 +143,9 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
     <Card 
       className="relative hover:shadow-lg transition-shadow cursor-pointer hover:scale-[1.02] transition-transform duration-200"
       onClick={handleCardClick}
+      onMouseEnter={prefetchDossierRoute}
+      onFocus={prefetchDossierRoute}
+      onTouchStart={prefetchDossierRoute}
     >
       {/* Similarity Score */}
       {similarity && (
@@ -278,19 +295,31 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
             variant="outline" 
             size="sm" 
             className="w-full"
+            disabled={isProfileLoading}
             data-testid="view-full-profile"
                 onClick={(e) => {
                   e.stopPropagation()
                   if (!stableEntityId) return
+                  if (isProfileLoading) return
+
+                  setIsProfileLoading(true)
                   // Get current page from URL and pass it to the entity profile
-                  const urlParams = new URLSearchParams(window.location.search)
-                  const currentPage = urlParams.get('page') || '1'
+                  const currentPage = getEntityCurrentPage()
                   rememberEntityBrowserUrl()
                   pushWithViewTransition(router, `/entity/${stableEntityId}?from=${currentPage}`)
                 }}
           >
-            View Full Profile
-            <ArrowRight className="h-4 w-4 ml-2" />
+            {isProfileLoading ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Loading Profile...
+              </>
+            ) : (
+              <>
+                View Full Profile
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </>
+            )}
           </Button>
         </div>
 
