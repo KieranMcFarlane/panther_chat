@@ -1761,6 +1761,29 @@ Hard requirements:
 
         return signals
 
+    def _derive_canonical_sources(self, entity_data: Dict[str, Any]) -> Dict[str, str]:
+        """Build a compact canonical source map from known entity data fields."""
+        if not isinstance(entity_data, dict):
+            return {}
+
+        canonical: Dict[str, str] = {}
+        field_map = {
+            "official_site": ("official_site_url", "official_website", "website", "url"),
+            "careers": ("careers_url",),
+            "press": ("press_url", "news_url"),
+            "linkedin_company": ("linkedin_company_url",),
+            "jobs_board": ("jobs_board_url",),
+        }
+
+        for key, candidates in field_map.items():
+            for field in candidates:
+                value = entity_data.get(field)
+                if isinstance(value, str) and value.strip():
+                    canonical[key] = value.strip()
+                    break
+
+        return canonical
+
     async def generate_universal_dossier(
         self,
         entity_id: str,
@@ -1789,6 +1812,8 @@ Hard requirements:
         tier = self._determine_tier(priority_score)
         logger.info(f"📊 Generating {tier} dossier for {entity_name} (priority: {priority_score})")
         phase0_collection_timed_out = bool(entity_data and entity_data.get("collection_timed_out"))
+        collection_started_at = datetime.now(timezone.utc)
+        collection_duration_seconds: Optional[float] = None
 
         claude_disabled_reason = None
         if getattr(self.claude_client, "_get_disabled_reason", None):
