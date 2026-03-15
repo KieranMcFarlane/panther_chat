@@ -113,3 +113,19 @@
 - `node --test tests/test-entity-run-detail.mjs`: pass.
 - `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_dossier_generator_timeout.py backend/tests/test_dossier_generator_timeout_fallback.py -q`: pass (`3 passed`).
 - `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
+
+## Wave 2G (Degraded Phase-0 Timeout Continuation)
+
+### Included Commits
+- `aa0fc4e` Allow degraded Phase 0 timeout continuation in entity pipeline
+- `52843ac` test(timeout): isolate degraded phase0 path from full pipeline deps
+
+### Conflict Decisions
+- No code conflicts on cherry-pick.
+- Test follow-up required in this repo shape because degraded-timeout coverage otherwise depends on optional/older pipeline constructor paths and missing monitoring modules.
+
+### Verification Results (Wave 2G)
+- `npm run qa:imports`: pass.
+- `python3 -m py_compile backend/main.py`: pass.
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_dossier_generator_timeout.py backend/tests/test_dossier_generator_timeout_fallback.py -q`: pass (`4 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
