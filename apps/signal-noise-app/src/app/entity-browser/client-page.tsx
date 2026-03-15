@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useState, useEffect, useCallback, useRef } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { FixedSizeList, type ListChildComponentProps } from "react-window"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -61,6 +62,8 @@ export default function EntityBrowserClientPage() {
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null)
   const [currentPage, setCurrentPage] = useState(initialPageFromUrl)
+  const [gridWidth, setGridWidth] = useState(0)
+  const gridContainerRef = useRef<HTMLDivElement | null>(null)
 
   const [filters, setFilters] = useState({
     entityType: "all",
@@ -209,6 +212,23 @@ export default function EntityBrowserClientPage() {
     }
   }, [buildEntityQueryParams, currentPage, data, fetchEntities])
 
+  useEffect(() => {
+    const element = gridContainerRef.current
+    if (!element) return
+
+    const updateWidth = () => setGridWidth(element.clientWidth)
+    updateWidth()
+
+    if (typeof ResizeObserver === "undefined") {
+      window.addEventListener("resize", updateWidth)
+      return () => window.removeEventListener("resize", updateWidth)
+    }
+
+    const observer = new ResizeObserver(() => updateWidth())
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [])
+
   const handleEmailEntity = (entity: Entity) => {
     setSelectedEntity(entity)
     setShowEmailModal(true)
@@ -270,6 +290,11 @@ export default function EntityBrowserClientPage() {
   }
 
   const entities = data.entities || []
+  const columnCount = gridWidth >= 1280 ? 3 : gridWidth >= 1024 ? 2 : 1
+  const rowCount = Math.ceil(entities.length / columnCount)
+  const rowHeight = 360
+  const listHeight = Math.min(900, Math.max(rowHeight, rowCount * rowHeight))
+  const columnGap = 24
 
   return (
     <div className="min-h-screen bg-background">
@@ -377,35 +402,65 @@ export default function EntityBrowserClientPage() {
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div ref={gridContainerRef} className="w-full">
           {gridLoading ? (
-            Array.from({ length: parseInt(filters.limit, 10) || 10 }).map((_, index) => (
-              <div key={index} className="rounded-lg border bg-card text-card-foreground shadow-sm">
-                <div className="flex flex-col space-y-1.5 p-6 pb-3">
-                  <div className="flex items-start gap-4">
-                    <div className="relative rounded-lg overflow-hidden w-16 h-16 bg-gray-200 animate-pulse"></div>
-                    <div className="flex-1 min-w-0">
-                      <div className="h-6 bg-gray-200 rounded animate-pulse mb-2"></div>
-                      <div className="h-4 bg-gray-200 rounded animate-pulse w-20"></div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+              {Array.from({ length: parseInt(filters.limit, 10) || 10 }).map((_, index) => (
+                <div key={index} className="rounded-lg border bg-card text-card-foreground shadow-sm">
+                  <div className="flex flex-col space-y-1.5 p-6 pb-3">
+                    <div className="flex items-start gap-4">
+                      <div className="relative rounded-lg overflow-hidden w-16 h-16 bg-gray-200 animate-pulse"></div>
+                      <div className="flex-1 min-w-0">
+                        <div className="h-6 bg-gray-200 rounded animate-pulse mb-2"></div>
+                        <div className="h-4 bg-gray-200 rounded animate-pulse w-20"></div>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="p-6 pt-0 space-y-3">
-                  <div className="border-t pt-3">
-                    <div className="h-9 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="p-6 pt-0 space-y-3">
+                    <div className="border-t pt-3">
+                      <div className="h-9 bg-gray-200 rounded animate-pulse"></div>
+                    </div>
+                    <div className="h-3 bg-gray-200 rounded animate-pulse w-16"></div>
                   </div>
-                  <div className="h-3 bg-gray-200 rounded animate-pulse w-16"></div>
                 </div>
-              </div>
-            ))
-          ) : (
-            entities.map((entity) => (
-              <EntityCard
-                key={`${entity.id}-${formatValue(entity.neo4j_id)}`}
-                entity={entity}
-                onEmailEntity={handleEmailEntity}
-              />
-            ))
+              ))}
+            </div>
+          ) : rowCount === 0 ? null : (
+            <FixedSizeList
+              height={listHeight}
+              width={gridWidth || 1}
+              itemCount={rowCount}
+              itemSize={rowHeight}
+            >
+              {({ index, style }: ListChildComponentProps) => {
+                const rowStart = index * columnCount
+                const rowItems = entities.slice(rowStart, rowStart + columnCount)
+                const widthForCols = gridWidth || 1
+                const computedColumnWidth = Math.max(
+                  280,
+                  Math.floor((widthForCols - (columnCount - 1) * columnGap) / columnCount),
+                )
+
+                return (
+                  <div style={style}>
+                    <div
+                      className="grid gap-6"
+                      style={{
+                        gridTemplateColumns: `repeat(${columnCount}, minmax(0, ${computedColumnWidth}px))`,
+                      }}
+                    >
+                      {rowItems.map((entity) => (
+                        <EntityCard
+                          key={`${entity.id}-${formatValue(entity.neo4j_id)}`}
+                          entity={entity}
+                          onEmailEntity={handleEmailEntity}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )
+              }}
+            </FixedSizeList>
           )}
         </div>
 
