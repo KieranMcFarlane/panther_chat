@@ -1780,79 +1780,80 @@ Use UNIVERSAL_CLUB_DOSSIER_PROMPT structure. Skip unavailable data.
             collector = DossierDataCollector()
             collection_timeout_seconds = int(os.getenv("DOSSIER_COLLECTION_TIMEOUT_SECONDS", "180"))
             try:
-                dossier_data_obj = await asyncio.wait_for(
-                    collector.collect_all(entity_id, entity_name, entity_type=entity_type),
-                    timeout=collection_timeout_seconds,
-                )
-            except asyncio.TimeoutError:
-                logger.warning(
-                    "⚠️ collect_entity_data timed out for %s after %ss; continuing with minimal data",
-                    entity_id,
-                    collection_timeout_seconds,
-                )
-                entity_data = {
-                    "entity_id": entity_id,
-                    "entity_name": entity_name,
-                    "entity_type": entity_type,
-                }
-                if progress_callback:
-                    await progress_callback(
-                        "collect_entity_data",
-                        "failed",
-                        reason="timeout",
-                        timeout_seconds=collection_timeout_seconds,
+                try:
+                    dossier_data_obj = await asyncio.wait_for(
+                        collector.collect_all(entity_id, entity_name, entity_type=entity_type),
+                        timeout=collection_timeout_seconds,
                     )
-                dossier_data_obj = None
-            collection_duration_seconds = round(
-                (datetime.now(timezone.utc) - collection_started_at).total_seconds(),
-                2,
-            )
-            if dossier_data_obj is not None:
-                entity_data = self._dossier_data_to_dict(dossier_data_obj)
-                if progress_callback:
-                    await progress_callback(
-                        "collect_entity_data",
-                        "completed",
-                        source_count=int(entity_data.get("source_count") or 0),
-                        source_timings=entity_data.get("source_timings") or {},
-                    )
-                # PHASE 0 ENHANCEMENT: Collect real leadership data
-                if hasattr(collector, "collect_leadership") and not claude_disabled_reason:
-                    try:
-                        leadership_data = await collector.collect_leadership(entity_id, entity_name)
-                        if leadership_data.get("decision_makers"):
-                            entity_data["leadership_names"] = ", ".join(
-                                [
-                                    dm.get("name", "")
-                                    for dm in leadership_data.get("decision_makers", [])
-                                    if dm.get("name") and dm.get("name") != "unknown"
-                                ]
-                            )
-                            entity_data["leadership_roles"] = ", ".join(
-                                [
-                                    dm.get("role", "")
-                                    for dm in leadership_data.get("decision_makers", [])
-                                    if dm.get("role") and dm.get("role") != "unknown"
-                                ]
-                            )
-                            entity_data["leadership_linkedins"] = ", ".join(
-                                [
-                                    dm.get("linkedin_url", "")
-                                    for dm in leadership_data.get("decision_makers", [])
-                                    if dm.get("linkedin_url")
-                                ]
-                            )
-                            entity_data["target_personnel_data"] = leadership_data.get("decision_makers", [])
-                            logger.info(
-                                "✅ Collected %s leadership profiles",
-                                len(leadership_data.get("decision_makers", [])),
-                            )
-                    except Exception as e:
-                        logger.warning(f"⚠️  Leadership data collection failed: {e}")
-                elif claude_disabled_reason:
+                except asyncio.TimeoutError:
                     logger.warning(
-                        f"⚠️ Claude API disabled ({claude_disabled_reason}); skipping leadership enrichment for {entity_name}"
+                        "⚠️ collect_entity_data timed out for %s after %ss; continuing with minimal data",
+                        entity_id,
+                        collection_timeout_seconds,
                     )
+                    entity_data = {
+                        "entity_id": entity_id,
+                        "entity_name": entity_name,
+                        "entity_type": entity_type,
+                    }
+                    if progress_callback:
+                        await progress_callback(
+                            "collect_entity_data",
+                            "failed",
+                            reason="timeout",
+                            timeout_seconds=collection_timeout_seconds,
+                        )
+                    dossier_data_obj = None
+                collection_duration_seconds = round(
+                    (datetime.now(timezone.utc) - collection_started_at).total_seconds(),
+                    2,
+                )
+                if dossier_data_obj is not None:
+                    entity_data = self._dossier_data_to_dict(dossier_data_obj)
+                    if progress_callback:
+                        await progress_callback(
+                            "collect_entity_data",
+                            "completed",
+                            source_count=int(entity_data.get("source_count") or 0),
+                            source_timings=entity_data.get("source_timings") or {},
+                        )
+                    # PHASE 0 ENHANCEMENT: Collect real leadership data
+                    if hasattr(collector, "collect_leadership") and not claude_disabled_reason:
+                        try:
+                            leadership_data = await collector.collect_leadership(entity_id, entity_name)
+                            if leadership_data.get("decision_makers"):
+                                entity_data["leadership_names"] = ", ".join(
+                                    [
+                                        dm.get("name", "")
+                                        for dm in leadership_data.get("decision_makers", [])
+                                        if dm.get("name") and dm.get("name") != "unknown"
+                                    ]
+                                )
+                                entity_data["leadership_roles"] = ", ".join(
+                                    [
+                                        dm.get("role", "")
+                                        for dm in leadership_data.get("decision_makers", [])
+                                        if dm.get("role") and dm.get("role") != "unknown"
+                                    ]
+                                )
+                                entity_data["leadership_linkedins"] = ", ".join(
+                                    [
+                                        dm.get("linkedin_url", "")
+                                        for dm in leadership_data.get("decision_makers", [])
+                                        if dm.get("linkedin_url")
+                                    ]
+                                )
+                                entity_data["target_personnel_data"] = leadership_data.get("decision_makers", [])
+                                logger.info(
+                                    "✅ Collected %s leadership profiles",
+                                    len(leadership_data.get("decision_makers", [])),
+                                )
+                        except Exception as e:
+                            logger.warning(f"⚠️  Leadership data collection failed: {e}")
+                    elif claude_disabled_reason:
+                        logger.warning(
+                            f"⚠️ Claude API disabled ({claude_disabled_reason}); skipping leadership enrichment for {entity_name}"
+                        )
             finally:
                 await collector.close()
         elif entity_data is None:
