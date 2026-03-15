@@ -95,3 +95,21 @@
 - `node --test tests/test-entity-run-detail.mjs`: pass.
 - `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_dossier_generator_timeout.py -q`: pass (`2 passed`).
 - `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
+
+## Wave 2F (Compact Phase-0 Fallback + Runtime Telemetry)
+
+### Included Commits
+- `74bea9a` Add compact Phase 0 fallback mode and inference runtime telemetry
+- `e828403` fix(merge): restore phase0 fallback metadata helpers in dossier generator
+
+### Conflict Decisions
+- Kept recency behavior for compact timeout fallback mode and inference runtime metadata in phase payloads/run detail UI.
+- Preserved deletion of `backend/tests/test_pipeline_phase_update_payload.py` (legacy stale test surface).
+- Applied merge repairs to keep leadership enrichment plus canonical-source metadata paths stable.
+
+### Verification Results (Wave 2F)
+- `npm run qa:imports`: pass.
+- `python3 -m py_compile backend/dossier_generator.py backend/main.py`: pass.
+- `node --test tests/test-entity-run-detail.mjs`: pass.
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_dossier_generator_timeout.py backend/tests/test_dossier_generator_timeout_fallback.py -q`: pass (`3 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
