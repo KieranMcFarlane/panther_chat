@@ -15,6 +15,7 @@ import asyncio
 import json
 import logging
 import re
+import time
 from typing import Dict, List, Any, Optional
 from datetime import datetime
 import os
@@ -76,6 +77,9 @@ class BrightDataSDKClient:
         self.token = token
         self._client = None
         self._invalid_request_zones = set()
+        self._zone_cooldowns: Dict[str, float] = {}
+        self._request_zone_whitelist: Optional[set] = None
+        self._request_zone_whitelist_checked_at: float = 0.0
 
         if not self.token:
             logger.warning("⚠️ BRIGHTDATA_API_TOKEN not found in environment")
@@ -558,11 +562,7 @@ class BrightDataSDKClient:
         max_attempts = max(1, int(os.getenv("BRIGHTDATA_FALLBACK_SEARCH_MAX_ATTEMPTS", "2")))
 
         last_error: Optional[str] = None
-        request_zone_candidates = [
-            os.getenv("BRIGHTDATA_SERP_ZONE", "").strip(),
-            "sdk_serp",
-        ]
-        request_zones = [z for z in dict.fromkeys(request_zone_candidates) if z]
+        request_zones = await self._get_adaptive_request_zones("serp")
         target_url = self._build_serp_target_url(engine, query, country, num_results)
         headers = {
             "Authorization": f"Bearer {token}",
@@ -600,9 +600,11 @@ class BrightDataSDKClient:
                         pass
                     if e.response is not None and e.response.status_code == 400 and "zone" in body.lower() and "not found" in body.lower():
                         last_error = str(e)
+                        self._mark_zone_not_found(zone)
                         logger.warning(f"⚠️ BrightData SERP request zone not found, skipping zone={zone}")
                         break
                     last_error = str(e)
+                    self._mark_zone_timeout(zone, e)
                     logger.warning(
                         "⚠️ BrightData /request SERP fallback failed (zone=%s, attempt %s/%s): %s",
                         zone,
@@ -613,6 +615,7 @@ class BrightDataSDKClient:
                     continue
                 except Exception as e:
                     last_error = str(e)
+                    self._mark_zone_timeout(zone, e)
                     logger.warning(
                         "⚠️ BrightData /request SERP fallback failed (zone=%s, attempt %s/%s): %s",
                         zone,
@@ -693,6 +696,95 @@ class BrightDataSDKClient:
                 params["gl"] = country.lower()
             params["hl"] = "en"
         return f"{base}?{urlencode(params)}"
+
+    def _mark_zone_not_found(self, zone: str) -> None:
+        invalid = getattr(self, "_invalid_request_zones", set())
+        invalid.add(zone)
+        self._invalid_request_zones = invalid
+
+    def _mark_zone_timeout(self, zone: str, error: Exception) -> None:
+        timeout_like = isinstance(error, (httpx.ReadTimeout, httpx.ConnectTimeout, httpx.TimeoutException, asyncio.TimeoutError))
+        if not timeout_like:
+            return
+        cooldown_seconds = float(os.getenv("BRIGHTDATA_ZONE_TIMEOUT_COOLDOWN_SECONDS", "120"))
+        cooldowns = getattr(self, "_zone_cooldowns", {})
+        cooldowns[zone] = time.monotonic() + max(1.0, cooldown_seconds)
+        self._zone_cooldowns = cooldowns
+
+    def _zone_in_cooldown(self, zone: str) -> bool:
+        cooldowns = getattr(self, "_zone_cooldowns", {})
+        until = cooldowns.get(zone, 0.0)
+        return until > time.monotonic()
+
+    async def _get_request_zone_whitelist(self) -> Optional[set]:
+        token = getattr(self, "token", None)
+        if not token:
+            return None
+        ttl_seconds = float(os.getenv("BRIGHTDATA_ZONE_PREFLIGHT_TTL_SECONDS", "600"))
+        now = time.monotonic()
+        cached_whitelist = getattr(self, "_request_zone_whitelist", None)
+        checked_at = float(getattr(self, "_request_zone_whitelist_checked_at", 0.0))
+        if cached_whitelist is not None and (now - checked_at) < ttl_seconds:
+            return cached_whitelist
+
+        api_base = os.getenv("BRIGHTDATA_API_BASE", "https://api.brightdata.com").rstrip("/")
+        timeout = float(os.getenv("BRIGHTDATA_ZONE_PREFLIGHT_TIMEOUT_SECONDS", "8"))
+        headers = {"Authorization": f"Bearer {token}"}
+        try:
+            async with httpx.AsyncClient(timeout=timeout, follow_redirects=True) as client:
+                response = await client.get(f"{api_base}/zone/whitelist", headers=headers)
+                response.raise_for_status()
+            payload = response.json()
+            zones = self._extract_zone_names(payload)
+            self._request_zone_whitelist = zones
+            self._request_zone_whitelist_checked_at = now
+            return zones
+        except Exception as e:
+            logger.warning(f"⚠️ BrightData zone preflight failed: {e}")
+            self._request_zone_whitelist_checked_at = now
+            self._request_zone_whitelist = None
+            return None
+
+    def _extract_zone_names(self, payload: Any) -> set:
+        zones = set()
+        if isinstance(payload, dict):
+            candidates = payload.get("zones") or payload.get("data") or payload.get("whitelist") or payload.get("results")
+        else:
+            candidates = payload
+        if not isinstance(candidates, list):
+            candidates = [candidates] if candidates else []
+        for item in candidates:
+            if isinstance(item, str) and item.strip():
+                zones.add(item.strip())
+            elif isinstance(item, dict):
+                for key in ("zone", "name", "id"):
+                    value = item.get(key)
+                    if isinstance(value, str) and value.strip():
+                        zones.add(value.strip())
+                        break
+        return zones
+
+    async def _get_adaptive_request_zones(self, request_kind: str) -> List[str]:
+        if request_kind == "serp":
+            candidates = [
+                os.getenv("BRIGHTDATA_SERP_ZONE", "").strip(),
+                "sdk_serp",
+                os.getenv("BRIGHTDATA_UNLOCKER_ZONE", "").strip(),
+                "sdk_unlocker",
+            ]
+        else:
+            candidates = [
+                os.getenv("BRIGHTDATA_UNLOCKER_ZONE", "").strip(),
+                "sdk_unlocker",
+                os.getenv("BRIGHTDATA_BROWSER_ZONE", "").strip(),
+            ]
+        invalid = getattr(self, "_invalid_request_zones", set())
+        ordered = [z for z in dict.fromkeys(candidates) if z and z not in invalid and not self._zone_in_cooldown(z)]
+        whitelist = await self._get_request_zone_whitelist()
+        if not whitelist:
+            return ordered
+        whitelisted = [z for z in ordered if z in whitelist]
+        return whitelisted or ordered
 
     def _extract_serp_results(self, payload: Dict[str, Any], num_results: int) -> List[Dict[str, Any]]:
         """Normalize common BrightData SERP response shapes into list of results."""
@@ -838,13 +930,7 @@ class BrightDataSDKClient:
             return None
 
         api_base = os.getenv("BRIGHTDATA_API_BASE", "https://api.brightdata.com").rstrip("/")
-        zone_candidates = [
-            os.getenv("BRIGHTDATA_UNLOCKER_ZONE", "").strip(),
-            "sdk_unlocker",
-            os.getenv("BRIGHTDATA_BROWSER_ZONE", "").strip(),
-        ]
-        invalid_zones = getattr(self, "_invalid_request_zones", set())
-        zones = [z for z in dict.fromkeys(zone_candidates) if z and z not in invalid_zones]
+        zones = await self._get_adaptive_request_zones("browser")
         if not zones:
             return None
 
@@ -908,15 +994,16 @@ class BrightDataSDKClient:
                     except Exception:
                         pass
                     if e.response is not None and e.response.status_code == 400 and "not found" in body.lower():
-                        invalid_zones.add(zone)
-                        self._invalid_request_zones = invalid_zones
+                        self._mark_zone_not_found(zone)
                         logger.warning(f"⚠️ BrightData /request zone not found, disabling zone={zone}")
                         break
+                    self._mark_zone_timeout(zone, e)
                     logger.warning(f"⚠️ BrightData /request render failed for zone={zone}: {e}")
                     if attempt + 1 >= max_attempts:
                         break
                     continue
                 except Exception as e:
+                    self._mark_zone_timeout(zone, e)
                     logger.warning(f"⚠️ BrightData /request render failed for zone={zone}: {e}")
                     if attempt + 1 >= max_attempts:
                         break

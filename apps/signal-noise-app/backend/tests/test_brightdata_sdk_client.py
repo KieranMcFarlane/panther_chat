@@ -4,6 +4,7 @@ Tests for BrightData client fallback scraping behavior.
 """
 
 import sys
+import time
 from pathlib import Path
 import pytest
 import httpx
@@ -294,6 +295,9 @@ async def test_search_engine_fallback_uses_brightdata_http_serp(monkeypatch):
             raise AssertionError("legacy /serp endpoint should not be used when /request succeeds")
 
     monkeypatch.setattr(brightdata_module.httpx, "AsyncClient", FakeAsyncClient)
+    async def fake_whitelist(self):
+        return {"sdk_serp", "sdk_unlocker"}
+    monkeypatch.setattr(BrightDataSDKClient, "_get_request_zone_whitelist", fake_whitelist)
 
     result = await BrightDataSDKClient._search_engine_fallback(
         client,
@@ -333,6 +337,9 @@ async def test_search_engine_fallback_returns_error_without_mock_results(monkeyp
 
     monkeypatch.setattr(brightdata_module.httpx, "AsyncClient", FakeAsyncClient)
     monkeypatch.setenv("BRIGHTDATA_FALLBACK_SEARCH_MAX_ATTEMPTS", "1")
+    async def fake_whitelist(self):
+        return {"sdk_serp", "sdk_unlocker"}
+    monkeypatch.setattr(BrightDataSDKClient, "_get_request_zone_whitelist", fake_whitelist)
 
     result = await BrightDataSDKClient._search_engine_fallback(
         client,
@@ -345,3 +352,125 @@ async def test_search_engine_fallback_returns_error_without_mock_results(monkeyp
     assert result["status"] == "error"
     assert result["results"] == []
     assert result["metadata"]["source"] == "brightdata_http_fallback"
+
+
+@pytest.mark.asyncio
+async def test_search_engine_fallback_skips_cooled_down_zone(monkeypatch):
+    client = BrightDataSDKClient.__new__(BrightDataSDKClient)
+    client.token = "test-token"
+    client._zone_cooldowns = {"sdk_serp": time.monotonic() + 999}
+
+    zone_calls = []
+
+    class FakeResponse:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {"organic_results": [{"title": "Result", "link": "https://example.org"}]}
+
+    class FakeAsyncClient:
+        def __init__(self, timeout, follow_redirects):
+            self.timeout = timeout
+            self.follow_redirects = follow_redirects
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            zone_calls.append(json["zone"])
+            return FakeResponse()
+
+        async def get(self, url, params=None):
+            raise AssertionError("legacy path should not be used")
+
+    monkeypatch.setattr(brightdata_module.httpx, "AsyncClient", FakeAsyncClient)
+    async def fake_whitelist(self):
+        return {"sdk_serp", "sdk_unlocker"}
+    monkeypatch.setattr(BrightDataSDKClient, "_get_request_zone_whitelist", fake_whitelist)
+
+    result = await BrightDataSDKClient._search_engine_fallback(
+        client,
+        query="coventry city fc rfp",
+        engine="google",
+        country="us",
+        num_results=5,
+    )
+
+    assert result["status"] == "success"
+    assert zone_calls == ["sdk_unlocker"]
+
+
+@pytest.mark.asyncio
+async def test_search_engine_fallback_disables_not_found_zone(monkeypatch):
+    client = BrightDataSDKClient.__new__(BrightDataSDKClient)
+    client.token = "test-token"
+
+    zone_calls = []
+
+    class FakeResponse:
+        def __init__(self, zone):
+            self.zone = zone
+            self.text = 'zone "sdk_serp" not found'
+            self.status_code = 400 if zone == "sdk_serp" else 200
+            self.request = httpx.Request("POST", "https://api.brightdata.com/request")
+
+        def raise_for_status(self):
+            if self.status_code >= 400:
+                raise httpx.HTTPStatusError(
+                    "bad request",
+                    request=self.request,
+                    response=httpx.Response(self.status_code, text=self.text, request=self.request),
+                )
+            return None
+
+        def json(self):
+            return {"organic_results": [{"title": "Result", "link": "https://example.org"}]}
+
+    class FakeAsyncClient:
+        def __init__(self, timeout, follow_redirects):
+            self.timeout = timeout
+            self.follow_redirects = follow_redirects
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            zone = json["zone"]
+            zone_calls.append(zone)
+            return FakeResponse(zone)
+
+        async def get(self, url, params=None):
+            raise AssertionError("legacy path should not be used")
+
+    monkeypatch.setattr(brightdata_module.httpx, "AsyncClient", FakeAsyncClient)
+    async def fake_whitelist(self):
+        return {"sdk_serp", "sdk_unlocker"}
+    monkeypatch.setattr(BrightDataSDKClient, "_get_request_zone_whitelist", fake_whitelist)
+
+    result_1 = await BrightDataSDKClient._search_engine_fallback(
+        client,
+        query="coventry city fc rfp",
+        engine="google",
+        country="us",
+        num_results=5,
+    )
+    assert result_1["status"] == "success"
+    assert "sdk_serp" in client._invalid_request_zones
+
+    zone_calls.clear()
+    result_2 = await BrightDataSDKClient._search_engine_fallback(
+        client,
+        query="coventry city fc rfp 2",
+        engine="google",
+        country="us",
+        num_results=5,
+    )
+    assert result_2["status"] == "success"
+    assert zone_calls == ["sdk_unlocker"]
