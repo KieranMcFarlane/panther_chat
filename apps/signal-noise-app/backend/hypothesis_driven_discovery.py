@@ -1247,6 +1247,24 @@ class HypothesisDrivenDiscovery:
             )
             performance['evaluation_ms'] = round((time.perf_counter() - evaluation_started_at) * 1000, 2)
 
+            # Ground positive decisions to the target entity to avoid league-level spillover.
+            decision = evaluation.get('decision', 'NO_PROGRESS')
+            if decision in {'ACCEPT', 'WEAK_ACCEPT'}:
+                target_entity_name = (
+                    getattr(state, 'entity_name', None)
+                    or getattr(hypothesis, 'entity_name', None)
+                    or (getattr(hypothesis, 'metadata', {}) or {}).get('entity_name')
+                    or ''
+                )
+                if not self._is_entity_grounded(content=content, url=url, entity_name=target_entity_name):
+                    evaluation = {
+                        **evaluation,
+                        'decision': 'REJECT',
+                        'confidence_delta': -0.02,
+                        'justification': 'Evidence appears weakly grounded to target entity; likely league/governing-body spillover',
+                        'evidence_type': 'entity_grounding_filter',
+                    }
+
             # Add cost tracking
             hop_cost = 0.001  # TODO: Track actual cost
             self.total_cost_usd += hop_cost
@@ -2311,6 +2329,71 @@ class HypothesisDrivenDiscovery:
             'evidence_type': None
         }
 
+    def _deterministic_fallback_classification(
+        self,
+        content: str,
+        context: EvaluationContext,
+        mcp_matches: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
+        """
+        Deterministic backup classifier when evaluator response is invalid/non-JSON.
+        """
+        text = str(content or "").lower()
+        keyword_hits = sum(1 for kw in (context.keywords or []) if kw and kw.lower() in text)
+        mcp_score = max((float(m.get("total_confidence", 0.0)) for m in (mcp_matches or [])), default=0.0)
+
+        if keyword_hits >= 2 and mcp_score >= 0.2:
+            decision = "ACCEPT"
+            delta = 0.06
+        elif keyword_hits >= 1 or mcp_score >= 0.08:
+            decision = "WEAK_ACCEPT"
+            delta = 0.02
+        elif self._is_low_signal_content(text):
+            decision = "NO_PROGRESS"
+            delta = 0.0
+        else:
+            decision = "NO_PROGRESS"
+            delta = 0.0
+
+        return {
+            "decision": decision,
+            "confidence_delta": delta,
+            "justification": "Deterministic fallback classifier used after invalid evaluator output",
+            "evidence_found": "",
+            "evidence_type": "deterministic_fallback",
+            "temporal_score": "older",
+        }
+
+    def _is_entity_grounded(self, content: str, url: str, entity_name: str) -> bool:
+        """
+        Check whether evidence content appears grounded to the target entity.
+        """
+        text = str(content or "").lower()
+        entity = str(entity_name or "").strip().lower()
+        if not entity:
+            return True
+
+        # Direct entity mention.
+        if entity in text:
+            return True
+
+        # Initialism mention (e.g., Coventry City FC -> ccfc).
+        parts = [p for p in entity.replace("-", " ").split() if p]
+        initials = "".join(p[0] for p in parts)
+        if len(initials) >= 3 and initials in text:
+            return True
+
+        # Domain-level grounding in URL.
+        from urllib.parse import urlparse
+        host = (urlparse(url or "").netloc or "").lower()
+        entity_slug = entity.replace(" ", "")
+        if entity_slug and entity_slug in host:
+            return True
+        if len(initials) >= 3 and initials in host:
+            return True
+
+        return False
+
     async def _query_evaluator_model(
         self,
         prompt: str,
@@ -2674,7 +2757,11 @@ Return JSON:
                     }
 
                 logger.warning(f"Could not parse Claude response: {response_text}")
-                return self._fallback_result()
+                return self._deterministic_fallback_classification(
+                    content=content,
+                    context=context,
+                    mcp_matches=mcp_matches,
+                )
         except json.JSONDecodeError as e:
             logger.error(f"JSON parsing error: {e}")
             logger.debug(f"Response text that failed to parse: {response_text[:500]}")

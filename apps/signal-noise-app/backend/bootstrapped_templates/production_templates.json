@@ -113,5 +113,141 @@
       "consumer_product",
       "ticket_sales"
     ]
+  },
+  {
+    "template_id": "tier_2_club_mixed_procurement",
+    "template_name": "Tier 2 Club Mixed Procurement",
+    "template_confidence": 0.62,
+    "applicable_entity_profile": {
+      "sport": "football",
+      "org_type": "club",
+      "estimated_revenue_band": "mid",
+      "digital_maturity": "medium"
+    },
+    "signal_channels": [
+      {
+        "channel_type": "official_news",
+        "priority": 1,
+        "description": "Official site and club news pages"
+      },
+      {
+        "channel_type": "careers_job_postings",
+        "priority": 2,
+        "description": "Club and partner job boards"
+      },
+      {
+        "channel_type": "local_press",
+        "priority": 3,
+        "description": "Regional business and sports coverage"
+      }
+    ],
+    "signal_patterns": [
+      {
+        "pattern_name": "commercial_leadership_hiring",
+        "category": "Leadership",
+        "weight": 0.1,
+        "description": "New hiring for commercial/procurement responsibilities",
+        "keywords": ["commercial director", "head of commercial", "procurement manager"],
+        "early_indicators": [
+          "Club careers page lists commercial/procurement leadership roles",
+          "Press release mentions executive commercial appointment",
+          "LinkedIn role opening tied to vendor management"
+        ]
+      },
+      {
+        "pattern_name": "fan_platform_refresh",
+        "category": "Technology",
+        "weight": 0.08,
+        "description": "Club seeks refreshed web/app engagement platforms",
+        "keywords": ["ticketing platform", "fan app", "crm", "digital platform"],
+        "early_indicators": [
+          "Official statement references platform migration",
+          "Vendor or partner announcement for fan engagement technology",
+          "Procurement/tender notice for digital services"
+        ]
+      }
+    ],
+    "verification_rules": [
+      {
+        "rule_type": "entity_grounding",
+        "description": "Evidence must refer to the club directly, not just league context"
+      },
+      {
+        "rule_type": "source_diversity",
+        "description": "Require at least two distinct source types for ACCEPT"
+      }
+    ],
+    "negative_filters": [
+      "match previews only",
+      "consumer merchandise only"
+    ]
+  },
+  {
+    "template_id": "federation_centralized_procurement",
+    "template_name": "Federation Centralized Procurement",
+    "template_confidence": 0.68,
+    "applicable_entity_profile": {
+      "sport": "multi",
+      "org_type": "federation",
+      "estimated_revenue_band": "mixed",
+      "digital_maturity": "medium_high"
+    },
+    "signal_channels": [
+      {
+        "channel_type": "tenders_portal",
+        "priority": 1,
+        "description": "Official tender/procurement notices"
+      },
+      {
+        "channel_type": "governance_documents",
+        "priority": 2,
+        "description": "Board papers, strategy docs, annual reports"
+      },
+      {
+        "channel_type": "rfp_documents",
+        "priority": 3,
+        "description": "Published PDFs and procurement attachments"
+      }
+    ],
+    "signal_patterns": [
+      {
+        "pattern_name": "formal_tender_language",
+        "category": "Procurement",
+        "weight": 0.14,
+        "description": "Formal tender language indicating active procurement",
+        "keywords": ["request for proposal", "invitation to tender", "submission deadline"],
+        "early_indicators": [
+          "Official tender page with submission deadlines",
+          "PDF procurement scope with evaluation criteria",
+          "Vendor onboarding requirement documents"
+        ]
+      },
+      {
+        "pattern_name": "multi_platform_programme",
+        "category": "Technology",
+        "weight": 0.1,
+        "description": "Cross-platform modernization programs and architecture work",
+        "keywords": ["crm", "data platform", "ecosystem", "integration"],
+        "early_indicators": [
+          "Strategy docs show multi-platform architecture roadmap",
+          "RFP references integration across systems",
+          "Technology steering committee updates"
+        ]
+      }
+    ],
+    "verification_rules": [
+      {
+        "rule_type": "document_verification",
+        "description": "Require source document references for ACCEPT decisions"
+      },
+      {
+        "rule_type": "temporal_check",
+        "description": "Prefer notices within the last 12 months"
+      }
+    ],
+    "negative_filters": [
+      "fan content",
+      "event recap only"
+    ]
   }
 ]
