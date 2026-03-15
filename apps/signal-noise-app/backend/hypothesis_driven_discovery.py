@@ -2686,8 +2686,13 @@ class HypothesisDrivenDiscovery:
         Returns:
             Evaluation result with decision and confidence delta
         """
-        from taxonomy.mcp_evidence_patterns import match_evidence_type
-        from confidence.mcp_scorer import MCPScorer, Signal
+        try:
+            from backend.taxonomy.mcp_evidence_patterns import match_evidence_type
+            from backend.confidence.mcp_scorer import MCPScorer, Signal
+        except ImportError:
+            # Backward compatibility for direct backend cwd execution.
+            from taxonomy.mcp_evidence_patterns import match_evidence_type
+            from confidence.mcp_scorer import MCPScorer, Signal
 
         # Step 1: Build structured evaluation context
         entity_name = hypothesis.metadata.get('entity_name', 'this entity')
@@ -2816,6 +2821,7 @@ Return JSON:
 """
 
         # Step 5: Call Claude API (existing implementation continues...)
+        response_text = ""
         try:
             # Use ClaudeClient.query() instead of Anthropic SDK
             response = await self._query_evaluator_model(
@@ -2848,7 +2854,10 @@ Return JSON:
 
                 # Enhance with MCP-derived confidence if not provided
                 if mcp_matches and result.get('confidence_delta', 0) == 0.0:
-                    from confidence.mcp_scorer import calculate_mcp_confidence_from_matches
+                    try:
+                        from backend.confidence.mcp_scorer import calculate_mcp_confidence_from_matches
+                    except ImportError:
+                        from confidence.mcp_scorer import calculate_mcp_confidence_from_matches
                     mcp_confidence = calculate_mcp_confidence_from_matches(mcp_matches)
                     result['confidence_delta'] = max(0.0, mcp_confidence - 0.70)
                     result['mcp_matches'] = mcp_matches
