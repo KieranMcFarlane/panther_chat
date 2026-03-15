@@ -2845,11 +2845,35 @@ Return JSON:
 
             result = self._extract_evaluator_json(response_text)
             if result:
+                result = self._normalize_evaluator_result(result)
 
                 # Ensure result has required 'decision' key
                 if 'decision' not in result:
                     logger.warning(f"Parsed JSON missing 'decision' key: {result}")
                     return self._fallback_result()
+
+                if self._should_force_evidence_reask(result):
+                    try:
+                        evidence_reask_prompt = (
+                            "Your prior evaluator output is missing required evidence. "
+                            "Return EXACT JSON with keys: decision, confidence_delta, justification, evidence_found, evidence_type, temporal_score. "
+                            "Keep the same decision unless invalid. "
+                            "Provide a specific quoted evidence snippet in `evidence_found` (8-240 chars). "
+                            "Return only JSON."
+                        )
+                        evidence_response = await self._query_evaluator_model(
+                            prompt=evidence_reask_prompt + "\n\nOriginal output:\n" + str(response_text or "")[:1800],
+                            max_tokens=220,
+                            system_prompt="Return one valid JSON object only.",
+                            json_mode=True,
+                            requested_model="haiku",
+                        )
+                        evidence_text = evidence_response.get('content', '') or evidence_response.get('text', '')
+                        reask_result = self._extract_evaluator_json(str(evidence_text))
+                        if reask_result:
+                            result = self._normalize_evaluator_result(reask_result)
+                    except Exception:
+                        pass
 
                 # Enhance with MCP-derived confidence if not provided
                 if mcp_matches and result.get('confidence_delta', 0) == 0.0:
@@ -2861,6 +2885,17 @@ Return JSON:
                     result['confidence_delta'] = max(0.0, mcp_confidence - 0.70)
                     result['mcp_matches'] = mcp_matches
                     result['mcp_confidence'] = mcp_confidence
+
+                if self._should_force_evidence_reask(result):
+                    return {
+                        'decision': 'NO_PROGRESS',
+                        'confidence_delta': 0.0,
+                        'justification': 'Evaluator decision lacked minimum evidence payload after re-ask',
+                        'evidence_found': '',
+                        'evidence_type': 'missing_evidence_payload',
+                        'temporal_score': result.get('temporal_score', 'unknown'),
+                        'parse_path': 'evidence_payload_gate',
+                    }
 
                 return result
             else:
@@ -2978,6 +3013,26 @@ Return JSON:
                 if isinstance(obj, dict) and "decision" in obj:
                     return obj
         return None
+
+    def _normalize_evaluator_result(self, result: Dict[str, Any]) -> Dict[str, Any]:
+        normalized = dict(result or {})
+        decision = str(normalized.get("decision", "")).strip().upper().replace("-", "_").replace(" ", "_")
+        normalized["decision"] = decision
+        if "evidence_found" in normalized:
+            normalized["evidence_found"] = str(normalized.get("evidence_found") or "").strip()
+        if "justification" in normalized:
+            normalized["justification"] = str(normalized.get("justification") or "").strip()
+        return normalized
+
+    def _should_force_evidence_reask(self, result: Dict[str, Any]) -> bool:
+        """
+        Require a minimum evidence payload for positive decisions.
+        """
+        decision = str((result or {}).get("decision") or "").upper()
+        if decision not in {"ACCEPT", "WEAK_ACCEPT"}:
+            return False
+        evidence = str((result or {}).get("evidence_found") or "").strip()
+        return len(evidence) < 8
 
     def _extract_decision_token(self, response_text: str) -> Optional[str]:
         """Extract canonical decision token from free-form evaluator output."""
