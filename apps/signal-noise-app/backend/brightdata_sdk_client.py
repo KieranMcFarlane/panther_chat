@@ -14,6 +14,7 @@ Architecture:
 import asyncio
 import json
 import logging
+import re
 from typing import Dict, List, Any, Optional
 from datetime import datetime
 import os
@@ -715,10 +716,73 @@ class BrightDataSDKClient:
                         value = node.get(key)
                         if isinstance(value, str) and value.strip():
                             meta_parts.append(value.strip())
+
+            # Try extracting readable strings from client-side JSON app state.
+            # This helps on JS-heavy shells where visible HTML is mostly empty.
+            json_state_parts = self._extract_json_state_text(original_soup)
+            if json_state_parts:
+                meta_parts.extend(json_state_parts)
             if meta_parts:
                 content = '\n'.join(dict.fromkeys([p for p in meta_parts if p]))
 
         return {"soup": soup, "content": content}
+
+    def _extract_json_state_text(self, soup) -> List[str]:
+        """
+        Extract human-readable strings from inline JSON blobs.
+
+        Many modern sites embed useful page data in scripts like __NEXT_DATA__,
+        application/json state blobs, or hydration payloads.
+        """
+        candidates: List[str] = []
+
+        def collect_strings(value: Any):
+            if isinstance(value, str):
+                text = value.strip()
+                # Keep only reasonably informative text fragments.
+                if (
+                    len(text) >= 30
+                    and len(text) <= 500
+                    and " " in text
+                    and not text.startswith(("http://", "https://", "/"))
+                    and re.search(r"[A-Za-z]{3,}", text)
+                ):
+                    candidates.append(text)
+                return
+            if isinstance(value, list):
+                for item in value:
+                    collect_strings(item)
+                return
+            if isinstance(value, dict):
+                for item in value.values():
+                    collect_strings(item)
+
+        for script in soup.find_all("script"):
+            script_id = (script.get("id") or "").lower()
+            script_type = (script.get("type") or "").lower()
+            raw = script.string or script.get_text(strip=True)
+            if not raw:
+                continue
+
+            looks_like_json = (
+                script_id in {"__next_data__", "__nuxt_data__"}
+                or script_type in {"application/json", "application/ld+json"}
+                or raw.startswith("{")
+                or raw.startswith("[")
+            )
+            if not looks_like_json:
+                continue
+
+            try:
+                payload = json.loads(raw)
+            except Exception:
+                continue
+
+            collect_strings(payload)
+
+        # Dedupe while preserving order and limit expansion noise.
+        deduped = list(dict.fromkeys(candidates))
+        return deduped[:80]
 
     def _should_retry_with_rendered_fallback(self, html: str, content: str) -> bool:
         min_words = int(os.getenv("BRIGHTDATA_MIN_WORDS", "80"))

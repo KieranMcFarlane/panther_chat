@@ -312,3 +312,74 @@ async def test_claude_client_uses_reasoning_content_when_message_content_none(mo
     result = await client.query(prompt="probe", model="haiku", max_tokens=64)
 
     assert result["content"] == "{\"decision\":\"NO_PROGRESS\"}"
+
+
+@pytest.mark.asyncio
+async def test_claude_client_uses_retry_after_and_fallback_model_on_429(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_FALLBACK_MODEL", "moonshotai/Kimi-K2.5-TEE")
+    monkeypatch.setenv("CHUTES_MAX_RETRIES", "1")
+    monkeypatch.setenv("CHUTES_RETRY_MAX_SECONDS", "5")
+
+    requests = {"models": []}
+    sleeps = []
+    attempts = {"count": 0}
+
+    class FakeResponse:
+        def __init__(self, status_code=200, payload=None, headers=None):
+            self.status_code = status_code
+            self._payload = payload or {}
+            self.headers = headers or {}
+            self.request = httpx.Request("POST", "https://llm.chutes.ai/v1/chat/completions")
+
+        def raise_for_status(self):
+            if self.status_code >= 400:
+                raise httpx.HTTPStatusError(
+                    "rate limited",
+                    request=self.request,
+                    response=httpx.Response(self.status_code, headers=self.headers, request=self.request),
+                )
+            return None
+
+        def json(self):
+            return self._payload
+
+    class FakeAsyncClient:
+        def __init__(self, timeout):
+            self.timeout = timeout
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            attempts["count"] += 1
+            requests["models"].append(json.get("model"))
+            if attempts["count"] == 1:
+                return FakeResponse(status_code=429, headers={"retry-after": "1.5"})
+            return FakeResponse(
+                status_code=200,
+                payload={
+                    "choices": [{"message": {"content": "Recovered after 429"}, "finish_reason": "stop"}],
+                    "usage": {"prompt_tokens": 2, "completion_tokens": 3, "total_tokens": 5},
+                },
+            )
+
+    async def fake_sleep(seconds):
+        sleeps.append(seconds)
+        return None
+
+    monkeypatch.setattr(claude_client_module.httpx, "AsyncClient", FakeAsyncClient)
+    monkeypatch.setattr(claude_client_module.asyncio, "sleep", fake_sleep)
+
+    client = ClaudeClient()
+    result = await client.query(prompt="retry with fallback model", model="haiku", max_tokens=64)
+
+    assert result["content"] == "Recovered after 429"
+    assert requests["models"] == ["zai-org/GLM-5-TEE", "moonshotai/Kimi-K2.5-TEE"]
+    assert sleeps == [1.5]

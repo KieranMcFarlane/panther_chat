@@ -180,3 +180,28 @@ async def test_fallback_scrape_survives_publication_date_import_failure(monkeypa
 
     assert result["status"] == "success"
     assert "No date parser installed" in result["content"]
+
+
+def test_extract_text_from_html_uses_json_state_for_js_heavy_pages():
+    client = BrightDataSDKClient.__new__(BrightDataSDKClient)
+    html = """
+    <html>
+      <head>
+        <script id="__NEXT_DATA__" type="application/json">
+          {
+            "props": {
+              "pageProps": {
+                "hero": {
+                  "description": "Coventry City FC has issued a request for proposals for digital fan engagement and CRM services."
+                }
+              }
+            }
+          }
+        </script>
+      </head>
+      <body><div id="__next"></div></body>
+    </html>
+    """
+
+    parsed = BrightDataSDKClient._extract_text_from_html(client, html)
+    assert "request for proposals" in parsed["content"].lower()

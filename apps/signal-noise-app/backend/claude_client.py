@@ -375,6 +375,9 @@ class ClaudeClient:
         self.chutes_fallback_model = os.getenv("CHUTES_FALLBACK_MODEL", "moonshotai/Kimi-K2.5-TEE")
         self.chutes_timeout_seconds = float(os.getenv("CHUTES_TIMEOUT_SECONDS", "45"))
         self.chutes_max_retries = int(os.getenv("CHUTES_MAX_RETRIES", "1"))
+        self.chutes_retry_base_seconds = float(os.getenv("CHUTES_RETRY_BASE_SECONDS", "1.0"))
+        self.chutes_retry_max_seconds = float(os.getenv("CHUTES_RETRY_MAX_SECONDS", "8.0"))
+        self.chutes_retry_jitter_seconds = float(os.getenv("CHUTES_RETRY_JITTER_SECONDS", "0.35"))
 
         disable_flag = (os.getenv("DISABLE_CLAUDE_API") or "").strip().lower()
         if disable_flag in {"1", "true", "yes", "on"}:
@@ -450,6 +453,24 @@ class ClaudeClient:
             msg = str(error).lower()
             return "empty response content" in msg
         return False
+
+    @staticmethod
+    def _extract_retry_after_seconds(error: Exception) -> Optional[float]:
+        if not isinstance(error, httpx.HTTPStatusError):
+            return None
+        response = error.response
+        if response is None:
+            return None
+        value = response.headers.get("retry-after")
+        if not value:
+            return None
+        try:
+            seconds = float(value)
+            if seconds >= 0:
+                return seconds
+        except Exception:
+            return None
+        return None
 
     @staticmethod
     def _coerce_message_text(value: Any) -> str:
@@ -636,8 +657,9 @@ class ClaudeClient:
             messages.append({"role": "system", "content": system_prompt})
         messages.append({"role": "user", "content": prompt})
 
+        runtime_model = self._resolve_chutes_runtime_model(model)
         payload = {
-            "model": self._resolve_chutes_runtime_model(model),
+            "model": runtime_model,
             "messages": messages,
             "max_tokens": max_tokens,
             "temperature": 0.0 if json_mode else (0.7 if system_prompt is None else 0.4),
@@ -678,7 +700,8 @@ class ClaudeClient:
 
                 return {
                     "content": content,
-                    "model_used": model,
+                    "model_used": payload["model"],
+                    "requested_model": model,
                     "provider": self.provider,
                     "raw_response": data,
                     "tokens_used": {
@@ -701,9 +724,25 @@ class ClaudeClient:
                 if not is_retryable or attempt >= self.chutes_max_retries:
                     raise
 
-                backoff = min(2 ** attempt, 4)
-                jitter = random.uniform(0.0, 0.35)
-                await asyncio.sleep(backoff + jitter)
+                if payload["model"] != self.chutes_fallback_model:
+                    status_code = None
+                    if isinstance(e, httpx.HTTPStatusError) and e.response is not None:
+                        status_code = e.response.status_code
+                    if status_code == 429 or isinstance(e, httpx.TimeoutException):
+                        payload["model"] = self.chutes_fallback_model
+                        logger.warning(
+                            "Switching Chutes retry model to fallback: %s",
+                            self.chutes_fallback_model,
+                        )
+
+                retry_after = self._extract_retry_after_seconds(e)
+                if retry_after is not None:
+                    sleep_seconds = min(retry_after, self.chutes_retry_max_seconds)
+                else:
+                    backoff = min(self.chutes_retry_base_seconds * (2 ** attempt), self.chutes_retry_max_seconds)
+                    jitter = random.uniform(0.0, max(0.0, self.chutes_retry_jitter_seconds))
+                    sleep_seconds = backoff + jitter
+                await asyncio.sleep(sleep_seconds)
 
         raise last_error
 
