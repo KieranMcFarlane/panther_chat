@@ -51,3 +51,16 @@
 - `node --test tests/test-entity-run-detail.mjs`: pass.
 - `python3 -m py_compile backend/main.py backend/dossier_generator.py backend/entity_pipeline_worker.py backend/pipeline_run_metadata.py`: pass.
 - `PYTHONPATH=backend pytest backend/tests/test_entity_pipeline_worker.py -q`: blocked in this environment (`ModuleNotFoundError: No module named 'supabase'`).
+
+## Wave 2C (BrightData Timeout Hardening)
+
+### Included Commit
+- `d38cd72` fix: enforce timeout on brightdata sdk calls
+
+### Conflict Decisions
+- Merged timeout guard into current `brightdata_sdk_client.py` while preserving newer adaptive zone/fallback logic already present on `main`.
+
+### Verification Results (Wave 2C)
+- `python3 -m py_compile backend/brightdata_sdk_client.py`: pass.
+- `PYTHONPATH=backend .venv-codex/bin/python scripts/check-brightdata-hello.py`: pass (`search_engine` and `scrape_as_markdown` both `status=success`, source `brightdata_sdk`).
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
