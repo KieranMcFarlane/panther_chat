@@ -79,3 +79,19 @@
 - `npm run qa:imports`: pass.
 - `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_dossier_generator_timeout.py -q`: pass (`2 passed`).
 - `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
+
+## Wave 2E (Chutes Error Reporting Hardening)
+
+### Included Commit
+- `3636a17` Harden Chutes error reporting and enrich Phase 0 substep details
+
+### Conflict Decisions
+- Resolved conflict in `backend/claude_client.py` by preserving newer local retry/response parsing helpers and adding richer Chutes error formatting from the incoming commit.
+- Retryable status set includes both existing and incoming coverage (`408`, `409`, `425`, `429`, and `>=500`).
+
+### Verification Results (Wave 2E)
+- `npm run qa:imports`: pass.
+- `python3 -m py_compile backend/claude_client.py`: pass.
+- `node --test tests/test-entity-run-detail.mjs`: pass.
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_dossier_generator_timeout.py -q`: pass (`2 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
