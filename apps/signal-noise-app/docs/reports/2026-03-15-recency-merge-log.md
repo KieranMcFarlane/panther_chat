@@ -129,3 +129,22 @@
 - `python3 -m py_compile backend/main.py`: pass.
 - `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_dossier_generator_timeout.py backend/tests/test_dossier_generator_timeout_fallback.py -q`: pass (`4 passed`).
 - `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
+
+## Wave 2H (Chutes Streaming + JSON Parsing Diagnostics)
+
+### Included Commits
+- `330c07c` Add Chutes streaming transport, final JSON parsing, and diagnostics
+- `ffdd0c7` test(timeout): align fail-mode assertion with queue defaults
+
+### Conflict Decisions
+- Kept incoming `backend/claude_client.py` streaming/parsing implementation and diagnostics surface.
+- Kept current stabilized `backend/dossier_generator.py` to avoid regressing previously merged phase-0 reliability behavior.
+- Preserved deletion of `backend/tests/test_pipeline_phase_update_payload.py` (stale test surface).
+- Restored timeout test file to current-branch baseline and applied a minimal assertion env fix for fail-mode behavior.
+
+### Verification Results (Wave 2H)
+- `npm run qa:imports`: pass.
+- `python3 -m py_compile backend/claude_client.py backend/main.py`: pass.
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_dossier_generator_timeout.py backend/tests/test_dossier_generator_timeout_fallback.py -q`: pass (`4 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python scripts/check-brightdata-hello.py`: pass (`search_engine` succeeded via HTTP fallback in this run; `scrape_as_markdown` succeeded via SDK direct mode).
