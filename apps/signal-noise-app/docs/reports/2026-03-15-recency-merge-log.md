@@ -190,3 +190,25 @@
 - `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_dossier_generator_timeout.py backend/tests/test_dossier_generator_timeout_fallback.py -q`: pass (`4 passed`).
 - `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
 - `PYTHONPATH=backend .venv-codex/bin/python scripts/check-brightdata-hello.py`: pass (`search_engine` success with `result_count=10`; `scrape_as_markdown` success via `brightdata_sdk` direct mode).
+
+## Wave 3B (Runtime Transport + Snapshot Salvage)
+
+### Included Commits
+- `69b4fa1` Add Chutes streaming transport, final JSON parsing, and diagnostics
+- `fabc2a5` fix(merge): restore timeout test contract after stale wave-c pick
+- `e6dd490` Use URI-based Falkor SSL mode instead of forcing TLS
+
+### Skipped Commits
+- `3ae56af` (snapshot: root official URLs + empty-length retry): skipped due high-conflict reintroduction of stale/deleted tests and overlap with newer mainline discovery hardening.
+
+### Conflict Decisions
+- For `69b4fa1`: accepted code path while reverting stale test-only backfill that regressed timeout suite against current `main` contracts.
+- For `e6dd490`: kept stale `backend/tests/test_dossier_phase0_runtime.py` deleted; applied only URI/override-driven Falkor SSL selection (`ssl=use_ssl`) in `dossier_data_collector.py`.
+- Task 5 baseline-monitoring wave remains deferred: `backend.baseline_monitoring` contract still absent on `main`, so precondition not met.
+
+### Verification Results (Wave 3B)
+- `npm run qa:imports`: pass.
+- `python3 -m py_compile backend/main.py backend/claude_client.py backend/dossier_generator.py backend/dossier_data_collector.py`: pass.
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_dossier_generator_timeout.py backend/tests/test_dossier_generator_timeout_fallback.py -q`: pass (`4 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python scripts/check-brightdata-hello.py`: pass (`search_engine` success with `result_count=10`; `scrape_as_markdown` success via `brightdata_sdk` direct mode).
