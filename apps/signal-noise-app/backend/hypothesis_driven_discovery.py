@@ -40,6 +40,7 @@ Usage:
 
 import json
 import logging
+import os
 import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional, Any, Tuple
@@ -584,6 +585,7 @@ class HypothesisDrivenDiscovery:
 
         # Dossier hypotheses cache for warm-start discovery
         self._dossier_hypotheses_cache = {}
+        self._last_url_candidates: List[str] = []
 
         logger.info("🔍 HypothesisDrivenDiscovery initialized")
 
@@ -1097,6 +1099,91 @@ class HypothesisDrivenDiscovery:
                 'performance': performance
             }
 
+        async def try_additional_candidates(primary_url: str, reason: str) -> Optional[Dict[str, Any]]:
+            """Try additional scored URL candidates when the primary scrape path fails."""
+            max_candidates = int(os.getenv("DISCOVERY_MAX_URL_CANDIDATES_PER_HOP", "3"))
+            candidates = []
+            for candidate in getattr(self, "_last_url_candidates", []):
+                if candidate and candidate != primary_url and candidate not in candidates:
+                    candidates.append(candidate)
+                if len(candidates) >= max_candidates - 1:
+                    break
+            if not candidates:
+                return None
+
+            performance.setdefault("candidate_attempts", [])
+            for candidate_url in candidates:
+                candidate_record = {"url": candidate_url}
+                performance["candidate_attempts"].append(candidate_record)
+                try:
+                    scrape_started_at = time.perf_counter()
+                    content_result = await self.brightdata_client.scrape_as_markdown(candidate_url)
+                    candidate_record["scrape_ms"] = round((time.perf_counter() - scrape_started_at) * 1000, 2)
+
+                    if content_result.get("status") != "success":
+                        candidate_record["status"] = "scrape_failed"
+                        continue
+
+                    content_text = content_result.get("content", "")
+                    if not isinstance(content_text, str) or not content_text.strip():
+                        candidate_record["status"] = "empty_content"
+                        continue
+
+                    evaluation_started_at = time.perf_counter()
+                    evaluation = await self._evaluate_content_with_claude(
+                        content=content_text,
+                        hypothesis=hypothesis,
+                        hop_type=hop_type,
+                        content_metadata={"content_type": "text/html", "char_count": len(content_text)},
+                    )
+                    candidate_record["evaluation_ms"] = round((time.perf_counter() - evaluation_started_at) * 1000, 2)
+
+                    decision = evaluation.get("decision", "NO_PROGRESS")
+                    if decision in {"ACCEPT", "WEAK_ACCEPT"}:
+                        target_entity_name = (
+                            getattr(state, 'entity_name', None)
+                            or getattr(hypothesis, 'entity_name', None)
+                            or (getattr(hypothesis, 'metadata', {}) or {}).get('entity_name')
+                            or ''
+                        )
+                        if not self._is_entity_grounded(content=content_text, url=candidate_url, entity_name=target_entity_name):
+                            evaluation = {
+                                **evaluation,
+                                "decision": "REJECT",
+                                "confidence_delta": -0.02,
+                                "justification": "Evidence appears weakly grounded to target entity; likely league/governing-body spillover",
+                                "evidence_type": "entity_grounding_filter",
+                            }
+
+                    hop_cost = 0.001
+                    self.total_cost_usd += hop_cost
+                    candidate_record["status"] = "evaluated"
+
+                    return {
+                        "hop_type": hop_type.value,
+                        "url": candidate_url,
+                        "decision": evaluation.get("decision", "NO_PROGRESS"),
+                        "confidence_delta": evaluation.get("confidence_delta", 0.0),
+                        "justification": evaluation.get("justification", reason),
+                        "evidence_found": evaluation.get("evidence_found", ""),
+                        "cost_usd": hop_cost,
+                        "scrape_data": {
+                            "publication_date": content_result.get("publication_date"),
+                            "timestamp": content_result.get("timestamp"),
+                            "url": content_result.get("url"),
+                            "word_count": content_result.get("metadata", {}).get("word_count"),
+                        },
+                        "performance": {
+                            **performance,
+                            "total_duration_ms": round((time.perf_counter() - hop_started_at) * 1000, 2),
+                        },
+                    }
+                except Exception as candidate_error:
+                    candidate_record["status"] = "error"
+                    candidate_record["error"] = str(candidate_error)
+                    continue
+            return None
+
         # Track depth iteration
         state.increment_depth_count(state.current_depth)
 
@@ -1170,6 +1257,12 @@ class HypothesisDrivenDiscovery:
 
                 if content_result.get('status') != 'success':
                     logger.error(f"Scraping failed: {content_result.get('error', 'Unknown error')}")
+                    alt_result = await try_additional_candidates(
+                        primary_url=url,
+                        reason=f"Primary scrape failed for {url}: {content_result.get('error', 'Unknown error')}"
+                    )
+                    if alt_result:
+                        return alt_result
                     return build_no_progress_result(
                         f"Scraping failed: {content_result.get('error', 'Unknown error')}",
                         scrape_data={
@@ -1201,6 +1294,12 @@ class HypothesisDrivenDiscovery:
                         }
                     else:
                         logger.warning("Scraping returned empty content; treating hop as NO_PROGRESS")
+                        alt_result = await try_additional_candidates(
+                            primary_url=url,
+                            reason=f"No content returned from primary scrape: {url}"
+                        )
+                        if alt_result:
+                            return alt_result
                         return {
                             'hop_type': hop_type.value,
                             'url': url,
@@ -1575,6 +1674,7 @@ class HypothesisDrivenDiscovery:
             'fallback_queries_tried': 0,
             'site_specific_attempted': False
         }
+        self._last_url_candidates = []
 
         # Special handling for DOCUMENT hop type - use optimized PDF search
         if hop_type == HopType.DOCUMENT:
@@ -1673,6 +1773,7 @@ class HypothesisDrivenDiscovery:
                         # If the best result is already clearly dominant, skip LLM validation.
                         if top_score >= 0.75 and (top_score - second_score) >= 0.25:
                             best_url = scored_results[0].get('url')
+                            self._last_url_candidates = [r.get('url') for r in scored_results if r.get('url')][:3]
                             logger.info(
                                 f"✅ {engine} search found dominant URL without validation "
                                 f"(score {top_score}, delta {top_score - second_score:.2f}): {best_url}"
@@ -1701,6 +1802,7 @@ class HypothesisDrivenDiscovery:
                             # Sort by URL score if available
                             valid_results.sort(key=lambda x: x.get('_url_score', 0), reverse=True)
                             best_url = valid_results[0].get('url')
+                            self._last_url_candidates = [r.get('url') for r in valid_results if r.get('url')][:3]
                             best_score = valid_results[0].get('_url_score', 0)
                             logger.info(
                                 f"✅ {engine} search found best URL after validation "
@@ -1735,6 +1837,7 @@ class HypothesisDrivenDiscovery:
                     if scored_results:
                         scored_results.sort(key=lambda x: x.get('_url_score', 0), reverse=True)
                         best_url = scored_results[0].get('url')
+                        self._last_url_candidates = [r.get('url') for r in scored_results if r.get('url')][:3]
                         best_score = scored_results[0].get('_url_score', 0)
                         logger.info(f"✅ {engine} search found best URL (score {best_score}): {best_url}")
 
@@ -1781,6 +1884,7 @@ class HypothesisDrivenDiscovery:
                     best = scored_results[0] if scored_results else None
                     url = best.get('url') if best else None
                     if url:
+                        self._last_url_candidates = [r.get('url') for r in scored_results if r.get('url')][:3]
                         logger.info(f"✅ {engine} search found URL (scored): {url}")
                         metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
                         self._last_url_resolution_metrics = {
@@ -1812,6 +1916,7 @@ class HypothesisDrivenDiscovery:
                 if search_result.get('status') == 'success' and search_result.get('results'):
                     url = search_result['results'][0].get('url')
                     if url:
+                        self._last_url_candidates = [r.get('url') for r in search_result['results'] if r.get('url')][:3]
                         logger.info(f"✅ Fallback {i} ({engine}) found URL: {url}")
                         metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
                         self._last_url_resolution_metrics = {
@@ -1828,6 +1933,7 @@ class HypothesisDrivenDiscovery:
             metrics['site_specific_attempted'] = True
             site_url = await self._try_site_specific_search(entity_name, hop_type)
             if site_url:
+                self._last_url_candidates = [site_url]
                 metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
                 self._last_url_resolution_metrics = {
                     **metrics,
