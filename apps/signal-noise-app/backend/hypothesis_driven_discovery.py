@@ -41,6 +41,7 @@ Usage:
 import json
 import logging
 import os
+import re
 import time
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional, Any, Tuple
@@ -2842,10 +2843,8 @@ Return JSON:
             # Parse JSON response (existing code)
             import re
 
-            json_match = re.search(r'\{[^}]*"decision"[^}]*\}', response_text, re.DOTALL)
-
-            if json_match:
-                result = json.loads(json_match.group(0))
+            result = self._extract_evaluator_json(response_text)
+            if result:
 
                 # Ensure result has required 'decision' key
                 if 'decision' not in result:
@@ -2899,11 +2898,9 @@ Return JSON:
                         requested_model="haiku",
                     )
                     recovery_text = recovery_response.get('content', '') or recovery_response.get('text', '')
-                    recovery_json_match = re.search(r'\{[^}]*"decision"[^}]*\}', str(recovery_text), re.DOTALL)
-                    if recovery_json_match:
-                        recovered = json.loads(recovery_json_match.group(0))
-                        if 'decision' in recovered:
-                            return recovered
+                    recovered = self._extract_evaluator_json(str(recovery_text))
+                    if recovered and 'decision' in recovered:
+                        return recovered
                 except Exception:
                     pass
 
@@ -2954,6 +2951,31 @@ Return JSON:
             logger.error(f"Claude evaluation error: {e}")
             logger.debug(f"Response text: {response_text[:500] if response_text else 'empty'}")
             return self._fallback_result()
+
+    def _extract_evaluator_json(self, response_text: str) -> Optional[Dict[str, Any]]:
+        """Extract first valid evaluator JSON object containing a decision key."""
+        if not isinstance(response_text, str) or not response_text.strip():
+            return None
+
+        candidate_blocks: List[str] = [response_text]
+
+        # Prefer fenced json blocks when present.
+        fenced = re.findall(r"```(?:json)?\s*(\{.*?\})\s*```", response_text, re.DOTALL | re.IGNORECASE)
+        candidate_blocks = fenced + candidate_blocks if fenced else candidate_blocks
+
+        decoder = json.JSONDecoder()
+        for block in candidate_blocks:
+            text = block.strip()
+            for idx, ch in enumerate(text):
+                if ch != "{":
+                    continue
+                try:
+                    obj, _ = decoder.raw_decode(text[idx:])
+                except Exception:
+                    continue
+                if isinstance(obj, dict) and "decision" in obj:
+                    return obj
+        return None
 
     async def _update_hypothesis_state(
         self,
