@@ -205,3 +205,47 @@ def test_extract_text_from_html_uses_json_state_for_js_heavy_pages():
 
     parsed = BrightDataSDKClient._extract_text_from_html(client, html)
     assert "request for proposals" in parsed["content"].lower()
+
+
+@pytest.mark.asyncio
+async def test_browser_request_api_render_returns_extracted_content(monkeypatch):
+    client = BrightDataSDKClient.__new__(BrightDataSDKClient)
+    client.token = "test-token"
+
+    class FakeResponse:
+        def __init__(self):
+            self.text = """
+            <html><body><main>
+            <h1>Vacancies</h1>
+            <p>Coventry City FC seeks digital transformation and CRM suppliers.</p>
+            </main></body></html>
+            """
+
+        def raise_for_status(self):
+            return None
+
+    class FakeAsyncClient:
+        def __init__(self, timeout, follow_redirects, verify=True):
+            self.timeout = timeout
+            self.follow_redirects = follow_redirects
+            self.verify = verify
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            return FakeResponse()
+
+    monkeypatch.setattr(brightdata_module.httpx, "AsyncClient", FakeAsyncClient)
+    monkeypatch.setenv("BRIGHTDATA_BROWSER_ZONE", "sdk_browser")
+
+    result = await BrightDataSDKClient._scrape_with_browser_request_api(client, "https://www.ccfc.co.uk")
+
+    assert result is not None
+    assert result["status"] == "success"
+    assert "crm suppliers" in result["content"].lower()
+    assert result["metadata"]["source"] == "brightdata_request_api"
+    assert result["metadata"]["extraction_mode"] == "rendered_fallback_brightdata_request_api"

@@ -74,6 +74,7 @@ class BrightDataSDKClient:
 
         self.token = token
         self._client = None
+        self._invalid_request_zones = set()
 
         if not self.token:
             logger.warning("⚠️ BRIGHTDATA_API_TOKEN not found in environment")
@@ -141,23 +142,34 @@ class BrightDataSDKClient:
                 logger.info("ℹ️ Using fallback search (SDK unavailable)")
                 return await self._search_engine_fallback(query, engine, country, num_results)
 
+            search_timeout = float(os.getenv("BRIGHTDATA_SEARCH_TIMEOUT_SECONDS", "30"))
+
             # Call search directly (SDK methods are async)
             if engine.lower() == "google":
-                result = await client.search.google(
-                    query=query,
-                    country=country,
-                    num=num_results
+                result = await asyncio.wait_for(
+                    client.search.google(
+                        query=query,
+                        country=country,
+                        num=num_results
+                    ),
+                    timeout=search_timeout,
                 )
             elif engine.lower() == "bing":
-                result = await client.search.bing(
-                    query=query,
-                    country=country,
-                    num=num_results
+                result = await asyncio.wait_for(
+                    client.search.bing(
+                        query=query,
+                        country=country,
+                        num=num_results
+                    ),
+                    timeout=search_timeout,
                 )
             elif engine.lower() == "yandex":
-                result = await client.search.yandex(
-                    query=query,
-                    num=num_results
+                result = await asyncio.wait_for(
+                    client.search.yandex(
+                        query=query,
+                        num=num_results
+                    ),
+                    timeout=search_timeout,
                 )
             else:
                 return {
@@ -240,9 +252,13 @@ class BrightDataSDKClient:
                 url = f'https://{url}'
 
             # Async scraping (SDK method is async)
-            result = await client.scrape_url(
-                url,
-                response_format='raw'
+            scrape_timeout = float(os.getenv("BRIGHTDATA_SCRAPE_TIMEOUT_SECONDS", "35"))
+            result = await asyncio.wait_for(
+                client.scrape_url(
+                    url,
+                    response_format='raw'
+                ),
+                timeout=scrape_timeout,
             )
 
             # Check result
@@ -593,15 +609,29 @@ class BrightDataSDKClient:
                         raw_html_for_output = modern_result.get("raw_html", raw_html_for_output)
                         extraction_mode = "rendered_fallback_modern_sdk"
                 else:
-                    async with httpx.AsyncClient(timeout=30.0, follow_redirects=True, verify=not insecure_ssl_used) as client:
-                        rendered_response = await client.get(url)
-                        rendered_response.raise_for_status()
-                    rendered_parse = self._extract_text_from_html(rendered_response.text)
-                    if len(rendered_parse["content"].strip()) > len(content.strip()):
-                        parse_result = rendered_parse
-                        content = parse_result["content"]
-                        raw_html_for_output = rendered_response.text
-                        extraction_mode = "rendered_fallback"
+                    browser_result = await self._scrape_with_browser_request_api(url, insecure_ssl_used=insecure_ssl_used)
+                    if browser_result and browser_result.get("status") == "success":
+                        browser_content = browser_result.get("content", "")
+                        if len(browser_content.strip()) > len(content.strip()):
+                            parse_result = self._extract_text_from_html(browser_result.get("raw_html", ""))
+                            content = browser_content
+                            raw_html_for_output = browser_result.get("raw_html", raw_html_for_output)
+                            extraction_mode = browser_result.get("metadata", {}).get(
+                                "extraction_mode",
+                                "rendered_fallback_brightdata_request_api",
+                            )
+                    if extraction_mode.startswith("rendered_fallback_brightdata_request_api"):
+                        pass
+                    else:
+                        async with httpx.AsyncClient(timeout=30.0, follow_redirects=True, verify=not insecure_ssl_used) as client:
+                            rendered_response = await client.get(url)
+                            rendered_response.raise_for_status()
+                        rendered_parse = self._extract_text_from_html(rendered_response.text)
+                        if len(rendered_parse["content"].strip()) > len(content.strip()):
+                            parse_result = rendered_parse
+                            content = parse_result["content"]
+                            raw_html_for_output = rendered_response.text
+                            extraction_mode = "rendered_fallback"
 
             try:
                 publication_date = self._extract_publication_date(parse_result["soup"], raw_html_for_output, url)
@@ -632,6 +662,106 @@ class BrightDataSDKClient:
                 "error": str(e),
                 "url": url
             }
+
+    async def _scrape_with_browser_request_api(
+        self,
+        url: str,
+        insecure_ssl_used: bool = False,
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Scrape via BrightData `/request` API using browser/unlocker zones.
+        Intended for JS-heavy pages where direct HTML is sparse.
+        """
+        token = getattr(self, "token", None)
+        if not token:
+            return None
+
+        api_base = os.getenv("BRIGHTDATA_API_BASE", "https://api.brightdata.com").rstrip("/")
+        zone_candidates = [
+            os.getenv("BRIGHTDATA_UNLOCKER_ZONE", "").strip(),
+            "sdk_unlocker",
+            os.getenv("BRIGHTDATA_BROWSER_ZONE", "").strip(),
+        ]
+        invalid_zones = getattr(self, "_invalid_request_zones", set())
+        zones = [z for z in dict.fromkeys(zone_candidates) if z and z not in invalid_zones]
+        if not zones:
+            return None
+
+        target_url = url if url.startswith(("http://", "https://")) else f"https://{url}"
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+            "Accept": "text/html,application/json",
+        }
+
+        request_timeout = float(os.getenv("BRIGHTDATA_REQUEST_TIMEOUT_SECONDS", "18"))
+        max_attempts = max(1, int(os.getenv("BRIGHTDATA_REQUEST_MAX_ATTEMPTS", "2")))
+
+        for zone in zones:
+            payload = {
+                "zone": zone,
+                "url": target_url,
+                "format": "raw",
+            }
+            for attempt in range(max_attempts):
+                try:
+                    async with httpx.AsyncClient(
+                        timeout=request_timeout,
+                        follow_redirects=True,
+                        verify=not insecure_ssl_used,
+                    ) as client:
+                        response = await client.post(f"{api_base}/request", headers=headers, json=payload)
+                        response.raise_for_status()
+                    html_content = response.text or ""
+                    if not html_content.strip():
+                        continue
+                    parse_result = self._extract_text_from_html(html_content)
+                    content = parse_result["content"]
+                    if not content.strip():
+                        continue
+
+                    try:
+                        publication_date = self._extract_publication_date(parse_result["soup"], html_content, target_url)
+                    except Exception:
+                        publication_date = None
+
+                    return {
+                        "status": "success",
+                        "url": target_url,
+                        "content": content,
+                        "raw_html": html_content,
+                        "timestamp": datetime.now().isoformat(),
+                        "publication_date": publication_date.isoformat() if publication_date else None,
+                        "metadata": {
+                            "word_count": len(content.split()),
+                            "source": "brightdata_request_api",
+                            "zone": zone,
+                            "has_publication_date": publication_date is not None,
+                            "extraction_mode": "rendered_fallback_brightdata_request_api",
+                        },
+                    }
+                except httpx.HTTPStatusError as e:
+                    body = ""
+                    try:
+                        body = (e.response.text or "")[:200]
+                    except Exception:
+                        pass
+                    if e.response is not None and e.response.status_code == 400 and "not found" in body.lower():
+                        invalid_zones.add(zone)
+                        self._invalid_request_zones = invalid_zones
+                        logger.warning(f"⚠️ BrightData /request zone not found, disabling zone={zone}")
+                        break
+                    logger.warning(f"⚠️ BrightData /request render failed for zone={zone}: {e}")
+                    if attempt + 1 >= max_attempts:
+                        break
+                    continue
+                except Exception as e:
+                    logger.warning(f"⚠️ BrightData /request render failed for zone={zone}: {e}")
+                    if attempt + 1 >= max_attempts:
+                        break
+                    continue
+
+        return None
 
     def _normalize_search_result_url(self, url: str) -> str:
         """
