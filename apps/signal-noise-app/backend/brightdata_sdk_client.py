@@ -19,6 +19,7 @@ from typing import Dict, List, Any, Optional
 from datetime import datetime
 import os
 from urllib.parse import parse_qs, unquote, urlparse
+from urllib.parse import urlencode
 import httpx
 
 logger = logging.getLogger(__name__)
@@ -536,30 +537,190 @@ class BrightDataSDKClient:
         country: str = "us",
         num_results: int = 10
     ) -> Dict[str, Any]:
-        """Fallback: Use search APIs when SDK unavailable"""
-        # For now, return mock results
-        # In production, you could use SerpAPI, Google Custom Search API, etc.
-        logger.warning(f"⚠️ Using fallback search (not BrightData): {query}")
+        """Fallback: Use BrightData SERP HTTP API directly when SDK search is unstable."""
+        logger.warning(f"⚠️ Using BrightData HTTP SERP fallback: {query}")
+        token = getattr(self, "token", None)
+        if not token:
+            return {
+                "status": "error",
+                "engine": engine,
+                "query": query,
+                "results": [],
+                "timestamp": datetime.now().isoformat(),
+                "metadata": {
+                    "source": "brightdata_http_fallback",
+                    "error": "BRIGHTDATA_API_TOKEN missing for HTTP fallback",
+                },
+            }
+
+        api_base = os.getenv("BRIGHTDATA_API_BASE", "https://api.brightdata.com").rstrip("/")
+        timeout = float(os.getenv("BRIGHTDATA_FALLBACK_SEARCH_TIMEOUT_SECONDS", "20"))
+        max_attempts = max(1, int(os.getenv("BRIGHTDATA_FALLBACK_SEARCH_MAX_ATTEMPTS", "2")))
+
+        last_error: Optional[str] = None
+        request_zone_candidates = [
+            os.getenv("BRIGHTDATA_SERP_ZONE", "").strip(),
+            "sdk_serp",
+        ]
+        request_zones = [z for z in dict.fromkeys(request_zone_candidates) if z]
+        target_url = self._build_serp_target_url(engine, query, country, num_results)
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+            "Accept": "application/json,text/html",
+        }
+
+        for zone in request_zones:
+            payload = {"zone": zone, "url": target_url, "format": "json", "country": country}
+            for attempt in range(max_attempts):
+                try:
+                    async with httpx.AsyncClient(timeout=timeout, follow_redirects=True) as client:
+                        response = await client.post(f"{api_base}/request", headers=headers, json=payload)
+                        response.raise_for_status()
+                    payload_json = response.json()
+                    results = self._extract_serp_results(payload_json, num_results)
+                    return {
+                        "status": "success",
+                        "engine": engine,
+                        "query": query,
+                        "results": results,
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": {
+                            "source": "brightdata_http_fallback",
+                            "country": country,
+                            "endpoint": f"{api_base}/request",
+                            "zone": zone,
+                        },
+                    }
+                except httpx.HTTPStatusError as e:
+                    body = ""
+                    try:
+                        body = (e.response.text or "")[:200]
+                    except Exception:
+                        pass
+                    if e.response is not None and e.response.status_code == 400 and "zone" in body.lower() and "not found" in body.lower():
+                        last_error = str(e)
+                        logger.warning(f"⚠️ BrightData SERP request zone not found, skipping zone={zone}")
+                        break
+                    last_error = str(e)
+                    logger.warning(
+                        "⚠️ BrightData /request SERP fallback failed (zone=%s, attempt %s/%s): %s",
+                        zone,
+                        attempt + 1,
+                        max_attempts,
+                        e,
+                    )
+                    continue
+                except Exception as e:
+                    last_error = str(e)
+                    logger.warning(
+                        "⚠️ BrightData /request SERP fallback failed (zone=%s, attempt %s/%s): %s",
+                        zone,
+                        attempt + 1,
+                        max_attempts,
+                        e,
+                    )
+                    continue
+
+        # Legacy fallback path (older endpoint variants).
+        endpoint = f"{api_base}/serp/{engine.lower()}"
+        params = {
+            "query": query,
+            "num_results": str(num_results),
+            "api_key": token,
+            "country": country,
+            "language": "en",
+        }
+        for attempt in range(max_attempts):
+            try:
+                async with httpx.AsyncClient(timeout=timeout, follow_redirects=True) as client:
+                    response = await client.get(endpoint, params=params)
+                    response.raise_for_status()
+                payload = response.json()
+                results = self._extract_serp_results(payload, num_results)
+
+                return {
+                    "status": "success",
+                    "engine": engine,
+                    "query": query,
+                    "results": results,
+                    "timestamp": datetime.now().isoformat(),
+                    "metadata": {
+                        "source": "brightdata_http_fallback",
+                        "country": country,
+                        "endpoint": endpoint,
+                    },
+                }
+            except Exception as e:
+                last_error = str(e)
+                logger.warning(
+                    "⚠️ BrightData HTTP SERP fallback failed (attempt %s/%s): %s",
+                    attempt + 1,
+                    max_attempts,
+                    e,
+                )
+                continue
 
         return {
-            "status": "success",
+            "status": "error",
             "engine": engine,
             "query": query,
-            "results": [
-                {
-                    "position": i + 1,
-                    "title": f"Result {i + 1} for {query}",
-                    "url": f"https://example.com/result{i + 1}",
-                    "snippet": f"This is a fallback result for {query}"
-                }
-                for i in range(min(num_results, 3))
-            ],
+            "results": [],
             "timestamp": datetime.now().isoformat(),
             "metadata": {
-                "source": "fallback",
-                "warning": "BrightData SDK unavailable, using mock results"
-            }
+                "source": "brightdata_http_fallback",
+                "country": country,
+                "endpoint": endpoint,
+                "error": last_error or "unknown fallback error",
+            },
         }
+
+    def _build_serp_target_url(self, engine: str, query: str, country: str, num_results: int) -> str:
+        """Build target SERP URL for BrightData /request fallback."""
+        normalized_engine = (engine or "google").lower()
+        if normalized_engine == "bing":
+            base = "https://www.bing.com/search"
+            params = {"q": query, "count": min(max(num_results, 1), 50), "setlang": "en"}
+        elif normalized_engine == "yandex":
+            base = "https://yandex.com/search/"
+            params = {"text": query}
+        else:
+            base = "https://www.google.com/search"
+            params = {"q": query}
+            if num_results > 0:
+                params["num"] = min(num_results, 100)
+            if country:
+                params["gl"] = country.lower()
+            params["hl"] = "en"
+        return f"{base}?{urlencode(params)}"
+
+    def _extract_serp_results(self, payload: Dict[str, Any], num_results: int) -> List[Dict[str, Any]]:
+        """Normalize common BrightData SERP response shapes into list of results."""
+        if not isinstance(payload, dict):
+            return []
+        raw_results = (
+            payload.get("organic_results")
+            or payload.get("results")
+            or payload.get("organic")
+            or payload.get("response", {}).get("organic_results")
+            or payload.get("serp", {}).get("organic_results")
+            or []
+        )
+        if not isinstance(raw_results, list):
+            return []
+
+        results = []
+        for idx, item in enumerate(raw_results[:num_results], 1):
+            if not isinstance(item, dict):
+                continue
+            raw_url = item.get("url") or item.get("link") or item.get("target_url") or ""
+            results.append({
+                "position": item.get("position") or item.get("rank") or idx,
+                "title": item.get("title") or item.get("text"),
+                "url": self._normalize_search_result_url(raw_url),
+                "snippet": item.get("description", "") or item.get("snippet", ""),
+            })
+        return results
 
     async def _scrape_as_markdown_fallback(self, url: str) -> Dict[str, Any]:
         """Fallback: Use httpx + BeautifulSoup when SDK unavailable"""

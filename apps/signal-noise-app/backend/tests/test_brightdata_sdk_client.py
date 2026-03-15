@@ -249,3 +249,99 @@ async def test_browser_request_api_render_returns_extracted_content(monkeypatch)
     assert "crm suppliers" in result["content"].lower()
     assert result["metadata"]["source"] == "brightdata_request_api"
     assert result["metadata"]["extraction_mode"] == "rendered_fallback_brightdata_request_api"
+
+
+@pytest.mark.asyncio
+async def test_search_engine_fallback_uses_brightdata_http_serp(monkeypatch):
+    client = BrightDataSDKClient.__new__(BrightDataSDKClient)
+    client.token = "test-token"
+
+    class FakeResponse:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {
+                "organic_results": [
+                    {
+                        "position": 1,
+                        "title": "Coventry City procurement update",
+                        "link": "https://example.org/procurement",
+                        "description": "RFP issued for CRM platform",
+                    }
+                ]
+            }
+
+    class FakeAsyncClient:
+        def __init__(self, timeout, follow_redirects):
+            self.timeout = timeout
+            self.follow_redirects = follow_redirects
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            assert "/request" in url
+            assert headers["Authorization"] == "Bearer test-token"
+            assert json["zone"] == "sdk_serp"
+            assert "google.com/search" in json["url"]
+            return FakeResponse()
+
+        async def get(self, url, params=None):
+            raise AssertionError("legacy /serp endpoint should not be used when /request succeeds")
+
+    monkeypatch.setattr(brightdata_module.httpx, "AsyncClient", FakeAsyncClient)
+
+    result = await BrightDataSDKClient._search_engine_fallback(
+        client,
+        query="coventry city fc rfp",
+        engine="google",
+        country="us",
+        num_results=5,
+    )
+
+    assert result["status"] == "success"
+    assert len(result["results"]) == 1
+    assert result["results"][0]["url"] == "https://example.org/procurement"
+    assert result["metadata"]["source"] == "brightdata_http_fallback"
+
+
+@pytest.mark.asyncio
+async def test_search_engine_fallback_returns_error_without_mock_results(monkeypatch):
+    client = BrightDataSDKClient.__new__(BrightDataSDKClient)
+    client.token = "test-token"
+
+    class FakeAsyncClient:
+        def __init__(self, timeout, follow_redirects):
+            self.timeout = timeout
+            self.follow_redirects = follow_redirects
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            raise httpx.ReadTimeout("timeout")
+
+        async def get(self, url, params=None):
+            raise httpx.ReadTimeout("timeout")
+
+    monkeypatch.setattr(brightdata_module.httpx, "AsyncClient", FakeAsyncClient)
+    monkeypatch.setenv("BRIGHTDATA_FALLBACK_SEARCH_MAX_ATTEMPTS", "1")
+
+    result = await BrightDataSDKClient._search_engine_fallback(
+        client,
+        query="coventry city fc rfp",
+        engine="google",
+        country="us",
+        num_results=5,
+    )
+
+    assert result["status"] == "error"
+    assert result["results"] == []
+    assert result["metadata"]["source"] == "brightdata_http_fallback"
