@@ -14,6 +14,10 @@ export async function GET(request: NextRequest) {
     const sortBy = searchParams.get('sortBy') || 'name'
     const sortOrder = searchParams.get('sortOrder') || 'asc'
     const search = searchParams.get('search') || ''
+    const sport = (searchParams.get('sport') || '').trim()
+    const league = (searchParams.get('league') || '').trim()
+    const country = (searchParams.get('country') || '').trim()
+    const entityClass = (searchParams.get('entityClass') || '').trim()
 
     console.log(`📖 Fetching entities from Supabase: page=${page}, limit=${limit}, search=${search || 'none'}`)
 
@@ -21,10 +25,42 @@ export async function GET(request: NextRequest) {
     console.log(`✅ Loaded canonical entity snapshot: ${canonicalEntities.length} entities`)
 
     const normalizedSearch = search.trim().toLowerCase()
+    const normalizedSport = sport.toLowerCase()
+    const normalizedLeague = league.toLowerCase()
+    const normalizedCountry = country.toLowerCase()
+    const normalizedEntityClass = entityClass.toLowerCase()
     const filteredEntities = canonicalEntities.filter((entity) => {
       const properties = entity.properties || {}
+      const entityLabels = (entity.labels || []).map((label: string) => String(label).toLowerCase())
+      const propType = String(properties.type || '').toLowerCase()
+      const propEntityClass = String(properties.entityClass || properties.entity_class || '').toLowerCase()
+      const propSport = String(properties.sport || '').toLowerCase()
+      const propLeague = String(properties.league || '').toLowerCase()
+      const propCountry = String(properties.country || '').toLowerCase()
 
-      if (entityType && entityType !== 'all' && !(entity.labels || []).includes(entityType)) {
+      if (
+        entityType &&
+        entityType !== 'all' &&
+        !entityLabels.includes(entityType.toLowerCase()) &&
+        propType !== entityType.toLowerCase() &&
+        propEntityClass !== entityType.toLowerCase()
+      ) {
+        return false
+      }
+
+      if (normalizedSport && propSport !== normalizedSport) {
+        return false
+      }
+
+      if (normalizedLeague && propLeague !== normalizedLeague) {
+        return false
+      }
+
+      if (normalizedCountry && propCountry !== normalizedCountry) {
+        return false
+      }
+
+      if (normalizedEntityClass && propEntityClass !== normalizedEntityClass && propType !== normalizedEntityClass) {
         return false
       }
 
@@ -94,6 +130,10 @@ export async function GET(request: NextRequest) {
       },
       filters: {
         entityType,
+        sport,
+        league,
+        country,
+        entityClass,
         sortBy,
         sortOrder
       },

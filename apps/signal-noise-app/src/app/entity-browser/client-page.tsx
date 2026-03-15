@@ -40,6 +40,10 @@ interface EntityBrowserResponse {
   }
   filters: {
     entityType: string
+    sport?: string
+    league?: string
+    country?: string
+    entityClass?: string
     sortBy: string
     sortOrder: string
   }
@@ -50,6 +54,13 @@ interface AutocompleteEntity {
   graph_id?: string | number
   name: string
   type?: string
+}
+
+interface EntityTaxonomyResponse {
+  sports: string[]
+  leagues: string[]
+  countries: string[]
+  entityClasses: string[]
 }
 
 export default function EntityBrowserClientPage() {
@@ -73,9 +84,19 @@ export default function EntityBrowserClientPage() {
   const [currentPage, setCurrentPage] = useState(initialPageFromUrl)
   const [gridWidth, setGridWidth] = useState(0)
   const gridContainerRef = useRef<HTMLDivElement | null>(null)
+  const [taxonomy, setTaxonomy] = useState<EntityTaxonomyResponse>({
+    sports: [],
+    leagues: [],
+    countries: [],
+    entityClasses: []
+  })
 
   const [filters, setFilters] = useState({
     entityType: "all",
+    sport: "all",
+    league: "all",
+    country: "all",
+    entityClass: "all",
     sortBy: "popular",
     sortOrder: "desc" as "asc" | "desc",
     limit: "10"
@@ -119,12 +140,25 @@ export default function EntityBrowserClientPage() {
       sortOrder: filters.sortOrder
     })
 
+    if (filters.sport !== 'all') {
+      params.append('sport', filters.sport)
+    }
+    if (filters.league !== 'all') {
+      params.append('league', filters.league)
+    }
+    if (filters.country !== 'all') {
+      params.append('country', filters.country)
+    }
+    if (filters.entityClass !== 'all') {
+      params.append('entityClass', filters.entityClass)
+    }
+
     if (searchValue.trim()) {
       params.append('search', searchValue.trim())
     }
 
     return params
-  }, [filters.entityType, filters.limit, filters.sortBy, filters.sortOrder])
+  }, [filters.country, filters.entityClass, filters.entityType, filters.league, filters.limit, filters.sortBy, filters.sortOrder, filters.sport])
 
   const fetchEntities = useCallback(async (page: number, isInitial: boolean = false) => {
     if (isInitial) {
@@ -204,11 +238,45 @@ export default function EntityBrowserClientPage() {
   }, [fetchEntities, searchTerm])
 
   const resetAndReload = useCallback(() => {
-    setCurrentPage(1)
-    startTransition(() => {
-      fetchEntities(1)
+    setSearchTerm("")
+    setAppliedSearchTerm("")
+    setFilters({
+      entityType: "all",
+      sport: "all",
+      league: "all",
+      country: "all",
+      entityClass: "all",
+      sortBy: "popular",
+      sortOrder: "desc",
+      limit: "10"
     })
-  }, [fetchEntities])
+    setCurrentPage(1)
+  }, [])
+
+  useEffect(() => {
+    let mounted = true
+    const fetchTaxonomy = async () => {
+      try {
+        const response = await fetch('/api/entities/taxonomy')
+        if (!response.ok) return
+        const result = await response.json()
+        if (!mounted) return
+        setTaxonomy({
+          sports: Array.isArray(result.sports) ? result.sports : [],
+          leagues: Array.isArray(result.leagues) ? result.leagues : [],
+          countries: Array.isArray(result.countries) ? result.countries : [],
+          entityClasses: Array.isArray(result.entityClasses) ? result.entityClasses : []
+        })
+      } catch (_err) {
+        // Taxonomy is optional; keep the browser usable without it.
+      }
+    }
+
+    fetchTaxonomy()
+    return () => {
+      mounted = false
+    }
+  }, [])
 
   useEffect(() => {
     const term = deferredSearchTerm.trim()
@@ -371,7 +439,7 @@ export default function EntityBrowserClientPage() {
       <div className="container mx-auto px-4 py-8">
         <Card className="mb-6">
           <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -423,6 +491,54 @@ export default function EntityBrowserClientPage() {
                   <SelectItem value="Club">Club</SelectItem>
                   <SelectItem value="League">League</SelectItem>
                   <SelectItem value="Person">Person</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={filters.sport} onValueChange={(value) => updateFilters(prev => ({ ...prev, sport: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Sport" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Sports</SelectItem>
+                  {taxonomy.sports.map((sport) => (
+                    <SelectItem key={sport} value={sport}>{sport}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={filters.league} onValueChange={(value) => updateFilters(prev => ({ ...prev, league: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="League" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Leagues</SelectItem>
+                  {taxonomy.leagues.map((league) => (
+                    <SelectItem key={league} value={league}>{league}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={filters.country} onValueChange={(value) => updateFilters(prev => ({ ...prev, country: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Country" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Countries</SelectItem>
+                  {taxonomy.countries.map((country) => (
+                    <SelectItem key={country} value={country}>{country}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={filters.entityClass} onValueChange={(value) => updateFilters(prev => ({ ...prev, entityClass: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Entity Class" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Classes</SelectItem>
+                  {taxonomy.entityClasses.map((entityClass) => (
+                    <SelectItem key={entityClass} value={entityClass}>{entityClass}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
 
