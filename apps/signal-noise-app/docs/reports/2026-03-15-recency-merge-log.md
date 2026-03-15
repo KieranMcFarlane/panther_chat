@@ -64,3 +64,18 @@
 - `python3 -m py_compile backend/brightdata_sdk_client.py`: pass.
 - `PYTHONPATH=backend .venv-codex/bin/python scripts/check-brightdata-hello.py`: pass (`search_engine` and `scrape_as_markdown` both `status=success`, source `brightdata_sdk`).
 - `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
+
+## Wave 2D (Phase-0 Timeout Handling)
+
+### Included Commits
+- `1b644a4` Fix phase-0 timeout handling in run-entity
+- `629c35b` test(timeout): stub missing baseline module for phase0 timeout path
+
+### Conflict Decisions
+- No cherry-pick conflicts for `1b644a4`.
+- Follow-up test shim added because `run_entity_pipeline` imports `backend.baseline_monitoring` eagerly while this module is not yet merged in current wave scope.
+
+### Verification Results (Wave 2D)
+- `npm run qa:imports`: pass.
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_dossier_generator_timeout.py -q`: pass (`2 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
