@@ -27,6 +27,7 @@ import {
   Target,
   Brain,
   Trophy,
+  Upload,
   ChevronDown,
   ChevronRight,
   Bot,
@@ -43,6 +44,7 @@ import VectorSearchDebounced from '@/components/ui/VectorSearch-debounced';
 const navItems = [
   { icon: Home, label: 'Home', href: '/' },
   { icon: Database, label: 'Entities', href: '/entity-browser' },
+  { icon: Upload, label: 'Import CSV', href: '/entity-import' },
   { icon: FileText, label: "RFP's/Tenders", href: '/tenders' },
   {
     icon: Search,
