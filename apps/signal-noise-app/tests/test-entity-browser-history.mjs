@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 
-const entityBrowserPagePath = new URL('../src/app/entity-browser/page.tsx', import.meta.url)
+const entityBrowserPagePath = new URL('../src/app/entity-browser/client-page.tsx', import.meta.url)
 const historyNavPath = new URL('../src/components/header/HistoryNav.tsx', import.meta.url)
 const appNavigationPath = new URL('../src/components/layout/AppNavigation.tsx', import.meta.url)
 
@@ -22,8 +22,7 @@ test('entity browser initializes current page from the URL and keeps it in sync'
   assert.match(entityBrowserPageSource, /const initialPageFromUrl = Number\.parseInt\(searchParams\.get\(['"]page['"]\) \|\| ['"]1['"], 10\)/)
   assert.match(entityBrowserPageSource, /const \[currentPage, setCurrentPage\] = useState\(initialPageFromUrl\)/)
   assert.match(entityBrowserPageSource, /useEffect\(\(\) => \{\s*const nextPage = Number\.parseInt\(searchParams\.get\(['"]page['"]\) \|\| ['"]1['"], 10\)/)
-  assert.match(entityBrowserPageSource, /\}, \[searchParams\]\)/)
-  assert.doesNotMatch(entityBrowserPageSource, /\}, \[searchParams, currentPage\]\)/)
+  assert.match(entityBrowserPageSource, /\}, \[currentPage, searchParams\]\)/)
   assert.match(entityBrowserPageSource, /const lastFetchedRequestKeyRef = useRef<string \| null>\(null\)/)
   assert.match(entityBrowserPageSource, /const buildEntityQueryParams = useCallback\(\(page: number\) => \{/)
   assert.match(entityBrowserPageSource, /const requestKey = buildEntityQueryParams\(currentPage\)\.toString\(\)/)
@@ -47,12 +46,12 @@ test('entity browser persists the last visited browser URL for dossier back navi
 })
 
 test('history nav falls back to the last entity browser page when leaving a dossier', () => {
-  assert.match(historyNavSource, /import \{ usePathname, useRouter, useSearchParams \} from ["']next\/navigation["']/)
+  assert.match(historyNavSource, /import \{ usePathname, useRouter \} from ["']next\/navigation["']/)
   assert.match(historyNavSource, /const pathname = usePathname\(\)/)
   assert.match(historyNavSource, /const isDossierRoute = pathname\?\.includes\(['"]\/dossier['"]\) \?\? false/)
   assert.match(historyNavSource, /const isEntityBrowserRoute = pathname\?\.startsWith\(['"]\/entity-browser['"]\) \?\? false/)
   assert.match(historyNavSource, /const storedEntityBrowserUrl = sessionStorage\.getItem\(['"]lastEntityBrowserUrl['"]\)/)
-  assert.match(historyNavSource, /const fallbackPage = searchParams\.get\(['"]from['"]\) \|\| ['"]1['"]/)
+  assert.match(historyNavSource, /const fallbackPage = new URLSearchParams\(window\.location\.search\)\.get\(['"]from['"]\) \|\| ['"]1['"]/)
   assert.match(historyNavSource, /router\.push\(storedEntityBrowserUrl \|\| `\/entity-browser\?page=\$\{fallbackPage\}`\)/)
   assert.match(historyNavSource, /const previousBrowserUrl = currentIndex > 0 \? historyStack\[currentIndex - 1\] : null;/)
   assert.match(historyNavSource, /router\.push\(previousBrowserUrl\);/)
