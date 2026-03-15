@@ -33,3 +33,21 @@
   - `/api/entities?page=1&limit=3&sport=Cricket` responds successfully.
 - `npm run lint:full`: blocked by interactive Next.js ESLint setup prompt in this repo state.
 - Pipeline smoke scripts referenced by prior workflow are not present in this repository layout (`run_fixed_dossier_pipeline.py`, `scripts/check-pipeline-runtime.sh`, `backend/tests/test_dossier_phase0_runtime.py` not found).
+
+## Wave 2B (Runtime + Run-Detail)
+
+### Included Commits
+- `c8d01bb` fix: preserve dossier phase metadata in pipeline updates
+- `0e881c5` feat: add live phase0 substep states and collection timeout guard
+- `c5c3a58` fix(merge): restore valid collector try/finally in dossier generation
+
+### Conflict Decisions (Deterministic Precedence)
+- Kept newer phase-metadata + phase0 substep instrumentation from the selected Wave 2B commit.
+- Preserved current branch deletion of `backend/tests/test_pipeline_phase_update_payload.py` to avoid reintroducing a stale deleted surface.
+- Merged `dossier_generator.py` to keep leadership enrichment and Claude-disabled fallback behavior while adding timeout/progress callbacks.
+
+### Verification Results (Wave 2B)
+- `npm run qa:imports`: pass.
+- `node --test tests/test-entity-run-detail.mjs`: pass.
+- `python3 -m py_compile backend/main.py backend/dossier_generator.py backend/entity_pipeline_worker.py backend/pipeline_run_metadata.py`: pass.
+- `PYTHONPATH=backend pytest backend/tests/test_entity_pipeline_worker.py -q`: blocked in this environment (`ModuleNotFoundError: No module named 'supabase'`).
