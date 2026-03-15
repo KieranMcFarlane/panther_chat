@@ -148,3 +148,45 @@
 - `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_dossier_generator_timeout.py backend/tests/test_dossier_generator_timeout_fallback.py -q`: pass (`4 passed`).
 - `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
 - `PYTHONPATH=backend .venv-codex/bin/python scripts/check-brightdata-hello.py`: pass (`search_engine` succeeded via HTTP fallback in this run; `scrape_as_markdown` succeeded via SDK direct mode).
+
+## Wave 3A Prep (Fresh Inventory + Shortlist)
+
+### Fresh `git cherry` counts vs `main`
+- `codex/phase0-reliability-optimizations`: `+213`
+- `codex/phase0-reliability-optimizations-no-workflow`: `+195`
+- `codex/worktree-snapshot-20260312`: `+134`
+
+### Recency-first shortlist (next candidates)
+- Reliability wave A candidate:
+  - `77e7315` Retry evaluator timeouts with bounded backoff
+- Discovery quality wave B candidates:
+  - `ad24491` fix(discovery): harden official-site selection against store/media domains
+  - `2fc4803` fix(dossier): avoid commerce-domain official-site cache poisoning
+  - `374f146` fix(dossier): reject binary docs and media fallbacks for official site
+- Snapshot salvage (only if not superseded by newer branch commits):
+  - `3ae56af` Prefer root official URLs and retry empty length responses
+  - `01a16d7` Fallback official scraping to subpaths on empty homepage
+
+### Dedupe policy applied
+- Kept only `+` entries from each branch delta.
+- Excluded obvious duplicates already represented in prior waves (e.g., `be2cb95` nav stabilization lineage).
+
+## Wave 3A (Reliability + Discovery Hardening)
+
+### Included Commits
+- `715d5cb` Retry evaluator timeouts with bounded backoff
+- `ae9964e` fix(discovery): harden official-site selection against store/media domains
+
+### Conflict Decisions
+- `hypothesis_driven_discovery.py`: merged incoming evaluator timeout/backoff settings while preserving current `_last_url_candidates` state tracking.
+- `dossier_data_collector.py`: merged incoming official-site domain hardening/cache helpers and preserved current async collector `close()` lifecycle method.
+- Preserved policy to keep stale deleted tests removed:
+  - `backend/tests/test_discovery_url_resolution_fallbacks.py` remained deleted.
+  - `backend/tests/test_dossier_data_collector_seed.py` remained deleted.
+
+### Verification Results (Wave 3A)
+- `npm run qa:imports`: pass.
+- `python3 -m py_compile backend/main.py backend/claude_client.py backend/dossier_generator.py backend/dossier_data_collector.py`: pass.
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_dossier_generator_timeout.py backend/tests/test_dossier_generator_timeout_fallback.py -q`: pass (`4 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python scripts/check-brightdata-hello.py`: pass (`search_engine` success with `result_count=10`; `scrape_as_markdown` success via `brightdata_sdk` direct mode).
