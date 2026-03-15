@@ -5,6 +5,7 @@ Tests for timeout-safe dossier generation behavior in phase 0.
 
 import asyncio
 import sys
+import types
 from pathlib import Path
 
 import pytest
@@ -50,6 +51,19 @@ async def test_generate_with_model_query_timeout_falls_back_to_minimal_dossier(m
 @pytest.mark.asyncio
 async def test_run_entity_pipeline_times_out_with_clear_http_error(monkeypatch):
     monkeypatch.setenv("DOSSIER_PHASE0_TIMEOUT_SECONDS", "0.01")
+
+    # The timeout path is exercised before baseline monitoring logic, but
+    # run_entity_pipeline imports this module eagerly. Stub it if absent.
+    if "backend.baseline_monitoring" not in sys.modules:
+        baseline_module = types.ModuleType("backend.baseline_monitoring")
+
+        class _DummyRunner:  # pragma: no cover - runtime stub for import only
+            def __init__(self, *args, **kwargs):
+                pass
+
+        baseline_module.BaselineMonitoringRunner = _DummyRunner
+        baseline_module.build_compact_candidate_validator = lambda *_args, **_kwargs: (lambda *_a, **_k: [])
+        monkeypatch.setitem(sys.modules, "backend.baseline_monitoring", baseline_module)
 
     async def slow_generate_dossier(*_args, **_kwargs):
         await asyncio.sleep(0.1)
