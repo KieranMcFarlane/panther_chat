@@ -61,6 +61,12 @@ interface EntityTaxonomyResponse {
   leagues: string[]
   countries: string[]
   entityClasses: string[]
+  counts?: {
+    sports?: Record<string, number>
+    leagues?: Record<string, number>
+    countries?: Record<string, number>
+    entityClasses?: Record<string, number>
+  }
 }
 
 export default function EntityBrowserClientPage() {
@@ -88,7 +94,8 @@ export default function EntityBrowserClientPage() {
     sports: [],
     leagues: [],
     countries: [],
-    entityClasses: []
+    entityClasses: [],
+    counts: {}
   })
 
   const [filters, setFilters] = useState({
@@ -265,7 +272,13 @@ export default function EntityBrowserClientPage() {
           sports: Array.isArray(result.sports) ? result.sports : [],
           leagues: Array.isArray(result.leagues) ? result.leagues : [],
           countries: Array.isArray(result.countries) ? result.countries : [],
-          entityClasses: Array.isArray(result.entityClasses) ? result.entityClasses : []
+          entityClasses: Array.isArray(result.entityClasses) ? result.entityClasses : [],
+          counts: {
+            sports: result?.counts?.sports || {},
+            leagues: result?.counts?.leagues || {},
+            countries: result?.counts?.countries || {},
+            entityClasses: result?.counts?.entityClasses || {}
+          }
         })
       } catch (_err) {
         // Taxonomy is optional; keep the browser usable without it.
@@ -406,6 +419,13 @@ export default function EntityBrowserClientPage() {
   }
 
   const entities = data.entities || []
+  const activeFilterChips = [
+    filters.sport !== 'all' ? { key: 'sport', label: `Sport: ${filters.sport}` } : null,
+    filters.league !== 'all' ? { key: 'league', label: `League: ${filters.league}` } : null,
+    filters.country !== 'all' ? { key: 'country', label: `Country: ${filters.country}` } : null,
+    filters.entityClass !== 'all' ? { key: 'entityClass', label: `Class: ${filters.entityClass}` } : null,
+    filters.entityType !== 'all' ? { key: 'entityType', label: `Type: ${filters.entityType}` } : null,
+  ].filter(Boolean) as Array<{ key: 'sport' | 'league' | 'country' | 'entityClass' | 'entityType', label: string }>
   const columnCount = gridWidth >= 1280 ? 3 : gridWidth >= 1024 ? 2 : 1
   const rowCount = Math.ceil(entities.length / columnCount)
   const rowHeight = 360
@@ -501,7 +521,9 @@ export default function EntityBrowserClientPage() {
                 <SelectContent>
                   <SelectItem value="all">All Sports</SelectItem>
                   {taxonomy.sports.map((sport) => (
-                    <SelectItem key={sport} value={sport}>{sport}</SelectItem>
+                    <SelectItem key={sport} value={sport}>
+                      {sport} ({taxonomy.counts?.sports?.[sport] ?? 0})
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -513,7 +535,9 @@ export default function EntityBrowserClientPage() {
                 <SelectContent>
                   <SelectItem value="all">All Leagues</SelectItem>
                   {taxonomy.leagues.map((league) => (
-                    <SelectItem key={league} value={league}>{league}</SelectItem>
+                    <SelectItem key={league} value={league}>
+                      {league} ({taxonomy.counts?.leagues?.[league] ?? 0})
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -525,7 +549,9 @@ export default function EntityBrowserClientPage() {
                 <SelectContent>
                   <SelectItem value="all">All Countries</SelectItem>
                   {taxonomy.countries.map((country) => (
-                    <SelectItem key={country} value={country}>{country}</SelectItem>
+                    <SelectItem key={country} value={country}>
+                      {country} ({taxonomy.counts?.countries?.[country] ?? 0})
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -537,7 +563,9 @@ export default function EntityBrowserClientPage() {
                 <SelectContent>
                   <SelectItem value="all">All Classes</SelectItem>
                   {taxonomy.entityClasses.map((entityClass) => (
-                    <SelectItem key={entityClass} value={entityClass}>{entityClass}</SelectItem>
+                    <SelectItem key={entityClass} value={entityClass}>
+                      {entityClass} ({taxonomy.counts?.entityClasses?.[entityClass] ?? 0})
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -597,6 +625,20 @@ export default function EntityBrowserClientPage() {
                 Showing {entities.length} of {data.pagination.total.toLocaleString()} entities
               </Badge>
             </div>
+            {activeFilterChips.length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {activeFilterChips.map((chip) => (
+                  <Button
+                    key={chip.key}
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => updateFilters((prev) => ({ ...prev, [chip.key]: 'all' }))}
+                  >
+                    {chip.label} ×
+                  </Button>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
 
