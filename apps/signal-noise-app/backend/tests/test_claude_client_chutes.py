@@ -413,7 +413,7 @@ async def test_claude_client_applies_jittered_backoff_without_retry_after(monkey
     result = await client.query(prompt="retry me", model="haiku", max_tokens=64)
 
     assert attempts["count"] == 2
-    assert sleeps == [1.25]
+    assert sleeps == [3.25]
     assert result["content"] == "Recovered after jitter backoff"
 
 
