@@ -19,7 +19,7 @@ import time
 from typing import Dict, List, Any, Optional
 from datetime import datetime
 import os
-from urllib.parse import parse_qs, unquote, urlparse
+from urllib.parse import parse_qs, unquote, urlparse, urljoin
 from urllib.parse import urlencode
 import httpx
 
@@ -1016,6 +1016,7 @@ class BrightDataSDKClient:
             return None
 
         target_url = url if url.startswith(("http://", "https://")) else f"https://{url}"
+        probe_urls = self._build_render_probe_urls(target_url)
         headers = {
             "Authorization": f"Bearer {token}",
             "Content-Type": "application/json",
@@ -1024,73 +1025,117 @@ class BrightDataSDKClient:
 
         request_timeout = float(os.getenv("BRIGHTDATA_REQUEST_TIMEOUT_SECONDS", "18"))
         max_attempts = max(1, int(os.getenv("BRIGHTDATA_REQUEST_MAX_ATTEMPTS", "2")))
+        min_words = int(os.getenv("BRIGHTDATA_MIN_WORDS", "80"))
 
         for zone in zones:
-            payload = {
-                "zone": zone,
-                "url": target_url,
-                "format": "raw",
-            }
-            for attempt in range(max_attempts):
-                try:
-                    async with httpx.AsyncClient(
-                        timeout=request_timeout,
-                        follow_redirects=True,
-                        verify=not insecure_ssl_used,
-                    ) as client:
-                        response = await client.post(f"{api_base}/request", headers=headers, json=payload)
-                        response.raise_for_status()
-                    html_content = response.text or ""
-                    if not html_content.strip():
-                        continue
-                    parse_result = self._extract_text_from_html(html_content)
-                    content = parse_result["content"]
-                    if not content.strip():
-                        continue
-
+            for probe_index, probe_url in enumerate(probe_urls):
+                payload = {
+                    "zone": zone,
+                    "url": probe_url,
+                    "format": "raw",
+                }
+                for attempt in range(max_attempts):
                     try:
-                        publication_date = self._extract_publication_date(parse_result["soup"], html_content, target_url)
-                    except Exception:
-                        publication_date = None
+                        async with httpx.AsyncClient(
+                            timeout=request_timeout,
+                            follow_redirects=True,
+                            verify=not insecure_ssl_used,
+                        ) as client:
+                            response = await client.post(f"{api_base}/request", headers=headers, json=payload)
+                            response.raise_for_status()
+                        html_content = response.text or ""
+                        if not html_content.strip():
+                            continue
+                        parse_result = self._extract_text_from_html(html_content)
+                        content = parse_result["content"]
+                        if not content.strip():
+                            continue
 
-                    return {
-                        "status": "success",
-                        "url": target_url,
-                        "content": content,
-                        "raw_html": html_content,
-                        "timestamp": datetime.now().isoformat(),
-                        "publication_date": publication_date.isoformat() if publication_date else None,
-                        "metadata": {
-                            "word_count": len(content.split()),
-                            "source": "brightdata_request_api",
-                            "zone": zone,
-                            "has_publication_date": publication_date is not None,
-                            "extraction_mode": "rendered_fallback_brightdata_request_api",
-                        },
-                    }
-                except httpx.HTTPStatusError as e:
-                    body = ""
-                    try:
-                        body = (e.response.text or "")[:200]
-                    except Exception:
-                        pass
-                    if e.response is not None and e.response.status_code == 400 and "not found" in body.lower():
-                        self._mark_zone_not_found(zone)
-                        logger.warning(f"⚠️ BrightData /request zone not found, disabling zone={zone}")
-                        break
-                    self._mark_zone_timeout(zone, e)
-                    logger.warning(f"⚠️ BrightData /request render failed for zone={zone}: {e}")
-                    if attempt + 1 >= max_attempts:
-                        break
-                    continue
-                except Exception as e:
-                    self._mark_zone_timeout(zone, e)
-                    logger.warning(f"⚠️ BrightData /request render failed for zone={zone}: {e}")
-                    if attempt + 1 >= max_attempts:
-                        break
-                    continue
+                        word_count = len(content.split())
+                        should_probe_next = (
+                            word_count < min_words
+                            and probe_index + 1 < len(probe_urls)
+                            and probe_url == target_url
+                        )
+                        if should_probe_next:
+                            logger.info(
+                                "ℹ️ BrightData rendered root page is low-signal (%s words), probing subpaths",
+                                word_count,
+                            )
+                            break
+
+                        try:
+                            publication_date = self._extract_publication_date(parse_result["soup"], html_content, probe_url)
+                        except Exception:
+                            publication_date = None
+
+                        return {
+                            "status": "success",
+                            "url": probe_url,
+                            "content": content,
+                            "raw_html": html_content,
+                            "timestamp": datetime.now().isoformat(),
+                            "publication_date": publication_date.isoformat() if publication_date else None,
+                            "metadata": {
+                                "word_count": word_count,
+                                "source": "brightdata_request_api",
+                                "zone": zone,
+                                "probe_url": probe_url,
+                                "probe_index": probe_index,
+                                "has_publication_date": publication_date is not None,
+                                "extraction_mode": "rendered_fallback_brightdata_request_api",
+                            },
+                        }
+                    except httpx.HTTPStatusError as e:
+                        body = ""
+                        try:
+                            body = (e.response.text or "")[:200]
+                        except Exception:
+                            pass
+                        if e.response is not None and e.response.status_code == 400 and "not found" in body.lower():
+                            self._mark_zone_not_found(zone)
+                            logger.warning(f"⚠️ BrightData /request zone not found, disabling zone={zone}")
+                            break
+                        self._mark_zone_timeout(zone, e)
+                        logger.warning(f"⚠️ BrightData /request render failed for zone={zone}: {e}")
+                        if attempt + 1 >= max_attempts:
+                            break
+                        continue
+                    except Exception as e:
+                        self._mark_zone_timeout(zone, e)
+                        logger.warning(f"⚠️ BrightData /request render failed for zone={zone}: {e}")
+                        if attempt + 1 >= max_attempts:
+                            break
+                        continue
 
         return None
+
+    def _build_render_probe_urls(self, url: str) -> List[str]:
+        """
+        Build a small set of high-signal subpaths for JS-heavy sites where homepages are shell-only.
+        """
+        parsed = urlparse(url)
+        if not parsed.scheme or not parsed.netloc:
+            return [url]
+
+        base_root = f"{parsed.scheme}://{parsed.netloc}/"
+        normalized_path = (parsed.path or "/").strip()
+        if normalized_path not in {"", "/"}:
+            return [url]
+
+        subpaths_env = os.getenv(
+            "BRIGHTDATA_CONTENT_PROBE_SUBPATHS",
+            "news,club,first-team,about,team,commercial,partners",
+        )
+        subpaths = [
+            part.strip().strip("/")
+            for part in subpaths_env.split(",")
+            if part.strip().strip("/")
+        ]
+        probe_urls = [base_root.rstrip("/")]
+        for subpath in subpaths:
+            probe_urls.append(urljoin(base_root, f"{subpath}/").rstrip("/"))
+        return list(dict.fromkeys(probe_urls))
 
     def _normalize_search_result_url(self, url: str) -> str:
         """
