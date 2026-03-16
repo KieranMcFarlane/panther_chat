@@ -55,6 +55,19 @@ class EntityDossierGenerator:
         """
         self.claude_client = claude_client
         self.falkordb_client = falkordb_client
+        self._last_entity_data_by_id: Dict[str, Dict[str, Any]] = {}
+        self.section_parallelism = max(
+            1,
+            int(os.getenv("DOSSIER_SECTION_PARALLELISM", "2")),
+        )
+        self.section_max_tokens_cap = max(
+            0,
+            int(os.getenv("DOSSIER_SECTION_MAX_TOKENS_CAP", "0")),
+        )
+        disable_question_extraction_env = os.getenv("DOSSIER_DISABLE_QUESTION_EXTRACTION")
+        self.disable_question_extraction = (
+            str(disable_question_extraction_env or "").strip().lower() in {"1", "true", "yes", "on"}
+        )
 
         # Section templates with model assignments
         self.section_templates = {
@@ -423,18 +436,22 @@ Website: N/A
             dossier.sections.extend(opus_results)
 
         # Extract questions from sections (for discovery feedback loop)
-        try:
-            from backend.dossier_question_extractor import DossierQuestionExtractor
-            question_extractor = DossierQuestionExtractor(self.claude_client)
-            dossier.questions = await question_extractor.extract_questions_from_dossier(
-                dossier.sections,
-                entity_name,
-                max_per_section=3
-            )
-            logger.info(f"Extracted {len(dossier.questions)} questions from dossier sections")
-        except Exception as e:
-            logger.warning(f"Could not extract questions from dossier: {e}")
+        if self.disable_question_extraction:
+            logger.info("Skipping dossier question extraction (DOSSIER_DISABLE_QUESTION_EXTRACTION=true)")
             dossier.questions = []
+        else:
+            try:
+                from dossier_question_extractor import DossierQuestionExtractor
+                question_extractor = DossierQuestionExtractor(self.claude_client)
+                dossier.questions = await question_extractor.extract_questions_from_dossier(
+                    dossier.sections,
+                    entity_name,
+                    max_per_section=3
+                )
+                logger.info(f"Extracted {len(dossier.questions)} questions from dossier sections")
+            except Exception as e:
+                logger.warning(f"Could not extract questions from dossier: {e}")
+                dossier.questions = []
 
         # Calculate metrics
         end_time = datetime.now(timezone.utc)
@@ -468,15 +485,18 @@ Website: N/A
         Returns:
             List of generated DossierSection objects
         """
-        # Create tasks for parallel execution
-        tasks = [
-            self._generate_section(
-                section_id=section_id,
-                entity_data=entity_data,
-                model=model
-            )
-            for section_id in section_ids
-        ]
+        semaphore = asyncio.Semaphore(self.section_parallelism)
+
+        async def _run(section_id: str):
+            async with semaphore:
+                return await self._generate_section(
+                    section_id=section_id,
+                    entity_data=entity_data,
+                    model=model,
+                )
+
+        # Create tasks for parallel execution with bounded concurrency.
+        tasks = [_run(section_id) for section_id in section_ids]
 
         # Execute in parallel
         results = await asyncio.gather(*tasks, return_exceptions=True)
@@ -514,6 +534,9 @@ Website: N/A
         template_info = self.section_templates.get(section_id)
         if not template_info:
             raise ValueError(f"Unknown section ID: {section_id}")
+        max_tokens = int(template_info["max_tokens"])
+        if self.section_max_tokens_cap > 0:
+            max_tokens = min(max_tokens, self.section_max_tokens_cap)
 
         # Load prompt template
         from backend.dossier_templates import get_prompt_template
@@ -539,46 +562,33 @@ Website: N/A
             response = await self.claude_client.query(
                 prompt=prompt,
                 model=claude_model,
-                max_tokens=template_info["max_tokens"]
+                max_tokens=max_tokens
             )
 
             content_text = response.get("content", "")
 
-            # Parse response (expect JSON)
-            import json
-            import re
-
-            # Try to extract JSON from response - more robust pattern matching
-            # First, remove markdown code blocks if present
-            markdown_pattern = r'```(?:json)?\s*\n?([\s\S]*?)\n?```'
-            markdown_match = re.search(markdown_pattern, content_text)
-            if markdown_match:
-                content_text = markdown_match.group(1)
-
-            # Look for a complete JSON object (could be an object or array)
-            json_match = re.search(r'\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}', content_text, re.DOTALL)
-            if not json_match:
-                # Try array pattern
-                json_match = re.search(r'\[[^\[\]]*(?:\[[^\[\]]*\][^\[\]]*)*\]', content_text, re.DOTALL)
-
-            if json_match:
-                try:
-                    section_data = json.loads(json_match.group(0))
-                except json.JSONDecodeError as je:
-                    logger.warning(f"JSON parsing error for {section_id}: {je}")
-                    # Try to fix common JSON issues (trailing commas, unquoted keys)
-                    json_str = json_match.group(0)
-                    # Remove trailing commas
-                    json_str = re.sub(r',\s*([}\]])', r'\1', json_str)
-                    try:
-                        section_data = json.loads(json_str)
-                    except Exception as e2:
-                        logger.warning(f"JSON repair failed for {section_id}: {e2}")
-                        # Final fallback - use raw content
-                        section_data = {"content": [content_text]}
-            else:
-                # Fallback: treat entire response as content
-                section_data = {"content": [content_text]}
+            section_data = self._extract_section_data(content_text)
+            if self._section_data_needs_repair(section_data):
+                if not self.section_json_repair_attempt:
+                    raise ValueError(f"Section {section_id} returned non-JSON or instruction-echo output")
+                repair_prompt = self._build_section_json_repair_prompt(content_text)
+                repair_response = await self.claude_client.query(
+                    prompt=repair_prompt,
+                    model=claude_model,
+                    max_tokens=min(max_tokens, 600),
+                )
+                repaired_text = repair_response.get("content", "")
+                section_data = self._extract_section_data(repaired_text)
+                if self._section_data_needs_repair(section_data):
+                    heuristic_data = self._coerce_unstructured_section_data(repaired_text or content_text)
+                    if heuristic_data:
+                        logger.warning(
+                            "⚠️ Section %s JSON repair failed; using heuristic content fallback",
+                            section_id,
+                        )
+                        section_data = heuristic_data
+                    else:
+                        raise ValueError(f"Section {section_id} JSON repair failed")
 
             # Create DossierSection
             section = DossierSection(
@@ -593,7 +603,7 @@ Website: N/A
             )
 
             # Track cost (approximate)
-            section_cost = self._estimate_section_cost(model, template_info["max_tokens"])
+            section_cost = self._estimate_section_cost(model, max_tokens)
             section.total_cost_usd = section_cost
 
             return section
@@ -602,6 +612,112 @@ Website: N/A
             logger.error(f"Error generating section {section_id} with {model}: {e}")
             raise
 
+    def _extract_section_data(self, content_text: str) -> Dict[str, Any]:
+        """Extract structured section data from model output."""
+        section_data = self._extract_last_valid_json_block(content_text)
+        if isinstance(section_data, list):
+            return {"content": section_data}
+        if isinstance(section_data, dict):
+            return section_data
+        return {"content": [content_text]}
+
+    def _section_data_needs_repair(self, section_data: Dict[str, Any]) -> bool:
+        content = section_data.get("content")
+        if not isinstance(content, list) or not content:
+            return True
+
+        first_text = next((item for item in content if isinstance(item, str) and item.strip()), "")
+        if not first_text:
+            return True
+
+        normalized = first_text.strip().lower()
+        instruction_markers = (
+            "analyze the request",
+            "the user wants",
+            "task:",
+            "instruction",
+            "evaluate whether",
+            "please review",
+            "request context",
+            "return valid json",
+        )
+        if any(marker in normalized for marker in instruction_markers):
+            return True
+
+        # Raw markdown/code-fenced JSON indicates parse failure and requires repair.
+        if normalized.startswith("```"):
+            return True
+        if normalized.startswith("{") or normalized.startswith("["):
+            return True
+
+        return False
+
+    @staticmethod
+    def _build_section_json_repair_prompt(raw_output: str) -> str:
+        return (
+            "Rewrite the following output as strict JSON only.\n"
+            "Return a single JSON object with keys: content (array of strings), metrics (array), "
+            "insights (array), recommendations (array), confidence (number 0-1).\n"
+            "Do not include markdown, commentary, or extra text.\n\n"
+            f"RAW_OUTPUT:\n{raw_output}"
+        )
+
+    @staticmethod
+    def _coerce_unstructured_section_data(raw_output: str) -> Optional[Dict[str, Any]]:
+        """Best-effort fallback when model output is non-JSON after repair."""
+        if not isinstance(raw_output, str) or not raw_output.strip():
+            return None
+
+        marker_patterns = (
+            "analyze the request",
+            "the user wants",
+            "request context",
+            "return valid json",
+            "instruction",
+            "task:",
+            "please review",
+        )
+
+        content_items: List[str] = []
+        for raw_line in raw_output.splitlines():
+            line = raw_line.strip()
+            if not line or line.startswith("```"):
+                continue
+
+            lowered = line.lower()
+            if any(marker in lowered for marker in marker_patterns):
+                continue
+
+            line = re.sub(r"^\d+[\.\)]\s*", "", line)
+            line = re.sub(r"^[-*•]\s*", "", line).strip()
+
+            if line in {"{", "}", "[", "]"}:
+                continue
+            if len(line) < 24 and "http" not in line:
+                continue
+
+            content_items.append(line)
+
+        deduped: List[str] = []
+        seen = set()
+        for item in content_items:
+            if item in seen:
+                continue
+            seen.add(item)
+            deduped.append(item)
+            if len(deduped) >= 6:
+                break
+
+        if not deduped:
+            return None
+
+        return {
+            "content": deduped,
+            "metrics": [],
+            "insights": [],
+            "recommendations": [],
+            "confidence": 0.55,
+        }
     def _estimate_section_cost(self, model: str, max_tokens: int) -> float:
         """
         Estimate cost for generating a section
@@ -885,6 +1001,20 @@ Website: {metadata.website or 'N/A'}
 
         count = len(posts)
         return f"{count} recent LinkedIn posts/references found"
+
+    def _extract_first_url(self, items: Any) -> Optional[str]:
+        """Extract first usable URL from a list of dict records."""
+        if not isinstance(items, list):
+            return None
+
+        for item in items:
+            if isinstance(item, dict):
+                for key in ("url", "link", "job_url"):
+                    value = item.get(key)
+                    if isinstance(value, str) and value.strip():
+                        return value.strip()
+
+        return None
 
 
 class UniversalDossierGenerator(EntityDossierGenerator):

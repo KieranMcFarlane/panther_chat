@@ -18,6 +18,16 @@ from claude_client import ClaudeClient, LLMRequestError
 @pytest.fixture(autouse=True)
 def _default_non_stream_for_legacy_tests(monkeypatch):
     monkeypatch.setenv("CHUTES_STREAM_ENABLED", "false")
+    monkeypatch.setenv("CHUTES_ADAPTIVE_PACING_ENABLED", "false")
+    monkeypatch.setenv("CHUTES_MIN_REQUEST_INTERVAL_SECONDS", "0")
+    monkeypatch.setenv("CHUTES_MODEL_PRIMARY", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_SECONDARY", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_TERTIARY", "zai-org/GLM-5-TEE")
+    ClaudeClient._api_disabled_reason = None
+    ClaudeClient._api_disabled_at_monotonic = None
+    ClaudeClient._api_disabled_until_monotonic = None
+    ClaudeClient._api_disabled_kind = None
+    ClaudeClient._quota_circuit_trip_count = 0
 
 
 def test_claude_client_prefers_chutes_when_configured(monkeypatch):
@@ -45,12 +55,14 @@ def test_claude_client_default_chutes_tier_mapping(monkeypatch):
     monkeypatch.delenv("CHUTES_MODEL_HAIKU", raising=False)
     monkeypatch.delenv("CHUTES_MODEL_SONNET", raising=False)
     monkeypatch.delenv("CHUTES_MODEL_OPUS", raising=False)
-    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_PRIMARY", "moonshotai/Kimi-K2.5-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_SECONDARY", "MiniMaxAI/MiniMax-M2.5-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_TERTIARY", "zai-org/GLM-5-TEE")
 
     client = ClaudeClient()
-    assert client._resolve_chutes_runtime_model("haiku") == "zai-org/GLM-5-TEE"
-    assert client._resolve_chutes_runtime_model("sonnet") == "moonshotai/Kimi-K2.5-TEE"
-    assert client._resolve_chutes_runtime_model("opus") == "MiniMaxAI/MiniMax-M2.5-TEE"
+    assert client._resolve_chutes_runtime_model("haiku") == "moonshotai/Kimi-K2.5-TEE"
+    assert client._resolve_chutes_runtime_model("sonnet") == "MiniMaxAI/MiniMax-M2.5-TEE"
+    assert client._resolve_chutes_runtime_model("opus") == "zai-org/GLM-5-TEE"
 
 
 def test_claude_client_supports_explicit_chutes_anthropic_provider(monkeypatch):
@@ -357,6 +369,62 @@ async def test_claude_client_retries_chutes_rate_limits(monkeypatch):
     assert attempts["count"] == 2
     assert sleeps == [1.0]
     assert result["content"] == "Recovered after 429"
+
+
+@pytest.mark.asyncio
+async def test_claude_client_applies_jittered_backoff_without_retry_after(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_FALLBACK_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_MAX_RETRIES", "1")
+    monkeypatch.setenv("CHUTES_RETRY_JITTER_SECONDS", "0.5")
+
+    attempts = {"count": 0}
+    sleeps = []
+
+    class SuccessResponse:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {
+                "choices": [{"message": {"content": "Recovered after jitter backoff"}, "finish_reason": "stop"}],
+                "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2},
+            }
+
+    class FakeAsyncClient:
+        def __init__(self, timeout):
+            self.timeout = timeout
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            attempts["count"] += 1
+            if attempts["count"] == 1:
+                request = httpx.Request("POST", url)
+                response = httpx.Response(429, request=request)
+                raise httpx.HTTPStatusError("429 Too Many Requests", request=request, response=response)
+            return SuccessResponse()
+
+    async def fake_sleep(seconds):
+        sleeps.append(seconds)
+
+    monkeypatch.setattr(claude_client_module.httpx, "AsyncClient", FakeAsyncClient)
+    monkeypatch.setattr(claude_client_module.asyncio, "sleep", fake_sleep)
+    monkeypatch.setattr(claude_client_module.random, "uniform", lambda _a, _b: 0.25)
+
+    client = ClaudeClient()
+    result = await client.query(prompt="retry me", model="haiku", max_tokens=64)
+
+    assert attempts["count"] == 2
+    assert sleeps == [3.25]
+    assert result["content"] == "Recovered after jitter backoff"
 
 
 @pytest.mark.asyncio

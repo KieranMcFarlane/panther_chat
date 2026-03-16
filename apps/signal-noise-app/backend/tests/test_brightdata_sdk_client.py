@@ -5,6 +5,7 @@ Tests for BrightData client fallback scraping behavior.
 
 import sys
 import time
+import json
 from pathlib import Path
 import pytest
 import httpx
@@ -361,6 +362,84 @@ async def test_search_engine_fallback_uses_brightdata_http_serp(monkeypatch):
     assert len(result["results"]) == 1
     assert result["results"][0]["url"] == "https://example.org/procurement"
     assert result["metadata"]["source"] == "brightdata_http_fallback"
+
+
+@pytest.mark.asyncio
+async def test_search_engine_fallback_polls_response_id_when_initial_results_empty(monkeypatch):
+    client = BrightDataSDKClient.__new__(BrightDataSDKClient)
+    client.token = "test-token"
+    client.serp_poll_attempts = 2
+    client.serp_poll_interval_seconds = 0.0
+
+    calls = {"post": 0, "get": 0}
+
+    class FakeResponse:
+        def __init__(self, payload, status_code=200):
+            self._payload = payload
+            self.status_code = status_code
+            self.text = json.dumps(payload)
+
+        def raise_for_status(self):
+            if self.status_code >= 400:
+                raise httpx.HTTPStatusError(
+                    "request failed",
+                    request=httpx.Request("POST", "https://api.brightdata.com/request"),
+                    response=httpx.Response(self.status_code, text=self.text),
+                )
+
+        def json(self):
+            return self._payload
+
+    class FakeAsyncClient:
+        def __init__(self, timeout, follow_redirects):
+            self.timeout = timeout
+            self.follow_redirects = follow_redirects
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            calls["post"] += 1
+            return FakeResponse({"response_id": "resp_123"})
+
+        async def get(self, url, headers=None, params=None):
+            calls["get"] += 1
+            return FakeResponse(
+                {
+                    "organic_results": [
+                        {
+                            "position": 1,
+                            "title": "Coventry City procurement update",
+                            "link": "https://example.org/async",
+                            "description": "Async SERP result",
+                        }
+                    ]
+                }
+            )
+
+    monkeypatch.setattr(brightdata_module.httpx, "AsyncClient", FakeAsyncClient)
+
+    async def fake_whitelist(self):
+        return {"sdk_serp", "sdk_unlocker"}
+
+    monkeypatch.setattr(BrightDataSDKClient, "_get_request_zone_whitelist", fake_whitelist)
+
+    result = await BrightDataSDKClient._search_engine_fallback(
+        client,
+        query="coventry city fc rfp",
+        engine="google",
+        country="us",
+        num_results=5,
+    )
+
+    assert result["status"] == "success"
+    assert result["results"][0]["url"] == "https://example.org/async"
+    assert calls["post"] == 1
+    assert calls["get"] >= 1
+    assert result["metadata"].get("async_polling") is True
 
 
 @pytest.mark.asyncio

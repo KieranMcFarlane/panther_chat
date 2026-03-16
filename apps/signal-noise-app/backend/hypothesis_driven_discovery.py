@@ -43,14 +43,17 @@ import logging
 import os
 import random
 import re
+import asyncio
 import time
 from importlib import import_module
+from pathlib import Path
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass, field
 from enum import Enum
 from collections import OrderedDict
 from urllib.parse import urlparse
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
@@ -724,6 +727,13 @@ class HypothesisDrivenDiscovery:
             0.0,
             float(os.getenv("DISCOVERY_EVALUATION_TIMEOUT_RETRY_JITTER_SECONDS", "0.35")),
         )
+        self.evaluation_timeout_model_escalation_enabled = self._parse_bool_env(
+            os.getenv("DISCOVERY_EVALUATION_TIMEOUT_MODEL_ESCALATION_ENABLED"),
+            default=True,
+        )
+        self.evaluation_timeout_escalation_model = str(
+            os.getenv("DISCOVERY_EVALUATION_TIMEOUT_ESCALATION_MODEL", "sonnet")
+        ).strip().lower() or "sonnet"
         self.evaluation_max_tokens_default = int(os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_DEFAULT", "360"))
         self.evaluation_max_tokens_press_release = int(os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_PRESS_RELEASE", "250"))
         self.evaluation_max_tokens_official_site = int(os.getenv("DISCOVERY_EVALUATION_MAX_TOKENS_OFFICIAL_SITE", "220"))
@@ -803,13 +813,172 @@ class HypothesisDrivenDiscovery:
                 return None
         return None
 
-    def _load_official_site_url_cache(self) -> Dict[str, Any]:
-        """Load official-site URL cache if configured; otherwise default to empty."""
-        return {}
+    def _official_site_cache_file(self) -> Path:
+        cache_path = os.getenv("DISCOVERY_OFFICIAL_SITE_CACHE_PATH", "backend/data/dossiers/official_site_cache.json")
+        path = Path(cache_path)
+        if not path.is_absolute():
+            path = Path(__file__).resolve().parent.parent / cache_path
+        return path
 
-    def _load_official_site_domain_map(self) -> Dict[str, Any]:
-        """Load official-site domain map if configured; otherwise default to empty."""
-        return {}
+    def _official_site_domain_map_file(self) -> Path:
+        domain_map_path = os.getenv(
+            "DISCOVERY_OFFICIAL_DOMAIN_MAP_PATH",
+            "backend/data/dossiers/official_domain_map.json",
+        )
+        path = Path(domain_map_path)
+        if not path.is_absolute():
+            path = Path(__file__).resolve().parent.parent / domain_map_path
+        return path
+
+    def _normalize_entity_cache_key(self, entity_name: Any) -> str:
+        if not isinstance(entity_name, str):
+            return ""
+        return entity_name.strip().casefold()
+
+    def _canonical_entity_signature(self, entity_name: Any) -> str:
+        if not isinstance(entity_name, str):
+            return ""
+        cleaned = "".join(ch if ch.isalnum() or ch.isspace() else " " for ch in entity_name.casefold())
+        stopwords = {"the", "fc", "afc", "cf", "club", "football", "sports", "sport", "team", "association"}
+        tokens = [token for token in cleaned.split() if token and token not in stopwords]
+        if not tokens:
+            return ""
+        return "".join(tokens)
+
+    def _normalize_http_url(self, candidate: Any) -> Optional[str]:
+        if not isinstance(candidate, str):
+            return None
+        value = candidate.strip()
+        if not value:
+            return None
+        if value.startswith(("http://", "https://")):
+            return value
+        if value.startswith("www.") or "." in value:
+            return f"https://{value.lstrip('/')}"
+        return None
+
+    def _load_official_site_url_cache(self) -> Dict[str, str]:
+        cache_file = self._official_site_cache_file()
+        try:
+            if not cache_file.exists():
+                return {}
+            payload = json.loads(cache_file.read_text())
+            if not isinstance(payload, dict):
+                return {}
+            cache: Dict[str, str] = {}
+            for key, value in payload.items():
+                if not isinstance(key, str):
+                    continue
+                normalized = self._normalize_http_url(value)
+                if normalized:
+                    cache[self._normalize_entity_cache_key(key)] = normalized
+            return cache
+        except Exception:
+            return {}
+
+    def _load_official_site_domain_map(self) -> Dict[str, str]:
+        domain_map_file = self._official_site_domain_map_file()
+        try:
+            if not domain_map_file.exists():
+                return {}
+            payload = json.loads(domain_map_file.read_text())
+            if not isinstance(payload, dict):
+                return {}
+            mapping: Dict[str, str] = {}
+            for key, value in payload.items():
+                normalized_url = self._normalize_http_url(value)
+                normalized_key = self._normalize_entity_cache_key(key)
+                if normalized_key and normalized_url:
+                    mapping[normalized_key] = normalized_url
+            return mapping
+        except Exception:
+            return {}
+
+    def _get_cached_official_site_url(self, entity_name: str) -> Optional[str]:
+        normalized_key = self._normalize_entity_cache_key(entity_name)
+        if not normalized_key:
+            return None
+        cache = getattr(self, "_official_site_url_cache", None)
+        if not isinstance(cache, dict):
+            return None
+        direct = self._normalize_http_url(cache.get(normalized_key))
+        if direct:
+            return direct
+
+        target_signature = self._canonical_entity_signature(entity_name)
+        if not target_signature:
+            return None
+        for cached_key, cached_url in cache.items():
+            if self._canonical_entity_signature(cached_key) != target_signature:
+                continue
+            normalized_cached = self._normalize_http_url(cached_url)
+            if normalized_cached:
+                return normalized_cached
+        return None
+
+    def _store_cached_official_site_url(self, entity_name: str, url: str) -> None:
+        normalized_key = self._normalize_entity_cache_key(entity_name)
+        normalized_url = self._normalize_http_url(url)
+        if not normalized_key or not normalized_url:
+            return
+        cache = getattr(self, "_official_site_url_cache", None)
+        if not isinstance(cache, dict):
+            cache = {}
+            self._official_site_url_cache = cache
+        cache[normalized_key] = normalized_url
+        cache_file = self._official_site_cache_file()
+        try:
+            cache_file.parent.mkdir(parents=True, exist_ok=True)
+            cache_file.write_text(json.dumps(cache, indent=2, sort_keys=True))
+        except Exception as cache_error:
+            logger.debug("Failed to persist official-site cache: %s", cache_error)
+
+    def _get_mapped_official_site_url(self, entity_name: str) -> Optional[str]:
+        normalized_key = self._normalize_entity_cache_key(entity_name)
+        if not normalized_key:
+            return None
+        mapping = getattr(self, "_official_site_domain_map", None)
+        if not isinstance(mapping, dict):
+            return None
+        mapped = self._normalize_http_url(mapping.get(normalized_key))
+        if mapped:
+            return mapped
+
+        target_signature = self._canonical_entity_signature(entity_name)
+        if not target_signature:
+            return None
+        for mapped_key, mapped_value in mapping.items():
+            if self._canonical_entity_signature(mapped_key) != target_signature:
+                continue
+            resolved = self._normalize_http_url(mapped_value)
+            if resolved:
+                return resolved
+        return None
+
+    def _is_official_site_resolution_in_cooldown(self, entity_name: str) -> bool:
+        cooldown = float(getattr(self, "official_site_resolution_cooldown_seconds", 0.0))
+        if cooldown <= 0:
+            return False
+        normalized_key = self._normalize_entity_cache_key(entity_name)
+        if not normalized_key:
+            return False
+        failures = getattr(self, "_official_site_resolution_failures", None)
+        if not isinstance(failures, dict):
+            return False
+        last_failed_at = failures.get(normalized_key)
+        if not isinstance(last_failed_at, (int, float)):
+            return False
+        return (time.time() - last_failed_at) < cooldown
+
+    def _mark_official_site_resolution_failure(self, entity_name: str) -> None:
+        normalized_key = self._normalize_entity_cache_key(entity_name)
+        if not normalized_key:
+            return
+        failures = getattr(self, "_official_site_resolution_failures", None)
+        if not isinstance(failures, dict):
+            failures = {}
+            self._official_site_resolution_failures = failures
+        failures[normalized_key] = time.time()
 
     def _current_run_mode(self) -> str:
         mode = str(os.getenv("DISCOVERY_RUN_MODE", "phase1_plus") or "phase1_plus").strip().lower()
@@ -1269,6 +1438,7 @@ class HypothesisDrivenDiscovery:
         max_tokens: int,
         system_prompt: Optional[str] = None,
         json_mode: bool = False,
+        requested_model: str = "haiku",
     ) -> Dict[str, Any]:
         """Query evaluator model with compatibility fallback for minimal stubs."""
         query_fn = getattr(getattr(self, "claude_client", None), "query", None)
@@ -1291,6 +1461,13 @@ class HypothesisDrivenDiscovery:
             0.0,
             float(getattr(self, "evaluation_timeout_retry_jitter_seconds", 0.35) or 0.0),
         )
+        timeout_model_escalation_enabled = bool(
+            getattr(self, "evaluation_timeout_model_escalation_enabled", True)
+        )
+        timeout_escalation_model = str(
+            getattr(self, "evaluation_timeout_escalation_model", "sonnet") or "sonnet"
+        ).strip().lower() or "sonnet"
+        current_model = str(requested_model or "haiku").strip().lower() or "haiku"
         total_attempts = timeout_max_retries + 1
 
         async def _await_query(coro):
@@ -1305,7 +1482,7 @@ class HypothesisDrivenDiscovery:
             try:
                 query_coro = query_fn(
                     prompt=prompt,
-                    model="haiku",
+                    model=current_model,
                     max_tokens=max_tokens,
                     system_prompt=system_prompt,
                     json_mode=json_mode,
@@ -1316,7 +1493,7 @@ class HypothesisDrivenDiscovery:
                 if "unexpected keyword argument" in message:
                     fallback_coro = query_fn(
                         prompt=prompt,
-                        model="haiku",
+                        model=current_model,
                         max_tokens=max_tokens,
                     )
                     return await _await_query(fallback_coro)
@@ -1329,6 +1506,17 @@ class HypothesisDrivenDiscovery:
                 is_final_attempt = attempt_idx >= (total_attempts - 1)
                 if is_final_attempt:
                     raise
+                if (
+                    timeout_model_escalation_enabled
+                    and timeout_escalation_model
+                    and current_model != timeout_escalation_model
+                ):
+                    logger.warning(
+                        "Evaluator timeout on model=%s; escalating to model=%s",
+                        current_model,
+                        timeout_escalation_model,
+                    )
+                    current_model = timeout_escalation_model
                 backoff_delay = min(
                     timeout_backoff_cap_seconds,
                     timeout_backoff_seconds * (2 ** attempt_idx),
@@ -1345,7 +1533,6 @@ class HypothesisDrivenDiscovery:
                     await asyncio.sleep(backoff_delay)
 
         raise TimeoutError(f"Evaluator model query timed out after {timeout_seconds:.2f}s")
-
     def _extract_structured_evaluation_payload(self, response: Any) -> Optional[Dict[str, Any]]:
         """Prefer provider-native structured output payloads when available."""
         if not isinstance(response, dict):
@@ -1815,6 +2002,14 @@ class HypothesisDrivenDiscovery:
         if max_cost_usd is None:
             max_cost_usd = self.max_cost_per_entity
 
+        template_id = resolve_template_id(template_id, getattr(self, "current_entity_type", None))
+        # Entity runs must not inherit official-site context from prior entities.
+        self.current_official_site_url = None
+        self._resolved_url_context = {}
+        self._update_llm_runtime_diagnostics(
+            run_mode=self._current_run_mode(),
+            run_profile=str(os.getenv("DISCOVERY_PROFILE", "continuous") or "continuous").strip().lower(),
+        )
         logger.info(f"🔍 Starting hypothesis-driven discovery for {entity_name}")
         logger.info(f"   Template: {template_id}")
         logger.info(f"   Max iterations: {max_iterations}")
@@ -2196,31 +2391,47 @@ class HypothesisDrivenDiscovery:
                     continue
             return None
 
+        def record_hop_failure() -> int:
+            hop_type_str = hop_type.value if hasattr(hop_type, 'value') else str(hop_type)
+            if not hasattr(state, 'hop_failure_counts'):
+                state.hop_failure_counts = {}
+            if not hasattr(state, 'last_failed_hop'):
+                state.last_failed_hop = None
+            if hop_type_str == state.last_failed_hop:
+                state.hop_failure_counts[hop_type_str] = state.hop_failure_counts.get(hop_type_str, 0) + 1
+            else:
+                state.hop_failure_counts[hop_type_str] = 1
+                state.last_failed_hop = hop_type_str
+            return state.hop_failure_counts.get(hop_type_str, 1)
+
         # Track depth iteration
         state.increment_depth_count(state.current_depth)
 
         # Get URL based on hop type
         url_resolution_started_at = time.perf_counter()
-        url = await self._get_url_for_hop(hop_type, hypothesis, state)
+        url_resolution_timeout_seconds = getattr(self, "url_resolution_timeout_seconds", 20.0)
+        try:
+            url = await asyncio.wait_for(
+                self._get_url_for_hop(hop_type, hypothesis, state),
+                timeout=url_resolution_timeout_seconds,
+            )
+        except asyncio.TimeoutError:
+            consecutive_failures = record_hop_failure()
+            logger.warning(
+                "URL resolution timed out after %.1fs for hop %s (consecutive failures: %s)",
+                url_resolution_timeout_seconds,
+                hop_type,
+                consecutive_failures,
+            )
+            performance['url_resolution_ms'] = round((time.perf_counter() - url_resolution_started_at) * 1000, 2)
+            return build_no_progress_result("URL resolution timed out")
         performance['url_resolution_ms'] = round((time.perf_counter() - url_resolution_started_at) * 1000, 2)
         if hasattr(self, '_last_url_resolution_metrics'):
             performance['url_resolution'] = self._last_url_resolution_metrics
 
         if not url:
-            # Record hop failure
-            hop_type_str = hop_type.value if hasattr(hop_type, 'value') else str(hop_type)
-            if not hasattr(state, 'hop_failure_counts'):
-                state.hop_failure_counts = {}
-
-            # Increment consecutive failure counter
-            if hop_type_str == state.last_failed_hop:
-                state.hop_failure_counts[hop_type_str] = state.hop_failure_counts.get(hop_type_str, 0) + 1
-            else:
-                # Reset counter if different hop type failed
-                state.hop_failure_counts[hop_type_str] = 1
-                state.last_failed_hop = hop_type_str
-
-            logger.warning(f"Could not determine URL for hop type: {hop_type} (consecutive failures: {state.hop_failure_counts[hop_type_str]})")
+            consecutive_failures = record_hop_failure()
+            logger.warning(f"Could not determine URL for hop type: {hop_type} (consecutive failures: {consecutive_failures})")
             return build_no_progress_result("No URL found for hop")
 
         logger.info(f"🔎 Scraping: {url}")
@@ -2269,6 +2480,7 @@ class HypothesisDrivenDiscovery:
                 performance['brightdata_scrape'] = self._extract_brightdata_trace(content_result)
 
                 if content_result.get('status') != 'success':
+                    consecutive_failures = record_hop_failure()
                     logger.error(f"Scraping failed: {content_result.get('error', 'Unknown error')}")
                     alt_result = await try_additional_candidates(
                         primary_url=url,
@@ -2277,7 +2489,10 @@ class HypothesisDrivenDiscovery:
                     if alt_result:
                         return alt_result
                     return build_no_progress_result(
-                        f"Scraping failed: {content_result.get('error', 'Unknown error')}",
+                        (
+                            f"Scraping failed: {content_result.get('error', 'Unknown error')}"
+                            f" (consecutive failures: {consecutive_failures})"
+                        ),
                         scrape_data={
                             'url': url
                         }
@@ -2306,6 +2521,7 @@ class HypothesisDrivenDiscovery:
                             'char_count': len(content_text)
                         }
                     else:
+                        record_hop_failure()
                         logger.warning("Scraping returned empty content; treating hop as NO_PROGRESS")
                         alt_result = await try_additional_candidates(
                             primary_url=url,
@@ -2536,6 +2752,16 @@ class HypothesisDrivenDiscovery:
                 return True
 
         return False
+
+    def _cache_resolved_url_context(self, url: Optional[str], result: Optional[Dict[str, Any]]) -> None:
+        """Cache lightweight search context (title/snippet) for resolved URLs."""
+        if not url or not isinstance(result, dict):
+            return
+        title = str(result.get("title") or "").strip()
+        snippet = str(result.get("snippet") or "").strip()
+        if not title and not snippet:
+            return
+        self._resolved_url_context[url] = {"title": title, "snippet": snippet}
 
     async def _resolve_official_site_url(self, entity_name: str) -> Optional[str]:
         started_at = time.perf_counter()
@@ -3168,6 +3394,18 @@ class HypothesisDrivenDiscovery:
                         }
                         return url
 
+        if hop_type == HopType.OFFICIAL_SITE:
+            logger.warning(
+                "⚠️ Official-site primary search failed; skipping fallback query loop to preserve timeout budget"
+            )
+            metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
+            self._last_url_resolution_metrics = {
+                **metrics,
+                'search_calls_ms': round(metrics['search_calls_ms'], 2),
+                'validation_ms': round(metrics['validation_ms'], 2)
+            }
+            return None
+
         # All engines failed, try fallback queries
         logger.warning(f"⚠️ All search engines failed for {hop_type}, trying fallbacks")
 
@@ -3557,6 +3795,31 @@ class HypothesisDrivenDiscovery:
         except Exception as e:
             logger.warning(f"⚠️ Search result validation failed: {e}, using all results")
             return results, []
+
+    async def _search_engine_with_timeout(
+        self,
+        *,
+        query: str,
+        engine: str,
+        num_results: int,
+    ) -> Dict[str, Any]:
+        try:
+            return await asyncio.wait_for(
+                self.brightdata_client.search_engine(
+                    query=query,
+                    engine=engine,
+                    num_results=num_results,
+                ),
+                timeout=getattr(self, "search_timeout_seconds", 12.0),
+            )
+        except asyncio.TimeoutError:
+            logger.warning(
+                "⚠️ Search timed out after %.1fs (engine=%s, query=%s)",
+                getattr(self, "search_timeout_seconds", 12.0),
+                engine,
+                query,
+            )
+            return {"status": "error", "error": "Search timeout", "results": []}
 
     def _extract_entity_type_from_template(self, template_id: str) -> str:
         """
@@ -4078,6 +4341,63 @@ class HypothesisDrivenDiscovery:
                     await asyncio.sleep(backoff_delay)
 
         raise TimeoutError(f"Evaluator model query timed out after {timeout_seconds:.2f}s")
+
+    def _official_site_cache_file(self) -> Path:
+        cache_path = os.getenv("DISCOVERY_OFFICIAL_SITE_CACHE_PATH", "backend/data/dossiers/official_site_cache.json")
+        path = Path(cache_path)
+        if not path.is_absolute():
+            path = Path(__file__).resolve().parent.parent / cache_path
+        return path
+
+    def _load_official_site_url_cache(self) -> Dict[str, str]:
+        cache_file = self._official_site_cache_file()
+        try:
+            if not cache_file.exists():
+                return {}
+            payload = json.loads(cache_file.read_text())
+            if not isinstance(payload, dict):
+                return {}
+            cache: Dict[str, str] = {}
+            for key, value in payload.items():
+                if not isinstance(key, str):
+                    continue
+                normalized = self._normalize_http_url(value)
+                if normalized:
+                    cache[key] = normalized
+            return cache
+        except Exception:
+            return {}
+
+    def _get_cached_official_site_url(self, entity_name: str) -> Optional[str]:
+        if not isinstance(entity_name, str):
+            return None
+        normalized_key = entity_name.strip().casefold()
+        if not normalized_key:
+            return None
+        cache = getattr(self, "_official_site_url_cache", None)
+        if not isinstance(cache, dict):
+            return None
+        value = cache.get(normalized_key)
+        return self._normalize_http_url(value)
+
+    def _store_cached_official_site_url(self, entity_name: str, url: str) -> None:
+        normalized_key = entity_name.strip().casefold() if isinstance(entity_name, str) else ""
+        normalized_url = self._normalize_http_url(url)
+        if not normalized_key or not normalized_url:
+            return
+
+        cache = getattr(self, "_official_site_url_cache", None)
+        if not isinstance(cache, dict):
+            cache = {}
+            self._official_site_url_cache = cache
+
+        cache[normalized_key] = normalized_url
+        cache_file = self._official_site_cache_file()
+        try:
+            cache_file.parent.mkdir(parents=True, exist_ok=True)
+            cache_file.write_text(json.dumps(cache, indent=2, sort_keys=True))
+        except Exception as cache_error:
+            logger.debug("Failed to persist official-site cache: %s", cache_error)
 
     async def _evaluate_content_with_claude(
         self,
