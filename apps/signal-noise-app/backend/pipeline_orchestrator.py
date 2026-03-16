@@ -208,7 +208,16 @@ class PipelineOrchestrator:
         entity_type: str,
         priority_score: int,
     ) -> Dict[str, Any]:
-        return await self.dossier_generator.generate_universal_dossier(
+        universal = getattr(self.dossier_generator, "generate_universal_dossier", None)
+        if callable(universal):
+            return await universal(
+                entity_id=entity_id,
+                entity_name=entity_name,
+                entity_type=entity_type,
+                priority_score=priority_score,
+            )
+
+        return await self.dossier_generator.generate_dossier(
             entity_id=entity_id,
             entity_name=entity_name,
             entity_type=entity_type,
