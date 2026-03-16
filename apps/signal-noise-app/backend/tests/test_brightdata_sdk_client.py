@@ -183,6 +183,56 @@ async def test_fallback_scrape_survives_publication_date_import_failure(monkeypa
     assert "No date parser installed" in result["content"]
 
 
+@pytest.mark.asyncio
+async def test_fallback_scrape_escalates_403_to_brightdata_request_api(monkeypatch):
+    client = BrightDataSDKClient.__new__(BrightDataSDKClient)
+    calls = {"get_count": 0, "browser_count": 0}
+
+    class FakeAsyncClient:
+        def __init__(self, timeout, follow_redirects, verify=True):
+            self.verify = verify
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def get(self, url):
+            calls["get_count"] += 1
+            request = httpx.Request("GET", url)
+            response = httpx.Response(403, text="forbidden", request=request)
+            raise httpx.HTTPStatusError("forbidden", request=request, response=response)
+
+    async def fake_browser_request_api(url, insecure_ssl_used=False):
+        calls["browser_count"] += 1
+        return {
+            "status": "success",
+            "url": url,
+            "content": "Rendered fallback content",
+            "raw_html": "<html><body><p>Rendered fallback content</p></body></html>",
+            "timestamp": "2026-03-16T05:00:00Z",
+            "publication_date": None,
+            "metadata": {
+                "word_count": 3,
+                "source": "brightdata_request_api",
+                "extraction_mode": "rendered_fallback_brightdata_request_api",
+            },
+        }
+
+    monkeypatch.setattr(brightdata_module.httpx, "AsyncClient", FakeAsyncClient)
+    monkeypatch.setattr(client, "_scrape_with_browser_request_api", fake_browser_request_api)
+
+    result = await BrightDataSDKClient._scrape_as_markdown_fallback(client, "https://example.com")
+
+    assert result["status"] == "success"
+    assert "Rendered fallback content" in result["content"]
+    assert result["metadata"]["fallback_reason"] == "http_status_403"
+    assert result["metadata"]["source_chain"] == "fallback_httpx->brightdata_request_api"
+    assert calls["get_count"] == 1
+    assert calls["browser_count"] == 1
+
+
 def test_extract_text_from_html_uses_json_state_for_js_heavy_pages():
     client = BrightDataSDKClient.__new__(BrightDataSDKClient)
     html = """

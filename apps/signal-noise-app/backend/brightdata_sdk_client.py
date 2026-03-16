@@ -838,6 +838,20 @@ class BrightDataSDKClient:
                     response.raise_for_status()
                 insecure_ssl_used = False
             except Exception as initial_error:
+                response = getattr(initial_error, "response", None)
+                status_code = getattr(response, "status_code", None)
+                if status_code in {401, 403, 429}:
+                    logger.info(
+                        "ℹ️ Fallback direct scrape blocked with HTTP %s, escalating to BrightData rendered request API",
+                        status_code,
+                    )
+                    browser_result = await self._scrape_with_browser_request_api(url, insecure_ssl_used=False)
+                    if browser_result and browser_result.get("status") == "success":
+                        metadata = browser_result.setdefault("metadata", {})
+                        metadata.setdefault("fallback_reason", f"http_status_{status_code}")
+                        metadata.setdefault("source_chain", "fallback_httpx->brightdata_request_api")
+                        return browser_result
+
                 allow_insecure_retry = (os.getenv("BRIGHTDATA_FALLBACK_SSL_RETRY_INSECURE", "true").lower() in {"1", "true", "yes", "on"})
                 if not allow_insecure_retry:
                     raise
