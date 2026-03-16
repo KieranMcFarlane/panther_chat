@@ -271,3 +271,21 @@
 - `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
 - `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_official_site_resolver.py -q`: pass (`3 passed`).
 - `PYTHONPATH=backend .venv-codex/bin/python scripts/check-brightdata-hello.py`: pass (`search_engine` success with `result_count=10`; `scrape_as_markdown` success via `brightdata_sdk`, `extraction_mode=sdk_direct`).
+
+## Wave 3F (Official-Site Lane Summaries in Run Metadata)
+
+### Included Commit
+- `2e2b349` feat(discovery): persist official-site lane summaries in run metadata
+
+### Conflict Decisions
+- Kept stale deleted test removed: `backend/tests/test_discovery_url_resolution_fallbacks.py`.
+- `pipeline_run_metadata.py`: preserved existing richer lane snapshot fields (`ranked_lanes`, `lane_ranker_snapshot`) while accepting lane-summary metadata persistence (`run_mode`, lane statuses, trace).
+- `hypothesis_driven_discovery.py`: accepted performance summary fields including `official_site_resolution_traces` export.
+
+### Verification Results (Wave 3F)
+- `npm run qa:imports`: pass.
+- `python3 -m py_compile backend/main.py backend/claude_client.py backend/dossier_generator.py backend/dossier_data_collector.py backend/hypothesis_driven_discovery.py backend/pipeline_run_metadata.py backend/official_site_resolver.py backend/brightdata_sdk_client.py`: pass.
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_dossier_generator_timeout.py backend/tests/test_dossier_generator_timeout_fallback.py -q`: pass (`4 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_official_site_resolver.py -q`: pass (`3 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python scripts/check-brightdata-hello.py`: pass (`search_engine` success via `brightdata_sdk`; scrape succeeded via `fallback_httpx` in this run).
