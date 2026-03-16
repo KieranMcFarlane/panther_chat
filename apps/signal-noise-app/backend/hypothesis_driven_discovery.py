@@ -4318,7 +4318,10 @@ class HypothesisDrivenDiscovery:
 
     def _official_site_cache_file(self) -> Path:
         cache_path = os.getenv("DISCOVERY_OFFICIAL_SITE_CACHE_PATH", "backend/data/dossiers/official_site_cache.json")
-        return Path(cache_path)
+        path = Path(cache_path)
+        if not path.is_absolute():
+            path = Path(__file__).resolve().parent.parent / cache_path
+        return path
 
     def _load_official_site_url_cache(self) -> Dict[str, str]:
         cache_file = self._official_site_cache_file()
