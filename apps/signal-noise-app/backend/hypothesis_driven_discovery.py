@@ -48,7 +48,7 @@ import time
 from importlib import import_module
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Dict, List, Optional, Any, Tuple, Callable, Awaitable
 from dataclasses import dataclass, field
 from enum import Enum
 from collections import OrderedDict
@@ -5595,6 +5595,9 @@ Return JSON:
                 'scrape_ms': performance.get('scrape_ms', 0.0),
                 'evaluation_ms': performance.get('evaluation_ms', 0.0),
                 'validation_ms': performance.get('url_resolution', {}).get('validation_ms', 0.0),
+                'scrape_cache_hit': bool(performance.get('scrape_cache_hit', False)),
+                'evaluation_cache_hit': bool(performance.get('evaluation_cache_hit', False)),
+                'content_hash': performance.get('content_hash'),
                 'decision': result.get('decision'),
                 'selected_url': result.get('url'),
                 'selected_domain': urlparse(result.get('url')).netloc if result.get('url') else None,
@@ -6100,7 +6103,8 @@ Return JSON:
     async def _run_discovery_loop(
         self,
         state,
-        max_iterations: int
+        max_iterations: int,
+        progress_callback: Optional[Callable[[Dict[str, Any]], Awaitable[None]]] = None,
     ) -> DiscoveryResult:
         """
         Internal method to run discovery loop with pre-initialized state
@@ -6113,17 +6117,40 @@ Return JSON:
             DiscoveryResult
         """
         hypotheses = state.active_hypotheses
-
         discovery_started_at = time.perf_counter()
+        return await self._run_discovery_iterations(
+            state=state,
+            hypotheses=hypotheses,
+            max_iterations=max_iterations,
+            max_depth=self.max_depth,
+            discovery_started_at=discovery_started_at,
+            progress_callback=progress_callback,
+        )
+
+    async def _run_discovery_iterations(
+        self,
+        state,
+        hypotheses: List,
+        max_iterations: int,
+        max_depth: int,
+        discovery_started_at: float,
+        progress_callback: Optional[Callable[[Dict[str, Any]], Awaitable[None]]] = None,
+    ) -> DiscoveryResult:
+        consecutive_no_progress = 0
+        repeated_unchanged_official_site_no_progress = 0
+        repeated_changed_official_site_no_progress = False
+        official_site_state = {
+            "last_content_hash": None,
+            "same_hash_no_progress_count": 0,
+            "changed_content_count": 0,
+            "changed_content_reevaluation_budget": 0,
+        }
 
         for iteration in range(1, max_iterations + 1):
             iteration_started_at = time.perf_counter()
             logger.info(f"\n--- Iteration {iteration} ---")
 
-            # Re-score hypotheses by EIG
             await self._rescore_hypotheses_by_eig(hypotheses)
-
-            # Select top hypothesis
             top_hypothesis = await self._select_top_hypothesis(hypotheses, state)
 
             if not top_hypothesis:
@@ -6136,29 +6163,35 @@ Return JSON:
                 f"Confidence: {top_hypothesis.confidence:.2f})"
             )
 
-            # Choose hop type
             hop_type = self._choose_next_hop(top_hypothesis, state)
             logger.info(f"   Hop type: {hop_type} (depth: {state.current_depth})")
 
-            # Execute hop
+            if progress_callback:
+                await progress_callback({
+                    "status": "running",
+                    "iteration": iteration,
+                    "hypothesis_id": top_hypothesis.hypothesis_id,
+                    "hop_type": hop_type.value if hasattr(hop_type, 'value') else str(hop_type),
+                    "current_confidence": getattr(top_hypothesis, "confidence", None),
+                    "depth": state.current_depth,
+                })
+
             result = await self._execute_hop(
                 hop_type=hop_type,
                 hypothesis=top_hypothesis,
-                state=state
+                state=state,
             )
 
             if not result:
                 logger.warning(f"Hop execution failed for {hop_type}")
                 continue
 
-            # Update state
             await self._update_hypothesis_state(
                 hypothesis=top_hypothesis,
                 result=result,
-                state=state
+                state=state,
             )
 
-            # Track iteration
             iteration_record = {
                 'iteration': iteration,
                 'hypothesis_id': top_hypothesis.hypothesis_id,
@@ -6166,19 +6199,113 @@ Return JSON:
                 'depth': state.current_depth,
                 'timestamp': datetime.now(timezone.utc).isoformat(),
                 'duration_ms': round((time.perf_counter() - iteration_started_at) * 1000, 2),
-                'result': result
+                'result': result,
             }
             state.iteration_results.append(iteration_record)
 
-            # Check stopping conditions
-            if self._should_stop(state, iteration, self.max_depth, top_hypothesis):
+            decision = result.get('decision')
+            consecutive_no_progress = consecutive_no_progress + 1 if decision == 'NO_PROGRESS' else 0
+            performance = result.get("performance") or {}
+            repeated_unchanged_official_site = (
+                hop_type == HopType.OFFICIAL_SITE
+                and decision == 'NO_PROGRESS'
+            )
+            repeated_changed_official_site_no_progress = False
+
+            if repeated_unchanged_official_site:
+                content_hash = performance.get('content_hash')
+                if content_hash:
+                    last_hash = official_site_state["last_content_hash"]
+                    pre_change_budget = official_site_state["changed_content_reevaluation_budget"]
+                    if last_hash is None:
+                        official_site_state["last_content_hash"] = content_hash
+                        # If both scrape+evaluation were cache hits on first official-site pass,
+                        # treat this as already-unchanged content for early-stop purposes.
+                        if bool(performance.get("scrape_cache_hit")) and bool(performance.get("evaluation_cache_hit")):
+                            official_site_state["same_hash_no_progress_count"] = 1
+                        else:
+                            official_site_state["same_hash_no_progress_count"] = 0
+                        official_site_state["changed_content_reevaluation_budget"] = 0
+                    elif content_hash == last_hash:
+                        if pre_change_budget > 0:
+                            repeated_changed_official_site_no_progress = True
+                            official_site_state["changed_content_reevaluation_budget"] = 0
+                        else:
+                            official_site_state["same_hash_no_progress_count"] += 1
+                    else:
+                        official_site_state["changed_content_count"] += 1
+                        official_site_state["last_content_hash"] = content_hash
+                        official_site_state["same_hash_no_progress_count"] = 0
+                        official_site_state["changed_content_reevaluation_budget"] = 1
+
+            repeated_unchanged_official_site_no_progress = (
+                official_site_state["same_hash_no_progress_count"]
+                if repeated_unchanged_official_site
+                else 0
+            )
+            repeated_official_site_no_progress = (
+                repeated_unchanged_official_site_no_progress >= 1
+                or repeated_changed_official_site_no_progress
+            )
+
+            if progress_callback:
+                elapsed_duration_ms = round((time.perf_counter() - discovery_started_at) * 1000, 2)
+                await progress_callback({
+                    "status": "running",
+                    "iteration": iteration,
+                    "decision": decision,
+                    "hop_type": hop_type.value if hasattr(hop_type, 'value') else str(hop_type),
+                    "duration_ms": iteration_record['duration_ms'],
+                    "current_confidence": getattr(state, "current_confidence", None),
+                    "consecutive_no_progress": consecutive_no_progress,
+                    "repeated_unchanged_official_site_no_progress": repeated_unchanged_official_site_no_progress,
+                    "performance_summary": self._build_performance_summary(state, elapsed_duration_ms),
+                })
+
+            if repeated_unchanged_official_site and repeated_official_site_no_progress:
+                stop_reason = (
+                    "repeated_unchanged_official_site_no_progress"
+                    if repeated_unchanged_official_site_no_progress >= 1
+                    else "repeated_changed_official_site_content"
+                )
+                logger.info(f"Stopping discovery after {stop_reason}")
+                if progress_callback:
+                    await progress_callback({
+                        "status": "completed",
+                        "stop_reason": stop_reason,
+                        "iteration": iteration,
+                        "consecutive_no_progress": consecutive_no_progress,
+                        "official_site_changed_content_count": official_site_state["changed_content_count"],
+                        "repeated_unchanged_official_site_no_progress": repeated_unchanged_official_site_no_progress,
+                    })
+                break
+
+            if consecutive_no_progress >= self.max_consecutive_no_progress_iterations:
+                logger.info(f"Stopping discovery after {consecutive_no_progress} consecutive NO_PROGRESS iterations")
+                if progress_callback:
+                    await progress_callback({
+                        "status": "completed",
+                        "stop_reason": "consecutive_no_progress",
+                        "iteration": iteration,
+                        "consecutive_no_progress": consecutive_no_progress,
+                    })
+                break
+
+            if self._should_stop(state, iteration, max_depth, top_hypothesis):
                 logger.info(f"Stopping condition met at iteration {iteration}")
+                if progress_callback:
+                    await progress_callback({
+                        "status": "completed",
+                        "stop_reason": "standard_stop_condition",
+                        "iteration": iteration,
+                        "current_confidence": getattr(state, "current_confidence", None),
+                    })
                 break
 
         return await self._build_final_result(
             state,
             hypotheses,
-            total_duration_ms=round((time.perf_counter() - discovery_started_at) * 1000, 2)
+            total_duration_ms=round((time.perf_counter() - discovery_started_at) * 1000, 2),
         )
 
     def _normalize_dossier_signal(self, signal: Dict[str, Any]) -> Optional[Dict[str, Any]]:
