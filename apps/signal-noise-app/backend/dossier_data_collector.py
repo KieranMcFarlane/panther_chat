@@ -2377,7 +2377,7 @@ If a field is not found, use null. Return ONLY valid JSON, no other text."""
             - freshness_score: Overall data freshness score (0-100)
         """
         # Ensure BrightData is connected
-        if not self._brightdata_available:
+        if not self._brightdata_available or not self.brightdata_client:
             connected = await self._connect_brightdata()
             if not connected or not self.brightdata_client:
                 logger.warning("BrightData not available for multi-source collection")
@@ -2597,7 +2597,7 @@ If a field is not found, use null. Return ONLY valid JSON, no other text."""
         logger.info(f"🎯 Collecting leadership data for {entity_name}")
 
         # Ensure BrightData is connected
-        if not self._brightdata_available:
+        if not self._brightdata_available or not self.brightdata_client:
             connected = await self._connect_brightdata()
             if not connected or not self.brightdata_client:
                 logger.warning("BrightData not available for leadership collection")

@@ -274,6 +274,19 @@ def test_build_render_probe_urls_only_expands_root_path(monkeypatch):
     assert leaf_urls == ["https://www.ccfc.co.uk/news/article"]
 
 
+def test_build_render_probe_urls_expands_known_low_signal_leaf(monkeypatch):
+    client = BrightDataSDKClient.__new__(BrightDataSDKClient)
+    monkeypatch.setenv("BRIGHTDATA_CONTENT_PROBE_SUBPATHS", "news,club")
+    monkeypatch.setenv("BRIGHTDATA_LOW_SIGNAL_LEAF_PATHS", "matches,fixtures")
+
+    probe_urls = BrightDataSDKClient._build_render_probe_urls(client, "https://www.ccfc.co.uk/matches")
+    assert probe_urls == [
+        "https://www.ccfc.co.uk/matches",
+        "https://www.ccfc.co.uk/news",
+        "https://www.ccfc.co.uk/club",
+    ]
+
+
 @pytest.mark.asyncio
 async def test_browser_request_api_probes_subpaths_when_root_is_low_signal(monkeypatch):
     client = BrightDataSDKClient.__new__(BrightDataSDKClient)
@@ -349,6 +362,86 @@ async def test_browser_request_api_probes_subpaths_when_root_is_low_signal(monke
     assert "procurement initiative" in result["content"].lower()
     assert post_urls == [
         "https://www.ccfc.co.uk",
+        "https://www.ccfc.co.uk/news",
+    ]
+
+
+@pytest.mark.asyncio
+async def test_browser_request_api_probes_when_low_signal_leaf_route(monkeypatch):
+    client = BrightDataSDKClient.__new__(BrightDataSDKClient)
+    client.token = "test-token"
+    client._invalid_request_zones = set()
+    client._zone_cooldowns = {}
+    client._request_zone_whitelist = None
+    client._request_zone_whitelist_checked_at = 0.0
+    client._zone_in_cooldown = lambda _zone: False
+
+    async def fake_get_adaptive_request_zones(_request_kind):
+        return ["sdk_unlocker"]
+
+    async def fake_get_request_zone_whitelist():
+        return None
+
+    client._get_adaptive_request_zones = fake_get_adaptive_request_zones
+    client._get_request_zone_whitelist = fake_get_request_zone_whitelist
+    client._mark_zone_not_found = lambda _zone: None
+    client._mark_zone_timeout = lambda _zone, _err: None
+
+    monkeypatch.setenv("BRIGHTDATA_API_BASE", "https://api.brightdata.com")
+    monkeypatch.setenv("BRIGHTDATA_MIN_WORDS", "20")
+    monkeypatch.setenv("BRIGHTDATA_CONTENT_PROBE_SUBPATHS", "news")
+    monkeypatch.setenv("BRIGHTDATA_LOW_SIGNAL_LEAF_PATHS", "matches")
+    monkeypatch.setenv("BRIGHTDATA_REQUEST_MAX_ATTEMPTS", "1")
+
+    post_urls = []
+
+    class FakeResponse:
+        def __init__(self, text):
+            self.text = text
+
+        def raise_for_status(self):
+            return None
+
+    class FakeAsyncClient:
+        def __init__(self, timeout, follow_redirects, verify):
+            self.timeout = timeout
+            self.follow_redirects = follow_redirects
+            self.verify = verify
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            post_urls.append(json.get("url"))
+            target = json.get("url")
+            if target.endswith("/news"):
+                return FakeResponse(
+                    """
+                    <html><body><main>
+                    <h1>Club News</h1>
+                    <p>Coventry City FC confirms a digital fan engagement procurement programme.</p>
+                    </main></body></html>
+                    """
+                )
+            return FakeResponse("<html><body><div id='__next'></div></body></html>")
+
+    monkeypatch.setattr(brightdata_module.httpx, "AsyncClient", FakeAsyncClient)
+
+    result = await BrightDataSDKClient._scrape_with_browser_request_api(
+        client,
+        "https://www.ccfc.co.uk/matches",
+        insecure_ssl_used=False,
+    )
+
+    assert result is not None
+    assert result["status"] == "success"
+    assert result["url"] == "https://www.ccfc.co.uk/news"
+    assert "procurement programme" in result["content"].lower()
+    assert post_urls == [
+        "https://www.ccfc.co.uk/matches",
         "https://www.ccfc.co.uk/news",
     ]
 

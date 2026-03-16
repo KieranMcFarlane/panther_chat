@@ -68,6 +68,10 @@ class EntityDossierGenerator:
         self.disable_question_extraction = (
             str(disable_question_extraction_env or "").strip().lower() in {"1", "true", "yes", "on"}
         )
+        section_json_repair_env = os.getenv("DOSSIER_SECTION_JSON_REPAIR_ATTEMPT", "true")
+        self.section_json_repair_attempt = (
+            str(section_json_repair_env).strip().lower() in {"1", "true", "yes", "on"}
+        )
 
         # Section templates with model assignments
         self.section_templates = {
@@ -254,10 +258,7 @@ class EntityDossierGenerator:
         if DATA_COLLECTOR_AVAILABLE:
             logger.info(f"🔍 Collecting entity data for {entity_name}")
             collector = DossierDataCollector()
-            try:
-                dossier_data_obj = await collector.collect_all(entity_id, entity_name)
-            finally:
-                await collector.close()
+            dossier_data_obj = await collector.collect_all(entity_id, entity_name)
 
             # Convert DossierData object to dict format for compatibility
             entity_data = self._dossier_data_to_dict(dossier_data_obj)
@@ -351,6 +352,8 @@ class EntityDossierGenerator:
                 logger.warning(f"⚠️ Could not load YP team data: {e}")
                 entity_data["yp_team_data"] = "Yellow Panther team data not available"
                 entity_data["yp_team_members"] = 0
+
+            await collector.close()
         elif entity_data is None:
             # Fallback: create minimal entity data dict
             logger.warning("DossierDataCollector unavailable, using placeholder data")
@@ -588,7 +591,21 @@ Website: N/A
                         )
                         section_data = heuristic_data
                     else:
-                        raise ValueError(f"Section {section_id} JSON repair failed")
+                        fallback_text = (repaired_text or content_text or "").strip()
+                        if fallback_text:
+                            logger.warning(
+                                "⚠️ Section %s JSON repair failed; using deterministic text fallback",
+                                section_id,
+                            )
+                            section_data = {
+                                "content": [fallback_text[:1600]],
+                                "metrics": [],
+                                "insights": [],
+                                "recommendations": [],
+                                "confidence": 0.45,
+                            }
+                        else:
+                            raise ValueError(f"Section {section_id} JSON repair failed")
 
             # Create DossierSection
             section = DossierSection(
@@ -620,6 +637,40 @@ Website: N/A
         if isinstance(section_data, dict):
             return section_data
         return {"content": [content_text]}
+
+    @staticmethod
+    def _extract_last_valid_json_block(content_text: str) -> Any:
+        """
+        Parse the last valid JSON object/array from model output, including fenced blocks.
+        """
+        if not isinstance(content_text, str) or not content_text.strip():
+            return {}
+
+        candidate_blocks: List[str] = []
+
+        fenced_matches = re.findall(
+            r"```(?:json)?\s*([\s\S]*?)```",
+            content_text,
+            flags=re.IGNORECASE,
+        )
+        candidate_blocks.extend([block.strip() for block in fenced_matches if block and block.strip()])
+
+        for pattern in (r"\{[\s\S]*\}", r"\[[\s\S]*\]"):
+            match = re.search(pattern, content_text)
+            if match:
+                candidate_blocks.append(match.group(0).strip())
+
+        candidate_blocks.append(content_text.strip())
+
+        for block in reversed(candidate_blocks):
+            try:
+                parsed = json.loads(block)
+                if isinstance(parsed, (dict, list)):
+                    return parsed
+            except Exception:
+                continue
+
+        return {}
 
     def _section_data_needs_repair(self, section_data: Dict[str, Any]) -> bool:
         content = section_data.get("content")

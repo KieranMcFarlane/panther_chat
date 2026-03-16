@@ -1055,11 +1055,10 @@ class BrightDataSDKClient:
                         should_probe_next = (
                             word_count < min_words
                             and probe_index + 1 < len(probe_urls)
-                            and probe_url == target_url
                         )
                         if should_probe_next:
                             logger.info(
-                                "ℹ️ BrightData rendered root page is low-signal (%s words), probing subpaths",
+                                "ℹ️ BrightData rendered page is low-signal (%s words), probing next candidate",
                                 word_count,
                             )
                             break
@@ -1120,8 +1119,6 @@ class BrightDataSDKClient:
 
         base_root = f"{parsed.scheme}://{parsed.netloc}/"
         normalized_path = (parsed.path or "/").strip()
-        if normalized_path not in {"", "/"}:
-            return [url]
 
         subpaths_env = os.getenv(
             "BRIGHTDATA_CONTENT_PROBE_SUBPATHS",
@@ -1132,7 +1129,27 @@ class BrightDataSDKClient:
             for part in subpaths_env.split(",")
             if part.strip().strip("/")
         ]
-        probe_urls = [base_root.rstrip("/")]
+        low_signal_leaf_env = os.getenv(
+            "BRIGHTDATA_LOW_SIGNAL_LEAF_PATHS",
+            "matches,fixtures,results,scores,schedule,watch",
+        )
+        low_signal_leafs = {
+            part.strip().strip("/")
+            for part in low_signal_leaf_env.split(",")
+            if part.strip().strip("/")
+        }
+
+        # Root pages get broad probing. Known low-signal leaf routes (e.g. /matches)
+        # also get probing to recover useful content from adjacent canonical sections.
+        if normalized_path in {"", "/"}:
+            probe_urls = [base_root.rstrip("/")]
+        else:
+            leaf = normalized_path.strip("/").split("/")[-1]
+            if leaf in low_signal_leafs:
+                probe_urls = [url.rstrip("/")]
+            else:
+                return [url]
+
         for subpath in subpaths:
             probe_urls.append(urljoin(base_root, f"{subpath}/").rstrip("/"))
         return list(dict.fromkeys(probe_urls))
