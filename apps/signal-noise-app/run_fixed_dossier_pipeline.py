@@ -89,8 +89,6 @@ class FixedDossierFirstPipeline:
 
         self.orchestrator = PipelineOrchestrator(
             dossier_generator=self.dossier_generator,
-            baseline_monitoring_runner=None,
-            schema_first_runner=None,
             discovery=self.discovery,
             ralph_validator=_IdentityRalphValidator(),
             graphiti_service=_NoopGraphitiService(),

@@ -23,6 +23,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from functools import lru_cache
 import asyncio
+import time
 import json
 import hashlib
 import re
@@ -377,6 +378,9 @@ class DossierDataCollector:
         self._hypothesis_available = False
         self.use_cache = use_cache
         self.parallel_scraping = parallel_scraping
+        self._preferred_official_site_urls: Dict[str, str] = {}
+        self._official_site_url_cache = self._load_official_site_url_cache()
+        self._official_site_content_cache = self._load_official_site_content_cache()
 
     async def close(self):
         """Close any async clients owned by the collector."""
@@ -1279,6 +1283,86 @@ class DossierDataCollector:
         logger.info(f"   Fields found: {list(all_extracted_data.keys())}")
 
         return scraped_content, all_extracted_data
+
+    async def _get_scraped_content(self, entity_id: str, entity_name: str) -> Optional[tuple[ScrapedContent, Dict[str, Any], Dict[str, Any]]]:
+        """Compatibility scraping path used by seeded-official-site tests."""
+        if not self.brightdata_client:
+            logger.warning("BrightData not available for scraping")
+            return None
+
+        try:
+            step_timings: Dict[str, Any] = {}
+            official_url = ""
+            search_results: Dict[str, Any] = {"status": "seeded", "results": []}
+
+            preferred_url = self._get_preferred_official_site_url(entity_name)
+            if preferred_url:
+                official_url = preferred_url
+                step_timings["search"] = 0.0
+                step_timings["url_select"] = 0.0
+                step_timings["official_site_source"] = "seeded_preferred"
+            else:
+                search_started_at = time.perf_counter()
+                search_results = await self.brightdata_client.search_engine(
+                    query=f'"{entity_name}" official website',
+                    engine="google",
+                    num_results=5,
+                )
+                step_timings["search"] = round(time.perf_counter() - search_started_at, 3)
+                if search_results.get("status") == "success":
+                    results = search_results.get("results", [])
+                    if results:
+                        url_select_started_at = time.perf_counter()
+                        official_url = self._choose_official_site_url(entity_name, results)
+                        step_timings["url_select"] = round(time.perf_counter() - url_select_started_at, 3)
+                        if official_url and not self._is_commerce_host(official_url):
+                            self._store_cached_official_site_url(entity_name, official_url)
+
+            if not official_url:
+                official_url = self._get_cached_official_site_url(entity_name) or ""
+
+            if not official_url:
+                return None
+
+            scrape_started_at = time.perf_counter()
+            scraped_url, scrape_result, content_source = await self._scrape_official_url_with_fallback(entity_name, official_url)
+            step_timings["scrape"] = round(time.perf_counter() - scrape_started_at, 3)
+            step_timings["official_content_source"] = content_source
+            if scrape_result.get("status") != "success":
+                return None
+
+            content = scrape_result.get("content", "")
+            if not content:
+                return None
+
+            official_url = scraped_url
+            extract_started_at = time.perf_counter()
+            extracted_data = await self._extract_entity_properties(content, entity_name)
+            step_timings["extract"] = round(time.perf_counter() - extract_started_at, 3)
+
+            extracted_website = self._normalize_http_url(extracted_data.get("website"))
+            if extracted_website:
+                extracted_data["website"] = extracted_website
+                if self._is_commerce_host(official_url) and not self._is_commerce_host(extracted_website):
+                    official_url = extracted_website
+                    self._store_cached_official_site_url(entity_name, official_url)
+
+            scraped_content = ScrapedContent(
+                url=official_url,
+                source_type="OFFICIAL_SITE",
+                title=entity_name,
+                content=content[:5000],
+                markdown_content=content,
+                word_count=len(content.split()),
+            )
+            step_timings["total"] = round(
+                sum(value for value in step_timings.values() if isinstance(value, (int, float))),
+                3,
+            )
+            return scraped_content, extracted_data, step_timings
+        except Exception as error:  # noqa: BLE001
+            logger.error("Web scraping failed: %s", error)
+            return None
 
     async def _scrape_wikipedia(self, entity_name: str) -> Dict[str, Any]:
         """
