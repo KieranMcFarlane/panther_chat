@@ -45,12 +45,14 @@ def test_claude_client_default_chutes_tier_mapping(monkeypatch):
     monkeypatch.delenv("CHUTES_MODEL_HAIKU", raising=False)
     monkeypatch.delenv("CHUTES_MODEL_SONNET", raising=False)
     monkeypatch.delenv("CHUTES_MODEL_OPUS", raising=False)
-    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_PRIMARY", "moonshotai/Kimi-K2.5-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_SECONDARY", "MiniMaxAI/MiniMax-M2.5-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_TERTIARY", "zai-org/GLM-5-TEE")
 
     client = ClaudeClient()
-    assert client._resolve_chutes_runtime_model("haiku") == "zai-org/GLM-5-TEE"
-    assert client._resolve_chutes_runtime_model("sonnet") == "moonshotai/Kimi-K2.5-TEE"
-    assert client._resolve_chutes_runtime_model("opus") == "MiniMaxAI/MiniMax-M2.5-TEE"
+    assert client._resolve_chutes_runtime_model("haiku") == "moonshotai/Kimi-K2.5-TEE"
+    assert client._resolve_chutes_runtime_model("sonnet") == "MiniMaxAI/MiniMax-M2.5-TEE"
+    assert client._resolve_chutes_runtime_model("opus") == "zai-org/GLM-5-TEE"
 
 
 def test_claude_client_supports_explicit_chutes_anthropic_provider(monkeypatch):
