@@ -9,6 +9,7 @@ import urllib.parse
 from datetime import datetime
 from dataclasses import dataclass
 from collections import deque
+from pathlib import Path
 import httpx
 
 try:
@@ -393,6 +394,25 @@ class ClaudeClient:
             api_key: Anthropic API key (default: from ANTHROPIC_API_KEY env)
             base_url: Custom base URL (default: from ANTHROPIC_BASE_URL env)
         """
+        should_load_env = not any(
+            os.getenv(key)
+            for key in (
+                "CHUTES_API_KEY",
+                "LLM_PROVIDER",
+                "CHUTES_MODEL_PRIMARY",
+                "CHUTES_MODEL",
+            )
+        )
+        if should_load_env:
+            try:
+                from dotenv import load_dotenv
+                load_dotenv()
+                parent_env = Path(__file__).parent.parent / ".env"
+                if parent_env.exists():
+                    load_dotenv(parent_env, override=False)
+            except Exception:
+                pass
+
         self.provider = self._resolve_provider()
         self.api_key = api_key or self._resolve_api_key()
         self.base_url = base_url or self._resolve_base_url()
