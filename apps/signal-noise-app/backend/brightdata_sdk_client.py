@@ -81,6 +81,8 @@ class BrightDataSDKClient:
         self._zone_cooldowns: Dict[str, float] = {}
         self._request_zone_whitelist: Optional[set] = None
         self._request_zone_whitelist_checked_at: float = 0.0
+        self.serp_poll_attempts = int(os.getenv("BRIGHTDATA_SERP_POLL_ATTEMPTS", "6"))
+        self.serp_poll_interval_seconds = float(os.getenv("BRIGHTDATA_SERP_POLL_INTERVAL_SECONDS", "1.2"))
 
         if not self.token:
             logger.warning("⚠️ BRIGHTDATA_API_TOKEN not found in environment")
@@ -586,6 +588,14 @@ class BrightDataSDKClient:
                         response.raise_for_status()
                     payload_json = response.json()
                     results = self._extract_serp_results(payload_json, num_results)
+                    if not results and isinstance(payload_json, dict):
+                        response_id = payload_json.get("response_id")
+                        if isinstance(response_id, str) and response_id.strip():
+                            payload_json = await self._poll_serp_result_payload(
+                                response_id=response_id.strip(),
+                                zone=zone,
+                            )
+                            results = self._extract_serp_results(payload_json, num_results)
                     return {
                         "status": "success",
                         "engine": engine,
@@ -597,6 +607,7 @@ class BrightDataSDKClient:
                             "country": country,
                             "endpoint": f"{api_base}/request",
                             "zone": zone,
+                            "async_polling": True,
                         },
                     }
                 except httpx.HTTPStatusError as e:
@@ -684,6 +695,55 @@ class BrightDataSDKClient:
                 "error": last_error or "unknown fallback error",
             },
         }
+
+    async def _poll_serp_result_payload(self, response_id: str, zone: str) -> Dict[str, Any]:
+        """Poll BrightData async SERP results for a response_id."""
+        token = getattr(self, "token", None)
+        if not token:
+            return {"status": "error", "error": "missing token", "response_id": response_id}
+
+        api_base = os.getenv("BRIGHTDATA_API_BASE", "https://api.brightdata.com").rstrip("/")
+        endpoint = f"{api_base}/serp/get_result"
+        headers = {"Authorization": f"Bearer {token}"}
+        params = {"response_id": response_id}
+        if zone:
+            params["zone"] = zone
+
+        timeout = float(os.getenv("BRIGHTDATA_FALLBACK_SEARCH_TIMEOUT_SECONDS", "20"))
+        attempts = max(self.serp_poll_attempts, 1)
+        last_payload: Dict[str, Any] = {}
+
+        async with httpx.AsyncClient(timeout=timeout, follow_redirects=True) as client:
+            for attempt in range(attempts):
+                try:
+                    response = await client.get(endpoint, headers=headers, params=params)
+                    if response.status_code == 202:
+                        if attempt < attempts - 1:
+                            await asyncio.sleep(self.serp_poll_interval_seconds)
+                            continue
+                        return {"status": "pending", "response_id": response_id}
+                    if response.status_code >= 500:
+                        if attempt < attempts - 1:
+                            await asyncio.sleep(self.serp_poll_interval_seconds)
+                            continue
+                    if response.status_code >= 400:
+                        if response.status_code == 404 and attempt < attempts - 1:
+                            await asyncio.sleep(self.serp_poll_interval_seconds)
+                            continue
+                        return {"status": "error", "error": response.text[:220], "response_id": response_id}
+
+                    payload = response.json() if response.text else {}
+                    if isinstance(payload, dict):
+                        last_payload = payload
+                        if self._extract_serp_results(payload, num_results=10):
+                            return payload
+                    await asyncio.sleep(self.serp_poll_interval_seconds)
+                except Exception as poll_error:
+                    logger.debug("SERP get_result polling failed (attempt=%s): %s", attempt + 1, poll_error)
+                    if attempt < attempts - 1:
+                        await asyncio.sleep(self.serp_poll_interval_seconds)
+
+        return last_payload or {"status": "error", "error": "SERP polling exhausted", "response_id": response_id}
 
     def _build_serp_target_url(self, engine: str, query: str, country: str, num_results: int) -> str:
         """Build target SERP URL for BrightData /request fallback."""

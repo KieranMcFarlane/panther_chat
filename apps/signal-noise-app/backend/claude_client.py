@@ -3,9 +3,18 @@ import logging
 from typing import Dict, Any, Optional, List, Tuple
 import os
 import asyncio
+import random
+import time
+import urllib.parse
 from datetime import datetime
 from dataclasses import dataclass
+from collections import deque
 import httpx
+
+try:
+    from http_client_pool import HttpClientPool
+except ImportError:
+    from backend.http_client_pool import HttpClientPool
 
 try:
     from anthropic import Anthropic
@@ -367,6 +376,10 @@ class ClaudeClient:
     """
 
     _api_disabled_reason: Optional[str] = None
+    _api_disabled_at_monotonic: Optional[float] = None
+    _api_disabled_until_monotonic: Optional[float] = None
+    _api_disabled_kind: Optional[str] = None
+    _quota_circuit_trip_count: int = 0
 
     PROVIDER_ANTHROPIC = "anthropic"
     PROVIDER_CHUTES_OPENAI = "chutes_openai"
@@ -401,16 +414,58 @@ class ClaudeClient:
         )
         self.chutes_stream_enabled = self._parse_bool_env(os.getenv("CHUTES_STREAM_ENABLED"), default=True)
         self.chutes_max_retries = int(os.getenv("CHUTES_MAX_RETRIES", "1"))
+        self.chutes_min_request_interval_seconds = float(os.getenv("CHUTES_MIN_REQUEST_INTERVAL_SECONDS", "0.0"))
+        self.chutes_retry_backoff_cap_seconds = float(os.getenv("CHUTES_RETRY_BACKOFF_CAP_SECONDS", "8.0"))
+        self.chutes_retry_jitter_seconds = float(os.getenv("CHUTES_RETRY_JITTER_SECONDS", "0.6"))
+        self.chutes_429_policy = os.getenv("CHUTES_429_POLICY", "header_exponential").strip().lower() or "header_exponential"
+        self.chutes_max_concurrent_requests = max(1, int(os.getenv("CHUTES_MAX_CONCURRENT_REQUESTS", "2")))
+        self.chutes_circuit_ttl_seconds = float(os.getenv("CHUTES_CIRCUIT_TTL_SECONDS", "120"))
+        self.chutes_circuit_ttl_multiplier = float(os.getenv("CHUTES_CIRCUIT_TTL_MULTIPLIER", "1.8"))
+        self.chutes_circuit_ttl_max_seconds = float(os.getenv("CHUTES_CIRCUIT_TTL_MAX_SECONDS", "900"))
+        self.chutes_circuit_canary_timeout_seconds = float(os.getenv("CHUTES_CIRCUIT_CANARY_TIMEOUT_SECONDS", "12"))
+        self.chutes_circuit_canary_prompt = os.getenv("CHUTES_CIRCUIT_CANARY_PROMPT", "reply with ok")
+        self.chutes_circuit_canary_max_tokens = int(os.getenv("CHUTES_CIRCUIT_CANARY_MAX_TOKENS", "8"))
+        self.chutes_adaptive_pacing_enabled = self._parse_bool_env(
+            os.getenv("CHUTES_ADAPTIVE_PACING_ENABLED"),
+            default=True,
+        )
+        self.chutes_adaptive_window_seconds = float(os.getenv("CHUTES_ADAPTIVE_WINDOW_SECONDS", "90"))
+        self.chutes_adaptive_rate_limit_multiplier = float(os.getenv("CHUTES_ADAPTIVE_RATE_LIMIT_MULTIPLIER", "1.6"))
+        self.chutes_adaptive_error_multiplier = float(os.getenv("CHUTES_ADAPTIVE_ERROR_MULTIPLIER", "1.25"))
+        self.chutes_adaptive_interval_max_seconds = float(os.getenv("CHUTES_ADAPTIVE_INTERVAL_MAX_SECONDS", "4.0"))
+        self.chutes_adaptive_recovery_factor = float(os.getenv("CHUTES_ADAPTIVE_RECOVERY_FACTOR", "0.9"))
+        self.llm_provider_validation_strict = self._parse_bool_env(
+            os.getenv("LLM_PROVIDER_VALIDATION_STRICT"),
+            default=True,
+        )
 
         disable_flag = (os.getenv("DISABLE_CLAUDE_API") or "").strip().lower()
         if disable_flag in {"1", "true", "yes", "on"}:
-            self._disable_api("disabled by environment")
+            self._disable_api_with_kind("disabled by environment", kind="env")
 
         if not self.api_key:
             logger.warning("⚠️ No LLM API key configured for selected provider - client will fail")
+        self._validate_provider_configuration()
 
         self.default_model = "haiku"
         self.cascade_order = ["haiku", "sonnet", "opus"]
+        self._chutes_rate_lock = asyncio.Lock()
+        self._chutes_circuit_probe_lock = asyncio.Lock()
+        self._chutes_last_request_monotonic = 0.0
+        self._chutes_effective_min_interval_seconds = self.chutes_min_request_interval_seconds
+        self._chutes_event_history = deque(maxlen=512)
+        self._chutes_event_counter = 0
+        self._chutes_request_semaphore = asyncio.Semaphore(self.chutes_max_concurrent_requests)
+        self._http_client_pool = HttpClientPool()
+        self._last_request_diagnostics: Dict[str, Any] = {
+            "llm_provider": self.provider,
+            "llm_retry_attempts": 0,
+            "llm_last_status": "init",
+            "llm_circuit_broken": bool(self._get_disabled_reason()),
+            "llm_disable_reason": self._get_disabled_reason(),
+            "llm_circuit_seconds_remaining": None,
+            "llm_circuit_kind": getattr(self.__class__, "_api_disabled_kind", None),
+        }
 
         logger.info(f"🤖 ClaudeClient initialized (provider: {self.provider}, default: {self.default_model})")
 
@@ -454,6 +509,33 @@ class ClaudeClient:
 
         return os.getenv("ANTHROPIC_BASE_URL", "https://api.anthropic.com")
 
+    def _validate_provider_configuration(self) -> None:
+        """Fail fast on known-invalid Chutes provider/model/endpoint combinations."""
+        if not self.llm_provider_validation_strict:
+            return
+        if self.provider not in {self.PROVIDER_CHUTES_OPENAI, self.PROVIDER_CHUTES_ANTHROPIC}:
+            return
+
+        parsed = urllib.parse.urlparse(self.base_url)
+        path_lower = (parsed.path or "").lower().rstrip("/")
+        model_lower = str(self.chutes_model or "").lower()
+        model_family_ok = ("glm" in model_lower) or ("kimi" in model_lower) or ("minimax" in model_lower)
+        if not model_family_ok:
+            raise ValueError(
+                f"Unsupported Chutes model for strict validation: {self.chutes_model}. "
+                "Expected GLM/Kimi/MiniMax family."
+            )
+        if self.provider == self.PROVIDER_CHUTES_OPENAI and "anthropic" in path_lower:
+            raise ValueError(
+                f"Invalid base URL for {self.PROVIDER_CHUTES_OPENAI}: {self.base_url}. "
+                "Use OpenAI-compatible /v1 endpoint."
+            )
+        if self.provider == self.PROVIDER_CHUTES_ANTHROPIC and path_lower.endswith("/v1") and "anthropic" not in path_lower:
+            raise ValueError(
+                f"Invalid base URL for {self.PROVIDER_CHUTES_ANTHROPIC}: {self.base_url}. "
+                "Use Anthropic-compatible endpoint base."
+            )
+
     def _resolve_chutes_runtime_model(self, requested_model: Optional[str]) -> str:
         normalized = str(requested_model or "haiku").strip().lower()
         if normalized == "sonnet":
@@ -472,7 +554,134 @@ class ClaudeClient:
     def _disable_api(cls, reason: str):
         if not cls._api_disabled_reason:
             cls._api_disabled_reason = reason
+            cls._api_disabled_at_monotonic = time.monotonic()
+            cls._api_disabled_kind = "runtime"
+            cls._api_disabled_until_monotonic = None
             logger.warning(f"⚠️ Disabling Claude API for current process: {reason}")
+
+    @classmethod
+    def _disable_api_with_kind(
+        cls,
+        reason: str,
+        *,
+        kind: str = "runtime",
+        cooldown_seconds: Optional[float] = None,
+    ) -> None:
+        now = time.monotonic()
+        if not cls._api_disabled_reason:
+            cls._api_disabled_reason = reason
+            cls._api_disabled_at_monotonic = now
+            cls._api_disabled_kind = kind
+            cls._api_disabled_until_monotonic = (
+                now + cooldown_seconds if kind == "quota" and cooldown_seconds and cooldown_seconds > 0 else None
+            )
+            logger.warning(f"⚠️ Disabling Claude API for current process: {reason}")
+            return
+        if kind == "quota":
+            cls._api_disabled_reason = reason
+            cls._api_disabled_kind = kind
+            cls._api_disabled_at_monotonic = now
+            cls._api_disabled_until_monotonic = (
+                now + cooldown_seconds if cooldown_seconds and cooldown_seconds > 0 else None
+            )
+
+    @classmethod
+    def _clear_disabled_reason(cls) -> None:
+        cls._api_disabled_reason = None
+        cls._api_disabled_at_monotonic = None
+        cls._api_disabled_kind = None
+        cls._api_disabled_until_monotonic = None
+
+    @classmethod
+    def _reset_quota_circuit(cls) -> None:
+        cls._quota_circuit_trip_count = 0
+        if cls._api_disabled_kind == "quota":
+            cls._clear_disabled_reason()
+
+    def _compute_quota_cooldown_seconds(self) -> float:
+        base = max(float(self.chutes_circuit_ttl_seconds or 0.0), 0.0)
+        if base <= 0.0:
+            return 0.0
+        multiplier = max(float(self.chutes_circuit_ttl_multiplier or 1.0), 1.0)
+        trips = max(int(getattr(self.__class__, "_quota_circuit_trip_count", 0)), 0)
+        cooldown = base * (multiplier ** max(trips - 1, 0))
+        max_cooldown = max(float(self.chutes_circuit_ttl_max_seconds or 0.0), base)
+        return min(cooldown, max_cooldown)
+
+    def _get_effective_disabled_reason(self) -> Optional[str]:
+        reason = self._get_disabled_reason()
+        if not reason:
+            return None
+        kind = getattr(self.__class__, "_api_disabled_kind", None)
+        if kind == "env":
+            return reason
+        if self.provider not in {self.PROVIDER_CHUTES_OPENAI, self.PROVIDER_CHUTES_ANTHROPIC}:
+            return reason
+        if kind == "quota" and getattr(self.__class__, "_api_disabled_until_monotonic", None) is not None:
+            return reason
+        ttl = float(getattr(self, "chutes_circuit_ttl_seconds", 0.0) or 0.0)
+        if ttl <= 0:
+            return reason
+        disabled_at = getattr(self.__class__, "_api_disabled_at_monotonic", None)
+        if disabled_at is None:
+            return reason
+        if (time.monotonic() - disabled_at) >= ttl:
+            self._clear_disabled_reason()
+            return None
+        return reason
+
+    def _current_circuit_remaining_seconds(self) -> Optional[float]:
+        if self._get_disabled_reason() is None:
+            return None
+        disabled_until = getattr(self.__class__, "_api_disabled_until_monotonic", None)
+        if disabled_until is not None:
+            return max(0.0, disabled_until - time.monotonic())
+        disabled_at = getattr(self.__class__, "_api_disabled_at_monotonic", None)
+        if disabled_at is None:
+            return None
+        ttl = float(getattr(self, "chutes_circuit_ttl_seconds", 0.0) or 0.0)
+        return max(0.0, ttl - (time.monotonic() - disabled_at)) if ttl > 0 else None
+
+    def _quota_probe_due(self) -> bool:
+        if getattr(self.__class__, "_api_disabled_kind", None) != "quota":
+            return False
+        disabled_until = getattr(self.__class__, "_api_disabled_until_monotonic", None)
+        return bool(disabled_until is not None and time.monotonic() >= disabled_until)
+
+    async def _attempt_quota_canary_probe_openai(self, headers: Dict[str, str]) -> bool:
+        async with self._chutes_circuit_probe_lock:
+            if not self._quota_probe_due():
+                return self._get_disabled_reason() is None
+            try:
+                timeout_seconds = max(self.chutes_circuit_canary_timeout_seconds, 1.0)
+                timeout = httpx.Timeout(timeout=timeout_seconds, connect=min(timeout_seconds, 8.0))
+                payload = {
+                    "model": self.chutes_model,
+                    "messages": [{"role": "user", "content": self.chutes_circuit_canary_prompt}],
+                    "max_tokens": max(1, int(self.chutes_circuit_canary_max_tokens)),
+                    "temperature": 0,
+                    "stream": False,
+                }
+                async with self._chutes_request_semaphore:
+                    await self._apply_chutes_request_throttle()
+                    probe = await self._query_chutes_non_stream(payload=payload, headers=headers, timeout=timeout)
+                content = str(probe.get("answer_text") or probe.get("reasoning_text") or "").strip()
+                if not content:
+                    raise RuntimeError("quota canary returned empty response")
+                self._clear_disabled_reason()
+                self._reset_quota_circuit()
+                logger.info("♻️ Re-enabled Chutes after successful quota canary probe")
+                return True
+            except Exception as exc:
+                self.__class__._quota_circuit_trip_count += 1
+                cooldown = self._compute_quota_cooldown_seconds()
+                self._disable_api_with_kind("insufficient balance", kind="quota", cooldown_seconds=cooldown)
+                logger.warning(
+                    "Quota canary probe failed; keeping circuit open for %.1fs: %s",
+                    cooldown,
+                    self._format_chutes_error(exc),
+                )
+                return False
 
     @staticmethod
     def _is_insufficient_balance_error(error: Exception) -> bool:
@@ -491,6 +700,164 @@ class ClaudeClient:
             status_code = error.response.status_code if error.response is not None else None
             return status_code in {408, 425, 429} or (status_code is not None and status_code >= 500)
         return False
+
+    @staticmethod
+    def _extract_http_error_text(error: Exception) -> str:
+        if not isinstance(error, httpx.HTTPStatusError) or error.response is None:
+            return ""
+        try:
+            return (error.response.text or "").strip()
+        except Exception:
+            return ""
+
+    def _classify_chutes_429(self, error: Exception) -> str:
+        body_lower = self._extract_http_error_text(error).lower()
+        if (
+            "insufficient balance" in body_lower
+            or "no resource package" in body_lower
+            or "please recharge" in body_lower
+            or '"code":"1113"' in body_lower
+            or "'code': '1113'" in body_lower
+        ):
+            return "insufficient_balance"
+        return "rate_limit"
+
+    def _compute_chutes_backoff_seconds(
+        self,
+        *,
+        attempt: int,
+        retry_after_seconds: Optional[float],
+        is_http_429: bool = False,
+    ) -> float:
+        if retry_after_seconds is not None and retry_after_seconds > 0:
+            return retry_after_seconds
+        cap = max(self.chutes_retry_backoff_cap_seconds, 0.0)
+        if is_http_429 and self.chutes_429_policy == "header_exponential":
+            profile = [3.0, 7.0, 15.0]
+            base = min(profile[min(max(attempt, 0), len(profile) - 1)], cap)
+            return max(0.0, base + random.uniform(0.0, max(self.chutes_retry_jitter_seconds, 0.0)))
+        base = min(2 ** max(attempt, 0), cap)
+        return max(0.0, base + random.uniform(0.0, max(self.chutes_retry_jitter_seconds, 0.0)))
+
+    def _effective_chutes_min_interval_seconds(self) -> float:
+        if not self.chutes_adaptive_pacing_enabled:
+            return max(0.0, float(self.chutes_min_request_interval_seconds or 0.0))
+        return max(0.0, float(self._chutes_effective_min_interval_seconds or 0.0))
+
+    def _prune_chutes_event_history(self, now: Optional[float] = None) -> None:
+        if not self.chutes_adaptive_pacing_enabled:
+            return
+        now = now if now is not None else time.monotonic()
+        cutoff = now - float(self.chutes_adaptive_window_seconds)
+        while self._chutes_event_history and self._chutes_event_history[0]["time"] < cutoff:
+            self._chutes_event_history.popleft()
+
+    def _record_chutes_event(
+        self,
+        status: str,
+        *,
+        wait_seconds: float = 0.0,
+        status_code: Optional[int] = None,
+    ) -> None:
+        if not self.chutes_adaptive_pacing_enabled:
+            return
+        now = time.monotonic()
+        self._chutes_event_history.append(
+            {
+                "time": now,
+                "status": str(status or "unknown"),
+                "wait_seconds": max(0.0, float(wait_seconds or 0.0)),
+                "status_code": status_code,
+            }
+        )
+        self._chutes_event_counter += 1
+        self._prune_chutes_event_history(now=now)
+
+    def _get_chutes_pacing_snapshot(self) -> Dict[str, Any]:
+        if self.chutes_adaptive_pacing_enabled:
+            self._prune_chutes_event_history()
+            events = list(self._chutes_event_history)
+        else:
+            events = []
+        window_seconds = float(self.chutes_adaptive_window_seconds)
+        event_count = len(events)
+        rpm = (event_count / window_seconds) * 60.0 if window_seconds > 0 else 0.0
+        rate_limits = sum(1 for event in events if event.get("status") == "rate_limit")
+        retryable_errors = sum(1 for event in events if event.get("status") == "retryable_error")
+        success = sum(1 for event in events if event.get("status") == "success")
+        return {
+            "chutes_effective_min_interval_seconds": round(self._effective_chutes_min_interval_seconds(), 4),
+            "chutes_window_requests_per_minute": round(rpm, 4),
+            "chutes_window_rate_limit_events": int(rate_limits),
+            "chutes_window_error_events": int(retryable_errors),
+            "chutes_window_success_ratio": round((success / event_count) if event_count else 0.0, 4),
+        }
+
+    def _set_chutes_effective_min_interval(self, interval_seconds: float) -> None:
+        base = max(0.0, float(self.chutes_min_request_interval_seconds or 0.0))
+        if not self.chutes_adaptive_pacing_enabled:
+            self._chutes_effective_min_interval_seconds = base
+            return
+        ceiling = max(base, float(self.chutes_adaptive_interval_max_seconds or 0.0))
+        self._chutes_effective_min_interval_seconds = min(max(float(interval_seconds or 0.0), base), ceiling)
+
+    def _apply_chutes_adaptive_penalty(self, *, is_rate_limit: bool) -> None:
+        if not self.chutes_adaptive_pacing_enabled:
+            return
+        base = max(0.0, float(self.chutes_min_request_interval_seconds or 0.0))
+        current = max(float(self._chutes_effective_min_interval_seconds or 0.0), max(base, 0.05))
+        multiplier = self.chutes_adaptive_rate_limit_multiplier if is_rate_limit else self.chutes_adaptive_error_multiplier
+        self._set_chutes_effective_min_interval(current * max(float(multiplier), 1.0))
+
+    def _apply_chutes_adaptive_recovery(self) -> None:
+        if not self.chutes_adaptive_pacing_enabled:
+            return
+        base = max(0.0, float(self.chutes_min_request_interval_seconds or 0.0))
+        current = max(float(self._chutes_effective_min_interval_seconds or 0.0), base)
+        if current <= base:
+            return
+        factor = min(1.0, max(0.0, float(self.chutes_adaptive_recovery_factor or 0.9)))
+        self._set_chutes_effective_min_interval(current * factor)
+
+    async def _apply_chutes_request_throttle(self) -> None:
+        min_interval_seconds = self._effective_chutes_min_interval_seconds()
+        if min_interval_seconds <= 0.0:
+            return
+        async with self._chutes_rate_lock:
+            now = time.monotonic()
+            elapsed = now - self._chutes_last_request_monotonic
+            wait_seconds = min_interval_seconds - elapsed
+            if wait_seconds > 0:
+                await asyncio.sleep(wait_seconds)
+                self._record_chutes_event("throttle_wait", wait_seconds=wait_seconds)
+            self._chutes_last_request_monotonic = time.monotonic()
+
+    def _set_last_request_diagnostics(
+        self,
+        *,
+        retry_attempts: int,
+        last_status: str,
+        circuit_broken: bool = False,
+        disable_reason: Optional[str] = None,
+    ) -> None:
+        self._last_request_diagnostics = {
+            "llm_provider": self.provider,
+            "llm_retry_attempts": max(0, int(retry_attempts)),
+            "llm_last_status": last_status,
+            "llm_circuit_broken": bool(circuit_broken),
+            "llm_disable_reason": disable_reason,
+            "llm_circuit_seconds_remaining": self._current_circuit_remaining_seconds(),
+            "llm_circuit_kind": getattr(self.__class__, "_api_disabled_kind", None),
+            **self._get_chutes_pacing_snapshot(),
+        }
+        if last_status == "ok":
+            self._reset_quota_circuit()
+
+    def get_runtime_diagnostics(self) -> Dict[str, Any]:
+        return dict(self._last_request_diagnostics)
+
+    async def close(self) -> None:
+        await self._http_client_pool.close()
 
     @staticmethod
     def _format_chutes_error(error: Exception) -> str:
@@ -675,7 +1042,7 @@ class ClaudeClient:
         if not ANTHROPIC_SDK_AVAILABLE:
             raise ImportError("anthropic package is required. Install with: pip install anthropic")
 
-        disabled_reason = self._get_disabled_reason()
+        disabled_reason = self._get_effective_disabled_reason()
         if disabled_reason:
             raise RuntimeError(f"Claude API disabled: {disabled_reason}")
 
@@ -733,7 +1100,7 @@ class ClaudeClient:
         The pipeline still calls this through the Claude client interface, but the
         transport is OpenAI chat completions and the model is configured via CHUTES_MODEL.
         """
-        disabled_reason = self._get_disabled_reason()
+        disabled_reason = self._get_effective_disabled_reason()
         if disabled_reason:
             raise RuntimeError(f"Claude API disabled: {disabled_reason}")
 
@@ -745,8 +1112,9 @@ class ClaudeClient:
             messages.append({"role": "system", "content": system_prompt})
         messages.append({"role": "user", "content": prompt})
 
+        runtime_model = self._resolve_chutes_runtime_model(model)
         payload = {
-            "model": self.chutes_model,
+            "model": runtime_model,
             "messages": messages,
             "max_tokens": max_tokens,
             "temperature": 0.7 if system_prompt is None else 0.4,
@@ -757,6 +1125,18 @@ class ClaudeClient:
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json",
         }
+
+        if self._quota_probe_due():
+            await self._attempt_quota_canary_probe_openai(headers)
+            disabled_reason = self._get_effective_disabled_reason()
+            if disabled_reason:
+                self._set_last_request_diagnostics(
+                    retry_attempts=0,
+                    last_status="circuit_open",
+                    circuit_broken=True,
+                    disable_reason=disabled_reason,
+                )
+                raise RuntimeError(f"Claude API disabled: {disabled_reason}")
 
         last_error: Optional[Exception] = None
 
@@ -776,17 +1156,21 @@ class ClaudeClient:
                     read=min(request_timeout_seconds, self.chutes_stream_idle_timeout_seconds),
                 )
                 if self.chutes_stream_enabled:
-                    data = await self._query_chutes_streaming(
-                        payload=payload,
-                        headers=headers,
-                        timeout=timeout,
-                    )
+                    async with self._chutes_request_semaphore:
+                        await self._apply_chutes_request_throttle()
+                        data = await self._query_chutes_streaming(
+                            payload=payload,
+                            headers=headers,
+                            timeout=timeout,
+                        )
                 else:
-                    data = await self._query_chutes_non_stream(
-                        payload=payload,
-                        headers=headers,
-                        timeout=timeout,
-                    )
+                    async with self._chutes_request_semaphore:
+                        await self._apply_chutes_request_throttle()
+                        data = await self._query_chutes_non_stream(
+                            payload=payload,
+                            headers=headers,
+                            timeout=timeout,
+                        )
 
                 content = data.get("answer_text", "")
                 reasoning_content = data.get("reasoning_text", "")
@@ -803,6 +1187,9 @@ class ClaudeClient:
                     )
                     payload["model"] = self.chutes_fallback_model
                     continue
+                self._record_chutes_event("success")
+                self._apply_chutes_adaptive_recovery()
+                self._set_last_request_diagnostics(retry_attempts=attempt, last_status="ok")
 
                 return {
                     "content": content,
@@ -835,7 +1222,15 @@ class ClaudeClient:
                     error_detail,
                 )
                 if self._is_insufficient_balance_error(e):
-                    self._disable_api("insufficient balance")
+                    self.__class__._quota_circuit_trip_count += 1
+                    cooldown = self._compute_quota_cooldown_seconds()
+                    self._disable_api_with_kind("insufficient balance", kind="quota", cooldown_seconds=cooldown)
+                    self._set_last_request_diagnostics(
+                        retry_attempts=attempt,
+                        last_status="insufficient_balance",
+                        circuit_broken=True,
+                        disable_reason=self._get_disabled_reason(),
+                    )
                     raise LLMRequestError(
                         f"Chutes insufficient balance: {error_detail}",
                         retryable=False,
@@ -846,6 +1241,25 @@ class ClaudeClient:
                     ) from e
 
                 is_retryable = self._is_retryable_chutes_error(e)
+                status_code = e.response.status_code if isinstance(e, httpx.HTTPStatusError) and e.response is not None else None
+                is_429 = status_code == 429
+                if is_429:
+                    classification = self._classify_chutes_429(e)
+                    if classification == "insufficient_balance":
+                        self.__class__._quota_circuit_trip_count += 1
+                        cooldown = self._compute_quota_cooldown_seconds()
+                        self._disable_api_with_kind("insufficient balance", kind="quota", cooldown_seconds=cooldown)
+                        self._set_last_request_diagnostics(
+                            retry_attempts=attempt,
+                            last_status="quota_circuit_open",
+                            circuit_broken=True,
+                            disable_reason=self._get_disabled_reason(),
+                        )
+                    self._record_chutes_event("rate_limit", status_code=status_code)
+                    self._apply_chutes_adaptive_penalty(is_rate_limit=True)
+                elif is_retryable:
+                    self._record_chutes_event("retryable_error", status_code=status_code)
+                    self._apply_chutes_adaptive_penalty(is_rate_limit=False)
                 if (
                     is_retryable
                     and self.chutes_fallback_model
@@ -859,6 +1273,12 @@ class ClaudeClient:
                     payload["model"] = self.chutes_fallback_model
                     continue
                 if not is_retryable or attempt >= self.chutes_max_retries:
+                    self._set_last_request_diagnostics(
+                        retry_attempts=attempt,
+                        last_status="error_non_retryable" if not is_retryable else "error_retry_exhausted",
+                        circuit_broken=bool(self._get_disabled_reason()),
+                        disable_reason=self._get_disabled_reason(),
+                    )
                     raise LLMRequestError(
                         f"Chutes request failed (retryable={is_retryable}): {error_detail}",
                         retryable=is_retryable,
@@ -877,9 +1297,19 @@ class ClaudeClient:
                 except (TypeError, ValueError):
                     retry_after_seconds = None
 
-                backoff_seconds = retry_after_seconds or min(2 ** attempt, 4)
+                backoff_seconds = self._compute_chutes_backoff_seconds(
+                    attempt=attempt,
+                    retry_after_seconds=retry_after_seconds,
+                    is_http_429=is_429,
+                )
                 await asyncio.sleep(backoff_seconds)
 
+        self._set_last_request_diagnostics(
+            retry_attempts=self.chutes_max_retries + 1,
+            last_status="error_exhausted",
+            circuit_broken=bool(self._get_disabled_reason()),
+            disable_reason=self._get_disabled_reason(),
+        )
         raise LLMRequestError(
             f"Chutes request failed after {self.chutes_max_retries + 1} attempts: "
             f"{self._format_chutes_error(last_error) if last_error else 'unknown error'}",
@@ -1003,7 +1433,7 @@ class ClaudeClient:
         system_prompt: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Query a Chutes Anthropic-compatible messages endpoint."""
-        disabled_reason = self._get_disabled_reason()
+        disabled_reason = self._get_effective_disabled_reason()
         if disabled_reason:
             raise RuntimeError(f"Claude API disabled: {disabled_reason}")
 
@@ -1032,13 +1462,15 @@ class ClaudeClient:
                     timeout=self.chutes_timeout_seconds,
                     connect=min(self.chutes_timeout_seconds, 15.0),
                 )
-                async with httpx.AsyncClient(timeout=timeout) as client:
-                    response = await client.post(
-                        f"{self.base_url.rstrip('/')}/messages",
-                        headers=headers,
-                        json=payload,
-                    )
-                    response.raise_for_status()
+                async with self._chutes_request_semaphore:
+                    await self._apply_chutes_request_throttle()
+                    async with httpx.AsyncClient(timeout=timeout) as client:
+                        response = await client.post(
+                            f"{self.base_url.rstrip('/')}/messages",
+                            headers=headers,
+                            json=payload,
+                        )
+                        response.raise_for_status()
 
                 data = response.json()
                 content_blocks = data.get("content") or []
@@ -1056,6 +1488,9 @@ class ClaudeClient:
                     structured_output = self._extract_structured_output(content)
                 if total_tokens is None and input_tokens is not None and output_tokens is not None:
                     total_tokens = input_tokens + output_tokens
+                self._record_chutes_event("success")
+                self._apply_chutes_adaptive_recovery()
+                self._set_last_request_diagnostics(retry_attempts=attempt, last_status="ok")
 
                 return {
                     "content": content,
@@ -1081,7 +1516,15 @@ class ClaudeClient:
                     error_detail,
                 )
                 if self._is_insufficient_balance_error(e):
-                    self._disable_api("insufficient balance")
+                    self.__class__._quota_circuit_trip_count += 1
+                    cooldown = self._compute_quota_cooldown_seconds()
+                    self._disable_api_with_kind("insufficient balance", kind="quota", cooldown_seconds=cooldown)
+                    self._set_last_request_diagnostics(
+                        retry_attempts=attempt,
+                        last_status="insufficient_balance",
+                        circuit_broken=True,
+                        disable_reason=self._get_disabled_reason(),
+                    )
                     raise LLMRequestError(
                         f"Chutes Anthropic insufficient balance: {error_detail}",
                         retryable=False,
@@ -1092,7 +1535,21 @@ class ClaudeClient:
                     ) from e
 
                 is_retryable = self._is_retryable_chutes_error(e)
+                status_code = e.response.status_code if isinstance(e, httpx.HTTPStatusError) and e.response is not None else None
+                is_429 = status_code == 429
+                if is_429:
+                    self._record_chutes_event("rate_limit", status_code=status_code)
+                    self._apply_chutes_adaptive_penalty(is_rate_limit=True)
+                elif is_retryable:
+                    self._record_chutes_event("retryable_error", status_code=status_code)
+                    self._apply_chutes_adaptive_penalty(is_rate_limit=False)
                 if not is_retryable or attempt >= self.chutes_max_retries:
+                    self._set_last_request_diagnostics(
+                        retry_attempts=attempt,
+                        last_status="error_non_retryable" if not is_retryable else "error_retry_exhausted",
+                        circuit_broken=bool(self._get_disabled_reason()),
+                        disable_reason=self._get_disabled_reason(),
+                    )
                     raise LLMRequestError(
                         f"Chutes Anthropic request failed (retryable={is_retryable}): {error_detail}",
                         retryable=is_retryable,
@@ -1111,9 +1568,19 @@ class ClaudeClient:
                 except (TypeError, ValueError):
                     retry_after_seconds = None
 
-                backoff_seconds = retry_after_seconds or min(2 ** attempt, 4)
+                backoff_seconds = self._compute_chutes_backoff_seconds(
+                    attempt=attempt,
+                    retry_after_seconds=retry_after_seconds,
+                    is_http_429=is_429,
+                )
                 await asyncio.sleep(backoff_seconds)
 
+        self._set_last_request_diagnostics(
+            retry_attempts=self.chutes_max_retries + 1,
+            last_status="error_exhausted",
+            circuit_broken=bool(self._get_disabled_reason()),
+            disable_reason=self._get_disabled_reason(),
+        )
         raise LLMRequestError(
             f"Chutes Anthropic request failed after {self.chutes_max_retries + 1} attempts: "
             f"{self._format_chutes_error(last_error) if last_error else 'unknown error'}",
