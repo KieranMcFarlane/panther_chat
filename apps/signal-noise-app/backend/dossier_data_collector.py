@@ -25,6 +25,7 @@ from functools import lru_cache
 import asyncio
 import json
 import hashlib
+import re
 
 # Load environment variables from .env (same pattern as graphiti_service.py)
 project_root = Path(__file__).parent.parent
@@ -56,7 +57,23 @@ logger = logging.getLogger(__name__)
 try:
     from official_site_resolver import choose_canonical_official_site, rank_official_site_candidates
 except ImportError:  # pragma: no cover - package import path fallback
-    from backend.official_site_resolver import choose_canonical_official_site, rank_official_site_candidates
+    try:
+        from backend.official_site_resolver import choose_canonical_official_site, rank_official_site_candidates
+    except ImportError:
+        def choose_canonical_official_site(entity_name: str, candidates: List[Dict[str, Any]], max_candidates: int = 10) -> str:
+            for candidate in candidates[:max_candidates]:
+                url = str(candidate.get("url") or "").strip()
+                if url:
+                    return url
+            return ""
+
+        def rank_official_site_candidates(
+            *,
+            entity_name: str,
+            candidates: List[Dict[str, Any]],
+            max_candidates: int = 10,
+        ) -> List[Dict[str, Any]]:
+            return list(candidates[:max_candidates])
 
 # =============================================================================
 # Data Structures

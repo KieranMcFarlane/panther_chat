@@ -212,3 +212,25 @@
 - `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_dossier_generator_timeout.py backend/tests/test_dossier_generator_timeout_fallback.py -q`: pass (`4 passed`).
 - `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
 - `PYTHONPATH=backend .venv-codex/bin/python scripts/check-brightdata-hello.py`: pass (`search_engine` success with `result_count=10`; `scrape_as_markdown` success via `brightdata_sdk` direct mode).
+
+## Wave 3C (Official-Site Cache Poisoning Guard)
+
+### Included Commits
+- `3d1dd71` fix(dossier): avoid commerce-domain official-site cache poisoning
+
+### Conflict Decisions
+- `dossier_data_collector.py`: preserved stricter current URL selection (`not commerce` + entity-domain likeness) while accepting commerce-domain cache-poisoning protections.
+- Kept stale deleted test removed: `backend/tests/test_dossier_data_collector_seed.py`.
+
+### Reconciliation Commit
+- `fix(merge): harden collector import fallbacks and sdk-empty scrape fallback`
+  - Added resilient import fallback when `official_site_resolver` module is unavailable in current branch shape.
+  - Added BrightData scrape fallback path when SDK returns empty payload (`data is None/empty`) to keep hello/runtime checks stable.
+  - Added missing `re` import used by domain-token logic in collector host checks.
+
+### Verification Results (Wave 3C)
+- `npm run qa:imports`: pass.
+- `python3 -m py_compile backend/main.py backend/claude_client.py backend/dossier_generator.py backend/dossier_data_collector.py backend/brightdata_sdk_client.py`: pass.
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_dossier_generator_timeout.py backend/tests/test_dossier_generator_timeout_fallback.py -q`: pass (`4 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python scripts/check-brightdata-hello.py`: pass (`search_engine` success with `result_count=10`; `scrape_as_markdown` success via `brightdata_sdk`, `extraction_mode=sdk_direct`).

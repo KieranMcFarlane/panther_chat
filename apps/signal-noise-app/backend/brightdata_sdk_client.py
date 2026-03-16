@@ -281,11 +281,12 @@ class BrightDataSDKClient:
             # Check if result has data AND data is not None
             html_content = (result.data if hasattr(result, 'data') and result.data is not None else "")
             if not html_content:
-                return {
-                    "status": "error",
-                    "error": "No content returned (data was None or empty)",
-                    "url": url
-                }
+                # Some SDK responses return an empty payload for JS-heavy or protected pages.
+                # Retry via modern SDK rendered path first, then the HTTP fallback scraper.
+                modern_result = await self._scrape_with_modern_sdk(url)
+                if modern_result and modern_result.get("status") == "success":
+                    return modern_result
+                return await self._scrape_as_markdown_fallback(url)
             parse_result = self._extract_text_from_html(str(html_content))
             soup = parse_result["soup"]
             content = parse_result["content"]
