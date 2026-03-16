@@ -48,14 +48,14 @@ async def test_official_site_hop_skips_fallback_query_loop_on_primary_failure():
     async def fake_cache_search_result(_query, _engine, _result):
         return None
 
-    async def fake_search_engine_with_timeout(*, query, engine, num_results):
+    async def fake_search_engine(*, query, engine, num_results):
         calls["search"] += 1
         return {"status": "error", "results": []}
 
     discovery._resolve_official_site_url = fake_resolve_official_site_url
     discovery._get_cached_search = fake_get_cached_search
     discovery._cache_search_result = fake_cache_search_result
-    discovery._search_engine_with_timeout = fake_search_engine_with_timeout
+    discovery.brightdata_client = SimpleNamespace(search_engine=fake_search_engine)
 
     state = SimpleNamespace(entity_name="Coventry City FC")
     hypothesis = SimpleNamespace()
@@ -64,3 +64,4 @@ async def test_official_site_hop_skips_fallback_query_loop_on_primary_failure():
     assert resolved is None
     # Official-site path should fail fast without burning retries on fallback queries.
     assert calls["search"] == 1
+    assert discovery._last_url_resolution_metrics.get("fallback_queries_tried") == 0
