@@ -51,6 +51,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from collections import OrderedDict
 from urllib.parse import urlparse
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
@@ -803,13 +804,172 @@ class HypothesisDrivenDiscovery:
                 return None
         return None
 
-    def _load_official_site_url_cache(self) -> Dict[str, Any]:
-        """Load official-site URL cache if configured; otherwise default to empty."""
-        return {}
+    def _official_site_cache_file(self) -> Path:
+        cache_path = os.getenv("DISCOVERY_OFFICIAL_SITE_CACHE_PATH", "backend/data/dossiers/official_site_cache.json")
+        path = Path(cache_path)
+        if not path.is_absolute():
+            path = Path(__file__).resolve().parent.parent / cache_path
+        return path
 
-    def _load_official_site_domain_map(self) -> Dict[str, Any]:
-        """Load official-site domain map if configured; otherwise default to empty."""
-        return {}
+    def _official_site_domain_map_file(self) -> Path:
+        domain_map_path = os.getenv(
+            "DISCOVERY_OFFICIAL_DOMAIN_MAP_PATH",
+            "backend/data/dossiers/official_domain_map.json",
+        )
+        path = Path(domain_map_path)
+        if not path.is_absolute():
+            path = Path(__file__).resolve().parent.parent / domain_map_path
+        return path
+
+    def _normalize_entity_cache_key(self, entity_name: Any) -> str:
+        if not isinstance(entity_name, str):
+            return ""
+        return entity_name.strip().casefold()
+
+    def _canonical_entity_signature(self, entity_name: Any) -> str:
+        if not isinstance(entity_name, str):
+            return ""
+        cleaned = "".join(ch if ch.isalnum() or ch.isspace() else " " for ch in entity_name.casefold())
+        stopwords = {"the", "fc", "afc", "cf", "club", "football", "sports", "sport", "team", "association"}
+        tokens = [token for token in cleaned.split() if token and token not in stopwords]
+        if not tokens:
+            return ""
+        return "".join(tokens)
+
+    def _normalize_http_url(self, candidate: Any) -> Optional[str]:
+        if not isinstance(candidate, str):
+            return None
+        value = candidate.strip()
+        if not value:
+            return None
+        if value.startswith(("http://", "https://")):
+            return value
+        if value.startswith("www.") or "." in value:
+            return f"https://{value.lstrip('/')}"
+        return None
+
+    def _load_official_site_url_cache(self) -> Dict[str, str]:
+        cache_file = self._official_site_cache_file()
+        try:
+            if not cache_file.exists():
+                return {}
+            payload = json.loads(cache_file.read_text())
+            if not isinstance(payload, dict):
+                return {}
+            cache: Dict[str, str] = {}
+            for key, value in payload.items():
+                if not isinstance(key, str):
+                    continue
+                normalized = self._normalize_http_url(value)
+                if normalized:
+                    cache[self._normalize_entity_cache_key(key)] = normalized
+            return cache
+        except Exception:
+            return {}
+
+    def _load_official_site_domain_map(self) -> Dict[str, str]:
+        domain_map_file = self._official_site_domain_map_file()
+        try:
+            if not domain_map_file.exists():
+                return {}
+            payload = json.loads(domain_map_file.read_text())
+            if not isinstance(payload, dict):
+                return {}
+            mapping: Dict[str, str] = {}
+            for key, value in payload.items():
+                normalized_url = self._normalize_http_url(value)
+                normalized_key = self._normalize_entity_cache_key(key)
+                if normalized_key and normalized_url:
+                    mapping[normalized_key] = normalized_url
+            return mapping
+        except Exception:
+            return {}
+
+    def _get_cached_official_site_url(self, entity_name: str) -> Optional[str]:
+        normalized_key = self._normalize_entity_cache_key(entity_name)
+        if not normalized_key:
+            return None
+        cache = getattr(self, "_official_site_url_cache", None)
+        if not isinstance(cache, dict):
+            return None
+        direct = self._normalize_http_url(cache.get(normalized_key))
+        if direct:
+            return direct
+
+        target_signature = self._canonical_entity_signature(entity_name)
+        if not target_signature:
+            return None
+        for cached_key, cached_url in cache.items():
+            if self._canonical_entity_signature(cached_key) != target_signature:
+                continue
+            normalized_cached = self._normalize_http_url(cached_url)
+            if normalized_cached:
+                return normalized_cached
+        return None
+
+    def _store_cached_official_site_url(self, entity_name: str, url: str) -> None:
+        normalized_key = self._normalize_entity_cache_key(entity_name)
+        normalized_url = self._normalize_http_url(url)
+        if not normalized_key or not normalized_url:
+            return
+        cache = getattr(self, "_official_site_url_cache", None)
+        if not isinstance(cache, dict):
+            cache = {}
+            self._official_site_url_cache = cache
+        cache[normalized_key] = normalized_url
+        cache_file = self._official_site_cache_file()
+        try:
+            cache_file.parent.mkdir(parents=True, exist_ok=True)
+            cache_file.write_text(json.dumps(cache, indent=2, sort_keys=True))
+        except Exception as cache_error:
+            logger.debug("Failed to persist official-site cache: %s", cache_error)
+
+    def _get_mapped_official_site_url(self, entity_name: str) -> Optional[str]:
+        normalized_key = self._normalize_entity_cache_key(entity_name)
+        if not normalized_key:
+            return None
+        mapping = getattr(self, "_official_site_domain_map", None)
+        if not isinstance(mapping, dict):
+            return None
+        mapped = self._normalize_http_url(mapping.get(normalized_key))
+        if mapped:
+            return mapped
+
+        target_signature = self._canonical_entity_signature(entity_name)
+        if not target_signature:
+            return None
+        for mapped_key, mapped_value in mapping.items():
+            if self._canonical_entity_signature(mapped_key) != target_signature:
+                continue
+            resolved = self._normalize_http_url(mapped_value)
+            if resolved:
+                return resolved
+        return None
+
+    def _is_official_site_resolution_in_cooldown(self, entity_name: str) -> bool:
+        cooldown = float(getattr(self, "official_site_resolution_cooldown_seconds", 0.0))
+        if cooldown <= 0:
+            return False
+        normalized_key = self._normalize_entity_cache_key(entity_name)
+        if not normalized_key:
+            return False
+        failures = getattr(self, "_official_site_resolution_failures", None)
+        if not isinstance(failures, dict):
+            return False
+        last_failed_at = failures.get(normalized_key)
+        if not isinstance(last_failed_at, (int, float)):
+            return False
+        return (time.time() - last_failed_at) < cooldown
+
+    def _mark_official_site_resolution_failure(self, entity_name: str) -> None:
+        normalized_key = self._normalize_entity_cache_key(entity_name)
+        if not normalized_key:
+            return
+        failures = getattr(self, "_official_site_resolution_failures", None)
+        if not isinstance(failures, dict):
+            failures = {}
+            self._official_site_resolution_failures = failures
+        failures[normalized_key] = time.time()
 
     def _current_run_mode(self) -> str:
         mode = str(os.getenv("DISCOVERY_RUN_MODE", "phase1_plus") or "phase1_plus").strip().lower()
@@ -2537,6 +2697,16 @@ class HypothesisDrivenDiscovery:
 
         return False
 
+    def _cache_resolved_url_context(self, url: Optional[str], result: Optional[Dict[str, Any]]) -> None:
+        """Cache lightweight search context (title/snippet) for resolved URLs."""
+        if not url or not isinstance(result, dict):
+            return
+        title = str(result.get("title") or "").strip()
+        snippet = str(result.get("snippet") or "").strip()
+        if not title and not snippet:
+            return
+        self._resolved_url_context[url] = {"title": title, "snippet": snippet}
+
     async def _resolve_official_site_url(self, entity_name: str) -> Optional[str]:
         started_at = time.perf_counter()
         lane_trace: List[Dict[str, Any]] = []
@@ -3557,6 +3727,31 @@ class HypothesisDrivenDiscovery:
         except Exception as e:
             logger.warning(f"⚠️ Search result validation failed: {e}, using all results")
             return results, []
+
+    async def _search_engine_with_timeout(
+        self,
+        *,
+        query: str,
+        engine: str,
+        num_results: int,
+    ) -> Dict[str, Any]:
+        try:
+            return await asyncio.wait_for(
+                self.brightdata_client.search_engine(
+                    query=query,
+                    engine=engine,
+                    num_results=num_results,
+                ),
+                timeout=getattr(self, "search_timeout_seconds", 12.0),
+            )
+        except asyncio.TimeoutError:
+            logger.warning(
+                "⚠️ Search timed out after %.1fs (engine=%s, query=%s)",
+                getattr(self, "search_timeout_seconds", 12.0),
+                engine,
+                query,
+            )
+            return {"status": "error", "error": "Search timeout", "results": []}
 
     def _extract_entity_type_from_template(self, template_id: str) -> str:
         """
