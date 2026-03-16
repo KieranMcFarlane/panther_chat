@@ -250,3 +250,24 @@
 - `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_dossier_generator_timeout.py backend/tests/test_dossier_generator_timeout_fallback.py -q`: pass (`4 passed`).
 - `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
 - `PYTHONPATH=backend .venv-codex/bin/python scripts/check-brightdata-hello.py`: pass (`search_engine` success with `result_count=10`; `scrape_as_markdown` success via `brightdata_sdk`, `extraction_mode=sdk_direct`).
+
+## Wave 3E (Shared Resolver Integration)
+
+### Included Commit
+- `798de46` Add shared official-site resolver and harden acronym domain ranking
+
+### Conflict Decisions
+- `dossier_data_collector.py`: kept stricter recency selection path (ranked candidates + commerce + entity-domain + binary-doc guards) while wiring shared resolver support.
+- `hypothesis_driven_discovery.py`: accepted shared resolver/path-registry helper integration and resolver trace/path probing methods.
+
+### Reconciliation Commit
+- `fix(merge): guard discovery optional imports for branch-shape compatibility`
+  - Added safe defaults for missing optional modules (`discovery_page_registry`, `official_site_resolver`) to prevent import-time 501 regressions in timeout path tests.
+
+### Verification Results (Wave 3E)
+- `npm run qa:imports`: pass.
+- `python3 -m py_compile backend/main.py backend/claude_client.py backend/dossier_generator.py backend/dossier_data_collector.py backend/hypothesis_driven_discovery.py backend/official_site_resolver.py backend/brightdata_sdk_client.py`: pass.
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_dossier_generator_timeout.py backend/tests/test_dossier_generator_timeout_fallback.py -q`: pass (`4 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_official_site_resolver.py -q`: pass (`3 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python scripts/check-brightdata-hello.py`: pass (`search_engine` success with `result_count=10`; `scrape_as_markdown` success via `brightdata_sdk`, `extraction_mode=sdk_direct`).

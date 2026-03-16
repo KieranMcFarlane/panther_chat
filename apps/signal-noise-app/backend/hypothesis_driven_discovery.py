@@ -59,13 +59,16 @@ DEFAULT_DISCOVERY_TEMPLATE_ID = "yellow_panther_agency"
 FEDERATION_DISCOVERY_TEMPLATE_ID = "federation_governing_body"
 
 
-def _load_backend_attr(module_name: str, attr_name: str):
+def _load_backend_attr(module_name: str, attr_name: str, default: Any = None):
     """Load backend modules whether imported as a package or from the backend cwd."""
     try:
         module = import_module(f"backend.{module_name}")
     except ImportError:
-        module = import_module(module_name)
-    return getattr(module, attr_name)
+        try:
+            module = import_module(module_name)
+        except ImportError:
+            return default
+    return getattr(module, attr_name, default)
 
 
 def _default_template_id_for_entity_type(entity_type: Optional[str]) -> str:
@@ -75,11 +78,20 @@ def _default_template_id_for_entity_type(entity_type: Optional[str]) -> str:
     return DEFAULT_DISCOVERY_TEMPLATE_ID
 
 
-get_page_rank = _load_backend_attr("discovery_page_registry", "get_page_rank")
-get_site_path_shortcuts = _load_backend_attr("discovery_page_registry", "get_site_path_shortcuts")
+get_page_rank = _load_backend_attr(
+    "discovery_page_registry",
+    "get_page_rank",
+    lambda _entity_type, _hop_type: 0.5,
+)
+get_site_path_shortcuts = _load_backend_attr(
+    "discovery_page_registry",
+    "get_site_path_shortcuts",
+    lambda _entity_type, _hop_type: [],
+)
 rank_official_site_candidates = _load_backend_attr(
     "official_site_resolver",
     "rank_official_site_candidates",
+    lambda entity_name, candidates, max_candidates=10: list(candidates[:max_candidates]),
 )
 
 
