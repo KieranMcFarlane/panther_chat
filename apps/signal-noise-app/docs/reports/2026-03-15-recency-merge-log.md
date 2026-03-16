@@ -234,3 +234,19 @@
 - `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_dossier_generator_timeout.py backend/tests/test_dossier_generator_timeout_fallback.py -q`: pass (`4 passed`).
 - `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
 - `PYTHONPATH=backend .venv-codex/bin/python scripts/check-brightdata-hello.py`: pass (`search_engine` success with `result_count=10`; `scrape_as_markdown` success via `brightdata_sdk`, `extraction_mode=sdk_direct`).
+
+## Wave 3D (Binary/Media Official-Site Rejection Hardening)
+
+### Included Commit
+- `5ebc8fd` fix(dossier): reject binary docs and media fallbacks for official site
+
+### Conflict Decisions
+- `dossier_data_collector.py`: accepted binary-document URL rejection hardening and kept recency-first official-site ranking path.
+- Kept stale deleted test removed: `backend/tests/test_dossier_data_collector_seed.py`.
+
+### Verification Results (Wave 3D)
+- `npm run qa:imports`: pass.
+- `python3 -m py_compile backend/main.py backend/claude_client.py backend/dossier_generator.py backend/dossier_data_collector.py backend/brightdata_sdk_client.py`: pass.
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_dossier_generator_timeout.py backend/tests/test_dossier_generator_timeout_fallback.py -q`: pass (`4 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python scripts/check-brightdata-hello.py`: pass (`search_engine` success with `result_count=10`; `scrape_as_markdown` success via `brightdata_sdk`, `extraction_mode=sdk_direct`).
