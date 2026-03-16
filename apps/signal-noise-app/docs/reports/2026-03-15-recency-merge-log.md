@@ -289,3 +289,28 @@
 - `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
 - `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_official_site_resolver.py -q`: pass (`3 passed`).
 - `PYTHONPATH=backend .venv-codex/bin/python scripts/check-brightdata-hello.py`: pass (`search_engine` success via `brightdata_sdk`; scrape succeeded via `fallback_httpx` in this run).
+
+## Wave 3G (Structured Evaluator Payload Parsing)
+
+### Included Commit
+- `96b6274` feat(evaluation): parse structured model payloads before text fallback
+
+### Conflict Decisions
+- Kept stale deleted test removed: `backend/tests/test_discovery_url_resolution_fallbacks.py`.
+- `claude_client.py`: accepted structured-output extraction and plumbing for Chutes non-stream/stream paths.
+- `hypothesis_driven_discovery.py`: kept deterministic/evidence-reask fallback behavior and integrated structured/empty-response handling paths.
+- `test_claude_client_chutes.py`: removed incoming tests that depended on unsupported `json_mode`/model-mapping contracts in current branch shape.
+
+### Reconciliation Commit
+- `fix(merge): repair structured-eval conflict fallout in discovery + chutes tests`
+  - Restored valid `_deterministic_fallback_classification` method signature/body after conflict merge.
+  - Aligned Chutes tests to current `ClaudeClient.query()` contract while preserving existing coverage.
+
+### Verification Results (Wave 3G)
+- `npm run qa:imports`: pass.
+- `python3 -m py_compile backend/main.py backend/claude_client.py backend/dossier_generator.py backend/dossier_data_collector.py backend/hypothesis_driven_discovery.py backend/pipeline_run_metadata.py backend/official_site_resolver.py backend/brightdata_sdk_client.py`: pass.
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_dossier_generator_timeout.py backend/tests/test_dossier_generator_timeout_fallback.py -q`: pass (`4 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_entity_pipeline_worker.py -q`: pass (`31 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_official_site_resolver.py -q`: pass (`3 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python -m pytest backend/tests/test_claude_client_chutes.py -q`: pass (`12 passed`).
+- `PYTHONPATH=backend .venv-codex/bin/python scripts/check-brightdata-hello.py`: pass (`search_engine` success via `brightdata_sdk`; scrape succeeded via `fallback_httpx` in this run).

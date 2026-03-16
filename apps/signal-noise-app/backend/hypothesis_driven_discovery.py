@@ -3697,6 +3697,15 @@ class HypothesisDrivenDiscovery:
         }
 
     def _deterministic_fallback_classification(
+        self,
+        *,
+        content: str,
+        context: EvaluationContext,
+        mcp_matches: List[Dict[str, Any]],
+    ) -> Dict[str, Any]:
+        """Deterministic backup classifier when evaluator output is invalid/non-JSON."""
+        return self._extract_evidence_pack(content, context, mcp_matches)
+
     def _fallback_result_with_reason(
         self,
         reason: str,
