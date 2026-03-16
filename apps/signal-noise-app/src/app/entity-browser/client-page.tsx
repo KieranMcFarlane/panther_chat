@@ -691,7 +691,7 @@ export default function EntityBrowserClientPage() {
                     >
                       {rowItems.map((entity) => (
                         <EntityCard
-                          key={`${entity.id}-${formatValue(entity.neo4j_id)}`}
+                          key={`${entity.id}-${String(entity.neo4j_id ?? "")}`}
                           entity={entity}
                           onEmailEntity={handleEmailEntity}
                         />
