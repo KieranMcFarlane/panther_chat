@@ -1387,7 +1387,7 @@ class BrightDataSDKClient:
         try:
             from dateutil import parser as date_parser
         except Exception:
-            return None
+            date_parser = None
 
         date_formats = [
             # ISO 8601 formats
@@ -1403,6 +1403,8 @@ class BrightDataSDKClient:
 
         # 1. Check meta tags for article published time
         for meta_name in ['article:published_time', 'article:modified_time', 'article:published', 'pubdate', 'date', 'publish-date', 'publish_date']:
+            if date_parser is None:
+                break
             meta = soup.find('meta', property=meta_name) or soup.find('meta', attrs={'name': meta_name})
             if meta:
                 content = meta.get('content', '')
@@ -1416,6 +1418,8 @@ class BrightDataSDKClient:
 
         # 2. Check <time> tags
         for time_tag in soup.find_all('time'):
+            if date_parser is None:
+                break
             datetime_attr = time_tag.get('datetime')
             if datetime_attr:
                 try:
@@ -1427,6 +1431,8 @@ class BrightDataSDKClient:
 
         # 3. Check JSON-LD schema.org data
         for script in soup.find_all('script', type='application/ld+json'):
+            if date_parser is None:
+                break
             try:
                 import json
                 data = json.loads(script.string)
@@ -1448,7 +1454,7 @@ class BrightDataSDKClient:
 
         # 4. Check Open Graph meta tags
         og_article = soup.find('meta', property='article:published_time')
-        if og_article:
+        if og_article and date_parser is not None:
             content = og_article.get('content', '')
             if content:
                 try:
@@ -1498,6 +1504,8 @@ class BrightDataSDKClient:
         # 6. Look for common date patterns in the content (last resort)
         # Check for dates in heading elements near the title
         for tag in soup.find_all(['h1', 'h2', 'h3']):
+            if date_parser is None:
+                break
             text = tag.get_text(strip=True)
             # Pattern: "Published January 15, 2024" or similar
             date_match = re.search(r'(?:published|posted|updated|on)\s+([A-Za-z]+\s+\d{1,2},?\s+\d{4})', text, re.IGNORECASE)
