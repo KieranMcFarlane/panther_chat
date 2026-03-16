@@ -18,6 +18,16 @@ from claude_client import ClaudeClient, LLMRequestError
 @pytest.fixture(autouse=True)
 def _default_non_stream_for_legacy_tests(monkeypatch):
     monkeypatch.setenv("CHUTES_STREAM_ENABLED", "false")
+    monkeypatch.setenv("CHUTES_ADAPTIVE_PACING_ENABLED", "false")
+    monkeypatch.setenv("CHUTES_MIN_REQUEST_INTERVAL_SECONDS", "0")
+    monkeypatch.setenv("CHUTES_MODEL_PRIMARY", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_SECONDARY", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_TERTIARY", "zai-org/GLM-5-TEE")
+    ClaudeClient._api_disabled_reason = None
+    ClaudeClient._api_disabled_at_monotonic = None
+    ClaudeClient._api_disabled_until_monotonic = None
+    ClaudeClient._api_disabled_kind = None
+    ClaudeClient._quota_circuit_trip_count = 0
 
 
 def test_claude_client_prefers_chutes_when_configured(monkeypatch):
