@@ -1570,7 +1570,11 @@ class DossierDataCollector:
                 return {}
 
             # Get top result and scrape
-            top_url = search_results.get('results', [{}])[0].get('url', '')
+            results = search_results.get("results")
+            if not isinstance(results, list) or not results:
+                return {}
+            first_result = results[0] if isinstance(results[0], dict) else {}
+            top_url = first_result.get("url", "")
 
             if not top_url:
                 return {}

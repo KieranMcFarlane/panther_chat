@@ -287,3 +287,26 @@ async def test_supabase_cache_disables_after_missing_table_error():
 
     assert first is None and second is None
     assert cache.supabase_client.calls == 1
+
+
+@pytest.mark.asyncio
+async def test_scrape_field_specific_handles_empty_results_without_exception_warning(monkeypatch):
+    class _FakeBrightData:
+        async def search_engine(self, **_kwargs):
+            return {"status": "success", "results": []}
+
+    collector = DossierDataCollector(brightdata_client=_FakeBrightData())
+
+    from dossier_data_collector import logger as collector_logger
+
+    original_warning = collector_logger.warning
+
+    def _guard_warning(msg, *args, **kwargs):
+        rendered = str(msg) % args if args else str(msg)
+        if "Field-specific scraping failed" in rendered:
+            raise AssertionError("unexpected exception-path warning for empty result set")
+        return original_warning(msg, *args, **kwargs)
+
+    monkeypatch.setattr(collector_logger, "warning", _guard_warning)
+    result = await collector._scrape_field_specific("Coventry City FC", "stadium")
+    assert result == {}
