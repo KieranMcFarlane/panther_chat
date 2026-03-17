@@ -18,6 +18,7 @@ NEWS_MAX_ITEMS="${DOSSIER_RECENT_NEWS_MAX_ITEMS:-4}"
 STRATEGIC_MAX_SEARCHES="${DOSSIER_STRATEGIC_MAX_SEARCHES:-2}"
 STRATEGIC_RESULTS_PER_SEARCH="${DOSSIER_STRATEGIC_RESULTS_PER_SEARCH:-1}"
 STRATEGIC_MAX_EVALS="${DOSSIER_STRATEGIC_MAX_EVALS:-4}"
+SECTION_TIMEOUT_SECONDS="${DOSSIER_SECTION_TIMEOUT_SECONDS:-45}"
 
 declare -a ENTITIES=(
   "coventry-city-fc|Coventry City FC|CLUB"
@@ -42,6 +43,7 @@ for row in "${ENTITIES[@]}"; do
   DOSSIER_STRATEGIC_MAX_SEARCHES="$STRATEGIC_MAX_SEARCHES" \
   DOSSIER_STRATEGIC_RESULTS_PER_SEARCH="$STRATEGIC_RESULTS_PER_SEARCH" \
   DOSSIER_STRATEGIC_MAX_EVALS="$STRATEGIC_MAX_EVALS" \
+  DOSSIER_SECTION_TIMEOUT_SECONDS="$SECTION_TIMEOUT_SECONDS" \
   PYTHONPATH=backend \
   timeout "$TIMEOUT_SECONDS" \
     python3 run_fixed_dossier_pipeline.py \
@@ -55,18 +57,73 @@ for row in "${ENTITIES[@]}"; do
   EXIT_CODE=${PIPESTATUS[0]}
   set -e
 
-  REPORT_PATH="$(rg -o '"run_report_path":\s*"[^"]+"' "$LOG_FILE" | tail -n 1 | sed -E 's/.*"run_report_path":\s*"([^"]+)"/\1/')"
+  REPORT_PATH="$(python3 - <<'PY' "$LOG_FILE"
+import re
+import sys
+from pathlib import Path
+
+log_path = Path(sys.argv[1])
+report_path = ""
+for line in log_path.read_text(errors="ignore").splitlines():
+    match = re.search(r'"run_report_path"\s*:\s*"([^"]+)"', line)
+    if match:
+        report_path = match.group(1)
+print(report_path)
+PY
+)"
   if [[ -z "${REPORT_PATH}" ]]; then
     REPORT_PATH=""
   fi
+  METRICS_JSON="$(python3 - <<'PY' "$REPORT_PATH"
+import json
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("")
+payload = {
+    "final_confidence": None,
+    "signals_discovered": None,
+    "acceptance_gate_passed": None,
+    "acceptance_gate_reasons": [],
+    "llm_last_status": None,
+    "parse_path": None,
+    "import_context_failure": None,
+    "llm_empty_response": None,
+    "schema_gate_fallback": None,
+    "low_signal_content": None,
+    "entity_grounding_reject": None,
+}
+if path and path.exists():
+    try:
+        report = json.loads(path.read_text())
+    except Exception:
+        report = {}
+    metrics = report.get("metrics", {}) if isinstance(report, dict) else {}
+    failure_taxonomy = metrics.get("failure_taxonomy", {}) if isinstance(metrics, dict) else {}
+    gate = report.get("acceptance_gate", {}) if isinstance(report, dict) else {}
+    payload["final_confidence"] = metrics.get("final_confidence")
+    payload["signals_discovered"] = metrics.get("signals_discovered")
+    payload["acceptance_gate_passed"] = gate.get("passed")
+    payload["acceptance_gate_reasons"] = gate.get("reasons") or []
+    payload["llm_last_status"] = metrics.get("llm_last_status")
+    payload["parse_path"] = metrics.get("parse_path")
+    payload["import_context_failure"] = failure_taxonomy.get("import_context_failure")
+    payload["llm_empty_response"] = failure_taxonomy.get("llm_empty_response")
+    payload["schema_gate_fallback"] = failure_taxonomy.get("schema_gate_fallback")
+    payload["low_signal_content"] = failure_taxonomy.get("low_signal_content")
+    payload["entity_grounding_reject"] = failure_taxonomy.get("entity_grounding_reject")
+print(json.dumps(payload))
+PY
+)"
   jq \
     --arg entity_id "$ENTITY_ID" \
     --arg entity_name "$ENTITY_NAME" \
     --arg entity_type "$ENTITY_TYPE" \
     --arg log_file "$LOG_FILE" \
     --arg report_path "$REPORT_PATH" \
+    --argjson metrics "$METRICS_JSON" \
     --argjson exit_code "$EXIT_CODE" \
-    '. += [{"entity_id":$entity_id,"entity_name":$entity_name,"entity_type":$entity_type,"exit_code":$exit_code,"log_file":$log_file,"run_report_path":$report_path}]' \
+    '. += [{"entity_id":$entity_id,"entity_name":$entity_name,"entity_type":$entity_type,"exit_code":$exit_code,"log_file":$log_file,"run_report_path":$report_path} + $metrics]' \
     "$TMP_FILE" > "${TMP_FILE}.next"
   mv "${TMP_FILE}.next" "$TMP_FILE"
 done

@@ -262,9 +262,27 @@ class SupabaseDossierCache:
     def __init__(self):
         self.supabase_client = None
         self._connected = False
+        self._cache_available = True
+
+    def _disable_cache_if_missing_table(self, error: Any) -> bool:
+        message = str(error).lower()
+        missing_table_markers = (
+            "404",
+            "dossier_scraping_cache",
+            "relation",
+            "not found",
+            "does not exist",
+        )
+        if "dossier_scraping_cache" in message and any(marker in message for marker in missing_table_markers):
+            self._cache_available = False
+            logger.warning("⚠️ Supabase dossier_scraping_cache unavailable; disabling remote cache for this process")
+            return True
+        return False
 
     async def connect(self) -> bool:
         """Initialize Supabase connection"""
+        if not self._cache_available:
+            return False
         if self._connected:
             return True
 
@@ -309,6 +327,7 @@ class SupabaseDossierCache:
                     # Delete expired entry
                     self.supabase_client.table("dossier_scraping_cache").delete().eq("entity_id", entity_id).eq("data_type", data_type).execute()
         except Exception as e:
+            self._disable_cache_if_missing_table(e)
             logger.debug(f"Supabase cache read error: {e}")
 
         return None
@@ -332,6 +351,7 @@ class SupabaseDossierCache:
 
             logger.debug(f"✅ Supabase cache SET: {entity_id}/{data_type}")
         except Exception as e:
+            self._disable_cache_if_missing_table(e)
             logger.debug(f"Supabase cache write error: {e}")
 
 
@@ -381,6 +401,9 @@ class DossierDataCollector:
             use_cache = str(env_use_cache).strip().lower() in {"1", "true", "yes", "on"}
         self.use_cache = use_cache
         self.parallel_scraping = parallel_scraping
+        self.section_timeout_seconds = self._parse_positive_float_env(
+            os.getenv("DOSSIER_SECTION_TIMEOUT_SECONDS")
+        )
         self._preferred_official_site_urls: Dict[str, str] = {}
         self._official_site_url_cache = self._load_official_site_url_cache()
         self._official_site_content_cache = self._load_official_site_content_cache()
@@ -401,6 +424,18 @@ class DossierDataCollector:
         if normalized in {"0", "false", "no", "off"}:
             return False
         return default
+
+    @staticmethod
+    def _parse_positive_float_env(value: Optional[str]) -> Optional[float]:
+        if value is None:
+            return None
+        try:
+            parsed = float(value)
+        except (TypeError, ValueError):
+            return None
+        if parsed <= 0:
+            return None
+        return parsed
 
     def _official_site_cache_file(self) -> Path:
         cache_path = os.getenv(
@@ -962,7 +997,21 @@ class DossierDataCollector:
                     return local_cached
 
             # Collect fresh data
-            result = await collect_func()
+            if self.section_timeout_seconds:
+                try:
+                    result = await asyncio.wait_for(
+                        collect_func(),
+                        timeout=self.section_timeout_seconds,
+                    )
+                except asyncio.TimeoutError:
+                    logger.warning(
+                        "  ⚠️ %s collection timed out after %.2fs",
+                        data_type,
+                        self.section_timeout_seconds,
+                    )
+                    return {}
+            else:
+                result = await collect_func()
 
             # Store in cache
             if self.use_cache and cache_key and result:
@@ -2739,6 +2788,7 @@ If a field is not found, use null. Return ONLY valid JSON, no other text."""
                     entity_name,
                     results["raw_leadership_data"]
                 )
+                decision_makers = self._postprocess_decision_makers(entity_name, decision_makers)
                 results["decision_makers"] = decision_makers
                 logger.info(f"✅ Extracted {len(decision_makers)} decision makers")
 
@@ -2755,6 +2805,57 @@ If a field is not found, use null. Return ONLY valid JSON, no other text."""
         logger.info(f"✅ Leadership collection complete: {len(results['decision_makers'])} decision makers, {len(results['sources_used'])} sources")
 
         return results
+
+    def _postprocess_decision_makers(
+        self,
+        entity_name: str,
+        decision_makers: List[Dict[str, Any]],
+    ) -> List[Dict[str, Any]]:
+        """Filter noisy fallback outputs before LinkedIn enrichment."""
+        if not isinstance(decision_makers, list):
+            return []
+
+        entity_tokens = {tok.lower() for tok in re.split(r"\W+", str(entity_name or "")) if tok}
+        blocked_tokens = {
+            "our", "members", "member", "media", "services", "news", "club", "team",
+            "official", "press", "update", "latest", "marketing", "digital", "platform",
+            "management", "leadership", "board", "committee", "fiba",
+        }
+        filtered: List[Dict[str, Any]] = []
+        seen: set[tuple[str, str]] = set()
+
+        for dm in decision_makers:
+            if not isinstance(dm, dict):
+                continue
+            name = str(dm.get("name") or "").strip()
+            role = str(dm.get("role") or "").strip()
+            if not name or name.lower() == "unknown":
+                continue
+
+            name_parts = [tok for tok in name.split() if tok]
+            lowered_parts = [tok.lower() for tok in name_parts]
+            if len(name_parts) < 2 or len(name_parts) > 3:
+                continue
+            if any(tok in blocked_tokens for tok in lowered_parts):
+                continue
+            if set(lowered_parts).issubset(entity_tokens):
+                continue
+            if not all(re.fullmatch(r"[A-Z][a-zA-Z'\\-]+", tok) for tok in name_parts):
+                continue
+            if not role or not re.search(
+                r"(chief|director|head|manager|officer|president|chair|ceo|cto|cdo|cfo)",
+                role,
+                re.IGNORECASE,
+            ):
+                continue
+
+            key = (name.lower(), role.lower())
+            if key in seen:
+                continue
+            seen.add(key)
+            filtered.append(dm)
+
+        return filtered[:10]
 
     async def _extract_leadership_from_scraped(
         self,

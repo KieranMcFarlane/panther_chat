@@ -72,6 +72,10 @@ class EntityDossierGenerator:
         self.section_json_repair_attempt = (
             str(section_json_repair_env).strip().lower() in {"1", "true", "yes", "on"}
         )
+        self.run_post_collection_enrichment = (
+            str(os.getenv("DOSSIER_RUN_POST_COLLECTION_ENRICHMENT", "false")).strip().lower()
+            in {"1", "true", "yes", "on"}
+        )
 
         # Section templates with model assignments
         self.section_templates = {
@@ -265,70 +269,77 @@ class EntityDossierGenerator:
 
             logger.info(f"✅ Data sources used: {', '.join(dossier_data_obj.data_sources_used)}")
 
-            # ENHANCED: Collect multi-source intelligence using BrightData SDK
+            # ENHANCED: Optional post-collection enrichment using BrightData SDK
             if hasattr(collector, '_collect_multi_source_intelligence'):
-                logger.info(f"🌐 Collecting multi-source intelligence for {entity_name}")
+                if self.run_post_collection_enrichment:
+                    logger.info(f"🌐 Collecting multi-source intelligence for {entity_name}")
 
-                # Collect real-time data
-                multi_source_data = await collector._collect_multi_source_intelligence(entity_name)
+                    # Collect real-time data
+                    multi_source_data = await collector._collect_multi_source_intelligence(entity_name)
 
-                # Add to entity_data for prompt interpolation
-                entity_data["official_site_summary"] = multi_source_data.get("official_site", {}).get("summary", "")
-                entity_data["official_site_url"] = multi_source_data.get("official_site", {}).get("url", "")
-                entity_data["job_postings_summary"] = self._summarize_job_postings(multi_source_data.get("job_postings", []))
-                entity_data["job_postings_count"] = len(multi_source_data.get("job_postings", []))
-                entity_data["press_releases_summary"] = self._summarize_press_releases(multi_source_data.get("press_releases", []))
-                entity_data["press_releases_count"] = len(multi_source_data.get("press_releases", []))
-                entity_data["linkedin_posts_summary"] = self._summarize_linkedin_posts(multi_source_data.get("linkedin_posts", []))
-                entity_data["linkedin_posts_count"] = len(multi_source_data.get("linkedin_posts", []))
-                entity_data["data_freshness"] = multi_source_data.get("freshness_score", 50)
-                entity_data["sources_used"] = multi_source_data.get("sources_used", [])
+                    # Add to entity_data for prompt interpolation
+                    entity_data["official_site_summary"] = multi_source_data.get("official_site", {}).get("summary", "")
+                    entity_data["official_site_url"] = multi_source_data.get("official_site", {}).get("url", "")
+                    entity_data["job_postings_summary"] = self._summarize_job_postings(multi_source_data.get("job_postings", []))
+                    entity_data["job_postings_count"] = len(multi_source_data.get("job_postings", []))
+                    entity_data["press_releases_summary"] = self._summarize_press_releases(multi_source_data.get("press_releases", []))
+                    entity_data["press_releases_count"] = len(multi_source_data.get("press_releases", []))
+                    entity_data["linkedin_posts_summary"] = self._summarize_linkedin_posts(multi_source_data.get("linkedin_posts", []))
+                    entity_data["linkedin_posts_count"] = len(multi_source_data.get("linkedin_posts", []))
+                    entity_data["data_freshness"] = multi_source_data.get("freshness_score", 50)
+                    entity_data["sources_used"] = multi_source_data.get("sources_used", [])
 
-                logger.info(f"✅ Multi-source data collected: {', '.join(multi_source_data.get('sources_used', []))}")
+                    logger.info(f"✅ Multi-source data collected: {', '.join(multi_source_data.get('sources_used', []))}")
+                else:
+                    logger.info("⏭️ Skipping duplicate post-collection multi-source enrichment (DOSSIER_RUN_POST_COLLECTION_ENRICHMENT=false)")
 
             # PHASE 0 ENHANCEMENT: Collect leadership data for real decision maker names
             if hasattr(collector, 'collect_leadership'):
-                logger.info(f"🎯 Collecting leadership data for {entity_name}")
-
-                leadership_data = await collector.collect_leadership(entity_id, entity_name)
-
-                # Add leadership data to entity_data for prompt interpolation
-                entity_data["leadership_names"] = ", ".join([
-                    dm.get("name", "unknown") for dm in leadership_data.get("decision_makers", [])
-                ]) if leadership_data.get("decision_makers") else "unknown"
-
-                entity_data["leadership_roles"] = ", ".join([
-                    dm.get("role", "unknown") for dm in leadership_data.get("decision_makers", [])
-                ]) if leadership_data.get("decision_makers") else "unknown"
-
-                entity_data["leadership_linkedins"] = ", ".join([
-                    dm.get("linkedin_url", "") for dm in leadership_data.get("decision_makers", []) if dm.get("linkedin_url")
-                ]) if leadership_data.get("decision_makers") else ""
-
-                entity_data["leadership_count"] = len(leadership_data.get("decision_makers", []))
-                entity_data["leadership_sources"] = ", ".join(leadership_data.get("sources_used", []))
-                entity_data["leadership_fresh_signals"] = leadership_data.get("fresh_signals_count", 0)
-
-                # Store raw leadership data for reference
-                entity_data["leadership_data"] = leadership_data
-
-                # Format leadership data for Connections section
-                if leadership_data.get("decision_makers"):
-                    personnel_summary = []
-                    for dm in leadership_data["decision_makers"]:
-                        personnel_summary.append(
-                            f"- {dm.get('name', 'unknown')}: {dm.get('role', 'unknown')} - "
-                            f"LinkedIn: {dm.get('linkedin_url', 'N/A')} - "
-                            f"Influence: {dm.get('influence_level', 'UNKNOWN')}"
-                        )
-                    entity_data["target_personnel_data"] = "\n".join(personnel_summary)
+                leadership_already_present = bool(entity_data.get("leadership_data")) or int(entity_data.get("leadership_count") or 0) > 0
+                if leadership_already_present and not self.run_post_collection_enrichment:
+                    logger.info("⏭️ Skipping duplicate leadership enrichment (already present from collect_all)")
                 else:
-                    entity_data["target_personnel_data"] = "No target personnel data available"
+                    logger.info(f"🎯 Collecting leadership data for {entity_name}")
 
-                # Add bridge contacts data (currently placeholder)
-                entity_data["bridge_contacts_data"] = "No bridge contacts data currently available"
+                    leadership_data = await collector.collect_leadership(entity_id, entity_name)
 
-                logger.info(f"✅ Leadership data collected: {entity_data['leadership_count']} decision makers")
+                    # Add leadership data to entity_data for prompt interpolation
+                    entity_data["leadership_names"] = ", ".join([
+                        dm.get("name", "unknown") for dm in leadership_data.get("decision_makers", [])
+                    ]) if leadership_data.get("decision_makers") else "unknown"
+
+                    entity_data["leadership_roles"] = ", ".join([
+                        dm.get("role", "unknown") for dm in leadership_data.get("decision_makers", [])
+                    ]) if leadership_data.get("decision_makers") else "unknown"
+
+                    entity_data["leadership_linkedins"] = ", ".join([
+                        dm.get("linkedin_url", "") for dm in leadership_data.get("decision_makers", []) if dm.get("linkedin_url")
+                    ]) if leadership_data.get("decision_makers") else ""
+
+                    entity_data["leadership_count"] = len(leadership_data.get("decision_makers", []))
+                    entity_data["leadership_sources"] = ", ".join(leadership_data.get("sources_used", []))
+                    entity_data["leadership_fresh_signals"] = leadership_data.get("fresh_signals_count", 0)
+
+                    # Store raw leadership data for reference
+                    entity_data["leadership_data"] = leadership_data
+
+                    # Format leadership data for Connections section
+                    if leadership_data.get("decision_makers"):
+                        personnel_summary = []
+                        for dm in leadership_data["decision_makers"]:
+                            personnel_summary.append(
+                                f"- {dm.get('name', 'unknown')}: {dm.get('role', 'unknown')} - "
+                                f"LinkedIn: {dm.get('linkedin_url', 'N/A')} - "
+                                f"Influence: {dm.get('influence_level', 'UNKNOWN')}"
+                            )
+                        entity_data["target_personnel_data"] = "\n".join(personnel_summary)
+                    else:
+                        entity_data["target_personnel_data"] = "No target personnel data available"
+
+                    # Add bridge contacts data (currently placeholder)
+                    entity_data["bridge_contacts_data"] = "No bridge contacts data currently available"
+
+                    logger.info(f"✅ Leadership data collected: {entity_data['leadership_count']} decision makers")
 
             # PHASE 0 ENHANCEMENT: Collect Yellow Panther team data for Connections analysis
             try:
@@ -513,7 +524,13 @@ Website: N/A
             if isinstance(result, Exception):
                 logger.error(f"Failed to generate section {section_ids[i]}: {result}")
                 # Create fallback section
-                sections.append(self._create_fallback_section(section_ids[i], model))
+                sections.append(
+                    self._create_fallback_section(
+                        section_ids[i],
+                        model,
+                        reason_code="section_generation_exception",
+                    )
+                )
             elif isinstance(result, DossierSection):
                 sections.append(result)
 
@@ -557,10 +574,17 @@ Website: N/A
         # Create safe entity data for formatting (remove entity_name to avoid duplicate)
         safe_entity_data = {k: v for k, v in entity_data.items() if k != "entity_name"}
 
-        prompt = prompt_template.format(entity_name=entity_name, **safe_entity_data)
+        prompt = self._safe_prompt_format(
+            prompt_template,
+            {"entity_name": entity_name, **safe_entity_data},
+        )
 
         # Call Claude with appropriate model
         try:
+            parse_path = "json_direct"
+            reason_code: Optional[str] = None
+            fallback_used = False
+            output_status = "completed"
             # Select model based on cascade (use model names, not model IDs)
             claude_model = model  # haiku, sonnet, or opus
 
@@ -575,50 +599,36 @@ Website: N/A
 
             section_data = self._extract_section_data(content_text)
             if self._section_data_needs_repair(section_data):
+                parse_path = "json_repair_attempted"
                 if not self.section_json_repair_attempt:
-                    raise ValueError(f"Section {section_id} returned non-JSON or instruction-echo output")
-                repair_prompt = self._build_section_json_repair_prompt(content_text)
-                repair_response = await self.claude_client.query(
-                    prompt=repair_prompt,
-                    model=claude_model,
-                    max_tokens=min(max_tokens, 600),
-                )
-                repaired_text = repair_response.get("content", "")
-                section_data = self._extract_section_data(repaired_text)
-                if self._section_data_needs_repair(section_data):
-                    heuristic_data = self._coerce_unstructured_section_data(repaired_text or content_text)
-                    if heuristic_data:
-                        logger.warning(
-                            "⚠️ Section %s JSON repair failed; using heuristic content fallback",
-                            section_id,
+                    reason_code = "section_schema_gate_failed_no_repair"
+                    section_data, reason_code, parse_path = self._build_deterministic_section_fallback(
+                        section_id=section_id,
+                        primary_text=content_text,
+                        repaired_text=None,
+                    )
+                    fallback_used = True
+                    output_status = "completed_with_fallback"
+                else:
+                    repair_prompt = self._build_section_json_repair_prompt(content_text)
+                    repair_response = await self.claude_client.query(
+                        prompt=repair_prompt,
+                        model=claude_model,
+                        max_tokens=min(max_tokens, 600),
+                    )
+                    repaired_text = repair_response.get("content", "")
+                    section_data = self._extract_section_data(repaired_text)
+                    if self._section_data_needs_repair(section_data):
+                        section_data, reason_code, parse_path = self._build_deterministic_section_fallback(
+                            section_id=section_id,
+                            primary_text=content_text,
+                            repaired_text=repaired_text,
                         )
-                        section_data = heuristic_data
+                        fallback_used = True
+                        output_status = "completed_with_fallback"
                     else:
-                        fallback_text = (repaired_text or content_text or "").strip()
-                        if fallback_text:
-                            logger.warning(
-                                "⚠️ Section %s JSON repair failed; using deterministic text fallback",
-                                section_id,
-                            )
-                            section_data = {
-                                "content": [fallback_text[:1600]],
-                                "metrics": [],
-                                "insights": [],
-                                "recommendations": [],
-                                "confidence": 0.45,
-                            }
-                        else:
-                            logger.warning(
-                                "⚠️ Section %s JSON repair failed with empty payload; using minimal placeholder fallback",
-                                section_id,
-                            )
-                            section_data = {
-                                "content": [f"Section generation for {section_id} returned no structured content in this run."],
-                                "metrics": [],
-                                "insights": [],
-                                "recommendations": [],
-                                "confidence": 0.2,
-                            }
+                        parse_path = "json_repair_recovered"
+                        reason_code = "section_json_repaired"
 
             # Create DossierSection
             section = DossierSection(
@@ -629,7 +639,11 @@ Website: N/A
                 insights=section_data.get("insights", []),
                 recommendations=section_data.get("recommendations", []),
                 confidence=section_data.get("confidence", 0.7),
-                generated_by=model
+                generated_by=model,
+                output_status=output_status,
+                reason_code=reason_code,
+                parse_path=parse_path,
+                fallback_used=fallback_used,
             )
 
             # Track cost (approximate)
@@ -650,6 +664,14 @@ Website: N/A
         if isinstance(section_data, dict):
             return section_data
         return {"content": [content_text]}
+
+    @staticmethod
+    def _safe_prompt_format(prompt_template: str, values: Dict[str, Any]) -> str:
+        class _PromptValues(dict):
+            def __missing__(self, _key):  # pragma: no cover - trivial fallback
+                return ""
+
+        return prompt_template.format_map(_PromptValues(values))
 
     @staticmethod
     def _extract_last_valid_json_block(content_text: str) -> Any:
@@ -715,6 +737,55 @@ Website: N/A
             return True
 
         return False
+
+    @staticmethod
+    def _build_deterministic_section_fallback(
+        section_id: str,
+        primary_text: str,
+        repaired_text: Optional[str],
+    ) -> tuple[Dict[str, Any], str, str]:
+        raw_text = (repaired_text or primary_text or "")
+        heuristic_data = EntityDossierGenerator._coerce_unstructured_section_data(raw_text)
+        if heuristic_data:
+            logger.warning(
+                "⚠️ Section %s JSON repair failed; using heuristic content fallback",
+                section_id,
+            )
+            return heuristic_data, "section_json_repair_failed_heuristic_fallback", "heuristic_content_fallback"
+
+        fallback_text = raw_text.strip()
+        if fallback_text:
+            logger.warning(
+                "⚠️ Section %s JSON repair failed; using deterministic text fallback",
+                section_id,
+            )
+            return (
+                {
+                    "content": [fallback_text[:1600]],
+                    "metrics": [],
+                    "insights": [],
+                    "recommendations": [],
+                    "confidence": 0.45,
+                },
+                "section_json_repair_failed_text_fallback",
+                "deterministic_text_fallback",
+            )
+
+        logger.warning(
+            "⚠️ Section %s JSON repair failed with empty payload; using minimal placeholder fallback",
+            section_id,
+        )
+        return (
+            {
+                "content": [f"Section generation for {section_id} returned no structured content in this run."],
+                "metrics": [],
+                "insights": [],
+                "recommendations": [],
+                "confidence": 0.2,
+            },
+            "section_json_repair_failed_minimal_placeholder",
+            "minimal_placeholder_fallback",
+        )
 
     @staticmethod
     def _build_section_json_repair_prompt(raw_output: str) -> str:
@@ -806,7 +877,12 @@ Website: N/A
         cost_per_million = pricing.get(model, 0.25)
         return (estimated_tokens / 1_000_000) * cost_per_million
 
-    def _create_fallback_section(self, section_id: str, model: str) -> DossierSection:
+    def _create_fallback_section(
+        self,
+        section_id: str,
+        model: str,
+        reason_code: str = "section_generation_failed",
+    ) -> DossierSection:
         """
         Create fallback section when generation fails
 
@@ -823,7 +899,11 @@ Website: N/A
             title=template_info.get("description", section_id),
             content=[f"Section generation failed. Please try again later."],
             confidence=0.0,
-            generated_by=model
+            generated_by=model,
+            output_status="failed",
+            reason_code=reason_code,
+            parse_path="section_exception_fallback",
+            fallback_used=True,
         )
 
     def _dossier_data_to_dict(self, dossier_data: 'DossierData') -> Dict[str, Any]:
