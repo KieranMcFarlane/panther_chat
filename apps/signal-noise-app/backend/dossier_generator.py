@@ -444,7 +444,10 @@ Website: N/A
             dossier.questions = []
         else:
             try:
-                from dossier_question_extractor import DossierQuestionExtractor
+                try:
+                    from backend.dossier_question_extractor import DossierQuestionExtractor
+                except ImportError:
+                    from dossier_question_extractor import DossierQuestionExtractor
                 question_extractor = DossierQuestionExtractor(self.claude_client)
                 dossier.questions = await question_extractor.extract_questions_from_dossier(
                     dossier.sections,

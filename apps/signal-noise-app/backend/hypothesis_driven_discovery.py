@@ -97,18 +97,23 @@ rank_official_site_candidates = _load_backend_attr(
 )
 
 
-def _load_backend_attr(module_name: str, attr_name: str):
+def _load_backend_attr(module_name: str, attr_name: str, default: Any = None):
     """Load backend modules whether imported as a package or from the backend cwd."""
     try:
         module = import_module(f"backend.{module_name}")
     except ImportError:
-        module = import_module(module_name)
-    return getattr(module, attr_name)
+        try:
+            module = import_module(module_name)
+        except ImportError:
+            return default
+    return getattr(module, attr_name, default)
 
 
 def resolve_template_id(template_id: Optional[str], entity_type: Optional[str] = None) -> str:
     """Return an available template id for discovery initialization."""
-    from template_loader import TemplateLoader
+    TemplateLoader = _load_backend_attr("template_loader", "TemplateLoader")
+    if TemplateLoader is None:
+        return template_id or _default_template_id_for_entity_type(entity_type)
 
     loader = TemplateLoader()
     requested = template_id or ""
@@ -4162,6 +4167,10 @@ class HypothesisDrivenDiscovery:
                 "platform",
                 "transformation",
                 "partnership",
+                "technology",
+                "appointment",
+                "appointed",
+                "appoints",
                 "career",
                 "careers",
                 "vacancy",
@@ -4196,6 +4205,13 @@ class HypothesisDrivenDiscovery:
             "request for proposal",
             "vendor",
             "supplier",
+            "partnership",
+            "technology",
+            "digital",
+            "platform",
+            "appointment",
+            "appointed",
+            "appoints",
             "career",
             "careers",
             "vacancy",
@@ -4229,11 +4245,30 @@ class HypothesisDrivenDiscovery:
         text = str(content or "").lower()
         keyword_hits = sum(1 for kw in (context.keywords or []) if kw and kw.lower() in text)
         mcp_score = max((float(m.get("total_confidence", 0.0)) for m in (mcp_matches or [])), default=0.0)
+        lexical_terms = [
+            "rfp",
+            "request for proposal",
+            "procurement",
+            "tender",
+            "supplier",
+            "vendor",
+            "partnership",
+            "digital",
+            "technology",
+            "platform",
+            "hiring",
+            "careers",
+            "job",
+            "appointed",
+            "appoints",
+            "appointment",
+        ]
+        lexical_hits = sum(1 for term in lexical_terms if term in text)
 
         if keyword_hits >= 2 and mcp_score >= 0.2:
             decision = "ACCEPT"
             delta = 0.06
-        elif keyword_hits >= 1 or mcp_score >= 0.08:
+        elif keyword_hits >= 1 or mcp_score >= 0.08 or lexical_hits >= 2:
             decision = "WEAK_ACCEPT"
             delta = 0.02
         elif self._is_low_signal_content(text):
@@ -4247,7 +4282,7 @@ class HypothesisDrivenDiscovery:
             "decision": decision,
             "confidence_delta": delta,
             "justification": "Deterministic fallback classifier used after invalid evaluator output",
-            "evidence_found": "",
+            "evidence_found": ", ".join([term for term in lexical_terms if term in text][:4]),
             "evidence_type": "deterministic_fallback",
             "temporal_score": "older",
         }
@@ -4726,14 +4761,21 @@ Return JSON:
             response_text = response.get('content', '') or response.get('text', '')
             if not str(response_text or "").strip():
                 logger.info("Claude evaluation returned empty response; using heuristic fallback")
-                fallback = self._fallback_result_with_reason(
-                    "Empty model response",
+                fallback = self._deterministic_fallback_classification(
                     content=content,
-                    hop_type=hop_type,
                     context=context,
+                    mcp_matches=mcp_matches,
                 )
+                if fallback.get("decision") == "NO_PROGRESS":
+                    fallback = self._fallback_result_with_reason(
+                        "Empty model response",
+                        content=content,
+                        hop_type=hop_type,
+                        context=context,
+                    )
+                fallback["parse_path"] = fallback.get("parse_path") or "empty_response_fallback"
                 self._update_llm_runtime_diagnostics(
-                    llm_last_status="empty_response",
+                    llm_last_status="empty_response_deterministic_fallback",
                     evaluation_mode="heuristic",
                 )
                 return self._decorate_evaluation_result(fallback, evaluation_mode="heuristic")
@@ -4853,15 +4895,20 @@ Return JSON:
             return self._fallback_result()
         except TimeoutError as e:
             logger.warning(f"Claude evaluation timeout: {e}")
-            return {
-                'decision': 'NO_PROGRESS',
-                'confidence_delta': 0.0,
-                'justification': 'Evaluator timeout after retry budget; deferred without heuristic fallback',
-                'evidence_found': '',
-                'evidence_type': 'llm_timeout_deferred',
-                'temporal_score': 'unknown',
-                'parse_path': 'llm_timeout_deferred',
-            }
+            fallback = self._deterministic_fallback_classification(
+                content=content,
+                context=context,
+                mcp_matches=mcp_matches,
+            )
+            if fallback.get("decision") == "NO_PROGRESS":
+                fallback = self._fallback_result_with_reason(
+                    "Evaluator timeout after retry budget",
+                    content=content,
+                    hop_type=hop_type,
+                    context=context,
+                )
+            fallback["parse_path"] = fallback.get("parse_path") or "llm_timeout_deferred"
+            return self._decorate_evaluation_result(fallback, evaluation_mode="heuristic")
         except Exception as e:
             logger.error(f"Claude evaluation error: {e}")
             logger.debug(f"Response text: {response_text[:500] if response_text else 'empty'}")
