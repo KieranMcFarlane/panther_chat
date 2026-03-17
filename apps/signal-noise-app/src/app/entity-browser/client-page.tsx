@@ -342,6 +342,7 @@ export default function EntityBrowserClientPage() {
   }, [appliedSearchTerm, buildEntityQueryParams, currentPage, data, fetchEntities])
 
   useEffect(() => {
+    if (initialLoading) return
     const element = gridContainerRef.current
     if (!element) return
 
@@ -356,7 +357,7 @@ export default function EntityBrowserClientPage() {
     const observer = new ResizeObserver(() => updateWidth())
     observer.observe(element)
     return () => observer.disconnect()
-  }, [])
+  }, [initialLoading, data?.entities?.length])
 
   const handleEmailEntity = (entity: Entity) => {
     setSelectedEntity(entity)

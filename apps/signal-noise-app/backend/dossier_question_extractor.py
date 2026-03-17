@@ -420,8 +420,12 @@ Questions:"""
             )
 
             # Parse response
+            if isinstance(response, dict):
+                response_text = str(response.get("content") or "")
+            else:
+                response_text = str(response or "")
             questions = []
-            for i, line in enumerate(response.strip().split('\n')[:count]):
+            for i, line in enumerate(response_text.strip().split('\n')[:count]):
                 question_text = line.strip()
 
                 # Skip empty lines

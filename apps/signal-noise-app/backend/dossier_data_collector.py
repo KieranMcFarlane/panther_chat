@@ -376,6 +376,9 @@ class DossierDataCollector:
         self._falkordb_connected = False
         self._brightdata_available = False
         self._hypothesis_available = False
+        env_use_cache = os.getenv("DOSSIER_USE_CACHE")
+        if env_use_cache is not None:
+            use_cache = str(env_use_cache).strip().lower() in {"1", "true", "yes", "on"}
         self.use_cache = use_cache
         self.parallel_scraping = parallel_scraping
         self._preferred_official_site_urls: Dict[str, str] = {}
@@ -2840,14 +2843,135 @@ If you cannot find ANY real names, return an empty array - do not invent names."
             json_match = re.search(r'\{[\s\S]*\}', response_text)
             if json_match:
                 extracted = json.loads(json_match.group(0))
-                return extracted.get('decision_makers', [])
+                decision_makers = extracted.get('decision_makers', [])
+                if isinstance(decision_makers, list) and decision_makers:
+                    return decision_makers
+                logger.warning("Leadership extraction returned empty decision_makers; using deterministic fallback")
+                return self._fallback_extract_leadership_from_signals(entity_name, scraped_data)
             else:
                 logger.warning("Could not parse leadership extraction response")
-                return []
+                return self._fallback_extract_leadership_from_signals(entity_name, scraped_data)
 
         except Exception as e:
             logger.error(f"❌ Leadership extraction failed: {e}")
-            return []
+            return self._fallback_extract_leadership_from_signals(entity_name, scraped_data)
+
+    def _fallback_extract_leadership_from_signals(
+        self,
+        entity_name: str,
+        scraped_data: Dict[str, Any],
+    ) -> List[Dict[str, Any]]:
+        """
+        Deterministic fallback extractor when model output is prose/non-JSON.
+        """
+        role_patterns = [
+            (r"\bchief executive officer\b|\bceo\b", "Chief Executive Officer"),
+            (r"\bchief technology officer\b|\bcto\b", "Chief Technology Officer"),
+            (r"\bchief digital officer\b|\bcdo\b", "Chief Digital Officer"),
+            (r"\bchief commercial officer\b|\bcco\b", "Chief Commercial Officer"),
+            (r"\bcommercial director\b", "Commercial Director"),
+            (r"\bmanaging director\b", "Managing Director"),
+            (r"\bhead of digital\b", "Head of Digital"),
+            (r"\bhead of marketing\b", "Head of Marketing"),
+            (r"\bfinance director\b|\bcfo\b", "Chief Financial Officer"),
+        ]
+
+        entity_tokens = {token.lower() for token in re.split(r"\W+", entity_name) if token}
+        candidates: List[Dict[str, Any]] = []
+
+        def add_candidate(name: str, role: str, source: str):
+            clean_name = (name or "").strip()
+            clean_role = (role or "").strip()
+            if not clean_role:
+                return
+            if clean_name:
+                lowered = clean_name.lower()
+                if lowered in {"unknown", "news", "sport", "club"}:
+                    return
+                banned_tokens = {"update", "careers", "weekly", "official", "latest", "coventry", "city", "football"}
+                if any(tok in banned_tokens for tok in lowered.split()):
+                    return
+                non_person_tokens = {
+                    "appoint", "appointed", "appointment", "new", "what",
+                    "getty", "images", "tottenham", "hotspur", "arsenal", "premier", "league",
+                    "sports", "team", "club", "fc", "women", "men", "academy",
+                    "chair", "board", "management", "leadership", "directorate",
+                }
+                name_parts = [tok.lower() for tok in clean_name.split()]
+                if any(tok in non_person_tokens for tok in name_parts):
+                    return
+                if len(clean_name.split()) > 3:
+                    return
+                role_like_terms = {
+                    "chief",
+                    "director",
+                    "head",
+                    "manager",
+                    "officer",
+                    "president",
+                    "chair",
+                    "chairman",
+                    "executive",
+                    "owner",
+                }
+                if any(tok in role_like_terms for tok in lowered.split()):
+                    return
+                invalid_prefixes = {"meet", "watch", "live", "breaking"}
+                if lowered.split()[0] in invalid_prefixes:
+                    return
+                org_like_terms = {"group", "limited", "ltd", "plc", "inc", "llc"}
+                if any(tok in org_like_terms for tok in lowered.split()):
+                    return
+                # Keep candidates name-like: mostly alphabetic words, no punctuation-heavy tokens.
+                if any(not re.fullmatch(r"[A-Za-z][A-Za-z'\\-]*", tok) for tok in clean_name.split()):
+                    return
+                if len(clean_name.split()) < 2:
+                    return
+                name_tokens = {tok.lower() for tok in clean_name.split()}
+                if name_tokens and name_tokens.issubset(entity_tokens):
+                    return
+            record = {
+                "name": clean_name or "unknown",
+                "role": clean_role,
+                "influence_level": "MEDIUM" if clean_name else "LOW",
+                "confidence": 58 if clean_name else 42,
+                "source": source,
+                "linkedin_url": None,
+            }
+            key = (record["name"].lower(), record["role"].lower())
+            if not any((c.get("name", "").lower(), c.get("role", "").lower()) == key for c in candidates):
+                candidates.append(record)
+
+        signal_rows: List[tuple[str, str]] = []
+        for source_key in ("job_postings", "press_releases", "linkedin"):
+            items = scraped_data.get(source_key) or []
+            if not isinstance(items, list):
+                continue
+            for item in items[:12]:
+                if not isinstance(item, dict):
+                    continue
+                title = str(item.get("title") or "").strip()
+                snippet = str(item.get("snippet") or "").strip()
+                combined = f"{title}. {snippet}".strip()
+                if combined:
+                    signal_rows.append((combined, source_key))
+
+        name_pattern = re.compile(r"\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,2})\b")
+        for text, source in signal_rows:
+            lowered = text.lower()
+            matched_roles = [role for pattern, role in role_patterns if re.search(pattern, lowered)]
+            if not matched_roles:
+                continue
+            names = name_pattern.findall(text)
+            if names:
+                for role in matched_roles[:2]:
+                    for name in names[:2]:
+                        add_candidate(name, role, source)
+            else:
+                for role in matched_roles[:2]:
+                    add_candidate("", role, source)
+
+        return candidates[:10]
 
     async def _search_linkedin_profiles(
         self,
@@ -3154,23 +3278,35 @@ Use 'unknown' if no evidence found. Be conservative - only report what you can a
             f'{entity_name} partnership announcement',
             f'{entity_name} signing transfer news'
         ]
+        max_queries = max(1, int(os.getenv("DOSSIER_RECENT_NEWS_MAX_QUERIES", "4")))
+        max_results_per_query = max(2, int(os.getenv("DOSSIER_RECENT_NEWS_RESULTS_PER_QUERY", "6")))
+        max_news_items = max(3, int(os.getenv("DOSSIER_RECENT_NEWS_MAX_ITEMS", "10")))
 
         seen_urls = set()
 
-        for query in news_queries[:4]:
+        for query in news_queries[:max_queries]:
             try:
                 search_results = await self.brightdata_client.search_engine(
                     query=query,
                     engine="google",
-                    num_results=5
+                    num_results=max_results_per_query
                 )
 
                 if search_results.get('status') == 'success':
                     for item in search_results.get('results', []):
+                        if len(result["news_items"]) >= max_news_items:
+                            break
                         url = item.get('url', '')
+                        title = str(item.get('title') or '').strip()
+                        snippet = str(item.get('snippet') or '').strip()
+                        source_site = self._extract_site_name(url)
 
                         # Skip duplicates
                         if url in seen_urls:
+                            continue
+                        if not url:
+                            continue
+                        if not self._is_high_quality_news_url(url):
                             continue
                         seen_urls.add(url)
 
@@ -3179,6 +3315,8 @@ Use 'unknown' if no evidence found. Be conservative - only report what you can a
                             scrape = await self.brightdata_client.scrape_as_markdown(url)
                             if scrape.get('status') == 'success':
                                 content = scrape.get('content', '')[:3000]
+                                if len((content or '').strip()) < 80 and snippet:
+                                    content = f"{title}\n{snippet}"
 
                                 news_prompt = f"""Extract key news information from this article about {entity_name}.
 
@@ -3210,26 +3348,56 @@ Return ONLY valid JSON."""
                                 if json_match:
                                     try:
                                         news_data = json.loads(json_match.group(0))
-                                        news_data['source_url'] = url
-                                        news_data['source_site'] = self._extract_site_name(url)
-
-                                        # Only include high-relevance items
-                                        if news_data.get('relevance_score', 0) >= 70:
-                                            result["news_items"].append(news_data)
+                                        if not isinstance(news_data, dict):
+                                            news_data = {}
                                     except json.JSONDecodeError:
-                                        pass
+                                        news_data = {}
+                                else:
+                                    news_data = {}
+
+                                if not news_data:
+                                    news_data = self._build_recent_news_fallback_item(
+                                        entity_name=entity_name,
+                                        title=title,
+                                        snippet=snippet,
+                                        url=url,
+                                        source_site=source_site,
+                                    )
+                                else:
+                                    news_data['headline'] = news_data.get('headline') or title or "Untitled news item"
+                                    news_data['summary'] = news_data.get('summary') or snippet or content[:300]
+                                    news_data['category'] = news_data.get('category') or self._infer_news_category(news_data['headline'], news_data['summary'])
+                                    news_data['relevance_score'] = int(news_data.get('relevance_score') or self._score_news_relevance(news_data['headline'], news_data['summary'], source_site))
+                                    news_data['source_url'] = url
+                                    news_data['source_site'] = source_site
+
+                                # Keep moderate+ relevance to avoid dropping all items.
+                                if int(news_data.get('relevance_score', 0)) >= 55:
+                                    result["news_items"].append(news_data)
 
                         except Exception as e:
                             logger.debug(f"    Failed to scrape news item: {e}")
+                            fallback_news = self._build_recent_news_fallback_item(
+                                entity_name=entity_name,
+                                title=title,
+                                snippet=snippet,
+                                url=url,
+                                source_site=source_site,
+                            )
+                            if int(fallback_news.get("relevance_score", 0)) >= 55:
+                                result["news_items"].append(fallback_news)
                             continue
 
             except Exception as e:
                 logger.debug(f"News query failed: {query} - {e}")
                 continue
 
+            if len(result["news_items"]) >= max_news_items:
+                break
+
         # Sort by relevance and limit
         result["news_items"].sort(key=lambda x: x.get('relevance_score', 0), reverse=True)
-        result["news_items"] = result["news_items"][:10]
+        result["news_items"] = result["news_items"][:max_news_items]
 
         # Count sources
         if result["news_items"]:
@@ -3237,6 +3405,82 @@ Return ONLY valid JSON."""
 
         logger.info(f"✅ Recent news collected: {len(result['news_items'])} items from {len(result['sources_used'])} sources")
         return result
+
+    def _is_high_quality_news_url(self, url: str) -> bool:
+        try:
+            parsed = urllib.parse.urlparse(str(url or "").strip())
+            host = (parsed.netloc or "").lower()
+            path = (parsed.path or "").lower()
+        except Exception:
+            return False
+        if not host:
+            return False
+        blocked_hosts = (
+            "youtube.com",
+            "youtu.be",
+            "facebook.com",
+            "x.com",
+            "twitter.com",
+            "instagram.com",
+            "tiktok.com",
+            "newsnow.",
+        )
+        if any(blocked in host for blocked in blocked_hosts):
+            return False
+        blocked_path_tokens = ("/video/", "/watch", "/live/")
+        if any(token in path for token in blocked_path_tokens):
+            return False
+        return True
+
+    def _infer_news_category(self, headline: str, summary: str) -> str:
+        text = f"{headline} {summary}".lower()
+        if any(token in text for token in ("partner", "sponsor", "deal", "agreement")):
+            return "partnership"
+        if any(token in text for token in ("sign", "transfer", "loan", "contract")):
+            return "signing"
+        if any(token in text for token in ("stadium", "arena", "facility")):
+            return "stadium"
+        if any(token in text for token in ("revenue", "finance", "investment", "funding")):
+            return "finance"
+        if any(token in text for token in ("win", "loss", "match", "fixture", "table")):
+            return "performance"
+        return "other"
+
+    def _score_news_relevance(self, headline: str, summary: str, source_site: str) -> int:
+        text = f"{headline} {summary}".lower()
+        score = 45
+        if source_site in {"BBC Sport", "Sky Sports", "ESPN"}:
+            score += 20
+        if any(token in text for token in ("digital", "technology", "crm", "platform", "data", "analytics")):
+            score += 15
+        if any(token in text for token in ("partner", "sponsor", "commercial", "agreement")):
+            score += 12
+        if any(token in text for token in ("appoint", "director", "chief", "head of")):
+            score += 8
+        return max(0, min(100, score))
+
+    def _build_recent_news_fallback_item(
+        self,
+        *,
+        entity_name: str,
+        title: str,
+        snippet: str,
+        url: str,
+        source_site: str,
+    ) -> Dict[str, Any]:
+        headline = title or f"{entity_name} update"
+        summary = snippet or f"Recent coverage mentioning {entity_name}."
+        category = self._infer_news_category(headline, summary)
+        relevance_score = self._score_news_relevance(headline, summary, source_site)
+        return {
+            "headline": headline,
+            "date": "recent",
+            "category": category,
+            "summary": summary[:420],
+            "relevance_score": relevance_score,
+            "source_url": url,
+            "source_site": source_site,
+        }
 
     def _extract_site_name(self, url: str) -> str:
         """Extract site name from URL"""
@@ -3410,6 +3654,11 @@ Return ONLY valid JSON."""
             "opportunities": [],
             "sources_used": []
         }
+        max_searches = max(1, int(os.getenv("DOSSIER_STRATEGIC_MAX_SEARCHES", "6")))
+        max_results_per_search = max(1, int(os.getenv("DOSSIER_STRATEGIC_RESULTS_PER_SEARCH", "2")))
+        max_model_evals = max(1, int(os.getenv("DOSSIER_STRATEGIC_MAX_EVALS", "12")))
+        searches_used = 0
+        model_evals = 0
 
         opportunity_keywords = [
             ('expansion', ['expansion', 'grow', 'new market', 'international']),
@@ -3421,19 +3670,28 @@ Return ONLY valid JSON."""
 
         for opp_type, keywords in opportunity_keywords:
             try:
+                if searches_used >= max_searches or model_evals >= max_model_evals:
+                    break
                 for keyword in keywords[:2]:
+                    if searches_used >= max_searches or model_evals >= max_model_evals:
+                        break
                     query = f'"{entity_name}" {keyword}'
+                    searches_used += 1
                     search_results = await self.brightdata_client.search_engine(
                         query=query,
                         engine="google",
-                        num_results=3
+                        num_results=max_results_per_search
                     )
 
                     if search_results.get('status') == 'success':
                         for item in search_results.get('results', []):
+                            if model_evals >= max_model_evals:
+                                break
                             snippet = item.get('snippet', '')
                             title = item.get('title', '')
                             url = item.get('url', '')
+                            if not self._is_high_quality_news_url(url):
+                                continue
 
                             # Analyze for opportunity signals
                             opp_prompt = f"""Analyze this news about {entity_name} and identify if it represents a strategic opportunity.
@@ -3461,6 +3719,7 @@ Return ONLY JSON:
 Return ONLY valid JSON."""
 
                             try:
+                                model_evals += 1
                                 response = await self.claude_client.query(
                                     prompt=opp_prompt,
                                     model="haiku",

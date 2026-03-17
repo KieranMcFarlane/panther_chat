@@ -1992,7 +1992,8 @@ class HypothesisDrivenDiscovery:
         template_id: str,
         max_iterations: int = None,
         max_depth: int = None,
-        max_cost_usd: float = None
+        max_cost_usd: float = None,
+        progress_callback: Optional[Callable[[Dict[str, Any]], Awaitable[None]]] = None,
     ) -> DiscoveryResult:
         """
         Run hypothesis-driven discovery for entity
@@ -3275,6 +3276,14 @@ class HypothesisDrivenDiscovery:
                         url = item.get('url', '')
                         if not url:
                             continue
+                        if not self._is_entity_relevant_candidate(
+                            url=url,
+                            entity_name=entity_name,
+                            hop_type=hop_type,
+                            title=item.get('title', ''),
+                            snippet=item.get('snippet', ''),
+                        ):
+                            continue
                         score = self._score_url(
                             url,
                             hop_type,
@@ -3396,6 +3405,14 @@ class HypothesisDrivenDiscovery:
                         candidate_url = item.get('url', '')
                         if not candidate_url:
                             continue
+                        if not self._is_entity_relevant_candidate(
+                            url=candidate_url,
+                            entity_name=entity_name,
+                            hop_type=hop_type,
+                            title=item.get('title', ''),
+                            snippet=item.get('snippet', ''),
+                        ):
+                            continue
                         score = self._score_url(
                             candidate_url,
                             hop_type,
@@ -3452,17 +3469,31 @@ class HypothesisDrivenDiscovery:
                 self._append_search_diagnostic(metrics, engine, fallback_query, search_result, stage="fallback")
 
                 if search_result.get('status') == 'success' and search_result.get('results'):
-                    url = search_result['results'][0].get('url')
-                    if url:
+                    selected_url = None
+                    for result_item in search_result.get('results', []):
+                        candidate_url = result_item.get('url')
+                        if not candidate_url:
+                            continue
+                        if not self._is_entity_relevant_candidate(
+                            url=candidate_url,
+                            entity_name=entity_name,
+                            hop_type=hop_type,
+                            title=result_item.get('title', ''),
+                            snippet=result_item.get('snippet', ''),
+                        ):
+                            continue
+                        selected_url = candidate_url
+                        break
+                    if selected_url:
                         self._last_url_candidates = [r.get('url') for r in search_result['results'] if r.get('url')][:3]
-                        logger.info(f"✅ Fallback {i} ({engine}) found URL: {url}")
+                        logger.info(f"✅ Fallback {i} ({engine}) found URL: {selected_url}")
                         metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
                         self._last_url_resolution_metrics = {
                             **metrics,
                             'search_calls_ms': round(metrics['search_calls_ms'], 2),
                             'validation_ms': round(metrics['validation_ms'], 2)
                         }
-                        return url
+                        return selected_url
 
         # FINAL FALLBACK: Try site-specific search for RFP-related hops
         # This addresses cases like ACE/MLC where RFP was on entity's own domain
@@ -4248,6 +4279,68 @@ class HypothesisDrivenDiscovery:
             return True
         if len(initials) >= 3 and initials in host:
             return True
+
+        return False
+
+    def _is_entity_relevant_candidate(
+        self,
+        *,
+        url: str,
+        entity_name: str,
+        hop_type: HopType,
+        title: str = "",
+        snippet: str = "",
+    ) -> bool:
+        """Filter out off-entity URLs before expensive scrape/evaluation."""
+        from urllib.parse import urlparse
+
+        parsed = urlparse(str(url or "").strip())
+        host = (parsed.netloc or "").lower()
+        path = (parsed.path or "").lower()
+        if not host:
+            return False
+
+        blocked_domains = {
+            "coliseum-online.com",
+            "newsnow.co.uk",
+            "newsnow.com",
+        }
+        if any(domain in host for domain in blocked_domains):
+            return False
+
+        strict_hops = {
+            HopType.OFFICIAL_SITE,
+            HopType.CAREERS_PAGE,
+            HopType.RFP_PAGE,
+            HopType.TENDERS_PAGE,
+            HopType.PROCUREMENT_PAGE,
+            HopType.PRESS_RELEASE,
+        }
+        if hop_type not in strict_hops:
+            return True
+
+        normalized_entity = str(entity_name or "").strip().lower()
+        entity_tokens = [
+            token
+            for token in re.split(r"[\s\-_]+", normalized_entity)
+            if token and token not in {"fc", "f.c.", "club", "football", "city", "united", "the"}
+        ]
+        initials = "".join(token[0] for token in entity_tokens if token)
+
+        haystack = " ".join([host, path, str(title or "").lower(), str(snippet or "").lower()])
+        if normalized_entity and normalized_entity in haystack:
+            return True
+        if initials and len(initials) >= 3 and initials in haystack:
+            return True
+        for token in entity_tokens:
+            if len(token) >= 4 and token in haystack:
+                return True
+
+        official_site_url = self._normalize_http_url(getattr(self, "current_official_site_url", None))
+        if official_site_url:
+            official_host = (urlparse(official_site_url).netloc or "").lower()
+            if official_host and official_host in host:
+                return True
 
         return False
 

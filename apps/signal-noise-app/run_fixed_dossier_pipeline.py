@@ -13,11 +13,13 @@ Pipeline:
 """
 
 import asyncio
+import argparse
 import inspect
 import json
 import logging
 import os
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Any
@@ -98,6 +100,8 @@ class FixedDossierFirstPipeline:
         # Create output directory
         self.output_dir = Path("backend/data/dossiers")
         self.output_dir.mkdir(parents=True, exist_ok=True)
+        self.run_reports_dir = self.output_dir / "run_reports"
+        self.run_reports_dir.mkdir(parents=True, exist_ok=True)
 
         logger.info("✅ Pipeline initialized")
 
@@ -129,6 +133,7 @@ class FixedDossierFirstPipeline:
             )
 
         start_time = datetime.now(timezone.utc)
+        phase_timings_seconds: Dict[str, float] = {}
 
         logger.info("=" * 60)
         logger.info(f"🎯 DOSSIER-FIRST PIPELINE: {entity_name}")
@@ -160,12 +165,14 @@ class FixedDossierFirstPipeline:
         logger.info("\n📋 PHASE 1: DOSSIER GENERATION")
         logger.info("-" * 60)
 
+        phase_started = time.perf_counter()
         dossier = await self._phase_1_generate_dossier(
             entity_id=entity_id,
             entity_name=entity_name,
             entity_type=entity_type,
             tier_score=tier_score
         )
+        phase_timings_seconds["phase_1_dossier_generation"] = round(time.perf_counter() - phase_started, 3)
         self._merge_schema_first_into_dossier(dossier)
 
         # =========================================================================
@@ -174,6 +181,7 @@ class FixedDossierFirstPipeline:
         logger.info("\n🔍 PHASE 2: DISCOVERY")
         logger.info("-" * 60)
 
+        phase_started = time.perf_counter()
         discovery_result = await self._phase_2_run_discovery(
             entity_id=entity_id,
             entity_name=entity_name,
@@ -182,6 +190,7 @@ class FixedDossierFirstPipeline:
             template_id=template_id,
             entity_type=entity_type,
         )
+        phase_timings_seconds["phase_2_discovery"] = round(time.perf_counter() - phase_started, 3)
 
         # =========================================================================
         # PHASE 3: DASHBOARD SCORING
@@ -189,12 +198,14 @@ class FixedDossierFirstPipeline:
         logger.info("\n📊 PHASE 3: DASHBOARD SCORING")
         logger.info("-" * 60)
 
+        phase_started = time.perf_counter()
         dashboard_scores = await self._phase_3_calculate_scores(
             entity_id=entity_id,
             entity_name=entity_name,
             dossier=dossier,
             discovery_result=discovery_result
         )
+        phase_timings_seconds["phase_3_dashboard_scoring"] = round(time.perf_counter() - phase_started, 3)
 
         # =========================================================================
         # PHASE 4: SAVE RESULTS
@@ -202,7 +213,9 @@ class FixedDossierFirstPipeline:
         logger.info("\n💾 PHASE 4: SAVE RESULTS")
         logger.info("-" * 60)
 
-        await self._save_results(entity_id, entity_name, dossier, discovery_result, dashboard_scores)
+        phase_started = time.perf_counter()
+        saved_paths = await self._save_results(entity_id, entity_name, dossier, discovery_result, dashboard_scores)
+        phase_timings_seconds["phase_4_save_results"] = round(time.perf_counter() - phase_started, 3)
 
         # =========================================================================
         # SUMMARY
@@ -228,6 +241,16 @@ class FixedDossierFirstPipeline:
         else:
             discovery_payload = {}
         diagnostics = self._extract_discovery_diagnostics(discovery_payload)
+        run_report = self._write_run_report(
+            entity_id=entity_id,
+            entity_name=entity_name,
+            dossier=dossier.to_dict() if hasattr(dossier, "to_dict") else dossier,
+            discovery=discovery_payload,
+            scores=dashboard_scores,
+            phase_timings=phase_timings_seconds,
+            artifacts=saved_paths,
+            total_time_seconds=total_time,
+        )
 
         return {
             "entity_id": entity_id,
@@ -237,6 +260,9 @@ class FixedDossierFirstPipeline:
             "discovery_confidence": discovery_result.final_confidence,
             "procurement_maturity": dashboard_scores['procurement_maturity'],
             "sales_readiness": dashboard_scores['sales_readiness'],
+            "run_report_path": run_report.get("report_path"),
+            "acceptance_gate_passed": run_report.get("acceptance_gate", {}).get("passed"),
+            "acceptance_gate_reasons": run_report.get("acceptance_gate", {}).get("reasons", []),
             **diagnostics,
         }
 
@@ -249,11 +275,29 @@ class FixedDossierFirstPipeline:
         tier_score: int,
     ) -> Dict[str, Any]:
         started_at = datetime.now(timezone.utc)
+        phase_timings_seconds: Dict[str, float] = {}
+        phase_started_at: Dict[str, float] = {}
+        phase_payloads: Dict[str, Dict[str, Any]] = {}
+
+        async def _phase_callback(phase: str, payload: Dict[str, Any]) -> None:
+            if not isinstance(payload, dict):
+                payload = {"value": payload}
+            status = str(payload.get("status") or "").lower()
+            now = time.perf_counter()
+            if status == "running":
+                phase_started_at[phase] = now
+            elif status in {"completed", "failed", "skipped"}:
+                started = phase_started_at.get(phase)
+                if started is not None:
+                    phase_timings_seconds[phase] = round(now - started, 3)
+            phase_payloads[phase] = payload
+
         orchestrated = await self.orchestrator.run_entity_pipeline(
             entity_id=entity_id,
             entity_name=entity_name,
             entity_type=entity_type,
             priority_score=tier_score,
+            phase_callback=_phase_callback,
         )
         artifacts = orchestrated.get("artifacts", {}) if isinstance(orchestrated, dict) else {}
         dossier = artifacts.get("dossier", {}) if isinstance(artifacts, dict) else {}
@@ -266,10 +310,23 @@ class FixedDossierFirstPipeline:
         if not isinstance(scores, dict):
             scores = {}
 
-        await self._save_results(entity_id, entity_name, dossier, discovery, scores)
+        save_started = time.perf_counter()
+        saved_paths = await self._save_results(entity_id, entity_name, dossier, discovery, scores)
+        phase_timings_seconds["save_results"] = round(time.perf_counter() - save_started, 3)
 
         total_time_seconds = (datetime.now(timezone.utc) - started_at).total_seconds()
         diagnostics = self._extract_discovery_diagnostics(discovery)
+        run_report = self._write_run_report(
+            entity_id=entity_id,
+            entity_name=entity_name,
+            dossier=dossier,
+            discovery=discovery,
+            scores=scores,
+            phase_timings=phase_timings_seconds,
+            phases=orchestrated.get("phases", {}) if isinstance(orchestrated, dict) else {},
+            artifacts=saved_paths,
+            total_time_seconds=total_time_seconds,
+        )
         return {
             "entity_id": entity_id,
             "entity_name": entity_name,
@@ -279,6 +336,9 @@ class FixedDossierFirstPipeline:
             "procurement_maturity": scores.get("procurement_maturity"),
             "sales_readiness": scores.get("sales_readiness"),
             "active_probability": scores.get("active_probability"),
+            "run_report_path": run_report.get("report_path"),
+            "acceptance_gate_passed": run_report.get("acceptance_gate", {}).get("passed"),
+            "acceptance_gate_reasons": run_report.get("acceptance_gate", {}).get("reasons", []),
             **diagnostics,
         }
 
@@ -629,7 +689,7 @@ class FixedDossierFirstPipeline:
         dossier: Any,
         discovery_result: Any,
         dashboard_scores: Dict[str, Any]
-    ):
+    ) -> Dict[str, str]:
         """Save all results to files"""
         timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
 
@@ -661,12 +721,165 @@ class FixedDossierFirstPipeline:
         with open(scores_path, 'w') as f:
             json.dump(dashboard_scores, f, indent=2, default=str)
         logger.info(f"💾 Scores saved: {scores_path}")
+        return {
+            "dossier_path": str(dossier_path),
+            "discovery_path": str(discovery_path),
+            "scores_path": str(scores_path),
+        }
+
+    def _count_section_fallbacks(self, dossier: Dict[str, Any]) -> Dict[str, int]:
+        sections = dossier.get("sections") if isinstance(dossier, dict) else []
+        if not isinstance(sections, list):
+            sections = []
+        hard_fallback = 0
+        low_confidence = 0
+        empty_like = 0
+        for section in sections:
+            if not isinstance(section, dict):
+                continue
+            content_items = section.get("content")
+            joined_content = " ".join(
+                item for item in content_items if isinstance(item, str)
+            ) if isinstance(content_items, list) else str(content_items or "")
+            lowered = joined_content.lower()
+            confidence = section.get("confidence")
+            try:
+                confidence_value = float(confidence)
+            except (TypeError, ValueError):
+                confidence_value = 0.0
+            if confidence_value <= 0.3:
+                low_confidence += 1
+            if (
+                "returned no structured content" in lowered
+                or "json repair failed" in lowered
+                or "fallback" in lowered
+            ):
+                hard_fallback += 1
+            if not joined_content.strip():
+                empty_like += 1
+        return {
+            "hard_fallback_sections": hard_fallback,
+            "low_confidence_sections": low_confidence,
+            "empty_sections": empty_like,
+        }
+
+    def _build_acceptance_gate(
+        self,
+        *,
+        final_confidence: float,
+        signal_count: int,
+        section_fallbacks: int,
+    ) -> Dict[str, Any]:
+        min_confidence = float(os.getenv("PIPELINE_ACCEPT_MIN_CONFIDENCE", "0.55"))
+        min_signals = int(os.getenv("PIPELINE_ACCEPT_MIN_SIGNALS", "2"))
+        max_fallbacks = int(os.getenv("PIPELINE_ACCEPT_MAX_SECTION_FALLBACKS", "3"))
+        reasons = []
+        if final_confidence < min_confidence:
+            reasons.append(f"final_confidence<{min_confidence}")
+        if signal_count < min_signals:
+            reasons.append(f"signal_count<{min_signals}")
+        if section_fallbacks > max_fallbacks:
+            reasons.append(f"section_fallbacks>{max_fallbacks}")
+        return {
+            "passed": len(reasons) == 0,
+            "reasons": reasons,
+            "thresholds": {
+                "min_confidence": min_confidence,
+                "min_signals": min_signals,
+                "max_section_fallbacks": max_fallbacks,
+            },
+        }
+
+    def _write_run_report(
+        self,
+        *,
+        entity_id: str,
+        entity_name: str,
+        dossier: Dict[str, Any],
+        discovery: Dict[str, Any],
+        scores: Dict[str, Any],
+        phase_timings: Dict[str, float],
+        artifacts: Dict[str, str],
+        total_time_seconds: float,
+        phases: Dict[str, Any] | None = None,
+    ) -> Dict[str, Any]:
+        phases = phases or {}
+        discovery = discovery if isinstance(discovery, dict) else {}
+        dossier = dossier if isinstance(dossier, dict) else {}
+        scores = scores if isinstance(scores, dict) else {}
+        performance = discovery.get("performance_summary")
+        if not isinstance(performance, dict):
+            performance = {}
+        signals = discovery.get("signals_discovered")
+        signal_count = len(signals) if isinstance(signals, list) else 0
+        official_traces = performance.get("official_site_resolution_traces")
+        latest_trace = official_traces[-1] if isinstance(official_traces, list) and official_traces else {}
+        lane_statuses = latest_trace.get("lane_statuses") if isinstance(latest_trace, dict) else {}
+        if not isinstance(lane_statuses, dict):
+            lane_statuses = {}
+        search_hit_lanes = sum(
+            1
+            for lane, status in lane_statuses.items()
+            if str(lane).startswith("search:") and str(status).lower() == "hit"
+        )
+        section_counters = self._count_section_fallbacks(dossier)
+        final_confidence = float(discovery.get("final_confidence") or 0.0)
+        acceptance_gate = self._build_acceptance_gate(
+            final_confidence=final_confidence,
+            signal_count=signal_count,
+            section_fallbacks=section_counters["hard_fallback_sections"],
+        )
+        report_payload = {
+            "run_at": datetime.now(timezone.utc).isoformat(),
+            "entity_id": entity_id,
+            "entity_name": entity_name,
+            "total_time_seconds": round(total_time_seconds, 3),
+            "phase_timings_seconds": phase_timings,
+            "phase_statuses": phases,
+            "metrics": {
+                "dossier_sections": len(dossier.get("sections") or []) if isinstance(dossier.get("sections"), list) else 0,
+                "final_confidence": final_confidence,
+                "signals_discovered": signal_count,
+                "iterations_completed": int(discovery.get("iterations_completed") or 0),
+                "procurement_maturity": scores.get("procurement_maturity"),
+                "sales_readiness": scores.get("sales_readiness"),
+                "active_probability": scores.get("active_probability"),
+                "official_site": {
+                    "selected_url": latest_trace.get("selected_url") if isinstance(latest_trace, dict) else None,
+                    "selected_score": latest_trace.get("selected_score") if isinstance(latest_trace, dict) else None,
+                    "search_hit_lanes": search_hit_lanes,
+                    "lane_statuses": lane_statuses,
+                },
+                "section_fallbacks": section_counters,
+            },
+            "acceptance_gate": acceptance_gate,
+            "artifacts": artifacts,
+        }
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        report_path = self.run_reports_dir / f"{entity_id}_run_report_{timestamp}.json"
+        with open(report_path, "w") as report_file:
+            json.dump(report_payload, report_file, indent=2, default=str)
+        logger.info("🧾 Run report saved: %s", report_path)
+        if acceptance_gate["passed"]:
+            logger.info("✅ Acceptance gate passed")
+        else:
+            logger.warning("⚠️ Acceptance gate failed: %s", acceptance_gate["reasons"])
+        report_payload["report_path"] = str(report_path)
+        return report_payload
 
 
 async def main():
     """Main entry point"""
     from dotenv import load_dotenv
     load_dotenv()
+    parser = argparse.ArgumentParser(description="Run fixed dossier-first pipeline")
+    parser.add_argument("--entity-id", default="coventry-city-fc")
+    parser.add_argument("--entity-name", default="Coventry City FC")
+    parser.add_argument("--entity-type", default="CLUB")
+    parser.add_argument("--tier-score", type=int, default=75)
+    parser.add_argument("--max-discovery-iterations", type=int, default=15)
+    parser.add_argument("--template-id", default="yellow_panther_agency")
+    args = parser.parse_args()
 
     # Verify environment
     required_vars = ['ANTHROPIC_AUTH_TOKEN', 'BRIGHTDATA_API_TOKEN']
@@ -679,11 +892,12 @@ async def main():
     pipeline = FixedDossierFirstPipeline()
     try:
         result = await pipeline.run_pipeline(
-            entity_id="coventry-city-fc",
-            entity_name="Coventry City FC",
-            tier_score=75,  # PREMIUM tier for richer data
-            max_discovery_iterations=15,
-            template_id="yellow_panther_agency"  # Use working template
+            entity_id=args.entity_id,
+            entity_name=args.entity_name,
+            entity_type=args.entity_type,
+            tier_score=args.tier_score,
+            max_discovery_iterations=args.max_discovery_iterations,
+            template_id=args.template_id,
         )
     finally:
         await pipeline.close()

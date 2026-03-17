@@ -73,6 +73,7 @@ class PipelineOrchestrator:
                 entity_type=entity_type,
                 priority_score=priority_score,
             )
+            dossier = self._coerce_dossier_payload(dossier)
             await self._emit_phase_update(
                 phase_callback,
                 "dossier_generation",
@@ -88,6 +89,7 @@ class PipelineOrchestrator:
                 "signal_count": dossier.get("metadata", {}).get("signal_count", 0),
             }
         else:
+            dossier = self._coerce_dossier_payload(dossier)
             phase_results["dossier_generation"] = {"status": "completed"}
 
         discovery_result: Any = {"signals_discovered": [], "hypotheses": []}
@@ -366,6 +368,16 @@ class PipelineOrchestrator:
             "capability_signals": [],
             "hypothesis_states": {},
         }
+
+    def _coerce_dossier_payload(self, dossier: Any) -> Dict[str, Any]:
+        if isinstance(dossier, dict):
+            return dossier
+        to_dict = getattr(dossier, "to_dict", None)
+        if callable(to_dict):
+            payload = to_dict()
+            if isinstance(payload, dict):
+                return payload
+        return {}
 
     def _normalize_validated_signals(self, signals: List[Any]) -> List[Dict[str, Any]]:
         normalized_signals: List[Dict[str, Any]] = []

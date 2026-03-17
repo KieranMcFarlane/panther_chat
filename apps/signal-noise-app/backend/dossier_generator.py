@@ -605,7 +605,17 @@ Website: N/A
                                 "confidence": 0.45,
                             }
                         else:
-                            raise ValueError(f"Section {section_id} JSON repair failed")
+                            logger.warning(
+                                "⚠️ Section %s JSON repair failed with empty payload; using minimal placeholder fallback",
+                                section_id,
+                            )
+                            section_data = {
+                                "content": [f"Section generation for {section_id} returned no structured content in this run."],
+                                "metrics": [],
+                                "insights": [],
+                                "recommendations": [],
+                                "confidence": 0.2,
+                            }
 
             # Create DossierSection
             section = DossierSection(
