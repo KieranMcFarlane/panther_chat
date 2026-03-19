@@ -61,6 +61,9 @@ logger = logging.getLogger(__name__)
 DEFAULT_DISCOVERY_TEMPLATE_ID = "tier_2_club_mixed_procurement"
 FEDERATION_DISCOVERY_TEMPLATE_ID = "federation_governing_body"
 AGENCY_DISCOVERY_TEMPLATE_ID = "yellow_panther_agency"
+TIER_1_CLUB_TEMPLATE_ID = "tier_1_club_centralized_procurement"
+TIER_2_CLUB_TEMPLATE_ID = "tier_2_club_mixed_procurement"
+FEDERATION_CENTRALIZED_TEMPLATE_ID = "federation_centralized_procurement"
 
 TEMPLATE_RUNTIME_OVERRIDES: Dict[str, Dict[str, Any]] = {
     "yellow_panther_agency": {
@@ -162,6 +165,69 @@ def _default_template_id_for_entity_type(entity_type: Optional[str]) -> str:
     return DEFAULT_DISCOVERY_TEMPLATE_ID
 
 
+def _select_template_from_league_context(
+    *,
+    entity_type: Optional[str],
+    league_or_competition: Optional[str],
+    org_type: Optional[str] = None,
+) -> Optional[str]:
+    """Select template using entity context before generic defaults."""
+    normalized_entity = str(entity_type or "").strip().upper()
+    league = str(league_or_competition or "").strip().lower()
+    org = str(org_type or "").strip().lower()
+
+    if not normalized_entity and not league and not org:
+        return None
+
+    if (
+        "FEDERATION" in normalized_entity
+        or "GOVERN" in normalized_entity
+        or "federation" in org
+    ):
+        if any(token in league for token in ("procurement", "tender", "supplier", "vendor", "rfp")):
+            return FEDERATION_CENTRALIZED_TEMPLATE_ID
+        return FEDERATION_DISCOVERY_TEMPLATE_ID
+
+    if "CLUB" not in normalized_entity and not league:
+        return None
+
+    # UK lower tiers should stay on tier-2 mixed procurement profile.
+    tier_2_markers = (
+        "championship",
+        "efl championship",
+        "league one",
+        "league two",
+        "national league",
+        "scottish championship",
+        "scottish league one",
+        "scottish league two",
+    )
+    if any(marker in league for marker in tier_2_markers):
+        return TIER_2_CLUB_TEMPLATE_ID
+
+    # Top-tier/high-budget club competitions tend to fit tier-1 centralized profile.
+    tier_1_markers = (
+        "premier league",
+        "epl",
+        "la liga",
+        "serie a",
+        "bundesliga",
+        "ligue 1",
+        "eredivisie",
+        "primeira liga",
+        "mls",
+        "uefa champions league",
+        "champions league",
+    )
+    if any(marker in league for marker in tier_1_markers):
+        return TIER_1_CLUB_TEMPLATE_ID
+
+    # Safe default for clubs remains tier-2.
+    if "CLUB" in normalized_entity:
+        return TIER_2_CLUB_TEMPLATE_ID
+    return None
+
+
 get_page_rank = _load_backend_attr(
     "discovery_page_registry",
     "get_page_rank",
@@ -196,18 +262,28 @@ def _load_backend_attr(module_name: str, attr_name: str, default: Any = None):
     return getattr(module, attr_name, default)
 
 
-def resolve_template_id(template_id: Optional[str], entity_type: Optional[str] = None) -> str:
+def resolve_template_id(
+    template_id: Optional[str],
+    entity_type: Optional[str] = None,
+    league_or_competition: Optional[str] = None,
+    org_type: Optional[str] = None,
+) -> str:
     """Return an available template id for discovery initialization."""
     TemplateLoader = _load_backend_attr("template_loader", "TemplateLoader")
+    context_choice = _select_template_from_league_context(
+        entity_type=entity_type,
+        league_or_competition=league_or_competition,
+        org_type=org_type,
+    )
     if TemplateLoader is None:
-        return template_id or _default_template_id_for_entity_type(entity_type)
+        return template_id or context_choice or _default_template_id_for_entity_type(entity_type)
 
     loader = TemplateLoader()
     requested = template_id or ""
     if requested and loader.get_template(requested):
         return requested
 
-    default_template_id = _default_template_id_for_entity_type(entity_type)
+    default_template_id = context_choice or _default_template_id_for_entity_type(entity_type)
     if loader.get_template(default_template_id):
         fallback_template_id = default_template_id
     else:

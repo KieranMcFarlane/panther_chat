@@ -243,6 +243,20 @@ class FixedDossierFirstPipeline:
         )
         phase_timings_seconds["phase_1_dossier_generation"] = round(time.perf_counter() - phase_started, 3)
         self._merge_schema_first_into_dossier(dossier)
+        from backend.hypothesis_driven_discovery import resolve_template_id
+        league_context = self._extract_dossier_league_context(dossier)
+        discovery_template_id = resolve_template_id(
+            template_id,
+            entity_type,
+            league_or_competition=league_context.get("league_or_competition"),
+            org_type=league_context.get("org_type"),
+        )
+        logger.info(
+            "🧭 Discovery template resolved from context: %s (league=%s, org_type=%s)",
+            discovery_template_id,
+            league_context.get("league_or_competition") or "n/a",
+            league_context.get("org_type") or "n/a",
+        )
 
         # =========================================================================
         # PHASE 2: DISCOVERY (with dossier context)
@@ -256,7 +270,7 @@ class FixedDossierFirstPipeline:
             entity_name=entity_name,
             dossier=dossier,
             max_iterations=max_discovery_iterations,
-            template_id=template_id,
+            template_id=discovery_template_id,
             entity_type=entity_type,
         )
         phase_timings_seconds["phase_2_discovery"] = round(time.perf_counter() - phase_started, 3)
@@ -786,6 +800,36 @@ class FixedDossierFirstPipeline:
         seeded = seed_fn(entity_name, official_site)
         if seeded:
             logger.info("🎯 Seeded phase-1 official-site from schema-first: %s", seeded)
+
+    def _extract_dossier_league_context(self, dossier: Any) -> Dict[str, str]:
+        """Extract league/org context for template routing."""
+        payload: Dict[str, Any] = {}
+        if isinstance(dossier, dict):
+            payload = dossier
+        elif hasattr(dossier, "to_dict"):
+            try:
+                payload = dossier.to_dict()
+            except Exception:  # noqa: BLE001
+                payload = {}
+
+        metadata = payload.get("metadata") if isinstance(payload, dict) else None
+        entity = payload.get("entity") if isinstance(payload, dict) else None
+        if not isinstance(metadata, dict):
+            metadata = {}
+        if not isinstance(entity, dict):
+            entity = {}
+
+        league_or_competition = (
+            metadata.get("league_or_competition")
+            or entity.get("league_or_competition")
+            or entity.get("entity_league")
+            or ""
+        )
+        org_type = metadata.get("org_type") or entity.get("org_type") or ""
+        return {
+            "league_or_competition": str(league_or_competition or "").strip(),
+            "org_type": str(org_type or "").strip(),
+        }
 
     def _lookup_official_site_from_recent_artifacts(self, entity_id: str) -> str | None:
         """Load the most recent official site URL from saved dossier artifacts."""
