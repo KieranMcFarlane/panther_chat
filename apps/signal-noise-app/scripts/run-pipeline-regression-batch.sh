@@ -38,7 +38,7 @@ echo "[]" > "$TMP_FILE"
 for row in "${ENTITIES[@]}"; do
   IFS='|' read -r ENTITY_ID ENTITY_NAME ENTITY_TYPE <<< "$row"
   LOG_FILE="tmp_pipeline_batch_${ENTITY_ID}_${STAMP}.log"
-  TEMPLATE_ID="yellow_panther_agency"
+  TEMPLATE_ID="tier_2_club_mixed_procurement"
   if [[ "$ENTITY_TYPE" == "FEDERATION" ]]; then
     TEMPLATE_ID="federation_governing_body"
   fi

@@ -58,8 +58,9 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 
-DEFAULT_DISCOVERY_TEMPLATE_ID = "yellow_panther_agency"
+DEFAULT_DISCOVERY_TEMPLATE_ID = "tier_2_club_mixed_procurement"
 FEDERATION_DISCOVERY_TEMPLATE_ID = "federation_governing_body"
+AGENCY_DISCOVERY_TEMPLATE_ID = "yellow_panther_agency"
 
 TEMPLATE_RUNTIME_OVERRIDES: Dict[str, Dict[str, Any]] = {
     "yellow_panther_agency": {
@@ -151,6 +152,13 @@ def _default_template_id_for_entity_type(entity_type: Optional[str]) -> str:
     normalized = str(entity_type or "").upper()
     if "FEDERATION" in normalized or "GOVERN" in normalized:
         return FEDERATION_DISCOVERY_TEMPLATE_ID
+    if (
+        "AGENCY" in normalized
+        or "SERVICE" in normalized
+        or "CONSULT" in normalized
+        or "VENDOR" in normalized
+    ):
+        return AGENCY_DISCOVERY_TEMPLATE_ID
     return DEFAULT_DISCOVERY_TEMPLATE_ID
 
 

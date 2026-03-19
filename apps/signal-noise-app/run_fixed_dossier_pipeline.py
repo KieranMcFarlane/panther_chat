@@ -188,7 +188,7 @@ class FixedDossierFirstPipeline:
         entity_type: str = "CLUB",
         tier_score: int = 50,
         max_discovery_iterations: int = 15,
-        template_id: str = "yellow_panther_agency"
+        template_id: Optional[str] = None
     ) -> Dict[str, Any]:
         """Run the complete 4-phase dossier-first pipeline"""
         self._last_discovery_error_class = None
@@ -1181,14 +1181,15 @@ async def main():
     parser.add_argument("--entity-type", default="CLUB")
     parser.add_argument("--tier-score", type=int, default=75)
     parser.add_argument("--max-discovery-iterations", type=int, default=None)
-    parser.add_argument("--template-id", default="yellow_panther_agency")
+    parser.add_argument("--template-id", default="")
     args = parser.parse_args()
 
     from backend.hypothesis_driven_discovery import (
         get_template_recommended_hop_cap,
         resolve_template_id,
     )
-    resolved_template_id = resolve_template_id(args.template_id, args.entity_type)
+    requested_template_id = (args.template_id or "").strip() or None
+    resolved_template_id = resolve_template_id(requested_template_id, args.entity_type)
     if args.max_discovery_iterations is None:
         resolved_max_iterations = get_template_recommended_hop_cap(resolved_template_id, fallback=5)
     else:
