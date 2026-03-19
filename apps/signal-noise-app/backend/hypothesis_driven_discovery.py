@@ -61,6 +61,79 @@ logger = logging.getLogger(__name__)
 DEFAULT_DISCOVERY_TEMPLATE_ID = "yellow_panther_agency"
 FEDERATION_DISCOVERY_TEMPLATE_ID = "federation_governing_body"
 
+TEMPLATE_RUNTIME_OVERRIDES: Dict[str, Dict[str, Any]] = {
+    "yellow_panther_agency": {
+        "recommended_hop_cap": 3,
+        "targeted_query_limit": 5,
+        "targeted_results_per_query": 3,
+        "hop_bias": {
+            "official_site": 0.15,
+            "press_release": 0.20,
+            "rfp_page": 0.10,
+        },
+    },
+    "tier_1_club_centralized_procurement": {
+        "recommended_hop_cap": 3,
+        "targeted_query_limit": 6,
+        "targeted_results_per_query": 4,
+        "hop_bias": {
+            "official_site": 0.10,
+            "press_release": 0.15,
+            "rfp_page": 0.25,
+            "tenders_page": 0.25,
+            "procurement_page": 0.20,
+        },
+    },
+    "tier_2_club_mixed_procurement": {
+        "recommended_hop_cap": 3,
+        "targeted_query_limit": 5,
+        "targeted_results_per_query": 3,
+        "hop_bias": {
+            "official_site": 0.10,
+            "press_release": 0.15,
+            "rfp_page": 0.18,
+            "tenders_page": 0.18,
+            "procurement_page": 0.12,
+        },
+    },
+    "federation_governing_body": {
+        "recommended_hop_cap": 1,
+        "targeted_query_limit": 4,
+        "targeted_results_per_query": 3,
+        "hop_bias": {
+            "official_site": 0.45,
+            "press_release": 0.20,
+            "rfp_page": -0.50,
+            "tenders_page": -0.50,
+            "procurement_page": -0.35,
+        },
+    },
+    "federation_centralized_procurement": {
+        "recommended_hop_cap": 3,
+        "targeted_query_limit": 5,
+        "targeted_results_per_query": 3,
+        "hop_bias": {
+            "official_site": 0.30,
+            "press_release": 0.20,
+            "rfp_page": -0.20,
+            "tenders_page": -0.15,
+            "procurement_page": -0.05,
+        },
+    },
+}
+
+
+def get_template_recommended_hop_cap(template_id: Optional[str], fallback: int = 5) -> int:
+    """Return calibrated hop cap for a template with safe fallback."""
+    resolved = str(template_id or "").strip().lower()
+    if not resolved:
+        return max(1, int(fallback))
+    raw = (TEMPLATE_RUNTIME_OVERRIDES.get(resolved) or {}).get("recommended_hop_cap")
+    try:
+        return max(1, int(raw))
+    except (TypeError, ValueError):
+        return max(1, int(fallback))
+
 
 def _load_backend_attr(module_name: str, attr_name: str, default: Any = None):
     """Load backend modules whether imported as a package or from the backend cwd."""
@@ -95,6 +168,11 @@ rank_official_site_candidates = _load_backend_attr(
     "official_site_resolver",
     "rank_official_site_candidates",
     lambda entity_name, candidates, max_candidates=10: list(candidates[:max_candidates]),
+)
+DiscoveryUrlPolicy = _load_backend_attr(
+    "discovery_url_policy",
+    "DiscoveryUrlPolicy",
+    None,
 )
 
 
@@ -673,6 +751,8 @@ class HypothesisDrivenDiscovery:
         self._official_site_content_cache: Dict[str, Dict[str, Any]] = {}
         self._official_site_evaluation_cache: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
         self._resolved_url_context: Dict[str, Dict[str, str]] = {}
+        self.url_policy = DiscoveryUrlPolicy() if DiscoveryUrlPolicy else None
+        self._last_url_policy_reject_reason: Optional[str] = None
         self._official_site_url_cache = self._load_official_site_url_cache()
         self._official_site_domain_map = self._load_official_site_domain_map()
         self._official_site_resolution_failures: Dict[str, float] = {}
@@ -2077,6 +2157,24 @@ class HypothesisDrivenDiscovery:
             return -1.1 if first_hop else (-0.55 if early_stage else -0.15)
         return 0.0
 
+    def _get_template_runtime_overrides(self) -> Dict[str, Any]:
+        template_id = str(getattr(self, "current_template_id", "") or "").strip().lower()
+        if not template_id:
+            return {}
+        return TEMPLATE_RUNTIME_OVERRIDES.get(template_id, {})
+
+    def _apply_template_hop_bias(self, hop_type: HopType, depth: int) -> float:
+        del depth
+        overrides = self._get_template_runtime_overrides()
+        hop_bias = overrides.get("hop_bias") if isinstance(overrides, dict) else None
+        if not isinstance(hop_bias, dict):
+            return 0.0
+        key = hop_type.value if hasattr(hop_type, "value") else str(hop_type)
+        try:
+            return float(hop_bias.get(key, 0.0) or 0.0)
+        except Exception:
+            return 0.0
+
     async def _get_cached_search(self, query: str, engine: str) -> Optional[Dict[str, Any]]:
         """Get cached search result if available and not expired"""
         cache_key = f"{engine}:{query}"
@@ -2144,6 +2242,7 @@ class HypothesisDrivenDiscovery:
             max_cost_usd = self.max_cost_per_entity
 
         template_id = resolve_template_id(template_id, getattr(self, "current_entity_type", None))
+        self.current_template_id = template_id
         # Entity runs must not inherit official-site context from prior entities.
         self.current_official_site_url = None
         self._resolved_url_context = {}
@@ -2405,6 +2504,7 @@ class HypothesisDrivenDiscovery:
                 base_eig=base_eig
             )
             score += self._apply_entity_type_hop_bias(hop_type, getattr(state, "current_depth", 1))
+            score += self._apply_template_hop_bias(hop_type, getattr(state, "current_depth", 1))
             hop_scores[hop_type] = score
 
         # Select highest scoring hop
@@ -3550,6 +3650,7 @@ class HypothesisDrivenDiscovery:
             'fallback_queries_tried': 0,
             'site_specific_attempted': False,
             'search_diagnostics': [],
+            'url_policy_reject_counts': {},
         }
         self._last_url_candidates = []
         recent_url_attempts = self._collect_recent_hop_url_attempts(state, hop_type)
@@ -3638,6 +3739,7 @@ class HypothesisDrivenDiscovery:
                             title=item.get('title', ''),
                             snippet=item.get('snippet', ''),
                         ):
+                            self._record_url_policy_reject(metrics, url)
                             continue
                         score = self._score_url(
                             url,
@@ -3656,6 +3758,23 @@ class HypothesisDrivenDiscovery:
                     # Second pass: Claude validation if we have multiple candidates
                     if len(scored_results) > 1 and self.search_validator:
                         scored_results = self._rank_urls_with_diversity(scored_results, recent_url_attempts)
+                        # Diversity ranking can prune repeated URLs and leave a single
+                        # high-quality candidate; handle that deterministically.
+                        if len(scored_results) == 1:
+                            best_url = scored_results[0].get('url')
+                            self._last_url_candidates = [best_url] if best_url else []
+                            best_score = scored_results[0].get('_selection_score', scored_results[0].get('_url_score', 0))
+                            logger.info(
+                                f"✅ {engine} search selected single diverse URL without validation "
+                                f"(score {best_score}): {best_url}"
+                            )
+                            metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
+                            self._last_url_resolution_metrics = {
+                                **metrics,
+                                'search_calls_ms': round(metrics['search_calls_ms'], 2),
+                                'validation_ms': round(metrics['validation_ms'], 2)
+                            }
+                            return best_url
                         top_score = scored_results[0].get('_selection_score', scored_results[0].get('_url_score', 0))
                         second_score = scored_results[1].get('_selection_score', scored_results[1].get('_url_score', 0))
 
@@ -3769,6 +3888,7 @@ class HypothesisDrivenDiscovery:
                             title=item.get('title', ''),
                             snippet=item.get('snippet', ''),
                         ):
+                            self._record_url_policy_reject(metrics, candidate_url)
                             continue
                         score = self._score_url(
                             candidate_url,
@@ -3882,6 +4002,7 @@ class HypothesisDrivenDiscovery:
                             title=result_item.get('title', ''),
                             snippet=result_item.get('snippet', ''),
                         ):
+                            self._record_url_policy_reject(metrics, candidate_url)
                             continue
                         repeat_hits = recent_url_attempts.get(
                             self._normalize_url_cooldown_key(candidate_url),
@@ -3935,6 +4056,20 @@ class HypothesisDrivenDiscovery:
         host = (parsed.netloc or "").lower().lstrip("www.")
         path = (parsed.path or "/").rstrip("/") or "/"
         return f"{host}{path}"
+
+    def _record_url_policy_reject(self, metrics: Dict[str, Any], url: str) -> None:
+        reason = str(getattr(self, "_last_url_policy_reject_reason", "") or "unspecified")
+        reject_counts = metrics.setdefault("url_policy_reject_counts", {})
+        reject_counts[reason] = int(reject_counts.get(reason, 0) or 0) + 1
+        diagnostics = metrics.setdefault("search_diagnostics", [])
+        diagnostics.append(
+            {
+                "stage": "candidate_filter",
+                "status": "rejected",
+                "url": url,
+                "reason": reason,
+            }
+        )
 
     @staticmethod
     def _extract_url_host(url: str) -> str:
@@ -5136,10 +5271,12 @@ class HypothesisDrivenDiscovery:
         """Filter out off-entity URLs before expensive scrape/evaluation."""
         from urllib.parse import urlparse
 
+        self._last_url_policy_reject_reason = None
         parsed = urlparse(str(url or "").strip())
         host = (parsed.netloc or "").lower()
         path = (parsed.path or "").lower()
         if not host:
+            self._last_url_policy_reject_reason = "missing_host"
             return False
 
         blocked_domains = {
@@ -5148,6 +5285,7 @@ class HypothesisDrivenDiscovery:
             "newsnow.com",
         }
         if any(domain in host for domain in blocked_domains):
+            self._last_url_policy_reject_reason = "blocked_domain"
             return False
 
         strict_hops = {
@@ -5161,6 +5299,23 @@ class HypothesisDrivenDiscovery:
         if hop_type not in strict_hops:
             return True
 
+        url_policy = getattr(self, "url_policy", None)
+        if url_policy is not None and hasattr(url_policy, "evaluate"):
+            try:
+                policy_decision = url_policy.evaluate(
+                    url=url,
+                    hop_type=hop_type,
+                    entity_name=entity_name,
+                    title=title,
+                    snippet=snippet,
+                )
+                if not getattr(policy_decision, "allow", True):
+                    self._last_url_policy_reject_reason = str(getattr(policy_decision, "reason", "url_policy_reject"))
+                    return False
+            except Exception:
+                # Keep discovery resilient even if policy raises unexpectedly.
+                pass
+
         official_site_url = self._normalize_http_url(getattr(self, "current_official_site_url", None))
         if not official_site_url:
             official_site_url = self._get_cached_official_site_url(entity_name)
@@ -5172,9 +5327,11 @@ class HypothesisDrivenDiscovery:
         # Canonical official-site discovery should stay on known official host once known.
         if hop_type == HopType.OFFICIAL_SITE and official_host:
             if not (host_norm == official_host or host_norm.endswith(f".{official_host}")):
+                self._last_url_policy_reject_reason = "official_host_mismatch"
                 return False
             legal_path_tokens = ("/privacy", "/terms", "/cookie", "/cookies", "/policy", "/legal")
             if any(token in path for token in legal_path_tokens):
+                self._last_url_policy_reject_reason = "official_legal_path"
                 return False
             return True
 
@@ -5193,6 +5350,7 @@ class HypothesisDrivenDiscovery:
         }
         if hop_type == HopType.CAREERS_PAGE and official_host:
             if any(marker in host for marker in job_aggregator_domains):
+                self._last_url_policy_reject_reason = "job_aggregator_domain"
                 return False
 
         haystack = " ".join([host, path, str(title or "").lower(), str(snippet or "").lower()])
@@ -5208,6 +5366,7 @@ class HypothesisDrivenDiscovery:
             if host_norm == official_host or host_norm.endswith(f".{official_host}"):
                 return True
 
+        self._last_url_policy_reject_reason = "entity_grounding_miss"
         return False
 
     async def _query_evaluator_model(
@@ -6080,8 +6239,16 @@ Return JSON:
             updated_hypothesis.last_delta = updated_hypothesis.confidence - old_confidence
             updated_hypothesis.last_updated = datetime.now(timezone.utc)
 
-        # Update state confidence
-        state.update_confidence(updated_hypothesis.confidence)
+        # Update global confidence additively by hop delta so switching hypotheses
+        # does not reset entity confidence back to a lower baseline.
+        try:
+            confidence_delta = float(result.get("confidence_delta", 0.0) or 0.0)
+        except Exception:
+            confidence_delta = 0.0
+        baseline_confidence = float(
+            getattr(state, "current_confidence", getattr(updated_hypothesis, "confidence", 0.0)) or 0.0
+        )
+        state.update_confidence(baseline_confidence + confidence_delta)
         state.iterations_completed += 1
 
         # Track channel failure/success for MCP-guided hop selection
@@ -6128,7 +6295,7 @@ Return JSON:
         # Create Signal object for Ralph Loop validation (bridge Step 2 → Step 3)
         signal = self._create_signal_from_hop_result(
             result=result,
-            hypothesis=hypothesis,
+            hypothesis=updated_hypothesis,
             entity_id=state.entity_id,
             entity_name=state.entity_name
         )
@@ -6956,11 +7123,25 @@ Return JSON:
 
         logger.info(f"📋 Initializing {len(dossier_hypotheses)} hypotheses from dossier")
 
-        for hyp_dict in dossier_hypotheses:
+        seen_hypothesis_ids: set[str] = set()
+        cache_bucket = self._dossier_hypotheses_cache.setdefault(entity_id, []) if hasattr(self, "_dossier_hypotheses_cache") else []
+        if not hasattr(self, "_dossier_hypotheses_cache"):
+            self._dossier_hypotheses_cache = {entity_id: cache_bucket}
+
+        manager_cache = None
+        if getattr(self, "hypothesis_manager", None) is not None and hasattr(self.hypothesis_manager, "_hypotheses_cache"):
+            manager_cache = self.hypothesis_manager._hypotheses_cache.setdefault(entity_id, [])
+            seen_hypothesis_ids.update(h.hypothesis_id for h in manager_cache)
+
+        seen_hypothesis_ids.update(h.hypothesis_id for h in cache_bucket)
+
+        for idx, hyp_dict in enumerate(dossier_hypotheses):
             try:
                 # Map signal type to category
                 signal_type = hyp_dict.get('signal_type', '')
                 category = self._map_signal_to_category(signal_type)
+                statement = str(hyp_dict.get('statement') or '').strip()
+                pattern_name = str(hyp_dict.get('pattern') or 'dossier_pattern').strip() or 'dossier_pattern'
 
                 # Enhanced metadata with YP info if available
                 metadata = {
@@ -6968,7 +7149,7 @@ Return JSON:
                     'dossier_confidence': hyp_dict.get('confidence', 0.50),
                     'original_category': hyp_dict.get('category', 'unknown'),
                     'signal_type': signal_type,
-                    'pattern_name': hyp_dict.get('pattern', 'dossier_pattern')
+                    'pattern_name': pattern_name
                 }
 
                 # Add YP metadata if present
@@ -6981,11 +7162,23 @@ Return JSON:
                 if 'next_signals' in hyp_dict:
                     metadata['next_signals'] = hyp_dict['next_signals']
 
+                # Ensure unique hypothesis IDs so manager updates target the correct object.
+                statement_slug = re.sub(r'[^a-z0-9]+', '_', statement.lower()).strip('_')[:36]
+                if not statement_slug:
+                    statement_slug = re.sub(r'[^a-z0-9]+', '_', pattern_name.lower()).strip('_')[:36] or f"seed_{idx + 1}"
+                base_hypothesis_id = f"{entity_id}_{category}_{statement_slug}"
+                hypothesis_id = base_hypothesis_id
+                suffix = 2
+                while hypothesis_id in seen_hypothesis_ids:
+                    hypothesis_id = f"{base_hypothesis_id}_{suffix}"
+                    suffix += 1
+                seen_hypothesis_ids.add(hypothesis_id)
+
                 # Create Hypothesis object
                 hypothesis = Hypothesis(
-                    hypothesis_id=f"{entity_id}_{category}_{hyp_dict.get('category', 'unknown')}",
+                    hypothesis_id=hypothesis_id,
                     entity_id=entity_id,
-                    statement=hyp_dict.get('statement', ''),
+                    statement=statement,
                     category=category,
                     prior_probability=hyp_dict.get('confidence', 0.50),
                     confidence=hyp_dict.get('confidence', 0.50),
@@ -6994,11 +7187,9 @@ Return JSON:
                 )
 
                 # Store in instance cache for retrieval
-                if not hasattr(self, '_dossier_hypotheses_cache'):
-                    self._dossier_hypotheses_cache = {}
-                if entity_id not in self._dossier_hypotheses_cache:
-                    self._dossier_hypotheses_cache[entity_id] = []
-                self._dossier_hypotheses_cache[entity_id].append(hypothesis)
+                cache_bucket.append(hypothesis)
+                if manager_cache is not None:
+                    manager_cache.append(hypothesis)
 
                 added_count += 1
 
@@ -7116,6 +7307,7 @@ Return JSON:
         entity_id: str,
         entity_name: str,
         dossier: Dict[str, Any],
+        template_id: Optional[str] = None,
         entity_type: Optional[str] = None,
         max_iterations: int = 30,
         progress_callback: Optional[Callable[[Dict[str, Any]], Awaitable[None]]] = None,
@@ -7138,6 +7330,11 @@ Return JSON:
             DiscoveryResult with enhanced dossier context
         """
         logger.info(f"📋 Running dossier-context discovery for {entity_name}")
+        resolved_template_id = resolve_template_id(
+            template_id or dossier.get("metadata", {}).get("template_id"),
+            entity_type or dossier.get("metadata", {}).get("entity_type") or getattr(self, "current_entity_type", None),
+        )
+        self.current_template_id = resolved_template_id
         resolved_entity_type = entity_type or dossier.get('metadata', {}).get('entity_type') or getattr(self, "current_entity_type", None)
         if resolved_entity_type:
             self.current_entity_type = resolved_entity_type
@@ -7213,17 +7410,26 @@ Return JSON:
             query = f'"{entity_name}" {signal.get("text", "")} platform'
             targeted_queries.append(query)
 
-        logger.info(f"🔍 Generated {len(targeted_queries)} targeted search queries")
+        runtime_overrides = self._get_template_runtime_overrides()
+        targeted_query_limit = int(runtime_overrides.get("targeted_query_limit", 5) or 5)
+        targeted_results_per_query = int(runtime_overrides.get("targeted_results_per_query", 3) or 3)
+        logger.info(
+            "🔍 Generated %s targeted search queries (template=%s, limit=%s, results_per_query=%s)",
+            len(targeted_queries),
+            resolved_template_id,
+            targeted_query_limit,
+            targeted_results_per_query,
+        )
 
         # Use BrightData SDK to search for specific opportunities
         search_results = []
 
-        for query in targeted_queries[:5]:  # Limit to 5 searches to control cost
+        for query in targeted_queries[:targeted_query_limit]:
             try:
                 result = await self.brightdata_client.search_engine(
                     query=query,
                     engine='google',
-                    num_results=3
+                    num_results=targeted_results_per_query
                 )
 
                 if result.get('status') == 'success':
@@ -7265,7 +7471,7 @@ Return JSON:
                 "entity_id": entity_id,
                 "entity_name": entity_name,
                 "template_id": resolve_template_id(
-                    dossier.get('metadata', {}).get('template_id'),
+                    resolved_template_id,
                     resolved_entity_type,
                 ),
                 "max_iterations": max_iterations,
@@ -7281,6 +7487,7 @@ Return JSON:
             return await self.run_discovery(**fallback_kwargs)
 
         state.active_hypotheses = active_hypotheses
+        self._seed_state_confidence_from_hypotheses(state, active_hypotheses)
 
         # Run standard discovery loop with dossier-enhanced hypotheses
         result = await self._run_discovery_loop(
@@ -7303,6 +7510,29 @@ Return JSON:
 
         logger.info(f"✅ Dossier-context discovery complete: {result.final_confidence:.2f} confidence")
         return result
+
+    def _seed_state_confidence_from_hypotheses(self, state, hypotheses: List[Any]) -> None:
+        """Initialize global confidence from hypothesis priors for dossier-context runs."""
+        if not hypotheses:
+            return
+        prior_values: List[float] = []
+        for hypothesis in hypotheses:
+            for key in ("confidence", "prior_probability"):
+                value = getattr(hypothesis, key, None)
+                try:
+                    if value is not None:
+                        prior_values.append(float(value))
+                        break
+                except Exception:
+                    continue
+        if not prior_values:
+            return
+        baseline = max(prior_values)
+        current = float(getattr(state, "current_confidence", 0.0) or 0.0)
+        if baseline <= current:
+            return
+        state.update_confidence(baseline)
+        logger.info("📈 Seeded state confidence from dossier priors: %.2f", float(getattr(state, "current_confidence", baseline) or baseline))
 
     async def _run_discovery_loop(
         self,

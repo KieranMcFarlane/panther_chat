@@ -22,7 +22,7 @@ import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 # Add backend to path
 sys.path.insert(0, str(Path(__file__).parent))
@@ -43,6 +43,14 @@ class FixedDossierFirstPipeline:
     """Fixed pipeline using EntityDossierGenerator"""
 
     def __init__(self):
+        self._runtime_import_guard = self._validate_runtime_imports()
+        self._last_discovery_error_class: str | None = None
+        self._last_discovery_error_message: str | None = None
+        self._last_shadow_discovery_payload: Dict[str, Any] | None = None
+        self._last_template_id: str | None = None
+        self._last_max_iterations: int | None = None
+        self._shadow_client = None
+        self._shadow_discovery = None
         from backend.claude_client import ClaudeClient
         from backend.brightdata_sdk_client import BrightDataSDKClient
         from backend.dossier_generator import EntityDossierGenerator
@@ -74,6 +82,33 @@ class FixedDossierFirstPipeline:
         self._use_canonical_orchestrator = _bool_env(
             os.getenv("PIPELINE_USE_CANONICAL_ORCHESTRATOR", "true")
         )
+        self.shadow_unbounded_enabled = _bool_env(
+            os.getenv("PIPELINE_SHADOW_UNBOUNDED_ENABLED", "false")
+        )
+        self.shadow_unbounded_parallel = _bool_env(
+            os.getenv("PIPELINE_SHADOW_UNBOUNDED_PARALLEL", "true")
+        )
+        self.shadow_unbounded_multiplier = max(
+            1.0,
+            float(os.getenv("PIPELINE_SHADOW_UNBOUNDED_ITERATION_MULTIPLIER", "3.0")),
+        )
+        self.shadow_unbounded_floor = max(
+            1,
+            int(os.getenv("PIPELINE_SHADOW_UNBOUNDED_MIN_ITERATIONS", "12")),
+        )
+
+        if _bool_env(os.getenv("PIPELINE_FORCE_BRIGHTDATA", "false")):
+            os.environ["BRIGHTDATA_FORCE_ONLY"] = "true"
+            os.environ.setdefault("BRIGHTDATA_GENEROUS_RETRY", "true")
+            os.environ.setdefault("BRIGHTDATA_SEARCH_MAX_ATTEMPTS", "5")
+            os.environ.setdefault("BRIGHTDATA_SCRAPE_MAX_ATTEMPTS", "5")
+            os.environ.setdefault("BRIGHTDATA_REQUEST_MAX_ATTEMPTS", "5")
+            logger.info("🔒 PIPELINE_FORCE_BRIGHTDATA enabled (BrightData-only + generous retries)")
+
+        # Shadow mode currently runs via fixed runner path, not canonical orchestrator.
+        if self.shadow_unbounded_enabled and self._use_canonical_orchestrator:
+            self._use_canonical_orchestrator = False
+            logger.info("🧪 PIPELINE_SHADOW_UNBOUNDED_ENABLED: using fixed runner (canonical orchestrator bypassed)")
 
         class _IdentityRalphValidator:
             async def validate_signals(self, raw_signals, _entity_id):
@@ -105,14 +140,46 @@ class FixedDossierFirstPipeline:
 
         logger.info("✅ Pipeline initialized")
 
+    @staticmethod
+    def _validate_runtime_imports() -> Dict[str, Any]:
+        """
+        Verify critical modules can be imported in current execution context.
+        Produces a single actionable failure class for run reports.
+        """
+        try:
+            from backend.pipeline_run_metadata import validate_runtime_imports
+        except ImportError:
+            from pipeline_run_metadata import validate_runtime_imports
+
+        payload = validate_runtime_imports()
+        missing = payload.get("missing") or []
+        if missing:
+            logger.warning(
+                "⚠️ Runtime import guard failed (%s). Canonical mode is PYTHONPATH=backend python3 run_fixed_dossier_pipeline.py",
+                ", ".join(missing),
+            )
+        return payload
+
     async def close(self) -> None:
         """Close pipeline-owned clients."""
+        claude_close_fn = getattr(self.claude, "close", None)
+        if callable(claude_close_fn):
+            try:
+                await claude_close_fn()
+            except Exception as close_error:  # noqa: BLE001
+                logger.warning("⚠️ Failed to close Claude client: %s", close_error)
         close_fn = getattr(self.brightdata, "close", None)
         if callable(close_fn):
             try:
                 await close_fn()
             except Exception as close_error:  # noqa: BLE001
                 logger.warning("⚠️ Failed to close BrightData client: %s", close_error)
+        shadow_close_fn = getattr(getattr(self, "_shadow_client", None), "close", None)
+        if callable(shadow_close_fn):
+            try:
+                await shadow_close_fn()
+            except Exception as close_error:  # noqa: BLE001
+                logger.warning("⚠️ Failed to close shadow BrightData client: %s", close_error)
 
     async def run_pipeline(
         self,
@@ -124,6 +191,8 @@ class FixedDossierFirstPipeline:
         template_id: str = "yellow_panther_agency"
     ) -> Dict[str, Any]:
         """Run the complete 4-phase dossier-first pipeline"""
+        self._last_discovery_error_class = None
+        self._last_discovery_error_message = None
         if getattr(self, "_use_canonical_orchestrator", False) and getattr(self, "orchestrator", None) is not None:
             return await self._run_pipeline_via_orchestrator(
                 entity_id=entity_id,
@@ -246,6 +315,7 @@ class FixedDossierFirstPipeline:
             entity_name=entity_name,
             dossier=dossier.to_dict() if hasattr(dossier, "to_dict") else dossier,
             discovery=discovery_payload,
+            shadow_discovery=self._last_shadow_discovery_payload,
             scores=dashboard_scores,
             phase_timings=phase_timings_seconds,
             artifacts=saved_paths,
@@ -274,6 +344,8 @@ class FixedDossierFirstPipeline:
         entity_type: str,
         tier_score: int,
     ) -> Dict[str, Any]:
+        self._last_discovery_error_class = None
+        self._last_discovery_error_message = None
         started_at = datetime.now(timezone.utc)
         phase_timings_seconds: Dict[str, float] = {}
         phase_started_at: Dict[str, float] = {}
@@ -321,6 +393,7 @@ class FixedDossierFirstPipeline:
             entity_name=entity_name,
             dossier=dossier,
             discovery=discovery,
+            shadow_discovery=None,
             scores=scores,
             phase_timings=phase_timings_seconds,
             phases=orchestrated.get("phases", {}) if isinstance(orchestrated, dict) else {},
@@ -459,7 +532,9 @@ class FixedDossierFirstPipeline:
         entity_type: str | None = None,
     ):
         """Phase 2: Run discovery with dossier context"""
-
+        self._last_shadow_discovery_payload = None
+        self._last_template_id = template_id
+        self._last_max_iterations = max_iterations
         logger.info(f"🔍 Running discovery (max {max_iterations} iterations, template: {template_id})")
 
         # Try with dossier context first, fall back to standard discovery
@@ -504,8 +579,80 @@ class FixedDossierFirstPipeline:
             if entity_type and (supports_kwargs or "entity_type" in context_signature.parameters):
                 context_kwargs["entity_type"] = entity_type
 
-            result = await context_method(**context_kwargs)
+            shadow_iterations = max(
+                self.shadow_unbounded_floor,
+                int(round(float(max_iterations) * self.shadow_unbounded_multiplier)),
+            )
+            shadow_kwargs = dict(context_kwargs)
+            shadow_kwargs["max_iterations"] = shadow_iterations
+            shadow_lane_enabled = bool(self.shadow_unbounded_enabled)
+
+            if shadow_lane_enabled:
+                logger.info(
+                    "🧪 Shadow unbounded lane enabled (iterations=%s, parallel=%s)",
+                    shadow_iterations,
+                    self.shadow_unbounded_parallel,
+                )
+
+            if shadow_lane_enabled and self.shadow_unbounded_parallel:
+                shadow_discovery = self._ensure_shadow_discovery()
+                shadow_context_method = shadow_discovery.run_discovery_with_dossier_context
+                shadow_signature = inspect.signature(shadow_context_method)
+                shadow_supports_kwargs = any(
+                    param.kind == inspect.Parameter.VAR_KEYWORD
+                    for param in shadow_signature.parameters.values()
+                )
+                if not (shadow_supports_kwargs or "template_id" in shadow_signature.parameters):
+                    shadow_kwargs.pop("template_id", None)
+                if not (shadow_supports_kwargs or "entity_type" in shadow_signature.parameters):
+                    shadow_kwargs.pop("entity_type", None)
+
+                primary_task = asyncio.create_task(context_method(**context_kwargs))
+                shadow_task = asyncio.create_task(shadow_context_method(**shadow_kwargs))
+                primary_result, shadow_result = await asyncio.gather(primary_task, shadow_task, return_exceptions=True)
+
+                if isinstance(primary_result, Exception):
+                    raise primary_result
+                result = primary_result
+
+                if isinstance(shadow_result, Exception):
+                    logger.warning("⚠️ Shadow unbounded lane failed: %s", shadow_result)
+                    self._last_shadow_discovery_payload = {"error": str(shadow_result)}
+                else:
+                    shadow_payload = (
+                        shadow_result.to_dict()
+                        if hasattr(shadow_result, "to_dict")
+                        else shadow_result
+                    )
+                    self._last_shadow_discovery_payload = shadow_payload if isinstance(shadow_payload, dict) else {}
+            else:
+                result = await context_method(**context_kwargs)
+                if shadow_lane_enabled:
+                    shadow_discovery = self._ensure_shadow_discovery()
+                    shadow_context_method = shadow_discovery.run_discovery_with_dossier_context
+                    shadow_signature = inspect.signature(shadow_context_method)
+                    shadow_supports_kwargs = any(
+                        param.kind == inspect.Parameter.VAR_KEYWORD
+                        for param in shadow_signature.parameters.values()
+                    )
+                    if not (shadow_supports_kwargs or "template_id" in shadow_signature.parameters):
+                        shadow_kwargs.pop("template_id", None)
+                    if not (shadow_supports_kwargs or "entity_type" in shadow_signature.parameters):
+                        shadow_kwargs.pop("entity_type", None)
+                    shadow_result = await shadow_context_method(**shadow_kwargs)
+                    shadow_payload = (
+                        shadow_result.to_dict()
+                        if hasattr(shadow_result, "to_dict")
+                        else shadow_result
+                    )
+                    self._last_shadow_discovery_payload = shadow_payload if isinstance(shadow_payload, dict) else {}
         except Exception as e:
+            self._last_discovery_error_message = str(e)
+            self._last_discovery_error_class = (
+                "import_context_failure"
+                if isinstance(e, ModuleNotFoundError) or "No module named" in str(e)
+                else "discovery_runtime_failure"
+            )
             logger.warning(f"⚠️ Dossier-context discovery failed: {e}")
             logger.info("🔄 Falling back to standard discovery...")
 
@@ -520,6 +667,12 @@ class FixedDossierFirstPipeline:
                     max_iterations=max_iterations
                 )
             except Exception as e2:
+                self._last_discovery_error_message = str(e2)
+                self._last_discovery_error_class = (
+                    "import_context_failure"
+                    if isinstance(e2, ModuleNotFoundError) or "No module named" in str(e2)
+                    else "discovery_runtime_failure"
+                )
                 logger.warning(f"⚠️ Standard discovery also failed: {e2}")
                 # Create minimal discovery result
                 from backend.hypothesis_driven_discovery import DiscoveryResult
@@ -536,12 +689,31 @@ class FixedDossierFirstPipeline:
                     signals_discovered=[]
                 )
 
+        if self._last_shadow_discovery_payload:
+            shadow_conf = float(self._last_shadow_discovery_payload.get("final_confidence") or 0.0)
+            shadow_signals = self._last_shadow_discovery_payload.get("signals_discovered") or []
+            logger.info(
+                "🧪 Shadow lane summary: confidence=%.3f signals=%s",
+                shadow_conf,
+                len(shadow_signals) if isinstance(shadow_signals, list) else 0,
+            )
+
         logger.info(f"✅ Discovery complete:")
         logger.info(f"   - Final confidence: {result.final_confidence:.3f}")
         logger.info(f"   - Iterations: {result.iterations_completed}")
         logger.info(f"   - Signals: {len(result.signals_discovered)}")
 
         return result
+
+    def _ensure_shadow_discovery(self):
+        if self._shadow_discovery is not None:
+            return self._shadow_discovery
+        from backend.brightdata_sdk_client import BrightDataSDKClient
+        from backend.hypothesis_driven_discovery import HypothesisDrivenDiscovery
+
+        self._shadow_client = BrightDataSDKClient()
+        self._shadow_discovery = HypothesisDrivenDiscovery(self.claude, self._shadow_client)
+        return self._shadow_discovery
 
     async def _run_schema_first_prepass(
         self,
@@ -721,10 +893,82 @@ class FixedDossierFirstPipeline:
         with open(scores_path, 'w') as f:
             json.dump(dashboard_scores, f, indent=2, default=str)
         logger.info(f"💾 Scores saved: {scores_path}")
-        return {
+        artifacts = {
             "dossier_path": str(dossier_path),
             "discovery_path": str(discovery_path),
             "scores_path": str(scores_path),
+        }
+
+        hop_trace_payload = self._build_hop_trace_payload(
+            entity_id=entity_id,
+            entity_name=entity_name,
+            primary_discovery=discovery_data,
+            shadow_discovery=self._last_shadow_discovery_payload,
+        )
+        if hop_trace_payload:
+            hop_trace_path = self.output_dir / f"{entity_id}_hop_trace_{timestamp}.json"
+            with open(hop_trace_path, "w") as trace_file:
+                json.dump(hop_trace_payload, trace_file, indent=2, default=str)
+            logger.info(f"💾 Hop trace saved: {hop_trace_path}")
+            artifacts["hop_trace_path"] = str(hop_trace_path)
+        return artifacts
+
+    def _build_hop_trace_payload(
+        self,
+        *,
+        entity_id: str,
+        entity_name: str,
+        primary_discovery: Dict[str, Any],
+        shadow_discovery: Optional[Dict[str, Any]],
+    ) -> Dict[str, Any]:
+        primary_perf = primary_discovery.get("performance_summary")
+        if not isinstance(primary_perf, dict):
+            primary_perf = {}
+        primary_hops = primary_perf.get("hop_timings")
+        if not isinstance(primary_hops, list):
+            primary_hops = []
+
+        shadow_perf = shadow_discovery.get("performance_summary") if isinstance(shadow_discovery, dict) else {}
+        if not isinstance(shadow_perf, dict):
+            shadow_perf = {}
+        shadow_hops = shadow_perf.get("hop_timings")
+        if not isinstance(shadow_hops, list):
+            shadow_hops = []
+
+        if not primary_hops and not shadow_hops:
+            return {}
+
+        def _lane_summary(payload: Dict[str, Any], hops: list[Dict[str, Any]]) -> Dict[str, Any]:
+            signals = payload.get("signals_discovered")
+            return {
+                "final_confidence": float(payload.get("final_confidence") or 0.0),
+                "iterations_completed": int(payload.get("iterations_completed") or 0),
+                "signals_discovered": len(signals) if isinstance(signals, list) else 0,
+                "run_profile": payload.get("run_profile"),
+                "parse_path": payload.get("parse_path"),
+                "llm_last_status": payload.get("llm_last_status"),
+                "hop_count": len(hops),
+            }
+
+        return {
+            "captured_at": datetime.now(timezone.utc).isoformat(),
+            "entity_id": entity_id,
+            "entity_name": entity_name,
+            "template_id": self._last_template_id,
+            "deterministic_max_iterations": self._last_max_iterations,
+            "lanes": {
+                "deterministic": {
+                    "summary": _lane_summary(primary_discovery, primary_hops),
+                    "hop_timings": primary_hops,
+                    "official_site_resolution_traces": primary_perf.get("official_site_resolution_traces") or [],
+                },
+                "shadow_unbounded": {
+                    "enabled": bool(shadow_discovery),
+                    "summary": _lane_summary(shadow_discovery or {}, shadow_hops) if shadow_discovery else {},
+                    "hop_timings": shadow_hops,
+                    "official_site_resolution_traces": shadow_perf.get("official_site_resolution_traces") or [],
+                },
+            },
         }
 
     def _count_section_fallbacks(self, dossier: Dict[str, Any]) -> Dict[str, int]:
@@ -737,6 +981,9 @@ class FixedDossierFirstPipeline:
         for section in sections:
             if not isinstance(section, dict):
                 continue
+            status = str(section.get("output_status") or "").strip().lower()
+            reason_code = str(section.get("reason_code") or "").strip().lower()
+            fallback_flag = bool(section.get("fallback_used"))
             content_items = section.get("content")
             joined_content = " ".join(
                 item for item in content_items if isinstance(item, str)
@@ -750,6 +997,9 @@ class FixedDossierFirstPipeline:
             if confidence_value <= 0.3:
                 low_confidence += 1
             if (
+                fallback_flag
+                or status in {"completed_with_fallback", "failed"}
+                or bool(reason_code) or
                 "returned no structured content" in lowered
                 or "json repair failed" in lowered
                 or "fallback" in lowered
@@ -797,6 +1047,7 @@ class FixedDossierFirstPipeline:
         entity_name: str,
         dossier: Dict[str, Any],
         discovery: Dict[str, Any],
+        shadow_discovery: Optional[Dict[str, Any]],
         scores: Dict[str, Any],
         phase_timings: Dict[str, float],
         artifacts: Dict[str, str],
@@ -807,6 +1058,7 @@ class FixedDossierFirstPipeline:
         discovery = discovery if isinstance(discovery, dict) else {}
         dossier = dossier if isinstance(dossier, dict) else {}
         scores = scores if isinstance(scores, dict) else {}
+        shadow_discovery = shadow_discovery if isinstance(shadow_discovery, dict) else {}
         performance = discovery.get("performance_summary")
         if not isinstance(performance, dict):
             performance = {}
@@ -829,6 +1081,43 @@ class FixedDossierFirstPipeline:
             signal_count=signal_count,
             section_fallbacks=section_counters["hard_fallback_sections"],
         )
+        hop_timings = performance.get("hop_timings")
+        if not isinstance(hop_timings, list):
+            hop_timings = []
+        parse_path_candidates = [
+            str(discovery.get("parse_path") or "").strip(),
+            str(performance.get("parse_path") or "").strip(),
+        ]
+        llm_status_candidates = [
+            str(discovery.get("llm_last_status") or "").strip(),
+            str(performance.get("llm_last_status") or "").strip(),
+        ]
+        for hop in hop_timings:
+            if not isinstance(hop, dict):
+                continue
+            hop_parse_path = str(hop.get("parse_path") or "").strip()
+            hop_llm_status = str(hop.get("llm_last_status") or "").strip()
+            if hop_parse_path:
+                parse_path_candidates.append(hop_parse_path)
+            if hop_llm_status:
+                llm_status_candidates.append(hop_llm_status)
+        parse_path = next((candidate for candidate in parse_path_candidates if candidate), "")
+        llm_last_status = next((candidate for candidate in llm_status_candidates if candidate), "")
+        entity_grounding_reject_count = sum(
+            1 for hop in hop_timings
+            if isinstance(hop, dict) and str(hop.get("evidence_type") or "").strip().lower() == "entity_grounding_filter"
+        )
+        failure_taxonomy = {
+            "import_context_failure": int(
+                bool(self._runtime_import_guard.get("missing")) or self._last_discovery_error_class == "import_context_failure"
+            ),
+            "llm_empty_response": int("empty_response" in llm_last_status),
+            "schema_gate_fallback": int("schema_gate" in parse_path or "schema_gate" in llm_last_status),
+            "low_signal_content": int("low_signal" in parse_path),
+            "entity_grounding_reject": int(entity_grounding_reject_count),
+            "last_discovery_error_class": self._last_discovery_error_class,
+            "last_discovery_error_message": self._last_discovery_error_message,
+        }
         report_payload = {
             "run_at": datetime.now(timezone.utc).isoformat(),
             "entity_id": entity_id,
@@ -844,6 +1133,8 @@ class FixedDossierFirstPipeline:
                 "procurement_maturity": scores.get("procurement_maturity"),
                 "sales_readiness": scores.get("sales_readiness"),
                 "active_probability": scores.get("active_probability"),
+                "parse_path": parse_path or None,
+                "llm_last_status": llm_last_status or None,
                 "official_site": {
                     "selected_url": latest_trace.get("selected_url") if isinstance(latest_trace, dict) else None,
                     "selected_score": latest_trace.get("selected_score") if isinstance(latest_trace, dict) else None,
@@ -851,6 +1142,18 @@ class FixedDossierFirstPipeline:
                     "lane_statuses": lane_statuses,
                 },
                 "section_fallbacks": section_counters,
+                "failure_taxonomy": failure_taxonomy,
+                "shadow_unbounded": {
+                    "enabled": bool(shadow_discovery),
+                    "final_confidence": float(shadow_discovery.get("final_confidence") or 0.0) if shadow_discovery else None,
+                    "iterations_completed": int(shadow_discovery.get("iterations_completed") or 0) if shadow_discovery else None,
+                    "signals_discovered": (
+                        len(shadow_discovery.get("signals_discovered") or [])
+                        if isinstance(shadow_discovery.get("signals_discovered"), list)
+                        else 0
+                    ) if shadow_discovery else None,
+                    "run_profile": shadow_discovery.get("run_profile") if shadow_discovery else None,
+                },
             },
             "acceptance_gate": acceptance_gate,
             "artifacts": artifacts,
@@ -877,9 +1180,24 @@ async def main():
     parser.add_argument("--entity-name", default="Coventry City FC")
     parser.add_argument("--entity-type", default="CLUB")
     parser.add_argument("--tier-score", type=int, default=75)
-    parser.add_argument("--max-discovery-iterations", type=int, default=15)
+    parser.add_argument("--max-discovery-iterations", type=int, default=None)
     parser.add_argument("--template-id", default="yellow_panther_agency")
     args = parser.parse_args()
+
+    from backend.hypothesis_driven_discovery import (
+        get_template_recommended_hop_cap,
+        resolve_template_id,
+    )
+    resolved_template_id = resolve_template_id(args.template_id, args.entity_type)
+    if args.max_discovery_iterations is None:
+        resolved_max_iterations = get_template_recommended_hop_cap(resolved_template_id, fallback=5)
+    else:
+        resolved_max_iterations = max(1, int(args.max_discovery_iterations))
+    logger.info(
+        "🧭 Discovery runtime defaults: template=%s max_iterations=%s",
+        resolved_template_id,
+        resolved_max_iterations,
+    )
 
     # Verify environment
     required_vars = ['ANTHROPIC_AUTH_TOKEN', 'BRIGHTDATA_API_TOKEN']
@@ -896,8 +1214,8 @@ async def main():
             entity_name=args.entity_name,
             entity_type=args.entity_type,
             tier_score=args.tier_score,
-            max_discovery_iterations=args.max_discovery_iterations,
-            template_id=args.template_id,
+            max_discovery_iterations=resolved_max_iterations,
+            template_id=resolved_template_id,
         )
     finally:
         await pipeline.close()
