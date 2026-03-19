@@ -250,6 +250,8 @@ class FixedDossierFirstPipeline:
             entity_type,
             league_or_competition=league_context.get("league_or_competition"),
             org_type=league_context.get("org_type"),
+            entity_id=entity_id,
+            entity_name=entity_name,
         )
         logger.info(
             "🧭 Discovery template resolved from context: %s (league=%s, org_type=%s)",
@@ -1233,7 +1235,12 @@ async def main():
         resolve_template_id,
     )
     requested_template_id = (args.template_id or "").strip() or None
-    resolved_template_id = resolve_template_id(requested_template_id, args.entity_type)
+    resolved_template_id = resolve_template_id(
+        requested_template_id,
+        args.entity_type,
+        entity_id=args.entity_id,
+        entity_name=args.entity_name,
+    )
     if args.max_discovery_iterations is None:
         resolved_max_iterations = get_template_recommended_hop_cap(resolved_template_id, fallback=5)
     else:

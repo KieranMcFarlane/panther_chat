@@ -65,6 +65,16 @@ TIER_1_CLUB_TEMPLATE_ID = "tier_1_club_centralized_procurement"
 TIER_2_CLUB_TEMPLATE_ID = "tier_2_club_mixed_procurement"
 FEDERATION_CENTRALIZED_TEMPLATE_ID = "federation_centralized_procurement"
 
+# Safety net for known entities when league metadata is absent/noisy.
+ENTITY_TEMPLATE_OVERRIDES: Dict[str, str] = {
+    "arsenal-fc": TIER_1_CLUB_TEMPLATE_ID,
+    "liverpool-fc": TIER_1_CLUB_TEMPLATE_ID,
+    "manchester-city": TIER_1_CLUB_TEMPLATE_ID,
+    "manchester-united": TIER_1_CLUB_TEMPLATE_ID,
+    "chelsea-fc": TIER_1_CLUB_TEMPLATE_ID,
+    "tottenham-hotspur": TIER_1_CLUB_TEMPLATE_ID,
+}
+
 TEMPLATE_RUNTIME_OVERRIDES: Dict[str, Dict[str, Any]] = {
     "yellow_panther_agency": {
         "recommended_hop_cap": 3,
@@ -228,6 +238,23 @@ def _select_template_from_league_context(
     return None
 
 
+def _normalize_entity_slug(value: Optional[str]) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", str(value or "").strip().lower()).strip("-")
+
+
+def _select_template_from_entity_override(
+    entity_id: Optional[str],
+    entity_name: Optional[str] = None,
+) -> Optional[str]:
+    slug = _normalize_entity_slug(entity_id)
+    if slug and slug in ENTITY_TEMPLATE_OVERRIDES:
+        return ENTITY_TEMPLATE_OVERRIDES[slug]
+    name_slug = _normalize_entity_slug(entity_name)
+    if name_slug and name_slug in ENTITY_TEMPLATE_OVERRIDES:
+        return ENTITY_TEMPLATE_OVERRIDES[name_slug]
+    return None
+
+
 get_page_rank = _load_backend_attr(
     "discovery_page_registry",
     "get_page_rank",
@@ -267,14 +294,20 @@ def resolve_template_id(
     entity_type: Optional[str] = None,
     league_or_competition: Optional[str] = None,
     org_type: Optional[str] = None,
+    entity_id: Optional[str] = None,
+    entity_name: Optional[str] = None,
 ) -> str:
     """Return an available template id for discovery initialization."""
     TemplateLoader = _load_backend_attr("template_loader", "TemplateLoader")
-    context_choice = _select_template_from_league_context(
-        entity_type=entity_type,
-        league_or_competition=league_or_competition,
-        org_type=org_type,
-    )
+    override_choice = _select_template_from_entity_override(entity_id, entity_name)
+    if override_choice:
+        context_choice = override_choice
+    else:
+        context_choice = _select_template_from_league_context(
+            entity_type=entity_type,
+            league_or_competition=league_or_competition,
+            org_type=org_type,
+        )
     if TemplateLoader is None:
         return template_id or context_choice or _default_template_id_for_entity_type(entity_type)
 

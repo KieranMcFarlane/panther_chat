@@ -22,6 +22,16 @@ def test_template_routing_club_premier_league_to_tier1():
     assert resolved == "tier_1_club_centralized_procurement"
 
 
+def test_template_routing_entity_override_arsenal_to_tier1():
+    resolved = resolve_template_id(
+        None,
+        entity_type="CLUB",
+        entity_id="arsenal-fc",
+        league_or_competition=None,
+    )
+    assert resolved == "tier_1_club_centralized_procurement"
+
+
 def test_template_routing_agency_to_yellow_panther():
     resolved = resolve_template_id(None, entity_type="AGENCY")
     assert resolved == "yellow_panther_agency"

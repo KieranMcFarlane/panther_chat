@@ -38,10 +38,12 @@ echo "[]" > "$TMP_FILE"
 for row in "${ENTITIES[@]}"; do
   IFS='|' read -r ENTITY_ID ENTITY_NAME ENTITY_TYPE <<< "$row"
   LOG_FILE="tmp_pipeline_batch_${ENTITY_ID}_${STAMP}.log"
-  TEMPLATE_ID="tier_2_club_mixed_procurement"
-  if [[ "$ENTITY_TYPE" == "FEDERATION" ]]; then
-    TEMPLATE_ID="federation_governing_body"
-  fi
+  TEMPLATE_ID="$(PYTHONPATH=backend python3 - <<'PY' "$ENTITY_ID" "$ENTITY_NAME" "$ENTITY_TYPE"
+from backend.hypothesis_driven_discovery import resolve_template_id
+import sys
+print(resolve_template_id(None, sys.argv[3], entity_id=sys.argv[1], entity_name=sys.argv[2]))
+PY
+)"
   ENTITY_MAX_ITERATIONS="$MAX_ITERATIONS"
   if [[ -z "$ENTITY_MAX_ITERATIONS" ]]; then
     ENTITY_MAX_ITERATIONS="$(PYTHONPATH=backend python3 - <<'PY' "$TEMPLATE_ID"
