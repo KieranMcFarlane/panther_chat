@@ -67,6 +67,21 @@ class FakeDiscovery:
         return FakeDiscoveryResult()
 
 
+class FakeDiscoveryManySignals:
+    async def run_discovery_with_dossier_context(self, **kwargs):
+        result = FakeDiscoveryResult()
+        result.signals_discovered = [
+            {
+                "signal_type": "TECHNOLOGY_ADOPTED",
+                "statement": f"Raw discovery signal {idx}",
+                "confidence": 0.81,
+                "url": f"https://example.com/signal/{idx}",
+            }
+            for idx in range(5)
+        ]
+        return result
+
+
 class FakeRalph:
     async def validate_signals(self, raw_signals, entity_id):
         return [
@@ -91,6 +106,11 @@ class FakeRalphNonRfp:
                 "url": "https://example.com/news/crm",
             }
         ]
+
+
+class FakeRalphEmpty:
+    async def validate_signals(self, raw_signals, entity_id):
+        return []
 
 
 class FakeGraphiti:
@@ -242,6 +262,27 @@ async def test_pipeline_orchestrator_hard_fails_acceptance_gate_when_dual_write_
     assert "dual_write_incomplete" in result["acceptance_gate"]["reasons"]
     assert result["failure_taxonomy"]["dual_write_incomplete"] == 1
     assert result["failure_taxonomy"]["supabase_write_failure"] == 1
+
+
+@pytest.mark.asyncio
+async def test_pipeline_orchestrator_acceptance_gate_uses_validated_signal_count():
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=FakeDossierGenerator(),
+        discovery=FakeDiscoveryManySignals(),
+        ralph_validator=FakeRalphEmpty(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=FakePersistenceCoordinator(),
+    )
+    result = await orchestrator.run_entity_pipeline(
+        entity_id="arsenal-fc",
+        entity_name="Arsenal FC",
+        entity_type="CLUB",
+        priority_score=90,
+    )
+    assert result["validated_signal_count"] == 0
+    assert result["acceptance_gate"]["passed"] is False
+    assert "signals_below_threshold" in result["acceptance_gate"]["reasons"]
 
 
 @pytest.mark.asyncio

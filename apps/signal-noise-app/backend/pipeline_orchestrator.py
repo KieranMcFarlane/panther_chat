@@ -257,6 +257,7 @@ class PipelineOrchestrator:
             discovery_result=discovery_result,
             phase_results=phase_results,
             raw_signals=raw_signals,
+            validated_signals=validated_signals,
             dual_write_ok=dual_write_ok,
             enforce_dual_write_gate=(temporal_status == "completed"),
         )
@@ -526,11 +527,13 @@ class PipelineOrchestrator:
         discovery_result: Any,
         phase_results: Dict[str, Dict[str, Any]],
         raw_signals: List[Dict[str, Any]],
+        validated_signals: List[Dict[str, Any]],
         dual_write_ok: bool,
         enforce_dual_write_gate: bool,
     ) -> Dict[str, Any]:
         final_confidence = self._read_discovery_metric(discovery_result, "final_confidence")
-        signals_discovered = len(raw_signals)
+        signals_discovered = len(validated_signals)
+        raw_signal_count = len(raw_signals)
         reasons: List[str] = []
         discovery_status = (phase_results.get("discovery") or {}).get("status")
         if discovery_status != "completed":
@@ -551,6 +554,7 @@ class PipelineOrchestrator:
             "observed": {
                 "final_confidence": final_confidence,
                 "signals_discovered": signals_discovered,
+                "raw_signals_discovered": raw_signal_count,
                 "dual_write_ok": dual_write_ok,
             },
         }

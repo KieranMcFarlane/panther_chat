@@ -610,6 +610,10 @@ def determine_dossier_tier_from_priority(priority_score: int) -> str:
     return "PREMIUM"
 
 
+def resolve_phase0_timeout_seconds() -> float:
+    return float(os.getenv("DOSSIER_PHASE0_TIMEOUT_SECONDS", "300"))
+
+
 def build_dossier_response_metadata(
     dossier: Dict[str, Any],
     *,
@@ -1114,7 +1118,7 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             priority_score=request.priority_score,
             force_refresh=True,
         )
-        dossier_timeout_seconds = float(os.getenv("DOSSIER_PHASE0_TIMEOUT_SECONDS", "180"))
+        dossier_timeout_seconds = resolve_phase0_timeout_seconds()
         queue_mode = (os.getenv("ENTITY_IMPORT_QUEUE_MODE") or "durable_worker").strip().lower()
         default_timeout_mode = "degraded" if queue_mode == "durable_worker" else "fail"
         phase0_timeout_mode = (os.getenv("PIPELINE_PHASE0_TIMEOUT_MODE") or default_timeout_mode).strip().lower()
