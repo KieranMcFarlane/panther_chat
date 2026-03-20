@@ -304,3 +304,28 @@ async def test_pipeline_orchestrator_uses_graphiti_discovery_episode_contract_fo
     assert result["phases"]["temporal_persistence"]["status"] == "completed"
     episodes = result["artifacts"]["episodes"]
     assert len(episodes) == 1
+
+
+@pytest.mark.asyncio
+async def test_pipeline_orchestrator_emits_objective_contract_fields():
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=FakeDossierGenerator(),
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=FakePersistenceCoordinator(),
+    )
+    result = await orchestrator.run_entity_pipeline(
+        entity_id="arsenal-fc",
+        entity_name="Arsenal FC",
+        entity_type="CLUB",
+        priority_score=90,
+        run_objective="rfp_web",
+    )
+
+    assert result["objective"] == "rfp_web"
+    assert isinstance(result["objective_result"], dict)
+    assert isinstance(result["llm_efficiency_metrics"], dict)
+    assert "length_stop_count" in result["llm_efficiency_metrics"]
+    assert "schema_fail_count" in result["llm_efficiency_metrics"]

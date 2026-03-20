@@ -29,6 +29,10 @@ try:
     from backend.persistence_coordinator import DualWritePersistenceCoordinator
 except ImportError:
     from persistence_coordinator import DualWritePersistenceCoordinator
+try:
+    from backend.objective_profiles import DEFAULT_PIPELINE_OBJECTIVE, normalize_run_objective
+except ImportError:
+    from objective_profiles import DEFAULT_PIPELINE_OBJECTIVE, normalize_run_objective
 
 
 @dataclass
@@ -81,9 +85,11 @@ class PipelineOrchestrator:
         entity_name: str,
         entity_type: str = "CLUB",
         priority_score: int = 50,
+        run_objective: Optional[str] = None,
         initial_dossier: Optional[Dict[str, Any]] = None,
         phase_callback: Optional[Callable[[str, Dict[str, Any]], Awaitable[None]]] = None,
     ) -> Dict[str, Any]:
+        objective = normalize_run_objective(run_objective, default=DEFAULT_PIPELINE_OBJECTIVE)
         phase_results: Dict[str, Dict[str, Any]] = {
             "dossier_generation": {"status": "pending"},
             "discovery": {"status": "pending"},
@@ -99,6 +105,7 @@ class PipelineOrchestrator:
                 entity_name=entity_name,
                 entity_type=entity_type,
                 priority_score=priority_score,
+                run_objective=objective,
             )
             dossier = self._coerce_dossier_payload(dossier)
             await self._emit_phase_update(
@@ -135,6 +142,7 @@ class PipelineOrchestrator:
                 entity_type=entity_type,
                 dossier=dossier,
                 phase_callback=phase_callback,
+                run_objective=objective,
             )
             discovery_budget = getattr(self, "_last_discovery_budget", {})
             raw_signals = self._extract_raw_signals(discovery_result)
@@ -271,6 +279,15 @@ class PipelineOrchestrator:
         return {
             "entity_id": entity_id,
             "entity_name": entity_name,
+            "objective": objective,
+            "objective_result": {
+                "validated_signal_count": len(validated_signals),
+                "rfp_count": len(validated_rfps),
+                "final_confidence": getattr(discovery_result, "final_confidence", None),
+                "acceptance_passed": bool(acceptance_gate.get("passed")),
+                "acceptance_reasons": acceptance_gate.get("reasons", []),
+            },
+            "llm_efficiency_metrics": self._extract_llm_efficiency_metrics(discovery_result),
             "phases": build_phase_status_map(canonical_phase_details),
             "phase_details_by_phase": deepcopy(canonical_phase_details),
             "validated_signal_count": len(validated_signals),
@@ -302,6 +319,7 @@ class PipelineOrchestrator:
         entity_name: str,
         entity_type: str,
         priority_score: int,
+        run_objective: str,
     ) -> Dict[str, Any]:
         universal = getattr(self.dossier_generator, "generate_universal_dossier", None)
         if callable(universal):
@@ -310,14 +328,24 @@ class PipelineOrchestrator:
                 entity_name=entity_name,
                 entity_type=entity_type,
                 priority_score=priority_score,
+                run_objective=run_objective,
             )
 
-        return await self.dossier_generator.generate_dossier(
-            entity_id=entity_id,
-            entity_name=entity_name,
-            entity_type=entity_type,
-            priority_score=priority_score,
-        )
+        try:
+            return await self.dossier_generator.generate_dossier(
+                entity_id=entity_id,
+                entity_name=entity_name,
+                entity_type=entity_type,
+                priority_score=priority_score,
+                run_objective=run_objective,
+            )
+        except TypeError:
+            return await self.dossier_generator.generate_dossier(
+                entity_id=entity_id,
+                entity_name=entity_name,
+                entity_type=entity_type,
+                priority_score=priority_score,
+            )
 
     async def _run_discovery(
         self,
@@ -325,6 +353,7 @@ class PipelineOrchestrator:
         entity_name: str,
         entity_type: str,
         dossier: Dict[str, Any],
+        run_objective: str,
         phase_callback: Optional[Callable[[str, Dict[str, Any]], Awaitable[None]]] = None,
     ):
         started_at = time.perf_counter()
@@ -339,6 +368,7 @@ class PipelineOrchestrator:
             entity_type=entity_type,
             max_iterations=self.discovery_max_iterations,
             progress_callback=emit_discovery_progress,
+            run_objective=run_objective,
         )
 
         if self.discovery_hard_timeout:
@@ -356,6 +386,26 @@ class PipelineOrchestrator:
         }
 
         return result
+
+    def _extract_llm_efficiency_metrics(self, discovery_result: Any) -> Dict[str, int]:
+        summary = (
+            getattr(discovery_result, "performance_summary", None)
+            if discovery_result is not None
+            else None
+        )
+        if not isinstance(summary, dict):
+            return {
+                "llm_call_count": 0,
+                "llm_fallback_count": 0,
+                "length_stop_count": 0,
+                "schema_fail_count": 0,
+            }
+        return {
+            "llm_call_count": int(summary.get("llm_call_count", 0) or 0),
+            "llm_fallback_count": int(summary.get("llm_fallback_count", 0) or 0),
+            "length_stop_count": int(summary.get("length_stop_count", 0) or 0),
+            "schema_fail_count": int(summary.get("schema_fail_count", 0) or 0),
+        }
 
     async def _run_ralph_validation(
         self,

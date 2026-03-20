@@ -26,6 +26,18 @@ from dataclasses import dataclass
 
 from backend.schemas import EntityDossier, DossierSection, DossierTier, CacheStatus
 from backend.claude_client import ClaudeClient
+try:
+    from backend.objective_profiles import (
+        DEFAULT_DOSSIER_OBJECTIVE,
+        get_objective_profile,
+        normalize_run_objective,
+    )
+except ImportError:
+    from objective_profiles import (  # type: ignore
+        DEFAULT_DOSSIER_OBJECTIVE,
+        get_objective_profile,
+        normalize_run_objective,
+    )
 
 # Import data collector
 try:
@@ -284,7 +296,8 @@ class EntityDossierGenerator:
         entity_name: str,
         entity_type: str = "CLUB",
         priority_score: int = 50,
-        entity_data: Optional[Dict[str, Any]] = None
+        entity_data: Optional[Dict[str, Any]] = None,
+        run_objective: Optional[str] = None,
     ) -> EntityDossier:
         """
         Generate complete dossier based on priority tier
@@ -300,12 +313,24 @@ class EntityDossierGenerator:
             Complete EntityDossier with all sections
         """
         start_time = datetime.now(timezone.utc)
+        objective = normalize_run_objective(run_objective, default=DEFAULT_DOSSIER_OBJECTIVE)
+        objective_profile = get_objective_profile(objective, default=DEFAULT_DOSSIER_OBJECTIVE)
+        if run_objective is None:
+            # Backward-compatible default behavior for direct generator usage.
+            enable_leadership_enrichment = True
+            enable_question_extraction = True
+        else:
+            enable_leadership_enrichment = bool(objective_profile.get("enable_leadership_enrichment", False))
+            enable_question_extraction = bool(objective_profile.get("enable_question_extraction", False))
 
         # Determine tier
         tier = self._determine_tier(priority_score)
 
         # Get sections for this tier
         sections_to_generate = self._get_sections_for_tier(tier)
+        if objective in {"rfp_pdf", "rfp_web"}:
+            # Objective-scoped compact baseline for RFP-focused runs.
+            sections_to_generate = ["core_information", "quick_actions", "contact_information", "recent_news"]
 
         # Create dossier object
         dossier = EntityDossier(
@@ -323,7 +348,7 @@ class EntityDossierGenerator:
             seeded_official_site = self._get_seeded_official_site_url(entity_name)
             if seeded_official_site and hasattr(collector, "seed_official_site_url"):
                 collector.seed_official_site_url(entity_name, seeded_official_site)
-            dossier_data_obj = await collector.collect_all(entity_id, entity_name)
+            dossier_data_obj = await collector.collect_all(entity_id, entity_name, run_objective=objective)
 
             # Convert DossierData object to dict format for compatibility
             entity_data = self._dossier_data_to_dict(dossier_data_obj)
@@ -355,7 +380,7 @@ class EntityDossierGenerator:
                     logger.info("⏭️ Skipping duplicate post-collection multi-source enrichment (DOSSIER_RUN_POST_COLLECTION_ENRICHMENT=false)")
 
             # PHASE 0 ENHANCEMENT: Collect leadership data for real decision maker names
-            if hasattr(collector, 'collect_leadership'):
+            if hasattr(collector, 'collect_leadership') and enable_leadership_enrichment:
                 leadership_already_present = bool(entity_data.get("leadership_data")) or int(entity_data.get("leadership_count") or 0) > 0
                 if leadership_already_present and not self.run_post_collection_enrichment:
                     logger.info("⏭️ Skipping duplicate leadership enrichment (already present from collect_all)")
@@ -401,6 +426,8 @@ class EntityDossierGenerator:
                     entity_data["bridge_contacts_data"] = "No bridge contacts data currently available"
 
                     logger.info(f"✅ Leadership data collected: {entity_data['leadership_count']} decision makers")
+            elif not enable_leadership_enrichment:
+                logger.info("⏭️ Skipping leadership enrichment for objective=%s", objective)
 
             # PHASE 0 ENHANCEMENT: Collect Yellow Panther team data for Connections analysis
             try:
@@ -513,8 +540,12 @@ Website: N/A
             dossier.sections.extend(opus_results)
 
         # Extract questions from sections (for discovery feedback loop)
-        if self.disable_question_extraction:
-            logger.info("Skipping dossier question extraction (DOSSIER_DISABLE_QUESTION_EXTRACTION=true)")
+        if self.disable_question_extraction or not enable_question_extraction:
+            logger.info(
+                "Skipping dossier question extraction (disabled_by_env=%s disabled_by_objective=%s)",
+                self.disable_question_extraction,
+                not enable_question_extraction,
+            )
             dossier.questions = []
         else:
             try:
@@ -2560,6 +2591,7 @@ Hard requirements:
         priority_score: int = 50,
         entity_data: Optional[Dict[str, Any]] = None,
         progress_callback: Optional[Callable[..., Awaitable[None]]] = None,
+        run_objective: Optional[str] = None,
     ) -> dict:
         """
         Generate universal dossier with tiered prompts and hypothesis extraction.
@@ -2575,6 +2607,14 @@ Hard requirements:
             Complete dossier dictionary with metadata, hypotheses, and signals
         """
         start_time = datetime.now(timezone.utc)
+        objective = normalize_run_objective(run_objective, default=DEFAULT_DOSSIER_OBJECTIVE)
+        objective_profile = get_objective_profile(objective, default=DEFAULT_DOSSIER_OBJECTIVE)
+        if run_objective is None:
+            enable_leadership_enrichment = True
+            enable_question_extraction = True
+        else:
+            enable_leadership_enrichment = bool(objective_profile.get("enable_leadership_enrichment", False))
+            enable_question_extraction = bool(objective_profile.get("enable_question_extraction", False))
 
         # Determine tier
         tier = self._determine_tier(priority_score)
@@ -2613,7 +2653,12 @@ Hard requirements:
             try:
                 try:
                     dossier_data_obj = await asyncio.wait_for(
-                        collector.collect_all(entity_id, entity_name, entity_type=entity_type),
+                        collector.collect_all(
+                            entity_id,
+                            entity_name,
+                            entity_type=entity_type,
+                            run_objective=objective,
+                        ),
                         timeout=collection_timeout_seconds,
                     )
                 except asyncio.TimeoutError:
@@ -2657,7 +2702,11 @@ Hard requirements:
                             source_timings=entity_data.get("source_timings") or {},
                         )
                     # PHASE 0 ENHANCEMENT: Collect real leadership data
-                    if hasattr(collector, "collect_leadership") and not claude_disabled_reason:
+                    if (
+                        enable_leadership_enrichment
+                        and hasattr(collector, "collect_leadership")
+                        and not claude_disabled_reason
+                    ):
                         try:
                             leadership_data = await collector.collect_leadership(entity_id, entity_name)
                             if leadership_data.get("decision_makers"):
@@ -2689,6 +2738,11 @@ Hard requirements:
                                 )
                         except Exception as e:
                             logger.warning(f"⚠️  Leadership data collection failed: {e}")
+                    elif not enable_leadership_enrichment:
+                        logger.info(
+                            "⏭️ Skipping leadership enrichment for objective=%s (objective profile disabled)",
+                            objective,
+                        )
                     elif claude_disabled_reason:
                         logger.warning(
                             f"⚠️ Claude API disabled ({claude_disabled_reason}); skipping leadership enrichment for {entity_name}"
@@ -2755,6 +2809,12 @@ Hard requirements:
         dossier["metadata"]["generation_mode"] = generation_mode
         dossier["metadata"]["collection_timed_out"] = bool(phase0_collection_timed_out)
         dossier["metadata"]["model_max_tokens"] = max_tokens_override
+        dossier["metadata"]["run_objective"] = objective
+        dossier["metadata"]["skipped_enrichment_reasons"] = []
+        if not enable_leadership_enrichment:
+            dossier["metadata"]["skipped_enrichment_reasons"].append("leadership_enrichment_disabled_by_objective")
+        if not enable_question_extraction:
+            dossier["metadata"]["skipped_enrichment_reasons"].append("question_extraction_disabled_by_objective")
         if collection_duration_seconds is not None:
             dossier["metadata"]["collection_time_seconds"] = collection_duration_seconds
 

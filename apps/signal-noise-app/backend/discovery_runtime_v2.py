@@ -24,6 +24,10 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional, Set, Tuple
 from urllib.parse import urlparse
 
 logger = logging.getLogger(__name__)
+try:
+    from backend.objective_profiles import get_objective_profile, normalize_run_objective
+except ImportError:
+    from objective_profiles import get_objective_profile, normalize_run_objective
 
 ALLOWED_CANDIDATE_ORIGINS = {
     "search",
@@ -213,12 +217,18 @@ class DiscoveryRuntimeV2:
         self.num_results = int(os.getenv("DISCOVERY_SEARCH_RESULTS_PER_QUERY", "5"))
         self.evidence_first = _truthy(os.getenv("DISCOVERY_POLICY_EVIDENCE_FIRST", "true"))
         self.enable_llm_eval = _truthy(os.getenv("DISCOVERY_V2_LLM_EVAL_ENABLED", "true"))
+        self.enable_llm_hop_selection = _truthy(os.getenv("DISCOVERY_V2_LLM_HOP_SELECTION_ENABLED", "true"))
         self.run_profile = os.getenv("PIPELINE_RUN_PROFILE", "bounded_balanced_v2")
 
         self._metrics: Dict[str, int] = {
             "synthetic_url_attempt_count": 0,
             "dead_end_event_count": 0,
             "fallback_accept_block_count": 0,
+            "llm_call_count": 0,
+            "llm_fallback_count": 0,
+            "length_stop_count": 0,
+            "schema_fail_count": 0,
+            "llm_hop_selection_count": 0,
         }
 
     async def run_discovery(
@@ -230,12 +240,14 @@ class DiscoveryRuntimeV2:
         **_kwargs: Any,
     ) -> DiscoveryResultV2:
         dossier = {"metadata": {"template_id": template_id}} if template_id else {}
+        run_objective = _kwargs.get("run_objective")
         return await self.run_discovery_with_dossier_context(
             entity_id=entity_id,
             entity_name=entity_name,
             dossier=dossier,
             template_id=template_id,
             max_iterations=max_iterations,
+            run_objective=run_objective,
         )
 
     async def run_discovery_with_dossier_context(
@@ -247,17 +259,28 @@ class DiscoveryRuntimeV2:
         entity_type: Optional[str] = None,
         max_iterations: int = 30,
         progress_callback: Optional[Callable[[Dict[str, Any]], Awaitable[None]]] = None,
+        run_objective: Optional[str] = None,
     ) -> DiscoveryResultV2:
         del template_id, entity_type  # Intent-only in v2.
+        objective = normalize_run_objective(run_objective)
+        objective_profile = get_objective_profile(objective)
+        pass_a_lanes = list(objective_profile.get("pass_a_lanes") or PASS_A_LANES)
+        pass_b_lanes = list(objective_profile.get("pass_b_lanes") or PASS_B_LANES)
+        objective_budget = self._resolve_objective_budget(max_iterations=max_iterations, profile=objective_profile)
 
         start = time.perf_counter()
         self._metrics = {
             "synthetic_url_attempt_count": 0,
             "dead_end_event_count": 0,
             "fallback_accept_block_count": 0,
+            "llm_call_count": 0,
+            "llm_fallback_count": 0,
+            "length_stop_count": 0,
+            "schema_fail_count": 0,
+            "llm_hop_selection_count": 0,
         }
 
-        iteration_budget = min(max(1, int(max_iterations or self.max_hops)), self.max_hops)
+        iteration_budget = int(objective_budget["max_hops"])
         official_domain = self._official_domain(entity_name=entity_name, dossier=dossier)
         state: Dict[str, Any] = {
             "visited_urls": set(),
@@ -277,7 +300,14 @@ class DiscoveryRuntimeV2:
         parse_path = "discovery_v2_evidence_first"
 
         pass_a_validated = 0
-        for lane in PASS_A_LANES:
+        selected_pass_a_lanes = await self._choose_lane_order_with_llm(
+            entity_name=entity_name,
+            objective=objective,
+            pass_name="A",
+            available_lanes=pass_a_lanes,
+            state=state,
+        )
+        for lane in selected_pass_a_lanes:
             if state["iterations_completed"] >= iteration_budget:
                 break
             lane_result = await self._run_lane(
@@ -286,6 +316,8 @@ class DiscoveryRuntimeV2:
                 dossier=dossier,
                 official_domain=official_domain,
                 state=state,
+                budget=objective_budget,
+                run_objective=objective,
             )
             hop_timings.append(lane_result["hop"])
             state["iterations_completed"] += 1
@@ -311,7 +343,14 @@ class DiscoveryRuntimeV2:
         pass_b_executed = False
         if pass_a_validated > 0 and state["iterations_completed"] < iteration_budget:
             pass_b_executed = True
-            for lane in PASS_B_LANES:
+            selected_pass_b_lanes = await self._choose_lane_order_with_llm(
+                entity_name=entity_name,
+                objective=objective,
+                pass_name="B",
+                available_lanes=pass_b_lanes,
+                state=state,
+            )
+            for lane in selected_pass_b_lanes:
                 if state["iterations_completed"] >= iteration_budget:
                     break
                 lane_result = await self._run_lane(
@@ -320,6 +359,8 @@ class DiscoveryRuntimeV2:
                     dossier=dossier,
                     official_domain=official_domain,
                     state=state,
+                    budget=objective_budget,
+                    run_objective=objective,
                 )
                 hop_timings.append(lane_result["hop"])
                 state["iterations_completed"] += 1
@@ -376,6 +417,7 @@ class DiscoveryRuntimeV2:
             budget=iteration_budget,
             hop_timings=hop_timings,
             state=state,
+            per_iteration_timeout=float(objective_budget["per_iteration_timeout"]),
         )
         final_confidence = round(max(0.0, min(1.0, entity_confidence * 0.8 + pipeline_confidence * 0.2)), 3)
 
@@ -384,6 +426,7 @@ class DiscoveryRuntimeV2:
             "run_profile": self.run_profile,
             "engine": "v2",
             "evaluation_mode": "evidence_first",
+            "run_objective": objective,
             "parse_path": parse_path,
             "llm_last_status": llm_last_status,
             "entity_confidence": entity_confidence,
@@ -392,17 +435,34 @@ class DiscoveryRuntimeV2:
             "synthetic_url_attempt_count": int(self._metrics["synthetic_url_attempt_count"]),
             "dead_end_event_count": int(self._metrics["dead_end_event_count"]),
             "fallback_accept_block_count": int(self._metrics["fallback_accept_block_count"]),
+            "llm_call_count": int(self._metrics["llm_call_count"]),
+            "llm_fallback_count": int(self._metrics["llm_fallback_count"]),
+            "length_stop_count": int(self._metrics["length_stop_count"]),
+            "schema_fail_count": int(self._metrics["schema_fail_count"]),
+            "llm_hop_selection_count": int(self._metrics["llm_hop_selection_count"]),
+            "skipped_enrichment_reasons": [],
+            "objective_stage_durations": {
+                "source_acquisition_seconds": round(sum(float(h.get("duration_ms") or 0.0) for h in hop_timings) / 1000.0, 3),
+                "normalization_seconds": 0.0,
+                "cheap_filters_seconds": 0.0,
+                "structured_extraction_seconds": 0.0,
+                "objective_scoring_seconds": 0.0,
+            },
+            "budget": objective_budget,
             "two_pass": {
                 "enabled": True,
                 "pass_a": {
-                    "iterations": min(len(PASS_A_LANES), iteration_budget),
+                    "iterations": min(len(pass_a_lanes), iteration_budget),
                     "validated_signals": pass_a_validated,
+                    "selected_lanes": selected_pass_a_lanes,
                 },
                 "pass_b_executed": pass_b_executed,
+                "pass_b_selected_lanes": selected_pass_b_lanes if pass_b_executed else [],
                 "selected_result": "pass_b" if pass_b_executed else "pass_a",
             },
             "duration_seconds": elapsed,
             "route_diversification_order": DIVERSIFIED_FALLBACK_ORDER,
+            "hop_selector": "llm" if self.enable_llm_hop_selection else "deterministic",
         }
 
         confidence_band = "HIGH" if final_confidence >= 0.7 else "MEDIUM" if final_confidence >= 0.55 else "LOW"
@@ -435,7 +495,17 @@ class DiscoveryRuntimeV2:
         dossier: Dict[str, Any],
         official_domain: Optional[str],
         state: Dict[str, Any],
+        budget: Optional[Dict[str, Any]] = None,
+        run_objective: Optional[str] = None,
     ) -> Dict[str, Any]:
+        effective_budget = budget or {
+            "max_hops": self.max_hops,
+            "max_evals_per_hop": self.max_evals_per_hop,
+            "per_iteration_timeout": self.per_iteration_timeout,
+            "max_retries": self.max_retries,
+            "max_same_domain_revisits": self.max_same_domain_revisits,
+        }
+        objective = normalize_run_objective(run_objective)
         started = time.perf_counter()
         hop_record: Dict[str, Any] = {
             "hop_type": lane,
@@ -472,7 +542,7 @@ class DiscoveryRuntimeV2:
             hop_record["duration_ms"] = int((time.perf_counter() - started) * 1000)
             return {"hop": hop_record, "signal": None, "diagnostic": None}
 
-        for candidate in candidates[: max(1, self.max_evals_per_hop)]:
+        for candidate in candidates[: max(1, int(effective_budget.get("max_evals_per_hop", self.max_evals_per_hop)))]:
             origin = str(candidate.get("candidate_origin") or "").strip().lower()
             if origin not in ALLOWED_CANDIDATE_ORIGINS:
                 if origin == "synthetic":
@@ -492,11 +562,13 @@ class DiscoveryRuntimeV2:
             host = (urlparse(url).hostname or "").lower()
             if host:
                 revisit_count = int(state["domain_visits"].get(host, 0) or 0)
-                if revisit_count >= self.max_same_domain_revisits:
+                if revisit_count >= int(
+                    effective_budget.get("max_same_domain_revisits", self.max_same_domain_revisits)
+                ):
                     self._register_lane_failure(lane, state, "same_domain_revisit_cap")
                     continue
 
-            scraped = await self._scrape_with_budget(url)
+            scraped = await self._scrape_with_budget(url, budget=effective_budget)
             content = str(scraped.get("content") or "")
             metadata = scraped.get("metadata") if isinstance(scraped.get("metadata"), dict) else {}
             content_hash = hashlib.sha1(content.encode("utf-8", errors="ignore")).hexdigest() if content else None
@@ -558,6 +630,7 @@ class DiscoveryRuntimeV2:
                 entity_name=entity_name,
                 url=url,
                 evidence=evidence,
+                run_objective=objective,
             )
             if llm_eval.get("parse_path"):
                 hop_record["parse_path"] = llm_eval["parse_path"]
@@ -685,13 +758,15 @@ class DiscoveryRuntimeV2:
         )
         return ranked
 
-    async def _scrape_with_budget(self, url: str) -> Dict[str, Any]:
+    async def _scrape_with_budget(self, url: str, *, budget: Dict[str, Any]) -> Dict[str, Any]:
         last_error = None
-        for _attempt in range(max(1, self.max_retries)):
+        max_retries = max(1, int(budget.get("max_retries", self.max_retries)))
+        timeout_seconds = float(budget.get("per_iteration_timeout", self.per_iteration_timeout))
+        for _attempt in range(max_retries):
             try:
                 return await asyncio.wait_for(
                     self.brightdata_client.scrape_as_markdown(url),
-                    timeout=self.per_iteration_timeout,
+                    timeout=timeout_seconds,
                 )
             except Exception as scrape_error:  # noqa: BLE001
                 last_error = scrape_error
@@ -774,7 +849,9 @@ class DiscoveryRuntimeV2:
         entity_name: str,
         url: str,
         evidence: Dict[str, Any],
+        run_objective: Optional[str] = None,
     ) -> Dict[str, Any]:
+        objective = normalize_run_objective(run_objective)
         if not self.enable_llm_eval:
             return {
                 "decision": "WEAK_ACCEPT_CANDIDATE",
@@ -782,18 +859,37 @@ class DiscoveryRuntimeV2:
                 "llm_last_status": "heuristic_only",
             }
         prompt = (
-            "Return strict JSON with keys decision,reason.\n"
+            "Return strict JSON only with keys decision,reason.\n"
             "Allowed decision: ACCEPT|WEAK_ACCEPT_CANDIDATE|NO_PROGRESS|PIPELINE_DIAGNOSTIC|RETRY_DIFFERENT_HOP.\n"
             f"Entity: {entity_name}\nLane: {lane}\nURL: {url}\n"
             f"Evidence: {evidence.get('snippet')}\n"
         )
         try:
-            response = await self.claude_client.query(prompt=prompt, model="haiku", max_tokens=180)
-            payload = _extract_json_object((response or {}).get("content"))
+            self._metrics["llm_call_count"] += 1
+            response = await self.claude_client.query(
+                prompt=prompt,
+                model="haiku",
+                max_tokens=110,
+                json_mode=True,
+                max_retries_override=1 if objective in {"rfp_pdf", "rfp_web"} else None,
+                empty_retries_before_fallback_override=1 if objective in {"rfp_pdf", "rfp_web"} else None,
+                fast_fail_on_length=True,
+            )
+            stop_reason = str((response or {}).get("stop_reason") or "").strip().lower()
+            if stop_reason == "length":
+                self._metrics["length_stop_count"] += 1
+                self._metrics["llm_fallback_count"] += 1
+            payload = None
+            structured_output = (response or {}).get("structured_output")
+            if isinstance(structured_output, dict):
+                payload = structured_output
             if not payload:
+                payload = self._extract_json_object_strict((response or {}).get("content"))
+            if not payload:
+                self._metrics["schema_fail_count"] += 1
                 return {
-                    "decision": "WEAK_ACCEPT_CANDIDATE",
-                    "parse_path": "schema_gate_fallback",
+                    "decision": "NO_PROGRESS",
+                    "parse_path": "schema_gate_hard_fail",
                     "llm_last_status": "empty_response",
                 }
             decision = str(payload.get("decision") or "NO_PROGRESS").upper()
@@ -812,11 +908,102 @@ class DiscoveryRuntimeV2:
                 "llm_last_status": "ok",
             }
         except Exception:  # noqa: BLE001
+            self._metrics["llm_fallback_count"] += 1
             return {
-                "decision": "WEAK_ACCEPT_CANDIDATE",
-                "parse_path": "schema_gate_fallback",
+                "decision": "NO_PROGRESS",
+                "parse_path": "schema_gate_hard_fail",
                 "llm_last_status": "timeout",
             }
+
+    @staticmethod
+    def _extract_json_object_strict(text: Any) -> Optional[Dict[str, Any]]:
+        raw = str(text or "").strip()
+        if not raw:
+            return None
+        try:
+            payload = json.loads(raw)
+        except Exception:
+            return None
+        return payload if isinstance(payload, dict) else None
+
+    def _resolve_objective_budget(self, *, max_iterations: int, profile: Dict[str, Any]) -> Dict[str, Any]:
+        budget_overrides = profile.get("budget") if isinstance(profile.get("budget"), dict) else {}
+        max_hops = min(max(1, int(max_iterations or self.max_hops)), int(budget_overrides.get("max_hops", self.max_hops)))
+        return {
+            "max_hops": max_hops,
+            "max_evals_per_hop": int(budget_overrides.get("max_evals_per_hop", self.max_evals_per_hop)),
+            "per_iteration_timeout": float(budget_overrides.get("per_iteration_timeout", self.per_iteration_timeout)),
+            "max_retries": int(budget_overrides.get("max_retries", self.max_retries)),
+            "max_same_domain_revisits": int(
+                budget_overrides.get("max_same_domain_revisits", self.max_same_domain_revisits)
+            ),
+        }
+
+    async def _choose_lane_order_with_llm(
+        self,
+        *,
+        entity_name: str,
+        objective: str,
+        pass_name: str,
+        available_lanes: List[str],
+        state: Dict[str, Any],
+    ) -> List[str]:
+        if not available_lanes:
+            return []
+        if not self.enable_llm_hop_selection:
+            return list(available_lanes)
+
+        unexhausted = [lane for lane in available_lanes if lane not in state.get("lane_exhausted", set())]
+        if not unexhausted:
+            return list(available_lanes)
+
+        prompt = (
+            "Return strict JSON only with key ordered_lanes (array of lane strings).\n"
+            "Rank lanes by expected evidence yield for this entity/objective.\n"
+            f"Entity: {entity_name}\n"
+            f"Objective: {objective}\n"
+            f"Pass: {pass_name}\n"
+            f"Available lanes: {', '.join(unexhausted)}\n"
+            "Rules: prefer entity-grounded, higher-signal lanes first. No explanation."
+        )
+        try:
+            self._metrics["llm_hop_selection_count"] += 1
+            response = await self.claude_client.query(
+                prompt=prompt,
+                model="haiku",
+                max_tokens=120,
+                json_mode=True,
+                max_retries_override=1,
+                empty_retries_before_fallback_override=1,
+                fast_fail_on_length=True,
+            )
+            payload = None
+            structured_output = (response or {}).get("structured_output")
+            if isinstance(structured_output, dict):
+                payload = structured_output
+            if not payload:
+                payload = self._extract_json_object_strict((response or {}).get("content"))
+            if not isinstance(payload, dict):
+                return list(available_lanes)
+
+            ranked = payload.get("ordered_lanes")
+            if not isinstance(ranked, list):
+                return list(available_lanes)
+
+            selected: List[str] = []
+            seen = set()
+            allowed = set(available_lanes)
+            for lane in ranked:
+                lane_name = str(lane or "").strip()
+                if lane_name and lane_name in allowed and lane_name not in seen:
+                    selected.append(lane_name)
+                    seen.add(lane_name)
+            for lane in available_lanes:
+                if lane not in seen:
+                    selected.append(lane)
+            return selected or list(available_lanes)
+        except Exception:  # noqa: BLE001
+            return list(available_lanes)
 
     def _quality_threshold_for_lane(self, lane: str) -> float:
         if lane in {"official_site", "annual_report"}:
@@ -925,12 +1112,13 @@ class DiscoveryRuntimeV2:
         budget: int,
         hop_timings: List[Dict[str, Any]],
         state: Dict[str, Any],
+        per_iteration_timeout: float,
     ) -> float:
         completion_ratio = min(1.0, float(iterations) / float(max(1, budget)))
         dead_end_penalty = min(0.4, float(self._metrics["dead_end_event_count"]) * 0.08)
         timeout_penalty = 0.0
         for hop in hop_timings:
-            if float(hop.get("duration_ms") or 0.0) > (self.per_iteration_timeout * 1000.0):
+            if float(hop.get("duration_ms") or 0.0) > (per_iteration_timeout * 1000.0):
                 timeout_penalty += 0.05
         score = 0.55 + completion_ratio * 0.35 - dead_end_penalty - min(0.2, timeout_penalty)
         if state.get("lane_exhausted"):

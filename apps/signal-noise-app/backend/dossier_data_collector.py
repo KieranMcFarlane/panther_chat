@@ -27,6 +27,10 @@ import time
 import json
 import hashlib
 import re
+try:
+    from backend.objective_profiles import DEFAULT_DOSSIER_OBJECTIVE, normalize_run_objective
+except Exception:  # noqa: BLE001
+    from objective_profiles import DEFAULT_DOSSIER_OBJECTIVE, normalize_run_objective
 
 # Load environment variables from .env (same pattern as graphiti_service.py)
 project_root = Path(__file__).parent.parent
@@ -448,6 +452,14 @@ class DossierDataCollector:
         self._preferred_official_site_urls: Dict[str, str] = {}
         self._official_site_url_cache = self._load_official_site_url_cache()
         self._official_site_content_cache = self._load_official_site_content_cache()
+        self.default_run_objective = normalize_run_objective(
+            os.getenv("DOSSIER_RUN_OBJECTIVE"),
+            default=DEFAULT_DOSSIER_OBJECTIVE,
+        )
+
+    @staticmethod
+    def _is_rfp_objective(run_objective: str) -> bool:
+        return run_objective in {"rfp_pdf", "rfp_web"}
 
     async def close(self):
         """Close any async clients owned by the collector."""
@@ -924,6 +936,7 @@ class DossierDataCollector:
         entity_id: str,
         entity_name: str = None,
         entity_type: Optional[str] = None,
+        run_objective: Optional[str] = None,
     ) -> DossierData:
         """
         Collect all available data for dossier generation
@@ -936,7 +949,8 @@ class DossierDataCollector:
         Returns:
             DossierData with all collected information
         """
-        logger.info(f"🔍 Collecting dossier data for {entity_name or entity_id}")
+        objective = normalize_run_objective(run_objective, default=self.default_run_objective)
+        logger.info(f"🔍 Collecting dossier data for {entity_name or entity_id} (objective={objective})")
 
         # Connect to all data sources
         await self._connect_falkordb()
@@ -980,7 +994,11 @@ class DossierDataCollector:
 
         # Scrape additional data from web (Phase 2) - Using Enhanced Multi-Source Scraping
         if self._brightdata_available:
-            scrape_result = await self._get_scraped_content_enhanced(entity_id, dossier_data.entity_name)
+            scrape_result = await self._get_scraped_content_enhanced(
+                entity_id,
+                dossier_data.entity_name,
+                run_objective=objective,
+            )
 
             if scrape_result:
                 scraped_content, extracted_data = scrape_result
@@ -990,7 +1008,7 @@ class DossierDataCollector:
                 dossier_data.data_sources_used.append("BrightData")
 
                 # Use Ralph Loop Field Validator for core fields
-                if dossier_data.metadata and self.claude_client:
+                if dossier_data.metadata and self.claude_client and not self._is_rfp_objective(objective):
                     logger.info("🔍 Applying Ralph Loop field validation...")
                     try:
                         validator = RalphLoopFieldValidator(
@@ -1048,6 +1066,10 @@ class DossierDataCollector:
         # ADDITIONAL DATA COLLECTION FOR DOSSIER SECTIONS (Phase 0 Enhancement)
         # =============================================================================
         # OPTIMIZED: Parallel async scraping with caching support
+        if self._is_rfp_objective(objective):
+            logger.info("⏭️ Skipping additional dossier section collectors for objective=%s", objective)
+            return dossier_data
+
         logger.info("📊 Collecting additional dossier section data (parallel mode)...")
 
         async def collect_with_cache(
@@ -1345,7 +1367,12 @@ class DossierDataCollector:
             logger.error(f"❌ BrightData SDK connection failed: {e}")
             return False
 
-    async def _get_scraped_content_enhanced(self, entity_id: str, entity_name: str) -> Optional[tuple]:
+    async def _get_scraped_content_enhanced(
+        self,
+        entity_id: str,
+        entity_name: str,
+        run_objective: Optional[str] = None,
+    ) -> Optional[tuple]:
         """
         Enhanced multi-source scraping for comprehensive entity data collection.
 
@@ -1386,24 +1413,48 @@ class DossierDataCollector:
             scraped_urls.append(official_site_data.get("url", ""))
             logger.info(f"✅ Official site data collected: {list(official_site_data.keys())}")
 
-        # Source 3: Field-specific searches for missing data
-        if not all_extracted_data.get("founded"):
-            founded_data = await self._scrape_field_specific(entity_name, "founded")
-            if founded_data:
-                all_extracted_data.update(founded_data)
+        current_objective = normalize_run_objective(run_objective, default=self.default_run_objective)
+        if not self._is_rfp_objective(current_objective):
+            # Source 3: Field-specific searches for missing data
+            if not all_extracted_data.get("founded"):
+                founded_data = await self._scrape_field_specific(entity_name, "founded")
+                if founded_data:
+                    all_extracted_data.update(founded_data)
 
-        if not all_extracted_data.get("stadium"):
-            stadium_data = await self._scrape_field_specific(entity_name, "stadium")
-            if stadium_data:
-                all_extracted_data.update(stadium_data)
+            if not all_extracted_data.get("stadium"):
+                stadium_data = await self._scrape_field_specific(entity_name, "stadium")
+                if stadium_data:
+                    all_extracted_data.update(stadium_data)
 
         if not all_extracted_data.get("website"):
             all_extracted_data["website"] = all_extracted_data.get("official_site_url", "")
 
-        # Source 4: League/Premier League data
-        league_data = await self._scrape_league_data(entity_name)
-        if league_data:
-            all_extracted_data.update(league_data)
+        # Source 4: League/Premier League data (skip for rfp objectives)
+        if not self._is_rfp_objective(current_objective):
+            league_data = await self._scrape_league_data(entity_name)
+            if league_data:
+                all_extracted_data.update(league_data)
+
+    async def _query_json_strict(self, *, prompt: str, max_tokens: int = 220, model: str = "haiku") -> Optional[Dict[str, Any]]:
+        if not self.claude_client:
+            return None
+        try:
+            result = await self.claude_client.query(
+                prompt=prompt,
+                model=model,
+                max_tokens=max_tokens,
+                json_mode=True,
+                max_retries_override=1,
+                empty_retries_before_fallback_override=1,
+                fast_fail_on_length=True,
+            )
+            raw = str((result or {}).get("content") or "").strip()
+            if not raw:
+                return None
+            parsed = json.loads(raw)
+            return parsed if isinstance(parsed, dict) else None
+        except Exception:
+            return None
 
         # Create scraped content object
         official_url = all_extracted_data.get("website", "")
@@ -2101,26 +2152,10 @@ Rules:
 - confidence should be 90-100 for official bios/pages, 75-85 for mentions
 - Return ONLY valid JSON, no other text"""
 
-            result = await self.claude_client.query(
-                prompt=prompt,
-                model="haiku",
-                max_tokens=800
-            )
-
-            import json
-            import re
-
-            response_text = result.get('content', '')
-            json_match = re.search(r'\{[\s\S]*?\}', response_text)
-            if json_match:
-                try:
-                    extracted = json.loads(json_match.group(0))
-                    if 'people' in extracted:
-                        return extracted
-                except json.JSONDecodeError:
-                    pass
-
-            return {'people': []}
+            extracted = await self._query_json_strict(prompt=prompt, max_tokens=260, model="haiku")
+            if isinstance(extracted, dict) and isinstance(extracted.get("people"), list):
+                return extracted
+            return {"people": []}
 
         except Exception as e:
             logger.warning(f"Leadership extraction from {source_type} failed: {e}")
@@ -2164,24 +2199,11 @@ Extract and return ONLY a JSON object:
 Only include people who are clearly being appointed to or holding executive positions.
 Return ONLY valid JSON."""
 
-            result = await self.claude_client.query(
-                prompt=prompt,
-                model="haiku",
-                max_tokens=500
-            )
-
-            import json
-            import re
-
-            response_text = result.get('content', '')
-            json_match = re.search(r'\{[\s\S]*?\}', response_text)
-            if json_match:
-                try:
-                    extracted = json.loads(json_match.group(0))
-                    return extracted.get('names', [])
-                except json.JSONDecodeError:
-                    pass
-
+            extracted = await self._query_json_strict(prompt=prompt, max_tokens=220, model="haiku")
+            if isinstance(extracted, dict):
+                names = extracted.get("names")
+                if isinstance(names, list):
+                    return names
             return []
 
         except Exception as e:
@@ -2195,10 +2217,6 @@ Return ONLY valid JSON."""
         Wikipedia typically has structured infoboxes with reliable data.
         """
         try:
-            from backend.claude_client import ClaudeClient
-
-            client = ClaudeClient()
-
             prompt = f"""Extract the following information from this Wikipedia article about {entity_name}:
 
 Wikipedia Content (first 4000 chars):
@@ -2217,24 +2235,9 @@ Extract and return ONLY a JSON object (no markdown):
 
 Use null for any information not found in the article. Return ONLY valid JSON."""
 
-            result = await client.query(
-                prompt=prompt,
-                model="haiku",
-                max_tokens=500
-            )
-
-            import json
-            import re
-
-            response_text = result.get('content', '')
-            json_match = re.search(r'\{[^{}]*\}', response_text)
-            if json_match:
-                try:
-                    extracted = json.loads(json_match.group(0))
-                    return {k: v for k, v in extracted.items() if v is not None}
-                except json.JSONDecodeError:
-                    pass
-
+            extracted = await self._query_json_strict(prompt=prompt, max_tokens=220, model="haiku")
+            if isinstance(extracted, dict):
+                return {k: v for k, v in extracted.items() if v is not None}
             return {}
 
         except Exception as e:
@@ -2246,10 +2249,6 @@ Use null for any information not found in the article. Return ONLY valid JSON.""
         Extract entity fields from website content.
         """
         try:
-            from backend.claude_client import ClaudeClient
-
-            client = ClaudeClient()
-
             prompt = f"""Extract the following information from this website content about {entity_name}:
 
 Website Content (first 3000 chars):
@@ -2267,24 +2266,9 @@ Extract and return ONLY a JSON object:
 
 Use null for information not found. Return ONLY valid JSON."""
 
-            result = await client.query(
-                prompt=prompt,
-                model="haiku",
-                max_tokens=500
-            )
-
-            import json
-            import re
-
-            response_text = result.get('content', '')
-            json_match = re.search(r'\{[^{}]*\}', response_text)
-            if json_match:
-                try:
-                    extracted = json.loads(json_match.group(0))
-                    return {k: v for k, v in extracted.items() if v is not None}
-                except json.JSONDecodeError:
-                    pass
-
+            extracted = await self._query_json_strict(prompt=prompt, max_tokens=220, model="haiku")
+            if isinstance(extracted, dict):
+                return {k: v for k, v in extracted.items() if v is not None}
             return {}
 
         except Exception as e:
@@ -2296,10 +2280,6 @@ Use null for information not found. Return ONLY valid JSON."""
         Extract a single field value from content.
         """
         try:
-            from backend.claude_client import ClaudeClient
-
-            client = ClaudeClient()
-
             field_prompts = {
                 "founded": f"What year was {entity_name} founded? Return ONLY a 4-digit year or 'null'.",
                 "stadium": f"What is the name of {entity_name}'s stadium? Return ONLY the name or 'null'.",
@@ -2309,7 +2289,7 @@ Use null for information not found. Return ONLY valid JSON."""
 
             prompt = field_prompts.get(field, f"Extract {field} for {entity_name}")
 
-            result = await client.query(
+            result = await self.claude_client.query(
                 prompt=f"""{prompt}
 
 Content:
@@ -2317,7 +2297,9 @@ Content:
 
 Return ONLY the value (no extra text).""",
                 model="haiku",
-                max_tokens=100
+                max_tokens=90,
+                max_retries_override=1,
+                empty_retries_before_fallback_override=1,
             )
 
             response_text = result.get('content', '').strip()
@@ -4402,15 +4384,15 @@ If there are conflicts, explain in analysis and rank accordingly."""
             response = await self.claude_client.query(
                 prompt=prompt,
                 model="haiku",
-                max_tokens=500
+                max_tokens=260,
+                json_mode=True,
+                max_retries_override=1,
+                empty_retries_before_fallback_override=1,
             )
 
-            import json
-            import re
-
-            json_match = re.search(r'\{[\s\S]*\}', response.get("content", ""))
-            if json_match:
-                result = json.loads(json_match.group(0))
+            raw = str((response or {}).get("content") or "").strip()
+            if raw:
+                result = json.loads(raw)
 
                 # Update candidates with LLM confidence
                 for ranking in result.get("ranked_candidates", []):

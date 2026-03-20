@@ -1563,10 +1563,16 @@ class RalphLoop:
             existing_summary=existing_summary,
             candidates_summary=self._format_signals_for_claude_detailed(batch),
         )
-        max_tokens = 1400 if len(batch) == 1 else 2200
+        max_tokens = 520 if len(batch) == 1 else 760
         try:
             async with semaphore:
-                response = await self.claude_client.query(prompt=prompt, max_tokens=max_tokens)
+                response = await self.claude_client.query(
+                    prompt=prompt,
+                    max_tokens=max_tokens,
+                    json_mode=True,
+                    max_retries_override=1,
+                    empty_retries_before_fallback_override=1,
+                )
             if self._extract_validation_json(response) is None:
                 retry_prompt = self._build_pass2_retry_prompt(entity_id=entity_id, batch=batch)
                 logger.warning(
@@ -1578,6 +1584,9 @@ class RalphLoop:
                         prompt=retry_prompt,
                         max_tokens=self.config.pass2_json_retry_max_tokens,
                         system_prompt="Return strict JSON only. No chain-of-thought. No markdown.",
+                        json_mode=True,
+                        max_retries_override=1,
+                        empty_retries_before_fallback_override=1,
                     )
             if self.config.enable_confidence_validation:
                 validated_with_meta = self._parse_claude_validation_with_confidence(response, batch)

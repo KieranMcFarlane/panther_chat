@@ -561,6 +561,7 @@ class DossierRequest(BaseModel):
     entity_type: str = Field(default="CLUB", description="Entity type (CLUB, LEAGUE, ORG, etc.)")
     priority_score: int = Field(default=85, ge=0, le=100, description="Priority score for tier determination")
     force_refresh: bool = Field(default=False, description="Force regeneration even if cache is fresh")
+    run_objective: str = Field(default="dossier_core", description="Objective profile for phase-0 generation")
 
 
 class DossierResponse(BaseModel):
@@ -580,12 +581,16 @@ class EntityPipelineRequest(BaseModel):
     entity_type: str = Field(default="CLUB", description="Entity type")
     priority_score: int = Field(default=85, ge=0, le=100, description="Priority score")
     batch_id: Optional[str] = Field(default=None, description="Optional import batch ID for live phase updates")
+    run_objective: str = Field(default="rfp_web", description="Objective profile for objective-first runtime")
 
 
 class EntityPipelineResponse(BaseModel):
     """Response from the canonical entity pipeline."""
     entity_id: str
     entity_name: str
+    objective: str = "rfp_web"
+    objective_result: Dict[str, Any] = Field(default_factory=dict)
+    llm_efficiency_metrics: Dict[str, Any] = Field(default_factory=dict)
     phases: Dict[str, Any]
     phase_details_by_phase: Dict[str, Any] = Field(default_factory=dict)
     validated_signal_count: int
@@ -914,6 +919,7 @@ async def generate_dossier(request: DossierRequest):
                 entity_type=request.entity_type,
                 priority_score=request.priority_score,
                 progress_callback=emit_dossier_substep,
+                run_objective=request.run_objective,
             )
             await emit_dossier_substep(
                 "collect_entity_data",
@@ -1117,6 +1123,7 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             entity_type=request.entity_type,
             priority_score=request.priority_score,
             force_refresh=True,
+            run_objective=request.run_objective,
         )
         dossier_timeout_seconds = resolve_phase0_timeout_seconds()
         queue_mode = (os.getenv("ENTITY_IMPORT_QUEUE_MODE") or "durable_worker").strip().lower()
@@ -1275,6 +1282,7 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             entity_name=request.entity_name,
             entity_type=request.entity_type,
             priority_score=request.priority_score,
+            run_objective=request.run_objective,
             initial_dossier=dossier_response.dossier_data,
             phase_callback=emit_phase_update,
         )

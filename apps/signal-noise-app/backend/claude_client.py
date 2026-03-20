@@ -1050,6 +1050,9 @@ class ClaudeClient:
         system_prompt: Optional[str] = None,
         json_mode: bool = False,
         stream: Optional[bool] = None,
+        max_retries_override: Optional[int] = None,
+        empty_retries_before_fallback_override: Optional[int] = None,
+        fast_fail_on_length: bool = False,
     ) -> Dict[str, Any]:
         """
         Query Claude with specific model using Anthropic SDK
@@ -1072,6 +1075,9 @@ class ClaudeClient:
                 system_prompt=system_prompt,
                 json_mode=json_mode,
                 stream=stream,
+                max_retries_override=max_retries_override,
+                empty_retries_before_fallback_override=empty_retries_before_fallback_override,
+                fast_fail_on_length=fast_fail_on_length,
             )
         if self.provider == self.PROVIDER_CHUTES_ANTHROPIC:
             return await self._query_chutes_anthropic(
@@ -1081,6 +1087,9 @@ class ClaudeClient:
                 system_prompt=system_prompt,
                 json_mode=json_mode,
                 stream=stream,
+                max_retries_override=max_retries_override,
+                empty_retries_before_fallback_override=empty_retries_before_fallback_override,
+                fast_fail_on_length=fast_fail_on_length,
             )
 
         if not ANTHROPIC_SDK_AVAILABLE:
@@ -1139,6 +1148,9 @@ class ClaudeClient:
         system_prompt: Optional[str] = None,
         json_mode: bool = False,
         stream: Optional[bool] = None,
+        max_retries_override: Optional[int] = None,
+        empty_retries_before_fallback_override: Optional[int] = None,
+        fast_fail_on_length: bool = False,
     ) -> Dict[str, Any]:
         """
         Query a Chutes OpenAI-compatible model endpoint.
@@ -1189,7 +1201,14 @@ class ClaudeClient:
 
         last_error: Optional[Exception] = None
 
-        for attempt in range(self.chutes_max_retries + 1):
+        max_retries = self.chutes_max_retries if max_retries_override is None else max(0, int(max_retries_override))
+        empty_before_fallback = (
+            self.chutes_empty_retries_before_fallback
+            if empty_retries_before_fallback_override is None
+            else max(1, int(empty_retries_before_fallback_override))
+        )
+
+        for attempt in range(max_retries + 1):
             try:
                 using_fallback_model = (
                     payload["model"] == self.chutes_fallback_model and payload["model"] != self.chutes_model
@@ -1231,10 +1250,39 @@ class ClaudeClient:
                 stop_reason = data.get("stop_reason")
                 chunk_count = int(data.get("chunk_count", 0) or 0)
 
+                if not content and str(stop_reason or "").strip().lower() == "length" and fast_fail_on_length:
+                    self._record_chutes_event("success")
+                    self._apply_chutes_adaptive_recovery()
+                    self._set_last_request_diagnostics(retry_attempts=attempt, last_status="length_fast_fail")
+                    return {
+                        "content": "",
+                        "reasoning_content": reasoning_content,
+                        "model_used": payload["model"],
+                        "requested_model": model,
+                        "provider": self.provider,
+                        "structured_output": structured_output,
+                        "raw_response": data.get("raw_response"),
+                        "tokens_used": {
+                            "input_tokens": usage.get("prompt_tokens"),
+                            "output_tokens": usage.get("completion_tokens"),
+                            "total_tokens": usage.get("total_tokens"),
+                        },
+                        "stop_reason": stop_reason,
+                        "inference_diagnostics": {
+                            "streaming": bool(request_stream),
+                            "streaming_override": request_stream != self.chutes_stream_enabled,
+                            "fallback_used": bool(payload["model"] != self.chutes_model),
+                            "chunk_count": chunk_count,
+                            "answer_channel_chars": 0,
+                            "reasoning_channel_chars": len(reasoning_content),
+                            "length_fast_fail": True,
+                        },
+                    }
+
                 if not content and self.chutes_fallback_model and payload["model"] != self.chutes_fallback_model:
                     if self._should_switch_to_fallback(
                         attempt=attempt,
-                        threshold=self.chutes_empty_retries_before_fallback,
+                        threshold=empty_before_fallback,
                         current_model=str(payload["model"]),
                     ):
                         logger.warning(
@@ -1250,7 +1298,7 @@ class ClaudeClient:
                             payload["model"],
                             stop_reason,
                             attempt + 1,
-                            self.chutes_empty_retries_before_fallback,
+                            empty_before_fallback,
                         )
                         backoff_seconds = self._compute_chutes_backoff_seconds(
                             attempt=attempt,
@@ -1292,7 +1340,7 @@ class ClaudeClient:
                 logger.error(
                     "Chutes API request failed (attempt %s/%s): %s",
                     attempt + 1,
-                    self.chutes_max_retries + 1,
+                    max_retries + 1,
                     error_detail,
                 )
                 if self._is_insufficient_balance_error(e):
@@ -1346,7 +1394,7 @@ class ClaudeClient:
                     )
                     payload["model"] = self.chutes_fallback_model
                     continue
-                if not is_retryable or attempt >= self.chutes_max_retries:
+                if not is_retryable or attempt >= max_retries:
                     self._set_last_request_diagnostics(
                         retry_attempts=attempt,
                         last_status="error_non_retryable" if not is_retryable else "error_retry_exhausted",
@@ -1379,13 +1427,13 @@ class ClaudeClient:
                 await asyncio.sleep(backoff_seconds)
 
         self._set_last_request_diagnostics(
-            retry_attempts=self.chutes_max_retries + 1,
+            retry_attempts=max_retries + 1,
             last_status="error_exhausted",
             circuit_broken=bool(self._get_disabled_reason()),
             disable_reason=self._get_disabled_reason(),
         )
         raise LLMRequestError(
-            f"Chutes request failed after {self.chutes_max_retries + 1} attempts: "
+            f"Chutes request failed after {max_retries + 1} attempts: "
             f"{self._format_chutes_error(last_error) if last_error else 'unknown error'}",
             retryable=self._is_retryable_chutes_error(last_error) if last_error is not None else False,
             provider=self.provider,
@@ -1517,6 +1565,9 @@ class ClaudeClient:
         system_prompt: Optional[str] = None,
         json_mode: bool = False,
         stream: Optional[bool] = None,
+        max_retries_override: Optional[int] = None,
+        empty_retries_before_fallback_override: Optional[int] = None,
+        fast_fail_on_length: bool = False,
     ) -> Dict[str, Any]:
         """Query a Chutes Anthropic-compatible messages endpoint."""
         disabled_reason = self._get_effective_disabled_reason()
@@ -1542,7 +1593,8 @@ class ClaudeClient:
 
         last_error: Optional[Exception] = None
 
-        for attempt in range(self.chutes_max_retries + 1):
+        max_retries = self.chutes_max_retries if max_retries_override is None else max(0, int(max_retries_override))
+        for attempt in range(max_retries + 1):
             try:
                 timeout = httpx.Timeout(
                     timeout=self.chutes_timeout_seconds,
@@ -1572,6 +1624,30 @@ class ClaudeClient:
                 structured_output = self._extract_structured_output(content_blocks)
                 if structured_output is None:
                     structured_output = self._extract_structured_output(content)
+                stop_reason = data.get("stop_reason")
+                if not content and str(stop_reason or "").strip().lower() == "length" and fast_fail_on_length:
+                    self._record_chutes_event("success")
+                    self._apply_chutes_adaptive_recovery()
+                    self._set_last_request_diagnostics(retry_attempts=attempt, last_status="length_fast_fail")
+                    return {
+                        "content": "",
+                        "reasoning_content": "",
+                        "model_used": self.chutes_model,
+                        "requested_model": model,
+                        "provider": self.provider,
+                        "structured_output": structured_output,
+                        "raw_response": data,
+                        "tokens_used": {
+                            "input_tokens": input_tokens,
+                            "output_tokens": output_tokens,
+                            "total_tokens": total_tokens,
+                        },
+                        "stop_reason": stop_reason,
+                        "inference_diagnostics": {
+                            "length_fast_fail": True,
+                            "fallback_used": False,
+                        },
+                    }
                 if total_tokens is None and input_tokens is not None and output_tokens is not None:
                     total_tokens = input_tokens + output_tokens
                 self._record_chutes_event("success")
@@ -1591,7 +1667,7 @@ class ClaudeClient:
                         "output_tokens": output_tokens,
                         "total_tokens": total_tokens,
                     },
-                    "stop_reason": data.get("stop_reason"),
+                    "stop_reason": stop_reason,
                 }
             except Exception as e:
                 last_error = e
@@ -1599,7 +1675,7 @@ class ClaudeClient:
                 logger.error(
                     "Chutes Anthropic API request failed (attempt %s/%s): %s",
                     attempt + 1,
-                    self.chutes_max_retries + 1,
+                    max_retries + 1,
                     error_detail,
                 )
                 if self._is_insufficient_balance_error(e):
@@ -1630,7 +1706,7 @@ class ClaudeClient:
                 elif is_retryable:
                     self._record_chutes_event("retryable_error", status_code=status_code)
                     self._apply_chutes_adaptive_penalty(is_rate_limit=False)
-                if not is_retryable or attempt >= self.chutes_max_retries:
+                if not is_retryable or attempt >= max_retries:
                     self._set_last_request_diagnostics(
                         retry_attempts=attempt,
                         last_status="error_non_retryable" if not is_retryable else "error_retry_exhausted",
@@ -1663,13 +1739,13 @@ class ClaudeClient:
                 await asyncio.sleep(backoff_seconds)
 
         self._set_last_request_diagnostics(
-            retry_attempts=self.chutes_max_retries + 1,
+            retry_attempts=max_retries + 1,
             last_status="error_exhausted",
             circuit_broken=bool(self._get_disabled_reason()),
             disable_reason=self._get_disabled_reason(),
         )
         raise LLMRequestError(
-            f"Chutes Anthropic request failed after {self.chutes_max_retries + 1} attempts: "
+            f"Chutes Anthropic request failed after {max_retries + 1} attempts: "
             f"{self._format_chutes_error(last_error) if last_error else 'unknown error'}",
             retryable=self._is_retryable_chutes_error(last_error) if last_error is not None else False,
             provider=self.provider,

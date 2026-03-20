@@ -355,6 +355,7 @@ class EntityPipelineWorker:
             "entity_name": run["entity_name"],
             "entity_type": str((run.get("metadata") or {}).get("entity_type") or "CLUB"),
             "priority_score": int((run.get("metadata") or {}).get("priority_score") or 50),
+            "run_objective": str((run.get("metadata") or {}).get("run_objective") or "rfp_web"),
         }
         started_at = time.perf_counter()
         logger.info(

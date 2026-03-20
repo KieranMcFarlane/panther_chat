@@ -113,6 +113,7 @@ class FixedDossierFirstPipeline:
         )
         self.two_pass_gate_min_confidence = float(os.getenv("PIPELINE_PASS_A_MIN_CONFIDENCE", "0.45"))
         self.two_pass_gate_min_signals = max(0, int(os.getenv("PIPELINE_PASS_A_MIN_SIGNALS", "1")))
+        self.run_objective = str(os.getenv("PIPELINE_RUN_OBJECTIVE", "rfp_web")).strip().lower() or "rfp_web"
 
         if _bool_env(os.getenv("PIPELINE_FORCE_BRIGHTDATA", "false")):
             os.environ["BRIGHTDATA_FORCE_ONLY"] = "true"
@@ -435,6 +436,7 @@ class FixedDossierFirstPipeline:
             entity_name=entity_name,
             entity_type=entity_type,
             priority_score=tier_score,
+            run_objective=self.run_objective,
             phase_callback=_phase_callback,
         )
         artifacts = orchestrated.get("artifacts", {}) if isinstance(orchestrated, dict) else {}
