@@ -230,6 +230,7 @@ class DiscoveryRuntimeV2:
             "schema_fail_count": 0,
             "llm_hop_selection_count": 0,
         }
+        self._llm_circuit_broken = False
 
     async def run_discovery(
         self,
@@ -279,6 +280,7 @@ class DiscoveryRuntimeV2:
             "schema_fail_count": 0,
             "llm_hop_selection_count": 0,
         }
+        self._llm_circuit_broken = False
 
         iteration_budget = int(objective_budget["max_hops"])
         official_domain = self._official_domain(entity_name=entity_name, dossier=dossier)
@@ -440,6 +442,7 @@ class DiscoveryRuntimeV2:
             "length_stop_count": int(self._metrics["length_stop_count"]),
             "schema_fail_count": int(self._metrics["schema_fail_count"]),
             "llm_hop_selection_count": int(self._metrics["llm_hop_selection_count"]),
+            "llm_circuit_broken": bool(self._llm_circuit_broken),
             "skipped_enrichment_reasons": [],
             "objective_stage_durations": {
                 "source_acquisition_seconds": round(sum(float(h.get("duration_ms") or 0.0) for h in hop_timings) / 1000.0, 3),
@@ -603,6 +606,12 @@ class DiscoveryRuntimeV2:
                 accept_reject_reasons.append("empty_content_item")
             if quality_score < self._quality_threshold_for_lane(lane):
                 accept_reject_reasons.append("evidence_quality_below_threshold")
+            if not self._is_evidence_grounded_in_content(
+                snippet=evidence_snippet,
+                content_item=str(evidence.get("content_item") or ""),
+                content=content,
+            ):
+                accept_reject_reasons.append("evidence_not_grounded_in_source_content")
 
             signature = self._evidence_signature(url=url, lane=lane, snippet=evidence_snippet)
             if signature in state["accepted_signatures"]:
@@ -852,6 +861,12 @@ class DiscoveryRuntimeV2:
         run_objective: Optional[str] = None,
     ) -> Dict[str, Any]:
         objective = normalize_run_objective(run_objective)
+        if self._llm_circuit_broken:
+            return {
+                "decision": "NO_PROGRESS",
+                "parse_path": "llm_circuit_open",
+                "llm_last_status": "length_stop",
+            }
         if not self.enable_llm_eval:
             return {
                 "decision": "WEAK_ACCEPT_CANDIDATE",
@@ -879,6 +894,12 @@ class DiscoveryRuntimeV2:
             if stop_reason == "length":
                 self._metrics["length_stop_count"] += 1
                 self._metrics["llm_fallback_count"] += 1
+                self._llm_circuit_broken = True
+                return {
+                    "decision": "NO_PROGRESS",
+                    "parse_path": "length_stop_hard_fail",
+                    "llm_last_status": "length_stop",
+                }
             payload = None
             structured_output = (response or {}).get("structured_output")
             if isinstance(structured_output, dict):
@@ -925,6 +946,17 @@ class DiscoveryRuntimeV2:
         except Exception:
             return None
         return payload if isinstance(payload, dict) else None
+
+    @staticmethod
+    def _is_evidence_grounded_in_content(*, snippet: str, content_item: str, content: str) -> bool:
+        content_norm = " ".join(str(content or "").lower().split())
+        if not content_norm:
+            return False
+        for candidate in (snippet, content_item):
+            candidate_norm = " ".join(str(candidate or "").lower().split())
+            if candidate_norm and candidate_norm in content_norm:
+                return True
+        return False
 
     def _resolve_objective_budget(self, *, max_iterations: int, profile: Dict[str, Any]) -> Dict[str, Any]:
         budget_overrides = profile.get("budget") if isinstance(profile.get("budget"), dict) else {}

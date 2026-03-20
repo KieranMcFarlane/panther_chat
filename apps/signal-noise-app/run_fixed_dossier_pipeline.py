@@ -1359,6 +1359,11 @@ class FixedDossierFirstPipeline:
                 "synthetic_url_attempt_count": int(performance.get("synthetic_url_attempt_count") or 0),
                 "dead_end_event_count": int(performance.get("dead_end_event_count") or 0),
                 "fallback_accept_block_count": int(performance.get("fallback_accept_block_count") or 0),
+                "llm_call_count": int(performance.get("llm_call_count") or 0),
+                "llm_fallback_count": int(performance.get("llm_fallback_count") or 0),
+                "length_stop_count": int(performance.get("length_stop_count") or 0),
+                "schema_fail_count": int(performance.get("schema_fail_count") or 0),
+                "llm_circuit_broken": bool(performance.get("llm_circuit_broken", False)),
                 "dual_write_ok": dual_write_ok,
                 "persistence_status": persistence_status if isinstance(persistence_status, dict) else None,
                 "shadow_unbounded": {

@@ -478,11 +478,26 @@ class GraphitiService:
                 'detection_confidence': rfp_data.get('confidence_score'),
                 'metadata': rfp_data.get('metadata', {}),
             }
-            self.supabase_client.table('rfp_tracking').upsert(fallback_payload).execute()
-            return {
-                'rfp_id': rfp_data.get('rfp_id'),
-                'status': 'fallback_tracking',
-            }
+            try:
+                self.supabase_client.table('rfp_tracking').upsert(fallback_payload).execute()
+                return {
+                    'rfp_id': rfp_data.get('rfp_id'),
+                    'status': 'fallback_tracking',
+                }
+            except Exception as fallback_exc:  # noqa: BLE001
+                message = str(fallback_exc)
+                # Duplicate/conflict writes are expected under idempotent replays.
+                if "409" in message or "23505" in message or "duplicate" in message.lower():
+                    logger.info(
+                        "ℹ️ rfp_tracking conflict treated as idempotent success for %s: %s",
+                        rfp_data.get('rfp_id'),
+                        fallback_exc,
+                    )
+                    return {
+                        'rfp_id': rfp_data.get('rfp_id'),
+                        'status': 'fallback_tracking_existing',
+                    }
+                raise
 
     async def persist_pipeline_record_supabase(self, envelope: Dict[str, Any]) -> Dict[str, Any]:
         """
