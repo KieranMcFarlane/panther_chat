@@ -6,20 +6,80 @@ Shared helpers for shaping pipeline run metadata.
 from __future__ import annotations
 
 from copy import deepcopy
+from importlib import import_module
 from typing import Any, Dict, Optional
 
 
-def merge_pipeline_phase_metadata(existing_metadata: Optional[Dict[str, Any]], payload: Dict[str, Any]) -> Dict[str, Any]:
+VALID_PHASE_STATUSES = {"pending", "running", "completed", "failed", "skipped"}
+CANONICAL_PHASE_ORDER = (
+    "dossier_generation",
+    "discovery",
+    "ralph_validation",
+    "temporal_persistence",
+    "dashboard_scoring",
+)
+
+
+def normalize_phase_status(status: Any, default: str = "running") -> str:
+    normalized = str(status or "").strip().lower()
+    if normalized in VALID_PHASE_STATUSES:
+        return normalized
+    return default
+
+
+def merge_pipeline_phase_metadata(
+    existing_metadata: Optional[Dict[str, Any]],
+    phase_or_payload: Any,
+    payload: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     metadata = deepcopy(existing_metadata or {})
-    metadata["phase_details"] = payload
-    if payload.get("monitoring_summary") is not None:
-        metadata["monitoring_summary"] = payload.get("monitoring_summary")
-    if payload.get("escalation_reason") is not None:
-        metadata["escalation_reason"] = payload.get("escalation_reason")
-    if payload.get("performance_summary") is not None:
-        metadata["performance_summary"] = payload.get("performance_summary")
-    if payload.get("discovery_context") is not None:
-        metadata["discovery_context"] = payload.get("discovery_context")
+    if payload is None:
+        phase_payload = deepcopy(phase_or_payload or {})
+        if not isinstance(phase_payload, dict):
+            raise TypeError("phase payload must be a dict when explicit phase is not provided")
+        phase_name = str(phase_payload.get("phase") or "unknown")
+    else:
+        phase_name = str(phase_or_payload or "unknown")
+        phase_payload = deepcopy(payload or {})
+
+    phase_payload["phase"] = phase_name
+    phase_payload["status"] = normalize_phase_status(phase_payload.get("status"), default="running")
+
+    phase_details_by_phase = metadata.get("phase_details_by_phase")
+    if not isinstance(phase_details_by_phase, dict):
+        phase_details_by_phase = {}
+    existing_phase_details = phase_details_by_phase.get(phase_name)
+    if not isinstance(existing_phase_details, dict):
+        existing_phase_details = {}
+    merged_phase_details = deepcopy(existing_phase_details)
+    merged_phase_details.update(phase_payload)
+    phase_details_by_phase[phase_name] = merged_phase_details
+
+    phase_details_by_phase = canonicalize_phase_details_by_phase(phase_details_by_phase)
+
+    # Keep both canonical and legacy keys for compatibility.
+    metadata["phase_details_by_phase"] = phase_details_by_phase
+    metadata["phases"] = build_phase_status_map(phase_details_by_phase)
+    metadata["phase_details"] = phase_details_by_phase.get(phase_name) or merged_phase_details
+
+    if phase_payload.get("monitoring_summary") is not None:
+        metadata["monitoring_summary"] = phase_payload.get("monitoring_summary")
+    if phase_payload.get("escalation_reason") is not None:
+        metadata["escalation_reason"] = phase_payload.get("escalation_reason")
+    if phase_payload.get("performance_summary") is not None:
+        metadata["performance_summary"] = phase_payload.get("performance_summary")
+    if phase_payload.get("discovery_context") is not None:
+        metadata["discovery_context"] = phase_payload.get("discovery_context")
+    if phase_payload.get("acceptance_gate") is not None:
+        metadata["acceptance_gate"] = phase_payload.get("acceptance_gate")
+    if phase_payload.get("failure_taxonomy") is not None:
+        metadata["failure_taxonomy"] = phase_payload.get("failure_taxonomy")
+    if phase_payload.get("run_profile") is not None:
+        metadata["run_profile"] = phase_payload.get("run_profile")
+    if phase_payload.get("degraded_mode") is not None:
+        metadata["degraded_mode"] = bool(phase_payload.get("degraded_mode"))
+    if phase_payload.get("persistence_status") is not None:
+        metadata["persistence"] = phase_payload.get("persistence_status")
     return metadata
 
 
@@ -28,15 +88,39 @@ def merge_pipeline_run_metadata(
     *,
     phases: Optional[Dict[str, Any]] = None,
     scores: Optional[Dict[str, Any]] = None,
+    phase_details_by_phase: Optional[Dict[str, Any]] = None,
     monitoring_summary: Optional[Dict[str, Any]] = None,
     escalation_reason: Optional[str] = None,
     performance_summary: Optional[Dict[str, Any]] = None,
     discovery_context: Optional[Dict[str, Any]] = None,
+    acceptance_gate: Optional[Dict[str, Any]] = None,
+    failure_taxonomy: Optional[Dict[str, Any]] = None,
+    run_profile: Optional[str] = None,
+    degraded_mode: Optional[bool] = None,
+    persistence_status: Optional[Dict[str, Any]] = None,
     promoted_rfp_ids: Optional[list[str]] = None,
     completed_at: Optional[str] = None,
 ) -> Dict[str, Any]:
     metadata = deepcopy(existing_metadata or {})
-    if phases is not None:
+    legacy_phase_details = deepcopy(metadata.get("phase_details") or {}) if isinstance(metadata.get("phase_details"), dict) else {}
+    phase_payload = phase_details_by_phase
+    if phase_payload is None and phases is not None:
+        phase_payload = {
+            str(name): {"phase": str(name), "status": normalize_phase_status((details or {}).get("status"), default="pending")}
+            for name, details in (phases or {}).items()
+            if isinstance(details, dict)
+        }
+    if phase_payload is not None:
+        normalized_details = canonicalize_phase_details_by_phase(phase_payload)
+        metadata["phase_details_by_phase"] = normalized_details
+        metadata["phases"] = build_phase_status_map(normalized_details)
+        latest_details = select_latest_phase_details(normalized_details)
+        if legacy_phase_details:
+            preserved = deepcopy(legacy_phase_details)
+            preserved.update(latest_details)
+            latest_details = preserved
+        metadata["phase_details"] = latest_details
+    elif phases is not None:
         metadata["phases"] = phases
     if scores is not None:
         metadata["scores"] = scores
@@ -48,11 +132,88 @@ def merge_pipeline_run_metadata(
         metadata["performance_summary"] = performance_summary
     if discovery_context is not None:
         metadata["discovery_context"] = discovery_context
+    if acceptance_gate is not None:
+        metadata["acceptance_gate"] = acceptance_gate
+    if failure_taxonomy is not None:
+        metadata["failure_taxonomy"] = failure_taxonomy
+    if run_profile is not None:
+        metadata["run_profile"] = run_profile
+    if degraded_mode is not None:
+        metadata["degraded_mode"] = bool(degraded_mode)
+    if persistence_status is not None:
+        metadata["persistence"] = persistence_status
     if promoted_rfp_ids is not None:
         metadata["promoted_rfp_ids"] = promoted_rfp_ids
     if completed_at is not None:
         metadata["completed_at"] = completed_at
     return metadata
+
+
+def build_phase_status_map(phase_details_by_phase: Optional[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
+    details = canonicalize_phase_details_by_phase(phase_details_by_phase or {})
+    return {
+        phase: {"status": (detail or {}).get("status", "pending")}
+        for phase, detail in details.items()
+    }
+
+
+def canonicalize_phase_details_by_phase(
+    phase_details_by_phase: Optional[Dict[str, Any]],
+) -> Dict[str, Dict[str, Any]]:
+    raw = deepcopy(phase_details_by_phase or {})
+    normalized: Dict[str, Dict[str, Any]] = {}
+    for phase_name, details in raw.items():
+        phase = str(phase_name or "unknown")
+        detail_payload = deepcopy(details) if isinstance(details, dict) else {}
+        detail_payload["phase"] = phase
+        detail_payload["status"] = normalize_phase_status(detail_payload.get("status"), default="pending")
+        normalized[phase] = detail_payload
+
+    for phase in CANONICAL_PHASE_ORDER:
+        if phase not in normalized:
+            normalized[phase] = {"phase": phase, "status": "pending"}
+
+    return normalized
+
+
+def select_latest_phase_details(phase_details_by_phase: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    details = canonicalize_phase_details_by_phase(phase_details_by_phase or {})
+    for phase in reversed(CANONICAL_PHASE_ORDER):
+        candidate = details.get(phase) or {}
+        status = normalize_phase_status(candidate.get("status"), default="pending")
+        if status != "pending":
+            return candidate
+    return details.get(CANONICAL_PHASE_ORDER[0], {"phase": CANONICAL_PHASE_ORDER[0], "status": "pending"})
+
+
+def validate_runtime_imports(
+    targets: Optional[Dict[str, tuple[str, ...]]] = None,
+) -> Dict[str, Any]:
+    resolved_targets = targets or {
+        "template_loader": ("backend.template_loader", "template_loader"),
+        "dossier_question_extractor": ("backend.dossier_question_extractor", "dossier_question_extractor"),
+    }
+    checked: Dict[str, str] = {}
+    missing: list[str] = []
+    for label, candidates in resolved_targets.items():
+        loaded_from = None
+        for module_name in candidates:
+            try:
+                import_module(module_name)
+                loaded_from = module_name
+                break
+            except Exception:
+                continue
+        if loaded_from is None:
+            missing.append(label)
+        else:
+            checked[label] = loaded_from
+    return {
+        "status": "ok" if not missing else "failed",
+        "checked": checked,
+        "missing": missing,
+        "failure_class": "import_context_failure" if missing else None,
+    }
 
 
 def derive_discovery_context(result: Dict[str, Any]) -> Dict[str, Any]:

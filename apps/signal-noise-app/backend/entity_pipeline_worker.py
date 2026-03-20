@@ -12,7 +12,10 @@ from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 from dotenv import load_dotenv
-from supabase import create_client
+try:
+    from supabase import create_client
+except ImportError:  # pragma: no cover - allows unit tests without supabase package
+    create_client = None
 from pipeline_run_metadata import (
     derive_discovery_context,
     derive_monitoring_summary,
@@ -46,7 +49,7 @@ def resolve_fastapi_url(
 
 FASTAPI_URL = resolve_fastapi_url(os.getenv("FASTAPI_URL"), os.getenv("PYTHON_BACKEND_URL"))
 PIPELINE_TIMEOUT_SECONDS = int(os.getenv("ENTITY_PIPELINE_TIMEOUT_SECONDS", "1800"))
-QUEUE_MODE = os.getenv("ENTITY_IMPORT_QUEUE_MODE", "in_process")
+QUEUE_MODE = os.getenv("ENTITY_IMPORT_QUEUE_MODE", "durable_worker")
 POLL_INTERVAL_SECONDS = int(os.getenv("ENTITY_PIPELINE_WORKER_POLL_SECONDS", "10"))
 STALE_MINUTES = int(os.getenv("ENTITY_PIPELINE_STALE_MINUTES", "30"))
 LEASE_SECONDS = int(os.getenv("ENTITY_PIPELINE_LEASE_SECONDS", "90"))
@@ -54,7 +57,7 @@ MAX_RUN_ATTEMPTS = int(os.getenv("ENTITY_PIPELINE_MAX_RUN_ATTEMPTS", "2"))
 
 
 def should_process_in_process(queue_mode: Optional[str]) -> bool:
-    return (queue_mode or "in_process") != "durable_worker"
+    return (queue_mode or "durable_worker") != "durable_worker"
 
 
 def choose_supabase_key(
@@ -245,6 +248,8 @@ def merge_cached_entity_properties(
 
 class EntityPipelineWorker:
     def __init__(self) -> None:
+        if create_client is None:
+            raise RuntimeError("supabase package is required for entity pipeline worker runtime")
         supabase_url = (
             os.getenv("SUPABASE_URL")
             or os.getenv("NEXT_PUBLIC_SUPABASE_URL")
@@ -587,25 +592,37 @@ class EntityPipelineWorker:
                 metadata = merge_pipeline_run_metadata(
                     build_run_success_metadata(latest_metadata if isinstance(latest_metadata, dict) else run_metadata),
                     phases=phases,
+                    phase_details_by_phase=(result.get("phase_details_by_phase") or phases),
                     scores=((result.get("artifacts") or {}).get("scores")),
                     monitoring_summary=derive_monitoring_summary(result),
                     escalation_reason=(result.get("artifacts") or {}).get("escalation_reason"),
                     performance_summary=(((result.get("artifacts") or {}).get("discovery_result") or {}).get("performance_summary")),
                     discovery_context=derive_discovery_context(result),
+                    acceptance_gate=result.get("acceptance_gate"),
+                    failure_taxonomy=result.get("failure_taxonomy"),
+                    run_profile=result.get("run_profile"),
+                    degraded_mode=result.get("degraded_mode"),
+                    persistence_status=result.get("persistence_status"),
                     promoted_rfp_ids=[],
                     completed_at=result.get("completed_at"),
                 )
-                self.persist_monitoring_outputs(batch_id, run, result)
-                self.sync_cached_entity(batch_id, run, result, "completed")
+                dual_write_ok = bool(result.get("dual_write_ok", True))
+                final_status = "completed" if dual_write_ok else "failed"
+                if final_status == "completed":
+                    self.persist_monitoring_outputs(batch_id, run, result)
+                    self.sync_cached_entity(batch_id, run, result, "completed")
+                else:
+                    self.sync_cached_entity(batch_id, run, result, "failed")
                 self.update_run(
                     batch_id,
                     run["entity_id"],
                     {
-                        "status": "completed",
+                        "status": final_status,
                         "phase": last_phase,
                         "dossier_id": ((result.get("artifacts") or {}).get("dossier_id")) or run["entity_id"],
                         "sales_readiness": result.get("sales_readiness"),
                         "rfp_count": int(result.get("rfp_count") or 0),
+                        "error_message": None if dual_write_ok else "dual_write_incomplete",
                         "completed_at": self._now_iso(),
                         "metadata": metadata,
                     },

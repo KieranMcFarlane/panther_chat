@@ -1,0 +1,6 @@
+-r requirements-runtime.txt
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+beautifulsoup4>=4.12.0

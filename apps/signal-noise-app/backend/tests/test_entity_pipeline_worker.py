@@ -31,8 +31,8 @@ from entity_pipeline_worker import (
 )
 
 
-def test_should_process_in_process_defaults_true_for_local_mode():
-    assert should_process_in_process(None) is True
+def test_should_process_in_process_defaults_to_durable_worker_mode():
+    assert should_process_in_process(None) is False
     assert should_process_in_process("in_process") is True
     assert should_process_in_process("durable_worker") is False
 
@@ -250,20 +250,32 @@ def test_merge_pipeline_run_metadata_preserves_phase_details_and_adds_scores():
     merged = merge_pipeline_run_metadata(
         {"phase_details": {"status": "running", "iteration": 2}},
         phases={"discovery": {"status": "completed"}},
+        phase_details_by_phase={"discovery": {"status": "completed"}},
         scores={"sales_readiness": "MONITOR"},
         monitoring_summary={"pages_fetched": 3, "candidate_count": 1},
         escalation_reason="baseline_monitoring_ambiguous",
         performance_summary={"slowest_hop": {"hop_type": "rfp_page"}},
+        acceptance_gate={"passed": True, "reasons": []},
+        failure_taxonomy={"schema_gate_fallback": 1},
+        run_profile="bounded_production",
+        degraded_mode=False,
+        persistence_status={"dual_write_ok": True, "supabase": {"ok": True}, "falkordb": {"ok": True}},
         promoted_rfp_ids=["rfp-1"],
         completed_at="2026-03-02T15:10:00+00:00",
     )
 
     assert merged["phase_details"]["iteration"] == 2
     assert merged["phases"]["discovery"]["status"] == "completed"
+    assert merged["phase_details_by_phase"]["discovery"]["status"] == "completed"
     assert merged["scores"]["sales_readiness"] == "MONITOR"
     assert merged["monitoring_summary"]["pages_fetched"] == 3
     assert merged["escalation_reason"] == "baseline_monitoring_ambiguous"
     assert merged["performance_summary"]["slowest_hop"]["hop_type"] == "rfp_page"
+    assert merged["acceptance_gate"]["passed"] is True
+    assert merged["failure_taxonomy"]["schema_gate_fallback"] == 1
+    assert merged["run_profile"] == "bounded_production"
+    assert merged["degraded_mode"] is False
+    assert merged["persistence"]["dual_write_ok"] is True
     assert merged["promoted_rfp_ids"] == ["rfp-1"]
 
 

@@ -475,7 +475,12 @@ class HypothesisManager:
         # Load from FalkorDB (slowest)
         if self._repository:
             # Initialize repository if needed
+            needs_init = False
             if hasattr(self._repository, 'driver') and self._repository.driver is None:
+                needs_init = True
+            if hasattr(self._repository, 'graph') and self._repository.graph is None:
+                needs_init = True
+            if needs_init:
                 await self._repository.initialize()
 
             hypothesis = await self._repository.get_hypothesis(hypothesis_id)
@@ -506,7 +511,12 @@ class HypothesisManager:
         # Load from FalkorDB
         if self._repository:
             # Initialize repository if needed
+            needs_init = False
             if hasattr(self._repository, 'driver') and self._repository.driver is None:
+                needs_init = True
+            if hasattr(self._repository, 'graph') and self._repository.graph is None:
+                needs_init = True
+            if needs_init:
                 await self._repository.initialize()
 
             hypotheses = await self._repository.get_hypotheses_for_entity(entity_id)

@@ -1601,6 +1601,10 @@ class DossierSection:
     recommendations: List[Dict[str, Any]] = field(default_factory=list)
     confidence: float = 0.0
     generated_by: str = "haiku"  # Which model generated this section
+    output_status: str = "completed"  # completed|completed_with_fallback|failed
+    reason_code: Optional[str] = None
+    parse_path: str = "json_direct"
+    fallback_used: bool = False
     generated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -1614,6 +1618,10 @@ class DossierSection:
             'recommendations': self.recommendations,
             'confidence': self.confidence,
             'generated_by': self.generated_by,
+            'output_status': self.output_status,
+            'reason_code': self.reason_code,
+            'parse_path': self.parse_path,
+            'fallback_used': self.fallback_used,
             'generated_at': self.generated_at.isoformat()
         }
 

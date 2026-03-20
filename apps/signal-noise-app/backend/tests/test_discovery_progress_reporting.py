@@ -557,3 +557,74 @@ Related article cites procurement team planning.
     assert salvaged["decision"] == "WEAK_ACCEPT"
     assert salvaged["confidence_delta"] <= 0.02
     assert salvaged["corroboration_count"] >= 2
+
+
+@pytest.mark.asyncio
+async def test_update_hypothesis_state_does_not_drop_global_confidence_on_lower_hypothesis_no_progress():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+
+    class _HypothesisManager:
+        async def update_hypothesis(self, **kwargs):
+            return None
+
+    discovery.hypothesis_manager = _HypothesisManager()
+    discovery._create_signal_from_hop_result = lambda **kwargs: None
+
+    hypothesis = SimpleNamespace(
+        hypothesis_id="h-dup",
+        confidence=0.54,
+        iterations_attempted=0,
+        iterations_accepted=0,
+        iterations_weak_accept=0,
+        iterations_rejected=0,
+        iterations_no_progress=0,
+        reinforced_count=0,
+        weakened_count=0,
+        last_delta=0.0,
+        last_updated=None,
+        category="digital_transformation",
+        metadata={},
+        statement="test",
+        status="ACTIVE",
+    )
+
+    state = SimpleNamespace(
+        entity_id="coventry-city-fc",
+        entity_name="Coventry City FC",
+        current_confidence=0.60,
+        current_depth=1,
+        iterations_completed=0,
+        update_confidence=lambda value: setattr(state, "current_confidence", value),
+        should_dig_deeper=lambda _hypothesis: False,
+    )
+
+    await discovery._update_hypothesis_state(
+        hypothesis=hypothesis,
+        result={
+            "decision": "NO_PROGRESS",
+            "confidence_delta": 0.0,
+            "hop_type": HopType.RFP_PAGE.value,
+            "url": "https://example.com/rfp",
+        },
+        state=state,
+    )
+
+    assert state.current_confidence >= 0.60
+
+
+def test_seed_state_confidence_from_hypotheses_uses_highest_prior():
+    discovery = HypothesisDrivenDiscovery.__new__(HypothesisDrivenDiscovery)
+
+    state = SimpleNamespace(
+        current_confidence=0.20,
+        update_confidence=lambda value: setattr(state, "current_confidence", value),
+    )
+    hypotheses = [
+        SimpleNamespace(confidence=0.54, prior_probability=0.54),
+        SimpleNamespace(confidence=0.58, prior_probability=0.58),
+        SimpleNamespace(confidence=0.50, prior_probability=0.50),
+    ]
+
+    discovery._seed_state_confidence_from_hypotheses(state, hypotheses)
+
+    assert state.current_confidence >= 0.58

@@ -9,7 +9,7 @@ import { promoteImportedEntityRfps } from '@/lib/entity-import-rfp'
 
 const FASTAPI_URL = process.env.FASTAPI_URL || process.env.PYTHON_BACKEND_URL || 'http://localhost:8000'
 const PIPELINE_TIMEOUT_MS = Number(process.env.ENTITY_PIPELINE_TIMEOUT_MS || 300000)
-const ENTITY_IMPORT_QUEUE_MODE = process.env.ENTITY_IMPORT_QUEUE_MODE || 'in_process'
+const ENTITY_IMPORT_QUEUE_MODE = process.env.ENTITY_IMPORT_QUEUE_MODE || 'durable_worker'
 const activeBatchRuns = new Map<string, Promise<void>>()
 
 type PipelineRunResponse = {

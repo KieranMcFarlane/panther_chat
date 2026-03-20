@@ -81,4 +81,8 @@ async def test_pipeline_degrades_cleanly_when_discovery_is_unavailable():
     assert result["validated_signal_count"] == 0
     assert result["rfp_count"] == 0
     assert result["sales_readiness"] == "MONITOR"
+    assert result["degraded_mode"] is True
+    assert result["acceptance_gate"]["passed"] is False
+    assert "discovery_failed" in result["acceptance_gate"]["reasons"]
+    assert result["failure_taxonomy"]["llm_empty_response"] == 0
     assert any(phase == "discovery" and payload["status"] == "failed" for phase, payload in phase_updates)

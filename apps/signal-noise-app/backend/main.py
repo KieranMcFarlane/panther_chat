@@ -37,7 +37,11 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-from pipeline_run_metadata import merge_pipeline_phase_metadata
+from pipeline_run_metadata import (
+    merge_pipeline_phase_metadata,
+    normalize_phase_status,
+    validate_runtime_imports,
+)
 
 PipelinePhaseCallback = Callable[[str, Dict[str, Any]], Awaitable[None]]
 _pipeline_phase_callback_ctx: ContextVar[Optional[PipelinePhaseCallback]] = ContextVar(
@@ -194,13 +198,42 @@ async def shutdown_event():
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
+    runtime_imports = validate_runtime_imports()
+    falkordb_uri = os.getenv("FALKORDB_URI")
+    try:
+        import falkordb  # noqa: F401
+        falkordb_installed = True
+    except Exception:
+        falkordb_installed = False
     return {
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
         "version": "2.0.0",
         "services": {
-            "graphiti": graphiti_service is not None
-        }
+            "graphiti": graphiti_service is not None,
+            "runtime_imports": runtime_imports,
+            "falkordb_persistence_readiness": {
+                "uri_configured": bool(falkordb_uri),
+                "client_installed": falkordb_installed,
+                "ready": bool(falkordb_uri and falkordb_installed),
+            },
+            "dual_write_adapter_readiness": {
+                "supabase_adapter": bool(
+                    graphiti_service and callable(getattr(graphiti_service, "persist_pipeline_record_supabase", None))
+                ),
+                "falkordb_adapter": bool(
+                    graphiti_service and callable(getattr(graphiti_service, "persist_pipeline_record_falkordb", None))
+                ),
+                "supabase_client_ready": bool(graphiti_service and getattr(graphiti_service, "supabase_client", None)),
+                "falkordb_transport_ready": bool(
+                    graphiti_service
+                    and (
+                        getattr(graphiti_service, "driver", None)
+                        or (falkordb_uri and falkordb_installed)
+                    )
+                ),
+            },
+        },
     }
 
 
@@ -554,10 +587,17 @@ class EntityPipelineResponse(BaseModel):
     entity_id: str
     entity_name: str
     phases: Dict[str, Any]
+    phase_details_by_phase: Dict[str, Any] = Field(default_factory=dict)
     validated_signal_count: int
     capability_signal_count: int
     rfp_count: int
     sales_readiness: Optional[str] = None
+    acceptance_gate: Dict[str, Any] = Field(default_factory=dict)
+    failure_taxonomy: Dict[str, int] = Field(default_factory=dict)
+    run_profile: str = "bounded_production"
+    degraded_mode: bool = False
+    dual_write_ok: Optional[bool] = None
+    persistence_status: Dict[str, Any] = Field(default_factory=dict)
     artifacts: Dict[str, Any]
     completed_at: str
 
@@ -993,12 +1033,29 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
         from backend.baseline_monitoring import build_compact_candidate_validator
         from backend.claude_client import ClaudeClient
         from backend.dashboard_scorer import DashboardScorer
+        from backend.discovery_engine_factory import create_discovery_engine
         from backend.dossier_generator import UniversalDossierGenerator
         from backend.graphiti_service import GraphitiService
-        from backend.hypothesis_driven_discovery import HypothesisDrivenDiscovery
         from backend.pipeline_orchestrator import PipelineOrchestrator
         from backend.ralph_loop import RalphLoop
         from supabase import create_client, Client
+
+        runtime_guard = validate_runtime_imports()
+        if runtime_guard.get("status") != "ok":
+            missing_modules = ", ".join(runtime_guard.get("missing") or [])
+            logger.error(
+                "❌ Pipeline runtime import guard failed (%s) for entity %s",
+                missing_modules or "unknown",
+                request.entity_id,
+            )
+            raise HTTPException(
+                status_code=500,
+                detail={
+                    "error": "Pipeline runtime import guard failed",
+                    "failure_class": runtime_guard.get("failure_class") or "import_context_failure",
+                    "missing": runtime_guard.get("missing") or [],
+                },
+            )
 
         supabase_url = os.getenv("SUPABASE_URL") or os.getenv("NEXT_PUBLIC_SUPABASE_URL")
         supabase_key = os.getenv("SUPABASE_ANON_KEY") or os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
@@ -1024,10 +1081,11 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             except Exception as fetch_error:
                 logger.warning(f"⚠️ Failed to fetch existing phase metadata for {request.entity_id}/{phase}: {fetch_error}")
 
+            normalized_status = normalize_phase_status(payload.get("status"), default="running")
             update_payload = {
                 "phase": phase,
-                "status": payload.get("status", "running"),
-                "completed_at": datetime.now().isoformat() if payload.get("status") == "completed" else None,
+                "status": normalized_status,
+                "completed_at": datetime.now().isoformat() if normalized_status == "completed" else None,
                 "metadata": merge_pipeline_phase_metadata(existing_metadata, phase, payload),
             }
 
@@ -1194,13 +1252,21 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             active_graphiti_service = GraphitiService()
             await active_graphiti_service.initialize()
 
+        discovery_engine, discovery_engine_name = create_discovery_engine(
+            claude_client=claude,
+            brightdata_client=brightdata,
+            graphiti_service=active_graphiti_service,
+            falkordb_client=getattr(active_graphiti_service, "falkordb_client", None),
+        )
+        logger.info("Using discovery engine in API pipeline: %s", discovery_engine_name)
+
         orchestrator = PipelineOrchestrator(
             dossier_generator=UniversalDossierGenerator(claude),
             baseline_monitoring_runner=BaselineMonitoringRunner(
                 brightdata.scrape_as_markdown,
                 validate_func=build_compact_candidate_validator(claude),
             ),
-            discovery=HypothesisDrivenDiscovery(claude, brightdata),
+            discovery=discovery_engine,
             ralph_validator=RalphLoop(claude, active_graphiti_service),
             graphiti_service=active_graphiti_service,
             dashboard_scorer=DashboardScorer(),

@@ -435,15 +435,18 @@ class ClaudeClient:
         self.chutes_fallback_model = os.getenv("CHUTES_FALLBACK_MODEL", "moonshotai/Kimi-K2.5-TEE")
         self.chutes_timeout_seconds = float(os.getenv("CHUTES_TIMEOUT_SECONDS", "45"))
         self.chutes_fallback_timeout_seconds = float(os.getenv("CHUTES_FALLBACK_TIMEOUT_SECONDS", "90"))
-        self.chutes_retry_backoff_cap_seconds = float(os.getenv("CHUTES_RETRY_BACKOFF_CAP_SECONDS", "4"))
-        self.chutes_retry_jitter_seconds = float(os.getenv("CHUTES_RETRY_JITTER_SECONDS", "0.35"))
         self.chutes_stream_idle_timeout_seconds = float(
             os.getenv("CHUTES_STREAM_IDLE_TIMEOUT_SECONDS", str(self.chutes_timeout_seconds))
         )
         self.chutes_stream_enabled = self._parse_bool_env(os.getenv("CHUTES_STREAM_ENABLED"), default=True)
-        self.chutes_max_retries = int(os.getenv("CHUTES_MAX_RETRIES", "1"))
+        self.chutes_max_retries = max(0, int(os.getenv("CHUTES_MAX_RETRIES", "7")))
+        self.chutes_retries_before_fallback = max(1, int(os.getenv("CHUTES_RETRIES_BEFORE_FALLBACK", "5")))
+        self.chutes_empty_retries_before_fallback = max(
+            1,
+            int(os.getenv("CHUTES_EMPTY_RETRIES_BEFORE_FALLBACK", str(self.chutes_retries_before_fallback))),
+        )
         self.chutes_min_request_interval_seconds = float(os.getenv("CHUTES_MIN_REQUEST_INTERVAL_SECONDS", "0.0"))
-        self.chutes_retry_backoff_cap_seconds = float(os.getenv("CHUTES_RETRY_BACKOFF_CAP_SECONDS", "8.0"))
+        self.chutes_retry_backoff_cap_seconds = float(os.getenv("CHUTES_RETRY_BACKOFF_CAP_SECONDS", "30.0"))
         self.chutes_retry_jitter_seconds = float(os.getenv("CHUTES_RETRY_JITTER_SECONDS", "0.6"))
         self.chutes_429_policy = os.getenv("CHUTES_429_POLICY", "header_exponential").strip().lower() or "header_exponential"
         self.chutes_max_concurrent_requests = max(1, int(os.getenv("CHUTES_MAX_CONCURRENT_REQUESTS", "2")))
@@ -729,19 +732,12 @@ class ClaudeClient:
             return status_code in {408, 425, 429} or (status_code is not None and status_code >= 500)
         return False
 
-    def _compute_chutes_backoff_seconds(
-        self,
-        *,
-        attempt: int,
-        retry_after_seconds: Optional[float],
-    ) -> float:
-        """Compute retry delay with optional jitter for rate-limit resilience."""
-        if retry_after_seconds is not None and retry_after_seconds > 0:
-            return retry_after_seconds
-
-        base = min(2 ** max(attempt, 0), max(self.chutes_retry_backoff_cap_seconds, 0.0))
-        jitter = random.uniform(0.0, max(self.chutes_retry_jitter_seconds, 0.0))
-        return max(0.0, base + jitter)
+    def _should_switch_to_fallback(self, *, attempt: int, threshold: int, current_model: str) -> bool:
+        if not self.chutes_fallback_model:
+            return False
+        if current_model == self.chutes_fallback_model:
+            return False
+        return (attempt + 1) >= max(1, int(threshold))
 
     @staticmethod
     def _extract_http_error_text(error: Exception) -> str:
@@ -1053,6 +1049,7 @@ class ClaudeClient:
         tools: Optional[List[Dict]] = None,
         system_prompt: Optional[str] = None,
         json_mode: bool = False,
+        stream: Optional[bool] = None,
     ) -> Dict[str, Any]:
         """
         Query Claude with specific model using Anthropic SDK
@@ -1074,6 +1071,7 @@ class ClaudeClient:
                 max_tokens=max_tokens,
                 system_prompt=system_prompt,
                 json_mode=json_mode,
+                stream=stream,
             )
         if self.provider == self.PROVIDER_CHUTES_ANTHROPIC:
             return await self._query_chutes_anthropic(
@@ -1082,6 +1080,7 @@ class ClaudeClient:
                 max_tokens=max_tokens,
                 system_prompt=system_prompt,
                 json_mode=json_mode,
+                stream=stream,
             )
 
         if not ANTHROPIC_SDK_AVAILABLE:
@@ -1139,6 +1138,7 @@ class ClaudeClient:
         max_tokens: int,
         system_prompt: Optional[str] = None,
         json_mode: bool = False,
+        stream: Optional[bool] = None,
     ) -> Dict[str, Any]:
         """
         Query a Chutes OpenAI-compatible model endpoint.
@@ -1159,12 +1159,13 @@ class ClaudeClient:
         messages.append({"role": "user", "content": prompt})
 
         runtime_model = self._resolve_chutes_runtime_model(model)
+        request_stream = self.chutes_stream_enabled if stream is None else bool(stream)
         payload = {
             "model": runtime_model,
             "messages": messages,
             "max_tokens": max_tokens,
             "temperature": 0.7 if system_prompt is None else 0.4,
-            "stream": self.chutes_stream_enabled,
+            "stream": request_stream,
         }
         if json_mode:
             payload["response_format"] = {"type": "json_object"}
@@ -1203,7 +1204,7 @@ class ClaudeClient:
                     connect=min(request_timeout_seconds, 15.0),
                     read=min(request_timeout_seconds, self.chutes_stream_idle_timeout_seconds),
                 )
-                if self.chutes_stream_enabled:
+                if request_stream:
                     async with self._chutes_request_semaphore:
                         await self._apply_chutes_request_throttle()
                         data = await self._query_chutes_streaming(
@@ -1222,18 +1223,41 @@ class ClaudeClient:
 
                 content = data.get("answer_text", "")
                 reasoning_content = data.get("reasoning_text", "")
+                structured_output = data.get("structured_output")
+                if not content and isinstance(structured_output, dict):
+                    # Some providers return strict JSON only in parsed/structured channels.
+                    content = json.dumps(structured_output, separators=(",", ":"))
                 usage = data.get("usage", {})
                 stop_reason = data.get("stop_reason")
                 chunk_count = int(data.get("chunk_count", 0) or 0)
 
                 if not content and self.chutes_fallback_model and payload["model"] != self.chutes_fallback_model:
-                    logger.warning(
-                        "Chutes response returned empty content for model=%s finish_reason=%s; retrying with fallback model=%s",
-                        payload["model"],
-                        stop_reason,
-                        self.chutes_fallback_model,
-                    )
-                    payload["model"] = self.chutes_fallback_model
+                    if self._should_switch_to_fallback(
+                        attempt=attempt,
+                        threshold=self.chutes_empty_retries_before_fallback,
+                        current_model=str(payload["model"]),
+                    ):
+                        logger.warning(
+                            "Chutes empty response threshold reached for model=%s finish_reason=%s; switching to fallback model=%s",
+                            payload["model"],
+                            stop_reason,
+                            self.chutes_fallback_model,
+                        )
+                        payload["model"] = self.chutes_fallback_model
+                    else:
+                        logger.warning(
+                            "Chutes empty response for model=%s finish_reason=%s; retrying primary model (%s/%s before fallback)",
+                            payload["model"],
+                            stop_reason,
+                            attempt + 1,
+                            self.chutes_empty_retries_before_fallback,
+                        )
+                        backoff_seconds = self._compute_chutes_backoff_seconds(
+                            attempt=attempt,
+                            retry_after_seconds=None,
+                            is_http_429=False,
+                        )
+                        await asyncio.sleep(backoff_seconds)
                     continue
                 self._record_chutes_event("success")
                 self._apply_chutes_adaptive_recovery()
@@ -1241,10 +1265,11 @@ class ClaudeClient:
 
                 return {
                     "content": content,
+                    "reasoning_content": reasoning_content,
                     "model_used": payload["model"],
                     "requested_model": model,
                     "provider": self.provider,
-                    "structured_output": data.get("structured_output"),
+                    "structured_output": structured_output,
                     "raw_response": data.get("raw_response"),
                     "tokens_used": {
                         "input_tokens": usage.get("prompt_tokens"),
@@ -1253,7 +1278,8 @@ class ClaudeClient:
                     },
                     "stop_reason": stop_reason,
                     "inference_diagnostics": {
-                        "streaming": bool(self.chutes_stream_enabled),
+                        "streaming": bool(request_stream),
+                        "streaming_override": request_stream != self.chutes_stream_enabled,
                         "fallback_used": bool(payload["model"] != self.chutes_model),
                         "chunk_count": chunk_count,
                         "answer_channel_chars": len(content),
@@ -1308,13 +1334,13 @@ class ClaudeClient:
                 elif is_retryable:
                     self._record_chutes_event("retryable_error", status_code=status_code)
                     self._apply_chutes_adaptive_penalty(is_rate_limit=False)
-                if (
-                    is_retryable
-                    and self.chutes_fallback_model
-                    and payload["model"] != self.chutes_fallback_model
+                if is_retryable and self._should_switch_to_fallback(
+                    attempt=attempt,
+                    threshold=self.chutes_retries_before_fallback,
+                    current_model=str(payload["model"]),
                 ):
                     logger.warning(
-                        "Retryable Chutes error for model=%s; switching to fallback model=%s",
+                        "Retryable Chutes error threshold reached for model=%s; switching to fallback model=%s",
                         payload["model"],
                         self.chutes_fallback_model,
                     )
@@ -1421,6 +1447,7 @@ class ClaudeClient:
     ) -> Dict[str, Any]:
         answer_parts: List[str] = []
         reasoning_parts: List[str] = []
+        structured_output: Optional[Dict[str, Any]] = None
         usage: Dict[str, Any] = {}
         stop_reason: Optional[str] = None
         chunk_count = 0
@@ -1453,11 +1480,19 @@ class ClaudeClient:
                     choice = (event.get("choices") or [{}])[0] if isinstance(event, dict) else {}
                     delta = choice.get("delta") or {}
                     content_piece = delta.get("content")
-                    if isinstance(content_piece, str) and content_piece:
-                        answer_parts.append(content_piece)
+                    content_text = self._extract_text_parts(content_piece)
+                    if content_text:
+                        answer_parts.append(content_text)
+                    if structured_output is None:
+                        structured_output = self._extract_structured_output(delta.get("parsed"))
+                    if structured_output is None and isinstance(choice.get("message"), dict):
+                        structured_output = self._extract_structured_output(choice["message"].get("parsed"))
+                    if structured_output is None:
+                        structured_output = self._extract_structured_output(content_piece)
                     reasoning_piece = delta.get("reasoning_content")
-                    if isinstance(reasoning_piece, str) and reasoning_piece:
-                        reasoning_parts.append(reasoning_piece)
+                    reasoning_text = self._extract_text_parts(reasoning_piece)
+                    if reasoning_text:
+                        reasoning_parts.append(reasoning_text)
                     if choice.get("finish_reason") is not None:
                         stop_reason = choice.get("finish_reason")
                     if isinstance(event, dict) and isinstance(event.get("usage"), dict):
@@ -1471,6 +1506,7 @@ class ClaudeClient:
             "usage": usage,
             "chunk_count": chunk_count,
             "raw_response": {"events": raw_events},
+            "structured_output": structured_output,
         }
 
     async def _query_chutes_anthropic(
@@ -1480,6 +1516,7 @@ class ClaudeClient:
         max_tokens: int,
         system_prompt: Optional[str] = None,
         json_mode: bool = False,
+        stream: Optional[bool] = None,
     ) -> Dict[str, Any]:
         """Query a Chutes Anthropic-compatible messages endpoint."""
         disabled_reason = self._get_effective_disabled_reason()
@@ -1543,6 +1580,7 @@ class ClaudeClient:
 
                 return {
                     "content": content,
+                    "reasoning_content": "",
                     "model_used": self.chutes_model,
                     "requested_model": model,
                     "provider": self.provider,

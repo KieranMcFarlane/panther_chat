@@ -16,21 +16,37 @@ interface EntityLookupResult {
   dossier: any | null
 }
 
-async function getPersistedDossier(entityId: string) {
+async function getPersistedDossier(entityId: string, neo4jId?: string | number, entityName?: string) {
   try {
-    const { data, error } = await supabase
-      .from('entity_dossiers')
-      .select('dossier_data')
-      .eq('entity_id', entityId)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle()
+    const candidateIds = [entityId, neo4jId != null ? String(neo4jId) : null]
+      .filter((value, index, arr): value is string => Boolean(value) && arr.indexOf(value) === index)
 
-    if (error || !data?.dossier_data) {
-      return null
+    for (const candidateId of candidateIds) {
+      const { data, error } = await supabase
+        .from('entity_dossiers')
+        .select('dossier_data')
+        .eq('entity_id', candidateId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+      if (!error && data?.dossier_data) {
+        return data.dossier_data
+      }
     }
 
-    return data.dossier_data
+    if (entityName && entityName.trim()) {
+      const { data, error } = await supabase
+        .from('entity_dossiers')
+        .select('dossier_data')
+        .ilike('entity_name', entityName.trim())
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+      if (!error && data?.dossier_data) {
+        return data.dossier_data
+      }
+    }
+    return null
   } catch (error) {
     console.log('⚠️ Server-side dossier lookup error:', error)
     return null
@@ -56,6 +72,9 @@ const getPossibleDossierDirs = () => {
 }
 
 const DOSSIERS_DIR = getPossibleDossierDirs().find(existsSync) ?? getPossibleDossierDirs()[0]
+const ENABLE_LEGACY_DOSSIER_FILE_FALLBACK = String(
+  process.env.ENTITY_DOSSIER_ENABLE_LEGACY_FILE_FALLBACK || 'false',
+).toLowerCase() === 'true'
 
 function findDossierFile(entityId: string, tierDir: string): string | null {
   const decodedEntityId = decodeURIComponent(entityId)
@@ -269,7 +288,10 @@ export async function getEntityForDossierPage(entityId: string, tier = 'standard
   }
 
   if (!entity) {
-    return getFallbackEntityFromDossier(entityId, tier)
+    if (ENABLE_LEGACY_DOSSIER_FILE_FALLBACK) {
+      return getFallbackEntityFromDossier(entityId, tier)
+    }
+    return { entity: null, source: null, dossier: null }
   }
 
   let dossier = null
@@ -282,7 +304,11 @@ export async function getEntityForDossierPage(entityId: string, tier = 'standard
   }
 
   if (!dossier) {
-    dossier = await getPersistedDossier(entity.id?.toString() || entityId)
+    dossier = await getPersistedDossier(
+      entity.id?.toString() || entityId,
+      entity.neo4j_id,
+      entity.properties?.name,
+    )
   }
 
   return {

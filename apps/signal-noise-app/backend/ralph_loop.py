@@ -60,6 +60,7 @@ Usage (API Client):
     print(f"New Confidence: {result['new_confidence']}")
 """
 
+import asyncio
 import os
 import sys
 import logging
@@ -70,8 +71,11 @@ from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
 from enum import Enum
 
-# Import schemas for type checking
-from backend.schemas import RalphDecisionType, SignalClass, HypothesisState
+# Import schemas for type checking (support both package and local execution contexts)
+try:
+    from backend.schemas import RalphDecisionType, SignalClass, HypothesisState
+except ImportError:  # pragma: no cover - exercised in non-package runtime contexts
+    from schemas import RalphDecisionType, SignalClass, HypothesisState
 
 # FastAPI imports
 from fastapi import FastAPI, HTTPException
@@ -84,6 +88,14 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+def _schema_types(*names: str):
+    """Resolve schema symbols in both package and local backend execution modes."""
+    try:
+        from backend import schemas as schema_module
+    except ImportError:  # pragma: no cover - local backend cwd/runtime
+        import schemas as schema_module
+    return tuple(getattr(schema_module, name) for name in names)
 
 
 @dataclass
@@ -99,6 +111,11 @@ class RalphLoopConfig:
     enable_confidence_validation: bool = True  # Feature flag for confidence validation
     max_confidence_adjustment: float = 0.15  # Max ± adjustment Claude can make
     confidence_review_threshold: float = 0.2  # Flag for manual review if adjustment > this
+    pass2_micro_batch_size: int = 1  # Keep prompts focused; validate one signal at a time by default
+    pass2_parallelism: int = 2  # Limit concurrent model calls for stability
+    pass2_existing_signal_context_limit: int = 5  # Keep context concise per batch
+    pass2_evidence_text_chars: int = 1200  # Preserve richer evidence context in pass-2 prompts
+    pass2_json_retry_max_tokens: int = 600  # One strict-json retry when primary response is non-JSON prose
 
 
 # =============================================================================
@@ -957,11 +974,11 @@ async def run_ralph_iteration_with_state(
     4. Detects category saturation for early stopping
     5. Enforces WEAK_ACCEPT guardrails
     """
-    from backend.schemas import (
-        RalphDecisionType,
-        RalphIterationOutput,
-        RalphState,
-        CategoryStats
+    RalphDecisionType, RalphIterationOutput, RalphState, CategoryStats = _schema_types(
+        "RalphDecisionType",
+        "RalphIterationOutput",
+        "RalphState",
+        "CategoryStats",
     )
 
     # Record evidence (for novelty detection)
@@ -1046,7 +1063,7 @@ async def run_ralph_iteration_with_state(
     # For now, we create a placeholder entry for the confidence change
     # Full hypothesis tracking will be implemented in future iterations
     from datetime import datetime, timezone
-    from backend.schemas import BeliefLedgerEntry, HypothesisAction
+    BeliefLedgerEntry, HypothesisAction = _schema_types("BeliefLedgerEntry", "HypothesisAction")
 
     if applied_delta != 0.0:
         # Create a belief ledger entry for this confidence change
@@ -1122,9 +1139,38 @@ class RalphLoop:
         self.claude_client = claude_client
         self.graphiti_service = graphiti_service
         self.config = config or RalphLoopConfig()
+        self.config.pass2_micro_batch_size = max(
+            1,
+            int(os.getenv("RALPH_PASS2_MICRO_BATCH_SIZE", str(self.config.pass2_micro_batch_size))),
+        )
+        self.config.pass2_parallelism = max(
+            1,
+            int(os.getenv("RALPH_PASS2_PARALLELISM", str(self.config.pass2_parallelism))),
+        )
+        self.config.pass2_existing_signal_context_limit = max(
+            1,
+            int(
+                os.getenv(
+                    "RALPH_PASS2_EXISTING_SIGNAL_CONTEXT_LIMIT",
+                    str(self.config.pass2_existing_signal_context_limit),
+                )
+            ),
+        )
+        self.config.pass2_evidence_text_chars = max(
+            200,
+            int(os.getenv("RALPH_PASS2_EVIDENCE_TEXT_CHARS", str(self.config.pass2_evidence_text_chars))),
+        )
+        self.config.pass2_json_retry_max_tokens = max(
+            200,
+            int(os.getenv("RALPH_PASS2_JSON_RETRY_MAX_TOKENS", str(self.config.pass2_json_retry_max_tokens))),
+        )
 
         logger.info(f"🔁 Ralph Loop initialized (min_evidence: {self.config.min_evidence}, "
-                   f"min_confidence: {self.config.min_confidence}, max_passes: {self.config.max_passes})")
+                   f"min_confidence: {self.config.min_confidence}, max_passes: {self.config.max_passes}, "
+                   f"pass2_micro_batch_size: {self.config.pass2_micro_batch_size}, "
+                   f"pass2_parallelism: {self.config.pass2_parallelism}, "
+                   f"pass2_evidence_text_chars: {self.config.pass2_evidence_text_chars}, "
+                   f"pass2_json_retry_max_tokens: {self.config.pass2_json_retry_max_tokens})")
 
     async def validate_signals(
         self,
@@ -1153,7 +1199,7 @@ class RalphLoop:
 
         Only signals that survive all 3 passes are classified and returned.
         """
-        from backend.schemas import Signal
+        Signal, = _schema_types("Signal")
 
         logger.info(f"🔁 Starting Ralph Loop for {entity_id} with {len(raw_signals)} raw signals")
 
@@ -1298,7 +1344,7 @@ class RalphLoop:
         - Confidence threshold
         - Basic data validation
         """
-        from backend.schemas import Signal, Evidence, SignalType
+        Signal, Evidence, SignalType = _schema_types("Signal", "Evidence", "SignalType")
 
         filtered = []
 
@@ -1394,7 +1440,8 @@ class RalphLoop:
             if url:
                 line += f"\n       URL: {url}"
             if text:
-                text_short = text[:100] + "..." if len(text) > 100 else text
+                max_chars = max(200, int(getattr(self.config, "pass2_evidence_text_chars", 1200)))
+                text_short = text[:max_chars] + "..." if len(text) > max_chars else text
                 line += f"\n       Text: \"{text_short}\""
 
             lines.append(line)
@@ -1450,8 +1497,6 @@ class RalphLoop:
         - Plausibility check
         - Confidence score appropriateness (NEW)
         """
-        from backend.schemas import ConfidenceValidation
-
         # Get existing signals for context
         try:
             existing_signals = await self.graphiti_service.find_related_signals(
@@ -1463,117 +1508,197 @@ class RalphLoop:
             logger.warning(f"⚠️ Could not fetch existing signals: {e}")
             existing_signals = []
 
-        # Format signals for Claude with evidence details
-        existing_summary = self._format_signals_for_claude_detailed(existing_signals[:10]) if existing_signals else "No existing signals"
-        candidates_summary = self._format_signals_for_claude_detailed(candidates)
+        existing_summary = (
+            self._format_signals_for_claude_detailed(
+                existing_signals[: self.config.pass2_existing_signal_context_limit]
+            )
+            if existing_signals
+            else "No existing signals"
+        )
+        batches = list(self._iter_signal_batches(candidates))
+        logger.info(
+            "🔬 Pass 2 modular mode: %s candidates in %s batch(es), batch_size=%s, parallelism=%s",
+            len(candidates),
+            len(batches),
+            self.config.pass2_micro_batch_size,
+            self.config.pass2_parallelism,
+        )
+        semaphore = asyncio.Semaphore(self.config.pass2_parallelism)
+        tasks = [
+            self._validate_signal_batch_with_claude(
+                batch=batch,
+                entity_id=entity_id,
+                existing_summary=existing_summary,
+                semaphore=semaphore,
+            )
+            for batch in batches
+        ]
+        batch_results = await asyncio.gather(*tasks)
+        validated_by_id: Dict[str, "Signal"] = {}
+        for validated_batch in batch_results:
+            for signal in validated_batch:
+                validated_by_id[signal.id] = signal
+        validated = [signal for signal in candidates if signal.id in validated_by_id]
+        rejected = [signal for signal in candidates if signal.id not in validated_by_id]
+        for signal in rejected:
+            logger.debug("❌ Pass 2: Claude rejected %s", signal.id)
+        return validated
 
-        # Build prompt based on whether confidence validation is enabled
+    def _iter_signal_batches(self, candidates: List['Signal']) -> List[List['Signal']]:
+        """Split candidate signals into small, focused validation batches."""
+        size = max(1, int(self.config.pass2_micro_batch_size))
+        return [candidates[idx: idx + size] for idx in range(0, len(candidates), size)]
+
+    async def _validate_signal_batch_with_claude(
+        self,
+        *,
+        batch: List['Signal'],
+        entity_id: str,
+        existing_summary: str,
+        semaphore: asyncio.Semaphore,
+    ) -> List['Signal']:
+        """Validate one micro-batch with a strict response contract; fail open on model issues."""
+        prompt = self._build_pass2_prompt(
+            entity_id=entity_id,
+            existing_summary=existing_summary,
+            candidates_summary=self._format_signals_for_claude_detailed(batch),
+        )
+        max_tokens = 1400 if len(batch) == 1 else 2200
+        try:
+            async with semaphore:
+                response = await self.claude_client.query(prompt=prompt, max_tokens=max_tokens)
+            if self._extract_validation_json(response) is None:
+                retry_prompt = self._build_pass2_retry_prompt(entity_id=entity_id, batch=batch)
+                logger.warning(
+                    "⚠️ Pass 2 batch received non-JSON response; retrying strict JSON mode (batch=%s)",
+                    len(batch),
+                )
+                async with semaphore:
+                    response = await self.claude_client.query(
+                        prompt=retry_prompt,
+                        max_tokens=self.config.pass2_json_retry_max_tokens,
+                        system_prompt="Return strict JSON only. No chain-of-thought. No markdown.",
+                    )
+            if self.config.enable_confidence_validation:
+                validated_with_meta = self._parse_claude_validation_with_confidence(response, batch)
+                return [item['signal'] for item in validated_with_meta]
+            validated_ids = set(self._parse_claude_validation(response, batch))
+            return [signal for signal in batch if signal.id in validated_ids]
+        except Exception as error:
+            logger.error("❌ Pass 2 batch validation failed; fail-open for batch of %s: %s", len(batch), error)
+            return batch
+
+    def _build_pass2_prompt(self, *, entity_id: str, existing_summary: str, candidates_summary: str) -> str:
+        """Build a concise pass-2 validation prompt for a small candidate batch."""
         if self.config.enable_confidence_validation:
-            prompt = f"""
-You are a signal validation expert. Your job is to validate candidate signals against existing signals for entity: {entity_id}
+            return f"""
+You are validating procurement/discovery signals for entity: {entity_id}.
 
-EXISTING SIGNALS (last 10):
+EXISTING SIGNALS (context only):
 {existing_summary}
 
-CANDIDATE SIGNALS TO VALIDATE:
+CANDIDATE SIGNALS (small batch):
 {candidates_summary}
 
-For each candidate signal, evaluate:
+For each candidate, evaluate:
+1) CONSISTENCY with known signals
+2) UNIQUENESS (not duplicate)
+3) PLAUSIBILITY for this entity
+4) CONFIDENCE ALIGNMENT with evidence quality
 
-1. CONSISTENCY: Is it consistent with existing signals? (No contradictions)
-2. UNIQUENESS: Is it distinct from existing signals? (Not a duplicate)
-3. PLAUSIBILITY: Is it plausible given entity context?
-4. CONFIDENCE ASSESSMENT: Does the confidence score match the evidence quality?
+Confidence adjustment limits:
+- max absolute adjustment: ±{self.config.max_confidence_adjustment}
+- only adjust when evidence clearly warrants it
 
-CONFIDENCE ASSESSMENT CRITERIA:
-- Evidence Quality: Assess credibility, recency, source diversity
-- Score Alignment: Does confidence (0.0-1.0) reflect evidence strength?
-- Adjustment: Can adjust by ±{self.config.max_confidence_adjustment} max if evidence clearly warrants it
-- Flags: Mark for review if confidence seems significantly misaligned
-
-CONFIDENCE SCORING GUIDELINES:
-- 0.9-1.0: Multiple high-credibility sources (0.8+), official statements, direct confirmation
-- 0.7-0.9: Multiple credible sources (0.6+), strong indicators, recent activity
-- 0.5-0.7: Mixed credibility, some ambiguity, limited sources
-- 0.3-0.5: Single sources, low credibility, speculative
-- 0.0-0.3: Rumors, unverified, very weak evidence
-
-Return ONLY a JSON object with this exact format:
+Return ONLY JSON:
 {{
   "validated": [
     {{
       "signal_id": "signal_id_1",
       "original_confidence": 0.85,
       "validated_confidence": 0.82,
-      "confidence_rationale": "High-credibility sources but single data point, slight reduction",
+      "confidence_rationale": "short rationale",
       "requires_manual_review": false
     }}
   ],
   "rejected": [
     {{
-      "signal_id": "signal_id_3",
-      "reason": "Duplicate of existing signal"
+      "signal_id": "signal_id_2",
+      "reason": "duplicate or inconsistent"
     }}
   ]
 }}
-
-Be strict but fair. Only reject signals that are clearly duplicates or inconsistent.
-Adjust confidence only when evidence clearly supports it (within ±{self.config.max_confidence_adjustment} range).
 """
-        else:
-            # Original prompt without confidence validation
-            prompt = f"""
-You are a signal validation expert. Your job is to validate candidate signals against existing signals for entity: {entity_id}
+        return f"""
+You are validating procurement/discovery signals for entity: {entity_id}.
 
-EXISTING SIGNALS (last 10):
+EXISTING SIGNALS (context only):
 {existing_summary}
 
-CANDIDATE SIGNALS TO VALIDATE:
+CANDIDATE SIGNALS (small batch):
 {candidates_summary}
 
-For each candidate signal, evaluate:
-1. Is it consistent with existing signals? (No contradictions)
-2. Is it distinct from existing signals? (Not a duplicate)
-3. Is it plausible? (Reasonable given entity context)
+For each candidate, evaluate:
+1) CONSISTENCY with known signals
+2) UNIQUENESS (not duplicate)
+3) PLAUSIBILITY for this entity
 
-Return ONLY a JSON object with this exact format:
+Return ONLY JSON:
 {{
-  "validated": ["signal_id_1", "signal_id_2"],
+  "validated": ["signal_id_1"],
   "rejected": [
-    {{"signal_id": "signal_id_3", "reason": "Duplicate of existing signal"}}
+    {{
+      "signal_id": "signal_id_2",
+      "reason": "duplicate or inconsistent"
+    }}
   ]
 }}
-
-Be strict but fair. Only reject signals that are clearly duplicates or inconsistent.
 """
 
-        try:
-            # Call Claude for validation
-            response = await self.claude_client.query(
-                prompt=prompt,
-                max_tokens=3000  # Increased for confidence reasoning
-            )
+    def _build_pass2_retry_prompt(self, *, entity_id: str, batch: List['Signal']) -> str:
+        """Minimal strict-json retry prompt when the primary response is unstructured."""
+        candidates_summary = self._format_signals_for_claude(batch)
+        if self.config.enable_confidence_validation:
+            return f"""
+Entity: {entity_id}
+Candidates:
+{candidates_summary}
 
-            # Parse Claude's response with confidence adjustments
-            if self.config.enable_confidence_validation:
-                validated_signals = self._parse_claude_validation_with_confidence(response, candidates)
-                validated = [s['signal'] for s in validated_signals]
-            else:
-                # Use original parsing
-                validated_ids = self._parse_claude_validation(response, candidates)
-                validated = [s for s in candidates if s.id in validated_ids]
+Return JSON only:
+{{
+  "validated": [
+    {{
+      "signal_id": "id",
+      "original_confidence": 0.8,
+      "validated_confidence": 0.8,
+      "confidence_rationale": "short",
+      "requires_manual_review": false
+    }}
+  ],
+  "rejected": [
+    {{
+      "signal_id": "id",
+      "reason": "duplicate or inconsistent"
+    }}
+  ]
+}}
+"""
+        return f"""
+Entity: {entity_id}
+Candidates:
+{candidates_summary}
 
-            rejected = [s for s in candidates if s not in validated]
-
-            for signal in rejected:
-                logger.debug(f"❌ Pass 2: Claude rejected {signal.id}")
-
-            return validated
-
-        except Exception as e:
-            logger.error(f"❌ Pass 2: Claude validation failed: {e}")
-            # Fail open: return all candidates if Claude fails
-            return candidates
+Return JSON only:
+{{
+  "validated": ["id"],
+  "rejected": [
+    {{
+      "signal_id": "id",
+      "reason": "duplicate or inconsistent"
+    }}
+  ]
+}}
+"""
 
     def _format_signals_for_claude(self, signals: List[Any]) -> str:
         """Format signals for Claude consumption"""
@@ -1605,19 +1730,11 @@ Be strict but fair. Only reject signals that are clearly duplicates or inconsist
             List of dicts with 'signal' and 'validation' keys
         """
         import json
-        import re
-        from backend.schemas import ConfidenceValidation
+        ConfidenceValidation, = _schema_types("ConfidenceValidation")
 
         try:
-            # Extract JSON from response (more flexible regex - handle multiline JSON)
-            json_match = re.search(
-                r'\{[\s\S]*"validated"[\s\S]*"rejected"[\s\S]*\}',
-                response,
-                re.DOTALL
-            )
-
-            if json_match:
-                result = json.loads(json_match.group(0))
+            result = self._extract_validation_json(response)
+            if result is not None:
 
                 validated_signals = []
 
@@ -1684,15 +1801,9 @@ Be strict but fair. Only reject signals that are clearly duplicates or inconsist
 
     def _parse_claude_validation(self, response: str, candidates: List['Signal']) -> List[str]:
         """Parse Claude's validation response and extract validated signal IDs"""
-        import json
-        import re
-
         try:
-            # Try to extract JSON from response
-            json_match = re.search(r'\{[^}]*"validated"[^}]*\}', response, re.DOTALL)
-
-            if json_match:
-                result = json.loads(json_match.group(0))
+            result = self._extract_validation_json(response)
+            if result is not None:
                 validated = result.get('validated', [])
 
                 logger.debug(f"Claude validated {len(validated)}/{len(candidates)} signals")
@@ -1704,6 +1815,44 @@ Be strict but fair. Only reject signals that are clearly duplicates or inconsist
         except Exception as e:
             logger.warning(f"Error parsing Claude validation: {e}, accepting all candidates")
             return [s.id for s in candidates]
+
+    def _extract_validation_json(self, response: Any) -> Optional[Dict[str, Any]]:
+        """Extract a validation payload with `validated` and `rejected` keys from model output."""
+        import json
+        import re
+
+        if isinstance(response, dict):
+            if "validated" in response and "rejected" in response:
+                return response
+            return None
+
+        text = response if isinstance(response, str) else str(response)
+        text = text.strip()
+        if not text:
+            return None
+
+        try:
+            parsed = json.loads(text)
+            if isinstance(parsed, dict) and "validated" in parsed and "rejected" in parsed:
+                return parsed
+        except Exception:
+            pass
+
+        json_match = re.search(
+            r'\{[\s\S]*"validated"[\s\S]*"rejected"[\s\S]*\}',
+            text,
+            re.DOTALL,
+        )
+        if not json_match:
+            return None
+
+        try:
+            parsed = json.loads(json_match.group(0))
+        except Exception:
+            return None
+        if isinstance(parsed, dict) and "validated" in parsed and "rejected" in parsed:
+            return parsed
+        return None
 
     async def _pass3_final_confirmation(
         self,
@@ -1829,7 +1978,7 @@ if __name__ == "__main__":
         async def test():
             from claude_client import ClaudeClient
             from graphiti_service import GraphitiService
-            from backend.schemas import SignalType
+            SignalType, = _schema_types("SignalType")
 
             # Initialize
             claude = ClaudeClient()

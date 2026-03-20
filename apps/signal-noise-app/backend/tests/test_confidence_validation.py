@@ -312,6 +312,116 @@ async def test_multiple_signals_confidence_validation(ralph_loop, mock_claude_cl
 
 
 @pytest.mark.asyncio
+async def test_pass2_micro_batches_prompt_per_signal(mock_claude_client, mock_graphiti_service):
+    """Pass 2 should split candidates into focused micro-prompts."""
+    config = RalphLoopConfig(
+        enable_confidence_validation=True,
+        pass2_micro_batch_size=1,
+        pass2_parallelism=1,
+    )
+    ralph = RalphLoop(mock_claude_client, mock_graphiti_service, config)
+
+    signals = [
+        Signal(
+            id="micro-1",
+            type=SignalType.RFP_DETECTED,
+            confidence=0.8,
+            entity_id="test-entity",
+            first_seen=datetime.now(timezone.utc),
+            metadata={'evidence': [{"source": "A", "credibility_score": 0.9}]},
+        ),
+        Signal(
+            id="micro-2",
+            type=SignalType.RFP_DETECTED,
+            confidence=0.82,
+            entity_id="test-entity",
+            first_seen=datetime.now(timezone.utc),
+            metadata={'evidence': [{"source": "B", "credibility_score": 0.9}]},
+        ),
+    ]
+
+    mock_claude_client.query.return_value = """
+    {
+      "validated": [
+        {
+          "signal_id": "micro-1",
+          "original_confidence": 0.80,
+          "validated_confidence": 0.81,
+          "confidence_rationale": "strong evidence",
+          "requires_manual_review": false
+        },
+        {
+          "signal_id": "micro-2",
+          "original_confidence": 0.82,
+          "validated_confidence": 0.83,
+          "confidence_rationale": "strong evidence",
+          "requires_manual_review": false
+        }
+      ],
+      "rejected": []
+    }
+    """
+
+    validated = await ralph._pass2_claude_validation(signals, "test-entity")
+
+    assert len(validated) == 2
+    assert mock_claude_client.query.await_count == 2
+    first_prompt = mock_claude_client.query.await_args_list[0].kwargs["prompt"]
+    second_prompt = mock_claude_client.query.await_args_list[1].kwargs["prompt"]
+    assert "micro-1" in first_prompt
+    assert "micro-2" not in first_prompt
+    assert "micro-2" in second_prompt
+    assert "micro-1" not in second_prompt
+
+
+@pytest.mark.asyncio
+async def test_pass2_retries_when_primary_response_is_non_json(mock_graphiti_service):
+    """Pass 2 should retry once in strict-json mode when first model output is prose."""
+    mock_claude = AsyncMock()
+    mock_claude.query.side_effect = [
+        {"content": "", "reasoning_content": "analysis prose with no json"},
+        """
+        {
+          "validated": [
+            {
+              "signal_id": "retry-1",
+              "original_confidence": 0.80,
+              "validated_confidence": 0.79,
+              "confidence_rationale": "minor adjustment",
+              "requires_manual_review": false
+            }
+          ],
+          "rejected": []
+        }
+        """,
+    ]
+    config = RalphLoopConfig(
+        enable_confidence_validation=True,
+        pass2_micro_batch_size=1,
+        pass2_parallelism=1,
+        pass2_json_retry_max_tokens=450,
+    )
+    ralph = RalphLoop(mock_claude, mock_graphiti_service, config)
+
+    signal = Signal(
+        id="retry-1",
+        type=SignalType.RFP_DETECTED,
+        confidence=0.8,
+        entity_id="test-entity",
+        first_seen=datetime.now(timezone.utc),
+        metadata={'evidence': [{"source": "A", "credibility_score": 0.9}]},
+    )
+
+    validated = await ralph._pass2_claude_validation([signal], "test-entity")
+
+    assert len(validated) == 1
+    assert mock_claude.query.await_count == 2
+    second_call = mock_claude.query.await_args_list[1].kwargs
+    assert second_call["max_tokens"] == 450
+    assert "system_prompt" in second_call
+
+
+@pytest.mark.asyncio
 async def test_evidence_formatting_for_claude(ralph_loop):
     """Test evidence formatting includes credibility details"""
     evidence = [

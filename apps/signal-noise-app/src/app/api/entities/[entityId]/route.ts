@@ -235,25 +235,79 @@ async function generateLinkedInAnalysis(entityName: string, entityType: string) 
   }
 }
 
-async function getPersistedDossier(entityId: string) {
+async function getPersistedDossier(entityId: string, neo4jId?: string | number, entityName?: string) {
   try {
-    const { data, error } = await supabase
-      .from('entity_dossiers')
-      .select('dossier_data')
-      .eq('entity_id', entityId)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle()
+    const candidateIds = [entityId, neo4jId != null ? String(neo4jId) : null]
+      .filter((value, index, arr): value is string => Boolean(value) && arr.indexOf(value) === index)
 
-    if (error || !data?.dossier_data) {
-      return null
+    for (const candidateId of candidateIds) {
+      const { data, error } = await supabase
+        .from('entity_dossiers')
+        .select('dossier_data')
+        .eq('entity_id', candidateId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+      if (!error && data?.dossier_data) {
+        return data.dossier_data
+      }
     }
 
-    return data.dossier_data
+    if (entityName && entityName.trim()) {
+      const { data, error } = await supabase
+        .from('entity_dossiers')
+        .select('dossier_data')
+        .ilike('entity_name', entityName.trim())
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+      if (!error && data?.dossier_data) {
+        return data.dossier_data
+      }
+    }
+    return null
   } catch (error) {
     console.log('⚠️ Persisted dossier lookup failed:', error)
     return null
   }
+}
+
+async function getLatestPipelineStatusSummary(...candidateEntityIds: Array<string | number | null | undefined>) {
+  const uniqueIds = candidateEntityIds
+    .map((value) => (value == null ? '' : String(value).trim()))
+    .filter((value, index, arr) => Boolean(value) && arr.indexOf(value) === index)
+
+  for (const candidateId of uniqueIds) {
+    const { data } = await supabase
+      .from('entity_pipeline_runs')
+      .select('batch_id, entity_id, status, phase, completed_at, metadata, started_at')
+      .eq('entity_id', candidateId)
+      .order('started_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+
+    if (!data) {
+      continue
+    }
+
+    const metadata = typeof data.metadata === 'object' && data.metadata !== null ? data.metadata : {}
+    const dualWriteOk = metadata.dual_write_ok
+      ?? metadata?.persistence?.dual_write_ok
+      ?? metadata?.metrics?.dual_write_ok
+      ?? null
+
+    return {
+      batch_id: data.batch_id ?? null,
+      entity_id: data.entity_id ?? candidateId,
+      status: data.status ?? null,
+      phase: data.phase ?? null,
+      completed_at: data.completed_at ?? null,
+      started_at: data.started_at ?? null,
+      dual_write_ok: dualWriteOk,
+    }
+  }
+
+  return null
 }
 
 interface Entity {
@@ -446,13 +500,24 @@ export async function GET(
     }
 
     if (!comprehensiveDossier) {
-      comprehensiveDossier = await getPersistedDossier(entity.id?.toString() || entityId)
+      comprehensiveDossier = await getPersistedDossier(
+        entity.id?.toString() || entityId,
+        entity.neo4j_id,
+        entity.properties?.name,
+      )
     }
+
+    const pipelineStatus = await getLatestPipelineStatusSummary(
+      entity.id,
+      entity.neo4j_id,
+      entityId,
+    )
 
     return NextResponse.json({
       entity,
       source,
-      dossier: comprehensiveDossier
+      dossier: comprehensiveDossier,
+      pipeline_status: pipelineStatus,
     })
 
   } catch (error) {
