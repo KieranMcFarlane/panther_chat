@@ -91,3 +91,41 @@ async def test_dual_write_coordinator_reports_reconcile_payload_on_failure():
     assert result["reconcile_required"] is True
     assert result["reconciliation_payload"]["idempotency_key"]
     assert result["falkordb"]["error_class"] == "missing_writer"
+
+
+@pytest.mark.asyncio
+async def test_dual_write_coordinator_persists_step_artifacts_with_idempotent_contract():
+    seen = {"keys": []}
+
+    async def supabase_writer(payload):
+        seen["keys"].append(payload["idempotency_key"])
+
+    async def falkordb_writer(payload):
+        seen["keys"].append(payload["idempotency_key"])
+
+    coordinator = DualWritePersistenceCoordinator(
+        supabase_writer=supabase_writer,
+        falkordb_writer=falkordb_writer,
+        max_attempts=1,
+    )
+    result = await coordinator.persist_step_artifacts(
+        run_id="run-3",
+        entity_id="arsenal-fc",
+        phase="discovery",
+        artifacts=[
+            {
+                "step_type": "discovery_candidate_eval",
+                "step_id": "candidate_1",
+                "status": "completed",
+            },
+            {
+                "step_type": "ralph_signal_validation",
+                "step_id": "signal_1",
+                "status": "rejected",
+            },
+        ],
+    )
+    assert result["dual_write_ok"] is True
+    assert result["persisted_count"] == 2
+    assert result["failed_count"] == 0
+    assert any(":discovery:discovery_candidate_eval:candidate_1" in key for key in seen["keys"])

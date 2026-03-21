@@ -9,6 +9,7 @@ STAMP="$(date +%Y%m%d_%H%M%S)"
 REPORT_DIR="backend/data/dossiers/run_reports"
 mkdir -p "$REPORT_DIR"
 PIPELINE_LEAN_VERIFY="${PIPELINE_LEAN_VERIFY:-false}"
+PIPELINE_LEAN_VERIFY_NORMALIZED="$(printf '%s' "$PIPELINE_LEAN_VERIFY" | tr '[:upper:]' '[:lower:]')"
 TIER_SCORE="${PIPELINE_BATCH_TIER_SCORE:-35}"
 MAX_ITERATIONS="${PIPELINE_BATCH_MAX_DISCOVERY_ITERATIONS:-5}"
 USE_CANONICAL="${PIPELINE_USE_CANONICAL_ORCHESTRATOR:-true}"
@@ -38,7 +39,7 @@ DISCOVERY_MAX_SAME_DOMAIN_REVISITS="${DISCOVERY_MAX_SAME_DOMAIN_REVISITS:-2}"
 DOSSIER_COLLECT_PARALLEL_LEADERSHIP="${DOSSIER_COLLECT_PARALLEL_LEADERSHIP:-false}"
 DOSSIER_RUN_POST_COLLECTION_ENRICHMENT="${DOSSIER_RUN_POST_COLLECTION_ENRICHMENT:-false}"
 
-if [[ "${PIPELINE_LEAN_VERIFY,,}" == "true" ]]; then
+if [[ "$PIPELINE_LEAN_VERIFY_NORMALIZED" == "true" ]]; then
   MAX_ITERATIONS="${PIPELINE_BATCH_MAX_DISCOVERY_ITERATIONS:-3}"
   NEWS_MAX_QUERIES="${DOSSIER_RECENT_NEWS_MAX_QUERIES:-1}"
   NEWS_RESULTS_PER_QUERY="${DOSSIER_RECENT_NEWS_RESULTS_PER_QUERY:-2}"
@@ -161,6 +162,12 @@ payload = {
     "dual_write_incomplete": None,
     "dual_write_ok": None,
     "persistence_status": None,
+    "accepted_empty_evidence_count": None,
+    "synthetic_url_attempt_count": None,
+    "length_stop_count": None,
+    "schema_fail_count": None,
+    "empty_content_count": None,
+    "strict_eval_metrics_by_model": None,
 }
 if path and path.exists():
     try:
@@ -186,6 +193,12 @@ if path and path.exists():
     payload["dual_write_incomplete"] = failure_taxonomy.get("dual_write_incomplete")
     payload["dual_write_ok"] = metrics.get("dual_write_ok")
     payload["persistence_status"] = metrics.get("persistence_status")
+    payload["accepted_empty_evidence_count"] = metrics.get("accepted_empty_evidence_count")
+    payload["synthetic_url_attempt_count"] = metrics.get("synthetic_url_attempt_count")
+    payload["length_stop_count"] = metrics.get("length_stop_count")
+    payload["schema_fail_count"] = metrics.get("schema_fail_count")
+    payload["empty_content_count"] = metrics.get("empty_content_count")
+    payload["strict_eval_metrics_by_model"] = metrics.get("strict_eval_metrics_by_model")
 print(json.dumps(payload))
 PY
 )"

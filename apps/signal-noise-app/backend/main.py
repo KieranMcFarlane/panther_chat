@@ -603,6 +603,8 @@ class EntityPipelineResponse(BaseModel):
     degraded_mode: bool = False
     dual_write_ok: Optional[bool] = None
     persistence_status: Dict[str, Any] = Field(default_factory=dict)
+    step_artifact_counts: Dict[str, Any] = Field(default_factory=dict)
+    step_failure_taxonomy: Dict[str, Any] = Field(default_factory=dict)
     artifacts: Dict[str, Any]
     completed_at: str
 

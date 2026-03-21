@@ -59,6 +59,61 @@ class _FakeBrightData:
         }
 
 
+class _DomainSensitiveBrightData:
+    def __init__(self):
+        self.scrape_calls = 0
+
+    async def search_engine(self, **_kwargs):
+        return {
+            "status": "success",
+            "results": [
+                {"url": "https://low-signal.example/news/a", "title": "Low A", "snippet": "thin"},
+                {"url": "https://low-signal.example/news/b", "title": "Low B", "snippet": "thin"},
+                {"url": "https://high-signal.example/press/c", "title": "High C", "snippet": "rich"},
+            ],
+        }
+
+    async def scrape_as_markdown(self, url):
+        self.scrape_calls += 1
+        if "low-signal.example" in str(url):
+            return {
+                "status": "success",
+                "content": "tiny",
+                "metadata": {"low_signal_reason": "thin_low_signal_leaf"},
+            }
+        return {
+            "status": "success",
+            "content": "Coventry City FC digital commercial partnership procurement update " * 25,
+            "metadata": {},
+        }
+
+
+class _GroundingFilterBrightData:
+    def __init__(self):
+        self.scraped_urls = []
+
+    async def search_engine(self, **_kwargs):
+        return {
+            "status": "success",
+            "results": [
+                {"url": "https://example.com/random-procurement.pdf", "title": "Procurement document", "snippet": "supplier tender"},
+                {
+                    "url": "https://www.ccfc.co.uk/news/coventry-city-supplier-announcement",
+                    "title": "Coventry City supplier announcement",
+                    "snippet": "coventry city procurement supplier",
+                },
+            ],
+        }
+
+    async def scrape_as_markdown(self, url):
+        self.scraped_urls.append(str(url))
+        return {
+            "status": "success",
+            "content": "Coventry City FC supplier procurement partnership update " * 25,
+            "metadata": {},
+        }
+
+
 @pytest.mark.asyncio
 async def test_synthetic_origin_candidate_rejected():
     brightdata = _FakeBrightData()
@@ -143,7 +198,13 @@ async def test_fallback_accept_blocked_when_evidence_guard_fails():
 @pytest.mark.asyncio
 async def test_tier3_cannot_validate_without_corroboration():
     brightdata = _FakeBrightData(
-        results=[{"url": "https://random-blog.example/signals", "title": "Digital procurement", "snippet": "supplier"}],
+        results=[
+            {
+                "url": "https://random-blog.example/arsenal-signals",
+                "title": "Arsenal FC club digital procurement",
+                "snippet": "arsenal fc supplier",
+            }
+        ],
         content="Arsenal procurement supplier digital platform partnership opportunity with evidence-rich details " * 25,
     )
     runtime = DiscoveryRuntimeV2(_FakeClaude(), brightdata)
@@ -404,10 +465,18 @@ async def test_llm_eval_opens_length_stop_circuit_and_short_circuits_next_calls(
         evidence={"snippet": "signal", "content_item": "signal"},
         run_objective="rfp_web",
     )
+    third = await runtime._maybe_llm_evaluate(
+        lane="press_release",
+        entity_name="Arsenal FC",
+        url="https://example.com/three",
+        evidence={"snippet": "signal", "content_item": "signal"},
+        run_objective="rfp_web",
+    )
 
     assert first["parse_path"] == "length_stop_hard_fail"
-    assert second["parse_path"] == "llm_circuit_open"
-    assert claude.calls == 1
+    assert second["parse_path"] == "length_stop_hard_fail"
+    assert third["parse_path"] == "llm_circuit_open"
+    assert claude.calls == 2
 
 
 @pytest.mark.asyncio
@@ -420,6 +489,7 @@ async def test_rfp_web_hop_cap_can_be_overridden_for_experiments(monkeypatch):
     runtime = DiscoveryRuntimeV2(_FakeClaude(), brightdata)
     runtime.enable_llm_eval = False
     runtime.enable_llm_hop_selection = False
+    runtime.enable_agentic_router = False
 
     result = await runtime.run_discovery_with_dossier_context(
         entity_id="arsenal-fc",
@@ -433,3 +503,249 @@ async def test_rfp_web_hop_cap_can_be_overridden_for_experiments(monkeypatch):
 
     assert int(budget.get("max_hops") or 0) == 7
     assert result.iterations_completed <= 7
+
+
+@pytest.mark.asyncio
+async def test_discovery_result_exposes_candidate_micro_evaluations_contract():
+    brightdata = _FakeBrightData(
+        results=[{"url": "https://www.arsenal.com/news/example", "title": "News", "snippet": "signal"}],
+        content="Arsenal partnership and commercial transformation update " * 35,
+    )
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), brightdata)
+    runtime.enable_llm_eval = True
+    runtime.enable_llm_hop_selection = False
+
+    result = await runtime.run_discovery_with_dossier_context(
+        entity_id="arsenal-fc",
+        entity_name="Arsenal FC",
+        dossier={"metadata": {"canonical_sources": {"official_site": "https://www.arsenal.com"}}},
+        run_objective="rfp_web",
+        max_iterations=2,
+    )
+    candidate_evaluations = result.candidate_evaluations
+    assert isinstance(candidate_evaluations, list)
+    assert candidate_evaluations
+    first = candidate_evaluations[0]
+    assert first["step_type"] == "discovery_candidate_eval"
+    assert "decision" in first
+    assert "reason_code" in first
+    assert "schema_valid" in first
+
+
+@pytest.mark.asyncio
+async def test_discovery_performance_summary_exposes_strict_eval_model_metrics():
+    brightdata = _FakeBrightData(
+        results=[{"url": "https://www.arsenal.com/news/example", "title": "News", "snippet": "signal"}],
+        content="Arsenal partnership and commercial transformation update " * 35,
+    )
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), brightdata)
+    runtime.enable_llm_eval = True
+    runtime.enable_llm_hop_selection = False
+
+    result = await runtime.run_discovery_with_dossier_context(
+        entity_id="arsenal-fc",
+        entity_name="Arsenal FC",
+        dossier={"metadata": {"canonical_sources": {"official_site": "https://www.arsenal.com"}}},
+        run_objective="rfp_web",
+        max_iterations=1,
+    )
+
+    summary = result.performance_summary or {}
+    strict_metrics = summary.get("strict_eval_metrics_by_model") or {}
+    assert isinstance(strict_metrics, dict)
+    assert strict_metrics
+    first_metrics = next(iter(strict_metrics.values()))
+    assert "length_stop_count" in first_metrics
+    assert "schema_fail_count" in first_metrics
+    assert "empty_content_count" in first_metrics
+    assert "median_eval_latency_ms" in first_metrics
+
+
+@pytest.mark.asyncio
+async def test_low_signal_domain_family_is_suppressed_across_attempts():
+    brightdata = _DomainSensitiveBrightData()
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), brightdata)
+    runtime.enable_llm_eval = False
+    runtime.enable_llm_hop_selection = False
+
+    state = {
+        "visited_urls": set(),
+        "visited_hashes": set(),
+        "accepted_signatures": set(),
+        "domain_visits": {},
+        "lane_failures": {},
+        "lane_exhausted": set(),
+        "trusted_corroboration_tokens": set(),
+        "rejected_urls": set(),
+        "rejected_domain_families": {},
+        "iterations_completed": 0,
+    }
+
+    await runtime._run_lane(
+        lane="press_release",
+        entity_name="Coventry City FC",
+        dossier={"metadata": {"canonical_sources": {"official_site": "https://www.ccfc.co.uk"}}},
+        official_domain="ccfc.co.uk",
+        state=state,
+        run_objective="rfp_web",
+    )
+    await runtime._run_lane(
+        lane="trusted_news",
+        entity_name="Coventry City FC",
+        dossier={"metadata": {"canonical_sources": {"official_site": "https://www.ccfc.co.uk"}}},
+        official_domain="ccfc.co.uk",
+        state=state,
+        run_objective="rfp_web",
+    )
+
+    # Low-signal family should be remembered and deprioritized/suppressed.
+    assert int(state.get("rejected_domain_families", {}).get("low-signal.example", 0) or 0) >= 2
+
+
+@pytest.mark.asyncio
+async def test_off_entity_prefilter_rejects_unrelated_pdf_before_scrape():
+    brightdata = _GroundingFilterBrightData()
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), brightdata)
+    runtime.enable_llm_eval = False
+    runtime.enable_llm_hop_selection = False
+
+    state = {
+        "visited_urls": set(),
+        "visited_hashes": set(),
+        "accepted_signatures": set(),
+        "domain_visits": {},
+        "lane_failures": {},
+        "lane_exhausted": set(),
+        "trusted_corroboration_tokens": set(),
+        "rejected_urls": set(),
+        "rejected_domain_families": {},
+        "iterations_completed": 0,
+    }
+
+    lane_result = await runtime._run_lane(
+        lane="rfp_procurement_tenders",
+        entity_name="Coventry City FC",
+        dossier={"metadata": {"canonical_sources": {"official_site": "https://www.ccfc.co.uk"}}},
+        official_domain="ccfc.co.uk",
+        state=state,
+        run_objective="rfp_web",
+    )
+
+    assert lane_result["signal"] is not None
+    assert "ccfc.co.uk" in str((lane_result["signal"] or {}).get("url") or "")
+    assert all("example.com/random-procurement.pdf" not in url for url in brightdata.scraped_urls)
+    assert runtime._candidate_passes_entity_grounding(
+        lane="rfp_procurement_tenders",
+        candidate={"url": "https://example.com/random-procurement.pdf", "title": "Procurement document", "snippet": "supplier tender"},
+        entity_name="Coventry City FC",
+        official_domain="ccfc.co.uk",
+    ) is False
+
+
+@pytest.mark.asyncio
+async def test_club_pdf_prefilter_rejects_city_council_context():
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), _FakeBrightData())
+    council_candidate = {
+        "url": "https://edemocracy.coventry.gov.uk/documents/public-report.pdf",
+        "title": "Coventry City Council report",
+        "snippet": "coventry city procurement tender",
+    }
+    club_candidate = {
+        "url": "https://www.ccfc.co.uk/club/coventry-city-football-club-procurement",
+        "title": "Coventry City Football Club procurement",
+        "snippet": "coventry city fc procurement",
+    }
+    assert runtime._candidate_passes_entity_grounding(
+        lane="governance_pdf",
+        candidate=council_candidate,
+        entity_name="Coventry City FC",
+        official_domain="ccfc.co.uk",
+    ) is False
+    assert runtime._candidate_passes_entity_grounding(
+        lane="governance_pdf",
+        candidate=club_candidate,
+        entity_name="Coventry City FC",
+        official_domain="ccfc.co.uk",
+    ) is True
+
+
+@pytest.mark.asyncio
+async def test_schema_invalid_length_stop_demotes_validated_to_candidate():
+    brightdata = _FakeBrightData(
+        results=[{"url": "https://www.arsenal.com/news/procurement-update", "title": "Arsenal FC procurement update", "snippet": "arsenal fc supplier procurement"}],
+        content="Arsenal FC football club procurement supplier commercial partnership update " * 35,
+    )
+    runtime = DiscoveryRuntimeV2(_LengthStopClaude(), brightdata)
+    runtime.enable_llm_eval = True
+    runtime.enable_llm_hop_selection = False
+
+    state = {
+        "visited_urls": set(),
+        "visited_hashes": set(),
+        "accepted_signatures": set(),
+        "domain_visits": {},
+        "lane_failures": {},
+        "lane_exhausted": set(),
+        "trusted_corroboration_tokens": set(),
+        "rejected_urls": set(),
+        "rejected_domain_families": {},
+        "iterations_completed": 0,
+    }
+    result = await runtime._run_lane(
+        lane="rfp_procurement_tenders",
+        entity_name="Arsenal FC",
+        dossier={"metadata": {"canonical_sources": {"official_site": "https://www.arsenal.com"}}},
+        official_domain="arsenal.com",
+        state=state,
+        run_objective="rfp_web",
+    )
+    signal = result["signal"] or result["diagnostic"]
+    assert signal is not None
+    assert signal["validation_state"] == "candidate"
+    assert signal["accept_guard_passed"] is False
+    assert "llm_schema_invalid_demoted" in list(signal.get("accept_reject_reasons") or [])
+
+
+@pytest.mark.asyncio
+async def test_pass_b_executes_with_candidate_signals_when_no_validated_signals():
+    brightdata = _FakeBrightData(
+        results=[{"url": "https://random-blog.example/post", "title": "Market update", "snippet": "commercial"}],
+        content="International Canoe Federation commercial partnership digital supplier update " * 30,
+    )
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), brightdata)
+    runtime.enable_llm_eval = False
+    runtime.enable_llm_hop_selection = False
+
+    result = await runtime.run_discovery_with_dossier_context(
+        entity_id="fiba",
+        entity_name="International Canoe Federation",
+        dossier={},
+        run_objective="rfp_web",
+        max_iterations=5,
+    )
+    two_pass = (result.performance_summary or {}).get("two_pass") or {}
+    assert two_pass.get("pass_b_executed") is True
+    assert int((result.performance_summary or {}).get("candidate_signals_count") or 0) >= 1
+
+
+@pytest.mark.asyncio
+async def test_candidate_mode_extends_budget_when_early_progress_is_only_candidates():
+    brightdata = _FakeBrightData(
+        results=[{"url": "https://random-blog.example/procurement", "title": "Procurement", "snippet": "rfp"}],
+        content="International Canoe Federation procurement tender digital transformation supplier " * 35,
+    )
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), brightdata)
+    runtime.enable_llm_eval = False
+    runtime.enable_llm_hop_selection = False
+
+    result = await runtime.run_discovery_with_dossier_context(
+        entity_id="fiba",
+        entity_name="International Canoe Federation",
+        dossier={},
+        run_objective="rfp_web",
+        max_iterations=5,
+    )
+    summary = result.performance_summary or {}
+    budget = summary.get("budget") or {}
+    assert summary.get("adaptive_candidate_mode_applied") is True
+    assert int(budget.get("max_hops") or 0) >= 7

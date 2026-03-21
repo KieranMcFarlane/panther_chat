@@ -1267,6 +1267,14 @@ class FixedDossierFirstPipeline:
             performance = {}
         signals = discovery.get("signals_discovered")
         signal_count = len(signals) if isinstance(signals, list) else 0
+        validated_signal_list = [signal for signal in (signals or []) if isinstance(signal, dict) and str(signal.get("validation_state") or "").strip().lower() == "validated"]
+        accepted_empty_evidence_count = 0
+        for signal in validated_signal_list:
+            evidence_found = str(signal.get("evidence_found") or "").strip()
+            evidence_items = signal.get("evidence") if isinstance(signal.get("evidence"), list) else []
+            has_content_item = any(str(item.get("content") or "").strip() for item in evidence_items if isinstance(item, dict))
+            if not evidence_found and not has_content_item:
+                accepted_empty_evidence_count += 1
         official_traces = performance.get("official_site_resolution_traces")
         latest_trace = official_traces[-1] if isinstance(official_traces, list) and official_traces else {}
         lane_statuses = latest_trace.get("lane_statuses") if isinstance(latest_trace, dict) else {}
@@ -1363,6 +1371,9 @@ class FixedDossierFirstPipeline:
                 "llm_fallback_count": int(performance.get("llm_fallback_count") or 0),
                 "length_stop_count": int(performance.get("length_stop_count") or 0),
                 "schema_fail_count": int(performance.get("schema_fail_count") or 0),
+                "empty_content_count": int(performance.get("empty_content_count") or 0),
+                "strict_eval_metrics_by_model": performance.get("strict_eval_metrics_by_model") if isinstance(performance.get("strict_eval_metrics_by_model"), dict) else {},
+                "accepted_empty_evidence_count": int(accepted_empty_evidence_count),
                 "llm_circuit_broken": bool(performance.get("llm_circuit_broken", False)),
                 "dual_write_ok": dual_write_ok,
                 "persistence_status": persistence_status if isinstance(persistence_status, dict) else None,

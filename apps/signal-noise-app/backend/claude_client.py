@@ -432,7 +432,36 @@ class ClaudeClient:
             "CHUTES_MODEL_TERTIARY",
             os.getenv("CHUTES_MODEL_OPUS", "MiniMaxAI/MiniMax-M2.5-TEE"),
         )
-        self.chutes_model_json = os.getenv("CHUTES_MODEL_JSON", "").strip()
+        default_json_model = os.getenv(
+            "CHUTES_MODEL_JSON_DEFAULT",
+            "deepseek-ai/DeepSeek-V3-0324-TEE",
+        )
+        self.chutes_model_json = os.getenv("CHUTES_MODEL_JSON", default_json_model).strip() or default_json_model
+        self.chutes_model_json_fallback = os.getenv(
+            "CHUTES_MODEL_JSON_FALLBACK",
+            self.chutes_model_sonnet,
+        ).strip() or self.chutes_model_sonnet
+        self.chutes_json_min_max_tokens = max(64, int(os.getenv("CHUTES_JSON_MIN_MAX_TOKENS", "192")))
+        self.chutes_json_length_retry_max_tokens = max(
+            self.chutes_json_min_max_tokens,
+            int(os.getenv("CHUTES_JSON_LENGTH_RETRY_MAX_TOKENS", "320")),
+        )
+        self.chutes_json_length_retry_enabled = self._parse_bool_env(
+            os.getenv("CHUTES_JSON_LENGTH_RETRY_ENABLED"),
+            default=False,
+        )
+        self.chutes_json_empty_retry_enabled = self._parse_bool_env(
+            os.getenv("CHUTES_JSON_EMPTY_RETRY_ENABLED"),
+            default=False,
+        )
+        self.chutes_json_response_format_enabled = self._parse_bool_env(
+            os.getenv("CHUTES_JSON_RESPONSE_FORMAT_ENABLED"),
+            default=True,
+        )
+        self.chutes_json_include_reasoning = self._parse_bool_env(
+            os.getenv("CHUTES_JSON_INCLUDE_REASONING"),
+            default=False,
+        )
         self.chutes_fallback_model = os.getenv("CHUTES_FALLBACK_MODEL", "moonshotai/Kimi-K2.5-TEE")
         self.chutes_timeout_seconds = float(os.getenv("CHUTES_TIMEOUT_SECONDS", "45"))
         self.chutes_fallback_timeout_seconds = float(os.getenv("CHUTES_FALLBACK_TIMEOUT_SECONDS", "90"))
@@ -967,6 +996,18 @@ class ClaudeClient:
                 continue
             trimmed = candidate.strip()
             if not trimmed.startswith("{"):
+                if "```" in trimmed:
+                    trimmed = trimmed.replace("```json", "```").replace("```JSON", "```")
+                    parts = [part.strip() for part in trimmed.split("```") if part.strip()]
+                    object_part = next((part for part in parts if part.startswith("{") and part.endswith("}")), "")
+                    if object_part:
+                        trimmed = object_part
+                if not trimmed.startswith("{"):
+                    start = trimmed.find("{")
+                    end = trimmed.rfind("}")
+                    if start >= 0 and end > start:
+                        trimmed = trimmed[start : end + 1]
+            if not trimmed.startswith("{"):
                 continue
             try:
                 parsed = json.loads(trimmed)
@@ -1183,7 +1224,10 @@ class ClaudeClient:
             "stream": request_stream,
         }
         if json_mode:
-            payload["response_format"] = {"type": "json_object"}
+            payload["max_tokens"] = max(max_tokens, self.chutes_json_min_max_tokens)
+            payload["include_reasoning"] = bool(self.chutes_json_include_reasoning)
+            if self.chutes_json_response_format_enabled:
+                payload["response_format"] = {"type": "json_object"}
 
         headers = {
             "Authorization": f"Bearer {self.api_key}",
@@ -1211,6 +1255,7 @@ class ClaudeClient:
             else max(1, int(empty_retries_before_fallback_override))
         )
 
+        attempted_json_length_retry = False
         for attempt in range(max_retries + 1):
             try:
                 using_fallback_model = (
@@ -1252,8 +1297,25 @@ class ClaudeClient:
                 usage = data.get("usage", {})
                 stop_reason = data.get("stop_reason")
                 chunk_count = int(data.get("chunk_count", 0) or 0)
+                strict_json_hard_fail = bool(json_mode and fast_fail_on_length)
 
                 if str(stop_reason or "").strip().lower() == "length" and fast_fail_on_length:
+                    if json_mode and self.chutes_json_length_retry_enabled and not attempted_json_length_retry:
+                        retry_model = self.chutes_model_json_fallback
+                        if retry_model and retry_model != payload["model"]:
+                            attempted_json_length_retry = True
+                            payload["model"] = retry_model
+                            payload["max_tokens"] = max(
+                                int(payload.get("max_tokens") or 0),
+                                self.chutes_json_length_retry_max_tokens,
+                            )
+                            logger.warning(
+                                "Chutes JSON length-stop on model=%s; retrying once with JSON fallback model=%s max_tokens=%s",
+                                runtime_model,
+                                retry_model,
+                                payload["max_tokens"],
+                            )
+                            continue
                     self._record_chutes_event("success")
                     self._apply_chutes_adaptive_recovery()
                     self._set_last_request_diagnostics(retry_attempts=attempt, last_status="length_fast_fail")
@@ -1279,6 +1341,35 @@ class ClaudeClient:
                             "answer_channel_chars": 0,
                             "reasoning_channel_chars": len(reasoning_content),
                             "length_fast_fail": True,
+                        },
+                    }
+
+                if not content and strict_json_hard_fail and not self.chutes_json_empty_retry_enabled:
+                    self._record_chutes_event("success")
+                    self._apply_chutes_adaptive_recovery()
+                    self._set_last_request_diagnostics(retry_attempts=attempt, last_status="empty_content_fast_fail")
+                    return {
+                        "content": "",
+                        "reasoning_content": reasoning_content,
+                        "model_used": payload["model"],
+                        "requested_model": model,
+                        "provider": self.provider,
+                        "structured_output": structured_output,
+                        "raw_response": data.get("raw_response"),
+                        "tokens_used": {
+                            "input_tokens": usage.get("prompt_tokens"),
+                            "output_tokens": usage.get("completion_tokens"),
+                            "total_tokens": usage.get("total_tokens"),
+                        },
+                        "stop_reason": stop_reason,
+                        "inference_diagnostics": {
+                            "streaming": bool(request_stream),
+                            "streaming_override": request_stream != self.chutes_stream_enabled,
+                            "fallback_used": bool(payload["model"] != self.chutes_model),
+                            "chunk_count": chunk_count,
+                            "answer_channel_chars": 0,
+                            "reasoning_channel_chars": len(reasoning_content),
+                            "empty_content_fast_fail": True,
                         },
                     }
 
