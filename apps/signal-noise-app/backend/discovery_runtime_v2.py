@@ -215,6 +215,7 @@ class DiscoveryRuntimeV2:
         self.max_retries = int(os.getenv("DISCOVERY_MAX_RETRIES", "2"))
         self.max_same_domain_revisits = int(os.getenv("DISCOVERY_MAX_SAME_DOMAIN_REVISITS", "2"))
         self.num_results = int(os.getenv("DISCOVERY_SEARCH_RESULTS_PER_QUERY", "5"))
+        self.eval_max_tokens = int(os.getenv("DISCOVERY_EVAL_MAX_TOKENS", "96"))
         self.evidence_first = _truthy(os.getenv("DISCOVERY_POLICY_EVIDENCE_FIRST", "true"))
         self.enable_llm_eval = _truthy(os.getenv("DISCOVERY_V2_LLM_EVAL_ENABLED", "true"))
         self.enable_llm_hop_selection = _truthy(os.getenv("DISCOVERY_V2_LLM_HOP_SELECTION_ENABLED", "true"))
@@ -873,18 +874,21 @@ class DiscoveryRuntimeV2:
                 "parse_path": "heuristic_only",
                 "llm_last_status": "heuristic_only",
             }
+        evidence_snippet = " ".join(str(evidence.get("snippet") or "").split())[:180]
         prompt = (
-            "Return strict JSON only with keys decision,reason.\n"
+            "Return strict JSON only with keys decision,reason_code.\n"
             "Allowed decision: ACCEPT|WEAK_ACCEPT_CANDIDATE|NO_PROGRESS|PIPELINE_DIAGNOSTIC|RETRY_DIFFERENT_HOP.\n"
+            "Allowed reason_code: evidence_strong|evidence_partial|low_signal|off_entity|schema_reject|duplicate|tier_reject|retry_other_lane.\n"
+            "Do not output prose. Do not output markdown. Output one compact JSON object only.\n"
             f"Entity: {entity_name}\nLane: {lane}\nURL: {url}\n"
-            f"Evidence: {evidence.get('snippet')}\n"
+            f"Evidence: {evidence_snippet}\n"
         )
         try:
             self._metrics["llm_call_count"] += 1
             response = await self.claude_client.query(
                 prompt=prompt,
                 model="haiku",
-                max_tokens=110,
+                max_tokens=self.eval_max_tokens,
                 json_mode=True,
                 max_retries_override=1 if objective in {"rfp_pdf", "rfp_web"} else None,
                 empty_retries_before_fallback_override=1 if objective in {"rfp_pdf", "rfp_web"} else None,

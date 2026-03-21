@@ -432,6 +432,7 @@ class ClaudeClient:
             "CHUTES_MODEL_TERTIARY",
             os.getenv("CHUTES_MODEL_OPUS", "MiniMaxAI/MiniMax-M2.5-TEE"),
         )
+        self.chutes_model_json = os.getenv("CHUTES_MODEL_JSON", "").strip()
         self.chutes_fallback_model = os.getenv("CHUTES_FALLBACK_MODEL", "moonshotai/Kimi-K2.5-TEE")
         self.chutes_timeout_seconds = float(os.getenv("CHUTES_TIMEOUT_SECONDS", "45"))
         self.chutes_fallback_timeout_seconds = float(os.getenv("CHUTES_FALLBACK_TIMEOUT_SECONDS", "90"))
@@ -1171,12 +1172,14 @@ class ClaudeClient:
         messages.append({"role": "user", "content": prompt})
 
         runtime_model = self._resolve_chutes_runtime_model(model)
+        if json_mode and self.chutes_model_json:
+            runtime_model = self.chutes_model_json
         request_stream = self.chutes_stream_enabled if stream is None else bool(stream)
         payload = {
             "model": runtime_model,
             "messages": messages,
             "max_tokens": max_tokens,
-            "temperature": 0.7 if system_prompt is None else 0.4,
+            "temperature": 0.0 if json_mode else (0.7 if system_prompt is None else 0.4),
             "stream": request_stream,
         }
         if json_mode:
@@ -1250,7 +1253,7 @@ class ClaudeClient:
                 stop_reason = data.get("stop_reason")
                 chunk_count = int(data.get("chunk_count", 0) or 0)
 
-                if not content and str(stop_reason or "").strip().lower() == "length" and fast_fail_on_length:
+                if str(stop_reason or "").strip().lower() == "length" and fast_fail_on_length:
                     self._record_chutes_event("success")
                     self._apply_chutes_adaptive_recovery()
                     self._set_last_request_diagnostics(retry_attempts=attempt, last_status="length_fast_fail")
@@ -1625,7 +1628,7 @@ class ClaudeClient:
                 if structured_output is None:
                     structured_output = self._extract_structured_output(content)
                 stop_reason = data.get("stop_reason")
-                if not content and str(stop_reason or "").strip().lower() == "length" and fast_fail_on_length:
+                if str(stop_reason or "").strip().lower() == "length" and fast_fail_on_length:
                     self._record_chutes_event("success")
                     self._apply_chutes_adaptive_recovery()
                     self._set_last_request_diagnostics(retry_attempts=attempt, last_status="length_fast_fail")
