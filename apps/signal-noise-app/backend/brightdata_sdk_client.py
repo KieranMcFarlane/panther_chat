@@ -16,6 +16,8 @@ import json
 import logging
 import re
 import time
+import random
+import hashlib
 from typing import Dict, List, Any, Optional
 from datetime import datetime
 import os
@@ -83,12 +85,163 @@ class BrightDataSDKClient:
         self._request_zone_whitelist_checked_at: float = 0.0
         self.serp_poll_attempts = int(os.getenv("BRIGHTDATA_SERP_POLL_ATTEMPTS", "6"))
         self.serp_poll_interval_seconds = float(os.getenv("BRIGHTDATA_SERP_POLL_INTERVAL_SECONDS", "1.2"))
+        self._domain_probe_last_run: Dict[str, float] = {}
+        self._low_signal_url_cache: Dict[str, Dict[str, Any]] = {}
+        self._low_signal_url_cooldown_seconds = float(
+            os.getenv("BRIGHTDATA_LOW_SIGNAL_URL_COOLDOWN_SECONDS", "600")
+        )
+        self.generous_retry_enabled = os.getenv("BRIGHTDATA_GENEROUS_RETRY", "true").strip().lower() in {"1", "true", "yes", "on"}
+        self.enable_modern_auto_scrape = os.getenv("BRIGHTDATA_ENABLE_MODERN_AUTO", "false").strip().lower() in {"1", "true", "yes", "on"}
+        self.retry_base_backoff_seconds = float(os.getenv("BRIGHTDATA_RETRY_BACKOFF_SECONDS", "1.0"))
+        self.retry_backoff_cap_seconds = float(os.getenv("BRIGHTDATA_RETRY_BACKOFF_CAP_SECONDS", "10.0"))
+        self.retry_jitter_seconds = float(os.getenv("BRIGHTDATA_RETRY_JITTER_SECONDS", "0.35"))
 
         if not self.token:
             logger.warning("⚠️ BRIGHTDATA_API_TOKEN not found in environment")
 
+    def _force_brightdata_only(self) -> bool:
+        return os.getenv("BRIGHTDATA_FORCE_ONLY", "false").strip().lower() in {"1", "true", "yes", "on"}
+
+    def _resolve_retry_attempts(self, env_key: str, normal_default: int = 2, generous_default: int = 5) -> int:
+        generous_retry_enabled = bool(
+            getattr(
+                self,
+                "generous_retry_enabled",
+                os.getenv("BRIGHTDATA_GENEROUS_RETRY", "true").strip().lower() in {"1", "true", "yes", "on"},
+            )
+        )
+        default_value = generous_default if generous_retry_enabled else normal_default
+        return max(1, int(os.getenv(env_key, str(default_value))))
+
+    def _normalize_low_signal_cache_key(self, url: str) -> str:
+        parsed = urlparse(url if url.startswith(("http://", "https://")) else f"https://{url}")
+        if not parsed.scheme or not parsed.netloc:
+            return str(url or "").strip().lower()
+        path = parsed.path or "/"
+        return f"{parsed.scheme.lower()}://{parsed.netloc.lower()}{path}".rstrip("/")
+
+    def _mark_low_signal_url(self, url: str, reason: str) -> None:
+        key = self._normalize_low_signal_cache_key(url)
+        if not key:
+            return
+        cache = getattr(self, "_low_signal_url_cache", None)
+        if not isinstance(cache, dict):
+            cache = {}
+            self._low_signal_url_cache = cache
+        now = time.time()
+        entry = cache.get(key) or {}
+        cache[key] = {
+            "count": int(entry.get("count", 0) or 0) + 1,
+            "last_reason": str(reason or "low_signal"),
+            "last_seen": now,
+        }
+
+    def _cached_low_signal_entry(self, url: str) -> Optional[Dict[str, Any]]:
+        key = self._normalize_low_signal_cache_key(url)
+        cache = getattr(self, "_low_signal_url_cache", None)
+        if not key or not isinstance(cache, dict):
+            return None
+        entry = cache.get(key)
+        if not isinstance(entry, dict):
+            return None
+        count = int(entry.get("count", 0) or 0)
+        last_seen = float(entry.get("last_seen", 0.0) or 0.0)
+        cooldown = float(getattr(self, "_low_signal_url_cooldown_seconds", 600.0) or 600.0)
+        if count < 1:
+            return None
+        if (time.time() - last_seen) > cooldown:
+            return None
+        return entry
+
+    def _minimum_words_for_url(self, url: str) -> int:
+        base = int(os.getenv("BRIGHTDATA_MIN_WORDS", "80"))
+        parsed = urlparse(url if url.startswith(("http://", "https://")) else f"https://{url}")
+        path = (parsed.path or "/").lower()
+        if any(token in path for token in ("/news", "/article", "/press", "/blog")):
+            return max(base, int(os.getenv("BRIGHTDATA_MIN_WORDS_NEWS", "120")))
+        return base
+
+    def _detect_low_signal_shell(self, *, url: str, content: str, raw_html: str) -> Optional[str]:
+        words = len((content or "").split())
+        min_words = self._minimum_words_for_url(url)
+        if words < min_words:
+            return f"thin_content<{min_words}"
+        lowered_html = (raw_html or "").lower()
+        lowered_content = (content or "").lower()
+        nav_tokens = ("fixtures", "matches", "results", "tickets", "shop", "menu")
+        nav_hits = sum(1 for token in nav_tokens if token in lowered_html)
+        if nav_hits >= 4 and words < max(min_words + 40, 160):
+            return "nav_heavy_shell"
+        repeated = ["official website", "club website", "cookies", "javascript"]
+        repeated_hits = sum(1 for token in repeated if lowered_content.count(token) >= 2)
+        if repeated_hits >= 2:
+            return "boilerplate_repetition"
+        path = (urlparse(url if url.startswith(("http://", "https://")) else f"https://{url}").path or "/").lower()
+        if any(path.rstrip("/").endswith(f"/{leaf}") for leaf in ("matches", "fixtures", "news")) and words < max(min_words + 30, 140):
+            return "thin_low_signal_leaf"
+        return None
+
+    def _entity_grounding_status(self, url: str, content: str) -> str:
+        parsed = urlparse(url if url.startswith(("http://", "https://")) else f"https://{url}")
+        host = (parsed.netloc or "").lower()
+        text = (content or "").lower()
+        if host and host.split(".")[0] and host.split(".")[0] in text:
+            return "grounded_by_domain_token"
+        if host:
+            return "domain_only"
+        return "unknown"
+
+    def _enrich_provenance(
+        self,
+        result: Dict[str, Any],
+        *,
+        lane: str,
+        attempt: int,
+        selected_candidate_url: Optional[str] = None,
+        fallback_reason: Optional[str] = None,
+        low_signal_reason: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        payload = dict(result or {})
+        metadata = payload.get("metadata")
+        if not isinstance(metadata, dict):
+            metadata = {}
+        content = str(payload.get("content") or "")
+        final_url = str(payload.get("url") or selected_candidate_url or "")
+        metadata["lane"] = lane
+        metadata["attempt"] = attempt
+        metadata["word_count"] = len(content.split())
+        metadata["selected_candidate_url"] = selected_candidate_url or final_url or None
+        metadata["entity_grounding_status"] = self._entity_grounding_status(final_url, content)
+        metadata["extract_hash"] = hashlib.sha256(content.encode("utf-8")).hexdigest() if content else None
+        metadata["fallback_reason"] = fallback_reason or metadata.get("fallback_reason")
+        metadata["low_signal_reason"] = low_signal_reason
+        payload["metadata"] = metadata
+        return payload
+
+    def _retry_backoff_delay(self, attempt_index: int) -> float:
+        # attempt_index is 1-based retry index
+        retry_backoff_cap_seconds = float(
+            getattr(self, "retry_backoff_cap_seconds", os.getenv("BRIGHTDATA_RETRY_BACKOFF_CAP_SECONDS", "10.0"))
+        )
+        retry_base_backoff_seconds = float(
+            getattr(self, "retry_base_backoff_seconds", os.getenv("BRIGHTDATA_RETRY_BACKOFF_SECONDS", "1.0"))
+        )
+        retry_jitter_seconds = float(
+            getattr(self, "retry_jitter_seconds", os.getenv("BRIGHTDATA_RETRY_JITTER_SECONDS", "0.35"))
+        )
+        delay = min(
+            retry_backoff_cap_seconds,
+            retry_base_backoff_seconds * (2 ** max(0, attempt_index - 1)),
+        )
+        if retry_jitter_seconds > 0:
+            delay += float(random.uniform(0.0, retry_jitter_seconds))
+        return max(0.0, delay)
+
     async def _with_timeout(self, awaitable):
-        return await asyncio.wait_for(awaitable, timeout=self.request_timeout_seconds)
+        timeout_seconds = float(
+            getattr(self, "request_timeout_seconds", os.getenv("BRIGHTDATA_SDK_TIMEOUT_SECONDS", "45"))
+        )
+        return await asyncio.wait_for(awaitable, timeout=timeout_seconds)
 
     async def _get_client(self):
         """Get or create async client context"""
@@ -103,6 +256,23 @@ class BrightDataSDKClient:
                 logger.info("ℹ️ Installed brightdata package does not expose BrightDataClient; using fallback client")
                 self._client = False
             except Exception as e:
+                manager = getattr(self, "_client_manager", None)
+                if manager is not None:
+                    try:
+                        aexit = getattr(manager, "__aexit__", None)
+                        if callable(aexit):
+                            await aexit(None, None, None)
+                    except Exception:
+                        pass
+                    try:
+                        close_fn = getattr(manager, "close", None)
+                        if callable(close_fn):
+                            maybe_coro = close_fn()
+                            if asyncio.iscoroutine(maybe_coro):
+                                await maybe_coro
+                    except Exception:
+                        pass
+                    self._client_manager = None
                 logger.warning(f"⚠️ BrightData SDK initialization failed: {e}")
                 logger.info("ℹ️ Will use fallback httpx client for scraping")
                 # Set to None to indicate SDK unavailable
@@ -114,8 +284,21 @@ class BrightDataSDKClient:
     async def close(self):
         """Close the BrightData SDK client session if it was initialized."""
         client_manager = getattr(self, "_client_manager", None)
-        if client_manager is not None and self._client not in (None, False):
-            await client_manager.__aexit__(None, None, None)
+        if client_manager is not None:
+            try:
+                aexit = getattr(client_manager, "__aexit__", None)
+                if callable(aexit):
+                    await aexit(None, None, None)
+            except Exception:
+                pass
+            try:
+                close_fn = getattr(client_manager, "close", None)
+                if callable(close_fn):
+                    maybe_coro = close_fn()
+                    if asyncio.iscoroutine(maybe_coro):
+                        await maybe_coro
+            except Exception:
+                pass
         self._client_manager = None
         self._client = None
 
@@ -155,46 +338,71 @@ class BrightDataSDKClient:
 
             search_timeout = float(os.getenv("BRIGHTDATA_SEARCH_TIMEOUT_SECONDS", "30"))
 
-            # Call search directly (SDK methods are async)
-            if engine.lower() == "google":
-                result = await asyncio.wait_for(
-                    client.search.google(
-                        query=query,
-                        country=country,
-                        num=num_results,
-                    ),
-                    timeout=search_timeout,
-                )
-            elif engine.lower() == "bing":
-                result = await asyncio.wait_for(
-                    client.search.bing(
-                        query=query,
-                        country=country,
-                        num=num_results,
-                    ),
-                    timeout=search_timeout,
-                )
-            elif engine.lower() == "yandex":
-                result = await asyncio.wait_for(
-                    client.search.yandex(
-                        query=query,
-                        num=num_results,
-                    ),
-                    timeout=search_timeout,
-                )
-            else:
-                return {
-                    "status": "error",
-                    "error": f"Unsupported search engine: {engine}",
-                    "query": query,
-                    "engine": engine
-                }
+            max_attempts = self._resolve_retry_attempts("BRIGHTDATA_SEARCH_MAX_ATTEMPTS")
+            last_error: Optional[Exception] = None
+            result = None
+            for attempt in range(1, max_attempts + 1):
+                try:
+                    # Call search directly (SDK methods are async)
+                    if engine.lower() == "google":
+                        result = await asyncio.wait_for(
+                            client.search.google(
+                                query=query,
+                                country=country,
+                                num=num_results,
+                            ),
+                            timeout=search_timeout,
+                        )
+                    elif engine.lower() == "bing":
+                        result = await asyncio.wait_for(
+                            client.search.bing(
+                                query=query,
+                                country=country,
+                                num=num_results,
+                            ),
+                            timeout=search_timeout,
+                        )
+                    elif engine.lower() == "yandex":
+                        result = await asyncio.wait_for(
+                            client.search.yandex(
+                                query=query,
+                                num=num_results,
+                            ),
+                            timeout=search_timeout,
+                        )
+                    else:
+                        return {
+                            "status": "error",
+                            "error": f"Unsupported search engine: {engine}",
+                            "query": query,
+                            "engine": engine
+                        }
 
-            # Check if result has data and data is not None
+                    # Check if result has data and data is not None
+                    if result and hasattr(result, 'data') and result.data is not None:
+                        break
+
+                    last_error = RuntimeError("No results returned")
+                except Exception as exc:
+                    last_error = exc
+
+                if attempt < max_attempts:
+                    delay = self._retry_backoff_delay(attempt)
+                    logger.warning(
+                        "⚠️ BrightData search attempt %s/%s failed for query=%r (%s); retrying in %.2fs",
+                        attempt,
+                        max_attempts,
+                        query,
+                        type(last_error).__name__ if last_error else "unknown",
+                        delay,
+                    )
+                    if delay > 0:
+                        await asyncio.sleep(delay)
+
             if not result or not hasattr(result, 'data') or result.data is None:
                 return {
                     "status": "error",
-                    "error": "No results returned",
+                    "error": f"No results returned after {max_attempts} attempts: {last_error}",
                     "query": query,
                     "engine": engine
                 }
@@ -247,105 +455,216 @@ class BrightDataSDKClient:
         try:
             logger.info(f"📄 BrightData scrape: {url}")
 
-            try:
-                client = await self._get_client()
-            except RuntimeError:
-                # Legacy SDK client unavailable. Try modern brightdata auto API before http fallback.
-                logger.info("ℹ️ Legacy SDK unavailable, trying modern brightdata auto scrape path")
-                modern_result = await self._scrape_with_modern_sdk(url)
-                if modern_result and modern_result.get("status") == "success":
-                    return modern_result
-                logger.info("ℹ️ Modern SDK scrape unavailable/failed; using http fallback")
-                return await self._scrape_as_markdown_fallback(url)
-
             # Ensure URL has protocol
             if not url.startswith(('http://', 'https://')):
                 url = f'https://{url}'
-
-            # Async scraping (SDK method is async)
-            scrape_timeout = float(os.getenv("BRIGHTDATA_SCRAPE_TIMEOUT_SECONDS", "35"))
-            result = await asyncio.wait_for(
-                client.scrape_url(
+            cached_low_signal = self._cached_low_signal_entry(url)
+            if cached_low_signal:
+                logger.info(
+                    "ℹ️ Short-circuiting repeated low-signal URL scrape: %s",
                     url,
-                    response_format='raw',
-                ),
-                timeout=scrape_timeout,
-            )
-
-            # Check result
-            if not result or not hasattr(result, 'data'):
+                )
                 return {
-                    "status": "error",
-                    "error": "No content returned",
-                    "url": url
+                    "status": "success",
+                    "url": url,
+                    "content": "",
+                    "raw_html": "",
+                    "timestamp": datetime.now().isoformat(),
+                    "metadata": {
+                        "source": "brightdata_cached_guard",
+                        "lane": "cached_guard",
+                        "attempt": 0,
+                        "word_count": 0,
+                        "fallback_reason": "cached_repeated_low_signal_url",
+                        "low_signal_reason": "cached_repeated_low_signal_url",
+                        "previous_reason": str(cached_low_signal.get("last_reason") or "low_signal"),
+                        "cache_count": int(cached_low_signal.get("count", 0) or 0),
+                    },
                 }
+            best_brightdata_result: Optional[Dict[str, Any]] = None
 
-            # Check if result has data AND data is not None
-            html_content = (result.data if hasattr(result, 'data') and result.data is not None else "")
-            if not html_content:
-                # Some SDK responses return an empty payload for JS-heavy or protected pages.
-                # Retry via modern SDK rendered path first, then the HTTP fallback scraper.
-                modern_result = await self._scrape_with_modern_sdk(url)
-                if modern_result and modern_result.get("status") == "success":
-                    return modern_result
-                return await self._scrape_as_markdown_fallback(url)
-            parse_result = self._extract_text_from_html(str(html_content))
-            soup = parse_result["soup"]
-            content = parse_result["content"]
-            extraction_mode = "sdk_direct"
-
-            if self._should_retry_with_rendered_fallback(str(html_content), content):
-                modern_result = await self._scrape_with_modern_sdk(url)
-                if modern_result and modern_result.get("status") == "success":
-                    modern_content = modern_result.get("content", "")
-                    if len(modern_content.strip()) > len(content.strip()):
-                        content = modern_content
-                        html_content = modern_result.get("raw_html", html_content)
-                        parse_result = self._extract_text_from_html(str(html_content))
-                        soup = parse_result["soup"]
-                        extraction_mode = "sdk_rendered_fallback"
-                else:
-                    # Fall back to httpx-based extraction path if modern SDK rendering is unavailable.
-                    fallback_result = await self._scrape_as_markdown_fallback(url)
-                    if fallback_result.get("status") == "success":
-                        fallback_content = fallback_result.get("content", "")
-                        if len(fallback_content.strip()) > len(content.strip()):
-                            return fallback_result
-
-            logger.info(f"✅ Scraped {len(content)} characters")
-
-            # Extract publication date from HTML metadata
+            # lane_1: BrightData direct snapshot
+            lane_1_attempt = 1
+            lane_1_result: Optional[Dict[str, Any]] = None
             try:
-                publication_date = self._extract_publication_date(soup, html_content, url)
-            except Exception as e:
-                logger.warning(f"⚠️ Publication date extraction failed: {e}")
-                publication_date = None
+                client = await self._get_client()
+                scrape_timeout = float(os.getenv("BRIGHTDATA_SCRAPE_TIMEOUT_SECONDS", "35"))
+                max_attempts = self._resolve_retry_attempts("BRIGHTDATA_SCRAPE_MAX_ATTEMPTS")
+                sdk_result = None
+                last_error: Optional[Exception] = None
+                for attempt in range(1, max_attempts + 1):
+                    lane_1_attempt = attempt
+                    try:
+                        sdk_result = await asyncio.wait_for(
+                            client.scrape_url(url, response_format="raw"),
+                            timeout=scrape_timeout,
+                        )
+                        break
+                    except Exception as exc:
+                        last_error = exc
+                        if attempt < max_attempts:
+                            delay = self._retry_backoff_delay(attempt)
+                            if delay > 0:
+                                await asyncio.sleep(delay)
+                if sdk_result is None and last_error is not None:
+                    raise last_error
+                html_content = sdk_result.data if sdk_result and hasattr(sdk_result, "data") and sdk_result.data is not None else ""
+                parse_result = self._extract_text_from_html(str(html_content))
+                content = parse_result["content"]
+                soup = parse_result["soup"]
+                try:
+                    publication_date = self._extract_publication_date(soup, html_content, url)
+                except Exception:
+                    publication_date = None
+                lane_1_result = self._enrich_provenance(
+                    {
+                        "status": "success",
+                        "url": url,
+                        "content": content,
+                        "raw_html": html_content,
+                        "timestamp": datetime.now().isoformat(),
+                        "publication_date": publication_date.isoformat() if publication_date else None,
+                        "metadata": {
+                            "source": "brightdata_sdk",
+                            "has_publication_date": publication_date is not None,
+                            "extraction_mode": "sdk_direct",
+                        },
+                    },
+                    lane="lane_1",
+                    attempt=lane_1_attempt,
+                )
+            except RuntimeError:
+                modern_result = await self._scrape_with_modern_sdk(url)
+                if modern_result and modern_result.get("status") == "success":
+                    return self._enrich_provenance(
+                        modern_result,
+                        lane="lane_1",
+                        attempt=1,
+                        selected_candidate_url=modern_result.get("url"),
+                    )
+                lane_1_result = None
+            except Exception:
+                lane_1_result = None
 
-            return {
-                "status": "success",
+            if lane_1_result and lane_1_result.get("status") == "success":
+                best_brightdata_result = lane_1_result
+                low_signal_reason = self._detect_low_signal_shell(
+                    url=url,
+                    content=str(lane_1_result.get("content") or ""),
+                    raw_html=str(lane_1_result.get("raw_html") or ""),
+                )
+                if low_signal_reason is None:
+                    return lane_1_result
+
+            # lane_2: BrightData rendered probe on target URL
+            lane_2_result = await self._scrape_with_browser_request_api(url, insecure_ssl_used=False)
+            if lane_2_result and lane_2_result.get("status") == "success":
+                lane_2_result = self._enrich_provenance(
+                    lane_2_result,
+                    lane="lane_2",
+                    attempt=1,
+                    selected_candidate_url=lane_2_result.get("url"),
+                )
+                lane_2_reason = self._detect_low_signal_shell(
+                    url=str(lane_2_result.get("url") or url),
+                    content=str(lane_2_result.get("content") or ""),
+                    raw_html=str(lane_2_result.get("raw_html") or ""),
+                )
+                lane_2_result["metadata"]["low_signal_reason"] = lane_2_reason
+                if best_brightdata_result is None or len(str(lane_2_result.get("content") or "").split()) > len(str(best_brightdata_result.get("content") or "").split()):
+                    best_brightdata_result = lane_2_result
+                if lane_2_reason is None:
+                    return lane_2_result
+                self._mark_low_signal_url(url, lane_2_reason)
+
+            # lane_3: same-domain rendered candidate probes
+            lane_3_result = await self._recover_with_domain_probe(url)
+            if lane_3_result and lane_3_result.get("status") == "success":
+                lane_3_result = self._enrich_provenance(
+                    lane_3_result,
+                    lane="lane_3",
+                    attempt=1,
+                    selected_candidate_url=lane_3_result.get("url"),
+                )
+                lane_3_reason = self._detect_low_signal_shell(
+                    url=str(lane_3_result.get("url") or url),
+                    content=str(lane_3_result.get("content") or ""),
+                    raw_html=str(lane_3_result.get("raw_html") or ""),
+                )
+                lane_3_result["metadata"]["low_signal_reason"] = lane_3_reason
+                if best_brightdata_result is None or len(str(lane_3_result.get("content") or "").split()) > len(str(best_brightdata_result.get("content") or "").split()):
+                    best_brightdata_result = lane_3_result
+                if lane_3_reason is None:
+                    return lane_3_result
+                self._mark_low_signal_url(url, lane_3_reason)
+
+            # lane_4: strict non-BrightData fallback only if improved over best BrightData result
+            fallback_result = {
+                "status": "error",
                 "url": url,
-                "content": content,
-                "raw_html": html_content,  # Include raw HTML for PDF link extraction
-                "timestamp": datetime.now().isoformat(),
-                "publication_date": publication_date.isoformat() if publication_date else None,
-                "metadata": {
-                    "word_count": len(content.split()),
-                    "source": "brightdata_sdk",
-                    "has_publication_date": publication_date is not None,
-                    "extraction_mode": extraction_mode,
-                }
+                "error": "lane_4_not_executed",
             }
+            if not self._force_brightdata_only():
+                fallback_reason = "lane_4_strict_fallback_after_low_signal"
+                fallback_result = await self._scrape_as_markdown_fallback(url, reason=fallback_reason)
+                if fallback_result.get("status") == "success":
+                    fallback_result = self._enrich_provenance(
+                        fallback_result,
+                        lane="lane_4",
+                        attempt=1,
+                        fallback_reason=fallback_reason,
+                        selected_candidate_url=fallback_result.get("url"),
+                        low_signal_reason=self._detect_low_signal_shell(
+                            url=str(fallback_result.get("url") or url),
+                            content=str(fallback_result.get("content") or ""),
+                            raw_html=str(fallback_result.get("raw_html") or ""),
+                        ),
+                    )
+                    best_word_count = len(str((best_brightdata_result or {}).get("content") or "").split())
+                    fallback_word_count = len(str(fallback_result.get("content") or "").split())
+                    if fallback_word_count > best_word_count:
+                        fallback_low_signal_reason = str(
+                            fallback_result.get("metadata", {}).get("low_signal_reason")
+                            or ""
+                        ).strip()
+                        if fallback_word_count == 0 or fallback_low_signal_reason:
+                            self._mark_low_signal_url(
+                                url,
+                                fallback_low_signal_reason or "fallback_empty_content",
+                            )
+                        return fallback_result
+
+            if best_brightdata_result and best_brightdata_result.get("status") == "success":
+                cached_reason = str(
+                    best_brightdata_result.get("metadata", {}).get("low_signal_reason")
+                    or ""
+                ).strip()
+                if cached_reason:
+                    self._mark_low_signal_url(url, cached_reason)
+                return best_brightdata_result
+            if fallback_result.get("status") == "success":
+                fallback_words = len(str(fallback_result.get("content") or "").split())
+                fallback_reason = str(
+                    fallback_result.get("metadata", {}).get("low_signal_reason")
+                    or fallback_result.get("metadata", {}).get("fallback_reason")
+                    or ""
+                ).strip()
+                if fallback_words == 0 or fallback_reason:
+                    self._mark_low_signal_url(url, fallback_reason or "fallback_empty_content")
+            return fallback_result
 
         except Exception as e:
             logger.warning(f"⚠️ BrightData scrape failed, using fallback: {e}")
             # Fall back to httpx scraping
-            return await self._scrape_as_markdown_fallback(url)
+            return await self._scrape_as_markdown_fallback(url, reason=f"sdk_exception:{type(e).__name__}")
 
     async def _scrape_with_modern_sdk(self, url: str) -> Optional[Dict[str, Any]]:
         """
         Scrape via modern brightdata package API (`scrape_url_async`) when
         `BrightDataClient` class is unavailable in the installed package.
         """
+        if not getattr(self, "enable_modern_auto_scrape", False):
+            return None
         try:
             from brightdata import scrape_url_async
         except Exception:
@@ -568,7 +887,7 @@ class BrightDataSDKClient:
 
         api_base = os.getenv("BRIGHTDATA_API_BASE", "https://api.brightdata.com").rstrip("/")
         timeout = float(os.getenv("BRIGHTDATA_FALLBACK_SEARCH_TIMEOUT_SECONDS", "20"))
-        max_attempts = max(1, int(os.getenv("BRIGHTDATA_FALLBACK_SEARCH_MAX_ATTEMPTS", "2")))
+        max_attempts = self._resolve_retry_attempts("BRIGHTDATA_FALLBACK_SEARCH_MAX_ATTEMPTS")
 
         last_error: Optional[str] = None
         request_zones = await self._get_adaptive_request_zones("serp")
@@ -710,7 +1029,8 @@ class BrightDataSDKClient:
             params["zone"] = zone
 
         timeout = float(os.getenv("BRIGHTDATA_FALLBACK_SEARCH_TIMEOUT_SECONDS", "20"))
-        attempts = max(self.serp_poll_attempts, 1)
+        attempts = max(int(getattr(self, "serp_poll_attempts", 6) or 6), 1)
+        poll_interval_seconds = float(getattr(self, "serp_poll_interval_seconds", 1.2) or 1.2)
         last_payload: Dict[str, Any] = {}
 
         async with httpx.AsyncClient(timeout=timeout, follow_redirects=True) as client:
@@ -719,16 +1039,16 @@ class BrightDataSDKClient:
                     response = await client.get(endpoint, headers=headers, params=params)
                     if response.status_code == 202:
                         if attempt < attempts - 1:
-                            await asyncio.sleep(self.serp_poll_interval_seconds)
+                            await asyncio.sleep(poll_interval_seconds)
                             continue
                         return {"status": "pending", "response_id": response_id}
                     if response.status_code >= 500:
                         if attempt < attempts - 1:
-                            await asyncio.sleep(self.serp_poll_interval_seconds)
+                            await asyncio.sleep(poll_interval_seconds)
                             continue
                     if response.status_code >= 400:
                         if response.status_code == 404 and attempt < attempts - 1:
-                            await asyncio.sleep(self.serp_poll_interval_seconds)
+                            await asyncio.sleep(poll_interval_seconds)
                             continue
                         return {"status": "error", "error": response.text[:220], "response_id": response_id}
 
@@ -737,11 +1057,11 @@ class BrightDataSDKClient:
                         last_payload = payload
                         if self._extract_serp_results(payload, num_results=10):
                             return payload
-                    await asyncio.sleep(self.serp_poll_interval_seconds)
+                    await asyncio.sleep(poll_interval_seconds)
                 except Exception as poll_error:
                     logger.debug("SERP get_result polling failed (attempt=%s): %s", attempt + 1, poll_error)
                     if attempt < attempts - 1:
-                        await asyncio.sleep(self.serp_poll_interval_seconds)
+                        await asyncio.sleep(poll_interval_seconds)
 
         return last_payload or {"status": "error", "error": "SERP polling exhausted", "response_id": response_id}
 
@@ -881,9 +1201,47 @@ class BrightDataSDKClient:
             })
         return results
 
-    async def _scrape_as_markdown_fallback(self, url: str) -> Dict[str, Any]:
+    async def _scrape_as_markdown_fallback(self, url: str, reason: Optional[str] = None) -> Dict[str, Any]:
         """Fallback: Use httpx + BeautifulSoup when SDK unavailable"""
         from bs4 import BeautifulSoup
+
+        force_only = self._force_brightdata_only()
+        if force_only:
+            logger.warning(f"⚠️ BRIGHTDATA_FORCE_ONLY enabled; skipping raw httpx fallback for: {url}")
+            try:
+                if not url.startswith(('http://', 'https://')):
+                    url = f'https://{url}'
+                modern_result = await self._scrape_with_modern_sdk(url)
+                if modern_result and modern_result.get("status") == "success":
+                    metadata = modern_result.setdefault("metadata", {})
+                    metadata.setdefault("fallback_reason", reason or "force_only_modern_sdk")
+                    return modern_result
+
+                browser_result = await self._scrape_with_browser_request_api(url, insecure_ssl_used=False)
+                if browser_result and browser_result.get("status") == "success":
+                    metadata = browser_result.setdefault("metadata", {})
+                    metadata.setdefault("fallback_reason", reason or "force_only_request_api")
+                    return browser_result
+
+                return {
+                    "status": "error",
+                    "error": "BRIGHTDATA_FORCE_ONLY enabled and no BrightData scrape path produced usable content",
+                    "url": url,
+                    "metadata": {
+                        "source": "brightdata_force_only",
+                        "fallback_reason": reason or "force_only_no_usable_result",
+                    },
+                }
+            except Exception as e:
+                return {
+                    "status": "error",
+                    "error": f"BRIGHTDATA_FORCE_ONLY scrape failed: {e}",
+                    "url": url,
+                    "metadata": {
+                        "source": "brightdata_force_only",
+                        "fallback_reason": reason or f"force_only_exception:{type(e).__name__}",
+                    },
+                }
 
         logger.warning(f"⚠️ Using fallback scraping (not BrightData): {url}")
 
@@ -931,6 +1289,7 @@ class BrightDataSDKClient:
             raw_html_for_output = response.text
 
             extraction_mode = "direct"
+            min_words = int(os.getenv("BRIGHTDATA_MIN_WORDS", "80"))
             if self._should_retry_with_rendered_fallback(response.text, content):
                 # JS-heavy pages often return shell HTML on first pass.
                 # Prefer modern BrightData browser-capable scrape when available.
@@ -967,6 +1326,24 @@ class BrightDataSDKClient:
                             raw_html_for_output = rendered_response.text
                             extraction_mode = "rendered_fallback"
 
+            # If the target URL remains low-signal after rendered attempts, probe
+            # higher-signal pages on the same domain via SERP and rendered scraping.
+            if (
+                len((content or "").split()) == 0
+                or self._should_retry_with_rendered_fallback(raw_html_for_output, content)
+            ):
+                recovered = await self._recover_with_domain_probe(url)
+                if recovered and recovered.get("status") == "success":
+                    recovered_content = recovered.get("content", "")
+                    if len(recovered_content.split()) > len((content or "").split()):
+                        content = recovered_content
+                        raw_html_for_output = recovered.get("raw_html", raw_html_for_output)
+                        parse_result = self._extract_text_from_html(raw_html_for_output)
+                        extraction_mode = recovered.get("metadata", {}).get(
+                            "extraction_mode",
+                            "domain_probe_recovery",
+                        )
+
             try:
                 publication_date = self._extract_publication_date(parse_result["soup"], raw_html_for_output, url)
             except Exception as e:
@@ -984,6 +1361,7 @@ class BrightDataSDKClient:
                     "word_count": len(content.split()),
                     "source": "fallback_httpx",
                     "warning": "BrightData SDK unavailable, using httpx",
+                    "fallback_reason": reason or "fallback_path_invoked",
                     "has_publication_date": publication_date is not None,
                     "extraction_mode": extraction_mode,
                     "insecure_ssl_used": insecure_ssl_used,
@@ -1024,8 +1402,14 @@ class BrightDataSDKClient:
         }
 
         request_timeout = float(os.getenv("BRIGHTDATA_REQUEST_TIMEOUT_SECONDS", "18"))
-        max_attempts = max(1, int(os.getenv("BRIGHTDATA_REQUEST_MAX_ATTEMPTS", "2")))
+        max_attempts = self._resolve_retry_attempts("BRIGHTDATA_REQUEST_MAX_ATTEMPTS")
         min_words = int(os.getenv("BRIGHTDATA_MIN_WORDS", "80"))
+        low_signal_hard_stop_repeats = max(
+            1,
+            int(os.getenv("BRIGHTDATA_LOW_SIGNAL_HARD_STOP_REPEATS", "2")),
+        )
+        best_low_signal_result: Optional[Dict[str, Any]] = None
+        low_signal_shell_repeats = 0
 
         for zone in zones:
             for probe_index, probe_url in enumerate(probe_urls):
@@ -1052,23 +1436,22 @@ class BrightDataSDKClient:
                             continue
 
                         word_count = len(content.split())
+                        low_signal_reason = self._detect_low_signal_shell(
+                            url=probe_url,
+                            content=content,
+                            raw_html=html_content,
+                        )
+                        if low_signal_reason:
+                            low_signal_shell_repeats += 1
                         should_probe_next = (
-                            word_count < min_words
+                            (word_count < min_words or bool(low_signal_reason))
                             and probe_index + 1 < len(probe_urls)
                         )
-                        if should_probe_next:
-                            logger.info(
-                                "ℹ️ BrightData rendered page is low-signal (%s words), probing next candidate",
-                                word_count,
-                            )
-                            break
-
                         try:
                             publication_date = self._extract_publication_date(parse_result["soup"], html_content, probe_url)
                         except Exception:
                             publication_date = None
-
-                        return {
+                        result_payload = {
                             "status": "success",
                             "url": probe_url,
                             "content": content,
@@ -1083,8 +1466,29 @@ class BrightDataSDKClient:
                                 "probe_index": probe_index,
                                 "has_publication_date": publication_date is not None,
                                 "extraction_mode": "rendered_fallback_brightdata_request_api",
+                                "low_signal_reason": low_signal_reason,
                             },
                         }
+
+                        if (
+                            not best_low_signal_result
+                            or word_count > int(best_low_signal_result.get("metadata", {}).get("word_count", 0))
+                        ):
+                            best_low_signal_result = result_payload
+
+                        if low_signal_shell_repeats >= low_signal_hard_stop_repeats:
+                            result_payload["metadata"]["low_signal_hard_stop_triggered"] = True
+                            result_payload["metadata"]["low_signal_reason"] = "repeated_rendered_shell"
+                            return result_payload
+
+                        if should_probe_next:
+                            logger.info(
+                                "ℹ️ BrightData rendered page is low-signal (%s words), probing next candidate",
+                                word_count,
+                            )
+                            break
+
+                        return result_payload
                     except httpx.HTTPStatusError as e:
                         body = ""
                         try:
@@ -1107,7 +1511,111 @@ class BrightDataSDKClient:
                             break
                         continue
 
+        if best_low_signal_result:
+            best_low_signal_result.setdefault("metadata", {})["low_signal_rendered"] = True
+            best_low_signal_result.setdefault("metadata", {}).setdefault(
+                "low_signal_hard_stop_triggered",
+                low_signal_shell_repeats >= low_signal_hard_stop_repeats,
+            )
+            best_low_signal_result.setdefault("metadata", {}).setdefault(
+                "low_signal_reason",
+                "repeated_rendered_shell" if low_signal_shell_repeats >= low_signal_hard_stop_repeats else None,
+            )
+            return best_low_signal_result
         return None
+
+    async def _recover_with_domain_probe(self, url: str) -> Optional[Dict[str, Any]]:
+        """
+        Recover sparse scrapes by probing same-domain high-signal pages from SERP.
+        """
+        parsed = urlparse(url if url.startswith(("http://", "https://")) else f"https://{url}")
+        host = (parsed.netloc or "").lower()
+        if not host:
+            return None
+
+        now = time.time()
+        cooldown_seconds = int(os.getenv("BRIGHTDATA_DOMAIN_PROBE_COOLDOWN_SECONDS", "300"))
+        probe_runs = getattr(self, "_domain_probe_last_run", None)
+        if not isinstance(probe_runs, dict):
+            probe_runs = {}
+            self._domain_probe_last_run = probe_runs
+        last_run = float(probe_runs.get(host, 0.0))
+        if (now - last_run) < cooldown_seconds:
+            return None
+
+        # Keep domain probe to high-level or known low-signal routes to prevent
+        # long retries on deep article URLs.
+        path = (parsed.path or "/").strip("/")
+        low_signal_leafs = {"matches", "fixtures", "results", "scores", "schedule", "watch", "news"}
+        is_root = not path
+        leaf = path.split("/")[-1] if path else ""
+        if not is_root and leaf not in low_signal_leafs and len(path.split("/")) > 2:
+            return None
+
+        probe_runs[host] = now
+        probe_query = (
+            f'site:{host} ("news" OR "careers" OR "vacancies" OR "commercial" '
+            f'OR "partnership" OR "procurement" OR "tender" OR "supplier")'
+        )
+        search_timeout = float(os.getenv("BRIGHTDATA_DOMAIN_PROBE_SEARCH_TIMEOUT_SECONDS", "10"))
+        try:
+            search = await asyncio.wait_for(
+                self.search_engine(probe_query, engine="google", country="us", num_results=8),
+                timeout=search_timeout,
+            )
+        except Exception:
+            return None
+        if search.get("status") != "success":
+            return None
+
+        candidates: List[str] = []
+        preferred_path_terms = ("procurement", "tender", "supplier", "commercial", "careers", "vacancies", "news")
+        for row in search.get("results", []):
+            candidate_url = str(row.get("url") or "").strip()
+            if not candidate_url:
+                continue
+            candidate_host = (urlparse(candidate_url).netloc or "").lower()
+            if candidate_host.endswith(host) or host.endswith(candidate_host):
+                candidates.append(candidate_url)
+        candidates = sorted(
+            list(dict.fromkeys(candidates)),
+            key=lambda candidate: (
+                sum(1 for token in preferred_path_terms if token in candidate.lower()),
+                len(candidate),
+            ),
+            reverse=True,
+        )
+        max_candidates = max(1, int(os.getenv("BRIGHTDATA_DOMAIN_PROBE_MAX_CANDIDATES", "3")))
+        candidates = candidates[:max_candidates]
+        if not candidates:
+            return None
+
+        per_candidate_timeout = float(os.getenv("BRIGHTDATA_DOMAIN_PROBE_PER_CANDIDATE_TIMEOUT_SECONDS", "12"))
+        best: Optional[Dict[str, Any]] = None
+        best_score = -1
+        for candidate_url in candidates:
+            try:
+                rendered = await asyncio.wait_for(
+                    self._scrape_with_browser_request_api(candidate_url, insecure_ssl_used=False),
+                    timeout=per_candidate_timeout,
+                )
+            except Exception:
+                continue
+            if not rendered or rendered.get("status") != "success":
+                continue
+            words = int(rendered.get("metadata", {}).get("word_count", 0))
+            path_bonus = sum(1 for token in preferred_path_terms if token in candidate_url.lower()) * 20
+            score = words + path_bonus
+            if not best or score > best_score:
+                best = rendered
+                best_score = score
+            if words >= int(os.getenv("BRIGHTDATA_MIN_WORDS", "80")):
+                break
+
+        if best:
+            best.setdefault("metadata", {})["extraction_mode"] = "domain_probe_recovery"
+            best["metadata"]["probe_host"] = host
+        return best
 
     def _build_render_probe_urls(self, url: str) -> List[str]:
         """
@@ -1131,7 +1639,7 @@ class BrightDataSDKClient:
         ]
         low_signal_leaf_env = os.getenv(
             "BRIGHTDATA_LOW_SIGNAL_LEAF_PATHS",
-            "matches,fixtures,results,scores,schedule,watch",
+            "matches,fixtures,results,scores,schedule,watch,procurement,tenders,rfp",
         )
         low_signal_leafs = {
             part.strip().strip("/")
@@ -1307,6 +1815,7 @@ class BrightDataSDKClient:
 
     def _should_retry_with_rendered_fallback(self, html: str, content: str) -> bool:
         min_words = int(os.getenv("BRIGHTDATA_MIN_WORDS", "80"))
+        force_on_thin = os.getenv("BRIGHTDATA_FORCE_RENDER_ON_THIN", "true").strip().lower() in {"1", "true", "yes", "on"}
         word_count = len((content or "").split())
         html_lower = (html or "").lower()
         html_len = len(html or "")
@@ -1319,6 +1828,8 @@ class BrightDataSDKClient:
             or "window.__" in html_lower
         )
         large_but_empty = word_count == 0 and html_len > 10000
+        if force_on_thin and word_count < min_words:
+            return True
         return word_count < min_words and (js_shell_signals or large_but_empty)
 
     async def _scrape_batch_fallback(self, urls: List[str]) -> Dict[str, Any]:

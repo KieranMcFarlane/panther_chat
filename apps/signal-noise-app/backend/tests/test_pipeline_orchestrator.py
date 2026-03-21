@@ -67,6 +67,21 @@ class FakeDiscovery:
         return FakeDiscoveryResult()
 
 
+class FakeDiscoveryManySignals:
+    async def run_discovery_with_dossier_context(self, **kwargs):
+        result = FakeDiscoveryResult()
+        result.signals_discovered = [
+            {
+                "signal_type": "TECHNOLOGY_ADOPTED",
+                "statement": f"Raw discovery signal {idx}",
+                "confidence": 0.81,
+                "url": f"https://example.com/signal/{idx}",
+            }
+            for idx in range(5)
+        ]
+        return result
+
+
 class FakeRalph:
     async def validate_signals(self, raw_signals, entity_id):
         return [
@@ -78,6 +93,24 @@ class FakeRalph:
                 "url": "https://example.com/rfp",
             }
         ]
+
+
+class FakeRalphNonRfp:
+    async def validate_signals(self, raw_signals, entity_id):
+        return [
+            {
+                "id": f"{entity_id}-validated-signal",
+                "type": "TECHNOLOGY_ADOPTED",
+                "confidence": 0.74,
+                "statement": "Adopted new CRM workflow",
+                "url": "https://example.com/news/crm",
+            }
+        ]
+
+
+class FakeRalphEmpty:
+    async def validate_signals(self, raw_signals, entity_id):
+        return []
 
 
 class FakeGraphiti:
@@ -101,6 +134,36 @@ class FakeGraphiti:
         return self.episodes[:limit]
 
 
+class StrictDiscoveryGraphiti(FakeGraphiti):
+    async def add_discovery_episode(
+        self,
+        entity_id,
+        entity_name,
+        entity_type,
+        episode_type,
+        description,
+        source="discovery",
+        url=None,
+        confidence=0.5,
+        evidence_date=None,
+        metadata=None,
+    ):
+        self.episodes.append(
+            {
+                "entity_id": entity_id,
+                "entity_name": entity_name,
+                "entity_type": entity_type,
+                "episode_type": episode_type,
+                "description": description,
+                "source": source,
+                "url": url,
+                "confidence": confidence,
+                "metadata": metadata or {},
+            }
+        )
+        return {"episode_id": "episode-discovery-1"}
+
+
 class FakeDashboardScorer:
     async def calculate_entity_scores(self, **kwargs):
         return {
@@ -108,6 +171,28 @@ class FakeDashboardScorer:
             "active_probability": 0.81,
             "sales_readiness": "LIVE",
             "calculated_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+
+class FakePersistenceCoordinator:
+    async def persist_run_artifacts(self, **kwargs):
+        return {
+            "dual_write_ok": True,
+            "supabase": {"ok": True, "attempts": 1},
+            "falkordb": {"ok": True, "attempts": 1},
+            "reconcile_required": False,
+            "reconciliation_payload": None,
+        }
+
+
+class FakePersistenceCoordinatorFail:
+    async def persist_run_artifacts(self, **kwargs):
+        return {
+            "dual_write_ok": False,
+            "supabase": {"ok": False, "attempts": 3, "error_class": "timeout"},
+            "falkordb": {"ok": True, "attempts": 1},
+            "reconcile_required": True,
+            "reconciliation_payload": {"idempotency_key": "k"},
         }
 
 
@@ -124,6 +209,7 @@ async def test_pipeline_orchestrator_runs_phases_and_returns_artifacts():
         ralph_validator=FakeRalph(),
         graphiti_service=FakeGraphiti(),
         dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=FakePersistenceCoordinator(),
     )
 
     result = await orchestrator.run_entity_pipeline(
@@ -143,5 +229,103 @@ async def test_pipeline_orchestrator_runs_phases_and_returns_artifacts():
     assert result["validated_signal_count"] == 1
     assert result["rfp_count"] == 1
     assert result["sales_readiness"] == "LIVE"
+    assert result["phase_details_by_phase"]["discovery"]["status"] == "completed"
+    assert result["acceptance_gate"]["passed"] is False
+    assert "signals_below_threshold" in result["acceptance_gate"]["reasons"]
+    assert result["failure_taxonomy"]["low_signal_content"] == 1
+    assert result["run_profile"] == "bounded_production"
+    assert result["degraded_mode"] is False
+    assert result["dual_write_ok"] is True
+    assert result["persistence_status"]["supabase"]["ok"] is True
     assert ("discovery", "running") in phase_events
     assert ("dashboard_scoring", "completed") in phase_events
+
+
+@pytest.mark.asyncio
+async def test_pipeline_orchestrator_hard_fails_acceptance_gate_when_dual_write_fails():
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=FakeDossierGenerator(),
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=FakePersistenceCoordinatorFail(),
+    )
+    result = await orchestrator.run_entity_pipeline(
+        entity_id="arsenal-fc",
+        entity_name="Arsenal FC",
+        entity_type="CLUB",
+        priority_score=90,
+    )
+    assert result["dual_write_ok"] is False
+    assert result["acceptance_gate"]["passed"] is False
+    assert "dual_write_incomplete" in result["acceptance_gate"]["reasons"]
+    assert result["failure_taxonomy"]["dual_write_incomplete"] == 1
+    assert result["failure_taxonomy"]["supabase_write_failure"] == 1
+
+
+@pytest.mark.asyncio
+async def test_pipeline_orchestrator_acceptance_gate_uses_validated_signal_count():
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=FakeDossierGenerator(),
+        discovery=FakeDiscoveryManySignals(),
+        ralph_validator=FakeRalphEmpty(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=FakePersistenceCoordinator(),
+    )
+    result = await orchestrator.run_entity_pipeline(
+        entity_id="arsenal-fc",
+        entity_name="Arsenal FC",
+        entity_type="CLUB",
+        priority_score=90,
+    )
+    assert result["validated_signal_count"] == 0
+    assert result["acceptance_gate"]["passed"] is False
+    assert "signals_below_threshold" in result["acceptance_gate"]["reasons"]
+
+
+@pytest.mark.asyncio
+async def test_pipeline_orchestrator_uses_graphiti_discovery_episode_contract_for_non_rfp_signals():
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=FakeDossierGenerator(),
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalphNonRfp(),
+        graphiti_service=StrictDiscoveryGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=FakePersistenceCoordinator(),
+    )
+    result = await orchestrator.run_entity_pipeline(
+        entity_id="arsenal-fc",
+        entity_name="Arsenal FC",
+        entity_type="CLUB",
+        priority_score=90,
+    )
+    assert result["phases"]["temporal_persistence"]["status"] == "completed"
+    episodes = result["artifacts"]["episodes"]
+    assert len(episodes) == 1
+
+
+@pytest.mark.asyncio
+async def test_pipeline_orchestrator_emits_objective_contract_fields():
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=FakeDossierGenerator(),
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=FakePersistenceCoordinator(),
+    )
+    result = await orchestrator.run_entity_pipeline(
+        entity_id="arsenal-fc",
+        entity_name="Arsenal FC",
+        entity_type="CLUB",
+        priority_score=90,
+        run_objective="rfp_web",
+    )
+
+    assert result["objective"] == "rfp_web"
+    assert isinstance(result["objective_result"], dict)
+    assert isinstance(result["llm_efficiency_metrics"], dict)
+    assert "length_stop_count" in result["llm_efficiency_metrics"]
+    assert "schema_fail_count" in result["llm_efficiency_metrics"]

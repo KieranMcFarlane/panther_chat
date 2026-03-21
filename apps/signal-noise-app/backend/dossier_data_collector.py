@@ -27,6 +27,10 @@ import time
 import json
 import hashlib
 import re
+try:
+    from backend.objective_profiles import DEFAULT_DOSSIER_OBJECTIVE, normalize_run_objective
+except Exception:  # noqa: BLE001
+    from objective_profiles import DEFAULT_DOSSIER_OBJECTIVE, normalize_run_objective
 
 # Load environment variables from .env (same pattern as graphiti_service.py)
 project_root = Path(__file__).parent.parent
@@ -401,12 +405,61 @@ class DossierDataCollector:
             use_cache = str(env_use_cache).strip().lower() in {"1", "true", "yes", "on"}
         self.use_cache = use_cache
         self.parallel_scraping = parallel_scraping
+        parallel_timeout_env = os.getenv("DOSSIER_PARALLEL_COLLECTION_TIMEOUT_SECONDS")
+        if parallel_timeout_env is None:
+            parallel_timeout_env = os.getenv("DOSSIER_SECTION_TIMEOUT_SECONDS")
         self.section_timeout_seconds = self._parse_positive_float_env(
-            os.getenv("DOSSIER_SECTION_TIMEOUT_SECONDS")
+            parallel_timeout_env
+        )
+        self.collection_timeout_overrides_seconds = {
+            "digital_transformation": self._parse_positive_float_env(
+                os.getenv("DOSSIER_COLLECTION_TIMEOUT_DIGITAL_TRANSFORMATION_SECONDS")
+            ),
+            "strategic_opportunities": self._parse_positive_float_env(
+                os.getenv("DOSSIER_COLLECTION_TIMEOUT_STRATEGIC_OPPORTUNITIES_SECONDS")
+            ),
+            "recent_news": self._parse_positive_float_env(
+                os.getenv("DOSSIER_COLLECTION_TIMEOUT_RECENT_NEWS_SECONDS")
+            ),
+            "performance": self._parse_positive_float_env(
+                os.getenv("DOSSIER_COLLECTION_TIMEOUT_PERFORMANCE_SECONDS")
+            ),
+            "leadership": self._parse_positive_float_env(
+                os.getenv("DOSSIER_COLLECTION_TIMEOUT_LEADERSHIP_SECONDS")
+            ),
+        }
+        self.collection_timeout_caps_seconds = {
+            "digital_transformation": self._parse_positive_float_env(
+                os.getenv("DOSSIER_COLLECTION_TIMEOUT_DIGITAL_TRANSFORMATION_CAP_SECONDS", "90")
+            ),
+            "strategic_opportunities": self._parse_positive_float_env(
+                os.getenv("DOSSIER_COLLECTION_TIMEOUT_STRATEGIC_OPPORTUNITIES_CAP_SECONDS", "75")
+            ),
+            "recent_news": self._parse_positive_float_env(
+                os.getenv("DOSSIER_COLLECTION_TIMEOUT_RECENT_NEWS_CAP_SECONDS", "75")
+            ),
+            "performance": self._parse_positive_float_env(
+                os.getenv("DOSSIER_COLLECTION_TIMEOUT_PERFORMANCE_CAP_SECONDS", "60")
+            ),
+            "leadership": self._parse_positive_float_env(
+                os.getenv("DOSSIER_COLLECTION_TIMEOUT_LEADERSHIP_CAP_SECONDS", "75")
+            ),
+        }
+        self.collect_parallel_leadership = self._parse_bool_env(
+            os.getenv("DOSSIER_COLLECT_PARALLEL_LEADERSHIP"),
+            default=False,
         )
         self._preferred_official_site_urls: Dict[str, str] = {}
         self._official_site_url_cache = self._load_official_site_url_cache()
         self._official_site_content_cache = self._load_official_site_content_cache()
+        self.default_run_objective = normalize_run_objective(
+            os.getenv("DOSSIER_RUN_OBJECTIVE"),
+            default=DEFAULT_DOSSIER_OBJECTIVE,
+        )
+
+    @staticmethod
+    def _is_rfp_objective(run_objective: str) -> bool:
+        return run_objective in {"rfp_pdf", "rfp_web"}
 
     async def close(self):
         """Close any async clients owned by the collector."""
@@ -471,6 +524,28 @@ class DossierDataCollector:
         if value.startswith("www.") or "." in value:
             return f"https://{value.lstrip('/').rstrip('/')}"
         return None
+
+    def _resolve_collection_timeout_seconds(self, section_key: str) -> Optional[float]:
+        """
+        Resolve the effective timeout for a collector section.
+
+        Priority:
+        1) Explicit per-section override env.
+        2) Shared parallel section timeout (if configured).
+        3) Per-section cap when shared timeout is configured.
+        """
+        override = self.collection_timeout_overrides_seconds.get(section_key)
+        if override is not None:
+            return override
+
+        base = self.section_timeout_seconds
+        if base is None:
+            return None
+
+        cap = self.collection_timeout_caps_seconds.get(section_key)
+        if cap is None:
+            return base
+        return min(base, cap)
 
     def _host_from_url(self, candidate: Optional[str]) -> str:
         normalized = self._normalize_http_url(candidate)
@@ -856,18 +931,26 @@ class DossierDataCollector:
             logger.warning(f"⚠️ Claude client connection failed: {e}")
             return False
 
-    async def collect_all(self, entity_id: str, entity_name: str = None) -> DossierData:
+    async def collect_all(
+        self,
+        entity_id: str,
+        entity_name: str = None,
+        entity_type: Optional[str] = None,
+        run_objective: Optional[str] = None,
+    ) -> DossierData:
         """
         Collect all available data for dossier generation
 
         Args:
             entity_id: Unique entity identifier (e.g., "arsenal-fc")
             entity_name: Entity name (e.g., "Arsenal FC")
+            entity_type: Optional entity type override (e.g., "CLUB", "FEDERATION")
 
         Returns:
             DossierData with all collected information
         """
-        logger.info(f"🔍 Collecting dossier data for {entity_name or entity_id}")
+        objective = normalize_run_objective(run_objective, default=self.default_run_objective)
+        logger.info(f"🔍 Collecting dossier data for {entity_name or entity_id} (objective={objective})")
 
         # Connect to all data sources
         await self._connect_falkordb()
@@ -893,9 +976,11 @@ class DossierDataCollector:
             dossier_data.metadata = EntityMetadata(
                 entity_id=entity_id,
                 entity_name=entity_name or entity_id.replace("-", " ").title(),
-                entity_type="CLUB",
+                entity_type=str(entity_type or "CLUB"),
                 data_source="Generated"
             )
+        elif entity_type:
+            dossier_data.metadata.entity_type = str(entity_type)
 
         # When Claude API is unavailable for the current process, skip expensive
         # BrightData enrichment that depends on Claude-based extraction anyway.
@@ -909,7 +994,11 @@ class DossierDataCollector:
 
         # Scrape additional data from web (Phase 2) - Using Enhanced Multi-Source Scraping
         if self._brightdata_available:
-            scrape_result = await self._get_scraped_content_enhanced(entity_id, dossier_data.entity_name)
+            scrape_result = await self._get_scraped_content_enhanced(
+                entity_id,
+                dossier_data.entity_name,
+                run_objective=objective,
+            )
 
             if scrape_result:
                 scraped_content, extracted_data = scrape_result
@@ -919,7 +1008,7 @@ class DossierDataCollector:
                 dossier_data.data_sources_used.append("BrightData")
 
                 # Use Ralph Loop Field Validator for core fields
-                if dossier_data.metadata and self.claude_client:
+                if dossier_data.metadata and self.claude_client and not self._is_rfp_objective(objective):
                     logger.info("🔍 Applying Ralph Loop field validation...")
                     try:
                         validator = RalphLoopFieldValidator(
@@ -977,9 +1066,18 @@ class DossierDataCollector:
         # ADDITIONAL DATA COLLECTION FOR DOSSIER SECTIONS (Phase 0 Enhancement)
         # =============================================================================
         # OPTIMIZED: Parallel async scraping with caching support
+        if self._is_rfp_objective(objective):
+            logger.info("⏭️ Skipping additional dossier section collectors for objective=%s", objective)
+            return dossier_data
+
         logger.info("📊 Collecting additional dossier section data (parallel mode)...")
 
-        async def collect_with_cache(data_type: str, collect_func, cache_key: str = None):
+        async def collect_with_cache(
+            data_type: str,
+            collect_func,
+            cache_key: str = None,
+            timeout_seconds: Optional[float] = None,
+        ):
             """Collect data with cache support"""
             if self.use_cache and cache_key:
                 # Try Supabase cache first
@@ -997,17 +1095,21 @@ class DossierDataCollector:
                     return local_cached
 
             # Collect fresh data
-            if self.section_timeout_seconds:
+            effective_timeout_seconds = timeout_seconds
+            if effective_timeout_seconds is None:
+                effective_timeout_seconds = self.section_timeout_seconds
+
+            if effective_timeout_seconds:
                 try:
                     result = await asyncio.wait_for(
                         collect_func(),
-                        timeout=self.section_timeout_seconds,
+                        timeout=effective_timeout_seconds,
                     )
                 except asyncio.TimeoutError:
                     logger.warning(
                         "  ⚠️ %s collection timed out after %.2fs",
                         data_type,
-                        self.section_timeout_seconds,
+                        effective_timeout_seconds,
                     )
                     return {}
             else:
@@ -1031,7 +1133,8 @@ class DossierDataCollector:
                     return await collect_with_cache(
                         "Digital Transformation",
                         lambda: self.collect_digital_transformation_data(entity_id, dossier_data.entity_name),
-                        cache_key="digital_transformation"
+                        cache_key="digital_transformation",
+                        timeout_seconds=self._resolve_collection_timeout_seconds("digital_transformation"),
                     )
                 except Exception as e:
                     logger.warning(f"  ⚠️ Digital Transformation collection failed: {e}")
@@ -1044,7 +1147,8 @@ class DossierDataCollector:
                     return await collect_with_cache(
                         "Strategic Opportunities",
                         lambda: self.collect_strategic_opportunities(entity_id, dossier_data.entity_name),
-                        cache_key="strategic_opportunities"
+                        cache_key="strategic_opportunities",
+                        timeout_seconds=self._resolve_collection_timeout_seconds("strategic_opportunities"),
                     )
                 except Exception as e:
                     logger.warning(f"  ⚠️ Strategic Opportunities collection failed: {e}")
@@ -1057,7 +1161,8 @@ class DossierDataCollector:
                     return await collect_with_cache(
                         "Recent News",
                         lambda: self.collect_recent_news_data(entity_id, dossier_data.entity_name),
-                        cache_key="recent_news"
+                        cache_key="recent_news",
+                        timeout_seconds=self._resolve_collection_timeout_seconds("recent_news"),
                     )
                 except Exception as e:
                     logger.warning(f"  ⚠️ Recent News collection failed: {e}")
@@ -1070,25 +1175,30 @@ class DossierDataCollector:
                     return await collect_with_cache(
                         "Performance",
                         lambda: self.collect_performance_data(entity_id, dossier_data.entity_name),
-                        cache_key="performance"
+                        cache_key="performance",
+                        timeout_seconds=self._resolve_collection_timeout_seconds("performance"),
                     )
                 except Exception as e:
                     logger.warning(f"  ⚠️ Performance collection failed: {e}")
                     return {}
             tasks.append(("performance", collect_performance()))
 
-            # Section 5: Leadership (always collected, critical)
-            async def collect_leadership():
-                try:
-                    return await collect_with_cache(
-                        "Leadership",
-                        lambda: self.collect_leadership(entity_id, dossier_data.entity_name),
-                        cache_key="leadership"
-                    )
-                except Exception as e:
-                    logger.warning(f"  ⚠️ Leadership collection failed: {e}")
-                    return {}
-            tasks.append(("leadership", collect_leadership()))
+            if self.collect_parallel_leadership:
+                # Section 5: Leadership (optional in parallel mode; can be collected post-pass)
+                async def collect_leadership():
+                    try:
+                        return await collect_with_cache(
+                            "Leadership",
+                            lambda: self.collect_leadership(entity_id, dossier_data.entity_name),
+                            cache_key="leadership",
+                            timeout_seconds=self._resolve_collection_timeout_seconds("leadership"),
+                        )
+                    except Exception as e:
+                        logger.warning(f"  ⚠️ Leadership collection failed: {e}")
+                        return {}
+                tasks.append(("leadership", collect_leadership()))
+            else:
+                logger.info("⏭️ Skipping parallel leadership collection (DOSSIER_COLLECT_PARALLEL_LEADERSHIP=false)")
 
             # Execute all tasks in parallel and wait for completion
             logger.info(f"🚀 Running {len(tasks)} collection tasks in parallel...")
@@ -1257,7 +1367,12 @@ class DossierDataCollector:
             logger.error(f"❌ BrightData SDK connection failed: {e}")
             return False
 
-    async def _get_scraped_content_enhanced(self, entity_id: str, entity_name: str) -> Optional[tuple]:
+    async def _get_scraped_content_enhanced(
+        self,
+        entity_id: str,
+        entity_name: str,
+        run_objective: Optional[str] = None,
+    ) -> Optional[tuple]:
         """
         Enhanced multi-source scraping for comprehensive entity data collection.
 
@@ -1298,24 +1413,53 @@ class DossierDataCollector:
             scraped_urls.append(official_site_data.get("url", ""))
             logger.info(f"✅ Official site data collected: {list(official_site_data.keys())}")
 
-        # Source 3: Field-specific searches for missing data
-        if not all_extracted_data.get("founded"):
-            founded_data = await self._scrape_field_specific(entity_name, "founded")
-            if founded_data:
-                all_extracted_data.update(founded_data)
+        current_objective = normalize_run_objective(run_objective, default=self.default_run_objective)
+        if not self._is_rfp_objective(current_objective):
+            # Source 3: Field-specific searches for missing data
+            if not all_extracted_data.get("founded"):
+                founded_data = await self._scrape_field_specific(entity_name, "founded")
+                if founded_data:
+                    all_extracted_data.update(founded_data)
 
-        if not all_extracted_data.get("stadium"):
-            stadium_data = await self._scrape_field_specific(entity_name, "stadium")
-            if stadium_data:
-                all_extracted_data.update(stadium_data)
+            if not all_extracted_data.get("stadium"):
+                stadium_data = await self._scrape_field_specific(entity_name, "stadium")
+                if stadium_data:
+                    all_extracted_data.update(stadium_data)
 
         if not all_extracted_data.get("website"):
             all_extracted_data["website"] = all_extracted_data.get("official_site_url", "")
 
-        # Source 4: League/Premier League data
-        league_data = await self._scrape_league_data(entity_name)
-        if league_data:
-            all_extracted_data.update(league_data)
+        # Source 4: League/Premier League data (skip for rfp objectives)
+        if not self._is_rfp_objective(current_objective):
+            league_data = await self._scrape_league_data(entity_name)
+            if league_data:
+                all_extracted_data.update(league_data)
+
+    async def _query_json_strict(self, *, prompt: str, max_tokens: int = 220, model: str = "haiku") -> Optional[Dict[str, Any]]:
+        if not self.claude_client:
+            return None
+        try:
+            result = await self.claude_client.query(
+                prompt=prompt,
+                model=model,
+                max_tokens=max_tokens,
+                json_mode=True,
+                max_retries_override=0,
+                empty_retries_before_fallback_override=1,
+                fast_fail_on_length=True,
+            )
+            parsed = None
+            structured_output = (result or {}).get("structured_output")
+            if isinstance(structured_output, dict):
+                parsed = structured_output
+            if parsed is None:
+                raw = str((result or {}).get("content") or "").strip()
+                if not raw:
+                    return None
+                parsed = json.loads(raw)
+            return parsed if isinstance(parsed, dict) else None
+        except Exception:
+            return None
 
         # Create scraped content object
         official_url = all_extracted_data.get("website", "")
@@ -2013,26 +2157,10 @@ Rules:
 - confidence should be 90-100 for official bios/pages, 75-85 for mentions
 - Return ONLY valid JSON, no other text"""
 
-            result = await self.claude_client.query(
-                prompt=prompt,
-                model="haiku",
-                max_tokens=800
-            )
-
-            import json
-            import re
-
-            response_text = result.get('content', '')
-            json_match = re.search(r'\{[\s\S]*?\}', response_text)
-            if json_match:
-                try:
-                    extracted = json.loads(json_match.group(0))
-                    if 'people' in extracted:
-                        return extracted
-                except json.JSONDecodeError:
-                    pass
-
-            return {'people': []}
+            extracted = await self._query_json_strict(prompt=prompt, max_tokens=260, model="haiku")
+            if isinstance(extracted, dict) and isinstance(extracted.get("people"), list):
+                return extracted
+            return {"people": []}
 
         except Exception as e:
             logger.warning(f"Leadership extraction from {source_type} failed: {e}")
@@ -2076,24 +2204,11 @@ Extract and return ONLY a JSON object:
 Only include people who are clearly being appointed to or holding executive positions.
 Return ONLY valid JSON."""
 
-            result = await self.claude_client.query(
-                prompt=prompt,
-                model="haiku",
-                max_tokens=500
-            )
-
-            import json
-            import re
-
-            response_text = result.get('content', '')
-            json_match = re.search(r'\{[\s\S]*?\}', response_text)
-            if json_match:
-                try:
-                    extracted = json.loads(json_match.group(0))
-                    return extracted.get('names', [])
-                except json.JSONDecodeError:
-                    pass
-
+            extracted = await self._query_json_strict(prompt=prompt, max_tokens=220, model="haiku")
+            if isinstance(extracted, dict):
+                names = extracted.get("names")
+                if isinstance(names, list):
+                    return names
             return []
 
         except Exception as e:
@@ -2107,10 +2222,6 @@ Return ONLY valid JSON."""
         Wikipedia typically has structured infoboxes with reliable data.
         """
         try:
-            from backend.claude_client import ClaudeClient
-
-            client = ClaudeClient()
-
             prompt = f"""Extract the following information from this Wikipedia article about {entity_name}:
 
 Wikipedia Content (first 4000 chars):
@@ -2129,24 +2240,9 @@ Extract and return ONLY a JSON object (no markdown):
 
 Use null for any information not found in the article. Return ONLY valid JSON."""
 
-            result = await client.query(
-                prompt=prompt,
-                model="haiku",
-                max_tokens=500
-            )
-
-            import json
-            import re
-
-            response_text = result.get('content', '')
-            json_match = re.search(r'\{[^{}]*\}', response_text)
-            if json_match:
-                try:
-                    extracted = json.loads(json_match.group(0))
-                    return {k: v for k, v in extracted.items() if v is not None}
-                except json.JSONDecodeError:
-                    pass
-
+            extracted = await self._query_json_strict(prompt=prompt, max_tokens=220, model="haiku")
+            if isinstance(extracted, dict):
+                return {k: v for k, v in extracted.items() if v is not None}
             return {}
 
         except Exception as e:
@@ -2158,10 +2254,6 @@ Use null for any information not found in the article. Return ONLY valid JSON.""
         Extract entity fields from website content.
         """
         try:
-            from backend.claude_client import ClaudeClient
-
-            client = ClaudeClient()
-
             prompt = f"""Extract the following information from this website content about {entity_name}:
 
 Website Content (first 3000 chars):
@@ -2179,24 +2271,9 @@ Extract and return ONLY a JSON object:
 
 Use null for information not found. Return ONLY valid JSON."""
 
-            result = await client.query(
-                prompt=prompt,
-                model="haiku",
-                max_tokens=500
-            )
-
-            import json
-            import re
-
-            response_text = result.get('content', '')
-            json_match = re.search(r'\{[^{}]*\}', response_text)
-            if json_match:
-                try:
-                    extracted = json.loads(json_match.group(0))
-                    return {k: v for k, v in extracted.items() if v is not None}
-                except json.JSONDecodeError:
-                    pass
-
+            extracted = await self._query_json_strict(prompt=prompt, max_tokens=220, model="haiku")
+            if isinstance(extracted, dict):
+                return {k: v for k, v in extracted.items() if v is not None}
             return {}
 
         except Exception as e:
@@ -2208,10 +2285,6 @@ Use null for information not found. Return ONLY valid JSON."""
         Extract a single field value from content.
         """
         try:
-            from backend.claude_client import ClaudeClient
-
-            client = ClaudeClient()
-
             field_prompts = {
                 "founded": f"What year was {entity_name} founded? Return ONLY a 4-digit year or 'null'.",
                 "stadium": f"What is the name of {entity_name}'s stadium? Return ONLY the name or 'null'.",
@@ -2221,7 +2294,7 @@ Use null for information not found. Return ONLY valid JSON."""
 
             prompt = field_prompts.get(field, f"Extract {field} for {entity_name}")
 
-            result = await client.query(
+            result = await self.claude_client.query(
                 prompt=f"""{prompt}
 
 Content:
@@ -2229,7 +2302,9 @@ Content:
 
 Return ONLY the value (no extra text).""",
                 model="haiku",
-                max_tokens=100
+                max_tokens=90,
+                max_retries_override=1,
+                empty_retries_before_fallback_override=1,
             )
 
             response_text = result.get('content', '').strip()
@@ -2825,8 +2900,13 @@ If a field is not found, use null. Return ONLY valid JSON, no other text."""
             "official", "press", "update", "latest", "marketing", "digital", "platform",
             "management", "leadership", "board", "committee", "fiba",
         }
+        org_like_name_tokens = {
+            "united", "city", "fc", "afc", "cf", "club", "basketball", "football", "athletic",
+            "rovers", "wanderers", "town", "county", "association", "federation", "committee",
+            "group", "media", "academy",
+        }
         filtered: List[Dict[str, Any]] = []
-        seen: set[tuple[str, str]] = set()
+        seen_names: set[str] = set()
 
         for dm in decision_makers:
             if not isinstance(dm, dict):
@@ -2842,24 +2922,68 @@ If a field is not found, use null. Return ONLY valid JSON, no other text."""
                 continue
             if any(tok in blocked_tokens for tok in lowered_parts):
                 continue
+            if any(tok in org_like_name_tokens for tok in lowered_parts):
+                continue
             if set(lowered_parts).issubset(entity_tokens):
+                continue
+            if not self._is_probably_person_name(name, entity_tokens=entity_tokens):
                 continue
             if not all(re.fullmatch(r"[A-Z][a-zA-Z'\\-]+", tok) for tok in name_parts):
                 continue
             if not role or not re.search(
-                r"(chief|director|head|manager|officer|president|chair|ceo|cto|cdo|cfo)",
+                r"(chief|director|head|manager|officer|president|chair|ceo|cto|cdo|cfo|secretary)",
                 role,
                 re.IGNORECASE,
             ):
                 continue
 
-            key = (name.lower(), role.lower())
-            if key in seen:
+            name_key = name.lower()
+            if name_key in seen_names:
                 continue
-            seen.add(key)
+            seen_names.add(name_key)
             filtered.append(dm)
 
         return filtered[:10]
+
+    def _is_probably_person_name(self, name: str, *, entity_tokens: Optional[set[str]] = None) -> bool:
+        """Reject organization-like or generic phrases while keeping person-style names."""
+        cleaned = str(name or "").strip()
+        if not cleaned:
+            return False
+        if any(char.isdigit() for char in cleaned):
+            return False
+
+        tokens = [tok for tok in cleaned.split() if tok]
+        lowered = [tok.lower() for tok in tokens]
+        if len(tokens) < 2 or len(tokens) > 3:
+            return False
+        if lowered[0] in {"the", "our", "this", "that"}:
+            return False
+        if "of" in lowered:
+            return False
+
+        non_person_phrase_tokens = {
+            "professional", "development", "phase", "programme", "program",
+            "official", "update", "training", "academy", "members", "media",
+            "news", "staff",
+        }
+        if sum(1 for tok in lowered if tok in non_person_phrase_tokens) >= 2:
+            return False
+
+        org_like_tokens = {
+            "association", "federation", "university", "systems", "group", "committee",
+            "company", "business", "basketball", "euroleague", "league", "media", "club",
+            "fc", "academy", "partners", "partnership", "holdings", "limited", "ltd", "plc",
+            "inc", "llc",
+        }
+        if any(tok in org_like_tokens for tok in lowered):
+            return False
+
+        if entity_tokens and set(lowered).issubset(entity_tokens):
+            return False
+        if not all(re.fullmatch(r"[A-Z][a-zA-Z'\\-]+", tok) for tok in tokens):
+            return False
+        return True
 
     async def _extract_leadership_from_scraped(
         self,
@@ -2933,33 +3057,88 @@ Return JSON:
 
 If you cannot find ANY real names, return an empty array - do not invent names."""
 
-            result = await client.query(
-                prompt=prompt,
-                model="haiku",
-                max_tokens=1500
-            )
+            parse_path = "llm_primary"
+            for attempt in range(2):
+                if attempt == 0:
+                    query_prompt = prompt
+                else:
+                    parse_path = "llm_retry_schema"
+                    query_prompt = (
+                        f"Return STRICT JSON only for leadership extraction for {entity_name}.\n"
+                        "No prose. No markdown. No commentary.\n"
+                        "Schema:\n"
+                        '{"decision_makers":[{"name":"string","role":"string","influence_level":"HIGH|MEDIUM|LOW","confidence":0,"source":"job_posting|press_release|linkedin|official_site","linkedin_url":"string"}]}'
+                    )
+                result = await client.query(
+                    prompt=query_prompt if attempt > 0 else query_prompt,
+                    model="haiku",
+                    max_tokens=1500,
+                )
+                extracted = self._parse_leadership_extraction_response(result.get("content", ""))
+                if extracted is None:
+                    continue
+                decision_makers = extracted.get("decision_makers", [])
+                normalized = self._normalize_decision_makers_contract(decision_makers)
+                if normalized:
+                    logger.info("Leadership extraction parse path: %s (%s records)", parse_path, len(normalized))
+                    return normalized
+                logger.warning(
+                    "Leadership extraction produced non-usable contract entries (%s); retrying/fallback",
+                    parse_path,
+                )
 
-            response_text = result.get('content', '')
-
-            # Parse JSON response
-            import json
-            import re
-
-            json_match = re.search(r'\{[\s\S]*\}', response_text)
-            if json_match:
-                extracted = json.loads(json_match.group(0))
-                decision_makers = extracted.get('decision_makers', [])
-                if isinstance(decision_makers, list) and decision_makers:
-                    return decision_makers
-                logger.warning("Leadership extraction returned empty decision_makers; using deterministic fallback")
-                return self._fallback_extract_leadership_from_signals(entity_name, scraped_data)
-            else:
-                logger.warning("Could not parse leadership extraction response")
-                return self._fallback_extract_leadership_from_signals(entity_name, scraped_data)
+            logger.warning("Leadership extraction failed JSON contract; using deterministic fallback")
+            return self._fallback_extract_leadership_from_signals(entity_name, scraped_data)
 
         except Exception as e:
             logger.error(f"❌ Leadership extraction failed: {e}")
             return self._fallback_extract_leadership_from_signals(entity_name, scraped_data)
+
+    @staticmethod
+    def _parse_leadership_extraction_response(response_text: str) -> Optional[Dict[str, Any]]:
+        json_match = re.search(r"\{[\s\S]*\}", str(response_text or ""))
+        if not json_match:
+            return None
+        try:
+            extracted = json.loads(json_match.group(0))
+        except Exception:
+            return None
+        return extracted if isinstance(extracted, dict) else None
+
+    @staticmethod
+    def _normalize_decision_makers_contract(decision_makers: Any) -> List[Dict[str, Any]]:
+        if not isinstance(decision_makers, list):
+            return []
+        normalized: List[Dict[str, Any]] = []
+        for dm in decision_makers:
+            if not isinstance(dm, dict):
+                continue
+            name = str(dm.get("name") or "").strip()
+            role = str(dm.get("role") or "").strip()
+            if not name or not role:
+                continue
+            influence = str(dm.get("influence_level") or "LOW").strip().upper()
+            if influence not in {"HIGH", "MEDIUM", "LOW"}:
+                influence = "LOW"
+            try:
+                confidence = int(dm.get("confidence", 0))
+            except Exception:
+                confidence = 0
+            confidence = max(0, min(100, confidence))
+            source = str(dm.get("source") or "").strip().lower()
+            if source not in {"job_posting", "press_release", "linkedin", "official_site"}:
+                source = "official_site"
+            normalized.append(
+                {
+                    "name": name,
+                    "role": role,
+                    "influence_level": influence,
+                    "confidence": confidence,
+                    "source": source,
+                    "linkedin_url": str(dm.get("linkedin_url") or "").strip() or None,
+                }
+            )
+        return normalized
 
     def _fallback_extract_leadership_from_signals(
         self,
@@ -2991,10 +3170,21 @@ If you cannot find ANY real names, return an empty array - do not invent names."
                 return
             if clean_name:
                 lowered = clean_name.lower()
+                if lowered.startswith("the "):
+                    return
                 if lowered in {"unknown", "news", "sport", "club"}:
+                    return
+                if not self._is_probably_person_name(clean_name, entity_tokens=entity_tokens):
                     return
                 banned_tokens = {"update", "careers", "weekly", "official", "latest", "coventry", "city", "football"}
                 if any(tok in banned_tokens for tok in lowered.split()):
+                    return
+                banned_phrases = {
+                    "san francisco",
+                    "new york",
+                    "united kingdom",
+                }
+                if any(phrase in lowered for phrase in banned_phrases):
                     return
                 non_person_tokens = {
                     "appoint", "appointed", "appointment", "new", "what",
@@ -3064,16 +3254,21 @@ If you cannot find ANY real names, return an empty array - do not invent names."
         name_pattern = re.compile(r"\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,2})\b")
         for text, source in signal_rows:
             lowered = text.lower()
-            matched_roles = [role for pattern, role in role_patterns if re.search(pattern, lowered)]
-            if not matched_roles:
+            role_hits: List[tuple[str, int]] = []
+            for pattern, role in role_patterns:
+                for role_match in re.finditer(pattern, lowered):
+                    role_hits.append((role, role_match.start()))
+            if not role_hits:
                 continue
-            names = name_pattern.findall(text)
+            names = [(m.group(1), m.start()) for m in name_pattern.finditer(text)]
             if names:
-                for role in matched_roles[:2]:
-                    for name in names[:2]:
-                        add_candidate(name, role, source)
+                for role, role_pos in role_hits[:3]:
+                    for name, name_pos in names[:4]:
+                        # Keep only person names close to the role mention in the same snippet.
+                        if abs(name_pos - role_pos) <= 80:
+                            add_candidate(name, role, source)
             else:
-                for role in matched_roles[:2]:
+                for role, _ in role_hits[:2]:
                     add_candidate("", role, source)
 
         return candidates[:10]
@@ -3099,6 +3294,9 @@ If you cannot find ANY real names, return an empty array - do not invent names."
             name = dm.get('name', '')
             if not name or name == 'unknown':
                 continue
+            if not self._is_probably_person_name(str(name)):
+                dm['linkedin_url'] = None
+                continue
 
             try:
                 # Search for person's LinkedIn profile
@@ -3111,14 +3309,25 @@ If you cannot find ANY real names, return an empty array - do not invent names."
 
                 if linkedin_search.get('status') == 'success':
                     results = linkedin_search.get('results', [])
-
-                    # Look for LinkedIn profile URLs in results
+                    best_url: Optional[str] = None
+                    best_score = 0.0
+                    role = str(dm.get("role") or "")
                     for result in results:
-                        url = result.get('url', '')
-                        if 'linkedin.com/in/' in url:
-                            dm['linkedin_url'] = url
-                            logger.info(f"  ✅ Found LinkedIn for {name}: {url}")
-                            break
+                        url = str(result.get("url") or "").strip()
+                        if 'linkedin.com/in/' not in url:
+                            continue
+                        score = self._score_linkedin_profile_candidate(
+                            name=name,
+                            role=role,
+                            entity_name=entity_name,
+                            result=result,
+                        )
+                        if score > best_score:
+                            best_score = score
+                            best_url = url
+                    if best_url and best_score >= 2.0:
+                        dm['linkedin_url'] = best_url
+                        logger.info(f"  ✅ Found LinkedIn for {name}: {best_url}")
                     else:
                         dm['linkedin_url'] = None
                 else:
@@ -3129,6 +3338,59 @@ If you cannot find ANY real names, return an empty array - do not invent names."
                 dm['linkedin_url'] = None
 
         return decision_makers
+
+    @staticmethod
+    def _score_linkedin_profile_candidate(
+        *,
+        name: str,
+        role: str,
+        entity_name: str,
+        result: Dict[str, Any],
+    ) -> float:
+        url = str(result.get("url") or "").strip().lower()
+        title = str(result.get("title") or "").strip().lower()
+        snippet = str(result.get("snippet") or "").strip().lower()
+        haystack = " ".join([url, title, snippet])
+
+        blocked_terms = {
+            "digest", "newsletter", "marketing", "agency", "media", "updates", "news",
+            "community", "commercial-team", "club-commercial-team",
+        }
+        if any(term in haystack for term in blocked_terms):
+            return 0.0
+
+        slug = ""
+        marker = "/in/"
+        if marker in url:
+            slug = url.split(marker, 1)[1].split("/", 1)[0]
+        slug_tokens = {tok for tok in re.split(r"[^a-z]+", slug) if tok}
+
+        name_tokens = [tok.lower() for tok in re.split(r"\W+", str(name or "")) if tok]
+        if len(name_tokens) < 2:
+            return 0.0
+        first, last = name_tokens[0], name_tokens[-1]
+        full_overlap = sum(1 for tok in name_tokens if tok in slug_tokens)
+        if full_overlap >= 2:
+            score = 2.2
+        elif first in slug_tokens or last in slug_tokens:
+            score = 1.2
+        else:
+            score = 0.0
+
+        text_overlap = sum(1 for tok in name_tokens if tok in haystack)
+        score += min(1.2, text_overlap * 0.4)
+
+        role_tokens = [tok.lower() for tok in re.split(r"\W+", str(role or "")) if tok]
+        role_tokens = [tok for tok in role_tokens if tok in {"chief", "director", "head", "officer", "president", "secretary", "executive"}]
+        if any(tok in haystack for tok in role_tokens):
+            score += 0.5
+
+        entity_tokens = [tok.lower() for tok in re.split(r"\W+", str(entity_name or "")) if len(tok) > 2]
+        entity_tokens = [tok for tok in entity_tokens if tok not in {"club", "city", "football", "federation", "international"}]
+        if any(tok in haystack for tok in entity_tokens):
+            score += 0.4
+
+        return score
 
     async def collect_digital_transformation_data(self, entity_id: str, entity_name: str) -> Dict[str, Any]:
         """
@@ -4127,7 +4389,11 @@ If there are conflicts, explain in analysis and rank accordingly."""
             response = await self.claude_client.query(
                 prompt=prompt,
                 model="haiku",
-                max_tokens=500
+                max_tokens=260,
+                json_mode=True,
+                max_retries_override=0,
+                empty_retries_before_fallback_override=1,
+                fast_fail_on_length=True,
             )
             result = None
             structured_output = (response or {}).get("structured_output")
@@ -4137,13 +4403,6 @@ If there are conflicts, explain in analysis and rank accordingly."""
                 raw = str((response or {}).get("content") or "").strip()
                 if raw:
                     result = json.loads(raw)
-
-            import json
-            import re
-
-            json_match = re.search(r'\{[\s\S]*\}', response.get("content", ""))
-            if json_match:
-                result = json.loads(json_match.group(0))
 
             if result:
                 # Update candidates with LLM confidence

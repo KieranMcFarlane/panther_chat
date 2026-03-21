@@ -25,6 +25,9 @@ const EntityDossierRouter = dynamic(() => import("@/components/entity-dossier/En
   )
 })
 
+const POLL_INTERVAL_MS = 2500
+const POLL_TIMEOUT_MS = 15 * 60 * 1000
+
 interface EntityDossierClientPageProps {
   entityId: string
   fromPage: string
@@ -96,6 +99,58 @@ export default function EntityDossierClientPage({
 
     const controller = new AbortController()
 
+    const sleep = (ms: number) =>
+      new Promise<void>((resolve) => {
+        window.setTimeout(resolve, ms)
+      })
+
+    async function pollQueuedPipeline(statusUrl: string) {
+      const startedAt = Date.now()
+
+      while (!controller.signal.aborted) {
+        if (Date.now() - startedAt > POLL_TIMEOUT_MS) {
+          throw new Error('Timed out waiting for pipeline dossier generation')
+        }
+
+        const statusResponse = await fetch(statusUrl, { signal: controller.signal })
+        if (statusResponse.ok) {
+          const statusData = await statusResponse.json()
+          const pipelineRuns = Array.isArray(statusData?.pipeline_runs) ? statusData.pipeline_runs : []
+          const matchingRun =
+            pipelineRuns.find((run: any) => String(run?.entity_id) === String(entityId)) ??
+            pipelineRuns[0]
+          const runStatus = String(matchingRun?.status || statusData?.batch?.status || 'queued')
+          const runPhase = String(matchingRun?.phase || '')
+
+          setGenerationMessage(
+            runPhase
+              ? `Pipeline run ${runStatus} (${runPhase}) for ${entity.properties.name}...`
+              : `Pipeline run ${runStatus} for ${entity.properties.name}...`,
+          )
+
+          if (runStatus === 'failed') {
+            const errorMessage = matchingRun?.error_message
+            throw new Error(errorMessage || 'Pipeline run failed to generate dossier')
+          }
+
+          if (runStatus === 'completed') {
+            const dossierResponse = await fetch(`/api/entities/${entityId}/dossier`, {
+              signal: controller.signal,
+            })
+            if (dossierResponse.ok) {
+              const dossierPayload = await dossierResponse.json()
+              if (dossierPayload?.dossier) {
+                setDossier(dossierPayload.dossier)
+                return
+              }
+            }
+          }
+        }
+
+        await sleep(POLL_INTERVAL_MS)
+      }
+    }
+
     async function generateDossier() {
       setIsGenerating(true)
       setGenerationError(null)
@@ -122,6 +177,17 @@ export default function EntityDossierClientPage({
           }) : undefined,
           signal: controller.signal
         })
+
+        if (response.status === 202) {
+          const queuedData = await response.json()
+          const statusUrl = queuedData?.statusUrl
+          if (!statusUrl) {
+            throw new Error('Pipeline queued but no status URL returned')
+          }
+          setGenerationMessage(`Pipeline run queued for ${entity.properties.name}...`)
+          await pollQueuedPipeline(statusUrl)
+          return
+        }
 
         if (!response.ok) {
           throw new Error(`Failed to generate dossier (${response.status})`)

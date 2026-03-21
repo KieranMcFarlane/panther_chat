@@ -287,6 +287,79 @@ def test_build_render_probe_urls_expands_known_low_signal_leaf(monkeypatch):
     ]
 
 
+def test_build_render_probe_urls_treats_procurement_route_as_low_signal_by_default(monkeypatch):
+    client = BrightDataSDKClient.__new__(BrightDataSDKClient)
+    monkeypatch.setenv("BRIGHTDATA_CONTENT_PROBE_SUBPATHS", "news,commercial")
+    monkeypatch.delenv("BRIGHTDATA_LOW_SIGNAL_LEAF_PATHS", raising=False)
+
+    probe_urls = BrightDataSDKClient._build_render_probe_urls(client, "https://www.ccfc.co.uk/procurement")
+    assert probe_urls == [
+        "https://www.ccfc.co.uk/procurement",
+        "https://www.ccfc.co.uk/news",
+        "https://www.ccfc.co.uk/commercial",
+    ]
+
+
+def test_detect_low_signal_shell_flags_nav_heavy_thin_pages():
+    client = BrightDataSDKClient.__new__(BrightDataSDKClient)
+    html = "<html><body>fixtures matches results tickets shop menu</body></html>"
+    content = "fixtures matches results tickets shop menu " * 8
+    reason = BrightDataSDKClient._detect_low_signal_shell(
+        client,
+        url="https://www.ccfc.co.uk/matches",
+        content=content,
+        raw_html=html,
+    )
+    assert reason is not None
+
+
+@pytest.mark.asyncio
+async def test_scrape_as_markdown_lane4_fallback_requires_signal_improvement(monkeypatch):
+    client = BrightDataSDKClient.__new__(BrightDataSDKClient)
+    client._force_brightdata_only = lambda: False
+
+    class FakeSDKResult:
+        data = "<html><body><div id='app'></div><script>js</script></body></html>"
+
+    class FakeClient:
+        async def scrape_url(self, url, response_format="raw"):
+            return FakeSDKResult()
+
+    async def fake_get_client():
+        return FakeClient()
+
+    async def fake_lane2(url, insecure_ssl_used=False):
+        return {
+            "status": "success",
+            "url": url,
+            "content": "thin content",
+            "raw_html": "<html><body>thin content</body></html>",
+            "metadata": {"source": "brightdata_request_api"},
+        }
+
+    async def fake_lane3(url):
+        return None
+
+    async def fake_lane4(url, reason=None):
+        return {
+            "status": "success",
+            "url": url,
+            "content": "fallback is better " * 80,
+            "raw_html": "<html><body>fallback is better</body></html>",
+            "metadata": {"source": "fallback_httpx"},
+        }
+
+    monkeypatch.setattr(client, "_get_client", fake_get_client)
+    monkeypatch.setattr(client, "_scrape_with_browser_request_api", fake_lane2)
+    monkeypatch.setattr(client, "_recover_with_domain_probe", fake_lane3)
+    monkeypatch.setattr(client, "_scrape_as_markdown_fallback", fake_lane4)
+
+    result = await BrightDataSDKClient.scrape_as_markdown(client, "https://www.ccfc.co.uk")
+    assert result["status"] == "success"
+    assert result["metadata"]["lane"] == "lane_4"
+    assert result["metadata"]["fallback_reason"] == "lane_4_strict_fallback_after_low_signal"
+
+
 @pytest.mark.asyncio
 async def test_browser_request_api_probes_subpaths_when_root_is_low_signal(monkeypatch):
     client = BrightDataSDKClient.__new__(BrightDataSDKClient)
@@ -447,6 +520,73 @@ async def test_browser_request_api_probes_when_low_signal_leaf_route(monkeypatch
 
 
 @pytest.mark.asyncio
+async def test_browser_request_api_hard_stops_after_repeated_low_signal_shells(monkeypatch):
+    client = BrightDataSDKClient.__new__(BrightDataSDKClient)
+    client.token = "test-token"
+    client._invalid_request_zones = set()
+    client._zone_cooldowns = {}
+    client._request_zone_whitelist = None
+    client._request_zone_whitelist_checked_at = 0.0
+    client._zone_in_cooldown = lambda _zone: False
+
+    async def fake_get_adaptive_request_zones(_request_kind):
+        return ["sdk_unlocker"]
+
+    async def fake_get_request_zone_whitelist():
+        return None
+
+    client._get_adaptive_request_zones = fake_get_adaptive_request_zones
+    client._get_request_zone_whitelist = fake_get_request_zone_whitelist
+    client._mark_zone_not_found = lambda _zone: None
+    client._mark_zone_timeout = lambda _zone, _err: None
+
+    monkeypatch.setenv("BRIGHTDATA_API_BASE", "https://api.brightdata.com")
+    monkeypatch.setenv("BRIGHTDATA_MIN_WORDS", "80")
+    monkeypatch.setenv("BRIGHTDATA_CONTENT_PROBE_SUBPATHS", "news,commercial,tickets")
+    monkeypatch.setenv("BRIGHTDATA_REQUEST_MAX_ATTEMPTS", "1")
+    monkeypatch.setenv("BRIGHTDATA_LOW_SIGNAL_HARD_STOP_REPEATS", "2")
+
+    post_urls = []
+
+    class FakeResponse:
+        def __init__(self, text):
+            self.text = text
+
+        def raise_for_status(self):
+            return None
+
+    class FakeAsyncClient:
+        def __init__(self, timeout, follow_redirects, verify):
+            self.timeout = timeout
+            self.follow_redirects = follow_redirects
+            self.verify = verify
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            post_urls.append(json.get("url"))
+            return FakeResponse("<html><body><div id='__next'></div><p>fixture menu table</p></body></html>")
+
+    monkeypatch.setattr(brightdata_module.httpx, "AsyncClient", FakeAsyncClient)
+
+    result = await BrightDataSDKClient._scrape_with_browser_request_api(
+        client,
+        "https://www.ccfc.co.uk/matches",
+        insecure_ssl_used=False,
+    )
+
+    assert result is not None
+    assert result["status"] == "success"
+    assert result["metadata"].get("low_signal_hard_stop_triggered") is True
+    assert result["metadata"].get("low_signal_reason") == "repeated_rendered_shell"
+    assert len(post_urls) == 2
+
+
+@pytest.mark.asyncio
 async def test_browser_request_api_render_returns_extracted_content(monkeypatch):
     client = BrightDataSDKClient.__new__(BrightDataSDKClient)
     client.token = "test-token"
@@ -488,6 +628,68 @@ async def test_browser_request_api_render_returns_extracted_content(monkeypatch)
     assert "crm suppliers" in result["content"].lower()
     assert result["metadata"]["source"] == "brightdata_request_api"
     assert result["metadata"]["extraction_mode"] == "rendered_fallback_brightdata_request_api"
+
+
+@pytest.mark.asyncio
+async def test_scrape_as_markdown_short_circuits_cached_repeated_low_signal_urls(monkeypatch):
+    client = BrightDataSDKClient.__new__(BrightDataSDKClient)
+    client.token = "token"
+    client._client = None
+    client._invalid_request_zones = set()
+    client._zone_cooldowns = {}
+    client._request_zone_whitelist = None
+    client._request_zone_whitelist_checked_at = 0.0
+    client._domain_probe_last_run = {}
+    client.generous_retry_enabled = True
+    client.enable_modern_auto_scrape = False
+    client.retry_base_backoff_seconds = 0.0
+    client.retry_backoff_cap_seconds = 0.0
+    client.retry_jitter_seconds = 0.0
+    client._low_signal_url_cache = {}
+    client._low_signal_url_cooldown_seconds = 600.0
+
+    calls = {"fallback": 0, "lane2": 0}
+
+    async def fake_get_client():
+        raise RuntimeError("sdk unavailable")
+
+    async def fake_lane2(url, insecure_ssl_used=False):
+        calls["lane2"] += 1
+        return {
+            "status": "success",
+            "url": url,
+            "content": "",
+            "raw_html": "<html><body><div id='app'></div></body></html>",
+            "metadata": {"source": "brightdata_request_api", "low_signal_reason": "thin_content<80"},
+        }
+
+    async def fake_lane3(url):
+        return None
+
+    async def fake_fallback(url, reason=None):
+        calls["fallback"] += 1
+        return {
+            "status": "success",
+            "url": url,
+            "content": "",
+            "raw_html": "<html><body></body></html>",
+            "metadata": {"source": "fallback_httpx", "fallback_reason": reason or "test"},
+        }
+
+    monkeypatch.setattr(client, "_get_client", fake_get_client)
+    monkeypatch.setattr(client, "_scrape_with_browser_request_api", fake_lane2)
+    monkeypatch.setattr(client, "_recover_with_domain_probe", fake_lane3)
+    monkeypatch.setattr(client, "_scrape_as_markdown_fallback", fake_fallback)
+    monkeypatch.setattr(client, "_force_brightdata_only", lambda: False)
+
+    first = await BrightDataSDKClient.scrape_as_markdown(client, "https://www.ccfc.co.uk/news/abc")
+    second = await BrightDataSDKClient.scrape_as_markdown(client, "https://www.ccfc.co.uk/news/abc")
+
+    assert first["status"] == "success"
+    assert calls["fallback"] == 1
+    assert second["status"] == "success"
+    assert second.get("metadata", {}).get("low_signal_reason") == "cached_repeated_low_signal_url"
+    assert calls["fallback"] == 1
 
 
 @pytest.mark.asyncio

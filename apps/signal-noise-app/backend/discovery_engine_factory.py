@@ -1,0 +1,62 @@
+#!/usr/bin/env python3
+"""Factory for discovery engine selection during strangler cutover."""
+
+from __future__ import annotations
+
+import logging
+import os
+from typing import Any, Tuple
+
+logger = logging.getLogger(__name__)
+
+
+def _normalize_engine_name(value: str) -> str:
+    raw = str(value or "").strip().lower()
+    if raw in {"legacy", "v1", "hypothesis"}:
+        return "legacy"
+    if raw in {"v2", "evidence_first", "discovery_v2"}:
+        return "v2"
+    return "v2"
+
+
+def create_discovery_engine(
+    *,
+    claude_client: Any,
+    brightdata_client: Any,
+    graphiti_service: Any = None,
+    falkordb_client: Any = None,
+    engine: str | None = None,
+) -> Tuple[Any, str]:
+    """
+    Build discovery engine for current runtime.
+
+    Returns:
+      (engine_instance, engine_name)
+    """
+    selected = _normalize_engine_name(engine or os.getenv("DISCOVERY_ENGINE", "v2"))
+    if selected == "legacy":
+        try:
+            from backend.hypothesis_driven_discovery import HypothesisDrivenDiscovery
+        except ImportError:
+            from hypothesis_driven_discovery import HypothesisDrivenDiscovery
+        instance = HypothesisDrivenDiscovery(
+            claude_client=claude_client,
+            brightdata_client=brightdata_client,
+            falkordb_client=falkordb_client,
+            graphiti_service=graphiti_service,
+        )
+        logger.info("🧠 Discovery engine selected: legacy")
+        return instance, "legacy"
+
+    try:
+        from backend.discovery_runtime_v2 import DiscoveryRuntimeV2
+    except ImportError:
+        from discovery_runtime_v2 import DiscoveryRuntimeV2
+
+    instance = DiscoveryRuntimeV2(
+        claude_client=claude_client,
+        brightdata_client=brightdata_client,
+    )
+    logger.info("🧠 Discovery engine selected: v2")
+    return instance, "v2"
+

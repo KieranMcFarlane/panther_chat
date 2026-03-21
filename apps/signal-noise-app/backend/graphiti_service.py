@@ -19,6 +19,7 @@ Usage:
 
 import os
 import sys
+import json
 import logging
 import urllib.parse
 from datetime import datetime, timezone, timedelta
@@ -486,11 +487,206 @@ class GraphitiService:
                 'detection_confidence': rfp_data.get('confidence_score'),
                 'metadata': rfp_data.get('metadata', {}),
             }
-            self.supabase_client.table('rfp_tracking').upsert(fallback_payload).execute()
-            return {
-                'rfp_id': rfp_data.get('rfp_id'),
-                'status': 'fallback_tracking',
-            }
+            try:
+                self.supabase_client.table('rfp_tracking').upsert(fallback_payload).execute()
+                return {
+                    'rfp_id': rfp_data.get('rfp_id'),
+                    'status': 'fallback_tracking',
+                }
+            except Exception as fallback_exc:  # noqa: BLE001
+                message = str(fallback_exc)
+                # Duplicate/conflict writes are expected under idempotent replays.
+                if "409" in message or "23505" in message or "duplicate" in message.lower():
+                    logger.info(
+                        "ℹ️ rfp_tracking conflict treated as idempotent success for %s: %s",
+                        rfp_data.get('rfp_id'),
+                        fallback_exc,
+                    )
+                    return {
+                        'rfp_id': rfp_data.get('rfp_id'),
+                        'status': 'fallback_tracking_existing',
+                    }
+                raise
+
+    async def persist_pipeline_record_supabase(self, envelope: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Persist pipeline run envelope to Supabase with idempotency guard.
+        """
+        if not self.use_supabase or not self.supabase_client:
+            raise RuntimeError("Supabase client not available for pipeline persistence")
+
+        idempotency_key = str(envelope.get("idempotency_key") or "").strip()
+        entity_id = str(envelope.get("entity_id") or "").strip()
+        if not idempotency_key or not entity_id:
+            raise ValueError("idempotency_key and entity_id are required")
+
+        existing = (
+            self.supabase_client.table("temporal_episodes")
+            .select("id")
+            .eq("entity_id", entity_id)
+            .eq("episode_type", "PIPELINE_PERSISTENCE")
+            .contains("metadata", {"idempotency_key": idempotency_key})
+            .limit(1)
+            .execute()
+        )
+        if existing.data:
+            return {"status": "existing", "idempotency_key": idempotency_key, "backend": "supabase"}
+
+        now_iso = datetime.now(timezone.utc).isoformat()
+        full_payload = envelope.get("payload") if isinstance(envelope.get("payload"), dict) else {}
+        payload_for_episode = dict(full_payload)
+        # Keep temporal episode metadata compact; large artifacts are stored in entity_dossiers.
+        payload_for_episode.pop("dossier", None)
+        payload_for_episode.pop("discovery_result", None)
+
+        payload = {
+            "entity_id": entity_id,
+            "entity_name": str(envelope.get("entity_id") or ""),
+            "entity_type": "PIPELINE_RUN",
+            "episode_type": "PIPELINE_PERSISTENCE",
+            "timestamp": now_iso,
+            "discovery_date": now_iso,
+            "description": f"Pipeline persistence checkpoint: {envelope.get('phase')}",
+            "source": "pipeline_orchestrator",
+            "url": None,
+            "confidence_score": None,
+            "metadata": {
+                "idempotency_key": idempotency_key,
+                "run_id": envelope.get("run_id"),
+                "phase": envelope.get("phase"),
+                "record_type": envelope.get("record_type"),
+                "record_id": envelope.get("record_id"),
+                "payload": payload_for_episode,
+            },
+        }
+        self.supabase_client.table("temporal_episodes").insert(payload).execute()
+        await self._upsert_entity_dossier_from_pipeline_payload(
+            entity_id=entity_id,
+            run_payload=full_payload,
+        )
+        return {"status": "inserted", "idempotency_key": idempotency_key, "backend": "supabase"}
+
+    async def _upsert_entity_dossier_from_pipeline_payload(
+        self,
+        *,
+        entity_id: str,
+        run_payload: Dict[str, Any],
+    ) -> None:
+        """
+        Persist phase-0 dossier snapshots so the entity browser dossier view can load
+        directly from Supabase after pipeline completion.
+        """
+        if not isinstance(run_payload, dict):
+            return
+        dossier = run_payload.get("dossier")
+        if not isinstance(dossier, dict) or not dossier:
+            return
+
+        metadata = dossier.get("metadata") if isinstance(dossier.get("metadata"), dict) else {}
+        sections = dossier.get("sections") if isinstance(dossier.get("sections"), list) else []
+        generated_at = datetime.now(timezone.utc).isoformat()
+        raw_priority = dossier.get("priority_score")
+        if raw_priority is None:
+            raw_priority = metadata.get("priority_score")
+        if raw_priority is None:
+            raw_priority = metadata.get("tier_score")
+        try:
+            priority_score = int(raw_priority)
+        except (TypeError, ValueError):
+            priority_score = 50
+        tier = str(dossier.get("tier") or metadata.get("tier") or "BASIC").strip().upper() or "BASIC"
+        entity_type = str(
+            dossier.get("entity_type")
+            or run_payload.get("entity_type")
+            or "CLUB"
+        ).strip().upper() or "CLUB"
+
+        record = {
+            "entity_id": entity_id,
+            "entity_name": str(
+                dossier.get("entity_name")
+                or run_payload.get("entity_name")
+                or entity_id
+            ),
+            "entity_type": entity_type,
+            "priority_score": priority_score,
+            "tier": tier,
+            "dossier_data": dossier,
+            "sections": sections,
+            "generated_at": generated_at,
+            "total_cost_usd": float(dossier.get("total_cost_usd") or metadata.get("total_cost_usd") or 0.0),
+            "generation_time_seconds": float(
+                dossier.get("generation_time_seconds") or metadata.get("generation_time_seconds") or 0.0
+            ),
+            "cache_status": "FRESH",
+            "updated_at": generated_at,
+            "created_at": generated_at,
+        }
+        # Upsert avoids race conditions and duplicate key insert failures across retries/workers.
+        self.supabase_client.table("entity_dossiers").upsert(record, on_conflict="entity_id").execute()
+
+    async def persist_pipeline_record_falkordb(self, envelope: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Persist pipeline run envelope to FalkorDB with idempotency guard.
+        """
+        idempotency_key = str(envelope.get("idempotency_key") or "").strip()
+        entity_id = str(envelope.get("entity_id") or "").strip()
+        if not idempotency_key or not entity_id:
+            raise ValueError("idempotency_key and entity_id are required")
+
+        query = """
+        MERGE (p:PipelinePersistenceRecord {idempotency_key: $idempotency_key})
+        SET p.entity_id = $entity_id,
+            p.run_id = $run_id,
+            p.phase = $phase,
+            p.record_type = $record_type,
+            p.record_id = $record_id,
+            p.payload_json = $payload_json,
+            p.persisted_at = $persisted_at
+        RETURN p.idempotency_key AS idempotency_key
+        """
+        params = {
+            "idempotency_key": idempotency_key,
+            "entity_id": entity_id,
+            "run_id": str(envelope.get("run_id") or ""),
+            "phase": str(envelope.get("phase") or ""),
+            "record_type": str(envelope.get("record_type") or ""),
+            "record_id": str(envelope.get("record_id") or ""),
+            "payload_json": json.dumps(
+                envelope.get("payload") if isinstance(envelope.get("payload"), dict) else {},
+                default=str,
+            ),
+            "persisted_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+        if self.driver:
+            with self.driver.session(database=self.graph_name) as session:
+                session.run(query, params)
+            return {"status": "merged", "idempotency_key": idempotency_key, "backend": "falkordb_neo4j_driver"}
+
+        if not self.falkordb_uri:
+            raise RuntimeError("FalkorDB URI not configured for pipeline persistence")
+
+        try:
+            from falkordb import FalkorDB  # type: ignore
+        except Exception as error:  # noqa: BLE001
+            raise RuntimeError("falkordb package not available for pipeline persistence") from error
+
+        parsed = urllib.parse.urlparse(
+            self.falkordb_uri.replace("rediss://", "http://").replace("redis://", "http://")
+        )
+        host = parsed.hostname or "localhost"
+        port = parsed.port or 6379
+        client = FalkorDB(
+            host=host,
+            port=port,
+            username=self.falkordb_user,
+            password=self.falkordb_password,
+            ssl=False,
+        )
+        graph = client.select_graph(self.graph_name)
+        graph.query(query, params)
+        return {"status": "merged", "idempotency_key": idempotency_key, "backend": "falkordb_native"}
 
     async def add_discovery_episode(
         self,

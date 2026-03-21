@@ -87,27 +87,35 @@ TEMPLATE_RUNTIME_OVERRIDES: Dict[str, Dict[str, Any]] = {
         },
     },
     "tier_1_club_centralized_procurement": {
-        "recommended_hop_cap": 3,
-        "targeted_query_limit": 6,
-        "targeted_results_per_query": 4,
+        "recommended_hop_cap": 5,
+        "targeted_query_limit": 8,
+        "targeted_results_per_query": 5,
         "hop_bias": {
-            "official_site": 0.10,
-            "press_release": 0.15,
-            "rfp_page": 0.25,
-            "tenders_page": 0.25,
-            "procurement_page": 0.20,
+            "official_site": 0.28,
+            "press_release": 0.24,
+            "careers_page": 0.20,
+            "annual_report": 0.18,
+            "document": 0.14,
+            "linkedin_job_posting": 0.12,
+            "procurement_page": 0.02,
+            "rfp_page": -0.10,
+            "tenders_page": -0.10,
         },
     },
     "tier_2_club_mixed_procurement": {
-        "recommended_hop_cap": 3,
-        "targeted_query_limit": 5,
-        "targeted_results_per_query": 3,
+        "recommended_hop_cap": 5,
+        "targeted_query_limit": 7,
+        "targeted_results_per_query": 4,
         "hop_bias": {
-            "official_site": 0.10,
-            "press_release": 0.15,
-            "rfp_page": 0.18,
-            "tenders_page": 0.18,
-            "procurement_page": 0.12,
+            "official_site": 0.26,
+            "press_release": 0.24,
+            "careers_page": 0.18,
+            "annual_report": 0.16,
+            "document": 0.12,
+            "linkedin_job_posting": 0.10,
+            "procurement_page": 0.02,
+            "rfp_page": -0.08,
+            "tenders_page": -0.08,
         },
     },
     "federation_governing_body": {
@@ -298,6 +306,21 @@ def resolve_template_id(
     entity_name: Optional[str] = None,
 ) -> str:
     """Return an available template id for discovery initialization."""
+    def _template_matches_entity_type(candidate: str, normalized_entity_type: str) -> bool:
+        cand = str(candidate or "").strip().lower()
+        et = str(normalized_entity_type or "").strip().upper()
+        if not cand or not et:
+            return True
+        if "FEDERATION" in et or "GOVERN" in et:
+            return cand.startswith("federation_")
+        if "AGENCY" in et or "SERVICE" in et or "CONSULT" in et or "VENDOR" in et:
+            return cand == AGENCY_DISCOVERY_TEMPLATE_ID
+        if "CLUB" in et:
+            return cand.startswith("tier_1_club_") or cand.startswith("tier_2_club_")
+        if "LEAGUE" in et:
+            return cand.startswith("tier_1_club_") or cand.startswith("tier_2_club_")
+        return True
+
     TemplateLoader = _load_backend_attr("template_loader", "TemplateLoader")
     override_choice = _select_template_from_entity_override(entity_id, entity_name)
     if override_choice:
@@ -313,8 +336,15 @@ def resolve_template_id(
 
     loader = TemplateLoader()
     requested = template_id or ""
+    normalized_entity_type = str(entity_type or "").strip().upper()
     if requested and loader.get_template(requested):
-        return requested
+        if _template_matches_entity_type(requested, normalized_entity_type):
+            return requested
+        logger.info(
+            "Ignoring requested template %s due to entity_type mismatch (%s)",
+            requested,
+            normalized_entity_type or "unknown",
+        )
 
     default_template_id = context_choice or _default_template_id_for_entity_type(entity_type)
     if loader.get_template(default_template_id):
@@ -322,12 +352,20 @@ def resolve_template_id(
     else:
         fallback_template_id = DEFAULT_DISCOVERY_TEMPLATE_ID
 
-    logger.warning(
-        "Requested discovery template unavailable, falling back to %s (requested=%s, entity_type=%s)",
-        fallback_template_id,
-        requested or None,
-        entity_type,
-    )
+    if requested:
+        logger.warning(
+            "Requested discovery template unavailable, falling back to %s (requested=%s, entity_type=%s)",
+            fallback_template_id,
+            requested,
+            entity_type,
+        )
+    else:
+        logger.debug(
+            "Resolved default discovery template: %s (entity_type=%s, league=%s)",
+            fallback_template_id,
+            entity_type,
+            league_or_competition,
+        )
     return fallback_template_id
 # Import PDF extractor for DOCUMENT hop type
 try:
@@ -722,6 +760,8 @@ class DiscoveryResult:
     raw_signals: List[Any] = field(default_factory=list)  # Signal objects for Ralph Loop
     hypothesis_states: Dict[str, Dict[str, Any]] = field(default_factory=dict)  # Category -> state data
     performance_summary: Dict[str, Any] = field(default_factory=dict)
+    entity_confidence: float = 0.0
+    pipeline_confidence: float = 0.0
     timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -740,6 +780,8 @@ class DiscoveryResult:
             'raw_signals_count': len(self.raw_signals),  # Include count for wrapper
             'hypothesis_states': self.hypothesis_states,  # New: hypothesis state data
             'performance_summary': self.performance_summary,
+            'entity_confidence': self.entity_confidence,
+            'pipeline_confidence': self.pipeline_confidence,
             'timestamp': self.timestamp.isoformat()
         }
 
@@ -929,7 +971,7 @@ class HypothesisDrivenDiscovery:
         )
         self.evaluation_timeout_max_retries = max(
             0,
-            int(os.getenv("DISCOVERY_EVALUATION_TIMEOUT_MAX_RETRIES", "1")),
+            int(os.getenv("DISCOVERY_EVALUATION_TIMEOUT_MAX_RETRIES", "2")),
         )
         self.evaluation_timeout_retry_backoff_seconds = max(
             0.0,
@@ -952,7 +994,7 @@ class HypothesisDrivenDiscovery:
         ).strip().lower() or "sonnet"
         self.evaluation_empty_response_max_retries = max(
             0,
-            int(os.getenv("DISCOVERY_EVALUATION_EMPTY_RESPONSE_MAX_RETRIES", "1")),
+            int(os.getenv("DISCOVERY_EVALUATION_EMPTY_RESPONSE_MAX_RETRIES", "2")),
         )
         self.evaluation_empty_response_retry_backoff_seconds = max(
             0.0,
@@ -1025,13 +1067,39 @@ class HypothesisDrivenDiscovery:
             1,
             int(os.getenv("DISCOVERY_URL_NO_PROGRESS_COOLDOWN_HITS", "2")),
         )
+        self.discovery_policy_evidence_first = self._parse_bool_env(
+            os.getenv("DISCOVERY_POLICY_EVIDENCE_FIRST"),
+            default=True,
+        )
+        self.discovery_source_trust_hard_gate = self._parse_bool_env(
+            os.getenv("DISCOVERY_SOURCE_TRUST_HARD_GATE"),
+            default=True,
+        )
+        self.discovery_policy_ignore_templates = self._parse_bool_env(
+            os.getenv("DISCOVERY_POLICY_IGNORE_TEMPLATES"),
+            default=True,
+        )
+        self._policy_metrics: Dict[str, int] = {
+            "synthetic_url_attempt_count": 0,
+            "dead_end_event_count": 0,
+            "fallback_accept_block_count": 0,
+        }
+        self._last_selected_candidate_origin: Optional[str] = None
         self.url_repeat_lookback_iterations = max(
             0,
             int(os.getenv("DISCOVERY_URL_REPEAT_LOOKBACK_ITERATIONS", "4")),
         )
         self.url_repeat_max_hits = max(
             1,
-            int(os.getenv("DISCOVERY_URL_REPEAT_MAX_HITS", "1")),
+            int(os.getenv("DISCOVERY_URL_REPEAT_MAX_HITS", "2")),
+        )
+        self.max_url_candidates_per_hop = max(
+            1,
+            int(os.getenv("DISCOVERY_MAX_EVALS_PER_HOP", "2")),
+        )
+        self.iteration_timeout_seconds = max(
+            1.0,
+            float(os.getenv("DISCOVERY_ITERATION_TIMEOUT_SECONDS", "30")),
         )
         self.url_repeat_penalty = max(
             0.0,
@@ -2281,16 +2349,25 @@ class HypothesisDrivenDiscovery:
         return TEMPLATE_RUNTIME_OVERRIDES.get(template_id, {})
 
     def _apply_template_hop_bias(self, hop_type: HopType, depth: int) -> float:
-        del depth
+        if bool(getattr(self, "discovery_policy_ignore_templates", False)):
+            return 0.0
         overrides = self._get_template_runtime_overrides()
         hop_bias = overrides.get("hop_bias") if isinstance(overrides, dict) else None
         if not isinstance(hop_bias, dict):
             return 0.0
         key = hop_type.value if hasattr(hop_type, "value") else str(hop_type)
         try:
-            return float(hop_bias.get(key, 0.0) or 0.0)
+            base_bias = float(hop_bias.get(key, 0.0) or 0.0)
         except Exception:
             return 0.0
+        if (
+            bool(getattr(self, "discovery_policy_evidence_first", False))
+            and depth <= 1
+            and "CLUB" in str(getattr(self, "current_entity_type", "") or "").upper()
+            and hop_type in {HopType.RFP_PAGE, HopType.TENDERS_PAGE, HopType.PROCUREMENT_PAGE}
+        ):
+            return base_bias - 0.35
+        return base_bias
 
     async def _get_cached_search(self, query: str, engine: str) -> Optional[Dict[str, Any]]:
         """Get cached search result if available and not expired"""
@@ -2319,6 +2396,8 @@ class HypothesisDrivenDiscovery:
         entity_id: str,
         entity_name: str,
         template_id: str,
+        league_or_competition: Optional[str] = None,
+        org_type: Optional[str] = None,
         max_iterations: int = None,
         max_depth: int = None,
         max_cost_usd: float = None,
@@ -2353,12 +2432,24 @@ class HypothesisDrivenDiscovery:
         # Use config values if not specified (Phase 6 parameter tuning)
         if max_iterations is None:
             max_iterations = self.max_iterations
+        if bool(getattr(self, "discovery_policy_evidence_first", False)):
+            max_iterations = min(
+                int(max_iterations or 5),
+                int(os.getenv("DISCOVERY_MAX_HOPS", "5")),
+            )
         if max_depth is None:
             max_depth = self.max_depth
         if max_cost_usd is None:
             max_cost_usd = self.max_cost_per_entity
 
-        template_id = resolve_template_id(template_id, getattr(self, "current_entity_type", None))
+        template_id = resolve_template_id(
+            template_id,
+            getattr(self, "current_entity_type", None),
+            league_or_competition=league_or_competition,
+            org_type=org_type,
+            entity_id=entity_id,
+            entity_name=entity_name,
+        )
         self.current_template_id = template_id
         # Entity runs must not inherit official-site context from prior entities.
         self.current_official_site_url = None
@@ -2541,6 +2632,108 @@ class HypothesisDrivenDiscovery:
 
         return sorted_hypotheses[0]
 
+    def _get_diversified_hop_order(self) -> List[HopType]:
+        # Evidence-first diversification: prefer fast, high-signal lanes before
+        # expensive PDF/procurement paths.
+        return [
+            HopType.OFFICIAL_SITE,
+            HopType.PRESS_RELEASE,
+            HopType.CAREERS_PAGE,
+            HopType.LINKEDIN_JOB,
+            HopType.ANNUAL_REPORT,
+            HopType.RFP_PAGE,
+            HopType.TENDERS_PAGE,
+            HopType.PROCUREMENT_PAGE,
+        ]
+
+    def _pick_diversified_hop(self, state) -> Optional[HopType]:
+        last_failed_hop = str(getattr(state, "last_failed_hop", "") or "")
+        if not last_failed_hop:
+            return None
+        order = self._get_diversified_hop_order()
+        position = next((idx for idx, hop in enumerate(order) if hop.value == last_failed_hop), None)
+        if position is None:
+            return None
+        lane_exhausted = getattr(state, "lane_exhausted", {}) if hasattr(state, "lane_exhausted") else {}
+        failure_counts = getattr(state, "hop_failure_counts", {}) if hasattr(state, "hop_failure_counts") else {}
+        for hop in order[position + 1:]:
+            exhausted = bool(isinstance(lane_exhausted, dict) and lane_exhausted.get(hop.value))
+            if exhausted:
+                continue
+            if int(failure_counts.get(hop.value, 0) or 0) >= 2:
+                continue
+            return hop
+        return None
+
+    @staticmethod
+    def _is_procurement_hop_type(hop_type: HopType) -> bool:
+        return hop_type in {HopType.RFP_PAGE, HopType.TENDERS_PAGE, HopType.PROCUREMENT_PAGE}
+
+    def _should_defer_procurement_hops(self, hypothesis, state) -> bool:
+        """
+        Evidence-first policy: avoid expensive procurement lanes until we have
+        at least one evidence-bearing signal from faster lanes.
+        """
+        if not bool(getattr(self, "discovery_policy_evidence_first", False)):
+            return False
+        signal_count = len(getattr(state, "raw_signals", []) or [])
+        if signal_count > 0:
+            return False
+        depth = int(getattr(state, "current_depth", 1) or 1)
+        if depth > 2:
+            return False
+        category = str(getattr(hypothesis, "category", "") or "").lower()
+        # Still allow procurement-first for explicit procurement hypotheses.
+        if any(token in category for token in ("procurement", "rfp", "tender", "supplier", "vendor")):
+            return False
+        return True
+
+    def _should_skip_tender_pdf_scan(self, hop_type: HopType, url: str, state) -> bool:
+        """
+        Guardrail for procurement hops: skip expensive PDF extraction when the
+        resolved page is clearly non-procurement or low-trust.
+        """
+        if not bool(getattr(self, "discovery_policy_evidence_first", False)):
+            return False
+        if not self._is_procurement_hop_type(hop_type):
+            return False
+        normalized = str(url or "").strip().lower()
+        if not normalized:
+            return True
+        host = (urlparse(normalized).netloc or "").lower().lstrip("www.")
+        path = (urlparse(normalized).path or "").lower()
+        query = (urlparse(normalized).query or "").lower()
+        if any(
+            blocked in host
+            for blocked in (
+                "wikipedia.org",
+                "wikidata.org",
+                "linkedin.com",
+                "web.archive.org",
+                "facebook.com",
+                "x.com",
+                "twitter.com",
+            )
+        ):
+            return True
+        procurement_tokens = (
+            "rfp",
+            "tender",
+            "procurement",
+            "supplier",
+            "vendors",
+            "commercial",
+            "partnership",
+        )
+        if not any(token in path or token in query for token in procurement_tokens):
+            return True
+        # Keep early iterations fast; deeper iterations can afford PDF deep-dives.
+        signal_count = len(getattr(state, "raw_signals", []) or [])
+        depth = int(getattr(state, "current_depth", 1) or 1)
+        if signal_count == 0 and depth <= 2:
+            return True
+        return False
+
     def _choose_next_hop(self, hypothesis, state) -> HopType:
         """
         Choose next hop type using MCP-guided scoring instead of depth-based
@@ -2577,6 +2770,14 @@ class HypothesisDrivenDiscovery:
             state.hop_failure_counts = {}
         if not hasattr(state, 'last_failed_hop'):
             state.last_failed_hop = None
+        if not hasattr(state, "lane_exhausted"):
+            state.lane_exhausted = {}
+
+        if bool(getattr(self, "discovery_policy_evidence_first", False)):
+            diversified_hop = self._pick_diversified_hop(state)
+            if diversified_hop is not None:
+                logger.info("   Diversified hop selection after failure: %s", diversified_hop.value)
+                return diversified_hop
 
         forced_procurement_once = bool(getattr(state, "force_procurement_hop_once", False))
         if forced_procurement_once:
@@ -2609,10 +2810,16 @@ class HypothesisDrivenDiscovery:
         # Score each hop type (skip those with too many consecutive failures)
         for hop_type, source_type in hop_source_mapping.items():
             hop_type_str = hop_type.value if hasattr(hop_type, 'value') else str(hop_type)
+            if self._is_procurement_hop_type(hop_type) and self._should_defer_procurement_hops(hypothesis, state):
+                logger.debug("Deferring procurement hop %s until evidence-bearing signal exists", hop_type_str)
+                continue
 
             # Skip hop types with 2+ consecutive failures
             if state.hop_failure_counts.get(hop_type_str, 0) >= max_consecutive_failures:
                 logger.debug(f"Skipping {hop_type_str} (failed {state.hop_failure_counts[hop_type_str]} times consecutively)")
+                continue
+            if bool(getattr(state, "lane_exhausted", {}).get(hop_type_str)):
+                logger.debug("Skipping %s (lane exhausted)", hop_type_str)
                 continue
 
             score = calculate_channel_score(
@@ -2705,6 +2912,7 @@ class HypothesisDrivenDiscovery:
                 'confidence_delta': 0.0,
                 'justification': justification,
                 'evidence_found': '',
+                'dead_end_reason': justification,
                 'cost_usd': 0.0,
                 'scrape_data': scrape_data or {},
                 'performance': performance
@@ -2712,7 +2920,14 @@ class HypothesisDrivenDiscovery:
 
         async def try_additional_candidates(primary_url: str, reason: str) -> Optional[Dict[str, Any]]:
             """Try additional scored URL candidates when the primary scrape path fails."""
-            max_candidates = int(os.getenv("DISCOVERY_MAX_URL_CANDIDATES_PER_HOP", "3"))
+            max_candidates = int(
+                getattr(
+                    self,
+                    "max_url_candidates_per_hop",
+                    int(os.getenv("DISCOVERY_MAX_EVALS_PER_HOP", "2")),
+                )
+                or 2
+            )
             candidates = []
             for candidate in getattr(self, "_last_url_candidates", []):
                 if candidate and candidate != primary_url and candidate not in candidates:
@@ -2766,6 +2981,20 @@ class HypothesisDrivenDiscovery:
                                 "justification": "Evidence appears weakly grounded to target entity; likely league/governing-body spillover",
                                 "evidence_type": "entity_grounding_filter",
                             }
+                    evaluation["_source_tier"] = self._source_tier_for_url(candidate_url, hop_type)
+                    evaluation["_candidate_origin"] = "search"
+                    evaluation["_evidence_quality_score"] = self._evidence_quality_score(
+                        evidence_found=str(evaluation.get("evidence_found") or ""),
+                        content=str(content_text or ""),
+                        hop_type=hop_type,
+                    )
+                    evaluation = self._enforce_policy_decision_constraints(
+                        evaluation=evaluation,
+                        content=str(content_text or ""),
+                        state=state,
+                        hypothesis_id=str(getattr(hypothesis, "hypothesis_id", "") or ""),
+                        hop_type=hop_type,
+                    )
 
                     hop_cost = 0.001
                     self.total_cost_usd += hop_cost
@@ -2778,6 +3007,17 @@ class HypothesisDrivenDiscovery:
                         "confidence_delta": evaluation.get("confidence_delta", 0.0),
                         "justification": evaluation.get("justification", reason),
                         "evidence_found": evaluation.get("evidence_found", ""),
+                        "dead_end_reason": (
+                            (list(evaluation.get("accept_reject_reasons") or [None])[0])
+                            if str(evaluation.get("decision") or "").upper() == "NO_PROGRESS"
+                            else None
+                        ),
+                        "candidate_origin": evaluation.get("_candidate_origin", "search"),
+                        "source_tier": evaluation.get("_source_tier"),
+                        "validation_state": evaluation.get("validation_state", "validated"),
+                        "accept_guard_passed": bool(evaluation.get("accept_guard_passed", False)),
+                        "accept_reject_reasons": list(evaluation.get("accept_reject_reasons") or []),
+                        "evidence_quality_score": evaluation.get("_evidence_quality_score"),
                         "cost_usd": hop_cost,
                         "scrape_data": {
                             "publication_date": content_result.get("publication_date"),
@@ -2840,6 +3080,11 @@ class HypothesisDrivenDiscovery:
                 hop_type=hop_type,
                 entity_name=fallback_entity_name,
             )
+            if bool(getattr(self, "discovery_policy_evidence_first", False)) and derived_url:
+                self._policy_metrics["synthetic_url_attempt_count"] = int(
+                    self._policy_metrics.get("synthetic_url_attempt_count", 0) or 0
+                ) + 1
+                derived_url = None
             if derived_url and not self._is_url_in_no_progress_cooldown(state, hop_type, derived_url):
                 logger.info(
                     "♻️ URL resolution timeout fallback for %s: %s",
@@ -2852,11 +3097,27 @@ class HypothesisDrivenDiscovery:
         performance['url_resolution_ms'] = round((time.perf_counter() - url_resolution_started_at) * 1000, 2)
         if hasattr(self, '_last_url_resolution_metrics'):
             performance['url_resolution'] = self._last_url_resolution_metrics
+        performance["candidate_origin"] = getattr(self, "_last_selected_candidate_origin", None)
 
         if not url:
             consecutive_failures = record_hop_failure()
             logger.warning(f"Could not determine URL for hop type: {hop_type} (consecutive failures: {consecutive_failures})")
             return build_no_progress_result("No URL found for hop")
+        if (
+            bool(getattr(self, "discovery_policy_evidence_first", False))
+            and str(getattr(self, "_last_selected_candidate_origin", "") or "").strip().lower() == "synthetic"
+        ):
+            self._policy_metrics["synthetic_url_attempt_count"] = int(
+                self._policy_metrics.get("synthetic_url_attempt_count", 0) or 0
+            ) + 1
+            return build_no_progress_result("Synthetic URL rejected by evidence-first policy")
+        if bool(getattr(self, "discovery_policy_evidence_first", False)):
+            allowed_origins = {"search", "sitemap", "nav", "internal_search", "crawl", "known_doc_index"}
+            selected_origin = str(getattr(self, "_last_selected_candidate_origin", "") or "").strip().lower()
+            if selected_origin and selected_origin not in allowed_origins:
+                return build_no_progress_result(
+                    f"Candidate origin '{selected_origin}' rejected by evidence-first policy"
+                )
 
         logger.info(f"🔎 Scraping: {url}")
         target_entity_name = (
@@ -3124,10 +3385,13 @@ class HypothesisDrivenDiscovery:
                 # ENHANCEMENT: Extract PDF links from tender pages
                 # This addresses the ICF case where /tenders page contained links to multiple RFP PDFs
                 if hop_type in [HopType.RFP_PAGE, HopType.TENDERS_PAGE, HopType.PROCUREMENT_PAGE]:
-                    pdf_links = self._extract_pdf_links_from_content(
-                        html_content=content_result.get('raw_html', ''),
-                        base_url=url
-                    )
+                    if self._should_skip_tender_pdf_scan(hop_type, url, state):
+                        pdf_links = []
+                    else:
+                        pdf_links = self._extract_pdf_links_from_content(
+                            html_content=content_result.get('raw_html', ''),
+                            base_url=url
+                        )
                     if pdf_links:
                         logger.info(f"📄 Found {len(pdf_links)} PDF links on tender page")
 
@@ -3197,6 +3461,22 @@ class HypothesisDrivenDiscovery:
                         'evidence_type': 'entity_grounding_filter',
                     }
 
+            source_tier = self._source_tier_for_url(url, hop_type)
+            evaluation["_source_tier"] = source_tier
+            evaluation["_candidate_origin"] = getattr(self, "_last_selected_candidate_origin", None)
+            evaluation["_evidence_quality_score"] = self._evidence_quality_score(
+                evidence_found=str(evaluation.get("evidence_found") or ""),
+                content=str(content or ""),
+                hop_type=hop_type,
+            )
+            evaluation = self._enforce_policy_decision_constraints(
+                evaluation=evaluation,
+                content=str(content or ""),
+                state=state,
+                hypothesis_id=str(getattr(hypothesis, "hypothesis_id", "") or ""),
+                hop_type=hop_type,
+            )
+
             if (
                 tender_pdf_extracted
                 and str(evaluation.get("decision") or "").upper() in {"ACCEPT", "WEAK_ACCEPT"}
@@ -3244,6 +3524,17 @@ class HypothesisDrivenDiscovery:
                 'confidence_delta': evaluation.get('confidence_delta', 0.0),
                 'justification': evaluation.get('justification', ''),
                 'evidence_found': evaluation.get('evidence_found', ''),
+                'dead_end_reason': (
+                    (list(evaluation.get('accept_reject_reasons') or [None])[0])
+                    if str(evaluation.get('decision') or '').upper() == 'NO_PROGRESS'
+                    else None
+                ),
+                'candidate_origin': evaluation.get('_candidate_origin', performance.get("candidate_origin")),
+                'source_tier': evaluation.get('_source_tier'),
+                'validation_state': evaluation.get('validation_state', 'validated'),
+                'accept_guard_passed': bool(evaluation.get('accept_guard_passed', False)),
+                'accept_reject_reasons': list(evaluation.get('accept_reject_reasons') or []),
+                'evidence_quality_score': evaluation.get('_evidence_quality_score'),
                 'tender_pdf_extracted': tender_pdf_extracted,
                 'tender_pdf_bonus_applied': bool(evaluation.get('tender_pdf_bonus_applied')),
                 'cost_usd': hop_cost,
@@ -3768,9 +4059,20 @@ class HypothesisDrivenDiscovery:
             'site_specific_attempted': False,
             'search_diagnostics': [],
             'url_policy_reject_counts': {},
+            'synthetic_url_attempt_count': 0,
+            'selected_candidate_origin': None,
         }
+        self._last_selected_candidate_origin = None
         self._last_url_candidates = []
         recent_url_attempts = self._collect_recent_hop_url_attempts(state, hop_type)
+
+        def _select_url(value: Optional[str], origin: str) -> Optional[str]:
+            normalized_value = str(value or "").strip()
+            if not normalized_value:
+                return None
+            self._last_selected_candidate_origin = origin
+            metrics["selected_candidate_origin"] = origin
+            return normalized_value
 
         # Special handling for DOCUMENT hop type - use optimized PDF search
         if hop_type == HopType.DOCUMENT:
@@ -3779,7 +4081,7 @@ class HypothesisDrivenDiscovery:
             pdf_url = await self._search_pdfs_optimized(entity_name)
 
             if pdf_url:
-                return pdf_url
+                return _select_url(pdf_url, "known_doc_index")
 
             # Fall through to standard search if optimized search fails
             logger.warning("Optimized PDF search failed, falling back to standard search")
@@ -3891,7 +4193,7 @@ class HypothesisDrivenDiscovery:
                                 'search_calls_ms': round(metrics['search_calls_ms'], 2),
                                 'validation_ms': round(metrics['validation_ms'], 2)
                             }
-                            return best_url
+                            return _select_url(best_url, "search")
                         top_score = scored_results[0].get('_selection_score', scored_results[0].get('_url_score', 0))
                         second_score = scored_results[1].get('_selection_score', scored_results[1].get('_url_score', 0))
 
@@ -3909,7 +4211,7 @@ class HypothesisDrivenDiscovery:
                                 'search_calls_ms': round(metrics['search_calls_ms'], 2),
                                 'validation_ms': round(metrics['validation_ms'], 2)
                             }
-                            return best_url
+                            return _select_url(best_url, "search")
 
                         validation_started_at = time.perf_counter()
                         valid_results, rejected_results = await self._validate_search_results(
@@ -3948,7 +4250,7 @@ class HypothesisDrivenDiscovery:
                                             'search_calls_ms': round(metrics['search_calls_ms'], 2),
                                             'validation_ms': round(metrics['validation_ms'], 2)
                                         }
-                                        return tender_page_url
+                                        return _select_url(tender_page_url, "search")
 
                             metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
                             self._last_url_resolution_metrics = {
@@ -3956,7 +4258,7 @@ class HypothesisDrivenDiscovery:
                                 'search_calls_ms': round(metrics['search_calls_ms'], 2),
                                 'validation_ms': round(metrics['validation_ms'], 2)
                             }
-                            return best_url
+                            return _select_url(best_url, "search")
 
                     # Fallback: return best scored result without validation
                     if scored_results:
@@ -3980,7 +4282,7 @@ class HypothesisDrivenDiscovery:
                                         'search_calls_ms': round(metrics['search_calls_ms'], 2),
                                         'validation_ms': round(metrics['validation_ms'], 2)
                                     }
-                                    return tender_page_url
+                                    return _select_url(tender_page_url, "search")
 
                         metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
                         self._last_url_resolution_metrics = {
@@ -3988,7 +4290,7 @@ class HypothesisDrivenDiscovery:
                             'search_calls_ms': round(metrics['search_calls_ms'], 2),
                             'validation_ms': round(metrics['validation_ms'], 2)
                         }
-                        return best_url
+                        return _select_url(best_url, "search")
                 else:
                     # For lower-priority hops, still rank by URL score instead of taking first result.
                     scored_results = []
@@ -4029,7 +4331,7 @@ class HypothesisDrivenDiscovery:
                             'search_calls_ms': round(metrics['search_calls_ms'], 2),
                             'validation_ms': round(metrics['validation_ms'], 2)
                         }
-                        return url
+                        return _select_url(url, "search")
 
         if hop_type == HopType.OFFICIAL_SITE:
             derived_url = self._build_official_site_derived_hop_url(
@@ -4046,15 +4348,22 @@ class HypothesisDrivenDiscovery:
                 logger.info("⏭️ Skipping cooled-down official-site derived URL: %s", derived_url)
                 derived_url = None
             if derived_url:
-                logger.info("♻️ Using official-site derived URL fallback: %s", derived_url)
-                self._last_url_candidates = [derived_url]
-                metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
-                self._last_url_resolution_metrics = {
-                    **metrics,
-                    'search_calls_ms': round(metrics['search_calls_ms'], 2),
-                    'validation_ms': round(metrics['validation_ms'], 2)
-                }
-                return derived_url
+                if bool(getattr(self, "discovery_policy_evidence_first", False)):
+                    metrics["synthetic_url_attempt_count"] = int(metrics.get("synthetic_url_attempt_count", 0) or 0) + 1
+                    self._policy_metrics["synthetic_url_attempt_count"] = int(
+                        self._policy_metrics.get("synthetic_url_attempt_count", 0) or 0
+                    ) + 1
+                    logger.info("⛔ Evidence-first policy rejected synthetic official-site fallback URL: %s", derived_url)
+                else:
+                    logger.info("♻️ Using official-site derived URL fallback: %s", derived_url)
+                    self._last_url_candidates = [derived_url]
+                    metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
+                    self._last_url_resolution_metrics = {
+                        **metrics,
+                        'search_calls_ms': round(metrics['search_calls_ms'], 2),
+                        'validation_ms': round(metrics['validation_ms'], 2)
+                    }
+                    return _select_url(derived_url, "synthetic")
             logger.warning(
                 "⚠️ Official-site primary search failed; skipping fallback query loop to preserve timeout budget"
             )
@@ -4076,15 +4385,22 @@ class HypothesisDrivenDiscovery:
             logger.info("⏭️ Skipping cooled-down derived fallback URL for %s: %s", hop_type.value, derived_url)
             derived_url = None
         if derived_url:
-            logger.info("♻️ Using official-site derived fallback URL for %s: %s", hop_type.value, derived_url)
-            self._last_url_candidates = [derived_url]
-            metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
-            self._last_url_resolution_metrics = {
-                **metrics,
-                'search_calls_ms': round(metrics['search_calls_ms'], 2),
-                'validation_ms': round(metrics['validation_ms'], 2)
-            }
-            return derived_url
+            if bool(getattr(self, "discovery_policy_evidence_first", False)):
+                metrics["synthetic_url_attempt_count"] = int(metrics.get("synthetic_url_attempt_count", 0) or 0) + 1
+                self._policy_metrics["synthetic_url_attempt_count"] = int(
+                    self._policy_metrics.get("synthetic_url_attempt_count", 0) or 0
+                ) + 1
+                logger.info("⛔ Evidence-first policy rejected synthetic fallback URL for %s: %s", hop_type.value, derived_url)
+            else:
+                logger.info("♻️ Using official-site derived fallback URL for %s: %s", hop_type.value, derived_url)
+                self._last_url_candidates = [derived_url]
+                metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
+                self._last_url_resolution_metrics = {
+                    **metrics,
+                    'search_calls_ms': round(metrics['search_calls_ms'], 2),
+                    'validation_ms': round(metrics['validation_ms'], 2)
+                }
+                return _select_url(derived_url, "synthetic")
 
         fallback_queries = self._get_fallback_queries(hop_type, entity_name)
 
@@ -4140,7 +4456,7 @@ class HypothesisDrivenDiscovery:
                             'search_calls_ms': round(metrics['search_calls_ms'], 2),
                             'validation_ms': round(metrics['validation_ms'], 2)
                         }
-                        return selected_url
+                        return _select_url(selected_url, "search")
 
         # FINAL FALLBACK: Try site-specific search for RFP-related hops
         # This addresses cases like ACE/MLC where RFP was on entity's own domain
@@ -4156,7 +4472,7 @@ class HypothesisDrivenDiscovery:
                     'search_calls_ms': round(metrics['search_calls_ms'], 2),
                     'validation_ms': round(metrics['validation_ms'], 2)
                 }
-                return site_url
+                return _select_url(site_url, "internal_search")
 
         logger.error(f"❌ All search queries failed for {hop_type}")
         metrics['total_duration_ms'] = round((time.perf_counter() - search_started_at) * 1000, 2)
@@ -4383,6 +4699,135 @@ class HypothesisDrivenDiscovery:
             return
         if normalized_decision in {"NO_PROGRESS", "REJECT"}:
             counts[key] = int(counts.get(key, 0) or 0) + 1
+            if bool(getattr(self, "discovery_policy_evidence_first", False)):
+                if counts[key] >= int(getattr(self, "url_no_progress_cooldown_hits", 2) or 2):
+                    lane_exhausted = getattr(state, "lane_exhausted", None)
+                    if not isinstance(lane_exhausted, dict):
+                        lane_exhausted = {}
+                        setattr(state, "lane_exhausted", lane_exhausted)
+                    lane_exhausted[hop_type.value] = True
+                    self._policy_metrics["dead_end_event_count"] = int(
+                        self._policy_metrics.get("dead_end_event_count", 0) or 0
+                    ) + 1
+
+    @staticmethod
+    def _source_tier_for_url(url: str, hop_type: HopType) -> str:
+        host = (urlparse(str(url or "")).netloc or "").lower().lstrip("www.")
+        path = (urlparse(str(url or "")).path or "").lower()
+        trusted_press_domains = (
+            "bbc.",
+            "reuters.com",
+            "apnews.com",
+            "ft.com",
+            "theathletic.com",
+            "sky.com",
+            "espn.com",
+            "sportbusiness.com",
+        )
+        if host.endswith(".gov.uk") or "companieshouse.gov.uk" in host:
+            return "tier_1"
+        if path.endswith(".pdf"):
+            return "tier_1"
+        if hop_type in {HopType.OFFICIAL_SITE, HopType.ANNUAL_REPORT} and host:
+            return "tier_1"
+        if any(domain in host for domain in trusted_press_domains):
+            return "tier_2"
+        return "tier_3"
+
+    @staticmethod
+    def _evidence_quality_score(
+        *,
+        evidence_found: str,
+        content: str,
+        hop_type: HopType,
+    ) -> float:
+        snippet_len = len(str(evidence_found or "").strip())
+        content_len = len(str(content or "").strip())
+        min_len = 120
+        if hop_type in {HopType.RFP_PAGE, HopType.TENDERS_PAGE, HopType.PROCUREMENT_PAGE}:
+            min_len = 160
+        if hop_type in {HopType.PRESS_RELEASE, HopType.CAREERS_PAGE}:
+            min_len = 90
+        snippet_score = min(1.0, snippet_len / 120.0)
+        content_score = min(1.0, content_len / float(min_len))
+        return round((snippet_score * 0.6) + (content_score * 0.4), 3)
+
+    def _has_trusted_corroboration(self, state, hypothesis_id: str) -> bool:
+        iteration_results = getattr(state, "iteration_results", None)
+        if not isinstance(iteration_results, list):
+            return False
+        for record in iteration_results:
+            if not isinstance(record, dict):
+                continue
+            if str(record.get("hypothesis_id") or "") != str(hypothesis_id or ""):
+                continue
+            result = record.get("result")
+            if not isinstance(result, dict):
+                continue
+            if str(result.get("decision") or "").upper() not in {"ACCEPT", "WEAK_ACCEPT"}:
+                continue
+            if str(result.get("source_tier") or "") in {"tier_1", "tier_2"}:
+                return True
+        return False
+
+    def _enforce_policy_decision_constraints(
+        self,
+        *,
+        evaluation: Dict[str, Any],
+        content: str,
+        state,
+        hypothesis_id: str,
+        hop_type: HopType,
+    ) -> Dict[str, Any]:
+        if not isinstance(evaluation, dict):
+            return evaluation
+        if not bool(getattr(self, "discovery_policy_evidence_first", False)):
+            evaluation.setdefault("validation_state", "validated")
+            return evaluation
+
+        constrained = dict(evaluation)
+        decision = str(constrained.get("decision") or "NO_PROGRESS").upper()
+        reasons: List[str] = []
+        source_tier = str(constrained.get("_source_tier") or "tier_3")
+        evidence_found = str(constrained.get("evidence_found") or "").strip()
+        content_text = str(content or "")
+        is_fallback = str(constrained.get("evidence_type") or "").strip().lower() == "deterministic_fallback"
+
+        if decision == "ACCEPT" and is_fallback:
+            decision = "WEAK_ACCEPT_CANDIDATE"
+            reasons.append("fallback_accept_blocked")
+            self._policy_metrics["fallback_accept_block_count"] = int(
+                self._policy_metrics.get("fallback_accept_block_count", 0) or 0
+            ) + 1
+
+        if decision in {"ACCEPT", "WEAK_ACCEPT", "WEAK_ACCEPT_CANDIDATE"}:
+            if not evidence_found:
+                reasons.append("empty_evidence_found")
+            if not content_text.strip():
+                reasons.append("empty_evidence_content")
+            quality_score = float(constrained.get("_evidence_quality_score") or 0.0)
+            if quality_score < 0.25:
+                reasons.append("low_evidence_quality")
+            if source_tier == "tier_3" and not self._has_trusted_corroboration(state, hypothesis_id):
+                reasons.append("tier3_without_corroboration")
+
+        if decision == "ACCEPT" and reasons:
+            decision = "WEAK_ACCEPT_CANDIDATE"
+        if decision in {"WEAK_ACCEPT", "WEAK_ACCEPT_CANDIDATE"} and reasons:
+            decision = "NO_PROGRESS"
+            constrained["confidence_delta"] = 0.0
+
+        constrained["decision"] = decision
+        constrained["accept_guard_passed"] = decision == "ACCEPT" and not reasons
+        constrained["accept_reject_reasons"] = reasons
+        if decision == "NO_PROGRESS" and reasons:
+            constrained["validation_state"] = "diagnostic"
+        elif decision == "WEAK_ACCEPT_CANDIDATE":
+            constrained["validation_state"] = "candidate"
+            constrained["confidence_delta"] = 0.0
+        else:
+            constrained["validation_state"] = "validated"
+        return constrained
 
     def _build_official_site_derived_hop_url(
         self,
@@ -4390,6 +4835,8 @@ class HypothesisDrivenDiscovery:
         hop_type: HopType,
         entity_name: str,
     ) -> Optional[str]:
+        if bool(getattr(self, "discovery_policy_evidence_first", False)):
+            return None
         base_url = self._normalize_http_url(getattr(self, "current_official_site_url", None))
         if not base_url:
             base_url = self._get_cached_official_site_url(entity_name)
@@ -4873,10 +5320,13 @@ class HypothesisDrivenDiscovery:
         pattern_name = hypothesis.metadata.get('pattern_name', 'unknown')
         template_id = hypothesis.metadata.get('template_id', '')
 
-        # Load template to get early_indicators and keywords
-        TemplateLoader = _load_backend_attr("template_loader", "TemplateLoader")
-        loader = TemplateLoader()
-        template = loader.get_template(template_id) if template_id else None
+        use_template_signals = not bool(getattr(self, "discovery_policy_ignore_templates", False))
+        template = None
+        if use_template_signals:
+            # Load template to get early_indicators and keywords
+            TemplateLoader = _load_backend_attr("template_loader", "TemplateLoader")
+            loader = TemplateLoader()
+            template = loader.get_template(template_id) if template_id else None
 
         # Find matching pattern
         early_indicators = []
@@ -4890,6 +5340,26 @@ class HypothesisDrivenDiscovery:
                     keywords = pattern.get('keywords', [])
                     confidence_weight = pattern.get('weight', confidence_weight)
                     break
+        else:
+            fallback_terms = [str(pattern_name or ""), str(getattr(hypothesis, "statement", "") or "")]
+            keywords = []
+            for term in fallback_terms:
+                for token in str(term).lower().replace("-", " ").split():
+                    cleaned = token.strip(",.():;!?\"'")
+                    if len(cleaned) >= 4 and cleaned not in keywords:
+                        keywords.append(cleaned)
+            generic_hop_terms = {
+                HopType.PRESS_RELEASE: ["announcement", "partnership", "commercial", "news"],
+                HopType.CAREERS_PAGE: ["hiring", "careers", "role", "job"],
+                HopType.OFFICIAL_SITE: ["official", "leadership", "strategy", "program"],
+                HopType.ANNUAL_REPORT: ["report", "governance", "financial", "risk"],
+                HopType.RFP_PAGE: ["rfp", "tender", "procurement", "supplier"],
+                HopType.TENDERS_PAGE: ["rfp", "tender", "procurement", "supplier"],
+                HopType.PROCUREMENT_PAGE: ["rfp", "tender", "procurement", "supplier"],
+            }
+            for token in generic_hop_terms.get(hop_type, []):
+                if token not in keywords:
+                    keywords.append(token)
 
         # Get recent decision history
         recent_history = []
@@ -5331,6 +5801,12 @@ class HypothesisDrivenDiscovery:
             "evidence_type": "deterministic_fallback",
             "temporal_score": "older",
         }
+        if bool(getattr(self, "discovery_policy_evidence_first", False)) and output["decision"] == "ACCEPT":
+            output["decision"] = "WEAK_ACCEPT_CANDIDATE"
+            output["confidence_delta"] = 0.0
+            output["justification"] = (
+                f"{output.get('justification', '')}; fallback ACCEPT downgraded by evidence-first policy"
+            ).strip("; ").strip()
         if trusted_signal:
             output["justification"] = trusted_signal.get("justification") or output["justification"]
             output["evidence_found"] = trusted_signal.get("evidence_found") or output["evidence_found"]
@@ -6319,12 +6795,15 @@ Return JSON:
         if 'decision' not in result:
             logger.error(f"Result missing 'decision' key: {result.keys() if hasattr(result, 'keys') else 'not a dict'}")
             return
+        decision_for_update = str(result.get("decision", "NO_PROGRESS") or "NO_PROGRESS").upper()
+        if decision_for_update == "WEAK_ACCEPT_CANDIDATE":
+            decision_for_update = "NO_PROGRESS"
 
         # Update hypothesis via manager
         updated_hypothesis = await self.hypothesis_manager.update_hypothesis(
             hypothesis_id=hypothesis.hypothesis_id,
             entity_id=state.entity_id,
-            decision=result.get('decision', 'NO_PROGRESS'),
+            decision=decision_for_update,
             confidence_delta=result.get('confidence_delta', 0.0),
             evidence_ref=result.get('url', '')
         )
@@ -6336,7 +6815,7 @@ Return JSON:
             )
             updated_hypothesis = hypothesis
             updated_hypothesis.iterations_attempted += 1
-            decision = result.get('decision', 'NO_PROGRESS')
+            decision = decision_for_update
             if decision == "ACCEPT":
                 updated_hypothesis.iterations_accepted += 1
                 updated_hypothesis.reinforced_count += 1
@@ -6365,7 +6844,29 @@ Return JSON:
         baseline_confidence = float(
             getattr(state, "current_confidence", getattr(updated_hypothesis, "confidence", 0.0)) or 0.0
         )
-        state.update_confidence(baseline_confidence + confidence_delta)
+        if bool(getattr(self, "discovery_policy_evidence_first", False)):
+            prior_entity_confidence = float(getattr(state, "entity_confidence", baseline_confidence) or baseline_confidence)
+            prior_pipeline_confidence = float(getattr(state, "pipeline_confidence", baseline_confidence) or baseline_confidence)
+            decision = str(result.get("decision") or "").upper()
+            validation_state = str(result.get("validation_state") or "validated")
+            evidence_found = str(result.get("evidence_found") or "").strip()
+            is_entity_event = (
+                decision in {"ACCEPT", "WEAK_ACCEPT"}
+                and validation_state == "validated"
+                and bool(evidence_found)
+            )
+            if is_entity_event:
+                next_entity_confidence = max(0.0, min(1.0, prior_entity_confidence + confidence_delta))
+            else:
+                next_entity_confidence = prior_entity_confidence
+            pipeline_delta = -0.02 if decision in {"NO_PROGRESS", "REJECT"} else 0.01
+            next_pipeline_confidence = max(0.0, min(1.0, prior_pipeline_confidence + pipeline_delta))
+            state.entity_confidence = next_entity_confidence
+            state.pipeline_confidence = next_pipeline_confidence
+            composite = (next_entity_confidence * 0.8) + (next_pipeline_confidence * 0.2)
+            state.update_confidence(composite)
+        else:
+            state.update_confidence(baseline_confidence + confidence_delta)
         state.iterations_completed += 1
 
         # Track channel failure/success for MCP-guided hop selection
@@ -6455,6 +6956,12 @@ Return JSON:
         # Only create signals for positive decisions
         if decision not in ['ACCEPT', 'WEAK_ACCEPT']:
             return None
+        if bool(getattr(self, "discovery_policy_evidence_first", False)):
+            guard_passed = bool(result.get("accept_guard_passed", False))
+            source_tier = str(result.get("source_tier") or "")
+            evidence_snippet = str(result.get("evidence_found") or "").strip()
+            if not guard_passed or source_tier not in {"tier_1", "tier_2"} or not evidence_snippet:
+                return None
 
         # Map hypothesis category to signal type
         signal_type_mapping = {
@@ -6531,6 +7038,12 @@ Return JSON:
             'yp_service_fit': hypothesis.metadata.get('yp_service_fit', []),
             'budget_range': hypothesis.metadata.get('budget_range', ''),
             'positioning_strategy': hypothesis.metadata.get('positioning_strategy', ''),
+            'validation_state': result.get('validation_state', 'validated'),
+            'accept_guard_passed': bool(result.get('accept_guard_passed', False)),
+            'accept_reject_reasons': list(result.get('accept_reject_reasons') or []),
+            'candidate_origin': result.get('candidate_origin'),
+            'source_tier': result.get('source_tier'),
+            'evidence_quality_score': result.get('evidence_quality_score'),
         }
 
         # Add MCP matches if present
@@ -6654,6 +7167,16 @@ Return JSON:
             # Only extract ACCEPT and WEAK_ACCEPT signals
             if decision not in ['ACCEPT', 'WEAK_ACCEPT']:
                 continue
+            validation_state = str(result.get("validation_state") or "validated")
+            accept_guard_passed = bool(result.get("accept_guard_passed", False))
+            source_tier = str(result.get("source_tier") or "")
+            if bool(getattr(self, "discovery_policy_evidence_first", False)):
+                if validation_state != "validated":
+                    continue
+                if not accept_guard_passed:
+                    continue
+                if source_tier not in {"tier_1", "tier_2"}:
+                    continue
 
             hypothesis_id = iteration_record.get('hypothesis_id', '')
 
@@ -6689,6 +7212,8 @@ Return JSON:
             # Extract content for evidence
             url = result.get('url', '')
             content_snippet = result.get('evidence_found', '')[:500]
+            if bool(getattr(self, "discovery_policy_evidence_first", False)) and not str(content_snippet).strip():
+                continue
 
             # Create evidence object
             evidence_id = f"{signal_id}_evidence_0"
@@ -6724,6 +7249,12 @@ Return JSON:
                 'yp_service_fit': hypothesis.metadata.get('yp_service_fit', []),
                 'budget_range': hypothesis.metadata.get('budget_range', ''),
                 'positioning_strategy': hypothesis.metadata.get('positioning_strategy', ''),
+                'validation_state': validation_state,
+                'accept_guard_passed': accept_guard_passed,
+                'accept_reject_reasons': list(result.get("accept_reject_reasons") or []),
+                'candidate_origin': result.get('candidate_origin'),
+                'source_tier': result.get('source_tier'),
+                'evidence_quality_score': result.get('evidence_quality_score'),
             }
 
             # Add MCP metadata if available
@@ -6762,6 +7293,15 @@ Return JSON:
                 'evidence_found': content_snippet,
                 'source_url': url,
                 'hop_type': result.get('hop_type', ''),
+                'candidate_origin': result.get('candidate_origin'),
+                'source_tier': result.get('source_tier'),
+                'validation_state': validation_state,
+                'accept_guard_passed': accept_guard_passed,
+                'accept_reject_reasons': list(result.get("accept_reject_reasons") or []),
+                'lane_exhausted': bool(getattr(state, "lane_exhausted", {}).get(result.get('hop_type', ''))),
+                'dead_end_reason': result.get('dead_end_reason'),
+                'content_hash': result.get('performance', {}).get('content_hash') if isinstance(result.get('performance'), dict) else None,
+                'evidence_quality_score': result.get('evidence_quality_score'),
                 'depth': iteration_record.get('depth'),
                 'iteration': iteration_record.get('iteration'),
                 'timestamp': datetime.now(timezone.utc).isoformat(),
@@ -7025,6 +7565,8 @@ Return JSON:
             raw_signals=getattr(state, 'raw_signals', []),  # Signal objects for Ralph Loop
             hypothesis_states=hypothesis_states,  # New: hypothesis state data
             performance_summary=performance_summary,
+            entity_confidence=float(getattr(state, "entity_confidence", state.current_confidence) or 0.0),
+            pipeline_confidence=float(getattr(state, "pipeline_confidence", state.current_confidence) or 0.0),
             timestamp=datetime.now(timezone.utc)
         )
 
@@ -7063,6 +7605,13 @@ Return JSON:
                 'llm_last_status': result.get('llm_last_status'),
                 'selected_url': result.get('url'),
                 'selected_domain': urlparse(result.get('url')).netloc if result.get('url') else None,
+                'candidate_origin': result.get('candidate_origin') or performance.get('candidate_origin'),
+                'source_tier': result.get('source_tier'),
+                'validation_state': result.get('validation_state'),
+                'accept_guard_passed': result.get('accept_guard_passed'),
+                'accept_reject_reasons': result.get('accept_reject_reasons') or [],
+                'evidence_quality_score': result.get('evidence_quality_score'),
+                'lane_exhausted': bool(getattr(state, "lane_exhausted", {}).get(str(iteration_record.get('hop_type') or ""))),
             }
             hop_records.append(record)
 
@@ -7092,6 +7641,11 @@ Return JSON:
             'field_statuses': schema_metrics.get('field_statuses', {}),
             'claims_count': schema_metrics.get('claims_count', 0),
             'verified_fields_count': schema_metrics.get('verified_fields_count', 0),
+            'synthetic_url_attempt_count': int((getattr(self, "_policy_metrics", {}) or {}).get("synthetic_url_attempt_count", 0) or 0),
+            'dead_end_event_count': int((getattr(self, "_policy_metrics", {}) or {}).get("dead_end_event_count", 0) or 0),
+            'fallback_accept_block_count': int((getattr(self, "_policy_metrics", {}) or {}).get("fallback_accept_block_count", 0) or 0),
+            'entity_confidence': float(getattr(state, "entity_confidence", getattr(state, "current_confidence", 0.0)) or 0.0),
+            'pipeline_confidence': float(getattr(state, "pipeline_confidence", getattr(state, "current_confidence", 0.0)) or 0.0),
         }
 
     def _build_failure_result(
@@ -7419,6 +7973,65 @@ Return JSON:
         else:
             return f'"{entity_name}" {" ".join(relevant_keywords)}'
 
+    def _compact_signal_text_for_query(self, text: str, max_terms: int = 8) -> str:
+        """Reduce long natural-language signal text into search-friendly keyword terms."""
+        import re
+
+        raw = re.sub(r"[^a-zA-Z0-9\\s]", " ", str(text or "").lower())
+        tokens = [tok for tok in raw.split() if len(tok) >= 4]
+        if not tokens:
+            return ""
+
+        stopwords = {
+            "this", "that", "with", "from", "into", "where", "when", "which", "about",
+            "before", "after", "against", "using", "used", "use", "their", "there",
+            "they", "them", "have", "has", "will", "would", "could", "should",
+            "platform", "baseline", "unknown", "metadata", "quality", "sufficient",
+            "outreach", "prioritize", "improves", "conversion", "entity", "specific",
+            "targeted", "discovery", "hops", "official", "announcements", "updates",
+        }
+
+        compact: List[str] = []
+        for token in tokens:
+            if token in stopwords:
+                continue
+            if token in compact:
+                continue
+            compact.append(token)
+            if len(compact) >= max_terms:
+                break
+
+        return " ".join(compact)
+
+    def _is_process_meta_signal(self, text: str) -> bool:
+        """Return True when text describes pipeline process rather than entity evidence."""
+        lowered = str(text or "").strip().lower()
+        if not lowered:
+            return True
+        blocked_phrases = (
+            "metadata quality is sufficient",
+            "run targeted discovery hops",
+            "action quality improves",
+            "trigger dossier refresh",
+            "re run recent news collection",
+            "re-run recent news collection",
+            "depth is constrained",
+            "outreach conversion improves",
+            "baseline is unknown",
+            "baseline unknown",
+            "source constraints",
+            "dossier refresh",
+            "discovery hops",
+            "collection with source constraints",
+        )
+        if any(phrase in lowered for phrase in blocked_phrases):
+            return True
+        if "dossier" in lowered and ("refresh" in lowered or "collection" in lowered):
+            return True
+        if "discovery" in lowered and ("hops" in lowered or "constrained" in lowered):
+            return True
+        return False
+
     async def run_discovery_with_dossier_context(
         self,
         entity_id: str,
@@ -7450,11 +8063,17 @@ Return JSON:
         resolved_template_id = resolve_template_id(
             template_id or dossier.get("metadata", {}).get("template_id"),
             entity_type or dossier.get("metadata", {}).get("entity_type") or getattr(self, "current_entity_type", None),
+            league_or_competition=dossier.get("metadata", {}).get("league_or_competition"),
+            org_type=dossier.get("metadata", {}).get("org_type"),
+            entity_id=entity_id,
+            entity_name=entity_name,
         )
         self.current_template_id = resolved_template_id
         resolved_entity_type = entity_type or dossier.get('metadata', {}).get('entity_type') or getattr(self, "current_entity_type", None)
         if resolved_entity_type:
             self.current_entity_type = resolved_entity_type
+        if bool(getattr(self, "discovery_policy_evidence_first", False)):
+            max_iterations = min(int(max_iterations or 5), int(os.getenv("DISCOVERY_MAX_HOPS", "5")))
 
         # Extract procurement signals from dossier
         procurement_signals = []
@@ -7488,6 +8107,17 @@ Return JSON:
         logger.info(f"📋 Found {len(procurement_signals)} procurement signals")
         logger.info(f"📋 Found {len(capability_signals)} capability signals")
 
+        procurement_signals = sorted(
+            procurement_signals,
+            key=lambda s: float(s.get("confidence", 0.0) or 0.0),
+            reverse=True,
+        )[:2]
+        capability_signals = sorted(
+            capability_signals,
+            key=lambda s: float(s.get("confidence", 0.0) or 0.0),
+            reverse=True,
+        )[:3]
+
         # Convert dossier signals to hypotheses
         dossier_hypotheses = []
 
@@ -7519,12 +8149,14 @@ Return JSON:
 
         for signal in procurement_signals:
             # Create targeted search for procurement opportunities
-            query = f'"{entity_name}" {signal.get("text", "")} procurement tender'
+            query_tail = self._compact_signal_text_for_query(signal.get("text", ""), max_terms=6)
+            query = f'"{entity_name}" {query_tail} procurement tender'.strip()
             targeted_queries.append(query)
 
         for signal in capability_signals:
             # Create verification search for capabilities
-            query = f'"{entity_name}" {signal.get("text", "")} platform'
+            query_tail = self._compact_signal_text_for_query(signal.get("text", ""), max_terms=6)
+            query = f'"{entity_name}" {query_tail} careers partnership commercial annual report'.strip()
             targeted_queries.append(query)
 
         runtime_overrides = self._get_template_runtime_overrides()
@@ -7590,6 +8222,10 @@ Return JSON:
                 "template_id": resolve_template_id(
                     resolved_template_id,
                     resolved_entity_type,
+                    league_or_competition=dossier.get("metadata", {}).get("league_or_competition"),
+                    org_type=dossier.get("metadata", {}).get("org_type"),
+                    entity_id=entity_id,
+                    entity_name=entity_name,
                 ),
                 "max_iterations": max_iterations,
             }
@@ -7697,6 +8333,12 @@ Return JSON:
             "changed_content_reevaluation_budget": 0,
         }
         empty_response_no_progress_streak = 0
+        if not hasattr(state, "entity_confidence"):
+            setattr(state, "entity_confidence", float(getattr(state, "current_confidence", 0.0) or 0.0))
+        if not hasattr(state, "pipeline_confidence"):
+            setattr(state, "pipeline_confidence", float(getattr(state, "current_confidence", 0.0) or 0.0))
+        if not hasattr(state, "lane_exhausted"):
+            setattr(state, "lane_exhausted", {})
 
         for iteration in range(1, max_iterations + 1):
             iteration_started_at = time.perf_counter()
@@ -7728,11 +8370,43 @@ Return JSON:
                     "depth": state.current_depth,
                 })
 
-            result = await self._execute_hop(
-                hop_type=hop_type,
-                hypothesis=top_hypothesis,
-                state=state,
-            )
+            try:
+                result = await asyncio.wait_for(
+                    self._execute_hop(
+                        hop_type=hop_type,
+                        hypothesis=top_hypothesis,
+                        state=state,
+                    ),
+                    timeout=float(getattr(self, "iteration_timeout_seconds", 30.0) or 30.0),
+                )
+            except asyncio.TimeoutError:
+                logger.warning(
+                    "Iteration %s timed out after %.1fs for hop %s",
+                    iteration,
+                    float(getattr(self, "iteration_timeout_seconds", 30.0) or 30.0),
+                    hop_type.value if hasattr(hop_type, "value") else str(hop_type),
+                )
+                state.hop_failure_counts[hop_type.value] = int(state.hop_failure_counts.get(hop_type.value, 0) or 0) + 1
+                state.last_failed_hop = hop_type.value
+                lane_exhausted = getattr(state, "lane_exhausted", None)
+                if not isinstance(lane_exhausted, dict):
+                    lane_exhausted = {}
+                    setattr(state, "lane_exhausted", lane_exhausted)
+                if state.hop_failure_counts[hop_type.value] >= 2:
+                    lane_exhausted[hop_type.value] = True
+                    self._policy_metrics["dead_end_event_count"] = int(
+                        self._policy_metrics.get("dead_end_event_count", 0) or 0
+                    ) + 1
+                result = {
+                    "hop_type": hop_type.value if hasattr(hop_type, "value") else str(hop_type),
+                    "decision": "NO_PROGRESS",
+                    "confidence_delta": 0.0,
+                    "justification": "Iteration timed out",
+                    "evidence_found": "",
+                    "validation_state": "diagnostic",
+                    "accept_guard_passed": False,
+                    "accept_reject_reasons": ["iteration_timeout"],
+                }
 
             if not result:
                 logger.warning(f"Hop execution failed for {hop_type}")
@@ -7942,6 +8616,8 @@ Return JSON:
                 if len(sentence) < 24:
                     continue
                 sentence = sentence[:260]
+                if self._is_process_meta_signal(sentence):
+                    continue
                 dedupe_key = (signal_type, sentence.lower())
                 if dedupe_key in seen:
                     continue
@@ -7969,6 +8645,8 @@ Return JSON:
         confidence = signal.get('confidence', 0.50)
 
         if not text:
+            return None
+        if self._is_process_meta_signal(text):
             return None
 
         if isinstance(confidence, (int, float)) and confidence > 1:

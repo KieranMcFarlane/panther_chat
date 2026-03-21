@@ -203,6 +203,44 @@ class TestDossierDiscoveryIntegration:
         logger.info(f"✅ Initialized {count} hypotheses from dossier")
 
     @pytest.mark.asyncio
+    async def test_initialize_from_dossier_generates_unique_ids(self, mock_claude_discovery, mock_brightdata_discovery):
+        """Warm-start should not create duplicate hypothesis IDs for same category."""
+        from hypothesis_driven_discovery import HypothesisDrivenDiscovery
+
+        discovery = HypothesisDrivenDiscovery(
+            claude_client=mock_claude_discovery,
+            brightdata_client=mock_brightdata_discovery
+        )
+
+        duplicate_like = [
+            {
+                "statement": "Digital maturity baseline is unknown",
+                "category": "digital_transformation",
+                "confidence": 0.54,
+                "signal_type": "[CAPABILITY]",
+                "pattern": "digital_transform"
+            },
+            {
+                "statement": "Digital maturity baseline is unknown",
+                "category": "digital_transformation",
+                "confidence": 0.54,
+                "signal_type": "[CAPABILITY]",
+                "pattern": "digital_transform"
+            },
+        ]
+
+        count = await discovery.initialize_from_dossier("test-entity", duplicate_like)
+        assert count == 2
+
+        active_hypotheses = discovery._dossier_hypotheses_cache.get("test-entity", [])
+        ids = [h.hypothesis_id for h in active_hypotheses]
+        assert len(ids) == len(set(ids))
+
+        manager_hypotheses = discovery.hypothesis_manager._hypotheses_cache.get("test-entity", [])
+        manager_ids = [h.hypothesis_id for h in manager_hypotheses]
+        assert len(manager_ids) == len(set(manager_ids))
+
+    @pytest.mark.asyncio
     async def test_signal_type_to_category_mapping(self, mock_claude_discovery, mock_brightdata_discovery):
         """Test signal type to discovery category mapping"""
         from hypothesis_driven_discovery import HypothesisDrivenDiscovery

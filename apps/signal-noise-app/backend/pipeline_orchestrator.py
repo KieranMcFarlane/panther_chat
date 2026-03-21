@@ -15,10 +15,24 @@ from __future__ import annotations
 import asyncio
 import os
 import time
+from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any, Awaitable, Callable, Dict, List, Optional
 from urllib.parse import urlparse
+
+try:
+    from backend.pipeline_run_metadata import canonicalize_phase_details_by_phase, build_phase_status_map
+except ImportError:
+    from pipeline_run_metadata import canonicalize_phase_details_by_phase, build_phase_status_map
+try:
+    from backend.persistence_coordinator import DualWritePersistenceCoordinator
+except ImportError:
+    from persistence_coordinator import DualWritePersistenceCoordinator
+try:
+    from backend.objective_profiles import DEFAULT_PIPELINE_OBJECTIVE, normalize_run_objective
+except ImportError:
+    from objective_profiles import DEFAULT_PIPELINE_OBJECTIVE, normalize_run_objective
 
 
 @dataclass
@@ -38,15 +52,32 @@ class PipelineOrchestrator:
         ralph_validator,
         graphiti_service,
         dashboard_scorer,
+        baseline_monitoring_runner=None,
+        persistence_coordinator=None,
     ):
         self.dossier_generator = dossier_generator
         self.discovery = discovery
         self.ralph_validator = ralph_validator
         self.graphiti_service = graphiti_service
         self.dashboard_scorer = dashboard_scorer
+        self.baseline_monitoring_runner = baseline_monitoring_runner
         self.discovery_timeout_seconds = int(os.getenv("ENTITY_DISCOVERY_TIMEOUT_SECONDS", "90"))
         self.discovery_max_iterations = int(os.getenv("ENTITY_DISCOVERY_MAX_ITERATIONS", "8"))
         self.discovery_hard_timeout = os.getenv("ENTITY_DISCOVERY_HARD_TIMEOUT", "0").lower() in {"1", "true", "yes"}
+        self.acceptance_min_confidence = float(os.getenv("PIPELINE_ACCEPTANCE_MIN_CONFIDENCE", "0.55"))
+        self.acceptance_min_signals = int(os.getenv("PIPELINE_ACCEPTANCE_MIN_SIGNALS", "2"))
+        self.run_profile = os.getenv("PIPELINE_RUN_PROFILE", "bounded_production")
+        self.require_dual_write = os.getenv("PIPELINE_REQUIRE_DUAL_WRITE", "true").lower() in {"1", "true", "yes"}
+        self.persistence_coordinator = persistence_coordinator or self._build_default_persistence_coordinator()
+
+    def _build_default_persistence_coordinator(self):
+        supabase_writer = getattr(self.graphiti_service, "persist_pipeline_record_supabase", None)
+        falkordb_writer = getattr(self.graphiti_service, "persist_pipeline_record_falkordb", None)
+        return DualWritePersistenceCoordinator(
+            supabase_writer=supabase_writer if callable(supabase_writer) else None,
+            falkordb_writer=falkordb_writer if callable(falkordb_writer) else None,
+            max_attempts=int(os.getenv("PIPELINE_DUAL_WRITE_MAX_ATTEMPTS", "3")),
+        )
 
     async def run_entity_pipeline(
         self,
@@ -54,9 +85,11 @@ class PipelineOrchestrator:
         entity_name: str,
         entity_type: str = "CLUB",
         priority_score: int = 50,
+        run_objective: Optional[str] = None,
         initial_dossier: Optional[Dict[str, Any]] = None,
         phase_callback: Optional[Callable[[str, Dict[str, Any]], Awaitable[None]]] = None,
     ) -> Dict[str, Any]:
+        objective = normalize_run_objective(run_objective, default=DEFAULT_PIPELINE_OBJECTIVE)
         phase_results: Dict[str, Dict[str, Any]] = {
             "dossier_generation": {"status": "pending"},
             "discovery": {"status": "pending"},
@@ -72,6 +105,7 @@ class PipelineOrchestrator:
                 entity_name=entity_name,
                 entity_type=entity_type,
                 priority_score=priority_score,
+                run_objective=objective,
             )
             dossier = self._coerce_dossier_payload(dossier)
             await self._emit_phase_update(
@@ -108,6 +142,7 @@ class PipelineOrchestrator:
                 entity_type=entity_type,
                 dossier=dossier,
                 phase_callback=phase_callback,
+                run_objective=objective,
             )
             discovery_budget = getattr(self, "_last_discovery_budget", {})
             raw_signals = self._extract_raw_signals(discovery_result)
@@ -181,15 +216,90 @@ class PipelineOrchestrator:
             "active_probability": scores.get("active_probability"),
             "procurement_maturity": scores.get("procurement_maturity"),
         }
+        failure_taxonomy = self._build_failure_taxonomy(
+            discovery_result=discovery_result,
+            phase_results=phase_results,
+            raw_signals=raw_signals,
+        )
+        temporal_status = str((phase_results.get("temporal_persistence") or {}).get("status") or "").lower()
+        if temporal_status == "completed":
+            persistence_status = await self.persistence_coordinator.persist_run_artifacts(
+                run_id=f"{entity_id}-{int(time.time())}",
+                entity_id=entity_id,
+                phase="dashboard_scoring",
+                record_type="pipeline_run",
+                record_id=entity_id,
+                payload={
+                    "entity_name": entity_name,
+                    "entity_type": entity_type,
+                    "dossier": dossier,
+                    "discovery_result": self._serialize_discovery_result(discovery_result),
+                    "scores": scores,
+                    "phase_results": phase_results,
+                    "validated_signal_count": len(validated_signals),
+                    "rfp_count": len(validated_rfps),
+                },
+            )
+        else:
+            persistence_status = {
+                "dual_write_ok": False,
+                "supabase": {"ok": False, "attempts": 0, "error_class": "phase_not_completed"},
+                "falkordb": {"ok": False, "attempts": 0, "error_class": "phase_not_completed"},
+                "reconcile_required": False,
+                "reconciliation_payload": None,
+            }
+        dual_write_ok = bool(persistence_status.get("dual_write_ok"))
+        if temporal_status == "completed" and self.require_dual_write and not dual_write_ok:
+            phase_results["temporal_persistence"] = {
+                "status": "failed",
+                "error": "dual_write_incomplete",
+            }
+            failure_taxonomy["supabase_write_failure"] = int(not (persistence_status.get("supabase") or {}).get("ok"))
+            failure_taxonomy["falkordb_write_failure"] = int(not (persistence_status.get("falkordb") or {}).get("ok"))
+            failure_taxonomy["dual_write_incomplete"] = 1
+        else:
+            failure_taxonomy["supabase_write_failure"] = 0
+            failure_taxonomy["falkordb_write_failure"] = 0
+            failure_taxonomy["dual_write_incomplete"] = 0
+        acceptance_gate = self._build_acceptance_gate(
+            discovery_result=discovery_result,
+            phase_results=phase_results,
+            raw_signals=raw_signals,
+            validated_signals=validated_signals,
+            dual_write_ok=dual_write_ok,
+            enforce_dual_write_gate=(temporal_status == "completed"),
+        )
+        degraded_mode = any(
+            (details or {}).get("status") in {"failed", "skipped"}
+            for details in phase_results.values()
+            if isinstance(details, dict)
+        )
 
+        canonical_phase_details = canonicalize_phase_details_by_phase(phase_results)
         return {
             "entity_id": entity_id,
             "entity_name": entity_name,
-            "phases": phase_results,
+            "objective": objective,
+            "objective_result": {
+                "validated_signal_count": len(validated_signals),
+                "rfp_count": len(validated_rfps),
+                "final_confidence": getattr(discovery_result, "final_confidence", None),
+                "acceptance_passed": bool(acceptance_gate.get("passed")),
+                "acceptance_reasons": acceptance_gate.get("reasons", []),
+            },
+            "llm_efficiency_metrics": self._extract_llm_efficiency_metrics(discovery_result),
+            "phases": build_phase_status_map(canonical_phase_details),
+            "phase_details_by_phase": deepcopy(canonical_phase_details),
             "validated_signal_count": len(validated_signals),
             "capability_signal_count": len(capability_signals),
             "rfp_count": len(validated_rfps),
             "sales_readiness": scores.get("sales_readiness"),
+            "acceptance_gate": acceptance_gate,
+            "failure_taxonomy": failure_taxonomy,
+            "run_profile": self.run_profile,
+            "degraded_mode": degraded_mode,
+            "dual_write_ok": dual_write_ok,
+            "persistence_status": persistence_status,
             "artifacts": {
                 "dossier_id": entity_id,
                 "dossier": dossier,
@@ -209,6 +319,7 @@ class PipelineOrchestrator:
         entity_name: str,
         entity_type: str,
         priority_score: int,
+        run_objective: str,
     ) -> Dict[str, Any]:
         universal = getattr(self.dossier_generator, "generate_universal_dossier", None)
         if callable(universal):
@@ -217,14 +328,24 @@ class PipelineOrchestrator:
                 entity_name=entity_name,
                 entity_type=entity_type,
                 priority_score=priority_score,
+                run_objective=run_objective,
             )
 
-        return await self.dossier_generator.generate_dossier(
-            entity_id=entity_id,
-            entity_name=entity_name,
-            entity_type=entity_type,
-            priority_score=priority_score,
-        )
+        try:
+            return await self.dossier_generator.generate_dossier(
+                entity_id=entity_id,
+                entity_name=entity_name,
+                entity_type=entity_type,
+                priority_score=priority_score,
+                run_objective=run_objective,
+            )
+        except TypeError:
+            return await self.dossier_generator.generate_dossier(
+                entity_id=entity_id,
+                entity_name=entity_name,
+                entity_type=entity_type,
+                priority_score=priority_score,
+            )
 
     async def _run_discovery(
         self,
@@ -232,6 +353,7 @@ class PipelineOrchestrator:
         entity_name: str,
         entity_type: str,
         dossier: Dict[str, Any],
+        run_objective: str,
         phase_callback: Optional[Callable[[str, Dict[str, Any]], Awaitable[None]]] = None,
     ):
         started_at = time.perf_counter()
@@ -246,6 +368,7 @@ class PipelineOrchestrator:
             entity_type=entity_type,
             max_iterations=self.discovery_max_iterations,
             progress_callback=emit_discovery_progress,
+            run_objective=run_objective,
         )
 
         if self.discovery_hard_timeout:
@@ -263,6 +386,26 @@ class PipelineOrchestrator:
         }
 
         return result
+
+    def _extract_llm_efficiency_metrics(self, discovery_result: Any) -> Dict[str, int]:
+        summary = (
+            getattr(discovery_result, "performance_summary", None)
+            if discovery_result is not None
+            else None
+        )
+        if not isinstance(summary, dict):
+            return {
+                "llm_call_count": 0,
+                "llm_fallback_count": 0,
+                "length_stop_count": 0,
+                "schema_fail_count": 0,
+            }
+        return {
+            "llm_call_count": int(summary.get("llm_call_count", 0) or 0),
+            "llm_fallback_count": int(summary.get("llm_fallback_count", 0) or 0),
+            "length_stop_count": int(summary.get("length_stop_count", 0) or 0),
+            "schema_fail_count": int(summary.get("schema_fail_count", 0) or 0),
+        }
 
     async def _run_ralph_validation(
         self,
@@ -307,10 +450,16 @@ class PipelineOrchestrator:
                 episode = await self.graphiti_service.add_discovery_episode(
                     entity_id=entity_id,
                     entity_name=entity_name,
+                    entity_type="Entity",
                     episode_type=signal.get("type", "DISCOVERY_SIGNAL"),
-                    content=signal.get("statement") or signal.get("text") or "Validated discovery signal",
+                    description=signal.get("statement") or signal.get("text") or "Validated discovery signal",
                     source="pipeline_orchestrator",
                     confidence=signal.get("confidence"),
+                    url=signal.get("url"),
+                    metadata={
+                        "entity_id": entity_id,
+                        "signal_type": signal.get("type"),
+                    },
                 )
                 episodes.append(episode)
 
@@ -418,7 +567,98 @@ class PipelineOrchestrator:
             "signals_discovered": getattr(discovery_result, "signals_discovered", []),
             "hypotheses": getattr(discovery_result, "hypotheses", []),
             "performance_summary": getattr(discovery_result, "performance_summary", {}),
+            "parse_path": getattr(discovery_result, "parse_path", None),
+            "llm_last_status": getattr(discovery_result, "llm_last_status", None),
         }
+
+    def _build_acceptance_gate(
+        self,
+        *,
+        discovery_result: Any,
+        phase_results: Dict[str, Dict[str, Any]],
+        raw_signals: List[Dict[str, Any]],
+        validated_signals: List[Dict[str, Any]],
+        dual_write_ok: bool,
+        enforce_dual_write_gate: bool,
+    ) -> Dict[str, Any]:
+        final_confidence = self._read_discovery_metric(discovery_result, "final_confidence")
+        signals_discovered = len(validated_signals)
+        raw_signal_count = len(raw_signals)
+        reasons: List[str] = []
+        discovery_status = (phase_results.get("discovery") or {}).get("status")
+        if discovery_status != "completed":
+            reasons.append("discovery_failed")
+        if final_confidence is None or float(final_confidence) < self.acceptance_min_confidence:
+            reasons.append("confidence_below_threshold")
+        if signals_discovered < self.acceptance_min_signals:
+            reasons.append("signals_below_threshold")
+        if enforce_dual_write_gate and self.require_dual_write and not dual_write_ok:
+            reasons.append("dual_write_incomplete")
+        return {
+            "passed": len(reasons) == 0,
+            "reasons": reasons,
+            "thresholds": {
+                "final_confidence": self.acceptance_min_confidence,
+                "signals_discovered": self.acceptance_min_signals,
+            },
+            "observed": {
+                "final_confidence": final_confidence,
+                "signals_discovered": signals_discovered,
+                "raw_signals_discovered": raw_signal_count,
+                "dual_write_ok": dual_write_ok,
+            },
+        }
+
+    def _build_failure_taxonomy(
+        self,
+        *,
+        discovery_result: Any,
+        phase_results: Dict[str, Dict[str, Any]],
+        raw_signals: List[Dict[str, Any]],
+    ) -> Dict[str, int]:
+        taxonomy = {
+            "import_context_failure": 0,
+            "llm_empty_response": 0,
+            "schema_gate_fallback": 0,
+            "low_signal_content": 0,
+            "entity_grounding_reject": 0,
+            "supabase_write_failure": 0,
+            "falkordb_write_failure": 0,
+            "dual_write_incomplete": 0,
+        }
+        discovery_payload = self._serialize_discovery_result(discovery_result)
+        parse_path = str(discovery_payload.get("parse_path") or "").lower()
+        llm_last_status = str(discovery_payload.get("llm_last_status") or "").lower()
+        discovery_error = str((phase_results.get("discovery") or {}).get("error") or "").lower()
+        performance_summary = discovery_payload.get("performance_summary") or {}
+        hop_timings = performance_summary.get("hop_timings") if isinstance(performance_summary, dict) else []
+
+        if "schema_gate" in parse_path or "fallback" in parse_path:
+            taxonomy["schema_gate_fallback"] = 1
+        if (
+            "empty" in llm_last_status
+            or "timeout" in llm_last_status
+            or "empty" in discovery_error
+            or "timeout" in discovery_error
+        ):
+            taxonomy["llm_empty_response"] = 1
+        if "import_context_failure" in discovery_error or "no module named" in discovery_error:
+            taxonomy["import_context_failure"] = 1
+        if len(raw_signals) < self.acceptance_min_signals:
+            taxonomy["low_signal_content"] = 1
+        if isinstance(hop_timings, list) and any(
+            str((hop or {}).get("evidence_type") or "").strip().lower() == "entity_grounding_filter"
+            for hop in hop_timings
+            if isinstance(hop, dict)
+        ):
+            taxonomy["entity_grounding_reject"] = 1
+
+        return taxonomy
+
+    def _read_discovery_metric(self, discovery_result: Any, key: str) -> Any:
+        if isinstance(discovery_result, dict):
+            return discovery_result.get(key)
+        return getattr(discovery_result, key, None)
 
     def _build_unified_rfp_record(
         self,

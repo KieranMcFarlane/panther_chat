@@ -87,6 +87,7 @@ class HypothesisRepository:
 
         self.db: Optional[FalkorDB] = None
         self.graph = None
+        self.auto_reconnect = str(os.getenv("FALKORDB_AUTO_RECONNECT", "true")).strip().lower() in {"1", "true", "yes", "on"}
 
         logger.info(f"🔬 HypothesisRepository (Native) initialized (graph: {self.database})")
 
@@ -149,6 +150,17 @@ class HypothesisRepository:
         """
         return self.graph is not None
 
+    async def _ensure_connection(self) -> bool:
+        """
+        Ensure repository has an active graph handle; reconnect lazily when enabled.
+        """
+        if self._is_connected():
+            return True
+        if not self.auto_reconnect:
+            return False
+        logger.info("🔄 HypothesisRepository reconnect attempt (graph handle missing)")
+        return await self.initialize()
+
     async def _create_indexes(self):
         """Create indexes for performance"""
         try:
@@ -188,7 +200,7 @@ class HypothesisRepository:
         """
         try:
             # Check connection first
-            if not self._is_connected():
+            if not await self._ensure_connection():
                 logger.warning(f"⚠️ FalkorDB not connected, skipping hypothesis save: {hypothesis.hypothesis_id}")
                 return False
 
@@ -273,7 +285,7 @@ class HypothesisRepository:
 
         try:
             # Check connection first
-            if not self._is_connected():
+            if not await self._ensure_connection():
                 logger.warning(f"⚠️ FalkorDB not connected, cannot get hypothesis: {hypothesis_id}")
                 return None
 

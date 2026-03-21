@@ -20,13 +20,18 @@ Questions are categorized by type:
 """
 
 import logging
+import os
 import re
 from datetime import datetime, timezone
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
 
-from schemas import DossierQuestion, DossierQuestionType, DossierQuestionStatus, DossierSection
-from claude_client import ClaudeClient
+try:
+    from backend.schemas import DossierQuestion, DossierQuestionType, DossierQuestionStatus, DossierSection
+    from backend.claude_client import ClaudeClient
+except ImportError:
+    from schemas import DossierQuestion, DossierQuestionType, DossierQuestionStatus, DossierSection
+    from claude_client import ClaudeClient
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +52,10 @@ class DossierQuestionExtractor:
             claude_client: Claude client for AI-powered extraction
         """
         self.claude_client = claude_client
+        self.disable_ai_questions = (
+            str(os.getenv("DOSSIER_DISABLE_AI_QUESTION_EXTRACTION", "")).strip().lower()
+            in {"1", "true", "yes", "on"}
+        )
 
         # Section-specific question templates
         self.section_question_templates = {
@@ -151,8 +160,9 @@ class DossierQuestionExtractor:
         question_types = section_template.get("types", [DossierQuestionType.GENERAL])
 
         # Extract using patterns
+        section_text = self._normalize_section_text(section.content)
         for pattern in self.question_patterns:
-            matches = re.findall(pattern, ' '.join(section.content), re.IGNORECASE)
+            matches = re.findall(pattern, section_text, re.IGNORECASE)
             for match in matches[:max_questions]:
                 # Clean up the question
                 question_text = match.strip()
@@ -197,6 +207,16 @@ class DossierQuestionExtractor:
                 question_types
             )
             questions.extend(ai_questions)
+        if len(questions) < max_questions:
+            questions.extend(
+                self._generate_template_fallback_questions(
+                    section=section,
+                    entity_name=entity_name,
+                    count=max_questions - len(questions),
+                    question_types=question_types,
+                    offset=len(questions),
+                )
+            )
 
         logger.info(f"Extracted {len(questions)} questions from section {section.id}")
         return questions
@@ -392,9 +412,15 @@ class DossierQuestionExtractor:
         Returns:
             List of AI-generated questions
         """
+        if self.disable_ai_questions:
+            logger.info(
+                "AI question generation disabled via DOSSIER_DISABLE_AI_QUESTION_EXTRACTION for section %s",
+                section.id,
+            )
+            return []
         try:
             # Build prompt
-            section_content = '\n'.join(section.content[:500])  # Limit content for cost
+            section_content = self._normalize_section_text(section.content)[:5000]
 
             prompt = f"""Analyze this dossier section and generate {count} specific intelligence questions that need to be answered.
 
@@ -420,20 +446,21 @@ Questions:"""
             )
 
             # Parse response
-            if isinstance(response, dict):
-                response_text = str(response.get("content") or "")
-            else:
-                response_text = str(response or "")
+            response_text = self._coerce_response_text(response)
             questions = []
             for i, line in enumerate(response_text.strip().split('\n')[:count]):
-                question_text = line.strip()
+                question_text = re.sub(r'^\s*[-*•\d\.\)\(]+\s*', '', line.strip())
 
                 # Skip empty lines
                 if not question_text or len(question_text) < 15:
                     continue
 
-                # Skip lines that don't look like questions
-                if not question_text.endswith('?'):
+                # Recover lightly malformed output (bullets/prose) into a question format.
+                if '?' in question_text:
+                    question_text = question_text.split('?', 1)[0].strip() + '?'
+                elif len(question_text) >= 20:
+                    question_text = question_text.rstrip('.:;') + '?'
+                else:
                     continue
 
                 question_id = f"q_ai_{section.id}_{i}_{int(datetime.now(timezone.utc).timestamp())}"
@@ -461,6 +488,84 @@ Questions:"""
         except Exception as e:
             logger.error(f"Failed to generate AI questions: {e}")
             return []
+
+    def _normalize_section_text(self, content: Any) -> str:
+        if isinstance(content, list):
+            parts = [str(item).strip() for item in content if str(item).strip()]
+            return "\n".join(parts)
+        return str(content or "").strip()
+
+    def _coerce_response_text(self, response: Any) -> str:
+        if isinstance(response, dict):
+            for key in ("content", "text", "response", "output_text"):
+                value = response.get(key)
+                if isinstance(value, str) and value.strip():
+                    return value
+                if isinstance(value, list):
+                    fragments = []
+                    for item in value:
+                        if isinstance(item, dict):
+                            text_part = item.get("text") or item.get("content")
+                            if text_part:
+                                fragments.append(str(text_part))
+                        elif item:
+                            fragments.append(str(item))
+                    if fragments:
+                        return "\n".join(fragments)
+            return str(response)
+        return str(response or "")
+
+    def _generate_template_fallback_questions(
+        self,
+        section: DossierSection,
+        entity_name: str,
+        count: int,
+        question_types: List[DossierQuestionType],
+        offset: int = 0,
+    ) -> List[DossierQuestion]:
+        if count <= 0:
+            return []
+
+        section_template = self.section_question_templates.get(section.id, {})
+        templates = section_template.get("templates") or [f"What important unknowns remain for {entity_name}?"]
+        fill = {
+            "entity": entity_name,
+            "role": "key decision maker",
+            "domain": "digital transformation",
+            "initiative_type": "priority initiatives",
+            "platform_type": "core",
+            "timeframe": "the next 6-12 months",
+            "area": "digital capability",
+            "category": "technology initiatives",
+        }
+
+        fallback_questions: List[DossierQuestion] = []
+        for i in range(count):
+            template = templates[i % len(templates)]
+            try:
+                question_text = template.format(**fill).strip()
+            except Exception:
+                question_text = str(template).strip()
+            if not question_text.endswith("?"):
+                question_text = question_text.rstrip(".:;") + "?"
+
+            question_type = question_types[0] if question_types else DossierQuestionType.GENERAL
+            question_id = f"q_tpl_{section.id}_{offset + i}_{int(datetime.now(timezone.utc).timestamp())}"
+            fallback_questions.append(
+                DossierQuestion(
+                    question_id=question_id,
+                    section_id=section.id,
+                    question_type=question_type,
+                    question_text=question_text,
+                    priority=4,
+                    confidence=0.0,
+                    status=DossierQuestionStatus.PENDING,
+                    search_strategy=self._generate_search_strategy(question_text, question_type, entity_name),
+                )
+            )
+
+        logger.info(f"Template-fallback generated {len(fallback_questions)} questions for section {section.id}")
+        return fallback_questions
 
     def prioritize_questions(
         self,

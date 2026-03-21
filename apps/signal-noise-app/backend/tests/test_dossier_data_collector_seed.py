@@ -216,6 +216,7 @@ def test_postprocess_decision_makers_filters_noisy_non_person_names():
 @pytest.mark.asyncio
 async def test_collect_all_parallel_section_timeout_isolated(monkeypatch):
     monkeypatch.setenv("DOSSIER_SECTION_TIMEOUT_SECONDS", "0.01")
+    monkeypatch.setenv("DOSSIER_COLLECT_PARALLEL_LEADERSHIP", "true")
 
     class _TimeoutCollector(DossierDataCollector):
         async def _connect_falkordb(self):
@@ -253,6 +254,52 @@ async def test_collect_all_parallel_section_timeout_isolated(monkeypatch):
     assert len(data.strategic_opportunities.get("opportunities", [])) == 1
     assert len(data.recent_news.get("news_items", [])) == 1
     assert len(data.leadership.get("decision_makers", [])) == 1
+
+
+@pytest.mark.asyncio
+async def test_collect_all_parallel_respects_per_section_timeout_overrides(monkeypatch):
+    monkeypatch.setenv("DOSSIER_SECTION_TIMEOUT_SECONDS", "0.2")
+    monkeypatch.setenv("DOSSIER_COLLECTION_TIMEOUT_DIGITAL_TRANSFORMATION_SECONDS", "0.01")
+    monkeypatch.setenv("DOSSIER_COLLECTION_TIMEOUT_STRATEGIC_OPPORTUNITIES_SECONDS", "0.2")
+    monkeypatch.setenv("DOSSIER_COLLECTION_TIMEOUT_RECENT_NEWS_SECONDS", "0.2")
+    monkeypatch.setenv("DOSSIER_COLLECTION_TIMEOUT_PERFORMANCE_SECONDS", "0.2")
+
+    class _TimeoutOverrideCollector(DossierDataCollector):
+        async def _connect_falkordb(self):
+            self._falkordb_connected = False
+            return False
+
+        async def _connect_brightdata(self):
+            self._brightdata_available = False
+            return False
+
+        async def _connect_claude(self):
+            self.claude_client = None
+            return False
+
+        async def collect_digital_transformation_data(self, *_args, **_kwargs):
+            await asyncio.sleep(0.05)
+            return {"sources_used": ["slow"]}
+
+        async def collect_strategic_opportunities(self, *_args, **_kwargs):
+            await asyncio.sleep(0.05)
+            return {"opportunities": [{"title": "Strategic"}]}
+
+        async def collect_recent_news_data(self, *_args, **_kwargs):
+            await asyncio.sleep(0.05)
+            return {"news_items": [{"title": "News"}]}
+
+        async def collect_performance_data(self, *_args, **_kwargs):
+            await asyncio.sleep(0.05)
+            return {"league_position": 3}
+
+    collector = _TimeoutOverrideCollector(use_cache=False, parallel_scraping=True)
+    data = await collector.collect_all("test-entity", "Test Entity")
+
+    assert data.digital_transformation == {}
+    assert len(data.strategic_opportunities.get("opportunities", [])) == 1
+    assert len(data.recent_news.get("news_items", [])) == 1
+    assert data.performance.get("league_position") == 3
 
 
 @pytest.mark.asyncio

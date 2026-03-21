@@ -54,7 +54,7 @@ class FixedDossierFirstPipeline:
         from backend.claude_client import ClaudeClient
         from backend.brightdata_sdk_client import BrightDataSDKClient
         from backend.dossier_generator import EntityDossierGenerator
-        from backend.hypothesis_driven_discovery import HypothesisDrivenDiscovery
+        from backend.discovery_engine_factory import create_discovery_engine
         from backend.dashboard_scorer import DashboardScorer
         from backend.pipeline_orchestrator import PipelineOrchestrator
 
@@ -66,7 +66,12 @@ class FixedDossierFirstPipeline:
 
         # Initialize components - use WORKING EntityDossierGenerator
         self.dossier_generator = EntityDossierGenerator(self.claude)
-        self.discovery = HypothesisDrivenDiscovery(self.claude, self.brightdata)
+        self.discovery, self.discovery_engine = create_discovery_engine(
+            claude_client=self.claude,
+            brightdata_client=self.brightdata,
+            graphiti_service=None,
+            falkordb_client=None,
+        )
         self.dashboard_scorer = DashboardScorer()
         self.schema_first_enabled = _bool_env(os.getenv("PIPELINE_SCHEMA_FIRST_ENABLED", "false"))
         self.schema_sweep_enabled = _bool_env(os.getenv("PIPELINE_SCHEMA_SWEEP_ENABLED", "false"))
@@ -96,6 +101,19 @@ class FixedDossierFirstPipeline:
             1,
             int(os.getenv("PIPELINE_SHADOW_UNBOUNDED_MIN_ITERATIONS", "12")),
         )
+        self.two_pass_enabled = _bool_env(os.getenv("PIPELINE_TWO_PASS_ENABLED", "true"))
+        self.two_pass_pass_a_only = _bool_env(os.getenv("PIPELINE_PASS_A_ONLY", "false"))
+        self.two_pass_pass_a_iterations = max(
+            1,
+            int(os.getenv("PIPELINE_PASS_A_MAX_ITERATIONS", "2")),
+        )
+        self.two_pass_pass_b_iterations = max(
+            1,
+            int(os.getenv("PIPELINE_PASS_B_MAX_ITERATIONS", "5")),
+        )
+        self.two_pass_gate_min_confidence = float(os.getenv("PIPELINE_PASS_A_MIN_CONFIDENCE", "0.45"))
+        self.two_pass_gate_min_signals = max(0, int(os.getenv("PIPELINE_PASS_A_MIN_SIGNALS", "1")))
+        self.run_objective = str(os.getenv("PIPELINE_RUN_OBJECTIVE", "rfp_web")).strip().lower() or "rfp_web"
 
         if _bool_env(os.getenv("PIPELINE_FORCE_BRIGHTDATA", "false")):
             os.environ["BRIGHTDATA_FORCE_ONLY"] = "true"
@@ -124,11 +142,26 @@ class FixedDossierFirstPipeline:
             async def get_entity_timeline(self, _entity_id, limit=50):
                 return []
 
+            async def persist_pipeline_record_supabase(self, _payload):
+                raise RuntimeError("noop_graphiti_supabase_unavailable")
+
+            async def persist_pipeline_record_falkordb(self, _payload):
+                raise RuntimeError("noop_graphiti_falkordb_unavailable")
+
+        graphiti_service = _NoopGraphitiService()
+        try:
+            from backend.graphiti_service import GraphitiService
+
+            graphiti_service = GraphitiService()
+            logger.info("✅ Using GraphitiService for canonical pipeline persistence")
+        except Exception as graphiti_error:  # noqa: BLE001
+            logger.warning("⚠️ GraphitiService unavailable in fixed runner, using noop: %s", graphiti_error)
+
         self.orchestrator = PipelineOrchestrator(
             dossier_generator=self.dossier_generator,
             discovery=self.discovery,
             ralph_validator=_IdentityRalphValidator(),
-            graphiti_service=_NoopGraphitiService(),
+            graphiti_service=graphiti_service,
             dashboard_scorer=self.dashboard_scorer,
         )
 
@@ -243,22 +276,29 @@ class FixedDossierFirstPipeline:
         )
         phase_timings_seconds["phase_1_dossier_generation"] = round(time.perf_counter() - phase_started, 3)
         self._merge_schema_first_into_dossier(dossier)
-        from backend.hypothesis_driven_discovery import resolve_template_id
+        discovery_engine = str(os.getenv("DISCOVERY_ENGINE", "v2") or "v2").strip().lower()
+        use_legacy_template_routing = discovery_engine in {"legacy", "v1", "hypothesis"}
         league_context = self._extract_dossier_league_context(dossier)
-        discovery_template_id = resolve_template_id(
-            template_id,
-            entity_type,
-            league_or_competition=league_context.get("league_or_competition"),
-            org_type=league_context.get("org_type"),
-            entity_id=entity_id,
-            entity_name=entity_name,
-        )
-        logger.info(
-            "🧭 Discovery template resolved from context: %s (league=%s, org_type=%s)",
-            discovery_template_id,
-            league_context.get("league_or_competition") or "n/a",
-            league_context.get("org_type") or "n/a",
-        )
+        if use_legacy_template_routing:
+            from backend.hypothesis_driven_discovery import resolve_template_id
+
+            discovery_template_id = resolve_template_id(
+                template_id,
+                entity_type,
+                league_or_competition=league_context.get("league_or_competition"),
+                org_type=league_context.get("org_type"),
+                entity_id=entity_id,
+                entity_name=entity_name,
+            )
+            logger.info(
+                "🧭 Legacy template routing resolved: %s (league=%s, org_type=%s)",
+                discovery_template_id,
+                league_context.get("league_or_competition") or "n/a",
+                league_context.get("org_type") or "n/a",
+            )
+        else:
+            discovery_template_id = (template_id or "").strip() or None
+            logger.info("🧭 Discovery v2 active: template routing disabled (template=%s)", discovery_template_id or "none")
 
         # =========================================================================
         # PHASE 2: DISCOVERY (with dossier context)
@@ -326,6 +366,13 @@ class FixedDossierFirstPipeline:
         else:
             discovery_payload = {}
         diagnostics = self._extract_discovery_diagnostics(discovery_payload)
+        # Non-canonical fixed runner does not execute persistence coordinator dual-write.
+        fixed_runner_persistence_status = {
+            "supabase": {"ok": False, "error": "not_executed_non_canonical"},
+            "falkordb": {"ok": False, "error": "not_executed_non_canonical"},
+            "dual_write_ok": False,
+            "reconcile_required": True,
+        }
         run_report = self._write_run_report(
             entity_id=entity_id,
             entity_name=entity_name,
@@ -336,6 +383,8 @@ class FixedDossierFirstPipeline:
             phase_timings=phase_timings_seconds,
             artifacts=saved_paths,
             total_time_seconds=total_time,
+            persistence_status=fixed_runner_persistence_status,
+            dual_write_ok=False,
         )
 
         return {
@@ -349,6 +398,8 @@ class FixedDossierFirstPipeline:
             "run_report_path": run_report.get("report_path"),
             "acceptance_gate_passed": run_report.get("acceptance_gate", {}).get("passed"),
             "acceptance_gate_reasons": run_report.get("acceptance_gate", {}).get("reasons", []),
+            "dual_write_ok": False,
+            "persistence_status": fixed_runner_persistence_status,
             **diagnostics,
         }
 
@@ -385,6 +436,7 @@ class FixedDossierFirstPipeline:
             entity_name=entity_name,
             entity_type=entity_type,
             priority_score=tier_score,
+            run_objective=self.run_objective,
             phase_callback=_phase_callback,
         )
         artifacts = orchestrated.get("artifacts", {}) if isinstance(orchestrated, dict) else {}
@@ -415,6 +467,8 @@ class FixedDossierFirstPipeline:
             phases=orchestrated.get("phases", {}) if isinstance(orchestrated, dict) else {},
             artifacts=saved_paths,
             total_time_seconds=total_time_seconds,
+            persistence_status=orchestrated.get("persistence_status") if isinstance(orchestrated, dict) else None,
+            dual_write_ok=orchestrated.get("dual_write_ok") if isinstance(orchestrated, dict) else None,
         )
         return {
             "entity_id": entity_id,
@@ -428,6 +482,8 @@ class FixedDossierFirstPipeline:
             "run_report_path": run_report.get("report_path"),
             "acceptance_gate_passed": run_report.get("acceptance_gate", {}).get("passed"),
             "acceptance_gate_reasons": run_report.get("acceptance_gate", {}).get("reasons", []),
+            "dual_write_ok": orchestrated.get("dual_write_ok") if isinstance(orchestrated, dict) else False,
+            "persistence_status": orchestrated.get("persistence_status") if isinstance(orchestrated, dict) else None,
             **diagnostics,
         }
 
@@ -548,6 +604,85 @@ class FixedDossierFirstPipeline:
         entity_type: str | None = None,
     ):
         """Phase 2: Run discovery with dossier context"""
+        if bool(getattr(self, "two_pass_enabled", False)) and not bool(getattr(self, "_two_pass_internal", False)):
+            pass_a_iterations = min(
+                int(max_iterations),
+                int(getattr(self, "two_pass_pass_a_iterations", 2) or 2),
+            )
+            pass_b_iterations = min(
+                int(max_iterations),
+                int(getattr(self, "two_pass_pass_b_iterations", max_iterations) or max_iterations),
+            )
+
+            self._two_pass_internal = True
+            try:
+                pass_a_result = await self._phase_2_run_discovery(
+                    entity_id=entity_id,
+                    entity_name=entity_name,
+                    dossier=dossier,
+                    max_iterations=pass_a_iterations,
+                    template_id=template_id,
+                    entity_type=entity_type,
+                )
+            finally:
+                self._two_pass_internal = False
+
+            pass_a_confidence = float(getattr(pass_a_result, "final_confidence", 0.0) or 0.0)
+            pass_a_signals = getattr(pass_a_result, "signals_discovered", []) or []
+            pass_a_signal_count = len(pass_a_signals) if isinstance(pass_a_signals, list) else 0
+            pass_a_gate_passed = (
+                pass_a_confidence >= float(getattr(self, "two_pass_gate_min_confidence", 0.45) or 0.45)
+                and pass_a_signal_count >= int(getattr(self, "two_pass_gate_min_signals", 1) or 1)
+            )
+            pass_a_only = bool(getattr(self, "two_pass_pass_a_only", False))
+
+            two_pass_summary = {
+                "enabled": True,
+                "pass_a": {
+                    "iterations": pass_a_iterations,
+                    "final_confidence": pass_a_confidence,
+                    "signals_discovered": pass_a_signal_count,
+                    "gate_passed": pass_a_gate_passed,
+                },
+                "pass_b_executed": False,
+                "pass_b": None,
+                "selected_result": "pass_a",
+            }
+
+            if not pass_a_only and pass_a_gate_passed and pass_b_iterations > 0:
+                self._two_pass_internal = True
+                try:
+                    pass_b_result = await self._phase_2_run_discovery(
+                        entity_id=entity_id,
+                        entity_name=entity_name,
+                        dossier=dossier,
+                        max_iterations=pass_b_iterations,
+                        template_id=template_id,
+                        entity_type=entity_type,
+                    )
+                finally:
+                    self._two_pass_internal = False
+                pass_b_confidence = float(getattr(pass_b_result, "final_confidence", 0.0) or 0.0)
+                pass_b_signals = getattr(pass_b_result, "signals_discovered", []) or []
+                pass_b_signal_count = len(pass_b_signals) if isinstance(pass_b_signals, list) else 0
+                two_pass_summary["pass_b_executed"] = True
+                two_pass_summary["pass_b"] = {
+                    "iterations": pass_b_iterations,
+                    "final_confidence": pass_b_confidence,
+                    "signals_discovered": pass_b_signal_count,
+                }
+                two_pass_summary["selected_result"] = "pass_b"
+                result = pass_b_result
+            else:
+                result = pass_a_result
+
+            perf = getattr(result, "performance_summary", None)
+            if not isinstance(perf, dict):
+                perf = {}
+            perf["two_pass"] = two_pass_summary
+            setattr(result, "performance_summary", perf)
+            return result
+
         self._last_shadow_discovery_payload = None
         self._last_template_id = template_id
         self._last_max_iterations = max_iterations
@@ -595,22 +730,24 @@ class FixedDossierFirstPipeline:
             if entity_type and (supports_kwargs or "entity_type" in context_signature.parameters):
                 context_kwargs["entity_type"] = entity_type
 
+            shadow_unbounded_floor = int(getattr(self, "shadow_unbounded_floor", 6) or 6)
+            shadow_unbounded_multiplier = float(getattr(self, "shadow_unbounded_multiplier", 1.8) or 1.8)
             shadow_iterations = max(
-                self.shadow_unbounded_floor,
-                int(round(float(max_iterations) * self.shadow_unbounded_multiplier)),
+                shadow_unbounded_floor,
+                int(round(float(max_iterations) * shadow_unbounded_multiplier)),
             )
             shadow_kwargs = dict(context_kwargs)
             shadow_kwargs["max_iterations"] = shadow_iterations
-            shadow_lane_enabled = bool(self.shadow_unbounded_enabled)
+            shadow_lane_enabled = bool(getattr(self, "shadow_unbounded_enabled", False))
 
             if shadow_lane_enabled:
                 logger.info(
                     "🧪 Shadow unbounded lane enabled (iterations=%s, parallel=%s)",
                     shadow_iterations,
-                    self.shadow_unbounded_parallel,
+                    bool(getattr(self, "shadow_unbounded_parallel", False)),
                 )
 
-            if shadow_lane_enabled and self.shadow_unbounded_parallel:
+            if shadow_lane_enabled and bool(getattr(self, "shadow_unbounded_parallel", False)):
                 shadow_discovery = self._ensure_shadow_discovery()
                 shadow_context_method = shadow_discovery.run_discovery_with_dossier_context
                 shadow_signature = inspect.signature(shadow_context_method)
@@ -676,10 +813,15 @@ class FixedDossierFirstPipeline:
             try:
                 if entity_type:
                     self.discovery.current_entity_type = entity_type
+                metadata = dossier_payload.get("metadata", {}) if isinstance(dossier_payload, dict) else {}
+                league_or_competition = metadata.get("league_or_competition") if isinstance(metadata, dict) else None
+                org_type = metadata.get("org_type") if isinstance(metadata, dict) else None
                 result = await self.discovery.run_discovery(
                     entity_id=entity_id,
                     entity_name=entity_name,
                     template_id=template_id,
+                    league_or_competition=league_or_competition,
+                    org_type=org_type,
                     max_iterations=max_iterations
                 )
             except Exception as e2:
@@ -725,10 +867,20 @@ class FixedDossierFirstPipeline:
         if self._shadow_discovery is not None:
             return self._shadow_discovery
         from backend.brightdata_sdk_client import BrightDataSDKClient
-        from backend.hypothesis_driven_discovery import HypothesisDrivenDiscovery
+        from backend.discovery_engine_factory import create_discovery_engine
 
         self._shadow_client = BrightDataSDKClient()
-        self._shadow_discovery = HypothesisDrivenDiscovery(self.claude, self._shadow_client)
+        shadow_engine_name = os.getenv(
+            "DISCOVERY_SHADOW_ENGINE",
+            "legacy" if str(getattr(self, "discovery_engine", "")).lower() == "v2" else "v2",
+        )
+        self._shadow_discovery, _ = create_discovery_engine(
+            claude_client=self.claude,
+            brightdata_client=self._shadow_client,
+            graphiti_service=None,
+            falkordb_client=None,
+            engine=shadow_engine_name,
+        )
         return self._shadow_discovery
 
     async def _run_schema_first_prepass(
@@ -1065,6 +1217,7 @@ class FixedDossierFirstPipeline:
         final_confidence: float,
         signal_count: int,
         section_fallbacks: int,
+        dual_write_ok: Optional[bool] = None,
     ) -> Dict[str, Any]:
         min_confidence = float(os.getenv("PIPELINE_ACCEPT_MIN_CONFIDENCE", "0.55"))
         min_signals = int(os.getenv("PIPELINE_ACCEPT_MIN_SIGNALS", "2"))
@@ -1076,6 +1229,8 @@ class FixedDossierFirstPipeline:
             reasons.append(f"signal_count<{min_signals}")
         if section_fallbacks > max_fallbacks:
             reasons.append(f"section_fallbacks>{max_fallbacks}")
+        if dual_write_ok is False:
+            reasons.append("dual_write_incomplete")
         return {
             "passed": len(reasons) == 0,
             "reasons": reasons,
@@ -1093,12 +1248,14 @@ class FixedDossierFirstPipeline:
         entity_name: str,
         dossier: Dict[str, Any],
         discovery: Dict[str, Any],
-        shadow_discovery: Optional[Dict[str, Any]],
+        shadow_discovery: Optional[Dict[str, Any]] = None,
         scores: Dict[str, Any],
         phase_timings: Dict[str, float],
         artifacts: Dict[str, str],
         total_time_seconds: float,
         phases: Dict[str, Any] | None = None,
+        persistence_status: Optional[Dict[str, Any]] = None,
+        dual_write_ok: Optional[bool] = None,
     ) -> Dict[str, Any]:
         phases = phases or {}
         discovery = discovery if isinstance(discovery, dict) else {}
@@ -1126,6 +1283,7 @@ class FixedDossierFirstPipeline:
             final_confidence=final_confidence,
             signal_count=signal_count,
             section_fallbacks=section_counters["hard_fallback_sections"],
+            dual_write_ok=dual_write_ok,
         )
         hop_timings = performance.get("hop_timings")
         if not isinstance(hop_timings, list):
@@ -1161,6 +1319,13 @@ class FixedDossierFirstPipeline:
             "schema_gate_fallback": int("schema_gate" in parse_path or "schema_gate" in llm_last_status),
             "low_signal_content": int("low_signal" in parse_path),
             "entity_grounding_reject": int(entity_grounding_reject_count),
+            "supabase_write_failure": int(
+                bool(isinstance(persistence_status, dict) and not ((persistence_status.get("supabase") or {}).get("ok", True)))
+            ),
+            "falkordb_write_failure": int(
+                bool(isinstance(persistence_status, dict) and not ((persistence_status.get("falkordb") or {}).get("ok", True)))
+            ),
+            "dual_write_incomplete": int(dual_write_ok is False),
             "last_discovery_error_class": self._last_discovery_error_class,
             "last_discovery_error_message": self._last_discovery_error_message,
         }
@@ -1174,6 +1339,8 @@ class FixedDossierFirstPipeline:
             "metrics": {
                 "dossier_sections": len(dossier.get("sections") or []) if isinstance(dossier.get("sections"), list) else 0,
                 "final_confidence": final_confidence,
+                "entity_confidence": float(performance.get("entity_confidence") or discovery.get("entity_confidence") or final_confidence),
+                "pipeline_confidence": float(performance.get("pipeline_confidence") or discovery.get("pipeline_confidence") or final_confidence),
                 "signals_discovered": signal_count,
                 "iterations_completed": int(discovery.get("iterations_completed") or 0),
                 "procurement_maturity": scores.get("procurement_maturity"),
@@ -1189,6 +1356,16 @@ class FixedDossierFirstPipeline:
                 },
                 "section_fallbacks": section_counters,
                 "failure_taxonomy": failure_taxonomy,
+                "synthetic_url_attempt_count": int(performance.get("synthetic_url_attempt_count") or 0),
+                "dead_end_event_count": int(performance.get("dead_end_event_count") or 0),
+                "fallback_accept_block_count": int(performance.get("fallback_accept_block_count") or 0),
+                "llm_call_count": int(performance.get("llm_call_count") or 0),
+                "llm_fallback_count": int(performance.get("llm_fallback_count") or 0),
+                "length_stop_count": int(performance.get("length_stop_count") or 0),
+                "schema_fail_count": int(performance.get("schema_fail_count") or 0),
+                "llm_circuit_broken": bool(performance.get("llm_circuit_broken", False)),
+                "dual_write_ok": dual_write_ok,
+                "persistence_status": persistence_status if isinstance(persistence_status, dict) else None,
                 "shadow_unbounded": {
                     "enabled": bool(shadow_discovery),
                     "final_confidence": float(shadow_discovery.get("final_confidence") or 0.0) if shadow_discovery else None,
@@ -1230,23 +1407,34 @@ async def main():
     parser.add_argument("--template-id", default="")
     args = parser.parse_args()
 
-    from backend.hypothesis_driven_discovery import (
-        get_template_recommended_hop_cap,
-        resolve_template_id,
-    )
+    discovery_engine = str(os.getenv("DISCOVERY_ENGINE", "v2") or "v2").strip().lower()
+    use_legacy_template_routing = discovery_engine in {"legacy", "v1", "hypothesis"}
     requested_template_id = (args.template_id or "").strip() or None
-    resolved_template_id = resolve_template_id(
-        requested_template_id,
-        args.entity_type,
-        entity_id=args.entity_id,
-        entity_name=args.entity_name,
-    )
-    if args.max_discovery_iterations is None:
-        resolved_max_iterations = get_template_recommended_hop_cap(resolved_template_id, fallback=5)
+    if use_legacy_template_routing:
+        from backend.hypothesis_driven_discovery import (
+            get_template_recommended_hop_cap,
+            resolve_template_id,
+        )
+
+        resolved_template_id = resolve_template_id(
+            requested_template_id,
+            args.entity_type,
+            entity_id=args.entity_id,
+            entity_name=args.entity_name,
+        )
+        if args.max_discovery_iterations is None:
+            resolved_max_iterations = get_template_recommended_hop_cap(resolved_template_id, fallback=5)
+        else:
+            resolved_max_iterations = max(1, int(args.max_discovery_iterations))
     else:
-        resolved_max_iterations = max(1, int(args.max_discovery_iterations))
+        resolved_template_id = requested_template_id
+        if args.max_discovery_iterations is None:
+            resolved_max_iterations = max(1, int(os.getenv("DISCOVERY_MAX_HOPS", "5")))
+        else:
+            resolved_max_iterations = max(1, int(args.max_discovery_iterations))
     logger.info(
-        "🧭 Discovery runtime defaults: template=%s max_iterations=%s",
+        "🧭 Discovery runtime defaults: engine=%s template=%s max_iterations=%s",
+        discovery_engine,
         resolved_template_id,
         resolved_max_iterations,
     )

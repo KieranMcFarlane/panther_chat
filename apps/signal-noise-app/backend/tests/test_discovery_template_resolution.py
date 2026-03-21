@@ -13,7 +13,7 @@ from hypothesis_driven_discovery import resolve_template_id
 def test_resolve_template_id_falls_back_to_available_default():
     assert resolve_template_id("tier_1_club_centralized_procurement", "FEDERATION") == "federation_governing_body"
     assert resolve_template_id(None, "FEDERATION") == "federation_governing_body"
-    assert resolve_template_id(None, "CLUB") == "yellow_panther_agency"
+    assert resolve_template_id(None, "CLUB") == "tier_2_club_mixed_procurement"
 
 
 async def _noop(*args, **kwargs):

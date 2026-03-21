@@ -232,7 +232,7 @@ async def test_press_release_evaluation_uses_reduced_prompt_budget():
     )
 
     assert result["decision"] == "NO_PROGRESS"
-    assert captured["max_tokens"] == 250
+    assert captured["max_tokens"] == 180
     assert "TAIL_MARKER" not in captured["prompt"]
     assert "A" * 1500 not in captured["prompt"]
 
@@ -354,7 +354,7 @@ async def test_dossier_context_fallback_uses_existing_default_template():
         max_iterations=3,
     )
 
-    assert result["template_id"] == "yellow_panther_agency"
+    assert result["template_id"] == "tier_2_club_mixed_procurement"
 
 
 def test_performance_summary_includes_selected_url_and_domain():

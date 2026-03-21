@@ -19,12 +19,25 @@ import logging
 import os
 import random
 import re
+from copy import deepcopy
 from datetime import datetime, timezone
 from typing import Dict, List, Optional, Any, Callable, Awaitable
 from dataclasses import dataclass
 
 from backend.schemas import EntityDossier, DossierSection, DossierTier, CacheStatus
 from backend.claude_client import ClaudeClient
+try:
+    from backend.objective_profiles import (
+        DEFAULT_DOSSIER_OBJECTIVE,
+        get_objective_profile,
+        normalize_run_objective,
+    )
+except ImportError:
+    from objective_profiles import (  # type: ignore
+        DEFAULT_DOSSIER_OBJECTIVE,
+        get_objective_profile,
+        normalize_run_objective,
+    )
 
 # Import data collector
 try:
@@ -56,13 +69,17 @@ class EntityDossierGenerator:
         self.claude_client = claude_client
         self.falkordb_client = falkordb_client
         self._last_entity_data_by_id: Dict[str, Dict[str, Any]] = {}
+        self._seeded_official_site_by_entity_name: Dict[str, str] = {}
         self.section_parallelism = max(
             1,
             int(os.getenv("DOSSIER_SECTION_PARALLELISM", "2")),
         )
         self.section_max_tokens_cap = max(
             0,
-            int(os.getenv("DOSSIER_SECTION_MAX_TOKENS_CAP", "0")),
+            int(os.getenv("DOSSIER_SECTION_MAX_TOKENS_CAP", "1800")),
+        )
+        self.section_generation_timeout_seconds = self._parse_positive_float_env(
+            os.getenv("DOSSIER_SECTION_GENERATION_TIMEOUT_SECONDS", "75")
         )
         disable_question_extraction_env = os.getenv("DOSSIER_DISABLE_QUESTION_EXTRACTION")
         self.disable_question_extraction = (
@@ -72,8 +89,61 @@ class EntityDossierGenerator:
         self.section_json_repair_attempt = (
             str(section_json_repair_env).strip().lower() in {"1", "true", "yes", "on"}
         )
+        section_json_mode_env = os.getenv("DOSSIER_SECTION_JSON_MODE", "true")
+        self.section_json_mode = (
+            str(section_json_mode_env).strip().lower() in {"1", "true", "yes", "on"}
+        )
+        self.use_data_driven_section_baseline = (
+            str(os.getenv("DOSSIER_SECTION_USE_DATA_DRIVEN_BASELINE", "true")).strip().lower()
+            in {"1", "true", "yes", "on"}
+        )
+        self.data_driven_section_ids = {
+            "core_information",
+            "quick_actions",
+            "contact_information",
+            "recent_news",
+            "leadership",
+            "digital_maturity",
+            "outreach_strategy",
+            "ai_reasoner_assessment",
+            "challenges_opportunities",
+        }
         self.run_post_collection_enrichment = (
             str(os.getenv("DOSSIER_RUN_POST_COLLECTION_ENRICHMENT", "false")).strip().lower()
+            in {"1", "true", "yes", "on"}
+        )
+        self.section_prompt_field_limits_default = {
+            "metadata_summary": 1200,
+            "official_site_summary": 1200,
+            "job_postings_summary": 1000,
+            "press_releases_summary": 1000,
+            "linkedin_posts_summary": 1000,
+            "target_personnel_data": 1200,
+            "yp_team_data": 1200,
+            "leadership_names": 400,
+            "leadership_roles": 500,
+            "leadership_linkedins": 700,
+        }
+        self.section_prompt_field_limits_by_section = {
+            "core_information": {"metadata_summary": 700},
+            "quick_actions": {"metadata_summary": 700},
+            "contact_information": {"metadata_summary": 700},
+            "recent_news": {"press_releases_summary": 700},
+            "digital_maturity": {"job_postings_summary": 700, "official_site_summary": 900},
+            "leadership": {"metadata_summary": 900},
+            "outreach_strategy": {"metadata_summary": 900, "job_postings_summary": 700},
+        }
+        self.compact_response_section_ids = {
+            "digital_maturity",
+            "leadership",
+            "ai_reasoner_assessment",
+            "challenges_opportunities",
+            "strategic_analysis",
+            "connections",
+            "outreach_strategy",
+        }
+        self.long_sections_use_primary_model = (
+            str(os.getenv("DOSSIER_LONG_SECTIONS_USE_PRIMARY_MODEL", "true")).strip().lower()
             in {"1", "true", "yes", "on"}
         )
 
@@ -226,7 +296,8 @@ class EntityDossierGenerator:
         entity_name: str,
         entity_type: str = "CLUB",
         priority_score: int = 50,
-        entity_data: Optional[Dict[str, Any]] = None
+        entity_data: Optional[Dict[str, Any]] = None,
+        run_objective: Optional[str] = None,
     ) -> EntityDossier:
         """
         Generate complete dossier based on priority tier
@@ -242,12 +313,24 @@ class EntityDossierGenerator:
             Complete EntityDossier with all sections
         """
         start_time = datetime.now(timezone.utc)
+        objective = normalize_run_objective(run_objective, default=DEFAULT_DOSSIER_OBJECTIVE)
+        objective_profile = get_objective_profile(objective, default=DEFAULT_DOSSIER_OBJECTIVE)
+        if run_objective is None:
+            # Backward-compatible default behavior for direct generator usage.
+            enable_leadership_enrichment = True
+            enable_question_extraction = True
+        else:
+            enable_leadership_enrichment = bool(objective_profile.get("enable_leadership_enrichment", False))
+            enable_question_extraction = bool(objective_profile.get("enable_question_extraction", False))
 
         # Determine tier
         tier = self._determine_tier(priority_score)
 
         # Get sections for this tier
         sections_to_generate = self._get_sections_for_tier(tier)
+        if objective in {"rfp_pdf", "rfp_web"}:
+            # Objective-scoped compact baseline for RFP-focused runs.
+            sections_to_generate = ["core_information", "quick_actions", "contact_information", "recent_news"]
 
         # Create dossier object
         dossier = EntityDossier(
@@ -262,7 +345,10 @@ class EntityDossierGenerator:
         if DATA_COLLECTOR_AVAILABLE:
             logger.info(f"🔍 Collecting entity data for {entity_name}")
             collector = DossierDataCollector()
-            dossier_data_obj = await collector.collect_all(entity_id, entity_name)
+            seeded_official_site = self._get_seeded_official_site_url(entity_name)
+            if seeded_official_site and hasattr(collector, "seed_official_site_url"):
+                collector.seed_official_site_url(entity_name, seeded_official_site)
+            dossier_data_obj = await collector.collect_all(entity_id, entity_name, run_objective=objective)
 
             # Convert DossierData object to dict format for compatibility
             entity_data = self._dossier_data_to_dict(dossier_data_obj)
@@ -294,7 +380,7 @@ class EntityDossierGenerator:
                     logger.info("⏭️ Skipping duplicate post-collection multi-source enrichment (DOSSIER_RUN_POST_COLLECTION_ENRICHMENT=false)")
 
             # PHASE 0 ENHANCEMENT: Collect leadership data for real decision maker names
-            if hasattr(collector, 'collect_leadership'):
+            if hasattr(collector, 'collect_leadership') and enable_leadership_enrichment:
                 leadership_already_present = bool(entity_data.get("leadership_data")) or int(entity_data.get("leadership_count") or 0) > 0
                 if leadership_already_present and not self.run_post_collection_enrichment:
                     logger.info("⏭️ Skipping duplicate leadership enrichment (already present from collect_all)")
@@ -340,6 +426,8 @@ class EntityDossierGenerator:
                     entity_data["bridge_contacts_data"] = "No bridge contacts data currently available"
 
                     logger.info(f"✅ Leadership data collected: {entity_data['leadership_count']} decision makers")
+            elif not enable_leadership_enrichment:
+                logger.info("⏭️ Skipping leadership enrichment for objective=%s", objective)
 
             # PHASE 0 ENHANCEMENT: Collect Yellow Panther team data for Connections analysis
             try:
@@ -414,6 +502,8 @@ Website: N/A
             if DATA_COLLECTOR_AVAILABLE:
                 logger.info("⚠️ Using placeholder data (FalkorDB unavailable)")
 
+        self._last_entity_data_by_id[entity_id] = deepcopy(entity_data)
+
         # Generate sections in parallel where possible
         logger.info(f"Generating {len(sections_to_generate)} sections for {entity_name} ({tier} tier)")
 
@@ -450,8 +540,12 @@ Website: N/A
             dossier.sections.extend(opus_results)
 
         # Extract questions from sections (for discovery feedback loop)
-        if self.disable_question_extraction:
-            logger.info("Skipping dossier question extraction (DOSSIER_DISABLE_QUESTION_EXTRACTION=true)")
+        if self.disable_question_extraction or not enable_question_extraction:
+            logger.info(
+                "Skipping dossier question extraction (disabled_by_env=%s disabled_by_objective=%s)",
+                self.disable_question_extraction,
+                not enable_question_extraction,
+            )
             dossier.questions = []
         else:
             try:
@@ -506,11 +600,29 @@ Website: N/A
 
         async def _run(section_id: str):
             async with semaphore:
-                return await self._generate_section(
+                generation_coro = self._generate_section(
                     section_id=section_id,
                     entity_data=entity_data,
                     model=model,
                 )
+                if self.section_generation_timeout_seconds:
+                    try:
+                        return await asyncio.wait_for(
+                            generation_coro,
+                            timeout=self.section_generation_timeout_seconds,
+                        )
+                    except asyncio.TimeoutError:
+                        logger.warning(
+                            "⚠️ Section %s generation timed out after %.2fs; using fallback section",
+                            section_id,
+                            self.section_generation_timeout_seconds,
+                        )
+                        return self._create_fallback_section(
+                            section_id,
+                            model,
+                            reason_code="section_generation_timeout",
+                        )
+                return await generation_coro
 
         # Create tasks for parallel execution with bounded concurrency.
         tasks = [_run(section_id) for section_id in section_ids]
@@ -574,9 +686,40 @@ Website: N/A
         # Create safe entity data for formatting (remove entity_name to avoid duplicate)
         safe_entity_data = {k: v for k, v in entity_data.items() if k != "entity_name"}
 
-        prompt = self._safe_prompt_format(
-            prompt_template,
-            {"entity_name": entity_name, **safe_entity_data},
+        prompt_values = self._prepare_section_prompt_values(
+            section_id=section_id,
+            entity_name=entity_name,
+            safe_entity_data=safe_entity_data,
+        )
+
+        deterministic_data = self._build_data_driven_section_content(section_id, entity_data)
+        if (
+            self.use_data_driven_section_baseline
+            and section_id in self.data_driven_section_ids
+            and deterministic_data is not None
+        ):
+            section = DossierSection(
+                id=section_id,
+                title=template_info["description"],
+                content=deterministic_data.get("content", []),
+                metrics=deterministic_data.get("metrics", []),
+                insights=deterministic_data.get("insights", []),
+                recommendations=deterministic_data.get("recommendations", []),
+                confidence=deterministic_data.get("confidence", 0.66),
+                generated_by=model,
+                output_status="completed",
+                reason_code=None,
+                parse_path="deterministic_data_driven_primary",
+                fallback_used=False,
+            )
+            section.total_cost_usd = 0.0
+            return section
+
+        prompt = self._safe_prompt_format(prompt_template, prompt_values)
+        prompt = self._apply_section_response_budget(
+            section_id=section_id,
+            model=model,
+            prompt=prompt,
         )
 
         # Call Claude with appropriate model
@@ -587,48 +730,67 @@ Website: N/A
             output_status = "completed"
             # Select model based on cascade (use model names, not model IDs)
             claude_model = model  # haiku, sonnet, or opus
+            if (
+                self.long_sections_use_primary_model
+                and section_id in self.compact_response_section_ids
+                and model in {"sonnet", "opus"}
+            ):
+                claude_model = "haiku"
 
             # Generate content using ClaudeClient.query()
             response = await self.claude_client.query(
                 prompt=prompt,
                 model=claude_model,
-                max_tokens=max_tokens
+                max_tokens=max_tokens,
+                json_mode=self.section_json_mode,
+                stream=False,
             )
 
             content_text = response.get("content", "")
 
-            section_data = self._extract_section_data(content_text)
-            if self._section_data_needs_repair(section_data):
-                parse_path = "json_repair_attempted"
-                if not self.section_json_repair_attempt:
-                    reason_code = "section_schema_gate_failed_no_repair"
-                    section_data, reason_code, parse_path = self._build_deterministic_section_fallback(
-                        section_id=section_id,
-                        primary_text=content_text,
-                        repaired_text=None,
-                    )
-                    fallback_used = True
-                    output_status = "completed_with_fallback"
-                else:
-                    repair_prompt = self._build_section_json_repair_prompt(content_text)
-                    repair_response = await self.claude_client.query(
-                        prompt=repair_prompt,
-                        model=claude_model,
-                        max_tokens=min(max_tokens, 600),
-                    )
-                    repaired_text = repair_response.get("content", "")
-                    section_data = self._extract_section_data(repaired_text)
-                    if self._section_data_needs_repair(section_data):
+            if not isinstance(content_text, str) or not content_text.strip():
+                section_data, reason_code, parse_path = self._build_deterministic_section_fallback(
+                    section_id=section_id,
+                    primary_text="",
+                    repaired_text=None,
+                )
+                fallback_used = True
+                output_status = "completed_with_fallback"
+            else:
+                section_data = self._extract_section_data(content_text)
+                if self._section_data_needs_repair(section_data):
+                    parse_path = "json_repair_attempted"
+                    if not self.section_json_repair_attempt:
+                        reason_code = "section_schema_gate_failed_no_repair"
                         section_data, reason_code, parse_path = self._build_deterministic_section_fallback(
                             section_id=section_id,
                             primary_text=content_text,
-                            repaired_text=repaired_text,
+                            repaired_text=None,
                         )
                         fallback_used = True
                         output_status = "completed_with_fallback"
                     else:
-                        parse_path = "json_repair_recovered"
-                        reason_code = "section_json_repaired"
+                        repair_prompt = self._build_section_json_repair_prompt(content_text)
+                        repair_response = await self.claude_client.query(
+                            prompt=repair_prompt,
+                            model=claude_model,
+                            max_tokens=min(max_tokens, 600),
+                            json_mode=self.section_json_mode,
+                            stream=False,
+                        )
+                        repaired_text = repair_response.get("content", "")
+                        section_data = self._extract_section_data(repaired_text)
+                        if self._section_data_needs_repair(section_data):
+                            section_data, reason_code, parse_path = self._build_deterministic_section_fallback(
+                                section_id=section_id,
+                                primary_text=content_text,
+                                repaired_text=repaired_text,
+                            )
+                            fallback_used = True
+                            output_status = "completed_with_fallback"
+                        else:
+                            parse_path = "json_repair_recovered"
+                            reason_code = "section_json_repaired"
 
             # Create DossierSection
             section = DossierSection(
@@ -672,6 +834,67 @@ Website: N/A
                 return ""
 
         return prompt_template.format_map(_PromptValues(values))
+
+    @staticmethod
+    def _truncate_prompt_value(value: str, max_chars: int) -> str:
+        if max_chars <= 0:
+            return ""
+        if len(value) <= max_chars:
+            return value
+        keep = max(64, max_chars - 64)
+        omitted = len(value) - keep
+        return f"{value[:keep].rstrip()} ... [truncated {omitted} chars]"
+
+    @staticmethod
+    def _parse_positive_float_env(value: Optional[str]) -> Optional[float]:
+        if value is None:
+            return None
+        try:
+            parsed = float(value)
+        except (TypeError, ValueError):
+            return None
+        if parsed <= 0:
+            return None
+        return parsed
+
+    def _prepare_section_prompt_values(
+        self,
+        *,
+        section_id: str,
+        entity_name: str,
+        safe_entity_data: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        values = {"entity_name": entity_name, **safe_entity_data}
+        limits = dict(self.section_prompt_field_limits_default)
+        limits.update(self.section_prompt_field_limits_by_section.get(section_id, {}))
+        for key, max_chars in limits.items():
+            raw = values.get(key)
+            if raw is None:
+                continue
+            if isinstance(raw, (dict, list)):
+                raw_text = json.dumps(raw, ensure_ascii=True)
+            else:
+                raw_text = str(raw)
+            values[key] = self._truncate_prompt_value(raw_text, int(max_chars))
+        return values
+
+    def _apply_section_response_budget(self, *, section_id: str, model: str, prompt: str) -> str:
+        if section_id not in self.compact_response_section_ids:
+            return prompt
+        word_budget_by_model = {
+            "haiku": 450,
+            "sonnet": 550,
+            "opus": 650,
+        }
+        max_words = word_budget_by_model.get(model, 500)
+        budget_instruction = (
+            "\n\nSTRICT RESPONSE BUDGET:\n"
+            f"- Keep total output under {max_words} words.\n"
+            "- Return concise JSON only with keys: content, metrics, insights, recommendations, confidence.\n"
+            "- content: max 6 items; metrics: max 1 item; insights: max 2 items; recommendations: max 2 items.\n"
+            "- Prefer high-signal, entity-specific facts; avoid generic filler."
+        )
+        return f"{prompt}{budget_instruction}"
 
     @staticmethod
     def _extract_last_valid_json_block(content_text: str) -> Any:
@@ -853,6 +1076,308 @@ Website: N/A
             "recommendations": [],
             "confidence": 0.55,
         }
+
+    @staticmethod
+    def _normalize_entity_key(value: str) -> str:
+        return " ".join((value or "").strip().lower().split())
+
+    @staticmethod
+    def _normalize_http_url(candidate: Optional[str]) -> Optional[str]:
+        if not isinstance(candidate, str):
+            return None
+        value = candidate.strip()
+        if not value:
+            return None
+        if value.startswith(("http://", "https://")):
+            return value.rstrip("/")
+        if value.startswith("www.") or "." in value:
+            return f"https://{value.lstrip('/').rstrip('/')}"
+        return None
+
+    def _get_seeded_official_site_url(self, entity_name: str) -> Optional[str]:
+        key = self._normalize_entity_key(entity_name)
+        if not key:
+            return None
+        return self._seeded_official_site_by_entity_name.get(key)
+
+    def seed_official_site_url(self, entity_name: str, url: str) -> Optional[str]:
+        normalized_url = self._normalize_http_url(url)
+        key = self._normalize_entity_key(entity_name)
+        if not key or not normalized_url:
+            return None
+        self._seeded_official_site_by_entity_name[key] = normalized_url
+        return normalized_url
+
+    def get_last_official_site_url(self, entity_id: str) -> Optional[str]:
+        payload = self._last_entity_data_by_id.get(entity_id) or {}
+        candidates = [
+            payload.get("official_site_url"),
+            payload.get("entity_website"),
+            payload.get("website"),
+            payload.get("url"),
+        ]
+        for candidate in candidates:
+            normalized = self._normalize_http_url(candidate)
+            if normalized:
+                return normalized
+        return None
+
+    def _build_data_driven_section_content(
+        self,
+        section_id: str,
+        entity_data: Dict[str, Any],
+    ) -> Optional[Dict[str, Any]]:
+        entity_name = str(entity_data.get("entity_name") or "This entity")
+        entity_type = str(entity_data.get("entity_type") or "Organization")
+        sport = str(entity_data.get("entity_sport") or entity_data.get("sport") or "Unknown sport")
+        country = str(entity_data.get("entity_country") or entity_data.get("country") or "Unknown country")
+        league = str(entity_data.get("entity_league") or entity_data.get("league_or_competition") or "Unknown competition")
+        founded = str(entity_data.get("entity_founded") or entity_data.get("founded") or "Unknown")
+        stadium = str(entity_data.get("entity_stadium") or entity_data.get("stadium") or "Unknown")
+        website = str(entity_data.get("entity_website") or entity_data.get("website") or entity_data.get("official_site_url") or "Unknown")
+        headquarters = str(entity_data.get("hq") or "Unknown")
+        revenue_band = str(entity_data.get("entity_revenue_band") or entity_data.get("estimated_revenue_band") or "Unknown")
+        digital_maturity = str(entity_data.get("entity_digital_maturity") or entity_data.get("digital_maturity") or "Unknown")
+        leadership_names = str(entity_data.get("leadership_names") or "").strip()
+        leadership_roles = str(entity_data.get("leadership_roles") or "").strip()
+        leadership_count = int(entity_data.get("leadership_count") or 0)
+        news_items = entity_data.get("news_items") if isinstance(entity_data.get("news_items"), list) else []
+        opportunity_count = int(entity_data.get("opportunity_count") or 0)
+        points = str(entity_data.get("points") or "unknown")
+        league_position = str(entity_data.get("league_position") or "unknown")
+
+        if section_id == "core_information":
+            return {
+                "content": [
+                    f"{entity_name} is a {entity_type} operating in {sport} with core activity in {country}.",
+                    f"The organization is currently associated with {league}.",
+                    f"Known profile markers include founded year {founded}, venue {stadium}, and website {website}.",
+                ],
+                "metrics": [
+                    f"Founded: {founded}",
+                    f"Country: {country}",
+                    f"Revenue band: {revenue_band}",
+                ],
+                "insights": [
+                    f"Digital maturity baseline is {digital_maturity}.",
+                    "Metadata quality is sufficient for downstream discovery seeding.",
+                ],
+                "recommendations": [
+                    "Use official-site and leadership sources as primary channels for next-hop discovery.",
+                ],
+                "confidence": 0.72,
+            }
+
+        if section_id == "quick_actions":
+            actions = [
+                f"Prioritize outreach to {entity_name}'s commercial/digital leadership with entity-specific value framing.",
+                "Run targeted discovery hops against official announcements and recent press updates before broad web hops.",
+            ]
+            if opportunity_count > 0:
+                actions.append(f"Exploit {opportunity_count} detected strategic opportunity signal(s) for tailored outreach timing.")
+            return {
+                "content": actions[:4],
+                "metrics": [
+                    f"Leadership records: {leadership_count}",
+                    f"Opportunities detected: {opportunity_count}",
+                    f"Recent news items: {len(news_items)}",
+                ],
+                "insights": [
+                    "Action quality improves when discovery is constrained to entity-grounded official channels first.",
+                ],
+                "recommendations": [
+                    "Execute a leadership-first contact path and a parallel press-release discovery lane.",
+                    "Trigger dossier refresh after any new leadership appointment or platform partnership signal.",
+                ],
+                "confidence": 0.68,
+            }
+
+        if section_id == "contact_information":
+            content = [
+                f"Primary web presence: {website}.",
+                f"Headquarters marker: {headquarters}.",
+                f"Country context: {country}.",
+            ]
+            if leadership_names:
+                content.append(f"Known decision makers: {leadership_names}.")
+            return {
+                "content": content[:5],
+                "metrics": [
+                    f"Leadership contacts identified: {leadership_count}",
+                ],
+                "insights": [
+                    "Contact surface is strongest through official web channels and verified leadership profiles.",
+                ],
+                "recommendations": [
+                    "Use named leadership contacts for role-specific outreach sequencing.",
+                ],
+                "confidence": 0.67,
+            }
+
+        if section_id == "recent_news":
+            if news_items:
+                content = []
+                for item in news_items[:4]:
+                    if not isinstance(item, dict):
+                        continue
+                    headline = str(item.get("headline") or "Untitled update")
+                    summary = str(item.get("summary") or "").strip()
+                    source = str(item.get("source_site") or "unknown source")
+                    content.append(f"{headline} ({source}): {summary[:180]}")
+                if not content:
+                    content = [f"No structured recent-news entries were captured for {entity_name} in this run."]
+            else:
+                content = [f"No structured recent-news entries were captured for {entity_name} in this run."]
+            return {
+                "content": content,
+                "metrics": [f"News items captured: {len(news_items)}"],
+                "insights": [
+                    "News coverage quality depends on entity-grounded source selection and scrape depth.",
+                ],
+                "recommendations": [
+                    "Re-run recent-news collection with source constraints when news count is below target.",
+                ],
+                "confidence": 0.62,
+            }
+
+        if section_id == "leadership":
+            leader_lines: List[str] = []
+            if isinstance(entity_data.get("leadership_data"), dict):
+                for person in (entity_data.get("leadership_data") or {}).get("decision_makers", [])[:6]:
+                    if not isinstance(person, dict):
+                        continue
+                    name = str(person.get("name") or "").strip()
+                    role = str(person.get("role") or "").strip()
+                    linkedin = str(person.get("linkedin_url") or "").strip()
+                    if not name:
+                        continue
+                    snippet = f"{name} - {role or 'Role unknown'}"
+                    if linkedin:
+                        snippet = f"{snippet} ({linkedin})"
+                    leader_lines.append(snippet)
+            if not leader_lines and leadership_names:
+                leader_lines = [f"{leadership_names} ({leadership_roles or 'roles not yet structured'})"]
+            if not leader_lines:
+                leader_lines = [f"Leadership records are currently sparse for {entity_name}."]
+            return {
+                "content": leader_lines,
+                "metrics": [f"Decision makers identified: {leadership_count}"],
+                "insights": [
+                    "Leadership extraction should be denoised before enrichment to avoid noisy profile searches.",
+                ],
+                "recommendations": [
+                    "Prioritize outreach to commercial, digital, and procurement-adjacent roles where present.",
+                ],
+                "confidence": 0.66,
+            }
+
+        if section_id == "digital_maturity":
+            tech_stack = entity_data.get("detected_tech_stack")
+            if isinstance(tech_stack, dict):
+                frontend = str(tech_stack.get("frontend") or "unknown")
+                analytics = str(tech_stack.get("analytics") or "unknown")
+                crm = str(tech_stack.get("crm") or "unknown")
+            else:
+                frontend = analytics = crm = "unknown"
+            return {
+                "content": [
+                    f"Digital maturity baseline: {digital_maturity}.",
+                    f"Observed stack markers include frontend={frontend}, analytics={analytics}, crm={crm}.",
+                    f"Current performance markers: league_position={league_position}, points={points}.",
+                ],
+                "metrics": [
+                    f"Digital maturity: {digital_maturity}",
+                    f"Tech stack confidence: {'present' if isinstance(tech_stack, dict) else 'limited'}",
+                ],
+                "insights": [
+                    "Depth is constrained when official-site rendering yields low-signal content shells.",
+                ],
+                "recommendations": [
+                    "Trigger rendered scrape fallback for JS-heavy pages when extracted text is below quality threshold.",
+                ],
+                "confidence": 0.64,
+            }
+
+        if section_id == "outreach_strategy":
+            primary_target = leadership_names.split(",")[0].strip() if leadership_names else f"{entity_name} digital/commercial lead"
+            return {
+                "content": [
+                    f"Primary target: {primary_target}.",
+                    "Sequence outreach in three steps: context proof, capability mapping, and low-friction pilot ask.",
+                    "Anchor every message to entity-grounded evidence from official-site or recent-news signals.",
+                ],
+                "metrics": [
+                    f"Leadership targets available: {leadership_count}",
+                    f"News/context anchors available: {len(news_items)}",
+                ],
+                "insights": [
+                    "Outreach conversion improves when messaging references specific operational signals rather than generic claims.",
+                ],
+                "recommendations": [
+                    "Send role-specific variants for commercial and technology stakeholders within the same account.",
+                ],
+                "confidence": 0.65,
+            }
+
+        if section_id == "ai_reasoner_assessment":
+            confidence_markers = []
+            if leadership_count > 0:
+                confidence_markers.append("leadership coverage present")
+            if len(news_items) > 0:
+                confidence_markers.append("recent news anchors present")
+            if website and website != "Unknown":
+                confidence_markers.append("official web presence identified")
+            marker_summary = ", ".join(confidence_markers) if confidence_markers else "limited source grounding"
+            return {
+                "content": [
+                    f"AI readiness posture for {entity_name} is constrained by available entity-grounded signal density.",
+                    f"Current evidence indicates {marker_summary}.",
+                    "Primary execution risk is low-structure source content, not missing orchestration paths.",
+                ],
+                "metrics": [
+                    f"Signals available for assessment: leadership={leadership_count}, news={len(news_items)}, opportunities={opportunity_count}",
+                ],
+                "insights": [
+                    "Assessment quality improves when official-site rendered extraction yields substantive text and citations.",
+                    "Decision confidence should remain bounded when data is sparse or partially inferred.",
+                ],
+                "recommendations": [
+                    "Run a rendered-site depth pass for JS-heavy official pages before escalating model depth.",
+                    "Promote only evidence-backed claims into downstream opportunity scoring.",
+                ],
+                "confidence": 0.63,
+            }
+
+        if section_id == "challenges_opportunities":
+            challenges = [
+                "Source pages may resolve to low-signal shells, reducing extraction depth.",
+                "Leadership and recent-news signals can be noisy without strict denoise and grounding gates.",
+            ]
+            opportunities = [
+                "Entity-grounded discovery can increase with rendered fallback and hop-policy tuning.",
+                "Role-specific outreach quality improves when decision-maker extraction is deterministic and denoised.",
+            ]
+            if opportunity_count > 0:
+                opportunities.append(f"Detected opportunity signals currently: {opportunity_count}.")
+            return {
+                "content": [
+                    "Key challenges: " + " ".join(challenges[:2]),
+                    "Key opportunities: " + " ".join(opportunities[:2]),
+                ],
+                "metrics": [
+                    f"Opportunity signals detected: {opportunity_count}",
+                ],
+                "insights": [
+                    "Challenge/opportunity balance is strongest when discovery evidence is entity-specific and recent.",
+                ],
+                "recommendations": [
+                    "Prioritize entities with >=2 grounded signals for high-confidence outreach sequencing.",
+                    "Re-run low-yield entities with expanded rendered extraction and strict source filters.",
+                ],
+                "confidence": 0.62,
+            }
+
+        return None
     def _estimate_section_cost(self, model: str, max_tokens: int) -> float:
         """
         Estimate cost for generating a section
@@ -2066,6 +2591,7 @@ Hard requirements:
         priority_score: int = 50,
         entity_data: Optional[Dict[str, Any]] = None,
         progress_callback: Optional[Callable[..., Awaitable[None]]] = None,
+        run_objective: Optional[str] = None,
     ) -> dict:
         """
         Generate universal dossier with tiered prompts and hypothesis extraction.
@@ -2081,6 +2607,14 @@ Hard requirements:
             Complete dossier dictionary with metadata, hypotheses, and signals
         """
         start_time = datetime.now(timezone.utc)
+        objective = normalize_run_objective(run_objective, default=DEFAULT_DOSSIER_OBJECTIVE)
+        objective_profile = get_objective_profile(objective, default=DEFAULT_DOSSIER_OBJECTIVE)
+        if run_objective is None:
+            enable_leadership_enrichment = True
+            enable_question_extraction = True
+        else:
+            enable_leadership_enrichment = bool(objective_profile.get("enable_leadership_enrichment", False))
+            enable_question_extraction = bool(objective_profile.get("enable_question_extraction", False))
 
         # Determine tier
         tier = self._determine_tier(priority_score)
@@ -2119,7 +2653,12 @@ Hard requirements:
             try:
                 try:
                     dossier_data_obj = await asyncio.wait_for(
-                        collector.collect_all(entity_id, entity_name, entity_type=entity_type),
+                        collector.collect_all(
+                            entity_id,
+                            entity_name,
+                            entity_type=entity_type,
+                            run_objective=objective,
+                        ),
                         timeout=collection_timeout_seconds,
                     )
                 except asyncio.TimeoutError:
@@ -2163,7 +2702,11 @@ Hard requirements:
                             source_timings=entity_data.get("source_timings") or {},
                         )
                     # PHASE 0 ENHANCEMENT: Collect real leadership data
-                    if hasattr(collector, "collect_leadership") and not claude_disabled_reason:
+                    if (
+                        enable_leadership_enrichment
+                        and hasattr(collector, "collect_leadership")
+                        and not claude_disabled_reason
+                    ):
                         try:
                             leadership_data = await collector.collect_leadership(entity_id, entity_name)
                             if leadership_data.get("decision_makers"):
@@ -2195,6 +2738,11 @@ Hard requirements:
                                 )
                         except Exception as e:
                             logger.warning(f"⚠️  Leadership data collection failed: {e}")
+                    elif not enable_leadership_enrichment:
+                        logger.info(
+                            "⏭️ Skipping leadership enrichment for objective=%s (objective profile disabled)",
+                            objective,
+                        )
                     elif claude_disabled_reason:
                         logger.warning(
                             f"⚠️ Claude API disabled ({claude_disabled_reason}); skipping leadership enrichment for {entity_name}"
@@ -2261,6 +2809,12 @@ Hard requirements:
         dossier["metadata"]["generation_mode"] = generation_mode
         dossier["metadata"]["collection_timed_out"] = bool(phase0_collection_timed_out)
         dossier["metadata"]["model_max_tokens"] = max_tokens_override
+        dossier["metadata"]["run_objective"] = objective
+        dossier["metadata"]["skipped_enrichment_reasons"] = []
+        if not enable_leadership_enrichment:
+            dossier["metadata"]["skipped_enrichment_reasons"].append("leadership_enrichment_disabled_by_objective")
+        if not enable_question_extraction:
+            dossier["metadata"]["skipped_enrichment_reasons"].append("question_extraction_disabled_by_objective")
         if collection_duration_seconds is not None:
             dossier["metadata"]["collection_time_seconds"] = collection_duration_seconds
 

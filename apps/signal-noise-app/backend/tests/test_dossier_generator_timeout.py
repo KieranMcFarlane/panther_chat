@@ -4,6 +4,7 @@ Tests for timeout-safe dossier generation behavior in phase 0.
 """
 
 import asyncio
+import main
 import sys
 import types
 from pathlib import Path
@@ -231,3 +232,13 @@ async def test_run_entity_pipeline_degrades_when_phase0_timeout_mode_is_degraded
 
     assert result.phases["dossier_generation"]["status"] in {"completed", "failed"}
     assert result.artifacts["dossier"]["metadata"]["generation_mode"] == "timeout_degraded"
+
+
+def test_resolve_phase0_timeout_seconds_defaults_to_300(monkeypatch):
+    monkeypatch.delenv("DOSSIER_PHASE0_TIMEOUT_SECONDS", raising=False)
+    assert main.resolve_phase0_timeout_seconds() == 300.0
+
+
+def test_resolve_phase0_timeout_seconds_respects_env_override(monkeypatch):
+    monkeypatch.setenv("DOSSIER_PHASE0_TIMEOUT_SECONDS", "240")
+    assert main.resolve_phase0_timeout_seconds() == 240.0
