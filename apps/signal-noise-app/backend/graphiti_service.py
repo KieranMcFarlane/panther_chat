@@ -162,9 +162,13 @@ class GraphitiService:
     """
 
     def __init__(self):
-        # Database configuration - prefer Supabase for temporal tracking
-        self.supabase_url = os.getenv("NEXT_PUBLIC_SUPABASE_URL") or os.getenv("SUPABASE_URL")
-        self.supabase_key = os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY") or os.getenv("SUPABASE_ANON_KEY")
+        # Database configuration - backend writes must prefer service-role credentials.
+        self.supabase_url = os.getenv("SUPABASE_URL") or os.getenv("NEXT_PUBLIC_SUPABASE_URL")
+        self.supabase_key = (
+            os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+            or os.getenv("SUPABASE_ANON_KEY")
+            or os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
+        )
         self.use_supabase = bool(self.supabase_url and self.supabase_key and SUPABASE_AVAILABLE)
 
         # FalkorDB configuration (optional - for graph queries)
@@ -326,8 +330,13 @@ class GraphitiService:
             'metadata': rfp_data.get('metadata', {})
         }
 
-        # Use upsert to handle duplicates
-        self.supabase_client.table('rfp_tracking').upsert(rfp_tracking_data).execute()
+        # Use conflict-aware upsert so repeat runs are idempotent on rfp_id.
+        rfp_tracking_table = self.supabase_client.table('rfp_tracking')
+        try:
+            rfp_tracking_table.upsert(rfp_tracking_data, on_conflict='rfp_id').execute()
+        except TypeError:
+            # Backward compatibility for clients without explicit on_conflict support.
+            rfp_tracking_table.upsert(rfp_tracking_data).execute()
 
         logger.info(f"✅ Created RFP episode: {rfp_id} for {organization} (Supabase)")
 

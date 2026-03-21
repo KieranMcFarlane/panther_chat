@@ -1218,7 +1218,7 @@ class DossierDataCollector:
                     description=row[9]
                 )
             else:
-                logger.warning(f"⚠️ No metadata found for {entity_id} in FalkorDB")
+                logger.info(f"ℹ️ No metadata found for {entity_id} in FalkorDB; using fallback metadata path")
                 return None
 
         except Exception as e:
@@ -4129,6 +4129,14 @@ If there are conflicts, explain in analysis and rank accordingly."""
                 model="haiku",
                 max_tokens=500
             )
+            result = None
+            structured_output = (response or {}).get("structured_output")
+            if isinstance(structured_output, dict):
+                result = structured_output
+            else:
+                raw = str((response or {}).get("content") or "").strip()
+                if raw:
+                    result = json.loads(raw)
 
             import json
             import re
@@ -4137,6 +4145,7 @@ If there are conflicts, explain in analysis and rank accordingly."""
             if json_match:
                 result = json.loads(json_match.group(0))
 
+            if result:
                 # Update candidates with LLM confidence
                 for ranking in result.get("ranked_candidates", []):
                     idx = ranking["index"] - 1
