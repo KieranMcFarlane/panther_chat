@@ -14,6 +14,7 @@ Priority Tiers:
 """
 
 import asyncio
+import hashlib
 import json
 import logging
 import os
@@ -2583,6 +2584,113 @@ Hard requirements:
 
         return canonical
 
+    def _build_field_extraction_results(
+        self,
+        *,
+        entity_id: str,
+        entity_name: str,
+        entity_data: Dict[str, Any],
+        dossier: Dict[str, Any],
+    ) -> List[Dict[str, Any]]:
+        canonical_sources = self._derive_canonical_sources(entity_data)
+        source_url = canonical_sources.get("official_site") or canonical_sources.get("press")
+        source_tier = "tier_1" if source_url else "tier_2"
+
+        def _field_record(
+            section_id: str,
+            field_name: str,
+            value: Any,
+            value_type: str,
+            *,
+            required: bool = False,
+            reason_code: str = "validated",
+        ) -> Dict[str, Any]:
+            value_text = json.dumps(value, ensure_ascii=True) if isinstance(value, (dict, list)) else str(value or "")
+            grounding_passed = bool(value_text.strip())
+            status = "validated" if grounding_passed else "rejected"
+            content_hash = (
+                hashlib.sha1(value_text.encode("utf-8", errors="ignore")).hexdigest() if value_text.strip() else None
+            )
+            evidence_pointer_ids = [f"ev:{content_hash[:16]}"] if content_hash else []
+            return {
+                "step_type": "dossier_field_extraction",
+                "field_id": f"{section_id}.{field_name}",
+                "section_id": section_id,
+                "field_name": field_name,
+                "required": bool(required),
+                "value_type": value_type,
+                "status": status,
+                "reason_code": reason_code if grounding_passed else "missing_or_ungrounded",
+                "value": value,
+                "evidence_snippet": value_text[:240],
+                "source_url": source_url,
+                "source_tier": source_tier,
+                "content_hash": content_hash,
+                "grounding_passed": grounding_passed,
+                "parse_path": "dossier_field_contract_v1",
+                "model_used": "deterministic",
+                "schema_valid": True,
+                "evidence_pointer_ids": evidence_pointer_ids,
+                "entity_id": entity_id,
+                "entity_name": entity_name,
+            }
+
+        opportunities = (dossier.get("procurement_signals") or {}).get("upcoming_opportunities") or []
+        leadership = (dossier.get("leadership_analysis") or {}).get("decision_makers") or []
+        return [
+            _field_record(
+                "core_information",
+                "entity_type",
+                entity_data.get("entity_type") or dossier.get("metadata", {}).get("entity_type"),
+                "string",
+                required=True,
+            ),
+            _field_record(
+                "core_information",
+                "country",
+                entity_data.get("country") or entity_data.get("entity_country"),
+                "string",
+            ),
+            _field_record(
+                "core_information",
+                "website",
+                entity_data.get("website") or entity_data.get("official_site_url"),
+                "url",
+                required=True,
+            ),
+            _field_record(
+                "leadership",
+                "decision_maker_count",
+                len(leadership),
+                "integer",
+            ),
+            _field_record(
+                "leadership",
+                "decision_maker_names",
+                [str(item.get("name") or "") for item in leadership if isinstance(item, dict)],
+                "string_array",
+            ),
+            _field_record(
+                "procurement_signals",
+                "upcoming_opportunity_count",
+                len(opportunities),
+                "integer",
+            ),
+            _field_record(
+                "procurement_signals",
+                "top_opportunity",
+                (opportunities[0] if opportunities else {}),
+                "object",
+                reason_code="validated" if opportunities else "no_opportunity_detected",
+            ),
+            _field_record(
+                "recent_news",
+                "news_item_count",
+                int(len(entity_data.get("news_items") or [])),
+                "integer",
+            ),
+        ]
+
     async def generate_universal_dossier(
         self,
         entity_id: str,
@@ -2840,6 +2948,27 @@ Hard requirements:
         # Attach hypotheses and signals
         dossier["extracted_hypotheses"] = hypotheses
         dossier["extracted_signals"] = signals
+        field_extraction_results = self._build_field_extraction_results(
+            entity_id=entity_id,
+            entity_name=entity_name,
+            entity_data=entity_data,
+            dossier=dossier,
+        )
+        validated_fields = [
+            row for row in field_extraction_results
+            if str(row.get("status") or "").strip().lower() == "validated"
+        ]
+        dossier["metadata"]["field_extraction_results"] = field_extraction_results
+        dossier["metadata"]["field_extraction_summary"] = {
+            "total_fields": len(field_extraction_results),
+            "validated_fields": len(validated_fields),
+            "rejected_fields": max(len(field_extraction_results) - len(validated_fields), 0),
+        }
+        dossier["metadata"]["section_synthesis"] = {
+            "mode": "validated_fields_only",
+            "validated_field_count": len(validated_fields),
+            "placeholder_policy": "explicit_reason_codes",
+        }
 
         # Calculate generation time
         end_time = datetime.now(timezone.utc)

@@ -1139,6 +1139,8 @@ class RalphLoop:
         self.claude_client = claude_client
         self.graphiti_service = graphiti_service
         self.config = config or RalphLoopConfig()
+        self._last_signal_validations: List[Dict[str, Any]] = []
+        self._last_aggregation_summary: Dict[str, Any] = {}
         self.config.pass2_micro_batch_size = max(
             1,
             int(os.getenv("RALPH_PASS2_MICRO_BATCH_SIZE", str(self.config.pass2_micro_batch_size))),
@@ -1202,6 +1204,8 @@ class RalphLoop:
         Signal, = _schema_types("Signal")
 
         logger.info(f"🔁 Starting Ralph Loop for {entity_id} with {len(raw_signals)} raw signals")
+        self._last_signal_validations = []
+        self._last_aggregation_summary = {}
 
         validated_signals = []
         capability_signals = []  # NEW: Track CAPABILITY signals
@@ -1220,7 +1224,15 @@ class RalphLoop:
             return {
                 "validated_signals": [],
                 "capability_signals": [],
-                "hypothesis_states": {}
+                "hypothesis_states": {},
+                "signal_validations": [],
+                "aggregation_summary": {
+                    "total_candidates": 0,
+                    "accepted_count": 0,
+                    "candidate_count": 0,
+                    "rejected_count": 0,
+                    "duplicate_collapsed_count": 0,
+                },
             }
 
         # Pass 2: Claude validation
@@ -1236,7 +1248,15 @@ class RalphLoop:
             return {
                 "validated_signals": [],
                 "capability_signals": [],
-                "hypothesis_states": {}
+                "hypothesis_states": {},
+                "signal_validations": self._last_signal_validations,
+                "aggregation_summary": {
+                    "total_candidates": len(pass1_candidates),
+                    "accepted_count": 0,
+                    "candidate_count": 0,
+                    "rejected_count": len(pass1_candidates),
+                    "duplicate_collapsed_count": 0,
+                },
             }
 
         # Pass 3: Final confirmation
@@ -1252,7 +1272,17 @@ class RalphLoop:
             return {
                 "validated_signals": [],
                 "capability_signals": [],
-                "hypothesis_states": {}
+                "hypothesis_states": {},
+                "signal_validations": self._finalize_signal_validations(
+                    pass1_candidates=pass1_candidates,
+                    pass2_candidates=pass2_candidates,
+                    pass3_candidates=[],
+                ),
+                "aggregation_summary": self._build_aggregation_summary(
+                    pass1_candidates=pass1_candidates,
+                    pass2_candidates=pass2_candidates,
+                    pass3_candidates=[],
+                ),
             }
 
         # Mark all surviving signals as validated
@@ -1327,11 +1357,25 @@ class RalphLoop:
                        f"state={hypothesis_states[category].state}")
 
         logger.info(f"✅ Ralph Loop complete: {len(validated_signals)} validated, {len(capability_signals)} capability signals")
+        signal_validations = self._finalize_signal_validations(
+            pass1_candidates=pass1_candidates,
+            pass2_candidates=pass2_candidates,
+            pass3_candidates=pass3_candidates,
+        )
+        aggregation_summary = self._build_aggregation_summary(
+            pass1_candidates=pass1_candidates,
+            pass2_candidates=pass2_candidates,
+            pass3_candidates=pass3_candidates,
+        )
+        self._last_signal_validations = signal_validations
+        self._last_aggregation_summary = aggregation_summary
 
         return {
             "validated_signals": validated_signals,
             "capability_signals": capability_signals,
-            "hypothesis_states": hypothesis_states
+            "hypothesis_states": hypothesis_states,
+            "signal_validations": signal_validations,
+            "aggregation_summary": aggregation_summary,
         }
 
     async def _pass1_filter(self, raw_signals: List[Dict]) -> List['Signal']:
@@ -1535,9 +1579,14 @@ class RalphLoop:
         ]
         batch_results = await asyncio.gather(*tasks)
         validated_by_id: Dict[str, "Signal"] = {}
-        for validated_batch in batch_results:
-            for signal in validated_batch:
+        validation_records: List[Dict[str, Any]] = []
+        for batch_result in batch_results:
+            if not isinstance(batch_result, dict):
+                continue
+            for signal in batch_result.get("validated_signals", []):
                 validated_by_id[signal.id] = signal
+            validation_records.extend(batch_result.get("validation_records", []))
+        self._last_signal_validations = validation_records
         validated = [signal for signal in candidates if signal.id in validated_by_id]
         rejected = [signal for signal in candidates if signal.id not in validated_by_id]
         for signal in rejected:
@@ -1556,8 +1605,8 @@ class RalphLoop:
         entity_id: str,
         existing_summary: str,
         semaphore: asyncio.Semaphore,
-    ) -> List['Signal']:
-        """Validate one micro-batch with a strict response contract; fail open on model issues."""
+    ) -> Dict[str, Any]:
+        """Validate one micro-batch with a strict response contract; fail closed on schema/timeout."""
         prompt = self._build_pass2_prompt(
             entity_id=entity_id,
             existing_summary=existing_summary,
@@ -1573,7 +1622,8 @@ class RalphLoop:
                     max_retries_override=1,
                     empty_retries_before_fallback_override=1,
                 )
-            if self._extract_validation_json(response) is None:
+            payload = self._extract_validation_json(response)
+            if payload is None:
                 retry_prompt = self._build_pass2_retry_prompt(entity_id=entity_id, batch=batch)
                 logger.warning(
                     "⚠️ Pass 2 batch received non-JSON response; retrying strict JSON mode (batch=%s)",
@@ -1588,14 +1638,120 @@ class RalphLoop:
                         max_retries_override=1,
                         empty_retries_before_fallback_override=1,
                     )
+                payload = self._extract_validation_json(response)
+
+            if payload is None:
+                records = [
+                    self._build_signal_validation_record(
+                        signal=signal,
+                        decision="REJECT",
+                        reason_code="schema_fail",
+                        schema_valid=False,
+                        parse_path="ralph_pass2_schema_fail",
+                        model_used="haiku",
+                        confidence_adjustment=0.0,
+                    )
+                    for signal in batch
+                ]
+                return {"validated_signals": [], "validation_records": records}
+
+            validated_ids: set[str] = set()
+            confidence_updates: Dict[str, Dict[str, Any]] = {}
+            rejected_reasons: Dict[str, str] = {}
+
             if self.config.enable_confidence_validation:
-                validated_with_meta = self._parse_claude_validation_with_confidence(response, batch)
-                return [item['signal'] for item in validated_with_meta]
-            validated_ids = set(self._parse_claude_validation(response, batch))
-            return [signal for signal in batch if signal.id in validated_ids]
+                for item in payload.get("validated", []):
+                    if not isinstance(item, dict):
+                        continue
+                    signal_id = str(item.get("signal_id") or "").strip()
+                    if not signal_id:
+                        continue
+                    validated_ids.add(signal_id)
+                    confidence_updates[signal_id] = item
+                for item in payload.get("rejected", []):
+                    if isinstance(item, dict):
+                        rejected_reasons[str(item.get("signal_id") or "").strip()] = str(
+                            item.get("reason") or "pass2_rejected"
+                        )
+            else:
+                validated_field = payload.get("validated", [])
+                if isinstance(validated_field, list):
+                    for item in validated_field:
+                        if isinstance(item, str):
+                            validated_ids.add(item)
+                        elif isinstance(item, dict):
+                            signal_id = str(item.get("signal_id") or "").strip()
+                            if signal_id:
+                                validated_ids.add(signal_id)
+                for item in payload.get("rejected", []):
+                    if isinstance(item, dict):
+                        rejected_reasons[str(item.get("signal_id") or "").strip()] = str(
+                            item.get("reason") or "pass2_rejected"
+                        )
+
+            validated_signals: List["Signal"] = []
+            validation_records: List[Dict[str, Any]] = []
+            for signal in batch:
+                if signal.id in validated_ids:
+                    conf_before = float(getattr(signal, "confidence", 0.0) or 0.0)
+                    conf_after = conf_before
+                    confidence_rationale = "validated"
+                    manual_review = False
+                    if signal.id in confidence_updates:
+                        update = confidence_updates[signal.id]
+                        conf_after = float(update.get("validated_confidence", conf_before) or conf_before)
+                        confidence_rationale = str(update.get("confidence_rationale") or "validated")
+                        manual_review = bool(update.get("requires_manual_review", False))
+                    signal.confidence = max(0.0, min(1.0, conf_after))
+                    if self.config.enable_confidence_validation:
+                        ConfidenceValidation, = _schema_types("ConfidenceValidation")
+                        signal.confidence_validation = ConfidenceValidation(
+                            original_confidence=conf_before,
+                            validated_confidence=signal.confidence,
+                            adjustment=signal.confidence - conf_before,
+                            rationale=confidence_rationale,
+                            requires_manual_review=manual_review,
+                        )
+                    validated_signals.append(signal)
+                    validation_records.append(
+                        self._build_signal_validation_record(
+                            signal=signal,
+                            decision="ACCEPT",
+                            reason_code="pass2_validated",
+                            schema_valid=True,
+                            parse_path="ralph_pass2_json_contract",
+                            model_used="haiku",
+                            confidence_adjustment=signal.confidence - conf_before,
+                        )
+                    )
+                else:
+                    validation_records.append(
+                        self._build_signal_validation_record(
+                            signal=signal,
+                            decision="REJECT",
+                            reason_code=rejected_reasons.get(signal.id, "pass2_rejected"),
+                            schema_valid=True,
+                            parse_path="ralph_pass2_json_contract",
+                            model_used="haiku",
+                            confidence_adjustment=0.0,
+                        )
+                    )
+            return {"validated_signals": validated_signals, "validation_records": validation_records}
         except Exception as error:
-            logger.error("❌ Pass 2 batch validation failed; fail-open for batch of %s: %s", len(batch), error)
-            return batch
+            logger.error("❌ Pass 2 batch validation failed; fail-closed for batch of %s: %s", len(batch), error)
+            records = [
+                self._build_signal_validation_record(
+                    signal=signal,
+                    decision="REJECT",
+                    reason_code="timeout_or_exception",
+                    schema_valid=False,
+                    parse_path="ralph_pass2_exception",
+                    model_used="haiku",
+                    confidence_adjustment=0.0,
+                )
+                for signal in batch
+            ]
+            return {"validated_signals": [], "validation_records": records}
 
     def _build_pass2_prompt(self, *, entity_id: str, existing_summary: str, candidates_summary: str) -> str:
         """Build a concise pass-2 validation prompt for a small candidate batch."""
@@ -1722,6 +1878,111 @@ Return JSON only:
                 # Signal object
                 lines.append(f"- {signal.id}: {signal.type.value} (confidence: {signal.confidence})")
         return "\n".join(lines)
+
+    def _extract_evidence_pointer_ids_from_signal(self, signal: 'Signal') -> List[str]:
+        metadata = getattr(signal, "metadata", {}) or {}
+        evidence = metadata.get("evidence")
+        pointers: List[str] = []
+        if isinstance(evidence, list):
+            for index, item in enumerate(evidence):
+                if not isinstance(item, dict):
+                    continue
+                pointer = item.get("id") or item.get("url") or item.get("source")
+                if pointer:
+                    pointers.append(str(pointer))
+                else:
+                    pointers.append(f"{signal.id}:evidence:{index + 1}")
+        if not pointers:
+            pointers.append(f"{signal.id}:evidence:derived")
+        return pointers[:5]
+
+    def _build_signal_validation_record(
+        self,
+        *,
+        signal: 'Signal',
+        decision: str,
+        reason_code: str,
+        schema_valid: bool,
+        parse_path: str,
+        model_used: str,
+        confidence_adjustment: float,
+    ) -> Dict[str, Any]:
+        return {
+            "signal_id": signal.id,
+            "decision": str(decision or "REJECT").upper(),
+            "reason_code": str(reason_code or "unspecified"),
+            "evidence_pointer_ids": self._extract_evidence_pointer_ids_from_signal(signal),
+            "confidence_adjustment": float(confidence_adjustment or 0.0),
+            "schema_valid": bool(schema_valid),
+            "parse_path": parse_path,
+            "model_used": model_used,
+            "validation_state": "validated" if str(decision).upper() == "ACCEPT" else "rejected",
+        }
+
+    def _finalize_signal_validations(
+        self,
+        *,
+        pass1_candidates: List['Signal'],
+        pass2_candidates: List['Signal'],
+        pass3_candidates: List['Signal'],
+    ) -> List[Dict[str, Any]]:
+        pass2_ids = {signal.id for signal in pass2_candidates}
+        pass3_ids = {signal.id for signal in pass3_candidates}
+        existing_by_id = {
+            str(item.get("signal_id") or ""): item
+            for item in (self._last_signal_validations or [])
+            if isinstance(item, dict)
+        }
+        finalized: List[Dict[str, Any]] = []
+        for signal in pass1_candidates:
+            base = dict(existing_by_id.get(signal.id) or {})
+            if signal.id in pass3_ids:
+                base["decision"] = "ACCEPT"
+                base["validation_state"] = "validated"
+                base["reason_code"] = "pass3_confirmed"
+                base["schema_valid"] = bool(base.get("schema_valid", True))
+            elif signal.id in pass2_ids:
+                base["decision"] = "REJECT"
+                base["validation_state"] = "rejected"
+                base["reason_code"] = str(base.get("reason_code") or "pass3_rejected")
+                base["schema_valid"] = bool(base.get("schema_valid", True))
+            else:
+                base["decision"] = str(base.get("decision") or "REJECT").upper()
+                base["validation_state"] = "rejected"
+                base["reason_code"] = str(base.get("reason_code") or "pass2_rejected")
+                base["schema_valid"] = bool(base.get("schema_valid", False))
+            base.setdefault("signal_id", signal.id)
+            base.setdefault("parse_path", "ralph_pass2_json_contract")
+            base.setdefault("model_used", "haiku")
+            base.setdefault("confidence_adjustment", 0.0)
+            base["evidence_pointer_ids"] = base.get("evidence_pointer_ids") or self._extract_evidence_pointer_ids_from_signal(signal)
+            finalized.append(base)
+        return finalized
+
+    def _build_aggregation_summary(
+        self,
+        *,
+        pass1_candidates: List['Signal'],
+        pass2_candidates: List['Signal'],
+        pass3_candidates: List['Signal'],
+    ) -> Dict[str, Any]:
+        pass2_ids = {signal.id for signal in pass2_candidates}
+        pass3_ids = {signal.id for signal in pass3_candidates}
+        rejected_count = max(len(pass1_candidates) - len(pass3_candidates), 0)
+        categories: Dict[str, int] = {}
+        for signal in pass3_candidates:
+            subtype = str(getattr(signal, "subtype", None) or "UNSPECIFIED")
+            categories[subtype] = int(categories.get(subtype, 0) or 0) + 1
+        return {
+            "total_candidates": len(pass1_candidates),
+            "post_pass2_count": len(pass2_candidates),
+            "accepted_count": len(pass3_candidates),
+            "candidate_count": 0,
+            "rejected_count": rejected_count,
+            "duplicate_collapsed_count": max(len(pass2_ids - pass3_ids), 0),
+            "accepted_signal_ids": sorted(list(pass3_ids)),
+            "categories": categories,
+        }
 
     def _parse_claude_validation_with_confidence(
         self,

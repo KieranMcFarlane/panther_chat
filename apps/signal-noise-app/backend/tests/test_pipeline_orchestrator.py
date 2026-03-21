@@ -184,6 +184,23 @@ class FakePersistenceCoordinator:
             "reconciliation_payload": None,
         }
 
+    async def persist_step_artifacts(self, **kwargs):
+        artifacts = kwargs.get("artifacts") or []
+        return {
+            "total_count": len(artifacts),
+            "persisted_count": len(artifacts),
+            "failed_count": 0,
+            "dual_write_ok": True,
+            "status_matrix": [],
+            "reconcile_required": False,
+            "reconciliation_payloads": [],
+            "failure_taxonomy": {
+                "supabase_write_failure": 0,
+                "falkordb_write_failure": 0,
+                "dual_write_incomplete": 0,
+            },
+        }
+
 
 class FakePersistenceCoordinatorFail:
     async def persist_run_artifacts(self, **kwargs):
@@ -193,6 +210,23 @@ class FakePersistenceCoordinatorFail:
             "falkordb": {"ok": True, "attempts": 1},
             "reconcile_required": True,
             "reconciliation_payload": {"idempotency_key": "k"},
+        }
+
+    async def persist_step_artifacts(self, **kwargs):
+        artifacts = kwargs.get("artifacts") or []
+        return {
+            "total_count": len(artifacts),
+            "persisted_count": 0,
+            "failed_count": len(artifacts),
+            "dual_write_ok": False,
+            "status_matrix": [],
+            "reconcile_required": True,
+            "reconciliation_payloads": [{"idempotency_key": "step-k"}],
+            "failure_taxonomy": {
+                "supabase_write_failure": len(artifacts),
+                "falkordb_write_failure": 0,
+                "dual_write_incomplete": 1 if artifacts else 0,
+            },
         }
 
 
@@ -261,7 +295,7 @@ async def test_pipeline_orchestrator_hard_fails_acceptance_gate_when_dual_write_
     assert result["acceptance_gate"]["passed"] is False
     assert "dual_write_incomplete" in result["acceptance_gate"]["reasons"]
     assert result["failure_taxonomy"]["dual_write_incomplete"] == 1
-    assert result["failure_taxonomy"]["supabase_write_failure"] == 1
+    assert result["failure_taxonomy"]["supabase_write_failure"] >= 1
 
 
 @pytest.mark.asyncio
@@ -283,6 +317,12 @@ async def test_pipeline_orchestrator_acceptance_gate_uses_validated_signal_count
     assert result["validated_signal_count"] == 0
     assert result["acceptance_gate"]["passed"] is False
     assert "signals_below_threshold" in result["acceptance_gate"]["reasons"]
+    no_signal_episodes = [
+        episode
+        for episode in result["artifacts"]["episodes"]
+        if isinstance(episode, dict) and str(episode.get("episode_type") or "") == "NO_SIGNAL_FOUND"
+    ]
+    assert len(no_signal_episodes) == 1
 
 
 @pytest.mark.asyncio

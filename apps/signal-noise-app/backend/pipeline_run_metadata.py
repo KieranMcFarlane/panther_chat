@@ -98,6 +98,8 @@ def merge_pipeline_run_metadata(
     run_profile: Optional[str] = None,
     degraded_mode: Optional[bool] = None,
     persistence_status: Optional[Dict[str, Any]] = None,
+    step_artifact_counts: Optional[Dict[str, Any]] = None,
+    step_failure_taxonomy: Optional[Dict[str, Any]] = None,
     promoted_rfp_ids: Optional[list[str]] = None,
     completed_at: Optional[str] = None,
 ) -> Dict[str, Any]:
@@ -142,6 +144,10 @@ def merge_pipeline_run_metadata(
         metadata["degraded_mode"] = bool(degraded_mode)
     if persistence_status is not None:
         metadata["persistence"] = persistence_status
+    if step_artifact_counts is not None:
+        metadata["step_artifact_counts"] = step_artifact_counts
+    if step_failure_taxonomy is not None:
+        metadata["step_failure_taxonomy"] = step_failure_taxonomy
     if promoted_rfp_ids is not None:
         metadata["promoted_rfp_ids"] = promoted_rfp_ids
     if completed_at is not None:

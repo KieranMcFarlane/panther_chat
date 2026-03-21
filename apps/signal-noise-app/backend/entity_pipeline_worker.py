@@ -604,6 +604,8 @@ class EntityPipelineWorker:
                     run_profile=result.get("run_profile"),
                     degraded_mode=result.get("degraded_mode"),
                     persistence_status=result.get("persistence_status"),
+                    step_artifact_counts=result.get("step_artifact_counts"),
+                    step_failure_taxonomy=result.get("step_failure_taxonomy"),
                     promoted_rfp_ids=[],
                     completed_at=result.get("completed_at"),
                 )
