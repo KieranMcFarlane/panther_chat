@@ -1328,7 +1328,7 @@ class DossierDataCollector:
                     description=row[9]
                 )
             else:
-                logger.warning(f"⚠️ No metadata found for {entity_id} in FalkorDB")
+                logger.info(f"ℹ️ No metadata found for {entity_id} in FalkorDB; using fallback metadata path")
                 return None
 
         except Exception as e:
@@ -1444,14 +1444,19 @@ class DossierDataCollector:
                 model=model,
                 max_tokens=max_tokens,
                 json_mode=True,
-                max_retries_override=1,
+                max_retries_override=0,
                 empty_retries_before_fallback_override=1,
                 fast_fail_on_length=True,
             )
-            raw = str((result or {}).get("content") or "").strip()
-            if not raw:
-                return None
-            parsed = json.loads(raw)
+            parsed = None
+            structured_output = (result or {}).get("structured_output")
+            if isinstance(structured_output, dict):
+                parsed = structured_output
+            if parsed is None:
+                raw = str((result or {}).get("content") or "").strip()
+                if not raw:
+                    return None
+                parsed = json.loads(raw)
             return parsed if isinstance(parsed, dict) else None
         except Exception:
             return None
@@ -4386,14 +4391,20 @@ If there are conflicts, explain in analysis and rank accordingly."""
                 model="haiku",
                 max_tokens=260,
                 json_mode=True,
-                max_retries_override=1,
+                max_retries_override=0,
                 empty_retries_before_fallback_override=1,
+                fast_fail_on_length=True,
             )
+            result = None
+            structured_output = (response or {}).get("structured_output")
+            if isinstance(structured_output, dict):
+                result = structured_output
+            else:
+                raw = str((response or {}).get("content") or "").strip()
+                if raw:
+                    result = json.loads(raw)
 
-            raw = str((response or {}).get("content") or "").strip()
-            if raw:
-                result = json.loads(raw)
-
+            if result:
                 # Update candidates with LLM confidence
                 for ranking in result.get("ranked_candidates", []):
                     idx = ranking["index"] - 1
