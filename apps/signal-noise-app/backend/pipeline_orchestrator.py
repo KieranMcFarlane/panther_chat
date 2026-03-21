@@ -91,7 +91,15 @@ class PipelineOrchestrator:
         initial_dossier: Optional[Dict[str, Any]] = None,
         phase_callback: Optional[Callable[[str, Dict[str, Any]], Awaitable[None]]] = None,
     ) -> Dict[str, Any]:
-        objective = normalize_run_objective(run_objective, default=DEFAULT_PIPELINE_OBJECTIVE)
+        requested_objective = str(run_objective or "").strip().lower() or DEFAULT_PIPELINE_OBJECTIVE
+        objective = normalize_run_objective(requested_objective, default=DEFAULT_PIPELINE_OBJECTIVE)
+        phase_objectives = {
+            "dossier_generation": "dossier_core",
+            "discovery": objective,
+            "ralph_validation": objective,
+            "temporal_persistence": objective,
+            "dashboard_scoring": objective,
+        }
         run_id = f"{entity_id}-{int(time.time())}"
         phase_results: Dict[str, Dict[str, Any]] = {
             "dossier_generation": {"status": "pending"},
@@ -275,6 +283,9 @@ class PipelineOrchestrator:
                     "phase_results": phase_results,
                     "validated_signal_count": len(validated_signals),
                     "rfp_count": len(validated_rfps),
+                    "requested_objective": requested_objective,
+                    "effective_objective": objective,
+                    "phase_objectives": phase_objectives,
                 },
             )
             step_persistence_status = await self.persistence_coordinator.persist_step_artifacts(
@@ -388,6 +399,9 @@ class PipelineOrchestrator:
             "entity_id": entity_id,
             "entity_name": entity_name,
             "run_id": run_id,
+            "requested_objective": requested_objective,
+            "effective_objective": objective,
+            "phase_objectives": phase_objectives,
             "objective": objective,
             "objective_result": {
                 "validated_signal_count": len(validated_signals),

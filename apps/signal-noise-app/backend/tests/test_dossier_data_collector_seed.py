@@ -196,6 +196,39 @@ async def test_get_scraped_content_does_not_cache_commerce_url_without_canonical
     assert collector._get_cached_official_site_url("Coventry City FC") is None
 
 
+@pytest.mark.asyncio
+async def test_get_scraped_content_enhanced_returns_tuple_with_merged_data(monkeypatch):
+    collector = DossierDataCollector(brightdata_client=SimpleNamespace())
+    collector._brightdata_available = True
+    collector.brightdata_client = SimpleNamespace()
+
+    async def _fake_wiki(_entity_name):
+        return {"source": "wikipedia", "url": "https://en.wikipedia.org/wiki/Arsenal_F.C.", "founded": "1886"}
+
+    async def _fake_site(_entity_name):
+        return {"source": "official", "url": "https://www.arsenal.com", "website": "https://www.arsenal.com"}
+
+    async def _fake_field(_entity_name, _field_name):
+        return {}
+
+    async def _fake_league(_entity_name):
+        return {"league": "Premier League", "country": "England"}
+
+    monkeypatch.setattr(collector, "_scrape_wikipedia", _fake_wiki)
+    monkeypatch.setattr(collector, "_scrape_official_site", _fake_site)
+    monkeypatch.setattr(collector, "_scrape_field_specific", _fake_field)
+    monkeypatch.setattr(collector, "_scrape_league_data", _fake_league)
+
+    result = await collector._get_scraped_content_enhanced("arsenal-fc", "Arsenal FC", run_objective="dossier_core")
+
+    assert result is not None
+    scraped_content, extracted = result
+    assert scraped_content.url == "https://www.arsenal.com"
+    assert extracted["founded"] == "1886"
+    assert extracted["league"] == "Premier League"
+    assert extracted["country"] == "England"
+
+
 def test_postprocess_decision_makers_filters_noisy_non_person_names():
     collector = DossierDataCollector(brightdata_client=SimpleNamespace())
     raw = [

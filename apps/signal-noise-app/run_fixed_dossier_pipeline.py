@@ -113,7 +113,16 @@ class FixedDossierFirstPipeline:
         )
         self.two_pass_gate_min_confidence = float(os.getenv("PIPELINE_PASS_A_MIN_CONFIDENCE", "0.45"))
         self.two_pass_gate_min_signals = max(0, int(os.getenv("PIPELINE_PASS_A_MIN_SIGNALS", "1")))
-        self.run_objective = str(os.getenv("PIPELINE_RUN_OBJECTIVE", "rfp_web")).strip().lower() or "rfp_web"
+        self.run_objective = str(os.getenv("PIPELINE_RUN_OBJECTIVE", "dossier_core")).strip().lower() or "dossier_core"
+        self.requested_objective = self.run_objective
+        self.effective_objective = self.run_objective
+        self.phase_objectives: Dict[str, str] = {
+            "dossier_generation": "dossier_core",
+            "discovery": self.run_objective,
+            "ralph_validation": self.run_objective,
+            "temporal_persistence": self.run_objective,
+            "dashboard_scoring": self.run_objective,
+        }
 
         if _bool_env(os.getenv("PIPELINE_FORCE_BRIGHTDATA", "false")):
             os.environ["BRIGHTDATA_FORCE_ONLY"] = "true"
@@ -1036,12 +1045,18 @@ class FixedDossierFirstPipeline:
     ):
         """Phase 3: Calculate dashboard scores"""
         logger.info(f"📊 Calculating three-axis dashboard scores")
+        raw_signals = discovery_result.signals_discovered if hasattr(discovery_result, 'signals_discovered') else []
+        validated_signals = [
+            signal
+            for signal in (raw_signals or [])
+            if isinstance(signal, dict) and str(signal.get("validation_state") or "").strip().lower() == "validated"
+        ]
 
         scores = await self.dashboard_scorer.calculate_entity_scores(
             entity_id=entity_id,
             entity_name=entity_name,
             hypotheses=discovery_result.hypotheses if hasattr(discovery_result, 'hypotheses') else [],
-            signals=discovery_result.signals_discovered if hasattr(discovery_result, 'signals_discovered') else [],
+            signals=validated_signals,
             episodes=None
         )
 
@@ -1266,8 +1281,23 @@ class FixedDossierFirstPipeline:
         if not isinstance(performance, dict):
             performance = {}
         signals = discovery.get("signals_discovered")
-        signal_count = len(signals) if isinstance(signals, list) else 0
-        validated_signal_list = [signal for signal in (signals or []) if isinstance(signal, dict) and str(signal.get("validation_state") or "").strip().lower() == "validated"]
+        signal_events = signals if isinstance(signals, list) else []
+        validated_signal_list = [
+            signal
+            for signal in signal_events
+            if isinstance(signal, dict) and str(signal.get("validation_state") or "").strip().lower() == "validated"
+        ]
+        candidate_signal_list = [
+            signal
+            for signal in signal_events
+            if isinstance(signal, dict) and str(signal.get("validation_state") or "").strip().lower() == "candidate"
+        ]
+        diagnostic_signal_list = [
+            signal
+            for signal in signal_events
+            if isinstance(signal, dict) and str(signal.get("validation_state") or "").strip().lower() == "diagnostic"
+        ]
+        signal_count = len(validated_signal_list)
         accepted_empty_evidence_count = 0
         for signal in validated_signal_list:
             evidence_found = str(signal.get("evidence_found") or "").strip()
@@ -1287,6 +1317,30 @@ class FixedDossierFirstPipeline:
         )
         section_counters = self._count_section_fallbacks(dossier)
         final_confidence = float(discovery.get("final_confidence") or 0.0)
+        metadata_coverage_score = None
+        unknown_required_field_count = None
+        sections = dossier.get("sections") if isinstance(dossier.get("sections"), list) else []
+        core_section = next(
+            (
+                section
+                for section in sections
+                if isinstance(section, dict) and str(section.get("id") or "").strip() == "core_information"
+            ),
+            None,
+        )
+        if isinstance(core_section, dict):
+            for metric in core_section.get("metrics") or []:
+                metric_text = str(metric or "")
+                if metric_text.lower().startswith("metadata coverage score:"):
+                    try:
+                        metadata_coverage_score = float(metric_text.split(":", 1)[1].strip())
+                    except Exception:
+                        metadata_coverage_score = None
+                if metric_text.lower().startswith("unknown required fields:"):
+                    try:
+                        unknown_required_field_count = int(float(metric_text.split(":", 1)[1].strip()))
+                    except Exception:
+                        unknown_required_field_count = None
         acceptance_gate = self._build_acceptance_gate(
             final_confidence=final_confidence,
             signal_count=signal_count,
@@ -1341,6 +1395,9 @@ class FixedDossierFirstPipeline:
             "run_at": datetime.now(timezone.utc).isoformat(),
             "entity_id": entity_id,
             "entity_name": entity_name,
+            "requested_objective": getattr(self, "requested_objective", self.run_objective if hasattr(self, "run_objective") else "dossier_core"),
+            "effective_objective": getattr(self, "effective_objective", self.run_objective if hasattr(self, "run_objective") else "dossier_core"),
+            "phase_objectives": dict(getattr(self, "phase_objectives", {})),
             "total_time_seconds": round(total_time_seconds, 3),
             "phase_timings_seconds": phase_timings,
             "phase_statuses": phases,
@@ -1350,6 +1407,12 @@ class FixedDossierFirstPipeline:
                 "entity_confidence": float(performance.get("entity_confidence") or discovery.get("entity_confidence") or final_confidence),
                 "pipeline_confidence": float(performance.get("pipeline_confidence") or discovery.get("pipeline_confidence") or final_confidence),
                 "signals_discovered": signal_count,
+                "signals_total_events": int(performance.get("signals_total_events") or len(signal_events)),
+                "signals_validated_count": int(performance.get("signals_validated_count") or len(validated_signal_list)),
+                "signals_candidate_count": int(performance.get("signals_candidate_count") or len(candidate_signal_list)),
+                "signals_diagnostic_count": int(performance.get("signals_diagnostic_count") or len(diagnostic_signal_list)),
+                "metadata_coverage_score": metadata_coverage_score,
+                "unknown_required_field_count": unknown_required_field_count,
                 "iterations_completed": int(discovery.get("iterations_completed") or 0),
                 "procurement_maturity": scores.get("procurement_maturity"),
                 "sales_readiness": scores.get("sales_readiness"),

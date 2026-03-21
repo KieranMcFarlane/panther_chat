@@ -540,6 +540,10 @@ class DiscoveryRuntimeV2:
             },
             "budget": objective_budget,
             "adaptive_candidate_mode_applied": adaptive_candidate_mode,
+            "signals_total_events": len(all_events),
+            "signals_validated_count": len(validated_signals),
+            "signals_candidate_count": len(candidate_signals),
+            "signals_diagnostic_count": len(diagnostics),
             "candidate_signals_count": len(candidate_signals),
             "two_pass": {
                 "enabled": True,
@@ -572,7 +576,7 @@ class DiscoveryRuntimeV2:
             total_cost_usd=0.0,
             hypotheses=[],
             depth_stats={0: state["iterations_completed"]},
-            signals_discovered=all_events,
+            signals_discovered=validated_signals,
             raw_signals=all_events,
             hypothesis_states={},
             performance_summary=performance_summary,
@@ -745,15 +749,8 @@ class DiscoveryRuntimeV2:
                 accept_reject_reasons.append("tier3_without_corroboration")
 
             accept_guard_passed = len(accept_reject_reasons) == 0
-            if accept_guard_passed:
-                validation_state = "validated"
-            else:
-                if quality_score > 0.25 and evidence_snippet:
-                    validation_state = "candidate"
-                else:
-                    validation_state = "diagnostic"
-                if source_tier == "tier_3" and "tier3_without_corroboration" in accept_reject_reasons:
-                    self._metrics["fallback_accept_block_count"] += 1
+            if not accept_guard_passed and source_tier == "tier_3" and "tier3_without_corroboration" in accept_reject_reasons:
+                self._metrics["fallback_accept_block_count"] += 1
 
             llm_eval = await self._maybe_llm_evaluate(
                 lane=lane,
@@ -769,15 +766,27 @@ class DiscoveryRuntimeV2:
             if llm_eval.get("decision") == "ACCEPT" and not accept_guard_passed:
                 # Hard block: fallback/invalid evidence cannot become ACCEPT.
                 self._metrics["fallback_accept_block_count"] += 1
+            llm_decision = str(llm_eval.get("decision") or "NO_PROGRESS").strip().upper()
+            positive_decision = llm_decision in {"ACCEPT", "WEAK_ACCEPT_CANDIDATE", "WEAK_ACCEPT"}
             llm_schema_invalid = (
                 not bool(llm_eval.get("schema_valid", False))
                 or str(llm_eval.get("llm_last_status") or "").strip().lower() in {"length_stop", "empty_response", "timeout"}
             )
-            if validation_state == "validated" and llm_schema_invalid:
-                validation_state = "candidate"
+            if llm_schema_invalid:
                 accept_guard_passed = False
                 accept_reject_reasons.append("llm_schema_invalid_demoted")
                 self._metrics["fallback_accept_block_count"] += 1
+            if accept_guard_passed and not positive_decision:
+                accept_guard_passed = False
+                accept_reject_reasons.append("llm_no_progress")
+                self._metrics["fallback_accept_block_count"] += 1
+
+            if accept_guard_passed:
+                validation_state = "validated"
+            elif quality_score > 0.25 and evidence_snippet:
+                validation_state = "candidate"
+            else:
+                validation_state = "diagnostic"
 
             if validation_state == "validated" and accept_guard_passed:
                 state["accepted_signatures"].add(signature)
@@ -790,7 +799,7 @@ class DiscoveryRuntimeV2:
             candidate_eval = {
                 "step_type": "discovery_candidate_eval",
                 "step_id": f"{lane}:{hashlib.md5(f'{url}|{content_hash or ''}'.encode('utf-8')).hexdigest()[:12]}",
-                "status": "completed" if accept_guard_passed else "rejected",
+                "status": "completed" if validation_state == "validated" else "rejected",
                 "reason_code": str(llm_eval.get("reason_code") or "accept_guard"),
                 "source_url": url,
                 "source_tier": source_tier,

@@ -1435,6 +1435,29 @@ class DossierDataCollector:
             if league_data:
                 all_extracted_data.update(league_data)
 
+        if not all_extracted_data:
+            logger.info("ℹ️ Enhanced scrape returned no usable data for %s", entity_name)
+            return None
+
+        # Create scraped content object
+        official_url = all_extracted_data.get("website", "")
+        if not official_url and scraped_urls:
+            official_url = scraped_urls[0]
+
+        scraped_content = ScrapedContent(
+            url=official_url,
+            source_type="MULTI_SOURCE",
+            title=entity_name,
+            content=all_extracted_data.get("official_site_content", ""),
+            markdown_content=all_extracted_data.get("official_site_markdown", ""),
+            word_count=0
+        )
+
+        logger.info(f"✅ Enhanced scraping complete: {len(all_extracted_data)} fields collected")
+        logger.info(f"   Fields found: {list(all_extracted_data.keys())}")
+
+        return scraped_content, all_extracted_data
+
     async def _query_json_strict(self, *, prompt: str, max_tokens: int = 220, model: str = "haiku") -> Optional[Dict[str, Any]]:
         if not self.claude_client:
             return None
@@ -1460,25 +1483,6 @@ class DossierDataCollector:
             return parsed if isinstance(parsed, dict) else None
         except Exception:
             return None
-
-        # Create scraped content object
-        official_url = all_extracted_data.get("website", "")
-        if not official_url and scraped_urls:
-            official_url = scraped_urls[0]
-
-        scraped_content = ScrapedContent(
-            url=official_url,
-            source_type="MULTI_SOURCE",
-            title=entity_name,
-            content=all_extracted_data.get("official_site_content", ""),
-            markdown_content=all_extracted_data.get("official_site_markdown", ""),
-            word_count=0
-        )
-
-        logger.info(f"✅ Enhanced scraping complete: {len(all_extracted_data)} fields collected")
-        logger.info(f"   Fields found: {list(all_extracted_data.keys())}")
-
-        return scraped_content, all_extracted_data
 
     async def _get_scraped_content(self, entity_id: str, entity_name: str) -> Optional[tuple[ScrapedContent, Dict[str, Any], Dict[str, Any]]]:
         """Compatibility scraping path used by seeded-official-site tests."""

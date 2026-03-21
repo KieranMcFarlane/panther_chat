@@ -1146,8 +1146,41 @@ Website: N/A
         opportunity_count = int(entity_data.get("opportunity_count") or 0)
         points = str(entity_data.get("points") or "unknown")
         league_position = str(entity_data.get("league_position") or "unknown")
+        required_values = {
+            "sport": sport,
+            "country": country,
+            "league": league,
+            "founded": founded,
+            "website": website,
+        }
+        unknown_required_field_count = sum(
+            1
+            for value in required_values.values()
+            if str(value).strip().lower() in {"unknown", "unknown sport", "unknown country", "unknown competition", ""}
+        )
+        metadata_coverage_score = round((len(required_values) - unknown_required_field_count) / max(1, len(required_values)), 3)
+        core_degraded = metadata_coverage_score < 0.6
 
         if section_id == "core_information":
+            insights = [f"Digital maturity baseline is {digital_maturity}."]
+            recommendations = [
+                "Use official-site and leadership sources as primary channels for next-hop discovery.",
+            ]
+            reason_code = None
+            output_status = "completed"
+            confidence = 0.72
+            if core_degraded:
+                output_status = "degraded"
+                reason_code = "insufficient_metadata"
+                confidence = 0.48
+                insights.append(
+                    "Metadata coverage is insufficient for reliable discovery seeding; targeted metadata recovery is required."
+                )
+                recommendations.append(
+                    "Run targeted metadata recovery for sport, country, league, and official website before wider discovery hops."
+                )
+            else:
+                insights.append("Metadata quality is sufficient for downstream discovery seeding.")
             return {
                 "content": [
                     f"{entity_name} is a {entity_type} operating in {sport} with core activity in {country}.",
@@ -1158,15 +1191,14 @@ Website: N/A
                     f"Founded: {founded}",
                     f"Country: {country}",
                     f"Revenue band: {revenue_band}",
+                    f"Metadata coverage score: {metadata_coverage_score}",
+                    f"Unknown required fields: {unknown_required_field_count}",
                 ],
-                "insights": [
-                    f"Digital maturity baseline is {digital_maturity}.",
-                    "Metadata quality is sufficient for downstream discovery seeding.",
-                ],
-                "recommendations": [
-                    "Use official-site and leadership sources as primary channels for next-hop discovery.",
-                ],
-                "confidence": 0.72,
+                "insights": insights,
+                "recommendations": recommendations,
+                "confidence": confidence,
+                "output_status": output_status,
+                "reason_code": reason_code,
             }
 
         if section_id == "quick_actions":
