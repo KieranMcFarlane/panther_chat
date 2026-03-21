@@ -163,6 +163,13 @@ async def test_fallback_accept_blocked_when_evidence_guard_fails():
     )
     runtime = DiscoveryRuntimeV2(_FakeClaude(), brightdata)
     runtime.enable_llm_eval = True
+    runtime._extract_evidence = lambda **_kwargs: {
+        "snippet": "Arsenal confirmed a commercial technology partnership with named vendor and deployment timeline.",
+        "content_item": "Arsenal confirmed a commercial technology partnership with named vendor and deployment timeline.",
+        "quality_score": 0.92,
+        "statement": "Arsenal partnership signal",
+        "tokens": ["commercial", "technology", "partnership"],
+    }
 
     # Force low-quality evidence so accept guard fails.
     runtime._extract_evidence = lambda **_kwargs: {
@@ -216,6 +223,7 @@ async def test_no_progress_decision_never_promotes_to_validated(monkeypatch):
         }
 
     monkeypatch.setattr(runtime, "_maybe_llm_evaluate", _forced_no_progress)
+    monkeypatch.setattr(runtime, "_is_evidence_grounded_in_content", lambda **_kwargs: True)
 
     state = {
         "visited_urls": set(),
@@ -242,6 +250,64 @@ async def test_no_progress_decision_never_promotes_to_validated(monkeypatch):
     assert signal["validation_state"] != "validated"
     assert signal["accept_guard_passed"] is False
     assert "llm_no_progress" in (signal.get("accept_reject_reasons") or [])
+
+
+@pytest.mark.asyncio
+async def test_no_progress_can_promote_when_evidence_guard_and_tier_are_strong(monkeypatch):
+    brightdata = _FakeBrightData(
+        results=[{"url": "https://www.bbc.com/sport/football/teams/arsenal", "title": "BBC Arsenal", "snippet": "Arsenal commercial partnership update"}],
+        content="Arsenal confirmed a commercial technology partnership with named vendor and deployment timeline. " * 25,
+    )
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), brightdata)
+    runtime.enable_llm_eval = True
+    runtime._extract_evidence = lambda **_kwargs: {
+        "snippet": "Arsenal confirmed a commercial technology partnership with named vendor and deployment timeline.",
+        "content_item": "Arsenal confirmed a commercial technology partnership with named vendor and deployment timeline.",
+        "quality_score": 0.92,
+        "statement": "Arsenal partnership signal",
+        "tokens": ["commercial", "technology", "partnership"],
+    }
+
+    async def _forced_no_progress(**_kwargs):
+        return {
+            "decision": "NO_PROGRESS",
+            "parse_path": "llm_json",
+            "llm_last_status": "ok",
+            "reason_code": "evidence_partial",
+            "confidence_delta_bucket": "NONE",
+            "model_used": "test-model",
+            "schema_valid": True,
+        }
+
+    monkeypatch.setattr(runtime, "_maybe_llm_evaluate", _forced_no_progress)
+    monkeypatch.setattr(runtime, "_is_evidence_grounded_in_content", lambda **_kwargs: True)
+
+    state = {
+        "visited_urls": set(),
+        "visited_hashes": set(),
+        "accepted_signatures": set(),
+        "domain_visits": {},
+        "lane_failures": {},
+        "lane_exhausted": set(),
+        "trusted_corroboration_tokens": set(),
+        "iterations_completed": 0,
+    }
+
+    result = await runtime._run_lane(
+        lane="trusted_news",
+        entity_name="Arsenal FC",
+        dossier={"metadata": {"canonical_sources": {"official_site": "https://www.arsenal.com"}}},
+        official_domain="arsenal.com",
+        state=state,
+    )
+
+    signal = result["signal"]
+    assert signal is not None
+    assert signal["source_tier"] == "tier_2"
+    assert signal["accept_guard_passed"] is True
+    assert signal["validation_state"] == "validated"
+    assert "llm_no_progress" not in (signal.get("accept_reject_reasons") or [])
+    assert result["hop"]["candidate_micro_eval"]["decision"] == "WEAK_ACCEPT_CANDIDATE"
 
 
 @pytest.mark.asyncio

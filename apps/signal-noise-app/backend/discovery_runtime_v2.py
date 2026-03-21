@@ -777,9 +777,25 @@ class DiscoveryRuntimeV2:
                 accept_reject_reasons.append("llm_schema_invalid_demoted")
                 self._metrics["fallback_accept_block_count"] += 1
             if accept_guard_passed and not positive_decision:
-                accept_guard_passed = False
-                accept_reject_reasons.append("llm_no_progress")
-                self._metrics["fallback_accept_block_count"] += 1
+                # Deterministic promotion path:
+                # If strict evidence guard already passed on grounded tier-1/2 evidence,
+                # promote NO_PROGRESS to weak accept to avoid candidate-only deadlock.
+                can_promote = (
+                    source_tier in {"tier_1", "tier_2"}
+                    and quality_score >= max(0.55, self._quality_threshold_for_lane(lane))
+                    and bool(evidence_snippet)
+                    and str(llm_decision) == "NO_PROGRESS"
+                )
+                if can_promote:
+                    llm_decision = "WEAK_ACCEPT_CANDIDATE"
+                    llm_eval["decision"] = "WEAK_ACCEPT_CANDIDATE"
+                    llm_eval["reason_code"] = str(llm_eval.get("reason_code") or "evidence_promoted")
+                    llm_eval["confidence_delta_bucket"] = str(llm_eval.get("confidence_delta_bucket") or "UP_2")
+                    positive_decision = True
+                else:
+                    accept_guard_passed = False
+                    accept_reject_reasons.append("llm_no_progress")
+                    self._metrics["fallback_accept_block_count"] += 1
 
             if accept_guard_passed:
                 validation_state = "validated"
