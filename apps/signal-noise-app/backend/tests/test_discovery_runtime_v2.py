@@ -408,3 +408,28 @@ async def test_llm_eval_opens_length_stop_circuit_and_short_circuits_next_calls(
     assert first["parse_path"] == "length_stop_hard_fail"
     assert second["parse_path"] == "llm_circuit_open"
     assert claude.calls == 1
+
+
+@pytest.mark.asyncio
+async def test_rfp_web_hop_cap_can_be_overridden_for_experiments(monkeypatch):
+    monkeypatch.setenv("DISCOVERY_MAX_HOPS_OVERRIDE", "7")
+    brightdata = _FakeBrightData(
+        results=[{"url": "https://example.com/signal", "title": "Signal", "snippet": "procurement"}],
+        content="procurement supplier partnership digital transformation evidence " * 40,
+    )
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), brightdata)
+    runtime.enable_llm_eval = False
+    runtime.enable_llm_hop_selection = False
+
+    result = await runtime.run_discovery_with_dossier_context(
+        entity_id="arsenal-fc",
+        entity_name="Arsenal FC",
+        dossier={},
+        run_objective="rfp_web",
+        max_iterations=7,
+    )
+    summary = result.performance_summary or {}
+    budget = summary.get("budget") or {}
+
+    assert int(budget.get("max_hops") or 0) == 7
+    assert result.iterations_completed <= 7

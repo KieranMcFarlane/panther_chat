@@ -210,6 +210,7 @@ class DiscoveryRuntimeV2:
 
         # Balanced production defaults (locked in plan).
         self.max_hops = int(os.getenv("DISCOVERY_MAX_HOPS", "5"))
+        self.max_hops_override = max(0, int(os.getenv("DISCOVERY_MAX_HOPS_OVERRIDE", "0")))
         self.max_evals_per_hop = int(os.getenv("DISCOVERY_MAX_EVALS_PER_HOP", "2"))
         self.per_iteration_timeout = float(os.getenv("DISCOVERY_PER_ITERATION_TIMEOUT_SECONDS", "30"))
         self.max_retries = int(os.getenv("DISCOVERY_MAX_RETRIES", "2"))
@@ -964,7 +965,9 @@ class DiscoveryRuntimeV2:
 
     def _resolve_objective_budget(self, *, max_iterations: int, profile: Dict[str, Any]) -> Dict[str, Any]:
         budget_overrides = profile.get("budget") if isinstance(profile.get("budget"), dict) else {}
-        max_hops = min(max(1, int(max_iterations or self.max_hops)), int(budget_overrides.get("max_hops", self.max_hops)))
+        profile_cap = int(budget_overrides.get("max_hops", self.max_hops))
+        effective_cap = self.max_hops_override if self.max_hops_override > 0 else profile_cap
+        max_hops = min(max(1, int(max_iterations or self.max_hops)), int(effective_cap))
         return {
             "max_hops": max_hops,
             "max_evals_per_hop": int(budget_overrides.get("max_evals_per_hop", self.max_evals_per_hop)),
