@@ -449,6 +449,13 @@ class DossierDataCollector:
             os.getenv("DOSSIER_COLLECT_PARALLEL_LEADERSHIP"),
             default=False,
         )
+        self.parallel_collection_profile = (os.getenv("DOSSIER_PARALLEL_COLLECTION_PROFILE") or "balanced").strip().lower()
+        self.parallel_collection_total_budget_seconds = self._parse_positive_float_env(
+            os.getenv("DOSSIER_PARALLEL_COLLECTION_TOTAL_BUDGET_SECONDS", "40")
+        )
+        self.parallel_collection_min_remaining_seconds = self._parse_positive_float_env(
+            os.getenv("DOSSIER_PARALLEL_COLLECTION_MIN_REMAINING_SECONDS", "6")
+        ) or 6.0
         self._preferred_official_site_urls: Dict[str, str] = {}
         self._official_site_url_cache = self._load_official_site_url_cache()
         self._official_site_content_cache = self._load_official_site_content_cache()
@@ -689,6 +696,19 @@ class DossierDataCollector:
         if persist_cache:
             self._store_cached_official_site_url(entity_name, normalized_url)
         return normalized_url
+
+    def _collection_priority(self, section_key: str) -> int:
+        """
+        Lower number means higher priority in staged parallel collection.
+        """
+        priority_map = {
+            "recent_news": 1,
+            "performance": 2,
+            "digital_transformation": 3,
+            "strategic_opportunities": 4,
+            "leadership": 5,
+        }
+        return priority_map.get(section_key, 99)
 
     def _get_preferred_official_site_url(self, entity_name: str) -> Optional[str]:
         key = self._normalize_official_site_cache_key(entity_name)
@@ -1123,11 +1143,6 @@ class DossierDataCollector:
             return result
 
         if self.parallel_scraping:
-            # PARALLEL MODE: Run all independent collection tasks concurrently
-            # This reduces total time from sum(all) to max(slowest)
-            tasks = []
-
-            # Section 2: Digital Transformation - Tech stack detection
             async def collect_digital():
                 try:
                     return await collect_with_cache(
@@ -1139,9 +1154,7 @@ class DossierDataCollector:
                 except Exception as e:
                     logger.warning(f"  ⚠️ Digital Transformation collection failed: {e}")
                     return {}
-            tasks.append(("digital_transformation", collect_digital()))
 
-            # Section 4: Strategic Opportunities
             async def collect_opportunities():
                 try:
                     return await collect_with_cache(
@@ -1153,9 +1166,7 @@ class DossierDataCollector:
                 except Exception as e:
                     logger.warning(f"  ⚠️ Strategic Opportunities collection failed: {e}")
                     return {}
-            tasks.append(("strategic_opportunities", collect_opportunities()))
 
-            # Section 7: Recent News
             async def collect_news():
                 try:
                     return await collect_with_cache(
@@ -1167,9 +1178,7 @@ class DossierDataCollector:
                 except Exception as e:
                     logger.warning(f"  ⚠️ Recent News collection failed: {e}")
                     return {}
-            tasks.append(("recent_news", collect_news()))
 
-            # Section 8: Performance
             async def collect_performance():
                 try:
                     return await collect_with_cache(
@@ -1181,53 +1190,109 @@ class DossierDataCollector:
                 except Exception as e:
                     logger.warning(f"  ⚠️ Performance collection failed: {e}")
                     return {}
-            tasks.append(("performance", collect_performance()))
 
+            async def collect_leadership():
+                try:
+                    return await collect_with_cache(
+                        "Leadership",
+                        lambda: self.collect_leadership(entity_id, dossier_data.entity_name),
+                        cache_key="leadership",
+                        timeout_seconds=self._resolve_collection_timeout_seconds("leadership"),
+                    )
+                except Exception as e:
+                    logger.warning(f"  ⚠️ Leadership collection failed: {e}")
+                    return {}
+
+            task_builders = [
+                ("digital_transformation", collect_digital, True),
+                ("strategic_opportunities", collect_opportunities, True),
+                ("recent_news", collect_news, False),
+                ("performance", collect_performance, False),
+            ]
             if self.collect_parallel_leadership:
-                # Section 5: Leadership (optional in parallel mode; can be collected post-pass)
-                async def collect_leadership():
-                    try:
-                        return await collect_with_cache(
-                            "Leadership",
-                            lambda: self.collect_leadership(entity_id, dossier_data.entity_name),
-                            cache_key="leadership",
-                            timeout_seconds=self._resolve_collection_timeout_seconds("leadership"),
-                        )
-                    except Exception as e:
-                        logger.warning(f"  ⚠️ Leadership collection failed: {e}")
-                        return {}
-                tasks.append(("leadership", collect_leadership()))
+                task_builders.append(("leadership", collect_leadership, True))
             else:
                 logger.info("⏭️ Skipping parallel leadership collection (DOSSIER_COLLECT_PARALLEL_LEADERSHIP=false)")
 
-            # Execute all tasks in parallel and wait for completion
-            logger.info(f"🚀 Running {len(tasks)} collection tasks in parallel...")
-            results = await asyncio.gather(*[task for _, task in tasks], return_exceptions=True)
+            # In balanced profile, prioritize faster/high-signal lanes first and only spend
+            # remaining budget on slower optional collectors.
+            profile = self.parallel_collection_profile
+            has_budget = self.parallel_collection_total_budget_seconds is not None
+            start_time = time.monotonic()
 
-            # Process results
-            for (key, _), result in zip(tasks, results):
-                if isinstance(result, Exception):
-                    logger.warning(f"⚠️ {key} task failed: {result}")
+            if profile == "balanced" and has_budget:
+                ordered = sorted(task_builders, key=lambda item: self._collection_priority(item[0]))
+                mandatory = [item for item in ordered if not item[2]]
+                optional = [item for item in ordered if item[2]]
+                stages = [("mandatory", mandatory), ("optional", optional)]
+                logger.info(
+                    "🚀 Running staged parallel collection (profile=%s, budget=%.2fs, mandatory=%d, optional=%d)",
+                    profile,
+                    float(self.parallel_collection_total_budget_seconds or 0.0),
+                    len(mandatory),
+                    len(optional),
+                )
+            else:
+                ordered = sorted(task_builders, key=lambda item: self._collection_priority(item[0]))
+                stages = [("all", ordered)]
+                logger.info(f"🚀 Running {len(ordered)} collection tasks in parallel (profile={profile})...")
+
+            async def run_stage(stage_name: str, entries: List[Any], stage_timeout: Optional[float]) -> None:
+                if not entries:
+                    return
+                stage_label = f"{stage_name} collectors"
+                coroutines = [builder() for _, builder, _ in entries]
+                try:
+                    if stage_timeout is not None:
+                        results = await asyncio.wait_for(
+                            asyncio.gather(*coroutines, return_exceptions=True),
+                            timeout=stage_timeout,
+                        )
+                    else:
+                        results = await asyncio.gather(*coroutines, return_exceptions=True)
+                except asyncio.TimeoutError:
+                    logger.warning("  ⚠️ %s exceeded shared stage budget (%.2fs); continuing", stage_label, stage_timeout or 0.0)
+                    return
+
+                for (key, _, _), result in zip(entries, results):
+                    if isinstance(result, Exception):
+                        logger.warning(f"⚠️ {key} task failed: {result}")
+                        continue
+                    if not result:
+                        continue
+                    if key == "digital_transformation":
+                        dossier_data.digital_transformation = result
+                        logger.info(f"  ✅ Digital Transformation: {len(result.get('sources_used', []))} sources")
+                    elif key == "strategic_opportunities":
+                        dossier_data.strategic_opportunities = result
+                        logger.info(f"  ✅ Strategic Opportunities: {len(result.get('opportunities', []))} found")
+                    elif key == "recent_news":
+                        dossier_data.recent_news = result
+                        logger.info(f"  ✅ Recent News: {len(result.get('news_items', []))} items")
+                    elif key == "performance":
+                        dossier_data.performance = result
+                        logger.info(f"  ✅ Performance: position {result.get('league_position', 'unknown')}")
+                    elif key == "leadership":
+                        dossier_data.leadership = result
+                        logger.info(f"  ✅ Leadership: {len(result.get('decision_makers', []))} decision makers")
+
+            for stage_name, entries in stages:
+                if not entries:
                     continue
-
-                if not result:
-                    continue
-
-                if key == "digital_transformation":
-                    dossier_data.digital_transformation = result
-                    logger.info(f"  ✅ Digital Transformation: {len(result.get('sources_used', []))} sources")
-                elif key == "strategic_opportunities":
-                    dossier_data.strategic_opportunities = result
-                    logger.info(f"  ✅ Strategic Opportunities: {len(result.get('opportunities', []))} found")
-                elif key == "recent_news":
-                    dossier_data.recent_news = result
-                    logger.info(f"  ✅ Recent News: {len(result.get('news_items', []))} items")
-                elif key == "performance":
-                    dossier_data.performance = result
-                    logger.info(f"  ✅ Performance: position {result.get('league_position', 'unknown')}")
-                elif key == "leadership":
-                    dossier_data.leadership = result
-                    logger.info(f"  ✅ Leadership: {len(result.get('decision_makers', []))} decision makers")
+                stage_timeout = None
+                if has_budget:
+                    elapsed = time.monotonic() - start_time
+                    remaining = float(self.parallel_collection_total_budget_seconds or 0.0) - elapsed
+                    if remaining <= self.parallel_collection_min_remaining_seconds:
+                        logger.info(
+                            "⏭️ Skipping %s stage (remaining budget %.2fs <= %.2fs)",
+                            stage_name,
+                            max(remaining, 0.0),
+                            self.parallel_collection_min_remaining_seconds,
+                        )
+                        continue
+                    stage_timeout = remaining
+                await run_stage(stage_name, entries, stage_timeout)
 
         else:
             # SEQUENTIAL MODE: Original behavior (for debugging)
