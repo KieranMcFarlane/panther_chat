@@ -416,22 +416,39 @@ class ClaudeClient:
         self.provider = self._resolve_provider()
         self.api_key = api_key or self._resolve_api_key()
         self.base_url = base_url or self._resolve_base_url()
-        self.chutes_model = os.getenv(
+        def _resolve_chutes_role_model(*env_keys: str, default: str) -> str:
+            for key in env_keys:
+                value = os.getenv(key)
+                if value and value.strip():
+                    return value.strip()
+            return default
+
+        self.chutes_model_planner = _resolve_chutes_role_model(
+            "CHUTES_MODEL_PLANNER",
             "CHUTES_MODEL_PRIMARY",
-            os.getenv("CHUTES_MODEL", "zai-org/GLM-5-TEE"),
+            "CHUTES_MODEL_HAIKU",
+            "CHUTES_MODEL",
+            default="zai-org/GLM-5-TEE",
         )
-        self.chutes_model_haiku = os.getenv(
-            "CHUTES_MODEL_PRIMARY",
-            os.getenv("CHUTES_MODEL_HAIKU", self.chutes_model),
-        )
-        self.chutes_model_sonnet = os.getenv(
+        self.chutes_model_judge = _resolve_chutes_role_model(
+            "CHUTES_MODEL_JUDGE",
             "CHUTES_MODEL_SECONDARY",
-            os.getenv("CHUTES_MODEL_SONNET", "moonshotai/Kimi-K2.5-TEE"),
+            "CHUTES_MODEL_SONNET",
+            default="moonshotai/Kimi-K2.5-TEE",
         )
-        self.chutes_model_opus = os.getenv(
+        self.chutes_model_fallback = _resolve_chutes_role_model(
+            "CHUTES_MODEL_FALLBACK",
             "CHUTES_MODEL_TERTIARY",
-            os.getenv("CHUTES_MODEL_OPUS", "MiniMaxAI/MiniMax-M2.5-TEE"),
+            "CHUTES_MODEL_OPUS",
+            default="MiniMaxAI/MiniMax-M2.5-TEE",
         )
+        self.chutes_model_primary = self.chutes_model_planner
+        self.chutes_model_secondary = self.chutes_model_judge
+        self.chutes_model_tertiary = self.chutes_model_fallback
+        self.chutes_model = self.chutes_model_planner
+        self.chutes_model_haiku = self.chutes_model_planner
+        self.chutes_model_sonnet = self.chutes_model_judge
+        self.chutes_model_opus = self.chutes_model_fallback
         default_json_model = os.getenv(
             "CHUTES_MODEL_JSON_DEFAULT",
             "deepseek-ai/DeepSeek-V3-0324-TEE",
@@ -439,8 +456,8 @@ class ClaudeClient:
         self.chutes_model_json = os.getenv("CHUTES_MODEL_JSON", default_json_model).strip() or default_json_model
         self.chutes_model_json_fallback = os.getenv(
             "CHUTES_MODEL_JSON_FALLBACK",
-            self.chutes_model_sonnet,
-        ).strip() or self.chutes_model_sonnet
+            self.chutes_model_judge,
+        ).strip() or self.chutes_model_judge
         self.chutes_json_min_max_tokens = max(64, int(os.getenv("CHUTES_JSON_MIN_MAX_TOKENS", "192")))
         self.chutes_json_length_retry_max_tokens = max(
             self.chutes_json_min_max_tokens,
@@ -599,12 +616,12 @@ class ClaudeClient:
 
     def _resolve_chutes_runtime_model(self, requested_model: Optional[str]) -> str:
         normalized = str(requested_model or "haiku").strip().lower()
-        if normalized == "sonnet":
-            return self.chutes_model_sonnet
-        if normalized == "opus":
-            return self.chutes_model_opus
-        if normalized == "haiku":
-            return self.chutes_model_haiku
+        if normalized in {"planner", "primary", "haiku"}:
+            return self.chutes_model_planner
+        if normalized in {"judge", "secondary", "sonnet"}:
+            return self.chutes_model_judge
+        if normalized in {"fallback", "tertiary", "opus"}:
+            return self.chutes_model_fallback
         return self.chutes_model
 
     @classmethod

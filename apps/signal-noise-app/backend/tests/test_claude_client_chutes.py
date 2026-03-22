@@ -65,6 +65,26 @@ def test_claude_client_default_chutes_tier_mapping(monkeypatch):
     assert client._resolve_chutes_runtime_model("opus") == "zai-org/GLM-5-TEE"
 
 
+def test_claude_client_exposes_provider_neutral_chutes_roles(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_MODEL_PLANNER", "moonshotai/Kimi-K2.5-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_JUDGE", "deepseek-ai/DeepSeek-V3.2-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_FALLBACK", "zai-org/GLM-5-TEE")
+    monkeypatch.delenv("CHUTES_MODEL_PRIMARY", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_SECONDARY", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_TERTIARY", raising=False)
+
+    client = ClaudeClient()
+
+    assert client.chutes_model_planner == "moonshotai/Kimi-K2.5-TEE"
+    assert client.chutes_model_judge == "deepseek-ai/DeepSeek-V3.2-TEE"
+    assert client.chutes_model_fallback == "zai-org/GLM-5-TEE"
+    assert client.chutes_model_haiku == client.chutes_model_planner
+    assert client.chutes_model_sonnet == client.chutes_model_judge
+    assert client.chutes_model_opus == client.chutes_model_fallback
+
+
 def test_claude_client_supports_explicit_chutes_anthropic_provider(monkeypatch):
     monkeypatch.setenv("LLM_PROVIDER", "chutes_anthropic")
     monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
