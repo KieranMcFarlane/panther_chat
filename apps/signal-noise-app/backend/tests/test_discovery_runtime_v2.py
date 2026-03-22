@@ -81,6 +81,20 @@ class _SameDomainProbeClaude:
         return {"content": '{"decision":"NO_PROGRESS","reason":"mock"}'}
 
 
+class _SearchRefiningClaude:
+    async def query(self, **kwargs):
+        prompt = str(kwargs.get("prompt") or "")
+        if "Candidate batch:" in prompt:
+            return {
+                "content": (
+                    '{"action":"search_queries","lane":"trusted_news",'
+                    '"queries":["\\"Coventry City FC\\" official commercial partner"],'
+                    '"reason":"refine toward official commercial evidence"}'
+                )
+            }
+        return {"content": '{"decision":"NO_PROGRESS","reason":"mock"}'}
+
+
 class _RecordingClaude:
     def __init__(self):
         self.last_prompt = ""
@@ -247,6 +261,51 @@ class _ProbeRecoveringBrightData:
             "url": "https://www.ccfc.co.uk/news/commercial-partnership",
             "content": "Coventry City FC commercial partnership supplier technology rollout update " * 30,
             "metadata": {"extraction_mode": "domain_probe_recovery", "probe_host": "www.ccfc.co.uk"},
+        }
+
+
+class _SearchRefiningBrightData:
+    def __init__(self):
+        self.search_queries = []
+        self.scraped_urls = []
+
+    async def search_engine(self, query=None, **_kwargs):
+        self.search_queries.append(str(query))
+        if 'official commercial partner' in str(query):
+            return {
+                "status": "success",
+                "results": [
+                    {
+                        "url": "https://www.ccfc.co.uk/news/commercial-partner",
+                        "title": "Coventry City FC commercial partner update",
+                        "snippet": "official commercial partner news",
+                    }
+                ],
+            }
+        return {
+            "status": "success",
+            "results": [
+                {
+                    "url": "https://example.com/weak-coverage",
+                    "title": "Weak Coventry coverage",
+                    "snippet": "thin summary",
+                }
+            ],
+        }
+
+    async def scrape_as_markdown(self, url):
+        current_url = str(url)
+        self.scraped_urls.append(current_url)
+        if current_url.endswith("/commercial-partner"):
+            return {
+                "status": "success",
+                "content": "Coventry City FC commercial partnership supplier update " * 30,
+                "metadata": {},
+            }
+        return {
+            "status": "success",
+            "content": "tiny",
+            "metadata": {"low_signal_reason": "thin_low_signal_leaf"},
         }
 
 
@@ -847,6 +906,39 @@ async def test_planner_same_domain_probe_uses_recovered_page_before_seed_scrape(
     assert (result["signal"] or result["diagnostic"]) is not None
     assert (result["signal"] or result["diagnostic"])["url"] == "https://www.ccfc.co.uk/news/commercial-partnership"
     assert (result["hop"].get("planner_action") or {}).get("action") == "same_domain_probe"
+
+
+@pytest.mark.asyncio
+async def test_planner_search_queries_refines_candidate_discovery_before_scrape():
+    brightdata = _SearchRefiningBrightData()
+    runtime = DiscoveryRuntimeV2(_SearchRefiningClaude(), brightdata)
+    runtime.enable_llm_hop_selection = True
+    runtime.enable_llm_eval = False
+
+    state = {
+        "visited_urls": set(),
+        "visited_hashes": set(),
+        "accepted_signatures": set(),
+        "domain_visits": {},
+        "lane_failures": {},
+        "lane_exhausted": set(),
+        "trusted_corroboration_tokens": set(),
+        "iterations_completed": 0,
+    }
+
+    result = await runtime._run_lane(
+        lane="trusted_news",
+        entity_name="Coventry City FC",
+        dossier={"metadata": {"canonical_sources": {"official_site": "https://www.ccfc.co.uk"}}},
+        official_domain="ccfc.co.uk",
+        state=state,
+        budget={"max_evals_per_hop": 1, "max_hops": 5, "per_iteration_timeout": 30, "max_retries": 1, "max_same_domain_revisits": 2},
+        run_objective="rfp_web",
+    )
+
+    assert any('official commercial partner' in query for query in brightdata.search_queries)
+    assert brightdata.scraped_urls[0] == "https://www.ccfc.co.uk/news/commercial-partner"
+    assert (result["hop"].get("planner_action") or {}).get("action") == "search_queries"
 
 
 def test_extract_evidence_includes_content_passages():

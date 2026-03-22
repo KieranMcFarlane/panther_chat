@@ -919,6 +919,26 @@ class DiscoveryRuntimeV2:
                         if _normalize_url(candidate.get("url") or "") != recovered_url
                     ]
                     pre_scraped_by_url[recovered_url] = recovered
+            if planner_action.get("action") == "search_queries":
+                refined_queries = [
+                    str(query or "").strip()
+                    for query in list(planner_action.get("queries") or [])
+                    if str(query or "").strip()
+                ]
+                if refined_queries:
+                    refined_candidates = await self._discover_candidates(
+                        lane=lane,
+                        entity_id=entity_id,
+                        entity_name=entity_name,
+                        dossier=dossier,
+                        state=state,
+                        objective=objective,
+                        query_overrides=refined_queries,
+                    )
+                    if refined_candidates:
+                        planner_candidates = refined_candidates[:planner_batch_size]
+                        candidate_batch = refined_candidates[:max_evals]
+                        hop_record["planner_search_queries"] = refined_queries
 
         for candidate in candidate_batch:
             origin = str(candidate.get("candidate_origin") or "").strip().lower()
@@ -1260,12 +1280,14 @@ class DiscoveryRuntimeV2:
         dossier: Dict[str, Any],
         state: Dict[str, Any],
         objective: str,
+        query_overrides: Optional[List[str]] = None,
     ) -> List[Dict[str, Any]]:
         queries = await self._build_agentic_queries(
             lane=lane,
             entity_name=entity_name,
             dossier=dossier,
             objective=objective,
+            query_overrides=query_overrides,
         )
         discovered: List[Dict[str, Any]] = []
         seen: Set[str] = set()
@@ -1608,6 +1630,7 @@ class DiscoveryRuntimeV2:
         entity_name: str,
         dossier: Dict[str, Any],
         objective: str,
+        query_overrides: Optional[List[str]] = None,
     ) -> List[str]:
         base_queries = list(LANE_QUERIES.get(lane, ('"{entity}" digital procurement',)))
         metadata = dossier.get("metadata") if isinstance(dossier, dict) else {}
@@ -1625,6 +1648,11 @@ class DiscoveryRuntimeV2:
         entity_aliases = self._entity_aliases(entity_name=entity_name, official_host=official_host)
 
         query_pool: List[str] = []
+        if isinstance(query_overrides, list):
+            for query in query_overrides:
+                text = str(query or "").strip()
+                if text:
+                    query_pool.append(text)
         query_pool.extend(base_queries)
         if official_host:
             if lane == "official_site":
