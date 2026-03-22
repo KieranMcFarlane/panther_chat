@@ -872,7 +872,32 @@ class DiscoveryRuntimeV2:
             hop_record["duration_ms"] = int((time.perf_counter() - started) * 1000)
             return {"hop": hop_record, "signal": None, "diagnostic": None}
 
-        for candidate in candidates[: max(1, int(effective_budget.get("max_evals_per_hop", self.max_evals_per_hop)))]:
+        candidate_batch = candidates[: max(1, int(effective_budget.get("max_evals_per_hop", self.max_evals_per_hop)))]
+        planner_action = await self._choose_candidate_action_from_batch(
+            lane=lane,
+            entity_name=entity_name,
+            candidates=candidate_batch,
+            state=state,
+            objective=objective,
+        )
+        if planner_action:
+            hop_record["planner_action"] = planner_action
+            if planner_action.get("action") in {"stop_lane", "stop_run"}:
+                self._mark_lane_dead(lane, state, str(planner_action.get("action") or "planner_stop"))
+                hop_record["lane_exhausted"] = True
+                hop_record["dead_end_reason"] = str(planner_action.get("action") or "planner_stop")
+                hop_record["evidence_type"] = "planner_stop"
+                hop_record["duration_ms"] = int((time.perf_counter() - started) * 1000)
+                return {"hop": hop_record, "signal": None, "diagnostic": None}
+            if planner_action.get("action") == "scrape_candidate":
+                chosen_index = int(planner_action.get("candidate_index") or 0)
+                if 0 <= chosen_index < len(candidate_batch):
+                    prioritized = candidate_batch[chosen_index]
+                    candidate_batch = [prioritized] + [
+                        candidate for index, candidate in enumerate(candidate_batch) if index != chosen_index
+                    ]
+
+        for candidate in candidate_batch:
             origin = str(candidate.get("candidate_origin") or "").strip().lower()
             if origin not in ALLOWED_CANDIDATE_ORIGINS:
                 if origin == "synthetic":
@@ -2207,6 +2232,73 @@ class DiscoveryRuntimeV2:
             return selected or list(available_lanes)
         except Exception:  # noqa: BLE001
             return list(available_lanes)
+
+    async def _choose_candidate_action_from_batch(
+        self,
+        *,
+        lane: str,
+        entity_name: str,
+        candidates: List[Dict[str, Any]],
+        state: Dict[str, Any],
+        objective: str,
+    ) -> Optional[Dict[str, Any]]:
+        if not candidates or not self.enable_llm_hop_selection or self._llm_circuit_broken:
+            return None
+
+        lane_dead = set(state.get("lane_exhausted", set()) or set())
+        if lane in lane_dead:
+            return {"action": "stop_lane", "lane": lane, "reason": "lane already exhausted"}
+
+        serialized_candidates: List[Dict[str, Any]] = []
+        for index, candidate in enumerate(candidates):
+            serialized_candidates.append(
+                {
+                    "candidate_index": index,
+                    "url": _normalize_url(candidate.get("url") or ""),
+                    "title": str(candidate.get("title") or "").strip(),
+                    "snippet": str(candidate.get("snippet") or "").strip(),
+                    "candidate_origin": str(candidate.get("candidate_origin") or "").strip(),
+                }
+            )
+
+        prompt = (
+            "Return one strict JSON controller action. No prose.\n"
+            "Valid actions: search_queries, scrape_candidate, same_domain_probe, stop_lane, stop_run.\n"
+            f"Entity: {entity_name}\n"
+            f"Objective: {objective}\n"
+            f"Lane: {lane}\n"
+            f"Candidate batch: {json.dumps(serialized_candidates, separators=(',', ':'))}\n"
+            "Choose the highest-yield next action from this candidate batch."
+        )
+        try:
+            self._metrics["llm_hop_selection_count"] += 1
+            response = await self.claude_client.query(
+                prompt=prompt,
+                model="haiku",
+                max_tokens=180,
+                json_mode=False,
+                max_retries_override=0,
+                empty_retries_before_fallback_override=1,
+                fast_fail_on_length=False,
+            )
+            payload = None
+            structured_output = (response or {}).get("structured_output")
+            if isinstance(structured_output, dict):
+                payload = structured_output
+            if not payload:
+                payload = self._extract_json_object_strict((response or {}).get("content"))
+            action = parse_controller_action(payload)
+            if not action:
+                return None
+            if str(action.get("lane") or lane).strip() != lane:
+                return None
+            if action.get("action") == "scrape_candidate":
+                candidate_index = int(action.get("candidate_index") or -1)
+                if candidate_index < 0 or candidate_index >= len(candidates):
+                    return None
+            return action
+        except Exception:  # noqa: BLE001
+            return None
 
     def _quality_threshold_for_lane(self, lane: str) -> float:
         if lane in {"official_site", "annual_report"}:

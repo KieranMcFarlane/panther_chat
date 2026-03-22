@@ -26,6 +26,21 @@ class _LaneChoosingClaude:
         return {"content": '{"decision":"NO_PROGRESS","reason":"mock"}'}
 
 
+class _CandidateChoosingClaude:
+    async def query(self, **kwargs):
+        prompt = str(kwargs.get("prompt") or "")
+        if "Candidate batch:" in prompt:
+            return {
+                "content": (
+                    '{"action":"scrape_candidate","lane":"trusted_news","candidate_index":1,'
+                    '"reason":"strongest candidate in batch"}'
+                )
+            }
+        if "key ordered_lanes" in prompt:
+            return {"content": '{"ordered_lanes":["trusted_news","press_release","careers","official_site"]}'}
+        return {"content": '{"decision":"NO_PROGRESS","reason":"mock"}'}
+
+
 class _LengthStopClaude:
     async def query(self, **_kwargs):
         return {"content": '{"decision":"ACCEPT","reason":"truncated"}', "stop_reason": "length"}
@@ -110,6 +125,29 @@ class _GroundingFilterBrightData:
         return {
             "status": "success",
             "content": "Coventry City FC supplier procurement partnership update " * 25,
+            "metadata": {},
+        }
+
+
+class _CandidateOrderBrightData:
+    def __init__(self):
+        self.scraped_urls = []
+
+    async def search_engine(self, **_kwargs):
+        return {"status": "success", "results": []}
+
+    async def scrape_as_markdown(self, url):
+        current_url = str(url)
+        self.scraped_urls.append(current_url)
+        if current_url.endswith("/preferred"):
+            return {
+                "status": "success",
+                "content": "Arsenal partnership and commercial transformation update " * 30,
+                "metadata": {},
+            }
+        return {
+            "status": "success",
+            "content": "Arsenal partnership and commercial transformation update " * 30,
             "metadata": {},
         }
 
@@ -498,6 +536,77 @@ async def test_llm_inference_can_reorder_hops_within_budget():
     assert selected
     assert selected[0] == "careers"
     assert result.iterations_completed <= 2
+
+
+@pytest.mark.asyncio
+async def test_planner_can_choose_candidate_from_ranked_batch():
+    runtime = DiscoveryRuntimeV2(_CandidateChoosingClaude(), _FakeBrightData())
+    runtime.enable_llm_hop_selection = True
+
+    action = await runtime._choose_candidate_action_from_batch(
+        lane="trusted_news",
+        entity_name="Coventry City FC",
+        objective="rfp_web",
+        candidates=[
+            {"url": "https://weak.example/result", "title": "Weak", "snippet": "weak", "candidate_origin": "search"},
+            {"url": "https://bbc.com/story", "title": "Strong", "snippet": "strong signal", "candidate_origin": "search"},
+        ],
+        state={"lane_exhausted": set()},
+    )
+
+    assert action is not None
+    assert action["action"] == "scrape_candidate"
+    assert action["candidate_index"] == 1
+
+
+@pytest.mark.asyncio
+async def test_run_lane_scrapes_planner_selected_candidate_first():
+    brightdata = _CandidateOrderBrightData()
+    runtime = DiscoveryRuntimeV2(_CandidateChoosingClaude(), brightdata)
+    runtime.enable_llm_hop_selection = True
+    runtime.enable_llm_eval = False
+
+    async def _fake_candidates(**_kwargs):
+        return [
+            {
+                "url": "https://weak.example/first",
+                "title": "Weak first result",
+                "snippet": "thin",
+                "candidate_origin": "search",
+            },
+            {
+                "url": "https://bbc.com/preferred",
+                "title": "Preferred result",
+                "snippet": "entity-grounded signal",
+                "candidate_origin": "search",
+            },
+        ]
+
+    runtime._discover_candidates = _fake_candidates
+    state = {
+        "visited_urls": set(),
+        "visited_hashes": set(),
+        "accepted_signatures": set(),
+        "domain_visits": {},
+        "lane_failures": {},
+        "lane_exhausted": set(),
+        "trusted_corroboration_tokens": set(),
+        "iterations_completed": 0,
+    }
+
+    result = await runtime._run_lane(
+        lane="trusted_news",
+        entity_name="Arsenal FC",
+        dossier={"metadata": {"canonical_sources": {"official_site": "https://www.arsenal.com"}}},
+        official_domain="arsenal.com",
+        state=state,
+        budget={"max_evals_per_hop": 2, "max_hops": 5, "per_iteration_timeout": 30, "max_retries": 1, "max_same_domain_revisits": 2},
+        run_objective="rfp_web",
+    )
+
+    assert brightdata.scraped_urls
+    assert brightdata.scraped_urls[0] == "https://bbc.com/preferred"
+    assert (result["hop"].get("planner_action") or {}).get("action") == "scrape_candidate"
 
 
 @pytest.mark.asyncio
