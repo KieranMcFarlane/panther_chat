@@ -876,6 +876,7 @@ class DiscoveryRuntimeV2:
         planner_batch_size = max(max_evals, min(len(candidates), 8))
         planner_candidates = candidates[:planner_batch_size]
         candidate_batch = candidates[:max_evals]
+        pre_scraped_by_url: Dict[str, Dict[str, Any]] = {}
         planner_action = await self._choose_candidate_action_from_batch(
             lane=lane,
             entity_name=entity_name,
@@ -901,6 +902,23 @@ class DiscoveryRuntimeV2:
                         for candidate in candidate_batch
                         if _normalize_url(candidate.get("url") or "") != _normalize_url(prioritized.get("url") or "")
                     ]
+            if planner_action.get("action") == "same_domain_probe":
+                probe_url = _normalize_url(str(planner_action.get("url") or ""))
+                recovered = await self._recover_same_domain_probe(url=probe_url, budget=effective_budget)
+                recovered_url = _normalize_url(str(recovered.get("url") or probe_url)) if recovered else ""
+                if recovered and recovered_url:
+                    probe_candidate = {
+                        "url": recovered_url,
+                        "title": str((recovered.get("metadata") or {}).get("title") or ""),
+                        "snippet": str((recovered.get("metadata") or {}).get("snippet") or ""),
+                        "candidate_origin": "nav",
+                    }
+                    candidate_batch = [probe_candidate] + [
+                        candidate
+                        for candidate in candidate_batch
+                        if _normalize_url(candidate.get("url") or "") != recovered_url
+                    ]
+                    pre_scraped_by_url[recovered_url] = recovered
 
         for candidate in candidate_batch:
             origin = str(candidate.get("candidate_origin") or "").strip().lower()
@@ -959,7 +977,9 @@ class DiscoveryRuntimeV2:
                     self._register_lane_failure(lane, state, "same_domain_revisit_cap")
                     continue
 
-            scraped = await self._scrape_with_budget(url, budget=effective_budget)
+            scraped = pre_scraped_by_url.get(url)
+            if not scraped:
+                scraped = await self._scrape_with_budget(url, budget=effective_budget)
             content = str(scraped.get("content") or "")
             metadata = scraped.get("metadata") if isinstance(scraped.get("metadata"), dict) else {}
             content_hash = hashlib.sha1(content.encode("utf-8", errors="ignore")).hexdigest() if content else None
@@ -1701,6 +1721,26 @@ class DiscoveryRuntimeV2:
             "content": "",
             "metadata": {"error": str(last_error) if last_error else "scrape_failed"},
         }
+
+    async def _recover_same_domain_probe(self, *, url: str, budget: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        recover = getattr(self.brightdata_client, "_recover_with_domain_probe", None)
+        if not callable(recover):
+            return None
+        timeout_seconds = float(budget.get("per_iteration_timeout", self.per_iteration_timeout))
+        try:
+            recovered = await asyncio.wait_for(recover(url), timeout=timeout_seconds)
+        except Exception:  # noqa: BLE001
+            return None
+        if not isinstance(recovered, dict):
+            return None
+        if str(recovered.get("status") or "").lower() != "success":
+            return None
+        if not str(recovered.get("content") or "").strip():
+            return None
+        recovered.setdefault("metadata", {})
+        recovered["metadata"]["recovery_action"] = "same_domain_probe"
+        recovered["metadata"]["probe_seed_url"] = url
+        return recovered
 
     def _candidate_score(
         self,

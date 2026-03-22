@@ -67,6 +67,20 @@ class _PdfChoosingClaude:
         return {"content": '{"decision":"NO_PROGRESS","reason":"mock"}'}
 
 
+class _SameDomainProbeClaude:
+    async def query(self, **kwargs):
+        prompt = str(kwargs.get("prompt") or "")
+        if "Candidate batch:" in prompt:
+            return {
+                "content": (
+                    '{"action":"same_domain_probe","lane":"official_site",'
+                    '"url":"https://www.ccfc.co.uk/matches",'
+                    '"reason":"probe a stronger same-domain section"}'
+                )
+            }
+        return {"content": '{"decision":"NO_PROGRESS","reason":"mock"}'}
+
+
 class _RecordingClaude:
     def __init__(self):
         self.last_prompt = ""
@@ -207,6 +221,32 @@ class _PdfGuardBrightData:
             "status": "success",
             "content": "Arsenal procurement supplier technology update " * 30,
             "metadata": {},
+        }
+
+
+class _ProbeRecoveringBrightData:
+    def __init__(self):
+        self.scraped_urls = []
+        self.probe_urls = []
+
+    async def search_engine(self, **_kwargs):
+        return {"status": "success", "results": []}
+
+    async def scrape_as_markdown(self, url):
+        self.scraped_urls.append(str(url))
+        return {
+            "status": "success",
+            "content": "tiny",
+            "metadata": {"low_signal_reason": "thin_low_signal_leaf"},
+        }
+
+    async def _recover_with_domain_probe(self, url):
+        self.probe_urls.append(str(url))
+        return {
+            "status": "success",
+            "url": "https://www.ccfc.co.uk/news/commercial-partnership",
+            "content": "Coventry City FC commercial partnership supplier technology rollout update " * 30,
+            "metadata": {"extraction_mode": "domain_probe_recovery", "probe_host": "www.ccfc.co.uk"},
         }
 
 
@@ -754,6 +794,59 @@ async def test_planner_action_still_respects_veto_rails():
     assert brightdata.scraped_urls == ["https://arsenal.com/procurement/tender.pdf"]
     assert result["signal"] is None
     assert runtime._quality_metrics["pdf_binary_reject_count"] >= 1
+
+
+@pytest.mark.asyncio
+async def test_planner_same_domain_probe_uses_recovered_page_before_seed_scrape():
+    brightdata = _ProbeRecoveringBrightData()
+    runtime = DiscoveryRuntimeV2(_SameDomainProbeClaude(), brightdata)
+    runtime.enable_llm_hop_selection = True
+    runtime.enable_llm_eval = False
+
+    async def _fake_candidates(**_kwargs):
+        return [
+            {
+                "url": "https://www.ccfc.co.uk/matches",
+                "title": "Coventry City FC matches",
+                "snippet": "fixtures and results",
+                "candidate_origin": "search",
+            },
+            {
+                "url": "https://www.ccfc.co.uk/",
+                "title": "Coventry City FC official site",
+                "snippet": "official site",
+                "candidate_origin": "search",
+            },
+        ]
+
+    runtime._discover_candidates = _fake_candidates
+    state = {
+        "visited_urls": set(),
+        "visited_hashes": set(),
+        "accepted_signatures": set(),
+        "domain_visits": {},
+        "lane_failures": {},
+        "lane_exhausted": set(),
+        "trusted_corroboration_tokens": set(),
+        "iterations_completed": 0,
+    }
+
+    result = await runtime._run_lane(
+        lane="official_site",
+        entity_name="Coventry City FC",
+        dossier={"metadata": {"canonical_sources": {"official_site": "https://www.ccfc.co.uk"}}},
+        official_domain="ccfc.co.uk",
+        state=state,
+        budget={"max_evals_per_hop": 1, "max_hops": 5, "per_iteration_timeout": 30, "max_retries": 1, "max_same_domain_revisits": 2},
+        run_objective="rfp_web",
+    )
+
+    assert brightdata.probe_urls == ["https://www.ccfc.co.uk/matches"]
+    assert brightdata.scraped_urls == []
+    assert result["hop"]["url"] == "https://www.ccfc.co.uk/news/commercial-partnership"
+    assert (result["signal"] or result["diagnostic"]) is not None
+    assert (result["signal"] or result["diagnostic"])["url"] == "https://www.ccfc.co.uk/news/commercial-partnership"
+    assert (result["hop"].get("planner_action") or {}).get("action") == "same_domain_probe"
 
 
 def test_extract_evidence_includes_content_passages():
