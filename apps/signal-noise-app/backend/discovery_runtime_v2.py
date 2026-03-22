@@ -146,6 +146,20 @@ LANE_QUERIES: Dict[str, Tuple[str, ...]] = {
     "broader_press": ('"{entity}" industry report', '"{entity}" modernization initiative'),
 }
 
+CONTROLLER_ACTION_TYPES = {
+    "search_queries",
+    "scrape_candidate",
+    "same_domain_probe",
+    "stop_lane",
+    "stop_run",
+}
+
+CONTROLLER_ACTION_LANES = {
+    *PASS_A_LANES,
+    *PASS_B_LANES,
+    *DIVERSIFIED_FALLBACK_ORDER,
+}
+
 
 def _truthy(value: Any) -> bool:
     return str(value or "").strip().lower() in {"1", "true", "yes", "on"}
@@ -184,6 +198,105 @@ def _extract_json_object(text: str) -> Optional[Dict[str, Any]]:
             return payload
     except Exception:
         return None
+    return None
+
+
+def parse_controller_action(payload: Any) -> Optional[Dict[str, Any]]:
+    """Parse a strict controller action contract.
+
+    Accepts either a dict payload or a JSON object string. Prose, unknown
+    actions, extra keys, and malformed field types are rejected deterministically.
+    """
+
+    if isinstance(payload, str):
+        raw = payload.strip()
+        if not raw:
+            return None
+        try:
+            payload = json.loads(raw)
+        except Exception:
+            return None
+
+    if not isinstance(payload, dict):
+        return None
+
+    action = str(payload.get("action") or "").strip()
+    if action not in CONTROLLER_ACTION_TYPES:
+        return None
+
+    reason_value = payload.get("reason")
+    reason = None
+    if reason_value is not None:
+        reason = str(reason_value).strip()
+        if not reason:
+            return None
+
+    if action == "stop_run":
+        allowed_keys = {"action", "reason"}
+        if set(payload.keys()) - allowed_keys:
+            return None
+        result: Dict[str, Any] = {"action": action}
+        if reason:
+            result["reason"] = reason
+        return result
+
+    lane = str(payload.get("lane") or "").strip()
+    if not lane or lane not in CONTROLLER_ACTION_LANES:
+        return None
+
+    if action == "search_queries":
+        allowed_keys = {"action", "lane", "queries", "reason"}
+        if set(payload.keys()) - allowed_keys:
+            return None
+        queries = payload.get("queries")
+        if not isinstance(queries, list) or not queries:
+            return None
+        normalized_queries: List[str] = []
+        for query in queries:
+            if not isinstance(query, str):
+                return None
+            normalized = query.strip()
+            if not normalized:
+                return None
+            normalized_queries.append(normalized)
+        result = {"action": action, "lane": lane, "queries": normalized_queries}
+        if reason:
+            result["reason"] = reason
+        return result
+
+    if action == "scrape_candidate":
+        allowed_keys = {"action", "lane", "candidate_index", "reason"}
+        if set(payload.keys()) - allowed_keys:
+            return None
+        candidate_index = payload.get("candidate_index")
+        if not isinstance(candidate_index, int) or isinstance(candidate_index, bool) or candidate_index < 0:
+            return None
+        result = {"action": action, "lane": lane, "candidate_index": candidate_index}
+        if reason:
+            result["reason"] = reason
+        return result
+
+    if action == "same_domain_probe":
+        allowed_keys = {"action", "lane", "url", "reason"}
+        if set(payload.keys()) - allowed_keys:
+            return None
+        url = _normalize_url(str(payload.get("url") or ""))
+        if not url:
+            return None
+        result = {"action": action, "lane": lane, "url": url}
+        if reason:
+            result["reason"] = reason
+        return result
+
+    if action == "stop_lane":
+        allowed_keys = {"action", "lane", "reason"}
+        if set(payload.keys()) - allowed_keys:
+            return None
+        result = {"action": action, "lane": lane}
+        if reason:
+            result["reason"] = reason
+        return result
+
     return None
 
 
@@ -235,6 +348,10 @@ class DiscoveryResultV2:
 
 class DiscoveryRuntimeV2:
     """Deterministic, evidence-first discovery runtime."""
+
+    @staticmethod
+    def parse_controller_action(payload: Any) -> Optional[Dict[str, Any]]:
+        return parse_controller_action(payload)
 
     def __init__(self, claude_client: Any, brightdata_client: Any):
         self.claude_client = claude_client
