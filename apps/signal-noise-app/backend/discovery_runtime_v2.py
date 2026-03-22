@@ -417,6 +417,7 @@ class DiscoveryRuntimeV2:
             "llm_hop_selection_count": 0,
             "planner_action_applied_count": 0,
             "planner_action_parse_fail_count": 0,
+            "planner_action_repair_retry_count": 0,
         }
         self._quality_metrics: Dict[str, Any] = {
             "entity_grounding_reject_count_by_lane": {},
@@ -478,6 +479,7 @@ class DiscoveryRuntimeV2:
             "llm_hop_selection_count": 0,
             "planner_action_applied_count": 0,
             "planner_action_parse_fail_count": 0,
+            "planner_action_repair_retry_count": 0,
         }
         self._quality_metrics = {
             "entity_grounding_reject_count_by_lane": {},
@@ -738,6 +740,7 @@ class DiscoveryRuntimeV2:
             "llm_hop_selection_count": int(self._metrics["llm_hop_selection_count"]),
             "planner_action_applied_count": int(self._metrics["planner_action_applied_count"]),
             "planner_action_parse_fail_count": int(self._metrics["planner_action_parse_fail_count"]),
+            "planner_action_repair_retry_count": int(self._metrics["planner_action_repair_retry_count"]),
             "strict_eval_metrics_by_model": self._build_strict_eval_metrics_by_model(),
             "entity_grounding_reject_count_by_lane": dict(
                 self._quality_metrics.get("entity_grounding_reject_count_by_lane") or {}
@@ -2434,6 +2437,16 @@ class DiscoveryRuntimeV2:
                 )
                 action = parse_controller_action(normalized_payload)
             if not action:
+                repaired_action = await self._repair_planner_action_payload(
+                    lane=lane,
+                    entity_name=entity_name,
+                    objective=objective,
+                    raw_content=str((response or {}).get("content") or ""),
+                    candidates=candidates,
+                )
+                if repaired_action:
+                    action = repaired_action
+            if not action:
                 self._metrics["planner_action_parse_fail_count"] += 1
                 return None
             if str(action.get("lane") or lane).strip() != lane:
@@ -2446,6 +2459,54 @@ class DiscoveryRuntimeV2:
                     return None
             self._metrics["planner_action_applied_count"] += 1
             return action
+        except Exception:  # noqa: BLE001
+            return None
+
+    async def _repair_planner_action_payload(
+        self,
+        *,
+        lane: str,
+        entity_name: str,
+        objective: str,
+        raw_content: str,
+        candidates: List[Dict[str, Any]],
+    ) -> Optional[Dict[str, Any]]:
+        if not raw_content.strip():
+            return None
+        prompt = (
+            "Normalize this into one strict JSON controller action only.\n"
+            "Valid actions: search_queries, scrape_candidate, same_domain_probe, stop_lane, stop_run.\n"
+            f"Entity: {entity_name}\nObjective: {objective}\nLane: {lane}\n"
+            f"Raw output: {self._truncate_word_boundary(raw_content, max_chars=700)}\n"
+            "Return JSON with correct types. No prose."
+        )
+        try:
+            self._metrics["planner_action_repair_retry_count"] += 1
+            self._metrics["llm_hop_selection_count"] += 1
+            repair_response = await self.claude_client.query(
+                prompt=prompt,
+                model="haiku",
+                max_tokens=160,
+                json_mode=False,
+                max_retries_override=0,
+                empty_retries_before_fallback_override=1,
+                fast_fail_on_length=False,
+            )
+            payload = None
+            structured_output = (repair_response or {}).get("structured_output")
+            if isinstance(structured_output, dict):
+                payload = structured_output
+            if not payload:
+                payload = self._extract_json_object_strict((repair_response or {}).get("content"))
+            action = parse_controller_action(payload)
+            if action:
+                return action
+            normalized = self._normalize_planner_action_payload(
+                payload=payload,
+                lane=lane,
+                candidates=candidates,
+            )
+            return parse_controller_action(normalized)
         except Exception:  # noqa: BLE001
             return None
 
