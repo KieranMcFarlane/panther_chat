@@ -449,11 +449,15 @@ class ClaudeClient:
         self.chutes_model_haiku = self.chutes_model_planner
         self.chutes_model_sonnet = self.chutes_model_judge
         self.chutes_model_opus = self.chutes_model_fallback
-        default_json_model = os.getenv(
+        self.chutes_model_json_default = _resolve_chutes_role_model(
             "CHUTES_MODEL_JSON_DEFAULT",
-            self.chutes_model_judge,
+            "CHUTES_MODEL_JUDGE",
+            default="deepseek-ai/DeepSeek-V3.2-TEE",
         )
-        self.chutes_model_json = os.getenv("CHUTES_MODEL_JSON", default_json_model).strip() or default_json_model
+        self.chutes_model_json = _resolve_chutes_role_model(
+            "CHUTES_MODEL_JSON",
+            default=self.chutes_model_json_default,
+        )
         self.chutes_model_json_fallback = os.getenv(
             "CHUTES_MODEL_JSON_FALLBACK",
             self.chutes_model_judge,
