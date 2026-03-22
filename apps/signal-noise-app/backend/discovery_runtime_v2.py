@@ -20,8 +20,11 @@ import re
 import time
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Awaitable, Callable, Dict, List, Optional, Set, Tuple
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
+
+import httpx
 
 logger = logging.getLogger(__name__)
 try:
@@ -64,8 +67,6 @@ TRUSTED_NEWS_DOMAINS = {
     "jobsinfootball.com",
     "sportsmintmedia.com",
     "e3mag.com",
-    "linkedin.com",
-    "wikipedia.org",
     "bbc.com",
     "bbc.co.uk",
 }
@@ -82,10 +83,8 @@ TIER_1_DOMAIN_HINTS = (
 )
 
 HIGH_PRIORITY_REFERENCE_DOMAINS = (
-    "wikipedia.org",
     "bbc.com",
     "bbc.co.uk",
-    "linkedin.com",
 )
 
 LOW_AUTHORITY_DOMAIN_HINTS = (
@@ -98,6 +97,15 @@ LOW_AUTHORITY_DOMAIN_HINTS = (
     "ziprecruiter.com",
     "scribd.com",
     "tendertiger.com",
+)
+
+PDF_BINARY_NOISE_MARKERS = (
+    "/filter/flatedecode",
+    "type/xref",
+    " obj",
+    "endobj",
+    "xref",
+    "startxref",
 )
 
 LANE_KEYWORDS: Dict[str, Tuple[str, ...]] = {
@@ -251,6 +259,17 @@ class DiscoveryRuntimeV2:
         self.candidate_mode_trigger_hops = int(os.getenv("DISCOVERY_CANDIDATE_MODE_TRIGGER_HOPS", "5"))
         self.candidate_mode_extended_hops = int(os.getenv("DISCOVERY_CANDIDATE_MODE_MAX_HOPS", "9"))
         self.run_profile = os.getenv("PIPELINE_RUN_PROFILE", "bounded_balanced_v2")
+        self.doc_index_cache_ttl_seconds = max(
+            60,
+            int(os.getenv("DISCOVERY_DOC_INDEX_TTL_SECONDS", "43200")),
+        )
+        self.doc_index_cache_max_urls = max(
+            8,
+            int(os.getenv("DISCOVERY_DOC_INDEX_MAX_URLS", "96")),
+        )
+        cache_dir_env = os.getenv("DISCOVERY_DOC_INDEX_CACHE_DIR", "backend/data/dossiers/doc_index")
+        self.doc_index_cache_dir = Path(cache_dir_env)
+        self.doc_index_cache_dir.mkdir(parents=True, exist_ok=True)
 
         self._metrics: Dict[str, int] = {
             "synthetic_url_attempt_count": 0,
@@ -262,6 +281,12 @@ class DiscoveryRuntimeV2:
             "schema_fail_count": 0,
             "empty_content_count": 0,
             "llm_hop_selection_count": 0,
+        }
+        self._quality_metrics: Dict[str, Any] = {
+            "entity_grounding_reject_count_by_lane": {},
+            "pdf_binary_reject_count": 0,
+            "non_english_source_reject_count": 0,
+            "off_entity_validated_signals": 0,
         }
         self._strict_eval_model_stats: Dict[str, Dict[str, Any]] = {}
         self._llm_circuit_broken = False
@@ -316,6 +341,12 @@ class DiscoveryRuntimeV2:
             "empty_content_count": 0,
             "llm_hop_selection_count": 0,
         }
+        self._quality_metrics = {
+            "entity_grounding_reject_count_by_lane": {},
+            "pdf_binary_reject_count": 0,
+            "non_english_source_reject_count": 0,
+            "off_entity_validated_signals": 0,
+        }
         self._strict_eval_model_stats = {}
         self._llm_circuit_broken = False
         self._consecutive_length_stops = 0
@@ -357,6 +388,7 @@ class DiscoveryRuntimeV2:
                 break
             lane_result = await self._run_lane(
                 lane=lane,
+                entity_id=entity_id,
                 entity_name=entity_name,
                 dossier=dossier,
                 official_domain=official_domain,
@@ -449,6 +481,7 @@ class DiscoveryRuntimeV2:
                     break
                 lane_result = await self._run_lane(
                     lane=lane,
+                    entity_id=entity_id,
                     entity_name=entity_name,
                     dossier=dossier,
                     official_domain=official_domain,
@@ -529,6 +562,12 @@ class DiscoveryRuntimeV2:
             "empty_content_count": int(self._metrics["empty_content_count"]),
             "llm_hop_selection_count": int(self._metrics["llm_hop_selection_count"]),
             "strict_eval_metrics_by_model": self._build_strict_eval_metrics_by_model(),
+            "entity_grounding_reject_count_by_lane": dict(
+                self._quality_metrics.get("entity_grounding_reject_count_by_lane") or {}
+            ),
+            "pdf_binary_reject_count": int(self._quality_metrics.get("pdf_binary_reject_count") or 0),
+            "non_english_source_reject_count": int(self._quality_metrics.get("non_english_source_reject_count") or 0),
+            "off_entity_validated_signals": int(self._quality_metrics.get("off_entity_validated_signals") or 0),
             "llm_circuit_broken": bool(self._llm_circuit_broken),
             "skipped_enrichment_reasons": [],
             "objective_stage_durations": {
@@ -592,6 +631,7 @@ class DiscoveryRuntimeV2:
         self,
         *,
         lane: str,
+        entity_id: str = "",
         entity_name: str,
         dossier: Dict[str, Any],
         official_domain: Optional[str],
@@ -619,6 +659,10 @@ class DiscoveryRuntimeV2:
             "lane_exhausted": False,
             "dead_end_reason": None,
             "content_hash": None,
+            "grounding_score": 0.0,
+            "entity_domain_match": False,
+            "language_ok": True,
+            "pdf_text_quality_ok": True,
             "parse_path": "discovery_v2_evidence_first",
             "llm_last_status": "heuristic_only",
             "evidence_type": "discovery",
@@ -638,6 +682,7 @@ class DiscoveryRuntimeV2:
 
         candidates = await self._discover_candidates(
             lane=lane,
+            entity_id=entity_id,
             entity_name=entity_name,
             dossier=dossier,
             state=state,
@@ -672,13 +717,25 @@ class DiscoveryRuntimeV2:
                 self._register_lane_failure(lane, state, "duplicate_url")
                 continue
 
+            grounding_score = self._entity_match_score(candidate=candidate, entity_name=entity_name)
+            entity_domain_match = self._is_entity_domain_match(url=url, official_domain=official_domain)
+            language_ok = self._candidate_language_ok(lane=lane, url=url)
             if not self._candidate_passes_entity_grounding(
                 lane=lane,
                 candidate=candidate,
                 entity_name=entity_name,
                 official_domain=official_domain,
+                grounding_score=grounding_score,
+                dossier=dossier,
+                language_ok=language_ok,
+                strict=False,
             ):
                 self._register_lane_failure(lane, state, "off_entity_candidate_prefilter")
+                self._increment_entity_grounding_reject(lane)
+                if not language_ok:
+                    self._quality_metrics["non_english_source_reject_count"] = int(
+                        self._quality_metrics.get("non_english_source_reject_count") or 0
+                    ) + 1
                 state.setdefault("rejected_urls", set()).add(url)
                 if domain_family:
                     rejected_families = state.setdefault("rejected_domain_families", {})
@@ -700,6 +757,15 @@ class DiscoveryRuntimeV2:
             content = str(scraped.get("content") or "")
             metadata = scraped.get("metadata") if isinstance(scraped.get("metadata"), dict) else {}
             content_hash = hashlib.sha1(content.encode("utf-8", errors="ignore")).hexdigest() if content else None
+            pdf_text_quality_ok = self._pdf_text_quality_ok(content=content)
+            if not pdf_text_quality_ok and lane in {"rfp_procurement_tenders", "annual_report", "governance_pdf"}:
+                self._quality_metrics["pdf_binary_reject_count"] = int(
+                    self._quality_metrics.get("pdf_binary_reject_count") or 0
+                ) + 1
+                self._register_lane_failure(lane, state, "pdf_binary_or_xref_text")
+                if self._lane_failure_count(lane, state) >= 2:
+                    self._mark_lane_dead(lane, state, "pdf_binary_or_xref_text")
+                continue
 
             low_signal_reason = self._low_signal_reason(lane=lane, url=url, content=content, metadata=metadata)
             if content_hash and content_hash in state["visited_hashes"]:
@@ -740,13 +806,38 @@ class DiscoveryRuntimeV2:
                 content=content,
             ):
                 accept_reject_reasons.append("evidence_not_grounded_in_source_content")
+            if lane in {"rfp_procurement_tenders", "annual_report", "governance_pdf"}:
+                procurement_text = " ".join(
+                    [
+                        evidence_snippet,
+                        str(evidence.get("content_item") or ""),
+                        str(candidate.get("title") or ""),
+                        str(candidate.get("snippet") or ""),
+                    ]
+                )
+                if not self._has_procurement_lexicon(procurement_text):
+                    accept_reject_reasons.append("missing_procurement_lexicon")
 
             signature = self._evidence_signature(url=url, lane=lane, snippet=evidence_snippet)
             if signature in state["accepted_signatures"]:
                 accept_reject_reasons.append("duplicate_evidence_signature")
+            if grounding_score < 0.52:
+                accept_reject_reasons.append("entity_match_score_below_threshold")
+            if not language_ok:
+                accept_reject_reasons.append("non_english_source")
 
             if source_tier == "tier_3" and not self._has_tier12_corroboration(state, evidence):
                 accept_reject_reasons.append("tier3_without_corroboration")
+            if (
+                lane in {"rfp_procurement_tenders", "annual_report", "governance_pdf"}
+                and self._is_federation_entity(dossier=dossier, entity_name=entity_name)
+                and not self._federation_procurement_source_allowed(
+                    url=url,
+                    official_domain=official_domain,
+                    grounding_score=grounding_score,
+                )
+            ):
+                accept_reject_reasons.append("federation_procurement_source_mismatch")
 
             accept_guard_passed = len(accept_reject_reasons) == 0
             if not accept_guard_passed and source_tier == "tier_3" and "tier3_without_corroboration" in accept_reject_reasons:
@@ -831,6 +922,10 @@ class DiscoveryRuntimeV2:
                 "accept_reject_reasons": list(accept_reject_reasons),
                 "validation_state": validation_state,
                 "evidence_quality_score": quality_score,
+                "grounding_score": grounding_score,
+                "entity_domain_match": bool(entity_domain_match),
+                "language_ok": bool(language_ok),
+                "pdf_text_quality_ok": bool(pdf_text_quality_ok),
             }
             candidate_evaluations.append(candidate_eval)
 
@@ -857,6 +952,10 @@ class DiscoveryRuntimeV2:
                         "reason_code": candidate_eval["reason_code"],
                         "confidence_delta_bucket": candidate_eval["confidence_delta_bucket"],
                     },
+                    "grounding_score": grounding_score,
+                    "entity_domain_match": bool(entity_domain_match),
+                    "language_ok": bool(language_ok),
+                    "pdf_text_quality_ok": bool(pdf_text_quality_ok),
                 }
             )
 
@@ -885,10 +984,27 @@ class DiscoveryRuntimeV2:
                 "reason_code": candidate_eval["reason_code"],
                 "model_used": candidate_eval["model_used"],
                 "schema_valid": candidate_eval["schema_valid"],
+                "grounding_score": grounding_score,
+                "entity_domain_match": bool(entity_domain_match),
+                "language_ok": bool(language_ok),
+                "pdf_text_quality_ok": bool(pdf_text_quality_ok),
             }
             if signal["validation_state"] == "diagnostic":
                 diagnostic = signal
                 signal = None
+            if validation_state == "validated" and not self._candidate_passes_entity_grounding(
+                lane=lane,
+                candidate=candidate,
+                entity_name=entity_name,
+                official_domain=official_domain,
+                grounding_score=grounding_score,
+                dossier=dossier,
+                language_ok=language_ok,
+                strict=True,
+            ):
+                self._quality_metrics["off_entity_validated_signals"] = int(
+                    self._quality_metrics.get("off_entity_validated_signals") or 0
+                ) + 1
             break
 
         if signal is None and diagnostic is None and not hop_record.get("url"):
@@ -913,6 +1029,7 @@ class DiscoveryRuntimeV2:
         self,
         *,
         lane: str,
+        entity_id: str = "",
         entity_name: str,
         dossier: Dict[str, Any],
         state: Dict[str, Any],
@@ -945,6 +1062,26 @@ class DiscoveryRuntimeV2:
                     }
                 )
                 seen.add(normalized)
+        if (
+            objective == "rfp_pdf"
+            and lane in {"governance_pdf", "annual_report", "rfp_procurement_tenders"}
+            and official_domain
+        ):
+            indexed = await self._discover_official_pdf_candidates(
+                entity_id=entity_id,
+                entity_name=entity_name,
+                official_url=str(official or ""),
+                official_domain=official_domain,
+                state=state,
+            )
+            for item in indexed:
+                if not isinstance(item, dict):
+                    continue
+                normalized = _normalize_url(item.get("url") or "")
+                if not normalized or normalized in seen:
+                    continue
+                seen.add(normalized)
+                discovered.append(item)
 
         for raw_query in queries[: max(1, self.queries_per_lane)]:
             query = raw_query.format(entity=entity_name)
@@ -990,6 +1127,238 @@ class DiscoveryRuntimeV2:
         )
         return ranked
 
+    async def _discover_official_pdf_candidates(
+        self,
+        *,
+        entity_id: str = "",
+        entity_name: str,
+        official_url: str,
+        official_domain: str,
+        state: Dict[str, Any],
+    ) -> List[Dict[str, Any]]:
+        cache_key = f"pdf_index::{official_domain}"
+        cached = state.get(cache_key)
+        if isinstance(cached, list):
+            return cached
+        disk_cached = self._load_doc_index_cache(entity_id=entity_id, official_domain=official_domain)
+        if disk_cached:
+            state[cache_key] = disk_cached
+            return disk_cached
+
+        discovered: List[Dict[str, Any]] = []
+        seen: Set[str] = set()
+        base_url = self._canonical_official_base_url(official_url=official_url, official_domain=official_domain)
+
+        sitemap_candidates = await self._discover_pdf_urls_from_sitemap(base_url=base_url, official_domain=official_domain)
+        for url in sitemap_candidates:
+            normalized = _normalize_url(url)
+            if not normalized or normalized in seen:
+                continue
+            seen.add(normalized)
+            discovered.append(
+                {
+                    "url": normalized,
+                    "title": f"{entity_name} sitemap document",
+                    "snippet": "Official-domain sitemap indexed document candidate",
+                    "candidate_origin": "sitemap",
+                    "discovery_source": "official_doc_index",
+                }
+            )
+
+        nav_candidates = await self._discover_pdf_urls_from_nav(base_url=base_url, official_domain=official_domain)
+        for url in nav_candidates:
+            normalized = _normalize_url(url)
+            if not normalized or normalized in seen:
+                continue
+            seen.add(normalized)
+            discovered.append(
+                {
+                    "url": normalized,
+                    "title": f"{entity_name} crawled document",
+                    "snippet": "Official-domain navigational document candidate",
+                    "candidate_origin": "crawl",
+                    "discovery_source": "official_doc_index",
+                }
+            )
+
+        truncated = discovered[: int(self.doc_index_cache_max_urls)]
+        state[cache_key] = truncated
+        self._save_doc_index_cache(
+            entity_id=entity_id,
+            official_domain=official_domain,
+            items=truncated,
+        )
+        return truncated
+
+    def _doc_index_cache_path(self, *, entity_id: str, official_domain: str) -> Path:
+        safe_entity = re.sub(r"[^a-z0-9._-]+", "-", str(entity_id or "entity").strip().lower()).strip("-") or "entity"
+        safe_domain = re.sub(r"[^a-z0-9._-]+", "-", str(official_domain or "domain").strip().lower()).strip("-") or "domain"
+        return self.doc_index_cache_dir / f"{safe_entity}__{safe_domain}.json"
+
+    def _load_doc_index_cache(self, *, entity_id: str, official_domain: str) -> List[Dict[str, Any]]:
+        path = self._doc_index_cache_path(entity_id=entity_id, official_domain=official_domain)
+        if not path.exists():
+            return []
+        try:
+            payload = json.loads(path.read_text())
+        except Exception:
+            return []
+        if not isinstance(payload, dict):
+            return []
+        created_at = float(payload.get("created_at") or 0.0)
+        if created_at <= 0 or (time.time() - created_at) > float(self.doc_index_cache_ttl_seconds):
+            return []
+        items = payload.get("items")
+        if not isinstance(items, list):
+            return []
+        valid: List[Dict[str, Any]] = []
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            normalized = _normalize_url(item.get("url") or "")
+            if not normalized:
+                continue
+            valid.append(
+                {
+                    "url": normalized,
+                    "title": str(item.get("title") or "Cached official document"),
+                    "snippet": str(item.get("snippet") or "Cached official-domain document candidate"),
+                    "candidate_origin": str(item.get("candidate_origin") or "known_doc_index"),
+                    "discovery_source": str(item.get("discovery_source") or "official_doc_index_cache"),
+                }
+            )
+        return valid[: int(self.doc_index_cache_max_urls)]
+
+    def _save_doc_index_cache(
+        self,
+        *,
+        entity_id: str,
+        official_domain: str,
+        items: List[Dict[str, Any]],
+    ) -> None:
+        path = self._doc_index_cache_path(entity_id=entity_id, official_domain=official_domain)
+        payload = {
+            "entity_id": entity_id,
+            "official_domain": official_domain,
+            "created_at": time.time(),
+            "items": items[: int(self.doc_index_cache_max_urls)],
+        }
+        try:
+            path.write_text(json.dumps(payload, indent=2))
+        except Exception:
+            return
+
+    @staticmethod
+    def _canonical_official_base_url(*, official_url: str, official_domain: str) -> str:
+        normalized = _normalize_url(official_url)
+        if normalized:
+            parsed = urlparse(normalized)
+            return f"{parsed.scheme}://{parsed.netloc}"
+        return f"https://{official_domain.lstrip('www.')}"
+
+    async def _discover_pdf_urls_from_sitemap(self, *, base_url: str, official_domain: str) -> List[str]:
+        root = base_url.rstrip("/")
+        sitemap_urls = [
+            f"{root}/sitemap.xml",
+            f"{root}/sitemap_index.xml",
+            f"{root}/sitemap-index.xml",
+            f"{root}/wp-sitemap.xml",
+        ]
+        discovered: Set[str] = set()
+        pending = list(sitemap_urls)
+        visited: Set[str] = set()
+        max_sitemaps = 5
+
+        async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
+            while pending and len(visited) < max_sitemaps:
+                sitemap_url = pending.pop(0)
+                if sitemap_url in visited:
+                    continue
+                visited.add(sitemap_url)
+                try:
+                    response = await client.get(sitemap_url)
+                except Exception:
+                    continue
+                if response.status_code != 200:
+                    continue
+                body = response.text or ""
+                locs = re.findall(r"<loc>(.*?)</loc>", body, flags=re.IGNORECASE)
+                for loc in locs:
+                    candidate = _normalize_url(loc)
+                    if not candidate:
+                        continue
+                    host = (urlparse(candidate).hostname or "").lower().lstrip("www.")
+                    if not host.endswith(official_domain):
+                        continue
+                    lower = candidate.lower()
+                    if lower.endswith(".xml") and len(visited) + len(pending) < max_sitemaps:
+                        pending.append(candidate)
+                        continue
+                    if self._looks_like_pdf_signal_url(candidate):
+                        discovered.add(candidate)
+
+        return sorted(discovered)[:24]
+
+    async def _discover_pdf_urls_from_nav(self, *, base_url: str, official_domain: str) -> List[str]:
+        probe_urls = [
+            base_url,
+            f"{base_url.rstrip('/')}/procurement",
+            f"{base_url.rstrip('/')}/tenders",
+            f"{base_url.rstrip('/')}/documents",
+        ]
+        discovered: Set[str] = set()
+        for page_url in probe_urls:
+            html = await self._fetch_raw_html_for_indexing(page_url)
+            if not html:
+                continue
+            for href in re.findall(r'href=[\"\']([^\"\']+)[\"\']', html, flags=re.IGNORECASE):
+                resolved = _normalize_url(urljoin(page_url, href))
+                if not resolved:
+                    continue
+                host = (urlparse(resolved).hostname or "").lower().lstrip("www.")
+                if not host.endswith(official_domain):
+                    continue
+                if self._looks_like_pdf_signal_url(resolved):
+                    discovered.add(resolved)
+        return sorted(discovered)[:24]
+
+    async def _fetch_raw_html_for_indexing(self, url: str) -> str:
+        try:
+            response = await self.brightdata_client.scrape_as_markdown(url)
+        except Exception:
+            response = None
+        if isinstance(response, dict):
+            raw_html = str(response.get("raw_html") or "")
+            if raw_html:
+                return raw_html
+        try:
+            async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
+                fallback = await client.get(url)
+            if fallback.status_code == 200:
+                return str(fallback.text or "")
+        except Exception:
+            return ""
+        return ""
+
+    @staticmethod
+    def _looks_like_pdf_signal_url(url: str) -> bool:
+        lower = str(url or "").lower()
+        if not lower:
+            return False
+        if lower.endswith(".pdf"):
+            return True
+        return any(
+            token in lower
+            for token in (
+                "procurement",
+                "tender",
+                "rfp",
+                "supplier",
+                "request-for-proposal",
+                "invitation-to-tender",
+            )
+        )
+
     async def _build_agentic_queries(
         self,
         *,
@@ -1002,7 +1371,16 @@ class DiscoveryRuntimeV2:
         metadata = dossier.get("metadata") if isinstance(dossier, dict) else {}
         canonical = metadata.get("canonical_sources") if isinstance(metadata, dict) else {}
         official = canonical.get("official_site") if isinstance(canonical, dict) else None
+        if not official and isinstance(metadata, dict):
+            official = (
+                metadata.get("website")
+                or metadata.get("entity_website")
+                or metadata.get("official_site_url")
+            )
         official_host = (urlparse(str(official or "")).hostname or "").lower().lstrip("www.")
+        if not official_host:
+            official_host = (self._official_domain(entity_name=entity_name, dossier=dossier) or "").lower().lstrip("www.")
+        entity_aliases = self._entity_aliases(entity_name=entity_name, official_host=official_host)
 
         query_pool: List[str] = []
         query_pool.extend(base_queries)
@@ -1016,12 +1394,26 @@ class DiscoveryRuntimeV2:
         if lane in {"rfp_procurement_tenders", "annual_report", "governance_pdf"}:
             query_pool.append(f'"{entity_name}" filetype:pdf procurement tender supplier')
             query_pool.append(f'"{entity_name}" filetype:pdf annual report governance')
+            if official_host:
+                query_pool.append(f'site:{official_host} filetype:pdf procurement tender supplier')
+                query_pool.append(f'site:{official_host} filetype:pdf rfp tender')
+                query_pool.append(f'site:{official_host} filetype:pdf procurement')
+                query_pool.append(f'site:{official_host} filetype:pdf tender')
+                query_pool.append(f'site:{official_host} "request for proposal" filetype:pdf')
+                query_pool.append(f'site:{official_host} "invitation to tender" filetype:pdf')
+                query_pool.append(f'site:{official_host} supplier procurement')
+                query_pool.append(f'site:{official_host} tender procurement')
         if objective in {"rfp_web", "rfp_pdf"} and lane in {"press_release", "trusted_news", "careers"}:
             query_pool.append(f'"{entity_name}" CEO "head of digital" "commercial" linkedin')
             query_pool.append(f'"{entity_name}" NTT data partnership digital transformation')
+            if objective == "rfp_pdf" and official_host:
+                for alias in entity_aliases[:2]:
+                    query_pool.append(f'site:{official_host} "{alias}" filetype:pdf tender')
+                    query_pool.append(f'site:{official_host} "{alias}" filetype:pdf procurement')
+                    query_pool.append(f'site:{official_host} "{alias}" "request for proposal"')
         if lane in {"official_site", "trusted_news"}:
-            query_pool.append(f'"{entity_name}" wikipedia')
             query_pool.append(f'"{entity_name}" bbc sport')
+            query_pool.append(f'"{entity_name}" official club site')
         if lane in {"careers", "linkedin_jobs"}:
             query_pool.append(f'site:linkedin.com/in "{entity_name}" "Head of Digital"')
             query_pool.append(f'site:linkedin.com/in "{entity_name}" "Chief Executive Officer"')
@@ -1120,9 +1512,9 @@ class DiscoveryRuntimeV2:
         if any(domain in url for domain in HIGH_PRIORITY_REFERENCE_DOMAINS):
             score += 0.1
         if lane in {"careers", "linkedin_jobs"} and "linkedin.com/in/" in url:
-            score += 0.18
+            score += 0.04
         if lane in {"official_site", "trusted_news"} and "wikipedia.org/wiki/" in url:
-            score += 0.12
+            score -= 0.1
         if lane == "trusted_news" and ("bbc.com/sport" in url or "bbc.co.uk/sport" in url):
             score += 0.16
         if lane in {"rfp_procurement_tenders", "annual_report", "governance_pdf", "careers", "linkedin_jobs"}:
@@ -1583,8 +1975,56 @@ class DiscoveryRuntimeV2:
                 host = (urlparse(website).hostname or "").lower()
                 if host:
                     return host.lstrip("www.")
-        guessed = re.sub(r"[^a-z0-9]+", "", entity_name.lower())
-        return f"{guessed}.com" if guessed else None
+        sections = dossier.get("sections") if isinstance(dossier, dict) else None
+        if isinstance(sections, list):
+            for section in sections:
+                if not isinstance(section, dict):
+                    continue
+                if str(section.get("id") or "").strip().lower() != "core_information":
+                    continue
+                lines = section.get("content") if isinstance(section.get("content"), list) else []
+                joined = " ".join(str(line or "") for line in lines)
+                match = re.search(r"https?://[^\s)]+", joined)
+                if match:
+                    host = (urlparse(match.group(0)).hostname or "").lower()
+                    if host:
+                        return host.lstrip("www.")
+                bare_match = re.search(
+                    r"\b(?:www\.)?[a-z0-9.-]+\.[a-z]{2,}(?:/[a-z0-9._~:/?#@!$&'()*+,;=-]*)?\b",
+                    joined,
+                    flags=re.IGNORECASE,
+                )
+                if bare_match:
+                    host = (urlparse(f"https://{bare_match.group(0)}").hostname or "").lower()
+                    if host:
+                        return host.lstrip("www.")
+        return None
+
+    @staticmethod
+    def _entity_aliases(*, entity_name: str, official_host: str = "") -> List[str]:
+        aliases: List[str] = []
+        normalized_words = [w for w in re.findall(r"[a-z0-9]+", str(entity_name or "").lower()) if w]
+        informative = [w for w in normalized_words if w not in {"fc", "f", "c", "football", "club", "the"}]
+        if informative:
+            acronym = "".join(part[0] for part in informative if part)
+            if len(acronym) >= 2:
+                aliases.append(acronym.upper())
+            aliases.append(" ".join(informative))
+        host_core = (official_host or "").split(".")[0].strip().lower()
+        if host_core and host_core not in aliases:
+            aliases.append(host_core)
+        deduped: List[str] = []
+        seen: Set[str] = set()
+        for alias in aliases:
+            item = str(alias or "").strip()
+            if not item:
+                continue
+            key = item.lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            deduped.append(item)
+        return deduped
 
     def _source_tier(self, *, url: str, official_domain: Optional[str]) -> str:
         host = (urlparse(url).hostname or "").lower().lstrip("www.")
@@ -1603,21 +2043,18 @@ class DiscoveryRuntimeV2:
         candidate: Dict[str, Any],
         entity_name: str,
         official_domain: Optional[str],
+        grounding_score: Optional[float] = None,
+        dossier: Optional[Dict[str, Any]] = None,
+        language_ok: bool = True,
+        strict: bool = False,
     ) -> bool:
         url = str(candidate.get("url") or "").strip()
         if not url:
             return False
         host = (urlparse(url).hostname or "").lower().lstrip("www.")
+        if not language_ok:
+            return False
         if official_domain and (host == official_domain or host.endswith(f".{official_domain}")):
-            return True
-
-        lane_requires_strict_grounding = lane in {
-            "rfp_procurement_tenders",
-            "annual_report",
-            "governance_pdf",
-            "linkedin_jobs",
-        }
-        if not lane_requires_strict_grounding:
             return True
 
         def _normalize_words(text: str) -> List[str]:
@@ -1626,6 +2063,16 @@ class DiscoveryRuntimeV2:
         entity_words = _normalize_words(entity_name)
         if not entity_words:
             return False
+        score = float(grounding_score) if isinstance(grounding_score, (int, float)) else self._entity_match_score(
+            candidate=candidate,
+            entity_name=entity_name,
+        )
+        high_risk_lane = lane in {"rfp_procurement_tenders", "annual_report", "governance_pdf", "linkedin_jobs"}
+        if strict and score < 0.52:
+            return False
+        if not strict and high_risk_lane and score < 0.25:
+            return False
+
         full_entity_phrase = " ".join(entity_words)
         alias_words = [word for word in entity_words if word not in {"fc", "f", "c", "football", "club"}]
         alias_phrase = " ".join(alias_words).strip()
@@ -1644,32 +2091,105 @@ class DiscoveryRuntimeV2:
                 and any(marker in searchable for marker in (" football", " fc", "f.c", "club"))
             )
         if has_exact_entity_phrase:
-            if lane in {"rfp_procurement_tenders", "annual_report", "governance_pdf"}:
-                is_sports_entity = any(word in {"fc", "football", "club"} for word in entity_words)
-                if is_sports_entity:
-                    sports_context_markers = (
-                        " football",
-                        "football club",
-                        " fc",
-                        "f.c",
-                        " stadium",
-                        " sport",
-                        " efl",
-                        " premier league",
-                    )
-                    council_markers = ("city council", "borough council", "county council", "local authority")
-                    has_sports_context = any(marker in searchable for marker in sports_context_markers)
-                    has_council_context = any(marker in searchable for marker in council_markers)
-                    if any(marker in host for marker in ("edemocracy.", "gov.uk", "charitycommission.")) and not (
-                        official_domain and (host == official_domain or host.endswith(f".{official_domain}"))
-                    ):
-                        return False
-                    return bool(has_sports_context and not has_council_context)
+            if (
+                lane in {"rfp_procurement_tenders", "annual_report", "governance_pdf"}
+                and self._is_federation_entity(dossier=dossier or {}, entity_name=entity_name)
+            ):
+                return self._federation_procurement_source_allowed(
+                    url=url,
+                    official_domain=official_domain,
+                    grounding_score=score,
+                )
+            return True
+
+        if not strict and not high_risk_lane:
+            # Let candidate evaluation inspect content, but keep strict gate for validated signals.
+            return True
+
+        if score >= 0.78 and lane in {
+            "official_site",
+            "press_release",
+            "trusted_news",
+            "careers",
+            "partnership_commercial",
+            "broader_press",
+        }:
             return True
 
         if lane == "linkedin_jobs" and "linkedin.com" in host:
             return bool(alias_phrase and alias_phrase in searchable)
 
+        return False
+
+    def _entity_match_score(self, *, candidate: Dict[str, Any], entity_name: str) -> float:
+        searchable = " ".join(
+            (
+                str(candidate.get("url") or ""),
+                str(candidate.get("title") or ""),
+                str(candidate.get("snippet") or ""),
+            )
+        ).lower()
+        entity_words = [part for part in re.findall(r"[a-z0-9]+", entity_name.lower()) if part]
+        if not entity_words:
+            return 0.0
+        informative = [word for word in entity_words if word not in {"fc", "f", "c", "football", "club"}]
+        required = informative or entity_words
+        matched = sum(1 for word in required if word in searchable)
+        score = matched / max(1, len(required))
+        if " ".join(required) in searchable:
+            score = min(1.0, score + 0.2)
+        acronym = "".join(part[0] for part in required if part)
+        if len(acronym) >= 2 and re.search(rf"\b{re.escape(acronym)}\b", searchable, flags=re.IGNORECASE):
+            score = max(score, 0.55)
+        return round(float(score), 3)
+
+    @staticmethod
+    def _is_entity_domain_match(*, url: str, official_domain: Optional[str]) -> bool:
+        if not official_domain:
+            return False
+        host = (urlparse(url).hostname or "").lower().lstrip("www.")
+        return bool(host and (host == official_domain or host.endswith(f".{official_domain}")))
+
+    def _candidate_language_ok(self, *, lane: str, url: str) -> bool:
+        if lane != "official_site":
+            return True
+        parsed = urlparse(url)
+        host = (parsed.hostname or "").lower()
+        path = (parsed.path or "").lower()
+        if "wikipedia.org" not in host:
+            return True
+        # Official-site lane should never validate through non-English Wikipedia mirrors.
+        if host.startswith("en.wikipedia.org"):
+            return True
+        return False
+
+    def _is_federation_entity(self, *, dossier: Dict[str, Any], entity_name: str) -> bool:
+        metadata = dossier.get("metadata") if isinstance(dossier, dict) else {}
+        if not isinstance(metadata, dict):
+            metadata = {}
+        fields = [
+            str(metadata.get("entity_type") or ""),
+            str(metadata.get("org_type") or ""),
+            str(metadata.get("description") or ""),
+            str(entity_name or ""),
+        ]
+        text = " ".join(fields).lower()
+        return any(token in text for token in ("federation", "association", "confederation"))
+
+    def _federation_procurement_source_allowed(
+        self,
+        *,
+        url: str,
+        official_domain: Optional[str],
+        grounding_score: float,
+    ) -> bool:
+        host = (urlparse(url).hostname or "").lower().lstrip("www.")
+        if official_domain and (host == official_domain or host.endswith(f".{official_domain}")):
+            return True
+        allowed_env = str(os.getenv("DISCOVERY_FEDERATION_PROCUREMENT_ALLOWED_DOMAINS", "") or "").strip()
+        allowlist = [domain.strip().lower().lstrip("www.") for domain in allowed_env.split(",") if domain.strip()]
+        if any(host == domain or host.endswith(f".{domain}") for domain in allowlist):
+            return grounding_score >= 0.75
         return False
 
     def _has_tier12_corroboration(self, state: Dict[str, Any], evidence: Dict[str, Any]) -> bool:
@@ -1700,6 +2220,42 @@ class DiscoveryRuntimeV2:
         if leaf in {"matches", "fixtures", "results", "news"} and word_count < 180:
             return "nav_shell_leaf"
         return None
+
+    def _pdf_text_quality_ok(self, *, content: str) -> bool:
+        body = str(content or "")
+        if not body:
+            return False
+        lowered = body.lower()
+        word_count = _safe_word_count(body)
+        marker_hits = sum(1 for marker in PDF_BINARY_NOISE_MARKERS if marker in lowered)
+        # Reject obvious binary/xref shells aggressively for procurement/pdf lanes.
+        if marker_hits >= 1 and word_count < 80:
+            return False
+        if marker_hits >= 2 and word_count < 160:
+            return False
+        return True
+
+    @staticmethod
+    def _has_procurement_lexicon(text: str) -> bool:
+        lowered = str(text or "").lower()
+        return any(
+            token in lowered
+            for token in (
+                "rfp",
+                "request for proposal",
+                "invitation to tender",
+                "tender",
+                "procurement",
+                "supplier",
+                "bid",
+                "quotation",
+                "rfq",
+            )
+        )
+
+    def _increment_entity_grounding_reject(self, lane: str) -> None:
+        by_lane = self._quality_metrics.setdefault("entity_grounding_reject_count_by_lane", {})
+        by_lane[lane] = int(by_lane.get(lane, 0) or 0) + 1
 
     def _register_lane_failure(self, lane: str, state: Dict[str, Any], reason: str) -> None:
         failures = state.setdefault("lane_failures", {})

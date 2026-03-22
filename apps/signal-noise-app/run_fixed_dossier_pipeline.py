@@ -18,11 +18,13 @@ import inspect
 import json
 import logging
 import os
+import re
 import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Any, Optional
+from urllib.parse import urlparse
 
 # Add backend to path
 sys.path.insert(0, str(Path(__file__).parent))
@@ -589,6 +591,7 @@ class FixedDossierFirstPipeline:
             entity_type=entity_type,
             priority_score=tier_score,
             entity_data=schema_entity_data,
+            run_objective=(self.phase_objectives or {}).get("dossier_generation", "dossier_core"),
         )
 
         logger.info(f"✅ Dossier generated:")
@@ -699,21 +702,38 @@ class FixedDossierFirstPipeline:
 
         # Try with dossier context first, fall back to standard discovery
         try:
-            dossier_payload = dossier.to_dict() if hasattr(dossier, 'to_dict') else {}
-            known_official_site = None
+            if isinstance(dossier, dict):
+                dossier_payload = dict(dossier)
+            elif hasattr(dossier, "to_dict"):
+                dossier_payload = dossier.to_dict()
+            else:
+                dossier_payload = {}
+            dossier_payload = self._ensure_dossier_metadata_payload(
+                dossier_payload=dossier_payload,
+                entity_id=entity_id,
+                entity_name=entity_name,
+            )
+            known_official_site = self._extract_official_site_from_dossier_payload(dossier_payload)
             generator = getattr(self, "dossier_generator", None)
             getter = getattr(generator, "get_last_official_site_url", None)
-            if callable(getter):
+            if not known_official_site and callable(getter):
                 try:
-                    known_official_site = getter(entity_id)
+                    getter_candidate = getter(entity_id)
+                    if self._is_likely_synthetic_entity_domain(getter_candidate, entity_name):
+                        getter_candidate = None
+                    known_official_site = getter_candidate
                 except Exception as seed_error:  # noqa: BLE001
                     logger.debug("Could not fetch seeded official site for %s: %s", entity_id, seed_error)
             if not known_official_site:
-                known_official_site = self._lookup_official_site_from_recent_artifacts(entity_id)
+                artifact_candidate = self._lookup_official_site_from_recent_artifacts(entity_id)
+                if self._is_likely_synthetic_entity_domain(artifact_candidate, entity_name):
+                    artifact_candidate = None
+                known_official_site = artifact_candidate
             if not known_official_site:
                 known_official_site = self._schema_first_official_site()
 
             if isinstance(known_official_site, str) and known_official_site.strip():
+                logger.info("🌐 Discovery official-site seed: %s", known_official_site)
                 metadata = dossier_payload.setdefault("metadata", {})
                 if isinstance(metadata, dict):
                     metadata.setdefault("website", known_official_site)
@@ -994,6 +1014,37 @@ class FixedDossierFirstPipeline:
             "org_type": str(org_type or "").strip(),
         }
 
+    def _extract_official_site_from_dossier_payload(self, payload: Dict[str, Any]) -> str | None:
+        if not isinstance(payload, dict):
+            return None
+        metadata = payload.get("metadata")
+        canonical_sources = metadata.get("canonical_sources") if isinstance(metadata, dict) else None
+        candidates = [
+            canonical_sources.get("official_site") if isinstance(canonical_sources, dict) else None,
+            metadata.get("website") if isinstance(metadata, dict) else None,
+            payload.get("official_site_url"),
+            payload.get("website"),
+        ]
+        sections = payload.get("sections") if isinstance(payload.get("sections"), list) else []
+        for section in sections:
+            if not isinstance(section, dict):
+                continue
+            if str(section.get("id") or "").strip().lower() != "core_information":
+                continue
+            content_lines = section.get("content") if isinstance(section.get("content"), list) else []
+            joined = " ".join(str(line or "") for line in content_lines)
+            url_match = re.search(r"https?://[^\s)]+", joined)
+            if url_match:
+                candidates.append(url_match.group(0))
+            bare_match = re.search(r"\b(?:www\.)?[a-z0-9.-]+\.[a-z]{2,}(?:/[a-z0-9._~:/?#@!$&'()*+,;=-]*)?\b", joined, flags=re.IGNORECASE)
+            if bare_match:
+                candidates.append(bare_match.group(0))
+        for candidate in candidates:
+            normalized = self._normalize_http_url(candidate)
+            if normalized:
+                return normalized
+        return None
+
     def _lookup_official_site_from_recent_artifacts(self, entity_id: str) -> str | None:
         """Load the most recent official site URL from saved dossier artifacts."""
         output_dir = Path(getattr(self, "output_dir", "backend/data/dossiers"))
@@ -1035,6 +1086,21 @@ class FixedDossierFirstPipeline:
         if value.startswith("www.") or "." in value:
             return f"https://{value.lstrip('/').rstrip('/')}"
         return None
+
+    @staticmethod
+    def _is_likely_synthetic_entity_domain(candidate: Any, entity_name: str) -> bool:
+        if not isinstance(candidate, str):
+            return False
+        normalized = FixedDossierFirstPipeline._normalize_http_url(candidate)
+        if not normalized:
+            return False
+        host = (urlparse(normalized).hostname or "").lower().lstrip("www.")
+        if not host:
+            return False
+        compact = re.sub(r"[^a-z0-9]+", "", str(entity_name or "").lower())
+        if not compact:
+            return False
+        return host in {f"{compact}.com", f"{compact}.org", f"{compact}.net"}
 
     async def _phase_3_calculate_scores(
         self,
@@ -1080,8 +1146,19 @@ class FixedDossierFirstPipeline:
 
         # Save dossier
         dossier_path = self.output_dir / f"{entity_id}_dossier_fixed_{timestamp}.json"
+        if isinstance(dossier, dict):
+            dossier_payload = dict(dossier)
+        elif hasattr(dossier, "to_dict"):
+            dossier_payload = dossier.to_dict()
+        else:
+            dossier_payload = {}
+        dossier_payload = self._ensure_dossier_metadata_payload(
+            dossier_payload=dossier_payload,
+            entity_id=entity_id,
+            entity_name=entity_name,
+        )
         with open(dossier_path, 'w') as f:
-            json.dump(dossier.to_dict() if hasattr(dossier, 'to_dict') else dossier, f, indent=2, default=str)
+            json.dump(dossier_payload, f, indent=2, default=str)
         logger.info(f"💾 Dossier saved: {dossier_path}")
 
         # Save discovery
@@ -1125,6 +1202,54 @@ class FixedDossierFirstPipeline:
             logger.info(f"💾 Hop trace saved: {hop_trace_path}")
             artifacts["hop_trace_path"] = str(hop_trace_path)
         return artifacts
+
+    def _ensure_dossier_metadata_payload(
+        self,
+        *,
+        dossier_payload: Dict[str, Any],
+        entity_id: str,
+        entity_name: str,
+    ) -> Dict[str, Any]:
+        payload = dict(dossier_payload or {})
+        metadata = payload.get("metadata")
+        if not isinstance(metadata, dict):
+            metadata = {}
+            payload["metadata"] = metadata
+
+        getter = getattr(getattr(self, "dossier_generator", None), "get_last_entity_data", None)
+        last_entity_data = getter(entity_id) if callable(getter) else {}
+        if not isinstance(last_entity_data, dict):
+            last_entity_data = {}
+
+        website = metadata.get("website")
+        if not website:
+            website = (
+                payload.get("official_site_url")
+                or payload.get("website")
+                or self._extract_official_site_from_dossier_payload(payload)
+                or last_entity_data.get("official_site_url")
+                or last_entity_data.get("entity_website")
+                or last_entity_data.get("website")
+            )
+        normalized_website = self._normalize_http_url(website)
+        if normalized_website:
+            metadata["website"] = normalized_website
+            canonical_sources = metadata.setdefault("canonical_sources", {})
+            if isinstance(canonical_sources, dict):
+                canonical_sources.setdefault("official_site", normalized_website)
+            payload.setdefault("official_site_url", normalized_website)
+
+        metadata.setdefault("entity_id", entity_id)
+        metadata.setdefault("entity_name", entity_name)
+        metadata.setdefault("sport", last_entity_data.get("entity_sport") or last_entity_data.get("sport"))
+        metadata.setdefault("country", last_entity_data.get("entity_country") or last_entity_data.get("country"))
+        metadata.setdefault(
+            "league_or_competition",
+            last_entity_data.get("entity_league") or last_entity_data.get("league_or_competition"),
+        )
+        metadata.setdefault("founded", last_entity_data.get("entity_founded") or last_entity_data.get("founded"))
+        metadata.setdefault("headquarters", last_entity_data.get("hq"))
+        return payload
 
     def _build_hop_trace_payload(
         self,
@@ -1319,6 +1444,7 @@ class FixedDossierFirstPipeline:
         final_confidence = float(discovery.get("final_confidence") or 0.0)
         metadata_coverage_score = None
         unknown_required_field_count = None
+        metadata_missing_fields: list[str] = []
         sections = dossier.get("sections") if isinstance(dossier.get("sections"), list) else []
         core_section = next(
             (
@@ -1341,6 +1467,26 @@ class FixedDossierFirstPipeline:
                         unknown_required_field_count = int(float(metric_text.split(":", 1)[1].strip()))
                     except Exception:
                         unknown_required_field_count = None
+        core_content_text = " ".join(str(line or "") for line in (core_section.get("content") or [])) if isinstance(core_section, dict) else ""
+        core_metrics = core_section.get("metrics") if isinstance(core_section, dict) and isinstance(core_section.get("metrics"), list) else []
+        if any(str(metric).lower().startswith("founded: unknown") for metric in core_metrics):
+            metadata_missing_fields.append("founded")
+        if any(str(metric).lower().startswith("country: unknown") for metric in core_metrics):
+            metadata_missing_fields.append("country")
+        core_content_lower = core_content_text.lower()
+        if "unknown sport" in core_content_lower:
+            metadata_missing_fields.append("sport")
+        if "unknown competition" in core_content_lower:
+            metadata_missing_fields.append("competition")
+        if "website unknown" in core_content_lower or "website: unknown" in core_content_lower:
+            metadata_missing_fields.append("website")
+        metadata_missing_fields = sorted(set(metadata_missing_fields))
+        section_partial_timeout_count = sum(
+            1
+            for section in sections
+            if isinstance(section, dict)
+            and str(section.get("reason_code") or "").strip().lower() == "timeout_partial"
+        )
         acceptance_gate = self._build_acceptance_gate(
             final_confidence=final_confidence,
             signal_count=signal_count,
@@ -1369,10 +1515,17 @@ class FixedDossierFirstPipeline:
                 llm_status_candidates.append(hop_llm_status)
         parse_path = next((candidate for candidate in parse_path_candidates if candidate), "")
         llm_last_status = next((candidate for candidate in llm_status_candidates if candidate), "")
+        entity_grounding_reject_count_by_lane = performance.get("entity_grounding_reject_count_by_lane")
+        if not isinstance(entity_grounding_reject_count_by_lane, dict):
+            entity_grounding_reject_count_by_lane = {}
         entity_grounding_reject_count = sum(
-            1 for hop in hop_timings
-            if isinstance(hop, dict) and str(hop.get("evidence_type") or "").strip().lower() == "entity_grounding_filter"
+            int(value or 0) for value in entity_grounding_reject_count_by_lane.values()
         )
+        if entity_grounding_reject_count == 0:
+            entity_grounding_reject_count = sum(
+                1 for hop in hop_timings
+                if isinstance(hop, dict) and str(hop.get("evidence_type") or "").strip().lower() == "entity_grounding_filter"
+            )
         failure_taxonomy = {
             "import_context_failure": int(
                 bool(self._runtime_import_guard.get("missing")) or self._last_discovery_error_class == "import_context_failure"
@@ -1413,6 +1566,8 @@ class FixedDossierFirstPipeline:
                 "signals_diagnostic_count": int(performance.get("signals_diagnostic_count") or len(diagnostic_signal_list)),
                 "metadata_coverage_score": metadata_coverage_score,
                 "unknown_required_field_count": unknown_required_field_count,
+                "metadata_missing_fields": metadata_missing_fields,
+                "section_partial_timeout_count": int(section_partial_timeout_count),
                 "iterations_completed": int(discovery.get("iterations_completed") or 0),
                 "procurement_maturity": scores.get("procurement_maturity"),
                 "sales_readiness": scores.get("sales_readiness"),
@@ -1429,6 +1584,10 @@ class FixedDossierFirstPipeline:
                 "failure_taxonomy": failure_taxonomy,
                 "synthetic_url_attempt_count": int(performance.get("synthetic_url_attempt_count") or 0),
                 "dead_end_event_count": int(performance.get("dead_end_event_count") or 0),
+                "entity_grounding_reject_count_by_lane": entity_grounding_reject_count_by_lane,
+                "pdf_binary_reject_count": int(performance.get("pdf_binary_reject_count") or 0),
+                "non_english_source_reject_count": int(performance.get("non_english_source_reject_count") or 0),
+                "off_entity_validated_signals": int(performance.get("off_entity_validated_signals") or 0),
                 "fallback_accept_block_count": int(performance.get("fallback_accept_block_count") or 0),
                 "llm_call_count": int(performance.get("llm_call_count") or 0),
                 "llm_fallback_count": int(performance.get("llm_fallback_count") or 0),

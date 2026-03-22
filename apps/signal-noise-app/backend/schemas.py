@@ -1650,6 +1650,9 @@ class EntityDossier:
     # Questions extracted from sections (for discovery feedback)
     questions: List[DossierQuestion] = field(default_factory=list)
 
+    # Structured metadata for downstream discovery/persistence contracts
+    metadata: Dict[str, Any] = field(default_factory=dict)
+
     # Metadata
     generated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     total_cost_usd: float = 0.0
@@ -1666,6 +1669,7 @@ class EntityDossier:
             'tier': self.tier,
             'sections': [section.to_dict() for section in self.sections],
             'questions': [q.to_dict() for q in self.questions],
+            'metadata': self.metadata,
             'generated_at': self.generated_at.isoformat(),
             'total_cost_usd': self.total_cost_usd,
             'generation_time_seconds': self.generation_time_seconds,

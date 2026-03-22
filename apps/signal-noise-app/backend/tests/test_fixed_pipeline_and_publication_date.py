@@ -75,7 +75,9 @@ async def test_phase2_handles_discovery_signature_without_template_id():
 
     assert result.final_confidence == 0.8
     assert captured["max_iterations"] == 9
-    assert captured["dossier"] == {"x": 2}
+    assert captured["dossier"]["x"] == 2
+    assert isinstance(captured["dossier"].get("metadata"), dict)
+    assert captured["dossier"]["metadata"].get("entity_id") == "coventry-city-fc"
 
 
 @pytest.mark.asyncio

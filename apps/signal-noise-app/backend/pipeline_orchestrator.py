@@ -15,6 +15,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import os
+import re
 import time
 from copy import deepcopy
 from dataclasses import dataclass
@@ -117,7 +118,7 @@ class PipelineOrchestrator:
                 entity_name=entity_name,
                 entity_type=entity_type,
                 priority_score=priority_score,
-                run_objective=objective,
+                run_objective=phase_objectives["dossier_generation"],
             )
             dossier = self._coerce_dossier_payload(dossier)
             await self._emit_phase_update(
@@ -156,7 +157,7 @@ class PipelineOrchestrator:
                 entity_type=entity_type,
                 dossier=dossier,
                 phase_callback=phase_callback,
-                run_objective=objective,
+                run_objective=phase_objectives["discovery"],
             )
             discovery_budget = getattr(self, "_last_discovery_budget", {})
             raw_signals = self._extract_raw_signals(discovery_result)
@@ -669,13 +670,66 @@ class PipelineOrchestrator:
 
     def _coerce_dossier_payload(self, dossier: Any) -> Dict[str, Any]:
         if isinstance(dossier, dict):
-            return dossier
-        to_dict = getattr(dossier, "to_dict", None)
-        if callable(to_dict):
-            payload = to_dict()
-            if isinstance(payload, dict):
-                return payload
-        return {}
+            payload = dict(dossier)
+        else:
+            to_dict = getattr(dossier, "to_dict", None)
+            if callable(to_dict):
+                payload = to_dict()
+                if not isinstance(payload, dict):
+                    payload = {}
+            else:
+                payload = {}
+
+        metadata = payload.get("metadata")
+        if not isinstance(metadata, dict):
+            attr_metadata = getattr(dossier, "metadata", None)
+            metadata = dict(attr_metadata) if isinstance(attr_metadata, dict) else {}
+            payload["metadata"] = metadata
+
+        if isinstance(metadata, dict):
+            canonical_sources = metadata.get("canonical_sources")
+            if not isinstance(canonical_sources, dict):
+                canonical_sources = {}
+                metadata["canonical_sources"] = canonical_sources
+            website_candidate = metadata.get("website")
+            if website_candidate and not canonical_sources.get("official_site"):
+                canonical_sources["official_site"] = website_candidate
+            if not metadata.get("website"):
+                section_host = self._extract_website_from_core_section(payload)
+                if section_host:
+                    metadata["website"] = section_host
+                    canonical_sources.setdefault("official_site", section_host)
+
+        return payload
+
+    @staticmethod
+    def _extract_website_from_core_section(payload: Dict[str, Any]) -> Optional[str]:
+        sections = payload.get("sections")
+        if not isinstance(sections, list):
+            return None
+        for section in sections:
+            if not isinstance(section, dict):
+                continue
+            if str(section.get("id") or "").strip().lower() != "core_information":
+                continue
+            content_lines = section.get("content")
+            if not isinstance(content_lines, list):
+                continue
+            joined = " ".join(str(line or "") for line in content_lines)
+            match = re.search(
+                r"\b(?:https?://)?(?:www\.)?[a-z0-9.-]+\.[a-z]{2,}(?:/[a-z0-9._~:/?#@!$&'()*+,;=-]*)?\b",
+                joined,
+                flags=re.IGNORECASE,
+            )
+            if not match:
+                continue
+            candidate = str(match.group(0) or "").strip()
+            if not candidate:
+                continue
+            if not candidate.startswith(("http://", "https://")):
+                candidate = f"https://{candidate.lstrip('/')}"
+            return candidate.rstrip("/")
+        return None
 
     def _normalize_validated_signals(self, signals: List[Any]) -> List[Dict[str, Any]]:
         normalized_signals: List[Dict[str, Any]] = []

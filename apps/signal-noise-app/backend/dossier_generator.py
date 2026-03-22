@@ -326,6 +326,7 @@ class EntityDossierGenerator:
 
         # Determine tier
         tier = self._determine_tier(priority_score)
+        dossier_data_obj: Optional["DossierData"] = None
 
         # Get sections for this tier
         sections_to_generate = self._get_sections_for_tier(tier)
@@ -569,6 +570,16 @@ Website: N/A
         end_time = datetime.now(timezone.utc)
         dossier.generation_time_seconds = (end_time - start_time).total_seconds()
         dossier.generated_at = start_time
+        dossier.metadata = self._build_dossier_metadata(
+            entity_id=entity_id,
+            entity_name=entity_name,
+            entity_type=entity_type,
+            priority_score=priority_score,
+            tier=tier,
+            objective=objective,
+            entity_data=entity_data or {},
+            dossier_data_obj=dossier_data_obj,
+        )
 
         logger.info(
             f"Dossier generated for {entity_name}: "
@@ -579,6 +590,71 @@ Website: N/A
         )
 
         return dossier
+
+    def _build_dossier_metadata(
+        self,
+        *,
+        entity_id: str,
+        entity_name: str,
+        entity_type: str,
+        priority_score: int,
+        tier: str,
+        objective: str,
+        entity_data: Dict[str, Any],
+        dossier_data_obj: Optional["DossierData"],
+    ) -> Dict[str, Any]:
+        website_candidate = (
+            entity_data.get("official_site_url")
+            or entity_data.get("entity_website")
+            or entity_data.get("website")
+        )
+        normalized_website = self._normalize_http_url(str(website_candidate or "")) if website_candidate else None
+
+        sport = entity_data.get("entity_sport") or entity_data.get("sport")
+        country = entity_data.get("entity_country") or entity_data.get("country")
+        competition = entity_data.get("entity_league") or entity_data.get("league_or_competition")
+        founded = entity_data.get("entity_founded") or entity_data.get("founded")
+
+        missing_required_fields: List[str] = []
+        if not sport:
+            missing_required_fields.append("sport")
+        if not country:
+            missing_required_fields.append("country")
+        if not competition:
+            missing_required_fields.append("league_or_competition")
+        if not founded and not normalized_website:
+            missing_required_fields.append("founded_or_website")
+        coverage_score = round(
+            (4 - min(4, len(missing_required_fields))) / 4,
+            3,
+        )
+
+        metadata: Dict[str, Any] = {
+            "entity_id": entity_id,
+            "entity_name": entity_name,
+            "entity_type": entity_type,
+            "priority_score": priority_score,
+            "tier": tier,
+            "run_objective": objective,
+            "sport": sport,
+            "country": country,
+            "league_or_competition": competition,
+            "founded": founded,
+            "website": normalized_website or website_candidate,
+            "headquarters": entity_data.get("hq"),
+            "metadata_coverage_score": coverage_score,
+            "metadata_missing_fields": missing_required_fields,
+            "canonical_sources": {
+                "official_site": normalized_website or website_candidate,
+            },
+            "field_extraction_results": [],
+        }
+
+        if dossier_data_obj is not None:
+            metadata["data_sources_used"] = list(getattr(dossier_data_obj, "data_sources_used", []) or [])
+            metadata["collection_metrics"] = dict(getattr(dossier_data_obj, "collection_metrics", {}) or {})
+
+        return metadata
 
     async def _generate_sections_parallel(
         self,
@@ -1123,11 +1199,27 @@ Website: N/A
                 return normalized
         return None
 
+    def get_last_entity_data(self, entity_id: str) -> Dict[str, Any]:
+        payload = self._last_entity_data_by_id.get(entity_id) or {}
+        if isinstance(payload, dict):
+            return deepcopy(payload)
+        return {}
+
     def _build_data_driven_section_content(
         self,
         section_id: str,
         entity_data: Dict[str, Any],
     ) -> Optional[Dict[str, Any]]:
+        def _is_unknownish(value: Any) -> bool:
+            text = str(value or "").strip().lower()
+            if text in {"", "unknown", "unknown sport", "unknown country", "unknown competition", "none", "null", "n/a"}:
+                return True
+            if text.startswith("unknown "):
+                return True
+            if text in {"http://unknown", "https://unknown"}:
+                return True
+            return False
+
         entity_name = str(entity_data.get("entity_name") or "This entity")
         entity_type = str(entity_data.get("entity_type") or "Organization")
         sport = str(entity_data.get("entity_sport") or entity_data.get("sport") or "Unknown sport")
@@ -1156,7 +1248,7 @@ Website: N/A
         unknown_required_field_count = sum(
             1
             for value in required_values.values()
-            if str(value).strip().lower() in {"unknown", "unknown sport", "unknown country", "unknown competition", ""}
+            if _is_unknownish(value)
         )
         metadata_coverage_score = round((len(required_values) - unknown_required_field_count) / max(1, len(required_values)), 3)
         core_degraded = metadata_coverage_score < 0.6
@@ -1248,6 +1340,7 @@ Website: N/A
             }
 
         if section_id == "recent_news":
+            recent_news_reason_code = str(entity_data.get("recent_news_reason_code") or "").strip().lower()
             if news_items:
                 content = []
                 for item in news_items[:4]:
@@ -1261,6 +1354,13 @@ Website: N/A
                     content = [f"No structured recent-news entries were captured for {entity_name} in this run."]
             else:
                 content = [f"No structured recent-news entries were captured for {entity_name} in this run."]
+            output_status = "completed"
+            reason_code = None
+            confidence = 0.62
+            if recent_news_reason_code in {"timeout_partial", "source_low_signal"}:
+                output_status = "degraded"
+                reason_code = recent_news_reason_code
+                confidence = 0.52 if recent_news_reason_code == "timeout_partial" else 0.5
             return {
                 "content": content,
                 "metrics": [f"News items captured: {len(news_items)}"],
@@ -1270,7 +1370,9 @@ Website: N/A
                 "recommendations": [
                     "Re-run recent-news collection with source constraints when news count is below target.",
                 ],
-                "confidence": 0.62,
+                "confidence": confidence,
+                "output_status": output_status,
+                "reason_code": reason_code,
             }
 
         if section_id == "leadership":
@@ -1554,6 +1656,7 @@ Website: N/A
             news_items = dossier_data.recent_news.get("news_items", [])
             entity_dict["news_items"] = news_items
             entity_dict["news_count"] = len(news_items)
+            entity_dict["recent_news_reason_code"] = dossier_data.recent_news.get("reason_code")
 
         # Section 8: Performance
         if dossier_data.performance:
@@ -1561,6 +1664,7 @@ Website: N/A
             entity_dict["league_position"] = dossier_data.performance.get("league_position", "unknown")
             entity_dict["points"] = dossier_data.performance.get("points", "unknown")
             entity_dict["recent_form"] = dossier_data.performance.get("recent_form", [])
+            entity_dict["performance_reason_code"] = dossier_data.performance.get("reason_code")
 
         return entity_dict
 

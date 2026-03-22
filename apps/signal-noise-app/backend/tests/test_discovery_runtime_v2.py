@@ -784,6 +784,113 @@ async def test_club_pdf_prefilter_rejects_city_council_context():
     ) is True
 
 
+def test_pdf_binary_noise_text_is_rejected_from_quality_gate():
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), _FakeBrightData())
+    noisy = "<5A375F999EDE6E4B960EF6243E7BDF70>] /Filter/FlateDecode/Length 17515>>"
+    assert runtime._pdf_text_quality_ok(content=noisy) is False
+    clean = (
+        "The International Canoe Federation tender document invites suppliers to submit procurement proposals "
+        "for event technology and timing systems."
+    )
+    assert runtime._pdf_text_quality_ok(content=clean) is True
+
+
+@pytest.mark.asyncio
+async def test_procurement_lanes_require_procurement_lexicon_for_validation():
+    brightdata = _FakeBrightData(
+        results=[
+            {
+                "url": "https://www.canoeicf.com/sites/default/files/icf_statutes_2024-marked-up.pdf",
+                "title": "ICF Statutes 2024",
+                "snippet": "governance policy document",
+            }
+        ],
+        content="International Canoe Federation governance code and statutes update " * 30,
+    )
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), brightdata)
+    runtime.enable_llm_eval = False
+    runtime.enable_llm_hop_selection = False
+    state = {
+        "visited_urls": set(),
+        "visited_hashes": set(),
+        "accepted_signatures": set(),
+        "domain_visits": {},
+        "lane_failures": {},
+        "lane_exhausted": set(),
+        "trusted_corroboration_tokens": set(),
+        "rejected_urls": set(),
+        "rejected_domain_families": {},
+        "iterations_completed": 0,
+    }
+    lane_result = await runtime._run_lane(
+        lane="governance_pdf",
+        entity_name="International Canoe Federation",
+        dossier={"metadata": {"canonical_sources": {"official_site": "https://www.canoeicf.com"}}},
+        official_domain="canoeicf.com",
+        state=state,
+        run_objective="rfp_pdf",
+    )
+    signal = lane_result.get("signal") or lane_result.get("diagnostic") or {}
+    assert signal.get("validation_state") in {"candidate", "diagnostic"}
+    assert "missing_procurement_lexicon" in list(signal.get("accept_reject_reasons") or [])
+
+
+@pytest.mark.asyncio
+async def test_rfp_pdf_lane_uses_official_document_indexing_candidates():
+    brightdata = _FakeBrightData(results=[])
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), brightdata)
+    runtime.enable_llm_hop_selection = False
+
+    async def _mock_official_pdf_candidates(**_kwargs):
+        return [
+            {
+                "url": "https://www.canoeicf.com/sites/default/files/icf_tender_notice.pdf",
+                "title": "ICF tender notice",
+                "snippet": "Official-domain sitemap indexed document candidate",
+                "candidate_origin": "sitemap",
+            }
+        ]
+
+    runtime._discover_official_pdf_candidates = _mock_official_pdf_candidates
+    candidates = await runtime._discover_candidates(
+        lane="governance_pdf",
+        entity_name="International Canoe Federation",
+        dossier={"metadata": {"canonical_sources": {"official_site": "https://www.canoeicf.com/home"}}},
+        state={},
+        objective="rfp_pdf",
+    )
+    assert len(candidates) >= 1
+    assert candidates[0]["candidate_origin"] == "sitemap"
+    assert "canoeicf.com" in str(candidates[0]["url"])
+
+
+def test_official_doc_index_cache_round_trip(tmp_path):
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), _FakeBrightData())
+    runtime.doc_index_cache_dir = tmp_path
+    runtime.doc_index_cache_ttl_seconds = 3600
+    runtime.doc_index_cache_max_urls = 10
+
+    runtime._save_doc_index_cache(
+        entity_id="international-canoe-federation",
+        official_domain="canoeicf.com",
+        items=[
+            {
+                "url": "https://www.canoeicf.com/sites/default/files/tender_notice.pdf",
+                "title": "Tender Notice",
+                "snippet": "Official-domain sitemap indexed document candidate",
+                "candidate_origin": "sitemap",
+            }
+        ],
+    )
+    loaded = runtime._load_doc_index_cache(
+        entity_id="international-canoe-federation",
+        official_domain="canoeicf.com",
+    )
+    assert len(loaded) == 1
+    assert loaded[0]["candidate_origin"] == "sitemap"
+    assert "canoeicf.com" in str(loaded[0]["url"])
+
+
 @pytest.mark.asyncio
 async def test_schema_invalid_length_stop_demotes_validated_to_candidate():
     brightdata = _FakeBrightData(

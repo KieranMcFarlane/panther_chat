@@ -1065,20 +1065,28 @@ class DossierDataCollector:
 
                 # Fallback: Update metadata with basic extracted data
                 if dossier_data.metadata and extracted_data:
-                    if extracted_data.get('founded') and not dossier_data.metadata.founded:
-                        dossier_data.metadata.founded = extracted_data['founded']
-                    if extracted_data.get('stadium') and not dossier_data.metadata.stadium:
-                        dossier_data.metadata.stadium = extracted_data['stadium']
-                    if extracted_data.get('capacity') and not dossier_data.metadata.capacity:
-                        dossier_data.metadata.capacity = extracted_data['capacity']
-                    if extracted_data.get('website') and not dossier_data.metadata.website:
-                        dossier_data.metadata.website = extracted_data['website']
-                    if extracted_data.get('employees') and not dossier_data.metadata.employees:
-                        dossier_data.metadata.employees = extracted_data['employees']
-                    if extracted_data.get('league') and not dossier_data.metadata.league_or_competition:
-                        dossier_data.metadata.league_or_competition = extracted_data['league']
-                    if extracted_data.get('country') and not dossier_data.metadata.country:
-                        dossier_data.metadata.country = extracted_data['country']
+                    def _has_value(value: Any) -> bool:
+                        return str(value or "").strip().lower() not in {"", "null", "none", "unknown", "n/a"}
+
+                    def _set_if_missing(attr: str, *keys: str) -> None:
+                        current = getattr(dossier_data.metadata, attr, None)
+                        if _has_value(current):
+                            return
+                        for key in keys:
+                            value = extracted_data.get(key)
+                            if _has_value(value):
+                                setattr(dossier_data.metadata, attr, str(value).strip())
+                                break
+
+                    _set_if_missing("founded", "founded")
+                    _set_if_missing("stadium", "stadium")
+                    _set_if_missing("capacity", "capacity")
+                    _set_if_missing("website", "website", "official_site_url")
+                    _set_if_missing("employees", "employees")
+                    _set_if_missing("league_or_competition", "competition", "league")
+                    _set_if_missing("country", "country")
+                    _set_if_missing("sport", "sport")
+                    _set_if_missing("headquarters", "hq", "headquarters")
 
                     logger.info(f"✅ Enhanced metadata with BrightData data")
 
@@ -1169,11 +1177,16 @@ class DossierDataCollector:
 
             async def collect_news():
                 try:
+                    timeout_seconds = self._resolve_collection_timeout_seconds("recent_news")
                     return await collect_with_cache(
                         "Recent News",
-                        lambda: self.collect_recent_news_data(entity_id, dossier_data.entity_name),
+                        lambda: self.collect_recent_news_data(
+                            entity_id,
+                            dossier_data.entity_name,
+                            timeout_seconds=timeout_seconds,
+                        ),
                         cache_key="recent_news",
-                        timeout_seconds=self._resolve_collection_timeout_seconds("recent_news"),
+                        timeout_seconds=None,
                     )
                 except Exception as e:
                     logger.warning(f"  ⚠️ Recent News collection failed: {e}")
@@ -1181,11 +1194,16 @@ class DossierDataCollector:
 
             async def collect_performance():
                 try:
+                    timeout_seconds = self._resolve_collection_timeout_seconds("performance")
                     return await collect_with_cache(
                         "Performance",
-                        lambda: self.collect_performance_data(entity_id, dossier_data.entity_name),
+                        lambda: self.collect_performance_data(
+                            entity_id,
+                            dossier_data.entity_name,
+                            timeout_seconds=timeout_seconds,
+                        ),
                         cache_key="performance",
-                        timeout_seconds=self._resolve_collection_timeout_seconds("performance"),
+                        timeout_seconds=None,
                     )
                 except Exception as e:
                     logger.warning(f"  ⚠️ Performance collection failed: {e}")
@@ -1241,22 +1259,29 @@ class DossierDataCollector:
                 if not entries:
                     return
                 stage_label = f"{stage_name} collectors"
-                coroutines = [builder() for _, builder, _ in entries]
-                try:
-                    if stage_timeout is not None:
-                        results = await asyncio.wait_for(
-                            asyncio.gather(*coroutines, return_exceptions=True),
-                            timeout=stage_timeout,
+                tasks = [asyncio.create_task(builder()) for _, builder, _ in entries]
+                task_map = {task: key for task, (key, _, _) in zip(tasks, entries)}
+                done: set = set()
+                pending: set = set()
+                if stage_timeout is not None:
+                    done, pending = await asyncio.wait(tasks, timeout=stage_timeout)
+                    if pending:
+                        logger.warning(
+                            "  ⚠️ %s exceeded shared stage budget (%.2fs); preserving partial outputs",
+                            stage_label,
+                            stage_timeout or 0.0,
                         )
-                    else:
-                        results = await asyncio.gather(*coroutines, return_exceptions=True)
-                except asyncio.TimeoutError:
-                    logger.warning("  ⚠️ %s exceeded shared stage budget (%.2fs); continuing", stage_label, stage_timeout or 0.0)
-                    return
+                        for task in pending:
+                            task.cancel()
+                else:
+                    done, pending = await asyncio.wait(tasks)
 
-                for (key, _, _), result in zip(entries, results):
-                    if isinstance(result, Exception):
-                        logger.warning(f"⚠️ {key} task failed: {result}")
+                for task in done:
+                    key = task_map.get(task, "unknown")
+                    try:
+                        result = task.result()
+                    except Exception as error:  # noqa: BLE001
+                        logger.warning("⚠️ %s task failed: %s", key, error)
                         continue
                     if not result:
                         continue
@@ -1275,6 +1300,28 @@ class DossierDataCollector:
                     elif key == "leadership":
                         dossier_data.leadership = result
                         logger.info(f"  ✅ Leadership: {len(result.get('decision_makers', []))} decision makers")
+
+                for task in pending:
+                    key = task_map.get(task, "unknown")
+                    if key == "recent_news" and not dossier_data.recent_news:
+                        dossier_data.recent_news = {
+                            "news_items": [],
+                            "sources_used": [],
+                            "reason_code": "timeout_partial",
+                        }
+                    elif key == "performance" and not dossier_data.performance:
+                        dossier_data.performance = {
+                            "league_position": "unknown",
+                            "points": "unknown",
+                            "sources_used": [],
+                            "reason_code": "timeout_partial",
+                        }
+                    elif key == "strategic_opportunities" and not dossier_data.strategic_opportunities:
+                        dossier_data.strategic_opportunities = {"opportunities": [], "reason_code": "timeout_partial"}
+                    elif key == "digital_transformation" and not dossier_data.digital_transformation:
+                        dossier_data.digital_transformation = {"sources_used": [], "reason_code": "timeout_partial"}
+                    elif key == "leadership" and not dossier_data.leadership:
+                        dossier_data.leadership = {"decision_makers": [], "reason_code": "timeout_partial"}
 
             for stage_name, entries in stages:
                 if not entries:
@@ -1701,16 +1748,48 @@ class DossierDataCollector:
 
             # Find official URL
             official_url = None
+            blocked_hosts = {
+                "youtube.com",
+                "www.youtube.com",
+                "facebook.com",
+                "www.facebook.com",
+                "x.com",
+                "twitter.com",
+                "linkedin.com",
+                "www.linkedin.com",
+                "instagram.com",
+                "www.instagram.com",
+                "tiktok.com",
+                "www.tiktok.com",
+            }
+            scored_candidates: List[tuple[float, str]] = []
             for result in search_results.get('results', []):
                 url = result.get('url', '')
                 title = result.get('title', '').lower()
                 snippet = result.get('snippet', '').lower()
+                parsed = urllib.parse.urlparse(str(url or "").strip())
+                host = (parsed.netloc or "").lower()
+                if host.startswith("www."):
+                    host = host[4:]
+                if not host or host in blocked_hosts:
+                    continue
 
-                # Look for official site indicators
-                if (entity_name.lower().replace(' ', '') in url.lower() or
-                    'official' in title or 'official' in snippet):
-                    official_url = url
-                    break
+                score = 0.0
+                if self._looks_like_entity_domain(entity_name, url):
+                    score += 1.0
+                if entity_name.lower().replace(' ', '') in url.lower():
+                    score += 0.5
+                if 'official' in title or 'official' in snippet:
+                    score += 0.25
+                if any(token in host for token in ("wiki", "news", "sport", "jobs")):
+                    score -= 0.35
+                scored_candidates.append((score, url))
+
+            if scored_candidates:
+                scored_candidates.sort(key=lambda item: item[0], reverse=True)
+                best_score, best_url = scored_candidates[0]
+                if best_score >= 0.45:
+                    official_url = best_url
 
             if not official_url:
                 return {}
@@ -2299,10 +2378,12 @@ Wikipedia Content (first 4000 chars):
 Extract and return ONLY a JSON object (no markdown):
 {{
   "founded": "year (4 digits) or null",
+  "sport": "sport (e.g., football, canoeing) or null",
   "stadium": "stadium name or null",
   "capacity": "capacity or null",
   "website": "official website URL or null",
   "league": "league name or null",
+  "competition": "competition/championship name or null",
   "country": "country or null",
   "hq": "headquarters location or null"
 }}
@@ -2311,7 +2392,11 @@ Use null for any information not found in the article. Return ONLY valid JSON.""
 
             extracted = await self._query_json_strict(prompt=prompt, max_tokens=220, model="haiku")
             if isinstance(extracted, dict):
-                return {k: v for k, v in extracted.items() if v is not None}
+                return {
+                    k: v
+                    for k, v in extracted.items()
+                    if str(v or "").strip().lower() not in {"", "null", "none", "unknown", "n/a"}
+                }
             return {}
 
         except Exception as e:
@@ -2331,9 +2416,13 @@ Website Content (first 3000 chars):
 Extract and return ONLY a JSON object:
 {{
   "founded": "Year founded (4 digits) or null",
+  "sport": "Sport type or null",
   "stadium": "Stadium or venue name or null",
   "capacity": "Capacity or null",
   "website": "Official website URL or null",
+  "league": "League or competition name or null",
+  "competition": "Competition/championship name or null",
+  "country": "Country or null",
   "employees": "Employee count or null",
   "hq": "Headquarters location or null"
 }}
@@ -2342,7 +2431,11 @@ Use null for information not found. Return ONLY valid JSON."""
 
             extracted = await self._query_json_strict(prompt=prompt, max_tokens=220, model="haiku")
             if isinstance(extracted, dict):
-                return {k: v for k, v in extracted.items() if v is not None}
+                return {
+                    k: v
+                    for k, v in extracted.items()
+                    if str(v or "").strip().lower() not in {"", "null", "none", "unknown", "n/a"}
+                }
             return {}
 
         except Exception as e:
@@ -2506,52 +2599,34 @@ Return ONLY the value (no extra text).""",
             Dictionary with extracted properties
         """
         try:
-            from backend.claude_client import ClaudeClient
-
-            client = ClaudeClient()
-
             prompt = f"""Extract the following information from this website content about {entity_name}:
 
 Website Content (first 3000 chars):
 {content[:3000]}
 
-Extract and return ONLY a JSON object with these fields:
+Extract and return ONLY JSON:
 {{
-  "founded": "Year founded (e.g., 1886)",
-  "stadium": "Stadium or venue name (e.g., Emirates Stadium)",
-  "capacity": "Stadium capacity (e.g., 60,704)",
-  "website": "Official website URL",
-  "employees": "Number of employees if mentioned",
-  "league": "League or competition name",
-  "country": "Country"
+  "founded": "Year founded (e.g., 1886) or null",
+  "sport": "Sport type or null",
+  "stadium": "Stadium or venue name or null",
+  "capacity": "Stadium capacity or null",
+  "website": "Official website URL or null",
+  "employees": "Number of employees if mentioned or null",
+  "league": "League or competition name or null",
+  "competition": "Competition/championship name or null",
+  "country": "Country or null",
+  "hq": "Headquarters location or null"
 }}
 
-If a field is not found, use null. Return ONLY valid JSON, no other text."""
+Use null when unknown. Return ONLY valid JSON with no prose."""
 
-            result = await client.query(
-                prompt=prompt,
-                model="haiku",
-                max_tokens=500
-            )
-
-            response_text = result.get('content', '')
-
-            # Parse JSON response
-            import json
-            import re
-
-            # Extract JSON from response
-            json_match = re.search(r'\{[^{}]*"fought"[^{}]*\}', response_text, re.DOTALL)
-            if not json_match:
-                json_match = re.search(r'\{.*\}', response_text, re.DOTALL)
-
-            if json_match:
-                extracted = json.loads(json_match.group(0))
-                logger.info(f"✅ Extracted properties: {extracted}")
-                return extracted
-            else:
-                logger.warning("Could not parse extraction response")
-                return {}
+            parsed = await self._query_json_strict(prompt=prompt, max_tokens=260, model="haiku")
+            if isinstance(parsed, dict):
+                cleaned = {k: v for k, v in parsed.items() if str(v or "").strip().lower() not in {"", "null", "none"}}
+                logger.info("✅ Extracted properties: %s", list(cleaned.keys()))
+                return cleaned
+            logger.warning("Could not parse extraction response")
+            return {}
 
         except Exception as e:
             logger.error(f"❌ Property extraction failed: {e}")
@@ -2663,7 +2738,7 @@ If a field is not found, use null. Return ONLY valid JSON, no other text."""
 
         return results
 
-    async def _scrape_official_site(self, entity_name: str) -> Optional[Dict[str, Any]]:
+    async def _scrape_official_site_legacy(self, entity_name: str) -> Optional[Dict[str, Any]]:
         """
         Scrape official website for entity details
 
@@ -2768,7 +2843,7 @@ If a field is not found, use null. Return ONLY valid JSON, no other text."""
 
         return min(score, 100)  # Cap at 100
 
-    async def collect_leadership(
+    async def collect_leadership_legacy(
         self,
         entity_id: str,
         entity_name: str
@@ -3679,7 +3754,13 @@ Use 'unknown' if no evidence found. Be conservative - only report what you can a
         logger.info(f"✅ Digital transformation data collected from {len(result.get('sources_used', []))} sources")
         return result
 
-    async def collect_recent_news_data(self, entity_id: str, entity_name: str, days_back: int = 90) -> Dict[str, Any]:
+    async def collect_recent_news_data(
+        self,
+        entity_id: str,
+        entity_name: str,
+        days_back: int = 90,
+        timeout_seconds: Optional[float] = None,
+    ) -> Dict[str, Any]:
         """
         Collect real recent news for Section 7.
 
@@ -3703,8 +3784,16 @@ Use 'unknown' if no evidence found. Be conservative - only report what you can a
 
         result = {
             "news_items": [],
-            "sources_used": []
+            "sources_used": [],
+            "reason_code": "completed",
         }
+        started_at = time.monotonic()
+
+        def _remaining_timeout() -> Optional[float]:
+            if timeout_seconds is None:
+                return None
+            elapsed = time.monotonic() - started_at
+            return max(0.1, float(timeout_seconds) - elapsed)
 
         # News sources to search
         news_queries = [
@@ -3721,12 +3810,26 @@ Use 'unknown' if no evidence found. Be conservative - only report what you can a
         seen_urls = set()
 
         for query in news_queries[:max_queries]:
+            if timeout_seconds is not None and (time.monotonic() - started_at) >= float(timeout_seconds):
+                result["reason_code"] = "timeout_partial"
+                break
             try:
-                search_results = await self.brightdata_client.search_engine(
-                    query=query,
-                    engine="google",
-                    num_results=max_results_per_query
-                )
+                remaining = _remaining_timeout()
+                if remaining is not None:
+                    search_results = await asyncio.wait_for(
+                        self.brightdata_client.search_engine(
+                            query=query,
+                            engine="google",
+                            num_results=max_results_per_query
+                        ),
+                        timeout=remaining,
+                    )
+                else:
+                    search_results = await self.brightdata_client.search_engine(
+                        query=query,
+                        engine="google",
+                        num_results=max_results_per_query
+                    )
 
                 if search_results.get('status') == 'success':
                     for item in search_results.get('results', []):
@@ -3748,7 +3851,14 @@ Use 'unknown' if no evidence found. Be conservative - only report what you can a
 
                         # Extract news data using Claude
                         try:
-                            scrape = await self.brightdata_client.scrape_as_markdown(url)
+                            remaining = _remaining_timeout()
+                            if remaining is not None:
+                                scrape = await asyncio.wait_for(
+                                    self.brightdata_client.scrape_as_markdown(url),
+                                    timeout=max(0.1, min(remaining, 8.0)),
+                                )
+                            else:
+                                scrape = await self.brightdata_client.scrape_as_markdown(url)
                             if scrape.get('status') == 'success':
                                 content = scrape.get('content', '')[:3000]
                                 if len((content or '').strip()) < 80 and snippet:
@@ -3824,6 +3934,9 @@ Return ONLY valid JSON."""
                                 result["news_items"].append(fallback_news)
                             continue
 
+            except asyncio.TimeoutError:
+                result["reason_code"] = "timeout_partial"
+                break
             except Exception as e:
                 logger.debug(f"News query failed: {query} - {e}")
                 continue
@@ -3838,6 +3951,8 @@ Return ONLY valid JSON."""
         # Count sources
         if result["news_items"]:
             result["sources_used"] = list(set(item.get('source_site', 'unknown') for item in result["news_items"]))
+        elif result.get("reason_code") == "completed":
+            result["reason_code"] = "source_low_signal"
 
         logger.info(f"✅ Recent news collected: {len(result['news_items'])} items from {len(result['sources_used'])} sources")
         return result
@@ -3940,7 +4055,12 @@ Return ONLY valid JSON."""
         except:
             return 'unknown'
 
-    async def collect_performance_data(self, entity_id: str, entity_name: str) -> Dict[str, Any]:
+    async def collect_performance_data(
+        self,
+        entity_id: str,
+        entity_name: str,
+        timeout_seconds: Optional[float] = None,
+    ) -> Dict[str, Any]:
         """
         Collect real performance data for Section 8.
 
@@ -3971,8 +4091,16 @@ Return ONLY valid JSON."""
             "goals_against": "unknown",
             "goal_difference": "unknown",
             "recent_form": [],
-            "sources_used": []
+            "sources_used": [],
+            "reason_code": "completed",
         }
+        started_at = time.monotonic()
+
+        def _remaining_timeout() -> Optional[float]:
+            if timeout_seconds is None:
+                return None
+            elapsed = time.monotonic() - started_at
+            return max(0.1, float(timeout_seconds) - elapsed)
 
         try:
             # Search for Premier League table or club stats
@@ -3983,11 +4111,25 @@ Return ONLY valid JSON."""
             ]
 
             for query in search_queries[:2]:
-                search_results = await self.brightdata_client.search_engine(
-                    query=query,
-                    engine="google",
-                    num_results=3
-                )
+                if timeout_seconds is not None and (time.monotonic() - started_at) >= float(timeout_seconds):
+                    result["reason_code"] = "timeout_partial"
+                    break
+                remaining = _remaining_timeout()
+                if remaining is not None:
+                    search_results = await asyncio.wait_for(
+                        self.brightdata_client.search_engine(
+                            query=query,
+                            engine="google",
+                            num_results=3
+                        ),
+                        timeout=remaining,
+                    )
+                else:
+                    search_results = await self.brightdata_client.search_engine(
+                        query=query,
+                        engine="google",
+                        num_results=3
+                    )
 
                 if search_results.get('status') == 'success':
                     for item in search_results.get('results', []):
@@ -3998,7 +4140,14 @@ Return ONLY valid JSON."""
                             logger.info(f"  ⚽ Scraping Premier League data: {url}")
 
                             try:
-                                scrape = await self.brightdata_client.scrape_as_markdown(url)
+                                remaining = _remaining_timeout()
+                                if remaining is not None:
+                                    scrape = await asyncio.wait_for(
+                                        self.brightdata_client.scrape_as_markdown(url),
+                                        timeout=max(0.1, min(remaining, 10.0)),
+                                    )
+                                else:
+                                    scrape = await self.brightdata_client.scrape_as_markdown(url)
                                 if scrape.get('status') == 'success':
                                     content = scrape.get('content', '')
 
@@ -4058,8 +4207,13 @@ Return ONLY valid JSON."""
                     if result["league_position"] != "unknown":
                         break  # Got the data we need
 
+        except asyncio.TimeoutError:
+            result["reason_code"] = "timeout_partial"
         except Exception as e:
             logger.warning(f"Performance data collection failed: {e}")
+
+        if result["league_position"] == "unknown" and result.get("reason_code") == "completed":
+            result["reason_code"] = "source_low_signal"
 
         logger.info(f"✅ Performance data: position {result['league_position']}, {result['points']} points")
         return result
