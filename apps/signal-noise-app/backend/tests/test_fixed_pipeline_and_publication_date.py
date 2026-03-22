@@ -223,6 +223,55 @@ def test_write_run_report_includes_failure_taxonomy(tmp_path):
     assert taxonomy["entity_grounding_reject"] == 1
 
 
+def test_write_run_report_surfaces_discovery_controller_summary(tmp_path):
+    pipeline = FixedDossierFirstPipeline.__new__(FixedDossierFirstPipeline)
+    pipeline.run_reports_dir = tmp_path
+    pipeline._runtime_import_guard = {"status": "ok", "missing": [], "failure_class": None}
+    pipeline._last_discovery_error_class = None
+    pipeline._last_discovery_error_message = None
+
+    report = pipeline._write_run_report(
+        entity_id="coventry-city-fc",
+        entity_name="Coventry City FC",
+        dossier={"sections": []},
+        discovery={
+            "final_confidence": 0.62,
+            "iterations_completed": 4,
+            "signals_discovered": [],
+            "performance_summary": {
+                "hop_budget_initial": 5,
+                "hop_budget_final": 15,
+                "hop_credits_earned": 10,
+                "hop_credit_events": 2,
+                "dynamic_hop_credits_enabled": True,
+                "llm_hop_selection_count": 3,
+                "hop_timings": [
+                    {"planner_action": {"action": "search_queries"}, "planner_search_queries": ['"Coventry City FC" official commercial partner']},
+                    {"planner_action": {"action": "same_domain_probe"}},
+                    {"planner_action": {"action": "scrape_candidate"}},
+                ],
+            },
+        },
+        scores={"procurement_maturity": 54.3, "sales_readiness": "MONITOR", "active_probability": 0.42},
+        phase_timings={},
+        artifacts={},
+        total_time_seconds=12.3,
+        phases={},
+    )
+
+    controller = report["metrics"]["discovery_controller"]
+    assert controller["hop_budget_initial"] == 5
+    assert controller["hop_budget_final"] == 15
+    assert controller["hop_credits_earned"] == 10
+    assert controller["hop_credit_events"] == 2
+    assert controller["dynamic_hop_credits_enabled"] is True
+    assert controller["llm_hop_selection_count"] == 3
+    assert controller["planner_search_refinement_count"] == 1
+    assert controller["planner_action_counts"]["search_queries"] == 1
+    assert controller["planner_action_counts"]["same_domain_probe"] == 1
+    assert controller["planner_action_counts"]["scrape_candidate"] == 1
+
+
 def test_count_section_fallbacks_uses_section_reason_and_status():
     pipeline = FixedDossierFirstPipeline.__new__(FixedDossierFirstPipeline)
     counters = pipeline._count_section_fallbacks(

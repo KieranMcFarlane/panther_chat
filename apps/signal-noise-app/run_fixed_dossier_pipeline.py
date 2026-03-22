@@ -1544,6 +1544,29 @@ class FixedDossierFirstPipeline:
             "last_discovery_error_class": self._last_discovery_error_class,
             "last_discovery_error_message": self._last_discovery_error_message,
         }
+        planner_action_counts: Dict[str, int] = {}
+        planner_search_refinement_count = 0
+        for hop in hop_timings:
+            if not isinstance(hop, dict):
+                continue
+            planner_action = hop.get("planner_action") if isinstance(hop.get("planner_action"), dict) else {}
+            action_name = str(planner_action.get("action") or "").strip()
+            if action_name:
+                planner_action_counts[action_name] = int(planner_action_counts.get(action_name, 0) or 0) + 1
+            planner_queries = hop.get("planner_search_queries")
+            if isinstance(planner_queries, list) and any(str(query or "").strip() for query in planner_queries):
+                planner_search_refinement_count += 1
+
+        discovery_controller = {
+            "hop_budget_initial": int(performance.get("hop_budget_initial") or 0),
+            "hop_budget_final": int(performance.get("hop_budget_final") or 0),
+            "hop_credits_earned": int(performance.get("hop_credits_earned") or 0),
+            "hop_credit_events": int(performance.get("hop_credit_events") or 0),
+            "dynamic_hop_credits_enabled": bool(performance.get("dynamic_hop_credits_enabled", False)),
+            "llm_hop_selection_count": int(performance.get("llm_hop_selection_count") or 0),
+            "planner_search_refinement_count": int(planner_search_refinement_count),
+            "planner_action_counts": planner_action_counts,
+        }
         report_payload = {
             "run_at": datetime.now(timezone.utc).isoformat(),
             "entity_id": entity_id,
@@ -1597,6 +1620,7 @@ class FixedDossierFirstPipeline:
                 "strict_eval_metrics_by_model": performance.get("strict_eval_metrics_by_model") if isinstance(performance.get("strict_eval_metrics_by_model"), dict) else {},
                 "accepted_empty_evidence_count": int(accepted_empty_evidence_count),
                 "llm_circuit_broken": bool(performance.get("llm_circuit_broken", False)),
+                "discovery_controller": discovery_controller,
                 "dual_write_ok": dual_write_ok,
                 "persistence_status": persistence_status if isinstance(persistence_status, dict) else None,
                 "shadow_unbounded": {
