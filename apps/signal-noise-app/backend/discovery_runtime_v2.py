@@ -1833,6 +1833,11 @@ class DiscoveryRuntimeV2:
         if not best_line:
             best_line = self._truncate_word_boundary((snippet_norm or title_norm or ""), max_chars=240)
 
+        content_passages = self._extract_content_passages(
+            content=content_norm,
+            entity_name=entity_name,
+            keywords=keywords,
+        )
         content_item = best_line or (
             self._truncate_word_boundary(lines[0], max_chars=240) if lines else ""
         )
@@ -1846,10 +1851,47 @@ class DiscoveryRuntimeV2:
         return {
             "snippet": best_line,
             "content_item": content_item,
+            "content_passages": content_passages,
             "quality_score": quality_score,
             "statement": statement,
             "tokens": tokens,
         }
+
+    def _extract_content_passages(
+        self,
+        *,
+        content: str,
+        entity_name: str,
+        keywords: Tuple[str, ...],
+    ) -> List[str]:
+        normalized = self._normalize_extracted_text(content)
+        if not normalized:
+            return []
+
+        raw_passages = [line.strip() for line in normalized.splitlines() if line.strip()]
+        if len(raw_passages) <= 1:
+            raw_passages = [segment.strip() for segment in re.split(r"(?<=[.!?])\s+", normalized) if segment.strip()]
+
+        chosen: List[str] = []
+        seen: Set[str] = set()
+        entity_lower = entity_name.lower()
+        for passage in raw_passages:
+            lowered = passage.lower()
+            if entity_lower not in lowered and not any(keyword in lowered for keyword in keywords):
+                continue
+            trimmed = self._truncate_word_boundary(passage, max_chars=280)
+            key = trimmed.lower()
+            if not trimmed or key in seen:
+                continue
+            seen.add(key)
+            chosen.append(trimmed)
+            if len(chosen) >= 4:
+                break
+
+        if chosen:
+            return chosen
+        fallback = self._truncate_word_boundary(normalized, max_chars=280)
+        return [fallback] if fallback else []
 
     @staticmethod
     def _normalize_extracted_text(text: str) -> str:
@@ -1901,9 +1943,26 @@ class DiscoveryRuntimeV2:
                 "llm_last_status": "heuristic_only",
             }
         evidence_snippet = " ".join(str(evidence.get("snippet") or "").split())[:140]
+        content_item = self._truncate_word_boundary(str(evidence.get("content_item") or ""), max_chars=180)
+        content_passages = [
+            self._truncate_word_boundary(str(passage or ""), max_chars=220)
+            for passage in list(evidence.get("content_passages") or [])[:3]
+            if str(passage or "").strip()
+        ]
+        prompt_lines = [
+            "Output one JSON object like {\"d\":\"N\",\"r\":\"ep\",\"c\":\"N\"}. No prose.",
+            f"L={lane};U={url};S={evidence_snippet}",
+        ]
+        if content_item:
+            prompt_lines.append(f"C={content_item}")
+        if content_passages:
+            prompt_lines.append(
+                "P="
+                + json.dumps(content_passages, separators=(",", ":"), ensure_ascii=True)
+            )
         prompt = (
-            "Output one JSON object like {\"d\":\"N\",\"r\":\"ep\",\"c\":\"N\"}. No prose.\n"
-            f"L={lane};S={evidence_snippet}\n"
+            "\n".join(prompt_lines)
+            + "\n"
         )
         eval_started = time.perf_counter()
         eval_model_used = "haiku"

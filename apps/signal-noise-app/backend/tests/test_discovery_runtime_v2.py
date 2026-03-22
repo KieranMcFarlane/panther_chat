@@ -41,6 +41,15 @@ class _CandidateChoosingClaude:
         return {"content": '{"decision":"NO_PROGRESS","reason":"mock"}'}
 
 
+class _RecordingClaude:
+    def __init__(self):
+        self.last_prompt = ""
+
+    async def query(self, **kwargs):
+        self.last_prompt = str(kwargs.get("prompt") or "")
+        return {"content": '{"decision":"NO_PROGRESS","reason_code":"low_signal","confidence_delta_bucket":"NONE"}'}
+
+
 class _LengthStopClaude:
     async def query(self, **_kwargs):
         return {"content": '{"decision":"ACCEPT","reason":"truncated"}', "stop_reason": "length"}
@@ -607,6 +616,54 @@ async def test_run_lane_scrapes_planner_selected_candidate_first():
     assert brightdata.scraped_urls
     assert brightdata.scraped_urls[0] == "https://bbc.com/preferred"
     assert (result["hop"].get("planner_action") or {}).get("action") == "scrape_candidate"
+
+
+def test_extract_evidence_includes_content_passages():
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), _FakeBrightData())
+    evidence = runtime._extract_evidence(
+        lane="trusted_news",
+        entity_name="Coventry City FC",
+        title="Coventry partnership update",
+        snippet="club update",
+        content=(
+            "Coventry City FC announced a new digital partnership with a named supplier. "
+            "The club said the rollout will improve supporter experience and data operations. "
+            "Commercial and technology teams are involved in the next phase."
+        ),
+    )
+
+    passages = evidence.get("content_passages") or []
+    assert passages
+    assert any("Coventry City FC announced a new digital partnership" in passage for passage in passages)
+
+
+@pytest.mark.asyncio
+async def test_llm_eval_receives_structured_evidence_packet():
+    runtime = DiscoveryRuntimeV2(_RecordingClaude(), _FakeBrightData())
+    runtime.enable_llm_eval = True
+
+    evidence = {
+        "snippet": "short summary",
+        "content_item": "important extracted line",
+        "content_passages": [
+            "passage one with grounded evidence",
+            "passage two with more grounded evidence",
+        ],
+        "quality_score": 0.8,
+        "statement": "signal",
+        "tokens": ["digital", "partnership"],
+    }
+
+    await runtime._maybe_llm_evaluate(
+        lane="trusted_news",
+        entity_name="Coventry City FC",
+        url="https://bbc.com/story",
+        evidence=evidence,
+        run_objective="rfp_web",
+    )
+
+    assert "passage one with grounded evidence" in runtime.claude_client.last_prompt
+    assert "passage two with more grounded evidence" in runtime.claude_client.last_prompt
 
 
 @pytest.mark.asyncio
