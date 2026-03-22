@@ -258,6 +258,17 @@ class DiscoveryRuntimeV2:
         self.enable_agentic_router = _truthy(os.getenv("DISCOVERY_V2_AGENTIC_ROUTER_ENABLED", "true"))
         self.candidate_mode_trigger_hops = int(os.getenv("DISCOVERY_CANDIDATE_MODE_TRIGGER_HOPS", "5"))
         self.candidate_mode_extended_hops = int(os.getenv("DISCOVERY_CANDIDATE_MODE_MAX_HOPS", "9"))
+        self.dynamic_hop_credits_enabled = _truthy(
+            os.getenv("DISCOVERY_DYNAMIC_HOP_CREDITS_ENABLED", "true")
+        )
+        self.dynamic_hop_credit_per_signal = max(
+            1,
+            int(os.getenv("DISCOVERY_HOP_CREDIT_PER_SIGNAL", "5")),
+        )
+        self.dynamic_hop_credit_cap = max(
+            1,
+            int(os.getenv("DISCOVERY_HOP_CREDIT_CAP", "40")),
+        )
         self.run_profile = os.getenv("PIPELINE_RUN_PROFILE", "bounded_balanced_v2")
         self.doc_index_cache_ttl_seconds = max(
             60,
@@ -352,6 +363,11 @@ class DiscoveryRuntimeV2:
         self._consecutive_length_stops = 0
 
         iteration_budget = int(objective_budget["max_hops"])
+        initial_iteration_budget = int(iteration_budget)
+        hop_credit_cap = max(initial_iteration_budget, min(self.dynamic_hop_credit_cap, 200))
+        hop_credit_events = 0
+        hop_credits_earned = 0
+        seen_validated_signal_ids: Set[str] = set()
         official_domain = self._official_domain(entity_name=entity_name, dossier=dossier)
         state: Dict[str, Any] = {
             "visited_urls": set(),
@@ -408,6 +424,22 @@ class DiscoveryRuntimeV2:
                     validated_candidate_count_by_lane[lane_name] = (
                         int(validated_candidate_count_by_lane.get(lane_name, 0) or 0) + 1
                     )
+                    signal_id = str(lane_result["signal"].get("id") or "").strip()
+                    if (
+                        self.dynamic_hop_credits_enabled
+                        and signal_id
+                        and signal_id not in seen_validated_signal_ids
+                    ):
+                        seen_validated_signal_ids.add(signal_id)
+                        credit_delta = max(0, int(self.dynamic_hop_credit_per_signal))
+                        if credit_delta > 0 and iteration_budget < hop_credit_cap:
+                            new_budget = min(hop_credit_cap, iteration_budget + credit_delta)
+                            granted = max(0, new_budget - iteration_budget)
+                            if granted > 0:
+                                iteration_budget = new_budget
+                                objective_budget["max_hops"] = int(new_budget)
+                                hop_credits_earned += granted
+                                hop_credit_events += 1
                     if lane_name in {"rfp_procurement_tenders", "annual_report", "governance_pdf"}:
                         procurement_validated += 1
                 elif signal_state == "candidate":
@@ -499,6 +531,22 @@ class DiscoveryRuntimeV2:
                         validated_candidate_count_by_lane[lane_name] = (
                             int(validated_candidate_count_by_lane.get(lane_name, 0) or 0) + 1
                         )
+                        signal_id = str(lane_result["signal"].get("id") or "").strip()
+                        if (
+                            self.dynamic_hop_credits_enabled
+                            and signal_id
+                            and signal_id not in seen_validated_signal_ids
+                        ):
+                            seen_validated_signal_ids.add(signal_id)
+                            credit_delta = max(0, int(self.dynamic_hop_credit_per_signal))
+                            if credit_delta > 0 and iteration_budget < hop_credit_cap:
+                                new_budget = min(hop_credit_cap, iteration_budget + credit_delta)
+                                granted = max(0, new_budget - iteration_budget)
+                                if granted > 0:
+                                    iteration_budget = new_budget
+                                    objective_budget["max_hops"] = int(new_budget)
+                                    hop_credits_earned += granted
+                                    hop_credit_events += 1
                 if lane_result["diagnostic"]:
                     diagnostics.append(lane_result["diagnostic"])
                 llm_last_status = lane_result["hop"].get("llm_last_status", llm_last_status)
@@ -578,6 +626,11 @@ class DiscoveryRuntimeV2:
                 "objective_scoring_seconds": 0.0,
             },
             "budget": objective_budget,
+            "hop_budget_initial": initial_iteration_budget,
+            "hop_budget_final": int(iteration_budget),
+            "hop_credits_earned": int(hop_credits_earned),
+            "hop_credit_events": int(hop_credit_events),
+            "dynamic_hop_credits_enabled": bool(self.dynamic_hop_credits_enabled),
             "adaptive_candidate_mode_applied": adaptive_candidate_mode,
             "signals_total_events": len(all_events),
             "signals_validated_count": len(validated_signals),
@@ -1114,17 +1167,33 @@ class DiscoveryRuntimeV2:
                     }
                 )
 
-        ranked = sorted(
-            discovered,
-            key=lambda candidate: self._candidate_score(
-                candidate,
-                lane=lane,
-                entity_name=entity_name,
-                official_domain=official_domain,
-                state=state,
-            ),
-            reverse=True,
-        )
+        if lane == "rfp_procurement_tenders":
+            ranked = sorted(
+                discovered,
+                key=lambda candidate: (
+                    self._rfp_tier_priority(candidate=candidate, official_domain=official_domain),
+                    self._candidate_score(
+                        candidate,
+                        lane=lane,
+                        entity_name=entity_name,
+                        official_domain=official_domain,
+                        state=state,
+                    ),
+                ),
+                reverse=True,
+            )
+        else:
+            ranked = sorted(
+                discovered,
+                key=lambda candidate: self._candidate_score(
+                    candidate,
+                    lane=lane,
+                    entity_name=entity_name,
+                    official_domain=official_domain,
+                    state=state,
+                ),
+                reverse=True,
+            )
         return ranked
 
     async def _discover_official_pdf_candidates(
@@ -1522,6 +1591,23 @@ class DiscoveryRuntimeV2:
                 score -= 0.5
             if any(marker in host for marker in ("edemocracy.", "charitycommission.", "gov.uk", "locality.org.uk")):
                 score -= 0.35
+        if lane == "rfp_procurement_tenders":
+            source_tier = self._source_tier(url=url, official_domain=official_domain)
+            origin = str(candidate.get("candidate_origin") or "").strip().lower()
+            if source_tier == "tier_1":
+                score += 0.45
+            elif source_tier == "tier_2":
+                score += 0.16
+            else:
+                score -= 0.22
+            if origin in {"known_doc_index", "sitemap", "crawl"}:
+                score += 0.35
+            if origin == "search":
+                score += 0.08
+            if any(token in url for token in ("procurement", "tender", "rfp", "request-for-proposal", "supplier")):
+                score += 0.24
+            if url.endswith(".pdf"):
+                score += 0.18
         if state:
             domain_visits = state.get("domain_visits", {})
             if host and int(domain_visits.get(host, 0) or 0) > 0:
@@ -1534,6 +1620,26 @@ class DiscoveryRuntimeV2:
             if isinstance(rejected_urls, set) and normalized and normalized in rejected_urls:
                 score -= 0.5
         return score
+
+    def _rfp_tier_priority(self, *, candidate: Dict[str, Any], official_domain: Optional[str]) -> float:
+        url = str(candidate.get("url") or "").strip()
+        origin = str(candidate.get("candidate_origin") or "").strip().lower()
+        source_tier = self._source_tier(url=url, official_domain=official_domain)
+        priority = 0.0
+        if source_tier == "tier_1":
+            priority += 2.0
+        elif source_tier == "tier_2":
+            priority += 1.0
+        if origin in {"known_doc_index", "sitemap", "crawl"}:
+            priority += 0.8
+        elif origin == "search":
+            priority += 0.2
+        lowered = url.lower()
+        if lowered.endswith(".pdf"):
+            priority += 0.4
+        if any(token in lowered for token in ("procurement", "tender", "rfp", "supplier")):
+            priority += 0.4
+        return priority
 
     @staticmethod
     def _domain_family(url: str) -> str:

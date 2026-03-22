@@ -971,3 +971,81 @@ async def test_candidate_mode_extends_budget_when_early_progress_is_only_candida
     budget = summary.get("budget") or {}
     assert summary.get("adaptive_candidate_mode_applied") is True
     assert int(budget.get("max_hops") or 0) >= 7
+
+
+@pytest.mark.asyncio
+async def test_dynamic_hop_credits_extend_budget_on_new_validated_signals(monkeypatch):
+    monkeypatch.setenv("DISCOVERY_DYNAMIC_HOP_CREDITS_ENABLED", "true")
+    monkeypatch.setenv("DISCOVERY_HOP_CREDIT_PER_SIGNAL", "2")
+    monkeypatch.setenv("DISCOVERY_HOP_CREDIT_CAP", "8")
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), _FakeBrightData())
+    runtime.enable_llm_eval = False
+    runtime.enable_llm_hop_selection = False
+    runtime.enable_agentic_router = False
+    call_count = {"n": 0}
+
+    async def _fake_run_lane(**kwargs):
+        call_count["n"] += 1
+        lane = str(kwargs.get("lane") or "unknown")
+        if call_count["n"] <= 2:
+            signal_id = f"{lane}:{call_count['n']}"
+            return {
+                "hop": {
+                    "hop_type": lane,
+                    "llm_last_status": "ok",
+                    "parse_path": "llm_json",
+                },
+                "signal": {
+                    "id": signal_id,
+                    "validation_state": "validated",
+                    "url": f"https://www.arsenal.com/{signal_id}",
+                },
+                "diagnostic": None,
+                "candidate_evaluations": [],
+            }
+        return {
+            "hop": {
+                "hop_type": lane,
+                "llm_last_status": "ok",
+                "parse_path": "llm_json",
+            },
+            "signal": None,
+            "diagnostic": None,
+            "candidate_evaluations": [],
+        }
+
+    runtime._run_lane = _fake_run_lane
+
+    result = await runtime.run_discovery_with_dossier_context(
+        entity_id="arsenal-fc",
+        entity_name="Arsenal FC",
+        dossier={"metadata": {"canonical_sources": {"official_site": "https://www.arsenal.com"}}},
+        run_objective="rfp_web",
+        max_iterations=2,
+    )
+    summary = result.performance_summary or {}
+    assert int(summary.get("hop_budget_initial") or 0) == 2
+    assert int(summary.get("hop_budget_final") or 0) >= 4
+    assert int(summary.get("hop_credits_earned") or 0) >= 2
+    assert int(summary.get("hop_credit_events") or 0) >= 1
+
+
+def test_rfp_tier_priority_prefers_official_tier_a_candidates():
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), _FakeBrightData())
+    official_domain = "arsenal.com"
+    tier_a = {
+        "url": "https://www.arsenal.com/procurement/tenders/it-rfp.pdf",
+        "title": "Arsenal procurement tender",
+        "snippet": "official supplier rfp",
+        "candidate_origin": "sitemap",
+    }
+    tier_c = {
+        "url": "https://aggregator.example/arsenal-procurement-rumour",
+        "title": "Aggregator procurement post",
+        "snippet": "unverified",
+        "candidate_origin": "search",
+    }
+    assert (
+        runtime._rfp_tier_priority(candidate=tier_a, official_domain=official_domain)
+        > runtime._rfp_tier_priority(candidate=tier_c, official_domain=official_domain)
+    )
