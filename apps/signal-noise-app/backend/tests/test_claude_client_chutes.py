@@ -385,10 +385,19 @@ async def test_claude_client_json_empty_content_fast_fails_without_fallback(monk
     monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
     monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
     monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
-    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_PLANNER", "moonshotai/Kimi-K2.5-TEE")
     monkeypatch.setenv("CHUTES_FALLBACK_MODEL", "moonshotai/Kimi-K2.5-TEE")
     monkeypatch.setenv("CHUTES_JSON_EMPTY_RETRY_ENABLED", "false")
     monkeypatch.setenv("CHUTES_STREAM_ENABLED", "false")
+    monkeypatch.delenv("CHUTES_MODEL_JSON", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_JSON_DEFAULT", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_JUDGE", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_PRIMARY", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_SECONDARY", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_TERTIARY", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_HAIKU", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_SONNET", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_OPUS", raising=False)
 
     request_models = []
 
@@ -434,7 +443,6 @@ async def test_claude_client_json_empty_content_fast_fails_without_fallback(monk
     assert request_models == ["deepseek-ai/DeepSeek-V3.2-TEE"]
     assert result["content"] == ""
     assert result.get("inference_diagnostics", {}).get("empty_content_fast_fail") is True
-
 
 @pytest.mark.asyncio
 async def test_claude_client_streaming_recovers_structured_output_when_content_empty(monkeypatch):
