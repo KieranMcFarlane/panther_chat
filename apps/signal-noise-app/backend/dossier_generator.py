@@ -775,6 +775,8 @@ Website: N/A
             and section_id in self.data_driven_section_ids
             and deterministic_data is not None
         ):
+            deterministic_status = str(deterministic_data.get("output_status") or "completed")
+            deterministic_reason = deterministic_data.get("reason_code")
             section = DossierSection(
                 id=section_id,
                 title=template_info["description"],
@@ -784,10 +786,10 @@ Website: N/A
                 recommendations=deterministic_data.get("recommendations", []),
                 confidence=deterministic_data.get("confidence", 0.66),
                 generated_by=model,
-                output_status="completed",
-                reason_code=None,
+                output_status=deterministic_status,
+                reason_code=deterministic_reason,
                 parse_path="deterministic_data_driven_primary",
-                fallback_used=False,
+                fallback_used=deterministic_status != "completed",
             )
             section.total_cost_usd = 0.0
             return section
@@ -1300,6 +1302,18 @@ Website: N/A
             ]
             if opportunity_count > 0:
                 actions.append(f"Exploit {opportunity_count} detected strategic opportunity signal(s) for tailored outreach timing.")
+            low_signal_actionability = leadership_count == 0 and opportunity_count == 0 and len(news_items) == 0
+            output_status = "completed"
+            reason_code = None
+            confidence = 0.68
+            if low_signal_actionability:
+                output_status = "degraded"
+                reason_code = "no_actionable_signals"
+                confidence = 0.5
+                actions = [
+                    f"Actionability for {entity_name} is currently limited by missing leadership/news/opportunity evidence.",
+                    "Do not send broad outreach yet; collect named decision makers and one recent entity-grounded trigger signal first.",
+                ]
             return {
                 "content": actions[:4],
                 "metrics": [
@@ -1314,7 +1328,9 @@ Website: N/A
                     "Execute a leadership-first contact path and a parallel press-release discovery lane.",
                     "Trigger dossier refresh after any new leadership appointment or platform partnership signal.",
                 ],
-                "confidence": 0.68,
+                "confidence": confidence,
+                "output_status": output_status,
+                "reason_code": reason_code,
             }
 
         if section_id == "contact_information":
@@ -1325,6 +1341,13 @@ Website: N/A
             ]
             if leadership_names:
                 content.append(f"Known decision makers: {leadership_names}.")
+            output_status = "completed"
+            reason_code = None
+            confidence = 0.67
+            if leadership_count == 0:
+                output_status = "degraded"
+                reason_code = "no_leadership_contacts"
+                confidence = 0.53
             return {
                 "content": content[:5],
                 "metrics": [
@@ -1336,7 +1359,9 @@ Website: N/A
                 "recommendations": [
                     "Use named leadership contacts for role-specific outreach sequencing.",
                 ],
-                "confidence": 0.67,
+                "confidence": confidence,
+                "output_status": output_status,
+                "reason_code": reason_code,
             }
 
         if section_id == "recent_news":
@@ -1357,6 +1382,10 @@ Website: N/A
             output_status = "completed"
             reason_code = None
             confidence = 0.62
+            if len(news_items) == 0 and not recent_news_reason_code:
+                output_status = "degraded"
+                reason_code = "recent_news_empty"
+                confidence = 0.48
             if recent_news_reason_code in {"timeout_partial", "source_low_signal"}:
                 output_status = "degraded"
                 reason_code = recent_news_reason_code
@@ -1394,6 +1423,13 @@ Website: N/A
                 leader_lines = [f"{leadership_names} ({leadership_roles or 'roles not yet structured'})"]
             if not leader_lines:
                 leader_lines = [f"Leadership records are currently sparse for {entity_name}."]
+            output_status = "completed"
+            reason_code = None
+            confidence = 0.66
+            if leadership_count == 0:
+                output_status = "degraded"
+                reason_code = "leadership_sparse"
+                confidence = 0.5
             return {
                 "content": leader_lines,
                 "metrics": [f"Decision makers identified: {leadership_count}"],
@@ -1403,7 +1439,9 @@ Website: N/A
                 "recommendations": [
                     "Prioritize outreach to commercial, digital, and procurement-adjacent roles where present.",
                 ],
-                "confidence": 0.66,
+                "confidence": confidence,
+                "output_status": output_status,
+                "reason_code": reason_code,
             }
 
         if section_id == "digital_maturity":
@@ -1414,6 +1452,13 @@ Website: N/A
                 crm = str(tech_stack.get("crm") or "unknown")
             else:
                 frontend = analytics = crm = "unknown"
+            output_status = "completed"
+            reason_code = None
+            confidence = 0.64
+            if not isinstance(tech_stack, dict) and str(league_position).lower() == "unknown" and str(points).lower() == "unknown":
+                output_status = "degraded"
+                reason_code = "digital_maturity_low_signal"
+                confidence = 0.52
             return {
                 "content": [
                     f"Digital maturity baseline: {digital_maturity}.",
@@ -1430,11 +1475,20 @@ Website: N/A
                 "recommendations": [
                     "Trigger rendered scrape fallback for JS-heavy pages when extracted text is below quality threshold.",
                 ],
-                "confidence": 0.64,
+                "confidence": confidence,
+                "output_status": output_status,
+                "reason_code": reason_code,
             }
 
         if section_id == "outreach_strategy":
             primary_target = leadership_names.split(",")[0].strip() if leadership_names else f"{entity_name} digital/commercial lead"
+            output_status = "completed"
+            reason_code = None
+            confidence = 0.65
+            if leadership_count == 0 and len(news_items) == 0:
+                output_status = "degraded"
+                reason_code = "outreach_low_evidence"
+                confidence = 0.5
             return {
                 "content": [
                     f"Primary target: {primary_target}.",
@@ -1451,7 +1505,9 @@ Website: N/A
                 "recommendations": [
                     "Send role-specific variants for commercial and technology stakeholders within the same account.",
                 ],
-                "confidence": 0.65,
+                "confidence": confidence,
+                "output_status": output_status,
+                "reason_code": reason_code,
             }
 
         if section_id == "ai_reasoner_assessment":

@@ -149,7 +149,15 @@ async def test_generate_section_uses_data_driven_baseline_when_enabled(monkeypat
 
     section = await generator._generate_section(
         section_id="core_information",
-        entity_data={"entity_name": "Test FC", "entity_type": "CLUB", "country": "UK"},
+        entity_data={
+            "entity_name": "Test FC",
+            "entity_type": "CLUB",
+            "sport": "Football",
+            "country": "UK",
+            "league_or_competition": "Championship",
+            "founded": "1883",
+            "website": "https://example.com",
+        },
         model="haiku",
     )
 
@@ -178,6 +186,49 @@ async def test_generate_long_sections_use_data_driven_baseline_when_enabled(monk
     assert section.fallback_used is False
     assert section.output_status == "completed"
     assert len(client.calls) == 0
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("section_id", "expected_reason"),
+    [
+        ("recent_news", "recent_news_empty"),
+        ("leadership", "leadership_sparse"),
+        ("outreach_strategy", "outreach_low_evidence"),
+        ("contact_information", "no_leadership_contacts"),
+    ],
+)
+async def test_data_driven_sections_mark_degraded_when_evidence_is_sparse(monkeypatch, section_id, expected_reason):
+    monkeypatch.setenv("DOSSIER_SECTION_USE_DATA_DRIVEN_BASELINE", "true")
+    generator = EntityDossierGenerator(_FakeClaudeClient([]))
+
+    section = await generator._generate_section(
+        section_id=section_id,
+        entity_data={"entity_name": "Test FC", "entity_type": "CLUB"},
+        model="haiku",
+    )
+
+    assert section.parse_path == "deterministic_data_driven_primary"
+    assert section.output_status == "degraded"
+    assert section.reason_code == expected_reason
+    assert section.fallback_used is True
+
+
+@pytest.mark.asyncio
+async def test_data_driven_quick_actions_mark_degraded_when_no_actionable_signals(monkeypatch):
+    monkeypatch.setenv("DOSSIER_SECTION_USE_DATA_DRIVEN_BASELINE", "true")
+    generator = EntityDossierGenerator(_FakeClaudeClient([]))
+
+    section = await generator._generate_section(
+        section_id="quick_actions",
+        entity_data={"entity_name": "Test FC", "entity_type": "CLUB"},
+        model="haiku",
+    )
+
+    assert section.parse_path == "deterministic_data_driven_primary"
+    assert section.output_status == "degraded"
+    assert section.reason_code == "no_actionable_signals"
+    assert section.fallback_used is True
 
 
 def test_get_last_official_site_url_prefers_entity_payload_fields():
