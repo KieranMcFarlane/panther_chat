@@ -14,6 +14,8 @@ sys.path.insert(0, str(backend_dir))
 from brightdata_sdk_client import BrightDataSDKClient
 from run_fixed_dossier_pipeline import FixedDossierFirstPipeline
 
+SCRIPT_ROOT = Path(__file__).resolve().parents[2] / "scripts"
+
 
 @pytest.mark.asyncio
 async def test_phase2_uses_passed_max_iterations():
@@ -270,6 +272,17 @@ def test_write_run_report_surfaces_discovery_controller_summary(tmp_path):
     assert controller["planner_action_counts"]["search_queries"] == 1
     assert controller["planner_action_counts"]["same_domain_probe"] == 1
     assert controller["planner_action_counts"]["scrape_candidate"] == 1
+
+
+def test_discovery_controller_ab_script_varies_planner_only():
+    script_path = SCRIPT_ROOT / "run-discovery-controller-ab.sh"
+    script_text = script_path.read_text()
+
+    assert "CHUTES_MODEL_PLANNER=\"$model\"" in script_text
+    assert "CHUTES_MODEL_JUDGE=\"${CHUTES_MODEL_JUDGE" in script_text
+    assert "CHUTES_MODEL_FALLBACK=\"${CHUTES_MODEL_FALLBACK" in script_text
+    assert "bash scripts/run-pipeline-regression-batch.sh" in script_text
+    assert "model_ab_summary" in script_text
 
 
 def test_count_section_fallbacks_uses_section_reason_and_status():

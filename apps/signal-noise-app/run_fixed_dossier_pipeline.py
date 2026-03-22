@@ -1546,6 +1546,9 @@ class FixedDossierFirstPipeline:
         }
         planner_action_counts: Dict[str, int] = {}
         planner_search_refinement_count = 0
+        planner_model = getattr(getattr(self, "claude", None), "chutes_model_planner", None)
+        judge_model = getattr(getattr(self, "claude", None), "chutes_model_judge", None)
+        fallback_model = getattr(getattr(self, "claude", None), "chutes_model_fallback", None)
         for hop in hop_timings:
             if not isinstance(hop, dict):
                 continue
@@ -1558,6 +1561,9 @@ class FixedDossierFirstPipeline:
                 planner_search_refinement_count += 1
 
         discovery_controller = {
+            "planner_model": planner_model,
+            "judge_model": judge_model,
+            "fallback_model": fallback_model,
             "hop_budget_initial": int(performance.get("hop_budget_initial") or 0),
             "hop_budget_final": int(performance.get("hop_budget_final") or 0),
             "hop_credits_earned": int(performance.get("hop_credits_earned") or 0),
