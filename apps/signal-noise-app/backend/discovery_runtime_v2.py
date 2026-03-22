@@ -154,12 +154,6 @@ CONTROLLER_ACTION_TYPES = {
     "stop_run",
 }
 
-CONTROLLER_ACTION_LANES = {
-    *PASS_A_LANES,
-    *PASS_B_LANES,
-    *DIVERSIFIED_FALLBACK_ORDER,
-}
-
 
 def _truthy(value: Any) -> bool:
     return str(value or "").strip().lower() in {"1", "true", "yes", "on"}
@@ -227,7 +221,9 @@ def parse_controller_action(payload: Any) -> Optional[Dict[str, Any]]:
     reason_value = payload.get("reason")
     reason = None
     if reason_value is not None:
-        reason = str(reason_value).strip()
+        if not isinstance(reason_value, str):
+            return None
+        reason = reason_value.strip()
         if not reason:
             return None
 
@@ -241,7 +237,7 @@ def parse_controller_action(payload: Any) -> Optional[Dict[str, Any]]:
         return result
 
     lane = str(payload.get("lane") or "").strip()
-    if not lane or lane not in CONTROLLER_ACTION_LANES:
+    if not lane or lane not in _controller_action_allowed_lanes():
         return None
 
     if action == "search_queries":
@@ -298,6 +294,16 @@ def parse_controller_action(payload: Any) -> Optional[Dict[str, Any]]:
         return result
 
     return None
+
+
+def _controller_action_allowed_lanes() -> Set[str]:
+    """Resolve the current discovery lane set at call time.
+
+    This keeps controller-action validation strict without freezing lane
+    membership at import time if lane constants change later.
+    """
+
+    return set(PASS_A_LANES) | set(PASS_B_LANES) | set(DIVERSIFIED_FALLBACK_ORDER)
 
 
 @dataclass

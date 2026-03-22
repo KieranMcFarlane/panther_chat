@@ -119,3 +119,21 @@ def test_parse_controller_action_rejects_unknown_action():
     parsed = DiscoveryRuntimeV2.parse_controller_action(raw_action)
 
     assert parsed is None
+
+
+@pytest.mark.parametrize(
+    "raw_action",
+    [
+        json.dumps({"action": "search_queries", "lane": "trusted_news", "queries": ["a"], "reason": 123}),
+        json.dumps({"action": "scrape_candidate", "lane": "trusted_news", "candidate_index": "1"}),
+        json.dumps({"action": "scrape_candidate", "lane": "trusted_news", "candidate_index": True}),
+        json.dumps({"action": "search_queries", "lane": "trusted_news", "queries": "not-a-list"}),
+        json.dumps({"action": "search_queries", "lane": "trusted_news", "queries": ["ok", 7]}),
+        json.dumps({"action": "same_domain_probe", "lane": "trusted_news", "url": "not a url"}),
+        json.dumps({"action": "stop_lane", "lane": "not-a-real-lane"}),
+        json.dumps({"action": "search_queries", "lane": "trusted_news", "queries": ["a"], "extra": "nope"}),
+    ],
+)
+def test_parse_controller_action_rejects_malformed_payloads(raw_action):
+    parsed = DiscoveryRuntimeV2.parse_controller_action(raw_action)
+    assert parsed is None
