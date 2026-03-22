@@ -1049,3 +1049,26 @@ def test_rfp_tier_priority_prefers_official_tier_a_candidates():
         runtime._rfp_tier_priority(candidate=tier_a, official_domain=official_domain)
         > runtime._rfp_tier_priority(candidate=tier_c, official_domain=official_domain)
     )
+
+
+def test_extract_evidence_normalizes_collapsed_spacing_and_truncates_cleanly():
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), _FakeBrightData())
+    raw = (
+        "Coventry City of Culture 2021 is hiring for these roles nowThere are some amazing jobs "
+        "up for grabs and some impressive salaries tooNewsEnda Mullen05:00, 12 Feb 2019"
+    )
+    evidence = runtime._extract_evidence(
+        lane="careers",
+        entity_name="Coventry City FC",
+        content=raw,
+        title="",
+        snippet="",
+    )
+    statement = str(evidence.get("statement") or "")
+    assert "now There" in statement
+    assert "Mullen 05:00" in statement
+    assert "nowThere" not in statement
+    assert "Mullen05:00" not in statement
+    assert len(statement) <= (len("Coventry City FC: ") + 363)
+    if statement.endswith("..."):
+        assert not statement.endswith(" ...")

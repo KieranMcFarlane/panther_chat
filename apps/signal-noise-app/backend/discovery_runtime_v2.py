@@ -1663,7 +1663,9 @@ class DiscoveryRuntimeV2:
         title: str,
         snippet: str,
     ) -> Dict[str, Any]:
-        content_norm = str(content or "")
+        content_norm = self._normalize_extracted_text(str(content or ""))
+        title_norm = self._normalize_extracted_text(str(title or ""))
+        snippet_norm = self._normalize_extracted_text(str(snippet or ""))
         lower = content_norm.lower()
         keywords = LANE_KEYWORDS.get(lane, ())
         tokens: List[str] = []
@@ -1678,12 +1680,14 @@ class DiscoveryRuntimeV2:
         for line in lines:
             line_lower = line.lower()
             if any(token in line_lower for token in keywords):
-                best_line = line[:360]
+                best_line = self._truncate_word_boundary(line, max_chars=360)
                 break
         if not best_line:
-            best_line = (snippet or title or "")[:240]
+            best_line = self._truncate_word_boundary((snippet_norm or title_norm or ""), max_chars=240)
 
-        content_item = best_line or (lines[0][:240] if lines else "")
+        content_item = best_line or (
+            self._truncate_word_boundary(lines[0], max_chars=240) if lines else ""
+        )
         quality_score = 0.0
         quality_score += min(0.45, len(tokens) * 0.12)
         quality_score += min(0.35, _safe_word_count(content_norm) / 1500.0)
@@ -1698,6 +1702,33 @@ class DiscoveryRuntimeV2:
             "statement": statement,
             "tokens": tokens,
         }
+
+    @staticmethod
+    def _normalize_extracted_text(text: str) -> str:
+        value = str(text or "").strip()
+        if not value:
+            return ""
+        # Scrapes from JS-heavy pages often collapse boundaries; restore common breaks.
+        value = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", " ", value)
+        value = re.sub(r"(?<=[A-Za-z])(?=[0-9])", " ", value)
+        value = re.sub(r"(?<=[0-9])(?=[A-Za-z])", " ", value)
+        value = " ".join(value.split())
+        return value
+
+    @staticmethod
+    def _truncate_word_boundary(text: str, *, max_chars: int) -> str:
+        value = str(text or "").strip()
+        if max_chars <= 0:
+            return ""
+        if len(value) <= max_chars:
+            return value
+        cut = max(1, max_chars - 1)
+        trimmed = value[:cut].rstrip()
+        if " " in trimmed:
+            trimmed = trimmed.rsplit(" ", 1)[0].rstrip()
+        if not trimmed:
+            trimmed = value[:cut].rstrip()
+        return f"{trimmed}..."
 
     async def _maybe_llm_evaluate(
         self,
