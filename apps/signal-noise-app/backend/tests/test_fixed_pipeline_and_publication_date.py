@@ -247,6 +247,8 @@ def test_write_run_report_surfaces_discovery_controller_summary(tmp_path):
                 "hop_credit_events": 2,
                 "dynamic_hop_credits_enabled": True,
                 "llm_hop_selection_count": 3,
+                "planner_action_applied_count": 2,
+                "planner_action_parse_fail_count": 1,
                 "hop_timings": [
                     {"planner_action": {"action": "search_queries"}, "planner_search_queries": ['"Coventry City FC" official commercial partner']},
                     {"planner_action": {"action": "same_domain_probe"}},
@@ -268,6 +270,9 @@ def test_write_run_report_surfaces_discovery_controller_summary(tmp_path):
     assert controller["hop_credit_events"] == 2
     assert controller["dynamic_hop_credits_enabled"] is True
     assert controller["llm_hop_selection_count"] == 3
+    assert controller["planner_action_applied_count"] == 2
+    assert controller["planner_action_parse_fail_count"] == 1
+    assert controller["controller_health"] == "degraded_parse_failures"
     assert controller["planner_search_refinement_count"] == 1
     assert controller["planner_action_counts"]["search_queries"] == 1
     assert controller["planner_action_counts"]["same_domain_probe"] == 1

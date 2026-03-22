@@ -1570,9 +1570,21 @@ class FixedDossierFirstPipeline:
             "hop_credit_events": int(performance.get("hop_credit_events") or 0),
             "dynamic_hop_credits_enabled": bool(performance.get("dynamic_hop_credits_enabled", False)),
             "llm_hop_selection_count": int(performance.get("llm_hop_selection_count") or 0),
+            "planner_action_applied_count": int(performance.get("planner_action_applied_count") or 0),
+            "planner_action_parse_fail_count": int(performance.get("planner_action_parse_fail_count") or 0),
             "planner_search_refinement_count": int(planner_search_refinement_count),
             "planner_action_counts": planner_action_counts,
         }
+        llm_hop_selection_count = int(discovery_controller.get("llm_hop_selection_count") or 0)
+        planner_action_applied_count = int(discovery_controller.get("planner_action_applied_count") or 0)
+        planner_action_parse_fail_count = int(discovery_controller.get("planner_action_parse_fail_count") or 0)
+        discovery_controller["controller_health"] = (
+            "degraded_no_applied_actions"
+            if llm_hop_selection_count > 0 and planner_action_applied_count == 0
+            else "degraded_parse_failures"
+            if planner_action_parse_fail_count > 0
+            else "healthy"
+        )
         report_payload = {
             "run_at": datetime.now(timezone.utc).isoformat(),
             "entity_id": entity_id,
