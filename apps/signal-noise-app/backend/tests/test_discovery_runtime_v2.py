@@ -41,6 +41,32 @@ class _CandidateChoosingClaude:
         return {"content": '{"decision":"NO_PROGRESS","reason":"mock"}'}
 
 
+class _FarCandidateChoosingClaude:
+    async def query(self, **kwargs):
+        prompt = str(kwargs.get("prompt") or "")
+        if "Candidate batch:" in prompt:
+            return {
+                "content": (
+                    '{"action":"scrape_candidate","lane":"trusted_news","candidate_index":2,'
+                    '"reason":"lift lower-ranked candidate into eval window"}'
+                )
+            }
+        return {"content": '{"decision":"NO_PROGRESS","reason":"mock"}'}
+
+
+class _PdfChoosingClaude:
+    async def query(self, **kwargs):
+        prompt = str(kwargs.get("prompt") or "")
+        if "Candidate batch:" in prompt:
+            return {
+                "content": (
+                    '{"action":"scrape_candidate","lane":"rfp_procurement_tenders","candidate_index":0,'
+                    '"reason":"try the pdf candidate"}'
+                )
+            }
+        return {"content": '{"decision":"NO_PROGRESS","reason":"mock"}'}
+
+
 class _RecordingClaude:
     def __init__(self):
         self.last_prompt = ""
@@ -157,6 +183,29 @@ class _CandidateOrderBrightData:
         return {
             "status": "success",
             "content": "Arsenal partnership and commercial transformation update " * 30,
+            "metadata": {},
+        }
+
+
+class _PdfGuardBrightData:
+    def __init__(self):
+        self.scraped_urls = []
+
+    async def search_engine(self, **_kwargs):
+        return {"status": "success", "results": []}
+
+    async def scrape_as_markdown(self, url):
+        current_url = str(url)
+        self.scraped_urls.append(current_url)
+        if current_url.endswith(".pdf"):
+            return {
+                "status": "success",
+                "content": "xref startxref endobj /Filter/FlateDecode",
+                "metadata": {},
+            }
+        return {
+            "status": "success",
+            "content": "Arsenal procurement supplier technology update " * 30,
             "metadata": {},
         }
 
@@ -616,6 +665,95 @@ async def test_run_lane_scrapes_planner_selected_candidate_first():
     assert brightdata.scraped_urls
     assert brightdata.scraped_urls[0] == "https://bbc.com/preferred"
     assert (result["hop"].get("planner_action") or {}).get("action") == "scrape_candidate"
+
+
+@pytest.mark.asyncio
+async def test_planner_can_lift_candidate_into_eval_window_beyond_max_evals():
+    brightdata = _CandidateOrderBrightData()
+    runtime = DiscoveryRuntimeV2(_FarCandidateChoosingClaude(), brightdata)
+    runtime.enable_llm_hop_selection = True
+    runtime.enable_llm_eval = False
+
+    async def _fake_candidates(**_kwargs):
+        return [
+            {"url": "https://weak.example/first", "title": "First", "snippet": "thin", "candidate_origin": "search"},
+            {"url": "https://weak.example/second", "title": "Second", "snippet": "thin", "candidate_origin": "search"},
+            {"url": "https://bbc.com/preferred", "title": "Preferred", "snippet": "entity-grounded signal", "candidate_origin": "search"},
+        ]
+
+    runtime._discover_candidates = _fake_candidates
+    state = {
+        "visited_urls": set(),
+        "visited_hashes": set(),
+        "accepted_signatures": set(),
+        "domain_visits": {},
+        "lane_failures": {},
+        "lane_exhausted": set(),
+        "trusted_corroboration_tokens": set(),
+        "iterations_completed": 0,
+    }
+
+    await runtime._run_lane(
+        lane="trusted_news",
+        entity_name="Arsenal FC",
+        dossier={"metadata": {"canonical_sources": {"official_site": "https://www.arsenal.com"}}},
+        official_domain="arsenal.com",
+        state=state,
+        budget={"max_evals_per_hop": 1, "max_hops": 5, "per_iteration_timeout": 30, "max_retries": 1, "max_same_domain_revisits": 2},
+        run_objective="rfp_web",
+    )
+
+    assert brightdata.scraped_urls == ["https://bbc.com/preferred"]
+
+
+@pytest.mark.asyncio
+async def test_planner_action_still_respects_veto_rails():
+    brightdata = _PdfGuardBrightData()
+    runtime = DiscoveryRuntimeV2(_PdfChoosingClaude(), brightdata)
+    runtime.enable_llm_hop_selection = True
+    runtime.enable_llm_eval = False
+
+    async def _fake_candidates(**_kwargs):
+        return [
+            {
+                "url": "https://arsenal.com/procurement/tender.pdf",
+                "title": "Tender PDF",
+                "snippet": "supplier procurement",
+                "candidate_origin": "search",
+            },
+            {
+                "url": "https://arsenal.com/procurement/update",
+                "title": "Procurement update",
+                "snippet": "supplier procurement",
+                "candidate_origin": "search",
+            },
+        ]
+
+    runtime._discover_candidates = _fake_candidates
+    state = {
+        "visited_urls": set(),
+        "visited_hashes": set(),
+        "accepted_signatures": set(),
+        "domain_visits": {},
+        "lane_failures": {},
+        "lane_exhausted": set(),
+        "trusted_corroboration_tokens": set(),
+        "iterations_completed": 0,
+    }
+
+    result = await runtime._run_lane(
+        lane="rfp_procurement_tenders",
+        entity_name="Arsenal FC",
+        dossier={"metadata": {"canonical_sources": {"official_site": "https://www.arsenal.com"}}},
+        official_domain="arsenal.com",
+        state=state,
+        budget={"max_evals_per_hop": 1, "max_hops": 5, "per_iteration_timeout": 30, "max_retries": 1, "max_same_domain_revisits": 2},
+        run_objective="rfp_pdf",
+    )
+
+    assert brightdata.scraped_urls == ["https://arsenal.com/procurement/tender.pdf"]
+    assert result["signal"] is None
+    assert runtime._quality_metrics["pdf_binary_reject_count"] >= 1
 
 
 def test_extract_evidence_includes_content_passages():

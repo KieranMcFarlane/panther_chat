@@ -872,11 +872,14 @@ class DiscoveryRuntimeV2:
             hop_record["duration_ms"] = int((time.perf_counter() - started) * 1000)
             return {"hop": hop_record, "signal": None, "diagnostic": None}
 
-        candidate_batch = candidates[: max(1, int(effective_budget.get("max_evals_per_hop", self.max_evals_per_hop)))]
+        max_evals = max(1, int(effective_budget.get("max_evals_per_hop", self.max_evals_per_hop)))
+        planner_batch_size = max(max_evals, min(len(candidates), 8))
+        planner_candidates = candidates[:planner_batch_size]
+        candidate_batch = candidates[:max_evals]
         planner_action = await self._choose_candidate_action_from_batch(
             lane=lane,
             entity_name=entity_name,
-            candidates=candidate_batch,
+            candidates=planner_candidates,
             state=state,
             objective=objective,
         )
@@ -891,10 +894,12 @@ class DiscoveryRuntimeV2:
                 return {"hop": hop_record, "signal": None, "diagnostic": None}
             if planner_action.get("action") == "scrape_candidate":
                 chosen_index = int(planner_action.get("candidate_index") or 0)
-                if 0 <= chosen_index < len(candidate_batch):
-                    prioritized = candidate_batch[chosen_index]
+                if 0 <= chosen_index < len(planner_candidates):
+                    prioritized = planner_candidates[chosen_index]
                     candidate_batch = [prioritized] + [
-                        candidate for index, candidate in enumerate(candidate_batch) if index != chosen_index
+                        candidate
+                        for candidate in candidate_batch
+                        if _normalize_url(candidate.get("url") or "") != _normalize_url(prioritized.get("url") or "")
                     ]
 
         for candidate in candidate_batch:
