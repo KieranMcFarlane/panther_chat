@@ -451,7 +451,7 @@ class ClaudeClient:
         self.chutes_model_opus = self.chutes_model_fallback
         default_json_model = os.getenv(
             "CHUTES_MODEL_JSON_DEFAULT",
-            "deepseek-ai/DeepSeek-V3-0324-TEE",
+            self.chutes_model_judge,
         )
         self.chutes_model_json = os.getenv("CHUTES_MODEL_JSON", default_json_model).strip() or default_json_model
         self.chutes_model_json_fallback = os.getenv(

@@ -253,14 +253,49 @@ async def test_claude_client_uses_dedicated_json_model_when_configured(monkeypat
     assert request_capture["json"]["model"] == "zai-org/GLM-5-TEE"
 
 
-def test_claude_client_defaults_json_model_to_deepseek(monkeypatch):
+@pytest.mark.asyncio
+async def test_claude_client_json_mode_defaults_to_judge_role(monkeypatch):
     monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
     monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL_PLANNER", "moonshotai/Kimi-K2.5-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_JUDGE", "deepseek-ai/DeepSeek-V3.2-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_FALLBACK", "zai-org/GLM-5-TEE")
     monkeypatch.delenv("CHUTES_MODEL_JSON", raising=False)
     monkeypatch.delenv("CHUTES_MODEL_JSON_DEFAULT", raising=False)
 
+    request_capture = {}
+
+    class FakeResponse:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {
+                "choices": [{"message": {"content": '{"decision":"NO_PROGRESS","reason_code":"low_signal"}'}, "finish_reason": "stop"}],
+                "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2},
+            }
+
+    class FakeAsyncClient:
+        def __init__(self, timeout):
+            self.timeout = timeout
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            request_capture["json"] = json
+            return FakeResponse()
+
+    monkeypatch.setattr(claude_client_module.httpx, "AsyncClient", FakeAsyncClient)
+
     client = ClaudeClient()
-    assert client.chutes_model_json == "deepseek-ai/DeepSeek-V3-0324-TEE"
+    assert client.chutes_model_json == "deepseek-ai/DeepSeek-V3.2-TEE"
+    await client.query(prompt="return json", model="haiku", max_tokens=64, json_mode=True)
+    assert request_capture["json"]["model"] == "deepseek-ai/DeepSeek-V3.2-TEE"
 
 
 @pytest.mark.asyncio
@@ -360,7 +395,7 @@ async def test_claude_client_json_empty_content_fast_fails_without_fallback(monk
         fast_fail_on_length=True,
     )
 
-    assert request_models == ["deepseek-ai/DeepSeek-V3-0324-TEE"]
+    assert request_models == ["zai-org/GLM-5-TEE"]
     assert result["content"] == ""
     assert result.get("inference_diagnostics", {}).get("empty_content_fast_fail") is True
 
