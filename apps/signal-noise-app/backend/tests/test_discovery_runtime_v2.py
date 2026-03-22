@@ -95,6 +95,16 @@ class _SearchRefiningClaude:
         return {"content": '{"decision":"NO_PROGRESS","reason":"mock"}'}
 
 
+class _LooselyFormattedPlannerClaude:
+    async def query(self, **kwargs):
+        prompt = str(kwargs.get("prompt") or "")
+        if "Candidate batch:" in prompt:
+            return {
+                "content": '{"action":"scrape_candidate","candidate_index":"1","reason":"best entity fit"}'
+            }
+        return {"content": '{"decision":"NO_PROGRESS","reason":"mock"}'}
+
+
 class _RecordingClaude:
     def __init__(self):
         self.last_prompt = ""
@@ -714,6 +724,30 @@ async def test_planner_can_choose_candidate_from_ranked_batch():
     assert action is not None
     assert action["action"] == "scrape_candidate"
     assert action["candidate_index"] == 1
+
+
+@pytest.mark.asyncio
+async def test_planner_action_normalization_accepts_missing_lane_and_string_index():
+    runtime = DiscoveryRuntimeV2(_LooselyFormattedPlannerClaude(), _FakeBrightData())
+    runtime.enable_llm_hop_selection = True
+
+    action = await runtime._choose_candidate_action_from_batch(
+        lane="trusted_news",
+        entity_name="Coventry City FC",
+        objective="rfp_web",
+        candidates=[
+            {"url": "https://weak.example/result", "title": "Weak", "snippet": "weak", "candidate_origin": "search"},
+            {"url": "https://bbc.com/story", "title": "Strong", "snippet": "strong signal", "candidate_origin": "search"},
+        ],
+        state={"lane_exhausted": set()},
+    )
+
+    assert action is not None
+    assert action["action"] == "scrape_candidate"
+    assert action["lane"] == "trusted_news"
+    assert action["candidate_index"] == 1
+    assert int(runtime._metrics.get("planner_action_applied_count") or 0) >= 1
+    assert int(runtime._metrics.get("planner_action_parse_fail_count") or 0) == 0
 
 
 @pytest.mark.asyncio

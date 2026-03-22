@@ -415,6 +415,8 @@ class DiscoveryRuntimeV2:
             "schema_fail_count": 0,
             "empty_content_count": 0,
             "llm_hop_selection_count": 0,
+            "planner_action_applied_count": 0,
+            "planner_action_parse_fail_count": 0,
         }
         self._quality_metrics: Dict[str, Any] = {
             "entity_grounding_reject_count_by_lane": {},
@@ -474,6 +476,8 @@ class DiscoveryRuntimeV2:
             "schema_fail_count": 0,
             "empty_content_count": 0,
             "llm_hop_selection_count": 0,
+            "planner_action_applied_count": 0,
+            "planner_action_parse_fail_count": 0,
         }
         self._quality_metrics = {
             "entity_grounding_reject_count_by_lane": {},
@@ -732,6 +736,8 @@ class DiscoveryRuntimeV2:
             "schema_fail_count": int(self._metrics["schema_fail_count"]),
             "empty_content_count": int(self._metrics["empty_content_count"]),
             "llm_hop_selection_count": int(self._metrics["llm_hop_selection_count"]),
+            "planner_action_applied_count": int(self._metrics["planner_action_applied_count"]),
+            "planner_action_parse_fail_count": int(self._metrics["planner_action_parse_fail_count"]),
             "strict_eval_metrics_by_model": self._build_strict_eval_metrics_by_model(),
             "entity_grounding_reject_count_by_lane": dict(
                 self._quality_metrics.get("entity_grounding_reject_count_by_lane") or {}
@@ -2421,16 +2427,59 @@ class DiscoveryRuntimeV2:
                 payload = self._extract_json_object_strict((response or {}).get("content"))
             action = parse_controller_action(payload)
             if not action:
+                normalized_payload = self._normalize_planner_action_payload(
+                    payload=payload,
+                    lane=lane,
+                    candidates=candidates,
+                )
+                action = parse_controller_action(normalized_payload)
+            if not action:
+                self._metrics["planner_action_parse_fail_count"] += 1
                 return None
             if str(action.get("lane") or lane).strip() != lane:
+                self._metrics["planner_action_parse_fail_count"] += 1
                 return None
             if action.get("action") == "scrape_candidate":
                 candidate_index = int(action.get("candidate_index") or -1)
                 if candidate_index < 0 or candidate_index >= len(candidates):
+                    self._metrics["planner_action_parse_fail_count"] += 1
                     return None
+            self._metrics["planner_action_applied_count"] += 1
             return action
         except Exception:  # noqa: BLE001
             return None
+
+    @staticmethod
+    def _normalize_planner_action_payload(
+        *,
+        payload: Any,
+        lane: str,
+        candidates: List[Dict[str, Any]],
+    ) -> Optional[Dict[str, Any]]:
+        if not isinstance(payload, dict):
+            return None
+        normalized: Dict[str, Any] = dict(payload)
+        action = str(normalized.get("action") or "").strip()
+        if action not in CONTROLLER_ACTION_TYPES:
+            return None
+        if action != "stop_run":
+            normalized["lane"] = str(normalized.get("lane") or lane).strip()
+
+        if action == "scrape_candidate":
+            candidate_index = normalized.get("candidate_index")
+            if isinstance(candidate_index, str) and candidate_index.strip().isdigit():
+                normalized["candidate_index"] = int(candidate_index.strip())
+        elif action == "search_queries":
+            queries = normalized.get("queries")
+            if isinstance(queries, str) and queries.strip():
+                normalized["queries"] = [queries.strip()]
+        elif action == "same_domain_probe":
+            url = str(normalized.get("url") or "").strip()
+            if not url and candidates:
+                url = str(candidates[0].get("url") or "").strip()
+            normalized["url"] = url
+
+        return normalized
 
     def _quality_threshold_for_lane(self, lane: str) -> float:
         if lane in {"official_site", "annual_report"}:
