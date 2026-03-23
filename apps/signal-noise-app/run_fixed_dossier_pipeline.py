@@ -1913,7 +1913,34 @@ async def main():
     parser.add_argument("--tier-score", type=int, default=75)
     parser.add_argument("--max-discovery-iterations", type=int, default=None)
     parser.add_argument("--template-id", default="")
+    parser.add_argument(
+        "--profile",
+        choices=["default", "fast-regression"],
+        default="default",
+        help="Runtime profile presets for repeatable benchmarking",
+    )
     args = parser.parse_args()
+
+    if args.profile == "fast-regression":
+        os.environ["PIPELINE_PASS_A_ONLY"] = "true"
+        os.environ["PIPELINE_PASS_A_MAX_ITERATIONS"] = os.getenv("PIPELINE_PASS_A_MAX_ITERATIONS", "2")
+        os.environ["DOSSIER_PARALLEL_COLLECTION_TOTAL_BUDGET_SECONDS"] = os.getenv(
+            "DOSSIER_PARALLEL_COLLECTION_TOTAL_BUDGET_SECONDS",
+            "15",
+        )
+        os.environ["DOSSIER_PARALLEL_COLLECTION_MIN_REMAINING_SECONDS"] = os.getenv(
+            "DOSSIER_PARALLEL_COLLECTION_MIN_REMAINING_SECONDS",
+            "4",
+        )
+        os.environ["DOSSIER_SECTION_GENERATION_TIMEOUT_SECONDS"] = os.getenv(
+            "DOSSIER_SECTION_GENERATION_TIMEOUT_SECONDS",
+            "20",
+        )
+        os.environ["BRIGHTDATA_RENDERED_MAX_TOTAL_ATTEMPTS"] = os.getenv(
+            "BRIGHTDATA_RENDERED_MAX_TOTAL_ATTEMPTS",
+            "8",
+        )
+        logger.info("⚙️ Runtime profile enabled: fast-regression")
 
     discovery_engine = str(os.getenv("DISCOVERY_ENGINE", "v2") or "v2").strip().lower()
     use_legacy_template_routing = discovery_engine in {"legacy", "v1", "hypothesis"}
