@@ -1121,6 +1121,24 @@ class DiscoveryRuntimeV2:
         final_confidence = round(max(0.0, min(1.0, entity_confidence * 0.8 + pipeline_confidence * 0.2)), 3)
         candidate_events_summary = self._summarize_candidate_events(candidate_evaluations)
         lane_failures = self._snapshot_lane_failures(state)
+        llm_json_hop_count = sum(
+            1
+            for hop in hop_timings
+            if isinstance(hop, dict) and str(hop.get("parse_path") or "").strip() == "llm_json"
+        )
+        heuristic_hop_count = sum(
+            1
+            for hop in hop_timings
+            if isinstance(hop, dict)
+            and (
+                str(hop.get("parse_path") or "").strip() == "discovery_v2_evidence_first"
+                or str(hop.get("llm_last_status") or "").strip().lower() == "heuristic_only"
+            )
+        )
+        agent_influence_ratio = round(
+            llm_json_hop_count / max(1, llm_json_hop_count + heuristic_hop_count),
+            3,
+        )
         demotion_reason_counts = (
             candidate_events_summary.get("demotion_reason_counts")
             if isinstance(candidate_events_summary, dict)
@@ -1205,6 +1223,9 @@ class DiscoveryRuntimeV2:
             "lane_failures": lane_failures,
             "controller_health_reasons": controller_health_reasons,
             "acceptance_mode": acceptance_mode,
+            "llm_json_hop_count": int(llm_json_hop_count),
+            "heuristic_hop_count": int(heuristic_hop_count),
+            "agent_influence_ratio": float(agent_influence_ratio),
             "two_pass": {
                 "enabled": True,
                 "pass_a": {
@@ -1803,6 +1824,8 @@ class DiscoveryRuntimeV2:
                 "lane": lane,
                 "reason_code": str(llm_eval.get("reason_code") or "accept_guard"),
                 "source_url": url,
+                "source_title": str(candidate.get("title") or ""),
+                "source_snippet": str(candidate.get("snippet") or ""),
                 "source_tier": source_tier,
                 "candidate_origin": origin,
                 "decision": str(llm_eval.get("decision") or "NO_PROGRESS"),
@@ -1823,6 +1846,14 @@ class DiscoveryRuntimeV2:
                 "entity_domain_match": bool(entity_domain_match),
                 "language_ok": bool(language_ok),
                 "pdf_text_quality_ok": bool(pdf_text_quality_ok),
+                "evidence_snippet": evidence_snippet,
+                "evidence_content_item": str(evidence.get("content_item") or ""),
+                "evidence_content_passages": list(evidence.get("content_passages") or []),
+                "evidence_statement": str(evidence.get("statement") or ""),
+                "word_count": _safe_word_count(content),
+                "publication_date": str((metadata or {}).get("publication_date") or ""),
+                "source_domain": host,
+                "run_objective": str(objective or ""),
             }
             candidate_evaluations.append(candidate_eval)
 
@@ -3283,12 +3314,13 @@ class DiscoveryRuntimeV2:
 
         prompt = (
             "Return strict JSON only with key ordered_lanes (array of lane strings).\n"
-            "Rank lanes by expected evidence yield for this entity/objective.\n"
+            "Rank lanes by highest expected procurement-intent and unmet-need signal yield.\n"
             f"Entity: {entity_name}\n"
             f"Objective: {objective}\n"
             f"Pass: {pass_name}\n"
             f"Available lanes: {', '.join(unexhausted)}\n"
-            "Rules: prefer entity-grounded, higher-signal lanes first. No explanation."
+            f"Yellow Panther fit focus: {self._planner_objective_hint(objective=objective, lane='all')}\n"
+            "Rules: prefer entity-grounded evidence that indicates current digital/commercial pain, near-term change, partner displacement, or future RFP motion. No explanation."
         )
         try:
             self._metrics["llm_hop_selection_count"] += 1
@@ -3376,9 +3408,10 @@ class DiscoveryRuntimeV2:
             f"Objective: {objective}\n"
             f"Lane: {lane}\n"
             f"Lane hint: {self._planner_lane_hint(lane)}\n"
+            f"Yellow Panther fit focus: {self._planner_objective_hint(objective=objective, lane=lane)}\n"
             f"Recent planner trace: {json.dumps(self._planner_trace_preview(state), separators=(',', ':'))}\n"
             f"Candidate batch: {json.dumps(serialized_candidates, separators=(',', ':'))}\n"
-            "Choose the highest-yield next action from this candidate batch."
+            "Choose the next action that most increases confidence of need/future-RFP timing, not just generic relevance."
         )
         try:
             self._metrics["llm_hop_selection_count"] += 1
@@ -3533,10 +3566,11 @@ class DiscoveryRuntimeV2:
             f"Objective: {objective}\n"
             f"Lane: {lane}\n"
             f"Lane hint: {self._planner_lane_hint(lane)}\n"
+            f"Yellow Panther fit focus: {self._planner_objective_hint(objective=objective, lane=lane)}\n"
             f"Recent planner trace: {json.dumps(self._planner_trace_preview(state), separators=(',', ':'))}\n"
             f"Batch horizon: {int(self.batch_planner_horizon)}\n"
             f"Candidate batch: {json.dumps(serialized_candidates, separators=(',', ':'))}\n"
-            "Choose a high-yield sequence for the next hops. No prose."
+            "Choose a high-yield sequence for procurement-intent discovery and timing confidence. No prose."
         )
         try:
             self._metrics["llm_hop_selection_count"] += 1
@@ -3741,6 +3775,41 @@ class DiscoveryRuntimeV2:
             "governance_pdf": "Prioritize governance/statute/policy documents that mention procurement or suppliers.",
         }
         return hints.get(str(lane or "").strip(), "Prefer the most entity-grounded high-signal source.")
+
+    @staticmethod
+    def _planner_objective_hint(*, objective: str, lane: str) -> str:
+        objective_key = str(objective or "").strip().lower()
+        lane_key = str(lane or "").strip().lower()
+        base = (
+            "prioritize evidence of budgeted digital/commercial change, procurement motion, leadership mandate shifts, "
+            "and partner displacement opportunities aligned to Yellow Panther services"
+        )
+        if objective_key == "dossier_core":
+            base = (
+                "prioritize role, budget, and initiative signals that improve outreach actionability for Yellow Panther services"
+            )
+        elif objective_key in {"rfp_web", "rfp_pdf"}:
+            base = (
+                "prioritize explicit tender/RFP activity, supplier onboarding signals, and pre-procurement indicators"
+            )
+        elif objective_key == "leadership_enrichment":
+            base = (
+                "prioritize named decision-makers and team changes tied to digital, commercial, procurement, and data platforms"
+            )
+        elif objective_key == "news_signals":
+            base = (
+                "prioritize dated entity-specific developments implying upcoming platform work, transformation programs, or vendor change"
+            )
+
+        lane_suffix = {
+            "careers": "with emphasis on roles that imply platform build/buy decisions.",
+            "trusted_news": "with emphasis on dated and attributable business impact evidence.",
+            "press_release": "with emphasis on partnership shifts and capability gaps.",
+            "rfp_procurement_tenders": "with emphasis on concrete buying process artifacts.",
+            "annual_report": "with emphasis on strategy/budget statements that imply procurement runway.",
+            "governance_pdf": "with emphasis on supplier policy/process evidence.",
+        }.get(lane_key, ".")
+        return f"{base} {lane_suffix}"
 
     @staticmethod
     def _planner_trace_preview(state: Dict[str, Any], *, limit: int = 5) -> List[Dict[str, Any]]:

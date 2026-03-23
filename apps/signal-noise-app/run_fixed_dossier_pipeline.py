@@ -1792,6 +1792,9 @@ class FixedDossierFirstPipeline:
             "planner_search_refinement_count": int(planner_search_refinement_count),
             "planner_action_counts": planner_action_counts,
             "controller_health_reasons": list(performance.get("controller_health_reasons") or []),
+            "llm_json_hop_count": int(performance.get("llm_json_hop_count") or 0),
+            "heuristic_hop_count": int(performance.get("heuristic_hop_count") or 0),
+            "agent_influence_ratio": float(performance.get("agent_influence_ratio") or 0.0),
         }
         llm_hop_selection_count = int(discovery_controller.get("llm_hop_selection_count") or 0)
         planner_action_applied_count = int(discovery_controller.get("planner_action_applied_count") or 0)

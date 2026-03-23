@@ -174,6 +174,21 @@ class BrightDataSDKClient:
             return max(base, int(os.getenv("BRIGHTDATA_MIN_WORDS_NEWS", "120")))
         return base
 
+    def _should_prefer_rendered_first(self, *, url: str, cached_low_signal: Optional[Dict[str, Any]]) -> bool:
+        if not isinstance(cached_low_signal, dict):
+            return False
+        parsed = urlparse(url if url.startswith(("http://", "https://")) else f"https://{url}")
+        host = (parsed.netloc or "").lower()
+        path = (parsed.path or "/").lower()
+        cache_count = int((cached_low_signal or {}).get("count", 0) or 0)
+        if cache_count >= 3:
+            return True
+        if any(token in path for token in ("/matches", "/fixtures", "/results", "/news")):
+            return cache_count >= 3
+        if any(domain in host for domain in ("ccfc.co.uk",)):
+            return cache_count >= 3
+        return False
+
     def _detect_low_signal_shell(self, *, url: str, content: str, raw_html: str) -> Optional[str]:
         words = len((content or "").split())
         min_words = self._minimum_words_for_url(url)
@@ -550,107 +565,113 @@ class BrightDataSDKClient:
             if not url.startswith(('http://', 'https://')):
                 url = f'https://{url}'
             cached_low_signal = self._cached_low_signal_entry(url)
+            prefer_rendered_first = self._should_prefer_rendered_first(
+                url=url,
+                cached_low_signal=cached_low_signal,
+            )
             if cached_low_signal:
                 logger.info(
-                    "ℹ️ Short-circuiting repeated low-signal URL scrape: %s",
+                    "ℹ️ Cached low-signal URL detected, escalating rendered strategy: %s",
                     url,
                 )
-                return {
-                    "status": "success",
-                    "url": url,
-                    "content": "",
-                    "raw_html": "",
-                    "timestamp": datetime.now().isoformat(),
-                    "metadata": {
-                        "source": "brightdata_cached_guard",
-                        "lane": "cached_guard",
-                        "attempt": 0,
-                        "word_count": 0,
-                        "fallback_reason": "cached_repeated_low_signal_url",
-                        "low_signal_reason": "cached_repeated_low_signal_url",
-                        "previous_reason": str(cached_low_signal.get("last_reason") or "low_signal"),
-                        "cache_count": int(cached_low_signal.get("count", 0) or 0),
-                    },
-                }
+                if not prefer_rendered_first:
+                    return {
+                        "status": "success",
+                        "url": url,
+                        "content": "",
+                        "raw_html": "",
+                        "timestamp": datetime.now().isoformat(),
+                        "metadata": {
+                            "source": "brightdata_cached_guard",
+                            "lane": "cached_guard",
+                            "attempt": 0,
+                            "word_count": 0,
+                            "fallback_reason": "cached_repeated_low_signal_url",
+                            "low_signal_reason": "cached_repeated_low_signal_url",
+                            "previous_reason": str(cached_low_signal.get("last_reason") or "low_signal"),
+                            "cache_count": int(cached_low_signal.get("count", 0) or 0),
+                        },
+                    }
             best_brightdata_result: Optional[Dict[str, Any]] = None
 
             # lane_1: BrightData direct snapshot
             lane_1_attempt = 1
             lane_1_result: Optional[Dict[str, Any]] = None
-            try:
-                client = await self._get_client()
-                scrape_timeout = float(os.getenv("BRIGHTDATA_SCRAPE_TIMEOUT_SECONDS", "35"))
-                max_attempts = self._resolve_retry_attempts("BRIGHTDATA_SCRAPE_MAX_ATTEMPTS")
-                sdk_result = None
-                last_error: Optional[Exception] = None
-                for attempt in range(1, max_attempts + 1):
-                    lane_1_attempt = attempt
-                    try:
-                        await self._wait_for_rate_limit_cooldown()
-                        sdk_result = await asyncio.wait_for(
-                            client.scrape_url(url, response_format="raw"),
-                            timeout=scrape_timeout,
-                        )
-                        self._recover_rate_limit_cooldown()
-                        break
-                    except Exception as exc:
-                        last_error = exc
-                        if self._is_rate_limit_or_capacity_error(exc):
-                            retry_after_seconds = None
-                            if isinstance(exc, httpx.HTTPStatusError) and exc.response is not None:
-                                retry_after = exc.response.headers.get("Retry-After")
-                                try:
-                                    retry_after_seconds = float(retry_after) if retry_after else None
-                                except (TypeError, ValueError):
-                                    retry_after_seconds = None
-                            cooldown = self._set_rate_limit_cooldown(
-                                attempt=attempt - 1,
-                                retry_after_seconds=retry_after_seconds,
-                            )
-                            logger.warning("⏳ BrightData scrape cooldown set to %.2fs", cooldown)
-                        if attempt < max_attempts:
-                            delay = self._retry_backoff_delay(attempt)
-                            if delay > 0:
-                                await asyncio.sleep(delay)
-                if sdk_result is None and last_error is not None:
-                    raise last_error
-                html_content = sdk_result.data if sdk_result and hasattr(sdk_result, "data") and sdk_result.data is not None else ""
-                parse_result = self._extract_text_from_html(str(html_content))
-                content = parse_result["content"]
-                soup = parse_result["soup"]
+            if not prefer_rendered_first:
                 try:
-                    publication_date = self._extract_publication_date(soup, html_content, url)
-                except Exception:
-                    publication_date = None
-                lane_1_result = self._enrich_provenance(
-                    {
-                        "status": "success",
-                        "url": url,
-                        "content": content,
-                        "raw_html": html_content,
-                        "timestamp": datetime.now().isoformat(),
-                        "publication_date": publication_date.isoformat() if publication_date else None,
-                        "metadata": {
-                            "source": "brightdata_sdk",
-                            "has_publication_date": publication_date is not None,
-                            "extraction_mode": "sdk_direct",
+                    client = await self._get_client()
+                    scrape_timeout = float(os.getenv("BRIGHTDATA_SCRAPE_TIMEOUT_SECONDS", "35"))
+                    max_attempts = self._resolve_retry_attempts("BRIGHTDATA_SCRAPE_MAX_ATTEMPTS")
+                    sdk_result = None
+                    last_error: Optional[Exception] = None
+                    for attempt in range(1, max_attempts + 1):
+                        lane_1_attempt = attempt
+                        try:
+                            await self._wait_for_rate_limit_cooldown()
+                            sdk_result = await asyncio.wait_for(
+                                client.scrape_url(url, response_format="raw"),
+                                timeout=scrape_timeout,
+                            )
+                            self._recover_rate_limit_cooldown()
+                            break
+                        except Exception as exc:
+                            last_error = exc
+                            if self._is_rate_limit_or_capacity_error(exc):
+                                retry_after_seconds = None
+                                if isinstance(exc, httpx.HTTPStatusError) and exc.response is not None:
+                                    retry_after = exc.response.headers.get("Retry-After")
+                                    try:
+                                        retry_after_seconds = float(retry_after) if retry_after else None
+                                    except (TypeError, ValueError):
+                                        retry_after_seconds = None
+                                cooldown = self._set_rate_limit_cooldown(
+                                    attempt=attempt - 1,
+                                    retry_after_seconds=retry_after_seconds,
+                                )
+                                logger.warning("⏳ BrightData scrape cooldown set to %.2fs", cooldown)
+                            if attempt < max_attempts:
+                                delay = self._retry_backoff_delay(attempt)
+                                if delay > 0:
+                                    await asyncio.sleep(delay)
+                    if sdk_result is None and last_error is not None:
+                        raise last_error
+                    html_content = sdk_result.data if sdk_result and hasattr(sdk_result, "data") and sdk_result.data is not None else ""
+                    parse_result = self._extract_text_from_html(str(html_content))
+                    content = parse_result["content"]
+                    soup = parse_result["soup"]
+                    try:
+                        publication_date = self._extract_publication_date(soup, html_content, url)
+                    except Exception:
+                        publication_date = None
+                    lane_1_result = self._enrich_provenance(
+                        {
+                            "status": "success",
+                            "url": url,
+                            "content": content,
+                            "raw_html": html_content,
+                            "timestamp": datetime.now().isoformat(),
+                            "publication_date": publication_date.isoformat() if publication_date else None,
+                            "metadata": {
+                                "source": "brightdata_sdk",
+                                "has_publication_date": publication_date is not None,
+                                "extraction_mode": "sdk_direct",
+                            },
                         },
-                    },
-                    lane="lane_1",
-                    attempt=lane_1_attempt,
-                )
-            except RuntimeError:
-                modern_result = await self._scrape_with_modern_sdk(url)
-                if modern_result and modern_result.get("status") == "success":
-                    return self._enrich_provenance(
-                        modern_result,
                         lane="lane_1",
-                        attempt=1,
-                        selected_candidate_url=modern_result.get("url"),
+                        attempt=lane_1_attempt,
                     )
-                lane_1_result = None
-            except Exception:
-                lane_1_result = None
+                except RuntimeError:
+                    modern_result = await self._scrape_with_modern_sdk(url)
+                    if modern_result and modern_result.get("status") == "success":
+                        return self._enrich_provenance(
+                            modern_result,
+                            lane="lane_1",
+                            attempt=1,
+                            selected_candidate_url=modern_result.get("url"),
+                        )
+                    lane_1_result = None
+                except Exception:
+                    lane_1_result = None
 
             if lane_1_result and lane_1_result.get("status") == "success":
                 best_brightdata_result = lane_1_result

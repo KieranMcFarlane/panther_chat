@@ -1920,15 +1920,28 @@ Website: {metadata.website or 'N/A'}
             for item in candidate_evaluations:
                 if not isinstance(item, dict):
                     continue
-                text = str(item.get("evidence_snippet") or "").strip()
+                text = str(
+                    item.get("evidence_snippet")
+                    or item.get("evidence_statement")
+                    or item.get("source_snippet")
+                    or item.get("source_title")
+                    or ""
+                ).strip()
                 if not text:
                     continue
+                content_passages = item.get("evidence_content_passages")
+                if isinstance(content_passages, list):
+                    content = " ".join(str(p or "").strip() for p in content_passages if str(p or "").strip())
+                else:
+                    content = ""
+                if not content:
+                    content = str(item.get("evidence_content_item") or item.get("evidence_snippet") or "").strip()
                 pool.append(
                     {
                         "validation_state": "candidate",
                         "rank": 1,
                         "text": text,
-                        "content": str(item.get("evidence_snippet") or "").strip(),
+                        "content": content,
                         "url": str(item.get("source_url") or "").strip(),
                         "subtype": str(item.get("step_type") or "").strip(),
                         "source": "candidate_eval",
@@ -3128,15 +3141,28 @@ Hard requirements:
                     continue
                 if str(item.get("validation_state") or "").strip().lower() not in {"candidate", "diagnostic"}:
                     continue
-                text = str(item.get("evidence_snippet") or "").strip()
+                text = str(
+                    item.get("evidence_snippet")
+                    or item.get("evidence_statement")
+                    or item.get("source_snippet")
+                    or item.get("source_title")
+                    or ""
+                ).strip()
                 if not text:
                     continue
+                content_passages = item.get("evidence_content_passages")
+                if isinstance(content_passages, list):
+                    content = " ".join(str(p or "").strip() for p in content_passages if str(p or "").strip())
+                else:
+                    content = ""
+                if not content:
+                    content = str(item.get("evidence_content_item") or item.get("evidence_snippet") or "").strip()
                 pool.append(
                     {
                         "validation_state": "candidate",
                         "rank": 1,
                         "text": text,
-                        "content": str(item.get("evidence_snippet") or "").strip(),
+                        "content": content,
                         "url": str(item.get("source_url") or "").strip(),
                         "subtype": str(item.get("step_type") or "").strip(),
                         "source": "candidate_eval",

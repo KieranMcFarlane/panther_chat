@@ -458,6 +458,10 @@ class ClaudeClient:
             "CHUTES_MODEL_JSON",
             default=self.chutes_model_json_default,
         )
+        self.chutes_json_force_model = self._parse_bool_env(
+            os.getenv("CHUTES_JSON_FORCE_MODEL"),
+            default=False,
+        )
         self.chutes_model_json_fallback = os.getenv(
             "CHUTES_MODEL_JSON_FALLBACK",
             self.chutes_model_judge,
@@ -1319,7 +1323,9 @@ class ClaudeClient:
         messages.append({"role": "user", "content": prompt})
 
         runtime_model = self._resolve_chutes_runtime_model(model)
-        if json_mode and self.chutes_model_json:
+        # Keep role-based routing for structured calls unless force-enabled.
+        explicit_json_alias = str(model or "").strip().lower() in {"json", "structured", "json_model"}
+        if json_mode and self.chutes_model_json and (self.chutes_json_force_model or explicit_json_alias):
             runtime_model = self.chutes_model_json
         request_stream = self.chutes_stream_enabled if stream is None else bool(stream)
         payload = {
