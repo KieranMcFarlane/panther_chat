@@ -39,6 +39,7 @@ ALLOWED_CANDIDATE_ORIGINS = {
     "internal_search",
     "crawl",
     "known_doc_index",
+    "tender_table",
 }
 
 PASS_A_LANES = ["official_site", "press_release", "careers", "trusted_news"]
@@ -427,6 +428,14 @@ class DiscoveryRuntimeV2:
         cache_dir_env = os.getenv("DISCOVERY_DOC_INDEX_CACHE_DIR", "backend/data/dossiers/doc_index")
         self.doc_index_cache_dir = Path(cache_dir_env)
         self.doc_index_cache_dir.mkdir(parents=True, exist_ok=True)
+        self.continuous_mode_enabled = _truthy(os.getenv("DISCOVERY_CONTINUOUS_MODE", "false"))
+        runtime_state_dir_env = os.getenv("DISCOVERY_RUNTIME_STATE_DIR", "backend/data/dossiers/runtime_state")
+        self.runtime_state_dir = Path(runtime_state_dir_env)
+        self.runtime_state_dir.mkdir(parents=True, exist_ok=True)
+        self.resume_checkpoint_enabled = _truthy(os.getenv("DISCOVERY_RESUME_CHECKPOINT_ENABLED", "true"))
+        self.provider_pause_state_file = self.runtime_state_dir / "provider_pause_state.json"
+        self.provider_pause_extension_factor = float(os.getenv("DISCOVERY_PROVIDER_PAUSE_EXTENSION_FACTOR", "1.6"))
+        self.provider_pause_max_seconds = float(os.getenv("DISCOVERY_PROVIDER_PAUSE_MAX_SECONDS", "3600"))
 
         self._metrics: Dict[str, int] = {
             "synthetic_url_attempt_count": 0,
@@ -452,6 +461,184 @@ class DiscoveryRuntimeV2:
         self._planner_parse_fail_samples: List[Dict[str, Any]] = []
         self._llm_circuit_broken = False
         self._consecutive_length_stops = 0
+
+    def _checkpoint_file_path(self, *, entity_id: str, objective: str) -> Path:
+        safe_entity = re.sub(r"[^a-z0-9._-]+", "-", str(entity_id or "entity").strip().lower()).strip("-") or "entity"
+        safe_objective = re.sub(r"[^a-z0-9._-]+", "-", str(objective or "objective").strip().lower()).strip("-") or "objective"
+        return self.runtime_state_dir / f"checkpoint__{safe_entity}__{safe_objective}.json"
+
+    @staticmethod
+    def _serialize_state_for_checkpoint(state: Dict[str, Any]) -> Dict[str, Any]:
+        serialized: Dict[str, Any] = {}
+        for key, value in (state or {}).items():
+            if isinstance(value, set):
+                serialized[key] = sorted(value)
+            else:
+                serialized[key] = value
+        return serialized
+
+    @staticmethod
+    def _restore_state_from_checkpoint(payload: Dict[str, Any]) -> Dict[str, Any]:
+        restored = dict(payload or {})
+        for key in {"visited_urls", "visited_hashes", "accepted_signatures", "lane_exhausted", "trusted_corroboration_tokens", "rejected_urls"}:
+            value = restored.get(key, set())
+            if isinstance(value, list):
+                restored[key] = set(value)
+            elif not isinstance(value, set):
+                restored[key] = set()
+        return restored
+
+    def _load_discovery_checkpoint(self, *, entity_id: str, objective: str) -> Optional[Dict[str, Any]]:
+        if not self.resume_checkpoint_enabled:
+            return None
+        path = self._checkpoint_file_path(entity_id=entity_id, objective=objective)
+        if not path.exists():
+            return None
+        try:
+            payload = json.loads(path.read_text())
+        except Exception:
+            return None
+        if not isinstance(payload, dict):
+            return None
+        state = payload.get("state")
+        if isinstance(state, dict):
+            payload["state"] = self._restore_state_from_checkpoint(state)
+        return payload
+
+    def _save_discovery_checkpoint(
+        self,
+        *,
+        entity_id: str,
+        objective: str,
+        state: Dict[str, Any],
+        hop_timings: List[Dict[str, Any]],
+        signals: List[Dict[str, Any]],
+        diagnostics: List[Dict[str, Any]],
+        candidate_evaluations: List[Dict[str, Any]],
+    ) -> None:
+        if not self.resume_checkpoint_enabled:
+            return
+        payload = {
+            "entity_id": entity_id,
+            "objective": objective,
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+            "state": self._serialize_state_for_checkpoint(state),
+            "hop_timings": hop_timings,
+            "signals": signals,
+            "diagnostics": diagnostics,
+            "candidate_evaluations": candidate_evaluations,
+        }
+        path = self._checkpoint_file_path(entity_id=entity_id, objective=objective)
+        try:
+            path.write_text(json.dumps(payload, default=str))
+        except Exception:
+            return
+
+    def _clear_discovery_checkpoint(self, *, entity_id: str, objective: str) -> None:
+        path = self._checkpoint_file_path(entity_id=entity_id, objective=objective)
+        try:
+            if path.exists():
+                path.unlink()
+        except Exception:
+            return
+
+    def _provider_pause_remaining_seconds(self) -> float:
+        now = time.time()
+        claude_until = float(getattr(self.claude_client, "_chutes_rate_limit_cooldown_until_epoch", 0.0) or 0.0)
+        bright_until = float(getattr(self.brightdata_client, "_rate_limit_cooldown_until_epoch", 0.0) or 0.0)
+        return max(0.0, claude_until - now, bright_until - now)
+
+    def _save_provider_pause_state(self, *, cooldown_seconds: float, reason: str) -> None:
+        cooldown_seconds = max(0.0, min(float(cooldown_seconds or 0.0), self.provider_pause_max_seconds))
+        payload = {
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+            "reason": str(reason or "provider_rate_limit"),
+            "cooldown_seconds": cooldown_seconds,
+            "resume_at_epoch": time.time() + cooldown_seconds,
+        }
+        try:
+            self.provider_pause_state_file.write_text(json.dumps(payload))
+        except Exception:
+            return
+
+    def _load_provider_pause_state(self) -> Optional[Dict[str, Any]]:
+        path = self.provider_pause_state_file
+        if not path.exists():
+            return None
+        try:
+            payload = json.loads(path.read_text())
+        except Exception:
+            return None
+        return payload if isinstance(payload, dict) else None
+
+    def _clear_provider_pause_state(self) -> None:
+        try:
+            if self.provider_pause_state_file.exists():
+                self.provider_pause_state_file.unlink()
+        except Exception:
+            return
+
+    async def _provider_canary_ready(self) -> bool:
+        # Cheap readiness probes before resuming paused runs.
+        try:
+            if hasattr(self.claude_client, "query"):
+                await self.claude_client.query(
+                    prompt="reply with ok",
+                    model="haiku",
+                    max_tokens=8,
+                    max_retries_override=0,
+                    fast_fail_on_length=True,
+                )
+        except Exception:
+            return False
+        try:
+            if hasattr(self.brightdata_client, "search_engine"):
+                result = await self.brightdata_client.search_engine(
+                    query="site:example.com",
+                    engine="google",
+                    num_results=1,
+                )
+                if isinstance(result, dict) and str(result.get("status") or "").lower() == "error":
+                    return False
+        except Exception:
+            return False
+        return True
+
+    def _build_paused_result(
+        self,
+        *,
+        entity_id: str,
+        entity_name: str,
+        objective: str,
+        reason: str,
+        resume_at_epoch: float,
+    ) -> DiscoveryResultV2:
+        summary = {
+            "engine": "v2",
+            "run_objective": objective,
+            "paused_infra": True,
+            "pause_reason": reason,
+            "resume_at_epoch": resume_at_epoch,
+            "resume_at": datetime.fromtimestamp(max(0.0, resume_at_epoch), tz=timezone.utc).isoformat(),
+        }
+        return DiscoveryResultV2(
+            entity_id=entity_id,
+            entity_name=entity_name,
+            final_confidence=0.0,
+            confidence_band="LOW",
+            is_actionable=False,
+            iterations_completed=0,
+            total_cost_usd=0.0,
+            hypotheses=[],
+            depth_stats={0: 0},
+            signals_discovered=[],
+            raw_signals=[],
+            hypothesis_states={},
+            performance_summary=summary,
+            parse_path="discovery_v2_paused_infra",
+            llm_last_status="paused_infra",
+            candidate_evaluations=[],
+        )
 
     async def run_discovery(
         self,
@@ -489,6 +676,35 @@ class DiscoveryRuntimeV2:
         pass_a_lanes = list(objective_profile.get("pass_a_lanes") or PASS_A_LANES)
         pass_b_lanes = list(objective_profile.get("pass_b_lanes") or PASS_B_LANES)
         objective_budget = self._resolve_objective_budget(max_iterations=max_iterations, profile=objective_profile)
+        checkpoint_payload: Optional[Dict[str, Any]] = None
+
+        if self.continuous_mode_enabled:
+            pause_state = self._load_provider_pause_state()
+            if isinstance(pause_state, dict):
+                resume_at_epoch = float(pause_state.get("resume_at_epoch") or 0.0)
+                if resume_at_epoch > time.time():
+                    return self._build_paused_result(
+                        entity_id=entity_id,
+                        entity_name=entity_name,
+                        objective=objective,
+                        reason=str(pause_state.get("reason") or "provider_rate_limit"),
+                        resume_at_epoch=resume_at_epoch,
+                    )
+                if not await self._provider_canary_ready():
+                    cooldown_seconds = min(
+                        self.provider_pause_max_seconds,
+                        max(10.0, float(pause_state.get("cooldown_seconds") or 10.0) * self.provider_pause_extension_factor),
+                    )
+                    self._save_provider_pause_state(cooldown_seconds=cooldown_seconds, reason="provider_canary_failed")
+                    return self._build_paused_result(
+                        entity_id=entity_id,
+                        entity_name=entity_name,
+                        objective=objective,
+                        reason="provider_canary_failed",
+                        resume_at_epoch=time.time() + cooldown_seconds,
+                    )
+                self._clear_provider_pause_state()
+            checkpoint_payload = self._load_discovery_checkpoint(entity_id=entity_id, objective=objective)
 
         start = time.perf_counter()
         self._metrics = {
@@ -523,7 +739,7 @@ class DiscoveryRuntimeV2:
         hop_credits_earned = 0
         seen_validated_signal_ids: Set[str] = set()
         official_domain = self._official_domain(entity_name=entity_name, dossier=dossier)
-        state: Dict[str, Any] = {
+        default_state: Dict[str, Any] = {
             "visited_urls": set(),
             "visited_hashes": set(),
             "accepted_signatures": set(),
@@ -536,10 +752,30 @@ class DiscoveryRuntimeV2:
             "trusted_corroboration_tokens": set(),
             "iterations_completed": 0,
         }
+        state: Dict[str, Any] = default_state
         hop_timings: List[Dict[str, Any]] = []
         signals: List[Dict[str, Any]] = []
         diagnostics: List[Dict[str, Any]] = []
         candidate_evaluations: List[Dict[str, Any]] = []
+        if isinstance(checkpoint_payload, dict):
+            loaded_state = checkpoint_payload.get("state")
+            if isinstance(loaded_state, dict):
+                restored_state = self._restore_state_from_checkpoint(loaded_state)
+                merged_state = dict(default_state)
+                merged_state.update(restored_state)
+                state = merged_state
+            loaded_hops = checkpoint_payload.get("hop_timings")
+            if isinstance(loaded_hops, list):
+                hop_timings = [item for item in loaded_hops if isinstance(item, dict)]
+            loaded_signals = checkpoint_payload.get("signals")
+            if isinstance(loaded_signals, list):
+                signals = [item for item in loaded_signals if isinstance(item, dict)]
+            loaded_diagnostics = checkpoint_payload.get("diagnostics")
+            if isinstance(loaded_diagnostics, list):
+                diagnostics = [item for item in loaded_diagnostics if isinstance(item, dict)]
+            loaded_candidate_evals = checkpoint_payload.get("candidate_evaluations")
+            if isinstance(loaded_candidate_evals, list):
+                candidate_evaluations = [item for item in loaded_candidate_evals if isinstance(item, dict)]
         validated_candidate_count_by_lane: Dict[str, int] = {}
         llm_last_status = "heuristic_only"
         parse_path = "discovery_v2_evidence_first"
@@ -613,6 +849,40 @@ class DiscoveryRuntimeV2:
                         "signals_discovered": len(signals),
                     }
                 )
+            if self.continuous_mode_enabled and self.resume_checkpoint_enabled:
+                self._save_discovery_checkpoint(
+                    entity_id=entity_id,
+                    objective=objective,
+                    state=state,
+                    hop_timings=hop_timings,
+                    signals=signals,
+                    diagnostics=diagnostics,
+                    candidate_evaluations=candidate_evaluations,
+                )
+            if self.continuous_mode_enabled:
+                cooldown_remaining = self._provider_pause_remaining_seconds()
+                if cooldown_remaining > 0:
+                    self._save_provider_pause_state(
+                        cooldown_seconds=cooldown_remaining,
+                        reason="provider_rate_limit",
+                    )
+                    if self.resume_checkpoint_enabled:
+                        self._save_discovery_checkpoint(
+                            entity_id=entity_id,
+                            objective=objective,
+                            state=state,
+                            hop_timings=hop_timings,
+                            signals=signals,
+                            diagnostics=diagnostics,
+                            candidate_evaluations=candidate_evaluations,
+                        )
+                    return self._build_paused_result(
+                        entity_id=entity_id,
+                        entity_name=entity_name,
+                        objective=objective,
+                        reason="provider_rate_limit",
+                        resume_at_epoch=time.time() + cooldown_remaining,
+                    )
 
         adaptive_extended = False
         adaptive_candidate_mode = False
@@ -716,6 +986,40 @@ class DiscoveryRuntimeV2:
                             "signals_discovered": len(signals),
                         }
                     )
+                if self.continuous_mode_enabled and self.resume_checkpoint_enabled:
+                    self._save_discovery_checkpoint(
+                        entity_id=entity_id,
+                        objective=objective,
+                        state=state,
+                        hop_timings=hop_timings,
+                        signals=signals,
+                        diagnostics=diagnostics,
+                        candidate_evaluations=candidate_evaluations,
+                    )
+                if self.continuous_mode_enabled:
+                    cooldown_remaining = self._provider_pause_remaining_seconds()
+                    if cooldown_remaining > 0:
+                        self._save_provider_pause_state(
+                            cooldown_seconds=cooldown_remaining,
+                            reason="provider_rate_limit",
+                        )
+                        if self.resume_checkpoint_enabled:
+                            self._save_discovery_checkpoint(
+                                entity_id=entity_id,
+                                objective=objective,
+                                state=state,
+                                hop_timings=hop_timings,
+                                signals=signals,
+                                diagnostics=diagnostics,
+                                candidate_evaluations=candidate_evaluations,
+                            )
+                        return self._build_paused_result(
+                            entity_id=entity_id,
+                            entity_name=entity_name,
+                            objective=objective,
+                            reason="provider_rate_limit",
+                            resume_at_epoch=time.time() + cooldown_remaining,
+                        )
 
         validated_signals = [
             signal
@@ -837,6 +1141,8 @@ class DiscoveryRuntimeV2:
             llm_last_status=llm_last_status,
             candidate_evaluations=candidate_evaluations,
         )
+        if self.continuous_mode_enabled and self.resume_checkpoint_enabled:
+            self._clear_discovery_checkpoint(entity_id=entity_id, objective=objective)
         return result
 
     async def _run_lane(
@@ -1038,6 +1344,60 @@ class DiscoveryRuntimeV2:
                 scraped = await self._scrape_with_budget(url, budget=effective_budget)
             content = str(scraped.get("content") or "")
             metadata = scraped.get("metadata") if isinstance(scraped.get("metadata"), dict) else {}
+            raw_html = str(scraped.get("raw_html") or metadata.get("raw_html") or "")
+
+            if lane in {"rfp_procurement_tenders", "annual_report", "governance_pdf"} and objective in {"rfp_web", "rfp_pdf"}:
+                promoted_candidates = self._extract_tender_table_candidates(
+                    page_url=url,
+                    content=content,
+                    raw_html=raw_html,
+                    official_domain=official_domain,
+                )
+                if promoted_candidates:
+                    existing_urls = {
+                        _normalize_url(item.get("url") or "")
+                        for item in candidate_batch
+                        if isinstance(item, dict)
+                    }
+                    for promoted in promoted_candidates:
+                        promoted_url = _normalize_url(promoted.get("url") or "")
+                        if (
+                            not promoted_url
+                            or promoted_url in existing_urls
+                            or promoted_url in state.get("visited_urls", set())
+                        ):
+                            continue
+                        existing_urls.add(promoted_url)
+                        candidate_batch.append(promoted)
+
+                    first_promoted = promoted_candidates[0] if promoted_candidates else {}
+                    first_promoted_url = _normalize_url(first_promoted.get("url") or "")
+                    if first_promoted_url and first_promoted_url != url:
+                        promoted_scraped = await self._scrape_with_budget(first_promoted_url, budget=effective_budget)
+                        promoted_content = str(promoted_scraped.get("content") or "")
+                        if promoted_content:
+                            candidate = {
+                                **candidate,
+                                "url": first_promoted_url,
+                                "title": str(first_promoted.get("title") or candidate.get("title") or ""),
+                                "snippet": str(first_promoted.get("snippet") or candidate.get("snippet") or ""),
+                                "candidate_origin": str(first_promoted.get("candidate_origin") or "tender_table"),
+                            }
+                            url = first_promoted_url
+                            scraped = promoted_scraped
+                            content = promoted_content
+                            metadata = (
+                                promoted_scraped.get("metadata")
+                                if isinstance(promoted_scraped.get("metadata"), dict)
+                                else metadata
+                            )
+                            raw_html = str(promoted_scraped.get("raw_html") or metadata.get("raw_html") or "")
+                            content_hash = hashlib.sha1(content.encode("utf-8", errors="ignore")).hexdigest() if content else None
+                            grounding_score = self._entity_match_score(candidate=candidate, entity_name=entity_name)
+                            entity_domain_match = self._is_entity_domain_match(url=url, official_domain=official_domain)
+                            hop_record["tender_table_promoted_url"] = first_promoted_url
+                            hop_record["tender_table_promoted_count"] = len(promoted_candidates)
+
             content_hash = hashlib.sha1(content.encode("utf-8", errors="ignore")).hexdigest() if content else None
             pdf_text_quality_ok = self._pdf_text_quality_ok(content=content)
             if not pdf_text_quality_ok and lane in {"rfp_procurement_tenders", "annual_report", "governance_pdf"}:
@@ -1105,10 +1465,16 @@ class DiscoveryRuntimeV2:
                 accept_reject_reasons.append("empty_content_item")
             if quality_score < self._quality_threshold_for_lane(lane):
                 accept_reject_reasons.append("evidence_quality_below_threshold")
+            relaxed_tender_first_pass = self._is_relaxed_tender_first_pass(
+                lane=lane,
+                url=url,
+                official_domain=official_domain,
+            )
             if not self._is_evidence_grounded_in_content(
                 snippet=evidence_snippet,
                 content_item=str(evidence.get("content_item") or ""),
                 content=content,
+                relaxed_tender_first_pass=relaxed_tender_first_pass,
             ):
                 accept_reject_reasons.append("evidence_not_grounded_in_source_content")
             if lane in {"rfp_procurement_tenders", "annual_report", "governance_pdf"}:
@@ -1131,13 +1497,15 @@ class DiscoveryRuntimeV2:
                 snippet=evidence_snippet,
                 entity_name=entity_name,
             )
-            if composite_acceptance_score < 0.52:
+            composite_threshold = 0.48 if relaxed_tender_first_pass else 0.52
+            if composite_acceptance_score < composite_threshold:
                 accept_reject_reasons.append("composite_acceptance_below_threshold")
 
             signature = self._evidence_signature(url=url, lane=lane, snippet=evidence_snippet)
             if signature in state["accepted_signatures"]:
                 accept_reject_reasons.append("duplicate_evidence_signature")
-            if grounding_score < 0.52:
+            grounding_threshold = 0.22 if relaxed_tender_first_pass else 0.52
+            if grounding_score < grounding_threshold:
                 accept_reject_reasons.append("entity_match_score_below_threshold")
             if not language_ok:
                 accept_reject_reasons.append("non_english_source")
@@ -1402,6 +1770,38 @@ class DiscoveryRuntimeV2:
                     }
                 )
         if (
+            lane in {"rfp_procurement_tenders", "annual_report", "governance_pdf"}
+            and isinstance(official, str)
+            and official.strip()
+        ):
+            for seeded_url in self._seed_procurement_probe_urls(official_url=str(official or "")):
+                normalized_seed = _normalize_url(seeded_url)
+                if not normalized_seed or normalized_seed in seen:
+                    continue
+                seen.add(normalized_seed)
+                discovered.append(
+                    {
+                        "url": normalized_seed,
+                        "title": f"{entity_name} procurement/tender route",
+                        "snippet": "Seeded official-domain procurement/tender route",
+                        "candidate_origin": "same_domain_seed",
+                    }
+                )
+            if official_domain:
+                tender_page_candidates = await self._discover_tender_links_from_seed_pages(
+                    entity_name=entity_name,
+                    official_url=str(official or ""),
+                    official_domain=official_domain,
+                )
+                for item in tender_page_candidates:
+                    if not isinstance(item, dict):
+                        continue
+                    normalized_tender = _normalize_url(item.get("url") or "")
+                    if not normalized_tender or normalized_tender in seen:
+                        continue
+                    seen.add(normalized_tender)
+                    discovered.append(item)
+        if (
             objective == "rfp_pdf"
             and lane in {"governance_pdf", "annual_report", "rfp_procurement_tenders"}
             and official_domain
@@ -1621,6 +2021,26 @@ class DiscoveryRuntimeV2:
             urls.append(urljoin(root, f"{path}/").rstrip("/"))
         return list(dict.fromkeys(urls))
 
+    @staticmethod
+    def _seed_procurement_probe_urls(*, official_url: str) -> List[str]:
+        normalized = _normalize_url(official_url)
+        if not normalized:
+            return []
+        parsed = urlparse(normalized)
+        root = f"{parsed.scheme}://{parsed.netloc}/"
+        seeded_paths = (
+            "tenders",
+            "procurement",
+            "suppliers",
+            "documents",
+            "rfp",
+            "about",
+        )
+        urls = [root.rstrip("/")]
+        for path in seeded_paths:
+            urls.append(urljoin(root, f"{path}/").rstrip("/"))
+        return list(dict.fromkeys(urls))
+
     async def _discover_pdf_urls_from_sitemap(self, *, base_url: str, official_domain: str) -> List[str]:
         root = base_url.rstrip("/")
         sitemap_urls = [
@@ -1704,6 +2124,42 @@ class DiscoveryRuntimeV2:
         except Exception:
             return ""
         return ""
+
+    async def _discover_tender_links_from_seed_pages(
+        self,
+        *,
+        entity_name: str,
+        official_url: str,
+        official_domain: str,
+    ) -> List[Dict[str, Any]]:
+        base = self._canonical_official_base_url(official_url=official_url, official_domain=official_domain)
+        seed_pages = self._seed_procurement_probe_urls(official_url=base)
+        discovered: List[Dict[str, Any]] = []
+        seen: Set[str] = set()
+        for page_url in seed_pages[:6]:
+            html = await self._fetch_raw_html_for_indexing(page_url)
+            if not html:
+                continue
+            for item in self._extract_tender_table_candidates(
+                page_url=page_url,
+                content="",
+                raw_html=html,
+                official_domain=official_domain,
+            ):
+                normalized = _normalize_url(item.get("url") or "")
+                if not normalized or normalized in seen:
+                    continue
+                seen.add(normalized)
+                discovered.append(
+                    {
+                        "url": normalized,
+                        "title": str(item.get("title") or f"{entity_name} tender-linked document"),
+                        "snippet": str(item.get("snippet") or "Extracted from official tenders/procurement page"),
+                        "candidate_origin": "tender_table",
+                        "discovery_source": "official_tender_seed_page",
+                    }
+                )
+        return discovered[:24]
 
     @staticmethod
     def _looks_like_pdf_signal_url(url: str) -> bool:
@@ -2444,7 +2900,13 @@ class DiscoveryRuntimeV2:
         return payload if isinstance(payload, dict) else None
 
     @staticmethod
-    def _is_evidence_grounded_in_content(*, snippet: str, content_item: str, content: str) -> bool:
+    def _is_evidence_grounded_in_content(
+        *,
+        snippet: str,
+        content_item: str,
+        content: str,
+        relaxed_tender_first_pass: bool = False,
+    ) -> bool:
         content_norm = " ".join(str(content or "").lower().split())
         if not content_norm:
             return False
@@ -2452,7 +2914,108 @@ class DiscoveryRuntimeV2:
             candidate_norm = " ".join(str(candidate or "").lower().split())
             if candidate_norm and candidate_norm in content_norm:
                 return True
+        candidate_tokens = {
+            token
+            for token in re.findall(r"[a-z0-9]{3,}", f"{snippet} {content_item}".lower())
+            if token not in {"with", "from", "that", "this", "for", "and", "the", "are", "was"}
+        }
+        content_tokens = set(re.findall(r"[a-z0-9]{3,}", content_norm))
+        if not candidate_tokens or not content_tokens:
+            return False
+        overlap = candidate_tokens.intersection(content_tokens)
+        overlap_ratio = len(overlap) / max(1, len(candidate_tokens))
+        if len(overlap) >= 5 and overlap_ratio >= 0.58:
+            return True
+        if relaxed_tender_first_pass:
+            procurement_tokens = {"rfp", "tender", "procurement", "supplier", "proposal", "bid"}
+            if overlap.intersection(procurement_tokens) and len(overlap) >= 3 and overlap_ratio >= 0.42:
+                return True
         return False
+
+    @staticmethod
+    def _is_relaxed_tender_first_pass(*, lane: str, url: str, official_domain: Optional[str]) -> bool:
+        if lane not in {"rfp_procurement_tenders", "annual_report", "governance_pdf"}:
+            return False
+        host = (urlparse(str(url or "")).hostname or "").lower().lstrip("www.")
+        if not official_domain or not host:
+            return False
+        if host != official_domain and not host.endswith(f".{official_domain}"):
+            return False
+        lowered_url = str(url or "").lower()
+        return any(token in lowered_url for token in ("tender", "rfp", "procurement", "supplier"))
+
+    def _extract_tender_table_candidates(
+        self,
+        *,
+        page_url: str,
+        content: str,
+        raw_html: str,
+        official_domain: Optional[str],
+    ) -> List[Dict[str, Any]]:
+        if not official_domain:
+            return []
+        host = (urlparse(str(page_url or "")).hostname or "").lower().lstrip("www.")
+        if not host or (host != official_domain and not host.endswith(f".{official_domain}")):
+            return []
+
+        lower_blob = f"{str(content or '').lower()} {str(raw_html or '').lower()}"
+        tender_path_hint = any(token in str(page_url or "").lower() for token in ("/tender", "/rfp", "/procurement"))
+        marker_hits = sum(
+            1 for marker in ("topic", "associated files", "status", "review phase", "awarded", "ongoing")
+            if marker in lower_blob
+        )
+        has_tender_markers = marker_hits >= 2
+        if not (has_tender_markers or tender_path_hint or "tender" in lower_blob):
+            return []
+
+        href_matches = re.findall(r'href=[\"\']([^\"\']+)[\"\']', raw_html or "", flags=re.IGNORECASE)
+        markdown_matches = re.findall(r'\[[^\]]+\]\(([^)]+)\)', content or "", flags=re.IGNORECASE)
+        bare_url_matches = re.findall(r'https?://[^\s)>\"]+', f"{content or ''} {raw_html or ''}", flags=re.IGNORECASE)
+        discovered = list(dict.fromkeys(href_matches + markdown_matches + bare_url_matches))
+        candidates: List[Dict[str, Any]] = []
+        seen: Set[str] = set()
+        for href in discovered:
+            resolved = _normalize_url(urljoin(page_url, href))
+            if not resolved:
+                continue
+            parsed = urlparse(resolved)
+            resolved_host = (parsed.hostname or "").lower().lstrip("www.")
+            if resolved_host != official_domain and not resolved_host.endswith(f".{official_domain}"):
+                continue
+            lowered = resolved.lower()
+            if not (
+                lowered.endswith(".pdf")
+                or any(token in lowered for token in ("tender", "rfp", "procurement", "supplier", "proposal", "brief"))
+            ):
+                continue
+            if resolved in seen:
+                continue
+            seen.add(resolved)
+            candidates.append(
+                {
+                    "url": resolved,
+                    "title": "Tender table linked document",
+                    "snippet": "Tier-1 tenders page extracted linked RFP/tender document",
+                    "candidate_origin": "tender_table",
+                    "discovery_source": "tier1_tender_table",
+                }
+            )
+
+        def _rank(item: Dict[str, Any]) -> float:
+            lowered_url = str(item.get("url") or "").lower()
+            score = 0.0
+            if lowered_url.endswith(".pdf"):
+                score += 2.0
+            if "rfp" in lowered_url:
+                score += 1.5
+            if "tender" in lowered_url:
+                score += 1.1
+            if "procurement" in lowered_url:
+                score += 0.8
+            return score
+
+        candidates.sort(key=_rank, reverse=True)
+        return candidates[:12]
 
     def _resolve_objective_budget(self, *, max_iterations: int, profile: Dict[str, Any]) -> Dict[str, Any]:
         budget_overrides = profile.get("budget") if isinstance(profile.get("budget"), dict) else {}

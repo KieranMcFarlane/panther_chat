@@ -99,6 +99,26 @@ def test_claude_client_supports_explicit_chutes_anthropic_provider(monkeypatch):
     assert client.chutes_model == "zai-org/GLM-5-TEE"
 
 
+def test_chutes_rate_limit_cooldown_grows_and_decays(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_RATE_LIMIT_COOLDOWN_ENABLED", "true")
+    monkeypatch.setenv("CHUTES_RATE_LIMIT_COOLDOWN_BASE_SECONDS", "2")
+    monkeypatch.setenv("CHUTES_RATE_LIMIT_COOLDOWN_CAP_SECONDS", "20")
+    monkeypatch.setenv("CHUTES_RATE_LIMIT_COOLDOWN_MULTIPLIER", "2.0")
+    monkeypatch.setenv("CHUTES_RATE_LIMIT_RECOVERY_FACTOR", "0.5")
+
+    client = ClaudeClient()
+    first = client._set_chutes_rate_limit_cooldown(attempt=0, retry_after_seconds=None)
+    second = client._set_chutes_rate_limit_cooldown(attempt=1, retry_after_seconds=None)
+
+    assert first >= 2.0
+    assert second >= first
+
+    client._recover_chutes_rate_limit_cooldown()
+    assert client._chutes_rate_limit_cooldown_seconds <= second
+
+
 @pytest.mark.asyncio
 async def test_claude_client_queries_chutes_chat_completions(monkeypatch):
     monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
@@ -707,9 +727,11 @@ async def test_claude_client_retries_chutes_rate_limits(monkeypatch):
 
     client = ClaudeClient()
     result = await client.query(prompt="retry me", model="haiku", max_tokens=64)
+    non_zero_sleeps = [value for value in sleeps if value > 0]
 
     assert attempts["count"] == 2
-    assert sleeps == [1.0]
+    assert len(non_zero_sleeps) == 1
+    assert non_zero_sleeps[0] >= 1.0
     assert result["content"] == "Recovered after 429"
 
 
@@ -763,9 +785,11 @@ async def test_claude_client_applies_jittered_backoff_without_retry_after(monkey
 
     client = ClaudeClient()
     result = await client.query(prompt="retry me", model="haiku", max_tokens=64)
+    non_zero_sleeps = [value for value in sleeps if value > 0]
 
     assert attempts["count"] == 2
-    assert sleeps == [3.25]
+    assert len(non_zero_sleeps) == 1
+    assert non_zero_sleeps[0] >= 3.25
     assert result["content"] == "Recovered after jitter backoff"
 
 

@@ -1,4 +1,7 @@
+import asyncio
+import json
 import pytest
+import time
 import sys
 from pathlib import Path
 
@@ -357,6 +360,57 @@ class _SearchRefiningBrightData:
             "content": "tiny",
             "metadata": {"low_signal_reason": "thin_low_signal_leaf"},
         }
+
+
+class _IcfTenderPageBrightData:
+    def __init__(self):
+        self.scraped_urls = []
+
+    async def search_engine(self, **_kwargs):
+        return {
+            "status": "success",
+            "results": [
+                {
+                    "url": "https://www.canoeicf.com/tenders",
+                    "title": "International Canoe Federation Tenders",
+                    "snippet": "Official tenders and associated files",
+                }
+            ],
+        }
+
+    async def scrape_as_markdown(self, url):
+        current_url = str(url)
+        self.scraped_urls.append(current_url)
+        if current_url.endswith("/tenders"):
+            raw_html = """
+            <html><body>
+            <h1>Tenders</h1>
+            <table>
+              <tr><th>Topic</th><th>Associated files</th><th>Status</th></tr>
+              <tr>
+                <td>Paddle Worldwide digital ecosystem</td>
+                <td><a href="/sites/default/files/paddleworldwide_dxp_rfp.pdf">RFP</a></td>
+                <td>Review phase</td>
+              </tr>
+            </table>
+            </body></html>
+            """
+            return {
+                "status": "success",
+                "content": "Tenders Topic Associated files Status Paddle Worldwide digital ecosystem RFP Review phase",
+                "raw_html": raw_html,
+                "metadata": {},
+            }
+        if current_url.endswith("paddleworldwide_dxp_rfp.pdf"):
+            return {
+                "status": "success",
+                "content": (
+                    "International Canoe Federation paddle worldwide digital ecosystem request for proposal "
+                    "procurement supplier submission requirements and technical scope."
+                ),
+                "metadata": {},
+            }
+        return {"status": "success", "content": "International Canoe Federation update", "metadata": {}}
 
 
 @pytest.mark.asyncio
@@ -1495,8 +1549,54 @@ async def test_rfp_pdf_lane_uses_official_document_indexing_candidates():
         objective="rfp_pdf",
     )
     assert len(candidates) >= 1
-    assert candidates[0]["candidate_origin"] == "sitemap"
-    assert "canoeicf.com" in str(candidates[0]["url"])
+    assert any(str(item.get("candidate_origin") or "") == "sitemap" for item in candidates)
+    assert any("canoeicf.com" in str(item.get("url") or "") for item in candidates)
+
+
+@pytest.mark.asyncio
+async def test_rfp_procurement_lane_seeds_official_tender_routes():
+    brightdata = _FakeBrightData(results=[])
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), brightdata)
+    runtime.enable_llm_hop_selection = False
+
+    candidates = await runtime._discover_candidates(
+        lane="rfp_procurement_tenders",
+        entity_name="International Canoe Federation",
+        dossier={"metadata": {"canonical_sources": {"official_site": "https://www.canoeicf.com/home"}}},
+        state={},
+        objective="rfp_web",
+    )
+    urls = [str(item.get("url") or "") for item in candidates]
+    assert any(url.rstrip("/").endswith("/tenders") for url in urls)
+    assert any(url.rstrip("/").endswith("/procurement") for url in urls)
+
+
+@pytest.mark.asyncio
+async def test_rfp_procurement_lane_extracts_pdf_candidates_from_seed_tender_pages():
+    brightdata = _FakeBrightData(results=[])
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), brightdata)
+    runtime.enable_llm_hop_selection = False
+
+    async def _mock_fetch_html(url):
+        if str(url).rstrip("/").endswith("/tenders"):
+            return (
+                '<table><tr><th>Topic</th><th>Associated files</th><th>Status</th></tr>'
+                '<tr><td>Paddle Worldwide digital ecosystem</td>'
+                '<td><a href="/sites/default/files/paddleworldwide_dxp_rfp.pdf">RFP</a></td>'
+                '<td>Review phase</td></tr></table>'
+            )
+        return ""
+
+    runtime._fetch_raw_html_for_indexing = _mock_fetch_html
+    candidates = await runtime._discover_candidates(
+        lane="rfp_procurement_tenders",
+        entity_name="International Canoe Federation",
+        dossier={"metadata": {"canonical_sources": {"official_site": "https://www.canoeicf.com/home"}}},
+        state={},
+        objective="rfp_web",
+    )
+    urls = [str(item.get("url") or "") for item in candidates]
+    assert any("paddleworldwide_dxp_rfp.pdf" in url for url in urls)
 
 
 def test_official_doc_index_cache_round_trip(tmp_path):
@@ -1684,6 +1784,155 @@ def test_rfp_tier_priority_prefers_official_tier_a_candidates():
         runtime._rfp_tier_priority(candidate=tier_a, official_domain=official_domain)
         > runtime._rfp_tier_priority(candidate=tier_c, official_domain=official_domain)
     )
+
+
+def test_extract_tender_table_candidates_discovers_official_pdf_links():
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), _FakeBrightData())
+    raw_html = """
+    <table>
+      <tr><th>Topic</th><th>Associated files</th><th>Status</th></tr>
+      <tr><td>Paddle Worldwide digital ecosystem</td><td><a href="/sites/default/files/paddleworldwide_dxp_rfp.pdf">RFP</a></td><td>Review phase</td></tr>
+    </table>
+    """
+    links = runtime._extract_tender_table_candidates(
+        page_url="https://www.canoeicf.com/tenders",
+        content="Tenders Topic Associated files Status",
+        raw_html=raw_html,
+        official_domain="canoeicf.com",
+    )
+    urls = [str(item.get("url") or "") for item in links]
+    assert any(url.endswith("paddleworldwide_dxp_rfp.pdf") for url in urls)
+
+
+@pytest.mark.asyncio
+async def test_tender_table_page_promotes_pdf_candidate_and_scrapes_pdf():
+    brightdata = _IcfTenderPageBrightData()
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), brightdata)
+    runtime.enable_llm_eval = False
+    runtime.enable_llm_hop_selection = False
+    runtime._discover_candidates = lambda **_kwargs: asyncio.sleep(
+        0, result=[{
+            "url": "https://www.canoeicf.com/tenders",
+            "title": "International Canoe Federation Tenders",
+            "snippet": "Official tenders and associated files",
+            "candidate_origin": "search",
+        }]
+    )
+
+    state = {
+        "visited_urls": set(),
+        "visited_hashes": set(),
+        "accepted_signatures": set(),
+        "domain_visits": {},
+        "lane_failures": {},
+        "lane_exhausted": set(),
+        "trusted_corroboration_tokens": set(),
+        "rejected_urls": set(),
+        "rejected_domain_families": {},
+        "iterations_completed": 0,
+    }
+    lane_result = await runtime._run_lane(
+        lane="rfp_procurement_tenders",
+        entity_name="International Canoe Federation",
+        dossier={"metadata": {"canonical_sources": {"official_site": "https://www.canoeicf.com"}}},
+        official_domain="canoeicf.com",
+        state=state,
+        run_objective="rfp_web",
+    )
+    assert any(url.endswith("paddleworldwide_dxp_rfp.pdf") for url in brightdata.scraped_urls)
+    hop = lane_result.get("hop") or {}
+    assert str(hop.get("tender_table_promoted_url") or "").endswith("paddleworldwide_dxp_rfp.pdf")
+
+
+@pytest.mark.asyncio
+async def test_continuous_mode_returns_paused_result_when_provider_pause_active(monkeypatch, tmp_path):
+    monkeypatch.setenv("DISCOVERY_CONTINUOUS_MODE", "true")
+    monkeypatch.setenv("DISCOVERY_RUNTIME_STATE_DIR", str(tmp_path))
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), _FakeBrightData())
+    runtime.enable_llm_hop_selection = False
+    pause_payload = {
+        "reason": "provider_rate_limit",
+        "cooldown_seconds": 120.0,
+        "resume_at_epoch": time.time() + 120.0,
+    }
+    runtime.provider_pause_state_file.write_text(json.dumps(pause_payload))
+
+    result = await runtime.run_discovery_with_dossier_context(
+        entity_id="fiba",
+        entity_name="International Canoe Federation",
+        dossier={},
+        run_objective="rfp_web",
+        max_iterations=2,
+    )
+
+    summary = result.performance_summary or {}
+    assert summary.get("paused_infra") is True
+    assert summary.get("pause_reason") == "provider_rate_limit"
+    assert result.iterations_completed == 0
+
+
+@pytest.mark.asyncio
+async def test_continuous_mode_restores_checkpoint_state_before_resuming(monkeypatch, tmp_path):
+    monkeypatch.setenv("DISCOVERY_CONTINUOUS_MODE", "true")
+    monkeypatch.setenv("DISCOVERY_RUNTIME_STATE_DIR", str(tmp_path))
+    monkeypatch.setenv("DISCOVERY_RESUME_CHECKPOINT_ENABLED", "true")
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), _FakeBrightData(results=[]))
+    runtime.enable_llm_hop_selection = False
+
+    checkpoint_path = runtime._checkpoint_file_path(entity_id="fiba", objective="rfp_web")
+    checkpoint_payload = {
+        "entity_id": "fiba",
+        "objective": "rfp_web",
+        "state": {
+            "visited_urls": ["https://example.com/already-seen"],
+            "visited_hashes": [],
+            "accepted_signatures": [],
+            "rejected_urls": [],
+            "low_signal_urls": {},
+            "rejected_domain_families": {},
+            "domain_visits": {},
+            "lane_failures": {},
+            "lane_exhausted": [],
+            "trusted_corroboration_tokens": [],
+            "iterations_completed": 1,
+        },
+        "hop_timings": [],
+        "signals": [],
+        "diagnostics": [],
+        "candidate_evaluations": [],
+    }
+    checkpoint_path.write_text(json.dumps(checkpoint_payload))
+
+    seen = {"restored": False}
+
+    async def _fake_run_lane(**kwargs):
+        state = kwargs.get("state") or {}
+        seen["restored"] = "https://example.com/already-seen" in set(state.get("visited_urls") or set())
+        return {
+            "hop": {
+                "hop_type": str(kwargs.get("lane") or "unknown"),
+                "llm_last_status": "ok",
+                "parse_path": "checkpoint_resume",
+                "duration_ms": 1,
+            },
+            "signal": None,
+            "diagnostic": None,
+            "candidate_evaluations": [],
+        }
+
+    runtime._run_lane = _fake_run_lane
+
+    result = await runtime.run_discovery_with_dossier_context(
+        entity_id="fiba",
+        entity_name="International Canoe Federation",
+        dossier={},
+        run_objective="rfp_web",
+        max_iterations=2,
+    )
+
+    assert seen["restored"] is True
+    assert result.iterations_completed >= 2
+    assert checkpoint_path.exists() is False
 
 
 def test_extract_evidence_normalizes_collapsed_spacing_and_truncates_cleanly():

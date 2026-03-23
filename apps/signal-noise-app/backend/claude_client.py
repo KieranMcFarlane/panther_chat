@@ -516,6 +516,22 @@ class ClaudeClient:
         self.chutes_adaptive_error_multiplier = float(os.getenv("CHUTES_ADAPTIVE_ERROR_MULTIPLIER", "1.25"))
         self.chutes_adaptive_interval_max_seconds = float(os.getenv("CHUTES_ADAPTIVE_INTERVAL_MAX_SECONDS", "4.0"))
         self.chutes_adaptive_recovery_factor = float(os.getenv("CHUTES_ADAPTIVE_RECOVERY_FACTOR", "0.9"))
+        self.chutes_rate_limit_cooldown_enabled = self._parse_bool_env(
+            os.getenv("CHUTES_RATE_LIMIT_COOLDOWN_ENABLED"),
+            default=True,
+        )
+        self.chutes_rate_limit_cooldown_base_seconds = float(
+            os.getenv("CHUTES_RATE_LIMIT_COOLDOWN_BASE_SECONDS", "6.0")
+        )
+        self.chutes_rate_limit_cooldown_cap_seconds = float(
+            os.getenv("CHUTES_RATE_LIMIT_COOLDOWN_CAP_SECONDS", "180.0")
+        )
+        self.chutes_rate_limit_cooldown_multiplier = float(
+            os.getenv("CHUTES_RATE_LIMIT_COOLDOWN_MULTIPLIER", "1.8")
+        )
+        self.chutes_rate_limit_recovery_factor = float(
+            os.getenv("CHUTES_RATE_LIMIT_RECOVERY_FACTOR", "0.7")
+        )
         self.llm_provider_validation_strict = self._parse_bool_env(
             os.getenv("LLM_PROVIDER_VALIDATION_STRICT"),
             default=True,
@@ -538,6 +554,9 @@ class ClaudeClient:
         self._chutes_event_history = deque(maxlen=512)
         self._chutes_event_counter = 0
         self._chutes_request_semaphore = asyncio.Semaphore(self.chutes_max_concurrent_requests)
+        self._chutes_rate_limit_cooldown_seconds = 0.0
+        self._chutes_rate_limit_cooldown_until_monotonic = 0.0
+        self._chutes_rate_limit_cooldown_until_epoch = 0.0
         self._http_client_pool = HttpClientPool()
         self._last_request_diagnostics: Dict[str, Any] = {
             "llm_provider": self.provider,
@@ -880,7 +899,69 @@ class ClaudeClient:
             "chutes_window_rate_limit_events": int(rate_limits),
             "chutes_window_error_events": int(retryable_errors),
             "chutes_window_success_ratio": round((success / event_count) if event_count else 0.0, 4),
+            "chutes_rate_limit_cooldown_seconds": round(
+                max(0.0, float(self._chutes_rate_limit_cooldown_seconds or 0.0)),
+                3,
+            ),
+            "chutes_rate_limit_cooldown_remaining_seconds": round(
+                max(0.0, float(self._chutes_rate_limit_cooldown_until_monotonic or 0.0) - time.monotonic()),
+                3,
+            ),
         }
+
+    def _set_chutes_rate_limit_cooldown(
+        self,
+        *,
+        attempt: int,
+        retry_after_seconds: Optional[float] = None,
+    ) -> float:
+        if not self.chutes_rate_limit_cooldown_enabled:
+            return 0.0
+        cap = max(0.0, float(self.chutes_rate_limit_cooldown_cap_seconds or 0.0))
+        base = max(0.0, float(self.chutes_rate_limit_cooldown_base_seconds or 0.0))
+        current = max(0.0, float(self._chutes_rate_limit_cooldown_seconds or 0.0))
+        exponential = base * (2 ** max(0, int(attempt)))
+        grown = max(exponential, current * max(1.0, float(self.chutes_rate_limit_cooldown_multiplier or 1.0)))
+        candidate = max(base, grown)
+        if retry_after_seconds is not None and retry_after_seconds > 0:
+            candidate = max(candidate, float(retry_after_seconds))
+        if cap > 0:
+            candidate = min(candidate, cap)
+        self._chutes_rate_limit_cooldown_seconds = max(0.0, candidate)
+        self._chutes_rate_limit_cooldown_until_monotonic = time.monotonic() + self._chutes_rate_limit_cooldown_seconds
+        self._chutes_rate_limit_cooldown_until_epoch = time.time() + self._chutes_rate_limit_cooldown_seconds
+        return self._chutes_rate_limit_cooldown_seconds
+
+    def _recover_chutes_rate_limit_cooldown(self) -> None:
+        if not self.chutes_rate_limit_cooldown_enabled:
+            return
+        current = max(0.0, float(self._chutes_rate_limit_cooldown_seconds or 0.0))
+        if current <= 0.0:
+            self._chutes_rate_limit_cooldown_seconds = 0.0
+            self._chutes_rate_limit_cooldown_until_monotonic = 0.0
+            return
+        factor = min(1.0, max(0.0, float(self.chutes_rate_limit_recovery_factor or 0.7)))
+        next_value = current * factor
+        floor = max(0.0, float(self.chutes_rate_limit_cooldown_base_seconds or 0.0))
+        if next_value <= floor * 0.5:
+            self._chutes_rate_limit_cooldown_seconds = 0.0
+            self._chutes_rate_limit_cooldown_until_monotonic = 0.0
+            self._chutes_rate_limit_cooldown_until_epoch = 0.0
+            return
+        self._chutes_rate_limit_cooldown_seconds = max(floor, next_value)
+        self._chutes_rate_limit_cooldown_until_monotonic = 0.0
+        self._chutes_rate_limit_cooldown_until_epoch = 0.0
+
+    async def _wait_for_chutes_rate_limit_cooldown(self) -> None:
+        if not self.chutes_rate_limit_cooldown_enabled:
+            return
+        remaining = max(0.0, float(self._chutes_rate_limit_cooldown_until_monotonic or 0.0) - time.monotonic())
+        if remaining <= 0.0:
+            return
+        logger.warning("⏳ Chutes in cooldown after rate-limit; waiting %.2fs before next request", remaining)
+        await asyncio.sleep(remaining)
+        self._chutes_rate_limit_cooldown_until_monotonic = 0.0
+        self._chutes_rate_limit_cooldown_until_epoch = 0.0
 
     def _set_chutes_effective_min_interval(self, interval_seconds: float) -> None:
         base = max(0.0, float(self.chutes_min_request_interval_seconds or 0.0))
@@ -1286,6 +1367,7 @@ class ClaudeClient:
         attempted_json_length_retry = False
         for attempt in range(max_retries + 1):
             try:
+                await self._wait_for_chutes_rate_limit_cooldown()
                 using_fallback_model = (
                     payload["model"] == self.chutes_fallback_model and payload["model"] != self.chutes_model
                 )
@@ -1431,6 +1513,7 @@ class ClaudeClient:
                     continue
                 self._record_chutes_event("success")
                 self._apply_chutes_adaptive_recovery()
+                self._recover_chutes_rate_limit_cooldown()
                 self._set_last_request_diagnostics(retry_attempts=attempt, last_status="ok")
 
                 return {
@@ -1501,6 +1584,16 @@ class ClaudeClient:
                         )
                     self._record_chutes_event("rate_limit", status_code=status_code)
                     self._apply_chutes_adaptive_penalty(is_rate_limit=True)
+                    try:
+                        retry_after_header = e.response.headers.get("Retry-After") if e.response is not None else None
+                        retry_after_seconds = float(retry_after_header) if retry_after_header else None
+                    except (TypeError, ValueError):
+                        retry_after_seconds = None
+                    cooldown = self._set_chutes_rate_limit_cooldown(
+                        attempt=attempt,
+                        retry_after_seconds=retry_after_seconds,
+                    )
+                    logger.warning("⏳ Chutes 429 cooldown set to %.2fs", cooldown)
                 elif is_retryable:
                     self._record_chutes_event("retryable_error", status_code=status_code)
                     self._apply_chutes_adaptive_penalty(is_rate_limit=False)
@@ -1546,6 +1639,9 @@ class ClaudeClient:
                     retry_after_seconds=retry_after_seconds,
                     is_http_429=is_429,
                 )
+                if is_429 and self.chutes_rate_limit_cooldown_enabled:
+                    # Cooldown wait is applied at the start of the next attempt; avoid double waiting here.
+                    backoff_seconds = 0.0
                 await asyncio.sleep(backoff_seconds)
 
         self._set_last_request_diagnostics(
@@ -1720,6 +1816,7 @@ class ClaudeClient:
         max_retries = self.chutes_max_retries if max_retries_override is None else max(0, int(max_retries_override))
         for attempt in range(max_retries + 1):
             try:
+                await self._wait_for_chutes_rate_limit_cooldown()
                 timeout = httpx.Timeout(
                     timeout=self.chutes_timeout_seconds,
                     connect=min(self.chutes_timeout_seconds, 15.0),
@@ -1776,6 +1873,7 @@ class ClaudeClient:
                     total_tokens = input_tokens + output_tokens
                 self._record_chutes_event("success")
                 self._apply_chutes_adaptive_recovery()
+                self._recover_chutes_rate_limit_cooldown()
                 self._set_last_request_diagnostics(retry_attempts=attempt, last_status="ok")
 
                 return {
@@ -1827,6 +1925,16 @@ class ClaudeClient:
                 if is_429:
                     self._record_chutes_event("rate_limit", status_code=status_code)
                     self._apply_chutes_adaptive_penalty(is_rate_limit=True)
+                    try:
+                        retry_after_header = e.response.headers.get("Retry-After") if e.response is not None else None
+                        retry_after_seconds = float(retry_after_header) if retry_after_header else None
+                    except (TypeError, ValueError):
+                        retry_after_seconds = None
+                    cooldown = self._set_chutes_rate_limit_cooldown(
+                        attempt=attempt,
+                        retry_after_seconds=retry_after_seconds,
+                    )
+                    logger.warning("⏳ Chutes 429 cooldown set to %.2fs", cooldown)
                 elif is_retryable:
                     self._record_chutes_event("retryable_error", status_code=status_code)
                     self._apply_chutes_adaptive_penalty(is_rate_limit=False)
@@ -1860,6 +1968,8 @@ class ClaudeClient:
                     retry_after_seconds=retry_after_seconds,
                     is_http_429=is_429,
                 )
+                if is_429 and self.chutes_rate_limit_cooldown_enabled:
+                    backoff_seconds = 0.0
                 await asyncio.sleep(backoff_seconds)
 
         self._set_last_request_diagnostics(

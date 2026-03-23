@@ -95,6 +95,19 @@ class BrightDataSDKClient:
         self.retry_base_backoff_seconds = float(os.getenv("BRIGHTDATA_RETRY_BACKOFF_SECONDS", "1.0"))
         self.retry_backoff_cap_seconds = float(os.getenv("BRIGHTDATA_RETRY_BACKOFF_CAP_SECONDS", "10.0"))
         self.retry_jitter_seconds = float(os.getenv("BRIGHTDATA_RETRY_JITTER_SECONDS", "0.35"))
+        self.rate_limit_cooldown_enabled = os.getenv("BRIGHTDATA_RATE_LIMIT_COOLDOWN_ENABLED", "true").strip().lower() in {
+            "1",
+            "true",
+            "yes",
+            "on",
+        }
+        self.rate_limit_cooldown_base_seconds = float(os.getenv("BRIGHTDATA_RATE_LIMIT_COOLDOWN_BASE_SECONDS", "4.0"))
+        self.rate_limit_cooldown_cap_seconds = float(os.getenv("BRIGHTDATA_RATE_LIMIT_COOLDOWN_CAP_SECONDS", "120.0"))
+        self.rate_limit_cooldown_multiplier = float(os.getenv("BRIGHTDATA_RATE_LIMIT_COOLDOWN_MULTIPLIER", "1.7"))
+        self.rate_limit_recovery_factor = float(os.getenv("BRIGHTDATA_RATE_LIMIT_RECOVERY_FACTOR", "0.7"))
+        self._rate_limit_cooldown_seconds = 0.0
+        self._rate_limit_cooldown_until = 0.0
+        self._rate_limit_cooldown_until_epoch = 0.0
 
         if not self.token:
             logger.warning("⚠️ BRIGHTDATA_API_TOKEN not found in environment")
@@ -237,6 +250,69 @@ class BrightDataSDKClient:
             delay += float(random.uniform(0.0, retry_jitter_seconds))
         return max(0.0, delay)
 
+    @staticmethod
+    def _is_rate_limit_or_capacity_error(error: Exception) -> bool:
+        if isinstance(error, httpx.HTTPStatusError) and error.response is not None:
+            if int(error.response.status_code) == 429:
+                return True
+            try:
+                body = (error.response.text or "").lower()
+            except Exception:
+                body = ""
+            return "maximum capacity" in body or "rate limit" in body
+        lowered = str(error or "").lower()
+        return "429" in lowered or "maximum capacity" in lowered or "rate limit" in lowered
+
+    async def _wait_for_rate_limit_cooldown(self) -> None:
+        if not bool(getattr(self, "rate_limit_cooldown_enabled", True)):
+            return
+        remaining = max(0.0, float(getattr(self, "_rate_limit_cooldown_until", 0.0) or 0.0) - time.monotonic())
+        if remaining <= 0:
+            return
+        logger.warning("⏳ BrightData cooldown active; waiting %.2fs", remaining)
+        await asyncio.sleep(remaining)
+        self._rate_limit_cooldown_until = 0.0
+
+    def _set_rate_limit_cooldown(self, *, attempt: int, retry_after_seconds: Optional[float] = None) -> float:
+        if not bool(getattr(self, "rate_limit_cooldown_enabled", True)):
+            return 0.0
+        cap = max(0.0, float(getattr(self, "rate_limit_cooldown_cap_seconds", 120.0) or 0.0))
+        base = max(0.0, float(getattr(self, "rate_limit_cooldown_base_seconds", 4.0) or 0.0))
+        current = max(0.0, float(getattr(self, "_rate_limit_cooldown_seconds", 0.0) or 0.0))
+        grown = max(
+            base * (2 ** max(0, int(attempt))),
+            current * max(1.0, float(getattr(self, "rate_limit_cooldown_multiplier", 1.7) or 1.0)),
+        )
+        cooldown = max(base, grown)
+        if retry_after_seconds is not None and retry_after_seconds > 0:
+            cooldown = max(cooldown, float(retry_after_seconds))
+        if cap > 0:
+            cooldown = min(cooldown, cap)
+        self._rate_limit_cooldown_seconds = max(0.0, cooldown)
+        self._rate_limit_cooldown_until = time.monotonic() + self._rate_limit_cooldown_seconds
+        self._rate_limit_cooldown_until_epoch = time.time() + self._rate_limit_cooldown_seconds
+        return self._rate_limit_cooldown_seconds
+
+    def _recover_rate_limit_cooldown(self) -> None:
+        if not bool(getattr(self, "rate_limit_cooldown_enabled", True)):
+            return
+        current = max(0.0, float(getattr(self, "_rate_limit_cooldown_seconds", 0.0) or 0.0))
+        if current <= 0.0:
+            self._rate_limit_cooldown_until = 0.0
+            self._rate_limit_cooldown_until_epoch = 0.0
+            return
+        factor = min(1.0, max(0.0, float(getattr(self, "rate_limit_recovery_factor", 0.7) or 0.7)))
+        next_value = current * factor
+        floor = max(0.0, float(getattr(self, "rate_limit_cooldown_base_seconds", 4.0) or 0.0))
+        if next_value <= floor * 0.5:
+            self._rate_limit_cooldown_seconds = 0.0
+            self._rate_limit_cooldown_until = 0.0
+            self._rate_limit_cooldown_until_epoch = 0.0
+            return
+        self._rate_limit_cooldown_seconds = max(floor, next_value)
+        self._rate_limit_cooldown_until = 0.0
+        self._rate_limit_cooldown_until_epoch = 0.0
+
     async def _with_timeout(self, awaitable):
         timeout_seconds = float(
             getattr(self, "request_timeout_seconds", os.getenv("BRIGHTDATA_SDK_TIMEOUT_SECONDS", "45"))
@@ -343,6 +419,7 @@ class BrightDataSDKClient:
             result = None
             for attempt in range(1, max_attempts + 1):
                 try:
+                    await self._wait_for_rate_limit_cooldown()
                     # Call search directly (SDK methods are async)
                     if engine.lower() == "google":
                         result = await asyncio.wait_for(
@@ -380,11 +457,25 @@ class BrightDataSDKClient:
 
                     # Check if result has data and data is not None
                     if result and hasattr(result, 'data') and result.data is not None:
+                        self._recover_rate_limit_cooldown()
                         break
 
                     last_error = RuntimeError("No results returned")
                 except Exception as exc:
                     last_error = exc
+                    if self._is_rate_limit_or_capacity_error(exc):
+                        retry_after_seconds = None
+                        if isinstance(exc, httpx.HTTPStatusError) and exc.response is not None:
+                            retry_after = exc.response.headers.get("Retry-After")
+                            try:
+                                retry_after_seconds = float(retry_after) if retry_after else None
+                            except (TypeError, ValueError):
+                                retry_after_seconds = None
+                        cooldown = self._set_rate_limit_cooldown(
+                            attempt=attempt - 1,
+                            retry_after_seconds=retry_after_seconds,
+                        )
+                        logger.warning("⏳ BrightData search cooldown set to %.2fs", cooldown)
 
                 if attempt < max_attempts:
                     delay = self._retry_backoff_delay(attempt)
@@ -495,13 +586,28 @@ class BrightDataSDKClient:
                 for attempt in range(1, max_attempts + 1):
                     lane_1_attempt = attempt
                     try:
+                        await self._wait_for_rate_limit_cooldown()
                         sdk_result = await asyncio.wait_for(
                             client.scrape_url(url, response_format="raw"),
                             timeout=scrape_timeout,
                         )
+                        self._recover_rate_limit_cooldown()
                         break
                     except Exception as exc:
                         last_error = exc
+                        if self._is_rate_limit_or_capacity_error(exc):
+                            retry_after_seconds = None
+                            if isinstance(exc, httpx.HTTPStatusError) and exc.response is not None:
+                                retry_after = exc.response.headers.get("Retry-After")
+                                try:
+                                    retry_after_seconds = float(retry_after) if retry_after else None
+                                except (TypeError, ValueError):
+                                    retry_after_seconds = None
+                            cooldown = self._set_rate_limit_cooldown(
+                                attempt=attempt - 1,
+                                retry_after_seconds=retry_after_seconds,
+                            )
+                            logger.warning("⏳ BrightData scrape cooldown set to %.2fs", cooldown)
                         if attempt < max_attempts:
                             delay = self._retry_backoff_delay(attempt)
                             if delay > 0:
@@ -1420,6 +1526,7 @@ class BrightDataSDKClient:
                 }
                 for attempt in range(max_attempts):
                     try:
+                        await self._wait_for_rate_limit_cooldown()
                         async with httpx.AsyncClient(
                             timeout=request_timeout,
                             follow_redirects=True,
@@ -1427,6 +1534,7 @@ class BrightDataSDKClient:
                         ) as client:
                             response = await client.post(f"{api_base}/request", headers=headers, json=payload)
                             response.raise_for_status()
+                        self._recover_rate_limit_cooldown()
                         html_content = response.text or ""
                         if not html_content.strip():
                             continue
@@ -1500,12 +1608,30 @@ class BrightDataSDKClient:
                             logger.warning(f"⚠️ BrightData /request zone not found, disabling zone={zone}")
                             break
                         self._mark_zone_timeout(zone, e)
+                        if self._is_rate_limit_or_capacity_error(e):
+                            retry_after = None
+                            try:
+                                retry_after = e.response.headers.get("Retry-After") if e.response is not None else None
+                            except Exception:
+                                retry_after = None
+                            try:
+                                retry_after_seconds = float(retry_after) if retry_after else None
+                            except (TypeError, ValueError):
+                                retry_after_seconds = None
+                            cooldown = self._set_rate_limit_cooldown(
+                                attempt=attempt,
+                                retry_after_seconds=retry_after_seconds,
+                            )
+                            logger.warning("⏳ BrightData rendered-request cooldown set to %.2fs", cooldown)
                         logger.warning(f"⚠️ BrightData /request render failed for zone={zone}: {e}")
                         if attempt + 1 >= max_attempts:
                             break
                         continue
                     except Exception as e:
                         self._mark_zone_timeout(zone, e)
+                        if self._is_rate_limit_or_capacity_error(e):
+                            cooldown = self._set_rate_limit_cooldown(attempt=attempt)
+                            logger.warning("⏳ BrightData rendered-request cooldown set to %.2fs", cooldown)
                         logger.warning(f"⚠️ BrightData /request render failed for zone={zone}: {e}")
                         if attempt + 1 >= max_attempts:
                             break

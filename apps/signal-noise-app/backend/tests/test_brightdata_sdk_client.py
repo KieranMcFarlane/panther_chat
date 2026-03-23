@@ -17,6 +17,26 @@ import brightdata_sdk_client as brightdata_module
 from brightdata_sdk_client import BrightDataSDKClient
 
 
+def test_brightdata_rate_limit_cooldown_grows_and_decays():
+    client = BrightDataSDKClient.__new__(BrightDataSDKClient)
+    client.rate_limit_cooldown_enabled = True
+    client.rate_limit_cooldown_base_seconds = 2.0
+    client.rate_limit_cooldown_cap_seconds = 30.0
+    client.rate_limit_cooldown_multiplier = 2.0
+    client.rate_limit_recovery_factor = 0.5
+    client._rate_limit_cooldown_seconds = 0.0
+    client._rate_limit_cooldown_until = 0.0
+
+    first = client._set_rate_limit_cooldown(attempt=0)
+    second = client._set_rate_limit_cooldown(attempt=1)
+
+    assert first >= 2.0
+    assert second >= first
+
+    client._recover_rate_limit_cooldown()
+    assert client._rate_limit_cooldown_seconds <= second
+
+
 @pytest.mark.asyncio
 async def test_fallback_scrape_uses_rendered_retry_for_low_content_js_pages(monkeypatch):
     client = BrightDataSDKClient.__new__(BrightDataSDKClient)
