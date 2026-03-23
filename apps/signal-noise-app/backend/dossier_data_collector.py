@@ -1517,6 +1517,14 @@ class DossierDataCollector:
             all_extracted_data.update(wiki_data)
             scraped_urls.append(wiki_data.get("url", ""))
             logger.info(f"✅ Wikipedia data collected: {list(wiki_data.keys())}")
+            wiki_website = self._normalize_http_url(wiki_data.get("website"))
+            if (
+                wiki_website
+                and not self._is_binary_document_url(wiki_website)
+                and not self._is_commerce_host(wiki_website)
+            ):
+                # Seed canonical official-site selection from reliable Wikipedia infobox metadata.
+                self.seed_official_site_url(entity_name, wiki_website, persist_cache=True)
 
         # Source 2: Official website homepage
         official_site_data = await self._scrape_official_site(entity_name)
@@ -1736,69 +1744,36 @@ class DossierDataCollector:
         Scrape official website for entity information.
         """
         try:
-            # Search for official website
-            search_results = await self.brightdata_client.search_engine(
-                query=f'"{entity_name}" official website',
-                engine="google",
-                num_results=5
+            official_url = (
+                self._get_preferred_official_site_url(entity_name)
+                or self._get_cached_official_site_url(entity_name)
+                or ""
             )
+            if official_url and self._is_binary_document_url(official_url):
+                official_url = ""
 
-            if search_results.get('status') != 'success':
-                return {}
-
-            # Find official URL
-            official_url = None
-            blocked_hosts = {
-                "youtube.com",
-                "www.youtube.com",
-                "facebook.com",
-                "www.facebook.com",
-                "x.com",
-                "twitter.com",
-                "linkedin.com",
-                "www.linkedin.com",
-                "instagram.com",
-                "www.instagram.com",
-                "tiktok.com",
-                "www.tiktok.com",
-            }
-            scored_candidates: List[tuple[float, str]] = []
-            for result in search_results.get('results', []):
-                url = result.get('url', '')
-                title = result.get('title', '').lower()
-                snippet = result.get('snippet', '').lower()
-                parsed = urllib.parse.urlparse(str(url or "").strip())
-                host = (parsed.netloc or "").lower()
-                if host.startswith("www."):
-                    host = host[4:]
-                if not host or host in blocked_hosts:
-                    continue
-
-                score = 0.0
-                if self._looks_like_entity_domain(entity_name, url):
-                    score += 1.0
-                if entity_name.lower().replace(' ', '') in url.lower():
-                    score += 0.5
-                if 'official' in title or 'official' in snippet:
-                    score += 0.25
-                if any(token in host for token in ("wiki", "news", "sport", "jobs")):
-                    score -= 0.35
-                scored_candidates.append((score, url))
-
-            if scored_candidates:
-                scored_candidates.sort(key=lambda item: item[0], reverse=True)
-                best_score, best_url = scored_candidates[0]
-                if best_score >= 0.45:
-                    official_url = best_url
+            if not official_url:
+                search_results = await self.brightdata_client.search_engine(
+                    query=f'"{entity_name}" official website',
+                    engine="google",
+                    num_results=8,
+                )
+                if search_results.get("status") == "success":
+                    results = search_results.get("results", [])
+                    if isinstance(results, list) and results:
+                        official_url = self._choose_official_site_url(entity_name, results)
+                        if official_url and not self._is_commerce_host(official_url):
+                            self._store_cached_official_site_url(entity_name, official_url)
 
             if not official_url:
                 return {}
 
             logger.info(f"🏠 Scraping official site: {official_url}")
 
-            # Scrape homepage
-            scrape_result = await self.brightdata_client.scrape_as_markdown(official_url)
-
+            scraped_url, scrape_result, _content_source = await self._scrape_official_url_with_fallback(
+                entity_name,
+                official_url,
+            )
             if scrape_result.get('status') != 'success':
                 return {}
 
@@ -1808,9 +1783,21 @@ class DossierDataCollector:
             # Extract data from homepage
             extracted = await self._extract_fields_from_content(content, entity_name)
 
+            official_url = scraped_url or official_url
             extracted["official_site_url"] = official_url
             extracted["official_site_markdown"] = markdown
             extracted["official_site_content"] = content[:5000]
+            extracted_website = self._normalize_http_url(extracted.get("website"))
+            if extracted_website:
+                extracted["website"] = extracted_website
+                if (
+                    self._looks_like_entity_domain(entity_name, extracted_website)
+                    and not self._is_binary_document_url(extracted_website)
+                    and not self._is_commerce_host(extracted_website)
+                ):
+                    official_url = extracted_website
+                    extracted["official_site_url"] = extracted_website
+                    self._store_cached_official_site_url(entity_name, extracted_website)
 
             return extracted
 

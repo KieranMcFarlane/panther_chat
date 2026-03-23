@@ -1927,6 +1927,29 @@ class BrightDataSDKClient:
                 for item in value.values():
                     collect_strings(item)
 
+        key_pattern = re.compile(
+            r'"(?:headline|description|articleBody|body|content|summary|title|excerpt|text)"\s*:\s*"((?:\\.|[^"\\]){20,4000})"',
+            re.IGNORECASE,
+        )
+
+        def append_regex_key_values(raw: str):
+            if not raw:
+                return
+            for match in key_pattern.findall(raw):
+                try:
+                    candidate = bytes(match, "utf-8").decode("unicode_escape")
+                except Exception:
+                    candidate = match
+                candidate = re.sub(r"\s+", " ", str(candidate or "")).strip()
+                if (
+                    len(candidate) >= 25
+                    and len(candidate) <= 1200
+                    and " " in candidate
+                    and not candidate.startswith(("http://", "https://", "/"))
+                    and re.search(r"[A-Za-z]{3,}", candidate)
+                ):
+                    candidates.append(candidate)
+
         for script in soup.find_all("script"):
             script_id = (script.get("id") or "").lower()
             script_type = (script.get("type") or "").lower()
@@ -1946,9 +1969,12 @@ class BrightDataSDKClient:
             try:
                 payload = json.loads(raw)
             except Exception:
+                # Many JS-heavy pages inline JSON-like blobs (not strict JSON).
+                append_regex_key_values(raw)
                 continue
 
             collect_strings(payload)
+            append_regex_key_values(raw)
 
         # Dedupe while preserving order and limit expansion noise.
         deduped = list(dict.fromkeys(candidates))

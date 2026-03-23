@@ -1499,13 +1499,26 @@ class FixedDossierFirstPipeline:
                 confidence_value = 0.0
             if confidence_value <= 0.3:
                 low_confidence += 1
+            hard_reason_codes = {
+                "timeout_partial",
+                "source_low_signal",
+                "schema_gate_failed",
+                "json_repair_failed",
+                "generation_failed",
+                "llm_error",
+            }
+            hard_reason_prefixes = ("timeout", "error", "failed", "schema", "parse")
+            reason_is_hard_failure = (
+                reason_code in hard_reason_codes
+                or any(reason_code.startswith(prefix) for prefix in hard_reason_prefixes)
+            )
             if (
-                fallback_flag
-                or status in {"completed_with_fallback", "failed"}
-                or bool(reason_code) or
+                status in {"completed_with_fallback", "failed"}
+                or reason_is_hard_failure
+                or
                 "returned no structured content" in lowered
                 or "json repair failed" in lowered
-                or "fallback" in lowered
+                or "using fallback section" in lowered
             ):
                 hard_fallback += 1
             if not joined_content.strip():

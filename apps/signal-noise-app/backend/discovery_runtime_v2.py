@@ -1533,6 +1533,25 @@ class DiscoveryRuntimeV2:
                         content_hash = hashlib.sha1(content.encode("utf-8", errors="ignore")).hexdigest() if content else None
                         low_signal_reason = recovered_reason
 
+            source_tier = self._source_tier(url=url, official_domain=official_domain)
+            snippet_fallback = self._build_low_signal_snippet_fallback(
+                lane=lane,
+                entity_name=entity_name,
+                official_domain=official_domain,
+                url=url,
+                title=str(candidate.get("title") or ""),
+                snippet=str(candidate.get("snippet") or ""),
+                source_tier=source_tier,
+            )
+
+            if low_signal_reason and snippet_fallback:
+                content = snippet_fallback
+                metadata = dict(metadata or {})
+                metadata["snippet_fallback_used"] = True
+                metadata["low_signal_reason_original"] = low_signal_reason
+                metadata["snippet_fallback_length"] = len(snippet_fallback.split())
+                low_signal_reason = None
+
             if low_signal_reason:
                 self._register_lane_failure(lane, state, low_signal_reason)
                 planner_feedback = state.setdefault("planner_feedback", {})
@@ -1551,7 +1570,6 @@ class DiscoveryRuntimeV2:
                     self._mark_lane_dead(lane, state, low_signal_reason)
                 continue
 
-            source_tier = self._source_tier(url=url, official_domain=official_domain)
             evidence = self._extract_evidence(
                 lane=lane,
                 entity_name=entity_name,
@@ -1707,7 +1725,20 @@ class DiscoveryRuntimeV2:
             if accept_guard_passed and positive_decision and not provisional_promoted:
                 validation_state = "validated"
             elif provisional_promoted and accept_guard_passed:
-                validation_state = "provisional"
+                # High-confidence deterministic path: when tier-1 evidence is fully grounded and
+                # quality/composite are very high, treat as validated even if LLM returns NO_PROGRESS.
+                if (
+                    source_tier == "tier_1"
+                    and grounding_score >= 0.9
+                    and quality_score >= 0.9
+                    and composite_acceptance_score >= 0.85
+                ):
+                    validation_state = "validated"
+                    llm_eval["reason_code"] = str(
+                        llm_eval.get("reason_code") or "deterministic_high_confidence_validated"
+                    )
+                else:
+                    validation_state = "provisional"
             elif quality_score > 0.25 and evidence_snippet:
                 validation_state = "candidate"
             else:
@@ -1737,6 +1768,7 @@ class DiscoveryRuntimeV2:
                     if validation_state == "provisional"
                     else "rejected"
                 ),
+                "lane": lane,
                 "reason_code": str(llm_eval.get("reason_code") or "accept_guard"),
                 "source_url": url,
                 "source_tier": source_tier,
@@ -4277,6 +4309,35 @@ class DiscoveryRuntimeV2:
             return 0.0
         matched = sum(1 for p in parts if p in snippet_norm)
         return round(matched / max(1, len(parts)), 3)
+
+    def _build_low_signal_snippet_fallback(
+        self,
+        *,
+        lane: str,
+        entity_name: str,
+        official_domain: str,
+        url: str,
+        title: str,
+        snippet: str,
+        source_tier: str,
+    ) -> str:
+        if lane not in {"press_release", "trusted_news", "official_site"}:
+            return ""
+        if source_tier not in {"tier_1", "tier_2"}:
+            return ""
+        combined = " ".join(part.strip() for part in [title, snippet] if str(part or "").strip())
+        combined = " ".join(combined.split())
+        if not combined:
+            return ""
+        if len(combined.split()) < 14:
+            return ""
+        specificity = self._entity_specificity_score(snippet=combined, entity_name=entity_name)
+        if specificity < 0.5:
+            return ""
+        host = (urlparse(url).hostname or "").lower().lstrip("www.")
+        if official_domain and not (host == official_domain or host.endswith(f".{official_domain}")):
+            return ""
+        return combined
 
     def _composite_acceptance_score(
         self,
