@@ -2495,7 +2495,8 @@ class DiscoveryRuntimeV2:
                 )
                 return None
             if action.get("action") == "scrape_candidate":
-                candidate_index = int(action.get("candidate_index") or -1)
+                raw_index = action.get("candidate_index")
+                candidate_index = int(raw_index) if raw_index is not None else -1
                 if candidate_index < 0 or candidate_index >= len(candidates):
                     self._metrics["planner_action_parse_fail_count"] += 1
                     self._record_planner_parse_failure(

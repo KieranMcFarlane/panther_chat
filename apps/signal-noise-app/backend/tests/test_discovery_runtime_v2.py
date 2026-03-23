@@ -135,6 +135,16 @@ class _StructuredPlannerClaude:
         return {"content": '{"decision":"NO_PROGRESS","reason":"mock"}'}
 
 
+class _ZeroIndexPlannerClaude:
+    async def query(self, **kwargs):
+        prompt = str(kwargs.get("prompt") or "")
+        if "Candidate batch:" in prompt:
+            return {
+                "content": '{"action":"scrape_candidate","lane":"trusted_news","candidate_index":0,"reason":"top result"}'
+            }
+        return {"content": '{"decision":"NO_PROGRESS","reason":"mock"}'}
+
+
 class _RecordingClaude:
     def __init__(self):
         self.last_prompt = ""
@@ -825,6 +835,29 @@ async def test_planner_action_normalization_accepts_structured_variant_payload()
     assert action["action"] == "scrape_candidate"
     assert action["lane"] == "trusted_news"
     assert action["candidate_index"] == 1
+    assert int(runtime._metrics.get("planner_action_applied_count") or 0) >= 1
+    assert int(runtime._metrics.get("planner_action_parse_fail_count") or 0) == 0
+
+
+@pytest.mark.asyncio
+async def test_planner_action_accepts_zero_candidate_index():
+    runtime = DiscoveryRuntimeV2(_ZeroIndexPlannerClaude(), _FakeBrightData())
+    runtime.enable_llm_hop_selection = True
+
+    action = await runtime._choose_candidate_action_from_batch(
+        lane="trusted_news",
+        entity_name="Coventry City FC",
+        objective="rfp_web",
+        candidates=[
+            {"url": "https://bbc.com/story", "title": "Strong", "snippet": "strong signal", "candidate_origin": "search"},
+            {"url": "https://weak.example/result", "title": "Weak", "snippet": "weak", "candidate_origin": "search"},
+        ],
+        state={"lane_exhausted": set()},
+    )
+
+    assert action is not None
+    assert action["action"] == "scrape_candidate"
+    assert action["candidate_index"] == 0
     assert int(runtime._metrics.get("planner_action_applied_count") or 0) >= 1
     assert int(runtime._metrics.get("planner_action_parse_fail_count") or 0) == 0
 
