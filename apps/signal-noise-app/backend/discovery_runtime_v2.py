@@ -2415,12 +2415,12 @@ class DiscoveryRuntimeV2:
             self._metrics["llm_hop_selection_count"] += 1
             response = await self.claude_client.query(
                 prompt=prompt,
-                model="haiku",
-                max_tokens=180,
-                json_mode=False,
+                model="planner",
+                max_tokens=220,
+                json_mode=True,
                 max_retries_override=0,
                 empty_retries_before_fallback_override=1,
-                fast_fail_on_length=False,
+                fast_fail_on_length=True,
             )
             payload = None
             structured_output = (response or {}).get("structured_output")
@@ -2520,27 +2520,106 @@ class DiscoveryRuntimeV2:
         if not isinstance(payload, dict):
             return None
         normalized: Dict[str, Any] = dict(payload)
-        action = str(normalized.get("action") or "").strip()
+        parameters = normalized.get("parameters")
+        parameters_dict = parameters if isinstance(parameters, dict) else {}
+
+        action = str(
+            normalized.get("action")
+            or normalized.get("next_action")
+            or normalized.get("action_type")
+            or parameters_dict.get("action")
+            or ""
+        ).strip()
         if action not in CONTROLLER_ACTION_TYPES:
             return None
+
+        reason = str(
+            normalized.get("reason")
+            or normalized.get("rationale")
+            or normalized.get("explanation")
+            or parameters_dict.get("reason")
+            or ""
+        ).strip()
+
+        canonical: Dict[str, Any] = {"action": action}
         if action != "stop_run":
-            normalized["lane"] = str(normalized.get("lane") or lane).strip()
+            canonical["lane"] = str(
+                normalized.get("lane")
+                or normalized.get("target_lane")
+                or parameters_dict.get("lane")
+                or lane
+            ).strip()
+        if reason:
+            canonical["reason"] = reason
 
         if action == "scrape_candidate":
-            candidate_index = normalized.get("candidate_index")
+            candidate_index = (
+                normalized.get("candidate_index")
+                if normalized.get("candidate_index") is not None
+                else normalized.get("target_candidate_index")
+            )
+            if candidate_index is None:
+                candidate_index = (
+                    parameters_dict.get("candidate_index")
+                    if parameters_dict.get("candidate_index") is not None
+                    else parameters_dict.get("target_candidate_index")
+                )
             if isinstance(candidate_index, str) and candidate_index.strip().isdigit():
-                normalized["candidate_index"] = int(candidate_index.strip())
+                candidate_index = int(candidate_index.strip())
+            if candidate_index is None:
+                candidate_url = _normalize_url(
+                    str(
+                        normalized.get("url")
+                        or normalized.get("target_url")
+                        or parameters_dict.get("url")
+                        or parameters_dict.get("target_url")
+                        or ""
+                    )
+                )
+                if candidate_url:
+                    for idx, candidate in enumerate(candidates):
+                        if _normalize_url(candidate.get("url") or "") == candidate_url:
+                            candidate_index = idx
+                            break
+            if isinstance(candidate_index, int):
+                canonical["candidate_index"] = candidate_index
         elif action == "search_queries":
             queries = normalized.get("queries")
+            if queries is None:
+                queries = (
+                    parameters_dict.get("queries")
+                    if parameters_dict.get("queries") is not None
+                    else parameters_dict.get("search_queries")
+                )
+            if queries is None:
+                single_query = str(
+                    normalized.get("query")
+                    or normalized.get("search_query")
+                    or parameters_dict.get("query")
+                    or parameters_dict.get("search_query")
+                    or ""
+                ).strip()
+                if single_query:
+                    queries = [single_query]
             if isinstance(queries, str) and queries.strip():
-                normalized["queries"] = [queries.strip()]
+                queries = [queries.strip()]
+            if isinstance(queries, list):
+                canonical["queries"] = [
+                    str(query or "").strip() for query in queries if str(query or "").strip()
+                ]
         elif action == "same_domain_probe":
-            url = str(normalized.get("url") or "").strip()
+            url = str(
+                normalized.get("url")
+                or normalized.get("target_url")
+                or parameters_dict.get("url")
+                or parameters_dict.get("target_url")
+                or ""
+            ).strip()
             if not url and candidates:
                 url = str(candidates[0].get("url") or "").strip()
-            normalized["url"] = url
+            canonical["url"] = url
 
-        return normalized
+        return canonical
 
     def _quality_threshold_for_lane(self, lane: str) -> float:
         if lane in {"official_site", "annual_report"}:
