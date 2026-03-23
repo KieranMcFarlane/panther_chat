@@ -1630,7 +1630,7 @@ class BrightDataSDKClient:
 
         subpaths_env = os.getenv(
             "BRIGHTDATA_CONTENT_PROBE_SUBPATHS",
-            "news,club,first-team,about,team,commercial,partners",
+            "news,club,first-team,about,team,commercial,partners,careers,procurement,tenders,suppliers",
         )
         subpaths = [
             part.strip().strip("/")
@@ -1692,7 +1692,7 @@ class BrightDataSDKClient:
         for tag in soup(["script", "style", "nav", "footer", "header"]):
             tag.decompose()
 
-        main = soup.find('main') or soup.find('article') or soup.body
+        main = soup.find('article') or soup.find('main') or soup.body
         if main:
             content = self._html_to_text(main)
         else:
@@ -1741,7 +1741,7 @@ class BrightDataSDKClient:
                 for node in candidates:
                     if not isinstance(node, dict):
                         continue
-                    for key in ("headline", "description", "name"):
+                    for key in ("headline", "description", "name", "articleBody"):
                         value = node.get(key)
                         if isinstance(value, str) and value.strip():
                             meta_parts.append(value.strip())
@@ -1753,6 +1753,21 @@ class BrightDataSDKClient:
                 meta_parts.extend(json_state_parts)
             if meta_parts:
                 content = '\n'.join(dict.fromkeys([p for p in meta_parts if p]))
+
+        # Normalize collapsed text boundaries and remove obvious boilerplate fragments.
+        content = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", " ", content)
+        content = re.sub(r"(?<=[A-Za-z])(?=[0-9])", " ", content)
+        content = re.sub(r"(?<=[0-9])(?=[A-Za-z])", " ", content)
+        boilerplate_markers = (
+            "accept all cookies",
+            "privacy policy",
+            "terms and conditions",
+            "sign up",
+            "log in",
+        )
+        lines = [line.strip() for line in str(content or "").split("\n") if line.strip()]
+        lines = [line for line in lines if not any(marker in line.lower() for marker in boilerplate_markers)]
+        content = "\n".join(lines)
 
         return {"soup": soup, "content": content}
 

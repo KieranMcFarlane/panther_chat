@@ -528,6 +528,7 @@ class DiscoveryRuntimeV2:
             "visited_hashes": set(),
             "accepted_signatures": set(),
             "rejected_urls": set(),
+            "low_signal_urls": {},
             "rejected_domain_families": {},
             "domain_visits": {},
             "lane_failures": {},
@@ -1052,9 +1053,22 @@ class DiscoveryRuntimeV2:
             if content_hash and content_hash in state["visited_hashes"]:
                 self._register_lane_failure(lane, state, "duplicate_content_hash")
                 low_signal_reason = low_signal_reason or "duplicate_content_hash"
+
+            # Pre-judge quality gate: attempt one rehydration via same-domain rendered probe before rejecting.
+            if low_signal_reason and lane in {"official_site", "press_release", "trusted_news", "careers"}:
+                recovered = await self._recover_same_domain_probe(url=url, budget=effective_budget)
+                recovered_content = str((recovered or {}).get("content") or "")
+                if recovered and recovered_content and _safe_word_count(recovered_content) > _safe_word_count(content):
+                    content = recovered_content
+                    metadata = recovered.get("metadata") if isinstance(recovered.get("metadata"), dict) else metadata
+                    content_hash = hashlib.sha1(content.encode("utf-8", errors="ignore")).hexdigest() if content else None
+                    low_signal_reason = self._low_signal_reason(lane=lane, url=url, content=content, metadata=metadata)
+
             if low_signal_reason:
                 self._register_lane_failure(lane, state, low_signal_reason)
                 state.setdefault("rejected_urls", set()).add(url)
+                low_signal_urls = state.setdefault("low_signal_urls", {})
+                low_signal_urls[url] = int(low_signal_urls.get(url, 0) or 0) + 1
                 if domain_family:
                     rejected_families = state.setdefault("rejected_domain_families", {})
                     rejected_families[domain_family] = int(rejected_families.get(domain_family, 0) or 0) + 1
@@ -1071,6 +1085,16 @@ class DiscoveryRuntimeV2:
                 snippet=str(candidate.get("snippet") or ""),
             )
             quality_score = float(evidence.get("quality_score") or 0.0)
+            freshness_score = self._freshness_score_from_text(
+                " ".join(
+                    [
+                        str(candidate.get("title") or ""),
+                        str(candidate.get("snippet") or ""),
+                        str(evidence.get("content_item") or ""),
+                    ]
+                )
+            )
+            quality_score = max(0.0, min(1.0, quality_score + max(-0.08, min(0.12, freshness_score))))
             evidence_snippet = str(evidence.get("snippet") or "").strip()
             accept_reject_reasons: List[str] = []
             validation_state = "candidate"
@@ -1098,6 +1122,17 @@ class DiscoveryRuntimeV2:
                 )
                 if not self._has_procurement_lexicon(procurement_text):
                     accept_reject_reasons.append("missing_procurement_lexicon")
+
+            composite_acceptance_score = self._composite_acceptance_score(
+                source_tier=source_tier,
+                quality_score=quality_score,
+                grounding_score=grounding_score,
+                freshness_score=freshness_score,
+                snippet=evidence_snippet,
+                entity_name=entity_name,
+            )
+            if composite_acceptance_score < 0.52:
+                accept_reject_reasons.append("composite_acceptance_below_threshold")
 
             signature = self._evidence_signature(url=url, lane=lane, snippet=evidence_snippet)
             if signature in state["accepted_signatures"]:
@@ -1153,7 +1188,8 @@ class DiscoveryRuntimeV2:
                 # If strict evidence guard already passed on grounded tier-1/2 evidence,
                 # promote NO_PROGRESS to weak accept to avoid candidate-only deadlock.
                 can_promote = (
-                    source_tier in {"tier_1", "tier_2"}
+                    lane == "trusted_news"
+                    and source_tier in {"tier_1", "tier_2"}
                     and quality_score >= max(0.55, self._quality_threshold_for_lane(lane))
                     and bool(evidence_snippet)
                     and str(llm_decision) == "NO_PROGRESS"
@@ -1203,6 +1239,8 @@ class DiscoveryRuntimeV2:
                 "accept_reject_reasons": list(accept_reject_reasons),
                 "validation_state": validation_state,
                 "evidence_quality_score": quality_score,
+                "freshness_score": freshness_score,
+                "composite_acceptance_score": composite_acceptance_score,
                 "grounding_score": grounding_score,
                 "entity_domain_match": bool(entity_domain_match),
                 "language_ok": bool(language_ok),
@@ -1224,6 +1262,8 @@ class DiscoveryRuntimeV2:
                     "accept_guard_passed": bool(accept_guard_passed),
                     "accept_reject_reasons": accept_reject_reasons,
                     "evidence_quality_score": quality_score,
+                    "freshness_score": freshness_score,
+                    "composite_acceptance_score": composite_acceptance_score,
                     "content_hash": content_hash,
                     "url": url,
                     "lane_exhausted": False,
@@ -1254,6 +1294,8 @@ class DiscoveryRuntimeV2:
                 "accept_guard_passed": bool(accept_guard_passed),
                 "accept_reject_reasons": accept_reject_reasons,
                 "evidence_quality_score": quality_score,
+                "freshness_score": freshness_score,
+                "composite_acceptance_score": composite_acceptance_score,
                 "lane_exhausted": False,
                 "dead_end_reason": None,
                 "content_hash": content_hash,
@@ -1345,6 +1387,20 @@ class DiscoveryRuntimeV2:
                     }
                 )
                 seen.add(normalized)
+            # Proactively add common high-yield same-domain paths for official-site discovery.
+            for seeded_url in self._seed_same_domain_probe_urls(official_url=str(official or "")):
+                normalized_seed = _normalize_url(seeded_url)
+                if not normalized_seed or normalized_seed in seen:
+                    continue
+                seen.add(normalized_seed)
+                discovered.append(
+                    {
+                        "url": normalized_seed,
+                        "title": f"{entity_name} official section",
+                        "snippet": "Seeded same-domain high-yield route",
+                        "candidate_origin": "same_domain_seed",
+                    }
+                )
         if (
             objective == "rfp_pdf"
             and lane in {"governance_pdf", "annual_report", "rfp_procurement_tenders"}
@@ -1397,33 +1453,22 @@ class DiscoveryRuntimeV2:
                     }
                 )
 
-        if lane == "rfp_procurement_tenders":
-            ranked = sorted(
-                discovered,
-                key=lambda candidate: (
-                    self._rfp_tier_priority(candidate=candidate, official_domain=official_domain),
-                    self._candidate_score(
-                        candidate,
-                        lane=lane,
-                        entity_name=entity_name,
-                        official_domain=official_domain,
-                        state=state,
-                    ),
-                ),
-                reverse=True,
-            )
-        else:
-            ranked = sorted(
-                discovered,
-                key=lambda candidate: self._candidate_score(
+        ranked = sorted(
+            discovered,
+            key=lambda candidate: (
+                self._rfp_tier_priority(candidate=candidate, official_domain=official_domain)
+                if lane == "rfp_procurement_tenders"
+                else 0.0,
+                self._candidate_score(
                     candidate,
                     lane=lane,
                     entity_name=entity_name,
                     official_domain=official_domain,
                     state=state,
                 ),
-                reverse=True,
-            )
+            ),
+            reverse=True,
+        )
         return ranked
 
     async def _discover_official_pdf_candidates(
@@ -1554,6 +1599,27 @@ class DiscoveryRuntimeV2:
             parsed = urlparse(normalized)
             return f"{parsed.scheme}://{parsed.netloc}"
         return f"https://{official_domain.lstrip('www.')}"
+
+    @staticmethod
+    def _seed_same_domain_probe_urls(*, official_url: str) -> List[str]:
+        normalized = _normalize_url(official_url)
+        if not normalized:
+            return []
+        parsed = urlparse(normalized)
+        root = f"{parsed.scheme}://{parsed.netloc}/"
+        seeded_paths = (
+            "news",
+            "commercial",
+            "partners",
+            "careers",
+            "procurement",
+            "tenders",
+            "suppliers",
+        )
+        urls = [root.rstrip("/")]
+        for path in seeded_paths:
+            urls.append(urljoin(root, f"{path}/").rstrip("/"))
+        return list(dict.fromkeys(urls))
 
     async def _discover_pdf_urls_from_sitemap(self, *, base_url: str, official_domain: str) -> List[str]:
         root = base_url.rstrip("/")
@@ -1756,6 +1822,21 @@ class DiscoveryRuntimeV2:
             except Exception:  # noqa: BLE001
                 pass
 
+        # Force entity/domain anchoring in official/press lanes to avoid broad league/federation drift.
+        if lane in {"official_site", "press_release", "trusted_news"}:
+            anchored_pool: List[str] = []
+            anchor_phrase = f"\"{entity_name}\""
+            for query in query_pool:
+                text = str(query or "").strip()
+                if not text:
+                    continue
+                if anchor_phrase.lower() not in text.lower():
+                    text = f"{anchor_phrase} {text}"
+                if official_host and f"site:{official_host}" not in text.lower():
+                    text = f"site:{official_host} {text}"
+                anchored_pool.append(text)
+            query_pool = anchored_pool or query_pool
+
         deduped: List[str] = []
         seen_queries: Set[str] = set()
         for query in query_pool:
@@ -1820,6 +1901,7 @@ class DiscoveryRuntimeV2:
         snippet = str(candidate.get("snippet") or "").lower()
         text = f"{title} {snippet} {url}"
         host = (urlparse(url).hostname or "").lower().lstrip("www.")
+        source_tier = self._source_tier(url=url, official_domain=official_domain)
 
         if entity_name.lower() in text:
             score += 0.35
@@ -1828,6 +1910,12 @@ class DiscoveryRuntimeV2:
                 score += 0.12
         if official_domain and (host == official_domain or host.endswith(f".{official_domain}")):
             score += 0.35
+        if source_tier == "tier_1":
+            score += 0.25
+        elif source_tier == "tier_2":
+            score += 0.12
+        else:
+            score -= 0.06
         if url.endswith(".pdf"):
             score += 0.08 if lane in {"annual_report", "governance_pdf"} else -0.05
         if "linkedin.com/jobs" in url and lane == "linkedin_jobs":
@@ -1875,6 +1963,11 @@ class DiscoveryRuntimeV2:
             normalized = _normalize_url(url)
             if isinstance(rejected_urls, set) and normalized and normalized in rejected_urls:
                 score -= 0.5
+            low_signal = state.get("low_signal_urls", {})
+            low_signal_count = int((low_signal or {}).get(normalized, 0) or 0) if normalized else 0
+            if low_signal_count > 0:
+                score -= min(0.4, low_signal_count * 0.15)
+        score += self._freshness_score_from_text(text)
         return score
 
     def _rfp_tier_priority(self, *, candidate: Dict[str, Any], official_domain: Optional[str]) -> float:
@@ -1910,6 +2003,25 @@ class DiscoveryRuntimeV2:
             return ".".join(parts[-3:])
         return ".".join(parts[-2:])
 
+    @staticmethod
+    def _freshness_score_from_text(text: str) -> float:
+        value = str(text or "")
+        if not value:
+            return 0.0
+        now_year = datetime.now(timezone.utc).year
+        years = [int(match) for match in re.findall(r"\b(20\d{2})\b", value) if 2000 <= int(match) <= now_year + 1]
+        if not years:
+            return 0.0
+        newest = max(years)
+        age = max(0, now_year - newest)
+        if age <= 1:
+            return 0.12
+        if age <= 3:
+            return 0.06
+        if age <= 5:
+            return -0.03
+        return -0.1
+
     def _extract_evidence(
         self,
         *,
@@ -1930,6 +2042,9 @@ class DiscoveryRuntimeV2:
                 tokens.append(keyword)
         if entity_name.lower() in lower:
             tokens.append(entity_name.lower())
+        deterministic_hits = self._extract_deterministic_signal_hits(content_norm)
+        if deterministic_hits:
+            tokens.extend(deterministic_hits)
 
         lines = [line.strip() for line in content_norm.splitlines() if line.strip()]
         best_line = ""
@@ -1954,6 +2069,8 @@ class DiscoveryRuntimeV2:
         quality_score += min(0.35, _safe_word_count(content_norm) / 1500.0)
         if best_line:
             quality_score += 0.2
+        if deterministic_hits:
+            quality_score += min(0.18, len(deterministic_hits) * 0.04)
         quality_score = max(0.0, min(1.0, quality_score))
         statement = f"{entity_name}: {best_line}" if best_line else f"{entity_name} {lane} signal"
         return {
@@ -1963,7 +2080,25 @@ class DiscoveryRuntimeV2:
             "quality_score": quality_score,
             "statement": statement,
             "tokens": tokens,
+            "deterministic_hits": deterministic_hits,
         }
+
+    @staticmethod
+    def _extract_deterministic_signal_hits(content: str) -> List[str]:
+        text = str(content or "").lower()
+        if not text:
+            return []
+        patterns = {
+            "partnership": r"\b(partnership|principal partner|sponsorship)\b",
+            "procurement": r"\b(procurement|tender|rfp|request for proposal|supplier)\b",
+            "hiring": r"\b(careers|vacancies|hiring|job opening)\b",
+            "leadership": r"\b(chief executive|ceo|head of|director)\b",
+        }
+        hits: List[str] = []
+        for key, pattern in patterns.items():
+            if re.search(pattern, text):
+                hits.append(key)
+        return hits
 
     def _extract_content_passages(
         self,
@@ -2975,7 +3110,29 @@ class DiscoveryRuntimeV2:
             return "low_word_count_for_high_value_lane"
         if leaf in {"matches", "fixtures", "results", "news"} and word_count < 180:
             return "nav_shell_leaf"
+        if self._looks_like_shell_content(content):
+            return "boilerplate_shell_content"
         return None
+
+    @staticmethod
+    def _looks_like_shell_content(content: str) -> bool:
+        text = str(content or "").lower()
+        if not text:
+            return True
+        markers = (
+            "accept all cookies",
+            "privacy policy",
+            "sign up",
+            "log in",
+            "fixtures",
+            "results",
+            "matches",
+            "tickets",
+            "shop",
+        )
+        marker_hits = sum(1 for marker in markers if marker in text)
+        words = _safe_word_count(text)
+        return marker_hits >= 3 and words < 240
 
     def _pdf_text_quality_ok(self, *, content: str) -> bool:
         body = str(content or "")
@@ -3008,6 +3165,42 @@ class DiscoveryRuntimeV2:
                 "rfq",
             )
         )
+
+    @staticmethod
+    def _entity_specificity_score(*, snippet: str, entity_name: str) -> float:
+        snippet_norm = str(snippet or "").lower()
+        entity_norm = str(entity_name or "").lower().strip()
+        if not snippet_norm or not entity_norm:
+            return 0.0
+        if entity_norm in snippet_norm:
+            return 1.0
+        parts = [p for p in re.findall(r"[a-z0-9]+", entity_norm) if p not in {"fc", "f", "c", "football", "club"}]
+        if not parts:
+            return 0.0
+        matched = sum(1 for p in parts if p in snippet_norm)
+        return round(matched / max(1, len(parts)), 3)
+
+    def _composite_acceptance_score(
+        self,
+        *,
+        source_tier: str,
+        quality_score: float,
+        grounding_score: float,
+        freshness_score: float,
+        snippet: str,
+        entity_name: str,
+    ) -> float:
+        tier_component = 1.0 if source_tier == "tier_1" else (0.7 if source_tier == "tier_2" else 0.35)
+        freshness_component = max(0.0, min(1.0, 0.5 + freshness_score))
+        specificity = self._entity_specificity_score(snippet=snippet, entity_name=entity_name)
+        score = (
+            0.30 * tier_component
+            + 0.30 * max(0.0, min(1.0, quality_score))
+            + 0.25 * max(0.0, min(1.0, grounding_score))
+            + 0.10 * freshness_component
+            + 0.05 * specificity
+        )
+        return round(max(0.0, min(1.0, score)), 3)
 
     def _increment_entity_grounding_reject(self, lane: str) -> None:
         by_lane = self._quality_metrics.setdefault("entity_grounding_reject_count_by_lane", {})
