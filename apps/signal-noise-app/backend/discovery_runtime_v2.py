@@ -431,7 +431,7 @@ class DiscoveryRuntimeV2:
         self.per_iteration_timeout = float(os.getenv("DISCOVERY_PER_ITERATION_TIMEOUT_SECONDS", "30"))
         self.eval_timeout_seconds = float(os.getenv("DISCOVERY_LLM_EVAL_TIMEOUT_SECONDS", "12"))
         self.eval_timeout_circuit_threshold = max(
-            1, int(os.getenv("DISCOVERY_LLM_EVAL_TIMEOUT_CIRCUIT_THRESHOLD", "2"))
+            1, int(os.getenv("DISCOVERY_LLM_EVAL_TIMEOUT_CIRCUIT_THRESHOLD", "6"))
         )
         self.max_retries = int(os.getenv("DISCOVERY_MAX_RETRIES", "2"))
         self.max_same_domain_revisits = int(os.getenv("DISCOVERY_MAX_SAME_DOMAIN_REVISITS", "2"))
@@ -487,6 +487,7 @@ class DiscoveryRuntimeV2:
             "fallback_accept_block_count": 0,
             "llm_call_count": 0,
             "llm_fallback_count": 0,
+            "agent_first_prefilter_bypass_count": 0,
             "length_stop_count": 0,
             "schema_fail_count": 0,
             "empty_content_count": 0,
@@ -770,6 +771,7 @@ class DiscoveryRuntimeV2:
             "fallback_accept_block_count": 0,
             "llm_call_count": 0,
             "llm_fallback_count": 0,
+            "agent_first_prefilter_bypass_count": 0,
             "length_stop_count": 0,
             "schema_fail_count": 0,
             "empty_content_count": 0,
@@ -790,6 +792,8 @@ class DiscoveryRuntimeV2:
         self._strict_eval_model_stats = {}
         self._planner_parse_fail_samples = []
         self._llm_circuit_broken = False
+        self._llm_eval_timeout_count = 0
+        self._llm_eval_timeout_circuit_open = False
         self._consecutive_length_stops = 0
 
         iteration_budget = int(objective_budget["max_hops"])
@@ -1410,7 +1414,9 @@ class DiscoveryRuntimeV2:
 
             grounding_score = self._entity_match_score(candidate=candidate, entity_name=entity_name)
             entity_domain_match = self._is_entity_domain_match(url=url, official_domain=official_domain)
+            source_tier = self._source_tier(url=url, official_domain=official_domain)
             language_ok = self._candidate_language_ok(lane=lane, url=url)
+            prefilter_soft_bypass = False
             if not self._candidate_passes_entity_grounding(
                 lane=lane,
                 candidate=candidate,
@@ -1421,19 +1427,25 @@ class DiscoveryRuntimeV2:
                 language_ok=language_ok,
                 strict=False,
             ):
-                self._register_lane_failure(lane, state, "off_entity_candidate_prefilter")
-                self._increment_entity_grounding_reject(lane)
-                if not language_ok:
-                    self._quality_metrics["non_english_source_reject_count"] = int(
-                        self._quality_metrics.get("non_english_source_reject_count") or 0
-                    ) + 1
-                state.setdefault("rejected_urls", set()).add(url)
-                if domain_family:
-                    rejected_families = state.setdefault("rejected_domain_families", {})
-                    rejected_families[domain_family] = int(rejected_families.get(domain_family, 0) or 0) + 1
-                if self._lane_failure_count(lane, state) >= 2:
-                    self._mark_lane_dead(lane, state, "off_entity_candidate_prefilter")
-                continue
+                # Agent-first: allow high-trust candidates to reach judge/evidence extraction
+                # before deterministic off-entity rejection.
+                if language_ok and (entity_domain_match or source_tier in {"tier_1", "tier_2"}):
+                    prefilter_soft_bypass = True
+                    self._metrics["agent_first_prefilter_bypass_count"] += 1
+                else:
+                    self._register_lane_failure(lane, state, "off_entity_candidate_prefilter")
+                    self._increment_entity_grounding_reject(lane)
+                    if not language_ok:
+                        self._quality_metrics["non_english_source_reject_count"] = int(
+                            self._quality_metrics.get("non_english_source_reject_count") or 0
+                        ) + 1
+                    state.setdefault("rejected_urls", set()).add(url)
+                    if domain_family:
+                        rejected_families = state.setdefault("rejected_domain_families", {})
+                        rejected_families[domain_family] = int(rejected_families.get(domain_family, 0) or 0) + 1
+                    if self._lane_failure_count(lane, state) >= 2:
+                        self._mark_lane_dead(lane, state, "off_entity_candidate_prefilter")
+                    continue
 
             host = (urlparse(url).hostname or "").lower()
             if host:
@@ -1539,7 +1551,6 @@ class DiscoveryRuntimeV2:
                         content_hash = hashlib.sha1(content.encode("utf-8", errors="ignore")).hexdigest() if content else None
                         low_signal_reason = recovered_reason
 
-            source_tier = self._source_tier(url=url, official_domain=official_domain)
             snippet_fallback = self._build_low_signal_snippet_fallback(
                 lane=lane,
                 entity_name=entity_name,
@@ -1654,6 +1665,8 @@ class DiscoveryRuntimeV2:
             if signature in state["accepted_signatures"]:
                 accept_reject_reasons.append("duplicate_evidence_signature")
             grounding_threshold = 0.22 if relaxed_tender_first_pass else 0.52
+            if prefilter_soft_bypass:
+                grounding_threshold = min(grounding_threshold, 0.22)
             if grounding_score < grounding_threshold:
                 accept_reject_reasons.append("entity_match_score_below_threshold")
             if not language_ok:
@@ -1698,9 +1711,20 @@ class DiscoveryRuntimeV2:
                 or str(llm_eval.get("llm_last_status") or "").strip().lower() in {"length_stop", "empty_response", "timeout"}
             )
             if llm_schema_invalid:
-                accept_guard_passed = False
-                accept_reject_reasons.append("llm_schema_invalid_demoted")
+                accept_reject_reasons.append("llm_schema_invalid")
                 self._metrics["fallback_accept_block_count"] += 1
+                # Agent-first bias: parser/schema failures should not hard-demote strong, grounded
+                # tier-1/tier-2 evidence by default.
+                if not (
+                    lane not in {"rfp_procurement_tenders", "annual_report", "governance_pdf"}
+                    and
+                    source_tier in {"tier_1", "tier_2"}
+                    and quality_score >= max(0.55, self._quality_threshold_for_lane(lane))
+                    and grounding_score >= max(0.40, grounding_threshold)
+                    and bool(evidence_snippet)
+                ):
+                    accept_guard_passed = False
+                    accept_reject_reasons.append("llm_schema_invalid_demoted")
             if accept_guard_passed and not positive_decision:
                 # Deterministic promotion path:
                 # If strict evidence guard already passed on grounded tier-1/2 evidence,
@@ -2832,16 +2856,6 @@ class DiscoveryRuntimeV2:
                 "parse_path": "llm_circuit_open",
                 "llm_last_status": "length_stop",
             }
-        if self._llm_eval_timeout_circuit_open:
-            return {
-                "decision": "WEAK_ACCEPT_CANDIDATE",
-                "parse_path": "llm_timeout_circuit_heuristic",
-                "llm_last_status": "heuristic_only",
-                "reason_code": "llm_timeout_circuit",
-                "confidence_delta_bucket": "NONE",
-                "model_used": "heuristic",
-                "schema_valid": False,
-            }
         if not self.enable_llm_eval:
             return {
                 "decision": "WEAK_ACCEPT_CANDIDATE",
@@ -3021,7 +3035,7 @@ class DiscoveryRuntimeV2:
             if timed_out:
                 self._llm_eval_timeout_count += 1
                 if self._llm_eval_timeout_count >= self.eval_timeout_circuit_threshold:
-                    self._llm_eval_timeout_circuit_open = True
+                    self._llm_eval_timeout_count = self.eval_timeout_circuit_threshold
             self._record_strict_eval_model_stat(
                 model=eval_model_used,
                 latency_ms=round((time.perf_counter() - eval_started) * 1000.0, 2),
@@ -4351,7 +4365,15 @@ class DiscoveryRuntimeV2:
         metadata: Dict[str, Any],
         low_signal_hits: int,
     ) -> str:
-        if lane not in {"press_release", "trusted_news", "official_site"}:
+        if lane not in {
+            "press_release",
+            "trusted_news",
+            "official_site",
+            "careers",
+            "rfp_procurement_tenders",
+            "annual_report",
+            "governance_pdf",
+        }:
             return ""
         if source_tier not in {"tier_1", "tier_2"}:
             return ""
