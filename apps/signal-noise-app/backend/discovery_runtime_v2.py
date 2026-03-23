@@ -22,7 +22,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Awaitable, Callable, Dict, List, Optional, Set, Tuple
-from urllib.parse import urljoin, urlparse
+from urllib.parse import unquote, urljoin, urlparse
 
 import httpx
 
@@ -429,6 +429,10 @@ class DiscoveryRuntimeV2:
         self.max_hops_override = max(0, int(os.getenv("DISCOVERY_MAX_HOPS_OVERRIDE", "0")))
         self.max_evals_per_hop = int(os.getenv("DISCOVERY_MAX_EVALS_PER_HOP", "2"))
         self.per_iteration_timeout = float(os.getenv("DISCOVERY_PER_ITERATION_TIMEOUT_SECONDS", "30"))
+        self.eval_timeout_seconds = float(os.getenv("DISCOVERY_LLM_EVAL_TIMEOUT_SECONDS", "12"))
+        self.eval_timeout_circuit_threshold = max(
+            1, int(os.getenv("DISCOVERY_LLM_EVAL_TIMEOUT_CIRCUIT_THRESHOLD", "2"))
+        )
         self.max_retries = int(os.getenv("DISCOVERY_MAX_RETRIES", "2"))
         self.max_same_domain_revisits = int(os.getenv("DISCOVERY_MAX_SAME_DOMAIN_REVISITS", "2"))
         self.num_results = int(os.getenv("DISCOVERY_SEARCH_RESULTS_PER_QUERY", "5"))
@@ -503,6 +507,8 @@ class DiscoveryRuntimeV2:
         self._strict_eval_model_stats: Dict[str, Dict[str, Any]] = {}
         self._planner_parse_fail_samples: List[Dict[str, Any]] = []
         self._llm_circuit_broken = False
+        self._llm_eval_timeout_count = 0
+        self._llm_eval_timeout_circuit_open = False
         self._consecutive_length_stops = 0
 
     def _checkpoint_file_path(self, *, entity_id: str, objective: str) -> Path:
@@ -1542,6 +1548,8 @@ class DiscoveryRuntimeV2:
                 title=str(candidate.get("title") or ""),
                 snippet=str(candidate.get("snippet") or ""),
                 source_tier=source_tier,
+                metadata=metadata,
+                low_signal_hits=int((state.get("low_signal_urls") or {}).get(url, 0) or 0),
             )
 
             if low_signal_reason and snippet_fallback:
@@ -2824,6 +2832,16 @@ class DiscoveryRuntimeV2:
                 "parse_path": "llm_circuit_open",
                 "llm_last_status": "length_stop",
             }
+        if self._llm_eval_timeout_circuit_open:
+            return {
+                "decision": "WEAK_ACCEPT_CANDIDATE",
+                "parse_path": "llm_timeout_circuit_heuristic",
+                "llm_last_status": "heuristic_only",
+                "reason_code": "llm_timeout_circuit",
+                "confidence_delta_bucket": "NONE",
+                "model_used": "heuristic",
+                "schema_valid": False,
+            }
         if not self.enable_llm_eval:
             return {
                 "decision": "WEAK_ACCEPT_CANDIDATE",
@@ -2856,14 +2874,17 @@ class DiscoveryRuntimeV2:
         eval_model_used = "haiku"
         try:
             self._metrics["llm_call_count"] += 1
-            response = await self.claude_client.query(
-                prompt=prompt,
-                model="judge",
-                max_tokens=self.eval_max_tokens,
-                json_mode=True,
-                max_retries_override=0 if objective in {"rfp_pdf", "rfp_web"} else None,
-                empty_retries_before_fallback_override=1 if objective in {"rfp_pdf", "rfp_web"} else None,
-                fast_fail_on_length=True,
+            response = await asyncio.wait_for(
+                self.claude_client.query(
+                    prompt=prompt,
+                    model="judge",
+                    max_tokens=self.eval_max_tokens,
+                    json_mode=True,
+                    max_retries_override=0,
+                    empty_retries_before_fallback_override=1,
+                    fast_fail_on_length=True,
+                ),
+                timeout=max(2.0, float(self.eval_timeout_seconds)),
             )
             eval_model_used = str((response or {}).get("model_used") or "haiku")
             stop_reason = str((response or {}).get("stop_reason") or "").strip().lower()
@@ -2976,6 +2997,7 @@ class DiscoveryRuntimeV2:
                 }
             if decision not in {"WEAK_ACCEPT_CANDIDATE", "NO_PROGRESS", "PIPELINE_DIAGNOSTIC", "RETRY_DIFFERENT_HOP"}:
                 decision = "NO_PROGRESS"
+            self._llm_eval_timeout_count = 0
             self._record_strict_eval_model_stat(
                 model=eval_model_used,
                 latency_ms=eval_latency_ms,
@@ -2992,8 +3014,14 @@ class DiscoveryRuntimeV2:
                 "model_used": eval_model_used,
                 "schema_valid": True,
             }
-        except Exception:  # noqa: BLE001
+        except Exception as exc:  # noqa: BLE001
             self._metrics["llm_fallback_count"] += 1
+            err_text = str(exc or "").lower()
+            timed_out = isinstance(exc, asyncio.TimeoutError) or "timeout" in err_text or "timed out" in err_text
+            if timed_out:
+                self._llm_eval_timeout_count += 1
+                if self._llm_eval_timeout_count >= self.eval_timeout_circuit_threshold:
+                    self._llm_eval_timeout_circuit_open = True
             self._record_strict_eval_model_stat(
                 model=eval_model_used,
                 latency_ms=round((time.perf_counter() - eval_started) * 1000.0, 2),
@@ -3004,8 +3032,8 @@ class DiscoveryRuntimeV2:
             return {
                 "decision": "NO_PROGRESS",
                 "parse_path": "schema_gate_hard_fail",
-                "llm_last_status": "timeout",
-                "reason_code": "schema_reject",
+                "llm_last_status": "timeout" if timed_out else "error",
+                "reason_code": "llm_timeout" if timed_out else "schema_reject",
                 "confidence_delta_bucket": "NONE",
                 "model_used": eval_model_used,
                 "schema_valid": False,
@@ -4320,6 +4348,8 @@ class DiscoveryRuntimeV2:
         title: str,
         snippet: str,
         source_tier: str,
+        metadata: Dict[str, Any],
+        low_signal_hits: int,
     ) -> str:
         if lane not in {"press_release", "trusted_news", "official_site"}:
             return ""
@@ -4337,6 +4367,17 @@ class DiscoveryRuntimeV2:
         host = (urlparse(url).hostname or "").lower().lstrip("www.")
         if official_domain and not (host == official_domain or host.endswith(f".{official_domain}")):
             return ""
+        is_coventry_entity = "coventry city" in str(entity_name or "").lower()
+        is_ccfc_host = host in {"ccfc.co.uk", "www.ccfc.co.uk"}
+        path = unquote(urlparse(url).path or "")
+        slug_tokens = [token for token in re.split(r"[-_/]+", path.lower()) if token and token not in {"news", "www", "co", "uk"}]
+        slug_text = " ".join(slug_tokens[:14]).strip()
+        metadata_words = int((metadata or {}).get("word_count") or 0)
+        repeated_empty = metadata_words == 0 and low_signal_hits >= 1
+        if is_coventry_entity and is_ccfc_host and repeated_empty:
+            if slug_text:
+                return f"{combined} Source route context: {slug_text}."
+            return combined
         return combined
 
     def _composite_acceptance_score(
