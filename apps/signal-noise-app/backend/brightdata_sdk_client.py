@@ -1530,6 +1530,10 @@ class BrightDataSDKClient:
 
         request_timeout = float(os.getenv("BRIGHTDATA_REQUEST_TIMEOUT_SECONDS", "18"))
         max_attempts = self._resolve_retry_attempts("BRIGHTDATA_REQUEST_MAX_ATTEMPTS")
+        max_total_render_attempts = max(
+            1,
+            int(os.getenv("BRIGHTDATA_RENDERED_MAX_TOTAL_ATTEMPTS", "8")),
+        )
         min_words = int(os.getenv("BRIGHTDATA_MIN_WORDS", "80"))
         low_signal_hard_stop_repeats = max(
             1,
@@ -1537,6 +1541,7 @@ class BrightDataSDKClient:
         )
         best_low_signal_result: Optional[Dict[str, Any]] = None
         low_signal_shell_repeats = 0
+        total_render_attempts = 0
 
         for zone in zones:
             for probe_index, probe_url in enumerate(probe_urls):
@@ -1546,7 +1551,18 @@ class BrightDataSDKClient:
                     "format": "raw",
                 }
                 for attempt in range(max_attempts):
+                    if total_render_attempts >= max_total_render_attempts:
+                        logger.info(
+                            "ℹ️ BrightData rendered attempt cap reached (%s), returning best available result",
+                            max_total_render_attempts,
+                        )
+                        if best_low_signal_result:
+                            best_low_signal_result.setdefault("metadata", {})[
+                                "rendered_attempt_cap_reached"
+                            ] = True
+                        return best_low_signal_result
                     try:
+                        total_render_attempts += 1
                         await self._wait_for_rate_limit_cooldown()
                         async with httpx.AsyncClient(
                             timeout=request_timeout,
