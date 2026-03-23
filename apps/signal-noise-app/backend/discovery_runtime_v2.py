@@ -178,6 +178,35 @@ CONTROLLER_ACTION_JSON_SCHEMA: Dict[str, Any] = {
     },
 }
 
+BATCH_CONTROLLER_PLAN_JSON_SCHEMA: Dict[str, Any] = {
+    "name": "controller_action_batch_plan",
+    "schema": {
+        "type": "object",
+        "additionalProperties": True,
+        "properties": {
+            "plan_actions": {
+                "type": "array",
+                "items": CONTROLLER_ACTION_JSON_SCHEMA["schema"],
+            },
+            "reason": {"type": "string"},
+        },
+        "required": ["plan_actions"],
+    },
+}
+
+BATCH_CONTROLLER_REVIEW_JSON_SCHEMA: Dict[str, Any] = {
+    "name": "controller_action_batch_review",
+    "schema": {
+        "type": "object",
+        "additionalProperties": True,
+        "properties": {
+            "replan": {"type": "boolean"},
+            "reason": {"type": "string"},
+        },
+        "required": ["replan"],
+    },
+}
+
 
 def _truthy(value: Any) -> bool:
     return str(value or "").strip().lower() in {"1", "true", "yes", "on"}
@@ -403,6 +432,9 @@ class DiscoveryRuntimeV2:
         self.enable_llm_eval = _truthy(os.getenv("DISCOVERY_V2_LLM_EVAL_ENABLED", "true"))
         self.enable_llm_hop_selection = _truthy(os.getenv("DISCOVERY_V2_LLM_HOP_SELECTION_ENABLED", "true"))
         self.enable_agentic_router = _truthy(os.getenv("DISCOVERY_V2_AGENTIC_ROUTER_ENABLED", "true"))
+        self.enable_batch_planner = _truthy(os.getenv("DISCOVERY_BATCH_PLANNER_ENABLED", "false"))
+        self.batch_planner_horizon = max(1, int(os.getenv("DISCOVERY_BATCH_PLANNER_HORIZON", "3")))
+        self.batch_planner_review_enabled = _truthy(os.getenv("DISCOVERY_BATCH_PLANNER_REVIEW_ENABLED", "true"))
         self.candidate_mode_trigger_hops = int(os.getenv("DISCOVERY_CANDIDATE_MODE_TRIGGER_HOPS", "5"))
         self.candidate_mode_extended_hops = int(os.getenv("DISCOVERY_CANDIDATE_MODE_MAX_HOPS", "9"))
         self.dynamic_hop_credits_enabled = _truthy(
@@ -450,6 +482,9 @@ class DiscoveryRuntimeV2:
             "planner_action_applied_count": 0,
             "planner_action_parse_fail_count": 0,
             "planner_action_repair_retry_count": 0,
+            "planner_batch_plan_created_count": 0,
+            "planner_batch_plan_reused_count": 0,
+            "planner_batch_plan_review_replan_count": 0,
         }
         self._quality_metrics: Dict[str, Any] = {
             "entity_grounding_reject_count_by_lane": {},
@@ -486,6 +521,10 @@ class DiscoveryRuntimeV2:
                 restored[key] = set(value)
             elif not isinstance(value, set):
                 restored[key] = set()
+        if not isinstance(restored.get("planner_trace"), list):
+            restored["planner_trace"] = []
+        if not isinstance(restored.get("planner_feedback"), dict):
+            restored["planner_feedback"] = {}
         return restored
 
     def _load_discovery_checkpoint(self, *, entity_id: str, objective: str) -> Optional[Dict[str, Any]]:
@@ -720,6 +759,9 @@ class DiscoveryRuntimeV2:
             "planner_action_applied_count": 0,
             "planner_action_parse_fail_count": 0,
             "planner_action_repair_retry_count": 0,
+            "planner_batch_plan_created_count": 0,
+            "planner_batch_plan_reused_count": 0,
+            "planner_batch_plan_review_replan_count": 0,
         }
         self._quality_metrics = {
             "entity_grounding_reject_count_by_lane": {},
@@ -750,6 +792,8 @@ class DiscoveryRuntimeV2:
             "lane_failures": {},
             "lane_exhausted": set(),
             "trusted_corroboration_tokens": set(),
+            "planner_trace": [],
+            "planner_feedback": {},
             "iterations_completed": 0,
         }
         state: Dict[str, Any] = default_state
@@ -1071,6 +1115,9 @@ class DiscoveryRuntimeV2:
             "planner_action_applied_count": int(self._metrics["planner_action_applied_count"]),
             "planner_action_parse_fail_count": int(self._metrics["planner_action_parse_fail_count"]),
             "planner_action_repair_retry_count": int(self._metrics["planner_action_repair_retry_count"]),
+            "planner_batch_plan_created_count": int(self._metrics["planner_batch_plan_created_count"]),
+            "planner_batch_plan_reused_count": int(self._metrics["planner_batch_plan_reused_count"]),
+            "planner_batch_plan_review_replan_count": int(self._metrics["planner_batch_plan_review_replan_count"]),
             "planner_action_parse_fail_samples": list(self._planner_parse_fail_samples[:5]),
             "strict_eval_metrics_by_model": self._build_strict_eval_metrics_by_model(),
             "entity_grounding_reject_count_by_lane": dict(
@@ -1426,6 +1473,12 @@ class DiscoveryRuntimeV2:
 
             if low_signal_reason:
                 self._register_lane_failure(lane, state, low_signal_reason)
+                planner_feedback = state.setdefault("planner_feedback", {})
+                planner_feedback[url] = float(planner_feedback.get(url, 0.0) or 0.0) - 0.15
+                low_signal_host = (urlparse(url).hostname or "").lower().lstrip("www.")
+                if low_signal_host:
+                    host_key = f"host:{low_signal_host}"
+                    planner_feedback[host_key] = float(planner_feedback.get(host_key, 0.0) or 0.0) - 0.08
                 state.setdefault("rejected_urls", set()).add(url)
                 low_signal_urls = state.setdefault("low_signal_urls", {})
                 low_signal_urls[url] = int(low_signal_urls.get(url, 0) or 0) + 1
@@ -1582,6 +1635,12 @@ class DiscoveryRuntimeV2:
 
             if validation_state == "validated" and accept_guard_passed:
                 state["accepted_signatures"].add(signature)
+                planner_feedback = state.setdefault("planner_feedback", {})
+                planner_feedback[url] = float(planner_feedback.get(url, 0.0) or 0.0) + 0.22
+                validated_host = (urlparse(url).hostname or "").lower().lstrip("www.")
+                if validated_host:
+                    host_key = f"host:{validated_host}"
+                    planner_feedback[host_key] = float(planner_feedback.get(host_key, 0.0) or 0.0) + 0.12
                 for token in evidence.get("tokens", []):
                     state["trusted_corroboration_tokens"].add(token)
 
@@ -1683,6 +1742,14 @@ class DiscoveryRuntimeV2:
             if signal["validation_state"] == "diagnostic":
                 diagnostic = signal
                 signal = None
+            self._append_planner_trace_event(
+                state=state,
+                lane=lane,
+                action=(hop_record.get("planner_action") or {}).get("action"),
+                url=url,
+                validation_state=validation_state,
+                reason_code=str(candidate_eval.get("reason_code") or ""),
+            )
             if validation_state == "validated" and not self._candidate_passes_entity_grounding(
                 lane=lane,
                 candidate=candidate,
@@ -2423,6 +2490,7 @@ class DiscoveryRuntimeV2:
             low_signal_count = int((low_signal or {}).get(normalized, 0) or 0) if normalized else 0
             if low_signal_count > 0:
                 score -= min(0.4, low_signal_count * 0.15)
+            score += self._planner_feedback_score(url=normalized, state=state)
         score += self._freshness_score_from_text(text)
         return score
 
@@ -3114,6 +3182,18 @@ class DiscoveryRuntimeV2:
         if lane in lane_dead:
             return {"action": "stop_lane", "lane": lane, "reason": "lane already exhausted"}
 
+        if self.enable_batch_planner:
+            batch_action = await self._choose_candidate_action_from_batch_plan(
+                lane=lane,
+                entity_name=entity_name,
+                candidates=candidates,
+                state=state,
+                objective=objective,
+            )
+            if batch_action:
+                self._metrics["planner_action_applied_count"] += 1
+                return batch_action
+
         serialized_candidates: List[Dict[str, Any]] = []
         for index, candidate in enumerate(candidates):
             serialized_candidates.append(
@@ -3132,6 +3212,8 @@ class DiscoveryRuntimeV2:
             f"Entity: {entity_name}\n"
             f"Objective: {objective}\n"
             f"Lane: {lane}\n"
+            f"Lane hint: {self._planner_lane_hint(lane)}\n"
+            f"Recent planner trace: {json.dumps(self._planner_trace_preview(state), separators=(',', ':'))}\n"
             f"Candidate batch: {json.dumps(serialized_candidates, separators=(',', ':'))}\n"
             "Choose the highest-yield next action from this candidate batch."
         )
@@ -3209,6 +3291,351 @@ class DiscoveryRuntimeV2:
             return action
         except Exception:  # noqa: BLE001
             return None
+
+    async def _choose_candidate_action_from_batch_plan(
+        self,
+        *,
+        lane: str,
+        entity_name: str,
+        candidates: List[Dict[str, Any]],
+        state: Dict[str, Any],
+        objective: str,
+    ) -> Optional[Dict[str, Any]]:
+        queue_by_lane = state.setdefault("planner_batch_queues", {})
+        if not isinstance(queue_by_lane, dict):
+            queue_by_lane = {}
+            state["planner_batch_queues"] = queue_by_lane
+        existing_queue = queue_by_lane.get(lane)
+        lane_queue: List[Dict[str, Any]] = list(existing_queue) if isinstance(existing_queue, list) else []
+
+        if lane_queue and self.batch_planner_review_enabled:
+            replan = await self._review_batch_plan_queue(
+                lane=lane,
+                entity_name=entity_name,
+                objective=objective,
+                candidates=candidates,
+                queued_actions=lane_queue,
+            )
+            if replan:
+                self._metrics["planner_batch_plan_review_replan_count"] += 1
+                lane_queue = []
+                queue_by_lane[lane] = lane_queue
+
+        if lane_queue:
+            action = lane_queue.pop(0)
+            queue_by_lane[lane] = lane_queue
+            self._metrics["planner_batch_plan_reused_count"] += 1
+            return action
+
+        new_plan = await self._build_candidate_action_batch_plan(
+            lane=lane,
+            entity_name=entity_name,
+            objective=objective,
+            candidates=candidates,
+            state=state,
+        )
+        if not new_plan:
+            return None
+
+        queue_by_lane[lane] = list(new_plan[1:])
+        self._metrics["planner_batch_plan_created_count"] += 1
+        return new_plan[0]
+
+    async def _build_candidate_action_batch_plan(
+        self,
+        *,
+        lane: str,
+        entity_name: str,
+        objective: str,
+        candidates: List[Dict[str, Any]],
+        state: Dict[str, Any],
+    ) -> List[Dict[str, Any]]:
+        serialized_candidates: List[Dict[str, Any]] = []
+        for index, candidate in enumerate(candidates):
+            serialized_candidates.append(
+                {
+                    "candidate_index": index,
+                    "url": _normalize_url(candidate.get("url") or ""),
+                    "title": str(candidate.get("title") or "").strip(),
+                    "snippet": str(candidate.get("snippet") or "").strip(),
+                    "candidate_origin": str(candidate.get("candidate_origin") or "").strip(),
+                }
+            )
+
+        prompt = (
+            "Planner batch request: return strict JSON only.\n"
+            "Key: plan_actions (array). Each item must be one controller action.\n"
+            "Valid actions: search_queries, scrape_candidate, same_domain_probe, stop_lane, stop_run.\n"
+            f"Entity: {entity_name}\n"
+            f"Objective: {objective}\n"
+            f"Lane: {lane}\n"
+            f"Lane hint: {self._planner_lane_hint(lane)}\n"
+            f"Recent planner trace: {json.dumps(self._planner_trace_preview(state), separators=(',', ':'))}\n"
+            f"Batch horizon: {int(self.batch_planner_horizon)}\n"
+            f"Candidate batch: {json.dumps(serialized_candidates, separators=(',', ':'))}\n"
+            "Choose a high-yield sequence for the next hops. No prose."
+        )
+        try:
+            self._metrics["llm_hop_selection_count"] += 1
+            response = await self.claude_client.query(
+                prompt=prompt,
+                model="planner",
+                max_tokens=420,
+                json_mode=True,
+                json_schema=BATCH_CONTROLLER_PLAN_JSON_SCHEMA,
+                stream=False,
+                max_retries_override=0,
+                empty_retries_before_fallback_override=1,
+                fast_fail_on_length=True,
+            )
+        except Exception:  # noqa: BLE001
+            return []
+
+        payload = None
+        structured_output = (response or {}).get("structured_output")
+        if isinstance(structured_output, dict):
+            payload = structured_output
+        if not payload:
+            payload = self._extract_json_object_strict((response or {}).get("content"))
+
+        normalized_actions = self._normalize_planner_batch_payload(
+            payload=payload,
+            lane=lane,
+            candidates=candidates,
+        )
+        if not normalized_actions:
+            repaired_actions = await self._repair_planner_batch_payload(
+                lane=lane,
+                entity_name=entity_name,
+                objective=objective,
+                raw_content=str((response or {}).get("content") or ""),
+                candidates=candidates,
+            )
+            normalized_actions = repaired_actions
+
+        if not normalized_actions:
+            self._metrics["planner_action_parse_fail_count"] += 1
+            self._record_planner_parse_failure(
+                lane=lane,
+                reason="batch_unparseable_action_plan",
+                response=response,
+                payload=payload,
+                candidate_count=len(candidates),
+            )
+            return []
+
+        validated_actions: List[Dict[str, Any]] = []
+        for action in normalized_actions:
+            if str(action.get("lane") or lane).strip() != lane and action.get("action") != "stop_run":
+                continue
+            if action.get("action") == "scrape_candidate":
+                idx = action.get("candidate_index")
+                if not isinstance(idx, int) or idx < 0 or idx >= len(candidates):
+                    continue
+            validated_actions.append(action)
+
+        return validated_actions[: max(1, int(self.batch_planner_horizon))]
+
+    async def _repair_planner_batch_payload(
+        self,
+        *,
+        lane: str,
+        entity_name: str,
+        objective: str,
+        raw_content: str,
+        candidates: List[Dict[str, Any]],
+    ) -> List[Dict[str, Any]]:
+        if not raw_content.strip():
+            return []
+        prompt = (
+            "Normalize this into strict JSON only with key plan_actions (array of controller actions).\n"
+            "Valid actions: search_queries, scrape_candidate, same_domain_probe, stop_lane, stop_run.\n"
+            f"Entity: {entity_name}\nObjective: {objective}\nLane: {lane}\n"
+            f"Raw output: {self._truncate_word_boundary(raw_content, max_chars=900)}\n"
+            "Return JSON only."
+        )
+        try:
+            self._metrics["planner_action_repair_retry_count"] += 1
+            self._metrics["llm_hop_selection_count"] += 1
+            repair_response = await self.claude_client.query(
+                prompt=prompt,
+                model="planner",
+                max_tokens=260,
+                json_mode=True,
+                json_schema=BATCH_CONTROLLER_PLAN_JSON_SCHEMA,
+                stream=False,
+                max_retries_override=0,
+                empty_retries_before_fallback_override=1,
+                fast_fail_on_length=True,
+            )
+        except Exception:  # noqa: BLE001
+            return []
+
+        payload = None
+        structured_output = (repair_response or {}).get("structured_output")
+        if isinstance(structured_output, dict):
+            payload = structured_output
+        if not payload:
+            payload = self._extract_json_object_strict((repair_response or {}).get("content"))
+        return self._normalize_planner_batch_payload(payload=payload, lane=lane, candidates=candidates) or []
+
+    async def _review_batch_plan_queue(
+        self,
+        *,
+        lane: str,
+        entity_name: str,
+        objective: str,
+        candidates: List[Dict[str, Any]],
+        queued_actions: List[Dict[str, Any]],
+    ) -> bool:
+        queue_preview = queued_actions[: max(1, int(self.batch_planner_horizon))]
+        candidate_preview = []
+        for idx, candidate in enumerate(candidates[:4]):
+            candidate_preview.append(
+                {
+                    "candidate_index": idx,
+                    "url": _normalize_url(candidate.get("url") or ""),
+                    "title": str(candidate.get("title") or "").strip(),
+                }
+            )
+        prompt = (
+            "Planner batch review: return strict JSON only.\n"
+            "Decide whether to keep or refresh the queued action plan.\n"
+            "JSON schema: {\"replan\": boolean, \"reason\": string}\n"
+            f"Entity: {entity_name}\nObjective: {objective}\nLane: {lane}\n"
+            f"Queued actions: {json.dumps(queue_preview, separators=(',', ':'))}\n"
+            f"Current candidates: {json.dumps(candidate_preview, separators=(',', ':'))}\n"
+            "No prose."
+        )
+        try:
+            self._metrics["llm_hop_selection_count"] += 1
+            review_response = await self.claude_client.query(
+                prompt=prompt,
+                model="planner",
+                max_tokens=120,
+                json_mode=True,
+                json_schema=BATCH_CONTROLLER_REVIEW_JSON_SCHEMA,
+                stream=False,
+                max_retries_override=0,
+                empty_retries_before_fallback_override=1,
+                fast_fail_on_length=True,
+            )
+        except Exception:  # noqa: BLE001
+            return False
+
+        payload = None
+        structured_output = (review_response or {}).get("structured_output")
+        if isinstance(structured_output, dict):
+            payload = structured_output
+        if not payload:
+            payload = self._extract_json_object_strict((review_response or {}).get("content"))
+        if not isinstance(payload, dict):
+            return False
+        return bool(payload.get("replan", False))
+
+    def _normalize_planner_batch_payload(
+        self,
+        *,
+        payload: Any,
+        lane: str,
+        candidates: List[Dict[str, Any]],
+    ) -> Optional[List[Dict[str, Any]]]:
+        if not isinstance(payload, dict):
+            return None
+        actions_payload = payload.get("plan_actions")
+        if actions_payload is None:
+            actions_payload = payload.get("actions")
+        if isinstance(actions_payload, dict):
+            actions_payload = [actions_payload]
+        if not isinstance(actions_payload, list):
+            return None
+
+        normalized_actions: List[Dict[str, Any]] = []
+        for item in actions_payload:
+            parsed_action = parse_controller_action(item)
+            if parsed_action:
+                normalized_actions.append(parsed_action)
+                continue
+            normalized = self._normalize_planner_action_payload(
+                payload=item,
+                lane=lane,
+                candidates=candidates,
+            )
+            parsed_normalized = parse_controller_action(normalized)
+            if parsed_normalized:
+                normalized_actions.append(parsed_normalized)
+        return normalized_actions
+
+    @staticmethod
+    def _planner_lane_hint(lane: str) -> str:
+        hints = {
+            "official_site": "Prefer official-domain pages with concrete operational updates.",
+            "press_release": "Prefer company or official announcements over generic media summaries.",
+            "trusted_news": "Prefer high-trust news with entity-specific facts and dates.",
+            "careers": "Prioritize role-specific hiring pages tied to digital/commercial/procurement signals.",
+            "rfp_procurement_tenders": "Prioritize official tenders/procurement/RFP routes and linked documents.",
+            "annual_report": "Prioritize annual/reporting PDFs on the official domain.",
+            "governance_pdf": "Prioritize governance/statute/policy documents that mention procurement or suppliers.",
+        }
+        return hints.get(str(lane or "").strip(), "Prefer the most entity-grounded high-signal source.")
+
+    @staticmethod
+    def _planner_trace_preview(state: Dict[str, Any], *, limit: int = 5) -> List[Dict[str, Any]]:
+        trace = state.get("planner_trace") if isinstance(state, dict) else []
+        if not isinstance(trace, list):
+            return []
+        preview: List[Dict[str, Any]] = []
+        for item in trace[-max(1, int(limit)) :]:
+            if not isinstance(item, dict):
+                continue
+            preview.append(
+                {
+                    "lane": str(item.get("lane") or ""),
+                    "action": str(item.get("action") or ""),
+                    "validation_state": str(item.get("validation_state") or ""),
+                    "reason_code": str(item.get("reason_code") or ""),
+                    "url": str(item.get("url") or ""),
+                }
+            )
+        return preview
+
+    @staticmethod
+    def _append_planner_trace_event(
+        *,
+        state: Dict[str, Any],
+        lane: str,
+        action: Optional[str],
+        url: str,
+        validation_state: str,
+        reason_code: str,
+    ) -> None:
+        trace = state.setdefault("planner_trace", [])
+        if not isinstance(trace, list):
+            trace = []
+            state["planner_trace"] = trace
+        trace.append(
+            {
+                "lane": str(lane or ""),
+                "action": str(action or ""),
+                "url": str(url or ""),
+                "validation_state": str(validation_state or ""),
+                "reason_code": str(reason_code or ""),
+            }
+        )
+        if len(trace) > 24:
+            del trace[:-24]
+
+    @staticmethod
+    def _planner_feedback_score(*, url: str, state: Dict[str, Any]) -> float:
+        if not url or not isinstance(state, dict):
+            return 0.0
+        feedback = state.get("planner_feedback")
+        if not isinstance(feedback, dict):
+            return 0.0
+        url_score = float(feedback.get(url, 0.0) or 0.0)
+        host = (urlparse(url).hostname or "").lower().lstrip("www.")
+        host_score = float(feedback.get(f"host:{host}", 0.0) or 0.0) if host else 0.0
+        return max(-0.45, min(0.45, (url_score * 0.8) + (host_score * 0.4)))
 
     async def _repair_planner_action_payload(
         self,

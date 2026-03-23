@@ -157,6 +157,36 @@ class _RecordingClaude:
         return {"content": '{"decision":"NO_PROGRESS","reason_code":"low_signal","confidence_delta_bucket":"NONE"}'}
 
 
+class _BatchPlannerClaude:
+    def __init__(self):
+        self.batch_plan_calls = 0
+        self.review_calls = 0
+
+    async def query(self, **kwargs):
+        prompt = str(kwargs.get("prompt") or "")
+        if "Planner batch request" in prompt:
+            self.batch_plan_calls += 1
+            if self.batch_plan_calls == 1:
+                return {
+                    "content": (
+                        '{"plan_actions":['
+                        '{"action":"scrape_candidate","lane":"trusted_news","candidate_index":1,"reason":"best first"},'
+                        '{"action":"search_queries","lane":"trusted_news","queries":["\\"Coventry City FC\\" commercial partner"],"reason":"refine"},'
+                        '{"action":"same_domain_probe","lane":"trusted_news","url":"https://bbc.com/story","reason":"probe follow-up"}'
+                        ']}'
+                    )
+                }
+            return {"content": '{"plan_actions":[{"action":"scrape_candidate","lane":"trusted_news","candidate_index":0,"reason":"replanned"}]}'}
+        if "Planner batch review" in prompt:
+            self.review_calls += 1
+            if self.review_calls == 1:
+                return {"content": '{"replan":false,"reason":"keep queue"}'}
+            return {"content": '{"replan":true,"reason":"queue stale"}'}
+        if "Candidate batch:" in prompt:
+            return {"content": '{"action":"scrape_candidate","lane":"trusted_news","candidate_index":0,"reason":"fallback single"}'}
+        return {"content": '{"decision":"NO_PROGRESS","reason":"mock"}'}
+
+
 class _LengthStopClaude:
     async def query(self, **_kwargs):
         return {"content": '{"decision":"ACCEPT","reason":"truncated"}', "stop_reason": "length"}
@@ -1141,6 +1171,93 @@ async def test_planner_search_queries_refines_candidate_discovery_before_scrape(
     assert (result["hop"].get("planner_action") or {}).get("action") == "search_queries"
 
 
+@pytest.mark.asyncio
+async def test_batch_planner_creates_then_reuses_queue_action():
+    claude = _BatchPlannerClaude()
+    runtime = DiscoveryRuntimeV2(claude, _FakeBrightData())
+    runtime.enable_llm_hop_selection = True
+    runtime.enable_batch_planner = True
+    runtime.batch_planner_review_enabled = True
+    runtime.batch_planner_horizon = 3
+
+    candidates = [
+        {"url": "https://weak.example/result", "title": "Weak", "snippet": "weak", "candidate_origin": "search"},
+        {"url": "https://bbc.com/story", "title": "Strong", "snippet": "strong signal", "candidate_origin": "search"},
+    ]
+    state = {"lane_exhausted": set(), "planner_batch_queues": {}}
+
+    action_1 = await runtime._choose_candidate_action_from_batch(
+        lane="trusted_news",
+        entity_name="Coventry City FC",
+        objective="rfp_web",
+        candidates=candidates,
+        state=state,
+    )
+    assert action_1 is not None
+    assert action_1["action"] == "scrape_candidate"
+    assert action_1["candidate_index"] == 1
+    assert int(runtime._metrics.get("planner_batch_plan_created_count") or 0) == 1
+    assert int(runtime._metrics.get("planner_batch_plan_reused_count") or 0) == 0
+    assert claude.batch_plan_calls == 1
+
+    action_2 = await runtime._choose_candidate_action_from_batch(
+        lane="trusted_news",
+        entity_name="Coventry City FC",
+        objective="rfp_web",
+        candidates=candidates,
+        state=state,
+    )
+    assert action_2 is not None
+    assert action_2["action"] == "search_queries"
+    assert int(runtime._metrics.get("planner_batch_plan_reused_count") or 0) == 1
+    assert claude.batch_plan_calls == 1
+
+
+@pytest.mark.asyncio
+async def test_batch_planner_review_can_trigger_replan():
+    claude = _BatchPlannerClaude()
+    runtime = DiscoveryRuntimeV2(claude, _FakeBrightData())
+    runtime.enable_llm_hop_selection = True
+    runtime.enable_batch_planner = True
+    runtime.batch_planner_review_enabled = True
+    runtime.batch_planner_horizon = 3
+
+    candidates = [
+        {"url": "https://weak.example/result", "title": "Weak", "snippet": "weak", "candidate_origin": "search"},
+        {"url": "https://bbc.com/story", "title": "Strong", "snippet": "strong signal", "candidate_origin": "search"},
+    ]
+    state = {"lane_exhausted": set(), "planner_batch_queues": {}}
+
+    await runtime._choose_candidate_action_from_batch(
+        lane="trusted_news",
+        entity_name="Coventry City FC",
+        objective="rfp_web",
+        candidates=candidates,
+        state=state,
+    )
+    await runtime._choose_candidate_action_from_batch(
+        lane="trusted_news",
+        entity_name="Coventry City FC",
+        objective="rfp_web",
+        candidates=candidates,
+        state=state,
+    )
+    action_3 = await runtime._choose_candidate_action_from_batch(
+        lane="trusted_news",
+        entity_name="Coventry City FC",
+        objective="rfp_web",
+        candidates=candidates,
+        state=state,
+    )
+
+    assert action_3 is not None
+    assert action_3["action"] == "scrape_candidate"
+    assert action_3["candidate_index"] == 0
+    assert claude.review_calls >= 2
+    assert claude.batch_plan_calls >= 2
+    assert int(runtime._metrics.get("planner_batch_plan_review_replan_count") or 0) >= 1
+
+
 def test_extract_evidence_includes_content_passages():
     runtime = DiscoveryRuntimeV2(_FakeClaude(), _FakeBrightData())
     evidence = runtime._extract_evidence(
@@ -1158,6 +1275,53 @@ def test_extract_evidence_includes_content_passages():
     passages = evidence.get("content_passages") or []
     assert passages
     assert any("Coventry City FC announced a new digital partnership" in passage for passage in passages)
+
+
+def test_candidate_score_applies_planner_feedback_reward_penalty():
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), _FakeBrightData())
+    candidate = {"url": "https://www.ccfc.co.uk/news/update", "title": "Update", "snippet": "signal"}
+    score_neutral = runtime._candidate_score(
+        candidate,
+        lane="trusted_news",
+        entity_name="Coventry City FC",
+        official_domain="ccfc.co.uk",
+        state={"domain_visits": {}, "rejected_domain_families": {}, "rejected_urls": set(), "low_signal_urls": {}},
+    )
+    score_positive = runtime._candidate_score(
+        candidate,
+        lane="trusted_news",
+        entity_name="Coventry City FC",
+        official_domain="ccfc.co.uk",
+        state={
+            "domain_visits": {},
+            "rejected_domain_families": {},
+            "rejected_urls": set(),
+            "low_signal_urls": {},
+            "planner_feedback": {
+                "https://www.ccfc.co.uk/news/update": 0.25,
+                "host:ccfc.co.uk": 0.1,
+            },
+        },
+    )
+    score_negative = runtime._candidate_score(
+        candidate,
+        lane="trusted_news",
+        entity_name="Coventry City FC",
+        official_domain="ccfc.co.uk",
+        state={
+            "domain_visits": {},
+            "rejected_domain_families": {},
+            "rejected_urls": set(),
+            "low_signal_urls": {},
+            "planner_feedback": {
+                "https://www.ccfc.co.uk/news/update": -0.25,
+                "host:ccfc.co.uk": -0.1,
+            },
+        },
+    )
+
+    assert score_positive > score_neutral
+    assert score_negative < score_neutral
 
 
 @pytest.mark.asyncio
