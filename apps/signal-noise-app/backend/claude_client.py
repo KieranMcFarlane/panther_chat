@@ -1112,6 +1112,7 @@ class ClaudeClient:
         tools: Optional[List[Dict]] = None,
         system_prompt: Optional[str] = None,
         json_mode: bool = False,
+        json_schema: Optional[Dict[str, Any]] = None,
         stream: Optional[bool] = None,
         max_retries_override: Optional[int] = None,
         empty_retries_before_fallback_override: Optional[int] = None,
@@ -1137,6 +1138,7 @@ class ClaudeClient:
                 max_tokens=max_tokens,
                 system_prompt=system_prompt,
                 json_mode=json_mode,
+                json_schema=json_schema,
                 stream=stream,
                 max_retries_override=max_retries_override,
                 empty_retries_before_fallback_override=empty_retries_before_fallback_override,
@@ -1149,6 +1151,7 @@ class ClaudeClient:
                 max_tokens=max_tokens,
                 system_prompt=system_prompt,
                 json_mode=json_mode,
+                json_schema=json_schema,
                 stream=stream,
                 max_retries_override=max_retries_override,
                 empty_retries_before_fallback_override=empty_retries_before_fallback_override,
@@ -1210,6 +1213,7 @@ class ClaudeClient:
         max_tokens: int,
         system_prompt: Optional[str] = None,
         json_mode: bool = False,
+        json_schema: Optional[Dict[str, Any]] = None,
         stream: Optional[bool] = None,
         max_retries_override: Optional[int] = None,
         empty_retries_before_fallback_override: Optional[int] = None,
@@ -1248,7 +1252,10 @@ class ClaudeClient:
             payload["max_tokens"] = max(max_tokens, self.chutes_json_min_max_tokens)
             payload["include_reasoning"] = bool(self.chutes_json_include_reasoning)
             if self.chutes_json_response_format_enabled:
-                payload["response_format"] = {"type": "json_object"}
+                if isinstance(json_schema, dict):
+                    payload["response_format"] = {"type": "json_schema", "json_schema": json_schema}
+                else:
+                    payload["response_format"] = {"type": "json_object"}
 
         headers = {
             "Authorization": f"Bearer {self.api_key}",
@@ -1679,12 +1686,14 @@ class ClaudeClient:
         max_tokens: int,
         system_prompt: Optional[str] = None,
         json_mode: bool = False,
+        json_schema: Optional[Dict[str, Any]] = None,
         stream: Optional[bool] = None,
         max_retries_override: Optional[int] = None,
         empty_retries_before_fallback_override: Optional[int] = None,
         fast_fail_on_length: bool = False,
     ) -> Dict[str, Any]:
         """Query a Chutes Anthropic-compatible messages endpoint."""
+        del json_schema
         disabled_reason = self._get_effective_disabled_reason()
         if disabled_reason:
             raise RuntimeError(f"Claude API disabled: {disabled_reason}")

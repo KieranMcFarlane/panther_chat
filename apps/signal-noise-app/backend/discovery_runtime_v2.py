@@ -154,6 +154,29 @@ CONTROLLER_ACTION_TYPES = {
     "stop_run",
 }
 
+CONTROLLER_ACTION_JSON_SCHEMA: Dict[str, Any] = {
+    "name": "controller_action",
+    "schema": {
+        "type": "object",
+        "additionalProperties": True,
+        "properties": {
+            "action": {
+                "type": "string",
+                "enum": sorted(list(CONTROLLER_ACTION_TYPES)),
+            },
+            "lane": {
+                "type": "string",
+                "enum": sorted(list(LANE_QUERIES.keys())),
+            },
+            "candidate_index": {"type": "integer", "minimum": 0},
+            "queries": {"type": "array", "items": {"type": "string"}},
+            "url": {"type": "string"},
+            "reason": {"type": "string"},
+        },
+        "required": ["action"],
+    },
+}
+
 
 def _truthy(value: Any) -> bool:
     return str(value or "").strip().lower() in {"1", "true", "yes", "on"}
@@ -426,6 +449,7 @@ class DiscoveryRuntimeV2:
             "off_entity_validated_signals": 0,
         }
         self._strict_eval_model_stats: Dict[str, Dict[str, Any]] = {}
+        self._planner_parse_fail_samples: List[Dict[str, Any]] = []
         self._llm_circuit_broken = False
         self._consecutive_length_stops = 0
 
@@ -488,6 +512,7 @@ class DiscoveryRuntimeV2:
             "off_entity_validated_signals": 0,
         }
         self._strict_eval_model_stats = {}
+        self._planner_parse_fail_samples = []
         self._llm_circuit_broken = False
         self._consecutive_length_stops = 0
 
@@ -741,6 +766,7 @@ class DiscoveryRuntimeV2:
             "planner_action_applied_count": int(self._metrics["planner_action_applied_count"]),
             "planner_action_parse_fail_count": int(self._metrics["planner_action_parse_fail_count"]),
             "planner_action_repair_retry_count": int(self._metrics["planner_action_repair_retry_count"]),
+            "planner_action_parse_fail_samples": list(self._planner_parse_fail_samples[:5]),
             "strict_eval_metrics_by_model": self._build_strict_eval_metrics_by_model(),
             "entity_grounding_reject_count_by_lane": dict(
                 self._quality_metrics.get("entity_grounding_reject_count_by_lane") or {}
@@ -2418,6 +2444,8 @@ class DiscoveryRuntimeV2:
                 model="planner",
                 max_tokens=220,
                 json_mode=True,
+                json_schema=CONTROLLER_ACTION_JSON_SCHEMA,
+                stream=False,
                 max_retries_override=0,
                 empty_retries_before_fallback_override=1,
                 fast_fail_on_length=True,
@@ -2448,14 +2476,35 @@ class DiscoveryRuntimeV2:
                     action = repaired_action
             if not action:
                 self._metrics["planner_action_parse_fail_count"] += 1
+                self._record_planner_parse_failure(
+                    lane=lane,
+                    reason="unparseable_action",
+                    response=response,
+                    payload=payload,
+                    candidate_count=len(candidates),
+                )
                 return None
             if str(action.get("lane") or lane).strip() != lane:
                 self._metrics["planner_action_parse_fail_count"] += 1
+                self._record_planner_parse_failure(
+                    lane=lane,
+                    reason="lane_mismatch",
+                    response=response,
+                    payload=payload,
+                    candidate_count=len(candidates),
+                )
                 return None
             if action.get("action") == "scrape_candidate":
                 candidate_index = int(action.get("candidate_index") or -1)
                 if candidate_index < 0 or candidate_index >= len(candidates):
                     self._metrics["planner_action_parse_fail_count"] += 1
+                    self._record_planner_parse_failure(
+                        lane=lane,
+                        reason="candidate_index_out_of_range",
+                        response=response,
+                        payload=payload,
+                        candidate_count=len(candidates),
+                    )
                     return None
             self._metrics["planner_action_applied_count"] += 1
             return action
@@ -2485,12 +2534,14 @@ class DiscoveryRuntimeV2:
             self._metrics["llm_hop_selection_count"] += 1
             repair_response = await self.claude_client.query(
                 prompt=prompt,
-                model="haiku",
+                model="planner",
                 max_tokens=160,
-                json_mode=False,
+                json_mode=True,
+                json_schema=CONTROLLER_ACTION_JSON_SCHEMA,
+                stream=False,
                 max_retries_override=0,
                 empty_retries_before_fallback_override=1,
-                fast_fail_on_length=False,
+                fast_fail_on_length=True,
             )
             payload = None
             structured_output = (repair_response or {}).get("structured_output")
@@ -2509,6 +2560,37 @@ class DiscoveryRuntimeV2:
             return parse_controller_action(normalized)
         except Exception:  # noqa: BLE001
             return None
+
+    def _record_planner_parse_failure(
+        self,
+        *,
+        lane: str,
+        reason: str,
+        response: Dict[str, Any],
+        payload: Any,
+        candidate_count: int,
+    ) -> None:
+        if len(self._planner_parse_fail_samples) >= 5:
+            return
+        content = str((response or {}).get("content") or "")
+        structured = (response or {}).get("structured_output")
+        model_used = str((response or {}).get("model_used") or "")
+        stop_reason = str((response or {}).get("stop_reason") or "")
+        sample = {
+            "lane": lane,
+            "reason": reason,
+            "candidate_count": int(candidate_count),
+            "model_used": model_used,
+            "stop_reason": stop_reason,
+            "content_prefix": self._truncate_word_boundary(content, max_chars=240),
+            "payload_type": type(payload).__name__,
+            "structured_type": type(structured).__name__ if structured is not None else None,
+        }
+        if isinstance(payload, dict):
+            sample["payload_keys"] = sorted(list(payload.keys()))[:12]
+        if isinstance(structured, dict):
+            sample["structured_keys"] = sorted(list(structured.keys()))[:12]
+        self._planner_parse_fail_samples.append(sample)
 
     @staticmethod
     def _normalize_planner_action_payload(
