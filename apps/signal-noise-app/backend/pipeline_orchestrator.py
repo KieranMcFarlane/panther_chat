@@ -409,6 +409,7 @@ class PipelineOrchestrator:
                 "rfp_count": len(validated_rfps),
                 "final_confidence": getattr(discovery_result, "final_confidence", None),
                 "acceptance_passed": bool(acceptance_gate.get("passed")),
+                "acceptance_mode": acceptance_gate.get("acceptance_mode"),
                 "acceptance_reasons": acceptance_gate.get("reasons", []),
                 "validated_event_signal_count": int(acceptance_gate.get("observed", {}).get("validated_event_signals") or 0),
             },
@@ -639,8 +640,24 @@ class PipelineOrchestrator:
 
     def _extract_raw_signals(self, discovery_result: Any) -> List[Dict[str, Any]]:
         if isinstance(discovery_result, dict):
-            return discovery_result.get("signals_discovered", [])
-        return getattr(discovery_result, "signals_discovered", [])
+            raw_signals = discovery_result.get("raw_signals")
+            if isinstance(raw_signals, list):
+                return [item for item in raw_signals if isinstance(item, dict)]
+            merged: List[Dict[str, Any]] = []
+            for key in ("signals_discovered", "provisional_signals", "candidate_signals"):
+                values = discovery_result.get(key)
+                if isinstance(values, list):
+                    merged.extend([item for item in values if isinstance(item, dict)])
+            return merged
+        raw_signals = getattr(discovery_result, "raw_signals", None)
+        if isinstance(raw_signals, list):
+            return [item for item in raw_signals if isinstance(item, dict)]
+        merged: List[Dict[str, Any]] = []
+        for key in ("signals_discovered", "provisional_signals", "candidate_signals"):
+            values = getattr(discovery_result, key, None)
+            if isinstance(values, list):
+                merged.extend([item for item in values if isinstance(item, dict)])
+        return merged
 
     async def _emit_phase_update(
         self,
@@ -928,11 +945,16 @@ class PipelineOrchestrator:
             "final_confidence": getattr(discovery_result, "final_confidence", None),
             "iterations_completed": getattr(discovery_result, "iterations_completed", None),
             "signals_discovered": getattr(discovery_result, "signals_discovered", []),
+            "provisional_signals": getattr(discovery_result, "provisional_signals", []),
+            "raw_signals": getattr(discovery_result, "raw_signals", []),
             "hypotheses": getattr(discovery_result, "hypotheses", []),
             "performance_summary": getattr(discovery_result, "performance_summary", {}),
             "parse_path": getattr(discovery_result, "parse_path", None),
             "llm_last_status": getattr(discovery_result, "llm_last_status", None),
             "candidate_evaluations": getattr(discovery_result, "candidate_evaluations", []),
+            "candidate_events_summary": getattr(discovery_result, "candidate_events_summary", {}),
+            "lane_failures": getattr(discovery_result, "lane_failures", {}),
+            "controller_health_reasons": getattr(discovery_result, "controller_health_reasons", []),
         }
 
     def _count_validated_event_signals(self, validated_signals: List[Dict[str, Any]]) -> int:
@@ -961,6 +983,18 @@ class PipelineOrchestrator:
     ) -> Dict[str, Any]:
         final_confidence = self._read_discovery_metric(discovery_result, "final_confidence")
         signals_discovered = len(validated_signals)
+        provisional_signals_raw = self._read_discovery_metric(discovery_result, "provisional_signals")
+        provisional_signals = provisional_signals_raw if isinstance(provisional_signals_raw, list) else []
+        provisional_count = len(provisional_signals)
+        performance_summary = self._read_discovery_metric(discovery_result, "performance_summary")
+        if not isinstance(performance_summary, dict):
+            performance_summary = {}
+        candidate_events_count = int(
+            performance_summary.get("signals_candidate_events_count")
+            or performance_summary.get("candidate_evaluations_count")
+            or 0
+        )
+        schema_fail_count = int(performance_summary.get("schema_fail_count") or 0)
         validated_event_signals = self._count_validated_event_signals(validated_signals)
         raw_signal_count = len(raw_signals)
         reasons: List[str] = []
@@ -969,23 +1003,37 @@ class PipelineOrchestrator:
             reasons.append("discovery_failed")
         if final_confidence is None or float(final_confidence) < self.acceptance_min_confidence:
             reasons.append("confidence_below_threshold")
-        if validated_event_signals < self.acceptance_min_signals:
+        strict_pass = validated_event_signals >= self.acceptance_min_signals
+        hybrid_pass = (
+            validated_event_signals >= 1
+            and provisional_count >= 2
+            and final_confidence is not None
+            and float(final_confidence) >= self.acceptance_min_confidence
+            and schema_fail_count == 0
+        )
+        if not strict_pass and not hybrid_pass:
             reasons.append("signals_below_threshold")
         if validated_event_signals < signals_discovered:
             reasons.append("unvalidated_or_ungrounded_signals_excluded")
         if enforce_dual_write_gate and self.require_dual_write and not dual_write_ok:
             reasons.append("dual_write_incomplete")
+        acceptance_mode = "strict" if strict_pass else "hybrid_provisional" if hybrid_pass else "none"
         return {
             "passed": len(reasons) == 0,
             "reasons": reasons,
+            "acceptance_mode": acceptance_mode,
             "thresholds": {
                 "final_confidence": self.acceptance_min_confidence,
                 "signals_discovered": self.acceptance_min_signals,
+                "provisional_signals_for_hybrid": 2,
             },
             "observed": {
                 "final_confidence": final_confidence,
                 "signals_discovered": signals_discovered,
                 "validated_event_signals": validated_event_signals,
+                "signals_provisional_count": provisional_count,
+                "signals_candidate_events_count": candidate_events_count,
+                "schema_fail_count": schema_fail_count,
                 "raw_signals_discovered": raw_signal_count,
                 "dual_write_ok": dual_write_ok,
             },

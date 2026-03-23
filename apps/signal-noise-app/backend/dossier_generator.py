@@ -24,6 +24,7 @@ from copy import deepcopy
 from datetime import datetime, timezone
 from typing import Dict, List, Optional, Any, Callable, Awaitable
 from dataclasses import dataclass
+from urllib.parse import urlparse
 
 from backend.schemas import EntityDossier, DossierSection, DossierTier, CacheStatus
 from backend.claude_client import ClaudeClient
@@ -1878,6 +1879,311 @@ Website: {metadata.website or 'N/A'}
 
         return None
 
+    @staticmethod
+    def _discovery_signal_rank(validation_state: str) -> int:
+        normalized = str(validation_state or "").strip().lower()
+        if normalized == "validated":
+            return 3
+        if normalized == "provisional":
+            return 2
+        return 1
+
+    def _build_discovery_signal_pool(self, discovery_payload: Dict[str, Any]) -> List[Dict[str, Any]]:
+        pool: List[Dict[str, Any]] = []
+        if not isinstance(discovery_payload, dict):
+            return pool
+
+        for state, key in (("validated", "signals_discovered"), ("provisional", "provisional_signals")):
+            signals = discovery_payload.get(key)
+            if not isinstance(signals, list):
+                continue
+            for signal in signals:
+                if not isinstance(signal, dict):
+                    continue
+                text = str(signal.get("statement") or signal.get("text") or "").strip()
+                if not text:
+                    continue
+                pool.append(
+                    {
+                        "validation_state": state,
+                        "rank": self._discovery_signal_rank(state),
+                        "text": text,
+                        "content": str(signal.get("content") or "").strip(),
+                        "url": str(signal.get("url") or "").strip(),
+                        "subtype": str(signal.get("subtype") or signal.get("type") or "").strip(),
+                        "source": "signal",
+                    }
+                )
+
+        candidate_evaluations = discovery_payload.get("candidate_evaluations")
+        if isinstance(candidate_evaluations, list):
+            for item in candidate_evaluations:
+                if not isinstance(item, dict):
+                    continue
+                text = str(item.get("evidence_snippet") or "").strip()
+                if not text:
+                    continue
+                pool.append(
+                    {
+                        "validation_state": "candidate",
+                        "rank": 1,
+                        "text": text,
+                        "content": str(item.get("evidence_snippet") or "").strip(),
+                        "url": str(item.get("source_url") or "").strip(),
+                        "subtype": str(item.get("step_type") or "").strip(),
+                        "source": "candidate_eval",
+                    }
+                )
+        return pool
+
+    def _extract_leadership_from_json_payload(self, text: str) -> List[Dict[str, str]]:
+        payload = self._extract_last_valid_json_block(text)
+        if not isinstance(payload, dict):
+            raw = str(text or "")
+            marker = raw.find('"decision_makers"')
+            if marker >= 0:
+                start = raw.rfind("{", 0, marker)
+                if start >= 0:
+                    depth = 0
+                    end: Optional[int] = None
+                    for index, ch in enumerate(raw[start:], start=start):
+                        if ch == "{":
+                            depth += 1
+                        elif ch == "}":
+                            depth -= 1
+                            if depth == 0:
+                                end = index + 1
+                                break
+                    if end:
+                        candidate = raw[start:end]
+                        try:
+                            parsed = json.loads(candidate)
+                            if isinstance(parsed, dict):
+                                payload = parsed
+                        except Exception:
+                            pass
+        if not isinstance(payload, dict):
+            return []
+        people = payload.get("decision_makers")
+        if not isinstance(people, list):
+            return []
+        extracted: List[Dict[str, str]] = []
+        for person in people:
+            if not isinstance(person, dict):
+                continue
+            name = str(person.get("name") or "").strip()
+            role = str(person.get("role") or person.get("title") or "").strip()
+            linkedin = str(person.get("linkedin_url") or person.get("linkedin") or "").strip()
+            if name:
+                extracted.append({"name": name, "role": role, "linkedin_url": linkedin})
+        return extracted
+
+    def _extract_leadership_from_text(self, text: str) -> List[Dict[str, str]]:
+        normalized = str(text or "").strip()
+        if not normalized:
+            return []
+
+        leadership: List[Dict[str, str]] = []
+        patterns = (
+            re.compile(
+                r"\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,2})\s*[-,:]\s*(Chief[^.,;\n]{0,80}|Head of[^.,;\n]{0,80}|Director[^.,;\n]{0,80}|CEO[^.,;\n]{0,80})\b"
+            ),
+            re.compile(
+                r"\b(Chief[^.,;\n]{0,80}|Head of[^.,;\n]{0,80}|Director[^.,;\n]{0,80}|CEO[^.,;\n]{0,80})\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,2})\b"
+            ),
+        )
+        for pattern in patterns:
+            for match in pattern.findall(normalized):
+                first, second = str(match[0]).strip(), str(match[1]).strip()
+                name, role = (first, second) if pattern is patterns[0] else (second, first)
+                if len(name.split()) < 2:
+                    continue
+                leadership.append({"name": name, "role": role, "linkedin_url": ""})
+
+        deduped: List[Dict[str, str]] = []
+        seen: set[str] = set()
+        for person in leadership:
+            key = str(person.get("name") or "").strip().lower()
+            if not key or key in seen:
+                continue
+            seen.add(key)
+            deduped.append(person)
+        return deduped
+
+    def _extract_recent_news_from_pool(self, signal_pool: List[Dict[str, Any]], *, entity_name: str = "") -> List[Dict[str, Any]]:
+        candidates: List[Dict[str, Any]] = []
+        entity_tokens = [
+            token
+            for token in re.findall(r"[a-z0-9]+", str(entity_name or "").lower())
+            if token and token not in {"fc", "football", "club"}
+        ]
+        for item in signal_pool:
+            if not isinstance(item, dict):
+                continue
+            url = str(item.get("url") or "").strip()
+            text = str(item.get("text") or "").strip()
+            content = str(item.get("content") or "").strip()
+            subtype = str(item.get("subtype") or "").strip().lower()
+            if not text:
+                continue
+
+            grounding_blob = " ".join([text.lower(), content.lower(), url.lower()])
+            if entity_tokens and not all(token in grounding_blob for token in entity_tokens[:2]):
+                continue
+            if not (
+                any(token in subtype for token in ("news", "press", "partnership", "official"))
+                or any(token in url.lower() for token in ("/news", "/press", "announcement", "media"))
+            ):
+                continue
+
+            host = (urlparse(url).hostname or "").lower().lstrip("www.") if url else "unknown-source"
+            date_match = re.search(
+                r"\b(?:20\d{2}-\d{2}-\d{2}|\d{1,2}\s+[A-Za-z]{3,9}\s+20\d{2})\b",
+                " ".join([text, content]),
+            )
+            headline = text.split(":")[0].strip()[:160]
+            if len(headline) < 8:
+                headline = text[:160]
+            candidates.append(
+                {
+                    "headline": headline,
+                    "summary": (content or text)[:260],
+                    "source_site": host,
+                    "publication_date": date_match.group(0) if date_match else None,
+                    "validation_state": str(item.get("validation_state") or "candidate").strip().lower(),
+                    "rank": int(item.get("rank") or 1),
+                    "url": url,
+                }
+            )
+
+        deduped: List[Dict[str, Any]] = []
+        seen: set[str] = set()
+        for item in sorted(candidates, key=lambda row: (int(row.get("rank") or 1), bool(row.get("publication_date"))), reverse=True):
+            key = f"{str(item.get('headline') or '').strip().lower()}|{str(item.get('source_site') or '').strip().lower()}"
+            if not key or key in seen:
+                continue
+            seen.add(key)
+            deduped.append(item)
+            if len(deduped) >= 6:
+                break
+        return deduped
+
+    def enrich_dossier_with_discovery_evidence(
+        self,
+        *,
+        dossier_payload: Dict[str, Any],
+        discovery_payload: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        payload = dict(dossier_payload or {})
+        sections = payload.get("sections")
+        if not isinstance(sections, list):
+            return payload
+
+        signal_pool = self._build_discovery_signal_pool(discovery_payload)
+        if not signal_pool:
+            return payload
+
+        leadership_candidates: List[Dict[str, Any]] = []
+        for item in signal_pool:
+            text_blob = " ".join([str(item.get("text") or "").strip(), str(item.get("content") or "").strip()]).strip()
+            if not text_blob:
+                continue
+            extracted = self._extract_leadership_from_json_payload(text_blob)
+            if not extracted:
+                extracted = self._extract_leadership_from_text(text_blob)
+            for person in extracted:
+                leadership_candidates.append(
+                    {
+                        **person,
+                        "validation_state": str(item.get("validation_state") or "candidate").strip().lower(),
+                        "rank": int(item.get("rank") or 1),
+                    }
+                )
+
+        deduped_leadership: List[Dict[str, Any]] = []
+        seen_people: set[str] = set()
+        for person in sorted(leadership_candidates, key=lambda row: int(row.get("rank") or 1), reverse=True):
+            key = str(person.get("name") or "").strip().lower()
+            if not key or key in seen_people:
+                continue
+            seen_people.add(key)
+            deduped_leadership.append(person)
+            if len(deduped_leadership) >= 6:
+                break
+
+        metadata = payload.get("metadata") if isinstance(payload.get("metadata"), dict) else {}
+        entity_name = str(payload.get("entity_name") or metadata.get("entity_name") or "").strip()
+        recent_news = self._extract_recent_news_from_pool(signal_pool, entity_name=entity_name)
+
+        for section in sections:
+            if not isinstance(section, dict):
+                continue
+            section_id = str(section.get("id") or "").strip().lower()
+            if section_id == "leadership" and deduped_leadership:
+                content: List[str] = []
+                validated_count = 0
+                for person in deduped_leadership:
+                    prefix = ""
+                    state = str(person.get("validation_state") or "candidate").strip().lower()
+                    if state == "validated":
+                        validated_count += 1
+                    elif state == "provisional":
+                        prefix = "[Unvalidated] "
+                    else:
+                        prefix = "[Unvalidated Candidate] "
+                    snippet = f"{prefix}{person.get('name')} - {person.get('role') or 'Role unknown'}"
+                    if str(person.get("linkedin_url") or "").strip():
+                        snippet = f"{snippet} ({person.get('linkedin_url')})"
+                    content.append(snippet)
+                section["content"] = content[:6]
+                section["metrics"] = [f"Decision makers identified: {len(deduped_leadership)}"]
+                if validated_count > 0:
+                    section["output_status"] = "completed"
+                    section["reason_code"] = None
+                    section["confidence"] = max(0.66, float(section.get("confidence") or 0.66))
+                else:
+                    section["output_status"] = "degraded"
+                    section["reason_code"] = "leadership_unvalidated_only"
+                    section["confidence"] = 0.56
+
+            if section_id == "recent_news" and recent_news:
+                content: List[str] = []
+                validated_news = 0
+                for item in recent_news[:5]:
+                    state = str(item.get("validation_state") or "candidate").strip().lower()
+                    prefix = ""
+                    if state == "validated":
+                        validated_news += 1
+                    elif state == "provisional":
+                        prefix = "[Unvalidated] "
+                    else:
+                        prefix = "[Unvalidated Candidate] "
+                    date_fragment = f", {item['publication_date']}" if item.get("publication_date") else ""
+                    content.append(
+                        f"{prefix}{item.get('headline')} ({item.get('source_site')}{date_fragment}): {str(item.get('summary') or '')[:180]}"
+                    )
+                section["content"] = content
+                section["metrics"] = [f"News items captured: {len(recent_news)}"]
+                if validated_news > 0:
+                    section["output_status"] = "completed"
+                    section["reason_code"] = None
+                    section["confidence"] = max(0.62, float(section.get("confidence") or 0.62))
+                else:
+                    section["output_status"] = "degraded"
+                    section["reason_code"] = "recent_news_unvalidated_only"
+                    section["confidence"] = 0.55
+
+        metadata = payload.get("metadata")
+        if not isinstance(metadata, dict):
+            metadata = {}
+            payload["metadata"] = metadata
+        metadata["discovery_enrichment"] = {
+            "validated_signals": len(discovery_payload.get("signals_discovered") or []),
+            "provisional_signals": len(discovery_payload.get("provisional_signals") or []),
+            "candidate_events": len(discovery_payload.get("candidate_evaluations") or []),
+        }
+        return payload
+
 
 class UniversalDossierGenerator(EntityDossierGenerator):
     """
@@ -2775,6 +3081,317 @@ Hard requirements:
                     break
 
         return canonical
+
+    @staticmethod
+    def _discovery_signal_rank(validation_state: str) -> int:
+        normalized = str(validation_state or "").strip().lower()
+        if normalized == "validated":
+            return 3
+        if normalized == "provisional":
+            return 2
+        return 1
+
+    def _build_discovery_signal_pool(self, discovery_payload: Dict[str, Any]) -> List[Dict[str, Any]]:
+        pool: List[Dict[str, Any]] = []
+        if not isinstance(discovery_payload, dict):
+            return pool
+
+        for state, key in (
+            ("validated", "signals_discovered"),
+            ("provisional", "provisional_signals"),
+        ):
+            signals = discovery_payload.get(key)
+            if not isinstance(signals, list):
+                continue
+            for signal in signals:
+                if not isinstance(signal, dict):
+                    continue
+                text = str(signal.get("statement") or signal.get("text") or "").strip()
+                if not text:
+                    continue
+                pool.append(
+                    {
+                        "validation_state": state,
+                        "rank": self._discovery_signal_rank(state),
+                        "text": text,
+                        "content": str(signal.get("content") or "").strip(),
+                        "url": str(signal.get("url") or "").strip(),
+                        "subtype": str(signal.get("subtype") or signal.get("type") or "").strip(),
+                        "source": "signal",
+                    }
+                )
+
+        candidate_evaluations = discovery_payload.get("candidate_evaluations")
+        if isinstance(candidate_evaluations, list):
+            for item in candidate_evaluations:
+                if not isinstance(item, dict):
+                    continue
+                if str(item.get("validation_state") or "").strip().lower() not in {"candidate", "diagnostic"}:
+                    continue
+                text = str(item.get("evidence_snippet") or "").strip()
+                if not text:
+                    continue
+                pool.append(
+                    {
+                        "validation_state": "candidate",
+                        "rank": 1,
+                        "text": text,
+                        "content": str(item.get("evidence_snippet") or "").strip(),
+                        "url": str(item.get("source_url") or "").strip(),
+                        "subtype": str(item.get("step_type") or "").strip(),
+                        "source": "candidate_eval",
+                    }
+                )
+        return pool
+
+    def _extract_leadership_from_json_payload(self, text: str) -> List[Dict[str, str]]:
+        payload = self._extract_last_valid_json_block(text)
+        if not isinstance(payload, dict):
+            raw = str(text or "")
+            marker = raw.find('"decision_makers"')
+            if marker >= 0:
+                start = raw.rfind("{", 0, marker)
+                if start >= 0:
+                    depth = 0
+                    end: Optional[int] = None
+                    for index, ch in enumerate(raw[start:], start=start):
+                        if ch == "{":
+                            depth += 1
+                        elif ch == "}":
+                            depth -= 1
+                            if depth == 0:
+                                end = index + 1
+                                break
+                    if end:
+                        candidate = raw[start:end]
+                        try:
+                            parsed = json.loads(candidate)
+                            if isinstance(parsed, dict):
+                                payload = parsed
+                        except Exception:
+                            pass
+        if not isinstance(payload, dict):
+            return []
+        people = payload.get("decision_makers")
+        if not isinstance(people, list):
+            return []
+        extracted: List[Dict[str, str]] = []
+        for person in people:
+            if not isinstance(person, dict):
+                continue
+            name = str(person.get("name") or "").strip()
+            role = str(person.get("role") or person.get("title") or "").strip()
+            linkedin = str(person.get("linkedin_url") or person.get("linkedin") or "").strip()
+            if not name:
+                continue
+            extracted.append({"name": name, "role": role, "linkedin_url": linkedin})
+        return extracted
+
+    def _extract_leadership_from_text(self, text: str) -> List[Dict[str, str]]:
+        normalized = str(text or "").strip()
+        if not normalized:
+            return []
+        leadership: List[Dict[str, str]] = []
+        patterns = (
+            re.compile(
+                r"\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,2})\s*[-,:]\s*(Chief[^.,;\n]{0,80}|Head of[^.,;\n]{0,80}|Director[^.,;\n]{0,80}|CEO[^.,;\n]{0,80})\b"
+            ),
+            re.compile(
+                r"\b(Chief[^.,;\n]{0,80}|Head of[^.,;\n]{0,80}|Director[^.,;\n]{0,80}|CEO[^.,;\n]{0,80})\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,2})\b"
+            ),
+        )
+        for pattern in patterns:
+            for match in pattern.findall(normalized):
+                if len(match) < 2:
+                    continue
+                first, second = str(match[0]).strip(), str(match[1]).strip()
+                if pattern is patterns[0]:
+                    name, role = first, second
+                else:
+                    role, name = first, second
+                if len(name.split()) < 2:
+                    continue
+                leadership.append({"name": name, "role": role, "linkedin_url": ""})
+        deduped: List[Dict[str, str]] = []
+        seen: set[str] = set()
+        for person in leadership:
+            key = str(person.get("name") or "").strip().lower()
+            if not key or key in seen:
+                continue
+            seen.add(key)
+            deduped.append(person)
+        return deduped
+
+    def _extract_recent_news_from_pool(self, signal_pool: List[Dict[str, Any]], *, entity_name: str = "") -> List[Dict[str, Any]]:
+        candidates: List[Dict[str, Any]] = []
+        entity_tokens = [
+            token
+            for token in re.findall(r"[a-z0-9]+", str(entity_name or "").lower())
+            if token and token not in {"fc", "football", "club"}
+        ]
+        for item in signal_pool:
+            if not isinstance(item, dict):
+                continue
+            url = str(item.get("url") or "").strip()
+            text = str(item.get("text") or "").strip()
+            content = str(item.get("content") or "").strip()
+            subtype = str(item.get("subtype") or "").strip().lower()
+            if not text:
+                continue
+            grounding_blob = " ".join([text.lower(), content.lower(), url.lower()])
+            if entity_tokens and not all(token in grounding_blob for token in entity_tokens[:2]):
+                continue
+            if not (
+                any(token in subtype for token in ("news", "press", "partnership", "official"))
+                or any(token in url.lower() for token in ("/news", "/press", "announcement", "media"))
+            ):
+                continue
+            host = (urlparse(url).hostname or "").lower().lstrip("www.") if url else "unknown-source"
+            date_match = re.search(
+                r"\b(?:20\d{2}-\d{2}-\d{2}|\d{1,2}\s+[A-Za-z]{3,9}\s+20\d{2})\b",
+                " ".join([text, content]),
+            )
+            headline = text.split(":")[0].strip()[:160]
+            if len(headline) < 8:
+                headline = text[:160]
+            candidates.append(
+                {
+                    "headline": headline,
+                    "summary": (content or text)[:260],
+                    "source_site": host,
+                    "publication_date": date_match.group(0) if date_match else None,
+                    "validation_state": str(item.get("validation_state") or "candidate").strip().lower(),
+                    "rank": int(item.get("rank") or 1),
+                    "url": url,
+                }
+            )
+        deduped: List[Dict[str, Any]] = []
+        seen: set[str] = set()
+        for item in sorted(candidates, key=lambda row: (int(row.get("rank") or 1), bool(row.get("publication_date"))), reverse=True):
+            key = f"{str(item.get('headline') or '').strip().lower()}|{str(item.get('source_site') or '').strip().lower()}"
+            if not key or key in seen:
+                continue
+            seen.add(key)
+            deduped.append(item)
+            if len(deduped) >= 6:
+                break
+        return deduped
+
+    def enrich_dossier_with_discovery_evidence(
+        self,
+        *,
+        dossier_payload: Dict[str, Any],
+        discovery_payload: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        payload = dict(dossier_payload or {})
+        sections = payload.get("sections")
+        if not isinstance(sections, list):
+            return payload
+
+        signal_pool = self._build_discovery_signal_pool(discovery_payload)
+        if not signal_pool:
+            return payload
+
+        leadership_candidates: List[Dict[str, Any]] = []
+        for item in signal_pool:
+            text_blob = " ".join(
+                [str(item.get("text") or "").strip(), str(item.get("content") or "").strip()]
+            ).strip()
+            if not text_blob:
+                continue
+            extracted = self._extract_leadership_from_json_payload(text_blob)
+            if not extracted:
+                extracted = self._extract_leadership_from_text(text_blob)
+            for person in extracted:
+                leadership_candidates.append(
+                    {
+                        **person,
+                        "validation_state": str(item.get("validation_state") or "candidate").strip().lower(),
+                        "rank": int(item.get("rank") or 1),
+                    }
+                )
+
+        deduped_leadership: List[Dict[str, Any]] = []
+        seen_people: set[str] = set()
+        for person in sorted(leadership_candidates, key=lambda row: int(row.get("rank") or 1), reverse=True):
+            key = str(person.get("name") or "").strip().lower()
+            if not key or key in seen_people:
+                continue
+            seen_people.add(key)
+            deduped_leadership.append(person)
+            if len(deduped_leadership) >= 6:
+                break
+
+        metadata = payload.get("metadata") if isinstance(payload.get("metadata"), dict) else {}
+        entity_name = str(payload.get("entity_name") or metadata.get("entity_name") or "").strip()
+        recent_news = self._extract_recent_news_from_pool(signal_pool, entity_name=entity_name)
+        for section in sections:
+            if not isinstance(section, dict):
+                continue
+            section_id = str(section.get("id") or "").strip().lower()
+            if section_id == "leadership" and deduped_leadership:
+                content: List[str] = []
+                validated_count = 0
+                for person in deduped_leadership:
+                    prefix = ""
+                    state = str(person.get("validation_state") or "candidate").strip().lower()
+                    if state == "validated":
+                        validated_count += 1
+                    elif state == "provisional":
+                        prefix = "[Unvalidated] "
+                    else:
+                        prefix = "[Unvalidated Candidate] "
+                    snippet = f"{prefix}{person.get('name')} - {person.get('role') or 'Role unknown'}"
+                    if str(person.get("linkedin_url") or "").strip():
+                        snippet = f"{snippet} ({person.get('linkedin_url')})"
+                    content.append(snippet)
+                section["content"] = content[:6]
+                section["metrics"] = [f"Decision makers identified: {len(deduped_leadership)}"]
+                if validated_count > 0:
+                    section["output_status"] = "completed"
+                    section["reason_code"] = None
+                    section["confidence"] = max(0.66, float(section.get("confidence") or 0.66))
+                else:
+                    section["output_status"] = "degraded"
+                    section["reason_code"] = "leadership_unvalidated_only"
+                    section["confidence"] = 0.56
+            if section_id == "recent_news" and recent_news:
+                content = []
+                validated_news = 0
+                for item in recent_news[:5]:
+                    state = str(item.get("validation_state") or "candidate").strip().lower()
+                    prefix = ""
+                    if state == "validated":
+                        validated_news += 1
+                    elif state == "provisional":
+                        prefix = "[Unvalidated] "
+                    else:
+                        prefix = "[Unvalidated Candidate] "
+                    date_fragment = f", {item['publication_date']}" if item.get("publication_date") else ""
+                    content.append(
+                        f"{prefix}{item.get('headline')} ({item.get('source_site')}{date_fragment}): {str(item.get('summary') or '')[:180]}"
+                    )
+                section["content"] = content
+                section["metrics"] = [f"News items captured: {len(recent_news)}"]
+                if validated_news > 0:
+                    section["output_status"] = "completed"
+                    section["reason_code"] = None
+                    section["confidence"] = max(0.62, float(section.get("confidence") or 0.62))
+                else:
+                    section["output_status"] = "degraded"
+                    section["reason_code"] = "recent_news_unvalidated_only"
+                    section["confidence"] = 0.55
+
+        metadata = payload.get("metadata")
+        if not isinstance(metadata, dict):
+            metadata = {}
+            payload["metadata"] = metadata
+        metadata["discovery_enrichment"] = {
+            "validated_signals": len(discovery_payload.get("signals_discovered") or []),
+            "provisional_signals": len(discovery_payload.get("provisional_signals") or []),
+            "candidate_events": len(discovery_payload.get("candidate_evaluations") or []),
+        }
+        return payload
 
     def _build_field_extraction_results(
         self,

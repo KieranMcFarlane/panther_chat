@@ -239,7 +239,12 @@ def test_write_run_report_surfaces_discovery_controller_summary(tmp_path):
         discovery={
             "final_confidence": 0.62,
             "iterations_completed": 4,
-            "signals_discovered": [],
+            "signals_discovered": [{"validation_state": "validated", "evidence_found": "validated evidence"}],
+            "provisional_signals": [
+                {"validation_state": "provisional"},
+                {"validation_state": "provisional"},
+            ],
+            "candidate_evaluations": [{}, {}],
             "performance_summary": {
                 "hop_budget_initial": 5,
                 "hop_budget_final": 15,
@@ -277,6 +282,11 @@ def test_write_run_report_surfaces_discovery_controller_summary(tmp_path):
     assert controller["planner_action_counts"]["search_queries"] == 1
     assert controller["planner_action_counts"]["same_domain_probe"] == 1
     assert controller["planner_action_counts"]["scrape_candidate"] == 1
+    assert report["signals_validated_count"] == 1
+    assert report["signals_provisional_count"] == 2
+    assert report["signals_candidate_events_count"] == 2
+    assert report["acceptance_mode"] == "hybrid_provisional"
+    assert report["acceptance_gate"]["passed"] is True
 
 
 def test_discovery_controller_ab_script_varies_planner_only():

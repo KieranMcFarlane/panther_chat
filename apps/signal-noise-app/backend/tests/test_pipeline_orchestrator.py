@@ -82,6 +82,29 @@ class FakeDiscoveryManySignals:
         return result
 
 
+class FakeDiscoveryHybridSignals:
+    async def run_discovery_with_dossier_context(self, **kwargs):
+        result = FakeDiscoveryResult()
+        result.provisional_signals = [
+            {
+                "signal_type": "DISCOVERY_SIGNAL",
+                "validation_state": "provisional",
+                "statement": "Provisional entity-grounded signal A",
+                "confidence": 0.66,
+                "url": "https://example.com/news/a",
+            },
+            {
+                "signal_type": "DISCOVERY_SIGNAL",
+                "validation_state": "provisional",
+                "statement": "Provisional entity-grounded signal B",
+                "confidence": 0.64,
+                "url": "https://example.com/news/b",
+            },
+        ]
+        result.performance_summary = {"schema_fail_count": 0}
+        return result
+
+
 class FakeRalph:
     async def validate_signals(self, raw_signals, entity_id):
         return [
@@ -111,6 +134,22 @@ class FakeRalphNonRfp:
 class FakeRalphEmpty:
     async def validate_signals(self, raw_signals, entity_id):
         return []
+
+
+class FakeRalphHybrid:
+    async def validate_signals(self, raw_signals, entity_id):
+        return [
+            {
+                "id": f"{entity_id}-validated-min",
+                "type": "DISCOVERY_SIGNAL",
+                "confidence": 0.72,
+                "statement": "Validated minimum signal",
+                "url": "https://example.com/validated",
+                "validation_state": "validated",
+                "accept_guard_passed": True,
+                "evidence_pointer_ids": ["ev:abc123"],
+            }
+        ]
 
 
 class FakeGraphiti:
@@ -323,6 +362,26 @@ async def test_pipeline_orchestrator_acceptance_gate_uses_validated_signal_count
         if isinstance(episode, dict) and str(episode.get("episode_type") or "") == "NO_SIGNAL_FOUND"
     ]
     assert len(no_signal_episodes) == 1
+
+
+@pytest.mark.asyncio
+async def test_pipeline_orchestrator_acceptance_gate_supports_hybrid_provisional_mode():
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=FakeDossierGenerator(),
+        discovery=FakeDiscoveryHybridSignals(),
+        ralph_validator=FakeRalphHybrid(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=FakePersistenceCoordinator(),
+    )
+    result = await orchestrator.run_entity_pipeline(
+        entity_id="arsenal-fc",
+        entity_name="Arsenal FC",
+        entity_type="CLUB",
+        priority_score=90,
+    )
+    assert result["acceptance_gate"]["passed"] is True
+    assert result["acceptance_gate"]["acceptance_mode"] == "hybrid_provisional"
 
 
 @pytest.mark.asyncio

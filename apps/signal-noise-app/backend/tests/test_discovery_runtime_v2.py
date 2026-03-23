@@ -532,7 +532,7 @@ async def test_fallback_accept_blocked_when_evidence_guard_fails():
 
 
 @pytest.mark.asyncio
-async def test_no_progress_decision_never_promotes_to_validated(monkeypatch):
+async def test_no_progress_decision_promotes_to_provisional_not_validated(monkeypatch):
     brightdata = _FakeBrightData(
         results=[{"url": "https://www.arsenal.com/news", "title": "News", "snippet": "Latest"}],
         content="Arsenal announced partnership and technology updates with concrete details " * 20,
@@ -575,10 +575,14 @@ async def test_no_progress_decision_never_promotes_to_validated(monkeypatch):
 
     signal = result["signal"]
     assert signal is not None
-    assert signal["validation_state"] in {"candidate", "diagnostic"}
+    assert signal["validation_state"] in {"provisional", "candidate", "diagnostic"}
     assert signal["validation_state"] != "validated"
-    assert signal["accept_guard_passed"] is False
-    assert "llm_no_progress" in (signal.get("accept_reject_reasons") or [])
+    if signal["validation_state"] == "provisional":
+        assert signal["accept_guard_passed"] is True
+        assert "llm_no_progress" not in (signal.get("accept_reject_reasons") or [])
+    else:
+        assert signal["accept_guard_passed"] is False
+        assert "llm_no_progress" in (signal.get("accept_reject_reasons") or [])
 
 
 @pytest.mark.asyncio
@@ -634,7 +638,7 @@ async def test_no_progress_can_promote_when_evidence_guard_and_tier_are_strong(m
     assert signal is not None
     assert signal["source_tier"] == "tier_2"
     assert signal["accept_guard_passed"] is True
-    assert signal["validation_state"] == "validated"
+    assert signal["validation_state"] == "provisional"
     assert "llm_no_progress" not in (signal.get("accept_reject_reasons") or [])
     assert result["hop"]["candidate_micro_eval"]["decision"] == "WEAK_ACCEPT_CANDIDATE"
 

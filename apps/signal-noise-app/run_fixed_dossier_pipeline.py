@@ -15,6 +15,7 @@ Pipeline:
 import asyncio
 import argparse
 import inspect
+import importlib.util
 import json
 import logging
 import os
@@ -176,6 +177,19 @@ class FixedDossierFirstPipeline:
             dashboard_scorer=self.dashboard_scorer,
         )
 
+        self._runtime_preflight = self._run_startup_preflight()
+        self._runtime_preflight_fail_fast = _bool_env(
+            os.getenv(
+                "PIPELINE_PREFLIGHT_FAIL_FAST",
+                "false" if os.getenv("PYTEST_CURRENT_TEST") else "true",
+            )
+        )
+        if not bool(self._runtime_preflight.get("ok", False)):
+            message = str(self._runtime_preflight.get("message") or "runtime_preflight_failed")
+            if self._runtime_preflight_fail_fast:
+                raise RuntimeError(message)
+            logger.warning("⚠️ Runtime preflight degraded mode: %s", message)
+
         # Create output directory
         self.output_dir = Path("backend/data/dossiers")
         self.output_dir.mkdir(parents=True, exist_ok=True)
@@ -183,6 +197,44 @@ class FixedDossierFirstPipeline:
         self.run_reports_dir.mkdir(parents=True, exist_ok=True)
 
         logger.info("✅ Pipeline initialized")
+
+    def _run_startup_preflight(self) -> Dict[str, Any]:
+        pdfplumber_ok = importlib.util.find_spec("pdfplumber") is not None
+        pymupdf_ok = importlib.util.find_spec("fitz") is not None
+        planner_model = str(getattr(self.claude, "chutes_model_planner", "") or "").strip()
+        judge_model = str(getattr(self.claude, "chutes_model_judge", "") or "").strip()
+        fallback_model = str(getattr(self.claude, "chutes_model_fallback", "") or "").strip()
+        brightdata_token = str(os.getenv("BRIGHTDATA_API_TOKEN") or "").strip()
+        brightdata_zone_candidates = list(getattr(self.brightdata, "_zone_candidates", []) or [])
+
+        failures: list[str] = []
+        warnings: list[str] = []
+        if not (pdfplumber_ok or pymupdf_ok):
+            failures.append("pdf_extractor_missing(pdfplumber|pymupdf)")
+        if not planner_model or not judge_model or not fallback_model:
+            failures.append("chutes_role_model_mapping_incomplete")
+        if not brightdata_token:
+            failures.append("brightdata_api_token_missing")
+        if not brightdata_zone_candidates:
+            warnings.append("brightdata_zone_candidates_empty")
+
+        ok = len(failures) == 0
+        message = "ok" if ok else "; ".join(failures)
+        return {
+            "ok": ok,
+            "message": message,
+            "failures": failures,
+            "warnings": warnings,
+            "checks": {
+                "pdfplumber_available": pdfplumber_ok,
+                "pymupdf_available": pymupdf_ok,
+                "planner_model": planner_model,
+                "judge_model": judge_model,
+                "fallback_model": fallback_model,
+                "brightdata_token_present": bool(brightdata_token),
+                "brightdata_zone_candidates": brightdata_zone_candidates,
+            },
+        }
 
     @staticmethod
     def _validate_runtime_imports() -> Dict[str, Any]:
@@ -1039,11 +1091,16 @@ class FixedDossierFirstPipeline:
             bare_match = re.search(r"\b(?:www\.)?[a-z0-9.-]+\.[a-z]{2,}(?:/[a-z0-9._~:/?#@!$&'()*+,;=-]*)?\b", joined, flags=re.IGNORECASE)
             if bare_match:
                 candidates.append(bare_match.group(0))
+        ranked: list[tuple[int, str]] = []
         for candidate in candidates:
-            normalized = self._normalize_http_url(candidate)
-            if normalized:
-                return normalized
-        return None
+            normalized = self._normalize_http_url(candidate, prefer_official_root=True)
+            if not normalized:
+                continue
+            ranked.append((self._official_site_candidate_score(normalized), normalized))
+        if not ranked:
+            return None
+        ranked.sort(key=lambda item: item[0], reverse=True)
+        return ranked[0][1]
 
     def _lookup_official_site_from_recent_artifacts(self, entity_id: str) -> str | None:
         """Load the most recent official site URL from saved dossier artifacts."""
@@ -1075,17 +1132,45 @@ class FixedDossierFirstPipeline:
         return None
 
     @staticmethod
-    def _normalize_http_url(candidate: Any) -> str | None:
+    def _normalize_http_url(candidate: Any, *, prefer_official_root: bool = False) -> str | None:
         if not isinstance(candidate, str):
             return None
         value = candidate.strip()
         if not value:
             return None
         if value.startswith(("http://", "https://")):
-            return value.rstrip("/")
-        if value.startswith("www.") or "." in value:
-            return f"https://{value.lstrip('/').rstrip('/')}"
-        return None
+            normalized = value.rstrip("/")
+        elif value.startswith("www.") or "." in value:
+            normalized = f"https://{value.lstrip('/').rstrip('/')}"
+        else:
+            return None
+        parsed = urlparse(normalized)
+        host = (parsed.hostname or "").lower().lstrip("www.")
+        if not host:
+            return None
+        path = (parsed.path or "").lower().strip()
+        if prefer_official_root and (
+            path.endswith(".pdf")
+            or any(token in host for token in ("images.", "img.", "cdn", "assets.", "static."))
+        ):
+            return f"{parsed.scheme}://{parsed.netloc}".rstrip("/")
+        return normalized
+
+    @staticmethod
+    def _official_site_candidate_score(url: str) -> int:
+        parsed = urlparse(str(url or ""))
+        host = (parsed.hostname or "").lower()
+        path = (parsed.path or "").strip().lower()
+        score = 0
+        if host.startswith("www."):
+            score += 2
+        if not path or path in {"/", "/home", "/index", "/index.html"}:
+            score += 3
+        if ".pdf" not in path:
+            score += 2
+        if not any(token in host for token in ("images.", "img.", "cdn", "assets.", "static.")):
+            score += 2
+        return score
 
     @staticmethod
     def _is_likely_synthetic_entity_domain(candidate: Any, entity_name: str) -> bool:
@@ -1144,6 +1229,20 @@ class FixedDossierFirstPipeline:
         """Save all results to files"""
         timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
 
+        # Normalize discovery payload once so dossier/report artifacts stay aligned.
+        if isinstance(discovery_result, dict):
+            discovery_data = dict(discovery_result)
+        elif hasattr(discovery_result, 'to_dict'):
+            discovery_data = discovery_result.to_dict()
+        else:
+            discovery_data = {
+                'entity_id': getattr(discovery_result, "entity_id", entity_id),
+                'final_confidence': getattr(discovery_result, "final_confidence", 0.0),
+                'iterations_completed': getattr(discovery_result, "iterations_completed", 0),
+                'signals_discovered': getattr(discovery_result, "signals_discovered", []),
+            }
+        discovery_data = self._normalize_discovery_payload(discovery_data)
+
         # Save dossier
         dossier_path = self.output_dir / f"{entity_id}_dossier_fixed_{timestamp}.json"
         if isinstance(dossier, dict):
@@ -1157,23 +1256,16 @@ class FixedDossierFirstPipeline:
             entity_id=entity_id,
             entity_name=entity_name,
         )
+        dossier_payload = self._enrich_dossier_with_discovery(
+            dossier_payload=dossier_payload,
+            discovery_payload=discovery_data,
+        )
         with open(dossier_path, 'w') as f:
             json.dump(dossier_payload, f, indent=2, default=str)
         logger.info(f"💾 Dossier saved: {dossier_path}")
 
         # Save discovery
         discovery_path = self.output_dir / f"{entity_id}_discovery_fixed_{timestamp}.json"
-        if isinstance(discovery_result, dict):
-            discovery_data = discovery_result
-        elif hasattr(discovery_result, 'to_dict'):
-            discovery_data = discovery_result.to_dict()
-        else:
-            discovery_data = {
-                'entity_id': getattr(discovery_result, "entity_id", entity_id),
-                'final_confidence': getattr(discovery_result, "final_confidence", 0.0),
-                'iterations_completed': getattr(discovery_result, "iterations_completed", 0),
-                'signals_discovered': getattr(discovery_result, "signals_discovered", []),
-            }
         with open(discovery_path, 'w') as f:
             json.dump(discovery_data, f, indent=2, default=str)
         logger.info(f"💾 Discovery saved: {discovery_path}")
@@ -1202,6 +1294,75 @@ class FixedDossierFirstPipeline:
             logger.info(f"💾 Hop trace saved: {hop_trace_path}")
             artifacts["hop_trace_path"] = str(hop_trace_path)
         return artifacts
+
+    @staticmethod
+    def _summarize_candidate_events(candidate_evaluations: Any) -> Dict[str, Any]:
+        summary = {
+            "total": 0,
+            "by_validation_state": {},
+            "by_reason_code": {},
+        }
+        if not isinstance(candidate_evaluations, list):
+            return summary
+        for item in candidate_evaluations:
+            if not isinstance(item, dict):
+                continue
+            summary["total"] += 1
+            state = str(item.get("validation_state") or "unknown").strip().lower()
+            reason = str(item.get("reason_code") or "unknown").strip().lower()
+            summary["by_validation_state"][state] = int(summary["by_validation_state"].get(state, 0) or 0) + 1
+            summary["by_reason_code"][reason] = int(summary["by_reason_code"].get(reason, 0) or 0) + 1
+        return summary
+
+    def _normalize_discovery_payload(self, discovery_data: Dict[str, Any]) -> Dict[str, Any]:
+        payload = dict(discovery_data or {})
+        signals = payload.get("signals_discovered")
+        if not isinstance(signals, list):
+            payload["signals_discovered"] = []
+        provisional = payload.get("provisional_signals")
+        if not isinstance(provisional, list):
+            payload["provisional_signals"] = []
+        candidate_evaluations = payload.get("candidate_evaluations")
+        if not isinstance(candidate_evaluations, list):
+            candidate_evaluations = []
+            payload["candidate_evaluations"] = candidate_evaluations
+
+        perf = payload.get("performance_summary")
+        if not isinstance(perf, dict):
+            perf = {}
+            payload["performance_summary"] = perf
+
+        if not isinstance(payload.get("candidate_events_summary"), dict):
+            payload["candidate_events_summary"] = self._summarize_candidate_events(candidate_evaluations)
+        if not isinstance(payload.get("lane_failures"), dict):
+            payload["lane_failures"] = perf.get("lane_failures") if isinstance(perf.get("lane_failures"), dict) else {}
+        if not isinstance(payload.get("controller_health_reasons"), list):
+            reasons = perf.get("controller_health_reasons")
+            payload["controller_health_reasons"] = reasons if isinstance(reasons, list) else []
+
+        perf.setdefault("signals_validated_count", len(payload.get("signals_discovered") or []))
+        perf.setdefault("signals_provisional_count", len(payload.get("provisional_signals") or []))
+        perf.setdefault("signals_candidate_events_count", len(candidate_evaluations))
+        perf.setdefault("candidate_events_summary", payload.get("candidate_events_summary"))
+        perf.setdefault("lane_failures", payload.get("lane_failures"))
+        perf.setdefault("controller_health_reasons", payload.get("controller_health_reasons"))
+        return payload
+
+    def _enrich_dossier_with_discovery(
+        self,
+        *,
+        dossier_payload: Dict[str, Any],
+        discovery_payload: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        enrich_fn = getattr(getattr(self, "dossier_generator", None), "enrich_dossier_with_discovery_evidence", None)
+        if not callable(enrich_fn):
+            return dossier_payload
+        try:
+            enriched = enrich_fn(dossier_payload=dossier_payload, discovery_payload=discovery_payload)
+        except Exception as enrich_error:  # noqa: BLE001
+            logger.warning("⚠️ Dossier discovery enrichment failed: %s", enrich_error)
+            return dossier_payload
+        return enriched if isinstance(enriched, dict) else dossier_payload
 
     def _ensure_dossier_metadata_payload(
         self,
@@ -1278,10 +1439,14 @@ class FixedDossierFirstPipeline:
 
         def _lane_summary(payload: Dict[str, Any], hops: list[Dict[str, Any]]) -> Dict[str, Any]:
             signals = payload.get("signals_discovered")
+            provisional = payload.get("provisional_signals")
+            candidate_events = payload.get("candidate_evaluations")
             return {
                 "final_confidence": float(payload.get("final_confidence") or 0.0),
                 "iterations_completed": int(payload.get("iterations_completed") or 0),
                 "signals_discovered": len(signals) if isinstance(signals, list) else 0,
+                "signals_provisional": len(provisional) if isinstance(provisional, list) else 0,
+                "signals_candidate_events": len(candidate_events) if isinstance(candidate_events, list) else 0,
                 "run_profile": payload.get("run_profile"),
                 "parse_path": payload.get("parse_path"),
                 "llm_last_status": payload.get("llm_last_status"),
@@ -1356,28 +1521,49 @@ class FixedDossierFirstPipeline:
         *,
         final_confidence: float,
         signal_count: int,
+        provisional_count: int,
+        candidate_events_count: int,
+        schema_fail_count: int = 0,
         section_fallbacks: int,
         dual_write_ok: Optional[bool] = None,
     ) -> Dict[str, Any]:
         min_confidence = float(os.getenv("PIPELINE_ACCEPT_MIN_CONFIDENCE", "0.55"))
         min_signals = int(os.getenv("PIPELINE_ACCEPT_MIN_SIGNALS", "2"))
         max_fallbacks = int(os.getenv("PIPELINE_ACCEPT_MAX_SECTION_FALLBACKS", "3"))
+        hybrid_min_validated = int(os.getenv("PIPELINE_ACCEPT_HYBRID_MIN_VALIDATED", "1"))
+        hybrid_min_provisional = int(os.getenv("PIPELINE_ACCEPT_HYBRID_MIN_PROVISIONAL", "2"))
+        strict_pass = signal_count >= min_signals
+        hybrid_pass = (
+            signal_count >= hybrid_min_validated
+            and provisional_count >= hybrid_min_provisional
+            and schema_fail_count == 0
+        )
         reasons = []
         if final_confidence < min_confidence:
             reasons.append(f"final_confidence<{min_confidence}")
-        if signal_count < min_signals:
+        if not strict_pass and not hybrid_pass:
             reasons.append(f"signal_count<{min_signals}")
         if section_fallbacks > max_fallbacks:
             reasons.append(f"section_fallbacks>{max_fallbacks}")
         if dual_write_ok is False:
             reasons.append("dual_write_incomplete")
+        acceptance_mode = "strict" if strict_pass else "hybrid_provisional" if hybrid_pass else "none"
         return {
             "passed": len(reasons) == 0,
             "reasons": reasons,
+            "acceptance_mode": acceptance_mode,
             "thresholds": {
                 "min_confidence": min_confidence,
                 "min_signals": min_signals,
+                "hybrid_min_validated": hybrid_min_validated,
+                "hybrid_min_provisional": hybrid_min_provisional,
                 "max_section_fallbacks": max_fallbacks,
+            },
+            "observed": {
+                "signals_validated_count": signal_count,
+                "signals_provisional_count": provisional_count,
+                "signals_candidate_events_count": candidate_events_count,
+                "schema_fail_count": schema_fail_count,
             },
         }
 
@@ -1405,12 +1591,22 @@ class FixedDossierFirstPipeline:
         performance = discovery.get("performance_summary")
         if not isinstance(performance, dict):
             performance = {}
-        signals = discovery.get("signals_discovered")
-        signal_events = signals if isinstance(signals, list) else []
+        validated_signals = discovery.get("signals_discovered")
+        provisional_signals = discovery.get("provisional_signals")
+        signal_events: List[Dict[str, Any]] = []
+        if isinstance(validated_signals, list):
+            signal_events.extend([item for item in validated_signals if isinstance(item, dict)])
+        if isinstance(provisional_signals, list):
+            signal_events.extend([item for item in provisional_signals if isinstance(item, dict)])
         validated_signal_list = [
             signal
             for signal in signal_events
             if isinstance(signal, dict) and str(signal.get("validation_state") or "").strip().lower() == "validated"
+        ]
+        provisional_signal_list = [
+            signal
+            for signal in signal_events
+            if isinstance(signal, dict) and str(signal.get("validation_state") or "").strip().lower() == "provisional"
         ]
         candidate_signal_list = [
             signal
@@ -1423,6 +1619,11 @@ class FixedDossierFirstPipeline:
             if isinstance(signal, dict) and str(signal.get("validation_state") or "").strip().lower() == "diagnostic"
         ]
         signal_count = len(validated_signal_list)
+        provisional_count = len(provisional_signal_list)
+        candidate_events = discovery.get("candidate_evaluations")
+        candidate_events_count = len(candidate_events) if isinstance(candidate_events, list) else int(
+            performance.get("signals_candidate_events_count") or 0
+        )
         accepted_empty_evidence_count = 0
         for signal in validated_signal_list:
             evidence_found = str(signal.get("evidence_found") or "").strip()
@@ -1490,6 +1691,9 @@ class FixedDossierFirstPipeline:
         acceptance_gate = self._build_acceptance_gate(
             final_confidence=final_confidence,
             signal_count=signal_count,
+            provisional_count=provisional_count,
+            candidate_events_count=candidate_events_count,
+            schema_fail_count=int(performance.get("schema_fail_count") or 0),
             section_fallbacks=section_counters["hard_fallback_sections"],
             dual_write_ok=dual_write_ok,
         )
@@ -1574,6 +1778,7 @@ class FixedDossierFirstPipeline:
             "planner_action_parse_fail_count": int(performance.get("planner_action_parse_fail_count") or 0),
             "planner_search_refinement_count": int(planner_search_refinement_count),
             "planner_action_counts": planner_action_counts,
+            "controller_health_reasons": list(performance.get("controller_health_reasons") or []),
         }
         llm_hop_selection_count = int(discovery_controller.get("llm_hop_selection_count") or 0)
         planner_action_applied_count = int(discovery_controller.get("planner_action_applied_count") or 0)
@@ -1595,6 +1800,12 @@ class FixedDossierFirstPipeline:
             "total_time_seconds": round(total_time_seconds, 3),
             "phase_timings_seconds": phase_timings,
             "phase_statuses": phases,
+            "signals_validated_count": int(acceptance_gate.get("observed", {}).get("signals_validated_count") or signal_count),
+            "signals_provisional_count": int(acceptance_gate.get("observed", {}).get("signals_provisional_count") or provisional_count),
+            "signals_candidate_events_count": int(
+                acceptance_gate.get("observed", {}).get("signals_candidate_events_count") or candidate_events_count
+            ),
+            "acceptance_mode": acceptance_gate.get("acceptance_mode"),
             "metrics": {
                 "dossier_sections": len(dossier.get("sections") or []) if isinstance(dossier.get("sections"), list) else 0,
                 "final_confidence": final_confidence,
@@ -1603,7 +1814,11 @@ class FixedDossierFirstPipeline:
                 "signals_discovered": signal_count,
                 "signals_total_events": int(performance.get("signals_total_events") or len(signal_events)),
                 "signals_validated_count": int(performance.get("signals_validated_count") or len(validated_signal_list)),
+                "signals_provisional_count": int(performance.get("signals_provisional_count") or provisional_count),
                 "signals_candidate_count": int(performance.get("signals_candidate_count") or len(candidate_signal_list)),
+                "signals_candidate_events_count": int(
+                    performance.get("signals_candidate_events_count") or candidate_events_count
+                ),
                 "signals_diagnostic_count": int(performance.get("signals_diagnostic_count") or len(diagnostic_signal_list)),
                 "metadata_coverage_score": metadata_coverage_score,
                 "unknown_required_field_count": unknown_required_field_count,
@@ -1639,7 +1854,9 @@ class FixedDossierFirstPipeline:
                 "accepted_empty_evidence_count": int(accepted_empty_evidence_count),
                 "llm_circuit_broken": bool(performance.get("llm_circuit_broken", False)),
                 "discovery_controller": discovery_controller,
+                "acceptance_mode": acceptance_gate.get("acceptance_mode"),
                 "dual_write_ok": dual_write_ok,
+                "runtime_preflight": dict(getattr(self, "_runtime_preflight", {}) or {}),
                 "persistence_status": persistence_status if isinstance(persistence_status, dict) else None,
                 "shadow_unbounded": {
                     "enabled": bool(shadow_discovery),

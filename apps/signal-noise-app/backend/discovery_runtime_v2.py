@@ -371,6 +371,7 @@ class DiscoveryResultV2:
     hypotheses: List[Any]
     depth_stats: Dict[int, int]
     signals_discovered: List[Dict[str, Any]]
+    provisional_signals: List[Dict[str, Any]] = field(default_factory=list)
     raw_signals: List[Any] = field(default_factory=list)
     hypothesis_states: Dict[str, Dict[str, Any]] = field(default_factory=dict)
     performance_summary: Dict[str, Any] = field(default_factory=dict)
@@ -379,6 +380,9 @@ class DiscoveryResultV2:
     parse_path: str = "discovery_v2_evidence_first"
     llm_last_status: str = "heuristic_only"
     candidate_evaluations: List[Dict[str, Any]] = field(default_factory=list)
+    candidate_events_summary: Dict[str, Any] = field(default_factory=dict)
+    lane_failures: Dict[str, Any] = field(default_factory=dict)
+    controller_health_reasons: List[str] = field(default_factory=list)
     timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -393,6 +397,7 @@ class DiscoveryResultV2:
             "hypotheses": self.hypotheses,
             "depth_stats": self.depth_stats,
             "signals_discovered": self.signals_discovered,
+            "provisional_signals": self.provisional_signals,
             "raw_signals_count": len(self.raw_signals),
             "hypothesis_states": self.hypothesis_states,
             "performance_summary": self.performance_summary,
@@ -401,6 +406,9 @@ class DiscoveryResultV2:
             "parse_path": self.parse_path,
             "llm_last_status": self.llm_last_status,
             "candidate_evaluations": self.candidate_evaluations,
+            "candidate_events_summary": self.candidate_events_summary,
+            "lane_failures": self.lane_failures,
+            "controller_health_reasons": self.controller_health_reasons,
             "timestamp": self.timestamp.isoformat(),
         }
 
@@ -671,12 +679,16 @@ class DiscoveryRuntimeV2:
             hypotheses=[],
             depth_stats={0: 0},
             signals_discovered=[],
+            provisional_signals=[],
             raw_signals=[],
             hypothesis_states={},
             performance_summary=summary,
             parse_path="discovery_v2_paused_infra",
             llm_last_status="paused_infra",
             candidate_evaluations=[],
+            candidate_events_summary={},
+            lane_failures={},
+            controller_health_reasons=["paused_infra"],
         )
 
     async def run_discovery(
@@ -1070,6 +1082,11 @@ class DiscoveryRuntimeV2:
             for signal in signals
             if str(signal.get("validation_state") or "") == "validated"
         ]
+        provisional_signals = [
+            signal
+            for signal in signals
+            if str(signal.get("validation_state") or "") == "provisional"
+        ]
         candidate_signals = [
             signal
             for signal in signals
@@ -1078,6 +1095,7 @@ class DiscoveryRuntimeV2:
         all_events = [*signals, *diagnostics]
         entity_confidence = self._compute_entity_confidence(
             validated_signals,
+            provisional_signals,
             candidate_signals,
             state,
             hop_timings,
@@ -1091,6 +1109,30 @@ class DiscoveryRuntimeV2:
             per_iteration_timeout=float(objective_budget["per_iteration_timeout"]),
         )
         final_confidence = round(max(0.0, min(1.0, entity_confidence * 0.8 + pipeline_confidence * 0.2)), 3)
+        candidate_events_summary = self._summarize_candidate_events(candidate_evaluations)
+        lane_failures = self._snapshot_lane_failures(state)
+        demotion_reason_counts = (
+            candidate_events_summary.get("demotion_reason_counts")
+            if isinstance(candidate_events_summary, dict)
+            else {}
+        )
+        strict_actionable = final_confidence >= 0.55 and len(validated_signals) >= 2
+        hybrid_actionable = (
+            final_confidence >= 0.55
+            and len(validated_signals) >= 1
+            and len(provisional_signals) >= 2
+            and int(self._metrics.get("schema_fail_count", 0) or 0) == 0
+        )
+        acceptance_mode = "strict" if strict_actionable else "hybrid_provisional" if hybrid_actionable else "none"
+        controller_health_reasons = self._build_controller_health_reasons(
+            demotion_reason_counts=demotion_reason_counts if isinstance(demotion_reason_counts, dict) else {},
+            planner_action_applied_count=int(self._metrics.get("planner_action_applied_count") or 0),
+            planner_action_parse_fail_count=int(self._metrics.get("planner_action_parse_fail_count") or 0),
+            llm_hop_selection_count=int(self._metrics.get("llm_hop_selection_count") or 0),
+            schema_fail_count=int(self._metrics.get("schema_fail_count") or 0),
+            dead_end_event_count=int(self._metrics.get("dead_end_event_count") or 0),
+            validated_count=len(validated_signals),
+        )
 
         elapsed = round(time.perf_counter() - start, 3)
         performance_summary = {
@@ -1144,9 +1186,15 @@ class DiscoveryRuntimeV2:
             "adaptive_candidate_mode_applied": adaptive_candidate_mode,
             "signals_total_events": len(all_events),
             "signals_validated_count": len(validated_signals),
+            "signals_provisional_count": len(provisional_signals),
             "signals_candidate_count": len(candidate_signals),
             "signals_diagnostic_count": len(diagnostics),
             "candidate_signals_count": len(candidate_signals),
+            "signals_candidate_events_count": len(candidate_evaluations),
+            "candidate_events_summary": candidate_events_summary,
+            "lane_failures": lane_failures,
+            "controller_health_reasons": controller_health_reasons,
+            "acceptance_mode": acceptance_mode,
             "two_pass": {
                 "enabled": True,
                 "pass_a": {
@@ -1173,12 +1221,13 @@ class DiscoveryRuntimeV2:
             entity_name=entity_name,
             final_confidence=final_confidence,
             confidence_band=confidence_band,
-            is_actionable=final_confidence >= 0.55 and len(validated_signals) >= 2,
+            is_actionable=bool(strict_actionable or hybrid_actionable),
             iterations_completed=state["iterations_completed"],
             total_cost_usd=0.0,
             hypotheses=[],
             depth_stats={0: state["iterations_completed"]},
             signals_discovered=validated_signals,
+            provisional_signals=provisional_signals,
             raw_signals=all_events,
             hypothesis_states={},
             performance_summary=performance_summary,
@@ -1187,6 +1236,9 @@ class DiscoveryRuntimeV2:
             parse_path=parse_path,
             llm_last_status=llm_last_status,
             candidate_evaluations=candidate_evaluations,
+            candidate_events_summary=candidate_events_summary,
+            lane_failures=lane_failures,
+            controller_health_reasons=controller_health_reasons,
         )
         if self.continuous_mode_enabled and self.resume_checkpoint_enabled:
             self._clear_discovery_checkpoint(entity_id=entity_id, objective=objective)
@@ -1461,15 +1513,25 @@ class DiscoveryRuntimeV2:
                 self._register_lane_failure(lane, state, "duplicate_content_hash")
                 low_signal_reason = low_signal_reason or "duplicate_content_hash"
 
-            # Pre-judge quality gate: attempt one rehydration via same-domain rendered probe before rejecting.
+            # Pre-judge quality gate: force one rendered probe on likely JS-shell pages before rejecting.
             if low_signal_reason and lane in {"official_site", "press_release", "trusted_news", "careers"}:
                 recovered = await self._recover_same_domain_probe(url=url, budget=effective_budget)
-                recovered_content = str((recovered or {}).get("content") or "")
-                if recovered and recovered_content and _safe_word_count(recovered_content) > _safe_word_count(content):
-                    content = recovered_content
-                    metadata = recovered.get("metadata") if isinstance(recovered.get("metadata"), dict) else metadata
-                    content_hash = hashlib.sha1(content.encode("utf-8", errors="ignore")).hexdigest() if content else None
-                    low_signal_reason = self._low_signal_reason(lane=lane, url=url, content=content, metadata=metadata)
+                recovered_content = self._normalize_extracted_text(str((recovered or {}).get("content") or ""))
+                if recovered and recovered_content:
+                    recovered_metadata = (
+                        recovered.get("metadata") if isinstance(recovered.get("metadata"), dict) else {}
+                    )
+                    recovered_reason = self._low_signal_reason(
+                        lane=lane,
+                        url=url,
+                        content=recovered_content,
+                        metadata=recovered_metadata,
+                    )
+                    if recovered_reason is None or _safe_word_count(recovered_content) >= _safe_word_count(content):
+                        content = recovered_content
+                        metadata = recovered_metadata or metadata
+                        content_hash = hashlib.sha1(content.encode("utf-8", errors="ignore")).hexdigest() if content else None
+                        low_signal_reason = recovered_reason
 
             if low_signal_reason:
                 self._register_lane_failure(lane, state, low_signal_reason)
@@ -1539,7 +1601,15 @@ class DiscoveryRuntimeV2:
                         str(candidate.get("snippet") or ""),
                     ]
                 )
-                if not self._has_procurement_lexicon(procurement_text):
+                same_domain_source = bool(
+                    official_domain and (host == official_domain or host.endswith(f".{official_domain}"))
+                )
+                allow_missing_lexicon = bool(
+                    source_tier == "tier_1"
+                    and same_domain_source
+                    and self._has_tier12_corroboration(state, evidence)
+                )
+                if not self._has_procurement_lexicon(procurement_text) and not allow_missing_lexicon:
                     accept_reject_reasons.append("missing_procurement_lexicon")
 
             composite_acceptance_score = self._composite_acceptance_score(
@@ -1596,6 +1666,7 @@ class DiscoveryRuntimeV2:
                 self._metrics["fallback_accept_block_count"] += 1
             llm_decision = str(llm_eval.get("decision") or "NO_PROGRESS").strip().upper()
             positive_decision = llm_decision in {"ACCEPT", "WEAK_ACCEPT_CANDIDATE", "WEAK_ACCEPT"}
+            provisional_promoted = False
             llm_schema_invalid = (
                 not bool(llm_eval.get("schema_valid", False))
                 or str(llm_eval.get("llm_last_status") or "").strip().lower() in {"length_stop", "empty_response", "timeout"}
@@ -1607,18 +1678,25 @@ class DiscoveryRuntimeV2:
             if accept_guard_passed and not positive_decision:
                 # Deterministic promotion path:
                 # If strict evidence guard already passed on grounded tier-1/2 evidence,
-                # promote NO_PROGRESS to weak accept to avoid candidate-only deadlock.
+                # promote NO_PROGRESS to provisional to avoid candidate-only deadlock.
                 can_promote = (
-                    lane == "trusted_news"
+                    lane in {"official_site", "press_release", "careers", "trusted_news"}
                     and source_tier in {"tier_1", "tier_2"}
                     and quality_score >= max(0.55, self._quality_threshold_for_lane(lane))
                     and bool(evidence_snippet)
+                    and grounding_score >= max(0.52, grounding_threshold)
+                    and "non_english_source" not in accept_reject_reasons
+                    and "entity_match_score_below_threshold" not in accept_reject_reasons
+                    and "evidence_not_grounded_in_source_content" not in accept_reject_reasons
                     and str(llm_decision) == "NO_PROGRESS"
                 )
                 if can_promote:
+                    provisional_promoted = True
                     llm_decision = "WEAK_ACCEPT_CANDIDATE"
                     llm_eval["decision"] = "WEAK_ACCEPT_CANDIDATE"
-                    llm_eval["reason_code"] = str(llm_eval.get("reason_code") or "evidence_promoted")
+                    llm_eval["reason_code"] = str(
+                        llm_eval.get("reason_code") or "deterministic_provisional_promotion"
+                    )
                     llm_eval["confidence_delta_bucket"] = str(llm_eval.get("confidence_delta_bucket") or "UP_2")
                     positive_decision = True
                 else:
@@ -1626,8 +1704,10 @@ class DiscoveryRuntimeV2:
                     accept_reject_reasons.append("llm_no_progress")
                     self._metrics["fallback_accept_block_count"] += 1
 
-            if accept_guard_passed:
+            if accept_guard_passed and positive_decision and not provisional_promoted:
                 validation_state = "validated"
+            elif provisional_promoted and accept_guard_passed:
+                validation_state = "provisional"
             elif quality_score > 0.25 and evidence_snippet:
                 validation_state = "candidate"
             else:
@@ -1650,7 +1730,13 @@ class DiscoveryRuntimeV2:
             candidate_eval = {
                 "step_type": "discovery_candidate_eval",
                 "step_id": f"{lane}:{hashlib.md5(f'{url}|{content_hash or ''}'.encode('utf-8')).hexdigest()[:12]}",
-                "status": "completed" if validation_state == "validated" else "rejected",
+                "status": (
+                    "completed"
+                    if validation_state == "validated"
+                    else "provisional"
+                    if validation_state == "provisional"
+                    else "rejected"
+                ),
                 "reason_code": str(llm_eval.get("reason_code") or "accept_guard"),
                 "source_url": url,
                 "source_tier": source_tier,
@@ -1665,6 +1751,7 @@ class DiscoveryRuntimeV2:
                 "accept_guard_passed": bool(accept_guard_passed),
                 "accept_reject_reasons": list(accept_reject_reasons),
                 "validation_state": validation_state,
+                "provisional_promoted": bool(provisional_promoted),
                 "evidence_quality_score": quality_score,
                 "freshness_score": freshness_score,
                 "composite_acceptance_score": composite_acceptance_score,
@@ -1700,6 +1787,7 @@ class DiscoveryRuntimeV2:
                         "reason_code": candidate_eval["reason_code"],
                         "confidence_delta_bucket": candidate_eval["confidence_delta_bucket"],
                     },
+                    "provisional_promoted": bool(provisional_promoted),
                     "grounding_score": grounding_score,
                     "entity_domain_match": bool(entity_domain_match),
                     "language_ok": bool(language_ok),
@@ -1718,6 +1806,7 @@ class DiscoveryRuntimeV2:
                 "candidate_origin": origin,
                 "source_tier": source_tier,
                 "validation_state": validation_state,
+                "provisional_promoted": bool(provisional_promoted),
                 "accept_guard_passed": bool(accept_guard_passed),
                 "accept_reject_reasons": accept_reject_reasons,
                 "evidence_quality_score": quality_score,
@@ -2737,7 +2826,7 @@ class DiscoveryRuntimeV2:
             self._metrics["llm_call_count"] += 1
             response = await self.claude_client.query(
                 prompt=prompt,
-                model="haiku",
+                model="judge",
                 max_tokens=self.eval_max_tokens,
                 json_mode=True,
                 max_retries_override=0 if objective in {"rfp_pdf", "rfp_web"} else None,
@@ -3848,14 +3937,33 @@ class DiscoveryRuntimeV2:
             if isinstance(canonical, dict):
                 official = canonical.get("official_site")
                 if isinstance(official, str):
+                    parsed_official = urlparse(official)
+                    path = (parsed_official.path or "").lower()
+                    if path.endswith(".pdf"):
+                        official = None
+                if isinstance(official, str):
+                    host = (urlparse(official).hostname or "").lower()
+                    if host:
+                        if any(token in host for token in ("images.", "img.", "cdn", "assets.", "static.")):
+                            official = None
+                if isinstance(official, str):
                     host = (urlparse(official).hostname or "").lower()
                     if host:
                         return host.lstrip("www.")
             website = metadata.get("website")
             if isinstance(website, str):
+                parsed_website = urlparse(website)
+                path = (parsed_website.path or "").lower()
+                if path.endswith(".pdf"):
+                    website = f"{parsed_website.scheme}://{parsed_website.netloc}"
                 host = (urlparse(website).hostname or "").lower()
                 if host:
-                    return host.lstrip("www.")
+                    if any(token in host for token in ("images.", "img.", "cdn", "assets.", "static.")):
+                        website = None
+                if isinstance(website, str):
+                    host = (urlparse(website).hostname or "").lower()
+                    if host:
+                        return host.lstrip("www.")
         sections = dossier.get("sections") if isinstance(dossier, dict) else None
         if isinstance(sections, list):
             for section in sections:
@@ -4211,15 +4319,114 @@ class DiscoveryRuntimeV2:
         self._metrics["dead_end_event_count"] += 1
         logger.info("Discovery v2 lane exhausted (lane=%s reason=%s)", lane, reason)
 
+    @staticmethod
+    def _snapshot_lane_failures(state: Dict[str, Any]) -> Dict[str, Dict[str, int]]:
+        lane_failures = state.get("lane_failures", {}) if isinstance(state, dict) else {}
+        if not isinstance(lane_failures, dict):
+            return {}
+        snapshot: Dict[str, Dict[str, int]] = {}
+        for lane, reasons in lane_failures.items():
+            if not isinstance(reasons, dict):
+                continue
+            snapshot[str(lane)] = {
+                str(reason): int(value or 0)
+                for reason, value in reasons.items()
+                if isinstance(reason, str)
+            }
+        return snapshot
+
+    @staticmethod
+    def _summarize_candidate_events(candidate_evaluations: List[Dict[str, Any]]) -> Dict[str, Any]:
+        summary = {
+            "total": 0,
+            "by_validation_state": {},
+            "by_decision": {},
+            "by_reason_code": {},
+            "demotion_reason_counts": {},
+        }
+        if not isinstance(candidate_evaluations, list):
+            return summary
+
+        for item in candidate_evaluations:
+            if not isinstance(item, dict):
+                continue
+            summary["total"] += 1
+            validation_state = str(item.get("validation_state") or "unknown").strip().lower()
+            decision = str(item.get("decision") or "unknown").strip().upper()
+            reason_code = str(item.get("reason_code") or "unknown").strip().lower()
+            summary["by_validation_state"][validation_state] = (
+                int(summary["by_validation_state"].get(validation_state, 0) or 0) + 1
+            )
+            summary["by_decision"][decision] = int(summary["by_decision"].get(decision, 0) or 0) + 1
+            summary["by_reason_code"][reason_code] = int(summary["by_reason_code"].get(reason_code, 0) or 0) + 1
+            if validation_state != "validated":
+                for demotion_reason in item.get("accept_reject_reasons") or []:
+                    key = str(demotion_reason or "").strip().lower()
+                    if not key:
+                        continue
+                    summary["demotion_reason_counts"][key] = (
+                        int(summary["demotion_reason_counts"].get(key, 0) or 0) + 1
+                    )
+
+        return summary
+
+    @staticmethod
+    def _build_controller_health_reasons(
+        *,
+        demotion_reason_counts: Dict[str, int],
+        planner_action_applied_count: int,
+        planner_action_parse_fail_count: int,
+        llm_hop_selection_count: int,
+        schema_fail_count: int,
+        dead_end_event_count: int,
+        validated_count: int,
+    ) -> List[str]:
+        reasons: List[str] = []
+        if llm_hop_selection_count > 0 and planner_action_applied_count == 0:
+            reasons.append("no_planner_actions_applied")
+        if planner_action_parse_fail_count > 0:
+            reasons.append("planner_action_parse_failures")
+        if schema_fail_count > 0:
+            reasons.append("schema_gate_failures")
+        if int((demotion_reason_counts or {}).get("llm_no_progress", 0) or 0) > 0:
+            reasons.append("llm_no_progress_demotions")
+        if dead_end_event_count > 0 and validated_count == 0:
+            reasons.append("dead_end_without_validated_signal")
+        if not reasons:
+            reasons.append("healthy")
+        return reasons
+
     def _compute_entity_confidence(
         self,
         validated_signals: List[Dict[str, Any]],
+        provisional_signals: List[Dict[str, Any]],
         candidate_signals: List[Dict[str, Any]],
         state: Dict[str, Any],
         hop_timings: List[Dict[str, Any]],
         permissive_mode: bool = False,
     ) -> float:
         if not validated_signals:
+            if provisional_signals:
+                provisional_quality = sum(
+                    float(signal.get("evidence_quality_score") or 0.0)
+                    for signal in provisional_signals
+                ) / max(1, len(provisional_signals))
+                provisional_score = (
+                    0.38
+                    + min(0.14, len(provisional_signals) * 0.03)
+                    + min(0.07, provisional_quality * 0.10)
+                )
+                if permissive_mode and candidate_signals:
+                    candidate_quality = sum(
+                        float(signal.get("evidence_quality_score") or 0.0)
+                        for signal in candidate_signals
+                    ) / max(1, len(candidate_signals))
+                    provisional_score += min(0.04, len(candidate_signals) * 0.01) + min(
+                        0.03, candidate_quality * 0.04
+                    )
+                provisional_score -= min(0.08, self._metrics["dead_end_event_count"] * 0.02)
+                provisional_score -= min(0.05, self._metrics["fallback_accept_block_count"] * 0.01)
+                return round(max(0.35, min(0.62, provisional_score)), 3)
             if permissive_mode and candidate_signals:
                 candidate_quality = sum(
                     float(signal.get("evidence_quality_score") or 0.0)
@@ -4233,6 +4440,13 @@ class DiscoveryRuntimeV2:
             len(validated_signals), 1
         )
         score = 0.35 + min(0.35, len(validated_signals) * 0.12) + min(0.2, quality_avg * 0.25)
+        if provisional_signals:
+            provisional_quality = sum(
+                float(signal.get("evidence_quality_score") or 0.0)
+                for signal in provisional_signals
+            ) / max(1, len(provisional_signals))
+            score += min(0.08, len(provisional_signals) * 0.02)
+            score += min(0.05, provisional_quality * 0.06)
         score -= min(0.12, self._metrics["dead_end_event_count"] * 0.03)
         score -= min(0.08, self._metrics["fallback_accept_block_count"] * 0.02)
         return round(max(0.0, min(0.95, score)), 3)
