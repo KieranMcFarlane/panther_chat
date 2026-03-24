@@ -2160,11 +2160,35 @@ class FixedDossierFirstPipeline:
             if planner_action_parse_fail_count > 0
             else "healthy"
         )
+        runtime_mode = str(performance.get("runtime_mode") or getattr(self, "discovery_runtime_mode", self.discovery_engine))
+        comparison_payload = performance.get("comparison_summary")
+        if not isinstance(comparison_payload, dict):
+            cached_compare = getattr(self, "_last_dual_compare_payload", None)
+            comparison_payload = cached_compare if isinstance(cached_compare, dict) else None
+        if runtime_mode == "dual_compare" and not isinstance(comparison_payload, dict):
+            comparison_payload = {
+                "mode": "dual_compare",
+                "status": "missing_compare_payload",
+                "compare_execution_failed": True,
+                "winner_runtime": "v2",
+                "runtimes": {},
+                "winner_reason_codes": [
+                    str(self._last_discovery_error_class or "dual_compare_not_emitted")
+                ],
+                "error_class": self._last_discovery_error_class,
+                "error_message": self._last_discovery_error_message,
+            }
+        winner_runtime = (
+            str(performance.get("winner_runtime") or "")
+            or (str(comparison_payload.get("winner_runtime") or "") if isinstance(comparison_payload, dict) else "")
+            or ("v2" if runtime_mode == "dual_compare" else "")
+            or None
+        )
         report_payload = {
             "run_at": datetime.now(timezone.utc).isoformat(),
             "entity_id": entity_id,
             "entity_name": entity_name,
-            "runtime_mode": str(performance.get("runtime_mode") or getattr(self, "discovery_runtime_mode", self.discovery_engine)),
+            "runtime_mode": runtime_mode,
             "requested_objective": getattr(self, "requested_objective", self.run_objective if hasattr(self, "run_objective") else "dossier_core"),
             "effective_objective": getattr(self, "effective_objective", self.run_objective if hasattr(self, "run_objective") else "dossier_core"),
             "phase_objectives": dict(getattr(self, "phase_objectives", {})),
@@ -2177,8 +2201,8 @@ class FixedDossierFirstPipeline:
                 acceptance_gate.get("observed", {}).get("signals_candidate_events_count") or candidate_events_count
             ),
             "acceptance_mode": acceptance_gate.get("acceptance_mode"),
-            "winner_runtime": performance.get("winner_runtime"),
-            "comparison_summary": performance.get("comparison_summary") if isinstance(performance.get("comparison_summary"), dict) else None,
+            "winner_runtime": winner_runtime,
+            "comparison_summary": comparison_payload if isinstance(comparison_payload, dict) else None,
             "metrics": {
                 "dossier_sections": len(dossier.get("sections") or []) if isinstance(dossier.get("sections"), list) else 0,
                 "final_confidence": final_confidence,
@@ -2247,8 +2271,8 @@ class FixedDossierFirstPipeline:
                 "dual_write_ok": dual_write_ok,
                 "runtime_preflight": dict(getattr(self, "_runtime_preflight", {}) or {}),
                 "persistence_status": persistence_status if isinstance(persistence_status, dict) else None,
-                "comparison_summary": performance.get("comparison_summary") if isinstance(performance.get("comparison_summary"), dict) else None,
-                "winner_runtime": performance.get("winner_runtime"),
+                "comparison_summary": comparison_payload if isinstance(comparison_payload, dict) else None,
+                "winner_runtime": winner_runtime,
                 "shadow_unbounded": {
                     "enabled": bool(shadow_discovery),
                     "final_confidence": float(shadow_discovery.get("final_confidence") or 0.0) if shadow_discovery else None,
