@@ -150,6 +150,15 @@ class FixedDossierFirstPipeline:
             os.environ.setdefault("BRIGHTDATA_REQUEST_MAX_ATTEMPTS", "5")
             logger.info("🔒 PIPELINE_FORCE_BRIGHTDATA enabled (BrightData-only + generous retries)")
 
+        # Dual-compare and agentic runtime orchestration currently lives in the
+        # fixed runner path, not in canonical orchestrator.
+        if self.discovery_runtime_mode in {"dual_compare", "agentic_v3"} and self._use_canonical_orchestrator:
+            self._use_canonical_orchestrator = False
+            logger.info(
+                "🧪 discovery_runtime_mode=%s: using fixed runner (canonical orchestrator bypassed)",
+                self.discovery_runtime_mode,
+            )
+
         # Shadow mode currently runs via fixed runner path, not canonical orchestrator.
         if self.shadow_unbounded_enabled and self._use_canonical_orchestrator:
             self._use_canonical_orchestrator = False
