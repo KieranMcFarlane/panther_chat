@@ -35,7 +35,7 @@ from datetime import datetime, timezone
 from typing import Dict, List, Optional, Any, Union
 from dataclasses import dataclass, field, asdict
 from enum import Enum
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 logger = logging.getLogger(__name__)
 
@@ -973,17 +973,18 @@ class SchemaExtensionRequest(BaseModel):
     requested_by: str = Field(default="system", description="Who requested this extension")
     confidence: float = Field(default=0.5, description="Confidence in this extension (0.0-1.0)")
 
-    class Config:
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "node": "SignalSubtype",
                 "field": "BLOCKCHAIN_ADOPTION",
                 "value": "Blockchain Adoption",
                 "rationale": "Track NFT ticketing initiatives",
                 "requested_by": "ralph_loop",
-                "confidence": 0.85
+                "confidence": 0.85,
             }
         }
+    )
 
 
 class SchemaExtensionStatus(str, Enum):
