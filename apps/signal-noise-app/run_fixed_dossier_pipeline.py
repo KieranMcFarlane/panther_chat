@@ -50,10 +50,17 @@ class FixedDossierFirstPipeline:
         self._last_discovery_error_class: str | None = None
         self._last_discovery_error_message: str | None = None
         self._last_shadow_discovery_payload: Dict[str, Any] | None = None
+        self._last_dual_compare_payload: Dict[str, Any] | None = None
+        self._last_v2_compare_payload: Dict[str, Any] | None = None
+        self._last_agentic_compare_payload: Dict[str, Any] | None = None
         self._last_template_id: str | None = None
         self._last_max_iterations: int | None = None
         self._shadow_client = None
         self._shadow_discovery = None
+        self._v2_compare_client = None
+        self._v2_compare_discovery = None
+        self._agentic_client = None
+        self._agentic_discovery = None
         from backend.claude_client import ClaudeClient
         from backend.brightdata_sdk_client import BrightDataSDKClient
         from backend.dossier_generator import EntityDossierGenerator
@@ -66,6 +73,13 @@ class FixedDossierFirstPipeline:
         # Initialize clients
         self.claude = ClaudeClient()
         self.brightdata = BrightDataSDKClient()
+        requested_runtime_mode = str(os.getenv("PIPELINE_DISCOVERY_RUNTIME", "v2") or "v2").strip().lower()
+        if requested_runtime_mode not in {"v2", "agentic_v3", "dual_compare"}:
+            requested_runtime_mode = "v2"
+        self.discovery_runtime_mode = requested_runtime_mode
+        primary_engine_name = "agentic_v3" if requested_runtime_mode == "agentic_v3" else str(
+            os.getenv("DISCOVERY_ENGINE", "v2") or "v2"
+        ).strip().lower()
 
         # Initialize components - use WORKING EntityDossierGenerator
         self.dossier_generator = EntityDossierGenerator(self.claude)
@@ -74,6 +88,7 @@ class FixedDossierFirstPipeline:
             brightdata_client=self.brightdata,
             graphiti_service=None,
             falkordb_client=None,
+            engine=primary_engine_name,
         )
         self.dashboard_scorer = DashboardScorer()
         self.schema_first_enabled = _bool_env(os.getenv("PIPELINE_SCHEMA_FIRST_ENABLED", "false"))
@@ -276,6 +291,18 @@ class FixedDossierFirstPipeline:
                 await shadow_close_fn()
             except Exception as close_error:  # noqa: BLE001
                 logger.warning("⚠️ Failed to close shadow BrightData client: %s", close_error)
+        v2_close_fn = getattr(getattr(self, "_v2_compare_client", None), "close", None)
+        if callable(v2_close_fn):
+            try:
+                await v2_close_fn()
+            except Exception as close_error:  # noqa: BLE001
+                logger.warning("⚠️ Failed to close v2 compare BrightData client: %s", close_error)
+        agentic_close_fn = getattr(getattr(self, "_agentic_client", None), "close", None)
+        if callable(agentic_close_fn):
+            try:
+                await agentic_close_fn()
+            except Exception as close_error:  # noqa: BLE001
+                logger.warning("⚠️ Failed to close agentic BrightData client: %s", close_error)
 
     async def run_pipeline(
         self,
@@ -339,8 +366,9 @@ class FixedDossierFirstPipeline:
         )
         phase_timings_seconds["phase_1_dossier_generation"] = round(time.perf_counter() - phase_started, 3)
         self._merge_schema_first_into_dossier(dossier)
-        discovery_engine = str(os.getenv("DISCOVERY_ENGINE", "v2") or "v2").strip().lower()
-        use_legacy_template_routing = discovery_engine in {"legacy", "v1", "hypothesis"}
+        discovery_engine = str(getattr(self, "discovery_engine", os.getenv("DISCOVERY_ENGINE", "v2") or "v2")).strip().lower()
+        runtime_mode = str(getattr(self, "discovery_runtime_mode", "v2") or "v2").strip().lower()
+        use_legacy_template_routing = discovery_engine in {"legacy", "v1", "hypothesis"} and runtime_mode == "v2"
         league_context = self._extract_dossier_league_context(dossier)
         if use_legacy_template_routing:
             from backend.hypothesis_driven_discovery import resolve_template_id
@@ -361,7 +389,7 @@ class FixedDossierFirstPipeline:
             )
         else:
             discovery_template_id = (template_id or "").strip() or None
-            logger.info("🧭 Discovery v2 active: template routing disabled (template=%s)", discovery_template_id or "none")
+            logger.info("🧭 Discovery runtime active (%s): template routing disabled (template=%s)", runtime_mode, discovery_template_id or "none")
 
         # =========================================================================
         # PHASE 2: DISCOVERY (with dossier context)
@@ -800,16 +828,58 @@ class FixedDossierFirstPipeline:
                 "dossier": dossier_payload,
                 "max_iterations": max_iterations,
             }
-            context_method = self.discovery.run_discovery_with_dossier_context
-            context_signature = inspect.signature(context_method)
-            supports_kwargs = any(
-                param.kind == inspect.Parameter.VAR_KEYWORD
-                for param in context_signature.parameters.values()
-            )
-            if supports_kwargs or "template_id" in context_signature.parameters:
+            if template_id:
                 context_kwargs["template_id"] = template_id
-            if entity_type and (supports_kwargs or "entity_type" in context_signature.parameters):
+            if entity_type:
                 context_kwargs["entity_type"] = entity_type
+
+            runtime_mode = str(getattr(self, "discovery_runtime_mode", "v2") or "v2").strip().lower()
+            if runtime_mode == "dual_compare":
+                v2_runtime = self._ensure_compare_discovery("v2")
+                agentic_runtime = self._ensure_compare_discovery("agentic_v3")
+                if isinstance(known_official_site, str) and known_official_site.strip():
+                    setattr(v2_runtime, "current_official_site_url", known_official_site)
+                    setattr(agentic_runtime, "current_official_site_url", known_official_site)
+                v2_kwargs = self._prepare_context_kwargs(runtime=v2_runtime, context_kwargs=context_kwargs)
+                agentic_kwargs = self._prepare_context_kwargs(runtime=agentic_runtime, context_kwargs=context_kwargs)
+                v2_result, agentic_result = await asyncio.gather(
+                    v2_runtime.run_discovery_with_dossier_context(**v2_kwargs),
+                    agentic_runtime.run_discovery_with_dossier_context(**agentic_kwargs),
+                )
+                v2_payload = self._normalize_discovery_payload(self._result_to_payload(v2_result))
+                agentic_payload = self._normalize_discovery_payload(self._result_to_payload(agentic_result))
+                comparison_payload = self._compare_discovery_payloads(
+                    v2_payload=v2_payload,
+                    agentic_payload=agentic_payload,
+                )
+                self._last_v2_compare_payload = v2_payload
+                self._last_agentic_compare_payload = agentic_payload
+                self._last_dual_compare_payload = comparison_payload
+                self._last_shadow_discovery_payload = agentic_payload
+                winner_runtime = str(comparison_payload.get("winner_runtime") or "v2")
+                winner_result = agentic_result if winner_runtime == "agentic_v3" else v2_result
+                winner_payload = agentic_payload if winner_runtime == "agentic_v3" else v2_payload
+                winner_payload["winner_metadata"] = comparison_payload
+                performance = winner_payload.get("performance_summary")
+                if not isinstance(performance, dict):
+                    performance = {}
+                    winner_payload["performance_summary"] = performance
+                performance["runtime_mode"] = runtime_mode
+                performance["comparison_summary"] = comparison_payload
+                performance["winner_runtime"] = winner_runtime
+                setattr(winner_result, "winner_metadata", comparison_payload)
+                setattr(winner_result, "performance_summary", performance)
+                result = winner_result
+                logger.info(
+                    "🧪 Dual compare complete: winner=%s v2_score=%.3f agentic_score=%.3f",
+                    winner_runtime,
+                    float((((comparison_payload.get("runtimes") or {}).get("v2") or {}).get("weighted_total") or 0.0)),
+                    float((((comparison_payload.get("runtimes") or {}).get("agentic_v3") or {}).get("weighted_total") or 0.0)),
+                )
+                return result
+
+            context_method = self.discovery.run_discovery_with_dossier_context
+            context_kwargs = self._prepare_context_kwargs(runtime=self.discovery, context_kwargs=context_kwargs)
 
             shadow_unbounded_floor = int(getattr(self, "shadow_unbounded_floor", 6) or 6)
             shadow_unbounded_multiplier = float(getattr(self, "shadow_unbounded_multiplier", 1.8) or 1.8)
@@ -830,19 +900,10 @@ class FixedDossierFirstPipeline:
 
             if shadow_lane_enabled and bool(getattr(self, "shadow_unbounded_parallel", False)):
                 shadow_discovery = self._ensure_shadow_discovery()
-                shadow_context_method = shadow_discovery.run_discovery_with_dossier_context
-                shadow_signature = inspect.signature(shadow_context_method)
-                shadow_supports_kwargs = any(
-                    param.kind == inspect.Parameter.VAR_KEYWORD
-                    for param in shadow_signature.parameters.values()
-                )
-                if not (shadow_supports_kwargs or "template_id" in shadow_signature.parameters):
-                    shadow_kwargs.pop("template_id", None)
-                if not (shadow_supports_kwargs or "entity_type" in shadow_signature.parameters):
-                    shadow_kwargs.pop("entity_type", None)
+                shadow_kwargs = self._prepare_context_kwargs(runtime=shadow_discovery, context_kwargs=shadow_kwargs)
 
                 primary_task = asyncio.create_task(context_method(**context_kwargs))
-                shadow_task = asyncio.create_task(shadow_context_method(**shadow_kwargs))
+                shadow_task = asyncio.create_task(shadow_discovery.run_discovery_with_dossier_context(**shadow_kwargs))
                 primary_result, shadow_result = await asyncio.gather(primary_task, shadow_task, return_exceptions=True)
 
                 if isinstance(primary_result, Exception):
@@ -863,17 +924,8 @@ class FixedDossierFirstPipeline:
                 result = await context_method(**context_kwargs)
                 if shadow_lane_enabled:
                     shadow_discovery = self._ensure_shadow_discovery()
-                    shadow_context_method = shadow_discovery.run_discovery_with_dossier_context
-                    shadow_signature = inspect.signature(shadow_context_method)
-                    shadow_supports_kwargs = any(
-                        param.kind == inspect.Parameter.VAR_KEYWORD
-                        for param in shadow_signature.parameters.values()
-                    )
-                    if not (shadow_supports_kwargs or "template_id" in shadow_signature.parameters):
-                        shadow_kwargs.pop("template_id", None)
-                    if not (shadow_supports_kwargs or "entity_type" in shadow_signature.parameters):
-                        shadow_kwargs.pop("entity_type", None)
-                    shadow_result = await shadow_context_method(**shadow_kwargs)
+                    shadow_kwargs = self._prepare_context_kwargs(runtime=shadow_discovery, context_kwargs=shadow_kwargs)
+                    shadow_result = await shadow_discovery.run_discovery_with_dossier_context(**shadow_kwargs)
                     shadow_payload = (
                         shadow_result.to_dict()
                         if hasattr(shadow_result, "to_dict")
@@ -963,6 +1015,206 @@ class FixedDossierFirstPipeline:
             engine=shadow_engine_name,
         )
         return self._shadow_discovery
+
+    def _ensure_compare_discovery(self, runtime_name: str):
+        from backend.brightdata_sdk_client import BrightDataSDKClient
+        from backend.discovery_engine_factory import create_discovery_engine
+
+        normalized = str(runtime_name or "v2").strip().lower()
+        if normalized == "v2" and self.discovery_engine == "v2":
+            return self.discovery
+        if normalized == "agentic_v3" and self.discovery_engine == "agentic_v3":
+            return self.discovery
+        if normalized == "v2":
+            if self._v2_compare_discovery is None:
+                self._v2_compare_client = BrightDataSDKClient()
+                self._v2_compare_discovery, _ = create_discovery_engine(
+                    claude_client=self.claude,
+                    brightdata_client=self._v2_compare_client,
+                    graphiti_service=None,
+                    falkordb_client=None,
+                    engine="v2",
+                )
+            return self._v2_compare_discovery
+        if self._agentic_discovery is None:
+            self._agentic_client = BrightDataSDKClient()
+            self._agentic_discovery, _ = create_discovery_engine(
+                claude_client=self.claude,
+                brightdata_client=self._agentic_client,
+                graphiti_service=None,
+                falkordb_client=None,
+                engine="agentic_v3",
+            )
+        return self._agentic_discovery
+
+    @staticmethod
+    def _result_to_payload(result: Any) -> Dict[str, Any]:
+        if isinstance(result, dict):
+            return dict(result)
+        if hasattr(result, "to_dict"):
+            payload = result.to_dict()
+            return payload if isinstance(payload, dict) else {}
+        return {}
+
+    def _prepare_context_kwargs(
+        self,
+        *,
+        runtime: Any,
+        context_kwargs: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        prepared = dict(context_kwargs)
+        context_method = runtime.run_discovery_with_dossier_context
+        signature = inspect.signature(context_method)
+        supports_kwargs = any(
+            param.kind == inspect.Parameter.VAR_KEYWORD
+            for param in signature.parameters.values()
+        )
+        if not (supports_kwargs or "template_id" in signature.parameters):
+            prepared.pop("template_id", None)
+        if not (supports_kwargs or "entity_type" in signature.parameters):
+            prepared.pop("entity_type", None)
+        return prepared
+
+    @staticmethod
+    def _safe_ratio(numerator: float, denominator: float) -> float:
+        if denominator <= 0:
+            return 0.0
+        return float(numerator) / float(denominator)
+
+    def _discovery_winner_score(self, payload: Dict[str, Any]) -> Dict[str, Any]:
+        performance = payload.get("performance_summary") if isinstance(payload.get("performance_summary"), dict) else {}
+        validated = payload.get("signals_discovered") if isinstance(payload.get("signals_discovered"), list) else []
+        provisional = payload.get("provisional_signals") if isinstance(payload.get("provisional_signals"), list) else []
+        candidates = payload.get("candidate_evaluations") if isinstance(payload.get("candidate_evaluations"), list) else []
+        total_evidence = len(validated) + len(provisional) + len(candidates)
+        actionability = float(
+            payload.get("actionability_score")
+            or performance.get("actionability_score")
+            or 0.0
+        )
+        grounded_count = int(
+            payload.get("entity_grounded_signal_count")
+            or performance.get("entity_grounded_signal_count")
+            or 0
+        )
+        precision = min(1.0, self._safe_ratio(grounded_count, max(1, len(validated) + len(provisional))))
+        procurement_hits = sum(
+            1
+            for item in [*validated, *provisional]
+            if isinstance(item, dict)
+            and any(
+                token in str(item.get("subtype") or item.get("reason_code") or "").lower()
+                for token in ("procurement", "tender", "rfp", "commercial", "digital", "hiring")
+            )
+        )
+        procurement_relevance = min(1.0, self._safe_ratio(procurement_hits, max(1, len(validated) + len(provisional))))
+        decision_maker_hits = sum(
+            1
+            for item in [*validated, *provisional]
+            if isinstance(item, dict)
+            and any(token in str(item.get("text") or item.get("statement") or "").lower() for token in ("chief", "director", "head of", "ceo"))
+        )
+        decision_maker_usefulness = min(1.0, self._safe_ratio(decision_maker_hits, max(1, len(validated) + len(provisional))))
+        duration_ms = float(performance.get("total_duration_ms") or 0.0)
+        planner_applied_rate = float(
+            performance.get("planner_decision_applied_rate")
+            or performance.get("planner_action_applied_rate")
+            or 0.0
+        )
+        off_entity_reject_rate = float(performance.get("off_entity_reject_rate") or 0.0)
+        schema_fail_count = int(performance.get("schema_fail_count") or 0)
+        controller_reasons = payload.get("controller_health_reasons") if isinstance(payload.get("controller_health_reasons"), list) else []
+        scores = {
+            "evidence_actionability": round(min(1.0, actionability / 100.0), 4),
+            "entity_grounded_precision": round(precision, 4),
+            "procurement_future_need_relevance": round(procurement_relevance, 4),
+            "decision_maker_usefulness": round(decision_maker_usefulness, 4),
+            "runtime_efficiency_stability": round(max(0.0, 1.0 - min(1.0, (off_entity_reject_rate + (schema_fail_count * 0.05)))), 4),
+        }
+        total_score = (
+            (scores["evidence_actionability"] * 0.35)
+            + (scores["entity_grounded_precision"] * 0.25)
+            + (scores["procurement_future_need_relevance"] * 0.20)
+            + (scores["decision_maker_usefulness"] * 0.10)
+            + (scores["runtime_efficiency_stability"] * 0.10)
+        )
+        return {
+            "score_breakdown": scores,
+            "weighted_total": round(total_score, 4),
+            "planner_applied_rate": round(planner_applied_rate, 4),
+            "duration_ms": round(duration_ms, 2),
+            "off_entity_reject_rate": round(off_entity_reject_rate, 4),
+            "schema_fail_count": schema_fail_count,
+            "total_evidence_items": total_evidence,
+            "controller_health_reasons": controller_reasons,
+        }
+
+    def _compare_discovery_payloads(
+        self,
+        *,
+        v2_payload: Dict[str, Any],
+        agentic_payload: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        v2_summary = self._discovery_winner_score(v2_payload)
+        agentic_summary = self._discovery_winner_score(agentic_payload)
+        runtimes = {
+            "v2": {"payload": v2_payload, **v2_summary},
+            "agentic_v3": {"payload": agentic_payload, **agentic_summary},
+        }
+        for runtime_name, row in runtimes.items():
+            payload = row["payload"]
+            performance = payload.get("performance_summary") if isinstance(payload.get("performance_summary"), dict) else {}
+            row["eligible"] = True
+            row["ineligible_reasons"] = []
+            if row["planner_applied_rate"] <= 0.0:
+                row["eligible"] = False
+                row["ineligible_reasons"].append("planner_applied_rate_zero")
+            if row["off_entity_reject_rate"] > 0.25:
+                row["eligible"] = False
+                row["ineligible_reasons"].append("off_entity_reject_rate_gt_25pct")
+            if row["schema_fail_count"] > 0 and self._safe_ratio(row["schema_fail_count"], max(1, row["total_evidence_items"])) > 0.15:
+                row["eligible"] = False
+                row["ineligible_reasons"].append("schema_fail_rate_gt_15pct")
+            if float(payload.get("actionability_score") or performance.get("actionability_score") or 0.0) <= 0.0:
+                row["ineligible_reasons"].append("sparse_fallback_only")
+
+        eligible = {name: row for name, row in runtimes.items() if row["eligible"]}
+        if eligible:
+            winner_runtime = max(eligible.items(), key=lambda item: item[1]["weighted_total"])[0]
+        else:
+            winner_runtime = max(
+                runtimes.items(),
+                key=lambda item: (
+                    item[1]["weighted_total"],
+                    len(item[1].get("payload", {}).get("turn_trace") or []),
+                    -item[1]["off_entity_reject_rate"],
+                ),
+            )[0]
+        loser_runtime = "agentic_v3" if winner_runtime == "v2" else "v2"
+        duration_fastest = min(
+            runtimes["v2"]["duration_ms"] or float("inf"),
+            runtimes["agentic_v3"]["duration_ms"] or float("inf"),
+        )
+        for row in runtimes.values():
+            if duration_fastest and duration_fastest != float("inf") and row["duration_ms"] > 0:
+                row["score_breakdown"]["runtime_efficiency_stability"] = round(
+                    min(
+                        row["score_breakdown"]["runtime_efficiency_stability"],
+                        duration_fastest / row["duration_ms"],
+                    ),
+                    4,
+                )
+        return {
+            "mode": "dual_compare",
+            "winner_runtime": winner_runtime,
+            "loser_runtime": loser_runtime,
+            "winner_reason_codes": runtimes[winner_runtime]["payload"].get("controller_health_reasons") or [],
+            "winner_score_breakdown": runtimes[winner_runtime]["score_breakdown"],
+            "runtimes": {
+                "v2": {k: v for k, v in runtimes["v2"].items() if k != "payload"},
+                "agentic_v3": {k: v for k, v in runtimes["agentic_v3"].items() if k != "payload"},
+            },
+        }
 
     async def _run_schema_first_prepass(
         self,
@@ -1280,6 +1532,23 @@ class FixedDossierFirstPipeline:
             "discovery_path": str(discovery_path),
             "scores_path": str(scores_path),
         }
+        dual_compare_payload = getattr(self, "_last_dual_compare_payload", None)
+        if isinstance(dual_compare_payload, dict):
+            comparison_path = self.output_dir / f"{entity_id}_discovery_comparison_{timestamp}.json"
+            with open(comparison_path, "w") as compare_file:
+                json.dump(dual_compare_payload, compare_file, indent=2, default=str)
+            artifacts["comparison_path"] = str(comparison_path)
+            logger.info(f"💾 Discovery comparison saved: {comparison_path}")
+        if isinstance(getattr(self, "_last_v2_compare_payload", None), dict):
+            v2_path = self.output_dir / f"{entity_id}_discovery_v2_control_{timestamp}.json"
+            with open(v2_path, "w") as compare_file:
+                json.dump(self._last_v2_compare_payload, compare_file, indent=2, default=str)
+            artifacts["control_discovery_path"] = str(v2_path)
+        if isinstance(getattr(self, "_last_agentic_compare_payload", None), dict):
+            agentic_path = self.output_dir / f"{entity_id}_discovery_agentic_v3_{timestamp}.json"
+            with open(agentic_path, "w") as compare_file:
+                json.dump(self._last_agentic_compare_payload, compare_file, indent=2, default=str)
+            artifacts["agentic_discovery_path"] = str(agentic_path)
 
         hop_trace_payload = self._build_hop_trace_payload(
             entity_id=entity_id,
@@ -1339,6 +1608,11 @@ class FixedDossierFirstPipeline:
         if not isinstance(payload.get("controller_health_reasons"), list):
             reasons = perf.get("controller_health_reasons")
             payload["controller_health_reasons"] = reasons if isinstance(reasons, list) else []
+        for key in ("turn_trace", "planner_decisions", "executed_actions", "credit_ledger", "evidence_ledger"):
+            if not isinstance(payload.get(key), list):
+                payload[key] = []
+        if not isinstance(payload.get("winner_metadata"), dict):
+            payload["winner_metadata"] = {}
 
         perf.setdefault("signals_validated_count", len(payload.get("signals_discovered") or []))
         perf.setdefault("signals_provisional_count", len(payload.get("provisional_signals") or []))
@@ -1346,6 +1620,25 @@ class FixedDossierFirstPipeline:
         perf.setdefault("candidate_events_summary", payload.get("candidate_events_summary"))
         perf.setdefault("lane_failures", payload.get("lane_failures"))
         perf.setdefault("controller_health_reasons", payload.get("controller_health_reasons"))
+        perf.setdefault("planner_decision_parse_fail_count", perf.get("planner_action_parse_fail_count") or 0)
+        perf.setdefault("planner_decision_applied_count", perf.get("planner_action_applied_count") or 0)
+        perf.setdefault(
+            "planner_decision_applied_rate",
+            round(
+                float(perf.get("planner_decision_applied_count") or 0)
+                / max(
+                    1,
+                    int(perf.get("planner_turn_count") or 0)
+                    + int(perf.get("planner_decision_parse_fail_count") or 0),
+                ),
+                4,
+            ),
+        )
+        perf.setdefault("actionability_score", float(payload.get("actionability_score") or perf.get("actionability_score") or 0.0))
+        perf.setdefault(
+            "entity_grounded_signal_count",
+            int(payload.get("entity_grounded_signal_count") or perf.get("entity_grounded_signal_count") or 0),
+        )
         return payload
 
     def _enrich_dossier_with_discovery(
@@ -1453,7 +1746,7 @@ class FixedDossierFirstPipeline:
                 "hop_count": len(hops),
             }
 
-        return {
+        payload = {
             "captured_at": datetime.now(timezone.utc).isoformat(),
             "entity_id": entity_id,
             "entity_name": entity_name,
@@ -1473,6 +1766,26 @@ class FixedDossierFirstPipeline:
                 },
             },
         }
+        comparison = getattr(self, "_last_dual_compare_payload", None)
+        if isinstance(comparison, dict):
+            payload["comparison"] = comparison
+            payload["lanes"]["control_v2"] = {
+                "summary": _lane_summary(
+                    getattr(self, "_last_v2_compare_payload", {}) or {},
+                    (((getattr(self, "_last_v2_compare_payload", {}) or {}).get("performance_summary") or {}).get("hop_timings") or []),
+                ),
+                "hop_timings": (((getattr(self, "_last_v2_compare_payload", {}) or {}).get("performance_summary") or {}).get("hop_timings") or []),
+                "official_site_resolution_traces": (((getattr(self, "_last_v2_compare_payload", {}) or {}).get("performance_summary") or {}).get("official_site_resolution_traces") or []),
+            }
+            payload["lanes"]["agentic_v3"] = {
+                "summary": _lane_summary(
+                    getattr(self, "_last_agentic_compare_payload", {}) or {},
+                    (((getattr(self, "_last_agentic_compare_payload", {}) or {}).get("performance_summary") or {}).get("hop_timings") or []),
+                ),
+                "hop_timings": (((getattr(self, "_last_agentic_compare_payload", {}) or {}).get("performance_summary") or {}).get("hop_timings") or []),
+                "official_site_resolution_traces": (((getattr(self, "_last_agentic_compare_payload", {}) or {}).get("performance_summary") or {}).get("official_site_resolution_traces") or []),
+            }
+        return payload
 
     def _count_section_fallbacks(self, dossier: Dict[str, Any]) -> Dict[str, int]:
         sections = dossier.get("sections") if isinstance(dossier, dict) else []
@@ -1513,7 +1826,7 @@ class FixedDossierFirstPipeline:
                 or any(reason_code.startswith(prefix) for prefix in hard_reason_prefixes)
             )
             if (
-                status in {"completed_with_fallback", "failed"}
+                status in {"completed_with_fallback", "completed_with_sparse_fallback", "degraded_sparse_evidence", "failed"}
                 or reason_is_hard_failure
                 or
                 "returned no structured content" in lowered
@@ -1787,14 +2100,29 @@ class FixedDossierFirstPipeline:
             "hop_credit_events": int(performance.get("hop_credit_events") or 0),
             "dynamic_hop_credits_enabled": bool(performance.get("dynamic_hop_credits_enabled", False)),
             "llm_hop_selection_count": int(performance.get("llm_hop_selection_count") or 0),
-            "planner_action_applied_count": int(performance.get("planner_action_applied_count") or 0),
-            "planner_action_parse_fail_count": int(performance.get("planner_action_parse_fail_count") or 0),
+            "planner_action_applied_count": int(
+                performance.get("planner_action_applied_count")
+                or performance.get("planner_decision_applied_count")
+                or 0
+            ),
+            "planner_action_parse_fail_count": int(
+                performance.get("planner_action_parse_fail_count")
+                or performance.get("planner_decision_parse_fail_count")
+                or 0
+            ),
+            "planner_turn_count": int(performance.get("planner_turn_count") or 0),
+            "planner_decision_applied_rate": float(performance.get("planner_decision_applied_rate") or 0.0),
             "planner_search_refinement_count": int(planner_search_refinement_count),
             "planner_action_counts": planner_action_counts,
             "controller_health_reasons": list(performance.get("controller_health_reasons") or []),
             "llm_json_hop_count": int(performance.get("llm_json_hop_count") or 0),
             "heuristic_hop_count": int(performance.get("heuristic_hop_count") or 0),
             "agent_influence_ratio": float(performance.get("agent_influence_ratio") or 0.0),
+            "credits_spent": int(performance.get("credits_spent") or 0),
+            "credits_earned": int(performance.get("credits_earned") or 0),
+            "entity_grounded_signal_count": int(performance.get("entity_grounded_signal_count") or 0),
+            "actionability_score": float(performance.get("actionability_score") or discovery.get("actionability_score") or 0.0),
+            "off_entity_reject_rate": float(performance.get("off_entity_reject_rate") or 0.0),
         }
         llm_hop_selection_count = int(discovery_controller.get("llm_hop_selection_count") or 0)
         planner_action_applied_count = int(discovery_controller.get("planner_action_applied_count") or 0)
@@ -1810,6 +2138,7 @@ class FixedDossierFirstPipeline:
             "run_at": datetime.now(timezone.utc).isoformat(),
             "entity_id": entity_id,
             "entity_name": entity_name,
+            "runtime_mode": str(performance.get("runtime_mode") or getattr(self, "discovery_runtime_mode", self.discovery_engine)),
             "requested_objective": getattr(self, "requested_objective", self.run_objective if hasattr(self, "run_objective") else "dossier_core"),
             "effective_objective": getattr(self, "effective_objective", self.run_objective if hasattr(self, "run_objective") else "dossier_core"),
             "phase_objectives": dict(getattr(self, "phase_objectives", {})),
@@ -1822,6 +2151,8 @@ class FixedDossierFirstPipeline:
                 acceptance_gate.get("observed", {}).get("signals_candidate_events_count") or candidate_events_count
             ),
             "acceptance_mode": acceptance_gate.get("acceptance_mode"),
+            "winner_runtime": performance.get("winner_runtime"),
+            "comparison_summary": performance.get("comparison_summary") if isinstance(performance.get("comparison_summary"), dict) else None,
             "metrics": {
                 "dossier_sections": len(dossier.get("sections") or []) if isinstance(dossier.get("sections"), list) else 0,
                 "final_confidence": final_confidence,
@@ -1836,10 +2167,26 @@ class FixedDossierFirstPipeline:
                     performance.get("signals_candidate_events_count") or candidate_events_count
                 ),
                 "signals_diagnostic_count": int(performance.get("signals_diagnostic_count") or len(diagnostic_signal_list)),
+                "planner_turn_count": int(performance.get("planner_turn_count") or 0),
+                "planner_decision_parse_fail_count": int(performance.get("planner_decision_parse_fail_count") or 0),
+                "planner_decision_applied_count": int(performance.get("planner_decision_applied_count") or 0),
+                "planner_decision_applied_rate": float(performance.get("planner_decision_applied_rate") or 0.0),
+                "planner_branch_change_count": int(performance.get("planner_branch_change_count") or 0),
+                "credits_spent": int(performance.get("credits_spent") or 0),
+                "credits_earned": int(performance.get("credits_earned") or 0),
+                "entity_grounded_signal_count": int(performance.get("entity_grounded_signal_count") or discovery.get("entity_grounded_signal_count") or 0),
+                "actionability_score": float(performance.get("actionability_score") or discovery.get("actionability_score") or 0.0),
+                "off_entity_reject_rate": float(performance.get("off_entity_reject_rate") or 0.0),
                 "metadata_coverage_score": metadata_coverage_score,
                 "unknown_required_field_count": unknown_required_field_count,
                 "metadata_missing_fields": metadata_missing_fields,
                 "section_partial_timeout_count": int(section_partial_timeout_count),
+                "sparse_fallback_section_count": sum(
+                    1
+                    for section in sections
+                    if isinstance(section, dict)
+                    and str(section.get("output_status") or "").strip().lower() in {"completed_with_sparse_fallback", "degraded_sparse_evidence"}
+                ),
                 "iterations_completed": int(discovery.get("iterations_completed") or 0),
                 "procurement_maturity": scores.get("procurement_maturity"),
                 "sales_readiness": scores.get("sales_readiness"),
@@ -1874,6 +2221,8 @@ class FixedDossierFirstPipeline:
                 "dual_write_ok": dual_write_ok,
                 "runtime_preflight": dict(getattr(self, "_runtime_preflight", {}) or {}),
                 "persistence_status": persistence_status if isinstance(persistence_status, dict) else None,
+                "comparison_summary": performance.get("comparison_summary") if isinstance(performance.get("comparison_summary"), dict) else None,
+                "winner_runtime": performance.get("winner_runtime"),
                 "shadow_unbounded": {
                     "enabled": bool(shadow_discovery),
                     "final_confidence": float(shadow_discovery.get("final_confidence") or 0.0) if shadow_discovery else None,

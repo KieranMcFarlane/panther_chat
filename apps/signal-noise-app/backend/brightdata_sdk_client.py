@@ -1506,6 +1506,7 @@ class BrightDataSDKClient:
         self,
         url: str,
         insecure_ssl_used: bool = False,
+        allow_probe_expansion: bool = True,
     ) -> Optional[Dict[str, Any]]:
         """
         Scrape via BrightData `/request` API using browser/unlocker zones.
@@ -1521,7 +1522,13 @@ class BrightDataSDKClient:
             return None
 
         target_url = url if url.startswith(("http://", "https://")) else f"https://{url}"
-        probe_urls = self._build_render_probe_urls(target_url)
+        probe_urls = (
+            self._build_render_probe_urls(target_url)
+            if allow_probe_expansion
+            else [target_url.rstrip("/")]
+        )
+        max_probe_urls = max(1, int(os.getenv("BRIGHTDATA_RENDER_PROBE_MAX_URLS", "4")))
+        probe_urls = probe_urls[:max_probe_urls]
         headers = {
             "Authorization": f"Bearer {token}",
             "Content-Type": "application/json",
@@ -1534,6 +1541,8 @@ class BrightDataSDKClient:
             1,
             int(os.getenv("BRIGHTDATA_RENDERED_MAX_TOTAL_ATTEMPTS", "8")),
         )
+        if not allow_probe_expansion:
+            max_total_render_attempts = min(max_total_render_attempts, 2)
         min_words = int(os.getenv("BRIGHTDATA_MIN_WORDS", "80"))
         low_signal_hard_stop_repeats = max(
             1,
@@ -1759,7 +1768,11 @@ class BrightDataSDKClient:
         for candidate_url in candidates:
             try:
                 rendered = await asyncio.wait_for(
-                    self._scrape_with_browser_request_api(candidate_url, insecure_ssl_used=False),
+                    self._scrape_with_browser_request_api(
+                        candidate_url,
+                        insecure_ssl_used=False,
+                        allow_probe_expansion=False,
+                    ),
                     timeout=per_candidate_timeout,
                 )
             except Exception:

@@ -16,6 +16,8 @@ def _normalize_engine_name(value: str) -> str:
         return "legacy"
     if raw in {"v2", "evidence_first", "discovery_v2"}:
         return "v2"
+    if raw in {"agentic_v3", "v3", "agentic", "planner_led"}:
+        return "agentic_v3"
     return "v2"
 
 
@@ -48,6 +50,19 @@ def create_discovery_engine(
         logger.info("🧠 Discovery engine selected: legacy")
         return instance, "legacy"
 
+    if selected == "agentic_v3":
+        try:
+            from backend.discovery_runtime_agentic_v3 import DiscoveryRuntimeAgenticV3
+        except ImportError:
+            from discovery_runtime_agentic_v3 import DiscoveryRuntimeAgenticV3
+
+        instance = DiscoveryRuntimeAgenticV3(
+            claude_client=claude_client,
+            brightdata_client=brightdata_client,
+        )
+        logger.info("🧠 Discovery engine selected: agentic_v3")
+        return instance, "agentic_v3"
+
     try:
         from backend.discovery_runtime_v2 import DiscoveryRuntimeV2
     except ImportError:
@@ -59,4 +74,3 @@ def create_discovery_engine(
     )
     logger.info("🧠 Discovery engine selected: v2")
     return instance, "v2"
-

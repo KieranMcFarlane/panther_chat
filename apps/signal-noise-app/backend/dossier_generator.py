@@ -1262,10 +1262,10 @@ Website: N/A
                 "Use official-site and leadership sources as primary channels for next-hop discovery.",
             ]
             reason_code = None
-            output_status = "completed"
+            output_status = "completed_with_sparse_fallback"
             confidence = 0.72
             if core_degraded:
-                output_status = "degraded"
+                output_status = "degraded_sparse_evidence"
                 reason_code = "insufficient_metadata"
                 confidence = 0.48
                 insights.append(
@@ -1304,11 +1304,11 @@ Website: N/A
             if opportunity_count > 0:
                 actions.append(f"Exploit {opportunity_count} detected strategic opportunity signal(s) for tailored outreach timing.")
             low_signal_actionability = leadership_count == 0 and opportunity_count == 0 and len(news_items) == 0
-            output_status = "completed"
+            output_status = "completed_with_sparse_fallback"
             reason_code = None
             confidence = 0.68
             if low_signal_actionability:
-                output_status = "degraded"
+                output_status = "degraded_sparse_evidence"
                 reason_code = "no_actionable_signals"
                 confidence = 0.5
                 actions = [
@@ -1342,11 +1342,11 @@ Website: N/A
             ]
             if leadership_names:
                 content.append(f"Known decision makers: {leadership_names}.")
-            output_status = "completed"
+            output_status = "completed_with_sparse_fallback"
             reason_code = None
             confidence = 0.67
             if leadership_count == 0:
-                output_status = "degraded"
+                output_status = "degraded_sparse_evidence"
                 reason_code = "no_leadership_contacts"
                 confidence = 0.53
             return {
@@ -1380,15 +1380,15 @@ Website: N/A
                     content = [f"No structured recent-news entries were captured for {entity_name} in this run."]
             else:
                 content = [f"No structured recent-news entries were captured for {entity_name} in this run."]
-            output_status = "completed"
+            output_status = "completed_with_sparse_fallback"
             reason_code = None
             confidence = 0.62
             if len(news_items) == 0 and not recent_news_reason_code:
-                output_status = "degraded"
+                output_status = "degraded_sparse_evidence"
                 reason_code = "recent_news_empty"
                 confidence = 0.48
             if recent_news_reason_code in {"timeout_partial", "source_low_signal"}:
-                output_status = "degraded"
+                output_status = "degraded_sparse_evidence"
                 reason_code = recent_news_reason_code
                 confidence = 0.52 if recent_news_reason_code == "timeout_partial" else 0.5
             return {
@@ -1424,11 +1424,11 @@ Website: N/A
                 leader_lines = [f"{leadership_names} ({leadership_roles or 'roles not yet structured'})"]
             if not leader_lines:
                 leader_lines = [f"Leadership records are currently sparse for {entity_name}."]
-            output_status = "completed"
+            output_status = "completed_with_sparse_fallback"
             reason_code = None
             confidence = 0.66
             if leadership_count == 0:
-                output_status = "degraded"
+                output_status = "degraded_sparse_evidence"
                 reason_code = "leadership_sparse"
                 confidence = 0.5
             return {
@@ -1453,11 +1453,11 @@ Website: N/A
                 crm = str(tech_stack.get("crm") or "unknown")
             else:
                 frontend = analytics = crm = "unknown"
-            output_status = "completed"
+            output_status = "completed_with_sparse_fallback"
             reason_code = None
             confidence = 0.64
             if not isinstance(tech_stack, dict) and str(league_position).lower() == "unknown" and str(points).lower() == "unknown":
-                output_status = "degraded"
+                output_status = "degraded_sparse_evidence"
                 reason_code = "digital_maturity_low_signal"
                 confidence = 0.52
             return {
@@ -1483,11 +1483,11 @@ Website: N/A
 
         if section_id == "outreach_strategy":
             primary_target = leadership_names.split(",")[0].strip() if leadership_names else f"{entity_name} digital/commercial lead"
-            output_status = "completed"
+            output_status = "completed_with_sparse_fallback"
             reason_code = None
             confidence = 0.65
             if leadership_count == 0 and len(news_items) == 0:
-                output_status = "degraded"
+                output_status = "degraded_sparse_evidence"
                 reason_code = "outreach_low_evidence"
                 confidence = 0.5
             return {
@@ -2127,6 +2127,14 @@ Website: {metadata.website or 'N/A'}
         metadata = payload.get("metadata") if isinstance(payload.get("metadata"), dict) else {}
         entity_name = str(payload.get("entity_name") or metadata.get("entity_name") or "").strip()
         recent_news = self._extract_recent_news_from_pool(signal_pool, entity_name=entity_name)
+        prioritized_signal_pool = sorted(
+            signal_pool,
+            key=lambda row: (
+                self._discovery_signal_rank(str(row.get("validation_state") or "candidate")),
+                int(row.get("rank") or 1),
+            ),
+            reverse=True,
+        )
 
         for section in sections:
             if not isinstance(section, dict):
@@ -2151,11 +2159,11 @@ Website: {metadata.website or 'N/A'}
                 section["content"] = content[:6]
                 section["metrics"] = [f"Decision makers identified: {len(deduped_leadership)}"]
                 if validated_count > 0:
-                    section["output_status"] = "completed"
+                    section["output_status"] = "completed_evidence_led"
                     section["reason_code"] = None
                     section["confidence"] = max(0.66, float(section.get("confidence") or 0.66))
                 else:
-                    section["output_status"] = "degraded"
+                    section["output_status"] = "completed_with_sparse_fallback"
                     section["reason_code"] = "leadership_unvalidated_only"
                     section["confidence"] = 0.56
 
@@ -2178,13 +2186,44 @@ Website: {metadata.website or 'N/A'}
                 section["content"] = content
                 section["metrics"] = [f"News items captured: {len(recent_news)}"]
                 if validated_news > 0:
-                    section["output_status"] = "completed"
+                    section["output_status"] = "completed_evidence_led"
                     section["reason_code"] = None
                     section["confidence"] = max(0.62, float(section.get("confidence") or 0.62))
                 else:
-                    section["output_status"] = "degraded"
+                    section["output_status"] = "completed_with_sparse_fallback"
                     section["reason_code"] = "recent_news_unvalidated_only"
                     section["confidence"] = 0.55
+            if section_id == "outreach_strategy":
+                anchors: List[str] = []
+                for item in prioritized_signal_pool[:3]:
+                    if not isinstance(item, dict):
+                        continue
+                    url = str(item.get("url") or "").strip()
+                    text = str(item.get("text") or item.get("content") or "").strip()
+                    if not text and not url:
+                        continue
+                    anchor = self._truncate_prompt_value(text, 150) if text else url
+                    if url:
+                        anchor = f"{anchor} [{url}]"
+                    anchors.append(anchor)
+                if anchors:
+                    has_validated_anchor = any(
+                        str(item.get("validation_state") or "").strip().lower() == "validated"
+                        for item in prioritized_signal_pool[:3]
+                        if isinstance(item, dict)
+                    )
+                    section["content"] = [
+                        f"Primary evidence anchor: {anchors[0]}",
+                        "Sequence outreach in three steps: context proof, capability mapping, and low-friction pilot ask.",
+                        "Every message should cite one explicit discovery anchor before making a capability claim.",
+                    ]
+                    section["recommendations"] = [
+                        f"Use anchored evidence in opening outreach: {anchors[0]}",
+                        f"Secondary proof point: {anchors[1]}" if len(anchors) > 1 else "Gather one more entity-grounded proof point before broad outreach.",
+                    ]
+                    section["output_status"] = "completed_evidence_led" if has_validated_anchor else "completed_with_sparse_fallback"
+                    section["reason_code"] = None if has_validated_anchor else "outreach_unvalidated_anchors"
+                    section["confidence"] = max(0.58, float(section.get("confidence") or 0.58))
 
         metadata = payload.get("metadata")
         if not isinstance(metadata, dict):
@@ -2194,6 +2233,8 @@ Website: {metadata.website or 'N/A'}
             "validated_signals": len(discovery_payload.get("signals_discovered") or []),
             "provisional_signals": len(discovery_payload.get("provisional_signals") or []),
             "candidate_events": len(discovery_payload.get("candidate_evaluations") or []),
+            "actionability_score": float(discovery_payload.get("actionability_score") or 0.0),
+            "entity_grounded_signal_count": int(discovery_payload.get("entity_grounded_signal_count") or 0),
         }
         return payload
 
@@ -3351,6 +3392,14 @@ Hard requirements:
         metadata = payload.get("metadata") if isinstance(payload.get("metadata"), dict) else {}
         entity_name = str(payload.get("entity_name") or metadata.get("entity_name") or "").strip()
         recent_news = self._extract_recent_news_from_pool(signal_pool, entity_name=entity_name)
+        prioritized_signal_pool = sorted(
+            signal_pool,
+            key=lambda row: (
+                self._discovery_signal_rank(str(row.get("validation_state") or "candidate")),
+                int(row.get("rank") or 1),
+            ),
+            reverse=True,
+        )
         for section in sections:
             if not isinstance(section, dict):
                 continue
@@ -3374,11 +3423,11 @@ Hard requirements:
                 section["content"] = content[:6]
                 section["metrics"] = [f"Decision makers identified: {len(deduped_leadership)}"]
                 if validated_count > 0:
-                    section["output_status"] = "completed"
+                    section["output_status"] = "completed_evidence_led"
                     section["reason_code"] = None
                     section["confidence"] = max(0.66, float(section.get("confidence") or 0.66))
                 else:
-                    section["output_status"] = "degraded"
+                    section["output_status"] = "completed_with_sparse_fallback"
                     section["reason_code"] = "leadership_unvalidated_only"
                     section["confidence"] = 0.56
             if section_id == "recent_news" and recent_news:
@@ -3400,13 +3449,44 @@ Hard requirements:
                 section["content"] = content
                 section["metrics"] = [f"News items captured: {len(recent_news)}"]
                 if validated_news > 0:
-                    section["output_status"] = "completed"
+                    section["output_status"] = "completed_evidence_led"
                     section["reason_code"] = None
                     section["confidence"] = max(0.62, float(section.get("confidence") or 0.62))
                 else:
-                    section["output_status"] = "degraded"
+                    section["output_status"] = "completed_with_sparse_fallback"
                     section["reason_code"] = "recent_news_unvalidated_only"
                     section["confidence"] = 0.55
+            if section_id == "outreach_strategy":
+                anchors: List[str] = []
+                for item in prioritized_signal_pool[:3]:
+                    if not isinstance(item, dict):
+                        continue
+                    url = str(item.get("url") or "").strip()
+                    text = str(item.get("text") or item.get("content") or "").strip()
+                    if not text and not url:
+                        continue
+                    anchor = self._truncate_prompt_value(text, 150) if text else url
+                    if url:
+                        anchor = f"{anchor} [{url}]"
+                    anchors.append(anchor)
+                if anchors:
+                    section["content"] = [
+                        f"Primary evidence anchor: {anchors[0]}",
+                        "Sequence outreach in three steps: context proof, capability mapping, and low-friction pilot ask.",
+                        "Every message should cite one explicit discovery anchor before making a capability claim.",
+                    ]
+                    section["recommendations"] = [
+                        f"Use anchored evidence in opening outreach: {anchors[0]}",
+                        f"Secondary proof point: {anchors[1]}" if len(anchors) > 1 else "Gather one more entity-grounded proof point before broad outreach.",
+                    ]
+                    has_validated_anchor = any(
+                        str(item.get("validation_state") or "").strip().lower() == "validated"
+                        for item in prioritized_signal_pool[:3]
+                        if isinstance(item, dict)
+                    )
+                    section["output_status"] = "completed_evidence_led" if has_validated_anchor else "completed_with_sparse_fallback"
+                    section["reason_code"] = None if has_validated_anchor else "outreach_unvalidated_anchors"
+                    section["confidence"] = max(0.58, float(section.get("confidence") or 0.58))
 
         metadata = payload.get("metadata")
         if not isinstance(metadata, dict):
