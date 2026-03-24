@@ -155,6 +155,34 @@ CONTROLLER_ACTION_TYPES = {
     "stop_run",
 }
 
+PLANNER_ACTION_ALIASES: Dict[str, str] = {
+    "search": "search_queries",
+    "search_query": "search_queries",
+    "refine_search": "search_queries",
+    "scrape": "scrape_candidate",
+    "open_candidate": "scrape_candidate",
+    "open_url": "same_domain_probe",
+    "probe_domain": "same_domain_probe",
+    "probe_same_domain": "same_domain_probe",
+    "stop": "stop_lane",
+    "halt_lane": "stop_lane",
+    "halt_run": "stop_run",
+}
+
+PLANNER_LANE_ALIASES: Dict[str, str] = {
+    "official": "official_site",
+    "officialsite": "official_site",
+    "press": "press_release",
+    "pressrelease": "press_release",
+    "news": "trusted_news",
+    "trustednews": "trusted_news",
+    "rfp": "rfp_procurement_tenders",
+    "procurement": "rfp_procurement_tenders",
+    "tenders": "rfp_procurement_tenders",
+    "annualreport": "annual_report",
+    "governance": "governance_pdf",
+}
+
 CONTROLLER_ACTION_JSON_SCHEMA: Dict[str, Any] = {
     "name": "controller_action",
     "schema": {
@@ -246,6 +274,32 @@ def _extract_json_object(text: str) -> Optional[Dict[str, Any]]:
     except Exception:
         return None
     return None
+
+
+def _normalize_planner_action_name(value: Any) -> str:
+    raw = str(value or "").strip().lower().replace("-", "_").replace(" ", "_")
+    if not raw:
+        return ""
+    if raw in CONTROLLER_ACTION_TYPES:
+        return raw
+    return PLANNER_ACTION_ALIASES.get(raw, "")
+
+
+def _normalize_planner_lane_name(value: Any) -> str:
+    raw = str(value or "").strip().lower().replace("-", "_").replace(" ", "_")
+    if not raw:
+        return ""
+    if raw in _controller_action_allowed_lanes():
+        return raw
+    compact = raw.replace("_", "")
+    if compact in PLANNER_LANE_ALIASES:
+        candidate = PLANNER_LANE_ALIASES[compact]
+        if candidate in _controller_action_allowed_lanes():
+            return candidate
+    candidate = PLANNER_LANE_ALIASES.get(raw, "")
+    if candidate in _controller_action_allowed_lanes():
+        return candidate
+    return ""
 
 
 def parse_controller_action(payload: Any) -> Optional[Dict[str, Any]]:
@@ -3141,6 +3195,11 @@ class DiscoveryRuntimeV2:
 
     @staticmethod
     def _extract_json_object_strict(text: Any) -> Optional[Dict[str, Any]]:
+        payload = DiscoveryRuntimeV2._extract_json_value_strict(text)
+        return payload if isinstance(payload, dict) else None
+
+    @staticmethod
+    def _extract_json_value_strict(text: Any) -> Optional[Any]:
         raw = str(text or "").strip()
         if not raw:
             return None
@@ -3159,7 +3218,41 @@ class DiscoveryRuntimeV2:
             payload = json.loads(raw)
         except Exception:
             return None
-        return payload if isinstance(payload, dict) else None
+        return payload
+
+    def _planner_payload_from_response(self, response: Dict[str, Any], *, batch: bool) -> Optional[Any]:
+        structured_output = (response or {}).get("structured_output")
+        if isinstance(structured_output, dict):
+            return structured_output
+        if isinstance(structured_output, list):
+            if batch:
+                return {"plan_actions": structured_output}
+            first_dict = next((item for item in structured_output if isinstance(item, dict)), None)
+            if isinstance(first_dict, dict):
+                return first_dict
+            return {"actions": structured_output}
+        if isinstance(structured_output, str):
+            parsed_structured = self._extract_json_value_strict(structured_output)
+            if parsed_structured is not None:
+                if isinstance(parsed_structured, list):
+                    if batch:
+                        return {"plan_actions": parsed_structured}
+                    first_dict = next((item for item in parsed_structured if isinstance(item, dict)), None)
+                    if isinstance(first_dict, dict):
+                        return first_dict
+                    return {"actions": parsed_structured}
+                return parsed_structured
+        parsed_content = self._extract_json_value_strict((response or {}).get("content"))
+        if parsed_content is None:
+            return None
+        if isinstance(parsed_content, list):
+            if batch:
+                return {"plan_actions": parsed_content}
+            first_dict = next((item for item in parsed_content if isinstance(item, dict)), None)
+            if isinstance(first_dict, dict):
+                return first_dict
+            return {"actions": parsed_content}
+        return parsed_content
 
     @staticmethod
     def _is_evidence_grounded_in_content(
@@ -3426,12 +3519,7 @@ class DiscoveryRuntimeV2:
                 empty_retries_before_fallback_override=1,
                 fast_fail_on_length=True,
             )
-            payload = None
-            structured_output = (response or {}).get("structured_output")
-            if isinstance(structured_output, dict):
-                payload = structured_output
-            if not payload:
-                payload = self._extract_json_object_strict((response or {}).get("content"))
+            payload = self._planner_payload_from_response(response or {}, batch=False)
             action = parse_controller_action(payload)
             if not action:
                 normalized_payload = self._normalize_planner_action_payload(
@@ -3588,12 +3676,7 @@ class DiscoveryRuntimeV2:
         except Exception:  # noqa: BLE001
             return []
 
-        payload = None
-        structured_output = (response or {}).get("structured_output")
-        if isinstance(structured_output, dict):
-            payload = structured_output
-        if not payload:
-            payload = self._extract_json_object_strict((response or {}).get("content"))
+        payload = self._planner_payload_from_response(response or {}, batch=True)
 
         normalized_actions = self._normalize_planner_batch_payload(
             payload=payload,
@@ -3668,12 +3751,7 @@ class DiscoveryRuntimeV2:
         except Exception:  # noqa: BLE001
             return []
 
-        payload = None
-        structured_output = (repair_response or {}).get("structured_output")
-        if isinstance(structured_output, dict):
-            payload = structured_output
-        if not payload:
-            payload = self._extract_json_object_strict((repair_response or {}).get("content"))
+        payload = self._planner_payload_from_response(repair_response or {}, batch=True)
         return self._normalize_planner_batch_payload(payload=payload, lane=lane, candidates=candidates) or []
 
     async def _review_batch_plan_queue(
@@ -3901,12 +3979,7 @@ class DiscoveryRuntimeV2:
                 empty_retries_before_fallback_override=1,
                 fast_fail_on_length=True,
             )
-            payload = None
-            structured_output = (repair_response or {}).get("structured_output")
-            if isinstance(structured_output, dict):
-                payload = structured_output
-            if not payload:
-                payload = self._extract_json_object_strict((repair_response or {}).get("content"))
+            payload = self._planner_payload_from_response(repair_response or {}, batch=False)
             action = parse_controller_action(payload)
             if action:
                 return action
@@ -3963,14 +4036,46 @@ class DiscoveryRuntimeV2:
         parameters = normalized.get("parameters")
         parameters_dict = parameters if isinstance(parameters, dict) else {}
 
-        action = str(
+        action = _normalize_planner_action_name(
             normalized.get("action")
             or normalized.get("next_action")
             or normalized.get("action_type")
             or parameters_dict.get("action")
+            or normalized.get("decision")
+            or normalized.get("selected_action")
             or ""
-        ).strip()
-        if action not in CONTROLLER_ACTION_TYPES:
+        )
+        if not action:
+            wrapped_action = (
+                normalized.get("controller_action")
+                or normalized.get("selected_action_payload")
+                or normalized.get("next_step")
+                or normalized.get("next")
+            )
+            if isinstance(wrapped_action, dict):
+                return DiscoveryRuntimeV2._normalize_planner_action_payload(
+                    payload=wrapped_action,
+                    lane=lane,
+                    candidates=candidates,
+                )
+            if isinstance(wrapped_action, list):
+                first_dict = next((item for item in wrapped_action if isinstance(item, dict)), None)
+                if isinstance(first_dict, dict):
+                    return DiscoveryRuntimeV2._normalize_planner_action_payload(
+                        payload=first_dict,
+                        lane=lane,
+                        candidates=candidates,
+                    )
+            for key in ("plan_actions", "actions"):
+                wrapped_list = normalized.get(key)
+                if isinstance(wrapped_list, list):
+                    first_dict = next((item for item in wrapped_list if isinstance(item, dict)), None)
+                    if isinstance(first_dict, dict):
+                        return DiscoveryRuntimeV2._normalize_planner_action_payload(
+                            payload=first_dict,
+                            lane=lane,
+                            candidates=candidates,
+                        )
             return None
 
         reason = str(
@@ -3983,12 +4088,14 @@ class DiscoveryRuntimeV2:
 
         canonical: Dict[str, Any] = {"action": action}
         if action != "stop_run":
-            canonical["lane"] = str(
+            lane_candidate = _normalize_planner_lane_name(
                 normalized.get("lane")
                 or normalized.get("target_lane")
                 or parameters_dict.get("lane")
                 or lane
-            ).strip()
+            )
+            # Candidate selection is lane-local. Coerce to active lane when model emits cross-lane directives.
+            canonical["lane"] = lane if lane_candidate else lane
         if reason:
             canonical["reason"] = reason
 
@@ -4004,6 +4111,11 @@ class DiscoveryRuntimeV2:
                     if parameters_dict.get("candidate_index") is not None
                     else parameters_dict.get("target_candidate_index")
                 )
+            if isinstance(candidate_index, float) and candidate_index.is_integer():
+                candidate_index = int(candidate_index)
+            if isinstance(candidate_index, str):
+                idx_match = re.search(r"\d+", candidate_index.strip())
+                candidate_index = int(idx_match.group(0)) if idx_match else candidate_index
             if isinstance(candidate_index, str) and candidate_index.strip().isdigit():
                 candidate_index = int(candidate_index.strip())
             if candidate_index is None:
@@ -4021,6 +4133,10 @@ class DiscoveryRuntimeV2:
                         if _normalize_url(candidate.get("url") or "") == candidate_url:
                             candidate_index = idx
                             break
+            if isinstance(candidate_index, int):
+                # Planner models occasionally emit 1-based indices.
+                if candidate_index >= len(candidates) and 1 <= candidate_index <= len(candidates):
+                    candidate_index -= 1
             if isinstance(candidate_index, int):
                 canonical["candidate_index"] = candidate_index
         elif action == "search_queries":
