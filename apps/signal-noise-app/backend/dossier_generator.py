@@ -9,7 +9,7 @@ Generates multi-section intelligence dossiers using cost-optimized model selecti
 
 Priority Tiers:
 - Basic (0-20): 3 sections, ~$0.0004, ~5s
-- Standard (21-50): 7 sections, ~$0.0095, ~15s
+- Standard (21-50): 11 sections, ~$0.057, ~30s
 - Premium (51-100): 11 sections, ~$0.057, ~30s
 """
 
@@ -40,6 +40,10 @@ except ImportError:
         get_objective_profile,
         normalize_run_objective,
     )
+try:
+    from backend.dossier_persistence import apply_dossier_persistence_context
+except ImportError:
+    from dossier_persistence import apply_dossier_persistence_context  # type: ignore
 
 # Import data collector
 try:
@@ -109,6 +113,8 @@ class EntityDossierGenerator:
             "outreach_strategy",
             "ai_reasoner_assessment",
             "challenges_opportunities",
+            "strategic_analysis",
+            "connections",
         }
         self.run_post_collection_enrichment = (
             str(os.getenv("DOSSIER_RUN_POST_COLLECTION_ENRICHMENT", "false")).strip().lower()
@@ -132,8 +138,10 @@ class EntityDossierGenerator:
             "contact_information": {"metadata_summary": 700},
             "recent_news": {"press_releases_summary": 700},
             "digital_maturity": {"job_postings_summary": 700, "official_site_summary": 900},
-            "leadership": {"metadata_summary": 900},
-            "outreach_strategy": {"metadata_summary": 900, "job_postings_summary": 700},
+            "leadership": {"metadata_summary": 700},
+            "strategic_analysis": {"metadata_summary": 700, "official_site_summary": 800},
+            "connections": {"metadata_summary": 700, "official_site_summary": 800},
+            "outreach_strategy": {"metadata_summary": 700, "job_postings_summary": 500, "press_releases_summary": 500},
         }
         self.compact_response_section_ids = {
             "digital_maturity",
@@ -193,7 +201,7 @@ class EntityDossierGenerator:
             "leadership": {
                 "model": "sonnet",
                 "prompt_template": "leadership_profiling_template",
-                "max_tokens": 2500,
+                "max_tokens": 2000,
                 "description": "Leadership team analysis"
             },
             "ai_reasoner_assessment": {
@@ -213,13 +221,13 @@ class EntityDossierGenerator:
             "strategic_analysis": {
                 "model": "opus",
                 "prompt_template": "strategic_analysis_template",
-                "max_tokens": 3000,
+                "max_tokens": 2200,
                 "description": "Deep strategic analysis"
             },
             "connections": {
                 "model": "opus",
                 "prompt_template": "connections_analysis_template",
-                "max_tokens": 3000,
+                "max_tokens": 2200,
                 "description": "Network connections analysis"
             },
 
@@ -227,40 +235,33 @@ class EntityDossierGenerator:
             "outreach_strategy": {
                 "model": "sonnet",
                 "prompt_template": "outreach_strategy_template",
-                "max_tokens": 4000,
+                "max_tokens": 2400,
                 "description": "Outreach strategy with conversation trees"
             }
         }
 
         # Tier section mappings
+        premium_sections = [
+            "core_information",
+            "quick_actions",
+            "contact_information",
+            "recent_news",
+            "leadership",
+            "digital_maturity",
+            "ai_reasoner_assessment",
+            "challenges_opportunities",
+            "strategic_analysis",
+            "connections",
+            "outreach_strategy",
+        ]
         self.tier_sections = {
             "BASIC": [
                 "core_information",
                 "quick_actions",
                 "contact_information"
             ],
-            "STANDARD": [
-                "core_information",
-                "quick_actions",
-                "contact_information",
-                "recent_news",
-                "leadership",
-                "digital_maturity",
-                "outreach_strategy"  # NEW for STANDARD
-            ],
-            "PREMIUM": [
-                "core_information",
-                "quick_actions",
-                "contact_information",
-                "recent_news",
-                "leadership",
-                "digital_maturity",
-                "ai_reasoner_assessment",
-                "challenges_opportunities",
-                "strategic_analysis",
-                "connections",
-                "outreach_strategy"  # NEW for PREMIUM
-            ]
+            "STANDARD": list(premium_sections),
+            "PREMIUM": list(premium_sections),
         }
 
     def _determine_tier(self, priority_score: int) -> str:
@@ -649,6 +650,22 @@ Website: N/A
                 "official_site": normalized_website or website_candidate,
             },
             "field_extraction_results": [],
+            "browser_dossier_url": f"/entity-browser/{entity_id}/dossier",
+            "page_url": f"/entity-browser/{entity_id}/dossier",
+            "source_url": normalized_website or website_candidate,
+            "signal_state": "monitor_no_opportunity",
+            "opportunity_score": 0,
+            "rfp_confidence": 0.0,
+            "decision_summary": (
+                "Dashboard posture MONITOR with no validated procurement opportunity."
+            ),
+            "last_pipeline_run_ref": {
+                "entity_id": entity_id,
+                "entity_name": entity_name,
+                "run_objective": objective,
+                "browser_dossier_url": f"/entity-browser/{entity_id}/dossier",
+                "source_url": normalized_website or website_candidate,
+            },
         }
 
         if dossier_data_obj is not None:
@@ -790,7 +807,7 @@ Website: N/A
                 output_status=deterministic_status,
                 reason_code=deterministic_reason,
                 parse_path="deterministic_data_driven_primary",
-                fallback_used=deterministic_status != "completed",
+                fallback_used=deterministic_status not in {"completed", "completed_evidence_led"},
             )
             section.total_cost_usd = 0.0
             return section
@@ -1262,7 +1279,7 @@ Website: N/A
                 "Use official-site and leadership sources as primary channels for next-hop discovery.",
             ]
             reason_code = None
-            output_status = "completed_with_sparse_fallback"
+            output_status = "completed_evidence_led"
             confidence = 0.72
             if core_degraded:
                 output_status = "degraded_sparse_evidence"
@@ -1506,6 +1523,94 @@ Website: N/A
                 "recommendations": [
                     "Send role-specific variants for commercial and technology stakeholders within the same account.",
                 ],
+                "confidence": confidence,
+                "output_status": output_status,
+                "reason_code": reason_code,
+            }
+
+        if section_id == "strategic_analysis":
+            strategic_signals = []
+            if not _is_unknownish(website):
+                strategic_signals.append(f"official site: {website}")
+            if leadership_count > 0:
+                strategic_signals.append(f"leadership anchors: {leadership_count}")
+            if len(news_items) > 0:
+                strategic_signals.append(f"recent news anchors: {len(news_items)}")
+            if opportunity_count > 0:
+                strategic_signals.append(f"opportunity signals: {opportunity_count}")
+            if not strategic_signals:
+                strategic_signals.append("metadata anchors only")
+
+            content = [
+                f"{entity_name}'s strategic position is primarily grounded in {sport.lower()} context, league footing, and its official site surface.",
+                f"Observed grounding markers include {', '.join(strategic_signals[:4])}.",
+                f"Strategy should prioritize entity-specific commercial and digital timing signals over broad league-level assumptions.",
+            ]
+            recommendations = [
+                "Use official-site and same-domain evidence before expanding to wider news or social channels.",
+                "Refresh this section after new leadership, partnership, or procurement-adjacent evidence is discovered.",
+            ]
+            if opportunity_count > 0:
+                recommendations.insert(
+                    0,
+                    f"Prioritize the {opportunity_count} detected opportunity signal(s) when sequencing outreach and follow-up.",
+                )
+            confidence = 0.68 if metadata_coverage_score >= 0.6 or strategic_signals else 0.55
+            output_status = "completed_evidence_led" if metadata_coverage_score >= 0.6 else "completed_with_sparse_fallback"
+            reason_code = None if output_status == "completed_evidence_led" else "strategic_analysis_sparse"
+            return {
+                "content": content,
+                "metrics": [
+                    f"Metadata coverage score: {metadata_coverage_score}",
+                    f"Leadership anchors: {leadership_count}",
+                    f"Recent news anchors: {len(news_items)}",
+                    f"Opportunity signals: {opportunity_count}",
+                ],
+                "insights": [
+                    "Strategic analysis should stay grounded in entity metadata and only widen when the evidence base expands.",
+                    "The strongest next-hop value comes from same-domain and official-channel evidence, not broad generic market summaries.",
+                ],
+                "recommendations": recommendations[:3],
+                "confidence": confidence,
+                "output_status": output_status,
+                "reason_code": reason_code,
+            }
+
+        if section_id == "connections":
+            connection_anchors = []
+            if not _is_unknownish(website):
+                connection_anchors.append(f"official domain: {website}")
+            if headquarters and not _is_unknownish(headquarters):
+                connection_anchors.append(f"headquarters marker: {headquarters}")
+            if leadership_count > 0:
+                connection_anchors.append(f"named leadership records: {leadership_count}")
+            if not connection_anchors:
+                connection_anchors.append("metadata-only connection surface")
+
+            content = [
+                f"The strongest connection surface for {entity_name} is its official domain and associated canonical contact routes.",
+                f"Observed anchors include {', '.join(connection_anchors[:4])}.",
+                "Connection mapping should stay entity-specific and avoid speculative network claims without named evidence.",
+            ]
+            recommendations = [
+                "Prefer official-domain and same-domain routes when mapping commercial or procurement connections.",
+                "Re-run the connection surface after leadership, news, or partnership evidence changes.",
+            ]
+            confidence = 0.66 if metadata_coverage_score >= 0.6 or connection_anchors else 0.54
+            output_status = "completed_evidence_led" if metadata_coverage_score >= 0.6 else "completed_with_sparse_fallback"
+            reason_code = None if output_status == "completed_evidence_led" else "connections_sparse"
+            return {
+                "content": content,
+                "metrics": [
+                    f"Official-site anchors: {0 if _is_unknownish(website) else 1}",
+                    f"Leadership anchors: {leadership_count}",
+                    f"Headquarters anchors: {0 if _is_unknownish(headquarters) else 1}",
+                ],
+                "insights": [
+                    "Connections are best represented as canonical entity surfaces unless the discovery graph provides named evidence.",
+                    "Long-form network analysis should not block dossier completion when the entity has enough grounding metadata.",
+                ],
+                "recommendations": recommendations,
                 "confidence": confidence,
                 "output_status": output_status,
                 "reason_code": reason_code,
@@ -1947,6 +2052,50 @@ Website: {metadata.website or 'N/A'}
                         "source": "candidate_eval",
                     }
                 )
+        evidence_ledger = discovery_payload.get("evidence_ledger")
+        if isinstance(evidence_ledger, list):
+            for item in evidence_ledger:
+                if not isinstance(item, dict):
+                    continue
+                text = str(item.get("statement") or item.get("text") or "").strip()
+                content = str(item.get("content") or item.get("raw_text") or "").strip()
+                if not text and not content:
+                    continue
+                validation_state = str(item.get("validation_state") or "candidate").strip().lower()
+                pool.append(
+                    {
+                        "validation_state": validation_state if validation_state in {"validated", "provisional"} else "candidate",
+                        "rank": self._discovery_signal_rank(validation_state),
+                        "text": text or self._truncate_prompt_value(content, 220),
+                        "content": content,
+                        "url": str(item.get("url") or "").strip(),
+                        "subtype": str(item.get("subtype") or item.get("reason_code") or "").strip(),
+                        "source": "evidence_ledger",
+                    }
+                )
+
+        kimi_batch_outputs = discovery_payload.get("kimi_batch_outputs")
+        if isinstance(kimi_batch_outputs, list):
+            for batch in kimi_batch_outputs:
+                if not isinstance(batch, dict):
+                    continue
+                for signal in batch.get("signals_found") or []:
+                    if not isinstance(signal, dict):
+                        continue
+                    text = str(signal.get("summary") or signal.get("text") or "").strip()
+                    if not text:
+                        continue
+                    pool.append(
+                        {
+                            "validation_state": "candidate",
+                            "rank": 1,
+                            "text": text,
+                            "content": text,
+                            "url": str(signal.get("url") or "").strip(),
+                            "subtype": str(signal.get("signal_type") or "batch_signal").strip(),
+                            "source": "kimi_batch_output",
+                        }
+                    )
         return pool
 
     def _extract_leadership_from_json_payload(self, text: str) -> List[Dict[str, str]]:
@@ -2095,6 +2244,8 @@ Website: {metadata.website or 'N/A'}
         signal_pool = self._build_discovery_signal_pool(discovery_payload)
         if not signal_pool:
             return payload
+        evidence_available = bool(signal_pool)
+        evidence_available = bool(signal_pool)
 
         leadership_candidates: List[Dict[str, Any]] = []
         for item in signal_pool:
@@ -2140,6 +2291,49 @@ Website: {metadata.website or 'N/A'}
             if not isinstance(section, dict):
                 continue
             section_id = str(section.get("id") or "").strip().lower()
+            if section_id == "quick_actions":
+                anchors: List[str] = []
+                for item in prioritized_signal_pool[:2]:
+                    if not isinstance(item, dict):
+                        continue
+                    text = str(item.get("text") or item.get("content") or "").strip()
+                    url = str(item.get("url") or "").strip()
+                    if not text and not url:
+                        continue
+                    anchor = self._truncate_prompt_value(text, 160) if text else url
+                    if url:
+                        anchor = f"{anchor} [{url}]"
+                    anchors.append(anchor)
+                if anchors:
+                    section["content"] = [
+                        f"Prioritize outreach using the strongest evidence anchor: {anchors[0]}",
+                        "Run the next discovery hop against official-site or same-domain paths that corroborate that signal.",
+                        "Avoid broad outreach until the entity-specific signal is confirmed across at least one more source.",
+                    ]
+                    section["metrics"] = [
+                        f"Evidence anchors available: {len(anchors)}",
+                        f"Validated signals: {len(discovery_payload.get('signals_discovered') or [])}",
+                        f"Provisional signals: {len(discovery_payload.get('provisional_signals') or [])}",
+                    ]
+                    section["output_status"] = "completed_evidence_led"
+                    section["reason_code"] = None
+                    section["confidence"] = max(0.62, float(section.get("confidence") or 0.62))
+                elif evidence_available:
+                    section["output_status"] = "degraded_sparse_evidence"
+                    section["reason_code"] = "quick_actions_evidence_not_consumed"
+                    section["confidence"] = min(0.5, float(section.get("confidence") or 0.5))
+            if section_id == "contact_information":
+                if evidence_available:
+                    content = list(section.get("content") or [])
+                    if not content:
+                        content = [
+                            f"Primary web presence: {metadata.get('website') or metadata.get('official_site_url') or 'Unknown'}.",
+                            f"Headquarters marker: {metadata.get('hq') or metadata.get('headquarters') or 'Unknown'}.",
+                        ]
+                    section["content"] = content[:5]
+                    section["output_status"] = "completed_evidence_led"
+                    section["reason_code"] = None
+                    section["confidence"] = max(0.64, float(section.get("confidence") or 0.64))
             if section_id == "leadership" and deduped_leadership:
                 content: List[str] = []
                 validated_count = 0
@@ -2166,6 +2360,10 @@ Website: {metadata.website or 'N/A'}
                     section["output_status"] = "completed_with_sparse_fallback"
                     section["reason_code"] = "leadership_unvalidated_only"
                     section["confidence"] = 0.56
+            elif section_id == "leadership" and evidence_available:
+                section["output_status"] = "degraded_sparse_evidence"
+                section["reason_code"] = "leadership_evidence_not_consumed"
+                section["confidence"] = min(0.5, float(section.get("confidence") or 0.5))
 
             if section_id == "recent_news" and recent_news:
                 content: List[str] = []
@@ -2193,6 +2391,10 @@ Website: {metadata.website or 'N/A'}
                     section["output_status"] = "completed_with_sparse_fallback"
                     section["reason_code"] = "recent_news_unvalidated_only"
                     section["confidence"] = 0.55
+            elif section_id == "recent_news" and evidence_available:
+                section["output_status"] = "degraded_sparse_evidence"
+                section["reason_code"] = "recent_news_evidence_not_consumed"
+                section["confidence"] = min(0.52, float(section.get("confidence") or 0.52))
             if section_id == "outreach_strategy":
                 anchors: List[str] = []
                 for item in prioritized_signal_pool[:3]:
@@ -2224,6 +2426,10 @@ Website: {metadata.website or 'N/A'}
                     section["output_status"] = "completed_evidence_led" if has_validated_anchor else "completed_with_sparse_fallback"
                     section["reason_code"] = None if has_validated_anchor else "outreach_unvalidated_anchors"
                     section["confidence"] = max(0.58, float(section.get("confidence") or 0.58))
+                elif evidence_available:
+                    section["output_status"] = "degraded_sparse_evidence"
+                    section["reason_code"] = "outreach_evidence_not_consumed"
+                    section["confidence"] = min(0.5, float(section.get("confidence") or 0.5))
 
         metadata = payload.get("metadata")
         if not isinstance(metadata, dict):
@@ -2233,6 +2439,8 @@ Website: {metadata.website or 'N/A'}
             "validated_signals": len(discovery_payload.get("signals_discovered") or []),
             "provisional_signals": len(discovery_payload.get("provisional_signals") or []),
             "candidate_events": len(discovery_payload.get("candidate_evaluations") or []),
+            "candidate_events_summary": dict(discovery_payload.get("candidate_events_summary") or {}),
+            "lane_failures": dict(discovery_payload.get("lane_failures") or {}),
             "actionability_score": float(discovery_payload.get("actionability_score") or 0.0),
             "entity_grounded_signal_count": int(discovery_payload.get("entity_grounded_signal_count") or 0),
         }
@@ -2651,7 +2859,7 @@ Confidence scores required. Skip unavailable data - use "unknown".
 """
 
     STANDARD_DOSSIER_PROMPT = """
-Generate STANDARD tier dossier for {name} (7 sections, ~15s, ~$0.0095):
+Generate STANDARD tier dossier for {name} using the PREMIUM dossier shape (11 sections, ~30s, ~$0.057):
 
 Include:
 1. Core entity information
@@ -2693,7 +2901,7 @@ Hard requirements:
         """
         tier_prompts = {
             "BASIC": self.BASIC_DOSSIER_PROMPT,
-            "STANDARD": self.STANDARD_DOSSIER_PROMPT,
+            "STANDARD": self.UNIVERSAL_CLUB_DOSSIER_PROMPT,
             "PREMIUM": self.UNIVERSAL_CLUB_DOSSIER_PROMPT
         }
         return tier_prompts.get(tier, self.STANDARD_DOSSIER_PROMPT)
@@ -2784,7 +2992,7 @@ Hard requirements:
         # Determine max tokens based on tier
         max_tokens_by_tier = {
             "BASIC": 2000,
-            "STANDARD": 4000,
+            "STANDARD": 8000,
             "PREMIUM": 8000
         }
         max_tokens = max_tokens_by_tier.get(tier, 4000)
@@ -3209,6 +3417,49 @@ Hard requirements:
                         "source": "candidate_eval",
                     }
                 )
+        evidence_ledger = discovery_payload.get("evidence_ledger")
+        if isinstance(evidence_ledger, list):
+            for item in evidence_ledger:
+                if not isinstance(item, dict):
+                    continue
+                text = str(item.get("statement") or item.get("text") or "").strip()
+                content = str(item.get("content") or item.get("raw_text") or "").strip()
+                if not text and not content:
+                    continue
+                validation_state = str(item.get("validation_state") or "candidate").strip().lower()
+                pool.append(
+                    {
+                        "validation_state": validation_state if validation_state in {"validated", "provisional"} else "candidate",
+                        "rank": self._discovery_signal_rank(validation_state),
+                        "text": text or self._truncate_prompt_value(content, 220),
+                        "content": content,
+                        "url": str(item.get("url") or "").strip(),
+                        "subtype": str(item.get("subtype") or item.get("reason_code") or "").strip(),
+                        "source": "evidence_ledger",
+                    }
+                )
+        kimi_batch_outputs = discovery_payload.get("kimi_batch_outputs")
+        if isinstance(kimi_batch_outputs, list):
+            for batch in kimi_batch_outputs:
+                if not isinstance(batch, dict):
+                    continue
+                for signal in batch.get("signals_found") or []:
+                    if not isinstance(signal, dict):
+                        continue
+                    text = str(signal.get("summary") or signal.get("text") or "").strip()
+                    if not text:
+                        continue
+                    pool.append(
+                        {
+                            "validation_state": "candidate",
+                            "rank": 1,
+                            "text": text,
+                            "content": text,
+                            "url": str(signal.get("url") or "").strip(),
+                            "subtype": str(signal.get("signal_type") or "batch_signal").strip(),
+                            "source": "kimi_batch_output",
+                        }
+                    )
         return pool
 
     def _extract_leadership_from_json_payload(self, text: str) -> List[Dict[str, str]]:
@@ -3430,6 +3681,10 @@ Hard requirements:
                     section["output_status"] = "completed_with_sparse_fallback"
                     section["reason_code"] = "leadership_unvalidated_only"
                     section["confidence"] = 0.56
+            elif section_id == "leadership" and evidence_available:
+                section["output_status"] = "degraded_sparse_evidence"
+                section["reason_code"] = "leadership_evidence_not_consumed"
+                section["confidence"] = min(0.5, float(section.get("confidence") or 0.5))
             if section_id == "recent_news" and recent_news:
                 content = []
                 validated_news = 0
@@ -3456,6 +3711,10 @@ Hard requirements:
                     section["output_status"] = "completed_with_sparse_fallback"
                     section["reason_code"] = "recent_news_unvalidated_only"
                     section["confidence"] = 0.55
+            elif section_id == "recent_news" and evidence_available:
+                section["output_status"] = "degraded_sparse_evidence"
+                section["reason_code"] = "recent_news_evidence_not_consumed"
+                section["confidence"] = min(0.52, float(section.get("confidence") or 0.52))
             if section_id == "outreach_strategy":
                 anchors: List[str] = []
                 for item in prioritized_signal_pool[:3]:
@@ -3487,6 +3746,10 @@ Hard requirements:
                     section["output_status"] = "completed_evidence_led" if has_validated_anchor else "completed_with_sparse_fallback"
                     section["reason_code"] = None if has_validated_anchor else "outreach_unvalidated_anchors"
                     section["confidence"] = max(0.58, float(section.get("confidence") or 0.58))
+                elif evidence_available:
+                    section["output_status"] = "degraded_sparse_evidence"
+                    section["reason_code"] = "outreach_evidence_not_consumed"
+                    section["confidence"] = min(0.5, float(section.get("confidence") or 0.5))
 
         metadata = payload.get("metadata")
         if not isinstance(metadata, dict):
@@ -3496,6 +3759,8 @@ Hard requirements:
             "validated_signals": len(discovery_payload.get("signals_discovered") or []),
             "provisional_signals": len(discovery_payload.get("provisional_signals") or []),
             "candidate_events": len(discovery_payload.get("candidate_evaluations") or []),
+            "candidate_events_summary": dict(discovery_payload.get("candidate_events_summary") or {}),
+            "lane_failures": dict(discovery_payload.get("lane_failures") or {}),
         }
         return payload
 
@@ -3884,6 +4149,16 @@ Hard requirements:
             "validated_field_count": len(validated_fields),
             "placeholder_policy": "explicit_reason_codes",
         }
+        persistence_context = apply_dossier_persistence_context(
+            dossier,
+            entity_id=entity_id,
+            entity_name=entity_name,
+            entity_data=entity_data,
+            run_objective=objective,
+        )
+        dossier["metadata"].update(persistence_context)
+        dossier["metadata"]["canonical_sources"] = dict(dossier["metadata"].get("canonical_sources") or {})
+        dossier["metadata"]["canonical_sources"].setdefault("official_site", persistence_context["source_url"])
 
         # Calculate generation time
         end_time = datetime.now(timezone.utc)

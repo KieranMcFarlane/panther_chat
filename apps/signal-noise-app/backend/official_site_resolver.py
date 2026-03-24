@@ -36,6 +36,29 @@ _ECOMMERCE_TERMS = {"store", "shop", "ticket", "tickets", "merch", "retail"}
 _CDN_HOST_TOKENS = {"cdn", "images", "image", "media", "static", "assets", "files"}
 _BINARY_DOCUMENT_SUFFIXES = (".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".zip")
 _SUBBRAND_TERMS = {"women", "womens", "ladies", "academy", "youth", "reserves", "u21", "u18", "girls", "boys", "wgfc", "wfc"}
+_LOW_SIGNAL_PATH_TERMS = {
+    "match",
+    "matches",
+    "fixture",
+    "fixtures",
+    "result",
+    "results",
+    "calendar",
+    "schedule",
+    "ticket",
+    "tickets",
+}
+_HIGH_SIGNAL_PATH_TERMS = {
+    "news",
+    "press",
+    "latest-news",
+    "about",
+    "club",
+    "commercial",
+    "careers",
+    "contact",
+    "partners",
+}
 
 
 def _to_alnum(value: str) -> str:
@@ -162,11 +185,28 @@ def _score_candidate(entity_name: str, candidate: Dict[str, Any], index: int) ->
         reasons.append("root_path")
     else:
         segments = [segment for segment in path.split("/") if segment]
-        score -= min(len(segments), 3) * 0.6
+        score -= min(len(segments), 4) * 0.6
         first_segment = segments[0] if segments else ""
+        path_tokens = set(_tokenize(path))
         if first_segment in {"news", "blog", "press", "updates", "fixtures", "results"}:
-            score -= 1.0
+            score -= 1.5
             reasons.append("content_subpath")
+        if path_tokens & _HIGH_SIGNAL_PATH_TERMS:
+            score += 1.5
+            reasons.append("high_signal_path")
+        low_signal_hits = path_tokens & _LOW_SIGNAL_PATH_TERMS
+        if low_signal_hits:
+            score -= 5.0 + (0.5 * max(0, len(segments) - 1))
+            reasons.append(f"low_signal_path:{','.join(sorted(low_signal_hits))}")
+        if any(term in path_tokens for term in {"article", "story", "report", "game"}) and low_signal_hits:
+            score -= 1.0
+            reasons.append("low_signal_detail_page")
+        if len(segments) >= 3 and low_signal_hits:
+            score -= 1.0
+            reasons.append("deep_low_signal_path")
+        if not low_signal_hits and any(term in path_tokens for term in {"news", "press", "about", "club"}):
+            score += 0.5
+            reasons.append("entity_content_path")
 
     if candidate_has_subbrand_terms and not entity_has_subbrand_terms:
         score -= 10.0

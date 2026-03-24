@@ -41,6 +41,34 @@ TRUSTED_NEWS_DOMAINS = {
     "jobsinfootball.com",
 }
 
+LOW_SIGNAL_PATH_TERMS = {
+    "match",
+    "matches",
+    "fixture",
+    "fixtures",
+    "result",
+    "results",
+    "calendar",
+    "schedule",
+    "ticket",
+    "tickets",
+}
+
+HIGH_SIGNAL_PATH_TERMS = {
+    "news",
+    "press",
+    "latest-news",
+    "about",
+    "club",
+    "commercial",
+    "careers",
+    "contact",
+    "partners",
+    "procurement",
+    "tenders",
+    "supplier",
+}
+
 PLANNER_ACTION_JSON_SCHEMA: Dict[str, Any] = {
     "type": "object",
     "additionalProperties": False,
@@ -166,6 +194,9 @@ class DiscoveryRuntimeAgenticV3:
         self.max_candidates_preview = max(3, int(os.getenv("AGENTIC_V3_MAX_CANDIDATES_PREVIEW", "5")))
         self.max_internal_links = max(4, int(os.getenv("AGENTIC_V3_MAX_INTERNAL_LINKS", "8")))
         self.render_word_floor = max(30, int(os.getenv("AGENTIC_V3_RENDER_WORD_FLOOR", "60")))
+        self.enforce_requested_iteration_cap = str(
+            os.getenv("PIPELINE_ENFORCE_DISCOVERY_ITERATION_CAP", "false")
+        ).strip().lower() in {"1", "true", "yes", "on"}
         self._metrics: Dict[str, Any] = {}
 
     async def run_discovery(self, **kwargs) -> DiscoveryResultAgenticV3:
@@ -194,6 +225,7 @@ class DiscoveryRuntimeAgenticV3:
         if requested_iterations <= 0:
             requested_iterations = self.default_credit_budget
         starting_credits = min(max(1, requested_iterations), self.credit_cap)
+        hard_turn_cap = requested_iterations if self.enforce_requested_iteration_cap else self.credit_cap
         state: Dict[str, Any] = {
             "mission_brief": self._build_mission_brief(entity_name=entity_name, objective=objective),
             "entity_profile": self._build_entity_profile(entity_name=entity_name, dossier=dossier),
@@ -202,6 +234,7 @@ class DiscoveryRuntimeAgenticV3:
             "visited_urls": set(),
             "visited_queries": set(),
             "pending_candidates": [],
+            "failed_urls": {},
             "failed_paths": {},
             "open_hypotheses": self._initial_hypotheses(entity_name=entity_name, objective_profile=objective_profile),
             "remaining_credits": starting_credits,
@@ -222,7 +255,9 @@ class DiscoveryRuntimeAgenticV3:
             "planner_turn_count": 0,
             "planner_decision_parse_fail_count": 0,
             "planner_decision_applied_count": 0,
+            "planner_repair_count": 0,
             "planner_branch_change_count": 0,
+            "planner_block_reason_counts": {},
             "credits_spent": 0,
             "credits_earned": 0,
             "off_entity_reject_count": 0,
@@ -240,8 +275,8 @@ class DiscoveryRuntimeAgenticV3:
 
         while state["remaining_credits"] > 0:
             turn_index = len(state["turn_trace"]) + 1
-            if turn_index > self.credit_cap:
-                stop_reason = "hard_cap_reached"
+            if turn_index > hard_turn_cap:
+                stop_reason = "requested_iteration_cap_reached" if self.enforce_requested_iteration_cap else "hard_cap_reached"
                 break
             planner_action = await self._choose_next_action(
                 entity_name=entity_name,
@@ -254,7 +289,6 @@ class DiscoveryRuntimeAgenticV3:
                 stop_reason = "planner_schema_failed"
                 break
             self._metrics["planner_turn_count"] += 1
-            self._metrics["planner_decision_applied_count"] += 1
             current_purpose = str(planner_action.get("purpose") or planner_action.get("action") or "unknown")
             if current_purpose != previous_purpose:
                 self._metrics["planner_branch_change_count"] += 1
@@ -278,6 +312,15 @@ class DiscoveryRuntimeAgenticV3:
                 entity_tokens=entity_tokens,
                 official_domains=official_domains,
             )
+            planner_status = str(execution.get("planner_status") or "applied").strip().lower()
+            planner_block_reason = str(execution.get("planner_block_reason") or "").strip().lower() or None
+            if planner_status == "applied":
+                self._metrics["planner_decision_applied_count"] += 1
+            elif planner_block_reason:
+                planner_block_reason_counts = self._metrics.setdefault("planner_block_reason_counts", {})
+                planner_block_reason_counts[planner_block_reason] = int(
+                    planner_block_reason_counts.get(planner_block_reason, 0) or 0
+                ) + 1
             state["executed_actions"].append(execution.get("executed_action") or {"turn": turn_index, **planner_action})
             branch_key = str(execution.get("branch") or planner_action.get("purpose") or planner_action.get("action") or "general")
             signals_found = 0
@@ -289,6 +332,8 @@ class DiscoveryRuntimeAgenticV3:
                         "turn": turn_index,
                         "planner_action": planner_action,
                         "executed_action": execution.get("executed_action"),
+                        "planner_status": planner_status,
+                        "planner_block_reason": planner_block_reason,
                         "judge_verdict": None,
                         "credit_delta": credit_entry,
                         "stop_reason": stop_reason,
@@ -351,6 +396,8 @@ class DiscoveryRuntimeAgenticV3:
                     "turn": turn_index,
                     "planner_action": planner_action,
                     "executed_action": execution.get("executed_action"),
+                    "planner_status": planner_status,
+                    "planner_block_reason": planner_block_reason,
                     "observation": last_observation,
                     "judge_verdict": (execution.get("evidence") or {}).get("judge_verdict") if execution.get("evidence") else None,
                     "credit_delta": credit_entry,
@@ -386,9 +433,17 @@ class DiscoveryRuntimeAgenticV3:
             4,
         )
         planner_turn_count = int(self._metrics.get("planner_turn_count") or 0)
-        planner_applied = int(self._metrics.get("planner_decision_applied_count") or 0)
+        planner_applied = self._planner_applied_count_from_trace(state["turn_trace"])
+        self._metrics["planner_decision_applied_count"] = planner_applied
         planner_parse_fail = int(self._metrics.get("planner_decision_parse_fail_count") or 0)
         planner_applied_rate = round(planner_applied / max(1, planner_turn_count + planner_parse_fail), 4)
+        artifact_consistency_issues = self._trace_consistency_issues(
+            turn_trace=state["turn_trace"],
+            planner_decisions=state["planner_decisions"],
+            executed_actions=state["executed_actions"],
+            planner_turn_count=planner_turn_count,
+            planner_applied_count=planner_applied,
+        )
         controller_health_reasons = self._build_controller_health_reasons(
             planner_applied_rate=planner_applied_rate,
             planner_parse_fail_count=planner_parse_fail,
@@ -396,6 +451,7 @@ class DiscoveryRuntimeAgenticV3:
             off_entity_reject_rate=off_entity_reject_rate,
             judge_fallback_count=int(self._metrics.get("judge_fallback_count") or 0),
             schema_fail_count=int(self._metrics.get("schema_fail_count") or 0),
+            artifact_consistency_issues=artifact_consistency_issues,
         )
         performance_summary = {
             "runtime_mode": "agentic_v3",
@@ -409,7 +465,11 @@ class DiscoveryRuntimeAgenticV3:
             "planner_decision_parse_fail_count": planner_parse_fail,
             "planner_decision_applied_count": planner_applied,
             "planner_decision_applied_rate": planner_applied_rate,
+            "planner_repair_count": int(self._metrics.get("planner_repair_count") or 0),
             "planner_branch_change_count": int(self._metrics.get("planner_branch_change_count") or 0),
+            "planner_block_reason_counts": dict(self._metrics.get("planner_block_reason_counts") or {}),
+            "planner_llm_attempt_history": list(self._metrics.get("planner_llm_attempt_history") or []),
+            "planner_repair_llm_attempt_history": list(self._metrics.get("planner_repair_llm_attempt_history") or []),
             "credits_spent": int(self._metrics.get("credits_spent") or 0),
             "credits_earned": int(self._metrics.get("credits_earned") or 0),
             "judge_fallback_count": int(self._metrics.get("judge_fallback_count") or 0),
@@ -420,6 +480,8 @@ class DiscoveryRuntimeAgenticV3:
             "lane_failures": state["lane_failures"],
             "controller_health_reasons": controller_health_reasons,
             "llm_last_status": str(self._metrics.get("llm_last_status") or "ok"),
+            "artifact_consistency_ok": len(artifact_consistency_issues) == 0,
+            "artifact_consistency_issues": artifact_consistency_issues,
             "official_site_resolution_traces": [
                 {
                     "official_site_url": official_site,
@@ -433,6 +495,8 @@ class DiscoveryRuntimeAgenticV3:
                     "action": ((row.get("executed_action") or {}).get("action") if isinstance(row, dict) else None),
                     "target": ((row.get("executed_action") or {}).get("target") if isinstance(row, dict) else None),
                     "summary": ((row.get("observation") or {}).get("summary") if isinstance(row, dict) else None),
+                    "planner_status": (row.get("planner_status") if isinstance(row, dict) else None),
+                    "planner_block_reason": (row.get("planner_block_reason") if isinstance(row, dict) else None),
                 }
                 for row in state["turn_trace"]
                 if isinstance(row, dict)
@@ -564,6 +628,8 @@ class DiscoveryRuntimeAgenticV3:
         except Exception as planner_error:  # noqa: BLE001
             logger.warning("⚠️ Planner query failed: %s", planner_error)
             self._metrics["llm_last_status"] = "planner_query_error"
+        planner_diag = getattr(self.claude_client, "get_runtime_diagnostics", lambda: {})() or {}
+        self._metrics["planner_llm_attempt_history"] = list(planner_diag.get("llm_attempt_history") or [])
         payload = self._extract_json_payload(response)
         action = self._normalize_planner_action(payload=payload, state=state)
         if action:
@@ -588,13 +654,108 @@ class DiscoveryRuntimeAgenticV3:
             except Exception as repair_error:  # noqa: BLE001
                 logger.warning("⚠️ Planner repair query failed: %s", repair_error)
                 repair = {}
+            repair_diag = getattr(self.claude_client, "get_runtime_diagnostics", lambda: {})() or {}
+            self._metrics["planner_repair_llm_attempt_history"] = list(repair_diag.get("llm_attempt_history") or [])
             payload = self._extract_json_payload(repair)
             action = self._normalize_planner_action(payload=payload, state=state)
             if action:
                 return action
+        repair_action = self._deterministic_planner_repair_action(
+            state=state,
+            entity_name=entity_name,
+            objective=objective,
+            last_observation=last_observation,
+            entity_tokens=entity_tokens,
+        )
+        if repair_action:
+            self._metrics["planner_repair_count"] += 1
+            self._metrics["llm_last_status"] = "planner_repaired"
+            repair_action["generated_by"] = "planner_repair"
+            repair_action.setdefault("purpose", "planner_repair")
+            return repair_action
         self._metrics["planner_decision_parse_fail_count"] += 1
         self._metrics["schema_fail_count"] += 1
         self._metrics["llm_last_status"] = "planner_schema_fail"
+        return None
+
+    def _deterministic_planner_repair_action(
+        self,
+        *,
+        state: Dict[str, Any],
+        entity_name: str,
+        objective: str,
+        last_observation: Dict[str, Any],
+        entity_tokens: List[str],
+    ) -> Optional[Dict[str, Any]]:
+        pending = state.get("pending_candidates") or []
+        visited_urls = set(state.get("visited_urls") or set())
+        failed_urls_raw = state.get("failed_urls") or set()
+        if isinstance(failed_urls_raw, dict):
+            failed_urls = {
+                self._normalize_url(str(url))
+                for url in failed_urls_raw.keys()
+                if str(url or "").strip()
+            }
+        else:
+            failed_urls = {
+                self._normalize_url(str(url))
+                for url in failed_urls_raw
+                if str(url or "").strip()
+            }
+        official_domains = state.get("official_domains") or set()
+        if failed_urls and isinstance(pending, list):
+            pending[:] = [
+                candidate
+                for candidate in pending
+                if self._normalize_url(str((candidate or {}).get("url") or "")) not in failed_urls
+            ]
+        for candidate in pending:
+            if not isinstance(candidate, dict):
+                continue
+            url = str(candidate.get("url") or "").strip()
+            if not url or url in visited_urls or url in failed_urls:
+                continue
+            action = "scrape_url"
+            target = url
+            title = str(candidate.get("title") or "").strip()
+            snippet = str(candidate.get("snippet") or "").strip()
+            if not title and not snippet:
+                action = "follow_link"
+            return {
+                "action": action,
+                "target": target,
+                "purpose": "planner_repair_candidate_followup",
+                "lane": str(candidate.get("lane") or candidate.get("purpose") or "candidate_followup"),
+                "expected_signal": str(candidate.get("expected_signal") or "entity-grounded evidence"),
+                "confidence": 0.18,
+                "source": "deterministic_repair",
+                "generated_from": {
+                    "entity_name": entity_name,
+                    "objective": objective,
+                    "last_observation": last_observation.get("summary"),
+                    "entity_tokens": entity_tokens[:3],
+                    "official_domains": sorted(str(domain) for domain in official_domains),
+                },
+            }
+        if official_domains:
+            domain = sorted(str(domain) for domain in official_domains)[0]
+            query = f'site:{domain} "{entity_name}" official'
+            return {
+                "action": "search_site",
+                "target": query,
+                "purpose": "planner_repair_official_domain_probe",
+                "lane": "official_site",
+                "expected_signal": "official-site evidence",
+                "confidence": 0.12,
+                "source": "deterministic_repair",
+                "generated_from": {
+                    "entity_name": entity_name,
+                    "objective": objective,
+                    "last_observation": last_observation.get("summary"),
+                    "entity_tokens": entity_tokens[:3],
+                    "official_domains": sorted(str(domain) for domain in official_domains),
+                },
+            }
         return None
 
     async def _execute_action(
@@ -609,7 +770,13 @@ class DiscoveryRuntimeAgenticV3:
         action_name = str(action.get("action") or "stop").strip().lower()
         executed_action = {"action": action_name, "target": action.get("target"), "purpose": action.get("purpose")}
         if action_name == "stop":
-            return {"kind": "stop", "reason": str(action.get("reason") or "planner_stop"), "executed_action": executed_action, "branch": "stop"}
+            return {
+                "kind": "stop",
+                "reason": str(action.get("reason") or "planner_stop"),
+                "executed_action": executed_action,
+                "branch": "stop",
+                "planner_status": "applied",
+            }
 
         if action_name in {"search_web", "search_site", "probe_same_domain"}:
             query = self._resolve_search_query(action=action, entity_name=entity_name, official_domains=official_domains)
@@ -620,6 +787,8 @@ class DiscoveryRuntimeAgenticV3:
                     "candidates": [],
                     "executed_action": {**executed_action, "target": query},
                     "branch": str(action.get("purpose") or action_name),
+                    "planner_status": "blocked",
+                    "planner_block_reason": "planner_action_blocked_duplicate",
                 }
             state["visited_queries"].add(query)
             try:
@@ -632,12 +801,20 @@ class DiscoveryRuntimeAgenticV3:
                 logger.warning("⚠️ Search action failed (query=%s): %s", query, search_error)
                 search_result = {"status": "error", "results": [], "error": str(search_error)}
             candidates = self._search_results_to_candidates(search_result=search_result, official_domains=official_domains, query=query, state=state)
+            provisional_search_evidence = self._search_candidates_to_provisional_evidence(
+                candidates=candidates,
+                entity_tokens=entity_tokens,
+            )
+            for item in provisional_search_evidence:
+                state["provisional_signals"].append(self._to_signal_record(item, "provisional"))
+                state["candidate_evaluations"].append(dict(item.get("candidate_evaluation") or {}))
             return {
                 "kind": "search",
                 "summary": f"search query={query} results={len(candidates)}",
                 "candidates": candidates,
                 "executed_action": {**executed_action, "target": query, "request_type": "search_engine"},
                 "branch": str(action.get("purpose") or action_name),
+                "planner_status": "applied",
             }
 
         url = self._resolve_action_url(action=action, state=state)
@@ -648,6 +825,8 @@ class DiscoveryRuntimeAgenticV3:
                 "summary": "planner selected scrape without URL",
                 "executed_action": executed_action,
                 "branch": str(action.get("purpose") or action_name),
+                "planner_status": "blocked",
+                "planner_block_reason": "planner_schema_invalid",
             }
         if url in state["visited_urls"]:
             return {
@@ -656,6 +835,8 @@ class DiscoveryRuntimeAgenticV3:
                 "summary": f"duplicate url skipped: {url}",
                 "executed_action": {**executed_action, "target": url},
                 "branch": str(action.get("purpose") or action_name),
+                "planner_status": "blocked",
+                "planner_block_reason": "planner_action_blocked_duplicate",
             }
         state["visited_urls"].add(url)
         try:
@@ -668,6 +849,8 @@ class DiscoveryRuntimeAgenticV3:
                 "summary": f"scrape action failed: {url}",
                 "executed_action": {**executed_action, "target": url},
                 "branch": str(action.get("purpose") or action_name),
+                "planner_status": "blocked",
+                "planner_block_reason": "planner_action_provider_error",
             }
         evidence = await self._evaluate_scrape(
             entity_name=entity_name,
@@ -679,6 +862,19 @@ class DiscoveryRuntimeAgenticV3:
         )
         if evidence and evidence.get("internal_links"):
             self._append_follow_links(state=state, links=evidence.get("internal_links") or [], official_domains=official_domains)
+        planner_status = "applied"
+        planner_block_reason = None
+        if isinstance(evidence, dict):
+            reason_code = str(evidence.get("reason_code") or "").strip().lower()
+            if reason_code in {"low_signal", "no_procurement_signal"}:
+                failed_urls = state.setdefault("failed_urls", {})
+                failed_urls[url] = reason_code or "low_signal"
+            if reason_code == "off_entity":
+                planner_status = "blocked"
+                planner_block_reason = "planner_action_blocked_off_entity"
+            elif reason_code == "low_signal":
+                planner_status = "blocked"
+                planner_block_reason = "planner_action_blocked_low_signal_exhausted"
         return {
             "kind": "scrape",
             "summary": f"scrape action={action_name} url={url}",
@@ -695,6 +891,8 @@ class DiscoveryRuntimeAgenticV3:
             },
             "branch": str(action.get("purpose") or action_name),
             "reason": (evidence or {}).get("reason_code"),
+            "planner_status": planner_status,
+            "planner_block_reason": planner_block_reason,
         }
 
     async def _scrape_for_action(self, *, action_name: str, url: str) -> Dict[str, Any]:
@@ -808,6 +1006,7 @@ class DiscoveryRuntimeAgenticV3:
             "source_tier": source_tier,
             "validation_state": validation_state,
             "reason_code": reason_code,
+            "raw_text": raw_text,
             "text": statement,
             "content": normalized_text,
             "statement": statement,
@@ -1025,7 +1224,101 @@ class DiscoveryRuntimeAgenticV3:
                     "query": query,
                 }
             )
+        candidates.sort(
+            key=lambda candidate: (
+                0 if bool(candidate.get("same_domain")) else 1,
+                self._candidate_path_priority(str(candidate.get("url") or "")),
+                int(candidate.get("position") or 0),
+            )
+        )
         return candidates
+
+
+    def _search_candidates_to_provisional_evidence(
+        self,
+        *,
+        candidates: List[Dict[str, Any]],
+        entity_tokens: List[str],
+    ) -> List[Dict[str, Any]]:
+        provisional: List[Dict[str, Any]] = []
+        if not candidates:
+            return provisional
+        selected_terms = {
+            "news",
+            "press",
+            "commercial",
+            "partnership",
+            "partner",
+            "procurement",
+            "tender",
+            "supplier",
+            "careers",
+            "vacancies",
+            "official",
+        }
+        for candidate in candidates[:3]:
+            if not isinstance(candidate, dict):
+                continue
+            if not bool(candidate.get("same_domain")):
+                continue
+            url = str(candidate.get("url") or "").strip()
+            title = str(candidate.get("title") or "").strip()
+            snippet = str(candidate.get("snippet") or "").strip()
+            if not url or not (title or snippet):
+                continue
+            text_blob = " ".join([title, snippet, url]).lower()
+            entity_hit = any(token in text_blob for token in entity_tokens[:2])
+            keyword_hit = any(term in text_blob for term in selected_terms)
+            if not (entity_hit and keyword_hit):
+                continue
+            actionability_score = 56.0
+            if any(term in text_blob for term in ("commercial", "partnership", "procurement", "tender", "supplier")):
+                actionability_score = 66.0
+            text_value = self._truncate_word_boundary(f"{title} {snippet}".strip() or url, 220)
+            provisional.append(
+                {
+                    "url": url,
+                    "source_host": str(candidate.get("host") or "").strip(),
+                    "source_tier": "tier_1",
+                    "validation_state": "provisional",
+                    "reason_code": "search_result_signal",
+                    "text": text_value,
+                    "content": self._truncate_word_boundary(f"{title} {snippet}".strip() or url, 420),
+                    "statement": self._truncate_word_boundary(f"{title} {snippet}".strip() or url, 360),
+                    "subtype": "search_result_signal",
+                    "rank": max(2, int(candidate.get("position") or 1)),
+                    "entity_grounding": 0.55 if keyword_hit else 0.45,
+                    "yellow_panther_relevance": min(1.0, actionability_score / 100.0),
+                    "actionability_score": actionability_score,
+                    "candidate_evaluation": {
+                        "source_url": url,
+                        "source_host": str(candidate.get("host") or "").strip(),
+                        "source_tier": "tier_1",
+                        "validation_state": "provisional",
+                        "reason_code": "search_result_signal",
+                        "step_type": str(candidate.get("candidate_origin") or "search"),
+                        "evidence_snippet": text_value,
+                        "evidence_statement": self._truncate_word_boundary(f"{title} {snippet}".strip() or url, 360),
+                        "evidence_content_item": self._truncate_word_boundary(f"{title} {snippet}".strip() or url, 420),
+                        "evidence_content_passages": self._content_passages(f"{title} {snippet}".strip() or url),
+                        "entity_grounding": 0.55 if keyword_hit else 0.45,
+                        "evidence_quality_score": 0.5,
+                        "freshness_score": 0.55,
+                        "actionability_score": actionability_score,
+                        "evidence_type": "search_result_signal",
+                    },
+                    "judge_verdict": {
+                        "validation_state": "provisional",
+                        "evidence_type": "search_result_signal",
+                        "entity_grounding": 0.55 if keyword_hit else 0.45,
+                        "yellow_panther_relevance": min(1.0, actionability_score / 100.0),
+                        "confidence_contribution": 0.05,
+                        "reason_code": "search_result_signal",
+                        "actionability_score": actionability_score,
+                    },
+                }
+            )
+        return provisional
 
     def _resolve_action_url(self, *, action: Dict[str, Any], state: Dict[str, Any]) -> Optional[str]:
         target = self._normalize_url(action.get("target"))
@@ -1067,6 +1360,29 @@ class DiscoveryRuntimeAgenticV3:
                 }
             )
             known.add(url)
+
+        pending.sort(
+            key=lambda candidate: (
+                0 if bool(candidate.get("same_domain")) else 1,
+                self._candidate_path_priority(str(candidate.get("url") or "")),
+                int(candidate.get("position") or 0),
+            )
+        )
+
+    @staticmethod
+    def _candidate_path_priority(url: str) -> int:
+        parsed = urlparse(str(url or ""))
+        path = (parsed.path or "").strip("/").lower()
+        if not path:
+            return 0
+        tokens = set(re.split(r"[^a-z0-9]+", path))
+        if tokens & HIGH_SIGNAL_PATH_TERMS:
+            return 1
+        if tokens & LOW_SIGNAL_PATH_TERMS:
+            return 3
+        if len([segment for segment in path.split("/") if segment]) >= 3:
+            return 2
+        return 1
 
     def _adjust_credit_budget(self, *, state: Dict[str, Any], branch_key: str, execution: Dict[str, Any]) -> int:
         evidence = execution.get("evidence") if isinstance(execution, dict) else None
@@ -1237,6 +1553,7 @@ class DiscoveryRuntimeAgenticV3:
         off_entity_reject_rate: float,
         judge_fallback_count: int,
         schema_fail_count: int,
+        artifact_consistency_issues: List[str],
     ) -> List[str]:
         reasons: List[str] = []
         if planner_applied_rate <= 0.0:
@@ -1251,9 +1568,48 @@ class DiscoveryRuntimeAgenticV3:
             reasons.append("high_off_entity_reject_rate")
         if validated_count == 0:
             reasons.append("no_validated_signals")
+        if artifact_consistency_issues:
+            reasons.append("artifact_consistency_mismatch")
         if not reasons:
             reasons.append("healthy")
         return reasons
+
+    @staticmethod
+    def _planner_applied_count_from_trace(turn_trace: List[Dict[str, Any]]) -> int:
+        return sum(
+            1
+            for row in turn_trace or []
+            if isinstance(row, dict)
+            and str(row.get("planner_status") or "").strip().lower() in {"applied", "repaired"}
+        )
+
+    @staticmethod
+    def _trace_consistency_issues(
+        *,
+        turn_trace: List[Dict[str, Any]],
+        planner_decisions: List[Dict[str, Any]],
+        executed_actions: List[Dict[str, Any]],
+        planner_turn_count: int,
+        planner_applied_count: int,
+    ) -> List[str]:
+        issues: List[str] = []
+        turn_count = len([row for row in turn_trace or [] if isinstance(row, dict)])
+        decision_count = len([row for row in planner_decisions or [] if isinstance(row, dict)])
+        executed_count = len([row for row in executed_actions or [] if isinstance(row, dict)])
+        if planner_turn_count != turn_count:
+            issues.append("planner_turn_count_mismatch")
+        if decision_count != turn_count:
+            issues.append("planner_decision_trace_mismatch")
+        if executed_count != turn_count:
+            issues.append("executed_action_trace_mismatch")
+        applied_from_trace = sum(
+            1
+            for row in turn_trace or []
+            if isinstance(row, dict) and str(row.get("planner_status") or "").strip().lower() == "applied"
+        )
+        if applied_from_trace != planner_applied_count:
+            issues.append("planner_applied_count_mismatch")
+        return issues
 
     @staticmethod
     def _signal_rank(validation_state: str) -> int:

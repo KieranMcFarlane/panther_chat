@@ -18,6 +18,8 @@ def _normalize_engine_name(value: str) -> str:
         return "v2"
     if raw in {"agentic_v3", "v3", "agentic", "planner_led"}:
         return "agentic_v3"
+    if raw in {"agentic_v4_batched", "v4", "batched", "batched_agentic"}:
+        return "agentic_v4_batched"
     return "v2"
 
 
@@ -62,6 +64,19 @@ def create_discovery_engine(
         )
         logger.info("🧠 Discovery engine selected: agentic_v3")
         return instance, "agentic_v3"
+
+    if selected == "agentic_v4_batched":
+        try:
+            from backend.discovery_runtime_agentic_v4_batched import DiscoveryRuntimeAgenticV4Batched
+        except ImportError:
+            from discovery_runtime_agentic_v4_batched import DiscoveryRuntimeAgenticV4Batched
+
+        instance = DiscoveryRuntimeAgenticV4Batched(
+            claude_client=claude_client,
+            brightdata_client=brightdata_client,
+        )
+        logger.info("🧠 Discovery engine selected: agentic_v4_batched")
+        return instance, "agentic_v4_batched"
 
     try:
         from backend.discovery_runtime_v2 import DiscoveryRuntimeV2

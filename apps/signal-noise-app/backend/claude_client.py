@@ -416,6 +416,19 @@ class ClaudeClient:
         self.provider = self._resolve_provider()
         self.api_key = api_key or self._resolve_api_key()
         self.base_url = base_url or self._resolve_base_url()
+        explicit_single_model = (os.getenv("CHUTES_MODEL") or "").strip()
+        role_model_keys = (
+            "CHUTES_MODEL_PLANNER",
+            "CHUTES_MODEL_JUDGE",
+            "CHUTES_MODEL_FALLBACK",
+            "CHUTES_MODEL_PRIMARY",
+            "CHUTES_MODEL_SECONDARY",
+            "CHUTES_MODEL_TERTIARY",
+            "CHUTES_MODEL_HAIKU",
+            "CHUTES_MODEL_SONNET",
+            "CHUTES_MODEL_OPUS",
+        )
+        has_role_model_overrides = any((os.getenv(key) or "").strip() for key in role_model_keys)
         def _resolve_chutes_role_model(*env_keys: str, default: str) -> str:
             for key in env_keys:
                 value = os.getenv(key)
@@ -423,32 +436,54 @@ class ClaudeClient:
                     return value.strip()
             return default
 
-        self.chutes_model_planner = _resolve_chutes_role_model(
-            "CHUTES_MODEL_PLANNER",
-            "CHUTES_MODEL_PRIMARY",
-            "CHUTES_MODEL_HAIKU",
-            "CHUTES_MODEL",
-            default="zai-org/GLM-5-TEE",
-        )
-        self.chutes_model_judge = _resolve_chutes_role_model(
-            "CHUTES_MODEL_JUDGE",
-            "CHUTES_MODEL_SECONDARY",
-            "CHUTES_MODEL_SONNET",
-            default="moonshotai/Kimi-K2.5-TEE",
-        )
-        self.chutes_model_fallback = _resolve_chutes_role_model(
-            "CHUTES_MODEL_FALLBACK",
-            "CHUTES_MODEL_TERTIARY",
-            "CHUTES_MODEL_OPUS",
-            default="MiniMaxAI/MiniMax-M2.5-TEE",
-        )
-        self.chutes_model_primary = self.chutes_model_planner
-        self.chutes_model_secondary = self.chutes_model_judge
-        self.chutes_model_tertiary = self.chutes_model_fallback
-        self.chutes_model = self.chutes_model_planner
-        self.chutes_model_haiku = self.chutes_model_planner
-        self.chutes_model_sonnet = self.chutes_model_judge
-        self.chutes_model_opus = self.chutes_model_fallback
+        if explicit_single_model and not has_role_model_overrides:
+            self.chutes_model_planner = explicit_single_model
+            self.chutes_model_judge = explicit_single_model
+            self.chutes_model_fallback = explicit_single_model
+        else:
+            default_primary_model = _resolve_chutes_role_model(
+                "CHUTES_MODEL_PRIMARY",
+                "CHUTES_MODEL_HAIKU",
+                "CHUTES_MODEL",
+                default="moonshotai/Kimi-K2.5-TEE",
+            )
+            default_secondary_model = _resolve_chutes_role_model(
+                "CHUTES_MODEL_SECONDARY",
+                "CHUTES_MODEL_SONNET",
+                default="MiniMaxAI/MiniMax-M2.5-TEE",
+            )
+            default_tertiary_model = _resolve_chutes_role_model(
+                "CHUTES_MODEL_TERTIARY",
+                "CHUTES_MODEL_OPUS",
+                default="zai-org/GLM-5-TEE",
+            )
+            self.chutes_model_planner = _resolve_chutes_role_model(
+                "CHUTES_MODEL_PLANNER",
+                "CHUTES_MODEL_STRUCTURED",
+                "CHUTES_MODEL_JSON_DEFAULT",
+                "CHUTES_MODEL_TERTIARY",
+                default=default_tertiary_model,
+            )
+            self.chutes_model_judge = _resolve_chutes_role_model(
+                "CHUTES_MODEL_JUDGE",
+                "CHUTES_MODEL_JSON_DEFAULT",
+                "CHUTES_MODEL_SECONDARY",
+                "CHUTES_MODEL_SONNET",
+                default="deepseek-ai/DeepSeek-V3.2-TEE",
+            )
+            self.chutes_model_fallback = _resolve_chutes_role_model(
+                "CHUTES_MODEL_FALLBACK",
+                "CHUTES_MODEL_TERTIARY",
+                "CHUTES_MODEL_OPUS",
+                default=default_secondary_model,
+            )
+        self.chutes_model_primary = explicit_single_model or locals().get("default_primary_model", self.chutes_model_planner)
+        self.chutes_model_secondary = locals().get("default_secondary_model", self.chutes_model_judge)
+        self.chutes_model_tertiary = locals().get("default_tertiary_model", self.chutes_model_fallback)
+        self.chutes_model = explicit_single_model or self.chutes_model_primary
+        self.chutes_model_haiku = self.chutes_model_primary
+        self.chutes_model_sonnet = self.chutes_model_secondary
+        self.chutes_model_opus = self.chutes_model_tertiary
         self.chutes_model_json_default = _resolve_chutes_role_model(
             "CHUTES_MODEL_JSON_DEFAULT",
             "CHUTES_MODEL_JUDGE",
@@ -487,7 +522,11 @@ class ClaudeClient:
             os.getenv("CHUTES_JSON_INCLUDE_REASONING"),
             default=False,
         )
-        self.chutes_fallback_model = os.getenv("CHUTES_FALLBACK_MODEL", "moonshotai/Kimi-K2.5-TEE")
+        env_fallback_model = (os.getenv("CHUTES_FALLBACK_MODEL") or "").strip()
+        if env_fallback_model and env_fallback_model != self.chutes_model:
+            self.chutes_fallback_model = env_fallback_model
+        else:
+            self.chutes_fallback_model = self.chutes_model_fallback
         self.chutes_timeout_seconds = float(os.getenv("CHUTES_TIMEOUT_SECONDS", "45"))
         self.chutes_fallback_timeout_seconds = float(os.getenv("CHUTES_FALLBACK_TIMEOUT_SECONDS", "90"))
         self.chutes_stream_idle_timeout_seconds = float(
@@ -585,6 +624,34 @@ class ClaudeClient:
             return False
         return default
 
+    @staticmethod
+    def _build_chutes_response_json_schema(schema: Dict[str, Any]) -> Dict[str, Any]:
+        payload = dict(schema or {})
+        schema_name = str(payload.pop("name", "") or "structured_output").strip() or "structured_output"
+        strict = bool(payload.pop("strict", True))
+        return {
+            "name": schema_name,
+            "strict": strict,
+            "schema": payload,
+        }
+
+    @staticmethod
+    def _prefer_chutes_json_object_for_schema(*, requested_model: str, runtime_model: str) -> bool:
+        requested = str(requested_model or "").strip().lower()
+        runtime = str(runtime_model or "").strip().lower()
+        return requested in {"planner", "primary", "haiku"} and "kimi" in runtime
+
+    @staticmethod
+    def _append_json_schema_contract_to_prompt(prompt: str, schema: Dict[str, Any]) -> str:
+        if not isinstance(schema, dict) or not schema:
+            return prompt
+        compact_schema = json.dumps(schema, separators=(",", ":"))
+        return (
+            f"{prompt}\n"
+            "Return a single valid JSON object only. No markdown, no prose.\n"
+            f"JSON contract: {compact_schema}"
+        )
+
     def _resolve_provider(self) -> str:
         provider = (os.getenv("LLM_PROVIDER") or "").strip().lower()
         if provider in {self.PROVIDER_ANTHROPIC, self.PROVIDER_CHUTES_OPENAI, self.PROVIDER_CHUTES_ANTHROPIC}:
@@ -643,10 +710,14 @@ class ClaudeClient:
 
     def _resolve_chutes_runtime_model(self, requested_model: Optional[str]) -> str:
         normalized = str(requested_model or "haiku").strip().lower()
-        if normalized in {"planner", "primary", "haiku"}:
+        if normalized == "planner":
             return self.chutes_model_planner
-        if normalized in {"judge", "secondary", "sonnet"}:
+        if normalized == "judge":
             return self.chutes_model_judge
+        if normalized in {"primary", "haiku"}:
+            return self.chutes_model_primary
+        if normalized in {"secondary", "sonnet"}:
+            return self.chutes_model_secondary
         if normalized in {"fallback", "tertiary", "opus"}:
             return self.chutes_model_fallback
         return self.chutes_model
@@ -813,6 +884,25 @@ class ClaudeClient:
             return False
         return (attempt + 1) >= max(1, int(threshold))
 
+    def _should_immediately_fallback_planner_capacity(
+        self,
+        *,
+        requested_model: str,
+        current_model: str,
+        error: Exception,
+    ) -> bool:
+        if str(requested_model or "").strip().lower() != "planner":
+            return False
+        if not self.chutes_fallback_model or current_model == self.chutes_fallback_model:
+            return False
+        if "glm-5-turbo" not in str(current_model or "").strip().lower():
+            return False
+        if not isinstance(error, httpx.HTTPStatusError) or error.response is None:
+            return False
+        if error.response.status_code != 503:
+            return False
+        return "no instances available" in self._extract_http_error_text(error).lower()
+
     @staticmethod
     def _extract_http_error_text(error: Exception) -> str:
         if not isinstance(error, httpx.HTTPStatusError) or error.response is None:
@@ -833,6 +923,28 @@ class ClaudeClient:
         ):
             return "insufficient_balance"
         return "rate_limit"
+
+    @staticmethod
+    def _build_attempt_record(
+        *,
+        attempt_number: int,
+        model: str,
+        status: str,
+        status_code: Optional[int] = None,
+        body: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        record: Dict[str, Any] = {
+            "attempt": int(attempt_number),
+            "model": str(model or ""),
+            "status": str(status or ""),
+        }
+        if status_code is not None:
+            record["status_code"] = int(status_code)
+        if body is not None:
+            trimmed = str(body).strip()
+            if trimmed:
+                record["body"] = trimmed[:500]
+        return record
 
     def _compute_chutes_backoff_seconds(
         self,
@@ -1013,6 +1125,7 @@ class ClaudeClient:
         last_status: str,
         circuit_broken: bool = False,
         disable_reason: Optional[str] = None,
+        attempt_history: Optional[List[Dict[str, Any]]] = None,
     ) -> None:
         self._last_request_diagnostics = {
             "llm_provider": self.provider,
@@ -1022,6 +1135,7 @@ class ClaudeClient:
             "llm_disable_reason": disable_reason,
             "llm_circuit_seconds_remaining": self._current_circuit_remaining_seconds(),
             "llm_circuit_kind": getattr(self.__class__, "_api_disabled_kind", None),
+            "llm_attempt_history": list(attempt_history or []),
             **self._get_chutes_pacing_snapshot(),
         }
         if last_status == "ok":
@@ -1317,16 +1431,28 @@ class ClaudeClient:
         if not self.api_key:
             raise RuntimeError("CHUTES_API_KEY not configured")
 
+        requested_model_normalized = str(model or "").strip().lower()
+        runtime_model = self._resolve_chutes_runtime_model(model)
+        explicit_json_alias = requested_model_normalized in {"json", "structured", "json_model"}
+        generic_tier_alias = requested_model_normalized in {"haiku", "sonnet", "opus"}
+        if json_mode and self.chutes_model_json and (self.chutes_json_force_model or explicit_json_alias or generic_tier_alias):
+            runtime_model = self.chutes_model_json
+        use_json_object_for_schema = bool(
+            json_mode
+            and isinstance(json_schema, dict)
+            and self._prefer_chutes_json_object_for_schema(
+                requested_model=requested_model_normalized,
+                runtime_model=runtime_model,
+            )
+        )
+        if use_json_object_for_schema:
+            prompt = self._append_json_schema_contract_to_prompt(prompt, json_schema or {})
+
         messages: List[Dict[str, str]] = []
         if system_prompt:
             messages.append({"role": "system", "content": system_prompt})
         messages.append({"role": "user", "content": prompt})
 
-        runtime_model = self._resolve_chutes_runtime_model(model)
-        # Keep role-based routing for structured calls unless force-enabled.
-        explicit_json_alias = str(model or "").strip().lower() in {"json", "structured", "json_model"}
-        if json_mode and self.chutes_model_json and (self.chutes_json_force_model or explicit_json_alias):
-            runtime_model = self.chutes_model_json
         request_stream = self.chutes_stream_enabled if stream is None else bool(stream)
         payload = {
             "model": runtime_model,
@@ -1339,8 +1465,11 @@ class ClaudeClient:
             payload["max_tokens"] = max(max_tokens, self.chutes_json_min_max_tokens)
             payload["include_reasoning"] = bool(self.chutes_json_include_reasoning)
             if self.chutes_json_response_format_enabled:
-                if isinstance(json_schema, dict):
-                    payload["response_format"] = {"type": "json_schema", "json_schema": json_schema}
+                if isinstance(json_schema, dict) and not use_json_object_for_schema:
+                    payload["response_format"] = {
+                        "type": "json_schema",
+                        "json_schema": self._build_chutes_response_json_schema(json_schema),
+                    }
                 else:
                     payload["response_format"] = {"type": "json_object"}
 
@@ -1371,6 +1500,8 @@ class ClaudeClient:
         )
 
         attempted_json_length_retry = False
+        attempted_length_model_fallback = False
+        attempt_history: List[Dict[str, Any]] = []
         for attempt in range(max_retries + 1):
             try:
                 await self._wait_for_chutes_rate_limit_cooldown()
@@ -1414,6 +1545,13 @@ class ClaudeClient:
                 stop_reason = data.get("stop_reason")
                 chunk_count = int(data.get("chunk_count", 0) or 0)
                 strict_json_hard_fail = bool(json_mode and fast_fail_on_length)
+                attempt_history.append(
+                    self._build_attempt_record(
+                        attempt_number=attempt + 1,
+                        model=str(payload["model"]),
+                        status="ok",
+                    )
+                )
 
                 if str(stop_reason or "").strip().lower() == "length" and fast_fail_on_length:
                     if json_mode and self.chutes_json_length_retry_enabled and not attempted_json_length_retry:
@@ -1432,9 +1570,31 @@ class ClaudeClient:
                                 payload["max_tokens"],
                             )
                             continue
+                    if (
+                        self.chutes_fallback_model
+                        and payload["model"] != self.chutes_fallback_model
+                        and not attempted_length_model_fallback
+                    ):
+                        attempted_length_model_fallback = True
+                        payload["model"] = self.chutes_fallback_model
+                        payload["max_tokens"] = max(
+                            int(payload.get("max_tokens") or 0),
+                            self.chutes_json_length_retry_max_tokens,
+                        )
+                        logger.warning(
+                            "Chutes length-stop on model=%s; switching to fallback model=%s max_tokens=%s",
+                            runtime_model,
+                            self.chutes_fallback_model,
+                            payload["max_tokens"],
+                        )
+                        continue
                     self._record_chutes_event("success")
                     self._apply_chutes_adaptive_recovery()
-                    self._set_last_request_diagnostics(retry_attempts=attempt, last_status="length_fast_fail")
+                    self._set_last_request_diagnostics(
+                        retry_attempts=attempt,
+                        last_status="length_fast_fail",
+                        attempt_history=attempt_history,
+                    )
                     return {
                         "content": "",
                         "reasoning_content": reasoning_content,
@@ -1457,35 +1617,7 @@ class ClaudeClient:
                             "answer_channel_chars": 0,
                             "reasoning_channel_chars": len(reasoning_content),
                             "length_fast_fail": True,
-                        },
-                    }
-
-                if not content and strict_json_hard_fail and not self.chutes_json_empty_retry_enabled:
-                    self._record_chutes_event("success")
-                    self._apply_chutes_adaptive_recovery()
-                    self._set_last_request_diagnostics(retry_attempts=attempt, last_status="empty_content_fast_fail")
-                    return {
-                        "content": "",
-                        "reasoning_content": reasoning_content,
-                        "model_used": payload["model"],
-                        "requested_model": model,
-                        "provider": self.provider,
-                        "structured_output": structured_output,
-                        "raw_response": data.get("raw_response"),
-                        "tokens_used": {
-                            "input_tokens": usage.get("prompt_tokens"),
-                            "output_tokens": usage.get("completion_tokens"),
-                            "total_tokens": usage.get("total_tokens"),
-                        },
-                        "stop_reason": stop_reason,
-                        "inference_diagnostics": {
-                            "streaming": bool(request_stream),
-                            "streaming_override": request_stream != self.chutes_stream_enabled,
-                            "fallback_used": bool(payload["model"] != self.chutes_model),
-                            "chunk_count": chunk_count,
-                            "answer_channel_chars": 0,
-                            "reasoning_channel_chars": len(reasoning_content),
-                            "empty_content_fast_fail": True,
+                            "attempt_history": list(attempt_history),
                         },
                     }
 
@@ -1517,10 +1649,47 @@ class ClaudeClient:
                         )
                         await asyncio.sleep(backoff_seconds)
                     continue
+                if not content and strict_json_hard_fail and not self.chutes_json_empty_retry_enabled:
+                    self._record_chutes_event("success")
+                    self._apply_chutes_adaptive_recovery()
+                    self._set_last_request_diagnostics(
+                        retry_attempts=attempt,
+                        last_status="empty_content_fast_fail",
+                        attempt_history=attempt_history,
+                    )
+                    return {
+                        "content": "",
+                        "reasoning_content": reasoning_content,
+                        "model_used": payload["model"],
+                        "requested_model": model,
+                        "provider": self.provider,
+                        "structured_output": structured_output,
+                        "raw_response": data.get("raw_response"),
+                        "tokens_used": {
+                            "input_tokens": usage.get("prompt_tokens"),
+                            "output_tokens": usage.get("completion_tokens"),
+                            "total_tokens": usage.get("total_tokens"),
+                        },
+                        "stop_reason": stop_reason,
+                        "inference_diagnostics": {
+                            "streaming": bool(request_stream),
+                            "streaming_override": request_stream != self.chutes_stream_enabled,
+                            "fallback_used": bool(payload["model"] != self.chutes_model),
+                            "chunk_count": chunk_count,
+                            "answer_channel_chars": 0,
+                            "reasoning_channel_chars": len(reasoning_content),
+                            "empty_content_fast_fail": True,
+                            "attempt_history": list(attempt_history),
+                        },
+                    }
                 self._record_chutes_event("success")
                 self._apply_chutes_adaptive_recovery()
                 self._recover_chutes_rate_limit_cooldown()
-                self._set_last_request_diagnostics(retry_attempts=attempt, last_status="ok")
+                self._set_last_request_diagnostics(
+                    retry_attempts=attempt,
+                    last_status="ok",
+                    attempt_history=attempt_history,
+                )
 
                 return {
                     "content": content,
@@ -1543,11 +1712,22 @@ class ClaudeClient:
                         "chunk_count": chunk_count,
                         "answer_channel_chars": len(content),
                         "reasoning_channel_chars": len(reasoning_content),
+                        "attempt_history": list(attempt_history),
                     },
                 }
             except Exception as e:
                 last_error = e
                 error_detail = self._format_chutes_error(e)
+                status_code = e.response.status_code if isinstance(e, httpx.HTTPStatusError) and e.response is not None else None
+                attempt_history.append(
+                    self._build_attempt_record(
+                        attempt_number=attempt + 1,
+                        model=str(payload["model"]),
+                        status="error",
+                        status_code=status_code,
+                        body=self._extract_http_error_text(e) or error_detail,
+                    )
+                )
                 logger.error(
                     "Chutes API request failed (attempt %s/%s): %s",
                     attempt + 1,
@@ -1563,6 +1743,7 @@ class ClaudeClient:
                         last_status="insufficient_balance",
                         circuit_broken=True,
                         disable_reason=self._get_disabled_reason(),
+                        attempt_history=attempt_history,
                     )
                     raise LLMRequestError(
                         f"Chutes insufficient balance: {error_detail}",
@@ -1587,6 +1768,7 @@ class ClaudeClient:
                             last_status="quota_circuit_open",
                             circuit_broken=True,
                             disable_reason=self._get_disabled_reason(),
+                            attempt_history=attempt_history,
                         )
                     self._record_chutes_event("rate_limit", status_code=status_code)
                     self._apply_chutes_adaptive_penalty(is_rate_limit=True)
@@ -1603,6 +1785,20 @@ class ClaudeClient:
                 elif is_retryable:
                     self._record_chutes_event("retryable_error", status_code=status_code)
                     self._apply_chutes_adaptive_penalty(is_rate_limit=False)
+                if self._should_immediately_fallback_planner_capacity(
+                    requested_model=model,
+                    current_model=str(payload["model"]),
+                    error=e,
+                ):
+                    logger.warning(
+                        "Planner capacity error on model=%s; immediately switching to fallback model=%s",
+                        payload["model"],
+                        self.chutes_fallback_model,
+                    )
+                    payload["model"] = self.chutes_fallback_model
+                    if attempt >= max_retries:
+                        max_retries = attempt + 1
+                    continue
                 if is_retryable and self._should_switch_to_fallback(
                     attempt=attempt,
                     threshold=self.chutes_retries_before_fallback,
@@ -1621,6 +1817,7 @@ class ClaudeClient:
                         last_status="error_non_retryable" if not is_retryable else "error_retry_exhausted",
                         circuit_broken=bool(self._get_disabled_reason()),
                         disable_reason=self._get_disabled_reason(),
+                        attempt_history=attempt_history,
                     )
                     raise LLMRequestError(
                         f"Chutes request failed (retryable={is_retryable}): {error_detail}",
@@ -1655,6 +1852,7 @@ class ClaudeClient:
             last_status="error_exhausted",
             circuit_broken=bool(self._get_disabled_reason()),
             disable_reason=self._get_disabled_reason(),
+            attempt_history=attempt_history,
         )
         raise LLMRequestError(
             f"Chutes request failed after {max_retries + 1} attempts: "

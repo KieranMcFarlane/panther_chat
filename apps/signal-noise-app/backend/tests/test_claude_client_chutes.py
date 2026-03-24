@@ -20,6 +20,9 @@ def _default_non_stream_for_legacy_tests(monkeypatch):
     monkeypatch.setenv("CHUTES_STREAM_ENABLED", "false")
     monkeypatch.setenv("CHUTES_ADAPTIVE_PACING_ENABLED", "false")
     monkeypatch.setenv("CHUTES_MIN_REQUEST_INTERVAL_SECONDS", "0")
+    monkeypatch.delenv("CHUTES_MODEL_PLANNER", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_JUDGE", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_FALLBACK", raising=False)
     monkeypatch.setenv("CHUTES_MODEL_PRIMARY", "zai-org/GLM-5-TEE")
     monkeypatch.setenv("CHUTES_MODEL_SECONDARY", "zai-org/GLM-5-TEE")
     monkeypatch.setenv("CHUTES_MODEL_TERTIARY", "zai-org/GLM-5-TEE")
@@ -52,6 +55,8 @@ def test_claude_client_prefers_chutes_when_configured(monkeypatch):
 def test_claude_client_default_chutes_tier_mapping(monkeypatch):
     monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
     monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.delenv("CHUTES_MODEL_PLANNER", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_JUDGE", raising=False)
     monkeypatch.delenv("CHUTES_MODEL_HAIKU", raising=False)
     monkeypatch.delenv("CHUTES_MODEL_SONNET", raising=False)
     monkeypatch.delenv("CHUTES_MODEL_OPUS", raising=False)
@@ -60,9 +65,30 @@ def test_claude_client_default_chutes_tier_mapping(monkeypatch):
     monkeypatch.setenv("CHUTES_MODEL_TERTIARY", "zai-org/GLM-5-TEE")
 
     client = ClaudeClient()
+    assert client._resolve_chutes_runtime_model("planner") == "zai-org/GLM-5-TEE"
     assert client._resolve_chutes_runtime_model("haiku") == "moonshotai/Kimi-K2.5-TEE"
     assert client._resolve_chutes_runtime_model("sonnet") == "MiniMaxAI/MiniMax-M2.5-TEE"
     assert client._resolve_chutes_runtime_model("opus") == "zai-org/GLM-5-TEE"
+
+
+def test_claude_client_defaults_planner_to_glm_and_preserves_primary_for_synthesis(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.delenv("CHUTES_MODEL_PLANNER", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_JUDGE", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_FALLBACK", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_JSON_DEFAULT", raising=False)
+    monkeypatch.setenv("CHUTES_MODEL_PRIMARY", "moonshotai/Kimi-K2.5-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_SECONDARY", "MiniMaxAI/MiniMax-M2.5-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_TERTIARY", "zai-org/GLM-5-TEE")
+
+    client = ClaudeClient()
+
+    assert client.chutes_model_planner == "zai-org/GLM-5-TEE"
+    assert client.chutes_model_primary == "moonshotai/Kimi-K2.5-TEE"
+    assert client.chutes_model_haiku == "moonshotai/Kimi-K2.5-TEE"
+    assert client._resolve_chutes_runtime_model("planner") == "zai-org/GLM-5-TEE"
+    assert client._resolve_chutes_runtime_model("haiku") == "moonshotai/Kimi-K2.5-TEE"
 
 
 def test_claude_client_exposes_provider_neutral_chutes_roles(monkeypatch):
@@ -80,9 +106,12 @@ def test_claude_client_exposes_provider_neutral_chutes_roles(monkeypatch):
     assert client.chutes_model_planner == "moonshotai/Kimi-K2.5-TEE"
     assert client.chutes_model_judge == "deepseek-ai/DeepSeek-V3.2-TEE"
     assert client.chutes_model_fallback == "zai-org/GLM-5-TEE"
-    assert client.chutes_model_haiku == client.chutes_model_planner
-    assert client.chutes_model_sonnet == client.chutes_model_judge
-    assert client.chutes_model_opus == client.chutes_model_fallback
+    assert client.chutes_model_haiku == client.chutes_model_primary
+    assert client.chutes_model_sonnet == client.chutes_model_secondary
+    assert client.chutes_model_opus == client.chutes_model_tertiary
+    assert client._resolve_chutes_runtime_model("planner") == "moonshotai/Kimi-K2.5-TEE"
+    assert client._resolve_chutes_runtime_model("judge") == "deepseek-ai/DeepSeek-V3.2-TEE"
+    assert client.chutes_fallback_model == "zai-org/GLM-5-TEE"
 
 
 def test_claude_client_supports_explicit_chutes_anthropic_provider(monkeypatch):
@@ -232,6 +261,232 @@ async def test_claude_client_sets_json_response_format_when_json_mode_enabled(mo
 
 
 @pytest.mark.asyncio
+async def test_claude_client_wraps_json_schema_with_name_for_chutes(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_STREAM_ENABLED", "false")
+
+    request_capture = {}
+
+    class FakeResponse:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {
+                "choices": [{"message": {"content": '{"decision":"NO_PROGRESS"}'}, "finish_reason": "stop"}],
+                "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2},
+            }
+
+    class FakeAsyncClient:
+        def __init__(self, timeout):
+            self.timeout = timeout
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            request_capture["json"] = json
+            return FakeResponse()
+
+    monkeypatch.setattr(claude_client_module.httpx, "AsyncClient", FakeAsyncClient)
+
+    client = ClaudeClient()
+    await client.query(
+        prompt="return json",
+        model="haiku",
+        max_tokens=64,
+        json_mode=True,
+        json_schema={"type": "object", "properties": {"decision": {"type": "string"}}, "required": ["decision"]},
+    )
+
+    response_format = request_capture["json"]["response_format"]
+    assert response_format["type"] == "json_schema"
+    assert response_format["json_schema"]["name"] == "structured_output"
+    assert response_format["json_schema"]["schema"]["required"] == ["decision"]
+
+
+@pytest.mark.asyncio
+async def test_claude_client_uses_json_object_for_kimi_planner_even_with_schema(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL_PLANNER", "moonshotai/Kimi-K2.5-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_JUDGE", "deepseek-ai/DeepSeek-V3.2-TEE")
+    monkeypatch.setenv("CHUTES_STREAM_ENABLED", "false")
+
+    request_capture = {}
+
+    class FakeResponse:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {
+                "choices": [{"message": {"content": '{"decision":"NO_PROGRESS"}'}, "finish_reason": "stop"}],
+                "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2},
+            }
+
+    class FakeAsyncClient:
+        def __init__(self, timeout):
+            self.timeout = timeout
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            request_capture["json"] = json
+            return FakeResponse()
+
+    monkeypatch.setattr(claude_client_module.httpx, "AsyncClient", FakeAsyncClient)
+
+    client = ClaudeClient()
+    await client.query(
+        prompt="return planner json",
+        model="planner",
+        max_tokens=128,
+        json_mode=True,
+        json_schema={"type": "object", "properties": {"decision": {"type": "string"}}, "required": ["decision"]},
+    )
+
+    assert request_capture["json"]["model"] == "moonshotai/Kimi-K2.5-TEE"
+    assert request_capture["json"]["response_format"] == {"type": "json_object"}
+
+
+@pytest.mark.asyncio
+async def test_claude_client_keeps_json_schema_for_deepseek_judge(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL_PLANNER", "moonshotai/Kimi-K2.5-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_JUDGE", "deepseek-ai/DeepSeek-V3.2-TEE")
+    monkeypatch.setenv("CHUTES_STREAM_ENABLED", "false")
+
+    request_capture = {}
+
+    class FakeResponse:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {
+                "choices": [{"message": {"content": '{"decision":"NO_PROGRESS"}'}, "finish_reason": "stop"}],
+                "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2},
+            }
+
+    class FakeAsyncClient:
+        def __init__(self, timeout):
+            self.timeout = timeout
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            request_capture["json"] = json
+            return FakeResponse()
+
+    monkeypatch.setattr(claude_client_module.httpx, "AsyncClient", FakeAsyncClient)
+
+    client = ClaudeClient()
+    await client.query(
+        prompt="return judge json",
+        model="judge",
+        max_tokens=128,
+        json_mode=True,
+        json_schema={"type": "object", "properties": {"decision": {"type": "string"}}, "required": ["decision"]},
+    )
+
+    response_format = request_capture["json"]["response_format"]
+    assert request_capture["json"]["model"] == "deepseek-ai/DeepSeek-V3.2-TEE"
+    assert response_format["type"] == "json_schema"
+    assert response_format["json_schema"]["schema"]["required"] == ["decision"]
+
+
+@pytest.mark.asyncio
+async def test_claude_client_immediately_falls_back_from_glm_turbo_planner_capacity(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL_PLANNER", "zai-org/GLM-5-Turbo")
+    monkeypatch.setenv("CHUTES_MODEL_FALLBACK", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_FALLBACK_MODEL", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_STREAM_ENABLED", "false")
+    monkeypatch.setenv("CHUTES_MAX_RETRIES", "1")
+
+    attempts = []
+
+    class FakeResponse:
+        def __init__(self, status_code=200, payload=None, text=""):
+            self.status_code = status_code
+            self._payload = payload or {}
+            self.text = text
+            self.headers = {}
+            self.request = httpx.Request("POST", "https://llm.chutes.ai/v1/chat/completions")
+
+        def raise_for_status(self):
+            if self.status_code >= 400:
+                raise httpx.HTTPStatusError(
+                    f"{self.status_code} error",
+                    request=self.request,
+                    response=self,
+                )
+            return None
+
+        def json(self):
+            return self._payload
+
+    class FakeAsyncClient:
+        def __init__(self, timeout):
+            self.timeout = timeout
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            attempts.append(json["model"])
+            if len(attempts) == 1:
+                return FakeResponse(
+                    status_code=503,
+                    text='{"detail":"No instances available (yet) for chute_id=\\"planner-turbo\\""}',
+                )
+            return FakeResponse(
+                payload={
+                    "choices": [{"message": {"content": '{"decision":"NO_PROGRESS"}'}, "finish_reason": "stop"}],
+                    "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2},
+                }
+            )
+
+    monkeypatch.setattr(claude_client_module.httpx, "AsyncClient", FakeAsyncClient)
+
+    client = ClaudeClient()
+    result = await client.query(
+        prompt="return planner json",
+        model="planner",
+        max_tokens=128,
+        json_mode=True,
+        json_schema={"type": "object", "properties": {"decision": {"type": "string"}}, "required": ["decision"]},
+    )
+
+    assert attempts == ["zai-org/GLM-5-Turbo", "zai-org/GLM-5-TEE"]
+    assert result["model_used"] == "zai-org/GLM-5-TEE"
+    assert [row["model"] for row in result["inference_diagnostics"]["attempt_history"]] == attempts
+
+
+@pytest.mark.asyncio
 async def test_claude_client_uses_dedicated_json_model_when_configured(monkeypatch):
     monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
     monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
@@ -301,7 +556,6 @@ async def test_claude_client_json_mode_precedence_contract(
     monkeypatch.delenv("CHUTES_MODEL_HAIKU", raising=False)
     monkeypatch.delenv("CHUTES_MODEL_SONNET", raising=False)
     monkeypatch.delenv("CHUTES_MODEL_OPUS", raising=False)
-    monkeypatch.delenv("CHUTES_MODEL_JSON", raising=False)
     monkeypatch.delenv("CHUTES_MODEL_JSON_DEFAULT", raising=False)
     monkeypatch.delenv("CHUTES_MODEL_JUDGE", raising=False)
     if judge_model is not None:
@@ -351,7 +605,8 @@ async def test_claude_client_fast_fails_on_length_even_with_partial_content(monk
     monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
     monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
     monkeypatch.setenv("CHUTES_MODEL_PLANNER", "moonshotai/Kimi-K2.5-TEE")
-    monkeypatch.delenv("CHUTES_MODEL_JSON", raising=False)
+    monkeypatch.setenv("CHUTES_MODEL_FALLBACK", "moonshotai/Kimi-K2.5-TEE")
+    monkeypatch.setenv("CHUTES_FALLBACK_MODEL", "moonshotai/Kimi-K2.5-TEE")
     monkeypatch.delenv("CHUTES_MODEL_JSON_DEFAULT", raising=False)
     monkeypatch.delenv("CHUTES_MODEL_JUDGE", raising=False)
     monkeypatch.delenv("CHUTES_MODEL_PRIMARY", raising=False)
@@ -401,15 +656,91 @@ async def test_claude_client_fast_fails_on_length_even_with_partial_content(monk
 
 
 @pytest.mark.asyncio
+async def test_claude_client_json_length_content_retries_to_role_fallback(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL_PLANNER", "moonshotai/Kimi-K2.5-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_FALLBACK", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_JSON", "moonshotai/Kimi-K2.5-TEE")
+    monkeypatch.setenv("CHUTES_JSON_LENGTH_RETRY_ENABLED", "false")
+    monkeypatch.setenv("CHUTES_STREAM_ENABLED", "false")
+    monkeypatch.delenv("CHUTES_FALLBACK_MODEL", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_JSON_DEFAULT", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_JUDGE", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_PRIMARY", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_SECONDARY", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_TERTIARY", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_HAIKU", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_SONNET", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_OPUS", raising=False)
+
+    request_models = []
+
+    class FakeResponse:
+        def __init__(self, content, finish_reason):
+            self._content = content
+            self._finish_reason = finish_reason
+
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {
+                "choices": [
+                    {
+                        "message": {"content": self._content, "reasoning_content": None},
+                        "finish_reason": self._finish_reason,
+                    }
+                ],
+                "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2},
+            }
+
+    class FakeAsyncClient:
+        def __init__(self, timeout):
+            self.timeout = timeout
+            self.calls = 0
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            request_models.append(json["model"])
+            self.calls += 1
+            if json["model"] == "moonshotai/Kimi-K2.5-TEE":
+                return FakeResponse('{"decision":"ACCEPT","reason":"cut"}', "length")
+            return FakeResponse('{"decision":"ACCEPT","reason":"fallback"}', "stop")
+
+    monkeypatch.setattr(claude_client_module.httpx, "AsyncClient", FakeAsyncClient)
+    client = ClaudeClient()
+    result = await client.query(
+        prompt="return strict json",
+        model="haiku",
+        max_tokens=64,
+        json_mode=True,
+        fast_fail_on_length=True,
+    )
+
+    assert request_models == ["moonshotai/Kimi-K2.5-TEE", "zai-org/GLM-5-TEE"]
+    assert result["model_used"] == "zai-org/GLM-5-TEE"
+    assert result["content"]
+    assert result.get("stop_reason") == "stop"
+
+
+@pytest.mark.asyncio
 async def test_claude_client_json_empty_content_fast_fails_without_fallback(monkeypatch):
     monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
     monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
     monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
     monkeypatch.setenv("CHUTES_MODEL_PLANNER", "moonshotai/Kimi-K2.5-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_FALLBACK", "moonshotai/Kimi-K2.5-TEE")
     monkeypatch.setenv("CHUTES_FALLBACK_MODEL", "moonshotai/Kimi-K2.5-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_JSON", "moonshotai/Kimi-K2.5-TEE")
     monkeypatch.setenv("CHUTES_JSON_EMPTY_RETRY_ENABLED", "false")
     monkeypatch.setenv("CHUTES_STREAM_ENABLED", "false")
-    monkeypatch.delenv("CHUTES_MODEL_JSON", raising=False)
     monkeypatch.delenv("CHUTES_MODEL_JSON_DEFAULT", raising=False)
     monkeypatch.delenv("CHUTES_MODEL_JUDGE", raising=False)
     monkeypatch.delenv("CHUTES_MODEL_PRIMARY", raising=False)
@@ -460,9 +791,82 @@ async def test_claude_client_json_empty_content_fast_fails_without_fallback(monk
         fast_fail_on_length=True,
     )
 
-    assert request_models == ["deepseek-ai/DeepSeek-V3.2-TEE"]
+    assert request_models == ["moonshotai/Kimi-K2.5-TEE"]
     assert result["content"] == ""
     assert result.get("inference_diagnostics", {}).get("empty_content_fast_fail") is True
+
+
+@pytest.mark.asyncio
+async def test_claude_client_json_empty_content_retries_to_role_fallback(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("CHUTES_MODEL_PLANNER", "moonshotai/Kimi-K2.5-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_FALLBACK", "zai-org/GLM-5-TEE")
+    monkeypatch.setenv("CHUTES_MODEL_JSON", "moonshotai/Kimi-K2.5-TEE")
+    monkeypatch.delenv("CHUTES_FALLBACK_MODEL", raising=False)
+    monkeypatch.setenv("CHUTES_JSON_EMPTY_RETRY_ENABLED", "false")
+    monkeypatch.setenv("CHUTES_EMPTY_RETRIES_BEFORE_FALLBACK", "1")
+    monkeypatch.setenv("CHUTES_STREAM_ENABLED", "false")
+    monkeypatch.delenv("CHUTES_MODEL_JSON_DEFAULT", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_JUDGE", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_PRIMARY", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_SECONDARY", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_TERTIARY", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_HAIKU", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_SONNET", raising=False)
+    monkeypatch.delenv("CHUTES_MODEL_OPUS", raising=False)
+
+    request_models = []
+
+    class FakeResponse:
+        def __init__(self, content):
+            self._content = content
+
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {
+                "choices": [
+                    {
+                        "message": {"content": self._content, "reasoning_content": None},
+                        "finish_reason": "stop",
+                    }
+                ],
+                "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2},
+            }
+
+    class FakeAsyncClient:
+        def __init__(self, timeout):
+            self.timeout = timeout
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            return False
+
+        async def post(self, url, headers=None, json=None):
+            request_models.append(json["model"])
+            if len(request_models) == 1:
+                return FakeResponse("")
+            return FakeResponse('{"action":"stop","reason":"fallback"}')
+
+    monkeypatch.setattr(claude_client_module.httpx, "AsyncClient", FakeAsyncClient)
+    client = ClaudeClient()
+    result = await client.query(
+        prompt="return strict json",
+        model="haiku",
+        max_tokens=64,
+        json_mode=True,
+        fast_fail_on_length=True,
+    )
+
+    assert request_models == ["moonshotai/Kimi-K2.5-TEE", "zai-org/GLM-5-TEE"]
+    assert result["content"] == '{"action":"stop","reason":"fallback"}'
+    assert result["model_used"] == "zai-org/GLM-5-TEE"
+    assert result["structured_output"] == {"action": "stop", "reason": "fallback"}
 
 @pytest.mark.asyncio
 async def test_claude_client_streaming_recovers_structured_output_when_content_empty(monkeypatch):

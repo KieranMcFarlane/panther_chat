@@ -25,11 +25,11 @@ export function EntityDossierRouter({ entity, onEmailEntity, dossier }: EntityDo
       return <EnhancedPersonDossier key={`enhanced-${entity.id}-${dossier ? 'with-dossier' : 'no-dossier'}`} entity={entity} onEmailEntity={onEmailEntity} dossier={dossier} />
     case 'Partner':
     case 'Organization':
-      return <PartnerDossier entity={entity} onEmailEntity={onEmailEntity} />
+      return <PartnerDossier entity={entity} onEmailEntity={onEmailEntity} dossier={dossier} />
     case 'League':
-      return <LeagueDossier entity={entity} onEmailEntity={onEmailEntity} />
+      return <LeagueDossier entity={entity} onEmailEntity={onEmailEntity} dossier={dossier} />
     default:
-      return <GenericEntityDossier entity={entity} onEmailEntity={onEmailEntity} />
+      return <GenericEntityDossier entity={entity} onEmailEntity={onEmailEntity} dossier={dossier} />
   }
 }
 

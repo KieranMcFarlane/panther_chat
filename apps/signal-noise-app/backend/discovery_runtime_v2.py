@@ -2691,6 +2691,23 @@ class DiscoveryRuntimeV2:
             score -= 0.1
         if lane == "trusted_news" and ("bbc.com/sport" in url or "bbc.co.uk/sport" in url):
             score += 0.16
+        parsed = urlparse(url)
+        path = (parsed.path or "").strip("/").lower()
+        path_tokens = {token for token in re.findall(r"[a-z0-9]+", path) if token}
+        if lane == "official_site":
+            if not path:
+                score += 0.4
+            else:
+                low_signal_terms = {"match", "matches", "fixture", "fixtures", "result", "results", "calendar", "schedule", "ticket", "tickets"}
+                high_signal_terms = {"news", "press", "about", "club", "commercial", "careers", "contact", "partners"}
+                low_hits = path_tokens.intersection(low_signal_terms)
+                high_hits = path_tokens.intersection(high_signal_terms)
+                if low_hits:
+                    score -= 0.95
+                    if len(path.split("/")) >= 3:
+                        score -= 0.2
+                if high_hits:
+                    score += 0.35
         if lane in {"rfp_procurement_tenders", "annual_report", "governance_pdf", "careers", "linkedin_jobs"}:
             if any(domain in host for domain in LOW_AUTHORITY_DOMAIN_HINTS):
                 score -= 0.5

@@ -49,6 +49,32 @@ def test_resolver_prefers_root_homepage_over_deep_news_url():
     assert ranked[0]["score"] > ranked[1]["score"]
 
 
+def test_resolver_demotes_matches_shell_below_richer_same_domain_paths():
+    candidates = [
+        {
+            "url": "https://www.ccfc.co.uk/matches/first-team/2025/g2566847",
+            "title": "Coventry City FC | Match Centre",
+            "snippet": "Match details and ticketing",
+        },
+        {
+            "url": "https://www.ccfc.co.uk/news",
+            "title": "Coventry City FC News",
+            "snippet": "Latest club updates",
+        },
+        {
+            "url": "https://www.ccfc.co.uk/",
+            "title": "Coventry City FC",
+            "snippet": "Official website",
+        },
+    ]
+
+    ranked = rank_official_site_candidates("Coventry City FC", candidates)
+    assert ranked[0]["url"] == "https://www.ccfc.co.uk/"
+    assert ranked[1]["url"] == "https://www.ccfc.co.uk/news"
+    assert ranked[-1]["url"].endswith("/matches/first-team/2025/g2566847")
+    assert ranked[0]["score"] > ranked[-1]["score"]
+
+
 def test_resolver_demotes_social_profiles():
     candidates = [
         {

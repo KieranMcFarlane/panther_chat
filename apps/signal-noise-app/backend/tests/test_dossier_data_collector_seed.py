@@ -42,6 +42,27 @@ def test_choose_official_site_url_prefers_non_commerce_candidate():
     assert chosen == "https://www.ccfc.co.uk/news"
 
 
+def test_choose_official_site_url_skips_low_signal_matches_shell():
+    collector = DossierDataCollector(brightdata_client=SimpleNamespace())
+    chosen = collector._choose_official_site_url(
+        "Coventry City FC",
+        [
+            {
+                "url": "https://www.ccfc.co.uk/matches/first-team/2025/g2566847",
+                "title": "Coventry City FC | Match Centre",
+                "snippet": "Match details and ticketing",
+            },
+            {
+                "url": "https://www.ccfc.co.uk/news",
+                "title": "Coventry City FC News",
+                "snippet": "Latest official club news",
+            },
+        ],
+    )
+
+    assert chosen == "https://www.ccfc.co.uk/news"
+
+
 def test_choose_official_site_url_avoids_unrelated_media_domain():
     collector = DossierDataCollector(brightdata_client=SimpleNamespace())
     chosen = collector._choose_official_site_url(

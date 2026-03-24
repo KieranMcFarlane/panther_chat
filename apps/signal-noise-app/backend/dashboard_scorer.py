@@ -229,13 +229,13 @@ class DashboardScorer:
             return 25.0  # Baseline for unknown
 
         # Get active hypotheses with confidence scores
-        active_hyps = [h for h in hypotheses if h.status == "ACTIVE"]
+        active_hyps = [h for h in hypotheses if self._hypothesis_status(h) == "ACTIVE"]
 
         if not active_hyps:
             return 25.0
 
         # Calculate weighted average confidence
-        total_confidence = sum(h.confidence for h in active_hyps)
+        total_confidence = sum(self._hypothesis_confidence(h) for h in active_hyps)
         avg_confidence = total_confidence / len(active_hyps)
 
         # Scale to 0-100 (0.5 baseline = 50 points)
@@ -449,16 +449,45 @@ class DashboardScorer:
             return 0.0
 
         # Get average confidence from active hypotheses
-        active_hyps = [h for h in hypotheses if h.status == "ACTIVE"]
+        active_hyps = [h for h in hypotheses if self._hypothesis_status(h) == "ACTIVE"]
 
         if not active_hyps:
             return 0.0
 
         # Average confidence above 0.5 baseline contributes
-        avg_confidence = sum(h.confidence for h in active_hyps) / len(active_hyps)
+        avg_confidence = sum(self._hypothesis_confidence(h) for h in active_hyps) / len(active_hyps)
 
         # Scale: 0.5 = 0, 1.0 = 1
         return max(0.0, (avg_confidence - 0.5) * 2.0)
+
+    @staticmethod
+    def _hypothesis_status(hypothesis: Any) -> str:
+        if hasattr(hypothesis, "status"):
+            return str(getattr(hypothesis, "status") or "").strip().upper()
+        if isinstance(hypothesis, dict):
+            return str(hypothesis.get("status") or hypothesis.get("state") or "").strip().upper()
+        if isinstance(hypothesis, str):
+            return "ACTIVE"
+        return ""
+
+    @staticmethod
+    def _hypothesis_confidence(hypothesis: Any) -> float:
+        if hasattr(hypothesis, "confidence"):
+            try:
+                return float(getattr(hypothesis, "confidence") or 0.0)
+            except (TypeError, ValueError):
+                return 0.0
+        if isinstance(hypothesis, dict):
+            for key in ("confidence", "score", "probability"):
+                try:
+                    value = hypothesis.get(key)
+                    if value is not None:
+                        return float(value)
+                except (TypeError, ValueError):
+                    continue
+        if isinstance(hypothesis, str):
+            return 0.5
+        return 0.0
 
     def _determine_sales_readiness(
         self,

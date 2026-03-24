@@ -30,6 +30,17 @@ from urllib.parse import urlparse
 # Add backend to path
 sys.path.insert(0, str(Path(__file__).parent))
 
+try:
+    from backend.dossier_persistence import (
+        apply_dashboard_score_persistence_context,
+        finalize_run_report_payload,
+    )
+except ImportError:
+    from dossier_persistence import (  # type: ignore
+        apply_dashboard_score_persistence_context,
+        finalize_run_report_payload,
+    )
+
 # Setup logging
 logging.basicConfig(
     level=logging.INFO,
@@ -51,12 +62,18 @@ class FixedDossierFirstPipeline:
         self._last_discovery_error_message: str | None = None
         self._last_shadow_discovery_payload: Dict[str, Any] | None = None
         self._last_dual_compare_payload: Dict[str, Any] | None = None
+        self._last_control_compare_payload: Dict[str, Any] | None = None
+        self._last_candidate_compare_payload: Dict[str, Any] | None = None
         self._last_v2_compare_payload: Dict[str, Any] | None = None
         self._last_agentic_compare_payload: Dict[str, Any] | None = None
         self._last_template_id: str | None = None
         self._last_max_iterations: int | None = None
         self._shadow_client = None
         self._shadow_discovery = None
+        self._control_compare_client = None
+        self._control_compare_discovery = None
+        self._candidate_compare_client = None
+        self._candidate_compare_discovery = None
         self._v2_compare_client = None
         self._v2_compare_discovery = None
         self._agentic_client = None
@@ -74,12 +91,15 @@ class FixedDossierFirstPipeline:
         self.claude = ClaudeClient()
         self.brightdata = BrightDataSDKClient()
         requested_runtime_mode = str(os.getenv("PIPELINE_DISCOVERY_RUNTIME", "v2") or "v2").strip().lower()
-        if requested_runtime_mode not in {"v2", "agentic_v3", "dual_compare"}:
+        if requested_runtime_mode not in {"v2", "agentic_v3", "agentic_v4_batched", "dual_compare"}:
             requested_runtime_mode = "v2"
         self.discovery_runtime_mode = requested_runtime_mode
-        primary_engine_name = "agentic_v3" if requested_runtime_mode == "agentic_v3" else str(
-            os.getenv("DISCOVERY_ENGINE", "v2") or "v2"
-        ).strip().lower()
+        if requested_runtime_mode == "agentic_v3":
+            primary_engine_name = "agentic_v3"
+        elif requested_runtime_mode == "agentic_v4_batched":
+            primary_engine_name = "agentic_v4_batched"
+        else:
+            primary_engine_name = str(os.getenv("DISCOVERY_ENGINE", "v2") or "v2").strip().lower()
 
         # Initialize components - use WORKING EntityDossierGenerator
         self.dossier_generator = EntityDossierGenerator(self.claude)
@@ -152,7 +172,7 @@ class FixedDossierFirstPipeline:
 
         # Dual-compare and agentic runtime orchestration currently lives in the
         # fixed runner path, not in canonical orchestrator.
-        if self.discovery_runtime_mode in {"dual_compare", "agentic_v3"} and self._use_canonical_orchestrator:
+        if self.discovery_runtime_mode in {"dual_compare", "agentic_v3", "agentic_v4_batched"} and self._use_canonical_orchestrator:
             self._use_canonical_orchestrator = False
             logger.info(
                 "🧪 discovery_runtime_mode=%s: using fixed runner (canonical orchestrator bypassed)",
@@ -844,49 +864,86 @@ class FixedDossierFirstPipeline:
 
             runtime_mode = str(getattr(self, "discovery_runtime_mode", "v2") or "v2").strip().lower()
             if runtime_mode == "dual_compare":
-                v2_runtime = self._ensure_compare_discovery("v2")
-                agentic_runtime = self._ensure_compare_discovery("agentic_v3")
+                control_runtime_name, candidate_runtime_name = self._dual_compare_runtime_names()
+                control_runtime = self._ensure_compare_discovery(control_runtime_name)
+                candidate_runtime = self._ensure_compare_discovery(candidate_runtime_name)
                 if isinstance(known_official_site, str) and known_official_site.strip():
-                    setattr(v2_runtime, "current_official_site_url", known_official_site)
-                    setattr(agentic_runtime, "current_official_site_url", known_official_site)
-                v2_kwargs = self._prepare_context_kwargs(runtime=v2_runtime, context_kwargs=context_kwargs)
-                agentic_kwargs = self._prepare_context_kwargs(runtime=agentic_runtime, context_kwargs=context_kwargs)
-                v2_result, agentic_result = await asyncio.gather(
-                    v2_runtime.run_discovery_with_dossier_context(**v2_kwargs),
-                    agentic_runtime.run_discovery_with_dossier_context(**agentic_kwargs),
+                    setattr(control_runtime, "current_official_site_url", known_official_site)
+                    setattr(candidate_runtime, "current_official_site_url", known_official_site)
+                control_kwargs = self._prepare_context_kwargs(runtime=control_runtime, context_kwargs=context_kwargs)
+                candidate_kwargs = self._prepare_context_kwargs(runtime=candidate_runtime, context_kwargs=context_kwargs)
+                control_result, candidate_result = await asyncio.gather(
+                    control_runtime.run_discovery_with_dossier_context(**control_kwargs),
+                    candidate_runtime.run_discovery_with_dossier_context(**candidate_kwargs),
                     return_exceptions=True,
                 )
                 lane_errors = {}
-                if isinstance(v2_result, Exception):
-                    lane_errors["v2"] = self._build_failed_compare_payload(runtime_name="v2", error=v2_result)
-                if isinstance(agentic_result, Exception):
-                    lane_errors["agentic_v3"] = self._build_failed_compare_payload(runtime_name="agentic_v3", error=agentic_result)
-                if isinstance(v2_result, Exception) and isinstance(agentic_result, Exception):
-                    raise v2_result
-                v2_payload = self._normalize_discovery_payload(
-                    lane_errors["v2"] if isinstance(v2_result, Exception) else self._result_to_payload(v2_result)
+                if isinstance(control_result, Exception):
+                    lane_errors[control_runtime_name] = self._build_failed_compare_payload(runtime_name=control_runtime_name, error=control_result)
+                if isinstance(candidate_result, Exception):
+                    lane_errors[candidate_runtime_name] = self._build_failed_compare_payload(runtime_name=candidate_runtime_name, error=candidate_result)
+                control_payload = self._normalize_discovery_payload(
+                    lane_errors[control_runtime_name] if isinstance(control_result, Exception) else self._result_to_payload(control_result)
                 )
-                agentic_payload = self._normalize_discovery_payload(
-                    lane_errors["agentic_v3"] if isinstance(agentic_result, Exception) else self._result_to_payload(agentic_result)
+                candidate_payload = self._normalize_discovery_payload(
+                    lane_errors[candidate_runtime_name] if isinstance(candidate_result, Exception) else self._result_to_payload(candidate_result)
                 )
-                comparison_payload = self._compare_discovery_payloads(
-                    v2_payload=v2_payload,
-                    agentic_payload=agentic_payload,
-                )
-                if lane_errors:
+                if isinstance(control_result, Exception) and isinstance(candidate_result, Exception):
+                    comparison_payload = {
+                        "mode": "dual_compare",
+                        "status": "both_lanes_failed",
+                        "winner_runtime": None,
+                        "loser_runtime": None,
+                        "winner_reason_codes": ["both_lanes_failed"],
+                        "winner_score_breakdown": {},
+                        "lane_errors": lane_errors,
+                        "runtimes": {
+                            control_runtime_name: self._discovery_winner_score(control_payload),
+                            candidate_runtime_name: self._discovery_winner_score(candidate_payload),
+                        },
+                    }
+                else:
+                    comparison_payload = self._compare_discovery_payloads(
+                        v2_payload=control_payload,
+                        agentic_payload=candidate_payload,
+                    )
+                if lane_errors and comparison_payload.get("status") != "both_lanes_failed":
                     comparison_payload["status"] = "partial_lane_failure"
                     comparison_payload["lane_errors"] = lane_errors
-                else:
+                elif comparison_payload.get("status") != "both_lanes_failed":
                     comparison_payload["status"] = "ok"
-                self._last_v2_compare_payload = v2_payload
-                self._last_agentic_compare_payload = agentic_payload
+                self._last_control_compare_payload = control_payload
+                self._last_candidate_compare_payload = candidate_payload
+                self._last_v2_compare_payload = control_payload
+                self._last_agentic_compare_payload = candidate_payload
                 self._last_dual_compare_payload = comparison_payload
-                self._last_shadow_discovery_payload = agentic_payload
-                winner_runtime = str(comparison_payload.get("winner_runtime") or "v2")
-                winner_result = agentic_result if winner_runtime == "agentic_v3" else v2_result
-                if isinstance(winner_result, Exception):
-                    winner_result = v2_result if not isinstance(v2_result, Exception) else agentic_result
-                winner_payload = agentic_payload if winner_runtime == "agentic_v3" else v2_payload
+                self._last_shadow_discovery_payload = candidate_payload
+                winner_runtime = comparison_payload.get("winner_runtime")
+                if winner_runtime == candidate_runtime_name:
+                    winner_result = candidate_result
+                    winner_payload = candidate_payload
+                else:
+                    winner_result = control_result
+                    winner_payload = control_payload
+                if comparison_payload.get("status") == "both_lanes_failed":
+                    from backend.hypothesis_driven_discovery import DiscoveryResult
+
+                    winner_result = DiscoveryResult(
+                        entity_id=entity_id,
+                        entity_name=entity_name,
+                        final_confidence=0.0,
+                        confidence_band="LOW",
+                        is_actionable=False,
+                        iterations_completed=0,
+                        total_cost_usd=0.0,
+                        hypotheses=[],
+                        depth_stats={},
+                        signals_discovered=[],
+                    )
+                    winner_payload = control_payload
+                elif isinstance(winner_result, Exception):
+                    winner_result = control_result if not isinstance(control_result, Exception) else candidate_result
+                    winner_payload = control_payload if winner_result is control_result else candidate_payload
                 winner_payload["winner_metadata"] = comparison_payload
                 performance = winner_payload.get("performance_summary")
                 if not isinstance(performance, dict):
@@ -896,14 +953,17 @@ class FixedDossierFirstPipeline:
                 performance["comparison_summary"] = comparison_payload
                 performance["winner_runtime"] = winner_runtime
                 performance["compare_partial_failure"] = bool(lane_errors)
+                performance["compare_payload_missing"] = False
                 setattr(winner_result, "winner_metadata", comparison_payload)
                 setattr(winner_result, "performance_summary", performance)
                 result = winner_result
                 logger.info(
-                    "🧪 Dual compare complete: winner=%s v2_score=%.3f agentic_score=%.3f",
+                    "🧪 Dual compare complete: winner=%s %s_score=%.3f %s_score=%.3f",
                     winner_runtime,
-                    float((((comparison_payload.get("runtimes") or {}).get("v2") or {}).get("weighted_total") or 0.0)),
-                    float((((comparison_payload.get("runtimes") or {}).get("agentic_v3") or {}).get("weighted_total") or 0.0)),
+                    control_runtime_name,
+                    float((((comparison_payload.get("runtimes") or {}).get(control_runtime_name) or {}).get("weighted_total") or 0.0)),
+                    candidate_runtime_name,
+                    float((((comparison_payload.get("runtimes") or {}).get(candidate_runtime_name) or {}).get("weighted_total") or 0.0)),
                 )
                 return result
 
@@ -970,9 +1030,10 @@ class FixedDossierFirstPipeline:
             )
             runtime_mode = str(getattr(self, "discovery_runtime_mode", "v2") or "v2").strip().lower()
             if runtime_mode == "dual_compare" and not isinstance(getattr(self, "_last_dual_compare_payload", None), dict):
+                control_runtime_name, _ = self._dual_compare_runtime_names()
                 self._last_dual_compare_payload = {
                     "mode": "dual_compare",
-                    "winner_runtime": "v2",
+                    "winner_runtime": control_runtime_name,
                     "status": "fallback_due_exception",
                     "compare_execution_failed": True,
                     "error_class": self._last_discovery_error_class,
@@ -1061,32 +1122,33 @@ class FixedDossierFirstPipeline:
         from backend.brightdata_sdk_client import BrightDataSDKClient
         from backend.discovery_engine_factory import create_discovery_engine
 
-        normalized = str(runtime_name or "v2").strip().lower()
-        if normalized == "v2" and self.discovery_engine == "v2":
+        control_runtime_name, candidate_runtime_name = self._dual_compare_runtime_names()
+        normalized = str(runtime_name or control_runtime_name).strip().lower()
+        if normalized == control_runtime_name and self.discovery_engine == control_runtime_name:
             return self.discovery
-        if normalized == "agentic_v3" and self.discovery_engine == "agentic_v3":
+        if normalized == candidate_runtime_name and self.discovery_engine == candidate_runtime_name:
             return self.discovery
-        if normalized == "v2":
-            if self._v2_compare_discovery is None:
-                self._v2_compare_client = BrightDataSDKClient()
-                self._v2_compare_discovery, _ = create_discovery_engine(
+        if normalized == control_runtime_name:
+            if self._control_compare_discovery is None:
+                self._control_compare_client = BrightDataSDKClient()
+                self._control_compare_discovery, _ = create_discovery_engine(
                     claude_client=self.claude,
-                    brightdata_client=self._v2_compare_client,
+                    brightdata_client=self._control_compare_client,
                     graphiti_service=None,
                     falkordb_client=None,
-                    engine="v2",
+                    engine=control_runtime_name,
                 )
-            return self._v2_compare_discovery
-        if self._agentic_discovery is None:
-            self._agentic_client = BrightDataSDKClient()
-            self._agentic_discovery, _ = create_discovery_engine(
+            return self._control_compare_discovery
+        if self._candidate_compare_discovery is None:
+            self._candidate_compare_client = BrightDataSDKClient()
+            self._candidate_compare_discovery, _ = create_discovery_engine(
                 claude_client=self.claude,
-                brightdata_client=self._agentic_client,
+                brightdata_client=self._candidate_compare_client,
                 graphiti_service=None,
                 falkordb_client=None,
-                engine="agentic_v3",
+                engine=candidate_runtime_name,
             )
-        return self._agentic_discovery
+        return self._candidate_compare_discovery
 
     @staticmethod
     def _build_failed_compare_payload(*, runtime_name: str, error: Exception) -> Dict[str, Any]:
@@ -1144,6 +1206,10 @@ class FixedDossierFirstPipeline:
         if denominator <= 0:
             return 0.0
         return float(numerator) / float(denominator)
+
+    @staticmethod
+    def _dual_compare_runtime_names() -> tuple[str, str]:
+        return ("agentic_v3", "agentic_v4_batched")
 
     def _discovery_winner_score(self, payload: Dict[str, Any]) -> Dict[str, Any]:
         performance = payload.get("performance_summary") if isinstance(payload.get("performance_summary"), dict) else {}
@@ -1219,11 +1285,12 @@ class FixedDossierFirstPipeline:
         v2_payload: Dict[str, Any],
         agentic_payload: Dict[str, Any],
     ) -> Dict[str, Any]:
+        control_runtime_name, candidate_runtime_name = self._dual_compare_runtime_names()
         v2_summary = self._discovery_winner_score(v2_payload)
         agentic_summary = self._discovery_winner_score(agentic_payload)
         runtimes = {
-            "v2": {"payload": v2_payload, **v2_summary},
-            "agentic_v3": {"payload": agentic_payload, **agentic_summary},
+            control_runtime_name: {"payload": v2_payload, **v2_summary},
+            candidate_runtime_name: {"payload": agentic_payload, **agentic_summary},
         }
         for runtime_name, row in runtimes.items():
             payload = row["payload"]
@@ -1254,10 +1321,10 @@ class FixedDossierFirstPipeline:
                     -item[1]["off_entity_reject_rate"],
                 ),
             )[0]
-        loser_runtime = "agentic_v3" if winner_runtime == "v2" else "v2"
+        loser_runtime = candidate_runtime_name if winner_runtime == control_runtime_name else control_runtime_name
         duration_fastest = min(
-            runtimes["v2"]["duration_ms"] or float("inf"),
-            runtimes["agentic_v3"]["duration_ms"] or float("inf"),
+            runtimes[control_runtime_name]["duration_ms"] or float("inf"),
+            runtimes[candidate_runtime_name]["duration_ms"] or float("inf"),
         )
         for row in runtimes.values():
             if duration_fastest and duration_fastest != float("inf") and row["duration_ms"] > 0:
@@ -1275,8 +1342,8 @@ class FixedDossierFirstPipeline:
             "winner_reason_codes": runtimes[winner_runtime]["payload"].get("controller_health_reasons") or [],
             "winner_score_breakdown": runtimes[winner_runtime]["score_breakdown"],
             "runtimes": {
-                "v2": {k: v for k, v in runtimes["v2"].items() if k != "payload"},
-                "agentic_v3": {k: v for k, v in runtimes["agentic_v3"].items() if k != "payload"},
+                control_runtime_name: {k: v for k, v in runtimes[control_runtime_name].items() if k != "payload"},
+                candidate_runtime_name: {k: v for k, v in runtimes[candidate_runtime_name].items() if k != "payload"},
             },
         }
 
@@ -1576,6 +1643,14 @@ class FixedDossierFirstPipeline:
             dossier_payload=dossier_payload,
             discovery_payload=discovery_data,
         )
+        dossier_payload = apply_dashboard_score_persistence_context(
+            dossier_payload,
+            entity_id=entity_id,
+            entity_name=entity_name,
+            dashboard_scores=dashboard_scores,
+            entity_data=getattr(self.dossier_generator, "_last_entity_data_by_id", {}).get(entity_id),
+        )
+        self._last_saved_dossier_payload = dossier_payload
         with open(dossier_path, 'w') as f:
             json.dump(dossier_payload, f, indent=2, default=str)
         logger.info(f"💾 Dossier saved: {dossier_path}")
@@ -1603,16 +1678,17 @@ class FixedDossierFirstPipeline:
                 json.dump(dual_compare_payload, compare_file, indent=2, default=str)
             artifacts["comparison_path"] = str(comparison_path)
             logger.info(f"💾 Discovery comparison saved: {comparison_path}")
-        if isinstance(getattr(self, "_last_v2_compare_payload", None), dict):
-            v2_path = self.output_dir / f"{entity_id}_discovery_v2_control_{timestamp}.json"
-            with open(v2_path, "w") as compare_file:
-                json.dump(self._last_v2_compare_payload, compare_file, indent=2, default=str)
-            artifacts["control_discovery_path"] = str(v2_path)
-        if isinstance(getattr(self, "_last_agentic_compare_payload", None), dict):
-            agentic_path = self.output_dir / f"{entity_id}_discovery_agentic_v3_{timestamp}.json"
-            with open(agentic_path, "w") as compare_file:
-                json.dump(self._last_agentic_compare_payload, compare_file, indent=2, default=str)
-            artifacts["agentic_discovery_path"] = str(agentic_path)
+        control_runtime_name, candidate_runtime_name = self._dual_compare_runtime_names()
+        if isinstance(getattr(self, "_last_control_compare_payload", None), dict):
+            control_path = self.output_dir / f"{entity_id}_discovery_{control_runtime_name}_{timestamp}.json"
+            with open(control_path, "w") as compare_file:
+                json.dump(self._last_control_compare_payload, compare_file, indent=2, default=str)
+            artifacts["control_discovery_path"] = str(control_path)
+        if isinstance(getattr(self, "_last_candidate_compare_payload", None), dict):
+            candidate_path = self.output_dir / f"{entity_id}_discovery_{candidate_runtime_name}_{timestamp}.json"
+            with open(candidate_path, "w") as compare_file:
+                json.dump(self._last_candidate_compare_payload, compare_file, indent=2, default=str)
+            artifacts["agentic_discovery_path"] = str(candidate_path)
 
         hop_trace_payload = self._build_hop_trace_payload(
             entity_id=entity_id,
@@ -1672,12 +1748,23 @@ class FixedDossierFirstPipeline:
             and not isinstance(perf.get("comparison_summary"), dict)
         ):
             perf["comparison_summary"] = dual_compare_payload
-            perf["winner_runtime"] = str(dual_compare_payload.get("winner_runtime") or "v2")
+            perf["winner_runtime"] = dual_compare_payload.get("winner_runtime")
             winner_metadata = payload.get("winner_metadata")
             if not isinstance(winner_metadata, dict):
                 winner_metadata = {}
             winner_metadata.setdefault("comparison", dual_compare_payload)
             payload["winner_metadata"] = winner_metadata
+        if runtime_mode == "dual_compare" and not isinstance(perf.get("comparison_summary"), dict):
+            control_runtime_name, _ = self._dual_compare_runtime_names()
+            perf["comparison_summary"] = {
+                "mode": "dual_compare",
+                "status": "missing_compare_payload",
+                "compare_execution_failed": True,
+                "winner_runtime": control_runtime_name,
+                "runtimes": {},
+                "winner_reason_codes": ["missing_compare_payload"],
+            }
+        compare_payload_missing = runtime_mode == "dual_compare" and not isinstance(getattr(self, "_last_dual_compare_payload", None), dict)
 
         if not isinstance(payload.get("candidate_events_summary"), dict):
             payload["candidate_events_summary"] = self._summarize_candidate_events(candidate_evaluations)
@@ -1699,18 +1786,38 @@ class FixedDossierFirstPipeline:
         perf.setdefault("lane_failures", payload.get("lane_failures"))
         perf.setdefault("controller_health_reasons", payload.get("controller_health_reasons"))
         perf.setdefault("planner_decision_parse_fail_count", perf.get("planner_action_parse_fail_count") or 0)
-        perf.setdefault("planner_decision_applied_count", perf.get("planner_action_applied_count") or 0)
-        perf.setdefault(
-            "planner_decision_applied_rate",
-            round(
-                float(perf.get("planner_decision_applied_count") or 0)
-                / max(
-                    1,
-                    int(perf.get("planner_turn_count") or 0)
-                    + int(perf.get("planner_decision_parse_fail_count") or 0),
-                ),
-                4,
+        applied_from_trace = sum(
+            1
+            for row in payload.get("turn_trace") or []
+            if isinstance(row, dict) and str(row.get("planner_status") or "").strip().lower() == "applied"
+        )
+        recorded_applied = int(perf.get("planner_decision_applied_count") or perf.get("planner_action_applied_count") or 0)
+        perf["planner_decision_applied_count"] = max(recorded_applied, applied_from_trace)
+        perf["planner_decision_applied_rate"] = round(
+            float(perf.get("planner_decision_applied_count") or 0)
+            / max(
+                1,
+                int(perf.get("planner_turn_count") or 0)
+                + int(perf.get("planner_decision_parse_fail_count") or 0),
             ),
+            4,
+        )
+        artifact_consistency_issues = list(perf.get("artifact_consistency_issues") or [])
+        if applied_from_trace != recorded_applied:
+            artifact_consistency_issues.append("planner_applied_count_mismatch")
+        if int(perf.get("planner_turn_count") or 0) != len(payload.get("turn_trace") or []):
+            artifact_consistency_issues.append("planner_turn_count_mismatch")
+        if len(payload.get("planner_decisions") or []) != len(payload.get("turn_trace") or []):
+            artifact_consistency_issues.append("planner_decision_trace_mismatch")
+        if len(payload.get("executed_actions") or []) != len(payload.get("turn_trace") or []):
+            artifact_consistency_issues.append("executed_action_trace_mismatch")
+        perf["artifact_consistency_issues"] = sorted(set(str(item) for item in artifact_consistency_issues if str(item)))
+        perf["artifact_consistency_ok"] = len(perf["artifact_consistency_issues"]) == 0
+        perf["compare_payload_missing"] = compare_payload_missing
+        perf["winner_selection_missing"] = runtime_mode == "dual_compare" and perf.get("winner_runtime") is None
+        perf["planner_influence_unobserved"] = (
+            (applied_from_trace > 0 and float(perf.get("planner_decision_applied_rate") or 0.0) <= 0.0)
+            or (applied_from_trace > 0 and "planner_applied_count_mismatch" in perf["artifact_consistency_issues"])
         )
         perf.setdefault("actionability_score", float(payload.get("actionability_score") or perf.get("actionability_score") or 0.0))
         perf.setdefault(
@@ -1846,22 +1953,23 @@ class FixedDossierFirstPipeline:
         }
         comparison = getattr(self, "_last_dual_compare_payload", None)
         if isinstance(comparison, dict):
+            control_runtime_name, candidate_runtime_name = self._dual_compare_runtime_names()
             payload["comparison"] = comparison
-            payload["lanes"]["control_v2"] = {
+            payload["lanes"][control_runtime_name] = {
                 "summary": _lane_summary(
-                    getattr(self, "_last_v2_compare_payload", {}) or {},
-                    (((getattr(self, "_last_v2_compare_payload", {}) or {}).get("performance_summary") or {}).get("hop_timings") or []),
+                    getattr(self, "_last_control_compare_payload", {}) or {},
+                    (((getattr(self, "_last_control_compare_payload", {}) or {}).get("performance_summary") or {}).get("hop_timings") or []),
                 ),
-                "hop_timings": (((getattr(self, "_last_v2_compare_payload", {}) or {}).get("performance_summary") or {}).get("hop_timings") or []),
-                "official_site_resolution_traces": (((getattr(self, "_last_v2_compare_payload", {}) or {}).get("performance_summary") or {}).get("official_site_resolution_traces") or []),
+                "hop_timings": (((getattr(self, "_last_control_compare_payload", {}) or {}).get("performance_summary") or {}).get("hop_timings") or []),
+                "official_site_resolution_traces": (((getattr(self, "_last_control_compare_payload", {}) or {}).get("performance_summary") or {}).get("official_site_resolution_traces") or []),
             }
-            payload["lanes"]["agentic_v3"] = {
+            payload["lanes"][candidate_runtime_name] = {
                 "summary": _lane_summary(
-                    getattr(self, "_last_agentic_compare_payload", {}) or {},
-                    (((getattr(self, "_last_agentic_compare_payload", {}) or {}).get("performance_summary") or {}).get("hop_timings") or []),
+                    getattr(self, "_last_candidate_compare_payload", {}) or {},
+                    (((getattr(self, "_last_candidate_compare_payload", {}) or {}).get("performance_summary") or {}).get("hop_timings") or []),
                 ),
-                "hop_timings": (((getattr(self, "_last_agentic_compare_payload", {}) or {}).get("performance_summary") or {}).get("hop_timings") or []),
-                "official_site_resolution_traces": (((getattr(self, "_last_agentic_compare_payload", {}) or {}).get("performance_summary") or {}).get("official_site_resolution_traces") or []),
+                "hop_timings": (((getattr(self, "_last_candidate_compare_payload", {}) or {}).get("performance_summary") or {}).get("hop_timings") or []),
+                "official_site_resolution_traces": (((getattr(self, "_last_candidate_compare_payload", {}) or {}).get("performance_summary") or {}).get("official_site_resolution_traces") or []),
             }
         return payload
 
@@ -1929,6 +2037,7 @@ class FixedDossierFirstPipeline:
         candidate_events_count: int,
         schema_fail_count: int = 0,
         section_fallbacks: int,
+        dual_write_required: bool = True,
         dual_write_ok: Optional[bool] = None,
     ) -> Dict[str, Any]:
         min_confidence = float(os.getenv("PIPELINE_ACCEPT_MIN_CONFIDENCE", "0.55"))
@@ -1949,7 +2058,7 @@ class FixedDossierFirstPipeline:
             reasons.append(f"signal_count<{min_signals}")
         if section_fallbacks > max_fallbacks:
             reasons.append(f"section_fallbacks>{max_fallbacks}")
-        if dual_write_ok is False:
+        if dual_write_required and dual_write_ok is False:
             reasons.append("dual_write_incomplete")
         acceptance_mode = "strict" if strict_pass else "hybrid_provisional" if hybrid_pass else "none"
         return {
@@ -1962,6 +2071,7 @@ class FixedDossierFirstPipeline:
                 "hybrid_min_validated": hybrid_min_validated,
                 "hybrid_min_provisional": hybrid_min_provisional,
                 "max_section_fallbacks": max_fallbacks,
+                "dual_write_required": dual_write_required,
             },
             "observed": {
                 "signals_validated_count": signal_count,
@@ -1988,8 +2098,12 @@ class FixedDossierFirstPipeline:
         dual_write_ok: Optional[bool] = None,
     ) -> Dict[str, Any]:
         phases = phases or {}
-        discovery = discovery if isinstance(discovery, dict) else {}
-        dossier = dossier if isinstance(dossier, dict) else {}
+        discovery = self._normalize_discovery_payload(discovery if isinstance(discovery, dict) else {})
+        saved_dossier = getattr(self, "_last_saved_dossier_payload", None)
+        if isinstance(saved_dossier, dict):
+            dossier = saved_dossier
+        else:
+            dossier = dossier if isinstance(dossier, dict) else {}
         scores = scores if isinstance(scores, dict) else {}
         shadow_discovery = shadow_discovery if isinstance(shadow_discovery, dict) else {}
         performance = discovery.get("performance_summary")
@@ -2092,6 +2206,9 @@ class FixedDossierFirstPipeline:
             if isinstance(section, dict)
             and str(section.get("reason_code") or "").strip().lower() == "timeout_partial"
         )
+        dual_write_required = not (
+            isinstance(persistence_status, dict) and bool(persistence_status.get("reconcile_required"))
+        )
         acceptance_gate = self._build_acceptance_gate(
             final_confidence=final_confidence,
             signal_count=signal_count,
@@ -2099,6 +2216,7 @@ class FixedDossierFirstPipeline:
             candidate_events_count=candidate_events_count,
             schema_fail_count=int(performance.get("schema_fail_count") or 0),
             section_fallbacks=section_counters["hard_fallback_sections"],
+            dual_write_required=dual_write_required,
             dual_write_ok=dual_write_ok,
         )
         hop_timings = performance.get("hop_timings")
@@ -2148,7 +2266,7 @@ class FixedDossierFirstPipeline:
             "falkordb_write_failure": int(
                 bool(isinstance(persistence_status, dict) and not ((persistence_status.get("falkordb") or {}).get("ok", True)))
             ),
-            "dual_write_incomplete": int(dual_write_ok is False),
+            "dual_write_incomplete": int(dual_write_required and dual_write_ok is False),
             "last_discovery_error_class": self._last_discovery_error_class,
             "last_discovery_error_message": self._last_discovery_error_message,
         }
@@ -2192,10 +2310,16 @@ class FixedDossierFirstPipeline:
             "planner_decision_applied_rate": float(performance.get("planner_decision_applied_rate") or 0.0),
             "planner_search_refinement_count": int(planner_search_refinement_count),
             "planner_action_counts": planner_action_counts,
+            "planner_block_reason_counts": dict(performance.get("planner_block_reason_counts") or {}),
             "controller_health_reasons": list(performance.get("controller_health_reasons") or []),
             "llm_json_hop_count": int(performance.get("llm_json_hop_count") or 0),
             "heuristic_hop_count": int(performance.get("heuristic_hop_count") or 0),
             "agent_influence_ratio": float(performance.get("agent_influence_ratio") or 0.0),
+            "artifact_consistency_ok": bool(performance.get("artifact_consistency_ok", True)),
+            "artifact_consistency_issues": list(performance.get("artifact_consistency_issues") or []),
+            "compare_payload_missing": bool(performance.get("compare_payload_missing", False)),
+            "winner_selection_missing": bool(performance.get("winner_selection_missing", False)),
+            "planner_influence_unobserved": bool(performance.get("planner_influence_unobserved", False)),
             "credits_spent": int(performance.get("credits_spent") or 0),
             "credits_earned": int(performance.get("credits_earned") or 0),
             "entity_grounded_signal_count": int(performance.get("entity_grounded_signal_count") or 0),
@@ -2221,11 +2345,12 @@ class FixedDossierFirstPipeline:
             cached_compare = getattr(self, "_last_dual_compare_payload", None)
             comparison_payload = cached_compare if isinstance(cached_compare, dict) else None
         if runtime_mode == "dual_compare" and not isinstance(comparison_payload, dict):
+            control_runtime_name, _ = self._dual_compare_runtime_names()
             comparison_payload = {
                 "mode": "dual_compare",
                 "status": "missing_compare_payload",
                 "compare_execution_failed": True,
-                "winner_runtime": "v2",
+                "winner_runtime": control_runtime_name,
                 "runtimes": {},
                 "winner_reason_codes": [
                     str(self._last_discovery_error_class or "dual_compare_not_emitted")
@@ -2236,7 +2361,7 @@ class FixedDossierFirstPipeline:
         winner_runtime = (
             str(performance.get("winner_runtime") or "")
             or (str(comparison_payload.get("winner_runtime") or "") if isinstance(comparison_payload, dict) else "")
-            or ("v2" if runtime_mode == "dual_compare" else "")
+            or (self._dual_compare_runtime_names()[0] if runtime_mode == "dual_compare" else "")
             or None
         )
         report_payload = {
@@ -2258,6 +2383,11 @@ class FixedDossierFirstPipeline:
             "acceptance_mode": acceptance_gate.get("acceptance_mode"),
             "winner_runtime": winner_runtime,
             "comparison_summary": comparison_payload if isinstance(comparison_payload, dict) else None,
+            "winner_runtime_status": (
+                str(comparison_payload.get("status"))
+                if isinstance(comparison_payload, dict) and comparison_payload.get("status") is not None
+                else ("missing_compare_payload" if runtime_mode == "dual_compare" else None)
+            ),
             "metrics": {
                 "dossier_sections": len(dossier.get("sections") or []) if isinstance(dossier.get("sections"), list) else 0,
                 "final_confidence": final_confidence,
@@ -2276,7 +2406,13 @@ class FixedDossierFirstPipeline:
                 "planner_decision_parse_fail_count": int(performance.get("planner_decision_parse_fail_count") or 0),
                 "planner_decision_applied_count": int(performance.get("planner_decision_applied_count") or 0),
                 "planner_decision_applied_rate": float(performance.get("planner_decision_applied_rate") or 0.0),
+                "planner_block_reason_counts": dict(performance.get("planner_block_reason_counts") or {}),
                 "planner_branch_change_count": int(performance.get("planner_branch_change_count") or 0),
+                "artifact_consistency_ok": bool(performance.get("artifact_consistency_ok", True)),
+                "artifact_consistency_issues": list(performance.get("artifact_consistency_issues") or []),
+                "compare_payload_missing": bool(performance.get("compare_payload_missing", False)),
+                "winner_selection_missing": bool(performance.get("winner_selection_missing", False)),
+                "planner_influence_unobserved": bool(performance.get("planner_influence_unobserved", False)),
                 "credits_spent": int(performance.get("credits_spent") or 0),
                 "credits_earned": int(performance.get("credits_earned") or 0),
                 "entity_grounded_signal_count": int(performance.get("entity_grounded_signal_count") or discovery.get("entity_grounded_signal_count") or 0),
@@ -2321,6 +2457,7 @@ class FixedDossierFirstPipeline:
                 "strict_eval_metrics_by_model": performance.get("strict_eval_metrics_by_model") if isinstance(performance.get("strict_eval_metrics_by_model"), dict) else {},
                 "accepted_empty_evidence_count": int(accepted_empty_evidence_count),
                 "llm_circuit_broken": bool(performance.get("llm_circuit_broken", False)),
+                "dual_write_required": dual_write_required,
                 "discovery_controller": discovery_controller,
                 "acceptance_mode": acceptance_gate.get("acceptance_mode"),
                 "dual_write_ok": dual_write_ok,
@@ -2342,9 +2479,11 @@ class FixedDossierFirstPipeline:
             },
             "acceptance_gate": acceptance_gate,
             "artifacts": artifacts,
+            "persistence_status": persistence_status if isinstance(persistence_status, dict) else None,
         }
         timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
         report_path = self.run_reports_dir / f"{entity_id}_run_report_{timestamp}.json"
+        report_payload = finalize_run_report_payload(report_payload, str(report_path))
         with open(report_path, "w") as report_file:
             json.dump(report_payload, report_file, indent=2, default=str)
         logger.info("🧾 Run report saved: %s", report_path)
@@ -2352,7 +2491,6 @@ class FixedDossierFirstPipeline:
             logger.info("✅ Acceptance gate passed")
         else:
             logger.warning("⚠️ Acceptance gate failed: %s", acceptance_gate["reasons"])
-        report_payload["report_path"] = str(report_path)
         return report_payload
 
 
@@ -2377,6 +2515,10 @@ async def main():
 
     if args.profile == "fast-regression":
         os.environ["PIPELINE_PASS_A_ONLY"] = "true"
+        os.environ["PIPELINE_ENFORCE_DISCOVERY_ITERATION_CAP"] = os.getenv(
+            "PIPELINE_ENFORCE_DISCOVERY_ITERATION_CAP",
+            "true",
+        )
         os.environ["PIPELINE_PASS_A_MAX_ITERATIONS"] = os.getenv("PIPELINE_PASS_A_MAX_ITERATIONS", "2")
         os.environ["DOSSIER_PARALLEL_COLLECTION_TOTAL_BUDGET_SECONDS"] = os.getenv(
             "DOSSIER_PARALLEL_COLLECTION_TOTAL_BUDGET_SECONDS",

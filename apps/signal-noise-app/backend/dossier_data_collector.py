@@ -609,6 +609,37 @@ class DossierDataCollector:
 
         return any(alias in compact_host for alias in aliases if len(alias) >= 3)
 
+    def _is_low_signal_official_path(self, candidate_url: Optional[str]) -> bool:
+        normalized = self._normalize_http_url(candidate_url)
+        if not normalized:
+            return False
+        parsed = urllib.parse.urlparse(normalized)
+        path = (parsed.path or "").strip("/").lower()
+        if not path:
+            return False
+
+        segments = [segment for segment in path.split("/") if segment]
+        tokens = set(re.split(r"[^a-z0-9]+", path))
+        low_signal_terms = {
+            "match",
+            "matches",
+            "fixture",
+            "fixtures",
+            "result",
+            "results",
+            "calendar",
+            "schedule",
+            "ticket",
+            "tickets",
+        }
+        if tokens & low_signal_terms:
+            return True
+        if len(segments) >= 3 and ("article" in tokens or "story" in tokens or "game" in tokens):
+            return True
+        if segments and segments[0] in {"matches", "fixtures", "results"}:
+            return True
+        return False
+
     def _is_binary_document_url(self, candidate_url: Optional[str]) -> bool:
         normalized = self._normalize_http_url(candidate_url)
         if not normalized:
@@ -863,6 +894,13 @@ class DossierDataCollector:
                 continue
             if self._is_binary_document_url(url):
                 continue
+            if self._is_low_signal_official_path(url):
+                logger.debug(
+                    "Skipping low-signal official-site path for %s: %s",
+                    entity_name,
+                    url,
+                )
+                continue
             if not self._is_commerce_host(url) and self._looks_like_entity_domain(entity_name, url):
                 return url
 
@@ -872,6 +910,8 @@ class DossierDataCollector:
             max_candidates=max_candidates,
         )
         if self._is_binary_document_url(fallback_choice):
+            return ""
+        if self._is_low_signal_official_path(fallback_choice):
             return ""
         return fallback_choice
 

@@ -220,7 +220,7 @@ async def test_phase2_dual_compare_survives_single_lane_failure():
             raise RuntimeError("agentic_lane_failed")
 
     def _ensure_compare_discovery(name):
-        return _OkRuntime() if name == "v2" else _FailRuntime()
+        return _OkRuntime() if name == "agentic_v3" else _FailRuntime()
 
     pipeline._ensure_compare_discovery = _ensure_compare_discovery
 
@@ -234,7 +234,127 @@ async def test_phase2_dual_compare_survives_single_lane_failure():
 
     assert result.final_confidence == 0.72
     assert pipeline._last_dual_compare_payload["status"] == "partial_lane_failure"
-    assert pipeline._last_dual_compare_payload["winner_runtime"] == "v2"
+    assert pipeline._last_dual_compare_payload["winner_runtime"] == "agentic_v3"
+
+
+@pytest.mark.asyncio
+async def test_phase2_dual_compare_emits_payload_when_both_lanes_fail():
+    pipeline = FixedDossierFirstPipeline.__new__(FixedDossierFirstPipeline)
+    pipeline.two_pass_enabled = False
+    pipeline.shadow_unbounded_enabled = False
+    pipeline.discovery_runtime_mode = "dual_compare"
+    pipeline._last_shadow_discovery_payload = None
+    pipeline._last_dual_compare_payload = None
+    pipeline._last_v2_compare_payload = None
+    pipeline._last_agentic_compare_payload = None
+    pipeline.discovery_engine = "v2"
+    pipeline.discovery = SimpleNamespace(
+        run_discovery=pytest.fail,
+        current_official_site_url=None,
+    )
+    pipeline.dossier_generator = None
+    pipeline.schema_first_result = None
+
+    class _FailRuntime:
+        current_official_site_url = None
+
+        async def run_discovery_with_dossier_context(self, **kwargs):
+            raise RuntimeError("lane_failed")
+
+    pipeline._ensure_compare_discovery = lambda name: _FailRuntime()
+
+    result = await pipeline._phase_2_run_discovery(
+        entity_id="coventry-city-fc",
+        entity_name="Coventry City FC",
+        dossier=SimpleNamespace(to_dict=lambda: {"metadata": {"website": "https://www.ccfc.co.uk"}}),
+        max_iterations=4,
+        template_id=None,
+    )
+
+    assert result.final_confidence == 0.0
+    assert pipeline._last_dual_compare_payload["status"] == "both_lanes_failed"
+    assert pipeline._last_dual_compare_payload["winner_runtime"] is None
+    assert set(pipeline._last_dual_compare_payload["lane_errors"].keys()) == {"agentic_v3", "agentic_v4_batched"}
+
+
+@pytest.mark.asyncio
+async def test_phase2_dual_compare_prefers_agentic_v4_batched_when_it_scores_higher():
+    pipeline = FixedDossierFirstPipeline.__new__(FixedDossierFirstPipeline)
+    pipeline.two_pass_enabled = False
+    pipeline.shadow_unbounded_enabled = False
+    pipeline.discovery_runtime_mode = "dual_compare"
+    pipeline._last_shadow_discovery_payload = None
+    pipeline._last_dual_compare_payload = None
+    pipeline._last_v2_compare_payload = None
+    pipeline._last_agentic_compare_payload = None
+    pipeline.discovery_engine = "agentic_v3"
+    pipeline.discovery = SimpleNamespace(
+        run_discovery=pytest.fail,
+        current_official_site_url=None,
+    )
+    pipeline.dossier_generator = None
+    pipeline.schema_first_result = None
+
+    class _V3Runtime:
+        current_official_site_url = None
+
+        async def run_discovery_with_dossier_context(self, **kwargs):
+            return _CompareResult(
+                final_confidence=0.61,
+                iterations_completed=2,
+                signals_discovered=[{"validation_state": "validated", "subtype": "operational_signal", "text": "club update"}],
+                performance_summary={
+                    "planner_decision_applied_rate": 0.4,
+                    "off_entity_reject_rate": 0.0,
+                    "schema_fail_count": 0,
+                    "total_duration_ms": 420.0,
+                    "actionability_score": 45.0,
+                },
+                actionability_score=45.0,
+                entity_grounded_signal_count=1,
+                controller_health_reasons=["healthy"],
+            )
+
+    class _V4Runtime:
+        current_official_site_url = None
+
+        async def run_discovery_with_dossier_context(self, **kwargs):
+            return _CompareResult(
+                final_confidence=0.77,
+                iterations_completed=2,
+                signals_discovered=[{"validation_state": "validated", "subtype": "commercial_signal", "text": "Chief Commercial Officer leading supplier review"}],
+                provisional_signals=[{"validation_state": "provisional", "subtype": "partnership_signal", "text": "supplier programme"}],
+                performance_summary={
+                    "planner_decision_applied_rate": 1.0,
+                    "off_entity_reject_rate": 0.0,
+                    "schema_fail_count": 0,
+                    "total_duration_ms": 590.0,
+                    "actionability_score": 88.0,
+                },
+                actionability_score=88.0,
+                entity_grounded_signal_count=2,
+                controller_health_reasons=["healthy"],
+            )
+
+    def _ensure_compare_discovery(name):
+        return _V3Runtime() if name == "agentic_v3" else _V4Runtime()
+
+    pipeline._ensure_compare_discovery = _ensure_compare_discovery
+
+    result = await pipeline._phase_2_run_discovery(
+        entity_id="coventry-city-fc",
+        entity_name="Coventry City FC",
+        dossier=SimpleNamespace(to_dict=lambda: {"metadata": {"website": "https://www.ccfc.co.uk"}}),
+        max_iterations=4,
+        template_id=None,
+    )
+
+    assert result.final_confidence == 0.77
+    assert pipeline._last_dual_compare_payload["winner_runtime"] == "agentic_v4_batched"
+    assert set((pipeline._last_dual_compare_payload["runtimes"] or {}).keys()) == {
+        "agentic_v3",
+        "agentic_v4_batched",
+    }
 
 
 def test_extract_publication_date_handles_missing_dateutil(monkeypatch):
@@ -378,6 +498,106 @@ def test_write_run_report_surfaces_discovery_controller_summary(tmp_path):
     assert report["acceptance_gate"]["passed"] is True
 
 
+def test_normalize_discovery_payload_reconciles_planner_metrics_from_trace():
+    pipeline = FixedDossierFirstPipeline.__new__(FixedDossierFirstPipeline)
+    pipeline.discovery_runtime_mode = "agentic_v3"
+
+    payload = pipeline._normalize_discovery_payload(
+        {
+            "turn_trace": [
+                {
+                    "turn": 1,
+                    "planner_action": {"action": "search_site"},
+                    "executed_action": {"action": "search_site", "target": "site:ccfc.co.uk"},
+                    "planner_status": "applied",
+                }
+            ],
+            "executed_actions": [{"action": "search_site", "target": "site:ccfc.co.uk"}],
+            "planner_decisions": [{"action": "search_site"}],
+            "performance_summary": {
+                "planner_turn_count": 1,
+                "planner_decision_applied_count": 0,
+                "planner_decision_parse_fail_count": 0,
+            },
+        }
+    )
+
+    perf = payload["performance_summary"]
+    assert perf["planner_decision_applied_count"] == 1
+    assert perf["planner_decision_applied_rate"] == 1.0
+    assert perf["artifact_consistency_ok"] is False
+    assert "planner_applied_count_mismatch" in perf["artifact_consistency_issues"]
+
+
+def test_write_run_report_flags_missing_compare_payload_and_trace_mismatch(tmp_path):
+    pipeline = FixedDossierFirstPipeline.__new__(FixedDossierFirstPipeline)
+    pipeline.run_reports_dir = tmp_path
+    pipeline.discovery_runtime_mode = "dual_compare"
+    pipeline.discovery_engine = "agentic_v3"
+    pipeline._runtime_import_guard = {"status": "ok", "missing": [], "failure_class": None}
+    pipeline._last_discovery_error_class = None
+    pipeline._last_discovery_error_message = None
+    pipeline._last_dual_compare_payload = None
+
+    report = pipeline._write_run_report(
+        entity_id="coventry-city-fc",
+        entity_name="Coventry City FC",
+        dossier={"sections": []},
+        discovery={
+            "final_confidence": 0.41,
+            "iterations_completed": 1,
+            "signals_discovered": [],
+            "turn_trace": [
+                {
+                    "turn": 1,
+                    "planner_action": {"action": "search_site"},
+                    "executed_action": {"action": "search_site", "target": "site:ccfc.co.uk"},
+                    "planner_status": "applied",
+                }
+            ],
+            "executed_actions": [{"action": "search_site", "target": "site:ccfc.co.uk"}],
+            "planner_decisions": [{"action": "search_site"}],
+            "performance_summary": {
+                "planner_turn_count": 1,
+                "planner_decision_applied_count": 0,
+                "planner_decision_applied_rate": 0.0,
+                "artifact_consistency_ok": False,
+                "artifact_consistency_issues": ["planner_applied_count_mismatch"],
+            },
+        },
+        scores={"procurement_maturity": 0.0, "sales_readiness": "MONITOR", "active_probability": 0.0},
+        phase_timings={},
+        artifacts={},
+        total_time_seconds=2.0,
+        phases={},
+    )
+
+    assert report["comparison_summary"]["status"] == "missing_compare_payload"
+    assert report["winner_runtime"] == "agentic_v3"
+    assert report["metrics"]["artifact_consistency_ok"] is False
+    assert "planner_applied_count_mismatch" in report["metrics"]["artifact_consistency_issues"]
+    assert report["metrics"]["planner_influence_unobserved"] is True
+
+
+def test_acceptance_gate_treats_non_canonical_dual_write_as_expected():
+    pipeline = FixedDossierFirstPipeline.__new__(FixedDossierFirstPipeline)
+
+    gate = pipeline._build_acceptance_gate(
+        final_confidence=0.72,
+        signal_count=1,
+        provisional_count=3,
+        candidate_events_count=10,
+        schema_fail_count=0,
+        section_fallbacks=2,
+        dual_write_required=False,
+        dual_write_ok=False,
+    )
+
+    assert gate["passed"] is True
+    assert gate["reasons"] == []
+    assert gate["thresholds"]["dual_write_required"] is False
+
+
 def test_discovery_controller_ab_script_varies_planner_only():
     script_path = SCRIPT_ROOT / "run-discovery-controller-ab.sh"
     script_text = script_path.read_text()
@@ -417,3 +637,119 @@ def test_count_section_fallbacks_uses_section_reason_and_status():
     assert counters["hard_fallback_sections"] == 1
     assert counters["low_confidence_sections"] == 1
     assert counters["empty_sections"] == 0
+
+
+def test_write_run_report_uses_finalized_dossier_payload_for_acceptance_gate(tmp_path):
+    pipeline = FixedDossierFirstPipeline.__new__(FixedDossierFirstPipeline)
+    pipeline.run_reports_dir = tmp_path
+    pipeline._runtime_import_guard = {"status": "ok", "missing": [], "failure_class": None}
+    pipeline._last_discovery_error_class = None
+    pipeline._last_discovery_error_message = None
+    pipeline.discovery_runtime_mode = "agentic_v3"
+    pipeline._last_saved_dossier_payload = {
+        "sections": [
+            {
+                "id": "core_information",
+                "content": ["Structured summary"],
+                "confidence": 0.8,
+                "output_status": "completed_evidence_led",
+                "reason_code": None,
+                "fallback_used": False,
+            },
+            {
+                "id": "leadership",
+                "content": ["Leadership is sparse but grounded."],
+                "confidence": 0.5,
+                "output_status": "degraded_sparse_evidence",
+                "reason_code": "leadership_evidence_not_consumed",
+                "fallback_used": True,
+            },
+            {
+                "id": "digital_maturity",
+                "content": ["Digital maturity is low signal."],
+                "confidence": 0.52,
+                "output_status": "degraded_sparse_evidence",
+                "reason_code": "digital_maturity_low_signal",
+                "fallback_used": True,
+            },
+        ]
+    }
+
+    report = pipeline._write_run_report(
+        entity_id="arsenal-fc",
+        entity_name="Arsenal FC",
+        dossier={
+            "sections": [
+                {
+                    "id": "core_information",
+                    "content": ["Structured summary"],
+                    "confidence": 0.8,
+                    "output_status": "completed_evidence_led",
+                    "reason_code": None,
+                    "fallback_used": False,
+                },
+                {
+                    "id": "leadership",
+                    "content": ["Leadership is sparse but grounded."],
+                    "confidence": 0.5,
+                    "output_status": "degraded_sparse_evidence",
+                    "reason_code": "leadership_evidence_not_consumed",
+                    "fallback_used": True,
+                },
+                {
+                    "id": "digital_maturity",
+                    "content": ["Digital maturity is low signal."],
+                    "confidence": 0.52,
+                    "output_status": "degraded_sparse_evidence",
+                    "reason_code": "digital_maturity_low_signal",
+                    "fallback_used": True,
+                },
+                {
+                    "id": "recent_news",
+                    "content": ["Recent news is sparse but grounded."],
+                    "confidence": 0.55,
+                    "output_status": "completed_with_sparse_fallback",
+                    "reason_code": "recent_news_unvalidated_only",
+                    "fallback_used": True,
+                },
+                {
+                    "id": "contact_information",
+                    "content": ["Contact information is sparse."],
+                    "confidence": 0.6,
+                    "output_status": "completed_with_sparse_fallback",
+                    "reason_code": "contact_information_sparse",
+                    "fallback_used": True,
+                },
+                {
+                    "id": "outreach_strategy",
+                    "content": ["Outreach strategy is sparse."],
+                    "confidence": 0.58,
+                    "output_status": "completed_with_sparse_fallback",
+                    "reason_code": "outreach_strategy_sparse",
+                    "fallback_used": True,
+                },
+            ]
+        },
+        discovery={
+            "final_confidence": 0.69,
+            "iterations_completed": 2,
+            "signals_discovered": [
+                {"validation_state": "validated", "evidence_found": "yes"},
+                {"validation_state": "validated", "evidence_found": "yes"},
+                {"validation_state": "validated", "evidence_found": "yes"},
+                {"validation_state": "provisional"},
+                {"validation_state": "provisional"},
+                {"validation_state": "provisional"},
+            ],
+            "candidate_evaluations": [{}, {}, {}, {}, {}, {}],
+            "performance_summary": {},
+        },
+        scores={"procurement_maturity": 74.0, "sales_readiness": "LIVE", "active_probability": 0.81},
+        phase_timings={},
+        artifacts={},
+        total_time_seconds=9.0,
+        phases={},
+    )
+
+    assert report["metrics"]["section_fallbacks"]["hard_fallback_sections"] == 2
+    assert report["acceptance_gate"]["passed"] is True

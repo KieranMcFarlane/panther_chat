@@ -83,6 +83,12 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
   const displayType = formatValue(enhancedData?.coreInfo?.type) || formatValue(props.type) || 'Club'
   const displayLeague = formatValue(enhancedData?.coreInfo?.league) || formatValue(props.level) || 'Championship'
   const displayHq = formatValue(enhancedData?.coreInfo?.hq) || formatValue(props.country) || 'England'
+  const dossierMetadata = dossier?.metadata || dossier || {}
+  const browserDossierUrl = dossierMetadata.browser_dossier_url || dossierMetadata.page_url || ''
+  const sourceUrl = dossierMetadata.source_url || ''
+  const signalState = dossierMetadata.signal_state || 'monitor_no_opportunity'
+  const opportunityScore = dossierMetadata.opportunity_score
+  const rfpConfidence = dossierMetadata.rfp_confidence
 
   const getEmbeddedDossier = () => {
     if (dossier && Object.keys(dossier).length > 0) {
@@ -1162,6 +1168,43 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                   </Button>
                 </CardContent>
               </Card>
+
+              {dossier && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Link2 className="h-5 w-5 text-indigo-600" />
+                      Dossier References
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3 text-sm">
+                    {browserDossierUrl && (
+                      <div>
+                        <p className="font-medium text-muted-foreground">Dossier Page</p>
+                        <a href={browserDossierUrl} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline break-all">
+                          {browserDossierUrl}
+                        </a>
+                      </div>
+                    )}
+                    {sourceUrl && (
+                      <div>
+                        <p className="font-medium text-muted-foreground">Source URL</p>
+                        <a href={sourceUrl} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline break-all">
+                          {sourceUrl}
+                        </a>
+                      </div>
+                    )}
+                    <div className="flex flex-wrap gap-2">
+                      <Badge variant="secondary">Signal State: {signalState}</Badge>
+                      {typeof opportunityScore === 'number' && <Badge variant="outline">Opportunity: {opportunityScore}/100</Badge>}
+                      {typeof rfpConfidence === 'number' && <Badge variant="outline">RFP Confidence: {Math.round(rfpConfidence * 100)}%</Badge>}
+                    </div>
+                    {dossierMetadata.decision_summary && (
+                      <p className="text-muted-foreground">{dossierMetadata.decision_summary}</p>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
 
               <Card>
                 <CardHeader>

@@ -10,10 +10,17 @@ import { Entity, formatValue } from './types'
 interface LeagueDossierProps {
   entity: Entity
   onEmailEntity: () => void
+  dossier?: any
 }
 
-export function LeagueDossier({ entity, onEmailEntity }: LeagueDossierProps) {
+export function LeagueDossier({ entity, onEmailEntity, dossier }: LeagueDossierProps) {
   const props = entity.properties
+  const dossierMetadata = dossier?.metadata || dossier || {}
+  const browserDossierUrl = dossierMetadata.browser_dossier_url || dossierMetadata.page_url || ''
+  const sourceUrl = dossierMetadata.source_url || ''
+  const signalState = dossierMetadata.signal_state || 'monitor_no_opportunity'
+  const opportunityScore = dossierMetadata.opportunity_score
+  const rfpConfidence = dossierMetadata.rfp_confidence
   
   return (
     <div className="space-y-6">
@@ -81,6 +88,42 @@ export function LeagueDossier({ entity, onEmailEntity }: LeagueDossierProps) {
           </div>
         </CardContent>
       </Card>
+
+      {dossier && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Dossier References</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="grid gap-3 md:grid-cols-2">
+              {browserDossierUrl && (
+                <div>
+                  <h4 className="font-semibold mb-1">Dossier Page</h4>
+                  <a href={browserDossierUrl} className="text-blue-600 hover:underline break-all" target="_blank" rel="noreferrer">
+                    {browserDossierUrl}
+                  </a>
+                </div>
+              )}
+              {sourceUrl && (
+                <div>
+                  <h4 className="font-semibold mb-1">Source URL</h4>
+                  <a href={sourceUrl} className="text-blue-600 hover:underline break-all" target="_blank" rel="noreferrer">
+                    {sourceUrl}
+                  </a>
+                </div>
+              )}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Badge variant="secondary">Signal State: {signalState}</Badge>
+              {typeof opportunityScore === 'number' && <Badge variant="outline">Opportunity: {opportunityScore}/100</Badge>}
+              {typeof rfpConfidence === 'number' && <Badge variant="outline">RFP Confidence: {Math.round(rfpConfidence * 100)}%</Badge>}
+            </div>
+            {dossierMetadata.decision_summary && (
+              <p className="text-sm text-muted-foreground">{dossierMetadata.decision_summary}</p>
+            )}
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }

@@ -23,6 +23,22 @@ def _base_dossier():
         "metadata": {"entity_name": "Arsenal FC"},
         "sections": [
             {
+                "id": "quick_actions",
+                "content": ["Prioritize outreach to the commercial lead."],
+                "metrics": ["Leadership records: 0"],
+                "output_status": "degraded",
+                "reason_code": "no_actionable_signals",
+                "confidence": 0.5,
+            },
+            {
+                "id": "contact_information",
+                "content": ["Primary web presence: https://www.arsenal.com."],
+                "metrics": ["Leadership contacts identified: 0"],
+                "output_status": "degraded",
+                "reason_code": "no_leadership_contacts",
+                "confidence": 0.53,
+            },
+            {
                 "id": "leadership",
                 "content": ["Leadership records are currently sparse for Arsenal FC."],
                 "metrics": ["Decision makers identified: 0"],
@@ -72,10 +88,14 @@ def test_enrich_dossier_with_discovery_evidence_populates_leadership_and_news():
         discovery_payload=discovery,
     )
 
+    quick_actions = next(section for section in enriched["sections"] if section.get("id") == "quick_actions")
+    contact_information = next(section for section in enriched["sections"] if section.get("id") == "contact_information")
     leadership = next(section for section in enriched["sections"] if section.get("id") == "leadership")
     recent_news = next(section for section in enriched["sections"] if section.get("id") == "recent_news")
 
-    assert leadership["output_status"] == "completed"
+    assert quick_actions["output_status"] == "completed_evidence_led"
+    assert contact_information["output_status"] == "completed_evidence_led"
+    assert leadership["output_status"] == "completed_evidence_led"
     assert any("Jane Doe" in line for line in leadership.get("content") or [])
     assert recent_news["metrics"] == ["News items captured: 2"]
     assert len(recent_news.get("content") or []) >= 1

@@ -1495,6 +1495,35 @@ def test_candidate_score_applies_planner_feedback_reward_penalty():
     assert score_negative < score_neutral
 
 
+def test_candidate_score_demotes_matches_shell_below_richer_same_domain_paths():
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), _FakeBrightData())
+    base_state = {"domain_visits": {}, "rejected_domain_families": {}, "rejected_urls": set(), "low_signal_urls": {}}
+    root_score = runtime._candidate_score(
+        {"url": "https://www.ccfc.co.uk/", "title": "Coventry City FC", "snippet": "Official website"},
+        lane="official_site",
+        entity_name="Coventry City FC",
+        official_domain="ccfc.co.uk",
+        state=base_state,
+    )
+    news_score = runtime._candidate_score(
+        {"url": "https://www.ccfc.co.uk/news", "title": "Coventry City FC News", "snippet": "Latest updates"},
+        lane="official_site",
+        entity_name="Coventry City FC",
+        official_domain="ccfc.co.uk",
+        state=base_state,
+    )
+    matches_score = runtime._candidate_score(
+        {"url": "https://www.ccfc.co.uk/matches/first-team/2025/g2566847", "title": "Match Centre", "snippet": "Fixture details"},
+        lane="official_site",
+        entity_name="Coventry City FC",
+        official_domain="ccfc.co.uk",
+        state=base_state,
+    )
+
+    assert root_score > matches_score
+    assert news_score > matches_score
+
+
 @pytest.mark.asyncio
 async def test_llm_eval_receives_structured_evidence_packet():
     runtime = DiscoveryRuntimeV2(_RecordingClaude(), _FakeBrightData())

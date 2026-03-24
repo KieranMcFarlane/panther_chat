@@ -14,7 +14,7 @@ app_dir = backend_dir.parent
 sys.path.insert(0, str(app_dir))
 sys.path.insert(0, str(backend_dir))
 
-from dossier_generator import EntityDossierGenerator
+from dossier_generator import EntityDossierGenerator, UniversalDossierGenerator
 
 
 @pytest.fixture(autouse=True)
@@ -163,7 +163,7 @@ async def test_generate_section_uses_data_driven_baseline_when_enabled(monkeypat
 
     assert section.parse_path == "deterministic_data_driven_primary"
     assert section.fallback_used is False
-    assert section.output_status == "completed"
+    assert section.output_status == "completed_evidence_led"
     assert len(client.calls) == 0
 
 
@@ -188,6 +188,42 @@ async def test_generate_long_sections_use_data_driven_baseline_when_enabled(monk
     assert len(client.calls) == 0
 
 
+def test_standard_tier_matches_premium_shape_and_prompt():
+    generator = EntityDossierGenerator(_FakeClaudeClient([]))
+    universal = UniversalDossierGenerator(_FakeClaudeClient([]))
+
+    assert generator._get_sections_for_tier("STANDARD") == generator._get_sections_for_tier("PREMIUM")
+    assert universal._select_prompt_by_tier("STANDARD") == universal._select_prompt_by_tier("PREMIUM")
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("section_id", ["strategic_analysis", "connections"])
+async def test_generate_deep_sections_use_evidence_led_data_driven_baseline_when_enabled(monkeypatch, section_id):
+    monkeypatch.setenv("DOSSIER_SECTION_USE_DATA_DRIVEN_BASELINE", "true")
+    client = _FakeClaudeClient(
+        ['{"content": ["Structured section"], "metrics": [], "insights": [], "recommendations": [], "confidence": 0.8}']
+    )
+    generator = EntityDossierGenerator(client)
+
+    section = await generator._generate_section(
+        section_id=section_id,
+        entity_data={
+            "entity_name": "Test FC",
+            "entity_type": "CLUB",
+            "sport": "Football",
+            "country": "UK",
+            "league_or_competition": "Championship",
+            "website": "https://example.com",
+        },
+        model="opus",
+    )
+
+    assert section.parse_path == "deterministic_data_driven_primary"
+    assert section.fallback_used is False
+    assert section.output_status == "completed_evidence_led"
+    assert len(client.calls) == 0
+
+
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     ("section_id", "expected_reason"),
@@ -209,7 +245,7 @@ async def test_data_driven_sections_mark_degraded_when_evidence_is_sparse(monkey
     )
 
     assert section.parse_path == "deterministic_data_driven_primary"
-    assert section.output_status == "degraded"
+    assert section.output_status == "degraded_sparse_evidence"
     assert section.reason_code == expected_reason
     assert section.fallback_used is True
 
@@ -226,7 +262,7 @@ async def test_data_driven_quick_actions_mark_degraded_when_no_actionable_signal
     )
 
     assert section.parse_path == "deterministic_data_driven_primary"
-    assert section.output_status == "degraded"
+    assert section.output_status == "degraded_sparse_evidence"
     assert section.reason_code == "no_actionable_signals"
     assert section.fallback_used is True
 
