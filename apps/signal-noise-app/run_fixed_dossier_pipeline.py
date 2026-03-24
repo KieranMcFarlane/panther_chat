@@ -854,19 +854,38 @@ class FixedDossierFirstPipeline:
                 v2_result, agentic_result = await asyncio.gather(
                     v2_runtime.run_discovery_with_dossier_context(**v2_kwargs),
                     agentic_runtime.run_discovery_with_dossier_context(**agentic_kwargs),
+                    return_exceptions=True,
                 )
-                v2_payload = self._normalize_discovery_payload(self._result_to_payload(v2_result))
-                agentic_payload = self._normalize_discovery_payload(self._result_to_payload(agentic_result))
+                lane_errors = {}
+                if isinstance(v2_result, Exception):
+                    lane_errors["v2"] = self._build_failed_compare_payload(runtime_name="v2", error=v2_result)
+                if isinstance(agentic_result, Exception):
+                    lane_errors["agentic_v3"] = self._build_failed_compare_payload(runtime_name="agentic_v3", error=agentic_result)
+                if isinstance(v2_result, Exception) and isinstance(agentic_result, Exception):
+                    raise v2_result
+                v2_payload = self._normalize_discovery_payload(
+                    lane_errors["v2"] if isinstance(v2_result, Exception) else self._result_to_payload(v2_result)
+                )
+                agentic_payload = self._normalize_discovery_payload(
+                    lane_errors["agentic_v3"] if isinstance(agentic_result, Exception) else self._result_to_payload(agentic_result)
+                )
                 comparison_payload = self._compare_discovery_payloads(
                     v2_payload=v2_payload,
                     agentic_payload=agentic_payload,
                 )
+                if lane_errors:
+                    comparison_payload["status"] = "partial_lane_failure"
+                    comparison_payload["lane_errors"] = lane_errors
+                else:
+                    comparison_payload["status"] = "ok"
                 self._last_v2_compare_payload = v2_payload
                 self._last_agentic_compare_payload = agentic_payload
                 self._last_dual_compare_payload = comparison_payload
                 self._last_shadow_discovery_payload = agentic_payload
                 winner_runtime = str(comparison_payload.get("winner_runtime") or "v2")
                 winner_result = agentic_result if winner_runtime == "agentic_v3" else v2_result
+                if isinstance(winner_result, Exception):
+                    winner_result = v2_result if not isinstance(v2_result, Exception) else agentic_result
                 winner_payload = agentic_payload if winner_runtime == "agentic_v3" else v2_payload
                 winner_payload["winner_metadata"] = comparison_payload
                 performance = winner_payload.get("performance_summary")
@@ -876,6 +895,7 @@ class FixedDossierFirstPipeline:
                 performance["runtime_mode"] = runtime_mode
                 performance["comparison_summary"] = comparison_payload
                 performance["winner_runtime"] = winner_runtime
+                performance["compare_partial_failure"] = bool(lane_errors)
                 setattr(winner_result, "winner_metadata", comparison_payload)
                 setattr(winner_result, "performance_summary", performance)
                 result = winner_result
@@ -1067,6 +1087,29 @@ class FixedDossierFirstPipeline:
                 engine="agentic_v3",
             )
         return self._agentic_discovery
+
+    @staticmethod
+    def _build_failed_compare_payload(*, runtime_name: str, error: Exception) -> Dict[str, Any]:
+        error_class = type(error).__name__
+        error_message = str(error)
+        return {
+            "signals_discovered": [],
+            "provisional_signals": [],
+            "candidate_evaluations": [],
+            "actionability_score": 0.0,
+            "entity_grounded_signal_count": 0,
+            "controller_health_reasons": [f"{runtime_name}_runtime_failed"],
+            "performance_summary": {
+                "planner_decision_applied_rate": 0.0,
+                "off_entity_reject_rate": 0.0,
+                "schema_fail_count": 1,
+                "total_duration_ms": 0.0,
+                "actionability_score": 0.0,
+                "runtime_failure": True,
+                "runtime_failure_class": error_class,
+                "runtime_failure_message": error_message,
+            },
+        }
 
     @staticmethod
     def _result_to_payload(result: Any) -> Dict[str, Any]:
@@ -2169,7 +2212,10 @@ class FixedDossierFirstPipeline:
             if planner_action_parse_fail_count > 0
             else "healthy"
         )
-        runtime_mode = str(performance.get("runtime_mode") or getattr(self, "discovery_runtime_mode", self.discovery_engine))
+        runtime_mode = str(
+            performance.get("runtime_mode")
+            or getattr(self, "discovery_runtime_mode", getattr(self, "discovery_engine", "v2"))
+        )
         comparison_payload = performance.get("comparison_summary")
         if not isinstance(comparison_payload, dict):
             cached_compare = getattr(self, "_last_dual_compare_payload", None)

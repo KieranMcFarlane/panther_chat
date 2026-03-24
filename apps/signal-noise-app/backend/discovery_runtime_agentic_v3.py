@@ -190,8 +190,10 @@ class DiscoveryRuntimeAgenticV3:
         official_site = self._extract_official_site(dossier)
         official_domains = self._official_domains(official_site)
         entity_tokens = self._entity_tokens(entity_name)
-        starting_credits = max(self.default_credit_budget, int(max_iterations or self.default_credit_budget))
-        starting_credits = min(starting_credits, self.credit_cap)
+        requested_iterations = int(max_iterations or 0)
+        if requested_iterations <= 0:
+            requested_iterations = self.default_credit_budget
+        starting_credits = min(max(1, requested_iterations), self.credit_cap)
         state: Dict[str, Any] = {
             "mission_brief": self._build_mission_brief(entity_name=entity_name, objective=objective),
             "entity_profile": self._build_entity_profile(entity_name=entity_name, dossier=dossier),
@@ -224,6 +226,7 @@ class DiscoveryRuntimeAgenticV3:
             "credits_spent": 0,
             "credits_earned": 0,
             "off_entity_reject_count": 0,
+            "judge_fallback_count": 0,
             "schema_fail_count": 0,
             "llm_last_status": "ok",
         }
@@ -391,6 +394,7 @@ class DiscoveryRuntimeAgenticV3:
             planner_parse_fail_count=planner_parse_fail,
             validated_count=len(validated_signals),
             off_entity_reject_rate=off_entity_reject_rate,
+            judge_fallback_count=int(self._metrics.get("judge_fallback_count") or 0),
             schema_fail_count=int(self._metrics.get("schema_fail_count") or 0),
         )
         performance_summary = {
@@ -408,12 +412,14 @@ class DiscoveryRuntimeAgenticV3:
             "planner_branch_change_count": int(self._metrics.get("planner_branch_change_count") or 0),
             "credits_spent": int(self._metrics.get("credits_spent") or 0),
             "credits_earned": int(self._metrics.get("credits_earned") or 0),
+            "judge_fallback_count": int(self._metrics.get("judge_fallback_count") or 0),
             "entity_grounded_signal_count": entity_grounded_signal_count,
             "actionability_score": actionability_score,
             "off_entity_reject_rate": off_entity_reject_rate,
             "candidate_events_summary": candidate_summary,
             "lane_failures": state["lane_failures"],
             "controller_health_reasons": controller_health_reasons,
+            "llm_last_status": str(self._metrics.get("llm_last_status") or "ok"),
             "official_site_resolution_traces": [
                 {
                     "official_site_url": official_site,
@@ -542,30 +548,12 @@ class DiscoveryRuntimeAgenticV3:
             f"Candidate options: {json.dumps(preview, separators=(',', ':'))}\n"
             "Pick the move that most increases confidence of procurement need, future-RFP timing, or named decision-maker discovery."
         )
-        response = await self.claude_client.query(
-            prompt=prompt,
-            model="planner",
-            max_tokens=220,
-            json_mode=True,
-            json_schema=PLANNER_ACTION_JSON_SCHEMA,
-            stream=False,
-            max_retries_override=0,
-            empty_retries_before_fallback_override=1,
-            fast_fail_on_length=True,
-        )
-        payload = self._extract_json_payload(response)
-        action = self._normalize_planner_action(payload=payload, state=state)
-        if action:
-            return action
-        raw = str((response or {}).get("content") or "").strip()
-        if raw:
-            repair = await self.claude_client.query(
-                prompt=(
-                    "Normalize this into one strict JSON planner action only.\n"
-                    f"Raw output: {raw[:900]}"
-                ),
+        response: Dict[str, Any] = {}
+        try:
+            response = await self.claude_client.query(
+                prompt=prompt,
                 model="planner",
-                max_tokens=180,
+                max_tokens=220,
                 json_mode=True,
                 json_schema=PLANNER_ACTION_JSON_SCHEMA,
                 stream=False,
@@ -573,6 +561,33 @@ class DiscoveryRuntimeAgenticV3:
                 empty_retries_before_fallback_override=1,
                 fast_fail_on_length=True,
             )
+        except Exception as planner_error:  # noqa: BLE001
+            logger.warning("⚠️ Planner query failed: %s", planner_error)
+            self._metrics["llm_last_status"] = "planner_query_error"
+        payload = self._extract_json_payload(response)
+        action = self._normalize_planner_action(payload=payload, state=state)
+        if action:
+            return action
+        raw = str((response or {}).get("content") or "").strip()
+        if raw:
+            try:
+                repair = await self.claude_client.query(
+                    prompt=(
+                        "Normalize this into one strict JSON planner action only.\n"
+                        f"Raw output: {raw[:900]}"
+                    ),
+                    model="planner",
+                    max_tokens=180,
+                    json_mode=True,
+                    json_schema=PLANNER_ACTION_JSON_SCHEMA,
+                    stream=False,
+                    max_retries_override=0,
+                    empty_retries_before_fallback_override=1,
+                    fast_fail_on_length=True,
+                )
+            except Exception as repair_error:  # noqa: BLE001
+                logger.warning("⚠️ Planner repair query failed: %s", repair_error)
+                repair = {}
             payload = self._extract_json_payload(repair)
             action = self._normalize_planner_action(payload=payload, state=state)
             if action:
@@ -607,7 +622,15 @@ class DiscoveryRuntimeAgenticV3:
                     "branch": str(action.get("purpose") or action_name),
                 }
             state["visited_queries"].add(query)
-            search_result = await self.brightdata_client.search_engine(query=query, engine="google", num_results=self.max_search_results)
+            try:
+                search_result = await self.brightdata_client.search_engine(
+                    query=query,
+                    engine="google",
+                    num_results=self.max_search_results,
+                )
+            except Exception as search_error:  # noqa: BLE001
+                logger.warning("⚠️ Search action failed (query=%s): %s", query, search_error)
+                search_result = {"status": "error", "results": [], "error": str(search_error)}
             candidates = self._search_results_to_candidates(search_result=search_result, official_domains=official_domains, query=query, state=state)
             return {
                 "kind": "search",
@@ -635,7 +658,17 @@ class DiscoveryRuntimeAgenticV3:
                 "branch": str(action.get("purpose") or action_name),
             }
         state["visited_urls"].add(url)
-        scrape_result = await self._scrape_for_action(action_name=action_name, url=url)
+        try:
+            scrape_result = await self._scrape_for_action(action_name=action_name, url=url)
+        except Exception as scrape_error:  # noqa: BLE001
+            logger.warning("⚠️ Scrape action failed (action=%s url=%s): %s", action_name, url, scrape_error)
+            return {
+                "kind": "scrape",
+                "reason": "scrape_action_exception",
+                "summary": f"scrape action failed: {url}",
+                "executed_action": {**executed_action, "target": url},
+                "branch": str(action.get("purpose") or action_name),
+            }
         evidence = await self._evaluate_scrape(
             entity_name=entity_name,
             entity_tokens=entity_tokens,
@@ -706,7 +739,13 @@ class DiscoveryRuntimeAgenticV3:
         word_count = int(((scrape_result.get("metadata") or {}).get("word_count") or len(normalized_text.split())))
         source_host = (urlparse(url).hostname or "").lower().lstrip("www.")
         if not normalized_text or self._is_hard_blocked(content=normalized_text, scrape_result=scrape_result):
-            return self._build_rejected_evidence(url=url, source_host=source_host, reason_code="low_signal", request_type=((scrape_result.get("metadata") or {}).get("request_type") or "scrape_markdown"))
+            return self._build_rejected_evidence(
+                url=url,
+                source_host=source_host,
+                reason_code="low_signal",
+                request_type=((scrape_result.get("metadata") or {}).get("request_type") or "scrape_markdown"),
+                official_domains=official_domains,
+            )
 
         grounding_score = self._entity_grounding_score(entity_tokens=entity_tokens, text=f"{url} {normalized_text}")
         source_tier = self._source_tier(source_host=source_host, official_domains=official_domains)
@@ -722,7 +761,14 @@ class DiscoveryRuntimeAgenticV3:
         )
         hard_reason = self._hard_block_reason(grounding_score=grounding_score, text=normalized_text, source_tier=source_tier)
         if hard_reason:
-            return self._build_rejected_evidence(url=url, source_host=source_host, reason_code=hard_reason, request_type=((scrape_result.get("metadata") or {}).get("request_type") or "scrape_markdown"), grounding_score=grounding_score)
+            return self._build_rejected_evidence(
+                url=url,
+                source_host=source_host,
+                reason_code=hard_reason,
+                request_type=((scrape_result.get("metadata") or {}).get("request_type") or "scrape_markdown"),
+                grounding_score=grounding_score,
+                official_domains=official_domains,
+            )
 
         internal_links = self._extract_internal_links(raw_html=raw_html, base_url=url, official_domains=official_domains)
         judge_verdict = await self._judge_evidence(
@@ -817,12 +863,14 @@ class DiscoveryRuntimeAgenticV3:
         except Exception:
             pass
         self._metrics["schema_fail_count"] += 1
+        self._metrics["judge_fallback_count"] += 1
         self._metrics["llm_last_status"] = "judge_fallback"
         return self._deterministic_judge_fallback(
             evidence_type=evidence_type,
             grounding_score=grounding_score,
             source_tier=source_tier,
             actionability_score=actionability_score,
+            allow_promotion=False,
         )
 
     def _normalize_planner_action(self, *, payload: Any, state: Dict[str, Any]) -> Optional[Dict[str, Any]]:
@@ -859,13 +907,18 @@ class DiscoveryRuntimeAgenticV3:
             pending = state.get("pending_candidates") or []
             if 0 <= candidate_index < len(pending):
                 target = str((pending[candidate_index] or {}).get("url") or "").strip()
+        try:
+            confidence_value = float(payload.get("confidence"))
+        except (TypeError, ValueError):
+            confidence_value = 0.5
+        confidence_value = max(0.0, min(1.0, confidence_value))
         return {
             "action": action,
             "target": target,
             "candidate_index": candidate_index,
             "purpose": str(payload.get("purpose") or payload.get("lane") or payload.get("reason") or action).strip()[:120],
             "expected_signal_type": str(payload.get("expected_signal_type") or payload.get("signal_type") or action).strip()[:80],
-            "confidence": float(payload.get("confidence") or 0.5),
+            "confidence": confidence_value,
             "reason": str(payload.get("reason") or "planner_selected").strip()[:240],
         }
 
@@ -892,7 +945,18 @@ class DiscoveryRuntimeAgenticV3:
         grounding_score: float,
         source_tier: str,
         actionability_score: float,
+        allow_promotion: bool = True,
     ) -> Dict[str, Any]:
+        if not allow_promotion:
+            return {
+                "validation_state": "candidate",
+                "evidence_type": evidence_type,
+                "entity_grounding": grounding_score,
+                "yellow_panther_relevance": min(1.0, actionability_score / 100.0),
+                "confidence_contribution": 0.0,
+                "reason_code": "judge_fallback_candidate",
+                "actionability_score": actionability_score,
+            }
         if grounding_score >= 0.65 and source_tier in {"tier_1", "tier_2"} and actionability_score >= 72:
             validation_state = "validated"
             contribution = 0.12
@@ -965,10 +1029,14 @@ class DiscoveryRuntimeAgenticV3:
 
     def _resolve_action_url(self, *, action: Dict[str, Any], state: Dict[str, Any]) -> Optional[str]:
         target = self._normalize_url(action.get("target"))
-        if target:
-            return target
         pending = state.get("pending_candidates") or []
         candidate_index = action.get("candidate_index")
+        if target:
+            if isinstance(candidate_index, int) and 0 <= candidate_index < len(pending):
+                candidate_url = self._normalize_url((pending[candidate_index] or {}).get("url"))
+                if candidate_url == target:
+                    pending.pop(candidate_index)
+            return target
         if isinstance(candidate_index, int) and 0 <= candidate_index < len(pending):
             candidate = pending.pop(candidate_index)
             return self._normalize_url(candidate.get("url"))
@@ -1043,11 +1111,13 @@ class DiscoveryRuntimeAgenticV3:
         reason_code: str,
         request_type: str,
         grounding_score: float = 0.0,
+        official_domains: Optional[Set[str]] = None,
     ) -> Dict[str, Any]:
+        source_tier = self._source_tier(source_host=source_host, official_domains=set(official_domains or set()))
         return {
             "url": url,
             "source_host": source_host,
-            "source_tier": self._source_tier(source_host=source_host, official_domains=set()),
+            "source_tier": source_tier,
             "validation_state": "candidate",
             "reason_code": reason_code,
             "text": "",
@@ -1068,6 +1138,7 @@ class DiscoveryRuntimeAgenticV3:
             "candidate_evaluation": {
                 "source_url": url,
                 "source_host": source_host,
+                "source_tier": source_tier,
                 "validation_state": "candidate",
                 "reason_code": reason_code,
                 "step_type": request_type,
@@ -1164,6 +1235,7 @@ class DiscoveryRuntimeAgenticV3:
         planner_parse_fail_count: int,
         validated_count: int,
         off_entity_reject_rate: float,
+        judge_fallback_count: int,
         schema_fail_count: int,
     ) -> List[str]:
         reasons: List[str] = []
@@ -1171,6 +1243,8 @@ class DiscoveryRuntimeAgenticV3:
             reasons.append("no_planner_actions_applied")
         if planner_parse_fail_count > 0:
             reasons.append("planner_action_parse_failures")
+        if judge_fallback_count > 0:
+            reasons.append("judge_fallback_used")
         if schema_fail_count > 0:
             reasons.append("schema_gate_failures")
         if off_entity_reject_rate > 0.25:

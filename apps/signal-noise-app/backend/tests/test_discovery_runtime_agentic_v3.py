@@ -78,6 +78,46 @@ class _FakeBrightData:
         }
 
 
+class _PlannerBadConfidenceClaude:
+    async def query(self, **kwargs):
+        model = str(kwargs.get("model") or "")
+        if model == "planner":
+            return {
+                "content": (
+                    '{"action":"search_web","target":"Coventry City FC procurement",'
+                    '"purpose":"seed_search","expected_signal_type":"procurement_signal",'
+                    '"confidence":"high","reason":"bad_confidence_type"}'
+                )
+            }
+        if model == "judge":
+            return {"content": '{"validation_state":"candidate","reason_code":"candidate"}'}
+        return {"content": "{}"}
+
+
+class _PlannerRaisesClaude:
+    async def query(self, **kwargs):
+        model = str(kwargs.get("model") or "")
+        if model == "planner":
+            raise RuntimeError("planner_timeout")
+        return {"content": "{}"}
+
+
+class _SearchRaisesBrightData:
+    async def search_engine(self, **kwargs):
+        raise RuntimeError("search_timeout")
+
+    async def scrape_as_markdown(self, url):
+        return {"status": "error", "url": url}
+
+
+class _JudgeRaisesClaude(_PlannerJudgeClaude):
+    async def query(self, **kwargs):
+        model = str(kwargs.get("model") or "")
+        if model == "judge":
+            raise RuntimeError("judge_timeout")
+        return await super().query(**kwargs)
+
+
 @pytest.mark.asyncio
 async def test_agentic_v3_runtime_produces_planner_led_validated_signal():
     runtime = DiscoveryRuntimeAgenticV3(_PlannerJudgeClaude(), _FakeBrightData())
@@ -139,6 +179,144 @@ def test_dual_compare_prefers_agentic_runtime_when_actionability_is_higher():
 
     assert comparison["winner_runtime"] == "agentic_v3"
     assert comparison["runtimes"]["agentic_v3"]["weighted_total"] > comparison["runtimes"]["v2"]["weighted_total"]
+
+
+@pytest.mark.asyncio
+async def test_agentic_v3_runtime_handles_non_numeric_planner_confidence_without_crashing():
+    runtime = DiscoveryRuntimeAgenticV3(_PlannerBadConfidenceClaude(), _FakeBrightData())
+
+    result = await runtime.run_discovery_with_dossier_context(
+        entity_id="coventry-city-fc",
+        entity_name="Coventry City FC",
+        dossier={"metadata": {"website": "https://www.ccfc.co.uk"}},
+        max_iterations=1,
+    )
+
+    payload = result.to_dict()
+    performance = payload["performance_summary"]
+    planner_decisions = payload.get("planner_decisions") or []
+
+    assert payload["parse_path"] == "agentic_v3_planner_led"
+    assert performance["planner_decision_parse_fail_count"] == 0
+    assert performance["planner_decision_applied_count"] >= 1
+    assert planner_decisions and planner_decisions[0]["confidence"] == 0.5
+
+
+@pytest.mark.asyncio
+async def test_agentic_v3_runtime_respects_max_iterations_bound():
+    runtime = DiscoveryRuntimeAgenticV3(_PlannerBadConfidenceClaude(), _FakeBrightData())
+
+    result = await runtime.run_discovery_with_dossier_context(
+        entity_id="coventry-city-fc",
+        entity_name="Coventry City FC",
+        dossier={"metadata": {"website": "https://www.ccfc.co.uk"}},
+        max_iterations=1,
+    )
+
+    assert result.iterations_completed <= 1
+
+
+@pytest.mark.asyncio
+async def test_agentic_v3_runtime_handles_planner_query_error_without_crashing():
+    runtime = DiscoveryRuntimeAgenticV3(_PlannerRaisesClaude(), _FakeBrightData())
+
+    result = await runtime.run_discovery_with_dossier_context(
+        entity_id="coventry-city-fc",
+        entity_name="Coventry City FC",
+        dossier={"metadata": {"website": "https://www.ccfc.co.uk"}},
+        max_iterations=2,
+    )
+
+    payload = result.to_dict()
+    performance = payload["performance_summary"]
+
+    assert payload["iterations_completed"] == 0
+    assert performance["stop_reason"] == "planner_schema_failed"
+    assert performance["planner_decision_parse_fail_count"] >= 1
+
+
+@pytest.mark.asyncio
+async def test_agentic_v3_runtime_handles_search_provider_error_without_crashing():
+    runtime = DiscoveryRuntimeAgenticV3(_PlannerBadConfidenceClaude(), _SearchRaisesBrightData())
+
+    result = await runtime.run_discovery_with_dossier_context(
+        entity_id="coventry-city-fc",
+        entity_name="Coventry City FC",
+        dossier={"metadata": {"website": "https://www.ccfc.co.uk"}},
+        max_iterations=1,
+    )
+
+    payload = result.to_dict()
+    performance = payload["performance_summary"]
+
+    assert payload["parse_path"] == "agentic_v3_planner_led"
+    assert payload["iterations_completed"] == 1
+    assert performance["stop_reason"] in {"credit_exhausted", "no_progress_budget_stop"}
+
+
+@pytest.mark.asyncio
+async def test_agentic_v3_runtime_does_not_promote_validated_signals_when_judge_falls_back():
+    runtime = DiscoveryRuntimeAgenticV3(_JudgeRaisesClaude(), _FakeBrightData())
+
+    result = await runtime.run_discovery_with_dossier_context(
+        entity_id="coventry-city-fc",
+        entity_name="Coventry City FC",
+        dossier={"metadata": {"website": "https://www.ccfc.co.uk"}},
+        max_iterations=2,
+    )
+
+    payload = result.to_dict()
+    performance = payload["performance_summary"]
+
+    assert payload["signals_discovered"] == []
+    assert payload["provisional_signals"] == []
+    assert performance["llm_last_status"] == "judge_fallback"
+    assert "judge_fallback_used" in payload["controller_health_reasons"]
+
+
+@pytest.mark.asyncio
+async def test_rejected_evidence_keeps_official_domain_source_tier():
+    runtime = DiscoveryRuntimeAgenticV3(_PlannerJudgeClaude(), _FakeBrightData())
+
+    evidence = await runtime._evaluate_scrape(
+        entity_name="Coventry City FC",
+        entity_tokens=runtime._entity_tokens("Coventry City FC"),
+        url="https://www.ccfc.co.uk/news/empty-shell",
+        scrape_result={
+            "status": "success",
+            "content": "Enable JavaScript",
+            "raw_html": "<html><body>Enable JavaScript</body></html>",
+            "metadata": {"word_count": 2, "request_type": "rendered_request"},
+        },
+        action={"action": "render_url", "purpose": "official_domain_news"},
+        official_domains={"ccfc.co.uk"},
+    )
+
+    assert isinstance(evidence, dict)
+    assert evidence["reason_code"] == "low_signal"
+    assert evidence["source_tier"] == "tier_1"
+
+
+def test_resolve_action_url_pops_matching_candidate_when_target_and_candidate_index_both_supplied():
+    runtime = DiscoveryRuntimeAgenticV3(_PlannerJudgeClaude(), _FakeBrightData())
+    state = {
+        "pending_candidates": [
+            {"url": "https://www.ccfc.co.uk/news/one"},
+            {"url": "https://www.ccfc.co.uk/news/two"},
+            {"url": "https://www.ccfc.co.uk/news/three"},
+        ]
+    }
+
+    resolved = runtime._resolve_action_url(
+        action={"target": "https://www.ccfc.co.uk/news/two", "candidate_index": 1},
+        state=state,
+    )
+
+    assert resolved == "https://www.ccfc.co.uk/news/two"
+    assert [item["url"] for item in state["pending_candidates"]] == [
+        "https://www.ccfc.co.uk/news/one",
+        "https://www.ccfc.co.uk/news/three",
+    ]
 
 
 def test_dossier_enrichment_marks_evidence_led_sections():

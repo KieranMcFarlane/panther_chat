@@ -2,6 +2,7 @@ import builtins
 import sys
 from pathlib import Path
 from types import SimpleNamespace
+from dataclasses import dataclass, field
 
 import pytest
 from bs4 import BeautifulSoup
@@ -15,6 +16,32 @@ from brightdata_sdk_client import BrightDataSDKClient
 from run_fixed_dossier_pipeline import FixedDossierFirstPipeline
 
 SCRIPT_ROOT = Path(__file__).resolve().parents[2] / "scripts"
+
+
+@dataclass
+class _CompareResult:
+    final_confidence: float
+    iterations_completed: int
+    signals_discovered: list
+    performance_summary: dict = field(default_factory=dict)
+    provisional_signals: list = field(default_factory=list)
+    candidate_evaluations: list = field(default_factory=list)
+    actionability_score: float = 0.0
+    entity_grounded_signal_count: int = 0
+    controller_health_reasons: list = field(default_factory=list)
+
+    def to_dict(self):
+        return {
+            "final_confidence": self.final_confidence,
+            "iterations_completed": self.iterations_completed,
+            "signals_discovered": self.signals_discovered,
+            "provisional_signals": self.provisional_signals,
+            "candidate_evaluations": self.candidate_evaluations,
+            "performance_summary": self.performance_summary,
+            "actionability_score": self.actionability_score,
+            "entity_grounded_signal_count": self.entity_grounded_signal_count,
+            "controller_health_reasons": self.controller_health_reasons,
+        }
 
 
 @pytest.mark.asyncio
@@ -146,6 +173,68 @@ async def test_phase2_two_pass_a_only_returns_pass_a_result():
     assert calls == [2]
     assert result.final_confidence == 0.55
     assert result.performance_summary.get("two_pass", {}).get("pass_b_executed") is False
+
+
+@pytest.mark.asyncio
+async def test_phase2_dual_compare_survives_single_lane_failure():
+    pipeline = FixedDossierFirstPipeline.__new__(FixedDossierFirstPipeline)
+    pipeline.two_pass_enabled = False
+    pipeline.shadow_unbounded_enabled = False
+    pipeline.discovery_runtime_mode = "dual_compare"
+    pipeline._last_shadow_discovery_payload = None
+    pipeline._last_dual_compare_payload = None
+    pipeline._last_v2_compare_payload = None
+    pipeline._last_agentic_compare_payload = None
+    pipeline.discovery_engine = "v2"
+    pipeline.discovery = SimpleNamespace(
+        run_discovery=pytest.fail,
+        current_official_site_url=None,
+    )
+    pipeline.dossier_generator = None
+    pipeline.schema_first_result = None
+
+    class _OkRuntime:
+        current_official_site_url = None
+
+        async def run_discovery_with_dossier_context(self, **kwargs):
+            return _CompareResult(
+                final_confidence=0.72,
+                iterations_completed=2,
+                signals_discovered=[{"validation_state": "validated", "subtype": "procurement_signal", "text": "supplier review"}],
+                performance_summary={
+                    "planner_decision_applied_rate": 0.8,
+                    "off_entity_reject_rate": 0.0,
+                    "schema_fail_count": 0,
+                    "total_duration_ms": 400.0,
+                    "actionability_score": 82.0,
+                },
+                actionability_score=82.0,
+                entity_grounded_signal_count=1,
+                controller_health_reasons=["healthy"],
+            )
+
+    class _FailRuntime:
+        current_official_site_url = None
+
+        async def run_discovery_with_dossier_context(self, **kwargs):
+            raise RuntimeError("agentic_lane_failed")
+
+    def _ensure_compare_discovery(name):
+        return _OkRuntime() if name == "v2" else _FailRuntime()
+
+    pipeline._ensure_compare_discovery = _ensure_compare_discovery
+
+    result = await pipeline._phase_2_run_discovery(
+        entity_id="coventry-city-fc",
+        entity_name="Coventry City FC",
+        dossier=SimpleNamespace(to_dict=lambda: {"metadata": {"website": "https://www.ccfc.co.uk"}}),
+        max_iterations=4,
+        template_id=None,
+    )
+
+    assert result.final_confidence == 0.72
+    assert pipeline._last_dual_compare_payload["status"] == "partial_lane_failure"
+    assert pipeline._last_dual_compare_payload["winner_runtime"] == "v2"
 
 
 def test_extract_publication_date_handles_missing_dateutil(monkeypatch):
