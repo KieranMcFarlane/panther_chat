@@ -939,6 +939,18 @@ class FixedDossierFirstPipeline:
                 if isinstance(e, ModuleNotFoundError) or "No module named" in str(e)
                 else "discovery_runtime_failure"
             )
+            runtime_mode = str(getattr(self, "discovery_runtime_mode", "v2") or "v2").strip().lower()
+            if runtime_mode == "dual_compare" and not isinstance(getattr(self, "_last_dual_compare_payload", None), dict):
+                self._last_dual_compare_payload = {
+                    "mode": "dual_compare",
+                    "winner_runtime": "v2",
+                    "status": "fallback_due_exception",
+                    "compare_execution_failed": True,
+                    "error_class": self._last_discovery_error_class,
+                    "error_message": self._last_discovery_error_message,
+                    "runtimes": {},
+                    "winner_reason_codes": [self._last_discovery_error_class],
+                }
             logger.warning(f"⚠️ Dossier-context discovery failed: {e}")
             logger.info("🔄 Falling back to standard discovery...")
 
@@ -1600,6 +1612,20 @@ class FixedDossierFirstPipeline:
         if not isinstance(perf, dict):
             perf = {}
             payload["performance_summary"] = perf
+        runtime_mode = str(getattr(self, "discovery_runtime_mode", "v2") or "v2").strip().lower()
+        dual_compare_payload = getattr(self, "_last_dual_compare_payload", None)
+        if (
+            runtime_mode == "dual_compare"
+            and isinstance(dual_compare_payload, dict)
+            and not isinstance(perf.get("comparison_summary"), dict)
+        ):
+            perf["comparison_summary"] = dual_compare_payload
+            perf["winner_runtime"] = str(dual_compare_payload.get("winner_runtime") or "v2")
+            winner_metadata = payload.get("winner_metadata")
+            if not isinstance(winner_metadata, dict):
+                winner_metadata = {}
+            winner_metadata.setdefault("comparison", dual_compare_payload)
+            payload["winner_metadata"] = winner_metadata
 
         if not isinstance(payload.get("candidate_events_summary"), dict):
             payload["candidate_events_summary"] = self._summarize_candidate_events(candidate_evaluations)
