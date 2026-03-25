@@ -202,6 +202,90 @@ def test_agentic_v4_batched_soft_skip_memory_downranks_failed_paths():
     assert events[0]["event"] == "soft_skip_downrank"
 
 
+def test_agentic_v4_batched_penalizes_shell_paths_in_ranking():
+    runtime = DiscoveryRuntimeAgenticV4Batched(_BatchPlannerJudgeClaude(), _BatchBrightData())
+    candidates = [
+        {
+            "url": "https://www.ccfc.co.uk/news",
+            "title": "News",
+            "snippet": "Club news",
+            "host": "ccfc.co.uk",
+            "position": 1,
+            "same_domain": True,
+        },
+        {
+            "url": "https://www.ccfc.co.uk/videos",
+            "title": "Videos",
+            "snippet": "Club videos",
+            "host": "ccfc.co.uk",
+            "position": 2,
+            "same_domain": True,
+        },
+        {
+            "url": "https://www.ccfc.co.uk/fans/travel-and-parking",
+            "title": "Travel and Parking",
+            "snippet": "Travel details",
+            "host": "ccfc.co.uk",
+            "position": 3,
+            "same_domain": True,
+        },
+        {
+            "url": "https://www.ccfc.co.uk/commercial",
+            "title": "Commercial",
+            "snippet": "Commercial opportunities",
+            "host": "ccfc.co.uk",
+            "position": 4,
+            "same_domain": True,
+        },
+    ]
+
+    ranked, events = runtime._apply_soft_skip_memory(
+        candidates=candidates,
+        prior_run_memory={"url_outcomes": {}},
+        override_urls=set(),
+    )
+
+    assert ranked[0]["url"] == "https://www.ccfc.co.uk/commercial"
+    assert events == []
+
+
+def test_agentic_v4_batched_explicit_target_consumes_matching_pending_candidate():
+    runtime = DiscoveryRuntimeAgenticV4Batched(_BatchPlannerJudgeClaude(), _BatchBrightData())
+    state = {
+        "pending_candidates": [
+            {
+                "url": "https://www.ccfc.co.uk/fans/travel-and-parking",
+                "title": "Travel and Parking",
+                "snippet": "",
+                "host": "ccfc.co.uk",
+                "position": 1,
+                "same_domain": True,
+            },
+            {
+                "url": "https://www.ccfc.co.uk/commercial",
+                "title": "Commercial",
+                "snippet": "",
+                "host": "ccfc.co.uk",
+                "position": 2,
+                "same_domain": True,
+            },
+        ],
+        "prior_run_memory": {"url_outcomes": {}},
+        "soft_skip_events": [],
+    }
+
+    url = runtime._resolve_batch_action_url(
+        action={"target": "https://www.ccfc.co.uk/fans/travel-and-parking"},
+        state=state,
+        override_urls=set(),
+    )
+
+    assert url == "https://www.ccfc.co.uk/fans/travel-and-parking"
+    assert [candidate["url"] for candidate in state["pending_candidates"]] == [
+        "https://www.ccfc.co.uk/commercial"
+    ]
+
+
 @pytest.mark.asyncio
 async def test_agentic_v4_batched_can_enforce_requested_iteration_cap(monkeypatch):
     monkeypatch.setenv("PIPELINE_ENFORCE_DISCOVERY_ITERATION_CAP", "true")
@@ -250,6 +334,142 @@ def test_agentic_v4_batched_uses_compact_planner_schema():
     assert "ranked_followups" not in BATCH_PLANNER_JSON_SCHEMA["properties"]
     assert "sitemap_updates" not in BATCH_PLANNER_JSON_SCHEMA["properties"]
     assert "missing_signals" in BATCH_PLANNER_JSON_SCHEMA["properties"]
+
+
+def test_agentic_v4_batched_normalizes_batch_plan_aliases():
+    runtime = DiscoveryRuntimeAgenticV4Batched(_BatchPlannerJudgeClaude(), _BatchBrightData())
+
+    normalized = runtime._normalize_batch_plan_payload(
+        payload={
+            "plan": [
+                {
+                    "action": "scrape_url",
+                    "target": "https://www.ccfc.co.uk/commercial",
+                    "purpose": "commercial_followup",
+                    "expected_signal_type": "commercial_signal",
+                    "confidence": 0.81,
+                }
+            ],
+            "stop_or_continue": "continue",
+            "missing_signals": ["named commercial lead"],
+            "override_soft_skips": ["https://www.ccfc.co.uk/commercial"],
+        },
+        state={"pending_candidates": []},
+    )
+
+    assert normalized is not None
+    assert normalized["stop_or_continue"] == "continue"
+    assert normalized["missing_signals"] == ["named commercial lead"]
+    assert normalized["override_soft_skips"] == ["https://www.ccfc.co.uk/commercial"]
+    assert normalized["next_batch_plan"][0]["target"] == "https://www.ccfc.co.uk/commercial"
+
+
+def test_agentic_v4_batched_normalizes_stringified_and_wrapper_batch_payloads():
+    runtime = DiscoveryRuntimeAgenticV4Batched(_BatchPlannerJudgeClaude(), _BatchBrightData())
+
+    stringified = runtime._normalize_batch_plan_payload(
+        payload=(
+            '{"plan":[{"action":"scrape_url","target":"https://www.ccfc.co.uk/news/",'
+            '"purpose":"news_followup","expected_signal_type":"news_signal","confidence":0.74}],'
+            '"stop_or_continue":"continue"}'
+        ),
+        state={"pending_candidates": []},
+    )
+    wrapped = runtime._normalize_batch_plan_payload(
+        payload={
+            "content": {
+                "batch_plan": [
+                    {
+                        "action": "search_site",
+                        "target": "site:ccfc.co.uk commercial",
+                        "purpose": "commercial_probe",
+                        "expected_signal_type": "commercial_signal",
+                        "confidence": 0.63,
+                    }
+                ],
+                "stop_or_continue": "stop",
+            }
+        },
+        state={"pending_candidates": []},
+    )
+
+    assert stringified is not None
+    assert stringified["next_batch_plan"][0]["target"] == "https://www.ccfc.co.uk/news/"
+    assert wrapped is not None
+    assert wrapped["stop_or_continue"] == "stop"
+    assert wrapped["next_batch_plan"][0]["action"] == "search_site"
+
+
+@pytest.mark.asyncio
+async def test_agentic_v4_batched_records_raw_parse_failure_telemetry():
+    class _BadPlannerClaude(_BatchPlannerJudgeClaude):
+        async def query(self, **kwargs):
+            if str(kwargs.get("model") or "") == "planner":
+                return {
+                    "content": (
+                        '{"next_batch_plan":[{"purpose":"commercial_followup",'
+                        '"target":"https://www.ccfc.co.uk/commercial"}],'
+                        '"stop_or_continue":"continue"}'
+                    )
+                }
+            return await super().query(**kwargs)
+
+    runtime = DiscoveryRuntimeAgenticV4Batched(_BadPlannerClaude(), _BatchBrightData())
+    state = {
+        "mission_brief": "Find procurement need for Coventry City FC",
+        "entity_profile": {},
+        "official_site_url": "https://www.ccfc.co.uk",
+        "official_domains": {"ccfc.co.uk"},
+        "visited_urls": set(),
+        "visited_queries": set(),
+        "pending_candidates": [],
+        "failed_paths": {},
+        "open_hypotheses": [],
+        "remaining_credits": 1,
+        "current_confidence": 0.35,
+        "consecutive_no_signal": 0,
+        "consecutive_low_signal_by_branch": {},
+        "turn_trace": [],
+        "planner_decisions": [],
+        "executed_actions": [],
+        "credit_ledger": [],
+        "evidence_ledger": [],
+        "validated_signals": [],
+        "provisional_signals": [],
+        "candidate_evaluations": [],
+        "lane_failures": {},
+        "batch_trace": [],
+        "evidence_packs": [],
+        "soft_skip_events": [],
+        "kimi_batch_outputs": [],
+        "deepseek_audits": [],
+        "sitemap_candidates": [],
+        "prior_run_memory": {},
+        "planner_parse_failure_events": [],
+    }
+    result = await runtime._plan_batch(
+        entity_name="Coventry City FC",
+        objective="dossier_core",
+        state=state,
+        evidence_pack={"packed_items": []},
+        last_batch_result={"summary": "seed bootstrap"},
+        batch_type="seed_batch",
+    )
+
+    assert result["stop_or_continue"] == "continue"
+    assert runtime._metrics["planner_decision_parse_fail_count"] == 1
+    assert runtime._metrics["schema_fail_count"] == 1
+    assert runtime._metrics["planner_repair_count"] == 1
+    assert runtime._metrics["planner_repair_fallback_count"] == 1
+    assert runtime._metrics["llm_last_status"] == "planner_repair_fallback"
+    assert runtime._metrics["planner_parse_failure_events"]
+    event = runtime._metrics["planner_parse_failure_events"][0]
+    assert event["failure_reason"] == "invalid_batch_action_shape"
+    assert "commercial_followup" in event["raw_content"]
+    assert result["planner_fallback_reason"] == "invalid_batch_action_shape"
+    assert result["planner_source"] == "deterministic_recovery"
+    assert state["planner_parse_failure_events"]
+    assert state["planner_parse_failure_events"][0]["failure_reason"] == "invalid_batch_action_shape"
 
 
 @pytest.mark.asyncio

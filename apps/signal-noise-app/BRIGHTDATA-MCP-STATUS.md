@@ -1,8 +1,29 @@
 # BrightData MCP Integration - Current Status
 
+For the full working summary and proof artifacts, see:
+- [`BRIGHTDATA-MCP-WORKING-SUMMARY.md`](./BRIGHTDATA-MCP-WORKING-SUMMARY.md)
+
+## Local FastMCP Service Update
+
+The recommended local development path is now a persistent FastMCP service on
+`http://127.0.0.1:8000/mcp`, launched with:
+
+```bash
+python3 scripts/start_brightdata_fastmcp_service.py
+```
+
+See [`BRIGHTDATA-FASTMCP-LOCAL-OPS.md`](./BRIGHTDATA-FASTMCP-LOCAL-OPS.md) for
+the exact env vars and startup flow.
+
 ## Implementation Status: ✅ COMPLETE (Structure)
 
-The BrightData MCP integration has been successfully implemented with proper architecture, but there's a runtime issue with the stdio transport initialization.
+The BrightData MCP integration has been successfully implemented with proper architecture.
+
+Current recommended path:
+- persistent local FastMCP service on `http://127.0.0.1:8000/mcp`
+- pipeline clients created through `backend/brightdata_client_factory.py`
+
+The legacy stdio MCP notes below are retained for historical reference only.
 
 ## What Was Completed
 
@@ -23,7 +44,7 @@ The BrightData MCP integration has been successfully implemented with proper arc
 - No more direct requests/BeautifulSoup imports
 - Proper separation of concerns
 
-## Current Issue: MCP Stdio Initialization Hangs
+## Legacy Notes: MCP Stdio Initialization Hangs
 
 ### Problem
 When the MCP client tries to initialize the stdio transport to `@brightdata/mcp`, it hangs indefinitely. This happens during:
@@ -55,7 +76,7 @@ await self.session.initialize()  # <-- Hangs here
 ❌ Runtime initialization hangs
 ```
 
-## Workarounds
+## Historical Workarounds
 
 ### Option 1: Use Direct HTTP (Temporary)
 While debugging the MCP issue, you can add a fallback that uses direct HTTP calls to BrightData's REST API instead of MCP:

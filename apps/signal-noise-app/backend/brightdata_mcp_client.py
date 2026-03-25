@@ -1,43 +1,18 @@
-"""
-DEPRECATED: BrightData MCP Client (Legacy Implementation)
+"""BrightData MCP client for hosted BrightData MCP and local compatibility paths.
 
-⚠️  This module is DEPRECATED and kept only for backward compatibility.
-
-Please use backend/brightdata_sdk_client.py (BrightDataSDKClient) instead.
-
-Migration guide:
-- OLD: from backend.brightdata_mcp_client import BrightDataClient, create_brightdata_client
-- NEW: from backend.brightdata_sdk_client import BrightDataSDKClient
-
-Why deprecated:
-- MCP integration had timeout issues (5-second timeout)
-- SDK provides direct HTTP calls (faster, simpler)
-- New implementation includes automatic HTTP fallback
-- Pay-per-success pricing with SDK
-
-Last updated: 2026-01-28
-Status: Deprecated - Use brightdata_sdk_client.py
-
-====================================================================
-
-LEGACY DOCUMENTATION (below kept for reference only):
-
-BrightData Client with MCP and HTTP fallback
-
-Architecture:
-1. Abstract BrightDataClient interface
-2. Two implementations: BrightDataMCPClient, BrightDataHTTPClient
-3. Runtime selection with timeout protection
-4. Agent doesn't know or care which is being used
-
-This is a data plane service - Claude Agent SDK handles reasoning.
+This module provides the BrightData retrieval client used by the pipeline and
+the persistent FastMCP wrapper. It prefers the hosted BrightData MCP endpoint
+when configured, and can still use the local stdio server for compatibility.
 """
 
 import asyncio
 import json
 import logging
 import os
+import re
 from abc import ABC, abstractmethod
+from urllib.parse import quote
+from pathlib import Path
 from typing import Dict, List, Any, Optional
 from datetime import datetime
 from dotenv import load_dotenv
@@ -46,13 +21,11 @@ load_dotenv()
 
 logger = logging.getLogger(__name__)
 
-# Issue deprecation warning when module is imported
-import warnings
-warnings.warn(
-    "brightdata_mcp_client is deprecated. Use brightdata_sdk_client instead.",
-    DeprecationWarning,
-    stacklevel=2
-)
+
+def _redact_token_in_url(url: Optional[str]) -> Optional[str]:
+    if not url:
+        return url
+    return re.sub(r"(token=)[^&]+", r"\1***", url)
 
 
 class BrightDataClient(ABC):
@@ -68,6 +41,8 @@ class BrightDataClient(ABC):
         self,
         query: str,
         engine: str = "google",
+        country: str = "us",
+        num_results: int = 10,
         cursor: Optional[str] = None
     ) -> Dict[str, Any]:
         """Search using search engine"""
@@ -97,6 +72,10 @@ class BrightDataClient(ABC):
         """Scrape press releases for entity"""
         pass
 
+    async def prewarm(self, timeout: Optional[float] = None) -> Dict[str, Any]:
+        """Prewarm any underlying connection/session state."""
+        return {"status": "success", "prewarmed": False, "timeout": timeout}
+
 
 class BrightDataHTTPClient(BrightDataClient):
     """
@@ -114,6 +93,8 @@ class BrightDataHTTPClient(BrightDataClient):
         self,
         query: str,
         engine: str = "google",
+        country: str = "us",
+        num_results: int = 10,
         cursor: Optional[str] = None
     ) -> Dict[str, Any]:
         """Search using DuckDuckGo (no API key needed)"""
@@ -140,7 +121,7 @@ class BrightDataHTTPClient(BrightDataClient):
                 soup = BeautifulSoup(response.text, 'html.parser')
                 results = []
 
-                for div in soup.find_all('div', class_='result')[:10]:
+                for div in soup.find_all('div', class_='result')[: max(1, int(num_results or 10))]:
                     title_elem = div.find('a', class_='result__a')
                     snippet_elem = div.find('a', class_='result__snippet')
 
@@ -338,19 +319,45 @@ class BrightDataMCPClient(BrightDataClient):
         self.pro_mode = os.getenv("BRIGHTDATA_PRO_MODE", "true").lower() == "true"
         self.timeout = timeout
         self.session = None
-        self._stdio_context = None
+        self._transport_context = None
         self._available = False
+        self._session_init_task: Optional[asyncio.Task] = None
+        self._warm_service_enabled = os.getenv("BRIGHTDATA_MCP_WARM_SERVICE", "true").strip().lower() in {"1", "true", "yes", "on"}
+        self._hosted_mcp_url = self._resolve_hosted_mcp_url()
+        self._transport = "hosted_sse" if self._hosted_mcp_url else "stdio"
 
         # Check if MCP package is available
         try:
+            from fastmcp import Client as FastMCPClient
             from mcp import ClientSession, StdioServerParameters
             from mcp.client.stdio import stdio_client
+            from mcp.client.sse import sse_client
             self._mcp_available = True
         except ImportError:
             self._mcp_available = False
             logger.warning("⚠️ mcp package not installed")
 
-        logger.info(f"🌐 BrightDataMCPClient initialized (timeout: {timeout}s, mcp_available: {self._mcp_available})")
+        logger.info(
+            "🌐 BrightDataMCPClient initialized (timeout: %ss, transport=%s, mcp_available=%s)",
+            timeout,
+            self._transport,
+            self._mcp_available,
+        )
+
+    def _resolve_hosted_mcp_url(self) -> Optional[str]:
+        """Resolve the hosted Bright Data MCP SSE URL if enabled."""
+        hosted_url = str(os.getenv("BRIGHTDATA_MCP_HOSTED_URL") or "").strip()
+        if hosted_url:
+            return hosted_url
+
+        if os.getenv("BRIGHTDATA_MCP_USE_HOSTED", "").strip().lower() in {"0", "false", "no", "off"}:
+            return None
+
+        token = str(self.api_token or "").strip()
+        if not token:
+            return None
+
+        return f"https://mcp.brightdata.com/sse?token={quote(token, safe='')}"
 
     async def _ensure_session(self):
         """Initialize MCP session with timeout protection"""
@@ -361,60 +368,122 @@ class BrightDataMCPClient(BrightDataClient):
         if self.session:
             return
 
-        # Mark as unavailable permanently after first attempt
-        self._mcp_available = False
-
         try:
             logger.info(f"⏳ Initializing MCP session (timeout: {self.timeout}s)...")
 
-            # Use asyncio.wait_for to enforce timeout
-            await asyncio.wait_for(self._init_mcp_session(), timeout=self.timeout)
+            if self._session_init_task is None or self._session_init_task.done():
+                self._session_init_task = asyncio.create_task(self._init_mcp_session())
+
+            # Use asyncio.wait_for to enforce timeout, but shield the init task so
+            # warm-service mode can keep the MCP process starting in the background.
+            await asyncio.wait_for(asyncio.shield(self._session_init_task), timeout=self.timeout)
 
             self._available = True
             self._mcp_available = True  # Re-enable if successful
             logger.info("✅ MCP session initialized")
 
         except asyncio.TimeoutError:
-            logger.warning(f"⚠️ MCP initialization timed out after {self.timeout}s - will use HTTP fallback")
+            if self._warm_service_enabled:
+                logger.warning(f"⚠️ MCP initialization timed out after {self.timeout}s - warm service continues in background")
+            else:
+                logger.warning(f"⚠️ MCP initialization timed out after {self.timeout}s - will use HTTP fallback")
             self._available = False
-            self.session = None
+            if not self._warm_service_enabled:
+                self._mcp_available = False
+                self.session = None
         except Exception as e:
             logger.error(f"❌ MCP initialization failed: {e} - will use HTTP fallback")
             self._available = False
             self.session = None
+            self._mcp_available = False
+            self._session_init_task = None
+
+    async def prewarm(self, timeout: Optional[float] = None) -> Dict[str, Any]:
+        """Force MCP session initialization ahead of the first real search."""
+        if timeout is None:
+            timeout = self.timeout
+
+        if not self._mcp_available:
+            return {"status": "error", "error": "mcp_unavailable", "prewarmed": False, "timeout": timeout}
+
+        if self.session and self._available:
+            return {"status": "success", "prewarmed": True, "timeout": timeout}
+
+        original_timeout = self.timeout
+        self.timeout = float(timeout)
+        try:
+            await self._ensure_session()
+            return {
+                "status": "success" if self.session and self._available else ("warming" if self._warm_service_enabled else "error"),
+                "prewarmed": bool(self.session and self._available),
+                "timeout": timeout,
+                "warming": bool(self._warm_service_enabled and self._session_init_task and not self._session_init_task.done()),
+            }
+        finally:
+            self.timeout = original_timeout
 
     async def _init_mcp_session(self):
         """Actual MCP initialization (separated for timeout)"""
+        from fastmcp import Client as FastMCPClient
         from mcp import ClientSession, StdioServerParameters
         from mcp.client.stdio import stdio_client
+        from mcp.client.sse import sse_client
+
+        if self._hosted_mcp_url:
+            logger.info(
+                "🌐 Initializing hosted BrightData MCP session via FastMCP: %s",
+                _redact_token_in_url(self._hosted_mcp_url),
+            )
+            self._transport_context = FastMCPClient(self._hosted_mcp_url, timeout=self.timeout)
+            self.session = await self._transport_context.__aenter__()
+            return
+
+        server_command = os.getenv("BRIGHTDATA_MCP_SERVER_COMMAND", "node")
+        server_path = os.getenv("BRIGHTDATA_MCP_SERVER_PATH")
+        if not server_path:
+          server_path = str(
+              Path(__file__).resolve().parent.parent
+              / "mcp-servers"
+              / "src"
+              / "mcp-servers"
+              / "brightdata-server.js"
+          )
 
         server_params = StdioServerParameters(
-            command="npx",
-            args=["-y", "@brightdata/mcp"],
+            command=server_command,
+            args=[server_path] if server_command != "npx" else ["-y", os.getenv("BRIGHTDATA_MCP_SERVER_PACKAGE", "@brightdata/mcp")],
             env={
-                "API_TOKEN": self.api_token or "",
-                "PRO_MODE": "true" if self.pro_mode else "false"
+                "BRIGHTDATA_API_TOKEN": self.api_token or "",
+                "BRIGHTDATA_TOKEN": self.api_token or "",
+                "BRIGHTDATA_ZONE": os.getenv("BRIGHTDATA_ZONE", ""),
+                "BRIGHTDATA_API_URL": os.getenv("BRIGHTDATA_API_URL", "https://api.brightdata.com"),
+                "PRO_MODE": "true" if self.pro_mode else "false",
             }
         )
 
-        self._stdio_context = stdio_client(server_params)
-        stdio, write = await self._stdio_context.__aenter__()
+        self._transport_context = stdio_client(server_params)
+        stdio, write = await self._transport_context.__aenter__()
 
         self.session = ClientSession(stdio, write)
         await self.session.initialize()
 
     async def close(self):
         """Close MCP session"""
-        if self._stdio_context:
+        if getattr(self, "_pipeline_shared_client", False):
+            logger.info("ℹ️ Shared pipeline MCP client close skipped (warm service mode)")
+            return
+        if self._transport_context:
             try:
-                await self._stdio_context.__aexit__(None, None, None)
+                await self._transport_context.__aexit__(None, None, None)
                 logger.info("✅ MCP session closed")
             except Exception as e:
                 logger.error(f"❌ Error closing MCP session: {e}")
             finally:
                 self.session = None
-                self._stdio_context = None
+                self._transport_context = None
                 self._available = False
+        if self._session_init_task and not self._session_init_task.done():
+            self._session_init_task.cancel()
 
     async def _call_tool(self, tool_name: str, arguments: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Call MCP tool, return None if unavailable"""
@@ -448,16 +517,24 @@ class BrightDataMCPClient(BrightDataClient):
         self,
         query: str,
         engine: str = "google",
+        country: str = "us",
+        num_results: int = 10,
         cursor: Optional[str] = None
     ) -> Dict[str, Any]:
         """Search via MCP, return error if unavailable (caller can use HTTP fallback)"""
         logger.info(f"🔍 MCP search: {query}")
 
-        arguments = {"query": query, "engine": engine}
+        arguments: Dict[str, Any] = {"query": query, "engine": engine}
+        if self._transport == "hosted_sse":
+            if country:
+                arguments["geo_location"] = country
+        else:
+            arguments["country"] = country
+            arguments["num_results"] = num_results
         if cursor:
             arguments["cursor"] = cursor
 
-        result = await self._call_tool("mcp__brightData__search_engine", arguments)
+        result = await self._call_tool("search_engine", arguments)
 
         if result is None or result.get("status") == "error":
             return {
@@ -468,11 +545,22 @@ class BrightDataMCPClient(BrightDataClient):
                 "use_http_fallback": True
             }
 
+        normalized_results = list(result.get("results") or [])
+        if not normalized_results and isinstance(result.get("organic"), list):
+            for item in result.get("organic", []):
+                normalized_results.append(
+                    {
+                        "title": item.get("title"),
+                        "url": item.get("link") or item.get("url"),
+                        "snippet": item.get("description") or item.get("snippet"),
+                    }
+                )
+
         return {
             "status": "success",
             "engine": engine,
             "query": query,
-            "results": result.get("results", []),
+            "results": normalized_results,
             "cursor": result.get("cursor"),
             "timestamp": datetime.now().isoformat(),
             "metadata": {"source": "mcp_client", "pro_mode": self.pro_mode}
@@ -482,7 +570,7 @@ class BrightDataMCPClient(BrightDataClient):
         """Scrape via MCP, return error if unavailable (caller can use HTTP fallback)"""
         logger.info(f"📄 MCP scrape: {url}")
 
-        result = await self._call_tool("mcp__brightData__scrape_as_markdown", {"url": url})
+        result = await self._call_tool("scrape_as_markdown", {"url": url})
 
         if result is None or result.get("status") == "error":
             return {
@@ -513,7 +601,7 @@ class BrightDataMCPClient(BrightDataClient):
 
         logger.info(f"📦 MCP batch scrape: {len(urls)} URLs")
 
-        result = await self._call_tool("mcp__brightData__scrape_batch", {"urls": urls})
+        result = await self._call_tool("scrape_batch", {"urls": urls})
 
         if result is None or result.get("status") == "error":
             return {
@@ -590,10 +678,12 @@ class BrightDataClientWithFallback(BrightDataClient):
         self,
         query: str,
         engine: str = "google",
+        country: str = "us",
+        num_results: int = 10,
         cursor: Optional[str] = None
     ) -> Dict[str, Any]:
         """Search with MCP + HTTP fallback"""
-        return await self._try_with_fallback("search_engine", query, engine, cursor)
+        return await self._try_with_fallback("search_engine", query, engine, country, num_results, cursor)
 
     async def scrape_as_markdown(self, url: str) -> Dict[str, Any]:
         """Scrape with MCP + HTTP fallback"""
@@ -617,7 +707,14 @@ class BrightDataClientWithFallback(BrightDataClient):
 
     async def close(self):
         """Cleanup MCP session if open"""
+        if getattr(self, "_pipeline_shared_client", False):
+            logger.info("ℹ️ Shared pipeline MCP client close skipped (warm service mode)")
+            return
         await self.mcp_client.close()
+
+    async def prewarm(self, timeout: Optional[float] = None) -> Dict[str, Any]:
+        """Prewarm the underlying MCP session before the first real tool call."""
+        return await self.mcp_client.prewarm(timeout=timeout)
 
 
 # =============================================================================

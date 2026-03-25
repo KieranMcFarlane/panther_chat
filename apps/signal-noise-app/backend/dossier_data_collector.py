@@ -849,7 +849,19 @@ class DossierDataCollector:
 
         for idx, candidate_url in enumerate(attempt_urls):
             selected_url = candidate_url
+            logger.warning(
+                "🚦 BrightData boundary: official_site_attempt:start (%s) idx=%s url=%s",
+                entity_name,
+                idx,
+                candidate_url,
+            )
             scrape_result = await self.brightdata_client.scrape_as_markdown(candidate_url)
+            logger.warning(
+                "🚦 BrightData boundary: official_site_attempt:complete (%s) idx=%s url=%s",
+                entity_name,
+                idx,
+                candidate_url,
+            )
             if not isinstance(scrape_result, dict):
                 last_result = {"status": "error", "error": "Invalid scrape payload"}
                 continue
@@ -1488,35 +1500,64 @@ class DossierDataCollector:
             return None
 
     async def _connect_brightdata(self):
-        """Initialize BrightData SDK client"""
+        """Initialize the pipeline BrightData client (prefers MCP when enabled)."""
         if self._brightdata_available:
             return True
 
         try:
-            from backend.brightdata_sdk_client import BrightDataSDKClient
+            logger.warning("🚦 BrightData boundary: connect:start")
+            from backend.brightdata_client_factory import (
+                create_pipeline_brightdata_client,
+                prewarm_pipeline_brightdata_client,
+            )
 
-            self.brightdata_client = BrightDataSDKClient()
+            self.brightdata_client = create_pipeline_brightdata_client()
+            logger.warning("🚦 BrightData boundary: connect:client_created")
+            warmup_timeout = self._parse_positive_float_env(
+                os.getenv("BRIGHTDATA_MCP_WARMUP_TIMEOUT_SECONDS", "60")
+            ) or 60.0
+            warm_service_enabled = self._parse_bool_env(
+                os.getenv("BRIGHTDATA_MCP_WARM_SERVICE", "true"),
+                default=True,
+            )
+            logger.warning(
+                "🚦 BrightData boundary: connect:prewarm:start (warm_service_enabled=%s, timeout=%s)",
+                warm_service_enabled,
+                warmup_timeout,
+            )
+            await prewarm_pipeline_brightdata_client(
+                self.brightdata_client,
+                timeout=warmup_timeout,
+                background=warm_service_enabled,
+            )
+            logger.warning("🚦 BrightData boundary: connect:prewarm:complete")
+            if warm_service_enabled:
+                self._brightdata_available = True
+                logger.info("✅ BrightData pipeline client warm-service started")
+                return True
 
-            # Test connection with a simple search
+            # Test connection with a simple search when warm service mode is disabled
+            logger.warning("🚦 BrightData boundary: connect:test_search:start")
             test_result = await self.brightdata_client.search_engine(
                 query="test",
                 engine="google",
                 num_results=1
             )
+            logger.warning("🚦 BrightData boundary: connect:test_search:complete")
 
             if test_result.get('status') == 'success':
                 self._brightdata_available = True
-                logger.info("✅ BrightData SDK connected")
+                logger.info("✅ BrightData pipeline client connected")
                 return True
-            else:
-                logger.warning("⚠️ BrightData SDK test failed")
-                return False
+
+            logger.warning("⚠️ BrightData pipeline client test failed")
+            return False
 
         except ImportError:
-            logger.warning("⚠️ brightdata_sdk_client not installed - web scraping disabled")
+            logger.warning("⚠️ BrightData client factory unavailable - web scraping disabled")
             return False
         except Exception as e:
-            logger.error(f"❌ BrightData SDK connection failed: {e}")
+            logger.error(f"❌ BrightData pipeline client connection failed: {e}")
             return False
 
     async def _get_scraped_content_enhanced(
@@ -1784,6 +1825,7 @@ class DossierDataCollector:
         Scrape official website for entity information.
         """
         try:
+            logger.warning("🚦 BrightData boundary: official_site_scrape:start (%s)", entity_name)
             official_url = (
                 self._get_preferred_official_site_url(entity_name)
                 or self._get_cached_official_site_url(entity_name)
@@ -1793,11 +1835,13 @@ class DossierDataCollector:
                 official_url = ""
 
             if not official_url:
+                logger.warning("🚦 BrightData boundary: official_site_search:start (%s)", entity_name)
                 search_results = await self.brightdata_client.search_engine(
                     query=f'"{entity_name}" official website',
                     engine="google",
                     num_results=8,
                 )
+                logger.warning("🚦 BrightData boundary: official_site_search:complete (%s)", entity_name)
                 if search_results.get("status") == "success":
                     results = search_results.get("results", [])
                     if isinstance(results, list) and results:
@@ -1809,11 +1853,13 @@ class DossierDataCollector:
                 return {}
 
             logger.info(f"🏠 Scraping official site: {official_url}")
+            logger.warning("🚦 BrightData boundary: official_site_scrape:start (%s) url=%s", entity_name, official_url)
 
             scraped_url, scrape_result, _content_source = await self._scrape_official_url_with_fallback(
                 entity_name,
                 official_url,
             )
+            logger.warning("🚦 BrightData boundary: official_site_scrape:complete (%s) url=%s", entity_name, scraped_url or official_url)
             if scrape_result.get('status') != 'success':
                 return {}
 

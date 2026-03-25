@@ -508,11 +508,11 @@ class ClaudeClient:
         )
         self.chutes_json_length_retry_enabled = self._parse_bool_env(
             os.getenv("CHUTES_JSON_LENGTH_RETRY_ENABLED"),
-            default=False,
+            default=True,
         )
         self.chutes_json_empty_retry_enabled = self._parse_bool_env(
             os.getenv("CHUTES_JSON_EMPTY_RETRY_ENABLED"),
-            default=False,
+            default=True,
         )
         self.chutes_json_response_format_enabled = self._parse_bool_env(
             os.getenv("CHUTES_JSON_RESPONSE_FORMAT_ENABLED"),

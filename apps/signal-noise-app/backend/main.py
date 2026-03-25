@@ -924,6 +924,7 @@ async def generate_dossier(request: DossierRequest):
             claude = runtime_client if runtime_client is not None else ClaudeClient()
             runtime_client = claude
             generator = UniversalDossierGenerator(claude)
+            logger.warning("🚦 Pipeline boundary: dossier_generation:start")
             await emit_dossier_substep("collect_entity_data", "running")
 
             # Generate dossier
@@ -935,6 +936,7 @@ async def generate_dossier(request: DossierRequest):
                 progress_callback=emit_dossier_substep,
                 run_objective=request.run_objective,
             )
+            logger.warning("🚦 Pipeline boundary: dossier_generation:complete")
             await emit_dossier_substep(
                 "collect_entity_data",
                 "completed",
@@ -1052,6 +1054,7 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
     consistent with the rest of the system. The remaining phases are then executed in-process.
     """
     try:
+        logger.warning("🚦 Pipeline boundary: pipeline_execute:start")
         from datetime import datetime
         from backend.claude_client import ClaudeClient
         from backend.dashboard_scorer import DashboardScorer
@@ -1120,7 +1123,9 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             except Exception as phase_error:
                 logger.warning(f"⚠️ Failed to emit phase update for {request.entity_id}/{phase}: {phase_error}")
 
+        logger.warning("🚦 Pipeline boundary: dossier_phase_runtime_init:start")
         phase0_runtime = build_inference_runtime_metadata(ClaudeClient())
+        logger.warning("🚦 Pipeline boundary: dossier_phase_runtime_init:complete")
         await emit_phase_update(
             "dossier_generation",
             build_dossier_running_phase_metadata(
@@ -1146,6 +1151,7 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
         callback_token = _pipeline_phase_callback_ctx.set(emit_phase_update)
         try:
             try:
+                logger.warning("🚦 Pipeline boundary: dossier_generation_call:start")
                 if dossier_timeout_seconds > 0:
                     dossier_response = await asyncio.wait_for(
                         generate_dossier(dossier_generation_request),
@@ -1153,6 +1159,8 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
                     )
                 else:
                     dossier_response = await generate_dossier(dossier_generation_request)
+                logger.warning("🚦 Pipeline boundary: dossier_generation_call:complete")
+                logger.warning("🚦 Pipeline boundary: dossier_response_received")
             except asyncio.TimeoutError:
                 logger.error(
                     "⏱️ Dossier generation timed out after %.2fs for entity %s",
@@ -1220,7 +1228,9 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
         finally:
             _pipeline_phase_callback_ctx.reset(callback_token)
 
+        logger.warning("🚦 Pipeline boundary: dossier_post_runtime_init:start")
         phase0_runtime = build_inference_runtime_metadata(ClaudeClient())
+        logger.warning("🚦 Pipeline boundary: dossier_post_runtime_init:complete")
         await emit_phase_update(
             "dossier_generation",
             {
@@ -1273,9 +1283,12 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
 
         active_graphiti_service = graphiti_service
         if active_graphiti_service is None:
+            logger.warning("🚦 Pipeline boundary: graphiti_initialize:start")
             active_graphiti_service = GraphitiService()
             await active_graphiti_service.initialize()
+            logger.warning("🚦 Pipeline boundary: graphiti_initialize:complete")
 
+        logger.warning("🚦 Pipeline boundary: discovery_engine_setup:start")
         discovery_engine, discovery_engine_name = create_discovery_engine(
             claude_client=claude,
             brightdata_client=brightdata,
@@ -1283,6 +1296,7 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             falkordb_client=getattr(active_graphiti_service, "falkordb_client", None),
         )
         logger.info("Using discovery engine in API pipeline: %s", discovery_engine_name)
+        logger.warning("🚦 Pipeline boundary: discovery_engine_setup:complete")
 
         orchestrator = PipelineOrchestrator(
             dossier_generator=UniversalDossierGenerator(claude),
@@ -1292,6 +1306,7 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             dashboard_scorer=DashboardScorer(),
         )
 
+        logger.warning("🚦 Pipeline boundary: orchestrator_run:start")
         result = await orchestrator.run_entity_pipeline(
             entity_id=request.entity_id,
             entity_name=request.entity_name,
@@ -1301,6 +1316,7 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             initial_dossier=dossier_response.dossier_data,
             phase_callback=emit_phase_update,
         )
+        logger.warning("🚦 Pipeline boundary: orchestrator_run:complete")
 
         return EntityPipelineResponse(**result)
 

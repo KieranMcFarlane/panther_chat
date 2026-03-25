@@ -2999,91 +2999,56 @@ Hard requirements:
         if max_tokens_override is not None and max_tokens_override > 0:
             max_tokens = max_tokens_override
 
-        # Model cascade: Try Haiku first (80% of cases)
-        rollout = random.random()
-
-        if rollout < 0.80:
-            # Try Haiku first (80%)
-            model = "haiku"
-            logger.info(f"🎯 Using Haiku for {entity_name} ({tier} tier)")
-        elif rollout < 0.95:
-            # Try Sonnet (15%)
-            model = "sonnet"
-            logger.info(f"🎯 Using Sonnet for {entity_name} ({tier} tier)")
-        else:
-            # Use Opus (5%)
-            model = "opus"
-            logger.info(f"🎯 Using Opus for {entity_name} ({tier} tier)")
-
         try:
-            # Generate with selected model
+            # Generate with the dedicated JSON route so dossier synthesis stays stable.
+            logger.warning(
+                "🚦 Dossier boundary: model_attempt:start (%s) model=json max_tokens=%s",
+                entity_name,
+                max_tokens,
+            )
             response = await self._query_model_with_timeout(
                 prompt=prompt,
-                model=model,
-                max_tokens=max_tokens
+                model="json",
+                max_tokens=max_tokens,
+                json_mode=True,
+            )
+            logger.warning(
+                "🚦 Dossier boundary: model_attempt:complete (%s) model=json",
+                entity_name,
             )
 
-            content_text = response.get("content", "")
-
-            # Parse JSON response
-            json_match = re.search(r'\{[\s\S]*\}', content_text)
-            if json_match:
-                dossier = json.loads(json_match.group(0))
-
-                # Validate required structure
-                if self._validate_dossier_structure(dossier):
-                    logger.info(f"✅ Generated {entity_name} dossier with {model}")
-                    return dossier
-                else:
-                    logger.warning(f"⚠️ Invalid dossier structure from {model}, retrying with Sonnet")
-
+            dossier = self._extract_dossier_from_response(response)
+            if self._validate_dossier_structure(dossier):
+                logger.info(f"✅ Generated {entity_name} dossier with JSON route")
+                return dossier
+            logger.warning("⚠️ Invalid dossier structure from JSON route for %s", entity_name)
         except Exception as e:
-            logger.warning(f"⚠️ Error generating with {model}: {e}")
+            logger.warning(f"⚠️ Error generating JSON dossier for {entity_name}: {e}")
             if not isinstance(e, asyncio.TimeoutError):
                 logger.debug("Model generation failed with non-timeout error for %s", entity_name, exc_info=e)
 
-        # Fallback to Sonnet if primary model failed
-        if model != "sonnet":
-            logger.info(f"🔄 Falling back to Sonnet for {entity_name}")
-            try:
-                response = await self._query_model_with_timeout(
-                    prompt=prompt,
-                    model="sonnet",
-                    max_tokens=max_tokens
-                )
-                content_text = response.get("content", "")
-                json_match = re.search(r'\{[\s\S]*\}', content_text)
-                if json_match:
-                    dossier = json.loads(json_match.group(0))
-                    if self._validate_dossier_structure(dossier):
-                        logger.info(f"✅ Generated {entity_name} dossier with Sonnet (fallback)")
-                        return dossier
-            except Exception as e:
-                logger.error(f"❌ Sonnet fallback also failed: {e}")
-
-        # Final fallback to Opus if needed
-        if model != "opus":
-            logger.info(f"🔄 Final fallback to Opus for {entity_name}")
-            try:
-                response = await self._query_model_with_timeout(
-                    prompt=prompt,
-                    model="opus",
-                    max_tokens=max_tokens
-                )
-                content_text = response.get("content", "")
-                json_match = re.search(r'\{[\s\S]*\}', content_text)
-                if json_match:
-                    dossier = json.loads(json_match.group(0))
-                    logger.info(f"✅ Generated {entity_name} dossier with Opus (final fallback)")
-                    return dossier
-            except Exception as e:
-                logger.error(f"❌ All models failed for {entity_name}: {e}")
-
         # If all else fails, return minimal valid dossier
-        logger.error(f"❌ Complete generation failure for {entity_name}, returning minimal dossier")
+        logger.error(f"❌ JSON dossier generation failure for {entity_name}, returning minimal dossier")
         return self._create_minimal_dossier(entity_name)
 
-    async def _query_model_with_timeout(self, prompt: str, model: str, max_tokens: int) -> Dict[str, Any]:
+    def _extract_dossier_from_response(self, response: Dict[str, Any]) -> dict:
+        structured_output = response.get("structured_output")
+        if isinstance(structured_output, dict):
+            return structured_output
+
+        content_text = str(response.get("content", "") or "")
+        json_match = re.search(r"\{[\s\S]*\}", content_text)
+        if json_match:
+            return json.loads(json_match.group(0))
+        return {}
+
+    async def _query_model_with_timeout(
+        self,
+        prompt: str,
+        model: str,
+        max_tokens: int,
+        json_mode: bool = False,
+    ) -> Dict[str, Any]:
         """
         Query the model with an optional timeout to avoid hangs in phase 0.
         """
@@ -3093,6 +3058,7 @@ Hard requirements:
                     prompt=prompt,
                     model=model,
                     max_tokens=max_tokens,
+                    json_mode=json_mode,
                 ),
                 timeout=self.model_query_timeout_seconds,
             )
@@ -3101,6 +3067,7 @@ Hard requirements:
             prompt=prompt,
             model=model,
             max_tokens=max_tokens,
+            json_mode=json_mode,
         )
 
     def _validate_dossier_structure(self, dossier: dict) -> bool:
@@ -3940,6 +3907,7 @@ Hard requirements:
             collection_timeout_seconds = int(os.getenv("DOSSIER_COLLECTION_TIMEOUT_SECONDS", "180"))
             try:
                 try:
+                    logger.warning("🚦 Dossier boundary: collect_all:start (%s)", entity_name)
                     dossier_data_obj = await asyncio.wait_for(
                         collector.collect_all(
                             entity_id,
@@ -3949,6 +3917,7 @@ Hard requirements:
                         ),
                         timeout=collection_timeout_seconds,
                     )
+                    logger.warning("🚦 Dossier boundary: collect_all:complete (%s)", entity_name)
                 except asyncio.TimeoutError:
                     logger.warning(
                         "⚠️ collect_entity_data timed out for %s after %ss; continuing with minimal data",
@@ -4070,14 +4039,17 @@ Hard requirements:
         interpolated_prompt = self._interpolate_prompt(prompt_template, entity_data)
 
         # Generate dossier using model cascade
+        logger.warning("🚦 Dossier boundary: generate_with_model_cascade:start (%s)", entity_name)
         dossier = await self._generate_with_model_cascade(
             prompt=interpolated_prompt,
             entity_name=entity_name,
             tier=tier,
             max_tokens_override=max_tokens_override,
         )
+        logger.warning("🚦 Dossier boundary: generate_with_model_cascade:complete (%s)", entity_name)
 
         # Extract hypotheses and signals
+        logger.warning("🚦 Dossier boundary: post_model_processing:start (%s)", entity_name)
         hypotheses = self._extract_hypotheses(dossier)
         signals = self._extract_signals(dossier)
 
@@ -4180,6 +4152,7 @@ Hard requirements:
                 generation_time_seconds=generation_time,
             )
 
+        logger.warning("🚦 Dossier boundary: post_model_processing:complete (%s)", entity_name)
         return dossier
 
 

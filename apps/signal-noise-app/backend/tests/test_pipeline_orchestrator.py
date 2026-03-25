@@ -315,6 +315,34 @@ async def test_pipeline_orchestrator_runs_phases_and_returns_artifacts():
 
 
 @pytest.mark.asyncio
+async def test_pipeline_orchestrator_emits_phase_boundary_logs(caplog):
+    caplog.set_level("WARNING")
+
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=FakeDossierGenerator(),
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=FakePersistenceCoordinator(),
+    )
+
+    await orchestrator.run_entity_pipeline(
+        entity_id="arsenal-fc",
+        entity_name="Arsenal FC",
+        entity_type="CLUB",
+        priority_score=90,
+    )
+
+    messages = [record.message for record in caplog.records]
+    assert any("Pipeline boundary: orchestrator:start" in message for message in messages)
+    assert any("Pipeline boundary: discovery:start" in message for message in messages)
+    assert any("Pipeline boundary: discovery:complete" in message for message in messages)
+    assert any("Pipeline boundary: dashboard_scoring:complete" in message for message in messages)
+    assert any("Pipeline boundary: orchestrator:complete" in message for message in messages)
+
+
+@pytest.mark.asyncio
 async def test_pipeline_orchestrator_hard_fails_acceptance_gate_when_dual_write_fails():
     orchestrator = PipelineOrchestrator(
         dossier_generator=FakeDossierGenerator(),

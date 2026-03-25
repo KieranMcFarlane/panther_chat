@@ -79,7 +79,7 @@ class FixedDossierFirstPipeline:
         self._agentic_client = None
         self._agentic_discovery = None
         from backend.claude_client import ClaudeClient
-        from backend.brightdata_sdk_client import BrightDataSDKClient
+        from backend.brightdata_client_factory import create_pipeline_brightdata_client
         from backend.dossier_generator import EntityDossierGenerator
         from backend.discovery_engine_factory import create_discovery_engine
         from backend.dashboard_scorer import DashboardScorer
@@ -89,7 +89,7 @@ class FixedDossierFirstPipeline:
 
         # Initialize clients
         self.claude = ClaudeClient()
-        self.brightdata = BrightDataSDKClient()
+        self.brightdata = create_pipeline_brightdata_client()
         requested_runtime_mode = str(os.getenv("PIPELINE_DISCOVERY_RUNTIME", "v2") or "v2").strip().lower()
         if requested_runtime_mode not in {"v2", "agentic_v3", "agentic_v4_batched", "dual_compare"}:
             requested_runtime_mode = "v2"
@@ -333,6 +333,24 @@ class FixedDossierFirstPipeline:
             except Exception as close_error:  # noqa: BLE001
                 logger.warning("⚠️ Failed to close agentic BrightData client: %s", close_error)
 
+    async def _prewarm_brightdata_client(self) -> None:
+        """Prewarm BrightData before discovery/collection starts."""
+        try:
+            from backend.brightdata_client_factory import prewarm_pipeline_brightdata_client
+        except ImportError:
+            from brightdata_client_factory import prewarm_pipeline_brightdata_client  # type: ignore
+
+        warmup_timeout = float(os.getenv("BRIGHTDATA_MCP_WARMUP_TIMEOUT_SECONDS", "60") or "60")
+        warm_service_enabled = _bool_env(os.getenv("BRIGHTDATA_MCP_WARM_SERVICE", "true"))
+        try:
+            await prewarm_pipeline_brightdata_client(
+                self.brightdata,
+                timeout=warmup_timeout,
+                background=warm_service_enabled,
+            )
+        except Exception as warmup_error:  # noqa: BLE001
+            logger.warning("⚠️ BrightData prewarm failed; continuing with fallback path: %s", warmup_error)
+
     async def run_pipeline(
         self,
         entity_id: str,
@@ -345,6 +363,7 @@ class FixedDossierFirstPipeline:
         """Run the complete 4-phase dossier-first pipeline"""
         self._last_discovery_error_class = None
         self._last_discovery_error_message = None
+        await self._prewarm_brightdata_client()
         if getattr(self, "_use_canonical_orchestrator", False) and getattr(self, "orchestrator", None) is not None:
             return await self._run_pipeline_via_orchestrator(
                 entity_id=entity_id,

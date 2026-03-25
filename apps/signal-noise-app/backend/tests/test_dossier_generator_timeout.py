@@ -4,7 +4,6 @@ Tests for timeout-safe dossier generation behavior in phase 0.
 """
 
 import asyncio
-import main
 import sys
 import types
 from pathlib import Path
@@ -14,6 +13,7 @@ import pytest
 backend_dir = Path(__file__).parent.parent
 sys.path.insert(0, str(backend_dir))
 
+import main
 from main import EntityPipelineRequest, run_entity_pipeline
 from dossier_generator import UniversalDossierGenerator
 from fastapi import HTTPException
@@ -28,6 +28,21 @@ class _SlowClaudeClient:
         await asyncio.sleep(0.1)
         return {
             "content": '{"metadata": {"entity_id":"icf", "generated_at":"2026-01-01T00:00:00+00:00", "confidence_overall": 0.5, "priority_signals": []}, "executive_summary": {"overall_assessment": {"digital_maturity": {"score": 1, "trend": "up", "key_strengths": [], "key_gaps": []}, "key_strengths": [], "key_gaps": []}, "quick_actions": [], "key_insights": []}}'
+        }
+
+
+class _JsonOnlyClaudeClient:
+    def __init__(self):
+        self.calls = []
+
+    async def query(self, **kwargs):
+        self.calls.append(kwargs)
+        if not kwargs.get("json_mode"):
+            raise AssertionError("Expected dossier synthesis to use json_mode=True")
+        if str(kwargs.get("model", "")).strip().lower() != "json":
+            raise AssertionError("Expected dossier synthesis to route through the json model alias")
+        return {
+            "content": '{"metadata": {"entity_id":"icf", "generated_at":"2026-01-01T00:00:00+00:00", "confidence_overall": 0.8, "priority_signals": []}, "executive_summary": {"overall_assessment": {"digital_maturity": {"score": 70, "trend": "stable", "key_strengths": [], "key_gaps": []}}, "quick_actions": [], "key_insights": []}}'
         }
 
 
@@ -47,6 +62,46 @@ async def test_generate_with_model_query_timeout_falls_back_to_minimal_dossier(m
 
     assert result["metadata"]["confidence_overall"] == 0
     assert result["executive_summary"]["overall_assessment"]["digital_maturity"]["score"] == 0
+
+
+@pytest.mark.asyncio
+async def test_generate_with_model_cascade_uses_json_model_route(monkeypatch):
+    monkeypatch.setenv("DOSSIER_MODEL_QUERY_TIMEOUT_SECONDS", "1")
+    generator = UniversalDossierGenerator(_JsonOnlyClaudeClient())
+
+    result = await generator._generate_with_model_cascade(
+        "Ignore context, return a valid JSON object.",
+        "International Canoe Federation",
+        "STANDARD",
+    )
+
+    assert result["metadata"]["confidence_overall"] == 0.8
+
+
+@pytest.mark.asyncio
+async def test_generate_universal_dossier_emits_post_model_assembly_logs(monkeypatch, caplog):
+    monkeypatch.setenv("DOSSIER_MODEL_QUERY_TIMEOUT_SECONDS", "1")
+    monkeypatch.setattr("dossier_generator.random.random", lambda: 0.5)
+    caplog.set_level("WARNING")
+
+    generator = UniversalDossierGenerator(_JsonOnlyClaudeClient())
+
+    await generator.generate_universal_dossier(
+        entity_id="icf",
+        entity_name="International Canoe Federation",
+        entity_type="FEDERATION",
+        priority_score=85,
+        entity_data={
+            "entity_id": "icf",
+            "entity_name": "International Canoe Federation",
+            "entity_type": "FEDERATION",
+            "sources_used": ["official_website"],
+        },
+    )
+
+    messages = [record.message for record in caplog.records]
+    assert any("Dossier boundary: post_model_processing:start" in message for message in messages)
+    assert any("Dossier boundary: post_model_processing:complete" in message for message in messages)
 
 
 @pytest.mark.asyncio

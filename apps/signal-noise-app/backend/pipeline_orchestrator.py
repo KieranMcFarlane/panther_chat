@@ -92,6 +92,7 @@ class PipelineOrchestrator:
         initial_dossier: Optional[Dict[str, Any]] = None,
         phase_callback: Optional[Callable[[str, Dict[str, Any]], Awaitable[None]]] = None,
     ) -> Dict[str, Any]:
+        logger.warning("🚦 Pipeline boundary: orchestrator:start")
         requested_objective = str(run_objective or "").strip().lower() or DEFAULT_PIPELINE_OBJECTIVE
         objective = normalize_run_objective(requested_objective, default=DEFAULT_PIPELINE_OBJECTIVE)
         phase_objectives = {
@@ -150,6 +151,7 @@ class PipelineOrchestrator:
         episodes: List[Dict[str, Any]] = []
 
         try:
+            logger.warning("🚦 Pipeline boundary: discovery:start")
             await self._emit_phase_update(phase_callback, "discovery", {"status": "running"})
             discovery_result = await self._run_discovery(
                 entity_id=entity_id,
@@ -169,6 +171,7 @@ class PipelineOrchestrator:
             }
             step_artifacts.extend(self._build_discovery_step_artifacts(discovery_result=discovery_result))
             await self._emit_phase_update(phase_callback, "discovery", phase_results["discovery"])
+            logger.warning("🚦 Pipeline boundary: discovery:complete")
         except Exception as exc:
             error_message = "Discovery timed out" if isinstance(exc, TimeoutError) else str(exc)
             logger.exception("Discovery phase failed for %s: %s", entity_id, error_message)
@@ -224,6 +227,7 @@ class PipelineOrchestrator:
                     await self._emit_phase_update(phase_callback, "temporal_persistence", phase_results["temporal_persistence"])
 
         await self._emit_phase_update(phase_callback, "dashboard_scoring", {"status": "running"})
+        logger.warning("🚦 Pipeline boundary: dashboard_scoring:start")
         scores = await self._run_dashboard_scoring(
             entity_id=entity_id,
             entity_name=entity_name,
@@ -248,6 +252,7 @@ class PipelineOrchestrator:
             "active_probability": scores.get("active_probability"),
             "procurement_maturity": scores.get("procurement_maturity"),
         }
+        logger.warning("🚦 Pipeline boundary: dashboard_scoring:complete")
         failure_taxonomy = self._build_failure_taxonomy(
             discovery_result=discovery_result,
             phase_results=phase_results,
@@ -396,6 +401,7 @@ class PipelineOrchestrator:
         )
 
         canonical_phase_details = canonicalize_phase_details_by_phase(phase_results)
+        logger.warning("🚦 Pipeline boundary: orchestrator:complete")
         return {
             "entity_id": entity_id,
             "entity_name": entity_name,

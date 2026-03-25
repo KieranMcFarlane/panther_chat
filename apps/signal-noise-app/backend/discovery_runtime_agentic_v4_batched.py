@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import re
 import time
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -87,6 +88,7 @@ class DiscoveryResultAgenticV4Batched:
     soft_skip_events: List[Dict[str, Any]] = field(default_factory=list)
     kimi_batch_outputs: List[Dict[str, Any]] = field(default_factory=list)
     deepseek_audits: List[Dict[str, Any]] = field(default_factory=list)
+    planner_parse_failure_events: List[Dict[str, Any]] = field(default_factory=list)
     batch_stop_reason: str = ""
     timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
@@ -129,6 +131,7 @@ class DiscoveryResultAgenticV4Batched:
             "soft_skip_events": self.soft_skip_events,
             "kimi_batch_outputs": self.kimi_batch_outputs,
             "deepseek_audits": self.deepseek_audits,
+            "planner_parse_failure_events": self.planner_parse_failure_events,
             "batch_stop_reason": self.batch_stop_reason,
             "timestamp": self.timestamp.isoformat(),
         }
@@ -248,8 +251,10 @@ class DiscoveryRuntimeAgenticV4Batched(DiscoveryRuntimeAgenticV3):
             "planner_decision_parse_fail_count": 0,
             "planner_decision_applied_count": 0,
             "planner_repair_count": 0,
+            "planner_repair_fallback_count": 0,
             "planner_branch_change_count": 0,
             "planner_block_reason_counts": {},
+            "planner_parse_failure_events": [],
             "credits_spent": 0,
             "credits_earned": 0,
             "off_entity_reject_count": 0,
@@ -434,6 +439,7 @@ class DiscoveryRuntimeAgenticV4Batched(DiscoveryRuntimeAgenticV3):
         planner_turn_count = int(self._metrics.get("planner_turn_count") or 0)
         planner_applied = int(self._metrics.get("planner_decision_applied_count") or 0)
         planner_parse_fail = int(self._metrics.get("planner_decision_parse_fail_count") or 0)
+        planner_repair_fallback_count = int(self._metrics.get("planner_repair_fallback_count") or 0)
         planner_applied_rate = round(planner_applied / max(1, planner_turn_count), 4)
         off_entity_reject_rate = round(
             float(self._metrics.get("off_entity_reject_count") or 0) / max(1, len(candidate_evaluations)),
@@ -455,11 +461,14 @@ class DiscoveryRuntimeAgenticV4Batched(DiscoveryRuntimeAgenticV3):
             schema_fail_count=int(self._metrics.get("schema_fail_count") or 0),
             artifact_consistency_issues=artifact_consistency_issues,
         )
+        if planner_repair_fallback_count > 0 and "planner_repair_fallback_used" not in controller_health_reasons:
+            controller_health_reasons.append("planner_repair_fallback_used")
         performance_summary = {
             "runtime_mode": "agentic_v4_batched",
             "run_mode": "agentic_v4_batched",
             "total_duration_ms": total_duration_ms,
             "stop_reason": batch_stop_reason,
+            "planner_parse_failure_events": list(state.get("planner_parse_failure_events") or []),
             "signals_validated_count": len(validated_signals),
             "signals_provisional_count": len(provisional_signals),
             "signals_candidate_events_count": len(candidate_evaluations),
@@ -468,6 +477,7 @@ class DiscoveryRuntimeAgenticV4Batched(DiscoveryRuntimeAgenticV3):
             "planner_decision_applied_count": planner_applied,
             "planner_decision_applied_rate": planner_applied_rate,
             "planner_repair_count": int(self._metrics.get("planner_repair_count") or 0),
+            "planner_repair_fallback_count": planner_repair_fallback_count,
             "planner_branch_change_count": int(self._metrics.get("planner_branch_change_count") or 0),
             "planner_block_reason_counts": dict(self._metrics.get("planner_block_reason_counts") or {}),
             "planner_llm_attempt_history": list(self._metrics.get("planner_llm_attempt_history") or []),
@@ -531,6 +541,7 @@ class DiscoveryRuntimeAgenticV4Batched(DiscoveryRuntimeAgenticV3):
             candidate_events_summary=candidate_summary,
             lane_failures=state["lane_failures"],
             controller_health_reasons=controller_health_reasons,
+            planner_parse_failure_events=list(state.get("planner_parse_failure_events") or []),
             turn_trace=list(state["turn_trace"]),
             planner_decisions=list(state["planner_decisions"]),
             executed_actions=list(state["executed_actions"]),
@@ -611,7 +622,7 @@ class DiscoveryRuntimeAgenticV4Batched(DiscoveryRuntimeAgenticV3):
             f"Failed branches: {json.dumps(failed_branches, separators=(',', ':'))}\n"
             f"Still missing: {json.dumps(missing_signals, separators=(',', ':'))}\n"
             f"Evidence pack: {json.dumps(evidence_pack.get('packed_items') or [], separators=(',', ':'))}\n"
-            "Return only JSON with next_batch_plan, stop_or_continue, optional missing_signals, and optional override_soft_skips. "
+            "Return only JSON with next_batch_plan and stop_or_continue. Optional missing_signals and override_soft_skips are allowed. "
             "Keep actions concise and prioritize procurement need, future-RFP timing, leadership, or digital/commercial change signal."
         )
         response: Dict[str, Any] = {}
@@ -636,12 +647,53 @@ class DiscoveryRuntimeAgenticV4Batched(DiscoveryRuntimeAgenticV3):
         normalized = self._normalize_batch_plan_payload(payload=payload, state=state)
         if normalized:
             return normalized
-        self._metrics["planner_decision_parse_fail_count"] += 1
-        self._metrics["schema_fail_count"] += 1
+        parse_failure_event = self._record_batch_plan_parse_failure(
+            state=state,
+            response=response,
+            payload=payload,
+        )
+        self._metrics["planner_decision_parse_fail_count"] = int(self._metrics.get("planner_decision_parse_fail_count") or 0) + 1
+        self._metrics["schema_fail_count"] = int(self._metrics.get("schema_fail_count") or 0) + 1
         recovery = self._deterministic_recovery_batch_plan(state=state, entity_name=entity_name)
-        self._metrics["planner_repair_count"] += 1
-        self._metrics["llm_last_status"] = "planner_repaired"
+        self._metrics["planner_repair_count"] = int(self._metrics.get("planner_repair_count") or 0) + 1
+        self._metrics["planner_repair_fallback_count"] = int(self._metrics.get("planner_repair_fallback_count") or 0) + 1
+        self._metrics["llm_last_status"] = "planner_repair_fallback"
+        recovery["planner_source"] = "deterministic_recovery"
+        recovery["planner_fallback_reason"] = str(parse_failure_event.get("failure_reason") or "planner_parse_failure")
         return recovery
+
+    def _coerce_batch_plan_payload(self, payload: Any) -> Any:
+        if isinstance(payload, str):
+            raw = payload.strip()
+            if not raw:
+                return None
+            candidates = [raw]
+            match = re.search(r"\{[\s\S]*\}", raw)
+            if match and match.group(0) not in candidates:
+                candidates.append(match.group(0))
+            for candidate in candidates:
+                try:
+                    parsed = json.loads(candidate)
+                except Exception:
+                    continue
+                coerced = self._coerce_batch_plan_payload(parsed)
+                if coerced is not None:
+                    return coerced
+            return None
+        if isinstance(payload, list) and len(payload) == 1 and isinstance(payload[0], dict):
+            return self._coerce_batch_plan_payload(payload[0])
+        if isinstance(payload, dict):
+            planner_keys = {"next_batch_plan", "stop_or_continue", "plan", "actions", "next_actions", "batch_plan"}
+            if planner_keys.intersection(payload.keys()):
+                return payload
+            for wrapper_key in ("content", "data", "payload", "result", "response", "output"):
+                nested = payload.get(wrapper_key)
+                if isinstance(nested, (dict, list, str)):
+                    coerced = self._coerce_batch_plan_payload(nested)
+                    if isinstance(coerced, dict) and planner_keys.intersection(coerced.keys()):
+                        return coerced
+            return payload
+        return payload
 
     def _normalize_batch_plan_payload(
         self,
@@ -649,10 +701,18 @@ class DiscoveryRuntimeAgenticV4Batched(DiscoveryRuntimeAgenticV3):
         payload: Any,
         state: Dict[str, Any],
     ) -> Optional[Dict[str, Any]]:
+        payload = self._coerce_batch_plan_payload(payload)
         if not isinstance(payload, dict):
             return None
         actions: List[Dict[str, Any]] = []
         raw_actions = payload.get("next_batch_plan")
+        if raw_actions is None:
+            for alias in ("plan", "actions", "next_actions", "batch_plan"):
+                if payload.get(alias) is not None:
+                    raw_actions = payload.get(alias)
+                    break
+        if isinstance(raw_actions, dict):
+            raw_actions = [raw_actions]
         if not isinstance(raw_actions, list):
             return None
         for item in raw_actions:
@@ -670,6 +730,87 @@ class DiscoveryRuntimeAgenticV4Batched(DiscoveryRuntimeAgenticV3):
             "stop_or_continue": stop_or_continue,
             "override_soft_skips": payload.get("override_soft_skips") if isinstance(payload.get("override_soft_skips"), list) else [],
         }
+
+    def _record_batch_plan_parse_failure(
+        self,
+        *,
+        state: Dict[str, Any],
+        response: Dict[str, Any],
+        payload: Any,
+    ) -> Dict[str, Any]:
+        failure_reason = self._classify_batch_plan_parse_failure(payload)
+        raw_content = str((response or {}).get("content") or "").strip()
+        raw_next_batch_plan = None
+        if isinstance(payload, dict):
+            raw_next_batch_plan = payload.get("next_batch_plan")
+            if raw_next_batch_plan is None:
+                for alias in ("plan", "actions", "next_actions", "batch_plan"):
+                    if payload.get(alias) is not None:
+                        raw_next_batch_plan = payload.get(alias)
+                        break
+        event = {
+            "failure_reason": failure_reason,
+            "raw_content": raw_content[:1200],
+            "raw_content_is_stringified_json": bool(raw_content and raw_content[:1] in {"{", "["}),
+            "payload_type": type(payload).__name__,
+            "payload_keys": sorted(list(payload.keys())) if isinstance(payload, dict) else [],
+            "raw_next_batch_plan_type": type(raw_next_batch_plan).__name__ if raw_next_batch_plan is not None else None,
+            "raw_next_batch_plan_item_key_sets": [
+                sorted(list(item.keys()))
+                for item in raw_next_batch_plan
+                if isinstance(raw_next_batch_plan, list) and isinstance(item, dict)
+            ][:5]
+            if isinstance(raw_next_batch_plan, list)
+            else [],
+            "response_keys": sorted(list(response.keys())) if isinstance(response, dict) else [],
+            "content_length": len(raw_content),
+        }
+        self._metrics.setdefault("planner_parse_failure_events", [])
+        parse_events = self._metrics["planner_parse_failure_events"]
+        if isinstance(parse_events, list):
+            parse_events.append(event)
+        state.setdefault("planner_parse_failure_events", []).append(event)
+        return event
+
+    def _classify_batch_plan_parse_failure(self, payload: Any) -> str:
+        if payload is None:
+            return "empty_payload"
+        if not isinstance(payload, dict):
+            return f"non_dict_payload:{type(payload).__name__}"
+        raw_actions = payload.get("next_batch_plan")
+        if raw_actions is None:
+            for alias in ("plan", "actions", "next_actions", "batch_plan"):
+                if payload.get(alias) is not None:
+                    raw_actions = payload.get(alias)
+                    break
+        if raw_actions is None:
+            for wrapper_key in ("content", "data", "payload", "result", "response", "output"):
+                if payload.get(wrapper_key) is not None:
+                    return f"wrapper_object_without_plan:{wrapper_key}"
+            return "missing_next_batch_plan"
+        if isinstance(raw_actions, dict):
+            raw_actions = [raw_actions]
+        if not isinstance(raw_actions, list):
+            return f"invalid_next_batch_plan_type:{type(raw_actions).__name__}"
+        if not raw_actions:
+            return "empty_next_batch_plan"
+        saw_malformed = False
+        saw_action_key = False
+        for item in raw_actions:
+            if isinstance(item, dict):
+                if any(key in item for key in ("action", "next_action", "type")):
+                    saw_action_key = True
+                    continue
+                saw_malformed = True
+                continue
+            saw_malformed = True
+        if saw_malformed:
+            return "invalid_batch_action_shape" if saw_action_key or any(
+                isinstance(item, dict) for item in raw_actions
+            ) else "invalid_next_batch_plan_item_shape"
+        if saw_action_key:
+            return "invalid_batch_action_shape"
+        return "unrecognized_batch_plan_shape"
 
     def _deterministic_recovery_batch_plan(self, *, state: Dict[str, Any], entity_name: str) -> Dict[str, Any]:
         pending_candidates = list(state.get("pending_candidates") or [])
@@ -1204,6 +1345,7 @@ class DiscoveryRuntimeAgenticV4Batched(DiscoveryRuntimeAgenticV3):
             )
         ranked.sort(
             key=lambda row: (
+                self._candidate_shell_penalty(str(row.get("url") or "")),
                 int(row.get("_memory_penalty") or 0),
                 0 if bool(row.get("same_domain")) else 1,
                 self._candidate_path_priority(str(row.get("url") or "")),
@@ -1214,6 +1356,22 @@ class DiscoveryRuntimeAgenticV4Batched(DiscoveryRuntimeAgenticV3):
             row.pop("_memory_penalty", None)
         return ranked, events
 
+    @staticmethod
+    def _candidate_shell_penalty(url: str) -> int:
+        parsed = urlparse(str(url or ""))
+        path = (parsed.path or "").strip("/").lower()
+        if not path:
+            return 4
+        segments = [segment for segment in path.split("/") if segment]
+        if len(segments) == 1:
+            if segments[0] in {"news", "videos", "home", "tickets", "fans", "club", "team"}:
+                return 4
+        if "travel-and-parking" in path:
+            return 5
+        if len(segments) <= 2 and segments[0] in {"fans", "tickets", "videos", "news"}:
+            return 3
+        return 0
+
     def _resolve_batch_action_url(
         self,
         *,
@@ -1223,6 +1381,11 @@ class DiscoveryRuntimeAgenticV4Batched(DiscoveryRuntimeAgenticV3):
     ) -> Optional[str]:
         target = self._normalize_url(action.get("target"))
         if target:
+            pending = list(state.get("pending_candidates") or [])
+            for index, candidate in enumerate(pending):
+                if self._normalize_url(candidate.get("url")) == target:
+                    state["pending_candidates"] = pending[:index] + pending[index + 1 :]
+                    break
             return target
         pending = list(state.get("pending_candidates") or [])
         ranked, events = self._apply_soft_skip_memory(
