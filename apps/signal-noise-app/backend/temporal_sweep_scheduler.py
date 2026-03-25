@@ -35,6 +35,10 @@ from dossier_question_extractor import DossierQuestionExtractor
 from hypothesis_driven_discovery import HypothesisDrivenDiscovery
 from claude_client import ClaudeClient
 from brightdata_sdk_client import BrightDataSDKClient
+try:
+    from backend.brightdata_client_factory import create_pipeline_brightdata_client
+except ImportError:  # pragma: no cover - direct backend path execution
+    from brightdata_client_factory import create_pipeline_brightdata_client  # type: ignore
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +57,7 @@ class TemporalSweepScheduler:
     def __init__(
         self,
         claude_client: ClaudeClient,
-        brightdata_client: BrightDataSDKClient,
+        brightdata_client: Optional[BrightDataSDKClient] = None,
         falkordb_client=None
     ):
         """
@@ -61,18 +65,18 @@ class TemporalSweepScheduler:
 
         Args:
             claude_client: Claude client for AI operations
-            brightdata_client: BrightData SDK client
+            brightdata_client: BrightData SDK client; if omitted, use the shared pipeline factory
             falkordb_client: Optional FalkorDB client
         """
         self.claude = claude_client
-        self.brightdata = brightdata_client
+        self.brightdata = brightdata_client or create_pipeline_brightdata_client()
         self.falkordb = falkordb_client
 
         # Initialize components
-        self.linkedin_profiler = LinkedInProfiler(brightdata_client)
+        self.linkedin_profiler = LinkedInProfiler(self.brightdata)
         self.dossier_generator = EntityDossierGenerator(claude_client, falkordb_client)
         self.question_extractor = DossierQuestionExtractor(claude_client)
-        self.discovery = HypothesisDrivenDiscovery(claude_client, brightdata_client)
+        self.discovery = HypothesisDrivenDiscovery(claude_client, self.brightdata)
 
         # Default sweep schedules (can be customized per entity)
         self.default_sweep_schedule = {

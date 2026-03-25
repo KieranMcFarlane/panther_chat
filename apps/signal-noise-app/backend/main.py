@@ -42,6 +42,10 @@ from pipeline_run_metadata import (
     normalize_phase_status,
     validate_runtime_imports,
 )
+try:
+    from backend.brightdata_client_factory import create_pipeline_brightdata_client
+except ImportError:
+    from brightdata_client_factory import create_pipeline_brightdata_client
 
 PipelinePhaseCallback = Callable[[str, Dict[str, Any]], Awaitable[None]]
 _pipeline_phase_callback_ctx: ContextVar[Optional[PipelinePhaseCallback]] = ContextVar(
@@ -1239,11 +1243,12 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
 
         claude = ClaudeClient()
         try:
-            from backend.brightdata_sdk_client import BrightDataSDKClient
-
-            brightdata = BrightDataSDKClient()
+            brightdata = create_pipeline_brightdata_client()
         except Exception as brightdata_error:  # noqa: BLE001
-            logger.warning("⚠️ BrightData SDK unavailable for pipeline run, using fallback client: %s", brightdata_error)
+            logger.warning(
+                "⚠️ BrightData pipeline client unavailable for pipeline run, using fallback client: %s",
+                brightdata_error,
+            )
 
             class _FallbackBrightDataClient:
                 async def scrape_as_markdown(self, _url: str):
