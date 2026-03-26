@@ -306,7 +306,7 @@ def parse_controller_action(payload: Any) -> Optional[Dict[str, Any]]:
     """Parse a strict controller action contract.
 
     Accepts either a dict payload or a JSON object string. Prose, unknown
-    actions, extra keys, and malformed field types are rejected deterministically.
+    actions, extra keys, and malformed field types are rejected.
     """
 
     if isinstance(payload, str):
@@ -432,7 +432,7 @@ class DiscoveryResultV2:
     entity_confidence: float = 0.0
     pipeline_confidence: float = 0.0
     parse_path: str = "discovery_v2_evidence_first"
-    llm_last_status: str = "heuristic_only"
+    llm_last_status: str = "evidence_only"
     candidate_evaluations: List[Dict[str, Any]] = field(default_factory=list)
     candidate_events_summary: Dict[str, Any] = field(default_factory=dict)
     lane_failures: Dict[str, Any] = field(default_factory=dict)
@@ -897,7 +897,7 @@ class DiscoveryRuntimeV2:
             if isinstance(loaded_candidate_evals, list):
                 candidate_evaluations = [item for item in loaded_candidate_evals if isinstance(item, dict)]
         validated_candidate_count_by_lane: Dict[str, int] = {}
-        llm_last_status = "heuristic_only"
+        llm_last_status = "evidence_only"
         parse_path = "discovery_v2_evidence_first"
 
         pass_a_validated = 0
@@ -1180,17 +1180,17 @@ class DiscoveryRuntimeV2:
             for hop in hop_timings
             if isinstance(hop, dict) and str(hop.get("parse_path") or "").strip() == "llm_json"
         )
-        heuristic_hop_count = sum(
+        non_llm_hop_count = sum(
             1
             for hop in hop_timings
             if isinstance(hop, dict)
             and (
                 str(hop.get("parse_path") or "").strip() == "discovery_v2_evidence_first"
-                or str(hop.get("llm_last_status") or "").strip().lower() == "heuristic_only"
+                or str(hop.get("llm_last_status") or "").strip().lower() == "evidence_only"
             )
         )
         agent_influence_ratio = round(
-            llm_json_hop_count / max(1, llm_json_hop_count + heuristic_hop_count),
+            llm_json_hop_count / max(1, llm_json_hop_count + non_llm_hop_count),
             3,
         )
         demotion_reason_counts = (
@@ -1278,7 +1278,7 @@ class DiscoveryRuntimeV2:
             "controller_health_reasons": controller_health_reasons,
             "acceptance_mode": acceptance_mode,
             "llm_json_hop_count": int(llm_json_hop_count),
-            "heuristic_hop_count": int(heuristic_hop_count),
+            "non_llm_hop_count": int(non_llm_hop_count),
             "agent_influence_ratio": float(agent_influence_ratio),
             "two_pass": {
                 "enabled": True,
@@ -1295,7 +1295,7 @@ class DiscoveryRuntimeV2:
             },
             "duration_seconds": elapsed,
             "route_diversification_order": DIVERSIFIED_FALLBACK_ORDER,
-            "hop_selector": "llm" if self.enable_llm_hop_selection else "deterministic",
+            "hop_selector": "llm" if self.enable_llm_hop_selection else "rule_based",
             "candidate_evaluations_count": len(candidate_evaluations),
             "validated_candidate_count_by_lane": validated_candidate_count_by_lane,
         }
@@ -1366,7 +1366,7 @@ class DiscoveryRuntimeV2:
             "language_ok": True,
             "pdf_text_quality_ok": True,
             "parse_path": "discovery_v2_evidence_first",
-            "llm_last_status": "heuristic_only",
+            "llm_last_status": "evidence_only",
             "evidence_type": "discovery",
             "duration_ms": 0,
             "candidate_evaluations": [],
@@ -1503,7 +1503,7 @@ class DiscoveryRuntimeV2:
                 strict=False,
             ):
                 # Agent-first: allow high-trust candidates to reach judge/evidence extraction
-                # before deterministic off-entity rejection.
+                # before off-entity rejection.
                 if language_ok and (entity_domain_match or source_tier in {"tier_1", "tier_2"}):
                     prefilter_soft_bypass = True
                     self._metrics["agent_first_prefilter_bypass_count"] += 1
@@ -1776,7 +1776,7 @@ class DiscoveryRuntimeV2:
             if llm_eval.get("llm_last_status"):
                 hop_record["llm_last_status"] = llm_eval["llm_last_status"]
             if llm_eval.get("decision") == "ACCEPT" and not accept_guard_passed:
-                # Hard block: fallback/invalid evidence cannot become ACCEPT.
+                # Hard block: invalid evidence cannot become ACCEPT.
                 self._metrics["fallback_accept_block_count"] += 1
             llm_decision = str(llm_eval.get("decision") or "NO_PROGRESS").strip().upper()
             positive_decision = llm_decision in {"ACCEPT", "WEAK_ACCEPT_CANDIDATE", "WEAK_ACCEPT"}
@@ -1801,8 +1801,8 @@ class DiscoveryRuntimeV2:
                     accept_guard_passed = False
                     accept_reject_reasons.append("llm_schema_invalid_demoted")
             if accept_guard_passed and not positive_decision:
-                # Deterministic promotion path:
-                # If strict evidence guard already passed on grounded tier-1/2 evidence,
+                # Strict promotion path:
+                # If the evidence guard already passed on grounded tier-1/2 evidence,
                 # promote NO_PROGRESS to provisional to avoid candidate-only deadlock.
                 can_promote = (
                     lane in {"official_site", "press_release", "careers", "trusted_news"}
@@ -1820,7 +1820,7 @@ class DiscoveryRuntimeV2:
                     llm_decision = "WEAK_ACCEPT_CANDIDATE"
                     llm_eval["decision"] = "WEAK_ACCEPT_CANDIDATE"
                     llm_eval["reason_code"] = str(
-                        llm_eval.get("reason_code") or "deterministic_provisional_promotion"
+                        llm_eval.get("reason_code") or "provisional_promotion"
                     )
                     llm_eval["confidence_delta_bucket"] = str(llm_eval.get("confidence_delta_bucket") or "UP_2")
                     positive_decision = True
@@ -1832,7 +1832,7 @@ class DiscoveryRuntimeV2:
             if accept_guard_passed and positive_decision and not provisional_promoted:
                 validation_state = "validated"
             elif provisional_promoted and accept_guard_passed:
-                # High-confidence deterministic path: when tier-1 evidence is fully grounded and
+                # High-confidence path: when tier-1 evidence is fully grounded and
                 # quality/composite are very high, treat as validated even if LLM returns NO_PROGRESS.
                 if (
                     source_tier == "tier_1"
@@ -1842,7 +1842,7 @@ class DiscoveryRuntimeV2:
                 ):
                     validation_state = "validated"
                     llm_eval["reason_code"] = str(
-                        llm_eval.get("reason_code") or "deterministic_high_confidence_validated"
+                        llm_eval.get("reason_code") or "high_confidence_validated"
                     )
                 else:
                     validation_state = "provisional"
@@ -2515,6 +2515,12 @@ class DiscoveryRuntimeV2:
                 text = str(query or "").strip()
                 if text:
                     query_pool.append(text)
+        if objective == "procurement_discovery" and lane == "rfp_procurement_tenders":
+            query_pool = [
+                f'"{entity_name}" RFP tender procurement',
+                f'"{entity_name}" procurement tender RFP',
+                f'"{entity_name}" tender procurement',
+            ] + query_pool
         query_pool.extend(base_queries)
         if official_host:
             if lane == "official_site":
@@ -2821,9 +2827,9 @@ class DiscoveryRuntimeV2:
                 tokens.append(keyword)
         if entity_name.lower() in lower:
             tokens.append(entity_name.lower())
-        deterministic_hits = self._extract_deterministic_signal_hits(content_norm)
-        if deterministic_hits:
-            tokens.extend(deterministic_hits)
+        signal_hits = self._extract_signal_hits(content_norm)
+        if signal_hits:
+            tokens.extend(signal_hits)
 
         lines = [line.strip() for line in content_norm.splitlines() if line.strip()]
         best_line = ""
@@ -2848,8 +2854,8 @@ class DiscoveryRuntimeV2:
         quality_score += min(0.35, _safe_word_count(content_norm) / 1500.0)
         if best_line:
             quality_score += 0.2
-        if deterministic_hits:
-            quality_score += min(0.18, len(deterministic_hits) * 0.04)
+        if signal_hits:
+            quality_score += min(0.18, len(signal_hits) * 0.04)
         quality_score = max(0.0, min(1.0, quality_score))
         statement = f"{entity_name}: {best_line}" if best_line else f"{entity_name} {lane} signal"
         return {
@@ -2859,11 +2865,11 @@ class DiscoveryRuntimeV2:
             "quality_score": quality_score,
             "statement": statement,
             "tokens": tokens,
-            "deterministic_hits": deterministic_hits,
+            "signal_hits": signal_hits,
         }
 
     @staticmethod
-    def _extract_deterministic_signal_hits(content: str) -> List[str]:
+    def _extract_signal_hits(content: str) -> List[str]:
         text = str(content or "").lower()
         if not text:
             return []
@@ -2961,8 +2967,8 @@ class DiscoveryRuntimeV2:
         if not self.enable_llm_eval:
             return {
                 "decision": "WEAK_ACCEPT_CANDIDATE",
-                "parse_path": "heuristic_only",
-                "llm_last_status": "heuristic_only",
+                "parse_path": "evidence_only",
+                "llm_last_status": "evidence_only",
             }
         evidence_snippet = " ".join(str(evidence.get("snippet") or "").split())[:140]
         content_item = self._truncate_word_boundary(str(evidence.get("content_item") or ""), max_chars=180)

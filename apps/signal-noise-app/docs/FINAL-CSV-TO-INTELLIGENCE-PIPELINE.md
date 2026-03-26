@@ -6,6 +6,38 @@
 
 ---
 
+## v5 MCP-First Discovery
+
+The v5 path keeps the dossier-first flow, but it changes the retrieval boundary:
+
+- the dossier is still the context builder
+- premium questions are still the query seed
+- BrightData MCP is the only external retrieval transport for discovery
+- DeepSeek remains the judge
+- validated results persist to Graphiti, FalkorDB, and Supabase
+
+For v5, the default smoke and pipeline behavior uses the **direct hosted BrightData MCP** endpoint.
+
+The canonical procurement sequence is:
+1. ingest entity
+2. build dossier context
+3. derive premium questions
+4. turn questions into BrightData MCP queries
+5. scrape evidence from BrightData MCP only
+6. judge with DeepSeek
+7. persist validated signals for the next pipeline stage
+
+The remembered proof pattern is the Major League Cricket procurement smoke:
+- direct BrightData MCP query
+- search hit returned
+- result scraped
+- DeepSeek confirmed the RFP signal
+
+The frozen method note lives here:
+- [V5 Direct Hosted BrightData MCP Procurement Method](./data/V5_DIRECT_HOSTED_MCP_PROCUREMENT_METHOD.md)
+
+---
+
 ## 1. Executive Summary
 
 The repository already contains most of the core capabilities needed for the full system:
