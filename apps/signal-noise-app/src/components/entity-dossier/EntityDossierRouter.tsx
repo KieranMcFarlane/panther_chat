@@ -6,6 +6,7 @@ import { LeagueDossier } from './LeagueDossier'
 import { GenericEntityDossier } from './GenericEntityDossier'
 import { EnhancedClubDossier } from './EnhancedClubDossier'
 import { EnhancedPersonDossier } from './EnhancedPersonDossier'
+import { FinalRalphClubDossier } from './FinalRalphClubDossier'
 
 interface EntityDossierRouterProps {
   entity: Entity
@@ -20,7 +21,16 @@ export function EntityDossierRouter({ entity, onEmailEntity, dossier }: EntityDo
 
   switch (entityType) {
     case 'Club':
-      return <EnhancedClubDossier key={`enhanced-${entity.id}-${dossier ? 'with-dossier' : 'no-dossier'}`} entity={entity} onEmailEntity={onEmailEntity} dossier={dossier} />
+      return dossier ? (
+        <FinalRalphClubDossier
+          key={`final-ralph-${entity.id}`}
+          entity={entity}
+          onEmailEntity={onEmailEntity}
+          dossier={dossier}
+        />
+      ) : (
+        <EnhancedClubDossier key={`enhanced-${entity.id}-no-dossier`} entity={entity} onEmailEntity={onEmailEntity} dossier={dossier} />
+      )
     case 'Person':
       return <EnhancedPersonDossier key={`enhanced-${entity.id}-${dossier ? 'with-dossier' : 'no-dossier'}`} entity={entity} onEmailEntity={onEmailEntity} dossier={dossier} />
     case 'Partner':

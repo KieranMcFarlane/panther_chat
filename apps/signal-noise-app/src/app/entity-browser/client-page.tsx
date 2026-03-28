@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { EntityCard } from "@/components/EntityCard"
-import { EmailComposeModal } from "@/components/email/EmailComposeModal"
+import { EntitySmokeJourney } from "@/components/entity-browser/EntitySmokeJourney"
 import {
   Database,
   Search,
@@ -85,8 +85,6 @@ export default function EntityBrowserClientPage() {
   const deferredSearchTerm = useDeferredValue(searchTerm)
   const [autocompleteLoading, setAutocompleteLoading] = useState(false)
   const [autocompleteEntities, setAutocompleteEntities] = useState<AutocompleteEntity[]>([])
-  const [showEmailModal, setShowEmailModal] = useState(false)
-  const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null)
   const [currentPage, setCurrentPage] = useState(initialPageFromUrl)
   const [gridWidth, setGridWidth] = useState(0)
   const gridContainerRef = useRef<HTMLDivElement | null>(null)
@@ -359,11 +357,6 @@ export default function EntityBrowserClientPage() {
     return () => observer.disconnect()
   }, [initialLoading, data?.entities?.length])
 
-  const handleEmailEntity = (entity: Entity) => {
-    setSelectedEntity(entity)
-    setShowEmailModal(true)
-  }
-
   const exportToJSON = () => {
     if (!data) return
 
@@ -444,7 +437,7 @@ export default function EntityBrowserClientPage() {
             </div>
           </div>
           <p className="text-muted-foreground">
-            Browse all entities in your graph intelligence store with their complete schemas
+            Primary workspace for persisted entity dossiers, question-driven research, and entity-first follow-up
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             <Button asChild variant="outline" size="sm">
@@ -458,6 +451,9 @@ export default function EntityBrowserClientPage() {
       </div>
 
       <div className="container mx-auto px-4 py-8">
+        <div className="mb-6">
+          <EntitySmokeJourney />
+        </div>
         <Card className="mb-6">
           <CardContent className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
@@ -694,7 +690,6 @@ export default function EntityBrowserClientPage() {
                         <EntityCard
                           key={`${entity.id}-${String(entity.neo4j_id ?? "")}`}
                           entity={entity}
-                          onEmailEntity={handleEmailEntity}
                         />
                       ))}
                     </div>
@@ -733,23 +728,6 @@ export default function EntityBrowserClientPage() {
         </div>
       </div>
 
-      {showEmailModal && selectedEntity && (
-        <EmailComposeModal
-          isOpen={showEmailModal}
-          onClose={() => {
-            setShowEmailModal(false)
-            setSelectedEntity(null)
-          }}
-          contact={{
-            id: selectedEntity.id.toString(),
-            name: selectedEntity.properties.name || 'Unknown',
-            email: formatEmail(selectedEntity.properties.email) || 'no-email@example.com',
-            role: selectedEntity.properties.title || 'Contact',
-            affiliation: selectedEntity.properties.company || selectedEntity.labels.join(', ') || 'Organization',
-            tags: selectedEntity.labels
-          }}
-        />
-      )}
     </div>
   )
 }

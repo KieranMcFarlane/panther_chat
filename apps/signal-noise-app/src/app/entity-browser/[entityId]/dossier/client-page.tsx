@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, FileText } from "lucide-react"
+import { ArrowLeft, CheckCircle2, Clock3, FileText, Info, Layers3 } from "lucide-react"
 
 import { DossierError } from "@/components/entity-dossier/DossierError"
 import { resolveEntityBrowserReturnUrl } from "@/lib/entity-browser-history"
@@ -62,6 +62,25 @@ export default function EntityDossierClientPage({
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [isContentTransitioning, setIsContentTransitioning] = useState(false)
   const [backHref, setBackHref] = useState(fromPage !== '1' ? `/entity-browser?page=${fromPage}` : '/entity-browser')
+  const dossierMetadata = dossier?.metadata || {}
+  const isPersistedDossier = Boolean(dossier)
+  const dossierConfidence = typeof dossierMetadata?.confidence_score === 'number'
+    ? `${Math.round(dossierMetadata.confidence_score * 100)}%`
+    : 'n/a'
+  const dossierFreshness = dossierMetadata?.information_freshness || 'N/A'
+  const nextReview = dossierMetadata?.next_review_date || 'Not scheduled'
+  const pipelineStatus = String(entity?.properties?.last_pipeline_status || dossierMetadata?.pipeline_status || '').trim()
+  const hasEntityPipelineState = Boolean(
+    entity?.properties?.last_pipeline_status ||
+      entity?.properties?.last_pipeline_run_at ||
+      entity?.properties?.dossier_autoqueue_request_count
+  )
+  const persistenceLabel = isPersistedDossier
+    ? 'Persisted dossier loaded'
+    : hasEntityPipelineState
+      ? 'Persisted entity state loaded'
+      : 'Dossier shell loaded'
+  const dossierReadout = pipelineStatus || (hasEntityPipelineState ? 'entity_state_loaded' : 'pending')
 
   useEffect(() => {
     const currentFrom = new URLSearchParams(window.location.search).get('from') || fromPage
@@ -283,6 +302,60 @@ export default function EntityDossierClientPage({
               </a>
             </Button>
           </div>
+
+          <Card className="mb-6 border border-slate-700 bg-slate-950/90 text-slate-50 shadow-lg">
+            <CardContent className="p-5">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-sm uppercase tracking-[0.18em] text-slate-400">
+                    <Layers3 className="h-4 w-4 text-sky-400" />
+                    Dossier persistence status
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-sm font-semibold text-emerald-300">
+                      {persistenceLabel}
+                    </span>
+                    <span className="rounded-full bg-sky-500/15 px-3 py-1 text-sm font-semibold text-sky-300">
+                      {dossierReadout}
+                    </span>
+                    <span className="rounded-full bg-violet-500/15 px-3 py-1 text-sm font-semibold text-violet-300">
+                      Confidence {dossierConfidence}
+                    </span>
+                  </div>
+                  <p className="max-w-3xl text-sm leading-6 text-slate-300">
+                    This page is reading the persisted dossier first, then layering the entity browser, question rail, and
+                    downstream enrichment state on top. The goal is to make the stored dossier obvious immediately.
+                  </p>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-3 lg:min-w-[360px]">
+                  <div className="rounded-xl border border-slate-700 bg-slate-900/80 p-3">
+                    <div className="flex items-center gap-2 text-xs uppercase tracking-[0.16em] text-slate-400">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
+                      Freshness
+                    </div>
+                    <div className="mt-2 text-base font-semibold text-slate-100">{dossierFreshness}</div>
+                  </div>
+                  <div className="rounded-xl border border-slate-700 bg-slate-900/80 p-3">
+                    <div className="flex items-center gap-2 text-xs uppercase tracking-[0.16em] text-slate-400">
+                      <Clock3 className="h-3.5 w-3.5 text-amber-400" />
+                      Next review
+                    </div>
+                    <div className="mt-2 text-base font-semibold text-slate-100">{nextReview}</div>
+                  </div>
+                  <div className="rounded-xl border border-slate-700 bg-slate-900/80 p-3">
+                    <div className="flex items-center gap-2 text-xs uppercase tracking-[0.16em] text-slate-400">
+                      <Info className="h-3.5 w-3.5 text-sky-400" />
+                      Source state
+                    </div>
+                    <div className="mt-2 text-base font-semibold text-slate-100">
+                      {pipelineStatus || 'No pipeline update'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {generationMessage && (
             <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
               <div className="flex items-center gap-2 text-blue-800">
