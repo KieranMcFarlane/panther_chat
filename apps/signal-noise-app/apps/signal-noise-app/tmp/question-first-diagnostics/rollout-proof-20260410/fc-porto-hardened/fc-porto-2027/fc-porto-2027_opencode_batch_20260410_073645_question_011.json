@@ -1,0 +1,144 @@
+{
+  "run_started_at": "2026-04-10T07:04:47.151Z",
+  "entity_name": "FC Porto",
+  "entity_id": "fc-porto-2027",
+  "entity_type": "SPORT_CLUB",
+  "preset": "fc-porto-2027-atomic-matrix",
+  "started_at": "2026-04-10T07:31:44.156Z",
+  "completed_at": "2026-04-10T07:36:45.398Z",
+  "duration_seconds": 301.242,
+  "question": {
+    "question_id": "q11_decision_owner",
+    "question_type": "decision_owner",
+    "question_text": "Who is the highest probability buyer at FC Porto given the current commercial and product context?",
+    "question": "Who is the highest probability buyer at FC Porto given the current commercial and product context?",
+    "query": "\"FC Porto\" commercial partnerships leadership",
+    "hop_budget": 8,
+    "source_priority": [
+      "wikipedia",
+      "official_site",
+      "linkedin_company_profile",
+      "linkedin_people_search",
+      "linkedin_person_profile",
+      "google_serp",
+      "news",
+      "linkedin_posts"
+    ],
+    "evidence_extension_budget": 2,
+    "evidence_extension_confidence_threshold": 0.65,
+    "question_timeout_ms": 300000,
+    "entity_name": "FC Porto",
+    "entity_id": "fc-porto-2027",
+    "entity_type": "SPORT_CLUB",
+    "preset": "fc-porto-2027-atomic-matrix",
+    "model_used": "zai-coding-plan/glm-5",
+    "session_id": "cli-11",
+    "agentic_plan": {
+      "source_priority": [
+        "wikipedia",
+        "official_site",
+        "linkedin_company_profile",
+        "linkedin_people_search",
+        "linkedin_person_profile",
+        "google_serp",
+        "news",
+        "linkedin_posts"
+      ],
+      "stop_rule": "continue for up to 8 hops within OpenCode steps budget"
+    },
+    "reasoning": {
+      "structured_output": {
+        "summary": "No deterministic answer was produced for this question.",
+        "context": "No deterministic answer was produced for this question.",
+        "notes": "No deterministic answer was produced for this question.",
+        "terminal_state": "no_signal",
+        "blocked_by": [],
+        "sources": []
+      },
+      "prompt_trace": {
+        "exit_code": 124,
+        "stdout_length": 1095263,
+        "stderr_length": 37,
+        "has_structured_output": false
+      },
+      "message_trace": [
+        {
+          "role": "assistant",
+          "completed": false,
+          "type": "cli-run",
+          "has_structured_output": false,
+          "part_count": 1
+        }
+      ],
+      "raw_execution_trace": {
+        "exit_code": 124,
+        "stdout_length": 1095263,
+        "stderr_length": 37,
+        "has_structured_output": false,
+        "stdout_excerpt": "89b21d90ffeuQBD7CEaf7Qv5N\",\"part\":{\"id\":\"prt_d76519075001iZZG8yhAzzvhJg\",\"sessionID\":\"ses_289b21d90ffeuQBD7CEaf7Qv5N\",\"messageID\":\"msg_d76517d57001iHKg7Su3Q4ebmX\",\"type\":\"step-start\",\"snapshot\":\"\"}}\n{\"type\":\"step_finish\",\"timestamp\":1775806550616,\"sessionID\":\"ses_289b21d90ffeuQBD7CEaf7Qv5N\",\"part\":{\"id\":\"prt_d7651907b0017E5YJNvQBBjQYE\",\"sessionID\":\"ses_289b21d90ffeuQBD7CEaf7Qv5N\",\"messageID\":\"msg_d76517d57001iHKg7Su3Q4ebmX\",\"type\":\"step-finish\",\"reason\":\"unknown\",\"snapshot\":\"\",\"cost\":0,\"tokens\":{\"input\":0,\"output\":0,\"reasoning\":0,\"cache\":{\"read\":0,\"write\":0}}}}\n{\"type\":\"step_start\",\"timestamp\":1775806557780,\"sessionID\":\"ses_289b21d90ffeuQBD7CEaf7Qv5N\",\"part\":{\"id\":\"prt_d7651ae45001Uo9O1aJkCwTZvX\",\"sessionID\":\"ses_289b21d90ffeuQBD7CEaf7Qv5N\",\"messageID\":\"msg_d765193830010LTxUbK3oMSFEJ\",\"type\":\"step-start\",\"snapshot\":\"\"}}\n{\"type\":\"step_finish\",\"timestamp\":1775806558051,\"sessionID\":\"ses_289b21d90ffeuQBD7CEaf7Qv5N\",\"part\":{\"id\":\"prt_d7651ae48001sOdLeY1uGvTm1f\",\"sessionID\":\"ses_289b21d90ffeuQBD7CEaf7Qv5N\",\"messageID\":\"msg_d765193830010LTxUbK3oMSFEJ\",\"type\":\"step-finish\",\"reason\":\"unknown\",\"snapshot\":\"\",\"cost\":0,\"tokens\":{\"input\":0,\"output\":0,\"reasoning\":0,\"cache\":{\"read\":0,\"write\":0}}}}",
+        "stderr_excerpt": "opencode run timed out after 300000ms",
+        "assistant_text_excerpt": "",
+        "message_trace_summary": [
+          {
+            "role": "assistant",
+            "completed": false,
+            "type": "cli-run",
+            "has_structured_output": false,
+            "part_count": 1
+          }
+        ]
+      }
+    },
+    "prompt_trace": {
+      "exit_code": 124,
+      "stdout_length": 1095263,
+      "stderr_length": 37,
+      "has_structured_output": false
+    },
+    "message_trace": [
+      {
+        "role": "assistant",
+        "completed": false,
+        "type": "cli-run",
+        "has_structured_output": false,
+        "part_count": 1
+      }
+    ],
+    "raw_execution_trace": {
+      "exit_code": 124,
+      "stdout_length": 1095263,
+      "stderr_length": 37,
+      "has_structured_output": false,
+      "stdout_excerpt": "89b21d90ffeuQBD7CEaf7Qv5N\",\"part\":{\"id\":\"prt_d76519075001iZZG8yhAzzvhJg\",\"sessionID\":\"ses_289b21d90ffeuQBD7CEaf7Qv5N\",\"messageID\":\"msg_d76517d57001iHKg7Su3Q4ebmX\",\"type\":\"step-start\",\"snapshot\":\"\"}}\n{\"type\":\"step_finish\",\"timestamp\":1775806550616,\"sessionID\":\"ses_289b21d90ffeuQBD7CEaf7Qv5N\",\"part\":{\"id\":\"prt_d7651907b0017E5YJNvQBBjQYE\",\"sessionID\":\"ses_289b21d90ffeuQBD7CEaf7Qv5N\",\"messageID\":\"msg_d76517d57001iHKg7Su3Q4ebmX\",\"type\":\"step-finish\",\"reason\":\"unknown\",\"snapshot\":\"\",\"cost\":0,\"tokens\":{\"input\":0,\"output\":0,\"reasoning\":0,\"cache\":{\"read\":0,\"write\":0}}}}\n{\"type\":\"step_start\",\"timestamp\":1775806557780,\"sessionID\":\"ses_289b21d90ffeuQBD7CEaf7Qv5N\",\"part\":{\"id\":\"prt_d7651ae45001Uo9O1aJkCwTZvX\",\"sessionID\":\"ses_289b21d90ffeuQBD7CEaf7Qv5N\",\"messageID\":\"msg_d765193830010LTxUbK3oMSFEJ\",\"type\":\"step-start\",\"snapshot\":\"\"}}\n{\"type\":\"step_finish\",\"timestamp\":1775806558051,\"sessionID\":\"ses_289b21d90ffeuQBD7CEaf7Qv5N\",\"part\":{\"id\":\"prt_d7651ae48001sOdLeY1uGvTm1f\",\"sessionID\":\"ses_289b21d90ffeuQBD7CEaf7Qv5N\",\"messageID\":\"msg_d765193830010LTxUbK3oMSFEJ\",\"type\":\"step-finish\",\"reason\":\"unknown\",\"snapshot\":\"\",\"cost\":0,\"tokens\":{\"input\":0,\"output\":0,\"reasoning\":0,\"cache\":{\"read\":0,\"write\":0}}}}",
+      "stderr_excerpt": "opencode run timed out after 300000ms",
+      "assistant_text_excerpt": "",
+      "message_trace_summary": [
+        {
+          "role": "assistant",
+          "completed": false,
+          "type": "cli-run",
+          "has_structured_output": false,
+          "part_count": 1
+        }
+      ]
+    },
+    "execution_query": "\"FC Porto\" commercial partnerships leadership",
+    "answer": "",
+    "primary_owner": null,
+    "secondary_candidates": [],
+    "supporting_candidates": [],
+    "candidates": [],
+    "signal_type": "DECISION_OWNER",
+    "confidence": 0,
+    "validation_state": "tool_call_missing",
+    "terminal_state": "no_signal",
+    "terminal_summary": "No deterministic answer was produced for this question.",
+    "blocked_by": [],
+    "evidence_url": "",
+    "recommended_next_query": "",
+    "notes": "No deterministic answer was produced for this question.",
+    "started_at": "2026-04-10T07:31:44.156Z",
+    "completed_at": "2026-04-10T07:36:45.398Z",
+    "duration_seconds": 301.242
+  }
+}

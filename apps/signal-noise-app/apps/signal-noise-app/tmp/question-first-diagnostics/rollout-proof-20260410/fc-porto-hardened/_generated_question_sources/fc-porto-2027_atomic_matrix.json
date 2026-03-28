@@ -1,0 +1,728 @@
+{
+  "schema_version": "atomic_question_source_v1",
+  "generated_at": "2026-04-10T07:04:46.746516+00:00",
+  "entity_id": "fc-porto-2027",
+  "entity_name": "FC Porto",
+  "entity_type": "SPORT_CLUB",
+  "preset": "fc-porto-2027-atomic-matrix",
+  "question_source_label": "fc-porto-2027-atomic-matrix",
+  "question_shape": "atomic",
+  "pack_role": "discovery",
+  "pack_stage": "atomic_matrix",
+  "rollout_strategy": "phased_core",
+  "default_rollout_phase": "phase_3_decision",
+  "question_count": 15,
+  "questions": [
+    {
+      "question_id": "q1_foundation",
+      "question_family": "foundation",
+      "question_type": "foundation",
+      "question": "What is the canonical identity and grounding profile for FC Porto?",
+      "query": "\"FC Porto\" official website founded year",
+      "source_priority": [
+        "google_serp",
+        "official_site",
+        "wikipedia"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "foundation_v1",
+      "graph_write_targets": [
+        "entity_identity"
+      ],
+      "evidence_focus": "entity_fact",
+      "promotion_target": "profile",
+      "answer_kind": "fact",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 1,
+      "search_strategy": {
+        "search_queries": [
+          "\"FC Porto\" official website",
+          "\"FC Porto\" founded year",
+          "\"FC Porto\" headquarters",
+          "\"FC Porto\" venue",
+          "\"FC Porto\" wikipedia"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q2_digital_stack",
+      "question_family": "digital_stack",
+      "question_type": "digital_stack",
+      "question": "What visible technologies, platforms, or vendors does FC Porto use, and what do they imply commercially?",
+      "query": "\"FC Porto\" official website",
+      "source_priority": [
+        "apify_techstack",
+        "google_serp",
+        "news",
+        "press_release",
+        "official_site"
+      ],
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [
+        "q1_foundation"
+      ],
+      "structured_output_schema": "digital_stack_v1",
+      "graph_write_targets": [
+        "technology_signals"
+      ],
+      "evidence_focus": "technology_stack",
+      "promotion_target": "technology_stack",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
+      "deterministic_tools": [
+        "apify_techstack"
+      ],
+      "deterministic_input": {
+        "source_question_id": "q1_foundation",
+        "official_site_only": true
+      },
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "search_strategy": {
+        "search_queries": [
+          "\"FC Porto\" official website",
+          "\"FC Porto\" technology stack",
+          "\"FC Porto\" tech stack",
+          "\"FC Porto\" digital stack",
+          "\"FC Porto\" CRM",
+          "\"FC Porto\" analytics platform",
+          "\"FC Porto\" ticketing platform",
+          "\"FC Porto\" mobile app",
+          "\"FC Porto\" technology partner",
+          "\"FC Porto\" digital partner"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q3_leadership",
+      "question_family": "leadership",
+      "question_type": "leadership",
+      "question": "Who are the key leadership, commercial, partnerships, marketing, digital, technology, and strategy figures at FC Porto?",
+      "query": "\"FC Porto\" chairman chief executive officer secretary general board",
+      "source_priority": [
+        "wikipedia",
+        "official_site",
+        "linkedin_company_profile",
+        "linkedin_people_search",
+        "linkedin_person_profile",
+        "google_serp",
+        "news"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "leadership_candidates_v1",
+      "graph_write_targets": [
+        "person_candidates"
+      ],
+      "evidence_focus": "leadership_map",
+      "promotion_target": "leadership",
+      "answer_kind": "people_list",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "question_timeout_ms": 300000,
+      "hop_timeout_ms": 300000,
+      "search_strategy": {
+        "search_queries": [
+          "\"FC Porto\" wikipedia",
+          "\"FC Porto\" chairman",
+          "\"FC Porto\" chief executive officer",
+          "\"FC Porto\" ceo",
+          "\"FC Porto\" secretary general",
+          "\"FC Porto\" managing director",
+          "\"FC Porto\" board",
+          "\"FC Porto\" board of directors",
+          "\"FC Porto\" LinkedIn company profile",
+          "\"FC Porto\" leadership team",
+          "\"FC Porto\" executive team",
+          "\"FC Porto\" commercial team",
+          "\"FC Porto\" partnerships",
+          "\"FC Porto\" marketing",
+          "\"FC Porto\" digital",
+          "\"FC Porto\" technology",
+          "\"FC Porto\" strategy"
+        ]
+      },
+      "question_shape": "atomic",
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q6_launch_signal",
+      "question_family": "launch_signal",
+      "question_type": "launch_signal",
+      "question": "What products, apps, platforms, or fan experiences has FC Porto launched or announced?",
+      "query": "\"FC Porto\" launch app platform",
+      "source_priority": [
+        "official_site",
+        "press_release",
+        "news",
+        "google_serp"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "launch_signal_v1",
+      "graph_write_targets": [
+        "launch_signal_episodes"
+      ],
+      "evidence_focus": "launch_signal",
+      "promotion_target": "launch_signals",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "search_strategy": {
+        "search_queries": [
+          "\"FC Porto\" launch app",
+          "\"FC Porto\" digital platform launch",
+          "\"FC Porto\" fan engagement platform",
+          "\"FC Porto\" membership platform",
+          "\"FC Porto\" streaming platform",
+          "\"FC Porto\" ticketing launch"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q7_procurement_signal",
+      "question_family": "procurement_signal",
+      "question_type": "procurement_signal",
+      "question": "Is there evidence FC Porto is buying, reshaping vendors, or changing its commercial or digital ecosystem?",
+      "query": "\"FC Porto\" official partner commercial partner platform",
+      "source_priority": [
+        "official_site",
+        "press_release",
+        "news",
+        "google_serp",
+        "linkedin_posts"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "procurement_signal_v1",
+      "graph_write_targets": [
+        "procurement_signal_episodes"
+      ],
+      "evidence_focus": "opportunity_signal",
+      "promotion_target": "opportunity_signals",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "search_strategy": {
+        "search_queries": [
+          "\"FC Porto\" official partner",
+          "\"FC Porto\" commercial partner",
+          "\"FC Porto\" sponsorship",
+          "\"FC Porto\" partnerships",
+          "\"FC Porto\" technology partner",
+          "\"FC Porto\" digital transformation",
+          "\"FC Porto\" procurement",
+          "\"FC Porto\" vendor"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q8_explicit_rfp",
+      "question_family": "explicit_rfp",
+      "question_type": "tender_docs",
+      "question": "Are there published RFPs, tenders, or formal procurement documents for FC Porto?",
+      "query": "\"FC Porto\" tender RFP",
+      "source_priority": [
+        "official_site",
+        "google_serp",
+        "press_release",
+        "news"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_2_conditional",
+      "conditional_on": [
+        {
+          "type": "validated_question",
+          "question_id": "q7_procurement_signal"
+        }
+      ],
+      "depends_on": [
+        "q7_procurement_signal"
+      ],
+      "structured_output_schema": "explicit_rfp_v1",
+      "graph_write_targets": [
+        "explicit_rfp_episodes"
+      ],
+      "evidence_focus": "explicit_rfp",
+      "promotion_target": "rfp_signals",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 1,
+      "search_strategy": {
+        "search_queries": [
+          "\"FC Porto\" RFP",
+          "\"FC Porto\" tender",
+          "\"FC Porto\" invitation to tender",
+          "\"FC Porto\" filetype:pdf tender"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q9_news_signal",
+      "question_family": "news_signal",
+      "question_type": "news_signal",
+      "question": "What recent news, partnerships, and strategic themes are most relevant for FC Porto right now?",
+      "query": "\"FC Porto\" news announcement partnership",
+      "source_priority": [
+        "news",
+        "press_release",
+        "official_site",
+        "google_serp"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "news_signal_v1",
+      "graph_write_targets": [
+        "news_signal_episodes"
+      ],
+      "evidence_focus": "news_signal",
+      "promotion_target": "news_signals",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "search_strategy": {
+        "search_queries": [
+          "\"FC Porto\" news",
+          "\"FC Porto\" announcement",
+          "\"FC Porto\" partnership",
+          "\"FC Porto\" digital",
+          "\"FC Porto\" strategy"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q10_hiring_signal",
+      "question_family": "hiring_signal",
+      "question_type": "hiring_signal",
+      "question": "What hiring signals suggest current investment priorities for FC Porto?",
+      "query": "\"FC Porto\" jobs digital marketing CRM",
+      "source_priority": [
+        "google_serp",
+        "official_site",
+        "linkedin_posts",
+        "news"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_2_conditional",
+      "conditional_on": [
+        {
+          "type": "question_phase_enabled",
+          "question_id": "q9_news_signal"
+        }
+      ],
+      "depends_on": [
+        "q9_news_signal"
+      ],
+      "structured_output_schema": "hiring_signal_v1",
+      "graph_write_targets": [
+        "hiring_signal_episodes"
+      ],
+      "evidence_focus": "hiring_signal",
+      "promotion_target": "hiring_signals",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 1,
+      "search_strategy": {
+        "search_queries": [
+          "\"FC Porto\" jobs digital",
+          "\"FC Porto\" jobs CRM",
+          "\"FC Porto\" jobs partnerships",
+          "\"FC Porto\" jobs marketing",
+          "\"FC Porto\" jobs transformation"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q4_performance",
+      "question_family": "performance",
+      "question_type": "performance",
+      "question": "What is the current sporting performance context for FC Porto?",
+      "query": "\"FC Porto\" standings",
+      "source_priority": [
+        "sports_data",
+        "official_site"
+      ],
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_2_conditional",
+      "conditional_on": [
+        {
+          "type": "entity_type_in",
+          "values": [
+            "SPORT_CLUB",
+            "SPORT_LEAGUE"
+          ]
+        }
+      ],
+      "depends_on": [],
+      "structured_output_schema": "performance_context_v1",
+      "graph_write_targets": [
+        "performance_context"
+      ],
+      "evidence_focus": "performance_context",
+      "promotion_target": "performance_context",
+      "answer_kind": "summary",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": [
+          "\"FC Porto\" standings",
+          "\"FC Porto\" table",
+          "\"FC Porto\" results"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q5_league_context",
+      "question_family": "league_context",
+      "question_type": "league_context",
+      "question": "What peer and ecosystem context best frames FC Porto?",
+      "query": "\"FC Porto\" league context",
+      "source_priority": [
+        "graphiti_context",
+        "sports_data",
+        "official_site"
+      ],
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_2_conditional",
+      "conditional_on": [
+        {
+          "type": "entity_type_in",
+          "values": [
+            "SPORT_CLUB",
+            "SPORT_LEAGUE",
+            "SPORT_FEDERATION"
+          ]
+        }
+      ],
+      "depends_on": [],
+      "structured_output_schema": "league_context_v1",
+      "graph_write_targets": [
+        "peer_context"
+      ],
+      "evidence_focus": "league_context",
+      "promotion_target": "league_context",
+      "answer_kind": "summary",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": [
+          "\"FC Porto\" league competitors",
+          "\"FC Porto\" comparable clubs",
+          "\"FC Porto\" peer organisations"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q11_decision_owner",
+      "question_family": "decision_owner",
+      "question_type": "decision_owner",
+      "question": "Who is the highest probability buyer at FC Porto given the current commercial and product context?",
+      "query": "\"FC Porto\" commercial partnerships leadership",
+      "source_priority": [
+        "wikipedia",
+        "official_site",
+        "linkedin_company_profile",
+        "linkedin_people_search",
+        "linkedin_person_profile",
+        "google_serp",
+        "news",
+        "linkedin_posts"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [],
+      "depends_on": [
+        "q3_leadership",
+        "q6_launch_signal",
+        "q7_procurement_signal",
+        "q9_news_signal",
+        "q10_hiring_signal"
+      ],
+      "structured_output_schema": "decision_owner_v1",
+      "graph_write_targets": [
+        "decision_owner_rankings"
+      ],
+      "evidence_focus": "decision_owner",
+      "promotion_target": "decision_owners",
+      "answer_kind": "person",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "question_timeout_ms": 300000,
+      "hop_timeout_ms": 300000,
+      "search_strategy": {
+        "search_queries": [
+          "\"FC Porto\" LinkedIn company profile",
+          "\"FC Porto\" chief commercial officer",
+          "\"FC Porto\" commercial director",
+          "\"FC Porto\" head of partnerships",
+          "\"FC Porto\" marketing director",
+          "\"FC Porto\" chief digital officer",
+          "\"FC Porto\" strategy director"
+        ]
+      },
+      "question_shape": "atomic",
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q12_connections",
+      "question_family": "connections",
+      "question_type": "connections",
+      "question": "What is the best Yellow Panther path to the ranked buying candidates at FC Porto?",
+      "query": "\"FC Porto\" connections",
+      "source_priority": [
+        "graphiti_connections",
+        "connections_graph",
+        "linkedin_network"
+      ],
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [
+        {
+          "type": "validated_question",
+          "question_id": "q11_decision_owner"
+        }
+      ],
+      "depends_on": [
+        "q11_decision_owner"
+      ],
+      "structured_output_schema": "connections_path_v1",
+      "graph_write_targets": [
+        "connection_paths"
+      ],
+      "evidence_focus": "connections",
+      "promotion_target": "connections",
+      "answer_kind": "scorecard",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": []
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q13_capability_gap",
+      "question_family": "capability_gap",
+      "question_type": "capability_gap",
+      "question": "What capability gaps or weaknesses are most relevant for FC Porto versus peers?",
+      "query": "\"FC Porto\" capability gap",
+      "source_priority": [],
+      "execution_class": "derived_inference",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [],
+      "depends_on": [
+        "q2_digital_stack",
+        "q4_performance",
+        "q5_league_context",
+        "q6_launch_signal",
+        "q7_procurement_signal",
+        "q9_news_signal",
+        "q10_hiring_signal"
+      ],
+      "structured_output_schema": "capability_gap_v1",
+      "graph_write_targets": [
+        "capability_gap_episodes"
+      ],
+      "evidence_focus": "capability_gap",
+      "promotion_target": "capability_gap",
+      "answer_kind": "scorecard",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": []
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q14_yp_fit",
+      "question_family": "yp_fit",
+      "question_type": "yp_fit",
+      "question": "Where does Yellow Panther fit best for FC Porto?",
+      "query": "\"FC Porto\" Yellow Panther fit",
+      "source_priority": [],
+      "execution_class": "derived_inference",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [],
+      "depends_on": [
+        "q13_capability_gap",
+        "q7_procurement_signal"
+      ],
+      "structured_output_schema": "yp_fit_v1",
+      "graph_write_targets": [
+        "yp_fit_episodes"
+      ],
+      "evidence_focus": "yp_fit",
+      "promotion_target": "yp_fit",
+      "answer_kind": "scorecard",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": []
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q15_outreach_strategy",
+      "question_family": "outreach_strategy",
+      "question_type": "outreach_strategy",
+      "question": "What is the best outreach strategy for Yellow Panther at FC Porto?",
+      "query": "\"FC Porto\" outreach strategy",
+      "source_priority": [],
+      "execution_class": "derived_inference",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [],
+      "depends_on": [
+        "q11_decision_owner",
+        "q12_connections",
+        "q14_yp_fit"
+      ],
+      "structured_output_schema": "outreach_strategy_v1",
+      "graph_write_targets": [
+        "outreach_strategy_episodes"
+      ],
+      "evidence_focus": "outreach_strategy",
+      "promotion_target": "outreach_strategy",
+      "answer_kind": "scorecard",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": []
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    }
+  ]
+}

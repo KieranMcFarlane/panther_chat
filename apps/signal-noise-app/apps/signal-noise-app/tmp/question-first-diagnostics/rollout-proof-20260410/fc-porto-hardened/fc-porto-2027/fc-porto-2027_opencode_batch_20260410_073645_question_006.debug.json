@@ -1,0 +1,37 @@
+{
+  "trace_id": "q8_explicit_rfp:debug",
+  "question_id": "q8_explicit_rfp",
+  "prompt_trace": {
+    "exit_code": 124,
+    "stdout_length": 7969,
+    "stderr_length": 37,
+    "has_structured_output": false
+  },
+  "message_trace": [
+    {
+      "role": "assistant",
+      "completed": false,
+      "type": "cli-run",
+      "has_structured_output": false,
+      "part_count": 1
+    }
+  ],
+  "raw_execution_trace": {
+    "exit_code": 124,
+    "stdout_length": 7969,
+    "stderr_length": 37,
+    "has_structured_output": false,
+    "stdout_excerpt": "ansport-linked emissions on match days and innovate how sports ...Read more\\n\\n8. FC Porto: a reputational perspective on corporate football\\n   URL: https://repositorium.uminho.pt/bitstreams/5f3b9235-ba9d-4d76-9b53-485833d91d81/download\\n   Description: With the purpose of studying this issue, an exploratory single case study research was conducted. The choice was the Portuguese club FC Porto, ...Read more\\n\\n9. Foundations of Porto's Urban Platform\\n   URL: https://portodigital.pt/documents/d/guest/porto-urban-platform_brochura_small-1\\n   Description: Following a public tender, PwC's ... In this example, a graphic visualization displays normalized traffic data collected from 15 FC Porto matches,.Read more\\n\\n10. International Capital Markets Review\\n   URL: https://www.vda.pt/xms/files/05_Publicacoes/2021/The_International_Capital_Markets_Review_edition_11_JPFM_OVG_SJU.pdf\\n   Description: named FC PORTO SAD 2021-2023. This transaction involved a retail bond issue with a placement syndicate composed of eight banks and represented the largest ...Read more\\n\\n\\nSource: brightdata_sdk\\n\",\"title\":\"\",\"metadata\":{},\"time\":{\"start\":1775805791271,\"end\":1775805805090},\"attachments\":[]}}}",
+    "stderr_excerpt": "opencode run timed out after 179989ms",
+    "assistant_text_excerpt": "",
+    "message_trace_summary": [
+      {
+        "role": "assistant",
+        "completed": false,
+        "type": "cli-run",
+        "has_structured_output": false,
+        "part_count": 1
+      }
+    ]
+  }
+}

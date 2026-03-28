@@ -1,0 +1,136 @@
+{
+  "run_started_at": "2026-04-10T07:04:47.151Z",
+  "entity_name": "FC Porto",
+  "entity_id": "fc-porto-2027",
+  "entity_type": "SPORT_CLUB",
+  "preset": "fc-porto-2027-atomic-matrix",
+  "started_at": "2026-04-10T07:28:42.182Z",
+  "completed_at": "2026-04-10T07:31:43.956Z",
+  "duration_seconds": 181.774,
+  "question": {
+    "question_id": "q10_hiring_signal",
+    "question_type": "hiring_signal",
+    "question_text": "What hiring signals suggest current investment priorities for FC Porto?",
+    "question": "What hiring signals suggest current investment priorities for FC Porto?",
+    "query": "\"FC Porto\" jobs digital marketing CRM",
+    "hop_budget": 8,
+    "source_priority": [
+      "google_serp",
+      "official_site",
+      "linkedin_posts",
+      "news"
+    ],
+    "evidence_extension_budget": 1,
+    "evidence_extension_confidence_threshold": 0.65,
+    "question_timeout_ms": 180000,
+    "entity_name": "FC Porto",
+    "entity_id": "fc-porto-2027",
+    "entity_type": "SPORT_CLUB",
+    "preset": "fc-porto-2027-atomic-matrix",
+    "model_used": "zai-coding-plan/glm-5",
+    "session_id": "cli-8",
+    "agentic_plan": {
+      "source_priority": [
+        "google_serp",
+        "official_site",
+        "linkedin_posts",
+        "news"
+      ],
+      "stop_rule": "continue for up to 8 hops within OpenCode steps budget"
+    },
+    "reasoning": {
+      "structured_output": {
+        "summary": "No deterministic answer was produced for this question.",
+        "context": "No deterministic answer was produced for this question.",
+        "notes": "No deterministic answer was produced for this question.",
+        "terminal_state": "no_signal",
+        "blocked_by": [],
+        "sources": []
+      },
+      "prompt_trace": {
+        "exit_code": 124,
+        "stdout_length": 0,
+        "stderr_length": 37,
+        "has_structured_output": false
+      },
+      "message_trace": [
+        {
+          "role": "assistant",
+          "completed": false,
+          "type": "cli-run",
+          "has_structured_output": false,
+          "part_count": 1
+        }
+      ],
+      "raw_execution_trace": {
+        "exit_code": 124,
+        "stdout_length": 0,
+        "stderr_length": 37,
+        "has_structured_output": false,
+        "stdout_excerpt": "",
+        "stderr_excerpt": "opencode run timed out after 179995ms",
+        "assistant_text_excerpt": "",
+        "message_trace_summary": [
+          {
+            "role": "assistant",
+            "completed": false,
+            "type": "cli-run",
+            "has_structured_output": false,
+            "part_count": 1
+          }
+        ]
+      }
+    },
+    "prompt_trace": {
+      "exit_code": 124,
+      "stdout_length": 0,
+      "stderr_length": 37,
+      "has_structured_output": false
+    },
+    "message_trace": [
+      {
+        "role": "assistant",
+        "completed": false,
+        "type": "cli-run",
+        "has_structured_output": false,
+        "part_count": 1
+      }
+    ],
+    "raw_execution_trace": {
+      "exit_code": 124,
+      "stdout_length": 0,
+      "stderr_length": 37,
+      "has_structured_output": false,
+      "stdout_excerpt": "",
+      "stderr_excerpt": "opencode run timed out after 179995ms",
+      "assistant_text_excerpt": "",
+      "message_trace_summary": [
+        {
+          "role": "assistant",
+          "completed": false,
+          "type": "cli-run",
+          "has_structured_output": false,
+          "part_count": 1
+        }
+      ]
+    },
+    "execution_query": "\"FC Porto\" jobs digital marketing CRM",
+    "answer": "",
+    "primary_owner": null,
+    "secondary_candidates": [],
+    "supporting_candidates": [],
+    "candidates": [],
+    "signal_type": "HIRING_SIGNAL",
+    "confidence": 0,
+    "validation_state": "tool_call_missing",
+    "terminal_state": "no_signal",
+    "terminal_summary": "No deterministic answer was produced for this question.",
+    "blocked_by": [],
+    "evidence_url": "",
+    "recommended_next_query": "",
+    "notes": "No deterministic answer was produced for this question.",
+    "started_at": "2026-04-10T07:28:42.182Z",
+    "completed_at": "2026-04-10T07:31:43.956Z",
+    "duration_seconds": 181.774
+  }
+}

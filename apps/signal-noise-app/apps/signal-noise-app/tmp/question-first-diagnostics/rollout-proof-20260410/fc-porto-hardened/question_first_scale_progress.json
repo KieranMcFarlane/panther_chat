@@ -1,0 +1,22 @@
+{
+  "schema_version": "question_first_scale_progress_v1",
+  "generated_at": "2026-04-10T07:04:46.753548+00:00",
+  "total_scheduled": 1,
+  "completed": 1,
+  "failed": 0,
+  "retryable_failures": 0,
+  "stalled": 0,
+  "promoted_dossiers": 0,
+  "client_ready_dossiers": 0,
+  "dossier_artifacts": 1,
+  "last_successful_canonical_run_at": "2026-04-10T07:36:45.501000+00:00",
+  "failure_breakdown": {
+    "retryable_upstream_failure": 0,
+    "completed_without_artifact": 0,
+    "stalled": 0,
+    "grounding_failure": 1,
+    "leadership_failure": 1,
+    "completed_not_promotable": 1,
+    "failed": 0
+  }
+}

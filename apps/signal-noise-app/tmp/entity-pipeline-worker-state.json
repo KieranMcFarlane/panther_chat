@@ -1,0 +1,11 @@
+{
+  "worker_process_state": "starting",
+  "worker_pid": 6299,
+  "worker_command": "npm run worker:entity-pipeline",
+  "worker_state_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/entity-pipeline-worker-state.json",
+  "worker_pid_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/entity-pipeline-worker.pid",
+  "started_at": "2026-04-15T03:56:02.590Z",
+  "stopped_at": null,
+  "updated_at": "2026-04-15T03:56:02.590Z",
+  "last_error": null
+}

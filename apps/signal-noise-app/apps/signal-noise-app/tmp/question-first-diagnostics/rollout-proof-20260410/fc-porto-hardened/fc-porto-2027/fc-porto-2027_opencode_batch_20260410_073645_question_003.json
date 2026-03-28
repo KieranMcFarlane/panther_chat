@@ -1,0 +1,152 @@
+{
+  "run_started_at": "2026-04-10T07:04:47.151Z",
+  "entity_name": "FC Porto",
+  "entity_id": "fc-porto-2027",
+  "entity_type": "SPORT_CLUB",
+  "preset": "fc-porto-2027-atomic-matrix",
+  "started_at": "2026-04-10T07:12:07.317Z",
+  "completed_at": "2026-04-10T07:17:07.939Z",
+  "duration_seconds": 300.622,
+  "question": {
+    "question_id": "q3_leadership",
+    "question_type": "leadership",
+    "question_text": "Who are the key leadership, commercial, partnerships, marketing, digital, technology, and strategy figures at FC Porto?",
+    "question": "Who are the key leadership, commercial, partnerships, marketing, digital, technology, and strategy figures at FC Porto?",
+    "query": "\"FC Porto\" chairman chief executive officer secretary general board",
+    "hop_budget": 8,
+    "source_priority": [
+      "wikipedia",
+      "official_site",
+      "linkedin_company_profile",
+      "linkedin_people_search",
+      "linkedin_person_profile",
+      "google_serp",
+      "news"
+    ],
+    "evidence_extension_budget": 2,
+    "evidence_extension_confidence_threshold": 0.65,
+    "question_timeout_ms": 300000,
+    "entity_name": "FC Porto",
+    "entity_id": "fc-porto-2027",
+    "entity_type": "SPORT_CLUB",
+    "preset": "fc-porto-2027-atomic-matrix",
+    "model_used": "zai-coding-plan/glm-5",
+    "session_id": "cli-3",
+    "agentic_plan": {
+      "source_priority": [
+        "wikipedia",
+        "official_site",
+        "linkedin_company_profile",
+        "linkedin_people_search",
+        "linkedin_person_profile",
+        "google_serp",
+        "news"
+      ],
+      "stop_rule": "continue for up to 8 hops within OpenCode steps budget"
+    },
+    "reasoning": {
+      "structured_output": {
+        "summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+        "context": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+        "notes": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+        "terminal_state": "no_signal",
+        "blocked_by": [],
+        "sources": []
+      },
+      "prompt_trace": {
+        "exit_code": 124,
+        "stdout_length": 499526,
+        "stderr_length": 37,
+        "has_structured_output": false
+      },
+      "message_trace": [
+        {
+          "role": "assistant",
+          "completed": false,
+          "type": "cli-run",
+          "has_structured_output": false,
+          "part_count": 1
+        }
+      ],
+      "raw_execution_trace": {
+        "exit_code": 124,
+        "stdout_length": 499526,
+        "stderr_length": 37,
+        "has_structured_output": false,
+        "stdout_excerpt": "2024](/wiki/Category:Articles_containing_potentially_dated_statements_from_August_2024)\\nAll articles containing potentially dated statements\\n[All articles containing potentially dated statements](/wiki/Category:All_articles_containing_potentially_dated_statements)\\nCommons category link from Wikidata\\n[Commons category link from Wikidata](/wiki/Category:Commons_category_link_from_Wikidata)\\nArticles with Portuguese-language sources (pt)\\n[Articles with Portuguese-language sources (pt)](/wiki/Category:Articles_with_Portuguese-language_sources_(pt))\\nWebarchive template wayback links\\n[Webarchive template wayback links](/wiki/Category:Webarchive_template_wayback_links)\\n\\n---\\nScraped at: 2026-04-10T07:17:03.644Z\",\"title\":\"\",\"metadata\":{},\"time\":{\"start\":1775805415672,\"end\":1775805423658},\"attachments\":[]}}}\n{\"type\":\"step_finish\",\"timestamp\":1775805423708,\"sessionID\":\"ses_289c420fbffeS2BMHYO64nMT6p\",\"part\":{\"id\":\"prt_d7640602e001QPwwpO6FGUW95f\",\"sessionID\":\"ses_289c420fbffeS2BMHYO64nMT6p\",\"messageID\":\"msg_d763c0b2f001psI8eDtSq54nkR\",\"type\":\"step-finish\",\"reason\":\"tool-calls\",\"snapshot\":\"\",\"cost\":0,\"tokens\":{\"input\":2693,\"output\":142,\"reasoning\":59,\"cache\":{\"read\":2752,\"write\":0}}}}",
+        "stderr_excerpt": "opencode run timed out after 300000ms",
+        "assistant_text_excerpt": "",
+        "message_trace_summary": [
+          {
+            "role": "assistant",
+            "completed": false,
+            "type": "cli-run",
+            "has_structured_output": false,
+            "part_count": 1
+          }
+        ]
+      }
+    },
+    "prompt_trace": {
+      "exit_code": 124,
+      "stdout_length": 499526,
+      "stderr_length": 37,
+      "has_structured_output": false
+    },
+    "message_trace": [
+      {
+        "role": "assistant",
+        "completed": false,
+        "type": "cli-run",
+        "has_structured_output": false,
+        "part_count": 1
+      }
+    ],
+    "raw_execution_trace": {
+      "exit_code": 124,
+      "stdout_length": 499526,
+      "stderr_length": 37,
+      "has_structured_output": false,
+      "stdout_excerpt": "2024](/wiki/Category:Articles_containing_potentially_dated_statements_from_August_2024)\\nAll articles containing potentially dated statements\\n[All articles containing potentially dated statements](/wiki/Category:All_articles_containing_potentially_dated_statements)\\nCommons category link from Wikidata\\n[Commons category link from Wikidata](/wiki/Category:Commons_category_link_from_Wikidata)\\nArticles with Portuguese-language sources (pt)\\n[Articles with Portuguese-language sources (pt)](/wiki/Category:Articles_with_Portuguese-language_sources_(pt))\\nWebarchive template wayback links\\n[Webarchive template wayback links](/wiki/Category:Webarchive_template_wayback_links)\\n\\n---\\nScraped at: 2026-04-10T07:17:03.644Z\",\"title\":\"\",\"metadata\":{},\"time\":{\"start\":1775805415672,\"end\":1775805423658},\"attachments\":[]}}}\n{\"type\":\"step_finish\",\"timestamp\":1775805423708,\"sessionID\":\"ses_289c420fbffeS2BMHYO64nMT6p\",\"part\":{\"id\":\"prt_d7640602e001QPwwpO6FGUW95f\",\"sessionID\":\"ses_289c420fbffeS2BMHYO64nMT6p\",\"messageID\":\"msg_d763c0b2f001psI8eDtSq54nkR\",\"type\":\"step-finish\",\"reason\":\"tool-calls\",\"snapshot\":\"\",\"cost\":0,\"tokens\":{\"input\":2693,\"output\":142,\"reasoning\":59,\"cache\":{\"read\":2752,\"write\":0}}}}",
+      "stderr_excerpt": "opencode run timed out after 300000ms",
+      "assistant_text_excerpt": "",
+      "message_trace_summary": [
+        {
+          "role": "assistant",
+          "completed": false,
+          "type": "cli-run",
+          "has_structured_output": false,
+          "part_count": 1
+        }
+      ]
+    },
+    "timeout_salvage": {
+      "salvage_state": "evidence_retained",
+      "counts_as_validated": false,
+      "candidate_summary": "BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+      "candidate_evidence_urls": [],
+      "risk_notes": [
+        "timeout salvage is non-strict and does not count as validated",
+        "no safe candidate summary extracted"
+      ]
+    },
+    "execution_query": "\"FC Porto\" chairman chief executive officer secretary general board",
+    "answer": "",
+    "primary_owner": null,
+    "secondary_candidates": [],
+    "supporting_candidates": [],
+    "candidates": [],
+    "signal_type": "LEADERSHIP",
+    "confidence": 0,
+    "validation_state": "tool_call_missing",
+    "terminal_state": "no_signal",
+    "terminal_summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+    "blocked_by": [],
+    "evidence_url": "",
+    "recommended_next_query": "",
+    "notes": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+    "started_at": "2026-04-10T07:12:07.317Z",
+    "completed_at": "2026-04-10T07:17:07.939Z",
+    "duration_seconds": 300.622
+  }
+}

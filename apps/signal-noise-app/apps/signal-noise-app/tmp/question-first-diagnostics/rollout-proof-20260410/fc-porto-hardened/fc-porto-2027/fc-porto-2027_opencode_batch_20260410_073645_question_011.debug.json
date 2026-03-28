@@ -1,0 +1,37 @@
+{
+  "trace_id": "q11_decision_owner:debug",
+  "question_id": "q11_decision_owner",
+  "prompt_trace": {
+    "exit_code": 124,
+    "stdout_length": 1095263,
+    "stderr_length": 37,
+    "has_structured_output": false
+  },
+  "message_trace": [
+    {
+      "role": "assistant",
+      "completed": false,
+      "type": "cli-run",
+      "has_structured_output": false,
+      "part_count": 1
+    }
+  ],
+  "raw_execution_trace": {
+    "exit_code": 124,
+    "stdout_length": 1095263,
+    "stderr_length": 37,
+    "has_structured_output": false,
+    "stdout_excerpt": "89b21d90ffeuQBD7CEaf7Qv5N\",\"part\":{\"id\":\"prt_d76519075001iZZG8yhAzzvhJg\",\"sessionID\":\"ses_289b21d90ffeuQBD7CEaf7Qv5N\",\"messageID\":\"msg_d76517d57001iHKg7Su3Q4ebmX\",\"type\":\"step-start\",\"snapshot\":\"\"}}\n{\"type\":\"step_finish\",\"timestamp\":1775806550616,\"sessionID\":\"ses_289b21d90ffeuQBD7CEaf7Qv5N\",\"part\":{\"id\":\"prt_d7651907b0017E5YJNvQBBjQYE\",\"sessionID\":\"ses_289b21d90ffeuQBD7CEaf7Qv5N\",\"messageID\":\"msg_d76517d57001iHKg7Su3Q4ebmX\",\"type\":\"step-finish\",\"reason\":\"unknown\",\"snapshot\":\"\",\"cost\":0,\"tokens\":{\"input\":0,\"output\":0,\"reasoning\":0,\"cache\":{\"read\":0,\"write\":0}}}}\n{\"type\":\"step_start\",\"timestamp\":1775806557780,\"sessionID\":\"ses_289b21d90ffeuQBD7CEaf7Qv5N\",\"part\":{\"id\":\"prt_d7651ae45001Uo9O1aJkCwTZvX\",\"sessionID\":\"ses_289b21d90ffeuQBD7CEaf7Qv5N\",\"messageID\":\"msg_d765193830010LTxUbK3oMSFEJ\",\"type\":\"step-start\",\"snapshot\":\"\"}}\n{\"type\":\"step_finish\",\"timestamp\":1775806558051,\"sessionID\":\"ses_289b21d90ffeuQBD7CEaf7Qv5N\",\"part\":{\"id\":\"prt_d7651ae48001sOdLeY1uGvTm1f\",\"sessionID\":\"ses_289b21d90ffeuQBD7CEaf7Qv5N\",\"messageID\":\"msg_d765193830010LTxUbK3oMSFEJ\",\"type\":\"step-finish\",\"reason\":\"unknown\",\"snapshot\":\"\",\"cost\":0,\"tokens\":{\"input\":0,\"output\":0,\"reasoning\":0,\"cache\":{\"read\":0,\"write\":0}}}}",
+    "stderr_excerpt": "opencode run timed out after 300000ms",
+    "assistant_text_excerpt": "",
+    "message_trace_summary": [
+      {
+        "role": "assistant",
+        "completed": false,
+        "type": "cli-run",
+        "has_structured_output": false,
+        "part_count": 1
+      }
+    ]
+  }
+}

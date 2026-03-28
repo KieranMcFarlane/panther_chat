@@ -1,0 +1,132 @@
+{
+  "run_started_at": "2026-04-10T07:04:47.151Z",
+  "entity_name": "FC Porto",
+  "entity_id": "fc-porto-2027",
+  "entity_type": "SPORT_CLUB",
+  "preset": "fc-porto-2027-atomic-matrix",
+  "started_at": "2026-04-10T07:36:45.444Z",
+  "completed_at": "2026-04-10T07:36:45.459Z",
+  "duration_seconds": 0.015,
+  "question": {
+    "question_id": "q13_capability_gap",
+    "question_type": "capability_gap",
+    "question_text": "What capability gaps or weaknesses are most relevant for FC Porto versus peers?",
+    "question": "What capability gaps or weaknesses are most relevant for FC Porto versus peers?",
+    "query": "\"FC Porto\" capability gap",
+    "hop_budget": 0,
+    "source_priority": [],
+    "evidence_extension_budget": 0,
+    "evidence_extension_confidence_threshold": 0.65,
+    "question_timeout_ms": 180000,
+    "entity_name": "FC Porto",
+    "entity_id": "fc-porto-2027",
+    "entity_type": "SPORT_CLUB",
+    "preset": "fc-porto-2027-atomic-matrix",
+    "model_used": "zai-coding-plan/glm-5",
+    "session_id": "cli-13",
+    "agentic_plan": {
+      "source_priority": [],
+      "stop_rule": "continue for up to 0 hops within OpenCode steps budget"
+    },
+    "reasoning": {
+      "structured_output": {
+        "answer": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+        "summary": "Capability gap scorecard derived from validated upstream commercial and digital signals.",
+        "themes": [
+          "digital_stack_maturity",
+          "vendor_change_motion"
+        ],
+        "recommendations": [
+          "Close digital stack maturity gap",
+          "Close vendor change motion gap"
+        ],
+        "gap_scorecard": [
+          {
+            "capability": "digital_stack_maturity",
+            "gap_score": 0.78,
+            "severity": "high",
+            "driver_question_ids": [
+              "q2_digital_stack",
+              "q6_launch_signal",
+              "q7_procurement_signal",
+              "q9_news_signal"
+            ]
+          },
+          {
+            "capability": "vendor_change_motion",
+            "gap_score": 0.7000000000000001,
+            "severity": "medium",
+            "driver_question_ids": [
+              "q2_digital_stack",
+              "q6_launch_signal",
+              "q7_procurement_signal",
+              "q9_news_signal"
+            ]
+          }
+        ],
+        "top_gap": "digital_stack_maturity",
+        "graph_episode": {
+          "episode_type": "capability_gap",
+          "label": "digital_stack_maturity",
+          "score": 0.78
+        },
+        "confidence": 0.6,
+        "validation_state": "provisional",
+        "sources": [],
+        "signal_type": "CAPABILITY_GAP",
+        "context": "Capability gap scorecard derived from validated upstream commercial and digital signals.",
+        "notes": "Capability gap scorecard derived from validated upstream commercial and digital signals.",
+        "terminal_state": "answered",
+        "blocked_by": []
+      },
+      "prompt_trace": {
+        "status": "derived_capability_gap",
+        "has_structured_output": true
+      },
+      "message_trace": [],
+      "raw_execution_trace": {
+        "exit_code": 0,
+        "stdout_length": 0,
+        "stderr_length": 0,
+        "has_structured_output": true,
+        "stdout_excerpt": "",
+        "stderr_excerpt": "",
+        "assistant_text_excerpt": "",
+        "message_trace_summary": []
+      }
+    },
+    "prompt_trace": {
+      "status": "derived_capability_gap",
+      "has_structured_output": true
+    },
+    "message_trace": [],
+    "raw_execution_trace": {
+      "exit_code": 0,
+      "stdout_length": 0,
+      "stderr_length": 0,
+      "has_structured_output": true,
+      "stdout_excerpt": "",
+      "stderr_excerpt": "",
+      "assistant_text_excerpt": "",
+      "message_trace_summary": []
+    },
+    "execution_query": "\"FC Porto\" capability gap",
+    "answer": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+    "primary_owner": null,
+    "secondary_candidates": [],
+    "supporting_candidates": [],
+    "candidates": [],
+    "signal_type": "CAPABILITY_GAP",
+    "confidence": 0.6,
+    "validation_state": "provisional",
+    "terminal_state": "answered",
+    "terminal_summary": "Capability gap scorecard derived from validated upstream commercial and digital signals.",
+    "blocked_by": [],
+    "evidence_url": "",
+    "recommended_next_query": "",
+    "notes": "Capability gap scorecard derived from validated upstream commercial and digital signals.",
+    "started_at": "2026-04-10T07:36:45.444Z",
+    "completed_at": "2026-04-10T07:36:45.459Z",
+    "duration_seconds": 0.015
+  }
+}

@@ -1,0 +1,3591 @@
+{
+  "schema_version": "question_first_run_v2",
+  "run_id": "fc-porto-2027_opencode_batch_20260410_073645",
+  "generated_at": "2026-04-10T07:36:45.501Z",
+  "run_started_at": "2026-04-10T07:04:47.151Z",
+  "source": "opencode_agentic_batch",
+  "status": "ready",
+  "warnings": [],
+  "entity": {
+    "entity_id": "fc-porto-2027",
+    "entity_name": "FC Porto",
+    "entity_type": "SPORT_CLUB"
+  },
+  "preset": "fc-porto-2027-atomic-matrix",
+  "question_source_path": "/var/folders/hj/cw6t72kn5wd7cjqht1tpvfl00000gp/T/tmpidsg6pal.json",
+  "question_specs": [
+    {
+      "question_id": "q1_foundation",
+      "question_family": "foundation",
+      "question_type": "foundation",
+      "question_text": "What is the canonical identity and grounding profile for FC Porto?",
+      "query": "\"FC Porto\" official website founded year",
+      "hop_budget": 8,
+      "evidence_extension_budget": 1,
+      "source_priority": [
+        "google_serp",
+        "official_site",
+        "wikipedia"
+      ],
+      "search_strategy": {
+        "search_queries": [
+          "\"FC Porto\" official website",
+          "\"FC Porto\" founded year",
+          "\"FC Porto\" headquarters",
+          "\"FC Porto\" venue",
+          "\"FC Porto\" wikipedia"
+        ]
+      },
+      "deterministic_tools": [],
+      "fallback_to_retrieval": true,
+      "deterministic_input": null,
+      "evidence_focus": "entity_fact",
+      "promotion_target": "profile",
+      "answer_kind": "fact",
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "preset": "fc-porto-2027-atomic-matrix",
+      "pack_role": "discovery",
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "foundation_v1",
+      "graph_write_targets": [
+        "entity_identity"
+      ]
+    },
+    {
+      "question_id": "q2_digital_stack",
+      "question_family": "digital_stack",
+      "question_type": "digital_stack",
+      "question_text": "What visible technologies, platforms, or vendors does FC Porto use, and what do they imply commercially?",
+      "query": "\"FC Porto\" official website",
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "source_priority": [
+        "apify_techstack",
+        "google_serp",
+        "news",
+        "press_release",
+        "official_site"
+      ],
+      "search_strategy": {
+        "search_queries": [
+          "\"FC Porto\" official website",
+          "\"FC Porto\" technology stack",
+          "\"FC Porto\" tech stack",
+          "\"FC Porto\" digital stack",
+          "\"FC Porto\" CRM",
+          "\"FC Porto\" analytics platform",
+          "\"FC Porto\" ticketing platform",
+          "\"FC Porto\" mobile app",
+          "\"FC Porto\" technology partner",
+          "\"FC Porto\" digital partner"
+        ]
+      },
+      "deterministic_tools": [
+        "apify_techstack"
+      ],
+      "fallback_to_retrieval": true,
+      "deterministic_input": {
+        "source_question_id": "q1_foundation",
+        "official_site_only": true
+      },
+      "evidence_focus": "technology_stack",
+      "promotion_target": "technology_stack",
+      "answer_kind": "signal",
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "preset": "fc-porto-2027-atomic-matrix",
+      "pack_role": "discovery",
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [
+        "q1_foundation"
+      ],
+      "structured_output_schema": "digital_stack_v1",
+      "graph_write_targets": [
+        "technology_signals"
+      ]
+    },
+    {
+      "question_id": "q3_leadership",
+      "question_family": "leadership",
+      "question_type": "leadership",
+      "question_text": "Who are the key leadership, commercial, partnerships, marketing, digital, technology, and strategy figures at FC Porto?",
+      "query": "\"FC Porto\" chairman chief executive officer secretary general board",
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "source_priority": [
+        "wikipedia",
+        "official_site",
+        "linkedin_company_profile",
+        "linkedin_people_search",
+        "linkedin_person_profile",
+        "google_serp",
+        "news"
+      ],
+      "search_strategy": {
+        "search_queries": [
+          "\"FC Porto\" wikipedia",
+          "\"FC Porto\" chairman",
+          "\"FC Porto\" chief executive officer",
+          "\"FC Porto\" ceo",
+          "\"FC Porto\" secretary general",
+          "\"FC Porto\" managing director",
+          "\"FC Porto\" board",
+          "\"FC Porto\" board of directors",
+          "\"FC Porto\" LinkedIn company profile",
+          "\"FC Porto\" leadership team",
+          "\"FC Porto\" executive team",
+          "\"FC Porto\" commercial team",
+          "\"FC Porto\" partnerships",
+          "\"FC Porto\" marketing",
+          "\"FC Porto\" digital",
+          "\"FC Porto\" technology",
+          "\"FC Porto\" strategy"
+        ]
+      },
+      "deterministic_tools": [],
+      "fallback_to_retrieval": true,
+      "deterministic_input": null,
+      "evidence_focus": "leadership_map",
+      "promotion_target": "leadership",
+      "answer_kind": "people_list",
+      "question_shape": "atomic",
+      "question_timeout_ms": 300000,
+      "hop_timeout_ms": 300000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "preset": "fc-porto-2027-atomic-matrix",
+      "pack_role": "discovery",
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "leadership_candidates_v1",
+      "graph_write_targets": [
+        "person_candidates"
+      ]
+    },
+    {
+      "question_id": "q6_launch_signal",
+      "question_family": "launch_signal",
+      "question_type": "launch_signal",
+      "question_text": "What products, apps, platforms, or fan experiences has FC Porto launched or announced?",
+      "query": "\"FC Porto\" launch app platform",
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "source_priority": [
+        "official_site",
+        "press_release",
+        "news",
+        "google_serp"
+      ],
+      "search_strategy": {
+        "search_queries": [
+          "\"FC Porto\" launch app",
+          "\"FC Porto\" digital platform launch",
+          "\"FC Porto\" fan engagement platform",
+          "\"FC Porto\" membership platform",
+          "\"FC Porto\" streaming platform",
+          "\"FC Porto\" ticketing launch"
+        ]
+      },
+      "deterministic_tools": [],
+      "fallback_to_retrieval": true,
+      "deterministic_input": null,
+      "evidence_focus": "launch_signal",
+      "promotion_target": "launch_signals",
+      "answer_kind": "signal",
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "preset": "fc-porto-2027-atomic-matrix",
+      "pack_role": "discovery",
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "launch_signal_v1",
+      "graph_write_targets": [
+        "launch_signal_episodes"
+      ]
+    },
+    {
+      "question_id": "q7_procurement_signal",
+      "question_family": "procurement_signal",
+      "question_type": "procurement_signal",
+      "question_text": "Is there evidence FC Porto is buying, reshaping vendors, or changing its commercial or digital ecosystem?",
+      "query": "\"FC Porto\" official partner commercial partner platform",
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "source_priority": [
+        "official_site",
+        "press_release",
+        "news",
+        "google_serp",
+        "linkedin_posts"
+      ],
+      "search_strategy": {
+        "search_queries": [
+          "\"FC Porto\" official partner",
+          "\"FC Porto\" commercial partner",
+          "\"FC Porto\" sponsorship",
+          "\"FC Porto\" partnerships",
+          "\"FC Porto\" technology partner",
+          "\"FC Porto\" digital transformation",
+          "\"FC Porto\" procurement",
+          "\"FC Porto\" vendor"
+        ]
+      },
+      "deterministic_tools": [],
+      "fallback_to_retrieval": true,
+      "deterministic_input": null,
+      "evidence_focus": "opportunity_signal",
+      "promotion_target": "opportunity_signals",
+      "answer_kind": "signal",
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "preset": "fc-porto-2027-atomic-matrix",
+      "pack_role": "discovery",
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "procurement_signal_v1",
+      "graph_write_targets": [
+        "procurement_signal_episodes"
+      ]
+    },
+    {
+      "question_id": "q8_explicit_rfp",
+      "question_family": "explicit_rfp",
+      "question_type": "tender_docs",
+      "question_text": "Are there published RFPs, tenders, or formal procurement documents for FC Porto?",
+      "query": "\"FC Porto\" tender RFP",
+      "hop_budget": 8,
+      "evidence_extension_budget": 1,
+      "source_priority": [
+        "official_site",
+        "google_serp",
+        "press_release",
+        "news"
+      ],
+      "search_strategy": {
+        "search_queries": [
+          "\"FC Porto\" RFP",
+          "\"FC Porto\" tender",
+          "\"FC Porto\" invitation to tender",
+          "\"FC Porto\" filetype:pdf tender"
+        ]
+      },
+      "deterministic_tools": [],
+      "fallback_to_retrieval": true,
+      "deterministic_input": null,
+      "evidence_focus": "explicit_rfp",
+      "promotion_target": "rfp_signals",
+      "answer_kind": "signal",
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "preset": "fc-porto-2027-atomic-matrix",
+      "pack_role": "discovery",
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_2_conditional",
+      "conditional_on": [
+        {
+          "type": "validated_question",
+          "question_id": "q7_procurement_signal"
+        }
+      ],
+      "depends_on": [
+        "q7_procurement_signal"
+      ],
+      "structured_output_schema": "explicit_rfp_v1",
+      "graph_write_targets": [
+        "explicit_rfp_episodes"
+      ]
+    },
+    {
+      "question_id": "q9_news_signal",
+      "question_family": "news_signal",
+      "question_type": "news_signal",
+      "question_text": "What recent news, partnerships, and strategic themes are most relevant for FC Porto right now?",
+      "query": "\"FC Porto\" news announcement partnership",
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "source_priority": [
+        "news",
+        "press_release",
+        "official_site",
+        "google_serp"
+      ],
+      "search_strategy": {
+        "search_queries": [
+          "\"FC Porto\" news",
+          "\"FC Porto\" announcement",
+          "\"FC Porto\" partnership",
+          "\"FC Porto\" digital",
+          "\"FC Porto\" strategy"
+        ]
+      },
+      "deterministic_tools": [],
+      "fallback_to_retrieval": true,
+      "deterministic_input": null,
+      "evidence_focus": "news_signal",
+      "promotion_target": "news_signals",
+      "answer_kind": "signal",
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "preset": "fc-porto-2027-atomic-matrix",
+      "pack_role": "discovery",
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "news_signal_v1",
+      "graph_write_targets": [
+        "news_signal_episodes"
+      ]
+    },
+    {
+      "question_id": "q10_hiring_signal",
+      "question_family": "hiring_signal",
+      "question_type": "hiring_signal",
+      "question_text": "What hiring signals suggest current investment priorities for FC Porto?",
+      "query": "\"FC Porto\" jobs digital marketing CRM",
+      "hop_budget": 8,
+      "evidence_extension_budget": 1,
+      "source_priority": [
+        "google_serp",
+        "official_site",
+        "linkedin_posts",
+        "news"
+      ],
+      "search_strategy": {
+        "search_queries": [
+          "\"FC Porto\" jobs digital",
+          "\"FC Porto\" jobs CRM",
+          "\"FC Porto\" jobs partnerships",
+          "\"FC Porto\" jobs marketing",
+          "\"FC Porto\" jobs transformation"
+        ]
+      },
+      "deterministic_tools": [],
+      "fallback_to_retrieval": true,
+      "deterministic_input": null,
+      "evidence_focus": "hiring_signal",
+      "promotion_target": "hiring_signals",
+      "answer_kind": "signal",
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "preset": "fc-porto-2027-atomic-matrix",
+      "pack_role": "discovery",
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_2_conditional",
+      "conditional_on": [
+        {
+          "type": "question_phase_enabled",
+          "question_id": "q9_news_signal"
+        }
+      ],
+      "depends_on": [
+        "q9_news_signal"
+      ],
+      "structured_output_schema": "hiring_signal_v1",
+      "graph_write_targets": [
+        "hiring_signal_episodes"
+      ]
+    },
+    {
+      "question_id": "q4_performance",
+      "question_family": "performance",
+      "question_type": "performance",
+      "question_text": "What is the current sporting performance context for FC Porto?",
+      "query": "\"FC Porto\" standings",
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "source_priority": [
+        "sports_data",
+        "official_site"
+      ],
+      "search_strategy": {
+        "search_queries": [
+          "\"FC Porto\" standings",
+          "\"FC Porto\" table",
+          "\"FC Porto\" results"
+        ]
+      },
+      "deterministic_tools": [],
+      "fallback_to_retrieval": false,
+      "deterministic_input": null,
+      "evidence_focus": "performance_context",
+      "promotion_target": "performance_context",
+      "answer_kind": "summary",
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "preset": "fc-porto-2027-atomic-matrix",
+      "pack_role": "discovery",
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_2_conditional",
+      "conditional_on": [
+        {
+          "type": "entity_type_in",
+          "values": [
+            "SPORT_CLUB",
+            "SPORT_LEAGUE"
+          ]
+        }
+      ],
+      "depends_on": [],
+      "structured_output_schema": "performance_context_v1",
+      "graph_write_targets": [
+        "performance_context"
+      ]
+    },
+    {
+      "question_id": "q5_league_context",
+      "question_family": "league_context",
+      "question_type": "league_context",
+      "question_text": "What peer and ecosystem context best frames FC Porto?",
+      "query": "\"FC Porto\" league context",
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "source_priority": [
+        "graphiti_context",
+        "sports_data",
+        "official_site"
+      ],
+      "search_strategy": {
+        "search_queries": [
+          "\"FC Porto\" league competitors",
+          "\"FC Porto\" comparable clubs",
+          "\"FC Porto\" peer organisations"
+        ]
+      },
+      "deterministic_tools": [],
+      "fallback_to_retrieval": false,
+      "deterministic_input": null,
+      "evidence_focus": "league_context",
+      "promotion_target": "league_context",
+      "answer_kind": "summary",
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "preset": "fc-porto-2027-atomic-matrix",
+      "pack_role": "discovery",
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_2_conditional",
+      "conditional_on": [
+        {
+          "type": "entity_type_in",
+          "values": [
+            "SPORT_CLUB",
+            "SPORT_LEAGUE",
+            "SPORT_FEDERATION"
+          ]
+        }
+      ],
+      "depends_on": [],
+      "structured_output_schema": "league_context_v1",
+      "graph_write_targets": [
+        "peer_context"
+      ]
+    },
+    {
+      "question_id": "q11_decision_owner",
+      "question_family": "decision_owner",
+      "question_type": "decision_owner",
+      "question_text": "Who is the highest probability buyer at FC Porto given the current commercial and product context?",
+      "query": "\"FC Porto\" commercial partnerships leadership",
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "source_priority": [
+        "wikipedia",
+        "official_site",
+        "linkedin_company_profile",
+        "linkedin_people_search",
+        "linkedin_person_profile",
+        "google_serp",
+        "news",
+        "linkedin_posts"
+      ],
+      "search_strategy": {
+        "search_queries": [
+          "\"FC Porto\" LinkedIn company profile",
+          "\"FC Porto\" chief commercial officer",
+          "\"FC Porto\" commercial director",
+          "\"FC Porto\" head of partnerships",
+          "\"FC Porto\" marketing director",
+          "\"FC Porto\" chief digital officer",
+          "\"FC Porto\" strategy director"
+        ]
+      },
+      "deterministic_tools": [],
+      "fallback_to_retrieval": true,
+      "deterministic_input": null,
+      "evidence_focus": "decision_owner",
+      "promotion_target": "decision_owners",
+      "answer_kind": "person",
+      "question_shape": "atomic",
+      "question_timeout_ms": 300000,
+      "hop_timeout_ms": 300000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "preset": "fc-porto-2027-atomic-matrix",
+      "pack_role": "discovery",
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [],
+      "depends_on": [
+        "q3_leadership",
+        "q6_launch_signal",
+        "q7_procurement_signal",
+        "q9_news_signal",
+        "q10_hiring_signal"
+      ],
+      "structured_output_schema": "decision_owner_v1",
+      "graph_write_targets": [
+        "decision_owner_rankings"
+      ]
+    },
+    {
+      "question_id": "q12_connections",
+      "question_family": "connections",
+      "question_type": "connections",
+      "question_text": "What is the best Yellow Panther path to the ranked buying candidates at FC Porto?",
+      "query": "\"FC Porto\" connections",
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "source_priority": [
+        "graphiti_connections",
+        "connections_graph",
+        "linkedin_network"
+      ],
+      "search_strategy": {
+        "search_queries": []
+      },
+      "deterministic_tools": [],
+      "fallback_to_retrieval": false,
+      "deterministic_input": null,
+      "evidence_focus": "connections",
+      "promotion_target": "connections",
+      "answer_kind": "scorecard",
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "preset": "fc-porto-2027-atomic-matrix",
+      "pack_role": "discovery",
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [
+        {
+          "type": "validated_question",
+          "question_id": "q11_decision_owner"
+        }
+      ],
+      "depends_on": [
+        "q11_decision_owner"
+      ],
+      "structured_output_schema": "connections_path_v1",
+      "graph_write_targets": [
+        "connection_paths"
+      ]
+    },
+    {
+      "question_id": "q13_capability_gap",
+      "question_family": "capability_gap",
+      "question_type": "capability_gap",
+      "question_text": "What capability gaps or weaknesses are most relevant for FC Porto versus peers?",
+      "query": "\"FC Porto\" capability gap",
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "source_priority": [],
+      "search_strategy": {
+        "search_queries": []
+      },
+      "deterministic_tools": [],
+      "fallback_to_retrieval": false,
+      "deterministic_input": null,
+      "evidence_focus": "capability_gap",
+      "promotion_target": "capability_gap",
+      "answer_kind": "scorecard",
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "preset": "fc-porto-2027-atomic-matrix",
+      "pack_role": "discovery",
+      "execution_class": "derived_inference",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [],
+      "depends_on": [
+        "q2_digital_stack",
+        "q4_performance",
+        "q5_league_context",
+        "q6_launch_signal",
+        "q7_procurement_signal",
+        "q9_news_signal",
+        "q10_hiring_signal"
+      ],
+      "structured_output_schema": "capability_gap_v1",
+      "graph_write_targets": [
+        "capability_gap_episodes"
+      ]
+    },
+    {
+      "question_id": "q14_yp_fit",
+      "question_family": "yp_fit",
+      "question_type": "yp_fit",
+      "question_text": "Where does Yellow Panther fit best for FC Porto?",
+      "query": "\"FC Porto\" Yellow Panther fit",
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "source_priority": [],
+      "search_strategy": {
+        "search_queries": []
+      },
+      "deterministic_tools": [],
+      "fallback_to_retrieval": false,
+      "deterministic_input": null,
+      "evidence_focus": "yp_fit",
+      "promotion_target": "yp_fit",
+      "answer_kind": "scorecard",
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "preset": "fc-porto-2027-atomic-matrix",
+      "pack_role": "discovery",
+      "execution_class": "derived_inference",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [],
+      "depends_on": [
+        "q13_capability_gap",
+        "q7_procurement_signal"
+      ],
+      "structured_output_schema": "yp_fit_v1",
+      "graph_write_targets": [
+        "yp_fit_episodes"
+      ]
+    },
+    {
+      "question_id": "q15_outreach_strategy",
+      "question_family": "outreach_strategy",
+      "question_type": "outreach_strategy",
+      "question_text": "What is the best outreach strategy for Yellow Panther at FC Porto?",
+      "query": "\"FC Porto\" outreach strategy",
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "source_priority": [],
+      "search_strategy": {
+        "search_queries": []
+      },
+      "deterministic_tools": [],
+      "fallback_to_retrieval": false,
+      "deterministic_input": null,
+      "evidence_focus": "outreach_strategy",
+      "promotion_target": "outreach_strategy",
+      "answer_kind": "scorecard",
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "FC Porto",
+      "entity_id": "fc-porto-2027",
+      "entity_type": "SPORT_CLUB",
+      "preset": "fc-porto-2027-atomic-matrix",
+      "pack_role": "discovery",
+      "execution_class": "derived_inference",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [],
+      "depends_on": [
+        "q11_decision_owner",
+        "q12_connections",
+        "q14_yp_fit"
+      ],
+      "structured_output_schema": "outreach_strategy_v1",
+      "graph_write_targets": [
+        "outreach_strategy_episodes"
+      ]
+    }
+  ],
+  "answer_records": [
+    {
+      "question_id": "q1_foundation",
+      "question_type": "foundation",
+      "status": "failed",
+      "validation_state": "failed",
+      "confidence": 0,
+      "signal_type": "FOUNDATION",
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "structured_output_schema": "foundation_v1",
+      "answer": {
+        "kind": "fact",
+        "value": "",
+        "summary": "No deterministic answer was produced for this question.",
+        "top_signals": [],
+        "commercial_interpretation": {},
+        "opportunity_hypotheses": [],
+        "maturity_signal": null,
+        "raw_structured_output": {
+          "summary": "No deterministic answer was produced for this question.",
+          "context": "No deterministic answer was produced for this question.",
+          "notes": "No deterministic answer was produced for this question.",
+          "terminal_state": "no_signal",
+          "blocked_by": [],
+          "sources": [],
+          "answer": {
+            "kind": "fact",
+            "value": "",
+            "summary": null,
+            "top_signals": [],
+            "commercial_interpretation": {},
+            "opportunity_hypotheses": [],
+            "maturity_signal": null,
+            "raw_structured_output": {
+              "summary": "No deterministic answer was produced for this question.",
+              "context": "No deterministic answer was produced for this question.",
+              "notes": "No deterministic answer was produced for this question.",
+              "terminal_state": "no_signal",
+              "blocked_by": [],
+              "sources": []
+            }
+          },
+          "validation_state": "failed"
+        },
+        "terminal_state": "no_signal",
+        "blocked_by": []
+      },
+      "primary_owner": null,
+      "supporting_candidates": [],
+      "candidates": [],
+      "evidence_refs": [],
+      "trace_ref": null,
+      "recommended_next_query": "",
+      "notes": "No deterministic answer was produced for this question.",
+      "started_at": "2026-04-10T07:04:47.194Z",
+      "completed_at": "2026-04-10T07:07:47.583Z",
+      "duration_seconds": 180.389,
+      "terminal_state": "no_signal",
+      "terminal_summary": "No deterministic answer was produced for this question.",
+      "blocked_by": []
+    },
+    {
+      "question_id": "q2_digital_stack",
+      "question_type": "digital_stack",
+      "status": "answered",
+      "validation_state": "validated",
+      "confidence": 0.78,
+      "signal_type": "DIGITAL_STACK",
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_1_core",
+      "structured_output_schema": "digital_stack_v1",
+      "answer": {
+        "kind": "signal_set",
+        "value": null,
+        "summary": "FC Porto operates a digitally progressive but infrastructure-light stack centred on Cloudflare CDN/Security, a bespoke mobile app (iOS/Android with NFC digital member cards and Apple/Google Wallet integration), a Magento-like e-commerce store at store.fcporto.pt, and a Binance-powered blockchain fan-token (PORTO). The club has a dedicated Head of Digital Transformation and a long-term 15-year Legends partnership managing global sponsorships, stadium naming rights, F&B and hospitality at Est\u00e1dio do Drag\u00e3o. Additional sports-tech partnerships include Scoutium for youth-athlete video analytics and Crypto Blockchain Industries for a metaverse digital world. Main commercial sponsors visible on kit and digital assets are New Balance (10+ year global kit deal), Betano (front-of-shirt, 4-year betting partnership), Super Bock, and Revigr\u00e9s.",
+        "top_signals": [
+          {
+            "name": "Cloudflare CDN",
+            "version": null,
+            "category": null,
+            "confidence": 0.5,
+            "validation_state": "inferred",
+            "evidence_refs": []
+          },
+          {
+            "name": "Cloudflare Web Optimizations",
+            "version": null,
+            "category": null,
+            "confidence": 0.5,
+            "validation_state": "inferred",
+            "evidence_refs": []
+          },
+          {
+            "name": "Webpack",
+            "version": null,
+            "category": null,
+            "confidence": 0.5,
+            "validation_state": "inferred",
+            "evidence_refs": []
+          },
+          {
+            "name": "Git",
+            "version": null,
+            "category": null,
+            "confidence": 0.5,
+            "validation_state": "inferred",
+            "evidence_refs": []
+          },
+          {
+            "name": "Head JS",
+            "version": null,
+            "category": null,
+            "confidence": 0.5,
+            "validation_state": "inferred",
+            "evidence_refs": []
+          },
+          {
+            "name": "HSTS",
+            "version": null,
+            "category": null,
+            "confidence": 0.5,
+            "validation_state": "inferred",
+            "evidence_refs": []
+          },
+          {
+            "name": "X-XSS-Protection",
+            "version": null,
+            "category": null,
+            "confidence": 0.5,
+            "validation_state": "inferred",
+            "evidence_refs": []
+          },
+          {
+            "name": "X-Content-Type-Options",
+            "version": null,
+            "category": null,
+            "confidence": 0.5,
+            "validation_state": "inferred",
+            "evidence_refs": []
+          },
+          {
+            "name": "PHP",
+            "version": null,
+            "category": null,
+            "confidence": 0.5,
+            "validation_state": "inferred",
+            "evidence_refs": []
+          },
+          {
+            "name": "NFC (member cards)",
+            "version": null,
+            "category": null,
+            "confidence": 0.5,
+            "validation_state": "inferred",
+            "evidence_refs": []
+          },
+          {
+            "name": "Apple Wallet",
+            "version": null,
+            "category": null,
+            "confidence": 0.5,
+            "validation_state": "inferred",
+            "evidence_refs": []
+          },
+          {
+            "name": "Google Wallet",
+            "version": null,
+            "category": null,
+            "confidence": 0.5,
+            "validation_state": "inferred",
+            "evidence_refs": []
+          },
+          {
+            "name": "Binance Smart Chain (BEP-20)",
+            "version": null,
+            "category": null,
+            "confidence": 0.5,
+            "validation_state": "inferred",
+            "evidence_refs": []
+          },
+          {
+            "name": "Scoutium (video analytics)",
+            "version": null,
+            "category": null,
+            "confidence": 0.5,
+            "validation_state": "inferred",
+            "evidence_refs": []
+          }
+        ],
+        "commercial_interpretation": {
+          "summary": "FC Porto is a top-tier Portuguese club actively investing in digital transformation: NFC-enabled digital membership cards (first in Portugal), a proprietary multi-function mobile app with in-stadium ordering (Seat Delivery), Binance fan-token monetisation, and a 15-year Legends mandate that outsources global partnership sales and stadium hospitality. The web infrastructure is standard CDN+PHP \u2014 no evidence of a modern headless CMS or enterprise CRM \u2014 suggesting digital ambition outpaces back-end maturity. The club's commercial engine is sponsor-driven (New Balance, Betano, Super Bock) rather than platform-driven, creating room for CRM, data-platform, and ticketing-system vendors to pitch layered value on top of the existing fan-app ecosystem.",
+          "themes": [],
+          "implication_strength": null
+        },
+        "opportunity_hypotheses": [
+          {
+            "type": "commercial_opportunity",
+            "label": "The highest-credibility commercial angle is CRM and fan-data unification: the club has NFC member cards, a mobile app with 237k+ downloads, a Binance fan token, and an e-commerce store, yet no visible enterprise CRM or CDP. A vendor offering fan-identity resolution, ticketing personalization, or loyalty-program technology could plug directly into the existing digital-member-card and Seat Delivery infrastructure \u2014 especially with a new commercial regime under president Andr\u00e9 Villas-Boas (elected April 2024) and a recently vacated Commercial Director role. Secondary opportunities include ticketing-platform modernisation and headless e-commerce for store.fcporto.pt.",
+            "confidence": 0.78
+          }
+        ],
+        "maturity_signal": "medium-high",
+        "raw_structured_output": {
+          "answer": "FC Porto operates a digitally progressive but infrastructure-light stack centred on Cloudflare CDN/Security, a bespoke mobile app (iOS/Android with NFC digital member cards and Apple/Google Wallet integration), a Magento-like e-commerce store at store.fcporto.pt, and a Binance-powered blockchain fan-token (PORTO). The club has a dedicated Head of Digital Transformation and a long-term 15-year Legends partnership managing global sponsorships, stadium naming rights, F&B and hospitality at Est\u00e1dio do Drag\u00e3o. Additional sports-tech partnerships include Scoutium for youth-athlete video analytics and Crypto Blockchain Industries for a metaverse digital world. Main commercial sponsors visible on kit and digital assets are New Balance (10+ year global kit deal), Betano (front-of-shirt, 4-year betting partnership), Super Bock, and Revigr\u00e9s.",
+          "technologies": [
+            "Cloudflare CDN",
+            "Cloudflare Web Optimizations",
+            "Webpack",
+            "Git",
+            "Head JS",
+            "HSTS",
+            "X-XSS-Protection",
+            "X-Content-Type-Options",
+            "PHP",
+            "NFC (member cards)",
+            "Apple Wallet",
+            "Google Wallet",
+            "Binance Smart Chain (BEP-20)",
+            "Scoutium (video analytics)"
+          ],
+          "categories": [
+            "CDN / Web Performance",
+            "Web Security",
+            "Build Tools / Version Control",
+            "Mobile App (iOS/Android)",
+            "E-commerce / Retail",
+            "Blockchain / Fan Token / NFT",
+            "Contactless / NFC Access",
+            "Sports Performance Analytics",
+            "Stadium Hospitality / F&B Management",
+            "Commercial Partnership Management",
+            "Digital Wallet Integration",
+            "Metaverse / Virtual World"
+          ],
+          "vendors": [
+            "Cloudflare",
+            "Binance",
+            "Legends (Global Partnerships / ASM Global)",
+            "New Balance",
+            "Betano (Kaizen Gaming)",
+            "Scoutium",
+            "Crypto Blockchain Industries (AlphaVerse)",
+            "Super Bock",
+            "Revigr\u00e9s"
+          ],
+          "additional_domains": [
+            "store.fcporto.pt",
+            "app.fcporto.pt",
+            "fcporto.pt"
+          ],
+          "maturity_signal": "medium-high",
+          "commercial_interpretation": "FC Porto is a top-tier Portuguese club actively investing in digital transformation: NFC-enabled digital membership cards (first in Portugal), a proprietary multi-function mobile app with in-stadium ordering (Seat Delivery), Binance fan-token monetisation, and a 15-year Legends mandate that outsources global partnership sales and stadium hospitality. The web infrastructure is standard CDN+PHP \u2014 no evidence of a modern headless CMS or enterprise CRM \u2014 suggesting digital ambition outpaces back-end maturity. The club's commercial engine is sponsor-driven (New Balance, Betano, Super Bock) rather than platform-driven, creating room for CRM, data-platform, and ticketing-system vendors to pitch layered value on top of the existing fan-app ecosystem.",
+          "opportunity": "The highest-credibility commercial angle is CRM and fan-data unification: the club has NFC member cards, a mobile app with 237k+ downloads, a Binance fan token, and an e-commerce store, yet no visible enterprise CRM or CDP. A vendor offering fan-identity resolution, ticketing personalization, or loyalty-program technology could plug directly into the existing digital-member-card and Seat Delivery infrastructure \u2014 especially with a new commercial regime under president Andr\u00e9 Villas-Boas (elected April 2024) and a recently vacated Commercial Director role. Secondary opportunities include ticketing-platform modernisation and headless e-commerce for store.fcporto.pt.",
+          "confidence": 0.78,
+          "sources": [
+            "https://leadiq.com/c/fc-porto/5a1d8acc2400002400650c4e",
+            "https://www.fcporto.pt/en/apps/apps",
+            "https://www.fcporto.pt/en/news/20240913-en-fc-porto-joins-the-nfc-universe",
+            "https://www.fcporto.pt/en/news/20240912-en-a-new-digital-card",
+            "https://www.fcporto.pt/en/news/20250606-en-fc-porto-and-scoutium-join-forces-to-enhance-the-development-of-young-athletes",
+            "https://legendsglobal.com/fc-porto-and-legends-announce-15-year-strategic-partnership/",
+            "https://www.fcporto.pt/en/corporate/partners-club/",
+            "https://www.fcporto.pt/en/news/20211105-en-fc-porto-and-binance-launch-porto-fan-token",
+            "https://store.fcporto.pt/en/",
+            "https://sportsmintmedia.com/legends-to-manage-fc-portos-global-partnerships-in-15-year-strategic-deal/"
+          ],
+          "validation_state": "validated",
+          "summary": "No deterministic answer was produced for this question.",
+          "context": "No deterministic answer was produced for this question.",
+          "notes": "No deterministic answer was produced for this question.",
+          "terminal_state": "answered",
+          "blocked_by": []
+        },
+        "terminal_state": "answered",
+        "blocked_by": []
+      },
+      "primary_owner": null,
+      "supporting_candidates": [],
+      "candidates": [],
+      "evidence_refs": [
+        "ev:q2_digital_stack:001",
+        "ev:q2_digital_stack:002",
+        "ev:q2_digital_stack:003",
+        "ev:q2_digital_stack:004",
+        "ev:q2_digital_stack:005",
+        "ev:q2_digital_stack:006",
+        "ev:q2_digital_stack:007",
+        "ev:q2_digital_stack:008",
+        "ev:q2_digital_stack:009",
+        "ev:q2_digital_stack:010"
+      ],
+      "trace_ref": null,
+      "recommended_next_query": "",
+      "notes": "No deterministic answer was produced for this question.",
+      "started_at": "2026-04-10T07:07:47.583Z",
+      "completed_at": "2026-04-10T07:12:07.316Z",
+      "duration_seconds": 259.733,
+      "terminal_state": "answered",
+      "terminal_summary": "FC Porto operates a digitally progressive but infrastructure-light stack centred on Cloudflare CDN/Security, a bespoke mobile app (iOS/Android with NFC digital member cards and Apple/Google Wallet integration), a Magento-like e-commerce store at store.fcporto.pt, and a Binance-powered blockchain fan-token (PORTO). The club has a dedicated Head of Digital Transformation and a long-term 15-year Legends partnership managing global sponsorships, stadium naming rights, F&B and hospitality at Est\u00e1dio do Drag\u00e3o. Additional sports-tech partnerships include Scoutium for youth-athlete video analytics and Crypto Blockchain Industries for a metaverse digital world. Main commercial sponsors visible on kit and digital assets are New Balance (10+ year global kit deal), Betano (front-of-shirt, 4-year betting partnership), Super Bock, and Revigr\u00e9s.",
+      "blocked_by": []
+    },
+    {
+      "question_id": "q3_leadership",
+      "question_type": "leadership",
+      "status": "failed",
+      "validation_state": "no_signal",
+      "confidence": 0,
+      "signal_type": "LEADERSHIP",
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "structured_output_schema": "leadership_candidates_v1",
+      "answer": {
+        "kind": "list",
+        "value": null,
+        "summary": "No trusted leadership candidates could be recovered from fallback sources.",
+        "top_signals": [],
+        "commercial_interpretation": {},
+        "opportunity_hypotheses": [],
+        "maturity_signal": null,
+        "raw_structured_output": {
+          "summary": "No trusted leadership candidates could be recovered from fallback sources.",
+          "context": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+          "notes": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+          "terminal_state": "no_signal",
+          "blocked_by": [],
+          "sources": [],
+          "validation_state": "no_signal",
+          "answer": {
+            "kind": "list",
+            "value": null,
+            "summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+            "top_signals": [],
+            "commercial_interpretation": {},
+            "opportunity_hypotheses": [],
+            "maturity_signal": null,
+            "raw_structured_output": {
+              "summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+              "context": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+              "notes": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+              "terminal_state": "no_signal",
+              "blocked_by": [],
+              "sources": []
+            }
+          },
+          "candidates": []
+        },
+        "terminal_state": "no_signal",
+        "blocked_by": []
+      },
+      "primary_owner": null,
+      "supporting_candidates": [],
+      "candidates": [],
+      "evidence_refs": [],
+      "trace_ref": null,
+      "recommended_next_query": "",
+      "notes": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+      "timeout_salvage": {
+        "salvage_state": "evidence_retained",
+        "counts_as_validated": false,
+        "candidate_summary": "BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+        "candidate_evidence_urls": [],
+        "risk_notes": [
+          "timeout salvage is non-strict and does not count as validated",
+          "no safe candidate summary extracted"
+        ]
+      },
+      "started_at": "2026-04-10T07:12:07.317Z",
+      "completed_at": "2026-04-10T07:17:07.939Z",
+      "duration_seconds": 300.622,
+      "terminal_state": "no_signal",
+      "terminal_summary": "No trusted leadership candidates could be recovered from fallback sources.",
+      "blocked_by": []
+    },
+    {
+      "question_id": "q6_launch_signal",
+      "question_type": "launch_signal",
+      "status": "failed",
+      "validation_state": "failed",
+      "confidence": 0,
+      "signal_type": "LAUNCH_SIGNAL",
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "structured_output_schema": "launch_signal_v1",
+      "answer": {
+        "kind": "summary",
+        "value": null,
+        "summary": "No deterministic answer was produced for this question.",
+        "top_signals": [],
+        "commercial_interpretation": {
+          "summary": "No deterministic answer was produced for this question.",
+          "themes": [],
+          "implication_strength": null
+        },
+        "opportunity_hypotheses": [],
+        "maturity_signal": null,
+        "raw_structured_output": {
+          "summary": "No deterministic answer was produced for this question.",
+          "context": "No deterministic answer was produced for this question.",
+          "notes": "No deterministic answer was produced for this question.",
+          "terminal_state": "no_signal",
+          "blocked_by": [],
+          "sources": [],
+          "answer": {
+            "kind": "summary",
+            "value": null,
+            "summary": "No deterministic answer was produced for this question.",
+            "top_signals": [],
+            "commercial_interpretation": {
+              "summary": "No deterministic answer was produced for this question.",
+              "themes": [],
+              "implication_strength": null
+            },
+            "opportunity_hypotheses": [],
+            "maturity_signal": null,
+            "raw_structured_output": {
+              "summary": "No deterministic answer was produced for this question.",
+              "context": "No deterministic answer was produced for this question.",
+              "notes": "No deterministic answer was produced for this question.",
+              "terminal_state": "no_signal",
+              "blocked_by": [],
+              "sources": []
+            }
+          },
+          "validation_state": "failed"
+        },
+        "terminal_state": "no_signal",
+        "blocked_by": []
+      },
+      "primary_owner": null,
+      "supporting_candidates": [],
+      "candidates": [],
+      "evidence_refs": [],
+      "trace_ref": null,
+      "recommended_next_query": "",
+      "notes": "No deterministic answer was produced for this question.",
+      "started_at": "2026-04-10T07:17:07.939Z",
+      "completed_at": "2026-04-10T07:20:08.345Z",
+      "duration_seconds": 180.406,
+      "terminal_state": "no_signal",
+      "terminal_summary": "No deterministic answer was produced for this question.",
+      "blocked_by": []
+    },
+    {
+      "question_id": "q7_procurement_signal",
+      "question_type": "procurement_signal",
+      "status": "answered",
+      "validation_state": "validated",
+      "confidence": 0.92,
+      "signal_type": "PROCUREMENT_SIGNAL",
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "structured_output_schema": "procurement_signal_v1",
+      "answer": {
+        "kind": "summary",
+        "value": null,
+        "summary": "Yes \u2014 FC Porto is actively and broadly reshaping its commercial and digital ecosystem across multiple fronts: stadium modernisation (\u20ac60\u201370M+), expanded vendor partnerships, new digital platforms, international strategic alliances, and a new premium/hospitality tiering model, all framed by its Strategic Plan and preparation for the 2030 FIFA World Cup.",
+        "top_signals": [],
+        "commercial_interpretation": {
+          "summary": "No deterministic answer was produced for this question.",
+          "themes": [],
+          "implication_strength": null
+        },
+        "opportunity_hypotheses": [],
+        "maturity_signal": null,
+        "raw_structured_output": {
+          "answer": "Yes \u2014 FC Porto is actively and broadly reshaping its commercial and digital ecosystem across multiple fronts: stadium modernisation (\u20ac60\u201370M+), expanded vendor partnerships, new digital platforms, international strategic alliances, and a new premium/hospitality tiering model, all framed by its Strategic Plan and preparation for the 2030 FIFA World Cup.",
+          "themes": [
+            {
+              "theme": "Stadium Modernisation & Premium Hospitality Overhaul",
+              "detail": "Multi-phase renovation of Est\u00e1dio do Drag\u00e3o (infrastructure, services, technology pillars). Expanding hospitality from 4 tiers to 9 integrated 'FC Porto Premium Experiences' concepts. New ticketing solution, innovative lighting, refurbished corporate boxes, central kitchen, satellite kitchens, and autonomous Ai Fi bars for frictionless service."
+            },
+            {
+              "theme": "Legends/ASM Global Partnership Expanded",
+              "detail": "New 5-year agreement (Aug 2025) expanding on a prior 15-year relationship. Legends now manages catering (first stadium-level contract of its kind in Portugal), F&B experience, global partnership sales, and fan experience transformation."
+            },
+            {
+              "theme": "Digital Transformation & Super App Strategy",
+              "detail": "Launched Portal do S\u00f3cio (Member Portal) and bilhetes.fcporto.pt ticketing platform. Planning a Hospitality App and a 'Super App' to integrate the entire FC Porto ecosystem into a single digital environment. Adobe Commerce online store built with Toogas/Altice/Sapo."
+            },
+            {
+              "theme": "International Expansion & Cross-Atlantic Alliance",
+              "detail": "Strategic partnership with FC Cincinnati (MLS) signed Jan 2026, built on four pillars covering sporting operations and brand expansion in European and North American markets."
+            },
+            {
+              "theme": "New Technology & Analytics Vendors",
+              "detail": "Off The Pitch (player valuation, financial/salary tools), Teamworks AMS (data-driven organisational transformation), LiveTag.Pro (official video/performance analysis), Forward Associates (stadium transformation strategy), Ai Fi (autonomous retail tech)."
+            },
+            {
+              "theme": "Sponsorship Portfolio Refresh",
+              "detail": "IUMAN named new Official Underwear Partner; New Balance landmark global deal extended (10th anniversary); Betano/Kaizen shirt sponsorship renewed/strengthened; Suits Inc partnership renewed for 2025; Ithaka 25-year deal for 30% economic rights of Drag\u00e3o; Binance Fan Token (PORTO); EarthCheck Silver Certification."
+            },
+            {
+              "theme": "Commercial Leadership Turnover",
+              "detail": "Long-serving Commercial Director Jos\u00e9 Pedro Dias (~10 years) departed to join Blocksport, indicating internal commercial reshaping."
+            }
+          ],
+          "confidence": 0.92,
+          "sources": [
+            "https://sportsvenuebusiness.com/2026/03/18/fc-porto-to-restart-stadium-renovation-works-at-the-end-of-the-season/",
+            "https://legendsglobal.com/press-release-legends-asm-global-expands-strategic-partnership-with-fc-porto-in-landmark-multi-year-agreement/",
+            "https://www.fcporto.pt/en/news/20260128-en-fc-porto-and-fc-cincinnati-sign-strategic-partnership",
+            "https://www.toogas.com/en/portfolio/fc-porto-store-en/",
+            "https://teamworks.com/blog/fc-portos-commitment-to-the-intelligent-use-of-data/",
+            "https://www.instagram.com/reel/DFFUW8mCblH/",
+            "https://www.coliseum-online.com/fc-porto-home-venue-massive-rejig-plans/",
+            "https://www.instagram.com/p/DIU554lycd6/",
+            "https://www.instagram.com/p/DVJaz6iiC5u/",
+            "https://sponsorship.sportbusiness.com/organisation/fc-porto/"
+          ],
+          "validation_state": "validated",
+          "summary": "No deterministic answer was produced for this question.",
+          "context": "No deterministic answer was produced for this question.",
+          "notes": "No deterministic answer was produced for this question.",
+          "terminal_state": "answered",
+          "blocked_by": []
+        },
+        "terminal_state": "answered",
+        "blocked_by": []
+      },
+      "primary_owner": null,
+      "supporting_candidates": [],
+      "candidates": [],
+      "evidence_refs": [
+        "ev:q7_procurement_signal:001",
+        "ev:q7_procurement_signal:002",
+        "ev:q7_procurement_signal:003",
+        "ev:q7_procurement_signal:004",
+        "ev:q7_procurement_signal:005",
+        "ev:q7_procurement_signal:006",
+        "ev:q7_procurement_signal:007",
+        "ev:q7_procurement_signal:008",
+        "ev:q7_procurement_signal:009",
+        "ev:q7_procurement_signal:010",
+        "ev:q7_procurement_signal:011"
+      ],
+      "trace_ref": null,
+      "recommended_next_query": "",
+      "notes": "No deterministic answer was produced for this question.",
+      "started_at": "2026-04-10T07:20:08.346Z",
+      "completed_at": "2026-04-10T07:22:38.947Z",
+      "duration_seconds": 150.601,
+      "terminal_state": "answered",
+      "terminal_summary": "Yes \u2014 FC Porto is actively and broadly reshaping its commercial and digital ecosystem across multiple fronts: stadium modernisation (\u20ac60\u201370M+), expanded vendor partnerships, new digital platforms, international strategic alliances, and a new premium/hospitality tiering model, all framed by its Strategic Plan and preparation for the 2030 FIFA World Cup.",
+      "blocked_by": []
+    },
+    {
+      "question_id": "q8_explicit_rfp",
+      "question_type": "tender_docs",
+      "status": "failed",
+      "validation_state": "failed",
+      "confidence": 0,
+      "signal_type": "TENDER_DOCS",
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_2_conditional",
+      "structured_output_schema": "explicit_rfp_v1",
+      "answer": {
+        "kind": "summary",
+        "value": null,
+        "summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+        "top_signals": [],
+        "commercial_interpretation": {
+          "summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+          "themes": [],
+          "implication_strength": null
+        },
+        "opportunity_hypotheses": [],
+        "maturity_signal": null,
+        "raw_structured_output": {
+          "summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+          "context": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+          "notes": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+          "terminal_state": "no_signal",
+          "blocked_by": [],
+          "sources": [
+            "https://repositorium.uminho.pt/bitstreams/5f3b9235-ba9d-4d76-9b53-485833d91d81/download",
+            "https://portodigital.pt/documents/d/guest/porto-urban-platform_brochura_small-1",
+            "https://www.vda.pt/xms/files/05_Publicacoes/2021/The_International_Capital_Markets_Review_edition_11_JPFM_OVG_SJU.pdf"
+          ],
+          "answer": {
+            "kind": "summary",
+            "value": null,
+            "summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+            "top_signals": [],
+            "commercial_interpretation": {
+              "summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+              "themes": [],
+              "implication_strength": null
+            },
+            "opportunity_hypotheses": [],
+            "maturity_signal": null,
+            "raw_structured_output": {
+              "summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+              "context": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+              "notes": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+              "terminal_state": "no_signal",
+              "blocked_by": [],
+              "sources": [
+                "https://repositorium.uminho.pt/bitstreams/5f3b9235-ba9d-4d76-9b53-485833d91d81/download",
+                "https://portodigital.pt/documents/d/guest/porto-urban-platform_brochura_small-1",
+                "https://www.vda.pt/xms/files/05_Publicacoes/2021/The_International_Capital_Markets_Review_edition_11_JPFM_OVG_SJU.pdf"
+              ]
+            }
+          },
+          "validation_state": "failed"
+        },
+        "terminal_state": "no_signal",
+        "blocked_by": []
+      },
+      "primary_owner": null,
+      "supporting_candidates": [],
+      "candidates": [],
+      "evidence_refs": [
+        "ev:q8_explicit_rfp:001",
+        "ev:q8_explicit_rfp:002",
+        "ev:q8_explicit_rfp:003"
+      ],
+      "trace_ref": null,
+      "recommended_next_query": "",
+      "notes": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+      "timeout_salvage": {
+        "salvage_state": "evidence_retained",
+        "counts_as_validated": false,
+        "candidate_summary": "BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+        "candidate_evidence_urls": [
+          "https://repositorium.uminho.pt/bitstreams/5f3b9235-ba9d-4d76-9b53-485833d91d81/download",
+          "https://portodigital.pt/documents/d/guest/porto-urban-platform_brochura_small-1",
+          "https://www.vda.pt/xms/files/05_Publicacoes/2021/The_International_Capital_Markets_Review_edition_11_JPFM_OVG_SJU.pdf"
+        ],
+        "risk_notes": [
+          "timeout salvage is non-strict and does not count as validated",
+          "no safe candidate summary extracted"
+        ]
+      },
+      "started_at": "2026-04-10T07:22:38.947Z",
+      "completed_at": "2026-04-10T07:25:40.127Z",
+      "duration_seconds": 181.18,
+      "terminal_state": "no_signal",
+      "terminal_summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+      "blocked_by": []
+    },
+    {
+      "question_id": "q9_news_signal",
+      "question_type": "news_signal",
+      "status": "failed",
+      "validation_state": "failed",
+      "confidence": 0,
+      "signal_type": "NEWS_SIGNAL",
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "structured_output_schema": "news_signal_v1",
+      "answer": {
+        "kind": "summary",
+        "value": null,
+        "summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+        "top_signals": [],
+        "commercial_interpretation": {
+          "summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+          "themes": [],
+          "implication_strength": null
+        },
+        "opportunity_hypotheses": [],
+        "maturity_signal": null,
+        "raw_structured_output": {
+          "summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+          "context": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+          "notes": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+          "terminal_state": "no_signal",
+          "blocked_by": [],
+          "sources": [],
+          "answer": {
+            "kind": "summary",
+            "value": null,
+            "summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+            "top_signals": [],
+            "commercial_interpretation": {
+              "summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+              "themes": [],
+              "implication_strength": null
+            },
+            "opportunity_hypotheses": [],
+            "maturity_signal": null,
+            "raw_structured_output": {
+              "summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+              "context": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+              "notes": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+              "terminal_state": "no_signal",
+              "blocked_by": [],
+              "sources": []
+            }
+          },
+          "validation_state": "failed"
+        },
+        "terminal_state": "no_signal",
+        "blocked_by": []
+      },
+      "primary_owner": null,
+      "supporting_candidates": [],
+      "candidates": [],
+      "evidence_refs": [],
+      "trace_ref": null,
+      "recommended_next_query": "",
+      "notes": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+      "timeout_salvage": {
+        "salvage_state": "evidence_retained",
+        "counts_as_validated": false,
+        "candidate_summary": "BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+        "candidate_evidence_urls": [],
+        "risk_notes": [
+          "timeout salvage is non-strict and does not count as validated",
+          "no safe candidate summary extracted"
+        ]
+      },
+      "started_at": "2026-04-10T07:25:40.130Z",
+      "completed_at": "2026-04-10T07:28:42.174Z",
+      "duration_seconds": 182.044,
+      "terminal_state": "no_signal",
+      "terminal_summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+      "blocked_by": []
+    },
+    {
+      "question_id": "q10_hiring_signal",
+      "question_type": "hiring_signal",
+      "status": "failed",
+      "validation_state": "failed",
+      "confidence": 0,
+      "signal_type": "HIRING_SIGNAL",
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_2_conditional",
+      "structured_output_schema": "hiring_signal_v1",
+      "answer": {
+        "kind": "summary",
+        "value": null,
+        "summary": "No deterministic answer was produced for this question.",
+        "top_signals": [],
+        "commercial_interpretation": {
+          "summary": "No deterministic answer was produced for this question.",
+          "themes": [],
+          "implication_strength": null
+        },
+        "opportunity_hypotheses": [],
+        "maturity_signal": null,
+        "raw_structured_output": {
+          "summary": "No deterministic answer was produced for this question.",
+          "context": "No deterministic answer was produced for this question.",
+          "notes": "No deterministic answer was produced for this question.",
+          "terminal_state": "no_signal",
+          "blocked_by": [],
+          "sources": [],
+          "answer": {
+            "kind": "summary",
+            "value": null,
+            "summary": "No deterministic answer was produced for this question.",
+            "top_signals": [],
+            "commercial_interpretation": {
+              "summary": "No deterministic answer was produced for this question.",
+              "themes": [],
+              "implication_strength": null
+            },
+            "opportunity_hypotheses": [],
+            "maturity_signal": null,
+            "raw_structured_output": {
+              "summary": "No deterministic answer was produced for this question.",
+              "context": "No deterministic answer was produced for this question.",
+              "notes": "No deterministic answer was produced for this question.",
+              "terminal_state": "no_signal",
+              "blocked_by": [],
+              "sources": []
+            }
+          },
+          "validation_state": "failed"
+        },
+        "terminal_state": "no_signal",
+        "blocked_by": []
+      },
+      "primary_owner": null,
+      "supporting_candidates": [],
+      "candidates": [],
+      "evidence_refs": [],
+      "trace_ref": null,
+      "recommended_next_query": "",
+      "notes": "No deterministic answer was produced for this question.",
+      "started_at": "2026-04-10T07:28:42.182Z",
+      "completed_at": "2026-04-10T07:31:43.956Z",
+      "duration_seconds": 181.774,
+      "terminal_state": "no_signal",
+      "terminal_summary": "No deterministic answer was produced for this question.",
+      "blocked_by": []
+    },
+    {
+      "question_id": "q4_performance",
+      "question_type": "performance",
+      "status": "no_signal",
+      "validation_state": "no_signal",
+      "confidence": 0,
+      "signal_type": "PERFORMANCE",
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_2_conditional",
+      "structured_output_schema": "performance_context_v1",
+      "answer": {
+        "kind": "summary",
+        "value": null,
+        "summary": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+        "top_signals": [],
+        "commercial_interpretation": {
+          "summary": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+          "themes": [],
+          "implication_strength": null
+        },
+        "opportunity_hypotheses": [],
+        "maturity_signal": null,
+        "raw_structured_output": {
+          "answer": "",
+          "confidence": 0,
+          "sources": [],
+          "validation_state": "no_signal",
+          "terminal_state": "no_signal",
+          "notes": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+          "context": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+          "summary": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+          "blocked_by": []
+        },
+        "terminal_state": "no_signal",
+        "blocked_by": []
+      },
+      "primary_owner": null,
+      "supporting_candidates": [],
+      "candidates": [],
+      "evidence_refs": [],
+      "trace_ref": null,
+      "recommended_next_query": "",
+      "notes": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+      "started_at": "2026-04-10T07:31:43.957Z",
+      "completed_at": "2026-04-10T07:31:44.077Z",
+      "duration_seconds": 0.12,
+      "terminal_state": "no_signal",
+      "terminal_summary": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+      "blocked_by": []
+    },
+    {
+      "question_id": "q5_league_context",
+      "question_type": "league_context",
+      "status": "no_signal",
+      "validation_state": "no_signal",
+      "confidence": 0,
+      "signal_type": "LEAGUE_CONTEXT",
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_2_conditional",
+      "structured_output_schema": "league_context_v1",
+      "answer": {
+        "kind": "summary",
+        "value": null,
+        "summary": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+        "top_signals": [],
+        "commercial_interpretation": {
+          "summary": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+          "themes": [],
+          "implication_strength": null
+        },
+        "opportunity_hypotheses": [],
+        "maturity_signal": null,
+        "raw_structured_output": {
+          "answer": "",
+          "confidence": 0,
+          "sources": [],
+          "validation_state": "no_signal",
+          "terminal_state": "no_signal",
+          "notes": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+          "context": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+          "summary": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+          "blocked_by": []
+        },
+        "terminal_state": "no_signal",
+        "blocked_by": []
+      },
+      "primary_owner": null,
+      "supporting_candidates": [],
+      "candidates": [],
+      "evidence_refs": [],
+      "trace_ref": null,
+      "recommended_next_query": "",
+      "notes": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+      "started_at": "2026-04-10T07:31:44.077Z",
+      "completed_at": "2026-04-10T07:31:44.155Z",
+      "duration_seconds": 0.078,
+      "terminal_state": "no_signal",
+      "terminal_summary": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+      "blocked_by": []
+    },
+    {
+      "question_id": "q11_decision_owner",
+      "question_type": "decision_owner",
+      "status": "failed",
+      "validation_state": "no_signal",
+      "confidence": 0,
+      "signal_type": "DECISION_OWNER",
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_3_decision",
+      "structured_output_schema": "decision_owner_v1",
+      "answer": {
+        "kind": "list",
+        "value": null,
+        "summary": "No trusted decision-owner candidates could be recovered from fallback sources.",
+        "top_signals": [],
+        "commercial_interpretation": {},
+        "opportunity_hypotheses": [],
+        "maturity_signal": null,
+        "raw_structured_output": {
+          "summary": "No trusted decision-owner candidates could be recovered from fallback sources.",
+          "context": "No deterministic answer was produced for this question.",
+          "notes": "No deterministic answer was produced for this question.",
+          "terminal_state": "no_signal",
+          "blocked_by": [],
+          "sources": [],
+          "validation_state": "no_signal",
+          "answer": {
+            "kind": "list",
+            "value": null,
+            "summary": "No deterministic answer was produced for this question.",
+            "top_signals": [],
+            "commercial_interpretation": {},
+            "opportunity_hypotheses": [],
+            "maturity_signal": null,
+            "raw_structured_output": {
+              "summary": "No deterministic answer was produced for this question.",
+              "context": "No deterministic answer was produced for this question.",
+              "notes": "No deterministic answer was produced for this question.",
+              "terminal_state": "no_signal",
+              "blocked_by": [],
+              "sources": []
+            }
+          },
+          "primary_owner": null,
+          "candidates": []
+        },
+        "terminal_state": "no_signal",
+        "blocked_by": []
+      },
+      "primary_owner": null,
+      "supporting_candidates": [],
+      "candidates": [],
+      "evidence_refs": [],
+      "trace_ref": null,
+      "recommended_next_query": "",
+      "notes": "No deterministic answer was produced for this question.",
+      "started_at": "2026-04-10T07:31:44.156Z",
+      "completed_at": "2026-04-10T07:36:45.398Z",
+      "duration_seconds": 301.242,
+      "terminal_state": "no_signal",
+      "terminal_summary": "No trusted decision-owner candidates could be recovered from fallback sources.",
+      "blocked_by": []
+    },
+    {
+      "question_id": "q12_connections",
+      "question_type": "connections",
+      "status": "no_signal",
+      "validation_state": "no_signal",
+      "confidence": 0,
+      "signal_type": "CONNECTIONS",
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_3_decision",
+      "structured_output_schema": "connections_path_v1",
+      "answer": {
+        "kind": "summary",
+        "value": null,
+        "summary": "Question conditions were not met: upstream question q11_decision_owner did not validate.",
+        "top_signals": [],
+        "commercial_interpretation": {
+          "summary": "Question conditions were not met: upstream question q11_decision_owner did not validate.",
+          "themes": [],
+          "implication_strength": null
+        },
+        "opportunity_hypotheses": [],
+        "maturity_signal": null,
+        "raw_structured_output": {
+          "answer": "",
+          "confidence": 0,
+          "sources": [],
+          "validation_state": "no_signal",
+          "terminal_state": "blocked",
+          "notes": "Question conditions were not met: upstream question q11_decision_owner did not validate.",
+          "context": "Question conditions were not met: upstream question q11_decision_owner did not validate.",
+          "summary": "Question conditions were not met: upstream question q11_decision_owner did not validate.",
+          "blocked_by": [
+            "q11_decision_owner"
+          ],
+          "candidate_paths": [],
+          "best_yp_owner": "",
+          "path_type": "cold",
+          "connection_score": 0,
+          "q12_score": 0
+        },
+        "terminal_state": "blocked",
+        "blocked_by": [
+          "q11_decision_owner"
+        ]
+      },
+      "primary_owner": null,
+      "supporting_candidates": [],
+      "candidates": [],
+      "evidence_refs": [],
+      "trace_ref": null,
+      "recommended_next_query": "",
+      "notes": "Question conditions were not met: upstream question q11_decision_owner did not validate.",
+      "started_at": "2026-04-10T07:36:45.398Z",
+      "completed_at": "2026-04-10T07:36:45.444Z",
+      "duration_seconds": 0.046,
+      "terminal_state": "blocked",
+      "terminal_summary": "Question conditions were not met: upstream question q11_decision_owner did not validate.",
+      "blocked_by": [
+        "q11_decision_owner"
+      ]
+    },
+    {
+      "question_id": "q13_capability_gap",
+      "question_type": "capability_gap",
+      "status": "answered",
+      "validation_state": "provisional",
+      "confidence": 0.6,
+      "signal_type": "CAPABILITY_GAP",
+      "execution_class": "derived_inference",
+      "rollout_phase": "phase_3_decision",
+      "structured_output_schema": "capability_gap_v1",
+      "answer": {
+        "kind": "summary",
+        "value": null,
+        "summary": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+        "top_signals": [],
+        "commercial_interpretation": {
+          "summary": "Capability gap scorecard derived from validated upstream commercial and digital signals.",
+          "themes": [],
+          "implication_strength": null
+        },
+        "opportunity_hypotheses": [],
+        "maturity_signal": null,
+        "raw_structured_output": {
+          "answer": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+          "summary": "Capability gap scorecard derived from validated upstream commercial and digital signals.",
+          "themes": [
+            "digital_stack_maturity",
+            "vendor_change_motion"
+          ],
+          "recommendations": [
+            "Close digital stack maturity gap",
+            "Close vendor change motion gap"
+          ],
+          "gap_scorecard": [
+            {
+              "capability": "digital_stack_maturity",
+              "gap_score": 0.78,
+              "severity": "high",
+              "driver_question_ids": [
+                "q2_digital_stack",
+                "q6_launch_signal",
+                "q7_procurement_signal",
+                "q9_news_signal"
+              ]
+            },
+            {
+              "capability": "vendor_change_motion",
+              "gap_score": 0.7000000000000001,
+              "severity": "medium",
+              "driver_question_ids": [
+                "q2_digital_stack",
+                "q6_launch_signal",
+                "q7_procurement_signal",
+                "q9_news_signal"
+              ]
+            }
+          ],
+          "top_gap": "digital_stack_maturity",
+          "graph_episode": {
+            "episode_type": "capability_gap",
+            "label": "digital_stack_maturity",
+            "score": 0.78
+          },
+          "confidence": 0.6,
+          "validation_state": "provisional",
+          "sources": [],
+          "signal_type": "CAPABILITY_GAP",
+          "context": "Capability gap scorecard derived from validated upstream commercial and digital signals.",
+          "notes": "Capability gap scorecard derived from validated upstream commercial and digital signals.",
+          "terminal_state": "answered",
+          "blocked_by": []
+        },
+        "terminal_state": "answered",
+        "blocked_by": []
+      },
+      "primary_owner": null,
+      "supporting_candidates": [],
+      "candidates": [],
+      "evidence_refs": [],
+      "trace_ref": null,
+      "recommended_next_query": "",
+      "notes": "Capability gap scorecard derived from validated upstream commercial and digital signals.",
+      "started_at": "2026-04-10T07:36:45.444Z",
+      "completed_at": "2026-04-10T07:36:45.459Z",
+      "duration_seconds": 0.015,
+      "terminal_state": "answered",
+      "terminal_summary": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+      "blocked_by": []
+    },
+    {
+      "question_id": "q14_yp_fit",
+      "question_type": "yp_fit",
+      "status": "no_signal",
+      "validation_state": "no_signal",
+      "confidence": 0,
+      "signal_type": "YP_FIT",
+      "execution_class": "derived_inference",
+      "rollout_phase": "phase_3_decision",
+      "structured_output_schema": "yp_fit_v1",
+      "answer": {
+        "kind": "summary",
+        "value": null,
+        "summary": "No capability-gap inference is available yet for YP fit mapping.",
+        "top_signals": [],
+        "commercial_interpretation": {
+          "summary": "No capability-gap inference is available yet for YP fit mapping.",
+          "themes": [],
+          "implication_strength": null
+        },
+        "opportunity_hypotheses": [],
+        "maturity_signal": null,
+        "raw_structured_output": {
+          "answer": "",
+          "confidence": 0,
+          "sources": [],
+          "validation_state": "no_signal",
+          "terminal_state": "blocked",
+          "notes": "No capability-gap inference is available yet for YP fit mapping.",
+          "context": "No capability-gap inference is available yet for YP fit mapping.",
+          "summary": "No capability-gap inference is available yet for YP fit mapping.",
+          "blocked_by": [
+            "q13_capability_gap",
+            "q7_procurement_signal"
+          ],
+          "themes": [],
+          "recommendations": []
+        },
+        "terminal_state": "blocked",
+        "blocked_by": [
+          "q13_capability_gap",
+          "q7_procurement_signal"
+        ]
+      },
+      "primary_owner": null,
+      "supporting_candidates": [],
+      "candidates": [],
+      "evidence_refs": [],
+      "trace_ref": null,
+      "recommended_next_query": "",
+      "notes": "No capability-gap inference is available yet for YP fit mapping.",
+      "started_at": "2026-04-10T07:36:45.459Z",
+      "completed_at": "2026-04-10T07:36:45.471Z",
+      "duration_seconds": 0.012,
+      "terminal_state": "blocked",
+      "terminal_summary": "No capability-gap inference is available yet for YP fit mapping.",
+      "blocked_by": [
+        "q13_capability_gap",
+        "q7_procurement_signal"
+      ]
+    },
+    {
+      "question_id": "q15_outreach_strategy",
+      "question_type": "outreach_strategy",
+      "status": "no_signal",
+      "validation_state": "no_signal",
+      "confidence": 0,
+      "signal_type": "OUTREACH_STRATEGY",
+      "execution_class": "derived_inference",
+      "rollout_phase": "phase_3_decision",
+      "structured_output_schema": "outreach_strategy_v1",
+      "answer": {
+        "kind": "summary",
+        "value": null,
+        "summary": "No ranked target is available yet for outreach strategy.",
+        "top_signals": [],
+        "commercial_interpretation": {
+          "summary": "No ranked target is available yet for outreach strategy.",
+          "themes": [],
+          "implication_strength": null
+        },
+        "opportunity_hypotheses": [],
+        "maturity_signal": null,
+        "raw_structured_output": {
+          "answer": "",
+          "confidence": 0,
+          "sources": [],
+          "validation_state": "no_signal",
+          "terminal_state": "no_signal",
+          "notes": "No ranked target is available yet for outreach strategy.",
+          "context": "No ranked target is available yet for outreach strategy.",
+          "summary": "No ranked target is available yet for outreach strategy.",
+          "themes": [],
+          "recommendations": [],
+          "blocked_by": []
+        },
+        "terminal_state": "no_signal",
+        "blocked_by": []
+      },
+      "primary_owner": null,
+      "supporting_candidates": [],
+      "candidates": [],
+      "evidence_refs": [],
+      "trace_ref": null,
+      "recommended_next_query": "",
+      "notes": "No ranked target is available yet for outreach strategy.",
+      "started_at": "2026-04-10T07:36:45.472Z",
+      "completed_at": "2026-04-10T07:36:45.483Z",
+      "duration_seconds": 0.011,
+      "terminal_state": "no_signal",
+      "terminal_summary": "No ranked target is available yet for outreach strategy.",
+      "blocked_by": []
+    }
+  ],
+  "question_timings": {
+    "q1_foundation": {
+      "started_at": "2026-04-10T07:04:47.194Z",
+      "completed_at": "2026-04-10T07:07:47.583Z",
+      "duration_seconds": 180.389
+    },
+    "q2_digital_stack": {
+      "started_at": "2026-04-10T07:07:47.583Z",
+      "completed_at": "2026-04-10T07:12:07.316Z",
+      "duration_seconds": 259.733
+    },
+    "q3_leadership": {
+      "started_at": "2026-04-10T07:12:07.317Z",
+      "completed_at": "2026-04-10T07:17:07.939Z",
+      "duration_seconds": 300.622
+    },
+    "q6_launch_signal": {
+      "started_at": "2026-04-10T07:17:07.939Z",
+      "completed_at": "2026-04-10T07:20:08.345Z",
+      "duration_seconds": 180.406
+    },
+    "q7_procurement_signal": {
+      "started_at": "2026-04-10T07:20:08.346Z",
+      "completed_at": "2026-04-10T07:22:38.947Z",
+      "duration_seconds": 150.601
+    },
+    "q8_explicit_rfp": {
+      "started_at": "2026-04-10T07:22:38.947Z",
+      "completed_at": "2026-04-10T07:25:40.127Z",
+      "duration_seconds": 181.18
+    },
+    "q9_news_signal": {
+      "started_at": "2026-04-10T07:25:40.130Z",
+      "completed_at": "2026-04-10T07:28:42.174Z",
+      "duration_seconds": 182.044
+    },
+    "q10_hiring_signal": {
+      "started_at": "2026-04-10T07:28:42.182Z",
+      "completed_at": "2026-04-10T07:31:43.956Z",
+      "duration_seconds": 181.774
+    },
+    "q4_performance": {
+      "started_at": "2026-04-10T07:31:43.957Z",
+      "completed_at": "2026-04-10T07:31:44.077Z",
+      "duration_seconds": 0.12
+    },
+    "q5_league_context": {
+      "started_at": "2026-04-10T07:31:44.077Z",
+      "completed_at": "2026-04-10T07:31:44.155Z",
+      "duration_seconds": 0.078
+    },
+    "q11_decision_owner": {
+      "started_at": "2026-04-10T07:31:44.156Z",
+      "completed_at": "2026-04-10T07:36:45.398Z",
+      "duration_seconds": 301.242
+    },
+    "q12_connections": {
+      "started_at": "2026-04-10T07:36:45.398Z",
+      "completed_at": "2026-04-10T07:36:45.444Z",
+      "duration_seconds": 0.046
+    },
+    "q13_capability_gap": {
+      "started_at": "2026-04-10T07:36:45.444Z",
+      "completed_at": "2026-04-10T07:36:45.459Z",
+      "duration_seconds": 0.015
+    },
+    "q14_yp_fit": {
+      "started_at": "2026-04-10T07:36:45.459Z",
+      "completed_at": "2026-04-10T07:36:45.471Z",
+      "duration_seconds": 0.012
+    },
+    "q15_outreach_strategy": {
+      "started_at": "2026-04-10T07:36:45.472Z",
+      "completed_at": "2026-04-10T07:36:45.483Z",
+      "duration_seconds": 0.011
+    }
+  },
+  "evidence_items": [
+    {
+      "evidence_id": "ev:q2_digital_stack:001",
+      "question_id": "q2_digital_stack",
+      "source_type": "other",
+      "url": "https://leadiq.com/c/fc-porto/5a1d8acc2400002400650c4e",
+      "title": null,
+      "snippet": null,
+      "captured_at": "2026-04-10T07:12:07.316Z",
+      "relevance": 0.78,
+      "confidence": 0.78,
+      "supports": [
+        "DIGITAL_STACK"
+      ],
+      "raw_ref": null
+    },
+    {
+      "evidence_id": "ev:q2_digital_stack:002",
+      "question_id": "q2_digital_stack",
+      "source_type": "other",
+      "url": "https://www.fcporto.pt/en/apps/apps",
+      "title": null,
+      "snippet": null,
+      "captured_at": "2026-04-10T07:12:07.316Z",
+      "relevance": 0.78,
+      "confidence": 0.78,
+      "supports": [
+        "DIGITAL_STACK"
+      ],
+      "raw_ref": null
+    },
+    {
+      "evidence_id": "ev:q2_digital_stack:003",
+      "question_id": "q2_digital_stack",
+      "source_type": "other",
+      "url": "https://www.fcporto.pt/en/news/20240913-en-fc-porto-joins-the-nfc-universe",
+      "title": null,
+      "snippet": null,
+      "captured_at": "2026-04-10T07:12:07.316Z",
+      "relevance": 0.78,
+      "confidence": 0.78,
+      "supports": [
+        "DIGITAL_STACK"
+      ],
+      "raw_ref": null
+    },
+    {
+      "evidence_id": "ev:q2_digital_stack:004",
+      "question_id": "q2_digital_stack",
+      "source_type": "other",
+      "url": "https://www.fcporto.pt/en/news/20240912-en-a-new-digital-card",
+      "title": null,
+      "snippet": null,
+      "captured_at": "2026-04-10T07:12:07.316Z",
+      "relevance": 0.78,
+      "confidence": 0.78,
+      "supports": [
+        "DIGITAL_STACK"
+      ],
+      "raw_ref": null
+    },
+    {
+      "evidence_id": "ev:q2_digital_stack:005",
+      "question_id": "q2_digital_stack",
+      "source_type": "other",
+      "url": "https://www.fcporto.pt/en/news/20250606-en-fc-porto-and-scoutium-join-forces-to-enhance-the-development-of-young-athletes",
+      "title": null,
+      "snippet": null,
+      "captured_at": "2026-04-10T07:12:07.316Z",
+      "relevance": 0.78,
+      "confidence": 0.78,
+      "supports": [
+        "DIGITAL_STACK"
+      ],
+      "raw_ref": null
+    },
+    {
+      "evidence_id": "ev:q2_digital_stack:006",
+      "question_id": "q2_digital_stack",
+      "source_type": "other",
+      "url": "https://legendsglobal.com/fc-porto-and-legends-announce-15-year-strategic-partnership/",
+      "title": null,
+      "snippet": null,
+      "captured_at": "2026-04-10T07:12:07.316Z",
+      "relevance": 0.78,
+      "confidence": 0.78,
+      "supports": [
+        "DIGITAL_STACK"
+      ],
+      "raw_ref": null
+    },
+    {
+      "evidence_id": "ev:q2_digital_stack:007",
+      "question_id": "q2_digital_stack",
+      "source_type": "other",
+      "url": "https://www.fcporto.pt/en/corporate/partners-club/",
+      "title": null,
+      "snippet": null,
+      "captured_at": "2026-04-10T07:12:07.316Z",
+      "relevance": 0.78,
+      "confidence": 0.78,
+      "supports": [
+        "DIGITAL_STACK"
+      ],
+      "raw_ref": null
+    },
+    {
+      "evidence_id": "ev:q2_digital_stack:008",
+      "question_id": "q2_digital_stack",
+      "source_type": "other",
+      "url": "https://www.fcporto.pt/en/news/20211105-en-fc-porto-and-binance-launch-porto-fan-token",
+      "title": null,
+      "snippet": null,
+      "captured_at": "2026-04-10T07:12:07.316Z",
+      "relevance": 0.78,
+      "confidence": 0.78,
+      "supports": [
+        "DIGITAL_STACK"
+      ],
+      "raw_ref": null
+    },
+    {
+      "evidence_id": "ev:q2_digital_stack:009",
+      "question_id": "q2_digital_stack",
+      "source_type": "other",
+      "url": "https://store.fcporto.pt/en/",
+      "title": null,
+      "snippet": null,
+      "captured_at": "2026-04-10T07:12:07.316Z",
+      "relevance": 0.78,
+      "confidence": 0.78,
+      "supports": [
+        "DIGITAL_STACK"
+      ],
+      "raw_ref": null
+    },
+    {
+      "evidence_id": "ev:q2_digital_stack:010",
+      "question_id": "q2_digital_stack",
+      "source_type": "other",
+      "url": "https://sportsmintmedia.com/legends-to-manage-fc-portos-global-partnerships-in-15-year-strategic-deal/",
+      "title": null,
+      "snippet": null,
+      "captured_at": "2026-04-10T07:12:07.316Z",
+      "relevance": 0.78,
+      "confidence": 0.78,
+      "supports": [
+        "DIGITAL_STACK"
+      ],
+      "raw_ref": null
+    },
+    {
+      "evidence_id": "ev:q7_procurement_signal:001",
+      "question_id": "q7_procurement_signal",
+      "source_type": "other",
+      "url": "[object Object]",
+      "title": null,
+      "snippet": null,
+      "captured_at": "2026-04-10T07:22:38.947Z",
+      "relevance": 0.92,
+      "confidence": 0.92,
+      "supports": [
+        "PROCUREMENT_SIGNAL"
+      ],
+      "raw_ref": null
+    },
+    {
+      "evidence_id": "ev:q7_procurement_signal:002",
+      "question_id": "q7_procurement_signal",
+      "source_type": "other",
+      "url": "https://sportsvenuebusiness.com/2026/03/18/fc-porto-to-restart-stadium-renovation-works-at-the-end-of-the-season/",
+      "title": "FC Porto to restart stadium renovation works at the end of the season",
+      "snippet": "Second phase focuses on infrastructure, services and technology. Digital Transformation remains a priority. Hospitality App and Super App planned. Legends Global and Forward Associates involved.",
+      "captured_at": "2026-04-10T07:22:38.947Z",
+      "relevance": 0.92,
+      "confidence": 0.92,
+      "supports": [
+        "PROCUREMENT_SIGNAL"
+      ],
+      "raw_ref": null
+    },
+    {
+      "evidence_id": "ev:q7_procurement_signal:003",
+      "question_id": "q7_procurement_signal",
+      "source_type": "other",
+      "url": "https://legendsglobal.com/press-release-legends-asm-global-expands-strategic-partnership-with-fc-porto-in-landmark-multi-year-agreement/",
+      "title": "Legends/ASM Global Expands Strategic Partnership with FC Porto",
+      "snippet": "New five-year agreement expanding on 15-year relationship. First stadium-level catering contract in Portugal.",
+      "captured_at": "2026-04-10T07:22:38.947Z",
+      "relevance": 0.92,
+      "confidence": 0.92,
+      "supports": [
+        "PROCUREMENT_SIGNAL"
+      ],
+      "raw_ref": null
+    },
+    {
+      "evidence_id": "ev:q7_procurement_signal:004",
+      "question_id": "q7_procurement_signal",
+      "source_type": "other",
+      "url": "https://www.fcporto.pt/en/news/20260128-en-fc-porto-and-fc-cincinnati-sign-strategic-partnership",
+      "title": "FC Porto and FC Cincinnati sign strategic partnership",
+      "snippet": "Agreement with MLS Club fits FC Porto's international expansion strategy.",
+      "captured_at": "2026-04-10T07:22:38.947Z",
+      "relevance": 0.92,
+      "confidence": 0.92,
+      "supports": [
+        "PROCUREMENT_SIGNAL"
+      ],
+      "raw_ref": null
+    },
+    {
+      "evidence_id": "ev:q7_procurement_signal:005",
+      "question_id": "q7_procurement_signal",
+      "source_type": "other",
+      "url": "https://www.toogas.com/en/portfolio/fc-porto-store-en/",
+      "title": "FC Porto Store Ecommerce Project",
+      "snippet": "Adobe Commerce B2C online store developed with Toogas, Altice, and Sapo.",
+      "captured_at": "2026-04-10T07:22:38.947Z",
+      "relevance": 0.92,
+      "confidence": 0.92,
+      "supports": [
+        "PROCUREMENT_SIGNAL"
+      ],
+      "raw_ref": null
+    },
+    {
+      "evidence_id": "ev:q7_procurement_signal:006",
+      "question_id": "q7_procurement_signal",
+      "source_type": "other",
+      "url": "https://teamworks.com/blog/fc-portos-commitment-to-the-intelligent-use-of-data/",
+      "title": "FC Porto: The Pursuit of Excellence \u2014 Teamworks AMS",
+      "snippet": "FC Porto embraced Teamworks AMS as catalyst for organisational transformation.",
+      "captured_at": "2026-04-10T07:22:38.947Z",
+      "relevance": 0.92,
+      "confidence": 0.92,
+      "supports": [
+        "PROCUREMENT_SIGNAL"
+      ],
+      "raw_ref": null
+    },
+    {
+      "evidence_id": "ev:q7_procurement_signal:007",
+      "question_id": "q7_procurement_signal",
+      "source_type": "other",
+      "url": "https://www.instagram.com/reel/DFFUW8mCblH/",
+      "title": "LiveTag.Pro selected as official video and performance analysis software provider for FC Porto",
+      "snippet": "LiveTag.Pro announced as official analysis software provider.",
+      "captured_at": "2026-04-10T07:22:38.947Z",
+      "relevance": 0.92,
+      "confidence": 0.92,
+      "supports": [
+        "PROCUREMENT_SIGNAL"
+      ],
+      "raw_ref": null
+    },
+    {
+      "evidence_id": "ev:q7_procurement_signal:008",
+      "question_id": "q7_procurement_signal",
+      "source_type": "other",
+      "url": "https://www.coliseum-online.com/fc-porto-home-venue-massive-rejig-plans/",
+      "title": "FC Porto home venue massive rejig plans",
+      "snippet": "Investment of between \u20ac60 and \u20ac70 million to modernize Est\u00e1dio do Drag\u00e3o. \u20ac250M financing deal closed.",
+      "captured_at": "2026-04-10T07:22:38.947Z",
+      "relevance": 0.92,
+      "confidence": 0.92,
+      "supports": [
+        "PROCUREMENT_SIGNAL"
+      ],
+      "raw_ref": null
+    },
+    {
+      "evidence_id": "ev:q7_procurement_signal:009",
+      "question_id": "q7_procurement_signal",
+      "source_type": "other",
+      "url": "https://www.instagram.com/p/DIU554lycd6/",
+      "title": "THE GATE alliance with FC Porto",
+      "snippet": "Partnership spanning youth development and other areas.",
+      "captured_at": "2026-04-10T07:22:38.947Z",
+      "relevance": 0.92,
+      "confidence": 0.92,
+      "supports": [
+        "PROCUREMENT_SIGNAL"
+      ],
+      "raw_ref": null
+    },
+    {
+      "evidence_id": "ev:q7_procurement_signal:010",
+      "question_id": "q7_procurement_signal",
+      "source_type": "other",
+      "url": "https://www.instagram.com/p/DVJaz6iiC5u/",
+      "title": "IUMAN \u00e9 a nova Official Underwear Partner do FC Porto",
+      "snippet": "IUMAN named new Official Underwear Partner.",
+      "captured_at": "2026-04-10T07:22:38.947Z",
+      "relevance": 0.92,
+      "confidence": 0.92,
+      "supports": [
+        "PROCUREMENT_SIGNAL"
+      ],
+      "raw_ref": null
+    },
+    {
+      "evidence_id": "ev:q7_procurement_signal:011",
+      "question_id": "q7_procurement_signal",
+      "source_type": "other",
+      "url": "https://sponsorship.sportbusiness.com/organisation/fc-porto/",
+      "title": "FC Porto \u2014 SportBusiness Sponsorship",
+      "snippet": "25-year deal with Ithaka to sell 30% of economic rights to Drag\u00e3o.",
+      "captured_at": "2026-04-10T07:22:38.947Z",
+      "relevance": 0.92,
+      "confidence": 0.92,
+      "supports": [
+        "PROCUREMENT_SIGNAL"
+      ],
+      "raw_ref": null
+    },
+    {
+      "evidence_id": "ev:q8_explicit_rfp:001",
+      "question_id": "q8_explicit_rfp",
+      "source_type": "other",
+      "url": "https://repositorium.uminho.pt/bitstreams/5f3b9235-ba9d-4d76-9b53-485833d91d81/download",
+      "title": null,
+      "snippet": null,
+      "captured_at": "2026-04-10T07:25:40.127Z",
+      "relevance": 0,
+      "confidence": 0,
+      "supports": [
+        "TENDER_DOCS"
+      ],
+      "raw_ref": null
+    },
+    {
+      "evidence_id": "ev:q8_explicit_rfp:002",
+      "question_id": "q8_explicit_rfp",
+      "source_type": "other",
+      "url": "https://portodigital.pt/documents/d/guest/porto-urban-platform_brochura_small-1",
+      "title": null,
+      "snippet": null,
+      "captured_at": "2026-04-10T07:25:40.127Z",
+      "relevance": 0,
+      "confidence": 0,
+      "supports": [
+        "TENDER_DOCS"
+      ],
+      "raw_ref": null
+    },
+    {
+      "evidence_id": "ev:q8_explicit_rfp:003",
+      "question_id": "q8_explicit_rfp",
+      "source_type": "other",
+      "url": "https://www.vda.pt/xms/files/05_Publicacoes/2021/The_International_Capital_Markets_Review_edition_11_JPFM_OVG_SJU.pdf",
+      "title": null,
+      "snippet": null,
+      "captured_at": "2026-04-10T07:25:40.127Z",
+      "relevance": 0,
+      "confidence": 0,
+      "supports": [
+        "TENDER_DOCS"
+      ],
+      "raw_ref": null
+    }
+  ],
+  "promotion_candidates": [],
+  "poi_graph": {
+    "schema_version": "poi_graph_v1",
+    "entity_id": "fc-porto-2027",
+    "entity_name": "FC Porto",
+    "nodes": [
+      {
+        "node_id": "fc-porto-2027",
+        "node_type": "entity",
+        "entity_id": "fc-porto-2027",
+        "name": "FC Porto"
+      },
+      {
+        "node_id": "episode:capability_gap:digital-stack-maturity",
+        "node_type": "derived_episode",
+        "name": "digital_stack_maturity",
+        "episode_type": "capability_gap",
+        "score": 0.78
+      }
+    ],
+    "edges": [
+      {
+        "from_id": "fc-porto-2027",
+        "to_id": "episode:capability_gap:digital-stack-maturity",
+        "edge_type": "derived_capability_gap",
+        "confidence": 0.6,
+        "source_question_id": "q13_capability_gap"
+      }
+    ]
+  },
+  "trace_index": [
+    {
+      "trace_id": "q1_foundation:debug",
+      "question_id": "q1_foundation",
+      "trace_type": "debug_bundle",
+      "path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_001.debug.json",
+      "inline": null
+    },
+    {
+      "trace_id": "q2_digital_stack:debug",
+      "question_id": "q2_digital_stack",
+      "trace_type": "debug_bundle",
+      "path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_002.debug.json",
+      "inline": null
+    },
+    {
+      "trace_id": "q3_leadership:debug",
+      "question_id": "q3_leadership",
+      "trace_type": "debug_bundle",
+      "path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_003.debug.json",
+      "inline": null
+    },
+    {
+      "trace_id": "q6_launch_signal:debug",
+      "question_id": "q6_launch_signal",
+      "trace_type": "debug_bundle",
+      "path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_004.debug.json",
+      "inline": null
+    },
+    {
+      "trace_id": "q7_procurement_signal:debug",
+      "question_id": "q7_procurement_signal",
+      "trace_type": "debug_bundle",
+      "path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_005.debug.json",
+      "inline": null
+    },
+    {
+      "trace_id": "q8_explicit_rfp:debug",
+      "question_id": "q8_explicit_rfp",
+      "trace_type": "debug_bundle",
+      "path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_006.debug.json",
+      "inline": null
+    },
+    {
+      "trace_id": "q9_news_signal:debug",
+      "question_id": "q9_news_signal",
+      "trace_type": "debug_bundle",
+      "path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_007.debug.json",
+      "inline": null
+    },
+    {
+      "trace_id": "q10_hiring_signal:debug",
+      "question_id": "q10_hiring_signal",
+      "trace_type": "debug_bundle",
+      "path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_008.debug.json",
+      "inline": null
+    },
+    {
+      "trace_id": "q4_performance:debug",
+      "question_id": "q4_performance",
+      "trace_type": "debug_bundle",
+      "path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_009.debug.json",
+      "inline": null
+    },
+    {
+      "trace_id": "q5_league_context:debug",
+      "question_id": "q5_league_context",
+      "trace_type": "debug_bundle",
+      "path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_010.debug.json",
+      "inline": null
+    },
+    {
+      "trace_id": "q11_decision_owner:debug",
+      "question_id": "q11_decision_owner",
+      "trace_type": "debug_bundle",
+      "path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_011.debug.json",
+      "inline": null
+    },
+    {
+      "trace_id": "q12_connections:debug",
+      "question_id": "q12_connections",
+      "trace_type": "debug_bundle",
+      "path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_012.debug.json",
+      "inline": null
+    },
+    {
+      "trace_id": "q13_capability_gap:debug",
+      "question_id": "q13_capability_gap",
+      "trace_type": "debug_bundle",
+      "path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_013.debug.json",
+      "inline": null
+    },
+    {
+      "trace_id": "q14_yp_fit:debug",
+      "question_id": "q14_yp_fit",
+      "trace_type": "debug_bundle",
+      "path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_014.debug.json",
+      "inline": null
+    },
+    {
+      "trace_id": "q15_outreach_strategy:debug",
+      "question_id": "q15_outreach_strategy",
+      "trace_type": "debug_bundle",
+      "path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_015.debug.json",
+      "inline": null
+    }
+  ],
+  "categories": [
+    {
+      "category": "identity",
+      "question_count": 1,
+      "validated_count": 0,
+      "pending_count": 0,
+      "no_signal_count": 1,
+      "retry_count": 0
+    },
+    {
+      "category": "technology_stack",
+      "question_count": 1,
+      "validated_count": 1,
+      "pending_count": 0,
+      "no_signal_count": 0,
+      "retry_count": 0
+    },
+    {
+      "category": "decision_owners",
+      "question_count": 2,
+      "validated_count": 0,
+      "pending_count": 0,
+      "no_signal_count": 2,
+      "retry_count": 0
+    },
+    {
+      "category": "opportunity_signal",
+      "question_count": 1,
+      "validated_count": 0,
+      "pending_count": 0,
+      "no_signal_count": 1,
+      "retry_count": 0
+    },
+    {
+      "category": "procurement_opportunity",
+      "question_count": 2,
+      "validated_count": 1,
+      "pending_count": 0,
+      "no_signal_count": 1,
+      "retry_count": 0
+    },
+    {
+      "category": "market_timing",
+      "question_count": 2,
+      "validated_count": 0,
+      "pending_count": 0,
+      "no_signal_count": 2,
+      "retry_count": 0
+    },
+    {
+      "category": "context",
+      "question_count": 2,
+      "validated_count": 0,
+      "pending_count": 0,
+      "no_signal_count": 2,
+      "retry_count": 0
+    },
+    {
+      "category": "connections",
+      "question_count": 1,
+      "validated_count": 0,
+      "pending_count": 0,
+      "no_signal_count": 1,
+      "retry_count": 0
+    },
+    {
+      "category": "derived_intelligence",
+      "question_count": 3,
+      "validated_count": 0,
+      "pending_count": 1,
+      "no_signal_count": 2,
+      "retry_count": 0
+    }
+  ],
+  "run_rollup": {
+    "run_started_at": "2026-04-10T07:04:47.151Z",
+    "entity_name": "FC Porto",
+    "entity_id": "fc-porto-2027",
+    "entity_type": "SPORT_CLUB",
+    "preset": "fc-porto-2027-atomic-matrix",
+    "questions_total": 15,
+    "questions_validated": 2,
+    "questions_no_signal": 5,
+    "questions_provisional": 1,
+    "meta_result_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_meta.json",
+    "question_result_paths": [
+      "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_001.json",
+      "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_002.json",
+      "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_003.json",
+      "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_004.json",
+      "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_005.json",
+      "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_006.json",
+      "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_007.json",
+      "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_008.json",
+      "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_009.json",
+      "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_010.json",
+      "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_011.json",
+      "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_012.json",
+      "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_013.json",
+      "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_014.json",
+      "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_015.json"
+    ],
+    "question_results_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_meta.json",
+    "transcript_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645.txt",
+    "question_first_run_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_first_run_v2.json"
+  },
+  "merge_patch": {
+    "metadata": {
+      "question_first": {
+        "enabled": true,
+        "schema_version": "question_first_run_v2",
+        "questions_answered": 15,
+        "generated_at": "2026-04-10T07:36:45.501Z"
+      }
+    },
+    "question_first": {
+      "enabled": true,
+      "schema_version": "question_first_run_v2",
+      "questions_answered": 15,
+      "generated_at": "2026-04-10T07:36:45.501Z",
+      "categories": [
+        {
+          "category": "identity",
+          "question_count": 1,
+          "validated_count": 0,
+          "pending_count": 0,
+          "no_signal_count": 1,
+          "retry_count": 0
+        },
+        {
+          "category": "technology_stack",
+          "question_count": 1,
+          "validated_count": 1,
+          "pending_count": 0,
+          "no_signal_count": 0,
+          "retry_count": 0
+        },
+        {
+          "category": "decision_owners",
+          "question_count": 2,
+          "validated_count": 0,
+          "pending_count": 0,
+          "no_signal_count": 2,
+          "retry_count": 0
+        },
+        {
+          "category": "opportunity_signal",
+          "question_count": 1,
+          "validated_count": 0,
+          "pending_count": 0,
+          "no_signal_count": 1,
+          "retry_count": 0
+        },
+        {
+          "category": "procurement_opportunity",
+          "question_count": 2,
+          "validated_count": 1,
+          "pending_count": 0,
+          "no_signal_count": 1,
+          "retry_count": 0
+        },
+        {
+          "category": "market_timing",
+          "question_count": 2,
+          "validated_count": 0,
+          "pending_count": 0,
+          "no_signal_count": 2,
+          "retry_count": 0
+        },
+        {
+          "category": "context",
+          "question_count": 2,
+          "validated_count": 0,
+          "pending_count": 0,
+          "no_signal_count": 2,
+          "retry_count": 0
+        },
+        {
+          "category": "connections",
+          "question_count": 1,
+          "validated_count": 0,
+          "pending_count": 0,
+          "no_signal_count": 1,
+          "retry_count": 0
+        },
+        {
+          "category": "derived_intelligence",
+          "question_count": 3,
+          "validated_count": 0,
+          "pending_count": 1,
+          "no_signal_count": 2,
+          "retry_count": 0
+        }
+      ],
+      "question_timings": {
+        "q1_foundation": {
+          "started_at": "2026-04-10T07:04:47.194Z",
+          "completed_at": "2026-04-10T07:07:47.583Z",
+          "duration_seconds": 180.389
+        },
+        "q2_digital_stack": {
+          "started_at": "2026-04-10T07:07:47.583Z",
+          "completed_at": "2026-04-10T07:12:07.316Z",
+          "duration_seconds": 259.733
+        },
+        "q3_leadership": {
+          "started_at": "2026-04-10T07:12:07.317Z",
+          "completed_at": "2026-04-10T07:17:07.939Z",
+          "duration_seconds": 300.622
+        },
+        "q6_launch_signal": {
+          "started_at": "2026-04-10T07:17:07.939Z",
+          "completed_at": "2026-04-10T07:20:08.345Z",
+          "duration_seconds": 180.406
+        },
+        "q7_procurement_signal": {
+          "started_at": "2026-04-10T07:20:08.346Z",
+          "completed_at": "2026-04-10T07:22:38.947Z",
+          "duration_seconds": 150.601
+        },
+        "q8_explicit_rfp": {
+          "started_at": "2026-04-10T07:22:38.947Z",
+          "completed_at": "2026-04-10T07:25:40.127Z",
+          "duration_seconds": 181.18
+        },
+        "q9_news_signal": {
+          "started_at": "2026-04-10T07:25:40.130Z",
+          "completed_at": "2026-04-10T07:28:42.174Z",
+          "duration_seconds": 182.044
+        },
+        "q10_hiring_signal": {
+          "started_at": "2026-04-10T07:28:42.182Z",
+          "completed_at": "2026-04-10T07:31:43.956Z",
+          "duration_seconds": 181.774
+        },
+        "q4_performance": {
+          "started_at": "2026-04-10T07:31:43.957Z",
+          "completed_at": "2026-04-10T07:31:44.077Z",
+          "duration_seconds": 0.12
+        },
+        "q5_league_context": {
+          "started_at": "2026-04-10T07:31:44.077Z",
+          "completed_at": "2026-04-10T07:31:44.155Z",
+          "duration_seconds": 0.078
+        },
+        "q11_decision_owner": {
+          "started_at": "2026-04-10T07:31:44.156Z",
+          "completed_at": "2026-04-10T07:36:45.398Z",
+          "duration_seconds": 301.242
+        },
+        "q12_connections": {
+          "started_at": "2026-04-10T07:36:45.398Z",
+          "completed_at": "2026-04-10T07:36:45.444Z",
+          "duration_seconds": 0.046
+        },
+        "q13_capability_gap": {
+          "started_at": "2026-04-10T07:36:45.444Z",
+          "completed_at": "2026-04-10T07:36:45.459Z",
+          "duration_seconds": 0.015
+        },
+        "q14_yp_fit": {
+          "started_at": "2026-04-10T07:36:45.459Z",
+          "completed_at": "2026-04-10T07:36:45.471Z",
+          "duration_seconds": 0.012
+        },
+        "q15_outreach_strategy": {
+          "started_at": "2026-04-10T07:36:45.472Z",
+          "completed_at": "2026-04-10T07:36:45.483Z",
+          "duration_seconds": 0.011
+        }
+      },
+      "answers": [
+        {
+          "question_id": "q1_foundation",
+          "question_type": "foundation",
+          "validation_state": "failed",
+          "confidence": 0,
+          "signal_type": "FOUNDATION",
+          "answer": {
+            "kind": "fact",
+            "value": "",
+            "summary": null,
+            "top_signals": [],
+            "commercial_interpretation": {},
+            "opportunity_hypotheses": [],
+            "maturity_signal": null,
+            "raw_structured_output": {
+              "summary": "No deterministic answer was produced for this question.",
+              "context": "No deterministic answer was produced for this question.",
+              "notes": "No deterministic answer was produced for this question.",
+              "terminal_state": "no_signal",
+              "blocked_by": [],
+              "sources": []
+            }
+          }
+        },
+        {
+          "question_id": "q2_digital_stack",
+          "question_type": "digital_stack",
+          "validation_state": "validated",
+          "confidence": 0.78,
+          "signal_type": "DIGITAL_STACK",
+          "answer": {
+            "kind": "signal_set",
+            "value": null,
+            "summary": "FC Porto operates a digitally progressive but infrastructure-light stack centred on Cloudflare CDN/Security, a bespoke mobile app (iOS/Android with NFC digital member cards and Apple/Google Wallet integration), a Magento-like e-commerce store at store.fcporto.pt, and a Binance-powered blockchain fan-token (PORTO). The club has a dedicated Head of Digital Transformation and a long-term 15-year Legends partnership managing global sponsorships, stadium naming rights, F&B and hospitality at Est\u00e1dio do Drag\u00e3o. Additional sports-tech partnerships include Scoutium for youth-athlete video analytics and Crypto Blockchain Industries for a metaverse digital world. Main commercial sponsors visible on kit and digital assets are New Balance (10+ year global kit deal), Betano (front-of-shirt, 4-year betting partnership), Super Bock, and Revigr\u00e9s.",
+            "top_signals": [
+              {
+                "name": "Cloudflare CDN",
+                "version": null,
+                "category": null,
+                "confidence": 0.5,
+                "validation_state": "inferred",
+                "evidence_refs": []
+              },
+              {
+                "name": "Cloudflare Web Optimizations",
+                "version": null,
+                "category": null,
+                "confidence": 0.5,
+                "validation_state": "inferred",
+                "evidence_refs": []
+              },
+              {
+                "name": "Webpack",
+                "version": null,
+                "category": null,
+                "confidence": 0.5,
+                "validation_state": "inferred",
+                "evidence_refs": []
+              },
+              {
+                "name": "Git",
+                "version": null,
+                "category": null,
+                "confidence": 0.5,
+                "validation_state": "inferred",
+                "evidence_refs": []
+              },
+              {
+                "name": "Head JS",
+                "version": null,
+                "category": null,
+                "confidence": 0.5,
+                "validation_state": "inferred",
+                "evidence_refs": []
+              },
+              {
+                "name": "HSTS",
+                "version": null,
+                "category": null,
+                "confidence": 0.5,
+                "validation_state": "inferred",
+                "evidence_refs": []
+              },
+              {
+                "name": "X-XSS-Protection",
+                "version": null,
+                "category": null,
+                "confidence": 0.5,
+                "validation_state": "inferred",
+                "evidence_refs": []
+              },
+              {
+                "name": "X-Content-Type-Options",
+                "version": null,
+                "category": null,
+                "confidence": 0.5,
+                "validation_state": "inferred",
+                "evidence_refs": []
+              },
+              {
+                "name": "PHP",
+                "version": null,
+                "category": null,
+                "confidence": 0.5,
+                "validation_state": "inferred",
+                "evidence_refs": []
+              },
+              {
+                "name": "NFC (member cards)",
+                "version": null,
+                "category": null,
+                "confidence": 0.5,
+                "validation_state": "inferred",
+                "evidence_refs": []
+              },
+              {
+                "name": "Apple Wallet",
+                "version": null,
+                "category": null,
+                "confidence": 0.5,
+                "validation_state": "inferred",
+                "evidence_refs": []
+              },
+              {
+                "name": "Google Wallet",
+                "version": null,
+                "category": null,
+                "confidence": 0.5,
+                "validation_state": "inferred",
+                "evidence_refs": []
+              },
+              {
+                "name": "Binance Smart Chain (BEP-20)",
+                "version": null,
+                "category": null,
+                "confidence": 0.5,
+                "validation_state": "inferred",
+                "evidence_refs": []
+              },
+              {
+                "name": "Scoutium (video analytics)",
+                "version": null,
+                "category": null,
+                "confidence": 0.5,
+                "validation_state": "inferred",
+                "evidence_refs": []
+              }
+            ],
+            "commercial_interpretation": {
+              "summary": "FC Porto is a top-tier Portuguese club actively investing in digital transformation: NFC-enabled digital membership cards (first in Portugal), a proprietary multi-function mobile app with in-stadium ordering (Seat Delivery), Binance fan-token monetisation, and a 15-year Legends mandate that outsources global partnership sales and stadium hospitality. The web infrastructure is standard CDN+PHP \u2014 no evidence of a modern headless CMS or enterprise CRM \u2014 suggesting digital ambition outpaces back-end maturity. The club's commercial engine is sponsor-driven (New Balance, Betano, Super Bock) rather than platform-driven, creating room for CRM, data-platform, and ticketing-system vendors to pitch layered value on top of the existing fan-app ecosystem.",
+              "themes": [],
+              "implication_strength": null
+            },
+            "opportunity_hypotheses": [
+              {
+                "type": "commercial_opportunity",
+                "label": "The highest-credibility commercial angle is CRM and fan-data unification: the club has NFC member cards, a mobile app with 237k+ downloads, a Binance fan token, and an e-commerce store, yet no visible enterprise CRM or CDP. A vendor offering fan-identity resolution, ticketing personalization, or loyalty-program technology could plug directly into the existing digital-member-card and Seat Delivery infrastructure \u2014 especially with a new commercial regime under president Andr\u00e9 Villas-Boas (elected April 2024) and a recently vacated Commercial Director role. Secondary opportunities include ticketing-platform modernisation and headless e-commerce for store.fcporto.pt.",
+                "confidence": 0.78
+              }
+            ],
+            "maturity_signal": "medium-high",
+            "raw_structured_output": {
+              "answer": "FC Porto operates a digitally progressive but infrastructure-light stack centred on Cloudflare CDN/Security, a bespoke mobile app (iOS/Android with NFC digital member cards and Apple/Google Wallet integration), a Magento-like e-commerce store at store.fcporto.pt, and a Binance-powered blockchain fan-token (PORTO). The club has a dedicated Head of Digital Transformation and a long-term 15-year Legends partnership managing global sponsorships, stadium naming rights, F&B and hospitality at Est\u00e1dio do Drag\u00e3o. Additional sports-tech partnerships include Scoutium for youth-athlete video analytics and Crypto Blockchain Industries for a metaverse digital world. Main commercial sponsors visible on kit and digital assets are New Balance (10+ year global kit deal), Betano (front-of-shirt, 4-year betting partnership), Super Bock, and Revigr\u00e9s.",
+              "technologies": [
+                "Cloudflare CDN",
+                "Cloudflare Web Optimizations",
+                "Webpack",
+                "Git",
+                "Head JS",
+                "HSTS",
+                "X-XSS-Protection",
+                "X-Content-Type-Options",
+                "PHP",
+                "NFC (member cards)",
+                "Apple Wallet",
+                "Google Wallet",
+                "Binance Smart Chain (BEP-20)",
+                "Scoutium (video analytics)"
+              ],
+              "categories": [
+                "CDN / Web Performance",
+                "Web Security",
+                "Build Tools / Version Control",
+                "Mobile App (iOS/Android)",
+                "E-commerce / Retail",
+                "Blockchain / Fan Token / NFT",
+                "Contactless / NFC Access",
+                "Sports Performance Analytics",
+                "Stadium Hospitality / F&B Management",
+                "Commercial Partnership Management",
+                "Digital Wallet Integration",
+                "Metaverse / Virtual World"
+              ],
+              "vendors": [
+                "Cloudflare",
+                "Binance",
+                "Legends (Global Partnerships / ASM Global)",
+                "New Balance",
+                "Betano (Kaizen Gaming)",
+                "Scoutium",
+                "Crypto Blockchain Industries (AlphaVerse)",
+                "Super Bock",
+                "Revigr\u00e9s"
+              ],
+              "additional_domains": [
+                "store.fcporto.pt",
+                "app.fcporto.pt",
+                "fcporto.pt"
+              ],
+              "maturity_signal": "medium-high",
+              "commercial_interpretation": "FC Porto is a top-tier Portuguese club actively investing in digital transformation: NFC-enabled digital membership cards (first in Portugal), a proprietary multi-function mobile app with in-stadium ordering (Seat Delivery), Binance fan-token monetisation, and a 15-year Legends mandate that outsources global partnership sales and stadium hospitality. The web infrastructure is standard CDN+PHP \u2014 no evidence of a modern headless CMS or enterprise CRM \u2014 suggesting digital ambition outpaces back-end maturity. The club's commercial engine is sponsor-driven (New Balance, Betano, Super Bock) rather than platform-driven, creating room for CRM, data-platform, and ticketing-system vendors to pitch layered value on top of the existing fan-app ecosystem.",
+              "opportunity": "The highest-credibility commercial angle is CRM and fan-data unification: the club has NFC member cards, a mobile app with 237k+ downloads, a Binance fan token, and an e-commerce store, yet no visible enterprise CRM or CDP. A vendor offering fan-identity resolution, ticketing personalization, or loyalty-program technology could plug directly into the existing digital-member-card and Seat Delivery infrastructure \u2014 especially with a new commercial regime under president Andr\u00e9 Villas-Boas (elected April 2024) and a recently vacated Commercial Director role. Secondary opportunities include ticketing-platform modernisation and headless e-commerce for store.fcporto.pt.",
+              "confidence": 0.78,
+              "sources": [
+                "https://leadiq.com/c/fc-porto/5a1d8acc2400002400650c4e",
+                "https://www.fcporto.pt/en/apps/apps",
+                "https://www.fcporto.pt/en/news/20240913-en-fc-porto-joins-the-nfc-universe",
+                "https://www.fcporto.pt/en/news/20240912-en-a-new-digital-card",
+                "https://www.fcporto.pt/en/news/20250606-en-fc-porto-and-scoutium-join-forces-to-enhance-the-development-of-young-athletes",
+                "https://legendsglobal.com/fc-porto-and-legends-announce-15-year-strategic-partnership/",
+                "https://www.fcporto.pt/en/corporate/partners-club/",
+                "https://www.fcporto.pt/en/news/20211105-en-fc-porto-and-binance-launch-porto-fan-token",
+                "https://store.fcporto.pt/en/",
+                "https://sportsmintmedia.com/legends-to-manage-fc-portos-global-partnerships-in-15-year-strategic-deal/"
+              ],
+              "validation_state": "validated",
+              "summary": "No deterministic answer was produced for this question.",
+              "context": "No deterministic answer was produced for this question.",
+              "notes": "No deterministic answer was produced for this question.",
+              "terminal_state": "answered",
+              "blocked_by": []
+            }
+          }
+        },
+        {
+          "question_id": "q3_leadership",
+          "question_type": "leadership",
+          "validation_state": "failed",
+          "confidence": 0,
+          "signal_type": "LEADERSHIP",
+          "answer": {
+            "kind": "list",
+            "value": null,
+            "summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+            "top_signals": [],
+            "commercial_interpretation": {},
+            "opportunity_hypotheses": [],
+            "maturity_signal": null,
+            "raw_structured_output": {
+              "summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+              "context": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+              "notes": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+              "terminal_state": "no_signal",
+              "blocked_by": [],
+              "sources": []
+            }
+          }
+        },
+        {
+          "question_id": "q6_launch_signal",
+          "question_type": "launch_signal",
+          "validation_state": "failed",
+          "confidence": 0,
+          "signal_type": "LAUNCH_SIGNAL",
+          "answer": {
+            "kind": "summary",
+            "value": null,
+            "summary": "No deterministic answer was produced for this question.",
+            "top_signals": [],
+            "commercial_interpretation": {
+              "summary": "No deterministic answer was produced for this question.",
+              "themes": [],
+              "implication_strength": null
+            },
+            "opportunity_hypotheses": [],
+            "maturity_signal": null,
+            "raw_structured_output": {
+              "summary": "No deterministic answer was produced for this question.",
+              "context": "No deterministic answer was produced for this question.",
+              "notes": "No deterministic answer was produced for this question.",
+              "terminal_state": "no_signal",
+              "blocked_by": [],
+              "sources": []
+            }
+          }
+        },
+        {
+          "question_id": "q7_procurement_signal",
+          "question_type": "procurement_signal",
+          "validation_state": "validated",
+          "confidence": 0.92,
+          "signal_type": "PROCUREMENT_SIGNAL",
+          "answer": {
+            "kind": "summary",
+            "value": null,
+            "summary": "Yes \u2014 FC Porto is actively and broadly reshaping its commercial and digital ecosystem across multiple fronts: stadium modernisation (\u20ac60\u201370M+), expanded vendor partnerships, new digital platforms, international strategic alliances, and a new premium/hospitality tiering model, all framed by its Strategic Plan and preparation for the 2030 FIFA World Cup.",
+            "top_signals": [],
+            "commercial_interpretation": {
+              "summary": "No deterministic answer was produced for this question.",
+              "themes": [],
+              "implication_strength": null
+            },
+            "opportunity_hypotheses": [],
+            "maturity_signal": null,
+            "raw_structured_output": {
+              "answer": "Yes \u2014 FC Porto is actively and broadly reshaping its commercial and digital ecosystem across multiple fronts: stadium modernisation (\u20ac60\u201370M+), expanded vendor partnerships, new digital platforms, international strategic alliances, and a new premium/hospitality tiering model, all framed by its Strategic Plan and preparation for the 2030 FIFA World Cup.",
+              "themes": [
+                {
+                  "theme": "Stadium Modernisation & Premium Hospitality Overhaul",
+                  "detail": "Multi-phase renovation of Est\u00e1dio do Drag\u00e3o (infrastructure, services, technology pillars). Expanding hospitality from 4 tiers to 9 integrated 'FC Porto Premium Experiences' concepts. New ticketing solution, innovative lighting, refurbished corporate boxes, central kitchen, satellite kitchens, and autonomous Ai Fi bars for frictionless service."
+                },
+                {
+                  "theme": "Legends/ASM Global Partnership Expanded",
+                  "detail": "New 5-year agreement (Aug 2025) expanding on a prior 15-year relationship. Legends now manages catering (first stadium-level contract of its kind in Portugal), F&B experience, global partnership sales, and fan experience transformation."
+                },
+                {
+                  "theme": "Digital Transformation & Super App Strategy",
+                  "detail": "Launched Portal do S\u00f3cio (Member Portal) and bilhetes.fcporto.pt ticketing platform. Planning a Hospitality App and a 'Super App' to integrate the entire FC Porto ecosystem into a single digital environment. Adobe Commerce online store built with Toogas/Altice/Sapo."
+                },
+                {
+                  "theme": "International Expansion & Cross-Atlantic Alliance",
+                  "detail": "Strategic partnership with FC Cincinnati (MLS) signed Jan 2026, built on four pillars covering sporting operations and brand expansion in European and North American markets."
+                },
+                {
+                  "theme": "New Technology & Analytics Vendors",
+                  "detail": "Off The Pitch (player valuation, financial/salary tools), Teamworks AMS (data-driven organisational transformation), LiveTag.Pro (official video/performance analysis), Forward Associates (stadium transformation strategy), Ai Fi (autonomous retail tech)."
+                },
+                {
+                  "theme": "Sponsorship Portfolio Refresh",
+                  "detail": "IUMAN named new Official Underwear Partner; New Balance landmark global deal extended (10th anniversary); Betano/Kaizen shirt sponsorship renewed/strengthened; Suits Inc partnership renewed for 2025; Ithaka 25-year deal for 30% economic rights of Drag\u00e3o; Binance Fan Token (PORTO); EarthCheck Silver Certification."
+                },
+                {
+                  "theme": "Commercial Leadership Turnover",
+                  "detail": "Long-serving Commercial Director Jos\u00e9 Pedro Dias (~10 years) departed to join Blocksport, indicating internal commercial reshaping."
+                }
+              ],
+              "confidence": 0.92,
+              "sources": [
+                {
+                  "url": "https://sportsvenuebusiness.com/2026/03/18/fc-porto-to-restart-stadium-renovation-works-at-the-end-of-the-season/",
+                  "title": "FC Porto to restart stadium renovation works at the end of the season",
+                  "date": "2026-03-18",
+                  "snippet": "Second phase focuses on infrastructure, services and technology. Digital Transformation remains a priority. Hospitality App and Super App planned. Legends Global and Forward Associates involved."
+                },
+                {
+                  "url": "https://legendsglobal.com/press-release-legends-asm-global-expands-strategic-partnership-with-fc-porto-in-landmark-multi-year-agreement/",
+                  "title": "Legends/ASM Global Expands Strategic Partnership with FC Porto",
+                  "date": "2025-08-28",
+                  "snippet": "New five-year agreement expanding on 15-year relationship. First stadium-level catering contract in Portugal."
+                },
+                {
+                  "url": "https://www.fcporto.pt/en/news/20260128-en-fc-porto-and-fc-cincinnati-sign-strategic-partnership",
+                  "title": "FC Porto and FC Cincinnati sign strategic partnership",
+                  "date": "2026-01-28",
+                  "snippet": "Agreement with MLS Club fits FC Porto's international expansion strategy."
+                },
+                {
+                  "url": "https://www.toogas.com/en/portfolio/fc-porto-store-en/",
+                  "title": "FC Porto Store Ecommerce Project",
+                  "snippet": "Adobe Commerce B2C online store developed with Toogas, Altice, and Sapo."
+                },
+                {
+                  "url": "https://teamworks.com/blog/fc-portos-commitment-to-the-intelligent-use-of-data/",
+                  "title": "FC Porto: The Pursuit of Excellence \u2014 Teamworks AMS",
+                  "snippet": "FC Porto embraced Teamworks AMS as catalyst for organisational transformation."
+                },
+                {
+                  "url": "https://www.instagram.com/reel/DFFUW8mCblH/",
+                  "title": "LiveTag.Pro selected as official video and performance analysis software provider for FC Porto",
+                  "snippet": "LiveTag.Pro announced as official analysis software provider."
+                },
+                {
+                  "url": "https://www.coliseum-online.com/fc-porto-home-venue-massive-rejig-plans/",
+                  "title": "FC Porto home venue massive rejig plans",
+                  "snippet": "Investment of between \u20ac60 and \u20ac70 million to modernize Est\u00e1dio do Drag\u00e3o. \u20ac250M financing deal closed."
+                },
+                {
+                  "url": "https://www.instagram.com/p/DIU554lycd6/",
+                  "title": "THE GATE alliance with FC Porto",
+                  "snippet": "Partnership spanning youth development and other areas."
+                },
+                {
+                  "url": "https://www.instagram.com/p/DVJaz6iiC5u/",
+                  "title": "IUMAN \u00e9 a nova Official Underwear Partner do FC Porto",
+                  "snippet": "IUMAN named new Official Underwear Partner."
+                },
+                {
+                  "url": "https://sponsorship.sportbusiness.com/organisation/fc-porto/",
+                  "title": "FC Porto \u2014 SportBusiness Sponsorship",
+                  "snippet": "25-year deal with Ithaka to sell 30% of economic rights to Drag\u00e3o."
+                }
+              ],
+              "validation_state": "validated",
+              "summary": "No deterministic answer was produced for this question.",
+              "context": "No deterministic answer was produced for this question.",
+              "notes": "No deterministic answer was produced for this question.",
+              "terminal_state": "answered",
+              "blocked_by": []
+            }
+          }
+        },
+        {
+          "question_id": "q8_explicit_rfp",
+          "question_type": "tender_docs",
+          "validation_state": "failed",
+          "confidence": 0,
+          "signal_type": "TENDER_DOCS",
+          "answer": {
+            "kind": "summary",
+            "value": null,
+            "summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+            "top_signals": [],
+            "commercial_interpretation": {
+              "summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+              "themes": [],
+              "implication_strength": null
+            },
+            "opportunity_hypotheses": [],
+            "maturity_signal": null,
+            "raw_structured_output": {
+              "summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+              "context": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+              "notes": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+              "terminal_state": "no_signal",
+              "blocked_by": [],
+              "sources": [
+                "https://repositorium.uminho.pt/bitstreams/5f3b9235-ba9d-4d76-9b53-485833d91d81/download",
+                "https://portodigital.pt/documents/d/guest/porto-urban-platform_brochura_small-1",
+                "https://www.vda.pt/xms/files/05_Publicacoes/2021/The_International_Capital_Markets_Review_edition_11_JPFM_OVG_SJU.pdf"
+              ]
+            }
+          }
+        },
+        {
+          "question_id": "q9_news_signal",
+          "question_type": "news_signal",
+          "validation_state": "failed",
+          "confidence": 0,
+          "signal_type": "NEWS_SIGNAL",
+          "answer": {
+            "kind": "summary",
+            "value": null,
+            "summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+            "top_signals": [],
+            "commercial_interpretation": {
+              "summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+              "themes": [],
+              "implication_strength": null
+            },
+            "opportunity_hypotheses": [],
+            "maturity_signal": null,
+            "raw_structured_output": {
+              "summary": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+              "context": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+              "notes": "Evidence retained during timeout, but no validated answer was produced. BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+              "terminal_state": "no_signal",
+              "blocked_by": [],
+              "sources": []
+            }
+          }
+        },
+        {
+          "question_id": "q10_hiring_signal",
+          "question_type": "hiring_signal",
+          "validation_state": "failed",
+          "confidence": 0,
+          "signal_type": "HIRING_SIGNAL",
+          "answer": {
+            "kind": "summary",
+            "value": null,
+            "summary": "No deterministic answer was produced for this question.",
+            "top_signals": [],
+            "commercial_interpretation": {
+              "summary": "No deterministic answer was produced for this question.",
+              "themes": [],
+              "implication_strength": null
+            },
+            "opportunity_hypotheses": [],
+            "maturity_signal": null,
+            "raw_structured_output": {
+              "summary": "No deterministic answer was produced for this question.",
+              "context": "No deterministic answer was produced for this question.",
+              "notes": "No deterministic answer was produced for this question.",
+              "terminal_state": "no_signal",
+              "blocked_by": [],
+              "sources": []
+            }
+          }
+        },
+        {
+          "question_id": "q4_performance",
+          "question_type": "performance",
+          "validation_state": "no_signal",
+          "confidence": 0,
+          "signal_type": "PERFORMANCE",
+          "answer": {
+            "kind": "summary",
+            "value": null,
+            "summary": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+            "top_signals": [],
+            "commercial_interpretation": {
+              "summary": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+              "themes": [],
+              "implication_strength": null
+            },
+            "opportunity_hypotheses": [],
+            "maturity_signal": null,
+            "raw_structured_output": {
+              "answer": "",
+              "confidence": 0,
+              "sources": [],
+              "validation_state": "no_signal",
+              "terminal_state": "no_signal",
+              "notes": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+              "context": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+              "summary": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+              "blocked_by": []
+            }
+          }
+        },
+        {
+          "question_id": "q5_league_context",
+          "question_type": "league_context",
+          "validation_state": "no_signal",
+          "confidence": 0,
+          "signal_type": "LEAGUE_CONTEXT",
+          "answer": {
+            "kind": "summary",
+            "value": null,
+            "summary": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+            "top_signals": [],
+            "commercial_interpretation": {
+              "summary": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+              "themes": [],
+              "implication_strength": null
+            },
+            "opportunity_hypotheses": [],
+            "maturity_signal": null,
+            "raw_structured_output": {
+              "answer": "",
+              "confidence": 0,
+              "sources": [],
+              "validation_state": "no_signal",
+              "terminal_state": "no_signal",
+              "notes": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+              "context": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+              "summary": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+              "blocked_by": []
+            }
+          }
+        },
+        {
+          "question_id": "q11_decision_owner",
+          "question_type": "decision_owner",
+          "validation_state": "failed",
+          "confidence": 0,
+          "signal_type": "DECISION_OWNER",
+          "answer": {
+            "kind": "list",
+            "value": null,
+            "summary": "No deterministic answer was produced for this question.",
+            "top_signals": [],
+            "commercial_interpretation": {},
+            "opportunity_hypotheses": [],
+            "maturity_signal": null,
+            "raw_structured_output": {
+              "summary": "No deterministic answer was produced for this question.",
+              "context": "No deterministic answer was produced for this question.",
+              "notes": "No deterministic answer was produced for this question.",
+              "terminal_state": "no_signal",
+              "blocked_by": [],
+              "sources": []
+            }
+          }
+        },
+        {
+          "question_id": "q12_connections",
+          "question_type": "connections",
+          "validation_state": "no_signal",
+          "confidence": 0,
+          "signal_type": "CONNECTIONS",
+          "answer": {
+            "kind": "summary",
+            "value": null,
+            "summary": "Question conditions were not met: upstream question q11_decision_owner did not validate.",
+            "top_signals": [],
+            "commercial_interpretation": {
+              "summary": "Question conditions were not met: upstream question q11_decision_owner did not validate.",
+              "themes": [],
+              "implication_strength": null
+            },
+            "opportunity_hypotheses": [],
+            "maturity_signal": null,
+            "raw_structured_output": {
+              "answer": "",
+              "confidence": 0,
+              "sources": [],
+              "validation_state": "no_signal",
+              "terminal_state": "blocked",
+              "notes": "Question conditions were not met: upstream question q11_decision_owner did not validate.",
+              "context": "Question conditions were not met: upstream question q11_decision_owner did not validate.",
+              "summary": "Question conditions were not met: upstream question q11_decision_owner did not validate.",
+              "blocked_by": [
+                "q11_decision_owner"
+              ],
+              "candidate_paths": [],
+              "best_yp_owner": "",
+              "path_type": "cold",
+              "connection_score": 0,
+              "q12_score": 0
+            }
+          }
+        },
+        {
+          "question_id": "q13_capability_gap",
+          "question_type": "capability_gap",
+          "validation_state": "provisional",
+          "confidence": 0.6,
+          "signal_type": "CAPABILITY_GAP",
+          "answer": {
+            "kind": "summary",
+            "value": null,
+            "summary": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+            "top_signals": [],
+            "commercial_interpretation": {
+              "summary": "Capability gap scorecard derived from validated upstream commercial and digital signals.",
+              "themes": [],
+              "implication_strength": null
+            },
+            "opportunity_hypotheses": [],
+            "maturity_signal": null,
+            "raw_structured_output": {
+              "answer": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+              "summary": "Capability gap scorecard derived from validated upstream commercial and digital signals.",
+              "themes": [
+                "digital_stack_maturity",
+                "vendor_change_motion"
+              ],
+              "recommendations": [
+                "Close digital stack maturity gap",
+                "Close vendor change motion gap"
+              ],
+              "gap_scorecard": [
+                {
+                  "capability": "digital_stack_maturity",
+                  "gap_score": 0.78,
+                  "severity": "high",
+                  "driver_question_ids": [
+                    "q2_digital_stack",
+                    "q6_launch_signal",
+                    "q7_procurement_signal",
+                    "q9_news_signal"
+                  ]
+                },
+                {
+                  "capability": "vendor_change_motion",
+                  "gap_score": 0.7000000000000001,
+                  "severity": "medium",
+                  "driver_question_ids": [
+                    "q2_digital_stack",
+                    "q6_launch_signal",
+                    "q7_procurement_signal",
+                    "q9_news_signal"
+                  ]
+                }
+              ],
+              "top_gap": "digital_stack_maturity",
+              "graph_episode": {
+                "episode_type": "capability_gap",
+                "label": "digital_stack_maturity",
+                "score": 0.78
+              },
+              "confidence": 0.6,
+              "validation_state": "provisional",
+              "sources": [],
+              "signal_type": "CAPABILITY_GAP",
+              "context": "Capability gap scorecard derived from validated upstream commercial and digital signals.",
+              "notes": "Capability gap scorecard derived from validated upstream commercial and digital signals.",
+              "terminal_state": "answered",
+              "blocked_by": []
+            }
+          }
+        },
+        {
+          "question_id": "q14_yp_fit",
+          "question_type": "yp_fit",
+          "validation_state": "no_signal",
+          "confidence": 0,
+          "signal_type": "YP_FIT",
+          "answer": {
+            "kind": "summary",
+            "value": null,
+            "summary": "No capability-gap inference is available yet for YP fit mapping.",
+            "top_signals": [],
+            "commercial_interpretation": {
+              "summary": "No capability-gap inference is available yet for YP fit mapping.",
+              "themes": [],
+              "implication_strength": null
+            },
+            "opportunity_hypotheses": [],
+            "maturity_signal": null,
+            "raw_structured_output": {
+              "answer": "",
+              "confidence": 0,
+              "sources": [],
+              "validation_state": "no_signal",
+              "terminal_state": "blocked",
+              "notes": "No capability-gap inference is available yet for YP fit mapping.",
+              "context": "No capability-gap inference is available yet for YP fit mapping.",
+              "summary": "No capability-gap inference is available yet for YP fit mapping.",
+              "blocked_by": [
+                "q13_capability_gap",
+                "q7_procurement_signal"
+              ],
+              "themes": [],
+              "recommendations": []
+            }
+          }
+        },
+        {
+          "question_id": "q15_outreach_strategy",
+          "question_type": "outreach_strategy",
+          "validation_state": "no_signal",
+          "confidence": 0,
+          "signal_type": "OUTREACH_STRATEGY",
+          "answer": {
+            "kind": "summary",
+            "value": null,
+            "summary": "No ranked target is available yet for outreach strategy.",
+            "top_signals": [],
+            "commercial_interpretation": {
+              "summary": "No ranked target is available yet for outreach strategy.",
+              "themes": [],
+              "implication_strength": null
+            },
+            "opportunity_hypotheses": [],
+            "maturity_signal": null,
+            "raw_structured_output": {
+              "answer": "",
+              "confidence": 0,
+              "sources": [],
+              "validation_state": "no_signal",
+              "terminal_state": "no_signal",
+              "notes": "No ranked target is available yet for outreach strategy.",
+              "context": "No ranked target is available yet for outreach strategy.",
+              "summary": "No ranked target is available yet for outreach strategy.",
+              "themes": [],
+              "recommendations": [],
+              "blocked_by": []
+            }
+          }
+        }
+      ]
+    }
+  }
+}

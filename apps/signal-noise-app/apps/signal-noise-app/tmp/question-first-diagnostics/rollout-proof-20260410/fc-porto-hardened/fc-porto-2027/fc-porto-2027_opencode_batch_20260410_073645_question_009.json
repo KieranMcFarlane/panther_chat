@@ -1,0 +1,99 @@
+{
+  "run_started_at": "2026-04-10T07:04:47.151Z",
+  "entity_name": "FC Porto",
+  "entity_id": "fc-porto-2027",
+  "entity_type": "SPORT_CLUB",
+  "preset": "fc-porto-2027-atomic-matrix",
+  "started_at": "2026-04-10T07:31:43.957Z",
+  "completed_at": "2026-04-10T07:31:44.077Z",
+  "duration_seconds": 0.12,
+  "question": {
+    "question_id": "q4_performance",
+    "question_type": "performance",
+    "question_text": "What is the current sporting performance context for FC Porto?",
+    "question": "What is the current sporting performance context for FC Porto?",
+    "query": "\"FC Porto\" standings",
+    "hop_budget": 0,
+    "source_priority": [
+      "sports_data",
+      "official_site"
+    ],
+    "evidence_extension_budget": 0,
+    "evidence_extension_confidence_threshold": 0.65,
+    "question_timeout_ms": 180000,
+    "entity_name": "FC Porto",
+    "entity_id": "fc-porto-2027",
+    "entity_type": "SPORT_CLUB",
+    "preset": "fc-porto-2027-atomic-matrix",
+    "model_used": "zai-coding-plan/glm-5",
+    "session_id": "cli-9",
+    "agentic_plan": {
+      "source_priority": [
+        "sports_data",
+        "official_site"
+      ],
+      "stop_rule": "continue for up to 0 hops within OpenCode steps budget"
+    },
+    "reasoning": {
+      "structured_output": {
+        "answer": "",
+        "confidence": 0,
+        "sources": [],
+        "validation_state": "no_signal",
+        "terminal_state": "no_signal",
+        "notes": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+        "context": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+        "summary": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+        "blocked_by": []
+      },
+      "prompt_trace": {
+        "status": "non_retrieval_no_signal",
+        "has_structured_output": true
+      },
+      "message_trace": [],
+      "raw_execution_trace": {
+        "exit_code": 0,
+        "stdout_length": 0,
+        "stderr_length": 0,
+        "has_structured_output": true,
+        "stdout_excerpt": "",
+        "stderr_excerpt": "",
+        "assistant_text_excerpt": "",
+        "message_trace_summary": []
+      }
+    },
+    "prompt_trace": {
+      "status": "non_retrieval_no_signal",
+      "has_structured_output": true
+    },
+    "message_trace": [],
+    "raw_execution_trace": {
+      "exit_code": 0,
+      "stdout_length": 0,
+      "stderr_length": 0,
+      "has_structured_output": true,
+      "stdout_excerpt": "",
+      "stderr_excerpt": "",
+      "assistant_text_excerpt": "",
+      "message_trace_summary": []
+    },
+    "execution_query": "\"FC Porto\" standings",
+    "answer": "",
+    "primary_owner": null,
+    "secondary_candidates": [],
+    "supporting_candidates": [],
+    "candidates": [],
+    "signal_type": "PERFORMANCE",
+    "confidence": 0,
+    "validation_state": "no_signal",
+    "terminal_state": "no_signal",
+    "terminal_summary": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+    "blocked_by": [],
+    "evidence_url": "",
+    "recommended_next_query": "",
+    "notes": "No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.",
+    "started_at": "2026-04-10T07:31:43.957Z",
+    "completed_at": "2026-04-10T07:31:44.077Z",
+    "duration_seconds": 0.12
+  }
+}

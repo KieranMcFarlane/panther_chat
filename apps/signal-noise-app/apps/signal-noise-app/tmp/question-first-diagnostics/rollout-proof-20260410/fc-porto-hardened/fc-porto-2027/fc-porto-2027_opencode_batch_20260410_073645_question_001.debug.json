@@ -1,0 +1,37 @@
+{
+  "trace_id": "q1_foundation:debug",
+  "question_id": "q1_foundation",
+  "prompt_trace": {
+    "exit_code": 124,
+    "stdout_length": 0,
+    "stderr_length": 37,
+    "has_structured_output": false
+  },
+  "message_trace": [
+    {
+      "role": "assistant",
+      "completed": false,
+      "type": "cli-run",
+      "has_structured_output": false,
+      "part_count": 1
+    }
+  ],
+  "raw_execution_trace": {
+    "exit_code": 124,
+    "stdout_length": 0,
+    "stderr_length": 37,
+    "has_structured_output": false,
+    "stdout_excerpt": "",
+    "stderr_excerpt": "opencode run timed out after 179999ms",
+    "assistant_text_excerpt": "",
+    "message_trace_summary": [
+      {
+        "role": "assistant",
+        "completed": false,
+        "type": "cli-run",
+        "has_structured_output": false,
+        "part_count": 1
+      }
+    ]
+  }
+}

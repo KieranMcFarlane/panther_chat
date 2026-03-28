@@ -1,0 +1,32 @@
+{
+  "run_started_at": "2026-04-10T07:04:47.151Z",
+  "entity_name": "FC Porto",
+  "entity_id": "fc-porto-2027",
+  "entity_type": "SPORT_CLUB",
+  "preset": "fc-porto-2027-atomic-matrix",
+  "questions_total": 15,
+  "questions_validated": 2,
+  "questions_no_signal": 5,
+  "questions_provisional": 1,
+  "meta_result_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_meta.json",
+  "question_result_paths": [
+    "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_001.json",
+    "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_002.json",
+    "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_003.json",
+    "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_004.json",
+    "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_005.json",
+    "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_006.json",
+    "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_007.json",
+    "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_008.json",
+    "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_009.json",
+    "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_010.json",
+    "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_011.json",
+    "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_012.json",
+    "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_013.json",
+    "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_014.json",
+    "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_015.json"
+  ],
+  "question_results_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_meta.json",
+  "transcript_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645.txt",
+  "question_first_run_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_first_run_v2.json"
+}

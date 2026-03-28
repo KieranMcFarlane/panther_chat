@@ -1,0 +1,37 @@
+{
+  "trace_id": "q9_news_signal:debug",
+  "question_id": "q9_news_signal",
+  "prompt_trace": {
+    "exit_code": 124,
+    "stdout_length": 54129,
+    "stderr_length": 37,
+    "has_structured_output": false
+  },
+  "message_trace": [
+    {
+      "role": "assistant",
+      "completed": false,
+      "type": "cli-run",
+      "has_structured_output": false,
+      "part_count": 1
+    }
+  ],
+  "raw_execution_trace": {
+    "exit_code": 124,
+    "stdout_length": 54129,
+    "stderr_length": 37,
+    "has_structured_output": false,
+    "stdout_excerpt": "\\nFC Porto Portal uses cookies in different ways. Know morehere.By continuing to browse the site you are consenting to its use.Accept\\nFC Porto Portal uses cookies in different ways. Know morehere.By continuing to browse the site you are consenting to its use.Accept\\nFC Porto Portal uses cookies in different ways. Know morehere.By continuing to browse the site you are consenting to its use.\\n[here](/en/privacy)\\n\\n---\\nScraped at: 2026-04-10T07:28:19.230Z\",\"title\":\"\",\"metadata\":{},\"time\":{\"start\":1775806092034,\"end\":1775806099240},\"attachments\":[]}}}\n{\"type\":\"step_finish\",\"timestamp\":1775806099521,\"sessionID\":\"ses_289b7a4fdffetPWjy47H3MAL4U\",\"part\":{\"id\":\"prt_d764aaf300014gG3yZFon2h9Gi\",\"sessionID\":\"ses_289b7a4fdffetPWjy47H3MAL4U\",\"messageID\":\"msg_d764a3bcc0015JmGTY9JMz8KxD\",\"type\":\"step-finish\",\"reason\":\"tool-calls\",\"snapshot\":\"\",\"cost\":0,\"tokens\":{\"input\":743,\"output\":133,\"reasoning\":34,\"cache\":{\"read\":5376,\"write\":0}}}}\n{\"type\":\"step_start\",\"timestamp\":1775806109653,\"sessionID\":\"ses_289b7a4fdffetPWjy47H3MAL4U\",\"part\":{\"id\":\"prt_d764ad510001dCPjdDpg7Jb0JI\",\"sessionID\":\"ses_289b7a4fdffetPWjy47H3MAL4U\",\"messageID\":\"msg_d764ab0b9001huUvoYsuGayuOQ\",\"type\":\"step-start\",\"snapshot\":\"\"}}",
+    "stderr_excerpt": "opencode run timed out after 179999ms",
+    "assistant_text_excerpt": "",
+    "message_trace_summary": [
+      {
+        "role": "assistant",
+        "completed": false,
+        "type": "cli-run",
+        "has_structured_output": false,
+        "part_count": 1
+      }
+    ]
+  }
+}

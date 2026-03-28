@@ -1,0 +1,19 @@
+{
+  "trace_id": "q15_outreach_strategy:debug",
+  "question_id": "q15_outreach_strategy",
+  "prompt_trace": {
+    "status": "derived_outreach_strategy_missing_q11",
+    "has_structured_output": true
+  },
+  "message_trace": [],
+  "raw_execution_trace": {
+    "exit_code": 0,
+    "stdout_length": 0,
+    "stderr_length": 0,
+    "has_structured_output": true,
+    "stdout_excerpt": "",
+    "stderr_excerpt": "",
+    "assistant_text_excerpt": "",
+    "message_trace_summary": []
+  }
+}

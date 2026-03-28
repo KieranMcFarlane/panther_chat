@@ -1,0 +1,329 @@
+{
+  "run_at": "2026-04-10T07:04:46.753548+00:00",
+  "opencode_timeout_ms": 300000,
+  "entities": [
+    {
+      "entity_id": "fc-porto-2027",
+      "entity_name": "FC Porto",
+      "entity_type": "SPORT_CLUB",
+      "question_source_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/_generated_question_sources/fc-porto-2027_atomic_matrix.json",
+      "output_dir": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027",
+      "status": "completed",
+      "started_at": "2026-04-10T07:04:46.753973+00:00",
+      "entity_runtime_seconds": 1918.35,
+      "question_runtime_seconds": {
+        "q1_foundation": 180.389,
+        "q2_digital_stack": 259.733,
+        "q3_leadership": 300.622,
+        "q6_launch_signal": 180.406,
+        "q7_procurement_signal": 150.601,
+        "q8_explicit_rfp": 181.18,
+        "q9_news_signal": 182.044,
+        "q10_hiring_signal": 181.774,
+        "q4_performance": 0.12,
+        "q5_league_context": 0.078,
+        "q11_decision_owner": 301.242,
+        "q12_connections": 0.046,
+        "q13_capability_gap": 0.015,
+        "q14_yp_fit": 0.012,
+        "q15_outreach_strategy": 0.011
+      },
+      "validation_by_question": {
+        "q1_foundation": {
+          "validated": 0,
+          "no_signal": 0,
+          "provisional": 0,
+          "pending": 1
+        },
+        "q2_digital_stack": {
+          "validated": 1,
+          "no_signal": 0,
+          "provisional": 0,
+          "pending": 0
+        },
+        "q3_leadership": {
+          "validated": 0,
+          "no_signal": 1,
+          "provisional": 0,
+          "pending": 0
+        },
+        "q6_launch_signal": {
+          "validated": 0,
+          "no_signal": 0,
+          "provisional": 0,
+          "pending": 1
+        },
+        "q7_procurement_signal": {
+          "validated": 1,
+          "no_signal": 0,
+          "provisional": 0,
+          "pending": 0
+        },
+        "q8_explicit_rfp": {
+          "validated": 0,
+          "no_signal": 0,
+          "provisional": 0,
+          "pending": 1
+        },
+        "q9_news_signal": {
+          "validated": 0,
+          "no_signal": 0,
+          "provisional": 0,
+          "pending": 1
+        },
+        "q10_hiring_signal": {
+          "validated": 0,
+          "no_signal": 0,
+          "provisional": 0,
+          "pending": 1
+        },
+        "q4_performance": {
+          "validated": 0,
+          "no_signal": 1,
+          "provisional": 0,
+          "pending": 0
+        },
+        "q5_league_context": {
+          "validated": 0,
+          "no_signal": 1,
+          "provisional": 0,
+          "pending": 0
+        },
+        "q11_decision_owner": {
+          "validated": 0,
+          "no_signal": 1,
+          "provisional": 0,
+          "pending": 0
+        },
+        "q12_connections": {
+          "validated": 0,
+          "no_signal": 1,
+          "provisional": 0,
+          "pending": 0
+        },
+        "q13_capability_gap": {
+          "validated": 0,
+          "no_signal": 0,
+          "provisional": 1,
+          "pending": 0
+        },
+        "q14_yp_fit": {
+          "validated": 0,
+          "no_signal": 1,
+          "provisional": 0,
+          "pending": 0
+        },
+        "q15_outreach_strategy": {
+          "validated": 0,
+          "no_signal": 1,
+          "provisional": 0,
+          "pending": 0
+        }
+      },
+      "validation_by_entity_type": {
+        "SPORT_CLUB": {
+          "validated": 2,
+          "no_signal": 7,
+          "provisional": 1,
+          "pending": 5
+        }
+      },
+      "deterministic_path_counts": {
+        "q2_digital_stack": 1
+      },
+      "retrieval_path_counts": {
+        "q1_foundation": 1,
+        "q3_leadership": 1,
+        "q6_launch_signal": 1,
+        "q7_procurement_signal": 1,
+        "q8_explicit_rfp": 1,
+        "q9_news_signal": 1,
+        "q10_hiring_signal": 1,
+        "q4_performance": 1,
+        "q5_league_context": 1,
+        "q11_decision_owner": 1,
+        "q12_connections": 1,
+        "q13_capability_gap": 1,
+        "q14_yp_fit": 1,
+        "q15_outreach_strategy": 1
+      },
+      "baseline_features": {
+        "enrichment_enabled": false,
+        "connections_graph_enrichment_enabled": false,
+        "connections_graph_enrichment_status": "optional",
+        "question_first_enabled": true
+      },
+      "questions_validated": 2,
+      "questions_no_signal": 5,
+      "client_ready": false,
+      "client_ready_blockers": [
+        "q1_foundation",
+        "q3_leadership",
+        "q11_decision_owner"
+      ],
+      "graphiti_sales_brief_status": "insufficient_signal",
+      "question_first_generated_at": "2026-04-10T07:36:45.501Z",
+      "question_first_run_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_opencode_batch_20260410_073645_question_first_run_v2.json",
+      "question_first_dossier_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_question_first_dossier.json",
+      "question_first_report_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/fc-porto-2027/fc-porto-2027_question_first_dossier.json",
+      "failure_reason": null,
+      "failure_category": null,
+      "optional_enrichments": {
+        "connections_graph": {
+          "enabled": false,
+          "status": "optional"
+        }
+      }
+    }
+  ],
+  "entities_total": 1,
+  "entities_completed": 1,
+  "entities_failed": 0,
+  "entities_with_validated_questions": 1,
+  "entity_runtime_seconds": {
+    "fc-porto-2027": 1918.35
+  },
+  "question_runtime_seconds": {
+    "fc-porto-2027": {
+      "q1_foundation": 180.389,
+      "q2_digital_stack": 259.733,
+      "q3_leadership": 300.622,
+      "q6_launch_signal": 180.406,
+      "q7_procurement_signal": 150.601,
+      "q8_explicit_rfp": 181.18,
+      "q9_news_signal": 182.044,
+      "q10_hiring_signal": 181.774,
+      "q4_performance": 0.12,
+      "q5_league_context": 0.078,
+      "q11_decision_owner": 301.242,
+      "q12_connections": 0.046,
+      "q13_capability_gap": 0.015,
+      "q14_yp_fit": 0.012,
+      "q15_outreach_strategy": 0.011
+    }
+  },
+  "validation_by_question": {
+    "q1_foundation": {
+      "validated": 0,
+      "no_signal": 0,
+      "provisional": 0,
+      "pending": 1
+    },
+    "q2_digital_stack": {
+      "validated": 1,
+      "no_signal": 0,
+      "provisional": 0,
+      "pending": 0
+    },
+    "q3_leadership": {
+      "validated": 0,
+      "no_signal": 1,
+      "provisional": 0,
+      "pending": 0
+    },
+    "q6_launch_signal": {
+      "validated": 0,
+      "no_signal": 0,
+      "provisional": 0,
+      "pending": 1
+    },
+    "q7_procurement_signal": {
+      "validated": 1,
+      "no_signal": 0,
+      "provisional": 0,
+      "pending": 0
+    },
+    "q8_explicit_rfp": {
+      "validated": 0,
+      "no_signal": 0,
+      "provisional": 0,
+      "pending": 1
+    },
+    "q9_news_signal": {
+      "validated": 0,
+      "no_signal": 0,
+      "provisional": 0,
+      "pending": 1
+    },
+    "q10_hiring_signal": {
+      "validated": 0,
+      "no_signal": 0,
+      "provisional": 0,
+      "pending": 1
+    },
+    "q4_performance": {
+      "validated": 0,
+      "no_signal": 1,
+      "provisional": 0,
+      "pending": 0
+    },
+    "q5_league_context": {
+      "validated": 0,
+      "no_signal": 1,
+      "provisional": 0,
+      "pending": 0
+    },
+    "q11_decision_owner": {
+      "validated": 0,
+      "no_signal": 1,
+      "provisional": 0,
+      "pending": 0
+    },
+    "q12_connections": {
+      "validated": 0,
+      "no_signal": 1,
+      "provisional": 0,
+      "pending": 0
+    },
+    "q13_capability_gap": {
+      "validated": 0,
+      "no_signal": 0,
+      "provisional": 1,
+      "pending": 0
+    },
+    "q14_yp_fit": {
+      "validated": 0,
+      "no_signal": 1,
+      "provisional": 0,
+      "pending": 0
+    },
+    "q15_outreach_strategy": {
+      "validated": 0,
+      "no_signal": 1,
+      "provisional": 0,
+      "pending": 0
+    }
+  },
+  "validation_by_entity_type": {
+    "SPORT_CLUB": {
+      "validated": 2,
+      "no_signal": 7,
+      "provisional": 1,
+      "pending": 5
+    }
+  },
+  "deterministic_path_counts": {
+    "q2_digital_stack": 1
+  },
+  "retrieval_path_counts": {
+    "q1_foundation": 1,
+    "q3_leadership": 1,
+    "q6_launch_signal": 1,
+    "q7_procurement_signal": 1,
+    "q8_explicit_rfp": 1,
+    "q9_news_signal": 1,
+    "q10_hiring_signal": 1,
+    "q4_performance": 1,
+    "q5_league_context": 1,
+    "q11_decision_owner": 1,
+    "q12_connections": 1,
+    "q13_capability_gap": 1,
+    "q14_yp_fit": 1,
+    "q15_outreach_strategy": 1
+  },
+  "baseline_features": {
+    "enrichment_enabled": false,
+    "connections_graph_enrichment_enabled": false
+  },
+  "scale_progress_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/apps/signal-noise-app/tmp/question-first-diagnostics/rollout-proof-20260410/fc-porto-hardened/question_first_scale_progress.json"
+}

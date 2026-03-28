@@ -1,0 +1,101 @@
+{
+  "run_started_at": "2026-04-10T07:04:47.151Z",
+  "entity_name": "FC Porto",
+  "entity_id": "fc-porto-2027",
+  "entity_type": "SPORT_CLUB",
+  "preset": "fc-porto-2027-atomic-matrix",
+  "started_at": "2026-04-10T07:36:45.459Z",
+  "completed_at": "2026-04-10T07:36:45.471Z",
+  "duration_seconds": 0.012,
+  "question": {
+    "question_id": "q14_yp_fit",
+    "question_type": "yp_fit",
+    "question_text": "Where does Yellow Panther fit best for FC Porto?",
+    "question": "Where does Yellow Panther fit best for FC Porto?",
+    "query": "\"FC Porto\" Yellow Panther fit",
+    "hop_budget": 0,
+    "source_priority": [],
+    "evidence_extension_budget": 0,
+    "evidence_extension_confidence_threshold": 0.65,
+    "question_timeout_ms": 180000,
+    "entity_name": "FC Porto",
+    "entity_id": "fc-porto-2027",
+    "entity_type": "SPORT_CLUB",
+    "preset": "fc-porto-2027-atomic-matrix",
+    "model_used": "zai-coding-plan/glm-5",
+    "session_id": "cli-14",
+    "agentic_plan": {
+      "source_priority": [],
+      "stop_rule": "continue for up to 0 hops within OpenCode steps budget"
+    },
+    "reasoning": {
+      "structured_output": {
+        "answer": "",
+        "confidence": 0,
+        "sources": [],
+        "validation_state": "no_signal",
+        "terminal_state": "blocked",
+        "notes": "No capability-gap inference is available yet for YP fit mapping.",
+        "context": "No capability-gap inference is available yet for YP fit mapping.",
+        "summary": "No capability-gap inference is available yet for YP fit mapping.",
+        "blocked_by": [
+          "q13_capability_gap",
+          "q7_procurement_signal"
+        ],
+        "themes": [],
+        "recommendations": []
+      },
+      "prompt_trace": {
+        "status": "derived_yp_fit_missing_q13",
+        "has_structured_output": true
+      },
+      "message_trace": [],
+      "raw_execution_trace": {
+        "exit_code": 0,
+        "stdout_length": 0,
+        "stderr_length": 0,
+        "has_structured_output": true,
+        "stdout_excerpt": "",
+        "stderr_excerpt": "",
+        "assistant_text_excerpt": "",
+        "message_trace_summary": []
+      }
+    },
+    "prompt_trace": {
+      "status": "derived_yp_fit_missing_q13",
+      "has_structured_output": true
+    },
+    "message_trace": [],
+    "raw_execution_trace": {
+      "exit_code": 0,
+      "stdout_length": 0,
+      "stderr_length": 0,
+      "has_structured_output": true,
+      "stdout_excerpt": "",
+      "stderr_excerpt": "",
+      "assistant_text_excerpt": "",
+      "message_trace_summary": []
+    },
+    "execution_query": "\"FC Porto\" Yellow Panther fit",
+    "answer": "",
+    "primary_owner": null,
+    "secondary_candidates": [],
+    "supporting_candidates": [],
+    "candidates": [],
+    "signal_type": "YP_FIT",
+    "confidence": 0,
+    "validation_state": "no_signal",
+    "terminal_state": "blocked",
+    "terminal_summary": "No capability-gap inference is available yet for YP fit mapping.",
+    "blocked_by": [
+      "q13_capability_gap",
+      "q7_procurement_signal"
+    ],
+    "evidence_url": "",
+    "recommended_next_query": "",
+    "notes": "No capability-gap inference is available yet for YP fit mapping.",
+    "started_at": "2026-04-10T07:36:45.459Z",
+    "completed_at": "2026-04-10T07:36:45.471Z",
+    "duration_seconds": 0.012
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "trace_id": "q7_procurement_signal:debug",
+  "question_id": "q7_procurement_signal",
+  "prompt_trace": {
+    "exit_code": 0,
+    "stdout_length": 88759,
+    "stderr_length": 0,
+    "has_structured_output": true
+  },
+  "message_trace": [
+    {
+      "role": "assistant",
+      "completed": true,
+      "type": "cli-run",
+      "has_structured_output": true,
+      "part_count": 1
+    }
+  ],
+  "raw_execution_trace": {
+    "exit_code": 0,
+    "stdout_length": 88759,
+    "stderr_length": 0,
+    "has_structured_output": true,
+    "stdout_excerpt": "der for FC Porto\\\",\\n      \\\"snippet\\\": \\\"LiveTag.Pro announced as official analysis software provider.\\\"\\n    },\\n    {\\n      \\\"url\\\": \\\"https://www.coliseum-online.com/fc-porto-home-venue-massive-rejig-plans/\\\",\\n      \\\"title\\\": \\\"FC Porto home venue massive rejig plans\\\",\\n      \\\"snippet\\\": \\\"Investment of between €60 and €70 million to modernize Estádio do Dragão. €250M financing deal closed.\\\"\\n    },\\n    {\\n      \\\"url\\\": \\\"https://www.instagram.com/p/DIU554lycd6/\\\",\\n      \\\"title\\\": \\\"THE GATE alliance with FC Porto\\\",\\n      \\\"snippet\\\": \\\"Partnership spanning youth development and other areas.\\\"\\n    },\\n    {\\n      \\\"url\\\": \\\"https://www.instagram.com/p/DVJaz6iiC5u/\\\",\\n      \\\"title\\\": \\\"IUMAN é a nova Official Underwear Partner do FC Porto\\\",\\n      \\\"snippet\\\": \\\"IUMAN named new Official Underwear Partner.\\\"\\n    },\\n    {\\n      \\\"url\\\": \\\"https://sponsorship.sportbusiness.com/organisation/fc-porto/\\\",\\n      \\\"title\\\": \\\"FC Porto — SportBusiness Sponsorship\\\",\\n      \\\"snippet\\\": \\\"25-year deal with Ithaka to sell 30% of economic rights to Dragão.\\\"\\n    }\\n  ],\\n  \\\"validation_state\\\": \\\"validated\\\"\\n}\\n```\",\"time\":{\"start\":1775805752713,\"end\":1775805752713}}}",
+    "stderr_excerpt": "",
+    "assistant_text_excerpt": "ps://www.instagram.com/reel/DFFUW8mCblH/\",\n      \"title\": \"LiveTag.Pro selected as official video and performance analysis software provider for FC Porto\",\n      \"snippet\": \"LiveTag.Pro announced as official analysis software provider.\"\n    },\n    {\n      \"url\": \"https://www.coliseum-online.com/fc-porto-home-venue-massive-rejig-plans/\",\n      \"title\": \"FC Porto home venue massive rejig plans\",\n      \"snippet\": \"Investment of between €60 and €70 million to modernize Estádio do Dragão. €250M financing deal closed.\"\n    },\n    {\n      \"url\": \"https://www.instagram.com/p/DIU554lycd6/\",\n      \"title\": \"THE GATE alliance with FC Porto\",\n      \"snippet\": \"Partnership spanning youth development and other areas.\"\n    },\n    {\n      \"url\": \"https://www.instagram.com/p/DVJaz6iiC5u/\",\n      \"title\": \"IUMAN é a nova Official Underwear Partner do FC Porto\",\n      \"snippet\": \"IUMAN named new Official Underwear Partner.\"\n    },\n    {\n      \"url\": \"https://sponsorship.sportbusiness.com/organisation/fc-porto/\",\n      \"title\": \"FC Porto — SportBusiness Sponsorship\",\n      \"snippet\": \"25-year deal with Ithaka to sell 30% of economic rights to Dragão.\"\n    }\n  ],\n  \"validation_state\": \"validated\"\n}\n```",
+    "message_trace_summary": [
+      {
+        "role": "assistant",
+        "completed": true,
+        "type": "cli-run",
+        "has_structured_output": true,
+        "part_count": 1
+      }
+    ]
+  }
+}

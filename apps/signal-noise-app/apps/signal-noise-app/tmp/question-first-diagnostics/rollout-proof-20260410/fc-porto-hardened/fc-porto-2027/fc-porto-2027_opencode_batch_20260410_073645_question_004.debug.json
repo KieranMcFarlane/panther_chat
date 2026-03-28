@@ -1,0 +1,37 @@
+{
+  "trace_id": "q6_launch_signal:debug",
+  "question_id": "q6_launch_signal",
+  "prompt_trace": {
+    "exit_code": 124,
+    "stdout_length": 18117,
+    "stderr_length": 37,
+    "has_structured_output": false
+  },
+  "message_trace": [
+    {
+      "role": "assistant",
+      "completed": false,
+      "type": "cli-run",
+      "has_structured_output": false,
+      "part_count": 1
+    }
+  ],
+  "raw_execution_trace": {
+    "exit_code": 124,
+    "stdout_length": 18117,
+    "stderr_length": 37,
+    "has_structured_output": false,
+    "stdout_excerpt": "-agreement-to-create-the-club_s-digital-world-in-football-at-alphaverse\\n   ✅ Successfully scraped\\n   Content preview: CRYPTO BLOCKCHAIN INDUSTRIES(Euronext Growth Paris)ISIN Code:FR 0014007 LW 0 Mnemo code:ALCBIICB sector:40203040 - Electronic Entertainment Website:cbicorp.io/\\nCRYPTO BLOCKCHAIN INDUSTRIES(Euronext Gr...\\n\\n4. https://www.vtapnfc.com/nfc-wallet-tickets-provide-swift-and-secure-member-experiences-fc-porto/\\n   ✅ Successfully scraped\\n   Content preview: FC Porto case study NFC wallet tickets for swift member experiences Use case Ticketing Market segment Sports & events Product VTAP 100 OEMPorto FC use NFC wallet tickets for swift and secure member ex...\\n\\n\\nSummary: 4/4 URLs successfully scraped\",\"title\":\"\",\"metadata\":{},\"time\":{\"start\":1775805493010,\"end\":1775805521461},\"attachments\":[]}}}\n{\"type\":\"step_finish\",\"timestamp\":1775805521515,\"sessionID\":\"ses_289bf8a04ffe3CRVIaxxIVf57d\",\"part\":{\"id\":\"prt_d7641de37001CtA1r2snW1mzHm\",\"sessionID\":\"ses_289bf8a04ffe3CRVIaxxIVf57d\",\"messageID\":\"msg_d764143040014OgHa1EbXeBCl4\",\"type\":\"step-finish\",\"reason\":\"tool-calls\",\"snapshot\":\"\",\"cost\":0,\"tokens\":{\"input\":588,\"output\":199,\"reasoning\":25,\"cache\":{\"read\":5120,\"write\":0}}}}",
+    "stderr_excerpt": "opencode run timed out after 180000ms",
+    "assistant_text_excerpt": "",
+    "message_trace_summary": [
+      {
+        "role": "assistant",
+        "completed": false,
+        "type": "cli-run",
+        "has_structured_output": false,
+        "part_count": 1
+      }
+    ]
+  }
+}

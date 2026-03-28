@@ -1,0 +1,19 @@
+{
+  "trace_id": "q13_capability_gap:debug",
+  "question_id": "q13_capability_gap",
+  "prompt_trace": {
+    "status": "derived_capability_gap",
+    "has_structured_output": true
+  },
+  "message_trace": [],
+  "raw_execution_trace": {
+    "exit_code": 0,
+    "stdout_length": 0,
+    "stderr_length": 0,
+    "has_structured_output": true,
+    "stdout_excerpt": "",
+    "stderr_excerpt": "",
+    "assistant_text_excerpt": "",
+    "message_trace_summary": []
+  }
+}

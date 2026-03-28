@@ -1,0 +1,89 @@
+Question 1: q1_foundation
+Prompt: "FC Porto" official website founded year
+Exit code: 124
+Validation: tool_call_missing
+Answer: n/a
+
+Question 2: q2_digital_stack
+Prompt: "FC Porto" official website
+Exit code: 0
+Validation: validated
+Answer: FC Porto operates a digitally progressive but infrastructure-light stack centred on Cloudflare CDN/Security, a bespoke mobile app (iOS/Android with NFC digital member cards and Apple/Google Wallet integration), a Magento-like e-commerce store at store.fcporto.pt, and a Binance-powered blockchain fan-token (PORTO). The club has a dedicated Head of Digital Transformation and a long-term 15-year Legends partnership managing global sponsorships, stadium naming rights, F&B and hospitality at Estádio do Dragão. Additional sports-tech partnerships include Scoutium for youth-athlete video analytics and Crypto Blockchain Industries for a metaverse digital world. Main commercial sponsors visible on kit and digital assets are New Balance (10+ year global kit deal), Betano (front-of-shirt, 4-year betting partnership), Super Bock, and Revigrés.
+
+Question 3: q3_leadership
+Prompt: "FC Porto" chairman chief executive officer secretary general board
+Exit code: 124
+Validation: tool_call_missing
+Answer: n/a
+
+Question 4: q6_launch_signal
+Prompt: "FC Porto" launch app platform
+Exit code: 124
+Validation: tool_call_missing
+Answer: n/a
+
+Question 5: q7_procurement_signal
+Prompt: "FC Porto" official partner commercial partner platform
+Exit code: 0
+Validation: validated
+Answer: Yes — FC Porto is actively and broadly reshaping its commercial and digital ecosystem across multiple fronts: stadium modernisation (€60–70M+), expanded vendor partnerships, new digital platforms, international strategic alliances, and a new premium/hospitality tiering model, all framed by its Strategic Plan and preparation for the 2030 FIFA World Cup.
+
+Question 6: q8_explicit_rfp
+Prompt: "FC Porto" tender RFP
+Exit code: 124
+Validation: tool_call_missing
+Answer: n/a
+
+Question 7: q9_news_signal
+Prompt: "FC Porto" news announcement partnership
+Exit code: 124
+Validation: tool_call_missing
+Answer: n/a
+
+Question 8: q10_hiring_signal
+Prompt: "FC Porto" jobs digital marketing CRM
+Exit code: 124
+Validation: tool_call_missing
+Answer: n/a
+
+Question 9: q4_performance
+Prompt: "FC Porto" standings
+Exit code: 0
+Validation: no_signal
+Answer: n/a
+
+Question 10: q5_league_context
+Prompt: "FC Porto" league context
+Exit code: 0
+Validation: no_signal
+Answer: n/a
+
+Question 11: q11_decision_owner
+Prompt: "FC Porto" commercial partnerships leadership
+Exit code: 124
+Validation: tool_call_missing
+Answer: n/a
+
+Question 12: q12_connections
+Prompt: "FC Porto" connections
+Exit code: 0
+Validation: no_signal
+Answer: n/a
+
+Question 13: q13_capability_gap
+Prompt: "FC Porto" capability gap
+Exit code: 0
+Validation: provisional
+Answer: Capability gaps inferred from digital_stack_maturity, vendor_change_motion
+
+Question 14: q14_yp_fit
+Prompt: "FC Porto" Yellow Panther fit
+Exit code: 0
+Validation: no_signal
+Answer: n/a
+
+Question 15: q15_outreach_strategy
+Prompt: "FC Porto" outreach strategy
+Exit code: 0
+Validation: no_signal
+Answer: n/a
