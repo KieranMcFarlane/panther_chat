@@ -1,17 +1,29 @@
 import {
-  Radar,
-  Target,
-  Zap,
-  Target as OpportunityIcon,
+  Database,
+  FileText,
+  Home,
   BarChart3,
-  Network,
-} from 'lucide-react';
+  Target,
+  Upload,
+  Zap,
+} from 'lucide-react'
 
-export const discoveryNavItems = [
-  { icon: Radar, label: 'Control Center', href: '/control-center' },
-  { icon: Target, label: 'Scout', href: '/scout' },
-  { icon: Zap, label: 'Enrichment', href: '/enrichment' },
-  { icon: OpportunityIcon, label: 'Opportunities', href: '/opportunities' },
-  { icon: BarChart3, label: 'Pipeline', href: '/pipeline' },
-  { icon: Network, label: 'Graph', href: '/graph' },
-] as const;
+export const primaryNavItems = [
+  { icon: Database, label: 'Entities', href: '/entity-browser' },
+  { icon: FileText, label: "RFP's/Tenders", href: '/tenders' },
+  { icon: FileText, label: 'Opportunities', href: '/opportunities' },
+] as const
+
+export const advancedOpsNavItems = [
+  { icon: Target, label: 'Scout', href: '/rfp-analysis-control-center' },
+  { icon: Zap, label: 'Enrichment', href: '/entity-enrichment' },
+  { icon: BarChart3, label: 'Pipeline', href: '/entity-pipeline' },
+] as const
+
+export const supportNavItems = [
+  { icon: Upload, label: 'Import CSV', href: '/entity-import' },
+] as const
+
+export const overviewNavItems = [
+  { icon: Home, label: 'Home', href: '/' },
+] as const

@@ -39,21 +39,24 @@ import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import PageTransition from './PageTransition';
 import VectorSearchDebounced from '@/components/ui/VectorSearch-debounced';
-import { discoveryNavItems } from './discovery-nav';
+import { advancedOpsNavItems, overviewNavItems, primaryNavItems, supportNavItems } from './discovery-nav';
+import { OperationalStatusStrip } from './OperationalStatusStrip';
+import { OperationalDrawer } from './OperationalDrawer';
 
-// Navigation items - Core demo functionality only
-const navItems = [
-  ...discoveryNavItems,
-  { icon: Database, label: 'Entities', href: '/entity-browser' },
-  { icon: Upload, label: 'Import CSV', href: '/entity-import' },
-  { icon: FileText, label: "RFP's/Tenders", href: '/tenders' },
-  {
-    icon: Search,
-    label: 'Search',
-    href: '#',
-    isSearch: true
-  },
-];
+const searchNavItem = {
+  icon: Search,
+  label: 'Search',
+  href: '#',
+  isSearch: true,
+} as const
+
+const navSections = [
+  { key: 'overview', label: 'Overview', items: overviewNavItems },
+  { key: 'workflow', label: 'Workflow', items: primaryNavItems },
+  { key: 'advanced-ops', label: 'Advanced Ops', items: advancedOpsNavItems },
+  { key: 'support', label: 'Support', items: supportNavItems },
+  { key: 'search', label: 'Search', items: [searchNavItem] },
+] as const
 
 interface AppNavigationProps {
   children: React.ReactNode;
@@ -63,6 +66,7 @@ interface AppNavigationProps {
 export default function AppNavigation({ children, authMenu }: AppNavigationProps) {
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(true);
   const pathname = usePathname();
   const isDossierRoute = pathname?.includes('/dossier') ?? false;
   const isEntityBrowserRoute = pathname?.startsWith('/entity-browser') ?? false;
@@ -78,7 +82,9 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
     );
   }
 
-  const renderNavItem = (item: typeof navItems[0]) => {
+  type NavItem = (typeof navSections)[number]['items'][number]
+
+  const renderNavItem = (item: NavItem) => {
     const isOpen = openSubmenu === item.label;
     const isActive = pathname === item.href || (item.hasSubmenu && pathname.startsWith(item.href));
     
@@ -125,25 +131,25 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
       // When collapsed, wrap in popover for tooltip
       if (!sidebarExpanded) {
         return (
-          <Popover key={item.label} open={isOpen} onOpenChange={setIsOpen}>
+          <Popover key={item.label} open={isOpen} onOpenChange={(open) => setOpenSubmenu(open ? item.label : null)}>
             <PopoverTrigger 
               asChild
-              onMouseEnter={() => setIsOpen(true)}
-              onMouseLeave={() => setIsOpen(false)}
+              onMouseEnter={() => setOpenSubmenu(item.label)}
+              onMouseLeave={() => setOpenSubmenu(null)}
             >
               <div className="cursor-pointer">
                 <VectorSearchDebounced variant="navitem" className="w-full justify-center" />
               </div>
             </PopoverTrigger>
             <PopoverContent 
-              side="right" 
-              className="w-auto p-2"
-              sideOffset={8}
-              onMouseEnter={() => setIsOpen(true)}
-              onMouseLeave={() => setIsOpen(false)}
-            >
-              <p className="text-sm font-medium">{item.label}</p>
-            </PopoverContent>
+            side="right" 
+            className="w-auto p-2"
+            sideOffset={8}
+            onMouseEnter={() => setOpenSubmenu(item.label)}
+            onMouseLeave={() => setOpenSubmenu(null)}
+          >
+            <p className="text-sm font-medium">{item.label}</p>
+          </PopoverContent>
           </Popover>
         );
       }
@@ -158,15 +164,11 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
     // When collapsed, wrap in popover for tooltip for other items
     if (!sidebarExpanded) {
       return (
-        <Popover
-          key={item.label}
-          open={isOpen}
-          onOpenChange={(open) => setOpenSubmenu(open ? item.label : null)}
-        >
+        <Popover key={item.label} open={isOpen} onOpenChange={(open) => setOpenSubmenu(open ? item.label : null)}>
           <PopoverTrigger 
             asChild
-            onMouseEnter={() => setIsOpen(true)}
-            onMouseLeave={() => setIsOpen(false)}
+            onMouseEnter={() => setOpenSubmenu(item.label)}
+            onMouseLeave={() => setOpenSubmenu(null)}
           >
             <Link href={item.hasSubmenu ? '#' : item.href}>
               {linkContent}
@@ -176,8 +178,8 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
             side="right" 
             className="w-auto p-2"
             sideOffset={8}
-            onMouseEnter={() => setIsOpen(true)}
-            onMouseLeave={() => setIsOpen(false)}
+            onMouseEnter={() => setOpenSubmenu(item.label)}
+            onMouseLeave={() => setOpenSubmenu(null)}
           >
             <p className="text-sm font-medium">{item.label}</p>
             {item.hasSubmenu && item.subItems && (
@@ -231,11 +233,28 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
                 </Link>
               );
             })}
-          </div>
+      </div>
         )}
       </div>
     );
   };
+
+  const renderSection = (section: typeof navSections[number]) => (
+    <div key={section.key} className="space-y-2">
+      {sidebarExpanded && section.key !== 'search' && (
+        <div className="px-3 pt-2 text-[0.6875rem] font-semibold uppercase tracking-[0.18em] text-slate-500">
+          {section.label}
+        </div>
+      )}
+      <div className="space-y-2">
+        {section.items.map((item) => (
+          <div key={item.href}>
+            {renderNavItem(item)}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 
   return (
     <div className="min-h-screen bg-custom-bg overflow-x-hidden">
@@ -289,12 +308,8 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
           )}
         </div>
         <div className="p-3">
-          <div className="space-y-2">
-            {navItems.map((item) => (
-              <div key={item.href}>
-                {renderNavItem(item)}
-              </div>
-            ))}
+          <div className="space-y-4">
+            {navSections.map((section) => renderSection(section))}
             {authMenu && !isDossierRoute && !isEntityBrowserRoute && (
               <div className="pt-4 border-t border-custom-border">
                 {authMenu}
@@ -318,7 +333,12 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
 
       {/* Main Content Area */}
       <div className={`p-6 bg-transparent ${sidebarExpanded ? 'ml-64' : 'ml-[4.4375rem]'} transition-[margin-left] duration-1200`} style={{ transitionTimingFunction: 'cubic-bezier(0.37, 0, 0.63, 1)' }}>
-        <div className="max-w-7xl overflow-hidden rounded-lg mx-auto">
+        <div className="max-w-7xl overflow-hidden rounded-lg mx-auto space-y-4">
+          <OperationalStatusStrip
+            drawerOpen={drawerOpen}
+            onToggleDrawer={() => setDrawerOpen((current) => !current)}
+          />
+          <OperationalDrawer open={drawerOpen} />
           <PageTransition>
             {children}
           </PageTransition>

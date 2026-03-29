@@ -2,13 +2,10 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import AppShell from '@/components/layout/AppShell'
-import BackgroundAnimation from '@/components/layout/BackgroundAnimation'
 import SWRProvider from '@/components/providers/SWRProvider'
 import { UserProvider } from '@/contexts/UserContext'
 import { TabProvider } from '@/contexts/TabContext'
 import { ThreadProvider } from '@/contexts/ThreadContext'
-import "@copilotkit/react-ui/styles.css"
-import { BetterAuthProvider } from '@/components/providers/BetterAuthProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -31,21 +28,16 @@ export default function RootLayout({
         <link href="/fonts/ywft-wetzlar-grotesk-regular-demo.css" rel="stylesheet" />
       </head>
       <body className={`${inter.className} antialiased`} suppressHydrationWarning={true}>
-        <BackgroundAnimation />
-        <BetterAuthProvider>
-          <UserProvider>
-            <TabProvider>
-              <ThreadProvider>
-                <SWRProvider>
-                  <AppShell>{children}</AppShell>
-                </SWRProvider>
-              </ThreadProvider>
-            </TabProvider>
-          </UserProvider>
-        </BetterAuthProvider>
+        <UserProvider>
+          <TabProvider>
+            <ThreadProvider>
+              <SWRProvider>
+                <AppShell>{children}</AppShell>
+              </SWRProvider>
+            </ThreadProvider>
+          </TabProvider>
+        </UserProvider>
       </body>
     </html>
   )
 }
-
-

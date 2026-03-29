@@ -158,6 +158,12 @@ export default function OpportunitiesPage() {
 
   const uniqueSports = Array.from(new Set(opportunities.map(o => o.sport)));
   const uniqueTypes = Array.from(new Set(opportunities.map(o => o.type)));
+  const highConvictionCount = filteredOpportunities.filter((opp) => opp.criticalOpportunityScore >= 8).length
+  const trackedValueCount = filteredOpportunities.filter((opp) => Boolean(opp.value)).length
+  const deadlineCount = filteredOpportunities.filter((opp) => Boolean(opp.deadline)).length
+  const averageScore = filteredOpportunities.length
+    ? (filteredOpportunities.reduce((sum, opp) => sum + opp.criticalOpportunityScore, 0) / filteredOpportunities.length).toFixed(1)
+    : '0.0'
 
   if (loading) {
     return (
@@ -169,20 +175,56 @@ export default function OpportunitiesPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Opportunities</h1>
-          <p className="text-fm-light-grey">High-value opportunities ranked by critical score</p>
+      <div className="rounded-2xl border border-custom-border bg-custom-box px-6 py-8">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-3xl">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-yellow-500/30 bg-yellow-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-yellow-300">
+              <Star className="h-3.5 w-3.5" />
+              Decision Surface
+            </div>
+            <h1 className="text-3xl font-bold text-white mb-2">Opportunity Shortlist</h1>
+            <p className="text-fm-light-grey">
+              Curated opportunities ranked for Yellow Panther action. This page is for deciding what to pursue next,
+              not for scanning the full raw feed.
+            </p>
+          </div>
+          <Button className="bg-yellow-500 text-black hover:bg-yellow-400 self-start lg:self-auto">
+            <Target className="w-4 h-4 mr-2" />
+            Add to Pursuit Queue
+          </Button>
         </div>
-        <Button className="bg-yellow-500 text-black hover:bg-yellow-400">
-          <Target className="w-4 h-4 mr-2" />
-          Add Opportunity
-        </Button>
+
+        <div className="mt-6 grid gap-3 md:grid-cols-4">
+          <div className="rounded-xl border border-custom-border bg-custom-bg/60 p-4">
+            <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">Shortlisted</div>
+            <div className="mt-2 text-3xl font-semibold text-white">{filteredOpportunities.length}</div>
+          </div>
+          <div className="rounded-xl border border-custom-border bg-custom-bg/60 p-4">
+            <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">High Conviction</div>
+            <div className="mt-2 text-3xl font-semibold text-green-400">{highConvictionCount}</div>
+          </div>
+          <div className="rounded-xl border border-custom-border bg-custom-bg/60 p-4">
+            <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">With Value Signal</div>
+            <div className="mt-2 text-3xl font-semibold text-yellow-300">{trackedValueCount}</div>
+          </div>
+          <div className="rounded-xl border border-custom-border bg-custom-bg/60 p-4">
+            <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">Average Score</div>
+            <div className="mt-2 text-3xl font-semibold text-white">{averageScore}</div>
+          </div>
+        </div>
       </div>
 
-      {/* Filters */}
       <div className="bg-custom-box border border-custom-border rounded-lg p-4">
+        <div className="mb-4 flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-base font-semibold text-white">Shortlist Filters</h2>
+            <p className="text-sm text-fm-medium-grey">Refine what is worth review, outreach, or pursuit.</p>
+          </div>
+          <div className="text-fm-light-grey text-sm flex items-center">
+            <Filter className="w-4 h-4 mr-2" />
+            {filteredOpportunities.length} of {opportunities.length}
+          </div>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           <Input
             placeholder="Search opportunities..."
@@ -226,15 +268,9 @@ export default function OpportunitiesPage() {
               <SelectItem value="low">Low (0+)</SelectItem>
             </SelectContent>
           </Select>
-
-          <div className="text-fm-light-grey text-sm flex items-center">
-            <Filter className="w-4 h-4 mr-2" />
-            {filteredOpportunities.length} of {opportunities.length}
-          </div>
         </div>
       </div>
 
-      {/* Opportunities Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {filteredOpportunities.map((opportunity) => (
           <div
@@ -326,7 +362,7 @@ export default function OpportunitiesPage() {
                 {opportunity.deadline && (
                   <div className="flex items-center gap-1">
                     <Calendar className="w-3 h-3" />
-                    <span>Deadline: {opportunity.deadline}</span>
+                  <span>Decision date: {opportunity.deadline}</span>
                   </div>
                 )}
                 <div className="flex items-center gap-1">
@@ -343,11 +379,11 @@ export default function OpportunitiesPage() {
             <div className="flex gap-2 mt-4">
               <Button size="sm" variant="outline" className="flex-1">
                 <Star className="w-3 h-3 mr-1" />
-                View Details
+                Review Fit
               </Button>
               <Button size="sm" variant="outline" className="flex-1">
                 <Target className="w-3 h-3 mr-1" />
-                Track
+                Add to Pipeline
               </Button>
             </div>
           </div>
@@ -357,8 +393,8 @@ export default function OpportunitiesPage() {
       {filteredOpportunities.length === 0 && (
         <div className="text-center py-12">
           <Target className="w-16 h-16 mx-auto text-fm-medium-grey mb-4 opacity-50" />
-          <h3 className="text-xl font-semibold text-white mb-2">No opportunities found</h3>
-          <p className="text-fm-medium-grey">Try adjusting your search criteria or add new opportunities</p>
+          <h3 className="text-xl font-semibold text-white mb-2">No shortlisted opportunities found</h3>
+          <p className="text-fm-medium-grey">Adjust the filters or move back to RFP&apos;s/Tenders to review the broader live feed.</p>
         </div>
       )}
     </div>

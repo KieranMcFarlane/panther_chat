@@ -30,6 +30,12 @@ export interface EntityPipelineRunRecord {
   metadata: Record<string, unknown>
 }
 
+export interface EntityPipelineActivitySummary {
+  activeRuns: number
+  failedRuns: number
+  recentCompleted: number
+}
+
 const entityImportBatchesMemoryStore = new Map<string, EntityImportBatchRecord>()
 const entityPipelineRunsMemoryStore = new Map<string, EntityPipelineRunRecord[]>()
 
@@ -257,4 +263,38 @@ export async function storeFallbackEntityImportState(
   runs: EntityPipelineRunRecord[],
 ) {
   withFallbackBatch(batch, runs)
+}
+
+export async function getEntityPipelineActivitySummary(): Promise<EntityPipelineActivitySummary> {
+  const summarize = (runs: Array<Pick<EntityPipelineRunRecord, 'status' | 'completed_at'>>) => {
+    const now = Date.now()
+    const recentWindowMs = 24 * 60 * 60 * 1000
+
+    return {
+      activeRuns: runs.filter((run) => ['queued', 'claiming', 'running', 'retrying'].includes(run.status)).length,
+      failedRuns: runs.filter((run) => run.status === 'failed').length,
+      recentCompleted: runs.filter((run) => {
+        if (run.status !== 'completed' || !run.completed_at) return false
+        const completedAt = new Date(run.completed_at).getTime()
+        return Number.isFinite(completedAt) && now - completedAt <= recentWindowMs
+      }).length,
+    }
+  }
+
+  const memoryRuns = [...entityPipelineRunsMemoryStore.values()].flat()
+
+  try {
+    const { data } = await supabase
+      .from('entity_pipeline_runs')
+      .select('status, completed_at')
+      .limit(500)
+
+    if (data) {
+      return summarize(data as Array<Pick<EntityPipelineRunRecord, 'status' | 'completed_at'>>)
+    }
+  } catch {
+    // fall back to memory
+  }
+
+  return summarize(memoryRuns)
 }

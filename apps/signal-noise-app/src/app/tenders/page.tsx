@@ -32,6 +32,7 @@ import { rfpStorageService } from '@/services/RFPStorageService';
 import { supabase } from '@/lib/supabase-client';
 import { comprehensiveRfpOpportunities } from '@/lib/comprehensive-rfp-opportunities';
 import digitalRfpOpportunities from '@/lib/digital-rfp-opportunities';
+import { ScoutPanel } from '@/components/rfp/ScoutPanel';
 
 // Use digital-first opportunities for optimal Yellow Panther alignment
 const alignedOpportunities = digitalRfpOpportunities;
@@ -363,6 +364,19 @@ const [filterSource, setFilterSource] = useState('all');
   // Combine results based on source selection
   const displayOpportunities = filterSource === 'ai-detected' ? [] : filteredOpportunities;
   const displayRFPs = filterSource === 'ai-detected' ? filteredDetectedRFPs : [];
+  const activeRfpCount = filteredOpportunities.filter((opp) => {
+    const title = opp.title ? opp.title.toLowerCase() : ''
+    return title.includes('rfp') || title.includes('tender') || title.includes('procurement') || title.includes('bid')
+  }).length
+  const emergingSignalCount = filteredOpportunities.filter((opp) => {
+    const title = opp.title ? opp.title.toLowerCase() : ''
+    return title.includes('digital') || title.includes('strategy') || title.includes('transformation') || title.includes('initiative')
+  }).length
+  const verifiedSourceCount = filteredOpportunities.filter((opp) => Boolean(opp.source_url || opp.url)).length
+  const scoutSourceCoverage = `${verifiedSourceCount || filteredOpportunities.length || opportunities.length} sources`
+  const scoutFreshnessLabel = dataLoadedAt
+    ? `${Math.max(1, Math.round((Date.now() - dataLoadedAt.getTime()) / 60000))}m ago`
+    : 'Awaiting sync'
 
   const getFitColor = (fit: number) => {
     if (fit >= 90) return 'bg-green-500';
@@ -623,7 +637,7 @@ const [filterSource, setFilterSource] = useState('all');
           <div className="text-6xl mb-4">🔍</div>
           <h2 className="text-xl font-semibold mb-2">No Quality Opportunities Available</h2>
           <p className="text-muted-foreground mb-4">
-            We've filtered out opportunities with broken source URLs to ensure the best user experience.
+            We&apos;ve filtered out opportunities with broken source URLs to ensure the best user experience.
           </p>
           <Button onClick={() => window.location.reload()}>
             <RefreshCw className="w-4 h-4 mr-2" />
@@ -636,16 +650,50 @@ const [filterSource, setFilterSource] = useState('all');
 
   return (
     <div className="min-h-screen bg-background p-6">
-      {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">🏆 Live Tender Opportunities</h1>
+      <div className="mb-8 rounded-2xl border border-border bg-card p-6">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-3xl">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-blue-300">
+              <RefreshCw className="h-3.5 w-3.5" />
+              Live Intake Feed
+            </div>
+            <h1 className="text-3xl font-bold mb-2">RFP&apos;s & Tenders</h1>
             <p className="text-muted-foreground">
-              🎯 Comprehensive RFP intelligence from Yellow Panther analysis • {opportunities.length} curated opportunities
-              {opportunities.length > 0 ? ` • High-value opportunities with verified source links` : ''}
+              Freshly found procurement items and early signals in one place. This page is the broad intake surface before
+              items are curated into the opportunity shortlist.
             </p>
           </div>
+          <Button onClick={() => window.location.reload()}>
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Refresh Feed
+          </Button>
+        </div>
+
+        <div className="mt-6 grid gap-3 md:grid-cols-4">
+          <Card className="border-border/70 bg-background/60 shadow-none">
+            <CardContent className="p-4">
+              <div className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Feed Items</div>
+              <div className="mt-2 text-3xl font-semibold">{filteredOpportunities.length}</div>
+            </CardContent>
+          </Card>
+          <Card className="border-border/70 bg-background/60 shadow-none">
+            <CardContent className="p-4">
+              <div className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Active RFPs</div>
+              <div className="mt-2 text-3xl font-semibold text-blue-400">{activeRfpCount}</div>
+            </CardContent>
+          </Card>
+          <Card className="border-border/70 bg-background/60 shadow-none">
+            <CardContent className="p-4">
+              <div className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Emerging Signals</div>
+              <div className="mt-2 text-3xl font-semibold text-yellow-400">{emergingSignalCount}</div>
+            </CardContent>
+          </Card>
+          <Card className="border-border/70 bg-background/60 shadow-none">
+            <CardContent className="p-4">
+              <div className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Verified Sources</div>
+              <div className="mt-2 text-3xl font-semibold text-green-400">{verifiedSourceCount}</div>
+            </CardContent>
+          </Card>
         </div>
       </div>
 
@@ -752,49 +800,58 @@ const [filterSource, setFilterSource] = useState('all');
       </div>
 
       {/* Filters */}
-      <Card className="mb-6">
-        <CardContent className="p-6">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search opportunities by title, organization, or category..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
+      <div className="mb-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]">
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex-1">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search opportunities by title, organization, or category..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
               </div>
+              <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+                className="px-3 py-2 border border-input bg-background rounded-md"
+              >
+                <option value="all">All Status</option>
+                <option value="active_rfp">🎯 ACTIVE_RFP</option>
+                <option value="signal">📡 SIGNAL</option>
+                <option value="qualified">Qualified</option>
+                <option value="expired">Expired</option>
+                <option value="emerging">Emerging</option>
+                <option value="active">Active</option>
+              </select>
+              <select
+                value={filterSource}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setFilterSource(value);
+                  setShowDetectedOnly(value === 'ai-detected');
+                }}
+                className="px-3 py-2 border border-input bg-background rounded-md"
+              >
+                <option value="all">All Opportunities</option>
+                <option value="rfp_opportunities">RFP Opportunities</option>
+                <option value="ai-detected">AI-Detected RFPs</option>
+              </select>
             </div>
-            <select
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-              className="px-3 py-2 border border-input bg-background rounded-md"
-            >
-              <option value="all">All Status</option>
-              <option value="active_rfp">🎯 ACTIVE_RFP</option>
-              <option value="signal">📡 SIGNAL</option>
-              <option value="qualified">Qualified</option>
-              <option value="expired">Expired</option>
-              <option value="emerging">Emerging</option>
-              <option value="active">Active</option>
-            </select>
-            <select
-              value={filterSource}
-              onChange={(e) => {
-                const value = e.target.value;
-                setFilterSource(value);
-                setShowDetectedOnly(value === 'ai-detected');
-              }}
-              className="px-3 py-2 border border-input bg-background rounded-md"
-            >
-              <option value="all">All Opportunities</option>
-              <option value="rfp_opportunities">RFP Opportunities</option>
-              <option value="ai-detected">AI-Detected RFPs</option>
-            </select>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+        <ScoutPanel
+          onRunScout={startA2A}
+          statusLabel={a2aRunning ? 'Running' : 'Ready'}
+          sourceCoverage={scoutSourceCoverage}
+          freshnessLabel={scoutFreshnessLabel}
+          runDisabled={a2aRunning}
+        />
+      </div>
 
       {/* Opportunities Grid */}
       {filterSource === 'ai-detected' && displayRFPs.length > 0 && (

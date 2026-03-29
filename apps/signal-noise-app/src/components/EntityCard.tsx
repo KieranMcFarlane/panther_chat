@@ -7,12 +7,11 @@ import { ExternalLink, Mail, Linkedin, ArrowRight, FileText, Target, Loader2 } f
 import { Entity, Connection } from "@/lib/neo4j"
 import { EntityBadge } from "@/components/badge/EntityBadge"
 import { useRouter } from "next/navigation"
-import { useMemo, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import Link from "next/link"
 import { rememberEntityBrowserUrl } from "@/lib/entity-browser-history"
 import { pushWithViewTransition } from "@/lib/view-transition"
-import { getEntityDossierSummary, buildDossierSourceLabel } from "@/lib/entity-dossier-summary"
-import { dossierLifecyclePhases, deriveControlCenterPhaseStrip } from "@/components/discovery/discovery-phase-model"
+import { EntityEnrichmentSummaryCard } from "@/components/entity-enrichment/EntityEnrichmentSummaryCard"
 
 interface EntityCardProps {
   entity: Entity
@@ -139,21 +138,28 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
   const latestPipelineRunUrl = typeof entity.properties.last_pipeline_run_detail_url === 'string'
     ? entity.properties.last_pipeline_run_detail_url
     : null
-  const dossierSummary = getEntityDossierSummary(entity, entity.properties?.dossier_data)
-  const dossierPhaseStrip = useMemo(() => {
-    if (!dossierSummary.hasDossier) {
-      return dossierLifecyclePhases.map((phase) => ({
-        index: phase.index,
-        label: phase.label,
-        progress: 0,
-        status: 'pending' as const,
-      }))
-    }
 
-    return deriveControlCenterPhaseStrip(dossierSummary.phaseIndex, dossierSummary.completionPercent)
-  }, [dossierSummary.completionPercent, dossierSummary.hasDossier, dossierSummary.phaseIndex])
+  const enrichmentStatusLabel = formatValue(
+    entity.properties.enrichment_status ||
+    entity.properties.last_enrichment_status
+  ) || (Array.isArray(entity.properties.keyContacts) && entity.properties.keyContacts.length > 0 ? 'Enriched' : 'Awaiting enrichment')
 
+  const lastUpdatedLabel = formatValue(
+    entity.properties.last_enriched ||
+    entity.properties.enriched_at ||
+    entity.properties.last_pipeline_run_at
+  ) || 'Not available'
 
+  const recentAdditions = [
+    Array.isArray(entity.properties.keyContacts) && entity.properties.keyContacts[0]?.name
+      ? `Contact: ${formatValue(entity.properties.keyContacts[0].name)}`
+      : null,
+    entity.properties.company ? `Company: ${formatValue(entity.properties.company)}` : null,
+    entity.properties.linkedinUrl ? 'LinkedIn profile available' : null,
+    entity.properties.website ? `Website: ${formatValue(entity.properties.website)}` : null,
+  ].filter(Boolean) as string[]
+
+  
   return (
     <Card 
       className="relative hover:shadow-lg transition-shadow cursor-pointer hover:scale-[1.02] transition-transform duration-200"
@@ -267,6 +273,18 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
           </div>
         )}
 
+        <EntityEnrichmentSummaryCard
+          compact
+          statusLabel={enrichmentStatusLabel}
+          lastUpdatedLabel={lastUpdatedLabel}
+          recentAdditions={recentAdditions}
+          onRunEnrichment={() => {
+            if (!stableEntityId) return
+            pushWithViewTransition(router, `/entity-enrichment?entityId=${stableEntityId}`)
+          }}
+          advancedHref={`/entity-enrichment${stableEntityId ? `?entityId=${stableEntityId}` : ''}`}
+        />
+
         {latestPipelineRunUrl && (
           <div className="pt-2">
             <Link
@@ -281,95 +299,6 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
             </Link>
           </div>
         )}
-
-        <div className="rounded-xl border border-white/10 bg-black/10 p-3 space-y-2">
-          <div className="flex items-center justify-between gap-2">
-            <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Dossier</div>
-            <Badge variant="outline" className="text-[11px]">
-              {buildDossierSourceLabel(dossierSummary)}
-            </Badge>
-          </div>
-          {dossierSummary.hasDossier ? (
-            <>
-              <div className="text-sm font-medium text-foreground">
-                Phase {dossierSummary.phaseIndex}/5 · {dossierSummary.completionPercent}%
-              </div>
-              <div className="text-xs text-muted-foreground">
-                Next action: {dossierSummary.nextAction}
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <Badge variant="secondary" className="text-[11px]">
-                  {dossierSummary.questionCount} questions
-                </Badge>
-                <Badge variant="secondary" className="text-[11px]">
-                  {dossierSummary.freshness}
-                </Badge>
-                <Badge variant="secondary" className="text-[11px]">
-                  {dossierSummary.confidence === null ? 'n/a' : `${Math.round(dossierSummary.confidence * 100)}% confidence`}
-                </Badge>
-              </div>
-              <div className="space-y-2 pt-1">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">Live phases</span>
-                  <span className="text-[11px] text-muted-foreground">
-                    {Math.round(dossierSummary.completionPercent)}% · Phase {dossierSummary.phaseIndex}/5
-                  </span>
-                </div>
-                <div className="grid grid-cols-3 gap-1.5 xl:grid-cols-6">
-                  {dossierPhaseStrip.map((phase) => {
-                    const isActive = phase.status === 'active'
-                    const isComplete = phase.status === 'complete'
-                    const isBlocked = phase.status === 'blocked'
-                    const tileClass = isComplete
-                      ? 'border-emerald-400/40 bg-emerald-500/15 text-emerald-100'
-                      : isActive
-                        ? 'border-cyan-400/40 bg-cyan-500/20 text-cyan-50'
-                        : isBlocked
-                          ? 'border-amber-400/40 bg-amber-500/15 text-amber-100'
-                          : 'border-white/10 bg-white/5 text-muted-foreground'
-
-                    return (
-                      <div key={phase.index} className={`rounded-md border px-2 py-1 ${tileClass}`}>
-                        <div className="flex items-center justify-between gap-1">
-                          <span className="text-[10px] font-semibold uppercase tracking-wide">
-                            {phase.index}
-                          </span>
-                          <span className="text-[9px] uppercase opacity-80">
-                            {phase.status}
-                          </span>
-                        </div>
-                        <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-black/15">
-                          <div
-                            className={`h-full rounded-full ${
-                              isComplete
-                                ? 'bg-emerald-300'
-                                : isActive
-                                  ? 'bg-cyan-300'
-                                  : isBlocked
-                                    ? 'bg-amber-300'
-                                    : 'bg-slate-500'
-                            }`}
-                            style={{ width: `${phase.progress}%` }}
-                          />
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-              <div className="rounded-lg border border-cyan-500/20 bg-cyan-500/10 px-3 py-2">
-                <div className="text-[11px] uppercase tracking-[0.18em] text-cyan-100/80">Next action</div>
-                <div className="mt-1 text-sm leading-5 text-cyan-50">
-                  {dossierSummary.nextAction || 'Open the dossier to start the Ralph loop.'}
-                </div>
-              </div>
-            </>
-          ) : (
-            <div className="text-xs text-muted-foreground">
-              No persisted dossier yet. Open the dossier page to start the question loop.
-            </div>
-          )}
-        </div>
 
         {/* Connections */}
         {connections && connections.length > 0 && (

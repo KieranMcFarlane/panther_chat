@@ -8,9 +8,9 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft, CheckCircle2, Clock3, FileText, Info, Layers3 } from "lucide-react"
 
 import { DossierError } from "@/components/entity-dossier/DossierError"
+import { EntityEnrichmentSummaryCard } from "@/components/entity-enrichment/EntityEnrichmentSummaryCard"
 import { resolveEntityBrowserReturnUrl } from "@/lib/entity-browser-history"
 import { pushWithViewTransition } from "@/lib/view-transition"
-import type { EntityGraphEpisode } from "@/lib/entity-graph-timeline"
 import type { Entity } from "@/lib/entity-loader"
 
 const Header = dynamic(() => import("@/components/header/Header"), { ssr: false })
@@ -38,8 +38,6 @@ interface EntityDossierClientPageProps {
   deepResearch: boolean
   initialEntity?: Entity | null
   initialDossier?: any | null
-  initialQuestionPack?: any | null
-  initialGraphEpisodes?: EntityGraphEpisode[] | null
   initialError?: string | null
 }
 
@@ -52,8 +50,6 @@ export default function EntityDossierClientPage({
   deepResearch,
   initialEntity = null,
   initialDossier = null,
-  initialQuestionPack = null,
-  initialGraphEpisodes = null,
   initialError = null
 }: EntityDossierClientPageProps) {
   const router = useRouter()
@@ -86,6 +82,32 @@ export default function EntityDossierClientPage({
       ? 'Persisted entity state loaded'
       : 'Dossier shell loaded'
   const dossierReadout = pipelineStatus || (hasEntityPipelineState ? 'entity_state_loaded' : 'pending')
+  const enrichmentStatusLabel = String(
+    entity?.properties?.enrichment_status ||
+      dossierMetadata?.enrichment_status ||
+      entity?.properties?.last_enrichment_status ||
+      (dossier?.linkedin_connection_analysis ? 'LinkedIn enrichment ready' : '')
+  ).trim() || 'Awaiting enrichment'
+  const enrichmentLastUpdatedLabel = String(
+    entity?.properties?.last_enriched ||
+      entity?.properties?.enriched_at ||
+      dossierMetadata?.last_enriched ||
+      dossierMetadata?.generated_at ||
+      dossierMetadata?.updated_at ||
+      'Not available'
+  ).trim()
+  const recentEnrichmentAdditions = [
+    Array.isArray(entity?.properties?.keyContacts) && entity?.properties?.keyContacts[0]?.name
+      ? `Contact: ${entity.properties.keyContacts[0].name}`
+      : null,
+    entity?.properties?.company ? `Company: ${entity.properties.company}` : null,
+    entity?.properties?.website ? `Website: ${entity.properties.website}` : null,
+    entity?.properties?.linkedin ? `LinkedIn: ${entity.properties.linkedin}` : null,
+    Array.isArray(dossier?.linkedin_connection_analysis?.yellow_panther_uk_team?.team_members) &&
+      dossier.linkedin_connection_analysis.yellow_panther_uk_team.team_members.length > 0
+      ? `Team member: ${String(dossier.linkedin_connection_analysis.yellow_panther_uk_team.team_members[0])}`
+      : null,
+  ].filter(Boolean) as string[]
 
   useEffect(() => {
     const currentFrom = new URLSearchParams(window.location.search).get('from') || fromPage
@@ -361,6 +383,20 @@ export default function EntityDossierClientPage({
             </CardContent>
           </Card>
 
+          <div className="mb-6">
+            <EntityEnrichmentSummaryCard
+              title="Shown before the dossier tabs so the latest enrichment state is visible immediately."
+              statusLabel={enrichmentStatusLabel}
+              lastUpdatedLabel={enrichmentLastUpdatedLabel}
+              recentAdditions={recentEnrichmentAdditions}
+              onRunEnrichment={() => {
+                const target = `/entity-enrichment?entityId=${encodeURIComponent(entityId)}`
+                pushWithViewTransition(router, target)
+              }}
+              advancedHref={`/entity-enrichment?entityId=${encodeURIComponent(entityId)}`}
+            />
+          </div>
+
           {generationMessage && (
             <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
               <div className="flex items-center gap-2 text-blue-800">
@@ -380,16 +416,14 @@ export default function EntityDossierClientPage({
             className={`transition-opacity duration-200 ${isContentTransitioning ? 'opacity-0' : 'opacity-100'}`}
             style={{ viewTransitionName: "dossier-content" }}
           >
-          <EntityDossierRouter
-            key={dossierKey}
-            entity={entity}
-            onEmailEntity={handleEmailEntity}
-            dossier={dossier}
-            questionPack={initialQuestionPack}
-            graphEpisodes={initialGraphEpisodes ?? []}
-          />
+            <EntityDossierRouter
+              key={dossierKey}
+              entity={entity}
+              onEmailEntity={handleEmailEntity}
+              dossier={dossier}
+            />
+          </div>
         </div>
-      </div>
       </div>
 
       {showEmailModal && (
