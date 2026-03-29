@@ -24,16 +24,51 @@ from typing import Dict, List, Any, Optional, Literal
 from datetime import datetime
 import json
 
-try:
-    from backend.yellow_panther_catalog import (
-        YELLOW_PANTHER_SERVICE_CONTEXT,
-        get_questions_for_entity_type,
-    )
-except ImportError:
-    from yellow_panther_catalog import (  # type: ignore
-        YELLOW_PANTHER_SERVICE_CONTEXT,
-        get_questions_for_entity_type,
-    )
+# Yellow Panther Service Context (imported from entity_type_dossier_questions)
+YELLOW_PANTHER_SERVICE_CONTEXT = """
+YELLOW PANTHER SERVICES & CAPABILITIES:
+
+Service Categories:
+- MOBILE_APPS: iOS/Android, React Native, Flutter, native apps, fan apps
+  Budget: £80K-£300K | Timeline: 3-6 months
+  Case Studies: Team GB (Olympic app, STA Award 2024), LNB (French basketball)
+
+- DIGITAL_TRANSFORMATION: Modernization, cloud migration, legacy system upgrades
+  Budget: £150K-£500K | Timeline: 6-12 months
+  Case Study: Premier Padel (3-year strategic partnership)
+
+- FAN_ENGAGEMENT: Fan platforms, supporter experience, fan communication
+  Budget: £80K-£300K | Timeline: 3-6 months
+  Case Studies: FIBA 3×3, ISU
+
+- ANALYTICS: Data platforms, BI, reporting, sports analytics
+  Budget: £100K-£400K | Timeline: 3-9 months
+  Case Study: ISU (International Skating Union analytics platform)
+
+- ECOMMERCE: Ticketing, merchandise, retail platforms, hospitality
+  Budget: £80K-£250K | Timeline: 3-6 months
+  Case Study: BNP Paribas Open (ticketing platform)
+
+- UI_UX_DESIGN: User experience, website redesign, app design
+  Budget: £50K-£200K | Timeline: 2-4 months
+
+Ideal Project Profile: £80K-£500K budget, 3-12 months timeline, 2-8 developers
+
+Positioning Strategies (Signal-Based):
+1. SOLUTION_PROVIDER: For RFP signals - respond to specific procurement needs
+2. STRATEGIC_PARTNER: For digital initiatives - advisory relationship
+3. CAPABILITY_PARTNER: For hiring signals - tool timing, scale with team
+4. INNOVATION_PARTNER: For partnership seeking - co-creation mode
+5. TRUSTED_ADVISOR: For mutual connections - referral mode
+
+Competitive Differentiators:
+- Olympic mobile app delivery (Team GB)
+- STA Award 2024 winner for mobile innovation
+- 3-year partnership track record (Premier Padel)
+- Multi-federation experience (FIBA 3×3, ISU, LNB)
+- Wild Creativity × Boundless Technology approach
+- Agile 2-8 developer team structure
+"""
 
 ENTITY_TYPE_QUESTION_CONTEXT = """
 QUESTION-FIRST REASONING - By Entity Type:
@@ -757,6 +792,15 @@ def get_question_context_for_subtype(entity_subtype: str, entity_name: str) -> s
     Returns:
         Formatted question context string
     """
+    try:
+        from entity_type_dossier_questions import (
+            get_questions_for_entity_type,
+            get_yp_service_summary
+        )
+    except ImportError:
+        # Fallback if module not available
+        return f"Generate hypotheses for {entity_name} ({entity_subtype})"
+
     questions = get_questions_for_entity_type(entity_subtype)
 
     context = f"""

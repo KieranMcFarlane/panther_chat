@@ -5,18 +5,7 @@
 
 export function formatValue(value: any): string {
   if (value === null || value === undefined) return "N/A"
-  if (typeof value === 'string') {
-    if (/^\d{4}-\d{2}-\d{2}(T.*)?Z?$/.test(value)) {
-      const date = new Date(value)
-      if (!isNaN(date.getTime())) {
-        const includesTime = value.includes('T')
-        return includesTime
-          ? date.toLocaleString('en-GB', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
-          : date.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' })
-      }
-    }
-    return value
-  }
+  if (typeof value === 'string') return value
   if (typeof value === 'number') return value.toString()
   if (typeof value === 'boolean') return value ? "Yes" : "No"
   if (Array.isArray(value)) return value.map(item => formatValue(item)).join(", ")
@@ -25,10 +14,6 @@ export function formatValue(value: any): string {
   if (typeof value === 'object') {
     // Handle Neo4j timestamp objects with {low, high} structure (more comprehensive)
     if (value && typeof value === 'object' && 'low' in value && 'high' in value) {
-      if (typeof value.low === 'number' && typeof value.high === 'number' && value.high === 0 && Math.abs(value.low) < 10000) {
-        return String(value.low)
-      }
-
       if (typeof value.low === 'number' && typeof value.high === 'number') {
         // Convert Neo4j timestamp to JavaScript Date
         // Neo4j timestamps are stored as milliseconds since epoch

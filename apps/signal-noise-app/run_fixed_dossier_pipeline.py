@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 """
-Fixed Dossier-First Pipeline for Coventry City FC
+Fixed dossier-first pipeline with v5 MCP-first procurement discovery.
 
-Uses the WORKING EntityDossierGenerator instead of the failing UniversalDossierGenerator.
-Based on the successful generate_coventry_dossier.py script.
+Uses the working EntityDossierGenerator, then enriches the dossier with premium
+questions and routes discovery through BrightData MCP only before DeepSeek
+judgment and downstream persistence.
 
 Pipeline:
 1. PHASE 1: Generate dossier (using EntityDossierGenerator)
-2. PHASE 2: Run hypothesis-driven discovery (warm start)
-3. PHASE 3: Calculate dashboard scores
-4. PHASE 4: Enrich and save results
+2. PHASE 1.5: Question-first enrichment for premium questions
+3. PHASE 2: Procurement discovery via BrightData MCP
+4. PHASE 3: Calculate dashboard scores
+5. PHASE 4: Enrich and save results
 """
 
 import asyncio
@@ -122,10 +124,18 @@ class FixedDossierFirstPipeline:
         fields_env = str(os.getenv("PIPELINE_SCHEMA_FIRST_FIELDS", "") or "").strip()
         self.schema_first_fields = [f.strip() for f in fields_env.split(",") if f.strip()] if fields_env else None
         self.schema_first_result: Dict[str, Any] | None = None
+        self.question_first_enabled = _bool_env(os.getenv("PIPELINE_QUESTION_FIRST_ENABLED", "false"))
+        self.question_first_persist_reports = _bool_env(os.getenv("PIPELINE_QUESTION_FIRST_PERSIST_REPORTS", "true"))
+        self.question_first_output_dir = Path(
+            os.getenv("PIPELINE_QUESTION_FIRST_OUTPUT_DIR", "backend/data/question_first_dossiers")
+        )
+        self.question_first_max_questions = int(os.getenv("PIPELINE_QUESTION_FIRST_MAX_QUESTIONS", "0") or 0)
+        self.question_first_brightdata_timeout = float(
+            os.getenv("PIPELINE_QUESTION_FIRST_BRIGHTDATA_TIMEOUT_SECONDS", "60")
+        )
         self._use_canonical_orchestrator = _bool_env(
             os.getenv("PIPELINE_USE_CANONICAL_ORCHESTRATOR", "true")
         )
-        self.v5_strict_mcp = _bool_env(os.getenv("PIPELINE_V5_STRICT_MCP", "true"))
         self.shadow_unbounded_enabled = _bool_env(
             os.getenv("PIPELINE_SHADOW_UNBOUNDED_ENABLED", "false")
         )
@@ -140,8 +150,6 @@ class FixedDossierFirstPipeline:
             1,
             int(os.getenv("PIPELINE_SHADOW_UNBOUNDED_MIN_ITERATIONS", "12")),
         )
-        if self.v5_strict_mcp:
-            self.shadow_unbounded_enabled = False
         self.two_pass_enabled = _bool_env(os.getenv("PIPELINE_TWO_PASS_ENABLED", "true"))
         self.two_pass_pass_a_only = _bool_env(os.getenv("PIPELINE_PASS_A_ONLY", "false"))
         self.two_pass_pass_a_iterations = max(
@@ -154,11 +162,33 @@ class FixedDossierFirstPipeline:
         )
         self.two_pass_gate_min_confidence = float(os.getenv("PIPELINE_PASS_A_MIN_CONFIDENCE", "0.45"))
         self.two_pass_gate_min_signals = max(0, int(os.getenv("PIPELINE_PASS_A_MIN_SIGNALS", "1")))
-        self.run_objective = str(os.getenv("PIPELINE_RUN_OBJECTIVE", "dossier_core")).strip().lower() or "dossier_core"
+        self.run_objective = str(
+            os.getenv(
+                "PIPELINE_RUN_OBJECTIVE",
+                "procurement_discovery" if self.question_first_enabled else "dossier_core",
+            )
+        ).strip().lower() or ("procurement_discovery" if self.question_first_enabled else "dossier_core")
+        self.strict_brightdata_mcp = _bool_env(
+            os.getenv(
+                "PIPELINE_STRICT_BRIGHTDATA_MCP",
+                "true" if self.run_objective == "procurement_discovery" or self.question_first_enabled else "false",
+            )
+        ) or self.run_objective == "procurement_discovery" or self.question_first_enabled
+        dossier_objective_default = (
+            "leadership_enrichment"
+            if self.question_first_enabled or self.run_objective == "procurement_discovery"
+            else "dossier_core"
+        )
+        self.dossier_objective = str(
+            os.getenv(
+                "PIPELINE_DOSSIER_OBJECTIVE",
+                dossier_objective_default,
+            )
+        ).strip().lower() or dossier_objective_default
         self.requested_objective = self.run_objective
         self.effective_objective = self.run_objective
         self.phase_objectives: Dict[str, str] = {
-            "dossier_generation": "dossier_core",
+            "dossier_generation": self.dossier_objective,
             "discovery": self.run_objective,
             "ralph_validation": self.run_objective,
             "temporal_persistence": self.run_objective,
@@ -222,6 +252,8 @@ class FixedDossierFirstPipeline:
             ralph_validator=_IdentityRalphValidator(),
             graphiti_service=graphiti_service,
             dashboard_scorer=self.dashboard_scorer,
+            brightdata_client=self.brightdata,
+            claude_client=self.claude,
         )
 
         self._runtime_preflight = self._run_startup_preflight()
@@ -417,6 +449,15 @@ class FixedDossierFirstPipeline:
         )
         phase_timings_seconds["phase_1_dossier_generation"] = round(time.perf_counter() - phase_started, 3)
         self._merge_schema_first_into_dossier(dossier)
+        if getattr(self, "question_first_enabled", False):
+            logger.info("\n🧭 PRE-PHASE: QUESTION-FIRST")
+            logger.info("-" * 60)
+            try:
+                dossier = await self._run_question_first_enrichment(dossier)
+                questions_answered = int((dossier.get("question_first") or {}).get("questions_answered") or 0)
+                logger.info("✅ Question-first enrichment complete (questions_answered=%s)", questions_answered)
+            except Exception as question_first_error:  # noqa: BLE001
+                logger.warning("⚠️ Question-first enrichment failed; continuing pipeline: %s", question_first_error)
         discovery_engine = str(getattr(self, "discovery_engine", os.getenv("DISCOVERY_ENGINE", "v2") or "v2")).strip().lower()
         runtime_mode = str(getattr(self, "discovery_runtime_mode", "v2") or "v2").strip().lower()
         use_legacy_template_routing = discovery_engine in {"legacy", "v1", "hypothesis"} and runtime_mode == "v2"
@@ -737,6 +778,40 @@ class FixedDossierFirstPipeline:
 
         return dossier
 
+    async def _run_question_first_enrichment(self, dossier: Any) -> Dict[str, Any]:
+        payload = self._coerce_dossier_payload(dossier)
+        questions = payload.get("questions")
+        if not isinstance(questions, list) or not questions:
+            logger.info("🧭 Question-first enrichment skipped: no questions on dossier")
+            return payload
+
+        try:
+            from backend.question_first_dossier_runner import (
+                merge_question_first_report_into_dossier,
+                run_question_first_dossier_from_payload,
+            )
+        except ImportError:
+            from question_first_dossier_runner import (  # type: ignore
+                merge_question_first_report_into_dossier,
+                run_question_first_dossier_from_payload,
+            )
+
+        max_questions = self.question_first_max_questions if int(self.question_first_max_questions or 0) > 0 else None
+        report = await run_question_first_dossier_from_payload(
+            source_payload=payload,
+            output_dir=self.question_first_output_dir if self.question_first_persist_reports else None,
+            brightdata_client=self.brightdata,
+            claude_client=self.claude,
+            max_questions=max_questions,
+            brightdata_timeout=self.question_first_brightdata_timeout,
+            question_source_label=f"{payload.get('entity_id') or payload.get('entity_name') or 'entity'}::question-first",
+        )
+        enriched = merge_question_first_report_into_dossier(
+            dossier_payload=payload,
+            report=report,
+        )
+        return enriched if isinstance(enriched, dict) else payload
+
     async def _phase_2_run_discovery(
         self,
         entity_id: str,
@@ -885,9 +960,6 @@ class FixedDossierFirstPipeline:
                 context_kwargs["entity_type"] = entity_type
 
             runtime_mode = str(getattr(self, "discovery_runtime_mode", "v2") or "v2").strip().lower()
-            if bool(getattr(self, "v5_strict_mcp", False)) and runtime_mode == "dual_compare":
-                logger.info("🔒 Strict v5 MCP mode: disabling dual compare runtime")
-                runtime_mode = "v2"
             if runtime_mode == "dual_compare":
                 control_runtime_name, candidate_runtime_name = self._dual_compare_runtime_names()
                 control_runtime = self._ensure_compare_discovery(control_runtime_name)
@@ -951,7 +1023,10 @@ class FixedDossierFirstPipeline:
                     winner_result = control_result
                     winner_payload = control_payload
                 if comparison_payload.get("status") == "both_lanes_failed":
-                    from backend.hypothesis_driven_discovery import DiscoveryResult
+                    try:
+                        from backend.hypothesis_driven_discovery import DiscoveryResult
+                    except ImportError:
+                        from hypothesis_driven_discovery import DiscoveryResult  # type: ignore
 
                     winner_result = DiscoveryResult(
                         entity_id=entity_id,
@@ -1003,9 +1078,7 @@ class FixedDossierFirstPipeline:
             )
             shadow_kwargs = dict(context_kwargs)
             shadow_kwargs["max_iterations"] = shadow_iterations
-            shadow_lane_enabled = bool(getattr(self, "shadow_unbounded_enabled", False)) and not bool(
-                getattr(self, "v5_strict_mcp", False)
-            )
+            shadow_lane_enabled = bool(getattr(self, "shadow_unbounded_enabled", False))
 
             if shadow_lane_enabled:
                 logger.info(
@@ -1069,45 +1142,67 @@ class FixedDossierFirstPipeline:
                     "winner_reason_codes": [self._last_discovery_error_class],
                 }
             logger.warning(f"⚠️ Dossier-context discovery failed: {e}")
-            logger.info("🔄 Falling back to standard discovery...")
-
-            # Try standard discovery with template
-            try:
-                if entity_type:
-                    self.discovery.current_entity_type = entity_type
-                metadata = dossier_payload.get("metadata", {}) if isinstance(dossier_payload, dict) else {}
-                league_or_competition = metadata.get("league_or_competition") if isinstance(metadata, dict) else None
-                org_type = metadata.get("org_type") if isinstance(metadata, dict) else None
-                result = await self.discovery.run_discovery(
-                    entity_id=entity_id,
-                    entity_name=entity_name,
-                    template_id=template_id,
-                    league_or_competition=league_or_competition,
-                    org_type=org_type,
-                    max_iterations=max_iterations
-                )
-            except Exception as e2:
-                self._last_discovery_error_message = str(e2)
-                self._last_discovery_error_class = (
-                    "import_context_failure"
-                    if isinstance(e2, ModuleNotFoundError) or "No module named" in str(e2)
-                    else "discovery_runtime_failure"
-                )
-                logger.warning(f"⚠️ Standard discovery also failed: {e2}")
-                # Create minimal discovery result
-                from backend.hypothesis_driven_discovery import DiscoveryResult
+            if self.strict_brightdata_mcp:
+                logger.info("🛑 Strict BrightData MCP mode: not falling back to standard discovery")
+                try:
+                    from backend.hypothesis_driven_discovery import DiscoveryResult
+                except ImportError:
+                    from hypothesis_driven_discovery import DiscoveryResult  # type: ignore
                 result = DiscoveryResult(
                     entity_id=entity_id,
                     entity_name=entity_name,
-                    final_confidence=0.50,
-                    confidence_band="EXPLORATORY",
+                    final_confidence=0.0,
+                    confidence_band="LOW",
                     is_actionable=False,
                     iterations_completed=0,
                     total_cost_usd=0.0,
                     hypotheses=[],
                     depth_stats={},
-                    signals_discovered=[]
+                    signals_discovered=[],
                 )
+            else:
+                logger.info("🔄 Falling back to standard discovery...")
+
+                # Try standard discovery with template
+                try:
+                    if entity_type:
+                        self.discovery.current_entity_type = entity_type
+                    metadata = dossier_payload.get("metadata", {}) if isinstance(dossier_payload, dict) else {}
+                    league_or_competition = metadata.get("league_or_competition") if isinstance(metadata, dict) else None
+                    org_type = metadata.get("org_type") if isinstance(metadata, dict) else None
+                    result = await self.discovery.run_discovery(
+                        entity_id=entity_id,
+                        entity_name=entity_name,
+                        template_id=template_id,
+                        league_or_competition=league_or_competition,
+                        org_type=org_type,
+                        max_iterations=max_iterations
+                    )
+                except Exception as e2:
+                    self._last_discovery_error_message = str(e2)
+                    self._last_discovery_error_class = (
+                        "import_context_failure"
+                        if isinstance(e2, ModuleNotFoundError) or "No module named" in str(e2)
+                        else "discovery_runtime_failure"
+                    )
+                    logger.warning(f"⚠️ Standard discovery also failed: {e2}")
+                    # Create minimal discovery result
+                    try:
+                        from backend.hypothesis_driven_discovery import DiscoveryResult
+                    except ImportError:
+                        from hypothesis_driven_discovery import DiscoveryResult  # type: ignore
+                    result = DiscoveryResult(
+                        entity_id=entity_id,
+                        entity_name=entity_name,
+                        final_confidence=0.50,
+                        confidence_band="EXPLORATORY",
+                        is_actionable=False,
+                        iterations_completed=0,
+                        total_cost_usd=0.0,
+                        hypotheses=[],
+                        depth_stats={},
+                        signals_discovered=[]
+                    )
 
         if self._last_shadow_discovery_payload:
             shadow_conf = float(self._last_shadow_discovery_payload.get("final_confidence") or 0.0)
@@ -1126,8 +1221,6 @@ class FixedDossierFirstPipeline:
         return result
 
     def _ensure_shadow_discovery(self):
-        if bool(getattr(self, "v5_strict_mcp", False)):
-            return self.discovery
         if self._shadow_discovery is not None:
             return self._shadow_discovery
         from backend.brightdata_sdk_client import BrightDataSDKClient
@@ -1148,8 +1241,6 @@ class FixedDossierFirstPipeline:
         return self._shadow_discovery
 
     def _ensure_compare_discovery(self, runtime_name: str):
-        if bool(getattr(self, "v5_strict_mcp", False)):
-            return self.discovery
         from backend.brightdata_sdk_client import BrightDataSDKClient
         from backend.discovery_engine_factory import create_discovery_engine
 
@@ -1967,14 +2058,14 @@ class FixedDossierFirstPipeline:
             "entity_id": entity_id,
             "entity_name": entity_name,
             "template_id": self._last_template_id,
-            "max_iterations": self._last_max_iterations,
+            "deterministic_max_iterations": self._last_max_iterations,
             "lanes": {
-                "primary": {
+                "deterministic": {
                     "summary": _lane_summary(primary_discovery, primary_hops),
                     "hop_timings": primary_hops,
                     "official_site_resolution_traces": primary_perf.get("official_site_resolution_traces") or [],
                 },
-                "shadow": {
+                "shadow_unbounded": {
                     "enabled": bool(shadow_discovery),
                     "summary": _lane_summary(shadow_discovery or {}, shadow_hops) if shadow_discovery else {},
                     "hop_timings": shadow_hops,
@@ -2272,8 +2363,6 @@ class FixedDossierFirstPipeline:
                 llm_status_candidates.append(hop_llm_status)
         parse_path = next((candidate for candidate in parse_path_candidates if candidate), "")
         llm_last_status = next((candidate for candidate in llm_status_candidates if candidate), "")
-        if bool(getattr(self, "v5_strict_mcp", False)) and llm_last_status == "evidence_only":
-            llm_last_status = "mcp_only"
         entity_grounding_reject_count_by_lane = performance.get("entity_grounding_reject_count_by_lane")
         if not isinstance(entity_grounding_reject_count_by_lane, dict):
             entity_grounding_reject_count_by_lane = {}
@@ -2498,7 +2587,7 @@ class FixedDossierFirstPipeline:
                 "persistence_status": persistence_status if isinstance(persistence_status, dict) else None,
                 "comparison_summary": comparison_payload if isinstance(comparison_payload, dict) else None,
                 "winner_runtime": winner_runtime,
-                "shadow": {
+                "shadow_unbounded": {
                     "enabled": bool(shadow_discovery),
                     "final_confidence": float(shadow_discovery.get("final_confidence") or 0.0) if shadow_discovery else None,
                     "iterations_completed": int(shadow_discovery.get("iterations_completed") or 0) if shadow_discovery else None,

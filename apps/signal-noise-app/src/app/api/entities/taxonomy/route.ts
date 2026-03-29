@@ -1,7 +1,14 @@
 import { NextResponse } from 'next/server'
-import { buildEmptyEntitiesTaxonomy, buildEntitiesTaxonomy } from '@/lib/entities-taxonomy'
-import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
+
+type CountMap = Record<string, number>
+
+const normalizeLabel = (value: unknown): string =>
+  String(value || '')
+    .trim()
+    .replace(/\s+/g, ' ')
+
+const isNonEmpty = (value: string): boolean => value.length > 0
 
 export async function GET() {
   const startedAt = Date.now()
@@ -14,31 +21,89 @@ export async function GET() {
     if (error) {
       throw error
     }
-    return NextResponse.json(
-      buildEntitiesTaxonomy(data || [], {
-        source: 'supabase',
-        latencyMs: Date.now() - startedAt,
-      })
-    )
-  } catch (error) {
-    console.warn('⚠️ Failed to fetch entities taxonomy from Supabase; falling back to canonical snapshot', error)
 
-    try {
-      const canonicalEntities = await getCanonicalEntitiesSnapshot()
-      return NextResponse.json(
-        buildEntitiesTaxonomy(canonicalEntities, {
-          source: 'canonical_snapshot',
-          latencyMs: Date.now() - startedAt,
-        })
+    const sports: CountMap = {}
+    const leagues: CountMap = {}
+    const countries: CountMap = {}
+    const classes: CountMap = {}
+    const federationsRightsHolders: CountMap = {}
+    const leaguesBySport: Record<string, Set<string>> = {}
+
+    for (const entity of data || []) {
+      const properties = entity?.properties || {}
+      const sport = normalizeLabel(properties.sport)
+      const league = normalizeLabel(properties.league)
+      const country = normalizeLabel(properties.country)
+      const entityClass = normalizeLabel(
+        properties.entityClass || properties.entity_class || properties.type || entity?.labels?.[0] || ''
       )
-    } catch (fallbackError) {
-      console.warn('⚠️ Failed to build taxonomy from canonical snapshot; returning empty taxonomy payload', fallbackError)
-      return NextResponse.json(
-        buildEmptyEntitiesTaxonomy({
-          source: 'empty_fallback',
-        }),
-        { status: 200 }
-      )
+      const entityName = normalizeLabel(properties.name)
+      const lowerClass = entityClass.toLowerCase()
+      const lowerName = entityName.toLowerCase()
+
+      if (isNonEmpty(sport)) sports[sport] = (sports[sport] || 0) + 1
+      if (isNonEmpty(league)) leagues[league] = (leagues[league] || 0) + 1
+      if (isNonEmpty(country)) countries[country] = (countries[country] || 0) + 1
+      if (isNonEmpty(entityClass)) classes[entityClass] = (classes[entityClass] || 0) + 1
+
+      if (isNonEmpty(sport) && isNonEmpty(league)) {
+        if (!leaguesBySport[sport]) leaguesBySport[sport] = new Set()
+        leaguesBySport[sport].add(league)
+      }
+
+      const isFederationOrRightsHolder =
+        lowerClass.includes('federation') ||
+        lowerClass.includes('rights') ||
+        lowerClass.includes('governing') ||
+        lowerClass.includes('association') ||
+        lowerName.includes('federation') ||
+        lowerName.includes('confederation')
+
+      if (isFederationOrRightsHolder && isNonEmpty(entityName)) {
+        federationsRightsHolders[entityName] = (federationsRightsHolders[entityName] || 0) + 1
+      }
     }
+
+    const sortAsc = (a: string, b: string) => a.localeCompare(b)
+    const leagueMap = Object.fromEntries(
+      Object.entries(leaguesBySport)
+        .sort(([a], [b]) => sortAsc(a, b))
+        .map(([sport, leagueSet]) => [sport, Array.from(leagueSet).sort(sortAsc)])
+    )
+
+    return NextResponse.json({
+      sports: Object.keys(sports).sort(sortAsc),
+      leagues: Object.keys(leagues).sort(sortAsc),
+      countries: Object.keys(countries).sort(sortAsc),
+      entityClasses: Object.keys(classes).sort(sortAsc),
+      federationsRightsHolders: Object.keys(federationsRightsHolders).sort(sortAsc),
+      leaguesBySport: leagueMap,
+      metadata: {
+        scanned_entities: (data || []).length,
+        latency_ms: Date.now() - startedAt
+      },
+      counts: {
+        sports,
+        leagues,
+        countries,
+        entityClasses: classes,
+        federationsRightsHolders
+      }
+    })
+  } catch (error) {
+    console.error('❌ Failed to fetch entities taxonomy:', error)
+    return NextResponse.json(
+      {
+        error: error instanceof Error ? error.message : 'Failed to fetch taxonomy',
+        sports: [],
+        leagues: [],
+        countries: [],
+        entityClasses: [],
+        federationsRightsHolders: [],
+        leaguesBySport: {},
+        counts: {}
+      },
+      { status: 500 }
+    )
   }
 }

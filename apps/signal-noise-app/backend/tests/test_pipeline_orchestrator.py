@@ -22,6 +22,7 @@ class FakeDossierGenerator:
                 "hypothesis_count": 1,
                 "signal_count": 1,
             },
+            "questions": [],
             "procurement_signals": {
                 "upcoming_opportunities": [
                     {
@@ -340,6 +341,189 @@ async def test_pipeline_orchestrator_emits_phase_boundary_logs(caplog):
     assert any("Pipeline boundary: discovery:complete" in message for message in messages)
     assert any("Pipeline boundary: dashboard_scoring:complete" in message for message in messages)
     assert any("Pipeline boundary: orchestrator:complete" in message for message in messages)
+
+
+@pytest.mark.asyncio
+async def test_pipeline_orchestrator_uses_dossier_objective_override(monkeypatch):
+    monkeypatch.setenv("PIPELINE_DOSSIER_OBJECTIVE", "leadership_enrichment")
+
+    captured = {}
+
+    class CaptureDossierGenerator(FakeDossierGenerator):
+        async def generate_universal_dossier(self, **kwargs):
+            captured.update(kwargs)
+            return await super().generate_universal_dossier(**kwargs)
+
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=CaptureDossierGenerator(),
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=FakePersistenceCoordinator(),
+    )
+
+    await orchestrator.run_entity_pipeline(
+        entity_id="leedsunited",
+        entity_name="Leeds United",
+        entity_type="CLUB",
+        priority_score=95,
+        run_objective="rfp_web",
+    )
+
+    assert captured["run_objective"] == "leadership_enrichment"
+
+
+@pytest.mark.asyncio
+async def test_pipeline_orchestrator_preserves_procurement_discovery_for_phase_split():
+    captured = {}
+
+    class CaptureDossierGenerator(FakeDossierGenerator):
+        async def generate_universal_dossier(self, **kwargs):
+            captured["dossier_run_objective"] = kwargs.get("run_objective")
+            return await super().generate_universal_dossier(**kwargs)
+
+    class CaptureDiscovery(FakeDiscovery):
+        async def run_discovery_with_dossier_context(self, **kwargs):
+            captured["discovery_run_objective"] = kwargs.get("run_objective")
+            return await super().run_discovery_with_dossier_context(**kwargs)
+
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=CaptureDossierGenerator(),
+        discovery=CaptureDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=FakePersistenceCoordinator(),
+    )
+
+    await orchestrator.run_entity_pipeline(
+        entity_id="major-league-cricket",
+        entity_name="Major League Cricket",
+        entity_type="LEAGUE",
+        priority_score=82,
+        run_objective="procurement_discovery",
+    )
+
+    assert captured["dossier_run_objective"] == "leadership_enrichment"
+    assert captured["discovery_run_objective"] == "procurement_discovery"
+
+
+@pytest.mark.asyncio
+async def test_pipeline_orchestrator_enriches_dossier_with_question_first(monkeypatch):
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_ENABLED", "true")
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_PERSIST_REPORTS", "false")
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_MAX_QUESTIONS", "1")
+
+    import question_first_dossier_runner as question_first_runner
+    try:
+        import backend.question_first_dossier_runner as backend_question_first_runner
+    except ModuleNotFoundError:
+        import question_first_dossier_runner as backend_question_first_runner
+
+    question_first_calls = {}
+
+    async def fake_run_question_first_dossier_from_payload(**kwargs):
+        question_first_calls["source_payload"] = kwargs["source_payload"]
+        return {
+            "generated_at": "2026-03-25T00:00:00+00:00",
+            "entity_id": "leedsunited",
+            "entity_name": "Leeds United",
+            "tier": "PREMIUM",
+            "question_source_path": "leedsunited::question-first",
+            "questions_answered": 1,
+            "answers": [
+                {
+                    "question_id": "q1",
+                    "section_id": "core_information",
+                    "question_text": "When was Leeds United founded?",
+                    "search_query": '"Leeds United" When was Leeds United founded',
+                    "search_hit": True,
+                    "search_results_count": 1,
+                    "scrape_url": "https://www.leedsunited.com/",
+                    "answer": "1919",
+                    "confidence": 0.95,
+                    "evidence_url": "https://www.leedsunited.com/",
+                    "reasoning_model_used": "deepseek-ai/DeepSeek-V3.2-TEE",
+                    "retry_count": 0,
+                    "category": "identity",
+                    "search_queries": ['"Leeds United" When was Leeds United founded'],
+                    "search_attempts": [{"query": '"Leeds United" When was Leeds United founded', "status": "success", "result_count": 1}],
+                }
+            ],
+            "categories": [
+                {
+                    "category": "identity",
+                    "question_count": 1,
+                    "validated_count": 1,
+                    "pending_count": 0,
+                    "no_signal_count": 0,
+                    "retry_count": 0,
+                }
+            ],
+            "retrieval": {"transport": "hosted_sse", "hosted_url": "https://mcp.brightdata.com/sse?token=***"},
+            "reasoning": {"model_requested": "judge", "model_used": "deepseek-ai/DeepSeek-V3.2-TEE"},
+        }
+
+    def fake_merge_question_first_report_into_dossier(*, dossier_payload, report):
+        payload = dict(dossier_payload)
+        payload["question_first"] = {
+            "enabled": True,
+            "questions_answered": report["questions_answered"],
+            "categories": report["categories"],
+            "answers": report["answers"],
+            "report": report,
+        }
+        questions = payload.get("questions") or []
+        if questions:
+            questions[0] = dict(questions[0])
+            questions[0]["answer"] = "1919"
+            questions[0]["validation_state"] = "validated"
+            questions[0]["question_first_answer"] = report["answers"][0]
+        payload["questions"] = questions
+        return payload
+
+    monkeypatch.setattr(question_first_runner, "run_question_first_dossier_from_payload", fake_run_question_first_dossier_from_payload)
+    monkeypatch.setattr(question_first_runner, "merge_question_first_report_into_dossier", fake_merge_question_first_report_into_dossier)
+    monkeypatch.setattr(backend_question_first_runner, "run_question_first_dossier_from_payload", fake_run_question_first_dossier_from_payload)
+    monkeypatch.setattr(backend_question_first_runner, "merge_question_first_report_into_dossier", fake_merge_question_first_report_into_dossier)
+
+    class QuestionFirstDossierGenerator(FakeDossierGenerator):
+        async def generate_universal_dossier(self, **kwargs):
+            question_first_calls["dossier_run_objective"] = kwargs.get("run_objective")
+            payload = await super().generate_universal_dossier(**kwargs)
+            payload["questions"] = [
+                {
+                    "question_id": "q1",
+                    "section_id": "core_information",
+                    "question_text": "When was Leeds United founded?",
+                    "search_strategy": {"search_queries": ['"Leeds United" founded']},
+                }
+            ]
+            return payload
+
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=QuestionFirstDossierGenerator(),
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=FakePersistenceCoordinator(),
+        brightdata_client=object(),
+        claude_client=object(),
+    )
+
+    result = await orchestrator.run_entity_pipeline(
+        entity_id="leedsunited",
+        entity_name="Leeds United",
+        entity_type="CLUB",
+        priority_score=95,
+    )
+
+    assert question_first_calls["dossier_run_objective"] == "leadership_enrichment"
+    assert question_first_calls["source_payload"]["questions"][0]["question_text"] == "When was Leeds United founded?"
+    assert result["artifacts"]["dossier"]["question_first"]["questions_answered"] == 1
+    assert result["artifacts"]["dossier"]["questions"][0]["validation_state"] == "validated"
 
 
 @pytest.mark.asyncio

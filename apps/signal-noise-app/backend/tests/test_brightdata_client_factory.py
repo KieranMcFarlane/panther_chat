@@ -26,7 +26,6 @@ def test_should_use_brightdata_mcp_defaults_to_enabled_with_token(monkeypatch):
 def test_create_pipeline_brightdata_client_prefers_mcp_when_enabled(monkeypatch):
     monkeypatch.setenv("BRIGHTDATA_API_TOKEN", "token")
     monkeypatch.setenv("PIPELINE_USE_BRIGHTDATA_MCP", "true")
-    monkeypatch.setenv("PIPELINE_V5_STRICT_MCP", "false")
     monkeypatch.delenv("BRIGHTDATA_FASTMCP_URL", raising=False)
     monkeypatch.delenv("PIPELINE_USE_BRIGHTDATA_FASTMCP", raising=False)
     monkeypatch.setattr(factory, "_PIPELINE_BRIGHTDATA_CLIENT_CACHE", None, raising=False)
@@ -52,7 +51,6 @@ def test_create_pipeline_brightdata_client_prefers_mcp_when_enabled(monkeypatch)
 def test_create_pipeline_brightdata_client_uses_sdk_when_disabled(monkeypatch):
     monkeypatch.setenv("BRIGHTDATA_API_TOKEN", "token")
     monkeypatch.setenv("PIPELINE_USE_BRIGHTDATA_MCP", "false")
-    monkeypatch.setenv("PIPELINE_V5_STRICT_MCP", "false")
     monkeypatch.delenv("BRIGHTDATA_FASTMCP_URL", raising=False)
     monkeypatch.delenv("PIPELINE_USE_BRIGHTDATA_FASTMCP", raising=False)
     monkeypatch.setattr(factory, "_PIPELINE_BRIGHTDATA_CLIENT_CACHE", None, raising=False)
@@ -64,31 +62,6 @@ def test_create_pipeline_brightdata_client_uses_sdk_when_disabled(monkeypatch):
     )
 
     assert client.kind == "sdk"
-
-
-def test_create_pipeline_brightdata_client_strict_mcp_only_rejects_sdk_fallback(monkeypatch):
-    monkeypatch.setenv("BRIGHTDATA_API_TOKEN", "token")
-    monkeypatch.setenv("PIPELINE_USE_BRIGHTDATA_MCP", "false")
-    monkeypatch.setenv("PIPELINE_V5_STRICT_MCP", "true")
-    monkeypatch.delenv("BRIGHTDATA_FASTMCP_URL", raising=False)
-    monkeypatch.delenv("PIPELINE_USE_BRIGHTDATA_FASTMCP", raising=False)
-    monkeypatch.setattr(factory, "_PIPELINE_BRIGHTDATA_CLIENT_CACHE", None, raising=False)
-    monkeypatch.setattr(factory, "_PIPELINE_BRIGHTDATA_CLIENT_CACHE_KEY", None, raising=False)
-
-    sdk_called = {"count": 0}
-
-    def fake_sdk_factory():
-        sdk_called["count"] += 1
-        return SimpleNamespace(kind="sdk")
-
-    client = factory.create_pipeline_brightdata_client(
-        mcp_factory=lambda **kwargs: SimpleNamespace(kind="mcp", use_fallback=kwargs.get("use_fallback")),
-        sdk_factory=fake_sdk_factory,
-    )
-
-    assert client.kind == "mcp"
-    assert client.use_fallback is False
-    assert sdk_called["count"] == 0
 
 
 def test_create_pipeline_brightdata_client_prefers_fastmcp_service(monkeypatch):

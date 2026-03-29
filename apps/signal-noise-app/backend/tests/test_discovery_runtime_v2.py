@@ -153,6 +153,29 @@ class _ZeroIndexPlannerClaude:
         return {"content": '{"decision":"NO_PROGRESS","reason":"mock"}'}
 
 
+@pytest.mark.asyncio
+async def test_discovery_runtime_uses_evidence_only_labels_when_llm_disabled():
+    runtime = DiscoveryRuntimeV2(_FakeClaude(), _FakeBrightData())
+    runtime.enable_llm_eval = False
+
+    result = await runtime._maybe_llm_evaluate(  # noqa: SLF001
+        lane="official_site",
+        entity_name="Coventry City FC",
+        url="https://www.ccfc.co.uk/",
+        evidence={"snippet": "club homepage"},
+        run_objective="procurement_discovery",
+    )
+
+    assert result["parse_path"] == "evidence_only"
+    assert result["llm_last_status"] == "evidence_only"
+
+
+def test_procurement_discovery_is_a_first_class_objective_profile():
+    assert normalize_run_objective("procurement_discovery") == "procurement_discovery"
+    profile = get_objective_profile("procurement_discovery")
+    assert profile["pass_b_lanes"][0] == "rfp_procurement_tenders"
+
+
 class _WrappedPlannerClaude:
     async def query(self, **kwargs):
         prompt = str(kwargs.get("prompt") or "")
@@ -263,33 +286,6 @@ class _BatchPlannerClaude:
 class _LengthStopClaude:
     async def query(self, **_kwargs):
         return {"content": '{"decision":"ACCEPT","reason":"truncated"}', "stop_reason": "length"}
-
-
-def test_procurement_discovery_objective_prefers_rfp_lane_first():
-    assert normalize_run_objective("procurement_discovery") == "procurement_discovery"
-    profile = get_objective_profile("procurement_discovery")
-    assert profile["pass_a_lanes"][0] == "rfp_procurement_tenders"
-
-
-@pytest.mark.asyncio
-async def test_procurement_discovery_builds_direct_procurement_queries_first():
-    runtime = DiscoveryRuntimeV2(_FakeClaude(), _FakeBrightData())
-    dossier = {
-        "metadata": {
-            "website": "https://www.majorleaguecricket.com",
-            "canonical_sources": {"official_site": "https://www.majorleaguecricket.com"},
-        }
-    }
-    queries = await runtime._build_agentic_queries(
-        lane="rfp_procurement_tenders",
-        entity_name="Major League Cricket",
-        dossier=dossier,
-        objective="procurement_discovery",
-    )
-
-    assert queries[0] == '"Major League Cricket" RFP tender procurement'
-    assert queries[1] == '"Major League Cricket" procurement tender RFP'
-    assert queries[2] == '"Major League Cricket" tender procurement'
 
 
 class _CountingLengthStopClaude:
@@ -1583,24 +1579,6 @@ async def test_llm_eval_receives_structured_evidence_packet():
 
     assert "passage one with grounded evidence" in runtime.claude_client.last_prompt
     assert "passage two with more grounded evidence" in runtime.claude_client.last_prompt
-
-
-@pytest.mark.asyncio
-async def test_llm_eval_disabled_uses_neutral_evidence_only_labels():
-    runtime = DiscoveryRuntimeV2(_FakeClaude(), _FakeBrightData())
-    runtime.enable_llm_eval = False
-
-    eval_result = await runtime._maybe_llm_evaluate(
-        lane="trusted_news",
-        entity_name="Coventry City FC",
-        url="https://bbc.com/story",
-        evidence={"snippet": "short summary", "content_item": "important extracted line"},
-        run_objective="rfp_web",
-    )
-
-    assert eval_result["decision"] == "WEAK_ACCEPT_CANDIDATE"
-    assert eval_result["parse_path"] == "evidence_only"
-    assert eval_result["llm_last_status"] == "evidence_only"
 
 
 @pytest.mark.asyncio

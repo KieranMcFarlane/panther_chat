@@ -357,25 +357,6 @@ async def test_phase2_dual_compare_prefers_agentic_v4_batched_when_it_scores_hig
     }
 
 
-def test_strict_v5_pipeline_skips_shadow_and_compare_sdk_clients(monkeypatch):
-    pipeline = FixedDossierFirstPipeline.__new__(FixedDossierFirstPipeline)
-    pipeline.discovery = SimpleNamespace(marker="primary")
-    pipeline.discovery_engine = "v2"
-    pipeline._shadow_discovery = None
-    pipeline._control_compare_discovery = None
-    pipeline._candidate_compare_discovery = None
-    pipeline.v5_strict_mcp = True
-
-    def _boom(*_args, **_kwargs):
-        raise AssertionError("SDK client should not be instantiated in strict v5 mode")
-
-    monkeypatch.setattr(BrightDataSDKClient, "__init__", _boom)
-
-    assert pipeline._ensure_shadow_discovery() is pipeline.discovery
-    assert pipeline._ensure_compare_discovery("v2") is pipeline.discovery
-    assert pipeline._ensure_compare_discovery("agentic_v3") is pipeline.discovery
-
-
 def test_extract_publication_date_handles_missing_dateutil(monkeypatch):
     client = BrightDataSDKClient(token="test-token")
     soup = BeautifulSoup("<html><head></head><body><h1>No date</h1></body></html>", "html.parser")

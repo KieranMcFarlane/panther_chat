@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Trophy, Download, FileText, Mail, ExternalLink } from "lucide-react"
 
-import DossierPhaseRail from "../discovery/DossierPhaseRail"
 import { Entity, formatValue } from './types'
 
 interface LeagueDossierProps {
@@ -25,15 +24,6 @@ export function LeagueDossier({ entity, onEmailEntity, dossier }: LeagueDossierP
   
   return (
     <div className="space-y-6">
-      <DossierPhaseRail
-        title="League dossier lifecycle"
-        entityName={props.name || 'League Entity'}
-        dossier={dossierMetadata}
-        currentPhaseIndex={dossierMetadata.phase_index}
-        progressPercent={typeof dossierMetadata.progress_percent === 'number' ? dossierMetadata.progress_percent : undefined}
-        nextAction={dossierMetadata.decision_summary || 'Review the latest league intelligence and move to the next phase.'}
-      />
-
       <Card className="border-2 shadow-lg">
         <CardHeader className="pb-4">
           <div className="flex items-start justify-between">

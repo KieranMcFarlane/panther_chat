@@ -98,7 +98,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
   const [showEmailModal, setShowEmailModal] = useState(false)
 
   // Use the actual entity ID for data fetching
-  const { entity, dossier, error, isLoading } = useEntity(actualEntityId)
+  const { entity, error, isLoading } = useEntity(actualEntityId)
 
   useEffect(() => {
     const query = new URLSearchParams(window.location.search)
@@ -137,6 +137,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
   // Note: In simplified SWR, we only get the entity. For connections and dossier, make direct API calls if needed
   const connections = []  // Simplified - not loading connections for now
   const dataSource = entity ? 'cache' : null
+  const dossier = null  // Simplified - not loading dossier for now
   
   // Set loading timeout if loading for too long
   useEffect(() => {

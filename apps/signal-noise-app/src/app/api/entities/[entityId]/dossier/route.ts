@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
-import { publishDiscoveryEvent } from '@/lib/discovery-events'
 import { normalizeImportedEntityRow } from '@/lib/entity-import-schema'
 import {
   createEntityImportBatch,
@@ -153,23 +152,6 @@ function buildQueuePayload(entityId: string, batchId: string, state: string, mes
   }
 }
 
-function publishPhaseEvent(entityId: string, entityName: string, phaseIndex: number, stage: string, title: string, detail: string, priority: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW' = 'HIGH') {
-  publishDiscoveryEvent({
-    type: phaseIndex >= 5 ? 'dossier_generation_status' : 'dossier_phase_update',
-    priority,
-    timestamp: new Date().toISOString(),
-    data: {
-      entityId,
-      entityName,
-      phaseIndex,
-      phaseLabel: `Phase ${phaseIndex}`,
-      stage,
-      title,
-      detail,
-    },
-  })
-}
-
 function toPipelineRow(entityId: string, entity: ResolvedEntity) {
   const input = {
     name: toStringValue(entity.properties?.name, entityId),
@@ -214,16 +196,6 @@ async function markAutoQueued(entity: ResolvedEntity, entityId: string, batchId:
     .from('cached_entities')
     .update({ properties })
     .eq('id', entity.id)
-
-  publishPhaseEvent(
-    entityId,
-    String(entity.properties?.name ?? entityId),
-    0,
-    'queued',
-    'Pipeline queued',
-    `Entity dossier pipeline queued for ${String(entity.properties?.name ?? entityId)}.`,
-    'HIGH',
-  )
 }
 
 async function queueRun(entityId: string, entity: ResolvedEntity) {
@@ -260,30 +232,12 @@ async function handleRequest(entityId: string, forceQueue: boolean) {
   if (!forceQueue) {
     const persisted = await getPersistedDossier(entityId, entity)
     if (persisted) {
-      publishPhaseEvent(
-        entityId,
-        String(entity.properties?.name ?? entityId),
-        5,
-        'completed',
-        'Persisted dossier loaded',
-        `Loaded persisted dossier for ${String(entity.properties?.name ?? entityId)}.`,
-        'MEDIUM',
-      )
       return NextResponse.json({ success: true, persisted: true, dossier: persisted })
     }
   }
 
   const activeRun = await findActivePipelineRunByEntityId(entityId)
   if (activeRun.run && activeRun.batch) {
-    publishPhaseEvent(
-      entityId,
-      String(entity.properties?.name ?? entityId),
-      1,
-      'running',
-      'Pipeline already running',
-      `Dossier pipeline already queued or running for ${String(entity.properties?.name ?? entityId)}.`,
-      'MEDIUM',
-    )
     return NextResponse.json(
       buildQueuePayload(entityId, activeRun.batch.id, 'running', 'Dossier pipeline already queued or running'),
       { status: 202 },
@@ -294,15 +248,6 @@ async function handleRequest(entityId: string, forceQueue: boolean) {
   if (!forceQueue && autoQueueAlreadyRequested) {
     const latestRun = await getLatestRun(entityId)
     if (latestRun?.batch_id) {
-      publishPhaseEvent(
-        entityId,
-        String(entity.properties?.name ?? entityId),
-        1,
-        String(latestRun.status || 'pending'),
-        'Pipeline already requested',
-        `Dossier auto-queue already requested for ${String(entity.properties?.name ?? entityId)}.`,
-        'MEDIUM',
-      )
       return NextResponse.json(
         buildQueuePayload(
           entityId,

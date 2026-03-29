@@ -20,6 +20,7 @@ import time
 from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Awaitable, Callable, Dict, List, Optional
 from urllib.parse import urlparse
 
@@ -58,6 +59,8 @@ class PipelineOrchestrator:
         dashboard_scorer,
         baseline_monitoring_runner=None,
         persistence_coordinator=None,
+        brightdata_client=None,
+        claude_client=None,
     ):
         self.dossier_generator = dossier_generator
         self.discovery = discovery
@@ -65,6 +68,8 @@ class PipelineOrchestrator:
         self.graphiti_service = graphiti_service
         self.dashboard_scorer = dashboard_scorer
         self.baseline_monitoring_runner = baseline_monitoring_runner
+        self.brightdata_client = brightdata_client
+        self.claude_client = claude_client
         self.discovery_timeout_seconds = int(os.getenv("ENTITY_DISCOVERY_TIMEOUT_SECONDS", "90"))
         self.discovery_max_iterations = int(os.getenv("ENTITY_DISCOVERY_MAX_ITERATIONS", "8"))
         self.discovery_hard_timeout = os.getenv("ENTITY_DISCOVERY_HARD_TIMEOUT", "0").lower() in {"1", "true", "yes"}
@@ -72,6 +77,12 @@ class PipelineOrchestrator:
         self.acceptance_min_signals = int(os.getenv("PIPELINE_ACCEPTANCE_MIN_SIGNALS", "2"))
         self.run_profile = os.getenv("PIPELINE_RUN_PROFILE", "bounded_production")
         self.require_dual_write = os.getenv("PIPELINE_REQUIRE_DUAL_WRITE", "true").lower() in {"1", "true", "yes"}
+        self.question_first_enabled = os.getenv("PIPELINE_QUESTION_FIRST_ENABLED", "false").lower() in {"1", "true", "yes"}
+        self.question_first_persist_reports = os.getenv("PIPELINE_QUESTION_FIRST_PERSIST_REPORTS", "true").lower() in {"1", "true", "yes"}
+        self.question_first_output_dir = os.getenv("PIPELINE_QUESTION_FIRST_OUTPUT_DIR", "backend/data/question_first_dossiers")
+        self.question_first_max_questions = int(os.getenv("PIPELINE_QUESTION_FIRST_MAX_QUESTIONS", "0") or 0)
+        self.question_first_brightdata_timeout = float(os.getenv("PIPELINE_QUESTION_FIRST_BRIGHTDATA_TIMEOUT_SECONDS", "60"))
+        self._last_question_first_report: Dict[str, Any] | None = None
         self.persistence_coordinator = persistence_coordinator or self._build_default_persistence_coordinator()
 
     def _build_default_persistence_coordinator(self):
@@ -95,8 +106,17 @@ class PipelineOrchestrator:
         logger.warning("🚦 Pipeline boundary: orchestrator:start")
         requested_objective = str(run_objective or "").strip().lower() or DEFAULT_PIPELINE_OBJECTIVE
         objective = normalize_run_objective(requested_objective, default=DEFAULT_PIPELINE_OBJECTIVE)
+        dossier_objective_default = (
+            "leadership_enrichment"
+            if self.question_first_enabled or objective == "procurement_discovery"
+            else objective
+        )
+        dossier_objective = normalize_run_objective(
+            os.getenv("PIPELINE_DOSSIER_OBJECTIVE", dossier_objective_default),
+            default=dossier_objective_default,
+        )
         phase_objectives = {
-            "dossier_generation": "dossier_core",
+            "dossier_generation": dossier_objective,
             "discovery": objective,
             "ralph_validation": objective,
             "temporal_persistence": objective,
@@ -122,6 +142,26 @@ class PipelineOrchestrator:
                 run_objective=phase_objectives["dossier_generation"],
             )
             dossier = self._coerce_dossier_payload(dossier)
+            if self.question_first_enabled:
+                logger.warning("🚦 Pipeline boundary: question_first_enrichment:start")
+                await self._emit_phase_update(phase_callback, "dossier_generation", {"status": "question_first_running"})
+                dossier = await self._run_question_first_enrichment(
+                    dossier=dossier,
+                    entity_id=entity_id,
+                    entity_name=entity_name,
+                )
+                question_first_meta = (dossier.get("question_first") or {}) if isinstance(dossier, dict) else {}
+                self._last_question_first_report = question_first_meta.get("report") if isinstance(question_first_meta, dict) else None
+                await self._emit_phase_update(
+                    phase_callback,
+                    "dossier_generation",
+                    {
+                        "status": "question_first_completed",
+                        "questions_answered": int(question_first_meta.get("questions_answered") or 0),
+                        "category_count": len(question_first_meta.get("categories") or []),
+                    },
+                )
+                logger.warning("🚦 Pipeline boundary: question_first_enrichment:complete")
             await self._emit_phase_update(
                 phase_callback,
                 "dossier_generation",
@@ -643,6 +683,42 @@ class PipelineOrchestrator:
             episodes=episodes,
             validated_rfps=validated_rfps,
         )
+
+    async def _run_question_first_enrichment(
+        self,
+        *,
+        dossier: Dict[str, Any],
+        entity_id: str,
+        entity_name: str,
+    ) -> Dict[str, Any]:
+        questions = dossier.get("questions")
+        if not isinstance(questions, list) or not questions:
+            logger.info("Question-first enrichment skipped for %s: no questions on dossier", entity_id)
+            return dossier
+        if self.brightdata_client is None or self.claude_client is None:
+            logger.info("Question-first enrichment skipped for %s: missing clients", entity_id)
+            return dossier
+
+        try:
+            from backend import question_first_dossier_runner as question_first_runner
+        except ImportError:
+            import question_first_dossier_runner as question_first_runner  # type: ignore
+
+        max_questions = self.question_first_max_questions if int(self.question_first_max_questions or 0) > 0 else None
+        report = await question_first_runner.run_question_first_dossier_from_payload(
+            source_payload=dossier,
+            output_dir=Path(self.question_first_output_dir) if self.question_first_persist_reports else None,
+            brightdata_client=getattr(self, "brightdata_client", None),
+            claude_client=getattr(self, "claude_client", None),
+            max_questions=max_questions,
+            brightdata_timeout=self.question_first_brightdata_timeout,
+            question_source_label=f"{entity_id}::question-first",
+        )
+        enriched = question_first_runner.merge_question_first_report_into_dossier(
+            dossier_payload=dossier,
+            report=report,
+        )
+        return enriched if isinstance(enriched, dict) else dossier
 
     def _extract_raw_signals(self, discovery_result: Any) -> List[Dict[str, Any]]:
         if isinstance(discovery_result, dict):

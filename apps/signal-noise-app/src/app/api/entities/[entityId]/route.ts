@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
-import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
 
 export const dynamic = 'force-dynamic';
 
@@ -274,69 +273,41 @@ async function getPersistedDossier(entityId: string, neo4jId?: string | number, 
 }
 
 async function getLatestPipelineStatusSummary(...candidateEntityIds: Array<string | number | null | undefined>) {
-  try {
-    const uniqueIds = candidateEntityIds
-      .map((value) => (value == null ? '' : String(value).trim()))
-      .filter((value, index, arr) => Boolean(value) && arr.indexOf(value) === index)
+  const uniqueIds = candidateEntityIds
+    .map((value) => (value == null ? '' : String(value).trim()))
+    .filter((value, index, arr) => Boolean(value) && arr.indexOf(value) === index)
 
-    for (const candidateId of uniqueIds) {
-      const { data } = await supabase
-        .from('entity_pipeline_runs')
-        .select('batch_id, entity_id, status, phase, completed_at, metadata, started_at')
-        .eq('entity_id', candidateId)
-        .order('started_at', { ascending: false })
-        .limit(1)
-        .maybeSingle()
+  for (const candidateId of uniqueIds) {
+    const { data } = await supabase
+      .from('entity_pipeline_runs')
+      .select('batch_id, entity_id, status, phase, completed_at, metadata, started_at')
+      .eq('entity_id', candidateId)
+      .order('started_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
 
-      if (!data) {
-        continue
-      }
-
-      const metadata = typeof data.metadata === 'object' && data.metadata !== null ? data.metadata : {}
-      const dualWriteOk = metadata.dual_write_ok
-        ?? metadata?.persistence?.dual_write_ok
-        ?? metadata?.metrics?.dual_write_ok
-        ?? null
-
-      return {
-        batch_id: data.batch_id ?? null,
-        entity_id: data.entity_id ?? candidateId,
-        status: data.status ?? null,
-        phase: data.phase ?? null,
-        completed_at: data.completed_at ?? null,
-        started_at: data.started_at ?? null,
-        dual_write_ok: dualWriteOk,
-      }
+    if (!data) {
+      continue
     }
-  } catch (error) {
-    console.warn('⚠️ Pipeline status lookup failed:', error)
+
+    const metadata = typeof data.metadata === 'object' && data.metadata !== null ? data.metadata : {}
+    const dualWriteOk = metadata.dual_write_ok
+      ?? metadata?.persistence?.dual_write_ok
+      ?? metadata?.metrics?.dual_write_ok
+      ?? null
+
+    return {
+      batch_id: data.batch_id ?? null,
+      entity_id: data.entity_id ?? candidateId,
+      status: data.status ?? null,
+      phase: data.phase ?? null,
+      completed_at: data.completed_at ?? null,
+      started_at: data.started_at ?? null,
+      dual_write_ok: dualWriteOk,
+    }
   }
 
   return null
-}
-
-function normalizeFallbackEntityId(value: string): string {
-  return String(value || '')
-    .trim()
-    .toLowerCase()
-    .replace(/[_\s]+/g, '-')
-}
-
-function matchesFallbackEntity(entity: any, entityId: string): boolean {
-  const properties = entity?.properties || {}
-  const normalizedEntityId = normalizeFallbackEntityId(entityId)
-  const normalizedName = normalizeFallbackEntityId(properties.name || '')
-
-  return [
-    entity?.id,
-    entity?.neo4j_id,
-    properties.supabase_id,
-    properties.neo4j_id,
-    properties.entity_id,
-  ].some((candidate) => normalizeFallbackEntityId(String(candidate || '')) === normalizedEntityId)
-    || normalizedName === normalizedEntityId
-    || normalizedName.includes(normalizedEntityId)
-    || normalizedEntityId.includes(normalizedName)
 }
 
 interface Entity {
@@ -365,7 +336,7 @@ export async function GET(
     const useCache = searchParams.get('useCache') !== 'false' // Default to true
 
     let entity: Entity | null = null
-    let source: 'supabase' | 'local_export' | null = null
+    let source: 'supabase' | null = null
 
     console.log(`📖 Fetching entity ${entityId} from Supabase`)
 
@@ -503,31 +474,13 @@ export async function GET(
     }
 
     if (!entity) {
-      try {
-        const canonicalEntities = await getCanonicalEntitiesSnapshot()
-        const fallbackEntity = canonicalEntities.find((candidate) => matchesFallbackEntity(candidate, entityId))
-
-        if (fallbackEntity) {
-          entity = {
-            id: String(fallbackEntity.id || fallbackEntity.neo4j_id || entityId),
-            neo4j_id: fallbackEntity.neo4j_id,
-            labels: fallbackEntity.labels || [],
-            properties: fallbackEntity.properties || {},
-          }
-          source = 'local_export'
-        }
-      } catch (fallbackError) {
-        console.warn('⚠️ Local export fallback lookup failed:', fallbackError)
-      }
-    }
-
-    if (!entity) {
+      // Entity not found in Supabase
       return NextResponse.json(
         {
           error: 'Entity not found',
           entityId: entityId,
           suggestion: 'This entity may have been removed or the ID is incorrect. Please verify the entity ID or refresh the entity list.',
-          availableSources: ['Supabase cached_entities, teams, and leagues tables', 'Local Falkor export']
+          availableSources: ['Supabase cached_entities, teams, and leagues tables']
         },
         { status: 404 }
       )
