@@ -7,7 +7,9 @@ test('opportunities page is framed as a shortlist and decision surface', async (
 
   assert.match(source, /Opportunity Shortlist/)
   assert.match(source, /Decision Surface/)
-  assert.match(source, /Add to Pipeline/)
+  assert.match(source, /Review Fit|Focused decision view/)
+  assert.match(source, /useSearchParams/)
+  assert.match(source, /\/api\/tenders\?action=opportunities/)
 })
 
 test('tenders page is framed as the live intake feed', async () => {

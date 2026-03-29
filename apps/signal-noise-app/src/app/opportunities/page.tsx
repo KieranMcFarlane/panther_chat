@@ -1,91 +1,129 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Target, TrendingUp, Calendar, DollarSign, Star, Filter, Search } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { Calendar, Filter, Search, Star, Target, TrendingUp } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { db, Entity, CriticalOpportunityScore } from '@/lib/database';
 
-interface Opportunity extends Entity, CriticalOpportunityScore {
-  id: string; // For UI compatibility
+interface TenderOpportunityRecord {
+  id: string;
   title: string;
-  type: 'tender' | 'partnership' | 'sponsorship' | 'acquisition' | 'investment';
-  club: string;
+  organization: string;
+  description: string | null;
+  location: string | null;
+  value: string | null;
+  deadline: string | null;
+  category: string | null;
+  priority: string | null;
+  priority_score: number | null;
+  confidence: number | null;
+  yellow_panther_fit: number | null;
+  entity_id: string | null;
+  entity_name: string | null;
+  entity_type: string | null;
+  source_url: string | null;
+  tags: string[] | null;
+  detected_at: string | null;
+}
+
+interface OpportunityCard {
+  id: string;
+  title: string;
+  type: string;
+  organization: string;
   sport: string;
   country: string;
   deadline?: string;
   value?: string;
   description: string;
   lastUpdated: string;
+  criticalOpportunityScore: number;
+  priorityScore: number;
+  trustScore: number;
+  influenceScore: number;
+  poiScore: number;
+  vectorSimilarity: number;
+  tags: string[];
+  entityId?: string;
+  entityName?: string;
+  sourceUrl?: string;
+}
+
+function normalizeOpportunity(opp: TenderOpportunityRecord): OpportunityCard {
+  const category = opp.category || 'General';
+  const organization = opp.entity_name || opp.organization || 'Unknown organization';
+  const fit = opp.yellow_panther_fit ?? 0;
+  const confidence = opp.confidence ?? 0;
+  const priority = opp.priority_score ?? 0;
+
+  return {
+    id: opp.id,
+    title: opp.title || organization,
+    type: category.toLowerCase().includes('sponsor') ? 'sponsorship' : category.toLowerCase().includes('partner') ? 'partnership' : 'tender',
+    organization,
+    sport: category,
+    country: opp.location || 'Unknown',
+    deadline: opp.deadline || undefined,
+    value: opp.value || undefined,
+    description: opp.description || 'No description available',
+    lastUpdated: opp.detected_at || 'Unknown',
+    criticalOpportunityScore: Math.round(fit / 10),
+    priorityScore: Math.max(0, Math.round(priority)),
+    trustScore: Math.max(0, Math.round(confidence / 10)),
+    influenceScore: Math.max(0, Math.round((fit + confidence) / 20)),
+    poiScore: Math.max(0, Math.round((fit + priority) / 20)),
+    vectorSimilarity: Math.max(0, Math.min(1, fit / 100)),
+    tags: Array.isArray(opp.tags) ? opp.tags : [],
+    entityId: opp.entity_id || undefined,
+    entityName: opp.entity_name || undefined,
+    sourceUrl: opp.source_url || undefined,
+  };
 }
 
 export default function OpportunitiesPage() {
-  const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
-  const [filteredOpportunities, setFilteredOpportunities] = useState<Opportunity[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const searchParams = useSearchParams();
+  const focusedEntityId = searchParams.get('entityId') || '';
+  const focusedEntityName = searchParams.get('entityName') || '';
+
+  const [opportunities, setOpportunities] = useState<OpportunityCard[]>([]);
+  const [searchQuery, setSearchQuery] = useState(focusedEntityName);
   const [typeFilter, setTypeFilter] = useState('all');
   const [sportFilter, setSportFilter] = useState('all');
   const [scoreFilter, setScoreFilter] = useState('all');
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setSearchQuery(focusedEntityName);
+  }, [focusedEntityName]);
 
   useEffect(() => {
     async function loadOpportunities() {
       try {
         setLoading(true);
-        const opportunitiesData = await db.getOpportunities(50);
-        const opportunitiesWithUI = opportunitiesData.map((opp, index) => ({
-          ...opp,
-          id: opp.entity_id || `opp-${index}`,
-          title: opp.entity_type === 'tender' ? (opp as any).title : opp.name,
-          type: opp.entity_type === 'tender' ? 'tender' : 'partnership',
-          club: opp.entity_type === 'club' ? opp.name : 'Unknown',
-          sport: 'Football', // Default sport
-          country: opp.entity_type === 'club' ? (opp as any).location?.split(', ')[1] || 'Unknown' : 'Unknown',
-          deadline: opp.entity_type === 'tender' ? (opp as any).deadline : undefined,
-          value: opp.entity_type === 'club' ? (opp as any).revenue_estimate : undefined,
-          description: opp.notes || 'No description available',
-          lastUpdated: opp.last_updated
-        }));
-        
-        setOpportunities(opportunitiesWithUI);
-        setFilteredOpportunities(opportunitiesWithUI);
+        setLoadError(null);
+
+        const response = await fetch('/api/tenders?action=opportunities&limit=100', {
+          cache: 'no-store',
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to load opportunities (${response.status})`);
+        }
+
+        const payload = await response.json();
+        const mapped = Array.isArray(payload?.opportunities)
+          ? payload.opportunities.map(normalizeOpportunity)
+          : [];
+
+        setOpportunities(mapped);
       } catch (error) {
         console.error('Error loading opportunities:', error);
-        // Fallback to mock data if database fails
-        const mockOpportunities: Opportunity[] = [
-          {
-            entity_id: '1',
-            entity_type: 'tender',
-            title: 'Old Trafford Stadium Upgrade Tender',
-            type: 'tender',
-            club: 'Manchester United FC',
-            sport: 'Football',
-            country: 'England',
-            deadline: '2024-12-31',
-            value: '£50M',
-            description: 'Major stadium renovation project including seating, facilities, and technology upgrades.',
-            lastUpdated: '2024-01-20',
-            source: 'manual',
-            last_updated: '2024-01-20',
-            trust_score: 8.8,
-            vector_embedding: [],
-            priority_score: 9.5,
-            notes: 'Stadium upgrade tender',
-            associated_club_id: 'MUFC001',
-            division_id: 'Premier League',
-            linked_contacts: [],
-            tags: ['Infrastructure', 'High Value', 'Stadium', 'Technology'],
-            critical_opportunity_score: 9.2,
-            influence_score: 9.0,
-            poi_score: 8.5,
-            vector_similarity: 0.92,
-            id: '1'
-          }
-        ];
-        setOpportunities(mockOpportunities);
-        setFilteredOpportunities(mockOpportunities);
+        setLoadError(error instanceof Error ? error.message : 'Failed to load opportunities');
+        setOpportunities([]);
       } finally {
         setLoading(false);
       }
@@ -94,39 +132,47 @@ export default function OpportunitiesPage() {
     loadOpportunities();
   }, []);
 
-  useEffect(() => {
-    let filtered = opportunities;
+  const filteredOpportunities = useMemo(() => {
+    let filtered = [...opportunities];
 
-    // Apply search filter
-    if (searchQuery) {
-      filtered = filtered.filter(opp =>
-        opp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        opp.club.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        opp.description.toLowerCase().includes(searchQuery.toLowerCase())
+    if (focusedEntityId || focusedEntityName) {
+      filtered = filtered.filter((opp) =>
+        (focusedEntityId && opp.entityId === focusedEntityId) ||
+        (focusedEntityName && [opp.entityName, opp.organization, opp.title].some((value) =>
+          String(value || '').toLowerCase().includes(focusedEntityName.toLowerCase())))
       );
     }
 
-    // Apply type filter
+    if (searchQuery) {
+      filtered = filtered.filter((opp) =>
+        [opp.title, opp.organization, opp.description].some((value) =>
+          String(value || '').toLowerCase().includes(searchQuery.toLowerCase()))
+      );
+    }
+
     if (typeFilter !== 'all') {
-      filtered = filtered.filter(opp => opp.type === typeFilter);
+      filtered = filtered.filter((opp) => opp.type === typeFilter);
     }
 
-    // Apply sport filter
     if (sportFilter !== 'all') {
-      filtered = filtered.filter(opp => opp.sport === sportFilter);
+      filtered = filtered.filter((opp) => opp.sport === sportFilter);
     }
 
-    // Apply score filter
     if (scoreFilter !== 'all') {
       const minScore = scoreFilter === 'high' ? 8 : scoreFilter === 'medium' ? 6 : 0;
-      filtered = filtered.filter(opp => opp.criticalOpportunityScore >= minScore);
+      filtered = filtered.filter((opp) => opp.criticalOpportunityScore >= minScore);
     }
 
-    // Sort by critical opportunity score
-    filtered.sort((a, b) => b.criticalOpportunityScore - a.criticalOpportunityScore);
+    return filtered.sort((a, b) => b.criticalOpportunityScore - a.criticalOpportunityScore);
+  }, [focusedEntityId, focusedEntityName, opportunities, scoreFilter, searchQuery, sportFilter, typeFilter]);
 
-    setFilteredOpportunities(filtered);
-  }, [opportunities, searchQuery, typeFilter, sportFilter, scoreFilter]);
+  const uniqueSports = Array.from(new Set(opportunities.map((opportunity) => opportunity.sport))).filter(Boolean);
+  const uniqueTypes = Array.from(new Set(opportunities.map((opportunity) => opportunity.type))).filter(Boolean);
+  const highConvictionCount = filteredOpportunities.filter((opp) => opp.criticalOpportunityScore >= 8).length;
+  const trackedValueCount = filteredOpportunities.filter((opp) => Boolean(opp.value)).length;
+  const averageScore = filteredOpportunities.length
+    ? (filteredOpportunities.reduce((sum, opp) => sum + opp.criticalOpportunityScore, 0) / filteredOpportunities.length).toFixed(1)
+    : '0.0';
 
   const getScoreColor = (score: number) => {
     if (score >= 8) return 'text-green-400';
@@ -136,39 +182,21 @@ export default function OpportunitiesPage() {
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'tender': return 'bg-blue-500';
-      case 'sponsorship': return 'bg-green-500';
-      case 'partnership': return 'bg-purple-500';
-      case 'acquisition': return 'bg-orange-500';
-      case 'investment': return 'bg-yellow-500';
-      default: return 'bg-gray-500';
+      case 'tender':
+        return 'bg-blue-500';
+      case 'sponsorship':
+        return 'bg-green-500';
+      case 'partnership':
+        return 'bg-purple-500';
+      default:
+        return 'bg-gray-500';
     }
   };
-
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case 'tender': return '📋';
-      case 'sponsorship': return '🤝';
-      case 'partnership': return '🔗';
-      case 'acquisition': return '🏢';
-      case 'investment': return '💰';
-      default: return '🎯';
-    }
-  };
-
-  const uniqueSports = Array.from(new Set(opportunities.map(o => o.sport)));
-  const uniqueTypes = Array.from(new Set(opportunities.map(o => o.type)));
-  const highConvictionCount = filteredOpportunities.filter((opp) => opp.criticalOpportunityScore >= 8).length
-  const trackedValueCount = filteredOpportunities.filter((opp) => Boolean(opp.value)).length
-  const deadlineCount = filteredOpportunities.filter((opp) => Boolean(opp.deadline)).length
-  const averageScore = filteredOpportunities.length
-    ? (filteredOpportunities.reduce((sum, opp) => sum + opp.criticalOpportunityScore, 0) / filteredOpportunities.length).toFixed(1)
-    : '0.0'
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-400"></div>
+      <div className="flex h-64 items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-yellow-400" />
       </div>
     );
   }
@@ -182,14 +210,14 @@ export default function OpportunitiesPage() {
               <Star className="h-3.5 w-3.5" />
               Decision Surface
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2">Opportunity Shortlist</h1>
+            <h1 className="mb-2 text-3xl font-bold text-white">Opportunity Shortlist</h1>
             <p className="text-fm-light-grey">
               Curated opportunities ranked for Yellow Panther action. This page is for deciding what to pursue next,
               not for scanning the full raw feed.
             </p>
           </div>
-          <Button className="bg-yellow-500 text-black hover:bg-yellow-400 self-start lg:self-auto">
-            <Target className="w-4 h-4 mr-2" />
+          <Button className="self-start bg-yellow-500 text-black hover:bg-yellow-400 lg:self-auto">
+            <Target className="mr-2 h-4 w-4" />
             Add to Pursuit Queue
           </Button>
         </div>
@@ -214,30 +242,49 @@ export default function OpportunitiesPage() {
         </div>
       </div>
 
-      <div className="bg-custom-box border border-custom-border rounded-lg p-4">
+      {(focusedEntityId || focusedEntityName) && (
+        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-4">
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+            <div>
+              <div className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300">Focused decision view</div>
+              <p className="mt-1 text-sm text-emerald-100/90">
+                Reviewing shortlist candidates for {focusedEntityName || focusedEntityId}. This keeps the entity and dossier handoff inside the decision surface.
+              </p>
+            </div>
+            <Badge variant="outline" className="border-emerald-400/40 text-emerald-200">
+              {filteredOpportunities.length} matching opportunities
+            </Badge>
+          </div>
+        </div>
+      )}
+
+      <div className="rounded-lg border border-custom-border bg-custom-box p-4">
         <div className="mb-4 flex items-center justify-between gap-4">
           <div>
             <h2 className="text-base font-semibold text-white">Shortlist Filters</h2>
             <p className="text-sm text-fm-medium-grey">Refine what is worth review, outreach, or pursuit.</p>
           </div>
-          <div className="text-fm-light-grey text-sm flex items-center">
-            <Filter className="w-4 h-4 mr-2" />
+          <div className="flex items-center text-sm text-fm-light-grey">
+            <Filter className="mr-2 h-4 w-4" />
             {filteredOpportunities.length} of {opportunities.length}
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-          <Input
-            placeholder="Search opportunities..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-custom-bg border-custom-border text-white placeholder:text-fm-medium-grey"
-          />
-          
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-fm-medium-grey" />
+            <Input
+              placeholder="Search opportunities..."
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              className="border-custom-border bg-custom-bg pl-9 text-white placeholder:text-fm-medium-grey"
+            />
+          </div>
+
           <Select value={typeFilter} onValueChange={setTypeFilter}>
-            <SelectTrigger className="bg-custom-bg border-custom-border text-white">
+            <SelectTrigger className="border-custom-border bg-custom-bg text-white">
               <SelectValue placeholder="Type" />
             </SelectTrigger>
-            <SelectContent className="bg-custom-box border-custom-border text-white">
+            <SelectContent className="border-custom-border bg-custom-box text-white">
               <SelectItem value="all">All types</SelectItem>
               {uniqueTypes.map((type) => (
                 <SelectItem key={type} value={type}>{type}</SelectItem>
@@ -246,11 +293,11 @@ export default function OpportunitiesPage() {
           </Select>
 
           <Select value={sportFilter} onValueChange={setSportFilter}>
-            <SelectTrigger className="bg-custom-bg border-custom-border text-white">
+            <SelectTrigger className="border-custom-border bg-custom-bg text-white">
               <SelectValue placeholder="Sport" />
             </SelectTrigger>
-            <SelectContent className="bg-custom-box border-custom-border text-white">
-              <SelectItem value="all">All sports</SelectItem>
+            <SelectContent className="border-custom-border bg-custom-box text-white">
+              <SelectItem value="all">All categories</SelectItem>
               {uniqueSports.map((sport) => (
                 <SelectItem key={sport} value={sport}>{sport}</SelectItem>
               ))}
@@ -258,10 +305,10 @@ export default function OpportunitiesPage() {
           </Select>
 
           <Select value={scoreFilter} onValueChange={setScoreFilter}>
-            <SelectTrigger className="bg-custom-bg border-custom-border text-white">
+            <SelectTrigger className="border-custom-border bg-custom-bg text-white">
               <SelectValue placeholder="Score" />
             </SelectTrigger>
-            <SelectContent className="bg-custom-box border-custom-border text-white">
+            <SelectContent className="border-custom-border bg-custom-box text-white">
               <SelectItem value="all">All scores</SelectItem>
               <SelectItem value="high">High (8+)</SelectItem>
               <SelectItem value="medium">Medium (6+)</SelectItem>
@@ -271,40 +318,37 @@ export default function OpportunitiesPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {loadError && (
+        <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-5 py-4 text-sm text-red-100">
+          {loadError}
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {filteredOpportunities.map((opportunity) => (
           <div
             key={opportunity.id}
-            className="bg-custom-box border border-custom-border rounded-lg p-4 hover:border-yellow-400 transition-colors"
+            className="rounded-lg border border-custom-border bg-custom-box p-4 transition-colors hover:border-yellow-400"
           >
-            {/* Header */}
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <span className="text-2xl">{getTypeIcon(opportunity.type)}</span>
-                <div>
-                  <h3 className="font-semibold text-white text-lg">{opportunity.title}</h3>
-                  <div className="flex items-center gap-2 text-sm text-fm-medium-grey">
-                    <span>{opportunity.club}</span>
-                    <span>•</span>
-                    <span>{opportunity.sport}</span>
-                    <span>•</span>
-                    <span>{opportunity.country}</span>
-                  </div>
+            <div className="mb-3 flex items-start justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-white">{opportunity.title}</h3>
+                <div className="flex flex-wrap items-center gap-2 text-sm text-fm-medium-grey">
+                  <span>{opportunity.organization}</span>
+                  <span>•</span>
+                  <span>{opportunity.sport}</span>
+                  <span>•</span>
+                  <span>{opportunity.country}</span>
                 </div>
               </div>
-              <Badge 
-                variant="secondary" 
-                className={`${getTypeColor(opportunity.type)} text-white text-xs`}
-              >
+              <Badge variant="secondary" className={`${getTypeColor(opportunity.type)} text-white text-xs`}>
                 {opportunity.type}
               </Badge>
             </div>
 
-            {/* Description */}
-            <p className="text-fm-light-grey text-sm mb-4">{opportunity.description}</p>
+            <p className="mb-4 text-sm text-fm-light-grey">{opportunity.description}</p>
 
-            {/* Key Metrics */}
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="mb-4 grid grid-cols-2 gap-4">
               <div className="text-center">
                 <div className={`text-2xl font-bold ${getScoreColor(opportunity.criticalOpportunityScore)}`}>
                   {opportunity.criticalOpportunityScore}
@@ -312,61 +356,48 @@ export default function OpportunitiesPage() {
                 <div className="text-xs text-fm-medium-grey">Critical Score</div>
               </div>
               <div className="text-center">
-                <div className="text-lg font-semibold text-yellow-400">
-                  {opportunity.value || 'N/A'}
-                </div>
+                <div className="text-lg font-semibold text-yellow-400">{opportunity.value || 'N/A'}</div>
                 <div className="text-xs text-fm-medium-grey">Value</div>
               </div>
             </div>
 
-            {/* Score Breakdown */}
-            <div className="grid grid-cols-4 gap-2 mb-4 text-xs">
+            <div className="mb-4 grid grid-cols-4 gap-2 text-xs">
               <div className="text-center">
-                <div className={`font-medium ${getScoreColor(opportunity.priorityScore)}`}>
-                  {opportunity.priorityScore}
-                </div>
+                <div className={`font-medium ${getScoreColor(opportunity.priorityScore)}`}>{opportunity.priorityScore}</div>
                 <div className="text-fm-medium-grey">Priority</div>
               </div>
               <div className="text-center">
-                <div className={`font-medium ${getScoreColor(opportunity.trustScore)}`}>
-                  {opportunity.trustScore}
-                </div>
+                <div className={`font-medium ${getScoreColor(opportunity.trustScore)}`}>{opportunity.trustScore}</div>
                 <div className="text-fm-medium-grey">Trust</div>
               </div>
               <div className="text-center">
-                <div className={`font-medium ${getScoreColor(opportunity.influenceScore)}`}>
-                  {opportunity.influenceScore}
-                </div>
+                <div className={`font-medium ${getScoreColor(opportunity.influenceScore)}`}>{opportunity.influenceScore}</div>
                 <div className="text-fm-medium-grey">Influence</div>
               </div>
               <div className="text-center">
-                <div className={`font-medium ${getScoreColor(opportunity.poiScore)}`}>
-                  {opportunity.poiScore}
-                </div>
+                <div className={`font-medium ${getScoreColor(opportunity.poiScore)}`}>{opportunity.poiScore}</div>
                 <div className="text-fm-medium-grey">POI</div>
               </div>
             </div>
 
-            {/* Tags */}
-            <div className="flex flex-wrap gap-1 mb-4">
-              {opportunity.tags.map((tag, index) => (
-                <Badge key={index} variant="outline" className="text-xs">
+            <div className="mb-4 flex flex-wrap gap-1">
+              {opportunity.tags.map((tag) => (
+                <Badge key={`${opportunity.id}-${tag}`} variant="outline" className="text-xs">
                   {tag}
                 </Badge>
               ))}
             </div>
 
-            {/* Footer */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4 text-xs text-fm-medium-grey">
                 {opportunity.deadline && (
                   <div className="flex items-center gap-1">
-                    <Calendar className="w-3 h-3" />
-                  <span>Decision date: {opportunity.deadline}</span>
+                    <Calendar className="h-3 w-3" />
+                    <span>Decision date: {opportunity.deadline}</span>
                   </div>
                 )}
                 <div className="flex items-center gap-1">
-                  <TrendingUp className="w-3 h-3" />
+                  <TrendingUp className="h-3 w-3" />
                   <span>Vector: {Math.round(opportunity.vectorSimilarity * 100)}%</span>
                 </div>
               </div>
@@ -375,15 +406,16 @@ export default function OpportunitiesPage() {
               </div>
             </div>
 
-            {/* Actions */}
-            <div className="flex gap-2 mt-4">
+            <div className="mt-4 flex gap-2">
               <Button size="sm" variant="outline" className="flex-1">
-                <Star className="w-3 h-3 mr-1" />
+                <Star className="mr-1 h-3 w-3" />
                 Review Fit
               </Button>
-              <Button size="sm" variant="outline" className="flex-1">
-                <Target className="w-3 h-3 mr-1" />
-                Add to Pipeline
+              <Button size="sm" variant="outline" className="flex-1" asChild>
+                <a href={opportunity.sourceUrl || '/tenders'}>
+                  <Target className="mr-1 h-3 w-3" />
+                  Add to Pipeline
+                </a>
               </Button>
             </div>
           </div>
@@ -391,10 +423,12 @@ export default function OpportunitiesPage() {
       </div>
 
       {filteredOpportunities.length === 0 && (
-        <div className="text-center py-12">
-          <Target className="w-16 h-16 mx-auto text-fm-medium-grey mb-4 opacity-50" />
-          <h3 className="text-xl font-semibold text-white mb-2">No shortlisted opportunities found</h3>
-          <p className="text-fm-medium-grey">Adjust the filters or move back to RFP&apos;s/Tenders to review the broader live feed.</p>
+        <div className="py-12 text-center">
+          <Target className="mx-auto mb-4 h-16 w-16 text-fm-medium-grey opacity-50" />
+          <h3 className="mb-2 text-xl font-semibold text-white">No shortlisted opportunities found</h3>
+          <p className="text-fm-medium-grey">
+            Adjust the filters or move back to RFP&apos;s/Tenders to review the broader live feed.
+          </p>
         </div>
       )}
     </div>

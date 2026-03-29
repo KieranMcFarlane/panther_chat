@@ -7,8 +7,9 @@ test('operational summary derives shell metrics from real subsystem state', () =
   const summary = buildOperationalSummary({
     entitiesActive: 128,
     scout: {
-      routeAvailable: false,
-      activeRuns: 0,
+      status: 'queued',
+      activeRuns: 1,
+      detail: 'Awaiting first scout artifact',
     },
     enrichment: {
       isRunning: true,
@@ -27,12 +28,12 @@ test('operational summary derives shell metrics from real subsystem state', () =
   assert.deepEqual(summary.cards, {
     entitiesActive: '128',
     pipelineLive: '3',
-    blocked: '4',
+    blocked: '3',
     recentCompletions: '9',
   })
 
-  assert.equal(summary.scout.statusLabel, 'Unavailable')
-  assert.match(summary.scout.detail, /endpoint missing/i)
+  assert.equal(summary.scout.statusLabel, 'Queued')
+  assert.match(summary.scout.detail, /awaiting first scout artifact/i)
   assert.equal(summary.enrichment.statusLabel, 'Running')
   assert.match(summary.enrichment.detail, /6 processed/i)
   assert.equal(summary.pipeline.statusLabel, '3 active')

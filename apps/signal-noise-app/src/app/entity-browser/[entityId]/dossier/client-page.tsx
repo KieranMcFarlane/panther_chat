@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, CheckCircle2, Clock3, FileText, Info, Layers3 } from "lucide-react"
+import { ArrowLeft, CheckCircle2, Clock3, FileText, Info, Layers3, Target } from "lucide-react"
 
 import { DossierError } from "@/components/entity-dossier/DossierError"
 import { EntityEnrichmentSummaryCard } from "@/components/entity-enrichment/EntityEnrichmentSummaryCard"
@@ -396,6 +396,31 @@ export default function EntityDossierClientPage({
               advancedHref={`/entity-enrichment?entityId=${encodeURIComponent(entityId)}`}
             />
           </div>
+
+          <Card className="mb-6 border border-emerald-700/40 bg-emerald-950/40 text-emerald-50 shadow-lg">
+            <CardContent className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.16em] text-emerald-300">
+                  <Target className="h-4 w-4" />
+                  Opportunity decision
+                </div>
+                <p className="text-sm leading-6 text-emerald-100/85">
+                  The dossier and enrichment are attached. Review opportunity fit to decide whether this entity belongs in the active shortlist.
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                className="border-emerald-500/40 bg-emerald-500/10 text-emerald-100 hover:bg-emerald-500/20"
+                asChild
+              >
+                <a
+                  href={`/opportunities?entityId=${encodeURIComponent(entityId)}&entityName=${encodeURIComponent(entity?.properties?.name || entityId)}`}
+                >
+                  Review opportunity fit
+                </a>
+              </Button>
+            </CardContent>
+          </Card>
 
           {generationMessage && (
             <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4">

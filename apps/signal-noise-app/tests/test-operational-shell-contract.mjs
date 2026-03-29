@@ -13,6 +13,8 @@ test('operational shell primitives expose the expected visible shell content', a
   assert.match(drawerSource, /Operational Snapshot/)
   assert.match(drawerSource, /Active runs/)
   assert.match(drawerSource, /Recent completions/)
+  assert.match(drawerSource, /\/api\/operational-summary/)
+  assert.doesNotMatch(drawerSource, /Scanning fresh RFP sources|Smoke journey loaded successfully/)
 })
 
 test('app navigation renders the shared operational shell primitives', async () => {

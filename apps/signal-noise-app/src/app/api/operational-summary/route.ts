@@ -1,9 +1,7 @@
-import { access } from 'node:fs/promises'
-import path from 'node:path'
-
 import { NextResponse } from 'next/server'
 
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
+import { readLaneSnapshot } from '@/lib/discovery-lanes/lane-status'
 import { getEntityPipelineActivitySummary } from '@/lib/entity-import-jobs'
 import { buildOperationalSummary } from '@/lib/operational-summary'
 import { entityDossierEnrichmentService } from '@/services/EntityDossierEnrichmentService'
@@ -33,20 +31,11 @@ async function getEntitiesActive(): Promise<number> {
   }
 }
 
-async function scoutRouteExists(): Promise<boolean> {
-  try {
-    await access(path.join(process.cwd(), 'src/app/api/a2a-system/start/route.ts'))
-    return true
-  } catch {
-    return false
-  }
-}
-
 export async function GET() {
-  const [entitiesActive, pipeline, scoutAvailable] = await Promise.all([
+  const [entitiesActive, pipeline, scoutSnapshot] = await Promise.all([
     getEntitiesActive(),
     getEntityPipelineActivitySummary(),
-    scoutRouteExists(),
+    readLaneSnapshot({ lane: 'scout' }),
   ])
 
   const batch = entityDossierEnrichmentService.getCurrentBatch()
@@ -60,8 +49,14 @@ export async function GET() {
   const summary = buildOperationalSummary({
     entitiesActive,
     scout: {
-      routeAvailable: scoutAvailable,
-      activeRuns: 0,
+      status: scoutSnapshot.status,
+      activeRuns:
+        scoutSnapshot.status === 'queued' || scoutSnapshot.status === 'running' || scoutSnapshot.status === 'active'
+          ? 1
+          : 0,
+      detail:
+        String(scoutSnapshot.summary?.message || '').trim() ||
+        (scoutSnapshot.updated_at ? `Last updated ${scoutSnapshot.updated_at}` : 'Scout lane ready'),
     },
     enrichment,
     pipeline,

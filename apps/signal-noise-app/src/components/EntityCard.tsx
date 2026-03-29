@@ -300,6 +300,21 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
           </div>
         )}
 
+        {stableEntityId && (
+          <div className="pt-2">
+            <Link
+              href={`/opportunities?entityId=${encodeURIComponent(stableEntityId)}&entityName=${encodeURIComponent(formatValue(entity.properties.name) || stableEntityId)}`}
+              className="inline-flex items-center gap-2 text-sm font-medium text-emerald-700 underline underline-offset-2"
+              onClick={(e) => {
+                e.stopPropagation()
+              }}
+            >
+              <Target className="h-4 w-4" />
+              Review opportunity fit
+            </Link>
+          </div>
+        )}
+
         {/* Connections */}
         {connections && connections.length > 0 && (
           <div className="border-t pt-3">

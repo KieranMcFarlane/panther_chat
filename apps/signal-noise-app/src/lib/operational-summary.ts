@@ -1,8 +1,9 @@
 export interface OperationalSummaryInput {
   entitiesActive: number
   scout: {
-    routeAvailable: boolean
+    status: 'inactive' | 'queued' | 'running' | 'completed' | 'failed' | 'active' | 'degraded'
     activeRuns: number
+    detail: string
   }
   enrichment: {
     isRunning: boolean
@@ -41,8 +42,22 @@ export interface OperationalSummary {
 }
 
 export function buildOperationalSummary(input: OperationalSummaryInput): OperationalSummary {
-  const blocked = input.pipeline.failedRuns + input.enrichment.totalFailed + (input.scout.routeAvailable ? 0 : 1)
+  const blocked =
+    input.pipeline.failedRuns +
+    input.enrichment.totalFailed +
+    (input.scout.status === 'failed' || input.scout.status === 'degraded' ? 1 : 0)
   const recentCompletions = input.pipeline.recentCompleted + input.enrichment.totalSuccessful
+
+  const scoutStatusLabel =
+    input.scout.status === 'running' || input.scout.status === 'active'
+      ? 'Running'
+      : input.scout.status === 'queued'
+        ? 'Queued'
+        : input.scout.status === 'completed'
+          ? 'Complete'
+          : input.scout.status === 'failed' || input.scout.status === 'degraded'
+            ? 'Blocked'
+            : 'Ready'
 
   return {
     updatedAt: input.updatedAt,
@@ -52,18 +67,10 @@ export function buildOperationalSummary(input: OperationalSummaryInput): Operati
       blocked: String(blocked),
       recentCompletions: String(recentCompletions),
     },
-    scout: input.scout.routeAvailable
-      ? {
-          statusLabel: input.scout.activeRuns > 0 ? 'Running' : 'Ready',
-          detail:
-            input.scout.activeRuns > 0
-              ? `${input.scout.activeRuns} scout runs active`
-              : 'Scout endpoint available',
-        }
-      : {
-          statusLabel: 'Unavailable',
-          detail: 'Scout endpoint missing in this branch',
-        },
+    scout: {
+      statusLabel: scoutStatusLabel,
+      detail: input.scout.detail,
+    },
     enrichment: {
       statusLabel: input.enrichment.isRunning ? 'Running' : 'Idle',
       detail: `${input.enrichment.totalProcessed} processed, ${input.enrichment.totalSuccessful} successful`,
