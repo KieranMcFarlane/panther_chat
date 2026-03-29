@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useState, useEffect, useCallback, useRef, useDeferredValue, startTransition } from "react"
+import { useState, useEffect, useCallback, useRef, useDeferredValue } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { FixedSizeList, type ListChildComponentProps } from "react-window"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { EntityCard } from "@/components/EntityCard"
 import { EntitySmokeJourney } from "@/components/entity-browser/EntitySmokeJourney"
+import { useEntitiesBrowserData, useEntityTaxonomy } from "@/lib/swr-config"
 import {
   Database,
   Search,
@@ -73,13 +74,7 @@ export default function EntityBrowserClientPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const initialPageFromUrl = Number.parseInt(searchParams.get('page') || '1', 10)
-  const lastFetchedRequestKeyRef = useRef<string | null>(null)
 
-  const [data, setData] = useState<EntityBrowserResponse | null>(null)
-  const [initialLoading, setInitialLoading] = useState(true)
-  const [gridLoading, setGridLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [dataSource, setDataSource] = useState<'cache' | 'supabase' | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
   const [appliedSearchTerm, setAppliedSearchTerm] = useState("")
   const deferredSearchTerm = useDeferredValue(searchTerm)
@@ -88,14 +83,6 @@ export default function EntityBrowserClientPage() {
   const [currentPage, setCurrentPage] = useState(initialPageFromUrl)
   const [gridWidth, setGridWidth] = useState(0)
   const gridContainerRef = useRef<HTMLDivElement | null>(null)
-  const [taxonomy, setTaxonomy] = useState<EntityTaxonomyResponse>({
-    sports: [],
-    leagues: [],
-    countries: [],
-    entityClasses: [],
-    counts: {}
-  })
-
   const [filters, setFilters] = useState({
     entityType: "all",
     sport: "all",
@@ -106,6 +93,12 @@ export default function EntityBrowserClientPage() {
     sortOrder: "desc" as "asc" | "desc",
     limit: "10"
   })
+  const { entitiesData, entitiesError, entitiesLoading, entitiesValidating, reloadEntities } = useEntitiesBrowserData(
+    currentPage,
+    appliedSearchTerm,
+    filters
+  )
+  const { taxonomy, taxonomyLoading } = useEntityTaxonomy()
 
   const syncEntityBrowserHistory = useCallback((browserUrl: string) => {
     const rawStack = sessionStorage.getItem('entityBrowserHistoryStack')
@@ -135,64 +128,6 @@ export default function EntityBrowserClientPage() {
     sessionStorage.setItem('entityBrowserHistoryStack', JSON.stringify(nextHistoryStack))
     sessionStorage.setItem('entityBrowserHistoryIndex', String(nextHistoryStack.length - 1))
   }, [])
-
-  const buildEntityQueryParams = useCallback((page: number, searchValue: string) => {
-    const params = new URLSearchParams({
-      page: page.toString(),
-      limit: filters.limit,
-      entityType: filters.entityType,
-      sortBy: filters.sortBy,
-      sortOrder: filters.sortOrder
-    })
-
-    if (filters.sport !== 'all') {
-      params.append('sport', filters.sport)
-    }
-    if (filters.league !== 'all') {
-      params.append('league', filters.league)
-    }
-    if (filters.country !== 'all') {
-      params.append('country', filters.country)
-    }
-    if (filters.entityClass !== 'all') {
-      params.append('entityClass', filters.entityClass)
-    }
-
-    if (searchValue.trim()) {
-      params.append('search', searchValue.trim())
-    }
-
-    return params
-  }, [filters.country, filters.entityClass, filters.entityType, filters.league, filters.limit, filters.sortBy, filters.sortOrder, filters.sport])
-
-  const fetchEntities = useCallback(async (page: number, isInitial: boolean = false) => {
-    if (isInitial) {
-      setInitialLoading(true)
-    } else {
-      setGridLoading(true)
-    }
-      setError(null)
-
-    try {
-      const params = buildEntityQueryParams(page, appliedSearchTerm)
-      const response = await fetch(`/api/entities?${params}`)
-      if (!response.ok) {
-        throw new Error(`Failed to fetch entities: ${response.status}`)
-      }
-
-      const result = await response.json()
-      setData(result)
-      setDataSource(result.source || null)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to fetch entities")
-    } finally {
-      if (isInitial) {
-        setInitialLoading(false)
-      } else {
-        setGridLoading(false)
-      }
-    }
-  }, [appliedSearchTerm, buildEntityQueryParams])
 
   const updateFilters = useCallback((updater: (prev: typeof filters) => typeof filters) => {
     setCurrentPage(1)
@@ -237,10 +172,7 @@ export default function EntityBrowserClientPage() {
   const applyFilters = useCallback(() => {
     setAppliedSearchTerm(searchTerm)
     setCurrentPage(1)
-    startTransition(() => {
-      fetchEntities(1)
-    })
-  }, [fetchEntities, searchTerm])
+  }, [searchTerm])
 
   const resetAndReload = useCallback(() => {
     setSearchTerm("")
@@ -256,37 +188,6 @@ export default function EntityBrowserClientPage() {
       limit: "10"
     })
     setCurrentPage(1)
-  }, [])
-
-  useEffect(() => {
-    let mounted = true
-    const fetchTaxonomy = async () => {
-      try {
-        const response = await fetch('/api/entities/taxonomy')
-        if (!response.ok) return
-        const result = await response.json()
-        if (!mounted) return
-        setTaxonomy({
-          sports: Array.isArray(result.sports) ? result.sports : [],
-          leagues: Array.isArray(result.leagues) ? result.leagues : [],
-          countries: Array.isArray(result.countries) ? result.countries : [],
-          entityClasses: Array.isArray(result.entityClasses) ? result.entityClasses : [],
-          counts: {
-            sports: result?.counts?.sports || {},
-            leagues: result?.counts?.leagues || {},
-            countries: result?.counts?.countries || {},
-            entityClasses: result?.counts?.entityClasses || {}
-          }
-        })
-      } catch (_err) {
-        // Taxonomy is optional; keep the browser usable without it.
-      }
-    }
-
-    fetchTaxonomy()
-    return () => {
-      mounted = false
-    }
   }, [])
 
   useEffect(() => {
@@ -327,20 +228,7 @@ export default function EntityBrowserClientPage() {
   }, [deferredSearchTerm])
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const requestKey = buildEntityQueryParams(currentPage, appliedSearchTerm).toString()
-      if (lastFetchedRequestKeyRef.current === requestKey) {
-        return
-      }
-
-      lastFetchedRequestKeyRef.current = requestKey
-      const isInitial = !data
-      fetchEntities(currentPage, isInitial)
-    }
-  }, [appliedSearchTerm, buildEntityQueryParams, currentPage, data, fetchEntities])
-
-  useEffect(() => {
-    if (initialLoading) return
+    if (entitiesLoading) return
     const element = gridContainerRef.current
     if (!element) return
 
@@ -355,17 +243,17 @@ export default function EntityBrowserClientPage() {
     const observer = new ResizeObserver(() => updateWidth())
     observer.observe(element)
     return () => observer.disconnect()
-  }, [initialLoading, data?.entities?.length])
+  }, [entitiesLoading, entitiesData?.entities?.length])
 
   const exportToJSON = () => {
-    if (!data) return
+    if (!entitiesData) return
 
     const exportData = {
-      entities: data.entities,
-      pagination: data.pagination,
-      filters: data.filters,
+      entities: entitiesData.entities,
+      pagination: entitiesData.pagination,
+      filters: entitiesData.filters,
       exportDate: new Date().toISOString(),
-      totalEntities: data.pagination.total
+      totalEntities: entitiesData.pagination.total
     }
 
     const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' })
@@ -379,7 +267,7 @@ export default function EntityBrowserClientPage() {
     URL.revokeObjectURL(url)
   }
 
-  if (initialLoading) {
+  if (entitiesLoading && !entitiesData) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
@@ -391,15 +279,15 @@ export default function EntityBrowserClientPage() {
     )
   }
 
-  if (error) {
+  if (entitiesError) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardContent className="p-6 text-center">
             <Database className="h-12 w-12 text-destructive mx-auto mb-4" />
             <h2 className="text-xl font-semibold mb-2">Error Loading Entities</h2>
-            <p className="text-muted-foreground mb-4">{error}</p>
-            <Button onClick={() => fetchEntities(currentPage, false)} variant="outline">
+            <p className="text-muted-foreground mb-4">{entitiesError.message}</p>
+            <Button onClick={() => reloadEntities()} variant="outline">
               Try Again
             </Button>
           </CardContent>
@@ -408,11 +296,11 @@ export default function EntityBrowserClientPage() {
     )
   }
 
-  if (!data) {
+  if (!entitiesData) {
     return null
   }
 
-  const entities = data.entities || []
+  const entities = entitiesData.entities || []
   const activeFilterChips = [
     filters.sport !== 'all' ? { key: 'sport', label: `Sport: ${filters.sport}` } : null,
     filters.league !== 'all' ? { key: 'league', label: `League: ${filters.league}` } : null,
@@ -484,7 +372,6 @@ export default function EntityBrowserClientPage() {
                             setAppliedSearchTerm(entity.name || "")
                             setAutocompleteEntities([])
                             setCurrentPage(1)
-                            startTransition(() => fetchEntities(1))
                           }}
                           type="button"
                         >
@@ -619,7 +506,7 @@ export default function EntityBrowserClientPage() {
                 Export JSON
               </Button>
               <Badge variant="outline" className="ml-auto">
-                Showing {entities.length} of {data.pagination.total.toLocaleString()} entities
+                Showing {entities.length} of {entitiesData.pagination.total.toLocaleString()} entities
               </Badge>
             </div>
             {activeFilterChips.length > 0 && (
@@ -640,7 +527,7 @@ export default function EntityBrowserClientPage() {
         </Card>
 
         <div ref={gridContainerRef} className="w-full">
-          {gridLoading ? (
+          {entitiesValidating ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
               {Array.from({ length: parseInt(filters.limit, 10) || 10 }).map((_, index) => (
                 <div key={index} className="rounded-lg border bg-card text-card-foreground shadow-sm">
@@ -704,23 +591,23 @@ export default function EntityBrowserClientPage() {
           <Button
             variant="outline"
             onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-            disabled={!data.pagination.hasPrev}
+            disabled={!entitiesData.pagination.hasPrev}
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Previous
           </Button>
 
           <div className="text-sm text-muted-foreground">
-            Page {data.pagination.page} of {data.pagination.totalPages}
+            Page {entitiesData.pagination.page} of {entitiesData.pagination.totalPages}
             <span className="ml-2">
-              ({((data.pagination.page - 1) * data.pagination.limit + 1)} - {Math.min(data.pagination.page * data.pagination.limit, data.pagination.total)} of {data.pagination.total})
+              ({((entitiesData.pagination.page - 1) * entitiesData.pagination.limit + 1)} - {Math.min(entitiesData.pagination.page * entitiesData.pagination.limit, entitiesData.pagination.total)} of {entitiesData.pagination.total})
             </span>
           </div>
 
           <Button
             variant="outline"
-            onClick={() => setCurrentPage((prev) => Math.min(data.pagination.totalPages, prev + 1))}
-            disabled={!data.pagination.hasNext}
+            onClick={() => setCurrentPage((prev) => Math.min(entitiesData.pagination.totalPages, prev + 1))}
+            disabled={!entitiesData.pagination.hasNext}
           >
             Next
             <ArrowRight className="h-4 w-4 ml-2" />

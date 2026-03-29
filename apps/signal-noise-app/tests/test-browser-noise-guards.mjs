@@ -7,12 +7,16 @@ const entitySummaryRoutePath = new URL('../src/app/api/entities/summary/route.ts
 const canonicalSnapshotPath = new URL('../src/lib/canonical-entities-snapshot.ts', import.meta.url)
 const entityBadgePath = new URL('../src/components/badge/EntityBadge.tsx', import.meta.url)
 const badgeServicePath = new URL('../src/services/badge-service.ts', import.meta.url)
+const badgeDisplayStatePath = new URL('../src/lib/badge-display-state.ts', import.meta.url)
+const entityBrowserClientPagePath = new URL('../src/app/entity-browser/client-page.tsx', import.meta.url)
 
 const entitiesRouteSource = readFileSync(entitiesRoutePath, 'utf8')
 const entitySummaryRouteSource = readFileSync(entitySummaryRoutePath, 'utf8')
 const canonicalSnapshotSource = readFileSync(canonicalSnapshotPath, 'utf8')
 const entityBadgeSource = readFileSync(entityBadgePath, 'utf8')
 const badgeServiceSource = readFileSync(badgeServicePath, 'utf8')
+const badgeDisplayStateSource = readFileSync(badgeDisplayStatePath, 'utf8')
+const entityBrowserClientPageSource = readFileSync(entityBrowserClientPagePath, 'utf8')
 
 test('entity browser API preserves badge metadata for client rendering', () => {
   assert.match(entitiesRouteSource, /const resolvedBadgeUrl = resolveLocalBadgeUrl\(\{/)
@@ -39,15 +43,12 @@ test('entity browser APIs use a shared cached canonical snapshot instead of resc
 })
 
 test('entity badge prefers explicit entity badge URLs before probing badge mappings', () => {
-  assert.match(entityBadgeSource, /const explicitBadgeUrl =/)
-  assert.match(entityBadgeSource, /const isBadgeLookupComplete =/)
-  assert.match(entityBadgeSource, /entity\?\.badge_s3_url \|\|/)
-  assert.match(entityBadgeSource, /entity\?\.badge_lookup_complete \|\|/)
-  assert.match(entityBadgeSource, /entity\?\.properties\?\.badge_s3_url \|\|/)
-  assert.match(entityBadgeSource, /entity\?\.properties\?\.badge_lookup_complete \|\|/)
-  assert.match(entityBadgeSource, /entity\?\.properties\?\.badge_path \|\|/)
-  assert.match(entityBadgeSource, /if \(explicitBadgeUrl\) \{\s*setBadgeUrl\(explicitBadgeUrl\)/)
-  assert.match(entityBadgeSource, /if \(isBadgeLookupComplete\) \{\s*setBadgeUrl\(null\)/)
+  assert.match(badgeDisplayStateSource, /const explicitBadgeUrl =/)
+  assert.match(badgeDisplayStateSource, /const isLookupComplete =/)
+  assert.match(badgeDisplayStateSource, /const shouldLookupBadge = !explicitBadgeUrl && !isLookupComplete/)
+  assert.match(entityBadgeSource, /resolveBadgeDisplayState\(entity\)/)
+  assert.match(entityBadgeSource, /if \(!badgeDisplayState\.shouldLookupBadge\) \{/)
+  assert.match(entityBadgeSource, /setBadgeUrl\(badgeDisplayState\.explicitBadgeUrl\)/)
 })
 
 test('badge service caches misses and deduplicates in-flight lookups', () => {
@@ -60,4 +61,12 @@ test('badge service caches misses and deduplicates in-flight lookups', () => {
   assert.match(badgeServiceSource, /const cachedExistence = this\.badgeExistenceCache\.get\(badgeFilename\)/)
   assert.match(badgeServiceSource, /const inFlightCheck = this\.inFlightBadgeExistenceChecks\.get\(badgeFilename\)/)
   assert.match(badgeServiceSource, /return cacheMapping\(mapping \|\| null\)/)
+})
+
+test('entity browser loads the list and taxonomy through SWR hooks instead of direct fetch effects', () => {
+  assert.match(entityBrowserClientPageSource, /import \{ useEntitiesBrowserData, useEntityTaxonomy \} from ['"]@\/lib\/swr-config['"]/)
+  assert.match(entityBrowserClientPageSource, /const \{ entitiesData, entitiesError, entitiesLoading, entitiesValidating, reloadEntities \} = useEntitiesBrowserData\(/)
+  assert.match(entityBrowserClientPageSource, /const \{ taxonomy, taxonomyLoading \} = useEntityTaxonomy\(\)/)
+  assert.doesNotMatch(entityBrowserClientPageSource, /fetchEntities\(/)
+  assert.doesNotMatch(entityBrowserClientPageSource, /fetch\('\/api\/entities\/taxonomy'\)/)
 })

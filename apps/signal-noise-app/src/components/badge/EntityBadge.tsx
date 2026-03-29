@@ -5,7 +5,8 @@ import NextImage from 'next/image'
 import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { BadgeComponentProps, BadgeSize, BadgeSource } from '@/types/badge'
-import { badgeService, getBadgeForEntity, getBadgeUrl, getEntityInitials } from '@/services/badge-service'
+import { getBadgeForEntity, getEntityInitials } from '@/services/badge-service'
+import { resolveBadgeDisplayState } from '@/lib/badge-display-state'
 import { Loader2, Shield, Trophy, Users, Building2 } from 'lucide-react'
 
 const sizeClasses = {
@@ -24,59 +25,41 @@ const iconSize = {
 
 export function EntityBadge({ entity, size = 'md', showFallback = true, className, onClick }: BadgeComponentProps) {
   const router = useRouter()
-  const [badgeUrl, setBadgeUrl] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
+  const entityId = entity?.id
+  const entityName = entity?.properties?.name || entity?.id || 'Unknown Entity'
+  const badgeDisplayState = resolveBadgeDisplayState(entity)
+  const [badgeUrl, setBadgeUrl] = useState<string | null>(badgeDisplayState.explicitBadgeUrl)
+  const [loading, setLoading] = useState(badgeDisplayState.initialLoading)
   const [error, setError] = useState(false)
-  const [badgeSource, setBadgeSource] = useState<BadgeSource>('fallback')
+  const [badgeSource, setBadgeSource] = useState<BadgeSource>(badgeDisplayState.explicitBadgeUrl ? 's3' : 'fallback')
 
   useEffect(() => {
-    if (!entity) return
+    if (!badgeDisplayState.shouldLookupBadge) {
+      setBadgeUrl(badgeDisplayState.explicitBadgeUrl)
+      setLoading(false)
+      setError(false)
+      setBadgeSource(badgeDisplayState.explicitBadgeUrl ? 's3' : 'fallback')
+      return
+    }
 
     const loadBadge = async () => {
       try {
         setLoading(true)
         setError(false)
 
-        console.log(`🏷️ Loading badge for: ${entity?.properties?.name || entity?.id}`)
-
-        const explicitBadgeUrl =
-          entity?.badge_s3_url ||
-          entity?.properties?.badge_s3_url ||
-          entity?.properties?.badge_path ||
-          null
-        const isBadgeLookupComplete =
-          entity?.badge_lookup_complete ||
-          entity?.properties?.badge_lookup_complete ||
-          false
-
-        if (explicitBadgeUrl) {
-          setBadgeUrl(explicitBadgeUrl)
-          setBadgeSource('s3')
-          return
-        }
-
-        if (isBadgeLookupComplete) {
-          setBadgeUrl(null)
-          setBadgeSource('fallback')
-          return
-        }
-
         // Get badge mapping from service (now uses local files)
-        const badgeMapping = await getBadgeForEntity(entity?.id?.toString() || 'unknown', entity?.properties?.name || 'Unknown Entity')
+        const badgeMapping = await getBadgeForEntity(entityId?.toString() || 'unknown', entityName)
 
         if (badgeMapping?.s3Url) {
           // Badge found - use the local path
-          console.log(`✅ Badge found: ${badgeMapping.s3Url}`)
           setBadgeUrl(badgeMapping.s3Url)
           setBadgeSource('s3')
         } else {
-          // No badge found - will show fallback
-          console.log(`⚠️ No badge found for: ${entity?.properties?.name}`)
           setBadgeUrl(null)
           setBadgeSource('fallback')
         }
       } catch (err) {
-        console.error(`❌ Failed to load badge for ${entity?.properties?.name || entity?.id}:`, err)
+        console.error(`❌ Failed to load badge for ${entityName || entityId}:`, err)
         setError(true)
         setBadgeUrl(null)
         setBadgeSource('fallback')
@@ -86,7 +69,13 @@ export function EntityBadge({ entity, size = 'md', showFallback = true, classNam
     }
 
     loadBadge()
-  }, [entity?.id, entity?.badge_lookup_complete, entity?.badge_s3_url, entity?.properties?.badge_lookup_complete, entity?.properties?.badge_s3_url, entity?.properties?.badge_path])
+  }, [
+    entityId,
+    entityName,
+    badgeDisplayState.explicitBadgeUrl,
+    badgeDisplayState.shouldLookupBadge,
+    badgeDisplayState.isLookupComplete,
+  ])
 
   const handleClick = () => {
     if (!entity || !entity?.id) return
@@ -207,8 +196,11 @@ export function EntityBadge({ entity, size = 'md', showFallback = true, classNam
 // Compact version for use in lists
 function CompactEntityBadge({ entity, size = 'sm', className, onClick }: BadgeComponentProps) {
   const router = useRouter()
-  const [badgeUrl, setBadgeUrl] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
+  const entityId = entity?.id
+  const entityName = entity?.properties?.name || entity?.id || 'Unknown Entity'
+  const badgeDisplayState = resolveBadgeDisplayState(entity)
+  const [badgeUrl, setBadgeUrl] = useState<string | null>(badgeDisplayState.explicitBadgeUrl)
+  const [loading, setLoading] = useState(badgeDisplayState.initialLoading)
   const [error, setError] = useState(false)
 
   // Unified navigation handler for compact badge
@@ -226,7 +218,12 @@ function CompactEntityBadge({ entity, size = 'sm', className, onClick }: BadgeCo
   }
 
   useEffect(() => {
-    if (!entity) return
+    if (!badgeDisplayState.shouldLookupBadge) {
+      setBadgeUrl(badgeDisplayState.explicitBadgeUrl)
+      setLoading(false)
+      setError(false)
+      return
+    }
 
     const loadCompactBadge = async () => {
       try {
@@ -234,7 +231,7 @@ function CompactEntityBadge({ entity, size = 'sm', className, onClick }: BadgeCo
         setError(false)
 
         // Try to get S3 badge URL first (from Supabase cache)
-        const cachedBadge = await getBadgeForEntity(entity?.id?.toString() || 'unknown', entity?.properties?.name || 'Unknown Entity')
+        const cachedBadge = await getBadgeForEntity(entityId?.toString() || 'unknown', entityName)
 
         if (cachedBadge?.s3Url) {
           // Use cached S3 URL
@@ -244,7 +241,7 @@ function CompactEntityBadge({ entity, size = 'sm', className, onClick }: BadgeCo
           setBadgeUrl(`/badges/default-badge.png`)
         }
       } catch (err) {
-        console.error(`Failed to load compact badge for ${entity?.properties?.name || entity?.id}:`, err)
+        console.error(`Failed to load compact badge for ${entityName || entityId}:`, err)
         setError(true)
       } finally {
         setLoading(false)
@@ -252,7 +249,13 @@ function CompactEntityBadge({ entity, size = 'sm', className, onClick }: BadgeCo
     }
 
     loadCompactBadge()
-  }, [entity?.id])
+  }, [
+    entityId,
+    entityName,
+    badgeDisplayState.explicitBadgeUrl,
+    badgeDisplayState.shouldLookupBadge,
+    badgeDisplayState.isLookupComplete,
+  ])
 
   const initials = getEntityInitials(entity?.properties?.name || entity?.id?.toString() || 'Unknown')
 
