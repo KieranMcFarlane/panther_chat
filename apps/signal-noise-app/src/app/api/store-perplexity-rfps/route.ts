@@ -7,6 +7,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase-client';
+import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot';
+import { linkOpportunityToCanonicalEntity } from '@/lib/opportunity-entity-linking';
 
 // Top RFP opportunities detected by Perplexity
 const rfpOpportunities = [
@@ -156,6 +158,15 @@ function extractKeywords(rfp: any) {
  */
 async function storeRFPOpportunity(rfp: any) {
   try {
+    const canonicalEntities = await getCanonicalEntitiesSnapshot();
+    const canonicalEntity = linkOpportunityToCanonicalEntity(
+      {
+        entity_name: rfp.organization,
+        organization: rfp.organization,
+      },
+      canonicalEntities,
+    );
+
     // Parse numeric value from estimated value
     const valueNumeric = parseFloat(rfp.estimated_value.replace(/[^0-9.]/g, ''));
     
@@ -230,14 +241,17 @@ async function storeRFPOpportunity(rfp: any) {
       urgency: rfp.urgency.toLowerCase(),
       
       // Entity information
-      entity_id: null,
-      entity_name: null,
+      entity_id: canonicalEntity.canonical_entity_id || null,
+      entity_name: canonicalEntity.canonical_entity_name || rfp.organization,
       
       // System fields - detection_strategy stored in metadata
       
       // JSON fields
       requirements: null,
       metadata: {
+        canonical_entity_id: canonicalEntity.canonical_entity_id || null,
+        canonical_entity_name: canonicalEntity.canonical_entity_name || null,
+        original_organization: rfp.organization,
         original_source: 'perplexity-hybrid-rfp-monitor',
         detection_confidence: rfp.confidence,
         market_sector: 'sports',
