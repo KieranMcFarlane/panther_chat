@@ -377,6 +377,11 @@ const [filterSource, setFilterSource] = useState('all');
   const scoutFreshnessLabel = dataLoadedAt
     ? `${Math.max(1, Math.round((Date.now() - dataLoadedAt.getTime()) / 60000))}m ago`
     : 'Awaiting sync'
+  const promotedShortlistCount = filteredOpportunities.filter((opp) => {
+    const fitScore = Number(opp.yellow_panther_fit || 0)
+    const priorityScore = Number(opp.priority_score || 0)
+    return fitScore >= 85 || priorityScore >= 8
+  }).length
 
   const getFitColor = (fit: number) => {
     if (fit >= 90) return 'bg-green-500';
@@ -662,6 +667,9 @@ const [filterSource, setFilterSource] = useState('all');
               Freshly found procurement items and early signals in one place. This page is the broad intake surface before
               items are curated into the opportunity shortlist.
             </p>
+            <p className="mt-3 text-sm text-muted-foreground">
+              Promote qualified intake into Opportunities once the source quality, timing, and Yellow Panther fit are strong enough.
+            </p>
           </div>
           <Button onClick={() => window.location.reload()}>
             <RefreshCw className="w-4 h-4 mr-2" />
@@ -692,6 +700,12 @@ const [filterSource, setFilterSource] = useState('all');
             <CardContent className="p-4">
               <div className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Verified Sources</div>
               <div className="mt-2 text-3xl font-semibold text-green-400">{verifiedSourceCount}</div>
+            </CardContent>
+          </Card>
+          <Card className="border-border/70 bg-background/60 shadow-none">
+            <CardContent className="p-4">
+              <div className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Promotion Candidates</div>
+              <div className="mt-2 text-3xl font-semibold text-yellow-400">{promotedShortlistCount}</div>
             </CardContent>
           </Card>
         </div>

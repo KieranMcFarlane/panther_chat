@@ -51,10 +51,10 @@ const searchNavItem = {
 } as const
 
 const navSections = [
-  { key: 'overview', label: 'Overview', items: overviewNavItems },
-  { key: 'workflow', label: 'Workflow', items: primaryNavItems },
+  { key: 'overview', label: 'Home', items: overviewNavItems },
+  { key: 'workflow', label: 'Primary Surfaces', items: primaryNavItems },
   { key: 'advanced-ops', label: 'Advanced Ops', items: advancedOpsNavItems },
-  { key: 'support', label: 'Support', items: supportNavItems },
+  { key: 'support', label: 'Utilities', items: supportNavItems },
   { key: 'search', label: 'Search', items: [searchNavItem] },
 ] as const
 

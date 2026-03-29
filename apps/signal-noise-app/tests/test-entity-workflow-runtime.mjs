@@ -14,7 +14,8 @@ test('entity-first runtime journey exposes browser, dossier, and opportunity dec
   const dossierResponse = await fetch(`${baseUrl}/entity-browser/${entityId}/dossier?from=1`)
   assert.equal(dossierResponse.status, 200)
   const dossierHtml = await dossierResponse.text()
-  assert.match(dossierHtml, /Dossier persistence status/)
+  assert.match(dossierHtml, /Entity dossier workspace/)
+  assert.match(dossierHtml, /Persisted dossier state/)
   assert.match(dossierHtml, /Review opportunity fit/)
 
   const opportunitiesResponse = await fetch(

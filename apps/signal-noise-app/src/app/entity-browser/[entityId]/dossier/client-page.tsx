@@ -334,9 +334,12 @@ export default function EntityDossierClientPage({
             <CardContent className="p-5">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                 <div className="space-y-3">
+                  <div className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                    Entity dossier workspace
+                  </div>
                   <div className="flex items-center gap-2 text-sm uppercase tracking-[0.18em] text-slate-400">
                     <Layers3 className="h-4 w-4 text-sky-400" />
-                    Dossier persistence status
+                    Persisted dossier state
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-sm font-semibold text-emerald-300">
@@ -350,8 +353,7 @@ export default function EntityDossierClientPage({
                     </span>
                   </div>
                   <p className="max-w-3xl text-sm leading-6 text-slate-300">
-                    This page is reading the persisted dossier first, then layering the entity browser, question rail, and
-                    downstream enrichment state on top. The goal is to make the stored dossier obvious immediately.
+                    This page leads with the stored dossier, then adds enrichment and opportunity context. The first question is whether the persisted entity state is strong enough to move into an active pursuit decision.
                   </p>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-3 lg:min-w-[360px]">
@@ -402,7 +404,7 @@ export default function EntityDossierClientPage({
               <div className="space-y-1">
                 <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.16em] text-emerald-300">
                   <Target className="h-4 w-4" />
-                  Opportunity decision
+                  Next decision
                 </div>
                 <p className="text-sm leading-6 text-emerald-100/85">
                   The dossier and enrichment are attached. Review opportunity fit to decide whether this entity belongs in the active shortlist.

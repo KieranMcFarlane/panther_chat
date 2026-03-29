@@ -222,6 +222,9 @@ export default function OpportunitiesPage() {
               Curated opportunities ranked for Yellow Panther action. This page is for deciding what to pursue next,
               not for scanning the full raw feed.
             </p>
+            <p className="mt-3 text-sm text-fm-medium-grey">
+              Only promoted shortlist candidates should live here. Raw intake stays in RFP&apos;s/Tenders.
+            </p>
           </div>
           <Button className="self-start bg-yellow-500 text-black hover:bg-yellow-400 lg:self-auto">
             <Target className="mr-2 h-4 w-4" />
@@ -259,7 +262,7 @@ export default function OpportunitiesPage() {
               </p>
               {filteredOpportunities.length === 0 && (
                 <p className="mt-2 text-sm text-emerald-100/75">
-                  No intake-linked opportunities found for {focusedEntityName || focusedEntityId} yet. The live feed is still available in RFP&apos;s/Tenders, and this shortlist will populate once a tender record is linked to the canonical entity.
+                  No intake-linked opportunities found for {focusedEntityName || focusedEntityId} yet. The live feed is still available in RFP&apos;s/Tenders, and this shortlist will populate once intake is promoted into the canonical entity.
                 </p>
               )}
             </div>
@@ -438,7 +441,7 @@ export default function OpportunitiesPage() {
         <div className="py-12 text-center">
           <Target className="mx-auto mb-4 h-16 w-16 text-fm-medium-grey opacity-50" />
           <h3 className="mb-2 text-xl font-semibold text-white">
-            {focusedEntityId || focusedEntityName ? 'No entity-linked opportunities yet' : 'No shortlisted opportunities found'}
+            {focusedEntityId || focusedEntityName ? 'No entity-linked opportunities yet' : 'Nothing has been promoted into the shortlist yet'}
           </h3>
           <p className="mx-auto max-w-2xl text-fm-medium-grey">
             {focusedEntityId || focusedEntityName
