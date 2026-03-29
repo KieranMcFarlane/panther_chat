@@ -6,41 +6,6 @@
 
 ---
 
-## v5 MCP-First Discovery
-
-The v5 path keeps the dossier-first flow, but it changes the retrieval boundary:
-
-- the dossier is still the context builder
-- premium questions are still the query seed
-- BrightData MCP is the only external retrieval transport for discovery
-- DeepSeek remains the judge
-- validated results persist to Graphiti, FalkorDB, and Supabase
-
-For v5, the default smoke and pipeline behavior uses the **direct hosted BrightData MCP** endpoint.
-
-The canonical procurement sequence is:
-1. ingest entity
-2. build dossier context
-3. derive premium questions
-4. turn questions into BrightData MCP queries
-5. score the returned results by relevance
-6. scrape the best result from BrightData MCP
-7. scrape the top 2-3 results for noisy or high-value questions
-8. use `web_data_*` or `extract` when Bright Data offers a better structured path
-9. judge with DeepSeek
-10. persist validated signals for the next pipeline stage
-
-The remembered proof pattern is the Major League Cricket procurement smoke:
-- direct BrightData MCP query
-- search hit returned
-- result scraped
-- DeepSeek confirmed the RFP signal
-
-The frozen method note lives here:
-- [V5 Direct Hosted BrightData MCP Procurement Method](./data/V5_DIRECT_HOSTED_MCP_PROCUREMENT_METHOD.md)
-
----
-
 ## 1. Executive Summary
 
 The repository already contains most of the core capabilities needed for the full system:
@@ -51,6 +16,17 @@ The repository already contains most of the core capabilities needed for the ful
 - temporal intelligence via Graphiti
 - three-axis dashboard scoring
 - dossier and RFP persistence in Supabase
+
+For v5 procurement discovery runs, the remembered contract is:
+
+1. Build the dossier first.
+2. Promote only the premium questions.
+3. Derive Yellow Panther-aligned procurement queries from those questions.
+4. Send those queries through BrightData MCP only.
+5. Use DeepSeek as the judge.
+6. Persist only validated signals into Graphiti/FalkorDB and Supabase.
+
+The Major League Cricket procurement smoke is the canonical proof pattern for this flow.
 
 What is still missing is one canonical production path that starts with a newly uploaded CSV row, creates or updates the entity in the shared system, runs every phase in the correct order, and persists the outputs so the entity becomes visible everywhere else.
 
@@ -221,6 +197,28 @@ The shared storage plane currently spans:
 Clean rule:
 - Supabase is the shared application data plane for UI and durable artifacts
 - Graphiti/FalkorDB is the graph and temporal reasoning plane
+
+### D. v5 MCP-First Procurement Discovery Contract
+
+For v5 procurement-oriented runs, BrightData MCP is the only external retrieval transport.
+SDK-based discovery paths and heuristic wording are legacy compatibility only and should
+not appear in the strict v5 surface.
+
+The working order is:
+
+1. Dossier generation creates the entity context.
+2. Premium questions become the query planner.
+3. Procurement discovery turns those questions into BrightData MCP search queries.
+4. The top hit is scraped through BrightData MCP.
+5. DeepSeek judges the evidence.
+6. Only validated signals reach Graphiti/FalkorDB/Supabase.
+
+Canonical example:
+- Major League Cricket procurement smoke
+- Query: `Major League Cricket RFP tender procurement`
+- BrightData MCP returned a hit
+- The hit was scraped directly
+- DeepSeek confirmed the RFP signal
 
 ---
 

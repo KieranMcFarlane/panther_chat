@@ -49,11 +49,6 @@ import {
 } from './types'
 import { OutreachStrategyPanel } from './OutreachStrategyPanel'
 import { HypothesisStatesPanel } from './HypothesisStatesPanel'
-import {
-  buildFallbackConnectionGuidance,
-  buildFallbackDossierNarrative,
-  buildFallbackIntroductionStrategy,
-} from '@/lib/dossier-language'
 
 const premiumDossierRequests = new Map<string, Promise<any | null>>()
 const premiumDossierResults = new Map<string, any | null>()
@@ -282,7 +277,6 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
     const entityName = apiDossier.core_info?.name || apiDossier.entity?.name || formatValue(props.name) || 'Club Entity'
     const entityLeague = apiDossier.core_info?.league || formatValue(props.level) || 'League not identified'
     const entityHq = apiDossier.core_info?.hq || formatValue(props.country) || 'Unknown'
-    const fallbackNarrative = buildFallbackDossierNarrative(entityName, 'Club', 'fan intelligence', 'commercial and innovation')
 
     return {
       coreInfo: {
@@ -307,12 +301,12 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
         ]
       },
       aiReasonerFeedback: {
-        overallAssessment: apiDossier.strategic_analysis?.overall_assessment || fallbackNarrative.overallAssessment,
-        yellowPantherOpportunity: apiDossier.strategic_analysis?.opportunity_scoring?.immediate_launch?.[0]?.opportunity || fallbackNarrative.yellowPantherOpportunity,
-        engagementStrategy: apiDossier.strategic_analysis?.recommended_approach || fallbackNarrative.recommendedApproach,
+        overallAssessment: apiDossier.strategic_analysis?.overall_assessment || 'Digital transformation opportunities identified',
+        yellowPantherOpportunity: apiDossier.strategic_analysis?.opportunity_scoring?.immediate_launch?.[0]?.opportunity || `Discovery and pilot work for ${entityName}`,
+        engagementStrategy: apiDossier.strategic_analysis?.recommended_approach || 'Direct engagement through available channels',
         riskFactors: ['Vendor lock-in', 'Change resistance', 'Budget constraints'],
         competitiveAdvantages: ['Brand strength', 'Digital readiness', 'Innovation culture'],
-        recommendedApproach: apiDossier.strategic_analysis?.recommended_approach || fallbackNarrative.recommendedApproach
+        recommendedApproach: apiDossier.strategic_analysis?.recommended_approach || 'Start with small pilot projects, prove value quickly, then expand scope based on success metrics.'
       },
       strategicOpportunities: {
         immediateLaunch: apiDossier.strategic_analysis?.opportunity_scoring?.immediate_launch?.map(opp => opp.opportunity) || [
@@ -349,7 +343,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
           relevanceScore: 88
         }
       ],
-          keyDecisionMakers: apiDossier.key_personnel?.map((person: any) => ({
+      keyDecisionMakers: apiDossier.key_personnel?.map((person: any) => ({
         name: person.name,
         role: person.role,
         influenceLevel: person.influence_level || 'MEDIUM',
@@ -391,7 +385,6 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
   const generateEnhancedDossier = () => {
     // Check if entity has comprehensive dossier_data from Neo4j
     let dossierData: EnhancedClubDossier
-    const fallbackNarrative = buildFallbackDossierNarrative(entityName, 'Club', 'supporter experience and digital workflows', 'commercial and innovation')
     
     if (props.dossier_data) {
       try {
@@ -423,12 +416,12 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
             ]
           },
           aiReasonerFeedback: {
-            overallAssessment: parsedDossier.strategic_analysis?.overall_assessment || buildFallbackDossierNarrative(parsedDossier.entity.name, 'Club', 'fan intelligence', 'commercial and innovation').overallAssessment,
-            yellowPantherOpportunity: parsedDossier.strategic_analysis?.opportunity_scoring?.immediate_launch?.[0]?.opportunity || buildFallbackDossierNarrative(parsedDossier.entity.name, 'Club', 'fan intelligence', 'commercial and innovation').yellowPantherOpportunity,
-            engagementStrategy: parsedDossier.strategic_analysis?.recommended_approach || buildFallbackDossierNarrative(parsedDossier.entity.name, 'Club', 'fan intelligence', 'commercial and innovation').recommendedApproach,
+            overallAssessment: parsedDossier.strategic_analysis?.overall_assessment || `${parsedDossier.entity.name} presents partnership opportunities with strong digital transformation potential.`,
+            yellowPantherOpportunity: parsedDossier.strategic_analysis?.opportunity_scoring?.immediate_launch?.[0]?.opportunity || `AI-powered engagement opportunities for ${parsedDossier.entity.name}`,
+            engagementStrategy: parsedDossier.strategic_analysis?.recommended_approach || 'Direct engagement through Yellow Panther UK team networks with focus on sports technology partnerships',
             riskFactors: ['Championship-level budget constraints', 'Change management resistance', 'Vendor integration complexity'],
             competitiveAdvantages: ['Strong fan base engagement', 'Digital readiness indicators', 'Leadership openness to innovation'],
-            recommendedApproach: buildFallbackDossierNarrative(parsedDossier.entity.name, 'Club', 'fan intelligence', 'commercial and innovation').recommendedApproach
+            recommendedApproach: 'Start with fan analytics pilot project, prove ROI quickly, then expand to comprehensive digital transformation partnership.'
           },
           strategicOpportunities: {
             immediateLaunch: parsedDossier.strategic_analysis?.opportunity_scoring?.immediate_launch?.map(opp => opp.opportunity) || [
@@ -561,13 +554,13 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
           'Assess opportunities for modular experimentation before platform-scale change'
         ]
       },
-          aiReasonerFeedback: {
-        overallAssessment: fallbackNarrative.overallAssessment,
-        yellowPantherOpportunity: fallbackNarrative.yellowPantherOpportunity,
-        engagementStrategy: fallbackNarrative.recommendedApproach,
+      aiReasonerFeedback: {
+        overallAssessment: `${entityName} does not yet have a verified enhanced dossier, so this view is using a neutral fallback summary.`,
+        yellowPantherOpportunity: `Position Yellow Panther around fast discovery work for ${entityName}: audit, prototype, and prove value before larger transformation commitments.`,
+        engagementStrategy: `Start with a compact discovery engagement focused on ${entityName}'s digital priorities, commercial workflows, and supporter experience gaps.`,
         riskFactors: ['Unverified stakeholder map', 'Limited confirmed systems data', 'Budget and prioritization unknown'],
         competitiveAdvantages: ['Lightweight pilot delivery', 'Rapid discovery capability', 'Clearer decision support for future initiatives'],
-        recommendedApproach: fallbackNarrative.recommendedApproach
+        recommendedApproach: 'Begin with evidence gathering, confirm stakeholders, and scope one measurable pilot before proposing broader platform work.'
       },
       strategicOpportunities: {
         immediateLaunch: [
@@ -770,7 +763,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                   }
                 ],
                 connection_context: 'Single 2nd-degree connection through sports media industry',
-                introduction_strategy: buildFallbackIntroductionStrategy('sports technology'),
+                introduction_strategy: 'Approach via Tom Richardson with sports technology context',
                 alternative_paths: [
                   'Industry conference introduction',
                   'Content marketing collaboration approach'
@@ -793,7 +786,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                   }
                 ],
                 connection_context: 'No strong network connections identified',
-                introduction_strategy: buildFallbackConnectionGuidance(entityName, 'commercial or innovation team'),
+                introduction_strategy: 'Formal business proposal approach',
                 alternative_paths: [
                   'Legal counsel introduction',
                   'Industry peer referral'
@@ -857,7 +850,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                   connection_strength: 'STRONG',
                   confidence_score: 90,
                   path_type: 'TIER_2_BRIDGE',
-                  introduction_strategy: buildFallbackIntroductionStrategy('sports industry'),
+                  introduction_strategy: 'Professional introduction through sports industry network focusing on digital transformation partnerships',
                   estimated_timeline: '2-4 weeks',
                   success_probability: 'HIGH'
                 },
@@ -869,7 +862,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                   connection_strength: 'MEDIUM',
                   confidence_score: 70,
                   path_type: 'TIER_2_BRIDGE',
-                  introduction_strategy: buildFallbackIntroductionStrategy('sports marketing'),
+                  introduction_strategy: 'Professional introduction through sports marketing industry connection, focusing on digital marketing and fan engagement opportunities',
                   estimated_timeline: '3-6 weeks',
                   success_probability: 'MEDIUM'
                 }
@@ -1557,7 +1550,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
 
                   <div>
                     <h5 className="font-medium mb-2">Communication Profile</h5>
-                    <p className="text-sm text-gray-600 italic">&ldquo;{displayValue(person.communicationProfile?.tone, 'Communication style not available')}&rdquo;</p>
+                    <p className="text-sm text-gray-600 italic">"{displayValue(person.communicationProfile?.tone, 'Communication style not available')}"</p>
                     <p className="text-sm text-gray-600">Risk Profile: <span className="font-medium">{displayValue(person.communicationProfile?.riskProfile, 'Unknown')}</span></p>
                   </div>
 
@@ -1588,7 +1581,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
                 <CardContent className="p-8 text-center">
                   <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">No Leadership Data Available</h3>
-                  <p className="text-gray-600">Key decision makers haven&apos;t been identified for this entity yet.</p>
+                  <p className="text-gray-600">Key decision makers haven't been identified for this entity yet.</p>
                 </CardContent>
               </Card>
             ]}

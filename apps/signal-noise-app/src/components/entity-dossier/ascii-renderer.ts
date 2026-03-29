@@ -129,10 +129,10 @@ export class ASCIIDossierRenderer {
     dossier += `╠${'═'.repeat(width)}╣\n`
     dossier += this.createSection('AI REASONER FEEDBACK')
     dossier += '\n║ ───────────────────────────────────────────────────────────────────── ║\n'
-    const defaultAnalysis = `${props.name}'s digital structure is mature but rigid. Their reliance on NTT DATA constrains innovation velocity. To engage, lead with a proof-of-value pilot that fits the gap NTT cannot move quickly enough to close.`
+    const defaultAnalysis = `${props.name}s digital structure is mature but rigid. Their reliance on NTT DATA constrains innovation velocity. To engage, consider framing Yellow Panther as a lightweight experimental R&D wing for pilot projects that NTT cannot deliver quickly.`
     dossier += `║ ${this.wrapText(props.aiAnalysis || defaultAnalysis)} ║\n`
     dossier += '\n║                                                                                                  ║\n'
-    dossier += `║ Recommended Action: ${this.wrapText(props.recommendedAction || "Lead with a proof of value in community, youth, and women's sports digital transformation, backed by measurable ROI.")} ║\n`
+    dossier += `║ Recommended Action: ${this.wrapText(props.recommendedAction || 'Target community, youth, and women\'s sports digital transformation with data-backed ROI projections.')} ║\n'
     
     // Strategic Opportunities
     dossier += `╠${'═'.repeat(width)}╣\n`

@@ -7,17 +7,14 @@ import { GenericEntityDossier } from './GenericEntityDossier'
 import { EnhancedClubDossier } from './EnhancedClubDossier'
 import { EnhancedPersonDossier } from './EnhancedPersonDossier'
 import { FinalRalphClubDossier } from './FinalRalphClubDossier'
-import DossierPhaseRail from '../discovery/DossierPhaseRail'
 
 interface EntityDossierRouterProps {
   entity: Entity
   onEmailEntity: () => void
   dossier?: any
-  questionPack?: any | null
-  graphEpisodes?: any[] | null
 }
 
-export function EntityDossierRouter({ entity, onEmailEntity, dossier, questionPack, graphEpisodes }: EntityDossierRouterProps) {
+export function EntityDossierRouter({ entity, onEmailEntity, dossier }: EntityDossierRouterProps) {
   const entityType = detectEntityType(entity)
 
   console.log(`Rendering dossier for entity: ${entity.properties.name}, type: ${entityType}`)
@@ -25,22 +22,12 @@ export function EntityDossierRouter({ entity, onEmailEntity, dossier, questionPa
   switch (entityType) {
     case 'Club':
       return dossier ? (
-        <>
-          <DossierPhaseRail
-            title="Phase 0-5 dossier lifecycle"
-            entityName={entity.properties.name}
-            dossier={dossier}
-            nextAction={dossier?.metadata?.next_best_action || dossier?.metadata?.next_action || 'Review the persisted question pack'}
-          />
-          <FinalRalphClubDossier
-            key={`final-ralph-${entity.id}`}
-            entity={entity}
-            onEmailEntity={onEmailEntity}
-            dossier={dossier}
-            questionPack={questionPack}
-            graphEpisodes={graphEpisodes}
-          />
-        </>
+        <FinalRalphClubDossier
+          key={`final-ralph-${entity.id}`}
+          entity={entity}
+          onEmailEntity={onEmailEntity}
+          dossier={dossier}
+        />
       ) : (
         <EnhancedClubDossier key={`enhanced-${entity.id}-no-dossier`} entity={entity} onEmailEntity={onEmailEntity} dossier={dossier} />
       )

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
-import { publishDiscoveryEvent } from '@/lib/discovery-events'
 import { normalizeImportedEntityRow, REQUIRED_ENTITY_IMPORT_COLUMNS } from '@/lib/entity-import-schema'
 import { mapImportedEntityRowToCachedEntity } from '@/lib/entity-import-mapper'
 import {
@@ -66,21 +65,6 @@ export async function POST(request: NextRequest) {
     await queueEntityImportBatch(batch.id, {
       queue_mode: ENTITY_IMPORT_QUEUE_MODE,
       queued_at: new Date().toISOString(),
-    })
-
-    publishDiscoveryEvent({
-      type: 'pipeline_lane_update',
-      priority: 'HIGH',
-      timestamp: new Date().toISOString(),
-      data: {
-        entityId: row.entity_id,
-        entityName: row.name,
-        stage: 'queued',
-        phaseIndex: 0,
-        phaseLabel: 'Phase 0 · Intake',
-        title: 'Entity pipeline queued',
-        detail: `Queued entity import and dossier tracking for ${row.name}.`,
-      },
     })
 
     return NextResponse.json(

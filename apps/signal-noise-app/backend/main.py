@@ -85,22 +85,6 @@ except ImportError:
     OutreachIntelligenceResponse = None
     dossier_outreach_handler = None
 
-try:
-    from backend.final_ralph_entity_question_pack import (
-        build_final_ralph_entity_question_pack,
-        write_final_ralph_entity_question_pack,
-    )
-except ImportError:
-    from final_ralph_entity_question_pack import (  # type: ignore
-        build_final_ralph_entity_question_pack,
-        write_final_ralph_entity_question_pack,
-    )
-
-try:
-    from backend.yellow_panther_catalog import build_entity_question_pack
-except ImportError:
-    from yellow_panther_catalog import build_entity_question_pack  # type: ignore
-
 # Configure timeout for long-running requests (5 minutes for dossier generation)
 # This is handled at the HTTP server level (uvicorn)
 # Default timeout is 30s, but dossier generation can take 2-3 minutes
@@ -271,38 +255,6 @@ async def root():
             "temporal_fit_scoring"
         ]
     }
-
-
-@app.get("/api/entity-question-pack")
-async def entity_question_pack(
-    entity_type: str,
-    entity_name: str,
-    entity_id: Optional[str] = None,
-    max_questions: int = 10,
-):
-    """Expose the final Ralph-optimized Yellow Panther question pack for an entity."""
-    normalized_name = str(entity_name or '').strip()
-    if not normalized_name:
-        raise HTTPException(status_code=400, detail="entity_name is required")
-
-    try:
-        pack = build_final_ralph_entity_question_pack(
-            entity_type=entity_type,
-            entity_name=normalized_name,
-            entity_id=entity_id,
-            max_questions=max_questions,
-        )
-        write_final_ralph_entity_question_pack(pack)
-        return pack
-    except Exception:
-        logger.exception("Falling back to the canonical question pack")
-
-    return build_entity_question_pack(
-        entity_type=entity_type,
-        entity_name=normalized_name,
-        entity_id=entity_id,
-        max_questions=max_questions,
-    )
 
 
 @app.get("/api/status")

@@ -1,8 +1,8 @@
-"""BrightData MCP client for hosted BrightData MCP and explicit local transport comparison.
+"""BrightData MCP client for hosted BrightData MCP and local compatibility paths.
 
 This module provides the BrightData retrieval client used by the pipeline and
 the persistent FastMCP wrapper. It prefers the hosted BrightData MCP endpoint
-when configured.
+when configured, and can still use the local stdio server for compatibility.
 """
 
 import asyncio
@@ -20,7 +20,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 logger = logging.getLogger(__name__)
-_HOSTED_MCP_DEFAULT_URL = "https://mcp.brightdata.com/mcp"
 
 
 def _redact_token_in_url(url: Optional[str]) -> Optional[str]:
@@ -346,7 +345,7 @@ class BrightDataMCPClient(BrightDataClient):
         )
 
     def _resolve_hosted_mcp_url(self) -> Optional[str]:
-        """Resolve the hosted Bright Data MCP URL if enabled."""
+        """Resolve the hosted Bright Data MCP SSE URL if enabled."""
         hosted_url = str(os.getenv("BRIGHTDATA_MCP_HOSTED_URL") or "").strip()
         if hosted_url:
             return hosted_url
@@ -358,7 +357,7 @@ class BrightDataMCPClient(BrightDataClient):
         if not token:
             return None
 
-        return f"{_HOSTED_MCP_DEFAULT_URL}?token={quote(token, safe='')}"
+        return f"https://mcp.brightdata.com/sse?token={quote(token, safe='')}"
 
     async def _ensure_session(self):
         """Initialize MCP session with timeout protection"""
@@ -366,11 +365,8 @@ class BrightDataMCPClient(BrightDataClient):
         if not self._mcp_available:
             return
 
-        if self.session and self._available:
+        if self.session:
             return
-
-        if self.session and not self._available:
-            await self._reset_session_state()
 
         try:
             logger.info(f"⏳ Initializing MCP session (timeout: {self.timeout}s)...")
@@ -378,8 +374,8 @@ class BrightDataMCPClient(BrightDataClient):
             if self._session_init_task is None or self._session_init_task.done():
                 self._session_init_task = asyncio.create_task(self._init_mcp_session())
 
-            # Use asyncio.wait_for to enforce timeout while warm-service mode keeps
-            # the MCP process starting in the background.
+            # Use asyncio.wait_for to enforce timeout, but shield the init task so
+            # warm-service mode can keep the MCP process starting in the background.
             await asyncio.wait_for(asyncio.shield(self._session_init_task), timeout=self.timeout)
 
             self._available = True
@@ -390,29 +386,17 @@ class BrightDataMCPClient(BrightDataClient):
             if self._warm_service_enabled:
                 logger.warning(f"⚠️ MCP initialization timed out after {self.timeout}s - warm service continues in background")
             else:
-                logger.warning(f"⚠️ MCP initialization timed out after {self.timeout}s - will use alternate transport")
+                logger.warning(f"⚠️ MCP initialization timed out after {self.timeout}s - will use HTTP fallback")
             self._available = False
             if not self._warm_service_enabled:
                 self._mcp_available = False
                 self.session = None
         except Exception as e:
-            logger.error(f"❌ MCP initialization failed: {e} - will use alternate transport")
+            logger.error(f"❌ MCP initialization failed: {e} - will use HTTP fallback")
             self._available = False
             self.session = None
             self._mcp_available = False
             self._session_init_task = None
-
-    async def _reset_session_state(self):
-        """Clear any stale MCP session so a fresh connection can be established."""
-        if self._transport_context:
-            try:
-                await self._transport_context.__aexit__(None, None, None)
-            except Exception as exc:  # noqa: BLE001
-                logger.debug("Ignoring error while closing stale MCP transport: %s", exc)
-        self.session = None
-        self._transport_context = None
-        self._available = False
-        self._session_init_task = None
 
     async def prewarm(self, timeout: Optional[float] = None) -> Dict[str, Any]:
         """Force MCP session initialization ahead of the first real search."""
@@ -509,44 +493,24 @@ class BrightDataMCPClient(BrightDataClient):
             logger.info(f"ℹ️ MCP unavailable for {tool_name}")
             return None
 
-        async def _invoke_once() -> Optional[Dict[str, Any]]:
-            try:
-                result = await self.session.call_tool(tool_name, arguments=arguments)
-
-                if hasattr(result, 'content'):
-                    content_text = ""
-                    for item in result.content:
-                        if hasattr(item, 'text'):
-                            content_text += item.text
-
-                    try:
-                        return json.loads(content_text)
-                    except json.JSONDecodeError:
-                        return {"status": "success", "content": content_text}
-                else:
-                    return {"status": "success", "result": str(result)}
-            except Exception as exc:  # noqa: BLE001
-                logger.error(f"❌ MCP tool call failed: {exc}")
-                return None
-
         try:
-            result = await _invoke_once()
-            if result is not None:
-                return result
+            result = await self.session.call_tool(tool_name, arguments=arguments)
 
-            retryable = self.session is not None and self._available
-            if not retryable:
-                return None
+            if hasattr(result, 'content'):
+                content_text = ""
+                for item in result.content:
+                    if hasattr(item, 'text'):
+                        content_text += item.text
 
-            await self._reset_session_state()
-            await self._ensure_session()
-            if not self.session or not self._available:
-                return None
+                try:
+                    return json.loads(content_text)
+                except json.JSONDecodeError:
+                    return {"status": "success", "content": content_text}
+            else:
+                return {"status": "success", "result": str(result)}
 
-            logger.info("🔁 Retrying MCP tool call once after reconnect: %s", tool_name)
-            return await _invoke_once()
-        except Exception as exc:  # noqa: BLE001
-            logger.error(f"❌ MCP tool call failed: {exc}")
+        except Exception as e:
+            logger.error(f"❌ MCP tool call failed: {e}")
             return None
 
     async def search_engine(
@@ -557,7 +521,7 @@ class BrightDataMCPClient(BrightDataClient):
         num_results: int = 10,
         cursor: Optional[str] = None
     ) -> Dict[str, Any]:
-        """Search via MCP and return an error if unavailable."""
+        """Search via MCP, return error if unavailable (caller can use HTTP fallback)"""
         logger.info(f"🔍 MCP search: {query}")
 
         arguments: Dict[str, Any] = {"query": query, "engine": engine}
@@ -578,7 +542,7 @@ class BrightDataMCPClient(BrightDataClient):
                 "error": "MCP unavailable",
                 "query": query,
                 "engine": engine,
-                "transport_retryable": True
+                "use_http_fallback": True
             }
 
         normalized_results = list(result.get("results") or [])
@@ -603,7 +567,7 @@ class BrightDataMCPClient(BrightDataClient):
         }
 
     async def scrape_as_markdown(self, url: str) -> Dict[str, Any]:
-        """Scrape via MCP and return an error if unavailable."""
+        """Scrape via MCP, return error if unavailable (caller can use HTTP fallback)"""
         logger.info(f"📄 MCP scrape: {url}")
 
         result = await self._call_tool("scrape_as_markdown", {"url": url})
@@ -613,7 +577,7 @@ class BrightDataMCPClient(BrightDataClient):
                 "status": "error",
                 "error": "MCP unavailable",
                 "url": url,
-                "transport_retryable": True
+                "use_http_fallback": True
             }
 
         content = result.get("content") or result.get("markdown") or result.get("text", "")
@@ -631,7 +595,7 @@ class BrightDataMCPClient(BrightDataClient):
         }
 
     async def scrape_batch(self, urls: List[str]) -> Dict[str, Any]:
-        """Batch scrape via MCP and return an error if unavailable."""
+        """Batch scrape via MCP, return error if unavailable (caller can use HTTP fallback)"""
         if len(urls) > 10:
             urls = urls[:10]
 
@@ -639,34 +603,12 @@ class BrightDataMCPClient(BrightDataClient):
 
         result = await self._call_tool("scrape_batch", {"urls": urls})
 
-        if result is None:
+        if result is None or result.get("status") == "error":
             return {
                 "status": "error",
                 "error": "MCP unavailable",
                 "total_urls": len(urls),
-                "transport_retryable": True
-            }
-
-        if isinstance(result, list):
-            results = result
-            successful = sum(1 for item in results if isinstance(item, dict) and item.get("status") != "error")
-            failed = max(len(urls) - successful, 0)
-            return {
-                "status": "success",
-                "total_urls": len(urls),
-                "successful": successful,
-                "failed": failed,
-                "results": results,
-                "timestamp": datetime.now().isoformat(),
-                "metadata": {"source": "mcp_client", "pro_mode": self.pro_mode},
-            }
-
-        if result.get("status") == "error":
-            return {
-                "status": "error",
-                "error": result.get("error") or "MCP unavailable",
-                "total_urls": len(urls),
-                "transport_retryable": True
+                "use_http_fallback": True
             }
 
         results = result.get("results", [])
@@ -720,13 +662,13 @@ class BrightDataClientWithFallback(BrightDataClient):
         result = await method(*args, **kwargs)
 
         # Check if MCP succeeded
-        if result and result.get("status") == "success" and not result.get("transport_retryable"):
+        if result and result.get("status") == "success" and not result.get("use_http_fallback"):
             self._using_mcp = True
             logger.info(f"✅ MCP succeeded for {method_name}")
             return result
 
         # Fall back to HTTP
-        logger.info(f"🔄 MCP unavailable, using alternate transport for {method_name}")
+        logger.info(f"🔄 MCP unavailable, using HTTP fallback for {method_name}")
         self._using_mcp = False
 
         http_method = getattr(self.http_client, method_name)
@@ -740,15 +682,15 @@ class BrightDataClientWithFallback(BrightDataClient):
         num_results: int = 10,
         cursor: Optional[str] = None
     ) -> Dict[str, Any]:
-        """Search with MCP plus alternate transport handling."""
+        """Search with MCP + HTTP fallback"""
         return await self._try_with_fallback("search_engine", query, engine, country, num_results, cursor)
 
     async def scrape_as_markdown(self, url: str) -> Dict[str, Any]:
-        """Scrape with MCP plus alternate transport handling."""
+        """Scrape with MCP + HTTP fallback"""
         return await self._try_with_fallback("scrape_as_markdown", url)
 
     async def scrape_batch(self, urls: List[str]) -> Dict[str, Any]:
-        """Batch scrape with MCP plus alternate transport handling."""
+        """Batch scrape with MCP + HTTP fallback"""
         return await self._try_with_fallback("scrape_batch", urls)
 
     async def scrape_jobs_board(
@@ -756,11 +698,11 @@ class BrightDataClientWithFallback(BrightDataClient):
         entity_name: str,
         keywords: List[str]
     ) -> Dict[str, Any]:
-        """Search job boards with MCP plus alternate transport handling."""
+        """Search job boards with MCP + HTTP fallback"""
         return await self._try_with_fallback("scrape_jobs_board", entity_name, keywords)
 
     async def scrape_press_release(self, entity_name: str) -> Dict[str, Any]:
-        """Scrape press releases with MCP plus alternate transport handling."""
+        """Scrape press releases with MCP + HTTP fallback"""
         return await self._try_with_fallback("scrape_press_release", entity_name)
 
     async def close(self):
@@ -781,10 +723,10 @@ class BrightDataClientWithFallback(BrightDataClient):
 
 def create_brightdata_client(use_fallback: bool = True, mcp_timeout: float = 5.0) -> BrightDataClient:
     """
-    Create BrightData client with automatic transport selection.
+    Create BrightData client with automatic fallback
 
     Args:
-        use_fallback: If True, allow alternate transport handling when MCP is unavailable.
+        use_fallback: If True, use MCP with HTTP fallback. If False, MCP only.
         mcp_timeout: Seconds to wait for MCP initialization
 
     Returns:

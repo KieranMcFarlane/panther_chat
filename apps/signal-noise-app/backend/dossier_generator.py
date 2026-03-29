@@ -26,7 +26,15 @@ from typing import Dict, List, Optional, Any, Callable, Awaitable
 from dataclasses import dataclass
 from urllib.parse import urlparse
 
-from backend.schemas import EntityDossier, DossierSection, DossierTier, CacheStatus
+from backend.schemas import (
+    EntityDossier,
+    DossierQuestion,
+    DossierQuestionStatus,
+    DossierQuestionType,
+    DossierSection,
+    DossierTier,
+    CacheStatus,
+)
 from backend.claude_client import ClaudeClient
 try:
     from backend.objective_profiles import (
@@ -46,9 +54,9 @@ except ImportError:
     from dossier_persistence import apply_dossier_persistence_context  # type: ignore
 
 try:
-    from backend.yellow_panther_catalog import get_questions_for_entity_type
+    from backend.entity_type_dossier_questions import get_questions_for_entity_type
 except ImportError:
-    from yellow_panther_catalog import get_questions_for_entity_type  # type: ignore
+    from entity_type_dossier_questions import get_questions_for_entity_type  # type: ignore
 
 # Import data collector
 try:
@@ -268,6 +276,105 @@ class EntityDossierGenerator:
             "STANDARD": list(premium_sections),
             "PREMIUM": list(premium_sections),
         }
+
+    def _entity_type_question_corpus_key(self, entity_type: str) -> str:
+        normalized = str(entity_type or "").strip().upper()
+        mapping = {
+            "CLUB": "SPORT_CLUB",
+            "SPORT_CLUB": "SPORT_CLUB",
+            "LEAGUE": "SPORT_LEAGUE",
+            "SPORT_LEAGUE": "SPORT_LEAGUE",
+            "FEDERATION": "SPORT_FEDERATION",
+            "SPORT_FEDERATION": "SPORT_FEDERATION",
+        }
+        return mapping.get(normalized, "SPORT_CLUB")
+
+    def _premium_question_section_id(self, question_id: str) -> str:
+        mapping = {
+            "sc_mobile_fan_platform": "quick_actions",
+            "sc_digital_transformation": "strategic_analysis",
+            "sc_ticketing_ecommerce": "quick_actions",
+            "sc_analytics_data_platform": "digital_maturity",
+            "sc_fan_engagement_gaps": "outreach_strategy",
+            "sc_stadium_technology": "quick_actions",
+            "sc_legacy_replacement": "digital_maturity",
+            "sf_governance_structure": "leadership",
+            "sf_digital_transformation": "strategic_analysis",
+            "sf_event_platform": "quick_actions",
+            "sf_member_engagement": "outreach_strategy",
+            "sf_analytics_data": "digital_maturity",
+            "sf_legacy_replacement": "digital_maturity",
+            "sl_competition_operations": "strategic_analysis",
+            "sl_media_broadcast": "connections",
+            "sl_fan_experience": "outreach_strategy",
+            "sl_analytics_platform": "digital_maturity",
+            "sl_legacy_replacement": "strategic_analysis",
+        }
+        return mapping.get(str(question_id or "").strip(), "quick_actions")
+
+    def _premium_question_type(self, question_text: str, section_id: str) -> DossierQuestionType:
+        text = str(question_text or "").lower()
+        if section_id == "leadership":
+            return DossierQuestionType.LEADERSHIP
+        if section_id == "digital_maturity":
+            return DossierQuestionType.DIGITAL_MATURITY if "maturity" in text else DossierQuestionType.TECHNOLOGY
+        if section_id == "quick_actions":
+            if any(token in text for token in ("budget", "spend", "cost", "financial", "invest")):
+                return DossierQuestionType.BUDGET
+            if any(token in text for token in ("when", "timeline", "window", "procurement", "tender", "rfp", "rfq")):
+                return DossierQuestionType.PROCUREMENT_TIMING
+            return DossierQuestionType.GENERAL
+        if section_id in {"strategic_analysis", "outreach_strategy"}:
+            return DossierQuestionType.STRATEGY
+        if section_id == "connections":
+            return DossierQuestionType.PARTNERSHIPS
+        return DossierQuestionType.GENERAL
+
+    def _build_premium_entity_type_questions(
+        self,
+        *,
+        entity_id: str,
+        entity_name: str,
+        entity_type: str,
+    ) -> List[DossierQuestion]:
+        corpus_key = self._entity_type_question_corpus_key(entity_type)
+        question_templates = get_questions_for_entity_type(corpus_key)
+
+        try:
+            from backend.dossier_question_extractor import DossierQuestionExtractor
+        except ImportError:
+            from dossier_question_extractor import DossierQuestionExtractor  # type: ignore
+
+        question_extractor = DossierQuestionExtractor(self.claude_client, disable_ai_questions=True)
+        timestamp = int(datetime.now(timezone.utc).timestamp())
+        premium_questions: List[DossierQuestion] = []
+
+        for idx, template in enumerate(question_templates):
+            question_text = template.question.format(entity=entity_name)
+            section_id = self._premium_question_section_id(template.question_id)
+            question_type = self._premium_question_type(question_text, section_id)
+            try:
+                search_strategy = question_extractor._generate_search_strategy(
+                    question_text,
+                    question_type,
+                    entity_name,
+                )
+            except Exception:
+                search_strategy = {}
+            premium_questions.append(
+                DossierQuestion(
+                    question_id=f"q_tpl_{section_id}_{idx}_{timestamp}",
+                    section_id=section_id,
+                    question_type=question_type,
+                    question_text=question_text,
+                    priority=max(4, min(10, int(round(5 + template.confidence_boost * 10)))),
+                    confidence=0.0,
+                    status=DossierQuestionStatus.PENDING,
+                    search_strategy=search_strategy or {},
+                )
+            )
+
+        return premium_questions
 
     def _determine_tier(self, priority_score: int) -> str:
         """
@@ -558,17 +665,32 @@ Website: N/A
             dossier.questions = []
         else:
             try:
-                try:
-                    from backend.dossier_question_extractor import DossierQuestionExtractor
-                except ImportError:
-                    from dossier_question_extractor import DossierQuestionExtractor
-                question_extractor = DossierQuestionExtractor(self.claude_client)
-                dossier.questions = await question_extractor.extract_questions_from_dossier(
-                    dossier.sections,
-                    entity_name,
-                    max_per_section=3
-                )
-                logger.info(f"Extracted {len(dossier.questions)} questions from dossier sections")
+                if bool(objective_profile.get("disable_ai_question_generation", False)):
+                    dossier.questions = self._build_premium_entity_type_questions(
+                        entity_id=entity_id,
+                        entity_name=entity_name,
+                        entity_type=entity_type,
+                    )
+                    logger.info(
+                        "Generated %s premium entity-type questions for %s",
+                        len(dossier.questions),
+                        entity_name,
+                    )
+                else:
+                    try:
+                        from backend.dossier_question_extractor import DossierQuestionExtractor
+                    except ImportError:
+                        from dossier_question_extractor import DossierQuestionExtractor
+                    question_extractor = DossierQuestionExtractor(
+                        self.claude_client,
+                        disable_ai_questions=bool(objective_profile.get("disable_ai_question_generation", False)),
+                    )
+                    dossier.questions = await question_extractor.extract_questions_from_dossier(
+                        dossier.sections,
+                        entity_name,
+                        max_per_section=3
+                    )
+                    logger.info(f"Extracted {len(dossier.questions)} questions from dossier sections")
             except Exception as e:
                 logger.warning(f"Could not extract questions from dossier: {e}")
                 dossier.questions = []

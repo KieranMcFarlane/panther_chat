@@ -94,21 +94,21 @@ class BrightDataFastMCPClient:
             arguments["cursor"] = cursor
         result = await self._call_tool("search_engine", arguments)
         if result is None:
-            return {"status": "error", "error": "FastMCP unavailable", "query": query, "transport_retryable": True}
+            return {"status": "error", "error": "FastMCP unavailable", "query": query, "use_http_fallback": True}
         result.setdefault("timestamp", datetime.now().isoformat())
         return result
 
     async def scrape_as_markdown(self, url: str) -> Dict[str, Any]:
         result = await self._call_tool("scrape_as_markdown", {"url": url})
         if result is None:
-            return {"status": "error", "error": "FastMCP unavailable", "url": url, "transport_retryable": True}
+            return {"status": "error", "error": "FastMCP unavailable", "url": url, "use_http_fallback": True}
         result.setdefault("timestamp", datetime.now().isoformat())
         return result
 
     async def scrape_batch(self, urls: List[str]) -> Dict[str, Any]:
         result = await self._call_tool("scrape_batch", {"urls": urls})
         if result is None:
-            return {"status": "error", "error": "FastMCP unavailable", "total_urls": len(urls), "transport_retryable": True}
+            return {"status": "error", "error": "FastMCP unavailable", "total_urls": len(urls), "use_http_fallback": True}
         result.setdefault("timestamp", datetime.now().isoformat())
         return result
 
@@ -117,7 +117,7 @@ class BrightDataFastMCPClient:
             "status": "error",
             "error": "FastMCP unavailable",
             "entity_name": entity_name,
-            "transport_retryable": True,
+            "use_http_fallback": True,
         }
 
     async def scrape_press_release(self, entity_name: str) -> Dict[str, Any]:
@@ -125,7 +125,7 @@ class BrightDataFastMCPClient:
             "status": "error",
             "error": "FastMCP unavailable",
             "entity_name": entity_name,
-            "transport_retryable": True,
+            "use_http_fallback": True,
         }
 
     async def close(self):

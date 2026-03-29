@@ -32,8 +32,6 @@ export function useEntity(entityId: string | null) {
 
   return {
     entity: data?.entity || null,
-    dossier: data?.dossier || null,
-    pipelineStatus: data?.pipeline_status || null,
     error,
     isLoading
   }

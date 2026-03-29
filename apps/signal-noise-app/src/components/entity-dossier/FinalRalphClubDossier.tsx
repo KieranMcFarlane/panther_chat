@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -21,7 +21,6 @@ import {
   Mail,
   MapPin,
   MessageSquare,
-  Layers3,
   Network,
   Target,
   Users,
@@ -29,20 +28,12 @@ import {
 } from "lucide-react"
 
 import { Entity, formatValue, getEntityPriority } from './types'
-import { buildHumanContextDossier } from "@/lib/human-context-dossier"
-import { applyLiveTabStatus } from "@/lib/dossier-live-tab-status"
 import { buildDossierTabs } from '@/lib/dossier-tabs'
-import EntityQuestionPackRail from './EntityQuestionPackRail'
-import DossierPhaseRail from '../discovery/DossierPhaseRail'
-import type { EntityGraphEpisode } from "@/lib/entity-graph-timeline"
-import type { EntityQuestionPack } from "@/lib/entity-question-pack"
 
 interface FinalRalphClubDossierProps {
   entity: Entity
   onEmailEntity: () => void
   dossier: any
-  questionPack?: EntityQuestionPack | null
-  graphEpisodes?: EntityGraphEpisode[] | null
 }
 
 function valueOrFallback(value: any, fallback: string) {
@@ -67,51 +58,12 @@ function renderBulletList(items: any[], emptyLabel: string) {
   )
 }
 
-export function FinalRalphClubDossier({ entity, onEmailEntity, dossier, questionPack = null, graphEpisodes = [] }: FinalRalphClubDossierProps) {
+export function FinalRalphClubDossier({ entity, onEmailEntity, dossier }: FinalRalphClubDossierProps) {
   const [activeTab, setActiveTab] = useState('overview')
 
   const props = entity.properties
   const priority = getEntityPriority(entity)
-  const humanContext = useMemo(() => buildHumanContextDossier(dossier, entity), [dossier, entity])
-  const tabs = useMemo(
-    () => buildDossierTabs(dossier, humanContext, { entityType: valueOrFallback(props.type, 'Club') }),
-    [dossier, humanContext, props.type],
-  )
-  const questionPackWriteback = questionPack?.service_context?.writeback || null
-  const featuredQuestions = questionPack?.questions?.slice(0, 3) || []
-  const liveTabEvents = useMemo(
-    () =>
-      questionPack || graphEpisodes.length > 0
-        ? [
-            {
-              type: 'graph_update',
-              timestamp: graphEpisodes[0]?.created_at || new Date().toISOString(),
-              data: {
-                phaseIndex: questionPackWriteback?.persisted ? 5 : graphEpisodes.length > 0 ? 3 : 1,
-                sectionStatuses: {
-                  questions: questionPack ? 'filled' : 'missing',
-                  overview: humanContext.sections.overview.status,
-                  'commercial-digital-context': humanContext.sections.commercial_digital_context.status,
-                  'temporal-relational-context':
-                    graphEpisodes.length > 0 ? 'partial' : humanContext.sections.temporal_relational_context.status,
-                  procurement: humanContext.sections.opportunity_narrative.status,
-                  'digital-transformation': humanContext.sections.commercial_digital_context.status,
-                  'strategic-analysis': humanContext.sections.opportunity_narrative.status,
-                  opportunities: humanContext.sections.opportunity_narrative.status,
-                  leadership: humanContext.sections.leadership_decision_shape.status,
-                  connections: humanContext.sections.relationship_access.status,
-                  'implementation-roadmap': dossier?.implementation_roadmap ? 'partial' : 'missing',
-                  contact: humanContext.sections.relationship_access.status,
-                  outreach: humanContext.sections.recommended_approach.status,
-                  system: questionPackWriteback?.persisted ? 'filled' : 'partial',
-                },
-              },
-            },
-          ]
-        : [],
-    [graphEpisodes, humanContext, dossier, questionPack, questionPackWriteback],
-  )
-  const tabsWithStatus = useMemo(() => applyLiveTabStatus(tabs, liveTabEvents), [tabs, liveTabEvents])
+  const tabs = useMemo(() => buildDossierTabs(dossier, { entityType: valueOrFallback(props.type, 'Club') }), [dossier, props.type])
 
   const coreInfo = dossier?.core_info || {}
   const digital = dossier?.digital_transformation || {}
@@ -172,7 +124,7 @@ export function FinalRalphClubDossier({ entity, onEmailEntity, dossier, question
             </div>
           </div>
         </CardHeader>
-        <CardContent className="grid gap-4 md:grid-cols-3">
+        <CardContent className="grid gap-4 md:grid-cols-4">
           <div className="rounded-lg border border-sky-200 bg-sky-50 p-4">
             <div className="text-sm font-medium text-sky-700">Dossier confidence</div>
             <div className="mt-1 text-2xl font-bold text-sky-950">
@@ -192,101 +144,26 @@ export function FinalRalphClubDossier({ entity, onEmailEntity, dossier, question
             </div>
           </div>
           <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
-            <div className="text-sm font-medium text-amber-700">Question pack</div>
+            <div className="text-sm font-medium text-amber-700">Roadmap phases</div>
             <div className="mt-1 text-lg font-semibold text-amber-950">
-              {questionPack?.question_count || 0} questions
+              {Object.keys(roadmap || {}).length || 0} defined
             </div>
           </div>
         </CardContent>
       </Card>
-
-      <Card className="border border-emerald-200 bg-emerald-50/70 shadow-lg">
-        <CardHeader className="pb-4">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div className="space-y-2">
-              <CardTitle className="flex items-center gap-2 text-2xl text-emerald-950">
-                <Layers3 className="h-5 w-5 text-emerald-600" />
-                Active question queue
-              </CardTitle>
-              <CardDescription className="max-w-3xl text-base leading-7 text-emerald-800">
-                This is the working queue for the persisted dossier. It should be the first thing you scan before drilling into tabs.
-              </CardDescription>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Badge className="border-emerald-400/20 bg-emerald-500/15 px-3 py-1 text-emerald-900">
-                {questionPack?.question_count || 0} questions
-              </Badge>
-              <Badge className="border-emerald-400/20 bg-emerald-500/15 px-3 py-1 text-emerald-900">
-                {questionPackWriteback?.persisted ? 'Persisted writeback' : 'Pending writeback'}
-              </Badge>
-              <Badge className="border-emerald-400/20 bg-emerald-500/15 px-3 py-1 text-emerald-900">
-                {questionPack?.entity_type || valueOrFallback(props.type, 'Club')}
-              </Badge>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-5">
-          <div className="grid gap-4 md:grid-cols-3">
-            {featuredQuestions.map((question: any) => (
-              <div key={question.question_id} className="min-h-[164px] rounded-3xl border border-emerald-200 bg-white/85 p-5 shadow-sm">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="text-base font-semibold leading-6 text-emerald-950">{question.question}</div>
-                  <Badge variant="outline" className="border-emerald-300 px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-emerald-700">
-                    {question.positioning_strategy.replace(/_/g, ' ').toLowerCase()}
-                  </Badge>
-                </div>
-                <p className="mt-3 text-sm leading-6 text-emerald-800">{question.accept_criteria}</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {question.yp_service_fit.slice(0, 2).map((service: string) => (
-                    <Badge key={`${question.question_id}-${service}`} variant="secondary" className="px-2.5 py-1 text-[11px]">
-                      {service.replace(/_/g, ' ').toLowerCase()}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-          {questionPackWriteback?.artifact_path && (
-            <div className="rounded-2xl border border-emerald-200 bg-emerald-100/60 p-4 text-sm text-emerald-950">
-              <span className="font-semibold">Persisted artifact:</span> {String(questionPackWriteback.artifact_path)}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      <div className="mb-6">
-        <DossierPhaseRail
-          entityName={valueOrFallback(props.name, 'Club')}
-          dossier={dossier}
-          nextAction={humanContext.sections.recommended_approach.content.next_best_action}
-        />
-      </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="flex h-auto w-full flex-wrap gap-1 rounded-lg bg-gray-100 p-1">
-          {tabsWithStatus.map((tab) => (
+        <TabsList className="grid h-auto w-full grid-cols-5 gap-1 rounded-lg bg-gray-100 p-1 md:grid-cols-10">
+          {tabs.map((tab) => (
             <TabsTrigger
               key={tab.value}
               value={tab.value}
-              className="flex min-w-[180px] flex-1 items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
             >
               <span>{tab.label}</span>
-              {tab.status && (
-                <Badge variant="outline" className="ml-auto border-slate-300 text-[10px] uppercase tracking-[0.18em] text-slate-500">
-                  {tab.status}
-                </Badge>
-              )}
             </TabsTrigger>
           ))}
         </TabsList>
-
-        <TabsContent value="questions" className="space-y-6">
-          <EntityQuestionPackRail
-            entityName={valueOrFallback(coreInfo.name, props.name || 'Club')}
-            entityType={valueOrFallback(props.type, 'Club')}
-            questionPack={questionPack}
-          />
-        </TabsContent>
 
         <TabsContent value="overview" className="space-y-6">
           <div className="grid gap-6 lg:grid-cols-3">
@@ -341,94 +218,6 @@ export function FinalRalphClubDossier({ entity, onEmailEntity, dossier, question
                   <div className="text-sm font-semibold text-sky-900">Recommended Approach</div>
                   <p className="mt-1 text-sm text-sky-700">{valueOrFallback(strategic.recommended_approach, 'Begin with evidence gathering and a scoped pilot')}</p>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="commercial-digital-context" className="space-y-6">
-          <div className="grid gap-6 lg:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-blue-600" />
-                  Commercial / Digital Context
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="rounded-lg border border-sky-200 bg-sky-50 p-4">
-                  <div className="text-sm font-semibold text-sky-900">Digital maturity summary</div>
-                  <p className="mt-1 text-sm text-sky-700">{valueOrFallback(humanContext.sections.commercial_digital_context.content.digital_maturity_summary, 'Not yet established')}</p>
-                </div>
-                <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4">
-                  <div className="text-sm font-semibold text-emerald-900">Commercial motion</div>
-                  <p className="mt-1 text-sm text-emerald-700">{valueOrFallback(humanContext.sections.commercial_digital_context.content.commercial_motion, 'Not yet established')}</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Brain className="h-5 w-5 text-purple-600" />
-                  Fan / Data Signals
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {renderBulletList(humanContext.sections.commercial_digital_context.content.fan_or_data_signals, 'No fan/data signals yet.')}
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="temporal-relational-context" className="space-y-6">
-          <div className="grid gap-6 lg:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Activity className="h-5 w-5 text-cyan-600" />
-                  Timeline Anchors
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {renderBulletList(humanContext.sections.temporal_relational_context.content.timeline_anchors, 'No timeline anchors yet.')}
-              </CardContent>
-            </Card>
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Network className="h-5 w-5 text-indigo-600" />
-                      Timeline episodes
-                    </CardTitle>
-                  </CardHeader>
-              <CardContent className="space-y-3">
-                {graphEpisodes.length > 0 ? (
-                  <div className="space-y-3">
-                    {graphEpisodes.slice(0, 6).map((episode) => (
-                      <div key={episode.id} className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="text-sm font-semibold text-slate-900">{episode.summary}</div>
-                          <Badge variant="outline">{episode.category}</Badge>
-                        </div>
-                        <div className="mt-2 text-xs text-slate-500">
-                          {episode.created_at ? new Date(episode.created_at).toLocaleString() : 'Unknown date'}
-                        </div>
-                        <div className="mt-2 flex items-center gap-2 text-xs text-slate-600">
-                          {episode.source_url ? (
-                            <a href={episode.source_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-blue-600 hover:underline">
-                              <ExternalLink className="h-3.5 w-3.5" />
-                              Open source
-                            </a>
-                          ) : (
-                            <span>Source unavailable</span>
-                          )}
-                          {episode.source_domain && <span>• {episode.source_domain}</span>}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-slate-500">No graph episodes available yet.</p>
-                )}
               </CardContent>
             </Card>
           </div>
@@ -662,37 +451,6 @@ export function FinalRalphClubDossier({ entity, onEmailEntity, dossier, question
               ) : (
                 <p className="text-sm text-slate-500">No roadmap data available yet.</p>
               )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="system" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Layers3 className="h-5 w-5 text-slate-600" />
-                System Writeback
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-4 md:grid-cols-3">
-              <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-                <div className="text-sm font-medium text-slate-500">Question pack</div>
-                <div className="mt-1 text-lg font-semibold text-slate-900">
-                  {questionPack?.question_count ?? 0} questions
-                </div>
-              </div>
-              <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-                <div className="text-sm font-medium text-slate-500">Writeback</div>
-                <div className="mt-1 text-lg font-semibold text-slate-900">
-                  {questionPackWriteback?.persisted ? 'Persisted' : 'Pending'}
-                </div>
-              </div>
-              <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-                <div className="text-sm font-medium text-slate-500">Artifact path</div>
-                <div className="mt-1 break-all text-sm font-semibold text-slate-900">
-                  {String(questionPackWriteback?.artifact_path || 'Unknown')}
-                </div>
-              </div>
             </CardContent>
           </Card>
         </TabsContent>

@@ -29,9 +29,11 @@ from dataclasses import dataclass
 try:
     from backend.schemas import DossierQuestion, DossierQuestionType, DossierQuestionStatus, DossierSection
     from backend.claude_client import ClaudeClient
+    from backend.question_first_dossier_runner import _question_search_hints
 except ImportError:
     from schemas import DossierQuestion, DossierQuestionType, DossierQuestionStatus, DossierSection
     from claude_client import ClaudeClient
+    from question_first_dossier_runner import _question_search_hints  # type: ignore
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +46,7 @@ class DossierQuestionExtractor:
     intelligence gaps that subsequent discovery passes should fill.
     """
 
-    def __init__(self, claude_client: ClaudeClient):
+    def __init__(self, claude_client: ClaudeClient, disable_ai_questions: Optional[bool] = None):
         """
         Initialize question extractor
 
@@ -52,10 +54,13 @@ class DossierQuestionExtractor:
             claude_client: Claude client for AI-powered extraction
         """
         self.claude_client = claude_client
-        self.disable_ai_questions = (
-            str(os.getenv("DOSSIER_DISABLE_AI_QUESTION_EXTRACTION", "")).strip().lower()
-            in {"1", "true", "yes", "on"}
-        )
+        if disable_ai_questions is None:
+            self.disable_ai_questions = (
+                str(os.getenv("DOSSIER_DISABLE_AI_QUESTION_EXTRACTION", "")).strip().lower()
+                in {"1", "true", "yes", "on"}
+            )
+        else:
+            self.disable_ai_questions = bool(disable_ai_questions)
 
         # Section-specific question templates
         self.section_question_templates = {
@@ -342,11 +347,29 @@ class DossierQuestionExtractor:
         }
 
         question_lower = question_text.lower()
+        hinted_queries = _question_search_hints(
+            {
+                "question_text": question_text,
+                "section_id": {
+                    DossierQuestionType.LEADERSHIP: "leadership",
+                    DossierQuestionType.TECHNOLOGY: "digital_maturity",
+                    DossierQuestionType.PROCUREMENT_TIMING: "quick_actions",
+                    DossierQuestionType.BUDGET: "quick_actions",
+                    DossierQuestionType.DIGITAL_MATURITY: "digital_maturity",
+                    DossierQuestionType.PARTNERSHIPS: "connections",
+                    DossierQuestionType.CHALLENGES: "challenges_opportunities",
+                    DossierQuestionType.STRATEGY: "strategic_analysis",
+                    DossierQuestionType.COMPETITIVE: "strategic_analysis",
+                    DossierQuestionType.GENERAL: "core_information",
+                }.get(question_type, "core_information"),
+            },
+            entity_name,
+        )
 
         # Leadership questions
         if question_type == DossierQuestionType.LEADERSHIP:
             strategy["primary_sources"] = ["official_site", "linkedin", "press_releases"]
-            strategy["search_queries"] = [
+            strategy["search_queries"] = hinted_queries or [
                 f'"{entity_name}" leadership team',
                 f'"{entity_name}" decision maker technology',
                 f'"{entity_name}" CTO CIO director'
@@ -366,7 +389,7 @@ class DossierQuestionExtractor:
         # Procurement timing questions
         elif question_type == DossierQuestionType.PROCUREMENT_TIMING:
             strategy["primary_sources"] = ["tender_portals", "official_site", "press_releases"]
-            strategy["search_queries"] = [
+            strategy["search_queries"] = hinted_queries or [
                 f'"{entity_name}" procurement timeline',
                 f'"{entity_name}" tender',
                 f'"{entity_name}" RFP'
@@ -376,7 +399,7 @@ class DossierQuestionExtractor:
         # Budget questions
         elif question_type == DossierQuestionType.BUDGET:
             strategy["primary_sources"] = ["annual_reports", "financial_statements", "press_releases"]
-            strategy["search_queries"] = [
+            strategy["search_queries"] = hinted_queries or [
                 f'"{entity_name}" annual report',
                 f'"{entity_name}" revenue',
                 f'"{entity_name}" financial results'
@@ -386,7 +409,7 @@ class DossierQuestionExtractor:
         # Default strategy
         else:
             strategy["primary_sources"] = ["official_site", "news", "press_releases"]
-            strategy["search_queries"] = [
+            strategy["search_queries"] = hinted_queries or [
                 f'"{entity_name}" {question_text.replace("?", "")}'
             ]
             strategy["hop_types"] = ["official_site", "news"]
@@ -438,10 +461,12 @@ Generate {count} questions (one per line) that:
 
 Questions:"""
 
-            # Call Claude (use Haiku for cost efficiency)
+            # Call Claude via the judge path so question extraction uses the
+            # same evidence-aware reasoning stack as discovery.
+            question_model = str(os.getenv("DOSSIER_QUESTION_MODEL", "judge")).strip() or "judge"
             response = await self.claude_client.query(
                 prompt,
-                model="haiku",
+                model=question_model,
                 max_tokens=500
             )
 

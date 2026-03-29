@@ -44,10 +44,6 @@ import { Button } from '@/components/ui/button';
 // Enhanced navigation items with graph submenu
 const navItems = [
   { icon: Home, label: 'Home', href: '/' },
-  { icon: Target, label: 'Scout', href: '/scout' },
-  { icon: Zap, label: 'Enrichment', href: '/enrichment' },
-  { icon: FileText, label: 'Opportunities', href: '/opportunities' },
-  { icon: BarChart3, label: 'Pipeline', href: '/pipeline' },
   { icon: Search, label: 'Entities', href: '/entity-browser' },
   { icon: FileText, label: 'Tenders', href: '/tenders' },
   { icon: Brain, label: 'RFP Intelligence', href: '/rfp-intelligence' },

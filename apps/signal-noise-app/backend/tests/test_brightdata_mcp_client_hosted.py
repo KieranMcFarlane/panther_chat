@@ -55,19 +55,6 @@ class _FakeFastMCPClient:
         return SimpleNamespace(content=[SimpleNamespace(text=json.dumps(payload))])
 
 
-class _FlakySession:
-    def __init__(self, *, fail_once: bool, payload: dict[str, object]):
-        self.fail_once = fail_once
-        self.payload = payload
-        self.calls = 0
-
-    async def call_tool(self, name, arguments=None):
-        self.calls += 1
-        if self.fail_once and self.calls == 1:
-            raise RuntimeError("Client is not connected. Use the 'async with client:' context manager first.")
-        return SimpleNamespace(content=[SimpleNamespace(text=json.dumps(self.payload))])
-
-
 @pytest.mark.asyncio
 async def test_brightdata_mcp_client_uses_hosted_sse(monkeypatch):
     monkeypatch.setenv("BRIGHTDATA_API_TOKEN", "test-token")
@@ -93,57 +80,3 @@ async def test_brightdata_mcp_client_uses_hosted_sse(monkeypatch):
         "engine": "google",
         "geo_location": "us",
     }
-
-
-def test_brightdata_mcp_client_defaults_to_hosted_mcp_endpoint(monkeypatch):
-    monkeypatch.setenv("BRIGHTDATA_API_TOKEN", "test-token")
-    monkeypatch.delenv("BRIGHTDATA_MCP_HOSTED_URL", raising=False)
-    monkeypatch.delenv("BRIGHTDATA_MCP_USE_HOSTED", raising=False)
-
-    module = importlib.import_module("brightdata_mcp_client")
-    client = module.BrightDataMCPClient(timeout=1.0)
-
-    assert client._hosted_mcp_url == "https://mcp.brightdata.com/mcp?token=test-token"
-    assert client._transport == "hosted_sse"
-
-
-@pytest.mark.asyncio
-async def test_brightdata_mcp_client_reconnects_after_stale_session(monkeypatch):
-    monkeypatch.setenv("BRIGHTDATA_API_TOKEN", "test-token")
-    monkeypatch.setenv("BRIGHTDATA_MCP_USE_HOSTED", "true")
-
-    module = importlib.import_module("brightdata_mcp_client")
-    monkeypatch.setattr(module, "_HOSTED_MCP_DEFAULT_URL", "https://mcp.brightdata.com/mcp", raising=False)
-
-    client = module.BrightDataMCPClient(timeout=1.0)
-    first_session = _FlakySession(
-        fail_once=True,
-        payload={"results": [{"title": "stale", "url": "https://example.com/stale", "snippet": "stale"}]},
-    )
-    second_session = _FlakySession(
-        fail_once=False,
-        payload={"results": [{"title": "recovered", "url": "https://example.com/recovered", "snippet": "fresh"}]},
-    )
-    client.session = first_session
-    client._available = True
-    client._mcp_available = True
-    client._transport_context = None
-
-    reconnects = {"count": 0}
-
-    async def fake_ensure_session():
-        reconnects["count"] += 1
-        if reconnects["count"] == 1:
-            client.session = first_session
-            client._available = True
-        else:
-            client.session = second_session
-            client._available = True
-
-    monkeypatch.setattr(client, "_ensure_session", fake_ensure_session)
-
-    result = await client.search_engine("Major League Cricket RFP tender procurement", num_results=1)
-
-    assert result["status"] == "success"
-    assert result["results"][0]["title"] == "recovered"
-    assert reconnects["count"] == 2

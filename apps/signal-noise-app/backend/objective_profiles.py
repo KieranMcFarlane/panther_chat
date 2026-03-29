@@ -54,8 +54,8 @@ OBJECTIVE_PROFILES: Dict[str, Dict[str, Any]] = {
         "enable_question_extraction": False,
         "strict_json_extraction": True,
         "fast_fail_length": True,
-        "pass_a_lanes": ["rfp_procurement_tenders", "annual_report", "governance_pdf"],
-        "pass_b_lanes": ["official_site", "press_release", "trusted_news", "careers"],
+        "pass_a_lanes": ["official_site", "press_release", "trusted_news", "careers"],
+        "pass_b_lanes": ["rfp_procurement_tenders", "annual_report", "governance_pdf"],
         "budget": {
             "max_hops": 5,
             "max_evals_per_hop": 2,
@@ -82,6 +82,7 @@ OBJECTIVE_PROFILES: Dict[str, Dict[str, Any]] = {
     "leadership_enrichment": {
         "enable_leadership_enrichment": True,
         "enable_question_extraction": True,
+        "disable_ai_question_generation": True,
         "strict_json_extraction": True,
         "fast_fail_length": True,
         "pass_a_lanes": ["official_site", "careers", "trusted_news", "linkedin_jobs"],
