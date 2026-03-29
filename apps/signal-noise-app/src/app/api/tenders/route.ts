@@ -98,6 +98,7 @@ function normalizeCuratedOpportunity(
       organization: opportunity.organization,
       title: opportunity.title,
       description: opportunity.description,
+      source_url: opportunity.url,
     },
     canonicalEntities,
   )

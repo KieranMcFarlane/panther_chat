@@ -1,11 +1,11 @@
 # Curated Opportunity Linkage QA Report
 
-Date: 2026-03-29T19:24:23.124Z
+Date: 2026-03-29T19:35:05.764Z
 
 ## Summary
 - Imported curated rows reviewed: 72
-- Likely correct links: 58
-- Unlinked rows: 14
+- Likely correct links: 59
+- Unlinked rows: 13
 - Suspicious linked rows: 0
 
 ## Smoke Entities
@@ -23,7 +23,6 @@ Date: 2026-03-29T19:24:23.124Z
 
 ## Unlinked Rows
 - Tennis Australia | Tournament Digital Platform Overhaul
-- French Football Federation (FFF) | Mobile Engagement & Digital Transformation
 - Major League Baseball | Advanced Analytics & Fan Platform
 - Korea Football Association | Digital Transformation & Fan Platform Development
 - U.S. Soccer Federation | Digital Platform & Fan Engagement System
@@ -38,7 +37,12 @@ Date: 2026-03-29T19:24:23.124Z
 - USA Club Rugby | USA Club Rugby National Championship Events Hosting
 
 ## Recommended Next Matcher Fixes
-- Add alias dictionaries for governing bodies and national federations that still remain unlinked, especially football federations and Olympic/NGB style operators.
+- Add the missing governing-body entities to the canonical graph before widening curated coverage further:
+  - Korea Football Association
+  - U.S. Soccer Federation
+  - Mexican Football Federation
+  - USA Cricket
+  - USA Cycling
 - Keep domain-aware overrides for official hosts and extend them incrementally from observed failures, not speculative coverage.
 - Preserve the forced curated-row re-link path so future matcher improvements can remediate existing imports in place.
 - Keep the QA gate strict: if official-host evidence is absent and overlap is weak, leave the row unlinked.

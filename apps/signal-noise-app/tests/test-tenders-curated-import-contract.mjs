@@ -9,3 +9,12 @@ test('tenders API exposes a curated source-backed import action for smoke opport
   assert.match(source, /digital-rfp-opportunities\.js/)
   assert.match(source, /real-rfp-opportunities\.js/)
 })
+
+test('curated import passes source urls into canonical linkage so domain aliases can apply at insert time', async () => {
+  const source = await readFile(new URL('../src/app/api/tenders/route.ts', import.meta.url), 'utf8')
+
+  assert.match(
+    source,
+    /linkOpportunityToCanonicalEntity\s*\(\s*\{\s*[\s\S]*?description:\s*opportunity\.description,\s*[\s\S]*?source_url:\s*opportunity\.url,/,
+  )
+})

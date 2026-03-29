@@ -73,3 +73,78 @@ test('prefers All England Lawn Tennis Association for wimbledon.com curated oppo
   assert.equal(linked.canonical_entity_id, '9992')
   assert.equal(linked.canonical_entity_name, 'All England Lawn Tennis Association')
 })
+
+test('links French Football Federation alias when the canonical federation exists', () => {
+  const linked = linkOpportunityToCanonicalEntity(
+    {
+      organization: 'French Football Federation (FFF)',
+      title: 'Mobile Engagement & Digital Transformation',
+      description:
+        'FFF announces a federation-wide digital transformation programme for football supporters.',
+      source_url: 'https://www.fff.fr/digital-transformation-rfp',
+    },
+    [
+      {
+        id: '2100',
+        properties: { name: 'French Football Federation', type: 'Federation' },
+      },
+    ],
+  )
+
+  assert.equal(linked.canonical_entity_id, '2100')
+  assert.equal(linked.canonical_entity_name, 'French Football Federation')
+})
+
+test('links French Football Federation alias even with noisy generic federation candidates present', () => {
+  const linked = linkOpportunityToCanonicalEntity(
+    {
+      organization: 'French Football Federation (FFF)',
+      title: 'Mobile Engagement & Digital Transformation',
+      description:
+        'FFF announces a federation-wide digital transformation programme for football supporters.',
+      source_url: 'https://www.fff.fr/digital-transformation-rfp',
+    },
+    [
+      {
+        id: 'generic-federation',
+        properties: { name: 'Federation', type: 'Sports Category' },
+      },
+      {
+        id: 'generic-football',
+        properties: { name: 'Football', type: 'Sport Category' },
+      },
+      {
+        id: 'rugby-federation',
+        properties: { name: 'French Rugby Federation', type: 'Federation' },
+      },
+      {
+        id: '2100',
+        properties: { name: 'French Football Federation', type: 'Federation' },
+      },
+    ],
+  )
+
+  assert.equal(linked.canonical_entity_id, '2100')
+  assert.equal(linked.canonical_entity_name, 'French Football Federation')
+})
+
+test('leaves USA Cricket alias opportunities unlinked when the canonical entity is absent', () => {
+  const linked = linkOpportunityToCanonicalEntity(
+    {
+      organization: 'USA Cricket',
+      title: 'Cricket Development and Youth Programs Technology Platform',
+      description:
+        'USA Cricket is requesting proposals for a youth development technology platform.',
+      source_url: 'https://www.usacricket.org/procurement/youth-development-platform-2025',
+    },
+    [
+      {
+        id: '4431',
+        properties: { name: 'Cricket', type: 'Sports Entity' },
+      },
+    ],
+  )
+
+  assert.equal(linked.canonical_entity_id, null)
+  assert.equal(linked.canonical_entity_name, null)
+})

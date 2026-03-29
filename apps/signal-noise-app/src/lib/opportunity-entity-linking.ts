@@ -48,6 +48,33 @@ const DOMAIN_ENTITY_ALIASES: Array<{ host: string; preferredEntities: string[] }
   },
 ]
 
+const ORGANIZATION_ENTITY_ALIASES: Array<{ match: string; preferredEntities: string[] }> = [
+  {
+    match: 'French Football Federation (FFF)',
+    preferredEntities: ['French Football Federation'],
+  },
+  {
+    match: 'Korea Football Association',
+    preferredEntities: ['Korea Football Association'],
+  },
+  {
+    match: 'U.S. Soccer Federation',
+    preferredEntities: ['U.S. Soccer Federation', 'US Soccer Federation'],
+  },
+  {
+    match: 'Mexican Football Federation',
+    preferredEntities: ['Mexican Football Federation'],
+  },
+  {
+    match: 'USA Cricket',
+    preferredEntities: ['USA Cricket'],
+  },
+  {
+    match: 'USA Cycling',
+    preferredEntities: ['USA Cycling'],
+  },
+]
+
 function normalizeName(value: unknown): string {
   return String(value || '')
     .toLowerCase()
@@ -190,6 +217,38 @@ function resolvePreferredDomainAlias(
   }
 }
 
+function resolveOrganizationAlias(
+  opportunity: OpportunityLike,
+  canonicalEntities: CanonicalEntityLike[],
+): CanonicalEntityLike | null {
+  const normalizedOrganization = normalizeName(opportunity.organization)
+  if (!normalizedOrganization) {
+    return null
+  }
+
+  const aliasRule = ORGANIZATION_ENTITY_ALIASES.find((entry) => normalizedOrganization === normalizeName(entry.match))
+  if (!aliasRule) {
+    return null
+  }
+
+  for (const preferredEntity of aliasRule.preferredEntities) {
+    const normalizedPreferred = normalizeName(preferredEntity)
+    const match = canonicalEntities.find((entity) => normalizeName(entity.properties?.name) === normalizedPreferred)
+    if (match) {
+      return match
+    }
+  }
+
+  return {
+    id: null,
+    neo4j_id: null,
+    properties: {
+      name: '__organization_alias_unresolved__',
+      type: 'Alias Guard',
+    },
+  }
+}
+
 function hasStrongMeaningfulOverlap(sourceCandidates: string[], candidateName: string): boolean {
   const candidateMeaningful = meaningfulTokens(candidateName)
 
@@ -228,6 +287,23 @@ export function linkOpportunityToCanonicalEntity<T extends OpportunityLike>(
       ...opportunity,
       canonical_entity_id: String(preferredDomainEntity.id || preferredDomainEntity.neo4j_id || ''),
       canonical_entity_name: String(preferredDomainEntity.properties?.name || ''),
+    }
+  }
+
+  const preferredOrganizationEntity = resolveOrganizationAlias(opportunity, canonicalEntities)
+  if (preferredOrganizationEntity?.properties?.name === '__organization_alias_unresolved__') {
+    return {
+      ...opportunity,
+      canonical_entity_id: null,
+      canonical_entity_name: null,
+    }
+  }
+
+  if (preferredOrganizationEntity) {
+    return {
+      ...opportunity,
+      canonical_entity_id: String(preferredOrganizationEntity.id || preferredOrganizationEntity.neo4j_id || ''),
+      canonical_entity_name: String(preferredOrganizationEntity.properties?.name || ''),
     }
   }
 
