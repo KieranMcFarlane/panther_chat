@@ -290,7 +290,9 @@ export default function EntityBrowserClientPage() {
               <Skeleton className="h-9 w-24 rounded-md" />
               <Skeleton className="h-9 w-20 rounded-md" />
             </div>
-            <p className="mt-4 text-sm text-muted-foreground">Loading first page quickly with cached entity data and taxonomy.</p>
+            <p className="mt-4 text-sm text-muted-foreground">
+              Hydrating entity browser from cached snapshot and taxonomy.
+            </p>
           </div>
         </div>
 

@@ -8,7 +8,7 @@ const clientPageSource = readFileSync(clientPagePath, 'utf8')
 test('entity browser loading state matches the page layout instead of a blank spinner', () => {
   assert.match(clientPageSource, /import \{ Skeleton \} from ['"]@\/components\/ui\/skeleton['"]/)
   assert.match(clientPageSource, /min-h-screen bg-background/)
-  assert.match(clientPageSource, /Loading first page quickly/)
+  assert.match(clientPageSource, /Hydrating entity browser from cached snapshot and taxonomy/)
   assert.match(clientPageSource, /Array\.from\(\{ length: 5 \}\)\.map/)
   assert.match(clientPageSource, /Array\.from\(\{ length: 6 \}\)\.map/)
 })
