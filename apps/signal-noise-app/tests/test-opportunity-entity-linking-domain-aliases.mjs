@@ -149,6 +149,27 @@ test('leaves USA Cricket alias opportunities unlinked when the canonical entity 
   assert.equal(linked.canonical_entity_name, null)
 })
 
+test('leaves athletics.ca governing-body opportunities unlinked when the canonical entity is absent', () => {
+  const linked = linkOpportunityToCanonicalEntity(
+    {
+      organization: 'Athletics Canada',
+      title: 'Canadian 10,000m Championships Hosting',
+      description:
+        'Athletics Canada is currently searching for a host for the Canadian 10,000m championships.',
+      source_url: 'https://athletics.ca/wp-content/uploads/2024/09/bid-handbook.pdf',
+    },
+    [
+      {
+        id: '3389',
+        properties: { name: 'EFL Championship', type: 'League' },
+      },
+    ],
+  )
+
+  assert.equal(linked.canonical_entity_id, null)
+  assert.equal(linked.canonical_entity_name, null)
+})
+
 test('keeps Volleyball World opportunities unlinked when the only strong candidate is an unrelated club brand', () => {
   const linked = linkOpportunityToCanonicalEntity(
     {
@@ -183,6 +204,113 @@ test('keeps Australian Sports Commission opportunities unlinked when the best le
       {
         id: '1934',
         properties: { name: 'Sporting CP', type: 'Club' },
+      },
+    ],
+  )
+
+  assert.equal(linked.canonical_entity_id, null)
+  assert.equal(linked.canonical_entity_name, null)
+})
+
+test('keeps government agency opportunities unlinked when the candidate is a sports league brand', () => {
+  const linked = linkOpportunityToCanonicalEntity(
+    {
+      organization: 'Government of Odisha',
+      title: 'World Athletics Continental Tour Event Management Agency',
+      description:
+        'Government of Odisha procurement for a World Athletics Continental Tour event management agency.',
+      source_url: 'https://odisha.gov.in/',
+    },
+    [
+      {
+        id: '2503',
+        properties: { name: 'WTA Tour', type: 'League' },
+      },
+    ],
+  )
+
+  assert.equal(linked.canonical_entity_id, null)
+  assert.equal(linked.canonical_entity_name, null)
+})
+
+test('keeps government agency opportunities unlinked when an event brand is typed as organization', () => {
+  const linked = linkOpportunityToCanonicalEntity(
+    {
+      organization: 'Government of Odisha',
+      title: 'World Athletics Continental Tour Event Management Agency',
+      description:
+        'Government of Odisha procurement for a World Athletics Continental Tour event management agency.',
+      source_url: 'https://odisha.gov.in/',
+    },
+    [
+      {
+        id: '2503',
+        properties: { name: 'WTA Tour', type: 'Organization' },
+      },
+    ],
+  )
+
+  assert.equal(linked.canonical_entity_id, null)
+  assert.equal(linked.canonical_entity_name, null)
+})
+
+test('keeps federation opportunities unlinked when the only candidate is an unrelated league', () => {
+  const linked = linkOpportunityToCanonicalEntity(
+    {
+      organization: 'World Karate Federation (WKF)',
+      title: 'Digital Platform and Championships Technology Services',
+      description:
+        'World Karate Federation procurement for platform and championships technology services.',
+      source_url: 'https://www.wkf.net/procurement-and-tenders',
+    },
+    [
+      {
+        id: '3389',
+        properties: { name: 'EFL Championship', type: 'League' },
+      },
+    ],
+  )
+
+  assert.equal(linked.canonical_entity_id, null)
+  assert.equal(linked.canonical_entity_name, null)
+})
+
+test('keeps mismatched sport associations unlinked when source and candidate sports differ', () => {
+  const linked = linkOpportunityToCanonicalEntity(
+    {
+      organization: 'Hong Kong Volleyball Association',
+      title: 'VNL 2025 Press and Side Event Management Services',
+      description:
+        'Hong Kong Volleyball Association procurement for Volleyball Nations League side-event management services.',
+      source_url:
+        'https://www.vbahk.org.hk/items/media/Volleyball/2025/VNL2025/Tender/vnlhk2025tender_invitation_of_press_and_side_event_management_service.pdf',
+    },
+    [
+      {
+        id: '1565',
+        properties: { name: 'Hong Kong Baseball Association', type: 'Association' },
+      },
+    ],
+  )
+
+  assert.equal(linked.canonical_entity_id, null)
+  assert.equal(linked.canonical_entity_name, null)
+})
+
+test('keeps multi-token organizations unlinked when the candidate name is only a generic sport token', () => {
+  const linked = linkOpportunityToCanonicalEntity(
+    {
+      organization: 'Hockey India',
+      title: 'LED Perimeter Boards & Replay Screens for Hero Hockey India League 2026',
+      description:
+        'Hockey India procurement for LED perimeter boards and replay screens for league operations.',
+      source_url:
+        'https://hockey-india.b-cdn.net/media/uploads/2025/08/RFP-for-Engagement-of-Vendors-to-provide-LED-Perimeter-Boards-Replay-Screens-for-Hero-Hockey-India-League-Men-Women-2026-at-Chennai-Ranchi-and-Bhubaneswar.pdf',
+    },
+    [
+      {
+        id: '3525',
+        properties: { name: 'Hockey', type: 'Sports Entity' },
       },
     ],
   )

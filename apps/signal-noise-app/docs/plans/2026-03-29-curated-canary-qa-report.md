@@ -66,3 +66,30 @@ These are acceptable for now because the current evidence is either too weak or 
 - Keep the current smoke set and product flow.
 - Pause further curated import widening.
 - Spend the next slice on disambiguation quality, not UI.
+
+## Targeted Resolution Rerun
+Date: 2026-03-29T20:40:00Z
+
+- Scope: direct Supabase verification of the 9 previously suspicious persisted curated rows
+- Result:
+  - Suspicious linked rows remaining: 0
+  - Rows now intentionally unlinked: 9
+
+Resolved rows:
+- Government of Odisha
+- Athletics Canada (2 rows)
+- Utah State University
+- Hockey India
+- French Government Digital Services
+- Department of Creative Industries, Tourism and Sport (WA)
+- World Karate Federation (WKF)
+- Hong Kong Volleyball Association
+
+What changed:
+- event-brand detection now treats names like `WTA Tour` as league/tour-style brands even when typed as `Organization`
+- domain-aware unresolved-host guards now keep `athletics.ca` governing-body rows unlinked unless `Athletics Canada` exists in the canonical snapshot
+- forced curated backfill now leaves the previous false-positive set unlinked in persisted data
+
+Next recommendation:
+1. Treat the previous 8-canary false-positive family as resolved
+2. Run a fresh 40-row canary directly from persisted curated rows, not paginated API windows, before widening again

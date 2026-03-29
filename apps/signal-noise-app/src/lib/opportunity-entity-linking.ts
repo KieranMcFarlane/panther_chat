@@ -37,6 +37,54 @@ const GENERIC_ENTITY_TOKENS = new Set([
   'athletics',
 ])
 
+const GOVERNMENT_ORGANIZATION_TOKENS = new Set([
+  'government',
+  'department',
+  'commission',
+  'office',
+  'university',
+  'state',
+  'county',
+])
+
+const FEDERATION_ORGANIZATION_TOKENS = new Set([
+  'federation',
+  'association',
+  'union',
+  'commission',
+  'office',
+])
+
+const SPORT_TOKENS = new Set([
+  'athletics',
+  'baseball',
+  'basketball',
+  'biathlon',
+  'canoe',
+  'canoeing',
+  'cricket',
+  'cycling',
+  'football',
+  'hockey',
+  'karate',
+  'rugby',
+  'tennis',
+  'volleyball',
+])
+
+const EVENT_OR_LEAGUE_BRAND_TOKENS = new Set([
+  'tour',
+  'championship',
+  'championships',
+  'league',
+  'cup',
+  'games',
+  'series',
+  'open',
+  'masters',
+  'trophy',
+])
+
 const DOMAIN_ENTITY_ALIASES: Array<{ host: string; preferredEntities: string[] }> = [
   {
     host: 'ausopen.com',
@@ -45,6 +93,10 @@ const DOMAIN_ENTITY_ALIASES: Array<{ host: string; preferredEntities: string[] }
   {
     host: 'wimbledon.com',
     preferredEntities: ['Wimbledon (The Championships)', 'All England Lawn Tennis Association'],
+  },
+  {
+    host: 'athletics.ca',
+    preferredEntities: ['Athletics Canada'],
   },
 ]
 
@@ -129,6 +181,15 @@ function meaningfulTokens(value: string): string[] {
     .filter(Boolean)
     .filter((token) => token.length > 3 || tokens.length === 1)
     .filter((token) => !GENERIC_ENTITY_TOKENS.has(token))
+}
+
+function rawTokens(value: unknown): string[] {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/[()]/g, ' ')
+    .split(/[^a-z0-9]+/)
+    .filter(Boolean)
 }
 
 function scoreEntityType(entity: CanonicalEntityLike): number {
@@ -289,6 +350,44 @@ function isForbiddenOrganizationCandidatePair(opportunity: OpportunityLike, cand
   })
 }
 
+function sourceLooksLikeGovernmentBody(opportunity: OpportunityLike): boolean {
+  return rawTokens(opportunity.organization).some((token) => GOVERNMENT_ORGANIZATION_TOKENS.has(token))
+}
+
+function sourceLooksLikeFederationBody(opportunity: OpportunityLike): boolean {
+  return rawTokens(opportunity.organization).some((token) => FEDERATION_ORGANIZATION_TOKENS.has(token))
+}
+
+function candidateIsClubOrLeague(entity: CanonicalEntityLike): boolean {
+  const type = String(entity.properties?.type || '').toLowerCase()
+  if (type.includes('club') || type.includes('league') || type.includes('tour')) {
+    return true
+  }
+
+  return rawTokens(entity.properties?.name).some((token) => EVENT_OR_LEAGUE_BRAND_TOKENS.has(token))
+}
+
+function candidateIsGenericSportToken(candidateName: string): boolean {
+  return tokenCount(candidateName) === 1 && (GENERIC_ENTITY_TOKENS.has(candidateName) || SPORT_TOKENS.has(candidateName))
+}
+
+function extractSportToken(value: unknown): string | null {
+  for (const token of rawTokens(value)) {
+    if (SPORT_TOKENS.has(token)) {
+      return token
+    }
+  }
+
+  return null
+}
+
+function hasConflictingSportToken(opportunity: OpportunityLike, candidateName: string): boolean {
+  const sourceSport = extractSportToken(opportunity.organization)
+  const candidateSport = extractSportToken(candidateName)
+
+  return Boolean(sourceSport && candidateSport && sourceSport !== candidateSport)
+}
+
 export function linkOpportunityToCanonicalEntity<T extends OpportunityLike>(
   opportunity: T,
   canonicalEntities: CanonicalEntityLike[],
@@ -350,7 +449,11 @@ export function linkOpportunityToCanonicalEntity<T extends OpportunityLike>(
     !bestMatch ||
     bestScore < 75 ||
     !hasStrongMeaningfulOverlap(sourceCandidates, bestCandidateName) ||
-    isForbiddenOrganizationCandidatePair(opportunity, String(bestMatch.properties?.name || ''))
+    isForbiddenOrganizationCandidatePair(opportunity, String(bestMatch.properties?.name || '')) ||
+    (sourceLooksLikeGovernmentBody(opportunity) && candidateIsClubOrLeague(bestMatch)) ||
+    (sourceLooksLikeFederationBody(opportunity) && candidateIsClubOrLeague(bestMatch)) ||
+    (tokenCount(normalizeName(opportunity.organization)) >= 2 && candidateIsGenericSportToken(bestCandidateName)) ||
+    hasConflictingSportToken(opportunity, String(bestMatch.properties?.name || ''))
   ) {
     return {
       ...opportunity,
