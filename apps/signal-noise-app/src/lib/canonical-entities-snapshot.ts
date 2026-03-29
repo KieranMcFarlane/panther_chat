@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
+import { CANONICAL_GOVERNING_BODY_OVERRIDES } from '@/lib/canonical-governing-body-overrides'
 import { canonicalizeEntities, type CanonicalEntity } from '@/lib/entity-canonicalization'
 
 const SNAPSHOT_TTL_MS = 15 * 60_000
@@ -30,6 +31,10 @@ function mapExportEntity(entity: any): CanonicalEntity {
   }
 }
 
+function applyCanonicalOverrides(entities: CanonicalEntity[]): CanonicalEntity[] {
+  return canonicalizeEntities([...entities, ...CANONICAL_GOVERNING_BODY_OVERRIDES])
+}
+
 async function fetchCanonicalEntitiesFromSupabase(): Promise<CanonicalEntity[]> {
   const allEntities: any[] = []
   let offset = 0
@@ -53,9 +58,7 @@ async function fetchCanonicalEntitiesFromSupabase(): Promise<CanonicalEntity[]> 
     hasMore = pageEntities.length === pageSize
   }
 
-  return canonicalizeEntities(
-    allEntities.map(mapExportEntity)
-  )
+  return applyCanonicalOverrides(allEntities.map(mapExportEntity))
 }
 
 async function fetchCanonicalEntitiesFromLocalExport(): Promise<CanonicalEntity[]> {
@@ -67,7 +70,7 @@ async function fetchCanonicalEntitiesFromLocalExport(): Promise<CanonicalEntity[
   const parsedExport = JSON.parse(fileContents) as { entities?: any[] }
   const exportEntities = Array.isArray(parsedExport.entities) ? parsedExport.entities : []
 
-  return canonicalizeEntities(exportEntities.map(mapExportEntity))
+  return applyCanonicalOverrides(exportEntities.map(mapExportEntity))
 }
 
 async function fetchCanonicalEntitiesFromBestAvailableSource(): Promise<CanonicalEntity[]> {

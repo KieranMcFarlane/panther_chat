@@ -442,19 +442,18 @@ async function handleBackfillEntityLinks(data: any = {}) {
  * Get RFP opportunities from unified table with advanced filtering
  */
 async function handleGetOpportunities(searchParams: URLSearchParams) {
-  try {
-    // Parse filters
-    const status = searchParams.get('status') || undefined;
-    const source = searchParams.get('source') || undefined; // NEW: Filter by source
-    const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 100); // Cap at 100
-    const offset = parseInt(searchParams.get('offset') || '0');
-    const category = searchParams.get('category') || undefined;
-    const min_fit = searchParams.get('min_fit') ? parseInt(searchParams.get('min_fit')) : undefined;
-    const urgency = searchParams.get('urgency') || undefined;
-    const priority = searchParams.get('priority') || undefined;
-    const orderBy = searchParams.get('orderBy') || 'detected_at';
-    const orderDirection = searchParams.get('orderDirection') || 'desc';
+  const status = searchParams.get('status') || undefined;
+  const source = searchParams.get('source') || undefined;
+  const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 100);
+  const offset = parseInt(searchParams.get('offset') || '0');
+  const category = searchParams.get('category') || undefined;
+  const min_fit = searchParams.get('min_fit') ? parseInt(searchParams.get('min_fit')) : undefined;
+  const urgency = searchParams.get('urgency') || undefined;
+  const priority = searchParams.get('priority') || undefined;
+  const orderBy = searchParams.get('orderBy') || 'detected_at';
+  const orderDirection = searchParams.get('orderDirection') || 'desc';
 
+  try {
     console.log(`🏆 UNIFIED TENDERS API: Fetching from rfp_opportunities table (with source URLs)`);
     console.log(`🔍 Filters:`, { status, source, limit, offset, category, min_fit, urgency, priority, orderBy, orderDirection });
 
@@ -686,7 +685,18 @@ async function handleGetOpportunities(searchParams: URLSearchParams) {
 
   } catch (error) {
     console.error('❌ Failed to get unified RFP opportunities:', error);
-    
+
+    if (offset > 0) {
+      return NextResponse.json({
+        opportunities: [],
+        total: 0,
+        filters: { status, source, category, min_fit, urgency, priority },
+        pagination: { limit, offset, has_more: false },
+        degraded: true,
+        error: 'Failed to fetch paginated opportunities from database',
+      });
+    }
+
     return NextResponse.json({
       opportunities: [],
       total: 0,
