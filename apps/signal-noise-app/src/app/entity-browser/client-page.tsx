@@ -99,6 +99,10 @@ export default function EntityBrowserClientPage() {
     filters
   )
   const { taxonomy, taxonomyLoading } = useEntityTaxonomy()
+  const availableSports = taxonomy?.sports ?? []
+  const availableLeagues = taxonomy?.leagues ?? []
+  const availableCountries = taxonomy?.countries ?? []
+  const availableEntityClasses = taxonomy?.entityClasses ?? []
 
   const syncEntityBrowserHistory = useCallback((browserUrl: string) => {
     const rawStack = sessionStorage.getItem('entityBrowserHistoryStack')
@@ -404,7 +408,7 @@ export default function EntityBrowserClientPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Sports</SelectItem>
-                  {taxonomy.sports.map((sport) => (
+                  {availableSports.map((sport) => (
                     <SelectItem key={sport} value={sport}>
                       {sport} ({taxonomy.counts?.sports?.[sport] ?? 0})
                     </SelectItem>
@@ -418,7 +422,7 @@ export default function EntityBrowserClientPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Leagues</SelectItem>
-                  {taxonomy.leagues.map((league) => (
+                  {availableLeagues.map((league) => (
                     <SelectItem key={league} value={league}>
                       {league} ({taxonomy.counts?.leagues?.[league] ?? 0})
                     </SelectItem>
@@ -432,7 +436,7 @@ export default function EntityBrowserClientPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Countries</SelectItem>
-                  {taxonomy.countries.map((country) => (
+                  {availableCountries.map((country) => (
                     <SelectItem key={country} value={country}>
                       {country} ({taxonomy.counts?.countries?.[country] ?? 0})
                     </SelectItem>
@@ -446,7 +450,7 @@ export default function EntityBrowserClientPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Classes</SelectItem>
-                  {taxonomy.entityClasses.map((entityClass) => (
+                  {availableEntityClasses.map((entityClass) => (
                     <SelectItem key={entityClass} value={entityClass}>
                       {entityClass} ({taxonomy.counts?.entityClasses?.[entityClass] ?? 0})
                     </SelectItem>

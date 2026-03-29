@@ -66,7 +66,7 @@ interface AppNavigationProps {
 export default function AppNavigation({ children, authMenu }: AppNavigationProps) {
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
-  const [drawerOpen, setDrawerOpen] = useState(true);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const pathname = usePathname();
   const isDossierRoute = pathname?.includes('/dossier') ?? false;
   const isEntityBrowserRoute = pathname?.startsWith('/entity-browser') ?? false;

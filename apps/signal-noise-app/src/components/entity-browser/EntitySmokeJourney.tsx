@@ -69,41 +69,41 @@ export function EntitySmokeJourney() {
           </Badge>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="grid gap-3 lg:grid-cols-2">
+      <CardContent className="space-y-3">
+        <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-5">
           {smokeJourneyItems.map((item, index) => (
             <div
               key={item.entityId}
-              className="rounded-xl border border-slate-700/70 bg-slate-900/60 p-4 transition-colors hover:border-sky-500/60"
+              className="rounded-xl border border-slate-700/70 bg-slate-900/60 p-3 transition-colors hover:border-sky-500/60"
             >
-              <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-slate-100">
+                    <span className="truncate text-sm font-semibold text-slate-100">
                       {index + 1}. {item.name}
                     </span>
-                    <Badge variant="outline" className="text-[11px]">
+                    <Badge variant="outline" className="shrink-0 text-[10px]">
                       {item.type}
                     </Badge>
                   </div>
-                  <p className="mt-1 text-sm text-slate-300">{item.purpose}</p>
+                  <p className="mt-1 text-xs text-slate-300">{item.purpose}</p>
                 </div>
-                <Badge variant="secondary" className="shrink-0 text-[11px]">
+                <Badge variant="secondary" className="shrink-0 text-[10px]">
                   <CheckCircle2 className="mr-1 h-3 w-3" />
                   Step {index + 1}
                 </Badge>
               </div>
 
-              <p className="mt-3 text-sm leading-6 text-slate-400">{item.smokeNote}</p>
+              <p className="mt-2 text-xs leading-5 text-slate-400">{item.smokeNote}</p>
 
-              <div className="mt-4 flex flex-wrap gap-2">
-                <Button asChild size="sm" className="gap-1.5">
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Button asChild size="sm" className="gap-1.5 px-4 py-2">
                   <Link href={`/entity-browser/${item.entityId}/dossier?from=1`}>
                     Open dossier
                     <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 </Button>
-                <Button asChild size="sm" variant="outline">
+                <Button asChild size="sm" variant="outline" className="px-4 py-2">
                   <Link href={`/entity-browser?search=${encodeURIComponent(item.name)}`}>
                     Find in browser
                   </Link>
@@ -113,9 +113,9 @@ export function EntitySmokeJourney() {
           ))}
         </div>
 
-        <div className="rounded-xl border border-dashed border-slate-700/80 bg-slate-950/60 p-4">
+        <div className="rounded-xl border border-dashed border-slate-700/80 bg-slate-950/60 p-3">
           <p className="text-sm font-medium text-slate-200">Smoke acceptance checklist</p>
-          <ul className="mt-3 grid gap-2 text-sm text-slate-400 md:grid-cols-2">
+          <ul className="mt-2 grid gap-2 text-xs text-slate-400 md:grid-cols-2">
             <li>Entity browser is the first screen, not the control center.</li>
             <li>Each dossier shows persisted state and the question-driven rail.</li>
             <li>At least one dossier visibly reuses stored data on the page.</li>
