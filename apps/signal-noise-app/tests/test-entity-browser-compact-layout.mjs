@@ -16,6 +16,6 @@ test('entity browser keeps the operational drawer collapsed by default', () => {
 
 test('entity browser smoke journey uses a denser grid and tighter cards', () => {
   assert.match(smokeJourneySource, /className="grid gap-2 sm:grid-cols-2 xl:grid-cols-5"/)
-  assert.match(smokeJourneySource, /className="rounded-xl border border-slate-700\/70 bg-slate-900\/60 p-3[^"]*"/)
+  assert.match(smokeJourneySource, /className="rounded-xl border border-border bg-muted\/35 p-3[^"]*"/)
   assert.match(smokeJourneySource, /size="sm" className="gap-1\.5 px-4 py-2"/)
 })
