@@ -148,3 +148,45 @@ test('leaves USA Cricket alias opportunities unlinked when the canonical entity 
   assert.equal(linked.canonical_entity_id, null)
   assert.equal(linked.canonical_entity_name, null)
 })
+
+test('keeps Volleyball World opportunities unlinked when the only strong candidate is an unrelated club brand', () => {
+  const linked = linkOpportunityToCanonicalEntity(
+    {
+      organization: 'Volleyball World',
+      title: 'Digital Growth Partnership in China',
+      description:
+        'Volleyball World is seeking a digital growth partner in China to expand distribution, fan engagement, and commercial reach for volleyball properties.',
+      source_url: 'https://en.volleyballworld.com/news/volleyball-world-teams-up-with-mailman-to-supercharge-growth-in-china',
+    },
+    [
+      {
+        id: '3378',
+        properties: { name: 'CBA (China)', type: 'League' },
+      },
+    ],
+  )
+
+  assert.equal(linked.canonical_entity_id, null)
+  assert.equal(linked.canonical_entity_name, null)
+})
+
+test('keeps Australian Sports Commission opportunities unlinked when the best lexical match is an unrelated club', () => {
+  const linked = linkOpportunityToCanonicalEntity(
+    {
+      organization: 'Australian Sports Commission',
+      title: 'Participation Growth Funding 2024-25 and Investment Announcements',
+      description:
+        'Australian Sports Commission funding initiative focused on national participation growth, investment programs, and strategic sports development.',
+      source_url: 'https://www.ausport.gov.au/',
+    },
+    [
+      {
+        id: '1934',
+        properties: { name: 'Sporting CP', type: 'Club' },
+      },
+    ],
+  )
+
+  assert.equal(linked.canonical_entity_id, null)
+  assert.equal(linked.canonical_entity_name, null)
+})

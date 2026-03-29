@@ -75,6 +75,17 @@ const ORGANIZATION_ENTITY_ALIASES: Array<{ match: string; preferredEntities: str
   },
 ]
 
+const FORBIDDEN_ORGANIZATION_CANDIDATE_PAIRS: Array<{ organization: string; candidate: string }> = [
+  {
+    organization: 'Volleyball World',
+    candidate: 'CBA (China)',
+  },
+  {
+    organization: 'Australian Sports Commission',
+    candidate: 'Sporting CP',
+  },
+]
+
 function normalizeName(value: unknown): string {
   return String(value || '')
     .toLowerCase()
@@ -269,6 +280,15 @@ function hasStrongMeaningfulOverlap(sourceCandidates: string[], candidateName: s
   return highestOverlap >= 1
 }
 
+function isForbiddenOrganizationCandidatePair(opportunity: OpportunityLike, candidateName: string): boolean {
+  const normalizedOrganization = normalizeName(opportunity.organization)
+  const normalizedCandidate = normalizeName(candidateName)
+
+  return FORBIDDEN_ORGANIZATION_CANDIDATE_PAIRS.some((entry) => {
+    return normalizedOrganization === normalizeName(entry.organization) && normalizedCandidate === normalizeName(entry.candidate)
+  })
+}
+
 export function linkOpportunityToCanonicalEntity<T extends OpportunityLike>(
   opportunity: T,
   canonicalEntities: CanonicalEntityLike[],
@@ -326,7 +346,12 @@ export function linkOpportunityToCanonicalEntity<T extends OpportunityLike>(
 
   const bestCandidateName = normalizeName(bestMatch?.properties?.name)
 
-  if (!bestMatch || bestScore < 75 || !hasStrongMeaningfulOverlap(sourceCandidates, bestCandidateName)) {
+  if (
+    !bestMatch ||
+    bestScore < 75 ||
+    !hasStrongMeaningfulOverlap(sourceCandidates, bestCandidateName) ||
+    isForbiddenOrganizationCandidatePair(opportunity, String(bestMatch.properties?.name || ''))
+  ) {
     return {
       ...opportunity,
       canonical_entity_id: null,

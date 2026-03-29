@@ -1,12 +1,12 @@
 # Curated Opportunity Linkage QA Report
 
-Date: 2026-03-29T19:47:32.000Z
+Date: 2026-03-29T19:52:20.849Z
 
 ## Summary
 - Imported curated rows reviewed: 88
-- Likely correct links: 78
+- Likely correct links: 80
 - Unlinked rows: 8
-- Suspicious linked rows: 2
+- Suspicious linked rows: 0
 
 ## Smoke Entities
 - Arsenal Football Club: 1 matching curated shortlist rows
@@ -19,8 +19,7 @@ Date: 2026-03-29T19:47:32.000Z
 - Zimbabwe Handball Federation: 0 matching curated shortlist rows
 
 ## Suspicious Linked Rows
-- Volleyball World | Digital Growth Partnership in China -> CBA (China)
-- Australian Sports Commission | Participation Growth Funding 2024-25 and Investment Announcements -> Sporting CP
+- None after the negative guard and forced curated-row re-link pass
 
 ## Unlinked Rows
 - Tennis Australia | Tournament Digital Platform Overhaul
@@ -33,10 +32,8 @@ Date: 2026-03-29T19:47:32.000Z
 - One additional low-signal row remained unlinked in the widened curated import pass
 
 ## Recommended Next Matcher Fixes
-- Add organization-level disambiguation rules before widening coverage further again, especially where a governing body or commercial operator can be mistaken for an unrelated club or league.
-- Add negative match guards for country/sport crossover cases such as:
-  - Volleyball World vs CBA (China)
-  - Australian Sports Commission vs Sporting CP
+- Keep using explicit negative guards for observed false positives before broadening lexical matching again.
+- Favor targeted organization-level disambiguation over broader fuzzy scoring changes unless a larger evidence set justifies it.
 - Keep domain-aware overrides for official hosts and extend them incrementally from observed failures, not speculative coverage.
 - Preserve the forced curated-row re-link path so future matcher improvements can remediate existing imports in place.
 - Keep the QA gate strict: if official-host evidence is absent and overlap is weak, leave the row unlinked.
