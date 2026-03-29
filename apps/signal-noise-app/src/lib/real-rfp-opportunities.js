@@ -764,3 +764,5 @@ const realOpportunities = [
     "confidence": 0.85
   }
 ];
+
+export default realOpportunities;

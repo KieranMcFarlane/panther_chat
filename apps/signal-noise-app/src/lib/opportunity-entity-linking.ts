@@ -12,6 +12,7 @@ interface OpportunityLike {
   entity_name?: string | null
   organization?: string | null
   title?: string | null
+  description?: string | null
 }
 
 const STOP_TOKENS = new Set([
@@ -21,6 +22,18 @@ const STOP_TOKENS = new Set([
   'football',
   'team',
   'the',
+])
+
+const GENERIC_ENTITY_TOKENS = new Set([
+  'cricket',
+  'football',
+  'sport',
+  'sports',
+  'league',
+  'club',
+  'federation',
+  'association',
+  'athletics',
 ])
 
 function normalizeName(value: unknown): string {
@@ -37,10 +50,18 @@ function normalizeName(value: unknown): string {
 function scoreCandidate(left: string, right: string): number {
   if (!left || !right) return -1
   if (left === right) return 100
-  if (left.includes(right) || right.includes(left)) return 75
 
   const leftTokens = new Set(left.split(' ').filter(Boolean))
   const rightTokens = new Set(right.split(' ').filter(Boolean))
+  const leftSubsetTokens = [...leftTokens].filter((token) => token.length > 3 || leftTokens.size === 1)
+  const rightSubsetTokens = [...rightTokens].filter((token) => token.length > 3 || rightTokens.size === 1)
+  const leftContainsRight =
+    rightSubsetTokens.length > 0 && rightSubsetTokens.every((token) => leftTokens.has(token))
+  const rightContainsLeft =
+    leftSubsetTokens.length > 0 && leftSubsetTokens.every((token) => rightTokens.has(token))
+
+  if (leftContainsRight || rightContainsLeft) return 75
+
   const overlap = [...leftTokens].filter((token) => rightTokens.has(token)).length
   const maxSize = Math.max(leftTokens.size, rightTokens.size)
 
@@ -48,25 +69,121 @@ function scoreCandidate(left: string, right: string): number {
   return Math.round((overlap / maxSize) * 100)
 }
 
+function tokenCount(value: string): number {
+  return value.split(' ').filter(Boolean).length
+}
+
+function meaningfulTokens(value: string): string[] {
+  const tokens = value.split(' ')
+  return tokens
+    .filter(Boolean)
+    .filter((token) => token.length > 3 || tokens.length === 1)
+    .filter((token) => !GENERIC_ENTITY_TOKENS.has(token))
+}
+
+function scoreEntityType(entity: CanonicalEntityLike): number {
+  const type = String(entity.properties?.type || '').toLowerCase()
+
+  if (
+    type.includes('sports entity') ||
+    type.includes('organization') ||
+    type.includes('club') ||
+    type.includes('league') ||
+    type.includes('federation')
+  ) {
+    return 20
+  }
+
+  if (type.includes('rfp entity')) {
+    return -20
+  }
+
+  if (type.includes('category') || type.includes('business opportunity') || type.includes('business action')) {
+    return -30
+  }
+
+  return 0
+}
+
+function scoreSpecificity(candidateName: string): number {
+  const tokens = tokenCount(candidateName)
+  const meaningful = meaningfulTokens(candidateName)
+  if (meaningful.length === 0) return -50
+  if (tokens === 1 && GENERIC_ENTITY_TOKENS.has(candidateName)) return -40
+  if (tokens >= 3) return 8
+  if (tokens === 2) return 4
+  if (tokens <= 1) return -10
+  return 0
+}
+
+function buildSourceCandidates(opportunity: OpportunityLike): string[] {
+  const directFields = [
+    opportunity.entity_name,
+    opportunity.organization,
+    opportunity.title,
+    opportunity.description,
+  ]
+    .map((value) => normalizeName(value))
+    .filter(Boolean)
+
+  const combined = normalizeName(
+    [
+      opportunity.entity_name,
+      opportunity.organization,
+      opportunity.title,
+      opportunity.description,
+    ]
+      .filter(Boolean)
+      .join(' '),
+  )
+
+  return [...new Set([...directFields, combined].filter(Boolean))]
+}
+
+function hasStrongMeaningfulOverlap(sourceCandidates: string[], candidateName: string): boolean {
+  const candidateMeaningful = meaningfulTokens(candidateName)
+
+  if (candidateMeaningful.length === 0) {
+    return false
+  }
+
+  const highestOverlap = sourceCandidates.reduce((maxOverlap, sourceCandidate) => {
+    const sourceMeaningful = new Set(meaningfulTokens(sourceCandidate))
+    const overlap = candidateMeaningful.filter((token) => sourceMeaningful.has(token)).length
+    return Math.max(maxOverlap, overlap)
+  }, 0)
+
+  if (candidateMeaningful.length >= 2) {
+    return highestOverlap >= 2
+  }
+
+  return highestOverlap >= 1
+}
+
 export function linkOpportunityToCanonicalEntity<T extends OpportunityLike>(
   opportunity: T,
   canonicalEntities: CanonicalEntityLike[],
 ): T & { canonical_entity_id: string | null; canonical_entity_name: string | null } {
-  const sourceName = normalizeName(opportunity.entity_name || opportunity.organization || opportunity.title)
+  const sourceCandidates = buildSourceCandidates(opportunity)
 
   let bestMatch: CanonicalEntityLike | null = null
   let bestScore = -1
 
   for (const entity of canonicalEntities) {
     const candidateName = normalizeName(entity.properties?.name)
-    const score = scoreCandidate(sourceName, candidateName)
+    const nameScore = sourceCandidates.reduce((highest, sourceCandidate) => {
+      return Math.max(highest, scoreCandidate(sourceCandidate, candidateName))
+    }, -1)
+    const score = nameScore < 0 ? -1 : nameScore + scoreEntityType(entity) + scoreSpecificity(candidateName)
     if (score > bestScore) {
       bestScore = score
       bestMatch = entity
     }
   }
 
-  if (!bestMatch || bestScore < 75) {
+  const bestCandidateName = normalizeName(bestMatch?.properties?.name)
+
+  if (!bestMatch || bestScore < 75 || !hasStrongMeaningfulOverlap(sourceCandidates, bestCandidateName)) {
     return {
       ...opportunity,
       canonical_entity_id: null,

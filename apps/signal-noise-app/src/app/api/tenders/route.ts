@@ -9,7 +9,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin, supabase } from '@/lib/supabase-client';
 import { comprehensiveRfpOpportunities } from '@/lib/comprehensive-rfp-opportunities';
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot';
-import digitalRfpOpportunities from '@/lib/digital-rfp-opportunities';
+import digitalRfpOpportunities from '@/lib/digital-rfp-opportunities.js';
+import realRfpOpportunities from '@/lib/real-rfp-opportunities.js';
 import { linkOpportunityToCanonicalEntity } from '@/lib/opportunity-entity-linking';
 
 export const dynamic = 'force-dynamic';
@@ -21,6 +22,248 @@ try {
 } catch (error) {
   console.warn('Could not load digital-rfp-opportunities, using comprehensive opportunities as fallback');
   alignedOpportunities = comprehensiveRfpOpportunities;
+}
+
+type CuratedOpportunity = {
+  id?: string | null
+  title?: string | null
+  organization?: string | null
+  location?: string | null
+  value?: string | null
+  deadline?: string | null
+  posted?: string | null
+  published?: string | null
+  source?: string | null
+  category?: string | null
+  status?: string | null
+  type?: string | null
+  description?: string | null
+  url?: string | null
+  yellow_panther_fit?: number | null
+  contact?: string | null
+  priority_score?: number | null
+  confidence?: number | null
+}
+
+function normalizeIdentity(value: string | null | undefined) {
+  return String(value || '')
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+}
+
+function parseOpportunityDate(value: string | null | undefined, fallbackIso: string) {
+  if (!value) {
+    return fallbackIso
+  }
+
+  const parsed = new Date(value)
+  if (Number.isNaN(parsed.getTime())) {
+    return fallbackIso
+  }
+
+  return parsed.toISOString()
+}
+
+function parseOpportunityDeadline(value: string | null | undefined) {
+  if (!value) {
+    return null
+  }
+
+  const parsed = new Date(value)
+  if (Number.isNaN(parsed.getTime())) {
+    return null
+  }
+
+  return parsed.toISOString().split('T')[0]
+}
+
+function buildDedupKey(opportunity: CuratedOpportunity) {
+  const sourceUrl = normalizeIdentity(opportunity.url)
+  if (sourceUrl) {
+    return `url:${sourceUrl}`
+  }
+
+  return `org-title:${normalizeIdentity(opportunity.organization)}|${normalizeIdentity(opportunity.title)}`
+}
+
+function normalizeCuratedOpportunity(
+  opportunity: CuratedOpportunity,
+  canonicalEntities: Awaited<ReturnType<typeof getCanonicalEntitiesSnapshot>>,
+  nowIso: string,
+) {
+  const linked = linkOpportunityToCanonicalEntity(
+    {
+      entity_name: opportunity.organization,
+      organization: opportunity.organization,
+      title: opportunity.title,
+      description: opportunity.description,
+    },
+    canonicalEntities,
+  )
+
+  const sourceUrl = opportunity.url || null
+  const detectedAt = parseOpportunityDate(opportunity.posted || opportunity.published, nowIso)
+  const sourceLabel = opportunity.source || 'Curated Source Library'
+  const confidenceScore =
+    typeof opportunity.confidence === 'number' && !Number.isNaN(opportunity.confidence)
+      ? opportunity.confidence
+      : 0.85
+  const confidenceValue = Math.max(0, Math.min(100, Math.round(confidenceScore * 100)))
+
+  return {
+    id: String(opportunity.id || buildDedupKey(opportunity)),
+    title: String(opportunity.title || opportunity.organization || 'Curated opportunity').slice(0, 240),
+    organization: String(opportunity.organization || linked.canonical_entity_name || 'Unknown organization'),
+    description: opportunity.description || opportunity.title || null,
+    location: opportunity.location || null,
+    value: opportunity.value || null,
+    deadline: parseOpportunityDeadline(opportunity.deadline),
+    published: opportunity.published || null,
+    detected_at: detectedAt,
+    created_at: nowIso,
+    updated_at: nowIso,
+    source: sourceLabel,
+    source_url: sourceUrl,
+    category: opportunity.category || 'Curated Opportunity',
+    status: 'new',
+    confidence: confidenceValue,
+    urgency: null,
+    yellow_panther_fit: opportunity.yellow_panther_fit || 80,
+    entity_id: linked.canonical_entity_id || null,
+    entity_name:
+      linked.canonical_entity_name || opportunity.organization || null,
+    requirements: null,
+    metadata: {
+      canonical_entity_id: linked.canonical_entity_id || null,
+      canonical_entity_name: linked.canonical_entity_name || null,
+      import_source: 'curated-opportunity-library',
+      original_source: sourceLabel,
+      original_id: opportunity.id || null,
+      original_contact: opportunity.contact || null,
+      original_type: opportunity.type || null,
+      original_priority_score: opportunity.priority_score || null,
+      original_confidence: confidenceScore,
+    },
+    link_status: sourceUrl ? 'unverified' : 'missing',
+    link_verified_at: null,
+    link_error: null,
+    link_redirect_url: null,
+  }
+}
+
+async function handleImportCuratedOpportunities(data: any = {}) {
+  try {
+    const dryRun = Boolean(data?.dryRun);
+    const limit = Math.min(Number(data?.limit || 1000), 5000);
+    const supabaseAdmin = getSupabaseAdmin();
+    const canonicalEntities = await getCanonicalEntitiesSnapshot().catch(() => []);
+    const nowIso = new Date().toISOString();
+    const curatedSources: CuratedOpportunity[] = [
+      ...digitalRfpOpportunities,
+      ...realRfpOpportunities,
+    ].filter(Boolean);
+
+    const normalizedRows = curatedSources
+      .slice(0, limit)
+      .map((opportunity) => normalizeCuratedOpportunity(opportunity, canonicalEntities, nowIso));
+
+    const dedupedRows = Array.from(
+      new Map(normalizedRows.map((row) => [buildDedupKey({ url: row.source_url, organization: row.organization, title: row.title }), row])).values(),
+    );
+
+    const sourceUrls = dedupedRows.map((row) => row.source_url).filter(Boolean);
+    const orgTitles = dedupedRows
+      .filter((row) => !row.source_url)
+      .map((row) => ({
+        organization: normalizeIdentity(row.organization),
+        title: normalizeIdentity(row.title),
+      }));
+
+    const existingKeys = new Set<string>();
+
+    if (sourceUrls.length > 0) {
+      const { data: existingUrlRows, error: existingUrlError } = await supabaseAdmin
+        .from('rfp_opportunities')
+        .select('source_url')
+        .in('source_url', sourceUrls);
+
+      if (existingUrlError) {
+        throw existingUrlError;
+      }
+
+      for (const row of existingUrlRows || []) {
+        existingKeys.add(buildDedupKey({ url: row.source_url }));
+      }
+    }
+
+    if (orgTitles.length > 0) {
+      const { data: existingTitleRows, error: existingTitleError } = await supabaseAdmin
+        .from('rfp_opportunities')
+        .select('organization, title');
+
+      if (existingTitleError) {
+        throw existingTitleError;
+      }
+
+      for (const row of existingTitleRows || []) {
+        existingKeys.add(
+          buildDedupKey({
+            organization: row.organization,
+            title: row.title,
+          }),
+        );
+      }
+    }
+
+    const insertableRows = dedupedRows.filter((row) => {
+      return !existingKeys.has(
+        buildDedupKey({
+          url: row.source_url,
+          organization: row.organization,
+          title: row.title,
+        }),
+      );
+    });
+
+    if (!dryRun && insertableRows.length > 0) {
+      const { error: insertError } = await supabaseAdmin
+        .from('rfp_opportunities')
+        .upsert(insertableRows, { onConflict: 'id' });
+
+      if (insertError) {
+        throw insertError;
+      }
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        processed: dedupedRows.length,
+        inserted: insertableRows.length,
+        skipped: dedupedRows.length - insertableRows.length,
+        linked: dedupedRows.filter((row) => row.entity_id).length,
+        dryRun,
+        samples: dedupedRows.slice(0, 10).map((row) => ({
+          id: row.id,
+          title: row.title,
+          organization: row.organization,
+          entity_id: row.entity_id,
+          entity_name: row.entity_name,
+          source_url: row.source_url,
+        })),
+      },
+    });
+  } catch (error) {
+    console.error('❌ Failed to import curated opportunities:', error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to import curated opportunities',
+      },
+      { status: 500 },
+    );
+  }
 }
 
 export async function GET(request: NextRequest) {
@@ -74,6 +317,8 @@ export async function POST(request: NextRequest) {
         return await handleRetroactiveScraping();
       case 'backfill-entity-links':
         return await handleBackfillEntityLinks(data);
+      case 'import-curated-opportunities':
+        return await handleImportCuratedOpportunities(data);
       default:
         return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
     }
@@ -92,7 +337,7 @@ async function handleBackfillEntityLinks(data: any = {}) {
 
     const { data: rows, error } = await supabaseAdmin
       .from('rfp_opportunities')
-      .select('id, organization, title, entity_id, entity_name, metadata')
+      .select('id, organization, title, description, entity_id, entity_name, metadata')
       .or('entity_id.is.null,entity_name.is.null')
       .limit(limit);
 
@@ -109,6 +354,7 @@ async function handleBackfillEntityLinks(data: any = {}) {
             entity_name: row.entity_name || row.organization,
             organization: row.organization,
             title: row.title,
+            description: row.description,
           },
           canonicalEntities,
         );

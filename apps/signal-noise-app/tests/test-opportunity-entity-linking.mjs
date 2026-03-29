@@ -50,3 +50,27 @@ test('keeps opportunities unlinked when no canonical entity is a plausible match
   assert.equal(linked.canonical_entity_id, null)
   assert.equal(linked.canonical_entity_name, null)
 })
+
+test('keeps opportunities unlinked when only generic tokens overlap with the canonical entity', () => {
+  const linked = linkOpportunityToCanonicalEntity(
+    {
+      entity_id: null,
+      entity_name: 'French Football Federation (FFF)',
+      organization: 'French Football Federation (FFF)',
+      title: 'Mobile engagement and digital transformation',
+      description: 'FFF announces a federation-wide digital transformation programme for football supporters.',
+    },
+    [
+      {
+        id: '2105',
+        properties: {
+          name: 'French Rugby Federation',
+          type: 'Organization',
+        },
+      },
+    ],
+  )
+
+  assert.equal(linked.canonical_entity_id, null)
+  assert.equal(linked.canonical_entity_name, null)
+})
