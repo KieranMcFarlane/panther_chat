@@ -332,14 +332,25 @@ async function handleBackfillEntityLinks(data: any = {}) {
   try {
     const limit = Math.min(Number(data?.limit || 500), 1000);
     const dryRun = Boolean(data?.dryRun);
+    const force = Boolean(data?.force);
+    const importSource = typeof data?.importSource === 'string' ? data.importSource : null;
     const supabaseAdmin = getSupabaseAdmin();
     const canonicalEntities = await getCanonicalEntitiesSnapshot().catch(() => []);
 
-    const { data: rows, error } = await supabaseAdmin
+    let query = supabaseAdmin
       .from('rfp_opportunities')
-      .select('id, organization, title, description, entity_id, entity_name, metadata')
-      .or('entity_id.is.null,entity_name.is.null')
+      .select('id, organization, title, description, entity_id, entity_name, source_url, metadata')
       .limit(limit);
+
+    if (!force) {
+      query = query.or('entity_id.is.null,entity_name.is.null');
+    }
+
+    if (importSource) {
+      query = query.eq('metadata->>import_source', importSource);
+    }
+
+    const { data: rows, error } = await query;
 
     if (error) {
       throw error;
@@ -355,12 +366,14 @@ async function handleBackfillEntityLinks(data: any = {}) {
             organization: row.organization,
             title: row.title,
             description: row.description,
+            source_url: row.source_url,
           },
           canonicalEntities,
         );
 
-        const nextEntityId = linked.canonical_entity_id || row.entity_id || null;
-        const nextEntityName = linked.canonical_entity_name || row.entity_name || row.organization || null;
+        const nextEntityId = linked.canonical_entity_id || (force ? null : row.entity_id || null);
+        const nextEntityName =
+          linked.canonical_entity_name || (force ? row.organization || null : row.entity_name || row.organization || null);
         const metadata = {
           ...(row.metadata || {}),
           canonical_entity_id: linked.canonical_entity_id || null,

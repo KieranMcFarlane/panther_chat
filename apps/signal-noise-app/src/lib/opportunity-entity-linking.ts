@@ -13,6 +13,7 @@ interface OpportunityLike {
   organization?: string | null
   title?: string | null
   description?: string | null
+  source_url?: string | null
 }
 
 const STOP_TOKENS = new Set([
@@ -35,6 +36,17 @@ const GENERIC_ENTITY_TOKENS = new Set([
   'association',
   'athletics',
 ])
+
+const DOMAIN_ENTITY_ALIASES: Array<{ host: string; preferredEntities: string[] }> = [
+  {
+    host: 'ausopen.com',
+    preferredEntities: ['Tennis Australia'],
+  },
+  {
+    host: 'wimbledon.com',
+    preferredEntities: ['Wimbledon (The Championships)', 'All England Lawn Tennis Association'],
+  },
+]
 
 function normalizeName(value: unknown): string {
   return String(value || '')
@@ -140,6 +152,44 @@ function buildSourceCandidates(opportunity: OpportunityLike): string[] {
   return [...new Set([...directFields, combined].filter(Boolean))]
 }
 
+function resolvePreferredDomainAlias(
+  sourceUrl: string | null | undefined,
+  canonicalEntities: CanonicalEntityLike[],
+): CanonicalEntityLike | null {
+  if (!sourceUrl) {
+    return null
+  }
+
+  let host = ''
+  try {
+    host = new URL(sourceUrl).hostname.toLowerCase()
+  } catch {
+    return null
+  }
+
+  const aliasRule = DOMAIN_ENTITY_ALIASES.find((entry) => host === entry.host || host.endsWith(`.${entry.host}`))
+  if (!aliasRule) {
+    return null
+  }
+
+  for (const preferredEntity of aliasRule.preferredEntities) {
+    const normalizedPreferred = normalizeName(preferredEntity)
+    const match = canonicalEntities.find((entity) => normalizeName(entity.properties?.name) === normalizedPreferred)
+    if (match) {
+      return match
+    }
+  }
+
+  return {
+    id: null,
+    neo4j_id: null,
+    properties: {
+      name: '__domain_alias_unresolved__',
+      type: 'Alias Guard',
+    },
+  }
+}
+
 function hasStrongMeaningfulOverlap(sourceCandidates: string[], candidateName: string): boolean {
   const candidateMeaningful = meaningfulTokens(candidateName)
 
@@ -164,6 +214,23 @@ export function linkOpportunityToCanonicalEntity<T extends OpportunityLike>(
   opportunity: T,
   canonicalEntities: CanonicalEntityLike[],
 ): T & { canonical_entity_id: string | null; canonical_entity_name: string | null } {
+  const preferredDomainEntity = resolvePreferredDomainAlias(opportunity.source_url, canonicalEntities)
+  if (preferredDomainEntity?.properties?.name === '__domain_alias_unresolved__') {
+    return {
+      ...opportunity,
+      canonical_entity_id: null,
+      canonical_entity_name: null,
+    }
+  }
+
+  if (preferredDomainEntity) {
+    return {
+      ...opportunity,
+      canonical_entity_id: String(preferredDomainEntity.id || preferredDomainEntity.neo4j_id || ''),
+      canonical_entity_name: String(preferredDomainEntity.properties?.name || ''),
+    }
+  }
+
   const sourceCandidates = buildSourceCandidates(opportunity)
 
   let bestMatch: CanonicalEntityLike | null = null

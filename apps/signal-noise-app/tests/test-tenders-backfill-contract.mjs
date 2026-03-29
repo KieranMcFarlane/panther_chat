@@ -9,4 +9,6 @@ test('tenders API exposes canonical entity backfill action for existing opportun
   assert.match(source, /handleBackfillEntityLinks/)
   assert.match(source, /getSupabaseAdmin\(\)/)
   assert.match(source, /canonical_entity_id|entity_id/)
+  assert.match(source, /data\?\.force/)
+  assert.match(source, /data\?\.importSource/)
 })
