@@ -30,6 +30,14 @@ class BrightDataMCPServer {
     this.setupErrorHandling();
   }
 
+  log(event, details = {}) {
+    console.error(`[brightdata-mcp] ${JSON.stringify({
+      event,
+      at: new Date().toISOString(),
+      ...details,
+    })}`);
+  }
+
   setupErrorHandling() {
     this.server.onerror = (error) => console.error('[MCP Error]', error);
     process.on('SIGINT', async () => {
@@ -140,7 +148,7 @@ class BrightDataMCPServer {
       throw new Error('BrightData credentials not configured. Please set BRIGHTDATA_TOKEN and BRIGHTDATA_ZONE environment variables.');
     }
 
-    console.log(`Searching ${engine} for: ${query}`);
+    this.log('search_engine.start', { engine, query, cursor: cursor || null });
     
     // Construct BrightData search API URL
     const searchUrl = `https://api.brightdata.com/serp/${engine}`;
@@ -192,6 +200,14 @@ class BrightDataMCPServer {
         });
       }
 
+      this.log('search_engine.result', {
+        engine,
+        query,
+        resultCount: Array.isArray(data.organic_results) ? data.organic_results.length : 0,
+        relatedSearchCount: Array.isArray(data.related_searches) ? data.related_searches.length : 0,
+        topResultUrl: data.organic_results?.[0]?.link || null,
+      });
+
       return {
         content: [
           {
@@ -201,7 +217,11 @@ class BrightDataMCPServer {
         ],
       };
     } catch (error) {
-      console.error('BrightData search error:', error);
+      this.log('search_engine.error', {
+        engine,
+        query,
+        error: error instanceof Error ? error.message : String(error),
+      });
       throw new Error(`Search failed: ${error.message}`);
     }
   }
@@ -213,7 +233,7 @@ class BrightDataMCPServer {
       throw new Error('BrightData credentials not configured. Please set BRIGHTDATA_TOKEN and BRIGHTDATA_ZONE environment variables.');
     }
 
-    console.log(`Scraping URL: ${url}`);
+    this.log('scrape_as_markdown.start', { url });
     
     try {
       // Use BrightData scraping API
@@ -258,6 +278,11 @@ class BrightDataMCPServer {
         processedContent = processedContent.replace(regex, '**$1**');
       });
 
+      this.log('scrape_as_markdown.result', {
+        url,
+        contentLength: typeof processedContent === 'string' ? processedContent.length : 0,
+      });
+
       const resultText = `Content scraped from ${url}:\n\n${processedContent}\n\n---\nScraped at: ${new Date().toISOString()}`;
 
       return {
@@ -269,7 +294,10 @@ class BrightDataMCPServer {
         ],
       };
     } catch (error) {
-      console.error('BrightData scrape error:', error);
+      this.log('scrape_as_markdown.error', {
+        url,
+        error: error instanceof Error ? error.message : String(error),
+      });
       throw new Error(`Scraping failed: ${error.message}`);
     }
   }
@@ -281,7 +309,10 @@ class BrightDataMCPServer {
       throw new Error('BrightData credentials not configured. Please set BRIGHTDATA_TOKEN and BRIGHTDATA_ZONE environment variables.');
     }
 
-    console.log(`Batch scraping ${urls.length} URLs`);
+    this.log('scrape_batch.start', {
+      urlCount: Array.isArray(urls) ? urls.length : 0,
+      urls: Array.isArray(urls) ? urls.slice(0, 10) : [],
+    });
     
     const results = [];
     
@@ -316,6 +347,11 @@ class BrightDataMCPServer {
     });
 
     const successfulScrapes = results.filter(r => r.success).length;
+    this.log('scrape_batch.result', {
+      urlCount: Array.isArray(urls) ? urls.length : 0,
+      successfulCount: successfulScrapes,
+      failedCount: Array.isArray(results) ? results.filter(r => !r.success).length : 0,
+    });
     batchResultText += `\nSummary: ${successfulScrapes}/${urls.length} URLs successfully scraped`;
 
     return {
@@ -331,7 +367,7 @@ class BrightDataMCPServer {
   async run() {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error('BrightData MCP server running on stdio');
+    this.log('server.running', { transport: 'stdio' });
   }
 }
 

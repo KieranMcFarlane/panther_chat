@@ -639,10 +639,32 @@ class BrightDataMCPClient(BrightDataClient):
 
         result = await self._call_tool("scrape_batch", {"urls": urls})
 
-        if result is None or result.get("status") == "error":
+        if result is None:
             return {
                 "status": "error",
                 "error": "MCP unavailable",
+                "total_urls": len(urls),
+                "transport_retryable": True
+            }
+
+        if isinstance(result, list):
+            results = result
+            successful = sum(1 for item in results if isinstance(item, dict) and item.get("status") != "error")
+            failed = max(len(urls) - successful, 0)
+            return {
+                "status": "success",
+                "total_urls": len(urls),
+                "successful": successful,
+                "failed": failed,
+                "results": results,
+                "timestamp": datetime.now().isoformat(),
+                "metadata": {"source": "mcp_client", "pro_mode": self.pro_mode},
+            }
+
+        if result.get("status") == "error":
+            return {
+                "status": "error",
+                "error": result.get("error") or "MCP unavailable",
                 "total_urls": len(urls),
                 "transport_retryable": True
             }

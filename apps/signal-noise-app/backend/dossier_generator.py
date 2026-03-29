@@ -45,6 +45,11 @@ try:
 except ImportError:
     from dossier_persistence import apply_dossier_persistence_context  # type: ignore
 
+try:
+    from backend.yellow_panther_catalog import get_questions_for_entity_type
+except ImportError:
+    from yellow_panther_catalog import get_questions_for_entity_type  # type: ignore
+
 # Import data collector
 try:
     from backend.dossier_data_collector import DossierDataCollector, DossierData, EntityMetadata

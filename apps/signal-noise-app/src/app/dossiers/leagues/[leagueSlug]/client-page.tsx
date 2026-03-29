@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import DossierPhaseRail from '@/components/discovery/DossierPhaseRail';
 import { 
   ArrowLeft,
   Globe,
@@ -206,7 +207,10 @@ export default function LeagueDossierClient({ leagueSlug }: { leagueSlug: string
       });
   };
 
-  const parsedContent = dossierContent ? parseDossierContent(dossierContent.content) : {};
+  const parsedContent = useMemo(
+    () => (dossierContent ? parseDossierContent(dossierContent.content) : {}),
+    [dossierContent]
+  );
   
   // Debug: Log parsed content to verify extraction
   useEffect(() => {
@@ -329,6 +333,24 @@ export default function LeagueDossierClient({ leagueSlug }: { leagueSlug: string
 
   const score = getOpportunityScore(actualLeagueSlug);
   const leagueName = parsedContent.entity || actualLeagueSlug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  const phaseProgressPayload = {
+    metadata: {
+      entity_name: leagueName,
+      confidence: parsedContent.confidence ? Number.parseFloat(String(parsedContent.confidence)) : undefined,
+      opportunity_score: score,
+      next_action: parsedContent.recommendedApproach || 'Continue monitoring the league dossier for new signals.',
+      freshness: 'fresh',
+    },
+    source_urls: [],
+    rawEvidence: [
+      parsedContent.executiveSummary,
+      parsedContent.coreIntelligence,
+      parsedContent.strategicAnalysis,
+      parsedContent.opportunityAnalysis,
+    ].filter(Boolean),
+    contacts: [],
+    recommendedActions: parsedContent.recommendedApproach ? [{ action: parsedContent.recommendedApproach, priority: 'high' as const }] : [],
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -386,6 +408,17 @@ export default function LeagueDossierClient({ leagueSlug }: { leagueSlug: string
       {/* Main Content */}
       <div className="flex-1 bg-header-bg">
         <div className="container mx-auto px-4 py-6">
+          <div className="mb-8">
+            <DossierPhaseRail
+              title="League dossier phase rail"
+              entityName={leagueName}
+              dossier={phaseProgressPayload}
+              currentPhaseIndex={parsedContent.opportunityAnalysis ? 5 : parsedContent.strategicAnalysis ? 4 : parsedContent.coreIntelligence ? 2 : 1}
+              progressPercent={score}
+              nextAction={parsedContent.recommendedApproach || 'Keep the dossier current and revisit fresh evidence.'}
+            />
+          </div>
+
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
             {/* Responsive Tab Navigation */}
             <div className="bg-custom-box rounded-lg p-1">

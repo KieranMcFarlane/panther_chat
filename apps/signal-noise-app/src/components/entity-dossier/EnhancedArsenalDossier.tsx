@@ -82,7 +82,7 @@ const enhancedArsenalData: {
           ],
           recommendations: [
             {
-              action: "Position Yellow Panther as lightweight experimental R&D wing",
+              action: "Position Yellow Panther as a proof-of-value partner for pilot work NTT cannot move quickly enough on",
               timeline: "3-6 months",
               priority: "HIGH",
               estimated_impact: "Quick wins to prove value for larger partnerships",
@@ -305,7 +305,7 @@ const enhancedArsenalData: {
           ],
           recommendations: [
             {
-              action: "Position Yellow Panther as long-term digital transformation partner",
+              action: "Position Yellow Panther as a long-term digital transformation partner once the first pilot proves value",
               timeline: "12-18 months",
               priority: "MEDIUM",
               estimated_impact: "Market leadership position"
@@ -470,7 +470,7 @@ const enhancedArsenalData: {
           ],
           recommendations: [
             {
-              action: "Design phased engagement starting with low-risk, high-visibility pilots",
+              action: "Lead with low-risk, high-visibility pilots tied to fan or commercial outcomes",
               timeline: "3 months",
               priority: "HIGH",
               estimated_impact: "Build trust and demonstrate value"
@@ -559,7 +559,7 @@ const enhancedArsenalData: {
           ],
           recommendations: [
             {
-              action: "Position Yellow Panther as complementary rather than competitive to existing partners",
+              action: "Position Yellow Panther as complementary to existing partners by filling execution gaps they are not built to close quickly",
               timeline: "2-4 weeks",
               priority: "HIGH",
               estimated_impact: "Reduce resistance and increase partnership likelihood"
@@ -828,8 +828,8 @@ function EnhancedArsenalDossier({
               <div>
                 <h3 className="font-semibold text-gray-900 mb-1">Strategic Assessment</h3>
                 <p className="text-sm text-gray-700 max-w-3xl">
-                  Arsenal's digital structure is mature but rigid. Their reliance on NTT DATA constrains innovation velocity, 
-                  creating opportunities for Yellow Panther to position as a lightweight experimental R&D wing for pilot projects.
+                  Arsenal&apos;s digital structure is mature but rigid. Their reliance on NTT DATA constrains innovation velocity, 
+                  creating room for Yellow Panther to lead with proof-of-value pilots that complement the existing stack without forcing a broad replacement.
                 </p>
               </div>
               <ArrowUpRight className="h-5 w-5 text-gray-400 flex-shrink-0 ml-4" />
@@ -977,7 +977,7 @@ function EnhancedArsenalDossier({
                 </div>
                 <div className="p-4 border rounded-lg">
                   <h4 className="font-semibold mb-2">Arsenal Women reach record 17,000 season ticket sales</h4>
-                  <p className="text-sm text-gray-600 mb-2">Historic milestone for women's football demonstrates commercial growth.</p>
+                  <p className="text-sm text-gray-600 mb-2">Historic milestone for women&apos;s football demonstrates commercial growth.</p>
                   <div className="flex items-center gap-2">
                     <Badge variant="outline">Sports</Badge>
                     <span className="text-xs text-gray-500">September 2024</span>

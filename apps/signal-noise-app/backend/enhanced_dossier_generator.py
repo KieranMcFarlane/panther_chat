@@ -32,7 +32,7 @@ from claude_client import ClaudeClient
 
 # Import entity-type questions for YP integration
 try:
-    from entity_type_dossier_questions import (
+    from backend.yellow_panther_catalog import (
         get_questions_for_entity_type,
         generate_hypothesis_from_question,
         get_question_first_prompt_context,
@@ -43,7 +43,7 @@ try:
     ENTITY_TYPE_QUESTIONS_AVAILABLE = True
 except ImportError:
     ENTITY_TYPE_QUESTIONS_AVAILABLE = False
-    logging.warning("entity_type_dossier_questions not available - YP integration disabled")
+    logging.warning("yellow_panther_catalog not available - YP integration disabled")
 
 logger = logging.getLogger(__name__)
 
@@ -118,7 +118,7 @@ class EnhancedDossierGenerator:
 
     def _load_entity_type_questions(self):
         """Load entity-type-specific questions for YP integration"""
-        from entity_type_dossier_questions import ENTITY_TYPE_QUESTIONS
+        from backend.yellow_panther_catalog import ENTITY_TYPE_QUESTIONS
 
         for entity_type, questions in ENTITY_TYPE_QUESTIONS.items():
             self.entity_type_questions[entity_type] = questions
@@ -143,7 +143,7 @@ class EnhancedDossierGenerator:
             logger.warning("Entity-type questions not available")
             return []
 
-        from entity_type_dossier_questions import get_questions_for_entity_type
+        from backend.yellow_panther_catalog import get_questions_for_entity_type
 
         questions = get_questions_for_entity_type(entity_type, max_questions)
         return [q.to_dict() for q in questions]
@@ -177,7 +177,7 @@ class EnhancedDossierGenerator:
             logger.warning("Entity-type questions not available")
             return []
 
-        from entity_type_dossier_questions import generate_hypothesis_batch
+        from backend.yellow_panther_catalog import generate_hypothesis_batch
 
         hypotheses = generate_hypothesis_batch(
             entity_type=entity_type,
@@ -206,7 +206,7 @@ class EnhancedDossierGenerator:
             # Basic validation without module
             return contacts, []
 
-        from entity_type_dossier_questions import validate_contact_data
+        from backend.yellow_panther_catalog import validate_contact_data
 
         valid_contacts = []
         errors = []
@@ -242,7 +242,7 @@ class EnhancedDossierGenerator:
         if not ENTITY_TYPE_QUESTIONS_AVAILABLE:
             return {"fit_score": 0, "positioning": "UNKNOWN"}
 
-        from entity_type_dossier_questions import (
+        from backend.yellow_panther_catalog import (
             get_questions_for_entity_type,
             score_entity_for_yp_service
         )
@@ -281,7 +281,7 @@ class EnhancedDossierGenerator:
         if not ENTITY_TYPE_QUESTIONS_AVAILABLE:
             return ""
 
-        from entity_type_dossier_questions import get_question_first_prompt_context
+        from backend.yellow_panther_catalog import get_question_first_prompt_context
 
         return get_question_first_prompt_context(entity_type, entity_name)
 

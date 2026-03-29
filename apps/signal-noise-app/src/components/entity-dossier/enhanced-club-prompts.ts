@@ -44,7 +44,7 @@ OUTPUT STRUCTURE:
           ],
           "recommendations": [
             {
-              "action": "Position Yellow Panther as lightweight experimental R&D wing",
+              "action": "Position Yellow Panther as a proof-of-value partner for pilot work NTT cannot move quickly enough on",
               "timeline": "3-6 months",
               "priority": "HIGH",
               "estimated_impact": "Quick wins to prove value for larger partnerships",
@@ -267,7 +267,7 @@ OUTPUT STRUCTURE:
           ],
           "recommendations": [
             {
-              "action": "Design phased engagement starting with low-risk, high-visibility pilots",
+              "action": "Lead with low-risk, high-visibility pilots tied to fan or commercial outcomes",
               "timeline": "3 months",
               "priority": "HIGH",
               "estimated_impact": "Build trust and demonstrate value"

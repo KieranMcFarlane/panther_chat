@@ -1,0 +1,1204 @@
+{
+  "generated_at": "2026-03-27T16:40:36.337616+00:00",
+  "summary": {
+    "source_question_count": 77,
+    "final_question_count": 53,
+    "deduplicated_question_count": 14,
+    "pruned_question_count": 35,
+    "split_section_count": 7,
+    "split_prompt_count": 40
+  },
+  "final_ralph_pack": {
+    "description": "Pruned and split Ralph-loop question pack ranked for Yellow Panther business goals",
+    "questions": [
+      {
+        "prompt": "Verify whether {entity} has a mobile or fan engagement initiative and whether the signal points to an RFP, vendor replacement, or partnership brief.",
+        "normalized_prompt": "verify whether {entity} has a mobile or fan engagement initiative and whether the signal points to an rfp, vendor replacement, or partnership brief",
+        "source_question_normalized": "what league-wide mobile app or digital platform initiatives is {entity} pursuing?",
+        "section_title": "Unclassified",
+        "final_goal_score": 100,
+        "final_goal_bucket": "direct_revenue_signal",
+        "final_goal_rank": 1,
+        "source_question_count": 3,
+        "source_questions": [
+          "What league-wide mobile app or digital platform initiatives is {entity} pursuing?",
+          "What member federation management platform or mobile app initiatives are underway at {entity}?",
+          "What mobile app or fan engagement platform investments are planned by {entity}?"
+        ],
+        "split_from_section": null,
+        "split_reason": "Kept as a single focused Ralph-loop prompt.",
+        "final_goal_rationale": "service fit: FAN_ENGAGEMENT, MOBILE_APPS; positioning: STRATEGIC_PARTNER; keywords: mobile app, mobile; service fit: DIGITAL_TRANSFORMATION, MOBILE_APPS; positioning: STRATEGIC_PARTNER; keywords: mobile app, mobile; service fit: FAN_ENGAGEMENT, MOBILE_APPS; positioning: SOLUTION_PROVIDER; keywords: mobile app, mobile, fan engagement"
+      },
+      {
+        "prompt": "Verify whether {entity} has analytics or data platform needs and what downstream fan or performance use case is driving them.",
+        "normalized_prompt": "verify whether {entity} has analytics or data platform needs and what downstream fan or performance use case is driving them",
+        "source_question_normalized": "what analytics or data platform needs does {entity} have for performance or fan insights?",
+        "section_title": "Unclassified",
+        "final_goal_score": 100,
+        "final_goal_bucket": "direct_revenue_signal",
+        "final_goal_rank": 2,
+        "source_question_count": 3,
+        "source_questions": [
+          "What analytics or data platform needs does {entity} have for performance or fan insights?",
+          "What analytics or performance data platform is {entity} seeking for member federations?",
+          "What centralized analytics or data platform is {entity} building for league and clubs?"
+        ],
+        "split_from_section": null,
+        "split_reason": "Kept as a single focused Ralph-loop prompt.",
+        "final_goal_rationale": "service fit: ANALYTICS; budget fit: £100K-£400K; positioning: CAPABILITY_PARTNER; keywords: analytics, data platform; service fit: ANALYTICS; budget fit: £150K-£400K; positioning: CAPABILITY_PARTNER; keywords: analytics, data platform"
+      },
+      {
+        "prompt": "Verify whether {entity} has stadium or venue technology upgrades planned and what triggers them.",
+        "normalized_prompt": "verify whether {entity} has stadium or venue technology upgrades planned and what triggers them",
+        "source_question_normalized": "what stadium or venue technology upgrades is {entity} planning?",
+        "section_title": "Unclassified",
+        "final_goal_score": 100,
+        "final_goal_bucket": "direct_revenue_signal",
+        "final_goal_rank": 3,
+        "source_question_count": 1,
+        "source_questions": [
+          "What stadium or venue technology upgrades is {entity} planning?"
+        ],
+        "split_from_section": null,
+        "split_reason": "Kept as a single focused Ralph-loop prompt.",
+        "final_goal_rationale": "service fit: ECOMMERCE, MOBILE_APPS, UI_UX_DESIGN; budget fit: £100K-£400K; positioning: STRATEGIC_PARTNER; keywords: stadium, venue"
+      },
+      {
+        "prompt": "Verify whether {entity} has ticketing or e-commerce pain points that suggest a replacement, upgrade, or new vendor process.",
+        "normalized_prompt": "verify whether {entity} has ticketing or e-commerce pain points that suggest a replacement, upgrade, or new vendor process",
+        "source_question_normalized": "what league-wide e-commerce or ticketing platform is {entity} developing?",
+        "section_title": "Unclassified",
+        "final_goal_score": 100,
+        "final_goal_bucket": "direct_revenue_signal",
+        "final_goal_rank": 4,
+        "source_question_count": 2,
+        "source_questions": [
+          "What league-wide e-commerce or ticketing platform is {entity} developing?",
+          "What ticketing or e-commerce pain points indicate replacement needs at {entity}?"
+        ],
+        "split_from_section": null,
+        "split_reason": "Kept as a single focused Ralph-loop prompt.",
+        "final_goal_rationale": "service fit: ECOMMERCE; budget fit: £150K-£400K; positioning: SOLUTION_PROVIDER; keywords: ticketing, e-commerce, commerce; service fit: ECOMMERCE, FAN_ENGAGEMENT; positioning: SOLUTION_PROVIDER; keywords: ticketing, e-commerce, commerce"
+      },
+      {
+        "prompt": "Verify the signal behind this opportunity question for {entity} and tie it to evidence, timing, and likely procurement intent.",
+        "normalized_prompt": "verify the signal behind this opportunity question for {entity} and tie it to evidence, timing, and likely procurement intent",
+        "source_question_normalized": "what event management platform needs does {entity} have for competitions/championships?",
+        "section_title": "Unclassified",
+        "final_goal_score": 99,
+        "final_goal_bucket": "direct_revenue_signal",
+        "final_goal_rank": 5,
+        "source_question_count": 5,
+        "source_questions": [
+          "What event management platform needs does {entity} have for competitions/championships?",
+          "What officiating or technology projects is {entity} planning for major events?",
+          "What digital member communication or engagement platforms is {entity} implementing?",
+          "What digital certification or assessment systems is {entity} modernizing?",
+          "What broadcast or streaming enhancements is {entity} planning for content distribution?"
+        ],
+        "split_from_section": null,
+        "split_reason": "Kept as a single focused Ralph-loop prompt.",
+        "final_goal_rationale": "service fit: ECOMMERCE, MOBILE_APPS; budget fit: £100K-£400K; positioning: SOLUTION_PROVIDER; service fit: ANALYTICS, MOBILE_APPS; positioning: INNOVATION_PARTNER; service fit: FAN_ENGAGEMENT, MOBILE_APPS; positioning: STRATEGIC_PARTNER; service fit: DIGITAL_TRANSFORMATION, UI_UX_DESIGN; positioning: STRATEGIC_PARTNER; service fit: MOBILE_APPS, UI_UX_DESIGN; positioning: INNOVATION_PARTNER"
+      },
+      {
+        "prompt": "Verify whether {entity} has fan engagement gaps or platform needs that could support a Yellow Panther pilot.",
+        "normalized_prompt": "verify whether {entity} has fan engagement gaps or platform needs that could support a yellow panther pilot",
+        "source_question_normalized": "what fan engagement strategy gaps or opportunities exist at {entity}?",
+        "section_title": "Unclassified",
+        "final_goal_score": 98,
+        "final_goal_bucket": "direct_revenue_signal",
+        "final_goal_rank": 6,
+        "source_question_count": 1,
+        "source_questions": [
+          "What fan engagement strategy gaps or opportunities exist at {entity}?"
+        ],
+        "split_from_section": null,
+        "split_reason": "Kept as a single focused Ralph-loop prompt.",
+        "final_goal_rationale": "service fit: FAN_ENGAGEMENT, MOBILE_APPS; positioning: INNOVATION_PARTNER; keywords: fan engagement"
+      },
+      {
+        "prompt": "Verify whether {entity} is undertaking a digital transformation initiative using the official site, job postings, and press releases, and identify timing, budget, or vendor change signals.",
+        "normalized_prompt": "verify whether {entity} is undertaking a digital transformation initiative using the official site, job postings, and press releases, and identify timing, budget, or vendor change signals",
+        "source_question_normalized": "what digital transformation initiatives is {entity} undertaking or planning?",
+        "section_title": "Unclassified",
+        "final_goal_score": 97,
+        "final_goal_bucket": "direct_revenue_signal",
+        "final_goal_rank": 7,
+        "source_question_count": 2,
+        "source_questions": [
+          "What digital transformation initiatives is {entity} undertaking or planning?",
+          "What digital transformation of league operations is {entity} undertaking?"
+        ],
+        "split_from_section": null,
+        "split_reason": "Kept as a single focused Ralph-loop prompt.",
+        "final_goal_rationale": "service fit: DIGITAL_TRANSFORMATION; positioning: STRATEGIC_PARTNER; keywords: digital transformation"
+      },
+      {
+        "prompt": "Verify whether {entity} is replacing legacy systems and what evidence points to procurement timing.",
+        "normalized_prompt": "verify whether {entity} is replacing legacy systems and what evidence points to procurement timing",
+        "source_question_normalized": "what legacy system replacement signals is {entity} showing?",
+        "section_title": "Unclassified",
+        "final_goal_score": 90,
+        "final_goal_bucket": "direct_revenue_signal",
+        "final_goal_rank": 8,
+        "source_question_count": 1,
+        "source_questions": [
+          "What legacy system replacement signals is {entity} showing?"
+        ],
+        "split_from_section": null,
+        "split_reason": "Kept as a single focused Ralph-loop prompt.",
+        "final_goal_rationale": "service fit: ANALYTICS, DIGITAL_TRANSFORMATION; positioning: SOLUTION_PROVIDER"
+      },
+      {
+        "prompt": "What technology platforms are currently in use at {entity}?",
+        "normalized_prompt": "what technology platforms are currently in use at {entity}?",
+        "source_question_normalized": "what are strategic digital opportunities?",
+        "section_title": "Digital Transformation",
+        "final_goal_score": 80,
+        "final_goal_bucket": "direct_revenue_signal",
+        "final_goal_rank": 9,
+        "source_question_count": 5,
+        "source_questions": [
+          "What are strategic digital opportunities?",
+          "What are the key digital weaknesses or gaps?",
+          "What is the digital maturity score (0-100) and what does it mean?",
+          "What technology platforms are currently in use (website, CRM, analytics, mobile)?",
+          "Who are the primary technology vendors/partners?"
+        ],
+        "split_from_section": "Digital Transformation",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: mobile, analytics, website, crm"
+      },
+      {
+        "prompt": "What website platform is in use at {entity}?",
+        "normalized_prompt": "what website platform is in use at {entity}?",
+        "source_question_normalized": "what are strategic digital opportunities?",
+        "section_title": "Digital Transformation",
+        "final_goal_score": 79,
+        "final_goal_bucket": "direct_revenue_signal",
+        "final_goal_rank": 10,
+        "source_question_count": 5,
+        "source_questions": [
+          "What are strategic digital opportunities?",
+          "What are the key digital weaknesses or gaps?",
+          "What is the digital maturity score (0-100) and what does it mean?",
+          "What technology platforms are currently in use (website, CRM, analytics, mobile)?",
+          "Who are the primary technology vendors/partners?"
+        ],
+        "split_from_section": "Digital Transformation",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: mobile, analytics, website, crm"
+      },
+      {
+        "prompt": "What CRM system is in use at {entity}?",
+        "normalized_prompt": "what crm system is in use at {entity}?",
+        "source_question_normalized": "what are strategic digital opportunities?",
+        "section_title": "Digital Transformation",
+        "final_goal_score": 78,
+        "final_goal_bucket": "direct_revenue_signal",
+        "final_goal_rank": 11,
+        "source_question_count": 5,
+        "source_questions": [
+          "What are strategic digital opportunities?",
+          "What are the key digital weaknesses or gaps?",
+          "What is the digital maturity score (0-100) and what does it mean?",
+          "What technology platforms are currently in use (website, CRM, analytics, mobile)?",
+          "Who are the primary technology vendors/partners?"
+        ],
+        "split_from_section": "Digital Transformation",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: mobile, analytics, website, crm"
+      },
+      {
+        "prompt": "What analytics platform is in use at {entity}?",
+        "normalized_prompt": "what analytics platform is in use at {entity}?",
+        "source_question_normalized": "what are strategic digital opportunities?",
+        "section_title": "Digital Transformation",
+        "final_goal_score": 77,
+        "final_goal_bucket": "direct_revenue_signal",
+        "final_goal_rank": 12,
+        "source_question_count": 5,
+        "source_questions": [
+          "What are strategic digital opportunities?",
+          "What are the key digital weaknesses or gaps?",
+          "What is the digital maturity score (0-100) and what does it mean?",
+          "What technology platforms are currently in use (website, CRM, analytics, mobile)?",
+          "Who are the primary technology vendors/partners?"
+        ],
+        "split_from_section": "Digital Transformation",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: mobile, analytics, website, crm"
+      },
+      {
+        "prompt": "What mobile apps are in use or planned at {entity}?",
+        "normalized_prompt": "what mobile apps are in use or planned at {entity}?",
+        "source_question_normalized": "what are strategic digital opportunities?",
+        "section_title": "Digital Transformation",
+        "final_goal_score": 76,
+        "final_goal_bucket": "direct_revenue_signal",
+        "final_goal_rank": 13,
+        "source_question_count": 5,
+        "source_questions": [
+          "What are strategic digital opportunities?",
+          "What are the key digital weaknesses or gaps?",
+          "What is the digital maturity score (0-100) and what does it mean?",
+          "What technology platforms are currently in use (website, CRM, analytics, mobile)?",
+          "Who are the primary technology vendors/partners?"
+        ],
+        "split_from_section": "Digital Transformation",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: mobile, analytics, website, crm"
+      },
+      {
+        "prompt": "Who are the primary technology vendors or partners?",
+        "normalized_prompt": "who are the primary technology vendors or partners?",
+        "source_question_normalized": "what are strategic digital opportunities?",
+        "section_title": "Digital Transformation",
+        "final_goal_score": 75,
+        "final_goal_bucket": "direct_revenue_signal",
+        "final_goal_rank": 14,
+        "source_question_count": 5,
+        "source_questions": [
+          "What are strategic digital opportunities?",
+          "What are the key digital weaknesses or gaps?",
+          "What is the digital maturity score (0-100) and what does it mean?",
+          "What technology platforms are currently in use (website, CRM, analytics, mobile)?",
+          "Who are the primary technology vendors/partners?"
+        ],
+        "split_from_section": "Digital Transformation",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: mobile, analytics, website, crm"
+      },
+      {
+        "prompt": "What strategic digital opportunities exist?",
+        "normalized_prompt": "what strategic digital opportunities exist?",
+        "source_question_normalized": "what are strategic digital opportunities?",
+        "section_title": "Digital Transformation",
+        "final_goal_score": 74,
+        "final_goal_bucket": "direct_revenue_signal",
+        "final_goal_rank": 15,
+        "source_question_count": 5,
+        "source_questions": [
+          "What are strategic digital opportunities?",
+          "What are the key digital weaknesses or gaps?",
+          "What is the digital maturity score (0-100) and what does it mean?",
+          "What technology platforms are currently in use (website, CRM, analytics, mobile)?",
+          "Who are the primary technology vendors/partners?"
+        ],
+        "split_from_section": "Digital Transformation",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: mobile, analytics, website, crm"
+      },
+      {
+        "prompt": "What key digital weaknesses or gaps exist?",
+        "normalized_prompt": "what key digital weaknesses or gaps exist?",
+        "source_question_normalized": "what are strategic digital opportunities?",
+        "section_title": "Digital Transformation",
+        "final_goal_score": 73,
+        "final_goal_bucket": "direct_revenue_signal",
+        "final_goal_rank": 16,
+        "source_question_count": 5,
+        "source_questions": [
+          "What are strategic digital opportunities?",
+          "What are the key digital weaknesses or gaps?",
+          "What is the digital maturity score (0-100) and what does it mean?",
+          "What technology platforms are currently in use (website, CRM, analytics, mobile)?",
+          "Who are the primary technology vendors/partners?"
+        ],
+        "split_from_section": "Digital Transformation",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: mobile, analytics, website, crm"
+      },
+      {
+        "prompt": "What is the digital maturity score and what does it mean?",
+        "normalized_prompt": "what is the digital maturity score and what does it mean?",
+        "source_question_normalized": "what are strategic digital opportunities?",
+        "section_title": "Digital Transformation",
+        "final_goal_score": 72,
+        "final_goal_bucket": "direct_revenue_signal",
+        "final_goal_rank": 17,
+        "source_question_count": 5,
+        "source_questions": [
+          "What are strategic digital opportunities?",
+          "What are the key digital weaknesses or gaps?",
+          "What is the digital maturity score (0-100) and what does it mean?",
+          "What technology platforms are currently in use (website, CRM, analytics, mobile)?",
+          "Who are the primary technology vendors/partners?"
+        ],
+        "split_from_section": "Digital Transformation",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: mobile, analytics, website, crm"
+      },
+      {
+        "prompt": "What immediate launch opportunities exist (0-6 months)?",
+        "normalized_prompt": "what immediate launch opportunities exist (0-6 months)?",
+        "source_question_normalized": "what are the opportunity scores for each?",
+        "section_title": "Strategic Opportunities",
+        "final_goal_score": 52,
+        "final_goal_bucket": "high_signal",
+        "final_goal_rank": 18,
+        "source_question_count": 5,
+        "source_questions": [
+          "What are the opportunity scores for each?",
+          "What immediate launch opportunities exist (0-6 months)?",
+          "What is the estimated budget/timeline for each?",
+          "What long-term initiatives align (18+ months)?",
+          "What medium-term partnerships are viable (6-18 months)?"
+        ],
+        "split_from_section": "Strategic Opportunities",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: budget, timeline"
+      },
+      {
+        "prompt": "Use verified evidence to answer: Is there an RFP or tender for Major League Cricket?",
+        "normalized_prompt": "use verified evidence to answer: is there an rfp or tender for major league cricket?",
+        "source_question_normalized": "is there an rfp or tender for major league cricket?",
+        "section_title": "Unclassified",
+        "final_goal_score": 52,
+        "final_goal_bucket": "high_signal",
+        "final_goal_rank": 19,
+        "source_question_count": 1,
+        "source_questions": [
+          "Is there an RFP or tender for Major League Cricket?"
+        ],
+        "split_from_section": null,
+        "split_reason": "Kept as a single focused Ralph-loop prompt.",
+        "final_goal_rationale": "keywords: rfp, tender"
+      },
+      {
+        "prompt": "What medium-term partnerships are viable (6-18 months)?",
+        "normalized_prompt": "what medium-term partnerships are viable (6-18 months)?",
+        "source_question_normalized": "what are the opportunity scores for each?",
+        "section_title": "Strategic Opportunities",
+        "final_goal_score": 51,
+        "final_goal_bucket": "high_signal",
+        "final_goal_rank": 20,
+        "source_question_count": 5,
+        "source_questions": [
+          "What are the opportunity scores for each?",
+          "What immediate launch opportunities exist (0-6 months)?",
+          "What is the estimated budget/timeline for each?",
+          "What long-term initiatives align (18+ months)?",
+          "What medium-term partnerships are viable (6-18 months)?"
+        ],
+        "split_from_section": "Strategic Opportunities",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: budget, timeline"
+      },
+      {
+        "prompt": "What long-term initiatives align (18+ months)?",
+        "normalized_prompt": "what long-term initiatives align (18+ months)?",
+        "source_question_normalized": "what are the opportunity scores for each?",
+        "section_title": "Strategic Opportunities",
+        "final_goal_score": 50,
+        "final_goal_bucket": "high_signal",
+        "final_goal_rank": 21,
+        "source_question_count": 5,
+        "source_questions": [
+          "What are the opportunity scores for each?",
+          "What immediate launch opportunities exist (0-6 months)?",
+          "What is the estimated budget/timeline for each?",
+          "What long-term initiatives align (18+ months)?",
+          "What medium-term partnerships are viable (6-18 months)?"
+        ],
+        "split_from_section": "Strategic Opportunities",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: budget, timeline"
+      },
+      {
+        "prompt": "What are the estimated budget/timeline expectations?",
+        "normalized_prompt": "what are the estimated budget/timeline expectations?",
+        "source_question_normalized": "what are the opportunity scores for each?",
+        "section_title": "Strategic Opportunities",
+        "final_goal_score": 49,
+        "final_goal_bucket": "high_signal",
+        "final_goal_rank": 22,
+        "source_question_count": 5,
+        "source_questions": [
+          "What are the opportunity scores for each?",
+          "What immediate launch opportunities exist (0-6 months)?",
+          "What is the estimated budget/timeline for each?",
+          "What long-term initiatives align (18+ months)?",
+          "What medium-term partnerships are viable (6-18 months)?"
+        ],
+        "split_from_section": "Strategic Opportunities",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: budget, timeline"
+      },
+      {
+        "prompt": "What are the opportunity scores for each path?",
+        "normalized_prompt": "what are the opportunity scores for each path?",
+        "source_question_normalized": "what are the opportunity scores for each?",
+        "section_title": "Strategic Opportunities",
+        "final_goal_score": 48,
+        "final_goal_bucket": "high_signal",
+        "final_goal_rank": 23,
+        "source_question_count": 5,
+        "source_questions": [
+          "What are the opportunity scores for each?",
+          "What immediate launch opportunities exist (0-6 months)?",
+          "What is the estimated budget/timeline for each?",
+          "What long-term initiatives align (18+ months)?",
+          "What medium-term partnerships are viable (6-18 months)?"
+        ],
+        "split_from_section": "Strategic Opportunities",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: budget, timeline"
+      },
+      {
+        "prompt": "Use verified evidence to answer: What league-wide mobile app or digital platform initiatives is Major League Cricket pursuing?",
+        "normalized_prompt": "use verified evidence to answer: what league-wide mobile app or digital platform initiatives is major league cricket pursuing?",
+        "source_question_normalized": "what league-wide mobile app or digital platform initiatives is major league cricket pursuing?",
+        "section_title": "Unclassified",
+        "final_goal_score": 46,
+        "final_goal_bucket": "high_signal",
+        "final_goal_rank": 24,
+        "source_question_count": 1,
+        "source_questions": [
+          "What league-wide mobile app or digital platform initiatives is Major League Cricket pursuing?"
+        ],
+        "split_from_section": null,
+        "split_reason": "Kept as a single focused Ralph-loop prompt.",
+        "final_goal_rationale": "keywords: mobile app, mobile"
+      },
+      {
+        "prompt": "Use verified evidence to answer: Who leads fan engagement, CRM, or audience growth at Major League Cricket?",
+        "normalized_prompt": "use verified evidence to answer: who leads fan engagement, crm, or audience growth at major league cricket?",
+        "source_question_normalized": "who leads fan engagement, crm, or audience growth at major league cricket?",
+        "section_title": "Unclassified",
+        "final_goal_score": 44,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 25,
+        "source_question_count": 1,
+        "source_questions": [
+          "Who leads fan engagement, CRM, or audience growth at Major League Cricket?"
+        ],
+        "split_from_section": null,
+        "split_reason": "Kept as a single focused Ralph-loop prompt.",
+        "final_goal_rationale": "keywords: fan engagement, crm"
+      },
+      {
+        "prompt": "Verify the entity's official name, type, sport/industry, founding year, headquarters, primary venue, website, and employee count from authoritative sources.",
+        "normalized_prompt": "verify the entity's official name, type, sport/industry, founding year, headquarters, primary venue, website, and employee count from authoritative sources",
+        "source_question_normalized": "what is the official website url?",
+        "section_title": "Core Information",
+        "final_goal_score": 38,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 26,
+        "source_question_count": 5,
+        "source_questions": [
+          "What is the official website URL?",
+          "What is the primary venue/facility and capacity?",
+          "What is the employee count range?",
+          "What is the entity's official name, type, and primary sport/industry?",
+          "When was it founded and where is it headquartered?"
+        ],
+        "split_from_section": null,
+        "split_reason": "Kept as a single focused Ralph-loop prompt.",
+        "final_goal_rationale": "keywords: website; keywords: venue; fallback business profile ranking"
+      },
+      {
+        "prompt": "Who are the key decision makers at {entity}?",
+        "normalized_prompt": "who are the key decision makers at {entity}?",
+        "source_question_normalized": "who are the key decision makers (name, role, influence level)?",
+        "section_title": "Key Decision Makers",
+        "final_goal_score": 38,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 27,
+        "source_question_count": 1,
+        "source_questions": [
+          "Who are the key decision makers (name, role, influence level)?"
+        ],
+        "split_from_section": "Key Decision Makers",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: decision maker"
+      },
+      {
+        "prompt": "What procurement-relevant news is there in the last 90 days?",
+        "normalized_prompt": "what procurement-relevant news is there in the last 90 days?",
+        "source_question_normalized": "what recent news (last 90 days) is relevant to procurement/partnerships?",
+        "section_title": "Recent News",
+        "final_goal_score": 38,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 28,
+        "source_question_count": 1,
+        "source_questions": [
+          "What recent news (last 90 days) is relevant to procurement/partnerships?"
+        ],
+        "split_from_section": "Recent News",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: procurement"
+      },
+      {
+        "prompt": "What are their titles and influence levels?",
+        "normalized_prompt": "what are their titles and influence levels?",
+        "source_question_normalized": "who are the key decision makers (name, role, influence level)?",
+        "section_title": "Key Decision Makers",
+        "final_goal_score": 37,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 29,
+        "source_question_count": 1,
+        "source_questions": [
+          "Who are the key decision makers (name, role, influence level)?"
+        ],
+        "split_from_section": "Key Decision Makers",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: decision maker"
+      },
+      {
+        "prompt": "What items indicate urgency or timing pressure?",
+        "normalized_prompt": "what items indicate urgency or timing pressure?",
+        "source_question_normalized": "what recent news (last 90 days) is relevant to procurement/partnerships?",
+        "section_title": "Recent News",
+        "final_goal_score": 37,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 30,
+        "source_question_count": 1,
+        "source_questions": [
+          "What recent news (last 90 days) is relevant to procurement/partnerships?"
+        ],
+        "split_from_section": "Recent News",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: procurement"
+      },
+      {
+        "prompt": "What are their decision criteria?",
+        "normalized_prompt": "what are their decision criteria?",
+        "source_question_normalized": "who are the key decision makers (name, role, influence level)?",
+        "section_title": "Key Decision Makers",
+        "final_goal_score": 36,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 31,
+        "source_question_count": 1,
+        "source_questions": [
+          "Who are the key decision makers (name, role, influence level)?"
+        ],
+        "split_from_section": "Key Decision Makers",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: decision maker"
+      },
+      {
+        "prompt": "What are the best contact channels?",
+        "normalized_prompt": "what are the best contact channels?",
+        "source_question_normalized": "what are the best contact channels and timing?",
+        "section_title": "Outreach Strategy",
+        "final_goal_score": 36,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 32,
+        "source_question_count": 1,
+        "source_questions": [
+          "What are the best contact channels and timing?"
+        ],
+        "split_from_section": "Outreach Strategy",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: contact"
+      },
+      {
+        "prompt": "What items indicate budget or vendor change signals?",
+        "normalized_prompt": "what items indicate budget or vendor change signals?",
+        "source_question_normalized": "what recent news (last 90 days) is relevant to procurement/partnerships?",
+        "section_title": "Recent News",
+        "final_goal_score": 36,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 33,
+        "source_question_count": 1,
+        "source_questions": [
+          "What recent news (last 90 days) is relevant to procurement/partnerships?"
+        ],
+        "split_from_section": "Recent News",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: procurement"
+      },
+      {
+        "prompt": "Use verified evidence to answer: What digital transformation of league operations is Major League Cricket undertaking?",
+        "normalized_prompt": "use verified evidence to answer: what digital transformation of league operations is major league cricket undertaking?",
+        "source_question_normalized": "what digital transformation of league operations is major league cricket undertaking?",
+        "section_title": "Unclassified",
+        "final_goal_score": 36,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 34,
+        "source_question_count": 1,
+        "source_questions": [
+          "What digital transformation of league operations is Major League Cricket undertaking?"
+        ],
+        "split_from_section": null,
+        "split_reason": "Kept as a single focused Ralph-loop prompt.",
+        "final_goal_rationale": "keywords: digital transformation"
+      },
+      {
+        "prompt": "What is their decision scope and authority?",
+        "normalized_prompt": "what is their decision scope and authority?",
+        "source_question_normalized": "who are the key decision makers (name, role, influence level)?",
+        "section_title": "Key Decision Makers",
+        "final_goal_score": 35,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 35,
+        "source_question_count": 1,
+        "source_questions": [
+          "Who are the key decision makers (name, role, influence level)?"
+        ],
+        "split_from_section": "Key Decision Makers",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: decision maker"
+      },
+      {
+        "prompt": "What timing windows are best?",
+        "normalized_prompt": "what timing windows are best?",
+        "source_question_normalized": "what are the best contact channels and timing?",
+        "section_title": "Outreach Strategy",
+        "final_goal_score": 35,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 36,
+        "source_question_count": 1,
+        "source_questions": [
+          "What are the best contact channels and timing?"
+        ],
+        "split_from_section": "Outreach Strategy",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: contact"
+      },
+      {
+        "prompt": "What items indicate partnership or platform change signals?",
+        "normalized_prompt": "what items indicate partnership or platform change signals?",
+        "source_question_normalized": "what recent news (last 90 days) is relevant to procurement/partnerships?",
+        "section_title": "Recent News",
+        "final_goal_score": 35,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 37,
+        "source_question_count": 1,
+        "source_questions": [
+          "What recent news (last 90 days) is relevant to procurement/partnerships?"
+        ],
+        "split_from_section": "Recent News",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: procurement"
+      },
+      {
+        "prompt": "What is the overall assessment of this entity's digital posture?",
+        "normalized_prompt": "what is the overall assessment of this entity's digital posture?",
+        "source_question_normalized": "what is the yellow panther opportunity (service fit, entry point)?",
+        "section_title": "AI Reasoner Assessment",
+        "final_goal_score": 34,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 38,
+        "source_question_count": 1,
+        "source_questions": [
+          "What is the Yellow Panther opportunity (service fit, entry point)?"
+        ],
+        "split_from_section": "AI Reasoner Assessment",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: opportunity"
+      },
+      {
+        "prompt": "Which Yellow Panther team members have connections to {entity}?",
+        "normalized_prompt": "which yellow panther team members have connections to {entity}?",
+        "source_question_normalized": "what are the tier 2 bridge contacts available for each yp member?",
+        "section_title": "Connections Analysis",
+        "final_goal_score": 34,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 39,
+        "source_question_count": 1,
+        "source_questions": [
+          "What are the Tier 2 bridge contacts available for EACH YP MEMBER?"
+        ],
+        "split_from_section": "Connections Analysis",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: contact"
+      },
+      {
+        "prompt": "What is their communication style and risk profile?",
+        "normalized_prompt": "what is their communication style and risk profile?",
+        "source_question_normalized": "who are the key decision makers (name, role, influence level)?",
+        "section_title": "Key Decision Makers",
+        "final_goal_score": 34,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 40,
+        "source_question_count": 1,
+        "source_questions": [
+          "Who are the key decision makers (name, role, influence level)?"
+        ],
+        "split_from_section": "Key Decision Makers",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: decision maker"
+      },
+      {
+        "prompt": "What anti-patterns should be avoided?",
+        "normalized_prompt": "what anti-patterns should be avoided?",
+        "source_question_normalized": "what are the best contact channels and timing?",
+        "section_title": "Outreach Strategy",
+        "final_goal_score": 34,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 41,
+        "source_question_count": 1,
+        "source_questions": [
+          "What are the best contact channels and timing?"
+        ],
+        "split_from_section": "Outreach Strategy",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: contact"
+      },
+      {
+        "prompt": "What is the Yellow Panther opportunity (service fit, entry point)?",
+        "normalized_prompt": "what is the yellow panther opportunity (service fit, entry point)?",
+        "source_question_normalized": "what is the yellow panther opportunity (service fit, entry point)?",
+        "section_title": "AI Reasoner Assessment",
+        "final_goal_score": 33,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 42,
+        "source_question_count": 1,
+        "source_questions": [
+          "What is the Yellow Panther opportunity (service fit, entry point)?"
+        ],
+        "split_from_section": "AI Reasoner Assessment",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: opportunity"
+      },
+      {
+        "prompt": "What are the direct connection counts and mutual connections for each Yellow Panther team member?",
+        "normalized_prompt": "what are the direct connection counts and mutual connections for each yellow panther team member?",
+        "source_question_normalized": "what are the tier 2 bridge contacts available for each yp member?",
+        "section_title": "Connections Analysis",
+        "final_goal_score": 33,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 43,
+        "source_question_count": 1,
+        "source_questions": [
+          "What are the Tier 2 bridge contacts available for EACH YP MEMBER?"
+        ],
+        "split_from_section": "Connections Analysis",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: contact"
+      },
+      {
+        "prompt": "What strategic hooks support Yellow Panther engagement?",
+        "normalized_prompt": "what strategic hooks support yellow panther engagement?",
+        "source_question_normalized": "who are the key decision makers (name, role, influence level)?",
+        "section_title": "Key Decision Makers",
+        "final_goal_score": 33,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 44,
+        "source_question_count": 1,
+        "source_questions": [
+          "Who are the key decision makers (name, role, influence level)?"
+        ],
+        "split_from_section": "Key Decision Makers",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: decision maker"
+      },
+      {
+        "prompt": "What conversation starters are relevant?",
+        "normalized_prompt": "what conversation starters are relevant?",
+        "source_question_normalized": "what are the best contact channels and timing?",
+        "section_title": "Outreach Strategy",
+        "final_goal_score": 33,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 45,
+        "source_question_count": 1,
+        "source_questions": [
+          "What are the best contact channels and timing?"
+        ],
+        "split_from_section": "Outreach Strategy",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: contact"
+      },
+      {
+        "prompt": "What are the key risk factors?",
+        "normalized_prompt": "what are the key risk factors?",
+        "source_question_normalized": "what is the yellow panther opportunity (service fit, entry point)?",
+        "section_title": "AI Reasoner Assessment",
+        "final_goal_score": 32,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 46,
+        "source_question_count": 1,
+        "source_questions": [
+          "What is the Yellow Panther opportunity (service fit, entry point)?"
+        ],
+        "split_from_section": "AI Reasoner Assessment",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: opportunity"
+      },
+      {
+        "prompt": "What are the Tier 2 bridge contacts available?",
+        "normalized_prompt": "what are the tier 2 bridge contacts available?",
+        "source_question_normalized": "what are the tier 2 bridge contacts available for each yp member?",
+        "section_title": "Connections Analysis",
+        "final_goal_score": 32,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 47,
+        "source_question_count": 1,
+        "source_questions": [
+          "What are the Tier 2 bridge contacts available for EACH YP MEMBER?"
+        ],
+        "split_from_section": "Connections Analysis",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: contact"
+      },
+      {
+        "prompt": "What personalization tokens should be used?",
+        "normalized_prompt": "what personalization tokens should be used?",
+        "source_question_normalized": "what are the best contact channels and timing?",
+        "section_title": "Outreach Strategy",
+        "final_goal_score": 32,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 48,
+        "source_question_count": 1,
+        "source_questions": [
+          "What are the best contact channels and timing?"
+        ],
+        "split_from_section": "Outreach Strategy",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: contact"
+      },
+      {
+        "prompt": "What are the competitive advantages to leverage?",
+        "normalized_prompt": "what are the competitive advantages to leverage?",
+        "source_question_normalized": "what is the yellow panther opportunity (service fit, entry point)?",
+        "section_title": "AI Reasoner Assessment",
+        "final_goal_score": 31,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 49,
+        "source_question_count": 1,
+        "source_questions": [
+          "What is the Yellow Panther opportunity (service fit, entry point)?"
+        ],
+        "split_from_section": "AI Reasoner Assessment",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: opportunity"
+      },
+      {
+        "prompt": "What is the recommended introduction strategy?",
+        "normalized_prompt": "what is the recommended introduction strategy?",
+        "source_question_normalized": "what are the tier 2 bridge contacts available for each yp member?",
+        "section_title": "Connections Analysis",
+        "final_goal_score": 31,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 50,
+        "source_question_count": 1,
+        "source_questions": [
+          "What are the Tier 2 bridge contacts available for EACH YP MEMBER?"
+        ],
+        "split_from_section": "Connections Analysis",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: contact"
+      },
+      {
+        "prompt": "What is the recommended approach (warm/lukewarm/cold)?",
+        "normalized_prompt": "what is the recommended approach (warm/lukewarm/cold)?",
+        "source_question_normalized": "what are the best contact channels and timing?",
+        "section_title": "Outreach Strategy",
+        "final_goal_score": 31,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 51,
+        "source_question_count": 1,
+        "source_questions": [
+          "What are the best contact channels and timing?"
+        ],
+        "split_from_section": "Outreach Strategy",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: contact"
+      },
+      {
+        "prompt": "What is the recommended engagement approach?",
+        "normalized_prompt": "what is the recommended engagement approach?",
+        "source_question_normalized": "what is the yellow panther opportunity (service fit, entry point)?",
+        "section_title": "AI Reasoner Assessment",
+        "final_goal_score": 30,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 52,
+        "source_question_count": 1,
+        "source_questions": [
+          "What is the Yellow Panther opportunity (service fit, entry point)?"
+        ],
+        "split_from_section": "AI Reasoner Assessment",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: opportunity"
+      },
+      {
+        "prompt": "What is the success probability for each path?",
+        "normalized_prompt": "what is the success probability for each path?",
+        "source_question_normalized": "what are the tier 2 bridge contacts available for each yp member?",
+        "section_title": "Connections Analysis",
+        "final_goal_score": 30,
+        "final_goal_bucket": "context_support",
+        "final_goal_rank": 53,
+        "source_question_count": 1,
+        "source_questions": [
+          "What are the Tier 2 bridge contacts available for EACH YP MEMBER?"
+        ],
+        "split_from_section": "Connections Analysis",
+        "split_reason": "Dense section split into atomic prompts for the Ralph loop.",
+        "final_goal_rationale": "keywords: contact"
+      }
+    ]
+  },
+  "split_sections": [
+    {
+      "section_title": "Digital Transformation",
+      "original_question_count": 5,
+      "split_prompt_count": 9,
+      "business_goal_score": 80,
+      "business_goal_bucket": "direct_revenue_signal",
+      "decision": "split"
+    },
+    {
+      "section_title": "Strategic Opportunities",
+      "original_question_count": 5,
+      "split_prompt_count": 5,
+      "business_goal_score": 52,
+      "business_goal_bucket": "high_signal",
+      "decision": "split"
+    },
+    {
+      "section_title": "Recent News",
+      "original_question_count": 1,
+      "split_prompt_count": 4,
+      "business_goal_score": 38,
+      "business_goal_bucket": "context_support",
+      "decision": "split"
+    },
+    {
+      "section_title": "Key Decision Makers",
+      "original_question_count": 1,
+      "split_prompt_count": 6,
+      "business_goal_score": 38,
+      "business_goal_bucket": "context_support",
+      "decision": "split"
+    },
+    {
+      "section_title": "Outreach Strategy",
+      "original_question_count": 1,
+      "split_prompt_count": 6,
+      "business_goal_score": 36,
+      "business_goal_bucket": "context_support",
+      "decision": "split"
+    },
+    {
+      "section_title": "Connections Analysis",
+      "original_question_count": 1,
+      "split_prompt_count": 5,
+      "business_goal_score": 34,
+      "business_goal_bucket": "context_support",
+      "decision": "split"
+    },
+    {
+      "section_title": "AI Reasoner Assessment",
+      "original_question_count": 1,
+      "split_prompt_count": 5,
+      "business_goal_score": 34,
+      "business_goal_bucket": "context_support",
+      "decision": "split"
+    }
+  ],
+  "pruned_questions": [
+    {
+      "question": "What anti-patterns should be avoided?",
+      "section_title": "Outreach Strategy",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 28
+    },
+    {
+      "question": "What are the strategic hooks for Yellow Panther engagement?",
+      "section_title": "Key Decision Makers",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 28
+    },
+    {
+      "question": "What are their decision criteria?",
+      "section_title": "Key Decision Makers",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 28
+    },
+    {
+      "question": "What conversation starters are relevant?",
+      "section_title": "Outreach Strategy",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 28
+    },
+    {
+      "question": "What is the recommended approach (warm/lukewarm/cold)?",
+      "section_title": "Outreach Strategy",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 28
+    },
+    {
+      "question": "What is their communication style and risk profile?",
+      "section_title": "Key Decision Makers",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 28
+    },
+    {
+      "question": "What is their decision scope and authority?",
+      "section_title": "Key Decision Makers",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 28
+    },
+    {
+      "question": "What personalization tokens should be used?",
+      "section_title": "Outreach Strategy",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 28
+    },
+    {
+      "question": "What are competitive advantages to leverage?",
+      "section_title": "AI Reasoner Assessment",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 26
+    },
+    {
+      "question": "What are the direct connection counts and mutual connections FOR EACH YP MEMBER?",
+      "section_title": "Connections Analysis",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 26
+    },
+    {
+      "question": "What are the key risk factors?",
+      "section_title": "AI Reasoner Assessment",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 26
+    },
+    {
+      "question": "What is the overall assessment of this entity's digital posture?",
+      "section_title": "AI Reasoner Assessment",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 26
+    },
+    {
+      "question": "What is the recommended engagement approach?",
+      "section_title": "AI Reasoner Assessment",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 26
+    },
+    {
+      "question": "What is the recommended introduction strategy considering ALL YP team members?",
+      "section_title": "Connections Analysis",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 26
+    },
+    {
+      "question": "What is the success probability for each path?",
+      "section_title": "Connections Analysis",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 26
+    },
+    {
+      "question": "Which Yellow Panther team members have connections to target entity?",
+      "section_title": "Connections Analysis",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 26
+    },
+    {
+      "question": "How can Yellow Panther differentiate?",
+      "section_title": "Risk Assessment",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 20
+    },
+    {
+      "question": "What are implementation risks (technical, organizational)?",
+      "section_title": "Risk Assessment",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 20
+    },
+    {
+      "question": "What are switching costs?",
+      "section_title": "Risk Assessment",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 20
+    },
+    {
+      "question": "What category does each item fall into (technology, partnership, operations)?",
+      "section_title": "Recent News",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 20
+    },
+    {
+      "question": "What insights do news items provide about entity priorities?",
+      "section_title": "Recent News",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 20
+    },
+    {
+      "question": "What is the competitive landscape (incumbents, alternatives)?",
+      "section_title": "Risk Assessment",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 20
+    },
+    {
+      "question": "What is the relevance score for each news item?",
+      "section_title": "Recent News",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 20
+    },
+    {
+      "question": "What are the key performance differentiators?",
+      "section_title": "League Context",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 16
+    },
+    {
+      "question": "What is the current league standing?",
+      "section_title": "League Context",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 16
+    },
+    {
+      "question": "Who are the top 3 competitors?",
+      "section_title": "League Context",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 16
+    },
+    {
+      "question": "When was Major League Cricket founded?",
+      "section_title": "Unclassified",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 16
+    },
+    {
+      "question": "Who leads commercial partnerships or business development at Major League Cricket?",
+      "section_title": "Unclassified",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 16
+    },
+    {
+      "question": "Who leads digital product, web, or app initiatives at Major League Cricket?",
+      "section_title": "Unclassified",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 16
+    },
+    {
+      "question": "Who leads marketing or communications at Major League Cricket?",
+      "section_title": "Unclassified",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 16
+    },
+    {
+      "question": "Who leads operations, strategy, or business operations at Major League Cricket?",
+      "section_title": "Unclassified",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 16
+    },
+    {
+      "question": "What are key statistics (wins, goals for/against)?",
+      "section_title": "Current Performance",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 14
+    },
+    {
+      "question": "What is recent form (last 5 matches)?",
+      "section_title": "Current Performance",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 4
+    },
+    {
+      "question": "What is current league position and points?",
+      "section_title": "Current Performance",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": 2
+    },
+    {
+      "question": "How does this compare to top competitors?",
+      "section_title": "Current Performance",
+      "business_goal_bucket": "weak_signal",
+      "business_goal_score": -10
+    }
+  ]
+}

@@ -24,55 +24,17 @@ from typing import Dict, List, Any, Optional, Literal
 from dataclasses import dataclass
 from enum import Enum
 
+try:
+    from yellow_panther_catalog import YELLOW_PANTHER_SERVICE_CONTEXT
+except ImportError:
+    from backend.yellow_panther_catalog import YELLOW_PANTHER_SERVICE_CONTEXT
+
 
 class DossierTier(Enum):
     """Dossier generation tiers"""
     BASIC = "BASIC"       # 3 sections, ~5s, ~$0.0004
     STANDARD = "STANDARD" # 7 sections, ~15s, ~$0.0095
     PREMIUM = "PREMIUM"   # 11 sections, ~30s, ~$0.057
-
-
-# =============================================================================
-# YELLOW PANTHER SERVICE CONTEXT (Shared across all prompts)
-# =============================================================================
-
-YELLOW_PANTHER_SERVICE_CONTEXT = """
-YELLOW PANTHER SERVICES & CAPABILITIES:
-
-Service Categories:
-- MOBILE_APPS: iOS/Android, React Native, Flutter, native apps, fan apps
-  Budget: £80K-£300K | Timeline: 3-6 months
-  Case Studies: Team GB (Olympic app, STA Award 2024), LNB (French basketball)
-
-- DIGITAL_TRANSFORMATION: Modernization, cloud migration, legacy system upgrades
-  Budget: £150K-£500K | Timeline: 6-12 months
-  Case Study: Premier Padel (3-year strategic partnership)
-
-- FAN_ENGAGEMENT: Fan platforms, supporter experience, fan communication
-  Budget: £80K-£300K | Timeline: 3-6 months
-  Case Studies: FIBA 3×3, ISU
-
-- ANALYTICS: Data platforms, BI, reporting, sports analytics
-  Budget: £100K-£400K | Timeline: 3-9 months
-  Case Study: ISU (International Skating Union analytics platform)
-
-- ECOMMERCE: Ticketing, merchandise, retail platforms, hospitality
-  Budget: £80K-£250K | Timeline: 3-6 months
-  Case Study: BNP Paribas Open (ticketing platform)
-
-- UI_UX_DESIGN: User experience, website redesign, app design
-  Budget: £50K-£200K | Timeline: 2-4 months
-
-Ideal Project Profile: £80K-£500K budget, 3-12 months timeline, 2-8 developers
-
-Positioning Strategies:
-1. SOLUTION_PROVIDER: For RFP signals - respond to specific procurement needs
-2. STRATEGIC_PARTNER: For digital initiatives - advisory relationship
-3. CAPABILITY_PARTNER: For hiring signals - tool timing, scale with team
-4. INNOVATION_PARTNER: For partnership seeking - co-creation mode
-5. TRUSTED_ADVISOR: For mutual connections - referral mode
-"""
-
 
 SCORE_CONTEXT_REQUIREMENTS = """
 CRITICAL: For EVERY score you provide, you MUST include:

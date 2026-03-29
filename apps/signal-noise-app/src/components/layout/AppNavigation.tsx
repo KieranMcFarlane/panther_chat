@@ -39,10 +39,11 @@ import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import PageTransition from './PageTransition';
 import VectorSearchDebounced from '@/components/ui/VectorSearch-debounced';
+import { discoveryNavItems } from './discovery-nav';
 
 // Navigation items - Core demo functionality only
 const navItems = [
-  { icon: Home, label: 'Home', href: '/' },
+  ...discoveryNavItems,
   { icon: Database, label: 'Entities', href: '/entity-browser' },
   { icon: Upload, label: 'Import CSV', href: '/entity-import' },
   { icon: FileText, label: "RFP's/Tenders", href: '/tenders' },
@@ -61,6 +62,7 @@ interface AppNavigationProps {
 
 export default function AppNavigation({ children, authMenu }: AppNavigationProps) {
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const pathname = usePathname();
   const isDossierRoute = pathname?.includes('/dossier') ?? false;
   const isEntityBrowserRoute = pathname?.startsWith('/entity-browser') ?? false;
@@ -77,13 +79,13 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
   }
 
   const renderNavItem = (item: typeof navItems[0]) => {
-    const [isOpen, setIsOpen] = useState(false);
+    const isOpen = openSubmenu === item.label;
     const isActive = pathname === item.href || (item.hasSubmenu && pathname.startsWith(item.href));
     
     const handleClick = (e: React.MouseEvent) => {
       if (item.hasSubmenu) {
         e.preventDefault();
-        setIsOpen(!isOpen);
+        setOpenSubmenu(isOpen ? null : item.label);
       }
       if (item.isSearch) {
         e.preventDefault();
@@ -156,7 +158,11 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
     // When collapsed, wrap in popover for tooltip for other items
     if (!sidebarExpanded) {
       return (
-        <Popover key={item.label} open={isOpen} onOpenChange={setIsOpen}>
+        <Popover
+          key={item.label}
+          open={isOpen}
+          onOpenChange={(open) => setOpenSubmenu(open ? item.label : null)}
+        >
           <PopoverTrigger 
             asChild
             onMouseEnter={() => setIsOpen(true)}

@@ -7700,12 +7700,12 @@ Return JSON:
             Number of hypotheses successfully added
         """
         try:
-            from entity_type_dossier_questions import (
+            from backend.yellow_panther_catalog import (
                 generate_hypothesis_batch,
                 validate_contact_data
             )
         except ImportError:
-            logger.warning("entity_type_dossier_questions not available - question initialization skipped")
+            logger.warning("yellow_panther_catalog not available - question initialization skipped")
             return 0
 
         Hypothesis = _load_backend_attr("hypothesis_manager", "Hypothesis")

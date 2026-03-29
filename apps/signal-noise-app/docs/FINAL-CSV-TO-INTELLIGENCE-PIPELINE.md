@@ -23,9 +23,12 @@ The canonical procurement sequence is:
 2. build dossier context
 3. derive premium questions
 4. turn questions into BrightData MCP queries
-5. scrape evidence from BrightData MCP only
-6. judge with DeepSeek
-7. persist validated signals for the next pipeline stage
+5. score the returned results by relevance
+6. scrape the best result from BrightData MCP
+7. scrape the top 2-3 results for noisy or high-value questions
+8. use `web_data_*` or `extract` when Bright Data offers a better structured path
+9. judge with DeepSeek
+10. persist validated signals for the next pipeline stage
 
 The remembered proof pattern is the Major League Cricket procurement smoke:
 - direct BrightData MCP query

@@ -3,9 +3,14 @@ export interface DossierTabDefinition {
   label: string
   description: string
   hasData: boolean
+  status?: 'filled' | 'partial' | 'missing'
 }
 
 type DossierSectionInput = Record<string, any> | null | undefined
+type DossierHumanContextInput = Record<string, any> | null | undefined
+type DossierTabOptions = {
+  entityType?: string
+}
 
 const SECTION_DEFINITIONS: Array<{
   value: string
@@ -14,10 +19,28 @@ const SECTION_DEFINITIONS: Array<{
   keys: string[]
 }> = [
   {
+    value: 'questions',
+    label: 'Questions',
+    description: 'Canonical Yellow Panther question pack and Ralph writeback',
+    keys: ['metadata'],
+  },
+  {
     value: 'overview',
     label: 'Overview',
     description: 'Core identity, metadata, and dossier snapshot',
     keys: ['core_info', 'entity', 'metadata'],
+  },
+  {
+    value: 'commercial-digital-context',
+    label: 'Commercial',
+    description: 'Commercial motion, digital maturity, and fan/data signals',
+    keys: ['core_info', 'digital_transformation', 'metadata'],
+  },
+  {
+    value: 'temporal-relational-context',
+    label: 'Temporal',
+    description: 'Timeline anchors, freshness, and graph-backed relationships',
+    keys: ['metadata', 'linkedin_connection_analysis'],
   },
   {
     value: 'procurement',
@@ -73,6 +96,12 @@ const SECTION_DEFINITIONS: Array<{
     description: 'Recommended approach and next step',
     keys: ['linkedin_connection_analysis', 'metadata'],
   },
+  {
+    value: 'system',
+    label: 'System',
+    description: 'Persisted writeback, provenance, and source health',
+    keys: ['metadata', 'entity'],
+  },
 ]
 
 function hasValue(value: any): boolean {
@@ -89,16 +118,33 @@ function hasValue(value: any): boolean {
 
 export function buildDossierTabs(
   dossier: DossierSectionInput,
-  options: { entityType?: string } = {},
+  humanContextOrOptions: DossierHumanContextInput | DossierTabOptions = {},
+  options: DossierTabOptions = {},
 ): DossierTabDefinition[] {
   const normalizedDossier = dossier ?? {}
+  const hasHumanContext = Boolean(
+    humanContextOrOptions &&
+      typeof humanContextOrOptions === 'object' &&
+      'sections' in humanContextOrOptions &&
+      humanContextOrOptions.sections &&
+      typeof humanContextOrOptions.sections === 'object',
+  )
+  const humanContext = hasHumanContext ? humanContextOrOptions : null
+  const resolvedOptions = (hasHumanContext ? options : humanContextOrOptions) as DossierTabOptions
   const hasAnyDossierData = Object.values(normalizedDossier).some(hasValue)
+  const hasAnyHumanContextData = Boolean(
+    humanContext &&
+      Object.values((humanContext as Record<string, any>).sections || {}).some((section: any) => {
+        if (!section || typeof section !== 'object') return false
+        return hasValue(section.content) || section.status === 'filled' || section.status === 'partial'
+      }),
+  )
 
-  if (!hasAnyDossierData) {
+  if (!hasAnyDossierData && !hasAnyHumanContextData) {
     return [
       {
         value: 'overview',
-        label: options.entityType ? `${options.entityType} dossier` : 'Dossier',
+        label: resolvedOptions.entityType ? `${resolvedOptions.entityType} dossier` : 'Dossier',
         description: 'No persisted dossier data is available yet',
         hasData: false,
       },
@@ -107,6 +153,17 @@ export function buildDossierTabs(
 
   return SECTION_DEFINITIONS.map((section) => ({
     ...section,
-    hasData: section.keys.some((key) => hasValue(normalizedDossier[key])),
+    hasData:
+      section.keys.some((key) => hasValue(normalizedDossier[key])) ||
+      Boolean(
+        humanContext &&
+          (section.value === 'questions' ||
+            (section.value === 'commercial-digital-context' &&
+              hasValue((humanContext as Record<string, any>).sections?.commercial_digital_context)) ||
+            (section.value === 'temporal-relational-context' &&
+              hasValue((humanContext as Record<string, any>).sections?.temporal_relational_context)) ||
+            (section.value === 'system' &&
+              hasValue((humanContext as Record<string, any>).sections?.evidence_confidence))),
+      ),
   }))
 }

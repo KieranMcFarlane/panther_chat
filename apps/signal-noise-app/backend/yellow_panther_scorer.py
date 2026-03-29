@@ -15,6 +15,11 @@ from datetime import datetime
 from enum import Enum
 import re
 
+try:
+    from backend.yellow_panther_catalog import ENTITY_TYPE_QUESTIONS
+except ImportError:
+    from yellow_panther_catalog import ENTITY_TYPE_QUESTIONS  # type: ignore
+
 
 class ServiceCategory(str, Enum):
     """Yellow Panther service categories"""
@@ -130,12 +135,7 @@ class YellowPantherFitScorer:
         }
 
         # Load entity-type questions for enhanced scoring
-        self.entity_type_questions = {}
-        try:
-            from entity_type_dossier_questions import ENTITY_TYPE_QUESTIONS
-            self.entity_type_questions = ENTITY_TYPE_QUESTIONS
-        except ImportError:
-            pass
+        self.entity_type_questions = ENTITY_TYPE_QUESTIONS
 
     def score_from_question_template(
         self,

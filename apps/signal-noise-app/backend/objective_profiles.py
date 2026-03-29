@@ -9,6 +9,7 @@ from typing import Any, Dict
 VALID_RUN_OBJECTIVES = {
     "rfp_pdf",
     "rfp_web",
+    "procurement_discovery",
     "dossier_core",
     "leadership_enrichment",
     "news_signals",
@@ -40,6 +41,21 @@ OBJECTIVE_PROFILES: Dict[str, Dict[str, Any]] = {
         "fast_fail_length": True,
         "pass_a_lanes": ["official_site", "press_release", "trusted_news", "careers"],
         "pass_b_lanes": ["rfp_procurement_tenders", "governance_pdf", "annual_report"],
+        "budget": {
+            "max_hops": 5,
+            "max_evals_per_hop": 2,
+            "per_iteration_timeout": 30.0,
+            "max_retries": 2,
+            "max_same_domain_revisits": 2,
+        },
+    },
+    "procurement_discovery": {
+        "enable_leadership_enrichment": False,
+        "enable_question_extraction": False,
+        "strict_json_extraction": True,
+        "fast_fail_length": True,
+        "pass_a_lanes": ["rfp_procurement_tenders", "annual_report", "governance_pdf"],
+        "pass_b_lanes": ["official_site", "press_release", "trusted_news", "careers"],
         "budget": {
             "max_hops": 5,
             "max_evals_per_hop": 2,

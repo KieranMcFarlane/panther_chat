@@ -1,0 +1,26 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "zai-coding-plan/glm-5",
+  "mcp": {
+    "brightData": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "npx",
+        "-y",
+        "@brightdata/mcp"
+      ],
+      "environment": {
+        "API_TOKEN": "bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4",
+        "PRO_MODE": "true"
+      }
+    }
+  },
+  "agent": {
+    "build": {
+      "tools": {
+        "brightData*": true
+      }
+    }
+  }
+}

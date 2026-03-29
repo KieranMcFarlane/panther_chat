@@ -125,6 +125,7 @@ class FixedDossierFirstPipeline:
         self._use_canonical_orchestrator = _bool_env(
             os.getenv("PIPELINE_USE_CANONICAL_ORCHESTRATOR", "true")
         )
+        self.v5_strict_mcp = _bool_env(os.getenv("PIPELINE_V5_STRICT_MCP", "true"))
         self.shadow_unbounded_enabled = _bool_env(
             os.getenv("PIPELINE_SHADOW_UNBOUNDED_ENABLED", "false")
         )
@@ -139,6 +140,8 @@ class FixedDossierFirstPipeline:
             1,
             int(os.getenv("PIPELINE_SHADOW_UNBOUNDED_MIN_ITERATIONS", "12")),
         )
+        if self.v5_strict_mcp:
+            self.shadow_unbounded_enabled = False
         self.two_pass_enabled = _bool_env(os.getenv("PIPELINE_TWO_PASS_ENABLED", "true"))
         self.two_pass_pass_a_only = _bool_env(os.getenv("PIPELINE_PASS_A_ONLY", "false"))
         self.two_pass_pass_a_iterations = max(
@@ -882,6 +885,9 @@ class FixedDossierFirstPipeline:
                 context_kwargs["entity_type"] = entity_type
 
             runtime_mode = str(getattr(self, "discovery_runtime_mode", "v2") or "v2").strip().lower()
+            if bool(getattr(self, "v5_strict_mcp", False)) and runtime_mode == "dual_compare":
+                logger.info("🔒 Strict v5 MCP mode: disabling dual compare runtime")
+                runtime_mode = "v2"
             if runtime_mode == "dual_compare":
                 control_runtime_name, candidate_runtime_name = self._dual_compare_runtime_names()
                 control_runtime = self._ensure_compare_discovery(control_runtime_name)
@@ -997,7 +1003,9 @@ class FixedDossierFirstPipeline:
             )
             shadow_kwargs = dict(context_kwargs)
             shadow_kwargs["max_iterations"] = shadow_iterations
-            shadow_lane_enabled = bool(getattr(self, "shadow_unbounded_enabled", False))
+            shadow_lane_enabled = bool(getattr(self, "shadow_unbounded_enabled", False)) and not bool(
+                getattr(self, "v5_strict_mcp", False)
+            )
 
             if shadow_lane_enabled:
                 logger.info(
@@ -1118,6 +1126,8 @@ class FixedDossierFirstPipeline:
         return result
 
     def _ensure_shadow_discovery(self):
+        if bool(getattr(self, "v5_strict_mcp", False)):
+            return self.discovery
         if self._shadow_discovery is not None:
             return self._shadow_discovery
         from backend.brightdata_sdk_client import BrightDataSDKClient
@@ -1138,6 +1148,8 @@ class FixedDossierFirstPipeline:
         return self._shadow_discovery
 
     def _ensure_compare_discovery(self, runtime_name: str):
+        if bool(getattr(self, "v5_strict_mcp", False)):
+            return self.discovery
         from backend.brightdata_sdk_client import BrightDataSDKClient
         from backend.discovery_engine_factory import create_discovery_engine
 
@@ -1955,14 +1967,14 @@ class FixedDossierFirstPipeline:
             "entity_id": entity_id,
             "entity_name": entity_name,
             "template_id": self._last_template_id,
-            "deterministic_max_iterations": self._last_max_iterations,
+            "max_iterations": self._last_max_iterations,
             "lanes": {
-                "deterministic": {
+                "primary": {
                     "summary": _lane_summary(primary_discovery, primary_hops),
                     "hop_timings": primary_hops,
                     "official_site_resolution_traces": primary_perf.get("official_site_resolution_traces") or [],
                 },
-                "shadow_unbounded": {
+                "shadow": {
                     "enabled": bool(shadow_discovery),
                     "summary": _lane_summary(shadow_discovery or {}, shadow_hops) if shadow_discovery else {},
                     "hop_timings": shadow_hops,
@@ -2260,6 +2272,8 @@ class FixedDossierFirstPipeline:
                 llm_status_candidates.append(hop_llm_status)
         parse_path = next((candidate for candidate in parse_path_candidates if candidate), "")
         llm_last_status = next((candidate for candidate in llm_status_candidates if candidate), "")
+        if bool(getattr(self, "v5_strict_mcp", False)) and llm_last_status == "evidence_only":
+            llm_last_status = "mcp_only"
         entity_grounding_reject_count_by_lane = performance.get("entity_grounding_reject_count_by_lane")
         if not isinstance(entity_grounding_reject_count_by_lane, dict):
             entity_grounding_reject_count_by_lane = {}
@@ -2332,7 +2346,7 @@ class FixedDossierFirstPipeline:
             "planner_block_reason_counts": dict(performance.get("planner_block_reason_counts") or {}),
             "controller_health_reasons": list(performance.get("controller_health_reasons") or []),
             "llm_json_hop_count": int(performance.get("llm_json_hop_count") or 0),
-            "heuristic_hop_count": int(performance.get("heuristic_hop_count") or 0),
+            "non_llm_hop_count": int(performance.get("non_llm_hop_count") or 0),
             "agent_influence_ratio": float(performance.get("agent_influence_ratio") or 0.0),
             "artifact_consistency_ok": bool(performance.get("artifact_consistency_ok", True)),
             "artifact_consistency_issues": list(performance.get("artifact_consistency_issues") or []),
@@ -2484,7 +2498,7 @@ class FixedDossierFirstPipeline:
                 "persistence_status": persistence_status if isinstance(persistence_status, dict) else None,
                 "comparison_summary": comparison_payload if isinstance(comparison_payload, dict) else None,
                 "winner_runtime": winner_runtime,
-                "shadow_unbounded": {
+                "shadow": {
                     "enabled": bool(shadow_discovery),
                     "final_confidence": float(shadow_discovery.get("final_confidence") or 0.0) if shadow_discovery else None,
                     "iterations_completed": int(shadow_discovery.get("iterations_completed") or 0) if shadow_discovery else None,

@@ -10,6 +10,7 @@ import { ArrowLeft, CheckCircle2, Clock3, FileText, Info, Layers3 } from "lucide
 import { DossierError } from "@/components/entity-dossier/DossierError"
 import { resolveEntityBrowserReturnUrl } from "@/lib/entity-browser-history"
 import { pushWithViewTransition } from "@/lib/view-transition"
+import type { EntityGraphEpisode } from "@/lib/entity-graph-timeline"
 import type { Entity } from "@/lib/entity-loader"
 
 const Header = dynamic(() => import("@/components/header/Header"), { ssr: false })
@@ -37,6 +38,8 @@ interface EntityDossierClientPageProps {
   deepResearch: boolean
   initialEntity?: Entity | null
   initialDossier?: any | null
+  initialQuestionPack?: any | null
+  initialGraphEpisodes?: EntityGraphEpisode[] | null
   initialError?: string | null
 }
 
@@ -49,6 +52,8 @@ export default function EntityDossierClientPage({
   deepResearch,
   initialEntity = null,
   initialDossier = null,
+  initialQuestionPack = null,
+  initialGraphEpisodes = null,
   initialError = null
 }: EntityDossierClientPageProps) {
   const router = useRouter()
@@ -375,14 +380,16 @@ export default function EntityDossierClientPage({
             className={`transition-opacity duration-200 ${isContentTransitioning ? 'opacity-0' : 'opacity-100'}`}
             style={{ viewTransitionName: "dossier-content" }}
           >
-            <EntityDossierRouter
-              key={dossierKey}
-              entity={entity}
-              onEmailEntity={handleEmailEntity}
-              dossier={dossier}
-            />
-          </div>
+          <EntityDossierRouter
+            key={dossierKey}
+            entity={entity}
+            onEmailEntity={handleEmailEntity}
+            dossier={dossier}
+            questionPack={initialQuestionPack}
+            graphEpisodes={initialGraphEpisodes ?? []}
+          />
         </div>
+      </div>
       </div>
 
       {showEmailModal && (

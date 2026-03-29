@@ -19,7 +19,7 @@ BACKEND = ROOT / "backend"
 sys.path.insert(0, str(BACKEND))
 
 from brightdata_mcp_client import BrightDataMCPClient  # noqa: E402
-from claude_client import ClaudeClient  # noqa: E402
+from judge_client_factory import build_deepseek_judge_client  # noqa: E402
 
 
 def _iso() -> str:
@@ -32,12 +32,71 @@ def _redact_token_in_url(url: str | None) -> str | None:
     return re.sub(r"(token=)[^&]+", r"\1***", url)
 
 
-async def run_smoke(search_query: str, scrape_url: str, output_path: Path, question: str) -> int:
+def _tokenize_query(text: str) -> set[str]:
+    tokens = {
+        token
+        for token in re.findall(r"[a-z0-9]+", str(text or "").lower())
+        if len(token) > 2
+    }
+    return tokens
+
+
+def _score_search_result(query: str, item: Dict[str, Any]) -> float:
+    title = str(item.get("title") or "").lower()
+    snippet = str(item.get("snippet") or "").lower()
+    url = str(item.get("url") or "").lower()
+    text = " ".join([title, snippet, url])
+    tokens = _tokenize_query(query)
+    score = 0.0
+
+    for token in tokens:
+        if token in text:
+            score += 1.0
+
+    procurement_terms = {
+        "rfp": 2.0,
+        "tender": 2.0,
+        "procurement": 2.0,
+        "request for proposal": 2.5,
+        "digital transformation": 1.5,
+    }
+    for term, weight in procurement_terms.items():
+        if term in text:
+            score += weight
+
+    if "linkedin.com" in url:
+        score += 0.75
+    if "/news" in url or "/press" in url:
+        score += 0.5
+    if "official" in text or "press release" in text:
+        score += 0.5
+
+    return score
+
+
+def _choose_best_search_result(query: str, results: list[Dict[str, Any]]) -> tuple[Dict[str, Any] | None, list[Dict[str, Any]]]:
+    scored: list[Dict[str, Any]] = []
+    for index, item in enumerate(results or []):
+        candidate = dict(item or {})
+        candidate["score"] = round(_score_search_result(query, candidate), 3)
+        candidate["rank"] = index
+        scored.append(candidate)
+    scored.sort(key=lambda item: (item.get("score", 0.0), -int(item.get("rank", 0))), reverse=True)
+    return (scored[0] if scored else None, scored)
+
+
+async def run_smoke(
+    search_query: str,
+    scrape_url: str,
+    output_path: Path,
+    question: str,
+    judge_client: Any | None = None,
+) -> int:
     load_dotenv(ROOT / ".env", override=False)
     load_dotenv(BACKEND / ".env", override=False)
 
     brightdata = BrightDataMCPClient(timeout=20)
-    claude = ClaudeClient()
+    claude = judge_client or build_deepseek_judge_client()
 
     report: Dict[str, Any] = {
         "run_at": _iso(),
@@ -69,7 +128,9 @@ async def run_smoke(search_query: str, scrape_url: str, output_path: Path, quest
                 "result_count": len(search.get("results", [])),
             }
         )
-        search_hit = bool(search.get("results", []))
+        search_results = list(search.get("results", []))
+        best_result, ranked_results = _choose_best_search_result(search_query, search_results)
+        search_hit = bool(search_results)
         report["retrieval"]["search_hit"] = search_hit
         report["retrieval"]["search_empty"] = not search_hit
         report["retrieval"]["search_results"] = [
@@ -77,18 +138,31 @@ async def run_smoke(search_query: str, scrape_url: str, output_path: Path, quest
                 "title": item.get("title"),
                 "url": item.get("url"),
                 "snippet": item.get("snippet"),
+                "score": item.get("score"),
+                "rank": item.get("rank"),
             }
-            for item in search.get("results", [])[:5]
+            for item in ranked_results[:5]
         ]
+        report["retrieval"]["selected_result"] = (
+            {
+                "title": best_result.get("title"),
+                "url": best_result.get("url"),
+                "snippet": best_result.get("snippet"),
+                "score": best_result.get("score"),
+                "rank": best_result.get("rank"),
+            }
+            if best_result
+            else None
+        )
 
         if not search_hit:
             print("ICF/Fact smoke: search returned 0 results, proceeding with MCP scrape evidence")
 
         scrape_target_url = scrape_url
         scrape_source = "provided_scrape_url"
-        if search_hit:
-            scrape_target_url = str((search.get("results") or [{}])[0].get("url") or scrape_url)
-            scrape_source = "search_result[0]"
+        if best_result and best_result.get("url"):
+            scrape_target_url = str(best_result.get("url") or scrape_url)
+            scrape_source = "best_search_result"
 
         scrape = await brightdata.scrape_as_markdown(scrape_target_url)
         report["retrieval"]["scrape_used"] = True

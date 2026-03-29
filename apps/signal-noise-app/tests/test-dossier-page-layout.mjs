@@ -12,12 +12,12 @@ const entityLoaderSource = readFileSync(entityLoaderPath, 'utf8')
 const entityApiRouteSource = readFileSync(entityApiRoutePath, 'utf8')
 
 test('dossier page uses the shared Header with league badge modal support', () => {
-  assert.match(clientSource, /import Header from ["']@\/components\/header\/Header["']/)
+  assert.match(clientSource, /const Header = dynamic\(\(\) => import\(["']@\/components\/header\/Header["']\), \{ ssr: false \}\)/)
   assert.match(clientSource, /<Header currentEntity=\{entity\} \/>/)
 })
 
 test('dossier page keeps email modal support for dossier actions', () => {
-  assert.match(clientSource, /import EmailComposeModal from ["']@\/components\/email\/EmailComposeModal["']/)
+  assert.match(clientSource, /const EmailComposeModal = dynamic\(\(\) => import\(["']@\/components\/email\/EmailComposeModal["']\), \{ ssr: false \}\)/)
   assert.match(clientSource, /const \[showEmailModal, setShowEmailModal\] = useState\(false\)/)
   assert.match(clientSource, /onEmailEntity=\{handleEmailEntity\}/)
   assert.match(clientSource, /<EmailComposeModal/)
@@ -28,7 +28,8 @@ test('dossier page server-renders the entity and hands it to the client page', (
   assert.match(source, /import \{ getEntityForDossierPage \} from ["']@\/lib\/entity-loader["']/)
   assert.match(source, /export default async function EntityDossierPage/)
   assert.match(source, /const entityData = await getEntityForDossierPage\(entityId, tier\)/)
-  assert.match(source, /<EntityDossierClientPage[\s\S]*initialEntity=\{entityData\.entity\}/)
+  assert.match(source, /<EntityDossierClientPage[\s\S]*initialEntity=\{entity\}/)
+  assert.match(source, /<EntityDossierClientPage[\s\S]*initialDossier=\{dossier\}/)
 })
 
 test('dossier client page renders from server-provided entity data without a bootstrap fetch', () => {
