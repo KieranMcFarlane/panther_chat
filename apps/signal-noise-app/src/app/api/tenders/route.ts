@@ -72,12 +72,109 @@ export async function POST(request: NextRequest) {
         return await handleRefreshCache();
       case 'retroactive':
         return await handleRetroactiveScraping();
+      case 'backfill-entity-links':
+        return await handleBackfillEntityLinks(data);
       default:
         return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
     }
   } catch (error) {
     console.error('❌ Tender POST API error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
+async function handleBackfillEntityLinks(data: any = {}) {
+  try {
+    const limit = Math.min(Number(data?.limit || 500), 1000);
+    const dryRun = Boolean(data?.dryRun);
+    const supabaseAdmin = getSupabaseAdmin();
+    const canonicalEntities = await getCanonicalEntitiesSnapshot().catch(() => []);
+
+    const { data: rows, error } = await supabaseAdmin
+      .from('rfp_opportunities')
+      .select('id, organization, title, entity_id, entity_name, metadata')
+      .or('entity_id.is.null,entity_name.is.null')
+      .limit(limit);
+
+    if (error) {
+      throw error;
+    }
+
+    const opportunities = Array.isArray(rows) ? rows : [];
+    const updates = opportunities
+      .map((row) => {
+        const linked = linkOpportunityToCanonicalEntity(
+          {
+            entity_id: row.entity_id,
+            entity_name: row.entity_name || row.organization,
+            organization: row.organization,
+            title: row.title,
+          },
+          canonicalEntities,
+        );
+
+        const nextEntityId = linked.canonical_entity_id || row.entity_id || null;
+        const nextEntityName = linked.canonical_entity_name || row.entity_name || row.organization || null;
+        const metadata = {
+          ...(row.metadata || {}),
+          canonical_entity_id: linked.canonical_entity_id || null,
+          canonical_entity_name: linked.canonical_entity_name || null,
+        };
+
+        const hasChange =
+          nextEntityId !== (row.entity_id || null) ||
+          nextEntityName !== (row.entity_name || null) ||
+          metadata.canonical_entity_id !== (row.metadata?.canonical_entity_id || null) ||
+          metadata.canonical_entity_name !== (row.metadata?.canonical_entity_name || null);
+
+        return hasChange
+          ? {
+              id: row.id,
+              entity_id: nextEntityId,
+              entity_name: nextEntityName,
+              metadata,
+              updated_at: new Date().toISOString(),
+            }
+          : null;
+      })
+      .filter(Boolean);
+
+    if (!dryRun && updates.length > 0) {
+      for (const update of updates) {
+        const { error: updateError } = await supabaseAdmin
+          .from('rfp_opportunities')
+          .update({
+            entity_id: update.entity_id,
+            entity_name: update.entity_name,
+            metadata: update.metadata,
+            updated_at: update.updated_at,
+          })
+          .eq('id', update.id);
+
+        if (updateError) {
+          throw updateError;
+        }
+      }
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        scanned: opportunities.length,
+        updated: updates.length,
+        dryRun,
+        samples: updates.slice(0, 10),
+      },
+    });
+  } catch (error) {
+    console.error('❌ Failed to backfill entity links:', error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to backfill entity links',
+      },
+      { status: 500 },
+    );
   }
 }
 
