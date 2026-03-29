@@ -8,6 +8,10 @@ test('tenders API exposes a curated source-backed import action for smoke opport
   assert.match(source, /import-curated-opportunities/)
   assert.match(source, /digital-rfp-opportunities\.js/)
   assert.match(source, /real-rfp-opportunities\.js/)
+  assert.match(
+    source,
+    /const curatedSources:[\s\S]*\[\s*[\s\S]*comprehensiveRfpOpportunities[\s\S]*digitalRfpOpportunities[\s\S]*realRfpOpportunities[\s\S]*\]/,
+  )
 })
 
 test('curated import passes source urls into canonical linkage so domain aliases can apply at insert time', async () => {

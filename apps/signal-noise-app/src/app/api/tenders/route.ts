@@ -161,6 +161,7 @@ async function handleImportCuratedOpportunities(data: any = {}) {
     const canonicalEntities = await getCanonicalEntitiesSnapshot().catch(() => []);
     const nowIso = new Date().toISOString();
     const curatedSources: CuratedOpportunity[] = [
+      ...comprehensiveRfpOpportunities,
       ...digitalRfpOpportunities,
       ...realRfpOpportunities,
     ].filter(Boolean);
