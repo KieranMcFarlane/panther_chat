@@ -10,6 +10,10 @@ test('opportunities page is framed as a shortlist and decision surface', async (
   assert.match(source, /Review Fit|Focused decision view/)
   assert.match(source, /useSearchParams/)
   assert.match(source, /\/api\/tenders\?action=opportunities/)
+  assert.match(source, /canonical_entity_id|canonicalEntityId/)
+  assert.match(source, /No intake-linked opportunities found|No entity-linked opportunities yet/)
+  assert.match(source, /Open RFP&apos;s\/Tenders|Open RFP's\/Tenders/)
+  assert.match(source, /Open Scout/)
 })
 
 test('tenders page is framed as the live intake feed', async () => {

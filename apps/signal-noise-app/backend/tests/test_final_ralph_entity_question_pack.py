@@ -13,8 +13,23 @@ from final_ralph_entity_question_pack import (
     write_final_ralph_entity_question_pack,
 )
 
+TEST_PACK_PATH = BACKEND_DIR / "tests" / "_tmp_dossier_question_final_ralph_pack.json"
+
+
+def setup_function():
+    pack_module._load_final_ralph_pack.cache_clear()
+    if TEST_PACK_PATH.exists():
+        TEST_PACK_PATH.unlink()
+
+
+def teardown_function():
+    pack_module._load_final_ralph_pack.cache_clear()
+    if TEST_PACK_PATH.exists():
+        TEST_PACK_PATH.unlink()
+
 
 def test_build_final_ralph_entity_question_pack_returns_final_pack_shape():
+    pack_module.FINAL_RALPH_PACK_PATH = TEST_PACK_PATH
     pack = build_final_ralph_entity_question_pack(
         entity_type="SPORT_CLUB",
         entity_name="Arsenal FC",
@@ -33,6 +48,7 @@ def test_build_final_ralph_entity_question_pack_returns_final_pack_shape():
 
 
 def test_build_final_ralph_entity_question_pack_exposes_persisted_writeback_metadata():
+    pack_module.FINAL_RALPH_PACK_PATH = TEST_PACK_PATH
     pack = build_final_ralph_entity_question_pack(
         entity_type="SPORT_CLUB",
         entity_name="Arsenal FC",
@@ -49,6 +65,7 @@ def test_build_final_ralph_entity_question_pack_exposes_persisted_writeback_meta
 
 def test_write_final_ralph_entity_question_pack_persists_artifact(tmp_path, monkeypatch):
     monkeypatch.setattr(pack_module, "FINAL_RALPH_PACK_PATH", tmp_path / "dossier_question_final_ralph_pack.json")
+    pack_module._load_final_ralph_pack.cache_clear()
 
     pack = build_final_ralph_entity_question_pack(
         entity_type="SPORT_CLUB",

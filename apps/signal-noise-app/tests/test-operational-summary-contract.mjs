@@ -39,3 +39,29 @@ test('operational summary derives shell metrics from real subsystem state', () =
   assert.equal(summary.pipeline.statusLabel, '3 active')
   assert.match(summary.pipeline.detail, /5 completed recently/i)
 })
+
+test('operational summary reports scout as ready when no artifact has landed yet', () => {
+  const summary = buildOperationalSummary({
+    entitiesActive: 10,
+    scout: {
+      status: 'active',
+      activeRuns: 0,
+      detail: 'scout lane is live and waiting for its first artifact.',
+    },
+    enrichment: {
+      isRunning: false,
+      totalProcessed: 0,
+      totalSuccessful: 0,
+      totalFailed: 0,
+    },
+    pipeline: {
+      activeRuns: 0,
+      failedRuns: 0,
+      recentCompleted: 0,
+    },
+    updatedAt: '2026-03-29T10:41:31.050Z',
+  })
+
+  assert.equal(summary.scout.statusLabel, 'Ready')
+  assert.equal(summary.cards.blocked, '0')
+})

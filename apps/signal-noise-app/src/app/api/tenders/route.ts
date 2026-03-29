@@ -8,7 +8,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin, supabase } from '@/lib/supabase-client';
 import { comprehensiveRfpOpportunities } from '@/lib/comprehensive-rfp-opportunities';
+import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot';
 import digitalRfpOpportunities from '@/lib/digital-rfp-opportunities';
+import { linkOpportunityToCanonicalEntity } from '@/lib/opportunity-entity-linking';
 
 export const dynamic = 'force-dynamic';
 
@@ -246,8 +248,10 @@ async function handleGetOpportunities(searchParams: URLSearchParams) {
       return hasBrokenPattern;
     };
 
+    const canonicalEntities = await getCanonicalEntitiesSnapshot().catch(() => [])
+
     // Map the rfp_opportunities fields to the expected format
-    const mappedOpportunities = (opportunities || []).map(opp => ({
+    const mappedOpportunities = (opportunities || []).map(opp => linkOpportunityToCanonicalEntity({
       id: opp.id,
       title: opp.title || 'Untitled Opportunity',
       organization: opp.organization || 'Unknown Organization',
@@ -278,7 +282,7 @@ async function handleGetOpportunities(searchParams: URLSearchParams) {
       detected_at: opp.created_at || new Date().toISOString(),
       source: 'rfp_opportunities',
       metadata: opp.metadata || {}
-    }));
+    }, canonicalEntities));
 
     // Filter out opportunities with broken or placeholder URLs
     const filteredOpportunities = mappedOpportunities.filter(opp => {

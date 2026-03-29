@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { Calendar, Filter, Search, Star, Target, TrendingUp } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -23,6 +24,8 @@ interface TenderOpportunityRecord {
   yellow_panther_fit: number | null;
   entity_id: string | null;
   entity_name: string | null;
+  canonical_entity_id?: string | null;
+  canonical_entity_name?: string | null;
   entity_type: string | null;
   source_url: string | null;
   tags: string[] | null;
@@ -49,12 +52,14 @@ interface OpportunityCard {
   tags: string[];
   entityId?: string;
   entityName?: string;
+  canonicalEntityId?: string;
+  canonicalEntityName?: string;
   sourceUrl?: string;
 }
 
 function normalizeOpportunity(opp: TenderOpportunityRecord): OpportunityCard {
   const category = opp.category || 'General';
-  const organization = opp.entity_name || opp.organization || 'Unknown organization';
+  const organization = opp.canonical_entity_name || opp.entity_name || opp.organization || 'Unknown organization';
   const fit = opp.yellow_panther_fit ?? 0;
   const confidence = opp.confidence ?? 0;
   const priority = opp.priority_score ?? 0;
@@ -79,6 +84,8 @@ function normalizeOpportunity(opp: TenderOpportunityRecord): OpportunityCard {
     tags: Array.isArray(opp.tags) ? opp.tags : [],
     entityId: opp.entity_id || undefined,
     entityName: opp.entity_name || undefined,
+    canonicalEntityId: opp.canonical_entity_id || undefined,
+    canonicalEntityName: opp.canonical_entity_name || undefined,
     sourceUrl: opp.source_url || undefined,
   };
 }
@@ -137,8 +144,8 @@ export default function OpportunitiesPage() {
 
     if (focusedEntityId || focusedEntityName) {
       filtered = filtered.filter((opp) =>
-        (focusedEntityId && opp.entityId === focusedEntityId) ||
-        (focusedEntityName && [opp.entityName, opp.organization, opp.title].some((value) =>
+        (focusedEntityId && (opp.canonicalEntityId === focusedEntityId || opp.entityId === focusedEntityId)) ||
+        (focusedEntityName && [opp.canonicalEntityName, opp.entityName, opp.organization, opp.title].some((value) =>
           String(value || '').toLowerCase().includes(focusedEntityName.toLowerCase())))
       );
     }
@@ -250,6 +257,11 @@ export default function OpportunitiesPage() {
               <p className="mt-1 text-sm text-emerald-100/90">
                 Reviewing shortlist candidates for {focusedEntityName || focusedEntityId}. This keeps the entity and dossier handoff inside the decision surface.
               </p>
+              {filteredOpportunities.length === 0 && (
+                <p className="mt-2 text-sm text-emerald-100/75">
+                  No intake-linked opportunities found for {focusedEntityName || focusedEntityId} yet. The live feed is still available in RFP&apos;s/Tenders, and this shortlist will populate once a tender record is linked to the canonical entity.
+                </p>
+              )}
             </div>
             <Badge variant="outline" className="border-emerald-400/40 text-emerald-200">
               {filteredOpportunities.length} matching opportunities
@@ -425,10 +437,24 @@ export default function OpportunitiesPage() {
       {filteredOpportunities.length === 0 && (
         <div className="py-12 text-center">
           <Target className="mx-auto mb-4 h-16 w-16 text-fm-medium-grey opacity-50" />
-          <h3 className="mb-2 text-xl font-semibold text-white">No shortlisted opportunities found</h3>
-          <p className="text-fm-medium-grey">
-            Adjust the filters or move back to RFP&apos;s/Tenders to review the broader live feed.
+          <h3 className="mb-2 text-xl font-semibold text-white">
+            {focusedEntityId || focusedEntityName ? 'No entity-linked opportunities yet' : 'No shortlisted opportunities found'}
+          </h3>
+          <p className="mx-auto max-w-2xl text-fm-medium-grey">
+            {focusedEntityId || focusedEntityName
+              ? `No shortlist items are linked to ${focusedEntityName || focusedEntityId} in the current intake feed. Review the live RFP feed or run Scout to create the first linked opportunity.`
+              : 'Adjust the filters or move back to RFP\'s/Tenders to review the broader live feed.'}
           </p>
+          {(focusedEntityId || focusedEntityName) && (
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+              <Button asChild variant="outline" className="border-custom-border bg-custom-box text-white hover:bg-custom-bg">
+                <Link href="/tenders">Open RFP&apos;s/Tenders</Link>
+              </Button>
+              <Button asChild className="bg-yellow-500 text-black hover:bg-yellow-400">
+                <Link href="/rfp-analysis-control-center">Open Scout</Link>
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>

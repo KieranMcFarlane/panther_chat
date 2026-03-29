@@ -14,7 +14,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Sequence, Union
 
-from question_pack_business_reasoner import build_business_goal_reasoned_pack
+try:
+    from backend.question_pack_business_reasoner import build_business_goal_reasoned_pack
+except ImportError:  # pragma: no cover - fallback for direct module execution
+    from question_pack_business_reasoner import build_business_goal_reasoned_pack  # type: ignore
 
 
 SECTION_SPLITS = {

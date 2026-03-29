@@ -41,23 +41,40 @@ export interface OperationalSummary {
   }
 }
 
+function deriveScoutStatusLabel(input: OperationalSummaryInput['scout']): string {
+  const awaitingFirstArtifact =
+    input.activeRuns === 0 && /awaiting first (scout )?artifact/i.test(input.detail)
+
+  if (awaitingFirstArtifact) {
+    return 'Ready'
+  }
+
+  if (input.status === 'running' || input.status === 'active') {
+    return input.activeRuns > 0 ? 'Running' : 'Ready'
+  }
+
+  if (input.status === 'queued') {
+    return 'Queued'
+  }
+
+  if (input.status === 'completed') {
+    return 'Complete'
+  }
+
+  if (input.status === 'failed' || input.status === 'degraded') {
+    return 'Blocked'
+  }
+
+  return 'Ready'
+}
+
 export function buildOperationalSummary(input: OperationalSummaryInput): OperationalSummary {
   const blocked =
     input.pipeline.failedRuns +
     input.enrichment.totalFailed +
     (input.scout.status === 'failed' || input.scout.status === 'degraded' ? 1 : 0)
   const recentCompletions = input.pipeline.recentCompleted + input.enrichment.totalSuccessful
-
-  const scoutStatusLabel =
-    input.scout.status === 'running' || input.scout.status === 'active'
-      ? 'Running'
-      : input.scout.status === 'queued'
-        ? 'Queued'
-        : input.scout.status === 'completed'
-          ? 'Complete'
-          : input.scout.status === 'failed' || input.scout.status === 'degraded'
-            ? 'Blocked'
-            : 'Ready'
+  const scoutStatusLabel = deriveScoutStatusLabel(input.scout)
 
   return {
     updatedAt: input.updatedAt,

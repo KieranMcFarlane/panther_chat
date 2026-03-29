@@ -20,7 +20,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Sequence, Tuple, Union
 
-from question_pack_reasoner import build_question_reasoned_pack
+try:
+    from backend.question_pack_reasoner import build_question_reasoned_pack
+except ImportError:  # pragma: no cover - fallback for direct module execution
+    from question_pack_reasoner import build_question_reasoned_pack  # type: ignore
 
 
 BUSINESS_PROFILE_GOALS = {

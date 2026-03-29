@@ -14,6 +14,19 @@ try:
 except ImportError:  # pragma: no cover - fallback for direct module execution
     from yellow_panther_catalog import get_yp_service_summary  # type: ignore
 
+try:
+    from backend.question_inventory_builder import build_question_inventory
+    from backend.question_pack_pruner import build_question_review_pack
+    from backend.question_pack_reasoner import build_question_reasoned_pack
+    from backend.question_pack_business_reasoner import build_business_goal_reasoned_pack
+    from backend.question_pack_final_ralph import write_final_ralph_pack, build_final_ralph_pack
+except ImportError:  # pragma: no cover - fallback for direct module execution
+    from question_inventory_builder import build_question_inventory  # type: ignore
+    from question_pack_pruner import build_question_review_pack  # type: ignore
+    from question_pack_reasoner import build_question_reasoned_pack  # type: ignore
+    from question_pack_business_reasoner import build_business_goal_reasoned_pack  # type: ignore
+    from question_pack_final_ralph import write_final_ralph_pack, build_final_ralph_pack  # type: ignore
+
 
 BACKEND_DIR = Path(__file__).resolve().parent
 FINAL_RALPH_PACK_PATH = BACKEND_DIR / "data" / "dossier_question_final_ralph_pack.json"
@@ -47,8 +60,24 @@ POSITIONING_MAP = {
 @lru_cache(maxsize=1)
 def _load_final_ralph_pack() -> Dict[str, Any]:
     if not FINAL_RALPH_PACK_PATH.exists():
+        _ensure_final_ralph_pack(FINAL_RALPH_PACK_PATH)
+    if not FINAL_RALPH_PACK_PATH.exists():
         raise FileNotFoundError(f"Missing final Ralph pack at {FINAL_RALPH_PACK_PATH}")
     return json.loads(FINAL_RALPH_PACK_PATH.read_text(encoding="utf-8"))
+
+
+def _ensure_final_ralph_pack(output_path: Path) -> Path:
+    output_path = Path(output_path)
+    if output_path.exists():
+        return output_path
+
+    inventory = build_question_inventory(BACKEND_DIR)
+    review_pack = build_question_review_pack(inventory)
+    reasoned_pack = build_question_reasoned_pack(review_pack)
+    business_goal_pack = build_business_goal_reasoned_pack(reasoned_pack)
+    final_pack = build_final_ralph_pack(business_goal_pack)
+    write_final_ralph_pack(output_path, final_pack)
+    return output_path
 
 
 def _normalize(text: str) -> str:
@@ -222,6 +251,7 @@ def write_final_ralph_entity_question_pack(
     writeback["artifact_path"] = str(target_path)
     writeback["persisted"] = True
     writeback["question_count"] = int(pack.get("question_count", len(pack.get("questions", []))))
+    _load_final_ralph_pack.cache_clear()
     return target_path
 
 

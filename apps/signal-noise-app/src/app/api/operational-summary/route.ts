@@ -38,6 +38,8 @@ export async function GET() {
     readLaneSnapshot({ lane: 'scout' }),
   ])
 
+  const scoutAwaitingFirstArtifact = scoutSnapshot.summary?.state === 'awaiting_first_snapshot'
+
   const batch = entityDossierEnrichmentService.getCurrentBatch()
   const enrichment = {
     isRunning: entityDossierEnrichmentService.isEnrichmentRunning(),
@@ -51,7 +53,8 @@ export async function GET() {
     scout: {
       status: scoutSnapshot.status,
       activeRuns:
-        scoutSnapshot.status === 'queued' || scoutSnapshot.status === 'running' || scoutSnapshot.status === 'active'
+        !scoutAwaitingFirstArtifact &&
+        (scoutSnapshot.status === 'queued' || scoutSnapshot.status === 'running' || scoutSnapshot.status === 'active')
           ? 1
           : 0,
       detail:
