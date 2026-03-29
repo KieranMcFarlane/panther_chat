@@ -93,3 +93,35 @@ What changed:
 Next recommendation:
 1. Treat the previous 8-canary false-positive family as resolved
 2. Run a fresh 40-row canary directly from persisted curated rows, not paginated API windows, before widening again
+
+## Fresh Persisted Canary
+Date: 2026-03-29T20:45:00Z
+
+- Scope: first 40 curated rows queried directly from `rfp_opportunities`
+- Sampling method: ordered by persisted `id`, not paginated API windows
+
+### Result
+- Likely correct links: 26
+- Acceptable unlinked rows: 11
+- Suspicious linked rows: 3
+
+### Suspicious Linked Rows
+- German Football League (DFL) -> 2. Bundesliga
+  - `Fan Technology Innovation Platform`
+- Canada Soccer -> USA/Canada
+  - `Digital Modernization & Fan Platform Enhancement`
+- New Zealand Rugby -> All Blacks
+  - `Digital Transformation & Fan Platform`
+
+### Verdict
+- Do not widen curated coverage again yet.
+- The governing-body and government-agency false-positive family is resolved.
+- The remaining blocker is now brand/operator disambiguation inside legitimate football and rugby ecosystems.
+
+### Recommended Next Fixes
+1. Add organization-specific alias resolution for:
+   - `German Football League (DFL)`
+   - `Canada Soccer`
+   - `New Zealand Rugby`
+2. Prefer governing body / league operator entities over team or geography aggregates when the source organization is explicit.
+3. Re-run the same direct persisted 40-row canary after those alias additions.
