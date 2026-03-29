@@ -233,11 +233,18 @@ export function canonicalizeEntities(entities: CanonicalEntity[]): CanonicalEnti
     return scoreEntityVariant(entity) >= bestScore
   })
 
-  const entityGroups: CanonicalEntity[][] = []
+  const entityGroupsByKey = new Map<string, CanonicalEntity[][]>()
 
   for (const entity of filteredEntities) {
     const signature = getEntitySignature(entity)
     if (!signature.name) continue
+
+    const groupKey = `${signature.type}|${signature.name}`
+    let entityGroups = entityGroupsByKey.get(groupKey)
+    if (!entityGroups) {
+      entityGroups = []
+      entityGroupsByKey.set(groupKey, entityGroups)
+    }
 
     let bestGroup: CanonicalEntity[] | null = null
     let bestScore = -1
@@ -258,5 +265,5 @@ export function canonicalizeEntities(entities: CanonicalEntity[]): CanonicalEnti
     }
   }
 
-  return entityGroups.map((variants) => mergeEntityVariants(variants))
+  return Array.from(entityGroupsByKey.values()).flatMap((groups) => groups.map((variants) => mergeEntityVariants(variants)))
 }

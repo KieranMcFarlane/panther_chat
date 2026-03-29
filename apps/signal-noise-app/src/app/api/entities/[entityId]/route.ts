@@ -1,7 +1,33 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
+import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
 
 export const dynamic = 'force-dynamic';
+
+function normalizeFallbackEntityKey(value: unknown): string {
+  return String(value || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '')
+}
+
+function matchesFallbackEntity(entity: any, entityId: string): boolean {
+  if (!entityId || !entity) {
+    return false
+  }
+
+  const entityName = normalizeFallbackEntityKey(entity.properties?.name)
+  const normalizedEntityId = normalizeFallbackEntityKey(entityId)
+  const normalizedNeo4jId = normalizeFallbackEntityKey(entity.neo4j_id)
+  const normalizedId = normalizeFallbackEntityKey(entity.id)
+
+  return [
+    normalizedEntityId,
+    normalizedNeo4jId,
+    normalizedId,
+    entityName,
+  ].some((candidate) => candidate && candidate === normalizedEntityId)
+}
 
 // Dynamic dossier generation function
 async function generateComprehensiveDossier(entity: any, supabase: any) {
@@ -336,7 +362,7 @@ export async function GET(
     const useCache = searchParams.get('useCache') !== 'false' // Default to true
 
     let entity: Entity | null = null
-    let source: 'supabase' | null = null
+    let source: 'supabase' | 'local_export' | null = null
 
     console.log(`📖 Fetching entity ${entityId} from Supabase`)
 
@@ -474,13 +500,28 @@ export async function GET(
     }
 
     if (!entity) {
+      const canonicalEntities = await getCanonicalEntitiesSnapshot()
+      const fallbackEntity = canonicalEntities.find((candidate) => matchesFallbackEntity(candidate, entityId))
+
+      if (fallbackEntity) {
+        entity = {
+          id: fallbackEntity.id,
+          neo4j_id: fallbackEntity.neo4j_id,
+          labels: fallbackEntity.labels || ['Entity'],
+          properties: fallbackEntity.properties,
+        }
+        source = 'local_export'
+      }
+    }
+
+    if (!entity) {
       // Entity not found in Supabase
       return NextResponse.json(
         {
           error: 'Entity not found',
           entityId: entityId,
           suggestion: 'This entity may have been removed or the ID is incorrect. Please verify the entity ID or refresh the entity list.',
-          availableSources: ['Supabase cached_entities, teams, and leagues tables']
+          availableSources: ['Supabase cached_entities, teams, and leagues tables', 'Local Falkor export']
         },
         { status: 404 }
       )

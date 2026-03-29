@@ -1,10 +1,34 @@
+import { existsSync } from 'node:fs'
+import { readFile } from 'node:fs/promises'
+import path from 'node:path'
+
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { canonicalizeEntities, type CanonicalEntity } from '@/lib/entity-canonicalization'
 
 const SNAPSHOT_TTL_MS = 15 * 60_000
+const localFalkorExportPath = path.resolve(process.cwd(), 'backend', 'falkordb_export.json')
+const hasUsableSupabaseConfiguration = Boolean(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+) && Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY)
+const preferSupabaseSnapshot = String(process.env.ENTITY_SNAPSHOT_SOURCE || 'local').toLowerCase() === 'supabase'
 
 let canonicalEntitiesCache: { entities: CanonicalEntity[]; expiresAt: number } | null = null
 let inFlightCanonicalEntitiesRequest: Promise<CanonicalEntity[]> | null = null
+
+function mapExportEntity(entity: any): CanonicalEntity {
+  return {
+    id: entity.id,
+    neo4j_id: entity.neo4j_id,
+    badge_path: entity.badge_path || entity.properties?.badge_path || null,
+    badge_s3_url: entity.badge_s3_url || entity.properties?.badge_s3_url || null,
+    labels: entity.labels || [],
+    properties: {
+      ...entity.properties,
+      name: entity.properties?.name || entity.neo4j_id,
+      type: entity.properties?.type || entity.labels?.[0] || 'ENTITY',
+    },
+  }
+}
 
 async function fetchCanonicalEntitiesFromSupabase(): Promise<CanonicalEntity[]> {
   const allEntities: any[] = []
@@ -30,19 +54,48 @@ async function fetchCanonicalEntitiesFromSupabase(): Promise<CanonicalEntity[]> 
   }
 
   return canonicalizeEntities(
-    allEntities.map((entity: any) => ({
-      id: entity.id,
-      neo4j_id: entity.neo4j_id,
-      badge_path: entity.badge_path || entity.properties?.badge_path || null,
-      badge_s3_url: entity.badge_s3_url || entity.properties?.badge_s3_url || null,
-      labels: entity.labels || [],
-      properties: {
-        ...entity.properties,
-        name: entity.properties?.name || entity.neo4j_id,
-        type: entity.properties?.type || entity.labels?.[0] || 'ENTITY',
-      }
-    }))
+    allEntities.map(mapExportEntity)
   )
+}
+
+async function fetchCanonicalEntitiesFromLocalExport(): Promise<CanonicalEntity[]> {
+  if (!existsSync(localFalkorExportPath)) {
+    throw new Error(`Local Falkor export not found at ${localFalkorExportPath}`)
+  }
+
+  const fileContents = await readFile(localFalkorExportPath, 'utf8')
+  const parsedExport = JSON.parse(fileContents) as { entities?: any[] }
+  const exportEntities = Array.isArray(parsedExport.entities) ? parsedExport.entities : []
+
+  return canonicalizeEntities(exportEntities.map(mapExportEntity))
+}
+
+async function fetchCanonicalEntitiesFromBestAvailableSource(): Promise<CanonicalEntity[]> {
+  if (!hasUsableSupabaseConfiguration) {
+    console.log('Supabase configuration is not available in this environment')
+    console.log('Falling back to local Falkor export for canonical entities snapshot')
+    return fetchCanonicalEntitiesFromLocalExport()
+  }
+
+  if (!preferSupabaseSnapshot && existsSync(localFalkorExportPath)) {
+    console.log('Falling back to local Falkor export for canonical entities snapshot')
+    try {
+      return await fetchCanonicalEntitiesFromLocalExport()
+    } catch (localExportError) {
+      console.warn('⚠️ Failed to load local Falkor export, falling back to Supabase snapshot:', localExportError)
+    }
+  }
+
+  try {
+    return await fetchCanonicalEntitiesFromSupabase()
+  } catch (supabaseError) {
+    if (existsSync(localFalkorExportPath)) {
+      console.log('Falling back to local Falkor export for canonical entities snapshot')
+      return fetchCanonicalEntitiesFromLocalExport()
+    }
+
+    throw supabaseError
+  }
 }
 
 export async function getCanonicalEntitiesSnapshot(): Promise<CanonicalEntity[]> {
@@ -54,7 +107,7 @@ export async function getCanonicalEntitiesSnapshot(): Promise<CanonicalEntity[]>
     return inFlightCanonicalEntitiesRequest
   }
 
-  inFlightCanonicalEntitiesRequest = fetchCanonicalEntitiesFromSupabase()
+  inFlightCanonicalEntitiesRequest = fetchCanonicalEntitiesFromBestAvailableSource()
 
   try {
     const entities = await inFlightCanonicalEntitiesRequest
