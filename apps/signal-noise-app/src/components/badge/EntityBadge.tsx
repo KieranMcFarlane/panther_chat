@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 import { BadgeComponentProps, BadgeSize, BadgeSource } from '@/types/badge'
 import { getBadgeForEntity, getEntityInitials } from '@/services/badge-service'
 import { resolveBadgeDisplayState } from '@/lib/badge-display-state'
+import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
 import { Loader2, Shield, Trophy, Users, Building2 } from 'lucide-react'
 
 const sizeClasses = {
@@ -25,7 +26,7 @@ const iconSize = {
 
 export function EntityBadge({ entity, size = 'md', showFallback = true, className, onClick }: BadgeComponentProps) {
   const router = useRouter()
-  const entityId = entity?.id
+  const entityId = entity?.uuid || entity?.entity_uuid || entity?.properties?.uuid || entity?.properties?.entity_uuid || entity?.id || entity?.neo4j_id
   const entityName = entity?.properties?.name || entity?.id || 'Unknown Entity'
   const badgeDisplayState = resolveBadgeDisplayState(entity)
   const [badgeUrl, setBadgeUrl] = useState<string | null>(badgeDisplayState.explicitBadgeUrl)
@@ -78,15 +79,18 @@ export function EntityBadge({ entity, size = 'md', showFallback = true, classNam
   ])
 
   const handleClick = () => {
-    if (!entity || !entity?.id) return
+    if (!entity) return
 
-    console.log('🔗 Badge click navigation for:', entity?.properties?.name || entity?.id, 'ID:', entity?.id)
+    const href = getEntityBrowserDossierHref(entity, '1')
+    if (!href) return
+
+    console.log('🔗 Badge click navigation for:', entity?.properties?.name || entity?.id, 'href:', href)
 
     if (onClick) {
       onClick(entity)
     } else {
-      // Default navigation to entity page
-      router.push(`/entity-browser/${entity?.id}/dossier?from=1`)
+      // Default navigation to browser dossier
+      router.push(href)
     }
   }
 
@@ -205,15 +209,18 @@ function CompactEntityBadge({ entity, size = 'sm', className, onClick }: BadgeCo
 
   // Unified navigation handler for compact badge
   const handleCompactBadgeClick = () => {
-    if (!entity || !entity?.id) return
+    if (!entity) return
 
-    console.log('🔗 Compact badge click navigation for:', entity?.properties?.name || entity?.id, 'ID:', entity?.id)
+    const href = getEntityBrowserDossierHref(entity, '1')
+    if (!href) return
+
+    console.log('🔗 Compact badge click navigation for:', entity?.properties?.name || entity?.id, 'href:', href)
 
     if (onClick) {
       onClick(entity)
     } else {
-      // Default navigation to entity page
-      router.push(`/entity-browser/${entity?.id}/dossier?from=1`)
+      // Default navigation to browser dossier
+      router.push(href)
     }
   }
 

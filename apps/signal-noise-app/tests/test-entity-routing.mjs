@@ -5,7 +5,8 @@ import { getEntityBrowserDossierHref, getEntityPrefetchId } from '../src/lib/ent
 
 test('entity browser dossier href uses canonical entity id with page context', () => {
   const entity = {
-    id: 'dbb4b0d7-68e4-49d7-929a-b1a0613454fd',
+    uuid: 'dbb4b0d7-68e4-49d7-929a-b1a0613454fd',
+    id: '335',
     neo4j_id: '335'
   }
 
@@ -17,7 +18,8 @@ test('entity browser dossier href uses canonical entity id with page context', (
 
 test('entity prefetch id prefers canonical entity id', () => {
   const entity = {
-    id: 'dbb4b0d7-68e4-49d7-929a-b1a0613454fd',
+    uuid: 'dbb4b0d7-68e4-49d7-929a-b1a0613454fd',
+    id: '335',
     neo4j_id: '335'
   }
 
@@ -37,4 +39,21 @@ test('entity routing falls back to neo4j id when canonical id is unavailable', (
     '/entity-browser/335/dossier?from=2'
   )
   assert.equal(getEntityPrefetchId(entity), '335')
+})
+
+test('entity routing ignores undefined sentinel strings and falls back to stable ids', () => {
+  const entity = {
+    uuid: 'undefined',
+    id: 'dbb4b0d7-68e4-49d7-929a-b1a0613454fd',
+    neo4j_id: '335'
+  }
+
+  assert.equal(
+    getEntityBrowserDossierHref(entity, '3'),
+    '/entity-browser/dbb4b0d7-68e4-49d7-929a-b1a0613454fd/dossier?from=3'
+  )
+  assert.equal(
+    getEntityPrefetchId(entity),
+    'dbb4b0d7-68e4-49d7-929a-b1a0613454fd'
+  )
 })
