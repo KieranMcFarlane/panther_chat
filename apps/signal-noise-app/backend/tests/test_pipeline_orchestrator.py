@@ -461,13 +461,29 @@ async def test_pipeline_orchestrator_enriches_dossier_with_question_first(monkey
 
     async def fake_run_question_first_dossier_from_payload(**kwargs):
         question_first_calls["source_payload"] = kwargs["source_payload"]
-        return {
+        payload = dict(kwargs["source_payload"])
+        payload["question_first_run_path"] = "leedsunited_question_first_run.json"
+        payload["question_first_run"] = {
+            "schema_version": "question_first_run_v1",
             "generated_at": "2026-03-25T00:00:00+00:00",
-            "entity_id": "leedsunited",
-            "entity_name": "Leeds United",
-            "tier": "PREMIUM",
-            "question_source_path": "leedsunited::question-first",
+            "run_started_at": "2026-03-25T00:00:00+00:00",
+            "source": "opencode_agentic_batch",
+            "status": "ready",
+        }
+        payload["question_first"] = {
+            "enabled": True,
+            "schema_version": "question_first_run_v1",
             "questions_answered": 1,
+            "categories": [
+                {
+                    "category": "identity",
+                    "question_count": 1,
+                    "validated_count": 1,
+                    "pending_count": 0,
+                    "no_signal_count": 0,
+                    "retry_count": 0,
+                }
+            ],
             "answers": [
                 {
                     "question_id": "q1",
@@ -480,49 +496,26 @@ async def test_pipeline_orchestrator_enriches_dossier_with_question_first(monkey
                     "answer": "1919",
                     "confidence": 0.95,
                     "evidence_url": "https://www.leedsunited.com/",
-                    "reasoning_model_used": "deepseek-ai/DeepSeek-V3.2-TEE",
+                    "reasoning_model_used": "opencode",
                     "retry_count": 0,
                     "category": "identity",
                     "search_queries": ['"Leeds United" When was Leeds United founded'],
                     "search_attempts": [{"query": '"Leeds United" When was Leeds United founded', "status": "success", "result_count": 1}],
                 }
             ],
-            "categories": [
-                {
-                    "category": "identity",
-                    "question_count": 1,
-                    "validated_count": 1,
-                    "pending_count": 0,
-                    "no_signal_count": 0,
-                    "retry_count": 0,
-                }
-            ],
-            "retrieval": {"transport": "hosted_sse", "hosted_url": "https://mcp.brightdata.com/sse?token=***"},
-            "reasoning": {"model_requested": "judge", "model_used": "deepseek-ai/DeepSeek-V3.2-TEE"},
-        }
-
-    def fake_merge_question_first_report_into_dossier(*, dossier_payload, report):
-        payload = dict(dossier_payload)
-        payload["question_first"] = {
-            "enabled": True,
-            "questions_answered": report["questions_answered"],
-            "categories": report["categories"],
-            "answers": report["answers"],
-            "report": report,
+            "report": payload["question_first_run"],
         }
         questions = payload.get("questions") or []
         if questions:
             questions[0] = dict(questions[0])
             questions[0]["answer"] = "1919"
             questions[0]["validation_state"] = "validated"
-            questions[0]["question_first_answer"] = report["answers"][0]
+            questions[0]["question_first_answer"] = payload["question_first"]["answers"][0]
         payload["questions"] = questions
         return payload
 
     monkeypatch.setattr(question_first_runner, "run_question_first_dossier_from_payload", fake_run_question_first_dossier_from_payload)
-    monkeypatch.setattr(question_first_runner, "merge_question_first_report_into_dossier", fake_merge_question_first_report_into_dossier)
     monkeypatch.setattr(backend_question_first_runner, "run_question_first_dossier_from_payload", fake_run_question_first_dossier_from_payload)
-    monkeypatch.setattr(backend_question_first_runner, "merge_question_first_report_into_dossier", fake_merge_question_first_report_into_dossier)
 
     class QuestionFirstDossierGenerator(FakeDossierGenerator):
         async def generate_universal_dossier(self, **kwargs):
@@ -545,8 +538,8 @@ async def test_pipeline_orchestrator_enriches_dossier_with_question_first(monkey
         graphiti_service=FakeGraphiti(),
         dashboard_scorer=FakeDashboardScorer(),
         persistence_coordinator=FakePersistenceCoordinator(),
-        brightdata_client=object(),
-        claude_client=object(),
+        brightdata_client=None,
+        claude_client=None,
     )
 
     result = await orchestrator.run_entity_pipeline(

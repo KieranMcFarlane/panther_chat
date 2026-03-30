@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { mkdtempSync, readFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -14,6 +14,7 @@ import {
   buildOpenCodeConfig,
   buildOpenCodeQuestionPrompt,
   buildQuestionState,
+  runOpenCodeQuestionSourceBatch,
   runOpenCodePresetBatch,
 } from '../scripts/opencode_agentic_batch.mjs';
 
@@ -211,6 +212,75 @@ test('runOpenCodePresetBatch writes a merged meta artifact for the preset', asyn
     assert.equal(meta.questions.length, 2);
     assert.equal(meta.questions[0].question_id, 'entity_founded_year');
     assert.equal(meta.questions[1].question_id, 'sl_league_mobile_app');
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
+test('runOpenCodeQuestionSourceBatch writes the canonical question_first_run artifact', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-question-source-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        entity_id: 'major-league-cricket',
+        entity_name: 'Major League Cricket',
+        entity_type: 'SPORT_LEAGUE',
+        preset: 'major-league-cricket',
+        questions: [
+          {
+            question_id: 'q1',
+            question_type: 'foundation',
+            question_text: 'When was Major League Cricket founded?',
+            query: '"Major League Cricket" founded',
+            hop_budget: 1,
+            source_priority: ['google_serp', 'official_site'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  try {
+    const result = await runOpenCodeQuestionSourceBatch({
+      questionSourcePath: sourcePath,
+      outputDir,
+      questionRunner: async (question) => ({
+        structuredOutput: {
+          answer: '2023',
+          signal_type: 'FOUNDATION',
+          confidence: 0.91,
+          validation_state: 'validated',
+          evidence_url: 'https://example.com',
+          recommended_next_query: '',
+          notes: 'stubbed',
+          sources: ['https://example.com'],
+        },
+        promptTrace: { status: 'ok', structured_output_keys: 1, has_structured_output: true },
+        messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
+        cliResult: { code: 0, stdout: '{"answer":"2023"}', stderr: '' },
+      }),
+    });
+
+    assert.ok(result.question_first_run_path);
+    const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+    assert.equal(artifact.schema_version, 'question_first_run_v1');
+    assert.equal(artifact.questions.length, 1);
+    assert.equal(artifact.answers.length, 1);
+    assert.equal(artifact.merge_patch.question_first.schema_version, 'question_first_run_v1');
+    assert.equal(artifact.merge_patch.questions[0].question_first_answer.answer, '2023');
   } finally {
     if (previousZaiKey === undefined) {
       delete process.env.ANTHROPIC_AUTH_TOKEN;

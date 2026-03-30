@@ -5,6 +5,10 @@ import { spawn } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import dotenv from 'dotenv';
+import {
+  buildQuestionFirstRunArtifact,
+  validateQuestionFirstRunArtifact,
+} from './question_first_run_contract.mjs';
 
 const MODULE_DIR = path.dirname(fileURLToPath(import.meta.url));
 const APP_ROOT = path.resolve(MODULE_DIR, '..');
@@ -486,8 +490,8 @@ function _spendCredit(questionState, creditType, amount = 1) {
   };
 }
 
-function _buildStateFilePath(outputDir, preset) {
-  return path.join(outputDir, `${_slugify('major-league-cricket')}_${_slugify(preset)}_state.json`);
+function _buildStateFilePath(outputDir, preset, entitySlug = 'major-league-cricket') {
+  return path.join(outputDir, `${_slugify(entitySlug)}_${_slugify(preset)}_state.json`);
 }
 
 export function buildOpenCodeConfig({
@@ -771,6 +775,49 @@ function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTr
   };
 }
 
+function _categoryForQuestion(question) {
+  const questionType = String(question?.question_type || '').trim().toLowerCase();
+  if (questionType === 'foundation') {
+    return 'identity';
+  }
+  if (questionType === 'procurement') {
+    return 'procurement_opportunity';
+  }
+  if (questionType === 'poi') {
+    return 'connections';
+  }
+  if (questionType === 'leadership') {
+    return 'leadership';
+  }
+  return 'general';
+}
+
+function _buildCategorySummary(answers) {
+  const summary = new Map();
+  for (const answer of Array.isArray(answers) ? answers : []) {
+    const category = String(answer?.category || _categoryForQuestion(answer)).trim() || 'general';
+    const bucket = summary.get(category) || {
+      category,
+      question_count: 0,
+      validated_count: 0,
+      pending_count: 0,
+      no_signal_count: 0,
+      retry_count: 0,
+    };
+    bucket.question_count += 1;
+    bucket.retry_count += Number(answer?.retry_count || 0);
+    if (answer?.validation_state === 'validated') {
+      bucket.validated_count += 1;
+    } else if (answer?.validation_state === 'pending' || answer?.validation_state === 'provisional') {
+      bucket.pending_count += 1;
+    } else {
+      bucket.no_signal_count += 1;
+    }
+    summary.set(category, bucket);
+  }
+  return Array.from(summary.values());
+}
+
 export async function runOpenCodePresetBatch({
   outputDir,
   preset = 'major-league-cricket',
@@ -782,27 +829,41 @@ export async function runOpenCodePresetBatch({
   scrapeCredits,
   revisitCredits,
   confidenceThreshold,
+  questionsOverride = null,
+  entityNameOverride = null,
+  entityIdOverride = null,
+  entityTypeOverride = null,
+  questionSourcePath = null,
 } = {}) {
-  const normalizedPreset = _slugify(preset);
+  let normalizedPreset = _slugify(preset || entityNameOverride || entityIdOverride || 'question-first');
   let questions;
-  if (normalizedPreset === 'major-league-cricket') {
-    questions = buildMajorLeagueCricketPresetQuestions();
-  } else if (normalizedPreset === 'major-league-cricket-smoke' || normalizedPreset === 'major-league-cricket-core') {
-    questions = buildMajorLeagueCricketSmokeQuestions();
-  } else if (normalizedPreset === 'major-league-cricket-poi-a') {
-    questions = buildMajorLeagueCricketPoiBatchAQuestions();
-  } else if (normalizedPreset === 'major-league-cricket-poi-b') {
-    questions = buildMajorLeagueCricketPoiBatchBQuestions();
-  } else if (normalizedPreset === 'major-league-cricket-poi-c') {
-    questions = buildMajorLeagueCricketPoiBatchCQuestions();
-  } else if (normalizedPreset === 'major-league-cricket-poi') {
-    questions = buildMajorLeagueCricketPoiQuestions();
+  if (Array.isArray(questionsOverride) && questionsOverride.length > 0) {
+    questions = questionsOverride;
   } else {
-    throw new Error(`Unsupported preset ${JSON.stringify(preset)}. Expected 'major-league-cricket', 'major-league-cricket-smoke', 'major-league-cricket-core', 'major-league-cricket-poi', 'major-league-cricket-poi-a', 'major-league-cricket-poi-b', or 'major-league-cricket-poi-c'.`);
+    if (normalizedPreset === 'major-league-cricket') {
+      questions = buildMajorLeagueCricketPresetQuestions();
+    } else if (normalizedPreset === 'major-league-cricket-smoke' || normalizedPreset === 'major-league-cricket-core') {
+      questions = buildMajorLeagueCricketSmokeQuestions();
+    } else if (normalizedPreset === 'major-league-cricket-poi-a') {
+      questions = buildMajorLeagueCricketPoiBatchAQuestions();
+    } else if (normalizedPreset === 'major-league-cricket-poi-b') {
+      questions = buildMajorLeagueCricketPoiBatchBQuestions();
+    } else if (normalizedPreset === 'major-league-cricket-poi-c') {
+      questions = buildMajorLeagueCricketPoiBatchCQuestions();
+    } else if (normalizedPreset === 'major-league-cricket-poi') {
+      questions = buildMajorLeagueCricketPoiQuestions();
+    } else {
+      throw new Error(`Unsupported preset ${JSON.stringify(preset)}. Expected 'major-league-cricket', 'major-league-cricket-smoke', 'major-league-cricket-core', 'major-league-cricket-poi', 'major-league-cricket-poi-a', 'major-league-cricket-poi-b', or 'major-league-cricket-poi-c'.`);
+    }
   }
   if (!outputDir) {
     throw new Error('outputDir is required');
   }
+
+  const firstQuestion = questions[0] || {};
+  const entityName = entityNameOverride || firstQuestion.entity_name || 'Major League Cricket';
+  const entityId = entityIdOverride || firstQuestion.entity_id || _slugify(entityName);
+  const entityType = entityTypeOverride || firstQuestion.entity_type || 'SPORT_LEAGUE';
 
   _loadEnv();
   if (!process.env.ZAI_API_KEY && !process.env.ANTHROPIC_AUTH_TOKEN) {
@@ -810,7 +871,7 @@ export async function runOpenCodePresetBatch({
   }
 
   const runStartedAt = new Date().toISOString();
-  const statePath = _buildStateFilePath(outputDir, normalizedPreset);
+  const statePath = _buildStateFilePath(outputDir, normalizedPreset, entityId);
   const existingState = resume ? await _loadJsonFile(statePath) : null;
   const runState = existingState && typeof existingState === 'object' ? existingState : buildPresetRunState(questions, { preset: normalizedPreset, runId: 'cli', timestamp: runStartedAt });
   const budgetOverrides = _buildCreditOverrides({ searchCredits, scrapeCredits, revisitCredits, confidenceThreshold });
@@ -1012,15 +1073,16 @@ export async function runOpenCodePresetBatch({
       );
     }
 
-    const slug = _slugify('major-league-cricket');
-    const timestamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z').replace('T', '_').replace('Z', '');
-    const stem = `${slug}_opencode_batch_${timestamp}`;
-    await fs.mkdir(outputDir, { recursive: true });
+	    const slug = _slugify(entityId);
+	    const timestamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z').replace('T', '_').replace('Z', '');
+	    const stem = `${slug}_opencode_batch_${timestamp}`;
+	    await fs.mkdir(outputDir, { recursive: true });
 
-    const metaPath = path.join(outputDir, `${stem}_meta.json`);
-    const rollupPath = path.join(outputDir, `${stem}_rollup.json`);
-    const transcriptPath = path.join(outputDir, `${stem}.txt`);
-    const questionPaths = [];
+	    const metaPath = path.join(outputDir, `${stem}_meta.json`);
+	    const rollupPath = path.join(outputDir, `${stem}_rollup.json`);
+	    const transcriptPath = path.join(outputDir, `${stem}.txt`);
+	    const questionFirstRunPath = path.join(outputDir, `${stem}_question_first_run_v1.json`);
+	    const questionPaths = [];
 
     for (const [index, payload] of perQuestionPayloads.entries()) {
       const questionPath = path.join(outputDir, `${stem}_question_${String(index + 1).padStart(3, '0')}.json`);
@@ -1028,54 +1090,125 @@ export async function runOpenCodePresetBatch({
       questionPaths.push(questionPath);
     }
 
-    const metaPayload = {
-      run_started_at: runStartedAt,
-      entity_name: 'Major League Cricket',
-      entity_id: 'major-league-cricket',
-      entity_type: 'SPORT_LEAGUE',
-      preset: normalizedPreset,
-      questions: finalQuestions,
-    };
+	    const metaPayload = {
+	      run_started_at: runStartedAt,
+	      entity_name: entityName,
+	      entity_id: entityId,
+	      entity_type: entityType,
+	      preset: normalizedPreset,
+	      questions: finalQuestions,
+	    };
     const questionsValidated = finalQuestions.filter((item) => item.validation_state === 'validated').length;
     const questionsNoSignal = finalQuestions.filter((item) => item.validation_state === 'no_signal').length;
     const questionsProvisional = finalQuestions.filter((item) => item.validation_state === 'provisional').length;
-    const rollupPayload = {
-      run_started_at: runStartedAt,
-      entity_name: 'Major League Cricket',
-      entity_id: 'major-league-cricket',
-      entity_type: 'SPORT_LEAGUE',
-      preset: normalizedPreset,
-      questions_total: finalQuestions.length,
-      questions_validated: questionsValidated,
+	    const rollupPayload = {
+	      run_started_at: runStartedAt,
+	      entity_name: entityName,
+	      entity_id: entityId,
+	      entity_type: entityType,
+	      preset: normalizedPreset,
+	      questions_total: finalQuestions.length,
+	      questions_validated: questionsValidated,
       questions_no_signal: questionsNoSignal,
       questions_provisional: questionsProvisional,
-      meta_result_path: metaPath,
-      question_result_paths: questionPaths,
-      question_results_path: metaPath,
-      transcript_path: transcriptPath,
-    };
+	      meta_result_path: metaPath,
+	      question_result_paths: questionPaths,
+	      question_results_path: metaPath,
+	      transcript_path: transcriptPath,
+	      question_first_run_path: questionFirstRunPath,
+	    };
 
-    await fs.writeFile(metaPath, JSON.stringify(metaPayload, null, 2), 'utf8');
-    await fs.writeFile(transcriptPath, transcripts.join('\n\n'), 'utf8');
-    await fs.writeFile(rollupPath, JSON.stringify(rollupPayload, null, 2), 'utf8');
-    await _writeJsonFile(statePath, {
-      ...runState,
-      last_run_at: new Date().toISOString(),
-      preset: normalizedPreset,
-      questions: runState.questions,
+	    await fs.writeFile(metaPath, JSON.stringify(metaPayload, null, 2), 'utf8');
+	    await fs.writeFile(transcriptPath, transcripts.join('\n\n'), 'utf8');
+	    await fs.writeFile(rollupPath, JSON.stringify(rollupPayload, null, 2), 'utf8');
+	    const questionFirstArtifact = buildQuestionFirstRunArtifact({
+	      entity_id: entityId,
+	      entity_name: entityName,
+	      entity_type: entityType,
+	      preset: normalizedPreset,
+	      question_source_path: questionSourcePath || `preset:${normalizedPreset}`,
+	      questions,
+	      answers: finalQuestions,
+	      categories: finalQuestions.length ? _buildCategorySummary(finalQuestions) : [],
+	      run_rollup: rollupPayload,
+	      generated_at: new Date().toISOString(),
+	      run_started_at: runStartedAt,
+	      status: finalQuestions.some((item) => item.validation_state === 'validated') ? 'ready' : 'empty',
+	    });
+	    validateQuestionFirstRunArtifact(questionFirstArtifact);
+	    await fs.writeFile(questionFirstRunPath, JSON.stringify(questionFirstArtifact, null, 2), 'utf8');
+	    await _writeJsonFile(statePath, {
+	      ...runState,
+	      last_run_at: new Date().toISOString(),
+	      preset: normalizedPreset,
+	      questions: runState.questions,
     });
 
     return {
       ...rollupPayload,
-      rollup_path: rollupPath,
-      meta_result_path: metaPath,
-      question_result_paths: questionPaths,
-      question_results_path: metaPath,
-      transcript_path: transcriptPath,
-      state_path: statePath,
-    };
+	      rollup_path: rollupPath,
+	      meta_result_path: metaPath,
+	      question_result_paths: questionPaths,
+	      question_results_path: metaPath,
+	      transcript_path: transcriptPath,
+	      question_first_run_path: questionFirstRunPath,
+	      state_path: statePath,
+	    };
   } finally {
   }
+}
+
+export async function runOpenCodeQuestionSourceBatch({
+  questionSourcePath,
+  outputDir,
+  worktreeRoot = WORKTREE_ROOT,
+  opencodeTimeoutMs = 300000,
+  questionRunner = runOpenCodeCliQuestion,
+  resume = false,
+  searchCredits,
+  scrapeCredits,
+  revisitCredits,
+  confidenceThreshold,
+} = {}) {
+  if (!questionSourcePath) {
+    throw new Error('questionSourcePath is required');
+  }
+  if (!outputDir) {
+    throw new Error('outputDir is required');
+  }
+
+  const sourcePayload = await _loadJsonFile(questionSourcePath);
+  if (!sourcePayload || typeof sourcePayload !== 'object') {
+    throw new Error(`Question source ${JSON.stringify(questionSourcePath)} must resolve to a JSON object`);
+  }
+
+  const questions = Array.isArray(sourcePayload.questions) ? sourcePayload.questions.filter((question) => question && typeof question === 'object') : [];
+  if (questions.length === 0) {
+    throw new Error(`Question source ${JSON.stringify(questionSourcePath)} does not contain any questions`);
+  }
+
+  const entityName = String(sourcePayload.entity_name || sourcePayload.entityName || sourcePayload.entity_id || sourcePayload.entityId || 'entity').trim() || 'entity';
+  const entityId = String(sourcePayload.entity_id || sourcePayload.entityId || _slugify(entityName)).trim() || _slugify(entityName);
+  const entityType = String(sourcePayload.entity_type || sourcePayload.entityType || 'ENTITY').trim() || 'ENTITY';
+  const preset = String(sourcePayload.preset || sourcePayload.question_source_label || entityId).trim() || entityId;
+
+  return runOpenCodePresetBatch({
+    outputDir,
+    preset,
+    worktreeRoot,
+    opencodeTimeoutMs,
+    questionRunner,
+    resume,
+    searchCredits,
+    scrapeCredits,
+    revisitCredits,
+    confidenceThreshold,
+    questionsOverride: questions,
+    entityNameOverride: entityName,
+    entityIdOverride: entityId,
+    entityTypeOverride: entityType,
+    questionSourcePath,
+  });
 }
 
 export async function main(argv = process.argv.slice(2)) {
@@ -1104,16 +1237,28 @@ export async function main(argv = process.argv.slice(2)) {
   const scrapeCredits = args.get('scrape-credits');
   const revisitCredits = args.get('revisit-credits');
   const confidenceThreshold = args.get('confidence-threshold');
-  const result = await runOpenCodePresetBatch({
-    outputDir: path.resolve(outputDir),
-    preset,
-    resume,
-    opencodeTimeoutMs: opencodeTimeoutMs || undefined,
-    searchCredits,
-    scrapeCredits,
-    revisitCredits,
-    confidenceThreshold,
-  });
+  const questionSourcePath = args.get('question-source');
+  const result = questionSourcePath
+    ? await runOpenCodeQuestionSourceBatch({
+      questionSourcePath: path.resolve(questionSourcePath),
+      outputDir: path.resolve(outputDir),
+      resume,
+      opencodeTimeoutMs: opencodeTimeoutMs || undefined,
+      searchCredits,
+      scrapeCredits,
+      revisitCredits,
+      confidenceThreshold,
+    })
+    : await runOpenCodePresetBatch({
+      outputDir: path.resolve(outputDir),
+      preset,
+      resume,
+      opencodeTimeoutMs: opencodeTimeoutMs || undefined,
+      searchCredits,
+      scrapeCredits,
+      revisitCredits,
+      confidenceThreshold,
+    });
   process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
   return 0;
 }

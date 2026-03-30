@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://signal-noise-app.local/contracts/question_first_run_v1.schema.json",
+  "title": "question_first_run_v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "generated_at",
+    "run_started_at",
+    "source",
+    "status",
+    "entity",
+    "questions",
+    "answers",
+    "categories",
+    "run_rollup",
+    "merge_patch"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "question_first_run_v1"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "run_started_at": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "entity": {
+      "type": "object",
+      "required": ["entity_id", "entity_name", "entity_type"],
+      "properties": {
+        "entity_id": { "type": "string" },
+        "entity_name": { "type": "string" },
+        "entity_type": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "preset": {
+      "type": ["string", "null"]
+    },
+    "question_source_path": {
+      "type": ["string", "null"]
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "answers": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "run_rollup": {
+      "type": "object"
+    },
+    "merge_patch": {
+      "type": "object",
+      "required": ["metadata", "question_first", "questions"],
+      "properties": {
+        "metadata": { "type": "object" },
+        "question_first": { "type": "object" },
+        "questions": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

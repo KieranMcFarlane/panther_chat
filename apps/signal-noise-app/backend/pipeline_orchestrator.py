@@ -81,7 +81,13 @@ class PipelineOrchestrator:
         self.question_first_persist_reports = os.getenv("PIPELINE_QUESTION_FIRST_PERSIST_REPORTS", "true").lower() in {"1", "true", "yes"}
         self.question_first_output_dir = os.getenv("PIPELINE_QUESTION_FIRST_OUTPUT_DIR", "backend/data/question_first_dossiers")
         self.question_first_max_questions = int(os.getenv("PIPELINE_QUESTION_FIRST_MAX_QUESTIONS", "0") or 0)
-        self.question_first_brightdata_timeout = float(os.getenv("PIPELINE_QUESTION_FIRST_BRIGHTDATA_TIMEOUT_SECONDS", "60"))
+        self.question_first_opencode_timeout = float(
+            os.getenv(
+                "PIPELINE_QUESTION_FIRST_OPENCODE_TIMEOUT_SECONDS",
+                os.getenv("PIPELINE_QUESTION_FIRST_BRIGHTDATA_TIMEOUT_SECONDS", "60"),
+            )
+        )
+        self.question_first_brightdata_timeout = self.question_first_opencode_timeout  # legacy alias
         self._last_question_first_report: Dict[str, Any] | None = None
         self.persistence_coordinator = persistence_coordinator or self._build_default_persistence_coordinator()
 
@@ -727,30 +733,21 @@ class PipelineOrchestrator:
         if not isinstance(questions, list) or not questions:
             logger.info("Question-first enrichment skipped for %s: no questions on dossier", entity_id)
             return dossier
-        if self.brightdata_client is None or self.claude_client is None:
-            logger.info("Question-first enrichment skipped for %s: missing clients", entity_id)
-            return dossier
 
         try:
             from backend import question_first_dossier_runner as question_first_runner
         except ImportError:
             import question_first_dossier_runner as question_first_runner  # type: ignore
 
-        max_questions = self.question_first_max_questions if int(self.question_first_max_questions or 0) > 0 else None
-        report = await question_first_runner.run_question_first_dossier_from_payload(
+        merged_dossier = await question_first_runner.run_question_first_dossier_from_payload(
             source_payload=dossier,
             output_dir=Path(self.question_first_output_dir) if self.question_first_persist_reports else None,
-            brightdata_client=getattr(self, "brightdata_client", None),
-            claude_client=getattr(self, "claude_client", None),
-            max_questions=max_questions,
-            brightdata_timeout=self.question_first_brightdata_timeout,
+            question_first_run_path=dossier.get("question_first_run_path"),
+            opencode_timeout_ms=self.question_first_opencode_timeout,
+            preset=dossier.get("preset"),
             question_source_label=f"{entity_id}::question-first",
         )
-        enriched = question_first_runner.merge_question_first_report_into_dossier(
-            dossier_payload=dossier,
-            report=report,
-        )
-        return enriched if isinstance(enriched, dict) else dossier
+        return merged_dossier if isinstance(merged_dossier, dict) else dossier
 
     def _extract_raw_signals(self, discovery_result: Any) -> List[Dict[str, Any]]:
         if isinstance(discovery_result, dict):

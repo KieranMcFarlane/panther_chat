@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Question-first dossier runner using BrightData MCP + DeepSeek judging.
+"""Question-first dossier adapter around the canonical OpenCode artifact.
 
-This runner consumes a saved dossier JSON containing exact questions, answers
-each question with BrightData MCP search/scrape, and writes a plain-text dossier
-plus a JSON report for inspection.
+This module now consumes a versioned ``question_first_run_v1`` artifact emitted
+by the OpenCode batch runner, merges it into a dossier payload, and optionally
+launches the canonical OpenCode batch when an artifact path is not supplied.
 """
 
 from __future__ import annotations
@@ -11,12 +11,16 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import os
 import re
+import subprocess
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Tuple, Literal
 
 from dotenv import load_dotenv
+from pydantic import BaseModel, Field, ValidationError
 
 try:
     from backend.brightdata_mcp_client import BrightDataMCPClient
@@ -35,6 +39,154 @@ def _iso_now() -> str:
 def _slugify(value: str) -> str:
     value = re.sub(r"[^a-zA-Z0-9]+", "-", str(value or "").strip().lower())
     return re.sub(r"-+", "-", value).strip("-") or "entity"
+
+
+class QuestionFirstRunArtifact(BaseModel):
+    schema_version: Literal["question_first_run_v1"]
+    generated_at: str
+    run_started_at: str
+    source: str
+    status: str
+    warnings: List[str] = Field(default_factory=list)
+    entity: Dict[str, Any] = Field(default_factory=dict)
+    preset: Optional[str] = None
+    question_source_path: Optional[str] = None
+    questions: List[Dict[str, Any]] = Field(default_factory=list)
+    answers: List[Dict[str, Any]] = Field(default_factory=list)
+    categories: List[Dict[str, Any]] = Field(default_factory=list)
+    run_rollup: Dict[str, Any] = Field(default_factory=dict)
+    merge_patch: Dict[str, Any] = Field(default_factory=dict)
+
+
+def _load_question_first_run_artifact(artifact_path: Path | str) -> QuestionFirstRunArtifact:
+    path = Path(artifact_path)
+    try:
+        return QuestionFirstRunArtifact.model_validate_json(path.read_text(encoding="utf-8"))
+    except ValidationError as exc:
+        raise ValueError(f"Invalid question_first_run artifact at {path}") from exc
+
+
+def _merge_question_first_run_patch(
+    *,
+    dossier_payload: Dict[str, Any],
+    artifact: QuestionFirstRunArtifact,
+) -> Dict[str, Any]:
+    payload = dict(dossier_payload or {})
+    patch = artifact.merge_patch if isinstance(artifact.merge_patch, dict) else {}
+
+    metadata = payload.setdefault("metadata", {})
+    if not isinstance(metadata, dict):
+        metadata = {}
+        payload["metadata"] = metadata
+
+    patch_metadata = patch.get("metadata") if isinstance(patch.get("metadata"), dict) else {}
+    if isinstance(patch_metadata, dict):
+        metadata.update(patch_metadata)
+
+    if "question_first" in patch and isinstance(patch["question_first"], dict):
+        payload["question_first"] = patch["question_first"]
+
+    if "questions" in patch and isinstance(patch["questions"], list):
+        payload["questions"] = patch["questions"]
+
+    payload.setdefault("question_first", {})
+    if isinstance(payload["question_first"], dict):
+        payload["question_first"].setdefault("schema_version", artifact.schema_version)
+        payload["question_first"].setdefault("generated_at", artifact.generated_at)
+        payload["question_first"].setdefault("run_rollup", artifact.run_rollup)
+        payload["question_first"].setdefault("categories", artifact.categories)
+        payload["question_first"].setdefault("answers", artifact.answers)
+        payload["question_first"].setdefault("questions_answered", len(artifact.answers))
+
+    metadata.setdefault("question_first", {})
+    if isinstance(metadata["question_first"], dict):
+        metadata["question_first"].setdefault("schema_version", artifact.schema_version)
+        metadata["question_first"].setdefault("generated_at", artifact.generated_at)
+        metadata["question_first"].setdefault("questions_answered", len(artifact.answers))
+        metadata["question_first"].setdefault("categories", artifact.categories)
+        metadata["question_first"].setdefault("question_source_path", artifact.question_source_path)
+        metadata["question_first"].setdefault("run_rollup", artifact.run_rollup)
+
+    payload["question_first_run"] = artifact.model_dump()
+    return payload
+
+
+def merge_question_first_run_artifact_into_dossier(
+    *,
+    dossier_payload: Dict[str, Any],
+    artifact: Dict[str, Any] | QuestionFirstRunArtifact,
+) -> Dict[str, Any]:
+    artifact_model = artifact if isinstance(artifact, QuestionFirstRunArtifact) else QuestionFirstRunArtifact.model_validate(artifact)
+    return _merge_question_first_run_patch(dossier_payload=dossier_payload, artifact=artifact_model)
+
+
+def _artifact_output_path(output_dir: Path, source_payload: Dict[str, Any], artifact: QuestionFirstRunArtifact | None = None) -> Path:
+    entity_name = str((artifact.entity if artifact else source_payload).get("entity_name") or source_payload.get("entity_name") or source_payload.get("entity_id") or "entity")
+    entity_id = str((artifact.entity if artifact else source_payload).get("entity_id") or source_payload.get("entity_id") or _slugify(entity_name))
+    return output_dir / f"{_slugify(entity_id)}_question_first_run_v1.json"
+
+
+def _launch_opencode_question_first_batch(
+    *,
+    source_payload: Dict[str, Any],
+    output_dir: Path,
+    preset: Optional[str] = None,
+    worktree_root: Optional[Path] = None,
+    opencode_timeout_ms: int = 300000,
+) -> Path:
+    backend_root = Path(__file__).resolve().parent
+    app_root = backend_root.parent
+    script_path = app_root / "scripts" / "opencode_agentic_batch.mjs"
+    worktree_root = worktree_root or app_root.parent.parent
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False, encoding="utf-8") as temp_source:
+        json.dump(source_payload, temp_source, indent=2, default=str)
+        temp_source_path = Path(temp_source.name)
+
+    try:
+        command = [
+            "node",
+            str(script_path),
+            "--question-source",
+            str(temp_source_path),
+            "--output-dir",
+            str(output_dir),
+            "--opencode-timeout-ms",
+            str(opencode_timeout_ms),
+        ]
+        if preset:
+            command.extend(["--preset", preset])
+
+        proc = subprocess.run(
+            command,
+            cwd=str(worktree_root),
+            capture_output=True,
+            text=True,
+            check=False,
+            env=dict(os.environ),
+        )
+        if proc.returncode != 0:
+            raise RuntimeError(
+                "OpenCode question-first batch failed with exit code "
+                f"{proc.returncode}: {proc.stderr.strip() or proc.stdout.strip()}"
+            )
+        try:
+            result = json.loads(proc.stdout.strip().splitlines()[-1])
+        except Exception:
+            result = {}
+        question_first_run_path = result.get("question_first_run_path")
+        if question_first_run_path:
+            return Path(question_first_run_path)
+        artifact_path = _artifact_output_path(output_dir, source_payload)
+        if artifact_path.exists():
+            return artifact_path
+        raise FileNotFoundError("OpenCode batch completed without producing a canonical question_first_run artifact")
+    finally:
+        try:
+            temp_source_path.unlink(missing_ok=True)
+        except Exception:
+            pass
 
 
 def _load_question_source(question_source_path: Path) -> Dict[str, Any]:
@@ -496,81 +648,84 @@ async def run_question_first_dossier_from_payload(
     *,
     source_payload: Dict[str, Any],
     output_dir: Optional[Path] = None,
-    brightdata_client: Optional[BrightDataMCPClient] = None,
-    claude_client: Optional[ClaudeClient] = None,
-    max_questions: Optional[int] = None,
-    brightdata_timeout: float = 60.0,
+    question_first_run_path: Optional[Path | str] = None,
+    worktree_root: Optional[Path] = None,
+    opencode_timeout_ms: int = 300000,
+    preset: Optional[str] = None,
     question_source_label: Optional[str] = None,
+    **_legacy_kwargs: Any,
 ) -> Dict[str, Any]:
     source = dict(source_payload or {})
-    questions = _question_list_from_payload(source)
-    if max_questions is not None:
-        questions = questions[: max(0, int(max_questions))]
+    artifact_path_value = question_first_run_path or source.get("question_first_run_path")
+    if artifact_path_value:
+        artifact_path = Path(artifact_path_value)
+    else:
+        target_output_dir = Path(output_dir) if output_dir is not None else Path(tempfile.mkdtemp(prefix="question-first-run-"))
+        artifact_path = _launch_opencode_question_first_batch(
+            source_payload=source,
+            output_dir=target_output_dir,
+            preset=preset or source.get("preset") or source.get("question_source_label") or None,
+            worktree_root=worktree_root,
+            opencode_timeout_ms=opencode_timeout_ms,
+        )
 
-    entity_name = str(source.get("entity_name") or source.get("entity_id") or "entity").strip()
-    entity_id = str(source.get("entity_id") or _slugify(entity_name))
+    artifact = _load_question_first_run_artifact(artifact_path)
+    merged = merge_question_first_run_artifact_into_dossier(dossier_payload=source, artifact=artifact)
 
-    brightdata = brightdata_client or BrightDataMCPClient(timeout=brightdata_timeout)
-    claude = claude_client or ClaudeClient()
+    if output_dir is not None:
+      output_dir = Path(output_dir)
+      output_dir.mkdir(parents=True, exist_ok=True)
+      entity_name = str(artifact.entity.get("entity_name") or source.get("entity_name") or source.get("entity_id") or "entity")
+      entity_id = str(artifact.entity.get("entity_id") or source.get("entity_id") or _slugify(entity_name))
+      json_path = output_dir / f"{_slugify(entity_id)}_question_first_dossier.json"
+      txt_path = output_dir / f"{_slugify(entity_id)}_question_first_dossier.txt"
+      report = {
+          "generated_at": artifact.generated_at,
+          "entity_id": entity_id,
+          "entity_name": entity_name,
+          "tier": source.get("tier"),
+          "question_source_path": question_source_label or artifact.question_source_path or source.get("question_source_path") or source.get("source_path") or None,
+          "questions_answered": len(artifact.answers),
+          "answers": artifact.answers,
+          "categories": artifact.categories,
+          "run_rollup": artifact.run_rollup,
+          "schema_version": artifact.schema_version,
+      }
+      json_path.write_text(json.dumps({**report, "merged_dossier": merged}, indent=2, default=str), encoding="utf-8")
+      txt_path.write_text(
+          _render_plain_text_report(
+              {
+                  "entity_name": entity_name,
+                  "generated_at": artifact.generated_at,
+                  "question_source_path": report["question_source_path"],
+                  "questions_answered": report["questions_answered"],
+                  "answers": artifact.answers,
+                  "categories": artifact.categories,
+              }
+          ),
+          encoding="utf-8",
+      )
+      merged.setdefault("question_first_report", {})
+      if isinstance(merged["question_first_report"], dict):
+          merged["question_first_report"].update(
+              {
+                  "json_report_path": str(json_path),
+                  "plain_text_path": str(txt_path),
+              }
+          )
 
-    answers: List[Dict[str, Any]] = []
-    try:
-        if hasattr(brightdata, "prewarm"):
-            await brightdata.prewarm(timeout=20)
-        for question in questions:
-            answers.append(
-                await _answer_question(
-                    question,
-                    entity_name=entity_name,
-                    brightdata_client=brightdata,
-                    claude_client=claude,
-                )
-            )
-
-        report: Dict[str, Any] = {
-            "generated_at": _iso_now(),
-            "entity_id": entity_id,
-            "entity_name": entity_name,
-            "tier": source.get("tier"),
-            "question_source_path": question_source_label or source.get("question_source_path") or source.get("source_path") or None,
-            "questions_answered": len(answers),
-            "answers": answers,
-            "categories": _build_category_summary(answers),
-            "retrieval": {
-                "transport": getattr(brightdata, "_transport", None),
-                "hosted_url": getattr(brightdata, "_hosted_mcp_url", None),
-            },
-            "reasoning": {
-                "model_requested": "judge",
-                "model_used": "deepseek-ai/DeepSeek-V3.2-TEE"
-                if any(answer.get("reasoning_model_used") for answer in answers)
-                else None,
-            },
-        }
-
-        if output_dir is not None:
-            output_dir.mkdir(parents=True, exist_ok=True)
-            json_path = output_dir / f"{_slugify(entity_id)}_question_first_dossier.json"
-            txt_path = output_dir / f"{_slugify(entity_id)}_question_first_dossier.txt"
-            report["json_report_path"] = str(json_path)
-            report["plain_text_path"] = str(txt_path)
-            json_path.write_text(json.dumps(report, indent=2, default=str), encoding="utf-8")
-            txt_path.write_text(_render_plain_text_report(report), encoding="utf-8")
-
-        return report
-    finally:
-        if brightdata_client is None:
-            await brightdata.close()
+    return merged
 
 
 async def run_question_first_dossier(
     *,
     question_source_path: Path,
     output_dir: Path,
-    brightdata_client: Optional[BrightDataMCPClient] = None,
-    claude_client: Optional[ClaudeClient] = None,
-    max_questions: Optional[int] = None,
-    brightdata_timeout: float = 60.0,
+    question_first_run_path: Optional[Path | str] = None,
+    worktree_root: Optional[Path] = None,
+    opencode_timeout_ms: int = 300000,
+    preset: Optional[str] = None,
+    **_legacy_kwargs: Any,
 ) -> Dict[str, Any]:
     load_dotenv(Path(".env"), override=False)
     load_dotenv(Path("apps/signal-noise-app/.env"), override=False)
@@ -579,10 +734,10 @@ async def run_question_first_dossier(
     return await run_question_first_dossier_from_payload(
         source_payload=source,
         output_dir=output_dir,
-        brightdata_client=brightdata_client,
-        claude_client=claude_client,
-        max_questions=max_questions,
-        brightdata_timeout=brightdata_timeout,
+        question_first_run_path=question_first_run_path or source.get("question_first_run_path"),
+        worktree_root=worktree_root,
+        opencode_timeout_ms=opencode_timeout_ms,
+        preset=preset,
         question_source_label=str(question_source_path),
     )
 
@@ -590,22 +745,24 @@ async def run_question_first_dossier(
 def main(argv: Optional[List[str]] = None) -> int:
     import argparse
 
-    parser = argparse.ArgumentParser(description="Run a question-first dossier using BrightData MCP")
+    parser = argparse.ArgumentParser(description="Run a question-first dossier using the canonical OpenCode artifact")
     parser.add_argument("--question-source", required=True, help="Path to a dossier JSON file with questions")
     parser.add_argument("--output-dir", default="backend/data/question_first_dossiers")
-    parser.add_argument("--max-questions", type=int, default=None)
-    parser.add_argument("--brightdata-timeout", type=float, default=60.0)
+    parser.add_argument("--question-first-run-path", default=None, help="Path to a canonical question_first_run_v1 artifact")
+    parser.add_argument("--opencode-timeout-ms", type=int, default=300000)
+    parser.add_argument("--preset", default=None)
     args = parser.parse_args(argv)
 
-    report = asyncio.run(
+    result = asyncio.run(
         run_question_first_dossier(
             question_source_path=Path(args.question_source),
             output_dir=Path(args.output_dir),
-            max_questions=args.max_questions,
-            brightdata_timeout=args.brightdata_timeout,
+            question_first_run_path=Path(args.question_first_run_path) if args.question_first_run_path else None,
+            opencode_timeout_ms=args.opencode_timeout_ms,
+            preset=args.preset,
         )
     )
-    print(report["plain_text_path"])
+    print(json.dumps(result, indent=2, default=str))
     return 0
 
 
