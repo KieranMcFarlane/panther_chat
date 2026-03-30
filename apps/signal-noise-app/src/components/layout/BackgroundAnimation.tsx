@@ -89,8 +89,8 @@ const BackgroundAnimation = () => {
 
   return (
     <>
-      <div className="bg-custom-bg fixed inset-0 z-[-1]" ref={containerRef}>
-        <div className="background-container">
+      <div className="bg-custom-bg fixed inset-0 z-0" ref={containerRef}>
+        <div className="background-container" style={{ zIndex: 0 }}>
           <svg 
             id="background-svg" 
             width="1738" 

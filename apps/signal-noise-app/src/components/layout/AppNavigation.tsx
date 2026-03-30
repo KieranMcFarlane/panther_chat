@@ -257,7 +257,7 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
   )
 
   return (
-    <div className="min-h-screen bg-custom-bg overflow-x-hidden">
+    <div className="relative z-10 min-h-screen bg-custom-bg overflow-x-hidden">
       {/* Fixed Sidebar */}
       <div className={`${sidebarExpanded ? 'w-64' : 'w-[4.4375rem]'} bg-custom-box border-r border-custom-border h-screen fixed left-0 top-0 z-10 transition-[width,transform] duration-1200`} style={{ transitionTimingFunction: 'cubic-bezier(0.37, 0, 0.63, 1)' }}>
         <div className={`${sidebarExpanded ? 'flex items-center justify-between gap-4 p-3' : 'flex flex-col justify-between gap-3 p-3'}`}>

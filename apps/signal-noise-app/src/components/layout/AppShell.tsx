@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { LogIn } from 'lucide-react'
 
 import AppNavigation from '@/components/layout/AppNavigation'
+import BackgroundAnimation from '@/components/layout/BackgroundAnimation'
 import { Button } from '@/components/ui/button'
 
 function AuthMenu() {
@@ -22,7 +23,12 @@ export default function AppShell({
 }: {
   children: React.ReactNode
 }) {
-  const appContent = <AppNavigation authMenu={<AuthMenu />}>{children}</AppNavigation>
+  const appContent = (
+    <>
+      <BackgroundAnimation />
+      <AppNavigation authMenu={<AuthMenu />}>{children}</AppNavigation>
+    </>
+  )
 
   return appContent
 }
