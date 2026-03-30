@@ -15,7 +15,10 @@ test('control center remains available as the secondary live overview', () => {
   assert.match(controlCenterPageSource, /export default function ControlCenterPage/)
 })
 
-test('discovery navigation exposes the control center instead of making it the default home surface', () => {
-  assert.match(discoveryNavSource, /Control Center/)
-  assert.match(discoveryNavSource, /href: '\/control-center'/)
+test('discovery navigation keeps the primary lanes explicit and the home surface slim', () => {
+  assert.match(discoveryNavSource, /label: 'Entities', href: '\/entity-browser'/)
+  assert.match(discoveryNavSource, /label: \"RFP's\/Tenders\", href: '\/tenders'/)
+  assert.match(discoveryNavSource, /label: 'Opportunities', href: '\/opportunities'/)
+  assert.match(discoveryNavSource, /label: 'Home', href: '\/'/)
+  assert.doesNotMatch(discoveryNavSource, /Control Center/)
 })

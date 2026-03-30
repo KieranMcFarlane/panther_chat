@@ -19,4 +19,5 @@ test('entity enrichment dashboard uses discovery-lane enrichment status', () => 
   assert.match(dashboardSource, /BrightData MCP/);
   assert.doesNotMatch(dashboardSource, /\/api\/entity-enrichment\/(progress|start|stop)/);
   assert.doesNotMatch(dashboardSource, /Perplexity/i);
+  assert.doesNotMatch(dashboardSource, /legacy batch/i);
 });

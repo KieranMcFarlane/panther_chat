@@ -1,10 +1,5 @@
-"use client"
-
-import DemoHero from './demo/page'
+import { redirect } from 'next/navigation'
 
 export default function Home() {
-  return <DemoHero />
+  redirect('/entity-browser')
 }
-
-
-

@@ -182,7 +182,7 @@ export default function EntityEnrichmentDashboard() {
           <h1 className="text-2xl font-bold">Entity Enrichment Lane</h1>
           <p className="max-w-3xl text-muted-foreground">
             This surface now follows the discovery-lane workflow. It queues OpenCode enrichment work, captures BrightData MCP evidence,
-            and expands candidate context with LeadIQ. The legacy batch path is no longer the source of truth here.
+            and expands candidate context with LeadIQ. The current lane snapshot is the source of truth here.
           </p>
         </div>
 
@@ -362,7 +362,7 @@ export default function EntityEnrichmentDashboard() {
             <ul className="mt-2 space-y-1 text-sm text-amber-900">
               <li>• Use the discovery-lane snapshot as the source of truth for enrichment status.</li>
               <li>• Queue work only when there is scout output to enrich.</li>
-              <li>• Treat the old batch service as legacy; this page does not depend on it.</li>
+              <li>• Use the discovery-lane snapshot rather than the older batch service.</li>
             </ul>
           </div>
         </CardContent>
