@@ -5,6 +5,6 @@ export default function EntityEnrichmentPage() {
 }
 
 export const metadata = {
-  title: 'Entity Dossier Enrichment | Signal Noise App',
-  description: 'Systematic enrichment of sports entities with BrightData and Perplexity intelligence',
+  title: 'Entity Enrichment Lane | Signal Noise App',
+  description: 'OpenCode enrichment lane for sports entities using BrightData MCP evidence and LeadIQ expansion.',
 };

@@ -4,7 +4,6 @@ import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supaba
 import { readLaneSnapshot } from '@/lib/discovery-lanes/lane-status'
 import { getEntityPipelineActivitySummary } from '@/lib/entity-import-jobs'
 import { buildOperationalSummary } from '@/lib/operational-summary'
-import { entityDossierEnrichmentService } from '@/services/EntityDossierEnrichmentService'
 
 async function getEntitiesActive(): Promise<number> {
   try {
@@ -32,20 +31,19 @@ async function getEntitiesActive(): Promise<number> {
 }
 
 export async function GET() {
-  const [entitiesActive, pipeline, scoutSnapshot] = await Promise.all([
+  const [entitiesActive, pipeline, scoutSnapshot, enrichmentSnapshot] = await Promise.all([
     getEntitiesActive(),
     getEntityPipelineActivitySummary(),
     readLaneSnapshot({ lane: 'scout' }),
+    readLaneSnapshot({ lane: 'enrichment' }),
   ])
 
   const scoutAwaitingFirstArtifact = scoutSnapshot.summary?.state === 'awaiting_first_snapshot'
-
-  const batch = entityDossierEnrichmentService.getCurrentBatch()
   const enrichment = {
-    isRunning: entityDossierEnrichmentService.isEnrichmentRunning(),
-    totalProcessed: batch?.processedEntities || 0,
-    totalSuccessful: batch?.successfulEnrichments || 0,
-    totalFailed: batch?.failedEnrichments || 0,
+    isRunning: enrichmentSnapshot.status === 'queued' || enrichmentSnapshot.status === 'running' || enrichmentSnapshot.status === 'active',
+    totalProcessed: Number(enrichmentSnapshot.summary?.total_candidates ?? enrichmentSnapshot.summary?.enriched ?? 0),
+    totalSuccessful: Number(enrichmentSnapshot.summary?.enriched ?? 0),
+    totalFailed: 0,
   }
 
   const summary = buildOperationalSummary({

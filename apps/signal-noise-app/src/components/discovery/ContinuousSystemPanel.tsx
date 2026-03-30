@@ -60,6 +60,31 @@ interface EnrichmentProgressSnapshot {
   timestamp?: string;
 }
 
+interface EnrichmentLaneSnapshot {
+  lane: 'enrichment';
+  status: 'inactive' | 'queued' | 'running' | 'completed' | 'failed' | 'active' | 'degraded';
+  file_path: string | null;
+  updated_at: string | null;
+  summary: {
+    total_candidates?: number;
+    enriched?: number;
+    company_matches?: number;
+    contact_matches?: number;
+    message?: string;
+    state?: string;
+  };
+  artifact?: {
+    id?: string;
+    system?: string;
+    source_lane?: string;
+    enriched_candidates?: Array<{
+      company?: { name?: string };
+      contacts?: unknown[];
+      decision_makers?: string[];
+    }>;
+  } | null;
+}
+
 interface FeedEntry {
   id: string;
   timestamp: string;
@@ -81,6 +106,43 @@ function formatTimestamp(timestamp: string) {
 
 function deriveSystemPhaseIndex(pipeline: PipelineSnapshot | null, enrichment: EnrichmentProgressSnapshot | null) {
   return derivePipelinePhaseIndex(pipeline, enrichment);
+}
+
+function normalizeEnrichmentSnapshot(snapshot: EnrichmentLaneSnapshot | null): EnrichmentProgressSnapshot | null {
+  if (!snapshot) {
+    return null;
+  }
+
+  const totalEntities = Number(snapshot.summary?.total_candidates ?? 0);
+  const successfulEnrichments = Number(snapshot.summary?.enriched ?? 0);
+  const successRate = totalEntities > 0 ? Math.round((successfulEnrichments / totalEntities) * 100) : 0;
+  const currentEntity = snapshot.artifact?.enriched_candidates?.[0]?.company?.name ?? snapshot.summary?.message ?? '';
+
+  return {
+    isRunning: snapshot.status === 'queued' || snapshot.status === 'running' || snapshot.status === 'active',
+    batch: snapshot.artifact
+      ? {
+          batchId: snapshot.artifact.id ?? `enrichment-${snapshot.updated_at ?? Date.now().toString()}`,
+          totalEntities,
+          processedEntities: successfulEnrichments,
+          successfulEnrichments,
+          failedEnrichments: 0,
+          currentEntity,
+          estimatedTimeRemaining: 0,
+          startTime: snapshot.updated_at ?? new Date().toISOString(),
+          results: [],
+        }
+      : null,
+    statistics: {
+      successRate,
+      averageTimePerEntity: 0,
+      totalProcessed: totalEntities,
+      totalSuccessful: successfulEnrichments,
+      totalFailed: 0,
+    },
+    recentResults: [],
+    timestamp: snapshot.updated_at ?? new Date().toISOString(),
+  };
 }
 
 function createSnapshotFeedItems(
@@ -229,7 +291,7 @@ export default function ContinuousSystemPanel() {
       try {
         const [pipelineResponse, enrichmentResponse] = await Promise.all([
           fetch('/api/discovery-lanes/pipeline', { cache: 'no-store' }),
-          fetch('/api/entity-enrichment/progress', { cache: 'no-store' }),
+          fetch('/api/discovery-lanes/enrichment', { cache: 'no-store' }),
         ]);
 
         if (cancelled) return;
@@ -244,7 +306,7 @@ export default function ContinuousSystemPanel() {
         if (enrichmentResponse.ok) {
           const enrichmentJson = await enrichmentResponse.json();
           if (!cancelled) {
-            setEnrichment(enrichmentJson?.data ?? null);
+            setEnrichment(normalizeEnrichmentSnapshot(enrichmentJson?.data ?? null));
           }
         }
       } catch (error) {

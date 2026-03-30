@@ -10,7 +10,7 @@ test('entity browser runtime HTML includes workflow shell and advanced ops navig
 
   const html = await response.text()
   assert.match(html, /Live Ops/)
-  assert.match(html, /Workflow/)
+  assert.match(html, /Primary Surfaces/)
   assert.match(html, /Advanced Ops/)
   assert.match(html, /RFP&#x27;s\/Tenders|RFP&apos;s\/Tenders|RFP's\/Tenders/)
 })
