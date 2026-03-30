@@ -453,7 +453,7 @@ export default function SportsDashboard() {
           <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                <h4 className="font-subheader text-green-900 mb-2">✅ Perplexity API</h4>
+                <h4 className="font-subheader text-green-900 mb-2">✅ OpenCode Intelligence</h4>
                 <p className="font-body-secondary text-green-700">Status: Active</p>
                 <p className="font-body-secondary text-green-700">Model: sonar-pro</p>
                 <p className="font-body-secondary text-green-700">Function: AI-powered business analysis</p>
@@ -622,7 +622,7 @@ export default function SportsDashboard() {
                             </div>
                             <div className="flex justify-between items-center py-2 border-b border-custom-border">
                               <span className="font-body-secondary text-fm-medium-grey">Data Sources:</span>
-                              <span className="font-body-medium text-fm-white">Perplexity + Bright Data MCP</span>
+                              <span className="font-body-medium text-fm-white">OpenCode + Bright Data MCP + LeadIQ</span>
                             </div>
                             <div className="flex justify-between items-center py-2">
                               <span className="font-body-secondary text-fm-medium-grey">Last Updated:</span>
@@ -746,6 +746,5 @@ export default function SportsDashboard() {
     </div>
   )
 }
-
 
 

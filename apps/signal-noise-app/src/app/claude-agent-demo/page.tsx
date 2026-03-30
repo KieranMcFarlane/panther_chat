@@ -463,7 +463,7 @@ export default function ClaudeAgentDemo() {
                   <div className="flex-1">
                     <h3 className="font-semibold text-cyan-400">HeadlessClaudeAgentService</h3>
                     <p className="text-sm text-gray-300 mt-1">
-                      Real programmatic Claude Agent with actual MCP tools (BrightData, Neo4j, Perplexity). 
+                      Real programmatic Claude Agent with actual MCP tools (BrightData MCP, Neo4j, OpenCode, LeadIQ). 
                       Streams live execution logs via Server-Sent Events.
                     </p>
                   </div>
@@ -878,7 +878,7 @@ export default function ClaudeAgentDemo() {
               <br /><br />
               <strong>⚠️ ERROR HANDLING:</strong> If the Claude Agent execution fails or times out after 30 seconds, 
               the system provides detailed diagnostic feedback instead of false positives. No fake RFP data 
-              is generated - you'll get genuine results or clear error messages to help troubleshoot issues.
+              is generated - you&apos;ll get genuine results or clear error messages to help troubleshoot issues.
             </AlertDescription>
           </Alert>
 

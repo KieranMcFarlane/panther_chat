@@ -36,7 +36,7 @@ export default function EnhancedChatDemo() {
       icon: <Database className="w-6 h-6" />,
       title: "Tool Status Monitoring",
       description: "Live status of your MCP tools and database connections",
-      benefits: ["Neo4j connection", "BrightData scraper", "Perplexity AI"]
+      benefits: ["Neo4j connection", "BrightData MCP", "OpenCode + LeadIQ"]
     },
     {
       icon: <Zap className="w-6 h-6" />,
@@ -48,8 +48,8 @@ export default function EnhancedChatDemo() {
 
   const integrations = [
     { name: "Neo4j MCP", status: "Connected", color: "text-fm-green" },
-    { name: "BrightData Scraper", status: "Ready", color: "text-fm-yellow" },
-    { name: "Perplexity AI", status: "Available", color: "text-fm-green" },
+    { name: "BrightData MCP", status: "Ready", color: "text-fm-yellow" },
+    { name: "OpenCode Lane", status: "Available", color: "text-fm-green" },
     { name: "Claude Agent SDK", status: "Active", color: "text-fm-green" },
     { name: "Supabase Cache", status: "Synced", color: "text-fm-green" },
     { name: "Email Service", status: "Configured", color: "text-fm-yellow" }
@@ -155,7 +155,7 @@ export default function EnhancedChatDemo() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-fm-medium-grey text-sm">
-                    Live monitoring of Neo4j, BrightData, Perplexity tools
+                    Live monitoring of Neo4j, BrightData MCP, OpenCode, and LeadIQ tools
                   </p>
                 </CardContent>
               </Card>

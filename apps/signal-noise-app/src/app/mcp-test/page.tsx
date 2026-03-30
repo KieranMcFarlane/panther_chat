@@ -72,7 +72,7 @@ export default function MCPTestPage() {
             <ul className="text-sm text-gray-300 space-y-1">
               <li>✅ Direct Neo4j queries to get real sports entities</li>
               <li>✅ Direct BrightData searches for RFP opportunities</li>
-              <li>✅ Direct Perplexity analysis for intelligence</li>
+              <li>✅ Direct OpenCode enrichment and LeadIQ expansion for intelligence</li>
               <li>✅ No abstraction layers - actual API execution</li>
               <li>✅ Honest reporting of results and errors</li>
             </ul>

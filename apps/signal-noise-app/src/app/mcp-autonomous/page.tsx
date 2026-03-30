@@ -353,7 +353,7 @@ export default function MCPAutonomousDashboard() {
               MCP-Enabled Autonomous RFP System
             </h1>
             <p className="text-gray-400 mt-2">
-              Direct MCP Integration: Neo4j + BrightData + Perplexity
+              Direct MCP Integration: Neo4j + BrightData MCP + OpenCode + LeadIQ
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -614,7 +614,7 @@ export default function MCPAutonomousDashboard() {
                   <div className="space-y-1">
                     <div className="text-xs text-green-400">• Neo4j (Knowledge Graph)</div>
                     <div className="text-xs text-green-400">• BrightData (Web Research)</div>
-                    <div className="text-xs text-green-400">• Perplexity (Market Intelligence)</div>
+                    <div className="text-xs text-green-400">• OpenCode (Market Intelligence)</div>
                   </div>
                 </div>
 
@@ -681,7 +681,7 @@ export default function MCPAutonomousDashboard() {
         <Alert className="bg-gray-800 border-gray-700">
           <Network className="h-4 w-4" />
           <AlertDescription className="text-gray-300">
-            <strong>🔌 MCP-Enabled Autonomous System:</strong> Direct integration with Neo4j, BrightData, and Perplexity MCP tools 
+            <strong>🔌 MCP-Enabled Autonomous System:</strong> Direct integration with Neo4j, BrightData MCP, OpenCode, and LeadIQ tools 
             for intelligent entity processing and RFP detection. System traverses knowledge graph relationships, performs 
             web research, and generates market intelligence - saving all results to structured JSON format for 24/7 autonomous operation.
             Currently monitoring with {systemStatus?.metrics.totalMcpCalls || 0} MCP tool calls and {systemStatus?.metrics.entitiesProcessed || 0} entities processed.

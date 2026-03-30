@@ -33,7 +33,7 @@ export default function LiveAgentLogsPage() {
     { value: 'ClaudeAgentSDK', label: 'Claude Agent SDK' },
     { value: 'EntityDossierEnrichmentService', label: 'Entity Dossier' },
     { value: 'BrightDataMCP', label: 'BrightData MCP' },
-    { value: 'PerplexityMCP', label: 'Perplexity MCP' },
+    { value: 'OpenCodeMCP', label: 'OpenCode Intelligence' },
     { value: 'Neo4jMCP', label: 'Neo4j MCP' }
   ];
 
