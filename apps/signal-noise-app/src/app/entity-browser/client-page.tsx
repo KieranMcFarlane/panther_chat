@@ -424,7 +424,7 @@ export default function EntityBrowserClientPage() {
       </div>
 
       <div className="container mx-auto px-4 py-6">
-        <details className="mb-4 rounded-2xl border border-border bg-card/70 p-3 shadow-sm">
+        <details className="mb-4 rounded-2xl border border-border/70 bg-card/65 p-2.5 shadow-sm">
           <summary className="cursor-pointer list-none">
             <div className="flex items-center justify-between gap-3">
               <div>
@@ -433,18 +433,18 @@ export default function EntityBrowserClientPage() {
                   Optional calibration path for the five entity smoke set.
                 </p>
               </div>
-              <Badge variant="secondary" className="gap-1 border-border bg-muted text-foreground">
+              <Badge variant="secondary" className="gap-1 border-border bg-muted px-2 py-0.5 text-xs text-foreground">
                 Hidden by default
               </Badge>
             </div>
           </summary>
-          <div className="pt-3">
+          <div className="pt-2.5">
             <EntitySmokeJourney />
           </div>
         </details>
         <Card className="mb-4 border-border/70 shadow-sm">
-          <CardContent className="p-4 md:p-5">
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          <CardContent className="p-3.5 md:p-4">
+            <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input

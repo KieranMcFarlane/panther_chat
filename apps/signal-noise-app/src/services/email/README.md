@@ -228,7 +228,7 @@ Multi-channel notification support:
 ## 🔄 Migration Notes
 
 This service has been migrated from the original locations:
-- **From:** `src/app/api/notifications/rfp-detected/route.ts`
+- **From:** the legacy RFP notification route
 - **To:** `src/services/email/rfp-notification-processor.ts`
 
 The migration provides:

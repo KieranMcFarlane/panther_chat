@@ -47,7 +47,7 @@ export class ClaudeAgentSDKService {
             tools: options.allowedTools || ['Read', 'Write', 'Bash', 'Grep', 'Glob'],
             permission_mode: 'default',
             mcp_servers: [
-              { name: 'neo4j-mcp', status: 'connected' },
+              { name: 'graphiti', status: 'connected' },
               { name: 'perplexity-mcp', status: 'connected' },
               { name: 'brightdata', status: 'connected' }
             ]

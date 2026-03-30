@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Brain, Settings, Bot, MessageCircle, Mail, Clock, Target, 
   Zap, AlertTriangle, CheckCircle, Play, Pause, RotateCcw,
-  Filter, Code, TestTube, Save, Trash2, Plus, Edit
+  Filter, Code, Save, Trash2, Plus, Edit
 } from 'lucide-react';
 
 interface AIAgentConfig {
@@ -84,8 +84,6 @@ export function AIEmailAgent({ entityId, config, enabled, onConfigChange }: AIEm
   });
 
   const [activeTab, setActiveTab] = useState('overview');
-  const [isTesting, setIsTesting] = useState(false);
-  const [testResults, setTestResults] = useState<any>(null);
   const [editingRule, setEditingRule] = useState<ClassificationRule | null>(null);
   const [editingPrompt, setEditingPrompt] = useState<CustomPrompt | null>(null);
 
@@ -109,32 +107,6 @@ export function AIEmailAgent({ entityId, config, enabled, onConfigChange }: AIEm
       }
     } catch (error) {
       console.error('Error saving AI agent config:', error);
-    }
-  };
-
-  const testAgent = async () => {
-    setIsTesting(true);
-    try {
-      const response = await fetch('/api/ai-agent/test', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          entityId,
-          config: agentConfig,
-          testEmail: {
-            subject: 'Test Inquiry About Partnership',
-            body: 'Hi, I\'m interested in discussing a potential partnership opportunity.',
-            sender: 'test@example.com'
-          }
-        })
-      });
-
-      const results = await response.json();
-      setTestResults(results);
-    } catch (error) {
-      console.error('Error testing AI agent:', error);
-    } finally {
-      setIsTesting(false);
     }
   };
 
@@ -214,15 +186,6 @@ export function AIEmailAgent({ entityId, config, enabled, onConfigChange }: AIEm
               <Badge variant={agentConfig.enabled ? "default" : "secondary"}>
                 {agentConfig.enabled ? 'ACTIVE' : 'INACTIVE'}
               </Badge>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={testAgent}
-                disabled={isTesting || !agentConfig.enabled}
-              >
-                <TestTube className="h-4 w-4 mr-2" />
-                {isTesting ? 'Testing...' : 'Test Agent'}
-              </Button>
               <Button onClick={saveConfig}>
                 <Save className="h-4 w-4 mr-2" />
                 Save Config
@@ -370,39 +333,6 @@ export function AIEmailAgent({ entityId, config, enabled, onConfigChange }: AIEm
               </CardContent>
             </Card>
 
-            {/* Test Results */}
-            {testResults && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <TestTube className="h-5 w-5" />
-                    Test Results
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 text-green-600" />
-                      <span className="text-sm">Classification: {testResults.classification}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Mail className="h-4 w-4 text-blue-600" />
-                      <span className="text-sm">Action: {testResults.action}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Zap className="h-4 w-4 text-purple-600" />
-                      <span className="text-sm">Response Time: {testResults.responseTime}ms</span>
-                    </div>
-                    {testResults.generatedResponse && (
-                      <div className="p-3 bg-muted rounded-lg">
-                        <p className="text-sm font-medium mb-1">Generated Response:</p>
-                        <p className="text-sm text-muted-foreground">{testResults.generatedResponse}</p>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
           </div>
         </TabsContent>
 

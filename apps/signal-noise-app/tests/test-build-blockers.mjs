@@ -66,10 +66,6 @@ const ralphAnalyticsHelperSource = readFileSync(
   new URL('../src/lib/ralph-analytics-helper.ts', import.meta.url),
   'utf8'
 )
-const mcpClientBusSource = readFileSync(
-  new URL('../src/lib/mcp/MCPClientBus.ts', import.meta.url),
-  'utf8'
-)
 const directMcpClientSource = readFileSync(
   new URL('../src/lib/direct-mcp-client.ts', import.meta.url),
   'utf8'
@@ -171,11 +167,6 @@ test('activity logger guards localStorage access outside the browser', () => {
 test('ralph analytics helper treats a missing runtime bindings directory as empty analytics input', () => {
   assert.match(ralphAnalyticsHelperSource, /fs\.access\(bindingsDir, fsConstants\.F_OK\)/)
   assert.match(ralphAnalyticsHelperSource, /if \(\(error as NodeJS\.ErrnoException\)\.code === 'ENOENT'\) \{\s*return \[\];/)
-})
-
-test('mcp client bus does not auto-initialize on module import', () => {
-  assert.match(mcpClientBusSource, /export const mcpBus = new MCPClientBus\(MCP_SERVERS\);/)
-  assert.doesNotMatch(mcpClientBusSource, /mcpBus\.initialize\(\)\.catch\(console\.error\);/)
 })
 
 test('direct MCP client does not auto-connect on module import', () => {

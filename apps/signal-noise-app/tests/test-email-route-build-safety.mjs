@@ -8,7 +8,7 @@ const mailboxSendRoute = readFileSync(
 );
 
 const rfpNotificationRoute = readFileSync(
-  new URL("../src/app/api/notifications/rfp-detected/route.ts", import.meta.url),
+  new URL("../src/app/api/notifications/rfp-detected-migrated/route.ts", import.meta.url),
   "utf8",
 );
 
@@ -20,10 +20,10 @@ test("mailbox send route does not instantiate Resend at module import time", () 
   );
 });
 
-test("rfp notification route does not instantiate Resend in a constructor at import time", () => {
+test("rfp notification migrated route does not instantiate Resend in a constructor at import time", () => {
   assert.doesNotMatch(
     rfpNotificationRoute,
     /constructor\s*\(\)\s*{\s*this\.resend\s*=\s*new\s+Resend\(/,
-    "notification route should not eagerly construct Resend during module initialization",
+    "migrated notification route should not eagerly construct Resend during module initialization",
   );
 });

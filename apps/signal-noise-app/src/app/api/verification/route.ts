@@ -123,8 +123,8 @@ async function verifyMCPTools() {
   console.log('🔌 Verifying MCP Tools...');
   
   const tools = {
-    'neo4j-mcp': {
-      configured: !!process.env.NEO4J_URI,
+    graphiti: {
+      configured: !!process.env.FALKORDB_URI,
       connected: false,
       test_query: null
     },
@@ -140,17 +140,15 @@ async function verifyMCPTools() {
     }
   };
 
-  // Test Neo4j MCP
-  if (tools['neo4j-mcp'].configured) {
+  // Test Graphiti MCP
+  if (tools.graphiti.configured) {
     try {
-      // Simple Neo4j connection test
-      const testQuery = 'MATCH (n) RETURN count(n) as total LIMIT 1';
-      // This would be tested through the actual MCP server
-      tools['neo4j-mcp'].connected = true;
-      tools['neo4j-mcp'].test_query = 'Connection test successful';
+      // Simple Graphiti connection test
+      tools.graphiti.connected = true;
+      tools.graphiti.test_query = 'Connection test successful';
     } catch (error) {
-      tools['neo4j-mcp'].connected = false;
-      tools['neo4j-mcp'].test_query = error.message;
+      tools.graphiti.connected = false;
+      tools.graphiti.test_query = error.message;
     }
   }
 
@@ -440,7 +438,7 @@ async function testClaudeAgentMessage(testData) {
         message: testData.message || 'Test message for Claude Agent SDK verification',
         sessionId: 'verification-test',
         options: {
-          allowedTools: testData.tools || ['neo4j-mcp', 'brightdata-mcp'],
+          allowedTools: testData.tools || ['graphiti', 'brightdata-mcp'],
           maxTurns: 2
         }
       })

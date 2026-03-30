@@ -141,7 +141,7 @@ async function validateJSONSchema(): Promise<ValidationResult> {
     timestamp: new Date().toISOString(),
     processingConfig: {
       entityBatchSize: 3,
-      mcpTools: ['neo4j-mcp', 'brightdata-mcp', 'perplexity-mcp'],
+      mcpTools: ['graphiti', 'brightdata-mcp', 'perplexity-mcp'],
       processingTime: '00:02:45'
     },
     entitiesProcessed: 3,
@@ -153,7 +153,7 @@ async function validateJSONSchema(): Promise<ValidationResult> {
         sport: 'Football',
         processingStatus: 'completed',
         mcpAnalysis: {
-          neo4jAnalysis: {
+          graphitiAnalysis: {
             relationshipsFound: 5,
             connectedEntities: 12,
             relationshipTypes: ['PARTNERSHIP', 'COMPETES_IN', 'EMPLOYED_BY'],

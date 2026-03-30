@@ -90,7 +90,7 @@ export async function GET(req: NextRequest) {
                     is_error: log.level === 'error',
                     tools: log.metadata?.tools || ['Task', 'Bash', 'Glob', 'Grep', 'Read', 'Edit', 'Write'],
                     mcp_servers: log.metadata?.mcp_servers || [
-                      { name: 'neo4j-mcp', status: 'connected' },
+                      { name: 'graphiti', status: 'connected' },
                       { name: 'perplexity-mcp', status: 'connected' }
                     ]
                   }
@@ -151,7 +151,7 @@ export async function GET(req: NextRequest) {
                   is_error: log.level === 'error',
                   tools: log.metadata?.tools || ['Task', 'Bash', 'Glob', 'Grep', 'Read', 'Edit', 'Write'],
                   mcp_servers: log.metadata?.mcp_servers || [
-                    { name: 'neo4j-mcp', status: 'connected' },
+                    { name: 'graphiti', status: 'connected' },
                     { name: 'perplexity-mcp', status: 'connected' }
                   ]
                 }

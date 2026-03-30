@@ -119,7 +119,7 @@ export function MCPActions() {
     parameters: ['query', 'num_results'],
     handler: async ({ query, num_results = 5 }) => {
       try {
-        const response = await fetch('/api/mcp/brightdata/search', {
+        const response = await fetch('/api/brightdata-search', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ query, num_results })

@@ -15,6 +15,20 @@ export async function POST(request: NextRequest) {
 
     // Configure MCP servers with working credentials
     const mcpServers = {
+      graphiti: {
+        command: 'python3',
+        args: ['backend/graphiti_mcp_server_official/src/graphiti_mcp_server.py'],
+        env: {
+          DATABASE_PROVIDER: 'falkordb',
+          FALKORDB_URI: process.env.FALKORDB_URI || '',
+          FALKORDB_USER: process.env.FALKORDB_USER || 'falkordb',
+          FALKORDB_PASSWORD: process.env.FALKORDB_PASSWORD || '',
+          FALKORDB_DATABASE: process.env.FALKORDB_DATABASE || 'sports_intelligence',
+          MODEL_NAME: process.env.MODEL_NAME || 'gpt-4o-mini',
+          EMBEDDING_MODEL: process.env.EMBEDDING_MODEL || 'text-embedding-3-small',
+          OPENAI_API_KEY: process.env.OPENAI_API_KEY || ''
+        }
+      },
       'brightdata-mcp': {
         command: 'node',
         args: ['src/mcp-brightdata-server.js'],
@@ -23,15 +37,6 @@ export async function POST(request: NextRequest) {
           BRIGHTDATA_TOKEN: process.env.BRIGHTDATA_API_TOKEN || 'bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4',
           BRIGHTDATA_ZONE: 'linkedin_posts_monitor'
         }
-      },
-      'neo4j-mcp': {
-        command: 'node', 
-        args: ['neo4j-mcp-server.js'],
-        env: {
-          NEO4J_URI: process.env.NEO4J_URI || 'neo4j+s://e6bb5665.databases.neo4j.io',
-          NEO4J_USERNAME: process.env.NEO4J_USERNAME || 'neo4j',
-          NEO4J_PASSWORD: process.env.NEO4J_PASSWORD || 'NeO4jPaSSworD!'
-        }
       }
     };
 
@@ -39,7 +44,7 @@ export async function POST(request: NextRequest) {
     const systemPrompt = {
       type: "preset" as const,
       preset: "claude_code" as const,
-      append: `You are an expert RFP Intelligence Analyst with access to Neo4j sports entities and BrightData web search capabilities.
+      append: `You are an expert RFP Intelligence Analyst with access to Graphiti sports entities on FalkorDB and BrightData web search capabilities.
 
 PRIMARY MISSION: Execute comprehensive RFP monitoring across all major sports entities.
 
@@ -65,7 +70,7 @@ MONITORING SOURCES:
 4. Direct organization websites
 
 WORKFLOW EXECUTION:
-1. Query Neo4j for high-priority sports entities (priority <= 5)
+1. Query Graphiti for high-priority sports entities (priority <= 5)
 2. For each entity, search BrightData for RFP opportunities using verified patterns
 3. Extract and analyze detected opportunities for Yellow Panther fit
 4. Return structured RFP intelligence in the specified JSON format
@@ -87,7 +92,7 @@ Execute this workflow autonomously and return all discovered RFP opportunities w
     for await (const message of query({
       prompt: `Execute comprehensive RFP monitoring workflow:
 
-1. First, query Neo4j to get ${entityLimit} high-priority sports entities (yellowPantherPriority <= 5)
+1. First, query Graphiti to get ${entityLimit} high-priority sports entities (yellowPantherPriority <= 5)
 2. For each entity found, conduct targeted RFP searches using these exact patterns:
    - Digital transformation RFP opportunities from sports organizations
    - Mobile app development proposals for sports federations
@@ -113,8 +118,9 @@ Focus on finding real, active RFP opportunities with live links and submission d
         systemPrompt,
         mcpServers,
         allowedTools: [
-          'mcp__neo4j-mcp__execute_query',
-          'mcp__neo4j-mcp__search_sports_entities', 
+          'mcp__graphiti__search_nodes',
+          'mcp__graphiti__get_entity_edge',
+          'mcp__graphiti__get_status',
           'mcp__brightdata-mcp__search_engine',
           'mcp__brightdata-mcp__scrape_as_markdown',
           'Read', 'Write', 'Grep', 'Bash'
@@ -127,8 +133,8 @@ Focus on finding real, active RFP opportunities with live links and submission d
       if (message.type === 'tool_use') {
         console.log(`🔧 [AUTONOMOUS SCAN] Tool: ${message.name}`);
         
-        // Track Neo4j entity queries
-        if (message.name.includes('neo4j')) {
+        // Track Graphiti entity queries
+        if (message.name.includes('graphiti')) {
           entitiesProcessed++;
         }
         

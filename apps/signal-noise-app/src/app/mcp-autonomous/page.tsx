@@ -16,14 +16,10 @@ import {
   Brain, 
   Database, 
   Search, 
-  TrendingUp, 
-  Play, 
-  Square, 
   Activity,
   Zap,
   Eye,
   BarChart3,
-  Lightbulb,
   Clock,
   CheckCircle,
   AlertTriangle,
@@ -92,10 +88,8 @@ export default function MCPAutonomousDashboard() {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [isStarting, setIsStarting] = useState(false);
   const [isStopping, setIsStopping] = useState(false);
-  const [isTesting, setIsTesting] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
   const [mcpServers, setMcpServers] = useState<MCPServerStatus[]>([]);
-  const [testResults, setTestResults] = useState<any>(null);
 
   // Fetch initial system status
   useEffect(() => {
@@ -277,40 +271,6 @@ export default function MCPAutonomousDashboard() {
     }
   };
 
-  const testMCPTools = async () => {
-    if (isTesting) return;
-    
-    setIsTesting(true);
-    setTestResults(null);
-    
-    try {
-      const response = await fetch('/api/mcp-autonomous/test', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ testType: 'all' })
-      });
-      
-      const data = await response.json();
-      
-      if (data.success) {
-        setTestResults(data);
-        
-        // Add test log entry
-        setLogs(prev => [{
-          timestamp: new Date().toISOString(),
-          level: 'INFO',
-          message: `🧪 MCP Tools Test Completed: ${data.testSummary.successCount}/${data.testSummary.totalTests} tools working`,
-          category: 'testing',
-          mcpTool: 'test'
-        }, ...prev.slice(0, 99)]);
-      }
-    } catch (error) {
-      console.error('Failed to test MCP tools:', error);
-    } finally {
-      setIsTesting(false);
-    }
-  };
-
   const getLogLevelColor = (level: string) => {
     switch (level) {
       case 'ERROR': return 'text-red-400';
@@ -337,7 +297,6 @@ export default function MCPAutonomousDashboard() {
       case 'brightdata-mcp': return <Search className="h-3 w-3" />;
       case 'perplexity-mcp': return <Brain className="h-3 w-3" />;
       case 'system': return <Cpu className="h-3 w-3" />;
-      case 'test': return <Lightbulb className="h-3 w-3" />;
       default: return <Activity className="h-3 w-3" />;
     }
   };
@@ -383,14 +342,6 @@ export default function MCPAutonomousDashboard() {
                 MCP Control Panel
               </span>
               <div className="flex items-center gap-2">
-                <Button
-                  onClick={testMCPTools}
-                  disabled={isTesting}
-                  size="sm"
-                  variant="outline"
-                >
-                  {isTesting ? 'Testing...' : 'Test MCP Tools'}
-                </Button>
                 <Button
                   onClick={startMCPAutonomous}
                   disabled={isStarting || systemStatus?.isRunning}
@@ -463,77 +414,6 @@ export default function MCPAutonomousDashboard() {
             )}
           </CardContent>
         </Card>
-
-        {/* Test Results */}
-        {testResults && (
-          <Card className="bg-gray-800 border-gray-700">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Lightbulb className="h-5 w-5" />
-                MCP Tools Test Results
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="mb-4">
-                <div className="flex items-center gap-4 mb-2">
-                  <span className="text-sm text-gray-400">
-                    Status: <span className="text-white font-semibold">{testResults.testSummary.overallStatus}</span>
-                  </span>
-                  <span className="text-sm text-gray-400">
-                    Success: <span className="text-green-400 font-semibold">{testResults.testSummary.successCount}/{testResults.testSummary.totalTests}</span>
-                  </span>
-                  <span className="text-sm text-gray-400">
-                    Time: <span className="text-blue-400 font-semibold">{testResults.testSummary.totalTime}</span>
-                  </span>
-                </div>
-              </div>
-
-              {testResults.results && (
-                <div className="space-y-3">
-                  {testResults.results.map((result: any, index: number) => (
-                    <div key={index} className="bg-gray-700 rounded-lg p-3">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-semibold flex items-center gap-2">
-                          {getMCPToolIcon(result.tool)}
-                          {result.tool}
-                        </span>
-                        <Badge className={result.status === 'success' ? 'bg-green-600' : 'bg-red-600'}>
-                          {result.status}
-                        </Badge>
-                      </div>
-                      <div className="text-sm text-gray-300">
-                        Response Time: {result.responseTime}ms
-                      </div>
-                      {result.error && (
-                        <div className="text-sm text-red-400 mt-1">
-                          Error: {result.error}
-                        </div>
-                      )}
-                      {result.result && (
-                        <div className="text-xs text-gray-400 mt-2">
-                          Result: {JSON.stringify(result.result).substring(0, 100)}...
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {testResults.recommendations && (
-                <div className="mt-4">
-                  <div className="text-sm font-semibold mb-2">Recommendations:</div>
-                  <div className="space-y-1">
-                    {testResults.recommendations.map((rec: string, index: number) => (
-                      <div key={index} className="text-xs text-blue-400">
-                        • {rec}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
 
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

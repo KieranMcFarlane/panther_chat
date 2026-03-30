@@ -1,88 +1,64 @@
 /**
- * Stop MCP-Enabled Autonomous RFP Monitoring System
+ * Stop the MCP-enabled autonomous RFP monitoring system.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { getMcpAutonomousManagerIfExists, mapMcpAutonomousStatus } from '@/lib/mcp/mcp-autonomous-manager';
 import { liveLogService } from '@/services/LiveLogService';
+
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 export async function POST(request: NextRequest) {
   try {
-    // Check if system is running
-    if (!global.mcpAutonomousRunning) {
+    const manager = getMcpAutonomousManagerIfExists();
+
+    if (!manager || !manager.getSystemStatus().isActive) {
       return NextResponse.json({
         success: true,
-        message: 'MCP-Enabled Autonomous RFP monitoring system is not running',
+        message: 'MCP-enabled autonomous monitoring is not running',
         status: 'already_stopped',
         lastChecked: new Date().toISOString()
       });
     }
 
-    // Clear the processing interval
-    if (global.mcpProcessingInterval) {
-      clearInterval(global.mcpProcessingInterval);
-      global.mcpProcessingInterval = null;
-    }
-    
-    // Update global state
-    global.mcpAutonomousRunning = false;
+    await manager.stopMCPEnabledMonitoring();
 
-    // Mock final status
-    const finalStatus = {
-      metrics: {
-        entitiesProcessed: Math.floor(Math.random() * 50) + 10,
-        batchesCompleted: Math.floor(Math.random() * 15) + 3,
-        rfpsIdentified: Math.floor(Math.random() * 8) + 1,
-        jsonFilesCreated: Math.floor(Math.random() * 15) + 3,
-        totalMcpCalls: Math.floor(Math.random() * 100) + 30,
-        uptime: `${Math.floor(Math.random() * 60) + 1}m ${Math.floor(Math.random() * 60)}s`
-      }
-    };
+    const status = mapMcpAutonomousStatus(manager);
 
-    // Log shutdown
     await liveLogService.addLog({
       level: 'INFO',
-      message: '🛑 MCP-Enabled Autonomous RFP monitoring system stopped successfully',
-      source: 'MCP Autonomous Stop',
-      category: 'autonomous',
+      message: '🛑 MCP-enabled autonomous RFP monitoring system stopped successfully',
+      source: 'MCPEnabledAutonomousRFPManager',
+      category: 'system',
       metadata: {
-        finalMetrics: finalStatus.metrics,
-        shutdownTime: new Date().toISOString(),
-        totalEntitiesProcessed: finalStatus.metrics.entitiesProcessed,
-        totalBatchesCompleted: finalStatus.metrics.batchesCompleted,
-        totalRfpsIdentified: finalStatus.metrics.rfpsIdentified
+        finalMetrics: status.metrics,
+        shutdownTime: new Date().toISOString()
       }
     });
 
     return NextResponse.json({
       success: true,
-      message: 'MCP-Enabled Autonomous RFP monitoring system stopped successfully',
+      message: 'MCP-enabled autonomous monitoring stopped successfully',
       status: 'stopped',
-      finalMetrics: finalStatus.metrics,
+      finalMetrics: status.metrics,
       mcpSummary: {
-        totalMcpCalls: finalStatus.metrics.totalMcpCalls || 0,
-        entitiesProcessed: finalStatus.metrics.entitiesProcessed || 0,
-        batchesCompleted: finalStatus.metrics.batchesCompleted || 0,
-        rfpsIdentified: finalStatus.metrics.rfpsIdentified || 0,
-        jsonFilesCreated: finalStatus.metrics.jsonFilesCreated || 0,
-        operationDuration: finalStatus.metrics.uptime || '0m 0s'
+        totalMcpCalls: status.metrics.totalMcpCalls || 0,
+        entitiesProcessed: status.metrics.entitiesProcessed || 0,
+        batchesCompleted: status.metrics.batchesCompleted || 0,
+        rfpsIdentified: status.metrics.rfpsIdentified || 0,
+        jsonFilesCreated: status.metrics.jsonFilesCreated || 0,
+        operationDuration: status.uptime || 'Inactive'
       },
       lastChecked: new Date().toISOString()
     });
-
   } catch (error) {
-    console.error('Failed to stop MCP-enabled autonomous system:', error);
-    
-    await liveLogService.addLog({
-      level: 'ERROR',
-      message: `Failed to stop MCP-enabled autonomous system: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      source: 'MCP Autonomous Stop',
-      category: 'error'
-    });
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
     return NextResponse.json({
       success: false,
       error: 'Failed to stop MCP-enabled autonomous system',
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message: errorMessage,
       lastChecked: new Date().toISOString()
     }, { status: 500 });
   }

@@ -59,7 +59,6 @@
     "discover:tables": "bash scripts/discover-supabase-tables.sh"
   },
   "dependencies": {
-    "@better-auth/infra": "^0.1.7",
     "@ag-ui/mastra": "0.0.11",
     "@ai-sdk/anthropic": "^2.0.17",
     "@ai-sdk/openai": "^1.3.24",
@@ -67,12 +66,14 @@
     "@anthropic-ai/claude-code": "^2.0.25",
     "@anthropic-ai/sdk": "^0.65.0",
     "@aws-sdk/client-s3": "^3.931.0",
+    "@better-auth/infra": "^0.1.7",
     "@copilotkit/react-core": "^1.10.5",
     "@copilotkit/react-textarea": "^1.10.5",
     "@copilotkit/react-ui": "^1.10.5",
     "@copilotkit/runtime": "^1.10.5",
     "@inboundemail/sdk": "^4.3.0",
     "@libsql/client": "^0.15.14",
+    "@libsql/kysely-libsql": "^0.4.1",
     "@livekit/agents": "^1.0.17",
     "@livekit/agents-plugin-openai": "^1.0.17",
     "@livekit/components-react": "^2.9.15",

@@ -4,7 +4,6 @@
  */
 
 import { liveLogService } from './LiveLogService';
-import { notificationService } from './NotificationService';
 import { ConnectionIntelligenceAgent } from './ConnectionIntelligenceAgent';
 import fs from 'fs/promises';
 import path from 'path';
@@ -1021,9 +1020,23 @@ export class MCPEnabledAutonomousRFPManager {
         competitive_advantage: connectionAnalysis.opportunity_enhancement.competitive_advantage
       };
 
-      // Send enhanced notification
-      await notificationService.sendEnhancedAlert(alertData);
-      
+      // Send enhanced notification only when the notification stack is available.
+      try {
+        const { notificationService } = await import('./NotificationService');
+        await notificationService.sendEnhancedAlert(alertData);
+      } catch (notificationError) {
+        liveLogService.warn('⚠️ Skipping connection intelligence notification', {
+          category: 'connection-intelligence',
+          source: 'MCPEnabledAutonomousRFPManager',
+          message: `Notification stack unavailable for ${entityName}`,
+          data: {
+            entity: entityName,
+            error: notificationError instanceof Error ? notificationError.message : 'Unknown error'
+          },
+          tags: ['connection-alert', 'notification-skip']
+        });
+      }
+
       liveLogService.success('🚀 Connection intelligence alert sent', {
         category: 'connection-intelligence',
         source: 'MCPEnabledAutonomousRFPManager',
