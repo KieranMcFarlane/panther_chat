@@ -195,17 +195,17 @@ async function fetchGraphData() {
     }
     
     if (entities.length === 0) {
-      console.warn('No entities found in Supabase cache, falling back to Neo4j API');
+      console.warn('No entities found in Supabase cache, falling back to the canonical entity snapshot');
       
-      // Fallback to Neo4j API if Supabase cache is empty
-      const fallbackResponse = await fetch(`${baseUrl}/api/sports-entities?limit=1000`, {
+      // Fallback to the canonical entity snapshot if Supabase cache is empty
+      const fallbackResponse = await fetch(`${baseUrl}/api/entities?limit=1000`, {
         cache: 'no-store'
       });
       
       if (fallbackResponse.ok) {
         const data = await fallbackResponse.json();
         entities = Array.isArray(data) ? data : (data?.entities ?? []);
-        console.log('✅ SERVER SIDE: Fallback loaded entities from Neo4j API:', entities.length);
+        console.log('✅ SERVER SIDE: Fallback loaded entities from canonical snapshot:', entities.length);
         totalAvailable = entities.length; // Set totalAvailable for fallback case
       }
     }

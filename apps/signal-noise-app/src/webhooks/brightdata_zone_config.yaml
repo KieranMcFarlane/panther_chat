@@ -140,13 +140,15 @@ automated_actions:
     - add_to_weekly_report
 
 integration_endpoints:
-  neo4j_mcp:
-    endpoint: "http://localhost:8080/api/mcp/neo4j"
+  graphiti_mcp:
+    endpoint: "http://localhost:8080/api/graphiti"
     operations:
-      - name: "createRFPNodes"
-        description: "Store detected RFPs in knowledge graph"
-      - name: "updateOrganizationProfile"
-        description: "Update organization profile with procurement info"
+      - name: "query_entity"
+        description: "Retrieve entity data and relationships from the graph"
+      - name: "query_subgraph"
+        description: "Retrieve an entity neighborhood graph"
+      - name: "find_related_signals"
+        description: "Find related signals for an entity"
   
   copilotkit_dashboard:
     endpoint: "http://localhost:3000/api/copilotkit"
@@ -170,4 +172,3 @@ environment_config:
     webhook_url: "https://yellow-panther.com/webhook/brightdata/linkedin"
     brightdata_zone: "linkedin_posts_monitor"
     log_level: "INFO"
-

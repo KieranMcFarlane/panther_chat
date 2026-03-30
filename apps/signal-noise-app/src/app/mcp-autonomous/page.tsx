@@ -176,7 +176,7 @@ export default function MCPAutonomousDashboard() {
         if (mcpServers.length === 0) {
           setMcpServers([
             {
-              tool: 'neo4j-mcp',
+              tool: 'graphiti',
               status: 'success',
               responseTime: 45,
               lastCall: new Date().toISOString()
@@ -188,7 +188,7 @@ export default function MCPAutonomousDashboard() {
               lastCall: new Date().toISOString()
             },
             {
-              tool: 'perplexity-mcp',
+              tool: 'supabase-mcp',
               status: 'success', 
               responseTime: 2100,
               lastCall: new Date().toISOString()
@@ -293,9 +293,9 @@ export default function MCPAutonomousDashboard() {
 
   const getMCPToolIcon = (tool?: string) => {
     switch (tool) {
-      case 'neo4j-mcp': return <Database className="h-3 w-3" />;
+      case 'graphiti': return <Database className="h-3 w-3" />;
       case 'brightdata-mcp': return <Search className="h-3 w-3" />;
-      case 'perplexity-mcp': return <Brain className="h-3 w-3" />;
+      case 'supabase-mcp': return <Brain className="h-3 w-3" />;
       case 'system': return <Cpu className="h-3 w-3" />;
       default: return <Activity className="h-3 w-3" />;
     }
@@ -312,7 +312,7 @@ export default function MCPAutonomousDashboard() {
               MCP-Enabled Autonomous RFP System
             </h1>
             <p className="text-gray-400 mt-2">
-              Direct MCP Integration: Neo4j + BrightData MCP + OpenCode + LeadIQ
+              Direct MCP Integration: Graphiti + BrightData MCP + Supabase MCP + OpenCode
             </p>
           </div>
           <div className="flex items-center gap-3">

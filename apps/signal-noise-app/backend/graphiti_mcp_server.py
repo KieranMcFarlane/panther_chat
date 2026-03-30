@@ -11,7 +11,6 @@ Provides:
 - request_schema_extension: Request schema extension (requires approval)
 
 This is the sole graph interface for the intelligence layer, replacing:
-- neo4j-mcp (moved functionality)
 - falkordb-mcp (moved functionality)
 - temporal-intelligence (replaced with graph intelligence)
 
