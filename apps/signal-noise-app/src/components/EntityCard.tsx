@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation"
 import { useRef, useState } from "react"
 import Link from "next/link"
 import { rememberEntityBrowserUrl } from "@/lib/entity-browser-history"
-import { pushWithViewTransition } from "@/lib/view-transition"
+import { resolveGraphId } from "@/lib/graph-id"
 
 interface EntityCardProps {
   entity: Entity
@@ -25,33 +25,28 @@ function getEntityCurrentPage(): string {
   return urlParams.get('page') || '1'
 }
 
-function getEntityBrowserDossierHref(entity: Entity, currentPage: string): string {
-  const stableEntityId = String(
-    (entity as any)?.id ??
-    (entity as any)?.graph_id ??
-    ''
-  ).trim()
+function getEntityBrowserDossierHref(entity: Entity, currentPage: string): string | null {
+  const stableEntityId = resolveGraphId(entity)
 
-  return `/entity-browser/${stableEntityId}/dossier?from=${currentPage}`
+  return stableEntityId
+    ? `/entity-browser/${stableEntityId}/dossier?from=${currentPage}`
+    : null
 }
 
 export function EntityCard({ entity, similarity, connections, rank, onEmailEntity }: EntityCardProps) {
   const router = useRouter()
   const [isProfileLoading, setIsProfileLoading] = useState(false)
   const hasPrefetchedDossierRouteRef = useRef(false)
-  const stableEntityId = String(
-    (entity as any)?.id ??
-    (entity as any)?.graph_id ??
-    ''
-  ).trim()
+  const stableEntityId = resolveGraphId(entity)
 
   const prefetchDossierRoute = () => {
-    if (!stableEntityId) return
     if (hasPrefetchedDossierRouteRef.current) return
 
-    hasPrefetchedDossierRouteRef.current = true
     const currentPage = getEntityCurrentPage()
     const href = getEntityBrowserDossierHref(entity, currentPage)
+    if (!href) return
+
+    hasPrefetchedDossierRouteRef.current = true
     router.prefetch(href)
   }
 
@@ -124,14 +119,14 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
   }
 
   const handleCardClick = () => {
-    if (!stableEntityId) return
+    const currentPage = getEntityCurrentPage()
+    const href = getEntityBrowserDossierHref(entity, currentPage)
+    if (!href) return
     if (isProfileLoading) return
 
     setIsProfileLoading(true)
-    // Get current page from URL and pass it to the entity profile
-    const currentPage = getEntityCurrentPage()
     rememberEntityBrowserUrl()
-    pushWithViewTransition(router, `/entity-browser/${stableEntityId}/dossier?from=${currentPage}`)
+    router.push(href)
   }
 
   return (
@@ -277,29 +272,49 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
             className="w-full"
             disabled={isProfileLoading}
             data-testid="view-full-profile"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  if (!stableEntityId) return
-                  if (isProfileLoading) return
-
-                  setIsProfileLoading(true)
-                  // Get current page from URL and pass it to the entity profile
-                  const currentPage = getEntityCurrentPage()
-                  rememberEntityBrowserUrl()
-                  pushWithViewTransition(router, `/entity-browser/${stableEntityId}/dossier?from=${currentPage}`)
-                }}
+            asChild
           >
-            {isProfileLoading ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Loading Profile...
-              </>
-            ) : (
-              <>
-                Open dossier
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </>
-            )}
+            {(() => {
+              const currentPage = getEntityCurrentPage()
+              const href = getEntityBrowserDossierHref(entity, currentPage)
+
+              if (!href) {
+                return (
+                  <span className="flex w-full items-center justify-center">
+                    Open dossier
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </span>
+                )
+              }
+
+              return (
+                <Link
+                  href={href}
+                  className="flex w-full items-center justify-center"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    if (isProfileLoading) {
+                      e.preventDefault()
+                      return
+                    }
+                    setIsProfileLoading(true)
+                    rememberEntityBrowserUrl()
+                  }}
+                >
+                  {isProfileLoading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Loading Profile...
+                    </>
+                  ) : (
+                    <>
+                      Open dossier
+                      <ArrowRight className="h-4 w-4 ml-2" />
+                    </>
+                  )}
+                </Link>
+              )
+            })()}
           </Button>
         </div>
 
