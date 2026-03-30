@@ -33,6 +33,11 @@ test('buildOpenCodeConfig wires Z.AI and BrightData MCP for OpenCode', () => {
   assert.equal(config.provider['zai-coding-plan'].options.baseURL, 'https://api.z.ai/api/anthropic');
   assert.equal(config.provider['zai-coding-plan'].options.apiKey, 'test-zai-token');
   assert.ok(config.mcp.brightData);
+  assert.ok(config.mcpServers['brightdata-mcp']);
+  assert.equal(config.mcpServers['brightdata-mcp'].type, 'stdio');
+  assert.equal(config.mcpServers['brightdata-mcp'].command, 'npx');
+  assert.equal(config.mcpServers['brightdata-mcp'].args[1], '@brightdata/mcp');
+  assert.equal(config.mcpServers['brightdata-mcp'].env.API_TOKEN, 'test-brightdata-token');
   assert.equal(config.mcp.brightData.type, 'local');
   assert.equal(config.mcp.brightData.enabled, true);
   assert.equal(config.mcp.brightData.command[0], 'npx');

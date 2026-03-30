@@ -1,0 +1,82 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "zai-coding-plan/glm-5",
+  "provider": {
+    "zai-coding-plan": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Z.AI Coding Plan",
+      "options": {
+        "baseURL": "https://api.z.ai/api/anthropic",
+        "apiKey": "${ZAI_API_KEY}"
+      },
+      "models": {
+        "glm-5": {
+          "id": "GLM-5",
+          "name": "GLM-5",
+          "limit": {
+            "context": 128000,
+            "output": 16384
+          }
+        }
+      }
+    }
+  },
+  "permission": {
+    "*": "allow",
+    "bash": "deny",
+    "edit": "deny"
+  },
+  "tools": {
+    "brightdata*": false
+  },
+  "agent": {
+    "build": {
+      "tools": {
+        "brightdata*": true
+      }
+    },
+    "discovery": {
+      "name": "discovery",
+      "description": "Bounded procurement discovery agent for Yellow Panther",
+      "mode": "primary",
+      "model": "zai-coding-plan/glm-5",
+      "steps": 4,
+      "prompt": "You are a procurement discovery agent. Use the brightdata tool to search broadly, inspect evidence carefully, and return only validated JSON.",
+      "tools": {
+        "brightdata*": true
+      },
+      "permission": {
+        "*": "allow",
+        "bash": "deny",
+        "edit": "deny"
+      }
+    }
+  },
+  "mcp": {
+    "brightData": {
+      "type": "local",
+      "enabled": true,
+      "command": ["npx", "-y", "@brightdata/mcp"],
+      "environment": {
+        "API_TOKEN": "${BRIGHTDATA_API_TOKEN}",
+        "PRO_MODE": "true"
+      }
+    }
+  },
+  "mcpServers": {
+    "brightdata-mcp": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@brightdata/mcp"],
+      "env": {
+        "API_TOKEN": "${BRIGHTDATA_API_TOKEN}",
+        "PRO_MODE": "true"
+      }
+    }
+  },
+  "instructions": [
+    "Use BrightData MCP for search and scrape operations.",
+    "Return validated JSON only.",
+    "Keep the agentic loop bounded."
+  ]
+}

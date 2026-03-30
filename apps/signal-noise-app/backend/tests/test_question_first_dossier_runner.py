@@ -131,6 +131,17 @@ def _write_question_first_run_artifact(path, *, entity_id, entity_name, question
     return path
 
 
+def test_find_latest_question_first_run_artifact_picks_timestamped_artifact(tmp_path):
+    older = tmp_path / "major-league-cricket_opencode_batch_20260330_150000_question_first_run_v1.json"
+    newer = tmp_path / "major-league-cricket_opencode_batch_20260330_150956_question_first_run_v1.json"
+    older.write_text("{}", encoding="utf-8")
+    newer.write_text("{}", encoding="utf-8")
+
+    found = runner._find_latest_question_first_run_artifact(tmp_path)
+
+    assert found == newer
+
+
 @pytest.mark.asyncio
 async def test_question_first_runner_uses_saved_questions_and_writes_plain_text_report(tmp_path):
     dossier_path = tmp_path / "leeds_dossier.json"

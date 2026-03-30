@@ -565,6 +565,17 @@ export function buildOpenCodeConfig({
         },
       },
     },
+    mcpServers: {
+      'brightdata-mcp': {
+        type: 'stdio',
+        command: 'npx',
+        args: ['-y', '@brightdata/mcp'],
+        env: {
+          API_TOKEN: brightdataToken,
+          PRO_MODE: 'true',
+        },
+      },
+    },
     instructions: [
       'Use BrightData MCP for search and scrape operations.',
       'Return validated JSON only.',

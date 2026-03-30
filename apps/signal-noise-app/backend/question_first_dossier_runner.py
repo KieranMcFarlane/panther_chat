@@ -126,6 +126,25 @@ def _artifact_output_path(output_dir: Path, source_payload: Dict[str, Any], arti
     return output_dir / f"{_slugify(entity_id)}_question_first_run_v1.json"
 
 
+def _find_latest_question_first_run_artifact(output_dir: Path) -> Optional[Path]:
+    candidates: List[Path] = []
+    for pattern in ("*_question_first_run_v1.json", "*_question_first_run.json"):
+        candidates.extend([path for path in output_dir.glob(pattern) if path.is_file()])
+
+    if not candidates:
+        return None
+
+    def _sort_key(path: Path) -> tuple[float, str]:
+        try:
+            mtime = path.stat().st_mtime
+        except OSError:
+            mtime = 0.0
+        return (mtime, path.name)
+
+    candidates.sort(key=_sort_key, reverse=True)
+    return candidates[0]
+
+
 def _launch_opencode_question_first_batch(
     *,
     source_payload: Dict[str, Any],
@@ -178,9 +197,12 @@ def _launch_opencode_question_first_batch(
         question_first_run_path = result.get("question_first_run_path")
         if question_first_run_path:
             return Path(question_first_run_path)
-        artifact_path = _artifact_output_path(output_dir, source_payload)
-        if artifact_path.exists():
+        artifact_path = _find_latest_question_first_run_artifact(output_dir)
+        if artifact_path is not None:
             return artifact_path
+        stable_artifact_path = _artifact_output_path(output_dir, source_payload)
+        if stable_artifact_path.exists():
+            return stable_artifact_path
         raise FileNotFoundError("OpenCode batch completed without producing a canonical question_first_run artifact")
     finally:
         try:
