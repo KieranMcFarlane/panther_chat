@@ -21,10 +21,67 @@ export type EntitiesTaxonomyResponse = {
   }
 }
 
+const LEAGUE_ALIAS_GROUPS: Record<string, string[]> = {
+  'premier league': ['premier league', 'english premier league', 'epl'],
+  'indian premier league': ['indian premier league', 'ipl'],
+  'la liga': ['la liga', 'laliga', 'spanish laliga', 'la liga santander'],
+  'major league soccer': ['major league soccer', 'mls'],
+  'bundesliga': ['bundesliga', 'german bundesliga'],
+  'serie a': ['serie a', 'italian serie a'],
+  'ligue 1': ['ligue 1', 'french ligue 1'],
+  'efl championship': ['efl championship', 'english league championship'],
+  'uefa champions league': ['uefa champions league', 'champions league', 'ucl'],
+}
+
 function normalizeLabel(value: unknown): string {
   return String(value || '')
     .trim()
     .replace(/\s+/g, ' ')
+}
+
+function normalizeLeagueKey(value: unknown): string {
+  return normalizeLabel(value)
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function titleCase(value: string): string {
+  return value
+    .split(' ')
+    .filter(Boolean)
+    .map((token) => token[0].toUpperCase() + token.slice(1))
+    .join(' ')
+}
+
+export function canonicalizeLeagueLabel(value: unknown): string {
+  const normalized = normalizeLeagueKey(value)
+  if (!normalized) return ''
+
+  for (const [canonical, aliases] of Object.entries(LEAGUE_ALIAS_GROUPS)) {
+    const normalizedAliases = new Set([canonical, ...aliases].map(normalizeLeagueKey))
+    if (normalizedAliases.has(normalized)) {
+      return titleCase(canonical)
+    }
+  }
+
+  return titleCase(normalized)
+}
+
+export function getCanonicalLeagueQueryValues(value: unknown): string[] {
+  const normalized = normalizeLeagueKey(value)
+  if (!normalized) return []
+
+  for (const [canonical, aliases] of Object.entries(LEAGUE_ALIAS_GROUPS)) {
+    const normalizedAliases = Array.from(new Set([canonical, ...aliases].map(normalizeLeagueKey)))
+    if (normalizedAliases.includes(normalized)) {
+      return normalizedAliases
+    }
+  }
+
+  return [normalized]
 }
 
 function isNonEmpty(value: string): boolean {
@@ -52,7 +109,9 @@ export function buildEntitiesTaxonomy(entities: any[], options: { source?: strin
   for (const entity of entities || []) {
     const properties = entity?.properties || {}
     const sport = normalizeLabel(properties.sport)
-    const league = normalizeLabel(properties.league)
+    const league = canonicalizeLeagueLabel(
+      properties.league || properties.level || properties.parent_league || properties.competition || ''
+    )
     const country = normalizeLabel(properties.country)
     const entityClass = normalizeLabel(
       properties.entityClass || properties.entity_class || properties.type || entity?.labels?.[0] || ''

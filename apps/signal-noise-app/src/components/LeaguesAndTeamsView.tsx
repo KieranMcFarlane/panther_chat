@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { useLeagues, useTeams, League, Team } from '@/hooks/useLeaguesAndTeams';
+import { useTeams, Team } from '@/hooks/useLeaguesAndTeams';
+import { useEntityTaxonomy } from '@/lib/swr-config';
 
 interface LeaguesAndTeamsViewProps {
   className?: string;
@@ -12,9 +13,10 @@ export function LeaguesAndTeamsView({ className }: LeaguesAndTeamsViewProps) {
   const [selectedLetter, setSelectedLetter] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
   
-  const { leagues, isLoading: leaguesLoading } = useLeagues({ includeTeams: true });
+  const { taxonomy, taxonomyLoading } = useEntityTaxonomy();
+  const availableLeagues = taxonomy?.leagues ?? [];
   const { teams, pagination, isLoading: teamsLoading } = useTeams({
-    leagueId: selectedLeague || undefined,
+    leagueName: selectedLeague || undefined,
     letter: selectedLetter !== 'all' ? selectedLetter : undefined,
     search: searchTerm || undefined,
     limit: 50,
@@ -46,7 +48,7 @@ export function LeaguesAndTeamsView({ className }: LeaguesAndTeamsViewProps) {
     return grouped;
   }, [teams]);
 
-  if (leaguesLoading) {
+  if (taxonomyLoading && availableLeagues.length === 0) {
     return (
       <div className={`p-6 ${className}`}>
         <div className="animate-pulse">
@@ -79,24 +81,22 @@ export function LeaguesAndTeamsView({ className }: LeaguesAndTeamsViewProps) {
           >
             All Leagues
           </button>
-          {leagues.map(league => (
+          {availableLeagues.map(league => (
             <button
-              key={league.id}
-              onClick={() => setSelectedLeague(league.id)}
+              key={league}
+              onClick={() => setSelectedLeague(league)}
               className={`px-4 py-2 rounded-lg transition-colors flex items-center gap-2 ${
-                selectedLeague === league.id 
+                selectedLeague === league
                   ? 'bg-blue-600 text-white' 
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              {league.badge_path && (
-                <img 
-                  src={league.badge_path} 
-                  alt={league.name} 
-                  className="w-5 h-5 rounded"
-                />
-              )}
-              {league.name}
+              {league}
+              {taxonomy?.counts?.leagues?.[league] ? (
+                <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs">
+                  {taxonomy.counts.leagues[league]}
+                </span>
+              ) : null}
             </button>
           ))}
         </div>
@@ -177,6 +177,7 @@ export function LeaguesAndTeamsView({ className }: LeaguesAndTeamsViewProps) {
                   >
                     <div className="flex items-center gap-3 mb-2">
                       {team.badge_path && (
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img 
                           src={team.badge_path} 
                           alt={team.name} 

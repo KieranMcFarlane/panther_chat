@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getCanonicalLeagueQueryValues } from '@/lib/entities-taxonomy';
 
 // Mark route as dynamic to prevent static generation
 export const dynamic = 'force-dynamic'
@@ -8,6 +9,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const leagueId = searchParams.get('leagueId');
+    const leagueName = searchParams.get('leagueName');
     const sport = searchParams.get('sport');
     const country = searchParams.get('country');
     const limit = parseInt(searchParams.get('limit') || '50');
@@ -21,6 +23,17 @@ export async function GET(request: NextRequest) {
     if (leagueId) {
       whereConditions.push(`t.league_id = $${queryParams.length + 1}`);
       queryParams.push(leagueId);
+    }
+
+    if (leagueName) {
+      const leagueNameValues = getCanonicalLeagueQueryValues(leagueName)
+      if (leagueNameValues.length > 0) {
+        const valuePlaceholders = leagueNameValues
+          .map((_, index) => `$${queryParams.length + index + 1}`)
+          .join(', ')
+        whereConditions.push(`LOWER(COALESCE(l.name, t.level)) IN (${valuePlaceholders})`)
+        queryParams.push(...leagueNameValues)
+      }
     }
     
     if (sport) {
@@ -45,7 +58,7 @@ export async function GET(request: NextRequest) {
     
     const whereClause = whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : '';
     
-    const query = `
+  const query = `
       SELECT 
         t.id,
         t.name,
@@ -258,6 +271,20 @@ function executeSupabaseQuery(query: string, params: any[] = []) {
         const leagueIdMatch = finalQuery.match(/t\.league_id = '([^']+)'/);
         if (leagueIdMatch) {
           filteredTeams = filteredTeams.filter(team => team.league_id === leagueIdMatch[1]);
+        }
+      }
+
+      if (finalQuery.includes('LOWER(COALESCE(l.name, t.level)) IN (')) {
+        const leagueNameMatch = finalQuery.match(/LOWER\(COALESCE\(l\.name, t\.level\)\) IN \(([^)]+)\)/);
+        if (leagueNameMatch) {
+          const allowedValues = leagueNameMatch[1]
+            .split(',')
+            .map((value) => value.trim().replace(/^'|'$/g, ''))
+            .map((value) => value.toLowerCase());
+          filteredTeams = filteredTeams.filter(team => {
+            const normalizedLeague = String(team.league_name || team.level || '').toLowerCase();
+            return allowedValues.includes(normalizedLeague);
+          });
         }
       }
       

@@ -1,108 +1,21 @@
 import { NextResponse } from 'next/server'
-import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
-
-type CountMap = Record<string, number>
-
-const normalizeLabel = (value: unknown): string =>
-  String(value || '')
-    .trim()
-    .replace(/\s+/g, ' ')
-
-const isNonEmpty = (value: string): boolean => value.length > 0
+import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
+import { buildEntitiesTaxonomy, buildEmptyEntitiesTaxonomy } from '@/lib/entities-taxonomy'
 
 export async function GET() {
   const startedAt = Date.now()
   try {
-    const { data, error } = await supabase
-      .from('cached_entities')
-      .select('labels, properties')
-      .limit(10000)
-
-    if (error) {
-      throw error
-    }
-
-    const sports: CountMap = {}
-    const leagues: CountMap = {}
-    const countries: CountMap = {}
-    const classes: CountMap = {}
-    const federationsRightsHolders: CountMap = {}
-    const leaguesBySport: Record<string, Set<string>> = {}
-
-    for (const entity of data || []) {
-      const properties = entity?.properties || {}
-      const sport = normalizeLabel(properties.sport)
-      const league = normalizeLabel(properties.league)
-      const country = normalizeLabel(properties.country)
-      const entityClass = normalizeLabel(
-        properties.entityClass || properties.entity_class || properties.type || entity?.labels?.[0] || ''
-      )
-      const entityName = normalizeLabel(properties.name)
-      const lowerClass = entityClass.toLowerCase()
-      const lowerName = entityName.toLowerCase()
-
-      if (isNonEmpty(sport)) sports[sport] = (sports[sport] || 0) + 1
-      if (isNonEmpty(league)) leagues[league] = (leagues[league] || 0) + 1
-      if (isNonEmpty(country)) countries[country] = (countries[country] || 0) + 1
-      if (isNonEmpty(entityClass)) classes[entityClass] = (classes[entityClass] || 0) + 1
-
-      if (isNonEmpty(sport) && isNonEmpty(league)) {
-        if (!leaguesBySport[sport]) leaguesBySport[sport] = new Set()
-        leaguesBySport[sport].add(league)
-      }
-
-      const isFederationOrRightsHolder =
-        lowerClass.includes('federation') ||
-        lowerClass.includes('rights') ||
-        lowerClass.includes('governing') ||
-        lowerClass.includes('association') ||
-        lowerName.includes('federation') ||
-        lowerName.includes('confederation')
-
-      if (isFederationOrRightsHolder && isNonEmpty(entityName)) {
-        federationsRightsHolders[entityName] = (federationsRightsHolders[entityName] || 0) + 1
-      }
-    }
-
-    const sortAsc = (a: string, b: string) => a.localeCompare(b)
-    const leagueMap = Object.fromEntries(
-      Object.entries(leaguesBySport)
-        .sort(([a], [b]) => sortAsc(a, b))
-        .map(([sport, leagueSet]) => [sport, Array.from(leagueSet).sort(sortAsc)])
-    )
-
-    return NextResponse.json({
-      sports: Object.keys(sports).sort(sortAsc),
-      leagues: Object.keys(leagues).sort(sortAsc),
-      countries: Object.keys(countries).sort(sortAsc),
-      entityClasses: Object.keys(classes).sort(sortAsc),
-      federationsRightsHolders: Object.keys(federationsRightsHolders).sort(sortAsc),
-      leaguesBySport: leagueMap,
-      metadata: {
-        scanned_entities: (data || []).length,
-        latency_ms: Date.now() - startedAt
-      },
-      counts: {
-        sports,
-        leagues,
-        countries,
-        entityClasses: classes,
-        federationsRightsHolders
-      }
+    const canonicalEntities = await getCanonicalEntitiesSnapshot()
+    const taxonomy = buildEntitiesTaxonomy(canonicalEntities, {
+      source: 'canonical_entities_snapshot',
+      latencyMs: Date.now() - startedAt,
     })
+
+    return NextResponse.json(taxonomy)
   } catch (error) {
     console.error('❌ Failed to fetch entities taxonomy:', error)
     return NextResponse.json(
-      {
-        error: error instanceof Error ? error.message : 'Failed to fetch taxonomy',
-        sports: [],
-        leagues: [],
-        countries: [],
-        entityClasses: [],
-        federationsRightsHolders: [],
-        leaguesBySport: {},
-        counts: {}
-      },
+      buildEmptyEntitiesTaxonomy({ source: 'canonical_entities_snapshot' }),
       { status: 500 }
     )
   }
