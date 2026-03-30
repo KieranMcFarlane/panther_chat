@@ -1,4 +1,5 @@
 import Redis from 'ioredis'
+import { resolveEntityUuid } from './entity-public-id'
 
 type QueryRow = Record<string, any>
 
@@ -96,6 +97,7 @@ function toCypherLiteral(value: any): string {
 
 export interface GraphEntityRecord {
   neo4j_id: string
+  uuid?: string
   labels: string[]
   properties: Record<string, any>
 }
@@ -183,6 +185,11 @@ export class FalkorRedisGraphService {
 
     return rows.map((row) => ({
       neo4j_id: String(row.internal_id),
+      uuid: resolveEntityUuid({
+        neo4j_id: row.internal_id,
+        id: row.internal_id,
+        properties: row.properties,
+      }) || undefined,
       labels: Array.isArray(row.labels) ? row.labels.map((item: any) => String(item)) : [],
       properties: row.properties && typeof row.properties === 'object' ? row.properties : {},
     }))
@@ -235,6 +242,11 @@ export class FalkorRedisGraphService {
     const entityId = escapeCypherString(String(payload.entityId).trim())
     const propertiesLiteral = toCypherLiteral({
       ...payload.properties,
+      uuid: payload.properties.uuid || resolveEntityUuid({
+        id: payload.entityId,
+        neo4j_id: payload.entityId,
+        properties: payload.properties,
+      }) || payload.entityId,
       neo4j_id: String(payload.entityId).trim(),
       id: String(payload.entityId).trim(),
     })

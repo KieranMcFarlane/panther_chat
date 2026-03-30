@@ -1,4 +1,5 @@
 import type { ImportedEntityRow } from './entity-import-schema'
+import { resolveEntityUuid } from './entity-public-id'
 
 export interface ImportedEntityGraphUpsert {
   entityId: string
@@ -24,10 +25,23 @@ function labelsForEntityType(entityType: string): string[] {
 }
 
 export function buildImportedEntityGraphUpsert(row: ImportedEntityRow): ImportedEntityGraphUpsert {
+  const uuid = resolveEntityUuid({
+    id: row.entity_id,
+    neo4j_id: row.entity_id,
+    supabase_id: row.external_id ?? undefined,
+    properties: {
+      name: row.name,
+      type: row.entity_type,
+      sport: row.sport,
+      country: row.country,
+    },
+  }) || row.entity_id
+
   return {
     entityId: row.entity_id,
     labels: labelsForEntityType(row.entity_type),
     properties: {
+      uuid,
       neo4j_id: row.entity_id,
       id: row.entity_id,
       name: row.name,

@@ -1,4 +1,5 @@
 import type { ImportedEntityRow } from '@/lib/entity-import-schema'
+import { resolveEntityUuid } from '@/lib/entity-public-id'
 
 function labelsForEntityType(entityType: string): string[] {
   switch (entityType) {
@@ -18,13 +19,27 @@ function labelsForEntityType(entityType: string): string[] {
 }
 
 export function mapImportedEntityRowToCachedEntity(row: ImportedEntityRow) {
+  const uuid = resolveEntityUuid({
+    id: row.entity_id,
+    neo4j_id: row.entity_id,
+    supabase_id: row.external_id ?? undefined,
+    properties: {
+      name: row.name,
+      type: row.entity_type,
+      sport: row.sport,
+      country: row.country,
+    },
+  }) || row.entity_id
+
   return {
+    uuid,
     neo4j_id: row.entity_id,
     labels: labelsForEntityType(row.entity_type),
     badge_s3_url: row.badge_url ?? null,
     priority_score: row.priority_score,
     entity_category: row.entity_type,
     properties: {
+      uuid,
       name: row.name,
       type: row.entity_type,
       sport: row.sport,

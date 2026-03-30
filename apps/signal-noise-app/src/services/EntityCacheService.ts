@@ -1,4 +1,5 @@
 import { Neo4jService } from '@/lib/neo4j'
+import { resolveEntityUuid } from '@/lib/entity-public-id'
 import { createClient } from '@supabase/supabase-js'
 import neo4j from 'neo4j-driver'
 
@@ -9,6 +10,7 @@ const supabase = createClient(supabaseUrl, supabaseKey)
 export interface CachedEntity {
   id: string
   neo4j_id: string
+  uuid?: string
   labels: string[]
   properties: Record<string, any>
   created_at: string
@@ -141,10 +143,19 @@ export class EntityCacheService {
     
     return result.records.map((record: any) => {
       const node = record.get('n')
+      const uuid = resolveEntityUuid({
+        neo4j_id: node.identity.toString(),
+        id: node.identity.toString(),
+        properties: node.properties,
+      }) || node.identity.toString()
       return {
         neo4j_id: node.identity.toString(),
+        uuid,
         labels: node.labels,
-        properties: node.properties,
+        properties: {
+          ...node.properties,
+          uuid,
+        },
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         cache_version: 1

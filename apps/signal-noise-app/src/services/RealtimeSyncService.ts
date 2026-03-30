@@ -5,6 +5,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { FalkorRedisGraphService } from '@/lib/falkor-redis-graph'
 import { EntityCacheService } from '@/services/EntityCacheService'
+import { resolveEntityUuid } from '@/lib/entity-public-id'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -25,6 +26,7 @@ interface SyncResult {
 
 interface GraphEntity {
   neo4j_id: string
+  uuid?: string
   labels: string[]
   properties: Record<string, any>
 }
@@ -183,7 +185,7 @@ export class RealtimeSyncService {
   private async getExistingSupabaseEntities() {
     const { data, error } = await supabase
       .from('cached_entities')
-      .select('neo4j_id, properties, updated_at')
+      .select('neo4j_id, uuid, properties, updated_at')
 
     if (error) throw error
     return data || []
@@ -212,14 +214,22 @@ export class RealtimeSyncService {
 
   private async upsertEntityToSupabase(entity: GraphEntity) {
     const checksum = this.calculateChecksum(entity.properties)
+    const uuid = entity.uuid || resolveEntityUuid({
+      neo4j_id: entity.neo4j_id,
+      properties: entity.properties,
+    }) || entity.neo4j_id
 
     await supabase
       .from('cached_entities')
       .upsert(
         {
           neo4j_id: entity.neo4j_id,
+          uuid,
           labels: entity.labels,
-          properties: entity.properties,
+          properties: {
+            ...entity.properties,
+            uuid,
+          },
           cache_version: 1,
           updated_at: new Date().toISOString(),
         },
