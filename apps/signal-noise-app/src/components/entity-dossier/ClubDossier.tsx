@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -63,6 +63,7 @@ export function ClubDossier({ entity, onEmailEntity }: ClubDossierProps) {
   const [isLoadingResearch, setIsLoadingResearch] = useState(false)
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
   const [activeTab, setActiveTab] = useState('overview')
+  const personLookupCache = useRef<Map<string, string>>(new Map())
   
   const props = entity.properties
   const priority = getEntityPriority(entity)
@@ -192,18 +193,61 @@ export function ClubDossier({ entity, onEmailEntity }: ClubDossierProps) {
     await loadPerplexityData()
   }
 
-  const navigateToPerson = (personName: string) => {
-    // For demo purposes, create a mock person ID based on name
-    // In production, this would use actual person IDs from the knowledge graph
-    const personId = personName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
-    console.log(`👤 Navigating to person: ${personName} (ID: ${personId})`)
-    router.push(`/person/${personId}`)
+  const normalizePersonName = (value: string) =>
+    value
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, ' ')
+      .replace(/[’']/g, "'")
+
+  const resolvePersonEntityId = async (personName: string): Promise<string | null> => {
+    const normalizedName = normalizePersonName(personName)
+    const cachedId = personLookupCache.current.get(normalizedName)
+    if (cachedId) {
+      return cachedId
+    }
+
+    try {
+      const searchParams = new URLSearchParams({
+        search: personName,
+        mode: 'autocomplete',
+        limit: '10',
+      })
+      const response = await fetch(`/api/entities/search?${searchParams.toString()}`)
+      if (!response.ok) {
+        return null
+      }
+
+      const data = await response.json()
+      const candidates = Array.isArray(data?.entities) ? data.entities : []
+      const exactMatch = candidates.find((candidate: any) => normalizePersonName(String(candidate?.name || '')) === normalizedName)
+      const personMatch = exactMatch
+        ?? candidates.find((candidate: any) => String(candidate?.type || '').toLowerCase() === 'person')
+        ?? candidates[0]
+
+      const resolvedId = String(personMatch?.id || '').trim()
+      if (resolvedId) {
+        personLookupCache.current.set(normalizedName, resolvedId)
+        return resolvedId
+      }
+    } catch (error) {
+      console.warn('Failed to resolve person entity id:', error)
+    }
+
+    return null
+  }
+
+  const navigateToPerson = async (personName: string) => {
+    const resolvedId = await resolvePersonEntityId(personName)
+    const targetId = resolvedId || personName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+    console.log(`👤 Navigating to person: ${personName} (ID: ${targetId})`)
+    router.push(`/person/${targetId}`)
   }
 
   const createPersonLink = (personName: string, role?: string) => {
     return (
       <button
-        onClick={() => navigateToPerson(personName)}
+        onClick={() => { void navigateToPerson(personName) }}
         className="font-medium text-blue-600 hover:text-blue-800 hover:underline transition-colors"
         title={role ? `View profile for ${personName}, ${role}` : `View profile for ${personName}`}
       >
