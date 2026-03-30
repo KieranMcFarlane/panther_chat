@@ -10,6 +10,7 @@ def test_build_entity_question_pack_returns_catalog_questions_and_prompt_context
     )
 
     assert pack["pack_role"] == "discovery"
+    assert pack["pack_stage"] == "entity_type"
     assert pack["entity_type"] == "SPORT_CLUB"
     assert pack["entity_name"] == "Arsenal FC"
     assert pack["question_count"] == 3

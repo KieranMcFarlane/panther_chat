@@ -43,6 +43,7 @@ from enum import Enum
 logger = logging.getLogger(__name__)
 
 GRAPHITI_DISCOVERY_LOOKBACK_DAYS = 180
+QUESTION_PACK_ROLE = "discovery"
 
 GRAPHITI_DISCOVERY_CONTEXT = """
 GRAPHITI DISCOVERY LENS:
@@ -216,7 +217,8 @@ class QuestionTemplate:
         return {
             "question_id": self.question_id,
             "question": self.question,
-            "pack_role": "discovery",
+            "pack_role": QUESTION_PACK_ROLE,
+            "pack_stage": "entity_type",
             "yp_service_fit": [s.value for s in self.yp_service_fit],
             "budget_range": self.budget_range,
             "yp_advantage": self.yp_advantage,

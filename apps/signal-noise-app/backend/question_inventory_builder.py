@@ -91,34 +91,6 @@ DISCOVERY_SECTION_IDS = {
     "outreach_strategy",
     "risk_assessment",
 }
-DISCOVERY_STYLE_PREFIXES = (
-    "what evidence",
-    "what are strategic",
-    "what are the opportunity",
-    "what is the recommended",
-    "what immediate launch",
-    "what medium-term partnership",
-    "what long-term initiative",
-    "what are competitive",
-    "how does this compare",
-)
-DISCOVERY_STYLE_KEYWORDS = (
-    "opportunity fit",
-    "budget",
-    "procurement",
-    "vendor replacement",
-    "vendor search",
-    "service fit",
-    "business case",
-    "direct revenue",
-    "strategic hooks",
-    "decision criteria",
-    "decision scope",
-    "success probability",
-    "bridge contacts",
-    "top 3 competitors",
-    "recommendation",
-)
 
 
 @dataclass(frozen=True)
@@ -130,24 +102,15 @@ class QuestionEntry:
     metadata: Dict[str, Any]
 
     def to_dict(self) -> Dict[str, Any]:
-        pack_role = self.metadata.get("pack_role")
-        if not pack_role:
-            if self.source_kind == "entity_type_question":
-                pack_role = "discovery"
-            elif self.source_kind == "tier_section_question":
-                section_id = str(self.metadata.get("section_id") or "").strip()
-                if section_id in DOSSIER_SECTION_IDS:
-                    pack_role = "dossier"
-                elif section_id in DISCOVERY_SECTION_IDS:
-                    pack_role = "discovery"
-                else:
-                    pack_role = "dossier"
-                if pack_role == "dossier" and _is_discovery_style_question(self.question):
-                    pack_role = "discovery"
-            elif self.source_kind in {"artifact_question", "dossier_json_section", "dossier_markdown_section"}:
-                pack_role = "dossier"
-            else:
-                pack_role = "dossier"
+        if self.source_kind == "entity_type_question":
+            pack_role = "discovery"
+        elif self.source_kind == "tier_section_question":
+            section_id = str(self.metadata.get("section_id") or "").strip()
+            pack_role = "dossier" if section_id in DOSSIER_SECTION_IDS else "discovery"
+        elif self.source_kind in {"artifact_question", "dossier_json_section", "dossier_markdown_section"}:
+            pack_role = "dossier"
+        else:
+            pack_role = str(self.metadata.get("pack_role") or "dossier")
         payload = {
             "question": self.question,
             "source_kind": self.source_kind,
@@ -172,24 +135,6 @@ def _normalize_question(text: str) -> str:
 
 def _question_from_text(text: str) -> str:
     return re.sub(r"\s+", " ", text.strip())
-
-
-def _is_discovery_style_question(question: str) -> bool:
-    normalized = _normalize_question(question)
-    if any(normalized.startswith(prefix) for prefix in DISCOVERY_STYLE_PREFIXES):
-        return True
-    if any(keyword in normalized for keyword in DISCOVERY_STYLE_KEYWORDS):
-        return True
-    return any(
-        phrase in normalized
-        for phrase in (
-            "what are their decision criteria",
-            "what is their decision scope",
-            "what are the tier 2 bridge contacts",
-            "what are the strategic hooks",
-            "who are the top 3 competitors",
-        )
-    )
 
 
 def _maybe_question_from_text(text: Any) -> Optional[str]:
@@ -456,6 +401,7 @@ def _dedupe_questions(entries: Iterable[QuestionEntry]) -> List[Dict[str, Any]]:
     grouped: Dict[str, Dict[str, Any]] = {}
     for entry in entries:
         key = _normalize_question(entry.question)
+        entry_dict = entry.to_dict()
         bucket = grouped.setdefault(
             key,
             {
@@ -467,24 +413,27 @@ def _dedupe_questions(entries: Iterable[QuestionEntry]) -> List[Dict[str, Any]]:
                 "pack_roles": set(),
             },
         )
-        bucket["sources"].append(entry.to_dict())
+        bucket["sources"].append(entry_dict)
         bucket["source_kinds"].add(entry.source_kind)
         bucket["source_labels"].add(entry.source_label)
-        bucket["pack_roles"].add(entry.to_dict().get("pack_role", "dossier"))
+        bucket["pack_roles"].add(entry_dict.get("pack_role", "dossier"))
 
     deduped: List[Dict[str, Any]] = []
     for bucket in grouped.values():
-        pack_role = sorted(bucket["pack_roles"])[0] if bucket["pack_roles"] else "dossier"
-        metadata = dict(bucket["sources"][0].get("metadata", {})) if bucket["sources"] else {}
+        pack_roles = sorted(bucket["pack_roles"])
+        pack_role = pack_roles[0] if len(pack_roles) == 1 else "mixed"
+        source_metadata = [source.get("metadata", {}) for source in bucket["sources"] if isinstance(source, dict)]
+        primary_metadata = source_metadata[0] if source_metadata else {}
         deduped.append(
             {
                 "question": bucket["question"],
                 "normalized_question": bucket["normalized_question"],
                 "source_kinds": sorted(bucket["source_kinds"]),
                 "source_labels": sorted(bucket["source_labels"]),
-                "metadata": metadata,
                 "pack_role": pack_role,
-                "pack_roles": sorted(bucket["pack_roles"]),
+                "pack_roles": pack_roles,
+                "metadata": primary_metadata,
+                "source_metadata": source_metadata,
                 "sources": bucket["sources"],
             }
         )
@@ -510,16 +459,8 @@ def build_question_inventory(backend_dir: Path) -> Dict[str, Any]:
 
     all_question_entries = entity_type_entries + section_entries + artifact_entries
     deduped_questions = _dedupe_questions(all_question_entries)
-    dossier_entries = [
-        entry
-        for entry in all_question_entries
-        if entry.to_dict().get("pack_role") == "dossier"
-    ]
-    discovery_entries = [
-        entry
-        for entry in all_question_entries
-        if entry.to_dict().get("pack_role") == "discovery"
-    ]
+    dossier_entries = [entry for entry in all_question_entries if entry.to_dict().get("pack_role") == "dossier"]
+    discovery_entries = [entry for entry in all_question_entries if entry.to_dict().get("pack_role") == "discovery"]
     dossier_questions = _dedupe_questions(dossier_entries)
     discovery_questions = _dedupe_questions(discovery_entries)
 

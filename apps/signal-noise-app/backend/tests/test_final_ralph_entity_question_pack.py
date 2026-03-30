@@ -38,16 +38,16 @@ def test_build_final_ralph_entity_question_pack_returns_final_pack_shape():
     )
 
     assert pack["pack_role"] == "discovery"
+    assert pack["pack_stage"] == "final_ralph"
     assert pack["entity_name"] == "Arsenal FC"
     assert pack["entity_type"] == "SPORT_CLUB"
     assert pack["question_count"] == 6
     assert len(pack["questions"]) == 6
-    assert pack["questions"][0]["question"].startswith("Verify whether")
+    assert pack["questions"][0]["question"].startswith("Use verified evidence")
     assert pack["questions"][0]["final_goal_bucket"] == "direct_revenue_signal"
-    assert pack["prompt_context"].startswith("Atomic discovery pack")
+    assert pack["prompt_context"].startswith("Final Ralph pack")
     assert pack["questions"][0]["yp_service_fit"]
     assert pack["questions"][0]["pack_role"] == "discovery"
-    assert pack["questions"][0]["question_shape"] == "atomic"
 
 
 def test_build_final_ralph_entity_question_pack_exposes_persisted_writeback_metadata():
