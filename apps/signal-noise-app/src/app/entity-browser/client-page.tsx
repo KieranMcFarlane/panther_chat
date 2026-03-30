@@ -275,9 +275,9 @@ export default function EntityBrowserClientPage() {
   if (entitiesLoading && !entitiesData) {
     return (
       <div className="min-h-screen bg-background">
-        <div className="border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
-          <div className="container mx-auto px-4 py-6">
-            <div className="flex items-center gap-4 mb-4">
+        <div className="border-b border-border/60 bg-card/90 backdrop-blur supports-[backdrop-filter]:bg-card/60">
+          <div className="container mx-auto px-4 py-5">
+            <div className="flex flex-wrap items-start justify-between gap-4">
               <div className="flex items-center gap-3">
                 <Skeleton className="h-8 w-8 rounded-full" />
                 <div className="space-y-2">
@@ -285,10 +285,10 @@ export default function EntityBrowserClientPage() {
                   <Skeleton className="h-4 w-72" />
                 </div>
               </div>
-            </div>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <Skeleton className="h-9 w-24 rounded-md" />
-              <Skeleton className="h-9 w-20 rounded-md" />
+              <div className="flex gap-2">
+                <Skeleton className="h-9 w-24 rounded-md" />
+                <Skeleton className="h-9 w-20 rounded-md" />
+              </div>
             </div>
             <p className="mt-4 text-sm text-muted-foreground">
               Hydrating entity browser from cached snapshot and taxonomy.
@@ -325,9 +325,9 @@ export default function EntityBrowserClientPage() {
             </div>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             {Array.from({ length: 6 }).map((_, index) => (
-              <div key={index} className="rounded-2xl border border-border bg-card p-4 shadow-sm">
+              <div key={index} className="rounded-2xl border border-border bg-card p-5 shadow-sm">
                 <div className="flex items-start gap-3">
                   <Skeleton className="h-10 w-10 rounded-full" />
                   <div className="min-w-0 flex-1 space-y-2">
@@ -348,7 +348,7 @@ export default function EntityBrowserClientPage() {
             ))}
           </div>
 
-          <div className="mt-4 rounded-xl border border-dashed border-border bg-muted/20 p-4">
+          <div className="mt-5 rounded-xl border border-dashed border-border bg-muted/15 p-4">
             <div className="flex items-center gap-3">
               <Database className="h-5 w-5 text-muted-foreground" />
               <div className="space-y-2">
@@ -391,43 +391,60 @@ export default function EntityBrowserClientPage() {
     filters.entityClass !== 'all' ? { key: 'entityClass', label: `Class: ${filters.entityClass}` } : null,
     filters.entityType !== 'all' ? { key: 'entityType', label: `Type: ${filters.entityType}` } : null,
   ].filter(Boolean) as Array<{ key: 'sport' | 'league' | 'country' | 'entityClass' | 'entityType', label: string }>
-  const columnCount = gridWidth >= 1280 ? 3 : gridWidth >= 1024 ? 2 : 1
+  const columnCount = gridWidth >= 1100 ? 3 : gridWidth >= 720 ? 2 : 1
   const rowCount = Math.ceil(entities.length / columnCount)
-  const rowHeight = 360
+  const rowHeight = 300
   const listHeight = Math.min(900, Math.max(rowHeight, rowCount * rowHeight))
   const columnGap = 24
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="flex items-center gap-2">
-              <Database className="h-8 w-8 text-primary" />
-              <h1 className="text-3xl font-bold">Entity Browser</h1>
+      <div className="border-b border-border/60 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto px-4 py-5">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <Database className="mt-0.5 h-7 w-7 text-primary" />
+              <div className="space-y-1">
+                <h1 className="text-2xl font-semibold tracking-tight">Entity Browser</h1>
+                <p className="max-w-2xl text-sm text-muted-foreground">
+                  Primary workspace for persisted entity dossiers, question-driven research, and entity-first follow-up
+                </p>
+              </div>
             </div>
-          </div>
-          <p className="text-muted-foreground">
-            Primary workspace for persisted entity dossiers, question-driven research, and entity-first follow-up
-          </p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            <Button asChild variant="outline" size="sm">
-              <Link href="/entity-import">Import CSV</Link>
-            </Button>
-            <Button asChild variant="outline" size="sm">
-              <Link href="/rfps">View RFPs</Link>
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              <Button asChild variant="outline" size="sm">
+                <Link href="/entity-import">Import CSV</Link>
+              </Button>
+              <Button asChild variant="outline" size="sm">
+                <Link href="/rfps">View RFPs</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-6">
-          <EntitySmokeJourney />
-        </div>
-        <Card className="mb-6">
-          <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+      <div className="container mx-auto px-4 py-6">
+        <details className="mb-4 rounded-2xl border border-border bg-card/70 p-3 shadow-sm">
+          <summary className="cursor-pointer list-none">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-sm font-medium text-foreground">Smoke journey</p>
+                <p className="text-xs text-muted-foreground">
+                  Optional calibration path for the five entity smoke set.
+                </p>
+              </div>
+              <Badge variant="secondary" className="gap-1 border-border bg-muted text-foreground">
+                Hidden by default
+              </Badge>
+            </div>
+          </summary>
+          <div className="pt-3">
+            <EntitySmokeJourney />
+          </div>
+        </details>
+        <Card className="mb-4 border-border/70 shadow-sm">
+          <CardContent className="p-4 md:p-5">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input

@@ -11,7 +11,6 @@ import { useRef, useState } from "react"
 import Link from "next/link"
 import { rememberEntityBrowserUrl } from "@/lib/entity-browser-history"
 import { pushWithViewTransition } from "@/lib/view-transition"
-import { EntityEnrichmentSummaryCard } from "@/components/entity-enrichment/EntityEnrichmentSummaryCard"
 
 interface EntityCardProps {
   entity: Entity
@@ -135,31 +134,6 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
     pushWithViewTransition(router, `/entity-browser/${stableEntityId}/dossier?from=${currentPage}`)
   }
 
-  const latestPipelineRunUrl = typeof entity.properties.last_pipeline_run_detail_url === 'string'
-    ? entity.properties.last_pipeline_run_detail_url
-    : null
-
-  const enrichmentStatusLabel = formatValue(
-    entity.properties.enrichment_status ||
-    entity.properties.last_enrichment_status
-  ) || (Array.isArray(entity.properties.keyContacts) && entity.properties.keyContacts.length > 0 ? 'Enriched' : 'Awaiting enrichment')
-
-  const lastUpdatedLabel = formatValue(
-    entity.properties.last_enriched ||
-    entity.properties.enriched_at ||
-    entity.properties.last_pipeline_run_at
-  ) || 'Not available'
-
-  const recentAdditions = [
-    Array.isArray(entity.properties.keyContacts) && entity.properties.keyContacts[0]?.name
-      ? `Contact: ${formatValue(entity.properties.keyContacts[0].name)}`
-      : null,
-    entity.properties.company ? `Company: ${formatValue(entity.properties.company)}` : null,
-    entity.properties.linkedinUrl ? 'LinkedIn profile available' : null,
-    entity.properties.website ? `Website: ${formatValue(entity.properties.website)}` : null,
-  ].filter(Boolean) as string[]
-
-  
   return (
     <Card 
       className="relative hover:shadow-lg transition-shadow cursor-pointer hover:scale-[1.02] transition-transform duration-200"
@@ -270,48 +244,6 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
         {entity.properties.location && (
           <div className="text-sm">
             <span className="font-medium">Location:</span> {entity.properties.location}
-          </div>
-        )}
-
-        <EntityEnrichmentSummaryCard
-          compact
-          statusLabel={enrichmentStatusLabel}
-          lastUpdatedLabel={lastUpdatedLabel}
-          recentAdditions={recentAdditions}
-          onRunEnrichment={() => {
-            if (!stableEntityId) return
-            pushWithViewTransition(router, `/entity-enrichment?entityId=${stableEntityId}`)
-          }}
-          advancedHref={`/entity-enrichment${stableEntityId ? `?entityId=${stableEntityId}` : ''}`}
-        />
-
-        {latestPipelineRunUrl && (
-          <div className="pt-2">
-            <Link
-              href={latestPipelineRunUrl}
-              className="inline-flex items-center gap-2 text-sm font-medium text-sky-700 underline underline-offset-2"
-              onClick={(e) => {
-                e.stopPropagation()
-              }}
-            >
-              <FileText className="h-4 w-4" />
-              Latest pipeline run
-            </Link>
-          </div>
-        )}
-
-        {stableEntityId && (
-          <div className="pt-2">
-            <Link
-              href={`/opportunities?entityId=${encodeURIComponent(stableEntityId)}&entityName=${encodeURIComponent(formatValue(entity.properties.name) || stableEntityId)}`}
-              className="inline-flex items-center gap-2 text-sm font-medium text-emerald-700 underline underline-offset-2"
-              onClick={(e) => {
-                e.stopPropagation()
-              }}
-            >
-              <Target className="h-4 w-4" />
-              Review opportunity fit
-            </Link>
           </div>
         )}
 
