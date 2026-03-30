@@ -22,3 +22,17 @@ test('curated import passes source urls into canonical linkage so domain aliases
     /linkOpportunityToCanonicalEntity\s*\(\s*\{\s*[\s\S]*?description:\s*opportunity\.description,\s*[\s\S]*?source_url:\s*opportunity\.url,/,
   )
 })
+
+test('tenders API exposes a dedicated controlled batch import for the 50-entity perplexity results', async () => {
+  const source = await readFile(new URL('../src/app/api/tenders/route.ts', import.meta.url), 'utf8')
+
+  assert.match(source, /import-controlled-batch-opportunities/)
+  assert.match(source, /perplexity-rfp-50-entities-supabase-ready\.json/)
+  assert.match(source, /controlled-batch-library/)
+})
+
+test('controlled batch import also references the repo rfp-results fixture for the next widening batch', async () => {
+  const source = await readFile(new URL('../src/app/api/tenders/route.ts', import.meta.url), 'utf8')
+
+  assert.match(source, /rfp-results\.json/)
+})
