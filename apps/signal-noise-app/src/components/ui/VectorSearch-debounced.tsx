@@ -122,11 +122,11 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 			
 			// Check if it's one of our demo entities first
 			const demoEntityRoutes = {
-				'arsenal_fc_001': '/entity/arsenal_fc_001',
-				'chelsea_fc_002': '/entity/chelsea_fc_002', 
-				'martin_odegaard_003': '/entity/martin_odegaard_003',
-				'tender_premier_league_001': '/entity/tender_premier_league_001',
-				'contact_sports_agent_001': '/entity/contact_sports_agent_001'
+				'arsenal_fc_001': '/entity-browser/arsenal_fc_001/dossier?from=1',
+				'chelsea_fc_002': '/entity-browser/chelsea_fc_002/dossier?from=1', 
+				'martin_odegaard_003': '/entity-browser/martin_odegaard_003/dossier?from=1',
+				'tender_premier_league_001': '/entity-browser/tender_premier_league_001/dossier?from=1',
+				'contact_sports_agent_001': '/entity-browser/contact_sports_agent_001/dossier?from=1'
 			};
 			
 			console.log('🗺️ Vector Search: Demo routes:', Object.keys(demoEntityRoutes));
@@ -137,8 +137,8 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 				targetUrl = demoEntityRoutes[entityId];
 				console.log('🎭 Vector Search: Using demo route:', targetUrl);
 			} else {
-				// For Neo4j entities, use the entity/[entityId] route
-				targetUrl = `/entity/${entityId}`;
+				// For Neo4j entities, use the browser dossier route
+				targetUrl = `/entity-browser/${entityId}/dossier?from=1`;
 				console.log('🏟️ Vector Search: Using Neo4j route:', targetUrl);
 			}
 			
@@ -375,7 +375,7 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 									<p className="text-sm mb-6">Search across clubs, players, tenders, and contacts</p>
 									<div className="space-y-2 text-xs text-fm-light-grey bg-custom-bg/50 rounded-lg p-4 mx-auto max-w-md">
 										<p>💡 <strong>Debounced Search:</strong> Results appear 200ms after you stop typing</p>
-										<p>🧪 <strong>Test it:</strong> Type "football" then wait 200ms before typing "club"</p>
+										<p>🧪 <strong>Test it:</strong> Type &quot;football&quot; then wait 200ms before typing &quot;club&quot;</p>
 										<p>⚡ <strong>Smart Matching:</strong> Finds entities by name, type, and metadata</p>
 									</div>
 								</div>

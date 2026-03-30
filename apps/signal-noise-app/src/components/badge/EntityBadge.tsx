@@ -86,7 +86,7 @@ export function EntityBadge({ entity, size = 'md', showFallback = true, classNam
       onClick(entity)
     } else {
       // Default navigation to entity page
-      router.push(`/entity/${entity?.id}`)
+      router.push(`/entity-browser/${entity?.id}/dossier?from=1`)
     }
   }
 
@@ -213,7 +213,7 @@ function CompactEntityBadge({ entity, size = 'sm', className, onClick }: BadgeCo
       onClick(entity)
     } else {
       // Default navigation to entity page
-      router.push(`/entity/${entity?.id}`)
+      router.push(`/entity-browser/${entity?.id}/dossier?from=1`)
     }
   }
 

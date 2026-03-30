@@ -592,7 +592,7 @@ export default function LeagueNavSimple({ currentEntity = null }: LeagueNavSimpl
       await loadFullEntity(club.id)
     }
     
-    router.push(`/entity/${club.id}`)
+    router.push(`/entity-browser/${club.id}/dossier?from=1`)
     setTimeout(() => setIsNavigating(false), 500)
   }
   
@@ -750,7 +750,7 @@ export default function LeagueNavSimple({ currentEntity = null }: LeagueNavSimpl
               // Vector search results
               <div className="max-h-[400px] overflow-y-auto space-y-2">
                 <div className="text-sm text-white/60 mb-2">
-                  Vector search results for "{searchTerm}"
+                  Vector search results for &quot;{searchTerm}&quot;
                 </div>
                 {searchResults.data.map((result: any, index: number) => (
                   <div

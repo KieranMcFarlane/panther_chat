@@ -65,7 +65,7 @@ export default function LeagueNav() {
   // Navigation handlers
   const handleClubSelect = (club: Club) => {
     setIsNavigating(true)
-    router.push(`/entity/${club.id}`)
+    router.push(`/entity-browser/${club.id}/dossier?from=1`)
     setIsModalOpen(false)
     setTimeout(() => setIsNavigating(false), 500)
   }
@@ -690,7 +690,7 @@ export default function LeagueNav() {
       fromClubId: currentLeague.clubs[actualCurrentClubIndex]?.id,
       toClubName: previousClub?.properties?.name,
       toClubId: previousClub?.id,
-      navigationUrl: previousClub ? `/entity/${previousClub.id}` : 'NO TARGET',
+      navigationUrl: previousClub ? `/entity-browser/${previousClub.id}/dossier?from=1` : 'NO TARGET',
       wrapAround: actualCurrentClubIndex === 0
     })
     
@@ -700,7 +700,7 @@ export default function LeagueNav() {
     setIsNavigating(true)
     
     if (previousClub) {
-      router.push(`/entity/${previousClub.id}`)
+      router.push(`/entity-browser/${previousClub.id}/dossier?from=1`)
     }
     
     setTimeout(() => setIsNavigating(false), 500)
@@ -792,7 +792,7 @@ export default function LeagueNav() {
       fromClubId: currentLeague.clubs[actualCurrentClubIndex]?.id,
       toClubName: nextClub?.properties?.name,
       toClubId: nextClub?.id,
-      navigationUrl: nextClub ? `/entity/${nextClub.id}` : 'NO TARGET'
+      navigationUrl: nextClub ? `/entity-browser/${nextClub.id}/dossier?from=1` : 'NO TARGET'
     })
     
     setSelectedClubIndex(newIndex)
@@ -801,7 +801,7 @@ export default function LeagueNav() {
     setIsNavigating(true)
     
     if (nextClub) {
-      router.push(`/entity/${nextClub.id}`)
+        router.push(`/entity-browser/${nextClub.id}/dossier?from=1`)
     }
     
     setTimeout(() => setIsNavigating(false), 500)
@@ -818,7 +818,7 @@ export default function LeagueNav() {
       
       const firstClub = sportsData[sportIndex]?.leagues[leagueIndex]?.clubs[0]
       if (firstClub) {
-        router.push(`/entity/${firstClub.id}`)
+        router.push(`/entity-browser/${firstClub.id}/dossier?from=1`)
       }
       
       setTimeout(() => setIsNavigating(false), 1500)

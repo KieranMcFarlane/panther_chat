@@ -99,11 +99,11 @@ export default function VectorSearch({ className }: VectorSearchProps) {
 			
 			// Check if it's one of our demo entities first
 			const demoEntityRoutes = {
-				'arsenal_fc_001': '/entity/arsenal_fc_001',
-				'chelsea_fc_002': '/entity/chelsea_fc_002', 
-				'martin_odegaard_003': '/entity/martin_odegaard_003',
-				'tender_premier_league_001': '/entity/tender_premier_league_001',
-				'contact_sports_agent_001': '/entity/contact_sports_agent_001'
+				'arsenal_fc_001': '/entity-browser/arsenal_fc_001/dossier?from=1',
+				'chelsea_fc_002': '/entity-browser/chelsea_fc_002/dossier?from=1', 
+				'martin_odegaard_003': '/entity-browser/martin_odegaard_003/dossier?from=1',
+				'tender_premier_league_001': '/entity-browser/tender_premier_league_001/dossier?from=1',
+				'contact_sports_agent_001': '/entity-browser/contact_sports_agent_001/dossier?from=1'
 			};
 			
 			if (demoEntityRoutes[entityId]) {
@@ -111,8 +111,8 @@ export default function VectorSearch({ className }: VectorSearchProps) {
 				return;
 			}
 			
-			// For Neo4j entities, use the entity/[entityId] route
-			router.push(`/entity/${entityId}`);
+			// For Neo4j entities, use the browser dossier route
+			router.push(`/entity-browser/${entityId}/dossier?from=1`);
 		}
 	};
 

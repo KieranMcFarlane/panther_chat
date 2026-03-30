@@ -28,18 +28,18 @@ export default function NavigationTestPage() {
 
   // Test demo entities that should navigate properly
   const demoTests = [
-    { query: 'Arsenal FC', expectedUrl: '/entity/arsenal_fc_001' },
-    { query: 'Chelsea FC', expectedUrl: '/entity/chelsea_fc_002' },
-    { query: 'Martin Ødegaard', expectedUrl: '/entity/martin_odegaard_003' },
-    { query: 'Premier League Digital', expectedUrl: '/entity/tender_premier_league_001' },
-    { query: 'Sports Management Agency', expectedUrl: '/entity/contact_sports_agent_001' }
+    { query: 'Arsenal FC', expectedUrl: '/entity-browser/arsenal_fc_001/dossier?from=1' },
+    { query: 'Chelsea FC', expectedUrl: '/entity-browser/chelsea_fc_002/dossier?from=1' },
+    { query: 'Martin Ødegaard', expectedUrl: '/entity-browser/martin_odegaard_003/dossier?from=1' },
+    { query: 'Premier League Digital', expectedUrl: '/entity-browser/tender_premier_league_001/dossier?from=1' },
+    { query: 'Sports Management Agency', expectedUrl: '/entity-browser/contact_sports_agent_001/dossier?from=1' }
   ];
 
   // Test real entities that should go to entity/[entityId] route
   const realTests = [
-    { query: '1. FC Köln', expectedUrl: '/entity/197' },
-    { query: 'AC Milan', expectedUrl: '/entity/450' },
-    { query: 'Aberdeen', expectedUrl: '/entity/201' }
+    { query: '1. FC Köln', expectedUrl: '/entity-browser/197/dossier?from=1' },
+    { query: 'AC Milan', expectedUrl: '/entity-browser/450/dossier?from=1' },
+    { query: 'Aberdeen', expectedUrl: '/entity-browser/201/dossier?from=1' }
   ];
 
   const runTests = async () => {
@@ -136,10 +136,10 @@ export default function NavigationTestPage() {
             </div>
             <div className="mt-4 p-4 bg-gray-700 rounded-lg">
               <p className="text-sm text-gray-300 mb-2">
-                <strong>Manual Test:</strong> Try searching for "Arsenal FC" and click the result
+                <strong>Manual Test:</strong> Try searching for &quot;Arsenal FC&quot; and click the result
               </p>
               <p className="text-sm text-gray-300">
-                <strong>Automated Test:</strong> Click the "Run Navigation Tests" button below
+                <strong>Automated Test:</strong> Click the &quot;Run Navigation Tests&quot; button below
               </p>
             </div>
           </CardContent>
@@ -237,28 +237,28 @@ export default function NavigationTestPage() {
               <div>
                 <h4 className="font-semibold text-blue-400 mb-3">Demo Entities (Known Routes)</h4>
                 <ul className="space-y-2 text-sm text-gray-300">
-                  <li>• /entity/arsenal_fc_001</li>
-                  <li>• /entity/chelsea_fc_002</li>
-                  <li>• /entity/martin_odegaard_003</li>
-                  <li>• /entity/tender_premier_league_001</li>
-                  <li>• /entity/contact_sports_agent_001</li>
+                  <li>• /entity-browser/arsenal_fc_001/dossier?from=1</li>
+                  <li>• /entity-browser/chelsea_fc_002/dossier?from=1</li>
+                  <li>• /entity-browser/martin_odegaard_003/dossier?from=1</li>
+                  <li>• /entity-browser/tender_premier_league_001/dossier?from=1</li>
+                  <li>• /entity-browser/contact_sports_agent_001/dossier?from=1</li>
                 </ul>
               </div>
               <div>
                 <h4 className="font-semibold text-green-400 mb-3">Real Entities (Neo4j IDs)</h4>
                 <ul className="space-y-2 text-sm text-gray-300">
-                  <li>• /entity/197 (1. FC Köln)</li>
-                  <li>• /entity/450 (AC Milan)</li>
-                  <li>• /entity/201 (Aberdeen)</li>
-                  <li>• /entity/[entity_id] pattern</li>
+                  <li>• /entity-browser/197/dossier?from=1 (1. FC Köln)</li>
+                  <li>• /entity-browser/450/dossier?from=1 (AC Milan)</li>
+                  <li>• /entity-browser/201/dossier?from=1 (Aberdeen)</li>
+                  <li>• /entity-browser/[entityId]/dossier pattern</li>
                   <li>• All 4,422 entities available</li>
                 </ul>
               </div>
             </div>
             <div className="mt-6 p-4 bg-gray-700 rounded-lg">
               <p className="text-sm text-gray-300">
-                <strong>✅ Navigation Logic:</strong> Search results now properly route to entity pages. 
-                Demo entities use predefined routes, real entities use the /entity/[entityId] pattern.
+                <strong>✅ Navigation Logic:</strong> Search results now properly route to browser dossiers. 
+                Demo entities and real entities use the /entity-browser/[entityId]/dossier pattern.
               </p>
             </div>
           </CardContent>

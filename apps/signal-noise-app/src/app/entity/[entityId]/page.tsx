@@ -1,5 +1,4 @@
-import { notFound } from 'next/navigation'
-import EntityProfileClient from './client-page'
+import { notFound, redirect } from 'next/navigation'
 
 interface EntityProfilePageProps {
   params: {
@@ -14,5 +13,5 @@ export default function EntityProfilePage({ params }: EntityProfilePageProps) {
     notFound()
   }
 
-  return <EntityProfileClient entityId={entityId} />
+  redirect(`/entity-browser/${entityId}/dossier?from=1`)
 }
