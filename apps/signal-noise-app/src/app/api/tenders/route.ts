@@ -11,6 +11,7 @@ import path from 'node:path';
 import { getSupabaseAdmin, supabase } from '@/lib/supabase-client';
 import { comprehensiveRfpOpportunities } from '@/lib/comprehensive-rfp-opportunities';
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot';
+import { loadContractsFinderOpportunities } from '@/lib/contracts-finder-live-import';
 import digitalRfpOpportunities from '@/lib/digital-rfp-opportunities.js';
 import realRfpOpportunities from '@/lib/real-rfp-opportunities.js';
 import { linkOpportunityToCanonicalEntity } from '@/lib/opportunity-entity-linking';
@@ -408,6 +409,50 @@ async function handleImportControlledBatchOpportunities(data: any = {}) {
   }
 }
 
+async function handleImportContractsFinderOpportunities(data: any = {}) {
+  try {
+    const dryRun = Boolean(data?.dryRun);
+    const limit = Math.min(Number(data?.limit || 20), 100);
+    const pages = Math.min(Number(data?.pages || 1), 5);
+    const query = typeof data?.query === 'string' && data.query.trim()
+      ? data.query.trim()
+      : 'sports technology digital transformation fan engagement';
+    const opportunities = await loadContractsFinderOpportunities({
+      searchUrl: 'https://www.contractsfinder.service.gov.uk/Search/Results',
+      query,
+      pages,
+      limit,
+    });
+    const batchResult = await insertOpportunityBatch(
+      opportunities,
+      'contracts-finder-live',
+      dryRun,
+      limit,
+    );
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        processed: batchResult.processed,
+        inserted: batchResult.inserted,
+        skipped: batchResult.skipped,
+        linked: batchResult.linked,
+        dryRun,
+        samples: batchResult.samples,
+      },
+    });
+  } catch (error) {
+    console.error('❌ Failed to import Contracts Finder opportunities:', error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to import Contracts Finder opportunities',
+      },
+      { status: 500 },
+    );
+  }
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -463,6 +508,8 @@ export async function POST(request: NextRequest) {
         return await handleImportCuratedOpportunities(data);
       case 'import-controlled-batch-opportunities':
         return await handleImportControlledBatchOpportunities(data);
+      case 'import-contracts-finder-opportunities':
+        return await handleImportContractsFinderOpportunities(data);
       default:
         return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
     }
