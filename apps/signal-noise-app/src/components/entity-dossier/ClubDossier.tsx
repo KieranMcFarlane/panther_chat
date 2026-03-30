@@ -239,9 +239,13 @@ export function ClubDossier({ entity, onEmailEntity }: ClubDossierProps) {
 
   const navigateToPerson = async (personName: string) => {
     const resolvedId = await resolvePersonEntityId(personName)
-    const targetId = resolvedId || personName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
-    console.log(`👤 Navigating to person: ${personName} (ID: ${targetId})`)
-    router.push(`/person/${targetId}`)
+    if (!resolvedId) {
+      console.warn(`👤 Unable to resolve stable person id for: ${personName}`)
+      return
+    }
+
+    console.log(`👤 Navigating to person: ${personName} (ID: ${resolvedId})`)
+    router.push(`/person/${resolvedId}`)
   }
 
   const createPersonLink = (personName: string, role?: string) => {
