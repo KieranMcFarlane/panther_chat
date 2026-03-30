@@ -14,6 +14,9 @@ def test_build_entity_question_pack_returns_catalog_questions_and_prompt_context
     assert pack["question_count"] == 3
     assert len(pack["questions"]) == 3
     assert "YELLOW PANTHER SERVICE CONTEXT" in pack["prompt_context"]
-    assert pack["questions"][0]["question"].startswith("What ")
+    assert "GRAPHITI DISCOVERY LENS" in pack["prompt_context"]
+    assert pack["questions"][0]["question"].startswith("What evidence")
     assert pack["hypotheses"][0]["metadata"]["positioning_strategy"]
     assert pack["hypotheses"][0]["metadata"]["yp_service_fit"]
+    assert pack["hypotheses"][0]["metadata"]["graphiti_focus"]
+    assert pack["questions"][0]["graphiti_focus"]

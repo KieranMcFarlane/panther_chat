@@ -1,5 +1,7 @@
 # LinkedIn Connection Analysis - Claude Agent SDK Specification
 
+> **Legacy reference:** This document reflects an older Neo4j-first implementation. The canonical discovery/reasoning contract is [Graphiti Discovery Contract](./graphiti-discovery-contract.md). Keep this for historical context only.
+
 ## Overview
 A Claude Agent SDK-based system that analyzes LinkedIn connections between sales team members and target entities to identify the warmest introduction paths.
 

@@ -1,5 +1,7 @@
 # AG-UI + Claude Code SDK Integration Guide
 
+> **Legacy reference:** This document reflects an older Neo4j-first implementation. The canonical discovery/reasoning contract is [Graphiti Discovery Contract](./graphiti-discovery-contract.md). Keep this for historical context only.
+
 ## Overview
 
 This integration combines the Person of Interest Profile System with AG-UI and the Claude Code SDK to create an **autonomous AI agent system** for intelligent relationship management and business development.

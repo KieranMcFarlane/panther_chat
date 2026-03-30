@@ -1,5 +1,7 @@
 # 📋 GitHub Issue & PR Templates - Complete Set
 
+> **Legacy reference:** This document reflects an older Neo4j-first implementation. The canonical discovery/reasoning contract is [Graphiti Discovery Contract](./graphiti-discovery-contract.md). Keep this for historical context only.
+
 ## 🎯 Overview
 
 This document provides a complete set of professional GitHub templates for the Signal Noise App project. These templates are designed to streamline issue reporting, feature requests, and pull request submissions while ensuring consistent information collection.

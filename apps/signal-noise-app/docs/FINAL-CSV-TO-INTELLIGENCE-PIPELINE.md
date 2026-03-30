@@ -4,6 +4,8 @@
 **Status:** Recommended target architecture
 **Purpose:** Define the cleanest end-to-end implementation for taking an entity from a CSV import through the full intelligence system and into the shared outputs used by dossier views, RFP views, Graphiti/FalkorDB, and Supabase.
 
+Canonical discovery contract: [Graphiti Discovery Contract](./graphiti-discovery-contract.md)
+
 ---
 
 ## 1. Executive Summary

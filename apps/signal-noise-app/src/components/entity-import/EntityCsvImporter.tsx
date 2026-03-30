@@ -250,10 +250,10 @@ export default function EntityCsvImporter() {
                           <div>{run.rfp_count}</div>
                           {run.rfp_count > 0 ? (
                             <a
-                              href="/rfps"
+                              href="/tenders"
                               className="mt-1 inline-block text-xs text-sky-700 underline underline-offset-2"
                             >
-                              View RFPs
+                              View tenders
                             </a>
                           ) : null}
                         </td>

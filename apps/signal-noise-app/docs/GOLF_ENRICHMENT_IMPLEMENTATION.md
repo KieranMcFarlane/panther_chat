@@ -1,5 +1,7 @@
 # Premium Golf Intelligence Enrichment - Implementation Summary
 
+> **Legacy reference:** This document reflects an older Neo4j-first implementation. The canonical discovery/reasoning contract is [Graphiti Discovery Contract](./graphiti-discovery-contract.md). Keep this for historical context only.
+
 ## Overview
 Comprehensive premium golf market expansion enrichment targeting 25 high-value golf organizations with Yellow Panther digital transformation scoring schema.
 

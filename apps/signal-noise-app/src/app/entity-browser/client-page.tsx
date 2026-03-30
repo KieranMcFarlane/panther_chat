@@ -416,7 +416,7 @@ export default function EntityBrowserClientPage() {
                 <Link href="/entity-import">Import CSV</Link>
               </Button>
               <Button asChild variant="outline" size="sm">
-                <Link href="/rfps">View RFPs</Link>
+                <Link href="/tenders">View tenders</Link>
               </Button>
             </div>
           </div>

@@ -33,7 +33,6 @@ import {
 } from "lucide-react"
 
 import { Entity, PersonIntelligence, detectEntityType, formatValue } from './types'
-import { perplexityService } from './PerplexityService'
 // import { ASCIIDossierRenderer } from './ascii-renderer' // ASCII functionality disabled
 
 interface PersonDossierProps {
@@ -49,29 +48,19 @@ export function PersonDossier({ entity, onEmailEntity }: PersonDossierProps) {
   
   const props = entity.properties
   
-  // Load real Perplexity data for any person entity
+  // Seed dossier intelligence locally so the UI remains functional without external Perplexity calls.
   useEffect(() => {
     if (entity) {
       loadPerplexityData()
     }
   }, [entity])
 
-  const loadPerplexityData = async () => {
-    console.log(`👤 Loading Perplexity intelligence for person: ${props.name}`)
+  const loadPerplexityData = () => {
+    console.log(`👤 Loading dossier intelligence for person: ${props.name}`)
     setIsLoadingResearch(true)
     
     try {
-      const result = await perplexityService.enrichEntityData(entity)
-      
-      if (result.personIntelligence) {
-        console.log(`✅ Loaded Perplexity person intelligence for ${props.name}:`, result.personIntelligence)
-        setPerplexityData(result.personIntelligence)
-        setLastUpdated(new Date())
-      } else {
-        console.log(`⚠️ No Perplexity person intelligence available for ${props.name}`)
-      }
-    } catch (error) {
-      console.error(`❌ Error loading Perplexity person data for ${props.name}:`, error)
+      generateMockPerplexityData()
     } finally {
       setIsLoadingResearch(false)
     }
@@ -139,8 +128,8 @@ export function PersonDossier({ entity, onEmailEntity }: PersonDossierProps) {
   }
   
   const handleRefreshResearch = async () => {
-    console.log(`🔄 Refreshing Perplexity research for person: ${props.name}`)
-    await loadPerplexityData()
+    console.log(`🔄 Refreshing dossier intelligence for person: ${props.name}`)
+    loadPerplexityData()
   }
   
   const handleExportDossier = () => {
@@ -248,7 +237,7 @@ export function PersonDossier({ entity, onEmailEntity }: PersonDossierProps) {
                   <div>
                     <h4 className="font-semibold mb-3 flex items-center gap-2">
                       <Activity className="h-4 w-4 text-blue-600" />
-                      Perplexity Deep Research
+                      Dossier Intelligence
                     </h4>
                     
                     {perplexityData.careerBackground && (

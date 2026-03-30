@@ -1,5 +1,7 @@
 # Yellow Panther AI System Integration Summary
 
+> **Legacy reference:** This document reflects an older Neo4j-first implementation. The canonical discovery/reasoning contract is [Graphiti Discovery Contract](./graphiti-discovery-contract.md). Keep this for historical context only.
+
 ## ✅ **Integration Complete**
 
 The Signal Noise App has been successfully updated to follow the **exact Yellow Panther AI System schema** and is now connected to **AuraDB (Neo4j)** with **Qdrant vector search** integration.
@@ -383,7 +385,6 @@ The system is ready for:
 4. **User testing and feedback**
 
 **Next milestone**: Replace mock data with real AuraDB queries and implement actual Qdrant vector operations.
-
 
 
 

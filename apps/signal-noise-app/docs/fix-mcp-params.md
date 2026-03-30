@@ -1,5 +1,7 @@
 # Fix for Neo4j MCP Parameter Issues
 
+> **Legacy reference:** This document reflects an older Neo4j-first implementation. The canonical discovery/reasoning contract is [Graphiti Discovery Contract](./graphiti-discovery-contract.md). Keep this for historical context only.
+
 ## Problem
 The native Neo4j MCP `execute_query` tool requires both `query` AND `params` parameters, even if params is empty.
 

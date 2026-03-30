@@ -1,5 +1,7 @@
 # Production Bootstrap - Connection Issue
 
+> **Legacy reference:** This document reflects an older Neo4j-first implementation. The canonical discovery/reasoning contract is [Graphiti Discovery Contract](./graphiti-discovery-contract.md). Keep this for historical context only.
+
 ## Issue: FalkorDB Cloud Connection Timeout
 
 The production bootstrap script is hanging when trying to connect to FalkorDB:
