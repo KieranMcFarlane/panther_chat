@@ -9,6 +9,8 @@ def test_build_entity_question_pack_returns_catalog_questions_and_prompt_context
         max_questions=3,
     )
 
+    assert pack["pack_role"] == "discovery"
+    assert pack["pack_stage"] == "entity_type"
     assert pack["entity_type"] == "SPORT_CLUB"
     assert pack["entity_name"] == "Arsenal FC"
     assert pack["question_count"] == 3
@@ -16,6 +18,7 @@ def test_build_entity_question_pack_returns_catalog_questions_and_prompt_context
     assert "YELLOW PANTHER SERVICE CONTEXT" in pack["prompt_context"]
     assert "GRAPHITI DISCOVERY LENS" in pack["prompt_context"]
     assert pack["questions"][0]["question"].startswith("What evidence")
+    assert pack["questions"][0]["pack_role"] == "discovery"
     assert pack["hypotheses"][0]["metadata"]["positioning_strategy"]
     assert pack["hypotheses"][0]["metadata"]["yp_service_fit"]
     assert pack["hypotheses"][0]["metadata"]["graphiti_focus"]

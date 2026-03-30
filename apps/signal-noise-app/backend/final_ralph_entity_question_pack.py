@@ -59,8 +59,9 @@ POSITIONING_MAP = {
 
 @lru_cache(maxsize=1)
 def _load_final_ralph_pack() -> Dict[str, Any]:
-    if not FINAL_RALPH_PACK_PATH.exists():
-        _ensure_final_ralph_pack(FINAL_RALPH_PACK_PATH)
+    # Always refresh the generated artifact so the browser-facing pack stays
+    # aligned with the canonical question builders and reasoners.
+    _ensure_final_ralph_pack(FINAL_RALPH_PACK_PATH)
     if not FINAL_RALPH_PACK_PATH.exists():
         raise FileNotFoundError(f"Missing final Ralph pack at {FINAL_RALPH_PACK_PATH}")
     return json.loads(FINAL_RALPH_PACK_PATH.read_text(encoding="utf-8"))
@@ -68,8 +69,6 @@ def _load_final_ralph_pack() -> Dict[str, Any]:
 
 def _ensure_final_ralph_pack(output_path: Path) -> Path:
     output_path = Path(output_path)
-    if output_path.exists():
-        return output_path
 
     inventory = build_question_inventory(BACKEND_DIR)
     review_pack = build_question_review_pack(inventory)
@@ -172,6 +171,7 @@ def build_final_ralph_entity_question_pack(
             {
                 "question_id": f"frq_{index:03d}",
                 "question": prompt,
+                "pack_role": "discovery",
                 "yp_service_fit": services,
                 "budget_range": BUDGET_MAP.get(services[0], "£80K-£500K"),
                 "yp_advantage": _derive_yp_advantage(services),
@@ -207,6 +207,8 @@ def build_final_ralph_entity_question_pack(
         "entity_name": entity_name,
         "entity_type": entity_type,
         "source_entity_type": entity_type,
+        "pack_role": "discovery",
+        "pack_stage": "final_ralph",
         "question_count": len(pack_questions),
         "prompt_context": prompt_context,
         "questions": pack_questions,

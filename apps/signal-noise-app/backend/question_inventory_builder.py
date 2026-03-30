@@ -76,6 +76,21 @@ TIER_SECTION_PROMPTS = [
 
 QUESTION_KEYS = ("question", "question_text", "prompt", "prompt_template")
 QUESTION_TEXT_RE = re.compile(r"^(what|who|when|where|why|how)\b", re.IGNORECASE)
+DOSSIER_SECTION_IDS = {
+    "core_information",
+    "digital_transformation",
+    "leadership",
+    "recent_news",
+    "current_performance",
+    "connections",
+    "league_context",
+}
+DISCOVERY_SECTION_IDS = {
+    "ai_reasoner_assessment",
+    "strategic_opportunities",
+    "outreach_strategy",
+    "risk_assessment",
+}
 
 
 @dataclass(frozen=True)
@@ -87,11 +102,21 @@ class QuestionEntry:
     metadata: Dict[str, Any]
 
     def to_dict(self) -> Dict[str, Any]:
+        if self.source_kind == "entity_type_question":
+            pack_role = "discovery"
+        elif self.source_kind == "tier_section_question":
+            section_id = str(self.metadata.get("section_id") or "").strip()
+            pack_role = "dossier" if section_id in DOSSIER_SECTION_IDS else "discovery"
+        elif self.source_kind in {"artifact_question", "dossier_json_section", "dossier_markdown_section"}:
+            pack_role = "dossier"
+        else:
+            pack_role = str(self.metadata.get("pack_role") or "dossier")
         payload = {
             "question": self.question,
             "source_kind": self.source_kind,
             "source_label": self.source_label,
             "source_path": self.source_path,
+            "pack_role": pack_role,
         }
         if self.metadata:
             payload["metadata"] = self.metadata
@@ -376,6 +401,7 @@ def _dedupe_questions(entries: Iterable[QuestionEntry]) -> List[Dict[str, Any]]:
     grouped: Dict[str, Dict[str, Any]] = {}
     for entry in entries:
         key = _normalize_question(entry.question)
+        entry_dict = entry.to_dict()
         bucket = grouped.setdefault(
             key,
             {
@@ -384,20 +410,30 @@ def _dedupe_questions(entries: Iterable[QuestionEntry]) -> List[Dict[str, Any]]:
                 "sources": [],
                 "source_kinds": set(),
                 "source_labels": set(),
+                "pack_roles": set(),
             },
         )
-        bucket["sources"].append(entry.to_dict())
+        bucket["sources"].append(entry_dict)
         bucket["source_kinds"].add(entry.source_kind)
         bucket["source_labels"].add(entry.source_label)
+        bucket["pack_roles"].add(entry_dict.get("pack_role", "dossier"))
 
     deduped: List[Dict[str, Any]] = []
     for bucket in grouped.values():
+        pack_roles = sorted(bucket["pack_roles"])
+        pack_role = pack_roles[0] if len(pack_roles) == 1 else "mixed"
+        source_metadata = [source.get("metadata", {}) for source in bucket["sources"] if isinstance(source, dict)]
+        primary_metadata = source_metadata[0] if source_metadata else {}
         deduped.append(
             {
                 "question": bucket["question"],
                 "normalized_question": bucket["normalized_question"],
                 "source_kinds": sorted(bucket["source_kinds"]),
                 "source_labels": sorted(bucket["source_labels"]),
+                "pack_role": pack_role,
+                "pack_roles": pack_roles,
+                "metadata": primary_metadata,
+                "source_metadata": source_metadata,
                 "sources": bucket["sources"],
             }
         )
@@ -423,6 +459,10 @@ def build_question_inventory(backend_dir: Path) -> Dict[str, Any]:
 
     all_question_entries = entity_type_entries + section_entries + artifact_entries
     deduped_questions = _dedupe_questions(all_question_entries)
+    dossier_entries = [entry for entry in all_question_entries if entry.to_dict().get("pack_role") == "dossier"]
+    discovery_entries = [entry for entry in all_question_entries if entry.to_dict().get("pack_role") == "discovery"]
+    dossier_questions = _dedupe_questions(dossier_entries)
+    discovery_questions = _dedupe_questions(discovery_entries)
 
     section_breakdown_candidates = []
     for section in TIER_SECTION_PROMPTS:
@@ -461,12 +501,16 @@ def build_question_inventory(backend_dir: Path) -> Dict[str, Any]:
             "review_section_count": review_section_count,
             "arsenal_section_count": arsenal_section_count,
             "artifact_question_total": len(artifact_entries),
+            "dossier_question_total": len(dossier_questions),
+            "discovery_question_total": len(discovery_questions),
             "unique_question_count": len(deduped_questions),
             "flat_question_total": len(deduped_questions),
         },
         "question_sets": {
             "entity_type_questions": [entry.to_dict() for entry in entity_type_entries],
             "section_questions": [entry.to_dict() for entry in section_entries],
+            "dossier_questions": dossier_questions,
+            "discovery_questions": discovery_questions,
             "tier_section_questions": {
                 tier: [entry.to_dict() for entry in section_entries if entry.metadata.get("tier") == tier]
                 for tier in sorted(section_question_counts_by_tier.keys())
@@ -477,6 +521,7 @@ def build_question_inventory(backend_dir: Path) -> Dict[str, Any]:
         "flat_questions": deduped_questions,
         "deduped_questions": deduped_questions,
         "section_breakdown_candidates": section_breakdown_candidates,
+        "pack_role": "dossier",
     }
 
 

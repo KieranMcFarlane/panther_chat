@@ -292,6 +292,7 @@ class QuestionTemplate:
         return {
             "question_id": self.question_id,
             "question": self.question,
+            "pack_role": QUESTION_PACK_ROLE,
             "yp_service_fit": [s.value for s in self.yp_service_fit],
             "budget_range": self.budget_range,
             "yp_advantage": self.yp_advantage,
@@ -740,6 +741,7 @@ def generate_hypothesis_from_question(
             "hop_types": question.hop_types,
             "accept_criteria": question.accept_criteria,
             "confidence_boost": question.confidence_boost,
+            "pack_role": QUESTION_PACK_ROLE,
             "graphiti_focus": _graphiti_focus_for_services(question.yp_service_fit),
             "graphiti_sources": _graphiti_sources_for_services(question.yp_service_fit),
             "graphiti_lookback_days": GRAPHITI_DISCOVERY_LOOKBACK_DAYS,

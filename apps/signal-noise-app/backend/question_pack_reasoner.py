@@ -97,7 +97,10 @@ def _reason_entity_type_question(question: str) -> str:
     for needle, template in ENTITY_TYPE_REASONING:
         if needle in lower:
             return template.format(entity="{entity}")
-    return f"Verify the signal behind this opportunity question for {{entity}} and tie it to evidence, timing, and likely procurement intent."
+    return (
+        f"Use verified evidence to decide whether {{entity}} has a real Yellow Panther opportunity, "
+        f"then tie it to timing, budget, and procurement intent."
+    )
 
 
 def _reasoned_question_for(item: Dict[str, Any]) -> Dict[str, Any]:

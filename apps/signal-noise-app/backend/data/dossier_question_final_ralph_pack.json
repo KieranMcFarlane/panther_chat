@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-03-27T16:40:36.337616+00:00",
+  "generated_at": "2026-03-30T15:28:28.535958+00:00",
   "summary": {
-    "source_question_count": 77,
-    "final_question_count": 53,
-    "deduplicated_question_count": 14,
-    "pruned_question_count": 35,
+    "source_question_count": 68,
+    "final_question_count": 48,
+    "deduplicated_question_count": 15,
+    "pruned_question_count": 30,
     "split_section_count": 7,
     "split_prompt_count": 40
   },
@@ -12,36 +12,58 @@
     "description": "Pruned and split Ralph-loop question pack ranked for Yellow Panther business goals",
     "questions": [
       {
-        "prompt": "Verify whether {entity} has a mobile or fan engagement initiative and whether the signal points to an RFP, vendor replacement, or partnership brief.",
-        "normalized_prompt": "verify whether {entity} has a mobile or fan engagement initiative and whether the signal points to an rfp, vendor replacement, or partnership brief",
-        "source_question_normalized": "what league-wide mobile app or digital platform initiatives is {entity} pursuing?",
+        "prompt": "Use verified evidence to decide whether {entity} has a real Yellow Panther opportunity, then tie it to timing, budget, and procurement intent.",
+        "normalized_prompt": "use verified evidence to decide whether {entity} has a real yellow panther opportunity, then tie it to timing, budget, and procurement intent",
+        "source_question_normalized": "what evidence in the last 180 days shows {entity} is modernizing member platforms, crm, or federation portals?",
         "section_title": "Unclassified",
         "final_goal_score": 100,
         "final_goal_bucket": "direct_revenue_signal",
         "final_goal_rank": 1,
-        "source_question_count": 3,
+        "source_question_count": 8,
         "source_questions": [
-          "What league-wide mobile app or digital platform initiatives is {entity} pursuing?",
-          "What member federation management platform or mobile app initiatives are underway at {entity}?",
-          "What mobile app or fan engagement platform investments are planned by {entity}?"
+          "What evidence in the last 180 days shows {entity} is modernizing member platforms, CRM, or federation portals?",
+          "What evidence shows {entity} needs event management tooling for competitions or championships?",
+          "What evidence in the last 180 days shows a vendor, platform, or relationship change at {entity} that could map to Yellow Panther services?",
+          "What evidence shows {entity} is planning officiating, event operations, or competition technology upgrades?",
+          "What evidence shows {entity} is implementing digital member communication or engagement platforms?",
+          "What evidence shows {entity} is modernizing digital certification or assessment systems?",
+          "What evidence shows {entity} is planning broadcast, streaming, or content-distribution enhancements?",
+          "What evidence shows {entity} is modernizing league operations, governance workflows, or member club tooling?"
         ],
         "split_from_section": null,
         "split_reason": "Kept as a single focused Ralph-loop prompt.",
-        "final_goal_rationale": "service fit: FAN_ENGAGEMENT, MOBILE_APPS; positioning: STRATEGIC_PARTNER; keywords: mobile app, mobile; service fit: DIGITAL_TRANSFORMATION, MOBILE_APPS; positioning: STRATEGIC_PARTNER; keywords: mobile app, mobile; service fit: FAN_ENGAGEMENT, MOBILE_APPS; positioning: SOLUTION_PROVIDER; keywords: mobile app, mobile, fan engagement"
+        "final_goal_rationale": "service fit: DIGITAL_TRANSFORMATION, MOBILE_APPS; positioning: STRATEGIC_PARTNER; keywords: crm; service fit: ECOMMERCE, MOBILE_APPS; budget fit: £100K-£400K; positioning: SOLUTION_PROVIDER; service fit: ANALYTICS, DIGITAL_TRANSFORMATION; positioning: SOLUTION_PROVIDER; keywords: vendor; service fit: ANALYTICS, MOBILE_APPS; positioning: INNOVATION_PARTNER; service fit: FAN_ENGAGEMENT, MOBILE_APPS; positioning: STRATEGIC_PARTNER; service fit: DIGITAL_TRANSFORMATION, UI_UX_DESIGN; positioning: STRATEGIC_PARTNER; service fit: MOBILE_APPS, UI_UX_DESIGN; positioning: INNOVATION_PARTNER; service fit: DIGITAL_TRANSFORMATION; positioning: STRATEGIC_PARTNER"
       },
       {
-        "prompt": "Verify whether {entity} has analytics or data platform needs and what downstream fan or performance use case is driving them.",
-        "normalized_prompt": "verify whether {entity} has analytics or data platform needs and what downstream fan or performance use case is driving them",
-        "source_question_normalized": "what analytics or data platform needs does {entity} have for performance or fan insights?",
+        "prompt": "Verify whether {entity} has a mobile or fan engagement initiative and whether the signal points to an RFP, vendor replacement, or partnership brief.",
+        "normalized_prompt": "verify whether {entity} has a mobile or fan engagement initiative and whether the signal points to an rfp, vendor replacement, or partnership brief",
+        "source_question_normalized": "what evidence in the last 180 days shows {entity} is planning or replacing a mobile app, fan app, or supporter platform?",
         "section_title": "Unclassified",
         "final_goal_score": 100,
         "final_goal_bucket": "direct_revenue_signal",
         "final_goal_rank": 2,
+        "source_question_count": 2,
+        "source_questions": [
+          "What evidence in the last 180 days shows {entity} is planning or replacing a mobile app, fan app, or supporter platform?",
+          "What evidence in the last 180 days shows {entity} is pursuing a league-wide digital platform, mobile app, or fan experience upgrade?"
+        ],
+        "split_from_section": null,
+        "split_reason": "Kept as a single focused Ralph-loop prompt.",
+        "final_goal_rationale": "service fit: FAN_ENGAGEMENT, MOBILE_APPS; positioning: SOLUTION_PROVIDER; keywords: mobile app, mobile; service fit: FAN_ENGAGEMENT, MOBILE_APPS; positioning: STRATEGIC_PARTNER; keywords: mobile app, mobile"
+      },
+      {
+        "prompt": "Verify whether {entity} has analytics or data platform needs and what downstream fan or performance use case is driving them.",
+        "normalized_prompt": "verify whether {entity} has analytics or data platform needs and what downstream fan or performance use case is driving them",
+        "source_question_normalized": "what evidence shows {entity} is building analytics, bi, reporting, or data platform capability?",
+        "section_title": "Unclassified",
+        "final_goal_score": 100,
+        "final_goal_bucket": "direct_revenue_signal",
+        "final_goal_rank": 3,
         "source_question_count": 3,
         "source_questions": [
-          "What analytics or data platform needs does {entity} have for performance or fan insights?",
-          "What analytics or performance data platform is {entity} seeking for member federations?",
-          "What centralized analytics or data platform is {entity} building for league and clubs?"
+          "What evidence shows {entity} is building analytics, BI, reporting, or data platform capability?",
+          "What evidence shows {entity} is seeking analytics or performance-data platforms for member federations?",
+          "What evidence shows {entity} is building centralized analytics or data infrastructure for clubs and competition?"
         ],
         "split_from_section": null,
         "split_reason": "Kept as a single focused Ralph-loop prompt.",
@@ -50,14 +72,14 @@
       {
         "prompt": "Verify whether {entity} has stadium or venue technology upgrades planned and what triggers them.",
         "normalized_prompt": "verify whether {entity} has stadium or venue technology upgrades planned and what triggers them",
-        "source_question_normalized": "what stadium or venue technology upgrades is {entity} planning?",
+        "source_question_normalized": "what evidence shows {entity} is upgrading stadium or venue technology that would affect matchday experience?",
         "section_title": "Unclassified",
         "final_goal_score": 100,
         "final_goal_bucket": "direct_revenue_signal",
-        "final_goal_rank": 3,
+        "final_goal_rank": 4,
         "source_question_count": 1,
         "source_questions": [
-          "What stadium or venue technology upgrades is {entity} planning?"
+          "What evidence shows {entity} is upgrading stadium or venue technology that would affect matchday experience?"
         ],
         "split_from_section": null,
         "split_reason": "Kept as a single focused Ralph-loop prompt.",
@@ -66,88 +88,51 @@
       {
         "prompt": "Verify whether {entity} has ticketing or e-commerce pain points that suggest a replacement, upgrade, or new vendor process.",
         "normalized_prompt": "verify whether {entity} has ticketing or e-commerce pain points that suggest a replacement, upgrade, or new vendor process",
-        "source_question_normalized": "what league-wide e-commerce or ticketing platform is {entity} developing?",
+        "source_question_normalized": "what evidence shows {entity} has ticketing, checkout, merchandise, or e-commerce friction that could trigger a platform change?",
         "section_title": "Unclassified",
         "final_goal_score": 100,
         "final_goal_bucket": "direct_revenue_signal",
-        "final_goal_rank": 4,
+        "final_goal_rank": 5,
         "source_question_count": 2,
         "source_questions": [
-          "What league-wide e-commerce or ticketing platform is {entity} developing?",
-          "What ticketing or e-commerce pain points indicate replacement needs at {entity}?"
+          "What evidence shows {entity} has ticketing, checkout, merchandise, or e-commerce friction that could trigger a platform change?",
+          "What evidence shows {entity} is developing a league-wide e-commerce, ticketing, or commercial platform?"
         ],
         "split_from_section": null,
         "split_reason": "Kept as a single focused Ralph-loop prompt.",
-        "final_goal_rationale": "service fit: ECOMMERCE; budget fit: £150K-£400K; positioning: SOLUTION_PROVIDER; keywords: ticketing, e-commerce, commerce; service fit: ECOMMERCE, FAN_ENGAGEMENT; positioning: SOLUTION_PROVIDER; keywords: ticketing, e-commerce, commerce"
-      },
-      {
-        "prompt": "Verify the signal behind this opportunity question for {entity} and tie it to evidence, timing, and likely procurement intent.",
-        "normalized_prompt": "verify the signal behind this opportunity question for {entity} and tie it to evidence, timing, and likely procurement intent",
-        "source_question_normalized": "what event management platform needs does {entity} have for competitions/championships?",
-        "section_title": "Unclassified",
-        "final_goal_score": 99,
-        "final_goal_bucket": "direct_revenue_signal",
-        "final_goal_rank": 5,
-        "source_question_count": 5,
-        "source_questions": [
-          "What event management platform needs does {entity} have for competitions/championships?",
-          "What officiating or technology projects is {entity} planning for major events?",
-          "What digital member communication or engagement platforms is {entity} implementing?",
-          "What digital certification or assessment systems is {entity} modernizing?",
-          "What broadcast or streaming enhancements is {entity} planning for content distribution?"
-        ],
-        "split_from_section": null,
-        "split_reason": "Kept as a single focused Ralph-loop prompt.",
-        "final_goal_rationale": "service fit: ECOMMERCE, MOBILE_APPS; budget fit: £100K-£400K; positioning: SOLUTION_PROVIDER; service fit: ANALYTICS, MOBILE_APPS; positioning: INNOVATION_PARTNER; service fit: FAN_ENGAGEMENT, MOBILE_APPS; positioning: STRATEGIC_PARTNER; service fit: DIGITAL_TRANSFORMATION, UI_UX_DESIGN; positioning: STRATEGIC_PARTNER; service fit: MOBILE_APPS, UI_UX_DESIGN; positioning: INNOVATION_PARTNER"
-      },
-      {
-        "prompt": "Verify whether {entity} has fan engagement gaps or platform needs that could support a Yellow Panther pilot.",
-        "normalized_prompt": "verify whether {entity} has fan engagement gaps or platform needs that could support a yellow panther pilot",
-        "source_question_normalized": "what fan engagement strategy gaps or opportunities exist at {entity}?",
-        "section_title": "Unclassified",
-        "final_goal_score": 98,
-        "final_goal_bucket": "direct_revenue_signal",
-        "final_goal_rank": 6,
-        "source_question_count": 1,
-        "source_questions": [
-          "What fan engagement strategy gaps or opportunities exist at {entity}?"
-        ],
-        "split_from_section": null,
-        "split_reason": "Kept as a single focused Ralph-loop prompt.",
-        "final_goal_rationale": "service fit: FAN_ENGAGEMENT, MOBILE_APPS; positioning: INNOVATION_PARTNER; keywords: fan engagement"
+        "final_goal_rationale": "service fit: ECOMMERCE, FAN_ENGAGEMENT; positioning: SOLUTION_PROVIDER; keywords: ticketing, e-commerce, commerce; service fit: ECOMMERCE; budget fit: £150K-£400K; positioning: SOLUTION_PROVIDER; keywords: ticketing, e-commerce, commerce"
       },
       {
         "prompt": "Verify whether {entity} is undertaking a digital transformation initiative using the official site, job postings, and press releases, and identify timing, budget, or vendor change signals.",
         "normalized_prompt": "verify whether {entity} is undertaking a digital transformation initiative using the official site, job postings, and press releases, and identify timing, budget, or vendor change signals",
-        "source_question_normalized": "what digital transformation initiatives is {entity} undertaking or planning?",
+        "source_question_normalized": "what evidence in the last 180 days shows {entity} is pursuing digital transformation, legacy replacement, or a new vendor search?",
         "section_title": "Unclassified",
-        "final_goal_score": 97,
+        "final_goal_score": 100,
         "final_goal_bucket": "direct_revenue_signal",
-        "final_goal_rank": 7,
-        "source_question_count": 2,
-        "source_questions": [
-          "What digital transformation initiatives is {entity} undertaking or planning?",
-          "What digital transformation of league operations is {entity} undertaking?"
-        ],
-        "split_from_section": null,
-        "split_reason": "Kept as a single focused Ralph-loop prompt.",
-        "final_goal_rationale": "service fit: DIGITAL_TRANSFORMATION; positioning: STRATEGIC_PARTNER; keywords: digital transformation"
-      },
-      {
-        "prompt": "Verify whether {entity} is replacing legacy systems and what evidence points to procurement timing.",
-        "normalized_prompt": "verify whether {entity} is replacing legacy systems and what evidence points to procurement timing",
-        "source_question_normalized": "what legacy system replacement signals is {entity} showing?",
-        "section_title": "Unclassified",
-        "final_goal_score": 90,
-        "final_goal_bucket": "direct_revenue_signal",
-        "final_goal_rank": 8,
+        "final_goal_rank": 6,
         "source_question_count": 1,
         "source_questions": [
-          "What legacy system replacement signals is {entity} showing?"
+          "What evidence in the last 180 days shows {entity} is pursuing digital transformation, legacy replacement, or a new vendor search?"
         ],
         "split_from_section": null,
         "split_reason": "Kept as a single focused Ralph-loop prompt.",
-        "final_goal_rationale": "service fit: ANALYTICS, DIGITAL_TRANSFORMATION; positioning: SOLUTION_PROVIDER"
+        "final_goal_rationale": "service fit: DIGITAL_TRANSFORMATION; positioning: STRATEGIC_PARTNER; keywords: vendor, digital transformation"
+      },
+      {
+        "prompt": "Verify whether {entity} has fan engagement gaps or platform needs that could support a Yellow Panther pilot.",
+        "normalized_prompt": "verify whether {entity} has fan engagement gaps or platform needs that could support a yellow panther pilot",
+        "source_question_normalized": "what evidence shows {entity} is investing in fan engagement, loyalty, membership, or personalized communication?",
+        "section_title": "Unclassified",
+        "final_goal_score": 98,
+        "final_goal_bucket": "direct_revenue_signal",
+        "final_goal_rank": 7,
+        "source_question_count": 1,
+        "source_questions": [
+          "What evidence shows {entity} is investing in fan engagement, loyalty, membership, or personalized communication?"
+        ],
+        "split_from_section": null,
+        "split_reason": "Kept as a single focused Ralph-loop prompt.",
+        "final_goal_rationale": "service fit: FAN_ENGAGEMENT, MOBILE_APPS; positioning: INNOVATION_PARTNER; keywords: fan engagement"
       },
       {
         "prompt": "What technology platforms are currently in use at {entity}?",
@@ -156,7 +141,7 @@
         "section_title": "Digital Transformation",
         "final_goal_score": 80,
         "final_goal_bucket": "direct_revenue_signal",
-        "final_goal_rank": 9,
+        "final_goal_rank": 8,
         "source_question_count": 5,
         "source_questions": [
           "What are strategic digital opportunities?",
@@ -176,7 +161,7 @@
         "section_title": "Digital Transformation",
         "final_goal_score": 79,
         "final_goal_bucket": "direct_revenue_signal",
-        "final_goal_rank": 10,
+        "final_goal_rank": 9,
         "source_question_count": 5,
         "source_questions": [
           "What are strategic digital opportunities?",
@@ -196,7 +181,7 @@
         "section_title": "Digital Transformation",
         "final_goal_score": 78,
         "final_goal_bucket": "direct_revenue_signal",
-        "final_goal_rank": 11,
+        "final_goal_rank": 10,
         "source_question_count": 5,
         "source_questions": [
           "What are strategic digital opportunities?",
@@ -216,7 +201,7 @@
         "section_title": "Digital Transformation",
         "final_goal_score": 77,
         "final_goal_bucket": "direct_revenue_signal",
-        "final_goal_rank": 12,
+        "final_goal_rank": 11,
         "source_question_count": 5,
         "source_questions": [
           "What are strategic digital opportunities?",
@@ -236,7 +221,7 @@
         "section_title": "Digital Transformation",
         "final_goal_score": 76,
         "final_goal_bucket": "direct_revenue_signal",
-        "final_goal_rank": 13,
+        "final_goal_rank": 12,
         "source_question_count": 5,
         "source_questions": [
           "What are strategic digital opportunities?",
@@ -256,7 +241,7 @@
         "section_title": "Digital Transformation",
         "final_goal_score": 75,
         "final_goal_bucket": "direct_revenue_signal",
-        "final_goal_rank": 14,
+        "final_goal_rank": 13,
         "source_question_count": 5,
         "source_questions": [
           "What are strategic digital opportunities?",
@@ -276,7 +261,7 @@
         "section_title": "Digital Transformation",
         "final_goal_score": 74,
         "final_goal_bucket": "direct_revenue_signal",
-        "final_goal_rank": 15,
+        "final_goal_rank": 14,
         "source_question_count": 5,
         "source_questions": [
           "What are strategic digital opportunities?",
@@ -296,7 +281,7 @@
         "section_title": "Digital Transformation",
         "final_goal_score": 73,
         "final_goal_bucket": "direct_revenue_signal",
-        "final_goal_rank": 16,
+        "final_goal_rank": 15,
         "source_question_count": 5,
         "source_questions": [
           "What are strategic digital opportunities?",
@@ -316,7 +301,7 @@
         "section_title": "Digital Transformation",
         "final_goal_score": 72,
         "final_goal_bucket": "direct_revenue_signal",
-        "final_goal_rank": 17,
+        "final_goal_rank": 16,
         "source_question_count": 5,
         "source_questions": [
           "What are strategic digital opportunities?",
@@ -336,7 +321,7 @@
         "section_title": "Strategic Opportunities",
         "final_goal_score": 52,
         "final_goal_bucket": "high_signal",
-        "final_goal_rank": 18,
+        "final_goal_rank": 17,
         "source_question_count": 5,
         "source_questions": [
           "What are the opportunity scores for each?",
@@ -350,29 +335,13 @@
         "final_goal_rationale": "keywords: budget, timeline"
       },
       {
-        "prompt": "Use verified evidence to answer: Is there an RFP or tender for Major League Cricket?",
-        "normalized_prompt": "use verified evidence to answer: is there an rfp or tender for major league cricket?",
-        "source_question_normalized": "is there an rfp or tender for major league cricket?",
-        "section_title": "Unclassified",
-        "final_goal_score": 52,
-        "final_goal_bucket": "high_signal",
-        "final_goal_rank": 19,
-        "source_question_count": 1,
-        "source_questions": [
-          "Is there an RFP or tender for Major League Cricket?"
-        ],
-        "split_from_section": null,
-        "split_reason": "Kept as a single focused Ralph-loop prompt.",
-        "final_goal_rationale": "keywords: rfp, tender"
-      },
-      {
         "prompt": "What medium-term partnerships are viable (6-18 months)?",
         "normalized_prompt": "what medium-term partnerships are viable (6-18 months)?",
         "source_question_normalized": "what are the opportunity scores for each?",
         "section_title": "Strategic Opportunities",
         "final_goal_score": 51,
         "final_goal_bucket": "high_signal",
-        "final_goal_rank": 20,
+        "final_goal_rank": 18,
         "source_question_count": 5,
         "source_questions": [
           "What are the opportunity scores for each?",
@@ -392,7 +361,7 @@
         "section_title": "Strategic Opportunities",
         "final_goal_score": 50,
         "final_goal_bucket": "high_signal",
-        "final_goal_rank": 21,
+        "final_goal_rank": 19,
         "source_question_count": 5,
         "source_questions": [
           "What are the opportunity scores for each?",
@@ -412,7 +381,7 @@
         "section_title": "Strategic Opportunities",
         "final_goal_score": 49,
         "final_goal_bucket": "high_signal",
-        "final_goal_rank": 22,
+        "final_goal_rank": 20,
         "source_question_count": 5,
         "source_questions": [
           "What are the opportunity scores for each?",
@@ -432,7 +401,7 @@
         "section_title": "Strategic Opportunities",
         "final_goal_score": 48,
         "final_goal_bucket": "high_signal",
-        "final_goal_rank": 23,
+        "final_goal_rank": 21,
         "source_question_count": 5,
         "source_questions": [
           "What are the opportunity scores for each?",
@@ -446,45 +415,13 @@
         "final_goal_rationale": "keywords: budget, timeline"
       },
       {
-        "prompt": "Use verified evidence to answer: What league-wide mobile app or digital platform initiatives is Major League Cricket pursuing?",
-        "normalized_prompt": "use verified evidence to answer: what league-wide mobile app or digital platform initiatives is major league cricket pursuing?",
-        "source_question_normalized": "what league-wide mobile app or digital platform initiatives is major league cricket pursuing?",
-        "section_title": "Unclassified",
-        "final_goal_score": 46,
-        "final_goal_bucket": "high_signal",
-        "final_goal_rank": 24,
-        "source_question_count": 1,
-        "source_questions": [
-          "What league-wide mobile app or digital platform initiatives is Major League Cricket pursuing?"
-        ],
-        "split_from_section": null,
-        "split_reason": "Kept as a single focused Ralph-loop prompt.",
-        "final_goal_rationale": "keywords: mobile app, mobile"
-      },
-      {
-        "prompt": "Use verified evidence to answer: Who leads fan engagement, CRM, or audience growth at Major League Cricket?",
-        "normalized_prompt": "use verified evidence to answer: who leads fan engagement, crm, or audience growth at major league cricket?",
-        "source_question_normalized": "who leads fan engagement, crm, or audience growth at major league cricket?",
-        "section_title": "Unclassified",
-        "final_goal_score": 44,
-        "final_goal_bucket": "context_support",
-        "final_goal_rank": 25,
-        "source_question_count": 1,
-        "source_questions": [
-          "Who leads fan engagement, CRM, or audience growth at Major League Cricket?"
-        ],
-        "split_from_section": null,
-        "split_reason": "Kept as a single focused Ralph-loop prompt.",
-        "final_goal_rationale": "keywords: fan engagement, crm"
-      },
-      {
         "prompt": "Verify the entity's official name, type, sport/industry, founding year, headquarters, primary venue, website, and employee count from authoritative sources.",
         "normalized_prompt": "verify the entity's official name, type, sport/industry, founding year, headquarters, primary venue, website, and employee count from authoritative sources",
         "source_question_normalized": "what is the official website url?",
         "section_title": "Core Information",
         "final_goal_score": 38,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 26,
+        "final_goal_rank": 22,
         "source_question_count": 5,
         "source_questions": [
           "What is the official website URL?",
@@ -504,7 +441,7 @@
         "section_title": "Key Decision Makers",
         "final_goal_score": 38,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 27,
+        "final_goal_rank": 23,
         "source_question_count": 1,
         "source_questions": [
           "Who are the key decision makers (name, role, influence level)?"
@@ -520,7 +457,7 @@
         "section_title": "Recent News",
         "final_goal_score": 38,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 28,
+        "final_goal_rank": 24,
         "source_question_count": 1,
         "source_questions": [
           "What recent news (last 90 days) is relevant to procurement/partnerships?"
@@ -536,7 +473,7 @@
         "section_title": "Key Decision Makers",
         "final_goal_score": 37,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 29,
+        "final_goal_rank": 25,
         "source_question_count": 1,
         "source_questions": [
           "Who are the key decision makers (name, role, influence level)?"
@@ -552,7 +489,7 @@
         "section_title": "Recent News",
         "final_goal_score": 37,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 30,
+        "final_goal_rank": 26,
         "source_question_count": 1,
         "source_questions": [
           "What recent news (last 90 days) is relevant to procurement/partnerships?"
@@ -568,7 +505,7 @@
         "section_title": "Key Decision Makers",
         "final_goal_score": 36,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 31,
+        "final_goal_rank": 27,
         "source_question_count": 1,
         "source_questions": [
           "Who are the key decision makers (name, role, influence level)?"
@@ -584,7 +521,7 @@
         "section_title": "Outreach Strategy",
         "final_goal_score": 36,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 32,
+        "final_goal_rank": 28,
         "source_question_count": 1,
         "source_questions": [
           "What are the best contact channels and timing?"
@@ -600,7 +537,7 @@
         "section_title": "Recent News",
         "final_goal_score": 36,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 33,
+        "final_goal_rank": 29,
         "source_question_count": 1,
         "source_questions": [
           "What recent news (last 90 days) is relevant to procurement/partnerships?"
@@ -610,29 +547,13 @@
         "final_goal_rationale": "keywords: procurement"
       },
       {
-        "prompt": "Use verified evidence to answer: What digital transformation of league operations is Major League Cricket undertaking?",
-        "normalized_prompt": "use verified evidence to answer: what digital transformation of league operations is major league cricket undertaking?",
-        "source_question_normalized": "what digital transformation of league operations is major league cricket undertaking?",
-        "section_title": "Unclassified",
-        "final_goal_score": 36,
-        "final_goal_bucket": "context_support",
-        "final_goal_rank": 34,
-        "source_question_count": 1,
-        "source_questions": [
-          "What digital transformation of league operations is Major League Cricket undertaking?"
-        ],
-        "split_from_section": null,
-        "split_reason": "Kept as a single focused Ralph-loop prompt.",
-        "final_goal_rationale": "keywords: digital transformation"
-      },
-      {
         "prompt": "What is their decision scope and authority?",
         "normalized_prompt": "what is their decision scope and authority?",
         "source_question_normalized": "who are the key decision makers (name, role, influence level)?",
         "section_title": "Key Decision Makers",
         "final_goal_score": 35,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 35,
+        "final_goal_rank": 30,
         "source_question_count": 1,
         "source_questions": [
           "Who are the key decision makers (name, role, influence level)?"
@@ -648,7 +569,7 @@
         "section_title": "Outreach Strategy",
         "final_goal_score": 35,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 36,
+        "final_goal_rank": 31,
         "source_question_count": 1,
         "source_questions": [
           "What are the best contact channels and timing?"
@@ -664,7 +585,7 @@
         "section_title": "Recent News",
         "final_goal_score": 35,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 37,
+        "final_goal_rank": 32,
         "source_question_count": 1,
         "source_questions": [
           "What recent news (last 90 days) is relevant to procurement/partnerships?"
@@ -680,7 +601,7 @@
         "section_title": "AI Reasoner Assessment",
         "final_goal_score": 34,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 38,
+        "final_goal_rank": 33,
         "source_question_count": 1,
         "source_questions": [
           "What is the Yellow Panther opportunity (service fit, entry point)?"
@@ -696,7 +617,7 @@
         "section_title": "Connections Analysis",
         "final_goal_score": 34,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 39,
+        "final_goal_rank": 34,
         "source_question_count": 1,
         "source_questions": [
           "What are the Tier 2 bridge contacts available for EACH YP MEMBER?"
@@ -712,7 +633,7 @@
         "section_title": "Key Decision Makers",
         "final_goal_score": 34,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 40,
+        "final_goal_rank": 35,
         "source_question_count": 1,
         "source_questions": [
           "Who are the key decision makers (name, role, influence level)?"
@@ -728,7 +649,7 @@
         "section_title": "Outreach Strategy",
         "final_goal_score": 34,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 41,
+        "final_goal_rank": 36,
         "source_question_count": 1,
         "source_questions": [
           "What are the best contact channels and timing?"
@@ -744,7 +665,7 @@
         "section_title": "AI Reasoner Assessment",
         "final_goal_score": 33,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 42,
+        "final_goal_rank": 37,
         "source_question_count": 1,
         "source_questions": [
           "What is the Yellow Panther opportunity (service fit, entry point)?"
@@ -760,7 +681,7 @@
         "section_title": "Connections Analysis",
         "final_goal_score": 33,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 43,
+        "final_goal_rank": 38,
         "source_question_count": 1,
         "source_questions": [
           "What are the Tier 2 bridge contacts available for EACH YP MEMBER?"
@@ -776,7 +697,7 @@
         "section_title": "Key Decision Makers",
         "final_goal_score": 33,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 44,
+        "final_goal_rank": 39,
         "source_question_count": 1,
         "source_questions": [
           "Who are the key decision makers (name, role, influence level)?"
@@ -792,7 +713,7 @@
         "section_title": "Outreach Strategy",
         "final_goal_score": 33,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 45,
+        "final_goal_rank": 40,
         "source_question_count": 1,
         "source_questions": [
           "What are the best contact channels and timing?"
@@ -808,7 +729,7 @@
         "section_title": "AI Reasoner Assessment",
         "final_goal_score": 32,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 46,
+        "final_goal_rank": 41,
         "source_question_count": 1,
         "source_questions": [
           "What is the Yellow Panther opportunity (service fit, entry point)?"
@@ -824,7 +745,7 @@
         "section_title": "Connections Analysis",
         "final_goal_score": 32,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 47,
+        "final_goal_rank": 42,
         "source_question_count": 1,
         "source_questions": [
           "What are the Tier 2 bridge contacts available for EACH YP MEMBER?"
@@ -840,7 +761,7 @@
         "section_title": "Outreach Strategy",
         "final_goal_score": 32,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 48,
+        "final_goal_rank": 43,
         "source_question_count": 1,
         "source_questions": [
           "What are the best contact channels and timing?"
@@ -856,7 +777,7 @@
         "section_title": "AI Reasoner Assessment",
         "final_goal_score": 31,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 49,
+        "final_goal_rank": 44,
         "source_question_count": 1,
         "source_questions": [
           "What is the Yellow Panther opportunity (service fit, entry point)?"
@@ -872,7 +793,7 @@
         "section_title": "Connections Analysis",
         "final_goal_score": 31,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 50,
+        "final_goal_rank": 45,
         "source_question_count": 1,
         "source_questions": [
           "What are the Tier 2 bridge contacts available for EACH YP MEMBER?"
@@ -888,7 +809,7 @@
         "section_title": "Outreach Strategy",
         "final_goal_score": 31,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 51,
+        "final_goal_rank": 46,
         "source_question_count": 1,
         "source_questions": [
           "What are the best contact channels and timing?"
@@ -904,7 +825,7 @@
         "section_title": "AI Reasoner Assessment",
         "final_goal_score": 30,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 52,
+        "final_goal_rank": 47,
         "source_question_count": 1,
         "source_questions": [
           "What is the Yellow Panther opportunity (service fit, entry point)?"
@@ -920,7 +841,7 @@
         "section_title": "Connections Analysis",
         "final_goal_score": 30,
         "final_goal_bucket": "context_support",
-        "final_goal_rank": 53,
+        "final_goal_rank": 48,
         "source_question_count": 1,
         "source_questions": [
           "What are the Tier 2 bridge contacts available for EACH YP MEMBER?"
@@ -1143,36 +1064,6 @@
     {
       "question": "Who are the top 3 competitors?",
       "section_title": "League Context",
-      "business_goal_bucket": "weak_signal",
-      "business_goal_score": 16
-    },
-    {
-      "question": "When was Major League Cricket founded?",
-      "section_title": "Unclassified",
-      "business_goal_bucket": "weak_signal",
-      "business_goal_score": 16
-    },
-    {
-      "question": "Who leads commercial partnerships or business development at Major League Cricket?",
-      "section_title": "Unclassified",
-      "business_goal_bucket": "weak_signal",
-      "business_goal_score": 16
-    },
-    {
-      "question": "Who leads digital product, web, or app initiatives at Major League Cricket?",
-      "section_title": "Unclassified",
-      "business_goal_bucket": "weak_signal",
-      "business_goal_score": 16
-    },
-    {
-      "question": "Who leads marketing or communications at Major League Cricket?",
-      "section_title": "Unclassified",
-      "business_goal_bucket": "weak_signal",
-      "business_goal_score": 16
-    },
-    {
-      "question": "Who leads operations, strategy, or business operations at Major League Cricket?",
-      "section_title": "Unclassified",
       "business_goal_bucket": "weak_signal",
       "business_goal_score": 16
     },
