@@ -211,9 +211,6 @@ async function getConventionsMetrics() {
  */
 async function getGraphMetrics() {
   try {
-    const cacheService = new EntityCacheService();
-    await cacheService.initialize();
-    
     // Get relationships count
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3005';
     try {

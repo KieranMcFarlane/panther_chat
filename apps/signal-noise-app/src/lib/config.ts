@@ -1,12 +1,12 @@
-// Configuration for AuraDB and Qdrant connections
-// Follows the Yellow Panther AI System requirements
+// Shared runtime configuration for external services.
+// Secrets are always read from environment variables.
 
 export const config = {
-  // AuraDB (Neo4j) Configuration
+  // Neo4j Configuration
   neo4j: {
-    uri: process.env.NEXT_PUBLIC_NEO4J_URI || 'neo4j+s://cce1f84b.databases.neo4j.io',
-    username: process.env.NEXT_PUBLIC_NEO4J_USER || 'neo4j',
-    password: process.env.NEXT_PUBLIC_NEO4J_PASSWORD || 'llNASCzMWGT-nTt-JkD9Qk_4W6PpJrv39X0PuYAIKV0',
+    uri: process.env.NEXT_PUBLIC_NEO4J_URI || '',
+    username: process.env.NEXT_PUBLIC_NEO4J_USER || '',
+    password: process.env.NEXT_PUBLIC_NEO4J_PASSWORD || '',
     database: process.env.NEXT_PUBLIC_NEO4J_DATABASE || 'neo4j'
   },
 
@@ -18,8 +18,8 @@ export const config = {
 
   // Qdrant Vector Database Configuration
   qdrant: {
-    url: process.env.NEXT_PUBLIC_QDRANT_URL || 'https://fbd5ba7f-7aed-442a-9ac1-0a3f1024bffd.eu-west-2-0.aws.cloud.qdrant.io:6333',
-    apiKey: process.env.NEXT_PUBLIC_QDRANT_API_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.psevOgtPfPHKnCb2DUnxFBwIMF_ShCB76voNnCD5qHg',
+    url: process.env.NEXT_PUBLIC_QDRANT_URL || '',
+    apiKey: process.env.NEXT_PUBLIC_QDRANT_API_KEY || '',
     collection: process.env.NEXT_PUBLIC_QDRANT_COLLECTION || 'sports_entities'
   },
 
@@ -55,7 +55,7 @@ export const config = {
     contact: 'contact'
   } as const,
 
-  // Navigation Structure (from Yellow Panther schema)
+  // Navigation Structure
   navigation: {
     home: '/',
     sports: '/sports',
@@ -106,7 +106,6 @@ export function getPriorityLevel(score: number): 'high' | 'medium' | 'low' {
 export function isValidEntityType(type: string): type is EntityType {
   return Object.values(config.entityTypes).includes(type as EntityType);
 }
-
 
 
 

@@ -1,7 +1,19 @@
 import useSWR from 'swr'
 import { useEffect } from 'react'
 
-const fetcher = (url: string) => fetch(url).then(res => res.json())
+const fetcher = async (url: string) => {
+  const response = await fetch(url)
+  const payload = await response.json().catch(() => null)
+
+  if (!response.ok) {
+    const message = typeof payload === 'object' && payload
+      ? payload.error || payload.message || `Request failed with status ${response.status}`
+      : `Request failed with status ${response.status}`
+    throw new Error(String(message))
+  }
+
+  return payload
+}
 
 type EntityBrowserFilters = {
   entityType: string

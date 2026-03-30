@@ -11,14 +11,12 @@ interface GraphVisualizationClientProps {
   initialNodes: GraphNode[];
   initialEdges: GraphEdge[];
   totalAvailableNodes?: number;
-  onLoadMoreNodes?: (count: number) => Promise<void>;
 }
 
 export default function GraphVisualizationClient({ 
   initialNodes, 
   initialEdges,
-  totalAvailableNodes = 0,
-  onLoadMoreNodes
+  totalAvailableNodes = 0
 }: GraphVisualizationClientProps) {
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });

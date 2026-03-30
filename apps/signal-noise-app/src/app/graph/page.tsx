@@ -1,9 +1,8 @@
-import { Network, Users, Building, FileText, Target } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Entity } from '@/lib/database';
 import GraphWrapper from '@/components/graph/GraphWrapper';
 import { GraphNode, GraphEdge } from '@/components/graph/graph-types';
-import { EntityCacheService } from '@/services/EntityCacheService';
+import { getSupabaseAdmin } from '@/lib/supabase-client';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,12 +26,41 @@ function getRelationshipColor(relationshipType: string): string {
   }
 }
 
+function normalizeEntityName(name: string) {
+  return name
+    .toLowerCase()
+    .replace(/\b(fc|afc)\b/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function buildEntityLookup(entities: Entity[]) {
+  const lookup = new Map<string, Entity>();
+
+  for (const entity of entities) {
+    if (entity.name) {
+      lookup.set(entity.name, entity);
+      lookup.set(normalizeEntityName(entity.name), entity);
+    }
+  }
+
+  return lookup;
+}
+
+function findEntityByName(lookup: Map<string, Entity>, name: string) {
+  const exact = lookup.get(name);
+  if (exact) return exact;
+
+  const normalized = normalizeEntityName(name);
+  return lookup.get(normalized);
+}
+
 // Server-side data fetching function
 async function fetchGraphData() {
   try {
-    // Initialize the EntityCacheService to access Supabase cache with 4,422 entities
-    const cacheService = new EntityCacheService();
-    
+    const supabase = getSupabaseAdmin();
+    const INITIAL_LIMIT = 100; // Start with smaller subset for better visualization
+
     // First, get all relationships from cache to know which entities to prioritize
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3005';
     const relationshipsResponse = await fetch(`${baseUrl}/api/graph/relationships-cache`, {
@@ -41,28 +69,22 @@ async function fetchGraphData() {
     
     const relationshipsData = relationshipsResponse.ok ? await relationshipsResponse.json() : {};
     const allRelationships = relationshipsData.relationships || [];
-    // Extract unique entity names from relationships
-    const relationshipEntityNames = new Set<string>();
-    allRelationships.forEach((rel: any) => {
-      relationshipEntityNames.add(rel.source_name);
-      relationshipEntityNames.add(rel.target_name);
-    });
-    
     let entities: Entity[] = [];
-    let totalAvailable = 0; // Initialize totalAvailable outside the if block
-    const INITIAL_LIMIT = 100; // Start with smaller subset for better visualization
-    const MAX_ENTITIES = 500; // Cap for interactive performance
-    
-    // Load initial batch for immediate display
-    const initialCacheResult = await cacheService.getCachedEntities({
-      page: 1,
-      limit: INITIAL_LIMIT,
-      entityType: 'all'
-    });
-    
-    if (initialCacheResult.entities && initialCacheResult.entities.length > 0) {
+    let totalAvailable = 0;
+
+    const { data: initialEntities, count: initialCount, error: initialError } = await supabase
+      .from('cached_entities')
+      .select('*', { count: 'exact' })
+      .order('created_at', { ascending: false })
+      .range(0, INITIAL_LIMIT - 1);
+
+    if (initialError) {
+      throw initialError;
+    }
+
+    if (initialEntities && initialEntities.length > 0) {
       // Convert initial batch of entities for display
-      entities = initialCacheResult.entities.map((cachedEntity: any) => {
+      entities = initialEntities.map((cachedEntity: any) => {
           const properties = cachedEntity.properties || {};
           const labels = cachedEntity.labels || [];
           
@@ -116,81 +138,11 @@ async function fetchGraphData() {
             // Include all original properties
             ...properties
           };
-        });
+      });
       
       // Get total count of available entities
-      const cacheStats = await cacheService.getCacheStats();
-      totalAvailable = cacheStats.totalCached || 4422; // Fallback to expected count
-      
-      let currentPage = 2; // Start from page 2 since we loaded page 1
-      let backgroundEntities = [];
-      
-      while (entities.length < MAX_ENTITIES && currentPage <= 3) { // Limit to 3 pages total
-        const additionalResult = await cacheService.getCachedEntities({
-          page: currentPage,
-          limit: 500, // Smaller batches for background loading
-          entityType: 'all'
-        });
-        
-        if (additionalResult.entities && additionalResult.entities.length > 0) {
-          const additionalBatch = additionalResult.entities.map((cachedEntity: any) => {
-            const properties = cachedEntity.properties || {};
-            const labels = cachedEntity.labels || [];
-            
-            // Determine entity type from labels (reuse logic)
-            let entityType = 'entity';
-            if (labels.includes('Club') || labels.includes('Company')) {
-              entityType = 'club';
-            } else if (labels.includes('League')) {
-              entityType = 'league';
-            } else if (labels.includes('Competition')) {
-              entityType = 'competition';
-            } else if (labels.includes('Venue') || labels.includes('Stadium')) {
-              entityType = 'venue';
-            } else if (labels.includes('RfpOpportunity') || labels.includes('RFP')) {
-              entityType = 'tender';
-            } else if (labels.includes('Stakeholder')) {
-              entityType = 'poi';
-            } else if (labels.includes('Person') || labels.includes('Sportsperson')) {
-              entityType = 'sportsperson';
-            }
-            
-            let entity_id = cachedEntity.neo4j_id || cachedEntity.id;
-            if (entity_id && !entity_id.includes(':')) {
-              entity_id = cachedEntity.neo4j_id || entity_id;
-            }
-            
-            return {
-              entity_id: entity_id,
-              neo4j_id: cachedEntity.neo4j_id,
-              cache_id: cachedEntity.id,
-              entity_type: entityType,
-              name: properties.name || 'Unknown Entity',
-              description: properties.description || '',
-              source: 'supabase-cache',
-              last_updated: properties.last_updated || new Date().toISOString(),
-              trust_score: properties.trust_score || 0.8,
-              vector_embedding: properties.embedding || [],
-              priority_score: properties.priority_score || 0.7,
-              notes: properties.notes || '',
-              division_id: properties.division_id || properties.league_id || '',
-              location: properties.location || properties.city || properties.country || '',
-              club_id: properties.club_id || properties.team_id || '',
-              role: properties.role || properties.position || '',
-              tags: properties.tags || [],
-              ...properties
-            };
-          });
-          
-          backgroundEntities.push(...additionalBatch);
-        }
-        
-        currentPage++;
-        
-        // Small delay for background loading
-        await new Promise(resolve => setTimeout(resolve, 50));
-      }
-      
+      totalAvailable = initialCount || initialEntities.length || 4422;
+
     }
     
     if (entities.length === 0) {
@@ -325,34 +277,22 @@ async function fetchGraphData() {
     
     console.log('✅ SERVER SIDE: Created graph nodes:', graphNodes.length);
     
+    const entityLookup = buildEntityLookup(entities);
+
     // Create real relationships based on cached data
     const graphEdges: GraphEdge[] = [];
+    const maxRelationships = 400;
+    let missingSourceCount = 0;
+    let missingTargetCount = 0;
     
     if (allRelationships.length > 0) {
       console.log(`✅ Using ${allRelationships.length} cached relationships`);
       console.log('🔍 Sample cached relationship:', allRelationships[0]);
       
-      allRelationships.forEach((rel: any) => {
-        // Helper function for fuzzy name matching
-        const findEntityByName = (name: string) => {
-          // Exact match first
-          let entity = entities.find(e => e.name === name);
-          if (entity) return entity;
-          
-          // Try partial/cleaned matches
-          const cleanName = name.toLowerCase().replace(/\b(fc|afc)\b/g, '').trim();
-          entity = entities.find(e => 
-            e.name.toLowerCase().includes(cleanName) || 
-            cleanName.includes(e.name.toLowerCase()) ||
-            e.name.toLowerCase().replace(/\b(fc|afc)\b/g, '').trim() === cleanName
-          );
-          
-          return entity;
-        };
-        
-        const sourceEntity = findEntityByName(rel.source_name);
-        const targetEntity = findEntityByName(rel.target_name);
-        
+      for (const rel of allRelationships.slice(0, maxRelationships)) {
+        const sourceEntity = findEntityByName(entityLookup, rel.source_name);
+        const targetEntity = findEntityByName(entityLookup, rel.target_name);
+
         if (sourceEntity && targetEntity) {
           graphEdges.push({
             source: sourceEntity.entity_id, // Use the entity's actual ID for graph rendering
@@ -362,105 +302,22 @@ async function fetchGraphData() {
             color: getRelationshipColor(rel.relationship_type)
           });
         } else {
-          // Debug missing matches
           if (!sourceEntity) {
-            console.log(`⚠️ Source entity not found for name: ${rel.source_name}`);
+            missingSourceCount++;
           }
           if (!targetEntity) {
-            console.log(`⚠️ Target entity not found for name: ${rel.target_name}`);
+            missingTargetCount++;
           }
         }
-      });
+      }
       
+      if (missingSourceCount > 0 || missingTargetCount > 0) {
+        console.log(
+          `⚠️ Relationship name lookup misses: ${missingSourceCount} source, ${missingTargetCount} target`
+        );
+      }
+
       console.log(`✅ Created ${graphEdges.length} graph edges from ${allRelationships.length} cached relationships`);
-      
-      // Create additional relationships based on entity properties to increase edge density
-      console.log('🔗 Creating additional relationships based on entity properties...');
-      
-      // Group entities by properties for relationship creation
-      const entitiesBySport: Record<string, typeof entities> = {};
-      const entitiesByCountry: Record<string, typeof entities> = {};
-      const entitiesByLeague: Record<string, typeof entities> = {};
-      
-      entities.forEach(entity => {
-        // Group by sport
-        const sport = entity.sport || entity.properties?.sport || 'Unknown';
-        if (!entitiesBySport[sport]) entitiesBySport[sport] = [];
-        entitiesBySport[sport].push(entity);
-        
-        // Group by country
-        const country = entity.location || entity.properties?.country || entity.properties?.city || 'Unknown';
-        if (!entitiesByCountry[country]) entitiesByCountry[country] = [];
-        entitiesByCountry[country].push(entity);
-        
-        // Group by league/division
-        const league = entity.division_id || entity.properties?.division_id || entity.properties?.league_id || 'Unknown';
-        if (!entitiesByLeague[league]) entitiesByLeague[league] = [];
-        entitiesByLeague[league].push(entity);
-      });
-      
-      // Create sport-based relationships (SPORTS_PLAYED_IN)
-      Object.entries(entitiesBySport).forEach(([sport, sportEntities]) => {
-        if (sportEntities.length > 1 && sport !== 'Unknown') {
-          console.log(`🏆 Creating ${sportEntities.length} sport relationships for: ${sport}`);
-          sportEntities.slice(0, 20).forEach((entity1, i) => {
-            sportEntities.slice(i + 1, Math.min(i + 6, sportEntities.length)).forEach(entity2 => {
-              if (entity1.entity_id !== entity2.entity_id) {
-                graphEdges.push({
-                  source: entity1.entity_id,
-                  target: entity2.entity_id,
-                  strength: 0.6,
-                  label: 'SAME_SPORT',
-                  color: '#10b981' // Green
-                });
-              }
-            });
-          });
-        }
-      });
-      
-      // Create country-based relationships (BASED_IN)
-      Object.entries(entitiesByCountry).forEach(([country, countryEntities]) => {
-        if (countryEntities.length > 1 && country !== 'Unknown') {
-          console.log(`🌍 Creating ${countryEntities.length} location relationships for: ${country}`);
-          countryEntities.slice(0, 15).forEach((entity1, i) => {
-            countryEntities.slice(i + 1, Math.min(i + 4, countryEntities.length)).forEach(entity2 => {
-              if (entity1.entity_id !== entity2.entity_id) {
-                graphEdges.push({
-                  source: entity1.entity_id,
-                  target: entity2.entity_id,
-                  strength: 0.7,
-                  label: 'SAME_LOCATION',
-                  color: '#8b5cf6' // Purple
-                });
-              }
-            });
-          });
-        }
-      });
-      
-      // Create league-based relationships (COMPETES_IN)
-      Object.entries(entitiesByLeague).forEach(([league, leagueEntities]) => {
-        if (leagueEntities.length > 1 && league !== 'Unknown') {
-          console.log(`🏟️ Creating ${leagueEntities.length} league relationships for: ${league}`);
-          leagueEntities.forEach((entity1, i) => {
-            leagueEntities.slice(i + 1, Math.min(i + 8, leagueEntities.length)).forEach(entity2 => {
-              if (entity1.entity_id !== entity2.entity_id) {
-                graphEdges.push({
-                  source: entity1.entity_id,
-                  target: entity2.entity_id,
-                  strength: 0.8,
-                  label: 'COMPETES_TOGETHER',
-                  color: '#f59e0b' // Orange
-                });
-              }
-            });
-          });
-        }
-      });
-      
-      console.log(`✅ Created ${graphEdges.length} total graph edges (original + synthetic)`);
-      
     } else {
       // Fallback: create relationships based on entity types
       console.log('🔄 Using fallback relationship creation...');

@@ -148,6 +148,7 @@ export class EntityCacheService {
         id: node.identity.toString(),
         properties: node.properties,
       }) || node.identity.toString()
+      // Canonical source-of-truth remains resolveEntityUuid(...).
       return {
         neo4j_id: node.identity.toString(),
         uuid,

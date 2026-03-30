@@ -255,10 +255,10 @@ export default function EntityBrowserClientPage() {
 
     const exportData = {
       entities: entitiesData.entities,
-      pagination: entitiesData.pagination,
+      pagination,
       filters: entitiesData.filters,
       exportDate: new Date().toISOString(),
-      totalEntities: entitiesData.pagination.total
+      totalEntities: pagination.total
     }
 
     const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' })
@@ -384,6 +384,14 @@ export default function EntityBrowserClientPage() {
   }
 
   const entities = entitiesData.entities || []
+  const pagination = entitiesData.pagination ?? {
+    page: currentPage,
+    limit: Number.parseInt(filters.limit, 10) || 10,
+    total: entities.length,
+    totalPages: Math.max(1, Math.ceil(entities.length / (Number.parseInt(filters.limit, 10) || 10))),
+    hasNext: false,
+    hasPrev: currentPage > 1,
+  }
   const activeFilterChips = [
     filters.sport !== 'all' ? { key: 'sport', label: `Sport: ${filters.sport}` } : null,
     filters.league !== 'all' ? { key: 'league', label: `League: ${filters.league}` } : null,
@@ -606,7 +614,7 @@ export default function EntityBrowserClientPage() {
                 Export JSON
               </Button>
               <Badge variant="outline" className="ml-auto">
-                Showing {entities.length} of {entitiesData.pagination.total.toLocaleString()} entities
+                Showing {entities.length} of {pagination.total.toLocaleString()} entities
               </Badge>
             </div>
             {activeFilterChips.length > 0 && (
@@ -691,23 +699,23 @@ export default function EntityBrowserClientPage() {
           <Button
             variant="outline"
             onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-            disabled={!entitiesData.pagination.hasPrev}
+            disabled={!pagination.hasPrev}
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Previous
           </Button>
 
           <div className="text-sm text-muted-foreground">
-            Page {entitiesData.pagination.page} of {entitiesData.pagination.totalPages}
+            Page {pagination.page} of {pagination.totalPages}
             <span className="ml-2">
-              ({((entitiesData.pagination.page - 1) * entitiesData.pagination.limit + 1)} - {Math.min(entitiesData.pagination.page * entitiesData.pagination.limit, entitiesData.pagination.total)} of {entitiesData.pagination.total})
+              ({((pagination.page - 1) * pagination.limit + 1)} - {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total})
             </span>
           </div>
 
           <Button
             variant="outline"
-            onClick={() => setCurrentPage((prev) => Math.min(entitiesData.pagination.totalPages, prev + 1))}
-            disabled={!entitiesData.pagination.hasNext}
+            onClick={() => setCurrentPage((prev) => Math.min(pagination.totalPages, prev + 1))}
+            disabled={!pagination.hasNext}
           >
             Next
             <ArrowRight className="h-4 w-4 ml-2" />

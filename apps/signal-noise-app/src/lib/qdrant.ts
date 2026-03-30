@@ -20,10 +20,10 @@ export interface VectorSearchResult {
   payload: Record<string, any>;
 }
 
-// Default Qdrant configuration
+// Default Qdrant configuration is environment-driven.
 export const defaultQdrantConfig: QdrantConfig = {
-  url: 'https://fbd5ba7f-7aed-442a-9ac1-0a3f1024bffd.eu-west-2-0.aws.cloud.qdrant.io:6333',
-  apiKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.psevOgtPfPHKnCb2DUnxFBwIMF_ShCB76voNnCD5qHg',
+  url: process.env.NEXT_PUBLIC_QDRANT_URL || '',
+  apiKey: process.env.NEXT_PUBLIC_QDRANT_API_KEY || '',
   collectionName: 'sports_entities'
 };
 
@@ -39,7 +39,7 @@ export async function performVectorSearch(
     // TODO: Implement actual Qdrant client integration
     // For now, return empty results
     console.log('Qdrant search:', { config, params });
-    
+
     // Placeholder for actual implementation
     const response = await fetch(`${config.url}/collections/${config.collectionName}/points/search`, {
       method: 'POST',
@@ -186,8 +186,3 @@ export async function deletePoints(
     return null;
   }
 }
-
-
-
-
-

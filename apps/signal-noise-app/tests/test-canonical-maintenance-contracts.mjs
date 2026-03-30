@@ -21,12 +21,8 @@ const entityPipelineRouteSource = readFileSync(
   new URL('../src/app/api/entity-pipeline/route.ts', import.meta.url),
   'utf8',
 )
-const cacheSyncRouteSource = readFileSync(
-  new URL('../src/app/api/entities/cache-sync/route.ts', import.meta.url),
-  'utf8',
-)
-const graphSyncRouteSource = readFileSync(
-  new URL('../src/app/api/sync/neo4j-to-supabase/route.ts', import.meta.url),
+const falkorSyncRouteSource = readFileSync(
+  new URL('../src/app/api/sync/falkordb-to-supabase/route.ts', import.meta.url),
   'utf8',
 )
 const adminAuditRouteSource = readFileSync(
@@ -40,22 +36,25 @@ const adminAuditPageSource = readFileSync(
 
 test('entity routing uses canonical stable id rather than neo4j_id-specific navigation', () => {
   assert.match(entityCardSource, /stableEntityId/)
-  assert.match(entityCardSource, /router\.push\(`\/entity\/\$\{stableEntityId\}/)
+  assert.match(entityCardSource, /router\.push\(href\)/)
   assert.doesNotMatch(entityCardSource, /router\.push\(`\/entity\/\$\{entity\.neo4j_id\}/)
   assert.match(entityPageSource, /id:\s*entity\.id,/)
 })
 
-test('import and sync routes invoke canonical maintenance after writes', () => {
-  assert.match(entityImportRouteSource, /runPostImportCanonicalMaintenance\('entity-import'\)/)
-  assert.match(entityPipelineRouteSource, /runPostImportCanonicalMaintenance\('entity-pipeline'\)/)
-  assert.match(cacheSyncRouteSource, /runPostImportCanonicalMaintenanceWithOptions\('entities-cache-sync'/)
-  assert.match(graphSyncRouteSource, /runPostImportCanonicalMaintenanceWithOptions\('sync-neo4j-to-supabase'/)
+test('import and sync routes use the current canonical write path', () => {
+  assert.match(entityImportRouteSource, /upsertImportedEntityIntoFalkor/)
+  assert.match(entityImportRouteSource, /createEntityPipelineRuns/)
+  assert.match(entityPipelineRouteSource, /createEntityImportBatch/)
+  assert.match(entityPipelineRouteSource, /queueEntityImportBatch/)
+  assert.match(entityPipelineRouteSource, /upsertImportedEntityIntoFalkor/)
+  assert.match(falkorSyncRouteSource, /RealtimeSyncService/)
+  assert.match(falkorSyncRouteSource, /performFullSync/)
 })
 
 test('deploy gate includes strict canonical congruence QA path', () => {
   assert.equal(
     packageJson.scripts['sync:post-import'],
-    'npm run remediate:canonical-congruence && npm run remediate:taxonomy-hygiene && npm run qa:canonical-congruence',
+    'npm run remediate:canonical-congruence && npm run remediate:taxonomy-hygiene && npm run qa:canonical-congruence && npm run qa:entity-congruence-audit',
   )
   assert.equal(
     packageJson.scripts['verify:canonical-congruence'],

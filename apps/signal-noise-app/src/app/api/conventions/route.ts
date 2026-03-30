@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { Neo4jService } from '@/lib/neo4j'
 
 export const dynamic = 'force-dynamic';
-
-const neo4jService = new Neo4jService()
 
 // Sample sports conventions data with federation intelligence
 const DEFAULT_CONVENTIONS = [
@@ -165,59 +162,8 @@ export async function GET(request: NextRequest) {
     // Sort by start date
     filteredConventions.sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
 
-    // Try to get additional data from Neo4j (optional, with timeout)
-    let enhancedConventions = filteredConventions
-    try {
-      await neo4jService.initialize()
-      const session = neo4jService.getDriver().session()
-      
-      try {
-        // For each convention, try to find related entities in our database
-        enhancedConventions = await Promise.all(
-          filteredConventions.map(async (convention) => {
-            let relatedEntities = []
-            
-            // Try to find federations mentioned in the convention data
-            for (const federationName of convention.federations) {
-              try {
-                const result = await session.run(
-                  'MATCH (n) WHERE toLower(n.name) CONTAINS toLower($fedName) RETURN n LIMIT 3',
-                  { fedName: federationName }
-                )
-                
-                const entities = result.records.map(record => {
-                  const node = record.get('n')
-                  return {
-                    id: node.identity.toString(),
-                    name: node.properties.name,
-                    type: node.properties.type || node.labels[0],
-                    labels: node.labels
-                  }
-                })
-                
-                relatedEntities.push(...entities)
-              } catch (err) {
-                console.warn('Error finding federation entities:', err)
-              }
-            }
-            
-            return {
-              ...convention,
-              relatedEntities: relatedEntities.slice(0, 10), // Limit to 10 related entities
-              hasRelatedEntities: relatedEntities.length > 0
-            }
-          })
-        )
-      } finally {
-        await session.close()
-      }
-    } catch (neo4jError) {
-      console.warn('Neo4j enhancement failed, using base data:', neo4jError)
-      // Continue with base convention data if Neo4j fails
-    }
-
     return NextResponse.json({
-      conventions: enhancedConventions,
+      conventions: filteredConventions,
       filters: {
         year,
         month,
@@ -226,7 +172,7 @@ export async function GET(request: NextRequest) {
         federation
       },
       meta: {
-        total: enhancedConventions.length,
+        total: filteredConventions.length,
         year,
         source: 'api'
       }

@@ -27,8 +27,6 @@ import {
   Sparkles
 } from 'lucide-react';
 
-// Import RFP storage service for unified data access
-import { rfpStorageService } from '@/services/RFPStorageService';
 import { supabase } from '@/lib/supabase-client';
 import { comprehensiveRfpOpportunities } from '@/lib/comprehensive-rfp-opportunities';
 import digitalRfpOpportunities from '@/lib/digital-rfp-opportunities';
