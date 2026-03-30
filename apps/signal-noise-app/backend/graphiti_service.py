@@ -688,6 +688,249 @@ class GraphitiService:
         graph.query(query, params)
         return {"status": "merged", "idempotency_key": idempotency_key, "backend": "falkordb_native"}
 
+    @staticmethod
+    def _safe_iso_datetime(value: Optional[str]) -> Optional[datetime]:
+        if not value:
+            return None
+        try:
+            normalized = str(value).replace("Z", "+00:00")
+            parsed = datetime.fromisoformat(normalized)
+            if parsed.tzinfo is None:
+                return parsed.replace(tzinfo=timezone.utc)
+            return parsed.astimezone(timezone.utc)
+        except Exception:
+            return None
+
+    def _build_homepage_insight_record(
+        self,
+        *,
+        run_result: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        artifacts = run_result.get("artifacts") if isinstance(run_result.get("artifacts"), dict) else {}
+        dossier = artifacts.get("dossier") if isinstance(artifacts.get("dossier"), dict) else {}
+        discovery_result = artifacts.get("discovery_result") if isinstance(artifacts.get("discovery_result"), dict) else {}
+        validated_signals = artifacts.get("validated_signals") if isinstance(artifacts.get("validated_signals"), list) else []
+        episodes = artifacts.get("episodes") if isinstance(artifacts.get("episodes"), list) else []
+        scores = run_result.get("scores") if isinstance(run_result.get("scores"), dict) else {}
+        phase_results = run_result.get("phase_details_by_phase") if isinstance(run_result.get("phase_details_by_phase"), dict) else run_result.get("phases")
+        if not isinstance(phase_results, dict):
+            phase_results = {}
+
+        entity_id = str(run_result.get("entity_id") or dossier.get("entity_id") or "").strip() or "unknown-entity"
+        entity_name = str(run_result.get("entity_name") or dossier.get("entity_name") or entity_id).strip() or entity_id
+        entity_type = str(run_result.get("entity_type") or dossier.get("entity_type") or "ENTITY").strip().upper() or "ENTITY"
+        completed_at = str(run_result.get("completed_at") or datetime.now(timezone.utc).isoformat())
+        completed_dt = self._safe_iso_datetime(completed_at) or datetime.now(timezone.utc)
+        materialized_at = datetime.now(timezone.utc)
+
+        selected_signal = None
+        if validated_signals:
+            def _signal_sort_key(signal: Dict[str, Any]) -> tuple[int, float]:
+                signal_type = str(signal.get("type") or signal.get("signal_type") or "").upper()
+                confidence = signal.get("confidence")
+                confidence_value = 0.0
+                try:
+                    confidence_value = float(confidence or 0)
+                except (TypeError, ValueError):
+                    confidence_value = 0.0
+                return (1 if signal_type == "RFP_DETECTED" else 0, confidence_value)
+
+            selected_signal = sorted(
+                [signal for signal in validated_signals if isinstance(signal, dict)],
+                key=_signal_sort_key,
+                reverse=True,
+            )[0]
+
+        selected_episode = episodes[0] if episodes and isinstance(episodes[0], dict) else None
+        signal_statement = str(
+            (selected_signal or {}).get("statement")
+            or (selected_signal or {}).get("text")
+            or (selected_signal or {}).get("title")
+            or (selected_episode or {}).get("description")
+            or dossier.get("summary")
+            or f"Fresh pipeline evidence for {entity_name}"
+        ).strip()
+        if len(signal_statement) > 180:
+            signal_statement = f"{signal_statement[:177].rstrip()}..."
+
+        sales_readiness = str(scores.get("sales_readiness") or "").strip().upper()
+        active_probability = scores.get("active_probability")
+        try:
+            active_probability_value = float(active_probability or 0)
+        except (TypeError, ValueError):
+            active_probability_value = 0.0
+        discovery_confidence = getattr(discovery_result, "final_confidence", None)
+        if discovery_confidence is None and isinstance(discovery_result, dict):
+            discovery_confidence = discovery_result.get("final_confidence")
+        confidence_candidates = [active_probability_value]
+        if isinstance(discovery_confidence, (int, float)):
+            confidence_candidates.append(float(discovery_confidence))
+        for signal in validated_signals:
+            try:
+                confidence_candidates.append(float(signal.get("confidence") or 0))
+            except (TypeError, ValueError):
+                continue
+        confidence = round(min(0.99, max(confidence_candidates or [0.0])), 4)
+
+        entity_type_lower = entity_type.lower()
+        if entity_type_lower in {"club", "team"}:
+            canonical_type = "team"
+        elif entity_type_lower in {"league"}:
+            canonical_type = "league"
+        elif entity_type_lower in {"federation"}:
+            canonical_type = "federation"
+        elif entity_type_lower in {"rights_holder", "rightsholder"}:
+            canonical_type = "rights_holder"
+        else:
+            canonical_type = "organisation"
+
+        freshness = "recent"
+        age_hours = (materialized_at - completed_dt).total_seconds() / 3600.0
+        if age_hours <= 24:
+            freshness = "new"
+        elif age_hours > 72:
+            freshness = "stale"
+
+        if selected_signal and str(selected_signal.get("type") or "").upper() == "RFP_DETECTED":
+            title = f"{entity_name}: validated opportunity signal"
+            suggested_action = f"Review the latest opportunity window for {entity_name} and prepare outreach."
+        elif sales_readiness == "LIVE" or active_probability_value >= 0.8:
+            title = f"{entity_name}: strong pipeline movement"
+            suggested_action = f"Prioritise follow-up while the {entity_name} signal remains fresh."
+        elif validated_signals:
+            title = f"{entity_name}: fresh validated signal"
+            suggested_action = f"Monitor {entity_name} for the next Graphiti pass and related evidence."
+        else:
+            title = f"{entity_name}: pipeline context refreshed"
+            suggested_action = f"Monitor {entity_name} for the next validated signal."
+
+        if sales_readiness == "LIVE":
+            why_it_matters = "Graphiti linked the newest evidence to a live opportunity window."
+        elif validated_signals:
+            why_it_matters = "Graphiti grounded this insight in validated pipeline evidence."
+        else:
+            why_it_matters = "This is the latest materialized context from the Graphiti pipeline."
+
+        related_relationships: List[Dict[str, Any]] = []
+        dossier_relationships = dossier.get("relationships") if isinstance(dossier.get("relationships"), list) else []
+        for relationship in dossier_relationships:
+            if not isinstance(relationship, dict):
+                continue
+            target_name = str(
+                relationship.get("target_name")
+                or relationship.get("name")
+                or relationship.get("entity_name")
+                or ""
+            ).strip()
+            if not target_name:
+                continue
+            related_relationships.append({
+                "type": str(relationship.get("type") or "related_to"),
+                "target_id": str(relationship.get("target_id") or relationship.get("id") or target_name.lower().replace(" ", "-")),
+                "target_name": target_name,
+                "direction": str(relationship.get("direction") or "outbound"),
+            })
+
+        if not related_relationships and selected_signal:
+            related_entities = selected_signal.get("related_entities")
+            if isinstance(related_entities, list):
+                for target in related_entities:
+                    if isinstance(target, str) and target.strip():
+                        related_relationships.append({
+                            "type": "related_to",
+                            "target_id": target.lower().replace(" ", "-"),
+                            "target_name": target.strip(),
+                            "direction": "bidirectional",
+                        })
+
+        evidence: List[Dict[str, Any]] = []
+        if selected_episode:
+            evidence.append({
+                "type": "episode",
+                "id": str(selected_episode.get("episode_id") or selected_episode.get("id") or f"{entity_id}:{run_result.get('run_id') or 'run'}"),
+                "snippet": str(
+                    selected_episode.get("description")
+                    or selected_episode.get("summary")
+                    or signal_statement
+                ),
+                "source": str(selected_episode.get("source") or "pipeline_orchestrator"),
+            })
+        if selected_signal:
+            evidence.append({
+                "type": "note",
+                "id": str(selected_signal.get("id") or selected_signal.get("signal_id") or f"{entity_id}:{run_result.get('run_id') or 'run'}:signal"),
+                "snippet": signal_statement,
+                "source": str(selected_signal.get("source") or "graphiti_pipeline"),
+            })
+        if not evidence:
+            evidence.append({
+                "type": "note",
+                "id": f"{entity_id}:{run_result.get('run_id') or 'run'}:context",
+                "snippet": signal_statement,
+                "source": "graphiti_pipeline",
+            })
+
+        insight_id = f"{run_result.get('run_id') or 'run'}:{entity_id}"
+        return {
+            "insight_id": insight_id,
+            "entity_id": entity_id,
+            "entity_name": entity_name,
+            "entity_type": canonical_type,
+            "sport": str(dossier.get("sport") or run_result.get("sport") or "unknown").strip() or "unknown",
+            "league": str(dossier.get("league") or run_result.get("league") or "").strip() or None,
+            "title": title,
+            "summary": signal_statement,
+            "why_it_matters": why_it_matters,
+            "confidence": confidence,
+            "freshness": freshness,
+            "evidence": evidence,
+            "relationships": related_relationships,
+            "suggested_action": suggested_action,
+            "detected_at": completed_at,
+            "source_run_id": str(run_result.get("run_id") or ""),
+            "source_signal_id": str((selected_signal or {}).get("id") or (selected_signal or {}).get("signal_id") or ""),
+            "source_episode_id": str((selected_episode or {}).get("episode_id") or (selected_episode or {}).get("id") or ""),
+            "materialized_at": materialized_at.isoformat(),
+            "updated_at": materialized_at.isoformat(),
+            "source_objective": str(run_result.get("objective") or run_result.get("effective_objective") or ""),
+            "raw_payload": {
+                "run_id": run_result.get("run_id"),
+                "entity_id": entity_id,
+                "entity_name": entity_name,
+                "objective": run_result.get("objective"),
+                "sales_readiness": scores.get("sales_readiness"),
+                "active_probability": scores.get("active_probability"),
+                "validated_signal_count": len(validated_signals),
+                "episode_count": len(episodes),
+                "phase_status": {phase: details.get("status") for phase, details in phase_results.items() if isinstance(details, dict)},
+            },
+        }
+
+    async def materialize_homepage_insight(self, run_result: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Materialize a homepage-ready insight from the latest pipeline run.
+
+        The homepage reads this persisted feed instead of traversing Graphiti on demand.
+        """
+        if not self.use_supabase or not self.supabase_client:
+            return {
+                "status": "skipped",
+                "reason": "supabase_unavailable",
+            }
+
+        insight_record = self._build_homepage_insight_record(run_result=run_result)
+        self.supabase_client.table("homepage_graphiti_insights").upsert(
+            insight_record,
+            on_conflict="insight_id",
+        ).execute()
+        return {
+            "status": "materialized",
+            "insight_id": insight_record["insight_id"],
+            "entity_id": insight_record["entity_id"],
+            "entity_name": insight_record["entity_name"],
+            "materialized_at": insight_record["materialized_at"],
+        }
+
     async def add_discovery_episode(
         self,
         entity_id: str,

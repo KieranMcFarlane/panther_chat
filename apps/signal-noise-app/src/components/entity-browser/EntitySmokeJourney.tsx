@@ -5,6 +5,7 @@ import { ArrowRight, CheckCircle2, PlayCircle } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { resolveEntityUuid } from "@/lib/entity-public-id"
 
 type SmokeJourneyItem = {
   entityId: string
@@ -98,7 +99,7 @@ export function EntitySmokeJourney() {
 
               <div className="mt-2 flex flex-wrap gap-2">
                 <Button asChild size="sm" className="gap-1.5 px-3 py-1.5 text-xs">
-                  <Link href={`/entity-browser/${item.entityId}/dossier?from=1`}>
+                  <Link href={`/entity-browser/${resolveEntityUuid({ id: item.entityId, neo4j_id: item.entityId, supabase_id: item.entityId })}/dossier?from=1`}>
                     Open dossier
                     <ArrowRight className="h-3.5 w-3.5" />
                   </Link>

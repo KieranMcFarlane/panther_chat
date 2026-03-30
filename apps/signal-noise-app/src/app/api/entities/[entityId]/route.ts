@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
+import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
 
 export const dynamic = 'force-dynamic';
 
@@ -27,6 +28,16 @@ function matchesFallbackEntity(entity: any, entityId: string): boolean {
     normalizedId,
     entityName,
   ].some((candidate) => candidate && candidate === normalizedEntityId)
+}
+
+function buildEntityPublicId(entity: any): string | undefined {
+  return resolveEntityUuid({
+    id: entity?.id,
+    neo4j_id: entity?.neo4j_id,
+    graph_id: entity?.graph_id,
+    supabase_id: entity?.supabase_id || entity?.properties?.supabase_id,
+    properties: entity?.properties,
+  }) || undefined
 }
 
 // Dynamic dossier generation function
@@ -388,6 +399,7 @@ export async function GET(
           // Convert team data to entity format
           entity = {
             id: teamData.id,
+            uuid: buildEntityPublicId(teamData),
             neo4j_id: teamData.neo4j_id || teamData.id,
             labels: ['Team'],
             properties: {
@@ -432,6 +444,7 @@ export async function GET(
             // Convert league data to entity format
             entity = {
               id: leagueData.id,
+              uuid: buildEntityPublicId(leagueData),
               neo4j_id: leagueData.neo4j_id || leagueData.id,
               labels: ['League'],
               properties: {
@@ -486,6 +499,7 @@ export async function GET(
             if (!cacheError && cachedEntity) {
               entity = {
                 id: cachedEntity.id,
+                uuid: buildEntityPublicId(cachedEntity),
                 neo4j_id: cachedEntity.neo4j_id,
                 labels: cachedEntity.labels,
                 properties: cachedEntity.properties
@@ -501,11 +515,15 @@ export async function GET(
 
     if (!entity) {
       const canonicalEntities = await getCanonicalEntitiesSnapshot()
-      const fallbackEntity = canonicalEntities.find((candidate) => matchesFallbackEntity(candidate, entityId))
+      const fallbackEntity = canonicalEntities.find((candidate) =>
+        matchesFallbackEntity(candidate, entityId) ||
+        matchesEntityUuid(candidate, entityId),
+      )
 
       if (fallbackEntity) {
         entity = {
           id: fallbackEntity.id,
+          uuid: buildEntityPublicId(fallbackEntity),
           neo4j_id: fallbackEntity.neo4j_id,
           labels: fallbackEntity.labels || ['Entity'],
           properties: fallbackEntity.properties,

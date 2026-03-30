@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { resolveLocalBadgeUrl } from '@/lib/badge-resolver'
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
+import { resolveEntityUuid } from '@/lib/entity-public-id'
 
 export const dynamic = 'force-dynamic';
 
@@ -94,6 +95,13 @@ export async function GET(request: NextRequest) {
 
     const transformedEntities = paginatedEntities.map((entity: any) => {
       const entityName = entity.properties?.name || entity.neo4j_id
+      const uuid = resolveEntityUuid({
+        id: entity.id,
+        neo4j_id: entity.neo4j_id,
+        graph_id: entity.graph_id,
+        supabase_id: entity.supabase_id || entity.properties?.supabase_id,
+        properties: entity.properties,
+      }) || undefined
       const resolvedBadgeUrl = resolveLocalBadgeUrl({
         entityId: entity.id ?? entity.neo4j_id,
         entityName,
@@ -103,6 +111,7 @@ export async function GET(request: NextRequest) {
 
       return {
         id: entity.id,
+        uuid,
         neo4j_id: entity.neo4j_id,
         badge_s3_url: resolvedBadgeUrl,
         badge_lookup_complete: true,
@@ -112,6 +121,7 @@ export async function GET(request: NextRequest) {
           badge_path: resolvedBadgeUrl,
           badge_s3_url: resolvedBadgeUrl,
           badge_lookup_complete: true,
+          uuid,
           name: entityName,
           type: entity.properties?.type || entity.labels?.[0] || 'ENTITY'
         }

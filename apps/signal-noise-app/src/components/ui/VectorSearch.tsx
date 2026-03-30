@@ -7,9 +7,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { resolveEntityUuid } from '@/lib/entity-public-id';
 
 interface SearchResult {
 	id: string;
+	uuid?: string;
 	entity_id?: string;
 	name: string;
 	type: 'club' | 'sportsperson' | 'poi' | 'tender' | 'contact' | 'unknown';
@@ -93,9 +95,8 @@ export default function VectorSearch({ className }: VectorSearchProps) {
 		setQuery('');
 		
 		// Navigate to entity page
-		if (result.entity_id) {
-			// The entity_id might need to be converted if it comes from Neo4j vs Supabase
-			const entityId = result.entity_id;
+		const entityId = result.uuid || result.entity_id || result.id;
+		if (entityId) {
 			
 			// Check if it's one of our demo entities first
 			const demoEntityRoutes = {
@@ -106,12 +107,12 @@ export default function VectorSearch({ className }: VectorSearchProps) {
 				'contact_sports_agent_001': '/entity-browser/contact_sports_agent_001/dossier?from=1'
 			};
 			
-			if (demoEntityRoutes[entityId]) {
-				router.push(demoEntityRoutes[entityId]);
+			const demoRoute = demoEntityRoutes[entityId] || demoEntityRoutes[resolveEntityUuid({ id: entityId, neo4j_id: entityId, supabase_id: entityId }) || '']
+			if (demoRoute) {
+				router.push(demoRoute);
 				return;
 			}
 			
-			// For Neo4j entities, use the browser dossier route
 			router.push(`/entity-browser/${entityId}/dossier?from=1`);
 		}
 	};

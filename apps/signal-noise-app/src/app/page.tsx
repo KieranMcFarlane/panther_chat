@@ -13,6 +13,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { GraphitiInsightsFeed } from '@/components/home/GraphitiInsightsFeed'
 
 const pillars = [
   {
@@ -178,6 +179,10 @@ export default function Home() {
               </div>
             </CardContent>
           </Card>
+        </section>
+
+        <section className="mt-10">
+          <GraphitiInsightsFeed />
         </section>
 
         <section className="mt-10 grid gap-4 lg:grid-cols-3">

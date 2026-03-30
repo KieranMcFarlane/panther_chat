@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
+import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
 import { normalizeImportedEntityRow } from '@/lib/entity-import-schema'
 import {
   createEntityImportBatch,
@@ -8,11 +9,13 @@ import {
   queueEntityImportBatch,
   storeFallbackEntityImportState,
 } from '@/lib/entity-import-jobs'
+import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
 
 const ENTITY_IMPORT_QUEUE_MODE = process.env.ENTITY_IMPORT_QUEUE_MODE || 'durable_worker'
 
 interface ResolvedEntity {
   id: string
+  uuid?: string
   neo4j_id?: string | number | null
   labels?: string[] | null
   properties: Record<string, any>
@@ -50,6 +53,13 @@ async function resolveEntity(entityId: string): Promise<ResolvedEntity | null> {
   if (directResult.data) {
     return {
       id: String(directResult.data.id ?? normalizedId),
+      uuid: resolveEntityUuid({
+        id: directResult.data.id,
+        neo4j_id: directResult.data.neo4j_id,
+        graph_id: directResult.data.graph_id,
+        supabase_id: directResult.data.supabase_id || directResult.data.properties?.supabase_id,
+        properties: directResult.data.properties,
+      }) || undefined,
       neo4j_id: directResult.data.neo4j_id,
       labels: directResult.data.labels,
       properties: typeof directResult.data.properties === 'object' && directResult.data.properties !== null
@@ -76,11 +86,37 @@ async function resolveEntity(entityId: string): Promise<ResolvedEntity | null> {
     .maybeSingle()
 
   if (!nameResult.data) {
-    return null
+    const canonicalEntities = await getCanonicalEntitiesSnapshot()
+    const canonicalMatch = canonicalEntities.find((candidate) =>
+      matchesEntityUuid(candidate, normalizedId) ||
+      String(candidate.id || '') === normalizedId ||
+      String(candidate.neo4j_id || '') === normalizedId,
+    )
+
+    if (!canonicalMatch) {
+      return null
+    }
+
+    return {
+      id: String(canonicalMatch.id),
+      uuid: resolveEntityUuid(canonicalMatch) || undefined,
+      neo4j_id: canonicalMatch.neo4j_id,
+      labels: canonicalMatch.labels,
+      properties: typeof canonicalMatch.properties === 'object' && canonicalMatch.properties !== null
+        ? canonicalMatch.properties
+        : {},
+    }
   }
 
   return {
     id: String(nameResult.data.id ?? normalizedId),
+    uuid: resolveEntityUuid({
+      id: nameResult.data.id,
+      neo4j_id: nameResult.data.neo4j_id,
+      graph_id: nameResult.data.graph_id,
+      supabase_id: nameResult.data.supabase_id || nameResult.data.properties?.supabase_id,
+      properties: nameResult.data.properties,
+    }) || undefined,
     neo4j_id: nameResult.data.neo4j_id,
     labels: nameResult.data.labels,
     properties: typeof nameResult.data.properties === 'object' && nameResult.data.properties !== null

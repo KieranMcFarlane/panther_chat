@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { resolveGraphId } from '@/lib/graph-id'
+import { resolveEntityUuid } from '@/lib/entity-public-id'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 
 type SearchEntity = {
   id: string
+  uuid: string
   graph_id: string
   name: string
   type: string
@@ -53,6 +55,13 @@ export async function GET(request: NextRequest) {
 
     const ranked = (data || []).map((entity: any) => {
       const stableId = resolveGraphId(entity) || entity.id
+      const uuid = resolveEntityUuid({
+        id: entity.id,
+        neo4j_id: entity.neo4j_id,
+        graph_id: entity.graph_id,
+        supabase_id: entity.properties?.supabase_id,
+        properties: entity.properties,
+      }) || stableId
       const name = entity.properties?.name || stableId || `Entity ${entity.id}`
       const type = entity.properties?.type || entity.labels?.[0] || 'Unknown'
       const sport = entity.properties?.sport || ''
@@ -61,6 +70,7 @@ export async function GET(request: NextRequest) {
       const popularityScore = Number(entity.properties?.priorityScore || entity.properties?.yellowPantherPriority || 0)
       return ({
         id: stableId,
+        uuid,
         graph_id: stableId,
         name,
         type,

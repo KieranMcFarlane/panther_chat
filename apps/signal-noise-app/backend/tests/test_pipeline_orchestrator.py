@@ -157,6 +157,7 @@ class FakeGraphiti:
     def __init__(self):
         self.episodes = []
         self.signals = []
+        self.homepage_insights = []
 
     async def upsert_signal(self, signal):
         self.signals.append(signal)
@@ -172,6 +173,16 @@ class FakeGraphiti:
 
     async def get_entity_timeline(self, entity_id, limit=50):
         return self.episodes[:limit]
+
+    async def materialize_homepage_insight(self, run_result):
+        self.homepage_insights.append(run_result)
+        return {
+            "status": "materialized",
+            "insight_id": f"{run_result['run_id']}:{run_result['entity_id']}",
+            "entity_id": run_result["entity_id"],
+            "entity_name": run_result["entity_name"],
+            "materialized_at": "2026-03-30T00:00:00+00:00",
+        }
 
 
 class StrictDiscoveryGraphiti(FakeGraphiti):
@@ -313,6 +324,31 @@ async def test_pipeline_orchestrator_runs_phases_and_returns_artifacts():
     assert result["persistence_status"]["supabase"]["ok"] is True
     assert ("discovery", "running") in phase_events
     assert ("dashboard_scoring", "completed") in phase_events
+
+
+@pytest.mark.asyncio
+async def test_pipeline_orchestrator_materializes_homepage_insight_after_run():
+    graphiti = FakeGraphiti()
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=FakeDossierGenerator(),
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=graphiti,
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=FakePersistenceCoordinator(),
+    )
+
+    result = await orchestrator.run_entity_pipeline(
+        entity_id="arsenal-fc",
+        entity_name="Arsenal FC",
+        entity_type="CLUB",
+        priority_score=90,
+    )
+
+    assert result["homepage_materialization"]["status"] == "materialized"
+    assert len(graphiti.homepage_insights) == 1
+    assert graphiti.homepage_insights[0]["entity_id"] == "arsenal-fc"
+    assert graphiti.homepage_insights[0]["scores"]["sales_readiness"] == "LIVE"
 
 
 @pytest.mark.asyncio

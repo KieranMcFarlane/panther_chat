@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
+import { resolveEntityUuid } from '@/lib/entity-public-id'
 
 export const dynamic = 'force-dynamic'
 
@@ -20,6 +21,7 @@ export async function GET(request: NextRequest) {
 
     const summaryEntities = filteredEntities.map((entity) => ({
       id: entity.id,
+      uuid: resolveEntityUuid(entity) || entity.id,
       neo4j_id: entity.neo4j_id,
       name: entity.properties.name,
       type: entity.properties.type,

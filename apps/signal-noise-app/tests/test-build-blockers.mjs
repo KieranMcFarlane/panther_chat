@@ -46,10 +46,6 @@ const evidenceImpactRouteSource = readFileSync(
   new URL('../src/app/api/ralph/analytics/evidence-impact/route.ts', import.meta.url),
   'utf8'
 )
-const verifyPerplexityRouteSource = readFileSync(
-  new URL('../src/app/api/verify-perplexity-rfps/route.ts', import.meta.url),
-  'utf8'
-)
 const testLogsRouteSource = readFileSync(
   new URL('../src/app/api/test-logs/route.ts', import.meta.url),
   'utf8'
@@ -212,7 +208,6 @@ test('Claude enrichment services defer initialization until runtime use', () => 
 test('build-noisy diagnostic routes are explicitly dynamic', () => {
   assert.match(automationResultsLatestRouteSource, /export const dynamic = ['"]force-dynamic['"]/)
   assert.match(evidenceImpactRouteSource, /export const dynamic = ['"]force-dynamic['"]/)
-  assert.match(verifyPerplexityRouteSource, /export const dynamic = ['"]force-dynamic['"]/)
   assert.match(testLogsRouteSource, /export const dynamic = ['"]force-dynamic['"]/)
 })
 

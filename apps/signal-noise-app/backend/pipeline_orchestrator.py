@@ -434,6 +434,37 @@ class PipelineOrchestrator:
                 ),
             }
             step_persistence_status["dual_write_ok"] = int(step_persistence_status.get("failed_count", 0) or 0) == 0
+        homepage_materialization_status: Dict[str, Any] = {
+            "status": "skipped",
+            "reason": "temporal_persistence_incomplete" if temporal_status != "completed" else "materializer_missing",
+        }
+        if temporal_status == "completed" and hasattr(self.graphiti_service, "materialize_homepage_insight"):
+            try:
+                homepage_materialization_status = await self.graphiti_service.materialize_homepage_insight(
+                    {
+                        "entity_id": entity_id,
+                        "entity_name": entity_name,
+                        "entity_type": entity_type,
+                        "run_id": run_id,
+                        "objective": objective,
+                        "effective_objective": objective,
+                        "completed_at": datetime.now(timezone.utc).isoformat(),
+                        "scores": scores,
+                        "phase_details_by_phase": deepcopy(phase_results),
+                        "artifacts": {
+                            "dossier": dossier,
+                            "discovery_result": self._serialize_discovery_result(discovery_result),
+                            "validated_signals": validated_signals,
+                            "episodes": episodes,
+                        },
+                    }
+                )
+            except Exception as exc:
+                logger.warning("⚠️ Homepage insight materialization failed for %s: %s", entity_id, exc)
+                homepage_materialization_status = {
+                    "status": "failed",
+                    "error": str(exc),
+                }
         degraded_mode = any(
             (details or {}).get("status") in {"failed", "skipped"}
             for details in phase_results.values()
@@ -470,6 +501,7 @@ class PipelineOrchestrator:
             "failure_taxonomy": failure_taxonomy,
             "run_profile": self.run_profile,
             "degraded_mode": degraded_mode,
+            "homepage_materialization": homepage_materialization_status,
             "dual_write_ok": bool(dual_write_ok and step_dual_write_ok),
             "persistence_status": {
                 **persistence_status,

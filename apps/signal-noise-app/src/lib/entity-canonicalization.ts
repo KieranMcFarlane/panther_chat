@@ -1,5 +1,6 @@
 export interface CanonicalEntity {
   id: string
+  uuid?: string
   neo4j_id: string | number
   labels?: string[]
   properties: Record<string, any>

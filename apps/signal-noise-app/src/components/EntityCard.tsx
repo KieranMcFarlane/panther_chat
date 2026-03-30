@@ -11,6 +11,7 @@ import { useRef, useState } from "react"
 import Link from "next/link"
 import { rememberEntityBrowserUrl } from "@/lib/entity-browser-history"
 import { resolveGraphId } from "@/lib/graph-id"
+import { resolveEntityUuid } from "@/lib/entity-public-id"
 
 interface EntityCardProps {
   entity: Entity
@@ -26,7 +27,7 @@ function getEntityCurrentPage(): string {
 }
 
 function getEntityBrowserDossierHref(entity: Entity, currentPage: string): string | null {
-  const stableEntityId = resolveGraphId(entity)
+  const stableEntityId = entity.uuid || resolveEntityUuid(entity) || resolveGraphId(entity)
 
   return stableEntityId
     ? `/entity-browser/${stableEntityId}/dossier?from=${currentPage}`
@@ -37,7 +38,7 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
   const router = useRouter()
   const [isProfileLoading, setIsProfileLoading] = useState(false)
   const hasPrefetchedDossierRouteRef = useRef(false)
-  const stableEntityId = resolveGraphId(entity)
+  const stableEntityId = entity.uuid || resolveEntityUuid(entity) || resolveGraphId(entity)
 
   const prefetchDossierRoute = () => {
     if (hasPrefetchedDossierRouteRef.current) return

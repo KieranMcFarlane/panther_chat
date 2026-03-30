@@ -2,9 +2,12 @@ import { readFile } from 'fs/promises'
 import { existsSync, readdirSync } from 'fs'
 import path from 'path'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
+import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
+import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
 
 export interface Entity {
   id: string
+  uuid?: string
   neo4j_id: string | number
   labels: string[]
   properties: Record<string, any>
@@ -149,6 +152,17 @@ async function getFallbackEntityFromDossier(entityId: string, tier = 'standard')
     return {
       entity: {
         id: dossier.entity_id || entityId,
+        uuid: resolveEntityUuid({
+          id: dossier.entity_id || entityId,
+          neo4j_id: dossier.entity_id || entityId,
+          supabase_id: dossier.entity_id || entityId,
+          properties: {
+            name:
+              dossier.entity_name ||
+              entityId.replace(/-/g, ' ').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+            type: dossier.entity_type || 'CLUB',
+          },
+        }) || undefined,
         neo4j_id: dossier.entity_id || entityId,
         labels: [dossier.entity_type || 'CLUB'],
         properties: {
@@ -195,6 +209,12 @@ export async function getEntityForDossierPage(entityId: string, tier = 'standard
     if (!teamError && teamData) {
       entity = {
         id: teamData.id,
+        uuid: resolveEntityUuid({
+          id: teamData.id,
+          neo4j_id: teamData.neo4j_id || teamData.id,
+          supabase_id: teamData.supabase_id || teamData.properties?.supabase_id,
+          properties: teamData,
+        }) || undefined,
         neo4j_id: teamData.neo4j_id || teamData.id,
         labels: ['Team'],
         properties: {
@@ -236,6 +256,12 @@ export async function getEntityForDossierPage(entityId: string, tier = 'standard
       if (!leagueError && leagueData) {
         entity = {
           id: leagueData.id,
+          uuid: resolveEntityUuid({
+            id: leagueData.id,
+            neo4j_id: leagueData.neo4j_id || leagueData.id,
+            supabase_id: leagueData.supabase_id || leagueData.properties?.supabase_id,
+            properties: leagueData,
+          }) || undefined,
           neo4j_id: leagueData.neo4j_id || leagueData.id,
           labels: ['League'],
           properties: {
@@ -286,6 +312,13 @@ export async function getEntityForDossierPage(entityId: string, tier = 'standard
         if (!cacheError && cachedEntity) {
           entity = {
             id: cachedEntity.id,
+            uuid: resolveEntityUuid({
+              id: cachedEntity.id,
+              neo4j_id: cachedEntity.neo4j_id,
+              graph_id: cachedEntity.graph_id,
+              supabase_id: cachedEntity.supabase_id || cachedEntity.properties?.supabase_id,
+              properties: cachedEntity.properties,
+            }) || undefined,
             neo4j_id: cachedEntity.neo4j_id,
             labels: cachedEntity.labels,
             properties: cachedEntity.properties
@@ -295,6 +328,25 @@ export async function getEntityForDossierPage(entityId: string, tier = 'standard
     }
   } catch (error) {
     console.log('⚠️ Server-side entity lookup error:', error)
+  }
+
+  if (!entity) {
+    const canonicalEntities = await getCanonicalEntitiesSnapshot()
+    const canonicalMatch = canonicalEntities.find((candidate) =>
+      matchesEntityUuid(candidate, entityId) ||
+      String(candidate.id || '') === entityId ||
+      String(candidate.neo4j_id || '') === entityId,
+    )
+
+    if (canonicalMatch) {
+      entity = {
+        id: String(canonicalMatch.id),
+        uuid: resolveEntityUuid(canonicalMatch) || undefined,
+        neo4j_id: canonicalMatch.neo4j_id,
+        labels: canonicalMatch.labels || [],
+        properties: canonicalMatch.properties || {},
+      }
+    }
   }
 
   if (!entity) {

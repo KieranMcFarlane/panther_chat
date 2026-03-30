@@ -5,6 +5,7 @@ import path from 'node:path'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { CANONICAL_GOVERNING_BODY_OVERRIDES } from '@/lib/canonical-governing-body-overrides'
 import { canonicalizeEntities, type CanonicalEntity } from '@/lib/entity-canonicalization'
+import { resolveEntityUuid } from '@/lib/entity-public-id'
 
 const SNAPSHOT_TTL_MS = 15 * 60_000
 const localFalkorExportPath = path.resolve(process.cwd(), 'backend', 'falkordb_export.json')
@@ -17,8 +18,17 @@ let canonicalEntitiesCache: { entities: CanonicalEntity[]; expiresAt: number } |
 let inFlightCanonicalEntitiesRequest: Promise<CanonicalEntity[]> | null = null
 
 function mapExportEntity(entity: any): CanonicalEntity {
+  const uuid = resolveEntityUuid({
+    id: entity.id,
+    neo4j_id: entity.neo4j_id,
+    graph_id: entity.graph_id,
+    supabase_id: entity.supabase_id || entity.properties?.supabase_id,
+    properties: entity.properties,
+  }) || undefined
+
   return {
     id: entity.id,
+    uuid,
     neo4j_id: entity.neo4j_id,
     badge_path: entity.badge_path || entity.properties?.badge_path || null,
     badge_s3_url: entity.badge_s3_url || entity.properties?.badge_s3_url || null,

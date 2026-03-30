@@ -2,6 +2,9 @@ import neo4j from 'neo4j-driver'
 
 export interface Entity {
   id: string | number
+  uuid?: string
+  graph_id?: string | number
+  neo4j_id?: string | number
   labels: string[]
   properties: Record<string, any>
 }
