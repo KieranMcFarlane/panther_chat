@@ -411,7 +411,7 @@ const EntityDossier: React.FC<EntityDossierProps> = ({
                           <User className="h-4 w-4 text-blue-600" />
                         </div>
                         <div>
-                          <Link href={`/person/${poi.id}`} className="hover:text-blue-600 transition-colors">
+                          <Link href={`/entity-browser/${poi.id}/dossier?from=1`} className="hover:text-blue-600 transition-colors">
                             <h3 className="font-semibold flex items-center gap-2">
                               {poi.name}
                               <ExternalLink className="h-3 w-3 text-blue-500" />

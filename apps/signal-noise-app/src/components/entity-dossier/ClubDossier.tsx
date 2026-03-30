@@ -245,7 +245,7 @@ export function ClubDossier({ entity, onEmailEntity }: ClubDossierProps) {
     }
 
     console.log(`👤 Navigating to person: ${personName} (ID: ${resolvedId})`)
-    router.push(`/person/${resolvedId}`)
+    router.push(`/entity-browser/${resolvedId}/dossier?from=1`)
   }
 
   const createPersonLink = (personName: string, role?: string) => {
