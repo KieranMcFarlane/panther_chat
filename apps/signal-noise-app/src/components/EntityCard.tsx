@@ -132,7 +132,7 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
     // Get current page from URL and pass it to the entity profile
     const currentPage = getEntityCurrentPage()
     rememberEntityBrowserUrl()
-    pushWithViewTransition(router, `/entity/${stableEntityId}?from=${currentPage}`)
+    pushWithViewTransition(router, `/entity-browser/${stableEntityId}/dossier?from=${currentPage}`)
   }
 
   const latestPipelineRunUrl = typeof entity.properties.last_pipeline_run_detail_url === 'string'
@@ -354,7 +354,7 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
                   // Get current page from URL and pass it to the entity profile
                   const currentPage = getEntityCurrentPage()
                   rememberEntityBrowserUrl()
-                  pushWithViewTransition(router, `/entity/${stableEntityId}?from=${currentPage}`)
+                  pushWithViewTransition(router, `/entity-browser/${stableEntityId}/dossier?from=${currentPage}`)
                 }}
           >
             {isProfileLoading ? (
