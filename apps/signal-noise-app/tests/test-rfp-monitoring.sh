@@ -386,7 +386,7 @@ main() {
         echo "   ✅ Data export functionality"
         echo "   ✅ Health monitoring"
         echo ""
-        echo "📊 Access the dashboard at: $BASE_URL/rfp-intelligence"
+        echo "📊 Access the dashboard at: $BASE_URL/tenders"
         echo "🔧 View API documentation at: $BASE_URL/api/rfp-monitoring"
     else
         echo -e "${RED}⚠️  SOME TESTS FAILED. Please check the system configuration.${NC}"

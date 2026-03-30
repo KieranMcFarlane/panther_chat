@@ -454,7 +454,7 @@ export default function OpportunitiesPage() {
                 <Link href="/tenders">Open RFP&apos;s/Tenders</Link>
               </Button>
               <Button asChild className="bg-yellow-500 text-black hover:bg-yellow-400">
-                <Link href="/rfp-analysis-control-center">Open Scout</Link>
+                <Link href="/tenders">Open Live Feed</Link>
               </Button>
             </div>
           )}

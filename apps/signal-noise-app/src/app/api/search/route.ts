@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { Neo4jService } from '@/lib/neo4j'
-
-const neo4jService = new Neo4jService()
+import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
+import { resolveGraphId } from '@/lib/graph-id'
+import { resolveEntityUuid } from '@/lib/entity-public-id'
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,36 +11,66 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Query is required' }, { status: 400 })
     }
 
-    console.log('🔍 Searching Neo4j:', { query, searchType, options })
+    console.log('🔍 Searching cached entities:', { query, searchType, options })
 
-    let results = []
-    
-    if (searchType === 'vector') {
-      // Use vector search with embeddings
-      const vectorResults = await neo4jService.vectorSearch(query, {
-        limit: options.limit || 12,
-        threshold: options.threshold || 0.7,
-        entityType: options.entityType
-      })
-      results = vectorResults
-    } else {
-      // Use text search
-      const textResults = await neo4jService.textSearch(query, {
-        limit: options.limit || 12,
-        entityType: options.entityType
-      })
-      // Convert text search results to match vector search format
-      results = textResults.map(entity => ({
-        entity,
-        similarity: 1.0, // Text search doesn't have similarity scores
-        connections: []
-      }))
+    const limit = Math.max(1, Math.min(Number(options.limit || 12), 50))
+    const threshold = Number(options.threshold || 0.7)
+    const normalized = String(query || '').trim().toLowerCase()
+
+    const { data, error } = await supabase
+      .from('cached_entities')
+      .select('id, graph_id, neo4j_id, labels, properties')
+      .limit(Math.min(limit * 4, 100))
+
+    if (error) {
+      throw error
     }
 
-    console.log(`✅ Found ${results.length} results for query: "${query}"`)
+    const scored = (data || [])
+      .map((entity: any) => {
+        const graphId = resolveGraphId(entity) || entity.id
+        const uuid = resolveEntityUuid({
+          id: entity.id,
+          neo4j_id: entity.neo4j_id,
+          graph_id: entity.graph_id,
+          supabase_id: entity.properties?.supabase_id,
+          properties: entity.properties,
+        }) || graphId
+        const name = String(entity.properties?.name || graphId || '')
+        const type = String(entity.properties?.type || entity.labels?.[0] || 'Unknown')
+        const sport = String(entity.properties?.sport || '')
+        const country = String(entity.properties?.country || '')
+        const haystack = `${name} ${type} ${sport} ${country}`.toLowerCase()
+        let similarity = 0
+        if (!normalized) similarity = 0.5
+        else if (haystack === normalized) similarity = 1
+        else if (haystack.includes(normalized)) similarity = 0.86
+        else if (normalized.includes(name.toLowerCase())) similarity = 0.78
+        else if (haystack.split(/\s+/).some((part: string) => normalized.includes(part) && part.length > 3)) similarity = 0.72
+        return {
+          entity: {
+            id: uuid,
+            labels: entity.labels || [],
+            properties: {
+              ...(entity.properties || {}),
+              name,
+              type,
+              sport,
+              country,
+            }
+          },
+          similarity,
+          connections: []
+        }
+      })
+      .filter((row: any) => row.similarity >= threshold)
+      .sort((a: any, b: any) => b.similarity - a.similarity)
+      .slice(0, limit)
+
+    console.log(`✅ Found ${scored.length} results for query: "${query}"`)
 
     return NextResponse.json({
-      results,
+      results: scored,
       searchType,
       query,
       options

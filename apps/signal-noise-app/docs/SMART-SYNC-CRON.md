@@ -1,5 +1,7 @@
 # Smart Incremental RFP Sync - Cron Job Setup
 
+> **Legacy reference:** This document reflects an older Neo4j-first implementation. The canonical discovery/reasoning contract is [Graphiti Discovery Contract](./graphiti-discovery-contract.md). Keep this for historical context only.
+
 ## Intelligent Sync Strategy
 
 This cron job implements **smart incremental processing**:

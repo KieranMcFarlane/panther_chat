@@ -9,7 +9,6 @@
  */
 
 export { RFPNotificationProcessor } from './rfp-notification-processor';
-export { EmailCampaignService } from './email-campaign-service';
 export type { 
   RFPDNotificationPayload,
   EmailCampaign,

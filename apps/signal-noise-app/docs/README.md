@@ -8,11 +8,13 @@ The Signal Noise App is a FastAPI-based system that:
 
 - **Collects signals** from Bright Data (web scraping) and Perplexity (AI analysis)
 - **Synthesizes insights** using Claude Code reasoning
-- **Updates knowledge graphs** via Neo4j MCP integration
+- **Updates knowledge graphs** via Graphiti + FalkorDB
 - **Processes tasks asynchronously** using Celery workers
 - **Provides RESTful API** for dossier requests and retrieval
 
 ## 🏗️ Architecture
+
+Core discovery/reasoning contract: [Graphiti Discovery Contract](./graphiti-discovery-contract.md)
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
@@ -22,8 +24,8 @@ The Signal Noise App is a FastAPI-based system that:
          │                       │
          ▼                       ▼
 ┌─────────────────┐    ┌─────────────────┐
-│   SQLite DB     │    │   Neo4j Graph   │
-│   (Tasks)       │    │   (Knowledge)   │
+│   SQLite DB     │    │ Graphiti/FalkorDB │
+│   (Tasks)       │    │   (Knowledge)    │
 └─────────────────┘    └─────────────────┘
          │                       │
          ▼                       ▼
@@ -40,7 +42,7 @@ The Signal Noise App is a FastAPI-based system that:
 
 - Python 3.8+
 - Docker and Docker Compose
-- Neo4j instance (or use included Docker setup)
+- FalkorDB instance for the Graphiti backend (or use included Docker setup)
 
 ### 1. Clone and Setup
 
@@ -62,8 +64,8 @@ pip install -r requirements.txt
 # Start Redis (required for Celery)
 docker-compose up -d redis
 
-# Optional: Start Neo4j (if not using external instance)
-docker-compose up -d neo4j
+# Optional: Start FalkorDB / Graphiti graph service
+docker-compose up -d falkordb
 ```
 
 ### 3. Configure Environment
@@ -71,23 +73,20 @@ docker-compose up -d neo4j
 Create a `.env` file in the root directory:
 
 ```bash
-# Neo4j Configuration
-NEO4J_URI=bolt://localhost:7687
-NEO4J_USER=neo4j
-NEO4J_PASSWORD=pantherpassword
-NEO4J_DATABASE=neo4j
+# Graphiti / FalkorDB Configuration
+FALKORDB_URI=redis://localhost:6379
+FALKORDB_USER=falkordb
+FALKORDB_PASSWORD=your_falkordb_password
+FALKORDB_DATABASE=sports_intelligence
 
 # MCP Server URLs (optional - will use mock data if not set)
 BRIGHTDATA_MCP_URL=http://localhost:3001
 PERPLEXITY_MCP_URL=http://localhost:3002
 CLAUDE_CODE_URL=http://localhost:3003
-NEO4J_MCP_URL=http://localhost:3004
-
 # API Keys (optional - will use mock data if not set)
 BRIGHTDATA_API_KEY=your_brightdata_key
 PERPLEXITY_API_KEY=your_perplexity_key
 CLAUDE_CODE_API_KEY=your_claude_key
-NEO4J_MCP_API_KEY=your_neo4j_mcp_key
 
 # Celery Configuration
 CELERY_BROKER_URL=redis://localhost:6379/0
@@ -194,9 +193,10 @@ Health check endpoint.
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `NEO4J_URI` | Neo4j connection URI | `bolt://localhost:7687` |
-| `NEO4J_USER` | Neo4j username | `neo4j` |
-| `NEO4J_PASSWORD` | Neo4j password | `pantherpassword` |
+| `FALKORDB_URI` | FalkorDB connection URI | `redis://localhost:6379` |
+| `FALKORDB_USER` | FalkorDB username | `falkordb` |
+| `FALKORDB_PASSWORD` | FalkorDB password | `your_falkordb_password` |
+| `FALKORDB_DATABASE` | FalkorDB database name | `sports_intelligence` |
 | `CELERY_BROKER_URL` | Redis broker URL | `redis://localhost:6379/0` |
 | `CELERY_RESULT_BACKEND` | Redis result backend | `redis://localhost:6379/0` |
 
@@ -231,8 +231,8 @@ python -m backend.perplexity_client
 # Test Claude Code client
 python -m backend.claude_client
 
-# Test Neo4j client
-python -m backend.neo4j_client
+# Test Graphiti / FalkorDB client
+python -m backend.test_falkordb_connection
 ```
 
 ## 📊 Monitoring
@@ -244,7 +244,7 @@ Access Flower (Celery monitoring) at: http://localhost:5555
 ### Health Checks
 
 - **API Health**: `GET /health`
-- **Neo4j Health**: Check logs for connection status
+- **Graph DB Health**: Check logs for Graphiti / FalkorDB connection status
 - **Redis Health**: `docker exec signal-noise-redis redis-cli ping`
 
 ### Logs
@@ -261,7 +261,7 @@ All components use structured logging. Check logs for:
 
 1. **Database**: Use PostgreSQL instead of SQLite
 2. **Redis**: Use managed Redis service or cluster
-3. **Neo4j**: Use managed Neo4j service
+3. **Graph DB**: Use managed FalkorDB service
 4. **Security**: Implement proper authentication and authorization
 5. **Monitoring**: Add Prometheus metrics and Grafana dashboards
 6. **Scaling**: Use multiple Celery workers and load balancers
@@ -290,9 +290,9 @@ docker-compose -f docker-compose.prod.yml up -d --scale worker=3
    - Check if Redis container is running
    - Verify Redis port (6379) is accessible
 
-2. **Neo4j Connection Failed**
-   - Check Neo4j credentials
-   - Verify Neo4j is running and accessible
+2. **Graph DB Connection Failed**
+   - Check FalkorDB credentials
+   - Verify Graphiti / FalkorDB is running and accessible
    - Check firewall settings
 
 3. **Celery Worker Not Processing Tasks**
@@ -331,6 +331,10 @@ For support and questions:
 - Check the documentation
 - Review the troubleshooting section
 
+## 🗂️ Legacy Archive
+
+Historical reference docs live in [docs/archive/README.md](./archive/README.md). They are preserved for context only and may describe older Neo4j-era workflows that are no longer the canonical path.
+
 ---
 
-**Built with ❤️ using FastAPI, Celery, Neo4j, and Claude Code**
+**Built with ❤️ using FastAPI, Celery, Graphiti, FalkorDB, and Claude Code**

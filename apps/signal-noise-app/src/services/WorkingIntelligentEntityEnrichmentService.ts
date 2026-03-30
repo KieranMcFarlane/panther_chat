@@ -70,12 +70,12 @@ class WorkingIntelligentEntityEnrichmentService {
         temperature: 0.3,
         tools: [
           {
-            name: 'neo4j_query',
-            description: 'Query Neo4j knowledge graph for entity relationships and data',
+            name: 'graphiti_query',
+            description: 'Query Graphiti knowledge graph for entity relationships and data',
             input_schema: {
               type: 'object',
               properties: {
-                query: { type: 'string', description: 'Cypher query to execute' },
+                query: { type: 'string', description: 'Search query or graph traversal request' },
                 params: { type: 'object', description: 'Query parameters' }
               },
               required: ['query']
@@ -116,7 +116,7 @@ class WorkingIntelligentEntityEnrichmentService {
         category: 'claude-agent',
         source: 'IntelligentEntityEnrichmentService',
         data: { 
-          tools: ['neo4j_query', 'brightdata_scrape', 'supabase_query'],
+          tools: ['graphiti_query', 'brightdata_scrape', 'supabase_query'],
           timestamp: new Date().toISOString()
         }
       });
@@ -300,7 +300,7 @@ Country: ${entity.properties.country}
 Current Website: ${entity.properties.website || 'None'}
 
 Use available tools to:
-1. Query Neo4j for existing relationships and connections
+1. Query Graphiti for existing relationships and connections
 2. Use BrightData to scrape current information from LinkedIn, company websites, and news sources
 3. Check Supabase for any cached analysis or historical data
 4. Synthesize all information into a comprehensive enrichment
@@ -317,13 +317,13 @@ Provide structured output with actionable insights for business development team
 
       const response = await this.claudeAgent!.complete({
         prompt,
-        tools: ['neo4j_query', 'brightdata_scrape', 'supabase_query'],
+        tools: ['graphiti_query', 'brightdata_scrape', 'supabase_query'],
         tool_choice: 'auto'
       });
 
       const enrichmentData = this.parseEnrichmentResponse(response.content, entity);
 
-      // Update entity in Neo4j with enriched data
+      // Update the knowledge graph with enriched data
       await this.updateEntityWithEnrichment(entity, enrichmentData);
 
       const processingTime = Date.now() - startTime;
@@ -383,7 +383,7 @@ Provide structured output with actionable insights for business development team
         risk_factors: []
       },
       brightdata_scraping: {},
-      neo4j_relationships: {},
+      graphiti_relationships: {},
       supabase_cache: {},
       last_enriched: new Date().toISOString()
     };
@@ -406,7 +406,7 @@ Provide structured output with actionable insights for business development team
   }
 
   private async updateEntityWithEnrichment(entity: Entity, enrichmentData: Record<string, any>) {
-    // Update Neo4j with enriched data
+    // Update the knowledge graph with enriched data
     const query = `
       MATCH (e:Entity {id: $entityId})
       SET e.enriched_at = $enrichedAt,
@@ -415,10 +415,10 @@ Provide structured output with actionable insights for business development team
       RETURN e
     `;
 
-    // This would use your Neo4j MCP server
-    liveLogService.info(`Updating Neo4j with enriched data for ${entity.properties.name}`, {
+    // This would use your Graphiti-backed graph layer
+    liveLogService.info(`Updating knowledge graph with enriched data for ${entity.properties.name}`, {
       category: 'database',
-      source: 'IntelligentEntityEnrichmentService',
+      source: 'Graphiti',
       entity_name: entity.properties.name,
       data: { 
         entityId: entity.id,
@@ -427,7 +427,7 @@ Provide structured output with actionable insights for business development team
       }
     });
 
-    // Implementation would call Neo4j MCP server here
+    // Implementation would call the graph layer here
   }
 
   private async getEntitiesForEnrichment(): Promise<Entity[]> {

@@ -1,5 +1,7 @@
 # Enhanced LinkedIn Connection Analysis Prompt
 
+> **Legacy reference:** This document reflects an older Neo4j-first implementation. The canonical discovery/reasoning contract is [Graphiti Discovery Contract](./graphiti-discovery-contract.md). Keep this for historical context only.
+
 ## **CLUB DOSSIER PROMPT WITH LINKEDIN CONNECTION ANALYSIS**
 
 **ROLE**: You are an expert sports intelligence analyst specializing in LinkedIn network analysis for Yellow Panther, a leading sports technology and digital agency.

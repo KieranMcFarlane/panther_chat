@@ -124,12 +124,12 @@ export const TAB_TYPE_CONFIGS = {
     icon: '💬',
     color: '#3B82F6',
     systemPrompt: "You are a helpful AI assistant for the Signal Noise sports intelligence platform.",
-    tools: ['neo4j-mcp', 'brightdata', 'perplexity-mcp', 'better-auth'],
+    tools: ['graphiti', 'brightdata', 'supabase-mcp', 'better-auth'],
     defaultClaudeConfig: {
       model: 'claude-3-sonnet-20240229',
       temperature: 0.7,
       maxTokens: 4000,
-      tools: ['neo4j-mcp', 'brightdata', 'perplexity-mcp', 'better-auth'],
+      tools: ['graphiti', 'brightdata', 'supabase-mcp', 'better-auth'],
       systemPrompt: "You are a helpful AI assistant for the Signal Noise sports intelligence platform."
     }
   },
@@ -138,12 +138,12 @@ export const TAB_TYPE_CONFIGS = {
     icon: '📋',
     color: '#10B981',
     systemPrompt: "You are an RFP analysis specialist. Help users identify and analyze procurement opportunities in the sports industry.",
-    tools: ['neo4j-mcp', 'brightdata', 'perplexity-mcp'],
+    tools: ['graphiti', 'brightdata', 'supabase-mcp'],
     defaultClaudeConfig: {
       model: 'claude-3-sonnet-20240229',
       temperature: 0.3,
       maxTokens: 6000,
-      tools: ['neo4j-mcp', 'brightdata', 'perplexity-mcp'],
+      tools: ['graphiti', 'brightdata', 'supabase-mcp'],
       systemPrompt: "You are an RFP analysis specialist. Help users identify and analyze procurement opportunities in the sports industry."
     }
   },
@@ -152,12 +152,12 @@ export const TAB_TYPE_CONFIGS = {
     icon: '⚽',
     color: '#F59E0B',
     systemPrompt: "You are a sports intelligence expert. Help users analyze sports entities, clubs, leagues, and business opportunities.",
-    tools: ['neo4j-mcp', 'brightdata'],
+    tools: ['graphiti', 'brightdata'],
     defaultClaudeConfig: {
       model: 'claude-3-sonnet-20240229',
       temperature: 0.5,
       maxTokens: 4000,
-      tools: ['neo4j-mcp', 'brightdata'],
+      tools: ['graphiti', 'brightdata'],
       systemPrompt: "You are a sports intelligence expert. Help users analyze sports entities, clubs, leagues, and business opportunities."
     }
   },
@@ -165,14 +165,14 @@ export const TAB_TYPE_CONFIGS = {
     name: 'Knowledge Graph',
     icon: '🕸️',
     color: '#8B5CF6',
-    systemPrompt: "You are a Neo4j and knowledge graph specialist. Help users query and analyze complex entity relationships.",
-    tools: ['neo4j-mcp'],
+    systemPrompt: "You are a Graphiti and knowledge graph specialist. Help users query and analyze complex entity relationships.",
+    tools: ['graphiti'],
     defaultClaudeConfig: {
       model: 'claude-3-sonnet-20240229',
       temperature: 0.2,
       maxTokens: 8000,
-      tools: ['neo4j-mcp'],
-      systemPrompt: "You are a Neo4j and knowledge graph specialist. Help users query and analyze complex entity relationships."
+      tools: ['graphiti'],
+      systemPrompt: "You are a Graphiti and knowledge graph specialist. Help users query and analyze complex entity relationships."
     }
   },
   custom: {
@@ -180,12 +180,12 @@ export const TAB_TYPE_CONFIGS = {
     icon: '⚙️',
     color: '#6B7280',
     systemPrompt: "You are a customizable AI assistant. Users can configure your behavior and tools.",
-    tools: ['neo4j-mcp', 'brightdata', 'perplexity-mcp', 'better-auth'],
+    tools: ['graphiti', 'brightdata', 'supabase-mcp', 'better-auth'],
     defaultClaudeConfig: {
       model: 'claude-3-sonnet-20240229',
       temperature: 0.7,
       maxTokens: 4000,
-      tools: ['neo4j-mcp', 'brightdata', 'perplexity-mcp', 'better-auth'],
+      tools: ['graphiti', 'brightdata', 'supabase-mcp', 'better-auth'],
       systemPrompt: "You are a customizable AI assistant. Users can configure your behavior and tools."
     }
   }

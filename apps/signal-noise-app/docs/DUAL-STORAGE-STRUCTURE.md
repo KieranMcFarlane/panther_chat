@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document outlines the dual storage approach for storing comprehensive entity dossiers in both Supabase and Neo4j databases, ensuring redundancy, performance, and accessibility across the application architecture.
+This document outlines the dual storage approach for storing comprehensive entity dossiers in Supabase and the graph layer used by the current system. Canonical discovery and reasoning rules live in the [Graphiti Discovery Contract](./graphiti-discovery-contract.md).
 
 ## Storage Architecture
 

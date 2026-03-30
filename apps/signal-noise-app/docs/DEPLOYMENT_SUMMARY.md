@@ -1,5 +1,7 @@
 # 🚀 Signal Noise App - AWS Deployment Complete!
 
+> **Legacy reference:** This document reflects an older Neo4j-first implementation. The canonical discovery/reasoning contract is [Graphiti Discovery Contract](./graphiti-discovery-contract.md). Keep this for historical context only.
+
 Your backend is now fully prepared for AWS deployment! Here's what has been created and how to proceed.
 
 ## 📁 Files Created

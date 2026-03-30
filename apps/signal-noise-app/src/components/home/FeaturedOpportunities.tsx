@@ -170,7 +170,7 @@ export function TopOpportunities() {
                   >
                     <Bookmark className="w-3 h-3" />
                   </Button>
-                  <Link href={`/rfp-intelligence?entity=${rfp.organization}`}>
+                  <Link href={`/entity-browser?search=${encodeURIComponent(rfp.organization)}`}>
                     <Button 
                       variant="ghost" 
                       size="sm" 
@@ -189,4 +189,3 @@ export function TopOpportunities() {
     </Card>
   )
 }
-

@@ -48,7 +48,6 @@ import {
 } from "lucide-react"
 
 import { Entity, detectEntityType, PerplexityIntelligence, formatValue, getEntityPriority } from './types'
-import { perplexityService } from './PerplexityService'
 // import { ASCIIDossierRenderer } from './ascii-renderer' // ASCII functionality disabled
 
 interface ClubDossierProps {
@@ -92,7 +91,7 @@ export function ClubDossier({ entity, onEmailEntity }: ClubDossierProps) {
 
   const dossierLeadership = getLeadershipFromDossier()
   
-  // Load real Perplexity data for any club entity
+  // Seed dossier intelligence locally so the UI stays functional without external Perplexity calls.
   useEffect(() => {
     if (entity) {
       loadPerplexityData()
@@ -105,22 +104,17 @@ export function ClubDossier({ entity, onEmailEntity }: ClubDossierProps) {
     }
   }, [entity])
 
-  const loadPerplexityData = async () => {
-    console.log(`🔍 Loading Perplexity intelligence for: ${props.name}`)
+  const loadPerplexityData = () => {
+    console.log(`🔍 Loading dossier intelligence for: ${props.name}`)
     setIsLoadingResearch(true)
-    
+
     try {
-      const result = await perplexityService.enrichEntityData(entity)
-      
-      if (result.perplexityIntelligence) {
-        console.log(`✅ Loaded Perplexity intelligence for ${props.name}:`, result.perplexityIntelligence)
-        setPerplexityData(result.perplexityIntelligence)
-        setLastUpdated(new Date())
-      } else {
-        console.log(`⚠️ No Perplexity intelligence available for ${props.name}`)
+      if (props.name === 'Arsenal') {
+        generateComprehensiveArsenalDossier()
+        return
       }
-    } catch (error) {
-      console.error(`❌ Error loading Perplexity data for ${props.name}:`, error)
+
+      generateMockPerplexityData()
     } finally {
       setIsLoadingResearch(false)
     }
@@ -189,8 +183,8 @@ export function ClubDossier({ entity, onEmailEntity }: ClubDossierProps) {
   }
   
   const handleRefreshResearch = async () => {
-    console.log(`🔄 Refreshing Perplexity research for: ${props.name}`)
-    await loadPerplexityData()
+    console.log(`🔄 Refreshing dossier intelligence for: ${props.name}`)
+    loadPerplexityData()
   }
 
   const normalizePersonName = (value: string) =>

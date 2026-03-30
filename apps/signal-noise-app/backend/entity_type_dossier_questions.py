@@ -42,6 +42,130 @@ from enum import Enum
 
 logger = logging.getLogger(__name__)
 
+GRAPHITI_DISCOVERY_LOOKBACK_DAYS = 180
+
+SERVICE_DISCOVERY_GUIDANCE: Dict[str, Dict[str, Any]] = {
+    "MOBILE_APPS": {
+        "signal_lens": [
+            "app relaunch",
+            "mobile product hire",
+            "app store changes",
+            "supporter login",
+            "push notifications",
+            "mobile ticketing",
+        ],
+        "evidence_sources": [
+            "official site",
+            "app store",
+            "job postings",
+            "press releases",
+            "Graphiti episode history",
+        ],
+    },
+    "DIGITAL_TRANSFORMATION": {
+        "signal_lens": [
+            "legacy replacement",
+            "vendor change",
+            "platform migration",
+            "cloud migration",
+            "digital modernization",
+        ],
+        "evidence_sources": [
+            "official site",
+            "job postings",
+            "press releases",
+            "Graphiti relationship changes",
+        ],
+    },
+    "FAN_ENGAGEMENT": {
+        "signal_lens": [
+            "loyalty",
+            "membership",
+            "personalization",
+            "supporter experience",
+            "fan communication",
+        ],
+        "evidence_sources": [
+            "official site",
+            "press releases",
+            "social channels",
+            "Graphiti community updates",
+        ],
+    },
+    "ANALYTICS": {
+        "signal_lens": [
+            "BI",
+            "reporting",
+            "data platform",
+            "dashboards",
+            "sports analytics",
+        ],
+        "evidence_sources": [
+            "official site",
+            "job postings",
+            "press releases",
+            "Graphiti facts and episodes",
+        ],
+    },
+    "ECOMMERCE": {
+        "signal_lens": [
+            "ticketing",
+            "checkout",
+            "merchandise",
+            "retail",
+            "hospitality",
+        ],
+        "evidence_sources": [
+            "official site",
+            "procurement pages",
+            "job postings",
+            "press releases",
+        ],
+    },
+    "UI_UX_DESIGN": {
+        "signal_lens": [
+            "redesign",
+            "accessibility",
+            "conversion",
+            "experience",
+            "mobile-first",
+        ],
+        "evidence_sources": [
+            "official site",
+            "job postings",
+            "press releases",
+            "Graphiti episode history",
+        ],
+    },
+}
+
+
+def _graphiti_focus_for_services(services: List["YPServiceCategory"]) -> str:
+    signal_terms: List[str] = []
+    for service in services:
+        service_key = service.value if isinstance(service, YPServiceCategory) else str(service).upper()
+        guidance = SERVICE_DISCOVERY_GUIDANCE.get(service_key, {})
+        for signal in guidance.get("signal_lens", []):
+            signal_terms.append(str(signal))
+
+    signal_terms = list(dict.fromkeys(signal_terms))
+    if not signal_terms:
+        signal_terms = ["recent change", "relationship change", "procurement signal"]
+    return ", ".join(signal_terms)
+
+
+def _graphiti_sources_for_services(services: List["YPServiceCategory"]) -> List[str]:
+    sources: List[str] = []
+    for service in services:
+        service_key = service.value if isinstance(service, YPServiceCategory) else str(service).upper()
+        guidance = SERVICE_DISCOVERY_GUIDANCE.get(service_key, {})
+        sources.extend(str(item) for item in guidance.get("evidence_sources", []))
+
+    sources = list(dict.fromkeys(sources))
+    if "Graphiti episode history" not in sources:
+        sources.append("Graphiti episode history")
+    return sources
+
 
 # =============================================================================
 # Yellow Panther Service Categories
@@ -176,7 +300,10 @@ class QuestionTemplate:
             "next_signals": self.next_signals,
             "hop_types": self.hop_types,
             "accept_criteria": self.accept_criteria,
-            "confidence_boost": self.confidence_boost
+            "confidence_boost": self.confidence_boost,
+            "graphiti_focus": _graphiti_focus_for_services(self.yp_service_fit),
+            "graphiti_sources": _graphiti_sources_for_services(self.yp_service_fit),
+            "graphiti_lookback_days": GRAPHITI_DISCOVERY_LOOKBACK_DAYS,
         }
 
 
@@ -187,127 +314,128 @@ class QuestionTemplate:
 SPORT_CLUB_QUESTIONS: List[QuestionTemplate] = [
     QuestionTemplate(
         question_id="sc_mobile_fan_platform",
-        question="What mobile app or fan engagement platform investments are planned by {entity}?",
+        question="What evidence in the last 180 days shows {entity} is planning or replacing a mobile app, fan app, or supporter platform?",
         yp_service_fit=[YPServiceCategory.MOBILE_APPS, YPServiceCategory.FAN_ENGAGEMENT],
         budget_range="£80K-£300K",
         yp_advantage="Team GB Olympic mobile app delivery, STA Award 2024 winner",
         positioning_strategy=YPPositioningStrategy.SOLUTION_PROVIDER,
-        hypothesis_template="{entity} will issue mobile app RFP (£80K-£300K budget) within 6-18 months",
+        hypothesis_template="{entity} will issue a mobile or fan-platform opportunity (£80K-£300K) within 6-18 months",
         next_signals=[
+            "Graphiti episodes: recent app changes, supporter journey changes, or vendor shifts",
             "Job postings: Mobile Developer, iOS Developer, Product Manager - Mobile",
+            "Official-site clues: app relaunch, supporter login, push notifications, mobile ticketing",
             "RFP keywords: mobile app, fan app, official app, React Native, RFP, Request for Proposal, tender, procurement, EOI, RFI",
-            "Announcements: Digital transformation initiatives, fan engagement strategy"
         ],
         hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE"],
-        accept_criteria="Any mention of mobile platform development or fan app in official channels",
+        accept_criteria="Evidence of app, fan platform, or supporter experience change in the last 180 days",
         confidence_boost=0.15
     ),
     QuestionTemplate(
         question_id="sc_digital_transformation",
-        question="What digital transformation initiatives is {entity} undertaking or planning?",
+        question="What evidence in the last 180 days shows {entity} is pursuing digital transformation, legacy replacement, or a new vendor search?",
         yp_service_fit=[YPServiceCategory.DIGITAL_TRANSFORMATION],
         budget_range="£150K-£500K",
         yp_advantage="3-year partnership track record (Premier Padel), end-to-end transformation expertise",
         positioning_strategy=YPPositioningStrategy.STRATEGIC_PARTNER,
-        hypothesis_template="{entity} is seeking digital transformation partner (£150K-£500K) for modernization project",
+        hypothesis_template="{entity} is likely to pursue a digital transformation partner (£150K-£500K) for modernization",
         next_signals=[
+            "Graphiti relationships: vendor replacement, leadership change, or modernization signal",
             "Job postings: CTO, CIO, Digital Transformation Manager, Cloud Architect",
             "RFP keywords: digital transformation, cloud migration, modernization, RFP, Request for Proposal, tender, ITT, procurement, vendor portal",
-            "Strategic announcements: Digital modernization, cloud migration, legacy system refresh",
-            "Partnership announcements: Technology consulting partners"
+            "Strategic announcements: digital modernization, cloud migration, legacy system refresh",
         ],
         hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE", "OFFICIAL_SITE"],
-        accept_criteria="Mentions of modernization, cloud migration, or technology overhaul initiatives",
+        accept_criteria="Modernization, migration, replacement, or vendor-search evidence in the last 180 days",
         confidence_boost=0.20
     ),
     QuestionTemplate(
         question_id="sc_ticketing_ecommerce",
-        question="What ticketing or e-commerce pain points indicate replacement needs at {entity}?",
+        question="What evidence shows {entity} has ticketing, checkout, merchandise, or e-commerce friction that could trigger a platform change?",
         yp_service_fit=[YPServiceCategory.ECOMMERCE, YPServiceCategory.FAN_ENGAGEMENT],
         budget_range="£80K-£250K",
         yp_advantage="BNP Paribas Open ticketing platform experience, high-volume e-commerce delivery",
         positioning_strategy=YPPositioningStrategy.SOLUTION_PROVIDER,
-        hypothesis_template="{entity} will replace ticketing/e-commerce platform (£80K-£250K) within 12 months",
+        hypothesis_template="{entity} will replace or upgrade its ticketing/e-commerce stack (£80K-£250K) within 12 months",
         next_signals=[
-            "Fan complaints: Ticketing issues, checkout problems, mobile ticketing",
+            "Graphiti episodes: vendor changes, payment flow issues, or commerce platform mentions",
+            "Fan complaints: ticketing issues, checkout problems, mobile ticketing",
             "Job postings: E-commerce Manager, Head of Ticketing, CRM Manager",
             "RFP keywords: ticketing system, e-commerce platform, POS system, RFP, Request for Proposal, tender, RFQ, supplier portal",
-            "Partnership changes: New ticketing provider partnerships"
         ],
         hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE"],
-        accept_criteria="Evidence of ticketing issues or job postings for e-commerce roles",
+        accept_criteria="Ticketing, commerce, or checkout friction with a plausible replacement path",
         confidence_boost=0.15
     ),
     QuestionTemplate(
         question_id="sc_analytics_data_platform",
-        question="What analytics or data platform needs does {entity} have for performance or fan insights?",
+        question="What evidence shows {entity} is building analytics, BI, reporting, or data platform capability?",
         yp_service_fit=[YPServiceCategory.ANALYTICS],
         budget_range="£100K-£400K",
         yp_advantage="ISU skating analytics platform, sports analytics expertise",
         positioning_strategy=YPPositioningStrategy.CAPABILITY_PARTNER,
-        hypothesis_template="{entity} will invest in analytics/data platform (£100K-£400K) for performance/fan insights",
+        hypothesis_template="{entity} will invest in analytics or data-platform capability (£100K-£400K) for performance or fan insights",
         next_signals=[
+            "Graphiti facts: reporting changes, dashboard references, or analytics community updates",
             "Job postings: Data Analyst, Data Engineer, BI Developer, Analytics Manager",
             "RFP keywords: analytics platform, BI system, data warehouse, CRM analytics, RFP, Request for Proposal, tender, RFQ",
-            "Partnerships: Analytics providers, BI platform announcements",
-            "Strategic mentions: Data-driven decisions, fan insights, performance analytics"
+            "Strategic mentions: data-driven decisions, fan insights, performance analytics",
         ],
         hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE", "OFFICIAL_SITE"],
-        accept_criteria="Job postings for analytics roles or data platform announcements",
+        accept_criteria="Analytics or reporting capability change that suggests a funded project",
         confidence_boost=0.12
     ),
     QuestionTemplate(
         question_id="sc_fan_engagement_gaps",
-        question="What fan engagement strategy gaps or opportunities exist at {entity}?",
+        question="What evidence shows {entity} is investing in fan engagement, loyalty, membership, or personalized communication?",
         yp_service_fit=[YPServiceCategory.FAN_ENGAGEMENT, YPServiceCategory.MOBILE_APPS],
         budget_range="£80K-£300K",
         yp_advantage="FIBA 3×3 fan engagement platform, multi-federation experience",
         positioning_strategy=YPPositioningStrategy.INNOVATION_PARTNER,
-        hypothesis_template="{entity} will seek fan engagement solution (£80K-£300K) to improve supporter experience",
+        hypothesis_template="{entity} will seek a fan engagement or loyalty solution (£80K-£300K) to improve supporter experience",
         next_signals=[
-            "Season ticket holder feedback: Engagement complaints, communication issues",
+            "Graphiti community updates: membership changes, supporter communications, or loyalty mentions",
+            "Season ticket holder feedback: engagement complaints, communication issues",
             "Job postings: Fan Engagement Manager, Head of Supporter Services",
             "RFP keywords: fan engagement platform, CRM system, loyalty platform, RFP, Request for Proposal, tender, EOI",
-            "Initiatives: Fan experience programs, loyalty scheme launches"
         ],
         hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE", "OFFICIAL_SITE"],
-        accept_criteria="Fan engagement initiatives or related job postings",
+        accept_criteria="Fan engagement, loyalty, or membership evidence with recent timing",
         confidence_boost=0.10
     ),
     QuestionTemplate(
         question_id="sc_stadium_technology",
-        question="What stadium or venue technology upgrades is {entity} planning?",
+        question="What evidence shows {entity} is upgrading stadium or venue technology that would affect matchday experience?",
         yp_service_fit=[YPServiceCategory.MOBILE_APPS, YPServiceCategory.UI_UX_DESIGN, YPServiceCategory.ECOMMERCE],
         budget_range="£100K-£400K",
         yp_advantage="Olympic venue app experience, large-scale deployment capability",
         positioning_strategy=YPPositioningStrategy.STRATEGIC_PARTNER,
-        hypothesis_template="{entity} will upgrade stadium technology (£100K-£400K) for matchday experience",
+        hypothesis_template="{entity} will upgrade venue technology (£100K-£400K) for the matchday experience",
         next_signals=[
+            "Graphiti episode changes: venue, matchday, or operations technology references",
             "Stadium announcements: WiFi upgrades, mobile ordering, seat upgrades",
             "Job postings: Stadium Technology Manager, Venue Operations Director",
             "RFP keywords: stadium technology, venue WiFi, mobile ordering, RFP, Request for Proposal, tender, ITT, supplier portal",
-            "Partnerships: Stadium technology providers, connectivity partners"
         ],
         hop_types=["RFP_PAGE", "PRESS_RELEASE", "CAREERS_PAGE"],
-        accept_criteria="Stadium technology initiatives or related partnerships",
+        accept_criteria="Venue technology change tied to a recent project or partner change",
         confidence_boost=0.12
     ),
     QuestionTemplate(
         question_id="sc_legacy_replacement",
-        question="What legacy system replacement signals is {entity} showing?",
+        question="What evidence in the last 180 days shows a vendor, platform, or relationship change at {entity} that could map to Yellow Panther services?",
         yp_service_fit=[YPServiceCategory.DIGITAL_TRANSFORMATION, YPServiceCategory.ANALYTICS],
         budget_range="£150K-£500K",
         yp_advantage="End-to-end digital transformation, legacy migration expertise",
         positioning_strategy=YPPositioningStrategy.SOLUTION_PROVIDER,
-        hypothesis_template="{entity} will initiate legacy system replacement (£150K-£500K) within 6-12 months",
+        hypothesis_template="{entity} will initiate a legacy-system or vendor replacement (£150K-£500K) within 6-12 months",
         next_signals=[
-            "Partnership changes: Ending vendor relationships",
-            "Strategic announcements: System modernization, platform migration",
+            "Graphiti relationship changes: vendor ending, partner switch, or procurement relationship shift",
+            "Partnership changes: ending vendor relationships",
+            "Strategic announcements: system modernization, platform migration",
             "RFP keywords: system migration, legacy replacement, platform modernization, RFP, Request for Proposal, tender, ITT, RFQ",
-            "Job postings: Migration specialists, system architects"
         ],
         hop_types=["RFP_PAGE", "PRESS_RELEASE", "CAREERS_PAGE"],
-        accept_criteria="Evidence of vendor changes or modernization initiatives",
+        accept_criteria="Vendor or platform replacement evidence with clear recency",
         confidence_boost=0.18
     )
 ]
@@ -320,108 +448,110 @@ SPORT_CLUB_QUESTIONS: List[QuestionTemplate] = [
 SPORT_FEDERATION_QUESTIONS: List[QuestionTemplate] = [
     QuestionTemplate(
         question_id="sf_member_platform",
-        question="What member federation management platform or mobile app initiatives are underway at {entity}?",
+        question="What evidence in the last 180 days shows {entity} is modernizing member platforms, CRM, or federation portals?",
         yp_service_fit=[YPServiceCategory.MOBILE_APPS, YPServiceCategory.DIGITAL_TRANSFORMATION],
         budget_range="£150K-£500K",
         yp_advantage="Multi-federation partnerships (FIBA 3×3, ISU, LNB), Olympic scalability (170+ federations)",
         positioning_strategy=YPPositioningStrategy.STRATEGIC_PARTNER,
-        hypothesis_template="{entity} will seek member database/platform RFP (£150K-£500K) for federation management",
+        hypothesis_template="{entity} will seek a member platform or CRM modernization opportunity (£150K-£500K)",
         next_signals=[
+            "Graphiti episodes: member portal, federation system, or relationship changes",
             "Job postings: CRM Manager, Member Services Director, Digital Platform Manager",
             "RFP keywords: member database, federation platform, CRM system, RFP, Request for Proposal, tender, EOI, ITT, procurement",
-            "Announcements: Strategic plan mentions, digital initiative announcements"
+            "Announcements: strategic plan mentions, digital initiative announcements",
         ],
         hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE"],
-        accept_criteria="Any mention of member system modernization or digital platform",
+        accept_criteria="Member-platform or CRM modernization evidence tied to a current initiative",
         confidence_boost=0.18
     ),
     QuestionTemplate(
         question_id="sf_officiating_tech",
-        question="What officiating or technology projects is {entity} planning for major events?",
+        question="What evidence shows {entity} is planning officiating, event operations, or competition technology upgrades?",
         yp_service_fit=[YPServiceCategory.ANALYTICS, YPServiceCategory.MOBILE_APPS],
         budget_range="£200K-£500K",
         yp_advantage="International federation experience (ISU officiating platform), event tech delivery",
         positioning_strategy=YPPositioningStrategy.INNOVATION_PARTNER,
-        hypothesis_template="{entity} will issue AI officiating/platform RFP (£200K-£500K) before next major event",
+        hypothesis_template="{entity} will issue an officiating or event-technology opportunity (£200K-£500K) before its next major event",
         next_signals=[
+            "Graphiti facts: event-tech references, officiating system updates, or relationship changes",
             "Job postings: Officiating Technology Manager, Event Technology Director",
             "RFP keywords: officiating system, VAR, video referee, AI officiating, RFP, Request for Proposal, tender, ITT, procurement",
-            "Event announcements: Technology trials, officiating system upgrades",
-            "Partnerships: Technology providers for officiating/VAR systems"
+            "Event announcements: technology trials, officiating system upgrades",
         ],
         hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE"],
-        accept_criteria="Job postings or announcements about officiating technology",
+        accept_criteria="Event-technology or officiating upgrade evidence with event timing",
         confidence_boost=0.20
     ),
     QuestionTemplate(
         question_id="sf_certification_modernization",
-        question="What digital certification or assessment systems is {entity} modernizing?",
+        question="What evidence shows {entity} is modernizing digital certification or assessment systems?",
         yp_service_fit=[YPServiceCategory.DIGITAL_TRANSFORMATION, YPServiceCategory.UI_UX_DESIGN],
         budget_range="£100K-£300K",
         yp_advantage="Federation certification platform experience, multi-language capability",
         positioning_strategy=YPPositioningStrategy.STRATEGIC_PARTNER,
-        hypothesis_template="{entity} will seek digital certification platform (£100K-£300K) for assessment modernization",
+        hypothesis_template="{entity} will seek a digital certification or assessment platform (£100K-£300K)",
         next_signals=[
+            "Graphiti episode history: certification, assessment, or process modernization mentions",
             "Job postings: Certification Manager, Assessment System Lead",
-            "Initiatives: Digital assessment programs, online certification launches",
-            "RFP keywords: certification system, assessment platform, digital testing, RFP, Request for Proposal, tender, RFQ, EOI"
+            "Initiatives: digital assessment programs, online certification launches",
+            "RFP keywords: certification system, assessment platform, digital testing, RFP, Request for Proposal, tender, RFQ, EOI",
         ],
         hop_types=["RFP_PAGE", "CAREERS_PAGE", "OFFICIAL_SITE"],
-        accept_criteria="Digital certification or assessment system initiatives",
+        accept_criteria="Certification or assessment modernization with an identifiable project",
         confidence_boost=0.15
     ),
     QuestionTemplate(
         question_id="sf_event_management",
-        question="What event management platform needs does {entity} have for competitions/championships?",
+        question="What evidence shows {entity} needs event management tooling for competitions or championships?",
         yp_service_fit=[YPServiceCategory.ECOMMERCE, YPServiceCategory.MOBILE_APPS],
         budget_range="£100K-£400K",
         yp_advantage="Major event platform delivery (Olympic-scale), multi-event management",
         positioning_strategy=YPPositioningStrategy.SOLUTION_PROVIDER,
-        hypothesis_template="{entity} will seek event management platform (£100K-£400K) for championship operations",
+        hypothesis_template="{entity} will seek event-management tooling (£100K-£400K) for championship operations",
         next_signals=[
+            "Graphiti communities: competition operations, event changes, or partner selection",
             "Job postings: Event Technology Manager, Championship Operations Lead",
             "RFP keywords: event management, championship platform, competition system, RFP, Request for Proposal, tender, ITT, procurement",
-            "Event announcements: New event formats, digital ticketing for events",
-            "Partnerships: Event technology providers"
+            "Event announcements: new event formats, digital ticketing for events",
         ],
         hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE"],
-        accept_criteria="Event management technology initiatives or partnerships",
+        accept_criteria="Competition or championship tooling change with recent evidence",
         confidence_boost=0.15
     ),
     QuestionTemplate(
         question_id="sf_member_communication",
-        question="What digital member communication or engagement platforms is {entity} implementing?",
+        question="What evidence shows {entity} is implementing digital member communication or engagement platforms?",
         yp_service_fit=[YPServiceCategory.FAN_ENGAGEMENT, YPServiceCategory.MOBILE_APPS],
         budget_range="£80K-£250K",
         yp_advantage="FIBA 3×3 member engagement platform, federation communication tools",
         positioning_strategy=YPPositioningStrategy.STRATEGIC_PARTNER,
-        hypothesis_template="{entity} will implement member communication platform (£80K-£250K) for federation engagement",
+        hypothesis_template="{entity} will implement a member communication platform (£80K-£250K) for federation engagement",
         next_signals=[
+            "Graphiti episodes: member-communication changes, portal updates, or relationship shifts",
             "Job postings: Communication Manager, Member Engagement Lead",
             "RFP keywords: member communication, federation portal, engagement platform, RFP, Request for Proposal, tender, EOI, ITT",
-            "Initiatives: Member portal launches, communication strategy updates",
-            "Platform announcements: Member apps, communication tools"
+            "Initiatives: member portal launches, communication strategy updates",
         ],
         hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE", "OFFICIAL_SITE"],
-        accept_criteria="Member communication or engagement platform initiatives",
+        accept_criteria="Member communication or engagement evidence with a recent trigger",
         confidence_boost=0.12
     ),
     QuestionTemplate(
         question_id="sf_analytics_platform",
-        question="What analytics or performance data platform is {entity} seeking for member federations?",
+        question="What evidence shows {entity} is seeking analytics or performance-data platforms for member federations?",
         yp_service_fit=[YPServiceCategory.ANALYTICS],
         budget_range="£150K-£400K",
         yp_advantage="ISU analytics platform, international federation data systems",
         positioning_strategy=YPPositioningStrategy.CAPABILITY_PARTNER,
-        hypothesis_template="{entity} will invest in federation analytics platform (£150K-£400K) for member insights",
+        hypothesis_template="{entity} will invest in a federation analytics platform (£150K-£400K) for member insights",
         next_signals=[
+            "Graphiti facts: analytics, reporting, or data-sharing changes",
             "Job postings: Data Analyst, Analytics Manager, Performance Data Lead",
             "RFP keywords: analytics platform, data warehouse, federation BI, RFP, Request for Proposal, tender, RFQ, ITT",
-            "Strategic mentions: Data-driven member support, performance insights",
-            "Partnerships: Analytics platform providers"
+            "Strategic mentions: data-driven member support, performance insights",
         ],
         hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE", "OFFICIAL_SITE"],
-        accept_criteria="Analytics platform initiatives or related job postings",
+        accept_criteria="Analytics platform evidence with a clear federation use case",
         confidence_boost=0.15
     )
 ]
@@ -434,92 +564,92 @@ SPORT_FEDERATION_QUESTIONS: List[QuestionTemplate] = [
 SPORT_LEAGUE_QUESTIONS: List[QuestionTemplate] = [
     QuestionTemplate(
         question_id="sl_league_mobile_app",
-        question="What league-wide mobile app or digital platform initiatives is {entity} pursuing?",
+        question="What evidence in the last 180 days shows {entity} is pursuing a league-wide digital platform, mobile app, or fan experience upgrade?",
         yp_service_fit=[YPServiceCategory.MOBILE_APPS, YPServiceCategory.FAN_ENGAGEMENT],
         budget_range="£200K-£500K",
         yp_advantage="Olympic mobile app experience, multi-club deployment capability",
         positioning_strategy=YPPositioningStrategy.STRATEGIC_PARTNER,
-        hypothesis_template="{entity} will develop league-wide mobile platform (£200K-£500K) for fan engagement",
+        hypothesis_template="{entity} will develop a league-wide digital platform (£200K-£500K) for fan engagement",
         next_signals=[
+            "Graphiti communities: league platform changes, member club coordination, or vendor switches",
             "Job postings: Mobile Product Manager, League Digital Director",
             "RFP keywords: mobile app, league platform, fan app, React Native, RFP, Request for Proposal, tender, ITT, EOI, procurement",
-            "League announcements: Mobile strategy, digital fan experience",
-            "Club initiatives: Coordinated mobile efforts across clubs"
+            "League announcements: mobile strategy, digital fan experience",
         ],
         hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE"],
-        accept_criteria="League-wide mobile or digital platform announcements",
+        accept_criteria="League-wide digital platform evidence or a recent vendor search",
         confidence_boost=0.20
     ),
     QuestionTemplate(
         question_id="sl_digital_operations",
-        question="What digital transformation of league operations is {entity} undertaking?",
+        question="What evidence shows {entity} is modernizing league operations, governance workflows, or member club tooling?",
         yp_service_fit=[YPServiceCategory.DIGITAL_TRANSFORMATION],
         budget_range="£200K-£500K",
         yp_advantage="Premier Padel 3-year transformation model, league operations expertise",
         positioning_strategy=YPPositioningStrategy.STRATEGIC_PARTNER,
         hypothesis_template="{entity} will seek digital operations transformation (£200K-£500K) for league efficiency",
         next_signals=[
+            "Graphiti relationship changes: governance, league operations, or member club tooling",
             "Job postings: League Operations Director, Digital Transformation Lead",
             "RFP keywords: digital transformation, CRM system, data warehouse, RFP, Request for Proposal, tender, ITT, procurement",
-            "Strategic announcements: Operations modernization, digital league management",
-            "Club mandates: Digital requirements for member clubs"
+            "Strategic announcements: operations modernization, digital league management",
         ],
         hop_types=["CAREERS_PAGE", "PRESS_RELEASE", "RFP_PAGE"],
-        accept_criteria="League operations modernization initiatives",
+        accept_criteria="League operations modernization with evidence of procurement or timing pressure",
         confidence_boost=0.18
     ),
     QuestionTemplate(
         question_id="sl_centralized_analytics",
-        question="What centralized analytics or data platform is {entity} building for league and clubs?",
+        question="What evidence shows {entity} is building centralized analytics or data infrastructure for clubs and competition?",
         yp_service_fit=[YPServiceCategory.ANALYTICS],
         budget_range="£150K-£400K",
         yp_advantage="ISU federation analytics, multi-club data platform experience",
         positioning_strategy=YPPositioningStrategy.CAPABILITY_PARTNER,
-        hypothesis_template="{entity} will invest in centralized analytics platform (£150K-£400K) for league-wide insights",
+        hypothesis_template="{entity} will invest in centralized analytics infrastructure (£150K-£400K) for league-wide insights",
         next_signals=[
+            "Graphiti facts: reporting, dashboards, or club data-sharing changes",
             "Job postings: Head of Analytics, Data Platform Manager",
             "RFP keywords: analytics platform, data warehouse, league BI, centralized data, RFP, Request for Proposal, tender, RFQ, ITT",
-            "League initiatives: Data sharing, analytics for member clubs",
-            "Partnerships: Analytics platform providers"
+            "League initiatives: data sharing, analytics for member clubs",
         ],
         hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE"],
-        accept_criteria="Centralized analytics or data platform initiatives",
+        accept_criteria="Centralized analytics evidence with a clear club or league use case",
         confidence_boost=0.15
     ),
     QuestionTemplate(
         question_id="sl_ecommerce_platform",
-        question="What league-wide e-commerce or ticketing platform is {entity} developing?",
+        question="What evidence shows {entity} is developing a league-wide e-commerce, ticketing, or commercial platform?",
         yp_service_fit=[YPServiceCategory.ECOMMERCE],
         budget_range="£150K-£400K",
         yp_advantage="BNP Paribas Open ticketing experience, league-wide commerce",
         positioning_strategy=YPPositioningStrategy.SOLUTION_PROVIDER,
-        hypothesis_template="{entity} will create unified e-commerce platform (£150K-£400K) for league merchandise/ticketing",
+        hypothesis_template="{entity} will create a unified e-commerce platform (£150K-£400K) for ticketing or merchandise",
         next_signals=[
+            "Graphiti episodes: commerce, ticketing, or vendor changes",
             "Job postings: E-commerce Director, Head of League Commerce",
             "RFP keywords: e-commerce platform, ticketing system, league merchandise, RFP, Request for Proposal, tender, RFQ, ITT, supplier portal",
-            "League announcements: Unified shopping, league ticketing platform",
-            "Club alignment: Standardized e-commerce across clubs"
+            "League announcements: unified shopping, league ticketing platform",
         ],
         hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE"],
-        accept_criteria="League-wide e-commerce or ticketing initiatives",
+        accept_criteria="League commerce or ticketing modernization with recent evidence",
         confidence_boost=0.15
     ),
     QuestionTemplate(
         question_id="sl_broadcast_streaming",
-        question="What broadcast or streaming enhancements is {entity} planning for content distribution?",
+        question="What evidence shows {entity} is planning broadcast, streaming, or content-distribution enhancements?",
         yp_service_fit=[YPServiceCategory.MOBILE_APPS, YPServiceCategory.UI_UX_DESIGN],
         budget_range="£200K-£500K",
         yp_advantage="Streaming platform experience, mobile video delivery",
         positioning_strategy=YPPositioningStrategy.INNOVATION_PARTNER,
-        hypothesis_template="{entity} will enhance broadcast/streaming platform (£200K-£500K) for digital content",
+        hypothesis_template="{entity} will enhance its broadcast or streaming platform (£200K-£500K) for digital content",
         next_signals=[
+            "Graphiti community updates: content-distribution, OTT, or partner changes",
             "Job postings: Streaming Product Manager, Digital Content Lead",
             "RFP keywords: streaming platform, OTT, video delivery, broadcast, RFP, Request for Proposal, tender, ITT, media procurement",
             "Media announcements: OTT platform, direct-to-consumer streaming",
-            "Partnerships: Streaming technology providers"
         ],
         hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE"],
-        accept_criteria="Streaming or broadcast platform initiatives",
+        accept_criteria="Streaming or broadcast enhancement evidence with a recent trigger",
         confidence_boost=0.15
     )
 ]
@@ -610,6 +740,9 @@ def generate_hypothesis_from_question(
             "hop_types": question.hop_types,
             "accept_criteria": question.accept_criteria,
             "confidence_boost": question.confidence_boost,
+            "graphiti_focus": _graphiti_focus_for_services(question.yp_service_fit),
+            "graphiti_sources": _graphiti_sources_for_services(question.yp_service_fit),
+            "graphiti_lookback_days": GRAPHITI_DISCOVERY_LOOKBACK_DAYS,
             **(additional_context or {})
         }
     }
@@ -813,12 +946,33 @@ def get_question_first_prompt_context(
     questions = get_questions_for_entity_type(entity_type)
     yp_summary = get_yp_service_summary()
 
+    service_lines = []
+    for service_name, service_info in yp_summary["services"].items():
+        service_focus = SERVICE_DISCOVERY_GUIDANCE.get(service_name, {})
+        signal_lens = ", ".join(service_focus.get("signal_lens", []))
+        evidence_sources = ", ".join(service_focus.get("evidence_sources", []))
+        service_lines.append(
+            f"- {service_name}: {service_info['description']}\n"
+            f"  Signals: {signal_lens}\n"
+            f"  Evidence sources: {evidence_sources}"
+        )
+
     context = f"""
 YELLOW PANTHER SERVICE CONTEXT:
 - Services: {', '.join(yp_summary['services'].keys())}
 - Ideal Budget: {yp_summary['ideal_profile']['budget_range']}
 - Timeline: {yp_summary['ideal_profile']['timeline']}
 - Team Size: {yp_summary['ideal_profile']['team_size']}
+
+GRAPHITI DISCOVERY LENS:
+- Treat the graph as temporal evidence, not static knowledge.
+- Prefer the last {GRAPHITI_DISCOVERY_LOOKBACK_DAYS} days unless the question requires a longer lookback.
+- Look for changes in episodes, relationships, vendors, jobs, press releases, and official pages.
+- Prefer recent, grounded evidence over broad summaries.
+- If the evidence is weak, return a lower-confidence hypothesis instead of forcing a fit.
+
+SERVICE-TO-SIGNAL MAPPING:
+{chr(10).join(service_lines)}
 
 ENTITY TYPE: {entity_type}
 ENTITY NAME: {entity_name}
@@ -833,7 +987,19 @@ QUESTIONS TO ANSWER (each generates a testable hypothesis):
    → YP Services: {', '.join([s.value for s in q.yp_service_fit])}
    → Budget: {q.budget_range}
    → Positioning: {q.positioning_strategy.value}
+   → Graphiti focus: {q.to_dict().get('graphiti_focus')}
    → Validate with: {', '.join(q.next_signals[:2])}
+"""
+
+    context += f"""
+RESPONSE SHAPE FOR EACH HYPOTHESIS:
+- service_fit
+- buying_trigger
+- evidence_sources
+- likely_owner
+- timeframe
+- confidence
+- next_best_action
 """
 
     return context

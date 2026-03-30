@@ -325,7 +325,7 @@ class IntelligentEnrichmentScheduler {
       nextScheduledRun: this.getNextScheduledRun(),
       schedulerHealth: this.isInitialized ? 'healthy' : 'initializing',
       claudeAgentStatus: 'ready',
-      availableTools: ['neo4j-mcp', 'brightdata-mcp', 'supabase-mcp', 'perplexity-mcp'],
+      availableTools: ['graphiti', 'brightdata-mcp', 'supabase-mcp'],
       timestamp: new Date().toISOString()
     };
   }

@@ -44,27 +44,6 @@ function FeatureCard({ icon: Icon, title, description, stats, preview, href, col
 export function FeatureCards() {
   const features = [
     {
-      icon: Brain,
-      title: 'RFP Intelligence',
-      description: 'AI-powered RFP detection and analysis with real-time opportunity scoring',
-      stats: '40+ opportunities detected | £21M+ pipeline',
-      href: '/rfp-intelligence',
-      color: 'text-green-400',
-      bgColor: 'bg-green-500/20',
-      preview: (
-        <div className="space-y-2">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-fm-light-grey">Top Fit Score</span>
-            <span className="text-yellow-400 font-semibold">95%</span>
-          </div>
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-fm-light-grey">High Value RFPs</span>
-            <span className="text-white font-semibold">15+</span>
-          </div>
-        </div>
-      )
-    },
-    {
       icon: Database,
       title: 'Entity Browser',
       description: 'Comprehensive sports entity database with Neo4j knowledge graph integration',
@@ -137,7 +116,6 @@ export function FeatureCards() {
     </div>
   )
 }
-
 
 
 

@@ -701,11 +701,211 @@ class GraphitiService:
         except Exception:
             return None
 
+    @staticmethod
+    def _humanize_service_label(service_code: Optional[str]) -> str:
+        label = str(service_code or "").strip().replace("_", " ").lower()
+        return label or "signal"
+
+    @staticmethod
+    def _safe_float(value: Any, default: float = 0.0) -> float:
+        try:
+            numeric = float(value)
+        except (TypeError, ValueError):
+            return default
+        return numeric if numeric == numeric else default
+
+    def _select_homepage_insight_candidate(
+        self,
+        *,
+        entity_name: str,
+        dossier: Dict[str, Any],
+        validated_signals: List[Dict[str, Any]],
+        episodes: List[Dict[str, Any]],
+        scores: Dict[str, Any],
+        discovery_result: Dict[str, Any],
+    ) -> Optional[Dict[str, Any]]:
+        sales_readiness = str(scores.get("sales_readiness") or "").strip().upper()
+        active_probability_value = self._safe_float(scores.get("active_probability"))
+        discovery_confidence = discovery_result.get("final_confidence") if isinstance(discovery_result, dict) else None
+        discovery_confidence_value = self._safe_float(discovery_confidence)
+
+        def _question_lookup_key(question: Dict[str, Any]) -> str:
+            return str(
+                question.get("question_id")
+                or question.get("question_text")
+                or question.get("question")
+                or ""
+            ).strip().lower()
+
+        def _build_question_first_candidate() -> Optional[Dict[str, Any]]:
+            question_first = dossier.get("question_first") if isinstance(dossier.get("question_first"), dict) else {}
+            answers = question_first.get("answers") if isinstance(question_first.get("answers"), list) else []
+            questions = dossier.get("questions") if isinstance(dossier.get("questions"), list) else []
+            if not answers:
+                return None
+
+            question_index: Dict[str, Dict[str, Any]] = {}
+            for question in questions:
+                if isinstance(question, dict):
+                    question_index[_question_lookup_key(question)] = question
+
+            validated_answers: List[Dict[str, Any]] = []
+            for answer in answers:
+                if not isinstance(answer, dict):
+                    continue
+                validation_state = str(answer.get("validation_state") or "").strip().lower()
+                confidence_value = self._safe_float(answer.get("confidence"))
+                if validation_state == "validated" and confidence_value >= 0.7:
+                    validated_answers.append(answer)
+
+            if not validated_answers:
+                return None
+
+            selected_answer = sorted(
+                validated_answers,
+                key=lambda item: (
+                    self._safe_float(item.get("confidence")),
+                    1 if bool(item.get("search_hit")) else 0,
+                ),
+                reverse=True,
+            )[0]
+
+            selected_question = question_index.get(
+                str(selected_answer.get("question_id") or selected_answer.get("question_text") or "").strip().lower()
+            ) or {}
+            service_fit = selected_question.get("yp_service_fit") if isinstance(selected_question.get("yp_service_fit"), list) else []
+            service_code = service_fit[0] if service_fit else "question_first"
+            service_label = self._humanize_service_label(service_code)
+            question_text = str(
+                selected_answer.get("question_text")
+                or selected_question.get("question")
+                or selected_question.get("question_text")
+                or f"Question-first evidence for {entity_name}"
+            ).strip()
+            answer_text = str(selected_answer.get("answer") or question_text).strip()
+            question_first_answers = question_first.get("answers") or []
+            confidence_value = max(
+                self._safe_float(selected_answer.get("confidence")),
+                active_probability_value,
+                discovery_confidence_value,
+            )
+
+            return {
+                "signal_basis": "question_first",
+                "signal_statement": answer_text,
+                "title": f"{entity_name}: {service_label} opportunity signal",
+                "suggested_action": str(
+                    selected_question.get("yp_advantage")
+                    or f"Review {service_label} evidence and prepare outreach."
+                ).strip(),
+                "why_it_matters": f"Question-first BrightData evidence validated a {service_label} trigger.",
+                "confidence": round(min(0.99, confidence_value), 4),
+                "selected_signal": None,
+                "selected_episode": episodes[0] if episodes and isinstance(episodes[0], dict) else None,
+                "source_signal_id": str(selected_answer.get("question_id") or selected_answer.get("evidence_url") or selected_answer.get("id") or ""),
+                "source_episode_id": str((episodes[0].get("episode_id") if episodes and isinstance(episodes[0], dict) else "") or ""),
+                "question_first_answer": selected_answer,
+                "question_first_question": selected_question,
+                "question_first_summary": {
+                    "questions_answered": int(question_first.get("questions_answered") or len(question_first_answers) or 0),
+                    "validated_answers": len(validated_answers),
+                    "service_fit": service_fit,
+                },
+            }
+
+        def _build_validated_signal_candidate() -> Optional[Dict[str, Any]]:
+            if not validated_signals:
+                return None
+
+            def _signal_sort_key(signal: Dict[str, Any]) -> tuple[int, float]:
+                signal_type = str(signal.get("type") or signal.get("signal_type") or "").upper()
+                confidence_value = self._safe_float(signal.get("confidence"))
+                return (1 if signal_type == "RFP_DETECTED" else 0, confidence_value)
+
+            selected_signal = sorted(
+                [signal for signal in validated_signals if isinstance(signal, dict)],
+                key=_signal_sort_key,
+                reverse=True,
+            )[0]
+            selected_episode = episodes[0] if episodes and isinstance(episodes[0], dict) else None
+            signal_type = str(selected_signal.get("type") or selected_signal.get("signal_type") or "").upper()
+            signal_statement = str(
+                selected_signal.get("statement")
+                or selected_signal.get("text")
+                or selected_signal.get("title")
+                or (selected_episode or {}).get("description")
+                or dossier.get("summary")
+                or f"Fresh pipeline evidence for {entity_name}"
+            ).strip()
+            if len(signal_statement) > 180:
+                signal_statement = f"{signal_statement[:177].rstrip()}..."
+
+            confidence_value = max(
+                self._safe_float(selected_signal.get("confidence")),
+                active_probability_value,
+                discovery_confidence_value,
+            )
+
+            if signal_type == "RFP_DETECTED":
+                title = f"{entity_name}: validated opportunity signal"
+                suggested_action = f"Review the latest opportunity window for {entity_name} and prepare outreach."
+                why_it_matters = "Graphiti linked the newest evidence to a live opportunity window."
+            else:
+                title = f"{entity_name}: fresh validated signal"
+                suggested_action = f"Monitor {entity_name} for the next Graphiti pass and related evidence."
+                why_it_matters = "Graphiti grounded this insight in validated pipeline evidence."
+
+            return {
+                "signal_basis": "validated_signal",
+                "signal_statement": signal_statement,
+                "title": title,
+                "suggested_action": suggested_action,
+                "why_it_matters": why_it_matters,
+                "confidence": round(min(0.99, confidence_value), 4),
+                "selected_signal": selected_signal,
+                "selected_episode": selected_episode,
+                "source_signal_id": str(selected_signal.get("id") or selected_signal.get("signal_id") or ""),
+                "source_episode_id": str((selected_episode or {}).get("episode_id") or (selected_episode or {}).get("id") or ""),
+            }
+
+        def _build_sales_readiness_candidate() -> Optional[Dict[str, Any]]:
+            if not (sales_readiness == "LIVE" or active_probability_value >= 0.8):
+                return None
+
+            selected_episode = episodes[0] if episodes and isinstance(episodes[0], dict) else None
+            signal_statement = str(
+                (selected_episode or {}).get("description")
+                or dossier.get("summary")
+                or f"Strong pipeline movement detected for {entity_name}"
+            ).strip()
+            if len(signal_statement) > 180:
+                signal_statement = f"{signal_statement[:177].rstrip()}..."
+
+            return {
+                "signal_basis": "sales_readiness",
+                "signal_statement": signal_statement,
+                "title": f"{entity_name}: strong pipeline movement",
+                "suggested_action": f"Prioritise follow-up while the {entity_name} signal remains fresh.",
+                "why_it_matters": "Graphiti linked the newest evidence to a live opportunity window.",
+                "confidence": round(min(0.99, max(active_probability_value, discovery_confidence_value)), 4),
+                "selected_signal": None,
+                "selected_episode": selected_episode,
+                "source_signal_id": "",
+                "source_episode_id": str((selected_episode or {}).get("episode_id") or (selected_episode or {}).get("id") or ""),
+            }
+
+        for candidate_builder in (_build_validated_signal_candidate, _build_question_first_candidate, _build_sales_readiness_candidate):
+            candidate = candidate_builder()
+            if candidate:
+                return candidate
+
+        return None
+
     def _build_homepage_insight_record(
         self,
         *,
         run_result: Dict[str, Any],
-    ) -> Dict[str, Any]:
+    ) -> Optional[Dict[str, Any]]:
         artifacts = run_result.get("artifacts") if isinstance(run_result.get("artifacts"), dict) else {}
         dossier = artifacts.get("dossier") if isinstance(artifacts.get("dossier"), dict) else {}
         discovery_result = artifacts.get("discovery_result") if isinstance(artifacts.get("discovery_result"), dict) else {}
@@ -722,55 +922,33 @@ class GraphitiService:
         completed_at = str(run_result.get("completed_at") or datetime.now(timezone.utc).isoformat())
         completed_dt = self._safe_iso_datetime(completed_at) or datetime.now(timezone.utc)
         materialized_at = datetime.now(timezone.utc)
-
-        selected_signal = None
-        if validated_signals:
-            def _signal_sort_key(signal: Dict[str, Any]) -> tuple[int, float]:
-                signal_type = str(signal.get("type") or signal.get("signal_type") or "").upper()
-                confidence = signal.get("confidence")
-                confidence_value = 0.0
-                try:
-                    confidence_value = float(confidence or 0)
-                except (TypeError, ValueError):
-                    confidence_value = 0.0
-                return (1 if signal_type == "RFP_DETECTED" else 0, confidence_value)
-
-            selected_signal = sorted(
-                [signal for signal in validated_signals if isinstance(signal, dict)],
-                key=_signal_sort_key,
-                reverse=True,
-            )[0]
-
-        selected_episode = episodes[0] if episodes and isinstance(episodes[0], dict) else None
-        signal_statement = str(
-            (selected_signal or {}).get("statement")
-            or (selected_signal or {}).get("text")
-            or (selected_signal or {}).get("title")
-            or (selected_episode or {}).get("description")
-            or dossier.get("summary")
-            or f"Fresh pipeline evidence for {entity_name}"
-        ).strip()
-        if len(signal_statement) > 180:
-            signal_statement = f"{signal_statement[:177].rstrip()}..."
-
-        sales_readiness = str(scores.get("sales_readiness") or "").strip().upper()
-        active_probability = scores.get("active_probability")
-        try:
-            active_probability_value = float(active_probability or 0)
-        except (TypeError, ValueError):
-            active_probability_value = 0.0
         discovery_confidence = getattr(discovery_result, "final_confidence", None)
         if discovery_confidence is None and isinstance(discovery_result, dict):
             discovery_confidence = discovery_result.get("final_confidence")
-        confidence_candidates = [active_probability_value]
-        if isinstance(discovery_confidence, (int, float)):
-            confidence_candidates.append(float(discovery_confidence))
-        for signal in validated_signals:
-            try:
-                confidence_candidates.append(float(signal.get("confidence") or 0))
-            except (TypeError, ValueError):
-                continue
-        confidence = round(min(0.99, max(confidence_candidates or [0.0])), 4)
+
+        candidate = self._select_homepage_insight_candidate(
+            entity_name=entity_name,
+            dossier=dossier,
+            validated_signals=validated_signals,
+            episodes=episodes,
+            scores=scores,
+            discovery_result={
+                "final_confidence": discovery_confidence,
+            },
+        )
+        if candidate is None:
+            return None
+
+        selected_signal = candidate.get("selected_signal") if isinstance(candidate.get("selected_signal"), dict) else None
+        selected_episode = candidate.get("selected_episode") if isinstance(candidate.get("selected_episode"), dict) else None
+        signal_statement = str(candidate.get("signal_statement") or f"Fresh pipeline evidence for {entity_name}").strip()
+        if len(signal_statement) > 180:
+            signal_statement = f"{signal_statement[:177].rstrip()}..."
+        confidence = self._safe_float(candidate.get("confidence"))
+        signal_basis = str(candidate.get("signal_basis") or "context_refresh").strip()
+        sales_readiness = str(scores.get("sales_readiness") or "").strip().upper()
+        active_probability = scores.get("active_probability")
+        active_probability_value = self._safe_float(active_probability)
 
         entity_type_lower = entity_type.lower()
         if entity_type_lower in {"club", "team"}:
@@ -791,25 +969,9 @@ class GraphitiService:
         elif age_hours > 72:
             freshness = "stale"
 
-        if selected_signal and str(selected_signal.get("type") or "").upper() == "RFP_DETECTED":
-            title = f"{entity_name}: validated opportunity signal"
-            suggested_action = f"Review the latest opportunity window for {entity_name} and prepare outreach."
-        elif sales_readiness == "LIVE" or active_probability_value >= 0.8:
-            title = f"{entity_name}: strong pipeline movement"
-            suggested_action = f"Prioritise follow-up while the {entity_name} signal remains fresh."
-        elif validated_signals:
-            title = f"{entity_name}: fresh validated signal"
-            suggested_action = f"Monitor {entity_name} for the next Graphiti pass and related evidence."
-        else:
-            title = f"{entity_name}: pipeline context refreshed"
-            suggested_action = f"Monitor {entity_name} for the next validated signal."
-
-        if sales_readiness == "LIVE":
-            why_it_matters = "Graphiti linked the newest evidence to a live opportunity window."
-        elif validated_signals:
-            why_it_matters = "Graphiti grounded this insight in validated pipeline evidence."
-        else:
-            why_it_matters = "This is the latest materialized context from the Graphiti pipeline."
+        title = str(candidate.get("title") or f"{entity_name}: pipeline context refreshed").strip()
+        suggested_action = str(candidate.get("suggested_action") or f"Monitor {entity_name} for the next validated signal.").strip()
+        why_it_matters = str(candidate.get("why_it_matters") or "This is the latest materialized context from the Graphiti pipeline.").strip()
 
         related_relationships: List[Dict[str, Any]] = []
         dossier_relationships = dossier.get("relationships") if isinstance(dossier.get("relationships"), list) else []
@@ -844,6 +1006,14 @@ class GraphitiService:
                         })
 
         evidence: List[Dict[str, Any]] = []
+        if signal_basis == "question_first":
+            question_first_answer = candidate.get("question_first_answer") if isinstance(candidate.get("question_first_answer"), dict) else {}
+            evidence.append({
+                "type": "note",
+                "id": str(question_first_answer.get("question_id") or f"{entity_id}:{run_result.get('run_id') or 'run'}:question-first"),
+                "snippet": signal_statement,
+                "source": str(question_first_answer.get("evidence_url") or "question_first_runner"),
+            })
         if selected_episode:
             evidence.append({
                 "type": "episode",
@@ -902,6 +1072,10 @@ class GraphitiService:
                 "active_probability": scores.get("active_probability"),
                 "validated_signal_count": len(validated_signals),
                 "episode_count": len(episodes),
+                "signal_basis": signal_basis,
+                "signal_quality": confidence,
+                "question_first_question_id": str((candidate.get("question_first_question") or {}).get("question_id") or ""),
+                "question_first_validation_state": str((candidate.get("question_first_answer") or {}).get("validation_state") or ""),
                 "phase_status": {phase: details.get("status") for phase, details in phase_results.items() if isinstance(details, dict)},
             },
         }
@@ -919,6 +1093,11 @@ class GraphitiService:
             }
 
         insight_record = self._build_homepage_insight_record(run_result=run_result)
+        if not insight_record:
+            return {
+                "status": "skipped",
+                "reason": "insufficient_signal_quality",
+            }
         self.supabase_client.table("homepage_graphiti_insights").upsert(
             insight_record,
             on_conflict="insight_id",

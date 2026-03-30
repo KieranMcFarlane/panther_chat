@@ -4,6 +4,8 @@
 **Status:** Proposed Architecture
 **Cost Savings:** 82% ($80/day → $14.12/day = $24,046/year savings)
 
+Canonical discovery contract: [Graphiti Discovery Contract](./graphiti-discovery-contract.md)
+
 ---
 
 ## Executive Summary

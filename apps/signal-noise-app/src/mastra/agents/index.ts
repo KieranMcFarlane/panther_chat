@@ -7,7 +7,6 @@ import { Memory } from "@mastra/memory";
 // import { completePlan, setPlan, updatePlanProgress } from "@/mastra/tools";
 import { neo4jTools } from "@/mastra/tools/neo4j-tools";
 import { brightDataTools } from "@/mastra/tools/brightdata-tools";
-import { perplexityTools } from "@/mastra/tools/perplexity-tools";
 import { sportsIntelligenceTools } from "@/mastra/tools/sports-intelligence-tools";
 
 // Canvas Agent working memory schema mirrors the front-end AgentState
@@ -39,7 +38,6 @@ console.log("🔧 Registering tools:", {
   // Plan tools disabled to prevent conversation clearing
   neo4jTools: Object.keys(neo4jTools),
   brightDataTools: Object.keys(brightDataTools),
-  perplexityTools: Object.keys(perplexityTools),
   sportsIntelligenceTools: Object.keys(sportsIntelligenceTools)
 });
 
@@ -50,7 +48,6 @@ export const canvasAgent = new Agent({
     // Plan tools completely removed to prevent conversation clearing
     ...neo4jTools,
     ...brightDataTools,
-    ...perplexityTools,
     ...sportsIntelligenceTools
   },
   model: getModel(), // Auto-selects Z.AI or OpenAI based on env vars

@@ -1,6 +1,6 @@
 /**
  * MCP-Enabled Autonomous 24/7 RFP Analysis Manager
- * Uses direct MCP tools for Neo4j, Perplexity, and BrightData integration
+ * Uses direct MCP tools for Graphiti, Supabase, and BrightData integration
  */
 
 import { liveLogService } from './LiveLogService';
@@ -67,12 +67,12 @@ export class MCPEnabledAutonomousRFPManager {
    * Initialize MCP servers for direct tool access
    */
   private initializeMCPServers(): void {
-    // Initialize Neo4j MCP server
-    this.mcpServers.set('neo4j-mcp', {
-      name: 'Neo4j MCP Server',
+    // Initialize Graphiti MCP server
+    this.mcpServers.set('graphiti', {
+      name: 'Graphiti MCP Server',
       tools: {
-        'neo4j_query': {
-          name: 'neo4j_query',
+        'graphiti_query': {
+          name: 'graphiti_query',
           execute: async (params) => this.executeNeo4jQuery(params)
         },
         'search_entities': {
@@ -109,9 +109,9 @@ export class MCPEnabledAutonomousRFPManager {
       }
     });
 
-    // Initialize Perplexity MCP server
-    this.mcpServers.set('perplexity-mcp', {
-      name: 'Perplexity MCP Server',
+    // Initialize Supabase MCP server
+    this.mcpServers.set('supabase-mcp', {
+      name: 'Supabase MCP Server',
       tools: {
         'chat_completion': {
           name: 'chat_completion',
@@ -219,7 +219,7 @@ export class MCPEnabledAutonomousRFPManager {
         {
           label: 'View Dashboard',
           action: 'view_autonomous_dashboard',
-          url: '/rfp-intelligence'
+          url: '/tenders'
         },
         {
           label: 'MCP Status',
@@ -239,7 +239,7 @@ export class MCPEnabledAutonomousRFPManager {
     await liveLogService.info('🔍 Starting MCP-enabled priority monitoring', {
       category: 'autonomous',
       source: 'MCPEnabledAutonomousRFPManager',
-      message: `Monitoring ${this.config.priorityEntities.length} priority entities with MCP tools`,
+      message: `Monitoring ${this.config.priorityEntities.length} priority entities with current MCP tools`,
       data: {
         entities: this.config.priorityEntities.length,
         monitoring_type: 'priority-mcp'
@@ -249,7 +249,7 @@ export class MCPEnabledAutonomousRFPManager {
 
     try {
       // Use Neo4j MCP to load priority entities from database
-      const neo4jTool = this.mcpServers.get('neo4j-mcp')?.tools['search_entities'];
+      const neo4jTool = this.mcpServers.get('graphiti')?.tools['search_entities'];
       if (neo4jTool) {
         const priorityEntitiesData = await neo4jTool.execute({
           limit: 50,
@@ -257,15 +257,15 @@ export class MCPEnabledAutonomousRFPManager {
           sortBy: 'rfp_probability'
         });
         
-        await liveLogService.info('📊 Neo4j MCP: Loaded priority entities from database', {
-          category: 'neo4j',
+        await liveLogService.info('📊 Graphiti MCP: Loaded priority entities from database', {
+          category: 'graphiti',
           source: 'MCPEnabledAutonomousRFPManager',
-          message: `Loaded ${priorityEntitiesData?.results?.length || 0} priority entities from Neo4j`,
+          message: `Loaded ${priorityEntitiesData?.results?.length || 0} priority entities from Graphiti`,
           data: {
             entitiesFound: priorityEntitiesData?.results?.length || 0,
-            source: 'neo4j-mcp'
+            source: 'graphiti'
           },
-          tags: ['neo4j-mcp', 'entity-loading']
+          tags: ['graphiti', 'entity-loading']
         });
       }
 
@@ -342,7 +342,7 @@ export class MCPEnabledAutonomousRFPManager {
 
     try {
       // Use Neo4j MCP to load all entities from database
-      const neo4jTool = this.mcpServers.get('neo4j-mcp')?.tools['search_entities'];
+      const neo4jTool = this.mcpServers.get('graphiti')?.tools['search_entities'];
       let allEntities = [];
       
       if (neo4jTool) {
@@ -458,10 +458,10 @@ export class MCPEnabledAutonomousRFPManager {
     await liveLogService.info('🔄 Processing entity with MCP tools', {
       category: 'mcp',
       source: 'MCPEnabledAutonomousRFPManager',
-      message: `Processing ${entityName} with Neo4j, BrightData, and Perplexity MCP tools`,
+      message: `Processing ${entityName} with Graphiti, BrightData, and Supabase MCP tools`,
       data: {
         entity: entityName,
-        tools: ['neo4j-mcp', 'brightdata-mcp', 'perplexity-mcp']
+        tools: ['graphiti', 'brightdata-mcp', 'supabase-mcp']
       },
       tags: ['mcp-processing', entity]
     });
@@ -478,8 +478,8 @@ export class MCPEnabledAutonomousRFPManager {
     };
 
     try {
-      // 1. Neo4j MCP: Find entity and get relationships
-      const neo4jTool = this.mcpServers.get('neo4j-mcp')?.tools['search_entities'];
+      // 1. Graphiti MCP: Find entity and get relationships
+      const neo4jTool = this.mcpServers.get('graphiti')?.tools['search_entities'];
       if (neo4jTool) {
         const neo4jResult = await neo4jTool.execute({
           query: entityName,
@@ -490,7 +490,7 @@ export class MCPEnabledAutonomousRFPManager {
           const entity = neo4jResult.results[0];
           
           // Get entity details
-          const detailsTool = this.mcpServers.get('neo4j-mcp')?.tools['get_entity_details'];
+          const detailsTool = this.mcpServers.get('graphiti')?.tools['get_entity_details'];
           if (detailsTool) {
             const details = await detailsTool.execute({ 
               entityId: entity.id 
@@ -501,7 +501,7 @@ export class MCPEnabledAutonomousRFPManager {
           }
           
           // Get entity relationships
-          const relationshipTool = this.mcpServers.get('neo4j-mcp')?.tools['create_relationship'];
+          const relationshipTool = this.mcpServers.get('graphiti')?.tools['create_relationship'];
           if (relationshipTool) {
             const relationships = await relationshipTool.execute({
               fromEntityId: entity.id,
@@ -529,8 +529,8 @@ export class MCPEnabledAutonomousRFPManager {
         this.metrics.mcpToolExecutions++;
       }
 
-      // 3. Perplexity MCP: Market intelligence analysis
-      const perplexityTool = this.mcpServers.get('perplexity-mcp')?.tools['chat_completion'];
+      // 3. Supabase MCP: Market intelligence analysis
+      const perplexityTool = this.mcpServers.get('supabase-mcp')?.tools['chat_completion'];
       if (perplexityTool && mcpResults.entity) {
         const marketPrompt = `
         Analyze ${entityName} for RFP and procurement opportunities in the sports industry.
@@ -582,8 +582,8 @@ export class MCPEnabledAutonomousRFPManager {
         mcpResults.connectionAnalysis = await this.performConnectionIntelligenceAnalysis(entityName, mcpResults);
       }
 
-      // 5. Store enhanced data back in Neo4j
-      const updateTool = this.mcpServers.get('neo4j-mcp')?.tools['create_relationship'];
+      // 5. Store enhanced data back in Graphiti
+      const updateTool = this.mcpServers.get('graphiti')?.tools['create_relationship'];
       if (updateTool && mcpResults.neo4jId) {
         await updateTool.execute({
           fromEntityId: mcpResults.neo4jId,
@@ -785,7 +785,7 @@ export class MCPEnabledAutonomousRFPManager {
     } else if (mcpResults.entity && (mcpResults.webData || mcpResults.marketIntelligence)) {
       confidence = 80; // Has 2 data sources
     } else if (mcpResults.entity) {
-      confidence = 75; // Has Neo4j data only
+      confidence = 75; // Has Graphiti data only
     }
     
     return {
@@ -798,11 +798,11 @@ export class MCPEnabledAutonomousRFPManager {
       lastUpdated: new Date().toISOString(),
       dataSource: 'mcp-integrated',
       dataSources: {
-        neo4j: !!mcpResults.entity,
+        graphiti: !!mcpResults.entity,
         brightData: !!mcpResults.webData,
-        perplexity: !!mcpResults.marketIntelligence
+        supabase: !!mcpResults.marketIntelligence
       },
-      mcpToolsUsed: ['neo4j-mcp', 'brightdata-mcp', 'perplexity-mcp']
+      mcpToolsUsed: ['graphiti', 'brightdata-mcp', 'supabase-mcp']
     };
   }
 
@@ -1135,9 +1135,9 @@ export class MCPEnabledAutonomousRFPManager {
         mcpToolExecutions: this.metrics.mcpToolExecutions,
         activeMCPTools: this.mcpServers.size,
         tools: {
-          neo4j: Object.keys(this.mcpServers.get('neo4j-mcp')?.tools || {}),
+          graphiti: Object.keys(this.mcpServers.get('graphiti')?.tools || {}),
           brightdata: Object.keys(this.mcpServers.get('brightdata-mcp')?.tools || {}),
-          perplexity: Object.keys(this.mcpServers.get('perplexity-mcp')?.tools || {})
+          supabase: Object.keys(this.mcpServers.get('supabase-mcp')?.tools || {})
         }
       }
     };

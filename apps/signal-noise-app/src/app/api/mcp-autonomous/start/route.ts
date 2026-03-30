@@ -80,8 +80,8 @@ export async function GET() {
       },
       capabilities: {
         directMCPIntegration: true,
-        supportedMCPTools: ['neo4j-mcp', 'brightdata-mcp', 'perplexity-mcp'],
-        entityProcessing: 'Neo4j traversal with relationship analysis',
+        supportedMCPTools: ['graphiti', 'brightdata-mcp', 'supabase-mcp'],
+        entityProcessing: 'Graphiti traversal with relationship analysis',
         dataOutput: 'Structured JSON format',
         operationMode: '24/7 autonomous with cron scheduling'
       },
@@ -101,8 +101,8 @@ export async function GET() {
     systemInfo: status,
     capabilities: {
       directMCPIntegration: true,
-      supportedMCPTools: ['neo4j-mcp', 'brightdata-mcp', 'perplexity-mcp'],
-      entityProcessing: 'Neo4j traversal with relationship analysis',
+      supportedMCPTools: ['graphiti', 'brightdata-mcp', 'supabase-mcp'],
+      entityProcessing: 'Graphiti traversal with relationship analysis',
       dataOutput: 'Structured JSON format',
       operationMode: '24/7 autonomous with cron scheduling'
     },
