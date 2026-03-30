@@ -98,6 +98,18 @@ const DOMAIN_ENTITY_ALIASES: Array<{ host: string; preferredEntities: string[] }
     host: 'athletics.ca',
     preferredEntities: ['Athletics Canada'],
   },
+  {
+    host: 'bundesliga.com',
+    preferredEntities: ['German Football League (DFL)', 'German Football League'],
+  },
+  {
+    host: 'canadasoccer.com',
+    preferredEntities: ['Canada Soccer'],
+  },
+  {
+    host: 'nzrugby.co.nz',
+    preferredEntities: ['New Zealand Rugby'],
+  },
 ]
 
 const ORGANIZATION_ENTITY_ALIASES: Array<{ match: string; preferredEntities: string[] }> = [

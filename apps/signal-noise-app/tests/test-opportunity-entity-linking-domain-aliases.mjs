@@ -170,6 +170,69 @@ test('leaves athletics.ca governing-body opportunities unlinked when the canonic
   assert.equal(linked.canonical_entity_name, null)
 })
 
+test('leaves bundesliga.com operator opportunities unlinked when German Football League is absent from the canonical snapshot', () => {
+  const linked = linkOpportunityToCanonicalEntity(
+    {
+      organization: 'German Football League (DFL)',
+      title: 'Fan Technology Innovation Platform',
+      description:
+        'Bundesliga seeking technology partners for innovative fan platform including mobile applications and content delivery.',
+      source_url: 'https://www.bundesliga.com/fan-technology-rfp',
+    },
+    [
+      {
+        id: '558',
+        properties: { name: '2. Bundesliga', type: 'League' },
+      },
+    ],
+  )
+
+  assert.equal(linked.canonical_entity_id, null)
+  assert.equal(linked.canonical_entity_name, null)
+})
+
+test('leaves canadasoccer.com governing-body opportunities unlinked when Canada Soccer is absent from the canonical snapshot', () => {
+  const linked = linkOpportunityToCanonicalEntity(
+    {
+      organization: 'Canada Soccer',
+      title: 'Digital Modernization & Fan Platform Enhancement',
+      description:
+        'Canada Soccer seeking digital agency for modernization, fan engagement, and national team content systems.',
+      source_url: 'https://www.canadasoccer.com/digital-modernization-rfp',
+    },
+    [
+      {
+        id: '4481',
+        properties: { name: 'USA/Canada', type: 'Sports Entity' },
+      },
+    ],
+  )
+
+  assert.equal(linked.canonical_entity_id, null)
+  assert.equal(linked.canonical_entity_name, null)
+})
+
+test('leaves nzrugby.co.nz operator opportunities unlinked when New Zealand Rugby is absent from the canonical snapshot', () => {
+  const linked = linkOpportunityToCanonicalEntity(
+    {
+      organization: 'New Zealand Rugby',
+      title: 'Digital Transformation & Fan Platform',
+      description:
+        'New Zealand Rugby seeking digital agency for transformation, fan engagement, and All Blacks community integration.',
+      source_url: 'https://www.nzrugby.co.nz/digital-transformation-rfp',
+    },
+    [
+      {
+        id: '297fb435-e99f-4cfc-b9e8-d8e1287df642',
+        properties: { name: 'All Blacks', type: 'Sports Entity' },
+      },
+    ],
+  )
+
+  assert.equal(linked.canonical_entity_id, null)
+  assert.equal(linked.canonical_entity_name, null)
+})
+
 test('keeps Volleyball World opportunities unlinked when the only strong candidate is an unrelated club brand', () => {
   const linked = linkOpportunityToCanonicalEntity(
     {

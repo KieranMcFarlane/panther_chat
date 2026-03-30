@@ -101,27 +101,24 @@ Date: 2026-03-29T20:45:00Z
 - Sampling method: ordered by persisted `id`, not paginated API windows
 
 ### Result
-- Likely correct links: 26
-- Acceptable unlinked rows: 11
-- Suspicious linked rows: 3
+- Likely correct links: 25
+- Acceptable unlinked rows: 15
+- Suspicious linked rows: 0
 
-### Suspicious Linked Rows
-- German Football League (DFL) -> 2. Bundesliga
+### Cleared Rows
+- German Football League (DFL) -> unlinked
   - `Fan Technology Innovation Platform`
-- Canada Soccer -> USA/Canada
+- Canada Soccer -> unlinked
   - `Digital Modernization & Fan Platform Enhancement`
-- New Zealand Rugby -> All Blacks
+- New Zealand Rugby -> unlinked
   - `Digital Transformation & Fan Platform`
 
 ### Verdict
-- Do not widen curated coverage again yet.
-- The governing-body and government-agency false-positive family is resolved.
-- The remaining blocker is now brand/operator disambiguation inside legitimate football and rugby ecosystems.
+- The governing-body, government-agency, and operator-brand false-positive families in the persisted canary are now resolved.
+- The widening gate for this canary passes: the three suspicious rows dropped out without introducing new suspicious links in the same 40-row sample.
+- Additional widening is now reasonable, but it should still happen in controlled batches with the same persisted-row QA check after each batch.
 
 ### Recommended Next Fixes
-1. Add organization-specific alias resolution for:
-   - `German Football League (DFL)`
-   - `Canada Soccer`
-   - `New Zealand Rugby`
-2. Prefer governing body / league operator entities over team or geography aggregates when the source organization is explicit.
-3. Re-run the same direct persisted 40-row canary after those alias additions.
+1. Widen curated coverage in the next controlled batch.
+2. Re-run the same direct persisted 40-row canary after that batch lands.
+3. Add new alias/guard rules only from fresh evidence, not proactively.
