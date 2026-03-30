@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { unstable_noStore as noStore } from 'next/cache';
 import { getSupabaseAdmin } from '@/lib/supabase-client';
+import { filterHighSignalGraphitiInsightRows } from '@/lib/home-graphiti-feed.mjs';
 import type {
   HomeGraphitiInsight,
   HomeGraphitiInsightsResponse,
@@ -161,10 +162,11 @@ export async function GET() {
         : rawRows && typeof rawRows === 'object'
           ? [rawRows as Record<string, unknown>]
           : [];
+      const highSignalRows = filterHighSignalGraphitiInsightRows(rows as Record<string, unknown>[]);
       const seen = new Set<string>();
       const uniqueRows: HomeGraphitiInsight[] = [];
 
-      for (const row of rows) {
+      for (const row of highSignalRows) {
         const mapped = mapRowToInsight(row as Record<string, unknown>);
         if (!mapped.insight_id) {
           continue;
@@ -177,7 +179,7 @@ export async function GET() {
       }
 
       highlights = uniqueRows.slice(0, 5);
-      const latestMaterializedAt = rows.find((row) => row?.materialized_at)?.materialized_at;
+      const latestMaterializedAt = highSignalRows.find((row) => row?.materialized_at)?.materialized_at;
       if (latestMaterializedAt) {
         lastUpdatedAt = String(latestMaterializedAt);
       }

@@ -331,6 +331,10 @@ For support and questions:
 - Check the documentation
 - Review the troubleshooting section
 
+## 🗂️ Legacy Archive
+
+Historical reference docs live in [docs/archive/README.md](./archive/README.md). They are preserved for context only and may describe older Neo4j-era workflows that are no longer the canonical path.
+
 ---
 
 **Built with ❤️ using FastAPI, Celery, Graphiti, FalkorDB, and Claude Code**
