@@ -455,16 +455,16 @@ export class MCPEnabledAutonomousRFPManager {
   private async processEntityWithMCP(entityName: string): Promise<any> {
     const processingStartTime = Date.now();
     
-    await liveLogService.info('🔄 Processing entity with MCP tools', {
-      category: 'mcp',
-      source: 'MCPEnabledAutonomousRFPManager',
-      message: `Processing ${entityName} with Graphiti, BrightData, and Supabase MCP tools`,
-      data: {
-        entity: entityName,
-        tools: ['graphiti', 'brightdata-mcp', 'supabase-mcp']
-      },
-      tags: ['mcp-processing', entity]
-    });
+      await liveLogService.info('🔄 Processing entity with MCP tools', {
+        category: 'mcp',
+        source: 'MCPEnabledAutonomousRFPManager',
+        message: `Processing ${entityName} with Graphiti, BrightData, and Supabase MCP tools`,
+        data: {
+          entity: entityName,
+          tools: ['graphiti', 'brightdata-mcp', 'supabase-mcp']
+        },
+        tags: ['mcp-processing', entityName]
+      });
 
     const mcpResults = {
       entity: entityName,
