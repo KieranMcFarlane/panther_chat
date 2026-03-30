@@ -128,6 +128,7 @@ async function resolveEntity(entityId: string): Promise<ResolvedEntity | null> {
 async function getPersistedDossier(entityId: string, entity?: ResolvedEntity | null) {
   const candidateIds = [
     entityId,
+    entity?.uuid ? String(entity.uuid) : null,
     entity?.id ? String(entity.id) : null,
     entity?.neo4j_id != null ? String(entity.neo4j_id) : null,
   ].filter((value, index, arr): value is string => Boolean(value) && arr.indexOf(value) === index)

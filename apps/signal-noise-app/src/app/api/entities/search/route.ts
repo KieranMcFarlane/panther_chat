@@ -54,24 +54,24 @@ export async function GET(request: NextRequest) {
     }
 
     const ranked = (data || []).map((entity: any) => {
-      const stableId = resolveGraphId(entity) || entity.id
       const uuid = resolveEntityUuid({
         id: entity.id,
         neo4j_id: entity.neo4j_id,
         graph_id: entity.graph_id,
+        uuid: entity.uuid,
         supabase_id: entity.properties?.supabase_id,
         properties: entity.properties,
-      }) || stableId
-      const name = entity.properties?.name || stableId || `Entity ${entity.id}`
+      }) || resolveGraphId(entity) || entity.id
+      const name = entity.properties?.name || uuid || `Entity ${entity.id}`
       const type = entity.properties?.type || entity.labels?.[0] || 'Unknown'
       const sport = entity.properties?.sport || ''
       const country = entity.properties?.country || ''
       const lexicalScore = buildVectorBackedFallbackSearch(search, String(name))
       const popularityScore = Number(entity.properties?.priorityScore || entity.properties?.yellowPantherPriority || 0)
       return ({
-        id: stableId,
+        id: uuid,
         uuid,
-        graph_id: stableId,
+        graph_id: resolveGraphId(entity) || entity.id,
         name,
         type,
         sport,

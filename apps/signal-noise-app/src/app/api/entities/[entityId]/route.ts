@@ -278,10 +278,10 @@ async function getPersistedDossier(entityId: string, neo4jId?: string | number, 
       .filter((value, index, arr): value is string => Boolean(value) && arr.indexOf(value) === index)
 
     for (const candidateId of candidateIds) {
-      const { data, error } = await supabase
-        .from('entity_dossiers')
-        .select('dossier_data')
-        .eq('entity_id', candidateId)
+    const { data, error } = await supabase
+      .from('entity_dossiers')
+      .select('dossier_data')
+      .eq('entity_id', candidateId)
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle()
@@ -560,13 +560,14 @@ export async function GET(
 
     if (!comprehensiveDossier) {
       comprehensiveDossier = await getPersistedDossier(
-        entity.id?.toString() || entityId,
+        entity.uuid?.toString() || entity.id?.toString() || entityId,
         entity.neo4j_id,
         entity.properties?.name,
       )
     }
 
     const pipelineStatus = await getLatestPipelineStatusSummary(
+      entity.uuid,
       entity.id,
       entity.neo4j_id,
       entityId,

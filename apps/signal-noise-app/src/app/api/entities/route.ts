@@ -110,7 +110,7 @@ export async function GET(request: NextRequest) {
       })
 
       return {
-        id: entity.id,
+        id: uuid || entity.id,
         uuid,
         neo4j_id: entity.neo4j_id,
         badge_s3_url: resolvedBadgeUrl,
