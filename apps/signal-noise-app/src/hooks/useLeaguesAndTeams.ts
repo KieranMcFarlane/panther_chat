@@ -92,6 +92,7 @@ export function useLeagues(options?: {
 
 export function useTeams(options?: {
   leagueId?: string;
+  leagueName?: string;
   sport?: string;
   country?: string;
   limit?: number;
@@ -101,6 +102,7 @@ export function useTeams(options?: {
 }) {
   const params = new URLSearchParams();
   if (options?.leagueId) params.append('leagueId', options.leagueId);
+  if (options?.leagueName) params.append('leagueName', options.leagueName);
   if (options?.sport) params.append('sport', options.sport);
   if (options?.country) params.append('country', options.country);
   if (options?.limit) params.append('limit', options.limit.toString());

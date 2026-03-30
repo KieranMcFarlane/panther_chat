@@ -1,32 +1,77 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { readFileSync } from 'node:fs'
 
-const entitiesTaxonomySource = readFileSync(new URL('../src/lib/entities-taxonomy.ts', import.meta.url), 'utf8')
-const sportsHierarchySource = readFileSync(new URL('../src/lib/sports-hierarchy-taxonomy.mjs', import.meta.url), 'utf8')
+import { buildEntitiesTaxonomy, canonicalizeLeagueLabel, getCanonicalLeagueQueryValues } from '../src/lib/entities-taxonomy.ts'
 
-test('buildEntitiesTaxonomy deduplicates canonical facet keys instead of raw labels', () => {
-  assert.match(entitiesTaxonomySource, /normalizeFacetKey/)
-  assert.match(entitiesTaxonomySource, /normalizeFacetLabel/)
-  assert.match(entitiesTaxonomySource, /isPreferredFacetLabel/)
-  assert.match(entitiesTaxonomySource, /shouldIncludeInSportsHierarchy/)
-  assert.match(entitiesTaxonomySource, /const sports = new Map<string, \{ label: string; count: number \}>/)
-  assert.match(entitiesTaxonomySource, /const entityRoles = new Map<string, \{ label: string; count: number \}>/)
-  assert.match(entitiesTaxonomySource, /const leaguesBySport = new Map<string, Map<string, \{ label: string; count: number \}>>/)
-  assert.match(entitiesTaxonomySource, /const bumpFacet = \(bucket: Map<string, \{ label: string; count: number \}>, rawValue: unknown\)/)
-  assert.match(entitiesTaxonomySource, /bumpNestedFacet\(leaguesBySport, sport, league\)/)
-  assert.match(entitiesTaxonomySource, /if \(inSportsHierarchy\)/)
-  assert.match(entitiesTaxonomySource, /getCanonicalEntityRole/)
-  assert.ok(entitiesTaxonomySource.includes('entityRoles: [...entityRoles.values()].sort'))
-  assert.ok(entitiesTaxonomySource.includes('sports: [...sports.values()].sort'))
-  assert.ok(entitiesTaxonomySource.includes('counts: {'))
-  assert.ok(entitiesTaxonomySource.includes('sports: toSortedCountMap(sports)'))
+test('buildEntitiesTaxonomy derives taxonomy from entity snapshots', () => {
+  const snapshot = buildEntitiesTaxonomy([
+    {
+      labels: ['Club'],
+      properties: {
+        name: 'Arsenal FC',
+        sport: 'Football',
+        league: 'Premier League',
+        country: 'England',
+        entityClass: 'SPORT_CLUB',
+      },
+    },
+    {
+      labels: ['Federation'],
+      properties: {
+        name: 'International Canoe Federation',
+        sport: 'Canoe',
+        country: 'Switzerland',
+        entityClass: 'SPORT_FEDERATION',
+      },
+    },
+  ])
+
+  assert.deepEqual(snapshot.sports, ['Canoe', 'Football'])
+  assert.deepEqual(snapshot.leagues, ['Premier League'])
+  assert.deepEqual(snapshot.countries, ['England', 'Switzerland'])
+  assert.deepEqual(snapshot.entityClasses, ['SPORT_CLUB', 'SPORT_FEDERATION'])
+  assert.deepEqual(snapshot.federationsRightsHolders, ['International Canoe Federation'])
+  assert.deepEqual(snapshot.leaguesBySport, { Football: ['Premier League'] })
+  assert.equal(snapshot.counts.sports.Football, 1)
+  assert.equal(snapshot.counts.entityClasses.SPORT_FEDERATION, 1)
 })
 
-test('sports hierarchy helper exposes the strict role gate and backfill shape', () => {
-  assert.match(sportsHierarchySource, /export function shouldIncludeInSportsHierarchy\(/)
-  assert.match(sportsHierarchySource, /export function buildCanonicalLeagueLookup\(/)
-  assert.match(sportsHierarchySource, /export function buildSportsHierarchyBackfill\(/)
-  assert.match(sportsHierarchySource, /SPORTS_HIERARCHY_ROLES/)
-  assert.match(sportsHierarchySource, /shouldClearHierarchy/)
+test('buildEntitiesTaxonomy collapses league aliases into one canonical option', () => {
+  const snapshot = buildEntitiesTaxonomy([
+    {
+      labels: ['Club'],
+      properties: {
+        name: 'Arsenal FC',
+        sport: 'Football',
+        league: 'English Premier League',
+        country: 'England',
+        entityClass: 'SPORT_CLUB',
+      },
+    },
+    {
+      labels: ['Club'],
+      properties: {
+        name: 'Chelsea FC',
+        sport: 'Football',
+        league: 'EPL',
+        country: 'England',
+        entityClass: 'SPORT_CLUB',
+      },
+    },
+    {
+      labels: ['League'],
+      properties: {
+        name: 'Premier League',
+        sport: 'Football',
+        country: 'England',
+        entityClass: 'SPORT_LEAGUE',
+      },
+    },
+  ])
+
+  assert.equal(canonicalizeLeagueLabel('English Premier League'), 'Premier League')
+  assert.equal(canonicalizeLeagueLabel('EPL'), 'Premier League')
+  assert.deepEqual(getCanonicalLeagueQueryValues('Premier League'), ['premier league', 'english premier league', 'epl'])
+  assert.deepEqual(snapshot.leagues, ['Premier League'])
+  assert.deepEqual(snapshot.leaguesBySport, { Football: ['Premier League'] })
 })
