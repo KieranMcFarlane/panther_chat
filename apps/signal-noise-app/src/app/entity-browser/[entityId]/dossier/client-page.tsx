@@ -391,6 +391,7 @@ export default function EntityDossierClientPage({
               statusLabel={enrichmentStatusLabel}
               lastUpdatedLabel={enrichmentLastUpdatedLabel}
               recentAdditions={recentEnrichmentAdditions}
+              primaryActionLabel="Further enrich"
               onRunEnrichment={() => {
                 const target = `/entity-enrichment?entityId=${encodeURIComponent(entityId)}`
                 pushWithViewTransition(router, target)

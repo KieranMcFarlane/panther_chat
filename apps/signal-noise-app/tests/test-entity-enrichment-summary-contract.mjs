@@ -12,6 +12,8 @@ test('entity enrichment summary is surfaced in the entity browser and dossier', 
   assert.match(summarySource, /Recent contact\/company additions/)
   assert.match(summarySource, /Run enrichment/)
   assert.match(summarySource, /Open advanced enrichment/)
+  assert.match(entityCardSource, /Open dossier/)
+  assert.match(dossierSource, /Further enrich/)
   assert.match(entityCardSource, /EntityEnrichmentSummaryCard/)
   assert.match(dossierSource, /EntityEnrichmentSummaryCard/)
 })

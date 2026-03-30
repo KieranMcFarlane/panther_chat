@@ -364,7 +364,7 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
               </>
             ) : (
               <>
-                View Full Profile
+                Open dossier
                 <ArrowRight className="h-4 w-4 ml-2" />
               </>
             )}

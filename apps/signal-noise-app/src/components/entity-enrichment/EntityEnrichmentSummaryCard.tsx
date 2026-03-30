@@ -15,6 +15,7 @@ interface EntityEnrichmentSummaryCardProps {
   onRunEnrichment: () => void
   advancedHref: string
   compact?: boolean
+  primaryActionLabel?: string
 }
 
 export function EntityEnrichmentSummaryCard({
@@ -25,6 +26,7 @@ export function EntityEnrichmentSummaryCard({
   onRunEnrichment,
   advancedHref,
   compact = false,
+  primaryActionLabel = 'Run enrichment',
 }: EntityEnrichmentSummaryCardProps) {
   const visibleAdditions = recentAdditions.filter(Boolean).slice(0, 3)
 
@@ -72,7 +74,7 @@ export function EntityEnrichmentSummaryCard({
             }}
           >
             <RefreshCw className="mr-2 h-4 w-4" />
-            Run enrichment
+            {primaryActionLabel}
           </Button>
           <Button variant="outline" asChild className="border-emerald-200 text-emerald-700 hover:bg-emerald-50">
             <Link

@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs'
 
 const journeyComponentPath = new URL('../src/components/entity-browser/EntitySmokeJourney.tsx', import.meta.url)
 const browserPagePath = new URL('../src/app/entity-browser/client-page.tsx', import.meta.url)
-const runbookPath = new URL('../../../docs/plans/2026-03-27-entity-browser-5-entity-smoke-runbook.md', import.meta.url)
+const runbookPath = new URL('../docs/plans/2026-03-29-yellow-panther-end-to-end-system-overview.md', import.meta.url)
 
 const journeySource = readFileSync(journeyComponentPath, 'utf8')
 const browserPageSource = readFileSync(browserPagePath, 'utf8')
@@ -26,8 +26,9 @@ test('entity browser page mounts the smoke journey above the entity grid', () =>
 })
 
 test('smoke runbook documents the live operator journey and acceptance criteria', () => {
-  assert.match(runbookSource, /Arsenal Football Club/)
-  assert.match(runbookSource, /Major League Cricket/)
+  assert.match(runbookSource, /entity browser first/)
+  assert.match(runbookSource, /LeadIQ/)
+  assert.match(runbookSource, /BrightData MCP/)
   assert.match(runbookSource, /Control Center/)
   assert.match(runbookSource, /persisted dossier state/)
   assert.match(runbookSource, /phase rail/)
