@@ -4,29 +4,18 @@ import fs from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { setTimeout as delay } from 'node:timers/promises';
 import dotenv from 'dotenv';
 import {
   buildQuestionFirstRunArtifact,
   validateQuestionFirstRunArtifact,
 } from './question_first_run_contract.mjs';
-import {
-  lookupApifyTechStack,
-} from './apify_techstack_lookup.mjs';
 
 const MODULE_DIR = path.dirname(fileURLToPath(import.meta.url));
 const APP_ROOT = path.resolve(MODULE_DIR, '..');
 const WORKTREE_ROOT = path.resolve(APP_ROOT, '..', '..');
-const OPCODE_WORKTREE_ROOT = path.resolve(WORKTREE_ROOT, '.worktrees', 'opencode-question-first-ssot');
 const DEFAULT_PROVIDER_ID = 'zai-coding-plan';
 const DEFAULT_MODEL_ID = 'glm-5';
 const DEFAULT_MODEL = `${DEFAULT_PROVIDER_ID}/${DEFAULT_MODEL_ID}`;
-const DEFAULT_QUESTION_MODEL = process.env.OPENCODE_QUESTION_MODEL || DEFAULT_MODEL;
-const ROLLOUT_PHASE_RANK = {
-  phase_1_core: 1,
-  phase_2_conditional: 2,
-  phase_3_decision: 3,
-};
 
 function _loadEnv() {
   for (const envPath of [
@@ -44,507 +33,6 @@ function _slugify(value) {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '') || 'entity';
-}
-
-function _questionText(question, entityName = '') {
-  const text = String(question?.question_text || question?.question || '').trim();
-  if (!text) {
-    return '';
-  }
-  const resolvedEntityName = String(entityName || question?.entity_name || question?.entityName || '').trim();
-  return resolvedEntityName ? text.replaceAll('{entity}', resolvedEntityName) : text;
-}
-
-function _secondsBetweenIso(startIso, endIso) {
-  const startTs = Date.parse(startIso);
-  const endTs = Date.parse(endIso);
-  if (!Number.isFinite(startTs) || !Number.isFinite(endTs)) {
-    return 0;
-  }
-  return Math.round(Math.max(endTs - startTs, 0) / 1000 * 1000) / 1000;
-}
-
-function _buildQuestionTiming(startedAt, completedAt = new Date().toISOString()) {
-  return {
-    started_at: startedAt,
-    completed_at: completedAt,
-    duration_seconds: _secondsBetweenIso(startedAt, completedAt),
-  };
-}
-
-function _phaseRank(value) {
-  return ROLLOUT_PHASE_RANK[String(value || '').trim()] || 1;
-}
-
-function _filterQuestionsForRollout(questions, rolloutPhase = 'phase_1_core') {
-  const activeRank = _phaseRank(rolloutPhase);
-  return (Array.isArray(questions) ? questions : []).filter((question) => _phaseRank(question?.rollout_phase) <= activeRank);
-}
-
-function _errorText(error) {
-  if (!error) return '';
-  if (error instanceof Error) {
-    return [error.name, error.message, error.stack].filter(Boolean).join('\n');
-  }
-  return String(error);
-}
-
-function _isRetryableUpstreamError(error) {
-  const text = _errorText(error).toLowerCase();
-  if (!text) return false;
-  return [
-    'retryable_upstream_failure',
-    'too many requests',
-    'too_many_requests',
-    'network error',
-    'ai_apicallerror',
-    'econnreset',
-    'etimedout',
-    'temporarily unavailable',
-    'rate limit',
-    'rate-limit',
-    '429',
-  ].some((pattern) => text.includes(pattern));
-}
-
-function _buildRetryableUpstreamFailure(error, attempts) {
-  const message = _errorText(error).trim() || 'transient upstream failure';
-  const wrapped = new Error(`retryable_upstream_failure: ${message}`);
-  wrapped.name = 'RetryableUpstreamError';
-  wrapped.cause = error;
-  wrapped.retry_attempts = attempts;
-  return wrapped;
-}
-
-function _transientRetryAttempts() {
-  const parsed = Number.parseInt(process.env.OPENCODE_TRANSIENT_RETRY_ATTEMPTS || '3', 10);
-  return Number.isFinite(parsed) ? Math.max(1, parsed) : 3;
-}
-
-function _transientRetryDelayMs() {
-  const parsed = Number.parseInt(process.env.OPENCODE_TRANSIENT_RETRY_DELAY_MS || '1000', 10);
-  return Number.isFinite(parsed) ? Math.max(1, parsed) : 1000;
-}
-
-function _getQuestionStateById(runState, questionId) {
-  return (Array.isArray(runState?.questions) ? runState.questions : []).find(
-    (item) => String(item?.question_id || '').trim() === String(questionId || '').trim(),
-  ) || null;
-}
-
-function _isAcceptedDependencyState(questionState) {
-  const status = String(questionState?.status || '').trim().toLowerCase();
-  const terminalState = String(
-    questionState?.terminal_state
-    || questionState?.question_output?.terminal_state
-    || questionState?.reasoning?.structured_output?.terminal_state
-    || '',
-  ).trim().toLowerCase();
-  const validationState = String(
-    questionState?.validation_state
-    || questionState?.question_output?.validation_state
-    || questionState?.reasoning?.structured_output?.validation_state
-    || '',
-  ).trim().toLowerCase();
-  return status === 'validated'
-    || status === 'answered'
-    || terminalState === 'answered'
-    || ACCEPTED_ANSWER_VALIDATION_STATES.has(validationState);
-}
-
-function _questionConditionsMet(question, runState, entityType) {
-  const conditions = Array.isArray(question?.conditional_on) ? question.conditional_on : [];
-  if (conditions.length === 0) {
-    return true;
-  }
-
-  return conditions.every((condition) => {
-    const conditionType = String(condition?.type || '').trim();
-    if (conditionType === 'entity_type_in') {
-      const values = Array.isArray(condition?.values) ? condition.values.map((item) => String(item || '').trim()) : [];
-      return values.includes(String(entityType || '').trim());
-    }
-    if (conditionType === 'validated_question') {
-      const prior = _getQuestionStateById(runState, condition?.question_id);
-      return _isAcceptedDependencyState(prior);
-    }
-    if (conditionType === 'question_phase_enabled') {
-      return Boolean(_getQuestionStateById(runState, condition?.question_id));
-    }
-    return true;
-  });
-}
-
-function _emptyStructuredOutputForQuestion(question, note = '', overrides = {}) {
-  const questionType = String(question?.question_type || '').trim().toLowerCase();
-  const base = {
-    answer: '',
-    confidence: 0,
-    sources: [],
-    validation_state: 'no_signal',
-    terminal_state: overrides.terminal_state || 'no_signal',
-  };
-  if (note) {
-    base.notes = note;
-    base.context = note;
-    base.summary = note;
-  }
-  if (Array.isArray(overrides.blocked_by) && overrides.blocked_by.length > 0) {
-    base.blocked_by = overrides.blocked_by;
-  }
-  if (questionType === 'decision_owner') {
-    return {
-      ...base,
-      primary_owner: null,
-      secondary_candidates: [],
-      supporting_candidates: [],
-      function_type: '',
-      seniority_level: '',
-      decision_score: 0,
-      confidence_score: 0,
-    };
-  }
-  if (questionType === 'leadership') {
-    return {
-      ...base,
-      candidates: [],
-      candidate_pool: [],
-    };
-  }
-  if (questionType === 'connections') {
-    return {
-      ...base,
-      candidate_paths: [],
-      best_yp_owner: '',
-      path_type: 'cold',
-      connection_score: 0,
-      q12_score: 0,
-    };
-  }
-  if (['capability_gap', 'yp_fit', 'outreach_strategy'].includes(questionType)) {
-    return {
-      ...base,
-      summary: '',
-      themes: [],
-      recommendations: [],
-    };
-  }
-  return base;
-}
-
-function _describeUnmetQuestionConditions(question, runState, entityType) {
-  const conditions = Array.isArray(question?.conditional_on) ? question.conditional_on : [];
-  const blockedBy = Array.isArray(question?.depends_on) ? question.depends_on.filter(Boolean) : [];
-  const unmetReasons = [];
-
-  for (const condition of conditions) {
-    const conditionType = String(condition?.type || '').trim();
-    if (conditionType === 'entity_type_in') {
-      const values = Array.isArray(condition?.values) ? condition.values.map((item) => String(item || '').trim()) : [];
-      if (!values.includes(String(entityType || '').trim())) {
-        unmetReasons.push(`entity type ${String(entityType || '').trim() || 'unknown'} is outside ${values.join(', ')}`);
-      }
-      continue;
-    }
-    if (conditionType === 'validated_question') {
-      const dependencyId = String(condition?.question_id || '').trim();
-      const prior = _getQuestionStateById(runState, dependencyId);
-      if (!_isAcceptedDependencyState(prior)) {
-        if (dependencyId && !blockedBy.includes(dependencyId)) {
-          blockedBy.push(dependencyId);
-        }
-        unmetReasons.push(`upstream question ${dependencyId || 'dependency'} did not validate`);
-      }
-      continue;
-    }
-    if (conditionType === 'question_phase_enabled') {
-      const dependencyId = String(condition?.question_id || '').trim();
-      if (!_getQuestionStateById(runState, dependencyId)) {
-        if (dependencyId && !blockedBy.includes(dependencyId)) {
-          blockedBy.push(dependencyId);
-        }
-        unmetReasons.push(`upstream question ${dependencyId || 'dependency'} was not enabled`);
-      }
-    }
-  }
-
-  if (unmetReasons.length === 0) {
-    return {
-      note: 'Question conditions were not met for this entity or prior signal state.',
-      blocked_by: blockedBy,
-      terminal_state: blockedBy.length > 0 ? 'blocked' : 'no_signal',
-    };
-  }
-
-  return {
-    note: `Question conditions were not met: ${unmetReasons.join('; ')}.`,
-    blocked_by: blockedBy,
-    terminal_state: blockedBy.length > 0 ? 'blocked' : 'no_signal',
-  };
-}
-
-function _candidatePoolFromLeadership(runState) {
-  const leadershipState = _getQuestionStateById(runState, 'q3_leadership');
-  const structured = leadershipState?.reasoning?.structured_output;
-  if (Array.isArray(structured?.candidates) && structured.candidates.length > 0) {
-    return structured.candidates;
-  }
-  if (Array.isArray(leadershipState?.candidates) && leadershipState.candidates.length > 0) {
-    return leadershipState.candidates;
-  }
-  return [];
-}
-
-const DEFAULT_YP_TEAM = [
-  { name: 'Stuart Cope', role: 'Co-Founder & COO' },
-  { name: 'Andrew Rapley', role: 'Head of Projects' },
-  { name: 'Sarfraz Hussain', role: 'Head of Strategy' },
-  { name: 'Elliott Hillman', role: 'Senior Client Partner' },
-];
-
-function _normalizeGraphCandidate(value) {
-  if (!value) return null;
-  if (typeof value === 'string') {
-    const name = value.trim();
-    return name ? { name } : null;
-  }
-  if (typeof value !== 'object') return null;
-  const name = String(value.name || value.full_name || value.person || '').trim();
-  if (!name) return null;
-  return {
-    ...value,
-    name,
-  };
-}
-
-function _graphConnectionScore(rawConfidence, fallback = 0) {
-  const numeric = Number(rawConfidence);
-  if (!Number.isFinite(numeric)) return fallback;
-  if (numeric > 1) return Math.max(0, Math.min(1, numeric / 100));
-  return Math.max(0, Math.min(1, numeric));
-}
-
-function _deriveGraphFirstConnectionPaths({ graphContext, decisionOwnerState }) {
-  const graph = graphContext && typeof graphContext === 'object' ? graphContext : {};
-  const nodes = Array.isArray(graph.nodes) ? graph.nodes.filter((node) => node && typeof node === 'object') : [];
-  const edges = Array.isArray(graph.edges) ? graph.edges.filter((edge) => edge && typeof edge === 'object') : [];
-  const nodeIndex = new Map(nodes.map((node) => [String(node.node_id || '').trim(), node]).filter(([nodeId]) => nodeId));
-  const primaryOwner = _normalizeGraphCandidate(decisionOwnerState?.primary_owner);
-  const secondaryCandidates = Array.isArray(decisionOwnerState?.secondary_candidates)
-    ? decisionOwnerState.secondary_candidates.map((item) => _normalizeGraphCandidate(item)).filter(Boolean)
-    : [];
-  const supportingCandidates = Array.isArray(decisionOwnerState?.supporting_candidates)
-    ? decisionOwnerState.supporting_candidates.map((item) => _normalizeGraphCandidate(item)).filter(Boolean)
-    : [];
-  const rankedCandidates = [primaryOwner, ...secondaryCandidates, ...supportingCandidates]
-    .filter(Boolean)
-    .reduce((acc, candidate) => {
-      const key = String(candidate.name || '').trim().toLowerCase();
-      if (!key || acc.some((existing) => String(existing.name || '').trim().toLowerCase() === key)) return acc;
-      acc.push(candidate);
-      return acc;
-    }, []);
-  if (rankedCandidates.length === 0) {
-    return { candidatePaths: [], bestPath: null };
-  }
-
-  const resolvedPaths = rankedCandidates.map((candidate) => {
-    const candidateName = String(candidate.name || '').trim();
-    const matchedNode = nodes.find((node) => (
-      String(node.node_type || '').trim().toLowerCase() === 'person' &&
-      String(node.name || '').trim().toLowerCase() === candidateName.toLowerCase()
-    )) || null;
-    const q11Score = Number(candidate.decision_score ?? decisionOwnerState?.decision_score ?? decisionOwnerState?.current_confidence ?? 0) || 0;
-    const directOrMutualEdge = matchedNode
-      ? edges.find((edge) => {
-          const edgeType = String(edge.edge_type || '').trim().toLowerCase();
-          return ['direct_connection', 'mutual_connection'].includes(edgeType) && String(edge.to_id || '').trim() === String(matchedNode.node_id || '').trim();
-        }) || null
-      : null;
-    const bridgeToTargetEdge = matchedNode
-      ? edges.find((edge) => String(edge.edge_type || '').trim().toLowerCase() === 'bridge_to_target' && String(edge.to_id || '').trim() === String(matchedNode.node_id || '').trim()) || null
-      : null;
-
-    let bestPath = null;
-    if (directOrMutualEdge) {
-      const fromId = String(directOrMutualEdge.from_id || '').trim();
-      const fromNode = nodeIndex.get(fromId) || null;
-      const pathType = String(directOrMutualEdge.edge_type || '').trim().toLowerCase() === 'mutual_connection' ? 'mutual' : 'direct';
-      const q12Score = _graphConnectionScore(directOrMutualEdge.confidence, pathType === 'direct' ? 0.9 : 0.7);
-      bestPath = {
-        name: candidateName,
-        function_type: String(candidate.function_type || primaryOwner?.function_type || '').trim(),
-        seniority_level: String(candidate.seniority_level || primaryOwner?.seniority_level || '').trim(),
-        best_yp_owner: String(fromNode?.name || fromId || '').trim(),
-        path_type: pathType,
-        connection_score: q12Score,
-        q11_score: q11Score,
-        q12_score: q12Score,
-        decision_score: Math.round(q11Score * q12Score * 1000) / 1000,
-      };
-    } else if (bridgeToTargetEdge) {
-      const bridgeId = String(bridgeToTargetEdge.from_id || '').trim();
-      const bridgeConnection = edges.find((edge) => String(edge.edge_type || '').trim().toLowerCase() === 'bridge_connection' && String(edge.to_id || '').trim() === bridgeId) || null;
-      const ypNode = bridgeConnection ? (nodeIndex.get(String(bridgeConnection.from_id || '').trim()) || null) : null;
-      const q12Score = _graphConnectionScore(bridgeToTargetEdge.confidence ?? bridgeConnection?.confidence, 0.5);
-      bestPath = {
-        name: candidateName,
-        function_type: String(candidate.function_type || primaryOwner?.function_type || '').trim(),
-        seniority_level: String(candidate.seniority_level || primaryOwner?.seniority_level || '').trim(),
-        best_yp_owner: String(ypNode?.name || bridgeConnection?.from_id || '').trim(),
-        path_type: 'bridge',
-        connection_score: q12Score,
-        q11_score: q11Score,
-        q12_score: q12Score,
-        decision_score: Math.round(q11Score * q12Score * 1000) / 1000,
-      };
-    } else {
-      const q12Score = 0.2;
-      bestPath = {
-        name: candidateName,
-        function_type: String(candidate.function_type || primaryOwner?.function_type || '').trim(),
-        seniority_level: String(candidate.seniority_level || primaryOwner?.seniority_level || '').trim(),
-        best_yp_owner: '',
-        path_type: 'cold',
-        connection_score: q12Score,
-        q11_score: q11Score,
-        q12_score: q12Score,
-        decision_score: Math.round(q11Score * q12Score * 1000) / 1000,
-      };
-    }
-    return bestPath;
-  }).filter(Boolean).sort((left, right) => Number(right.decision_score || 0) - Number(left.decision_score || 0));
-
-  return {
-    candidatePaths: resolvedPaths,
-    bestPath: resolvedPaths[0] || null,
-  };
-}
-
-function _buildRunConnectionsGraphContext({ sourcePayload = {}, runState = {}, entityId = '', entityName = '' } = {}) {
-  const explicitGraph = (sourcePayload.connections_graph && typeof sourcePayload.connections_graph === 'object')
-    ? sourcePayload.connections_graph
-    : (sourcePayload.graph_context && typeof sourcePayload.graph_context === 'object')
-      ? sourcePayload.graph_context
-      : (runState.connections_graph && typeof runState.connections_graph === 'object')
-        ? runState.connections_graph
-        : null;
-  const nodes = [];
-  const edges = [];
-  const seenNodes = new Set();
-  const seenEdges = new Set();
-  const addNode = (node) => {
-    const nodeId = String(node?.node_id || '').trim();
-    if (!nodeId || seenNodes.has(nodeId)) return;
-    seenNodes.add(nodeId);
-    nodes.push(node);
-  };
-  const addEdge = (edge) => {
-    const fromId = String(edge?.from_id || '').trim();
-    const edgeType = String(edge?.edge_type || '').trim();
-    const toId = String(edge?.to_id || '').trim();
-    const key = `${fromId}:${edgeType}:${toId}`;
-    if (!fromId || !edgeType || !toId || seenEdges.has(key)) return;
-    seenEdges.add(key);
-    edges.push(edge);
-  };
-
-  if (explicitGraph) {
-    for (const node of (Array.isArray(explicitGraph.nodes) ? explicitGraph.nodes : [])) {
-      if (node && typeof node === 'object') addNode({ ...node });
-    }
-    for (const edge of (Array.isArray(explicitGraph.edges) ? explicitGraph.edges : [])) {
-      if (edge && typeof edge === 'object') addEdge({ ...edge });
-    }
-  }
-
-  const entityNodeId = String(entityId || explicitGraph?.entity_id || '').trim() || `entity:${_slugify(entityName || explicitGraph?.entity_name || 'entity')}`;
-  addNode({
-    node_id: entityNodeId,
-    node_type: 'entity',
-    entity_id: entityId || explicitGraph?.entity_id || null,
-    name: entityName || explicitGraph?.entity_name || entityId || 'entity',
-  });
-
-  for (const ypMember of DEFAULT_YP_TEAM) {
-    addNode({
-      node_id: ypMember.name,
-      node_type: 'yp_member',
-      name: ypMember.name,
-      title: ypMember.role,
-    });
-  }
-
-  const bridgeContacts = Array.isArray(sourcePayload.bridge_contacts) ? sourcePayload.bridge_contacts : [];
-  for (const bridge of bridgeContacts) {
-    const bridgeName = String(bridge?.contact_name || bridge?.name || '').trim();
-    if (!bridgeName) continue;
-    const bridgeId = `bridge:${_slugify(bridgeName)}`;
-    addNode({
-      node_id: bridgeId,
-      node_type: 'bridge_contact',
-      name: bridgeName,
-      relationship_to_yp: String(bridge?.relationship_to_yp || '').trim(),
-      introduction_capability: String(bridge?.introduction_capability || '').trim(),
-    });
-    const relationship = String(bridge?.relationship_to_yp || '').trim();
-    for (const ypName of relationship.split(',').map((item) => item.trim()).filter(Boolean)) {
-      addEdge({
-        from_id: ypName,
-        to_id: bridgeId,
-        edge_type: 'bridge_connection',
-        confidence: 35,
-      });
-    }
-  }
-
-  const priorQuestions = Array.isArray(runState.questions) ? runState.questions : [];
-  const q3Leadership = priorQuestions.find((item) => String(item?.question_id || '').trim() === 'q3_leadership') || null;
-  const q11DecisionOwner = priorQuestions.find((item) => String(item?.question_id || '').trim() === 'q11_decision_owner') || null;
-  const leadershipCandidates = Array.isArray(q3Leadership?.candidates) ? q3Leadership.candidates : [];
-  const rankedCandidates = [
-    q11DecisionOwner?.primary_owner || null,
-    ...(Array.isArray(q11DecisionOwner?.secondary_candidates) ? q11DecisionOwner.secondary_candidates : []),
-    ...(Array.isArray(q11DecisionOwner?.supporting_candidates) ? q11DecisionOwner.supporting_candidates : []),
-    ...leadershipCandidates,
-  ]
-    .map((item) => _normalizeGraphCandidate(item))
-    .filter(Boolean)
-    .reduce((acc, candidate) => {
-      const key = String(candidate.name || '').trim().toLowerCase();
-      if (!key || acc.some((existing) => String(existing.name || '').trim().toLowerCase() === key)) return acc;
-      acc.push(candidate);
-      return acc;
-    }, []);
-
-  for (const candidate of rankedCandidates) {
-    const personId = `person:${_slugify(candidate.name)}`;
-    addNode({
-      node_id: personId,
-      node_type: 'person',
-      name: candidate.name,
-      title: candidate.title || '',
-      function_type: candidate.function_type || '',
-      seniority_level: candidate.seniority_level || '',
-      linkedin_url: candidate.linkedin_url || '',
-    });
-    addEdge({
-      from_id: entityNodeId,
-      to_id: personId,
-      edge_type: q11DecisionOwner?.primary_owner && String(q11DecisionOwner.primary_owner.name || '').trim().toLowerCase() === String(candidate.name || '').trim().toLowerCase()
-        ? 'primary_owner_of'
-        : 'supports',
-      confidence: Number(candidate.decision_score || q11DecisionOwner?.current_confidence || 0) || 0.5,
-    });
-  }
-
-  return {
-    schema_version: 'connections_graph_v1',
-    entity_id: entityId || explicitGraph?.entity_id || null,
-    entity_name: entityName || explicitGraph?.entity_name || null,
-    nodes,
-    edges,
-  };
 }
 
 function _presetQuestionSpecs(entityName) {
@@ -570,87 +58,10 @@ function _presetQuestionSpecs(entityName) {
     {
       question_id: 'poi_commercial_partnerships_lead',
       question_type: 'poi',
-      question_text: `Who is the most suitable person for commercial partnerships or business development at ${entityName}?`,
-      query: `"${entityName}" LinkedIn company profile`,
+      question_text: `Who leads commercial partnerships or business development at ${entityName}?`,
+      query: `"${entityName}" commercial partnerships`,
       hop_budget: 2,
-      source_priority: [
-        'linkedin_company_profile',
-        'linkedin_people_search',
-        'linkedin_person_profile',
-        'google_serp',
-        'official_site',
-      ],
-      search_strategy: {
-        search_queries: [
-          `"${entityName}" LinkedIn company profile`,
-          `"${entityName}" LinkedIn commercial`,
-          `"${entityName}" LinkedIn partnerships`,
-          `"${entityName}" LinkedIn sponsorship`,
-          `"${entityName}" LinkedIn revenue`,
-          `"${entityName}" LinkedIn business development`,
-          `"${entityName}" LinkedIn marketing`,
-          `"${entityName}" LinkedIn fan engagement`,
-          `"${entityName}" LinkedIn digital`,
-          `"${entityName}" LinkedIn innovation`,
-          `"${entityName}" LinkedIn strategy`,
-          `"${entityName}" LinkedIn transformation`,
-          `"${entityName}" LinkedIn growth`,
-          `"${entityName}" chief commercial officer`,
-          `"${entityName}" partnerships director`,
-          `"${entityName}" sponsorship director`,
-          `"${entityName}" head of partnerships`,
-          `"${entityName}" chief digital officer`,
-          `"${entityName}" innovation director`,
-          `"${entityName}" transformation director`,
-          `"${entityName}" marketing director`,
-          `"${entityName}" growth director`,
-          `"${entityName}" CEO`,
-          `"${entityName}" managing director`,
-        ],
-      },
-      yp_service_fit: ['FAN_ENGAGEMENT'],
-    },
-    {
-      question_id: 'poi_related_pois',
-      question_type: 'related_pois',
-      question_text: `Which 3 to 5 people are the most relevant commercial, partnerships, or business development contacts at ${entityName}?`,
-      query: `"${entityName}" LinkedIn company profile`,
-      hop_budget: 2,
-      source_priority: [
-        'linkedin_company_profile',
-        'linkedin_people_search',
-        'linkedin_person_profile',
-        'google_serp',
-        'official_site',
-      ],
-      search_strategy: {
-        search_queries: [
-          `"${entityName}" LinkedIn company profile`,
-          `"${entityName}" LinkedIn commercial`,
-          `"${entityName}" LinkedIn partnerships`,
-          `"${entityName}" LinkedIn sponsorship`,
-          `"${entityName}" LinkedIn revenue`,
-          `"${entityName}" LinkedIn business development`,
-          `"${entityName}" LinkedIn marketing`,
-          `"${entityName}" LinkedIn digital`,
-          `"${entityName}" LinkedIn innovation`,
-          `"${entityName}" LinkedIn strategy`,
-          `"${entityName}" LinkedIn transformation`,
-          `"${entityName}" LinkedIn growth`,
-          `"${entityName}" chief commercial officer`,
-          `"${entityName}" commercial director`,
-          `"${entityName}" partnerships director`,
-          `"${entityName}" sponsorship director`,
-          `"${entityName}" head of partnerships`,
-          `"${entityName}" chief digital officer`,
-          `"${entityName}" innovation director`,
-          `"${entityName}" transformation director`,
-          `"${entityName}" marketing director`,
-          `"${entityName}" growth director`,
-          `"${entityName}" CEO`,
-          `"${entityName}" managing director`,
-        ],
-      },
+      source_priority: ['google_serp', 'official_site', 'news'],
       yp_service_fit: ['FAN_ENGAGEMENT'],
     },
     {
@@ -774,11 +185,13 @@ function _buildQuestionCredits(question, overrides = {}) {
 }
 
 function _buildQuestionAliases(question) {
-  const aliases = new Set([question.entity_name, question.entity_id, _questionText(question)]);
-  if (Array.isArray(question.aliases)) {
-    for (const alias of question.aliases) {
-      aliases.add(alias);
-    }
+  const aliases = new Set([question.entity_name, question.entity_id, question.question_text]);
+  if (question.question_type === 'procurement') {
+    aliases.add('ACE');
+    aliases.add('Major League Cricket');
+  }
+  if (question.question_type === 'foundation') {
+    aliases.add('MLC');
   }
   return [...aliases].filter(Boolean);
 }
@@ -816,82 +229,6 @@ function _sourceKindFromUrl(value) {
   return 'web';
 }
 
-function _extractUrlString(value) {
-  if (!value) return '';
-  if (typeof value === 'string') return value.trim();
-  if (typeof value === 'object') return String(value.url || value.href || '').trim();
-  return '';
-}
-
-function _normalizeSourceList(items = []) {
-  const normalized = [];
-  for (const item of Array.isArray(items) ? items : []) {
-    const value = _extractUrlString(item);
-    if (value && !normalized.includes(value)) {
-      normalized.push(value);
-    }
-  }
-  return normalized;
-}
-
-function _normalizePeopleFallbackCandidate(candidate) {
-  if (!candidate || typeof candidate !== 'object') return null;
-  const name = String(candidate.name || candidate.full_name || candidate.person || '').trim();
-  const title = String(candidate.title || candidate.role || '').trim();
-  const sourceUrl = _extractUrlString(candidate.source_url || candidate.url || candidate.href);
-  if (!name || !title || !sourceUrl) return null;
-  return {
-    ...candidate,
-    name,
-    title,
-    source_url: sourceUrl,
-    source_type: String(candidate.source_type || _sourceKindFromUrl(sourceUrl) || 'trusted_fallback').trim().toLowerCase(),
-  };
-}
-
-function _decisionOwnerFallbackRank(candidate) {
-  const title = String(candidate?.title || '').trim().toLowerCase();
-  const operatingPriority = [
-    'chief commercial officer',
-    'commercial director',
-    'chief executive officer',
-    'ceo',
-    'managing director',
-    'director general',
-    'secretary general',
-    'head of partnerships',
-    'partnerships manager',
-    'marketing director',
-    'chief marketing officer',
-    'chief digital officer',
-    'technology director',
-  ];
-  const governancePriority = [
-    'chairman',
-    'chair',
-    'president',
-    'vice chairman',
-    'vice president',
-    'secretary',
-    'treasurer',
-  ];
-  const operatingIndex = operatingPriority.findIndex((role) => title.includes(role));
-  if (operatingIndex >= 0) return [0, operatingIndex, title];
-  const governanceIndex = governancePriority.findIndex((role) => title.includes(role));
-  if (governanceIndex >= 0) return [1, governanceIndex, title];
-  return [2, 999, title];
-}
-
-function _rankDecisionOwnerFallbackCandidates(candidates = []) {
-  return [...candidates].sort((a, b) => {
-    const [groupA, indexA, titleA] = _decisionOwnerFallbackRank(a);
-    const [groupB, indexB, titleB] = _decisionOwnerFallbackRank(b);
-    if (groupA !== groupB) return groupA - groupB;
-    if (indexA !== indexB) return indexA - indexB;
-    return titleA.localeCompare(titleB);
-  });
-}
-
 function _scoreSourceRecord(questionState, url, title = '', confidence = 0) {
   const sourceKind = _sourceKindFromUrl(url);
   const questionType = questionState.question_type;
@@ -899,17 +236,13 @@ function _scoreSourceRecord(questionState, url, title = '', confidence = 0) {
   const sourcePriorityBonus = sourcePriority.get(sourceKind) || 0.2;
   const domain = _safeUrlHostname(url);
   const questionMatch = String(title || '').toLowerCase().includes(String(questionState.entity_name || '').toLowerCase()) ? 0.2 : 0;
-  const confidenceScore = _coerceConfidenceScore(confidence);
+  const confidenceScore = Number(confidence || 0);
   const questionBias =
     questionType === 'procurement'
       ? (sourceKind === 'linkedin_posts' ? 0.25 : 0.1)
       : questionType === 'foundation'
         ? (sourceKind === 'wikipedia' || sourceKind === 'official_site' ? 0.25 : 0.08)
-        : (questionType === 'decision_owner' || questionType === 'leadership' || questionType === 'poi')
-          ? (sourceKind === 'linkedin_posts' || sourceKind === 'linkedin_profiles' ? 0.25 : 0.1)
-          : (questionType === 'launch' || questionType === 'opportunity_signal')
-            ? (sourceKind === 'news' || sourceKind === 'press_release' || sourceKind === 'official_site' ? 0.22 : 0.12)
-            : (sourceKind === 'official_site' || sourceKind === 'news' ? 0.2 : 0.08);
+        : (sourceKind === 'official_site' || sourceKind === 'news' ? 0.2 : 0.08);
   const freshnessBonus = sourceKind === 'news' || sourceKind === 'press_release' ? 0.15 : 0.1;
   const score = Math.max(0, Math.min(1, sourcePriorityBonus * 0.35 + questionBias + freshnessBonus + questionMatch + confidenceScore * 0.3));
   return {
@@ -927,181 +260,6 @@ function _scoreSourceRecord(questionState, url, title = '', confidence = 0) {
     tags: [questionState.question_type],
     score,
   };
-}
-
-const KNOWN_OFFICIAL_DOMAIN_HINTS = {
-  ecb: 'https://www.ecb.co.uk/',
-  'england and wales cricket board': 'https://www.ecb.co.uk/',
-  icf: 'https://www.canoeicf.com/',
-  'international canoe federation': 'https://www.canoeicf.com/',
-  mls: 'https://www.mlssoccer.com/',
-  'major league soccer': 'https://www.mlssoccer.com/',
-  'world-athletics': 'https://worldathletics.org/',
-  'world athletics': 'https://worldathletics.org/',
-};
-
-function _appendUniqueUrlCandidate(target, candidate, { preserveRaw = false } = {}) {
-  const raw = String(candidate || '').trim();
-  const normalized = _normalizeDomainCandidate(raw);
-  if (!normalized) {
-    return;
-  }
-  const exists = target.some((item) => _normalizeDomainCandidate(item) === normalized);
-  if (!exists) {
-    target.push(preserveRaw ? raw : normalized);
-  }
-}
-
-function _buildOfficialSurfaceCandidates(baseUrl, question, sourceQuestion = null) {
-  const normalizedBaseUrl = _normalizeDomainCandidate(baseUrl);
-  if (!normalizedBaseUrl) {
-    return [];
-  }
-
-  const candidates = [];
-  _appendUniqueUrlCandidate(candidates, normalizedBaseUrl);
-
-  let parsed;
-  try {
-    parsed = new URL(normalizedBaseUrl);
-  } catch {
-    return candidates;
-  }
-
-  const entityType = String(question?.entity_type || sourceQuestion?.entity_type || '').trim().toUpperCase();
-  const rootHostname = String(parsed.hostname || '').replace(/^www\./i, '');
-  _appendUniqueUrlCandidate(candidates, `${parsed.protocol}//${rootHostname}/`);
-
-  const subdomains = [];
-  if (entityType === 'SPORT_FEDERATION' || entityType === 'SPORT_LEAGUE') {
-    subdomains.push('results', 'events', 'app', 'membership');
-  }
-  if (entityType === 'SPORT_FEDERATION') {
-    subdomains.push('rankings');
-  }
-  for (const subdomain of subdomains) {
-    _appendUniqueUrlCandidate(candidates, `${parsed.protocol}//${subdomain}.${rootHostname}/`);
-  }
-
-  return candidates;
-}
-
-function _guessOfficialDomainCandidates(question, sourceQuestion = null) {
-  const deterministicInput = question?.deterministic_input && typeof question.deterministic_input === 'object'
-    ? question.deterministic_input
-    : {};
-  if (!deterministicInput.official_site_only) {
-    return [];
-  }
-
-  const resolved = [];
-  const rawEntityId = String(question?.entity_id || sourceQuestion?.entity_id || '').trim().toLowerCase();
-  const rawEntityName = String(question?.entity_name || sourceQuestion?.entity_name || '').trim().toLowerCase();
-
-  for (const lookupKey of [rawEntityId, rawEntityName]) {
-    const hint = KNOWN_OFFICIAL_DOMAIN_HINTS[lookupKey];
-    if (hint) {
-      _appendUniqueUrlCandidate(resolved, hint);
-    }
-  }
-  const entityType = String(question?.entity_type || sourceQuestion?.entity_type || '').trim().toUpperCase();
-  if (!['SPORT_LEAGUE', 'SPORT_CLUB', 'SPORT_FEDERATION'].includes(entityType)) {
-    return resolved;
-  }
-  const idCandidate = rawEntityId
-    .replace(/(^|-)fc$/g, '')
-    .replace(/(^|-)cf$/g, '')
-    .replace(/-/g, '');
-  const nameCandidate = rawEntityName
-    .replace(/\bfootball club\b/g, '')
-    .replace(/\bfootball\b/g, '')
-    .replace(/\bclub\b/g, '')
-    .replace(/[^a-z0-9]+/g, '');
-  const candidates = [idCandidate, nameCandidate]
-    .map((value) => String(value || '').trim())
-    .filter((value) => value.length >= 6);
-  for (const candidate of candidates) {
-    const normalized = _normalizeDomainCandidate(`https://www.${candidate}.com/`);
-    if (normalized && _isLikelyOfficialDomain(normalized, question?.entity_name || sourceQuestion?.entity_name || '')) {
-      _appendUniqueUrlCandidate(resolved, normalized);
-    }
-  }
-  return resolved;
-}
-
-function _resolveDeterministicInputUrls(question, runState = {}) {
-  const deterministicInput = question?.deterministic_input && typeof question.deterministic_input === 'object'
-    ? question.deterministic_input
-    : {};
-  const candidates = [];
-  for (const candidate of [
-    deterministicInput.url,
-    deterministicInput.website,
-    question?.entity_website,
-    question?.website,
-  ]) {
-    const value = String(candidate || '').trim();
-    if (value) {
-      _appendUniqueUrlCandidate(candidates, value, { preserveRaw: true });
-      for (const expanded of _buildOfficialSurfaceCandidates(value, question)) {
-        _appendUniqueUrlCandidate(candidates, expanded);
-      }
-    }
-  }
-  const sourceQuestionId = String(deterministicInput.source_question_id || '').trim();
-  if (!sourceQuestionId) {
-    return candidates;
-  }
-  const priorQuestions = Array.isArray(runState?.questions) ? runState.questions : [];
-  const sourceQuestion = priorQuestions.find((item) => String(item?.question_id || '').trim() === sourceQuestionId);
-  if (!sourceQuestion) {
-    return candidates;
-  }
-  const acceptedLinks = Array.isArray(sourceQuestion.accepted_links) ? sourceQuestion.accepted_links : [];
-  const preferredAccepted = acceptedLinks.find((item) => String(item?.source_kind || '').trim() === 'official_site');
-  const officialAcceptedUrl = _normalizeDomainCandidate(_extractUrlString(preferredAccepted?.url));
-  if (officialAcceptedUrl) {
-    for (const expanded of _buildOfficialSurfaceCandidates(officialAcceptedUrl, question, sourceQuestion)) {
-      _appendUniqueUrlCandidate(candidates, expanded);
-    }
-  }
-  const likelyOfficialAccepted = acceptedLinks.find((item) =>
-    _isLikelyOfficialDomain(
-      _normalizeDomainCandidate(_extractUrlString(item?.url)),
-      question?.entity_name || sourceQuestion?.entity_name || '',
-    ));
-  const likelyOfficialAcceptedUrl = _normalizeDomainCandidate(_extractUrlString(likelyOfficialAccepted?.url));
-  if (likelyOfficialAcceptedUrl) {
-    for (const expanded of _buildOfficialSurfaceCandidates(likelyOfficialAcceptedUrl, question, sourceQuestion)) {
-      _appendUniqueUrlCandidate(candidates, expanded);
-    }
-  }
-  const sourceStructuredOutput = sourceQuestion?.reasoning?.structured_output && typeof sourceQuestion.reasoning.structured_output === 'object'
-    ? sourceQuestion.reasoning.structured_output
-    : {};
-  const officialSource = Array.isArray(sourceStructuredOutput.sources)
-    ? sourceStructuredOutput.sources.find((item) => _sourceKindFromUrl(_extractUrlString(item)) === 'official_site')
-    : '';
-  const officialSourceUrl = _normalizeDomainCandidate(_extractUrlString(officialSource));
-  if (officialSourceUrl) {
-    for (const expanded of _buildOfficialSurfaceCandidates(officialSourceUrl, question, sourceQuestion)) {
-      _appendUniqueUrlCandidate(candidates, expanded);
-    }
-  }
-  for (const guessed of _guessOfficialDomainCandidates(question, sourceQuestion)) {
-    for (const expanded of _buildOfficialSurfaceCandidates(guessed, question, sourceQuestion)) {
-      _appendUniqueUrlCandidate(candidates, expanded);
-    }
-  }
-  return candidates;
-}
-
-function _resolveDeterministicInputUrl(question, runState = {}) {
-  return _resolveDeterministicInputUrls(question, runState)[0] || '';
-}
-
-function _guessOfficialDomainCandidate(question, sourceQuestion = null) {
-  return _guessOfficialDomainCandidates(question, sourceQuestion)[0] || '';
 }
 
 function _buildFrontierFromStructuredOutput(questionState, structuredOutput, timestamp) {
@@ -1134,135 +292,12 @@ function _buildFrontierFromStructuredOutput(questionState, structuredOutput, tim
   return frontier;
 }
 
-function _questionHasEvidence(questionPayload) {
-  const structuredOutput = questionPayload?.reasoning?.structured_output || {};
-  const evidenceUrl = String(questionPayload?.evidence_url || structuredOutput.evidence_url || '').trim();
-  const sources = Array.isArray(structuredOutput.sources)
-    ? structuredOutput.sources.map((item) => String(item || '').trim()).filter(Boolean)
-    : [];
-  const source = String(structuredOutput.source || '').trim();
-  const answer = String(questionPayload?.answer || structuredOutput.answer || '').trim();
-  const fact = structuredOutput.fact;
-  const hasFact = fact && typeof fact === 'object' && Object.keys(fact).length > 0;
-  return Boolean(answer || evidenceUrl || sources.length > 0 || source || hasFact);
-}
-
-function _resolveEvidenceExtensionConfidenceThreshold(question, questionState) {
-  const questionThreshold = Number(question?.evidence_extension_confidence_threshold);
-  if (Number.isFinite(questionThreshold) && questionThreshold >= 0 && questionThreshold <= 1) {
-    return questionThreshold;
-  }
-  const stateThreshold = Number(questionState?.evidence_extension_confidence_threshold);
-  if (Number.isFinite(stateThreshold) && stateThreshold >= 0 && stateThreshold <= 1) {
-    return stateThreshold;
-  }
-  return 0.65;
-}
-
-function _questionHasStrongEvidence(questionPayload, confidenceThreshold = 0.9) {
-  if (!_questionHasEvidence(questionPayload)) {
-    return false;
-  }
-  if (String(questionPayload?.validation_state || '').trim().toLowerCase() !== 'validated') {
-    return false;
-  }
-  const confidence = _coerceConfidenceScore(
-    questionPayload?.confidence ?? questionPayload?.reasoning?.structured_output?.confidence ?? 0,
-  );
-  return confidence >= Math.max(0, Number(confidenceThreshold || 0));
-}
-
-function _structuredOwnerCandidates(structuredOutput = {}) {
-  const normalizeCandidate = (value) => {
-    if (!value) return null;
-    if (typeof value === 'string') {
-      const name = value.trim();
-      return name ? { name } : null;
-    }
-    if (typeof value === 'object') {
-      const name = String(value.name || value.full_name || value.person || value.primary_owner || '').trim();
-      if (!name) return null;
-      const sourceUrl = _extractUrlString(value.source_url || value.url || value.href);
-      const linkedinUrl = _extractUrlString(value.linkedin_url || value.linkedin || value.profile_url);
-      return {
-        ...value,
-        name,
-        ...(sourceUrl ? { source_url: sourceUrl } : {}),
-        ...(linkedinUrl ? { linkedin_url: linkedinUrl } : {}),
-      };
-    }
-    return null;
-  };
-  const primaryOwner = normalizeCandidate(structuredOutput?.primary_owner);
-  const supportingCandidates = Array.isArray(structuredOutput?.supporting_candidates)
-    ? structuredOutput.supporting_candidates.map((item) => normalizeCandidate(item)).filter(Boolean)
-    : [];
-  const candidates = Array.isArray(structuredOutput?.candidates)
-    ? structuredOutput.candidates.map((item) => normalizeCandidate(item)).filter(Boolean)
-    : [];
-  const topCandidate = candidates[0] || supportingCandidates[0] || primaryOwner || null;
-  const answerText = String(
-    structuredOutput?.answer ||
-      primaryOwner?.name ||
-      topCandidate?.name ||
-      '',
-  ).trim();
-  return {
-    primaryOwner,
-    supportingCandidates,
-    candidates,
-    topCandidate,
-    answerText,
-  };
-}
-
-function _extendQuestionBudget(questionState, extensionBudget = 0) {
-  const extension = Math.max(0, Number(extensionBudget || 0));
-  if (extension <= 0) {
-    return questionState;
-  }
-  const currentSearch = Number(questionState.credit_budget?.search || 0);
-  const currentScrape = Number(questionState.credit_budget?.scrape || 0);
-  const currentRevisit = Number(questionState.credit_budget?.revisit || 0);
-  return {
-    ...questionState,
-    status: questionState.status === 'exhausted' ? 'running' : questionState.status,
-    credit_budget: {
-      ...(questionState.credit_budget || {}),
-      search: currentSearch + extension,
-      scrape: currentScrape + extension,
-      revisit: currentRevisit + Math.max(1, Math.ceil(extension / 2)),
-    },
-  };
-}
-
 function _normalizeConfidenceThreshold(question, overrides = {}) {
   const threshold = Number(overrides.confidenceThreshold);
   if (Number.isFinite(threshold) && threshold >= 0 && threshold <= 1) {
     return threshold;
   }
-  return question.question_type === 'procurement' || question.question_type === 'tender_docs' ? 0.85 : 0.8;
-}
-
-function _coerceConfidenceScore(value) {
-  const numeric = Number(value);
-  if (Number.isFinite(numeric)) {
-    return numeric;
-  }
-  const normalized = String(value || '').trim().toLowerCase();
-  if (!normalized) {
-    return 0;
-  }
-  if (['high', 'strong', 'validated', 'pass', 'yes'].includes(normalized)) {
-    return 0.95;
-  }
-  if (['medium', 'moderate', 'likely', 'probable', 'partial'].includes(normalized)) {
-    return 0.7;
-  }
-  if (['low', 'weak', 'uncertain', 'maybe'].includes(normalized)) {
-    return 0.35;
-  }
-  return 0;
+  return question.question_type === 'procurement' ? 0.85 : 0.8;
 }
 
 function _applyQuestionBudgetOverrides(questionState, overrides = {}) {
@@ -1304,20 +339,11 @@ export function buildQuestionState(question, { runId = 'cli', timestamp = new Da
     entity_id: question.entity_id,
     entity_type: question.entity_type,
     question_type: question.question_type,
-    question_text: _questionText(question),
+    question_text: question.question_text,
     seed_query: question.query,
     aliases: _buildQuestionAliases(question),
     source_priority: question.source_priority,
     hop_budget: question.hop_budget,
-    evidence_extension_budget: Number.isFinite(Number(question.evidence_extension_budget))
-      ? Number(question.evidence_extension_budget)
-      : Number(question.hop_budget || 0),
-    evidence_extension_confidence_threshold: Number.isFinite(Number(question.evidence_extension_confidence_threshold))
-      ? Number(question.evidence_extension_confidence_threshold)
-      : 0.65,
-    question_timeout_ms: Number.isFinite(Number(question.question_timeout_ms))
-      ? Number(question.question_timeout_ms)
-      : undefined,
     credit_budget: _buildQuestionCredits(question, creditBudgetOverrides),
     credits_spent: {
       search: 0,
@@ -1328,16 +354,9 @@ export function buildQuestionState(question, { runId = 'cli', timestamp = new Da
       ? Number(confidenceThreshold)
       : _normalizeConfidenceThreshold(question, creditBudgetOverrides),
     status: 'running',
-    terminal_state: null,
     current_confidence: 0,
     best_answer: '',
     best_evidence_url: '',
-    question_output: null,
-    started_at: timestamp,
-    completed_at: null,
-    heartbeat_at: timestamp,
-    last_error: null,
-    retry_count: 0,
     frontier: _buildQuestionFrontier(question, timestamp),
     accepted_links: [],
     rejected_links: [],
@@ -1354,202 +373,8 @@ export function buildPresetRunState(questions, { preset = 'major-league-cricket'
     run_id: runId,
     run_started_at: timestamp,
     last_run_at: timestamp,
-    heartbeat_at: timestamp,
     preset,
-    publish_status: 'draft',
-    failure_reason: null,
-    failure_category: null,
-    retryable: false,
-    last_error: null,
-    last_completed_question: null,
-    resume_from_question: questions[0]?.question_id || null,
-    non_terminal_question_ids: questions.map((question) => question?.question_id).filter(Boolean),
-    checkpoint_consistent: true,
-    connections_graph: null,
     questions: questions.map((question) => buildQuestionState(question, { runId, timestamp, creditBudgetOverrides, confidenceThreshold })),
-  };
-}
-
-const TERMINAL_QUESTION_STATUSES = new Set(['validated', 'partially_validated', 'provisional', 'no_signal', 'blocked', 'exhausted', 'failed']);
-const PUBLISHED_LIKE_STATUSES = new Set(['staged', 'published', 'published_valid', 'published_shadow']);
-const ACCEPTED_ANSWER_VALIDATION_STATES = new Set(['validated', 'partially_validated', 'provisional', 'deterministic_detected', 'inferred']);
-
-function _normalizeQuestionStatus(status) {
-  return String(status || '').trim().toLowerCase();
-}
-
-function _isTerminalQuestionState(questionState) {
-  if (!questionState || typeof questionState !== 'object') {
-    return false;
-  }
-  const normalizedStatus = _normalizeQuestionStatus(questionState.status);
-  if (TERMINAL_QUESTION_STATUSES.has(normalizedStatus)) {
-    return true;
-  }
-  const payloadTerminalState = _normalizeQuestionStatus(
-    questionState.terminal_state
-      || questionState.question_output?.terminal_state
-      || questionState.question_output?.reasoning?.structured_output?.terminal_state,
-  );
-  return payloadTerminalState === 'no_signal' || payloadTerminalState === 'blocked';
-}
-
-function _shouldStopAfterQuestionPayload(questionPayload, updatedState) {
-  const validationState = _normalizeQuestionStatus(questionPayload?.validation_state);
-  if (updatedState?.status && _isTerminalQuestionState(updatedState)) {
-    return true;
-  }
-  if (validationState === 'validated') {
-    return true;
-  }
-  const terminalState = String(questionPayload?.terminal_state || '').trim().toLowerCase();
-  return terminalState === 'answered' && ACCEPTED_ANSWER_VALIDATION_STATES.has(validationState);
-}
-
-export function reconcileRunStateCheckpoint(runState, {
-  activeQuestion = null,
-  requiredQuestionCount = null,
-} = {}) {
-  const questions = Array.isArray(runState?.questions) ? runState.questions : [];
-  let lastCompletedQuestion = null;
-  let resumeFromQuestion = null;
-  const nonTerminalQuestionIds = [];
-
-  for (const questionState of questions) {
-    if (_isTerminalQuestionState(questionState)) {
-      lastCompletedQuestion = questionState.question_id || lastCompletedQuestion;
-      continue;
-    }
-    if (questionState?.question_id) {
-      nonTerminalQuestionIds.push(questionState.question_id);
-    }
-    if (!resumeFromQuestion) {
-      resumeFromQuestion = questionState.question_id || null;
-    }
-  }
-
-  if (!resumeFromQuestion && activeQuestion?.question_id) {
-    resumeFromQuestion = activeQuestion.question_id;
-  }
-
-  const normalizedRunPhase = String(runState?.run_phase || '').trim().toLowerCase();
-  const publishStatus = String(runState?.publish_status || '').trim().toLowerCase();
-  const failureCategory = String(runState?.failure_category || '').trim().toLowerCase();
-  const requiredCount = Number.isFinite(Number(requiredQuestionCount)) ? Number(requiredQuestionCount) : null;
-  const hasExpectedQuestionCount = requiredCount === null || questions.length >= requiredCount;
-  const allTerminal = nonTerminalQuestionIds.length === 0 && hasExpectedQuestionCount;
-  const claimsCompletion = normalizedRunPhase === 'completed' || PUBLISHED_LIKE_STATUSES.has(publishStatus);
-  const checkpointConsistent = failureCategory === 'checkpoint_inconsistency'
-    ? false
-    : (!claimsCompletion || allTerminal);
-  let derivedRunPhase = normalizedRunPhase || 'queued';
-  if (allTerminal) {
-    derivedRunPhase = normalizedRunPhase || 'completed';
-  } else if (Boolean(runState?.retryable) || String(runState?.failure_category || '').trim().toLowerCase() === 'retryable_failure') {
-    derivedRunPhase = 'retryable_failure';
-  } else if (normalizedRunPhase === 'stalled') {
-    derivedRunPhase = 'stalled';
-  } else if (normalizedRunPhase === 'running' || normalizedRunPhase === 'initialized' || normalizedRunPhase.startsWith('question_')) {
-    derivedRunPhase = normalizedRunPhase;
-  } else {
-    derivedRunPhase = 'resume_needed';
-  }
-
-  return {
-    all_terminal: allTerminal,
-    checkpoint_consistent: checkpointConsistent,
-    last_completed_question: lastCompletedQuestion,
-    resume_from_question: resumeFromQuestion,
-    non_terminal_question_ids: nonTerminalQuestionIds,
-    derived_run_phase: derivedRunPhase,
-  };
-}
-
-function _deriveRunCheckpointPointers(runState, activeQuestion = null) {
-  const reconciled = reconcileRunStateCheckpoint(runState, { activeQuestion });
-  return {
-    last_completed_question: reconciled.last_completed_question,
-    resume_from_question: reconciled.resume_from_question,
-    non_terminal_question_ids: reconciled.non_terminal_question_ids,
-    checkpoint_consistent: reconciled.checkpoint_consistent,
-  };
-}
-
-export function normalizeRunStateForResume(runState, {
-  timestamp = new Date().toISOString(),
-} = {}) {
-  const questions = Array.isArray(runState?.questions)
-    ? runState.questions.map((questionState) => {
-        const status = _normalizeQuestionStatus(questionState?.status);
-        if (status !== 'running') {
-          return questionState;
-        }
-        return {
-          ...questionState,
-          status: 'pending',
-          heartbeat_at: timestamp,
-        };
-      })
-    : [];
-  const normalizedState = {
-    ...runState,
-    questions,
-    heartbeat_at: timestamp,
-  };
-  const reconciled = reconcileRunStateCheckpoint(normalizedState);
-  return {
-    ...normalizedState,
-    run_phase: Boolean(normalizedState?.retryable) ? 'retryable_failure' : 'resume_needed',
-    publish_status: reconciled.non_terminal_question_ids.length > 0 ? 'draft' : (normalizedState.publish_status || 'draft'),
-    last_completed_question: reconciled.last_completed_question,
-    resume_from_question: reconciled.resume_from_question,
-    non_terminal_question_ids: reconciled.non_terminal_question_ids,
-    checkpoint_consistent: reconciled.checkpoint_consistent,
-  };
-}
-
-function _classifyRunFailure(error) {
-  const message = String(error instanceof Error ? error.message : error || '').trim();
-  const lowered = message.toLowerCase();
-  if (!message) {
-    return {
-      failure_reason: 'unknown_failure',
-      failure_category: 'failed',
-      retryable: false,
-    };
-  }
-  if (lowered.includes('enospc') || lowered.includes('no space left on device')) {
-    return {
-      failure_reason: message,
-      failure_category: 'infrastructure_failure',
-      retryable: false,
-    };
-  }
-  if (lowered.includes('retryable_upstream_failure') || lowered.includes('too many requests') || lowered.includes('429')) {
-    return {
-      failure_reason: message,
-      failure_category: 'retryable_failure',
-      retryable: true,
-    };
-  }
-  if (lowered.includes('tool_call_missing') || lowered.includes('parser')) {
-    return {
-      failure_reason: message,
-      failure_category: 'parser_failure',
-      retryable: false,
-    };
-  }
-  if (lowered.includes('checkpoint_inconsistency')) {
-    return {
-      failure_reason: message,
-      failure_category: 'checkpoint_inconsistency',
-      retryable: false,
-    };
-  }
-  return {
-    failure_reason: message,
-    failure_category: 'failed',
-    retryable: false,
   };
 }
 
@@ -1559,28 +384,13 @@ function _mergeQuestionState(questionState, questionPayload, timestamp) {
   const acceptedLinkCandidates = Array.isArray(structuredOutput.sources)
     ? structuredOutput.sources.map((sourceUrl) => _scoreSourceRecord(questionState, sourceUrl, structuredOutput.answer || '', structuredOutput.confidence || 0))
     : [];
-  const validationState = _normalizeQuestionStatus(questionPayload.validation_state);
-  const terminalState = String(questionPayload?.terminal_state || structuredOutput?.terminal_state || '').trim().toLowerCase();
-  const nextStatus = TERMINAL_QUESTION_STATUSES.has(validationState)
-    ? validationState
-    : (terminalState === 'no_signal' || terminalState === 'blocked')
-        ? terminalState
-        : 'running';
   const nextState = {
     ...questionState,
     last_run_at: timestamp,
-    heartbeat_at: timestamp,
-    status: nextStatus,
-    terminal_state: questionPayload.terminal_state || questionState.terminal_state || null,
+    status: questionPayload.validation_state === 'validated' ? 'validated' : questionPayload.validation_state === 'provisional' ? 'provisional' : questionPayload.validation_state === 'no_signal' ? 'no_signal' : 'running',
     current_confidence: questionPayload.confidence ?? questionState.current_confidence ?? 0,
     best_answer: questionPayload.answer || questionState.best_answer || '',
     best_evidence_url: questionPayload.evidence_url || questionState.best_evidence_url || '',
-    question_output: questionPayload || questionState.question_output || null,
-    completed_at: TERMINAL_QUESTION_STATUSES.has(nextStatus)
-      ? timestamp
-      : (questionState.completed_at || null),
-    last_error: null,
-    retry_count: Number(questionState.retry_count || 0),
     frontier: [...(Array.isArray(questionState.frontier) ? questionState.frontier : []), ...frontierUpdates]
       .map((item, index, allItems) => ({
         ...item,
@@ -1597,13 +407,6 @@ function _mergeQuestionState(questionState, questionPayload, timestamp) {
     seen_queries: Array.from(new Set([...(questionState.seen_queries || []), questionState.seed_query])),
     run_history: [...(questionState.run_history || [])],
     last_executed_query: questionPayload?.execution_query || questionPayload?.query || questionState.last_executed_query || questionState.seed_query,
-    primary_owner: questionPayload?.primary_owner || questionState.primary_owner || null,
-    supporting_candidates: Array.isArray(questionPayload?.supporting_candidates)
-      ? questionPayload.supporting_candidates
-      : (questionState.supporting_candidates || []),
-    candidates: Array.isArray(questionPayload?.candidates)
-      ? questionPayload.candidates
-      : (questionState.candidates || []),
   };
 
   if (questionPayload.evidence_url || questionPayload.answer) {
@@ -1648,17 +451,7 @@ async function _loadJsonFile(filePath) {
 }
 
 async function _writeJsonFile(filePath, value) {
-  const directory = path.dirname(filePath);
-  await fs.mkdir(directory, { recursive: true });
-  const tmpPath = path.join(directory, `.${path.basename(filePath)}.${process.pid}.${Date.now()}.tmp`);
-  const handle = await fs.open(tmpPath, 'w');
-  try {
-    await handle.writeFile(JSON.stringify(value, null, 2), 'utf8');
-    await handle.sync();
-  } finally {
-    await handle.close();
-  }
-  await fs.rename(tmpPath, filePath);
+  await fs.writeFile(filePath, JSON.stringify(value, null, 2), 'utf8');
 }
 
 function _coerceNumber(value) {
@@ -1672,32 +465,6 @@ function _applyRunBudgetOverrides(runState, overrides = {}) {
     questions: Array.isArray(runState.questions) ? runState.questions.map((questionState) => _applyQuestionBudgetOverrides(questionState, overrides)) : [],
   };
   return nextState;
-}
-
-function _decorateRunStateCheckpoint(runState, {
-  runPhase = 'running',
-  activeQuestionIndex = null,
-  activeQuestion = null,
-  activeHopIndex = null,
-  activeQuery = '',
-} = {}) {
-  const activeQuestionId = activeQuestion?.question_id || '';
-  const activeQuestionType = activeQuestion?.question_type || '';
-  const activeQuestionText = activeQuestion ? _questionText(activeQuestion) : '';
-  const heartbeatAt = new Date().toISOString();
-  const checkpointPointers = _deriveRunCheckpointPointers(runState, runPhase === 'completed' ? null : activeQuestion);
-  return {
-    ...runState,
-    run_phase: runPhase,
-    heartbeat_at: heartbeatAt,
-    active_question_index: activeQuestionIndex,
-    active_question_id: activeQuestionId,
-    active_question_type: activeQuestionType,
-    active_question_text: activeQuestionText,
-    active_hop_index: activeHopIndex,
-    active_query: activeQuery,
-    ...checkpointPointers,
-  };
 }
 
 function _buildCreditOverrides({ searchCredits, scrapeCredits, revisitCredits, confidenceThreshold } = {}) {
@@ -1727,105 +494,91 @@ function _buildStateFilePath(outputDir, preset, entitySlug = 'major-league-crick
   return path.join(outputDir, `${_slugify(entitySlug)}_${_slugify(preset)}_state.json`);
 }
 
-function _resolveOpencodeWorktreeRoot(worktreeRoot = null) {
-  const candidate = String(worktreeRoot || process.env.OPENCODE_WORKTREE_ROOT || OPCODE_WORKTREE_ROOT || '').trim();
-  return candidate || WORKTREE_ROOT;
+function _buildTrackerFilePath(outputDir, preset, entitySlug = 'major-league-cricket') {
+  return path.join(outputDir, `${_slugify(entitySlug)}_${_slugify(preset)}_tracker.json`);
 }
 
-function _resolveBrightDataFastMcpServiceUrl() {
-  return process.env.BRIGHTDATA_FASTMCP_URL || 'http://127.0.0.1:8000/mcp';
-}
-
-function _resolveBrightDataFastMcpHealthUrl(serviceUrl = _resolveBrightDataFastMcpServiceUrl()) {
-  try {
-    const url = new URL(String(serviceUrl));
-    url.pathname = '/health';
-    url.search = '';
-    url.hash = '';
-    return url.toString();
-  } catch {
-    return 'http://127.0.0.1:8000/health';
-  }
-}
-
-async function _probeBrightDataFastMcpHealth({
-  fetchImpl = globalThis.fetch,
-  healthUrl = _resolveBrightDataFastMcpHealthUrl(),
-  timeoutMs = 1000,
-} = {}) {
-  const normalizedTimeoutMs = Number.isFinite(Number(timeoutMs))
-    ? Math.max(1, Number(timeoutMs))
-    : 1000;
-  const abortController = typeof AbortController !== 'undefined' ? new AbortController() : null;
-  const timeoutHandle = setTimeout(() => {
-    abortController?.abort?.();
-  }, normalizedTimeoutMs);
-  try {
-    const response = await Promise.race([
-      fetchImpl(healthUrl, {
-        method: 'GET',
-        ...(abortController ? { signal: abortController.signal } : {}),
-      }),
-      delay(normalizedTimeoutMs).then(() => {
-        throw new Error(`FastMCP health probe timed out after ${normalizedTimeoutMs}ms`);
-      }),
-    ]);
-    return Boolean(response && response.ok);
-  } catch {
-    return false;
-  } finally {
-    clearTimeout(timeoutHandle);
-  }
-}
-
-export async function ensureBrightDataFastMcpService({
-  fetchImpl = globalThis.fetch,
-  spawnImpl = spawn,
-  serviceUrl = _resolveBrightDataFastMcpServiceUrl(),
-  healthUrl = _resolveBrightDataFastMcpHealthUrl(serviceUrl),
-  serviceCommand = ['python3', 'apps/signal-noise-app/scripts/start_brightdata_fastmcp_service.py'],
-  serviceCwd = WORKTREE_ROOT,
-  serviceEnv = process.env,
-  startupTimeoutMs = 10000,
-  pollIntervalMs = 250,
-  probeTimeoutMs = 1000,
-} = {}) {
-  if (await _probeBrightDataFastMcpHealth({ fetchImpl, healthUrl, timeoutMs: probeTimeoutMs })) {
-    return { started: false, healthy: true, serviceUrl, healthUrl };
-  }
-
-  const child = spawnImpl(serviceCommand[0], serviceCommand.slice(1), {
-    cwd: serviceCwd,
-    env: {
-      ...serviceEnv,
-      BRIGHTDATA_FASTMCP_URL: serviceUrl,
-      BRIGHTDATA_FASTMCP_HOST: serviceEnv.BRIGHTDATA_FASTMCP_HOST || '127.0.0.1',
-      BRIGHTDATA_FASTMCP_PORT: serviceEnv.BRIGHTDATA_FASTMCP_PORT || '8000',
-      BRIGHTDATA_MCP_USE_HOSTED: 'false',
-      BRIGHTDATA_MCP_HOSTED_URL: '',
+function _buildQuestionTracker({
+  runStartedAt,
+  preset,
+  entityName,
+  entityId,
+  entityType,
+  questionSourcePath = null,
+  questions = [],
+}) {
+  return {
+    schema_version: 'question_first_run_tracker_v1',
+    run_started_at: runStartedAt,
+    updated_at: runStartedAt,
+    status: 'running',
+    preset,
+    entity: {
+      entity_name: entityName,
+      entity_id: entityId,
+      entity_type: entityType,
     },
-    detached: true,
-    stdio: 'ignore',
+    question_source_path: questionSourcePath,
+    total_questions: Array.isArray(questions) ? questions.length : 0,
+    current_question_index: 0,
+    current_question_id: null,
+    questions: Array.isArray(questions)
+      ? questions.map((question, index) => ({
+          question_index: index + 1,
+          question_id: question.question_id,
+          question_type: question.question_type,
+          question_text: question.question_text,
+          query: question.query,
+          status: 'queued',
+          started_at: null,
+          completed_at: null,
+          validation_state: null,
+          confidence: null,
+          answer_excerpt: null,
+          notes: null,
+          error: null,
+        }))
+      : [],
+    events: [
+      {
+        timestamp: runStartedAt,
+        type: 'run_started',
+        status: 'running',
+      },
+    ],
+  };
+}
+
+function _appendTrackerEvent(tracker, event) {
+  const timestamp = event.timestamp || new Date().toISOString();
+  tracker.updated_at = timestamp;
+  tracker.events = Array.isArray(tracker.events) ? tracker.events : [];
+  tracker.events.push({
+    timestamp,
+    ...event,
   });
-  child.unref?.();
+}
 
-  const deadline = Date.now() + Math.max(0, Number(startupTimeoutMs || 0));
-  while (Date.now() < deadline) {
-    if (await _probeBrightDataFastMcpHealth({ fetchImpl, healthUrl, timeoutMs: probeTimeoutMs })) {
-      return { started: true, healthy: true, serviceUrl, healthUrl };
-    }
-    await delay(Math.max(1, Number(pollIntervalMs || 0)));
+function _updateTrackerQuestion(tracker, questionIndex, patch) {
+  if (!tracker || !Array.isArray(tracker.questions) || !tracker.questions[questionIndex]) {
+    return tracker;
   }
+  tracker.questions[questionIndex] = {
+    ...tracker.questions[questionIndex],
+    ...patch,
+  };
+  return tracker;
+}
 
-  return { started: true, healthy: false, serviceUrl, healthUrl };
+async function _writeTrackerFile(trackerPath, tracker) {
+  await _writeJsonFile(trackerPath, tracker);
 }
 
 export function buildOpenCodeConfig({
   worktreeRoot = WORKTREE_ROOT,
   baseUrl = process.env.ANTHROPIC_BASE_URL || 'https://api.z.ai/api/anthropic',
 } = {}) {
-  const fastmcpUrl = process.env.BRIGHTDATA_FASTMCP_URL || 'http://127.0.0.1:8000/mcp';
-  const brightDataStdioServerPath = path.join(APP_ROOT, 'src', 'mcp-brightdata-server.js');
+  const brightdataToken = process.env.BRIGHTDATA_API_TOKEN || process.env.BRIGHTDATA_TOKEN || '';
   return {
     $schema: 'https://opencode.ai/config.json',
     model: DEFAULT_MODEL,
@@ -1855,12 +608,12 @@ export function buildOpenCodeConfig({
       edit: 'deny',
     },
     tools: {
-      'brightData_*': false,
+      'brightdata*': false,
     },
     agent: {
       build: {
         tools: {
-          'brightData_*': true,
+          'brightdata*': true,
         },
       },
       discovery: {
@@ -1872,7 +625,7 @@ export function buildOpenCodeConfig({
         prompt:
           'You are a procurement discovery agent. Use the brightdata tool to search broadly, inspect evidence carefully, and return only validated JSON.',
         tools: {
-          'brightData_*': true,
+          'brightdata*': true,
         },
         permission: {
           '*': 'allow',
@@ -1885,16 +638,26 @@ export function buildOpenCodeConfig({
       brightData: {
         type: 'local',
         enabled: true,
-        command: ['node', brightDataStdioServerPath],
+        command: ['npx', '-y', '@brightdata/mcp'],
         environment: {
-          BRIGHTDATA_FASTMCP_URL: fastmcpUrl,
-          BRIGHTDATA_MCP_USE_HOSTED: 'false',
-          BRIGHTDATA_MCP_HOSTED_URL: '',
+          API_TOKEN: brightdataToken,
+          PRO_MODE: 'true',
+        },
+      },
+    },
+    mcpServers: {
+      'brightdata-mcp': {
+        type: 'stdio',
+        command: 'npx',
+        args: ['-y', '@brightdata/mcp'],
+        env: {
+          API_TOKEN: brightdataToken,
+          PRO_MODE: 'true',
         },
       },
     },
     instructions: [
-      'Use the BrightData FastMCP service at the configured MCP URL for search and scrape operations.',
+      'Use BrightData MCP for search and scrape operations.',
       'Return validated JSON only.',
       'Keep the agentic loop bounded.',
     ],
@@ -1905,51 +668,16 @@ export function buildOpenCodeConfig({
 }
 
 export function buildOpenCodeQuestionPrompt(question) {
-  const hopBudget = Math.max(1, Math.min(10, Number(question?.hop_budget || 10)));
-  const searchQueries = Array.isArray(question?.search_strategy?.search_queries)
-    ? question.search_strategy.search_queries
-        .map((query) => String(query || '').trim())
-        .filter(Boolean)
-    : [];
-  const searchHint = searchQueries.length > 0
-    ? `Suggested search queries: ${searchQueries.join(' | ')}.`
-    : '';
-  const questionType = String(question?.question_type || '').trim().toLowerCase();
-  if (questionType === 'leadership') {
-    return `${_questionText(question)} use brightdata. ${searchHint} Wikipedia and official board or leadership pages are valid grounding sources. Start with those, then use LinkedIn company and people results only to enrich or validate named candidates. Search explicitly for chairman, chief executive officer, secretary general, president, or managing director roles before generic leadership-team browsing. Avoid generic company-page or unrelated profile results unless they clearly validate a named person at this entity. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer, candidates, confidence, sources, and validation_state. candidates must be a broad typed pool of leadership and operating buyers, each with name, role, function_type, seniority_level, linkedin_url, email, bio, bio_evidence, recent_post_summary, recent_post_urls, and confidence. Only include email when it is directly sourced or explicitly verified in the evidence. bio may be synthesized from official site text, LinkedIn profile/about text, and recent LinkedIn posts when available. If you cannot validate a meaningful candidate pool, return exactly one fenced JSON code block with answer "", candidates [], confidence 0, sources [], validation_state "no_signal", then stop. Do not include prose outside the fenced JSON block.`;
-  }
-  if (questionType === 'decision_owner') {
-    const candidateHint = Array.isArray(question?.candidate_pool) && question.candidate_pool.length > 0
-      ? `Use this candidate pool as the starting point: ${JSON.stringify(question.candidate_pool)}.`
-      : '';
-    return `${_questionText(question)} use brightdata. ${candidateHint} ${searchHint} Start with company-anchored people evidence and only scrape pages needed to validate rank order. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer set to the primary owner's name, primary_owner, secondary_candidates, supporting_candidates, function_type, seniority_level, decision_score, confidence_score, reasoning, confidence, sources, and validation_state. primary_owner must be the highest probability buyer. secondary_candidates should be ranked next-best options, and supporting_candidates may mirror that list for compatibility. For primary_owner and supporting_candidates, include linkedin_url, email, bio, bio_evidence, recent_post_summary, and recent_post_urls when available. Only include email when it is directly sourced or explicitly verified in the evidence. bio may be synthesized from official site text, LinkedIn profile/about text, and recent LinkedIn posts when available. If you cannot validate a supported primary owner within that budget, return exactly one fenced JSON code block with answer "", primary_owner null, secondary_candidates [], supporting_candidates [], function_type "", seniority_level "", decision_score 0, confidence_score 0, reasoning "", confidence 0, sources [], and validation_state "no_signal", then stop. Do not include any prose outside the fenced JSON block.`;
-  }
-  if (questionType === 'related_pois') {
-    return `${_questionText(question)} use brightdata. ${searchHint} Start with search and use scraped pages only if the search results are not enough to validate the answer. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer set to the best candidate name, candidates, confidence, sources, and validation_state. candidates should be a ranked list of 3 to 5 people with the best commercial relevance. If you cannot validate a ranked list of 3 to 5 candidates within that budget, return exactly one fenced JSON code block with answer "", candidates [], confidence 0, sources [], and validation_state "no_signal", then stop. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated ranked list.`;
-  }
-  if (questionType === 'tender_docs') {
-    return `${_questionText(question)} use brightdata. ${searchHint} Start with official tender pages, PDF attachments, and official-site search results before broader web search. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer, confidence, sources, and validation_state. The answer should name the active tender, RFP, or procurement document if one exists. If you cannot validate an explicit tender or RFP document within that budget, return exactly one fenced JSON code block with answer "", confidence 0, sources [], and validation_state "no_signal", then stop. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated answer.`;
-  }
-  if (questionType === 'digital_stack') {
-    return `${_questionText(question)} use brightdata. ${searchHint} Start with search and use scraped pages only if the search results are not enough to validate the answer. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer, technologies, categories, vendors, additional_domains, maturity_signal, commercial_interpretation, opportunity, confidence, sources, and validation_state. additional_domains should only include real digital services or subdomains worth separate tech-stack enrichment, such as ticketing, shop, app, or fan platform domains. commercial_interpretation must summarize the stack in business terms, not raw telemetry. opportunity must state the most credible commercial angle from the visible stack. If you cannot validate a supported answer within that budget, return exactly one fenced JSON code block with answer "", technologies [], categories [], vendors [], additional_domains [], maturity_signal "low", commercial_interpretation "", opportunity "", confidence 0, sources [], and validation_state "no_signal", then stop. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated answer.`;
-  }
-  if (questionType === 'news_signal' || questionType === 'launch_signal' || questionType === 'hiring_signal' || questionType === 'procurement_signal') {
-    return `${_questionText(question)} use brightdata. ${searchHint} Start with search and use scraped pages only if search results are not enough to validate the signal. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer, themes, confidence, sources, and validation_state. themes should be a short array of structured commercial themes. If you cannot validate a supported answer, return exactly one fenced JSON code block with answer "", themes [], confidence 0, sources [], and validation_state "no_signal". Do not include prose outside the fenced JSON block.`;
-  }
-  return `${_questionText(question)} use brightdata. ${searchHint} Start with search and use scraped pages only if the search results are not enough to validate the answer. You have at most ${hopBudget} hops. If you cannot validate a supported answer within that budget, return exactly one fenced JSON code block with answer "", confidence 0, sources [], and validation_state "no_signal", then stop. Otherwise return exactly one fenced JSON code block with the validated answer, confidence, and sources if available. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated answer.`;
-}
-
-export function buildOpenCodeQuestionCommand(question, { model = DEFAULT_QUESTION_MODEL } = {}) {
   return [
-    'run',
-    '--format',
-    'json',
-    '--model',
-    model,
-    '--title',
-    `Yellow Panther :: ${question.question_id}`,
-    buildOpenCodeQuestionPrompt(question),
-  ];
+    'Use BrightData to answer one atomic question.',
+    `Question type: ${question.question_type}`,
+    `Question: ${question.question_text}`,
+    `Canonical query: ${question.query}`,
+    'Return only JSON with these keys: question, answer, context, sources, confidence.',
+    'If you cannot find an answer, leave answer empty, keep context brief, and set confidence to 0.',
+    'If the question is compound, answer the narrowest concrete fact first.',
+    'Do not return markdown or prose.',
+  ].join('\n');
 }
 
 export function buildOpenCodeQuestionSchema() {
@@ -1958,88 +686,8 @@ export function buildOpenCodeQuestionSchema() {
     properties: {
       question: { type: 'string' },
       answer: { type: 'string' },
-      primary_owner: {
-        type: 'object',
-        additionalProperties: true,
-      },
-      supporting_candidates: {
-        type: 'array',
-        items: {
-          type: 'object',
-          additionalProperties: true,
-        },
-      },
-      candidates: {
-        type: 'array',
-        items: {
-          type: 'object',
-          additionalProperties: true,
-        },
-      },
-      secondary_candidates: {
-        type: 'array',
-        items: {
-          type: 'object',
-          additionalProperties: true,
-        },
-      },
-      candidate_paths: {
-        type: 'array',
-        items: {
-          type: 'object',
-          additionalProperties: true,
-        },
-      },
       context: { type: 'string' },
-      themes: {
-        type: 'array',
-        items: { type: 'string' },
-      },
       sources: {
-        type: 'array',
-        items: { type: 'string' },
-      },
-      technologies: {
-        type: 'array',
-        items: {
-          type: 'object',
-          additionalProperties: true,
-        },
-      },
-      categories: {
-        type: 'array',
-        items: { type: 'string' },
-      },
-      vendors: {
-        type: 'array',
-        items: { type: 'string' },
-      },
-      additional_domains: {
-        type: 'array',
-        items: { type: 'string' },
-      },
-      additional_domain_results: {
-        type: 'array',
-        items: {
-          type: 'object',
-          additionalProperties: true,
-        },
-      },
-      maturity_signal: { type: 'string' },
-      commercial_interpretation: { type: 'string' },
-      opportunity: { type: 'string' },
-      function_type: { type: 'string' },
-      seniority_level: { type: 'string' },
-      decision_score: { type: 'number' },
-      confidence_score: { type: 'number' },
-      q11_score: { type: 'number' },
-      q12_score: { type: 'number' },
-      path_type: { type: 'string' },
-      best_yp_owner: { type: 'string' },
-      recommended_target: { type: 'string' },
-      recommended_route: { type: 'string' },
-      recommended_angle: { type: 'string' },
-      recommendations: {
         type: 'array',
         items: { type: 'string' },
       },
@@ -2047,613 +695,6 @@ export function buildOpenCodeQuestionSchema() {
     },
     required: ['answer', 'confidence'],
     additionalProperties: true,
-  };
-}
-
-function _normalizeDomainCandidate(value) {
-  const raw = String(value || '').trim();
-  if (!raw) {
-    return '';
-  }
-  const withScheme = /^[a-z]+:\/\//i.test(raw) ? raw : `https://${raw}`;
-  try {
-    const parsed = new URL(withScheme);
-    parsed.hash = '';
-    return parsed.toString();
-  } catch {
-    return '';
-  }
-}
-
-function _mergeTechnologyRecords(base, extra, sourceUrl = '') {
-  const merged = new Map();
-  for (const record of [...(Array.isArray(base) ? base : []), ...(Array.isArray(extra) ? extra : [])]) {
-    if (!record || typeof record !== 'object') {
-      continue;
-    }
-    const name = String(record.name || '').trim();
-    if (!name) {
-      continue;
-    }
-    const existing = merged.get(name) || {};
-    const categories = Array.from(new Set([
-      ...(Array.isArray(existing.categories) ? existing.categories : []),
-      ...(Array.isArray(record.categories) ? record.categories : []),
-    ].filter(Boolean)));
-    merged.set(name, {
-      ...existing,
-      ...record,
-      name,
-      categories,
-      source_url: record.source_url || existing.source_url || sourceUrl || '',
-    });
-  }
-  return Array.from(merged.values());
-}
-
-function _mergeUniqueStrings(...values) {
-  return Array.from(new Set(values.flatMap((value) => (Array.isArray(value) ? value : [])).map((item) => String(item || '').trim()).filter(Boolean)));
-}
-
-function _isLikelyOfficialDomain(url, entityName = '') {
-  const hostname = _safeUrlHostname(url);
-  if (!hostname) return false;
-  if (hostname.includes('wikipedia.org') || hostname.includes('linkedin.com')) return false;
-  const entityTokens = String(entityName || '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, ' ')
-    .split(/\s+/)
-    .filter((token) => token.length >= 3 && !['football', 'club', 'league', 'federation', 'international', 'major'].includes(token));
-  if (entityTokens.length === 0) return true;
-  return entityTokens.some((token) => hostname.includes(token));
-}
-
-function _deriveDigitalStackMaturity({ technologies = [], categories = [], vendors = [] } = {}) {
-  const techNames = Array.isArray(technologies)
-    ? technologies.map((item) => String(item?.name || '').trim().toLowerCase()).filter(Boolean)
-    : [];
-  const categoryNames = Array.isArray(categories)
-    ? categories.map((item) => String(item || '').trim().toLowerCase()).filter(Boolean)
-    : [];
-  const vendorNames = Array.isArray(vendors)
-    ? vendors.map((item) => String(item || '').trim()).filter(Boolean)
-    : [];
-  const modernSignals = ['next.js', 'angular', 'react', 'pwa', 'google analytics 4', 'google tag manager', 'stripe', 'azure', 'aws', 'cloudflare'];
-  const legacySignals = ['jquery', 'magento', 'bootstrap'];
-  const modernHits = modernSignals.filter((item) => techNames.includes(item)).length;
-  const legacyHits = legacySignals.filter((item) => techNames.includes(item)).length;
-  const hasAnalytics = categoryNames.includes('analytics') || techNames.includes('google analytics') || techNames.includes('google analytics 4');
-  const hasPayments = techNames.includes('stripe');
-  const hasCms = categoryNames.includes('cms');
-  const hasFragmentation = ['webflow', 'magento', 'wordpress', 'drupal'].filter((item) => techNames.includes(item)).length >= 2;
-  let maturitySignal = 'medium';
-  if (modernHits >= 4 && hasAnalytics) {
-    maturitySignal = 'high';
-  } else if (modernHits <= 1 && legacyHits >= 2) {
-    maturitySignal = 'low';
-  }
-  const interpretationParts = [];
-  if (modernHits > 0) interpretationParts.push('Visible modern web delivery and tagging stack');
-  if (legacyHits > 0) interpretationParts.push('Mixed legacy frontend signals remain present');
-  if (hasCms) interpretationParts.push('CMS-backed publishing is likely part of the estate');
-  if (hasPayments) interpretationParts.push('Payment or commerce capability is visible');
-  if (hasFragmentation) interpretationParts.push('Stack fragmentation is plausible across multiple web properties');
-  const opportunityParts = [];
-  if (hasFragmentation) opportunityParts.push('Platform consolidation and governance');
-  if (hasAnalytics) opportunityParts.push('Measurement, data activation, and fan journey optimization');
-  if (hasPayments || vendorNames.some((item) => /magento|shopify|stripe/i.test(item))) opportunityParts.push('Commerce and fan monetization improvements');
-  if (modernHits > 0 && legacyHits > 0) opportunityParts.push('Legacy-to-modern platform transition planning');
-  return {
-    maturity_signal: maturitySignal,
-    commercial_interpretation: interpretationParts.join('. ') || 'Limited visible stack evidence beyond generic web technologies.',
-    opportunity: opportunityParts.join('; ') || 'Use direct discovery to confirm the core digital estate before shaping an opportunity.',
-  };
-}
-
-export async function enrichDigitalStackStructuredOutput(
-  question,
-  structuredOutput,
-  {
-    fetchImpl = globalThis.fetch,
-    apifyTechStackLookup = lookupApifyTechStack,
-    apifyToken = process.env.APIFY_PERSONAL_API || process.env.APIFY_TOKEN || process.env.APIFY_PASSWORD || '',
-  } = {},
-) {
-  const questionType = String(question?.question_type || '').trim().toLowerCase();
-  if (questionType !== 'digital_stack' || !structuredOutput || typeof structuredOutput !== 'object') {
-    return structuredOutput;
-  }
-  const baseCommercialView = _deriveDigitalStackMaturity({
-    technologies: structuredOutput.technologies,
-    categories: structuredOutput.categories,
-    vendors: structuredOutput.vendors,
-  });
-  const resolvedApifyToken = String(apifyToken || '').trim();
-  if (!resolvedApifyToken) {
-    return {
-      ...structuredOutput,
-      commercial_interpretation: structuredOutput.commercial_interpretation || baseCommercialView.commercial_interpretation,
-      opportunity: structuredOutput.opportunity || baseCommercialView.opportunity,
-      maturity_signal: structuredOutput.maturity_signal || baseCommercialView.maturity_signal,
-    };
-  }
-  const baseEvidenceUrl = _normalizeDomainCandidate(
-    structuredOutput.evidence_url || structuredOutput.source || (Array.isArray(structuredOutput.sources) ? structuredOutput.sources[0] : ''),
-  );
-  let technologies = Array.isArray(structuredOutput.technologies) ? structuredOutput.technologies : [];
-  let categories = Array.isArray(structuredOutput.categories) ? structuredOutput.categories : [];
-  let vendors = Array.isArray(structuredOutput.vendors) ? structuredOutput.vendors : [];
-  let primaryDomainResult = null;
-  if (baseEvidenceUrl && _isLikelyOfficialDomain(baseEvidenceUrl, question?.entity_name)) {
-    try {
-      const lookupResult = await apifyTechStackLookup({
-        url: baseEvidenceUrl,
-        token: resolvedApifyToken,
-        fetchImpl,
-      });
-      primaryDomainResult = Array.isArray(lookupResult?.results) ? lookupResult.results[0] : null;
-    } catch {
-      primaryDomainResult = null;
-    }
-  }
-  if (primaryDomainResult) {
-    const primaryTechnologies = Array.isArray(primaryDomainResult.technologies)
-      ? primaryDomainResult.technologies.map((item) => ({ ...item, source_url: baseEvidenceUrl }))
-      : [];
-    technologies = _mergeTechnologyRecords(technologies, primaryTechnologies, baseEvidenceUrl);
-    categories = _mergeUniqueStrings(categories, primaryDomainResult.categories);
-    vendors = _mergeUniqueStrings(vendors, primaryDomainResult.vendors);
-  }
-  const additionalDomains = _mergeUniqueStrings(structuredOutput.additional_domains)
-    .map((item) => _normalizeDomainCandidate(item))
-    .filter(Boolean)
-    .filter((item, index, array) => array.indexOf(item) === index)
-    .filter((item) => item !== baseEvidenceUrl);
-  if (additionalDomains.length === 0) {
-    return {
-      ...structuredOutput,
-      commercial_interpretation: structuredOutput.commercial_interpretation || baseCommercialView.commercial_interpretation,
-      opportunity: structuredOutput.opportunity || baseCommercialView.opportunity,
-      maturity_signal: structuredOutput.maturity_signal || baseCommercialView.maturity_signal,
-    };
-  }
-  const additionalDomainResults = [];
-
-  for (const url of additionalDomains) {
-    try {
-      const lookupResult = await apifyTechStackLookup({
-        url,
-        token: resolvedApifyToken,
-        fetchImpl,
-      });
-      const topResult = Array.isArray(lookupResult?.results) ? lookupResult.results[0] : null;
-      if (!topResult) {
-        continue;
-      }
-      const nextTechnologies = Array.isArray(topResult.technologies)
-        ? topResult.technologies.map((item) => ({ ...item, source_url: url }))
-        : [];
-      const nextCategories = Array.isArray(topResult.categories) ? topResult.categories : [];
-      const nextVendors = Array.isArray(topResult.vendors) ? topResult.vendors : [];
-      technologies = _mergeTechnologyRecords(technologies, nextTechnologies, url);
-      categories = _mergeUniqueStrings(categories, nextCategories);
-      vendors = _mergeUniqueStrings(vendors, nextVendors);
-      additionalDomainResults.push({
-        url,
-        technologies: nextTechnologies,
-        categories: nextCategories,
-        vendors: nextVendors,
-      });
-    } catch {
-      // Keep the primary digital stack result even if one secondary enrichment fails.
-    }
-  }
-
-  const commercialView = _deriveDigitalStackMaturity({ technologies, categories, vendors });
-  return {
-    ...structuredOutput,
-    technologies,
-    categories,
-    vendors,
-    additional_domains: additionalDomains,
-    additional_domain_results: additionalDomainResults,
-    answer: vendors.slice(0, 5).join(', ') || structuredOutput.answer || '',
-    commercial_interpretation: structuredOutput.commercial_interpretation || commercialView.commercial_interpretation,
-    opportunity: structuredOutput.opportunity || commercialView.opportunity,
-    maturity_signal: structuredOutput.maturity_signal || commercialView.maturity_signal,
-  };
-}
-
-export async function runDeterministicToolQuestion(
-  question,
-  {
-    runState = {},
-    fetchImpl = globalThis.fetch,
-    apifyTechStackLookup = lookupApifyTechStack,
-  } = {},
-) {
-  const questionType = String(question?.question_type || '').trim().toLowerCase();
-  const priorQuestions = Array.isArray(runState?.questions) ? runState.questions : [];
-  const getPriorQuestion = (questionId) => priorQuestions.find((item) => String(item?.question_id || '').trim() === String(questionId || '').trim()) || null;
-
-  if (questionType === 'connections') {
-    const decisionOwnerState = getPriorQuestion('q11_decision_owner');
-    const graphContext = (question?.graph_context && typeof question.graph_context === 'object')
-      ? question.graph_context
-      : (question?.deterministic_input?.connections_graph && typeof question.deterministic_input.connections_graph === 'object')
-        ? question.deterministic_input.connections_graph
-        : (runState?.connections_graph && typeof runState.connections_graph === 'object')
-          ? runState.connections_graph
-          : null;
-    const { candidatePaths, bestPath } = _deriveGraphFirstConnectionPaths({ graphContext, decisionOwnerState });
-    if (!bestPath || candidatePaths.length === 0) {
-      return {
-        structuredOutput: _emptyStructuredOutputForQuestion(question, 'No ranked decision owner is available yet for graph-first path analysis.'),
-        promptTrace: { status: 'deterministic_connections_missing_q11', has_structured_output: true },
-        messageTrace: [],
-        cliResult: { code: 0, stdout: '', stderr: '' },
-      };
-    }
-    return {
-      structuredOutput: {
-        answer: bestPath.name,
-        candidate_paths: candidatePaths,
-        best_yp_owner: bestPath.best_yp_owner || '',
-        path_type: bestPath.path_type,
-        connection_score: bestPath.connection_score,
-        q11_score: bestPath.q11_score,
-        q12_score: bestPath.q12_score,
-        confidence: Math.max(0.35, Number(bestPath.q12_score || 0)),
-        validation_state: bestPath.path_type === 'cold' ? 'provisional' : 'deterministic_detected',
-        sources: [],
-        signal_type: 'CONNECTIONS',
-      },
-      promptTrace: { status: graphContext ? 'deterministic_connections_graph_first' : 'deterministic_connections_fallback', has_structured_output: true },
-      messageTrace: [],
-      cliResult: { code: 0, stdout: '', stderr: '' },
-    };
-  }
-
-  if (questionType === 'capability_gap') {
-    const digitalStack = getPriorQuestion('q2_digital_stack');
-    const launchSignal = getPriorQuestion('q6_launch_signal');
-    const procurementSignal = getPriorQuestion('q7_procurement_signal');
-    const newsSignal = getPriorQuestion('q9_news_signal');
-    const themes = [
-      String(digitalStack?.best_answer || '').trim() && 'digital_stack_maturity',
-      String(launchSignal?.best_answer || '').trim() && 'product_launch_pressure',
-      String(procurementSignal?.best_answer || '').trim() && 'vendor_change_motion',
-      String(newsSignal?.best_answer || '').trim() && 'current_priority_shift',
-    ].filter(Boolean);
-    if (themes.length === 0) {
-      return {
-        structuredOutput: _emptyStructuredOutputForQuestion(question, 'No upstream signals are available yet for capability-gap inference.'),
-        promptTrace: { status: 'derived_capability_gap_missing_dependencies', has_structured_output: true },
-        messageTrace: [],
-        cliResult: { code: 0, stdout: '', stderr: '' },
-      };
-    }
-    const gapScorecard = themes.map((theme, index) => ({
-      capability: theme,
-      gap_score: Math.max(0.45, 0.78 - (index * 0.08)),
-      severity: index === 0 ? 'high' : 'medium',
-      driver_question_ids: ['q2_digital_stack', 'q6_launch_signal', 'q7_procurement_signal', 'q9_news_signal'],
-    }));
-    const topGap = gapScorecard[0];
-    return {
-      structuredOutput: {
-        answer: `Capability gaps inferred from ${themes.join(', ')}`,
-        summary: 'Capability gap scorecard derived from validated upstream commercial and digital signals.',
-        themes,
-        recommendations: gapScorecard.map((item) => `Close ${item.capability.replaceAll('_', ' ')} gap`),
-        gap_scorecard: gapScorecard,
-        top_gap: topGap?.capability || '',
-        graph_episode: {
-          episode_type: 'capability_gap',
-          label: topGap?.capability || 'capability_gap',
-          score: Number(topGap?.gap_score || 0),
-        },
-        confidence: 0.6,
-        validation_state: 'provisional',
-        sources: [],
-        signal_type: 'CAPABILITY_GAP',
-      },
-      promptTrace: { status: 'derived_capability_gap', has_structured_output: true },
-      messageTrace: [],
-      cliResult: { code: 0, stdout: '', stderr: '' },
-    };
-  }
-
-  if (questionType === 'yp_fit') {
-    const capabilityGap = getPriorQuestion('q13_capability_gap');
-    const themes = Array.isArray(capabilityGap?.reasoning?.structured_output?.themes)
-      ? capabilityGap.reasoning.structured_output.themes
-      : [];
-    const gapScorecard = Array.isArray(capabilityGap?.reasoning?.structured_output?.gap_scorecard)
-      ? capabilityGap.reasoning.structured_output.gap_scorecard
-      : [];
-    if (themes.length === 0) {
-      return {
-        structuredOutput: _emptyStructuredOutputForQuestion(
-          question,
-          'No capability-gap inference is available yet for YP fit mapping.',
-          { terminal_state: 'blocked', blocked_by: ['q13_capability_gap', 'q7_procurement_signal'] },
-        ),
-        promptTrace: { status: 'derived_yp_fit_missing_q13', has_structured_output: true },
-        messageTrace: [],
-        cliResult: { code: 0, stdout: '', stderr: '' },
-      };
-    }
-    const fitScorecard = [
-      { service: 'commercial_intelligence', fit_score: 0.86, based_on: themes.slice(0, 2) },
-      { service: 'platform_strategy', fit_score: themes.includes('digital_stack_maturity') ? 0.82 : 0.64, based_on: themes.filter((theme) => theme === 'digital_stack_maturity') },
-      { service: 'fan_engagement', fit_score: themes.includes('product_launch_pressure') ? 0.78 : 0.58, based_on: themes.filter((theme) => theme === 'product_launch_pressure') },
-    ].sort((left, right) => right.fit_score - left.fit_score);
-    const bestFit = fitScorecard[0];
-    return {
-      structuredOutput: {
-        answer: `Yellow Panther fit is strongest for ${bestFit?.service || 'commercial_intelligence'}`,
-        summary: 'Yellow Panther fit scorecard is mapped from capability gaps and active commercial change signals.',
-        themes,
-        recommendations: fitScorecard.map((item) => item.service),
-        fit_scorecard: fitScorecard,
-        best_service: bestFit?.service || '',
-        graph_episode: {
-          episode_type: 'yp_fit',
-          label: bestFit?.service || 'yp_fit',
-          score: Number(bestFit?.fit_score || 0),
-        },
-        confidence: 0.62,
-        validation_state: 'provisional',
-        sources: [],
-        signal_type: 'YP_FIT',
-      },
-      promptTrace: { status: 'derived_yp_fit', has_structured_output: true },
-      messageTrace: [],
-      cliResult: { code: 0, stdout: '', stderr: '' },
-    };
-  }
-
-  if (questionType === 'outreach_strategy') {
-    const decisionOwnerState = getPriorQuestion('q11_decision_owner');
-    const connectionsState = getPriorQuestion('q12_connections');
-    const ypFitState = getPriorQuestion('q14_yp_fit');
-    const primaryOwner = decisionOwnerState?.primary_owner && typeof decisionOwnerState.primary_owner === 'object'
-      ? decisionOwnerState.primary_owner
-      : null;
-    const targetName = String(primaryOwner?.name || '').trim();
-    if (!targetName) {
-      return {
-        structuredOutput: _emptyStructuredOutputForQuestion(question, 'No ranked target is available yet for outreach strategy.'),
-        promptTrace: { status: 'derived_outreach_strategy_missing_q11', has_structured_output: true },
-        messageTrace: [],
-        cliResult: { code: 0, stdout: '', stderr: '' },
-      };
-    }
-    const route = String(connectionsState?.reasoning?.structured_output?.path_type || 'cold').trim() || 'cold';
-    const fitScorecard = Array.isArray(ypFitState?.reasoning?.structured_output?.fit_scorecard)
-      ? ypFitState.reasoning.structured_output.fit_scorecard
-      : [];
-    const bestFit = fitScorecard[0] || null;
-    const q11Score = Number(connectionsState?.reasoning?.structured_output?.q11_score || decisionOwnerState?.current_confidence || 0) || 0;
-    const q12Score = Number(connectionsState?.reasoning?.structured_output?.q12_score || 0) || 0;
-    const strategyScore = Math.round((q11Score * Math.max(q12Score, 0.2) * Math.max(Number(bestFit?.fit_score || 0.6), 0.4)) * 1000) / 1000;
-    return {
-      structuredOutput: {
-        answer: `Target ${targetName} via ${route} route`,
-        summary: 'Outreach strategy scorecard derived from ranked buyer, network path, and YP fit signals.',
-        recommended_target: targetName,
-        recommended_route: route,
-        recommended_angle: String(ypFitState?.reasoning?.structured_output?.best_service || ypFitState?.best_answer || 'commercial_intelligence').trim(),
-        recommendations: ['lead with current commercial change signal', 'anchor on a concrete capability gap'],
-        avoidances: ['avoid generic capabilities pitch', 'do not bypass identified buyer path'],
-        strategy_scorecard: {
-          target_name: targetName,
-          q11_score: q11Score,
-          q12_score: q12Score,
-          yp_fit_score: Number(bestFit?.fit_score || 0.6),
-          strategy_score: strategyScore,
-        },
-        graph_episode: {
-          episode_type: 'outreach_strategy',
-          label: targetName,
-          score: strategyScore,
-        },
-        confidence: 0.58,
-        validation_state: 'provisional',
-        sources: [],
-        signal_type: 'OUTREACH_STRATEGY',
-      },
-      promptTrace: { status: 'derived_outreach_strategy', has_structured_output: true },
-      messageTrace: [],
-      cliResult: { code: 0, stdout: '', stderr: '' },
-    };
-  }
-
-  if (questionType === 'related_pois') {
-    const decisionOwnerState = priorQuestions.find((item) => String(item?.question_id || '').trim() === 'q4_decision_owner');
-    if (decisionOwnerState && String(decisionOwnerState.status || '').trim().toLowerCase() === 'validated') {
-      const primaryOwner = decisionOwnerState?.primary_owner && typeof decisionOwnerState.primary_owner === 'object'
-        ? decisionOwnerState.primary_owner
-        : (typeof decisionOwnerState?.best_answer === 'string' && decisionOwnerState.best_answer.trim()
-            ? { name: decisionOwnerState.best_answer.trim() }
-            : null);
-      const supportingCandidates = Array.isArray(decisionOwnerState?.supporting_candidates)
-        ? decisionOwnerState.supporting_candidates.filter((item) => item && typeof item === 'object')
-        : [];
-      const candidates = [primaryOwner, ...supportingCandidates]
-        .filter((item) => item && String(item.name || '').trim())
-        .reduce((acc, item) => {
-          const key = String(item.name || '').trim().toLowerCase();
-          if (!key || acc.some((existing) => String(existing.name || '').trim().toLowerCase() === key)) {
-            return acc;
-          }
-          acc.push(item);
-          return acc;
-        }, [])
-        .slice(0, 5)
-        .map((item) => ({ ...item }));
-      if (candidates.length >= 3) {
-        const sources = Array.isArray(decisionOwnerState?.accepted_links)
-          ? decisionOwnerState.accepted_links
-              .map((item) => _extractUrlString(item?.url))
-              .filter(Boolean)
-          : [];
-        return {
-          structuredOutput: {
-            answer: String(candidates[0]?.name || '').trim(),
-            candidates,
-            confidence: Number(decisionOwnerState?.current_confidence || 0.85) || 0.85,
-            validation_state: 'validated',
-            sources,
-            signal_type: 'RELATED_POIS',
-            context: 'Derived from validated decision-owner output',
-          },
-          promptTrace: {
-            status: 'deterministic_related_pois_from_q4',
-            has_structured_output: true,
-            candidates_count: candidates.length,
-          },
-          messageTrace: [],
-          cliResult: {
-            code: 0,
-            stdout: '',
-            stderr: '',
-          },
-        };
-      }
-    }
-    return null;
-  }
-
-  const deterministicTools = Array.isArray(question?.deterministic_tools)
-    ? question.deterministic_tools.map((item) => String(item || '').trim().toLowerCase()).filter(Boolean)
-    : [];
-  const usesApifyTechStack = deterministicTools.includes('apify_techstack') || deterministicTools.includes('wappalyzer');
-  if (!usesApifyTechStack) {
-    return null;
-  }
-
-  const fallbackToRetrieval = question?.fallback_to_retrieval !== false;
-  const inputUrls = _resolveDeterministicInputUrls(question, runState);
-  const inputUrl = inputUrls[0] || '';
-  const apifyToken = process.env.APIFY_PERSONAL_API || process.env.APIFY_TOKEN || process.env.APIFY_PASSWORD || '';
-  if (inputUrl && !_isLikelyOfficialDomain(inputUrl, question?.entity_name)) {
-    return null;
-  }
-  if (!inputUrl || !String(apifyToken || '').trim()) {
-    if (fallbackToRetrieval) {
-      return null;
-    }
-    return {
-      structuredOutput: {
-        answer: '',
-        technologies: [],
-        categories: [],
-        vendors: [],
-        confidence: 0,
-        validation_state: 'no_signal',
-        sources: inputUrls,
-        evidence_url: inputUrl,
-        signal_type: 'DIGITAL_STACK',
-        notes: inputUrl ? 'Missing Apify token' : 'Missing deterministic input URL',
-      },
-      promptTrace: {
-        status: 'deterministic_apify_skipped',
-        has_structured_output: true,
-      },
-      messageTrace: [],
-      cliResult: {
-        code: 0,
-        stdout: '',
-        stderr: '',
-      },
-    };
-  }
-
-  let lookupError = null;
-  for (const candidateUrl of inputUrls) {
-    let lookupResult;
-    try {
-      lookupResult = await apifyTechStackLookup({
-        url: candidateUrl,
-        token: apifyToken,
-        fetchImpl,
-      });
-    } catch (error) {
-      lookupError = error;
-      continue;
-    }
-
-    const topResult = Array.isArray(lookupResult?.results) ? lookupResult.results[0] : null;
-    const technologies = Array.isArray(topResult?.technologies) ? topResult.technologies : [];
-    if (technologies.length === 0) {
-      continue;
-    }
-    const vendors = Array.isArray(topResult?.vendors) ? topResult.vendors : [];
-    const categories = Array.isArray(topResult?.categories) ? topResult.categories : [];
-    const commercialView = _deriveDigitalStackMaturity({ technologies, categories, vendors });
-    return {
-      structuredOutput: {
-        answer: vendors.slice(0, 5).join(', '),
-        technologies,
-        categories,
-        vendors,
-        raw: topResult?.raw || {},
-        confidence: 0.95,
-        validation_state: 'validated',
-        sources: inputUrls,
-        source: candidateUrl,
-        evidence_url: candidateUrl,
-        signal_type: 'DIGITAL_STACK',
-        commercial_interpretation: commercialView.commercial_interpretation,
-        opportunity: commercialView.opportunity,
-        maturity_signal: commercialView.maturity_signal,
-      },
-      promptTrace: {
-        status: 'deterministic_apify',
-        has_structured_output: true,
-        technologies_detected: technologies.length,
-        attempted_urls: inputUrls,
-      },
-      messageTrace: [],
-      cliResult: {
-        code: 0,
-        stdout: '',
-        stderr: '',
-      },
-    };
-  }
-  if (fallbackToRetrieval) {
-    return null;
-  }
-  return {
-    structuredOutput: {
-      answer: '',
-      technologies: [],
-      categories: [],
-      vendors: [],
-      raw: {},
-      confidence: 0,
-      validation_state: 'no_signal',
-      sources: inputUrls,
-      source: inputUrl,
-      evidence_url: inputUrl,
-      signal_type: 'DIGITAL_STACK',
-      notes: lookupError instanceof Error ? lookupError.message : '',
-    },
-    promptTrace: {
-      status: lookupError ? 'deterministic_apify_error' : 'deterministic_apify',
-      has_structured_output: true,
-      technologies_detected: 0,
-      attempted_urls: inputUrls,
-    },
-    messageTrace: [],
-    cliResult: {
-      code: 0,
-      stdout: '',
-      stderr: '',
-    },
   };
 }
 
@@ -2665,14 +706,10 @@ function _classifyValidationState(structuredOutput) {
     return 'tool_call_missing';
   }
   if (structuredOutput.validation_state) {
-    if (String(structuredOutput.validation_state).trim().toLowerCase() === 'validated_with_nuance') {
-      return 'validated';
-    }
     return structuredOutput.validation_state;
   }
-  const confidence = _coerceConfidenceScore(structuredOutput.confidence);
-  const { answerText } = _structuredOwnerCandidates(structuredOutput);
-  const answer = String(structuredOutput.answer || answerText || '').trim();
+  const confidence = Number(structuredOutput.confidence ?? 0);
+  const answer = String(structuredOutput.answer || '').trim();
   if (!answer || confidence <= 0) {
     return 'no_signal';
   }
@@ -2682,60 +719,6 @@ function _classifyValidationState(structuredOutput) {
   return 'provisional';
 }
 
-function _deriveTerminalState(question, structuredOutput, timeoutSalvage) {
-  const validationState = String(structuredOutput?.validation_state || '').trim().toLowerCase();
-  const answerText = String(
-    structuredOutput?.summary
-    || structuredOutput?.answer
-    || structuredOutput?.context
-    || structuredOutput?.notes
-    || '',
-  ).trim();
-  const blockedBy = Array.isArray(structuredOutput?.blocked_by) ? structuredOutput.blocked_by.filter(Boolean) : [];
-  const note = String(structuredOutput?.notes || structuredOutput?.context || '').trim().toLowerCase();
-
-  if (String(structuredOutput?.terminal_state || '').trim()) {
-    return structuredOutput.terminal_state;
-  }
-  if (answerText && ['validated', 'partially_validated', 'deterministic_detected', 'provisional', 'inferred'].includes(validationState)) {
-    return 'answered';
-  }
-  if (
-    note.includes('question conditions were not met')
-    || note.includes('no capability-gap inference')
-    || note.includes('upstream signals are available yet')
-    || blockedBy.length > 0
-  ) {
-    return 'blocked';
-  }
-  if (timeoutSalvage?.candidate_summary) {
-    return 'no_signal';
-  }
-  return 'no_signal';
-}
-
-function _deriveTerminalSummary(question, structuredOutput, timeoutSalvage, terminalState) {
-  const summary = String(
-    structuredOutput?.summary
-    || structuredOutput?.context
-    || structuredOutput?.notes
-    || structuredOutput?.commercial_interpretation?.summary
-    || '',
-  ).trim();
-  if (summary) {
-    return summary;
-  }
-  const salvageSummary = String(timeoutSalvage?.candidate_summary || '').trim();
-  if (salvageSummary) {
-    return `Evidence retained during timeout, but no validated answer was produced. ${salvageSummary}`;
-  }
-  const blockedBy = Array.isArray(structuredOutput?.blocked_by) ? structuredOutput.blocked_by.filter(Boolean) : [];
-  if (terminalState === 'blocked' && blockedBy.length > 0) {
-    return `Blocked by upstream question state: ${blockedBy.join(', ')}`;
-  }
-  return 'No deterministic answer was produced for this question.';
-}
-
 function _stripJsonFence(text) {
   return String(text || '')
     .trim()
@@ -2743,28 +726,6 @@ function _stripJsonFence(text) {
     .replace(/^```\s*/i, '')
     .replace(/\s*```$/i, '')
     .trim();
-}
-
-function _extractJsonCandidate(text) {
-  const rawText = String(text || '').trim();
-  if (!rawText) {
-    return null;
-  }
-  const fencedMatches = [...rawText.matchAll(/```json\s*([\s\S]*?)```/gi)];
-  for (let index = fencedMatches.length - 1; index >= 0; index -= 1) {
-    const candidate = _stripJsonFence(fencedMatches[index][1]);
-    try {
-      return JSON.parse(candidate);
-    } catch {
-      // Keep looking.
-    }
-  }
-  const stripped = _stripJsonFence(rawText);
-  try {
-    return JSON.parse(stripped);
-  } catch {
-    return null;
-  }
 }
 
 function _extractFinalCliJson(stdout) {
@@ -2780,478 +741,13 @@ function _extractFinalCliJson(stdout) {
       // Ignore non-JSON lines and log chatter.
     }
   }
-  for (let index = textEvents.length - 1; index >= 0; index -= 1) {
-    const parsed = _extractJsonCandidate(textEvents[index]);
-    if (parsed && typeof parsed === 'object') {
-      return parsed;
-    }
-  }
-  return {};
-}
-
-export function extractFinalCliJson(stdout) {
-  return _extractFinalCliJson(stdout);
-}
-
-function _boundedTraceText(value, maxLength = 1200) {
-  const text = String(value || '').trim();
-  if (!text) {
-    return '';
-  }
-  if (text.length <= maxLength) {
-    return text;
-  }
-  return text.slice(-maxLength);
-}
-
-function _extractAssistantTextExcerpt(stdout) {
-  const lines = String(stdout || '').split(/\r?\n/).filter(Boolean);
-  const textEvents = [];
-  for (const line of lines) {
-    try {
-      const parsed = JSON.parse(line);
-      if (parsed?.type === 'text' && parsed?.part?.text) {
-        textEvents.push(String(parsed.part.text));
-      }
-    } catch {
-      // Keep raw stdout excerpt as the fallback for non-JSON streams.
-    }
-  }
-  return _boundedTraceText(textEvents.join('\n'));
-}
-
-function _buildRawExecutionTrace({ promptTrace = null, messageTrace = [], cliResult = null } = {}) {
-  const stdout = String(cliResult?.stdout || '');
-  const stderr = String(cliResult?.stderr || '');
-  const exitCode = cliResult?.code ?? promptTrace?.exit_code ?? null;
-  return {
-    exit_code: exitCode,
-    stdout_length: Number.isFinite(Number(promptTrace?.stdout_length))
-      ? Number(promptTrace.stdout_length)
-      : stdout.length,
-    stderr_length: Number.isFinite(Number(promptTrace?.stderr_length))
-      ? Number(promptTrace.stderr_length)
-      : stderr.length,
-    has_structured_output: Boolean(promptTrace?.has_structured_output),
-    stdout_excerpt: _boundedTraceText(stdout),
-    stderr_excerpt: _boundedTraceText(stderr),
-    assistant_text_excerpt: _extractAssistantTextExcerpt(stdout),
-    message_trace_summary: Array.isArray(messageTrace)
-      ? messageTrace.map((item) => ({
-          role: item?.role || '',
-          completed: Boolean(item?.completed),
-          type: item?.type || '',
-          has_structured_output: Boolean(item?.has_structured_output),
-          part_count: Number.isFinite(Number(item?.part_count)) ? Number(item.part_count) : 0,
-        }))
-      : [],
-  };
-}
-
-function _extractUrls(text) {
-  const matches = String(text || '').match(/https?:\/\/[^\s)"'<>\\]+/g) || [];
-  return [...new Set(matches
-    .map((url) => url.split('\\n')[0].replace(/[.,;:]+$/g, ''))
-    .filter(Boolean))].slice(0, 8);
-}
-
-function _extractBrightDataEvidenceText(text) {
-  const value = String(text || '');
+  const lastText = textEvents[textEvents.length - 1] || '';
+  const stripped = _stripJsonFence(lastText);
   try {
-    const payload = JSON.parse(value);
-    const output = payload?.part?.state?.output;
-    if (typeof output === 'string' && output.trim()) {
-      return output;
-    }
+    return JSON.parse(stripped);
   } catch {
-    // Bounded traces can start mid-stream, so fall through to escaped-text cleanup.
+    return {};
   }
-  return value.replace(/\\n/g, '\n');
-}
-
-function _sourceTypeFromEvidenceUrl(url) {
-  const hostname = _safeUrlHostname(url).toLowerCase();
-  if (!hostname) return 'web';
-  if (hostname.includes('wikipedia.org')) return 'wikipedia';
-  if (hostname.includes('linkedin.com')) return 'linkedin_person_profile';
-  if (hostname.includes('datanyze.com') || hostname.includes('zippia.com') || hostname.includes('rocketreach.co')) return 'commercial_database';
-  if (
-    hostname.includes('press')
-    || hostname.includes('news')
-    || hostname.includes('timesofindia')
-    || hostname.includes('indiatimes')
-    || hostname.includes('reuters')
-    || hostname.includes('bbc')
-    || hostname.includes('espn')
-    || hostname.includes('cricbuzz')
-  ) return 'press_release';
-  return 'official_site';
-}
-
-function _titleCaseName(text) {
-  return String(text || '')
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((part) => {
-      if (!part) return part;
-      if (part.length === 1) return part.toUpperCase();
-      return part[0].toUpperCase() + part.slice(1).toLowerCase();
-    })
-    .join(' ');
-}
-
-function _isTrustedLeadershipTitle(title) {
-  const normalized = _normalizeLeadershipTitle(title).toLowerCase();
-  return [
-    'chairman',
-    'chief executive officer',
-    'ceo',
-    'secretary general',
-    'president',
-    'managing director',
-    'director general',
-    'chief commercial officer',
-    'commercial director',
-    'marketing director',
-    'technical director',
-    'head of partnerships',
-    'partnerships manager',
-    'vice president',
-    'vice chairman',
-    'secretary',
-    'treasurer',
-  ].includes(normalized);
-}
-
-function _isLikelyPeopleName(value) {
-  const cleaned = String(value || '').trim();
-  if (!cleaned) return false;
-  if (/(https?:\/\/|linkedin|datanyze|zippia|rocketreach|company profile|see all employees)/i.test(cleaned)) {
-    return false;
-  }
-  if (/\b(abbreviation|official website|governing body|domestic teams|domestic competitions|headquarters|founded|sponsors?)\b/i.test(cleaned)) {
-    return false;
-  }
-  const tokens = cleaned.split(/\s+/).filter(Boolean);
-  if (tokens.length < 2 || tokens.length > 5) {
-    return false;
-  }
-  if (String(tokens[0] || '').toLowerCase() === 'the') {
-    return false;
-  }
-  const properNameTokenCount = tokens.filter((token) => /^[A-ZÀ-Ÿ][A-Za-zÀ-ÿ'’.`-]+$/.test(token)).length;
-  if (properNameTokenCount < 2) {
-    return false;
-  }
-  return tokens.every((token) => /^[A-Za-zÀ-ÿ'’.`-]+$/.test(token));
-}
-
-function _entityPrefixPattern(entityName) {
-  const slug = String(entityName || '')
-    .normalize('NFKD')
-    .replace(/[^\w\s-]+/g, '')
-    .trim()
-    .replace(/[\s_]+/g, '-')
-    .toLowerCase();
-  if (!slug) return null;
-  return new RegExp(`^${slug.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}(?:-|\\s)+`, 'i');
-}
-
-function _sanitizePeopleCandidateName(name, { entityName = '', title = '' } = {}) {
-  let cleaned = String(name || '').trim();
-  if (!cleaned) return '';
-
-  const prefixPattern = _entityPrefixPattern(entityName);
-  cleaned = cleaned
-    .replace(/[_/]+/g, ' ')
-    .replace(/[-–—]+/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-  if (prefixPattern) {
-    cleaned = cleaned.replace(prefixPattern, '').trim();
-  }
-
-  const rolePrefixPattern = /^(?:chief|chairman|president|ceo|secretary(?:\s+general)?|managing\s+director|director\s+general|commercial\s+director|marketing\s+director|technical\s+director)\s+/i;
-  cleaned = cleaned.replace(rolePrefixPattern, '').trim();
-
-  const slugCandidatePattern = /^(?:[a-z]+(?:\s+[a-z]+){0,4}\s+)?(?:chief|chairman|president|ceo|secretary(?:\s+general)?|managing\s+director|director\s+general)\s+([a-z]+(?:\s+[a-z]+){1,3})(?=\s+(?:mulls|eyes|says|joins|appointed|named|to|for|as|in|on|at|after|amid|over|under|seeks|wins|contesting)\b|$)/i;
-  const slugMatch = cleaned.match(slugCandidatePattern);
-  if (slugMatch?.[1]) {
-    cleaned = slugMatch[1];
-  }
-
-  const stopwordPattern = /\b(?:mulls|eyes|says|joins|appointed|named|contesting|contesting-icc|to|for|as|in|on|at|after|amid|over|under|seeks|wins)\b/i;
-  if (stopwordPattern.test(cleaned)) {
-    cleaned = cleaned.split(stopwordPattern)[0].trim();
-  }
-
-  const tokens = cleaned.split(/\s+/).filter((token) => /^[A-Za-zÀ-ÿ'’.`-]+$/.test(token));
-  if (tokens.length >= 2) {
-    cleaned = tokens.slice(0, 4).join(' ');
-  }
-
-  if (!/[A-ZÀ-Ÿ]/.test(cleaned)) {
-    cleaned = _titleCaseName(cleaned);
-  }
-
-  const titleText = String(title || '').trim().toLowerCase();
-  if (titleText && cleaned.toLowerCase().endsWith(titleText)) {
-    cleaned = cleaned.slice(0, cleaned.length - titleText.length).trim();
-  }
-
-  return cleaned.trim();
-}
-
-function _normalizeLeadershipTitle(value) {
-  const text = String(value || '').trim();
-  if (!text) return '';
-  const normalized = text.toLowerCase();
-  if (normalized === 'ceo') return 'Chief Executive Officer';
-  if (normalized === 'cco') return 'Chief Commercial Officer';
-  if (normalized === 'cio') return 'Chief Information Officer';
-  if (normalized === 'cto') return 'Chief Technology Officer';
-  if (normalized === 'sg') return 'Secretary General';
-  return text
-    .split(/\s+/)
-    .map((part) => part ? part[0].toUpperCase() + part.slice(1).toLowerCase() : part)
-    .join(' ');
-}
-
-function _collectSeedUrls(...urlLists) {
-  const urls = new Set();
-  for (const value of urlLists) {
-    if (!Array.isArray(value)) continue;
-    for (const url of value) {
-      const text = _extractUrlString(url);
-      if (text) urls.add(text);
-    }
-  }
-  return [...urls];
-}
-
-function _foundationLeadershipSeedCandidates(runState, entityName = '') {
-  const foundationState = _getQuestionStateById(runState, 'q1_foundation');
-  if (!foundationState || typeof foundationState !== 'object') {
-    return [];
-  }
-  const structured = foundationState?.question_output?.reasoning?.structured_output || {};
-  const evidenceText = [
-    foundationState.best_answer,
-    structured.answer,
-    structured.summary,
-    structured.context,
-    structured.notes,
-    foundationState?.question_output?.terminal_summary,
-    foundationState?.question_output?.raw_execution_trace?.assistant_text_excerpt,
-    foundationState?.question_output?.raw_execution_trace?.stdout_excerpt,
-  ]
-    .map((value) => String(value || '').trim())
-    .filter(Boolean)
-    .join('\n');
-  const seedUrls = _collectSeedUrls(
-    Array.isArray(structured.sources) ? structured.sources : [],
-    Array.isArray(foundationState.accepted_links) ? foundationState.accepted_links.map((item) => item?.url) : [],
-    [foundationState.best_evidence_url],
-  );
-  return _extractLeadershipFallbackCandidates(evidenceText, seedUrls, entityName);
-}
-
-function _decorateQuestionWithFallbackSeeds(question, runState) {
-  const questionType = String(question?.question_type || '').trim().toLowerCase();
-  if (!['leadership', 'decision_owner'].includes(questionType)) {
-    return question;
-  }
-  const seedCandidates = _foundationLeadershipSeedCandidates(runState, question?.entity_name || '');
-  if (seedCandidates.length === 0) {
-    return question;
-  }
-  return {
-    ...question,
-    foundation_seed_candidates: seedCandidates,
-    fallback_seed_urls: _collectSeedUrls(seedCandidates.map((candidate) => candidate?.source_url)),
-  };
-}
-
-function _extractLeadershipFallbackCandidates(evidenceText, urls = [], entityName = '') {
-  const trustedUrl = urls.find((url) => {
-    const sourceType = _sourceTypeFromEvidenceUrl(url);
-    return sourceType === 'wikipedia' || sourceType === 'official_site' || sourceType === 'linkedin_person_profile' || sourceType === 'press_release';
-  }) || urls[0] || '';
-  const sourceType = _sourceTypeFromEvidenceUrl(trustedUrl);
-  if (!trustedUrl || sourceType === 'commercial_database') {
-    return [];
-  }
-
-  const candidates = [];
-  const seen = new Set();
-  const titleFirstPattern = /\b(Chairman|Chief Executive Officer|CEO|Secretary General|President|Managing Director|Director General|Chief Commercial Officer|Commercial Director|Marketing Director|Technical Director|Head of Partnerships|Partnerships Manager|Vice President|Vice Chairman|Secretary|Treasurer)\b\s*[:\-]\s*([A-Z][A-Za-zÀ-ÿ'’. -]+?)(?=\.|,|;|\n|$)/gi;
-  const nameFirstPattern = /\b([A-Z][A-Za-zÀ-ÿ'’. -]+?)\b\s*[-–—,]\s*\b(Chairman|Chief Executive Officer|CEO|Secretary General|President|Managing Director|Director General|Chief Commercial Officer|Commercial Director|Marketing Director|Technical Director|Head of Partnerships|Partnerships Manager)\b/gi;
-  const titleInlinePattern = /\b(Chairman|Chief Executive Officer|CEO|Secretary General|President|Managing Director|Director General|Chief Commercial Officer|Commercial Director|Marketing Director|Technical Director|Head of Partnerships|Partnerships Manager|Vice President|Vice Chairman|Secretary|Treasurer)\b\s+([A-Z][A-Za-zÀ-ÿ'’. -]+?)(?=\s*(?:\(|,|;|\.|$)|\s+(?:and|who|term|since|of|at|for)\b)/gi;
-  const nameIsTitlePattern = /\b([A-Z][A-Za-zÀ-ÿ'’. -]+?)\s+is\s+(?:the\s+)?(Chairman|Chief Executive Officer|CEO|Secretary General|President|Managing Director|Director General|Chief Commercial Officer|Commercial Director|Marketing Director|Technical Director|Head of Partnerships|Partnerships Manager|Vice President|Vice Chairman|Secretary|Treasurer)\b/gi;
-
-  const registerCandidate = (rawName, rawTitle) => {
-    const title = _normalizeLeadershipTitle(rawTitle);
-    const name = _sanitizePeopleCandidateName(rawName, { entityName, title });
-    if (!name || !title || !_isTrustedLeadershipTitle(title) || !_isLikelyPeopleName(name)) return;
-    const key = `${name.toLowerCase()}|${title.toLowerCase()}|${trustedUrl}`;
-    if (seen.has(key)) return;
-    seen.add(key);
-    candidates.push({ name, title, source_url: trustedUrl, source_type: sourceType });
-  };
-
-  for (const match of evidenceText.matchAll(titleFirstPattern)) {
-    registerCandidate(match[2], match[1]);
-  }
-  for (const match of evidenceText.matchAll(titleInlinePattern)) {
-    registerCandidate(match[2], match[1]);
-  }
-  for (const match of evidenceText.matchAll(nameFirstPattern)) {
-    registerCandidate(match[1], match[2]);
-  }
-  for (const match of evidenceText.matchAll(nameIsTitlePattern)) {
-    registerCandidate(match[1], match[2]);
-  }
-
-  return candidates.slice(0, 8);
-}
-
-function _containsBrightDataEvidence(text) {
-  const value = String(text || '').toLowerCase();
-  return value.includes('brightdata')
-    || value.includes('search results for')
-    || value.includes('scraped from')
-    || value.includes('scraped at')
-    || value.includes('source: brightdata');
-}
-
-function _buildTimeoutSalvage(question, validationState, rawExecutionTrace) {
-  if (String(validationState || '') !== 'tool_call_missing') {
-    return null;
-  }
-  if (Number(rawExecutionTrace?.exit_code) !== 124) {
-    return null;
-  }
-  const stdoutExcerpt = String(rawExecutionTrace?.stdout_excerpt || '');
-  const evidenceText = _extractBrightDataEvidenceText(stdoutExcerpt);
-  if (!_containsBrightDataEvidence(evidenceText)) {
-    return null;
-  }
-
-  const questionId = String(question?.question_id || '').trim();
-  const questionType = String(question?.question_type || '').trim();
-  const urls = _extractUrls(evidenceText);
-  const riskNotes = ['timeout salvage is non-strict and does not count as validated'];
-  const entityContext = [question?.entity_id, question?.entity_name, question?.question, question?.query]
-    .map((item) => String(item || '').toLowerCase())
-    .join(' ');
-  const isMlsEntityContext = /(^|[^a-z])mls([^a-z]|$)|major league soccer|mlssoccer/.test(entityContext)
-    || /(^|[^a-z])mls([^a-z]|$)/i.test(stdoutExcerpt);
-  const hasRealEstateNoise = /(real estate|property listings|foreclosures|find an agent|new homes)/i.test(evidenceText)
-    || /https?:\/\/(?:www\.)?mls\.com(?:[/"\\]|$)/i.test(evidenceText);
-  const hasSoccerEvidenceContext = /(major league soccer|mls soccer|mlssoccer)/i.test(evidenceText);
-  const isMlsRealEstateNoise = isMlsEntityContext && hasRealEstateNoise && !hasSoccerEvidenceContext;
-  if (isMlsRealEstateNoise) {
-    riskNotes.push('possible real-estate MLS false positive');
-  }
-
-  let candidateSummary = '';
-  let fallbackCandidates = [];
-  if (questionId === 'q3_procurement_signal' || questionType === 'procurement') {
-    const signalPatterns = [
-      /[^.\n]*(?:partnership|partner|sponsor|sponsorship|platform|product launch|ticketing|mobile app|broadcast|media rights|data platform|vendor)[^.\n]*/ig,
-    ];
-    const matches = signalPatterns.flatMap((pattern) => evidenceText.match(pattern) || []);
-    candidateSummary = matches.map((item) => item.trim()).filter(Boolean).slice(0, 3).join(' | ');
-  } else if (questionId === 'q4_decision_owner' || questionType === 'decision_owner') {
-    const peopleRolePattern = /[A-Z][A-Za-zÀ-ÿ'’-]+(?:\s+[A-Z][A-Za-zÀ-ÿ'’-]+){1,3}[^.\n]{0,120}(?:partnerships?|commercial|business development|sponsorship|revenue|academies|international)[^.\n]{0,120}/g;
-    const roleFirstPattern = /[^.\n]*(?:director|head|chief|vp|vice president)[^.\n]{0,120}(?:partnerships?|commercial|business development|sponsorship|revenue|academies|international)[^.\n]*/ig;
-    const matches = [
-      ...(evidenceText.match(peopleRolePattern) || []),
-      ...(evidenceText.match(roleFirstPattern) || []),
-    ];
-    candidateSummary = matches.map((item) => item.trim()).filter(Boolean).slice(0, 3).join(' | ');
-    fallbackCandidates = _extractLeadershipFallbackCandidates(evidenceText, urls, question?.entity_name);
-    if (!candidateSummary && fallbackCandidates.length > 0) {
-      candidateSummary = fallbackCandidates
-        .map((candidate) => `${candidate.name} - ${candidate.title}`)
-        .slice(0, 3)
-        .join(' | ');
-    }
-  } else if (questionType === 'leadership') {
-    fallbackCandidates = _extractLeadershipFallbackCandidates(evidenceText, urls, question?.entity_name);
-    if (fallbackCandidates.length > 0) {
-      candidateSummary = fallbackCandidates
-        .map((candidate) => `${candidate.name} - ${candidate.title}`)
-        .slice(0, 3)
-        .join(' | ');
-    }
-  }
-
-  if (!candidateSummary && isMlsRealEstateNoise) {
-    candidateSummary = 'BrightData output retained, but visible evidence is likely real-estate MLS noise rather than Major League Soccer.';
-  }
-  if (!candidateSummary) {
-    candidateSummary = 'BrightData evidence retained during timeout, but no safe candidate summary was extracted.';
-    riskNotes.push('no safe candidate summary extracted');
-  }
-
-  return {
-    salvage_state: 'evidence_retained',
-    counts_as_validated: false,
-    candidate_summary: _boundedTraceText(candidateSummary, 1000),
-    candidate_evidence_urls: urls,
-    ...(fallbackCandidates.length > 0 ? { fallback_candidates: fallbackCandidates } : {}),
-    risk_notes: riskNotes,
-  };
-}
-
-function _applyPeopleTimeoutFallback(question, structuredOutput, timeoutSalvage) {
-  const questionType = String(question?.question_type || '').trim().toLowerCase();
-  if (!['leadership', 'decision_owner'].includes(questionType)) {
-    return structuredOutput;
-  }
-  const fallbackCandidates = Array.isArray(timeoutSalvage?.fallback_candidates) && timeoutSalvage.fallback_candidates.length > 0
-    ? timeoutSalvage.fallback_candidates.map((candidate) => _normalizePeopleFallbackCandidate(candidate)).filter(Boolean)
-    : (Array.isArray(question?.foundation_seed_candidates) ? question.foundation_seed_candidates.map((candidate) => _normalizePeopleFallbackCandidate(candidate)).filter(Boolean) : []);
-  if (fallbackCandidates.length === 0) {
-    return structuredOutput;
-  }
-  if (questionType === 'decision_owner') {
-    const rankedCandidates = _rankDecisionOwnerFallbackCandidates(fallbackCandidates);
-    const [primaryOwner, ...supportingCandidates] = rankedCandidates;
-    return {
-      ...structuredOutput,
-      answer: primaryOwner?.name || structuredOutput?.answer || '',
-      primary_owner: primaryOwner || null,
-      supporting_candidates: supportingCandidates,
-      candidates: rankedCandidates,
-      candidate_pool: rankedCandidates,
-      confidence: Math.max(_coerceConfidenceScore(structuredOutput?.confidence), 0.72),
-      validation_state: 'partially_validated',
-      summary: `Recovered ${rankedCandidates.length} decision-owner candidates from trusted fallback sources.`,
-      notes: structuredOutput?.notes || 'Recovered from trusted timeout salvage after model output was missing.',
-      sources: Array.isArray(structuredOutput?.sources) && structuredOutput.sources.length > 0
-        ? _normalizeSourceList(structuredOutput.sources)
-        : (Array.isArray(timeoutSalvage?.candidate_evidence_urls) && timeoutSalvage.candidate_evidence_urls.length > 0
-            ? _normalizeSourceList(timeoutSalvage.candidate_evidence_urls)
-            : _normalizeSourceList(Array.isArray(question?.fallback_seed_urls) ? question.fallback_seed_urls : [])),
-    };
-  }
-  return {
-    ...structuredOutput,
-    answer: fallbackCandidates.map((candidate) => `${candidate.name} - ${candidate.title}`).join(', '),
-    candidates: fallbackCandidates,
-    candidate_pool: fallbackCandidates,
-    confidence: Math.max(_coerceConfidenceScore(structuredOutput?.confidence), 0.72),
-    validation_state: 'partially_validated',
-    summary: `Recovered ${fallbackCandidates.length} leadership candidates from trusted fallback sources.`,
-    notes: structuredOutput?.notes || 'Recovered from trusted timeout salvage after model output was missing.',
-    sources: Array.isArray(structuredOutput?.sources) && structuredOutput.sources.length > 0
-      ? _normalizeSourceList(structuredOutput.sources)
-      : (Array.isArray(timeoutSalvage?.candidate_evidence_urls) && timeoutSalvage.candidate_evidence_urls.length > 0
-          ? _normalizeSourceList(timeoutSalvage.candidate_evidence_urls)
-          : _normalizeSourceList(Array.isArray(question?.fallback_seed_urls) ? question.fallback_seed_urls : [])),
-  };
 }
 
 function _spawnOpencodeRun(args, { cwd, env, timeoutMs = 300000 } = {}) {
@@ -3263,205 +759,40 @@ function _spawnOpencodeRun(args, { cwd, env, timeoutMs = 300000 } = {}) {
     });
     let stdout = '';
     let stderr = '';
-    let settled = false;
-    const teeLogs = String(env?.OPENCODE_TEE_LOGS || process.env.OPENCODE_TEE_LOGS || '').trim().toLowerCase() === 'true';
-    const settle = (result) => {
-      if (settled) return;
-      settled = true;
-      clearTimeout(timer);
-      resolve(result);
-    };
-    const rejectOnce = (error) => {
-      if (settled) return;
-      settled = true;
-      clearTimeout(timer);
-      reject(error);
-    };
-    const maybeResolveEarly = () => {
-      if (settled) return;
-      const parsed = _extractFinalCliJson(stdout);
-      if (parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0) {
-        const answer = String(parsed.answer || '').trim();
-        const confidence = _coerceConfidenceScore(parsed.confidence);
-        if (answer && confidence > 0) {
-          child.kill('SIGTERM');
-          settle({ code: 0, stdout, stderr });
-        }
-      }
-    };
     const timer = setTimeout(() => {
       child.kill('SIGTERM');
-      settle({
-        code: 124,
-        stdout,
-        stderr: `${stderr}${stderr ? '\n' : ''}opencode run timed out after ${timeoutMs}ms`,
-      });
+      reject(new Error(`opencode run timed out after ${timeoutMs}ms`));
     }, timeoutMs);
     child.stdout.on('data', (chunk) => {
       stdout += chunk.toString();
-      if (teeLogs) {
-        process.stdout.write(chunk);
-      }
-      maybeResolveEarly();
     });
     child.stderr.on('data', (chunk) => {
       stderr += chunk.toString();
-      if (teeLogs) {
-        process.stderr.write(chunk);
-      }
     });
     child.on('error', (error) => {
-      rejectOnce(error);
+      clearTimeout(timer);
+      reject(error);
     });
     child.on('close', (code) => {
-      if (settled) {
-        return;
-      }
-      settle({ code, stdout, stderr });
+      clearTimeout(timer);
+      resolve({ code, stdout, stderr });
     });
   });
 }
 
-export async function _runQuestionRunnerWithTimeout(questionRunner, executionQuestion, options = {}, timeoutMs = 300000) {
-  const retryAttempts = _transientRetryAttempts();
-  const retryDelayMs = _transientRetryDelayMs();
-
-  for (let attempt = 1; attempt <= retryAttempts; attempt += 1) {
-    const normalizedTimeoutMs = Number.isFinite(Number(timeoutMs))
-      ? Math.max(1, Number(timeoutMs))
-      : 300000;
-    const guardTimeoutMs = normalizedTimeoutMs + Math.min(5000, Math.max(1000, Math.ceil(normalizedTimeoutMs * 0.1)));
-    const heartbeatIntervalMs = Math.max(
-      1000,
-      Math.min(
-        15000,
-        Number.isFinite(Number(options?.heartbeatIntervalMs))
-          ? Number(options.heartbeatIntervalMs)
-          : Math.ceil(normalizedTimeoutMs / 4),
-      ),
-    );
-    const onHeartbeat = typeof options?.onHeartbeat === 'function'
-      ? options.onHeartbeat
-      : null;
-    const watchdogTimeoutMs = Math.max(
-      heartbeatIntervalMs + 250,
-      Math.min(
-        30000,
-        Number.isFinite(Number(options?.watchdogTimeoutMs))
-          ? Number(options.watchdogTimeoutMs)
-          : heartbeatIntervalMs * 2,
-      ),
-    );
-    let runnerSettled = false;
-    let heartbeatCount = 0;
-    let lastHeartbeatAt = Date.now();
-    const heartbeatLoop = onHeartbeat
-      ? (async () => {
-          while (!runnerSettled) {
-            await delay(heartbeatIntervalMs);
-            if (runnerSettled) {
-              break;
-            }
-            await onHeartbeat({
-              attempt,
-              executionQuestion,
-              timeoutMs: normalizedTimeoutMs,
-              heartbeatIntervalMs,
-            });
-            heartbeatCount += 1;
-            lastHeartbeatAt = Date.now();
-          }
-        })().catch(() => {})
-      : null;
-    const watchdogLoop = onHeartbeat
-      ? (async () => {
-          while (!runnerSettled) {
-            await delay(Math.min(heartbeatIntervalMs, 1000));
-            if (runnerSettled) {
-              break;
-            }
-            if (Date.now() - lastHeartbeatAt > watchdogTimeoutMs) {
-              throw _buildRetryableUpstreamFailure(
-                new Error(`runner heartbeat stalled for ${executionQuestion?.question_id || 'question'} after ${watchdogTimeoutMs}ms`),
-                attempt,
-              );
-            }
-          }
-        })()
-      : null;
-    const runnerPromise = Promise.resolve().then(() => questionRunner(executionQuestion, options));
-    const timeoutResult = {
-      timedOut: true,
-      questionRun: {
-        structuredOutput: {
-          answer: '',
-          confidence: 0,
-          validation_state: 'no_signal',
-          sources: [],
-        },
-        promptTrace: {
-          status: 'timeout',
-          exit_code: 124,
-          stdout_length: 0,
-          stderr_length: 0,
-          has_structured_output: false,
-          timeout_ms: timeoutMs,
-        },
-        messageTrace: [],
-        cliResult: {
-          code: 124,
-          stdout: '',
-          stderr: `question runner timed out after ${timeoutMs}ms`,
-        },
-      },
-    };
-    try {
-      const raceResult = await Promise.race([
-        runnerPromise.then((questionRun) => ({
-          timedOut: false,
-          questionRun,
-        })),
-        ...(watchdogLoop ? [watchdogLoop] : []),
-        delay(guardTimeoutMs).then(() => timeoutResult),
-      ]);
-      runnerSettled = true;
-      await heartbeatLoop;
-      if (watchdogLoop) {
-        try {
-          await watchdogLoop;
-        } catch (error) {
-          if (raceResult?.timedOut) {
-            throw error;
-          }
-        }
-      }
-      if (raceResult.timedOut) {
-        runnerPromise.catch(() => {});
-      }
-      return raceResult;
-    } catch (error) {
-      runnerSettled = true;
-      await heartbeatLoop;
-      if (watchdogLoop) {
-        await watchdogLoop.catch(() => {});
-      }
-      if (!_isRetryableUpstreamError(error)) {
-        throw error;
-      }
-      if (attempt >= retryAttempts) {
-        throw _buildRetryableUpstreamFailure(error, attempt);
-      }
-      await delay(retryDelayMs * attempt);
-    }
-  }
-
-  throw _buildRetryableUpstreamFailure(new Error('transient upstream retries exhausted'), retryAttempts);
-}
-
 async function runOpenCodeCliQuestion(question, { worktreeRoot, opencodeTimeoutMs } = {}) {
-  await ensureBrightDataFastMcpService({ serviceCwd: worktreeRoot || WORKTREE_ROOT });
+  const prompt = buildOpenCodeQuestionPrompt(question);
   const cliResult = await _spawnOpencodeRun(
-    buildOpenCodeQuestionCommand(question),
+    [
+      'run',
+      '--format',
+      'json',
+      '--model',
+      DEFAULT_MODEL,
+      '--title',
+      `Yellow Panther :: ${question.question_id}`,
+      prompt,
+    ],
     {
       cwd: worktreeRoot,
       env: {
@@ -3470,8 +801,6 @@ async function runOpenCodeCliQuestion(question, { worktreeRoot, opencodeTimeoutM
         ANTHROPIC_AUTH_TOKEN: process.env.ZAI_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN || '',
         BRIGHTDATA_API_TOKEN: process.env.BRIGHTDATA_API_TOKEN || process.env.BRIGHTDATA_TOKEN || '',
         BRIGHTDATA_ZONE: process.env.BRIGHTDATA_ZONE || '',
-        BRIGHTDATA_MCP_USE_HOSTED: 'false',
-        BRIGHTDATA_MCP_HOSTED_URL: '',
         PATH: process.env.PATH,
       },
       timeoutMs: opencodeTimeoutMs,
@@ -3496,75 +825,20 @@ async function runOpenCodeCliQuestion(question, { worktreeRoot, opencodeTimeoutM
   return { structuredOutput, promptTrace, messageTrace, cliResult };
 }
 
-function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTrace = null, messageTrace = [], executionQuery = '', cliResult = null } = {}) {
-  const initialValidationState = _classifyValidationState(structuredOutput);
-  const rawExecutionTrace = _buildRawExecutionTrace({ promptTrace, messageTrace, cliResult });
-  const timeoutSalvage = _buildTimeoutSalvage(question, initialValidationState, rawExecutionTrace);
-  const effectiveStructuredOutput = _applyPeopleTimeoutFallback(question, structuredOutput, timeoutSalvage);
-  const validationState = _classifyValidationState(effectiveStructuredOutput);
-  const sources = Array.isArray(effectiveStructuredOutput.sources) ? effectiveStructuredOutput.sources : [];
-  const { primaryOwner, supportingCandidates, candidates, answerText } = _structuredOwnerCandidates(effectiveStructuredOutput);
-  const secondaryCandidates = Array.isArray(structuredOutput.secondary_candidates)
-    ? structuredOutput.secondary_candidates
-    : supportingCandidates;
-  const evidenceUrl = effectiveStructuredOutput.evidence_url || primaryOwner?.profile_url || primaryOwner?.linkedin_url || sources[0] || '';
-  const inferredSignalType = effectiveStructuredOutput.signal_type || (question.question_type ? question.question_type.toUpperCase() : 'NO_SIGNAL');
-  const terminalState = _deriveTerminalState(question, effectiveStructuredOutput, timeoutSalvage);
-  const terminalSummary = _deriveTerminalSummary(question, effectiveStructuredOutput, timeoutSalvage, terminalState);
-  const notes = effectiveStructuredOutput.notes || effectiveStructuredOutput.context || terminalSummary || '';
-  const isLeadershipQuestion = String(question?.question_type || '').trim().toLowerCase() === 'leadership';
-  const isDecisionOwnerQuestion = String(question?.question_type || '').trim().toLowerCase() === 'decision_owner';
-  const normalizedStructuredOutput = {
-    ...effectiveStructuredOutput,
-    summary: effectiveStructuredOutput.summary || terminalSummary,
-    context: effectiveStructuredOutput.context || terminalSummary,
-    notes: effectiveStructuredOutput.notes || terminalSummary,
-    terminal_state: terminalState,
-    blocked_by: Array.isArray(effectiveStructuredOutput.blocked_by) ? effectiveStructuredOutput.blocked_by.filter(Boolean) : [],
-    sources: sources.length > 0
-      ? sources
-      : (Array.isArray(timeoutSalvage?.candidate_evidence_urls) ? timeoutSalvage.candidate_evidence_urls : []),
-  };
-  if (isLeadershipQuestion && candidates.length > 0) {
-    normalizedStructuredOutput.candidates = candidates;
-    normalizedStructuredOutput.answer = candidates;
-    if (!String(normalizedStructuredOutput.summary || '').includes('[object Object]')) {
-      // preserve existing meaningful summary
-    } else {
-      normalizedStructuredOutput.summary = answerText || terminalSummary;
-    }
-  }
-  if (isDecisionOwnerQuestion) {
-    if (primaryOwner) {
-      normalizedStructuredOutput.primary_owner = primaryOwner;
-    }
-    if (candidates.length > 0) {
-      normalizedStructuredOutput.candidates = candidates;
-      normalizedStructuredOutput.answer = primaryOwner?.name || answerText || terminalSummary;
-    }
-    if (!String(normalizedStructuredOutput.summary || '').includes('[object Object]')) {
-      // preserve existing meaningful summary
-    } else {
-      normalizedStructuredOutput.summary = answerText || terminalSummary;
-    }
-  }
+function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTrace = null, messageTrace = [], executionQuery = '' } = {}) {
+  const validationState = _classifyValidationState(structuredOutput);
+  const sources = Array.isArray(structuredOutput.sources) ? structuredOutput.sources : [];
+  const evidenceUrl = structuredOutput.evidence_url || sources[0] || '';
+  const notes = structuredOutput.notes || structuredOutput.context || '';
+  const inferredSignalType = structuredOutput.signal_type || (question.question_type ? question.question_type.toUpperCase() : 'NO_SIGNAL');
   return {
     question_id: question.question_id,
     question_type: question.question_type,
-    question_text: _questionText(question),
-    question: _questionText(question),
+    question_text: question.question_text,
+    question: question.question_text,
     query: question.query,
     hop_budget: question.hop_budget,
     source_priority: question.source_priority,
-    evidence_extension_budget: Number.isFinite(Number(question.evidence_extension_budget))
-      ? Number(question.evidence_extension_budget)
-      : Number(question.hop_budget || 0),
-    evidence_extension_confidence_threshold: Number.isFinite(Number(question.evidence_extension_confidence_threshold))
-      ? Number(question.evidence_extension_confidence_threshold)
-      : 0.65,
-    question_timeout_ms: Number.isFinite(Number(question.question_timeout_ms))
-      ? Number(question.question_timeout_ms)
-      : undefined,
     entity_name: question.entity_name,
     entity_id: question.entity_id,
     entity_type: question.entity_type,
@@ -3576,27 +850,17 @@ function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTr
       stop_rule: `continue for up to ${question.hop_budget} hops within OpenCode steps budget`,
     },
     reasoning: {
-      structured_output: normalizedStructuredOutput,
+      structured_output: structuredOutput,
       prompt_trace: promptTrace,
       message_trace: messageTrace,
-      raw_execution_trace: rawExecutionTrace,
     },
     prompt_trace: promptTrace,
     message_trace: messageTrace,
-    raw_execution_trace: rawExecutionTrace,
-    ...(timeoutSalvage ? { timeout_salvage: timeoutSalvage } : {}),
     execution_query: executionQuery || question.query,
-    answer: answerText || effectiveStructuredOutput.answer || '',
-    primary_owner: primaryOwner,
-    secondary_candidates: secondaryCandidates,
-    supporting_candidates: supportingCandidates,
-    candidates,
+    answer: structuredOutput.answer || '',
     signal_type: inferredSignalType,
-    confidence: effectiveStructuredOutput.confidence ?? 0,
+    confidence: structuredOutput.confidence ?? 0,
     validation_state: validationState,
-    terminal_state: terminalState,
-    terminal_summary: terminalSummary,
-    blocked_by: Array.isArray(normalizedStructuredOutput.blocked_by) ? normalizedStructuredOutput.blocked_by : [],
     evidence_url: evidenceUrl,
     recommended_next_query: structuredOutput.recommended_next_query || '',
     notes,
@@ -3608,35 +872,14 @@ function _categoryForQuestion(question) {
   if (questionType === 'foundation') {
     return 'identity';
   }
-  if (questionType === 'launch' || questionType === 'launch_signal' || questionType === 'opportunity_signal') {
-    return 'opportunity_signal';
-  }
-  if (questionType === 'procurement' || questionType === 'procurement_signal') {
+  if (questionType === 'procurement') {
     return 'procurement_opportunity';
-  }
-  if (questionType === 'tender_docs') {
-    return 'procurement_opportunity';
-  }
-  if (questionType === 'news_signal' || questionType === 'hiring_signal') {
-    return 'market_timing';
   }
   if (questionType === 'poi') {
     return 'connections';
   }
-  if (questionType === 'leadership' || questionType === 'decision_owner' || questionType === 'related_pois') {
-    return 'decision_owners';
-  }
-  if (questionType === 'connections') {
-    return 'connections';
-  }
-  if (questionType === 'digital_stack') {
-    return 'technology_stack';
-  }
-  if (questionType === 'performance' || questionType === 'league_context') {
-    return 'context';
-  }
-  if (questionType === 'capability_gap' || questionType === 'yp_fit' || questionType === 'outreach_strategy') {
-    return 'derived_intelligence';
+  if (questionType === 'leadership') {
+    return 'leadership';
   }
   return 'general';
 }
@@ -3670,12 +913,9 @@ function _buildCategorySummary(answers) {
 export async function runOpenCodePresetBatch({
   outputDir,
   preset = 'major-league-cricket',
-  worktreeRoot = null,
+  worktreeRoot = WORKTREE_ROOT,
   opencodeTimeoutMs = 300000,
   questionRunner = runOpenCodeCliQuestion,
-  deterministicToolRunner = runDeterministicToolQuestion,
-  apifyTechStackLookup = lookupApifyTechStack,
-  apifyToken = process.env.APIFY_PERSONAL_API || process.env.APIFY_TOKEN || process.env.APIFY_PASSWORD || '',
   resume = false,
   searchCredits,
   scrapeCredits,
@@ -3686,9 +926,7 @@ export async function runOpenCodePresetBatch({
   entityIdOverride = null,
   entityTypeOverride = null,
   questionSourcePath = null,
-  sourcePayload = null,
 } = {}) {
-  const resolvedWorktreeRoot = _resolveOpencodeWorktreeRoot(worktreeRoot);
   let normalizedPreset = _slugify(preset || entityNameOverride || entityIdOverride || 'question-first');
   let questions;
   if (Array.isArray(questionsOverride) && questionsOverride.length > 0) {
@@ -3713,7 +951,6 @@ export async function runOpenCodePresetBatch({
   if (!outputDir) {
     throw new Error('outputDir is required');
   }
-  await fs.mkdir(outputDir, { recursive: true });
 
   const firstQuestion = questions[0] || {};
   const entityName = entityNameOverride || firstQuestion.entity_name || 'Major League Cricket';
@@ -3728,20 +965,21 @@ export async function runOpenCodePresetBatch({
   const runStartedAt = new Date().toISOString();
   const statePath = _buildStateFilePath(outputDir, normalizedPreset, entityId);
   const existingState = resume ? await _loadJsonFile(statePath) : null;
-  let runState = existingState && typeof existingState === 'object' ? existingState : buildPresetRunState(questions, { preset: normalizedPreset, runId: 'cli', timestamp: runStartedAt });
-  if (resume && existingState && typeof existingState === 'object') {
-    runState = normalizeRunStateForResume(runState, { timestamp: runStartedAt });
-  }
+  const runState = existingState && typeof existingState === 'object' ? existingState : buildPresetRunState(questions, { preset: normalizedPreset, runId: 'cli', timestamp: runStartedAt });
   const budgetOverrides = _buildCreditOverrides({ searchCredits, scrapeCredits, revisitCredits, confidenceThreshold });
+  const trackerPath = _buildTrackerFilePath(outputDir, normalizedPreset, entityId);
+  let tracker = _buildQuestionTracker({
+    runStartedAt,
+    preset: normalizedPreset,
+    entityName,
+    entityId,
+    entityType,
+    questionSourcePath,
+    questions,
+  });
   runState.last_run_at = runStartedAt;
-  runState.heartbeat_at = runStartedAt;
   runState.preset = normalizedPreset;
-  runState.failure_reason = null;
-  runState.failure_category = null;
-  runState.retryable = false;
-  runState.last_error = null;
   runState.run_started_at = runState.run_started_at || runStartedAt;
-  runState.publish_status = runState.publish_status || 'draft';
   runState.questions = Array.isArray(runState.questions) ? runState.questions : buildPresetRunState(questions, { preset: normalizedPreset, runId: 'cli', timestamp: runStartedAt }).questions;
   if (Object.values(budgetOverrides).some((value) => Number.isFinite(value))) {
     runState.questions = runState.questions.map((questionState, index) => {
@@ -3750,436 +988,59 @@ export async function runOpenCodePresetBatch({
       return nextState;
     });
   }
-  runState.connections_graph = _buildRunConnectionsGraphContext({
-    sourcePayload: sourcePayload && typeof sourcePayload === 'object' ? sourcePayload : {},
-    runState,
-    entityId,
-    entityName,
-  });
-  runState = _decorateRunStateCheckpoint(runState, {
-    runPhase: 'initialized',
-    activeQuestionIndex: questions.length > 0 ? 0 : null,
-    activeQuestion: questions[0] || null,
-    activeHopIndex: 0,
-    activeQuery: questions[0]?.query || '',
-  });
-  await _writeJsonFile(statePath, runState);
+  await _writeTrackerFile(trackerPath, tracker);
 
   const finalQuestions = [];
   const perQuestionPayloads = [];
-  const questionTimings = {};
   const transcripts = [];
 
   try {
     for (const [index, question] of questions.entries()) {
-      const payloadQuestion = _decorateQuestionWithFallbackSeeds(question, runState);
+      const questionStartedAt = new Date().toISOString();
+      tracker.current_question_index = index + 1;
+      tracker.current_question_id = question.question_id;
+      tracker = _updateTrackerQuestion(tracker, index, {
+        status: 'running',
+        started_at: questionStartedAt,
+        completed_at: null,
+        validation_state: null,
+        confidence: null,
+        answer_excerpt: null,
+        notes: null,
+        error: null,
+      });
+      _appendTrackerEvent(tracker, {
+        type: 'question_started',
+        question_id: question.question_id,
+        question_index: index + 1,
+        question_text: question.question_text,
+      });
+      await _writeTrackerFile(trackerPath, tracker);
+
       let existingQuestionState = runState.questions[index];
       const currentQuestionState = existingQuestionState || buildQuestionState(question, { runId: `cli-${index + 1}`, timestamp: runStartedAt, creditBudgetOverrides: budgetOverrides, confidenceThreshold: budgetOverrides.confidenceThreshold });
       existingQuestionState = currentQuestionState;
-      let questionPayload;
-      let questionRun = null;
-      let questionTiming = null;
-      if (resume && _isTerminalQuestionState(existingQuestionState)) {
-        questionPayload = existingQuestionState.question_output || {
-          question_id: question.question_id,
-          question_type: question.question_type,
-          question_text: _questionText(question),
-          question: _questionText(question),
-          query: existingQuestionState.last_executed_query || question.query,
-          hop_budget: question.hop_budget,
-          source_priority: question.source_priority,
-          entity_name: question.entity_name,
-          entity_id: question.entity_id,
-          entity_type: question.entity_type,
-          preset: question.preset,
-          model_used: DEFAULT_MODEL,
-          session_id: existingQuestionState.run_id || `cli-${index + 1}`,
-          answer: existingQuestionState.best_answer || '',
-          confidence: existingQuestionState.current_confidence || 0,
-          validation_state: existingQuestionState.status || 'no_signal',
-          terminal_state: existingQuestionState.terminal_state || 'answered',
-          evidence_url: existingQuestionState.best_evidence_url || '',
-          reasoning: {
-            structured_output: {
-              answer: existingQuestionState.best_answer || '',
-              confidence: existingQuestionState.current_confidence || 0,
-              sources: existingQuestionState.accepted_links?.map((link) => link.url).filter(Boolean) || [],
-            },
-          },
-        };
-        const resumedStartedAt = existingQuestionState.started_at || runStartedAt;
-        const resumedCompletedAt = existingQuestionState.completed_at || resumedStartedAt;
-        questionTiming = questionTimings[question.question_id] || {
-          started_at: resumedStartedAt,
-          completed_at: resumedCompletedAt,
-          duration_seconds: _secondsBetweenIso(resumedStartedAt, resumedCompletedAt),
-        };
-        questionTimings[question.question_id] = questionTiming;
-        finalQuestions.push(questionPayload);
-        perQuestionPayloads.push({
-          run_started_at: runStartedAt,
-          entity_name: question.entity_name,
-          entity_id: question.entity_id,
-          entity_type: question.entity_type,
-          preset: question.preset,
-          started_at: questionTiming.started_at,
-          completed_at: questionTiming.completed_at,
-          duration_seconds: questionTiming.duration_seconds,
-          question: questionPayload,
-        });
-        transcripts.push(
-          [
-            `Question ${index + 1}: ${question.question_id}`,
-            `Prompt: ${question.query}`,
-            'Exit code: 0',
-            `Validation: ${questionPayload.validation_state}`,
-            `Answer: ${questionPayload.answer || 'n/a'}`,
-          ].join('\n'),
-        );
-        continue;
-      }
-      const questionStartedAt = new Date().toISOString();
-      const finalizeQuestionTiming = () => {
-        const completedAt = new Date().toISOString();
-        questionTiming = _buildQuestionTiming(questionStartedAt, completedAt);
-        questionTimings[question.question_id] = questionTiming;
-        questionPayload = {
-          ...questionPayload,
-          ...questionTiming,
-        };
-        return questionTiming;
-      };
-      runState = _decorateRunStateCheckpoint(runState, {
-        runPhase: 'question_start',
-        activeQuestionIndex: index,
-        activeQuestion: question,
-        activeHopIndex: 0,
-        activeQuery: question.query,
-      });
-      runState.questions[index] = existingQuestionState;
-      await _writeJsonFile(statePath, runState);
-      const pendingFrontierItems = resume && existingQuestionState ? _getPendingFrontierItems(existingQuestionState) : [];
-      const shouldReplayFrontier = pendingFrontierItems.length > 0;
-      const baseHopBudget = Math.max(1, Number(question.hop_budget || 0) || 10);
-      const evidenceExtensionBudget = Math.max(0, Number(question.evidence_extension_budget || question.hop_budget || 0) || 0);
-      const configuredQuestionTimeoutMs = Number(question.question_timeout_ms);
-      const configuredHopTimeoutMs = Number(question.hop_timeout_ms || question.question_timeout_ms);
-      const atomicHopTimeoutMs = Math.max(
-        1000,
-        Number.isFinite(configuredHopTimeoutMs)
-          ? configuredHopTimeoutMs
-          : Math.min(Number(opencodeTimeoutMs || 300000), 60000),
-      );
-      const evidenceExtensionConfidenceThreshold = _resolveEvidenceExtensionConfidenceThreshold(question, existingQuestionState || currentQuestionState);
-      let questionDeadline = Number.isFinite(configuredQuestionTimeoutMs)
-        ? Date.now() + Math.max(1000, configuredQuestionTimeoutMs)
-        : Date.now() + Math.max(1000, baseHopBudget * atomicHopTimeoutMs);
-      let hopLimit = baseHopBudget;
-      let evidenceExtended = false;
-      let currentState = existingQuestionState;
-      let activeQuery = question.query;
-      const queuedQueries = shouldReplayFrontier
-        ? pendingFrontierItems.slice(0, baseHopBudget).map((item) => item.query).filter(Boolean)
-        : [];
-      let hopIndex = 0;
-      const executionClass = String(question.execution_class || '').trim().toLowerCase() || 'atomic_retrieval';
-      const isAtomicDiscoveryQuestion = executionClass === 'atomic_retrieval';
-      const fallbackToRetrieval = question.fallback_to_retrieval !== false;
-
-      if (!_questionConditionsMet(question, runState, entityType)) {
-        const unmetCondition = _describeUnmetQuestionConditions(question, runState, entityType);
-        questionPayload = _buildQuestionPayload(
-          payloadQuestion,
-          _emptyStructuredOutputForQuestion(question, unmetCondition.note, {
-            terminal_state: unmetCondition.terminal_state,
-            blocked_by: unmetCondition.blocked_by,
-          }),
-          `cli-${index + 1}`,
-          {
-            promptTrace: { status: 'skipped_condition_unmet', has_structured_output: true },
-            messageTrace: [],
-            cliResult: { code: 0, stdout: '', stderr: '' },
-            executionQuery: question.query,
-          },
-        );
-        runState.questions[index] = _mergeQuestionState(existingQuestionState || currentQuestionState, questionPayload, new Date().toISOString());
-        runState.connections_graph = _buildRunConnectionsGraphContext({ sourcePayload, runState, entityId, entityName });
-        await _writeJsonFile(statePath, runState);
-        finalizeQuestionTiming();
-        finalQuestions.push(questionPayload);
-        perQuestionPayloads.push({
-          run_started_at: runStartedAt,
-          entity_name: question.entity_name,
-          entity_id: question.entity_id,
-          entity_type: question.entity_type,
-          preset: question.preset,
-          started_at: questionTiming.started_at,
-          completed_at: questionTiming.completed_at,
-          duration_seconds: questionTiming.duration_seconds,
-          question: questionPayload,
-        });
-        transcripts.push(
-          [
-            `Question ${index + 1}: ${question.question_id}`,
-            `Prompt: ${question.query}`,
-            'Exit code: 0',
-            'Validation: no_signal',
-            'Answer: n/a',
-          ].join('\n'),
-        );
-        continue;
-      }
-
-      if (typeof deterministicToolRunner === 'function') {
-        const deterministicRun = await deterministicToolRunner(question, {
-          runState,
-          fetchImpl: globalThis.fetch,
-        });
-        if (deterministicRun) {
-          const deterministicStructuredOutput = await enrichDigitalStackStructuredOutput(
-            question,
-            deterministicRun.structuredOutput || {},
-            {
-              fetchImpl: globalThis.fetch,
-              apifyTechStackLookup,
-              apifyToken,
-            },
-          );
-          questionRun = deterministicRun;
-          questionPayload = _buildQuestionPayload(
-            payloadQuestion,
-            deterministicStructuredOutput,
-            `cli-${index + 1}`,
-            {
-              promptTrace: deterministicRun.promptTrace || null,
-              messageTrace: deterministicRun.messageTrace || [],
-              cliResult: deterministicRun.cliResult || null,
-              executionQuery: question.query,
-            },
-          );
-          let updatedState = _mergeQuestionState(currentState || currentQuestionState, questionPayload, new Date().toISOString());
-          if (questionPayload.validation_state !== 'validated' && fallbackToRetrieval) {
-            updatedState = {
-              ...updatedState,
-              status: 'running',
-            };
-          }
-          runState.questions[index] = updatedState;
-          runState.connections_graph = _buildRunConnectionsGraphContext({ sourcePayload, runState, entityId, entityName });
-          await _writeJsonFile(statePath, runState);
-          currentState = updatedState;
-          existingQuestionState = updatedState;
-          if (questionPayload.validation_state === 'validated' || !fallbackToRetrieval) {
-            finalizeQuestionTiming();
-            finalQuestions.push(questionPayload);
-            perQuestionPayloads.push({
-              run_started_at: runStartedAt,
-              entity_name: question.entity_name,
-              entity_id: question.entity_id,
-              entity_type: question.entity_type,
-              preset: question.preset,
-              started_at: questionTiming.started_at,
-              completed_at: questionTiming.completed_at,
-              duration_seconds: questionTiming.duration_seconds,
-              question: questionPayload,
-            });
-            transcripts.push(
-              [
-                `Question ${index + 1}: ${question.question_id}`,
-                `Prompt: ${question.query}`,
-                `Exit code: ${questionRun?.cliResult?.code ?? 'n/a'}`,
-                `Validation: ${questionPayload.validation_state}`,
-                `Answer: ${questionPayload.answer || 'n/a'}`,
-              ].join('\n'),
-            );
-            continue;
-          }
-        }
-      }
-
-      if (!isAtomicDiscoveryQuestion && !fallbackToRetrieval) {
-        questionPayload = _buildQuestionPayload(
-          payloadQuestion,
-          _emptyStructuredOutputForQuestion(question, 'No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.'),
-          `cli-${index + 1}`,
-          {
-            promptTrace: { status: 'non_retrieval_no_signal', has_structured_output: true },
-            messageTrace: [],
-            cliResult: { code: 0, stdout: '', stderr: '' },
-            executionQuery: question.query,
-          },
-        );
-        runState.questions[index] = _mergeQuestionState(existingQuestionState || currentQuestionState, questionPayload, new Date().toISOString());
-        runState.connections_graph = _buildRunConnectionsGraphContext({ sourcePayload, runState, entityId, entityName });
-        await _writeJsonFile(statePath, runState);
-        finalizeQuestionTiming();
-        finalQuestions.push(questionPayload);
-        perQuestionPayloads.push({
-          run_started_at: runStartedAt,
-          entity_name: question.entity_name,
-          entity_id: question.entity_id,
-          entity_type: question.entity_type,
-          preset: question.preset,
-          started_at: questionTiming.started_at,
-          completed_at: questionTiming.completed_at,
-          duration_seconds: questionTiming.duration_seconds,
-          question: questionPayload,
-        });
-        transcripts.push(
-          [
-            `Question ${index + 1}: ${question.question_id}`,
-            `Prompt: ${question.query}`,
-            'Exit code: 0',
-            'Validation: no_signal',
-            'Answer: n/a',
-          ].join('\n'),
-        );
-        continue;
-      }
-
-      if (isAtomicDiscoveryQuestion) {
-      while (hopIndex < hopLimit && Date.now() < questionDeadline) {
-        const executionQuery = queuedQueries.length > 0 ? queuedQueries.shift() : activeQuery || question.query;
-        const remainingMs = questionDeadline - Date.now();
-        if (remainingMs <= 0) {
-          break;
-        }
-        const hopTimeoutMs = Math.max(1000, Math.min(atomicHopTimeoutMs, remainingMs));
-        const executionQuestion = _buildExecutionQuestion(payloadQuestion, executionQuery, hopIndex);
-        if (String(question.question_id || '').trim() === 'q11_decision_owner') {
-          executionQuestion.candidate_pool = _candidatePoolFromLeadership(runState);
-        }
-        runState = _decorateRunStateCheckpoint(runState, {
-          runPhase: 'question_runner_enter',
-          activeQuestionIndex: index,
-          activeQuestion: executionQuestion,
-          activeHopIndex: hopIndex,
-          activeQuery: executionQuestion.query,
-        });
-        runState.runner_debug = {
-          phase: 'before_runner',
-          question_id: executionQuestion.question_id,
-          hop_index: hopIndex,
-          at: new Date().toISOString(),
-        };
-        runState.questions[index] = existingQuestionState;
-        await _writeJsonFile(statePath, runState);
-        const runnerResult = await _runQuestionRunnerWithTimeout(
-          questionRunner,
-          executionQuestion,
-          {
-            worktreeRoot: resolvedWorktreeRoot,
-            opencodeTimeoutMs: hopTimeoutMs,
-            onHeartbeat: async () => {
-              runState = _decorateRunStateCheckpoint(runState, {
-                runPhase: 'question_runner_enter',
-                activeQuestionIndex: index,
-                activeQuestion: executionQuestion,
-                activeHopIndex: hopIndex,
-                activeQuery: executionQuestion.query,
-              });
-              runState.runner_debug = {
-                phase: 'heartbeat',
-                question_id: executionQuestion.question_id,
-                hop_index: hopIndex,
-                at: new Date().toISOString(),
-              };
-              runState.questions[index] = existingQuestionState;
-              await _writeJsonFile(statePath, runState);
-            },
-          },
-          hopTimeoutMs,
-        );
-        questionRun = runnerResult.questionRun;
-        if (questionRun?.structuredOutput && typeof questionRun.structuredOutput === 'object') {
-          questionRun.structuredOutput = await enrichDigitalStackStructuredOutput(
-            question,
-            questionRun.structuredOutput,
-            {
-              fetchImpl: globalThis.fetch,
-              apifyTechStackLookup,
-              apifyToken,
-            },
-          );
-        }
-        runState = _decorateRunStateCheckpoint(runState, {
-          runPhase: runnerResult.timedOut ? 'question_runner_timeout' : 'question_runner_return',
-          activeQuestionIndex: index,
-          activeQuestion: executionQuestion,
-          activeHopIndex: hopIndex,
-          activeQuery: executionQuestion.query,
-        });
-        runState.runner_debug = {
-          phase: runnerResult.timedOut ? 'after_runner_timeout' : 'after_runner',
-          question_id: executionQuestion.question_id,
-          hop_index: hopIndex,
-          at: new Date().toISOString(),
-        };
-        runState.questions[index] = existingQuestionState;
-        await _writeJsonFile(statePath, runState);
-        questionPayload = _buildQuestionPayload(
-          payloadQuestion,
-          questionRun.structuredOutput || {},
-          `cli-${index + 1}`,
-          {
-            promptTrace: questionRun.promptTrace || null,
-            messageTrace: questionRun.messageTrace || [],
-            cliResult: questionRun.cliResult || null,
-            executionQuery: executionQuestion.query,
-          },
-        );
-        let updatedState = _mergeQuestionState(currentState || currentQuestionState, questionPayload, new Date().toISOString());
-        updatedState = _spendCredit(updatedState, 'search', 1);
-        if (Array.isArray(questionPayload?.reasoning?.structured_output?.sources) && questionPayload.reasoning.structured_output.sources.length > 0) {
-          updatedState = _spendCredit(updatedState, 'scrape', 1);
-        }
-        if ((executionQuestion.query || question.query) !== question.query) {
-          updatedState = _spendCredit(updatedState, 'revisit', 1);
-        }
-
-        const hasEvidence = _questionHasStrongEvidence(questionPayload, evidenceExtensionConfidenceThreshold);
-        if (hasEvidence && !evidenceExtended && evidenceExtensionBudget > 0) {
-          updatedState = _extendQuestionBudget(updatedState, evidenceExtensionBudget);
-          hopLimit += evidenceExtensionBudget;
-          questionDeadline += evidenceExtensionBudget * atomicHopTimeoutMs;
-          evidenceExtended = true;
-        }
-
-        runState.questions[index] = updatedState;
-        await _writeJsonFile(statePath, runState);
-        currentState = updatedState;
-        existingQuestionState = updatedState;
-        if (_shouldStopAfterQuestionPayload(questionPayload, updatedState)) {
-          break;
-        }
-
-        const recommendedNextQuery = String(questionPayload?.recommended_next_query || '').trim();
-        if (recommendedNextQuery) {
-          activeQuery = recommendedNextQuery;
-        } else if (!queuedQueries.length) {
-          activeQuery = executionQuery;
-        }
-
-        hopIndex += 1;
-      }
-      } else {
       const searchSpent = Number(currentQuestionState.credits_spent?.search || 0);
       const searchBudget = Number(currentQuestionState.credit_budget?.search || 0);
       const scrapeSpent = Number(currentQuestionState.credits_spent?.scrape || 0);
       const scrapeBudget = Number(currentQuestionState.credit_budget?.scrape || 0);
       const revisitSpent = Number(currentQuestionState.credits_spent?.revisit || 0);
       const revisitBudget = Number(currentQuestionState.credit_budget?.revisit || 0);
+      const pendingFrontierItems = resume && existingQuestionState ? _getPendingFrontierItems(existingQuestionState) : [];
+      const shouldReplayFrontier = pendingFrontierItems.length > 0;
       const executionQueue = shouldReplayFrontier
-        ? pendingFrontierItems.slice(0, Math.max(1, Number(question.hop_budget || 0))).map((item, hopIndex) => _buildExecutionQuestion(payloadQuestion, item.query, hopIndex + 1))
-        : (resume && existingQuestionState && _isTerminalQuestionState(existingQuestionState))
+        ? pendingFrontierItems.slice(0, Math.max(1, Number(question.hop_budget || 0))).map((item, hopIndex) => _buildExecutionQuestion(question, item.query, hopIndex + 1))
+        : (resume && existingQuestionState && ['validated', 'provisional', 'no_signal'].includes(existingQuestionState.status) && existingQuestionState.best_answer)
           ? []
           : [question];
+      let questionPayload;
+      let questionRun = null;
       if (executionQueue.length === 0) {
         questionPayload = {
           question_id: question.question_id,
           question_type: question.question_type,
-          question_text: _questionText(question),
-          question: _questionText(question),
+          question_text: question.question_text,
+          question: question.question_text,
           query: question.query,
           hop_budget: question.hop_budget,
           source_priority: question.source_priority,
@@ -4229,73 +1090,27 @@ export async function runOpenCodePresetBatch({
               status: 'exhausted',
             };
             runState.questions[index] = existingQuestionState;
+            tracker = _updateTrackerQuestion(tracker, index, {
+              status: 'exhausted',
+              completed_at: new Date().toISOString(),
+            });
+            _appendTrackerEvent(tracker, {
+              type: 'question_exhausted',
+              question_id: question.question_id,
+              question_index: index + 1,
+              reason: 'search_budget_exhausted',
+            });
+            await _writeTrackerFile(trackerPath, tracker);
             break;
           }
-          runState = _decorateRunStateCheckpoint(runState, {
-            runPhase: 'question_runner_enter',
-            activeQuestionIndex: index,
-            activeQuestion: executionQuestion,
-            activeHopIndex: hopIndex,
-            activeQuery: executionQuestion.query,
-          });
-          runState.runner_debug = {
-            phase: 'before_runner',
-            question_id: executionQuestion.question_id,
-            hop_index: hopIndex,
-            at: new Date().toISOString(),
-          };
-          runState.questions[index] = existingQuestionState;
-          await _writeJsonFile(statePath, runState);
-          const runnerResult = await _runQuestionRunnerWithTimeout(
-            questionRunner,
-            executionQuestion,
-            {
-              worktreeRoot: resolvedWorktreeRoot,
-              opencodeTimeoutMs,
-              onHeartbeat: async () => {
-                runState = _decorateRunStateCheckpoint(runState, {
-                  runPhase: 'question_runner_enter',
-                  activeQuestionIndex: index,
-                  activeQuestion: executionQuestion,
-                  activeHopIndex: hopIndex,
-                  activeQuery: executionQuestion.query,
-                });
-                runState.runner_debug = {
-                  phase: 'heartbeat',
-                  question_id: executionQuestion.question_id,
-                  hop_index: hopIndex,
-                  at: new Date().toISOString(),
-                };
-                runState.questions[index] = existingQuestionState;
-                await _writeJsonFile(statePath, runState);
-              },
-            },
-            opencodeTimeoutMs,
-          );
-          questionRun = runnerResult.questionRun;
-          runState = _decorateRunStateCheckpoint(runState, {
-            runPhase: runnerResult.timedOut ? 'question_runner_timeout' : 'question_runner_return',
-            activeQuestionIndex: index,
-            activeQuestion: executionQuestion,
-            activeHopIndex: hopIndex,
-            activeQuery: executionQuestion.query,
-          });
-          runState.runner_debug = {
-            phase: runnerResult.timedOut ? 'after_runner_timeout' : 'after_runner',
-            question_id: executionQuestion.question_id,
-            hop_index: hopIndex,
-            at: new Date().toISOString(),
-          };
-          runState.questions[index] = existingQuestionState;
-          await _writeJsonFile(statePath, runState);
+          questionRun = await questionRunner(executionQuestion, { worktreeRoot, opencodeTimeoutMs });
           questionPayload = _buildQuestionPayload(
-            payloadQuestion,
+            question,
             questionRun.structuredOutput || {},
             `cli-${index + 1}`,
             {
               promptTrace: questionRun.promptTrace || null,
               messageTrace: questionRun.messageTrace || [],
-              cliResult: questionRun.cliResult || null,
               executionQuery: executionQuestion.query,
             },
           );
@@ -4319,23 +1134,35 @@ export async function runOpenCodePresetBatch({
               status: 'exhausted',
             };
           }
-        runState.questions[index] = updatedState;
-        await _writeJsonFile(statePath, runState);
-        existingQuestionState = runState.questions[index];
-        if (_shouldStopAfterQuestionPayload(questionPayload, updatedState)) {
-          break;
+          runState.questions[index] = updatedState;
+          await _writeJsonFile(statePath, runState);
+          existingQuestionState = runState.questions[index];
+          if (existingQuestionState.status === 'exhausted') {
+            tracker = _updateTrackerQuestion(tracker, index, {
+              status: 'exhausted',
+              completed_at: new Date().toISOString(),
+              validation_state: questionPayload?.validation_state || null,
+              confidence: questionPayload?.confidence ?? null,
+              answer_excerpt: String(questionPayload?.answer || '').slice(0, 280) || null,
+              notes: questionPayload?.notes || null,
+            });
+            _appendTrackerEvent(tracker, {
+              type: 'question_exhausted',
+              question_id: question.question_id,
+              question_index: index + 1,
+              validation_state: questionPayload?.validation_state || null,
+            });
+            await _writeTrackerFile(trackerPath, tracker);
+            break;
+          }
         }
-        if (runnerResult.timedOut || existingQuestionState.status === 'exhausted') {
-          break;
-        }
-      }
       }
       if (!questionPayload) {
         questionPayload = {
           question_id: question.question_id,
           question_type: question.question_type,
-          question_text: _questionText(question),
-          question: _questionText(question),
+          question_text: question.question_text,
+          question: question.question_text,
           query: existingQuestionState?.last_executed_query || question.query,
           hop_budget: question.hop_budget,
           source_priority: question.source_priority,
@@ -4372,14 +1199,27 @@ export async function runOpenCodePresetBatch({
           notes: existingQuestionState?.notes || '',
         };
       }
-      runState.questions[index] = _mergeQuestionState(existingQuestionState || currentQuestionState, questionPayload, new Date().toISOString());
-      runState.connections_graph = _buildRunConnectionsGraphContext({ sourcePayload, runState, entityId, entityName });
-      await _writeJsonFile(statePath, runState);
-      finalizeQuestionTiming();
+      if (executionQueue.length === 0) {
+        runState.questions[index] = _mergeQuestionState(existingQuestionState || currentQuestionState, questionPayload, new Date().toISOString());
+        await _writeJsonFile(statePath, runState);
       }
-      if (!questionTiming) {
-        finalizeQuestionTiming();
-      }
+      tracker = _updateTrackerQuestion(tracker, index, {
+        status: questionPayload.validation_state === 'validated' ? 'validated' : (questionPayload.validation_state === 'exhausted' ? 'exhausted' : 'completed'),
+        completed_at: new Date().toISOString(),
+        validation_state: questionPayload.validation_state || null,
+        confidence: questionPayload.confidence ?? null,
+        answer_excerpt: String(questionPayload.answer || '').slice(0, 280) || null,
+        notes: questionPayload.notes || null,
+        error: null,
+      });
+      _appendTrackerEvent(tracker, {
+        type: 'question_completed',
+        question_id: question.question_id,
+        question_index: index + 1,
+        validation_state: questionPayload.validation_state || null,
+        confidence: questionPayload.confidence ?? null,
+      });
+      await _writeTrackerFile(trackerPath, tracker);
       finalQuestions.push(questionPayload);
       perQuestionPayloads.push({
         run_started_at: runStartedAt,
@@ -4387,9 +1227,6 @@ export async function runOpenCodePresetBatch({
         entity_id: question.entity_id,
         entity_type: question.entity_type,
         preset: question.preset,
-        started_at: questionTiming.started_at,
-        completed_at: questionTiming.completed_at,
-        duration_seconds: questionTiming.duration_seconds,
         question: questionPayload,
       });
       transcripts.push(
@@ -4403,75 +1240,21 @@ export async function runOpenCodePresetBatch({
       );
     }
 
-    const reconciliation = reconcileRunStateCheckpoint(runState, {
-      requiredQuestionCount: questions.length,
-    });
-    if (!reconciliation.all_terminal) {
-      const inconsistentRunState = _decorateRunStateCheckpoint({
-        ...runState,
-        last_run_at: new Date().toISOString(),
-        publish_status: 'draft',
-        failure_reason: `checkpoint_inconsistency: non-terminal questions remain (${reconciliation.non_terminal_question_ids.join(', ')})`,
-        failure_category: 'checkpoint_inconsistency',
-        retryable: false,
-        last_error: {
-          message: `checkpoint_inconsistency: non-terminal questions remain (${reconciliation.non_terminal_question_ids.join(', ')})`,
-          category: 'checkpoint_inconsistency',
-          retryable: false,
-          at: new Date().toISOString(),
-        },
-        questions: runState.questions,
-      }, {
-        runPhase: reconciliation.derived_run_phase,
-        activeQuestionIndex: questions.findIndex((question) => question?.question_id === reconciliation.resume_from_question),
-        activeQuestion: questions.find((question) => question?.question_id === reconciliation.resume_from_question) || null,
-        activeHopIndex: null,
-        activeQuery: '',
-      });
-      await _writeJsonFile(statePath, inconsistentRunState);
-      throw new Error(`checkpoint_inconsistency: non-terminal questions remain (${reconciliation.non_terminal_question_ids.join(', ')})`);
-    }
-
-    const slug = _slugify(entityId);
-    const timestamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z').replace('T', '_').replace('Z', '');
-    const stem = `${slug}_opencode_batch_${timestamp}`;
-    await fs.mkdir(outputDir, { recursive: true });
+	    const slug = _slugify(entityId);
+	    const timestamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z').replace('T', '_').replace('Z', '');
+	    const stem = `${slug}_opencode_batch_${timestamp}`;
+	    await fs.mkdir(outputDir, { recursive: true });
 
 	    const metaPath = path.join(outputDir, `${stem}_meta.json`);
 	    const rollupPath = path.join(outputDir, `${stem}_rollup.json`);
 	    const transcriptPath = path.join(outputDir, `${stem}.txt`);
-	    const questionFirstRunPath = path.join(outputDir, `${stem}_question_first_run_v2.json`);
+	    const questionFirstRunPath = path.join(outputDir, `${stem}_question_first_run_v1.json`);
 	    const questionPaths = [];
-      const traceIndex = [];
 
     for (const [index, payload] of perQuestionPayloads.entries()) {
       const questionPath = path.join(outputDir, `${stem}_question_${String(index + 1).padStart(3, '0')}.json`);
       await fs.writeFile(questionPath, JSON.stringify(payload, null, 2), 'utf8');
       questionPaths.push(questionPath);
-      const debugPath = path.join(outputDir, `${stem}_question_${String(index + 1).padStart(3, '0')}.debug.json`);
-      const questionTraceId = `${payload.question.question_id || `question_${index + 1}`}:debug`;
-      await fs.writeFile(
-        debugPath,
-        JSON.stringify(
-          {
-            trace_id: questionTraceId,
-            question_id: payload.question.question_id || `question_${index + 1}`,
-            prompt_trace: payload.question.prompt_trace || null,
-            message_trace: payload.question.message_trace || [],
-            raw_execution_trace: payload.question.raw_execution_trace || null,
-          },
-          null,
-          2,
-        ),
-        'utf8',
-      );
-      traceIndex.push({
-        trace_id: questionTraceId,
-        question_id: payload.question.question_id || `question_${index + 1}`,
-        trace_type: 'debug_bundle',
-        path: debugPath,
-        inline: null,
-      });
     }
 
 	    const metaPayload = {
@@ -4496,6 +1279,7 @@ export async function runOpenCodePresetBatch({
       questions_no_signal: questionsNoSignal,
       questions_provisional: questionsProvisional,
 	      meta_result_path: metaPath,
+	      tracker_path: trackerPath,
 	      question_result_paths: questionPaths,
 	      question_results_path: metaPath,
 	      transcript_path: transcriptPath,
@@ -4509,40 +1293,42 @@ export async function runOpenCodePresetBatch({
 	      entity_id: entityId,
 	      entity_name: entityName,
 	      entity_type: entityType,
-          run_id: stem,
 	      preset: normalizedPreset,
 	      question_source_path: questionSourcePath || `preset:${normalizedPreset}`,
-	      question_specs: questions,
-	      answer_records: finalQuestions,
-          trace_index: traceIndex,
+	      questions,
+	      answers: finalQuestions,
 	      categories: finalQuestions.length ? _buildCategorySummary(finalQuestions) : [],
-	      question_timings: questionTimings,
 	      run_rollup: rollupPayload,
 	      generated_at: new Date().toISOString(),
 	      run_started_at: runStartedAt,
 	      status: finalQuestions.some((item) => item.validation_state === 'validated') ? 'ready' : 'empty',
 	    });
 	    validateQuestionFirstRunArtifact(questionFirstArtifact);
-    await fs.writeFile(questionFirstRunPath, JSON.stringify(questionFirstArtifact, null, 2), 'utf8');
-    await _writeJsonFile(statePath, _decorateRunStateCheckpoint({
-      ...runState,
-      last_run_at: new Date().toISOString(),
-      publish_status: 'staged',
-      preset: normalizedPreset,
-      failure_reason: null,
-      failure_category: null,
-      retryable: false,
-      last_error: null,
-      questions: runState.questions,
-    }, {
-      runPhase: 'completed',
-      activeQuestionIndex: null,
-      activeQuestion: null,
-      activeHopIndex: null,
-      activeQuery: '',
-    }));
+	    await fs.writeFile(questionFirstRunPath, JSON.stringify(questionFirstArtifact, null, 2), 'utf8');
+	    tracker = {
+	      ...tracker,
+	      status: 'completed',
+	      run_completed_at: new Date().toISOString(),
+	      updated_at: new Date().toISOString(),
+	      current_question_index: finalQuestions.length,
+	      current_question_id: finalQuestions[finalQuestions.length - 1]?.question_id || tracker.current_question_id || null,
+	    };
+	    _appendTrackerEvent(tracker, {
+	      type: 'run_completed',
+	      questions_total: finalQuestions.length,
+	      questions_validated: questionsValidated,
+	      questions_no_signal: questionsNoSignal,
+	      questions_provisional: questionsProvisional,
+	    });
+	    await _writeTrackerFile(trackerPath, tracker);
+	    await _writeJsonFile(statePath, {
+	      ...runState,
+	      last_run_at: new Date().toISOString(),
+	      preset: normalizedPreset,
+	      questions: runState.questions,
+    });
 
-	    return {
+    return {
       ...rollupPayload,
 	      rollup_path: rollupPath,
 	      meta_result_path: metaPath,
@@ -4550,58 +1336,25 @@ export async function runOpenCodePresetBatch({
 	      question_results_path: metaPath,
 	      transcript_path: transcriptPath,
 	      question_first_run_path: questionFirstRunPath,
+	      tracker_path: trackerPath,
 	      state_path: statePath,
 	    };
   } catch (error) {
-    const timestamp = new Date().toISOString();
-    const failure = _classifyRunFailure(error);
-    const activeQuestion = Number.isFinite(Number(runState?.active_question_index))
-      ? questions[Number(runState.active_question_index)] || null
-      : null;
-    const failureRunPhase = failure.failure_category === 'checkpoint_inconsistency'
-      ? 'resume_needed'
-      : (failure.retryable ? 'retryable_failure' : 'failed');
-    const failedRunState = _decorateRunStateCheckpoint({
-      ...runState,
-      last_run_at: timestamp,
-      publish_status: failure.failure_category === 'checkpoint_inconsistency' ? 'draft' : 'failed',
-      failure_reason: failure.failure_reason,
-      failure_category: failure.failure_category,
-      retryable: failure.retryable,
-      last_error: {
-        message: failure.failure_reason,
-        category: failure.failure_category,
-        retryable: failure.retryable,
-        at: timestamp,
-      },
-      questions: Array.isArray(runState?.questions)
-        ? runState.questions.map((questionState) => (
-            questionState?.question_id === runState?.active_question_id
-              ? {
-                  ...questionState,
-                  heartbeat_at: timestamp,
-                  retry_count: Number(questionState?.retry_count || 0) + 1,
-                  last_error: {
-                    message: failure.failure_reason,
-                    category: failure.failure_category,
-                    retryable: failure.retryable,
-                    at: timestamp,
-                  },
-                }
-              : questionState
-          ))
-        : [],
-    }, {
-      runPhase: failureRunPhase,
-      activeQuestionIndex: runState?.active_question_index ?? null,
-      activeQuestion,
-      activeHopIndex: runState?.active_hop_index ?? null,
-      activeQuery: runState?.active_query || '',
+    tracker = {
+      ...tracker,
+      status: 'failed',
+      run_completed_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      error: error instanceof Error ? error.message : String(error),
+    };
+    _appendTrackerEvent(tracker, {
+      type: 'run_failed',
+      error: error instanceof Error ? error.message : String(error),
     });
     try {
-      await _writeJsonFile(statePath, failedRunState);
+      await _writeTrackerFile(trackerPath, tracker);
     } catch {
-      // Preserve original failure if checkpoint persistence also fails.
+      // Ignore tracker write failures on the error path.
     }
     throw error;
   } finally {
@@ -4611,18 +1364,14 @@ export async function runOpenCodePresetBatch({
 export async function runOpenCodeQuestionSourceBatch({
   questionSourcePath,
   outputDir,
-  worktreeRoot = null,
+  worktreeRoot = WORKTREE_ROOT,
   opencodeTimeoutMs = 300000,
   questionRunner = runOpenCodeCliQuestion,
-  deterministicToolRunner = runDeterministicToolQuestion,
-  apifyTechStackLookup = lookupApifyTechStack,
-  apifyToken = process.env.APIFY_PERSONAL_API || process.env.APIFY_TOKEN || process.env.APIFY_PASSWORD || '',
   resume = false,
   searchCredits,
   scrapeCredits,
   revisitCredits,
   confidenceThreshold,
-  rolloutPhase = null,
 } = {}) {
   if (!questionSourcePath) {
     throw new Error('questionSourcePath is required');
@@ -4636,9 +1385,7 @@ export async function runOpenCodeQuestionSourceBatch({
     throw new Error(`Question source ${JSON.stringify(questionSourcePath)} must resolve to a JSON object`);
   }
 
-  const canonicalQuestions = Array.isArray(sourcePayload.questions) ? sourcePayload.questions.filter((question) => question && typeof question === 'object') : [];
-  const resolvedRolloutPhase = String(rolloutPhase || sourcePayload.default_rollout_phase || 'phase_1_core').trim() || 'phase_1_core';
-  const questions = _filterQuestionsForRollout(canonicalQuestions, resolvedRolloutPhase);
+  const questions = Array.isArray(sourcePayload.questions) ? sourcePayload.questions.filter((question) => question && typeof question === 'object') : [];
   if (questions.length === 0) {
     throw new Error(`Question source ${JSON.stringify(questionSourcePath)} does not contain any questions`);
   }
@@ -4647,48 +1394,23 @@ export async function runOpenCodeQuestionSourceBatch({
   const entityId = String(sourcePayload.entity_id || sourcePayload.entityId || _slugify(entityName)).trim() || _slugify(entityName);
   const entityType = String(sourcePayload.entity_type || sourcePayload.entityType || 'ENTITY').trim() || 'ENTITY';
   const preset = String(sourcePayload.preset || sourcePayload.question_source_label || entityId).trim() || entityId;
-  const materializedQuestions = questions.map((question) => {
-    const resolvedQuestionText = _questionText(question, entityName);
-    return {
-      ...question,
-      entity_name: question.entity_name || entityName,
-      entity_id: question.entity_id || entityId,
-      entity_type: question.entity_type || entityType,
-      preset: question.preset || preset,
-      question_shape: question.question_shape || sourcePayload.question_shape || 'atomic',
-      pack_role: question.pack_role || sourcePayload.pack_role || 'discovery',
-      execution_class: question.execution_class || 'atomic_retrieval',
-      rollout_phase: question.rollout_phase || resolvedRolloutPhase,
-      conditional_on: Array.isArray(question.conditional_on) ? question.conditional_on : [],
-      depends_on: Array.isArray(question.depends_on) ? question.depends_on : [],
-      structured_output_schema: question.structured_output_schema || '',
-      graph_write_targets: Array.isArray(question.graph_write_targets) ? question.graph_write_targets : [],
-      graph_context: question.graph_context || sourcePayload.connections_graph || sourcePayload.graph_context || null,
-      question_text: resolvedQuestionText,
-      question: resolvedQuestionText,
-    };
-  });
 
   return runOpenCodePresetBatch({
     outputDir,
     preset,
-    worktreeRoot: _resolveOpencodeWorktreeRoot(worktreeRoot),
+    worktreeRoot,
     opencodeTimeoutMs,
     questionRunner,
-    deterministicToolRunner,
-    apifyTechStackLookup,
-    apifyToken,
     resume,
     searchCredits,
     scrapeCredits,
     revisitCredits,
     confidenceThreshold,
-    questionsOverride: materializedQuestions,
+    questionsOverride: questions,
     entityNameOverride: entityName,
     entityIdOverride: entityId,
     entityTypeOverride: entityType,
     questionSourcePath,
-    sourcePayload,
   });
 }
 

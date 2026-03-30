@@ -16,15 +16,15 @@ def test_build_question_inventory_separates_dossier_and_discovery_questions(tmp_
     assert inventory["summary"]["entity_type_question_counts"] == {
         "SPORT_CLUB": 7,
         "SPORT_FEDERATION": 6,
-        "SPORT_LEAGUE": 5,
+        "SPORT_LEAGUE": 6,
     }
-    assert inventory["summary"]["entity_type_question_total"] == 18
+    assert inventory["summary"]["entity_type_question_total"] == 19
     assert inventory["summary"]["section_question_total"] == 50
     assert inventory["summary"]["dossier_question_total"] > 0
     assert inventory["summary"]["discovery_question_total"] > 0
     assert inventory["summary"]["artifact_question_total"] >= 0
     assert inventory["summary"]["flat_question_total"] == inventory["summary"]["unique_question_count"]
-    assert inventory["summary"]["flat_question_total"] >= 68
+    assert inventory["summary"]["flat_question_total"] >= 69
     assert inventory["section_breakdown_candidates"]
     assert inventory["pack_role"] == "dossier"
 
@@ -37,7 +37,11 @@ def test_build_question_inventory_separates_dossier_and_discovery_questions(tmp_
 
     assert any(
         "mobile app" in entry["question"].lower()
-        and "fan app" in entry["question"].lower()
+        and "last 180 days" in entry["question"].lower()
+        for entry in entity_type_questions
+    )
+    assert any(
+        "fan experience" in entry["question"].lower()
         and "last 180 days" in entry["question"].lower()
         for entry in entity_type_questions
     )
@@ -70,7 +74,7 @@ def test_build_question_inventory_separates_dossier_and_discovery_questions(tmp_
     write_question_inventory(output_path, inventory)
 
     written = json.loads(output_path.read_text())
-    assert written["summary"]["entity_type_question_total"] == 18
+    assert written["summary"]["entity_type_question_total"] == 19
     assert written["summary"]["dossier_question_total"] > 0
     assert written["summary"]["discovery_question_total"] > 0
     assert "flat_questions" in written

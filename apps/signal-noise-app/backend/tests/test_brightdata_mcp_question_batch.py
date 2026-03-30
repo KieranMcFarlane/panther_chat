@@ -25,7 +25,7 @@ def test_build_question_records_uses_premium_questions_and_service_queries():
     first = records[0]
 
     assert first["question_id"] == "sl_league_mobile_app"
-    assert first["question_text"] == "What league-wide mobile app or digital platform initiatives is Major League Cricket pursuing?"
+    assert first["question_text"] == "What evidence in the last 180 days shows Major League Cricket is planning or updating a league mobile app?"
     assert len(first["query_plan"]) == 1
     assert first["query_plan"][0]["kind"] == "direct_question_query"
     assert first["query_plan"][0]["query"] == '"Major League Cricket" RFP tender procurement'
@@ -426,7 +426,7 @@ def test_main_can_merge_existing_question_json_files(tmp_path, monkeypatch, caps
                 "entity_type": "SPORT_LEAGUE",
                 "question": {
                     "question_id": "sl_league_mobile_app",
-                    "question_text": "What league-wide mobile app or digital platform initiatives is Major League Cricket pursuing?",
+                    "question_text": "What evidence in the last 180 days shows Major League Cricket is planning or updating a league mobile app?",
                     "validation_state": "validated",
                     "reasoning": {
                         "structured_output": {

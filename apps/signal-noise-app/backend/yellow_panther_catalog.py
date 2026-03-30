@@ -485,27 +485,45 @@ SPORT_FEDERATION_QUESTIONS: List[QuestionTemplate] = [
 
 
 # =============================================================================
-# SPORT_LEAGUE Questions (5 questions)
+# SPORT_LEAGUE Questions (6 questions)
 # =============================================================================
 
 SPORT_LEAGUE_QUESTIONS: List[QuestionTemplate] = [
     QuestionTemplate(
         question_id="sl_league_mobile_app",
-        question="What evidence in the last 180 days shows {entity} is pursuing a league-wide digital platform, mobile app, or fan experience upgrade?",
+        question="What evidence in the last 180 days shows {entity} is planning or updating a league mobile app?",
         yp_service_fit=[YPServiceCategory.MOBILE_APPS, YPServiceCategory.FAN_ENGAGEMENT],
         budget_range="£200K-£500K",
         yp_advantage="Olympic mobile app experience, multi-club deployment capability",
         positioning_strategy=YPPositioningStrategy.STRATEGIC_PARTNER,
-        hypothesis_template="{entity} will develop a league-wide digital platform (£200K-£500K) for fan engagement",
+        hypothesis_template="{entity} will commission or update a league mobile app (£200K-£500K)",
         next_signals=[
-            "Graphiti communities: league platform changes, member club coordination, or vendor switches",
+            "Graphiti communities: league app changes, member club coordination, or vendor switches",
             "Job postings: Mobile Product Manager, League Digital Director",
-            "RFP keywords: mobile app, league platform, fan app, React Native, RFP, Request for Proposal, tender, ITT, EOI, procurement",
-            "League announcements: mobile strategy, digital fan experience",
+            "RFP keywords: mobile app, fan app, React Native, RFP, Request for Proposal, tender, ITT, EOI, procurement",
+            "League announcements: mobile strategy, app relaunch, digital fan experience",
         ],
         hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE"],
-        accept_criteria="League-wide digital platform evidence or a recent vendor search",
+        accept_criteria="Evidence of a league app project or a recent vendor search",
         confidence_boost=0.20
+    ),
+    QuestionTemplate(
+        question_id="sl_league_fan_experience",
+        question="What evidence in the last 180 days shows {entity} is upgrading fan experience or supporter engagement?",
+        yp_service_fit=[YPServiceCategory.FAN_ENGAGEMENT, YPServiceCategory.MOBILE_APPS],
+        budget_range="£150K-£400K",
+        yp_advantage="FIBA 3×3 fan engagement platform, multi-federation experience",
+        positioning_strategy=YPPositioningStrategy.INNOVATION_PARTNER,
+        hypothesis_template="{entity} will invest in a fan-experience upgrade (£150K-£400K) within 12 months",
+        next_signals=[
+            "Graphiti communities: supporter journey changes, engagement tooling, or fan feedback",
+            "Job postings: Fan Engagement Manager, League CRM Lead",
+            "RFP keywords: fan experience, supporter platform, loyalty, CRM, RFP, Request for Proposal, tender, ITT, procurement",
+            "League announcements: engagement strategy, supporter experience, fan platform",
+        ],
+        hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE"],
+        accept_criteria="Evidence of a fan-experience initiative or a recent vendor search",
+        confidence_boost=0.18
     ),
     QuestionTemplate(
         question_id="sl_digital_operations",
