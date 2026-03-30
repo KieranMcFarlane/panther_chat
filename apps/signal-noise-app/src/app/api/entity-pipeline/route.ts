@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
+import { upsertImportedEntityIntoFalkor } from '@/lib/entity-import-falkor-writer'
 import { normalizeImportedEntityRow, REQUIRED_ENTITY_IMPORT_COLUMNS } from '@/lib/entity-import-schema'
 import { mapImportedEntityRowToCachedEntity } from '@/lib/entity-import-mapper'
 import {
@@ -62,6 +63,13 @@ export async function POST(request: NextRequest) {
       .from('cached_entities')
       .upsert([mapImportedEntityRowToCachedEntity(row)], { onConflict: 'neo4j_id' })
 
+    let falkor_sync_error: string | null = null
+    try {
+      await upsertImportedEntityIntoFalkor(row)
+    } catch (error) {
+      falkor_sync_error = error instanceof Error ? error.message : 'Failed to sync entity to FalkorDB'
+    }
+
     await queueEntityImportBatch(batch.id, {
       queue_mode: ENTITY_IMPORT_QUEUE_MODE,
       queued_at: new Date().toISOString(),
@@ -71,6 +79,7 @@ export async function POST(request: NextRequest) {
       {
         batchId: batch.id,
         entityId: row.entity_id,
+        falkor_sync_error,
         statusUrl: `/api/entity-import/${batch.id}`,
         runDetailUrl: `/entity-import/${batch.id}/${row.entity_id}`,
         dossierUrl: `/entity-browser/${row.entity_id}/dossier?from=1`,

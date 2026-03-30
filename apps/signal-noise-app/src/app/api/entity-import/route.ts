@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
+import { upsertImportedEntityIntoFalkor } from '@/lib/entity-import-falkor-writer'
 import { normalizeImportedEntityRow, REQUIRED_ENTITY_IMPORT_COLUMNS } from '@/lib/entity-import-schema'
 import { mapImportedEntityRowToCachedEntity } from '@/lib/entity-import-mapper'
 import {
@@ -95,10 +96,31 @@ export async function POST(request: NextRequest) {
     const created_rows = validRows.filter((row) => !existingIds.has(row.entity_id)).length
     const updated_rows = validRows.length - created_rows
 
+    let falkor_synced_rows = 0
+    let falkor_sync_errors = 0
+    let falkor_sync_error: string | null = null
+    for (const row of validRows) {
+      try {
+        await upsertImportedEntityIntoFalkor(row)
+        falkor_synced_rows += 1
+      } catch (error) {
+        falkor_sync_errors += 1
+        if (!falkor_sync_error) {
+          falkor_sync_error = error instanceof Error ? error.message : 'Failed to sync entity to FalkorDB'
+        }
+      }
+    }
+
     await updateEntityImportBatch(batch.id, {
       status: 'running',
       created_rows,
       updated_rows,
+      metadata: {
+        ...(batch.metadata ?? {}),
+        falkor_synced_rows,
+        falkor_sync_errors,
+        falkor_sync_error,
+      },
     })
 
     return NextResponse.json({
@@ -108,6 +130,9 @@ export async function POST(request: NextRequest) {
       updated_rows,
       invalid_rows,
       acceptedRows: validRows.length,
+      falkor_synced_rows,
+      falkor_sync_errors,
+      falkor_sync_error,
     })
   } catch (error) {
     return NextResponse.json(

@@ -69,6 +69,31 @@ function escapeCypherString(value: string): string {
   return value.replace(/\\/g, '\\\\').replace(/'/g, "\\'")
 }
 
+function toCypherLiteral(value: any): string {
+  if (value === null || value === undefined) {
+    return 'null'
+  }
+
+  if (Array.isArray(value)) {
+    return `[${value.map((item) => toCypherLiteral(item)).join(', ')}]`
+  }
+
+  if (typeof value === 'object') {
+    const entries = Object.entries(value).map(([key, item]) => `${key}: ${toCypherLiteral(item)}`)
+    return `{${entries.join(', ')}}`
+  }
+
+  if (typeof value === 'boolean') {
+    return value ? 'true' : 'false'
+  }
+
+  if (typeof value === 'number') {
+    return Number.isFinite(value) ? String(value) : 'null'
+  }
+
+  return `'${escapeCypherString(String(value))}'`
+}
+
 export interface GraphEntityRecord {
   neo4j_id: string
   labels: string[]
@@ -193,5 +218,42 @@ export class FalkorRedisGraphService {
           ? row.relationship_properties
           : {},
     }))
+  }
+
+  async upsertImportedEntity(payload: {
+    entityId: string
+    labels: string[]
+    properties: Record<string, any>
+  }): Promise<void> {
+    await this.initialize()
+
+    const labels = Array.from(new Set(payload.labels.map((label) => String(label).trim()).filter(Boolean)))
+    if (!labels.includes('Entity')) {
+      labels.unshift('Entity')
+    }
+    const labelClause = labels.map((label) => `:${label.replace(/[^A-Za-z0-9_]/g, '')}`).join('')
+    const entityId = escapeCypherString(String(payload.entityId).trim())
+    const propertiesLiteral = toCypherLiteral({
+      ...payload.properties,
+      neo4j_id: String(payload.entityId).trim(),
+      id: String(payload.entityId).trim(),
+    })
+    const sport = payload.properties?.sport ? escapeCypherString(String(payload.properties.sport)) : ''
+    const league = payload.properties?.league ? escapeCypherString(String(payload.properties.league)) : ''
+    const isLeague = labels.includes('League')
+
+    const sportClause = sport
+      ? `MERGE (sport:Sport {name: '${sport}'}) MERGE (n)-[:IN_SPORT]->(sport)`
+      : ''
+    const leagueClause = league && !isLeague
+      ? `MERGE (league:League {name: '${league}'}) MERGE (n)-[:PART_OF_LEAGUE]->(league)`
+      : ''
+
+    await this.query(`
+      MERGE (n${labelClause} {neo4j_id: '${entityId}'})
+      SET n += ${propertiesLiteral}
+      ${sportClause}
+      ${leagueClause}
+    `)
   }
 }
