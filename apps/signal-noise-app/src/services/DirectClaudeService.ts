@@ -158,17 +158,17 @@ export class DirectClaudeService {
 TASK: Analyze ${entityLimit} sports entities and identify RFP opportunities.
 
 EXECUTION:
-1. Use Neo4j to get ${entityLimit} sports entities
+1. Use Graphiti to get ${entityLimit} sports entities
 2. For each entity: research and identify RFP opportunities
 3. Report findings for each entity
 4. Provide final summary
 
 Focus on actionable intelligence and business opportunities.`;
 
-      const prompt = `Analyze ${entityLimit} sports entities from the Neo4j knowledge base for RFP opportunities. 
+      const prompt = `Analyze ${entityLimit} sports entities from the current knowledge graph for RFP opportunities.
 
 Process each entity systematically:
-1. Get entities using Neo4j
+1. Get entities using Graphiti
 2. Research each entity using available tools
 3. Identify RFP opportunities and market intelligence
 4. Report findings for each entity processed
@@ -189,7 +189,7 @@ Start now and process all ${entityLimit} entities systematically.`;
         prompt,
         systemPrompt,
         outputFormat: 'json',
-        allowedTools: 'mcp__neo4j__execute_query,mcp__brightdata_mcp__search_engine,mcp__perplexity_mcp__search_engine,TodoWrite,Read,Grep',
+        allowedTools: 'mcp__graphiti__search_nodes,mcp__graphiti__get_episodes,mcp__brightdata_mcp__search_engine,TodoWrite,Read,Grep',
         permissionMode: 'acceptEdits',
         maxTurns: 12, // Reduced to prevent hanging
         sessionId

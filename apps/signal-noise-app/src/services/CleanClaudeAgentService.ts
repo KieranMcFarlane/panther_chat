@@ -56,7 +56,7 @@ class CleanClaudeAgentService {
         source: 'CleanClaudeAgentService',
         data: { 
           timestamp: new Date().toISOString(),
-          tools: ['neo4j-mcp', 'brightdata-mcp', 'supabase-mcp', 'perplexity-mcp']
+          tools: ['graphiti', 'brightdata-mcp', 'supabase-mcp']
         }
       });
 
@@ -91,7 +91,7 @@ class CleanClaudeAgentService {
                 "web_data": "Recent news and announcements found",
                 "sources_found": 3
               },
-              "neo4j_relationships": {
+              "graphiti_relationships": {
                 "new_connections": 5,
                 "existing_partners": 12,
                 "competitor_links": 8
@@ -337,7 +337,7 @@ Sport: ${entity.properties.sport}
 Country: ${entity.properties.country}
 Website: ${entity.properties.website || 'None'}
 
-Using available MCP tools (neo4j-mcp, brightdata-mcp, supabase-mcp, perplexity-mcp), provide:
+Using available discovery tools (graphiti, brightdata-mcp, supabase-mcp), provide:
 1. Executive leadership and key personnel updates
 2. Recent business developments and partnerships
 3. Digital presence analysis and improvements
@@ -361,14 +361,14 @@ Focus on actionable intelligence for business development and sponsorship opport
 
       const response = await this.claudeAgent.complete({
         prompt,
-        tools: ['neo4j_query', 'brightdata_scrape', 'supabase_query', 'perplexity_search'],
+        tools: ['graphiti_query', 'brightdata_scrape', 'supabase_query'],
         tool_choice: 'auto'
       });
 
       const enrichmentData = this.parseClaudeResponse(response.content, entity);
 
-      // Simulate updating Neo4j with enriched data
-      await this.updateEntityInNeo4j(entity, enrichmentData);
+      // Simulate updating the knowledge graph with enriched data
+      await this.updateEntityInKnowledgeGraph(entity, enrichmentData);
 
       const processingTime = Date.now() - startTime;
 
@@ -432,11 +432,11 @@ Focus on actionable intelligence for business development and sponsorship opport
     return enrichmentData;
   }
 
-  private async updateEntityInNeo4j(entity: Entity, enrichmentData: Record<string, any>) {
-    // Simulate Neo4j update using MCP tools
-    liveLogService.info(`💾 Updating Neo4j with enriched data for ${entity.properties.name}`, {
+  private async updateEntityInKnowledgeGraph(entity: Entity, enrichmentData: Record<string, any>) {
+    // Simulate knowledge graph update using current discovery tools
+    liveLogService.info(`💾 Updating knowledge graph with enriched data for ${entity.properties.name}`, {
       category: 'database',
-      source: 'Neo4jMCP',
+      source: 'Graphiti',
       entity_name: entity.properties.name,
       data: { 
         entityId: entity.id,

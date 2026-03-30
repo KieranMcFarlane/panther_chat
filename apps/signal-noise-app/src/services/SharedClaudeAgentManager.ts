@@ -101,9 +101,9 @@ class SharedClaudeAgentManager implements SharedClaudeAgentManagerType {
         temperature: 0.7,
         enableMCP: true,
         mcpServers: [
-          'neo4j-mcp',
-          'brightdata', 
-          'perplexity-mcp',
+          'graphiti',
+          'brightdata-mcp',
+          'supabase-mcp',
           'better-auth-mcp',
           'byte-rover-mcp'
         ],
@@ -133,17 +133,17 @@ class SharedClaudeAgentManager implements SharedClaudeAgentManagerType {
   }
 
   private getToolsForThreadType(threadType: string): string[] {
-    const baseTools = ['neo4j-mcp', 'better-auth-mcp', 'byte-rover-mcp'];
+    const baseTools = ['graphiti', 'better-auth-mcp', 'byte-rover-mcp'];
     
     switch (threadType) {
       case 'rfp_analysis':
-        return [...baseTools, 'brightdata', 'perplexity-mcp'];
+        return [...baseTools, 'brightdata-mcp', 'supabase-mcp'];
       case 'sports_intelligence':
-        return [...baseTools, 'neo4j-mcp', 'brightdata'];
+        return [...baseTools, 'graphiti', 'brightdata-mcp'];
       case 'knowledge_graph':
-        return [...baseTools, 'neo4j-mcp'];
+        return [...baseTools, 'graphiti'];
       case 'quick_research':
-        return [...baseTools, 'perplexity-mcp', 'brightdata'];
+        return [...baseTools, 'brightdata-mcp', 'supabase-mcp'];
       case 'general':
       default:
         return baseTools;

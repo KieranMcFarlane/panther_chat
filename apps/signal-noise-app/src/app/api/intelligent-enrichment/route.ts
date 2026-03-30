@@ -106,7 +106,7 @@ export async function GET(request: NextRequest) {
             },
             scheduler: schedulerStatus,
             capabilities: {
-              tools: ['graphiti', 'brightdata-mcp', 'perplexity-mcp', 'supabase-mcp'],
+              tools: ['graphiti', 'brightdata-mcp', 'supabase-mcp'],
               strategies: ['intensive', 'standard', 'quick'],
               features: [
                 'Intelligent entity selection',

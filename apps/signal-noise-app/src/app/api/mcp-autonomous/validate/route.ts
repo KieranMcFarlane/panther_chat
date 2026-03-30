@@ -141,7 +141,7 @@ async function validateJSONSchema(): Promise<ValidationResult> {
     timestamp: new Date().toISOString(),
     processingConfig: {
       entityBatchSize: 3,
-      mcpTools: ['graphiti', 'brightdata-mcp', 'perplexity-mcp'],
+      mcpTools: ['graphiti', 'brightdata-mcp', 'supabase-mcp'],
       processingTime: '00:02:45'
     },
     entitiesProcessed: 3,
@@ -238,7 +238,7 @@ async function validateJSONSchema(): Promise<ValidationResult> {
   });
 
   // Validate MCP analysis structure
-  const mcpChecks = ['neo4jAnalysis', 'brightDataAnalysis', 'perplexityAnalysis'];
+    const mcpChecks = ['graphitiAnalysis', 'brightDataAnalysis', 'contextAnalysis'];
   mcpChecks.forEach(mcpTool => {
     if (!(mcpTool in sampleEntity.mcpAnalysis)) {
       issues.push(`Missing MCP tool analysis: ${mcpTool}`);
@@ -300,7 +300,7 @@ async function testEntityTraversal(entityCount: number): Promise<any> {
         sport: entity.properties.sport,
         processingStatus: 'completed',
         mcpAnalysis: {
-          neo4jAnalysis: {
+          graphitiAnalysis: {
             relationshipsFound: Math.floor(Math.random() * 10) + 1,
             connectedEntities: Math.floor(Math.random() * 20) + 5,
             relationshipTypes: ['PARTNERSHIP', 'COMPETES_IN'],

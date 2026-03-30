@@ -154,7 +154,7 @@ export class ParallelClaudeAgentService {
       });
     }
 
-    if (threadConfig.tools?.includes('neo4j-mcp')) {
+    if (threadConfig.tools?.includes('graphiti')) {
       steps.push({
         name: 'knowledge_graph_query',
         description: 'Querying knowledge graph for relevant information',
@@ -162,13 +162,13 @@ export class ParallelClaudeAgentService {
         execute: async (threadId: string, context: any) => {
           await this.updateExecutionProgress(threadId, 'Querying knowledge graph...', 60);
           
-          // Generate relevant Neo4j queries based on context
-          const queries = this.generateNeo4jQueries(context.userMessage, context.entities);
+          // Generate relevant graph queries based on context
+          const queries = this.generateGraphitiQueries(context.userMessage, context.entities);
           
           const graphResults = [];
           for (const query of queries) {
-            // In real implementation, call Neo4j MCP
-            const result = await this.callNeo4jMCP(query);
+            // In real implementation, call Graphiti MCP
+            const result = await this.callGraphitiMCP(query);
             graphResults.push(result);
           }
           
@@ -177,16 +177,16 @@ export class ParallelClaudeAgentService {
       });
     }
 
-    if (threadConfig.tools?.includes('perplexity-mcp')) {
+    if (threadConfig.tools?.includes('supabase-mcp')) {
       steps.push({
         name: 'deep_research',
-        description: 'Performing deep research with Perplexity',
+        description: 'Performing deep research with Supabase-backed context',
         estimatedDuration: 4000,
         execute: async (threadId: string, context: any) => {
           await this.updateExecutionProgress(threadId, 'Deep research...', 80);
           
-          // Call Perplexity MCP for additional research
-          const researchResult = await this.callPerplexityMCP(context.userMessage);
+          // Call the current discovery stack for additional research
+          const researchResult = await this.callContextMCP(context.userMessage);
           
           return { researchResult };
         }
@@ -353,7 +353,7 @@ export class ParallelClaudeAgentService {
     return queries;
   }
 
-  private generateNeo4jQueries(message: string, entities: any[]): string[] {
+  private generateGraphitiQueries(message: string, entities: any[]): string[] {
     const queries = [];
     
     // Generate queries based on entities found
@@ -370,8 +370,8 @@ export class ParallelClaudeAgentService {
   }
 
   // Mock MCP calls (in real implementation, these would call actual MCP tools)
-  private async callNeo4jMCP(query: string): Promise<any> {
-    console.log(`Calling Neo4j MCP with query: ${query}`);
+  private async callGraphitiMCP(query: string): Promise<any> {
+    console.log(`Calling Graphiti MCP with query: ${query}`);
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     return {
@@ -384,8 +384,8 @@ export class ParallelClaudeAgentService {
     };
   }
 
-  private async callPerplexityMCP(query: string): Promise<any> {
-    console.log(`Calling Perplexity MCP with query: ${query}`);
+  private async callContextMCP(query: string): Promise<any> {
+    console.log(`Calling current discovery tools with query: ${query}`);
     await new Promise(resolve => setTimeout(resolve, 2000));
     
     return {

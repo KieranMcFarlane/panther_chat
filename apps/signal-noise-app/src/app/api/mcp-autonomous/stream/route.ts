@@ -32,9 +32,9 @@ export async function GET(request: NextRequest) {
         timestamp: new Date().toISOString(),
         message: 'Connected to MCP-enabled autonomous RFP system',
         system: {
-          neo4j: 'neo4j-mcp (direct)',
+          graphiti: 'graphiti (direct)',
           brightdata: 'brightdata-mcp (direct)',
-          perplexity: 'perplexity-mcp (direct)'
+          supabase: 'supabase-mcp (direct)'
         },
         connectionTime: `${Date.now() - startTime}ms`
       });

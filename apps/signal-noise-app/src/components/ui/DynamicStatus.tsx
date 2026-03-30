@@ -18,11 +18,11 @@
 // ];
 
 // const toolActionMap: { [key: string]: string[] } = {
-//   "mcp__neo4j-mcp__execute_query": ["Querying", "Analyzing", "Investigating"],
-//   "mcp__neo4j-mcp__search_nodes": ["Searching", "Finding", "Discovering"],
+//   "mcp__graphiti__execute_query": ["Querying", "Analyzing", "Investigating"],
+//   "mcp__graphiti__search_nodes": ["Searching", "Finding", "Discovering"],
 //   "mcp__brightData__search_engine": ["Searching", "Scouring", "Exploring"],
 //   "mcp__brightData__scrape_as_markdown": ["Scraping", "Gathering", "Collecting"],
-//   "mcp__perplexity-mcp__chat_completion": ["Analyzing", "Reasoning", "Synthesizing"],
+//   "mcp__supabase-mcp__chat_completion": ["Analyzing", "Reasoning", "Synthesizing"],
 //   "WebSearch": ["Searching", "Exploring", "Discovering"],
 //   "WebFetch": ["Fetching", "Gathering", "Retrieving"]
 // };

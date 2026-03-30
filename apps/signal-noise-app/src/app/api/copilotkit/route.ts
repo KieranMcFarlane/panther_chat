@@ -21,7 +21,7 @@
  * - falkordb-mcp: Replaced by official Graphiti
  * - temporal-intelligence: Replaced by Graphiti episodes
  * - brightData: Removed (scraping not in core scope)
- * - perplexity-mcp: Removed (use Claude's built-in knowledge)
+ * - supabase-mcp: Use the current discovery stack
  * - byterover-mcp: Removed (email not in scope)
  *
  * GRAPH INTELLIGENCE:
@@ -192,7 +192,7 @@ const ALLOWED_TOOLS: string[] = [
   // - falkordb-mcp: Replaced by Graphiti Neo4j backend
   // - temporal-intelligence: Replaced by Graphiti episodes
   // - brightData: Removed (scraping not needed for core intelligence)
-  // - perplexity-mcp: Removed (use Claude's built-in knowledge)
+  // - supabase-mcp: Use the current discovery stack
   // - byterover-mcp: Removed (email not in scope)
   //
   // Data Migration:
