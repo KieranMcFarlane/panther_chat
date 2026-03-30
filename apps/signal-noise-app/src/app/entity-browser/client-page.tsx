@@ -275,9 +275,9 @@ export default function EntityBrowserClientPage() {
   if (entitiesLoading && !entitiesData) {
     return (
       <div className="min-h-screen bg-background">
-        <div className="border-b border-border/60 bg-card/90 backdrop-blur supports-[backdrop-filter]:bg-card/60">
-          <div className="container mx-auto px-4 py-5">
-            <div className="flex flex-wrap items-start justify-between gap-4">
+        <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="container mx-auto px-4 py-6">
+            <div className="flex items-center gap-4 mb-4">
               <div className="flex items-center gap-3">
                 <Skeleton className="h-8 w-8 rounded-full" />
                 <div className="space-y-2">
@@ -297,7 +297,7 @@ export default function EntityBrowserClientPage() {
         </div>
 
         <div className="container mx-auto px-4 py-6">
-          <div className="mb-4 rounded-2xl border border-border bg-card p-4">
+          <div className="mb-4 rounded-2xl border border-slate-700/80 bg-slate-950/70 p-4">
             <div className="flex items-center justify-between gap-3">
               <div className="space-y-2">
                 <Skeleton className="h-6 w-44" />
@@ -307,7 +307,7 @@ export default function EntityBrowserClientPage() {
             </div>
             <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-5">
               {Array.from({ length: 5 }).map((_, index) => (
-                <div key={index} className="rounded-xl border border-border bg-muted/35 p-3">
+                <div key={index} className="rounded-xl border border-slate-700/70 bg-slate-900/60 p-3">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between gap-2">
                       <Skeleton className="h-4 w-32" />
@@ -327,7 +327,7 @@ export default function EntityBrowserClientPage() {
 
           <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             {Array.from({ length: 6 }).map((_, index) => (
-              <div key={index} className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+              <div key={index} className="rounded-2xl border border-slate-200/70 bg-white p-4 shadow-sm">
                 <div className="flex items-start gap-3">
                   <Skeleton className="h-10 w-10 rounded-full" />
                   <div className="min-w-0 flex-1 space-y-2">
@@ -348,7 +348,7 @@ export default function EntityBrowserClientPage() {
             ))}
           </div>
 
-          <div className="mt-5 rounded-xl border border-dashed border-border bg-muted/15 p-4">
+          <div className="mt-4 rounded-xl border border-dashed border-slate-700/80 bg-slate-950/60 p-4">
             <div className="flex items-center gap-3">
               <Database className="h-5 w-5 text-muted-foreground" />
               <div className="space-y-2">
