@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase-client';
-import { EntityCacheService } from '@/services/EntityCacheService';
 
 export const dynamic = 'force-dynamic';
 
@@ -51,20 +50,17 @@ export async function GET(request: NextRequest) {
  */
 async function getEntitiesMetrics() {
   try {
-    const cacheService = new EntityCacheService();
-    await cacheService.initialize();
-    
-    const result = await cacheService.getCachedEntities({ limit: 1 });
-    const total = result.total || 4422; // Fallback to known count
-    
-    // Get recent entities (last 7 days)
-    const recentResult = await cacheService.getCachedEntities({ 
-      limit: 100,
-      // Note: This would need date filtering if available in cache
-    });
+    const supabase = getSupabaseAdmin();
+    const { count, error } = await supabase
+      .from('cached_entities')
+      .select('*', { count: 'exact', head: true });
+
+    if (error) {
+      throw error;
+    }
     
     return {
-      total,
+      total: count || 4422,
       recent: 0, // Would need to calculate from timestamps if available
       cached: true
     };

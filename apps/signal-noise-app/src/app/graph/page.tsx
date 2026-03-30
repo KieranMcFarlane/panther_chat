@@ -32,7 +32,6 @@ async function fetchGraphData() {
   try {
     // Initialize the EntityCacheService to access Supabase cache with 4,422 entities
     const cacheService = new EntityCacheService();
-    await cacheService.initialize();
     
     // First, get all relationships from cache to know which entities to prioritize
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3005';

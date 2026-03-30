@@ -1,9 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { EntityCacheService } from '@/services/EntityCacheService'
+import { createClient } from '@supabase/supabase-js'
 
 // Mark route as dynamic to prevent static generation
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
+
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Supabase is not configured')
+  }
+
+  return createClient(supabaseUrl, supabaseKey)
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -18,30 +29,58 @@ export async function GET(request: NextRequest) {
     const sortBy = searchParams.get('sortBy') || 'relationship_type'
     const sortOrder = searchParams.get('sortOrder') as 'asc' | 'desc' || 'asc'
 
-    console.log('🔗 API: Fetching cached relationships from Supabase')
-    
-    const cacheService = new EntityCacheService()
-    await cacheService.initialize()
-    
-    const result = await cacheService.getCachedRelationships({
-      page,
-      limit,
-      relationshipType,
-      sourceName,
-      targetName,
-      sourceNeo4jId,
-      targetNeo4jId,
-      sortBy,
-      sortOrder
-    })
-    
-    console.log(`✅ API: Returning ${result.relationships.length} cached relationships`)
-    
+    console.log('🔗 API: Fetching cached relationships directly from Supabase')
+
+    const supabase = getSupabaseClient()
+    const start = (page - 1) * limit
+    let query = supabase
+      .from('entity_relationships')
+      .select('*', { count: 'exact' })
+      .eq('is_active', true)
+
+    if (relationshipType) {
+      query = query.eq('relationship_type', relationshipType)
+    }
+
+    if (sourceName) {
+      query = query.ilike('source_name', `%${sourceName}%`)
+    }
+
+    if (targetName) {
+      query = query.ilike('target_name', `%${targetName}%`)
+    }
+
+    if (sourceNeo4jId) {
+      query = query.eq('source_neo4j_id', sourceNeo4jId)
+    }
+
+    if (targetNeo4jId) {
+      query = query.eq('target_neo4j_id', targetNeo4jId)
+    }
+
+    const { data, error, count } = await query
+      .order(sortBy, { ascending: sortOrder === 'asc' })
+      .range(start, start + limit - 1)
+
+    if (error) throw error
+
+    const relationships = data || []
+    const total = count || 0
+
+    console.log(`✅ API: Returning ${relationships.length} cached relationships`)
+
     return NextResponse.json({
-      relationships: result.relationships,
-      pagination: result.pagination,
-      filters: result.filters,
-      totalAvailable: result.pagination.total
+      relationships,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+        hasNext: start + limit < total,
+        hasPrev: page > 1
+      },
+      filters: { relationshipType, sourceName, targetName, sourceNeo4jId, targetNeo4jId, sortBy, sortOrder },
+      totalAvailable: total
     })
     
   } catch (error) {
@@ -54,37 +93,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json()
-    const { action = 'sync', options = {} } = body
-    
-    if (action === 'sync') {
-      console.log('🔄 API: Syncing relationships from Neo4j to Supabase cache')
-      
-      const cacheService = new EntityCacheService()
-      await cacheService.initialize()
-      
-      const result = await cacheService.syncRelationshipsFromNeo4j(options)
-      
-      console.log(`✅ API: Relationship sync complete: ${result.synced} synced, ${result.errors} errors`)
-      
-      return NextResponse.json({
-        success: true,
-        result,
-        message: `Successfully synced ${result.synced} relationships`
-      })
-    }
-    
-    return NextResponse.json(
-      { error: 'Invalid action', availableActions: ['sync'] },
-      { status: 400 }
-    )
-    
-  } catch (error) {
-    console.error('❌ API: Failed to process relationship request:', error)
-    return NextResponse.json(
-      { error: 'Failed to process request', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    )
-  }
+  return NextResponse.json(
+    { error: 'Relationship sync is disabled in the fast cache route. Use the offline sync job instead.' },
+    { status: 405 }
+  )
 }
