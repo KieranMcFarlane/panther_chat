@@ -568,7 +568,7 @@ Format as strategic RFP analysis report with clear recommendations.`
           {
             label: 'View Opportunities',
             action: 'view_rfp_opportunities',
-            url: '/rfp-intelligence'
+            url: '/tenders'
           },
           {
             label: 'View Full Report',

@@ -55,7 +55,7 @@ export function ScoutPanel({
             Run scout
           </Button>
           <Button variant="outline" asChild className="border-blue-200 text-blue-700 hover:bg-blue-50">
-            <Link href="/rfp-analysis-control-center">Advanced scout</Link>
+            <Link href="/tenders">Open live feed</Link>
           </Button>
         </div>
       </CardContent>

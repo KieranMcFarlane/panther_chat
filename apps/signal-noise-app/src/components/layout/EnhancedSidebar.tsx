@@ -6,7 +6,6 @@ import {
   Home,
   Search,
   FileText,
-  Brain,
   BarChart3,
   ChevronDown,
   ChevronRight,
@@ -46,7 +45,6 @@ const navItems = [
   { icon: Home, label: 'Home', href: '/' },
   { icon: Search, label: 'Entities', href: '/entity-browser' },
   { icon: FileText, label: 'Tenders', href: '/tenders' },
-  { icon: Brain, label: 'RFP Intelligence', href: '/rfp-intelligence' },
   { icon: Mail, label: 'Mailbox', href: '/mailbox' },
   { 
     icon: BarChart3, 

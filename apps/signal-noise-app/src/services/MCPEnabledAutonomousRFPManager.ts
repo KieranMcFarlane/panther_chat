@@ -219,7 +219,7 @@ export class MCPEnabledAutonomousRFPManager {
         {
           label: 'View Dashboard',
           action: 'view_autonomous_dashboard',
-          url: '/rfp-intelligence'
+          url: '/tenders'
         },
         {
           label: 'MCP Status',

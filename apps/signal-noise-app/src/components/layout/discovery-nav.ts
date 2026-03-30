@@ -3,7 +3,6 @@ import {
   FileText,
   Home,
   BarChart3,
-  Target,
   Upload,
   Zap,
 } from 'lucide-react'
@@ -15,7 +14,6 @@ export const primaryNavItems = [
 ] as const
 
 export const advancedOpsNavItems = [
-  { icon: Target, label: 'Scout', href: '/rfp-analysis-control-center' },
   { icon: Zap, label: 'Enrichment', href: '/entity-enrichment' },
   { icon: BarChart3, label: 'Pipeline', href: '/entity-pipeline' },
 ] as const

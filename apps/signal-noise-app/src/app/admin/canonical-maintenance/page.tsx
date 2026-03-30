@@ -61,7 +61,7 @@ export default function CanonicalMaintenanceAuditPage() {
         </div>
         <div className="flex gap-2">
           <Button asChild variant="outline" size="sm">
-            <Link href="/sync-control">Sync Control</Link>
+            <Link href="/entity-pipeline">Entity Pipeline</Link>
           </Button>
           <Button onClick={() => loadRows(status)} variant="outline" size="sm">Refresh</Button>
         </div>

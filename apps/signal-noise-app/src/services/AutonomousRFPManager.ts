@@ -200,7 +200,7 @@ export class AutonomousRFPManager {
         {
           label: 'View Dashboard',
           action: 'view_autonomous_dashboard',
-          url: '/rfp-intelligence'
+          url: '/tenders'
         },
         {
           label: 'Predictive Intelligence',
@@ -863,7 +863,7 @@ export class AutonomousRFPManager {
         {
           label: 'View Details',
           action: 'view_opportunity',
-          url: `/rfp-intelligence/opportunity/${opportunity.id}`
+          url: `/tenders#${opportunity.id}`
         }
       ]
     };

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { unstable_noStore as noStore } from 'next/cache';
 import { getSupabaseAdmin } from '@/lib/supabase-client';
 import type {
   HomeGraphitiInsight,
@@ -127,6 +128,7 @@ function buildRelatedEntities(highlights: HomeGraphitiInsight[]): HomeGraphitiRe
 }
 
 export async function GET() {
+  noStore();
   const supabase = getSupabaseAdmin();
   const warnings: string[] = [];
 

@@ -21,7 +21,6 @@ test('workflow nav keeps only the primary user-facing surfaces in the main lane'
 
 test('advanced ops keeps scout and the thinner operational pages available', () => {
   assert.deepEqual(advancedOpsNavItems.map((item) => [item.label, item.href]), [
-    ['Scout', '/rfp-analysis-control-center'],
     ['Enrichment', '/entity-enrichment'],
     ['Pipeline', '/entity-pipeline'],
   ])
