@@ -108,6 +108,22 @@ export default function EntityDossierClientPage({
       ? `Team member: ${String(dossier.linkedin_connection_analysis.yellow_panther_uk_team.team_members[0])}`
       : null,
   ].filter(Boolean) as string[]
+  const dossierPromotions = Array.isArray(dossier?.question_first?.dossier_promotions)
+    ? dossier.question_first.dossier_promotions
+    : Array.isArray(dossier?.dossier_promotions)
+      ? dossier.dossier_promotions
+      : []
+  const discoverySummary = dossier?.question_first?.discovery_summary || dossier?.discovery_summary || {}
+  const opportunitySignals = Array.isArray(discoverySummary?.opportunity_signals) ? discoverySummary.opportunity_signals : []
+  const decisionOwners = Array.isArray(discoverySummary?.decision_owners) ? discoverySummary.decision_owners : []
+  const timingAndProcurement = Array.isArray(discoverySummary?.timing_procurement_markers)
+    ? discoverySummary.timing_procurement_markers
+    : Array.isArray(discoverySummary?.timing_and_procurement)
+      ? discoverySummary.timing_and_procurement
+      : Array.isArray(discoverySummary?.timing_markers)
+        ? discoverySummary.timing_markers
+        : []
+  const supportingEvidenceCount = Number(discoverySummary?.supporting_evidence_count || dossierPromotions.length || 0)
 
   useEffect(() => {
     const currentFrom = new URLSearchParams(window.location.search).get('from') || fromPage
@@ -399,6 +415,52 @@ export default function EntityDossierClientPage({
               advancedHref={`/entity-enrichment?entityId=${encodeURIComponent(entityId)}`}
             />
           </div>
+
+          <Card className="mb-6 border border-sky-700/40 bg-slate-950/90 text-slate-50 shadow-lg">
+            <CardContent className="p-5">
+              <div className="flex flex-col gap-5">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.16em] text-sky-300">
+                    <FileText className="h-4 w-4" />
+                    Promoted discovery summary
+                  </div>
+                  <p className="max-w-3xl text-sm leading-6 text-slate-300">
+                    Evidence-backed discovery signals are promoted here first. The raw question pack is secondary operator/debug context, not the main dossier narrative.
+                  </p>
+                </div>
+                <div className="grid gap-4 lg:grid-cols-4">
+                  <div className="rounded-xl border border-slate-700 bg-slate-900/80 p-4">
+                    <div className="text-xs uppercase tracking-[0.16em] text-slate-400">Opportunity signals</div>
+                    <div className="mt-2 text-2xl font-semibold text-slate-100">{opportunitySignals.length}</div>
+                    <div className="mt-2 text-sm text-slate-400">
+                      {opportunitySignals[0]?.answer || 'No promoted opportunity signals yet.'}
+                    </div>
+                  </div>
+                  <div className="rounded-xl border border-slate-700 bg-slate-900/80 p-4">
+                    <div className="text-xs uppercase tracking-[0.16em] text-slate-400">Decision owners</div>
+                    <div className="mt-2 text-2xl font-semibold text-slate-100">{decisionOwners.length}</div>
+                    <div className="mt-2 text-sm text-slate-400">
+                      {decisionOwners[0]?.answer || 'No promoted buyer-side ownership yet.'}
+                    </div>
+                  </div>
+                  <div className="rounded-xl border border-slate-700 bg-slate-900/80 p-4">
+                    <div className="text-xs uppercase tracking-[0.16em] text-slate-400">Timing and procurement</div>
+                    <div className="mt-2 text-2xl font-semibold text-slate-100">{timingAndProcurement.length}</div>
+                    <div className="mt-2 text-sm text-slate-400">
+                      {timingAndProcurement[0]?.answer || 'No promoted timing or procurement markers yet.'}
+                    </div>
+                  </div>
+                  <div className="rounded-xl border border-slate-700 bg-slate-900/80 p-4">
+                    <div className="text-xs uppercase tracking-[0.16em] text-slate-400">Supporting evidence</div>
+                    <div className="mt-2 text-2xl font-semibold text-slate-100">{supportingEvidenceCount}</div>
+                    <div className="mt-2 text-sm text-slate-400">
+                      {dossierPromotions[0]?.evidence_url || 'No promoted evidence URLs yet.'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
           <Card className="mb-6 border border-emerald-700/40 bg-emerald-950/40 text-emerald-50 shadow-lg">
             <CardContent className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">

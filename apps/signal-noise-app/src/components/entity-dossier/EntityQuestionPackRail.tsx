@@ -35,14 +35,14 @@ export function EntityQuestionPackRail({ entityName, entityType, questionPack }:
 
   return (
     <Card className="border border-white/10 bg-slate-950/80 backdrop-blur-md">
-      <CardHeader className="space-y-2">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div className="space-y-1">
-            <CardTitle className="text-lg text-white">Question pack</CardTitle>
+        <CardHeader className="space-y-2">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div className="space-y-1">
+            <CardTitle className="text-lg text-white">Operator debug surface</CardTitle>
             <CardDescription className="text-slate-300">
               {isAtomicDiscoveryPack
-                ? `Atomic discovery pack for ${entityName}. Questions are for evidence collection and later dossier promotion.`
-                : `Canonical question bank for ${entityName}. Each question drives a testable hypothesis and a Yellow Panther service-fit check.`}
+                ? `Atomic discovery pack for ${entityName}. This is a secondary operator/debug surface for evidence collection and later dossier promotion.`
+                : `Canonical question bank for ${entityName}. This is secondary to the promoted dossier summary and remains available for operator/debug review.`}
             </CardDescription>
           </div>
           <div className="flex flex-wrap gap-2">
