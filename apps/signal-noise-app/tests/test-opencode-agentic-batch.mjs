@@ -18,7 +18,7 @@ import {
   runOpenCodePresetBatch,
 } from '../scripts/opencode_agentic_batch.mjs';
 
-test('buildOpenCodeConfig wires Z.AI and BrightData MCP for OpenCode', () => {
+test('buildOpenCodeConfig wires Z.AI and BrightData FastMCP for OpenCode', () => {
   const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
   const previousBrightDataToken = process.env.BRIGHTDATA_API_TOKEN;
   process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
@@ -35,9 +35,11 @@ test('buildOpenCodeConfig wires Z.AI and BrightData MCP for OpenCode', () => {
   assert.ok(config.mcp.brightData);
   assert.equal(config.mcp.brightData.type, 'local');
   assert.equal(config.mcp.brightData.enabled, true);
-  assert.equal(config.mcp.brightData.command[0], 'npx');
-  assert.equal(config.mcp.brightData.command[1], '-y');
-  assert.equal(config.mcp.brightData.command[2], '@brightdata/mcp');
+  assert.equal(config.mcp.brightData.command[0], 'python3');
+  assert.match(config.mcp.brightData.command[1], /start_brightdata_fastmcp_service\.py$/);
+  assert.equal(config.mcp.brightData.environment.BRIGHTDATA_FASTMCP_HOST, '127.0.0.1');
+  assert.equal(config.mcp.brightData.environment.BRIGHTDATA_FASTMCP_PORT, '8000');
+  assert.match(config.instructions[0], /FastMCP/);
   assert.equal(config.mcp.brightData.environment.API_TOKEN, 'test-brightdata-token');
   assert.equal(config.agent.discovery.steps, 4);
   assert.equal(config.agent.discovery.model, 'zai-coding-plan/glm-5');

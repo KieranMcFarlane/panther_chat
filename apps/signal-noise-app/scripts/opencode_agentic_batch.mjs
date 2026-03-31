@@ -499,6 +499,7 @@ export function buildOpenCodeConfig({
   baseUrl = process.env.ANTHROPIC_BASE_URL || 'https://api.z.ai/api/anthropic',
 } = {}) {
   const brightdataToken = process.env.BRIGHTDATA_API_TOKEN || process.env.BRIGHTDATA_TOKEN || '';
+  const fastmcpServiceScript = path.join(APP_ROOT, 'scripts', 'start_brightdata_fastmcp_service.py');
   return {
     $schema: 'https://opencode.ai/config.json',
     model: DEFAULT_MODEL,
@@ -558,15 +559,17 @@ export function buildOpenCodeConfig({
       brightData: {
         type: 'local',
         enabled: true,
-        command: ['npx', '-y', '@brightdata/mcp'],
+        command: ['python3', fastmcpServiceScript],
         environment: {
           API_TOKEN: brightdataToken,
           PRO_MODE: 'true',
+          BRIGHTDATA_FASTMCP_HOST: process.env.BRIGHTDATA_FASTMCP_HOST || '127.0.0.1',
+          BRIGHTDATA_FASTMCP_PORT: process.env.BRIGHTDATA_FASTMCP_PORT || '8000',
         },
       },
     },
     instructions: [
-      'Use BrightData MCP for search and scrape operations.',
+      'Use the local BrightData FastMCP service for search and scrape operations.',
       'Return validated JSON only.',
       'Keep the agentic loop bounded.',
     ],
