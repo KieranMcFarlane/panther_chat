@@ -62,6 +62,34 @@ class _FakeClaudeClient:
 
 
 def _write_question_first_run_artifact(path, *, entity_id, entity_name, questions, answers, categories):
+    evidence_items = [
+        {
+            "evidence_id": f"{answer.get('question_id')}:evidence",
+            "question_id": answer.get("question_id"),
+            "entity_id": entity_id,
+            "signal_type": answer.get("signal_type"),
+            "evidence_focus": "entity_fact" if answer.get("signal_type") == "FOUNDATION" else "opportunity_signal",
+            "promotion_target": "profile" if answer.get("signal_type") == "FOUNDATION" else "opportunity_signals",
+            "answer_kind": "fact" if answer.get("signal_type") == "FOUNDATION" else "signal",
+            "answer": answer.get("answer"),
+            "confidence": answer.get("confidence"),
+            "validation_state": answer.get("validation_state"),
+            "evidence_url": answer.get("evidence_url"),
+        }
+        for answer in answers
+    ]
+    promotion_candidates = [
+        {
+            "candidate_id": f"{answer.get('question_id')}:{'profile' if answer.get('signal_type') == 'FOUNDATION' else 'opportunity_signals'}",
+            "question_id": answer.get("question_id"),
+            "promotion_target": "profile" if answer.get("signal_type") == "FOUNDATION" else "opportunity_signals",
+            "signal_type": answer.get("signal_type"),
+            "answer": answer.get("answer"),
+            "confidence": answer.get("confidence"),
+            "promotion_candidate": answer.get("validation_state") == "validated",
+        }
+        for answer in answers
+    ]
     payload = {
         "schema_version": "question_first_run_v1",
         "generated_at": "2026-03-30T00:00:00+00:00",
@@ -78,6 +106,8 @@ def _write_question_first_run_artifact(path, *, entity_id, entity_name, question
         "question_source_path": "backend/data/question_sources/major_league_cricket.json",
         "questions": questions,
         "answers": answers,
+        "evidence_items": evidence_items,
+        "promotion_candidates": promotion_candidates,
         "categories": categories,
         "run_rollup": {
             "questions_total": len(answers),
@@ -100,6 +130,8 @@ def _write_question_first_run_artifact(path, *, entity_id, entity_name, question
                 "question_source_path": "backend/data/question_sources/major_league_cricket.json",
                 "generated_at": "2026-03-30T00:00:00+00:00",
                 "run_rollup": payload["run_rollup"],
+                "evidence_items": evidence_items,
+                "promotion_candidates": promotion_candidates,
             }
         },
         "question_first": {
@@ -108,6 +140,8 @@ def _write_question_first_run_artifact(path, *, entity_id, entity_name, question
             "questions_answered": len(answers),
             "categories": categories,
             "answers": answers,
+            "evidence_items": evidence_items,
+            "promotion_candidates": promotion_candidates,
             "run_rollup": payload["run_rollup"],
             "question_source_path": "backend/data/question_sources/major_league_cricket.json",
             "generated_at": "2026-03-30T00:00:00+00:00",
@@ -209,7 +243,11 @@ async def test_question_first_runner_uses_saved_questions_and_writes_plain_text_
     assert result["entity_name"] == "Leeds United"
     assert result["question_first"]["schema_version"] == "question_first_run_v1"
     assert result["question_first"]["questions_answered"] == 1
+    assert result["question_first"]["evidence_items"][0]["promotion_target"] == "profile"
+    assert result["question_first"]["promotion_candidates"][0]["promotion_candidate"] is True
     assert result["question_first_run"]["schema_version"] == "question_first_run_v1"
+    assert result["question_first_run"]["evidence_items"][0]["promotion_target"] == "profile"
+    assert result["question_first_run"]["promotion_candidates"][0]["promotion_candidate"] is True
     assert result["questions"][0]["answer"] == "1919"
     assert result["questions"][0]["validation_state"] == "validated"
 

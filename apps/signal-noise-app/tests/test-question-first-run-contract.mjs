@@ -34,6 +34,32 @@ test('buildQuestionFirstRunArtifact emits the canonical question_first_run_v1 sh
         signal_type: 'FOUNDATION',
       },
     ],
+    evidence_items: [
+      {
+        evidence_id: 'q1:foundation',
+        question_id: 'q1',
+        entity_id: 'major-league-cricket',
+        signal_type: 'FOUNDATION',
+        evidence_focus: 'entity_fact',
+        promotion_target: 'profile',
+        answer_kind: 'fact',
+        answer: '2023',
+        confidence: 0.92,
+        validation_state: 'validated',
+        evidence_url: 'https://example.com',
+      },
+    ],
+    promotion_candidates: [
+      {
+        candidate_id: 'q1:profile',
+        question_id: 'q1',
+        promotion_target: 'profile',
+        signal_type: 'FOUNDATION',
+        answer: '2023',
+        confidence: 0.92,
+        promotion_candidate: true,
+      },
+    ],
     categories: [
       {
         category: 'identity',
@@ -59,8 +85,12 @@ test('buildQuestionFirstRunArtifact emits the canonical question_first_run_v1 sh
   assert.equal(artifact.schema_version, QUESTION_FIRST_RUN_SCHEMA_VERSION);
   assert.equal(artifact.questions.length, 1);
   assert.equal(artifact.answers.length, 1);
+  assert.equal(artifact.evidence_items.length, 1);
+  assert.equal(artifact.promotion_candidates.length, 1);
   assert.equal(artifact.categories.length, 1);
   assert.equal(artifact.run_rollup.questions_total, 1);
+  assert.equal(artifact.merge_patch.metadata.question_first.evidence_items[0].promotion_target, 'profile');
+  assert.equal(artifact.merge_patch.question_first.promotion_candidates[0].candidate_id, 'q1:profile');
   assert.equal(artifact.merge_patch.question_first.schema_version, QUESTION_FIRST_RUN_SCHEMA_VERSION);
   assert.equal(artifact.merge_patch.question_first.questions_answered, 1);
   assert.equal(artifact.merge_patch.questions[0].question_first_answer.answer, '2023');
@@ -74,5 +104,16 @@ test('validateQuestionFirstRunArtifact rejects malformed payloads', () => {
   assert.throws(
     () => validateQuestionFirstRunArtifact({ schema_version: QUESTION_FIRST_RUN_SCHEMA_VERSION }),
     /Missing canonical question_first_run field: questions/,
+  );
+  assert.throws(
+    () => validateQuestionFirstRunArtifact({
+      schema_version: QUESTION_FIRST_RUN_SCHEMA_VERSION,
+      questions: [],
+      answers: [],
+      categories: [],
+      run_rollup: {},
+      merge_patch: {},
+    }),
+    /Missing canonical question_first_run field: evidence_items/,
   );
 });

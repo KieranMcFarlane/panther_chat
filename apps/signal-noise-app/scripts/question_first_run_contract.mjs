@@ -68,6 +68,8 @@ function _mergeQuestionWithAnswer(question, answer) {
 export function buildQuestionFirstRunMergePatch({
   questions = [],
   answers = [],
+  evidence_items = [],
+  promotion_candidates = [],
   categories = [],
   run_rollup = {},
   generated_at = new Date().toISOString(),
@@ -89,6 +91,8 @@ export function buildQuestionFirstRunMergePatch({
         schema_version: QUESTION_FIRST_RUN_SCHEMA_VERSION,
         questions_answered: questionsAnswered,
         categories: _clone(categories) || [],
+        evidence_items: _clone(evidence_items) || [],
+        promotion_candidates: _clone(promotion_candidates) || [],
         question_source_path,
         generated_at,
         run_rollup: _clone(run_rollup) || {},
@@ -101,6 +105,8 @@ export function buildQuestionFirstRunMergePatch({
       questions_answered: questionsAnswered,
       categories: _clone(categories) || [],
       answers: _clone(answers) || [],
+      evidence_items: _clone(evidence_items) || [],
+      promotion_candidates: _clone(promotion_candidates) || [],
       run_rollup: _clone(run_rollup) || {},
       question_source_path,
       generated_at,
@@ -118,6 +124,8 @@ export function buildQuestionFirstRunArtifact({
   question_source_path = null,
   questions = [],
   answers = [],
+  evidence_items = [],
+  promotion_candidates = [],
   categories = [],
   run_rollup = {},
   merge_patch = null,
@@ -129,11 +137,15 @@ export function buildQuestionFirstRunArtifact({
 }) {
   const normalizedQuestions = Array.isArray(questions) ? questions.map((question) => _clone(question)) : [];
   const normalizedAnswers = Array.isArray(answers) ? answers.map((answer) => _clone(answer)) : [];
+  const normalizedEvidenceItems = Array.isArray(evidence_items) ? evidence_items.map((item) => _clone(item)) : [];
+  const normalizedPromotionCandidates = Array.isArray(promotion_candidates) ? promotion_candidates.map((item) => _clone(item)) : [];
   const normalizedCategories = Array.isArray(categories) ? categories.map((category) => _clone(category)) : [];
   const normalizedRollup = _clone(run_rollup) || {};
   const normalizedMergePatch = merge_patch || buildQuestionFirstRunMergePatch({
     questions: normalizedQuestions,
     answers: normalizedAnswers,
+    evidence_items: normalizedEvidenceItems,
+    promotion_candidates: normalizedPromotionCandidates,
     categories: normalizedCategories,
     run_rollup: normalizedRollup,
     generated_at,
@@ -157,6 +169,8 @@ export function buildQuestionFirstRunArtifact({
     question_source_path,
     questions: normalizedQuestions,
     answers: normalizedAnswers,
+    evidence_items: normalizedEvidenceItems,
+    promotion_candidates: normalizedPromotionCandidates,
     categories: normalizedCategories,
     run_rollup: normalizedRollup,
     merge_patch: normalizedMergePatch,
@@ -170,7 +184,7 @@ export function validateQuestionFirstRunArtifact(artifact) {
   if (artifact.schema_version !== QUESTION_FIRST_RUN_SCHEMA_VERSION) {
     throw new TypeError(`Expected schema_version ${QUESTION_FIRST_RUN_SCHEMA_VERSION}`);
   }
-  for (const field of ['questions', 'answers', 'categories', 'run_rollup', 'merge_patch']) {
+  for (const field of ['questions', 'answers', 'evidence_items', 'promotion_candidates', 'categories', 'run_rollup', 'merge_patch']) {
     if (!(field in artifact)) {
       throw new TypeError(`Missing canonical question_first_run field: ${field}`);
     }

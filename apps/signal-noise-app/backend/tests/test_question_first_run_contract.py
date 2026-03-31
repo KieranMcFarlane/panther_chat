@@ -48,6 +48,32 @@ async def test_question_first_runner_merges_canonical_artifact_without_brightdat
                         "signal_type": "FOUNDATION",
                     }
                 ],
+                "evidence_items": [
+                    {
+                        "evidence_id": "q1:foundation",
+                        "question_id": "q1",
+                        "entity_id": "major-league-cricket",
+                        "signal_type": "FOUNDATION",
+                        "evidence_focus": "entity_fact",
+                        "promotion_target": "profile",
+                        "answer_kind": "fact",
+                        "answer": "2023",
+                        "confidence": 0.92,
+                        "validation_state": "validated",
+                        "evidence_url": "https://example.com",
+                    }
+                ],
+                "promotion_candidates": [
+                    {
+                        "candidate_id": "q1:profile",
+                        "question_id": "q1",
+                        "promotion_target": "profile",
+                        "signal_type": "FOUNDATION",
+                        "answer": "2023",
+                        "confidence": 0.92,
+                        "promotion_candidate": True,
+                    }
+                ],
                 "categories": [
                     {
                         "category": "identity",
@@ -74,9 +100,35 @@ async def test_question_first_runner_merges_canonical_artifact_without_brightdat
                             "enabled": True,
                             "schema_version": "question_first_run_v1",
                             "questions_answered": 1,
-                            "question_source_path": "backend/data/question_sources/major_league_cricket.json",
-                            "generated_at": "2026-03-30T00:00:00+00:00",
-                        }
+                        "question_source_path": "backend/data/question_sources/major_league_cricket.json",
+                        "generated_at": "2026-03-30T00:00:00+00:00",
+                        "evidence_items": [
+                            {
+                                "evidence_id": "q1:foundation",
+                                "question_id": "q1",
+                                "entity_id": "major-league-cricket",
+                                "signal_type": "FOUNDATION",
+                                "evidence_focus": "entity_fact",
+                                "promotion_target": "profile",
+                                "answer_kind": "fact",
+                                "answer": "2023",
+                                "confidence": 0.92,
+                                "validation_state": "validated",
+                                "evidence_url": "https://example.com",
+                            }
+                        ],
+                        "promotion_candidates": [
+                            {
+                                "candidate_id": "q1:profile",
+                                "question_id": "q1",
+                                "promotion_target": "profile",
+                                "signal_type": "FOUNDATION",
+                                "answer": "2023",
+                                "confidence": 0.92,
+                                "promotion_candidate": True,
+                            }
+                        ],
+                    }
                     },
                     "question_first": {
                         "enabled": True,
@@ -102,6 +154,32 @@ async def test_question_first_runner_merges_canonical_artifact_without_brightdat
                                 "validation_state": "validated",
                                 "evidence_url": "https://example.com",
                                 "signal_type": "FOUNDATION",
+                            }
+                        ],
+                        "evidence_items": [
+                            {
+                                "evidence_id": "q1:foundation",
+                                "question_id": "q1",
+                                "entity_id": "major-league-cricket",
+                                "signal_type": "FOUNDATION",
+                                "evidence_focus": "entity_fact",
+                                "promotion_target": "profile",
+                                "answer_kind": "fact",
+                                "answer": "2023",
+                                "confidence": 0.92,
+                                "validation_state": "validated",
+                                "evidence_url": "https://example.com",
+                            }
+                        ],
+                        "promotion_candidates": [
+                            {
+                                "candidate_id": "q1:profile",
+                                "question_id": "q1",
+                                "promotion_target": "profile",
+                                "signal_type": "FOUNDATION",
+                                "answer": "2023",
+                                "confidence": 0.92,
+                                "promotion_candidate": True,
                             }
                         ],
                         "run_rollup": {
@@ -162,6 +240,10 @@ async def test_question_first_runner_merges_canonical_artifact_without_brightdat
 
     assert merged["question_first"]["schema_version"] == "question_first_run_v1"
     assert merged["question_first"]["questions_answered"] == 1
+    assert merged["question_first"]["evidence_items"][0]["promotion_target"] == "profile"
+    assert merged["question_first"]["promotion_candidates"][0]["candidate_id"] == "q1:profile"
+    assert merged["question_first_run"]["evidence_items"][0]["promotion_target"] == "profile"
+    assert merged["question_first_run"]["promotion_candidates"][0]["candidate_id"] == "q1:profile"
     assert merged["questions"][0]["question_first_answer"]["answer"] == "2023"
     assert merged["questions"][0]["validation_state"] == "validated"
 

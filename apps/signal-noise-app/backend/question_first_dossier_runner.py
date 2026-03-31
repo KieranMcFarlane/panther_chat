@@ -53,6 +53,8 @@ class QuestionFirstRunArtifact(BaseModel):
     question_source_path: Optional[str] = None
     questions: List[Dict[str, Any]] = Field(default_factory=list)
     answers: List[Dict[str, Any]] = Field(default_factory=list)
+    evidence_items: List[Dict[str, Any]] = Field(default_factory=list)
+    promotion_candidates: List[Dict[str, Any]] = Field(default_factory=list)
     categories: List[Dict[str, Any]] = Field(default_factory=list)
     run_rollup: Dict[str, Any] = Field(default_factory=dict)
     merge_patch: Dict[str, Any] = Field(default_factory=dict)
@@ -96,6 +98,8 @@ def _merge_question_first_run_patch(
         payload["question_first"].setdefault("run_rollup", artifact.run_rollup)
         payload["question_first"].setdefault("categories", artifact.categories)
         payload["question_first"].setdefault("answers", artifact.answers)
+        payload["question_first"].setdefault("evidence_items", artifact.evidence_items)
+        payload["question_first"].setdefault("promotion_candidates", artifact.promotion_candidates)
         payload["question_first"].setdefault("questions_answered", len(artifact.answers))
 
     metadata.setdefault("question_first", {})
@@ -104,6 +108,8 @@ def _merge_question_first_run_patch(
         metadata["question_first"].setdefault("generated_at", artifact.generated_at)
         metadata["question_first"].setdefault("questions_answered", len(artifact.answers))
         metadata["question_first"].setdefault("categories", artifact.categories)
+        metadata["question_first"].setdefault("evidence_items", artifact.evidence_items)
+        metadata["question_first"].setdefault("promotion_candidates", artifact.promotion_candidates)
         metadata["question_first"].setdefault("question_source_path", artifact.question_source_path)
         metadata["question_first"].setdefault("run_rollup", artifact.run_rollup)
 
