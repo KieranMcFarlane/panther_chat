@@ -4,6 +4,11 @@ import path from 'path'
 export interface EntityQuestionPackQuestion {
   question_id: string
   question: string
+  pack_role?: string
+  question_shape?: string
+  evidence_focus?: string
+  promotion_target?: string
+  answer_kind?: string
   yp_service_fit: string[]
   budget_range: string
   yp_advantage: string
@@ -127,6 +132,11 @@ function mapLocalFinalRalphPackToQuestionPack(
     return {
       question_id: `frq_${String(rank).padStart(3, '0')}`,
       question: prompt,
+      pack_role: 'discovery',
+      question_shape: 'atomic',
+      evidence_focus: 'supporting_evidence',
+      promotion_target: 'supporting_context',
+      answer_kind: 'evidence',
       yp_service_fit: services,
       budget_range: deriveBudgetRange(primaryService),
       yp_advantage: `Yellow Panther fit for ${primaryService.toLowerCase().replace(/_/g, ' ')}`,
@@ -155,7 +165,7 @@ function mapLocalFinalRalphPackToQuestionPack(
     entity_type: entityType,
     source_entity_type: entityType,
     question_count: packQuestions.length,
-    prompt_context: `Final Ralph pack for ${entityName}. Questions are ordered by Yellow Panther business value and keep the Ralph loop focused on direct revenue signals.`,
+    prompt_context: `Atomic discovery pack for ${entityName}. Questions are ordered for evidence collection before any dossier promotion.`,
     questions: packQuestions,
     hypotheses: packQuestions.map((question, index) => ({
       hypothesis_id: `${entityId || entityName}-frq-${String(index + 1).padStart(3, '0')}`,

@@ -30,7 +30,7 @@ export function EntityQuestionPackRail({ entityName, entityType, questionPack }:
 
   const visibleQuestions = questionPack.questions.slice(0, 6)
   const serviceFits = Array.from(new Set(questionPack.questions.flatMap((question) => question.yp_service_fit)))
-  const isFinalRalphPack = String(questionPack.prompt_context || '').startsWith('Final Ralph pack')
+  const isAtomicDiscoveryPack = String(questionPack.prompt_context || '').startsWith('Atomic discovery pack')
   const writeback = questionPack.service_context?.writeback || null
 
   return (
@@ -40,15 +40,15 @@ export function EntityQuestionPackRail({ entityName, entityType, questionPack }:
           <div className="space-y-1">
             <CardTitle className="text-lg text-white">Question pack</CardTitle>
             <CardDescription className="text-slate-300">
-              {isFinalRalphPack
-                ? `Final Ralph-ranked question pack for ${entityName}. Questions are ordered by Yellow Panther business value.`
+              {isAtomicDiscoveryPack
+                ? `Atomic discovery pack for ${entityName}. Questions are for evidence collection and later dossier promotion.`
                 : `Canonical question bank for ${entityName}. Each question drives a testable hypothesis and a Yellow Panther service-fit check.`}
             </CardDescription>
           </div>
           <div className="flex flex-wrap gap-2">
-            {isFinalRalphPack && (
+            {isAtomicDiscoveryPack && (
               <Badge className="border-emerald-400/20 bg-emerald-500/10 text-emerald-100">
-                Final Ralph
+                Atomic discovery
               </Badge>
             )}
             <Badge className="border-cyan-400/20 bg-cyan-500/10 text-cyan-100">
