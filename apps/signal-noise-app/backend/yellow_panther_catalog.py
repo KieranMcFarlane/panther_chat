@@ -216,6 +216,7 @@ class QuestionTemplate:
         return {
             "question_id": self.question_id,
             "question": self.question,
+            "pack_role": "discovery",
             "yp_service_fit": [s.value for s in self.yp_service_fit],
             "budget_range": self.budget_range,
             "yp_advantage": self.yp_advantage,
@@ -979,6 +980,8 @@ def build_entity_question_pack(
         "entity_name": entity_name,
         "entity_type": normalized_type,
         "source_entity_type": entity_type,
+        "pack_role": "discovery",
+        "pack_stage": "entity_type",
         "question_count": len(questions),
         "prompt_context": get_question_first_prompt_context(normalized_type, entity_name),
         "questions": [question.to_dict() for question in questions],

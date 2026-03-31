@@ -21,7 +21,7 @@ def test_build_business_goal_reasoned_pack_ranks_high_signal_questions_above_noi
     digital_question = next(
         item
         for item in questions
-        if item["question"] == "What digital transformation initiatives is {entity} undertaking or planning?"
+        if item["question"] == "What evidence in the last 180 days shows {entity} is pursuing digital transformation, legacy replacement, or a new vendor search?"
     )
     competitor_question = next(
         item
@@ -29,8 +29,8 @@ def test_build_business_goal_reasoned_pack_ranks_high_signal_questions_above_noi
         if item["question"] == "How does this compare to top competitors?"
     )
 
-    assert business_pack["summary"]["business_goal_question_count"] == 77
-    assert len(questions) == 77
+    assert business_pack["summary"]["business_goal_question_count"] == 68
+    assert len(questions) == 68
     assert digital_question["business_goal_score"] > competitor_question["business_goal_score"]
     assert digital_question["business_goal_bucket"] == "direct_revenue_signal"
     assert competitor_question["business_goal_bucket"] in {"context_support", "weak_signal"}

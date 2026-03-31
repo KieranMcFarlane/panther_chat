@@ -172,6 +172,7 @@ def build_final_ralph_entity_question_pack(
             {
                 "question_id": f"frq_{index:03d}",
                 "question": prompt,
+                "pack_role": "discovery",
                 "yp_service_fit": services,
                 "budget_range": BUDGET_MAP.get(services[0], "£80K-£500K"),
                 "yp_advantage": _derive_yp_advantage(services),
@@ -207,6 +208,8 @@ def build_final_ralph_entity_question_pack(
         "entity_name": entity_name,
         "entity_type": entity_type,
         "source_entity_type": entity_type,
+        "pack_role": "discovery",
+        "pack_stage": "final_ralph",
         "question_count": len(pack_questions),
         "prompt_context": prompt_context,
         "questions": pack_questions,

@@ -37,6 +37,7 @@ def test_build_final_ralph_entity_question_pack_returns_final_pack_shape():
         max_questions=6,
     )
 
+    assert pack["pack_role"] == "discovery"
     assert pack["entity_name"] == "Arsenal FC"
     assert pack["entity_type"] == "SPORT_CLUB"
     assert pack["question_count"] == 6
@@ -45,6 +46,7 @@ def test_build_final_ralph_entity_question_pack_returns_final_pack_shape():
     assert pack["questions"][0]["final_goal_bucket"] == "direct_revenue_signal"
     assert pack["prompt_context"].startswith("Final Ralph pack")
     assert pack["questions"][0]["yp_service_fit"]
+    assert pack["questions"][0]["pack_role"] == "discovery"
 
 
 def test_build_final_ralph_entity_question_pack_exposes_persisted_writeback_metadata():
