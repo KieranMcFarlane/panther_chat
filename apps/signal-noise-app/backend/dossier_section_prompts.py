@@ -473,11 +473,11 @@ SECTION_5_LEADERSHIP = {
     "title": "Key Decision Makers",
     "tier": DossierTier.STANDARD,
     "questions_to_answer": [
-        "Who are the key decision makers (name, role, influence level)?",
-        "What is their decision scope and authority?",
-        "What is their communication style and risk profile?",
-        "What are their decision criteria?",
-        "What are the strategic hooks for Yellow Panther engagement?"
+        "Which leaders own procurement, digital, and commercial decisions?",
+        "What is their approval scope and authority?",
+        "How do they communicate and assess risk?",
+        "What decision criteria are visible from public evidence?",
+        "Which outreach angle is most defensible based on evidence?"
     ],
     "input_data_required": [
         "person_name", "role", "title", "influence_level", "decision_scope",
@@ -580,10 +580,10 @@ SECTION_6_CONNECTIONS = {
     "tier": DossierTier.PREMIUM,
     "questions_to_answer": [
         "Which Yellow Panther team members have connections to target entity?",
-        "What are the direct connection counts and mutual connections FOR EACH YP MEMBER?",
-        "What are the Tier 2 bridge contacts available for EACH YP MEMBER?",
-        "What is the recommended introduction strategy considering ALL YP team members?",
-        "What is the success probability for each path?"
+        "What direct and mutual connection paths exist for each YP member?",
+        "Which bridge contacts can reach the target most credibly?",
+        "Which introduction path is strongest across the team?",
+        "What is the relative likelihood of success for each path?"
     ],
     "input_data_required": [
         # YELLOW PANTHER TEAM CSV (static)
@@ -869,10 +869,10 @@ SECTION_9_OUTREACH = {
     "title": "Outreach Strategy",
     "tier": DossierTier.STANDARD,
     "questions_to_answer": [
-        "What is the recommended approach (warm/lukewarm/cold)?",
-        "What are the best contact channels and timing?",
-        "What personalization tokens should be used?",
-        "What conversation starters are relevant?",
+        "What is the best outreach approach based on evidence?",
+        "What contact channels and timing are most credible?",
+        "What entity-specific personalization tokens should be used?",
+        "What conversation starters map to recent evidence?",
         "What anti-patterns should be avoided?"
     ],
     "input_data_required": [
@@ -971,10 +971,10 @@ SECTION_10_RISK = {
     "title": "Risk Assessment",
     "tier": DossierTier.PREMIUM,
     "questions_to_answer": [
-        "What are implementation risks (technical, organizational)?",
-        "What is the competitive landscape (incumbents, alternatives)?",
-        "What are switching costs?",
-        "How can Yellow Panther differentiate?"
+        "What implementation risks are visible in the evidence?",
+        "Which incumbents or alternatives are actually present?",
+        "What switching costs are implied by the evidence?",
+        "How should Yellow Panther position against them?"
     ],
     "input_data_required": [
         "risk_category", "risk_description", "probability", "impact",
@@ -1063,8 +1063,8 @@ SECTION_11_LEAGUE = {
     "tier": DossierTier.BASIC,
     "questions_to_answer": [
         "What is the current league standing?",
-        "Who are the top 3 competitors?",
-        "What are the key performance differentiators?"
+        "Which teams are closest in the standings?",
+        "What differentiates them on the table?"
     ],
     "input_data_required": [
         "league_name", "current_position", "clubs_in_league", "season_phase",
@@ -1082,7 +1082,7 @@ AVAILABLE DATA:
 
 QUESTIONS TO ANSWER:
 1. What is the current league standing?
-2. Who are the top 3 competitors?
+2. Which teams are closest in the standings?
 3. What are the key performance differentiators?
 
 OUTPUT FORMAT (JSON):

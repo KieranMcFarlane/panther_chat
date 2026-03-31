@@ -46,12 +46,37 @@ def test_build_question_inventory_separates_dossier_and_discovery_questions(tmp_
     assert any(question["pack_role"] == "dossier" for question in dossier_questions)
     assert any(question["pack_role"] == "discovery" for question in discovery_questions)
     assert any(
+        question["question"] == "What is the entity's official name, type, and primary sport/industry?"
+        for question in dossier_questions
+    )
+    assert any(
+        question["question"] == "When was it founded and where is it headquartered?"
+        for question in dossier_questions
+    )
+    assert any(
         question["metadata"].get("section_id") == "core_information" and question["pack_role"] == "dossier"
         for question in dossier_questions
     )
     assert any(
         question["metadata"].get("section_id") == "ai_reasoner_assessment" and question["pack_role"] == "discovery"
         for question in discovery_questions
+    )
+    assert all(
+        "opportunity" not in question["question"].lower()
+        and "budget" not in question["question"].lower()
+        and "procurement" not in question["question"].lower()
+        and not question["question"].lower().startswith("what evidence")
+        for question in dossier_questions
+    )
+    assert all(
+        "strategic" not in question["question"].lower()
+        and "probability" not in question["question"].lower()
+        and "competitor" not in question["question"].lower()
+        and "bridge contact" not in question["question"].lower()
+        and "decision criteria" not in question["question"].lower()
+        and "decision scope" not in question["question"].lower()
+        and "recommendation" not in question["question"].lower()
+        for question in dossier_questions
     )
     assert isinstance(review_sections, list)
     assert inventory["summary"]["review_section_count"] == len(review_sections)

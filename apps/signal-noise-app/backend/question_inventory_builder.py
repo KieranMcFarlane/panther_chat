@@ -91,6 +91,34 @@ DISCOVERY_SECTION_IDS = {
     "outreach_strategy",
     "risk_assessment",
 }
+DISCOVERY_STYLE_PREFIXES = (
+    "what evidence",
+    "what are strategic",
+    "what are the opportunity",
+    "what is the recommended",
+    "what immediate launch",
+    "what medium-term partnership",
+    "what long-term initiative",
+    "what are competitive",
+    "how does this compare",
+)
+DISCOVERY_STYLE_KEYWORDS = (
+    "opportunity fit",
+    "budget",
+    "procurement",
+    "vendor replacement",
+    "vendor search",
+    "service fit",
+    "business case",
+    "direct revenue",
+    "strategic hooks",
+    "decision criteria",
+    "decision scope",
+    "success probability",
+    "bridge contacts",
+    "top 3 competitors",
+    "recommendation",
+)
 
 
 @dataclass(frozen=True)
@@ -114,6 +142,8 @@ class QuestionEntry:
                     pack_role = "discovery"
                 else:
                     pack_role = "dossier"
+                if pack_role == "dossier" and _is_discovery_style_question(self.question):
+                    pack_role = "discovery"
             elif self.source_kind in {"artifact_question", "dossier_json_section", "dossier_markdown_section"}:
                 pack_role = "dossier"
             else:
@@ -142,6 +172,24 @@ def _normalize_question(text: str) -> str:
 
 def _question_from_text(text: str) -> str:
     return re.sub(r"\s+", " ", text.strip())
+
+
+def _is_discovery_style_question(question: str) -> bool:
+    normalized = _normalize_question(question)
+    if any(normalized.startswith(prefix) for prefix in DISCOVERY_STYLE_PREFIXES):
+        return True
+    if any(keyword in normalized for keyword in DISCOVERY_STYLE_KEYWORDS):
+        return True
+    return any(
+        phrase in normalized
+        for phrase in (
+            "what are their decision criteria",
+            "what is their decision scope",
+            "what are the tier 2 bridge contacts",
+            "what are the strategic hooks",
+            "who are the top 3 competitors",
+        )
+    )
 
 
 def _maybe_question_from_text(text: Any) -> Optional[str]:
