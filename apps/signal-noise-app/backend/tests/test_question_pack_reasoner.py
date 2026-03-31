@@ -17,9 +17,9 @@ def test_build_question_reasoned_pack_creates_optimized_duplicate(tmp_path):
     review_pack_path = build_and_write_default_review_pack(inventory_path)
     reasoned_pack = build_question_reasoned_pack(review_pack_path)
 
-    assert reasoned_pack["summary"]["reasoned_question_count"] == 77
+    assert reasoned_pack["summary"]["reasoned_question_count"] == 68
     assert reasoned_pack["summary"]["section_count"] == 11
-    assert len(reasoned_pack["reasoned_dossier_pack"]["questions"]) == 77
+    assert len(reasoned_pack["reasoned_dossier_pack"]["questions"]) == 68
     assert len(reasoned_pack["reasoned_sections_to_keep"]) == 11
 
     optimized_questions = reasoned_pack["reasoned_dossier_pack"]["questions"]
@@ -31,10 +31,9 @@ def test_build_question_reasoned_pack_creates_optimized_duplicate(tmp_path):
     assert "authoritative sources" in core_question["optimization_notes"]
 
     digital_question = next(
-        item for item in optimized_questions if item["question"] == "What digital transformation initiatives is {entity} undertaking or planning?"
+        item for item in optimized_questions if item["question"] == "What evidence in the last 180 days shows a vendor, platform, or relationship change at {entity} that could map to Yellow Panther services?"
     )
-    assert "official site" in digital_question["optimized_question"].lower()
-    assert "job postings" in digital_question["optimized_question"].lower()
+    assert digital_question["optimized_question"].startswith("Verify whether this opportunity question is real")
 
     split_section = next(
         section for section in reasoned_pack["reasoned_sections_to_keep"] if section["section_title"] == "AI Reasoner Assessment"
@@ -46,5 +45,5 @@ def test_build_question_reasoned_pack_creates_optimized_duplicate(tmp_path):
     write_question_reasoned_pack(output_path, reasoned_pack)
 
     written = json.loads(output_path.read_text())
-    assert written["summary"]["reasoned_question_count"] == 77
+    assert written["summary"]["reasoned_question_count"] == 68
     assert "reasoned_dossier_pack" in written
