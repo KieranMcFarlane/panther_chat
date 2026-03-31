@@ -9,6 +9,7 @@ import {
   buildMajorLeagueCricketPoiBatchAQuestions,
   buildMajorLeagueCricketPoiBatchBQuestions,
   buildMajorLeagueCricketPoiBatchCQuestions,
+  buildOpenCodeQuestionCommand,
   buildMajorLeagueCricketPoiQuestions,
   buildMajorLeagueCricketSmokeQuestions,
   buildOpenCodeConfig,
@@ -144,11 +145,24 @@ test('buildOpenCodeQuestionPrompt stays close to the proven direct prompt shape'
     yp_service_fit: [],
   });
 
-  assert.match(prompt, /Return only JSON/i);
-  assert.match(prompt, /Use BrightData to answer the question/i);
-  assert.match(prompt, /context, sources, confidence/i);
-  assert.doesNotMatch(prompt, /hop budget/i);
+  assert.match(prompt, /When was Major League Cricket founded\? use brightdata\./i);
+  assert.match(prompt, /Return one validated JSON object/i);
+  assert.match(prompt, /Stop immediately after the first validated answer/i);
   assert.doesNotMatch(prompt, /brightdata tool/i);
+  assert.doesNotMatch(prompt, /canonical query/i);
+  assert.doesNotMatch(prompt, /question type/i);
+  assert.doesNotMatch(prompt, /context, sources, confidence/i);
+});
+
+test('buildOpenCodeQuestionCommand defaults to the known-good OpenCode model', () => {
+  const command = buildOpenCodeQuestionCommand({
+    question_id: 'foundation_year',
+    question_text: 'When was Major League Cricket founded?',
+  });
+
+  const modelIndex = command.indexOf('--model');
+  assert.notEqual(modelIndex, -1);
+  assert.equal(command[modelIndex + 1], 'zai-coding-plan/glm-5');
 });
 
 test('buildQuestionState applies explicit budget and threshold overrides', () => {
@@ -513,6 +527,180 @@ test('runOpenCodePresetBatch persists explicit credit and confidence overrides',
     assert.equal(state.questions[0].confidence_threshold, 0.93);
     assert.equal(state.questions[1].credit_budget.search, 9);
     assert.equal(state.questions[1].confidence_threshold, 0.93);
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
+test('runOpenCodePresetBatch stops after the base hop budget when no evidence appears', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-batch-no-evidence-'));
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+  const runs = [];
+
+  try {
+    const result = await runOpenCodePresetBatch({
+      outputDir,
+      questionsOverride: [
+        {
+          entity_name: 'Test Entity',
+          entity_id: 'test-entity',
+          entity_type: 'ENTITY',
+          preset: 'test-entity',
+          pack_role: 'discovery',
+          question_shape: 'atomic',
+          question_id: 'q_no_evidence',
+          question_type: 'procurement',
+          question_text: 'Is there evidence of a platform replacement?',
+          query: '"Test Entity" platform replacement',
+          hop_budget: 2,
+          evidence_extension_budget: 2,
+          question_timeout_ms: 5000,
+          source_priority: ['google_serp', 'official_site'],
+          yp_service_fit: [],
+        },
+      ],
+      questionRunner: async (question) => {
+        runs.push(question.query);
+        return {
+          structuredOutput: {
+            answer: '',
+            signal_type: 'NO_SIGNAL',
+            confidence: 0.0,
+            validation_state: 'no_signal',
+            evidence_url: '',
+            recommended_next_query: '',
+            notes: 'stubbed',
+            sources: [],
+          },
+          promptTrace: { status: 'ok', structured_output_keys: 1, has_structured_output: true },
+          messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
+          cliResult: { code: 0, stdout: '{"answer":""}', stderr: '' },
+        };
+      },
+    });
+
+    assert.equal(result.questions_total, 1);
+    assert.equal(runs.length, 2);
+    assert.deepEqual(runs, ['"Test Entity" platform replacement', '"Test Entity" platform replacement']);
+    const state = JSON.parse(readFileSync(result.state_path, 'utf8'));
+    assert.equal(state.questions[0].run_history.length, 2);
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
+test('runOpenCodePresetBatch extends when evidence appears', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-batch-evidence-extension-'));
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+  const runs = [];
+
+  try {
+    const result = await runOpenCodePresetBatch({
+      outputDir,
+      questionsOverride: [
+        {
+          entity_name: 'Test Entity',
+          entity_id: 'test-entity',
+          entity_type: 'ENTITY',
+          preset: 'test-entity',
+          pack_role: 'discovery',
+          question_shape: 'atomic',
+          question_id: 'q_evidence_extension',
+          question_type: 'foundation',
+          question_text: 'When was Test Entity founded?',
+          query: '"Test Entity" founded',
+          hop_budget: 1,
+          evidence_extension_budget: 1,
+          question_timeout_ms: 5000,
+          source_priority: ['google_serp', 'official_site', 'wikipedia'],
+          yp_service_fit: [],
+        },
+      ],
+      questionRunner: async (question) => {
+        runs.push(question.query);
+        const hopCount = runs.length;
+        return {
+          structuredOutput: {
+            answer: hopCount === 1 ? '1886' : '1887',
+            signal_type: 'FOUNDATION',
+            confidence: 0.95,
+            validation_state: 'validated',
+            evidence_url: 'https://example.com/history',
+            recommended_next_query: hopCount === 1 ? 'Test Entity founding evidence' : '',
+            notes: 'stubbed',
+            sources: ['https://example.com/history'],
+          },
+          promptTrace: { status: 'ok', structured_output_keys: 1, has_structured_output: true },
+          messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
+          cliResult: { code: 0, stdout: '{"answer":"1886"}', stderr: '' },
+        };
+      },
+    });
+
+    assert.equal(result.questions_total, 1);
+    assert.equal(runs.length, 2);
+    assert.deepEqual(runs, ['"Test Entity" founded', 'Test Entity founding evidence']);
+    const state = JSON.parse(readFileSync(result.state_path, 'utf8'));
+    assert.equal(state.questions[0].status, 'validated');
+    assert.equal(state.questions[0].run_history.length, 2);
+    assert.equal(state.questions[0].frontier.some((item) => item.query === 'Test Entity founding evidence'), true);
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
+
+test('runOpenCodePresetBatch treats string high confidence as validated', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-batch-high-confidence-'));
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+  const questionRuns = [];
+
+  try {
+    const result = await runOpenCodePresetBatch({
+      outputDir,
+      preset: 'major-league-cricket-smoke',
+      questionRunner: async (question) => {
+        questionRuns.push(question.question_id);
+        return {
+          structuredOutput: {
+            answer: `stub-${question.question_id}`,
+            signal_type: 'FOUNDATION',
+            confidence: 'high',
+            evidence_url: 'https://example.com/evidence',
+            sources: ['https://example.com/evidence'],
+            notes: 'stubbed',
+          },
+          promptTrace: { status: 'ok', structured_output_keys: 1, has_structured_output: true },
+          messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
+          cliResult: { code: 0, stdout: '{"answer":"stub"}', stderr: '' },
+        };
+      },
+    });
+
+    const meta = JSON.parse(readFileSync(result.meta_result_path, 'utf8'));
+    assert.equal(result.questions_total, 2);
+    assert.deepEqual(questionRuns, ['entity_founded_year', 'sl_league_mobile_app']);
+    assert.equal(result.questions_validated, 2);
+    assert.equal(meta.questions[0].validation_state, 'validated');
+    assert.equal(meta.questions[1].validation_state, 'validated');
   } finally {
     if (previousZaiKey === undefined) {
       delete process.env.ANTHROPIC_AUTH_TOKEN;

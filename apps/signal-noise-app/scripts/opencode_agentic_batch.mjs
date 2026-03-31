@@ -16,6 +16,7 @@ const WORKTREE_ROOT = path.resolve(APP_ROOT, '..', '..');
 const DEFAULT_PROVIDER_ID = 'zai-coding-plan';
 const DEFAULT_MODEL_ID = 'glm-5';
 const DEFAULT_MODEL = `${DEFAULT_PROVIDER_ID}/${DEFAULT_MODEL_ID}`;
+const DEFAULT_QUESTION_MODEL = process.env.OPENCODE_QUESTION_MODEL || DEFAULT_MODEL;
 
 function _loadEnv() {
   for (const envPath of [
@@ -236,7 +237,7 @@ function _scoreSourceRecord(questionState, url, title = '', confidence = 0) {
   const sourcePriorityBonus = sourcePriority.get(sourceKind) || 0.2;
   const domain = _safeUrlHostname(url);
   const questionMatch = String(title || '').toLowerCase().includes(String(questionState.entity_name || '').toLowerCase()) ? 0.2 : 0;
-  const confidenceScore = Number(confidence || 0);
+  const confidenceScore = _coerceConfidenceScore(confidence);
   const questionBias =
     questionType === 'procurement'
       ? (sourceKind === 'linkedin_posts' ? 0.25 : 0.1)
@@ -292,12 +293,66 @@ function _buildFrontierFromStructuredOutput(questionState, structuredOutput, tim
   return frontier;
 }
 
+function _questionHasEvidence(questionPayload) {
+  const structuredOutput = questionPayload?.reasoning?.structured_output || {};
+  const evidenceUrl = String(questionPayload?.evidence_url || structuredOutput.evidence_url || '').trim();
+  const sources = Array.isArray(structuredOutput.sources)
+    ? structuredOutput.sources.map((item) => String(item || '').trim()).filter(Boolean)
+    : [];
+  const source = String(structuredOutput.source || '').trim();
+  const answer = String(questionPayload?.answer || structuredOutput.answer || '').trim();
+  const fact = structuredOutput.fact;
+  const hasFact = fact && typeof fact === 'object' && Object.keys(fact).length > 0;
+  return Boolean(answer || evidenceUrl || sources.length > 0 || source || hasFact);
+}
+
+function _extendQuestionBudget(questionState, extensionBudget = 0) {
+  const extension = Math.max(0, Number(extensionBudget || 0));
+  if (extension <= 0) {
+    return questionState;
+  }
+  const currentSearch = Number(questionState.credit_budget?.search || 0);
+  const currentScrape = Number(questionState.credit_budget?.scrape || 0);
+  const currentRevisit = Number(questionState.credit_budget?.revisit || 0);
+  return {
+    ...questionState,
+    status: questionState.status === 'exhausted' ? 'running' : questionState.status,
+    credit_budget: {
+      ...(questionState.credit_budget || {}),
+      search: currentSearch + extension,
+      scrape: currentScrape + extension,
+      revisit: currentRevisit + Math.max(1, Math.ceil(extension / 2)),
+    },
+  };
+}
+
 function _normalizeConfidenceThreshold(question, overrides = {}) {
   const threshold = Number(overrides.confidenceThreshold);
   if (Number.isFinite(threshold) && threshold >= 0 && threshold <= 1) {
     return threshold;
   }
   return question.question_type === 'procurement' ? 0.85 : 0.8;
+}
+
+function _coerceConfidenceScore(value) {
+  const numeric = Number(value);
+  if (Number.isFinite(numeric)) {
+    return numeric;
+  }
+  const normalized = String(value || '').trim().toLowerCase();
+  if (!normalized) {
+    return 0;
+  }
+  if (['high', 'strong', 'validated', 'pass', 'yes'].includes(normalized)) {
+    return 0.95;
+  }
+  if (['medium', 'moderate', 'likely', 'probable', 'partial'].includes(normalized)) {
+    return 0.7;
+  }
+  if (['low', 'weak', 'uncertain', 'maybe'].includes(normalized)) {
+    return 0.35;
+  }
+  return 0;
 }
 
 function _applyQuestionBudgetOverrides(questionState, overrides = {}) {
@@ -344,6 +399,12 @@ export function buildQuestionState(question, { runId = 'cli', timestamp = new Da
     aliases: _buildQuestionAliases(question),
     source_priority: question.source_priority,
     hop_budget: question.hop_budget,
+    evidence_extension_budget: Number.isFinite(Number(question.evidence_extension_budget))
+      ? Number(question.evidence_extension_budget)
+      : Number(question.hop_budget || 0),
+    question_timeout_ms: Number.isFinite(Number(question.question_timeout_ms))
+      ? Number(question.question_timeout_ms)
+      : undefined,
     credit_budget: _buildQuestionCredits(question, creditBudgetOverrides),
     credits_spent: {
       search: 0,
@@ -580,15 +641,20 @@ export function buildOpenCodeConfig({
 }
 
 export function buildOpenCodeQuestionPrompt(question) {
+  return `${question.question_text} use brightdata. Return one validated JSON object with the answer, confidence, and sources if available. Stop immediately after the first validated answer.`;
+}
+
+export function buildOpenCodeQuestionCommand(question, { model = DEFAULT_QUESTION_MODEL } = {}) {
   return [
-    'Use BrightData to answer the question.',
-    `Question type: ${question.question_type}`,
-    `Question: ${question.question_text}`,
-    `Canonical query: ${question.query}`,
-    'Return only JSON with these keys: question, answer, context, sources, confidence.',
-    'If you cannot find an answer, leave answer empty, keep context brief, and set confidence to 0.',
-    'Do not return markdown or prose.',
-  ].join('\n');
+    'run',
+    '--format',
+    'json',
+    '--model',
+    model,
+    '--title',
+    `Yellow Panther :: ${question.question_id}`,
+    buildOpenCodeQuestionPrompt(question),
+  ];
 }
 
 export function buildOpenCodeQuestionSchema() {
@@ -619,7 +685,7 @@ function _classifyValidationState(structuredOutput) {
   if (structuredOutput.validation_state) {
     return structuredOutput.validation_state;
   }
-  const confidence = Number(structuredOutput.confidence ?? 0);
+  const confidence = _coerceConfidenceScore(structuredOutput.confidence);
   const answer = String(structuredOutput.answer || '').trim();
   if (!answer || confidence <= 0) {
     return 'no_signal';
@@ -670,40 +736,64 @@ function _spawnOpencodeRun(args, { cwd, env, timeoutMs = 300000 } = {}) {
     });
     let stdout = '';
     let stderr = '';
+    let settled = false;
+    const teeLogs = String(env?.OPENCODE_TEE_LOGS || process.env.OPENCODE_TEE_LOGS || '').trim().toLowerCase() === 'true';
+    const settle = (result) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      resolve(result);
+    };
+    const rejectOnce = (error) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      reject(error);
+    };
+    const maybeResolveEarly = () => {
+      if (settled) return;
+      const parsed = _extractFinalCliJson(stdout);
+      if (parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0) {
+        const answer = String(parsed.answer || '').trim();
+        const confidence = _coerceConfidenceScore(parsed.confidence);
+        if (answer && confidence > 0) {
+          child.kill('SIGTERM');
+          settle({ code: 0, stdout, stderr });
+        }
+      }
+    };
     const timer = setTimeout(() => {
       child.kill('SIGTERM');
-      reject(new Error(`opencode run timed out after ${timeoutMs}ms`));
+      rejectOnce(new Error(`opencode run timed out after ${timeoutMs}ms`));
     }, timeoutMs);
     child.stdout.on('data', (chunk) => {
       stdout += chunk.toString();
+      if (teeLogs) {
+        process.stdout.write(chunk);
+      }
+      maybeResolveEarly();
     });
     child.stderr.on('data', (chunk) => {
       stderr += chunk.toString();
+      if (teeLogs) {
+        process.stderr.write(chunk);
+      }
     });
     child.on('error', (error) => {
-      clearTimeout(timer);
-      reject(error);
+      rejectOnce(error);
     });
     child.on('close', (code) => {
-      clearTimeout(timer);
-      resolve({ code, stdout, stderr });
+      if (settled) {
+        return;
+      }
+      settle({ code, stdout, stderr });
     });
   });
 }
 
 async function runOpenCodeCliQuestion(question, { worktreeRoot, opencodeTimeoutMs } = {}) {
-  const prompt = buildOpenCodeQuestionPrompt(question);
   const cliResult = await _spawnOpencodeRun(
-    [
-      'run',
-      '--format',
-      'json',
-      '--model',
-      DEFAULT_MODEL,
-      '--title',
-      `Yellow Panther :: ${question.question_id}`,
-      prompt,
-    ],
+    buildOpenCodeQuestionCommand(question),
     {
       cwd: worktreeRoot,
       env: {
@@ -750,6 +840,12 @@ function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTr
     query: question.query,
     hop_budget: question.hop_budget,
     source_priority: question.source_priority,
+    evidence_extension_budget: Number.isFinite(Number(question.evidence_extension_budget))
+      ? Number(question.evidence_extension_budget)
+      : Number(question.hop_budget || 0),
+    question_timeout_ms: Number.isFinite(Number(question.question_timeout_ms))
+      ? Number(question.question_timeout_ms)
+      : undefined,
     entity_name: question.entity_name,
     entity_id: question.entity_id,
     entity_type: question.entity_type,
@@ -862,6 +958,7 @@ export async function runOpenCodePresetBatch({
   if (!outputDir) {
     throw new Error('outputDir is required');
   }
+  await fs.mkdir(outputDir, { recursive: true });
 
   const firstQuestion = questions[0] || {};
   const entityName = entityNameOverride || firstQuestion.entity_name || 'Major League Cricket';
@@ -899,21 +996,98 @@ export async function runOpenCodePresetBatch({
       let existingQuestionState = runState.questions[index];
       const currentQuestionState = existingQuestionState || buildQuestionState(question, { runId: `cli-${index + 1}`, timestamp: runStartedAt, creditBudgetOverrides: budgetOverrides, confidenceThreshold: budgetOverrides.confidenceThreshold });
       existingQuestionState = currentQuestionState;
+      const pendingFrontierItems = resume && existingQuestionState ? _getPendingFrontierItems(existingQuestionState) : [];
+      const shouldReplayFrontier = pendingFrontierItems.length > 0;
+      const baseHopBudget = Math.max(1, Number(question.hop_budget || 0) || 10);
+      const evidenceExtensionBudget = Math.max(0, Number(question.evidence_extension_budget || question.hop_budget || 0) || 0);
+      const configuredQuestionTimeoutMs = Number(question.question_timeout_ms);
+      const configuredHopTimeoutMs = Number(question.hop_timeout_ms || question.question_timeout_ms);
+      const atomicHopTimeoutMs = Math.max(
+        1000,
+        Number.isFinite(configuredHopTimeoutMs)
+          ? configuredHopTimeoutMs
+          : Math.min(Number(opencodeTimeoutMs || 300000), 60000),
+      );
+      let questionDeadline = Number.isFinite(configuredQuestionTimeoutMs)
+        ? Date.now() + Math.max(1000, configuredQuestionTimeoutMs)
+        : Date.now() + Math.max(1000, baseHopBudget * atomicHopTimeoutMs);
+      let hopLimit = baseHopBudget;
+      let evidenceExtended = false;
+      let questionPayload;
+      let questionRun = null;
+      let currentState = existingQuestionState;
+      let activeQuery = question.query;
+      const queuedQueries = shouldReplayFrontier
+        ? pendingFrontierItems.slice(0, baseHopBudget).map((item) => item.query).filter(Boolean)
+        : [];
+      let hopIndex = 0;
+      const isAtomicDiscoveryQuestion = ['atomic', 'discovery'].includes(
+        String(question.question_shape || question.pack_role || '').trim().toLowerCase(),
+      );
+
+      if (isAtomicDiscoveryQuestion) {
+      while (hopIndex < hopLimit && Date.now() < questionDeadline) {
+        const executionQuery = queuedQueries.length > 0 ? queuedQueries.shift() : activeQuery || question.query;
+        const remainingMs = questionDeadline - Date.now();
+        if (remainingMs <= 0) {
+          break;
+        }
+        const hopTimeoutMs = Math.max(1000, Math.min(atomicHopTimeoutMs, remainingMs));
+        const executionQuestion = _buildExecutionQuestion(question, executionQuery, hopIndex);
+        questionRun = await questionRunner(executionQuestion, { worktreeRoot, opencodeTimeoutMs: hopTimeoutMs });
+        questionPayload = _buildQuestionPayload(
+          question,
+          questionRun.structuredOutput || {},
+          `cli-${index + 1}`,
+          {
+            promptTrace: questionRun.promptTrace || null,
+            messageTrace: questionRun.messageTrace || [],
+            executionQuery: executionQuestion.query,
+          },
+        );
+        let updatedState = _mergeQuestionState(currentState || currentQuestionState, questionPayload, new Date().toISOString());
+        updatedState = _spendCredit(updatedState, 'search', 1);
+        if (Array.isArray(questionPayload?.reasoning?.structured_output?.sources) && questionPayload.reasoning.structured_output.sources.length > 0) {
+          updatedState = _spendCredit(updatedState, 'scrape', 1);
+        }
+        if ((executionQuestion.query || question.query) !== question.query) {
+          updatedState = _spendCredit(updatedState, 'revisit', 1);
+        }
+
+        const hasEvidence = _questionHasEvidence(questionPayload);
+        if (hasEvidence && !evidenceExtended && evidenceExtensionBudget > 0) {
+          updatedState = _extendQuestionBudget(updatedState, evidenceExtensionBudget);
+          hopLimit += evidenceExtensionBudget;
+          questionDeadline += evidenceExtensionBudget * atomicHopTimeoutMs;
+          evidenceExtended = true;
+        }
+
+        runState.questions[index] = updatedState;
+        await _writeJsonFile(statePath, runState);
+        currentState = updatedState;
+        existingQuestionState = updatedState;
+
+        const recommendedNextQuery = String(questionPayload?.recommended_next_query || '').trim();
+        if (recommendedNextQuery) {
+          activeQuery = recommendedNextQuery;
+        } else if (!queuedQueries.length) {
+          activeQuery = executionQuery;
+        }
+
+        hopIndex += 1;
+      }
+      } else {
       const searchSpent = Number(currentQuestionState.credits_spent?.search || 0);
       const searchBudget = Number(currentQuestionState.credit_budget?.search || 0);
       const scrapeSpent = Number(currentQuestionState.credits_spent?.scrape || 0);
       const scrapeBudget = Number(currentQuestionState.credit_budget?.scrape || 0);
       const revisitSpent = Number(currentQuestionState.credits_spent?.revisit || 0);
       const revisitBudget = Number(currentQuestionState.credit_budget?.revisit || 0);
-      const pendingFrontierItems = resume && existingQuestionState ? _getPendingFrontierItems(existingQuestionState) : [];
-      const shouldReplayFrontier = pendingFrontierItems.length > 0;
       const executionQueue = shouldReplayFrontier
         ? pendingFrontierItems.slice(0, Math.max(1, Number(question.hop_budget || 0))).map((item, hopIndex) => _buildExecutionQuestion(question, item.query, hopIndex + 1))
         : (resume && existingQuestionState && ['validated', 'provisional', 'no_signal'].includes(existingQuestionState.status) && existingQuestionState.best_answer)
           ? []
           : [question];
-      let questionPayload;
-      let questionRun = null;
       if (executionQueue.length === 0) {
         questionPayload = {
           question_id: question.question_id,
@@ -1052,9 +1226,8 @@ export async function runOpenCodePresetBatch({
           notes: existingQuestionState?.notes || '',
         };
       }
-      if (executionQueue.length === 0) {
-        runState.questions[index] = _mergeQuestionState(existingQuestionState || currentQuestionState, questionPayload, new Date().toISOString());
-        await _writeJsonFile(statePath, runState);
+      runState.questions[index] = _mergeQuestionState(existingQuestionState || currentQuestionState, questionPayload, new Date().toISOString());
+      await _writeJsonFile(statePath, runState);
       }
       finalQuestions.push(questionPayload);
       perQuestionPayloads.push({

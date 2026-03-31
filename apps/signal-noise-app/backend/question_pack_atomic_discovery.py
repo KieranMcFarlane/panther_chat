@@ -194,6 +194,10 @@ def build_atomic_discovery_pack_questions(
                 "question": prompt,
                 "pack_role": "discovery",
                 "question_shape": "atomic",
+                "hop_budget": 10,
+                "evidence_extension_budget": 10,
+                "hop_timeout_ms": 180000,
+                "question_timeout_ms": 180000,
                 "evidence_focus": evidence_focus,
                 "promotion_target": promotion_target,
                 "answer_kind": answer_kind,
@@ -216,4 +220,3 @@ def build_atomic_discovery_pack_questions(
         )
 
     return pack_questions
-
