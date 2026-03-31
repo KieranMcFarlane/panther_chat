@@ -70,6 +70,9 @@ export function FinalRalphClubDossier({ entity, onEmailEntity, dossier }: FinalR
   const strategic = dossier?.strategic_analysis || {}
   const roadmap = dossier?.implementation_roadmap || {}
   const linkedin = dossier?.linkedin_connection_analysis || {}
+  const questionFirst = dossier?.question_first || {}
+  const discoverySummary = dossier?.question_first?.discovery_summary || {}
+  const dossierPromotions = Array.isArray(dossier?.question_first?.dossier_promotions) ? dossier.question_first.dossier_promotions : []
   const metadata = dossier?.metadata || {}
   const opportunities = strategic?.opportunity_scoring || {}
   const leadershipRecommendation = linkedin?.recommendations || {}
@@ -77,6 +80,16 @@ export function FinalRalphClubDossier({ entity, onEmailEntity, dossier }: FinalR
   const activeOpportunityList = Array.isArray(opportunities?.immediate_launch) ? opportunities.immediate_launch : []
   const mediumOpportunityList = Array.isArray(opportunities?.medium_term_partnerships) ? opportunities.medium_term_partnerships : []
   const longOpportunityList = Array.isArray(opportunities?.long_term_initiatives) ? opportunities.long_term_initiatives : []
+  const promotedOpportunitySignals = Array.isArray(discoverySummary?.opportunity_signals) ? discoverySummary.opportunity_signals : []
+  const promotedDecisionOwners = Array.isArray(discoverySummary?.decision_owners) ? discoverySummary.decision_owners : []
+  const promotedTimingAndProcurement = Array.isArray(discoverySummary?.timing_procurement_markers)
+    ? discoverySummary.timing_procurement_markers
+    : Array.isArray(discoverySummary?.timing_and_procurement)
+      ? discoverySummary.timing_and_procurement
+      : Array.isArray(discoverySummary?.timing_markers)
+        ? discoverySummary.timing_markers
+        : []
+  const promotedEvidenceCount = Number(discoverySummary?.supporting_evidence_count || dossierPromotions.length || 0)
 
   return (
     <div className="space-y-6">
@@ -233,19 +246,29 @@ export function FinalRalphClubDossier({ entity, onEmailEntity, dossier }: FinalR
             </CardHeader>
             <CardContent className="grid gap-6 lg:grid-cols-2">
               <div>
-                <div className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Buy signals</div>
-                {renderBulletList([
-                  ...(Array.isArray(roadmap?.phase_1_engagement?.objectives) ? roadmap.phase_1_engagement.objectives : []),
-                  ...(Array.isArray(roadmap?.phase_2_pilot?.objectives) ? roadmap.phase_2_pilot.objectives : []),
-                ], 'No procurement milestones recorded yet.')}
+                <div className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Evidence-backed opportunity signals</div>
+                {renderBulletList(
+                  promotedOpportunitySignals.length > 0
+                    ? promotedOpportunitySignals.map((entry: any) => entry?.answer || entry?.question_text || entry?.candidate_id)
+                    : [
+                        ...(Array.isArray(roadmap?.phase_1_engagement?.objectives) ? roadmap.phase_1_engagement.objectives : []),
+                        ...(Array.isArray(roadmap?.phase_2_pilot?.objectives) ? roadmap.phase_2_pilot.objectives : []),
+                      ],
+                  'No promoted opportunity signals yet.',
+                )}
               </div>
               <div>
-                <div className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Decision windows</div>
-                {renderBulletList([
-                  roadmap?.phase_1_engagement?.timeline && `Engagement: ${roadmap.phase_1_engagement.timeline}`,
-                  roadmap?.phase_2_pilot?.timeline && `Pilot: ${roadmap.phase_2_pilot.timeline}`,
-                  roadmap?.phase_3_partnership?.timeline && `Partnership: ${roadmap.phase_3_partnership.timeline}`,
-                ].filter(Boolean), 'No timeline evidence yet.')}
+                <div className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Promoted timing and procurement</div>
+                {renderBulletList(
+                  promotedTimingAndProcurement.length > 0
+                    ? promotedTimingAndProcurement.map((entry: any) => entry?.answer || entry?.question_text || entry?.candidate_id)
+                    : [
+                        roadmap?.phase_1_engagement?.timeline && `Engagement: ${roadmap.phase_1_engagement.timeline}`,
+                        roadmap?.phase_2_pilot?.timeline && `Pilot: ${roadmap.phase_2_pilot.timeline}`,
+                        roadmap?.phase_3_partnership?.timeline && `Partnership: ${roadmap.phase_3_partnership.timeline}`,
+                      ].filter(Boolean),
+                  'No promoted timing or procurement markers yet.',
+                )}
               </div>
             </CardContent>
           </Card>
@@ -323,15 +346,49 @@ export function FinalRalphClubDossier({ entity, onEmailEntity, dossier }: FinalR
               <div className="space-y-4">
                 <div className="text-sm font-semibold uppercase tracking-wide text-slate-500">Opportunity scoring</div>
                 {renderBulletList(
-                  [...activeOpportunityList, ...mediumOpportunityList, ...longOpportunityList].map((entry: any) => {
-                    if (typeof entry === 'string') return entry
-                    return `${entry.opportunity} (${entry.score}/100)`
-                  }),
-                  'No opportunity scores yet.',
+                  promotedOpportunitySignals.length > 0
+                    ? promotedOpportunitySignals.map((entry: any) => entry?.answer || entry?.question_text || entry?.candidate_id)
+                    : [...activeOpportunityList, ...mediumOpportunityList, ...longOpportunityList].map((entry: any) => {
+                        if (typeof entry === 'string') return entry
+                        return `${entry.opportunity} (${entry.score}/100)`
+                      }),
+                  'No promoted opportunity scores yet.',
                 )}
               </div>
             </CardContent>
           </Card>
+          <div className="grid gap-6 lg:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="h-5 w-5 text-indigo-600" />
+                  Promoted decision owners
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {renderBulletList(
+                  promotedDecisionOwners.map((entry: any) => entry?.answer || entry?.question_text || entry?.candidate_id),
+                  'No promoted decision owners yet.',
+                )}
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Target className="h-5 w-5 text-emerald-600" />
+                  Promoted evidence coverage
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="text-3xl font-semibold text-slate-900">{promotedEvidenceCount}</div>
+                <div className="text-sm text-slate-600">
+                  {questionFirst?.questions_answered
+                    ? `${questionFirst.questions_answered} question-first answers available for promotion.`
+                    : 'No promoted evidence coverage yet.'}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         <TabsContent value="opportunities" className="space-y-6">
