@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Trophy, Download, FileText, Mail, ExternalLink } from "lucide-react"
+import { FileText, Mail, Trophy } from "lucide-react"
 
 import { Entity, formatValue } from './types'
 
@@ -21,6 +21,18 @@ export function LeagueDossier({ entity, onEmailEntity, dossier }: LeagueDossierP
   const signalState = dossierMetadata.signal_state || 'monitor_no_opportunity'
   const opportunityScore = dossierMetadata.opportunity_score
   const rfpConfidence = dossierMetadata.rfp_confidence
+  const discoverySummary = dossier?.question_first?.discovery_summary || dossier?.discovery_summary || {}
+  const opportunitySignals = Array.isArray(discoverySummary?.opportunity_signals) ? discoverySummary.opportunity_signals : []
+  const decisionOwners = Array.isArray(discoverySummary?.decision_owners) ? discoverySummary.decision_owners : []
+  const timingAndProcurement = Array.isArray(discoverySummary?.timing_procurement_markers)
+    ? discoverySummary.timing_procurement_markers
+    : Array.isArray(discoverySummary?.timing_and_procurement)
+      ? discoverySummary.timing_and_procurement
+      : Array.isArray(discoverySummary?.timing_markers)
+        ? discoverySummary.timing_markers
+        : []
+  const supportingEvidenceCount = Number(discoverySummary?.supporting_evidence_count || 0)
+  const hasPromotedEvidence = opportunitySignals.length > 0 || decisionOwners.length > 0 || timingAndProcurement.length > 0 || supportingEvidenceCount > 0
   
   return (
     <div className="space-y-6">
@@ -64,28 +76,73 @@ export function LeagueDossier({ entity, onEmailEntity, dossier }: LeagueDossierP
           <CardTitle>League Intelligence Dossier</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <div>
-              <h4 className="font-semibold mb-2">League Overview</h4>
-              <p className="text-muted-foreground">
-                {formatValue(props.description) || 'League information and governance structure.'}
-              </p>
+          {hasPromotedEvidence ? (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.16em] text-orange-600">
+                <FileText className="h-4 w-4" />
+                Promoted league discovery synthesis
+              </div>
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                <div className="rounded-xl border border-orange-200 bg-orange-50/50 p-4">
+                  <div className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Opportunity signals</div>
+                  <div className="mt-2 text-2xl font-semibold">{opportunitySignals.length}</div>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {opportunitySignals[0]?.answer || 'No promoted opportunity signals yet.'}
+                  </p>
+                </div>
+                <div className="rounded-xl border border-orange-200 bg-orange-50/50 p-4">
+                  <div className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Decision owners</div>
+                  <div className="mt-2 text-2xl font-semibold">{decisionOwners.length}</div>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {decisionOwners[0]?.answer || 'No promoted decision-owner evidence yet.'}
+                  </p>
+                </div>
+                <div className="rounded-xl border border-orange-200 bg-orange-50/50 p-4">
+                  <div className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Timing and procurement</div>
+                  <div className="mt-2 text-2xl font-semibold">{timingAndProcurement.length}</div>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {timingAndProcurement[0]?.answer || 'No promoted timing or procurement markers yet.'}
+                  </p>
+                </div>
+                <div className="rounded-xl border border-orange-200 bg-orange-50/50 p-4">
+                  <div className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Supporting evidence</div>
+                  <div className="mt-2 text-2xl font-semibold">{supportingEvidenceCount}</div>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {dossier?.question_first?.dossier_promotions?.[0]?.evidence_url || 'No promoted evidence URLs yet.'}
+                  </p>
+                </div>
+              </div>
             </div>
-            
-            <div>
-              <h4 className="font-semibold mb-2">Member Clubs</h4>
-              <p className="text-muted-foreground">
-                {formatValue(props.memberCount) || 'Multiple member organizations'}
-              </p>
+          ) : (
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-semibold mb-2">Awaiting promoted dossier evidence</h4>
+                <p className="text-muted-foreground">
+                  No persisted discovery synthesis is available for this league yet. Use enrichment or the pipeline to populate opportunity signals, decision owners, and timing/procurement markers before treating this as an active dossier.
+                </p>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                <div>
+                  <h4 className="font-semibold mb-2">League Overview</h4>
+                  <p className="text-muted-foreground">
+                    {formatValue(props.description) || 'League information and governance structure.'}
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-2">Member Clubs</h4>
+                  <p className="text-muted-foreground">
+                    {formatValue(props.memberCount) || 'Multiple member organizations'}
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-2">Commercial Strategy</h4>
+                  <p className="text-muted-foreground">
+                    {formatValue(props.commercialStrategy) || 'Media rights and commercial partnerships.'}
+                  </p>
+                </div>
+              </div>
             </div>
-            
-            <div>
-              <h4 className="font-semibold mb-2">Commercial Strategy</h4>
-              <p className="text-muted-foreground">
-                {formatValue(props.commercialStrategy) || 'Media rights and commercial partnerships.'}
-              </p>
-            </div>
-          </div>
+          )}
         </CardContent>
       </Card>
 

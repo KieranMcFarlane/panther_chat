@@ -124,6 +124,9 @@ export default function EntityDossierClientPage({
         ? discoverySummary.timing_markers
         : []
   const supportingEvidenceCount = Number(discoverySummary?.supporting_evidence_count || dossierPromotions.length || 0)
+  const persistedStateSummary = isPersistedDossier
+    ? 'This page leads with the stored dossier, then adds enrichment and opportunity context. The first question is whether the persisted entity state is strong enough to move into an active pursuit decision.'
+    : 'No persisted dossier is available yet, so this page starts from the entity state and enrichment context. The next step is to gather enough promoted evidence to decide whether this entity belongs in active pursuit.'
 
   useEffect(() => {
     const currentFrom = new URLSearchParams(window.location.search).get('from') || fromPage
@@ -369,7 +372,7 @@ export default function EntityDossierClientPage({
                     </span>
                   </div>
                   <p className="max-w-3xl text-sm leading-6 text-slate-300">
-                    This page leads with the stored dossier, then adds enrichment and opportunity context. The first question is whether the persisted entity state is strong enough to move into an active pursuit decision.
+                    {persistedStateSummary}
                   </p>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-3 lg:min-w-[360px]">
