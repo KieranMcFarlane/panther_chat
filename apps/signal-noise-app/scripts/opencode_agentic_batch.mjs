@@ -13,6 +13,7 @@ import {
 const MODULE_DIR = path.dirname(fileURLToPath(import.meta.url));
 const APP_ROOT = path.resolve(MODULE_DIR, '..');
 const WORKTREE_ROOT = path.resolve(APP_ROOT, '..', '..');
+const OPCODE_WORKTREE_ROOT = path.resolve(WORKTREE_ROOT, '.worktrees', 'opencode-question-first-ssot');
 const DEFAULT_PROVIDER_ID = 'zai-coding-plan';
 const DEFAULT_MODEL_ID = 'glm-5';
 const DEFAULT_MODEL = `${DEFAULT_PROVIDER_ID}/${DEFAULT_MODEL_ID}`;
@@ -34,6 +35,15 @@ function _slugify(value) {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '') || 'entity';
+}
+
+function _questionText(question, entityName = '') {
+  const text = String(question?.question_text || question?.question || '').trim();
+  if (!text) {
+    return '';
+  }
+  const resolvedEntityName = String(entityName || question?.entity_name || question?.entityName || '').trim();
+  return resolvedEntityName ? text.replaceAll('{entity}', resolvedEntityName) : text;
 }
 
 function _presetQuestionSpecs(entityName) {
@@ -186,7 +196,7 @@ function _buildQuestionCredits(question, overrides = {}) {
 }
 
 function _buildQuestionAliases(question) {
-  const aliases = new Set([question.entity_name, question.entity_id, question.question_text]);
+  const aliases = new Set([question.entity_name, question.entity_id, _questionText(question)]);
   if (question.question_type === 'procurement') {
     aliases.add('ACE');
     aliases.add('Major League Cricket');
@@ -394,7 +404,7 @@ export function buildQuestionState(question, { runId = 'cli', timestamp = new Da
     entity_id: question.entity_id,
     entity_type: question.entity_type,
     question_type: question.question_type,
-    question_text: question.question_text,
+    question_text: _questionText(question),
     seed_query: question.query,
     aliases: _buildQuestionAliases(question),
     source_priority: question.source_priority,
@@ -555,12 +565,16 @@ function _buildStateFilePath(outputDir, preset, entitySlug = 'major-league-crick
   return path.join(outputDir, `${_slugify(entitySlug)}_${_slugify(preset)}_state.json`);
 }
 
+function _resolveOpencodeWorktreeRoot(worktreeRoot = null) {
+  const candidate = String(worktreeRoot || process.env.OPENCODE_WORKTREE_ROOT || OPCODE_WORKTREE_ROOT || '').trim();
+  return candidate || WORKTREE_ROOT;
+}
+
 export function buildOpenCodeConfig({
   worktreeRoot = WORKTREE_ROOT,
   baseUrl = process.env.ANTHROPIC_BASE_URL || 'https://api.z.ai/api/anthropic',
 } = {}) {
-  const brightdataToken = process.env.BRIGHTDATA_API_TOKEN || process.env.BRIGHTDATA_TOKEN || '';
-  const fastmcpServiceScript = path.join(APP_ROOT, 'scripts', 'start_brightdata_fastmcp_service.py');
+  const fastmcpUrl = process.env.BRIGHTDATA_FASTMCP_URL || 'http://127.0.0.1:8000/mcp';
   return {
     $schema: 'https://opencode.ai/config.json',
     model: DEFAULT_MODEL,
@@ -618,19 +632,13 @@ export function buildOpenCodeConfig({
     },
     mcp: {
       brightData: {
-        type: 'local',
+        type: 'remote',
         enabled: true,
-        command: ['python3', fastmcpServiceScript],
-        environment: {
-          API_TOKEN: brightdataToken,
-          PRO_MODE: 'true',
-          BRIGHTDATA_FASTMCP_HOST: process.env.BRIGHTDATA_FASTMCP_HOST || '127.0.0.1',
-          BRIGHTDATA_FASTMCP_PORT: process.env.BRIGHTDATA_FASTMCP_PORT || '8000',
-        },
+        url: fastmcpUrl,
       },
     },
     instructions: [
-      'Use the local BrightData FastMCP service for search and scrape operations.',
+      'Use the BrightData FastMCP service at the configured MCP URL for search and scrape operations.',
       'Return validated JSON only.',
       'Keep the agentic loop bounded.',
     ],
@@ -641,7 +649,8 @@ export function buildOpenCodeConfig({
 }
 
 export function buildOpenCodeQuestionPrompt(question) {
-  return `${question.question_text} use brightdata. Return one validated JSON object with the answer, confidence, and sources if available. Stop immediately after the first validated answer.`;
+  const hopBudget = Math.max(1, Math.min(10, Number(question?.hop_budget || 10)));
+  return `${_questionText(question)} use brightdata. Start with search and use scraped pages only if the search results are not enough to validate the answer. You have at most ${hopBudget} hops. If you cannot validate a supported answer within that budget, return exactly one fenced JSON code block with answer "", confidence 0, sources [], and validation_state "no_signal", then stop. Otherwise return exactly one fenced JSON code block with the validated answer, confidence, and sources if available. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated answer.`;
 }
 
 export function buildOpenCodeQuestionCommand(question, { model = DEFAULT_QUESTION_MODEL } = {}) {
@@ -705,6 +714,28 @@ function _stripJsonFence(text) {
     .trim();
 }
 
+function _extractJsonCandidate(text) {
+  const rawText = String(text || '').trim();
+  if (!rawText) {
+    return null;
+  }
+  const fencedMatches = [...rawText.matchAll(/```json\s*([\s\S]*?)```/gi)];
+  for (let index = fencedMatches.length - 1; index >= 0; index -= 1) {
+    const candidate = _stripJsonFence(fencedMatches[index][1]);
+    try {
+      return JSON.parse(candidate);
+    } catch {
+      // Keep looking.
+    }
+  }
+  const stripped = _stripJsonFence(rawText);
+  try {
+    return JSON.parse(stripped);
+  } catch {
+    return null;
+  }
+}
+
 function _extractFinalCliJson(stdout) {
   const lines = String(stdout || '').split(/\r?\n/).filter(Boolean);
   const textEvents = [];
@@ -718,13 +749,17 @@ function _extractFinalCliJson(stdout) {
       // Ignore non-JSON lines and log chatter.
     }
   }
-  const lastText = textEvents[textEvents.length - 1] || '';
-  const stripped = _stripJsonFence(lastText);
-  try {
-    return JSON.parse(stripped);
-  } catch {
-    return {};
+  for (let index = textEvents.length - 1; index >= 0; index -= 1) {
+    const parsed = _extractJsonCandidate(textEvents[index]);
+    if (parsed && typeof parsed === 'object') {
+      return parsed;
+    }
   }
+  return {};
+}
+
+export function extractFinalCliJson(stdout) {
+  return _extractFinalCliJson(stdout);
 }
 
 function _spawnOpencodeRun(args, { cwd, env, timeoutMs = 300000 } = {}) {
@@ -835,8 +870,8 @@ function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTr
   return {
     question_id: question.question_id,
     question_type: question.question_type,
-    question_text: question.question_text,
-    question: question.question_text,
+    question_text: _questionText(question),
+    question: _questionText(question),
     query: question.query,
     hop_budget: question.hop_budget,
     source_priority: question.source_priority,
@@ -920,7 +955,7 @@ function _buildCategorySummary(answers) {
 export async function runOpenCodePresetBatch({
   outputDir,
   preset = 'major-league-cricket',
-  worktreeRoot = WORKTREE_ROOT,
+  worktreeRoot = null,
   opencodeTimeoutMs = 300000,
   questionRunner = runOpenCodeCliQuestion,
   resume = false,
@@ -934,6 +969,7 @@ export async function runOpenCodePresetBatch({
   entityTypeOverride = null,
   questionSourcePath = null,
 } = {}) {
+  const resolvedWorktreeRoot = _resolveOpencodeWorktreeRoot(worktreeRoot);
   let normalizedPreset = _slugify(preset || entityNameOverride || entityIdOverride || 'question-first');
   let questions;
   if (Array.isArray(questionsOverride) && questionsOverride.length > 0) {
@@ -1034,7 +1070,7 @@ export async function runOpenCodePresetBatch({
         }
         const hopTimeoutMs = Math.max(1000, Math.min(atomicHopTimeoutMs, remainingMs));
         const executionQuestion = _buildExecutionQuestion(question, executionQuery, hopIndex);
-        questionRun = await questionRunner(executionQuestion, { worktreeRoot, opencodeTimeoutMs: hopTimeoutMs });
+        questionRun = await questionRunner(executionQuestion, { worktreeRoot: resolvedWorktreeRoot, opencodeTimeoutMs: hopTimeoutMs });
         questionPayload = _buildQuestionPayload(
           question,
           questionRun.structuredOutput || {},
@@ -1092,8 +1128,8 @@ export async function runOpenCodePresetBatch({
         questionPayload = {
           question_id: question.question_id,
           question_type: question.question_type,
-          question_text: question.question_text,
-          question: question.question_text,
+          question_text: _questionText(question),
+          question: _questionText(question),
           query: question.query,
           hop_budget: question.hop_budget,
           source_priority: question.source_priority,
@@ -1145,7 +1181,7 @@ export async function runOpenCodePresetBatch({
             runState.questions[index] = existingQuestionState;
             break;
           }
-          questionRun = await questionRunner(executionQuestion, { worktreeRoot, opencodeTimeoutMs });
+          questionRun = await questionRunner(executionQuestion, { worktreeRoot: resolvedWorktreeRoot, opencodeTimeoutMs });
           questionPayload = _buildQuestionPayload(
             question,
             questionRun.structuredOutput || {},
@@ -1188,8 +1224,8 @@ export async function runOpenCodePresetBatch({
         questionPayload = {
           question_id: question.question_id,
           question_type: question.question_type,
-          question_text: question.question_text,
-          question: question.question_text,
+          question_text: _questionText(question),
+          question: _questionText(question),
           query: existingQuestionState?.last_executed_query || question.query,
           hop_budget: question.hop_budget,
           source_priority: question.source_priority,
@@ -1337,7 +1373,7 @@ export async function runOpenCodePresetBatch({
 export async function runOpenCodeQuestionSourceBatch({
   questionSourcePath,
   outputDir,
-  worktreeRoot = WORKTREE_ROOT,
+  worktreeRoot = null,
   opencodeTimeoutMs = 300000,
   questionRunner = runOpenCodeCliQuestion,
   resume = false,
@@ -1367,11 +1403,21 @@ export async function runOpenCodeQuestionSourceBatch({
   const entityId = String(sourcePayload.entity_id || sourcePayload.entityId || _slugify(entityName)).trim() || _slugify(entityName);
   const entityType = String(sourcePayload.entity_type || sourcePayload.entityType || 'ENTITY').trim() || 'ENTITY';
   const preset = String(sourcePayload.preset || sourcePayload.question_source_label || entityId).trim() || entityId;
+  const materializedQuestions = questions.map((question) => {
+    const resolvedQuestionText = _questionText(question, entityName);
+    return {
+      ...question,
+      entity_name: question.entity_name || entityName,
+      entity_id: question.entity_id || entityId,
+      question_text: resolvedQuestionText,
+      question: resolvedQuestionText,
+    };
+  });
 
   return runOpenCodePresetBatch({
     outputDir,
     preset,
-    worktreeRoot,
+    worktreeRoot: _resolveOpencodeWorktreeRoot(worktreeRoot),
     opencodeTimeoutMs,
     questionRunner,
     resume,
@@ -1379,7 +1425,7 @@ export async function runOpenCodeQuestionSourceBatch({
     scrapeCredits,
     revisitCredits,
     confidenceThreshold,
-    questionsOverride: questions,
+    questionsOverride: materializedQuestions,
     entityNameOverride: entityName,
     entityIdOverride: entityId,
     entityTypeOverride: entityType,

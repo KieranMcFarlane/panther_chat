@@ -14,6 +14,7 @@ import {
   buildMajorLeagueCricketSmokeQuestions,
   buildOpenCodeConfig,
   buildOpenCodeQuestionPrompt,
+  extractFinalCliJson,
   buildQuestionState,
   runOpenCodeQuestionSourceBatch,
   runOpenCodePresetBatch,
@@ -21,9 +22,7 @@ import {
 
 test('buildOpenCodeConfig wires Z.AI and BrightData FastMCP for OpenCode', () => {
   const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
-  const previousBrightDataToken = process.env.BRIGHTDATA_API_TOKEN;
   process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
-  process.env.BRIGHTDATA_API_TOKEN = 'test-brightdata-token';
   const config = buildOpenCodeConfig({
     worktreeRoot: '/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/v5-yellow-panther-canonical',
   });
@@ -34,14 +33,10 @@ test('buildOpenCodeConfig wires Z.AI and BrightData FastMCP for OpenCode', () =>
   assert.equal(config.provider['zai-coding-plan'].options.baseURL, 'https://api.z.ai/api/anthropic');
   assert.equal(config.provider['zai-coding-plan'].options.apiKey, 'test-zai-token');
   assert.ok(config.mcp.brightData);
-  assert.equal(config.mcp.brightData.type, 'local');
+  assert.equal(config.mcp.brightData.type, 'remote');
   assert.equal(config.mcp.brightData.enabled, true);
-  assert.equal(config.mcp.brightData.command[0], 'python3');
-  assert.match(config.mcp.brightData.command[1], /start_brightdata_fastmcp_service\.py$/);
-  assert.equal(config.mcp.brightData.environment.BRIGHTDATA_FASTMCP_HOST, '127.0.0.1');
-  assert.equal(config.mcp.brightData.environment.BRIGHTDATA_FASTMCP_PORT, '8000');
+  assert.equal(config.mcp.brightData.url, 'http://127.0.0.1:8000/mcp');
   assert.match(config.instructions[0], /FastMCP/);
-  assert.equal(config.mcp.brightData.environment.API_TOKEN, 'test-brightdata-token');
   assert.equal(config.agent.discovery.steps, 4);
   assert.equal(config.agent.discovery.model, 'zai-coding-plan/glm-5');
   assert.deepEqual(config.tools, { 'brightdata*': false });
@@ -51,11 +46,6 @@ test('buildOpenCodeConfig wires Z.AI and BrightData FastMCP for OpenCode', () =>
     delete process.env.ANTHROPIC_AUTH_TOKEN;
   } else {
     process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
-  }
-  if (previousBrightDataToken === undefined) {
-    delete process.env.BRIGHTDATA_API_TOKEN;
-  } else {
-    process.env.BRIGHTDATA_API_TOKEN = previousBrightDataToken;
   }
 });
 
@@ -146,7 +136,11 @@ test('buildOpenCodeQuestionPrompt stays close to the proven direct prompt shape'
   });
 
   assert.match(prompt, /When was Major League Cricket founded\? use brightdata\./i);
-  assert.match(prompt, /Return one validated JSON object/i);
+  assert.match(prompt, /Start with search and use scraped pages only if the search results are not enough to validate the answer\./i);
+  assert.match(prompt, /You have at most 2 hops/i);
+  assert.match(prompt, /fenced JSON code block with answer "", confidence 0, sources \[\], and validation_state "no_signal"/i);
+  assert.match(prompt, /exactly one fenced JSON code block with the validated answer, confidence, and sources if available/i);
+  assert.match(prompt, /Do not include any prose outside the fenced JSON block/i);
   assert.match(prompt, /Stop immediately after the first validated answer/i);
   assert.doesNotMatch(prompt, /brightdata tool/i);
   assert.doesNotMatch(prompt, /canonical query/i);
@@ -163,6 +157,16 @@ test('buildOpenCodeQuestionCommand defaults to the known-good OpenCode model', (
   const modelIndex = command.indexOf('--model');
   assert.notEqual(modelIndex, -1);
   assert.equal(command[modelIndex + 1], 'zai-coding-plan/glm-5');
+});
+
+test('extractFinalCliJson parses fenced JSON embedded in prose', () => {
+  const parsed = extractFinalCliJson([
+    '{"type":"text","part":{"text":"I found the answer.\\n\\n```json\\n{\\n  \\"answer\\": \\"1886\\",\\n  \\"confidence\\": 0.98,\\n  \\"validation_state\\": \\"validated\\"\\n}\\n```"}}',
+  ].join('\n'));
+
+  assert.equal(parsed.answer, '1886');
+  assert.equal(parsed.confidence, 0.98);
+  assert.equal(parsed.validation_state, 'validated');
 });
 
 test('buildQuestionState applies explicit budget and threshold overrides', () => {
@@ -243,6 +247,7 @@ test('runOpenCodeQuestionSourceBatch writes the canonical question_first_run art
   const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
   delete process.env.CHUTES_API_KEY;
   process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+  const seenWorktreeRoots = [];
 
   writeFileSync(
     sourcePath,
@@ -256,7 +261,7 @@ test('runOpenCodeQuestionSourceBatch writes the canonical question_first_run art
           {
             question_id: 'q1',
             question_type: 'foundation',
-            question_text: 'When was Major League Cricket founded?',
+            question: 'When was {entity} founded?',
             query: '"Major League Cricket" founded',
             hop_budget: 1,
             source_priority: ['google_serp', 'official_site'],
@@ -273,7 +278,9 @@ test('runOpenCodeQuestionSourceBatch writes the canonical question_first_run art
     const result = await runOpenCodeQuestionSourceBatch({
       questionSourcePath: sourcePath,
       outputDir,
-      questionRunner: async (question) => ({
+      questionRunner: async (question, options = {}) => {
+        seenWorktreeRoots.push(options.worktreeRoot);
+        return {
         structuredOutput: {
           answer: '2023',
           signal_type: 'FOUNDATION',
@@ -285,9 +292,10 @@ test('runOpenCodeQuestionSourceBatch writes the canonical question_first_run art
           sources: ['https://example.com'],
         },
         promptTrace: { status: 'ok', structured_output_keys: 1, has_structured_output: true },
-        messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
-        cliResult: { code: 0, stdout: '{"answer":"2023"}', stderr: '' },
-      }),
+          messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
+          cliResult: { code: 0, stdout: '{"answer":"2023"}', stderr: '' },
+        };
+      },
     });
 
     assert.ok(result.question_first_run_path);
@@ -295,8 +303,11 @@ test('runOpenCodeQuestionSourceBatch writes the canonical question_first_run art
     assert.equal(artifact.schema_version, 'question_first_run_v1');
     assert.equal(artifact.questions.length, 1);
     assert.equal(artifact.answers.length, 1);
+    assert.equal(artifact.questions[0].question_text, 'When was Major League Cricket founded?');
+    assert.equal(artifact.questions[0].question, 'When was Major League Cricket founded?');
     assert.equal(artifact.merge_patch.question_first.schema_version, 'question_first_run_v1');
     assert.equal(artifact.merge_patch.questions[0].question_first_answer.answer, '2023');
+    assert.equal(seenWorktreeRoots[0], '/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot');
   } finally {
     if (previousZaiKey === undefined) {
       delete process.env.ANTHROPIC_AUTH_TOKEN;
