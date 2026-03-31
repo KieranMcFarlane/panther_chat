@@ -84,3 +84,38 @@ def test_build_question_first_promotions_emits_promoted_summary_and_filters_weak
     assert result["discovery_summary"]["supporting_evidence_count"] == 1
     assert result["discovery_summary"]["promotion_targets"] == ["opportunity_signals"]
     assert result["discovery_summary"]["opportunity_signals"][0]["candidate_id"] == "q1:opportunity_signals"
+
+
+def test_build_question_first_promotions_derives_evidence_from_validated_answers():
+    result = build_question_first_promotions(
+        answers=[
+            {
+                "question_id": "q_foundation",
+                "question_text": "When was Arsenal Football Club founded?",
+                "question_type": "foundation",
+                "answer": "1886",
+                "confidence": 0.95,
+                "validation_state": "validated",
+                "signal_type": "FOUNDATION",
+                "evidence_url": "https://www.arsenal.com/history",
+            },
+            {
+                "question_id": "q_procurement",
+                "question_text": "Is there evidence of a ticketing rebuild?",
+                "question_type": "procurement",
+                "answer": "The league is replacing its ticketing platform in 2026.",
+                "confidence": 0.86,
+                "validation_state": "validated",
+                "signal_type": "PROCUREMENT_SIGNAL",
+                "evidence_url": "https://example.com/ticketing",
+            },
+        ],
+        evidence_items=[],
+        promotion_candidates=[],
+    )
+
+    assert result["discovery_summary"]["promoted_count"] == 2
+    assert result["discovery_summary"]["supporting_evidence_count"] == 2
+    assert result["discovery_summary"]["promotion_targets"] == ["opportunity_signals", "profile"]
+    assert result["discovery_summary"]["profile"][0]["question_id"] == "q_foundation"
+    assert result["discovery_summary"]["opportunity_signals"][0]["question_id"] == "q_procurement"
