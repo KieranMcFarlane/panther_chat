@@ -245,9 +245,13 @@ async def test_question_first_runner_uses_saved_questions_and_writes_plain_text_
     assert result["question_first"]["questions_answered"] == 1
     assert result["question_first"]["evidence_items"][0]["promotion_target"] == "profile"
     assert result["question_first"]["promotion_candidates"][0]["promotion_candidate"] is True
+    assert result["question_first"]["dossier_promotions"][0]["question_id"] == "q1"
+    assert result["question_first"]["discovery_summary"]["promoted_count"] == 1
     assert result["question_first_run"]["schema_version"] == "question_first_run_v1"
     assert result["question_first_run"]["evidence_items"][0]["promotion_target"] == "profile"
     assert result["question_first_run"]["promotion_candidates"][0]["promotion_candidate"] is True
+    assert result["dossier_promotions"][0]["question_id"] == "q1"
+    assert result["discovery_summary"]["profile"][0]["candidate_id"] == "q1:profile"
     assert result["questions"][0]["answer"] == "1919"
     assert result["questions"][0]["validation_state"] == "validated"
 

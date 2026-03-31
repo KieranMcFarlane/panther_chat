@@ -740,14 +740,31 @@ class GraphitiService:
         def _build_question_first_candidate() -> Optional[Dict[str, Any]]:
             question_first = dossier.get("question_first") if isinstance(dossier.get("question_first"), dict) else {}
             answers = question_first.get("answers") if isinstance(question_first.get("answers"), list) else []
+            dossier_promotions = question_first.get("dossier_promotions") if isinstance(question_first.get("dossier_promotions"), list) else []
             questions = dossier.get("questions") if isinstance(dossier.get("questions"), list) else []
-            if not answers:
+            if not answers and not dossier_promotions:
                 return None
 
             question_index: Dict[str, Dict[str, Any]] = {}
             for question in questions:
                 if isinstance(question, dict):
                     question_index[_question_lookup_key(question)] = question
+
+            selected_promotion = None
+            if dossier_promotions:
+                eligible_promotions = [
+                    item for item in dossier_promotions
+                    if isinstance(item, dict) and self._safe_float(item.get("confidence")) >= 0.7 and str(item.get("evidence_url") or "").strip()
+                ]
+                if eligible_promotions:
+                    selected_promotion = sorted(
+                        eligible_promotions,
+                        key=lambda item: (
+                            self._safe_float(item.get("confidence")),
+                            len(str(item.get("answer") or "")),
+                        ),
+                        reverse=True,
+                    )[0]
 
             validated_answers: List[Dict[str, Any]] = []
             for answer in answers:
@@ -758,17 +775,35 @@ class GraphitiService:
                 if validation_state == "validated" and confidence_value >= 0.7:
                     validated_answers.append(answer)
 
-            if not validated_answers:
+            if not selected_promotion and not validated_answers:
                 return None
 
-            selected_answer = sorted(
-                validated_answers,
-                key=lambda item: (
-                    self._safe_float(item.get("confidence")),
-                    1 if bool(item.get("search_hit")) else 0,
-                ),
-                reverse=True,
-            )[0]
+            if selected_promotion:
+                promoted_question_id = str(selected_promotion.get("question_id") or "").strip().lower()
+                selected_answer = next(
+                    (
+                        answer for answer in validated_answers
+                        if str(answer.get("question_id") or answer.get("question_text") or "").strip().lower() == promoted_question_id
+                    ),
+                    {
+                        "question_id": selected_promotion.get("question_id"),
+                        "question_text": selected_promotion.get("question_text"),
+                        "answer": selected_promotion.get("answer"),
+                        "confidence": selected_promotion.get("confidence"),
+                        "validation_state": "validated",
+                        "evidence_url": selected_promotion.get("evidence_url"),
+                        "signal_type": selected_promotion.get("signal_type"),
+                    },
+                )
+            else:
+                selected_answer = sorted(
+                    validated_answers,
+                    key=lambda item: (
+                        self._safe_float(item.get("confidence")),
+                        1 if bool(item.get("search_hit")) else 0,
+                    ),
+                    reverse=True,
+                )[0]
 
             selected_question = question_index.get(
                 str(selected_answer.get("question_id") or selected_answer.get("question_text") or "").strip().lower()
@@ -806,9 +841,11 @@ class GraphitiService:
                 "source_episode_id": str((episodes[0].get("episode_id") if episodes and isinstance(episodes[0], dict) else "") or ""),
                 "question_first_answer": selected_answer,
                 "question_first_question": selected_question,
+                "question_first_promotion": selected_promotion,
                 "question_first_summary": {
                     "questions_answered": int(question_first.get("questions_answered") or len(question_first_answers) or 0),
                     "validated_answers": len(validated_answers),
+                    "promoted_answers": len(dossier_promotions),
                     "service_fit": service_fit,
                 },
             }

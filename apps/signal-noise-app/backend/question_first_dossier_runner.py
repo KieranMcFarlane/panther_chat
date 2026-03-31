@@ -25,9 +25,11 @@ from pydantic import BaseModel, Field, ValidationError
 try:
     from backend.brightdata_mcp_client import BrightDataMCPClient
     from backend.claude_client import ClaudeClient
+    from backend.question_first_promoter import build_question_first_promotions
 except ImportError:
     from brightdata_mcp_client import BrightDataMCPClient  # type: ignore
     from claude_client import ClaudeClient  # type: ignore
+    from question_first_promoter import build_question_first_promotions  # type: ignore
 
 logger = logging.getLogger(__name__)
 
@@ -677,6 +679,17 @@ async def run_question_first_dossier_from_payload(
 
     artifact = _load_question_first_run_artifact(artifact_path)
     merged = merge_question_first_run_artifact_into_dossier(dossier_payload=source, artifact=artifact)
+    promotions = build_question_first_promotions(
+        answers=artifact.answers,
+        evidence_items=artifact.evidence_items,
+        promotion_candidates=artifact.promotion_candidates,
+    )
+    merged["dossier_promotions"] = promotions["dossier_promotions"]
+    merged["discovery_summary"] = promotions["discovery_summary"]
+    merged.setdefault("question_first", {})
+    if isinstance(merged["question_first"], dict):
+        merged["question_first"]["dossier_promotions"] = promotions["dossier_promotions"]
+        merged["question_first"]["discovery_summary"] = promotions["discovery_summary"]
 
     if output_dir is not None:
       output_dir = Path(output_dir)

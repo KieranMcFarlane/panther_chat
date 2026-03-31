@@ -140,6 +140,11 @@ async def test_materialize_homepage_insight_prefers_question_first_validation_wh
                     ],
                     "questions": [
                         {
+                            "question_id": "foundation_q",
+                            "question": "When was Arsenal FC founded?",
+                            "yp_service_fit": ["QUESTION_FIRST"],
+                        },
+                        {
                             "question_id": "sc_fan_engagement_gaps",
                             "question": "What evidence shows Arsenal FC is investing in fan engagement, loyalty, membership, or personalized communication?",
                             "yp_service_fit": ["FAN_ENGAGEMENT", "MOBILE_APPS"],
@@ -153,6 +158,19 @@ async def test_materialize_homepage_insight_prefers_question_first_validation_wh
                         "enabled": True,
                         "questions_answered": 1,
                         "answers": [
+                            {
+                                "question_id": "foundation_q",
+                                "section_id": "core_information",
+                                "question_text": "When was Arsenal FC founded?",
+                                "answer": "Arsenal FC was founded in 1886.",
+                                "confidence": 0.93,
+                                "evidence_url": "https://example.com/arsenal-foundation",
+                                "reasoning_model_used": "judge",
+                                "retry_count": 0,
+                                "category": "identity",
+                                "validation_state": "validated",
+                                "signal_type": "FOUNDATION",
+                            },
                             {
                                 "question_id": "sc_fan_engagement_gaps",
                                 "section_id": "recent_news",
@@ -170,6 +188,34 @@ async def test_materialize_homepage_insight_prefers_question_first_validation_wh
                                 "validation_state": "validated",
                             }
                         ],
+                        "dossier_promotions": [
+                            {
+                                "candidate_id": "sc_fan_engagement_gaps:opportunity_signals",
+                                "question_id": "sc_fan_engagement_gaps",
+                                "promotion_target": "opportunity_signals",
+                                "signal_type": "PROCUREMENT_SIGNAL",
+                                "answer": "Arsenal FC is hiring for supporter loyalty and CRM modernization.",
+                                "confidence": 0.84,
+                                "evidence_url": "https://example.com/arsenal-supporter-experience",
+                                "promotion_candidate": True,
+                            }
+                        ],
+                        "discovery_summary": {
+                            "promoted_count": 1,
+                            "supporting_evidence_count": 1,
+                            "promotion_targets": ["opportunity_signals"],
+                            "opportunity_signals": [
+                                {
+                                    "candidate_id": "sc_fan_engagement_gaps:opportunity_signals",
+                                    "question_id": "sc_fan_engagement_gaps",
+                                    "promotion_target": "opportunity_signals",
+                                    "signal_type": "PROCUREMENT_SIGNAL",
+                                    "answer": "Arsenal FC is hiring for supporter loyalty and CRM modernization.",
+                                    "confidence": 0.84,
+                                    "evidence_url": "https://example.com/arsenal-supporter-experience",
+                                }
+                            ],
+                        },
                         "categories": [
                             {
                                 "category": "strategy",
