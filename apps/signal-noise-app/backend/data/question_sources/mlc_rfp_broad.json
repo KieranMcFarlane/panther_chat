@@ -1,0 +1,113 @@
+{
+  "entity_id": "major-league-cricket",
+  "entity_name": "Major League Cricket",
+  "entity_type": "SPORT_LEAGUE",
+  "preset": "mlc-rfp-broad",
+  "questions": [
+    {
+      "question_id": "q1_rfp",
+      "question_type": "procurement",
+      "question": "Is there public evidence that {entity} is running an RFP?",
+      "query": "Major League Cricket RFP",
+      "hop_budget": 2,
+      "evidence_extension_confidence_threshold": 0.65,
+      "source_priority": [
+        "google_serp",
+        "linkedin_posts",
+        "news",
+        "press_release",
+        "official_site"
+      ]
+    },
+    {
+      "question_id": "q2_tender",
+      "question_type": "procurement",
+      "question": "Is there public evidence that {entity} is running a tender?",
+      "query": "Major League Cricket tender",
+      "hop_budget": 2,
+      "evidence_extension_confidence_threshold": 0.65,
+      "source_priority": [
+        "google_serp",
+        "linkedin_posts",
+        "news",
+        "press_release",
+        "official_site"
+      ]
+    },
+    {
+      "question_id": "q3_procurement",
+      "question_type": "procurement",
+      "question": "Is there public evidence that {entity} is running procurement activity?",
+      "query": "Major League Cricket procurement",
+      "hop_budget": 2,
+      "evidence_extension_confidence_threshold": 0.65,
+      "source_priority": [
+        "google_serp",
+        "linkedin_posts",
+        "news",
+        "press_release",
+        "official_site"
+      ]
+    },
+    {
+      "question_id": "q4_vendor",
+      "question_type": "procurement",
+      "question": "Is there public evidence of vendors working with {entity}?",
+      "query": "Major League Cricket vendor",
+      "hop_budget": 2,
+      "evidence_extension_confidence_threshold": 0.65,
+      "source_priority": [
+        "google_serp",
+        "linkedin_posts",
+        "news",
+        "press_release",
+        "official_site"
+      ]
+    },
+    {
+      "question_id": "q5_digital_transformation",
+      "question_type": "procurement",
+      "question": "Is there public evidence of digital transformation work at {entity}?",
+      "query": "Major League Cricket digital transformation",
+      "hop_budget": 2,
+      "evidence_extension_confidence_threshold": 0.65,
+      "source_priority": [
+        "google_serp",
+        "linkedin_posts",
+        "news",
+        "press_release",
+        "official_site"
+      ]
+    },
+    {
+      "question_id": "q6_broadcast_partner",
+      "question_type": "procurement",
+      "question": "Is there public evidence of a broadcast partner relationship for {entity}?",
+      "query": "Major League Cricket broadcast partner",
+      "hop_budget": 2,
+      "evidence_extension_confidence_threshold": 0.65,
+      "source_priority": [
+        "google_serp",
+        "linkedin_posts",
+        "news",
+        "press_release",
+        "official_site"
+      ]
+    },
+    {
+      "question_id": "q7_fan_engagement_platform",
+      "question_type": "procurement",
+      "question": "Is there public evidence of a fan engagement platform project for {entity}?",
+      "query": "Major League Cricket fan engagement platform",
+      "hop_budget": 2,
+      "evidence_extension_confidence_threshold": 0.65,
+      "source_priority": [
+        "google_serp",
+        "linkedin_posts",
+        "news",
+        "press_release",
+        "official_site"
+      ]
+    }
+  ]
+}
