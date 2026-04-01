@@ -16,6 +16,7 @@ import {
   buildOpenCodeQuestionPrompt,
   extractFinalCliJson,
   buildQuestionState,
+  ensureBrightDataFastMcpService,
   runOpenCodeQuestionSourceBatch,
   runOpenCodePresetBatch,
 } from '../scripts/opencode_agentic_batch.mjs';
@@ -157,6 +158,41 @@ test('buildOpenCodeQuestionCommand defaults to the known-good OpenCode model', (
   const modelIndex = command.indexOf('--model');
   assert.notEqual(modelIndex, -1);
   assert.equal(command[modelIndex + 1], 'zai-coding-plan/glm-5');
+});
+
+test('ensureBrightDataFastMcpService starts the local service when health is down', async () => {
+  const seen = [];
+  let probes = 0;
+  const fetchImpl = async () => {
+    seen.push('probe');
+    probes += 1;
+    if (probes === 1) {
+      throw new Error('connect ECONNREFUSED');
+    }
+    return { ok: true };
+  };
+  const spawnImpl = (...args) => {
+    seen.push(args);
+    return {
+      unref() {
+        seen.push('unref');
+      },
+    };
+  };
+
+  const result = await ensureBrightDataFastMcpService({
+    fetchImpl,
+    spawnImpl,
+    serviceUrl: 'http://127.0.0.1:8000/mcp',
+    healthUrl: 'http://127.0.0.1:8000/health',
+  });
+
+  assert.equal(result.started, true);
+  assert.equal(result.healthy, true);
+  assert.equal(seen[0], 'probe');
+  assert.equal(seen[1][0], 'python3');
+  assert.match(seen[1][1][0], /start_brightdata_fastmcp_service\.py$/);
+  assert.equal(seen.includes('unref'), true);
 });
 
 test('extractFinalCliJson parses fenced JSON embedded in prose', () => {

@@ -4,6 +4,7 @@ import fs from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { setTimeout as delay } from 'node:timers/promises';
 import dotenv from 'dotenv';
 import {
   buildQuestionFirstRunArtifact,
@@ -570,6 +571,73 @@ function _resolveOpencodeWorktreeRoot(worktreeRoot = null) {
   return candidate || WORKTREE_ROOT;
 }
 
+function _resolveBrightDataFastMcpServiceUrl() {
+  return process.env.BRIGHTDATA_FASTMCP_URL || 'http://127.0.0.1:8000/mcp';
+}
+
+function _resolveBrightDataFastMcpHealthUrl(serviceUrl = _resolveBrightDataFastMcpServiceUrl()) {
+  try {
+    const url = new URL(String(serviceUrl));
+    url.pathname = '/health';
+    url.search = '';
+    url.hash = '';
+    return url.toString();
+  } catch {
+    return 'http://127.0.0.1:8000/health';
+  }
+}
+
+async function _probeBrightDataFastMcpHealth({
+  fetchImpl = globalThis.fetch,
+  healthUrl = _resolveBrightDataFastMcpHealthUrl(),
+} = {}) {
+  try {
+    const response = await fetchImpl(healthUrl, { method: 'GET' });
+    return Boolean(response && response.ok);
+  } catch {
+    return false;
+  }
+}
+
+export async function ensureBrightDataFastMcpService({
+  fetchImpl = globalThis.fetch,
+  spawnImpl = spawn,
+  serviceUrl = _resolveBrightDataFastMcpServiceUrl(),
+  healthUrl = _resolveBrightDataFastMcpHealthUrl(serviceUrl),
+  serviceCommand = ['python3', 'apps/signal-noise-app/scripts/start_brightdata_fastmcp_service.py'],
+  serviceCwd = WORKTREE_ROOT,
+  serviceEnv = process.env,
+  startupTimeoutMs = 10000,
+  pollIntervalMs = 250,
+} = {}) {
+  if (await _probeBrightDataFastMcpHealth({ fetchImpl, healthUrl })) {
+    return { started: false, healthy: true, serviceUrl, healthUrl };
+  }
+
+  const child = spawnImpl(serviceCommand[0], serviceCommand.slice(1), {
+    cwd: serviceCwd,
+    env: {
+      ...serviceEnv,
+      BRIGHTDATA_FASTMCP_URL: serviceUrl,
+      BRIGHTDATA_FASTMCP_HOST: serviceEnv.BRIGHTDATA_FASTMCP_HOST || '127.0.0.1',
+      BRIGHTDATA_FASTMCP_PORT: serviceEnv.BRIGHTDATA_FASTMCP_PORT || '8000',
+    },
+    detached: true,
+    stdio: 'ignore',
+  });
+  child.unref?.();
+
+  const deadline = Date.now() + Math.max(0, Number(startupTimeoutMs || 0));
+  while (Date.now() < deadline) {
+    if (await _probeBrightDataFastMcpHealth({ fetchImpl, healthUrl })) {
+      return { started: true, healthy: true, serviceUrl, healthUrl };
+    }
+    await delay(Math.max(1, Number(pollIntervalMs || 0)));
+  }
+
+  return { started: true, healthy: false, serviceUrl, healthUrl };
+}
+
 export function buildOpenCodeConfig({
   worktreeRoot = WORKTREE_ROOT,
   baseUrl = process.env.ANTHROPIC_BASE_URL || 'https://api.z.ai/api/anthropic',
@@ -827,6 +895,7 @@ function _spawnOpencodeRun(args, { cwd, env, timeoutMs = 300000 } = {}) {
 }
 
 async function runOpenCodeCliQuestion(question, { worktreeRoot, opencodeTimeoutMs } = {}) {
+  await ensureBrightDataFastMcpService({ serviceCwd: worktreeRoot || WORKTREE_ROOT });
   const cliResult = await _spawnOpencodeRun(
     buildOpenCodeQuestionCommand(question),
     {
