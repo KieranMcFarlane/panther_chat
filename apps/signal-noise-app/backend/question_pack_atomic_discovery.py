@@ -169,6 +169,22 @@ def _derive_answer_kind(evidence_focus: str) -> str:
     return "evidence"
 
 
+def _split_atomic_prompts(prompt: str) -> List[str]:
+    normalized = str(prompt or "").strip()
+    if not normalized:
+        return []
+
+    lowered = normalized.lower()
+    marker = " and whether the signal points to "
+    if marker in lowered:
+        marker_index = lowered.index(marker)
+        first = normalized[:marker_index].rstrip(" ,;:")
+        second = f"Verify whether {normalized[marker_index + len(' and whether '):].strip().rstrip(' .?')}."
+        return [first if first.endswith(".") else f"{first}.", second]
+
+    return [normalized]
+
+
 def build_atomic_discovery_pack_questions(
     source_questions: Sequence[Mapping[str, Any]],
     entity_name: str,
@@ -183,40 +199,43 @@ def build_atomic_discovery_pack_questions(
         bucket = str(item.get("final_goal_bucket") or "context_support")
         score = int(item.get("final_goal_score") or 0)
         rank = int(item.get("final_goal_rank") or index)
-        services = _derive_services(prompt, section_title)
-        evidence_focus = _derive_evidence_focus(prompt, section_title)
-        promotion_target = _derive_promotion_target(section_title, evidence_focus)
-        answer_kind = _derive_answer_kind(evidence_focus)
+        for split_index, split_prompt in enumerate(_split_atomic_prompts(prompt), start=1):
+            services = _derive_services(split_prompt, section_title)
+            evidence_focus = _derive_evidence_focus(split_prompt, section_title)
+            promotion_target = _derive_promotion_target(section_title, evidence_focus)
+            answer_kind = _derive_answer_kind(evidence_focus)
+            question_id = f"frq_{index:03d}" if split_index == 1 and len(_split_atomic_prompts(prompt)) == 1 else f"frq_{index:03d}_{split_index}"
 
-        pack_questions.append(
-            {
-                "question_id": f"frq_{index:03d}",
-                "question": prompt,
-                "pack_role": "discovery",
-                "question_shape": "atomic",
-                "hop_budget": 10,
-                "evidence_extension_budget": 10,
-                "hop_timeout_ms": 180000,
-                "question_timeout_ms": 180000,
-                "evidence_focus": evidence_focus,
-                "promotion_target": promotion_target,
-                "answer_kind": answer_kind,
-                "yp_service_fit": services,
-                "budget_range": BUDGET_MAP.get(services[0], "£80K-£500K"),
-                "yp_advantage": _derive_yp_advantage(services),
-                "positioning_strategy": POSITIONING_MAP.get(bucket, "STRATEGIC_PARTNER"),
-                "hypothesis_template": _derive_hypothesis_template(entity_name, prompt, bucket),
-                "next_signals": _derive_next_signals(services, bucket),
-                "hop_types": ["OFFICIAL_SITE", "PRESS_RELEASE", "CAREERS_PAGE", "PROCUREMENT_PAGE"],
-                "accept_criteria": _derive_accept_criteria(prompt, bucket),
-                "confidence_boost": round(min(0.30, score / 1000 + 0.10), 2),
-                "final_goal_bucket": bucket,
-                "final_goal_score": score,
-                "final_goal_rank": rank,
-                "section_title": section_title,
-                "source_questions": list(item.get("source_questions", [])),
-                "final_goal_rationale": str(item.get("final_goal_rationale", "")),
-            }
-        )
+            pack_questions.append(
+                {
+                    "question_id": question_id,
+                    "question": split_prompt,
+                    "pack_role": "discovery",
+                    "question_shape": "atomic",
+                    "hop_budget": 10,
+                    "evidence_extension_budget": 10,
+                    "evidence_extension_confidence_threshold": 0.9,
+                    "hop_timeout_ms": 180000,
+                    "question_timeout_ms": 180000,
+                    "evidence_focus": evidence_focus,
+                    "promotion_target": promotion_target,
+                    "answer_kind": answer_kind,
+                    "yp_service_fit": services,
+                    "budget_range": BUDGET_MAP.get(services[0], "£80K-£500K"),
+                    "yp_advantage": _derive_yp_advantage(services),
+                    "positioning_strategy": POSITIONING_MAP.get(bucket, "STRATEGIC_PARTNER"),
+                    "hypothesis_template": _derive_hypothesis_template(entity_name, split_prompt, bucket),
+                    "next_signals": _derive_next_signals(services, bucket),
+                    "hop_types": ["OFFICIAL_SITE", "PRESS_RELEASE", "CAREERS_PAGE", "PROCUREMENT_PAGE"],
+                    "accept_criteria": _derive_accept_criteria(split_prompt, bucket),
+                    "confidence_boost": round(min(0.30, score / 1000 + 0.10), 2),
+                    "final_goal_bucket": bucket,
+                    "final_goal_score": score,
+                    "final_goal_rank": rank,
+                    "section_title": section_title,
+                    "source_questions": list(item.get("source_questions", [])),
+                    "final_goal_rationale": str(item.get("final_goal_rationale", "")),
+                }
+            )
 
     return pack_questions

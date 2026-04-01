@@ -315,6 +315,31 @@ function _questionHasEvidence(questionPayload) {
   return Boolean(answer || evidenceUrl || sources.length > 0 || source || hasFact);
 }
 
+function _resolveEvidenceExtensionConfidenceThreshold(question, questionState) {
+  const questionThreshold = Number(question?.evidence_extension_confidence_threshold);
+  if (Number.isFinite(questionThreshold) && questionThreshold >= 0 && questionThreshold <= 1) {
+    return questionThreshold;
+  }
+  const stateThreshold = Number(questionState?.evidence_extension_confidence_threshold);
+  if (Number.isFinite(stateThreshold) && stateThreshold >= 0 && stateThreshold <= 1) {
+    return stateThreshold;
+  }
+  return 0.9;
+}
+
+function _questionHasStrongEvidence(questionPayload, confidenceThreshold = 0.9) {
+  if (!_questionHasEvidence(questionPayload)) {
+    return false;
+  }
+  if (String(questionPayload?.validation_state || '').trim().toLowerCase() !== 'validated') {
+    return false;
+  }
+  const confidence = _coerceConfidenceScore(
+    questionPayload?.confidence ?? questionPayload?.reasoning?.structured_output?.confidence ?? 0,
+  );
+  return confidence >= Math.max(0, Number(confidenceThreshold || 0));
+}
+
 function _extendQuestionBudget(questionState, extensionBudget = 0) {
   const extension = Math.max(0, Number(extensionBudget || 0));
   if (extension <= 0) {
@@ -411,6 +436,9 @@ export function buildQuestionState(question, { runId = 'cli', timestamp = new Da
     evidence_extension_budget: Number.isFinite(Number(question.evidence_extension_budget))
       ? Number(question.evidence_extension_budget)
       : Number(question.hop_budget || 0),
+    evidence_extension_confidence_threshold: Number.isFinite(Number(question.evidence_extension_confidence_threshold))
+      ? Number(question.evidence_extension_confidence_threshold)
+      : 0.9,
     question_timeout_ms: Number.isFinite(Number(question.question_timeout_ms))
       ? Number(question.question_timeout_ms)
       : undefined,
@@ -955,6 +983,9 @@ function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTr
     evidence_extension_budget: Number.isFinite(Number(question.evidence_extension_budget))
       ? Number(question.evidence_extension_budget)
       : Number(question.hop_budget || 0),
+    evidence_extension_confidence_threshold: Number.isFinite(Number(question.evidence_extension_confidence_threshold))
+      ? Number(question.evidence_extension_confidence_threshold)
+      : 0.9,
     question_timeout_ms: Number.isFinite(Number(question.question_timeout_ms))
       ? Number(question.question_timeout_ms)
       : undefined,
@@ -1121,6 +1152,7 @@ export async function runOpenCodePresetBatch({
           ? configuredHopTimeoutMs
           : Math.min(Number(opencodeTimeoutMs || 300000), 60000),
       );
+      const evidenceExtensionConfidenceThreshold = _resolveEvidenceExtensionConfidenceThreshold(question, existingQuestionState || currentQuestionState);
       let questionDeadline = Number.isFinite(configuredQuestionTimeoutMs)
         ? Date.now() + Math.max(1000, configuredQuestionTimeoutMs)
         : Date.now() + Math.max(1000, baseHopBudget * atomicHopTimeoutMs);
@@ -1167,7 +1199,7 @@ export async function runOpenCodePresetBatch({
           updatedState = _spendCredit(updatedState, 'revisit', 1);
         }
 
-        const hasEvidence = _questionHasEvidence(questionPayload);
+        const hasEvidence = _questionHasStrongEvidence(questionPayload, evidenceExtensionConfidenceThreshold);
         if (hasEvidence && !evidenceExtended && evidenceExtensionBudget > 0) {
           updatedState = _extendQuestionBudget(updatedState, evidenceExtensionBudget);
           hopLimit += evidenceExtensionBudget;

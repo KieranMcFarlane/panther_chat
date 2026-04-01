@@ -237,7 +237,10 @@ test('extractFinalCliJson parses fenced JSON embedded in prose', () => {
 });
 
 test('buildQuestionState applies explicit budget and threshold overrides', () => {
-  const question = buildMajorLeagueCricketPresetQuestions()[0];
+  const question = {
+    ...buildMajorLeagueCricketPresetQuestions()[0],
+    evidence_extension_confidence_threshold: 0.91,
+  };
   const state = buildQuestionState(question, {
     runId: 'test-run',
     timestamp: '2026-03-27T00:00:00.000Z',
@@ -255,6 +258,7 @@ test('buildQuestionState applies explicit budget and threshold overrides', () =>
     revisit: 2,
   });
   assert.equal(state.confidence_threshold, 0.92);
+  assert.equal(state.evidence_extension_confidence_threshold, 0.91);
   assert.equal(state.run_id, 'test-run');
   assert.equal(state.last_run_at, '2026-03-27T00:00:00.000Z');
 });
@@ -756,6 +760,70 @@ test('runOpenCodePresetBatch extends when evidence appears', async () => {
     assert.equal(state.questions[0].status, 'validated');
     assert.equal(state.questions[0].run_history.length, 2);
     assert.equal(state.questions[0].frontier.some((item) => item.query === 'Test Entity founding evidence'), true);
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
+test('runOpenCodePresetBatch does not extend when evidence confidence is below threshold', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-batch-weak-evidence-'));
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+  const runs = [];
+
+  try {
+    const result = await runOpenCodePresetBatch({
+      outputDir,
+      questionsOverride: [
+        {
+          entity_name: 'Test Entity',
+          entity_id: 'test-entity',
+          entity_type: 'ENTITY',
+          preset: 'test-entity',
+          pack_role: 'discovery',
+          question_shape: 'atomic',
+          question_id: 'q_weak_evidence',
+          question_type: 'foundation',
+          question_text: 'When was Test Entity founded?',
+          query: '"Test Entity" founded',
+          hop_budget: 1,
+          evidence_extension_budget: 1,
+          evidence_extension_confidence_threshold: 0.9,
+          question_timeout_ms: 5000,
+          source_priority: ['google_serp', 'official_site', 'wikipedia'],
+          yp_service_fit: [],
+        },
+      ],
+      questionRunner: async (question) => {
+        runs.push(question.query);
+        return {
+          structuredOutput: {
+            answer: '1886',
+            signal_type: 'FOUNDATION',
+            confidence: 0.85,
+            validation_state: 'validated',
+            evidence_url: 'https://example.com/history',
+            recommended_next_query: 'Test Entity founding evidence',
+            notes: 'stubbed',
+            sources: ['https://example.com/history'],
+          },
+          promptTrace: { status: 'ok', structured_output_keys: 1, has_structured_output: true },
+          messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
+          cliResult: { code: 0, stdout: '{"answer":"1886"}', stderr: '' },
+        };
+      },
+    });
+
+    assert.equal(result.questions_total, 1);
+    assert.equal(runs.length, 1);
+    const state = JSON.parse(readFileSync(result.state_path, 'utf8'));
+    assert.equal(state.questions[0].status, 'validated');
+    assert.equal(state.questions[0].run_history.length, 1);
   } finally {
     if (previousZaiKey === undefined) {
       delete process.env.ANTHROPIC_AUTH_TOKEN;
