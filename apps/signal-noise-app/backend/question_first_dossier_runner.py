@@ -14,7 +14,9 @@ import logging
 import os
 import re
 import subprocess
+import time
 import tempfile
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Literal
@@ -41,6 +43,81 @@ def _iso_now() -> str:
 def _slugify(value: str) -> str:
     value = re.sub(r"[^a-zA-Z0-9]+", "-", str(value or "").strip().lower())
     return re.sub(r"-+", "-", value).strip("-") or "entity"
+
+
+def _build_question_first_state_path(
+    *,
+    output_dir: Path,
+    source_payload: Dict[str, Any],
+    preset: Optional[str] = None,
+    artifact: Optional[QuestionFirstRunArtifact] = None,
+) -> Path:
+    entity_name = str(
+        (artifact.entity if artifact else source_payload).get("entity_name")
+        or source_payload.get("entity_name")
+        or source_payload.get("entity_id")
+        or "entity"
+    )
+    entity_id = str(
+        (artifact.entity if artifact else source_payload).get("entity_id")
+        or source_payload.get("entity_id")
+        or _slugify(entity_name)
+    )
+    resolved_preset = str(
+        preset
+        or (artifact.preset if artifact else None)
+        or source_payload.get("preset")
+        or source_payload.get("question_source_label")
+        or "question-first"
+    )
+    return output_dir / f"{_slugify(entity_id)}_{_slugify(resolved_preset)}_state.json"
+
+
+@contextmanager
+def _acquire_question_first_launch_lock(worktree_root: Path):
+    lock_dir = Path(worktree_root) / ".locks"
+    lock_dir.mkdir(parents=True, exist_ok=True)
+    lock_path = lock_dir / "question-first-batch.lock"
+    lock_path.touch(exist_ok=True)
+    lock_file = lock_path.open("a+")
+    try:
+        try:
+            import fcntl
+
+            fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
+        except ImportError as exc:  # pragma: no cover - platform fallback
+            raise RuntimeError("question-first launch locking requires fcntl on this platform") from exc
+        yield lock_path
+    finally:
+        try:
+            import fcntl
+
+            fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
+        except Exception:
+            pass
+        lock_file.close()
+
+
+async def _wait_for_question_first_run_completion(
+    state_path: Path,
+    *,
+    timeout_ms: int = 300000,
+    poll_interval_ms: int = 250,
+) -> Dict[str, Any]:
+    deadline = time.monotonic() + max(timeout_ms, 1) / 1000.0
+    last_state: Dict[str, Any] = {}
+    while time.monotonic() <= deadline:
+        if state_path.exists():
+            try:
+                last_state = json.loads(state_path.read_text(encoding="utf-8"))
+            except Exception:
+                last_state = {}
+            if str(last_state.get("run_phase") or "").lower() == "completed":
+                return last_state
+        await asyncio.sleep(max(poll_interval_ms, 1) / 1000.0)
+    raise TimeoutError(
+        f"Timed out waiting for question-first batch to reach completed state at {state_path}"
+    )
 
 
 def _resolve_question_first_worktree_root(worktree_root: Optional[Path] = None) -> Path:
@@ -141,19 +218,28 @@ def merge_question_first_run_artifact_into_dossier(
 
 
 def _artifact_output_path(output_dir: Path, source_payload: Dict[str, Any], artifact: QuestionFirstRunArtifact | None = None) -> Path:
-    entity_name = str((artifact.entity if artifact else source_payload).get("entity_name") or source_payload.get("entity_name") or source_payload.get("entity_id") or "entity")
-    entity_id = str((artifact.entity if artifact else source_payload).get("entity_id") or source_payload.get("entity_id") or _slugify(entity_name))
+    entity_name = str(
+        (artifact.entity if artifact else source_payload).get("entity_name")
+        or source_payload.get("entity_name")
+        or source_payload.get("entity_id")
+        or "entity"
+    )
+    entity_id = str(
+        (artifact.entity if artifact else source_payload).get("entity_id")
+        or source_payload.get("entity_id")
+        or _slugify(entity_name)
+    )
     return output_dir / f"{_slugify(entity_id)}_question_first_run_v1.json"
 
 
-def _launch_opencode_question_first_batch(
+async def _launch_opencode_question_first_batch(
     *,
     source_payload: Dict[str, Any],
     output_dir: Path,
     preset: Optional[str] = None,
     worktree_root: Optional[Path] = None,
     opencode_timeout_ms: int = 300000,
-) -> Path:
+) -> Tuple[Path, Optional[Path]]:
     backend_root = Path(__file__).resolve().parent
     app_root = backend_root.parent
     script_path = app_root / "scripts" / "opencode_agentic_batch.mjs"
@@ -165,43 +251,52 @@ def _launch_opencode_question_first_batch(
         temp_source_path = Path(temp_source.name)
 
     try:
-        command = [
-            "node",
-            str(script_path),
-            "--question-source",
-            str(temp_source_path),
-            "--output-dir",
-            str(output_dir),
-            "--opencode-timeout-ms",
-            str(opencode_timeout_ms),
-        ]
-        if preset:
-            command.extend(["--preset", preset])
+        with _acquire_question_first_launch_lock(worktree_root):
+            command = [
+                "node",
+                str(script_path),
+                "--question-source",
+                str(temp_source_path),
+                "--output-dir",
+                str(output_dir),
+                "--opencode-timeout-ms",
+                str(opencode_timeout_ms),
+            ]
+            if preset:
+                command.extend(["--preset", preset])
 
-        proc = subprocess.run(
-            command,
-            cwd=str(worktree_root),
-            capture_output=True,
-            text=True,
-            check=False,
-            env=dict(os.environ),
-        )
-        if proc.returncode != 0:
-            raise RuntimeError(
-                "OpenCode question-first batch failed with exit code "
-                f"{proc.returncode}: {proc.stderr.strip() or proc.stdout.strip()}"
+            proc = subprocess.run(
+                command,
+                cwd=str(worktree_root),
+                capture_output=True,
+                text=True,
+                check=False,
+                env=dict(os.environ),
             )
-        try:
-            result = json.loads(proc.stdout.strip().splitlines()[-1])
-        except Exception:
-            result = {}
-        question_first_run_path = result.get("question_first_run_path")
-        if question_first_run_path:
-            return Path(question_first_run_path)
-        artifact_path = _artifact_output_path(output_dir, source_payload)
-        if artifact_path.exists():
-            return artifact_path
-        raise FileNotFoundError("OpenCode batch completed without producing a canonical question_first_run artifact")
+            if proc.returncode != 0:
+                raise RuntimeError(
+                    "OpenCode question-first batch failed with exit code "
+                    f"{proc.returncode}: {proc.stderr.strip() or proc.stdout.strip()}"
+                )
+            try:
+                result = json.loads(proc.stdout.strip().splitlines()[-1])
+            except Exception:
+                result = {}
+            question_first_run_path = result.get("question_first_run_path")
+            state_path = Path(
+                result.get("state_path")
+                or _build_question_first_state_path(
+                    output_dir=output_dir,
+                    source_payload=source_payload,
+                    preset=preset,
+                )
+            )
+            if question_first_run_path:
+                return Path(question_first_run_path), state_path
+            artifact_path = _artifact_output_path(output_dir, source_payload)
+            if artifact_path.exists():
+                return artifact_path, state_path
+            raise FileNotFoundError("OpenCode batch completed without producing a canonical question_first_run artifact")
     finally:
         try:
             temp_source_path.unlink(missing_ok=True)
@@ -681,13 +776,14 @@ async def run_question_first_dossier_from_payload(
         artifact_path = Path(artifact_path_value)
     else:
         target_output_dir = Path(output_dir) if output_dir is not None else Path(tempfile.mkdtemp(prefix="question-first-run-"))
-        artifact_path = _launch_opencode_question_first_batch(
+        artifact_path, state_path = await _launch_opencode_question_first_batch(
             source_payload=source,
             output_dir=target_output_dir,
             preset=preset or source.get("preset") or source.get("question_source_label") or None,
             worktree_root=worktree_root,
             opencode_timeout_ms=opencode_timeout_ms,
         )
+        await _wait_for_question_first_run_completion(state_path, timeout_ms=opencode_timeout_ms)
 
     artifact = _load_question_first_run_artifact(artifact_path)
     merged = merge_question_first_run_artifact_into_dossier(dossier_payload=source, artifact=artifact)

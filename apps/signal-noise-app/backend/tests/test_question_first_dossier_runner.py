@@ -1,6 +1,8 @@
 import asyncio
 import json
 import sys
+import threading
+import time
 from pathlib import Path
 
 import pytest
@@ -182,6 +184,112 @@ def test_resolve_question_first_worktree_root_honors_explicit_root(tmp_path):
     explicit.mkdir()
 
     assert runner._resolve_question_first_worktree_root(explicit) == explicit
+
+
+def test_question_first_launch_lock_serializes_across_callers(tmp_path):
+    lock_root = tmp_path / "worktree-root"
+    lock_root.mkdir()
+    second_entered = threading.Event()
+
+    def contender():
+        with runner._acquire_question_first_launch_lock(lock_root):
+            second_entered.set()
+
+    with runner._acquire_question_first_launch_lock(lock_root):
+        thread = threading.Thread(target=contender, daemon=True)
+        thread.start()
+        time.sleep(0.1)
+        assert second_entered.is_set() is False
+
+    thread.join(timeout=1.0)
+    assert second_entered.is_set() is True
+
+
+@pytest.mark.asyncio
+async def test_question_first_runner_waits_for_completed_state_before_merging(tmp_path, monkeypatch):
+    output_dir = tmp_path / "out"
+    output_dir.mkdir()
+    source_payload = {
+        "entity_id": "leedsunited",
+        "entity_name": "Leeds United",
+        "preset": "leeds-united-atomic-matrix",
+        "questions": [
+            {
+                "question_id": "q1",
+                "section_id": "core_information",
+                "question_text": "When was Leeds United founded?",
+                "search_strategy": {"search_queries": ['"Leeds United" founded']},
+            }
+        ],
+    }
+    state_path = runner._build_question_first_state_path(
+        output_dir=output_dir,
+        source_payload=source_payload,
+        preset=source_payload["preset"],
+    )
+    artifact_path = output_dir / "leedsunited_question_first_run_v1.json"
+    _write_question_first_run_artifact(
+        artifact_path,
+        entity_id="leedsunited",
+        entity_name="Leeds United",
+        questions=source_payload["questions"],
+        answers=[
+            {
+                "question_id": "q1",
+                "section_id": "core_information",
+                "question_text": "When was Leeds United founded?",
+                "search_query": '"Leeds United" founded',
+                "search_hit": True,
+                "search_results_count": 1,
+                "scrape_url": "https://www.leedsunited.com/",
+                "answer": "1919",
+                "confidence": 0.91,
+                "evidence_url": "https://www.leedsunited.com/",
+                "reasoning_model_used": "opencode",
+                "retry_count": 0,
+                "category": "identity",
+                "search_queries": ['"Leeds United" founded'],
+                "search_attempts": [{"query": '"Leeds United" founded', "status": "success", "result_count": 1}],
+                "validation_state": "validated",
+                "signal_type": "FOUNDATION",
+            }
+        ],
+        categories=[
+            {
+                "category": "identity",
+                "question_count": 1,
+                "validated_count": 1,
+                "pending_count": 0,
+                "no_signal_count": 0,
+                "retry_count": 0,
+            }
+        ],
+    )
+    state_path.write_text(json.dumps({"run_phase": "question_runner_enter"}), encoding="utf-8")
+
+    async def fake_launch(**_kwargs):
+        return artifact_path, state_path
+
+    sleep_calls = {"count": 0}
+
+    async def fake_sleep(_delay):
+        sleep_calls["count"] += 1
+        if sleep_calls["count"] == 1:
+            state_path.write_text(json.dumps({"run_phase": "completed"}), encoding="utf-8")
+
+    monkeypatch.setattr(runner, "_launch_opencode_question_first_batch", fake_launch)
+    monkeypatch.setattr(runner.asyncio, "sleep", fake_sleep)
+
+    merged = await runner.run_question_first_dossier_from_payload(
+        source_payload=source_payload,
+        output_dir=output_dir,
+        preset=source_payload["preset"],
+    )
+
+    assert sleep_calls["count"] >= 1
+    assert json.loads(state_path.read_text(encoding="utf-8"))["run_phase"] == "completed"
+    assert merged["question_first_run"]["run_rollup"]["questions_validated"] == 1
+    assert merged["questions"][0]["validation_state"] == "validated"
 
 
 @pytest.mark.asyncio
