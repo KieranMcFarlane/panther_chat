@@ -616,6 +616,77 @@ test('runOpenCodeQuestionSourceBatch records question runner entry and return ch
   }
 });
 
+test('runOpenCodeQuestionSourceBatch settles a question when the runner does not return', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-question-source-timeout-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'arsenal-fc',
+        entity_name: 'Arsenal Football Club',
+        entity_type: 'SPORT_CLUB',
+        preset: 'arsenal-atomic-matrix',
+        question_source_label: 'arsenal-atomic-matrix',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        question_count: 1,
+        questions: [
+          {
+            question_id: 'q1_foundation',
+            question_type: 'foundation',
+            question: 'What year was {entity} founded?',
+            query: '"Arsenal Football Club" founded year',
+            hop_budget: 8,
+            evidence_extension_budget: 1,
+            evidence_extension_confidence_threshold: 0.65,
+            question_timeout_ms: 180000,
+            hop_timeout_ms: 180000,
+            source_priority: ['google_serp', 'official_site', 'wikipedia'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  const questionRunner = async () => new Promise(() => {});
+
+  try {
+    const runPromise = runOpenCodeQuestionSourceBatch({
+      questionSourcePath: sourcePath,
+      outputDir,
+      opencodeTimeoutMs: 50,
+      questionRunner,
+    });
+
+    const result = await runPromise;
+    assert.equal(result.questions_total, 1);
+    assert.equal(result.questions_no_signal, 1);
+    assert.equal(result.questions_validated, 0);
+
+    const statePath = join(outputDir, 'arsenal-fc_arsenal-atomic-matrix_state.json');
+    const checkpoint = JSON.parse(readFileSync(statePath, 'utf8'));
+    assert.equal(checkpoint.run_phase, 'completed');
+    assert.equal(checkpoint.questions[0].status, 'no_signal');
+    assert.equal(checkpoint.questions[0].current_confidence, 0);
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
 test('runOpenCodePresetBatch supports the POI-only preset', async () => {
   const outputDir = mkdtempSync(join(tmpdir(), 'opencode-batch-poi-'));
   const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;

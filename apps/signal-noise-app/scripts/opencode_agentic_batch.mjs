@@ -954,6 +954,49 @@ function _spawnOpencodeRun(args, { cwd, env, timeoutMs = 300000 } = {}) {
   });
 }
 
+async function _runQuestionRunnerWithTimeout(questionRunner, executionQuestion, options = {}, timeoutMs = 300000) {
+  const normalizedTimeoutMs = Number.isFinite(Number(timeoutMs))
+    ? Math.max(1, Number(timeoutMs))
+    : 300000;
+  const runnerPromise = Promise.resolve().then(() => questionRunner(executionQuestion, options));
+  const timeoutResult = {
+    timedOut: true,
+    questionRun: {
+      structuredOutput: {
+        answer: '',
+        confidence: 0,
+        validation_state: 'no_signal',
+        sources: [],
+      },
+      promptTrace: {
+        status: 'timeout',
+        exit_code: 124,
+        stdout_length: 0,
+        stderr_length: 0,
+        has_structured_output: false,
+        timeout_ms: timeoutMs,
+      },
+      messageTrace: [],
+      cliResult: {
+        code: 124,
+        stdout: '',
+      stderr: `question runner timed out after ${timeoutMs}ms`,
+      },
+    },
+  };
+  const raceResult = await Promise.race([
+    runnerPromise.then((questionRun) => ({
+      timedOut: false,
+      questionRun,
+    })),
+    delay(normalizedTimeoutMs).then(() => timeoutResult),
+  ]);
+  if (raceResult.timedOut) {
+    runnerPromise.catch(() => {});
+  }
+  return raceResult;
+}
+
 async function runOpenCodeCliQuestion(question, { worktreeRoot, opencodeTimeoutMs } = {}) {
   await ensureBrightDataFastMcpService({ serviceCwd: worktreeRoot || WORKTREE_ROOT });
   const cliResult = await _spawnOpencodeRun(
@@ -1234,9 +1277,15 @@ export async function runOpenCodePresetBatch({
         });
         runState.questions[index] = existingQuestionState;
         await _writeJsonFile(statePath, runState);
-        questionRun = await questionRunner(executionQuestion, { worktreeRoot: resolvedWorktreeRoot, opencodeTimeoutMs: hopTimeoutMs });
+        const runnerResult = await _runQuestionRunnerWithTimeout(
+          questionRunner,
+          executionQuestion,
+          { worktreeRoot: resolvedWorktreeRoot, opencodeTimeoutMs: hopTimeoutMs },
+          hopTimeoutMs,
+        );
+        questionRun = runnerResult.questionRun;
         runState = _decorateRunStateCheckpoint(runState, {
-          runPhase: 'question_runner_return',
+          runPhase: runnerResult.timedOut ? 'question_runner_timeout' : 'question_runner_return',
           activeQuestionIndex: index,
           activeQuestion: executionQuestion,
           activeHopIndex: hopIndex,
@@ -1363,9 +1412,15 @@ export async function runOpenCodePresetBatch({
           });
           runState.questions[index] = existingQuestionState;
           await _writeJsonFile(statePath, runState);
-          questionRun = await questionRunner(executionQuestion, { worktreeRoot: resolvedWorktreeRoot, opencodeTimeoutMs });
+          const runnerResult = await _runQuestionRunnerWithTimeout(
+            questionRunner,
+            executionQuestion,
+            { worktreeRoot: resolvedWorktreeRoot, opencodeTimeoutMs },
+            opencodeTimeoutMs,
+          );
+          questionRun = runnerResult.questionRun;
           runState = _decorateRunStateCheckpoint(runState, {
-            runPhase: 'question_runner_return',
+            runPhase: runnerResult.timedOut ? 'question_runner_timeout' : 'question_runner_return',
             activeQuestionIndex: index,
             activeQuestion: executionQuestion,
             activeHopIndex: hopIndex,
@@ -1406,7 +1461,7 @@ export async function runOpenCodePresetBatch({
           runState.questions[index] = updatedState;
           await _writeJsonFile(statePath, runState);
           existingQuestionState = runState.questions[index];
-          if (existingQuestionState.status === 'exhausted') {
+          if (runnerResult.timedOut || existingQuestionState.status === 'exhausted') {
             break;
           }
         }
