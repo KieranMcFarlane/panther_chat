@@ -135,6 +135,12 @@ The remaining issue is the larger atomic discovery pack:
 - the list-shape scrape bug is fixed
 - but the broader atomic pack may still take longer than the current timeout budget
 
+The procurement/tender slice is intentionally separated into its own canary:
+- the old `arsenal.com`-first q2b probe was too slow/fragile
+- the repo now uses a web-first procurement canary instead:
+  - [apps/signal-noise-app/backend/data/question_sources/arsenal_procurement_webfirst.json](/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/backend/data/question_sources/arsenal_procurement_webfirst.json)
+- that canary should be treated as a fragile negative/slow path unless it validates quickly
+
 That means:
 - the transport is stable
 - the parser is stable

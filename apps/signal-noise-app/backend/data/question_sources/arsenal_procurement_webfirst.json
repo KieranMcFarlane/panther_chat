@@ -1,0 +1,23 @@
+{
+  "entity_id": "arsenal_fc",
+  "entity_name": "Arsenal Football Club",
+  "entity_type": "SPORT_CLUB",
+  "preset": "arsenal-procurement-webfirst",
+  "questions": [
+    {
+      "question_id": "q2b_public_procurement_or_tender",
+      "question_type": "procurement",
+      "question": "Is there public evidence of {entity} procurement or tender activity for digital work?",
+      "query": "Arsenal Football Club procurement tender digital work",
+      "hop_budget": 1,
+      "evidence_extension_confidence_threshold": 0.65,
+      "source_priority": [
+        "google_serp",
+        "news",
+        "press_release",
+        "linkedin_posts",
+        "official_site"
+      ]
+    }
+  ]
+}
