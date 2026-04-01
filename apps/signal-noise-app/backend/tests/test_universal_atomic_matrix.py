@@ -91,7 +91,7 @@ def test_universal_atomic_matrix_builds_consistent_four_question_sources():
             "news",
             "official_site",
         ]
-        assert all(question["hop_budget"] in {1, 2} for question in payload["questions"])
+        assert all(question["hop_budget"] == 8 for question in payload["questions"])
         assert all(question["evidence_extension_confidence_threshold"] == 0.65 for question in payload["questions"])
         assert all(question["question_timeout_ms"] == 180000 for question in payload["questions"])
         assert all(question["hop_timeout_ms"] == 180000 for question in payload["questions"])

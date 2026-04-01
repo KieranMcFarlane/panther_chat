@@ -16,6 +16,7 @@ from typing import Any, Dict, List, Optional
 
 QUESTION_TIMEOUT_MS = 180000
 HOP_TIMEOUT_MS = 180000
+HOP_BUDGET = 8
 EVIDENCE_EXTENSION_CONFIDENCE_THRESHOLD = 0.65
 
 UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
@@ -25,7 +26,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "question_type": "foundation",
         "question": "What year was {entity} founded?",
         "query": '"{entity}" founded year',
-        "hop_budget": 1,
+        "hop_budget": HOP_BUDGET,
         "evidence_extension_budget": 1,
         "source_priority": [
             "google_serp",
@@ -42,7 +43,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "question_type": "launch",
         "question": "Is there evidence {entity} has launched or is replacing a public app, product, or digital platform?",
         "query": '"{entity}" app product platform launch',
-        "hop_budget": 2,
+        "hop_budget": HOP_BUDGET,
         "evidence_extension_budget": 2,
         "source_priority": [
             "google_serp",
@@ -61,7 +62,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "question_type": "procurement",
         "question": "Is there evidence {entity} is running an RFP, tender, or procurement for a digital platform?",
         "query": '"{entity}" RFP tender procurement digital platform',
-        "hop_budget": 2,
+        "hop_budget": HOP_BUDGET,
         "evidence_extension_budget": 2,
         "source_priority": [
             "google_serp",
@@ -80,7 +81,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "question_type": "decision_owner",
         "question": "Who leads commercial partnerships or business development at {entity}?",
         "query": '"{entity}" commercial partnerships business development LinkedIn',
-        "hop_budget": 2,
+        "hop_budget": HOP_BUDGET,
         "evidence_extension_budget": 2,
         "source_priority": [
             "google_serp",
@@ -170,6 +171,7 @@ def write_universal_atomic_question_source(
 
 __all__ = [
     "EVIDENCE_EXTENSION_CONFIDENCE_THRESHOLD",
+    "HOP_BUDGET",
     "HOP_TIMEOUT_MS",
     "QUESTION_TIMEOUT_MS",
     "UNIVERSAL_ATOMIC_QUESTION_SPECS",

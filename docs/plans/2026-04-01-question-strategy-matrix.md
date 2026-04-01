@@ -12,6 +12,10 @@ The atomic strategy is universal:
 
 This is the canonical operating guide for the current question-first setup.
 
+Baseline hop policy:
+- atomic questions start with an 8-hop baseline
+- evidence extension is still allowed, but the matrix is tuned from an 8-hop starting point
+
 ## Canonical Matrix
 
 ### q1_foundation
