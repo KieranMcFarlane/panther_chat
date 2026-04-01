@@ -228,6 +228,28 @@ test('buildQuestionState applies explicit budget and threshold overrides', () =>
   assert.equal(state.last_run_at, '2026-03-27T00:00:00.000Z');
 });
 
+test('buildQuestionState does not inject unrelated aliases across entities', () => {
+  const state = buildQuestionState({
+    question_id: 'q1_foundation',
+    question_type: 'foundation',
+    question_text: 'What year was Arsenal Football Club founded?',
+    query: 'Arsenal Football Club founded year',
+    entity_name: 'Arsenal Football Club',
+    entity_id: 'arsenal_fc',
+    source_priority: ['google_serp', 'official_site', 'wikipedia'],
+    hop_budget: 1,
+  });
+
+  assert.deepEqual(state.aliases, [
+    'Arsenal Football Club',
+    'arsenal_fc',
+    'What year was Arsenal Football Club founded?',
+  ]);
+  assert.equal(state.aliases.includes('MLC'), false);
+  assert.equal(state.aliases.includes('ACE'), false);
+  assert.equal(state.aliases.includes('Major League Cricket'), false);
+});
+
 test('runOpenCodePresetBatch writes a merged meta artifact for the preset', async () => {
   const outputDir = mkdtempSync(join(tmpdir(), 'opencode-batch-'));
   const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;

@@ -198,12 +198,10 @@ function _buildQuestionCredits(question, overrides = {}) {
 
 function _buildQuestionAliases(question) {
   const aliases = new Set([question.entity_name, question.entity_id, _questionText(question)]);
-  if (question.question_type === 'procurement') {
-    aliases.add('ACE');
-    aliases.add('Major League Cricket');
-  }
-  if (question.question_type === 'foundation') {
-    aliases.add('MLC');
+  if (Array.isArray(question.aliases)) {
+    for (const alias of question.aliases) {
+      aliases.add(alias);
+    }
   }
   return [...aliases].filter(Boolean);
 }
