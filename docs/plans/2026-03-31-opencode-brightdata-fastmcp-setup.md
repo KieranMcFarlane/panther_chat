@@ -88,7 +88,7 @@ Command:
 
 ```bash
 cd .worktrees/opencode-question-first-ssot
-OPENCODE_TEE_LOGS=true opencode run --format json --model opencode/gpt-5-nano --title 'FastMCP smoke' 'What year was Arsenal Football Club founded? use brightdata'
+OPENCODE_TEE_LOGS=true opencode run --format json --model zai-coding-plan/glm-5 --title 'FastMCP smoke' 'What year was Arsenal Football Club founded? use brightdata'
 ```
 
 Observed output:
@@ -126,4 +126,3 @@ If you need to verify the stack again:
 - The repo still contains older BrightData compatibility paths. Those are historical or fallback paths and should not be treated as the primary setup for the question-first smoke.
 - OpenCode provider auth is already present in the repo environment here, so the smoke did not require an extra login step.
 - If a future environment lacks provider credentials, use `opencode auth login` and select `Z.AI Coding Plan`.
-
