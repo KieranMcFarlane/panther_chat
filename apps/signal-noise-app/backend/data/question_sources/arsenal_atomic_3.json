@@ -1,0 +1,45 @@
+{
+  "entity_id": "arsenal_fc",
+  "entity_name": "Arsenal Football Club",
+  "entity_type": "SPORT_CLUB",
+  "preset": "arsenal-atomic-3",
+  "questions": [
+    {
+      "question_id": "q1_foundation",
+      "question_type": "foundation",
+      "question": "What year was {entity} founded?",
+      "query": "Arsenal Football Club founded year",
+      "hop_budget": 1,
+      "source_priority": [
+        "google_serp",
+        "official_site",
+        "wikipedia"
+      ]
+    },
+    {
+      "question_id": "q2_procurement_signal",
+      "question_type": "procurement",
+      "question": "Is there evidence {entity} is replacing or launching a digital fan engagement platform?",
+      "query": "Arsenal Football Club digital fan engagement platform replacement launch",
+      "hop_budget": 2,
+      "source_priority": [
+        "google_serp",
+        "official_site",
+        "linkedin_posts",
+        "news"
+      ]
+    },
+    {
+      "question_id": "q3_decision_owner",
+      "question_type": "poi",
+      "question": "Who leads commercial partnerships or business development at {entity}?",
+      "query": "Arsenal Football Club commercial partnerships business development",
+      "hop_budget": 2,
+      "source_priority": [
+        "google_serp",
+        "official_site",
+        "news"
+      ]
+    }
+  ]
+}
