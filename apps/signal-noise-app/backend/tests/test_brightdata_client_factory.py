@@ -8,7 +8,7 @@ backend_dir = Path(__file__).parent.parent
 sys.path.insert(0, str(backend_dir))
 
 import brightdata_client_factory as factory
-from brightdata_mcp_client import BrightDataClientWithFallback
+from brightdata_mcp_client import BrightDataClientWithFallback, BrightDataMCPClient, _resolve_stdio_server_path
 
 
 def test_should_use_brightdata_mcp_requires_token(monkeypatch):
@@ -193,3 +193,9 @@ async def test_brightdata_client_with_fallback_accepts_num_results(monkeypatch):
 
     assert result["status"] == "success"
     assert result["results"][0]["snippet"] == "3"
+
+
+def test_brightdata_mcp_client_defaults_to_repo_stdio_server_path(monkeypatch):
+    monkeypatch.delenv("BRIGHTDATA_MCP_SERVER_PATH", raising=False)
+    resolved = _resolve_stdio_server_path()
+    assert resolved.endswith("apps/signal-noise-app/src/mcp-brightdata-server.js")

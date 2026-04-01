@@ -43,6 +43,18 @@ def _slugify(value: str) -> str:
     return re.sub(r"-+", "-", value).strip("-") or "entity"
 
 
+def _resolve_question_first_worktree_root(worktree_root: Optional[Path] = None) -> Path:
+    """Prefer the dedicated question-first worktree when no explicit root is provided."""
+    if worktree_root is not None:
+        return Path(worktree_root)
+
+    repo_root = Path(__file__).resolve().parents[3]
+    preferred = repo_root / ".worktrees" / "opencode-question-first-ssot"
+    if preferred.exists():
+        return preferred
+    return repo_root
+
+
 class QuestionFirstRunArtifact(BaseModel):
     schema_version: Literal["question_first_run_v1"]
     generated_at: str
@@ -145,7 +157,7 @@ def _launch_opencode_question_first_batch(
     backend_root = Path(__file__).resolve().parent
     app_root = backend_root.parent
     script_path = app_root / "scripts" / "opencode_agentic_batch.mjs"
-    worktree_root = worktree_root or app_root.parent.parent
+    worktree_root = _resolve_question_first_worktree_root(worktree_root)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False, encoding="utf-8") as temp_source:

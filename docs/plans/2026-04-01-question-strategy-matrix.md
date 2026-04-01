@@ -1,76 +1,86 @@
-# Question Strategy Matrix
+# Universal Atomic Matrix
 
 Date: 2026-04-01
 
 ## Purpose
-Freeze the current question strategy so the stable canary pack, fragile probes, and procurement workflow stop drifting in context.
+Freeze one atomic question strategy matrix and apply it to every entity.
 
-This document is the operating guide for the current question-first setup:
-- stable canary questions stay small and fast
-- fragile questions stay isolated
-- procurement discovery uses a two-stage workflow
+The atomic strategy is universal:
+- the same four question families are used everywhere
+- only entity name, entity ID, and rendered query text change
+- `no_signal` is a valid terminal result when evidence does not exist
 
-## Stable
+This is the canonical operating guide for the current question-first setup.
+
+## Canonical Matrix
 
 ### q1_foundation
 - Note: direct factual lookup; keep it deterministic and fast.
 - Best sources: `google_serp`, `official_site`, `wikipedia`
-- Status: stable
+- Role: foundation / stable canary
 
-### q2a_app_launch
-- Note: broad web-first discovery for public app/product launch evidence.
-- Best sources: `google_serp`, `linkedin_posts`, `news`, `press_release`, `official_site`
-- Status: stable if it stays fast
-
-## Fragile
-
-### q2b_public_procurement_or_tender
-- Note: explicit procurement/tender probe; useful as a negative canary, but too slow to join the stable pack.
+### q2_launch_signal
+- Note: broad web-first discovery for a public app, product, or digital platform signal.
 - Best sources: `google_serp`, `news`, `press_release`, `linkedin_posts`, `official_site`
-- Status: fragile negative canary
+- Role: launch / product signal
 
-### q3_decision_owner
-- Note: leadership / partnerships / business development probe; use LinkedIn-first discovery.
+### q3_procurement_signal
+- Note: broad-first discovery for procurement, RFP, tender, or vendor-change evidence.
+- Best sources: `google_serp`, `linkedin_posts`, `news`, `press_release`, `official_site`
+- Role: procurement / RFP / tender
+
+### q4_decision_owner
+- Note: LinkedIn-heavy leadership search for commercial partnerships or business development.
 - Best sources: `google_serp`, `linkedin_posts`, `linkedin_people_search`, `linkedin_person_profile`, `linkedin_company_profile`, `news`, `official_site`
-- Status: fragile until it gives a reliable positive result
+- Role: decision owner / commercial lead
 
-## Two-Stage Procurement
+## Archetype Validation
 
-### Stage 1 Broad Opener
-- Questions:
-  - `q1_rfp`
-  - `q2_tender`
-  - `q3_procurement`
-- Note: broad first-pass procurement discovery; start with entity + RFP/tender/procurement and let search lead.
-- Best sources: `google_serp`, `linkedin_posts`, `news`, `press_release`, `official_site`
-- Status: separate procurement lane
+Use the same matrix on three archetypes before scaling:
 
-### Stage 2 Follow-Ups
-- Questions:
-  - `q4_vendor`
-  - `q5_digital_transformation`
-  - `q6_broadcast_partner`
-  - `q7_fan_engagement_platform`
-- Note: run only if stage 1 surfaces a real lead; use follow-up prompts to expand the signal.
-- Best sources: `google_serp`, `linkedin_posts`, `news`, `press_release`, `official_site`
-- Status: downstream from stage 1 only
+- Arsenal
+  - club archetype
+  - proves the baseline sport-entity path
+
+- International Canoe Federation
+  - federation archetype
+  - proves the official-site / federation style path
+
+- Major League Cricket
+  - procurement archetype
+  - proves the broad discovery and procurement signal path
+
+## Source Files
+
+Canonical checked-in sources:
+- `/apps/signal-noise-app/backend/data/question_sources/arsenal_atomic_matrix.json`
+- `/apps/signal-noise-app/backend/data/question_sources/icf_atomic_matrix.json`
+- `/apps/signal-noise-app/backend/data/question_sources/major_league_cricket_atomic_matrix.json`
+
+Generator:
+- `/apps/signal-noise-app/backend/universal_atomic_matrix.py`
 
 ## Rules
 
-1. Keep the stable pack small.
-2. Do not fold procurement or decision-owner questions back into the stable pack unless they become reliably fast.
-3. Treat q2b and q3 as separate canaries.
-4. Run MLC procurement as a two-stage workflow, not as part of the stable pack.
-5. Do not widen the stable pack again until q3 gives one more reliable positive signal.
+1. Use the same strategy matrix for every entity.
+2. Do not branch the atomic strategy by entity type.
+3. Preserve the same hop/timeout/confidence policy across all archetypes.
+4. Keep the matrix small and deterministic enough to validate end to end.
+5. Treat `q2`, `q3`, and `q4` as legitimate terminal questions, not as special-case canaries.
 
-## Current Operating Split
+## Test Plan
 
-- Stable pack:
-  - q1_foundation
-  - q2a_app_launch
-- Fragile probes:
-  - q2b_public_procurement_or_tender
-  - q3_decision_owner
-- Procurement workflow:
-  - MLC stage 1 broad opener
-  - MLC stage 2 follow-ups
+- Validate that the generator renders the same matrix for Arsenal, ICF, and MLC.
+- Validate that the canonical source files exactly match the generator output.
+- Run the end-to-end batch on the three archetypes and confirm:
+  - question-first artifacts are written
+  - the dossier/promoter path still accepts the output
+  - the acceptance gate still works
+
+## Rollout
+
+1. Prove the matrix end to end on Arsenal, ICF, and MLC.
+2. Sample a broader set of entities once the archetypes are stable.
+3. Roll the same matrix into the full 3000+ entity batch.
+4. Keep the execution model as scheduled batch, not an always-on worker.
+

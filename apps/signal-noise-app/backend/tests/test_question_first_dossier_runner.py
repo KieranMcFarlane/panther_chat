@@ -165,6 +165,25 @@ def _write_question_first_run_artifact(path, *, entity_id, entity_name, question
     return path
 
 
+def test_resolve_question_first_worktree_root_prefers_dedicated_worktree(tmp_path, monkeypatch):
+    repo_root = tmp_path / "repo"
+    worktree_root = repo_root / ".worktrees" / "opencode-question-first-ssot"
+    worktree_root.mkdir(parents=True)
+
+    monkeypatch.setattr(runner.Path, "resolve", lambda self: repo_root / "apps" / "signal-noise-app" / "backend" / "question_first_dossier_runner.py")
+
+    resolved = runner._resolve_question_first_worktree_root()
+
+    assert resolved == worktree_root
+
+
+def test_resolve_question_first_worktree_root_honors_explicit_root(tmp_path):
+    explicit = tmp_path / "explicit-root"
+    explicit.mkdir()
+
+    assert runner._resolve_question_first_worktree_root(explicit) == explicit
+
+
 @pytest.mark.asyncio
 async def test_question_first_runner_uses_saved_questions_and_writes_plain_text_report(tmp_path):
     dossier_path = tmp_path / "leeds_dossier.json"

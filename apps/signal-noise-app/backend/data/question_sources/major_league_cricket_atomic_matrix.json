@@ -1,0 +1,107 @@
+{
+  "schema_version": "atomic_question_source_v1",
+  "generated_at": "2026-04-01T00:00:00+00:00",
+  "entity_id": "major-league-cricket",
+  "entity_name": "Major League Cricket",
+  "entity_type": "SPORT_LEAGUE",
+  "preset": "major-league-cricket-atomic-matrix",
+  "question_source_label": "major-league-cricket-atomic-matrix",
+  "question_shape": "atomic",
+  "pack_role": "discovery",
+  "pack_stage": "atomic_matrix",
+  "question_count": 4,
+  "questions": [
+    {
+      "question_id": "q1_foundation",
+      "question_family": "foundation",
+      "question_type": "foundation",
+      "question": "What year was Major League Cricket founded?",
+      "query": "\"Major League Cricket\" founded year",
+      "question_shape": "atomic",
+      "hop_budget": 1,
+      "evidence_extension_budget": 1,
+      "evidence_extension_confidence_threshold": 0.65,
+      "hop_timeout_ms": 180000,
+      "question_timeout_ms": 180000,
+      "source_priority": [
+        "google_serp",
+        "official_site",
+        "wikipedia"
+      ],
+      "evidence_focus": "entity_fact",
+      "promotion_target": "profile",
+      "answer_kind": "fact"
+    },
+    {
+      "question_id": "q2_launch_signal",
+      "question_family": "launch",
+      "question_type": "launch",
+      "question": "Is there evidence Major League Cricket has launched or is replacing a public app, product, or digital platform?",
+      "query": "\"Major League Cricket\" app product platform launch",
+      "question_shape": "atomic",
+      "hop_budget": 2,
+      "evidence_extension_budget": 2,
+      "evidence_extension_confidence_threshold": 0.65,
+      "hop_timeout_ms": 180000,
+      "question_timeout_ms": 180000,
+      "source_priority": [
+        "google_serp",
+        "news",
+        "press_release",
+        "linkedin_posts",
+        "official_site"
+      ],
+      "evidence_focus": "opportunity_signal",
+      "promotion_target": "opportunity_signals",
+      "answer_kind": "signal"
+    },
+    {
+      "question_id": "q3_procurement_signal",
+      "question_family": "procurement",
+      "question_type": "procurement",
+      "question": "Is there evidence Major League Cricket is running an RFP, tender, or procurement for a digital platform?",
+      "query": "\"Major League Cricket\" RFP tender procurement digital platform",
+      "question_shape": "atomic",
+      "hop_budget": 2,
+      "evidence_extension_budget": 2,
+      "evidence_extension_confidence_threshold": 0.65,
+      "hop_timeout_ms": 180000,
+      "question_timeout_ms": 180000,
+      "source_priority": [
+        "google_serp",
+        "linkedin_posts",
+        "news",
+        "press_release",
+        "official_site"
+      ],
+      "evidence_focus": "opportunity_signal",
+      "promotion_target": "opportunity_signals",
+      "answer_kind": "signal"
+    },
+    {
+      "question_id": "q4_decision_owner",
+      "question_family": "decision_owner",
+      "question_type": "decision_owner",
+      "question": "Who leads commercial partnerships or business development at Major League Cricket?",
+      "query": "\"Major League Cricket\" commercial partnerships business development LinkedIn",
+      "question_shape": "atomic",
+      "hop_budget": 2,
+      "evidence_extension_budget": 2,
+      "evidence_extension_confidence_threshold": 0.65,
+      "hop_timeout_ms": 180000,
+      "question_timeout_ms": 180000,
+      "source_priority": [
+        "google_serp",
+        "linkedin_posts",
+        "linkedin_people_search",
+        "linkedin_person_profile",
+        "linkedin_company_profile",
+        "news",
+        "official_site"
+      ],
+      "evidence_focus": "decision_owner",
+      "promotion_target": "decision_owners",
+      "answer_kind": "person"
+    }
+  ]
+}

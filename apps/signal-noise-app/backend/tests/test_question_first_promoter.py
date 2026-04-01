@@ -119,3 +119,36 @@ def test_build_question_first_promotions_derives_evidence_from_validated_answers
     assert result["discovery_summary"]["promotion_targets"] == ["opportunity_signals", "profile"]
     assert result["discovery_summary"]["profile"][0]["question_id"] == "q_foundation"
     assert result["discovery_summary"]["opportunity_signals"][0]["question_id"] == "q_procurement"
+
+
+def test_build_question_first_promotions_supports_launch_and_decision_owner_questions():
+    result = build_question_first_promotions(
+        answers=[
+            {
+                "question_id": "q_launch",
+                "question_text": "Is there evidence Arsenal Football Club has launched or is replacing a public app?",
+                "question_type": "launch",
+                "answer": "Arsenal launched a new app experience.",
+                "confidence": 0.86,
+                "validation_state": "validated",
+                "signal_type": "LAUNCH_SIGNAL",
+                "evidence_url": "https://example.com/arsenal-launch",
+            },
+            {
+                "question_id": "q_owner",
+                "question_text": "Who leads commercial partnerships or business development at Arsenal Football Club?",
+                "question_type": "decision_owner",
+                "answer": "Jane Doe",
+                "confidence": 0.88,
+                "validation_state": "validated",
+                "signal_type": "DECISION_OWNER",
+                "evidence_url": "https://example.com/jane-doe",
+            },
+        ],
+        evidence_items=[],
+        promotion_candidates=[],
+    )
+
+    assert result["discovery_summary"]["promotion_targets"] == ["decision_owners", "opportunity_signals"]
+    assert result["discovery_summary"]["opportunity_signals"][0]["question_id"] == "q_launch"
+    assert result["discovery_summary"]["decision_owners"][0]["question_id"] == "q_owner"

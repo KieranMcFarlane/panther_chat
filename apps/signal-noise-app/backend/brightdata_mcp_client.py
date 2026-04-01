@@ -28,6 +28,17 @@ def _redact_token_in_url(url: Optional[str]) -> Optional[str]:
     return re.sub(r"(token=)[^&]+", r"\1***", url)
 
 
+def _resolve_stdio_server_path() -> str:
+    server_path = os.getenv("BRIGHTDATA_MCP_SERVER_PATH")
+    if server_path:
+        return server_path
+    return str(
+        Path(__file__).resolve().parent.parent
+        / "src"
+        / "mcp-brightdata-server.js"
+    )
+
+
 class BrightDataClient(ABC):
     """
     Abstract interface for BrightData client
@@ -439,15 +450,7 @@ class BrightDataMCPClient(BrightDataClient):
             return
 
         server_command = os.getenv("BRIGHTDATA_MCP_SERVER_COMMAND", "node")
-        server_path = os.getenv("BRIGHTDATA_MCP_SERVER_PATH")
-        if not server_path:
-          server_path = str(
-              Path(__file__).resolve().parent.parent
-              / "mcp-servers"
-              / "src"
-              / "mcp-servers"
-              / "brightdata-server.js"
-          )
+        server_path = _resolve_stdio_server_path()
 
         server_params = StdioServerParameters(
             command=server_command,
@@ -503,7 +506,17 @@ class BrightDataMCPClient(BrightDataClient):
                         content_text += item.text
 
                 try:
-                    return json.loads(content_text)
+                    parsed = json.loads(content_text)
+                    if isinstance(parsed, list):
+                        return {
+                            "status": "success",
+                            "results": parsed,
+                            "successful": sum(1 for item in parsed if isinstance(item, dict) and item.get("status") == "success"),
+                            "failed": sum(1 for item in parsed if isinstance(item, dict) and item.get("status") == "error"),
+                        }
+                    if isinstance(parsed, dict):
+                        return parsed
+                    return {"status": "success", "result": parsed}
                 except json.JSONDecodeError:
                     return {"status": "success", "content": content_text}
             else:
@@ -602,6 +615,20 @@ class BrightDataMCPClient(BrightDataClient):
         logger.info(f"📦 MCP batch scrape: {len(urls)} URLs")
 
         result = await self._call_tool("scrape_batch", {"urls": urls})
+
+        if isinstance(result, list):
+            normalized_results = result
+            successful = sum(1 for item in normalized_results if isinstance(item, dict) and item.get("status") == "success")
+            failed = sum(1 for item in normalized_results if isinstance(item, dict) and item.get("status") == "error")
+            return {
+                "status": "success",
+                "total_urls": len(urls),
+                "successful": successful,
+                "failed": failed,
+                "results": normalized_results,
+                "timestamp": datetime.now().isoformat(),
+                "metadata": {"source": "mcp_client", "pro_mode": self.pro_mode},
+            }
 
         if result is None or result.get("status") == "error":
             return {

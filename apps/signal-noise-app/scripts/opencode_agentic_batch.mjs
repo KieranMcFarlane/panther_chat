@@ -252,7 +252,11 @@ function _scoreSourceRecord(questionState, url, title = '', confidence = 0) {
       ? (sourceKind === 'linkedin_posts' ? 0.25 : 0.1)
       : questionType === 'foundation'
         ? (sourceKind === 'wikipedia' || sourceKind === 'official_site' ? 0.25 : 0.08)
-        : (sourceKind === 'official_site' || sourceKind === 'news' ? 0.2 : 0.08);
+        : (questionType === 'decision_owner' || questionType === 'leadership' || questionType === 'poi')
+          ? (sourceKind === 'linkedin_posts' || sourceKind === 'linkedin_profiles' ? 0.25 : 0.1)
+          : (questionType === 'launch' || questionType === 'opportunity_signal')
+            ? (sourceKind === 'news' || sourceKind === 'press_release' || sourceKind === 'official_site' ? 0.22 : 0.12)
+            : (sourceKind === 'official_site' || sourceKind === 'news' ? 0.2 : 0.08);
   const freshnessBonus = sourceKind === 'news' || sourceKind === 'press_release' ? 0.15 : 0.1;
   const score = Math.max(0, Math.min(1, sourcePriorityBonus * 0.35 + questionBias + freshnessBonus + questionMatch + confidenceScore * 0.3));
   return {
@@ -1022,14 +1026,17 @@ function _categoryForQuestion(question) {
   if (questionType === 'foundation') {
     return 'identity';
   }
+  if (questionType === 'launch' || questionType === 'opportunity_signal') {
+    return 'opportunity_signal';
+  }
   if (questionType === 'procurement') {
     return 'procurement_opportunity';
   }
   if (questionType === 'poi') {
     return 'connections';
   }
-  if (questionType === 'leadership') {
-    return 'leadership';
+  if (questionType === 'leadership' || questionType === 'decision_owner') {
+    return 'decision_owners';
   }
   return 'general';
 }

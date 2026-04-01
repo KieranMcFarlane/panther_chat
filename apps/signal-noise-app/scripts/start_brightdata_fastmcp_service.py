@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Launch the local BrightData FastMCP service."""
 
+import os
 from pathlib import Path
 from typing import Optional
 
@@ -34,6 +35,8 @@ def _load_repo_env(start_path: Path | None = None) -> Optional[Path]:
 
 def main() -> None:
     _load_repo_env(Path(__file__))
+    os.environ["BRIGHTDATA_MCP_USE_HOSTED"] = "false"
+    os.environ.setdefault("BRIGHTDATA_MCP_HOSTED_URL", "")
     from backend.brightdata_fastmcp_service import main as service_main
 
     service_main()

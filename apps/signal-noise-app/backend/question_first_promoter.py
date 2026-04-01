@@ -20,7 +20,11 @@ def _infer_promotion_target(answer: Dict[str, Any]) -> str:
 
     if "foundation" in combined or "identity" in combined:
         return "profile"
+    if "launch" in combined or "product" in combined:
+        return "opportunity_signals"
     if "leadership" in combined:
+        return "decision_owners"
+    if "decision_owner" in combined or "decision owner" in combined:
         return "decision_owners"
     if "procurement" in combined or "rfp" in combined or "tender" in combined:
         return "opportunity_signals"

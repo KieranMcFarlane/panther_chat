@@ -47,3 +47,37 @@ async def test_scrape_batch_normalizes_list_response(monkeypatch):
     assert len(result["results"]) == 2
     assert result["results"][0]["url"] == "https://example.com/one"
 
+
+@pytest.mark.asyncio
+async def test_call_tool_wraps_json_list_response(monkeypatch):
+    client = BrightDataMCPClient.__new__(BrightDataMCPClient)
+    client._transport = "hosted_sse"
+    client._available = True
+    client.pro_mode = False
+
+    class _FakeContentItem:
+        def __init__(self, text):
+            self.text = text
+
+    class _FakeResult:
+        def __init__(self, text):
+            self.content = [_FakeContentItem(text)]
+
+    async def _noop_ensure_session():
+        return None
+
+    async def _fake_call_tool(self, tool_name, arguments):
+        assert tool_name == "scrape_batch"
+        return _FakeResult(
+            '[{"status":"success","url":"https://example.com/one"},{"status":"error","url":"https://example.com/two"}]'
+        )
+
+    client._ensure_session = _noop_ensure_session  # type: ignore[method-assign]
+    client.session = type("S", (), {"call_tool": _fake_call_tool})()  # type: ignore[assignment]
+
+    result = await client._call_tool("scrape_batch", {"urls": ["https://example.com/one", "https://example.com/two"]})
+
+    assert result["status"] == "success"
+    assert result["successful"] == 1
+    assert result["failed"] == 1
+    assert len(result["results"]) == 2

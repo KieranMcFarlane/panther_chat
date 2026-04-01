@@ -17,12 +17,17 @@ from fastmcp import FastMCP
 from starlette.responses import PlainTextResponse
 
 from backend.brightdata_mcp_client import BrightDataMCPClient
+from backend.brightdata_sdk_client import BrightDataSDKClient
 
 logger = logging.getLogger(__name__)
 
 mcp = FastMCP("BrightDataPipelineService")
 _PIPELINE_CLIENT: Any | None = None
 _PIPELINE_CLIENT_LOCK = asyncio.Lock()
+
+
+def _resolve_fastmcp_backend() -> str:
+    return str(os.getenv("BRIGHTDATA_FASTMCP_BACKEND", "sdk") or "sdk").strip().lower()
 
 
 async def _get_pipeline_client() -> Any:
@@ -32,8 +37,14 @@ async def _get_pipeline_client() -> Any:
 
     async with _PIPELINE_CLIENT_LOCK:
         if _PIPELINE_CLIENT is None:
-            warmup_timeout = float(os.getenv("BRIGHTDATA_FASTMCP_WARMUP_TIMEOUT_SECONDS", "60") or "60")
-            _PIPELINE_CLIENT = BrightDataMCPClient(timeout=warmup_timeout)
+            backend = _resolve_fastmcp_backend()
+            if backend == "mcp":
+                warmup_timeout = float(os.getenv("BRIGHTDATA_FASTMCP_WARMUP_TIMEOUT_SECONDS", "60") or "60")
+                _PIPELINE_CLIENT = BrightDataMCPClient(timeout=warmup_timeout)
+                logger.info("🌐 BrightData FastMCP backend selected: mcp")
+            else:
+                _PIPELINE_CLIENT = BrightDataSDKClient()
+                logger.info("🌐 BrightData FastMCP backend selected: sdk")
     return _PIPELINE_CLIENT
 
 
@@ -41,7 +52,15 @@ async def _get_pipeline_client() -> Any:
 async def prewarm(timeout: Optional[float] = None) -> Dict[str, Any]:
     """Warm the underlying BrightData client in the background."""
     client = await _get_pipeline_client()
-    return await client.prewarm(timeout=timeout)
+    prewarm_fn = getattr(client, "prewarm", None)
+    if callable(prewarm_fn):
+        return await prewarm_fn(timeout=timeout)
+    return {
+        "status": "success",
+        "prewarmed": True,
+        "backend": str(os.getenv("BRIGHTDATA_FASTMCP_BACKEND", "sdk") or "sdk").strip().lower(),
+        "timeout": timeout,
+    }
 
 
 @mcp.tool
@@ -53,6 +72,13 @@ async def search_engine(
     cursor: Optional[str] = None,
 ) -> Dict[str, Any]:
     client = await _get_pipeline_client()
+    if _resolve_fastmcp_backend() == "sdk" or isinstance(client, BrightDataSDKClient):
+        return await client.search_engine(
+            query=query,
+            engine=engine,
+            country=country,
+            num_results=num_results,
+        )
     return await client.search_engine(
         query=query,
         engine=engine,
