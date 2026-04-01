@@ -619,6 +619,8 @@ export async function ensureBrightDataFastMcpService({
       BRIGHTDATA_FASTMCP_URL: serviceUrl,
       BRIGHTDATA_FASTMCP_HOST: serviceEnv.BRIGHTDATA_FASTMCP_HOST || '127.0.0.1',
       BRIGHTDATA_FASTMCP_PORT: serviceEnv.BRIGHTDATA_FASTMCP_PORT || '8000',
+      BRIGHTDATA_MCP_USE_HOSTED: 'false',
+      BRIGHTDATA_MCP_HOSTED_URL: '',
     },
     detached: true,
     stdio: 'ignore',
@@ -641,6 +643,7 @@ export function buildOpenCodeConfig({
   baseUrl = process.env.ANTHROPIC_BASE_URL || 'https://api.z.ai/api/anthropic',
 } = {}) {
   const fastmcpUrl = process.env.BRIGHTDATA_FASTMCP_URL || 'http://127.0.0.1:8000/mcp';
+  const brightDataStdioServerPath = path.join(APP_ROOT, 'src', 'mcp-brightdata-server.js');
   return {
     $schema: 'https://opencode.ai/config.json',
     model: DEFAULT_MODEL,
@@ -670,12 +673,12 @@ export function buildOpenCodeConfig({
       edit: 'deny',
     },
     tools: {
-      'brightdata*': false,
+      'brightData_*': false,
     },
     agent: {
       build: {
         tools: {
-          'brightdata*': true,
+          'brightData_*': true,
         },
       },
       discovery: {
@@ -687,7 +690,7 @@ export function buildOpenCodeConfig({
         prompt:
           'You are a procurement discovery agent. Use the brightdata tool to search broadly, inspect evidence carefully, and return only validated JSON.',
         tools: {
-          'brightdata*': true,
+          'brightData_*': true,
         },
         permission: {
           '*': 'allow',
@@ -698,9 +701,14 @@ export function buildOpenCodeConfig({
     },
     mcp: {
       brightData: {
-        type: 'remote',
+        type: 'local',
         enabled: true,
-        url: fastmcpUrl,
+        command: ['node', brightDataStdioServerPath],
+        environment: {
+          BRIGHTDATA_FASTMCP_URL: fastmcpUrl,
+          BRIGHTDATA_MCP_USE_HOSTED: 'false',
+          BRIGHTDATA_MCP_HOSTED_URL: '',
+        },
       },
     },
     instructions: [
@@ -904,6 +912,8 @@ async function runOpenCodeCliQuestion(question, { worktreeRoot, opencodeTimeoutM
         ANTHROPIC_AUTH_TOKEN: process.env.ZAI_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN || '',
         BRIGHTDATA_API_TOKEN: process.env.BRIGHTDATA_API_TOKEN || process.env.BRIGHTDATA_TOKEN || '',
         BRIGHTDATA_ZONE: process.env.BRIGHTDATA_ZONE || '',
+        BRIGHTDATA_MCP_USE_HOSTED: 'false',
+        BRIGHTDATA_MCP_HOSTED_URL: '',
         PATH: process.env.PATH,
       },
       timeoutMs: opencodeTimeoutMs,

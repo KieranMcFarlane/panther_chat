@@ -5,12 +5,85 @@
  * Provides MCP tools for web scraping and search capabilities using BrightData
  */
 
-const { Server } = require('@modelcontextprotocol/sdk/server/index.js');
-const { StdioServerTransport } = require('@modelcontextprotocol/sdk/server/stdio.js');
-const {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
-} = require('@modelcontextprotocol/sdk/types.js');
+import { execFile } from 'node:child_process';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { promisify } from 'node:util';
+
+let Server;
+let StdioServerTransport;
+let CallToolRequestSchema;
+let ListToolsRequestSchema;
+
+const execFileAsync = promisify(execFile);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const APP_ROOT = path.resolve(__dirname, '..');
+
+async function runBrightDataSdk(method, payload) {
+  const pythonCode = String.raw`
+import asyncio
+import json
+import os
+import sys
+from pathlib import Path
+
+repo_root = Path(sys.argv[2])
+sys.path.insert(0, str(repo_root))
+
+from backend.brightdata_sdk_client import BrightDataSDKClient
+
+async def main():
+    payload = json.loads(sys.argv[1])
+    client = BrightDataSDKClient()
+    try:
+        if sys.argv[3] == "search_engine":
+            result = await client.search_engine(
+                query=payload.get("query", ""),
+                engine=payload.get("engine", "google"),
+                country=payload.get("country", "us"),
+                num_results=int(payload.get("num_results", 10) or 10),
+            )
+        elif sys.argv[3] == "scrape_as_markdown":
+            result = await client.scrape_as_markdown(payload.get("url", ""))
+        elif sys.argv[3] == "scrape_batch":
+            result = await client.scrape_batch(payload.get("urls", []))
+        else:
+            raise RuntimeError(f"Unsupported BrightData SDK method: {sys.argv[3]}")
+        print(json.dumps(result))
+    finally:
+        await client.close()
+
+asyncio.run(main())
+`;
+
+  const { stdout } = await execFileAsync(
+    'python3',
+    ['-c', pythonCode, JSON.stringify(payload), APP_ROOT, method],
+    {
+      env: {
+        ...process.env,
+        PYTHONPATH: APP_ROOT,
+      },
+      maxBuffer: 10 * 1024 * 1024,
+    }
+  );
+
+  return JSON.parse(String(stdout || '{}').trim() || '{}');
+}
+
+async function loadMcpSdk() {
+  ({
+    Server,
+  } = await import('@modelcontextprotocol/sdk/server/index.js'));
+  ({
+    StdioServerTransport,
+  } = await import('@modelcontextprotocol/sdk/server/stdio.js'));
+  ({
+    CallToolRequestSchema,
+    ListToolsRequestSchema,
+  } = await import('@modelcontextprotocol/sdk/types.js'));
+}
 
 class BrightDataMCPServer {
   constructor() {
@@ -135,61 +208,24 @@ class BrightDataMCPServer {
 
   async handleSearchEngine(args) {
     const { query, engine = 'google', cursor } = args;
-    
-    if (!process.env.BRIGHTDATA_TOKEN || !process.env.BRIGHTDATA_ZONE) {
-      throw new Error('BrightData credentials not configured. Please set BRIGHTDATA_TOKEN and BRIGHTDATA_ZONE environment variables.');
-    }
-
-    console.log(`Searching ${engine} for: ${query}`);
-    
-    // Construct BrightData search API URL
-    const searchUrl = `https://api.brightdata.com/serp/${engine}`;
-    const params = new URLSearchParams({
-      query,
-      num_results: '10',
-      api_key: process.env.BRIGHTDATA_TOKEN,
-      country: 'us',
-      language: 'en'
-    });
-
-    if (cursor) {
-      params.append('cursor', cursor);
-    }
-
     try {
-      const response = await fetch(`${searchUrl}?${params}`, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-        },
+      const data = await runBrightDataSdk('search_engine', {
+        query,
+        engine,
+        country: 'us',
+        num_results: 10,
+        cursor,
       });
 
-      if (!response.ok) {
-        throw new Error(`BrightData API error: ${response.status} ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      
-      // Format results for RFP scanning
+      const results = Array.isArray(data.results) ? data.results : [];
       let resultsText = `Search results for "${query}" on ${engine}:\n\n`;
-      
-      if (data.organic_results && Array.isArray(data.organic_results)) {
-        data.organic_results.forEach((result, index) => {
-          resultsText += `${index + 1}. ${result.title}\n`;
-          resultsText += `   URL: ${result.link}\n`;
-          resultsText += `   Description: ${result.description || 'No description available'}\n\n`;
-        });
-      }
-
-      if (data.search_information) {
-        resultsText += `\nSearch completed in ${data.search_information.time_taken_displayed}s\n`;
-      }
-
-      if (data.related_searches && data.related_searches.length > 0) {
-        resultsText += `\nRelated searches for RFP discovery:\n`;
-        data.related_searches.slice(0, 5).forEach(related => {
-          resultsText += `- ${related.query}\n`;
-        });
+      results.forEach((result, index) => {
+        resultsText += `${index + 1}. ${result.title || 'Untitled'}\n`;
+        resultsText += `   URL: ${result.url || ''}\n`;
+        resultsText += `   Description: ${result.snippet || 'No description available'}\n\n`;
+      });
+      if (data.metadata?.source) {
+        resultsText += `\nSource: ${data.metadata.source}\n`;
       }
 
       return {
@@ -208,56 +244,9 @@ class BrightDataMCPServer {
 
   async handleScrapeAsMarkdown(args) {
     const { url } = args;
-    
-    if (!process.env.BRIGHTDATA_TOKEN || !process.env.BRIGHTDATA_ZONE) {
-      throw new Error('BrightData credentials not configured. Please set BRIGHTDATA_TOKEN and BRIGHTDATA_ZONE environment variables.');
-    }
-
-    console.log(`Scraping URL: ${url}`);
-    
     try {
-      // Use BrightData scraping API
-      const scrapeUrl = `https://api.brightdata.com/scrape`;
-      const params = new URLSearchParams({
-        url,
-        format: 'markdown',
-        api_key: process.env.BRIGHTDATA_TOKEN,
-        country: 'us',
-        language: 'en'
-      });
-
-      const response = await fetch(`${scrapeUrl}?${params}`, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`BrightData scrape error: ${response.status} ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      
-      if (!data.content) {
-        throw new Error('No content returned from scraping service');
-      }
-
-      // Extract RFP-relevant information
-      let processedContent = data.content;
-      
-      // Look for RFP-specific keywords and highlight them
-      const rfpKeywords = [
-        'request for proposal', 'RFP', 'tender', 'procurement', 
-        'bid deadline', 'submission', 'vendor', 'supplier',
-        'contract opportunity', 'solicitation'
-      ];
-      
-      rfpKeywords.forEach(keyword => {
-        const regex = new RegExp(`\\b(${keyword})\\b`, 'gi');
-        processedContent = processedContent.replace(regex, '**$1**');
-      });
-
+      const data = await runBrightDataSdk('scrape_as_markdown', { url });
+      const processedContent = String(data.content || data.markdown || data.text || '');
       const resultText = `Content scraped from ${url}:\n\n${processedContent}\n\n---\nScraped at: ${new Date().toISOString()}`;
 
       return {
@@ -276,23 +265,14 @@ class BrightDataMCPServer {
 
   async handleScrapeBatch(args) {
     const { urls } = args;
-    
-    if (!process.env.BRIGHTDATA_TOKEN || !process.env.BRIGHTDATA_ZONE) {
-      throw new Error('BrightData credentials not configured. Please set BRIGHTDATA_TOKEN and BRIGHTDATA_ZONE environment variables.');
-    }
-
-    console.log(`Batch scraping ${urls.length} URLs`);
-    
     const results = [];
-    
     for (const url of urls) {
       try {
-        // Reuse single scrape logic for each URL
-        const result = await this.handleScrapeAsMarkdown({ url });
+        const result = await runBrightDataSdk('scrape_as_markdown', { url });
         results.push({
           url,
           success: true,
-          content: result.content[0].text,
+          content: String(result.content || result.markdown || result.text || ''),
         });
       } catch (error) {
         results.push({
@@ -302,9 +282,7 @@ class BrightDataMCPServer {
         });
       }
     }
-
     let batchResultText = `Batch scraping completed for ${urls.length} URLs:\n\n`;
-    
     results.forEach((result, index) => {
       batchResultText += `${index + 1}. ${result.url}\n`;
       if (result.success) {
@@ -314,10 +292,8 @@ class BrightDataMCPServer {
         batchResultText += `   ❌ Failed: ${result.error}\n\n`;
       }
     });
-
     const successfulScrapes = results.filter(r => r.success).length;
     batchResultText += `\nSummary: ${successfulScrapes}/${urls.length} URLs successfully scraped`;
-
     return {
       content: [
         {
@@ -336,5 +312,10 @@ class BrightDataMCPServer {
 }
 
 // Run the server
-const server = new BrightDataMCPServer();
-server.run().catch(console.error);
+async function main() {
+  await loadMcpSdk();
+  const server = new BrightDataMCPServer();
+  await server.run();
+}
+
+main().catch(console.error);

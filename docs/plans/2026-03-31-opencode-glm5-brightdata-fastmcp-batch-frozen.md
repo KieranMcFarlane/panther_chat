@@ -22,8 +22,9 @@ The question-first worktree config is:
 It is configured with:
 - model: `zai-coding-plan/glm-5`
 - provider label: `Z.AI Coding Plan`
-- MCP transport: remote BrightData FastMCP
-- MCP URL: `http://127.0.0.1:8000/mcp`
+- MCP transport: local `node` command
+- MCP command: `node /Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/src/mcp-brightdata-server.js`
+- MCP URL passed through the local command env: `http://127.0.0.1:8000/mcp`
 
 ### Runtime env
 The repo env points the BrightData runtime at the local FastMCP service:
@@ -57,12 +58,13 @@ Fix:
   - `/.worktrees/opencode-question-first-ssot`
 - it no longer falls back to the repo-root BrightData stdio config for the question-first smoke path
 
-### 2. BrightData transport had to be remote MCP, not local stdio
+### 2. BrightData transport had to be a local stdio MCP command
 The OpenCode config now uses:
-- `type: "remote"`
-- `url: "http://127.0.0.1:8000/mcp"`
+- `type: "local"`
+- `command: ["node", "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/src/mcp-brightdata-server.js"]`
+- `environment.BRIGHTDATA_FASTMCP_URL = "http://127.0.0.1:8000/mcp"`
 
-That matches the FastMCP service actually running on port 8000.
+That local stdio server is the bridge OpenCode can load reliably, and it proxies to the FastMCP service on port 8000.
 
 ### 3. OpenCode needed a stricter answer contract
 The prompt was tightened so the model:
@@ -142,6 +144,7 @@ That means:
 
 1. Use the question-first worktree config for all OpenCode smoke runs.
 2. Keep BrightData on remote MCP URL `http://127.0.0.1:8000/mcp`.
+2. Keep BrightData routed through the local stdio server command that proxies to the FastMCP URL.
 3. Use `zai-coding-plan/glm-5` for the batch smoke.
 4. Treat plain text + fenced JSON as the expected OpenCode response shape.
 5. Keep `scrape_batch` list normalization in `BrightDataMCPClient`.
@@ -154,4 +157,3 @@ That means:
 - [apps/signal-noise-app/backend/brightdata_fastmcp_service.py](/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/backend/brightdata_fastmcp_service.py)
 - [/.worktrees/opencode-question-first-ssot/opencode.json](/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot/opencode.json)
 - [apps/signal-noise-app/.env](/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/.env)
-

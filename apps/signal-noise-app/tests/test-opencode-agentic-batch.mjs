@@ -34,15 +34,23 @@ test('buildOpenCodeConfig wires Z.AI and BrightData FastMCP for OpenCode', () =>
   assert.equal(config.provider['zai-coding-plan'].options.baseURL, 'https://api.z.ai/api/anthropic');
   assert.equal(config.provider['zai-coding-plan'].options.apiKey, 'test-zai-token');
   assert.ok(config.mcp.brightData);
-  assert.equal(config.mcp.brightData.type, 'remote');
+  assert.equal(config.mcp.brightData.type, 'local');
   assert.equal(config.mcp.brightData.enabled, true);
-  assert.equal(config.mcp.brightData.url, 'http://127.0.0.1:8000/mcp');
+  assert.deepEqual(config.mcp.brightData.command, [
+    'node',
+    '/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/src/mcp-brightdata-server.js',
+  ]);
+  assert.deepEqual(config.mcp.brightData.environment, {
+    BRIGHTDATA_FASTMCP_URL: 'http://127.0.0.1:8000/mcp',
+    BRIGHTDATA_MCP_USE_HOSTED: 'false',
+    BRIGHTDATA_MCP_HOSTED_URL: '',
+  });
   assert.match(config.instructions[0], /FastMCP/);
   assert.equal(config.agent.discovery.steps, 4);
   assert.equal(config.agent.discovery.model, 'zai-coding-plan/glm-5');
-  assert.deepEqual(config.tools, { 'brightdata*': false });
-  assert.deepEqual(config.agent.build.tools, { 'brightdata*': true });
-  assert.deepEqual(config.agent.discovery.tools, { 'brightdata*': true });
+  assert.deepEqual(config.tools, { 'brightData_*': false });
+  assert.deepEqual(config.agent.build.tools, { 'brightData_*': true });
+  assert.deepEqual(config.agent.discovery.tools, { 'brightData_*': true });
   if (previousZaiKey === undefined) {
     delete process.env.ANTHROPIC_AUTH_TOKEN;
   } else {
@@ -193,6 +201,29 @@ test('ensureBrightDataFastMcpService starts the local service when health is dow
   assert.equal(seen[1][0], 'python3');
   assert.match(seen[1][1][0], /start_brightdata_fastmcp_service\.py$/);
   assert.equal(seen.includes('unref'), true);
+});
+
+test('ensureBrightDataFastMcpService forces local BrightData transport flags', async () => {
+  let capturedEnv = null;
+  const fetchImpl = async () => {
+    throw new Error('connect ECONNREFUSED');
+  };
+  const spawnImpl = (...args) => {
+    capturedEnv = args[2]?.env || null;
+    return {
+      unref() {},
+    };
+  };
+
+  await ensureBrightDataFastMcpService({
+    fetchImpl,
+    spawnImpl,
+    serviceUrl: 'http://127.0.0.1:8000/mcp',
+    healthUrl: 'http://127.0.0.1:8000/health',
+  });
+
+  assert.equal(capturedEnv.BRIGHTDATA_MCP_USE_HOSTED, 'false');
+  assert.equal(capturedEnv.BRIGHTDATA_MCP_HOSTED_URL, '');
 });
 
 test('extractFinalCliJson parses fenced JSON embedded in prose', () => {
