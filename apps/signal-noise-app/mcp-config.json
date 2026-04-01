@@ -13,7 +13,15 @@
         "EMBEDDING_MODEL": "text-embedding-3-small",
         "OPENAI_API_KEY": "${OPENAI_API_KEY}"
       }
+    },
+    "brightdata-mcp": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["src/mcp-brightdata-server.js"],
+      "env": {
+        "BRIGHTDATA_API_TOKEN": "${BRIGHTDATA_API_TOKEN}"
+      }
     }
   },
-  "_comment": "BrightData MCP server removed - now using brightdata-sdk directly via backend/brightdata_sdk_client.py with HTTP fallback"
+  "_comment": "BrightData now uses the same local stdio bridge as the question-first worktree; no streamableHttp BrightData server remains."
 }

@@ -24,7 +24,7 @@ It is configured with:
 - provider label: `Z.AI Coding Plan`
 - MCP transport: local `node` command
 - MCP command: `node /Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/src/mcp-brightdata-server.js`
-- MCP URL passed through the local command env: `http://127.0.0.1:8000/mcp`
+- MCP env keeps BrightData on the local API token path; no streamableHttp BrightData server remains in the repo configs
 
 ### Runtime env
 The repo env points the BrightData runtime at the local FastMCP service:
@@ -51,20 +51,21 @@ It starts BrightData FastMCP on:
 ## What Was Fixed
 
 ### 1. OpenCode was loading the wrong BrightData config
-The repo-root batch path was letting the stale `.mcp.json` shape leak in.
+The repo-root batch path was letting the stale `.mcp.json` BrightData streamableHttp shape leak in.
 
 Fix:
 - the batch runner now resolves the dedicated question-first worktree root:
   - `/.worktrees/opencode-question-first-ssot`
-- it no longer falls back to the repo-root BrightData stdio config for the question-first smoke path
+- both repo MCP configs now point BrightData at the same local stdio bridge
+- the repo-root stale BrightData streamableHttp server entry was removed
 
 ### 2. BrightData transport had to be a local stdio MCP command
 The OpenCode config now uses:
 - `type: "local"`
 - `command: ["node", "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/src/mcp-brightdata-server.js"]`
-- `environment.BRIGHTDATA_FASTMCP_URL = "http://127.0.0.1:8000/mcp"`
+- `environment.BRIGHTDATA_API_TOKEN = "${BRIGHTDATA_API_TOKEN}"`
 
-That local stdio server is the bridge OpenCode can load reliably, and it proxies to the FastMCP service on port 8000.
+That local stdio server is the bridge OpenCode can load reliably. It keeps the BrightData story consistent with the rest of the repo configs and avoids the old streamableHttp path.
 
 ### 3. OpenCode needed a stricter answer contract
 The prompt was tightened so the model:
@@ -143,8 +144,8 @@ That means:
 ## Practical Rules Going Forward
 
 1. Use the question-first worktree config for all OpenCode smoke runs.
-2. Keep BrightData on remote MCP URL `http://127.0.0.1:8000/mcp`.
-2. Keep BrightData routed through the local stdio server command that proxies to the FastMCP URL.
+2. Keep BrightData routed through the local stdio server command shared by the repo configs.
+3. Keep the FastMCP service on port 8000 for the app-side service path.
 3. Use `zai-coding-plan/glm-5` for the batch smoke.
 4. Treat plain text + fenced JSON as the expected OpenCode response shape.
 5. Keep `scrape_batch` list normalization in `BrightDataMCPClient`.

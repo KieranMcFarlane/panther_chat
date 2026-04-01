@@ -9,8 +9,8 @@ This note captures the working setup for the question-first discovery path so we
 The canonical working shape is:
 
 1. OpenCode runs the question-first prompt loop.
-2. OpenCode uses the local BrightData FastMCP service.
-3. The FastMCP service listens on `127.0.0.1:8000`.
+2. OpenCode uses the local BrightData stdio bridge.
+3. The app-side BrightData FastMCP service listens on `127.0.0.1:8000`.
 4. OpenCode returns validated JSON.
 
 ## What the setup looks like now
@@ -48,7 +48,7 @@ The important bit is the local MCP launcher:
 }
 ```
 
-That config also tells OpenCode to use the `Z.AI Coding Plan` provider. If a manual login is needed, the OpenCode docs say to use:
+That config also tells OpenCode to use the `Z.AI Coding Plan` provider and keeps BrightData on the local stdio bridge used by the repo configs. If a manual login is needed, the OpenCode docs say to use:
 
 ```bash
 opencode auth login
@@ -63,14 +63,15 @@ The setup kept getting lost because the transport boundary was spread across mul
 - `.env` had the port and FastMCP URL
 - the OpenCode config had the local launcher
 - the question-first batch path had to be run from the correct worktree
-- the repository also still contains older BrightData compatibility paths
+- the repository also still contained an older BrightData streamableHttp path in `.mcp.json`
+- `mcp-config.json` still claimed BrightData had been removed
 
 The working fix is to treat the question-first worktree config as the source of truth for the smoke:
 
 - launch `start_brightdata_fastmcp_service.py`
 - keep it on port `8000`
 - run OpenCode from `.worktrees/opencode-question-first-ssot`
-- rely on the local FastMCP service, not the old hosted or fallback path
+- rely on the local stdio BrightData bridge and remove the stale streamableHttp config
 
 ## Known-good terminal proof
 
@@ -124,5 +125,6 @@ If you need to verify the stack again:
 ## Notes
 
 - The repo still contains older BrightData compatibility paths. Those are historical or fallback paths and should not be treated as the primary setup for the question-first smoke.
+- The repo no longer advertises the old BrightData streamableHttp server in `.mcp.json` or the removed-BrightData comment in `mcp-config.json`.
 - OpenCode provider auth is already present in the repo environment here, so the smoke did not require an extra login step.
 - If a future environment lacks provider credentials, use `opencode auth login` and select `Z.AI Coding Plan`.
