@@ -1225,7 +1225,25 @@ export async function runOpenCodePresetBatch({
         }
         const hopTimeoutMs = Math.max(1000, Math.min(atomicHopTimeoutMs, remainingMs));
         const executionQuestion = _buildExecutionQuestion(question, executionQuery, hopIndex);
+        runState = _decorateRunStateCheckpoint(runState, {
+          runPhase: 'question_runner_enter',
+          activeQuestionIndex: index,
+          activeQuestion: executionQuestion,
+          activeHopIndex: hopIndex,
+          activeQuery: executionQuestion.query,
+        });
+        runState.questions[index] = existingQuestionState;
+        await _writeJsonFile(statePath, runState);
         questionRun = await questionRunner(executionQuestion, { worktreeRoot: resolvedWorktreeRoot, opencodeTimeoutMs: hopTimeoutMs });
+        runState = _decorateRunStateCheckpoint(runState, {
+          runPhase: 'question_runner_return',
+          activeQuestionIndex: index,
+          activeQuestion: executionQuestion,
+          activeHopIndex: hopIndex,
+          activeQuery: executionQuestion.query,
+        });
+        runState.questions[index] = existingQuestionState;
+        await _writeJsonFile(statePath, runState);
         questionPayload = _buildQuestionPayload(
           question,
           questionRun.structuredOutput || {},
@@ -1336,7 +1354,25 @@ export async function runOpenCodePresetBatch({
             runState.questions[index] = existingQuestionState;
             break;
           }
+          runState = _decorateRunStateCheckpoint(runState, {
+            runPhase: 'question_runner_enter',
+            activeQuestionIndex: index,
+            activeQuestion: executionQuestion,
+            activeHopIndex: hopIndex,
+            activeQuery: executionQuestion.query,
+          });
+          runState.questions[index] = existingQuestionState;
+          await _writeJsonFile(statePath, runState);
           questionRun = await questionRunner(executionQuestion, { worktreeRoot: resolvedWorktreeRoot, opencodeTimeoutMs });
+          runState = _decorateRunStateCheckpoint(runState, {
+            runPhase: 'question_runner_return',
+            activeQuestionIndex: index,
+            activeQuestion: executionQuestion,
+            activeHopIndex: hopIndex,
+            activeQuery: executionQuestion.query,
+          });
+          runState.questions[index] = existingQuestionState;
+          await _writeJsonFile(statePath, runState);
           questionPayload = _buildQuestionPayload(
             question,
             questionRun.structuredOutput || {},

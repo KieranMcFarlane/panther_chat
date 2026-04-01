@@ -480,7 +480,7 @@ test('runOpenCodeQuestionSourceBatch writes an initial checkpoint before the fir
     assert.equal(existsSync(statePath), true);
 
     const checkpoint = JSON.parse(readFileSync(statePath, 'utf8'));
-    assert.equal(checkpoint.run_phase, 'question_start');
+    assert.equal(checkpoint.run_phase, 'question_runner_enter');
     assert.equal(checkpoint.active_question_index, 0);
     assert.equal(checkpoint.active_question_id, 'q1_foundation');
     assert.equal(checkpoint.active_query, '"Arsenal Football Club" founded year');
@@ -506,6 +506,107 @@ test('runOpenCodeQuestionSourceBatch writes an initial checkpoint before the fir
     assert.equal(result.questions_total, 1);
     assert.equal(result.questions_no_signal, 1);
     assert.equal(result.questions_validated, 0);
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
+test('runOpenCodeQuestionSourceBatch records question runner entry and return checkpoints', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-question-source-trace-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'arsenal-fc',
+        entity_name: 'Arsenal Football Club',
+        entity_type: 'SPORT_CLUB',
+        preset: 'arsenal-atomic-matrix',
+        question_source_label: 'arsenal-atomic-matrix',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        question_count: 1,
+        questions: [
+          {
+            question_id: 'q1_foundation',
+            question_type: 'foundation',
+            question: 'What year was {entity} founded?',
+            query: '"Arsenal Football Club" founded year',
+            hop_budget: 8,
+            evidence_extension_budget: 1,
+            evidence_extension_confidence_threshold: 0.65,
+            question_timeout_ms: 180000,
+            hop_timeout_ms: 180000,
+            source_priority: ['google_serp', 'official_site', 'wikipedia'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  let resolveFirstQuestion;
+  const questionRunner = async () => {
+    return await new Promise((resolve) => {
+      resolveFirstQuestion = resolve;
+    });
+  };
+
+  try {
+    const runPromise = runOpenCodeQuestionSourceBatch({
+      questionSourcePath: sourcePath,
+      outputDir,
+      questionRunner,
+    });
+
+    const statePath = join(outputDir, 'arsenal-fc_arsenal-atomic-matrix_state.json');
+    for (let index = 0; index < 40; index += 1) {
+      if (existsSync(statePath)) {
+        break;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 25));
+    }
+
+    const checkpoint = JSON.parse(readFileSync(statePath, 'utf8'));
+    assert.equal(checkpoint.run_phase, 'question_runner_enter');
+    assert.equal(checkpoint.active_question_id, 'q1_foundation');
+
+    resolveFirstQuestion({
+      structuredOutput: {
+        answer: '',
+        confidence: 0,
+        validation_state: 'no_signal',
+        sources: [],
+      },
+      promptTrace: {
+        exit_code: 0,
+        stdout_length: 0,
+        stderr_length: 0,
+        has_structured_output: true,
+      },
+      messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
+      cliResult: { code: 0, stdout: '{"answer":""}', stderr: '' },
+    });
+
+    const result = await runPromise;
+    assert.equal(result.questions_total, 1);
+    assert.equal(result.questions_no_signal, 1);
+
+    const finalState = JSON.parse(readFileSync(statePath, 'utf8'));
+    assert.equal(finalState.run_phase, 'completed');
+    assert.equal(finalState.active_question_id, '');
   } finally {
     if (previousZaiKey === undefined) {
       delete process.env.ANTHROPIC_AUTH_TOKEN;
