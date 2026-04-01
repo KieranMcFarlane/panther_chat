@@ -214,7 +214,7 @@ def build_atomic_discovery_pack_questions(
                     "question_shape": "atomic",
                     "hop_budget": 10,
                     "evidence_extension_budget": 10,
-                    "evidence_extension_confidence_threshold": 0.9,
+                    "evidence_extension_confidence_threshold": 0.65,
                     "hop_timeout_ms": 180000,
                     "question_timeout_ms": 180000,
                     "evidence_focus": evidence_focus,

@@ -324,7 +324,7 @@ function _resolveEvidenceExtensionConfidenceThreshold(question, questionState) {
   if (Number.isFinite(stateThreshold) && stateThreshold >= 0 && stateThreshold <= 1) {
     return stateThreshold;
   }
-  return 0.9;
+  return 0.65;
 }
 
 function _questionHasStrongEvidence(questionPayload, confidenceThreshold = 0.9) {
@@ -438,7 +438,7 @@ export function buildQuestionState(question, { runId = 'cli', timestamp = new Da
       : Number(question.hop_budget || 0),
     evidence_extension_confidence_threshold: Number.isFinite(Number(question.evidence_extension_confidence_threshold))
       ? Number(question.evidence_extension_confidence_threshold)
-      : 0.9,
+      : 0.65,
     question_timeout_ms: Number.isFinite(Number(question.question_timeout_ms))
       ? Number(question.question_timeout_ms)
       : undefined,
@@ -985,7 +985,7 @@ function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTr
       : Number(question.hop_budget || 0),
     evidence_extension_confidence_threshold: Number.isFinite(Number(question.evidence_extension_confidence_threshold))
       ? Number(question.evidence_extension_confidence_threshold)
-      : 0.9,
+      : 0.65,
     question_timeout_ms: Number.isFinite(Number(question.question_timeout_ms))
       ? Number(question.question_timeout_ms)
       : undefined,

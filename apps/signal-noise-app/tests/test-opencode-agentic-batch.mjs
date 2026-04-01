@@ -793,7 +793,7 @@ test('runOpenCodePresetBatch does not extend when evidence confidence is below t
           query: '"Test Entity" founded',
           hop_budget: 1,
           evidence_extension_budget: 1,
-          evidence_extension_confidence_threshold: 0.9,
+          evidence_extension_confidence_threshold: 0.65,
           question_timeout_ms: 5000,
           source_priority: ['google_serp', 'official_site', 'wikipedia'],
           yp_service_fit: [],
@@ -805,7 +805,7 @@ test('runOpenCodePresetBatch does not extend when evidence confidence is below t
           structuredOutput: {
             answer: '1886',
             signal_type: 'FOUNDATION',
-            confidence: 0.85,
+            confidence: 0.64,
             validation_state: 'validated',
             evidence_url: 'https://example.com/history',
             recommended_next_query: 'Test Entity founding evidence',

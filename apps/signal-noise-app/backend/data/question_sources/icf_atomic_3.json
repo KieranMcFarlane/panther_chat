@@ -10,7 +10,7 @@
       "question": "What year was {entity} founded?",
       "query": "International Canoe Federation founded year",
       "hop_budget": 6,
-      "evidence_extension_confidence_threshold": 0.9,
+      "evidence_extension_confidence_threshold": 0.65,
       "source_priority": [
         "google_serp",
         "official_site",
@@ -23,7 +23,7 @@
       "question": "Is there evidence {entity} is replacing or launching a digital fan engagement platform?",
       "query": "International Canoe Federation digital fan engagement platform replacement launch",
       "hop_budget": 6,
-      "evidence_extension_confidence_threshold": 0.9,
+      "evidence_extension_confidence_threshold": 0.65,
       "source_priority": [
         "google_serp",
         "official_site",
@@ -37,7 +37,7 @@
       "question": "Who leads commercial partnerships or business development at {entity}?",
       "query": "International Canoe Federation commercial partnerships business development",
       "hop_budget": 6,
-      "evidence_extension_confidence_threshold": 0.9,
+      "evidence_extension_confidence_threshold": 0.65,
       "source_priority": [
         "google_serp",
         "official_site",
