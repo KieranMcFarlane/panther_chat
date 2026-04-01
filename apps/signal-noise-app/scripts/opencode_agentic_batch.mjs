@@ -569,6 +569,28 @@ function _applyRunBudgetOverrides(runState, overrides = {}) {
   return nextState;
 }
 
+function _decorateRunStateCheckpoint(runState, {
+  runPhase = 'running',
+  activeQuestionIndex = null,
+  activeQuestion = null,
+  activeHopIndex = null,
+  activeQuery = '',
+} = {}) {
+  const activeQuestionId = activeQuestion?.question_id || '';
+  const activeQuestionType = activeQuestion?.question_type || '';
+  const activeQuestionText = activeQuestion ? _questionText(activeQuestion) : '';
+  return {
+    ...runState,
+    run_phase: runPhase,
+    active_question_index: activeQuestionIndex,
+    active_question_id: activeQuestionId,
+    active_question_type: activeQuestionType,
+    active_question_text: activeQuestionText,
+    active_hop_index: activeHopIndex,
+    active_query: activeQuery,
+  };
+}
+
 function _buildCreditOverrides({ searchCredits, scrapeCredits, revisitCredits, confidenceThreshold } = {}) {
   return {
     searchCredits: _coerceNumber(searchCredits),
@@ -1124,7 +1146,7 @@ export async function runOpenCodePresetBatch({
   const runStartedAt = new Date().toISOString();
   const statePath = _buildStateFilePath(outputDir, normalizedPreset, entityId);
   const existingState = resume ? await _loadJsonFile(statePath) : null;
-  const runState = existingState && typeof existingState === 'object' ? existingState : buildPresetRunState(questions, { preset: normalizedPreset, runId: 'cli', timestamp: runStartedAt });
+  let runState = existingState && typeof existingState === 'object' ? existingState : buildPresetRunState(questions, { preset: normalizedPreset, runId: 'cli', timestamp: runStartedAt });
   const budgetOverrides = _buildCreditOverrides({ searchCredits, scrapeCredits, revisitCredits, confidenceThreshold });
   runState.last_run_at = runStartedAt;
   runState.preset = normalizedPreset;
@@ -1137,6 +1159,14 @@ export async function runOpenCodePresetBatch({
       return nextState;
     });
   }
+  runState = _decorateRunStateCheckpoint(runState, {
+    runPhase: 'initialized',
+    activeQuestionIndex: questions.length > 0 ? 0 : null,
+    activeQuestion: questions[0] || null,
+    activeHopIndex: 0,
+    activeQuery: questions[0]?.query || '',
+  });
+  await _writeJsonFile(statePath, runState);
 
   const finalQuestions = [];
   const perQuestionPayloads = [];
@@ -1147,6 +1177,15 @@ export async function runOpenCodePresetBatch({
       let existingQuestionState = runState.questions[index];
       const currentQuestionState = existingQuestionState || buildQuestionState(question, { runId: `cli-${index + 1}`, timestamp: runStartedAt, creditBudgetOverrides: budgetOverrides, confidenceThreshold: budgetOverrides.confidenceThreshold });
       existingQuestionState = currentQuestionState;
+      runState = _decorateRunStateCheckpoint(runState, {
+        runPhase: 'question_start',
+        activeQuestionIndex: index,
+        activeQuestion: question,
+        activeHopIndex: 0,
+        activeQuery: question.query,
+      });
+      runState.questions[index] = existingQuestionState;
+      await _writeJsonFile(statePath, runState);
       const pendingFrontierItems = resume && existingQuestionState ? _getPendingFrontierItems(existingQuestionState) : [];
       const shouldReplayFrontier = pendingFrontierItems.length > 0;
       const baseHopBudget = Math.max(1, Number(question.hop_budget || 0) || 10);
@@ -1465,12 +1504,18 @@ export async function runOpenCodePresetBatch({
 	    });
 	    validateQuestionFirstRunArtifact(questionFirstArtifact);
 	    await fs.writeFile(questionFirstRunPath, JSON.stringify(questionFirstArtifact, null, 2), 'utf8');
-	    await _writeJsonFile(statePath, {
-	      ...runState,
-	      last_run_at: new Date().toISOString(),
-	      preset: normalizedPreset,
-	      questions: runState.questions,
-    });
+    await _writeJsonFile(statePath, _decorateRunStateCheckpoint({
+      ...runState,
+      last_run_at: new Date().toISOString(),
+      preset: normalizedPreset,
+      questions: runState.questions,
+    }, {
+      runPhase: 'completed',
+      activeQuestionIndex: null,
+      activeQuestion: null,
+      activeHopIndex: null,
+      activeQuery: '',
+    }));
 
     return {
       ...rollupPayload,
