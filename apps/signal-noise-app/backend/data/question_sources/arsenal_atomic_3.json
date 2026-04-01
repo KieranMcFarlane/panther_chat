@@ -21,14 +21,15 @@
       "question_id": "q2_procurement_signal",
       "question_type": "procurement",
       "question": "Is there evidence {entity} is replacing or launching a digital fan engagement platform?",
-      "query": "Arsenal Football Club digital fan engagement platform replacement launch",
+      "query": "Arsenal Football Club digital fan engagement platform procurement launch",
       "hop_budget": 6,
       "evidence_extension_confidence_threshold": 0.65,
       "source_priority": [
         "google_serp",
-        "official_site",
+        "news",
+        "press_release",
         "linkedin_posts",
-        "news"
+        "official_site"
       ]
     },
     {
