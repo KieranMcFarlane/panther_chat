@@ -1,0 +1,53 @@
+{
+  "entity_id": "major-league-cricket",
+  "entity_name": "Major League Cricket",
+  "entity_type": "SPORT_LEAGUE",
+  "preset": "mlc-rfp-core",
+  "questions": [
+    {
+      "question_id": "q1_rfp",
+      "question_type": "procurement",
+      "question": "Is there public evidence that {entity} is running an RFP?",
+      "query": "Major League Cricket RFP",
+      "hop_budget": 2,
+      "evidence_extension_confidence_threshold": 0.65,
+      "source_priority": [
+        "google_serp",
+        "linkedin_posts",
+        "news",
+        "press_release",
+        "official_site"
+      ]
+    },
+    {
+      "question_id": "q2_tender",
+      "question_type": "procurement",
+      "question": "Is there public evidence that {entity} is running a tender?",
+      "query": "Major League Cricket tender",
+      "hop_budget": 2,
+      "evidence_extension_confidence_threshold": 0.65,
+      "source_priority": [
+        "google_serp",
+        "linkedin_posts",
+        "news",
+        "press_release",
+        "official_site"
+      ]
+    },
+    {
+      "question_id": "q3_procurement",
+      "question_type": "procurement",
+      "question": "Is there public evidence that {entity} is running procurement activity?",
+      "query": "Major League Cricket procurement",
+      "hop_budget": 2,
+      "evidence_extension_confidence_threshold": 0.65,
+      "source_priority": [
+        "google_serp",
+        "linkedin_posts",
+        "news",
+        "press_release",
+        "official_site"
+      ]
+    }
+  ]
+}
