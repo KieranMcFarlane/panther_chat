@@ -395,8 +395,8 @@ def build_poi_question_records(
     specs = [
         (
             "poi_commercial_partnerships_lead",
-            f"Who leads commercial partnerships or business development at {entity_name}?",
-            f'"{entity_name}" commercial partnerships LinkedIn',
+            f"Who is the most suitable person for commercial partnerships or business development at {entity_name}?",
+            f'"{entity_name}" business commercial partnerships business development LinkedIn',
             ["FAN_ENGAGEMENT"],
         ),
         (

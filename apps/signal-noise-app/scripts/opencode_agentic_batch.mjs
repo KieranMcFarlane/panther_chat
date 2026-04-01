@@ -70,8 +70,8 @@ function _presetQuestionSpecs(entityName) {
     {
       question_id: 'poi_commercial_partnerships_lead',
       question_type: 'poi',
-      question_text: `Who leads commercial partnerships or business development at ${entityName}?`,
-      query: `"${entityName}" commercial partnerships`,
+      question_text: `Who is the most suitable person for commercial partnerships or business development at ${entityName}?`,
+      query: `"${entityName}" business commercial partnerships business development`,
       hop_budget: 2,
       source_priority: ['google_serp', 'official_site', 'news'],
       yp_service_fit: ['FAN_ENGAGEMENT'],
@@ -778,7 +778,15 @@ export function buildOpenCodeConfig({
 
 export function buildOpenCodeQuestionPrompt(question) {
   const hopBudget = Math.max(1, Math.min(10, Number(question?.hop_budget || 10)));
-  return `${_questionText(question)} use brightdata. Start with search and use scraped pages only if the search results are not enough to validate the answer. You have at most ${hopBudget} hops. If you cannot validate a supported answer within that budget, return exactly one fenced JSON code block with answer "", confidence 0, sources [], and validation_state "no_signal", then stop. Otherwise return exactly one fenced JSON code block with the validated answer, confidence, and sources if available. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated answer.`;
+  const searchQueries = Array.isArray(question?.search_strategy?.search_queries)
+    ? question.search_strategy.search_queries
+        .map((query) => String(query || '').trim())
+        .filter(Boolean)
+    : [];
+  const searchHint = searchQueries.length > 0
+    ? `Suggested search queries: ${searchQueries.join(' | ')}.`
+    : '';
+  return `${_questionText(question)} use brightdata. ${searchHint} Start with search and use scraped pages only if the search results are not enough to validate the answer. You have at most ${hopBudget} hops. If you cannot validate a supported answer within that budget, return exactly one fenced JSON code block with answer "", confidence 0, sources [], and validation_state "no_signal", then stop. Otherwise return exactly one fenced JSON code block with the validated answer, confidence, and sources if available. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated answer.`;
 }
 
 export function buildOpenCodeQuestionCommand(question, { model = DEFAULT_QUESTION_MODEL } = {}) {

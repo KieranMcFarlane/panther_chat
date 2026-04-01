@@ -104,3 +104,27 @@ def test_canonical_atomic_matrix_sources_are_four_question_universal_matrices(
     assert all(question["question_timeout_ms"] == 180000 for question in payload["questions"])
     assert all(question["hop_timeout_ms"] == 180000 for question in payload["questions"])
     assert all(question["evidence_extension_confidence_threshold"] == 0.65 for question in payload["questions"])
+    if entity_id == "major-league-cricket":
+        assert payload["questions"][1]["question"] == (
+            "Has Major League Cricket launched a public app, product, or digital platform?"
+        )
+        assert payload["questions"][1]["search_strategy"]["search_queries"] == [
+            '"Major League Cricket" launched a public app',
+            '"Major League Cricket" launched a product',
+            '"Major League Cricket" launched a digital platform',
+        ]
+        assert payload["questions"][2]["search_strategy"]["search_queries"] == [
+            '"Major League Cricket" RFP',
+            '"Major League Cricket" tender',
+            '"Major League Cricket" procurement',
+            '"Major League Cricket" vendor',
+            '"Major League Cricket" sponsor',
+            '"Major League Cricket" broadcast',
+        ]
+        assert payload["questions"][3]["search_strategy"]["search_queries"] == [
+            '"Major League Cricket" business',
+            '"Major League Cricket" commercial partnerships',
+            '"Major League Cricket" business development',
+            '"Major League Cricket" LinkedIn',
+            '"Major League Cricket" leadership',
+        ]

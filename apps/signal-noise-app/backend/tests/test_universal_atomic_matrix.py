@@ -99,6 +99,29 @@ def test_universal_atomic_matrix_builds_consistent_four_question_sources():
     assert arsenal["questions"][0]["question"] == "What year was Arsenal Football Club founded?"
     assert icf["questions"][0]["question"] == "What year was International Canoe Federation founded?"
     assert mlc["questions"][0]["question"] == "What year was Major League Cricket founded?"
+    assert mlc["questions"][1]["question"] == (
+        "Has Major League Cricket launched a public app, product, or digital platform?"
+    )
+    assert mlc["questions"][1]["search_strategy"]["search_queries"] == [
+        '"Major League Cricket" launched a public app',
+        '"Major League Cricket" launched a product',
+        '"Major League Cricket" launched a digital platform',
+    ]
+    assert mlc["questions"][2]["search_strategy"]["search_queries"] == [
+        '"Major League Cricket" RFP',
+        '"Major League Cricket" tender',
+        '"Major League Cricket" procurement',
+        '"Major League Cricket" vendor',
+        '"Major League Cricket" sponsor',
+        '"Major League Cricket" broadcast',
+    ]
+    assert mlc["questions"][3]["search_strategy"]["search_queries"] == [
+        '"Major League Cricket" business',
+        '"Major League Cricket" commercial partnerships',
+        '"Major League Cricket" business development',
+        '"Major League Cricket" LinkedIn',
+        '"Major League Cricket" leadership',
+    ]
 
 
 def test_universal_atomic_matrix_output_matches_canonical_files():
@@ -144,4 +167,28 @@ def test_universal_atomic_matrix_output_matches_canonical_files():
         assert payload["pack_role"] == "discovery"
         assert payload["pack_stage"] == "atomic_matrix"
         assert payload["question_count"] == 4
+        if entity_id == "major-league-cricket":
+            assert payload["questions"][1]["question"] == (
+                "Has Major League Cricket launched a public app, product, or digital platform?"
+            )
+            assert payload["questions"][1]["search_strategy"]["search_queries"] == [
+                '"Major League Cricket" launched a public app',
+                '"Major League Cricket" launched a product',
+                '"Major League Cricket" launched a digital platform',
+            ]
+            assert payload["questions"][2]["search_strategy"]["search_queries"] == [
+                '"Major League Cricket" RFP',
+                '"Major League Cricket" tender',
+                '"Major League Cricket" procurement',
+                '"Major League Cricket" vendor',
+                '"Major League Cricket" sponsor',
+                '"Major League Cricket" broadcast',
+            ]
+            assert payload["questions"][3]["search_strategy"]["search_queries"] == [
+                '"Major League Cricket" business',
+                '"Major League Cricket" commercial partnerships',
+                '"Major League Cricket" business development',
+                '"Major League Cricket" LinkedIn',
+                '"Major League Cricket" leadership',
+            ]
         assert payload["questions"] == expected["questions"]

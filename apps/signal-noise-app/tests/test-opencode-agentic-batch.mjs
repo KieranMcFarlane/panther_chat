@@ -141,10 +141,20 @@ test('buildOpenCodeQuestionPrompt stays close to the proven direct prompt shape'
     source_priority: ['google_serp', 'official_site', 'wikipedia'],
     hop_budget: 2,
     query: '"Major League Cricket" founded',
+    search_strategy: {
+      search_queries: [
+        '"Major League Cricket" founded year',
+        '"Major League Cricket" established',
+      ],
+    },
     yp_service_fit: [],
   });
 
   assert.match(prompt, /When was Major League Cricket founded\? use brightdata\./i);
+  assert.match(
+    prompt,
+    /Suggested search queries: "Major League Cricket" founded year \| "Major League Cricket" established\./i,
+  );
   assert.match(prompt, /Start with search and use scraped pages only if the search results are not enough to validate the answer\./i);
   assert.match(prompt, /You have at most 2 hops/i);
   assert.match(prompt, /fenced JSON code block with answer "", confidence 0, sources \[\], and validation_state "no_signal"/i);

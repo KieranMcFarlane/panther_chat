@@ -61,7 +61,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "question_family": "procurement",
         "question_type": "procurement",
         "question": "Is there evidence {entity} is running an RFP, tender, or procurement for a digital platform?",
-        "query": '"{entity}" RFP tender procurement digital platform',
+        "query": '"{entity}" RFP tender procurement digital platform sponsor broadcast vendor',
         "hop_budget": HOP_BUDGET,
         "evidence_extension_budget": 2,
         "source_priority": [
@@ -79,8 +79,8 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "question_id": "q4_decision_owner",
         "question_family": "decision_owner",
         "question_type": "decision_owner",
-        "question": "Who leads commercial partnerships or business development at {entity}?",
-        "query": '"{entity}" commercial partnerships business development LinkedIn',
+        "question": "Who is the most suitable person for commercial partnerships or business development at {entity}?",
+        "query": '"{entity}" business commercial partnerships business development LinkedIn',
         "hop_budget": HOP_BUDGET,
         "evidence_extension_budget": 2,
         "source_priority": [
@@ -98,6 +98,43 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
     },
 ]
 
+MLC_ENTITY_ID = "major-league-cricket"
+MLC_QUESTION_OVERRIDES: Dict[str, Dict[str, Any]] = {
+    "q2_launch_signal": {
+        "question": "Has {entity} launched a public app, product, or digital platform?",
+        "search_strategy": {
+            "search_queries": [
+                '"{entity}" launched a public app',
+                '"{entity}" launched a product',
+                '"{entity}" launched a digital platform',
+            ]
+        },
+    },
+    "q3_procurement_signal": {
+        "search_strategy": {
+            "search_queries": [
+                '"{entity}" RFP',
+                '"{entity}" tender',
+                '"{entity}" procurement',
+                '"{entity}" vendor',
+                '"{entity}" sponsor',
+                '"{entity}" broadcast',
+            ]
+        },
+    },
+    "q4_decision_owner": {
+        "search_strategy": {
+            "search_queries": [
+                '"{entity}" business',
+                '"{entity}" commercial partnerships',
+                '"{entity}" business development',
+                '"{entity}" LinkedIn',
+                '"{entity}" leadership',
+            ]
+        },
+    },
+}
+
 
 def _slugify(value: str) -> str:
     slug = "".join(ch.lower() if ch.isalnum() else "-" for ch in str(value or "").strip())
@@ -106,7 +143,7 @@ def _slugify(value: str) -> str:
     return slug.strip("-") or "entity"
 
 
-def _render_question_spec(spec: Dict[str, Any], entity_name: str) -> Dict[str, Any]:
+def _render_question_spec(spec: Dict[str, Any], entity_name: str, entity_id: str) -> Dict[str, Any]:
     rendered = deepcopy(spec)
     rendered["question"] = str(rendered["question"]).format(entity=entity_name)
     rendered["query"] = str(rendered["query"]).format(entity=entity_name)
@@ -114,6 +151,19 @@ def _render_question_spec(spec: Dict[str, Any], entity_name: str) -> Dict[str, A
     rendered["question_timeout_ms"] = QUESTION_TIMEOUT_MS
     rendered["hop_timeout_ms"] = HOP_TIMEOUT_MS
     rendered["evidence_extension_confidence_threshold"] = EVIDENCE_EXTENSION_CONFIDENCE_THRESHOLD
+    if _slugify(entity_id) == MLC_ENTITY_ID:
+        overrides = MLC_QUESTION_OVERRIDES.get(str(rendered.get("question_id") or "").strip(), {})
+        if overrides:
+            rendered.update(deepcopy(overrides))
+            if "question" in overrides:
+                rendered["question"] = str(rendered["question"]).format(entity=entity_name)
+            if "search_strategy" in overrides:
+                rendered["search_strategy"] = {
+                    **deepcopy(overrides["search_strategy"]),
+                    "search_queries": [
+                        str(query).format(entity=entity_name) for query in overrides["search_strategy"].get("search_queries", [])
+                    ],
+                }
     return rendered
 
 
@@ -127,7 +177,7 @@ def build_universal_atomic_question_source(
 ) -> Dict[str, Any]:
     resolved_preset = str(preset or f"{_slugify(entity_name)}-atomic-matrix").strip()
     source_label = str(question_source_label or resolved_preset).strip()
-    questions = [_render_question_spec(spec, entity_name) for spec in UNIVERSAL_ATOMIC_QUESTION_SPECS]
+    questions = [_render_question_spec(spec, entity_name, entity_id) for spec in UNIVERSAL_ATOMIC_QUESTION_SPECS]
     return {
         "schema_version": "atomic_question_source_v1",
         "generated_at": datetime.now(timezone.utc).isoformat(),

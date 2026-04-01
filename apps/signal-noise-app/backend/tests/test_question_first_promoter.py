@@ -136,7 +136,7 @@ def test_build_question_first_promotions_supports_launch_and_decision_owner_ques
             },
             {
                 "question_id": "q_owner",
-                "question_text": "Who leads commercial partnerships or business development at Arsenal Football Club?",
+                "question_text": "Who is the most suitable person for commercial partnerships or business development at Arsenal Football Club?",
                 "question_type": "decision_owner",
                 "answer": "Jane Doe",
                 "confidence": 0.88,
