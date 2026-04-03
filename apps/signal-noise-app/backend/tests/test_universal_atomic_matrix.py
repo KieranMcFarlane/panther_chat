@@ -49,18 +49,20 @@ def test_universal_atomic_matrix_builds_consistent_four_question_sources():
         assert payload["question_shape"] == "atomic"
         assert payload["pack_role"] == "discovery"
         assert payload["pack_stage"] == "atomic_matrix"
-        assert payload["question_count"] == 4
+        assert payload["question_count"] == 5
         assert [question["question_id"] for question in payload["questions"]] == [
             "q1_foundation",
             "q2_launch_signal",
             "q3_procurement_signal",
             "q4_decision_owner",
+            "q5_related_pois",
         ]
         assert [question["question_type"] for question in payload["questions"]] == [
             "foundation",
             "launch",
             "procurement",
             "decision_owner",
+            "related_pois",
         ]
         assert all(question["question_shape"] == "atomic" for question in payload["questions"])
         assert payload["questions"][0]["source_priority"] == [
@@ -83,6 +85,13 @@ def test_universal_atomic_matrix_builds_consistent_four_question_sources():
             "official_site",
         ]
         assert payload["questions"][3]["source_priority"] == [
+            "linkedin_company_profile",
+            "linkedin_people_search",
+            "linkedin_person_profile",
+            "google_serp",
+            "official_site",
+        ]
+        assert payload["questions"][4]["source_priority"] == [
             "linkedin_company_profile",
             "linkedin_people_search",
             "linkedin_person_profile",
@@ -127,6 +136,13 @@ def test_universal_atomic_matrix_builds_consistent_four_question_sources():
     )
     assert '"Major League Cricket" LinkedIn partnerships' in mlc["questions"][3]["search_strategy"]["search_queries"]
     assert '"Major League Cricket" managing director' in mlc["questions"][3]["search_strategy"]["search_queries"]
+    assert mlc["questions"][4]["question"] == (
+        "Which 3 to 5 people are the most relevant commercial, partnerships, or business development contacts at Major League Cricket?"
+    )
+    assert mlc["questions"][4]["question_type"] == "related_pois"
+    assert mlc["questions"][4]["search_strategy"]["search_queries"][0] == (
+        '"Major League Cricket" LinkedIn company profile'
+    )
 
 
 def test_universal_atomic_matrix_output_matches_canonical_files():
@@ -171,7 +187,7 @@ def test_universal_atomic_matrix_output_matches_canonical_files():
         assert payload["question_shape"] == "atomic"
         assert payload["pack_role"] == "discovery"
         assert payload["pack_stage"] == "atomic_matrix"
-        assert payload["question_count"] == 4
+        assert payload["question_count"] == 5
         if entity_id == "major-league-cricket":
             assert payload["questions"][1]["question"] == (
                 "Has Major League Cricket launched a public app, product, or digital platform?"
@@ -195,4 +211,11 @@ def test_universal_atomic_matrix_output_matches_canonical_files():
             )
             assert '"Major League Cricket" LinkedIn revenue' in payload["questions"][3]["search_strategy"]["search_queries"]
             assert '"Major League Cricket" partnerships director' in payload["questions"][3]["search_strategy"]["search_queries"]
+            assert payload["questions"][4]["question"] == (
+                "Which 3 to 5 people are the most relevant commercial, partnerships, or business development contacts at Major League Cricket?"
+            )
+            assert payload["questions"][4]["question_type"] == "related_pois"
+            assert payload["questions"][4]["search_strategy"]["search_queries"][0] == (
+                '"Major League Cricket" LinkedIn company profile'
+            )
         assert payload["questions"] == expected["questions"]

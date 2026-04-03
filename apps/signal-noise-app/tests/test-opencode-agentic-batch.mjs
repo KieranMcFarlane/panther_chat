@@ -181,6 +181,178 @@ test('buildOpenCodeQuestionPrompt stays close to the proven direct prompt shape'
   assert.doesNotMatch(prompt, /context, sources, confidence/i);
 });
 
+test('buildOpenCodeQuestionPrompt specializes decision-owner and related-pois outputs', () => {
+  const decisionPrompt = buildOpenCodeQuestionPrompt({
+    question_text: 'Who is the most suitable person for commercial partnerships or business development at Major League Cricket?',
+    question_type: 'decision_owner',
+    source_priority: ['linkedin_company_profile', 'linkedin_people_search', 'linkedin_person_profile', 'google_serp', 'official_site'],
+    hop_budget: 2,
+    query: '"Major League Cricket" LinkedIn company profile',
+    search_strategy: {
+      search_queries: [
+        '"Major League Cricket" LinkedIn company profile',
+        '"Major League Cricket" LinkedIn commercial',
+        '"Major League Cricket" chief commercial officer',
+      ],
+    },
+  });
+
+  assert.match(decisionPrompt, /primary_owner/i);
+  assert.match(decisionPrompt, /supporting_candidates/i);
+  assert.match(decisionPrompt, /primary owner/i);
+
+  const relatedPrompt = buildOpenCodeQuestionPrompt({
+    question_text: 'Which 3 to 5 people are the most relevant commercial, partnerships, or business development contacts at Major League Cricket?',
+    question_type: 'related_pois',
+    source_priority: ['linkedin_company_profile', 'linkedin_people_search', 'linkedin_person_profile', 'google_serp', 'official_site'],
+    hop_budget: 2,
+    query: '"Major League Cricket" LinkedIn company profile',
+    search_strategy: {
+      search_queries: [
+        '"Major League Cricket" LinkedIn company profile',
+        '"Major League Cricket" LinkedIn partnerships',
+        '"Major League Cricket" managing director',
+      ],
+    },
+  });
+
+  assert.match(relatedPrompt, /3 to 5 people/i);
+  assert.match(relatedPrompt, /candidates/i);
+  assert.match(relatedPrompt, /ranked list/i);
+});
+
+test('runOpenCodeQuestionSourceBatch preserves decision-owner primary owner and supporting candidates', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-decision-owner-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'arsenal-fc',
+        entity_name: 'Arsenal Football Club',
+        entity_type: 'SPORT_CLUB',
+        preset: 'arsenal-atomic-matrix',
+        question_source_label: 'arsenal-atomic-matrix',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        question_count: 1,
+        questions: [
+          {
+            question_id: 'q4_decision_owner',
+            question_family: 'decision_owner',
+            question_type: 'decision_owner',
+            question: 'Who is the most suitable person for commercial partnerships or business development at {entity}?',
+            query: '"Arsenal Football Club" LinkedIn company profile',
+            hop_budget: 8,
+            evidence_extension_budget: 2,
+            evidence_extension_confidence_threshold: 0.65,
+            question_timeout_ms: 180000,
+            hop_timeout_ms: 180000,
+            source_priority: ['linkedin_company_profile', 'linkedin_people_search', 'linkedin_person_profile', 'google_serp', 'official_site'],
+            search_strategy: {
+              search_queries: [
+                '"Arsenal Football Club" LinkedIn company profile',
+                '"Arsenal Football Club" LinkedIn commercial',
+                '"Arsenal Football Club" chief commercial officer',
+              ],
+            },
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  try {
+    const result = await runOpenCodeQuestionSourceBatch({
+      questionSourcePath: sourcePath,
+      outputDir,
+      questionRunner: async () => ({
+        structuredOutput: {
+          answer: '',
+          primary_owner: {
+            name: 'Juliet Slot',
+            title: 'Chief Commercial Officer',
+            company: 'Arsenal Football Club',
+          },
+          supporting_candidates: [
+            { name: 'Tom Fox', title: 'Commercial Director', company: 'Arsenal Football Club' },
+            { name: 'Richard Garlick', title: 'Managing Director', company: 'Arsenal Football Club' },
+          ],
+          confidence: 0.95,
+          validation_state: 'validated',
+          sources: ['https://www.arsenal.com/'],
+        },
+        promptTrace: { status: 'ok', structured_output_keys: 1, has_structured_output: true },
+        messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
+        cliResult: { code: 0, stdout: '{"answer":""}', stderr: '' },
+      }),
+    });
+
+    const questionPath = result.question_result_paths[0];
+    const question = JSON.parse(readFileSync(questionPath, 'utf8')).question;
+    assert.equal(question.validation_state, 'validated');
+    assert.equal(question.answer, 'Juliet Slot');
+    assert.equal(question.primary_owner.name, 'Juliet Slot');
+    assert.equal(question.supporting_candidates.length, 2);
+    assert.equal(question.supporting_candidates[0].name, 'Tom Fox');
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
+test('buildOpenCodeQuestionPrompt specializes decision-owner and related-pois outputs', () => {
+  const decisionPrompt = buildOpenCodeQuestionPrompt({
+    question_text: 'Who is the most suitable person for commercial partnerships or business development at Major League Cricket?',
+    question_type: 'decision_owner',
+    source_priority: ['linkedin_company_profile', 'linkedin_people_search', 'linkedin_person_profile', 'google_serp', 'official_site'],
+    hop_budget: 2,
+    query: '"Major League Cricket" LinkedIn company profile',
+    search_strategy: {
+      search_queries: [
+        '"Major League Cricket" LinkedIn company profile',
+        '"Major League Cricket" LinkedIn commercial',
+        '"Major League Cricket" chief commercial officer',
+      ],
+    },
+  });
+
+  assert.match(decisionPrompt, /primary_owner/i);
+  assert.match(decisionPrompt, /supporting_candidates/i);
+  assert.match(decisionPrompt, /first validated primary owner/i);
+
+  const relatedPrompt = buildOpenCodeQuestionPrompt({
+    question_text: 'Which 3 to 5 people are the most relevant commercial, partnerships, or business development contacts at Major League Cricket?',
+    question_type: 'related_pois',
+    source_priority: ['linkedin_company_profile', 'linkedin_people_search', 'linkedin_person_profile', 'google_serp', 'official_site'],
+    hop_budget: 2,
+    query: '"Major League Cricket" LinkedIn company profile',
+    search_strategy: {
+      search_queries: [
+        '"Major League Cricket" LinkedIn company profile',
+        '"Major League Cricket" LinkedIn partnerships',
+        '"Major League Cricket" managing director',
+      ],
+    },
+  });
+
+  assert.match(relatedPrompt, /3 to 5 candidates/i);
+  assert.match(relatedPrompt, /candidates/i);
+  assert.match(relatedPrompt, /ranked list/i);
+});
+
 test('buildOpenCodeQuestionCommand defaults to the known-good OpenCode model', () => {
   const command = buildOpenCodeQuestionCommand({
     question_id: 'foundation_year',

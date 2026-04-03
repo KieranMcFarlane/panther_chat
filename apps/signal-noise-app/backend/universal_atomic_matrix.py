@@ -54,6 +54,33 @@ DECISION_OWNER_SEARCH_QUERIES = [
     '"{entity}" managing director',
 ]
 
+RELATED_POIS_SEARCH_QUERIES = [
+    '"{entity}" LinkedIn company profile',
+    '"{entity}" LinkedIn commercial',
+    '"{entity}" LinkedIn partnerships',
+    '"{entity}" LinkedIn sponsorship',
+    '"{entity}" LinkedIn revenue',
+    '"{entity}" LinkedIn business development',
+    '"{entity}" LinkedIn marketing',
+    '"{entity}" LinkedIn digital',
+    '"{entity}" LinkedIn innovation',
+    '"{entity}" LinkedIn strategy',
+    '"{entity}" LinkedIn transformation',
+    '"{entity}" LinkedIn growth',
+    '"{entity}" chief commercial officer',
+    '"{entity}" commercial director',
+    '"{entity}" partnerships director',
+    '"{entity}" sponsorship director',
+    '"{entity}" head of partnerships',
+    '"{entity}" chief digital officer',
+    '"{entity}" innovation director',
+    '"{entity}" transformation director',
+    '"{entity}" marketing director',
+    '"{entity}" growth director',
+    '"{entity}" CEO',
+    '"{entity}" managing director',
+]
+
 UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
     {
         "question_id": "q1_foundation",
@@ -125,6 +152,22 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "evidence_focus": "decision_owner",
         "promotion_target": "decision_owners",
         "answer_kind": "person",
+    },
+    {
+        "question_id": "q5_related_pois",
+        "question_family": "related_pois",
+        "question_type": "related_pois",
+        "question": "Which 3 to 5 people are the most relevant commercial, partnerships, or business development contacts at {entity}?",
+        "query": '"{entity}" LinkedIn company profile',
+        "hop_budget": HOP_BUDGET,
+        "evidence_extension_budget": 2,
+        "source_priority": DECISION_OWNER_SOURCE_PRIORITY,
+        "search_strategy": {
+            "search_queries": RELATED_POIS_SEARCH_QUERIES,
+        },
+        "evidence_focus": "decision_owner",
+        "promotion_target": "decision_owners",
+        "answer_kind": "people_list",
     },
 ]
 

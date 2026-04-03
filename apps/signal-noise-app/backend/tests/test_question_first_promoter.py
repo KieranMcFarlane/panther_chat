@@ -152,3 +152,25 @@ def test_build_question_first_promotions_supports_launch_and_decision_owner_ques
     assert result["discovery_summary"]["promotion_targets"] == ["decision_owners", "opportunity_signals"]
     assert result["discovery_summary"]["opportunity_signals"][0]["question_id"] == "q_launch"
     assert result["discovery_summary"]["decision_owners"][0]["question_id"] == "q_owner"
+
+
+def test_build_question_first_promotions_supports_related_pois_questions():
+    result = build_question_first_promotions(
+        answers=[
+            {
+                "question_id": "q_related",
+                "question_text": "Which 3 to 5 people are the most relevant commercial, partnerships, or business development contacts at Arsenal Football Club?",
+                "question_type": "related_pois",
+                "answer": "Juliet Slot",
+                "confidence": 0.87,
+                "validation_state": "validated",
+                "signal_type": "RELATED_POIS",
+                "evidence_url": "https://example.com/juliet-slot",
+            },
+        ],
+        evidence_items=[],
+        promotion_candidates=[],
+    )
+
+    assert result["discovery_summary"]["promotion_targets"] == ["decision_owners"]
+    assert result["discovery_summary"]["decision_owners"][0]["question_id"] == "q_related"

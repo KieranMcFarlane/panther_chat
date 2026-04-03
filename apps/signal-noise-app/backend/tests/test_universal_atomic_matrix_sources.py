@@ -36,7 +36,7 @@ QUESTION_SOURCE_DIR = BACKEND_DIR / "data" / "question_sources"
         ),
     ],
 )
-def test_canonical_atomic_matrix_sources_are_four_question_universal_matrices(
+def test_canonical_atomic_matrix_sources_are_five_question_universal_matrices(
     filename: str,
     entity_id: str,
     entity_name: str,
@@ -57,19 +57,21 @@ def test_canonical_atomic_matrix_sources_are_four_question_universal_matrices(
     assert payload["question_shape"] == "atomic"
     assert payload["pack_role"] == "discovery"
     assert payload["pack_stage"] == "atomic_matrix"
-    assert payload["question_count"] == 4
+    assert payload["question_count"] == 5
 
     assert [question["question_id"] for question in payload["questions"]] == [
         "q1_foundation",
         "q2_launch_signal",
         "q3_procurement_signal",
         "q4_decision_owner",
+        "q5_related_pois",
     ]
     assert [question["question_type"] for question in payload["questions"]] == [
         "foundation",
         "launch",
         "procurement",
         "decision_owner",
+        "related_pois",
     ]
     assert all(question["question_shape"] == "atomic" for question in payload["questions"])
     assert payload["questions"][0]["source_priority"] == [
@@ -92,6 +94,13 @@ def test_canonical_atomic_matrix_sources_are_four_question_universal_matrices(
         "official_site",
     ]
     assert payload["questions"][3]["source_priority"] == [
+        "linkedin_company_profile",
+        "linkedin_people_search",
+        "linkedin_person_profile",
+        "google_serp",
+        "official_site",
+    ]
+    assert payload["questions"][4]["source_priority"] == [
         "linkedin_company_profile",
         "linkedin_people_search",
         "linkedin_person_profile",
@@ -125,3 +134,10 @@ def test_canonical_atomic_matrix_sources_are_four_question_universal_matrices(
         )
         assert '"Major League Cricket" LinkedIn sponsorship' in payload["questions"][3]["search_strategy"]["search_queries"]
         assert '"Major League Cricket" chief digital officer' in payload["questions"][3]["search_strategy"]["search_queries"]
+        assert payload["questions"][4]["question"] == (
+            "Which 3 to 5 people are the most relevant commercial, partnerships, or business development contacts at Major League Cricket?"
+        )
+        assert payload["questions"][4]["question_type"] == "related_pois"
+        assert payload["questions"][4]["search_strategy"]["search_queries"][0] == (
+            '"Major League Cricket" LinkedIn company profile'
+        )

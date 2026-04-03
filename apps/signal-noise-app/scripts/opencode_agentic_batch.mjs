@@ -111,6 +111,49 @@ function _presetQuestionSpecs(entityName) {
       yp_service_fit: ['FAN_ENGAGEMENT'],
     },
     {
+      question_id: 'poi_related_pois',
+      question_type: 'related_pois',
+      question_text: `Which 3 to 5 people are the most relevant commercial, partnerships, or business development contacts at ${entityName}?`,
+      query: `"${entityName}" LinkedIn company profile`,
+      hop_budget: 2,
+      source_priority: [
+        'linkedin_company_profile',
+        'linkedin_people_search',
+        'linkedin_person_profile',
+        'google_serp',
+        'official_site',
+      ],
+      search_strategy: {
+        search_queries: [
+          `"${entityName}" LinkedIn company profile`,
+          `"${entityName}" LinkedIn commercial`,
+          `"${entityName}" LinkedIn partnerships`,
+          `"${entityName}" LinkedIn sponsorship`,
+          `"${entityName}" LinkedIn revenue`,
+          `"${entityName}" LinkedIn business development`,
+          `"${entityName}" LinkedIn marketing`,
+          `"${entityName}" LinkedIn digital`,
+          `"${entityName}" LinkedIn innovation`,
+          `"${entityName}" LinkedIn strategy`,
+          `"${entityName}" LinkedIn transformation`,
+          `"${entityName}" LinkedIn growth`,
+          `"${entityName}" chief commercial officer`,
+          `"${entityName}" commercial director`,
+          `"${entityName}" partnerships director`,
+          `"${entityName}" sponsorship director`,
+          `"${entityName}" head of partnerships`,
+          `"${entityName}" chief digital officer`,
+          `"${entityName}" innovation director`,
+          `"${entityName}" transformation director`,
+          `"${entityName}" marketing director`,
+          `"${entityName}" growth director`,
+          `"${entityName}" CEO`,
+          `"${entityName}" managing director`,
+        ],
+      },
+      yp_service_fit: ['FAN_ENGAGEMENT'],
+    },
+    {
       question_id: 'poi_digital_product_lead',
       question_type: 'poi',
       question_text: `Who leads digital product, web, or app initiatives at ${entityName}?`,
@@ -376,6 +419,32 @@ function _questionHasStrongEvidence(questionPayload, confidenceThreshold = 0.9) 
     questionPayload?.confidence ?? questionPayload?.reasoning?.structured_output?.confidence ?? 0,
   );
   return confidence >= Math.max(0, Number(confidenceThreshold || 0));
+}
+
+function _structuredOwnerCandidates(structuredOutput = {}) {
+  const primaryOwner = structuredOutput && typeof structuredOutput.primary_owner === 'object' && structuredOutput.primary_owner
+    ? structuredOutput.primary_owner
+    : null;
+  const supportingCandidates = Array.isArray(structuredOutput?.supporting_candidates)
+    ? structuredOutput.supporting_candidates.filter((item) => item && typeof item === 'object')
+    : [];
+  const candidates = Array.isArray(structuredOutput?.candidates)
+    ? structuredOutput.candidates.filter((item) => item && typeof item === 'object')
+    : [];
+  const topCandidate = candidates[0] || supportingCandidates[0] || primaryOwner || null;
+  const answerText = String(
+    structuredOutput?.answer ||
+      primaryOwner?.name ||
+      topCandidate?.name ||
+      '',
+  ).trim();
+  return {
+    primaryOwner,
+    supportingCandidates,
+    candidates,
+    topCandidate,
+    answerText,
+  };
 }
 
 function _extendQuestionBudget(questionState, extensionBudget = 0) {
@@ -820,6 +889,13 @@ export function buildOpenCodeQuestionPrompt(question) {
   const searchHint = searchQueries.length > 0
     ? `Suggested search queries: ${searchQueries.join(' | ')}.`
     : '';
+  const questionType = String(question?.question_type || '').trim().toLowerCase();
+  if (questionType === 'decision_owner') {
+    return `${_questionText(question)} use brightdata. ${searchHint} Start with search and use scraped pages only if the search results are not enough to validate the answer. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer set to the primary owner's name, primary_owner, supporting_candidates, confidence, sources, and validation_state. primary_owner must be the single best commercial buyer. supporting_candidates should include the next strongest people in rank order. If you cannot validate a supported primary owner within that budget, return exactly one fenced JSON code block with answer "", primary_owner null, supporting_candidates [], confidence 0, sources [], and validation_state "no_signal", then stop. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated primary owner.`;
+  }
+  if (questionType === 'related_pois') {
+    return `${_questionText(question)} use brightdata. ${searchHint} Start with search and use scraped pages only if the search results are not enough to validate the answer. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer set to the best candidate name, candidates, confidence, sources, and validation_state. candidates should be a ranked list of 3 to 5 people with the best commercial relevance. If you cannot validate a ranked list of 3 to 5 candidates within that budget, return exactly one fenced JSON code block with answer "", candidates [], confidence 0, sources [], and validation_state "no_signal", then stop. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated ranked list.`;
+  }
   return `${_questionText(question)} use brightdata. ${searchHint} Start with search and use scraped pages only if the search results are not enough to validate the answer. You have at most ${hopBudget} hops. If you cannot validate a supported answer within that budget, return exactly one fenced JSON code block with answer "", confidence 0, sources [], and validation_state "no_signal", then stop. Otherwise return exactly one fenced JSON code block with the validated answer, confidence, and sources if available. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated answer.`;
 }
 
@@ -842,6 +918,24 @@ export function buildOpenCodeQuestionSchema() {
     properties: {
       question: { type: 'string' },
       answer: { type: 'string' },
+      primary_owner: {
+        type: 'object',
+        additionalProperties: true,
+      },
+      supporting_candidates: {
+        type: 'array',
+        items: {
+          type: 'object',
+          additionalProperties: true,
+        },
+      },
+      candidates: {
+        type: 'array',
+        items: {
+          type: 'object',
+          additionalProperties: true,
+        },
+      },
       context: { type: 'string' },
       sources: {
         type: 'array',
@@ -865,7 +959,8 @@ function _classifyValidationState(structuredOutput) {
     return structuredOutput.validation_state;
   }
   const confidence = _coerceConfidenceScore(structuredOutput.confidence);
-  const answer = String(structuredOutput.answer || '').trim();
+  const { answerText } = _structuredOwnerCandidates(structuredOutput);
+  const answer = String(structuredOutput.answer || answerText || '').trim();
   if (!answer || confidence <= 0) {
     return 'no_signal';
   }
@@ -1080,7 +1175,8 @@ async function runOpenCodeCliQuestion(question, { worktreeRoot, opencodeTimeoutM
 function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTrace = null, messageTrace = [], executionQuery = '' } = {}) {
   const validationState = _classifyValidationState(structuredOutput);
   const sources = Array.isArray(structuredOutput.sources) ? structuredOutput.sources : [];
-  const evidenceUrl = structuredOutput.evidence_url || sources[0] || '';
+  const { primaryOwner, supportingCandidates, candidates, answerText } = _structuredOwnerCandidates(structuredOutput);
+  const evidenceUrl = structuredOutput.evidence_url || primaryOwner?.profile_url || primaryOwner?.linkedin_url || sources[0] || '';
   const notes = structuredOutput.notes || structuredOutput.context || '';
   const inferredSignalType = structuredOutput.signal_type || (question.question_type ? question.question_type.toUpperCase() : 'NO_SIGNAL');
   return {
@@ -1118,7 +1214,10 @@ function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTr
     prompt_trace: promptTrace,
     message_trace: messageTrace,
     execution_query: executionQuery || question.query,
-    answer: structuredOutput.answer || '',
+    answer: answerText || structuredOutput.answer || '',
+    primary_owner: primaryOwner,
+    supporting_candidates: supportingCandidates,
+    candidates,
     signal_type: inferredSignalType,
     confidence: structuredOutput.confidence ?? 0,
     validation_state: validationState,
@@ -1142,7 +1241,7 @@ function _categoryForQuestion(question) {
   if (questionType === 'poi') {
     return 'connections';
   }
-  if (questionType === 'leadership' || questionType === 'decision_owner') {
+  if (questionType === 'leadership' || questionType === 'decision_owner' || questionType === 'related_pois') {
     return 'decision_owners';
   }
   return 'general';

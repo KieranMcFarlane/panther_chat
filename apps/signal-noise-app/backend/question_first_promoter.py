@@ -26,6 +26,8 @@ def _infer_promotion_target(answer: Dict[str, Any]) -> str:
         return "decision_owners"
     if "decision_owner" in combined or "decision owner" in combined:
         return "decision_owners"
+    if "related_pois" in combined or "related pois" in combined:
+        return "decision_owners"
     if "procurement" in combined or "rfp" in combined or "tender" in combined:
         return "opportunity_signals"
     if "poi" in combined or "connection" in combined or "partnership" in combined:
