@@ -46,19 +46,21 @@ Use these classes consistently:
 
 ## Core Universal Atomic Matrix
 
-These are the four universal questions that should exist for every entity:
+These are the core universal retrieval questions that should exist for every entity:
 
 1. `q1_foundation`
-2. `q6_launch_signal`
-3. `q7_procurement_signal`
-4. `q11_decision_owner`
+2. `q3_leadership`
+3. `q6_launch_signal`
+4. `q7_procurement_signal`
+5. `q9_news_signal`
 
 They are universal because they cover:
 
 - identity
+- broad people map
 - public digital signal
 - procurement / vendor-change signal
-- likely commercial buyer
+- current timing and priority context
 
 Everything else extends coverage around those core questions.
 
@@ -565,46 +567,75 @@ Classification:
 
 ## q11_decision_owner
 
-For decision-owner discovery, do not reuse the full leadership search. Start from commercial and sponsorship ownership directly.
+For decision-owner discovery, do not rely only on a short list of titles. Start from the entity's LinkedIn company profile, retrieve a broad candidate pool, then rank those candidates by likely buying relevance.
 
 For `{entity}`, use this flow:
 
-1. Start with commercial owner discovery
-   - Queries:
-     - `"{entity}" commercial director`
-     - `"{entity}" partnerships director`
-     - `"{entity}" business development`
-     - `"{entity}" sponsorship director`
+1. Start with company anchor
+   - Sources:
+     - `linkedin_company_profile`
+2. Retrieve a broad candidate pool
    - Sources:
      - `linkedin_people_search`
      - `linkedin_person_profile`
-     - `google_serp`
-2. Look for evidence types that indicate buying relevance
-   - role clearly tied to commercial, sponsorship, partnerships, or business development
-   - seniority and scope visible in profile
-   - public proof of remit
-3. Scrape only candidate profiles and official bios
-4. Use this question to pick the best commercial contact, not to rebuild the full org chart
+   - Target functions:
+     - commercial
+     - partnerships
+     - sponsorship
+     - revenue
+     - business development
+     - marketing
+     - fan engagement
+     - digital
+     - innovation
+     - strategy
+     - transformation
+     - growth
+3. Use title-specific search only as fallback
+   - Queries:
+     - `"{entity}" commercial director`
+     - `"{entity}" chief commercial officer`
+     - `"{entity}" partnerships director`
+     - `"{entity}" sponsorship director`
+     - `"{entity}" head of partnerships`
+     - `"{entity}" digital director`
+     - `"{entity}" chief digital officer`
+     - `"{entity}" innovation director`
+     - `"{entity}" transformation director`
+     - `"{entity}" marketing director`
+     - `"{entity}" growth director`
+     - `"{entity}" CEO`
+     - `"{entity}" managing director`
+4. Look for evidence types that indicate buying relevance
+   - current role at the correct entity
+   - remit tied to commercial, sponsorship, partnerships, revenue, digital, or transformation
+   - visible seniority and scope
+   - public proof of ownership or decision-making relevance
+5. Use this question to pick the best likely buyer, not to rebuild the full org chart
 
 For the runner, the practical source priority should be:
 
 ```json
 [
+  "linkedin_company_profile",
   "linkedin_people_search",
   "linkedin_person_profile",
-  "google_serp"
+  "google_serp",
+  "official_site"
 ]
 ```
 
 My recommendation:
 
 - keep `q11_decision_owner` separate from `q3_leadership`
-- `q3` builds the leadership map
-- `q11` chooses the likely buyer
+- `q3` builds the broad leadership map
+- `q11` selects the likely buyer from a company-anchored candidate set
+- do not rely on a small fixed title list
 
 Classification:
 
 - `atomic_retrieval`
+- with post-retrieval ranking
 
 ## q12_connections
 
@@ -741,11 +772,9 @@ Recommended breakdown:
 
 - universal atomic retrieval:
   - `q1_foundation`
+  - `q3_leadership`
   - `q6_launch_signal`
   - `q7_procurement_signal`
-  - `q11_decision_owner`
-- supporting atomic retrieval:
-  - `q3_leadership`
   - `q9_news_signal`
 - deterministic enrichment:
   - `q2_digital_stack`
@@ -755,6 +784,7 @@ Recommended breakdown:
   - `q5_league_context`
   - `q8_explicit_rfp`
   - `q10_hiring_signal`
+  - `q11_decision_owner`
 - derived inference:
   - `q13_capability_gap`
   - `q14_yp_fit`
