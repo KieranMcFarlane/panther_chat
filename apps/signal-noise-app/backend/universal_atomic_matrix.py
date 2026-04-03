@@ -19,6 +19,41 @@ HOP_TIMEOUT_MS = 180000
 HOP_BUDGET = 8
 EVIDENCE_EXTENSION_CONFIDENCE_THRESHOLD = 0.65
 
+DECISION_OWNER_SOURCE_PRIORITY = [
+    "linkedin_company_profile",
+    "linkedin_people_search",
+    "linkedin_person_profile",
+    "google_serp",
+    "official_site",
+]
+
+DECISION_OWNER_SEARCH_QUERIES = [
+    '"{entity}" LinkedIn company profile',
+    '"{entity}" LinkedIn commercial',
+    '"{entity}" LinkedIn partnerships',
+    '"{entity}" LinkedIn sponsorship',
+    '"{entity}" LinkedIn revenue',
+    '"{entity}" LinkedIn business development',
+    '"{entity}" LinkedIn marketing',
+    '"{entity}" LinkedIn fan engagement',
+    '"{entity}" LinkedIn digital',
+    '"{entity}" LinkedIn innovation',
+    '"{entity}" LinkedIn strategy',
+    '"{entity}" LinkedIn transformation',
+    '"{entity}" LinkedIn growth',
+    '"{entity}" chief commercial officer',
+    '"{entity}" partnerships director',
+    '"{entity}" sponsorship director',
+    '"{entity}" head of partnerships',
+    '"{entity}" chief digital officer',
+    '"{entity}" innovation director',
+    '"{entity}" transformation director',
+    '"{entity}" marketing director',
+    '"{entity}" growth director',
+    '"{entity}" CEO',
+    '"{entity}" managing director',
+]
+
 UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
     {
         "question_id": "q1_foundation",
@@ -80,18 +115,13 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "question_family": "decision_owner",
         "question_type": "decision_owner",
         "question": "Who is the most suitable person for commercial partnerships or business development at {entity}?",
-        "query": '"{entity}" business commercial partnerships business development LinkedIn',
+        "query": '"{entity}" LinkedIn company profile',
         "hop_budget": HOP_BUDGET,
         "evidence_extension_budget": 2,
-        "source_priority": [
-            "google_serp",
-            "linkedin_posts",
-            "linkedin_people_search",
-            "linkedin_person_profile",
-            "linkedin_company_profile",
-            "news",
-            "official_site",
-        ],
+        "source_priority": DECISION_OWNER_SOURCE_PRIORITY,
+        "search_strategy": {
+            "search_queries": DECISION_OWNER_SEARCH_QUERIES,
+        },
         "evidence_focus": "decision_owner",
         "promotion_target": "decision_owners",
         "answer_kind": "person",
@@ -122,17 +152,6 @@ MLC_QUESTION_OVERRIDES: Dict[str, Dict[str, Any]] = {
             ]
         },
     },
-    "q4_decision_owner": {
-        "search_strategy": {
-            "search_queries": [
-                '"{entity}" business',
-                '"{entity}" commercial partnerships',
-                '"{entity}" business development',
-                '"{entity}" LinkedIn',
-                '"{entity}" leadership',
-            ]
-        },
-    },
 }
 
 
@@ -147,6 +166,14 @@ def _render_question_spec(spec: Dict[str, Any], entity_name: str, entity_id: str
     rendered = deepcopy(spec)
     rendered["question"] = str(rendered["question"]).format(entity=entity_name)
     rendered["query"] = str(rendered["query"]).format(entity=entity_name)
+    if "search_strategy" in rendered:
+        rendered["search_strategy"] = {
+            **deepcopy(rendered["search_strategy"]),
+            "search_queries": [
+                str(query).format(entity=entity_name)
+                for query in rendered["search_strategy"].get("search_queries", [])
+            ],
+        }
     rendered["question_shape"] = "atomic"
     rendered["question_timeout_ms"] = QUESTION_TIMEOUT_MS
     rendered["hop_timeout_ms"] = HOP_TIMEOUT_MS

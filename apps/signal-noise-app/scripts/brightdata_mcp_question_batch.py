@@ -346,6 +346,9 @@ def _build_poi_question_record(
     question_text: str,
     query: str,
     yp_service_fit: Optional[List[str]] = None,
+    query_plan: Optional[List[Dict[str, Any]]] = None,
+    recovery_query_plan: Optional[List[Dict[str, Any]]] = None,
+    source_priority: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
     yp_service_fit = yp_service_fit or []
     return {
@@ -357,16 +360,18 @@ def _build_poi_question_record(
         "aliases": get_entity_aliases(entity_id, entity_name),
         "yp_service_fit": yp_service_fit,
         "confidence_boost": 0.0,
-        "query_plan": [
+        "query_plan": query_plan
+        or [
             {
                 "kind": "poi_question",
                 "query": query,
                 "priority": 0,
             }
         ],
-        "recovery_query_plan": [],
+        "recovery_query_plan": recovery_query_plan or [],
         "agentic_plan": {
-            "source_priority": [
+            "source_priority": source_priority
+            or [
                 "google_serp",
                 "linkedin_profiles",
                 "linkedin_posts",
@@ -393,36 +398,72 @@ def build_poi_question_records(
     max_questions: Optional[int] = None,
 ) -> List[Dict[str, Any]]:
     specs = [
-        (
-            "poi_commercial_partnerships_lead",
-            f"Who is the most suitable person for commercial partnerships or business development at {entity_name}?",
-            f'"{entity_name}" business commercial partnerships business development LinkedIn',
-            ["FAN_ENGAGEMENT"],
-        ),
-        (
-            "poi_digital_product_lead",
-            f"Who leads digital product, web, or app initiatives at {entity_name}?",
-            f'"{entity_name}" digital product LinkedIn',
-            ["MOBILE_APPS", "DIGITAL_TRANSFORMATION"],
-        ),
-        (
-            "poi_fan_engagement_lead",
-            f"Who leads fan engagement, CRM, or audience growth at {entity_name}?",
-            f'"{entity_name}" fan engagement LinkedIn',
-            ["FAN_ENGAGEMENT"],
-        ),
-        (
-            "poi_marketing_comms_lead",
-            f"Who leads marketing or communications at {entity_name}?",
-            f'"{entity_name}" marketing communications LinkedIn',
-            ["FAN_ENGAGEMENT"],
-        ),
-        (
-            "poi_operations_lead",
-            f"Who leads operations, strategy, or business operations at {entity_name}?",
-            f'"{entity_name}" operations LinkedIn',
-            ["DIGITAL_TRANSFORMATION", "ANALYTICS"],
-        ),
+        {
+            "question_id": "poi_commercial_partnerships_lead",
+            "question_text": (
+                f"Who is the most suitable person for commercial partnerships or business development at {entity_name}?"
+            ),
+            "query": f'"{entity_name}" LinkedIn company profile',
+            "yp_service_fit": ["FAN_ENGAGEMENT"],
+            "query_plan": [
+                {
+                    "kind": "poi_company_anchor",
+                    "query": f'"{entity_name}" LinkedIn company profile',
+                    "priority": 0,
+                },
+                {
+                    "kind": "poi_candidate_pool",
+                    "query": f'"{entity_name}" LinkedIn commercial partnerships business development',
+                    "priority": 1,
+                },
+            ],
+            "recovery_query_plan": [
+                {"kind": "poi_title_fallback", "query": f'"{entity_name}" chief commercial officer', "priority": 2},
+                {"kind": "poi_title_fallback", "query": f'"{entity_name}" partnerships director', "priority": 3},
+                {"kind": "poi_title_fallback", "query": f'"{entity_name}" sponsorship director', "priority": 4},
+                {"kind": "poi_title_fallback", "query": f'"{entity_name}" head of partnerships', "priority": 5},
+                {"kind": "poi_title_fallback", "query": f'"{entity_name}" chief digital officer', "priority": 6},
+                {"kind": "poi_title_fallback", "query": f'"{entity_name}" innovation director', "priority": 7},
+                {"kind": "poi_title_fallback", "query": f'"{entity_name}" transformation director', "priority": 8},
+                {"kind": "poi_title_fallback", "query": f'"{entity_name}" marketing director', "priority": 9},
+                {"kind": "poi_title_fallback", "query": f'"{entity_name}" growth director', "priority": 10},
+                {"kind": "poi_title_fallback", "query": f'"{entity_name}" CEO', "priority": 11},
+                {"kind": "poi_title_fallback", "query": f'"{entity_name}" managing director', "priority": 12},
+            ],
+            "source_priority": [
+                "linkedin_company_profile",
+                "linkedin_people_search",
+                "linkedin_person_profile",
+                "google_serp",
+                "official_site",
+                "press_release",
+                "news",
+            ],
+        },
+        {
+            "question_id": "poi_digital_product_lead",
+            "question_text": f"Who leads digital product, web, or app initiatives at {entity_name}?",
+            "query": f'"{entity_name}" digital product LinkedIn',
+            "yp_service_fit": ["MOBILE_APPS", "DIGITAL_TRANSFORMATION"],
+        },
+        {
+            "question_id": "poi_fan_engagement_lead",
+            "question_text": f"Who leads fan engagement, CRM, or audience growth at {entity_name}?",
+            "query": f'"{entity_name}" fan engagement LinkedIn',
+            "yp_service_fit": ["FAN_ENGAGEMENT"],
+        },
+        {
+            "question_id": "poi_marketing_comms_lead",
+            "question_text": f"Who leads marketing or communications at {entity_name}?",
+            "query": f'"{entity_name}" marketing communications LinkedIn',
+            "yp_service_fit": ["FAN_ENGAGEMENT"],
+        },
+        {
+            "question_id": "poi_operations_lead",
+            "question_text": f"Who leads operations, strategy, or business operations at {entity_name}?",
+            "query": f'"{entity_name}" operations LinkedIn',
+            "yp_service_fit": ["DIGITAL_TRANSFORMATION", "ANALYTICS"],
+        },
     ]
     limit = max_questions if max_questions is not None else len(specs)
     return [
@@ -430,12 +471,15 @@ def build_poi_question_records(
             entity_name,
             entity_id,
             entity_type,
-            question_id=question_id,
-            question_text=question_text,
-            query=query,
-            yp_service_fit=yp_service_fit,
+            question_id=spec["question_id"],
+            question_text=spec["question_text"],
+            query=spec["query"],
+            yp_service_fit=spec.get("yp_service_fit"),
+            query_plan=spec.get("query_plan"),
+            recovery_query_plan=spec.get("recovery_query_plan"),
+            source_priority=spec.get("source_priority"),
         )
-        for question_id, question_text, query, yp_service_fit in specs[:limit]
+        for spec in specs[:limit]
     ]
 
 

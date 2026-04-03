@@ -94,8 +94,17 @@ def test_poi_question_records_cover_five_contact_targets():
     assert records[2]["question_id"] == "poi_fan_engagement_lead"
     assert records[3]["question_id"] == "poi_marketing_comms_lead"
     assert records[4]["question_id"] == "poi_operations_lead"
-    assert records[0]["agentic_plan"]["source_priority"][1] == "linkedin_profiles"
-    assert "LinkedIn" in records[0]["query_plan"][0]["query"]
+    assert records[0]["agentic_plan"]["source_priority"][:5] == [
+        "linkedin_company_profile",
+        "linkedin_people_search",
+        "linkedin_person_profile",
+        "google_serp",
+        "official_site",
+    ]
+    assert records[0]["query_plan"][0]["query"] == '"Major League Cricket" LinkedIn company profile'
+    assert records[0]["query_plan"][1]["query"] == '"Major League Cricket" LinkedIn commercial partnerships business development'
+    assert records[0]["recovery_query_plan"][0]["query"] == '"Major League Cricket" chief commercial officer'
+    assert records[0]["recovery_query_plan"][-1]["query"] == '"Major League Cricket" managing director'
 
 
 def test_build_major_league_cricket_preset_returns_foundation_procurement_and_pois():

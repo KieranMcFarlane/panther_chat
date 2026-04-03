@@ -1,6 +1,6 @@
 {
   "schema_version": "atomic_question_source_v1",
-  "generated_at": "2026-04-01T21:54:31.827485+00:00",
+  "generated_at": "2026-04-03T06:31:19.558830+00:00",
   "entity_id": "major-league-cricket",
   "entity_name": "Major League Cricket",
   "entity_type": "SPORT_LEAGUE",
@@ -100,34 +100,51 @@
       "question_family": "decision_owner",
       "question_type": "decision_owner",
       "question": "Who is the most suitable person for commercial partnerships or business development at Major League Cricket?",
-      "query": "\"Major League Cricket\" business commercial partnerships business development LinkedIn",
+      "query": "\"Major League Cricket\" LinkedIn company profile",
       "hop_budget": 8,
       "evidence_extension_budget": 2,
       "source_priority": [
-        "google_serp",
-        "linkedin_posts",
+        "linkedin_company_profile",
         "linkedin_people_search",
         "linkedin_person_profile",
-        "linkedin_company_profile",
-        "news",
+        "google_serp",
         "official_site"
       ],
+      "search_strategy": {
+        "search_queries": [
+          "\"Major League Cricket\" LinkedIn company profile",
+          "\"Major League Cricket\" LinkedIn commercial",
+          "\"Major League Cricket\" LinkedIn partnerships",
+          "\"Major League Cricket\" LinkedIn sponsorship",
+          "\"Major League Cricket\" LinkedIn revenue",
+          "\"Major League Cricket\" LinkedIn business development",
+          "\"Major League Cricket\" LinkedIn marketing",
+          "\"Major League Cricket\" LinkedIn fan engagement",
+          "\"Major League Cricket\" LinkedIn digital",
+          "\"Major League Cricket\" LinkedIn innovation",
+          "\"Major League Cricket\" LinkedIn strategy",
+          "\"Major League Cricket\" LinkedIn transformation",
+          "\"Major League Cricket\" LinkedIn growth",
+          "\"Major League Cricket\" chief commercial officer",
+          "\"Major League Cricket\" partnerships director",
+          "\"Major League Cricket\" sponsorship director",
+          "\"Major League Cricket\" head of partnerships",
+          "\"Major League Cricket\" chief digital officer",
+          "\"Major League Cricket\" innovation director",
+          "\"Major League Cricket\" transformation director",
+          "\"Major League Cricket\" marketing director",
+          "\"Major League Cricket\" growth director",
+          "\"Major League Cricket\" CEO",
+          "\"Major League Cricket\" managing director"
+        ]
+      },
       "evidence_focus": "decision_owner",
       "promotion_target": "decision_owners",
       "answer_kind": "person",
       "question_shape": "atomic",
       "question_timeout_ms": 180000,
       "hop_timeout_ms": 180000,
-      "evidence_extension_confidence_threshold": 0.65,
-      "search_strategy": {
-        "search_queries": [
-          "\"Major League Cricket\" business",
-          "\"Major League Cricket\" commercial partnerships",
-          "\"Major League Cricket\" business development",
-          "\"Major League Cricket\" LinkedIn",
-          "\"Major League Cricket\" leadership"
-        ]
-      }
+      "evidence_extension_confidence_threshold": 0.65
     }
   ]
 }

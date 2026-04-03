@@ -96,6 +96,20 @@ test('buildMajorLeagueCricketPoiQuestions returns the POI bundle in order', () =
       'poi_operations_lead',
     ],
   );
+  assert.deepEqual(
+    records[0].source_priority,
+    [
+      'linkedin_company_profile',
+      'linkedin_people_search',
+      'linkedin_person_profile',
+      'google_serp',
+      'official_site',
+    ],
+  );
+  assert.equal(records[0].query, '"Major League Cricket" LinkedIn company profile');
+  assert.equal(records[0].search_strategy.search_queries[0], '"Major League Cricket" LinkedIn company profile');
+  assert.ok(records[0].search_strategy.search_queries.includes('"Major League Cricket" LinkedIn commercial'));
+  assert.ok(records[0].search_strategy.search_queries.includes('"Major League Cricket" chief commercial officer'));
 });
 
 test('buildMajorLeagueCricketPoiBatchAQuestions returns the first POI sub-bundle', () => {
