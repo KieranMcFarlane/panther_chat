@@ -185,6 +185,101 @@ test('buildOpenCodeQuestionPrompt stays close to the proven direct prompt shape'
   assert.doesNotMatch(prompt, /context, sources, confidence/i);
 });
 
+test('runOpenCodeQuestionSourceBatch stops after the first validated digital-stack fallback answer', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-digital-stack-stop-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'arsenal-fc',
+        entity_name: 'Arsenal Football Club',
+        entity_type: 'SPORT_CLUB',
+        preset: 'arsenal-digital-stack',
+        question_source_label: 'arsenal-digital-stack',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        question_count: 1,
+        questions: [
+          {
+            question_id: 'q2_digital_stack',
+            question_family: 'digital_stack',
+            question_type: 'digital_stack',
+            question: 'What visible technologies, platforms, or vendors does Arsenal Football Club use?',
+            query: '"Arsenal Football Club" technology stack',
+            hop_budget: 3,
+            evidence_extension_budget: 0,
+            evidence_extension_confidence_threshold: 0.65,
+            question_timeout_ms: 180000,
+            hop_timeout_ms: 180000,
+            source_priority: ['google_serp', 'news', 'press_release', 'official_site'],
+            deterministic_tools: [],
+            fallback_to_retrieval: true,
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  let questionRunnerCalls = 0;
+  try {
+    const result = await runOpenCodeQuestionSourceBatch({
+      questionSourcePath: sourcePath,
+      outputDir,
+      deterministicToolRunner: async () => null,
+      questionRunner: async () => {
+        questionRunnerCalls += 1;
+        if (questionRunnerCalls > 1) {
+          throw new Error('questionRunner should stop after the first validated fallback answer');
+        }
+        return {
+          structuredOutput: {
+            answer: 'Ticketmaster',
+            technologies: [{ name: 'React', confidence: 85 }],
+            categories: ['Frontend'],
+            vendors: ['Ticketmaster'],
+            confidence: 0.9,
+            validation_state: 'validated',
+            sources: ['https://www.arsenal.com'],
+            evidence_url: 'https://www.arsenal.com',
+            signal_type: 'DIGITAL_STACK',
+          },
+          promptTrace: {
+            status: 'validated',
+            has_structured_output: true,
+          },
+          messageTrace: [],
+          cliResult: {
+            code: 0,
+            stdout: '',
+            stderr: '',
+          },
+        };
+      },
+    });
+
+    assert.equal(questionRunnerCalls, 1);
+    const questionPath = result.question_result_paths[0];
+    const question = JSON.parse(readFileSync(questionPath, 'utf8')).question;
+    assert.equal(question.validation_state, 'validated');
+    assert.equal(question.answer, 'Ticketmaster');
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
 test('buildOpenCodeQuestionPrompt specializes decision-owner and related-pois outputs', () => {
   const decisionPrompt = buildOpenCodeQuestionPrompt({
     question_text: 'Who is the most suitable person for commercial partnerships or business development at Major League Cricket?',

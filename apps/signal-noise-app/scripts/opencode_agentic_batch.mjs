@@ -1846,6 +1846,9 @@ export async function runOpenCodePresetBatch({
         await _writeJsonFile(statePath, runState);
         currentState = updatedState;
         existingQuestionState = updatedState;
+        if (String(questionPayload?.validation_state || '').trim().toLowerCase() === 'validated' || updatedState.status === 'validated') {
+          break;
+        }
 
         const recommendedNextQuery = String(questionPayload?.recommended_next_query || '').trim();
         if (recommendedNextQuery) {
@@ -1980,13 +1983,16 @@ export async function runOpenCodePresetBatch({
               status: 'exhausted',
             };
           }
-          runState.questions[index] = updatedState;
-          await _writeJsonFile(statePath, runState);
-          existingQuestionState = runState.questions[index];
-          if (runnerResult.timedOut || existingQuestionState.status === 'exhausted') {
-            break;
-          }
+        runState.questions[index] = updatedState;
+        await _writeJsonFile(statePath, runState);
+        existingQuestionState = runState.questions[index];
+        if (updatedState.status === 'validated') {
+          break;
         }
+        if (runnerResult.timedOut || existingQuestionState.status === 'exhausted') {
+          break;
+        }
+      }
       }
       if (!questionPayload) {
         questionPayload = {
