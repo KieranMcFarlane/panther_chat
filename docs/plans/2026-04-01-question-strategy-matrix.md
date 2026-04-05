@@ -44,6 +44,69 @@ Use these classes consistently:
 - LinkedIn is primary for people and relationship questions
 - deterministic tools should run before search when the input is known
 
+## Execution-Aligned Matrix
+
+This is the canonical execution split for the full system.
+
+### Retrieval Layer
+
+These are the only questions that should consume BrightData hop budget.
+
+| Question | Execution Class | Status | Notes |
+| --- | --- | --- | --- |
+| `q1_foundation` | `atomic_retrieval` | `keep` | Deterministic factual grounding |
+| `q3_leadership` | `atomic_retrieval` | `keep` | Broad org mapping |
+| `q6_launch_signal` | `atomic_retrieval` | `keep` | Product and initiative signal |
+| `q7_procurement_signal` | `atomic_retrieval` | `keep` | Core buying signal |
+| `q8_explicit_rfp` | `atomic_retrieval` | `keep_conditional` | Strict procurement proof |
+| `q9_news_signal` | `atomic_retrieval` | `keep` | Timing and priority signal |
+| `q10_hiring_signal` | `atomic_retrieval` | `keep_conditional` | Investment proxy |
+| `q11_decision_owner` | `atomic_retrieval` | `change` | Must be company-first plus candidate ranking |
+
+### Enrichment Layer
+
+These should not behave like generic search questions.
+
+| Question | Execution Class | Status | Notes |
+| --- | --- | --- | --- |
+| `q2_digital_stack` | `deterministic_enrichment` then retrieval fallback | `change` | `apify_techstack` first, search second |
+| `q4_performance` | `deterministic_enrichment` | `change` | Sports-only, structured data first |
+| `q5_league_context` | `deterministic_enrichment` | `change` | Sports and ecosystem only |
+| `q12_connections` | `deterministic_enrichment` or graph lookup | `change` | Network resolution, not broad search |
+
+### Inference Layer
+
+These should never enter the hop loop.
+
+| Question | Execution Class | Status | Notes |
+| --- | --- | --- | --- |
+| `q13_capability_gap` | `derived_inference` | `remove_from_retrieval` | Compare target versus peers |
+| `q14_yp_fit` | `derived_inference` | `remove_from_retrieval` | Service fit reasoning |
+| `q15_outreach_strategy` | `derived_inference` | `remove_from_retrieval` | Final engagement output |
+
+## Clean Execution Flow
+
+```text
+[1] Retrieval Layer
+    q1, q3, q6, q7, q8?, q9, q10?, q11?
+
+[2] Enrichment Layer
+    q2, q4?, q5?, q12
+
+[3] Inference Layer
+    q13 -> q14 -> q15
+```
+
+## Architectural Principles
+
+- not all questions are retrieval questions
+- retrieval should answer one specific signal question only
+- deterministic enrichment should run when the input is already known
+- inference should operate on prior outputs and should not burn hops
+- `q11_decision_owner` should rank a company-anchored candidate pool, not rely on a short title list
+- `q2_digital_stack` should start with `apify_techstack` before search fallback
+- `q12_connections` should resolve graph and network paths, not behave like a search query bundle
+
 ## Core Universal Atomic Matrix
 
 These are the core universal retrieval questions that should exist for every entity:
@@ -122,7 +185,7 @@ For `{entity}`, use this flow:
 
 1. Start with deterministic enrichment
    - Tools:
-     - `wappalyzer`
+     - `apify_techstack`
    - Input:
      - canonical website or domain from `q1_foundation`
    - Output:
@@ -143,7 +206,7 @@ For `{entity}`, use this flow:
      - `press_release`
      - `official_site`
 3. Look for evidence types that indicate a real stack signal
-   - Wappalyzer detection
+   - Apify tech stack detection
    - vendor announcement
    - case study
    - implementation partner page
@@ -153,7 +216,7 @@ For the runner, the practical source priority should be:
 
 ```json
 [
-  "wappalyzer",
+  "apify_techstack",
   "google_serp",
   "news",
   "press_release",
@@ -164,7 +227,7 @@ For the runner, the practical source priority should be:
 My recommendation:
 
 - keep `q2_digital_stack` as one logical question family
-- treat Wappalyzer as a deterministic pre-search step
+- treat Apify tech stack detection as a deterministic pre-search step
 - use search only for enrichment or confirmation
 
 Classification:

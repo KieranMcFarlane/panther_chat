@@ -61,14 +61,14 @@ def test_canonical_atomic_matrix_sources_are_five_question_universal_matrices(
 
     assert [question["question_id"] for question in payload["questions"]] == [
         "q1_foundation",
-        "q2_launch_signal",
+        "q2_digital_stack",
         "q3_procurement_signal",
         "q4_decision_owner",
         "q5_related_pois",
     ]
     assert [question["question_type"] for question in payload["questions"]] == [
         "foundation",
-        "launch",
+        "digital_stack",
         "procurement",
         "decision_owner",
         "related_pois",
@@ -80,10 +80,10 @@ def test_canonical_atomic_matrix_sources_are_five_question_universal_matrices(
         "wikipedia",
     ]
     assert payload["questions"][1]["source_priority"] == [
+        "apify_techstack",
         "google_serp",
         "news",
         "press_release",
-        "linkedin_posts",
         "official_site",
     ]
     assert payload["questions"][2]["source_priority"] == [
@@ -113,12 +113,20 @@ def test_canonical_atomic_matrix_sources_are_five_question_universal_matrices(
     assert all(question["evidence_extension_confidence_threshold"] == 0.65 for question in payload["questions"])
     if entity_id == "major-league-cricket":
         assert payload["questions"][1]["question"] == (
-            "Has Major League Cricket launched a public app, product, or digital platform?"
+            "What visible technologies, platforms, or vendors does Major League Cricket use?"
         )
+        assert payload["questions"][1]["deterministic_tools"] == ["apify_techstack"]
+        assert payload["questions"][1]["fallback_to_retrieval"] is True
+        assert payload["questions"][1]["deterministic_input"] == {
+            "source_question_id": "q1_foundation"
+        }
         assert payload["questions"][1]["search_strategy"]["search_queries"] == [
-            '"Major League Cricket" launched a public app',
-            '"Major League Cricket" launched a product',
-            '"Major League Cricket" launched a digital platform',
+            '"Major League Cricket" CRM',
+            '"Major League Cricket" analytics platform',
+            '"Major League Cricket" ticketing platform',
+            '"Major League Cricket" ecommerce',
+            '"Major League Cricket" mobile app',
+            '"Major League Cricket" technology partner',
         ]
         assert payload["questions"][2]["search_strategy"]["search_queries"] == [
             '"Major League Cricket" RFP',

@@ -16,7 +16,7 @@ def _load_source(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def test_universal_atomic_matrix_builds_consistent_four_question_sources():
+def test_universal_atomic_matrix_builds_consistent_five_question_sources():
     arsenal = build_universal_atomic_question_source(
         entity_type="SPORT_CLUB",
         entity_name="Arsenal Football Club",
@@ -52,14 +52,14 @@ def test_universal_atomic_matrix_builds_consistent_four_question_sources():
         assert payload["question_count"] == 5
         assert [question["question_id"] for question in payload["questions"]] == [
             "q1_foundation",
-            "q2_launch_signal",
+            "q2_digital_stack",
             "q3_procurement_signal",
             "q4_decision_owner",
             "q5_related_pois",
         ]
         assert [question["question_type"] for question in payload["questions"]] == [
             "foundation",
-            "launch",
+            "digital_stack",
             "procurement",
             "decision_owner",
             "related_pois",
@@ -71,10 +71,10 @@ def test_universal_atomic_matrix_builds_consistent_four_question_sources():
             "wikipedia",
         ]
         assert payload["questions"][1]["source_priority"] == [
+            "apify_techstack",
             "google_serp",
             "news",
             "press_release",
-            "linkedin_posts",
             "official_site",
         ]
         assert payload["questions"][2]["source_priority"] == [
@@ -106,14 +106,27 @@ def test_universal_atomic_matrix_builds_consistent_four_question_sources():
     assert arsenal["questions"][0]["question"] == "What year was Arsenal Football Club founded?"
     assert icf["questions"][0]["question"] == "What year was International Canoe Federation founded?"
     assert mlc["questions"][0]["question"] == "What year was Major League Cricket founded?"
-    assert mlc["questions"][1]["question"] == (
-        "Has Major League Cricket launched a public app, product, or digital platform?"
-    )
-    assert mlc["questions"][1]["search_strategy"]["search_queries"] == [
-        '"Major League Cricket" launched a public app',
-        '"Major League Cricket" launched a product',
-        '"Major League Cricket" launched a digital platform',
-    ]
+    for payload, entity_name in [
+        (arsenal, "Arsenal Football Club"),
+        (icf, "International Canoe Federation"),
+        (mlc, "Major League Cricket"),
+    ]:
+        assert payload["questions"][1]["question"] == (
+            f"What visible technologies, platforms, or vendors does {entity_name} use?"
+        )
+        assert payload["questions"][1]["deterministic_tools"] == ["apify_techstack"]
+        assert payload["questions"][1]["fallback_to_retrieval"] is True
+        assert payload["questions"][1]["deterministic_input"] == {
+            "source_question_id": "q1_foundation"
+        }
+        assert payload["questions"][1]["search_strategy"]["search_queries"] == [
+            f'"{entity_name}" CRM',
+            f'"{entity_name}" analytics platform',
+            f'"{entity_name}" ticketing platform',
+            f'"{entity_name}" ecommerce',
+            f'"{entity_name}" mobile app',
+            f'"{entity_name}" technology partner',
+        ]
     assert mlc["questions"][2]["search_strategy"]["search_queries"] == [
         '"Major League Cricket" RFP',
         '"Major League Cricket" tender',
@@ -190,12 +203,27 @@ def test_universal_atomic_matrix_output_matches_canonical_files():
         assert payload["question_count"] == 5
         if entity_id == "major-league-cricket":
             assert payload["questions"][1]["question"] == (
-                "Has Major League Cricket launched a public app, product, or digital platform?"
+                "What visible technologies, platforms, or vendors does Major League Cricket use?"
             )
+            assert payload["questions"][1]["source_priority"] == [
+                "apify_techstack",
+                "google_serp",
+                "news",
+                "press_release",
+                "official_site",
+            ]
+            assert payload["questions"][1]["deterministic_tools"] == ["apify_techstack"]
+            assert payload["questions"][1]["fallback_to_retrieval"] is True
+            assert payload["questions"][1]["deterministic_input"] == {
+                "source_question_id": "q1_foundation"
+            }
             assert payload["questions"][1]["search_strategy"]["search_queries"] == [
-                '"Major League Cricket" launched a public app',
-                '"Major League Cricket" launched a product',
-                '"Major League Cricket" launched a digital platform',
+                '"Major League Cricket" CRM',
+                '"Major League Cricket" analytics platform',
+                '"Major League Cricket" ticketing platform',
+                '"Major League Cricket" ecommerce',
+                '"Major League Cricket" mobile app',
+                '"Major League Cricket" technology partner',
             ]
             assert payload["questions"][2]["search_strategy"]["search_queries"] == [
                 '"Major League Cricket" RFP',

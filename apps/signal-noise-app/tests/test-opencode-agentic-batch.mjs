@@ -17,9 +17,13 @@ import {
   extractFinalCliJson,
   buildQuestionState,
   ensureBrightDataFastMcpService,
+  runDeterministicToolQuestion,
   runOpenCodeQuestionSourceBatch,
   runOpenCodePresetBatch,
 } from '../scripts/opencode_agentic_batch.mjs';
+import {
+  lookupApifyTechStack,
+} from '../scripts/apify_techstack_lookup.mjs';
 
 test('buildOpenCodeConfig wires Z.AI and BrightData FastMCP for OpenCode', () => {
   const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
@@ -249,7 +253,7 @@ test('runOpenCodeQuestionSourceBatch preserves decision-owner primary owner and 
             question_type: 'decision_owner',
             question: 'Who is the most suitable person for commercial partnerships or business development at {entity}?',
             query: '"Arsenal Football Club" LinkedIn company profile',
-            hop_budget: 8,
+            hop_budget: 1,
             evidence_extension_budget: 2,
             evidence_extension_confidence_threshold: 0.65,
             question_timeout_ms: 180000,
@@ -309,6 +313,367 @@ test('runOpenCodeQuestionSourceBatch preserves decision-owner primary owner and 
       delete process.env.ANTHROPIC_AUTH_TOKEN;
     } else {
       process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
+test('lookupApifyTechStack uses the documented Apify sync endpoint and token', async () => {
+  const calls = [];
+  const result = await lookupApifyTechStack({
+    url: 'https://www.arsenal.com',
+    token: 'test-apify-token',
+    fetchImpl: async (url, options) => {
+      calls.push({ url: String(url), options });
+      return {
+        ok: true,
+        status: 201,
+        async json() {
+          return [
+            {
+              url: 'https://www.arsenal.com',
+              technologies: [
+                {
+                  name: 'Salesforce',
+                  confidence: 100,
+                  categories: ['CRM'],
+                },
+              ],
+            },
+          ];
+        },
+      };
+    },
+  });
+
+  assert.equal(calls.length, 1);
+  assert.match(calls[0].url, /^https:\/\/api\.apify\.com\/v2\/acts\/magicfingers~techstack-detector\/run-sync-get-dataset-items\?/);
+  assert.match(calls[0].url, /token=test-apify-token/);
+  assert.equal(calls[0].options.method, 'POST');
+  assert.equal(calls[0].options.headers['content-type'], 'application/json');
+  assert.deepEqual(JSON.parse(calls[0].options.body), { urls: ['https://www.arsenal.com'] });
+  assert.equal(result.results.length, 1);
+  assert.equal(result.results[0].technologies[0].name, 'Salesforce');
+  assert.deepEqual(result.results[0].categories, ['CRM']);
+});
+
+test('runDeterministicToolQuestion accepts APIFY_PERSONAL_API and APIFY_PASSWORD as token aliases', async () => {
+  const previousApifyToken = process.env.APIFY_TOKEN;
+  const previousApifyPassword = process.env.APIFY_PASSWORD;
+  const previousApifyPersonalApi = process.env.APIFY_PERSONAL_API;
+  delete process.env.APIFY_TOKEN;
+  process.env.APIFY_PERSONAL_API = 'test-apify-personal-api';
+  process.env.APIFY_PASSWORD = 'test-apify-password';
+
+  try {
+    const result = await runDeterministicToolQuestion(
+      {
+        question_type: 'digital_stack',
+        deterministic_tools: ['apify_techstack'],
+        fallback_to_retrieval: false,
+        deterministic_input: {
+          url: 'https://www.arsenal.com',
+        },
+      },
+      {
+        apifyTechStackLookup: async ({ token, url }) => {
+          assert.equal(token, 'test-apify-personal-api');
+          assert.equal(url, 'https://www.arsenal.com');
+          return {
+            results: [
+              {
+                url,
+                technologies: [{ name: 'Salesforce', confidence: 100, categories: ['CRM'] }],
+                categories: ['CRM'],
+                vendors: ['Salesforce'],
+              },
+            ],
+          };
+        },
+      },
+    );
+
+    assert.equal(result.structuredOutput.validation_state, 'validated');
+    assert.deepEqual(result.structuredOutput.vendors, ['Salesforce']);
+  } finally {
+    if (previousApifyToken === undefined) {
+      delete process.env.APIFY_TOKEN;
+    } else {
+      process.env.APIFY_TOKEN = previousApifyToken;
+    }
+    if (previousApifyPassword === undefined) {
+      delete process.env.APIFY_PASSWORD;
+    } else {
+      process.env.APIFY_PASSWORD = previousApifyPassword;
+    }
+    if (previousApifyPersonalApi === undefined) {
+      delete process.env.APIFY_PERSONAL_API;
+    } else {
+      process.env.APIFY_PERSONAL_API = previousApifyPersonalApi;
+    }
+  }
+});
+
+test('runOpenCodeQuestionSourceBatch resolves deterministic Apify enrichment before search', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-digital-stack-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  const previousApifyToken = process.env.APIFY_TOKEN;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+  process.env.APIFY_TOKEN = 'test-apify-token';
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'arsenal-fc',
+        entity_name: 'Arsenal Football Club',
+        entity_type: 'SPORT_CLUB',
+        preset: 'arsenal-digital-stack',
+        question_source_label: 'arsenal-digital-stack',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        question_count: 1,
+        questions: [
+          {
+            question_id: 'q2_digital_stack',
+            question_family: 'digital_stack',
+            question_type: 'digital_stack',
+            question: 'What visible technologies, platforms, or vendors does {entity} use?',
+            query: '"Arsenal Football Club" technology stack',
+            hop_budget: 1,
+            evidence_extension_budget: 0,
+            evidence_extension_confidence_threshold: 0.65,
+            question_timeout_ms: 180000,
+            hop_timeout_ms: 180000,
+            source_priority: ['apify_techstack', 'google_serp', 'news', 'press_release', 'official_site'],
+            deterministic_tools: ['apify_techstack'],
+            fallback_to_retrieval: false,
+            deterministic_input: {
+              url: 'https://www.arsenal.com',
+            },
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  try {
+    const result = await runOpenCodeQuestionSourceBatch({
+      questionSourcePath: sourcePath,
+      outputDir,
+      questionRunner: async () => {
+        throw new Error('questionRunner should not be called when deterministic enrichment validates');
+      },
+      deterministicToolRunner: async () => ({
+        structuredOutput: {
+          answer: 'Salesforce',
+          technologies: [{ name: 'Salesforce', confidence: 100 }],
+          categories: ['CRM'],
+          vendors: ['Salesforce'],
+          confidence: 0.95,
+          validation_state: 'validated',
+          sources: ['https://www.arsenal.com'],
+          evidence_url: 'https://www.arsenal.com',
+          signal_type: 'DIGITAL_STACK',
+        },
+        promptTrace: {
+          status: 'deterministic_apify',
+          has_structured_output: true,
+        },
+        messageTrace: [],
+        cliResult: {
+          code: 0,
+          stdout: '',
+          stderr: '',
+        },
+      }),
+    });
+
+    const questionPath = result.question_result_paths[0];
+    const question = JSON.parse(readFileSync(questionPath, 'utf8')).question;
+    assert.equal(question.question_type, 'digital_stack');
+    assert.equal(question.validation_state, 'validated');
+    assert.equal(question.answer, 'Salesforce');
+    assert.deepEqual(question.reasoning.structured_output.categories, ['CRM']);
+    assert.deepEqual(question.reasoning.structured_output.vendors, ['Salesforce']);
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+    if (previousApifyToken === undefined) {
+      delete process.env.APIFY_TOKEN;
+    } else {
+      process.env.APIFY_TOKEN = previousApifyToken;
+    }
+  }
+});
+
+test('buildOpenCodeQuestionPrompt asks digital-stack runs to return additional domains', () => {
+  const prompt = buildOpenCodeQuestionPrompt({
+    question_text: 'What visible technologies, platforms, or vendors does Arsenal Football Club use?',
+    question_type: 'digital_stack',
+    source_priority: ['apify_techstack', 'google_serp', 'news', 'press_release', 'official_site'],
+    hop_budget: 2,
+    query: '"Arsenal Football Club" technology stack',
+    search_strategy: {
+      search_queries: [
+        '"Arsenal Football Club" CRM',
+        '"Arsenal Football Club" ticketing platform',
+        '"Arsenal Football Club" technology partner',
+      ],
+    },
+  });
+
+  assert.match(prompt, /additional_domains/i);
+  assert.match(prompt, /digital services/i);
+});
+
+test('runOpenCodeQuestionSourceBatch enriches digital-stack additional domains with Apify after search fallback', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-digital-stack-fallback-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  const previousApifyToken = process.env.APIFY_TOKEN;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+  process.env.APIFY_TOKEN = 'test-apify-token';
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'arsenal-fc',
+        entity_name: 'Arsenal Football Club',
+        entity_type: 'SPORT_CLUB',
+        preset: 'arsenal-digital-stack',
+        question_source_label: 'arsenal-digital-stack',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        question_count: 1,
+        questions: [
+          {
+            question_id: 'q2_digital_stack',
+            question_family: 'digital_stack',
+            question_type: 'digital_stack',
+            question: 'What visible technologies, platforms, or vendors does Arsenal Football Club use?',
+            query: '"Arsenal Football Club" technology stack',
+            hop_budget: 1,
+            evidence_extension_budget: 0,
+            evidence_extension_confidence_threshold: 0.65,
+            question_timeout_ms: 180000,
+            hop_timeout_ms: 180000,
+            source_priority: ['apify_techstack', 'google_serp', 'news', 'press_release', 'official_site'],
+            deterministic_tools: ['apify_techstack'],
+            fallback_to_retrieval: true,
+            deterministic_input: {
+              url: 'https://www.arsenal.com',
+            },
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  const apifyCalls = [];
+  try {
+    const result = await runOpenCodeQuestionSourceBatch({
+      questionSourcePath: sourcePath,
+      outputDir,
+      questionRunner: async () => ({
+        structuredOutput: {
+          answer: 'Ticketmaster',
+          technologies: [{ name: 'React', confidence: 85 }],
+          categories: ['Frontend'],
+          vendors: ['Ticketmaster'],
+          confidence: 0.9,
+          validation_state: 'validated',
+          sources: ['https://www.arsenal.com'],
+          evidence_url: 'https://www.arsenal.com',
+          signal_type: 'DIGITAL_STACK',
+          additional_domains: [
+            'tickets.arsenal.com',
+            'https://shop.arsenal.com/store',
+          ],
+        },
+        promptTrace: {
+          status: 'validated',
+          has_structured_output: true,
+        },
+        messageTrace: [],
+        cliResult: {
+          code: 0,
+          stdout: '',
+          stderr: '',
+        },
+      }),
+      deterministicToolRunner: async () => null,
+      apifyToken: 'test-apify-token',
+      apifyTechStackLookup: async ({ url }) => {
+        apifyCalls.push(url);
+        if (String(url).includes('tickets.arsenal.com')) {
+          return {
+            results: [
+              {
+                url,
+                technologies: [{ name: 'Ticketmaster', confidence: 90, categories: ['Ticketing'] }],
+                categories: ['Ticketing'],
+                vendors: ['Ticketmaster'],
+              },
+            ],
+          };
+        }
+        return {
+          results: [
+            {
+              url,
+              technologies: [
+                { name: 'Shopify', confidence: 100, categories: ['Ecommerce'] },
+                { name: 'Stripe', confidence: 88, categories: ['Payments'] },
+              ],
+              categories: ['Ecommerce', 'Payments'],
+              vendors: ['Shopify', 'Stripe'],
+            },
+          ],
+        };
+      },
+    });
+
+    assert.deepEqual(Array.from(new Set(apifyCalls)), [
+      'https://tickets.arsenal.com/',
+      'https://shop.arsenal.com/store',
+    ]);
+
+    const questionPath = result.question_result_paths[0];
+    const question = JSON.parse(readFileSync(questionPath, 'utf8')).question;
+    assert.equal(question.question_type, 'digital_stack');
+    assert.equal(question.validation_state, 'validated');
+    assert.deepEqual(question.reasoning.structured_output.additional_domains, [
+      'https://tickets.arsenal.com/',
+      'https://shop.arsenal.com/store',
+    ]);
+    assert.equal(question.reasoning.structured_output.additional_domain_results.length, 2);
+    assert.deepEqual(question.reasoning.structured_output.vendors, ['Ticketmaster', 'Shopify', 'Stripe']);
+    assert.deepEqual(question.reasoning.structured_output.categories, ['Frontend', 'Ticketing', 'Ecommerce', 'Payments']);
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+    if (previousApifyToken === undefined) {
+      delete process.env.APIFY_TOKEN;
+    } else {
+      process.env.APIFY_TOKEN = previousApifyToken;
     }
   }
 });

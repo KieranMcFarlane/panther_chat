@@ -1,6 +1,6 @@
 {
   "schema_version": "atomic_question_source_v1",
-  "generated_at": "2026-04-03T07:01:33.137984+00:00",
+  "generated_at": "2026-04-03T14:20:30.517028+00:00",
   "entity_id": "arsenal-fc",
   "entity_name": "Arsenal Football Club",
   "entity_type": "SPORT_CLUB",
@@ -33,22 +33,39 @@
       "evidence_extension_confidence_threshold": 0.65
     },
     {
-      "question_id": "q2_launch_signal",
-      "question_family": "launch",
-      "question_type": "launch",
-      "question": "Is there evidence Arsenal Football Club has launched or is replacing a public app, product, or digital platform?",
-      "query": "\"Arsenal Football Club\" app product platform launch",
+      "question_id": "q2_digital_stack",
+      "question_family": "digital_stack",
+      "question_type": "digital_stack",
+      "question": "What visible technologies, platforms, or vendors does Arsenal Football Club use?",
+      "query": "\"Arsenal Football Club\" technology stack",
       "hop_budget": 8,
       "evidence_extension_budget": 2,
       "source_priority": [
+        "apify_techstack",
         "google_serp",
         "news",
         "press_release",
-        "linkedin_posts",
         "official_site"
       ],
-      "evidence_focus": "opportunity_signal",
-      "promotion_target": "opportunity_signals",
+      "search_strategy": {
+        "search_queries": [
+          "\"Arsenal Football Club\" CRM",
+          "\"Arsenal Football Club\" analytics platform",
+          "\"Arsenal Football Club\" ticketing platform",
+          "\"Arsenal Football Club\" ecommerce",
+          "\"Arsenal Football Club\" mobile app",
+          "\"Arsenal Football Club\" technology partner"
+        ]
+      },
+      "deterministic_tools": [
+        "apify_techstack"
+      ],
+      "fallback_to_retrieval": true,
+      "deterministic_input": {
+        "source_question_id": "q1_foundation"
+      },
+      "evidence_focus": "technology_stack",
+      "promotion_target": "technology_stack",
       "answer_kind": "signal",
       "question_shape": "atomic",
       "question_timeout_ms": 180000,

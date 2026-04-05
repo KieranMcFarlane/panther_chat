@@ -10,6 +10,9 @@ import {
   buildQuestionFirstRunArtifact,
   validateQuestionFirstRunArtifact,
 } from './question_first_run_contract.mjs';
+import {
+  lookupApifyTechStack,
+} from './apify_techstack_lookup.mjs';
 
 const MODULE_DIR = path.dirname(fileURLToPath(import.meta.url));
 const APP_ROOT = path.resolve(MODULE_DIR, '..');
@@ -351,6 +354,35 @@ function _scoreSourceRecord(questionState, url, title = '', confidence = 0) {
     tags: [questionState.question_type],
     score,
   };
+}
+
+function _resolveDeterministicInputUrl(question, runState = {}) {
+  const deterministicInput = question?.deterministic_input && typeof question.deterministic_input === 'object'
+    ? question.deterministic_input
+    : {};
+  for (const candidate of [
+    deterministicInput.url,
+    deterministicInput.website,
+    question?.entity_website,
+    question?.website,
+  ]) {
+    const value = String(candidate || '').trim();
+    if (value) {
+      return value;
+    }
+  }
+  const sourceQuestionId = String(deterministicInput.source_question_id || '').trim();
+  if (!sourceQuestionId) {
+    return '';
+  }
+  const priorQuestions = Array.isArray(runState?.questions) ? runState.questions : [];
+  const sourceQuestion = priorQuestions.find((item) => String(item?.question_id || '').trim() === sourceQuestionId);
+  if (!sourceQuestion) {
+    return '';
+  }
+  const acceptedLinks = Array.isArray(sourceQuestion.accepted_links) ? sourceQuestion.accepted_links : [];
+  const preferredAccepted = acceptedLinks.find((item) => String(item?.source_kind || '').trim() === 'official_site');
+  return String(preferredAccepted?.url || sourceQuestion.best_evidence_url || '').trim();
 }
 
 function _buildFrontierFromStructuredOutput(questionState, structuredOutput, timestamp) {
@@ -896,6 +928,9 @@ export function buildOpenCodeQuestionPrompt(question) {
   if (questionType === 'related_pois') {
     return `${_questionText(question)} use brightdata. ${searchHint} Start with search and use scraped pages only if the search results are not enough to validate the answer. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer set to the best candidate name, candidates, confidence, sources, and validation_state. candidates should be a ranked list of 3 to 5 people with the best commercial relevance. If you cannot validate a ranked list of 3 to 5 candidates within that budget, return exactly one fenced JSON code block with answer "", candidates [], confidence 0, sources [], and validation_state "no_signal", then stop. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated ranked list.`;
   }
+  if (questionType === 'digital_stack') {
+    return `${_questionText(question)} use brightdata. ${searchHint} Start with search and use scraped pages only if the search results are not enough to validate the answer. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer, technologies, categories, vendors, additional_domains, confidence, sources, and validation_state. additional_domains should only include real digital services or subdomains worth separate tech-stack enrichment, such as ticketing, shop, app, or fan platform domains. If you cannot validate a supported answer within that budget, return exactly one fenced JSON code block with answer "", technologies [], categories [], vendors [], additional_domains [], confidence 0, sources [], and validation_state "no_signal", then stop. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated answer.`;
+  }
   return `${_questionText(question)} use brightdata. ${searchHint} Start with search and use scraped pages only if the search results are not enough to validate the answer. You have at most ${hopBudget} hops. If you cannot validate a supported answer within that budget, return exactly one fenced JSON code block with answer "", confidence 0, sources [], and validation_state "no_signal", then stop. Otherwise return exactly one fenced JSON code block with the validated answer, confidence, and sources if available. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated answer.`;
 }
 
@@ -941,10 +976,277 @@ export function buildOpenCodeQuestionSchema() {
         type: 'array',
         items: { type: 'string' },
       },
+      technologies: {
+        type: 'array',
+        items: {
+          type: 'object',
+          additionalProperties: true,
+        },
+      },
+      categories: {
+        type: 'array',
+        items: { type: 'string' },
+      },
+      vendors: {
+        type: 'array',
+        items: { type: 'string' },
+      },
+      additional_domains: {
+        type: 'array',
+        items: { type: 'string' },
+      },
+      additional_domain_results: {
+        type: 'array',
+        items: {
+          type: 'object',
+          additionalProperties: true,
+        },
+      },
       confidence: { type: 'number' },
     },
     required: ['answer', 'confidence'],
     additionalProperties: true,
+  };
+}
+
+function _normalizeDomainCandidate(value) {
+  const raw = String(value || '').trim();
+  if (!raw) {
+    return '';
+  }
+  const withScheme = /^[a-z]+:\/\//i.test(raw) ? raw : `https://${raw}`;
+  try {
+    const parsed = new URL(withScheme);
+    parsed.hash = '';
+    return parsed.toString();
+  } catch {
+    return '';
+  }
+}
+
+function _mergeTechnologyRecords(base, extra, sourceUrl = '') {
+  const merged = new Map();
+  for (const record of [...(Array.isArray(base) ? base : []), ...(Array.isArray(extra) ? extra : [])]) {
+    if (!record || typeof record !== 'object') {
+      continue;
+    }
+    const name = String(record.name || '').trim();
+    if (!name) {
+      continue;
+    }
+    const existing = merged.get(name) || {};
+    const categories = Array.from(new Set([
+      ...(Array.isArray(existing.categories) ? existing.categories : []),
+      ...(Array.isArray(record.categories) ? record.categories : []),
+    ].filter(Boolean)));
+    merged.set(name, {
+      ...existing,
+      ...record,
+      name,
+      categories,
+      source_url: record.source_url || existing.source_url || sourceUrl || '',
+    });
+  }
+  return Array.from(merged.values());
+}
+
+function _mergeUniqueStrings(...values) {
+  return Array.from(new Set(values.flatMap((value) => (Array.isArray(value) ? value : [])).map((item) => String(item || '').trim()).filter(Boolean)));
+}
+
+export async function enrichDigitalStackStructuredOutput(
+  question,
+  structuredOutput,
+  {
+    fetchImpl = globalThis.fetch,
+    apifyTechStackLookup = lookupApifyTechStack,
+    apifyToken = process.env.APIFY_PERSONAL_API || process.env.APIFY_TOKEN || process.env.APIFY_PASSWORD || '',
+  } = {},
+) {
+  const questionType = String(question?.question_type || '').trim().toLowerCase();
+  if (questionType !== 'digital_stack' || !structuredOutput || typeof structuredOutput !== 'object') {
+    return structuredOutput;
+  }
+  const resolvedApifyToken = String(apifyToken || '').trim();
+  if (!resolvedApifyToken) {
+    return structuredOutput;
+  }
+  const baseEvidenceUrl = _normalizeDomainCandidate(
+    structuredOutput.evidence_url || structuredOutput.source || (Array.isArray(structuredOutput.sources) ? structuredOutput.sources[0] : ''),
+  );
+  const additionalDomains = _mergeUniqueStrings(structuredOutput.additional_domains)
+    .map((item) => _normalizeDomainCandidate(item))
+    .filter(Boolean)
+    .filter((item, index, array) => array.indexOf(item) === index)
+    .filter((item) => item !== baseEvidenceUrl);
+  if (additionalDomains.length === 0) {
+    return structuredOutput;
+  }
+
+  const additionalDomainResults = [];
+  let technologies = Array.isArray(structuredOutput.technologies) ? structuredOutput.technologies : [];
+  let categories = Array.isArray(structuredOutput.categories) ? structuredOutput.categories : [];
+  let vendors = Array.isArray(structuredOutput.vendors) ? structuredOutput.vendors : [];
+
+  for (const url of additionalDomains) {
+    try {
+      const lookupResult = await apifyTechStackLookup({
+        url,
+        token: resolvedApifyToken,
+        fetchImpl,
+      });
+      const topResult = Array.isArray(lookupResult?.results) ? lookupResult.results[0] : null;
+      if (!topResult) {
+        continue;
+      }
+      const nextTechnologies = Array.isArray(topResult.technologies)
+        ? topResult.technologies.map((item) => ({ ...item, source_url: url }))
+        : [];
+      const nextCategories = Array.isArray(topResult.categories) ? topResult.categories : [];
+      const nextVendors = Array.isArray(topResult.vendors) ? topResult.vendors : [];
+      technologies = _mergeTechnologyRecords(technologies, nextTechnologies, url);
+      categories = _mergeUniqueStrings(categories, nextCategories);
+      vendors = _mergeUniqueStrings(vendors, nextVendors);
+      additionalDomainResults.push({
+        url,
+        technologies: nextTechnologies,
+        categories: nextCategories,
+        vendors: nextVendors,
+      });
+    } catch {
+      // Keep the primary digital stack result even if one secondary enrichment fails.
+    }
+  }
+
+  return {
+    ...structuredOutput,
+    technologies,
+    categories,
+    vendors,
+    additional_domains: additionalDomains,
+    additional_domain_results: additionalDomainResults,
+    answer: vendors.slice(0, 5).join(', ') || structuredOutput.answer || '',
+  };
+}
+
+export async function runDeterministicToolQuestion(
+  question,
+  {
+    runState = {},
+    fetchImpl = globalThis.fetch,
+    apifyTechStackLookup = lookupApifyTechStack,
+  } = {},
+) {
+  const deterministicTools = Array.isArray(question?.deterministic_tools)
+    ? question.deterministic_tools.map((item) => String(item || '').trim().toLowerCase()).filter(Boolean)
+    : [];
+  const usesApifyTechStack = deterministicTools.includes('apify_techstack') || deterministicTools.includes('wappalyzer');
+  if (!usesApifyTechStack) {
+    return null;
+  }
+
+  const fallbackToRetrieval = question?.fallback_to_retrieval !== false;
+  const inputUrl = _resolveDeterministicInputUrl(question, runState);
+  const apifyToken = process.env.APIFY_PERSONAL_API || process.env.APIFY_TOKEN || process.env.APIFY_PASSWORD || '';
+  if (!inputUrl || !String(apifyToken || '').trim()) {
+    if (fallbackToRetrieval) {
+      return null;
+    }
+    return {
+      structuredOutput: {
+        answer: '',
+        technologies: [],
+        categories: [],
+        vendors: [],
+        confidence: 0,
+        validation_state: 'no_signal',
+        sources: inputUrl ? [inputUrl] : [],
+        evidence_url: inputUrl,
+        signal_type: 'DIGITAL_STACK',
+        notes: inputUrl ? 'Missing Apify token' : 'Missing deterministic input URL',
+      },
+      promptTrace: {
+        status: 'deterministic_apify_skipped',
+        has_structured_output: true,
+      },
+      messageTrace: [],
+      cliResult: {
+        code: 0,
+        stdout: '',
+        stderr: '',
+      },
+    };
+  }
+
+  let lookupResult;
+  try {
+    lookupResult = await apifyTechStackLookup({
+      url: inputUrl,
+      token: apifyToken,
+      fetchImpl,
+    });
+  } catch (error) {
+    if (fallbackToRetrieval) {
+      return null;
+    }
+    return {
+      structuredOutput: {
+        answer: '',
+        technologies: [],
+        categories: [],
+        vendors: [],
+        confidence: 0,
+        validation_state: 'no_signal',
+        sources: inputUrl ? [inputUrl] : [],
+        evidence_url: inputUrl,
+        signal_type: 'DIGITAL_STACK',
+        notes: error instanceof Error ? error.message : String(error),
+      },
+      promptTrace: {
+        status: 'deterministic_apify_error',
+        has_structured_output: true,
+      },
+      messageTrace: [],
+      cliResult: {
+        code: 0,
+        stdout: '',
+        stderr: '',
+      },
+    };
+  }
+
+  const topResult = Array.isArray(lookupResult?.results) ? lookupResult.results[0] : null;
+  const technologies = Array.isArray(topResult?.technologies) ? topResult.technologies : [];
+  if (technologies.length === 0 && fallbackToRetrieval) {
+    return null;
+  }
+  const vendors = Array.isArray(topResult?.vendors) ? topResult.vendors : [];
+  const categories = Array.isArray(topResult?.categories) ? topResult.categories : [];
+  return {
+    structuredOutput: {
+      answer: vendors.slice(0, 5).join(', '),
+      technologies,
+      categories,
+      vendors,
+      raw: topResult?.raw || {},
+      confidence: technologies.length > 0 ? 0.95 : 0,
+      validation_state: technologies.length > 0 ? 'validated' : 'no_signal',
+      sources: inputUrl ? [inputUrl] : [],
+      source: inputUrl,
+      evidence_url: inputUrl,
+      signal_type: 'DIGITAL_STACK',
+    },
+    promptTrace: {
+      status: 'deterministic_apify',
+      has_structured_output: true,
+      technologies_detected: technologies.length,
+    },
+    messageTrace: [],
+    cliResult: {
+      code: 0,
+      stdout: '',
+      stderr: '',
+    },
   };
 }
 
@@ -1244,6 +1546,9 @@ function _categoryForQuestion(question) {
   if (questionType === 'leadership' || questionType === 'decision_owner' || questionType === 'related_pois') {
     return 'decision_owners';
   }
+  if (questionType === 'digital_stack') {
+    return 'technology_stack';
+  }
   return 'general';
 }
 
@@ -1279,6 +1584,9 @@ export async function runOpenCodePresetBatch({
   worktreeRoot = null,
   opencodeTimeoutMs = 300000,
   questionRunner = runOpenCodeCliQuestion,
+  deterministicToolRunner = runDeterministicToolQuestion,
+  apifyTechStackLookup = lookupApifyTechStack,
+  apifyToken = process.env.APIFY_PERSONAL_API || process.env.APIFY_TOKEN || process.env.APIFY_PASSWORD || '',
   resume = false,
   searchCredits,
   scrapeCredits,
@@ -1399,6 +1707,68 @@ export async function runOpenCodePresetBatch({
       const isAtomicDiscoveryQuestion = ['atomic', 'discovery'].includes(
         String(question.question_shape || question.pack_role || '').trim().toLowerCase(),
       );
+      const fallbackToRetrieval = question.fallback_to_retrieval !== false;
+
+      if (typeof deterministicToolRunner === 'function') {
+        const deterministicRun = await deterministicToolRunner(question, {
+          runState,
+          fetchImpl: globalThis.fetch,
+        });
+        if (deterministicRun) {
+          const deterministicStructuredOutput = await enrichDigitalStackStructuredOutput(
+            question,
+            deterministicRun.structuredOutput || {},
+            {
+              fetchImpl: globalThis.fetch,
+              apifyTechStackLookup,
+              apifyToken,
+            },
+          );
+          questionRun = deterministicRun;
+          questionPayload = _buildQuestionPayload(
+            question,
+            deterministicStructuredOutput,
+            `cli-${index + 1}`,
+            {
+              promptTrace: deterministicRun.promptTrace || null,
+              messageTrace: deterministicRun.messageTrace || [],
+              executionQuery: question.query,
+            },
+          );
+          let updatedState = _mergeQuestionState(currentState || currentQuestionState, questionPayload, new Date().toISOString());
+          if (questionPayload.validation_state !== 'validated' && fallbackToRetrieval) {
+            updatedState = {
+              ...updatedState,
+              status: 'running',
+            };
+          }
+          runState.questions[index] = updatedState;
+          await _writeJsonFile(statePath, runState);
+          currentState = updatedState;
+          existingQuestionState = updatedState;
+          if (questionPayload.validation_state === 'validated' || !fallbackToRetrieval) {
+            finalQuestions.push(questionPayload);
+            perQuestionPayloads.push({
+              run_started_at: runStartedAt,
+              entity_name: question.entity_name,
+              entity_id: question.entity_id,
+              entity_type: question.entity_type,
+              preset: question.preset,
+              question: questionPayload,
+            });
+            transcripts.push(
+              [
+                `Question ${index + 1}: ${question.question_id}`,
+                `Prompt: ${question.query}`,
+                `Exit code: ${questionRun?.cliResult?.code ?? 'n/a'}`,
+                `Validation: ${questionPayload.validation_state}`,
+                `Answer: ${questionPayload.answer || 'n/a'}`,
+              ].join('\n'),
+            );
+            continue;
+          }
+        }
+      }
 
       if (isAtomicDiscoveryQuestion) {
       while (hopIndex < hopLimit && Date.now() < questionDeadline) {
@@ -1425,6 +1795,17 @@ export async function runOpenCodePresetBatch({
           hopTimeoutMs,
         );
         questionRun = runnerResult.questionRun;
+        if (questionRun?.structuredOutput && typeof questionRun.structuredOutput === 'object') {
+          questionRun.structuredOutput = await enrichDigitalStackStructuredOutput(
+            question,
+            questionRun.structuredOutput,
+            {
+              fetchImpl: globalThis.fetch,
+              apifyTechStackLookup,
+              apifyToken,
+            },
+          );
+        }
         runState = _decorateRunStateCheckpoint(runState, {
           runPhase: runnerResult.timedOut ? 'question_runner_timeout' : 'question_runner_return',
           activeQuestionIndex: index,
@@ -1769,6 +2150,9 @@ export async function runOpenCodeQuestionSourceBatch({
   worktreeRoot = null,
   opencodeTimeoutMs = 300000,
   questionRunner = runOpenCodeCliQuestion,
+  deterministicToolRunner = runDeterministicToolQuestion,
+  apifyTechStackLookup = lookupApifyTechStack,
+  apifyToken = process.env.APIFY_PERSONAL_API || process.env.APIFY_TOKEN || process.env.APIFY_PASSWORD || '',
   resume = false,
   searchCredits,
   scrapeCredits,
@@ -1802,6 +2186,10 @@ export async function runOpenCodeQuestionSourceBatch({
       ...question,
       entity_name: question.entity_name || entityName,
       entity_id: question.entity_id || entityId,
+      entity_type: question.entity_type || entityType,
+      preset: question.preset || preset,
+      question_shape: question.question_shape || sourcePayload.question_shape || 'atomic',
+      pack_role: question.pack_role || sourcePayload.pack_role || 'discovery',
       question_text: resolvedQuestionText,
       question: resolvedQuestionText,
     };
@@ -1813,6 +2201,9 @@ export async function runOpenCodeQuestionSourceBatch({
     worktreeRoot: _resolveOpencodeWorktreeRoot(worktreeRoot),
     opencodeTimeoutMs,
     questionRunner,
+    deterministicToolRunner,
+    apifyTechStackLookup,
+    apifyToken,
     resume,
     searchCredits,
     scrapeCredits,

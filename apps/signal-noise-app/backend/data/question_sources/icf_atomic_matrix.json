@@ -1,6 +1,6 @@
 {
   "schema_version": "atomic_question_source_v1",
-  "generated_at": "2026-04-03T07:01:33.138876+00:00",
+  "generated_at": "2026-04-03T14:20:30.518004+00:00",
   "entity_id": "international-canoe-federation",
   "entity_name": "International Canoe Federation",
   "entity_type": "SPORT_FEDERATION",
@@ -33,22 +33,39 @@
       "evidence_extension_confidence_threshold": 0.65
     },
     {
-      "question_id": "q2_launch_signal",
-      "question_family": "launch",
-      "question_type": "launch",
-      "question": "Is there evidence International Canoe Federation has launched or is replacing a public app, product, or digital platform?",
-      "query": "\"International Canoe Federation\" app product platform launch",
+      "question_id": "q2_digital_stack",
+      "question_family": "digital_stack",
+      "question_type": "digital_stack",
+      "question": "What visible technologies, platforms, or vendors does International Canoe Federation use?",
+      "query": "\"International Canoe Federation\" technology stack",
       "hop_budget": 8,
       "evidence_extension_budget": 2,
       "source_priority": [
+        "apify_techstack",
         "google_serp",
         "news",
         "press_release",
-        "linkedin_posts",
         "official_site"
       ],
-      "evidence_focus": "opportunity_signal",
-      "promotion_target": "opportunity_signals",
+      "search_strategy": {
+        "search_queries": [
+          "\"International Canoe Federation\" CRM",
+          "\"International Canoe Federation\" analytics platform",
+          "\"International Canoe Federation\" ticketing platform",
+          "\"International Canoe Federation\" ecommerce",
+          "\"International Canoe Federation\" mobile app",
+          "\"International Canoe Federation\" technology partner"
+        ]
+      },
+      "deterministic_tools": [
+        "apify_techstack"
+      ],
+      "fallback_to_retrieval": true,
+      "deterministic_input": {
+        "source_question_id": "q1_foundation"
+      },
+      "evidence_focus": "technology_stack",
+      "promotion_target": "technology_stack",
       "answer_kind": "signal",
       "question_shape": "atomic",
       "question_timeout_ms": 180000,

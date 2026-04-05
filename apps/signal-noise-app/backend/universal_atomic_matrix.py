@@ -100,22 +100,37 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "answer_kind": "fact",
     },
     {
-        "question_id": "q2_launch_signal",
-        "question_family": "launch",
-        "question_type": "launch",
-        "question": "Is there evidence {entity} has launched or is replacing a public app, product, or digital platform?",
-        "query": '"{entity}" app product platform launch',
+        "question_id": "q2_digital_stack",
+        "question_family": "digital_stack",
+        "question_type": "digital_stack",
+        "question": "What visible technologies, platforms, or vendors does {entity} use?",
+        "query": '"{entity}" technology stack',
         "hop_budget": HOP_BUDGET,
         "evidence_extension_budget": 2,
         "source_priority": [
+            "apify_techstack",
             "google_serp",
             "news",
             "press_release",
-            "linkedin_posts",
             "official_site",
         ],
-        "evidence_focus": "opportunity_signal",
-        "promotion_target": "opportunity_signals",
+        "search_strategy": {
+            "search_queries": [
+                '"{entity}" CRM',
+                '"{entity}" analytics platform',
+                '"{entity}" ticketing platform',
+                '"{entity}" ecommerce',
+                '"{entity}" mobile app',
+                '"{entity}" technology partner',
+            ]
+        },
+        "deterministic_tools": ["apify_techstack"],
+        "fallback_to_retrieval": True,
+        "deterministic_input": {
+            "source_question_id": "q1_foundation",
+        },
+        "evidence_focus": "technology_stack",
+        "promotion_target": "technology_stack",
         "answer_kind": "signal",
     },
     {
@@ -173,16 +188,6 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
 
 MLC_ENTITY_ID = "major-league-cricket"
 MLC_QUESTION_OVERRIDES: Dict[str, Dict[str, Any]] = {
-    "q2_launch_signal": {
-        "question": "Has {entity} launched a public app, product, or digital platform?",
-        "search_strategy": {
-            "search_queries": [
-                '"{entity}" launched a public app',
-                '"{entity}" launched a product',
-                '"{entity}" launched a digital platform',
-            ]
-        },
-    },
     "q3_procurement_signal": {
         "search_strategy": {
             "search_queries": [
