@@ -116,6 +116,8 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
                 f'"{entity_name}" technology stack',
                 f'"{entity_name}" tech stack',
                 f'"{entity_name}" digital stack',
+                f'"{entity_name}" official website',
+                f'"{entity_name}" digital experience',
                 f'"{entity_name}" case study',
                 f'"{entity_name}" official partner',
                 f'"{entity_name}" digital partner',
@@ -133,6 +135,8 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
                 f'"{entity_name}" technology stack',
                 f'"{entity_name}" tech stack',
                 f'"{entity_name}" digital stack',
+                f'"{entity_name}" official website',
+                f'"{entity_name}" digital experience',
                 f'"{entity_name}" events platform',
                 f'"{entity_name}" membership platform',
                 f'"{entity_name}" results platform',
@@ -152,6 +156,8 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
                 f'"{entity_name}" technology stack',
                 f'"{entity_name}" tech stack',
                 f'"{entity_name}" digital stack',
+                f'"{entity_name}" official website',
+                f'"{entity_name}" digital experience',
                 f'"{entity_name}" CRM',
                 f'"{entity_name}" analytics platform',
                 f'"{entity_name}" ticketing platform',
@@ -165,14 +171,34 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
                 f'"{entity_name}" app',
             ]
         assert payload["questions"][1]["question"] == (
-            f"What visible technologies, platforms, or vendors does {entity_name} use?"
+            f"What visible technologies, platforms, or vendors does {entity_name} use, and what do they imply commercially?"
         )
         assert payload["questions"][1]["deterministic_tools"] == ["apify_techstack"]
         assert payload["questions"][1]["fallback_to_retrieval"] is True
         assert payload["questions"][1]["deterministic_input"] == {
-            "source_question_id": "q1_foundation"
+            "source_question_id": "q1_foundation",
+            "official_site_only": True,
         }
         assert payload["questions"][1]["search_strategy"]["search_queries"] == q2_expected
+        assert payload["questions"][1]["question"] == (
+            f"What visible technologies, platforms, or vendors does {entity_name} use, and what do they imply commercially?"
+        )
+    assert arsenal["questions"][2]["question"] == (
+        "Is there evidence Arsenal Football Club is buying, launching, or reshaping its commercial or digital ecosystem through procurement, partnerships, hiring, or platform initiatives?"
+    )
+    assert arsenal["questions"][2]["search_strategy"]["search_queries"] == [
+        '"Arsenal Football Club" RFP',
+        '"Arsenal Football Club" tender',
+        '"Arsenal Football Club" procurement',
+        '"Arsenal Football Club" partner',
+        '"Arsenal Football Club" sponsor',
+        '"Arsenal Football Club" hiring digital',
+        '"Arsenal Football Club" hiring analytics',
+        '"Arsenal Football Club" platform',
+        '"Arsenal Football Club" analytics initiative',
+        '"Arsenal Football Club" broadcast partner',
+        '"Arsenal Football Club" vendor',
+    ]
     assert mlc["questions"][2]["search_strategy"]["search_queries"] == [
         '"Major League Cricket" RFP',
         '"Major League Cricket" tender',
@@ -180,6 +206,9 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
         '"Major League Cricket" vendor',
         '"Major League Cricket" sponsor',
         '"Major League Cricket" broadcast',
+        '"Major League Cricket" hiring digital',
+        '"Major League Cricket" analytics',
+        '"Major League Cricket" platform',
     ]
     assert arsenal["questions"][3]["query"] == '"Arsenal Football Club" LinkedIn company profile'
     assert arsenal["questions"][3]["search_strategy"]["search_queries"][0] == (
@@ -249,7 +278,7 @@ def test_universal_atomic_matrix_output_matches_canonical_files():
         assert payload["question_count"] == 5
         if entity_id == "major-league-cricket":
             assert payload["questions"][1]["question"] == (
-                "What visible technologies, platforms, or vendors does Major League Cricket use?"
+                "What visible technologies, platforms, or vendors does Major League Cricket use, and what do they imply commercially?"
             )
             assert payload["questions"][1]["source_priority"] == [
                 "apify_techstack",
@@ -261,12 +290,15 @@ def test_universal_atomic_matrix_output_matches_canonical_files():
             assert payload["questions"][1]["deterministic_tools"] == ["apify_techstack"]
             assert payload["questions"][1]["fallback_to_retrieval"] is True
             assert payload["questions"][1]["deterministic_input"] == {
-                "source_question_id": "q1_foundation"
+                "source_question_id": "q1_foundation",
+                "official_site_only": True,
             }
             assert payload["questions"][1]["search_strategy"]["search_queries"] == [
                 '"Major League Cricket" technology stack',
                 '"Major League Cricket" tech stack',
                 '"Major League Cricket" digital stack',
+                '"Major League Cricket" official website',
+                '"Major League Cricket" digital experience',
                 '"Major League Cricket" CRM',
                 '"Major League Cricket" analytics platform',
                 '"Major League Cricket" ticketing platform',
@@ -286,6 +318,9 @@ def test_universal_atomic_matrix_output_matches_canonical_files():
                 '"Major League Cricket" vendor',
                 '"Major League Cricket" sponsor',
                 '"Major League Cricket" broadcast',
+                '"Major League Cricket" hiring digital',
+                '"Major League Cricket" analytics',
+                '"Major League Cricket" platform',
             ]
             assert payload["questions"][3]["query"] == '"Major League Cricket" LinkedIn company profile'
             assert payload["questions"][3]["search_strategy"]["search_queries"][0] == (

@@ -1,6 +1,6 @@
 {
   "schema_version": "atomic_question_source_v1",
-  "generated_at": "2026-04-05T09:38:23.597295+00:00",
+  "generated_at": "2026-04-05T15:03:31.065214+00:00",
   "entity_id": "major-league-cricket",
   "entity_name": "Major League Cricket",
   "entity_type": "SPORT_LEAGUE",
@@ -36,7 +36,7 @@
       "question_id": "q2_digital_stack",
       "question_family": "digital_stack",
       "question_type": "digital_stack",
-      "question": "What visible technologies, platforms, or vendors does Major League Cricket use?",
+      "question": "What visible technologies, platforms, or vendors does Major League Cricket use, and what do they imply commercially?",
       "query": "\"Major League Cricket\" technology stack",
       "hop_budget": 8,
       "evidence_extension_budget": 2,
@@ -52,6 +52,8 @@
           "\"Major League Cricket\" technology stack",
           "\"Major League Cricket\" tech stack",
           "\"Major League Cricket\" digital stack",
+          "\"Major League Cricket\" official website",
+          "\"Major League Cricket\" digital experience",
           "\"Major League Cricket\" CRM",
           "\"Major League Cricket\" analytics platform",
           "\"Major League Cricket\" ticketing platform",
@@ -70,7 +72,8 @@
       ],
       "fallback_to_retrieval": true,
       "deterministic_input": {
-        "source_question_id": "q1_foundation"
+        "source_question_id": "q1_foundation",
+        "official_site_only": true
       },
       "evidence_focus": "technology_stack",
       "promotion_target": "technology_stack",
@@ -84,8 +87,8 @@
       "question_id": "q3_procurement_signal",
       "question_family": "procurement",
       "question_type": "procurement",
-      "question": "Is there evidence Major League Cricket is running an RFP, tender, or procurement for a digital platform?",
-      "query": "\"Major League Cricket\" RFP tender procurement digital platform sponsor broadcast vendor",
+      "question": "Is there evidence Major League Cricket is buying, launching, or reshaping its commercial or digital ecosystem through procurement, partnerships, hiring, or platform initiatives?",
+      "query": "\"Major League Cricket\" RFP tender procurement partner sponsor hiring platform analytics broadcast vendor",
       "hop_budget": 8,
       "evidence_extension_budget": 2,
       "source_priority": [
@@ -95,13 +98,6 @@
         "press_release",
         "official_site"
       ],
-      "evidence_focus": "opportunity_signal",
-      "promotion_target": "opportunity_signals",
-      "answer_kind": "signal",
-      "question_shape": "atomic",
-      "question_timeout_ms": 180000,
-      "hop_timeout_ms": 180000,
-      "evidence_extension_confidence_threshold": 0.65,
       "search_strategy": {
         "search_queries": [
           "\"Major League Cricket\" RFP",
@@ -109,9 +105,19 @@
           "\"Major League Cricket\" procurement",
           "\"Major League Cricket\" vendor",
           "\"Major League Cricket\" sponsor",
-          "\"Major League Cricket\" broadcast"
+          "\"Major League Cricket\" broadcast",
+          "\"Major League Cricket\" hiring digital",
+          "\"Major League Cricket\" analytics",
+          "\"Major League Cricket\" platform"
         ]
-      }
+      },
+      "evidence_focus": "opportunity_signal",
+      "promotion_target": "opportunity_signals",
+      "answer_kind": "signal",
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65
     },
     {
       "question_id": "q4_decision_owner",

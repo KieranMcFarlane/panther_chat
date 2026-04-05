@@ -319,6 +319,13 @@ function _sourceKindFromUrl(value) {
   return 'web';
 }
 
+function _extractUrlString(value) {
+  if (!value) return '';
+  if (typeof value === 'string') return value.trim();
+  if (typeof value === 'object') return String(value.url || value.href || '').trim();
+  return '';
+}
+
 function _scoreSourceRecord(questionState, url, title = '', confidence = 0) {
   const sourceKind = _sourceKindFromUrl(url);
   const questionType = questionState.question_type;
@@ -382,7 +389,26 @@ function _resolveDeterministicInputUrl(question, runState = {}) {
   }
   const acceptedLinks = Array.isArray(sourceQuestion.accepted_links) ? sourceQuestion.accepted_links : [];
   const preferredAccepted = acceptedLinks.find((item) => String(item?.source_kind || '').trim() === 'official_site');
-  return String(preferredAccepted?.url || sourceQuestion.best_evidence_url || '').trim();
+  const officialAcceptedUrl = _normalizeDomainCandidate(_extractUrlString(preferredAccepted?.url));
+  if (officialAcceptedUrl) {
+    return officialAcceptedUrl;
+  }
+  const likelyOfficialAccepted = acceptedLinks.find((item) =>
+    _isLikelyOfficialDomain(
+      _normalizeDomainCandidate(_extractUrlString(item?.url)),
+      question?.entity_name || sourceQuestion?.entity_name || '',
+    ));
+  const likelyOfficialAcceptedUrl = _normalizeDomainCandidate(_extractUrlString(likelyOfficialAccepted?.url));
+  if (likelyOfficialAcceptedUrl) {
+    return likelyOfficialAcceptedUrl;
+  }
+  const sourceStructuredOutput = sourceQuestion?.reasoning?.structured_output && typeof sourceQuestion.reasoning.structured_output === 'object'
+    ? sourceQuestion.reasoning.structured_output
+    : {};
+  const officialSource = Array.isArray(sourceStructuredOutput.sources)
+    ? sourceStructuredOutput.sources.find((item) => _sourceKindFromUrl(_extractUrlString(item)) === 'official_site')
+    : '';
+  return _normalizeDomainCandidate(_extractUrlString(officialSource));
 }
 
 function _buildFrontierFromStructuredOutput(questionState, structuredOutput, timestamp) {
@@ -929,7 +955,7 @@ export function buildOpenCodeQuestionPrompt(question) {
     return `${_questionText(question)} use brightdata. ${searchHint} Start with search and use scraped pages only if the search results are not enough to validate the answer. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer set to the best candidate name, candidates, confidence, sources, and validation_state. candidates should be a ranked list of 3 to 5 people with the best commercial relevance. If you cannot validate a ranked list of 3 to 5 candidates within that budget, return exactly one fenced JSON code block with answer "", candidates [], confidence 0, sources [], and validation_state "no_signal", then stop. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated ranked list.`;
   }
   if (questionType === 'digital_stack') {
-    return `${_questionText(question)} use brightdata. ${searchHint} Start with search and use scraped pages only if the search results are not enough to validate the answer. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer, technologies, categories, vendors, additional_domains, confidence, sources, and validation_state. additional_domains should only include real digital services or subdomains worth separate tech-stack enrichment, such as ticketing, shop, app, or fan platform domains. If you cannot validate a supported answer within that budget, return exactly one fenced JSON code block with answer "", technologies [], categories [], vendors [], additional_domains [], confidence 0, sources [], and validation_state "no_signal", then stop. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated answer.`;
+    return `${_questionText(question)} use brightdata. ${searchHint} Start with search and use scraped pages only if the search results are not enough to validate the answer. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer, technologies, categories, vendors, additional_domains, maturity_signal, commercial_interpretation, opportunity, confidence, sources, and validation_state. additional_domains should only include real digital services or subdomains worth separate tech-stack enrichment, such as ticketing, shop, app, or fan platform domains. commercial_interpretation must summarize the stack in business terms, not raw telemetry. opportunity must state the most credible commercial angle from the visible stack. If you cannot validate a supported answer within that budget, return exactly one fenced JSON code block with answer "", technologies [], categories [], vendors [], additional_domains [], maturity_signal "low", commercial_interpretation "", opportunity "", confidence 0, sources [], and validation_state "no_signal", then stop. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated answer.`;
   }
   return `${_questionText(question)} use brightdata. ${searchHint} Start with search and use scraped pages only if the search results are not enough to validate the answer. You have at most ${hopBudget} hops. If you cannot validate a supported answer within that budget, return exactly one fenced JSON code block with answer "", confidence 0, sources [], and validation_state "no_signal", then stop. Otherwise return exactly one fenced JSON code block with the validated answer, confidence, and sources if available. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated answer.`;
 }
@@ -1002,6 +1028,9 @@ export function buildOpenCodeQuestionSchema() {
           additionalProperties: true,
         },
       },
+      maturity_signal: { type: 'string' },
+      commercial_interpretation: { type: 'string' },
+      opportunity: { type: 'string' },
       confidence: { type: 'number' },
     },
     required: ['answer', 'confidence'],
@@ -1054,6 +1083,61 @@ function _mergeUniqueStrings(...values) {
   return Array.from(new Set(values.flatMap((value) => (Array.isArray(value) ? value : [])).map((item) => String(item || '').trim()).filter(Boolean)));
 }
 
+function _isLikelyOfficialDomain(url, entityName = '') {
+  const hostname = _safeUrlHostname(url);
+  if (!hostname) return false;
+  if (hostname.includes('wikipedia.org') || hostname.includes('linkedin.com')) return false;
+  const entityTokens = String(entityName || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .split(/\s+/)
+    .filter((token) => token.length >= 3 && !['football', 'club', 'league', 'federation', 'international', 'major'].includes(token));
+  if (entityTokens.length === 0) return true;
+  return entityTokens.some((token) => hostname.includes(token));
+}
+
+function _deriveDigitalStackMaturity({ technologies = [], categories = [], vendors = [] } = {}) {
+  const techNames = Array.isArray(technologies)
+    ? technologies.map((item) => String(item?.name || '').trim().toLowerCase()).filter(Boolean)
+    : [];
+  const categoryNames = Array.isArray(categories)
+    ? categories.map((item) => String(item || '').trim().toLowerCase()).filter(Boolean)
+    : [];
+  const vendorNames = Array.isArray(vendors)
+    ? vendors.map((item) => String(item || '').trim()).filter(Boolean)
+    : [];
+  const modernSignals = ['next.js', 'angular', 'react', 'pwa', 'google analytics 4', 'google tag manager', 'stripe', 'azure', 'aws', 'cloudflare'];
+  const legacySignals = ['jquery', 'magento', 'bootstrap'];
+  const modernHits = modernSignals.filter((item) => techNames.includes(item)).length;
+  const legacyHits = legacySignals.filter((item) => techNames.includes(item)).length;
+  const hasAnalytics = categoryNames.includes('analytics') || techNames.includes('google analytics') || techNames.includes('google analytics 4');
+  const hasPayments = techNames.includes('stripe');
+  const hasCms = categoryNames.includes('cms');
+  const hasFragmentation = ['webflow', 'magento', 'wordpress', 'drupal'].filter((item) => techNames.includes(item)).length >= 2;
+  let maturitySignal = 'medium';
+  if (modernHits >= 4 && hasAnalytics) {
+    maturitySignal = 'high';
+  } else if (modernHits <= 1 && legacyHits >= 2) {
+    maturitySignal = 'low';
+  }
+  const interpretationParts = [];
+  if (modernHits > 0) interpretationParts.push('Visible modern web delivery and tagging stack');
+  if (legacyHits > 0) interpretationParts.push('Mixed legacy frontend signals remain present');
+  if (hasCms) interpretationParts.push('CMS-backed publishing is likely part of the estate');
+  if (hasPayments) interpretationParts.push('Payment or commerce capability is visible');
+  if (hasFragmentation) interpretationParts.push('Stack fragmentation is plausible across multiple web properties');
+  const opportunityParts = [];
+  if (hasFragmentation) opportunityParts.push('Platform consolidation and governance');
+  if (hasAnalytics) opportunityParts.push('Measurement, data activation, and fan journey optimization');
+  if (hasPayments || vendorNames.some((item) => /magento|shopify|stripe/i.test(item))) opportunityParts.push('Commerce and fan monetization improvements');
+  if (modernHits > 0 && legacyHits > 0) opportunityParts.push('Legacy-to-modern platform transition planning');
+  return {
+    maturity_signal: maturitySignal,
+    commercial_interpretation: interpretationParts.join('. ') || 'Limited visible stack evidence beyond generic web technologies.',
+    opportunity: opportunityParts.join('; ') || 'Use direct discovery to confirm the core digital estate before shaping an opportunity.',
+  };
+}
+
 export async function enrichDigitalStackStructuredOutput(
   question,
   structuredOutput,
@@ -1067,26 +1151,61 @@ export async function enrichDigitalStackStructuredOutput(
   if (questionType !== 'digital_stack' || !structuredOutput || typeof structuredOutput !== 'object') {
     return structuredOutput;
   }
+  const baseCommercialView = _deriveDigitalStackMaturity({
+    technologies: structuredOutput.technologies,
+    categories: structuredOutput.categories,
+    vendors: structuredOutput.vendors,
+  });
   const resolvedApifyToken = String(apifyToken || '').trim();
   if (!resolvedApifyToken) {
-    return structuredOutput;
+    return {
+      ...structuredOutput,
+      commercial_interpretation: structuredOutput.commercial_interpretation || baseCommercialView.commercial_interpretation,
+      opportunity: structuredOutput.opportunity || baseCommercialView.opportunity,
+      maturity_signal: structuredOutput.maturity_signal || baseCommercialView.maturity_signal,
+    };
   }
   const baseEvidenceUrl = _normalizeDomainCandidate(
     structuredOutput.evidence_url || structuredOutput.source || (Array.isArray(structuredOutput.sources) ? structuredOutput.sources[0] : ''),
   );
+  let technologies = Array.isArray(structuredOutput.technologies) ? structuredOutput.technologies : [];
+  let categories = Array.isArray(structuredOutput.categories) ? structuredOutput.categories : [];
+  let vendors = Array.isArray(structuredOutput.vendors) ? structuredOutput.vendors : [];
+  let primaryDomainResult = null;
+  if (baseEvidenceUrl && _isLikelyOfficialDomain(baseEvidenceUrl, question?.entity_name)) {
+    try {
+      const lookupResult = await apifyTechStackLookup({
+        url: baseEvidenceUrl,
+        token: resolvedApifyToken,
+        fetchImpl,
+      });
+      primaryDomainResult = Array.isArray(lookupResult?.results) ? lookupResult.results[0] : null;
+    } catch {
+      primaryDomainResult = null;
+    }
+  }
+  if (primaryDomainResult) {
+    const primaryTechnologies = Array.isArray(primaryDomainResult.technologies)
+      ? primaryDomainResult.technologies.map((item) => ({ ...item, source_url: baseEvidenceUrl }))
+      : [];
+    technologies = _mergeTechnologyRecords(technologies, primaryTechnologies, baseEvidenceUrl);
+    categories = _mergeUniqueStrings(categories, primaryDomainResult.categories);
+    vendors = _mergeUniqueStrings(vendors, primaryDomainResult.vendors);
+  }
   const additionalDomains = _mergeUniqueStrings(structuredOutput.additional_domains)
     .map((item) => _normalizeDomainCandidate(item))
     .filter(Boolean)
     .filter((item, index, array) => array.indexOf(item) === index)
     .filter((item) => item !== baseEvidenceUrl);
   if (additionalDomains.length === 0) {
-    return structuredOutput;
+    return {
+      ...structuredOutput,
+      commercial_interpretation: structuredOutput.commercial_interpretation || baseCommercialView.commercial_interpretation,
+      opportunity: structuredOutput.opportunity || baseCommercialView.opportunity,
+      maturity_signal: structuredOutput.maturity_signal || baseCommercialView.maturity_signal,
+    };
   }
-
   const additionalDomainResults = [];
-  let technologies = Array.isArray(structuredOutput.technologies) ? structuredOutput.technologies : [];
-  let categories = Array.isArray(structuredOutput.categories) ? structuredOutput.categories : [];
-  let vendors = Array.isArray(structuredOutput.vendors) ? structuredOutput.vendors : [];
 
   for (const url of additionalDomains) {
     try {
@@ -1118,6 +1237,7 @@ export async function enrichDigitalStackStructuredOutput(
     }
   }
 
+  const commercialView = _deriveDigitalStackMaturity({ technologies, categories, vendors });
   return {
     ...structuredOutput,
     technologies,
@@ -1126,6 +1246,9 @@ export async function enrichDigitalStackStructuredOutput(
     additional_domains: additionalDomains,
     additional_domain_results: additionalDomainResults,
     answer: vendors.slice(0, 5).join(', ') || structuredOutput.answer || '',
+    commercial_interpretation: structuredOutput.commercial_interpretation || commercialView.commercial_interpretation,
+    opportunity: structuredOutput.opportunity || commercialView.opportunity,
+    maturity_signal: structuredOutput.maturity_signal || commercialView.maturity_signal,
   };
 }
 
@@ -1148,6 +1271,9 @@ export async function runDeterministicToolQuestion(
   const fallbackToRetrieval = question?.fallback_to_retrieval !== false;
   const inputUrl = _resolveDeterministicInputUrl(question, runState);
   const apifyToken = process.env.APIFY_PERSONAL_API || process.env.APIFY_TOKEN || process.env.APIFY_PASSWORD || '';
+  if (inputUrl && !_isLikelyOfficialDomain(inputUrl, question?.entity_name)) {
+    return null;
+  }
   if (!inputUrl || !String(apifyToken || '').trim()) {
     if (fallbackToRetrieval) {
       return null;
@@ -1222,6 +1348,7 @@ export async function runDeterministicToolQuestion(
   }
   const vendors = Array.isArray(topResult?.vendors) ? topResult.vendors : [];
   const categories = Array.isArray(topResult?.categories) ? topResult.categories : [];
+  const commercialView = _deriveDigitalStackMaturity({ technologies, categories, vendors });
   return {
     structuredOutput: {
       answer: vendors.slice(0, 5).join(', '),
@@ -1235,6 +1362,9 @@ export async function runDeterministicToolQuestion(
       source: inputUrl,
       evidence_url: inputUrl,
       signal_type: 'DIGITAL_STACK',
+      commercial_interpretation: commercialView.commercial_interpretation,
+      opportunity: commercialView.opportunity,
+      maturity_signal: commercialView.maturity_signal,
     },
     promptTrace: {
       status: 'deterministic_apify',

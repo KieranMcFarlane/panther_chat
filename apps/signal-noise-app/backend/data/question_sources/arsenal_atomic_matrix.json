@@ -1,6 +1,6 @@
 {
   "schema_version": "atomic_question_source_v1",
-  "generated_at": "2026-04-05T09:38:23.596057+00:00",
+  "generated_at": "2026-04-05T15:03:31.051732+00:00",
   "entity_id": "arsenal-fc",
   "entity_name": "Arsenal Football Club",
   "entity_type": "SPORT_CLUB",
@@ -36,7 +36,7 @@
       "question_id": "q2_digital_stack",
       "question_family": "digital_stack",
       "question_type": "digital_stack",
-      "question": "What visible technologies, platforms, or vendors does Arsenal Football Club use?",
+      "question": "What visible technologies, platforms, or vendors does Arsenal Football Club use, and what do they imply commercially?",
       "query": "\"Arsenal Football Club\" technology stack",
       "hop_budget": 8,
       "evidence_extension_budget": 2,
@@ -52,6 +52,8 @@
           "\"Arsenal Football Club\" technology stack",
           "\"Arsenal Football Club\" tech stack",
           "\"Arsenal Football Club\" digital stack",
+          "\"Arsenal Football Club\" official website",
+          "\"Arsenal Football Club\" digital experience",
           "\"Arsenal Football Club\" case study",
           "\"Arsenal Football Club\" official partner",
           "\"Arsenal Football Club\" digital partner",
@@ -70,7 +72,8 @@
       ],
       "fallback_to_retrieval": true,
       "deterministic_input": {
-        "source_question_id": "q1_foundation"
+        "source_question_id": "q1_foundation",
+        "official_site_only": true
       },
       "evidence_focus": "technology_stack",
       "promotion_target": "technology_stack",
@@ -84,8 +87,8 @@
       "question_id": "q3_procurement_signal",
       "question_family": "procurement",
       "question_type": "procurement",
-      "question": "Is there evidence Arsenal Football Club is running an RFP, tender, or procurement for a digital platform?",
-      "query": "\"Arsenal Football Club\" RFP tender procurement digital platform sponsor broadcast vendor",
+      "question": "Is there evidence Arsenal Football Club is buying, launching, or reshaping its commercial or digital ecosystem through procurement, partnerships, hiring, or platform initiatives?",
+      "query": "\"Arsenal Football Club\" RFP tender procurement partner sponsor hiring platform analytics broadcast vendor",
       "hop_budget": 8,
       "evidence_extension_budget": 2,
       "source_priority": [
@@ -95,6 +98,21 @@
         "press_release",
         "official_site"
       ],
+      "search_strategy": {
+        "search_queries": [
+          "\"Arsenal Football Club\" RFP",
+          "\"Arsenal Football Club\" tender",
+          "\"Arsenal Football Club\" procurement",
+          "\"Arsenal Football Club\" partner",
+          "\"Arsenal Football Club\" sponsor",
+          "\"Arsenal Football Club\" hiring digital",
+          "\"Arsenal Football Club\" hiring analytics",
+          "\"Arsenal Football Club\" platform",
+          "\"Arsenal Football Club\" analytics initiative",
+          "\"Arsenal Football Club\" broadcast partner",
+          "\"Arsenal Football Club\" vendor"
+        ]
+      },
       "evidence_focus": "opportunity_signal",
       "promotion_target": "opportunity_signals",
       "answer_kind": "signal",

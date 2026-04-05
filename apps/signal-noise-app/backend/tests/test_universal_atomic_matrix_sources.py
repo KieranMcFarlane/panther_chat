@@ -113,17 +113,20 @@ def test_canonical_atomic_matrix_sources_are_five_question_universal_matrices(
     assert all(question["evidence_extension_confidence_threshold"] == 0.65 for question in payload["questions"])
     if entity_id == "major-league-cricket":
         assert payload["questions"][1]["question"] == (
-            "What visible technologies, platforms, or vendors does Major League Cricket use?"
+            "What visible technologies, platforms, or vendors does Major League Cricket use, and what do they imply commercially?"
         )
         assert payload["questions"][1]["deterministic_tools"] == ["apify_techstack"]
         assert payload["questions"][1]["fallback_to_retrieval"] is True
         assert payload["questions"][1]["deterministic_input"] == {
-            "source_question_id": "q1_foundation"
+            "source_question_id": "q1_foundation",
+            "official_site_only": True,
         }
         assert payload["questions"][1]["search_strategy"]["search_queries"] == [
             '"Major League Cricket" technology stack',
             '"Major League Cricket" tech stack',
             '"Major League Cricket" digital stack',
+            '"Major League Cricket" official website',
+            '"Major League Cricket" digital experience',
             '"Major League Cricket" CRM',
             '"Major League Cricket" analytics platform',
             '"Major League Cricket" ticketing platform',
@@ -143,6 +146,9 @@ def test_canonical_atomic_matrix_sources_are_five_question_universal_matrices(
             '"Major League Cricket" vendor',
             '"Major League Cricket" sponsor',
             '"Major League Cricket" broadcast',
+            '"Major League Cricket" hiring digital',
+            '"Major League Cricket" analytics',
+            '"Major League Cricket" platform',
         ]
         assert payload["questions"][3]["query"] == '"Major League Cricket" LinkedIn company profile'
         assert payload["questions"][3]["search_strategy"]["search_queries"][0] == (

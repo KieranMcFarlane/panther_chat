@@ -65,15 +65,15 @@ test('buildOpenCodeConfig wires Z.AI and BrightData FastMCP for OpenCode', () =>
 test('buildMajorLeagueCricketPresetQuestions returns the preset bundle in order', () => {
   const records = buildMajorLeagueCricketPresetQuestions();
 
-  assert.equal(records.length, 7);
+  assert.equal(records.length, 8);
   assert.deepEqual(
     records.map((record) => record.question_type),
-    ['foundation', 'procurement', 'poi', 'poi', 'poi', 'poi', 'poi'],
+    ['foundation', 'procurement', 'poi', 'related_pois', 'poi', 'poi', 'poi', 'poi'],
   );
   assert.equal(records[0].question_id, 'entity_founded_year');
   assert.equal(records[1].question_id, 'sl_league_mobile_app');
   assert.equal(records[2].question_id, 'poi_commercial_partnerships_lead');
-  assert.equal(records[6].question_id, 'poi_operations_lead');
+  assert.equal(records[7].question_id, 'poi_operations_lead');
 });
 
 test('buildMajorLeagueCricketSmokeQuestions returns the core two-question smoke bundle', () => {
@@ -89,11 +89,12 @@ test('buildMajorLeagueCricketSmokeQuestions returns the core two-question smoke 
 test('buildMajorLeagueCricketPoiQuestions returns the POI bundle in order', () => {
   const records = buildMajorLeagueCricketPoiQuestions();
 
-  assert.equal(records.length, 5);
+  assert.equal(records.length, 6);
   assert.deepEqual(
     records.map((record) => record.question_id),
     [
       'poi_commercial_partnerships_lead',
+      'poi_related_pois',
       'poi_digital_product_lead',
       'poi_fan_engagement_lead',
       'poi_marketing_comms_lead',
@@ -124,7 +125,7 @@ test('buildMajorLeagueCricketPoiBatchAQuestions returns the first POI sub-bundle
     records.map((record) => record.question_id),
     [
       'poi_commercial_partnerships_lead',
-      'poi_digital_product_lead',
+      'poi_related_pois',
     ],
   );
 });
@@ -136,8 +137,8 @@ test('buildMajorLeagueCricketPoiBatchBQuestions returns the second POI sub-bundl
   assert.deepEqual(
     records.map((record) => record.question_id),
     [
+      'poi_digital_product_lead',
       'poi_fan_engagement_lead',
-      'poi_marketing_comms_lead',
     ],
   );
 });
@@ -145,10 +146,10 @@ test('buildMajorLeagueCricketPoiBatchBQuestions returns the second POI sub-bundl
 test('buildMajorLeagueCricketPoiBatchCQuestions returns the third POI sub-bundle', () => {
   const records = buildMajorLeagueCricketPoiBatchCQuestions();
 
-  assert.equal(records.length, 1);
+  assert.equal(records.length, 2);
   assert.deepEqual(
     records.map((record) => record.question_id),
-    ['poi_operations_lead'],
+    ['poi_marketing_comms_lead', 'poi_operations_lead'],
   );
 });
 
@@ -628,6 +629,9 @@ test('buildOpenCodeQuestionPrompt asks digital-stack runs to return additional d
 
   assert.match(prompt, /additional_domains/i);
   assert.match(prompt, /digital services/i);
+  assert.match(prompt, /maturity_signal/i);
+  assert.match(prompt, /commercial_interpretation/i);
+  assert.match(prompt, /opportunity/i);
 });
 
 test('runOpenCodeQuestionSourceBatch enriches digital-stack additional domains with Apify after search fallback', async () => {
@@ -744,6 +748,7 @@ test('runOpenCodeQuestionSourceBatch enriches digital-stack additional domains w
     });
 
     assert.deepEqual(Array.from(new Set(apifyCalls)), [
+      'https://www.arsenal.com/',
       'https://tickets.arsenal.com/',
       'https://shop.arsenal.com/store',
     ]);
@@ -758,13 +763,104 @@ test('runOpenCodeQuestionSourceBatch enriches digital-stack additional domains w
     ]);
     assert.equal(question.reasoning.structured_output.additional_domain_results.length, 2);
     assert.deepEqual(question.reasoning.structured_output.vendors, ['Ticketmaster', 'Shopify', 'Stripe']);
-    assert.deepEqual(question.reasoning.structured_output.categories, ['Frontend', 'Ticketing', 'Ecommerce', 'Payments']);
+    assert.deepEqual(
+      [...question.reasoning.structured_output.categories].sort(),
+      ['Ecommerce', 'Frontend', 'Payments', 'Ticketing'],
+    );
+    assert.equal(question.reasoning.structured_output.maturity_signal, 'medium');
+    assert.match(question.reasoning.structured_output.commercial_interpretation, /payment or commerce capability/i);
+    assert.match(question.reasoning.structured_output.opportunity, /commerce/i);
   } finally {
     if (previousZaiKey === undefined) {
       delete process.env.ANTHROPIC_AUTH_TOKEN;
     } else {
       process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
     }
+    if (previousApifyToken === undefined) {
+      delete process.env.APIFY_TOKEN;
+    } else {
+      process.env.APIFY_TOKEN = previousApifyToken;
+    }
+  }
+});
+
+test('runDeterministicToolQuestion skips non-official domains for digital-stack enrichment', async () => {
+  const previousApifyToken = process.env.APIFY_TOKEN;
+  process.env.APIFY_TOKEN = 'test-apify-token';
+  try {
+    const result = await runDeterministicToolQuestion(
+      {
+        question_type: 'digital_stack',
+        entity_name: 'Arsenal Football Club',
+        deterministic_tools: ['apify_techstack'],
+        fallback_to_retrieval: true,
+        deterministic_input: {
+          url: 'https://en.wikipedia.org/wiki/Arsenal_F.C.',
+        },
+      },
+      {
+        apifyTechStackLookup: async () => {
+          throw new Error('apifyTechStackLookup should not run for non-official domains');
+        },
+      },
+    );
+
+    assert.equal(result, null);
+  } finally {
+    if (previousApifyToken === undefined) {
+      delete process.env.APIFY_TOKEN;
+    } else {
+      process.env.APIFY_TOKEN = previousApifyToken;
+    }
+  }
+});
+
+test('runDeterministicToolQuestion uses a likely official accepted link even when q1 labeled it as web', async () => {
+  const previousApifyToken = process.env.APIFY_TOKEN;
+  process.env.APIFY_TOKEN = 'test-apify-token';
+  try {
+    const result = await runDeterministicToolQuestion(
+      {
+        question_type: 'digital_stack',
+        entity_name: 'Arsenal Football Club',
+        deterministic_tools: ['apify_techstack'],
+        fallback_to_retrieval: false,
+        deterministic_input: {
+          source_question_id: 'q1_foundation',
+        },
+      },
+      {
+        runState: {
+          questions: [
+            {
+              question_id: 'q1_foundation',
+              entity_name: 'Arsenal Football Club',
+              accepted_links: [
+                {
+                  url: 'https://www.arsenal.com/history',
+                  source_kind: 'web',
+                },
+              ],
+            },
+          ],
+        },
+        apifyTechStackLookup: async ({ url }) => ({
+          results: [
+            {
+              url,
+              technologies: [{ name: 'Drupal', confidence: 100, categories: ['CMS'] }],
+              categories: ['CMS'],
+              vendors: ['Drupal'],
+            },
+          ],
+        }),
+      },
+    );
+
+    assert.equal(result.structuredOutput.validation_state, 'validated');
+    assert.equal(result.structuredOutput.evidence_url, 'https://www.arsenal.com/history');
+    assert.deepEqual(result.structuredOutput.vendors, ['Drupal']);
+  } finally {
     if (previousApifyToken === undefined) {
       delete process.env.APIFY_TOKEN;
     } else {
