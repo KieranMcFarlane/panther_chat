@@ -193,7 +193,22 @@ For `{entity}`, use this flow:
      - categories
      - likely vendors
 2. Then run discovery only if enrichment is incomplete
-   - Queries:
+   - Club profile:
+     - `"{entity}" technology stack`
+     - `"{entity}" tech stack`
+     - `"{entity}" digital stack`
+     - `"{entity}" case study`
+     - `"{entity}" official partner`
+     - `"{entity}" digital partner`
+     - `"{entity}" technology partner`
+     - `"{entity}" platform`
+     - `"{entity}" app`
+     - `"{entity}" mobile app`
+     - `"{entity}" CRM`
+     - `"{entity}" ticketing platform`
+     - `"{entity}" ecommerce`
+     - `"{entity}" analytics platform`
+   - League/federation profile:
      - `"{entity}" technology stack`
      - `"{entity}" tech stack`
      - `"{entity}" digital stack`

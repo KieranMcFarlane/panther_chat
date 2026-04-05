@@ -81,6 +81,40 @@ RELATED_POIS_SEARCH_QUERIES = [
     '"{entity}" managing director',
 ]
 
+Q2_DIGITAL_STACK_SEARCH_QUERIES_CLUB = [
+    '"{entity}" technology stack',
+    '"{entity}" tech stack',
+    '"{entity}" digital stack',
+    '"{entity}" case study',
+    '"{entity}" official partner',
+    '"{entity}" digital partner',
+    '"{entity}" technology partner',
+    '"{entity}" platform',
+    '"{entity}" app',
+    '"{entity}" mobile app',
+    '"{entity}" CRM',
+    '"{entity}" ticketing platform',
+    '"{entity}" ecommerce',
+    '"{entity}" analytics platform',
+]
+
+Q2_DIGITAL_STACK_SEARCH_QUERIES_LEAGUE = [
+    '"{entity}" technology stack',
+    '"{entity}" tech stack',
+    '"{entity}" digital stack',
+    '"{entity}" CRM',
+    '"{entity}" analytics platform',
+    '"{entity}" ticketing platform',
+    '"{entity}" ecommerce',
+    '"{entity}" mobile app',
+    '"{entity}" technology partner',
+    '"{entity}" digital partner',
+    '"{entity}" official partner',
+    '"{entity}" case study',
+    '"{entity}" platform',
+    '"{entity}" app',
+]
+
 UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
     {
         "question_id": "q1_foundation",
@@ -218,17 +252,31 @@ def _slugify(value: str) -> str:
     return slug.strip("-") or "entity"
 
 
-def _render_question_spec(spec: Dict[str, Any], entity_name: str, entity_id: str) -> Dict[str, Any]:
+def _render_question_spec(spec: Dict[str, Any], entity_name: str, entity_id: str, entity_type: str) -> Dict[str, Any]:
     rendered = deepcopy(spec)
     rendered["question"] = str(rendered["question"]).format(entity=entity_name)
     rendered["query"] = str(rendered["query"]).format(entity=entity_name)
     if "search_strategy" in rendered:
+        search_strategy = deepcopy(rendered["search_strategy"])
+        search_queries = [
+            str(query).format(entity=entity_name)
+            for query in search_strategy.get("search_queries", [])
+        ]
+        if rendered.get("question_id") == "q2_digital_stack":
+            entity_type_key = _slugify(entity_type)
+            if entity_type_key == "sport-club":
+                search_queries = [
+                    str(query).format(entity=entity_name)
+                    for query in Q2_DIGITAL_STACK_SEARCH_QUERIES_CLUB
+                ]
+            elif entity_type_key in {"sport-league", "sport-federation"}:
+                search_queries = [
+                    str(query).format(entity=entity_name)
+                    for query in Q2_DIGITAL_STACK_SEARCH_QUERIES_LEAGUE
+                ]
         rendered["search_strategy"] = {
-            **deepcopy(rendered["search_strategy"]),
-            "search_queries": [
-                str(query).format(entity=entity_name)
-                for query in rendered["search_strategy"].get("search_queries", [])
-            ],
+            **search_strategy,
+            "search_queries": search_queries,
         }
     rendered["question_shape"] = "atomic"
     rendered["question_timeout_ms"] = QUESTION_TIMEOUT_MS
@@ -260,7 +308,7 @@ def build_universal_atomic_question_source(
 ) -> Dict[str, Any]:
     resolved_preset = str(preset or f"{_slugify(entity_name)}-atomic-matrix").strip()
     source_label = str(question_source_label or resolved_preset).strip()
-    questions = [_render_question_spec(spec, entity_name, entity_id) for spec in UNIVERSAL_ATOMIC_QUESTION_SPECS]
+    questions = [_render_question_spec(spec, entity_name, entity_id, entity_type) for spec in UNIVERSAL_ATOMIC_QUESTION_SPECS]
     return {
         "schema_version": "atomic_question_source_v1",
         "generated_at": datetime.now(timezone.utc).isoformat(),

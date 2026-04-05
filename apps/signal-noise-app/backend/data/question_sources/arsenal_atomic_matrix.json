@@ -1,6 +1,6 @@
 {
   "schema_version": "atomic_question_source_v1",
-  "generated_at": "2026-04-05T09:18:42.430776+00:00",
+  "generated_at": "2026-04-05T09:24:33.714785+00:00",
   "entity_id": "arsenal-fc",
   "entity_name": "Arsenal Football Club",
   "entity_type": "SPORT_CLUB",
@@ -52,17 +52,17 @@
           "\"Arsenal Football Club\" technology stack",
           "\"Arsenal Football Club\" tech stack",
           "\"Arsenal Football Club\" digital stack",
+          "\"Arsenal Football Club\" case study",
+          "\"Arsenal Football Club\" official partner",
+          "\"Arsenal Football Club\" digital partner",
+          "\"Arsenal Football Club\" technology partner",
+          "\"Arsenal Football Club\" platform",
+          "\"Arsenal Football Club\" app",
+          "\"Arsenal Football Club\" mobile app",
           "\"Arsenal Football Club\" CRM",
-          "\"Arsenal Football Club\" analytics platform",
           "\"Arsenal Football Club\" ticketing platform",
           "\"Arsenal Football Club\" ecommerce",
-          "\"Arsenal Football Club\" mobile app",
-          "\"Arsenal Football Club\" technology partner",
-          "\"Arsenal Football Club\" digital partner",
-          "\"Arsenal Football Club\" official partner",
-          "\"Arsenal Football Club\" case study",
-          "\"Arsenal Football Club\" platform",
-          "\"Arsenal Football Club\" app"
+          "\"Arsenal Football Club\" analytics platform"
         ]
       },
       "deterministic_tools": [

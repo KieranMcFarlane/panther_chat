@@ -111,6 +111,41 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
         (icf, "International Canoe Federation"),
         (mlc, "Major League Cricket"),
     ]:
+        q2_expected = (
+            [
+                f'"{entity_name}" technology stack',
+                f'"{entity_name}" tech stack',
+                f'"{entity_name}" digital stack',
+                f'"{entity_name}" case study',
+                f'"{entity_name}" official partner',
+                f'"{entity_name}" digital partner',
+                f'"{entity_name}" technology partner',
+                f'"{entity_name}" platform',
+                f'"{entity_name}" app',
+                f'"{entity_name}" mobile app',
+                f'"{entity_name}" CRM',
+                f'"{entity_name}" ticketing platform',
+                f'"{entity_name}" ecommerce',
+                f'"{entity_name}" analytics platform',
+            ]
+            if payload["entity_type"] == "SPORT_CLUB"
+            else [
+                f'"{entity_name}" technology stack',
+                f'"{entity_name}" tech stack',
+                f'"{entity_name}" digital stack',
+                f'"{entity_name}" CRM',
+                f'"{entity_name}" analytics platform',
+                f'"{entity_name}" ticketing platform',
+                f'"{entity_name}" ecommerce',
+                f'"{entity_name}" mobile app',
+                f'"{entity_name}" technology partner',
+                f'"{entity_name}" digital partner',
+                f'"{entity_name}" official partner',
+                f'"{entity_name}" case study',
+                f'"{entity_name}" platform',
+                f'"{entity_name}" app',
+            ]
+        )
         assert payload["questions"][1]["question"] == (
             f"What visible technologies, platforms, or vendors does {entity_name} use?"
         )
@@ -119,22 +154,7 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
         assert payload["questions"][1]["deterministic_input"] == {
             "source_question_id": "q1_foundation"
         }
-        assert payload["questions"][1]["search_strategy"]["search_queries"] == [
-            f'"{entity_name}" technology stack',
-            f'"{entity_name}" tech stack',
-            f'"{entity_name}" digital stack',
-            f'"{entity_name}" CRM',
-            f'"{entity_name}" analytics platform',
-            f'"{entity_name}" ticketing platform',
-            f'"{entity_name}" ecommerce',
-            f'"{entity_name}" mobile app',
-            f'"{entity_name}" technology partner',
-            f'"{entity_name}" digital partner',
-            f'"{entity_name}" official partner',
-            f'"{entity_name}" case study',
-            f'"{entity_name}" platform',
-            f'"{entity_name}" app',
-        ]
+        assert payload["questions"][1]["search_strategy"]["search_queries"] == q2_expected
     assert mlc["questions"][2]["search_strategy"]["search_queries"] == [
         '"Major League Cricket" RFP',
         '"Major League Cricket" tender',
