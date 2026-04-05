@@ -111,8 +111,8 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
         (icf, "International Canoe Federation"),
         (mlc, "Major League Cricket"),
     ]:
-        q2_expected = (
-            [
+        if payload["entity_type"] == "SPORT_CLUB":
+            q2_expected = [
                 f'"{entity_name}" technology stack',
                 f'"{entity_name}" tech stack',
                 f'"{entity_name}" digital stack',
@@ -128,8 +128,27 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
                 f'"{entity_name}" ecommerce',
                 f'"{entity_name}" analytics platform',
             ]
-            if payload["entity_type"] == "SPORT_CLUB"
-            else [
+        elif payload["entity_type"] == "SPORT_FEDERATION":
+            q2_expected = [
+                f'"{entity_name}" technology stack',
+                f'"{entity_name}" tech stack',
+                f'"{entity_name}" digital stack',
+                f'"{entity_name}" events platform',
+                f'"{entity_name}" membership platform',
+                f'"{entity_name}" results platform',
+                f'"{entity_name}" rankings platform',
+                f'"{entity_name}" athlete app',
+                f'"{entity_name}" mobile app',
+                f'"{entity_name}" broadcast partner',
+                f'"{entity_name}" technology partner',
+                f'"{entity_name}" digital partner',
+                f'"{entity_name}" official partner',
+                f'"{entity_name}" case study',
+                f'"{entity_name}" platform',
+                f'"{entity_name}" app',
+            ]
+        else:
+            q2_expected = [
                 f'"{entity_name}" technology stack',
                 f'"{entity_name}" tech stack',
                 f'"{entity_name}" digital stack',
@@ -145,7 +164,6 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
                 f'"{entity_name}" platform',
                 f'"{entity_name}" app',
             ]
-        )
         assert payload["questions"][1]["question"] == (
             f"What visible technologies, platforms, or vendors does {entity_name} use?"
         )

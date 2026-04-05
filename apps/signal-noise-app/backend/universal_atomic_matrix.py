@@ -115,6 +115,25 @@ Q2_DIGITAL_STACK_SEARCH_QUERIES_LEAGUE = [
     '"{entity}" app',
 ]
 
+Q2_DIGITAL_STACK_SEARCH_QUERIES_FEDERATION = [
+    '"{entity}" technology stack',
+    '"{entity}" tech stack',
+    '"{entity}" digital stack',
+    '"{entity}" events platform',
+    '"{entity}" membership platform',
+    '"{entity}" results platform',
+    '"{entity}" rankings platform',
+    '"{entity}" athlete app',
+    '"{entity}" mobile app',
+    '"{entity}" broadcast partner',
+    '"{entity}" technology partner',
+    '"{entity}" digital partner',
+    '"{entity}" official partner',
+    '"{entity}" case study',
+    '"{entity}" platform',
+    '"{entity}" app',
+]
+
 UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
     {
         "question_id": "q1_foundation",
@@ -269,10 +288,15 @@ def _render_question_spec(spec: Dict[str, Any], entity_name: str, entity_id: str
                     str(query).format(entity=entity_name)
                     for query in Q2_DIGITAL_STACK_SEARCH_QUERIES_CLUB
                 ]
-            elif entity_type_key in {"sport-league", "sport-federation"}:
+            elif entity_type_key == "sport-league":
                 search_queries = [
                     str(query).format(entity=entity_name)
                     for query in Q2_DIGITAL_STACK_SEARCH_QUERIES_LEAGUE
+                ]
+            elif entity_type_key == "sport-federation":
+                search_queries = [
+                    str(query).format(entity=entity_name)
+                    for query in Q2_DIGITAL_STACK_SEARCH_QUERIES_FEDERATION
                 ]
         rendered["search_strategy"] = {
             **search_strategy,
