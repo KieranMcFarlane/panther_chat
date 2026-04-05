@@ -129,9 +129,16 @@ def test_canonical_atomic_matrix_sources_are_five_question_universal_matrices(
             '"International Canoe Federation" director of tv broadcast marketing',
         ]
     if entity_id == "major-league-cricket":
+        assert payload["questions"][0]["query"] == '"Major League Cricket" official website founded year'
+        assert payload["questions"][0]["search_strategy"]["search_queries"] == [
+            '"Major League Cricket" official website',
+            '"Major League Cricket" founded year',
+            '"Major League Cricket" wikipedia',
+        ]
         assert payload["questions"][1]["question"] == (
             "What visible technologies, platforms, or vendors does Major League Cricket use, and what do they imply commercially?"
         )
+        assert payload["questions"][1]["query"] == '"Major League Cricket" official website'
         assert payload["questions"][1]["deterministic_tools"] == ["apify_techstack"]
         assert payload["questions"][1]["fallback_to_retrieval"] is True
         assert payload["questions"][1]["deterministic_input"] == {
@@ -139,10 +146,10 @@ def test_canonical_atomic_matrix_sources_are_five_question_universal_matrices(
             "official_site_only": True,
         }
         assert payload["questions"][1]["search_strategy"]["search_queries"] == [
+            '"Major League Cricket" official website',
             '"Major League Cricket" technology stack',
             '"Major League Cricket" tech stack',
             '"Major League Cricket" digital stack',
-            '"Major League Cricket" official website',
             '"Major League Cricket" digital experience',
             '"Major League Cricket" CRM',
             '"Major League Cricket" analytics platform',

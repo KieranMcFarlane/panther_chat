@@ -599,6 +599,87 @@ test('runOpenCodeQuestionSourceBatch derives related-pois from a validated decis
   }
 });
 
+test('runOpenCodeQuestionSourceBatch preserves nuanced foundation validation instead of overwriting it on a later timeout', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-foundation-nuance-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+  let calls = 0;
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'major-league-cricket',
+        entity_name: 'Major League Cricket',
+        entity_type: 'SPORT_LEAGUE',
+        preset: 'major-league-cricket-atomic-matrix',
+        question_source_label: 'major-league-cricket-atomic-matrix',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        question_count: 1,
+        questions: [
+          {
+            question_id: 'q1_foundation',
+            question_type: 'foundation',
+            question: 'What year was {entity} founded?',
+            query: '"Major League Cricket" official website founded year',
+            hop_budget: 8,
+            evidence_extension_budget: 1,
+            evidence_extension_confidence_threshold: 0.65,
+            question_timeout_ms: 180000,
+            hop_timeout_ms: 180000,
+            source_priority: ['google_serp', 'official_site', 'wikipedia'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  try {
+    const result = await runOpenCodeQuestionSourceBatch({
+      questionSourcePath: sourcePath,
+      outputDir,
+      questionRunner: async () => {
+        calls += 1;
+        if (calls > 1) {
+          throw new Error('foundation should have stopped after nuanced validation');
+        }
+        return {
+          structuredOutput: {
+            answer: '2019',
+            confidence: 0.85,
+            validation_state: 'validated_with_nuance',
+            sources: ['https://en.wikipedia.org/wiki/Major_League_Cricket'],
+          },
+          promptTrace: { status: 'ok', structured_output_keys: 1, has_structured_output: true },
+          messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
+          cliResult: { code: 0, stdout: '{"answer":"2019"}', stderr: '' },
+        };
+      },
+    });
+
+    assert.equal(result.questions_validated, 1);
+    assert.equal(result.questions_no_signal, 0);
+    assert.equal(calls, 1);
+    const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+    assert.equal(artifact.answers[0].validation_state, 'validated');
+    assert.equal(artifact.answers[0].answer, '2019');
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
 test('lookupApifyTechStack uses the documented Apify sync endpoint and token', async () => {
   const calls = [];
   const result = await lookupApifyTechStack({
@@ -1046,6 +1127,70 @@ test('runDeterministicToolQuestion uses a likely official accepted link even whe
     assert.equal(result.structuredOutput.validation_state, 'validated');
     assert.equal(result.structuredOutput.evidence_url, 'https://www.arsenal.com/history');
     assert.deepEqual(result.structuredOutput.vendors, ['Drupal']);
+  } finally {
+    if (previousApifyToken === undefined) {
+      delete process.env.APIFY_TOKEN;
+    } else {
+      process.env.APIFY_TOKEN = previousApifyToken;
+    }
+  }
+});
+
+test('runDeterministicToolQuestion can guess an official domain when q1 only resolved wikipedia', async () => {
+  const previousApifyToken = process.env.APIFY_TOKEN;
+  process.env.APIFY_TOKEN = 'test-apify-token';
+  const seenUrls = [];
+  try {
+    const result = await runDeterministicToolQuestion(
+      {
+        question_type: 'digital_stack',
+        entity_name: 'Major League Cricket',
+        entity_type: 'SPORT_LEAGUE',
+        deterministic_tools: ['apify_techstack'],
+        fallback_to_retrieval: false,
+        deterministic_input: {
+          source_question_id: 'q1_foundation',
+          official_site_only: true,
+        },
+      },
+      {
+        runState: {
+          questions: [
+            {
+              question_id: 'q1_foundation',
+              entity_name: 'Major League Cricket',
+              accepted_links: [
+                {
+                  url: 'https://en.wikipedia.org/wiki/Major_League_Cricket',
+                  source_kind: 'wikipedia',
+                },
+              ],
+            },
+          ],
+        },
+        apifyTechStackLookup: async ({ url }) => {
+          seenUrls.push(url);
+          if (url === 'https://www.majorleaguecricket.com/') {
+            return {
+              results: [
+                {
+                  url,
+                  technologies: [{ name: 'Angular', confidence: 100, categories: ['Frontend'] }],
+                  categories: ['Frontend'],
+                  vendors: ['Angular'],
+                },
+              ],
+            };
+          }
+          return { results: [] };
+        },
+      },
+    );
+
+    assert.equal(result.structuredOutput.validation_state, 'validated');
+    assert.equal(result.structuredOutput.evidence_url, 'https://www.majorleaguecricket.com/');
+    assert.deepEqual(result.structuredOutput.vendors, ['Angular']);
+    assert.deepEqual(seenUrls, ['https://www.majorleaguecricket.com/']);
   } finally {
     if (previousApifyToken === undefined) {
       delete process.env.APIFY_TOKEN;

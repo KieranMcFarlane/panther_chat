@@ -408,7 +408,45 @@ function _resolveDeterministicInputUrl(question, runState = {}) {
   const officialSource = Array.isArray(sourceStructuredOutput.sources)
     ? sourceStructuredOutput.sources.find((item) => _sourceKindFromUrl(_extractUrlString(item)) === 'official_site')
     : '';
-  return _normalizeDomainCandidate(_extractUrlString(officialSource));
+  const officialSourceUrl = _normalizeDomainCandidate(_extractUrlString(officialSource));
+  if (officialSourceUrl) {
+    return officialSourceUrl;
+  }
+  return _guessOfficialDomainCandidate(question, sourceQuestion);
+}
+
+function _guessOfficialDomainCandidate(question, sourceQuestion = null) {
+  const deterministicInput = question?.deterministic_input && typeof question.deterministic_input === 'object'
+    ? question.deterministic_input
+    : {};
+  if (!deterministicInput.official_site_only) {
+    return '';
+  }
+  const entityType = String(question?.entity_type || sourceQuestion?.entity_type || '').trim().toUpperCase();
+  if (!['SPORT_LEAGUE', 'SPORT_CLUB'].includes(entityType)) {
+    return '';
+  }
+  const rawEntityId = String(question?.entity_id || sourceQuestion?.entity_id || '').trim().toLowerCase();
+  const rawEntityName = String(question?.entity_name || sourceQuestion?.entity_name || '').trim().toLowerCase();
+  const idCandidate = rawEntityId
+    .replace(/(^|-)fc$/g, '')
+    .replace(/(^|-)cf$/g, '')
+    .replace(/-/g, '');
+  const nameCandidate = rawEntityName
+    .replace(/\bfootball club\b/g, '')
+    .replace(/\bfootball\b/g, '')
+    .replace(/\bclub\b/g, '')
+    .replace(/[^a-z0-9]+/g, '');
+  const candidates = [idCandidate, nameCandidate]
+    .map((value) => String(value || '').trim())
+    .filter((value) => value.length >= 6);
+  for (const candidate of candidates) {
+    const normalized = _normalizeDomainCandidate(`https://www.${candidate}.com/`);
+    if (normalized && _isLikelyOfficialDomain(normalized, question?.entity_name || sourceQuestion?.entity_name || '')) {
+      return normalized;
+    }
+  }
+  return '';
 }
 
 function _buildFrontierFromStructuredOutput(questionState, structuredOutput, timestamp) {
@@ -1467,6 +1505,9 @@ function _classifyValidationState(structuredOutput) {
     return 'tool_call_missing';
   }
   if (structuredOutput.validation_state) {
+    if (String(structuredOutput.validation_state).trim().toLowerCase() === 'validated_with_nuance') {
+      return 'validated';
+    }
     return structuredOutput.validation_state;
   }
   const confidence = _coerceConfidenceScore(structuredOutput.confidence);

@@ -1,6 +1,6 @@
 {
   "schema_version": "atomic_question_source_v1",
-  "generated_at": "2026-04-05T16:28:51.570788+00:00",
+  "generated_at": "2026-04-05T18:11:46.779290+00:00",
   "entity_id": "international-canoe-federation",
   "entity_name": "International Canoe Federation",
   "entity_type": "SPORT_FEDERATION",
@@ -24,6 +24,13 @@
         "official_site",
         "wikipedia"
       ],
+      "search_strategy": {
+        "search_queries": [
+          "\"International Canoe Federation\" founded year",
+          "\"International Canoe Federation\" official website",
+          "\"International Canoe Federation\" wikipedia"
+        ]
+      },
       "evidence_focus": "entity_fact",
       "promotion_target": "profile",
       "answer_kind": "fact",

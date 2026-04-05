@@ -155,24 +155,44 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
                 f'"{entity_name}" app',
             ]
         else:
-            q2_expected = [
-                f'"{entity_name}" technology stack',
-                f'"{entity_name}" tech stack',
-                f'"{entity_name}" digital stack',
-                f'"{entity_name}" official website',
-                f'"{entity_name}" digital experience',
-                f'"{entity_name}" CRM',
-                f'"{entity_name}" analytics platform',
-                f'"{entity_name}" ticketing platform',
-                f'"{entity_name}" ecommerce',
-                f'"{entity_name}" mobile app',
-                f'"{entity_name}" technology partner',
-                f'"{entity_name}" digital partner',
-                f'"{entity_name}" official partner',
-                f'"{entity_name}" case study',
-                f'"{entity_name}" platform',
-                f'"{entity_name}" app',
-            ]
+            if entity_name == "Major League Cricket":
+                q2_expected = [
+                    f'"{entity_name}" official website',
+                    f'"{entity_name}" technology stack',
+                    f'"{entity_name}" tech stack',
+                    f'"{entity_name}" digital stack',
+                    f'"{entity_name}" digital experience',
+                    f'"{entity_name}" CRM',
+                    f'"{entity_name}" analytics platform',
+                    f'"{entity_name}" ticketing platform',
+                    f'"{entity_name}" ecommerce',
+                    f'"{entity_name}" mobile app',
+                    f'"{entity_name}" technology partner',
+                    f'"{entity_name}" digital partner',
+                    f'"{entity_name}" official partner',
+                    f'"{entity_name}" case study',
+                    f'"{entity_name}" platform',
+                    f'"{entity_name}" app',
+                ]
+            else:
+                q2_expected = [
+                    f'"{entity_name}" technology stack',
+                    f'"{entity_name}" tech stack',
+                    f'"{entity_name}" digital stack',
+                    f'"{entity_name}" official website',
+                    f'"{entity_name}" digital experience',
+                    f'"{entity_name}" CRM',
+                    f'"{entity_name}" analytics platform',
+                    f'"{entity_name}" ticketing platform',
+                    f'"{entity_name}" ecommerce',
+                    f'"{entity_name}" mobile app',
+                    f'"{entity_name}" technology partner',
+                    f'"{entity_name}" digital partner',
+                    f'"{entity_name}" official partner',
+                    f'"{entity_name}" case study',
+                    f'"{entity_name}" platform',
+                    f'"{entity_name}" app',
+                ]
         assert payload["questions"][1]["question"] == (
             f"What visible technologies, platforms, or vendors does {entity_name} use, and what do they imply commercially?"
         )
@@ -212,6 +232,31 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
         '"Major League Cricket" hiring digital',
         '"Major League Cricket" analytics',
         '"Major League Cricket" platform',
+    ]
+    assert mlc["questions"][0]["query"] == '"Major League Cricket" official website founded year'
+    assert mlc["questions"][0]["search_strategy"]["search_queries"] == [
+        '"Major League Cricket" official website',
+        '"Major League Cricket" founded year',
+        '"Major League Cricket" wikipedia',
+    ]
+    assert mlc["questions"][1]["query"] == '"Major League Cricket" official website'
+    assert mlc["questions"][1]["search_strategy"]["search_queries"] == [
+        '"Major League Cricket" official website',
+        '"Major League Cricket" technology stack',
+        '"Major League Cricket" tech stack',
+        '"Major League Cricket" digital stack',
+        '"Major League Cricket" digital experience',
+        '"Major League Cricket" CRM',
+        '"Major League Cricket" analytics platform',
+        '"Major League Cricket" ticketing platform',
+        '"Major League Cricket" ecommerce',
+        '"Major League Cricket" mobile app',
+        '"Major League Cricket" technology partner',
+        '"Major League Cricket" digital partner',
+        '"Major League Cricket" official partner',
+        '"Major League Cricket" case study',
+        '"Major League Cricket" platform',
+        '"Major League Cricket" app',
     ]
     assert arsenal["questions"][3]["query"] == '"Arsenal Football Club" LinkedIn company profile'
     assert arsenal["questions"][3]["search_strategy"]["search_queries"] == [
@@ -352,10 +397,10 @@ def test_universal_atomic_matrix_output_matches_canonical_files():
                 "official_site_only": True,
             }
             assert payload["questions"][1]["search_strategy"]["search_queries"] == [
+                '"Major League Cricket" official website',
                 '"Major League Cricket" technology stack',
                 '"Major League Cricket" tech stack',
                 '"Major League Cricket" digital stack',
-                '"Major League Cricket" official website',
                 '"Major League Cricket" digital experience',
                 '"Major League Cricket" CRM',
                 '"Major League Cricket" analytics platform',

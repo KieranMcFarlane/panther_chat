@@ -185,6 +185,13 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
             "official_site",
             "wikipedia",
         ],
+        "search_strategy": {
+            "search_queries": [
+                '"{entity}" founded year',
+                '"{entity}" official website',
+                '"{entity}" wikipedia',
+            ]
+        },
         "evidence_focus": "entity_fact",
         "promotion_target": "profile",
         "answer_kind": "fact",
@@ -303,6 +310,39 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
 MLC_ENTITY_ID = "major-league-cricket"
 ICF_ENTITY_ID = "international-canoe-federation"
 MLC_QUESTION_OVERRIDES: Dict[str, Dict[str, Any]] = {
+    "q1_foundation": {
+        "query": '"{entity}" official website founded year',
+        "search_strategy": {
+            "search_queries": [
+                '"{entity}" official website',
+                '"{entity}" founded year',
+                '"{entity}" wikipedia',
+            ]
+        },
+    },
+    "q2_digital_stack": {
+        "query": '"{entity}" official website',
+        "search_strategy": {
+            "search_queries": [
+                '"{entity}" official website',
+                '"{entity}" technology stack',
+                '"{entity}" tech stack',
+                '"{entity}" digital stack',
+                '"{entity}" digital experience',
+                '"{entity}" CRM',
+                '"{entity}" analytics platform',
+                '"{entity}" ticketing platform',
+                '"{entity}" ecommerce',
+                '"{entity}" mobile app',
+                '"{entity}" technology partner',
+                '"{entity}" digital partner',
+                '"{entity}" official partner',
+                '"{entity}" case study',
+                '"{entity}" platform',
+                '"{entity}" app',
+            ]
+        },
+    },
     "q3_procurement_signal": {
         "search_strategy": {
             "search_queries": [
@@ -413,6 +453,8 @@ def _render_question_spec(spec: Dict[str, Any], entity_name: str, entity_id: str
             rendered.update(deepcopy(overrides))
             if "question" in overrides:
                 rendered["question"] = str(rendered["question"]).format(entity=entity_name)
+            if "query" in overrides:
+                rendered["query"] = str(rendered["query"]).format(entity=entity_name)
             if "search_strategy" in overrides:
                 rendered["search_strategy"] = {
                     **deepcopy(overrides["search_strategy"]),
@@ -426,6 +468,8 @@ def _render_question_spec(spec: Dict[str, Any], entity_name: str, entity_id: str
             rendered.update(deepcopy(overrides))
             if "question" in overrides:
                 rendered["question"] = str(rendered["question"]).format(entity=entity_name)
+            if "query" in overrides:
+                rendered["query"] = str(rendered["query"]).format(entity=entity_name)
             if "search_strategy" in overrides:
                 rendered["search_strategy"] = {
                     **deepcopy(overrides["search_strategy"]),
