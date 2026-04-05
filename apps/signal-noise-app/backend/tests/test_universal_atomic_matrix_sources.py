@@ -107,10 +107,27 @@ def test_canonical_atomic_matrix_sources_are_five_question_universal_matrices(
         "google_serp",
         "official_site",
     ]
-    assert all(question["hop_budget"] == 8 for question in payload["questions"])
+    if entity_id == "international-canoe-federation":
+        assert [question["hop_budget"] for question in payload["questions"]] == [8, 8, 8, 6, 8]
+    else:
+        assert all(question["hop_budget"] == 8 for question in payload["questions"])
     assert all(question["question_timeout_ms"] == 180000 for question in payload["questions"])
     assert all(question["hop_timeout_ms"] == 180000 for question in payload["questions"])
     assert all(question["evidence_extension_confidence_threshold"] == 0.65 for question in payload["questions"])
+    if entity_id == "international-canoe-federation":
+        assert payload["questions"][3]["question"] == (
+            "Who is the most suitable senior commercial owner for sponsorship, broadcast, media rights, or marketing at International Canoe Federation?"
+        )
+        assert payload["questions"][3]["search_strategy"]["search_queries"] == [
+            '"International Canoe Federation" LinkedIn company profile',
+            '"International Canoe Federation" commercial and sponsorship',
+            '"International Canoe Federation" broadcast marketing',
+            '"International Canoe Federation" media rights',
+            '"International Canoe Federation" marketing director',
+            '"International Canoe Federation" commercial manager',
+            '"International Canoe Federation" sponsorship manager',
+            '"International Canoe Federation" director of tv broadcast marketing',
+        ]
     if entity_id == "major-league-cricket":
         assert payload["questions"][1]["question"] == (
             "What visible technologies, platforms, or vendors does Major League Cricket use, and what do they imply commercially?"

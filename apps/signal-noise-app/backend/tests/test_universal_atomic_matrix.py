@@ -98,7 +98,10 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
             "google_serp",
             "official_site",
         ]
-        assert all(question["hop_budget"] == 8 for question in payload["questions"])
+        if payload["entity_type"] == "SPORT_FEDERATION":
+            assert [question["hop_budget"] for question in payload["questions"]] == [8, 8, 8, 6, 8]
+        else:
+            assert all(question["hop_budget"] == 8 for question in payload["questions"])
         assert all(question["evidence_extension_confidence_threshold"] == 0.65 for question in payload["questions"])
         assert all(question["question_timeout_ms"] == 180000 for question in payload["questions"])
         assert all(question["hop_timeout_ms"] == 180000 for question in payload["questions"])
@@ -238,18 +241,18 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
         '"Arsenal Football Club" head of partnerships',
         '"Arsenal Football Club" CEO',
     ]
+    assert icf["questions"][3]["question"] == (
+        "Who is the most suitable senior commercial owner for sponsorship, broadcast, media rights, or marketing at International Canoe Federation?"
+    )
     assert icf["questions"][3]["search_strategy"]["search_queries"] == [
         '"International Canoe Federation" LinkedIn company profile',
-        '"International Canoe Federation" LinkedIn commercial',
-        '"International Canoe Federation" LinkedIn sponsorship',
-        '"International Canoe Federation" LinkedIn marketing',
-        '"International Canoe Federation" LinkedIn broadcast',
-        '"International Canoe Federation" LinkedIn media rights',
-        '"International Canoe Federation" head of commercial and sponsorship',
-        '"International Canoe Federation" director of tv broadcast marketing',
-        '"International Canoe Federation" broadcast marketing director',
+        '"International Canoe Federation" commercial and sponsorship',
+        '"International Canoe Federation" broadcast marketing',
+        '"International Canoe Federation" media rights',
         '"International Canoe Federation" marketing director',
-        '"International Canoe Federation" secretary general',
+        '"International Canoe Federation" commercial manager',
+        '"International Canoe Federation" sponsorship manager',
+        '"International Canoe Federation" director of tv broadcast marketing',
     ]
     assert mlc["questions"][3]["search_strategy"]["search_queries"] == [
         '"Major League Cricket" LinkedIn company profile',

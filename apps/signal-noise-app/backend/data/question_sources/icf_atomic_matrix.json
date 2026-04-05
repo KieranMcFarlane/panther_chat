@@ -1,6 +1,6 @@
 {
   "schema_version": "atomic_question_source_v1",
-  "generated_at": "2026-04-05T16:11:09.509114+00:00",
+  "generated_at": "2026-04-05T16:28:51.570788+00:00",
   "entity_id": "international-canoe-federation",
   "entity_name": "International Canoe Federation",
   "entity_type": "SPORT_FEDERATION",
@@ -127,10 +127,10 @@
       "question_id": "q4_decision_owner",
       "question_family": "decision_owner",
       "question_type": "decision_owner",
-      "question": "Who is the most suitable person for commercial partnerships or business development at International Canoe Federation?",
+      "question": "Who is the most suitable senior commercial owner for sponsorship, broadcast, media rights, or marketing at International Canoe Federation?",
       "query": "\"International Canoe Federation\" LinkedIn company profile",
-      "hop_budget": 8,
-      "evidence_extension_budget": 2,
+      "hop_budget": 6,
+      "evidence_extension_budget": 1,
       "source_priority": [
         "linkedin_company_profile",
         "linkedin_people_search",
@@ -141,16 +141,13 @@
       "search_strategy": {
         "search_queries": [
           "\"International Canoe Federation\" LinkedIn company profile",
-          "\"International Canoe Federation\" LinkedIn commercial",
-          "\"International Canoe Federation\" LinkedIn sponsorship",
-          "\"International Canoe Federation\" LinkedIn marketing",
-          "\"International Canoe Federation\" LinkedIn broadcast",
-          "\"International Canoe Federation\" LinkedIn media rights",
-          "\"International Canoe Federation\" head of commercial and sponsorship",
-          "\"International Canoe Federation\" director of tv broadcast marketing",
-          "\"International Canoe Federation\" broadcast marketing director",
+          "\"International Canoe Federation\" commercial and sponsorship",
+          "\"International Canoe Federation\" broadcast marketing",
+          "\"International Canoe Federation\" media rights",
           "\"International Canoe Federation\" marketing director",
-          "\"International Canoe Federation\" secretary general"
+          "\"International Canoe Federation\" commercial manager",
+          "\"International Canoe Federation\" sponsorship manager",
+          "\"International Canoe Federation\" director of tv broadcast marketing"
         ]
       },
       "evidence_focus": "decision_owner",

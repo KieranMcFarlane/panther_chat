@@ -301,6 +301,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
 ]
 
 MLC_ENTITY_ID = "major-league-cricket"
+ICF_ENTITY_ID = "international-canoe-federation"
 MLC_QUESTION_OVERRIDES: Dict[str, Dict[str, Any]] = {
     "q3_procurement_signal": {
         "search_strategy": {
@@ -314,6 +315,26 @@ MLC_QUESTION_OVERRIDES: Dict[str, Dict[str, Any]] = {
                 '"{entity}" hiring digital',
                 '"{entity}" analytics',
                 '"{entity}" platform',
+            ]
+        },
+    },
+}
+
+ICF_QUESTION_OVERRIDES: Dict[str, Dict[str, Any]] = {
+    "q4_decision_owner": {
+        "question": "Who is the most suitable senior commercial owner for sponsorship, broadcast, media rights, or marketing at {entity}?",
+        "hop_budget": 6,
+        "evidence_extension_budget": 1,
+        "search_strategy": {
+            "search_queries": [
+                '"{entity}" LinkedIn company profile',
+                '"{entity}" commercial and sponsorship',
+                '"{entity}" broadcast marketing',
+                '"{entity}" media rights',
+                '"{entity}" marketing director',
+                '"{entity}" commercial manager',
+                '"{entity}" sponsorship manager',
+                '"{entity}" director of tv broadcast marketing',
             ]
         },
     },
@@ -388,6 +409,19 @@ def _render_question_spec(spec: Dict[str, Any], entity_name: str, entity_id: str
     rendered["evidence_extension_confidence_threshold"] = EVIDENCE_EXTENSION_CONFIDENCE_THRESHOLD
     if _slugify(entity_id) == MLC_ENTITY_ID:
         overrides = MLC_QUESTION_OVERRIDES.get(str(rendered.get("question_id") or "").strip(), {})
+        if overrides:
+            rendered.update(deepcopy(overrides))
+            if "question" in overrides:
+                rendered["question"] = str(rendered["question"]).format(entity=entity_name)
+            if "search_strategy" in overrides:
+                rendered["search_strategy"] = {
+                    **deepcopy(overrides["search_strategy"]),
+                    "search_queries": [
+                        str(query).format(entity=entity_name) for query in overrides["search_strategy"].get("search_queries", [])
+                    ],
+                }
+    if _slugify(entity_id) == ICF_ENTITY_ID:
+        overrides = ICF_QUESTION_OVERRIDES.get(str(rendered.get("question_id") or "").strip(), {})
         if overrides:
             rendered.update(deepcopy(overrides))
             if "question" in overrides:
