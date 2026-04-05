@@ -151,15 +151,33 @@ def test_canonical_atomic_matrix_sources_are_five_question_universal_matrices(
             '"Major League Cricket" platform',
         ]
         assert payload["questions"][3]["query"] == '"Major League Cricket" LinkedIn company profile'
-        assert payload["questions"][3]["search_strategy"]["search_queries"][0] == (
-            '"Major League Cricket" LinkedIn company profile'
-        )
-        assert '"Major League Cricket" LinkedIn sponsorship' in payload["questions"][3]["search_strategy"]["search_queries"]
-        assert '"Major League Cricket" chief digital officer' in payload["questions"][3]["search_strategy"]["search_queries"]
+        assert payload["questions"][3]["search_strategy"]["search_queries"] == [
+            '"Major League Cricket" LinkedIn company profile',
+            '"Major League Cricket" LinkedIn commercial',
+            '"Major League Cricket" LinkedIn sponsorship',
+            '"Major League Cricket" LinkedIn partnerships',
+            '"Major League Cricket" LinkedIn revenue',
+            '"Major League Cricket" LinkedIn business development',
+            '"Major League Cricket" vice president commercial',
+            '"Major League Cricket" chief commercial officer',
+            '"Major League Cricket" partnerships director',
+            '"Major League Cricket" sponsorship director',
+            '"Major League Cricket" CEO',
+        ]
         assert payload["questions"][4]["question"] == (
             "Which 3 to 5 people are the most relevant commercial, partnerships, or business development contacts at Major League Cricket?"
         )
         assert payload["questions"][4]["question_type"] == "related_pois"
-        assert payload["questions"][4]["search_strategy"]["search_queries"][0] == (
-            '"Major League Cricket" LinkedIn company profile'
-        )
+        assert payload["questions"][4]["search_strategy"]["search_queries"] == [
+            '"Major League Cricket" LinkedIn company profile',
+            '"Major League Cricket" LinkedIn commercial',
+            '"Major League Cricket" LinkedIn sponsorship',
+            '"Major League Cricket" LinkedIn partnerships',
+            '"Major League Cricket" LinkedIn revenue',
+            '"Major League Cricket" LinkedIn marketing',
+            '"Major League Cricket" vice president commercial',
+            '"Major League Cricket" chief commercial officer',
+            '"Major League Cricket" partnerships director',
+            '"Major League Cricket" sponsorship director',
+            '"Major League Cricket" CEO',
+        ]

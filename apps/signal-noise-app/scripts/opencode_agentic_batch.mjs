@@ -480,14 +480,28 @@ function _questionHasStrongEvidence(questionPayload, confidenceThreshold = 0.9) 
 }
 
 function _structuredOwnerCandidates(structuredOutput = {}) {
-  const primaryOwner = structuredOutput && typeof structuredOutput.primary_owner === 'object' && structuredOutput.primary_owner
-    ? structuredOutput.primary_owner
-    : null;
+  const normalizeCandidate = (value) => {
+    if (!value) return null;
+    if (typeof value === 'string') {
+      const name = value.trim();
+      return name ? { name } : null;
+    }
+    if (typeof value === 'object') {
+      const name = String(value.name || value.full_name || value.person || value.primary_owner || '').trim();
+      if (!name) return null;
+      return {
+        ...value,
+        name,
+      };
+    }
+    return null;
+  };
+  const primaryOwner = normalizeCandidate(structuredOutput?.primary_owner);
   const supportingCandidates = Array.isArray(structuredOutput?.supporting_candidates)
-    ? structuredOutput.supporting_candidates.filter((item) => item && typeof item === 'object')
+    ? structuredOutput.supporting_candidates.map((item) => normalizeCandidate(item)).filter(Boolean)
     : [];
   const candidates = Array.isArray(structuredOutput?.candidates)
-    ? structuredOutput.candidates.filter((item) => item && typeof item === 'object')
+    ? structuredOutput.candidates.map((item) => normalizeCandidate(item)).filter(Boolean)
     : [];
   const topCandidate = candidates[0] || supportingCandidates[0] || primaryOwner || null;
   const answerText = String(
@@ -670,6 +684,13 @@ function _mergeQuestionState(questionState, questionPayload, timestamp) {
     seen_queries: Array.from(new Set([...(questionState.seen_queries || []), questionState.seed_query])),
     run_history: [...(questionState.run_history || [])],
     last_executed_query: questionPayload?.execution_query || questionPayload?.query || questionState.last_executed_query || questionState.seed_query,
+    primary_owner: questionPayload?.primary_owner || questionState.primary_owner || null,
+    supporting_candidates: Array.isArray(questionPayload?.supporting_candidates)
+      ? questionPayload.supporting_candidates
+      : (questionState.supporting_candidates || []),
+    candidates: Array.isArray(questionPayload?.candidates)
+      ? questionPayload.candidates
+      : (questionState.candidates || []),
   };
 
   if (questionPayload.evidence_url || questionPayload.answer) {
@@ -1260,6 +1281,64 @@ export async function runDeterministicToolQuestion(
     apifyTechStackLookup = lookupApifyTechStack,
   } = {},
 ) {
+  const questionType = String(question?.question_type || '').trim().toLowerCase();
+  if (questionType === 'related_pois') {
+    const priorQuestions = Array.isArray(runState?.questions) ? runState.questions : [];
+    const decisionOwnerState = priorQuestions.find((item) => String(item?.question_id || '').trim() === 'q4_decision_owner');
+    if (decisionOwnerState && String(decisionOwnerState.status || '').trim().toLowerCase() === 'validated') {
+      const primaryOwner = decisionOwnerState?.primary_owner && typeof decisionOwnerState.primary_owner === 'object'
+        ? decisionOwnerState.primary_owner
+        : (typeof decisionOwnerState?.best_answer === 'string' && decisionOwnerState.best_answer.trim()
+            ? { name: decisionOwnerState.best_answer.trim() }
+            : null);
+      const supportingCandidates = Array.isArray(decisionOwnerState?.supporting_candidates)
+        ? decisionOwnerState.supporting_candidates.filter((item) => item && typeof item === 'object')
+        : [];
+      const candidates = [primaryOwner, ...supportingCandidates]
+        .filter((item) => item && String(item.name || '').trim())
+        .reduce((acc, item) => {
+          const key = String(item.name || '').trim().toLowerCase();
+          if (!key || acc.some((existing) => String(existing.name || '').trim().toLowerCase() === key)) {
+            return acc;
+          }
+          acc.push(item);
+          return acc;
+        }, [])
+        .slice(0, 5)
+        .map((item) => ({ ...item }));
+      if (candidates.length >= 3) {
+        const sources = Array.isArray(decisionOwnerState?.accepted_links)
+          ? decisionOwnerState.accepted_links
+              .map((item) => _extractUrlString(item?.url))
+              .filter(Boolean)
+          : [];
+        return {
+          structuredOutput: {
+            answer: String(candidates[0]?.name || '').trim(),
+            candidates,
+            confidence: Number(decisionOwnerState?.current_confidence || 0.85) || 0.85,
+            validation_state: 'validated',
+            sources,
+            signal_type: 'RELATED_POIS',
+            context: 'Derived from validated decision-owner output',
+          },
+          promptTrace: {
+            status: 'deterministic_related_pois_from_q4',
+            has_structured_output: true,
+            candidates_count: candidates.length,
+          },
+          messageTrace: [],
+          cliResult: {
+            code: 0,
+            stdout: '',
+            stderr: '',
+          },
+        };
+      }
+    }
+    return null;
+  }
+
   const deterministicTools = Array.isArray(question?.deterministic_tools)
     ? question.deterministic_tools.map((item) => String(item || '').trim().toLowerCase()).filter(Boolean)
     : [];

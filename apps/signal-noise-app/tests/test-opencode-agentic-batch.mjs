@@ -413,6 +413,192 @@ test('runOpenCodeQuestionSourceBatch preserves decision-owner primary owner and 
   }
 });
 
+test('runOpenCodeQuestionSourceBatch normalizes string decision-owner candidates', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-decision-owner-strings-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'major-league-cricket',
+        entity_name: 'Major League Cricket',
+        entity_type: 'SPORT_LEAGUE',
+        preset: 'major-league-cricket-atomic-matrix',
+        question_source_label: 'major-league-cricket-atomic-matrix',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        question_count: 1,
+        questions: [
+          {
+            question_id: 'q4_decision_owner',
+            question_type: 'decision_owner',
+            question: 'Who is the most suitable person for commercial partnerships or business development at {entity}?',
+            query: '"Major League Cricket" LinkedIn company profile',
+            hop_budget: 8,
+            evidence_extension_budget: 1,
+            evidence_extension_confidence_threshold: 0.65,
+            question_timeout_ms: 180000,
+            hop_timeout_ms: 180000,
+            source_priority: ['linkedin_company_profile', 'linkedin_people_search', 'linkedin_person_profile', 'google_serp', 'official_site'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  try {
+    const result = await runOpenCodeQuestionSourceBatch({
+      questionSourcePath: sourcePath,
+      outputDir,
+      questionRunner: async () => ({
+        structuredOutput: {
+          answer: 'Oliver Smith',
+          primary_owner: 'Oliver Smith',
+          supporting_candidates: ['Rushil Mehta', 'Johnny Grave'],
+          confidence: 0.85,
+          validation_state: 'validated',
+          sources: [
+            'https://www.linkedin.com/in/oliveralexsmith',
+            'https://www.linkedin.com/in/rushilmehta',
+          ],
+        },
+        promptTrace: { status: 'ok', structured_output_keys: 1, has_structured_output: true },
+        messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
+        cliResult: { code: 0, stdout: '{"answer":"Oliver Smith"}', stderr: '' },
+      }),
+    });
+
+    const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+    const question = artifact.answers[0];
+    assert.equal(question.validation_state, 'validated');
+    assert.equal(question.primary_owner.name, 'Oliver Smith');
+    assert.deepEqual(
+      question.supporting_candidates.map((candidate) => candidate.name),
+      ['Rushil Mehta', 'Johnny Grave'],
+    );
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
+test('runOpenCodeQuestionSourceBatch derives related-pois from a validated decision-owner result before search', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-related-pois-derived-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+  const seenQuestions = [];
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'arsenal-fc',
+        entity_name: 'Arsenal Football Club',
+        entity_type: 'SPORT_CLUB',
+        preset: 'arsenal-atomic-matrix',
+        question_source_label: 'arsenal-atomic-matrix',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        question_count: 2,
+        questions: [
+          {
+            question_id: 'q4_decision_owner',
+            question_type: 'decision_owner',
+            question: 'Who is the most suitable person for commercial partnerships or business development at {entity}?',
+            query: '"Arsenal Football Club" LinkedIn company profile',
+            hop_budget: 8,
+            evidence_extension_budget: 1,
+            evidence_extension_confidence_threshold: 0.65,
+            question_timeout_ms: 180000,
+            hop_timeout_ms: 180000,
+            source_priority: ['linkedin_company_profile', 'linkedin_people_search', 'linkedin_person_profile', 'google_serp', 'official_site'],
+          },
+          {
+            question_id: 'q5_related_pois',
+            question_type: 'related_pois',
+            question: 'Which 3 to 5 people are the most relevant commercial, partnerships, or business development contacts at {entity}?',
+            query: '"Arsenal Football Club" LinkedIn company profile',
+            hop_budget: 8,
+            evidence_extension_budget: 1,
+            evidence_extension_confidence_threshold: 0.65,
+            question_timeout_ms: 180000,
+            hop_timeout_ms: 180000,
+            source_priority: ['linkedin_company_profile', 'linkedin_people_search', 'linkedin_person_profile', 'google_serp', 'official_site'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  try {
+    const result = await runOpenCodeQuestionSourceBatch({
+      questionSourcePath: sourcePath,
+      outputDir,
+      questionRunner: async (question) => {
+        seenQuestions.push(question.question_id);
+        if (question.question_id === 'q4_decision_owner') {
+          return {
+            structuredOutput: {
+              answer: 'Juliet Slot',
+              primary_owner: {
+                name: 'Juliet Slot',
+                title: 'Chief Commercial Officer',
+                organization: 'Arsenal Football Club',
+              },
+              supporting_candidates: [
+                { name: 'Omar Shaikh', title: 'Director, Global Partnerships & Ventures' },
+                { name: 'Stuart Milne', title: 'Head of Partnerships' },
+                { name: 'Andrew Sheridan', title: 'Head of Commercial Ventures' },
+              ],
+              confidence: 0.95,
+              validation_state: 'validated',
+              sources: ['https://uk.linkedin.com/in/juliet-slot-0a823b4'],
+            },
+            promptTrace: { status: 'ok', structured_output_keys: 1, has_structured_output: true },
+            messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
+            cliResult: { code: 0, stdout: '{"answer":"Juliet Slot"}', stderr: '' },
+          };
+        }
+        throw new Error(`unexpected runner call for ${question.question_id}`);
+      },
+    });
+
+    const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+    const relatedPois = artifact.answers.find((question) => question.question_id === 'q5_related_pois');
+    assert.deepEqual(seenQuestions, ['q4_decision_owner']);
+    assert.equal(relatedPois.validation_state, 'validated');
+    assert.deepEqual(
+      relatedPois.candidates.map((candidate) => candidate.name),
+      ['Juliet Slot', 'Omar Shaikh', 'Stuart Milne', 'Andrew Sheridan'],
+    );
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
 test('lookupApifyTechStack uses the documented Apify sync endpoint and token', async () => {
   const calls = [];
   const result = await lookupApifyTechStack({

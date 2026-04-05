@@ -27,58 +27,89 @@ DECISION_OWNER_SOURCE_PRIORITY = [
     "official_site",
 ]
 
-DECISION_OWNER_SEARCH_QUERIES = [
+DECISION_OWNER_SEARCH_QUERIES_CLUB = [
     '"{entity}" LinkedIn company profile',
     '"{entity}" LinkedIn commercial',
     '"{entity}" LinkedIn partnerships',
     '"{entity}" LinkedIn sponsorship',
-    '"{entity}" LinkedIn revenue',
     '"{entity}" LinkedIn business development',
     '"{entity}" LinkedIn marketing',
-    '"{entity}" LinkedIn fan engagement',
-    '"{entity}" LinkedIn digital',
-    '"{entity}" LinkedIn innovation',
-    '"{entity}" LinkedIn strategy',
-    '"{entity}" LinkedIn transformation',
-    '"{entity}" LinkedIn growth',
     '"{entity}" chief commercial officer',
     '"{entity}" partnerships director',
     '"{entity}" sponsorship director',
     '"{entity}" head of partnerships',
-    '"{entity}" chief digital officer',
-    '"{entity}" innovation director',
-    '"{entity}" transformation director',
-    '"{entity}" marketing director',
-    '"{entity}" growth director',
     '"{entity}" CEO',
-    '"{entity}" managing director',
 ]
 
-RELATED_POIS_SEARCH_QUERIES = [
+DECISION_OWNER_SEARCH_QUERIES_LEAGUE = [
+    '"{entity}" LinkedIn company profile',
+    '"{entity}" LinkedIn commercial',
+    '"{entity}" LinkedIn sponsorship',
+    '"{entity}" LinkedIn partnerships',
+    '"{entity}" LinkedIn revenue',
+    '"{entity}" LinkedIn business development',
+    '"{entity}" vice president commercial',
+    '"{entity}" chief commercial officer',
+    '"{entity}" partnerships director',
+    '"{entity}" sponsorship director',
+    '"{entity}" CEO',
+]
+
+DECISION_OWNER_SEARCH_QUERIES_FEDERATION = [
+    '"{entity}" LinkedIn company profile',
+    '"{entity}" LinkedIn commercial',
+    '"{entity}" LinkedIn sponsorship',
+    '"{entity}" LinkedIn marketing',
+    '"{entity}" LinkedIn broadcast',
+    '"{entity}" LinkedIn media rights',
+    '"{entity}" head of commercial and sponsorship',
+    '"{entity}" director of tv broadcast marketing',
+    '"{entity}" broadcast marketing director',
+    '"{entity}" marketing director',
+    '"{entity}" secretary general',
+]
+
+RELATED_POIS_SEARCH_QUERIES_CLUB = [
     '"{entity}" LinkedIn company profile',
     '"{entity}" LinkedIn commercial',
     '"{entity}" LinkedIn partnerships',
     '"{entity}" LinkedIn sponsorship',
-    '"{entity}" LinkedIn revenue',
     '"{entity}" LinkedIn business development',
     '"{entity}" LinkedIn marketing',
-    '"{entity}" LinkedIn digital',
-    '"{entity}" LinkedIn innovation',
-    '"{entity}" LinkedIn strategy',
-    '"{entity}" LinkedIn transformation',
-    '"{entity}" LinkedIn growth',
     '"{entity}" chief commercial officer',
     '"{entity}" commercial director',
     '"{entity}" partnerships director',
     '"{entity}" sponsorship director',
     '"{entity}" head of partnerships',
-    '"{entity}" chief digital officer',
-    '"{entity}" innovation director',
-    '"{entity}" transformation director',
-    '"{entity}" marketing director',
-    '"{entity}" growth director',
     '"{entity}" CEO',
-    '"{entity}" managing director',
+]
+
+RELATED_POIS_SEARCH_QUERIES_LEAGUE = [
+    '"{entity}" LinkedIn company profile',
+    '"{entity}" LinkedIn commercial',
+    '"{entity}" LinkedIn sponsorship',
+    '"{entity}" LinkedIn partnerships',
+    '"{entity}" LinkedIn revenue',
+    '"{entity}" LinkedIn marketing',
+    '"{entity}" vice president commercial',
+    '"{entity}" chief commercial officer',
+    '"{entity}" partnerships director',
+    '"{entity}" sponsorship director',
+    '"{entity}" CEO',
+]
+
+RELATED_POIS_SEARCH_QUERIES_FEDERATION = [
+    '"{entity}" LinkedIn company profile',
+    '"{entity}" LinkedIn commercial',
+    '"{entity}" LinkedIn sponsorship',
+    '"{entity}" LinkedIn marketing',
+    '"{entity}" LinkedIn broadcast',
+    '"{entity}" LinkedIn media rights',
+    '"{entity}" head of commercial and sponsorship',
+    '"{entity}" director of tv broadcast marketing',
+    '"{entity}" digital product owner',
+    '"{entity}" marketing director',
+    '"{entity}" secretary general',
 ]
 
 Q2_DIGITAL_STACK_SEARCH_QUERIES_CLUB = [
@@ -245,7 +276,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "evidence_extension_budget": 2,
         "source_priority": DECISION_OWNER_SOURCE_PRIORITY,
         "search_strategy": {
-            "search_queries": DECISION_OWNER_SEARCH_QUERIES,
+            "search_queries": DECISION_OWNER_SEARCH_QUERIES_CLUB,
         },
         "evidence_focus": "decision_owner",
         "promotion_target": "decision_owners",
@@ -261,7 +292,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "evidence_extension_budget": 2,
         "source_priority": DECISION_OWNER_SOURCE_PRIORITY,
         "search_strategy": {
-            "search_queries": RELATED_POIS_SEARCH_QUERIES,
+            "search_queries": RELATED_POIS_SEARCH_QUERIES_CLUB,
         },
         "evidence_focus": "decision_owner",
         "promotion_target": "decision_owners",
@@ -323,6 +354,30 @@ def _render_question_spec(spec: Dict[str, Any], entity_name: str, entity_id: str
                     str(query).format(entity=entity_name)
                     for query in Q2_DIGITAL_STACK_SEARCH_QUERIES_FEDERATION
                 ]
+        if rendered.get("question_id") in {"q4_decision_owner", "q5_related_pois"}:
+            entity_type_key = _slugify(entity_type)
+            if rendered.get("question_id") == "q4_decision_owner":
+                if entity_type_key == "sport-club":
+                    query_set = DECISION_OWNER_SEARCH_QUERIES_CLUB
+                elif entity_type_key == "sport-league":
+                    query_set = DECISION_OWNER_SEARCH_QUERIES_LEAGUE
+                elif entity_type_key == "sport-federation":
+                    query_set = DECISION_OWNER_SEARCH_QUERIES_FEDERATION
+                else:
+                    query_set = DECISION_OWNER_SEARCH_QUERIES_CLUB
+            else:
+                if entity_type_key == "sport-club":
+                    query_set = RELATED_POIS_SEARCH_QUERIES_CLUB
+                elif entity_type_key == "sport-league":
+                    query_set = RELATED_POIS_SEARCH_QUERIES_LEAGUE
+                elif entity_type_key == "sport-federation":
+                    query_set = RELATED_POIS_SEARCH_QUERIES_FEDERATION
+                else:
+                    query_set = RELATED_POIS_SEARCH_QUERIES_CLUB
+            search_queries = [
+                str(query).format(entity=entity_name)
+                for query in query_set
+            ]
         rendered["search_strategy"] = {
             **search_strategy,
             "search_queries": search_queries,
