@@ -121,12 +121,20 @@ def test_canonical_atomic_matrix_sources_are_five_question_universal_matrices(
             "source_question_id": "q1_foundation"
         }
         assert payload["questions"][1]["search_strategy"]["search_queries"] == [
+            '"Major League Cricket" technology stack',
+            '"Major League Cricket" tech stack',
+            '"Major League Cricket" digital stack',
             '"Major League Cricket" CRM',
             '"Major League Cricket" analytics platform',
             '"Major League Cricket" ticketing platform',
             '"Major League Cricket" ecommerce',
             '"Major League Cricket" mobile app',
             '"Major League Cricket" technology partner',
+            '"Major League Cricket" digital partner',
+            '"Major League Cricket" official partner',
+            '"Major League Cricket" case study',
+            '"Major League Cricket" platform',
+            '"Major League Cricket" app',
         ]
         assert payload["questions"][2]["search_strategy"]["search_queries"] == [
             '"Major League Cricket" RFP',

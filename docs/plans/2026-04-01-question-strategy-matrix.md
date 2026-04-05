@@ -194,12 +194,20 @@ For `{entity}`, use this flow:
      - likely vendors
 2. Then run discovery only if enrichment is incomplete
    - Queries:
+     - `"{entity}" technology stack`
+     - `"{entity}" tech stack`
+     - `"{entity}" digital stack`
      - `"{entity}" CRM`
      - `"{entity}" analytics platform`
      - `"{entity}" ticketing platform`
      - `"{entity}" ecommerce`
      - `"{entity}" mobile app`
      - `"{entity}" technology partner`
+     - `"{entity}" digital partner`
+     - `"{entity}" official partner`
+     - `"{entity}" case study`
+     - `"{entity}" platform`
+     - `"{entity}" app`
    - Sources:
      - `google_serp`
      - `news`

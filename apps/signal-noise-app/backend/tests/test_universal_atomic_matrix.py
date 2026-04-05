@@ -120,12 +120,20 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
             "source_question_id": "q1_foundation"
         }
         assert payload["questions"][1]["search_strategy"]["search_queries"] == [
+            f'"{entity_name}" technology stack',
+            f'"{entity_name}" tech stack',
+            f'"{entity_name}" digital stack',
             f'"{entity_name}" CRM',
             f'"{entity_name}" analytics platform',
             f'"{entity_name}" ticketing platform',
             f'"{entity_name}" ecommerce',
             f'"{entity_name}" mobile app',
             f'"{entity_name}" technology partner',
+            f'"{entity_name}" digital partner',
+            f'"{entity_name}" official partner',
+            f'"{entity_name}" case study',
+            f'"{entity_name}" platform',
+            f'"{entity_name}" app',
         ]
     assert mlc["questions"][2]["search_strategy"]["search_queries"] == [
         '"Major League Cricket" RFP',
@@ -218,12 +226,20 @@ def test_universal_atomic_matrix_output_matches_canonical_files():
                 "source_question_id": "q1_foundation"
             }
             assert payload["questions"][1]["search_strategy"]["search_queries"] == [
+                '"Major League Cricket" technology stack',
+                '"Major League Cricket" tech stack',
+                '"Major League Cricket" digital stack',
                 '"Major League Cricket" CRM',
                 '"Major League Cricket" analytics platform',
                 '"Major League Cricket" ticketing platform',
                 '"Major League Cricket" ecommerce',
                 '"Major League Cricket" mobile app',
                 '"Major League Cricket" technology partner',
+                '"Major League Cricket" digital partner',
+                '"Major League Cricket" official partner',
+                '"Major League Cricket" case study',
+                '"Major League Cricket" platform',
+                '"Major League Cricket" app',
             ]
             assert payload["questions"][2]["search_strategy"]["search_queries"] == [
                 '"Major League Cricket" RFP',

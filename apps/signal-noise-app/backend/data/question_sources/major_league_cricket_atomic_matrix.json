@@ -1,6 +1,6 @@
 {
   "schema_version": "atomic_question_source_v1",
-  "generated_at": "2026-04-03T14:20:30.518269+00:00",
+  "generated_at": "2026-04-05T09:18:42.432465+00:00",
   "entity_id": "major-league-cricket",
   "entity_name": "Major League Cricket",
   "entity_type": "SPORT_LEAGUE",
@@ -49,12 +49,20 @@
       ],
       "search_strategy": {
         "search_queries": [
+          "\"Major League Cricket\" technology stack",
+          "\"Major League Cricket\" tech stack",
+          "\"Major League Cricket\" digital stack",
           "\"Major League Cricket\" CRM",
           "\"Major League Cricket\" analytics platform",
           "\"Major League Cricket\" ticketing platform",
           "\"Major League Cricket\" ecommerce",
           "\"Major League Cricket\" mobile app",
-          "\"Major League Cricket\" technology partner"
+          "\"Major League Cricket\" technology partner",
+          "\"Major League Cricket\" digital partner",
+          "\"Major League Cricket\" official partner",
+          "\"Major League Cricket\" case study",
+          "\"Major League Cricket\" platform",
+          "\"Major League Cricket\" app"
         ]
       },
       "deterministic_tools": [

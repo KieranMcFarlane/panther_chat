@@ -116,12 +116,20 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         ],
         "search_strategy": {
             "search_queries": [
+                '"{entity}" technology stack',
+                '"{entity}" tech stack',
+                '"{entity}" digital stack',
                 '"{entity}" CRM',
                 '"{entity}" analytics platform',
                 '"{entity}" ticketing platform',
                 '"{entity}" ecommerce',
                 '"{entity}" mobile app',
                 '"{entity}" technology partner',
+                '"{entity}" digital partner',
+                '"{entity}" official partner',
+                '"{entity}" case study',
+                '"{entity}" platform',
+                '"{entity}" app',
             ]
         },
         "deterministic_tools": ["apify_techstack"],

@@ -1,6 +1,6 @@
 {
   "schema_version": "atomic_question_source_v1",
-  "generated_at": "2026-04-03T14:20:30.518004+00:00",
+  "generated_at": "2026-04-05T09:18:42.432079+00:00",
   "entity_id": "international-canoe-federation",
   "entity_name": "International Canoe Federation",
   "entity_type": "SPORT_FEDERATION",
@@ -49,12 +49,20 @@
       ],
       "search_strategy": {
         "search_queries": [
+          "\"International Canoe Federation\" technology stack",
+          "\"International Canoe Federation\" tech stack",
+          "\"International Canoe Federation\" digital stack",
           "\"International Canoe Federation\" CRM",
           "\"International Canoe Federation\" analytics platform",
           "\"International Canoe Federation\" ticketing platform",
           "\"International Canoe Federation\" ecommerce",
           "\"International Canoe Federation\" mobile app",
-          "\"International Canoe Federation\" technology partner"
+          "\"International Canoe Federation\" technology partner",
+          "\"International Canoe Federation\" digital partner",
+          "\"International Canoe Federation\" official partner",
+          "\"International Canoe Federation\" case study",
+          "\"International Canoe Federation\" platform",
+          "\"International Canoe Federation\" app"
         ]
       },
       "deterministic_tools": [
