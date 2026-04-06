@@ -167,6 +167,40 @@ def test_canonical_atomic_matrix_sources_are_five_question_universal_matrices(
             '"Arsenal Football Club" tender',
             '"Arsenal Football Club" procurement',
         ]
+    if entity_id == "celtic-fc":
+        assert payload["questions"][0]["query"] == '"Celtic Football Club" official website founded year'
+        assert payload["questions"][0]["search_strategy"]["search_queries"] == [
+            '"Celtic Football Club" official website',
+            '"Celtic Football Club" history',
+            '"Celtic Football Club" founded year',
+            '"Celtic Football Club" wikipedia',
+        ]
+        assert payload["questions"][3]["search_strategy"]["search_queries"] == [
+            '"Celtic Football Club" official website',
+            '"Celtic Football Club" leadership team',
+            '"Celtic Football Club" commercial team',
+            '"Celtic Football Club" commercial director',
+            '"Celtic Football Club" head of partnerships',
+            '"Celtic Football Club" partnerships manager',
+            '"Celtic Football Club" sponsorship manager',
+            '"Celtic Football Club" marketing director',
+            '"Celtic Football Club" chief commercial officer',
+            '"Celtic Football Club" business development director',
+        ]
+        assert payload["questions"][4]["search_strategy"]["search_queries"] == [
+            '"Celtic Football Club" official website',
+            '"Celtic Football Club" leadership team',
+            '"Celtic Football Club" commercial team',
+            '"Celtic Football Club" commercial director',
+            '"Celtic Football Club" partnerships manager',
+            '"Celtic Football Club" sponsorship manager',
+            '"Celtic Football Club" marketing director',
+            '"Celtic Football Club" head of partnerships',
+            '"Celtic Football Club" business development director',
+            '"Celtic Football Club" fan engagement',
+            '"Celtic Football Club" digital product',
+            '"Celtic Football Club" operations director',
+        ]
     if entity_id == "international-canoe-federation":
         assert payload["questions"][2]["question_family"] == "tender_docs"
         assert payload["questions"][2]["question_type"] == "tender_docs"

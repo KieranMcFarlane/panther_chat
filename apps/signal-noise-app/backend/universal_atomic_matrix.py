@@ -365,6 +365,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
 
 MLC_ENTITY_ID = "major-league-cricket"
 ICF_ENTITY_ID = "international-canoe-federation"
+CELTIC_ENTITY_ID = "celtic-fc"
 MLC_QUESTION_OVERRIDES: Dict[str, Dict[str, Any]] = {
     "q1_foundation": {
         "query": '"{entity}" official website founded year',
@@ -453,6 +454,57 @@ ICF_QUESTION_OVERRIDES: Dict[str, Dict[str, Any]] = {
                 '"{entity}" commercial manager',
                 '"{entity}" sponsorship manager',
                 '"{entity}" director of tv broadcast marketing',
+            ]
+        },
+    },
+}
+
+CELTIC_QUESTION_OVERRIDES: Dict[str, Dict[str, Any]] = {
+    "q1_foundation": {
+        "query": '"Celtic Football Club" official website founded year',
+        "search_strategy": {
+            "search_queries": [
+                '"Celtic Football Club" official website',
+                '"Celtic Football Club" history',
+                '"Celtic Football Club" founded year',
+                '"Celtic Football Club" wikipedia',
+            ]
+        },
+    },
+    "q4_decision_owner": {
+        "question": "Who is the most suitable person for commercial partnerships or business development at {entity}?",
+        "query": '"Celtic Football Club" leadership team',
+        "search_strategy": {
+            "search_queries": [
+                '"Celtic Football Club" official website',
+                '"Celtic Football Club" leadership team',
+                '"Celtic Football Club" commercial team',
+                '"Celtic Football Club" commercial director',
+                '"Celtic Football Club" head of partnerships',
+                '"Celtic Football Club" partnerships manager',
+                '"Celtic Football Club" sponsorship manager',
+                '"Celtic Football Club" marketing director',
+                '"Celtic Football Club" chief commercial officer',
+                '"Celtic Football Club" business development director',
+            ]
+        },
+    },
+    "q5_related_pois": {
+        "query": '"Celtic Football Club" leadership team',
+        "search_strategy": {
+            "search_queries": [
+                '"Celtic Football Club" official website',
+                '"Celtic Football Club" leadership team',
+                '"Celtic Football Club" commercial team',
+                '"Celtic Football Club" commercial director',
+                '"Celtic Football Club" partnerships manager',
+                '"Celtic Football Club" sponsorship manager',
+                '"Celtic Football Club" marketing director',
+                '"Celtic Football Club" head of partnerships',
+                '"Celtic Football Club" business development director',
+                '"Celtic Football Club" fan engagement',
+                '"Celtic Football Club" digital product',
+                '"Celtic Football Club" operations director',
             ]
         },
     },
@@ -572,6 +624,21 @@ def _render_question_spec(spec: Dict[str, Any], entity_name: str, entity_id: str
                 }
     if _slugify(entity_id) == ICF_ENTITY_ID:
         overrides = ICF_QUESTION_OVERRIDES.get(str(rendered.get("question_id") or "").strip(), {})
+        if overrides:
+            rendered.update(deepcopy(overrides))
+            if "question" in overrides:
+                rendered["question"] = str(rendered["question"]).format(entity=entity_name)
+            if "query" in overrides:
+                rendered["query"] = str(rendered["query"]).format(entity=entity_name)
+            if "search_strategy" in overrides:
+                rendered["search_strategy"] = {
+                    **deepcopy(overrides["search_strategy"]),
+                    "search_queries": [
+                        str(query).format(entity=entity_name) for query in overrides["search_strategy"].get("search_queries", [])
+                    ],
+                }
+    if _slugify(entity_id) == CELTIC_ENTITY_ID:
+        overrides = CELTIC_QUESTION_OVERRIDES.get(str(rendered.get("question_id") or "").strip(), {})
         if overrides:
             rendered.update(deepcopy(overrides))
             if "question" in overrides:

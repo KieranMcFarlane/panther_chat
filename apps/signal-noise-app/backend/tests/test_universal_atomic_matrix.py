@@ -35,11 +35,18 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
         entity_id="major-league-cricket",
         preset="major-league-cricket-atomic-matrix",
     )
+    celtic = build_universal_atomic_question_source(
+        entity_type="SPORT_CLUB",
+        entity_name="Celtic FC",
+        entity_id="celtic-fc",
+        preset="celtic-fc-atomic-matrix",
+    )
 
     for payload, entity_name, entity_id, entity_type, preset in [
         (arsenal, "Arsenal Football Club", "arsenal-fc", "SPORT_CLUB", "arsenal-atomic-matrix"),
         (icf, "International Canoe Federation", "international-canoe-federation", "SPORT_FEDERATION", "icf-atomic-matrix"),
         (mlc, "Major League Cricket", "major-league-cricket", "SPORT_LEAGUE", "major-league-cricket-atomic-matrix"),
+        (celtic, "Celtic FC", "celtic-fc", "SPORT_CLUB", "celtic-fc-atomic-matrix"),
     ]:
         assert payload["schema_version"] == "atomic_question_source_v1"
         assert payload["entity_name"] == entity_name
@@ -295,6 +302,40 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
                 f"Is there evidence {entity_name} is buying, launching, or reshaping its commercial or digital ecosystem through procurement, partnerships, hiring, or platform initiatives?"
             )
             assert payload["questions"][2]["search_strategy"]["search_queries"] == q3_expected
+        if payload["entity_id"] == "celtic-fc":
+            assert payload["questions"][0]["query"] == '"Celtic Football Club" official website founded year'
+            assert payload["questions"][0]["search_strategy"]["search_queries"] == [
+                '"Celtic Football Club" official website',
+                '"Celtic Football Club" history',
+                '"Celtic Football Club" founded year',
+                '"Celtic Football Club" wikipedia',
+            ]
+            assert payload["questions"][3]["search_strategy"]["search_queries"] == [
+                '"Celtic Football Club" official website',
+                '"Celtic Football Club" leadership team',
+                '"Celtic Football Club" commercial team',
+                '"Celtic Football Club" commercial director',
+                '"Celtic Football Club" head of partnerships',
+                '"Celtic Football Club" partnerships manager',
+                '"Celtic Football Club" sponsorship manager',
+                '"Celtic Football Club" marketing director',
+                '"Celtic Football Club" chief commercial officer',
+                '"Celtic Football Club" business development director',
+            ]
+            assert payload["questions"][4]["search_strategy"]["search_queries"] == [
+                '"Celtic Football Club" official website',
+                '"Celtic Football Club" leadership team',
+                '"Celtic Football Club" commercial team',
+                '"Celtic Football Club" commercial director',
+                '"Celtic Football Club" partnerships manager',
+                '"Celtic Football Club" sponsorship manager',
+                '"Celtic Football Club" marketing director',
+                '"Celtic Football Club" head of partnerships',
+                '"Celtic Football Club" business development director',
+                '"Celtic Football Club" fan engagement',
+                '"Celtic Football Club" digital product',
+                '"Celtic Football Club" operations director',
+            ]
     if payload["entity_id"] == "international-canoe-federation":
         assert payload["questions"][2]["question_family"] == "tender_docs"
         assert payload["questions"][2]["question_type"] == "tender_docs"
