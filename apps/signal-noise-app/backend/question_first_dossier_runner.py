@@ -146,6 +146,7 @@ class QuestionFirstRunArtifact(BaseModel):
     answers: List[Dict[str, Any]] = Field(default_factory=list)
     evidence_items: List[Dict[str, Any]] = Field(default_factory=list)
     promotion_candidates: List[Dict[str, Any]] = Field(default_factory=list)
+    poi_graph: Dict[str, Any] = Field(default_factory=dict)
     categories: List[Dict[str, Any]] = Field(default_factory=list)
     run_rollup: Dict[str, Any] = Field(default_factory=dict)
     merge_patch: Dict[str, Any] = Field(default_factory=dict)
@@ -191,6 +192,7 @@ def _merge_question_first_run_patch(
         payload["question_first"].setdefault("answers", artifact.answers)
         payload["question_first"].setdefault("evidence_items", artifact.evidence_items)
         payload["question_first"].setdefault("promotion_candidates", artifact.promotion_candidates)
+        payload["question_first"].setdefault("poi_graph", artifact.poi_graph)
         payload["question_first"].setdefault("questions_answered", len(artifact.answers))
 
     metadata.setdefault("question_first", {})
@@ -201,6 +203,7 @@ def _merge_question_first_run_patch(
         metadata["question_first"].setdefault("categories", artifact.categories)
         metadata["question_first"].setdefault("evidence_items", artifact.evidence_items)
         metadata["question_first"].setdefault("promotion_candidates", artifact.promotion_candidates)
+        metadata["question_first"].setdefault("poi_graph", artifact.poi_graph)
         metadata["question_first"].setdefault("question_source_path", artifact.question_source_path)
         metadata["question_first"].setdefault("run_rollup", artifact.run_rollup)
 
@@ -806,10 +809,12 @@ async def run_question_first_dossier_from_payload(
     )
     merged["dossier_promotions"] = promotions["dossier_promotions"]
     merged["discovery_summary"] = promotions["discovery_summary"]
+    merged["poi_graph"] = promotions["poi_graph"]
     merged.setdefault("question_first", {})
     if isinstance(merged["question_first"], dict):
         merged["question_first"]["dossier_promotions"] = promotions["dossier_promotions"]
         merged["question_first"]["discovery_summary"] = promotions["discovery_summary"]
+        merged["question_first"]["poi_graph"] = artifact.poi_graph or promotions["poi_graph"]
 
     if output_dir is not None:
       output_dir = Path(output_dir)

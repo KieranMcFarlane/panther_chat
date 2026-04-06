@@ -6,6 +6,10 @@ from __future__ import annotations
 from typing import Any, Dict, List
 
 
+def _slugify(value: Any) -> str:
+    return "".join(ch.lower() if str(ch).isalnum() else "-" for ch in str(value or "").strip()).strip("-") or "item"
+
+
 def _safe_float(value: Any) -> float:
     try:
         return float(value)
@@ -33,6 +37,138 @@ def _infer_promotion_target(answer: Dict[str, Any]) -> str:
     if "poi" in combined or "connection" in combined or "partnership" in combined:
         return "decision_owners"
     return "opportunity_signals"
+
+
+def _normalize_candidate(value: Any) -> Dict[str, Any] | None:
+    if isinstance(value, str):
+        name = value.strip()
+        return {"name": name} if name else None
+    if not isinstance(value, dict):
+        return None
+    name = str(value.get("name") or value.get("full_name") or value.get("person") or "").strip()
+    if not name:
+        return None
+    candidate: Dict[str, Any] = {"name": name}
+    for source_key, target_key in (
+        ("title", "title"),
+        ("role", "title"),
+        ("organization", "organization"),
+        ("company", "organization"),
+        ("linkedin_url", "linkedin_url"),
+        ("linkedin", "linkedin_url"),
+        ("relevance", "relevance"),
+    ):
+        raw_value = str(value.get(source_key) or "").strip()
+        if raw_value and target_key not in candidate:
+            candidate[target_key] = raw_value
+    return candidate
+
+
+def build_question_first_poi_graph(*, answers: List[Dict[str, Any]] | None = None) -> Dict[str, Any]:
+    answers = [item for item in (answers or []) if isinstance(item, dict)]
+    entity_id = ""
+    entity_name = ""
+    nodes: List[Dict[str, Any]] = []
+    edges: List[Dict[str, Any]] = []
+    seen_nodes = set()
+    seen_edges = set()
+
+    def add_node(node: Dict[str, Any]) -> None:
+        node_id = str(node.get("node_id") or "").strip()
+        if not node_id or node_id in seen_nodes:
+            return
+        seen_nodes.add(node_id)
+        nodes.append(node)
+
+    def add_edge(edge: Dict[str, Any]) -> None:
+        key = (
+            str(edge.get("from_id") or "").strip(),
+            str(edge.get("edge_type") or "").strip(),
+            str(edge.get("to_id") or "").strip(),
+        )
+        if not all(key) or key in seen_edges:
+            return
+        seen_edges.add(key)
+        edges.append(edge)
+
+    for answer in answers:
+        validation_state = str(answer.get("validation_state") or "").strip().lower()
+        question_type = str(answer.get("question_type") or "").strip().lower()
+        if validation_state != "validated":
+            continue
+        if question_type not in {"decision_owner", "related_pois", "leadership"}:
+            continue
+
+        entity_id = entity_id or str(answer.get("entity_id") or "").strip()
+        entity_name = entity_name or str(answer.get("entity_name") or "").strip()
+        entity_node_id = entity_id or f"entity:{_slugify(entity_name)}"
+        add_node(
+            {
+                "node_id": entity_node_id,
+                "node_type": "entity",
+                "entity_id": entity_id or None,
+                "name": entity_name or entity_id or "entity",
+            }
+        )
+
+        primary_owner = _normalize_candidate(answer.get("primary_owner"))
+        supporting_candidates = [
+            candidate
+            for candidate in (
+                _normalize_candidate(item) for item in (answer.get("supporting_candidates") or [])
+            )
+            if candidate
+        ]
+        candidates = [
+            candidate
+            for candidate in (
+                _normalize_candidate(item) for item in (answer.get("candidates") or [])
+            )
+            if candidate
+        ]
+
+        merged_candidates: List[Dict[str, Any]] = []
+        seen_people = set()
+        for candidate in [primary_owner, *supporting_candidates, *candidates]:
+            if not candidate:
+                continue
+            person_key = str(candidate.get("name") or "").strip().lower()
+            if not person_key or person_key in seen_people:
+                continue
+            seen_people.add(person_key)
+            merged_candidates.append(candidate)
+
+        for candidate in merged_candidates:
+            person_id = f"person:{_slugify(candidate['name'])}"
+            add_node(
+                {
+                    "node_id": person_id,
+                    "node_type": "person",
+                    "name": candidate["name"],
+                    "title": candidate.get("title"),
+                    "organization": candidate.get("organization"),
+                    "linkedin_url": candidate.get("linkedin_url"),
+                }
+            )
+            add_edge(
+                {
+                    "from_id": entity_node_id,
+                    "to_id": person_id,
+                    "edge_type": "primary_owner_of" if primary_owner and candidate["name"] == primary_owner["name"] else "supports",
+                    "confidence": _safe_float(answer.get("confidence")),
+                    "source_question_id": str(answer.get("question_id") or "").strip(),
+                    "evidence_url": str(answer.get("evidence_url") or "").strip() or None,
+                    "relevance": candidate.get("relevance"),
+                }
+            )
+
+    return {
+        "schema_version": "poi_graph_v1",
+        "entity_id": entity_id or None,
+        "entity_name": entity_name or None,
+        "nodes": nodes,
+        "edges": edges,
+    }
 
 
 def build_question_first_promotions(
@@ -145,6 +281,8 @@ def build_question_first_promotions(
     for target in targets:
         grouped[target] = [item for item in promoted if item["promotion_target"] == target]
 
+    poi_graph = build_question_first_poi_graph(answers=answers)
+
     discovery_summary: Dict[str, Any] = {
         "promoted_count": len(promoted),
         "supporting_evidence_count": len({item["evidence_id"] or item["candidate_id"] for item in promoted}),
@@ -156,4 +294,5 @@ def build_question_first_promotions(
         "dossier_promotions": promoted,
         "discovery_summary": discovery_summary,
         "promotion_candidates": promotion_candidates,
+        "poi_graph": poi_graph,
     }

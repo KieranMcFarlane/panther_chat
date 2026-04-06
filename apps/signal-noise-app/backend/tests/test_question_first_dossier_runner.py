@@ -93,6 +93,20 @@ def _write_question_first_run_artifact(path, *, entity_id, entity_name, question
         }
         for answer in answers
     ]
+    poi_graph = {
+        "schema_version": "poi_graph_v1",
+        "entity_id": entity_id,
+        "entity_name": entity_name,
+        "nodes": [
+            {
+                "node_id": entity_id,
+                "node_type": "entity",
+                "entity_id": entity_id,
+                "name": entity_name,
+            }
+        ],
+        "edges": [],
+    }
     payload = {
         "schema_version": "question_first_run_v1",
         "generated_at": "2026-03-30T00:00:00+00:00",
@@ -111,6 +125,7 @@ def _write_question_first_run_artifact(path, *, entity_id, entity_name, question
         "answers": answers,
         "evidence_items": evidence_items,
         "promotion_candidates": promotion_candidates,
+        "poi_graph": poi_graph,
         "categories": categories,
         "run_rollup": {
             "questions_total": len(answers),
@@ -135,6 +150,7 @@ def _write_question_first_run_artifact(path, *, entity_id, entity_name, question
                 "run_rollup": payload["run_rollup"],
                 "evidence_items": evidence_items,
                 "promotion_candidates": promotion_candidates,
+                "poi_graph": poi_graph,
             }
         },
         "question_first": {
@@ -145,6 +161,7 @@ def _write_question_first_run_artifact(path, *, entity_id, entity_name, question
             "answers": answers,
             "evidence_items": evidence_items,
             "promotion_candidates": promotion_candidates,
+            "poi_graph": poi_graph,
             "run_rollup": payload["run_rollup"],
             "question_source_path": "backend/data/question_sources/major_league_cricket.json",
             "generated_at": "2026-03-30T00:00:00+00:00",
@@ -375,11 +392,14 @@ async def test_question_first_runner_uses_saved_questions_and_writes_plain_text_
     assert result["question_first"]["promotion_candidates"][0]["promotion_candidate"] is True
     assert result["question_first"]["dossier_promotions"][0]["question_id"] == "q1"
     assert result["question_first"]["discovery_summary"]["promoted_count"] == 1
+    assert result["question_first"]["poi_graph"]["schema_version"] == "poi_graph_v1"
     assert result["question_first_run"]["schema_version"] == "question_first_run_v1"
+    assert result["question_first_run"]["poi_graph"]["schema_version"] == "poi_graph_v1"
     assert result["question_first_run"]["evidence_items"][0]["promotion_target"] == "profile"
     assert result["question_first_run"]["promotion_candidates"][0]["promotion_candidate"] is True
     assert result["dossier_promotions"][0]["question_id"] == "q1"
     assert result["discovery_summary"]["profile"][0]["candidate_id"] == "q1:profile"
+    assert result["poi_graph"]["schema_version"] == "poi_graph_v1"
     assert result["questions"][0]["answer"] == "1919"
     assert result["questions"][0]["validation_state"] == "validated"
 

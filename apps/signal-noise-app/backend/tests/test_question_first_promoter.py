@@ -174,3 +174,43 @@ def test_build_question_first_promotions_supports_related_pois_questions():
 
     assert result["discovery_summary"]["promotion_targets"] == ["decision_owners"]
     assert result["discovery_summary"]["decision_owners"][0]["question_id"] == "q_related"
+
+
+def test_build_question_first_promotions_emits_poi_graph_for_people_answers():
+    result = build_question_first_promotions(
+        answers=[
+            {
+                "question_id": "q_owner",
+                "entity_id": "arsenal-fc",
+                "entity_name": "Arsenal Football Club",
+                "question_text": "Who is the most suitable person for commercial partnerships or business development at Arsenal Football Club?",
+                "question_type": "decision_owner",
+                "answer": "Juliet Slot",
+                "confidence": 0.93,
+                "validation_state": "validated",
+                "signal_type": "DECISION_OWNER",
+                "evidence_url": "https://example.com/juliet-slot",
+                "primary_owner": {
+                    "name": "Juliet Slot",
+                    "title": "Chief Commercial Officer",
+                    "organization": "Arsenal Football Club",
+                },
+                "supporting_candidates": [
+                    {
+                        "name": "Omar Shaikh",
+                        "title": "Chief Financial Officer",
+                        "organization": "Arsenal Football Club",
+                        "relevance": "Supports commercial decision making",
+                    }
+                ],
+            },
+        ],
+        evidence_items=[],
+        promotion_candidates=[],
+    )
+
+    assert result["poi_graph"]["schema_version"] == "poi_graph_v1"
+    assert result["poi_graph"]["entity_id"] == "arsenal-fc"
+    assert len(result["poi_graph"]["nodes"]) == 3
+    assert len(result["poi_graph"]["edges"]) == 2
+    assert result["poi_graph"]["edges"][0]["edge_type"] == "primary_owner_of"

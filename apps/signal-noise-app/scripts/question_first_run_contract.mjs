@@ -31,6 +31,141 @@ function _buildQuestionAnswerIndex(answers) {
   return index;
 }
 
+function _slugify(value) {
+  return String(value || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'item';
+}
+
+function _normalizeCandidate(value) {
+  if (!value) {
+    return null;
+  }
+  if (typeof value === 'string') {
+    const name = value.trim();
+    return name ? { name } : null;
+  }
+  if (typeof value !== 'object') {
+    return null;
+  }
+  const name = String(value.name || value.full_name || value.person || '').trim();
+  if (!name) {
+    return null;
+  }
+  const title = String(value.title || value.role || '').trim();
+  const organization = String(value.organization || value.company || '').trim();
+  const linkedin_url = String(value.linkedin_url || value.linkedin || '').trim();
+  const relevance = String(value.relevance || '').trim();
+  const candidate = { name };
+  if (title) candidate.title = title;
+  if (organization) candidate.organization = organization;
+  if (linkedin_url) candidate.linkedin_url = linkedin_url;
+  if (relevance) candidate.relevance = relevance;
+  return candidate;
+}
+
+function buildPoiGraph({ entity_id, entity_name, answers = [] }) {
+  const entityId = String(entity_id || '').trim();
+  const entityName = String(entity_name || '').trim();
+  const nodes = [];
+  const edges = [];
+  const seenNodes = new Set();
+  const seenEdges = new Set();
+
+  const addNode = (node) => {
+    if (!node?.node_id || seenNodes.has(node.node_id)) {
+      return;
+    }
+    seenNodes.add(node.node_id);
+    nodes.push(node);
+  };
+
+  const addEdge = (edge) => {
+    const key = `${edge.from_id}:${edge.edge_type}:${edge.to_id}`;
+    if (seenEdges.has(key)) {
+      return;
+    }
+    seenEdges.add(key);
+    edges.push(edge);
+  };
+
+  if (entityId || entityName) {
+    addNode({
+      node_id: entityId || `entity:${_slugify(entityName)}`,
+      node_type: 'entity',
+      entity_id: entityId || undefined,
+      name: entityName || entityId,
+    });
+  }
+
+  for (const answer of Array.isArray(answers) ? answers : []) {
+    const validationState = String(answer?.validation_state || '').trim().toLowerCase();
+    const questionType = String(answer?.question_type || '').trim().toLowerCase();
+    if (validationState !== 'validated') {
+      continue;
+    }
+    if (!['decision_owner', 'related_pois', 'leadership'].includes(questionType)) {
+      continue;
+    }
+
+    const evidenceUrl = String(answer?.evidence_url || '').trim();
+    const confidence = Number(answer?.confidence || 0);
+    const sourceQuestionId = String(answer?.question_id || '').trim();
+
+    const primaryOwner = _normalizeCandidate(answer?.primary_owner);
+    const supportingCandidates = Array.isArray(answer?.supporting_candidates)
+      ? answer.supporting_candidates.map((item) => _normalizeCandidate(item)).filter(Boolean)
+      : [];
+    const candidates = Array.isArray(answer?.candidates)
+      ? answer.candidates.map((item) => _normalizeCandidate(item)).filter(Boolean)
+      : [];
+
+    const mergedCandidates = [];
+    const seenPeople = new Set();
+    for (const candidate of [primaryOwner, ...supportingCandidates, ...candidates]) {
+      if (!candidate?.name) continue;
+      const key = candidate.name.toLowerCase();
+      if (seenPeople.has(key)) continue;
+      seenPeople.add(key);
+      mergedCandidates.push(candidate);
+    }
+
+    for (const candidate of mergedCandidates) {
+      const personId = `person:${_slugify(candidate.name)}`;
+      addNode({
+        node_id: personId,
+        node_type: 'person',
+        name: candidate.name,
+        title: candidate.title,
+        organization: candidate.organization,
+        linkedin_url: candidate.linkedin_url,
+      });
+
+      if (entityId || entityName) {
+        addEdge({
+          from_id: entityId || `entity:${_slugify(entityName)}`,
+          to_id: personId,
+          edge_type: primaryOwner?.name === candidate.name ? 'primary_owner_of' : 'supports',
+          confidence,
+          source_question_id: sourceQuestionId,
+          evidence_url: evidenceUrl || undefined,
+          relevance: candidate.relevance || undefined,
+        });
+      }
+    }
+  }
+
+  return {
+    schema_version: 'poi_graph_v1',
+    entity_id: entityId || null,
+    entity_name: entityName || null,
+    nodes,
+    edges,
+  };
+}
+
 function _mergeQuestionWithAnswer(question, answer) {
   const merged = { ..._clone(question) };
   if (!answer) {
@@ -66,6 +201,8 @@ function _mergeQuestionWithAnswer(question, answer) {
 }
 
 export function buildQuestionFirstRunMergePatch({
+  entity_id = null,
+  entity_name = null,
   questions = [],
   answers = [],
   evidence_items = [],
@@ -77,6 +214,7 @@ export function buildQuestionFirstRunMergePatch({
   warnings = [],
 }) {
   const answerIndex = _buildQuestionAnswerIndex(answers);
+  const poiGraph = buildPoiGraph({ entity_id, entity_name, answers });
   const mergedQuestions = (Array.isArray(questions) ? questions : []).map((question) => {
     const key = _answerKey(question);
     const answer = key ? answerIndex.get(key) : undefined;
@@ -93,6 +231,7 @@ export function buildQuestionFirstRunMergePatch({
         categories: _clone(categories) || [],
         evidence_items: _clone(evidence_items) || [],
         promotion_candidates: _clone(promotion_candidates) || [],
+        poi_graph: _clone(poiGraph),
         question_source_path,
         generated_at,
         run_rollup: _clone(run_rollup) || {},
@@ -107,6 +246,7 @@ export function buildQuestionFirstRunMergePatch({
       answers: _clone(answers) || [],
       evidence_items: _clone(evidence_items) || [],
       promotion_candidates: _clone(promotion_candidates) || [],
+      poi_graph: _clone(poiGraph),
       run_rollup: _clone(run_rollup) || {},
       question_source_path,
       generated_at,
@@ -142,6 +282,8 @@ export function buildQuestionFirstRunArtifact({
   const normalizedCategories = Array.isArray(categories) ? categories.map((category) => _clone(category)) : [];
   const normalizedRollup = _clone(run_rollup) || {};
   const normalizedMergePatch = merge_patch || buildQuestionFirstRunMergePatch({
+    entity_id,
+    entity_name,
     questions: normalizedQuestions,
     answers: normalizedAnswers,
     evidence_items: normalizedEvidenceItems,
@@ -171,6 +313,7 @@ export function buildQuestionFirstRunArtifact({
     answers: normalizedAnswers,
     evidence_items: normalizedEvidenceItems,
     promotion_candidates: normalizedPromotionCandidates,
+    poi_graph: buildPoiGraph({ entity_id, entity_name, answers: normalizedAnswers }),
     categories: normalizedCategories,
     run_rollup: normalizedRollup,
     merge_patch: normalizedMergePatch,
@@ -184,7 +327,7 @@ export function validateQuestionFirstRunArtifact(artifact) {
   if (artifact.schema_version !== QUESTION_FIRST_RUN_SCHEMA_VERSION) {
     throw new TypeError(`Expected schema_version ${QUESTION_FIRST_RUN_SCHEMA_VERSION}`);
   }
-  for (const field of ['questions', 'answers', 'evidence_items', 'promotion_candidates', 'categories', 'run_rollup', 'merge_patch']) {
+  for (const field of ['questions', 'answers', 'evidence_items', 'promotion_candidates', 'poi_graph', 'categories', 'run_rollup', 'merge_patch']) {
     if (!(field in artifact)) {
       throw new TypeError(`Missing canonical question_first_run field: ${field}`);
     }

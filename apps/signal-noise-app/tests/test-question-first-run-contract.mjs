@@ -87,10 +87,12 @@ test('buildQuestionFirstRunArtifact emits the canonical question_first_run_v1 sh
   assert.equal(artifact.answers.length, 1);
   assert.equal(artifact.evidence_items.length, 1);
   assert.equal(artifact.promotion_candidates.length, 1);
+  assert.equal(artifact.poi_graph.schema_version, 'poi_graph_v1');
   assert.equal(artifact.categories.length, 1);
   assert.equal(artifact.run_rollup.questions_total, 1);
   assert.equal(artifact.merge_patch.metadata.question_first.evidence_items[0].promotion_target, 'profile');
   assert.equal(artifact.merge_patch.question_first.promotion_candidates[0].candidate_id, 'q1:profile');
+  assert.equal(artifact.merge_patch.question_first.poi_graph.schema_version, 'poi_graph_v1');
   assert.equal(artifact.merge_patch.question_first.schema_version, QUESTION_FIRST_RUN_SCHEMA_VERSION);
   assert.equal(artifact.merge_patch.question_first.questions_answered, 1);
   assert.equal(artifact.merge_patch.questions[0].question_first_answer.answer, '2023');
@@ -113,7 +115,46 @@ test('validateQuestionFirstRunArtifact rejects malformed payloads', () => {
       categories: [],
       run_rollup: {},
       merge_patch: {},
+      poi_graph: {},
     }),
     /Missing canonical question_first_run field: evidence_items/,
   );
+});
+
+test('buildQuestionFirstRunArtifact derives poi_graph from validated people answers', () => {
+  const artifact = buildQuestionFirstRunArtifact({
+    entity_id: 'arsenal-fc',
+    entity_name: 'Arsenal Football Club',
+    entity_type: 'SPORT_CLUB',
+    questions: [],
+    answers: [
+      {
+        question_id: 'q4',
+        question_type: 'decision_owner',
+        validation_state: 'validated',
+        confidence: 0.95,
+        evidence_url: 'https://example.com/juliet-slot',
+        primary_owner: {
+          name: 'Juliet Slot',
+          title: 'Chief Commercial Officer',
+          organization: 'Arsenal Football Club',
+        },
+        supporting_candidates: [
+          {
+            name: 'Omar Shaikh',
+            title: 'Chief Financial Officer',
+            organization: 'Arsenal Football Club',
+          },
+        ],
+      },
+    ],
+    evidence_items: [],
+    promotion_candidates: [],
+    categories: [],
+    run_rollup: {},
+  });
+
+  assert.equal(artifact.poi_graph.nodes.length, 3);
+  assert.equal(artifact.poi_graph.edges.length, 2);
+  assert.equal(artifact.poi_graph.edges[0].edge_type, 'primary_owner_of');
 });
