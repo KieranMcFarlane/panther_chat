@@ -119,6 +119,7 @@ class LinkedInBrightDataConnectionsProvider:
         self.brightdata = brightdata_client
         self.max_pairs = max(1, int(max_pairs))
         self.per_lookup_timeout_s = max(0.1, float(per_lookup_timeout_s))
+        self.last_run_stats: Dict[str, Any] = {}
 
     async def _search_direct_connection(self, *, yp_name: str, target_person: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         target_name = str(target_person.get("name") or "").strip()
@@ -181,6 +182,14 @@ class LinkedInBrightDataConnectionsProvider:
         observations: List[Dict[str, Any]] = []
         bridge_names = {_normalize_name(item.get("name")) for item in bridge_contacts}
         pair_budget = self.max_pairs
+        stats = {
+            "pair_attempts": 0,
+            "direct_hits": 0,
+            "direct_profile_url_hits": 0,
+            "mutual_hits": 0,
+            "filtered_mutual_names": 0,
+            "observations_total": 0,
+        }
 
         for yp_member in yp_members[:4]:
             yp_name = str(yp_member.get("name") or "").strip()
@@ -188,15 +197,21 @@ class LinkedInBrightDataConnectionsProvider:
                 continue
             for target_person in target_people[:5]:
                 if pair_budget <= 0:
+                    stats["observations_total"] = len(observations)
+                    self.last_run_stats = stats
                     return observations
                 target_name = str(target_person.get("name") or "").strip()
                 if not target_name:
                     continue
                 pair_budget -= 1
+                stats["pair_attempts"] += 1
                 enriched_target_person = dict(target_person)
                 enriched_target_person.setdefault("entity_name", entity_name)
                 direct = await self._search_direct_connection(yp_name=yp_name, target_person=enriched_target_person)
                 if direct:
+                    stats["direct_hits"] += 1
+                    if str(direct.get("source") or "") == "linkedin_profile_url_probe":
+                        stats["direct_profile_url_hits"] += 1
                     observations.append(direct)
                     continue
                 try:
@@ -209,7 +224,9 @@ class LinkedInBrightDataConnectionsProvider:
                 for mutual_name in mutuals[:3]:
                     cleaned_mutual_name = _clean_mutual_name(mutual_name, bridge_names)
                     if not cleaned_mutual_name:
+                        stats["filtered_mutual_names"] += 1
                         continue
+                    stats["mutual_hits"] += 1
                     observations.append(
                         {
                             "yp_member": yp_name,
@@ -222,6 +239,8 @@ class LinkedInBrightDataConnectionsProvider:
                             "entity_name": entity_name,
                         }
                     )
+        stats["observations_total"] = len(observations)
+        self.last_run_stats = stats
         return observations
 
 
@@ -266,6 +285,7 @@ async def enrich_connections_graph(
         yp_members=yp_members,
         bridge_contacts=bridge_contacts,
     )
+    provider_stats = getattr(provider, "last_run_stats", {}) if provider is not None else {}
 
     seen_edges = {
         (
@@ -328,6 +348,14 @@ async def enrich_connections_graph(
 
     graph["enriched_at"] = _iso_now()
     graph["enrichment_source"] = str(graph.get("enrichment_source") or "connections_graph_enricher")
+    graph["enrichment_stats"] = {
+        "pair_attempts": int(provider_stats.get("pair_attempts") or 0),
+        "direct_hits": int(provider_stats.get("direct_hits") or 0),
+        "direct_profile_url_hits": int(provider_stats.get("direct_profile_url_hits") or 0),
+        "mutual_hits": int(provider_stats.get("mutual_hits") or 0),
+        "filtered_mutual_names": int(provider_stats.get("filtered_mutual_names") or 0),
+        "observations_total": int(provider_stats.get("observations_total") or len(observations)),
+    }
     return graph
 
 

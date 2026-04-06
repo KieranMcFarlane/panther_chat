@@ -21,6 +21,13 @@ class _FakeConnectionsEnricher:
                 "confidence": 72.0,
             }
         ]
+        enriched["enrichment_stats"] = {
+            "pair_attempts": 1,
+            "direct_hits": 1,
+            "mutual_hits": 0,
+            "filtered_mutual_names": 0,
+            "observations_total": 1,
+        }
         return enriched
 
 
@@ -84,3 +91,4 @@ async def test_run_question_first_dossier_from_payload_applies_connections_graph
         for edge in result["connections_graph"]["edges"]
     }
     assert ("Elliott Hillman", "direct_connection", "person:alberto-muti") in edge_types
+    assert result["connections_graph"]["enrichment_stats"]["direct_hits"] == 1

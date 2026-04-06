@@ -62,6 +62,7 @@ def test_enrich_connections_graph_adds_provider_edges_and_bridge_targets():
     assert ("Elliott Hillman", "direct_connection", "person:alberto-muti") in edge_types
     assert ("Stuart Cope", "mutual_connection", "person:alberto-muti") in edge_types
     assert ("bridge:david-eames", "bridge_to_target", "person:alberto-muti") in edge_types
+    assert enriched["enrichment_stats"]["observations_total"] == 2
 
 
 class _FastBrightData:
@@ -124,6 +125,10 @@ def test_linkedin_brightdata_provider_adds_direct_and_mutual_observations_with_s
     assert ("Elliott Hillman", "direct_connection", "Alberto Muti") in edge_types
     assert ("Stuart Cope", "mutual_connection", "Alberto Muti") in edge_types
     assert '"Elliott Hillman" "Alberto Muti" "International Canoe Federation" "Secretary General" LinkedIn' in brightdata.queries
+    stats = provider.last_run_stats
+    assert stats["pair_attempts"] == 2
+    assert stats["direct_hits"] == 1
+    assert stats["mutual_hits"] == 1
 
 
 class _NoisyMutualBrightData:
@@ -177,6 +182,8 @@ def test_linkedin_brightdata_provider_filters_noisy_mutual_names_and_prefers_cle
             "entity_name": "Arsenal Football Club",
         }
     ]
+    stats = provider.last_run_stats
+    assert stats["filtered_mutual_names"] == 1
 
 
 class _UrlDirectProbeBrightData:
@@ -231,3 +238,6 @@ def test_linkedin_brightdata_provider_uses_profile_url_probe_for_direct_connecti
             "source": "linkedin_profile_url_probe",
         }
     ]
+    stats = provider.last_run_stats
+    assert stats["direct_hits"] == 1
+    assert stats["direct_profile_url_hits"] == 1
