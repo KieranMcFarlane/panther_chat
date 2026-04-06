@@ -70,7 +70,7 @@ class _FastBrightData:
 
     async def search_engine(self, *, query, engine="google", num_results=5, **_kwargs):
         self.queries.append(query)
-        if '"Elliott Hillman" "Alberto Muti" LinkedIn' in query:
+        if '"Elliott Hillman" "Alberto Muti" "International Canoe Federation" "Secretary General" LinkedIn' in query:
             return {
                 "status": "success",
                 "results": [
@@ -96,14 +96,20 @@ class _FastBrightData:
 
 
 def test_linkedin_brightdata_provider_adds_direct_and_mutual_observations_with_small_budget():
-    provider = LinkedInBrightDataConnectionsProvider(_FastBrightData(), max_pairs=2, per_lookup_timeout_s=1.0)
+    brightdata = _FastBrightData()
+    provider = LinkedInBrightDataConnectionsProvider(brightdata, max_pairs=2, per_lookup_timeout_s=1.0)
 
     observations = asyncio.run(
-        provider.collect_connection_observations(
-            entity_name="International Canoe Federation",
-            target_people=[
-                {"node_id": "person:alberto-muti", "name": "Alberto Muti", "linkedin_url": "https://www.linkedin.com/in/alberto-muti/"}
-            ],
+            provider.collect_connection_observations(
+                entity_name="International Canoe Federation",
+                target_people=[
+                    {
+                        "node_id": "person:alberto-muti",
+                        "name": "Alberto Muti",
+                        "title": "Secretary General",
+                        "linkedin_url": "https://www.linkedin.com/in/alberto-muti/",
+                    }
+                ],
             yp_members=[
                 {"node_id": "Elliott Hillman", "name": "Elliott Hillman"},
                 {"node_id": "Stuart Cope", "name": "Stuart Cope"},
@@ -117,3 +123,4 @@ def test_linkedin_brightdata_provider_adds_direct_and_mutual_observations_with_s
     edge_types = {(item["yp_member"], item["edge_type"], item["target_person"]) for item in observations}
     assert ("Elliott Hillman", "direct_connection", "Alberto Muti") in edge_types
     assert ("Stuart Cope", "mutual_connection", "Alberto Muti") in edge_types
+    assert '"Elliott Hillman" "Alberto Muti" "International Canoe Federation" "Secretary General" LinkedIn' in brightdata.queries

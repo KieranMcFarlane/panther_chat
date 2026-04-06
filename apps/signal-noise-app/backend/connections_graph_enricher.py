@@ -108,7 +108,15 @@ class LinkedInBrightDataConnectionsProvider:
         target_name = str(target_person.get("name") or "").strip()
         if not yp_name or not target_name:
             return None
-        query = f'"{yp_name}" "{target_name}" LinkedIn'
+        entity_name = str(target_person.get("entity_name") or "").strip()
+        title = str(target_person.get("title") or "").strip()
+        query_parts = [f'"{yp_name}"', f'"{target_name}"']
+        if entity_name:
+            query_parts.append(f'"{entity_name}"')
+        if title:
+            query_parts.append(f'"{title}"')
+        query_parts.append("LinkedIn")
+        query = " ".join(query_parts)
         try:
             results = await asyncio.wait_for(
                 self.brightdata.search_engine(query=query, engine="google", num_results=3),
@@ -155,7 +163,9 @@ class LinkedInBrightDataConnectionsProvider:
                 if not target_name:
                     continue
                 pair_budget -= 1
-                direct = await self._search_direct_connection(yp_name=yp_name, target_person=target_person)
+                enriched_target_person = dict(target_person)
+                enriched_target_person.setdefault("entity_name", entity_name)
+                direct = await self._search_direct_connection(yp_name=yp_name, target_person=enriched_target_person)
                 if direct:
                     observations.append(direct)
                     continue

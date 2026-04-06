@@ -176,7 +176,11 @@ def build_question_first_poi_graph(*, answers: List[Dict[str, Any]] | None = Non
     }
 
 
-def build_question_first_connections_graph(*, poi_graph: Dict[str, Any] | None = None) -> Dict[str, Any]:
+def build_question_first_connections_graph(
+    *,
+    poi_graph: Dict[str, Any] | None = None,
+    bridge_contacts: List[Dict[str, Any]] | None = None,
+) -> Dict[str, Any]:
     graph = poi_graph if isinstance(poi_graph, dict) else {}
     entity_id = str(graph.get("entity_id") or "").strip() or None
     entity_name = str(graph.get("entity_name") or "").strip() or None
@@ -227,21 +231,35 @@ def build_question_first_connections_graph(*, poi_graph: Dict[str, Any] | None =
         )
 
     analyzer = ConnectionsAnalyzer()
-    for bridge in analyzer.bridge_contacts:
-        bridge_id = f"bridge:{_slugify(bridge.contact_name)}"
+    configured_bridge_contacts = bridge_contacts if bridge_contacts is not None else [
+        {
+            "contact_name": bridge.contact_name,
+            "relationship_to_yp": bridge.relationship_to_yp,
+            "network_reach": bridge.network_reach,
+            "introduction_capability": bridge.introduction_capability,
+            "linkedin_url": bridge.linkedin_url,
+            "target_connections_count": bridge.target_connections_count,
+        }
+        for bridge in analyzer.bridge_contacts
+    ]
+    for bridge_payload in configured_bridge_contacts:
+        bridge_name = str(bridge_payload.get("contact_name") or bridge_payload.get("name") or "").strip()
+        if not bridge_name:
+            continue
+        bridge_id = f"bridge:{_slugify(bridge_name)}"
         add_node(
             {
                 "node_id": bridge_id,
                 "node_type": "bridge_contact",
-                "name": bridge.contact_name,
-                "relationship_to_yp": bridge.relationship_to_yp,
-                "network_reach": bridge.network_reach,
-                "introduction_capability": bridge.introduction_capability,
-                "linkedin_url": bridge.linkedin_url or None,
-                "target_connections_count": bridge.target_connections_count,
+                "name": bridge_name,
+                "relationship_to_yp": str(bridge_payload.get("relationship_to_yp") or "").strip(),
+                "network_reach": str(bridge_payload.get("network_reach") or "").strip(),
+                "introduction_capability": str(bridge_payload.get("introduction_capability") or "").strip(),
+                "linkedin_url": str(bridge_payload.get("linkedin_url") or "").strip() or None,
+                "target_connections_count": int(bridge_payload.get("target_connections_count") or 0),
             }
         )
-        relationship_to_yp = str(bridge.relationship_to_yp or "").strip()
+        relationship_to_yp = str(bridge_payload.get("relationship_to_yp") or "").strip()
         if relationship_to_yp:
             for yp_name in [item.strip() for item in relationship_to_yp.split(",") if item.strip()]:
                 add_edge(
@@ -250,7 +268,7 @@ def build_question_first_connections_graph(*, poi_graph: Dict[str, Any] | None =
                         "to_id": bridge_id,
                         "edge_type": "bridge_connection",
                         "confidence": 35.0,
-                        "to_label": bridge.contact_name,
+                        "to_label": bridge_name,
                     }
                 )
 

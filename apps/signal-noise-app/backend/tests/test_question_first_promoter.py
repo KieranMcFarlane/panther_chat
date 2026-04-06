@@ -4,7 +4,7 @@ from pathlib import Path
 backend_dir = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(backend_dir))
 
-from question_first_promoter import build_question_first_promotions
+from question_first_promoter import build_question_first_connections_graph, build_question_first_promotions
 
 
 def test_build_question_first_promotions_emits_promoted_summary_and_filters_weak_candidates():
@@ -216,3 +216,38 @@ def test_build_question_first_promotions_emits_poi_graph_for_people_answers():
     assert result["poi_graph"]["edges"][0]["edge_type"] == "primary_owner_of"
     assert result["connections_graph"]["schema_version"] == "connections_graph_v1"
     assert any(node["node_type"] == "yp_member" for node in result["connections_graph"]["nodes"])
+
+
+def test_build_question_first_connections_graph_accepts_explicit_bridge_contacts():
+    poi_graph = {
+        "schema_version": "poi_graph_v1",
+        "entity_id": "celtic-fc",
+        "entity_name": "Celtic FC",
+        "nodes": [
+            {"node_id": "celtic-fc", "node_type": "entity", "name": "Celtic FC"},
+            {"node_id": "person:michael-nicholson", "node_type": "person", "name": "Michael Nicholson", "title": "Chief Executive"},
+        ],
+        "edges": [
+            {"from_id": "celtic-fc", "to_id": "person:michael-nicholson", "edge_type": "primary_owner_of"},
+        ],
+    }
+
+    graph = build_question_first_connections_graph(
+        poi_graph=poi_graph,
+        bridge_contacts=[
+            {
+                "contact_name": "David Eames",
+                "relationship_to_yp": "Stuart Cope",
+                "network_reach": "Sports marketing",
+                "introduction_capability": "Warm commercial intro",
+                "linkedin_url": "https://www.linkedin.com/in/david-eames/",
+                "target_connections_count": 2,
+            }
+        ],
+    )
+
+    assert any(node["node_type"] == "bridge_contact" and node["name"] == "David Eames" for node in graph["nodes"])
+    assert any(
+        edge["from_id"] == "Stuart Cope" and edge["edge_type"] == "bridge_connection" and edge["to_id"] == "bridge:david-eames"
+        for edge in graph["edges"]
+    )
