@@ -125,35 +125,49 @@ class LinkedInBrightDataConnectionsProvider:
         if not yp_name or not target_name:
             return None
         entity_name = str(target_person.get("entity_name") or "").strip()
-        title = str(target_person.get("title") or "").strip()
+        person_title = str(target_person.get("title") or "").strip()
+        linkedin_url = str(target_person.get("linkedin_url") or "").strip()
         query_parts = [f'"{yp_name}"', f'"{target_name}"']
         if entity_name:
             query_parts.append(f'"{entity_name}"')
-        if title:
-            query_parts.append(f'"{title}"')
+        if person_title:
+            query_parts.append(f'"{person_title}"')
         query_parts.append("LinkedIn")
-        query = " ".join(query_parts)
-        try:
-            results = await asyncio.wait_for(
-                self.brightdata.search_engine(query=query, engine="google", num_results=3),
-                timeout=self.per_lookup_timeout_s,
-            )
-        except Exception:
-            return None
-        if str(results.get("status") or "").lower() != "success":
-            return None
-        for item in results.get("results", []) or []:
-            snippet = str(item.get("snippet") or "").lower()
-            title = str(item.get("title") or "").lower()
-            if "1st degree" in snippet or "1st-degree" in snippet or "1st degree" in title:
-                return {
-                    "yp_member": yp_name,
-                    "target_person": target_name,
-                    "edge_type": "direct_connection",
-                    "confidence": 72.0,
-                    "evidence_url": str(item.get("url") or "").strip() or str(target_person.get("linkedin_url") or "").strip() or None,
-                    "source": "linkedin_search_direct_probe",
-                }
+        queries = [" ".join(query_parts)]
+        if linkedin_url:
+            queries.append(f'"{yp_name}" "{linkedin_url}" LinkedIn')
+        for query in queries:
+            try:
+                results = await asyncio.wait_for(
+                    self.brightdata.search_engine(query=query, engine="google", num_results=3),
+                    timeout=self.per_lookup_timeout_s,
+                )
+            except Exception:
+                continue
+            if str(results.get("status") or "").lower() != "success":
+                continue
+            for item in results.get("results", []) or []:
+                snippet = str(item.get("snippet") or "").lower()
+                result_title = str(item.get("title") or "").lower()
+                result_url = str(item.get("url") or "").strip()
+                if "1st degree" in snippet or "1st-degree" in snippet or "1st degree" in result_title:
+                    return {
+                        "yp_member": yp_name,
+                        "target_person": target_name,
+                        "edge_type": "direct_connection",
+                        "confidence": 72.0,
+                        "evidence_url": result_url or linkedin_url or None,
+                        "source": "linkedin_search_direct_probe",
+                    }
+                if linkedin_url and result_url.rstrip("/") == linkedin_url.rstrip("/"):
+                    return {
+                        "yp_member": yp_name,
+                        "target_person": target_name,
+                        "edge_type": "direct_connection",
+                        "confidence": 68.0,
+                        "evidence_url": linkedin_url,
+                        "source": "linkedin_profile_url_probe",
+                    }
         return None
 
     async def collect_connection_observations(

@@ -177,3 +177,57 @@ def test_linkedin_brightdata_provider_filters_noisy_mutual_names_and_prefers_cle
             "entity_name": "Arsenal Football Club",
         }
     ]
+
+
+class _UrlDirectProbeBrightData:
+    def __init__(self):
+        self.queries = []
+
+    async def search_engine(self, *, query, engine="google", num_results=5, **_kwargs):
+        self.queries.append(query)
+        if '"Elliott Hillman" "https://www.linkedin.com/in/juliet-slot/" LinkedIn' in query:
+            return {
+                "status": "success",
+                "results": [
+                    {
+                        "title": "Juliet Slot | LinkedIn",
+                        "url": "https://www.linkedin.com/in/juliet-slot/",
+                        "snippet": "Juliet Slot profile on LinkedIn",
+                    }
+                ],
+            }
+        return {"status": "success", "results": []}
+
+
+def test_linkedin_brightdata_provider_uses_profile_url_probe_for_direct_connection():
+    brightdata = _UrlDirectProbeBrightData()
+    provider = LinkedInBrightDataConnectionsProvider(brightdata, max_pairs=1, per_lookup_timeout_s=1.0)
+
+    observations = asyncio.run(
+        provider.collect_connection_observations(
+            entity_name="Arsenal Football Club",
+            target_people=[
+                {
+                    "node_id": "person:juliet-slot",
+                    "name": "Juliet Slot",
+                    "title": "Chief Commercial Officer",
+                    "linkedin_url": "https://www.linkedin.com/in/juliet-slot/",
+                }
+            ],
+            yp_members=[
+                {"node_id": "Elliott Hillman", "name": "Elliott Hillman"},
+            ],
+            bridge_contacts=[],
+        )
+    )
+
+    assert observations == [
+        {
+            "yp_member": "Elliott Hillman",
+            "target_person": "Juliet Slot",
+            "edge_type": "direct_connection",
+            "confidence": 68.0,
+            "evidence_url": "https://www.linkedin.com/in/juliet-slot/",
+            "source": "linkedin_profile_url_probe",
+        }
+    ]
