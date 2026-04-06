@@ -5,7 +5,7 @@ from pathlib import Path
 backend_dir = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(backend_dir))
 
-from connections_graph_enricher import enrich_connections_graph
+from connections_graph_enricher import LinkedInBrightDataConnectionsProvider, enrich_connections_graph
 
 
 class _FakeProvider:
@@ -63,3 +63,57 @@ def test_enrich_connections_graph_adds_provider_edges_and_bridge_targets():
     assert ("Stuart Cope", "mutual_connection", "person:alberto-muti") in edge_types
     assert ("bridge:david-eames", "bridge_to_target", "person:alberto-muti") in edge_types
 
+
+class _FastBrightData:
+    def __init__(self):
+        self.queries = []
+
+    async def search_engine(self, *, query, engine="google", num_results=5, **_kwargs):
+        self.queries.append(query)
+        if '"Elliott Hillman" "Alberto Muti" LinkedIn' in query:
+            return {
+                "status": "success",
+                "results": [
+                    {
+                        "title": "Alberto Muti | LinkedIn",
+                        "url": "https://www.linkedin.com/in/alberto-muti/",
+                        "snippet": "1st degree connection · Elliott Hillman and Alberto Muti are connected on LinkedIn",
+                    }
+                ],
+            }
+        if '"Stuart Cope" "Alberto Muti" mutual connections site:linkedin.com' in query:
+            return {
+                "status": "success",
+                "results": [
+                    {
+                        "title": "David Eames",
+                        "url": "https://www.linkedin.com/in/david-eames/",
+                        "snippet": "Mutual connection between Stuart Cope and Alberto Muti",
+                    }
+                ],
+            }
+        return {"status": "success", "results": []}
+
+
+def test_linkedin_brightdata_provider_adds_direct_and_mutual_observations_with_small_budget():
+    provider = LinkedInBrightDataConnectionsProvider(_FastBrightData(), max_pairs=2, per_lookup_timeout_s=1.0)
+
+    observations = asyncio.run(
+        provider.collect_connection_observations(
+            entity_name="International Canoe Federation",
+            target_people=[
+                {"node_id": "person:alberto-muti", "name": "Alberto Muti", "linkedin_url": "https://www.linkedin.com/in/alberto-muti/"}
+            ],
+            yp_members=[
+                {"node_id": "Elliott Hillman", "name": "Elliott Hillman"},
+                {"node_id": "Stuart Cope", "name": "Stuart Cope"},
+            ],
+            bridge_contacts=[
+                {"node_id": "bridge:david-eames", "name": "David Eames"},
+            ],
+        )
+    )
+
+    edge_types = {(item["yp_member"], item["edge_type"], item["target_person"]) for item in observations}
+    assert ("Elliott Hillman", "direct_connection", "Alberto Muti") in edge_types
+    assert ("Stuart Cope", "mutual_connection", "Alberto Muti") in edge_types

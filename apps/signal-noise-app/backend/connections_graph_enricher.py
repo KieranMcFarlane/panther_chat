@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import os
 from copy import deepcopy
 from datetime import datetime, timezone
@@ -91,8 +92,45 @@ def _bridge_contacts_from_graph(graph: Dict[str, Any]) -> List[Dict[str, Any]]:
 class LinkedInBrightDataConnectionsProvider:
     """Thin adapter over the existing LinkedIn profiler."""
 
-    def __init__(self, brightdata_client: Any):
+    def __init__(
+        self,
+        brightdata_client: Any,
+        *,
+        max_pairs: int = 4,
+        per_lookup_timeout_s: float = 3.0,
+    ):
         self.profiler = LinkedInProfiler(brightdata_client)
+        self.brightdata = brightdata_client
+        self.max_pairs = max(1, int(max_pairs))
+        self.per_lookup_timeout_s = max(0.1, float(per_lookup_timeout_s))
+
+    async def _search_direct_connection(self, *, yp_name: str, target_person: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        target_name = str(target_person.get("name") or "").strip()
+        if not yp_name or not target_name:
+            return None
+        query = f'"{yp_name}" "{target_name}" LinkedIn'
+        try:
+            results = await asyncio.wait_for(
+                self.brightdata.search_engine(query=query, engine="google", num_results=3),
+                timeout=self.per_lookup_timeout_s,
+            )
+        except Exception:
+            return None
+        if str(results.get("status") or "").lower() != "success":
+            return None
+        for item in results.get("results", []) or []:
+            snippet = str(item.get("snippet") or "").lower()
+            title = str(item.get("title") or "").lower()
+            if "1st degree" in snippet or "1st-degree" in snippet or "1st degree" in title:
+                return {
+                    "yp_member": yp_name,
+                    "target_person": target_name,
+                    "edge_type": "direct_connection",
+                    "confidence": 72.0,
+                    "evidence_url": str(item.get("url") or "").strip() or str(target_person.get("linkedin_url") or "").strip() or None,
+                    "source": "linkedin_search_direct_probe",
+                }
+        return None
 
     async def collect_connection_observations(
         self,
@@ -104,16 +142,30 @@ class LinkedInBrightDataConnectionsProvider:
     ) -> List[Dict[str, Any]]:
         observations: List[Dict[str, Any]] = []
         bridge_names = {_normalize_name(item.get("name")) for item in bridge_contacts}
+        pair_budget = self.max_pairs
 
         for yp_member in yp_members[:4]:
             yp_name = str(yp_member.get("name") or "").strip()
             if not yp_name:
                 continue
             for target_person in target_people[:5]:
+                if pair_budget <= 0:
+                    return observations
                 target_name = str(target_person.get("name") or "").strip()
                 if not target_name:
                     continue
-                mutuals = await self.profiler._find_mutual_connections(yp_name, target_name)
+                pair_budget -= 1
+                direct = await self._search_direct_connection(yp_name=yp_name, target_person=target_person)
+                if direct:
+                    observations.append(direct)
+                    continue
+                try:
+                    mutuals = await asyncio.wait_for(
+                        self.profiler._find_mutual_connections(yp_name, target_name),
+                        timeout=self.per_lookup_timeout_s,
+                    )
+                except Exception:
+                    mutuals = []
                 for mutual_name in mutuals[:3]:
                     observations.append(
                         {
