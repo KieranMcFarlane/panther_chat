@@ -4,6 +4,7 @@ import sys
 import threading
 import time
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -507,3 +508,76 @@ async def test_question_first_runner_groups_by_category_and_retries_on_empty_sea
     assert result["questions"][0]["answer"] == "1919"
     assert result["questions"][1]["answer"] == "Chairman answer"
     assert result["questions"][1]["validation_state"] == "validated"
+
+
+@pytest.mark.asyncio
+async def test_launch_opencode_question_first_batch_falls_back_to_timestamped_artifact_when_stdout_is_not_json(tmp_path, monkeypatch):
+    output_dir = tmp_path / "out"
+    output_dir.mkdir(parents=True)
+    artifact_path = output_dir / "leedsunited_opencode_batch_20260406_120000_question_first_run_v1.json"
+    _write_question_first_run_artifact(
+        artifact_path,
+        entity_id="leedsunited",
+        entity_name="Leeds United",
+        questions=[
+            {
+                "question_id": "q1",
+                "section_id": "core_information",
+                "question_text": "When was Leeds United founded?",
+            }
+        ],
+        answers=[
+            {
+                "question_id": "q1",
+                "section_id": "core_information",
+                "question_text": "When was Leeds United founded?",
+                "answer": "1919",
+                "confidence": 0.91,
+                "evidence_url": "https://www.leedsunited.com/",
+                "validation_state": "validated",
+                "signal_type": "FOUNDATION",
+            }
+        ],
+        categories=[
+            {
+                "category": "identity",
+                "question_count": 1,
+                "validated_count": 1,
+                "pending_count": 0,
+                "no_signal_count": 0,
+                "retry_count": 0,
+            }
+        ],
+    )
+
+    def _fake_run(*args, **kwargs):
+        return SimpleNamespace(
+            returncode=0,
+            stdout="[dotenv] loaded env\nnot-json\n",
+            stderr="",
+        )
+
+    monkeypatch.setattr(runner.subprocess, "run", _fake_run)
+
+    source_payload = {
+        "entity_id": "leedsunited",
+        "entity_name": "Leeds United",
+        "entity_type": "SPORT_CLUB",
+        "questions": [
+            {
+                "question_id": "q1",
+                "question_text": "When was Leeds United founded?",
+            }
+        ],
+    }
+
+    question_first_run_path, state_path = await runner._launch_opencode_question_first_batch(
+        source_payload=source_payload,
+        output_dir=output_dir,
+        preset="leedsunited-atomic-matrix",
+        worktree_root=tmp_path,
+        opencode_timeout_ms=1000,
+    )
+
+    assert question_first_run_path == artifact_path
+    assert state_path.name.endswith("_state.json")
