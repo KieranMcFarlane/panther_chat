@@ -1,6 +1,6 @@
 {
   "schema_version": "atomic_question_source_v1",
-  "generated_at": "2026-04-06T08:12:28.932540+00:00",
+  "generated_at": "2026-04-06T08:34:09.921282+00:00",
   "entity_id": "major-league-cricket",
   "entity_name": "Major League Cricket",
   "entity_type": "SPORT_LEAGUE",
@@ -95,7 +95,7 @@
       "question_family": "procurement",
       "question_type": "procurement",
       "question": "Is there evidence Major League Cricket is buying, launching, or reshaping its commercial or digital ecosystem through procurement, partnerships, hiring, or platform initiatives?",
-      "query": "\"Major League Cricket\" RFP tender procurement partner sponsor hiring platform analytics broadcast vendor",
+      "query": "\"Major League Cricket\" partner sponsor broadcast media rights platform",
       "hop_budget": 8,
       "evidence_extension_budget": 2,
       "source_priority": [

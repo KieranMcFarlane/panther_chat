@@ -1,6 +1,6 @@
 {
   "schema_version": "atomic_question_source_v1",
-  "generated_at": "2026-04-06T08:12:28.931891+00:00",
+  "generated_at": "2026-04-06T08:34:09.920605+00:00",
   "entity_id": "international-canoe-federation",
   "entity_name": "International Canoe Federation",
   "entity_type": "SPORT_FEDERATION",
@@ -97,29 +97,23 @@
       "question_family": "procurement",
       "question_type": "procurement",
       "question": "Is there evidence International Canoe Federation is buying, launching, or reshaping its commercial or digital ecosystem through procurement, partnerships, hiring, or platform initiatives?",
-      "query": "\"International Canoe Federation\" RFP tender procurement partner sponsor hiring platform analytics broadcast vendor",
+      "query": "\"International Canoe Federation\" tenders",
       "hop_budget": 8,
       "evidence_extension_budget": 2,
       "source_priority": [
+        "official_site",
         "google_serp",
-        "linkedin_posts",
-        "news",
         "press_release",
-        "official_site"
+        "news"
       ],
       "search_strategy": {
         "search_queries": [
-          "\"International Canoe Federation\" RFP",
-          "\"International Canoe Federation\" tender",
-          "\"International Canoe Federation\" procurement",
-          "\"International Canoe Federation\" partner",
-          "\"International Canoe Federation\" sponsor",
-          "\"International Canoe Federation\" hiring digital",
-          "\"International Canoe Federation\" hiring analytics",
-          "\"International Canoe Federation\" platform",
-          "\"International Canoe Federation\" analytics initiative",
-          "\"International Canoe Federation\" broadcast partner",
-          "\"International Canoe Federation\" vendor"
+          "\"International Canoe Federation\" tenders",
+          "\"International Canoe Federation\" Paddle Worldwide digital ecosystem",
+          "\"International Canoe Federation\" OTT platform",
+          "site:canoeicf.com paddleworldwide_dxp_rfp.pdf",
+          "site:canoeicf.com ott platform 2026 pdf",
+          "site:canoeicf.com tenders"
         ]
       },
       "evidence_focus": "opportunity_signal",

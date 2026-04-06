@@ -77,13 +77,21 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
             "press_release",
             "official_site",
         ]
-        assert payload["questions"][2]["source_priority"] == [
-            "google_serp",
-            "linkedin_posts",
-            "news",
-            "press_release",
-            "official_site",
-        ]
+        if payload["entity_id"] == "international-canoe-federation":
+            assert payload["questions"][2]["source_priority"] == [
+                "official_site",
+                "google_serp",
+                "press_release",
+                "news",
+            ]
+        else:
+            assert payload["questions"][2]["source_priority"] == [
+                "google_serp",
+                "linkedin_posts",
+                "news",
+                "press_release",
+                "official_site",
+            ]
         if payload["entity_type"] == "SPORT_FEDERATION":
             assert payload["questions"][3]["source_priority"] == [
                 "linkedin_company_profile",
@@ -221,17 +229,21 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
         "Is there evidence Arsenal Football Club is buying, launching, or reshaping its commercial or digital ecosystem through procurement, partnerships, hiring, or platform initiatives?"
     )
     assert arsenal["questions"][2]["search_strategy"]["search_queries"] == [
-        '"Arsenal Football Club" RFP',
-        '"Arsenal Football Club" tender',
-        '"Arsenal Football Club" procurement',
         '"Arsenal Football Club" partner',
         '"Arsenal Football Club" sponsor',
+        '"Arsenal Football Club" official partner',
+        '"Arsenal Football Club" digital partner',
+        '"Arsenal Football Club" technology partner',
+        '"Arsenal Football Club" platform',
+        '"Arsenal Football Club" mobile app',
         '"Arsenal Football Club" hiring digital',
         '"Arsenal Football Club" hiring analytics',
-        '"Arsenal Football Club" platform',
         '"Arsenal Football Club" analytics initiative',
         '"Arsenal Football Club" broadcast partner',
         '"Arsenal Football Club" vendor',
+        '"Arsenal Football Club" RFP',
+        '"Arsenal Football Club" tender',
+        '"Arsenal Football Club" procurement',
     ]
     assert mlc["questions"][2]["search_strategy"]["search_queries"] == [
         '"Major League Cricket" RFP',
@@ -269,6 +281,13 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
         '"Major League Cricket" platform',
         '"Major League Cricket" app',
     ]
+    assert arsenal["questions"][0]["query"] == '"Arsenal Football Club" official website founded year'
+    assert arsenal["questions"][0]["search_strategy"]["search_queries"] == [
+        '"Arsenal Football Club" official website',
+        '"Arsenal Football Club" history',
+        '"Arsenal Football Club" founded year',
+        '"Arsenal Football Club" wikipedia',
+    ]
     assert arsenal["questions"][3]["query"] == '"Arsenal Football Club" LinkedIn company profile'
     assert arsenal["questions"][3]["search_strategy"]["search_queries"] == [
         '"Arsenal Football Club" LinkedIn company profile',
@@ -297,6 +316,21 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
         '"Arsenal Football Club" sponsorship director',
         '"Arsenal Football Club" head of partnerships',
         '"Arsenal Football Club" CEO',
+    ]
+    assert icf["questions"][2]["query"] == '"International Canoe Federation" tenders'
+    assert icf["questions"][2]["source_priority"] == [
+        "official_site",
+        "google_serp",
+        "press_release",
+        "news",
+    ]
+    assert icf["questions"][2]["search_strategy"]["search_queries"] == [
+        '"International Canoe Federation" tenders',
+        '"International Canoe Federation" Paddle Worldwide digital ecosystem',
+        '"International Canoe Federation" OTT platform',
+        'site:canoeicf.com paddleworldwide_dxp_rfp.pdf',
+        'site:canoeicf.com ott platform 2026 pdf',
+        'site:canoeicf.com tenders',
     ]
     assert icf["questions"][3]["question"] == (
         "Who is the most suitable senior commercial owner for sponsorship, broadcast, media rights, or marketing at International Canoe Federation?"
@@ -334,6 +368,46 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
         "Which 3 to 5 people are the most relevant commercial, partnerships, or business development contacts at Major League Cricket?"
     )
     assert mlc["questions"][4]["question_type"] == "related_pois"
+    premier = build_universal_atomic_question_source(
+        entity_type="SPORT_LEAGUE",
+        entity_name="Premier League",
+        entity_id="premier-league",
+        preset="premier-league-atomic-matrix",
+    )
+    nwsl = build_universal_atomic_question_source(
+        entity_type="SPORT_LEAGUE",
+        entity_name="National Women's Soccer League",
+        entity_id="nwsl",
+        preset="nwsl-atomic-matrix",
+    )
+    assert premier["questions"][2]["search_strategy"]["search_queries"] == [
+        '"Premier League" partner',
+        '"Premier League" sponsor',
+        '"Premier League" official partner',
+        '"Premier League" broadcast partner',
+        '"Premier League" media rights',
+        '"Premier League" data partner',
+        '"Premier League" analytics',
+        '"Premier League" platform',
+        '"Premier League" mobile app',
+        '"Premier League" digital transformation',
+        '"Premier League" vendor',
+        '"Premier League" procurement',
+    ]
+    assert nwsl["questions"][2]["search_strategy"]["search_queries"] == [
+        "\"National Women's Soccer League\" partner",
+        "\"National Women's Soccer League\" sponsor",
+        "\"National Women's Soccer League\" official partner",
+        "\"National Women's Soccer League\" broadcast partner",
+        "\"National Women's Soccer League\" media rights",
+        "\"National Women's Soccer League\" data partner",
+        "\"National Women's Soccer League\" analytics",
+        "\"National Women's Soccer League\" platform",
+        "\"National Women's Soccer League\" mobile app",
+        "\"National Women's Soccer League\" digital transformation",
+        "\"National Women's Soccer League\" vendor",
+        "\"National Women's Soccer League\" procurement",
+    ]
     assert mlc["questions"][4]["search_strategy"]["search_queries"] == [
         '"Major League Cricket" LinkedIn company profile',
         '"Major League Cricket" LinkedIn commercial',

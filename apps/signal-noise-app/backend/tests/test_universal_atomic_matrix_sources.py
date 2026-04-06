@@ -86,13 +86,21 @@ def test_canonical_atomic_matrix_sources_are_five_question_universal_matrices(
         "press_release",
         "official_site",
     ]
-    assert payload["questions"][2]["source_priority"] == [
-        "google_serp",
-        "linkedin_posts",
-        "news",
-        "press_release",
-        "official_site",
-    ]
+    if entity_id == "international-canoe-federation":
+        assert payload["questions"][2]["source_priority"] == [
+            "official_site",
+            "google_serp",
+            "press_release",
+            "news",
+        ]
+    else:
+        assert payload["questions"][2]["source_priority"] == [
+            "google_serp",
+            "linkedin_posts",
+            "news",
+            "press_release",
+            "official_site",
+        ]
     if entity_id == "international-canoe-federation":
         assert payload["questions"][3]["source_priority"] == [
             "linkedin_company_profile",
@@ -125,7 +133,41 @@ def test_canonical_atomic_matrix_sources_are_five_question_universal_matrices(
     assert all(question["question_timeout_ms"] == 180000 for question in payload["questions"])
     assert all(question["hop_timeout_ms"] == 180000 for question in payload["questions"])
     assert all(question["evidence_extension_confidence_threshold"] == 0.65 for question in payload["questions"])
+    if entity_id == "arsenal-fc":
+        assert payload["questions"][0]["query"] == '"Arsenal Football Club" official website founded year'
+        assert payload["questions"][0]["search_strategy"]["search_queries"] == [
+            '"Arsenal Football Club" official website',
+            '"Arsenal Football Club" history',
+            '"Arsenal Football Club" founded year',
+            '"Arsenal Football Club" wikipedia',
+        ]
+        assert payload["questions"][2]["search_strategy"]["search_queries"] == [
+            '"Arsenal Football Club" partner',
+            '"Arsenal Football Club" sponsor',
+            '"Arsenal Football Club" official partner',
+            '"Arsenal Football Club" digital partner',
+            '"Arsenal Football Club" technology partner',
+            '"Arsenal Football Club" platform',
+            '"Arsenal Football Club" mobile app',
+            '"Arsenal Football Club" hiring digital',
+            '"Arsenal Football Club" hiring analytics',
+            '"Arsenal Football Club" analytics initiative',
+            '"Arsenal Football Club" broadcast partner',
+            '"Arsenal Football Club" vendor',
+            '"Arsenal Football Club" RFP',
+            '"Arsenal Football Club" tender',
+            '"Arsenal Football Club" procurement',
+        ]
     if entity_id == "international-canoe-federation":
+        assert payload["questions"][2]["query"] == '"International Canoe Federation" tenders'
+        assert payload["questions"][2]["search_strategy"]["search_queries"] == [
+            '"International Canoe Federation" tenders',
+            '"International Canoe Federation" Paddle Worldwide digital ecosystem',
+            '"International Canoe Federation" OTT platform',
+            'site:canoeicf.com paddleworldwide_dxp_rfp.pdf',
+            'site:canoeicf.com ott platform 2026 pdf',
+            'site:canoeicf.com tenders',
+        ]
         assert payload["questions"][3]["question"] == (
             "Who is the most suitable senior commercial owner for sponsorship, broadcast, media rights, or marketing at International Canoe Federation?"
         )

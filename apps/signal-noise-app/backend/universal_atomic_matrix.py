@@ -183,6 +183,66 @@ Q2_DIGITAL_STACK_SEARCH_QUERIES_FEDERATION = [
     '"{entity}" app',
 ]
 
+Q1_FOUNDATION_SEARCH_QUERIES_DEFAULT = [
+    '"{entity}" founded year',
+    '"{entity}" official website',
+    '"{entity}" wikipedia',
+]
+
+Q1_FOUNDATION_SEARCH_QUERIES_CLUB = [
+    '"{entity}" official website',
+    '"{entity}" history',
+    '"{entity}" founded year',
+    '"{entity}" wikipedia',
+]
+
+Q3_PROCUREMENT_SEARCH_QUERIES_CLUB = [
+    '"{entity}" partner',
+    '"{entity}" sponsor',
+    '"{entity}" official partner',
+    '"{entity}" digital partner',
+    '"{entity}" technology partner',
+    '"{entity}" platform',
+    '"{entity}" mobile app',
+    '"{entity}" hiring digital',
+    '"{entity}" hiring analytics',
+    '"{entity}" analytics initiative',
+    '"{entity}" broadcast partner',
+    '"{entity}" vendor',
+    '"{entity}" RFP',
+    '"{entity}" tender',
+    '"{entity}" procurement',
+]
+
+Q3_PROCUREMENT_SEARCH_QUERIES_LEAGUE = [
+    '"{entity}" partner',
+    '"{entity}" sponsor',
+    '"{entity}" official partner',
+    '"{entity}" broadcast partner',
+    '"{entity}" media rights',
+    '"{entity}" data partner',
+    '"{entity}" analytics',
+    '"{entity}" platform',
+    '"{entity}" mobile app',
+    '"{entity}" digital transformation',
+    '"{entity}" vendor',
+    '"{entity}" procurement',
+]
+
+Q3_PROCUREMENT_SEARCH_QUERIES_FEDERATION = [
+    '"{entity}" procurement',
+    '"{entity}" tender',
+    '"{entity}" broadcast services',
+    '"{entity}" OTT platform',
+    '"{entity}" partner',
+    '"{entity}" sponsor',
+    '"{entity}" digital platform',
+    '"{entity}" analytics',
+    '"{entity}" membership platform',
+    '"{entity}" results platform',
+    '"{entity}" vendor',
+]
+
 UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
     {
         "question_id": "q1_foundation",
@@ -198,11 +258,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
             "wikipedia",
         ],
         "search_strategy": {
-            "search_queries": [
-                '"{entity}" founded year',
-                '"{entity}" official website',
-                '"{entity}" wikipedia',
-            ]
+            "search_queries": Q1_FOUNDATION_SEARCH_QUERIES_DEFAULT,
         },
         "evidence_focus": "entity_fact",
         "promotion_target": "profile",
@@ -267,19 +323,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
             "official_site",
         ],
         "search_strategy": {
-            "search_queries": [
-                '"{entity}" RFP',
-                '"{entity}" tender',
-                '"{entity}" procurement',
-                '"{entity}" partner',
-                '"{entity}" sponsor',
-                '"{entity}" hiring digital',
-                '"{entity}" hiring analytics',
-                '"{entity}" platform',
-                '"{entity}" analytics initiative',
-                '"{entity}" broadcast partner',
-                '"{entity}" vendor',
-            ]
+            "search_queries": Q3_PROCUREMENT_SEARCH_QUERIES_CLUB,
         },
         "evidence_focus": "opportunity_signal",
         "promotion_target": "opportunity_signals",
@@ -373,6 +417,25 @@ MLC_QUESTION_OVERRIDES: Dict[str, Dict[str, Any]] = {
 }
 
 ICF_QUESTION_OVERRIDES: Dict[str, Dict[str, Any]] = {
+    "q3_procurement_signal": {
+        "query": '"{entity}" tenders',
+        "source_priority": [
+            "official_site",
+            "google_serp",
+            "press_release",
+            "news",
+        ],
+        "search_strategy": {
+            "search_queries": [
+                '"{entity}" tenders',
+                '"{entity}" Paddle Worldwide digital ecosystem',
+                '"{entity}" OTT platform',
+                'site:canoeicf.com paddleworldwide_dxp_rfp.pdf',
+                'site:canoeicf.com ott platform 2026 pdf',
+                'site:canoeicf.com tenders',
+            ]
+        },
+    },
     "q4_decision_owner": {
         "question": "Who is the most suitable senior commercial owner for sponsorship, broadcast, media rights, or marketing at {entity}?",
         "hop_budget": 6,
@@ -410,6 +473,14 @@ def _render_question_spec(spec: Dict[str, Any], entity_name: str, entity_id: str
             str(query).format(entity=entity_name)
             for query in search_strategy.get("search_queries", [])
         ]
+        if rendered.get("question_id") == "q1_foundation":
+            entity_type_key = _slugify(entity_type)
+            if entity_type_key == "sport-club":
+                rendered["query"] = f'"{entity_name}" official website founded year'
+                search_queries = [
+                    str(query).format(entity=entity_name)
+                    for query in Q1_FOUNDATION_SEARCH_QUERIES_CLUB
+                ]
         if rendered.get("question_id") == "q2_digital_stack":
             entity_type_key = _slugify(entity_type)
             if entity_type_key == "sport-club":
@@ -426,6 +497,26 @@ def _render_question_spec(spec: Dict[str, Any], entity_name: str, entity_id: str
                 search_queries = [
                     str(query).format(entity=entity_name)
                     for query in Q2_DIGITAL_STACK_SEARCH_QUERIES_FEDERATION
+                ]
+        if rendered.get("question_id") == "q3_procurement_signal":
+            entity_type_key = _slugify(entity_type)
+            if entity_type_key == "sport-club":
+                rendered["query"] = f'"{entity_name}" partner sponsor platform'
+                search_queries = [
+                    str(query).format(entity=entity_name)
+                    for query in Q3_PROCUREMENT_SEARCH_QUERIES_CLUB
+                ]
+            elif entity_type_key == "sport-league":
+                rendered["query"] = f'"{entity_name}" partner sponsor broadcast media rights platform'
+                search_queries = [
+                    str(query).format(entity=entity_name)
+                    for query in Q3_PROCUREMENT_SEARCH_QUERIES_LEAGUE
+                ]
+            elif entity_type_key == "sport-federation":
+                rendered["query"] = f'"{entity_name}" procurement broadcast services digital platform'
+                search_queries = [
+                    str(query).format(entity=entity_name)
+                    for query in Q3_PROCUREMENT_SEARCH_QUERIES_FEDERATION
                 ]
         if rendered.get("question_id") in {"q4_decision_owner", "q5_related_pois"}:
             entity_type_key = _slugify(entity_type)
