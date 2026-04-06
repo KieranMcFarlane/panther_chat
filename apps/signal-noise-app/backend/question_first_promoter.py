@@ -286,6 +286,7 @@ def build_question_first_promotions(
     answers: List[Dict[str, Any]] | None = None,
     evidence_items: List[Dict[str, Any]] | None = None,
     promotion_candidates: List[Dict[str, Any]] | None = None,
+    bridge_contacts: List[Dict[str, Any]] | None = None,
     min_confidence: float = 0.7,
 ) -> Dict[str, Any]:
     answers = [item for item in (answers or []) if isinstance(item, dict)]
@@ -392,7 +393,7 @@ def build_question_first_promotions(
         grouped[target] = [item for item in promoted if item["promotion_target"] == target]
 
     poi_graph = build_question_first_poi_graph(answers=answers)
-    connections_graph = build_question_first_connections_graph(poi_graph=poi_graph)
+    connections_graph = build_question_first_connections_graph(poi_graph=poi_graph, bridge_contacts=bridge_contacts)
 
     discovery_summary: Dict[str, Any] = {
         "promoted_count": len(promoted),

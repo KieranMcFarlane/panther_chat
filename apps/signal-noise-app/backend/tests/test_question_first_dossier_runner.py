@@ -204,6 +204,70 @@ def test_resolve_question_first_worktree_root_honors_explicit_root(tmp_path):
     assert runner._resolve_question_first_worktree_root(explicit) == explicit
 
 
+@pytest.mark.asyncio
+async def test_run_question_first_dossier_from_payload_seeds_explicit_bridge_contacts(tmp_path):
+    output_dir = tmp_path / "out"
+    output_dir.mkdir()
+    artifact_path = output_dir / "celtic-fc_question_first_run_v1.json"
+    _write_question_first_run_artifact(
+        artifact_path,
+        entity_id="celtic-fc",
+        entity_name="Celtic FC",
+        questions=[
+            {
+                "question_id": "q4_decision_owner",
+                "question_text": "Who is the most suitable person for commercial partnerships?",
+                "section_id": "connections",
+            }
+        ],
+        answers=[
+            {
+                "question_id": "q4_decision_owner",
+                "question_type": "decision_owner",
+                "question_text": "Who is the most suitable person for commercial partnerships?",
+                "answer": "Michael Nicholson",
+                "confidence": 0.92,
+                "validation_state": "validated",
+                "signal_type": "DECISION_OWNER",
+                "evidence_url": "https://example.com/michael-nicholson",
+                "entity_id": "celtic-fc",
+                "entity_name": "Celtic FC",
+                "primary_owner": {
+                    "name": "Michael Nicholson",
+                    "title": "Chief Executive",
+                    "organization": "Celtic FC",
+                },
+            }
+        ],
+        categories=[],
+    )
+
+    merged = await runner.run_question_first_dossier_from_payload(
+        source_payload={
+            "entity_id": "celtic-fc",
+            "entity_name": "Celtic FC",
+            "bridge_contacts": [
+                {
+                    "contact_name": "David Eames",
+                    "relationship_to_yp": "Stuart Cope",
+                    "network_reach": "Sports marketing",
+                    "introduction_capability": "Warm commercial intro",
+                    "linkedin_url": "https://www.linkedin.com/in/david-eames/",
+                    "target_connections_count": 2,
+                }
+            ],
+        },
+        question_first_run_path=artifact_path,
+    )
+
+    graph = merged["connections_graph"]
+    assert any(node["node_type"] == "bridge_contact" and node["name"] == "David Eames" for node in graph["nodes"])
+    assert any(
+        edge["from_id"] == "Stuart Cope" and edge["edge_type"] == "bridge_connection" and edge["to_id"] == "bridge:david-eames"
+        for edge in graph["edges"]
+    )
+
+
 def test_question_first_launch_lock_serializes_across_callers(tmp_path):
     lock_root = tmp_path / "worktree-root"
     lock_root.mkdir()

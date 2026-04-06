@@ -812,6 +812,7 @@ async def run_question_first_dossier_from_payload(
         answers=artifact.answers,
         evidence_items=artifact.evidence_items,
         promotion_candidates=artifact.promotion_candidates,
+        bridge_contacts=source.get("bridge_contacts") if isinstance(source.get("bridge_contacts"), list) else None,
     )
     active_connections_graph = promotions["connections_graph"]
     if connections_graph_enricher is None and connections_enrichment_enabled_by_default():

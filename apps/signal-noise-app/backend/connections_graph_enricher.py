@@ -89,6 +89,22 @@ def _bridge_contacts_from_graph(graph: Dict[str, Any]) -> List[Dict[str, Any]]:
     return contacts
 
 
+def _clean_mutual_name(raw_value: Any, bridge_names: set[str]) -> str:
+    name = str(raw_value or "").strip()
+    if not name:
+        return ""
+    lowered = name.lower()
+    if lowered in bridge_names:
+        return name
+    noisy_markers = ["|", " - ", " now hiring", "...", "advisor to", "associate at"]
+    if any(marker in lowered for marker in noisy_markers):
+        return ""
+    words = [part for part in name.split() if part]
+    if len(words) < 2 or len(words) > 4:
+        return ""
+    return name
+
+
 class LinkedInBrightDataConnectionsProvider:
     """Thin adapter over the existing LinkedIn profiler."""
 
@@ -177,13 +193,16 @@ class LinkedInBrightDataConnectionsProvider:
                 except Exception:
                     mutuals = []
                 for mutual_name in mutuals[:3]:
+                    cleaned_mutual_name = _clean_mutual_name(mutual_name, bridge_names)
+                    if not cleaned_mutual_name:
+                        continue
                     observations.append(
                         {
                             "yp_member": yp_name,
                             "target_person": target_name,
                             "edge_type": "mutual_connection",
-                            "mutual_name": mutual_name,
-                            "confidence": 55.0 if _normalize_name(mutual_name) in bridge_names else 48.0,
+                            "mutual_name": cleaned_mutual_name,
+                            "confidence": 55.0 if _normalize_name(cleaned_mutual_name) in bridge_names else 48.0,
                             "evidence_url": str(target_person.get("linkedin_url") or "").strip() or None,
                             "source": "linkedin_profiler._find_mutual_connections",
                             "entity_name": entity_name,

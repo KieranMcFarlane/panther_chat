@@ -124,3 +124,56 @@ def test_linkedin_brightdata_provider_adds_direct_and_mutual_observations_with_s
     assert ("Elliott Hillman", "direct_connection", "Alberto Muti") in edge_types
     assert ("Stuart Cope", "mutual_connection", "Alberto Muti") in edge_types
     assert '"Elliott Hillman" "Alberto Muti" "International Canoe Federation" "Secretary General" LinkedIn' in brightdata.queries
+
+
+class _NoisyMutualBrightData:
+    async def search_engine(self, *, query, engine="google", num_results=5, **_kwargs):
+        if "mutual connections" in query:
+            return {
+                "status": "success",
+                "results": [
+                    {
+                        "title": "Andrew Tam - Associate at Gort Scott | Advisor to Hive ...",
+                        "url": "https://www.linkedin.com/in/andrew-tam/",
+                        "snippet": "Mutual connection between Stuart Cope and Omar Shaikh",
+                    },
+                    {
+                        "title": "David Eames",
+                        "url": "https://www.linkedin.com/in/david-eames/",
+                        "snippet": "Mutual connection between Stuart Cope and Omar Shaikh",
+                    },
+                ],
+            }
+        return {"status": "success", "results": []}
+
+
+def test_linkedin_brightdata_provider_filters_noisy_mutual_names_and_prefers_clean_profiles():
+    provider = LinkedInBrightDataConnectionsProvider(_NoisyMutualBrightData(), max_pairs=1, per_lookup_timeout_s=1.0)
+
+    observations = asyncio.run(
+        provider.collect_connection_observations(
+            entity_name="Arsenal Football Club",
+            target_people=[
+                {"node_id": "person:omar-shaikh", "name": "Omar Shaikh", "title": "Chief Financial Officer"}
+            ],
+            yp_members=[
+                {"node_id": "Stuart Cope", "name": "Stuart Cope"},
+            ],
+            bridge_contacts=[
+                {"node_id": "bridge:david-eames", "name": "David Eames"},
+            ],
+        )
+    )
+
+    assert observations == [
+        {
+            "yp_member": "Stuart Cope",
+            "target_person": "Omar Shaikh",
+            "edge_type": "mutual_connection",
+            "mutual_name": "David Eames",
+            "confidence": 55.0,
+            "evidence_url": None,
+            "source": "linkedin_profiler._find_mutual_connections",
+            "entity_name": "Arsenal Football Club",
+        }
+    ]
