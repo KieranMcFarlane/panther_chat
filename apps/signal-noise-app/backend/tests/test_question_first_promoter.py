@@ -214,3 +214,5 @@ def test_build_question_first_promotions_emits_poi_graph_for_people_answers():
     assert len(result["poi_graph"]["nodes"]) == 3
     assert len(result["poi_graph"]["edges"]) == 2
     assert result["poi_graph"]["edges"][0]["edge_type"] == "primary_owner_of"
+    assert result["connections_graph"]["schema_version"] == "connections_graph_v1"
+    assert any(node["node_type"] == "yp_member" for node in result["connections_graph"]["nodes"])

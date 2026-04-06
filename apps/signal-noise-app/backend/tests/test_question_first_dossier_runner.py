@@ -393,6 +393,7 @@ async def test_question_first_runner_uses_saved_questions_and_writes_plain_text_
     assert result["question_first"]["dossier_promotions"][0]["question_id"] == "q1"
     assert result["question_first"]["discovery_summary"]["promoted_count"] == 1
     assert result["question_first"]["poi_graph"]["schema_version"] == "poi_graph_v1"
+    assert result["question_first"]["connections_graph"]["schema_version"] == "connections_graph_v1"
     assert result["question_first_run"]["schema_version"] == "question_first_run_v1"
     assert result["question_first_run"]["poi_graph"]["schema_version"] == "poi_graph_v1"
     assert result["question_first_run"]["evidence_items"][0]["promotion_target"] == "profile"
@@ -400,6 +401,7 @@ async def test_question_first_runner_uses_saved_questions_and_writes_plain_text_
     assert result["dossier_promotions"][0]["question_id"] == "q1"
     assert result["discovery_summary"]["profile"][0]["candidate_id"] == "q1:profile"
     assert result["poi_graph"]["schema_version"] == "poi_graph_v1"
+    assert result["connections_graph"]["schema_version"] == "connections_graph_v1"
     assert result["questions"][0]["answer"] == "1919"
     assert result["questions"][0]["validation_state"] == "validated"
 

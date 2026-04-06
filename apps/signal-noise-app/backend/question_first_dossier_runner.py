@@ -810,11 +810,13 @@ async def run_question_first_dossier_from_payload(
     merged["dossier_promotions"] = promotions["dossier_promotions"]
     merged["discovery_summary"] = promotions["discovery_summary"]
     merged["poi_graph"] = promotions["poi_graph"]
+    merged["connections_graph"] = promotions["connections_graph"]
     merged.setdefault("question_first", {})
     if isinstance(merged["question_first"], dict):
         merged["question_first"]["dossier_promotions"] = promotions["dossier_promotions"]
         merged["question_first"]["discovery_summary"] = promotions["discovery_summary"]
         merged["question_first"]["poi_graph"] = artifact.poi_graph or promotions["poi_graph"]
+        merged["question_first"]["connections_graph"] = promotions["connections_graph"]
 
     if output_dir is not None:
       output_dir = Path(output_dir)

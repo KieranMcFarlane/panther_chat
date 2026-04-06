@@ -5,6 +5,11 @@ from __future__ import annotations
 
 from typing import Any, Dict, List
 
+try:
+    from backend.connections_analyzer import ConnectionsAnalyzer, YELLOW_PANTHER_TEAM
+except ImportError:
+    from connections_analyzer import ConnectionsAnalyzer, YELLOW_PANTHER_TEAM  # type: ignore
+
 
 def _slugify(value: Any) -> str:
     return "".join(ch.lower() if str(ch).isalnum() else "-" for ch in str(value or "").strip()).strip("-") or "item"
@@ -171,6 +176,93 @@ def build_question_first_poi_graph(*, answers: List[Dict[str, Any]] | None = Non
     }
 
 
+def build_question_first_connections_graph(*, poi_graph: Dict[str, Any] | None = None) -> Dict[str, Any]:
+    graph = poi_graph if isinstance(poi_graph, dict) else {}
+    entity_id = str(graph.get("entity_id") or "").strip() or None
+    entity_name = str(graph.get("entity_name") or "").strip() or None
+    nodes: List[Dict[str, Any]] = []
+    edges: List[Dict[str, Any]] = []
+    seen_nodes = set()
+    seen_edges = set()
+
+    def add_node(node: Dict[str, Any]) -> None:
+        node_id = str(node.get("node_id") or "").strip()
+        if not node_id or node_id in seen_nodes:
+            return
+        seen_nodes.add(node_id)
+        nodes.append(node)
+
+    def add_edge(edge: Dict[str, Any]) -> None:
+        key = (
+            str(edge.get("from_id") or "").strip(),
+            str(edge.get("edge_type") or "").strip(),
+            str(edge.get("to_id") or "").strip(),
+        )
+        if not all(key) or key in seen_edges:
+            return
+        seen_edges.add(key)
+        edges.append(edge)
+
+    for node in graph.get("nodes") or []:
+        if isinstance(node, dict):
+            add_node(dict(node))
+
+    for edge in graph.get("edges") or []:
+        if isinstance(edge, dict):
+            add_edge(dict(edge))
+
+    for member in YELLOW_PANTHER_TEAM:
+        yp_name = str(member.get("yp_name") or "").strip()
+        if not yp_name:
+            continue
+        add_node(
+            {
+                "node_id": yp_name,
+                "node_type": "yp_member",
+                "name": yp_name,
+                "title": str(member.get("yp_role") or "").strip() or None,
+                "linkedin_url": str(member.get("yp_linkedin") or "").strip() or None,
+                "weight": member.get("yp_weight"),
+            }
+        )
+
+    analyzer = ConnectionsAnalyzer()
+    for bridge in analyzer.bridge_contacts:
+        bridge_id = f"bridge:{_slugify(bridge.contact_name)}"
+        add_node(
+            {
+                "node_id": bridge_id,
+                "node_type": "bridge_contact",
+                "name": bridge.contact_name,
+                "relationship_to_yp": bridge.relationship_to_yp,
+                "network_reach": bridge.network_reach,
+                "introduction_capability": bridge.introduction_capability,
+                "linkedin_url": bridge.linkedin_url or None,
+                "target_connections_count": bridge.target_connections_count,
+            }
+        )
+        relationship_to_yp = str(bridge.relationship_to_yp or "").strip()
+        if relationship_to_yp:
+            for yp_name in [item.strip() for item in relationship_to_yp.split(",") if item.strip()]:
+                add_edge(
+                    {
+                        "from_id": yp_name,
+                        "to_id": bridge_id,
+                        "edge_type": "bridge_connection",
+                        "confidence": 35.0,
+                        "to_label": bridge.contact_name,
+                    }
+                )
+
+    return {
+        "schema_version": "connections_graph_v1",
+        "entity_id": entity_id,
+        "entity_name": entity_name,
+        "nodes": nodes,
+        "edges": edges,
+    }
+
+
 def build_question_first_promotions(
     *,
     answers: List[Dict[str, Any]] | None = None,
@@ -282,6 +374,7 @@ def build_question_first_promotions(
         grouped[target] = [item for item in promoted if item["promotion_target"] == target]
 
     poi_graph = build_question_first_poi_graph(answers=answers)
+    connections_graph = build_question_first_connections_graph(poi_graph=poi_graph)
 
     discovery_summary: Dict[str, Any] = {
         "promoted_count": len(promoted),
@@ -295,4 +388,5 @@ def build_question_first_promotions(
         "discovery_summary": discovery_summary,
         "promotion_candidates": promotion_candidates,
         "poi_graph": poi_graph,
+        "connections_graph": connections_graph,
     }
