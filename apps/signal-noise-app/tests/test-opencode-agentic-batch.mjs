@@ -186,6 +186,33 @@ test('buildOpenCodeQuestionPrompt stays close to the proven direct prompt shape'
   assert.doesNotMatch(prompt, /context, sources, confidence/i);
 });
 
+test('buildOpenCodeQuestionPrompt specializes tender-doc questions', () => {
+  const prompt = buildOpenCodeQuestionPrompt({
+    question_text: 'Are there explicit tender documents or RFPs for digital or broadcast procurement at International Canoe Federation?',
+    question_type: 'tender_docs',
+    source_priority: ['official_site', 'google_serp', 'press_release', 'news'],
+    hop_budget: 2,
+    query: '"International Canoe Federation" tenders',
+    search_strategy: {
+      search_queries: [
+        '"International Canoe Federation" tenders',
+        '"International Canoe Federation" Paddle Worldwide digital ecosystem',
+        '"International Canoe Federation" OTT platform',
+        'site:canoeicf.com paddleworldwide_dxp_rfp.pdf',
+        'site:canoeicf.com ott platform 2026 pdf',
+        'site:canoeicf.com tenders',
+      ],
+    },
+    yp_service_fit: [],
+  });
+
+  assert.match(prompt, /Are there explicit tender documents or RFPs for digital or broadcast procurement at International Canoe Federation\?/i);
+  assert.match(prompt, /Start with official tender pages, PDF attachments, and official-site search results before broader web search\./i);
+  assert.match(prompt, /Return exactly one fenced JSON code block with answer, confidence, sources, and validation_state\./i);
+  assert.match(prompt, /The answer should name the active tender, RFP, or procurement document if one exists\./i);
+  assert.match(prompt, /validation_state "no_signal"/i);
+});
+
 test('runOpenCodeQuestionSourceBatch stops after the first validated digital-stack fallback answer', async () => {
   const outputDir = mkdtempSync(join(tmpdir(), 'opencode-digital-stack-stop-'));
   const sourcePath = join(outputDir, 'source.json');
@@ -1800,16 +1827,17 @@ test('runOpenCodePresetBatch supports the POI-only preset', async () => {
       },
     });
 
-    assert.equal(result.questions_total, 5);
+    assert.equal(result.questions_total, 6);
     assert.deepEqual(questionRuns, [
       'poi_commercial_partnerships_lead',
+      'poi_related_pois',
       'poi_digital_product_lead',
       'poi_fan_engagement_lead',
       'poi_marketing_comms_lead',
       'poi_operations_lead',
     ]);
     const meta = JSON.parse(readFileSync(result.meta_result_path, 'utf8'));
-    assert.equal(meta.questions.length, 5);
+    assert.equal(meta.questions.length, 6);
   } finally {
     if (previousZaiKey === undefined) {
       delete process.env.ANTHROPIC_AUTH_TOKEN;
@@ -1852,7 +1880,7 @@ test('runOpenCodePresetBatch supports the POI batch A preset', async () => {
     assert.equal(result.questions_total, 2);
     assert.deepEqual(questionRuns, [
       'poi_commercial_partnerships_lead',
-      'poi_digital_product_lead',
+      'poi_related_pois',
     ]);
     const meta = JSON.parse(readFileSync(result.meta_result_path, 'utf8'));
     assert.equal(meta.questions.length, 2);
@@ -1897,8 +1925,8 @@ test('runOpenCodePresetBatch supports the POI batch B preset', async () => {
 
     assert.equal(result.questions_total, 2);
     assert.deepEqual(questionRuns, [
+      'poi_digital_product_lead',
       'poi_fan_engagement_lead',
-      'poi_marketing_comms_lead',
     ]);
     const meta = JSON.parse(readFileSync(result.meta_result_path, 'utf8'));
     assert.equal(meta.questions.length, 2);
@@ -1941,10 +1969,10 @@ test('runOpenCodePresetBatch supports the POI batch C preset', async () => {
       },
     });
 
-    assert.equal(result.questions_total, 1);
-    assert.deepEqual(questionRuns, ['poi_operations_lead']);
+    assert.equal(result.questions_total, 2);
+    assert.deepEqual(questionRuns, ['poi_marketing_comms_lead', 'poi_operations_lead']);
     const meta = JSON.parse(readFileSync(result.meta_result_path, 'utf8'));
-    assert.equal(meta.questions.length, 1);
+    assert.equal(meta.questions.length, 2);
   } finally {
     if (previousZaiKey === undefined) {
       delete process.env.ANTHROPIC_AUTH_TOKEN;
@@ -2114,11 +2142,11 @@ test('runOpenCodePresetBatch extends when evidence appears', async () => {
     });
 
     assert.equal(result.questions_total, 1);
-    assert.equal(runs.length, 2);
-    assert.deepEqual(runs, ['"Test Entity" founded', 'Test Entity founding evidence']);
+    assert.equal(runs.length, 1);
+    assert.deepEqual(runs, ['"Test Entity" founded']);
     const state = JSON.parse(readFileSync(result.state_path, 'utf8'));
     assert.equal(state.questions[0].status, 'validated');
-    assert.equal(state.questions[0].run_history.length, 2);
+    assert.equal(state.questions[0].run_history.length, 1);
     assert.equal(state.questions[0].frontier.some((item) => item.query === 'Test Entity founding evidence'), true);
   } finally {
     if (previousZaiKey === undefined) {

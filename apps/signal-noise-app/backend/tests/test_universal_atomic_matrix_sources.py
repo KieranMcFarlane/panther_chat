@@ -66,13 +66,22 @@ def test_canonical_atomic_matrix_sources_are_five_question_universal_matrices(
         "q4_decision_owner",
         "q5_related_pois",
     ]
-    assert [question["question_type"] for question in payload["questions"]] == [
-        "foundation",
-        "digital_stack",
-        "procurement",
-        "decision_owner",
-        "related_pois",
-    ]
+    if entity_id == "international-canoe-federation":
+        assert [question["question_type"] for question in payload["questions"]] == [
+            "foundation",
+            "digital_stack",
+            "tender_docs",
+            "decision_owner",
+            "related_pois",
+        ]
+    else:
+        assert [question["question_type"] for question in payload["questions"]] == [
+            "foundation",
+            "digital_stack",
+            "procurement",
+            "decision_owner",
+            "related_pois",
+        ]
     assert all(question["question_shape"] == "atomic" for question in payload["questions"])
     assert payload["questions"][0]["source_priority"] == [
         "google_serp",
@@ -159,6 +168,11 @@ def test_canonical_atomic_matrix_sources_are_five_question_universal_matrices(
             '"Arsenal Football Club" procurement',
         ]
     if entity_id == "international-canoe-federation":
+        assert payload["questions"][2]["question_family"] == "tender_docs"
+        assert payload["questions"][2]["question_type"] == "tender_docs"
+        assert payload["questions"][2]["question"] == (
+            "Are there explicit tender documents or RFPs for digital or broadcast procurement at International Canoe Federation?"
+        )
         assert payload["questions"][2]["query"] == '"International Canoe Federation" tenders'
         assert payload["questions"][2]["search_strategy"]["search_queries"] == [
             '"International Canoe Federation" tenders',

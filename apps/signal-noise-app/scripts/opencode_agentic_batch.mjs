@@ -582,7 +582,7 @@ function _normalizeConfidenceThreshold(question, overrides = {}) {
   if (Number.isFinite(threshold) && threshold >= 0 && threshold <= 1) {
     return threshold;
   }
-  return question.question_type === 'procurement' ? 0.85 : 0.8;
+  return question.question_type === 'procurement' || question.question_type === 'tender_docs' ? 0.85 : 0.8;
 }
 
 function _coerceConfidenceScore(value) {
@@ -1012,6 +1012,9 @@ export function buildOpenCodeQuestionPrompt(question) {
   }
   if (questionType === 'related_pois') {
     return `${_questionText(question)} use brightdata. ${searchHint} Start with search and use scraped pages only if the search results are not enough to validate the answer. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer set to the best candidate name, candidates, confidence, sources, and validation_state. candidates should be a ranked list of 3 to 5 people with the best commercial relevance. If you cannot validate a ranked list of 3 to 5 candidates within that budget, return exactly one fenced JSON code block with answer "", candidates [], confidence 0, sources [], and validation_state "no_signal", then stop. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated ranked list.`;
+  }
+  if (questionType === 'tender_docs') {
+    return `${_questionText(question)} use brightdata. ${searchHint} Start with official tender pages, PDF attachments, and official-site search results before broader web search. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer, confidence, sources, and validation_state. The answer should name the active tender, RFP, or procurement document if one exists. If you cannot validate an explicit tender or RFP document within that budget, return exactly one fenced JSON code block with answer "", confidence 0, sources [], and validation_state "no_signal", then stop. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated answer.`;
   }
   if (questionType === 'digital_stack') {
     return `${_questionText(question)} use brightdata. ${searchHint} Start with search and use scraped pages only if the search results are not enough to validate the answer. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer, technologies, categories, vendors, additional_domains, maturity_signal, commercial_interpretation, opportunity, confidence, sources, and validation_state. additional_domains should only include real digital services or subdomains worth separate tech-stack enrichment, such as ticketing, shop, app, or fan platform domains. commercial_interpretation must summarize the stack in business terms, not raw telemetry. opportunity must state the most credible commercial angle from the visible stack. If you cannot validate a supported answer within that budget, return exactly one fenced JSON code block with answer "", technologies [], categories [], vendors [], additional_domains [], maturity_signal "low", commercial_interpretation "", opportunity "", confidence 0, sources [], and validation_state "no_signal", then stop. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated answer.`;
@@ -1788,6 +1791,9 @@ function _categoryForQuestion(question) {
     return 'opportunity_signal';
   }
   if (questionType === 'procurement') {
+    return 'procurement_opportunity';
+  }
+  if (questionType === 'tender_docs') {
     return 'procurement_opportunity';
   }
   if (questionType === 'poi') {

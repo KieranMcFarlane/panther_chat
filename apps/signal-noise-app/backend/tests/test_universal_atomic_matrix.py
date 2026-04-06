@@ -57,13 +57,22 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
             "q4_decision_owner",
             "q5_related_pois",
         ]
-        assert [question["question_type"] for question in payload["questions"]] == [
-            "foundation",
-            "digital_stack",
-            "procurement",
-            "decision_owner",
-            "related_pois",
-        ]
+        if payload["entity_id"] == "international-canoe-federation":
+            assert [question["question_type"] for question in payload["questions"]] == [
+                "foundation",
+                "digital_stack",
+                "tender_docs",
+                "decision_owner",
+                "related_pois",
+            ]
+        else:
+            assert [question["question_type"] for question in payload["questions"]] == [
+                "foundation",
+                "digital_stack",
+                "procurement",
+                "decision_owner",
+                "related_pois",
+            ]
         assert all(question["question_shape"] == "atomic" for question in payload["questions"])
         assert payload["questions"][0]["source_priority"] == [
             "google_serp",
@@ -225,26 +234,81 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
         assert payload["questions"][1]["question"] == (
             f"What visible technologies, platforms, or vendors does {entity_name} use, and what do they imply commercially?"
         )
-    assert arsenal["questions"][2]["question"] == (
-        "Is there evidence Arsenal Football Club is buying, launching, or reshaping its commercial or digital ecosystem through procurement, partnerships, hiring, or platform initiatives?"
-    )
-    assert arsenal["questions"][2]["search_strategy"]["search_queries"] == [
-        '"Arsenal Football Club" partner',
-        '"Arsenal Football Club" sponsor',
-        '"Arsenal Football Club" official partner',
-        '"Arsenal Football Club" digital partner',
-        '"Arsenal Football Club" technology partner',
-        '"Arsenal Football Club" platform',
-        '"Arsenal Football Club" mobile app',
-        '"Arsenal Football Club" hiring digital',
-        '"Arsenal Football Club" hiring analytics',
-        '"Arsenal Football Club" analytics initiative',
-        '"Arsenal Football Club" broadcast partner',
-        '"Arsenal Football Club" vendor',
-        '"Arsenal Football Club" RFP',
-        '"Arsenal Football Club" tender',
-        '"Arsenal Football Club" procurement',
-    ]
+        if payload["entity_id"] == "international-canoe-federation":
+            assert payload["questions"][2]["question"] == (
+                "Are there explicit tender documents or RFPs for digital or broadcast procurement at International Canoe Federation?"
+            )
+            assert payload["questions"][2]["search_strategy"]["search_queries"] == [
+                '"International Canoe Federation" tenders',
+                '"International Canoe Federation" Paddle Worldwide digital ecosystem',
+                '"International Canoe Federation" OTT platform',
+                'site:canoeicf.com paddleworldwide_dxp_rfp.pdf',
+                'site:canoeicf.com ott platform 2026 pdf',
+                'site:canoeicf.com tenders',
+            ]
+        else:
+            if payload["entity_type"] == "SPORT_CLUB":
+                q3_expected = [
+                    f'"{entity_name}" partner',
+                    f'"{entity_name}" sponsor',
+                    f'"{entity_name}" official partner',
+                    f'"{entity_name}" digital partner',
+                    f'"{entity_name}" technology partner',
+                    f'"{entity_name}" platform',
+                    f'"{entity_name}" mobile app',
+                    f'"{entity_name}" hiring digital',
+                    f'"{entity_name}" hiring analytics',
+                    f'"{entity_name}" analytics initiative',
+                    f'"{entity_name}" broadcast partner',
+                    f'"{entity_name}" vendor',
+                    f'"{entity_name}" RFP',
+                    f'"{entity_name}" tender',
+                    f'"{entity_name}" procurement',
+                ]
+            elif payload["entity_type"] == "SPORT_LEAGUE":
+                q3_expected = [
+                    f'"{entity_name}" RFP',
+                    f'"{entity_name}" tender',
+                    f'"{entity_name}" procurement',
+                    f'"{entity_name}" vendor',
+                    f'"{entity_name}" sponsor',
+                    f'"{entity_name}" broadcast',
+                    f'"{entity_name}" hiring digital',
+                    f'"{entity_name}" analytics',
+                    f'"{entity_name}" platform',
+                ]
+            else:
+                q3_expected = [
+                    f'"{entity_name}" procurement',
+                    f'"{entity_name}" tender',
+                    f'"{entity_name}" broadcast services',
+                    f'"{entity_name}" OTT platform',
+                    f'"{entity_name}" partner',
+                    f'"{entity_name}" sponsor',
+                    f'"{entity_name}" digital platform',
+                    f'"{entity_name}" analytics',
+                    f'"{entity_name}" membership platform',
+                    f'"{entity_name}" results platform',
+                    f'"{entity_name}" vendor',
+                ]
+            assert payload["questions"][2]["question"] == (
+                f"Is there evidence {entity_name} is buying, launching, or reshaping its commercial or digital ecosystem through procurement, partnerships, hiring, or platform initiatives?"
+            )
+            assert payload["questions"][2]["search_strategy"]["search_queries"] == q3_expected
+    if payload["entity_id"] == "international-canoe-federation":
+        assert payload["questions"][2]["question_family"] == "tender_docs"
+        assert payload["questions"][2]["question_type"] == "tender_docs"
+        assert payload["questions"][2]["question"] == (
+            "Are there explicit tender documents or RFPs for digital or broadcast procurement at International Canoe Federation?"
+        )
+        assert payload["questions"][2]["search_strategy"]["search_queries"] == [
+            '"International Canoe Federation" tenders',
+            '"International Canoe Federation" Paddle Worldwide digital ecosystem',
+            '"International Canoe Federation" OTT platform',
+            'site:canoeicf.com paddleworldwide_dxp_rfp.pdf',
+            'site:canoeicf.com ott platform 2026 pdf',
+            'site:canoeicf.com tenders',
+        ]
     assert mlc["questions"][2]["search_strategy"]["search_queries"] == [
         '"Major League Cricket" RFP',
         '"Major League Cricket" tender',
@@ -318,6 +382,11 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
         '"Arsenal Football Club" CEO',
     ]
     assert icf["questions"][2]["query"] == '"International Canoe Federation" tenders'
+    assert icf["questions"][2]["question_family"] == "tender_docs"
+    assert icf["questions"][2]["question_type"] == "tender_docs"
+    assert icf["questions"][2]["question"] == (
+        "Are there explicit tender documents or RFPs for digital or broadcast procurement at International Canoe Federation?"
+    )
     assert icf["questions"][2]["source_priority"] == [
         "official_site",
         "google_serp",

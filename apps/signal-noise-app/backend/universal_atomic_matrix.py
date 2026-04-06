@@ -418,6 +418,9 @@ MLC_QUESTION_OVERRIDES: Dict[str, Dict[str, Any]] = {
 
 ICF_QUESTION_OVERRIDES: Dict[str, Dict[str, Any]] = {
     "q3_procurement_signal": {
+        "question_family": "tender_docs",
+        "question_type": "tender_docs",
+        "question": "Are there explicit tender documents or RFPs for digital or broadcast procurement at {entity}?",
         "query": '"{entity}" tenders',
         "source_priority": [
             "official_site",
