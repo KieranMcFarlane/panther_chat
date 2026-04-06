@@ -27,10 +27,15 @@ from pydantic import BaseModel, Field, ValidationError
 try:
     from backend.brightdata_mcp_client import BrightDataMCPClient
     from backend.claude_client import ClaudeClient
+    from backend.connections_graph_enricher import (
+        build_default_connections_graph_enricher,
+        connections_enrichment_enabled_by_default,
+    )
     from backend.question_first_promoter import build_question_first_promotions
 except ImportError:
     from brightdata_mcp_client import BrightDataMCPClient  # type: ignore
     from claude_client import ClaudeClient  # type: ignore
+    from connections_graph_enricher import build_default_connections_graph_enricher, connections_enrichment_enabled_by_default  # type: ignore
     from question_first_promoter import build_question_first_promotions  # type: ignore
 
 logger = logging.getLogger(__name__)
@@ -783,6 +788,7 @@ async def run_question_first_dossier_from_payload(
     opencode_timeout_ms: int = 300000,
     preset: Optional[str] = None,
     question_source_label: Optional[str] = None,
+    connections_graph_enricher: Any | None = None,
     **_legacy_kwargs: Any,
 ) -> Dict[str, Any]:
     source = dict(source_payload or {})
@@ -807,16 +813,31 @@ async def run_question_first_dossier_from_payload(
         evidence_items=artifact.evidence_items,
         promotion_candidates=artifact.promotion_candidates,
     )
+    active_connections_graph = promotions["connections_graph"]
+    if connections_graph_enricher is None and connections_enrichment_enabled_by_default():
+        brightdata_client = BrightDataMCPClient()
+        connections_graph_enricher = build_default_connections_graph_enricher(brightdata_client)
+    if connections_graph_enricher is not None:
+        enrich_callable = getattr(connections_graph_enricher, "enrich", None)
+        if callable(enrich_callable):
+            try:
+                active_connections_graph = await enrich_callable(
+                    connections_graph=active_connections_graph,
+                    poi_graph=promotions["poi_graph"],
+                    entity_name=str(artifact.entity.get("entity_name") or source.get("entity_name") or source.get("entity_id") or ""),
+                )
+            except Exception as exc:
+                logger.warning("connections graph enrichment failed: %s", exc)
     merged["dossier_promotions"] = promotions["dossier_promotions"]
     merged["discovery_summary"] = promotions["discovery_summary"]
     merged["poi_graph"] = promotions["poi_graph"]
-    merged["connections_graph"] = promotions["connections_graph"]
+    merged["connections_graph"] = active_connections_graph
     merged.setdefault("question_first", {})
     if isinstance(merged["question_first"], dict):
         merged["question_first"]["dossier_promotions"] = promotions["dossier_promotions"]
         merged["question_first"]["discovery_summary"] = promotions["discovery_summary"]
         merged["question_first"]["poi_graph"] = artifact.poi_graph or promotions["poi_graph"]
-        merged["question_first"]["connections_graph"] = promotions["connections_graph"]
+        merged["question_first"]["connections_graph"] = active_connections_graph
 
     if output_dir is not None:
       output_dir = Path(output_dir)
