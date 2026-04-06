@@ -619,6 +619,15 @@ def analyze_connections_from_question_first_dossier(
 
     question_first = merged_dossier.get("question_first") if isinstance(merged_dossier.get("question_first"), dict) else {}
     question_first_run = merged_dossier.get("question_first_run") if isinstance(merged_dossier.get("question_first_run"), dict) else {}
+    connections_graph = (
+        merged_dossier.get("connections_graph")
+        if isinstance(merged_dossier.get("connections_graph"), dict)
+        else question_first.get("connections_graph")
+        if isinstance(question_first.get("connections_graph"), dict)
+        else question_first_run.get("connections_graph")
+        if isinstance(question_first_run.get("connections_graph"), dict)
+        else {}
+    )
     poi_graph = (
         question_first.get("poi_graph")
         if isinstance(question_first.get("poi_graph"), dict)
@@ -646,11 +655,162 @@ def analyze_connections_from_question_first_dossier(
         analyzer = ConnectionsAnalyzer(yp_team=yp_team)
 
     target_personnel = _target_personnel_from_poi_graph(entity_id=entity_id, poi_graph=poi_graph)
+    bridge_contacts = _bridge_contacts_from_connections_graph(connections_graph)
+    yp_team_data = _yp_team_data_from_connections_graph(connections_graph, yp_team=analyzer.yp_team)
+    target_personnel = _merge_target_personnel(
+        target_personnel,
+        _target_personnel_from_connections_graph(entity_id=entity_id, connections_graph=connections_graph),
+    )
     return analyzer.analyze_connections(
         entity_id=entity_id,
         entity_name=entity_name,
         target_personnel=target_personnel,
+        bridge_contacts=bridge_contacts or None,
+        yp_team_data=yp_team_data or None,
     )
+
+
+def _merge_target_personnel(*collections: List[TargetPerson]) -> List[TargetPerson]:
+    merged: List[TargetPerson] = []
+    index: Dict[Tuple[str, str], TargetPerson] = {}
+    for collection in collections:
+        for person in collection or []:
+            key = (person.entity_id, person.person_name.strip().lower())
+            existing = index.get(key)
+            if existing is None:
+                index[key] = TargetPerson(
+                    entity_id=person.entity_id,
+                    person_name=person.person_name,
+                    role=person.role,
+                    linkedin_url=person.linkedin_url,
+                    mutual_connections_yp=person.mutual_connections_yp,
+                    count_second_degree_paths=person.count_second_degree_paths,
+                )
+                continue
+            if not existing.role and person.role:
+                existing.role = person.role
+            if not existing.linkedin_url and person.linkedin_url:
+                existing.linkedin_url = person.linkedin_url
+            if not existing.mutual_connections_yp and person.mutual_connections_yp:
+                existing.mutual_connections_yp = person.mutual_connections_yp
+            existing.count_second_degree_paths = max(existing.count_second_degree_paths, person.count_second_degree_paths)
+    merged.extend(index.values())
+    return merged
+
+
+def _connections_graph_nodes(graph: Optional[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
+    nodes = graph.get("nodes") if isinstance(graph, dict) and isinstance(graph.get("nodes"), list) else []
+    result: Dict[str, Dict[str, Any]] = {}
+    for node in nodes:
+        if not isinstance(node, dict):
+            continue
+        node_id = str(node.get("node_id") or "").strip()
+        if node_id:
+            result[node_id] = node
+    return result
+
+
+def _target_personnel_from_connections_graph(
+    *,
+    entity_id: str,
+    connections_graph: Optional[Dict[str, Any]] = None,
+) -> List[TargetPerson]:
+    graph = connections_graph if isinstance(connections_graph, dict) else {}
+    nodes = _connections_graph_nodes(graph)
+    edges = graph.get("edges") if isinstance(graph.get("edges"), list) else []
+    people: List[TargetPerson] = []
+    seen = set()
+    for edge in edges:
+        if not isinstance(edge, dict):
+            continue
+        edge_type = str(edge.get("edge_type") or "").strip().lower()
+        if edge_type not in {"primary_owner_of", "supports", "bridge_to_target", "direct_connection", "mutual_connection"}:
+            continue
+        to_id = str(edge.get("to_id") or "").strip()
+        person_node = nodes.get(to_id)
+        if not person_node or str(person_node.get("node_type") or "").strip().lower() != "person":
+            continue
+        name = str(person_node.get("name") or "").strip()
+        if not name:
+            continue
+        key = name.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        people.append(
+            TargetPerson(
+                entity_id=entity_id,
+                person_name=name,
+                role=str(person_node.get("title") or "").strip(),
+                linkedin_url=str(person_node.get("linkedin_url") or "").strip(),
+                mutual_connections_yp="",
+                count_second_degree_paths=0,
+            )
+        )
+    return people
+
+
+def _bridge_contacts_from_connections_graph(connections_graph: Optional[Dict[str, Any]] = None) -> List[BridgeContact]:
+    nodes = _connections_graph_nodes(connections_graph)
+    bridge_contacts: List[BridgeContact] = []
+    for node in nodes.values():
+        if str(node.get("node_type") or "").strip().lower() != "bridge_contact":
+            continue
+        bridge_contacts.append(
+            BridgeContact(
+                contact_name=str(node.get("name") or "").strip(),
+                relationship_to_yp=str(node.get("relationship_to_yp") or "").strip(),
+                network_reach=str(node.get("network_reach") or "").strip(),
+                introduction_capability=str(node.get("introduction_capability") or "").strip(),
+                linkedin_url=str(node.get("linkedin_url") or "").strip(),
+                target_connections_count=int(node.get("target_connections_count") or 0),
+            )
+        )
+    return bridge_contacts
+
+
+def _yp_team_data_from_connections_graph(
+    connections_graph: Optional[Dict[str, Any]],
+    *,
+    yp_team: Optional[List[Dict[str, Any]]] = None,
+) -> List[Dict[str, Any]]:
+    graph = connections_graph if isinstance(connections_graph, dict) else {}
+    nodes = _connections_graph_nodes(graph)
+    edges = graph.get("edges") if isinstance(graph.get("edges"), list) else []
+    yp_team = yp_team or YELLOW_PANTHER_TEAM
+    yp_index = {str(member.get("yp_name") or "").strip(): {"yp_name": str(member.get("yp_name") or "").strip(), "direct_connections": 0, "mutual_connections": [], "success_probability": 0.0} for member in yp_team}
+
+    def add_mutual(name: str, mutual: str) -> None:
+        mutual = mutual.strip()
+        if mutual and mutual not in yp_index[name]["mutual_connections"]:
+            yp_index[name]["mutual_connections"].append(mutual)
+
+    for edge in edges:
+        if not isinstance(edge, dict):
+            continue
+        from_id = str(edge.get("from_id") or "").strip()
+        edge_type = str(edge.get("edge_type") or "").strip().lower()
+        yp_name = ""
+        from_node = nodes.get(from_id)
+        if from_node and str(from_node.get("node_type") or "").strip().lower() == "yp_member":
+            yp_name = str(from_node.get("name") or "").strip()
+        elif from_id in yp_index:
+            yp_name = from_id
+        if yp_name not in yp_index:
+            continue
+
+        if edge_type == "direct_connection":
+            yp_index[yp_name]["direct_connections"] += 1
+            yp_index[yp_name]["success_probability"] = max(yp_index[yp_name]["success_probability"], float(edge.get("confidence") or 60.0))
+        elif edge_type == "mutual_connection":
+            yp_index[yp_name]["direct_connections"] += 1
+            add_mutual(yp_name, str(edge.get("mutual_name") or edge.get("to_label") or "").strip())
+            yp_index[yp_name]["success_probability"] = max(yp_index[yp_name]["success_probability"], float(edge.get("confidence") or 55.0))
+        elif edge_type == "bridge_connection":
+            add_mutual(yp_name, str(edge.get("to_label") or "").strip())
+            yp_index[yp_name]["success_probability"] = max(yp_index[yp_name]["success_probability"], float(edge.get("confidence") or 35.0))
+
+    return list(yp_index.values())
 
 
 def format_connections_for_dossier(result: ConnectionsResult) -> Dict[str, Any]:
