@@ -93,13 +93,24 @@ def test_canonical_atomic_matrix_sources_are_five_question_universal_matrices(
         "press_release",
         "official_site",
     ]
-    assert payload["questions"][3]["source_priority"] == [
-        "linkedin_company_profile",
-        "linkedin_people_search",
-        "linkedin_person_profile",
-        "google_serp",
-        "official_site",
-    ]
+    if entity_id == "international-canoe-federation":
+        assert payload["questions"][3]["source_priority"] == [
+            "linkedin_company_profile",
+            "linkedin_people_search",
+            "linkedin_person_profile",
+            "google_serp",
+            "official_site",
+        ]
+    else:
+        assert payload["questions"][3]["source_priority"] == [
+            "google_serp",
+            "official_site",
+            "news",
+            "press_release",
+            "linkedin_company_profile",
+            "linkedin_people_search",
+            "linkedin_person_profile",
+        ]
     assert payload["questions"][4]["source_priority"] == [
         "linkedin_company_profile",
         "linkedin_people_search",
@@ -177,15 +188,16 @@ def test_canonical_atomic_matrix_sources_are_five_question_universal_matrices(
         assert payload["questions"][3]["query"] == '"Major League Cricket" LinkedIn company profile'
         assert payload["questions"][3]["search_strategy"]["search_queries"] == [
             '"Major League Cricket" LinkedIn company profile',
-            '"Major League Cricket" LinkedIn commercial',
-            '"Major League Cricket" LinkedIn sponsorship',
-            '"Major League Cricket" LinkedIn partnerships',
-            '"Major League Cricket" LinkedIn revenue',
-            '"Major League Cricket" LinkedIn business development',
+            '"Major League Cricket" leadership team',
+            '"Major League Cricket" commercial team',
+            '"Major League Cricket" partnerships',
+            '"Major League Cricket" sponsorship',
+            '"Major League Cricket" chief business officer',
             '"Major League Cricket" vice president commercial',
             '"Major League Cricket" chief commercial officer',
-            '"Major League Cricket" partnerships director',
-            '"Major League Cricket" sponsorship director',
+            '"Major League Cricket" commercial director',
+            '"Major League Cricket" head of partnerships',
+            '"Major League Cricket" business development director',
             '"Major League Cricket" CEO',
         ]
         assert payload["questions"][4]["question"] == (

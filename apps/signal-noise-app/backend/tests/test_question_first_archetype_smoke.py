@@ -107,3 +107,39 @@ async def test_archetype_smoke_runs_serially_and_writes_summary(tmp_path):
     assert summary["entities"][2]["entity_id"] == "major-league-cricket"
     assert (output_root / "question_first_archetype_smoke.json").exists()
     assert (output_root / "question_first_archetype_smoke.md").exists()
+
+
+def test_load_archetypes_from_manifest_materializes_missing_question_sources(tmp_path):
+    manifest_path = tmp_path / "batch.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "question_first_scale_batch_v1",
+                "entities": [
+                    {
+                        "entity_id": "arsenal",
+                        "entity_name": "Arsenal Football Club",
+                        "entity_type": "SPORT_CLUB",
+                        "question_source_path": "apps/signal-noise-app/backend/data/question_sources/arsenal_atomic_matrix.json",
+                    },
+                    {
+                        "entity_id": "world-rugby",
+                        "entity_name": "World Rugby",
+                        "entity_type": "SPORT_FEDERATION",
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    archetypes = smoke.load_archetypes_from_manifest(manifest_path, output_root=tmp_path / "out")
+
+    assert len(archetypes) == 2
+    assert archetypes[0]["question_source_path"].name == "arsenal_atomic_matrix.json"
+    generated_path = archetypes[1]["question_source_path"]
+    assert generated_path.exists()
+    payload = json.loads(generated_path.read_text(encoding="utf-8"))
+    assert payload["entity_id"] == "world-rugby"
+    assert payload["entity_name"] == "World Rugby"
+    assert payload["entity_type"] == "SPORT_FEDERATION"

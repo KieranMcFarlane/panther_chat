@@ -19,6 +19,7 @@ from typing import Any, Awaitable, Callable, Dict, Iterable, List, Optional
 from dotenv import load_dotenv
 
 from question_first_dossier_runner import run_question_first_dossier
+from universal_atomic_matrix import build_universal_atomic_question_source
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +45,59 @@ DEFAULT_ARCHETYPE_BATCH: List[Dict[str, Any]] = [
         "question_source_path": ROOT / "backend" / "data" / "question_sources" / "major_league_cricket_atomic_matrix.json",
     },
 ]
+
+
+def load_archetypes_from_manifest(manifest_path: Path, *, output_root: Path) -> List[Dict[str, Any]]:
+    payload = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+    entities = payload.get("entities") if isinstance(payload, dict) else None
+    if not isinstance(entities, list) or not entities:
+        raise ValueError("Batch manifest must contain a non-empty entities list")
+
+    generated_source_dir = output_root / "_generated_question_sources"
+    generated_source_dir.mkdir(parents=True, exist_ok=True)
+
+    archetypes: List[Dict[str, Any]] = []
+    for entity in entities:
+        if not isinstance(entity, dict):
+            continue
+        entity_id = str(entity.get("entity_id") or "").strip()
+        entity_name = str(entity.get("entity_name") or "").strip()
+        entity_type = str(entity.get("entity_type") or "").strip()
+        if not entity_id or not entity_name or not entity_type:
+            raise ValueError("Each manifest entity must include entity_id, entity_name, and entity_type")
+
+        provided_source_path = str(entity.get("question_source_path") or "").strip()
+        if provided_source_path:
+            question_source_path = Path(provided_source_path)
+            if not question_source_path.is_absolute():
+                question_source_path = ROOT.parent / question_source_path
+        else:
+            generated_path = generated_source_dir / f"{_slugify(entity_id)}_atomic_matrix.json"
+            generated_path.write_text(
+                json.dumps(
+                    build_universal_atomic_question_source(
+                        entity_type=entity_type,
+                        entity_name=entity_name,
+                        entity_id=entity_id,
+                        preset=f"{_slugify(entity_id)}-atomic-matrix",
+                        question_source_label=f"{_slugify(entity_id)}-atomic-matrix",
+                    ),
+                    indent=2,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            question_source_path = generated_path
+
+        archetypes.append(
+            {
+                "entity_id": entity_id,
+                "entity_name": entity_name,
+                "entity_type": entity_type,
+                "question_source_path": question_source_path,
+            }
+        )
+    return archetypes
 
 
 def _iso() -> str:
@@ -182,6 +236,11 @@ async def run_smoke(
 def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(description="Run the serial question-first archetype smoke")
     parser.add_argument(
+        "--batch-manifest",
+        default="",
+        help="Path to a question-first scale batch manifest JSON",
+    )
+    parser.add_argument(
         "--output-root",
         default="",
         help="Directory for the smoke outputs (default: backend/data/question_first_archetype_smokes/<timestamp>)",
@@ -200,9 +259,14 @@ def main(argv: Optional[List[str]] = None) -> int:
         ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
         output_root = ROOT / "backend" / "data" / "question_first_archetype_smokes" / f"question_first_archetype_smoke_{ts}"
 
+    if args.batch_manifest:
+        archetypes = load_archetypes_from_manifest(Path(args.batch_manifest), output_root=output_root)
+    else:
+        archetypes = DEFAULT_ARCHETYPE_BATCH
+
     asyncio.run(
         run_smoke(
-            DEFAULT_ARCHETYPE_BATCH,
+            archetypes,
             output_root=output_root,
             opencode_timeout_ms=args.opencode_timeout_ms,
         )

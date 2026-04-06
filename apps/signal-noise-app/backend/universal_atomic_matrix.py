@@ -27,31 +27,43 @@ DECISION_OWNER_SOURCE_PRIORITY = [
     "official_site",
 ]
 
+DECISION_OWNER_SOURCE_PRIORITY_BROAD = [
+    "google_serp",
+    "official_site",
+    "news",
+    "press_release",
+    "linkedin_company_profile",
+    "linkedin_people_search",
+    "linkedin_person_profile",
+]
+
 DECISION_OWNER_SEARCH_QUERIES_CLUB = [
     '"{entity}" LinkedIn company profile',
-    '"{entity}" LinkedIn commercial',
-    '"{entity}" LinkedIn partnerships',
-    '"{entity}" LinkedIn sponsorship',
-    '"{entity}" LinkedIn business development',
-    '"{entity}" LinkedIn marketing',
+    '"{entity}" front office staff',
+    '"{entity}" leadership team',
+    '"{entity}" commercial team',
+    '"{entity}" partnerships',
+    '"{entity}" sponsorship',
+    '"{entity}" chief business officer',
     '"{entity}" chief commercial officer',
-    '"{entity}" partnerships director',
-    '"{entity}" sponsorship director',
+    '"{entity}" commercial director',
     '"{entity}" head of partnerships',
+    '"{entity}" business development director',
     '"{entity}" CEO',
 ]
 
 DECISION_OWNER_SEARCH_QUERIES_LEAGUE = [
     '"{entity}" LinkedIn company profile',
-    '"{entity}" LinkedIn commercial',
-    '"{entity}" LinkedIn sponsorship',
-    '"{entity}" LinkedIn partnerships',
-    '"{entity}" LinkedIn revenue',
-    '"{entity}" LinkedIn business development',
+    '"{entity}" leadership team',
+    '"{entity}" commercial team',
+    '"{entity}" partnerships',
+    '"{entity}" sponsorship',
+    '"{entity}" chief business officer',
     '"{entity}" vice president commercial',
     '"{entity}" chief commercial officer',
-    '"{entity}" partnerships director',
-    '"{entity}" sponsorship director',
+    '"{entity}" commercial director',
+    '"{entity}" head of partnerships',
+    '"{entity}" business development director',
     '"{entity}" CEO',
 ]
 
@@ -418,6 +430,8 @@ def _render_question_spec(spec: Dict[str, Any], entity_name: str, entity_id: str
         if rendered.get("question_id") in {"q4_decision_owner", "q5_related_pois"}:
             entity_type_key = _slugify(entity_type)
             if rendered.get("question_id") == "q4_decision_owner":
+                if entity_type_key in {"sport-club", "sport-league"}:
+                    rendered["source_priority"] = DECISION_OWNER_SOURCE_PRIORITY_BROAD
                 if entity_type_key == "sport-club":
                     query_set = DECISION_OWNER_SEARCH_QUERIES_CLUB
                 elif entity_type_key == "sport-league":

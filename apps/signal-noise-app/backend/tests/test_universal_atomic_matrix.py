@@ -84,13 +84,24 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
             "press_release",
             "official_site",
         ]
-        assert payload["questions"][3]["source_priority"] == [
-            "linkedin_company_profile",
-            "linkedin_people_search",
-            "linkedin_person_profile",
-            "google_serp",
-            "official_site",
-        ]
+        if payload["entity_type"] == "SPORT_FEDERATION":
+            assert payload["questions"][3]["source_priority"] == [
+                "linkedin_company_profile",
+                "linkedin_people_search",
+                "linkedin_person_profile",
+                "google_serp",
+                "official_site",
+            ]
+        else:
+            assert payload["questions"][3]["source_priority"] == [
+                "google_serp",
+                "official_site",
+                "news",
+                "press_release",
+                "linkedin_company_profile",
+                "linkedin_people_search",
+                "linkedin_person_profile",
+            ]
         assert payload["questions"][4]["source_priority"] == [
             "linkedin_company_profile",
             "linkedin_people_search",
@@ -261,15 +272,16 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
     assert arsenal["questions"][3]["query"] == '"Arsenal Football Club" LinkedIn company profile'
     assert arsenal["questions"][3]["search_strategy"]["search_queries"] == [
         '"Arsenal Football Club" LinkedIn company profile',
-        '"Arsenal Football Club" LinkedIn commercial',
-        '"Arsenal Football Club" LinkedIn partnerships',
-        '"Arsenal Football Club" LinkedIn sponsorship',
-        '"Arsenal Football Club" LinkedIn business development',
-        '"Arsenal Football Club" LinkedIn marketing',
+        '"Arsenal Football Club" front office staff',
+        '"Arsenal Football Club" leadership team',
+        '"Arsenal Football Club" commercial team',
+        '"Arsenal Football Club" partnerships',
+        '"Arsenal Football Club" sponsorship',
+        '"Arsenal Football Club" chief business officer',
         '"Arsenal Football Club" chief commercial officer',
-        '"Arsenal Football Club" partnerships director',
-        '"Arsenal Football Club" sponsorship director',
+        '"Arsenal Football Club" commercial director',
         '"Arsenal Football Club" head of partnerships',
+        '"Arsenal Football Club" business development director',
         '"Arsenal Football Club" CEO',
     ]
     assert arsenal["questions"][4]["search_strategy"]["search_queries"] == [
@@ -301,22 +313,23 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
     ]
     assert mlc["questions"][3]["search_strategy"]["search_queries"] == [
         '"Major League Cricket" LinkedIn company profile',
-        '"Major League Cricket" LinkedIn commercial',
-        '"Major League Cricket" LinkedIn sponsorship',
-        '"Major League Cricket" LinkedIn partnerships',
-        '"Major League Cricket" LinkedIn revenue',
-        '"Major League Cricket" LinkedIn business development',
+        '"Major League Cricket" leadership team',
+        '"Major League Cricket" commercial team',
+        '"Major League Cricket" partnerships',
+        '"Major League Cricket" sponsorship',
+        '"Major League Cricket" chief business officer',
         '"Major League Cricket" vice president commercial',
         '"Major League Cricket" chief commercial officer',
-        '"Major League Cricket" partnerships director',
-        '"Major League Cricket" sponsorship director',
+        '"Major League Cricket" commercial director',
+        '"Major League Cricket" head of partnerships',
+        '"Major League Cricket" business development director',
         '"Major League Cricket" CEO',
     ]
     assert mlc["questions"][3]["query"] == '"Major League Cricket" LinkedIn company profile'
     assert mlc["questions"][3]["search_strategy"]["search_queries"][0] == (
         '"Major League Cricket" LinkedIn company profile'
     )
-    assert '"Major League Cricket" LinkedIn partnerships' in mlc["questions"][3]["search_strategy"]["search_queries"]
+    assert '"Major League Cricket" head of partnerships' in mlc["questions"][3]["search_strategy"]["search_queries"]
     assert mlc["questions"][4]["question"] == (
         "Which 3 to 5 people are the most relevant commercial, partnerships, or business development contacts at Major League Cricket?"
     )
@@ -429,8 +442,8 @@ def test_universal_atomic_matrix_output_matches_canonical_files():
             assert payload["questions"][3]["search_strategy"]["search_queries"][0] == (
                 '"Major League Cricket" LinkedIn company profile'
             )
-            assert '"Major League Cricket" LinkedIn revenue' in payload["questions"][3]["search_strategy"]["search_queries"]
-            assert '"Major League Cricket" partnerships director' in payload["questions"][3]["search_strategy"]["search_queries"]
+            assert '"Major League Cricket" chief business officer' in payload["questions"][3]["search_strategy"]["search_queries"]
+            assert '"Major League Cricket" head of partnerships' in payload["questions"][3]["search_strategy"]["search_queries"]
             assert payload["questions"][4]["question"] == (
                 "Which 3 to 5 people are the most relevant commercial, partnerships, or business development contacts at Major League Cricket?"
             )
