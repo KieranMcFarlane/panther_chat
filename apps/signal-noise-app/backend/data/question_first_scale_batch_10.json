@@ -1,0 +1,73 @@
+{
+  "schema_version": "question_first_scale_batch_v1",
+  "batch_name": "question-first-scale-batch-10",
+  "description": "First post-baseline 10-entity scale batch for the five-question question-first matrix.",
+  "entities": [
+    {
+      "entity_id": "arsenal",
+      "entity_name": "Arsenal Football Club",
+      "entity_type": "SPORT_CLUB"
+    },
+    {
+      "entity_id": "leeds-united",
+      "entity_name": "Leeds United",
+      "entity_type": "SPORT_CLUB"
+    },
+    {
+      "entity_id": "celtic-fc",
+      "entity_name": "Celtic FC",
+      "entity_type": "SPORT_CLUB"
+    },
+    {
+      "entity_id": "inter-miami-cf",
+      "entity_name": "Inter Miami CF",
+      "entity_type": "SPORT_CLUB"
+    },
+    {
+      "entity_id": "icf",
+      "entity_name": "International Canoe Federation",
+      "entity_type": "SPORT_FEDERATION"
+    },
+    {
+      "entity_id": "world-rugby",
+      "entity_name": "World Rugby",
+      "entity_type": "SPORT_FEDERATION"
+    },
+    {
+      "entity_id": "ecb",
+      "entity_name": "England and Wales Cricket Board",
+      "entity_type": "SPORT_FEDERATION"
+    },
+    {
+      "entity_id": "major-league-cricket",
+      "entity_name": "Major League Cricket",
+      "entity_type": "SPORT_LEAGUE"
+    },
+    {
+      "entity_id": "premier-league",
+      "entity_name": "Premier League",
+      "entity_type": "SPORT_LEAGUE"
+    },
+    {
+      "entity_id": "nwsl",
+      "entity_name": "National Women's Soccer League",
+      "entity_type": "SPORT_LEAGUE"
+    }
+  ],
+  "metrics": {
+    "target_entities_completed": 8,
+    "target_entities_with_dossiers": 8,
+    "track_question_ids": [
+      "q1_foundation",
+      "q2_digital_stack",
+      "q3_procurement_signal",
+      "q4_decision_owner",
+      "q5_related_pois"
+    ],
+    "track_q2_modes": [
+      "deterministic_apify",
+      "retrieval_fallback",
+      "no_signal"
+    ]
+  }
+}
