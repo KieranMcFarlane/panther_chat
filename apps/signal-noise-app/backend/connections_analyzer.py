@@ -34,7 +34,7 @@ import logging
 from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass, field
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 
 logger = logging.getLogger(__name__)
 
@@ -151,7 +151,7 @@ class ConnectionsResult:
     primary_connections: List[YPConnectionAnalysis] = field(default_factory=list)
     tier_2_bridges: List[Dict[str, Any]] = field(default_factory=list)
     recommended_approach: Dict[str, Any] = field(default_factory=dict)
-    analysis_timestamp: str = field(default_factory=lambda: datetime.utcnow().isoformat())
+    analysis_timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     overall_connection_score: float = 0.0
 
 
@@ -465,6 +465,61 @@ class ConnectionsAnalyzer:
         }
 
 
+def _target_personnel_from_poi_graph(
+    *,
+    entity_id: str,
+    poi_graph: Optional[Dict[str, Any]] = None,
+) -> List[TargetPerson]:
+    """Convert a question-first poi_graph payload into TargetPerson records.
+
+    This is a structural adapter only. The current poi_graph_v1 contains entity->person
+    edges but not YP-to-target connection edges, so mutual/direct connection fields
+    stay empty until a later graph enrichment pass adds them.
+    """
+    graph = poi_graph if isinstance(poi_graph, dict) else {}
+    nodes = graph.get("nodes") if isinstance(graph.get("nodes"), list) else []
+    edges = graph.get("edges") if isinstance(graph.get("edges"), list) else []
+
+    person_nodes: Dict[str, Dict[str, Any]] = {}
+    for node in nodes:
+        if not isinstance(node, dict):
+            continue
+        if str(node.get("node_type") or "").strip().lower() != "person":
+            continue
+        node_id = str(node.get("node_id") or "").strip()
+        if node_id:
+            person_nodes[node_id] = node
+
+    target_personnel: List[TargetPerson] = []
+    seen_people = set()
+    for edge in edges:
+        if not isinstance(edge, dict):
+            continue
+        to_id = str(edge.get("to_id") or "").strip()
+        person = person_nodes.get(to_id)
+        if not person:
+            continue
+        person_name = str(person.get("name") or "").strip()
+        if not person_name:
+            continue
+        dedupe_key = person_name.lower()
+        if dedupe_key in seen_people:
+            continue
+        seen_people.add(dedupe_key)
+        target_personnel.append(
+            TargetPerson(
+                entity_id=entity_id,
+                person_name=person_name,
+                role=str(person.get("title") or "").strip(),
+                linkedin_url=str(person.get("linkedin_url") or "").strip(),
+                mutual_connections_yp="",
+                count_second_degree_paths=0,
+            )
+        )
+
+    return target_personnel
+
+
 # =============================================================================
 # CONVENIENCE FUNCTIONS
 # =============================================================================
@@ -528,6 +583,73 @@ def analyze_connections_from_csv(
         entity_id=entity_id,
         entity_name=entity_name,
         target_personnel=target_personnel
+    )
+
+
+def analyze_connections_from_question_first_dossier(
+    question_first_dossier_path: str,
+    yp_team_csv: Optional[str] = None,
+) -> ConnectionsResult:
+    """
+    Analyze connections using target personnel derived from a question-first dossier.
+
+    Args:
+        question_first_dossier_path: Path to `*_question_first_dossier.json`
+        yp_team_csv: Optional path to yp_team CSV file
+
+    Returns:
+        ConnectionsResult with analysis
+    """
+    dossier_path = Path(question_first_dossier_path)
+    payload = json.loads(dossier_path.read_text(encoding="utf-8"))
+    merged_dossier = payload.get("merged_dossier") if isinstance(payload.get("merged_dossier"), dict) else payload
+
+    entity_id = str(
+        payload.get("entity_id")
+        or merged_dossier.get("entity_id")
+        or merged_dossier.get("metadata", {}).get("entity_id")
+        or ""
+    ).strip()
+    entity_name = str(
+        payload.get("entity_name")
+        or merged_dossier.get("entity_name")
+        or merged_dossier.get("metadata", {}).get("entity_name")
+        or entity_id
+    ).strip()
+
+    question_first = merged_dossier.get("question_first") if isinstance(merged_dossier.get("question_first"), dict) else {}
+    question_first_run = merged_dossier.get("question_first_run") if isinstance(merged_dossier.get("question_first_run"), dict) else {}
+    poi_graph = (
+        question_first.get("poi_graph")
+        if isinstance(question_first.get("poi_graph"), dict)
+        else question_first_run.get("poi_graph")
+        if isinstance(question_first_run.get("poi_graph"), dict)
+        else {}
+    )
+
+    analyzer = ConnectionsAnalyzer()
+    if yp_team_csv and Path(yp_team_csv).exists():
+        yp_team = []
+        with open(yp_team_csv, 'r') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if row.get('yp_name') and row.get('yp_name') != 'yp_name':
+                    yp_team.append({
+                        "yp_name": row['yp_name'],
+                        "yp_role": row.get('yp_role', ''),
+                        "yp_linkedin": row.get('yp_linkedin', ''),
+                        "yp_weight": float(row.get('yp_weight', 1.0)),
+                        "yp_expertise_1": row.get('yp_expertise_1', ''),
+                        "yp_expertise_2": row.get('yp_expertise_2', ''),
+                        "yp_expertise_3": row.get('yp_expertise_3', '')
+                    })
+        analyzer = ConnectionsAnalyzer(yp_team=yp_team)
+
+    target_personnel = _target_personnel_from_poi_graph(entity_id=entity_id, poi_graph=poi_graph)
+    return analyzer.analyze_connections(
+        entity_id=entity_id,
+        entity_name=entity_name,
+        target_personnel=target_personnel,
     )
 
 
@@ -616,6 +738,7 @@ def main():
     parser.add_argument("--entity-id", required=True, help="Entity ID (e.g., arsenal-fc)")
     parser.add_argument("--entity-name", required=True, help="Entity name (e.g., Arsenal FC)")
     parser.add_argument("--target-csv", help="Path to target_personnel.csv")
+    parser.add_argument("--question-first-dossier", help="Path to *_question_first_dossier.json")
     parser.add_argument("--output", help="Output JSON file path")
     parser.add_argument("--verbose", action="store_true", help="Verbose logging")
 
@@ -625,11 +748,16 @@ def main():
         logging.basicConfig(level=logging.INFO)
 
     # Run analysis
-    result = analyze_connections_from_csv(
-        entity_id=args.entity_id,
-        entity_name=args.entity_name,
-        target_personnel_csv=args.target_csv
-    )
+    if args.question_first_dossier:
+        result = analyze_connections_from_question_first_dossier(
+            question_first_dossier_path=args.question_first_dossier,
+        )
+    else:
+        result = analyze_connections_from_csv(
+            entity_id=args.entity_id,
+            entity_name=args.entity_name,
+            target_personnel_csv=args.target_csv
+        )
 
     # Format output
     output = format_connections_for_dossier(result)
