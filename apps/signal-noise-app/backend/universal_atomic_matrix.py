@@ -471,6 +471,37 @@ CELTIC_QUESTION_OVERRIDES: Dict[str, Dict[str, Any]] = {
             ]
         },
     },
+    "q3_procurement_signal": {
+        "question": "Is there evidence Celtic Football Club is buying, launching, or reshaping its commercial or digital ecosystem through sponsorship, partnerships, hiring, or platform initiatives?",
+        "query": '"Celtic Football Club" commercial partnership',
+        "source_priority": [
+            "official_site",
+            "press_release",
+            "news",
+            "google_serp",
+        ],
+        "search_strategy": {
+            "search_queries": [
+                'site:celticfc.com/club/club-partners/ Celtic Football Club commercial partners',
+                'site:celticfc.com/club/club-partners/ Celtic Football Club official partners',
+                'site:cdn.celticfc.com/assets/Celtic_plc_Annual_Report_2025.pdf Celtic commercial partners',
+                '"Celtic Football Club" official partner',
+                '"Celtic Football Club" commercial partnership',
+                '"Celtic Football Club" sponsorship',
+                '"Celtic Football Club" sponsor',
+                '"Celtic Football Club" partnership announcement',
+                '"Celtic Football Club" commercial operations',
+                '"Celtic Football Club" business development',
+                '"Celtic Football Club" fan engagement',
+                '"Celtic Football Club" digital platform',
+                '"Celtic Football Club" app',
+                '"Celtic Football Club" commercial partners',
+                '"Celtic Football Club" sponsorship opportunities',
+                '"Celtic Football Club" official website',
+                '"Celtic Football Club" press release',
+            ]
+        },
+    },
     "q4_decision_owner": {
         "question": "Who is the most suitable person for commercial partnerships or business development at {entity}?",
         "query": '"Celtic Football Club" leadership team',

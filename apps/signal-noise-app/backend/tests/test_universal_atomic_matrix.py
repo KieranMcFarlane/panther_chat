@@ -100,6 +100,13 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
                 "press_release",
                 "news",
             ]
+        elif payload["entity_id"] == "celtic-fc":
+            assert payload["questions"][2]["source_priority"] == [
+                "official_site",
+                "press_release",
+                "news",
+                "google_serp",
+            ]
         else:
             assert payload["questions"][2]["source_priority"] == [
                 "google_serp",
@@ -309,6 +316,35 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
                 '"Celtic Football Club" history',
                 '"Celtic Football Club" founded year',
                 '"Celtic Football Club" wikipedia',
+            ]
+            assert payload["questions"][2]["question"] == (
+                "Is there evidence Celtic Football Club is buying, launching, or reshaping its commercial or digital ecosystem through sponsorship, partnerships, hiring, or platform initiatives?"
+            )
+            assert payload["questions"][2]["query"] == '"Celtic Football Club" commercial partnership'
+            assert payload["questions"][2]["source_priority"] == [
+                "official_site",
+                "press_release",
+                "news",
+                "google_serp",
+            ]
+            assert payload["questions"][2]["search_strategy"]["search_queries"] == [
+                'site:celticfc.com/club/club-partners/ Celtic Football Club commercial partners',
+                'site:celticfc.com/club/club-partners/ Celtic Football Club official partners',
+                'site:cdn.celticfc.com/assets/Celtic_plc_Annual_Report_2025.pdf Celtic commercial partners',
+                '"Celtic Football Club" official partner',
+                '"Celtic Football Club" commercial partnership',
+                '"Celtic Football Club" sponsorship',
+                '"Celtic Football Club" sponsor',
+                '"Celtic Football Club" partnership announcement',
+                '"Celtic Football Club" commercial operations',
+                '"Celtic Football Club" business development',
+                '"Celtic Football Club" fan engagement',
+                '"Celtic Football Club" digital platform',
+                '"Celtic Football Club" app',
+                '"Celtic Football Club" commercial partners',
+                '"Celtic Football Club" sponsorship opportunities',
+                '"Celtic Football Club" official website',
+                '"Celtic Football Club" press release',
             ]
             assert payload["questions"][3]["search_strategy"]["search_queries"] == [
                 '"Celtic Football Club" official website',
