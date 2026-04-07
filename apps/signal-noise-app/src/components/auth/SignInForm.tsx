@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useSearchParams } from "next/navigation"
 import { authClient } from "@/lib/auth-client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -8,12 +9,18 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 
 export function SignInForm() {
+  const searchParams = useSearchParams()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [message, setMessage] = useState<string | null>(null)
   const [mode, setMode] = useState<"signIn" | "signUp" | "reset">("signIn")
+  const redirect = searchParams.get("redirect")
+
+  const redirectTo = redirect && redirect.startsWith("/") && !redirect.startsWith("//")
+    ? redirect
+    : "/"
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,7 +38,7 @@ export function SignInForm() {
         if (result.error) {
           setError(result.error.message || "Sign in failed")
         } else {
-          window.location.href = "/" // Redirect on success
+          window.location.href = redirectTo
         }
       } else if (mode === "signUp") {
         const result = await authClient.signUp.email({
@@ -43,7 +50,7 @@ export function SignInForm() {
         if (result.error) {
           setError(result.error.message || "Sign up failed")
         } else {
-          window.location.href = "/" // Better Auth establishes a live session on sign up
+          window.location.href = redirectTo
         }
       } else {
         const response = await fetch("/api/auth/request-password-reset", {

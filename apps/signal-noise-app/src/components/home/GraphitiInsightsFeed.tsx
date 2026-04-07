@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Sparkles, ArrowRight, BrainCircuit, AlertCircle, Users, Network } from 'lucide-react'
+import { Sparkles, ArrowRight, BrainCircuit, AlertCircle, Users, Network, Target, Radar, Wrench } from 'lucide-react'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -70,7 +70,21 @@ export function GraphitiInsightsFeed() {
     )
   }
 
-  const topInsight = data.highlights[0]
+  const insightTypeLabel: Record<string, string> = {
+    opportunity: 'Opportunity',
+    watch_item: 'Watch item',
+    operational: 'Operational',
+  }
+  const insightTypeIcon = (insightType?: string) => {
+    switch (insightType) {
+      case 'opportunity':
+        return <Target className="h-4 w-4 text-emerald-300" />
+      case 'operational':
+        return <Wrench className="h-4 w-4 text-amber-300" />
+      default:
+        return <Radar className="h-4 w-4 text-sky-300" />
+    }
+  }
 
   return (
     <Card className="border-white/10 bg-white/[0.04] backdrop-blur-md">
@@ -122,55 +136,58 @@ export function GraphitiInsightsFeed() {
       </CardHeader>
 
       <CardContent className="space-y-4">
-        <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div className="min-w-0">
-              <div className="mb-2 flex flex-wrap gap-2">
-                <Badge className="border border-white/10 bg-white/5 text-slate-100 hover:bg-white/5">
-                  {topInsight.entity_name}
-                </Badge>
-                <Badge className="border border-sky-400/20 bg-sky-500/10 text-sky-100 hover:bg-sky-500/10">
-                  {topInsight.league || topInsight.sport}
-                </Badge>
-              </div>
-              <div className="text-lg font-semibold text-white">{topInsight.title}</div>
-              <div className="mt-2 text-sm leading-6 text-slate-300">{topInsight.summary}</div>
-            </div>
-            <div className="flex shrink-0 flex-col items-end gap-2">
-              <Badge className="border border-emerald-400/20 bg-emerald-500/10 text-emerald-100 hover:bg-emerald-500/10">
-                {Math.round(topInsight.confidence * 100)}% confidence
-              </Badge>
-              <Badge className="border border-amber-400/20 bg-amber-500/10 text-amber-100 hover:bg-amber-500/10">
-                {topInsight.freshness}
-              </Badge>
-            </div>
-          </div>
-
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
-              <div className="text-xs uppercase tracking-[0.2em] text-slate-500">Why it matters</div>
-              <div className="mt-1 text-sm text-slate-200">{topInsight.why_it_matters}</div>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
-              <div className="text-xs uppercase tracking-[0.2em] text-slate-500">Suggested action</div>
-              <div className="mt-1 text-sm text-slate-200">{topInsight.suggested_action}</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid gap-3 md:grid-cols-2">
-          {data.highlights.slice(1, 3).map((insight) => (
-            <div key={insight.insight_id} className="rounded-2xl border border-white/10 bg-black/20 p-4">
-              <div className="flex items-center justify-between gap-2">
+        <div className="grid gap-3">
+          {data.highlights.map((insight) => (
+            <div key={insight.insight_id} className="rounded-2xl border border-white/10 bg-black/20 p-5">
+              <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <div className="text-sm font-semibold text-white">{insight.entity_name}</div>
-                  <div className="text-xs text-slate-400">{insight.title}</div>
+                  <div className="mb-2 flex flex-wrap items-center gap-2">
+                    <Badge className="border border-white/10 bg-white/5 text-slate-100 hover:bg-white/5">
+                      {insight.entity_name}
+                    </Badge>
+                    <Badge className="border border-sky-400/20 bg-sky-500/10 text-sky-100 hover:bg-sky-500/10">
+                      {insight.league || insight.sport}
+                    </Badge>
+                    <Badge className="border border-white/10 bg-black/30 text-slate-100 hover:bg-black/30">
+                      <span className="mr-1 inline-flex">{insightTypeIcon(insight.insight_type)}</span>
+                      {insightTypeLabel[insight.insight_type || 'watch_item']}
+                    </Badge>
+                  </div>
+                  <div className="text-lg font-semibold text-white">{insight.title}</div>
+                  <div className="mt-2 text-sm leading-6 text-slate-300">{insight.summary}</div>
                 </div>
-                <Badge className="border border-white/10 bg-white/5 text-slate-100">
-                  {Math.round(insight.confidence * 100)}%
-                </Badge>
+                <div className="flex shrink-0 flex-col items-end gap-2">
+                  <Badge className="border border-emerald-400/20 bg-emerald-500/10 text-emerald-100 hover:bg-emerald-500/10">
+                    {Math.round(insight.confidence * 100)}% confidence
+                  </Badge>
+                  <Badge className="border border-amber-400/20 bg-amber-500/10 text-amber-100 hover:bg-amber-500/10">
+                    {insight.freshness}
+                  </Badge>
+                </div>
               </div>
-              <div className="mt-3 text-sm leading-6 text-slate-300">{insight.summary}</div>
+
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+                  <div className="text-xs uppercase tracking-[0.2em] text-slate-500">Why it matters</div>
+                  <div className="mt-1 text-sm text-slate-200">{insight.why_it_matters}</div>
+                </div>
+                <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+                  <div className="text-xs uppercase tracking-[0.2em] text-slate-500">Suggested action</div>
+                  <div className="mt-1 text-sm text-slate-200">{insight.suggested_action}</div>
+                </div>
+              </div>
+
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                <div className="text-xs text-slate-400">
+                  Detected {new Date(insight.detected_at).toLocaleString()}
+                </div>
+                <Button asChild size="sm" className="bg-amber-400 text-black hover:bg-amber-300">
+                  <Link href={insight.destination_url || `/entity-browser/${insight.entity_id}/dossier?from=1`}>
+                    Open dossier
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
             </div>
           ))}
         </div>

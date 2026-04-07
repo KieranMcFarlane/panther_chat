@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -11,104 +12,84 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 
-const notifications = [
-  {
-    id: 1,
-    title: 'New transfer rumor',
-    message: 'Jude Bellingham linked with Real Madrid',
-    time: '2 hours ago',
-    read: false,
-    type: 'transfer'
-  },
-  {
-    id: 2,
-    title: 'Match result',
-    message: 'Manchester United defeated Liverpool 2-1',
-    time: '4 hours ago',
-    read: false,
-    type: 'match'
-  },
-  {
-    id: 3,
-    title: 'Injury update',
-    message: 'Erling Haaland expected to return next week',
-    time: '6 hours ago',
-    read: true,
-    type: 'injury'
-  },
-  {
-    id: 4,
-    title: 'League standings updated',
-    message: 'Arsenal moves to 2nd place after win',
-    time: '1 day ago',
-    read: true,
-    type: 'league'
-  },
-  {
-    id: 5,
-    title: 'Contract renewal',
-    message: 'Kylian Mbappé signs new 3-year deal',
-    time: '2 days ago',
-    read: true,
-    type: 'contract'
-  },
-];
+type GraphitiNotification = {
+  insight_id: string;
+  insight_type?: 'opportunity' | 'watch_item' | 'operational';
+  entity_id: string;
+  title: string;
+  short_message: string;
+  priority: 'high' | 'medium' | 'low';
+  destination_url: string;
+  created_at: string;
+  sent_state?: string;
+  read_state?: string;
+}
 
 export default function Notifications() {
   const [isOpen, setIsOpen] = useState(false);
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const [notifications, setNotifications] = useState<GraphitiNotification[]>([]);
+  const unreadCount = notifications.filter((notification) => notification.read_state !== 'read').length;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadNotifications = async () => {
+      try {
+        const response = await fetch('/api/notifications/graphiti', { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error(`Failed to load notifications (${response.status})`);
+        }
+
+        const payload = await response.json();
+        if (!cancelled) {
+          setNotifications(Array.isArray(payload.notifications) ? payload.notifications : []);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setNotifications([]);
+        }
+      }
+    };
+
+    loadNotifications();
+    const interval = window.setInterval(loadNotifications, 60000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+    };
+  }, []);
 
   const handleMarkAllAsRead = () => {
-    console.log('Mark all notifications as read');
+    setNotifications((current) => current.map((notification) => ({ ...notification, read_state: 'read' })));
   };
 
   const handleClearAll = () => {
-    console.log('Clear all notifications');
+    setNotifications([]);
   };
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
-      case 'transfer':
-        return (
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-            <circle cx="9" cy="7" r="4" />
-            <path d="m22 21-3-3 3-3" />
-          </svg>
-        );
-      case 'match':
-        return (
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="12" cy="12" r="10" />
-            <path d="M12 6v6l4 2" />
-          </svg>
-        );
-      case 'injury':
-        return (
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-            <line x1="12" y1="9" x2="12" y2="13" />
-            <line x1="12" y1="17" x2="12.01" y2="17" />
-          </svg>
-        );
-      case 'league':
+      case 'opportunity':
         return (
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M12 20V10" />
-            <path d="M18 20V4" />
-            <path d="M6 20v-4" />
+            <path d="m18 14-6-6-6 6" />
           </svg>
         );
-      case 'contract':
+      case 'operational':
         return (
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-            <polyline points="14 2 14 8 20 8" />
-            <line x1="16" y1="13" x2="8" y2="13" />
-            <line x1="16" y1="17" x2="8" y2="17" />
-            <polyline points="10 9 9 9 8 9" />
+            <path d="M12 6v6l4 2" />
+            <circle cx="12" cy="12" r="9" />
+          </svg>
+        );
+      case 'watch_item':
+        return (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 8v4" />
+            <path d="M12 16h.01" />
           </svg>
         );
       default:
@@ -174,34 +155,40 @@ export default function Notifications() {
           ) : (
             notifications.map((notification) => (
               <DropdownMenuItem
-                key={notification.id}
+                key={notification.insight_id}
                 className={`p-3 cursor-pointer flex flex-col items-start ${
-                  !notification.read ? 'bg-blue-50/50' : ''
+                  notification.read_state !== 'read' ? 'bg-blue-50/50' : ''
                 }`}
+                asChild
               >
-                <div className="flex items-start gap-3 w-full">
+                <Link href={notification.destination_url} className="flex items-start gap-3 w-full">
                   <div className="flex-shrink-0 text-muted-foreground mt-0.5">
-                    {getNotificationIcon(notification.type)}
+                    {getNotificationIcon(notification.insight_type || 'watch_item')}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">
                       <span className={`text-sm font-medium ${
-                        !notification.read ? 'text-blue-600' : 'text-foreground'
+                        notification.read_state !== 'read' ? 'text-blue-600' : 'text-foreground'
                       }`}>
                         {notification.title}
                       </span>
-                      {!notification.read && (
+                      {notification.read_state !== 'read' && (
                         <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0" />
                       )}
                     </div>
                     <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                      {notification.message}
+                      {notification.short_message}
                     </p>
-                    <span className="text-xs text-muted-foreground mt-1">
-                      {notification.time}
-                    </span>
+                    <div className="mt-1 flex items-center gap-2">
+                      <span className="text-xs text-muted-foreground">
+                        {new Date(notification.created_at).toLocaleString()}
+                      </span>
+                      <Badge variant="outline" className="text-[10px] uppercase">
+                        {notification.priority}
+                      </Badge>
+                    </div>
                   </div>
-                </div>
+                </Link>
               </DropdownMenuItem>
             ))
           )}

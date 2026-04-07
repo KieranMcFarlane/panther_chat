@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { resolveLocalBadgeUrl } from '@/lib/badge-resolver'
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
+import { getEntityDossierIndexRecord } from '@/lib/dossier-index'
 import { resolveEntityUuid } from '@/lib/entity-public-id'
 
 export const dynamic = 'force-dynamic';
@@ -93,7 +94,7 @@ export async function GET(request: NextRequest) {
     const start = (page - 1) * limit
     const paginatedEntities = filteredEntities.slice(start, start + limit)
 
-    const transformedEntities = paginatedEntities.map((entity: any) => {
+    const transformedEntities = await Promise.all(paginatedEntities.map(async (entity: any) => {
       const entityName = entity.properties?.name || entity.neo4j_id
       const uuid = resolveEntityUuid({
         id: entity.id,
@@ -102,6 +103,12 @@ export async function GET(request: NextRequest) {
         supabase_id: entity.supabase_id || entity.properties?.supabase_id,
         properties: entity.properties,
       }) || undefined
+      const dossierIndex = await getEntityDossierIndexRecord(uuid || String(entity.id), {
+        id: entity.id,
+        uuid,
+        neo4j_id: entity.neo4j_id,
+        properties: entity.properties,
+      })
       const resolvedBadgeUrl = resolveLocalBadgeUrl({
         entityId: entity.id ?? entity.neo4j_id,
         entityName,
@@ -113,6 +120,12 @@ export async function GET(request: NextRequest) {
         id: uuid || entity.id,
         uuid,
         neo4j_id: entity.neo4j_id,
+        dossier_status: dossierIndex.dossier_status,
+        latest_run_id: dossierIndex.latest_run_id,
+        latest_generated_at: dossierIndex.latest_generated_at,
+        latest_dossier_path: dossierIndex.latest_dossier_path,
+        dossier_source: dossierIndex.dossier_source,
+        dossier_summary: dossierIndex.dossier_summary,
         badge_s3_url: resolvedBadgeUrl,
         badge_lookup_complete: true,
         labels: entity.labels || [],
@@ -122,11 +135,17 @@ export async function GET(request: NextRequest) {
           badge_s3_url: resolvedBadgeUrl,
           badge_lookup_complete: true,
           uuid,
+          dossier_status: dossierIndex.dossier_status,
+          latest_run_id: dossierIndex.latest_run_id,
+          latest_generated_at: dossierIndex.latest_generated_at,
+          latest_dossier_path: dossierIndex.latest_dossier_path,
+          dossier_source: dossierIndex.dossier_source,
+          dossier_summary: dossierIndex.dossier_summary,
           name: entityName,
           type: entity.properties?.type || entity.labels?.[0] || 'ENTITY'
         }
       }
-    })
+    }))
 
     return NextResponse.json({
       entities: transformedEntities,

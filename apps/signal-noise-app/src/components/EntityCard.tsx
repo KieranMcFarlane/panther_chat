@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ExternalLink, Mail, Linkedin, ArrowRight, FileText, Target, Loader2 } from "lucide-react"
+import { Mail, Linkedin, ArrowRight, Loader2 } from "lucide-react"
 import { Entity, Connection } from "@/lib/neo4j"
 import { EntityBadge } from "@/components/badge/EntityBadge"
 import { useRouter } from "next/navigation"
@@ -57,6 +57,21 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
     if (score >= 0.7) return "bg-yellow-500"
     return "bg-gray-500"
   }
+
+  const dossierStatus = String(entity.properties?.dossier_status || entity?.dossier_status || '').trim()
+  const latestGeneratedAt = String(entity.properties?.latest_generated_at || entity?.latest_generated_at || '').trim()
+  const dossierStatusLabel = dossierStatus === 'ready'
+    ? 'Dossier ready'
+    : dossierStatus === 'rerun_needed'
+      ? 'Needs rerun'
+      : dossierStatus === 'pending'
+        ? 'Dossier pending'
+        : 'No dossier yet'
+  const dossierStatusVariant = dossierStatus === 'ready'
+    ? 'default'
+    : dossierStatus === 'rerun_needed'
+      ? 'secondary'
+      : 'outline'
 
   const formatValue = (value: any): string => {
     if (value === null || value === undefined) return ""
@@ -242,6 +257,29 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
             <span className="font-medium">Location:</span> {entity.properties.location}
           </div>
         )}
+
+        <div className="rounded-md border border-border/70 bg-muted/30 p-2.5">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-xs font-medium text-muted-foreground">Dossier status</span>
+            <Badge variant={dossierStatusVariant}>
+              {dossierStatusLabel}
+            </Badge>
+          </div>
+          {latestGeneratedAt ? (
+            <p className="mt-1 text-xs text-muted-foreground">
+              Updated {new Date(latestGeneratedAt).toLocaleDateString()}
+            </p>
+          ) : (
+            <p className="mt-1 text-xs text-muted-foreground">
+              Waiting for a persisted dossier artifact
+            </p>
+          )}
+          {entity.properties?.dossier_summary ? (
+            <p className="mt-1 text-xs text-muted-foreground line-clamp-2">
+              {String(entity.properties.dossier_summary)}
+            </p>
+          ) : null}
+        </div>
 
         {/* Connections */}
         {connections && connections.length > 0 && (
