@@ -380,71 +380,85 @@ function _scoreSourceRecord(questionState, url, title = '', confidence = 0) {
   };
 }
 
-function _resolveDeterministicInputUrl(question, runState = {}) {
-  const deterministicInput = question?.deterministic_input && typeof question.deterministic_input === 'object'
-    ? question.deterministic_input
-    : {};
-  for (const candidate of [
-    deterministicInput.url,
-    deterministicInput.website,
-    question?.entity_website,
-    question?.website,
-  ]) {
-    const value = String(candidate || '').trim();
-    if (value) {
-      return value;
-    }
+const KNOWN_OFFICIAL_DOMAIN_HINTS = {
+  ecb: 'https://www.ecb.co.uk/',
+  'england and wales cricket board': 'https://www.ecb.co.uk/',
+  icf: 'https://www.canoeicf.com/',
+  'international canoe federation': 'https://www.canoeicf.com/',
+  mls: 'https://www.mlssoccer.com/',
+  'major league soccer': 'https://www.mlssoccer.com/',
+  'world-athletics': 'https://worldathletics.org/',
+  'world athletics': 'https://worldathletics.org/',
+};
+
+function _appendUniqueUrlCandidate(target, candidate, { preserveRaw = false } = {}) {
+  const raw = String(candidate || '').trim();
+  const normalized = _normalizeDomainCandidate(raw);
+  if (!normalized) {
+    return;
   }
-  const sourceQuestionId = String(deterministicInput.source_question_id || '').trim();
-  if (!sourceQuestionId) {
-    return '';
+  const exists = target.some((item) => _normalizeDomainCandidate(item) === normalized);
+  if (!exists) {
+    target.push(preserveRaw ? raw : normalized);
   }
-  const priorQuestions = Array.isArray(runState?.questions) ? runState.questions : [];
-  const sourceQuestion = priorQuestions.find((item) => String(item?.question_id || '').trim() === sourceQuestionId);
-  if (!sourceQuestion) {
-    return '';
-  }
-  const acceptedLinks = Array.isArray(sourceQuestion.accepted_links) ? sourceQuestion.accepted_links : [];
-  const preferredAccepted = acceptedLinks.find((item) => String(item?.source_kind || '').trim() === 'official_site');
-  const officialAcceptedUrl = _normalizeDomainCandidate(_extractUrlString(preferredAccepted?.url));
-  if (officialAcceptedUrl) {
-    return officialAcceptedUrl;
-  }
-  const likelyOfficialAccepted = acceptedLinks.find((item) =>
-    _isLikelyOfficialDomain(
-      _normalizeDomainCandidate(_extractUrlString(item?.url)),
-      question?.entity_name || sourceQuestion?.entity_name || '',
-    ));
-  const likelyOfficialAcceptedUrl = _normalizeDomainCandidate(_extractUrlString(likelyOfficialAccepted?.url));
-  if (likelyOfficialAcceptedUrl) {
-    return likelyOfficialAcceptedUrl;
-  }
-  const sourceStructuredOutput = sourceQuestion?.reasoning?.structured_output && typeof sourceQuestion.reasoning.structured_output === 'object'
-    ? sourceQuestion.reasoning.structured_output
-    : {};
-  const officialSource = Array.isArray(sourceStructuredOutput.sources)
-    ? sourceStructuredOutput.sources.find((item) => _sourceKindFromUrl(_extractUrlString(item)) === 'official_site')
-    : '';
-  const officialSourceUrl = _normalizeDomainCandidate(_extractUrlString(officialSource));
-  if (officialSourceUrl) {
-    return officialSourceUrl;
-  }
-  return _guessOfficialDomainCandidate(question, sourceQuestion);
 }
 
-function _guessOfficialDomainCandidate(question, sourceQuestion = null) {
+function _buildOfficialSurfaceCandidates(baseUrl, question, sourceQuestion = null) {
+  const normalizedBaseUrl = _normalizeDomainCandidate(baseUrl);
+  if (!normalizedBaseUrl) {
+    return [];
+  }
+
+  const candidates = [];
+  _appendUniqueUrlCandidate(candidates, normalizedBaseUrl);
+
+  let parsed;
+  try {
+    parsed = new URL(normalizedBaseUrl);
+  } catch {
+    return candidates;
+  }
+
+  const entityType = String(question?.entity_type || sourceQuestion?.entity_type || '').trim().toUpperCase();
+  const rootHostname = String(parsed.hostname || '').replace(/^www\./i, '');
+  _appendUniqueUrlCandidate(candidates, `${parsed.protocol}//${rootHostname}/`);
+
+  const subdomains = [];
+  if (entityType === 'SPORT_FEDERATION' || entityType === 'SPORT_LEAGUE') {
+    subdomains.push('results', 'events', 'app', 'membership');
+  }
+  if (entityType === 'SPORT_FEDERATION') {
+    subdomains.push('rankings');
+  }
+  for (const subdomain of subdomains) {
+    _appendUniqueUrlCandidate(candidates, `${parsed.protocol}//${subdomain}.${rootHostname}/`);
+  }
+
+  return candidates;
+}
+
+function _guessOfficialDomainCandidates(question, sourceQuestion = null) {
   const deterministicInput = question?.deterministic_input && typeof question.deterministic_input === 'object'
     ? question.deterministic_input
     : {};
   if (!deterministicInput.official_site_only) {
-    return '';
+    return [];
   }
-  const entityType = String(question?.entity_type || sourceQuestion?.entity_type || '').trim().toUpperCase();
-  if (!['SPORT_LEAGUE', 'SPORT_CLUB'].includes(entityType)) {
-    return '';
-  }
+
+  const resolved = [];
   const rawEntityId = String(question?.entity_id || sourceQuestion?.entity_id || '').trim().toLowerCase();
   const rawEntityName = String(question?.entity_name || sourceQuestion?.entity_name || '').trim().toLowerCase();
+
+  for (const lookupKey of [rawEntityId, rawEntityName]) {
+    const hint = KNOWN_OFFICIAL_DOMAIN_HINTS[lookupKey];
+    if (hint) {
+      _appendUniqueUrlCandidate(resolved, hint);
+    }
+  }
+  const entityType = String(question?.entity_type || sourceQuestion?.entity_type || '').trim().toUpperCase();
+  if (!['SPORT_LEAGUE', 'SPORT_CLUB', 'SPORT_FEDERATION'].includes(entityType)) {
+    return resolved;
+  }
   const idCandidate = rawEntityId
     .replace(/(^|-)fc$/g, '')
     .replace(/(^|-)cf$/g, '')
@@ -460,10 +474,85 @@ function _guessOfficialDomainCandidate(question, sourceQuestion = null) {
   for (const candidate of candidates) {
     const normalized = _normalizeDomainCandidate(`https://www.${candidate}.com/`);
     if (normalized && _isLikelyOfficialDomain(normalized, question?.entity_name || sourceQuestion?.entity_name || '')) {
-      return normalized;
+      _appendUniqueUrlCandidate(resolved, normalized);
     }
   }
-  return '';
+  return resolved;
+}
+
+function _resolveDeterministicInputUrls(question, runState = {}) {
+  const deterministicInput = question?.deterministic_input && typeof question.deterministic_input === 'object'
+    ? question.deterministic_input
+    : {};
+  const candidates = [];
+  for (const candidate of [
+    deterministicInput.url,
+    deterministicInput.website,
+    question?.entity_website,
+    question?.website,
+  ]) {
+    const value = String(candidate || '').trim();
+    if (value) {
+      _appendUniqueUrlCandidate(candidates, value, { preserveRaw: true });
+      for (const expanded of _buildOfficialSurfaceCandidates(value, question)) {
+        _appendUniqueUrlCandidate(candidates, expanded);
+      }
+    }
+  }
+  const sourceQuestionId = String(deterministicInput.source_question_id || '').trim();
+  if (!sourceQuestionId) {
+    return candidates;
+  }
+  const priorQuestions = Array.isArray(runState?.questions) ? runState.questions : [];
+  const sourceQuestion = priorQuestions.find((item) => String(item?.question_id || '').trim() === sourceQuestionId);
+  if (!sourceQuestion) {
+    return candidates;
+  }
+  const acceptedLinks = Array.isArray(sourceQuestion.accepted_links) ? sourceQuestion.accepted_links : [];
+  const preferredAccepted = acceptedLinks.find((item) => String(item?.source_kind || '').trim() === 'official_site');
+  const officialAcceptedUrl = _normalizeDomainCandidate(_extractUrlString(preferredAccepted?.url));
+  if (officialAcceptedUrl) {
+    for (const expanded of _buildOfficialSurfaceCandidates(officialAcceptedUrl, question, sourceQuestion)) {
+      _appendUniqueUrlCandidate(candidates, expanded);
+    }
+  }
+  const likelyOfficialAccepted = acceptedLinks.find((item) =>
+    _isLikelyOfficialDomain(
+      _normalizeDomainCandidate(_extractUrlString(item?.url)),
+      question?.entity_name || sourceQuestion?.entity_name || '',
+    ));
+  const likelyOfficialAcceptedUrl = _normalizeDomainCandidate(_extractUrlString(likelyOfficialAccepted?.url));
+  if (likelyOfficialAcceptedUrl) {
+    for (const expanded of _buildOfficialSurfaceCandidates(likelyOfficialAcceptedUrl, question, sourceQuestion)) {
+      _appendUniqueUrlCandidate(candidates, expanded);
+    }
+  }
+  const sourceStructuredOutput = sourceQuestion?.reasoning?.structured_output && typeof sourceQuestion.reasoning.structured_output === 'object'
+    ? sourceQuestion.reasoning.structured_output
+    : {};
+  const officialSource = Array.isArray(sourceStructuredOutput.sources)
+    ? sourceStructuredOutput.sources.find((item) => _sourceKindFromUrl(_extractUrlString(item)) === 'official_site')
+    : '';
+  const officialSourceUrl = _normalizeDomainCandidate(_extractUrlString(officialSource));
+  if (officialSourceUrl) {
+    for (const expanded of _buildOfficialSurfaceCandidates(officialSourceUrl, question, sourceQuestion)) {
+      _appendUniqueUrlCandidate(candidates, expanded);
+    }
+  }
+  for (const guessed of _guessOfficialDomainCandidates(question, sourceQuestion)) {
+    for (const expanded of _buildOfficialSurfaceCandidates(guessed, question, sourceQuestion)) {
+      _appendUniqueUrlCandidate(candidates, expanded);
+    }
+  }
+  return candidates;
+}
+
+function _resolveDeterministicInputUrl(question, runState = {}) {
+  return _resolveDeterministicInputUrls(question, runState)[0] || '';
+}
+
+function _guessOfficialDomainCandidate(question, sourceQuestion = null) {
+  return _guessOfficialDomainCandidates(question, sourceQuestion)[0] || '';
 }
 
 function _buildFrontierFromStructuredOutput(questionState, structuredOutput, timestamp) {
@@ -1425,7 +1514,8 @@ export async function runDeterministicToolQuestion(
   }
 
   const fallbackToRetrieval = question?.fallback_to_retrieval !== false;
-  const inputUrl = _resolveDeterministicInputUrl(question, runState);
+  const inputUrls = _resolveDeterministicInputUrls(question, runState);
+  const inputUrl = inputUrls[0] || '';
   const apifyToken = process.env.APIFY_PERSONAL_API || process.env.APIFY_TOKEN || process.env.APIFY_PASSWORD || '';
   if (inputUrl && !_isLikelyOfficialDomain(inputUrl, question?.entity_name)) {
     return null;
@@ -1442,7 +1532,7 @@ export async function runDeterministicToolQuestion(
         vendors: [],
         confidence: 0,
         validation_state: 'no_signal',
-        sources: inputUrl ? [inputUrl] : [],
+        sources: inputUrls,
         evidence_url: inputUrl,
         signal_type: 'DIGITAL_STACK',
         notes: inputUrl ? 'Missing Apify token' : 'Missing deterministic input URL',
@@ -1460,33 +1550,50 @@ export async function runDeterministicToolQuestion(
     };
   }
 
-  let lookupResult;
-  try {
-    lookupResult = await apifyTechStackLookup({
-      url: inputUrl,
-      token: apifyToken,
-      fetchImpl,
-    });
-  } catch (error) {
-    if (fallbackToRetrieval) {
-      return null;
+  let lookupError = null;
+  for (const candidateUrl of inputUrls) {
+    let lookupResult;
+    try {
+      lookupResult = await apifyTechStackLookup({
+        url: candidateUrl,
+        token: apifyToken,
+        fetchImpl,
+      });
+    } catch (error) {
+      lookupError = error;
+      continue;
     }
+
+    const topResult = Array.isArray(lookupResult?.results) ? lookupResult.results[0] : null;
+    const technologies = Array.isArray(topResult?.technologies) ? topResult.technologies : [];
+    if (technologies.length === 0) {
+      continue;
+    }
+    const vendors = Array.isArray(topResult?.vendors) ? topResult.vendors : [];
+    const categories = Array.isArray(topResult?.categories) ? topResult.categories : [];
+    const commercialView = _deriveDigitalStackMaturity({ technologies, categories, vendors });
     return {
       structuredOutput: {
-        answer: '',
-        technologies: [],
-        categories: [],
-        vendors: [],
-        confidence: 0,
-        validation_state: 'no_signal',
-        sources: inputUrl ? [inputUrl] : [],
-        evidence_url: inputUrl,
+        answer: vendors.slice(0, 5).join(', '),
+        technologies,
+        categories,
+        vendors,
+        raw: topResult?.raw || {},
+        confidence: 0.95,
+        validation_state: 'validated',
+        sources: inputUrls,
+        source: candidateUrl,
+        evidence_url: candidateUrl,
         signal_type: 'DIGITAL_STACK',
-        notes: error instanceof Error ? error.message : String(error),
+        commercial_interpretation: commercialView.commercial_interpretation,
+        opportunity: commercialView.opportunity,
+        maturity_signal: commercialView.maturity_signal,
       },
       promptTrace: {
-        status: 'deterministic_apify_error',
+        status: 'deterministic_apify',
         has_structured_output: true,
+        technologies_detected: technologies.length,
+        attempted_urls: inputUrls,
       },
       messageTrace: [],
       cliResult: {
@@ -1496,36 +1603,29 @@ export async function runDeterministicToolQuestion(
       },
     };
   }
-
-  const topResult = Array.isArray(lookupResult?.results) ? lookupResult.results[0] : null;
-  const technologies = Array.isArray(topResult?.technologies) ? topResult.technologies : [];
-  if (technologies.length === 0 && fallbackToRetrieval) {
+  if (fallbackToRetrieval) {
     return null;
   }
-  const vendors = Array.isArray(topResult?.vendors) ? topResult.vendors : [];
-  const categories = Array.isArray(topResult?.categories) ? topResult.categories : [];
-  const commercialView = _deriveDigitalStackMaturity({ technologies, categories, vendors });
   return {
     structuredOutput: {
-      answer: vendors.slice(0, 5).join(', '),
-      technologies,
-      categories,
-      vendors,
-      raw: topResult?.raw || {},
-      confidence: technologies.length > 0 ? 0.95 : 0,
-      validation_state: technologies.length > 0 ? 'validated' : 'no_signal',
-      sources: inputUrl ? [inputUrl] : [],
+      answer: '',
+      technologies: [],
+      categories: [],
+      vendors: [],
+      raw: {},
+      confidence: 0,
+      validation_state: 'no_signal',
+      sources: inputUrls,
       source: inputUrl,
       evidence_url: inputUrl,
       signal_type: 'DIGITAL_STACK',
-      commercial_interpretation: commercialView.commercial_interpretation,
-      opportunity: commercialView.opportunity,
-      maturity_signal: commercialView.maturity_signal,
+      notes: lookupError instanceof Error ? lookupError.message : '',
     },
     promptTrace: {
-      status: 'deterministic_apify',
+      status: lookupError ? 'deterministic_apify_error' : 'deterministic_apify',
       has_structured_output: true,
-      technologies_detected: technologies.length,
+      technologies_detected: 0,
+      attempted_urls: inputUrls,
     },
     messageTrace: [],
     cliResult: {

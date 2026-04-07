@@ -1310,6 +1310,125 @@ test('runDeterministicToolQuestion can guess an official domain when q1 only res
   }
 });
 
+test('runDeterministicToolQuestion can guess federation and acronym official domains from q1 fallback', async () => {
+  const previousApifyToken = process.env.APIFY_TOKEN;
+  process.env.APIFY_TOKEN = 'test-apify-token';
+  const seenUrls = [];
+  try {
+    const result = await runDeterministicToolQuestion(
+      {
+        question_type: 'digital_stack',
+        entity_name: 'International Canoe Federation',
+        entity_id: 'icf',
+        entity_type: 'SPORT_FEDERATION',
+        deterministic_tools: ['apify_techstack'],
+        fallback_to_retrieval: false,
+        deterministic_input: {
+          source_question_id: 'q1_foundation',
+          official_site_only: true,
+        },
+      },
+      {
+        runState: {
+          questions: [
+            {
+              question_id: 'q1_foundation',
+              entity_name: 'International Canoe Federation',
+              accepted_links: [
+                {
+                  url: 'https://en.wikipedia.org/wiki/International_Canoe_Federation',
+                  source_kind: 'wikipedia',
+                },
+              ],
+            },
+          ],
+        },
+        apifyTechStackLookup: async ({ url }) => {
+          seenUrls.push(url);
+          if (url === 'https://www.canoeicf.com/') {
+            return {
+              results: [
+                {
+                  url,
+                  technologies: [{ name: 'Drupal', confidence: 100, categories: ['CMS'] }],
+                  categories: ['CMS'],
+                  vendors: ['Drupal'],
+                },
+              ],
+            };
+          }
+          return { results: [] };
+        },
+      },
+    );
+
+    assert.equal(result.structuredOutput.validation_state, 'validated');
+    assert.equal(result.structuredOutput.evidence_url, 'https://www.canoeicf.com/');
+    assert.deepEqual(result.structuredOutput.vendors, ['Drupal']);
+    assert.deepEqual(seenUrls, ['https://www.canoeicf.com/']);
+  } finally {
+    if (previousApifyToken === undefined) {
+      delete process.env.APIFY_TOKEN;
+    } else {
+      process.env.APIFY_TOKEN = previousApifyToken;
+    }
+  }
+});
+
+test('runDeterministicToolQuestion retries known official surface candidates before giving up q2', async () => {
+  const previousApifyToken = process.env.APIFY_TOKEN;
+  process.env.APIFY_TOKEN = 'test-apify-token';
+  const seenUrls = [];
+  try {
+    const result = await runDeterministicToolQuestion(
+      {
+        question_type: 'digital_stack',
+        entity_name: 'World Athletics',
+        entity_id: 'world-athletics',
+        entity_type: 'SPORT_FEDERATION',
+        deterministic_tools: ['apify_techstack'],
+        fallback_to_retrieval: false,
+        deterministic_input: {
+          website: 'https://worldathletics.org/',
+          official_site_only: true,
+        },
+      },
+      {
+        apifyTechStackLookup: async ({ url }) => {
+          seenUrls.push(url);
+          if (url === 'https://results.worldathletics.org/') {
+            return {
+              results: [
+                {
+                  url,
+                  technologies: [{ name: 'React', confidence: 92, categories: ['Frontend'] }],
+                  categories: ['Frontend'],
+                  vendors: ['React'],
+                },
+              ],
+            };
+          }
+          return { results: [{ url, technologies: [], categories: [], vendors: [] }] };
+        },
+      },
+    );
+
+    assert.equal(result.structuredOutput.validation_state, 'validated');
+    assert.equal(result.structuredOutput.evidence_url, 'https://results.worldathletics.org/');
+    assert.deepEqual(result.structuredOutput.vendors, ['React']);
+    assert.deepEqual(seenUrls, [
+      'https://worldathletics.org/',
+      'https://results.worldathletics.org/',
+    ]);
+  } finally {
+    if (previousApifyToken === undefined) {
+      delete process.env.APIFY_TOKEN;
+    } else {
+      process.env.APIFY_TOKEN = previousApifyToken;
+    }
+  }
+});
+
 test('buildOpenCodeQuestionPrompt specializes decision-owner and related-pois outputs', () => {
   const decisionPrompt = buildOpenCodeQuestionPrompt({
     question_text: 'Who is the most suitable person for commercial partnerships or business development at Major League Cricket?',
