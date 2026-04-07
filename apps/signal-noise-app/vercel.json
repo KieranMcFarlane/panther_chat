@@ -4,15 +4,15 @@
   "crons": [
     {
       "path": "/api/cron/dossiers/refresh",
-      "schedule": "0 * * * *"
+      "schedule": "0 5 * * *"
     },
     {
       "path": "/api/cron/graphiti/materialize",
-      "schedule": "*/15 * * * *"
+      "schedule": "15 5 * * *"
     },
     {
       "path": "/api/cron/daily-sales-digest",
-      "schedule": "0 6,7 * * 1-5"
+      "schedule": "30 5 * * 1-5"
     }
   ],
   "headers": [

@@ -82,6 +82,11 @@ Local contract status:
 
 - `node --test` cockpit/operator contract suite: 26 passed
 
+Vercel deployment note:
+
+- the `panther-chat` project is on a Hobby plan, so cron jobs must not run more than once per day
+- cron schedules were adjusted to daily production-safe runs so deployment can proceed without requiring a plan upgrade
+
 Required production checks:
 
 - `GET /api/home/graphiti-insights` is present and auth-gated
