@@ -1,13 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
+import { requireCronSecret } from '@/lib/cron-auth'
 import { buildSalesActionDigest } from '@/lib/graphiti-insight-materializer'
 import { loadPersistedGraphitiInsights, markGraphitiNotificationsSent } from '@/lib/graphiti-persistence'
-import { requireApiSession, UnauthorizedError } from '@/lib/server-auth'
+import { getSupabaseAdmin } from '@/lib/supabase-client'
+import { UnauthorizedError } from '@/lib/server-auth'
 
-async function loadInsights() {
-  const { highlights } = await loadPersistedGraphitiInsights(50)
-  return highlights
+function getLondonDateKey() {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Europe/London',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date())
 }
 
 function renderDigestHtml(digest: ReturnType<typeof buildSalesActionDigest>) {
@@ -31,28 +37,25 @@ function renderDigestHtml(digest: ReturnType<typeof buildSalesActionDigest>) {
   `
 }
 
-export async function GET(request: NextRequest) {
-  try {
-    await requireApiSession(request)
-    const digest = buildSalesActionDigest(await loadInsights())
-    return NextResponse.json({ digest })
-  } catch (error) {
-    if (error instanceof UnauthorizedError) {
-      return NextResponse.json({ error: error.message }, { status: 401 })
-    }
-
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to build sales digest' },
-      { status: 500 },
-    )
-  }
-}
-
 export async function POST(request: NextRequest) {
   try {
-    await requireApiSession(request)
+    requireCronSecret(request)
+    const supabase = getSupabaseAdmin()
+    const windowKey = getLondonDateKey()
+    const configKey = 'daily_sales_digest_last_window'
 
-    const digest = buildSalesActionDigest(await loadInsights())
+    const currentWindow = await supabase
+      .from('sync_config')
+      .select('config_value')
+      .eq('config_key', configKey)
+      .maybeSingle()
+
+    if (!currentWindow.error && currentWindow.data?.config_value?.window_key === windowKey) {
+      return NextResponse.json({ ok: true, skipped: true, reason: 'Digest already sent for this London business day' })
+    }
+
+    const { highlights } = await loadPersistedGraphitiInsights(50)
+    const digest = buildSalesActionDigest(highlights)
     const resendApiKey = process.env.RESEND_API_KEY
     const from = process.env.AUTH_EMAIL_FROM || process.env.RESEND_FROM_EMAIL
     const to = process.env.SALES_DIGEST_TO
@@ -76,16 +79,28 @@ export async function POST(request: NextRequest) {
       ...digest.entities_needing_review_or_rerun,
     ].map((item) => item.insight_id).filter(Boolean)))
 
-    await markGraphitiNotificationsSent(sentInsightIds)
+    await Promise.all([
+      markGraphitiNotificationsSent(sentInsightIds),
+      supabase.from('sync_config').upsert({
+        config_key: configKey,
+        config_value: {
+          window_key: windowKey,
+          sent_at: new Date().toISOString(),
+        },
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'config_key' }),
+    ])
 
-    return NextResponse.json({ digest, sent: true, result })
+    console.log('Daily sales digest cron completed', { windowKey, sentInsightIds: sentInsightIds.length })
+    return NextResponse.json({ ok: true, digest, sent: true, result })
   } catch (error) {
     if (error instanceof UnauthorizedError) {
       return NextResponse.json({ error: error.message }, { status: 401 })
     }
 
+    console.error('Daily sales digest cron failed', { error })
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to send sales digest' },
+      { error: error instanceof Error ? error.message : 'Failed to send daily sales digest' },
       { status: 500 },
     )
   }

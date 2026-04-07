@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft, CheckCircle2, Clock3, FileText, Info, Layers3, Target } from "lucide-react"
 
 import { DossierError } from "@/components/entity-dossier/DossierError"
+import { DossierOperatorControls } from "@/components/entity-dossier/DossierOperatorControls"
 import { EntityEnrichmentSummaryCard } from "@/components/entity-enrichment/EntityEnrichmentSummaryCard"
 import { resolveEntityBrowserReturnUrl } from "@/lib/entity-browser-history"
 import { pushWithViewTransition } from "@/lib/view-transition"
@@ -64,6 +65,11 @@ export default function EntityDossierClientPage({
   const [isContentTransitioning, setIsContentTransitioning] = useState(false)
   const [backHref, setBackHref] = useState(fromPage !== '1' ? `/entity-browser?page=${fromPage}` : '/entity-browser')
   const dossierMetadata = dossier?.metadata || {}
+  const dossierStatus = String(
+    entity?.properties?.dossier_status ||
+      dossierMetadata?.dossier_status ||
+      ''
+  ).trim()
   const isPersistedDossier = Boolean(dossier)
   const dossierConfidence = typeof dossierMetadata?.confidence_score === 'number'
     ? `${Math.round(dossierMetadata.confidence_score * 100)}%`
@@ -403,6 +409,8 @@ export default function EntityDossierClientPage({
               </div>
             </CardContent>
           </Card>
+
+          <DossierOperatorControls entityId={entityId} dossierStatus={dossierStatus} />
 
           <div className="mb-6">
             <EntityEnrichmentSummaryCard

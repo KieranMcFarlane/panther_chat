@@ -1,4 +1,6 @@
 import { normalizeQuestionFirstDossier, resolveCanonicalQuestionFirstDossier } from '@/lib/question-first-dossier'
+import { getEntityDossierOpsRecord } from '@/lib/dossier-ops'
+import { getDossierStaleWindowDays } from '@/lib/runtime-env'
 
 type EntityLike = {
   id?: unknown
@@ -7,7 +9,7 @@ type EntityLike = {
   properties?: Record<string, any> | null
 }
 
-export type DossierStatus = 'ready' | 'pending' | 'rerun_needed' | 'missing'
+export type DossierStatus = 'ready' | 'stale' | 'pending' | 'rerun_needed' | 'missing'
 
 export interface EntityDossierIndexRecord {
   dossier_status: DossierStatus
@@ -16,6 +18,8 @@ export interface EntityDossierIndexRecord {
   latest_dossier_path: string | null
   dossier_source: 'question_first_dossier' | 'question_first_run' | 'legacy_dossier' | 'entity_state' | 'missing'
   dossier_summary: string | null
+  review_status: 'needs_review' | 'in_review' | 'resolved'
+  rerun_reason: string | null
 }
 
 function toText(value: unknown): string {
@@ -38,8 +42,8 @@ function isStale(generatedAt: string | null): boolean {
   if (!generatedAt) return false
   const timestamp = Date.parse(generatedAt)
   if (!Number.isFinite(timestamp)) return false
-  const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000
-  return Date.now() - timestamp > THIRTY_DAYS_MS
+  const staleWindowMs = getDossierStaleWindowDays() * 24 * 60 * 60 * 1000
+  return Date.now() - timestamp > staleWindowMs
 }
 
 function buildSummary(dossier: Record<string, any> | null | undefined, status: DossierStatus): string | null {
@@ -60,18 +64,25 @@ export async function getEntityDossierIndexRecord(
   entity?: EntityLike | null,
 ): Promise<EntityDossierIndexRecord> {
   const canonical = await resolveCanonicalQuestionFirstDossier(entityId, entity)
+  const opsRecord = await getEntityDossierOpsRecord(entityId, canonical.dossier)
+  const enrichmentStatus = toText(entity?.properties?.enrichment_status).toLowerCase()
+  const shouldForceRerun = Boolean(opsRecord.rerun_reason)
+    || ['failed', 'incomplete', 'missing'].includes(enrichmentStatus)
 
   if (canonical.dossier) {
     const generatedAt = getGeneratedAt(canonical.dossier)
     const stale = isStale(generatedAt)
     const dossier = normalizeQuestionFirstDossier(canonical.dossier, entityId, entity)
+    const dossierStatus: DossierStatus = shouldForceRerun ? 'rerun_needed' : (stale ? 'stale' : 'ready')
     return {
-      dossier_status: stale ? 'rerun_needed' : 'ready',
+      dossier_status: dossierStatus,
       latest_run_id: toText(dossier.run_rollup?.run_id) || toText(entity?.properties?.last_pipeline_batch_id) || null,
       latest_generated_at: generatedAt,
       latest_dossier_path: canonical.artifactPath,
       dossier_source: canonical.source,
-      dossier_summary: buildSummary(dossier, stale ? 'rerun_needed' : 'ready'),
+      dossier_summary: buildSummary(dossier, dossierStatus),
+      review_status: opsRecord.review_status,
+      rerun_reason: opsRecord.rerun_reason,
     }
   }
 
@@ -81,12 +92,14 @@ export async function getEntityDossierIndexRecord(
       const generatedAt = getGeneratedAt(dossier)
       const stale = isStale(generatedAt)
       return {
-        dossier_status: stale ? 'rerun_needed' : 'ready',
+        dossier_status: shouldForceRerun ? 'rerun_needed' : (stale ? 'stale' : 'ready'),
         latest_run_id: toText(dossier.run_rollup?.run_id) || toText(entity?.properties?.last_pipeline_batch_id) || null,
         latest_generated_at: generatedAt,
         latest_dossier_path: null,
         dossier_source: 'legacy_dossier',
-        dossier_summary: buildSummary(dossier, stale ? 'rerun_needed' : 'ready'),
+        dossier_summary: buildSummary(dossier, shouldForceRerun ? 'rerun_needed' : (stale ? 'stale' : 'ready')),
+        review_status: opsRecord.review_status,
+        rerun_reason: opsRecord.rerun_reason,
       }
     } catch {
       // ignore invalid legacy payloads
@@ -102,6 +115,8 @@ export async function getEntityDossierIndexRecord(
       latest_dossier_path: null,
       dossier_source: 'entity_state',
       dossier_summary: buildSummary(null, 'pending'),
+      review_status: opsRecord.review_status,
+      rerun_reason: opsRecord.rerun_reason,
     }
   }
 
@@ -112,5 +127,7 @@ export async function getEntityDossierIndexRecord(
     latest_dossier_path: null,
     dossier_source: 'missing',
     dossier_summary: buildSummary(null, 'missing'),
+    review_status: opsRecord.review_status,
+    rerun_reason: opsRecord.rerun_reason,
   }
 }

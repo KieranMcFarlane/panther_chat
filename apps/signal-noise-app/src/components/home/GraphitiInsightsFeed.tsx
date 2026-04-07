@@ -11,6 +11,7 @@ import type { HomeGraphitiInsightsResponse } from '@/lib/home-graphiti-contract'
 export function GraphitiInsightsFeed() {
   const [data, setData] = useState<HomeGraphitiInsightsResponse | null>(null)
   const [loading, setLoading] = useState(true)
+  const [busyInsightId, setBusyInsightId] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchInsights = async () => {
@@ -74,6 +75,30 @@ export function GraphitiInsightsFeed() {
     opportunity: 'Opportunity',
     watch_item: 'Watch item',
     operational: 'Operational',
+  }
+
+  const handleOperationalAction = async (insight: HomeGraphitiInsightsResponse['highlights'][number], action: 'rerun' | 'review') => {
+    setBusyInsightId(insight.insight_id)
+    try {
+      const endpoint = action === 'rerun'
+        ? `/api/entities/${insight.entity_id}/dossier/rerun`
+        : `/api/entities/${insight.entity_id}/dossier/review`
+      const body = action === 'rerun'
+        ? { rerun_reason: 'Operational Graphiti card requested a dossier refresh.' }
+        : { review_status: 'needs_review', review_note: 'Marked from the operational Graphiti card.' }
+      await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+      const response = await fetch('/api/home/graphiti-insights', { cache: 'no-store' })
+      const json = await response.json()
+      setData(json)
+    } catch (error) {
+      console.error('Failed to run Graphiti operational action', { action, insight_id: insight.insight_id, error })
+    } finally {
+      setBusyInsightId(null)
+    }
   }
   const insightTypeIcon = (insightType?: string) => {
     switch (insightType) {
@@ -181,12 +206,41 @@ export function GraphitiInsightsFeed() {
                 <div className="text-xs text-slate-400">
                   Detected {new Date(insight.detected_at).toLocaleString()}
                 </div>
-                <Button asChild size="sm" className="bg-amber-400 text-black hover:bg-amber-300">
-                  <Link href={insight.destination_url || `/entity-browser/${insight.entity_id}/dossier?from=1`}>
-                    Open dossier
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
+                <div className="flex flex-wrap gap-2">
+                  {insight.insight_type === 'operational' && (
+                    <>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-white/15 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+                        disabled={busyInsightId === insight.insight_id}
+                        onClick={() => handleOperationalAction(insight, 'rerun')}
+                      >
+                        Rerun dossier
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-white/15 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+                        disabled={busyInsightId === insight.insight_id}
+                        onClick={() => handleOperationalAction(insight, 'review')}
+                      >
+                        Mark for review
+                      </Button>
+                      <Button asChild size="sm" variant="ghost" className="text-slate-200 hover:bg-white/5 hover:text-white">
+                        <Link href={`${insight.destination_url || `/entity-browser/${insight.entity_id}/dossier?from=1`}#missing-evidence`}>
+                          Inspect missing evidence
+                        </Link>
+                      </Button>
+                    </>
+                  )}
+                  <Button asChild size="sm" className="bg-amber-400 text-black hover:bg-amber-300">
+                    <Link href={insight.destination_url || `/entity-browser/${insight.entity_id}/dossier?from=1`}>
+                      Open dossier
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </div>
           ))}

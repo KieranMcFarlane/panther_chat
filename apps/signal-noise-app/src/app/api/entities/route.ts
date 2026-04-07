@@ -126,6 +126,8 @@ export async function GET(request: NextRequest) {
         latest_dossier_path: dossierIndex.latest_dossier_path,
         dossier_source: dossierIndex.dossier_source,
         dossier_summary: dossierIndex.dossier_summary,
+        review_status: dossierIndex.review_status,
+        rerun_reason: dossierIndex.rerun_reason,
         badge_s3_url: resolvedBadgeUrl,
         badge_lookup_complete: true,
         labels: entity.labels || [],
@@ -141,6 +143,8 @@ export async function GET(request: NextRequest) {
           latest_dossier_path: dossierIndex.latest_dossier_path,
           dossier_source: dossierIndex.dossier_source,
           dossier_summary: dossierIndex.dossier_summary,
+          review_status: dossierIndex.review_status,
+          rerun_reason: dossierIndex.rerun_reason,
           name: entityName,
           type: entity.properties?.type || entity.labels?.[0] || 'ENTITY'
         }

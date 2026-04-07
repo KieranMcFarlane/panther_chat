@@ -50,13 +50,17 @@ function inferInsightType(row: Record<string, unknown>): HomeGraphitiInsight['in
   const summary = readString(row.summary).toLowerCase()
   const whyItMatters = readString(row.why_it_matters).toLowerCase()
   const signalBasis = readString(rawPayload.signal_basis).toLowerCase()
+  const salesReadiness = readString(rawPayload.sales_readiness).toUpperCase()
 
   if (
+    title.includes('context refreshed') ||
+    summary.includes('no validated signals remained') ||
     title.includes('rerun') ||
     title.includes('refresh') ||
     summary.includes('rerun') ||
     whyItMatters.includes('missing') ||
-    signalBasis.includes('operational')
+    signalBasis.includes('operational') ||
+    salesReadiness === 'MONITOR'
   ) {
     return 'operational'
   }
@@ -108,6 +112,12 @@ export function materializeGraphitiInsight(row: Record<string, unknown>): HomeGr
   const insightType = inferInsightType(row)
   const confidence = readNumber(row.confidence || 0)
   const entityId = String(row.entity_id || '')
+  const suggestedAction = readString(row.suggested_action)
+  const fallbackSuggestedAction = insightType === 'operational'
+    ? 'Review the dossier, inspect missing evidence, and rerun the account if a stronger signal is needed.'
+    : insightType === 'opportunity'
+      ? 'Open the dossier and convert the signal into a concrete sales next step.'
+      : 'Keep the dossier current and monitor for a stronger trigger before escalating.'
 
   return {
     insight_id: String(row.insight_id || row.id || ''),
@@ -124,7 +134,7 @@ export function materializeGraphitiInsight(row: Record<string, unknown>): HomeGr
     freshness,
     evidence: normalizeEvidence(row.evidence),
     relationships: normalizeRelationships(row.relationships),
-    suggested_action: String(row.suggested_action || ''),
+    suggested_action: suggestedAction || fallbackSuggestedAction,
     priority: inferPriority(confidence, insightType),
     destination_url: entityId ? `/entity-browser/${entityId}/dossier?from=1` : '/entity-browser',
     detected_at: String(row.detected_at || row.materialized_at || new Date().toISOString()),

@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton"
 import { EntityCard } from "@/components/EntityCard"
 import { EntitySmokeJourney } from "@/components/entity-browser/EntitySmokeJourney"
+import type { EntitySmokeJourneyItem } from "@/lib/entity-smoke-set"
 import { useEntitiesBrowserData, useEntityTaxonomy } from "@/lib/swr-config"
 import {
   Database,
@@ -71,7 +72,11 @@ interface EntityTaxonomyResponse {
   }
 }
 
-export default function EntityBrowserClientPage() {
+interface EntityBrowserClientPageProps {
+  smokeItems: EntitySmokeJourneyItem[]
+}
+
+export default function EntityBrowserClientPage({ smokeItems }: EntityBrowserClientPageProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const initialPageFromUrl = Number.parseInt(searchParams.get('page') || '1', 10)
@@ -432,24 +437,9 @@ export default function EntityBrowserClientPage() {
       </div>
 
       <div className="container mx-auto px-4 py-6">
-        <details className="mb-4 rounded-2xl border border-border/70 bg-card/65 p-2.5 shadow-sm">
-          <summary className="cursor-pointer list-none">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="text-sm font-medium text-foreground">Smoke journey</p>
-                <p className="text-xs text-muted-foreground">
-                  Optional calibration path for the five entity smoke set.
-                </p>
-              </div>
-              <Badge variant="secondary" className="gap-1 border-border bg-muted px-2 py-0.5 text-xs text-foreground">
-                Hidden by default
-              </Badge>
-            </div>
-          </summary>
-          <div className="pt-2.5">
-            <EntitySmokeJourney />
-          </div>
-        </details>
+        <div className="mb-4">
+          <EntitySmokeJourney items={smokeItems} />
+        </div>
         <Card className="mb-4 border-border/70 shadow-sm">
           <CardContent className="p-3.5 md:p-4">
             <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">

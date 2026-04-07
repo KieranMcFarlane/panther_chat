@@ -1,0 +1,122 @@
+import type { HomeGraphitiInsight } from "@/lib/home-graphiti-contract"
+
+const DEMO_TIMESTAMP = "2026-04-07T10:15:00.000Z"
+
+export function getDemoGraphitiInsights(): HomeGraphitiInsight[] {
+  return [
+    {
+      insight_id: "demo-opportunity-major-league-cricket",
+      insight_type: "opportunity",
+      entity_id: "1db6d6eb-89c5-5c9f-95cb-217d0985a176",
+      entity_name: "Major League Cricket (MLC)",
+      entity_type: "League",
+      sport: "Cricket",
+      title: "Major League Cricket shows a live procurement-led opening",
+      summary: "League build-out and ecosystem motion make this the clearest current sales opening in the demo set.",
+      why_it_matters: "This is the strongest why-now account for a concrete sales action rather than passive monitoring.",
+      confidence: 0.86,
+      freshness: "new",
+      evidence: [
+        {
+          type: "note",
+          id: "demo-mlc-evidence",
+          snippet: "Seeded question-first dossier indicates active ecosystem and procurement relevance.",
+          source: "client_demo_seed",
+        },
+      ],
+      relationships: [
+        {
+          type: "buyer_group",
+          target_id: "mlc-commercial-ops",
+          target_name: "League operations and commercial leadership",
+          direction: "bidirectional",
+        },
+      ],
+      suggested_action: "Open the dossier, review the procurement and ecosystem tab, and draft a targeted outreach step tied to league infrastructure growth.",
+      priority: "high",
+      destination_url: "/entity-browser/1db6d6eb-89c5-5c9f-95cb-217d0985a176/dossier?from=1",
+      detected_at: DEMO_TIMESTAMP,
+      source_run_id: "demo-seed-mlc",
+      source_signal_id: "demo-signal-mlc",
+      source_episode_id: "demo-episode-mlc",
+      source_objective: "client_demo_seed",
+      materialized_at: DEMO_TIMESTAMP,
+    },
+    {
+      insight_id: "demo-watch-zimbabwe-cricket",
+      insight_type: "watch_item",
+      entity_id: "fedd8440-4082-5ce4-b07a-2d662a4c200e",
+      entity_name: "Zimbabwe Cricket",
+      entity_type: "Cricket Board",
+      sport: "Cricket",
+      title: "Zimbabwe Cricket warrants a watch-and-qualify motion",
+      summary: "The account is credible and dossier-ready, but the current signal points to measured discovery rather than a forced immediate push.",
+      why_it_matters: "It demonstrates a coherent board-level watch item in the same cockpit surface as stronger opportunities.",
+      confidence: 0.72,
+      freshness: "recent",
+      evidence: [
+        {
+          type: "note",
+          id: "demo-zc-evidence",
+          snippet: "Seeded board dossier supports qualification around digital operations and partner delivery.",
+          source: "client_demo_seed",
+        },
+      ],
+      relationships: [
+        {
+          type: "buyer_group",
+          target_id: "zc-board-commercial-ops",
+          target_name: "Board commercial and operations leadership",
+          direction: "bidirectional",
+        },
+      ],
+      suggested_action: "Monitor modernization, vendor, and partner changes, then escalate if a stronger timing or procurement signal appears.",
+      priority: "medium",
+      destination_url: "/entity-browser/fedd8440-4082-5ce4-b07a-2d662a4c200e/dossier?from=1",
+      detected_at: "2026-04-07T10:14:00.000Z",
+      source_run_id: "demo-seed-zc",
+      source_signal_id: "demo-signal-zc",
+      source_episode_id: "demo-episode-zc",
+      source_objective: "client_demo_seed",
+      materialized_at: "2026-04-07T10:14:00.000Z",
+    },
+    {
+      insight_id: "demo-operational-zimbabwe-handball-federation",
+      insight_type: "operational",
+      entity_id: "a01fa763-6170-5f62-912b-cedd1363a804",
+      entity_name: "Zimbabwe Handball Federation",
+      entity_type: "Federation",
+      sport: "Handball",
+      title: "Zimbabwe Handball Federation should stay in light-review mode",
+      summary: "The dossier is ready, but this remains a lower-signal federation account that should be reviewed rather than actively pushed.",
+      why_it_matters: "The cockpit needs an operational card that tells sales what to keep warm and what not to over-invest in yet.",
+      confidence: 0.69,
+      freshness: "recent",
+      evidence: [
+        {
+          type: "note",
+          id: "demo-zhf-evidence",
+          snippet: "Seeded federation dossier confirms lower-signal readiness without a strong active pursuit trigger.",
+          source: "client_demo_seed",
+        },
+      ],
+      relationships: [
+        {
+          type: "buyer_group",
+          target_id: "zhf-leadership",
+          target_name: "Federation leadership",
+          direction: "bidirectional",
+        },
+      ],
+      suggested_action: "Keep the dossier current, revisit on the next review date, and only escalate if stronger external movement appears.",
+      priority: "medium",
+      destination_url: "/entity-browser/a01fa763-6170-5f62-912b-cedd1363a804/dossier?from=1",
+      detected_at: "2026-04-07T10:13:00.000Z",
+      source_run_id: "demo-seed-zhf",
+      source_signal_id: "demo-signal-zhf",
+      source_episode_id: "demo-episode-zhf",
+      source_objective: "client_demo_seed",
+      materialized_at: "2026-04-07T10:13:00.000Z",
+    },
+  ]
+}

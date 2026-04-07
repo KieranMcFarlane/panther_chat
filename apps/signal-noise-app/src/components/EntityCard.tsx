@@ -62,6 +62,8 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
   const latestGeneratedAt = String(entity.properties?.latest_generated_at || entity?.latest_generated_at || '').trim()
   const dossierStatusLabel = dossierStatus === 'ready'
     ? 'Dossier ready'
+    : dossierStatus === 'stale'
+      ? 'Dossier stale'
     : dossierStatus === 'rerun_needed'
       ? 'Needs rerun'
       : dossierStatus === 'pending'
@@ -69,6 +71,8 @@ export function EntityCard({ entity, similarity, connections, rank, onEmailEntit
         : 'No dossier yet'
   const dossierStatusVariant = dossierStatus === 'ready'
     ? 'default'
+    : dossierStatus === 'stale'
+      ? 'secondary'
     : dossierStatus === 'rerun_needed'
       ? 'secondary'
       : 'outline'

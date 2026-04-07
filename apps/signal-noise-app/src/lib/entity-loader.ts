@@ -191,8 +191,21 @@ export async function getEntityForDossierPage(entityId: string, tier = 'standard
   }
 
   let entity: Entity | null = null
+  const canonicalEntities = await getCanonicalEntitiesSnapshot()
+  const canonicalUuidMatch = canonicalEntities.find((candidate) => matchesEntityUuid(candidate, entityId))
+
+  if (canonicalUuidMatch) {
+    entity = {
+      id: String(canonicalUuidMatch.id),
+      uuid: resolveEntityUuid(canonicalUuidMatch) || undefined,
+      neo4j_id: canonicalUuidMatch.neo4j_id,
+      labels: canonicalUuidMatch.labels || [],
+      properties: canonicalUuidMatch.properties || {},
+    }
+  }
 
   try {
+    if (!entity) {
     const { data: teamData, error: teamError } = await supabase
       .from('teams')
       .select(`
@@ -327,14 +340,13 @@ export async function getEntityForDossierPage(entityId: string, tier = 'standard
         }
       }
     }
+    }
   } catch (error) {
     console.log('⚠️ Server-side entity lookup error:', error)
   }
 
   if (!entity) {
-    const canonicalEntities = await getCanonicalEntitiesSnapshot()
     const canonicalMatch = canonicalEntities.find((candidate) =>
-      matchesEntityUuid(candidate, entityId) ||
       String(candidate.id || '') === entityId ||
       String(candidate.neo4j_id || '') === entityId,
     )

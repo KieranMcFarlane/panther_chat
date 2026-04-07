@@ -5,55 +5,21 @@ import { ArrowRight, CheckCircle2, PlayCircle } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { resolveEntityUuid } from "@/lib/entity-public-id"
+import type { EntitySmokeJourneyItem } from "@/lib/entity-smoke-set"
 
-type SmokeJourneyItem = {
-  entityId: string
-  name: string
-  type: string
-  purpose: string
-  smokeNote: string
+const STATUS_LABELS: Record<EntitySmokeJourneyItem["dossierStatus"], string> = {
+  ready: "Dossier ready",
+  stale: "Dossier stale",
+  rerun_needed: "Needs rerun",
+  pending: "Dossier pending",
+  missing: "No dossier yet",
 }
 
-const smokeJourneyItems: SmokeJourneyItem[] = [
-  {
-    entityId: "dca9d675-1d91-4a19-8ae6-04ed0df624cd",
-    name: "Arsenal Football Club",
-    type: "Club",
-    purpose: "Happy-path club dossier",
-    smokeNote: "Use this to prove the dossier page, persistence, and phase rail on a strong entity."
-  },
-  {
-    entityId: "b62b1f00-dd3a-4a22-82cb-4a6a573f5a09",
-    name: "Coventry City",
-    type: "Club",
-    purpose: "Repeat club run",
-    smokeNote: "Use this to confirm the browser-to-dossier journey is repeatable across clubs."
-  },
-  {
-    entityId: "d500cecb-8392-4bba-9cb2-4ed2bb7f9253",
-    name: "Zimbabwe Cricket",
-    type: "Cricket Board",
-    purpose: "Persisted question-first dossier",
-    smokeNote: "Use this to verify the persisted dossier is visible immediately on the page."
-  },
-  {
-    entityId: "0c6caa0a-8475-455f-8f9b-5ce61295bcd1",
-    name: "Major League Cricket",
-    type: "League",
-    purpose: "Procurement signal check",
-    smokeNote: "Use this to exercise the question pack and show sparse/no-signal handling without breaking UX."
-  },
-  {
-    entityId: "f6f83596-9b70-41e9-996b-a53b82168cd7",
-    name: "Zimbabwe Handball Federation",
-    type: "Federation",
-    purpose: "Federation dossier path",
-    smokeNote: "Use this to confirm the federation dossier path and phase progression."
-  }
-]
+interface EntitySmokeJourneyProps {
+  items: EntitySmokeJourneyItem[]
+}
 
-export function EntitySmokeJourney() {
+export function EntitySmokeJourney({ items }: EntitySmokeJourneyProps) {
   return (
     <Card className="border-slate-700/80 bg-slate-950/70 shadow-sm">
       <CardHeader className="space-y-3">
@@ -72,7 +38,7 @@ export function EntitySmokeJourney() {
       </CardHeader>
       <CardContent className="space-y-2">
         <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-5">
-          {smokeJourneyItems.map((item, index) => (
+          {items.map((item, index) => (
             <div
               key={item.entityId}
               className="rounded-xl border border-slate-700/70 bg-slate-900/60 p-3 transition-colors hover:border-sky-500/60"
@@ -96,10 +62,15 @@ export function EntitySmokeJourney() {
               </div>
 
               <p className="mt-2 text-xs leading-5 text-slate-400">{item.smokeNote}</p>
+              <div className="mt-2 rounded-lg border border-slate-700/70 bg-slate-950/70 p-2">
+                <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Dossier status</p>
+                <p className="mt-1 text-sm font-medium text-slate-100">{STATUS_LABELS[item.dossierStatus]}</p>
+                <p className="mt-1 text-xs leading-5 text-slate-400">{item.dossierSummary}</p>
+              </div>
 
               <div className="mt-2 flex flex-wrap gap-2">
                 <Button asChild size="sm" className="gap-1.5 px-3 py-1.5 text-xs">
-                  <Link href={`/entity-browser/${resolveEntityUuid({ id: item.entityId, neo4j_id: item.entityId, supabase_id: item.entityId })}/dossier?from=1`}>
+                  <Link href={`/entity-browser/${item.entityId}/dossier?from=1`}>
                     Open dossier
                     <ArrowRight className="h-3.5 w-3.5" />
                   </Link>

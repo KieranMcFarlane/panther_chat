@@ -7,6 +7,7 @@ import { GenericEntityDossier } from './GenericEntityDossier'
 import { EnhancedClubDossier } from './EnhancedClubDossier'
 import { EnhancedPersonDossier } from './EnhancedPersonDossier'
 import { FinalRalphClubDossier } from './FinalRalphClubDossier'
+import { QuestionFirstEntityDossier } from './QuestionFirstEntityDossier'
 
 interface EntityDossierRouterProps {
   entity: Entity
@@ -16,8 +17,13 @@ interface EntityDossierRouterProps {
 
 export function EntityDossierRouter({ entity, onEmailEntity, dossier }: EntityDossierRouterProps) {
   const entityType = detectEntityType(entity)
+  const hasQuestionFirstTabs = Array.isArray(dossier?.tabs) && dossier.tabs.length > 0
 
   console.log(`Rendering dossier for entity: ${entity.properties.name}, type: ${entityType}`)
+
+  if (hasQuestionFirstTabs) {
+    return <QuestionFirstEntityDossier entity={entity} dossier={dossier} />
+  }
 
   switch (entityType) {
     case 'Club':

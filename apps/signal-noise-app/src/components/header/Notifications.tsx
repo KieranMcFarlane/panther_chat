@@ -61,12 +61,29 @@ export default function Notifications() {
   }, []);
 
   const handleMarkAllAsRead = () => {
+    fetch('/api/notifications/graphiti', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'mark_all_read' }),
+    }).catch(() => undefined)
     setNotifications((current) => current.map((notification) => ({ ...notification, read_state: 'read' })));
   };
 
   const handleClearAll = () => {
+    handleMarkAllAsRead();
     setNotifications([]);
   };
+
+  const handleNotificationOpen = (insightId: string) => {
+    fetch('/api/notifications/graphiti', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'mark_read', insight_ids: [insightId] }),
+    }).catch(() => undefined)
+    setNotifications((current) => current.map((notification) => (
+      notification.insight_id === insightId ? { ...notification, read_state: 'read' } : notification
+    )));
+  }
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
@@ -161,7 +178,7 @@ export default function Notifications() {
                 }`}
                 asChild
               >
-                <Link href={notification.destination_url} className="flex items-start gap-3 w-full">
+                <Link href={notification.destination_url} className="flex items-start gap-3 w-full" onClick={() => handleNotificationOpen(notification.insight_id)}>
                   <div className="flex-shrink-0 text-muted-foreground mt-0.5">
                     {getNotificationIcon(notification.insight_type || 'watch_item')}
                   </div>

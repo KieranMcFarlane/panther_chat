@@ -5,6 +5,7 @@ import path from 'path'
 import { getDossierRoots } from '@/lib/dossier-paths'
 import { buildDossierTabs } from '@/lib/dossier-tabs'
 import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
+import { allowDemoFallbacks } from '@/lib/runtime-env'
 
 type EntityLike = {
   id?: unknown
@@ -91,6 +92,7 @@ function walkDirectory(root: string, maxDepth = 4): string[] {
 function getArtifactFiles(suffix: string): string[] {
   return getDossierRoots()
     .flatMap((root) => walkDirectory(root))
+    .filter((filePath) => allowDemoFallbacks() || !filePath.includes(`${path.sep}demo${path.sep}`))
     .filter((filePath) => filePath.endsWith(suffix))
 }
 
