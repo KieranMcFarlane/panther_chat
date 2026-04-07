@@ -1419,6 +1419,39 @@ test('ensureBrightDataFastMcpService forces local BrightData transport flags', a
   assert.equal(capturedEnv.BRIGHTDATA_MCP_HOSTED_URL, '');
 });
 
+test('ensureBrightDataFastMcpService does not hang on a stalled health probe', async () => {
+  let probes = 0;
+  const fetchImpl = async () => {
+    probes += 1;
+    if (probes === 1) {
+      return await new Promise(() => {});
+    }
+    return { ok: true };
+  };
+  let spawned = false;
+  const spawnImpl = () => {
+    spawned = true;
+    return {
+      unref() {},
+    };
+  };
+
+  const startedAt = Date.now();
+  const result = await ensureBrightDataFastMcpService({
+    fetchImpl,
+    spawnImpl,
+    serviceUrl: 'http://127.0.0.1:8000/mcp',
+    healthUrl: 'http://127.0.0.1:8000/health',
+    probeTimeoutMs: 25,
+    startupTimeoutMs: 100,
+    pollIntervalMs: 5,
+  });
+
+  assert.equal(spawned, true);
+  assert.equal(result.healthy, true);
+  assert.ok(Date.now() - startedAt < 500);
+});
+
 test('extractFinalCliJson parses fenced JSON embedded in prose', () => {
   const parsed = extractFinalCliJson([
     '{"type":"text","part":{"text":"I found the answer.\\n\\n```json\\n{\\n  \\"answer\\": \\"1886\\",\\n  \\"confidence\\": 0.98,\\n  \\"validation_state\\": \\"validated\\"\\n}\\n```"}}',

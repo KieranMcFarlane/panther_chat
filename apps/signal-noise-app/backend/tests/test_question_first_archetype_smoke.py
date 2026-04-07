@@ -337,6 +337,10 @@ def test_build_rerun_archetypes_filters_failed_entities_and_failed_question(tmp_
     assert rerun_source_path.exists()
     rerun_payload = json.loads(rerun_source_path.read_text(encoding="utf-8"))
     assert [question["question_id"] for question in rerun_payload["questions"]] == ["q2_digital_stack"]
+    assert rerun_payload["rerun_profile"] == "bounded_single_question"
+    assert rerun_payload["questions"][0]["hop_budget"] == 4
+    assert rerun_payload["questions"][0]["question_timeout_ms"] == 60000
+    assert rerun_payload["questions"][0]["hop_timeout_ms"] == 30000
 
 
 def test_skip_complete_skips_entities_with_fresh_artifacts(tmp_path):

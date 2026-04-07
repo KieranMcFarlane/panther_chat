@@ -879,12 +879,30 @@ function _resolveBrightDataFastMcpHealthUrl(serviceUrl = _resolveBrightDataFastM
 async function _probeBrightDataFastMcpHealth({
   fetchImpl = globalThis.fetch,
   healthUrl = _resolveBrightDataFastMcpHealthUrl(),
+  timeoutMs = 1000,
 } = {}) {
+  const normalizedTimeoutMs = Number.isFinite(Number(timeoutMs))
+    ? Math.max(1, Number(timeoutMs))
+    : 1000;
+  const abortController = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  const timeoutHandle = setTimeout(() => {
+    abortController?.abort?.();
+  }, normalizedTimeoutMs);
   try {
-    const response = await fetchImpl(healthUrl, { method: 'GET' });
+    const response = await Promise.race([
+      fetchImpl(healthUrl, {
+        method: 'GET',
+        ...(abortController ? { signal: abortController.signal } : {}),
+      }),
+      delay(normalizedTimeoutMs).then(() => {
+        throw new Error(`FastMCP health probe timed out after ${normalizedTimeoutMs}ms`);
+      }),
+    ]);
     return Boolean(response && response.ok);
   } catch {
     return false;
+  } finally {
+    clearTimeout(timeoutHandle);
   }
 }
 
@@ -898,8 +916,9 @@ export async function ensureBrightDataFastMcpService({
   serviceEnv = process.env,
   startupTimeoutMs = 10000,
   pollIntervalMs = 250,
+  probeTimeoutMs = 1000,
 } = {}) {
-  if (await _probeBrightDataFastMcpHealth({ fetchImpl, healthUrl })) {
+  if (await _probeBrightDataFastMcpHealth({ fetchImpl, healthUrl, timeoutMs: probeTimeoutMs })) {
     return { started: false, healthy: true, serviceUrl, healthUrl };
   }
 
@@ -920,7 +939,7 @@ export async function ensureBrightDataFastMcpService({
 
   const deadline = Date.now() + Math.max(0, Number(startupTimeoutMs || 0));
   while (Date.now() < deadline) {
-    if (await _probeBrightDataFastMcpHealth({ fetchImpl, healthUrl })) {
+    if (await _probeBrightDataFastMcpHealth({ fetchImpl, healthUrl, timeoutMs: probeTimeoutMs })) {
       return { started: true, healthy: true, serviceUrl, healthUrl };
     }
     await delay(Math.max(1, Number(pollIntervalMs || 0)));

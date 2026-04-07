@@ -151,10 +151,27 @@ def _write_filtered_question_source(
     selected_questions = [question for question in questions if isinstance(question, dict) and str(question.get("question_id") or "").strip() == question_id]
     if not selected_questions:
         raise ValueError(f"Question id {question_id!r} not found in {source_path}")
+    bounded_questions = []
+    for question in selected_questions:
+        bounded_question = dict(question)
+        if question_id in {"q4_decision_owner", "q3_procurement_signal", "q2_digital_stack"}:
+            bounded_question["hop_budget"] = min(max(int(question.get("hop_budget") or 1), 1), 4)
+            bounded_question["evidence_extension_budget"] = min(max(int(question.get("evidence_extension_budget") or 0), 0), 1)
+            if question.get("question_timeout_ms") is not None:
+                bounded_question["question_timeout_ms"] = min(max(int(question.get("question_timeout_ms") or 1000), 1000), 60000)
+            else:
+                bounded_question["question_timeout_ms"] = 60000
+            if question.get("hop_timeout_ms") is not None:
+                bounded_question["hop_timeout_ms"] = min(max(int(question.get("hop_timeout_ms") or 1000), 1000), 30000)
+            else:
+                bounded_question["hop_timeout_ms"] = 30000
+        bounded_questions.append(bounded_question)
+
     filtered = {
         **payload,
-        "questions": selected_questions,
-        "question_count": len(selected_questions),
+        "questions": bounded_questions,
+        "question_count": len(bounded_questions),
+        "rerun_profile": "bounded_single_question",
     }
     rerun_dir = output_root / "_rerun_question_sources"
     rerun_dir.mkdir(parents=True, exist_ok=True)
