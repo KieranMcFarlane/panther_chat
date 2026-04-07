@@ -45,6 +45,29 @@ def _iso_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def _parse_iso_timestamp(value: Any) -> Optional[float]:
+    if value is None:
+        return None
+    text = str(value).strip()
+    if not text:
+        return None
+    try:
+        return datetime.fromisoformat(text.replace("Z", "+00:00")).timestamp()
+    except ValueError:
+        try:
+            return float(text)
+        except (TypeError, ValueError):
+            return None
+
+
+def _seconds_between(start_value: Any, end_value: Any) -> float:
+    start_ts = _parse_iso_timestamp(start_value)
+    end_ts = _parse_iso_timestamp(end_value)
+    if start_ts is None or end_ts is None:
+        return 0.0
+    return round(max(end_ts - start_ts, 0.0), 3)
+
+
 def _slugify(value: str) -> str:
     value = re.sub(r"[^a-zA-Z0-9]+", "-", str(value or "").strip().lower())
     return re.sub(r"-+", "-", value).strip("-") or "entity"
@@ -149,6 +172,7 @@ class QuestionFirstRunArtifact(BaseModel):
     question_source_path: Optional[str] = None
     questions: List[Dict[str, Any]] = Field(default_factory=list)
     answers: List[Dict[str, Any]] = Field(default_factory=list)
+    question_timings: Dict[str, Any] = Field(default_factory=dict)
     evidence_items: List[Dict[str, Any]] = Field(default_factory=list)
     promotion_candidates: List[Dict[str, Any]] = Field(default_factory=list)
     poi_graph: Dict[str, Any] = Field(default_factory=dict)
@@ -195,6 +219,7 @@ def _merge_question_first_run_patch(
         payload["question_first"].setdefault("run_rollup", artifact.run_rollup)
         payload["question_first"].setdefault("categories", artifact.categories)
         payload["question_first"].setdefault("answers", artifact.answers)
+        payload["question_first"].setdefault("question_timings", artifact.question_timings)
         payload["question_first"].setdefault("evidence_items", artifact.evidence_items)
         payload["question_first"].setdefault("promotion_candidates", artifact.promotion_candidates)
         payload["question_first"].setdefault("poi_graph", artifact.poi_graph)
@@ -206,6 +231,7 @@ def _merge_question_first_run_patch(
         metadata["question_first"].setdefault("generated_at", artifact.generated_at)
         metadata["question_first"].setdefault("questions_answered", len(artifact.answers))
         metadata["question_first"].setdefault("categories", artifact.categories)
+        metadata["question_first"].setdefault("question_timings", artifact.question_timings)
         metadata["question_first"].setdefault("evidence_items", artifact.evidence_items)
         metadata["question_first"].setdefault("promotion_candidates", artifact.promotion_candidates)
         metadata["question_first"].setdefault("poi_graph", artifact.poi_graph)
@@ -250,6 +276,28 @@ def _find_existing_question_first_run_artifact(output_dir: Path, source_payload:
         reverse=True,
     )
     return candidates[0] if candidates else None
+
+
+def _find_existing_question_first_dossier_artifact(output_dir: Path) -> Optional[Path]:
+    canonical_candidates = sorted(
+        output_dir.glob("*_question_first_dossier.json"),
+        key=lambda path: path.stat().st_mtime,
+        reverse=True,
+    )
+    return canonical_candidates[0] if canonical_candidates else None
+
+
+def has_complete_question_first_artifacts(
+    *,
+    output_dir: Path,
+    source_payload: Dict[str, Any],
+    preset: Optional[str] = None,
+) -> bool:
+    artifact_path = _find_existing_question_first_run_artifact(output_dir, source_payload)
+    if artifact_path is None:
+        return False
+    dossier_path = _find_existing_question_first_dossier_artifact(output_dir)
+    return artifact_path.exists() and dossier_path is not None and dossier_path.exists()
 
 
 async def _launch_opencode_question_first_batch(
@@ -533,6 +581,114 @@ def _build_category_summary(answers: List[Dict[str, Any]]) -> List[Dict[str, Any
     return list(summary.values())
 
 
+def build_question_first_durable_batch_metrics(
+    *,
+    artifact: QuestionFirstRunArtifact,
+    output_dir: Optional[Path] = None,
+    connections_graph_enrichment_enabled: bool = False,
+    connections_graph_enrichment_status: str = "optional",
+) -> Dict[str, Any]:
+    answers = [answer for answer in artifact.answers if isinstance(answer, dict)]
+    questions = [question for question in artifact.questions if isinstance(question, dict)]
+    answer_index: Dict[str, Dict[str, Any]] = {}
+    for answer in answers:
+        question_id = str(answer.get("question_id") or "").strip()
+        if question_id:
+            answer_index[question_id] = answer
+
+    validation_by_question: Dict[str, Dict[str, int]] = {}
+    validation_by_entity_type: Dict[str, Dict[str, int]] = {}
+    deterministic_path_counts: Dict[str, int] = {}
+    retrieval_path_counts: Dict[str, int] = {}
+
+    entity_type = str((artifact.entity or {}).get("entity_type") or "").strip() or "unknown"
+    entity_bucket = validation_by_entity_type.setdefault(
+        entity_type,
+        {"validated": 0, "no_signal": 0, "provisional": 0, "pending": 0},
+    )
+
+    for question in questions:
+        question_id = str(question.get("question_id") or "").strip()
+        if not question_id:
+            continue
+        answer = answer_index.get(question_id, {})
+        state = str(answer.get("validation_state") or "").strip().lower() or "no_signal"
+        if state not in {"validated", "no_signal", "provisional", "pending"}:
+            state = "pending"
+        question_bucket = validation_by_question.setdefault(
+            question_id,
+            {"validated": 0, "no_signal": 0, "provisional": 0, "pending": 0},
+        )
+        question_bucket[state] += 1
+        entity_bucket[state] += 1
+        if question.get("deterministic_tools"):
+            deterministic_path_counts[question_id] = deterministic_path_counts.get(question_id, 0) + 1
+        else:
+            retrieval_path_counts[question_id] = retrieval_path_counts.get(question_id, 0) + 1
+
+    question_runtime_seconds: Dict[str, float] = {}
+    contract_question_timings = _normalize_question_timings(getattr(artifact, "question_timings", {}))
+    if contract_question_timings:
+        for question in questions:
+            question_id = str(question.get("question_id") or "").strip()
+            if not question_id:
+                continue
+            question_timing = contract_question_timings.get(question_id)
+            if not question_timing:
+                continue
+            duration_value = question_timing.get("duration_seconds")
+            if duration_value is None and question_timing.get("started_at") and question_timing.get("completed_at"):
+                duration_value = _seconds_between(question_timing["started_at"], question_timing["completed_at"])
+            if duration_value is None:
+                continue
+            try:
+                question_runtime_seconds[question_id] = round(float(duration_value), 3)
+            except (TypeError, ValueError):
+                continue
+
+    if output_dir is not None and questions:
+        output_path = Path(output_dir)
+        question_paths = sorted(
+            [
+                path
+                for path in output_path.glob("*_question_*.json")
+                if "question_first" not in path.name
+            ],
+            key=lambda path: (path.stat().st_mtime, path.name),
+        )
+        start_ts = _parse_iso_timestamp(artifact.run_started_at)
+        previous_ts = start_ts
+        legacy_question_runtime_seconds: Dict[str, float] = {}
+        for question, path in zip(questions, question_paths):
+            question_id = str(question.get("question_id") or "").strip()
+            if not question_id:
+                continue
+            current_ts = path.stat().st_mtime
+            if previous_ts is None:
+                duration = 0.0
+            else:
+                duration = round(max(current_ts - previous_ts, 0.0), 3)
+            legacy_question_runtime_seconds[question_id] = duration
+            previous_ts = current_ts
+        for question_id, duration in legacy_question_runtime_seconds.items():
+            question_runtime_seconds.setdefault(question_id, duration)
+
+    return {
+        "entity_runtime_seconds": _seconds_between(artifact.run_started_at, artifact.generated_at),
+        "question_runtime_seconds": question_runtime_seconds,
+        "validation_by_question": validation_by_question,
+        "validation_by_entity_type": validation_by_entity_type,
+        "deterministic_path_counts": deterministic_path_counts,
+        "retrieval_path_counts": retrieval_path_counts,
+        "baseline_features": {
+            "enrichment_enabled": bool(connections_graph_enrichment_enabled),
+            "connections_graph_enrichment_enabled": bool(connections_graph_enrichment_enabled),
+            "connections_graph_enrichment_status": connections_graph_enrichment_status,
+            "question_first_enabled": True,
+        },
+    }
+
+
 def _validation_state_for_answer(answer: Dict[str, Any]) -> str:
     if not answer.get("search_hit"):
         return "no_signal"
@@ -540,6 +696,31 @@ def _validation_state_for_answer(answer: Dict[str, Any]) -> str:
     if confidence >= 0.5:
         return "validated"
     return "pending"
+
+
+def _normalize_question_timings(question_timings: Any) -> Dict[str, Dict[str, Any]]:
+    normalized: Dict[str, Dict[str, Any]] = {}
+    if not isinstance(question_timings, dict):
+        return normalized
+    for question_id, timing in question_timings.items():
+        if not question_id or not isinstance(timing, dict):
+            continue
+        entry: Dict[str, Any] = {}
+        started_at = str(timing.get("started_at") or "").strip()
+        completed_at = str(timing.get("completed_at") or "").strip()
+        duration_seconds = timing.get("duration_seconds")
+        if started_at:
+            entry["started_at"] = started_at
+        if completed_at:
+            entry["completed_at"] = completed_at
+        if duration_seconds is not None:
+            try:
+                entry["duration_seconds"] = round(float(duration_seconds), 3)
+            except (TypeError, ValueError):
+                pass
+        if entry:
+            normalized[str(question_id)] = entry
+    return normalized
 
 
 def _render_plain_text_report(report: Dict[str, Any]) -> str:
@@ -815,10 +996,14 @@ async def run_question_first_dossier_from_payload(
         bridge_contacts=source.get("bridge_contacts") if isinstance(source.get("bridge_contacts"), list) else None,
     )
     active_connections_graph = promotions["connections_graph"]
+    connections_graph_enrichment_enabled = False
+    connections_graph_enrichment_status = "optional"
     if connections_graph_enricher is None and connections_enrichment_enabled_by_default():
         brightdata_client = BrightDataMCPClient()
         connections_graph_enricher = build_default_connections_graph_enricher(brightdata_client)
     if connections_graph_enricher is not None:
+        connections_graph_enrichment_enabled = True
+        connections_graph_enrichment_status = "enabled"
         enrich_callable = getattr(connections_graph_enricher, "enrich", None)
         if callable(enrich_callable):
             try:
@@ -829,6 +1014,12 @@ async def run_question_first_dossier_from_payload(
                 )
             except Exception as exc:
                 logger.warning("connections graph enrichment failed: %s", exc)
+    durable_batch_metrics = build_question_first_durable_batch_metrics(
+        artifact=artifact,
+        output_dir=output_dir,
+        connections_graph_enrichment_enabled=connections_graph_enrichment_enabled,
+        connections_graph_enrichment_status=connections_graph_enrichment_status,
+    )
     merged["dossier_promotions"] = promotions["dossier_promotions"]
     merged["discovery_summary"] = promotions["discovery_summary"]
     merged["poi_graph"] = promotions["poi_graph"]
@@ -839,6 +1030,9 @@ async def run_question_first_dossier_from_payload(
         merged["question_first"]["discovery_summary"] = promotions["discovery_summary"]
         merged["question_first"]["poi_graph"] = artifact.poi_graph or promotions["poi_graph"]
         merged["question_first"]["connections_graph"] = active_connections_graph
+        merged["question_first"]["connections_graph_enrichment_enabled"] = connections_graph_enrichment_enabled
+        merged["question_first"]["connections_graph_enrichment_status"] = connections_graph_enrichment_status
+        merged["question_first"].update(durable_batch_metrics)
 
     if output_dir is not None:
       output_dir = Path(output_dir)
@@ -858,6 +1052,9 @@ async def run_question_first_dossier_from_payload(
           "categories": artifact.categories,
           "run_rollup": artifact.run_rollup,
           "schema_version": artifact.schema_version,
+          "connections_graph_enrichment_enabled": connections_graph_enrichment_enabled,
+          "connections_graph_enrichment_status": connections_graph_enrichment_status,
+          **durable_batch_metrics,
       }
       json_path.write_text(json.dumps({**report, "merged_dossier": merged}, indent=2, default=str), encoding="utf-8")
       txt_path.write_text(
@@ -879,6 +1076,9 @@ async def run_question_first_dossier_from_payload(
               {
                   "json_report_path": str(json_path),
                   "plain_text_path": str(txt_path),
+                  "connections_graph_enrichment_enabled": connections_graph_enrichment_enabled,
+                  "connections_graph_enrichment_status": connections_graph_enrichment_status,
+                  **durable_batch_metrics,
               }
           )
 

@@ -66,6 +66,37 @@ function _normalizeCandidate(value) {
   return candidate;
 }
 
+function _normalizeQuestionTiming(value) {
+  if (!value || typeof value !== 'object') {
+    return null;
+  }
+  const started_at = String(value.started_at || '').trim();
+  const completed_at = String(value.completed_at || '').trim();
+  const duration_seconds = Number(value.duration_seconds);
+  if (!started_at && !completed_at && !Number.isFinite(duration_seconds)) {
+    return null;
+  }
+  const timing = {};
+  if (started_at) timing.started_at = started_at;
+  if (completed_at) timing.completed_at = completed_at;
+  if (Number.isFinite(duration_seconds)) timing.duration_seconds = duration_seconds;
+  return timing;
+}
+
+function _buildQuestionTimingIndex(question_timings) {
+  const index = new Map();
+  if (!question_timings || typeof question_timings !== 'object') {
+    return index;
+  }
+  for (const [questionId, timing] of Object.entries(question_timings)) {
+    const normalized = _normalizeQuestionTiming(timing);
+    if (questionId && normalized) {
+      index.set(String(questionId), normalized);
+    }
+  }
+  return index;
+}
+
 function buildPoiGraph({ entity_id, entity_name, answers = [] }) {
   const entityId = String(entity_id || '').trim();
   const entityName = String(entity_name || '').trim();
@@ -166,9 +197,14 @@ function buildPoiGraph({ entity_id, entity_name, answers = [] }) {
   };
 }
 
-function _mergeQuestionWithAnswer(question, answer) {
+function _mergeQuestionWithAnswer(question, answer, questionTiming) {
   const merged = { ..._clone(question) };
   if (!answer) {
+    if (questionTiming) {
+      merged.started_at = questionTiming.started_at;
+      merged.completed_at = questionTiming.completed_at;
+      merged.duration_seconds = questionTiming.duration_seconds;
+    }
     return merged;
   }
 
@@ -196,6 +232,11 @@ function _mergeQuestionWithAnswer(question, answer) {
       merged[field] = answerPayload[field];
     }
   }
+  if (questionTiming) {
+    merged.started_at = questionTiming.started_at;
+    merged.completed_at = questionTiming.completed_at;
+    merged.duration_seconds = questionTiming.duration_seconds;
+  }
   merged.question_first_answer = answerPayload;
   return merged;
 }
@@ -208,19 +249,26 @@ export function buildQuestionFirstRunMergePatch({
   evidence_items = [],
   promotion_candidates = [],
   categories = [],
+  question_timings = {},
   run_rollup = {},
   generated_at = new Date().toISOString(),
   question_source_path = null,
   warnings = [],
 }) {
   const answerIndex = _buildQuestionAnswerIndex(answers);
+  const timingIndex = _buildQuestionTimingIndex(question_timings);
   const poiGraph = buildPoiGraph({ entity_id, entity_name, answers });
   const mergedQuestions = (Array.isArray(questions) ? questions : []).map((question) => {
     const key = _answerKey(question);
     const answer = key ? answerIndex.get(key) : undefined;
-    return _mergeQuestionWithAnswer(question, answer);
+    const questionTiming = key ? timingIndex.get(String(question.question_id || '').trim()) : undefined;
+    return _mergeQuestionWithAnswer(question, answer, questionTiming);
   });
   const questionsAnswered = (Array.isArray(answers) ? answers : []).length;
+  const normalizedQuestionTimings = {};
+  for (const [questionId, timing] of timingIndex.entries()) {
+    normalizedQuestionTimings[questionId] = _clone(timing);
+  }
 
   return {
     metadata: {
@@ -232,6 +280,7 @@ export function buildQuestionFirstRunMergePatch({
         evidence_items: _clone(evidence_items) || [],
         promotion_candidates: _clone(promotion_candidates) || [],
         poi_graph: _clone(poiGraph),
+        question_timings: _clone(normalizedQuestionTimings),
         question_source_path,
         generated_at,
         run_rollup: _clone(run_rollup) || {},
@@ -247,6 +296,7 @@ export function buildQuestionFirstRunMergePatch({
       evidence_items: _clone(evidence_items) || [],
       promotion_candidates: _clone(promotion_candidates) || [],
       poi_graph: _clone(poiGraph),
+      question_timings: _clone(normalizedQuestionTimings),
       run_rollup: _clone(run_rollup) || {},
       question_source_path,
       generated_at,
@@ -267,6 +317,7 @@ export function buildQuestionFirstRunArtifact({
   evidence_items = [],
   promotion_candidates = [],
   categories = [],
+  question_timings = {},
   run_rollup = {},
   merge_patch = null,
   generated_at = new Date().toISOString(),
@@ -280,6 +331,7 @@ export function buildQuestionFirstRunArtifact({
   const normalizedEvidenceItems = Array.isArray(evidence_items) ? evidence_items.map((item) => _clone(item)) : [];
   const normalizedPromotionCandidates = Array.isArray(promotion_candidates) ? promotion_candidates.map((item) => _clone(item)) : [];
   const normalizedCategories = Array.isArray(categories) ? categories.map((category) => _clone(category)) : [];
+  const normalizedQuestionTimings = _clone(question_timings) || {};
   const normalizedRollup = _clone(run_rollup) || {};
   const normalizedMergePatch = merge_patch || buildQuestionFirstRunMergePatch({
     entity_id,
@@ -289,10 +341,22 @@ export function buildQuestionFirstRunArtifact({
     evidence_items: normalizedEvidenceItems,
     promotion_candidates: normalizedPromotionCandidates,
     categories: normalizedCategories,
+    question_timings: normalizedQuestionTimings,
     run_rollup: normalizedRollup,
     generated_at,
     question_source_path,
     warnings,
+  });
+  const timingIndex = _buildQuestionTimingIndex(normalizedQuestionTimings);
+  const mergedQuestions = normalizedQuestions.map((question) => {
+    const answer = _buildQuestionAnswerIndex(normalizedAnswers).get(_answerKey(question));
+    const questionTiming = timingIndex.get(String(question.question_id || '').trim());
+    return _mergeQuestionWithAnswer(question, answer, questionTiming);
+  });
+  const normalizedAnswersWithTimings = normalizedAnswers.map((answer) => {
+    const questionId = String(answer.question_id || '').trim();
+    const questionTiming = questionId ? timingIndex.get(questionId) : undefined;
+    return questionTiming ? { ...answer, ...questionTiming } : answer;
   });
 
   return {
@@ -309,12 +373,13 @@ export function buildQuestionFirstRunArtifact({
     },
     preset,
     question_source_path,
-    questions: normalizedQuestions,
-    answers: normalizedAnswers,
+    questions: mergedQuestions,
+    answers: normalizedAnswersWithTimings,
     evidence_items: normalizedEvidenceItems,
     promotion_candidates: normalizedPromotionCandidates,
     poi_graph: buildPoiGraph({ entity_id, entity_name, answers: normalizedAnswers }),
     categories: normalizedCategories,
+    question_timings: normalizedQuestionTimings,
     run_rollup: normalizedRollup,
     merge_patch: normalizedMergePatch,
   };
@@ -327,7 +392,7 @@ export function validateQuestionFirstRunArtifact(artifact) {
   if (artifact.schema_version !== QUESTION_FIRST_RUN_SCHEMA_VERSION) {
     throw new TypeError(`Expected schema_version ${QUESTION_FIRST_RUN_SCHEMA_VERSION}`);
   }
-  for (const field of ['questions', 'answers', 'evidence_items', 'promotion_candidates', 'poi_graph', 'categories', 'run_rollup', 'merge_patch']) {
+  for (const field of ['questions', 'answers', 'evidence_items', 'promotion_candidates', 'poi_graph', 'categories', 'question_timings', 'run_rollup', 'merge_patch']) {
     if (!(field in artifact)) {
       throw new TypeError(`Missing canonical question_first_run field: ${field}`);
     }

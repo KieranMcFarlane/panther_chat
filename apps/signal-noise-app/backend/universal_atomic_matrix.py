@@ -197,11 +197,15 @@ Q1_FOUNDATION_SEARCH_QUERIES_CLUB = [
 ]
 
 Q3_PROCUREMENT_SEARCH_QUERIES_CLUB = [
+    '"{entity}" official website',
     '"{entity}" partner',
     '"{entity}" sponsor',
     '"{entity}" official partner',
+    '"{entity}" commercial partner',
     '"{entity}" digital partner',
     '"{entity}" technology partner',
+    '"{entity}" partnership announcement',
+    '"{entity}" sponsorship opportunities',
     '"{entity}" platform',
     '"{entity}" mobile app',
     '"{entity}" hiring digital',
@@ -215,14 +219,18 @@ Q3_PROCUREMENT_SEARCH_QUERIES_CLUB = [
 ]
 
 Q3_PROCUREMENT_SEARCH_QUERIES_LEAGUE = [
+    '"{entity}" official website',
     '"{entity}" partner',
     '"{entity}" sponsor',
     '"{entity}" official partner',
     '"{entity}" broadcast partner',
+    '"{entity}" broadcast rights',
     '"{entity}" media rights',
     '"{entity}" data partner',
     '"{entity}" analytics',
     '"{entity}" platform',
+    '"{entity}" digital platform',
+    '"{entity}" streaming platform',
     '"{entity}" mobile app',
     '"{entity}" digital transformation',
     '"{entity}" vendor',
@@ -230,17 +238,44 @@ Q3_PROCUREMENT_SEARCH_QUERIES_LEAGUE = [
 ]
 
 Q3_PROCUREMENT_SEARCH_QUERIES_FEDERATION = [
+    '"{entity}" official website',
     '"{entity}" procurement',
     '"{entity}" tender',
+    '"{entity}" request for proposal',
     '"{entity}" broadcast services',
     '"{entity}" OTT platform',
     '"{entity}" partner',
     '"{entity}" sponsor',
+    '"{entity}" digital ecosystem',
     '"{entity}" digital platform',
     '"{entity}" analytics',
     '"{entity}" membership platform',
+    '"{entity}" events platform',
     '"{entity}" results platform',
     '"{entity}" vendor',
+]
+
+Q3_PROCUREMENT_SOURCE_PRIORITY_CLUB = [
+    "official_site",
+    "press_release",
+    "news",
+    "google_serp",
+    "linkedin_posts",
+]
+
+Q3_PROCUREMENT_SOURCE_PRIORITY_LEAGUE = [
+    "official_site",
+    "news",
+    "press_release",
+    "google_serp",
+    "linkedin_posts",
+]
+
+Q3_PROCUREMENT_SOURCE_PRIORITY_FEDERATION = [
+    "official_site",
+    "press_release",
+    "news",
+    "google_serp",
 ]
 
 UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
@@ -401,17 +436,26 @@ MLC_QUESTION_OVERRIDES: Dict[str, Dict[str, Any]] = {
         },
     },
     "q3_procurement_signal": {
+        "query": '"{entity}" official partner broadcast rights media rights data platform',
+        "source_priority": Q3_PROCUREMENT_SOURCE_PRIORITY_LEAGUE,
         "search_strategy": {
             "search_queries": [
-                '"{entity}" RFP',
-                '"{entity}" tender',
-                '"{entity}" procurement',
-                '"{entity}" vendor',
+                '"{entity}" official website',
+                '"{entity}" partner',
                 '"{entity}" sponsor',
-                '"{entity}" broadcast',
-                '"{entity}" hiring digital',
+                '"{entity}" official partner',
+                '"{entity}" broadcast partner',
+                '"{entity}" broadcast rights',
+                '"{entity}" media rights',
+                '"{entity}" data partner',
                 '"{entity}" analytics',
                 '"{entity}" platform',
+                '"{entity}" digital platform',
+                '"{entity}" streaming platform',
+                '"{entity}" mobile app',
+                '"{entity}" digital transformation',
+                '"{entity}" vendor',
+                '"{entity}" procurement',
             ]
         },
     },
@@ -587,19 +631,22 @@ def _render_question_spec(spec: Dict[str, Any], entity_name: str, entity_id: str
         if rendered.get("question_id") == "q3_procurement_signal":
             entity_type_key = _slugify(entity_type)
             if entity_type_key == "sport-club":
-                rendered["query"] = f'"{entity_name}" partner sponsor platform'
+                rendered["query"] = f'"{entity_name}" official partner commercial partner platform'
+                rendered["source_priority"] = Q3_PROCUREMENT_SOURCE_PRIORITY_CLUB
                 search_queries = [
                     str(query).format(entity=entity_name)
                     for query in Q3_PROCUREMENT_SEARCH_QUERIES_CLUB
                 ]
             elif entity_type_key == "sport-league":
-                rendered["query"] = f'"{entity_name}" partner sponsor broadcast media rights platform'
+                rendered["query"] = f'"{entity_name}" official partner broadcast rights media rights data platform'
+                rendered["source_priority"] = Q3_PROCUREMENT_SOURCE_PRIORITY_LEAGUE
                 search_queries = [
                     str(query).format(entity=entity_name)
                     for query in Q3_PROCUREMENT_SEARCH_QUERIES_LEAGUE
                 ]
             elif entity_type_key == "sport-federation":
-                rendered["query"] = f'"{entity_name}" procurement broadcast services digital platform'
+                rendered["query"] = f'"{entity_name}" procurement tender request for proposal digital ecosystem platform'
+                rendered["source_priority"] = Q3_PROCUREMENT_SOURCE_PRIORITY_FEDERATION
                 search_queries = [
                     str(query).format(entity=entity_name)
                     for query in Q3_PROCUREMENT_SEARCH_QUERIES_FEDERATION

@@ -50,6 +50,23 @@ function _questionText(question, entityName = '') {
   return resolvedEntityName ? text.replaceAll('{entity}', resolvedEntityName) : text;
 }
 
+function _secondsBetweenIso(startIso, endIso) {
+  const startTs = Date.parse(startIso);
+  const endTs = Date.parse(endIso);
+  if (!Number.isFinite(startTs) || !Number.isFinite(endTs)) {
+    return 0;
+  }
+  return Math.round(Math.max(endTs - startTs, 0) / 1000 * 1000) / 1000;
+}
+
+function _buildQuestionTiming(startedAt, completedAt = new Date().toISOString()) {
+  return {
+    started_at: startedAt,
+    completed_at: completedAt,
+    duration_seconds: _secondsBetweenIso(startedAt, completedAt),
+  };
+}
+
 function _presetQuestionSpecs(entityName) {
   return [
     {
@@ -1918,6 +1935,7 @@ export async function runOpenCodePresetBatch({
 
   const finalQuestions = [];
   const perQuestionPayloads = [];
+  const questionTimings = {};
   const transcripts = [];
 
   try {
@@ -1925,6 +1943,18 @@ export async function runOpenCodePresetBatch({
       let existingQuestionState = runState.questions[index];
       const currentQuestionState = existingQuestionState || buildQuestionState(question, { runId: `cli-${index + 1}`, timestamp: runStartedAt, creditBudgetOverrides: budgetOverrides, confidenceThreshold: budgetOverrides.confidenceThreshold });
       existingQuestionState = currentQuestionState;
+      const questionStartedAt = new Date().toISOString();
+      let questionTiming = null;
+      const finalizeQuestionTiming = () => {
+        const completedAt = new Date().toISOString();
+        questionTiming = _buildQuestionTiming(questionStartedAt, completedAt);
+        questionTimings[question.question_id] = questionTiming;
+        questionPayload = {
+          ...questionPayload,
+          ...questionTiming,
+        };
+        return questionTiming;
+      };
       runState = _decorateRunStateCheckpoint(runState, {
         runPhase: 'question_start',
         activeQuestionIndex: index,
@@ -2003,6 +2033,7 @@ export async function runOpenCodePresetBatch({
           currentState = updatedState;
           existingQuestionState = updatedState;
           if (questionPayload.validation_state === 'validated' || !fallbackToRetrieval) {
+            finalizeQuestionTiming();
             finalQuestions.push(questionPayload);
             perQuestionPayloads.push({
               run_started_at: runStartedAt,
@@ -2010,6 +2041,9 @@ export async function runOpenCodePresetBatch({
               entity_id: question.entity_id,
               entity_type: question.entity_type,
               preset: question.preset,
+              started_at: questionTiming.started_at,
+              completed_at: questionTiming.completed_at,
+              duration_seconds: questionTiming.duration_seconds,
               question: questionPayload,
             });
             transcripts.push(
@@ -2294,6 +2328,10 @@ export async function runOpenCodePresetBatch({
       }
       runState.questions[index] = _mergeQuestionState(existingQuestionState || currentQuestionState, questionPayload, new Date().toISOString());
       await _writeJsonFile(statePath, runState);
+      finalizeQuestionTiming();
+      }
+      if (!questionTiming) {
+        finalizeQuestionTiming();
       }
       finalQuestions.push(questionPayload);
       perQuestionPayloads.push({
@@ -2302,6 +2340,9 @@ export async function runOpenCodePresetBatch({
         entity_id: question.entity_id,
         entity_type: question.entity_type,
         preset: question.preset,
+        started_at: questionTiming.started_at,
+        completed_at: questionTiming.completed_at,
+        duration_seconds: questionTiming.duration_seconds,
         question: questionPayload,
       });
       transcripts.push(
@@ -2372,6 +2413,7 @@ export async function runOpenCodePresetBatch({
 	      questions,
 	      answers: finalQuestions,
 	      categories: finalQuestions.length ? _buildCategorySummary(finalQuestions) : [],
+	      question_timings: questionTimings,
 	      run_rollup: rollupPayload,
 	      generated_at: new Date().toISOString(),
 	      run_started_at: runStartedAt,

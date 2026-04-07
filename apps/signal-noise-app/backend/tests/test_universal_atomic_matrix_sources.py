@@ -102,13 +102,28 @@ def test_canonical_atomic_matrix_sources_are_five_question_universal_matrices(
             "press_release",
             "news",
         ]
-    else:
+    elif entity_id == "arsenal-fc":
         assert payload["questions"][2]["source_priority"] == [
+            "official_site",
+            "press_release",
+            "news",
             "google_serp",
             "linkedin_posts",
+        ]
+    elif entity_id == "major-league-cricket":
+        assert payload["questions"][2]["source_priority"] == [
+            "official_site",
             "news",
             "press_release",
+            "google_serp",
+            "linkedin_posts",
+        ]
+    else:
+        assert payload["questions"][2]["source_priority"] == [
             "official_site",
+            "press_release",
+            "news",
+            "google_serp",
         ]
     if entity_id == "international-canoe-federation":
         assert payload["questions"][3]["source_priority"] == [
@@ -150,12 +165,17 @@ def test_canonical_atomic_matrix_sources_are_five_question_universal_matrices(
             '"Arsenal Football Club" founded year',
             '"Arsenal Football Club" wikipedia',
         ]
+        assert payload["questions"][2]["query"] == '"Arsenal Football Club" official partner commercial partner platform'
         assert payload["questions"][2]["search_strategy"]["search_queries"] == [
+            '"Arsenal Football Club" official website',
             '"Arsenal Football Club" partner',
             '"Arsenal Football Club" sponsor',
             '"Arsenal Football Club" official partner',
+            '"Arsenal Football Club" commercial partner',
             '"Arsenal Football Club" digital partner',
             '"Arsenal Football Club" technology partner',
+            '"Arsenal Football Club" partnership announcement',
+            '"Arsenal Football Club" sponsorship opportunities',
             '"Arsenal Football Club" platform',
             '"Arsenal Football Club" mobile app',
             '"Arsenal Football Club" hiring digital',
@@ -293,16 +313,31 @@ def test_canonical_atomic_matrix_sources_are_five_question_universal_matrices(
             '"Major League Cricket" platform',
             '"Major League Cricket" app',
         ]
+        assert payload["questions"][2]["query"] == '"Major League Cricket" official partner broadcast rights media rights data platform'
+        assert payload["questions"][2]["source_priority"] == [
+            "official_site",
+            "news",
+            "press_release",
+            "google_serp",
+            "linkedin_posts",
+        ]
         assert payload["questions"][2]["search_strategy"]["search_queries"] == [
-            '"Major League Cricket" RFP',
-            '"Major League Cricket" tender',
-            '"Major League Cricket" procurement',
-            '"Major League Cricket" vendor',
+            '"Major League Cricket" official website',
+            '"Major League Cricket" partner',
             '"Major League Cricket" sponsor',
-            '"Major League Cricket" broadcast',
-            '"Major League Cricket" hiring digital',
+            '"Major League Cricket" official partner',
+            '"Major League Cricket" broadcast partner',
+            '"Major League Cricket" broadcast rights',
+            '"Major League Cricket" media rights',
+            '"Major League Cricket" data partner',
             '"Major League Cricket" analytics',
             '"Major League Cricket" platform',
+            '"Major League Cricket" digital platform',
+            '"Major League Cricket" streaming platform',
+            '"Major League Cricket" mobile app',
+            '"Major League Cricket" digital transformation',
+            '"Major League Cricket" vendor',
+            '"Major League Cricket" procurement',
         ]
         assert payload["questions"][3]["query"] == '"Major League Cricket" LinkedIn company profile'
         assert payload["questions"][3]["search_strategy"]["search_queries"] == [

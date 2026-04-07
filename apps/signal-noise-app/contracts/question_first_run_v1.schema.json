@@ -13,6 +13,7 @@
     "questions",
     "answers",
     "categories",
+    "question_timings",
     "run_rollup",
     "merge_patch"
   ],
@@ -65,6 +66,18 @@
       "type": "array",
       "items": {
         "type": "object"
+      }
+    },
+    "question_timings": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "started_at": { "type": "string" },
+          "completed_at": { "type": "string" },
+          "duration_seconds": { "type": "number" }
+        },
+        "additionalProperties": true
       }
     },
     "categories": {

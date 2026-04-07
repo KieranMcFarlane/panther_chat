@@ -308,6 +308,89 @@ test('runOpenCodeQuestionSourceBatch stops after the first validated digital-sta
   }
 });
 
+test('runOpenCodeQuestionSourceBatch writes contract-backed question timings into question_first_run_v1', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-question-timings-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'arsenal-fc',
+        entity_name: 'Arsenal Football Club',
+        entity_type: 'SPORT_CLUB',
+        preset: 'arsenal-timing-check',
+        question_source_label: 'arsenal-timing-check',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        question_count: 1,
+        questions: [
+          {
+            question_id: 'q1_foundation',
+            question_family: 'foundation',
+            question_type: 'foundation',
+            question: 'When was {entity} founded?',
+            query: '"Arsenal Football Club" founded',
+            hop_budget: 1,
+            evidence_extension_budget: 0,
+            evidence_extension_confidence_threshold: 0.65,
+            question_timeout_ms: 180000,
+            hop_timeout_ms: 180000,
+            source_priority: ['google_serp', 'official_site', 'wikipedia'],
+            fallback_to_retrieval: false,
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  try {
+    const result = await runOpenCodeQuestionSourceBatch({
+      questionSourcePath: sourcePath,
+      outputDir,
+      deterministicToolRunner: async () => null,
+      questionRunner: async () => ({
+        structuredOutput: {
+          answer: '1886',
+          confidence: 0.96,
+          validation_state: 'validated',
+          sources: ['https://www.arsenal.com/'],
+        },
+        promptTrace: { status: 'ok', structured_output_keys: 1, has_structured_output: true },
+        messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
+        cliResult: { code: 0, stdout: '{"answer":"1886"}', stderr: '' },
+      }),
+    });
+
+    const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+    assert.ok(artifact.question_timings);
+    assert.ok(artifact.question_timings.q1_foundation);
+    assert.equal(typeof artifact.question_timings.q1_foundation.started_at, 'string');
+    assert.equal(typeof artifact.question_timings.q1_foundation.completed_at, 'string');
+    assert.equal(typeof artifact.question_timings.q1_foundation.duration_seconds, 'number');
+    assert.equal(artifact.question_timings.q1_foundation.duration_seconds >= 0, true);
+    assert.equal(artifact.questions[0].started_at, artifact.question_timings.q1_foundation.started_at);
+    assert.equal(artifact.questions[0].completed_at, artifact.question_timings.q1_foundation.completed_at);
+    assert.equal(artifact.questions[0].duration_seconds, artifact.question_timings.q1_foundation.duration_seconds);
+    assert.equal(artifact.answers[0].started_at, artifact.question_timings.q1_foundation.started_at);
+    assert.equal(artifact.answers[0].completed_at, artifact.question_timings.q1_foundation.completed_at);
+    assert.equal(artifact.answers[0].duration_seconds, artifact.question_timings.q1_foundation.duration_seconds);
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
 test('buildOpenCodeQuestionPrompt specializes decision-owner and related-pois outputs', () => {
   const decisionPrompt = buildOpenCodeQuestionPrompt({
     question_text: 'Who is the most suitable person for commercial partnerships or business development at Major League Cricket?',

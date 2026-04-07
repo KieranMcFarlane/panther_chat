@@ -60,6 +60,13 @@ test('buildQuestionFirstRunArtifact emits the canonical question_first_run_v1 sh
         promotion_candidate: true,
       },
     ],
+    question_timings: {
+      q1: {
+        started_at: '2026-03-30T00:00:00+00:00',
+        completed_at: '2026-03-30T00:00:05+00:00',
+        duration_seconds: 5,
+      },
+    },
     categories: [
       {
         category: 'identity',
@@ -90,11 +97,19 @@ test('buildQuestionFirstRunArtifact emits the canonical question_first_run_v1 sh
   assert.equal(artifact.poi_graph.schema_version, 'poi_graph_v1');
   assert.equal(artifact.categories.length, 1);
   assert.equal(artifact.run_rollup.questions_total, 1);
+  assert.equal(artifact.question_timings.q1.started_at, '2026-03-30T00:00:00+00:00');
+  assert.equal(artifact.question_timings.q1.completed_at, '2026-03-30T00:00:05+00:00');
+  assert.equal(artifact.question_timings.q1.duration_seconds, 5);
+  assert.equal(artifact.questions[0].started_at, '2026-03-30T00:00:00+00:00');
+  assert.equal(artifact.questions[0].completed_at, '2026-03-30T00:00:05+00:00');
+  assert.equal(artifact.questions[0].duration_seconds, 5);
   assert.equal(artifact.merge_patch.metadata.question_first.evidence_items[0].promotion_target, 'profile');
   assert.equal(artifact.merge_patch.question_first.promotion_candidates[0].candidate_id, 'q1:profile');
   assert.equal(artifact.merge_patch.question_first.poi_graph.schema_version, 'poi_graph_v1');
   assert.equal(artifact.merge_patch.question_first.schema_version, QUESTION_FIRST_RUN_SCHEMA_VERSION);
   assert.equal(artifact.merge_patch.question_first.questions_answered, 1);
+  assert.equal(artifact.merge_patch.metadata.question_first.question_timings.q1.duration_seconds, 5);
+  assert.equal(artifact.merge_patch.question_first.question_timings.q1.completed_at, '2026-03-30T00:00:05+00:00');
   assert.equal(artifact.merge_patch.questions[0].question_first_answer.answer, '2023');
 });
 
@@ -112,6 +127,7 @@ test('validateQuestionFirstRunArtifact rejects malformed payloads', () => {
       schema_version: QUESTION_FIRST_RUN_SCHEMA_VERSION,
       questions: [],
       answers: [],
+      question_timings: {},
       categories: [],
       run_rollup: {},
       merge_patch: {},

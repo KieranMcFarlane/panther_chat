@@ -39,6 +39,14 @@ def _resolve_stdio_server_path() -> str:
     )
 
 
+def _is_cross_task_cancel_scope_error(exc: BaseException) -> bool:
+    """Return True for the known anyio/stdio shutdown noise."""
+    return (
+        isinstance(exc, RuntimeError)
+        and "Attempted to exit cancel scope in a different task than it was entered in" in str(exc)
+    )
+
+
 class BrightDataClient(ABC):
     """
     Abstract interface for BrightData client
@@ -330,6 +338,7 @@ class BrightDataMCPClient(BrightDataClient):
         self.pro_mode = os.getenv("BRIGHTDATA_PRO_MODE", "true").lower() == "true"
         self.timeout = timeout
         self.session = None
+        self._session_context = None
         self._transport_context = None
         self._available = False
         self._session_init_task: Optional[asyncio.Task] = None
@@ -467,7 +476,8 @@ class BrightDataMCPClient(BrightDataClient):
         self._transport_context = stdio_client(server_params)
         stdio, write = await self._transport_context.__aenter__()
 
-        self.session = ClientSession(stdio, write)
+        self._session_context = ClientSession(stdio, write)
+        self.session = await self._session_context.__aenter__()
         await self.session.initialize()
 
     async def close(self):
@@ -475,18 +485,42 @@ class BrightDataMCPClient(BrightDataClient):
         if getattr(self, "_pipeline_shared_client", False):
             logger.info("ℹ️ Shared pipeline MCP client close skipped (warm service mode)")
             return
-        if self._transport_context:
+        init_task = self._session_init_task
+        self._session_init_task = None
+        if init_task and not init_task.done():
+            init_task.cancel()
             try:
-                await self._transport_context.__aexit__(None, None, None)
+                await init_task
+            except asyncio.CancelledError:
+                logger.info("ℹ️ Cancelled in-flight MCP session initialization during close")
+            except Exception as e:
+                logger.warning("⚠️ Error while cancelling MCP session initialization: %s", e)
+
+        session_context = self._session_context
+        transport_context = self._transport_context
+        self.session = None
+        self._session_context = None
+        self._transport_context = None
+        self._available = False
+
+        if session_context:
+            try:
+                await session_context.__aexit__(None, None, None)
+            except Exception as e:
+                if _is_cross_task_cancel_scope_error(e):
+                    logger.debug("Suppressed BrightData MCP cancel-scope shutdown noise while closing session context")
+                else:
+                    logger.warning("⚠️ Error closing MCP session context: %s", e)
+
+        if transport_context:
+            try:
+                await transport_context.__aexit__(None, None, None)
                 logger.info("✅ MCP session closed")
             except Exception as e:
-                logger.error(f"❌ Error closing MCP session: {e}")
-            finally:
-                self.session = None
-                self._transport_context = None
-                self._available = False
-        if self._session_init_task and not self._session_init_task.done():
-            self._session_init_task.cancel()
+                if _is_cross_task_cancel_scope_error(e):
+                    logger.debug("Suppressed BrightData MCP cancel-scope shutdown noise while closing transport")
+                else:
+                    logger.warning("⚠️ Error closing MCP transport: %s", e)
 
     async def _call_tool(self, tool_name: str, arguments: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Call MCP tool, return None if unavailable"""

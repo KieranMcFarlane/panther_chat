@@ -1,10 +1,12 @@
 import asyncio
 import json
+import os
 import sys
 import threading
 import time
 from pathlib import Path
 from types import SimpleNamespace
+from datetime import datetime
 
 import pytest
 
@@ -64,7 +66,7 @@ class _FakeClaudeClient:
         }
 
 
-def _write_question_first_run_artifact(path, *, entity_id, entity_name, questions, answers, categories):
+def _write_question_first_run_artifact(path, *, entity_id, entity_name, questions, answers, categories, entity_type="SPORT_LEAGUE"):
     evidence_items = [
         {
             "evidence_id": f"{answer.get('question_id')}:evidence",
@@ -109,7 +111,7 @@ def _write_question_first_run_artifact(path, *, entity_id, entity_name, question
     }
     payload = {
         "schema_version": "question_first_run_v1",
-        "generated_at": "2026-03-30T00:00:00+00:00",
+        "generated_at": "2026-03-30T00:00:30+00:00",
         "run_started_at": "2026-03-30T00:00:00+00:00",
         "source": "opencode_agentic_batch",
         "status": "ready",
@@ -117,12 +119,21 @@ def _write_question_first_run_artifact(path, *, entity_id, entity_name, question
         "entity": {
             "entity_id": entity_id,
             "entity_name": entity_name,
-            "entity_type": "SPORT_LEAGUE",
+            "entity_type": entity_type,
         },
         "preset": "major-league-cricket",
         "question_source_path": "backend/data/question_sources/major_league_cricket.json",
         "questions": questions,
         "answers": answers,
+        "question_timings": {
+            answer.get("question_id"): {
+                "started_at": "2026-03-30T00:00:00+00:00",
+                "completed_at": "2026-03-30T00:00:05+00:00",
+                "duration_seconds": 5.0,
+            }
+            for answer in answers
+            if answer.get("question_id")
+        },
         "evidence_items": evidence_items,
         "promotion_candidates": promotion_candidates,
         "poi_graph": poi_graph,
@@ -134,10 +145,29 @@ def _write_question_first_run_artifact(path, *, entity_id, entity_name, question
             "questions_provisional": sum(1 for answer in answers if answer.get("validation_state") == "provisional"),
             "entity_id": entity_id,
             "entity_name": entity_name,
-            "entity_type": "SPORT_LEAGUE",
+            "entity_type": entity_type,
             "preset": "major-league-cricket",
         },
     }
+    for index, question in enumerate(questions, start=1):
+        question_path = path.parent / f"{entity_id}_opencode_batch_20260401_question_{index:03d}.json"
+        question_path.write_text(
+            json.dumps(
+                {
+                    "run_started_at": "2026-03-30T00:00:00+00:00",
+                    "entity_name": entity_name,
+                    "entity_id": entity_id,
+                    "entity_type": entity_type,
+                    "preset": "major-league-cricket",
+                    "question": question,
+                },
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
+        question_start = int(datetime.fromisoformat("2026-03-30T00:00:00+00:00").timestamp())
+        os.utime(question_path, (question_start + index * 5, question_start + index * 5))
+
     payload["merge_patch"] = {
         "metadata": {
             "question_first": {
@@ -146,7 +176,7 @@ def _write_question_first_run_artifact(path, *, entity_id, entity_name, question
                 "questions_answered": len(answers),
                 "categories": categories,
                 "question_source_path": "backend/data/question_sources/major_league_cricket.json",
-                "generated_at": "2026-03-30T00:00:00+00:00",
+                "generated_at": "2026-03-30T00:00:30+00:00",
                 "run_rollup": payload["run_rollup"],
                 "evidence_items": evidence_items,
                 "promotion_candidates": promotion_candidates,
@@ -164,7 +194,7 @@ def _write_question_first_run_artifact(path, *, entity_id, entity_name, question
             "poi_graph": poi_graph,
             "run_rollup": payload["run_rollup"],
             "question_source_path": "backend/data/question_sources/major_league_cricket.json",
-            "generated_at": "2026-03-30T00:00:00+00:00",
+            "generated_at": "2026-03-30T00:00:30+00:00",
             "warnings": [],
         },
         "questions": [
@@ -183,6 +213,57 @@ def _write_question_first_run_artifact(path, *, entity_id, entity_name, question
     }
     path.write_text(json.dumps(payload), encoding="utf-8")
     return path
+
+
+def _write_question_first_run_artifact_with_timings(
+    path,
+    *,
+    entity_id,
+    entity_name,
+    questions,
+    answers,
+    categories,
+    question_timings,
+    entity_type="SPORT_LEAGUE",
+):
+    payload_path = _write_question_first_run_artifact(
+        path,
+        entity_id=entity_id,
+        entity_name=entity_name,
+        questions=questions,
+        answers=answers,
+        categories=categories,
+        entity_type=entity_type,
+    )
+    payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    payload["question_timings"] = question_timings
+    payload["questions"] = [
+        {
+            **question,
+            **question_timings.get(question.get("question_id"), {}),
+        }
+        for question in payload["questions"]
+    ]
+    payload["answers"] = [
+        {
+            **answer,
+            **question_timings.get(answer.get("question_id"), {}),
+        }
+        for answer in payload["answers"]
+    ]
+    if isinstance(payload.get("merge_patch"), dict):
+        payload["merge_patch"].setdefault("metadata", {}).setdefault("question_first", {})["question_timings"] = question_timings
+        payload["merge_patch"].setdefault("question_first", {})["question_timings"] = question_timings
+        payload["merge_patch"]["questions"] = [
+            {
+                **question,
+                **question_timings.get(question.get("question_id"), {}),
+                "question_first_answer": payload["answers"][index],
+            }
+            for index, question in enumerate(payload["questions"])
+        ]
+    payload_path.write_text(json.dumps(payload), encoding="utf-8")
+    return payload_path
 
 
 def test_resolve_question_first_worktree_root_prefers_dedicated_worktree(tmp_path, monkeypatch):
@@ -266,6 +347,276 @@ async def test_run_question_first_dossier_from_payload_seeds_explicit_bridge_con
         edge["from_id"] == "Stuart Cope" and edge["edge_type"] == "bridge_connection" and edge["to_id"] == "bridge:david-eames"
         for edge in graph["edges"]
     )
+
+
+@pytest.mark.asyncio
+async def test_run_question_first_dossier_from_payload_marks_connections_enrichment_as_optional_metadata(tmp_path, monkeypatch):
+    output_dir = tmp_path / "out"
+    output_dir.mkdir()
+    artifact_path = output_dir / "arsenal_question_first_run_v1.json"
+    _write_question_first_run_artifact(
+        artifact_path,
+        entity_id="arsenal",
+        entity_name="Arsenal FC",
+        questions=[
+            {
+                "question_id": "q1_foundation",
+                "question_text": "When was Arsenal founded?",
+                "section_id": "core_information",
+            }
+        ],
+        answers=[
+            {
+                "question_id": "q1_foundation",
+                "question_type": "foundation",
+                "question_text": "When was Arsenal founded?",
+                "answer": "1886",
+                "confidence": 0.97,
+                "validation_state": "validated",
+                "signal_type": "FOUNDATION",
+                "evidence_url": "https://www.arsenal.com/",
+                "entity_id": "arsenal",
+                "entity_name": "Arsenal FC",
+            }
+        ],
+        categories=[],
+    )
+
+    monkeypatch.setattr(runner, "connections_enrichment_enabled_by_default", lambda: False)
+    monkeypatch.setattr(runner, "build_default_connections_graph_enricher", lambda *_args, **_kwargs: pytest.fail("baseline should not build a default connections enricher"))
+
+    merged = await runner.run_question_first_dossier_from_payload(
+        source_payload={
+            "entity_id": "arsenal",
+            "entity_name": "Arsenal FC",
+            "questions": [
+                {
+                    "question_id": "q1_foundation",
+                    "question_text": "When was Arsenal founded?",
+                    "section_id": "core_information",
+                }
+            ],
+        },
+        question_first_run_path=artifact_path,
+        output_dir=output_dir,
+    )
+
+    assert merged["question_first"]["connections_graph_enrichment_enabled"] is False
+    assert merged["question_first"]["connections_graph_enrichment_status"] == "optional"
+    assert merged["question_first_report"]["connections_graph_enrichment_enabled"] is False
+    assert merged["question_first_report"]["connections_graph_enrichment_status"] == "optional"
+
+
+@pytest.mark.asyncio
+async def test_run_question_first_dossier_from_payload_adds_durable_batch_metrics(tmp_path, monkeypatch):
+    output_dir = tmp_path / "out"
+    output_dir.mkdir()
+    artifact_path = output_dir / "arsenal_question_first_run_v1.json"
+    _write_question_first_run_artifact(
+        artifact_path,
+        entity_id="arsenal",
+        entity_name="Arsenal FC",
+        entity_type="SPORT_CLUB",
+        questions=[
+            {
+                "question_id": "q1_foundation",
+                "question_text": "When was Arsenal founded?",
+                "section_id": "core_information",
+                "deterministic_tools": [],
+                "fallback_to_retrieval": False,
+            },
+            {
+                "question_id": "q2_digital_stack",
+                "question_text": "What is Arsenal's digital stack and what does it imply commercially?",
+                "section_id": "digital_maturity",
+                "deterministic_tools": ["apify_techstack"],
+                "fallback_to_retrieval": True,
+            },
+            {
+                "question_id": "q3_procurement_signal",
+                "question_text": "Is there evidence of procurement, partnership, or platform change?",
+                "section_id": "quick_actions",
+                "deterministic_tools": [],
+                "fallback_to_retrieval": True,
+            },
+        ],
+        answers=[
+            {
+                "question_id": "q1_foundation",
+                "question_type": "foundation",
+                "question_text": "When was Arsenal founded?",
+                "answer": "1886",
+                "confidence": 0.95,
+                "validation_state": "validated",
+                "signal_type": "FOUNDATION",
+                "evidence_url": "https://www.arsenal.com/",
+            },
+            {
+                "question_id": "q2_digital_stack",
+                "question_type": "digital_stack",
+                "question_text": "What is Arsenal's digital stack and what does it imply commercially?",
+                "answer": "Modern stack with legacy and commerce signals",
+                "confidence": 0.9,
+                "validation_state": "validated",
+                "signal_type": "DIGITAL_STACK",
+                "evidence_url": "https://www.arsenal.com/",
+            },
+            {
+                "question_id": "q3_procurement_signal",
+                "question_type": "procurement_signal",
+                "question_text": "Is there evidence of procurement, partnership, or platform change?",
+                "answer": "No answer found",
+                "confidence": 0.0,
+                "validation_state": "no_signal",
+                "signal_type": "PROCUREMENT",
+                "evidence_url": None,
+            },
+        ],
+        categories=[],
+    )
+
+    merged = await runner.run_question_first_dossier_from_payload(
+        source_payload={
+            "entity_id": "arsenal",
+            "entity_name": "Arsenal FC",
+            "entity_type": "SPORT_CLUB",
+            "questions": [
+                {
+                    "question_id": "q1_foundation",
+                    "question_text": "When was Arsenal founded?",
+                    "section_id": "core_information",
+                }
+            ],
+        },
+        question_first_run_path=artifact_path,
+        output_dir=output_dir,
+    )
+
+    question_first = merged["question_first"]
+    report = merged["question_first_report"]
+
+    assert question_first["entity_runtime_seconds"] == 30.0
+    assert question_first["question_runtime_seconds"]["q1_foundation"] == 5.0
+    assert question_first["question_runtime_seconds"]["q2_digital_stack"] == 5.0
+    assert question_first["validation_by_question"]["q2_digital_stack"]["validated"] == 1
+    assert question_first["validation_by_question"]["q3_procurement_signal"]["no_signal"] == 1
+    assert question_first["validation_by_entity_type"]["SPORT_CLUB"]["validated"] == 2
+    assert question_first["validation_by_entity_type"]["SPORT_CLUB"]["no_signal"] == 1
+    assert question_first["deterministic_path_counts"]["q2_digital_stack"] == 1
+    assert question_first["retrieval_path_counts"]["q3_procurement_signal"] == 1
+    assert question_first["baseline_features"]["enrichment_enabled"] is False
+    assert report["entity_runtime_seconds"] == 30.0
+    assert report["question_runtime_seconds"]["q1_foundation"] == 5.0
+    assert report["validation_by_question"]["q1_foundation"]["validated"] == 1
+    assert report["baseline_features"]["enrichment_enabled"] is False
+
+
+@pytest.mark.asyncio
+async def test_run_question_first_dossier_prefers_contract_question_timings_over_mtimes(tmp_path):
+    output_dir = tmp_path / "out"
+    output_dir.mkdir()
+    artifact_path = output_dir / "arsenal_question_first_run_v1.json"
+    _write_question_first_run_artifact_with_timings(
+        artifact_path,
+        entity_id="arsenal",
+        entity_name="Arsenal FC",
+        entity_type="SPORT_CLUB",
+        questions=[
+            {
+                "question_id": "q1_foundation",
+                "question_text": "When was Arsenal founded?",
+                "section_id": "core_information",
+            },
+            {
+                "question_id": "q2_digital_stack",
+                "question_text": "What is Arsenal's digital stack and what does it imply commercially?",
+                "section_id": "digital_maturity",
+            },
+        ],
+        answers=[
+            {
+                "question_id": "q1_foundation",
+                "question_type": "foundation",
+                "question_text": "When was Arsenal founded?",
+                "answer": "1886",
+                "confidence": 0.95,
+                "validation_state": "validated",
+                "signal_type": "FOUNDATION",
+                "evidence_url": "https://www.arsenal.com/",
+            },
+            {
+                "question_id": "q2_digital_stack",
+                "question_type": "digital_stack",
+                "question_text": "What is Arsenal's digital stack and what does it imply commercially?",
+                "answer": "Modern stack with legacy and commerce signals",
+                "confidence": 0.9,
+                "validation_state": "validated",
+                "signal_type": "DIGITAL_STACK",
+                "evidence_url": "https://www.arsenal.com/",
+            },
+        ],
+        categories=[],
+        question_timings={
+            "q1_foundation": {
+                "started_at": "2026-03-30T00:00:02+00:00",
+                "completed_at": "2026-03-30T00:00:10+00:00",
+                "duration_seconds": 8.0,
+            },
+            "q2_digital_stack": {
+                "started_at": "2026-03-30T00:00:10+00:00",
+                "completed_at": "2026-03-30T00:00:17+00:00",
+                "duration_seconds": 7.0,
+            },
+        },
+    )
+
+    question_start = int(datetime.fromisoformat("2026-03-30T00:00:00+00:00").timestamp())
+    for index, question in enumerate([
+        {
+            "question_id": "q1_foundation",
+            "question_text": "When was Arsenal founded?",
+            "section_id": "core_information",
+        },
+        {
+            "question_id": "q2_digital_stack",
+            "question_text": "What is Arsenal's digital stack and what does it imply commercially?",
+            "section_id": "digital_maturity",
+        },
+    ], start=1):
+        question_path = output_dir / f"arsenal_opencode_batch_20260330_question_{index:03d}.json"
+        question_path.write_text(json.dumps({"question": question}, indent=2), encoding="utf-8")
+        os.utime(question_path, (question_start + index * 3, question_start + index * 3))
+
+    merged = await runner.run_question_first_dossier_from_payload(
+        source_payload={
+            "entity_id": "arsenal",
+            "entity_name": "Arsenal FC",
+            "entity_type": "SPORT_CLUB",
+            "questions": [
+                {
+                    "question_id": "q1_foundation",
+                    "question_text": "When was Arsenal founded?",
+                    "section_id": "core_information",
+                },
+                {
+                    "question_id": "q2_digital_stack",
+                    "question_text": "What is Arsenal's digital stack and what does it imply commercially?",
+                    "section_id": "digital_maturity",
+                },
+            ],
+        },
+        question_first_run_path=artifact_path,
+        output_dir=output_dir,
+    )
+
+    question_first = merged["question_first"]
+    report = merged["question_first_report"]
+
+    assert question_first["question_runtime_seconds"]["q1_foundation"] == 8.0
+    assert question_first["question_runtime_seconds"]["q2_digital_stack"] == 7.0
+    assert report["question_runtime_seconds"]["q1_foundation"] == 8.0
+    assert report["question_runtime_seconds"]["q2_digital_stack"] == 7.0
+    assert merged["question_first_run"]["question_timings"]["q1_foundation"]["duration_seconds"] == 8.0
 
 
 def test_question_first_launch_lock_serializes_across_callers(tmp_path):

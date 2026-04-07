@@ -1,6 +1,6 @@
 {
   "schema_version": "atomic_question_source_v1",
-  "generated_at": "2026-04-06T08:46:42.167042+00:00",
+  "generated_at": "2026-04-07T05:21:30.167736+00:00",
   "entity_id": "major-league-cricket",
   "entity_name": "Major League Cricket",
   "entity_type": "SPORT_LEAGUE",
@@ -95,27 +95,34 @@
       "question_family": "procurement",
       "question_type": "procurement",
       "question": "Is there evidence Major League Cricket is buying, launching, or reshaping its commercial or digital ecosystem through procurement, partnerships, hiring, or platform initiatives?",
-      "query": "\"Major League Cricket\" partner sponsor broadcast media rights platform",
+      "query": "\"Major League Cricket\" official partner broadcast rights media rights data platform",
       "hop_budget": 8,
       "evidence_extension_budget": 2,
       "source_priority": [
-        "google_serp",
-        "linkedin_posts",
+        "official_site",
         "news",
         "press_release",
-        "official_site"
+        "google_serp",
+        "linkedin_posts"
       ],
       "search_strategy": {
         "search_queries": [
-          "\"Major League Cricket\" RFP",
-          "\"Major League Cricket\" tender",
-          "\"Major League Cricket\" procurement",
-          "\"Major League Cricket\" vendor",
+          "\"Major League Cricket\" official website",
+          "\"Major League Cricket\" partner",
           "\"Major League Cricket\" sponsor",
-          "\"Major League Cricket\" broadcast",
-          "\"Major League Cricket\" hiring digital",
+          "\"Major League Cricket\" official partner",
+          "\"Major League Cricket\" broadcast partner",
+          "\"Major League Cricket\" broadcast rights",
+          "\"Major League Cricket\" media rights",
+          "\"Major League Cricket\" data partner",
           "\"Major League Cricket\" analytics",
-          "\"Major League Cricket\" platform"
+          "\"Major League Cricket\" platform",
+          "\"Major League Cricket\" digital platform",
+          "\"Major League Cricket\" streaming platform",
+          "\"Major League Cricket\" mobile app",
+          "\"Major League Cricket\" digital transformation",
+          "\"Major League Cricket\" vendor",
+          "\"Major League Cricket\" procurement"
         ]
       },
       "evidence_focus": "opportunity_signal",

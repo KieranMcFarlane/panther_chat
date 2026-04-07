@@ -3,7 +3,7 @@ import importlib
 import json
 import sys
 from pathlib import Path
-from types import SimpleNamespace
+from types import ModuleType, SimpleNamespace
 
 import pytest
 
@@ -65,6 +65,9 @@ async def test_brightdata_mcp_client_uses_hosted_sse(monkeypatch):
 
     module = importlib.import_module("brightdata_mcp_client")
     monkeypatch.setattr(module, "_HOSTED_MCP_DEFAULT_URL", "https://mcp.brightdata.com/mcp", raising=False)
+    fake_fastmcp = ModuleType("fastmcp")
+    fake_fastmcp.Client = _FakeFastMCPClient
+    monkeypatch.setitem(sys.modules, "fastmcp", fake_fastmcp)
     monkeypatch.setattr("fastmcp.Client", _FakeFastMCPClient)
     monkeypatch.setattr("mcp.client.stdio.stdio_client", lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("stdio path should not be used")))
 

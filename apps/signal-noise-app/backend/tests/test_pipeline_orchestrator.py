@@ -287,6 +287,8 @@ async def test_pipeline_orchestrator_runs_phases_and_returns_artifacts():
 
     async def phase_callback(phase, payload):
         phase_events.append((phase, payload["status"]))
+        if phase == "dossier_generation" and payload["status"] == "question_first_completed":
+            question_first_calls["phase_payload"] = dict(payload)
 
     orchestrator = PipelineOrchestrator(
         dossier_generator=FakeDossierGenerator(),
@@ -474,6 +476,8 @@ async def test_pipeline_orchestrator_enriches_dossier_with_question_first(monkey
             "enabled": True,
             "schema_version": "question_first_run_v1",
             "questions_answered": 1,
+            "connections_graph_enrichment_enabled": False,
+            "connections_graph_enrichment_status": "optional",
             "categories": [
                 {
                     "category": "identity",
@@ -542,16 +546,25 @@ async def test_pipeline_orchestrator_enriches_dossier_with_question_first(monkey
         claude_client=None,
     )
 
+    async def phase_callback(phase, payload):
+        if phase == "dossier_generation" and payload["status"] == "question_first_completed":
+            question_first_calls["phase_payload"] = dict(payload)
+
     result = await orchestrator.run_entity_pipeline(
         entity_id="leedsunited",
         entity_name="Leeds United",
         entity_type="CLUB",
         priority_score=95,
+        phase_callback=phase_callback,
     )
 
     assert question_first_calls["dossier_run_objective"] == "leadership_enrichment"
     assert question_first_calls["source_payload"]["questions"][0]["question_text"] == "When was Leeds United founded?"
     assert result["artifacts"]["dossier"]["question_first"]["questions_answered"] == 1
+    assert result["artifacts"]["dossier"]["question_first"]["connections_graph_enrichment_enabled"] is False
+    assert result["artifacts"]["dossier"]["question_first"]["connections_graph_enrichment_status"] == "optional"
+    assert question_first_calls["phase_payload"]["connections_graph_enrichment_enabled"] is False
+    assert question_first_calls["phase_payload"]["connections_graph_enrichment_status"] == "optional"
     assert result["artifacts"]["dossier"]["questions"][0]["validation_state"] == "validated"
 
 

@@ -1,6 +1,6 @@
 {
   "schema_version": "atomic_question_source_v1",
-  "generated_at": "2026-04-06T08:46:42.165041+00:00",
+  "generated_at": "2026-04-07T05:21:30.158703+00:00",
   "entity_id": "arsenal-fc",
   "entity_name": "Arsenal Football Club",
   "entity_type": "SPORT_CLUB",
@@ -96,23 +96,27 @@
       "question_family": "procurement",
       "question_type": "procurement",
       "question": "Is there evidence Arsenal Football Club is buying, launching, or reshaping its commercial or digital ecosystem through procurement, partnerships, hiring, or platform initiatives?",
-      "query": "\"Arsenal Football Club\" partner sponsor platform",
+      "query": "\"Arsenal Football Club\" official partner commercial partner platform",
       "hop_budget": 8,
       "evidence_extension_budget": 2,
       "source_priority": [
-        "google_serp",
-        "linkedin_posts",
-        "news",
+        "official_site",
         "press_release",
-        "official_site"
+        "news",
+        "google_serp",
+        "linkedin_posts"
       ],
       "search_strategy": {
         "search_queries": [
+          "\"Arsenal Football Club\" official website",
           "\"Arsenal Football Club\" partner",
           "\"Arsenal Football Club\" sponsor",
           "\"Arsenal Football Club\" official partner",
+          "\"Arsenal Football Club\" commercial partner",
           "\"Arsenal Football Club\" digital partner",
           "\"Arsenal Football Club\" technology partner",
+          "\"Arsenal Football Club\" partnership announcement",
+          "\"Arsenal Football Club\" sponsorship opportunities",
           "\"Arsenal Football Club\" platform",
           "\"Arsenal Football Club\" mobile app",
           "\"Arsenal Football Club\" hiring digital",

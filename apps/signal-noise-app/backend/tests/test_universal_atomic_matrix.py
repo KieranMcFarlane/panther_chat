@@ -107,13 +107,28 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
                 "news",
                 "google_serp",
             ]
-        else:
+        elif payload["entity_type"] == "SPORT_CLUB":
             assert payload["questions"][2]["source_priority"] == [
+                "official_site",
+                "press_release",
+                "news",
                 "google_serp",
                 "linkedin_posts",
+            ]
+        elif payload["entity_type"] == "SPORT_LEAGUE":
+            assert payload["questions"][2]["source_priority"] == [
+                "official_site",
                 "news",
                 "press_release",
+                "google_serp",
+                "linkedin_posts",
+            ]
+        else:
+            assert payload["questions"][2]["source_priority"] == [
                 "official_site",
+                "press_release",
+                "news",
+                "google_serp",
             ]
         if payload["entity_type"] == "SPORT_FEDERATION":
             assert payload["questions"][3]["source_priority"] == [
@@ -263,11 +278,15 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
         else:
             if payload["entity_type"] == "SPORT_CLUB":
                 q3_expected = [
+                    f'"{entity_name}" official website',
                     f'"{entity_name}" partner',
                     f'"{entity_name}" sponsor',
                     f'"{entity_name}" official partner',
+                    f'"{entity_name}" commercial partner',
                     f'"{entity_name}" digital partner',
                     f'"{entity_name}" technology partner',
+                    f'"{entity_name}" partnership announcement',
+                    f'"{entity_name}" sponsorship opportunities',
                     f'"{entity_name}" platform',
                     f'"{entity_name}" mobile app',
                     f'"{entity_name}" hiring digital',
@@ -281,27 +300,38 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
                 ]
             elif payload["entity_type"] == "SPORT_LEAGUE":
                 q3_expected = [
-                    f'"{entity_name}" RFP',
-                    f'"{entity_name}" tender',
-                    f'"{entity_name}" procurement',
-                    f'"{entity_name}" vendor',
+                    f'"{entity_name}" official website',
+                    f'"{entity_name}" partner',
                     f'"{entity_name}" sponsor',
-                    f'"{entity_name}" broadcast',
-                    f'"{entity_name}" hiring digital',
+                    f'"{entity_name}" official partner',
+                    f'"{entity_name}" broadcast partner',
+                    f'"{entity_name}" broadcast rights',
+                    f'"{entity_name}" media rights',
+                    f'"{entity_name}" data partner',
                     f'"{entity_name}" analytics',
                     f'"{entity_name}" platform',
+                    f'"{entity_name}" digital platform',
+                    f'"{entity_name}" streaming platform',
+                    f'"{entity_name}" mobile app',
+                    f'"{entity_name}" digital transformation',
+                    f'"{entity_name}" vendor',
+                    f'"{entity_name}" procurement',
                 ]
             else:
                 q3_expected = [
+                    f'"{entity_name}" official website',
                     f'"{entity_name}" procurement',
                     f'"{entity_name}" tender',
+                    f'"{entity_name}" request for proposal',
                     f'"{entity_name}" broadcast services',
                     f'"{entity_name}" OTT platform',
                     f'"{entity_name}" partner',
                     f'"{entity_name}" sponsor',
+                    f'"{entity_name}" digital ecosystem',
                     f'"{entity_name}" digital platform',
                     f'"{entity_name}" analytics',
                     f'"{entity_name}" membership platform',
+                    f'"{entity_name}" events platform',
                     f'"{entity_name}" results platform',
                     f'"{entity_name}" vendor',
                 ]
@@ -386,16 +416,31 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
             'site:canoeicf.com ott platform 2026 pdf',
             'site:canoeicf.com tenders',
         ]
+    assert mlc["questions"][2]["query"] == '"Major League Cricket" official partner broadcast rights media rights data platform'
+    assert mlc["questions"][2]["source_priority"] == [
+        "official_site",
+        "news",
+        "press_release",
+        "google_serp",
+        "linkedin_posts",
+    ]
     assert mlc["questions"][2]["search_strategy"]["search_queries"] == [
-        '"Major League Cricket" RFP',
-        '"Major League Cricket" tender',
-        '"Major League Cricket" procurement',
-        '"Major League Cricket" vendor',
+        '"Major League Cricket" official website',
+        '"Major League Cricket" partner',
         '"Major League Cricket" sponsor',
-        '"Major League Cricket" broadcast',
-        '"Major League Cricket" hiring digital',
+        '"Major League Cricket" official partner',
+        '"Major League Cricket" broadcast partner',
+        '"Major League Cricket" broadcast rights',
+        '"Major League Cricket" media rights',
+        '"Major League Cricket" data partner',
         '"Major League Cricket" analytics',
         '"Major League Cricket" platform',
+        '"Major League Cricket" digital platform',
+        '"Major League Cricket" streaming platform',
+        '"Major League Cricket" mobile app',
+        '"Major League Cricket" digital transformation',
+        '"Major League Cricket" vendor',
+        '"Major League Cricket" procurement',
     ]
     assert mlc["questions"][0]["query"] == '"Major League Cricket" official website founded year'
     assert mlc["questions"][0]["search_strategy"]["search_queries"] == [
@@ -428,6 +473,35 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
         '"Arsenal Football Club" history',
         '"Arsenal Football Club" founded year',
         '"Arsenal Football Club" wikipedia',
+    ]
+    assert arsenal["questions"][2]["query"] == '"Arsenal Football Club" official partner commercial partner platform'
+    assert arsenal["questions"][2]["source_priority"] == [
+        "official_site",
+        "press_release",
+        "news",
+        "google_serp",
+        "linkedin_posts",
+    ]
+    assert arsenal["questions"][2]["search_strategy"]["search_queries"] == [
+        '"Arsenal Football Club" official website',
+        '"Arsenal Football Club" partner',
+        '"Arsenal Football Club" sponsor',
+        '"Arsenal Football Club" official partner',
+        '"Arsenal Football Club" commercial partner',
+        '"Arsenal Football Club" digital partner',
+        '"Arsenal Football Club" technology partner',
+        '"Arsenal Football Club" partnership announcement',
+        '"Arsenal Football Club" sponsorship opportunities',
+        '"Arsenal Football Club" platform',
+        '"Arsenal Football Club" mobile app',
+        '"Arsenal Football Club" hiring digital',
+        '"Arsenal Football Club" hiring analytics',
+        '"Arsenal Football Club" analytics initiative',
+        '"Arsenal Football Club" broadcast partner',
+        '"Arsenal Football Club" vendor',
+        '"Arsenal Football Club" RFP',
+        '"Arsenal Football Club" tender',
+        '"Arsenal Football Club" procurement',
     ]
     assert arsenal["questions"][3]["query"] == '"Arsenal Football Club" LinkedIn company profile'
     assert arsenal["questions"][3]["search_strategy"]["search_queries"] == [
@@ -527,28 +601,36 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
         preset="nwsl-atomic-matrix",
     )
     assert premier["questions"][2]["search_strategy"]["search_queries"] == [
+        '"Premier League" official website',
         '"Premier League" partner',
         '"Premier League" sponsor',
         '"Premier League" official partner',
         '"Premier League" broadcast partner',
+        '"Premier League" broadcast rights',
         '"Premier League" media rights',
         '"Premier League" data partner',
         '"Premier League" analytics',
         '"Premier League" platform',
+        '"Premier League" digital platform',
+        '"Premier League" streaming platform',
         '"Premier League" mobile app',
         '"Premier League" digital transformation',
         '"Premier League" vendor',
         '"Premier League" procurement',
     ]
     assert nwsl["questions"][2]["search_strategy"]["search_queries"] == [
+        "\"National Women's Soccer League\" official website",
         "\"National Women's Soccer League\" partner",
         "\"National Women's Soccer League\" sponsor",
         "\"National Women's Soccer League\" official partner",
         "\"National Women's Soccer League\" broadcast partner",
+        "\"National Women's Soccer League\" broadcast rights",
         "\"National Women's Soccer League\" media rights",
         "\"National Women's Soccer League\" data partner",
         "\"National Women's Soccer League\" analytics",
         "\"National Women's Soccer League\" platform",
+        "\"National Women's Soccer League\" digital platform",
+        "\"National Women's Soccer League\" streaming platform",
         "\"National Women's Soccer League\" mobile app",
         "\"National Women's Soccer League\" digital transformation",
         "\"National Women's Soccer League\" vendor",
@@ -648,15 +730,22 @@ def test_universal_atomic_matrix_output_matches_canonical_files():
                 '"Major League Cricket" app',
             ]
             assert payload["questions"][2]["search_strategy"]["search_queries"] == [
-                '"Major League Cricket" RFP',
-                '"Major League Cricket" tender',
-                '"Major League Cricket" procurement',
-                '"Major League Cricket" vendor',
+                '"Major League Cricket" official website',
+                '"Major League Cricket" partner',
                 '"Major League Cricket" sponsor',
-                '"Major League Cricket" broadcast',
-                '"Major League Cricket" hiring digital',
+                '"Major League Cricket" official partner',
+                '"Major League Cricket" broadcast partner',
+                '"Major League Cricket" broadcast rights',
+                '"Major League Cricket" media rights',
+                '"Major League Cricket" data partner',
                 '"Major League Cricket" analytics',
                 '"Major League Cricket" platform',
+                '"Major League Cricket" digital platform',
+                '"Major League Cricket" streaming platform',
+                '"Major League Cricket" mobile app',
+                '"Major League Cricket" digital transformation',
+                '"Major League Cricket" vendor',
+                '"Major League Cricket" procurement',
             ]
             assert payload["questions"][3]["query"] == '"Major League Cricket" LinkedIn company profile'
             assert payload["questions"][3]["search_strategy"]["search_queries"][0] == (

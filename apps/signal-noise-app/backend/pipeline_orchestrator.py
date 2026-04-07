@@ -165,6 +165,10 @@ class PipelineOrchestrator:
                         "status": "question_first_completed",
                         "questions_answered": int(question_first_meta.get("questions_answered") or 0),
                         "category_count": len(question_first_meta.get("categories") or []),
+                        "connections_graph_enrichment_enabled": bool(question_first_meta.get("connections_graph_enrichment_enabled")),
+                        "connections_graph_enrichment_status": str(
+                            question_first_meta.get("connections_graph_enrichment_status") or ("optional")
+                        ),
                     },
                 )
                 logger.warning("🚦 Pipeline boundary: question_first_enrichment:complete")
