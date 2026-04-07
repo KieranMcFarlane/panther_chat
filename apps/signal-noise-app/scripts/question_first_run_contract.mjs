@@ -226,6 +226,9 @@ function _mergeQuestionWithAnswer(question, answer, questionTiming) {
     'signal_type',
     'recommended_next_query',
     'notes',
+    'prompt_trace',
+    'message_trace',
+    'raw_execution_trace',
   ];
   for (const field of answerFields) {
     if (answerPayload[field] !== undefined) {

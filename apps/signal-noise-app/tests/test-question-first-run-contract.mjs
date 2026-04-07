@@ -174,3 +174,47 @@ test('buildQuestionFirstRunArtifact derives poi_graph from validated people answ
   assert.equal(artifact.poi_graph.edges.length, 2);
   assert.equal(artifact.poi_graph.edges[0].edge_type, 'primary_owner_of');
 });
+
+test('buildQuestionFirstRunArtifact promotes raw execution trace onto merged questions', () => {
+  const artifact = buildQuestionFirstRunArtifact({
+    entity_id: 'celtic-fc',
+    entity_name: 'Celtic FC',
+    entity_type: 'SPORT_CLUB',
+    questions: [
+      {
+        question_id: 'q3_procurement_signal',
+        question_type: 'procurement',
+        question_text: 'Is there evidence Celtic is reshaping its digital ecosystem?',
+        query: '"Celtic Football Club" commercial partnership',
+      },
+    ],
+    answers: [
+      {
+        question_id: 'q3_procurement_signal',
+        question_type: 'procurement',
+        question_text: 'Is there evidence Celtic is reshaping its digital ecosystem?',
+        answer: '',
+        confidence: 0,
+        validation_state: 'tool_call_missing',
+        raw_execution_trace: {
+          exit_code: 1,
+          stderr_excerpt: "Cannot find module 'opencode-copilot-auth'",
+          assistant_text_excerpt: '',
+        },
+        prompt_trace: {
+          exit_code: 1,
+          has_structured_output: false,
+        },
+      },
+    ],
+    evidence_items: [],
+    promotion_candidates: [],
+    categories: [],
+    run_rollup: {},
+  });
+
+  assert.equal(artifact.questions[0].raw_execution_trace.exit_code, 1);
+  assert.match(artifact.questions[0].raw_execution_trace.stderr_excerpt, /opencode-copilot-auth/);
+  assert.equal(artifact.questions[0].prompt_trace.exit_code, 1);
+  assert.equal(artifact.merge_patch.questions[0].raw_execution_trace.exit_code, 1);
+});
