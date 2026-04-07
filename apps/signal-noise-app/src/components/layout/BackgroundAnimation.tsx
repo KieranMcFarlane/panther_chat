@@ -89,7 +89,7 @@ const BackgroundAnimation = () => {
 
   return (
     <>
-      <div className="bg-custom-bg fixed inset-0 z-0" ref={containerRef}>
+      <div className="bg-custom-bg pointer-events-none fixed inset-0 z-0" ref={containerRef}>
         <div className="background-container" style={{ zIndex: 0 }}>
           <svg 
             id="background-svg" 

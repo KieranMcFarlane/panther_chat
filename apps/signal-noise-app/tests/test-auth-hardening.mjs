@@ -35,6 +35,10 @@ const signInPageSource = readFileSync(
   new URL('../src/app/sign-in/page.tsx', import.meta.url),
   'utf8'
 )
+const backgroundAnimationSource = readFileSync(
+  new URL('../src/components/layout/BackgroundAnimation.tsx', import.meta.url),
+  'utf8'
+)
 const mailboxPageSource = readFileSync(
   new URL('../src/app/mailbox/page.tsx', import.meta.url),
   'utf8'
@@ -101,12 +105,17 @@ test('full-screen auth routes bypass the dashboard shell container', () => {
   assert.match(appNavigationSource, /if \(isFullScreenAuthRoute\)/)
 })
 
+test('decorative auth background cannot intercept sign-in form clicks', () => {
+  assert.match(backgroundAnimationSource, /pointer-events-none/)
+  assert.match(backgroundAnimationSource, /bg-custom-bg pointer-events-none fixed inset-0 z-0/)
+})
+
 test('sign-in form supports password reset requests from the auth page', () => {
   assert.match(signInFormSource, /request-password-reset/)
   assert.match(signInFormSource, /Forgot your password\?/)
   assert.match(signInFormSource, /setMode\("reset"\)/)
   assert.match(signInFormSource, /mode !== "reset"/)
-  assert.match(signInFormSource, /window\.location\.href = "\/"/)
+  assert.match(signInFormSource, /window\.location\.href = redirectTo/)
   assert.doesNotMatch(signInFormSource, /Account created\. Sign in with your new credentials\./)
 })
 
@@ -116,8 +125,7 @@ test('auth-backed pages opt out of static prerendering', () => {
 })
 
 test('app shell uses a single mounted auth menu branch to avoid hydration mismatch', () => {
-  assert.match(appShellSource, /const \{ data: session \} = authClient\.useSession\(\)/)
-  assert.match(appShellSource, /const \[isMounted, setIsMounted\] = useState\(false\)/)
-  assert.match(appShellSource, /if \(!isMounted\) \{\s*return null/s)
+  assert.match(appShellSource, /function AuthMenu\(\)/)
+  assert.match(appShellSource, /<AppNavigation authMenu=\{<AuthMenu \/>}/)
   assert.doesNotMatch(appShellSource, /<SignInLink \/>/)
 })

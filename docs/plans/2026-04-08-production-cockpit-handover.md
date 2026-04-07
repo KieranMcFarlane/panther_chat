@@ -144,3 +144,33 @@ The following local untracked files were seen during handover inspection and sho
 - `apps/signal-noise-app/tmp/`
 
 The two scripts contain hardcoded BrightData token values and should be deleted or rewritten to read credentials from environment variables before they are ever staged.
+
+## Client Demo Readiness Update - 2026-04-07 18:00 BST
+
+Local verification after client-smoke hardening:
+
+- `node --test tests/test-auth-hardening.mjs tests/test-auth-origin-contract.mjs tests/test-pinned-client-smoke-config-contract.mjs tests/test-question-first-demo-seed-contract.mjs tests/test-entity-browser-smoke-journey.mjs tests/test-question-first-dossier-router-contract.mjs tests/test-operator-controls-contract.mjs tests/test-vercel-cron-contract.mjs`: 24 passed
+- `npm run build`: passed after clearing generated caches to resolve local `ENOSPC`
+
+Production route and cron smoke:
+
+- Vercel alias `https://panther-chat.vercel.app` was Ready on deployment `panther-chat-nvbzvcumb-kieranmcfarlanes-projects.vercel.app`
+- anonymous `/` resolves to the sign-in redirect
+- anonymous `/entity-browser` resolves to the sign-in redirect
+- anonymous `/api/home/graphiti-insights`, `/api/notifications/graphiti`, and `/api/email/daily-sales-digest` return `401`
+- cron routes without `CRON_SECRET` return `401`
+- cron routes with `CRON_SECRET` return `200`
+- daily sales digest with `CRON_SECRET` now returns `200`; repeated same-day triggers are idempotently skipped with `Digest already sent for this London business day`
+
+Authenticated browser smoke finding:
+
+- Playwright smoke reached the production sign-in page and found that the decorative fixed SVG background intercepted the `Sign up` button click
+- the root cause was the global `BackgroundAnimation` fixed layer receiving pointer events above the auth form
+- fix applied: mark the decorative background wrapper `pointer-events-none`
+- regression coverage added in `test-auth-hardening.mjs`
+
+Client demo status:
+
+- the five pinned smoke entities and demo seed dossier contracts remain stable
+- the app is ready for redeploy with the click-interception fix before rerunning the full authenticated browser smoke
+- no full-batch real artifact replacement should happen before the client-facing smoke passes on the redeployed build
