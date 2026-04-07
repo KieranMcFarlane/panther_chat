@@ -74,7 +74,7 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
 
   if (isFullScreenAuthRoute) {
     return (
-      <div className="min-h-screen">
+      <div className="relative z-10 min-h-screen">
         <PageTransition>
           {children}
         </PageTransition>

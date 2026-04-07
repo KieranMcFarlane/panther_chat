@@ -105,6 +105,10 @@ test('full-screen auth routes bypass the dashboard shell container', () => {
   assert.match(appNavigationSource, /if \(isFullScreenAuthRoute\)/)
 })
 
+test('full-screen auth route content is layered above the decorative background', () => {
+  assert.match(appNavigationSource, /className="relative z-10 min-h-screen"/)
+})
+
 test('decorative auth background cannot intercept sign-in form clicks', () => {
   assert.match(backgroundAnimationSource, /pointer-events-none/)
   assert.match(backgroundAnimationSource, /bg-custom-bg pointer-events-none fixed inset-0 z-0/)
