@@ -1,0 +1,439 @@
+{
+  "schema_version": "question_first_scale_batch_25_evidence_summary_v1",
+  "batch_name": "question-first-scale-batch-25",
+  "provenance": {
+    "reconstructed_from_tracked_notes": true,
+    "raw_tmp_artifacts_available_at_bundle_time": false,
+    "raw_tmp_artifact_root": "/tmp/question-first-scale-batch-25",
+    "source_documents": [
+      "docs/plans/2026-04-07-question-first-25-entity-scale-results.md",
+      "docs/plans/2026-04-07-question-first-25-entity-failure-segmentation.md",
+      "apps/signal-noise-app/backend/data/question_first_scale_batch_25.json"
+    ],
+    "note": "The original recovered /tmp summary artifacts were referenced in the result note but were no longer present when this portable evidence bundle was created. This JSON reconstructs the compact matrix from the pushed result and segmentation notes."
+  },
+  "result": {
+    "entities_total": 25,
+    "entities_completed": 25,
+    "entities_failed": 0,
+    "entities_with_validated_questions": 25,
+    "recovered_from_terminal_state_files": true,
+    "recovery_reason": "serial smoke wrapper blocked on lingering opencode_agentic_batch process after terminal state write"
+  },
+  "by_question": {
+    "q1_foundation": {
+      "validated": 22,
+      "no_signal": 3
+    },
+    "q2_digital_stack": {
+      "validated": 20,
+      "no_signal": 5
+    },
+    "q3_procurement_signal": {
+      "validated": 14,
+      "no_signal": 11
+    },
+    "q4_decision_owner": {
+      "validated": 12,
+      "no_signal": 13
+    },
+    "q5_related_pois": {
+      "validated": 18,
+      "no_signal": 7
+    }
+  },
+  "by_entity_type": {
+    "SPORT_CLUB": {
+      "entities": 10,
+      "validated": 34,
+      "no_signal": 16
+    },
+    "SPORT_FEDERATION": {
+      "entities": 8,
+      "validated": 30,
+      "no_signal": 10
+    },
+    "SPORT_LEAGUE": {
+      "entities": 7,
+      "validated": 22,
+      "no_signal": 13
+    }
+  },
+  "entities": [
+    {
+      "entity_id": "arsenal",
+      "entity_name": "Arsenal Football Club",
+      "entity_type": "SPORT_CLUB",
+      "question_status": {
+        "q1_foundation": "validated",
+        "q2_digital_stack": "validated",
+        "q3_procurement_signal": "validated",
+        "q4_decision_owner": "validated",
+        "q5_related_pois": "validated"
+      },
+      "validated_count": 5,
+      "no_signal_count": 0,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "leeds-united",
+      "entity_name": "Leeds United",
+      "entity_type": "SPORT_CLUB",
+      "question_status": {
+        "q1_foundation": "validated",
+        "q2_digital_stack": "validated",
+        "q3_procurement_signal": "validated",
+        "q4_decision_owner": "validated",
+        "q5_related_pois": "validated"
+      },
+      "validated_count": 5,
+      "no_signal_count": 0,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "celtic-fc",
+      "entity_name": "Celtic FC",
+      "entity_type": "SPORT_CLUB",
+      "question_status": {
+        "q1_foundation": "validated",
+        "q2_digital_stack": "validated",
+        "q3_procurement_signal": "no_signal",
+        "q4_decision_owner": "no_signal",
+        "q5_related_pois": "no_signal"
+      },
+      "validated_count": 2,
+      "no_signal_count": 3,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "inter-miami-cf",
+      "entity_name": "Inter Miami CF",
+      "entity_type": "SPORT_CLUB",
+      "question_status": {
+        "q1_foundation": "validated",
+        "q2_digital_stack": "validated",
+        "q3_procurement_signal": "validated",
+        "q4_decision_owner": "validated",
+        "q5_related_pois": "validated"
+      },
+      "validated_count": 5,
+      "no_signal_count": 0,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "fc-barcelona",
+      "entity_name": "FC Barcelona",
+      "entity_type": "SPORT_CLUB",
+      "question_status": {
+        "q1_foundation": "validated",
+        "q2_digital_stack": "validated",
+        "q3_procurement_signal": "validated",
+        "q4_decision_owner": "no_signal",
+        "q5_related_pois": "validated"
+      },
+      "validated_count": 4,
+      "no_signal_count": 1,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "real-madrid-cf",
+      "entity_name": "Real Madrid CF",
+      "entity_type": "SPORT_CLUB",
+      "question_status": {
+        "q1_foundation": "no_signal",
+        "q2_digital_stack": "validated",
+        "q3_procurement_signal": "no_signal",
+        "q4_decision_owner": "validated",
+        "q5_related_pois": "validated"
+      },
+      "validated_count": 3,
+      "no_signal_count": 2,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "manchester-city",
+      "entity_name": "Manchester City FC",
+      "entity_type": "SPORT_CLUB",
+      "question_status": {
+        "q1_foundation": "no_signal",
+        "q2_digital_stack": "validated",
+        "q3_procurement_signal": "validated",
+        "q4_decision_owner": "no_signal",
+        "q5_related_pois": "no_signal"
+      },
+      "validated_count": 2,
+      "no_signal_count": 3,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "juventus",
+      "entity_name": "Juventus FC",
+      "entity_type": "SPORT_CLUB",
+      "question_status": {
+        "q1_foundation": "validated",
+        "q2_digital_stack": "validated",
+        "q3_procurement_signal": "no_signal",
+        "q4_decision_owner": "no_signal",
+        "q5_related_pois": "no_signal"
+      },
+      "validated_count": 2,
+      "no_signal_count": 3,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "bayern-munich",
+      "entity_name": "FC Bayern Munich",
+      "entity_type": "SPORT_CLUB",
+      "question_status": {
+        "q1_foundation": "validated",
+        "q2_digital_stack": "validated",
+        "q3_procurement_signal": "validated",
+        "q4_decision_owner": "validated",
+        "q5_related_pois": "validated"
+      },
+      "validated_count": 5,
+      "no_signal_count": 0,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "psg",
+      "entity_name": "Paris Saint-Germain",
+      "entity_type": "SPORT_CLUB",
+      "question_status": {
+        "q1_foundation": "validated",
+        "q2_digital_stack": "no_signal",
+        "q3_procurement_signal": "no_signal",
+        "q4_decision_owner": "no_signal",
+        "q5_related_pois": "no_signal"
+      },
+      "validated_count": 1,
+      "no_signal_count": 4,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "icf",
+      "entity_name": "International Canoe Federation",
+      "entity_type": "SPORT_FEDERATION",
+      "question_status": {
+        "q1_foundation": "validated",
+        "q2_digital_stack": "no_signal",
+        "q3_procurement_signal": "no_signal",
+        "q4_decision_owner": "validated",
+        "q5_related_pois": "validated"
+      },
+      "validated_count": 3,
+      "no_signal_count": 2,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "world-rugby",
+      "entity_name": "World Rugby",
+      "entity_type": "SPORT_FEDERATION",
+      "question_status": {
+        "q1_foundation": "validated",
+        "q2_digital_stack": "validated",
+        "q3_procurement_signal": "validated",
+        "q4_decision_owner": "validated",
+        "q5_related_pois": "validated"
+      },
+      "validated_count": 5,
+      "no_signal_count": 0,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "ecb",
+      "entity_name": "England and Wales Cricket Board",
+      "entity_type": "SPORT_FEDERATION",
+      "question_status": {
+        "q1_foundation": "validated",
+        "q2_digital_stack": "no_signal",
+        "q3_procurement_signal": "validated",
+        "q4_decision_owner": "no_signal",
+        "q5_related_pois": "validated"
+      },
+      "validated_count": 3,
+      "no_signal_count": 2,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "fifa",
+      "entity_name": "FIFA",
+      "entity_type": "SPORT_FEDERATION",
+      "question_status": {
+        "q1_foundation": "validated",
+        "q2_digital_stack": "validated",
+        "q3_procurement_signal": "no_signal",
+        "q4_decision_owner": "validated",
+        "q5_related_pois": "validated"
+      },
+      "validated_count": 4,
+      "no_signal_count": 1,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "uefa",
+      "entity_name": "UEFA",
+      "entity_type": "SPORT_FEDERATION",
+      "question_status": {
+        "q1_foundation": "validated",
+        "q2_digital_stack": "validated",
+        "q3_procurement_signal": "validated",
+        "q4_decision_owner": "no_signal",
+        "q5_related_pois": "no_signal"
+      },
+      "validated_count": 3,
+      "no_signal_count": 2,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "fiba",
+      "entity_name": "FIBA",
+      "entity_type": "SPORT_FEDERATION",
+      "question_status": {
+        "q1_foundation": "validated",
+        "q2_digital_stack": "validated",
+        "q3_procurement_signal": "validated",
+        "q4_decision_owner": "validated",
+        "q5_related_pois": "validated"
+      },
+      "validated_count": 5,
+      "no_signal_count": 0,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "world-athletics",
+      "entity_name": "World Athletics",
+      "entity_type": "SPORT_FEDERATION",
+      "question_status": {
+        "q1_foundation": "validated",
+        "q2_digital_stack": "no_signal",
+        "q3_procurement_signal": "validated",
+        "q4_decision_owner": "validated",
+        "q5_related_pois": "validated"
+      },
+      "validated_count": 4,
+      "no_signal_count": 1,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "fis",
+      "entity_name": "International Ski and Snowboard Federation",
+      "entity_type": "SPORT_FEDERATION",
+      "question_status": {
+        "q1_foundation": "validated",
+        "q2_digital_stack": "validated",
+        "q3_procurement_signal": "no_signal",
+        "q4_decision_owner": "no_signal",
+        "q5_related_pois": "validated"
+      },
+      "validated_count": 3,
+      "no_signal_count": 2,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "major-league-cricket",
+      "entity_name": "Major League Cricket",
+      "entity_type": "SPORT_LEAGUE",
+      "question_status": {
+        "q1_foundation": "validated",
+        "q2_digital_stack": "validated",
+        "q3_procurement_signal": "no_signal",
+        "q4_decision_owner": "no_signal",
+        "q5_related_pois": "no_signal"
+      },
+      "validated_count": 2,
+      "no_signal_count": 3,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "premier-league",
+      "entity_name": "Premier League",
+      "entity_type": "SPORT_LEAGUE",
+      "question_status": {
+        "q1_foundation": "validated",
+        "q2_digital_stack": "validated",
+        "q3_procurement_signal": "validated",
+        "q4_decision_owner": "validated",
+        "q5_related_pois": "validated"
+      },
+      "validated_count": 5,
+      "no_signal_count": 0,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "nwsl",
+      "entity_name": "National Women's Soccer League",
+      "entity_type": "SPORT_LEAGUE",
+      "question_status": {
+        "q1_foundation": "validated",
+        "q2_digital_stack": "validated",
+        "q3_procurement_signal": "no_signal",
+        "q4_decision_owner": "no_signal",
+        "q5_related_pois": "validated"
+      },
+      "validated_count": 3,
+      "no_signal_count": 2,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "mls",
+      "entity_name": "Major League Soccer",
+      "entity_type": "SPORT_LEAGUE",
+      "question_status": {
+        "q1_foundation": "no_signal",
+        "q2_digital_stack": "no_signal",
+        "q3_procurement_signal": "validated",
+        "q4_decision_owner": "no_signal",
+        "q5_related_pois": "no_signal"
+      },
+      "validated_count": 1,
+      "no_signal_count": 4,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "formula-1",
+      "entity_name": "Formula 1",
+      "entity_type": "SPORT_LEAGUE",
+      "question_status": {
+        "q1_foundation": "validated",
+        "q2_digital_stack": "validated",
+        "q3_procurement_signal": "no_signal",
+        "q4_decision_owner": "validated",
+        "q5_related_pois": "validated"
+      },
+      "validated_count": 4,
+      "no_signal_count": 1,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "wsl",
+      "entity_name": "Women's Super League",
+      "entity_type": "SPORT_LEAGUE",
+      "question_status": {
+        "q1_foundation": "validated",
+        "q2_digital_stack": "validated",
+        "q3_procurement_signal": "validated",
+        "q4_decision_owner": "no_signal",
+        "q5_related_pois": "validated"
+      },
+      "validated_count": 4,
+      "no_signal_count": 1,
+      "terminal_state": "completed"
+    },
+    {
+      "entity_id": "bundesliga",
+      "entity_name": "Bundesliga",
+      "entity_type": "SPORT_LEAGUE",
+      "question_status": {
+        "q1_foundation": "validated",
+        "q2_digital_stack": "validated",
+        "q3_procurement_signal": "no_signal",
+        "q4_decision_owner": "no_signal",
+        "q5_related_pois": "validated"
+      },
+      "validated_count": 3,
+      "no_signal_count": 2,
+      "terminal_state": "completed"
+    }
+  ]
+}

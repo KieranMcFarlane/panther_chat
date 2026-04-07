@@ -17,6 +17,7 @@ It captures:
 - Summary: [/tmp/question-first-scale-batch-25/question_first_archetype_smoke.json](/tmp/question-first-scale-batch-25/question_first_archetype_smoke.json)
 - Manifest: [apps/signal-noise-app/backend/data/question_first_scale_batch_25.json](/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/backend/data/question_first_scale_batch_25.json)
 - Plan: [docs/plans/2026-04-07-question-first-25-entity-scale-plan.md](/Users/kieranmcfarlane/Downloads/panther_chat/docs/plans/2026-04-07-question-first-25-entity-scale-plan.md)
+- Portable evidence bundle: [docs/evidence/2026-04-07-question-first-scale-batch-25/README.md](/Users/kieranmcfarlane/Downloads/panther_chat/docs/evidence/2026-04-07-question-first-scale-batch-25/README.md)
 
 ## Batch Result
 
@@ -42,6 +43,7 @@ Recovery used for this note:
 - the recovered summary is marked with:
   - `recovered_from_terminal_state_files: true`
   - `recovery_reason: serial smoke wrapper blocked on lingering opencode_agentic_batch process after terminal state write`
+- because the original `/tmp` artifacts were not portable and were later cleaned up, a compact reconstructed evidence bundle is tracked under [docs/evidence/2026-04-07-question-first-scale-batch-25/](/Users/kieranmcfarlane/Downloads/panther_chat/docs/evidence/2026-04-07-question-first-scale-batch-25/)
 
 So the quality results are real, but the wrapper finalization path still needs a follow-up fix.
 
