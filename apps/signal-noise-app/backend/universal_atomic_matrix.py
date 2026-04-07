@@ -322,6 +322,42 @@ Q3_PROCUREMENT_SEARCH_QUERIES_CLUB = [
     '"{entity}" procurement',
 ]
 
+Q3_PROCUREMENT_SEARCH_QUERIES_GLOBAL_ELITE_CLUB = [
+    '"{entity}" official website',
+    '"{entity}" official partner',
+    '"{entity}" commercial partner',
+    '"{entity}" global partner',
+    '"{entity}" sponsorship',
+    '"{entity}" partnerships',
+    '"{entity}" technology partner',
+    '"{entity}" digital partner',
+    '"{entity}" fan engagement platform',
+    '"{entity}" data partner',
+    '"{entity}" mobile app',
+    '"{entity}" analytics initiative',
+    '"{entity}" broadcast partner',
+    '"{entity}" media rights',
+    '"{entity}" digital transformation',
+    '"{entity}" procurement',
+]
+
+Q3_PROCUREMENT_SEARCH_QUERIES_WEAKER_PUBLIC_SURFACE_CLUB = [
+    '"{entity}" official website',
+    '"{entity}" commercial partners',
+    '"{entity}" official partners',
+    '"{entity}" sponsorship',
+    '"{entity}" sponsor',
+    '"{entity}" partnership announcement',
+    '"{entity}" commercial operations',
+    '"{entity}" business development',
+    '"{entity}" fan engagement',
+    '"{entity}" digital platform',
+    '"{entity}" app',
+    '"{entity}" annual report',
+    '"{entity}" commercial partners pdf',
+    '"{entity}" press release',
+]
+
 Q3_PROCUREMENT_SEARCH_QUERIES_LEAGUE = [
     '"{entity}" official website',
     '"{entity}" partner',
@@ -336,6 +372,42 @@ Q3_PROCUREMENT_SEARCH_QUERIES_LEAGUE = [
     '"{entity}" digital platform',
     '"{entity}" streaming platform',
     '"{entity}" mobile app',
+    '"{entity}" digital transformation',
+    '"{entity}" vendor',
+    '"{entity}" procurement',
+]
+
+Q3_PROCUREMENT_SEARCH_QUERIES_TOP_COMMERCIAL_LEAGUE = [
+    '"{entity}" official website',
+    '"{entity}" official partner',
+    '"{entity}" sponsor',
+    '"{entity}" broadcast partner',
+    '"{entity}" broadcast rights',
+    '"{entity}" media rights',
+    '"{entity}" data partner',
+    '"{entity}" analytics partner',
+    '"{entity}" technology partner',
+    '"{entity}" streaming platform',
+    '"{entity}" digital platform',
+    '"{entity}" mobile app',
+    '"{entity}" digital transformation',
+    '"{entity}" vendor',
+    '"{entity}" procurement',
+]
+
+Q3_PROCUREMENT_SEARCH_QUERIES_DEVELOPING_LEAGUE = [
+    '"{entity}" official website',
+    '"{entity}" partner',
+    '"{entity}" official partner',
+    '"{entity}" sponsorship',
+    '"{entity}" business operations',
+    '"{entity}" fan engagement',
+    '"{entity}" digital platform',
+    '"{entity}" streaming platform',
+    '"{entity}" mobile app',
+    '"{entity}" data platform',
+    '"{entity}" analytics',
+    '"{entity}" technology partner',
     '"{entity}" digital transformation',
     '"{entity}" vendor',
     '"{entity}" procurement',
@@ -356,6 +428,40 @@ Q3_PROCUREMENT_SEARCH_QUERIES_FEDERATION = [
     '"{entity}" membership platform',
     '"{entity}" events platform',
     '"{entity}" results platform',
+    '"{entity}" vendor',
+]
+
+Q3_PROCUREMENT_SEARCH_QUERIES_COMMERCIAL_GLOBAL_FEDERATION = [
+    '"{entity}" official website',
+    '"{entity}" partner',
+    '"{entity}" sponsor',
+    '"{entity}" commercial and sponsorship',
+    '"{entity}" broadcast rights',
+    '"{entity}" media rights',
+    '"{entity}" digital partner',
+    '"{entity}" technology partner',
+    '"{entity}" platform',
+    '"{entity}" digital platform',
+    '"{entity}" membership platform',
+    '"{entity}" events platform',
+    '"{entity}" analytics',
+    '"{entity}" digital transformation',
+    '"{entity}" vendor',
+]
+
+Q3_PROCUREMENT_SEARCH_QUERIES_TECHNICAL_TENDER_FEDERATION = [
+    '"{entity}" official website',
+    '"{entity}" procurement',
+    '"{entity}" tender',
+    '"{entity}" request for proposal',
+    '"{entity}" broadcast services',
+    '"{entity}" OTT platform',
+    '"{entity}" digital ecosystem',
+    '"{entity}" digital platform',
+    '"{entity}" results platform',
+    '"{entity}" membership platform',
+    '"{entity}" events platform',
+    '"{entity}" analytics',
     '"{entity}" vendor',
 ]
 
@@ -380,6 +486,20 @@ Q3_PROCUREMENT_SOURCE_PRIORITY_FEDERATION = [
     "press_release",
     "news",
     "google_serp",
+]
+
+Q3_PROCUREMENT_SOURCE_PRIORITY_COMMERCIAL_FEDERATION = [
+    "official_site",
+    "news",
+    "press_release",
+    "google_serp",
+]
+
+Q3_PROCUREMENT_SOURCE_PRIORITY_TENDER_FEDERATION = [
+    "official_site",
+    "google_serp",
+    "press_release",
+    "news",
 ]
 
 UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
@@ -760,6 +880,30 @@ def _decision_owner_surface(entity_type: str, entity_id: str) -> str:
     return "generic"
 
 
+def _procurement_surface(entity_type: str, entity_id: str) -> str:
+    entity_type_key = _slugify(entity_type)
+    entity_id_key = _slugify(entity_id)
+    if entity_id_key in GLOBAL_ELITE_CLUB_ENTITY_IDS:
+        return "global_elite_club"
+    if entity_id_key in WEAKER_PUBLIC_SURFACE_CLUB_ENTITY_IDS:
+        return "weaker_public_surface_club"
+    if entity_id_key in TOP_COMMERCIAL_LEAGUE_ENTITY_IDS:
+        return "top_commercial_league"
+    if entity_id_key in DEVELOPING_OR_FRAGMENTED_LEAGUE_ENTITY_IDS:
+        return "developing_or_fragmented_league"
+    if entity_id_key in COMMERCIAL_GLOBAL_FEDERATION_ENTITY_IDS:
+        return "commercial_global_federation"
+    if entity_id_key in TECHNICAL_TENDER_FEDERATION_ENTITY_IDS:
+        return "technical_tender_federation"
+    if entity_type_key == "sport-club":
+        return "global_elite_club"
+    if entity_type_key == "sport-league":
+        return "top_commercial_league"
+    if entity_type_key == "sport-federation":
+        return "commercial_global_federation"
+    return "generic"
+
+
 def _render_question_spec(spec: Dict[str, Any], entity_name: str, entity_id: str, entity_type: str) -> Dict[str, Any]:
     rendered = deepcopy(spec)
     rendered["question"] = str(rendered["question"]).format(entity=entity_name)
@@ -797,27 +941,51 @@ def _render_question_spec(spec: Dict[str, Any], entity_name: str, entity_id: str
                 ]
         if rendered.get("question_id") == "q3_procurement_signal":
             entity_type_key = _slugify(entity_type)
+            procurement_surface = _procurement_surface(entity_type, entity_id)
             if entity_type_key == "sport-club":
-                rendered["query"] = f'"{entity_name}" official partner commercial partner platform'
-                rendered["source_priority"] = Q3_PROCUREMENT_SOURCE_PRIORITY_CLUB
-                search_queries = [
-                    str(query).format(entity=entity_name)
-                    for query in Q3_PROCUREMENT_SEARCH_QUERIES_CLUB
-                ]
+                if procurement_surface == "weaker_public_surface_club":
+                    rendered["query"] = f'"{entity_name}" commercial partnership'
+                    rendered["source_priority"] = [
+                        "official_site",
+                        "press_release",
+                        "news",
+                        "google_serp",
+                    ]
+                    query_set = Q3_PROCUREMENT_SEARCH_QUERIES_WEAKER_PUBLIC_SURFACE_CLUB
+                else:
+                    rendered["query"] = f'"{entity_name}" official partner commercial partner platform'
+                    rendered["source_priority"] = Q3_PROCUREMENT_SOURCE_PRIORITY_CLUB
+                    query_set = Q3_PROCUREMENT_SEARCH_QUERIES_GLOBAL_ELITE_CLUB
             elif entity_type_key == "sport-league":
-                rendered["query"] = f'"{entity_name}" official partner broadcast rights media rights data platform'
-                rendered["source_priority"] = Q3_PROCUREMENT_SOURCE_PRIORITY_LEAGUE
-                search_queries = [
-                    str(query).format(entity=entity_name)
-                    for query in Q3_PROCUREMENT_SEARCH_QUERIES_LEAGUE
-                ]
+                if procurement_surface == "developing_or_fragmented_league":
+                    rendered["query"] = f'"{entity_name}" digital platform partner operations'
+                    rendered["source_priority"] = [
+                        "official_site",
+                        "google_serp",
+                        "news",
+                        "press_release",
+                        "linkedin_posts",
+                    ]
+                    query_set = Q3_PROCUREMENT_SEARCH_QUERIES_DEVELOPING_LEAGUE
+                else:
+                    rendered["query"] = f'"{entity_name}" official partner broadcast rights media rights data platform'
+                    rendered["source_priority"] = Q3_PROCUREMENT_SOURCE_PRIORITY_LEAGUE
+                    query_set = Q3_PROCUREMENT_SEARCH_QUERIES_TOP_COMMERCIAL_LEAGUE
             elif entity_type_key == "sport-federation":
-                rendered["query"] = f'"{entity_name}" procurement tender request for proposal digital ecosystem platform'
-                rendered["source_priority"] = Q3_PROCUREMENT_SOURCE_PRIORITY_FEDERATION
-                search_queries = [
-                    str(query).format(entity=entity_name)
-                    for query in Q3_PROCUREMENT_SEARCH_QUERIES_FEDERATION
-                ]
+                if procurement_surface == "technical_tender_federation":
+                    rendered["query"] = f'"{entity_name}" procurement tender request for proposal digital ecosystem platform'
+                    rendered["source_priority"] = Q3_PROCUREMENT_SOURCE_PRIORITY_TENDER_FEDERATION
+                    query_set = Q3_PROCUREMENT_SEARCH_QUERIES_TECHNICAL_TENDER_FEDERATION
+                else:
+                    rendered["query"] = f'"{entity_name}" partner sponsor broadcast rights digital platform'
+                    rendered["source_priority"] = Q3_PROCUREMENT_SOURCE_PRIORITY_COMMERCIAL_FEDERATION
+                    query_set = Q3_PROCUREMENT_SEARCH_QUERIES_COMMERCIAL_GLOBAL_FEDERATION
+            else:
+                query_set = Q3_PROCUREMENT_SEARCH_QUERIES_CLUB
+            search_queries = [
+                str(query).format(entity=entity_name)
+                for query in query_set
+            ]
         if rendered.get("question_id") in {"q4_decision_owner", "q5_related_pois"}:
             entity_type_key = _slugify(entity_type)
             decision_owner_surface = _decision_owner_surface(entity_type, entity_id)
