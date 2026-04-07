@@ -1,0 +1,105 @@
+{
+  "schema_version": "question_first_timeout_salvage_evidence_v1",
+  "created_at": "2026-04-07T14:59:24.688091+00:00",
+  "provenance": {
+    "raw_artifact_root_local_only": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-07-q3-q4-timeout-salvage",
+    "note": "Compact reconstructed evidence bundle. Raw app tmp artifacts are generated runtime outputs and are intentionally not tracked."
+  },
+  "policy_decision": {
+    "strict_validation_remains_baseline": true,
+    "timeout_salvage_counts_as_validated": false,
+    "expose_timeout_salvage_in_client_ui_now": false,
+    "recommendation": "Keep timeout_salvage internal until more diagnostic slices show it is consistently useful and low-noise."
+  },
+  "records": [
+    {
+      "diagnostic_slice": "q3-final",
+      "entity_id": "celtic-fc",
+      "entity_name": "Celtic FC",
+      "question_id": "q3_procurement_signal",
+      "validation_state": "validated",
+      "answer": "Yes, Celtic Football Club shows strong evidence of actively reshaping its commercial and digital ecosystem through multiple initiatives in 2025. Key evidence includes: (1) Major adidas partnership extension announced May 1, 2025, described as 'landmark' with 'additional revenues of well over £30m anticipated'; (2) New Avant Water partnership as Official Water Partner; (3) Launch of Celtic Mobile, a dedicated mobile network service for supporters; (4) New official Celtic FC App developed with Urban Zoo; (5) Partnership with XS2Event for global fan access; (6) Eleven Sports Media partnership; (7) Active Community Partner Programme for regional businesses; (8) Existing partnerships with JD, EA Sports, Magners, Kellogg's, Coca-Cola, William Hill, and Fleet Alliance. The club is clearly investing in sponsorship extensions, new commercial partnerships, digital platforms (mobile app, mobile network), and fan engagement technologies.",
+      "confidence": 0.95,
+      "raw_execution_trace": {
+        "exit_code": 0,
+        "has_structured_output": true,
+        "stdout_length": 12312,
+        "stderr_length": 0
+      },
+      "timeout_salvage": null,
+      "source_artifact_local_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-07-q3-q4-timeout-salvage/q3-final/celtic-fc/celtic-fc_opencode_batch_20260407_142509_question_first_run_v1.json"
+    },
+    {
+      "diagnostic_slice": "q3-final",
+      "entity_id": "major-league-cricket",
+      "entity_name": "Major League Cricket",
+      "question_id": "q3_procurement_signal",
+      "validation_state": "tool_call_missing",
+      "answer": "",
+      "confidence": 0,
+      "raw_execution_trace": {
+        "exit_code": 124,
+        "has_structured_output": false,
+        "stdout_length": 11506,
+        "stderr_length": 36
+      },
+      "timeout_salvage": {
+        "salvage_state": "evidence_retained",
+        "counts_as_validated": false,
+        "candidate_summary": "MLC 2025 Live In India: TV Channels, Streaming Platforms | com/cricket/mlc-2025-live-in-india-tv-channels-streaming-platforms-match-timings-all-you-need-to-know-2915107 | Description: MLC 2025 Live In India: TV Channels, Streaming Platforms & Match Timings - All You Need To Know",
+        "candidate_evidence_urls": [
+          "https://zeenews.india.com/cricket/mlc-2025-live-in-india-tv-channels-streaming-platforms-match-timings-all-you-need-to-know-2915107.html"
+        ],
+        "risk_notes": [
+          "timeout salvage is non-strict and does not count as validated"
+        ]
+      },
+      "source_artifact_local_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-07-q3-q4-timeout-salvage/q3-final/major-league-cricket/major-league-cricket_opencode_batch_20260407_142709_question_first_run_v1.json"
+    },
+    {
+      "diagnostic_slice": "q4-final",
+      "entity_id": "fc-barcelona",
+      "entity_name": "FC Barcelona",
+      "question_id": "q4_decision_owner",
+      "validation_state": "tool_call_missing",
+      "answer": "",
+      "confidence": 0,
+      "raw_execution_trace": {
+        "exit_code": 124,
+        "has_structured_output": false,
+        "stdout_length": 14863,
+        "stderr_length": 36
+      },
+      "timeout_salvage": null,
+      "source_artifact_local_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-07-q3-q4-timeout-salvage/q4-final/fc-barcelona/fc-barcelona_opencode_batch_20260407_142915_question_first_run_v1.json"
+    },
+    {
+      "diagnostic_slice": "q4-final",
+      "entity_id": "mls",
+      "entity_name": "Major League Soccer",
+      "question_id": "q4_decision_owner",
+      "validation_state": "tool_call_missing",
+      "answer": "",
+      "confidence": 0,
+      "raw_execution_trace": {
+        "exit_code": 124,
+        "has_structured_output": false,
+        "stdout_length": 54186,
+        "stderr_length": 36
+      },
+      "timeout_salvage": {
+        "salvage_state": "evidence_retained",
+        "counts_as_validated": false,
+        "candidate_summary": "Description: Camilo Durana is the Executive Vice President, Apple Partnership, Properties, & Events at Major League Soccer and Soccer United Marketing",
+        "candidate_evidence_urls": [
+          "https://www.sportsbusinessjournal.com/Articles/2026/02/16/world-of-opportunity-major-league-soccer-capitalizing-on-2026-fifa-world-cup/",
+          "https://podcasts.apple.com/gw/podcast/how-mls-can-become-the-worlds-top-soccer-league/id1593114026?i=1000662144353&l=fr-FR"
+        ],
+        "risk_notes": [
+          "timeout salvage is non-strict and does not count as validated"
+        ]
+      },
+      "source_artifact_local_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-07-q3-q4-timeout-salvage/q4-final/mls/mls_opencode_batch_20260407_143115_question_first_run_v1.json"
+    }
+  ]
+}
