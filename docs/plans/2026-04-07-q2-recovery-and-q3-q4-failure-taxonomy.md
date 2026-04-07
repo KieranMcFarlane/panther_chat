@@ -178,6 +178,42 @@ Reason:
 - they are predominantly upstream `tool_call_missing` / no-candidate artifacts
 - adding a best-available path now would mostly manufacture weak outputs from runs that captured no evidence
 
+## Follow-up: Execution Trace Preservation
+
+After this taxonomy, the next execution-layer fix was added in [opencode_agentic_batch.mjs](/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/scripts/opencode_agentic_batch.mjs):
+
+- `tool_call_missing` remains the correct validation state when structured output is empty
+- question artifacts now retain a bounded `raw_execution_trace`
+- the trace is written at both:
+  - `question.raw_execution_trace`
+  - `question.reasoning.raw_execution_trace`
+
+The trace preserves:
+- `exit_code`
+- `stdout_length`
+- `stderr_length`
+- `has_structured_output`
+- bounded `stdout_excerpt`
+- bounded `stderr_excerpt`
+- bounded `assistant_text_excerpt` from OpenCode text events when present
+- normalized `message_trace_summary`
+
+This is intentionally diagnostic only. It does not convert weak-surface failures into answers, and it does not change strict validation metrics.
+
+### Product-policy decision after trace preservation
+
+Do **not** add weak-signal fallback yet.
+
+The correct next measurement is:
+- rerun a very small `q3/q4` diagnostic slice
+- inspect the new `raw_execution_trace`
+- decide whether the failures are:
+  - execution/runtime failures,
+  - retrieval found evidence but final JSON was missing,
+  - or genuine no-evidence cases
+
+Only if the new trace repeatedly shows useful partial evidence should a flagged “best available signal” mode be implemented.
+
 Decision gate for revisiting best-available mode:
 - only revisit after the artifact layer can reliably retain retrieval evidence or candidate fragments for weak-surface runs
 - if later review shows repeated “useful but rejected” cases, add a visibly flagged fallback mode then

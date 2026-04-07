@@ -2566,6 +2566,55 @@ test('runOpenCodePresetBatch stores prompt response trace when available', async
 });
 
 
+test('runOpenCodePresetBatch preserves bounded raw execution trace for tool-call-missing failures', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-batch-raw-trace-'));
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+
+  const stdout = [
+    JSON.stringify({
+      type: 'text',
+      part: {
+        text: 'Searched official site and found a possible partnerships page, but did not emit final JSON.',
+      },
+    }),
+  ].join('\n');
+  const stderr = 'OpenCode exited before tool result finalization';
+
+  try {
+    const result = await runOpenCodePresetBatch({
+      outputDir,
+      preset: 'major-league-cricket-smoke',
+      questionRunner: async () => ({
+        structuredOutput: {},
+        promptTrace: {
+          exit_code: 1,
+          stdout_length: stdout.length,
+          stderr_length: stderr.length,
+          has_structured_output: false,
+        },
+        messageTrace: [{ role: 'assistant', completed: false, type: 'cli-run', has_structured_output: false, part_count: 1 }],
+        cliResult: { code: 1, stdout, stderr },
+      }),
+    });
+
+    const question = JSON.parse(readFileSync(result.question_result_paths[0], 'utf8')).question;
+    assert.equal(question.validation_state, 'tool_call_missing');
+    assert.equal(question.reasoning.raw_execution_trace.exit_code, 1);
+    assert.match(question.reasoning.raw_execution_trace.stderr_excerpt, /tool result finalization/);
+    assert.match(question.reasoning.raw_execution_trace.assistant_text_excerpt, /possible partnerships page/);
+    assert.equal(question.raw_execution_trace.stderr_excerpt, question.reasoning.raw_execution_trace.stderr_excerpt);
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
+
 test('runOpenCodePresetBatch resumes from persisted validated state without re-running questions', async () => {
   const outputDir = mkdtempSync(join(tmpdir(), 'opencode-batch-resume-'));
   const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;

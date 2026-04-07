@@ -1718,6 +1718,61 @@ export function extractFinalCliJson(stdout) {
   return _extractFinalCliJson(stdout);
 }
 
+function _boundedTraceText(value, maxLength = 1200) {
+  const text = String(value || '').trim();
+  if (!text) {
+    return '';
+  }
+  if (text.length <= maxLength) {
+    return text;
+  }
+  return text.slice(-maxLength);
+}
+
+function _extractAssistantTextExcerpt(stdout) {
+  const lines = String(stdout || '').split(/\r?\n/).filter(Boolean);
+  const textEvents = [];
+  for (const line of lines) {
+    try {
+      const parsed = JSON.parse(line);
+      if (parsed?.type === 'text' && parsed?.part?.text) {
+        textEvents.push(String(parsed.part.text));
+      }
+    } catch {
+      // Keep raw stdout excerpt as the fallback for non-JSON streams.
+    }
+  }
+  return _boundedTraceText(textEvents.join('\n'));
+}
+
+function _buildRawExecutionTrace({ promptTrace = null, messageTrace = [], cliResult = null } = {}) {
+  const stdout = String(cliResult?.stdout || '');
+  const stderr = String(cliResult?.stderr || '');
+  const exitCode = cliResult?.code ?? promptTrace?.exit_code ?? null;
+  return {
+    exit_code: exitCode,
+    stdout_length: Number.isFinite(Number(promptTrace?.stdout_length))
+      ? Number(promptTrace.stdout_length)
+      : stdout.length,
+    stderr_length: Number.isFinite(Number(promptTrace?.stderr_length))
+      ? Number(promptTrace.stderr_length)
+      : stderr.length,
+    has_structured_output: Boolean(promptTrace?.has_structured_output),
+    stdout_excerpt: _boundedTraceText(stdout),
+    stderr_excerpt: _boundedTraceText(stderr),
+    assistant_text_excerpt: _extractAssistantTextExcerpt(stdout),
+    message_trace_summary: Array.isArray(messageTrace)
+      ? messageTrace.map((item) => ({
+          role: item?.role || '',
+          completed: Boolean(item?.completed),
+          type: item?.type || '',
+          has_structured_output: Boolean(item?.has_structured_output),
+          part_count: Number.isFinite(Number(item?.part_count)) ? Number(item.part_count) : 0,
+        }))
+      : [],
+  };
+}
+
 function _spawnOpencodeRun(args, { cwd, env, timeoutMs = 300000 } = {}) {
   return new Promise((resolve, reject) => {
     const child = spawn('opencode', args, {
@@ -1863,13 +1918,14 @@ async function runOpenCodeCliQuestion(question, { worktreeRoot, opencodeTimeoutM
   return { structuredOutput, promptTrace, messageTrace, cliResult };
 }
 
-function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTrace = null, messageTrace = [], executionQuery = '' } = {}) {
+function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTrace = null, messageTrace = [], executionQuery = '', cliResult = null } = {}) {
   const validationState = _classifyValidationState(structuredOutput);
   const sources = Array.isArray(structuredOutput.sources) ? structuredOutput.sources : [];
   const { primaryOwner, supportingCandidates, candidates, answerText } = _structuredOwnerCandidates(structuredOutput);
   const evidenceUrl = structuredOutput.evidence_url || primaryOwner?.profile_url || primaryOwner?.linkedin_url || sources[0] || '';
   const notes = structuredOutput.notes || structuredOutput.context || '';
   const inferredSignalType = structuredOutput.signal_type || (question.question_type ? question.question_type.toUpperCase() : 'NO_SIGNAL');
+  const rawExecutionTrace = _buildRawExecutionTrace({ promptTrace, messageTrace, cliResult });
   return {
     question_id: question.question_id,
     question_type: question.question_type,
@@ -1901,9 +1957,11 @@ function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTr
       structured_output: structuredOutput,
       prompt_trace: promptTrace,
       message_trace: messageTrace,
+      raw_execution_trace: rawExecutionTrace,
     },
     prompt_trace: promptTrace,
     message_trace: messageTrace,
+    raw_execution_trace: rawExecutionTrace,
     execution_query: executionQuery || question.query,
     answer: answerText || structuredOutput.answer || '',
     primary_owner: primaryOwner,
@@ -2137,6 +2195,7 @@ export async function runOpenCodePresetBatch({
             {
               promptTrace: deterministicRun.promptTrace || null,
               messageTrace: deterministicRun.messageTrace || [],
+              cliResult: deterministicRun.cliResult || null,
               executionQuery: question.query,
             },
           );
@@ -2231,6 +2290,7 @@ export async function runOpenCodePresetBatch({
           {
             promptTrace: questionRun.promptTrace || null,
             messageTrace: questionRun.messageTrace || [],
+            cliResult: questionRun.cliResult || null,
             executionQuery: executionQuestion.query,
           },
         );
@@ -2369,6 +2429,7 @@ export async function runOpenCodePresetBatch({
             {
               promptTrace: questionRun.promptTrace || null,
               messageTrace: questionRun.messageTrace || [],
+              cliResult: questionRun.cliResult || null,
               executionQuery: executionQuestion.query,
             },
           );
