@@ -1773,6 +1773,100 @@ function _buildRawExecutionTrace({ promptTrace = null, messageTrace = [], cliRes
   };
 }
 
+function _extractUrls(text) {
+  const matches = String(text || '').match(/https?:\/\/[^\s)"'<>\\]+/g) || [];
+  return [...new Set(matches
+    .map((url) => url.split('\\n')[0].replace(/[.,;:]+$/g, ''))
+    .filter(Boolean))].slice(0, 8);
+}
+
+function _extractBrightDataEvidenceText(text) {
+  const value = String(text || '');
+  try {
+    const payload = JSON.parse(value);
+    const output = payload?.part?.state?.output;
+    if (typeof output === 'string' && output.trim()) {
+      return output;
+    }
+  } catch {
+    // Bounded traces can start mid-stream, so fall through to escaped-text cleanup.
+  }
+  return value.replace(/\\n/g, '\n');
+}
+
+function _containsBrightDataEvidence(text) {
+  const value = String(text || '').toLowerCase();
+  return value.includes('brightdata')
+    || value.includes('search results for')
+    || value.includes('scraped from')
+    || value.includes('scraped at')
+    || value.includes('source: brightdata');
+}
+
+function _buildTimeoutSalvage(question, validationState, rawExecutionTrace) {
+  if (String(validationState || '') !== 'tool_call_missing') {
+    return null;
+  }
+  if (Number(rawExecutionTrace?.exit_code) !== 124) {
+    return null;
+  }
+  const stdoutExcerpt = String(rawExecutionTrace?.stdout_excerpt || '');
+  const evidenceText = _extractBrightDataEvidenceText(stdoutExcerpt);
+  if (!_containsBrightDataEvidence(evidenceText)) {
+    return null;
+  }
+
+  const questionId = String(question?.question_id || '').trim();
+  const questionType = String(question?.question_type || '').trim();
+  const urls = _extractUrls(evidenceText);
+  const riskNotes = ['timeout salvage is non-strict and does not count as validated'];
+  const entityContext = [question?.entity_id, question?.entity_name, question?.question, question?.query]
+    .map((item) => String(item || '').toLowerCase())
+    .join(' ');
+  const isMlsEntityContext = /(^|[^a-z])mls([^a-z]|$)|major league soccer|mlssoccer/.test(entityContext)
+    || /(^|[^a-z])mls([^a-z]|$)/i.test(stdoutExcerpt);
+  const hasRealEstateNoise = /(real estate|property listings|foreclosures|find an agent|new homes)/i.test(evidenceText)
+    || /https?:\/\/(?:www\.)?mls\.com(?:[/"\\]|$)/i.test(evidenceText);
+  const hasSoccerEvidenceContext = /(major league soccer|mls soccer|mlssoccer)/i.test(evidenceText);
+  const isMlsRealEstateNoise = isMlsEntityContext && hasRealEstateNoise && !hasSoccerEvidenceContext;
+  if (isMlsRealEstateNoise) {
+    riskNotes.push('possible real-estate MLS false positive');
+  }
+
+  let candidateSummary = '';
+  if (questionId === 'q3_procurement_signal' || questionType === 'procurement') {
+    const signalPatterns = [
+      /[^.\n]*(?:partnership|partner|sponsor|sponsorship|platform|product launch|ticketing|mobile app|broadcast|media rights|data platform|vendor)[^.\n]*/ig,
+    ];
+    const matches = signalPatterns.flatMap((pattern) => evidenceText.match(pattern) || []);
+    candidateSummary = matches.map((item) => item.trim()).filter(Boolean).slice(0, 3).join(' | ');
+  } else if (questionId === 'q4_decision_owner' || questionType === 'decision_owner') {
+    const peopleRolePattern = /[A-Z][A-Za-zÀ-ÿ'’-]+(?:\s+[A-Z][A-Za-zÀ-ÿ'’-]+){1,3}[^.\n]{0,120}(?:partnerships?|commercial|business development|sponsorship|revenue|academies|international)[^.\n]{0,120}/g;
+    const roleFirstPattern = /[^.\n]*(?:director|head|chief|vp|vice president)[^.\n]{0,120}(?:partnerships?|commercial|business development|sponsorship|revenue|academies|international)[^.\n]*/ig;
+    const matches = [
+      ...(evidenceText.match(peopleRolePattern) || []),
+      ...(evidenceText.match(roleFirstPattern) || []),
+    ];
+    candidateSummary = matches.map((item) => item.trim()).filter(Boolean).slice(0, 3).join(' | ');
+  }
+
+  if (!candidateSummary && isMlsRealEstateNoise) {
+    candidateSummary = 'BrightData output retained, but visible evidence is likely real-estate MLS noise rather than Major League Soccer.';
+  }
+  if (!candidateSummary) {
+    candidateSummary = 'BrightData evidence retained during timeout, but no safe candidate summary was extracted.';
+    riskNotes.push('no safe candidate summary extracted');
+  }
+
+  return {
+    salvage_state: 'evidence_retained',
+    counts_as_validated: false,
+    candidate_summary: _boundedTraceText(candidateSummary, 1000),
+    candidate_evidence_urls: urls,
+    risk_notes: riskNotes,
+  };
+}
+
 function _spawnOpencodeRun(args, { cwd, env, timeoutMs = 300000 } = {}) {
   return new Promise((resolve, reject) => {
     const child = spawn('opencode', args, {
@@ -1931,6 +2025,7 @@ function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTr
   const notes = structuredOutput.notes || structuredOutput.context || '';
   const inferredSignalType = structuredOutput.signal_type || (question.question_type ? question.question_type.toUpperCase() : 'NO_SIGNAL');
   const rawExecutionTrace = _buildRawExecutionTrace({ promptTrace, messageTrace, cliResult });
+  const timeoutSalvage = _buildTimeoutSalvage(question, validationState, rawExecutionTrace);
   return {
     question_id: question.question_id,
     question_type: question.question_type,
@@ -1967,6 +2062,7 @@ function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTr
     prompt_trace: promptTrace,
     message_trace: messageTrace,
     raw_execution_trace: rawExecutionTrace,
+    ...(timeoutSalvage ? { timeout_salvage: timeoutSalvage } : {}),
     execution_query: executionQuery || question.query,
     answer: answerText || structuredOutput.answer || '',
     primary_owner: primaryOwner,

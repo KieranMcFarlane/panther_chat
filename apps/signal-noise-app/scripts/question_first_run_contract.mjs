@@ -229,6 +229,7 @@ function _mergeQuestionWithAnswer(question, answer, questionTiming) {
     'prompt_trace',
     'message_trace',
     'raw_execution_trace',
+    'timeout_salvage',
   ];
   for (const field of answerFields) {
     if (answerPayload[field] !== undefined) {

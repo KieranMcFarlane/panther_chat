@@ -2698,6 +2698,171 @@ test('runOpenCodePresetBatch preserves bounded raw execution trace for tool-call
   }
 });
 
+test('runOpenCodeQuestionSourceBatch adds non-strict timeout salvage without changing validation counts', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-timeout-salvage-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'diagnostic-slice',
+        entity_name: 'Diagnostic Slice',
+        entity_type: 'SPORT_LEAGUE',
+        preset: 'diagnostic-slice',
+        question_source_label: 'diagnostic-slice',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        question_count: 4,
+        questions: [
+          {
+            question_id: 'q3_procurement_signal_celtic',
+            question_type: 'procurement',
+            entity_id: 'celtic-fc',
+            entity_name: 'Celtic FC',
+            entity_type: 'SPORT_CLUB',
+            question: 'Is there evidence Celtic is reshaping its digital ecosystem?',
+            query: '"Celtic Football Club" commercial partnership',
+            hop_budget: 1,
+            source_priority: ['google_serp'],
+          },
+          {
+            question_id: 'q4_decision_owner_barcelona',
+            question_type: 'decision_owner',
+            entity_id: 'fc-barcelona',
+            entity_name: 'FC Barcelona',
+            entity_type: 'SPORT_CLUB',
+            question: 'Who is the most suitable person for commercial partnerships at FC Barcelona?',
+            query: '"FC Barcelona" LinkedIn company profile',
+            hop_budget: 1,
+            source_priority: ['google_serp'],
+          },
+          {
+            question_id: 'q4_decision_owner_mls_noise',
+            question_type: 'decision_owner',
+            entity_id: 'mls',
+            entity_name: 'Major League Soccer',
+            entity_type: 'SPORT_LEAGUE',
+            question: 'Who is the most suitable person for commercial partnerships at Major League Soccer?',
+            query: '"Major League Soccer" LinkedIn company profile',
+            hop_budget: 1,
+            source_priority: ['google_serp'],
+          },
+          {
+            question_id: 'q3_procurement_signal_mlc',
+            question_type: 'procurement',
+            entity_id: 'major-league-cricket',
+            entity_name: 'Major League Cricket',
+            entity_type: 'SPORT_LEAGUE',
+            question: 'Is there evidence Major League Cricket is reshaping its digital ecosystem?',
+            query: '"Major League Cricket" official partner broadcast rights media rights data platform',
+            hop_budget: 1,
+            source_priority: ['google_serp'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  const brightDataSearch = (body) => JSON.stringify({
+    type: 'tool_use',
+    part: {
+      tool: 'brightData_search_engine',
+      state: {
+        output: body,
+      },
+    },
+  });
+  const timeoutTrace = (body) => ({
+    structuredOutput: {},
+    promptTrace: {
+      exit_code: 124,
+      stdout_length: body.length,
+      stderr_length: 36,
+      has_structured_output: false,
+    },
+    messageTrace: [{ role: 'assistant', completed: false, type: 'cli-run', has_structured_output: false, part_count: 1 }],
+    cliResult: { code: 124, stdout: brightDataSearch(body), stderr: 'opencode run timed out after 60000ms' },
+  });
+
+  try {
+    const result = await runOpenCodeQuestionSourceBatch({
+      questionSourcePath: sourcePath,
+      outputDir,
+      questionRunner: async (question) => {
+        if (question.entity_id === 'celtic-fc') {
+          return timeoutTrace([
+            'Search results for "Celtic Football Club commercial partnership" on google:',
+            '1. Celtic FC hiring Mobile App Platform Manager',
+            'URL: https://jobs.celticfc.com/mobile-app-platform-manager',
+            'Description: Mobile app platform manager, fan engagement and digital services.',
+            '2. Eleven Sports Media become official Celtic FC partner',
+            'URL: https://sportsvenuebusiness.com/2020/02/27/eleven-sports-media-become-official-celtic-fc-partner/',
+            'Source: brightdata_sdk',
+          ].join('\n'));
+        }
+        if (question.entity_id === 'fc-barcelona') {
+          return timeoutTrace([
+            'Search results for "FC Barcelona LinkedIn company profile" on google:',
+            '1. Marc Bruix Email & Phone Number | FC Barcelona Director',
+            'URL: https://rocketreach.co/marc-bruix-email_69036',
+            'Description: Marc Bruix Work; Director of Partnerships and Academies @ FC Barcelona; Partnerships Director - Americas and Asia-Pacific @ FC Barcelona.',
+            'Source: brightdata_sdk',
+          ].join('\n'));
+        }
+        if (question.entity_id === 'mls') {
+          return timeoutTrace([
+            'Search results for "MLS listings leadership" on google:',
+            '1. MLS.com - MLS Listings, Real Estate Property Listings',
+            'URL: https://www.mls.com/',
+            'Description: Property Search. Find Foreclosures, New Homes, Find an Agent.',
+            'Source: brightdata_sdk',
+          ].join('\n'));
+        }
+        return {
+          structuredOutput: {
+            answer: 'Major League Cricket has commercial ecosystem signals across title sponsorship, broadcast rights, and ticketing.',
+            confidence: 0.85,
+            sources: ['https://www.majorleaguecricket.com/'],
+            validation_state: 'validated',
+          },
+          promptTrace: { exit_code: 0, stdout_length: 1, stderr_length: 0, has_structured_output: true },
+          messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
+          cliResult: { code: 0, stdout: '', stderr: '' },
+        };
+      },
+    });
+
+    assert.equal(result.questions_validated, 1);
+    const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+    const [celtic, barcelona, mls, mlc] = artifact.questions;
+    assert.equal(celtic.validation_state, 'tool_call_missing');
+    assert.equal(celtic.timeout_salvage.counts_as_validated, false);
+    assert.match(celtic.timeout_salvage.candidate_summary, /Mobile App Platform Manager|official Celtic FC partner/i);
+    assert.ok(celtic.timeout_salvage.candidate_evidence_urls.includes('https://jobs.celticfc.com/mobile-app-platform-manager'));
+    assert.equal(barcelona.timeout_salvage.salvage_state, 'evidence_retained');
+    assert.match(barcelona.timeout_salvage.candidate_summary, /Marc Bruix|Director of Partnerships/i);
+    assert.match(mls.timeout_salvage.risk_notes.join(' '), /real-estate MLS false positive/i);
+    assert.equal(mls.timeout_salvage.counts_as_validated, false);
+    assert.equal(mlc.validation_state, 'validated');
+    assert.equal(mlc.timeout_salvage, undefined);
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
 
 test('runOpenCodePresetBatch resumes from persisted validated state without re-running questions', async () => {
   const outputDir = mkdtempSync(join(tmpdir(), 'opencode-batch-resume-'));
