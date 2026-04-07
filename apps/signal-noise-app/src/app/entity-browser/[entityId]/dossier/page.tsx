@@ -1,5 +1,6 @@
 import EntityDossierClientPage from './client-page'
 import { getEntityForDossierPage } from '@/lib/entity-loader'
+import { requirePageSession } from '@/lib/server-auth'
 
 interface EntityDossierPageProps {
   params: {
@@ -18,6 +19,7 @@ function getSearchParamValue(value: string | string[] | undefined, fallback: str
 
 export default async function EntityDossierPage({ params, searchParams = {} }: EntityDossierPageProps) {
   const entityId = params.entityId
+  await requirePageSession(`/entity-browser/${entityId}/dossier`)
   const fromPage = getSearchParamValue(searchParams.from, '1')
   const shouldGenerate = getSearchParamValue(searchParams.generate, 'false') === 'true'
   const includeSignals = getSearchParamValue(searchParams.includeSignals, 'true') !== 'false'

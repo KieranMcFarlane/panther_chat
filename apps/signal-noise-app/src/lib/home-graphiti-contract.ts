@@ -16,6 +16,7 @@ export interface HomeGraphitiInsightRelationship {
 
 export interface HomeGraphitiInsight {
   insight_id: string
+  insight_type?: 'opportunity' | 'watch_item' | 'operational'
   entity_id: string
   entity_name: string
   entity_type: string
@@ -29,6 +30,8 @@ export interface HomeGraphitiInsight {
   evidence: HomeGraphitiInsightEvidence[]
   relationships: HomeGraphitiInsightRelationship[]
   suggested_action: string
+  priority?: 'high' | 'medium' | 'low'
+  destination_url?: string
   detected_at: string
   source_run_id?: string
   source_signal_id?: string

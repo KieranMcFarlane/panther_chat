@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
 import { normalizeImportedEntityRow } from '@/lib/entity-import-schema'
+import { requireApiSession, UnauthorizedError } from '@/lib/server-auth'
 import {
   createEntityImportBatch,
   createEntityPipelineRuns,
@@ -10,6 +11,13 @@ import {
   storeFallbackEntityImportState,
 } from '@/lib/entity-import-jobs'
 import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
+import {
+  getLatestQuestionFirstDossierArtifact,
+  getLatestQuestionFirstRunArtifact,
+  mergeQuestionFirstRunArtifactIntoDossier,
+  normalizeQuestionFirstDossier,
+  resolveCanonicalQuestionFirstDossier,
+} from '@/lib/question-first-dossier'
 
 const ENTITY_IMPORT_QUEUE_MODE = process.env.ENTITY_IMPORT_QUEUE_MODE || 'durable_worker'
 
@@ -189,6 +197,28 @@ function buildQueuePayload(entityId: string, batchId: string, state: string, mes
   }
 }
 
+function buildCanonicalDossierResponse(dossier: Record<string, any>, source: string) {
+  return {
+    success: true,
+    persisted: true,
+    source,
+    dossier: {
+      ...dossier,
+      entity_id: dossier.entity_id,
+      entity_name: dossier.entity_name,
+      entity_type: dossier.entity_type,
+      question_first: dossier.question_first,
+      metadata: dossier.metadata,
+      run_rollup: dossier.run_rollup,
+      categories: dossier.categories,
+      answers: dossier.answers,
+      question_timings: dossier.question_timings,
+      poi_graph: dossier.poi_graph,
+      tabs: dossier.tabs,
+    },
+  }
+}
+
 function toPipelineRow(entityId: string, entity: ResolvedEntity) {
   const input = {
     name: toStringValue(entity.properties?.name, entityId),
@@ -267,9 +297,28 @@ async function handleRequest(entityId: string, forceQueue: boolean) {
   }
 
   if (!forceQueue) {
+    const latestQuestionFirstDossier = await getLatestQuestionFirstDossierArtifact(entityId, entity)
+    if (latestQuestionFirstDossier?.payload) {
+      const dossier = normalizeQuestionFirstDossier(latestQuestionFirstDossier.payload, entityId, entity)
+      return NextResponse.json(buildCanonicalDossierResponse(dossier, 'question_first_dossier'))
+    }
+
+    const latestQuestionFirstRun = await getLatestQuestionFirstRunArtifact(entityId, entity)
+    if (latestQuestionFirstRun?.payload) {
+      const mergedDossier = mergeQuestionFirstRunArtifactIntoDossier({}, latestQuestionFirstRun.payload)
+      const dossier = normalizeQuestionFirstDossier(mergedDossier, entityId, entity)
+      return NextResponse.json(buildCanonicalDossierResponse(dossier, 'question_first_run'))
+    }
+
+    const canonicalQuestionFirst = await resolveCanonicalQuestionFirstDossier(entityId, entity)
+    if (canonicalQuestionFirst.dossier) {
+      return NextResponse.json(buildCanonicalDossierResponse(canonicalQuestionFirst.dossier, canonicalQuestionFirst.source))
+    }
+
     const persisted = await getPersistedDossier(entityId, entity)
     if (persisted) {
-      return NextResponse.json({ success: true, persisted: true, dossier: persisted })
+      const dossier = normalizeQuestionFirstDossier(persisted, entityId, entity)
+      return NextResponse.json(buildCanonicalDossierResponse(dossier, 'legacy_dossier'))
     }
   }
 
@@ -314,12 +363,16 @@ async function handleRequest(entityId: string, forceQueue: boolean) {
 }
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: { entityId: string } },
 ) {
   try {
+    await requireApiSession(request)
     return await handleRequest(params.entityId, false)
   } catch (error) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json({ error: error.message }, { status: 401 })
+    }
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to fetch dossier' },
       { status: 500 },
@@ -328,12 +381,16 @@ export async function GET(
 }
 
 export async function POST(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: { entityId: string } },
 ) {
   try {
+    await requireApiSession(request)
     return await handleRequest(params.entityId, true)
   } catch (error) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json({ error: error.message }, { status: 401 })
+    }
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to queue dossier pipeline' },
       { status: 500 },

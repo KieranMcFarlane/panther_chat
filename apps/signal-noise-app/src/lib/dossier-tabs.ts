@@ -11,67 +11,55 @@ const SECTION_DEFINITIONS: Array<{
   value: string
   label: string
   description: string
-  keys: string[]
+  hasData: (dossier: Record<string, any>) => boolean
 }> = [
   {
     value: 'overview',
     label: 'Overview',
-    description: 'Core identity, metadata, and dossier snapshot',
-    keys: ['core_info', 'entity', 'metadata'],
+    description: 'Entity identity, run status, and discovery summary',
+    hasData: (dossier) =>
+      hasValue(dossier.entity_name) ||
+      hasValue(dossier.entity_type) ||
+      hasValue(dossier.run_rollup) ||
+      hasValue(dossier.question_first),
   },
   {
-    value: 'procurement',
-    label: 'Procurement',
-    description: 'Buying signals, timelines, and roadmap phases',
-    keys: ['implementation_roadmap', 'metadata'],
+    value: 'digital-stack',
+    label: 'Digital Stack',
+    description: 'Observed platforms, stack clues, and digital posture',
+    hasData: (dossier) =>
+      hasValue(dossier.digital_transformation) ||
+      hasValue(dossier.question_first?.discovery_summary?.digital_stack) ||
+      hasValue(dossier.answers),
   },
   {
-    value: 'digital-transformation',
-    label: 'Digital',
-    description: 'Digital maturity and platform posture',
-    keys: ['digital_transformation'],
+    value: 'procurement-ecosystem',
+    label: 'Procurement / Ecosystem',
+    description: 'Buying motion, timing, incumbent vendors, and ecosystem signals',
+    hasData: (dossier) =>
+      hasValue(dossier.question_first?.discovery_summary?.timing_procurement_markers) ||
+      hasValue(dossier.question_first?.discovery_summary?.timing_and_procurement) ||
+      hasValue(dossier.question_first?.discovery_summary?.opportunity_signals) ||
+      hasValue(dossier.run_rollup),
   },
   {
-    value: 'strategic-analysis',
-    label: 'AI Insights',
-    description: 'Reasoner assessment and priority fit',
-    keys: ['strategic_analysis'],
+    value: 'decision-owners-pois',
+    label: 'Decision Owners / POIs',
+    description: 'Decision owners, people of interest, and relationship graph',
+    hasData: (dossier) =>
+      hasValue(dossier.question_first?.discovery_summary?.decision_owners) ||
+      hasValue(dossier.poi_graph) ||
+      hasValue(dossier.question_first?.poi_graph),
   },
   {
-    value: 'opportunities',
-    label: 'Opportunities',
-    description: 'Commercial opportunities and decision paths',
-    keys: ['strategic_analysis', 'implementation_roadmap'],
-  },
-  {
-    value: 'leadership',
-    label: 'Leadership',
-    description: 'Decision makers, influence, and contact anchors',
-    keys: ['linkedin_connection_analysis'],
-  },
-  {
-    value: 'connections',
-    label: 'Connections',
-    description: 'Relationship paths and bridge contacts',
-    keys: ['linkedin_connection_analysis'],
-  },
-  {
-    value: 'implementation-roadmap',
-    label: 'Roadmap',
-    description: 'Phase-by-phase activation plan',
-    keys: ['implementation_roadmap'],
-  },
-  {
-    value: 'contact',
-    label: 'Contact',
-    description: 'Web, HQ, and outreach anchors',
-    keys: ['core_info', 'metadata'],
-  },
-  {
-    value: 'outreach',
-    label: 'Outreach',
-    description: 'Recommended approach and next step',
-    keys: ['linkedin_connection_analysis', 'metadata'],
+    value: 'evidence-sources',
+    label: 'Evidence / Sources',
+    description: 'Promoted evidence, source URLs, and question timing detail',
+    hasData: (dossier) =>
+      hasValue(dossier.question_first?.evidence_items) ||
+      hasValue(dossier.question_first?.dossier_promotions) ||
+      hasValue(dossier.question_timings) ||
+      hasValue(dossier.metadata?.question_first),
   },
 ]
 
@@ -106,7 +94,9 @@ export function buildDossierTabs(
   }
 
   return SECTION_DEFINITIONS.map((section) => ({
-    ...section,
-    hasData: section.keys.some((key) => hasValue(normalizedDossier[key])),
+    value: section.value,
+    label: section.label,
+    description: section.description,
+    hasData: section.hasData(normalizedDossier),
   }))
 }

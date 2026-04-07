@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { GraphitiInsightsFeed } from '@/components/home/GraphitiInsightsFeed'
+import { requirePageSession } from '@/lib/server-auth'
 
 const pillars = [
   {
@@ -51,7 +52,9 @@ const flow = [
   },
 ]
 
-export default function Home() {
+export default async function Home() {
+  await requirePageSession('/')
+
   return (
     <main className="min-h-screen overflow-hidden bg-[#07111f] text-white">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(247,192,53,0.18),_transparent_35%),radial-gradient(circle_at_top_right,_rgba(56,189,248,0.12),_transparent_28%),linear-gradient(180deg,_rgba(4,8,20,1),_rgba(7,17,31,1))]" />
