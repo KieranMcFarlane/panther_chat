@@ -1,6 +1,6 @@
 {
   "schema_version": "atomic_question_source_v1",
-  "generated_at": "2026-04-07T05:21:30.167736+00:00",
+  "generated_at": "2026-04-07T10:43:21.794509+00:00",
   "entity_id": "major-league-cricket",
   "entity_name": "Major League Cricket",
   "entity_type": "SPORT_LEAGUE",
@@ -142,8 +142,8 @@
       "hop_budget": 8,
       "evidence_extension_budget": 2,
       "source_priority": [
-        "google_serp",
         "official_site",
+        "google_serp",
         "news",
         "press_release",
         "linkedin_company_profile",
@@ -152,18 +152,17 @@
       ],
       "search_strategy": {
         "search_queries": [
-          "\"Major League Cricket\" LinkedIn company profile",
+          "\"Major League Cricket\" official website",
+          "\"Major League Cricket\" staff",
           "\"Major League Cricket\" leadership team",
-          "\"Major League Cricket\" commercial team",
           "\"Major League Cricket\" partnerships",
           "\"Major League Cricket\" sponsorship",
-          "\"Major League Cricket\" chief business officer",
-          "\"Major League Cricket\" vice president commercial",
+          "\"Major League Cricket\" business operations",
+          "\"Major League Cricket\" commissioner",
           "\"Major League Cricket\" chief commercial officer",
-          "\"Major League Cricket\" commercial director",
           "\"Major League Cricket\" head of partnerships",
-          "\"Major League Cricket\" business development director",
-          "\"Major League Cricket\" CEO"
+          "\"Major League Cricket\" business development",
+          "\"Major League Cricket\" commercial director"
         ]
       },
       "evidence_focus": "decision_owner",

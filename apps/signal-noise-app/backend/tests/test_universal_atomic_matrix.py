@@ -130,23 +130,33 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
                 "news",
                 "google_serp",
             ]
-        if payload["entity_type"] == "SPORT_FEDERATION":
+        if payload["entity_id"] in {"arsenal-fc", "international-canoe-federation"}:
             assert payload["questions"][3]["source_priority"] == [
+                "official_site",
+                "news",
+                "press_release",
+                "google_serp",
                 "linkedin_company_profile",
                 "linkedin_people_search",
                 "linkedin_person_profile",
-                "google_serp",
-                "official_site",
             ]
-        else:
+        elif payload["entity_id"] in {"celtic-fc", "major-league-cricket"}:
             assert payload["questions"][3]["source_priority"] == [
-                "google_serp",
                 "official_site",
+                "google_serp",
                 "news",
                 "press_release",
                 "linkedin_company_profile",
                 "linkedin_people_search",
                 "linkedin_person_profile",
+            ]
+        else:
+            assert payload["questions"][3]["source_priority"] == [
+                "linkedin_company_profile",
+                "linkedin_people_search",
+                "linkedin_person_profile",
+                "google_serp",
+                "official_site",
             ]
         assert payload["questions"][4]["source_priority"] == [
             "linkedin_company_profile",
@@ -505,18 +515,18 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
     ]
     assert arsenal["questions"][3]["query"] == '"Arsenal Football Club" LinkedIn company profile'
     assert arsenal["questions"][3]["search_strategy"]["search_queries"] == [
-        '"Arsenal Football Club" LinkedIn company profile',
-        '"Arsenal Football Club" front office staff',
-        '"Arsenal Football Club" leadership team',
-        '"Arsenal Football Club" commercial team',
-        '"Arsenal Football Club" partnerships',
-        '"Arsenal Football Club" sponsorship',
-        '"Arsenal Football Club" chief business officer',
+        '"Arsenal Football Club" official website leadership team',
+        '"Arsenal Football Club" executive committee',
+        '"Arsenal Football Club" commercial leadership',
+        '"Arsenal Football Club" partnerships team',
+        '"Arsenal Football Club" sponsorship team',
         '"Arsenal Football Club" chief commercial officer',
+        '"Arsenal Football Club" chief business officer',
         '"Arsenal Football Club" commercial director',
-        '"Arsenal Football Club" head of partnerships',
+        '"Arsenal Football Club" global partnerships',
         '"Arsenal Football Club" business development director',
-        '"Arsenal Football Club" CEO',
+        '"Arsenal Football Club" chief marketing officer',
+        '"Arsenal Football Club" LinkedIn company profile',
     ]
     assert arsenal["questions"][4]["search_strategy"]["search_queries"] == [
         '"Arsenal Football Club" LinkedIn company profile',
@@ -566,22 +576,21 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
         '"International Canoe Federation" director of tv broadcast marketing',
     ]
     assert mlc["questions"][3]["search_strategy"]["search_queries"] == [
-        '"Major League Cricket" LinkedIn company profile',
+        '"Major League Cricket" official website',
+        '"Major League Cricket" staff',
         '"Major League Cricket" leadership team',
-        '"Major League Cricket" commercial team',
         '"Major League Cricket" partnerships',
         '"Major League Cricket" sponsorship',
-        '"Major League Cricket" chief business officer',
-        '"Major League Cricket" vice president commercial',
+        '"Major League Cricket" business operations',
+        '"Major League Cricket" commissioner',
         '"Major League Cricket" chief commercial officer',
-        '"Major League Cricket" commercial director',
         '"Major League Cricket" head of partnerships',
-        '"Major League Cricket" business development director',
-        '"Major League Cricket" CEO',
+        '"Major League Cricket" business development',
+        '"Major League Cricket" commercial director',
     ]
     assert mlc["questions"][3]["query"] == '"Major League Cricket" LinkedIn company profile'
     assert mlc["questions"][3]["search_strategy"]["search_queries"][0] == (
-        '"Major League Cricket" LinkedIn company profile'
+        '"Major League Cricket" official website'
     )
     assert '"Major League Cricket" head of partnerships' in mlc["questions"][3]["search_strategy"]["search_queries"]
     assert mlc["questions"][4]["question"] == (
@@ -648,8 +657,150 @@ def test_universal_atomic_matrix_builds_consistent_five_question_sources():
         '"Major League Cricket" partnerships director',
         '"Major League Cricket" sponsorship director',
         '"Major League Cricket" CEO',
+        ]
+
+
+def test_q4_decision_owner_uses_surface_specific_queries_and_priorities():
+    barcelona = build_universal_atomic_question_source(
+        entity_type="SPORT_CLUB",
+        entity_name="FC Barcelona",
+        entity_id="fc-barcelona",
+        preset="fc-barcelona-atomic-matrix",
+    )
+    celtic = build_universal_atomic_question_source(
+        entity_type="SPORT_CLUB",
+        entity_name="Celtic FC",
+        entity_id="celtic-fc",
+        preset="celtic-fc-atomic-matrix",
+    )
+    bundesliga = build_universal_atomic_question_source(
+        entity_type="SPORT_LEAGUE",
+        entity_name="Bundesliga",
+        entity_id="bundesliga",
+        preset="bundesliga-atomic-matrix",
+    )
+    mls = build_universal_atomic_question_source(
+        entity_type="SPORT_LEAGUE",
+        entity_name="Major League Soccer",
+        entity_id="mls",
+        preset="mls-atomic-matrix",
+    )
+    fifa = build_universal_atomic_question_source(
+        entity_type="SPORT_FEDERATION",
+        entity_name="FIFA",
+        entity_id="fifa",
+        preset="fifa-atomic-matrix",
+    )
+    fis = build_universal_atomic_question_source(
+        entity_type="SPORT_FEDERATION",
+        entity_name="International Ski and Snowboard Federation",
+        entity_id="fis",
+        preset="fis-atomic-matrix",
+    )
+
+    def q4(payload: dict) -> dict:
+        return next(question for question in payload["questions"] if question["question_id"] == "q4_decision_owner")
+
+    assert q4(barcelona)["source_priority"] == [
+        "official_site",
+        "news",
+        "press_release",
+        "google_serp",
+        "linkedin_company_profile",
+        "linkedin_people_search",
+        "linkedin_person_profile",
+    ]
+    assert q4(barcelona)["search_strategy"]["search_queries"] == [
+        '"FC Barcelona" official website leadership team',
+        '"FC Barcelona" executive committee',
+        '"FC Barcelona" commercial leadership',
+        '"FC Barcelona" partnerships team',
+        '"FC Barcelona" sponsorship team',
+        '"FC Barcelona" chief commercial officer',
+        '"FC Barcelona" chief business officer',
+        '"FC Barcelona" commercial director',
+        '"FC Barcelona" global partnerships',
+        '"FC Barcelona" business development director',
+        '"FC Barcelona" chief marketing officer',
+        '"FC Barcelona" LinkedIn company profile',
     ]
 
+    assert q4(celtic)["search_strategy"]["search_queries"] == [
+        '"Celtic Football Club" official website',
+        '"Celtic Football Club" leadership team',
+        '"Celtic Football Club" commercial team',
+        '"Celtic Football Club" commercial director',
+        '"Celtic Football Club" head of partnerships',
+        '"Celtic Football Club" partnerships manager',
+        '"Celtic Football Club" sponsorship manager',
+        '"Celtic Football Club" marketing director',
+        '"Celtic Football Club" chief commercial officer',
+        '"Celtic Football Club" business development director',
+    ]
+
+    assert q4(bundesliga)["search_strategy"]["search_queries"] == [
+        '"Bundesliga" official website leadership team',
+        '"Bundesliga" management board',
+        '"Bundesliga" commercial team',
+        '"Bundesliga" partnerships',
+        '"Bundesliga" media rights',
+        '"Bundesliga" sponsorship',
+        '"Bundesliga" chief commercial officer',
+        '"Bundesliga" managing director commercial',
+        '"Bundesliga" vice president commercial',
+        '"Bundesliga" business development director',
+        '"Bundesliga" head of partnerships',
+    ]
+
+    assert q4(mls)["source_priority"] == [
+        "official_site",
+        "google_serp",
+        "news",
+        "press_release",
+        "linkedin_company_profile",
+        "linkedin_people_search",
+        "linkedin_person_profile",
+    ]
+    assert q4(mls)["search_strategy"]["search_queries"] == [
+        '"Major League Soccer" official website',
+        '"Major League Soccer" staff',
+        '"Major League Soccer" leadership team',
+        '"Major League Soccer" partnerships',
+        '"Major League Soccer" sponsorship',
+        '"Major League Soccer" business operations',
+        '"Major League Soccer" commissioner',
+        '"Major League Soccer" chief commercial officer',
+        '"Major League Soccer" head of partnerships',
+        '"Major League Soccer" business development',
+        '"Major League Soccer" commercial director',
+    ]
+
+    assert q4(fifa)["search_strategy"]["search_queries"] == [
+        '"FIFA" official website leadership team',
+        '"FIFA" management team',
+        '"FIFA" commercial and sponsorship',
+        '"FIFA" partnerships',
+        '"FIFA" media rights',
+        '"FIFA" broadcast',
+        '"FIFA" marketing director',
+        '"FIFA" chief marketing officer',
+        '"FIFA" head of partnerships',
+        '"FIFA" commercial director',
+        '"FIFA" secretary general',
+    ]
+
+    assert q4(fis)["search_strategy"]["search_queries"] == [
+        '"International Ski and Snowboard Federation" official website leadership team',
+        '"International Ski and Snowboard Federation" secretariat',
+        '"International Ski and Snowboard Federation" marketing director',
+        '"International Ski and Snowboard Federation" communications director',
+        '"International Ski and Snowboard Federation" partnerships manager',
+        '"International Ski and Snowboard Federation" broadcast director',
+        '"International Ski and Snowboard Federation" media rights',
+        '"International Ski and Snowboard Federation" tv broadcast marketing',
+        '"International Ski and Snowboard Federation" commercial manager',
+        '"International Ski and Snowboard Federation" secretary general',
+    ]
 
 def test_universal_atomic_matrix_output_matches_canonical_files():
     backend_dir = Path(__file__).resolve().parent.parent
@@ -749,9 +900,9 @@ def test_universal_atomic_matrix_output_matches_canonical_files():
             ]
             assert payload["questions"][3]["query"] == '"Major League Cricket" LinkedIn company profile'
             assert payload["questions"][3]["search_strategy"]["search_queries"][0] == (
-                '"Major League Cricket" LinkedIn company profile'
+                '"Major League Cricket" official website'
             )
-            assert '"Major League Cricket" chief business officer' in payload["questions"][3]["search_strategy"]["search_queries"]
+            assert '"Major League Cricket" chief commercial officer' in payload["questions"][3]["search_strategy"]["search_queries"]
             assert '"Major League Cricket" head of partnerships' in payload["questions"][3]["search_strategy"]["search_queries"]
             assert payload["questions"][4]["question"] == (
                 "Which 3 to 5 people are the most relevant commercial, partnerships, or business development contacts at Major League Cricket?"

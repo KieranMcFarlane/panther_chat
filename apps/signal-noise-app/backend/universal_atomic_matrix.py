@@ -37,6 +37,26 @@ DECISION_OWNER_SOURCE_PRIORITY_BROAD = [
     "linkedin_person_profile",
 ]
 
+DECISION_OWNER_SOURCE_PRIORITY_OFFICIAL_FIRST = [
+    "official_site",
+    "news",
+    "press_release",
+    "google_serp",
+    "linkedin_company_profile",
+    "linkedin_people_search",
+    "linkedin_person_profile",
+]
+
+DECISION_OWNER_SOURCE_PRIORITY_OPERATIONS_FIRST = [
+    "official_site",
+    "google_serp",
+    "news",
+    "press_release",
+    "linkedin_company_profile",
+    "linkedin_people_search",
+    "linkedin_person_profile",
+]
+
 DECISION_OWNER_SEARCH_QUERIES_CLUB = [
     '"{entity}" LinkedIn company profile',
     '"{entity}" front office staff',
@@ -50,6 +70,35 @@ DECISION_OWNER_SEARCH_QUERIES_CLUB = [
     '"{entity}" head of partnerships',
     '"{entity}" business development director',
     '"{entity}" CEO',
+]
+
+DECISION_OWNER_SEARCH_QUERIES_GLOBAL_ELITE_CLUB = [
+    '"{entity}" official website leadership team',
+    '"{entity}" executive committee',
+    '"{entity}" commercial leadership',
+    '"{entity}" partnerships team',
+    '"{entity}" sponsorship team',
+    '"{entity}" chief commercial officer',
+    '"{entity}" chief business officer',
+    '"{entity}" commercial director',
+    '"{entity}" global partnerships',
+    '"{entity}" business development director',
+    '"{entity}" chief marketing officer',
+    '"{entity}" LinkedIn company profile',
+]
+
+DECISION_OWNER_SEARCH_QUERIES_WEAKER_PUBLIC_SURFACE_CLUB = [
+    '"{entity}" official website',
+    '"{entity}" leadership team',
+    '"{entity}" commercial team',
+    '"{entity}" club partners',
+    '"{entity}" partnerships manager',
+    '"{entity}" sponsorship manager',
+    '"{entity}" marketing director',
+    '"{entity}" head of partnerships',
+    '"{entity}" commercial director',
+    '"{entity}" fan engagement',
+    '"{entity}" business development director',
 ]
 
 DECISION_OWNER_SEARCH_QUERIES_LEAGUE = [
@@ -67,6 +116,34 @@ DECISION_OWNER_SEARCH_QUERIES_LEAGUE = [
     '"{entity}" CEO',
 ]
 
+DECISION_OWNER_SEARCH_QUERIES_TOP_COMMERCIAL_LEAGUE = [
+    '"{entity}" official website leadership team',
+    '"{entity}" management board',
+    '"{entity}" commercial team',
+    '"{entity}" partnerships',
+    '"{entity}" media rights',
+    '"{entity}" sponsorship',
+    '"{entity}" chief commercial officer',
+    '"{entity}" managing director commercial',
+    '"{entity}" vice president commercial',
+    '"{entity}" business development director',
+    '"{entity}" head of partnerships',
+]
+
+DECISION_OWNER_SEARCH_QUERIES_DEVELOPING_LEAGUE = [
+    '"{entity}" official website',
+    '"{entity}" staff',
+    '"{entity}" leadership team',
+    '"{entity}" partnerships',
+    '"{entity}" sponsorship',
+    '"{entity}" business operations',
+    '"{entity}" commissioner',
+    '"{entity}" chief commercial officer',
+    '"{entity}" head of partnerships',
+    '"{entity}" business development',
+    '"{entity}" commercial director',
+]
+
 DECISION_OWNER_SEARCH_QUERIES_FEDERATION = [
     '"{entity}" LinkedIn company profile',
     '"{entity}" LinkedIn commercial',
@@ -78,6 +155,33 @@ DECISION_OWNER_SEARCH_QUERIES_FEDERATION = [
     '"{entity}" director of tv broadcast marketing',
     '"{entity}" broadcast marketing director',
     '"{entity}" marketing director',
+    '"{entity}" secretary general',
+]
+
+DECISION_OWNER_SEARCH_QUERIES_COMMERCIAL_GLOBAL_FEDERATION = [
+    '"{entity}" official website leadership team',
+    '"{entity}" management team',
+    '"{entity}" commercial and sponsorship',
+    '"{entity}" partnerships',
+    '"{entity}" media rights',
+    '"{entity}" broadcast',
+    '"{entity}" marketing director',
+    '"{entity}" chief marketing officer',
+    '"{entity}" head of partnerships',
+    '"{entity}" commercial director',
+    '"{entity}" secretary general',
+]
+
+DECISION_OWNER_SEARCH_QUERIES_TECHNICAL_TENDER_FEDERATION = [
+    '"{entity}" official website leadership team',
+    '"{entity}" secretariat',
+    '"{entity}" marketing director',
+    '"{entity}" communications director',
+    '"{entity}" partnerships manager',
+    '"{entity}" broadcast director',
+    '"{entity}" media rights',
+    '"{entity}" tv broadcast marketing',
+    '"{entity}" commercial manager',
     '"{entity}" secretary general',
 ]
 
@@ -401,6 +505,45 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
 MLC_ENTITY_ID = "major-league-cricket"
 ICF_ENTITY_ID = "international-canoe-federation"
 CELTIC_ENTITY_ID = "celtic-fc"
+GLOBAL_ELITE_CLUB_ENTITY_IDS = {
+    "arsenal",
+    "arsenal-fc",
+    "bayern-munich",
+    "fc-barcelona",
+    "inter-miami-cf",
+    "juventus",
+    "manchester-city",
+    "psg",
+    "real-madrid-cf",
+}
+WEAKER_PUBLIC_SURFACE_CLUB_ENTITY_IDS = {
+    "celtic-fc",
+    "leeds-united",
+}
+TOP_COMMERCIAL_LEAGUE_ENTITY_IDS = {
+    "bundesliga",
+    "formula-1",
+    "premier-league",
+}
+DEVELOPING_OR_FRAGMENTED_LEAGUE_ENTITY_IDS = {
+    "major-league-cricket",
+    "mls",
+    "nwsl",
+    "wsl",
+}
+COMMERCIAL_GLOBAL_FEDERATION_ENTITY_IDS = {
+    "ecb",
+    "fiba",
+    "fifa",
+    "uefa",
+    "world-athletics",
+    "world-rugby",
+}
+TECHNICAL_TENDER_FEDERATION_ENTITY_IDS = {
+    "fis",
+    "icf",
+    ICF_ENTITY_ID,
+}
 MLC_QUESTION_OVERRIDES: Dict[str, Dict[str, Any]] = {
     "q1_foundation": {
         "query": '"{entity}" official website founded year',
@@ -593,6 +736,30 @@ def _slugify(value: str) -> str:
     return slug.strip("-") or "entity"
 
 
+def _decision_owner_surface(entity_type: str, entity_id: str) -> str:
+    entity_type_key = _slugify(entity_type)
+    entity_id_key = _slugify(entity_id)
+    if entity_id_key in GLOBAL_ELITE_CLUB_ENTITY_IDS:
+        return "global_elite_club"
+    if entity_id_key in WEAKER_PUBLIC_SURFACE_CLUB_ENTITY_IDS:
+        return "weaker_public_surface_club"
+    if entity_id_key in TOP_COMMERCIAL_LEAGUE_ENTITY_IDS:
+        return "top_commercial_league"
+    if entity_id_key in DEVELOPING_OR_FRAGMENTED_LEAGUE_ENTITY_IDS:
+        return "developing_or_fragmented_league"
+    if entity_id_key in COMMERCIAL_GLOBAL_FEDERATION_ENTITY_IDS:
+        return "commercial_global_federation"
+    if entity_id_key in TECHNICAL_TENDER_FEDERATION_ENTITY_IDS:
+        return "technical_tender_federation"
+    if entity_type_key == "sport-club":
+        return "global_elite_club"
+    if entity_type_key == "sport-league":
+        return "top_commercial_league"
+    if entity_type_key == "sport-federation":
+        return "commercial_global_federation"
+    return "generic"
+
+
 def _render_question_spec(spec: Dict[str, Any], entity_name: str, entity_id: str, entity_type: str) -> Dict[str, Any]:
     rendered = deepcopy(spec)
     rendered["question"] = str(rendered["question"]).format(entity=entity_name)
@@ -653,12 +820,31 @@ def _render_question_spec(spec: Dict[str, Any], entity_name: str, entity_id: str
                 ]
         if rendered.get("question_id") in {"q4_decision_owner", "q5_related_pois"}:
             entity_type_key = _slugify(entity_type)
+            decision_owner_surface = _decision_owner_surface(entity_type, entity_id)
             if rendered.get("question_id") == "q4_decision_owner":
-                if entity_type_key in {"sport-club", "sport-league"}:
+                if decision_owner_surface == "global_elite_club":
+                    rendered["source_priority"] = DECISION_OWNER_SOURCE_PRIORITY_OFFICIAL_FIRST
+                    query_set = DECISION_OWNER_SEARCH_QUERIES_GLOBAL_ELITE_CLUB
+                elif decision_owner_surface == "weaker_public_surface_club":
+                    rendered["source_priority"] = DECISION_OWNER_SOURCE_PRIORITY_OPERATIONS_FIRST
+                    query_set = DECISION_OWNER_SEARCH_QUERIES_WEAKER_PUBLIC_SURFACE_CLUB
+                elif decision_owner_surface == "top_commercial_league":
+                    rendered["source_priority"] = DECISION_OWNER_SOURCE_PRIORITY_OFFICIAL_FIRST
+                    query_set = DECISION_OWNER_SEARCH_QUERIES_TOP_COMMERCIAL_LEAGUE
+                elif decision_owner_surface == "developing_or_fragmented_league":
+                    rendered["source_priority"] = DECISION_OWNER_SOURCE_PRIORITY_OPERATIONS_FIRST
+                    query_set = DECISION_OWNER_SEARCH_QUERIES_DEVELOPING_LEAGUE
+                elif decision_owner_surface == "commercial_global_federation":
+                    rendered["source_priority"] = DECISION_OWNER_SOURCE_PRIORITY_OFFICIAL_FIRST
+                    query_set = DECISION_OWNER_SEARCH_QUERIES_COMMERCIAL_GLOBAL_FEDERATION
+                elif decision_owner_surface == "technical_tender_federation":
+                    rendered["source_priority"] = DECISION_OWNER_SOURCE_PRIORITY_OFFICIAL_FIRST
+                    query_set = DECISION_OWNER_SEARCH_QUERIES_TECHNICAL_TENDER_FEDERATION
+                elif entity_type_key == "sport-club":
                     rendered["source_priority"] = DECISION_OWNER_SOURCE_PRIORITY_BROAD
-                if entity_type_key == "sport-club":
                     query_set = DECISION_OWNER_SEARCH_QUERIES_CLUB
                 elif entity_type_key == "sport-league":
+                    rendered["source_priority"] = DECISION_OWNER_SOURCE_PRIORITY_BROAD
                     query_set = DECISION_OWNER_SEARCH_QUERIES_LEAGUE
                 elif entity_type_key == "sport-federation":
                     query_set = DECISION_OWNER_SEARCH_QUERIES_FEDERATION

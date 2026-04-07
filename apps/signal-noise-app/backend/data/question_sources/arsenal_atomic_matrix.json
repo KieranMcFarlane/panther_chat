@@ -1,6 +1,6 @@
 {
   "schema_version": "atomic_question_source_v1",
-  "generated_at": "2026-04-07T05:21:30.158703+00:00",
+  "generated_at": "2026-04-07T10:43:21.792808+00:00",
   "entity_id": "arsenal-fc",
   "entity_name": "Arsenal Football Club",
   "entity_type": "SPORT_CLUB",
@@ -146,28 +146,28 @@
       "hop_budget": 8,
       "evidence_extension_budget": 2,
       "source_priority": [
-        "google_serp",
         "official_site",
         "news",
         "press_release",
+        "google_serp",
         "linkedin_company_profile",
         "linkedin_people_search",
         "linkedin_person_profile"
       ],
       "search_strategy": {
         "search_queries": [
-          "\"Arsenal Football Club\" LinkedIn company profile",
-          "\"Arsenal Football Club\" front office staff",
-          "\"Arsenal Football Club\" leadership team",
-          "\"Arsenal Football Club\" commercial team",
-          "\"Arsenal Football Club\" partnerships",
-          "\"Arsenal Football Club\" sponsorship",
-          "\"Arsenal Football Club\" chief business officer",
+          "\"Arsenal Football Club\" official website leadership team",
+          "\"Arsenal Football Club\" executive committee",
+          "\"Arsenal Football Club\" commercial leadership",
+          "\"Arsenal Football Club\" partnerships team",
+          "\"Arsenal Football Club\" sponsorship team",
           "\"Arsenal Football Club\" chief commercial officer",
+          "\"Arsenal Football Club\" chief business officer",
           "\"Arsenal Football Club\" commercial director",
-          "\"Arsenal Football Club\" head of partnerships",
+          "\"Arsenal Football Club\" global partnerships",
           "\"Arsenal Football Club\" business development director",
-          "\"Arsenal Football Club\" CEO"
+          "\"Arsenal Football Club\" chief marketing officer",
+          "\"Arsenal Football Club\" LinkedIn company profile"
         ]
       },
       "evidence_focus": "decision_owner",

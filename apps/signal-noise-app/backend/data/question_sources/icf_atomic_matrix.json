@@ -1,6 +1,6 @@
 {
   "schema_version": "atomic_question_source_v1",
-  "generated_at": "2026-04-07T05:21:30.161269+00:00",
+  "generated_at": "2026-04-07T10:43:21.794100+00:00",
   "entity_id": "international-canoe-federation",
   "entity_name": "International Canoe Federation",
   "entity_type": "SPORT_FEDERATION",
@@ -133,11 +133,13 @@
       "hop_budget": 6,
       "evidence_extension_budget": 1,
       "source_priority": [
+        "official_site",
+        "news",
+        "press_release",
+        "google_serp",
         "linkedin_company_profile",
         "linkedin_people_search",
-        "linkedin_person_profile",
-        "google_serp",
-        "official_site"
+        "linkedin_person_profile"
       ],
       "search_strategy": {
         "search_queries": [
