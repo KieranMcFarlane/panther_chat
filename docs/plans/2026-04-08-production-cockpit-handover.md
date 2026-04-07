@@ -92,6 +92,7 @@ Vercel deployment note:
   - `/api/cron/dossiers/refresh`: `200`, queued 25 dossier refresh jobs
   - `/api/cron/graphiti/materialize`: `200`, materialized 2 fallback operational insights
   - `/api/cron/daily-sales-digest`: `200`, digest generated but not sent because `SALES_DIGEST_TO` is not configured
+- after `SALES_DIGEST_TO` was added in Vercel production, production was redeployed and `/api/cron/daily-sales-digest` returned `200` with `sent: true`
 - anonymous route smoke passed:
   - `/` redirects to `/sign-in?redirect=%2F`
   - `/entity-browser` redirects to `/sign-in?redirect=%2Fentity-browser`
