@@ -1,0 +1,126 @@
+{
+  "schema_version": "question_first_scale_batch_v1",
+  "batch_name": "question-first-rerun-q4-failures",
+  "description": "Focused rerun subset for q4_decision_owner failures from the recovered 25-entity control batch.",
+  "source_summary_path": "/tmp/question-first-scale-batch-25/question_first_archetype_smoke.json",
+  "target_question_id": "q4_decision_owner",
+  "entities": [
+    {
+      "entity_id": "bundesliga",
+      "entity_name": "Bundesliga",
+      "entity_type": "SPORT_LEAGUE",
+      "surface_type": "top_commercial_league",
+      "failed_questions": [
+        "q4_decision_owner"
+      ]
+    },
+    {
+      "entity_id": "celtic-fc",
+      "entity_name": "Celtic FC",
+      "entity_type": "SPORT_CLUB",
+      "surface_type": "weaker_public_surface_club",
+      "failed_questions": [
+        "q4_decision_owner"
+      ]
+    },
+    {
+      "entity_id": "ecb",
+      "entity_name": "England and Wales Cricket Board",
+      "entity_type": "SPORT_FEDERATION",
+      "surface_type": "commercial_global_federation",
+      "failed_questions": [
+        "q4_decision_owner"
+      ]
+    },
+    {
+      "entity_id": "fc-barcelona",
+      "entity_name": "FC Barcelona",
+      "entity_type": "SPORT_CLUB",
+      "surface_type": "global_elite_club",
+      "failed_questions": [
+        "q4_decision_owner"
+      ]
+    },
+    {
+      "entity_id": "fis",
+      "entity_name": "International Ski and Snowboard Federation",
+      "entity_type": "SPORT_FEDERATION",
+      "surface_type": "technical_tender_federation",
+      "failed_questions": [
+        "q4_decision_owner"
+      ]
+    },
+    {
+      "entity_id": "juventus",
+      "entity_name": "Juventus FC",
+      "entity_type": "SPORT_CLUB",
+      "surface_type": "global_elite_club",
+      "failed_questions": [
+        "q4_decision_owner"
+      ]
+    },
+    {
+      "entity_id": "major-league-cricket",
+      "entity_name": "Major League Cricket",
+      "entity_type": "SPORT_LEAGUE",
+      "surface_type": "developing_or_fragmented_league",
+      "failed_questions": [
+        "q4_decision_owner"
+      ]
+    },
+    {
+      "entity_id": "manchester-city",
+      "entity_name": "Manchester City FC",
+      "entity_type": "SPORT_CLUB",
+      "surface_type": "global_elite_club",
+      "failed_questions": [
+        "q4_decision_owner"
+      ]
+    },
+    {
+      "entity_id": "mls",
+      "entity_name": "Major League Soccer",
+      "entity_type": "SPORT_LEAGUE",
+      "surface_type": "developing_or_fragmented_league",
+      "failed_questions": [
+        "q4_decision_owner"
+      ]
+    },
+    {
+      "entity_id": "nwsl",
+      "entity_name": "National Women's Soccer League",
+      "entity_type": "SPORT_LEAGUE",
+      "surface_type": "developing_or_fragmented_league",
+      "failed_questions": [
+        "q4_decision_owner"
+      ]
+    },
+    {
+      "entity_id": "psg",
+      "entity_name": "Paris Saint-Germain",
+      "entity_type": "SPORT_CLUB",
+      "surface_type": "global_elite_club",
+      "failed_questions": [
+        "q4_decision_owner"
+      ]
+    },
+    {
+      "entity_id": "uefa",
+      "entity_name": "UEFA",
+      "entity_type": "SPORT_FEDERATION",
+      "surface_type": "commercial_global_federation",
+      "failed_questions": [
+        "q4_decision_owner"
+      ]
+    },
+    {
+      "entity_id": "wsl",
+      "entity_name": "Women's Super League",
+      "entity_type": "SPORT_LEAGUE",
+      "surface_type": "developing_or_fragmented_league",
+      "failed_questions": [
+        "q4_decision_owner"
+      ]
+    }
+  ]
+}

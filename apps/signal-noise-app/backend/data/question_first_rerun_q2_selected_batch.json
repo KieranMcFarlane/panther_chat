@@ -1,0 +1,46 @@
+{
+  "schema_version": "question_first_scale_batch_v1",
+  "batch_name": "question-first-rerun-q2-selected",
+  "description": "Selected rerun subset for q2_digital_stack misses on leagues/federations from the recovered 25-entity control batch.",
+  "source_summary_path": "/tmp/question-first-scale-batch-25/question_first_archetype_smoke.json",
+  "target_question_id": "q2_digital_stack",
+  "selection_rule": "league_and_federation_q2_failures_only",
+  "entities": [
+    {
+      "entity_id": "ecb",
+      "entity_name": "England and Wales Cricket Board",
+      "entity_type": "SPORT_FEDERATION",
+      "surface_type": "commercial_global_federation",
+      "failed_questions": [
+        "q2_digital_stack"
+      ]
+    },
+    {
+      "entity_id": "icf",
+      "entity_name": "International Canoe Federation",
+      "entity_type": "SPORT_FEDERATION",
+      "surface_type": "technical_tender_federation",
+      "failed_questions": [
+        "q2_digital_stack"
+      ]
+    },
+    {
+      "entity_id": "mls",
+      "entity_name": "Major League Soccer",
+      "entity_type": "SPORT_LEAGUE",
+      "surface_type": "developing_or_fragmented_league",
+      "failed_questions": [
+        "q2_digital_stack"
+      ]
+    },
+    {
+      "entity_id": "world-athletics",
+      "entity_name": "World Athletics",
+      "entity_type": "SPORT_FEDERATION",
+      "surface_type": "commercial_global_federation",
+      "failed_questions": [
+        "q2_digital_stack"
+      ]
+    }
+  ]
+}

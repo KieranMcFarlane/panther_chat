@@ -1,0 +1,108 @@
+{
+  "schema_version": "question_first_scale_batch_v1",
+  "batch_name": "question-first-rerun-q3-failures",
+  "description": "Focused rerun subset for q3_procurement_signal failures from the recovered 25-entity control batch.",
+  "source_summary_path": "/tmp/question-first-scale-batch-25/question_first_archetype_smoke.json",
+  "target_question_id": "q3_procurement_signal",
+  "entities": [
+    {
+      "entity_id": "bundesliga",
+      "entity_name": "Bundesliga",
+      "entity_type": "SPORT_LEAGUE",
+      "surface_type": "top_commercial_league",
+      "failed_questions": [
+        "q3_procurement_signal"
+      ]
+    },
+    {
+      "entity_id": "celtic-fc",
+      "entity_name": "Celtic FC",
+      "entity_type": "SPORT_CLUB",
+      "surface_type": "weaker_public_surface_club",
+      "failed_questions": [
+        "q3_procurement_signal"
+      ]
+    },
+    {
+      "entity_id": "fifa",
+      "entity_name": "FIFA",
+      "entity_type": "SPORT_FEDERATION",
+      "surface_type": "commercial_global_federation",
+      "failed_questions": [
+        "q3_procurement_signal"
+      ]
+    },
+    {
+      "entity_id": "fis",
+      "entity_name": "International Ski and Snowboard Federation",
+      "entity_type": "SPORT_FEDERATION",
+      "surface_type": "technical_tender_federation",
+      "failed_questions": [
+        "q3_procurement_signal"
+      ]
+    },
+    {
+      "entity_id": "formula-1",
+      "entity_name": "Formula 1",
+      "entity_type": "SPORT_LEAGUE",
+      "surface_type": "top_commercial_league",
+      "failed_questions": [
+        "q3_procurement_signal"
+      ]
+    },
+    {
+      "entity_id": "icf",
+      "entity_name": "International Canoe Federation",
+      "entity_type": "SPORT_FEDERATION",
+      "surface_type": "technical_tender_federation",
+      "failed_questions": [
+        "q3_procurement_signal"
+      ]
+    },
+    {
+      "entity_id": "juventus",
+      "entity_name": "Juventus FC",
+      "entity_type": "SPORT_CLUB",
+      "surface_type": "global_elite_club",
+      "failed_questions": [
+        "q3_procurement_signal"
+      ]
+    },
+    {
+      "entity_id": "major-league-cricket",
+      "entity_name": "Major League Cricket",
+      "entity_type": "SPORT_LEAGUE",
+      "surface_type": "developing_or_fragmented_league",
+      "failed_questions": [
+        "q3_procurement_signal"
+      ]
+    },
+    {
+      "entity_id": "nwsl",
+      "entity_name": "National Women's Soccer League",
+      "entity_type": "SPORT_LEAGUE",
+      "surface_type": "developing_or_fragmented_league",
+      "failed_questions": [
+        "q3_procurement_signal"
+      ]
+    },
+    {
+      "entity_id": "psg",
+      "entity_name": "Paris Saint-Germain",
+      "entity_type": "SPORT_CLUB",
+      "surface_type": "global_elite_club",
+      "failed_questions": [
+        "q3_procurement_signal"
+      ]
+    },
+    {
+      "entity_id": "real-madrid-cf",
+      "entity_name": "Real Madrid CF",
+      "entity_type": "SPORT_CLUB",
+      "surface_type": "global_elite_club",
+      "failed_questions": [
+        "q3_procurement_signal"
+      ]
+    }
+  ]
+}
