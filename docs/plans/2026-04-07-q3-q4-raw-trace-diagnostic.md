@@ -180,3 +180,52 @@ But the follow-up slice now justifies a narrower internal next step:
 
 This should be implemented as diagnostic/assistive recovery first, not counted
 in baseline validation metrics.
+
+## Follow-Up: Timeout Salvage Metadata
+
+Implemented an internal `timeout_salvage` field for bounded timeout artifacts.
+This is diagnostic metadata only and does not affect strict validation counts.
+
+Emission gate:
+
+- `validation_state = tool_call_missing`
+- `raw_execution_trace.exit_code = 124`
+- retained stdout contains BrightData search or scrape evidence
+
+Artifact shape:
+
+- `salvage_state = evidence_retained`
+- `counts_as_validated = false`
+- `candidate_summary`
+- `candidate_evidence_urls`
+- `risk_notes`
+
+Durable diagnostic output root:
+
+- `apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-07-q3-q4-timeout-salvage/`
+
+Final diagnostic rerun outputs:
+
+- `q3-final/question_first_archetype_smoke.json`
+- `q4-final/question_first_archetype_smoke.json`
+
+Results:
+
+| Entity | Question | Strict Outcome | Timeout Salvage | Assessment |
+| --- | --- | --- | --- | --- |
+| `celtic-fc` | `q3_procurement_signal` | `validated` | none | Strict path recovered; no salvage needed. |
+| `major-league-cricket` | `q3_procurement_signal` | `tool_call_missing` timeout | yes | Retained streaming-platform evidence; useful as internal review signal, not validated. |
+| `fc-barcelona` | `q4_decision_owner` | `tool_call_missing` timeout | none | No safe salvage candidate from the bounded excerpt. |
+| `mls` | `q4_decision_owner` | `tool_call_missing` timeout | yes | Retained plausible executive/Apple partnership signal for Camilo Durana; useful as internal review signal, not validated. |
+
+Policy decision remains unchanged:
+
+- keep strict validated mode as the baseline system of record
+- do not expose timeout salvage in the client UI yet
+- do not count salvage as validated
+- treat salvage as internal review/debug metadata until more examples show it is consistently useful and low-noise
+
+Next decision gate:
+
+- if future diagnostic slices repeatedly produce useful `timeout_salvage` for timed-out `q3/q4` cases, design a visible `weak signal / needs review` dossier section
+- if salvage stays sparse or noisy, keep it internal only
