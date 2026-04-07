@@ -73,6 +73,29 @@ def _slugify(value: str) -> str:
     return re.sub(r"-+", "-", value).strip("-") or "entity"
 
 
+def _parse_opencode_batch_stdout(stdout_text: str) -> Dict[str, Any]:
+    lines = [line.strip() for line in str(stdout_text or "").splitlines() if line.strip()]
+    if not lines:
+        return {}
+    try:
+        parsed = json.loads(lines[-1])
+    except Exception:
+        return {}
+    return parsed if isinstance(parsed, dict) else {}
+
+
+async def _terminate_process(proc: subprocess.Popen[str], *, grace_seconds: float = 2.0) -> Tuple[str, str]:
+    if proc.poll() is None:
+        proc.terminate()
+        try:
+            stdout, stderr = await asyncio.to_thread(proc.communicate, timeout=grace_seconds)
+            return stdout or "", stderr or ""
+        except subprocess.TimeoutExpired:
+            proc.kill()
+    stdout, stderr = await asyncio.to_thread(proc.communicate)
+    return stdout or "", stderr or ""
+
+
 def _build_question_first_state_path(
     *,
     output_dir: Path,
@@ -333,38 +356,68 @@ async def _launch_opencode_question_first_batch(
             if preset:
                 command.extend(["--preset", preset])
 
-            proc = subprocess.run(
+            proc = subprocess.Popen(
                 command,
                 cwd=str(worktree_root),
-                capture_output=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
                 text=True,
-                check=False,
                 env=dict(os.environ),
             )
-            if proc.returncode != 0:
-                raise RuntimeError(
-                    "OpenCode question-first batch failed with exit code "
-                    f"{proc.returncode}: {proc.stderr.strip() or proc.stdout.strip()}"
-                )
-            try:
-                result = json.loads(proc.stdout.strip().splitlines()[-1])
-            except Exception:
-                result = {}
-            question_first_run_path = result.get("question_first_run_path")
-            state_path = Path(
-                result.get("state_path")
-                or _build_question_first_state_path(
-                    output_dir=output_dir,
-                    source_payload=source_payload,
-                    preset=preset,
-                )
+            state_path = _build_question_first_state_path(
+                output_dir=output_dir,
+                source_payload=source_payload,
+                preset=preset,
             )
-            if question_first_run_path:
-                return Path(question_first_run_path), state_path
-            artifact_path = _find_existing_question_first_run_artifact(output_dir, source_payload)
-            if artifact_path is not None:
-                return artifact_path, state_path
-            raise FileNotFoundError("OpenCode batch completed without producing a canonical question_first_run artifact")
+            deadline = time.monotonic() + max(opencode_timeout_ms, 1) / 1000.0
+            stdout_text = ""
+            stderr_text = ""
+            result: Dict[str, Any] = {}
+
+            while time.monotonic() <= deadline:
+                if state_path.exists():
+                    try:
+                        state_payload = json.loads(state_path.read_text(encoding="utf-8"))
+                    except Exception:
+                        state_payload = {}
+                    if str(state_payload.get("run_phase") or "").strip().lower() == "completed":
+                        stdout_text, stderr_text = await _terminate_process(proc)
+                        result = _parse_opencode_batch_stdout(stdout_text)
+                        question_first_run_path = result.get("question_first_run_path") or state_payload.get("question_first_run_path")
+                        if question_first_run_path:
+                            return Path(str(question_first_run_path)), state_path
+                        artifact_path = _find_existing_question_first_run_artifact(output_dir, source_payload)
+                        if artifact_path is not None:
+                            return artifact_path, state_path
+                        raise FileNotFoundError(
+                            "OpenCode batch reached completed state without producing a canonical question_first_run artifact"
+                        )
+
+                returncode = proc.poll()
+                if returncode is not None:
+                    stdout_text, stderr_text = await asyncio.to_thread(proc.communicate)
+                    result = _parse_opencode_batch_stdout(stdout_text)
+                    if returncode != 0:
+                        raise RuntimeError(
+                            "OpenCode question-first batch failed with exit code "
+                            f"{returncode}: {stderr_text.strip() or stdout_text.strip()}"
+                        )
+                    question_first_run_path = result.get("question_first_run_path")
+                    state_path = Path(result.get("state_path") or state_path)
+                    if question_first_run_path:
+                        return Path(str(question_first_run_path)), state_path
+                    artifact_path = _find_existing_question_first_run_artifact(output_dir, source_payload)
+                    if artifact_path is not None:
+                        return artifact_path, state_path
+                    raise FileNotFoundError("OpenCode batch completed without producing a canonical question_first_run artifact")
+
+                await asyncio.sleep(0.25)
+
+            stdout_text, stderr_text = await _terminate_process(proc)
+            raise TimeoutError(
+                "Timed out waiting for OpenCode question-first batch to complete "
+                f"at {state_path}: {stderr_text.strip() or stdout_text.strip()}"
+            )
     finally:
         try:
             temp_source_path.unlink(missing_ok=True)

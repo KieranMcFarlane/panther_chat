@@ -987,14 +987,25 @@ async def test_launch_opencode_question_first_batch_falls_back_to_timestamped_ar
         ],
     )
 
-    def _fake_run(*args, **kwargs):
-        return SimpleNamespace(
-            returncode=0,
-            stdout="[dotenv] loaded env\nnot-json\n",
-            stderr="",
-        )
+    class _FakeProcess:
+        def __init__(self):
+            self.returncode = 0
+            self._stdout = "[dotenv] loaded env\nnot-json\n"
+            self._stderr = ""
 
-    monkeypatch.setattr(runner.subprocess, "run", _fake_run)
+        def poll(self):
+            return 0
+
+        def communicate(self, timeout=None):
+            return self._stdout, self._stderr
+
+        def terminate(self):
+            return None
+
+        def kill(self):
+            return None
+
+    monkeypatch.setattr(runner.subprocess, "Popen", lambda *args, **kwargs: _FakeProcess())
 
     source_payload = {
         "entity_id": "leedsunited",
@@ -1018,3 +1029,115 @@ async def test_launch_opencode_question_first_batch_falls_back_to_timestamped_ar
 
     assert question_first_run_path == artifact_path
     assert state_path.name.endswith("_state.json")
+
+
+@pytest.mark.asyncio
+async def test_launch_opencode_question_first_batch_returns_after_terminal_state_even_if_child_lingers(tmp_path, monkeypatch):
+    output_dir = tmp_path / "out"
+    output_dir.mkdir(parents=True)
+    artifact_path = output_dir / "bundesliga_opencode_batch_20260407_120000_question_first_run_v1.json"
+    _write_question_first_run_artifact(
+        artifact_path,
+        entity_id="bundesliga",
+        entity_name="Bundesliga",
+        entity_type="SPORT_LEAGUE",
+        questions=[
+            {
+                "question_id": "q1_foundation",
+                "section_id": "core_information",
+                "question_text": "When was Bundesliga founded?",
+            }
+        ],
+        answers=[
+            {
+                "question_id": "q1_foundation",
+                "section_id": "core_information",
+                "question_text": "When was Bundesliga founded?",
+                "answer": "1963",
+                "confidence": 0.95,
+                "evidence_url": "https://www.bundesliga.com/",
+                "validation_state": "validated",
+                "signal_type": "FOUNDATION",
+            }
+        ],
+        categories=[
+            {
+                "category": "identity",
+                "question_count": 1,
+                "validated_count": 1,
+                "pending_count": 0,
+                "no_signal_count": 0,
+                "retry_count": 0,
+            }
+        ],
+    )
+    source_payload = {
+        "entity_id": "bundesliga",
+        "entity_name": "Bundesliga",
+        "entity_type": "SPORT_LEAGUE",
+        "questions": [
+            {
+                "question_id": "q1_foundation",
+                "question_text": "When was Bundesliga founded?",
+            }
+        ],
+    }
+    state_path = runner._build_question_first_state_path(
+        output_dir=output_dir,
+        source_payload=source_payload,
+        preset="bundesliga-atomic-matrix",
+    )
+    state_path.write_text(
+        json.dumps(
+            {
+                "run_phase": "completed",
+                "question_first_run_path": str(artifact_path),
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    class _LingeringProcess:
+        def __init__(self):
+            self.returncode = None
+            self.terminated = False
+
+        def poll(self):
+            return None if not self.terminated else 0
+
+        def communicate(self, timeout=None):
+            if timeout is not None and not self.terminated:
+                raise runner.subprocess.TimeoutExpired(cmd="node", timeout=timeout)
+            return (
+                json.dumps(
+                    {
+                        "question_first_run_path": str(artifact_path),
+                        "state_path": str(state_path),
+                    }
+                )
+                + "\n",
+                "",
+            )
+
+        def terminate(self):
+            self.terminated = True
+            self.returncode = 0
+
+        def kill(self):
+            self.terminated = True
+            self.returncode = 0
+
+    process = _LingeringProcess()
+    monkeypatch.setattr(runner.subprocess, "Popen", lambda *args, **kwargs: process)
+
+    question_first_run_path, returned_state_path = await runner._launch_opencode_question_first_batch(
+        source_payload=source_payload,
+        output_dir=output_dir,
+        preset="bundesliga-atomic-matrix",
+        worktree_root=tmp_path,
+        opencode_timeout_ms=1000,
+    )
+
+    assert question_first_run_path == artifact_path
+    assert returned_state_path == state_path
+    assert process.terminated is True
