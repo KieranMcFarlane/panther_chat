@@ -1810,7 +1810,11 @@ function _spawnOpencodeRun(args, { cwd, env, timeoutMs = 300000 } = {}) {
     };
     const timer = setTimeout(() => {
       child.kill('SIGTERM');
-      rejectOnce(new Error(`opencode run timed out after ${timeoutMs}ms`));
+      settle({
+        code: 124,
+        stdout,
+        stderr: `${stderr}${stderr ? '\n' : ''}opencode run timed out after ${timeoutMs}ms`,
+      });
     }, timeoutMs);
     child.stdout.on('data', (chunk) => {
       stdout += chunk.toString();
@@ -1841,6 +1845,7 @@ async function _runQuestionRunnerWithTimeout(questionRunner, executionQuestion, 
   const normalizedTimeoutMs = Number.isFinite(Number(timeoutMs))
     ? Math.max(1, Number(timeoutMs))
     : 300000;
+  const guardTimeoutMs = normalizedTimeoutMs + Math.min(5000, Math.max(1000, Math.ceil(normalizedTimeoutMs * 0.1)));
   const runnerPromise = Promise.resolve().then(() => questionRunner(executionQuestion, options));
   const timeoutResult = {
     timedOut: true,
@@ -1872,7 +1877,7 @@ async function _runQuestionRunnerWithTimeout(questionRunner, executionQuestion, 
       timedOut: false,
       questionRun,
     })),
-    delay(normalizedTimeoutMs).then(() => timeoutResult),
+    delay(guardTimeoutMs).then(() => timeoutResult),
   ]);
   if (raceResult.timedOut) {
     runnerPromise.catch(() => {});

@@ -158,13 +158,13 @@ def _write_filtered_question_source(
             bounded_question["hop_budget"] = min(max(int(question.get("hop_budget") or 1), 1), 4)
             bounded_question["evidence_extension_budget"] = min(max(int(question.get("evidence_extension_budget") or 0), 0), 1)
             if question.get("question_timeout_ms") is not None:
-                bounded_question["question_timeout_ms"] = min(max(int(question.get("question_timeout_ms") or 1000), 1000), 60000)
+                bounded_question["question_timeout_ms"] = min(max(int(question.get("question_timeout_ms") or 1000), 1000), 120000)
             else:
-                bounded_question["question_timeout_ms"] = 60000
+                bounded_question["question_timeout_ms"] = 120000
             if question.get("hop_timeout_ms") is not None:
-                bounded_question["hop_timeout_ms"] = min(max(int(question.get("hop_timeout_ms") or 1000), 1000), 30000)
+                bounded_question["hop_timeout_ms"] = min(max(int(question.get("hop_timeout_ms") or 1000), 1000), 60000)
             else:
-                bounded_question["hop_timeout_ms"] = 30000
+                bounded_question["hop_timeout_ms"] = 60000
         bounded_questions.append(bounded_question)
 
     filtered = {

@@ -121,3 +121,62 @@ Only after that rerun should the team decide whether the remaining failures are:
 - retrieval/extraction problems,
 - validator/acceptance problems,
 - or still runtime/tooling problems.
+
+## Follow-Up: Runtime Repaired
+
+The local OpenCode cache was repaired by reinstalling dependencies from:
+
+- `/Users/kieranmcfarlane/.cache/opencode/package.json`
+- `/Users/kieranmcfarlane/.cache/opencode/bun.lock`
+
+Verified cache packages:
+
+- `/Users/kieranmcfarlane/.cache/opencode/node_modules/opencode-copilot-auth`
+- `/Users/kieranmcfarlane/.cache/opencode/node_modules/opencode-anthropic-auth`
+
+Direct smoke from `.worktrees/opencode-question-first-ssot` succeeded with
+BrightData and returned the expected Arsenal founded-year JSON.
+
+## Follow-Up Diagnostic Slice
+
+Durable output root:
+
+- `apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-07-q3-q4-runtime-fixed-timeout-artifacts/`
+
+The rerun required two launcher hardening changes:
+
+- bounded single-question reruns now allow `120000ms` question timeout and `60000ms` hop timeout
+- OpenCode child timeout now resolves into a `code=124` trace artifact instead of failing the whole entity
+
+Results:
+
+| Entity | Question | Outcome | Trace Classification |
+| --- | --- | --- | --- |
+| `celtic-fc` | `q3_procurement_signal` | `tool_call_missing` | timeout with retained BrightData search output |
+| `major-league-cricket` | `q3_procurement_signal` | `validated` | structured answer produced |
+| `fc-barcelona` | `q4_decision_owner` | `tool_call_missing` | timeout with retained BrightData search output |
+| `mls` | `q4_decision_owner` | `tool_call_missing` | timeout with retained but noisy search output |
+
+The missing-module failure is gone.
+
+The remaining failures are now evidence/extraction-timeout cases, not OpenCode
+startup failures.
+
+Observed useful partial evidence:
+
+- `celtic-fc` retained search output mentioning mobile app/platform manager and commercial partnership signals.
+- `fc-barcelona` retained search output with plausible partnership-owner leads, including partnership director results.
+- `mls` retained a large search trace but the visible tail was noisy and included real-estate MLS false positives.
+
+## Updated Product Policy Decision
+
+Do **not** add a broad product-level `best_available_signal` mode yet.
+
+But the follow-up slice now justifies a narrower internal next step:
+
+- add a timeout-salvage extraction pass for retained `raw_execution_trace.stdout_excerpt`
+- keep the salvaged result explicitly marked as non-strict and non-validated
+- use it only when `validation_state = tool_call_missing`, `exit_code = 124`, and retained stdout contains BrightData search/scrape evidence
+
+This should be implemented as diagnostic/assistive recovery first, not counted
+in baseline validation metrics.

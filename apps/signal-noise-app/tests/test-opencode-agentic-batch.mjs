@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -2023,6 +2023,90 @@ test('runOpenCodeQuestionSourceBatch settles a question when the runner does not
     assert.equal(checkpoint.run_phase, 'completed');
     assert.equal(checkpoint.questions[0].status, 'no_signal');
     assert.equal(checkpoint.questions[0].current_confidence, 0);
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
+test('runOpenCodeQuestionSourceBatch preserves runner timeout trace when child settles just after guard', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-question-source-timeout-trace-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'arsenal-fc',
+        entity_name: 'Arsenal Football Club',
+        entity_type: 'SPORT_CLUB',
+        preset: 'arsenal-atomic-matrix',
+        question_source_label: 'arsenal-atomic-matrix',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        question_count: 1,
+        questions: [
+          {
+            question_id: 'q1_foundation',
+            question_type: 'foundation',
+            question: 'What year was {entity} founded?',
+            query: '"Arsenal Football Club" founded year',
+            hop_budget: 1,
+            question_timeout_ms: 50,
+            hop_timeout_ms: 50,
+            source_priority: ['google_serp'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  const questionRunner = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 75));
+    return {
+      structuredOutput: {
+        answer: '',
+        confidence: 0,
+        validation_state: 'no_signal',
+        sources: [],
+      },
+      promptTrace: {
+        exit_code: 124,
+        stdout_length: 12,
+        stderr_length: 19,
+        has_structured_output: false,
+      },
+      messageTrace: [],
+      cliResult: {
+        code: 124,
+        stdout: 'partial text',
+        stderr: 'child timed out late',
+      },
+    };
+  };
+
+  try {
+    await runOpenCodeQuestionSourceBatch({
+      questionSourcePath: sourcePath,
+      outputDir,
+      opencodeTimeoutMs: 50,
+      questionRunner,
+    });
+
+    const runPath = readdirSync(outputDir).find((name) => name.endsWith('_question_first_run_v1.json'));
+    const artifact = JSON.parse(readFileSync(join(outputDir, runPath), 'utf8'));
+    assert.equal(artifact.questions[0].raw_execution_trace.stderr_excerpt, 'child timed out late');
   } finally {
     if (previousZaiKey === undefined) {
       delete process.env.ANTHROPIC_AUTH_TOKEN;
