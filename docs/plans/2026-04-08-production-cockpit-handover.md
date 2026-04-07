@@ -174,3 +174,41 @@ Client demo status:
 - the five pinned smoke entities and demo seed dossier contracts remain stable
 - the app is ready for redeploy with the click-interception fix before rerunning the full authenticated browser smoke
 - no full-batch real artifact replacement should happen before the client-facing smoke passes on the redeployed build
+
+## Client Demo Smoke Result - 2026-04-07 18:15 BST
+
+Redeployed build:
+
+- commit: `92143ea9` (`fix(app): prevent auth background click interception`)
+- production alias: `https://panther-chat.vercel.app`
+- Ready deployment: `panther-chat-8v5e1b2tc-kieranmcfarlanes-projects.vercel.app`
+
+Authenticated Playwright smoke result:
+
+- created disposable production smoke users using `kieranmcfarlane2+panther-smoke-*` aliases
+- sign-up and redirect to `/` succeeded
+- homepage cockpit/feed surface rendered expected cockpit terms
+- `/entity-browser` rendered all five pinned smoke entities:
+  - Arsenal
+  - Coventry City
+  - Zimbabwe Cricket
+  - Major League Cricket
+  - Zimbabwe Handball Federation
+- all five UUID-backed dossier pages opened without broken states and rendered question-first dossier content signals
+- dossier pages exposed operator-control text/signals for the smoke route
+- authenticated `/api/notifications/graphiti` returned `200` with 2 notifications
+- first notification destination opened `/entity-browser/1db6d6eb-89c5-5c9f-95cb-217d0985a176/dossier?from=1` without a broken state
+
+Client-visible checkpoint:
+
+- production auth path is usable
+- homepage cockpit is reachable after auth
+- entity browser smoke set is visible
+- five pinned dossiers route by UUID and render tabbed dossier signals
+- notification-to-dossier routing is working
+- daily digest send path has already been verified; repeated same-day cron calls are idempotently skipped after send
+
+Remaining tuning work:
+
+- regenerate or recover real full-batch canonical artifacts before replacing the current tracked demo seed dossiers
+- continue q3/q4 quality hardening separately from the client demo checkpoint
