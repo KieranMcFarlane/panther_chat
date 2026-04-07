@@ -86,6 +86,16 @@ Vercel deployment note:
 
 - the `panther-chat` project is on a Hobby plan, so cron jobs must not run more than once per day
 - cron schedules were adjusted to daily production-safe runs so deployment can proceed without requiring a plan upgrade
+- production alias `https://panther-chat.vercel.app` was verified on deployment `panther-chat-fzjt5v76u-kieranmcfarlanes-projects.vercel.app`
+- the earlier production Supabase keys were stale; production Supabase URL, anon key, and service-role key were refreshed from the Supabase Management API for project `itlcuazbybqlkicsaola`
+- authorized cron smoke passed after the Supabase refresh:
+  - `/api/cron/dossiers/refresh`: `200`, queued 25 dossier refresh jobs
+  - `/api/cron/graphiti/materialize`: `200`, materialized 2 fallback operational insights
+  - `/api/cron/daily-sales-digest`: `200`, digest generated but not sent because `SALES_DIGEST_TO` is not configured
+- anonymous route smoke passed:
+  - `/` redirects to `/sign-in?redirect=%2F`
+  - `/entity-browser` redirects to `/sign-in?redirect=%2Fentity-browser`
+  - `/api/home/graphiti-insights`, `/api/notifications/graphiti`, and `/api/email/daily-sales-digest` return `401` without an authenticated session
 
 Required production checks:
 
