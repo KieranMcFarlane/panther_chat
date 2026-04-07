@@ -123,7 +123,7 @@ function getDatabase(): AuthDatabaseConfig {
           type: "sqlite",
         },
         label: "libsql",
-        runMigrations: true,
+        runMigrations: !isBuildPhase(),
       };
     } catch (error) {
       if (!isBuildPhase()) {
@@ -156,7 +156,7 @@ function getDatabase(): AuthDatabaseConfig {
           casing: "snake",
         },
         label: "postgres",
-        runMigrations: true,
+        runMigrations: !isBuildPhase(),
       };
     } catch (error) {
       if (!isBuildPhase()) {
@@ -174,7 +174,7 @@ function getDatabase(): AuthDatabaseConfig {
     return {
       database: sqliteHandle,
       label: "sqlite",
-      runMigrations: true,
+      runMigrations: !isBuildPhase(),
     };
   } catch (error) {
     if (!isBuildPhase()) {
@@ -283,6 +283,6 @@ export const authReady = runAuthMigrations()
   .catch((error) => {
     if (!isBuildPhase()) {
       console.error("Better Auth: Failed to initialize database", error);
+      throw error;
     }
-    throw error;
   });

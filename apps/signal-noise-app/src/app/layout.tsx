@@ -6,6 +6,7 @@ import SWRProvider from '@/components/providers/SWRProvider'
 import { UserProvider } from '@/contexts/UserContext'
 import { TabProvider } from '@/contexts/TabContext'
 import { ThreadProvider } from '@/contexts/ThreadContext'
+import CopilotRuntimeProvider from '@/components/copilotkit/CopilotRuntimeProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -32,7 +33,9 @@ export default function RootLayout({
           <TabProvider>
             <ThreadProvider>
               <SWRProvider>
-                <AppShell>{children}</AppShell>
+                <CopilotRuntimeProvider agentConfig={{ app: 'signal-noise' }}>
+                  <AppShell>{children}</AppShell>
+                </CopilotRuntimeProvider>
               </SWRProvider>
             </ThreadProvider>
           </TabProvider>

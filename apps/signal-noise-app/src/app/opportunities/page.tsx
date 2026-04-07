@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Calendar, Filter, Search, Star, Target, TrendingUp } from 'lucide-react';
@@ -90,7 +90,7 @@ function normalizeOpportunity(opp: TenderOpportunityRecord): OpportunityCard {
   };
 }
 
-export default function OpportunitiesPage() {
+function OpportunitiesContent() {
   const searchParams = useSearchParams();
   const focusedEntityId = searchParams.get('entityId') || '';
   const focusedEntityName = searchParams.get('entityName') || '';
@@ -461,5 +461,13 @@ export default function OpportunitiesPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function OpportunitiesPage() {
+  return (
+    <Suspense fallback={<div className="flex h-64 items-center justify-center text-fm-light-grey">Loading opportunities...</div>}>
+      <OpportunitiesContent />
+    </Suspense>
   );
 }

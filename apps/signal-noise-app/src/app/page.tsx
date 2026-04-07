@@ -16,6 +16,8 @@ import { Card, CardContent } from '@/components/ui/card'
 import { GraphitiInsightsFeed } from '@/components/home/GraphitiInsightsFeed'
 import { requirePageSession } from '@/lib/server-auth'
 
+export const dynamic = 'force-dynamic'
+
 const pillars = [
   {
     icon: Search,

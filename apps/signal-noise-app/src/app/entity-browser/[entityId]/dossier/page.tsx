@@ -2,6 +2,8 @@ import EntityDossierClientPage from './client-page'
 import { getEntityForDossierPage } from '@/lib/entity-loader'
 import { requirePageSession } from '@/lib/server-auth'
 
+export const dynamic = 'force-dynamic'
+
 interface EntityDossierPageProps {
   params: {
     entityId: string

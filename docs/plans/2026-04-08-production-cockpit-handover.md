@@ -4,7 +4,14 @@ Date: 2026-04-08
 
 ## Current State
 
-The latest pushed `main` is `c247abe5` (`docs(question-first): add timeout salvage evidence bundle`).
+The latest pushed `main` at handover was `c247abe5` (`docs(question-first): add timeout salvage evidence bundle`).
+
+Update on 2026-04-08:
+
+- local `main` was confirmed in sync with `origin/main` at `3b86f121` before production-readiness work
+- production build was made build-safe for auth-protected app routes and CopilotKit pages
+- `npm run build` now completes successfully locally
+- cockpit/operator contract suite now passes with 26 tests
 
 The app implementation for the client-visible dossier and Graphiti cockpit path is now on `main`:
 
@@ -62,6 +69,18 @@ Next step:
 ### 3. Cut production over to the current build
 
 Production was previously observed serving an older app shell and returning `404` for new cockpit APIs. After pushing current `main`, verify the Vercel deployment is actually on the latest commit.
+
+Local production build status:
+
+- `npm run build`: passed
+- known non-blocking warning: Ralph analytics static route export logs missing optional local data files:
+  - `apps/signal-noise-app/data/entity_cluster_mapping.json`
+  - `apps/signal-noise-app/data/production_clusters.json`
+- those warnings did not fail the build
+
+Local contract status:
+
+- `node --test` cockpit/operator contract suite: 26 passed
 
 Required production checks:
 
