@@ -1,0 +1,177 @@
+{
+  "generated_at": "2026-04-08T20:01:00.703140Z",
+  "source": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/scale-3000-live-filtered-20260408/question_first_scale_progress.json",
+  "loop_status": {
+    "total_scheduled": 702,
+    "completed": 11,
+    "failed": 0,
+    "retryable_failures": 0,
+    "client_ready_dossiers": 0,
+    "promoted_dossiers": 0,
+    "last_successful_canonical_run_at": "2026-04-08T19:50:39.065000+00:00"
+  },
+  "queue": {
+    "completed_entities": [
+      {
+        "entity_id": "badureliya-sports-club-1338",
+        "entity_name": "Badureliya Sports Club",
+        "entity_type": "SPORT_CLUB",
+        "state": "completed",
+        "client_ready": false,
+        "promoted": false,
+        "summary": "Completed run, awaiting client-ready promotion",
+        "generated_at": "2026-04-08T20:50:39.072101",
+        "run_phase": "completed"
+      },
+      {
+        "entity_id": "peterborough-united",
+        "entity_name": "Peterborough United",
+        "entity_type": "SPORT_CLUB",
+        "state": "completed",
+        "client_ready": false,
+        "promoted": false,
+        "summary": "Completed run, awaiting client-ready promotion",
+        "generated_at": "2026-04-08T20:36:35.764568",
+        "run_phase": "completed"
+      },
+      {
+        "entity_id": "paraguayan-basketball-federation-4026",
+        "entity_name": "Paraguayan Basketball Federation",
+        "entity_type": "SPORT_FEDERATION",
+        "state": "completed",
+        "client_ready": false,
+        "promoted": false,
+        "summary": "Completed run, awaiting client-ready promotion",
+        "generated_at": "2026-04-08T20:24:25.214162",
+        "run_phase": "completed"
+      },
+      {
+        "entity_id": "federation-of-motor-sports-clubs-of-india-fmsci-2040",
+        "entity_name": "Federation of Motor Sports Clubs of India (FMSCI)",
+        "entity_type": "SPORT_FEDERATION",
+        "state": "completed",
+        "client_ready": false,
+        "promoted": false,
+        "summary": "Completed run, awaiting client-ready promotion",
+        "generated_at": "2026-04-08T20:08:47.597094",
+        "run_phase": "completed"
+      },
+      {
+        "entity_id": "fc-midtjylland-2026",
+        "entity_name": "FC Midtjylland",
+        "entity_type": "SPORT_CLUB",
+        "state": "completed",
+        "client_ready": false,
+        "promoted": false,
+        "summary": "Completed run, awaiting client-ready promotion",
+        "generated_at": "2026-04-08T19:44:52.794696",
+        "run_phase": "completed"
+      },
+      {
+        "entity_id": "colchester-united-4370",
+        "entity_name": "Colchester United",
+        "entity_type": "SPORT_CLUB",
+        "state": "completed",
+        "client_ready": false,
+        "promoted": false,
+        "summary": "Completed run, awaiting client-ready promotion",
+        "generated_at": "2026-04-08T19:28:08.260813",
+        "run_phase": "completed"
+      }
+    ],
+    "in_progress_entity": {
+      "entity_id": "barnsley-1364",
+      "entity_name": "Barnsley",
+      "entity_type": "SPORT_CLUB",
+      "state": "in_progress",
+      "client_ready": false,
+      "promoted": false,
+      "summary": "Running q7_procurement_signal",
+      "generated_at": null,
+      "active_question_id": "q7_procurement_signal",
+      "run_phase": "question_runner_enter"
+    },
+    "upcoming_entities": [
+      {
+        "entity_id": "fc-porto-2027",
+        "entity_name": "FC Porto",
+        "entity_type": "SPORT_CLUB",
+        "state": "upcoming",
+        "client_ready": false,
+        "promoted": false,
+        "summary": "Waiting in the serialized live loop",
+        "generated_at": null
+      },
+      {
+        "entity_id": "gog-handbold",
+        "entity_name": "GOG H\u00e5ndbold",
+        "entity_type": "SPORT_CLUB",
+        "state": "upcoming",
+        "client_ready": false,
+        "promoted": false,
+        "summary": "Waiting in the serialized live loop",
+        "generated_at": null
+      },
+      {
+        "entity_id": "bournemouth-267",
+        "entity_name": "Bournemouth",
+        "entity_type": "SPORT_CLUB",
+        "state": "upcoming",
+        "client_ready": false,
+        "promoted": false,
+        "summary": "Waiting in the serialized live loop",
+        "generated_at": null
+      },
+      {
+        "entity_id": "leeds-united-533",
+        "entity_name": "Leeds United",
+        "entity_type": "SPORT_CLUB",
+        "state": "upcoming",
+        "client_ready": false,
+        "promoted": false,
+        "summary": "Waiting in the serialized live loop",
+        "generated_at": null
+      },
+      {
+        "entity_id": "o-higgins-761",
+        "entity_name": "O'Higgins",
+        "entity_type": "SPORT_CLUB",
+        "state": "upcoming",
+        "client_ready": false,
+        "promoted": false,
+        "summary": "Waiting in the serialized live loop",
+        "generated_at": null
+      },
+      {
+        "entity_id": "palmeiras-585",
+        "entity_name": "Palmeiras",
+        "entity_type": "SPORT_CLUB",
+        "state": "upcoming",
+        "client_ready": false,
+        "promoted": false,
+        "summary": "Waiting in the serialized live loop",
+        "generated_at": null
+      },
+      {
+        "entity_id": "pyramids-fc-1608",
+        "entity_name": "Pyramids FC",
+        "entity_type": "SPORT_CLUB",
+        "state": "upcoming",
+        "client_ready": false,
+        "promoted": false,
+        "summary": "Waiting in the serialized live loop",
+        "generated_at": null
+      },
+      {
+        "entity_id": "argentine-basketball-confederation-39",
+        "entity_name": "Argentine Basketball Confederation",
+        "entity_type": "SPORT_FEDERATION",
+        "state": "upcoming",
+        "client_ready": false,
+        "promoted": false,
+        "summary": "Waiting in the serialized live loop",
+        "generated_at": null
+      }
+    ]
+  }
+}

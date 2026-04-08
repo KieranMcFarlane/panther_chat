@@ -12,7 +12,12 @@ const localFalkorExportPath = path.resolve(process.cwd(), 'backend', 'falkordb_e
 const hasUsableSupabaseConfiguration = Boolean(
   process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
 ) && Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY)
-const preferSupabaseSnapshot = String(process.env.ENTITY_SNAPSHOT_SOURCE || 'local').toLowerCase() === 'supabase'
+const defaultSnapshotSource = (
+  process.env.VERCEL
+  || process.env.VERCEL_ENV
+  || process.env.NODE_ENV === 'production'
+) ? 'supabase' : 'local'
+const preferSupabaseSnapshot = String(process.env.ENTITY_SNAPSHOT_SOURCE || defaultSnapshotSource).toLowerCase() === 'supabase'
 
 let canonicalEntitiesCache: { entities: CanonicalEntity[]; expiresAt: number } | null = null
 let inFlightCanonicalEntitiesRequest: Promise<CanonicalEntity[]> | null = null

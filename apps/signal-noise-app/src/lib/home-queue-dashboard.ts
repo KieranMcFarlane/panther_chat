@@ -105,6 +105,11 @@ type BuildOptions = {
   tendersFetcher?: () => Promise<RfpCard[]>
 }
 
+type LiveQueueSnapshot = {
+  loop_status?: HomeQueueDashboardPayload['loop_status']
+  queue?: HomeQueueDashboardPayload['queue']
+}
+
 type PipelineRunRecord = {
   entity_id: string
   entity_name: string
@@ -526,6 +531,8 @@ export async function buildHomeQueueDashboardPayload(options: BuildOptions = {})
   const progress = (progressPath ? tryReadJson(progressPath) : null) as ScaleProgress | null
   const outputRoot = progressPath ? path.dirname(progressPath) : diagnosticsRoot
   const manifestPath = path.join(appRoot, 'backend', 'data', 'question_first_scale_batch_3000_live.json')
+  const liveQueueSnapshotPath = path.join(appRoot, 'backend', 'data', 'question_first_live_queue_snapshot.json')
+  const liveQueueSnapshot = tryReadJson(liveQueueSnapshotPath) as LiveQueueSnapshot | null
   const manifestPayload = tryReadJson(manifestPath)
   const manifestEntities = Array.isArray(manifestPayload?.entities) ? manifestPayload.entities as ManifestEntity[] : []
   const dossierRoot = path.join(appRoot, 'backend', 'data', 'dossiers', 'question_first')
@@ -543,10 +550,12 @@ export async function buildHomeQueueDashboardPayload(options: BuildOptions = {})
   const queue = pipelineRuns.length > 0
     ? buildQueueState(manifestEntities, pipelineRuns, ids)
     : buildQueueStateFromDiagnostics(outputRoot, manifestEntities, ids)
+  const publishedQueue = liveQueueSnapshot?.queue
+  const publishedLoopStatus = liveQueueSnapshot?.loop_status
 
   return {
-    loop_status: buildLoopStatusFromRuns(manifestEntities.length, pipelineRuns, cards.length, progress),
-    queue,
+    loop_status: publishedLoopStatus || buildLoopStatusFromRuns(manifestEntities.length, pipelineRuns, cards.length, progress),
+    queue: publishedQueue || queue,
     client_ready_dossiers: cards.slice(0, 6),
     rfp_cards: rfpCards.slice(0, 6),
     sales_summary: {

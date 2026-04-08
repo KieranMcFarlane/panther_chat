@@ -52,3 +52,7 @@ test('home queue dashboard loader prefers Supabase pipeline runs and keeps manif
   assert.match(dashboardLoaderSource, /buildQueueStateFromDiagnostics/)
   assert.match(dashboardLoaderSource, /manifestEntities\.map\(\(entity\) => entity\.entity_id\)/)
 })
+
+test('home queue dashboard loader reads a published live queue snapshot before falling back to local diagnostics', () => {
+  assert.match(dashboardLoaderSource, /question_first_live_queue_snapshot\.json/)
+})
