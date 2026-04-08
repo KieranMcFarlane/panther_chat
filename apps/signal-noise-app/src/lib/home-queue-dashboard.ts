@@ -1,5 +1,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
+import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
+import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
 import { normalizeQuestionFirstDossier } from '@/lib/question-first-dossier'
 
 type ScaleProgress = {
@@ -39,6 +41,7 @@ type QueueEntityRecord = {
 
 type ClientReadyDossierCard = {
   entity_id: string
+  browser_entity_id: string
   entity_name: string
   entity_type: string
   generated_at: string | null
@@ -166,7 +169,41 @@ function summarizeDossier(dossier: Record<string, any>): string | null {
   return null
 }
 
-function buildClientReadyDossiersStore(dossierRoot: string) {
+function resolveBrowserEntityId(
+  normalizedPayload: Record<string, any>,
+  canonicalEntities: any[],
+): string | null {
+  const entityId = toText(normalizedPayload?.entity_id)
+  const entityName = toText(normalizedPayload?.entity_name).toLowerCase()
+  const entityType = toText(normalizedPayload?.entity_type).toLowerCase()
+
+  const exactUuidMatch = canonicalEntities.find((candidate) => matchesEntityUuid(candidate, entityId))
+  if (exactUuidMatch) {
+    return resolveEntityUuid(exactUuidMatch)
+  }
+
+  const idMatch = canonicalEntities.find((candidate) =>
+    toText(candidate?.id) === entityId ||
+    toText(candidate?.neo4j_id) === entityId ||
+    toText(candidate?.supabase_id || candidate?.properties?.supabase_id) === entityId,
+  )
+  if (idMatch) {
+    return resolveEntityUuid(idMatch)
+  }
+
+  const nameMatch = canonicalEntities.find((candidate) => {
+    const candidateName = toText(candidate?.properties?.name).toLowerCase()
+    const candidateType = toText(candidate?.properties?.type || candidate?.labels?.[0]).toLowerCase()
+    return candidateName === entityName && (!entityType || candidateType === entityType)
+  })
+  if (nameMatch) {
+    return resolveEntityUuid(nameMatch)
+  }
+
+  return entityId || null
+}
+
+function buildClientReadyDossiersStore(dossierRoot: string, canonicalEntities: any[]) {
   const dossierFiles = walkFiles(dossierRoot, (filePath) => filePath.endsWith('_question_first_dossier.json'), 2)
   const cards: ClientReadyDossierCard[] = []
   const sales: SalesSummaryItem[] = []
@@ -184,9 +221,11 @@ function buildClientReadyDossiersStore(dossierRoot: string) {
     const entityId = toText(normalizedPayload?.entity_id || payload?.entity_id || payload?.question_first?.entity_id || payload?.entity?.entity_id)
     if (!entityId || ids.has(entityId)) continue
     ids.add(entityId)
+    const browserEntityId = resolveBrowserEntityId(normalizedPayload, canonicalEntities) || entityId
     const graphiti = discoverySummary?.graphiti_sales_brief || {}
     cards.push({
       entity_id: entityId,
+      browser_entity_id: browserEntityId,
       entity_name: toText(normalizedPayload?.entity_name || payload?.entity_name || payload?.question_first?.entity_name || entityId),
       entity_type: toText(normalizedPayload?.entity_type || payload?.entity_type || payload?.question_first?.entity_type || 'Entity'),
       generated_at: toText(normalizedPayload?.question_first?.generated_at || normalizedPayload?.metadata?.question_first?.generated_at) || null,
@@ -313,7 +352,8 @@ export async function buildHomeQueueDashboardPayload(options: BuildOptions = {})
   const manifestPayload = tryReadJson(manifestPath)
   const manifestEntities = Array.isArray(manifestPayload?.entities) ? manifestPayload.entities as ManifestEntity[] : []
   const dossierRoot = path.join(appRoot, 'backend', 'data', 'dossiers', 'question_first')
-  const { cards, sales, ids } = buildClientReadyDossiersStore(dossierRoot)
+  const canonicalEntities = await getCanonicalEntitiesSnapshot()
+  const { cards, sales, ids } = buildClientReadyDossiersStore(dossierRoot, canonicalEntities)
   const rfpCards = options.tendersFetcher ? await options.tendersFetcher() : []
 
   return {

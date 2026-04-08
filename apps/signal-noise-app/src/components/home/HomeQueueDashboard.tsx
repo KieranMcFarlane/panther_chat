@@ -21,6 +21,7 @@ type QueueEntityRecord = {
 
 type ClientReadyDossierCard = {
   entity_id: string
+  browser_entity_id: string
   entity_name: string
   entity_type: string
   generated_at: string | null
@@ -227,10 +228,10 @@ export function HomeQueueDashboard() {
                   {item.best_path ? <span>Path: {item.best_path}</span> : null}
                 </div>
                 <div className="mt-4">
-                  <Link href={`/entity-browser/${encodeURIComponent(item.entity_id)}/dossier`}>
-                    <Button size="sm" variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10">
-                      Open dossier
-                    </Button>
+                      <Link href={`/entity-browser/${encodeURIComponent(item.browser_entity_id)}/dossier`}>
+                        <Button size="sm" variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10">
+                          Open dossier
+                        </Button>
                   </Link>
                 </div>
               </div>
