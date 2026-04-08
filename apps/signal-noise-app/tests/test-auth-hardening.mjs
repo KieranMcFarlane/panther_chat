@@ -99,6 +99,20 @@ test('auth client falls back to the browser origin when a localhost auth URL lea
   assert.match(authClientSource, /resolveAuthBaseUrl/)
 })
 
+
+test('auth client prefers the current Vercel deployment origin over a pinned canonical env host', () => {
+  assert.match(authClientSource, /function shouldPreferBrowserOrigin/)
+  assert.match(authClientSource, /new URL\(browserOrigin\)/)
+  assert.match(authClientSource, /new URL\(envBaseUrl\)/)
+  assert.match(authClientSource, /browserUrl\.hostname\.endsWith\("\.vercel\.app"\)/)
+  assert.match(authClientSource, /browserUrl\.hostname !== envUrl\.hostname/)
+  assert.match(authClientSource, /return browserOrigin/)
+})
+
+test('server auth trusts the deployment-specific Vercel host', () => {
+  assert.match(authSource, /process\.env\.VERCEL_URL/)
+})
+
 test('full-screen auth routes bypass the dashboard shell container', () => {
   assert.match(appNavigationSource, /pathname === '\/sign-in'/)
   assert.match(appNavigationSource, /pathname === '\/login'/)

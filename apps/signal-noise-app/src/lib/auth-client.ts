@@ -26,12 +26,32 @@ function getBrowserOrigin() {
   return normalizeBaseUrl(window.location.origin) || null;
 }
 
+function shouldPreferBrowserOrigin(browserOrigin?: string | null, envBaseUrl?: string | null) {
+  if (!browserOrigin) {
+    return false;
+  }
+
+  if (!envBaseUrl || isLocalhostUrl(envBaseUrl)) {
+    return true;
+  }
+
+  try {
+    const browserUrl = new URL(browserOrigin);
+    const envUrl = new URL(envBaseUrl);
+
+    return browserUrl.hostname.endsWith(".vercel.app")
+      && browserUrl.hostname !== envUrl.hostname;
+  } catch {
+    return false;
+  }
+}
+
 function resolveAuthBaseUrl() {
   const browserOrigin = getBrowserOrigin();
   const envBaseUrl = normalizeBaseUrl(process.env.NEXT_PUBLIC_BETTER_AUTH_URL)
     || normalizeBaseUrl(process.env.NEXT_PUBLIC_APP_URL);
 
-  if (browserOrigin && (!envBaseUrl || isLocalhostUrl(envBaseUrl))) {
+  if (shouldPreferBrowserOrigin(browserOrigin, envBaseUrl)) {
     return browserOrigin;
   }
 

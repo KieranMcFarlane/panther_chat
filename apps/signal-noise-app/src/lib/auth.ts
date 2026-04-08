@@ -210,6 +210,7 @@ const trustedOrigins = Array.from(new Set([
   "http://127.0.0.1:3005",
   normalizeBaseUrl(process.env.NEXT_PUBLIC_BETTER_AUTH_URL),
   normalizeBaseUrl(process.env.NEXT_PUBLIC_APP_URL),
+  normalizeBaseUrl(process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined),
   authBaseUrl,
 ].filter(Boolean))) as string[];
 
