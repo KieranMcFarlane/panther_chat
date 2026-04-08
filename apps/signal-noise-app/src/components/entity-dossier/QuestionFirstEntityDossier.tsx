@@ -81,6 +81,7 @@ export function QuestionFirstEntityDossier({ entity, dossier }: QuestionFirstEnt
   const pois = collectPOIs(dossier)
   const procurementSignals = collectProcurementSignals(dossier)
   const digitalSignals = collectDigitalSignals(dossier)
+  const salesBrief = dossier?.question_first?.discovery_summary?.graphiti_sales_brief
 
   return (
     <Card className="border-border/70 bg-card/70 shadow-sm">
@@ -136,6 +137,36 @@ export function QuestionFirstEntityDossier({ entity, dossier }: QuestionFirstEnt
                 </p>
               </div>
             </div>
+            {salesBrief?.status === "available" ? (
+              <div className="rounded-xl border border-border/70 bg-card/60 p-4">
+                <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Sales brief</p>
+                <div className="mt-3 grid gap-3 md:grid-cols-2">
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">{toText(salesBrief?.buyer_name || "Buyer hypothesis")}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {toText(salesBrief?.buyer_title || salesBrief?.outreach_angle || "Commercial decision owner")}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">{toText(salesBrief?.best_path_owner || "Path not ranked")}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {toText(salesBrief?.path_type ? `Route: ${salesBrief.path_type}` : "No connection route materialized")}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Capability gap</p>
+                    <p className="mt-1 text-sm text-muted-foreground">{toText(salesBrief?.capability_gap || "Not available")}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Outreach strategy</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {toText(salesBrief?.outreach_target || "No target")}
+                      {salesBrief?.outreach_route ? ` via ${salesBrief.outreach_route}` : ""}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : null}
             {renderItems(
               answers.slice(0, 3),
               "No question-first answers are available yet.",

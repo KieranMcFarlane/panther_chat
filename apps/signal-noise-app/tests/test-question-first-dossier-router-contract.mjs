@@ -6,6 +6,8 @@ const routerPath = new URL('../src/components/entity-dossier/EntityDossierRouter
 const routerSource = readFileSync(routerPath, 'utf8')
 const clientPagePath = new URL('../src/app/entity-browser/[entityId]/dossier/client-page.tsx', import.meta.url)
 const clientPageSource = readFileSync(clientPagePath, 'utf8')
+const questionFirstDossierPath = new URL('../src/components/entity-dossier/QuestionFirstEntityDossier.tsx', import.meta.url)
+const questionFirstDossierSource = readFileSync(questionFirstDossierPath, 'utf8')
 
 test('entity dossier router prefers the question-first tab renderer when canonical dossier tabs exist', () => {
   assert.match(routerSource, /QuestionFirstEntityDossier/)
@@ -17,4 +19,9 @@ test('entity dossier client page does not auto-queue generation on initial view 
   assert.match(clientPageSource, /if \(!entity \|\| !shouldGenerate\) return/)
   assert.match(clientPageSource, /Canonical dossier not ready/)
   assert.match(clientPageSource, /legacy dossier views are intentionally hidden on this route/)
+})
+
+test('question-first dossier surfaces the sales brief only when graphiti-derived synthesis is present', () => {
+  assert.match(questionFirstDossierSource, /graphiti_sales_brief/)
+  assert.match(questionFirstDossierSource, /Sales brief|Graphiti digest/)
 })

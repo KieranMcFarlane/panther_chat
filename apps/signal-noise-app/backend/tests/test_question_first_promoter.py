@@ -285,3 +285,190 @@ def test_build_question_first_promotions_phase_gates_decision_outputs_by_default
 
     assert result["discovery_summary"]["promoted_count"] == 0
     assert result["discovery_summary"]["promotion_rollout_phase"] == "phase_1_core"
+
+
+def test_build_question_first_promotions_marks_client_ready_only_with_foundation_leadership_and_buyer_signals():
+    not_ready = build_question_first_promotions(
+        answers=[
+            {
+                "question_id": "q2_digital_stack",
+                "question_type": "digital_stack",
+                "answer": "Drupal 10",
+                "confidence": 0.95,
+                "validation_state": "validated",
+                "signal_type": "DIGITAL_STACK",
+                "evidence_url": "https://example.com/stack",
+            },
+            {
+                "question_id": "q11_decision_owner",
+                "question_type": "decision_owner",
+                "answer": "Juliet Slot",
+                "confidence": 0.97,
+                "validation_state": "validated",
+                "signal_type": "DECISION_OWNER",
+                "evidence_url": "https://example.com/owner",
+            },
+            {
+                "question_id": "q15_outreach_strategy",
+                "question_type": "outreach_strategy",
+                "answer": "Target Juliet Slot via cold route",
+                "confidence": 0.58,
+                "validation_state": "provisional",
+                "signal_type": "OUTREACH_STRATEGY",
+                "evidence_url": "https://example.com/strategy",
+            },
+        ],
+        evidence_items=[],
+        promotion_candidates=[],
+        allowed_rollout_phase="phase_3_decision",
+    )
+
+    assert not_ready["discovery_summary"]["client_ready"] is False
+    assert "q1_foundation" in not_ready["discovery_summary"]["client_ready_blockers"]
+    assert "q3_leadership" in not_ready["discovery_summary"]["client_ready_blockers"]
+
+    ready = build_question_first_promotions(
+        answers=[
+            {
+                "question_id": "q1_foundation",
+                "question_type": "foundation",
+                "answer": "1886",
+                "confidence": 0.95,
+                "validation_state": "validated",
+                "signal_type": "FOUNDATION",
+                "evidence_url": "https://example.com/foundation",
+            },
+            {
+                "question_id": "q2_digital_stack",
+                "question_type": "digital_stack",
+                "answer": "Drupal 10",
+                "confidence": 0.95,
+                "validation_state": "validated",
+                "signal_type": "DIGITAL_STACK",
+                "evidence_url": "https://example.com/stack",
+            },
+            {
+                "question_id": "q3_leadership",
+                "question_type": "leadership",
+                "answer": "Leadership pool available",
+                "confidence": 0.91,
+                "validation_state": "validated",
+                "signal_type": "LEADERSHIP",
+                "evidence_url": "https://example.com/leadership",
+            },
+            {
+                "question_id": "q11_decision_owner",
+                "question_type": "decision_owner",
+                "answer": "Juliet Slot",
+                "confidence": 0.97,
+                "validation_state": "validated",
+                "signal_type": "DECISION_OWNER",
+                "evidence_url": "https://example.com/owner",
+                "primary_owner": {"name": "Juliet Slot", "title": "Chief Commercial Officer"},
+            },
+            {
+                "question_id": "q15_outreach_strategy",
+                "question_type": "outreach_strategy",
+                "answer": "Target Juliet Slot via cold route",
+                "confidence": 0.58,
+                "validation_state": "provisional",
+                "signal_type": "OUTREACH_STRATEGY",
+                "evidence_url": "https://example.com/strategy",
+            },
+        ],
+        evidence_items=[],
+        promotion_candidates=[],
+        allowed_rollout_phase="phase_3_decision",
+    )
+
+    assert ready["discovery_summary"]["client_ready"] is True
+    assert ready["discovery_summary"]["client_ready_blockers"] == []
+
+
+def test_build_question_first_promotions_emits_graphiti_sales_brief_when_buyer_signals_exist():
+    result = build_question_first_promotions(
+        answers=[
+            {
+                "question_id": "q1_foundation",
+                "question_type": "foundation",
+                "answer": "1886",
+                "confidence": 0.95,
+                "validation_state": "validated",
+                "signal_type": "FOUNDATION",
+                "evidence_url": "https://example.com/foundation",
+            },
+            {
+                "question_id": "q2_digital_stack",
+                "question_type": "digital_stack",
+                "answer": "Drupal 10",
+                "confidence": 0.95,
+                "validation_state": "validated",
+                "signal_type": "DIGITAL_STACK",
+                "evidence_url": "https://example.com/stack",
+            },
+            {
+                "question_id": "q3_leadership",
+                "question_type": "leadership",
+                "answer": "Leadership pool available",
+                "confidence": 0.91,
+                "validation_state": "validated",
+                "signal_type": "LEADERSHIP",
+                "evidence_url": "https://example.com/leadership",
+            },
+            {
+                "question_id": "q11_decision_owner",
+                "question_type": "decision_owner",
+                "answer": "Juliet Slot",
+                "confidence": 0.97,
+                "validation_state": "validated",
+                "signal_type": "DECISION_OWNER",
+                "evidence_url": "https://example.com/owner",
+                "primary_owner": {"name": "Juliet Slot", "title": "Chief Commercial Officer"},
+            },
+            {
+                "question_id": "q12_connections",
+                "question_type": "connections",
+                "answer": "Juliet Slot",
+                "confidence": 0.35,
+                "validation_state": "provisional",
+                "signal_type": "CONNECTIONS",
+                "evidence_url": "",
+                "answer": {
+                    "raw_structured_output": {
+                        "candidate_paths": [{"name": "Juliet Slot", "best_yp_owner": "Elliott Hillman", "path_type": "cold", "decision_score": 0.194}]
+                    }
+                },
+            },
+            {
+                "question_id": "q13_capability_gap",
+                "question_type": "capability_gap",
+                "answer": {
+                    "raw_structured_output": {"top_gap": "digital_stack_maturity"}
+                },
+                "confidence": 0.6,
+                "validation_state": "provisional",
+                "signal_type": "CAPABILITY_GAP",
+                "evidence_url": "",
+            },
+            {
+                "question_id": "q15_outreach_strategy",
+                "question_type": "outreach_strategy",
+                "answer": {
+                    "raw_structured_output": {"recommended_target": "Juliet Slot", "recommended_route": "cold", "recommended_angle": "commercial_intelligence"}
+                },
+                "confidence": 0.58,
+                "validation_state": "provisional",
+                "signal_type": "OUTREACH_STRATEGY",
+                "evidence_url": "",
+            },
+        ],
+        evidence_items=[],
+        promotion_candidates=[],
+        allowed_rollout_phase="phase_3_decision",
+    )
+
+    brief = result["discovery_summary"]["graphiti_sales_brief"]
+    assert brief["status"] == "available"
+    assert brief["buyer_name"] == "Juliet Slot"
+    assert brief["best_path_owner"] == "Elliott Hillman"
+    assert brief["capability_gap"] == "digital_stack_maturity"

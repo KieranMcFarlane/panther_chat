@@ -323,6 +323,76 @@ def _merge_path_counts(target: Dict[str, int], source: Dict[str, int]) -> None:
         target[str(key)] = int(target.get(str(key), 0)) + int(value or 0)
 
 
+def _safe_iso_timestamp(value: Any) -> Optional[str]:
+    text = str(value or "").strip()
+    if not text:
+        return None
+    try:
+        return datetime.fromisoformat(text.replace("Z", "+00:00")).isoformat()
+    except ValueError:
+        return None
+
+
+def _build_scale_progress(summary: Dict[str, Any]) -> Dict[str, Any]:
+    entities = summary.get("entities") if isinstance(summary, dict) else []
+    entities = entities if isinstance(entities, list) else []
+    failure_breakdown = {
+        "retryable_upstream_failure": 0,
+        "stalled": 0,
+        "grounding_failure": 0,
+        "leadership_failure": 0,
+        "completed_not_promotable": 0,
+        "failed": 0,
+    }
+    client_ready_dossiers = 0
+    dossier_artifacts = 0
+    last_successful_canonical_run_at: Optional[str] = None
+
+    for entity in entities:
+        if not isinstance(entity, dict):
+            continue
+        status = str(entity.get("status") or "").strip()
+        client_ready = bool(entity.get("client_ready"))
+        blockers = entity.get("client_ready_blockers") if isinstance(entity.get("client_ready_blockers"), list) else []
+        run_generated_at = _safe_iso_timestamp(entity.get("question_first_generated_at"))
+
+        if entity.get("question_first_dossier_path"):
+            dossier_artifacts += 1
+        if status == "completed" and run_generated_at:
+            if last_successful_canonical_run_at is None or run_generated_at > last_successful_canonical_run_at:
+                last_successful_canonical_run_at = run_generated_at
+        if client_ready:
+            client_ready_dossiers += 1
+
+        if status == "retryable_upstream_failure":
+            failure_breakdown["retryable_upstream_failure"] += 1
+        elif status == "stalled":
+            failure_breakdown["stalled"] += 1
+        elif status != "completed":
+            failure_breakdown["failed"] += 1
+        elif not client_ready:
+            failure_breakdown["completed_not_promotable"] += 1
+            if "q1_foundation" in blockers:
+                failure_breakdown["grounding_failure"] += 1
+            if "q3_leadership" in blockers:
+                failure_breakdown["leadership_failure"] += 1
+
+    return {
+        "schema_version": "question_first_scale_progress_v1",
+        "generated_at": summary.get("run_at"),
+        "total_scheduled": int(summary.get("entities_total") or 0),
+        "completed": int(summary.get("entities_completed") or 0),
+        "failed": int(summary.get("entities_failed") or 0),
+        "retryable_failures": failure_breakdown["retryable_upstream_failure"],
+        "stalled": failure_breakdown["stalled"],
+        "promoted_dossiers": client_ready_dossiers,
+        "client_ready_dossiers": client_ready_dossiers,
+        "dossier_artifacts": dossier_artifacts,
+        "last_successful_canonical_run_at": last_successful_canonical_run_at,
+        "failure_breakdown": failure_breakdown,
+    }
+
+
 def _load_repo_envs() -> None:
     seen: set[Path] = set()
     for parent in Path(__file__).resolve().parents:
@@ -399,6 +469,8 @@ async def run_smoke(
         questions_validated = int(run_rollup.get("questions_validated") or 0)
         questions_no_signal = int(run_rollup.get("questions_no_signal") or 0)
         question_first_meta = merged.get("question_first") if isinstance(merged, dict) else {}
+        discovery_summary = question_first_meta.get("discovery_summary") if isinstance(question_first_meta, dict) else {}
+        discovery_summary = discovery_summary if isinstance(discovery_summary, dict) else {}
         connections_graph_enrichment_enabled = bool(
             question_first_meta.get("connections_graph_enrichment_enabled") if isinstance(question_first_meta, dict) else False
         )
@@ -439,6 +511,10 @@ async def run_smoke(
             "baseline_features": baseline_features,
             "questions_validated": questions_validated,
             "questions_no_signal": questions_no_signal,
+            "client_ready": bool(discovery_summary.get("client_ready")),
+            "client_ready_blockers": discovery_summary.get("client_ready_blockers") if isinstance(discovery_summary.get("client_ready_blockers"), list) else [],
+            "graphiti_sales_brief_status": str((discovery_summary.get("graphiti_sales_brief") or {}).get("status") or "").strip() if isinstance(discovery_summary.get("graphiti_sales_brief"), dict) else None,
+            "question_first_generated_at": question_first_run.get("generated_at") if isinstance(question_first_run, dict) else None,
             "question_first_run_path": str(question_first_run_path) if question_first_run_path else None,
             "question_first_dossier_path": str(question_first_dossier_path) if question_first_dossier_path else None,
             "question_first_report_path": question_first_report.get("json_report_path") if isinstance(question_first_report, dict) else None,
@@ -482,7 +558,11 @@ async def run_smoke(
 
     summary_path = output_root / "question_first_archetype_smoke.json"
     md_path = output_root / "question_first_archetype_smoke.md"
+    scale_progress_path = output_root / "question_first_scale_progress.json"
+    scale_progress = _build_scale_progress(summary)
+    summary["scale_progress_path"] = str(scale_progress_path)
     summary_path.write_text(json.dumps(summary, indent=2, default=str), encoding="utf-8")
+    scale_progress_path.write_text(json.dumps(scale_progress, indent=2, default=str), encoding="utf-8")
 
     md_lines = [
         "# Question-First Archetype Smoke",
@@ -512,6 +592,7 @@ async def run_smoke(
     logger.info("Question-first archetype smoke summary written to %s", summary_path)
     print(str(summary_path))
     print(str(md_path))
+    print(str(scale_progress_path))
     return summary
 
 

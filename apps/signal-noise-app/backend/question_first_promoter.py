@@ -80,6 +80,95 @@ def _normalize_candidate(value: Any) -> Dict[str, Any] | None:
     return candidate
 
 
+def _question_is_validated(answer: Dict[str, Any] | None) -> bool:
+    if not isinstance(answer, dict):
+        return False
+    return str(answer.get("validation_state") or "").strip().lower() == "validated"
+
+
+def _question_is_strong_provisional(answer: Dict[str, Any] | None, *, min_confidence: float = 0.55) -> bool:
+    if not isinstance(answer, dict):
+        return False
+    return (
+        str(answer.get("validation_state") or "").strip().lower() == "provisional"
+        and _safe_float(answer.get("confidence")) >= min_confidence
+    )
+
+
+def _extract_raw_structured_output(answer: Dict[str, Any] | None) -> Dict[str, Any]:
+    if not isinstance(answer, dict):
+        return {}
+    answer_value = answer.get("answer")
+    if isinstance(answer_value, dict):
+        raw_structured_output = answer_value.get("raw_structured_output")
+        if isinstance(raw_structured_output, dict):
+            return raw_structured_output
+        return answer_value
+    raw_structured_output = answer.get("raw_structured_output")
+    return raw_structured_output if isinstance(raw_structured_output, dict) else {}
+
+
+def _build_client_ready_summary(answer_by_question: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
+    required_questions = [
+        "q1_foundation",
+        "q2_digital_stack",
+        "q3_leadership",
+        "q11_decision_owner",
+    ]
+    blockers = [
+        question_id
+        for question_id in required_questions
+        if not _question_is_validated(answer_by_question.get(question_id))
+    ]
+    buyer_support_questions = ["q12_connections", "q13_capability_gap", "q15_outreach_strategy"]
+    has_buyer_support = any(
+        _question_is_validated(answer_by_question.get(question_id))
+        or _question_is_strong_provisional(answer_by_question.get(question_id))
+        for question_id in buyer_support_questions
+    )
+    if not has_buyer_support:
+        blockers.append("buyer_signal_support")
+    return {
+        "client_ready": len(blockers) == 0,
+        "client_ready_blockers": blockers,
+    }
+
+
+def _build_graphiti_sales_brief(answer_by_question: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
+    decision_owner = answer_by_question.get("q11_decision_owner") or {}
+    if not _question_is_validated(decision_owner):
+        return {"status": "insufficient_signal"}
+
+    primary_owner = decision_owner.get("primary_owner") if isinstance(decision_owner.get("primary_owner"), dict) else {}
+    buyer_name = str(primary_owner.get("name") or decision_owner.get("answer") or "").strip()
+    buyer_title = str(primary_owner.get("title") or primary_owner.get("role") or "").strip() or None
+
+    connections = _extract_raw_structured_output(answer_by_question.get("q12_connections"))
+    candidate_paths = connections.get("candidate_paths") if isinstance(connections.get("candidate_paths"), list) else []
+    best_path = candidate_paths[0] if candidate_paths and isinstance(candidate_paths[0], dict) else {}
+
+    capability_gap = _extract_raw_structured_output(answer_by_question.get("q13_capability_gap"))
+    outreach_strategy = _extract_raw_structured_output(answer_by_question.get("q15_outreach_strategy"))
+    yp_fit = _extract_raw_structured_output(answer_by_question.get("q14_yp_fit"))
+
+    summary = {
+        "status": "available",
+        "buyer_name": buyer_name or None,
+        "buyer_title": buyer_title,
+        "best_path_owner": str(best_path.get("best_yp_owner") or best_path.get("recommended_yp_owner") or "").strip() or None,
+        "path_type": str(best_path.get("path_type") or "").strip() or None,
+        "capability_gap": str(capability_gap.get("top_gap") or capability_gap.get("gap_label") or "").strip() or None,
+        "yp_fit_service": str(yp_fit.get("best_service") or yp_fit.get("recommended_service") or "").strip() or None,
+        "outreach_target": str(outreach_strategy.get("recommended_target") or buyer_name or "").strip() or None,
+        "outreach_route": str(outreach_strategy.get("recommended_route") or best_path.get("path_type") or "").strip() or None,
+        "outreach_angle": str(outreach_strategy.get("recommended_angle") or "").strip() or None,
+        "source": "question_first_promotions",
+    }
+    if not any(summary.get(key) for key in ("best_path_owner", "capability_gap", "outreach_target", "outreach_angle")):
+        return {"status": "insufficient_signal"}
+    return summary
+
+
 def build_question_first_poi_graph(*, answers: List[Dict[str, Any]] | None = None) -> Dict[str, Any]:
     answers = [item for item in (answers or []) if isinstance(item, dict)]
     entity_id = ""
@@ -442,6 +531,8 @@ def build_question_first_promotions(
         "promotion_targets": targets,
         "promotion_rollout_phase": allowed_rollout_phase,
     }
+    discovery_summary.update(_build_client_ready_summary(answer_by_question))
+    discovery_summary["graphiti_sales_brief"] = _build_graphiti_sales_brief(answer_by_question)
     discovery_summary.update(grouped)
 
     return {

@@ -46,9 +46,29 @@ function isStale(generatedAt: string | null): boolean {
   return Date.now() - timestamp > staleWindowMs
 }
 
+function getClientReadyInfo(dossier: Record<string, any> | null | undefined): {
+  clientReady: boolean
+  blockers: string[]
+} {
+  const discoverySummary = dossier?.question_first?.discovery_summary
+  const blockers = Array.isArray(discoverySummary?.client_ready_blockers)
+    ? discoverySummary.client_ready_blockers
+        .map((value: unknown) => toText(value))
+        .filter(Boolean)
+    : []
+  return {
+    clientReady: discoverySummary?.client_ready === true,
+    blockers,
+  }
+}
+
 function buildSummary(dossier: Record<string, any> | null | undefined, status: DossierStatus): string | null {
   if (status === 'pending') return 'Pipeline run queued or entity shell only'
   if (status === 'missing') return 'No dossier artifact found yet'
+  const { blockers } = getClientReadyInfo(dossier)
+  if (status === 'rerun_needed' && blockers.length > 0) {
+    return `Client-ready gate blocked: ${blockers.join(', ')}`
+  }
   const discoverySummary = dossier?.question_first?.discovery_summary
   if (Array.isArray(discoverySummary?.opportunity_signals) && discoverySummary.opportunity_signals[0]?.answer) {
     return String(discoverySummary.opportunity_signals[0].answer)
@@ -73,7 +93,8 @@ export async function getEntityDossierIndexRecord(
     const generatedAt = getGeneratedAt(canonical.dossier)
     const stale = isStale(generatedAt)
     const dossier = normalizeQuestionFirstDossier(canonical.dossier, entityId, entity)
-    const dossierStatus: DossierStatus = shouldForceRerun ? 'rerun_needed' : (stale ? 'stale' : 'ready')
+    const { clientReady } = getClientReadyInfo(dossier)
+    const dossierStatus: DossierStatus = (!clientReady || shouldForceRerun) ? 'rerun_needed' : (stale ? 'stale' : 'ready')
     return {
       dossier_status: dossierStatus,
       latest_run_id: toText(dossier.run_rollup?.run_id) || toText(entity?.properties?.last_pipeline_batch_id) || null,
@@ -91,13 +112,15 @@ export async function getEntityDossierIndexRecord(
       const dossier = normalizeQuestionFirstDossier(JSON.parse(String(entity.properties.dossier_data)), entityId, entity)
       const generatedAt = getGeneratedAt(dossier)
       const stale = isStale(generatedAt)
+      const { clientReady } = getClientReadyInfo(dossier)
+      const dossierStatus: DossierStatus = (!clientReady || shouldForceRerun) ? 'rerun_needed' : (stale ? 'stale' : 'ready')
       return {
-        dossier_status: shouldForceRerun ? 'rerun_needed' : (stale ? 'stale' : 'ready'),
+        dossier_status: dossierStatus,
         latest_run_id: toText(dossier.run_rollup?.run_id) || toText(entity?.properties?.last_pipeline_batch_id) || null,
         latest_generated_at: generatedAt,
         latest_dossier_path: null,
         dossier_source: 'legacy_dossier',
-        dossier_summary: buildSummary(dossier, shouldForceRerun ? 'rerun_needed' : (stale ? 'stale' : 'ready')),
+        dossier_summary: buildSummary(dossier, dossierStatus),
         review_status: opsRecord.review_status,
         rerun_reason: opsRecord.rerun_reason,
       }

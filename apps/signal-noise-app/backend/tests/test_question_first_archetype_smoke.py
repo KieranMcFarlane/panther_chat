@@ -343,6 +343,32 @@ async def test_archetype_smoke_surfaces_retryable_upstream_failure_status(tmp_pa
     assert "retryable_upstream_failure" in summary["entities"][0]["error"]
 
 
+@pytest.mark.asyncio
+async def test_archetype_smoke_writes_scale_progress_artifact_with_client_ready_counts(tmp_path):
+    runner = _FakeRunner()
+    output_root = tmp_path / "smoke"
+
+    summary = await smoke.run_smoke(
+        smoke.DEFAULT_ARCHETYPE_BATCH,
+        output_root=output_root,
+        question_first_runner=runner,
+        opencode_timeout_ms=180000,
+    )
+
+    progress_path = output_root / "question_first_scale_progress.json"
+    assert progress_path.exists()
+    progress = json.loads(progress_path.read_text(encoding="utf-8"))
+
+    assert progress["total_scheduled"] == 3
+    assert progress["completed"] == 3
+    assert progress["failed"] == 0
+    assert progress["client_ready_dossiers"] == 0
+    assert progress["dossier_artifacts"] == 3
+    assert progress["last_successful_canonical_run_at"] == "2026-04-01T00:00:30+00:00"
+    assert progress["failure_breakdown"]["completed_not_promotable"] == 3
+    assert summary["scale_progress_path"] == str(progress_path)
+
+
 def test_build_rerun_archetypes_filters_failed_entities_and_failed_question(tmp_path):
     output_root = tmp_path / "smoke"
     summary_path = output_root / "question_first_archetype_smoke.json"
