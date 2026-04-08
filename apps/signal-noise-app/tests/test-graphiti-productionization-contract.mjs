@@ -47,6 +47,7 @@ test('graphiti notifications load only from active materialized insights', () =>
 
 test('graphiti loader prefers persisted insights and disables demo fallback in production', () => {
   assert.match(loaderSource, /loadGraphitiInsightsWithPersistence/)
+  assert.match(loaderSource, /clientFacingOnly:\s*true/)
   assert.match(loaderSource, /allowDemoFallbacks/)
   assert.match(loaderSource, /isProductionRuntime/)
 })

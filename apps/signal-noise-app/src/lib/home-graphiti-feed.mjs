@@ -41,3 +41,31 @@ export function isHighSignalGraphitiInsightRow(row) {
 export function filterHighSignalGraphitiInsightRows(rows) {
   return rows.filter((row) => isHighSignalGraphitiInsightRow(row))
 }
+
+function readInsightString(value) {
+  return typeof value === 'string' ? value.trim().toLowerCase() : ''
+}
+
+export function isClientFacingGraphitiInsight(insight) {
+  const insightType = readInsightString(insight?.insight_type)
+  const title = readInsightString(insight?.title)
+  const summary = readInsightString(insight?.summary)
+
+  if (insightType === 'operational') {
+    return false
+  }
+
+  if (title.includes('context refreshed')) {
+    return false
+  }
+
+  if (summary.includes('no validated signals remained')) {
+    return false
+  }
+
+  return true
+}
+
+export function filterClientFacingGraphitiInsights(insights) {
+  return insights.filter((insight) => isClientFacingGraphitiInsight(insight))
+}

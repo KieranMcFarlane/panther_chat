@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto'
 
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
 import { getSupabaseAdmin } from '@/lib/supabase-client'
-import { filterHighSignalGraphitiInsightRows } from '@/lib/home-graphiti-feed.mjs'
+import { filterClientFacingGraphitiInsights, filterHighSignalGraphitiInsightRows } from '@/lib/home-graphiti-feed.mjs'
 import type { HomeGraphitiInsight } from '@/lib/home-graphiti-contract'
 import { buildGraphitiNotificationPayload, materializeGraphitiInsight, rankGraphitiInsights } from '@/lib/graphiti-insight-materializer'
 import { resolvePinnedSmokeEntities } from '@/lib/entity-smoke-set'
@@ -331,7 +331,7 @@ async function resolveCanonicalGraphitiInsight(insight: HomeGraphitiInsight, raw
   }
 }
 
-export async function loadPersistedGraphitiInsights(limit = 25) {
+export async function loadPersistedGraphitiInsights(limit = 25, options?: { clientFacingOnly?: boolean }) {
   const supabase = getSupabaseAdmin()
   const warnings: string[] = []
   const response = await supabase
@@ -349,7 +349,12 @@ export async function loadPersistedGraphitiInsights(limit = 25) {
   const rows = Array.isArray(response.data)
     ? (response.data as PersistedGraphitiInsightRow[]).filter((row) => !isDemoOriginInsight(row))
     : []
-  const highlights = rankGraphitiInsights(rows.map(fromPersistedInsight)).slice(0, limit)
+  const materializedInsights = rows.map(fromPersistedInsight)
+  const highlights = rankGraphitiInsights(
+    options?.clientFacingOnly
+      ? filterClientFacingGraphitiInsights(materializedInsights)
+      : materializedInsights,
+  ).slice(0, limit)
 
   return {
     highlights,
@@ -560,8 +565,8 @@ export async function materializeGraphitiInsights(limit = 100) {
   }
 }
 
-export async function loadGraphitiInsightsWithPersistence(limit = 25) {
-  const persisted = await loadPersistedGraphitiInsights(limit)
+export async function loadGraphitiInsightsWithPersistence(limit = 25, options?: { clientFacingOnly?: boolean }) {
+  const persisted = await loadPersistedGraphitiInsights(limit, options)
   if (persisted.highlights.length > 0 || !allowDemoFallbacks()) {
     return persisted
   }

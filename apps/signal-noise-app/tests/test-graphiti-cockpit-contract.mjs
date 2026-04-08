@@ -16,6 +16,14 @@ test('home graphiti route uses protected ranked materialization instead of raw r
   assert.match(homeGraphitiRouteSource, /loadGraphitiInsights/)
 })
 
+test('homepage graphiti loader excludes operational refresh cards from client-facing highlights', () => {
+  assert.match(materializerSource, /context refreshed/)
+  assert.match(materializerSource, /no validated signals remained/)
+  const loaderSource = readFileSync(new URL('../src/lib/graphiti-insight-loader.ts', import.meta.url), 'utf8')
+  assert.match(loaderSource, /filterClientFacingGraphitiInsights/)
+  assert.match(loaderSource, /clientFacingOnly:\s*true/)
+})
+
 test('graphiti notifications route exists and references entity and insight ids', () => {
   const routePath = new URL('../src/app/api/notifications/graphiti/route.ts', import.meta.url)
   assert.equal(existsSync(routePath), true)

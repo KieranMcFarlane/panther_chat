@@ -1,5 +1,5 @@
 import { getSupabaseAdmin } from "@/lib/supabase-client"
-import { filterHighSignalGraphitiInsightRows } from "@/lib/home-graphiti-feed.mjs"
+import { filterClientFacingGraphitiInsights, filterHighSignalGraphitiInsightRows } from "@/lib/home-graphiti-feed.mjs"
 import { getDemoGraphitiInsights } from "@/lib/graphiti-demo-insights"
 import { materializeGraphitiInsight, rankGraphitiInsights } from "@/lib/graphiti-insight-materializer"
 import type { HomeGraphitiInsight } from "@/lib/home-graphiti-contract"
@@ -36,7 +36,7 @@ export async function loadGraphitiInsights(limit = 25): Promise<{
   lastUpdatedAt: string
   warnings: string[]
 }> {
-  const persisted = await loadGraphitiInsightsWithPersistence(limit)
+  const persisted = await loadGraphitiInsightsWithPersistence(limit, { clientFacingOnly: true })
   if (persisted) {
     return persisted
   }
@@ -67,7 +67,7 @@ export async function loadGraphitiInsights(limit = 25): Promise<{
     materialized.push(insight)
   }
 
-  const ranked = rankGraphitiInsights(materialized)
+  const ranked = rankGraphitiInsights(filterClientFacingGraphitiInsights(materialized))
   if (ranked.length > 0) {
     return {
       highlights: ranked.slice(0, limit),
