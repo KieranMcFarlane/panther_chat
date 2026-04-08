@@ -12,6 +12,12 @@ test('entity browser api exposes lightweight dossier index fields for cards', ()
   assert.match(entitiesRouteSource, /latest_run_id/)
 })
 
+test('entity browser api avoids per-row dossier index resolution on the hot path', () => {
+  assert.doesNotMatch(entitiesRouteSource, /getEntityDossierIndexRecord/)
+  assert.match(entitiesRouteSource, /function buildLightweightDossierIndexFromEntityState/)
+  assert.match(entitiesRouteSource, /dossier_status:\s*lightweightDossierIndex\.dossier_status/)
+})
+
 test('entity cards surface dossier availability and freshness status', () => {
   assert.match(entityCardSource, /dossier_status/)
   assert.match(entityCardSource, /Dossier ready|Dossier pending|Needs rerun/)

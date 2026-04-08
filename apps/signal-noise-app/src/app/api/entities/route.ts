@@ -1,10 +1,51 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { resolveLocalBadgeUrl } from '@/lib/badge-resolver'
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
-import { getEntityDossierIndexRecord } from '@/lib/dossier-index'
 import { resolveEntityUuid } from '@/lib/entity-public-id'
 
 export const dynamic = 'force-dynamic';
+
+type LightweightDossierIndex = {
+  dossier_status: 'ready' | 'stale' | 'pending' | 'rerun_needed' | 'missing'
+  latest_run_id: string | null
+  latest_generated_at: string | null
+  latest_dossier_path: string | null
+  dossier_source: string
+  dossier_summary: string | null
+  review_status: string
+  rerun_reason: string | null
+}
+
+function toText(value: unknown): string {
+  if (value === null || value === undefined) return ''
+  return String(value).trim()
+}
+
+function buildLightweightDossierIndexFromEntityState(entity: any): LightweightDossierIndex {
+  const properties = entity?.properties || {}
+  const dossierStatus = toText(properties.dossier_status).toLowerCase()
+  const pipelineStatus = toText(properties.last_pipeline_status).toLowerCase()
+
+  const normalizedStatus: LightweightDossierIndex['dossier_status'] =
+    dossierStatus === 'ready' || dossierStatus === 'stale' || dossierStatus === 'pending' || dossierStatus === 'rerun_needed'
+      ? dossierStatus
+      : dossierStatus === 'missing'
+        ? 'missing'
+        : ['queued', 'running', 'pending'].includes(pipelineStatus)
+          ? 'pending'
+          : 'missing'
+
+  return {
+    dossier_status: normalizedStatus,
+    latest_run_id: toText(properties.latest_run_id || properties.last_pipeline_batch_id) || null,
+    latest_generated_at: toText(properties.latest_generated_at || properties.generated_at || properties.dossier_generated_at) || null,
+    latest_dossier_path: toText(properties.latest_dossier_path) || null,
+    dossier_source: toText(properties.dossier_source) || (normalizedStatus === 'missing' ? 'missing' : 'entity_state'),
+    dossier_summary: toText(properties.dossier_summary) || null,
+    review_status: toText(properties.review_status) || 'resolved',
+    rerun_reason: toText(properties.rerun_reason) || null,
+  }
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -94,7 +135,7 @@ export async function GET(request: NextRequest) {
     const start = (page - 1) * limit
     const paginatedEntities = filteredEntities.slice(start, start + limit)
 
-    const transformedEntities = await Promise.all(paginatedEntities.map(async (entity: any) => {
+    const transformedEntities = paginatedEntities.map((entity: any) => {
       const entityName = entity.properties?.name || entity.neo4j_id
       const uuid = resolveEntityUuid({
         id: entity.id,
@@ -103,12 +144,7 @@ export async function GET(request: NextRequest) {
         supabase_id: entity.supabase_id || entity.properties?.supabase_id,
         properties: entity.properties,
       }) || undefined
-      const dossierIndex = await getEntityDossierIndexRecord(uuid || String(entity.id), {
-        id: entity.id,
-        uuid,
-        neo4j_id: entity.neo4j_id,
-        properties: entity.properties,
-      })
+      const lightweightDossierIndex = buildLightweightDossierIndexFromEntityState(entity)
       const resolvedBadgeUrl = resolveLocalBadgeUrl({
         entityId: entity.id ?? entity.neo4j_id,
         entityName,
@@ -120,14 +156,14 @@ export async function GET(request: NextRequest) {
         id: uuid || entity.id,
         uuid,
         neo4j_id: entity.neo4j_id,
-        dossier_status: dossierIndex.dossier_status,
-        latest_run_id: dossierIndex.latest_run_id,
-        latest_generated_at: dossierIndex.latest_generated_at,
-        latest_dossier_path: dossierIndex.latest_dossier_path,
-        dossier_source: dossierIndex.dossier_source,
-        dossier_summary: dossierIndex.dossier_summary,
-        review_status: dossierIndex.review_status,
-        rerun_reason: dossierIndex.rerun_reason,
+        dossier_status: lightweightDossierIndex.dossier_status,
+        latest_run_id: lightweightDossierIndex.latest_run_id,
+        latest_generated_at: lightweightDossierIndex.latest_generated_at,
+        latest_dossier_path: lightweightDossierIndex.latest_dossier_path,
+        dossier_source: lightweightDossierIndex.dossier_source,
+        dossier_summary: lightweightDossierIndex.dossier_summary,
+        review_status: lightweightDossierIndex.review_status,
+        rerun_reason: lightweightDossierIndex.rerun_reason,
         badge_s3_url: resolvedBadgeUrl,
         badge_lookup_complete: true,
         labels: entity.labels || [],
@@ -137,19 +173,19 @@ export async function GET(request: NextRequest) {
           badge_s3_url: resolvedBadgeUrl,
           badge_lookup_complete: true,
           uuid,
-          dossier_status: dossierIndex.dossier_status,
-          latest_run_id: dossierIndex.latest_run_id,
-          latest_generated_at: dossierIndex.latest_generated_at,
-          latest_dossier_path: dossierIndex.latest_dossier_path,
-          dossier_source: dossierIndex.dossier_source,
-          dossier_summary: dossierIndex.dossier_summary,
-          review_status: dossierIndex.review_status,
-          rerun_reason: dossierIndex.rerun_reason,
+          dossier_status: lightweightDossierIndex.dossier_status,
+          latest_run_id: lightweightDossierIndex.latest_run_id,
+          latest_generated_at: lightweightDossierIndex.latest_generated_at,
+          latest_dossier_path: lightweightDossierIndex.latest_dossier_path,
+          dossier_source: lightweightDossierIndex.dossier_source,
+          dossier_summary: lightweightDossierIndex.dossier_summary,
+          review_status: lightweightDossierIndex.review_status,
+          rerun_reason: lightweightDossierIndex.rerun_reason,
           name: entityName,
           type: entity.properties?.type || entity.labels?.[0] || 'ENTITY'
         }
       }
-    }))
+    })
 
     return NextResponse.json({
       entities: transformedEntities,
