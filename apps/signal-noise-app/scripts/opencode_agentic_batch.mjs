@@ -174,6 +174,125 @@ function _candidatePoolFromLeadership(runState) {
   return [];
 }
 
+function _normalizeGraphCandidate(value) {
+  if (!value) return null;
+  if (typeof value === 'string') {
+    const name = value.trim();
+    return name ? { name } : null;
+  }
+  if (typeof value !== 'object') return null;
+  const name = String(value.name || value.full_name || value.person || '').trim();
+  if (!name) return null;
+  return {
+    ...value,
+    name,
+  };
+}
+
+function _graphConnectionScore(rawConfidence, fallback = 0) {
+  const numeric = Number(rawConfidence);
+  if (!Number.isFinite(numeric)) return fallback;
+  if (numeric > 1) return Math.max(0, Math.min(1, numeric / 100));
+  return Math.max(0, Math.min(1, numeric));
+}
+
+function _deriveGraphFirstConnectionPaths({ graphContext, decisionOwnerState }) {
+  const graph = graphContext && typeof graphContext === 'object' ? graphContext : {};
+  const nodes = Array.isArray(graph.nodes) ? graph.nodes.filter((node) => node && typeof node === 'object') : [];
+  const edges = Array.isArray(graph.edges) ? graph.edges.filter((edge) => edge && typeof edge === 'object') : [];
+  const nodeIndex = new Map(nodes.map((node) => [String(node.node_id || '').trim(), node]).filter(([nodeId]) => nodeId));
+  const primaryOwner = _normalizeGraphCandidate(decisionOwnerState?.primary_owner);
+  const secondaryCandidates = Array.isArray(decisionOwnerState?.secondary_candidates)
+    ? decisionOwnerState.secondary_candidates.map((item) => _normalizeGraphCandidate(item)).filter(Boolean)
+    : [];
+  const supportingCandidates = Array.isArray(decisionOwnerState?.supporting_candidates)
+    ? decisionOwnerState.supporting_candidates.map((item) => _normalizeGraphCandidate(item)).filter(Boolean)
+    : [];
+  const rankedCandidates = [primaryOwner, ...secondaryCandidates, ...supportingCandidates]
+    .filter(Boolean)
+    .reduce((acc, candidate) => {
+      const key = String(candidate.name || '').trim().toLowerCase();
+      if (!key || acc.some((existing) => String(existing.name || '').trim().toLowerCase() === key)) return acc;
+      acc.push(candidate);
+      return acc;
+    }, []);
+  if (rankedCandidates.length === 0) {
+    return { candidatePaths: [], bestPath: null };
+  }
+
+  const resolvedPaths = rankedCandidates.map((candidate) => {
+    const candidateName = String(candidate.name || '').trim();
+    const matchedNode = nodes.find((node) => (
+      String(node.node_type || '').trim().toLowerCase() === 'person' &&
+      String(node.name || '').trim().toLowerCase() === candidateName.toLowerCase()
+    )) || null;
+    const q11Score = Number(candidate.decision_score ?? decisionOwnerState?.decision_score ?? decisionOwnerState?.current_confidence ?? 0) || 0;
+    const directOrMutualEdge = matchedNode
+      ? edges.find((edge) => {
+          const edgeType = String(edge.edge_type || '').trim().toLowerCase();
+          return ['direct_connection', 'mutual_connection'].includes(edgeType) && String(edge.to_id || '').trim() === String(matchedNode.node_id || '').trim();
+        }) || null
+      : null;
+    const bridgeToTargetEdge = matchedNode
+      ? edges.find((edge) => String(edge.edge_type || '').trim().toLowerCase() === 'bridge_to_target' && String(edge.to_id || '').trim() === String(matchedNode.node_id || '').trim()) || null
+      : null;
+
+    let bestPath = null;
+    if (directOrMutualEdge) {
+      const fromId = String(directOrMutualEdge.from_id || '').trim();
+      const fromNode = nodeIndex.get(fromId) || null;
+      const pathType = String(directOrMutualEdge.edge_type || '').trim().toLowerCase() === 'mutual_connection' ? 'mutual' : 'direct';
+      const q12Score = _graphConnectionScore(directOrMutualEdge.confidence, pathType === 'direct' ? 0.9 : 0.7);
+      bestPath = {
+        name: candidateName,
+        function_type: String(candidate.function_type || primaryOwner?.function_type || '').trim(),
+        seniority_level: String(candidate.seniority_level || primaryOwner?.seniority_level || '').trim(),
+        best_yp_owner: String(fromNode?.name || fromId || '').trim(),
+        path_type: pathType,
+        connection_score: q12Score,
+        q11_score: q11Score,
+        q12_score: q12Score,
+        decision_score: Math.round(q11Score * q12Score * 1000) / 1000,
+      };
+    } else if (bridgeToTargetEdge) {
+      const bridgeId = String(bridgeToTargetEdge.from_id || '').trim();
+      const bridgeConnection = edges.find((edge) => String(edge.edge_type || '').trim().toLowerCase() === 'bridge_connection' && String(edge.to_id || '').trim() === bridgeId) || null;
+      const ypNode = bridgeConnection ? (nodeIndex.get(String(bridgeConnection.from_id || '').trim()) || null) : null;
+      const q12Score = _graphConnectionScore(bridgeToTargetEdge.confidence ?? bridgeConnection?.confidence, 0.5);
+      bestPath = {
+        name: candidateName,
+        function_type: String(candidate.function_type || primaryOwner?.function_type || '').trim(),
+        seniority_level: String(candidate.seniority_level || primaryOwner?.seniority_level || '').trim(),
+        best_yp_owner: String(ypNode?.name || bridgeConnection?.from_id || '').trim(),
+        path_type: 'bridge',
+        connection_score: q12Score,
+        q11_score: q11Score,
+        q12_score: q12Score,
+        decision_score: Math.round(q11Score * q12Score * 1000) / 1000,
+      };
+    } else {
+      const q12Score = 0.2;
+      bestPath = {
+        name: candidateName,
+        function_type: String(candidate.function_type || primaryOwner?.function_type || '').trim(),
+        seniority_level: String(candidate.seniority_level || primaryOwner?.seniority_level || '').trim(),
+        best_yp_owner: '',
+        path_type: 'cold',
+        connection_score: q12Score,
+        q11_score: q11Score,
+        q12_score: q12Score,
+        decision_score: Math.round(q11Score * q12Score * 1000) / 1000,
+      };
+    }
+    return bestPath;
+  }).filter(Boolean).sort((left, right) => Number(right.decision_score || 0) - Number(left.decision_score || 0));
+
+  return {
+    candidatePaths: resolvedPaths,
+    bestPath: resolvedPaths[0] || null,
+  };
+}
+
 function _presetQuestionSpecs(entityName) {
   return [
     {
@@ -1602,11 +1721,15 @@ export async function runDeterministicToolQuestion(
 
   if (questionType === 'connections') {
     const decisionOwnerState = getPriorQuestion('q11_decision_owner');
-    const primaryOwner = decisionOwnerState?.primary_owner && typeof decisionOwnerState.primary_owner === 'object'
-      ? decisionOwnerState.primary_owner
-      : null;
-    const ownerName = String(primaryOwner?.name || '').trim();
-    if (!ownerName) {
+    const graphContext = (question?.graph_context && typeof question.graph_context === 'object')
+      ? question.graph_context
+      : (question?.deterministic_input?.connections_graph && typeof question.deterministic_input.connections_graph === 'object')
+        ? question.deterministic_input.connections_graph
+        : (runState?.connections_graph && typeof runState.connections_graph === 'object')
+          ? runState.connections_graph
+          : null;
+    const { candidatePaths, bestPath } = _deriveGraphFirstConnectionPaths({ graphContext, decisionOwnerState });
+    if (!bestPath || candidatePaths.length === 0) {
       return {
         structuredOutput: _emptyStructuredOutputForQuestion(question, 'No ranked decision owner is available yet for graph-first path analysis.'),
         promptTrace: { status: 'deterministic_connections_missing_q11', has_structured_output: true },
@@ -1614,34 +1737,21 @@ export async function runDeterministicToolQuestion(
         cliResult: { code: 0, stdout: '', stderr: '' },
       };
     }
-    const q11Score = Number(decisionOwnerState?.current_confidence || 0);
-    const q12Score = 0.2;
     return {
       structuredOutput: {
-        answer: ownerName,
-        candidate_paths: [
-          {
-            name: ownerName,
-            function_type: String(primaryOwner?.function_type || '').trim(),
-            seniority_level: String(primaryOwner?.seniority_level || '').trim(),
-            path_type: 'cold',
-            connection_score: q12Score,
-            q11_score: q11Score,
-            q12_score: q12Score,
-            decision_score: Math.round(q11Score * q12Score * 1000) / 1000,
-          },
-        ],
-        best_yp_owner: 'Elliott Hillman',
-        path_type: 'cold',
-        connection_score: q12Score,
-        q11_score: q11Score,
-        q12_score: q12Score,
-        confidence: 0.35,
-        validation_state: 'provisional',
+        answer: bestPath.name,
+        candidate_paths: candidatePaths,
+        best_yp_owner: bestPath.best_yp_owner || '',
+        path_type: bestPath.path_type,
+        connection_score: bestPath.connection_score,
+        q11_score: bestPath.q11_score,
+        q12_score: bestPath.q12_score,
+        confidence: Math.max(0.35, Number(bestPath.q12_score || 0)),
+        validation_state: bestPath.path_type === 'cold' ? 'provisional' : 'deterministic_detected',
         sources: [],
         signal_type: 'CONNECTIONS',
       },
-      promptTrace: { status: 'deterministic_connections_fallback', has_structured_output: true },
+      promptTrace: { status: graphContext ? 'deterministic_connections_graph_first' : 'deterministic_connections_fallback', has_structured_output: true },
       messageTrace: [],
       cliResult: { code: 0, stdout: '', stderr: '' },
     };
@@ -3207,6 +3317,7 @@ export async function runOpenCodeQuestionSourceBatch({
       depends_on: Array.isArray(question.depends_on) ? question.depends_on : [],
       structured_output_schema: question.structured_output_schema || '',
       graph_write_targets: Array.isArray(question.graph_write_targets) ? question.graph_write_targets : [],
+      graph_context: question.graph_context || sourcePayload.connections_graph || sourcePayload.graph_context || null,
       question_text: resolvedQuestionText,
       question: resolvedQuestionText,
     };

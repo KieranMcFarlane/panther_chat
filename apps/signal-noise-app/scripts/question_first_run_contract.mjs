@@ -259,6 +259,12 @@ function _normalizeQuestionSpec(question, entityMeta = {}) {
     entity_type: String(normalized.entity_type || entityMeta.entity_type || '').trim(),
     preset: normalized.preset ?? entityMeta.preset ?? null,
     pack_role: String(normalized.pack_role || 'discovery').trim(),
+    execution_class: String(normalized.execution_class || 'atomic_retrieval').trim(),
+    rollout_phase: String(normalized.rollout_phase || 'phase_1_core').trim(),
+    conditional_on: Array.isArray(normalized.conditional_on) ? _clone(normalized.conditional_on) : [],
+    depends_on: Array.isArray(normalized.depends_on) ? [...normalized.depends_on] : [],
+    structured_output_schema: String(normalized.structured_output_schema || '').trim(),
+    graph_write_targets: Array.isArray(normalized.graph_write_targets) ? [...normalized.graph_write_targets] : [],
   };
 }
 
@@ -274,6 +280,9 @@ function _normalizeAnswerRecord(answer, questionTiming, questionSpec) {
     validation_state: validationState,
     confidence,
     signal_type: String(normalized.signal_type || (questionSpec?.question_type ? questionSpec.question_type.toUpperCase() : 'GENERAL')).trim(),
+    execution_class: String(normalized.execution_class || questionSpec?.execution_class || '').trim() || null,
+    rollout_phase: String(normalized.rollout_phase || questionSpec?.rollout_phase || '').trim() || null,
+    structured_output_schema: String(normalized.structured_output_schema || questionSpec?.structured_output_schema || '').trim() || null,
     answer: _normalizeAnswerPayload(normalized),
     primary_owner: _normalizeCandidate(normalized.primary_owner),
     supporting_candidates: Array.isArray(normalized.supporting_candidates) ? normalized.supporting_candidates.map((item) => _normalizeCandidate(item)).filter(Boolean) : [],
@@ -566,6 +575,31 @@ export function validateQuestionFirstRunArtifact(artifact) {
   for (const field of ['question_specs', 'answer_records', 'evidence_items', 'trace_index', 'promotion_candidates', 'poi_graph', 'categories', 'question_timings', 'run_rollup', 'merge_patch']) {
     if (!(field in artifact)) {
       throw new TypeError(`Missing canonical question_first_run field: ${field}`);
+    }
+  }
+  const answerRecords = Array.isArray(artifact.answer_records) ? artifact.answer_records : [];
+  for (const answer of answerRecords) {
+    const questionType = String(answer?.question_type || '').trim().toLowerCase();
+    const status = String(answer?.status || '').trim().toLowerCase();
+    if (status === 'failed' || status === 'no_signal') continue;
+    if (questionType === 'decision_owner') {
+      const hasPrimaryOwner = Boolean(answer?.primary_owner && typeof answer.primary_owner === 'object' && String(answer.primary_owner.name || '').trim());
+      const hasCandidates = Array.isArray(answer?.supporting_candidates) || Array.isArray(answer?.candidates);
+      if (!hasPrimaryOwner && !hasCandidates) {
+        throw new TypeError('decision_owner answers must include a primary_owner or ranked candidates');
+      }
+    }
+    if (questionType === 'connections') {
+      const candidatePaths = answer?.answer?.raw_structured_output?.candidate_paths;
+      if (!Array.isArray(candidatePaths)) {
+        throw new TypeError('connections answers must include candidate_paths in raw_structured_output');
+      }
+    }
+    if (['capability_gap', 'yp_fit', 'outreach_strategy'].includes(questionType)) {
+      const rawStructuredOutput = answer?.answer?.raw_structured_output;
+      if (!rawStructuredOutput || typeof rawStructuredOutput !== 'object') {
+        throw new TypeError(`${questionType} answers must include raw_structured_output`);
+      }
     }
   }
   return artifact;

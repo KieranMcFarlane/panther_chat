@@ -1121,9 +1121,11 @@ async def run_question_first_dossier_from_payload(
     merged = merge_question_first_run_artifact_into_dossier(dossier_payload=source, artifact=artifact)
     promotions = build_question_first_promotions(
         answers=artifact.answers,
+        question_specs=artifact.question_specs,
         evidence_items=artifact.evidence_items,
         promotion_candidates=artifact.promotion_candidates,
         bridge_contacts=source.get("bridge_contacts") if isinstance(source.get("bridge_contacts"), list) else None,
+        allowed_rollout_phase=str(os.getenv("QUESTION_FIRST_PROMOTION_PHASE") or "phase_1_core").strip() or "phase_1_core",
     )
     active_connections_graph = promotions["connections_graph"]
     connections_graph_enrichment_enabled = False

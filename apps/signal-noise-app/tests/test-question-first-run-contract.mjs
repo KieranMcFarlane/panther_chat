@@ -36,6 +36,12 @@ test('buildQuestionFirstRunArtifact emits the canonical question_first_run_v2 sh
         entity_type: 'SPORT_LEAGUE',
         preset: 'major-league-cricket',
         pack_role: 'discovery',
+        execution_class: 'atomic_retrieval',
+        rollout_phase: 'phase_1_core',
+        conditional_on: [],
+        depends_on: [],
+        structured_output_schema: 'foundation_v1',
+        graph_write_targets: ['entity_profile'],
       },
     ],
     answer_records: [
@@ -122,7 +128,10 @@ test('buildQuestionFirstRunArtifact emits the canonical question_first_run_v2 sh
   assert.equal(artifact.question_timings.q1.completed_at, '2026-03-30T00:00:05+00:00');
   assert.equal(artifact.question_timings.q1.duration_seconds, 5);
   assert.equal(artifact.question_specs[0].question_text, 'When was Major League Cricket founded?');
+  assert.equal(artifact.question_specs[0].rollout_phase, 'phase_1_core');
+  assert.equal(artifact.question_specs[0].structured_output_schema, 'foundation_v1');
   assert.equal(artifact.answer_records[0].answer.value, '2023');
+  assert.equal(artifact.answer_records[0].rollout_phase, 'phase_1_core');
   assert.equal(artifact.answer_records[0].evidence_refs[0], 'q1:foundation');
   assert.equal(artifact.answer_records[0].trace_ref, 'trace:q1');
   assert.equal(artifact.merge_patch.question_first.schema_version, QUESTION_FIRST_RUN_SCHEMA_VERSION);
@@ -131,6 +140,86 @@ test('buildQuestionFirstRunArtifact emits the canonical question_first_run_v2 sh
   assert.ok(!('questions' in artifact.merge_patch));
   assert.ok(!('question_first_answer' in artifact.question_specs[0]));
   assert.ok(!('raw_execution_trace' in artifact.answer_records[0]));
+});
+
+test('validateQuestionFirstRunArtifact requires typed connection and inference payloads', () => {
+  const artifact = buildQuestionFirstRunArtifact({
+    entity_id: 'arsenal-fc',
+    entity_name: 'Arsenal Football Club',
+    entity_type: 'SPORT_CLUB',
+    question_specs: [
+      {
+        question_id: 'q12_connections',
+        question_family: 'connections',
+        question_type: 'connections',
+        question_text: 'Which YP paths reach the ranked buyer?',
+        query: '',
+        hop_budget: 0,
+        evidence_extension_budget: 0,
+        source_priority: [],
+        evidence_focus: 'network_path',
+        promotion_target: 'connections',
+        answer_kind: 'summary',
+        question_shape: 'atomic',
+        question_timeout_ms: 1000,
+        hop_timeout_ms: 1000,
+        evidence_extension_confidence_threshold: 0.65,
+        entity_name: 'Arsenal Football Club',
+        entity_id: 'arsenal-fc',
+        entity_type: 'SPORT_CLUB',
+        preset: 'arsenal',
+        pack_role: 'discovery',
+        execution_class: 'deterministic_enrichment',
+        rollout_phase: 'phase_3_decision',
+        conditional_on: [],
+        depends_on: ['q11_decision_owner'],
+        structured_output_schema: 'connections_path_v1',
+        graph_write_targets: ['connection_paths'],
+      },
+    ],
+    answer_records: [
+      {
+        question_id: 'q12_connections',
+        question_type: 'connections',
+        status: 'answered',
+        validation_state: 'deterministic_detected',
+        confidence: 0.72,
+        signal_type: 'CONNECTIONS',
+        answer: {
+          kind: 'summary',
+          summary: 'Path found',
+          raw_structured_output: {
+            candidate_paths: [
+              {
+                name: 'Jane Doe',
+                path_type: 'direct',
+                q11_score: 0.8,
+                q12_score: 0.9,
+                decision_score: 0.72,
+              },
+            ],
+          },
+        },
+        trace_ref: 'trace:q12',
+        evidence_refs: [],
+        started_at: '2026-03-30T00:00:00+00:00',
+        completed_at: '2026-03-30T00:00:05+00:00',
+        duration_seconds: 5,
+      },
+    ],
+    evidence_items: [],
+    trace_index: [],
+    categories: [],
+    run_rollup: {},
+  });
+
+  assert.doesNotThrow(() => validateQuestionFirstRunArtifact(artifact));
+  const brokenArtifact = structuredClone(artifact);
+  delete brokenArtifact.answer_records[0].answer.raw_structured_output.candidate_paths;
+  assert.throws(
+    () => validateQuestionFirstRunArtifact(brokenArtifact),
+    /connections answers must include candidate_paths/,
+  );
 });
 
 test('validateQuestionFirstRunArtifact rejects malformed payloads', () => {

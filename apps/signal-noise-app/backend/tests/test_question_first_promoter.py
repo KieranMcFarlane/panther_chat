@@ -147,6 +147,7 @@ def test_build_question_first_promotions_supports_launch_and_decision_owner_ques
         ],
         evidence_items=[],
         promotion_candidates=[],
+        allowed_rollout_phase="phase_3_decision",
     )
 
     assert result["discovery_summary"]["promotion_targets"] == ["decision_owners", "opportunity_signals"]
@@ -170,6 +171,7 @@ def test_build_question_first_promotions_supports_related_pois_questions():
         ],
         evidence_items=[],
         promotion_candidates=[],
+        allowed_rollout_phase="phase_3_decision",
     )
 
     assert result["discovery_summary"]["promotion_targets"] == ["decision_owners"]
@@ -207,6 +209,7 @@ def test_build_question_first_promotions_emits_poi_graph_for_people_answers():
         ],
         evidence_items=[],
         promotion_candidates=[],
+        allowed_rollout_phase="phase_3_decision",
     )
 
     assert result["poi_graph"]["schema_version"] == "poi_graph_v1"
@@ -251,3 +254,34 @@ def test_build_question_first_connections_graph_accepts_explicit_bridge_contacts
         edge["from_id"] == "Stuart Cope" and edge["edge_type"] == "bridge_connection" and edge["to_id"] == "bridge:david-eames"
         for edge in graph["edges"]
     )
+
+
+def test_build_question_first_promotions_phase_gates_decision_outputs_by_default():
+    result = build_question_first_promotions(
+        answers=[
+            {
+                "question_id": "q_owner",
+                "question_text": "Who is the most suitable person for commercial partnerships or business development at Arsenal Football Club?",
+                "question_type": "decision_owner",
+                "answer": "Jane Doe",
+                "confidence": 0.88,
+                "validation_state": "validated",
+                "signal_type": "DECISION_OWNER",
+                "evidence_url": "https://example.com/jane-doe",
+                "rollout_phase": "phase_3_decision",
+            },
+        ],
+        question_specs=[
+            {
+                "question_id": "q_owner",
+                "rollout_phase": "phase_3_decision",
+                "execution_class": "atomic_retrieval",
+                "structured_output_schema": "decision_owner_v1",
+            }
+        ],
+        evidence_items=[],
+        promotion_candidates=[],
+    )
+
+    assert result["discovery_summary"]["promoted_count"] == 0
+    assert result["discovery_summary"]["promotion_rollout_phase"] == "phase_1_core"

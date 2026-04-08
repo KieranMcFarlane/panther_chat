@@ -883,6 +883,50 @@ test('runDeterministicToolQuestion accepts APIFY_PERSONAL_API and APIFY_PASSWORD
   }
 });
 
+test('runDeterministicToolQuestion prefers graph-first candidate paths for q12_connections when graph context exists', async () => {
+  const result = await runDeterministicToolQuestion(
+    {
+      question_id: 'q12_connections',
+      question_type: 'connections',
+      graph_context: {
+        schema_version: 'connections_graph_v1',
+        nodes: [
+          { node_id: 'Elliott Hillman', node_type: 'yp_member', name: 'Elliott Hillman' },
+          { node_id: 'person:jane-doe', node_type: 'person', name: 'Jane Doe' },
+        ],
+        edges: [
+          { from_id: 'Elliott Hillman', to_id: 'person:jane-doe', edge_type: 'direct_connection', confidence: 72 },
+        ],
+      },
+    },
+    {
+      runState: {
+        questions: [
+          {
+            question_id: 'q11_decision_owner',
+            current_confidence: 0.8,
+            primary_owner: {
+              name: 'Jane Doe',
+              function_type: 'PARTNERSHIPS',
+              seniority_level: 'director',
+              decision_score: 0.8,
+            },
+            secondary_candidates: [],
+            supporting_candidates: [],
+          },
+        ],
+      },
+    },
+  );
+
+  assert.equal(result.structuredOutput.answer, 'Jane Doe');
+  assert.equal(result.structuredOutput.best_yp_owner, 'Elliott Hillman');
+  assert.equal(result.structuredOutput.path_type, 'direct');
+  assert.equal(result.structuredOutput.validation_state, 'deterministic_detected');
+  assert.equal(result.structuredOutput.candidate_paths[0].q12_score, 0.72);
+  assert.equal(result.structuredOutput.candidate_paths[0].decision_score, 0.576);
+});
+
 test('runOpenCodeQuestionSourceBatch resolves deterministic Apify enrichment before search', async () => {
   const outputDir = mkdtempSync(join(tmpdir(), 'opencode-digital-stack-'));
   const sourcePath = join(outputDir, 'source.json');

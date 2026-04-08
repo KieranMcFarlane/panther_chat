@@ -22,6 +22,17 @@ def _safe_float(value: Any) -> float:
         return 0.0
 
 
+_ROLLOUT_PHASE_RANK = {
+    "phase_1_core": 1,
+    "phase_2_conditional": 2,
+    "phase_3_decision": 3,
+}
+
+
+def _rollout_phase_rank(value: Any) -> int:
+    return _ROLLOUT_PHASE_RANK.get(str(value or "").strip(), _ROLLOUT_PHASE_RANK["phase_3_decision"])
+
+
 def _infer_promotion_target(answer: Dict[str, Any]) -> str:
     question_type = str(answer.get("question_type") or "").strip().lower()
     signal_type = str(answer.get("signal_type") or "").strip().lower()
@@ -284,14 +295,23 @@ def build_question_first_connections_graph(
 def build_question_first_promotions(
     *,
     answers: List[Dict[str, Any]] | None = None,
+    question_specs: List[Dict[str, Any]] | None = None,
     evidence_items: List[Dict[str, Any]] | None = None,
     promotion_candidates: List[Dict[str, Any]] | None = None,
     bridge_contacts: List[Dict[str, Any]] | None = None,
     min_confidence: float = 0.7,
+    allowed_rollout_phase: str = "phase_1_core",
 ) -> Dict[str, Any]:
     answers = [item for item in (answers or []) if isinstance(item, dict)]
+    question_specs = [item for item in (question_specs or []) if isinstance(item, dict)]
     evidence_items = [item for item in (evidence_items or []) if isinstance(item, dict)]
     promotion_candidates = [item for item in (promotion_candidates or []) if isinstance(item, dict)]
+    question_specs_by_id = {
+        str(item.get("question_id") or "").strip(): item
+        for item in question_specs
+        if str(item.get("question_id") or "").strip()
+    }
+    allowed_phase_rank = _rollout_phase_rank(allowed_rollout_phase)
 
     if not evidence_items or not promotion_candidates:
         synthetic_evidence_items: List[Dict[str, Any]] = []
@@ -299,6 +319,12 @@ def build_question_first_promotions(
         for answer in answers:
             question_id = str(answer.get("question_id") or "").strip()
             if not question_id:
+                continue
+            question_spec = question_specs_by_id.get(question_id, {})
+            rollout_phase = str(answer.get("rollout_phase") or question_spec.get("rollout_phase") or "phase_1_core").strip()
+            execution_class = str(answer.get("execution_class") or question_spec.get("execution_class") or "").strip()
+            structured_output_schema = str(answer.get("structured_output_schema") or question_spec.get("structured_output_schema") or "").strip()
+            if _rollout_phase_rank(rollout_phase) > allowed_phase_rank:
                 continue
             confidence = _safe_float(answer.get("confidence"))
             validation_state = str(answer.get("validation_state") or "").strip().lower()
@@ -323,6 +349,9 @@ def build_question_first_promotions(
                     "confidence": confidence,
                     "validation_state": validation_state,
                     "evidence_url": evidence_url,
+                    "rollout_phase": rollout_phase,
+                    "execution_class": execution_class,
+                    "structured_output_schema": structured_output_schema,
                 }
             )
             synthetic_promotion_candidates.append(
@@ -334,6 +363,9 @@ def build_question_first_promotions(
                     "answer": str(answer.get("answer") or "").strip(),
                     "confidence": confidence,
                     "promotion_candidate": True,
+                    "rollout_phase": rollout_phase,
+                    "execution_class": execution_class,
+                    "structured_output_schema": structured_output_schema,
                 }
             )
 
@@ -357,11 +389,17 @@ def build_question_first_promotions(
     for candidate in promotion_candidates:
         if not candidate.get("promotion_candidate"):
             continue
+        question_id = str(candidate.get("question_id") or "").strip()
+        question_spec = question_specs_by_id.get(question_id, {})
+        rollout_phase = str(candidate.get("rollout_phase") or question_spec.get("rollout_phase") or "phase_1_core").strip()
+        execution_class = str(candidate.get("execution_class") or question_spec.get("execution_class") or "").strip()
+        structured_output_schema = str(candidate.get("structured_output_schema") or question_spec.get("structured_output_schema") or "").strip()
+        if _rollout_phase_rank(rollout_phase) > allowed_phase_rank:
+            continue
         confidence = _safe_float(candidate.get("confidence"))
         if confidence < min_confidence:
             continue
 
-        question_id = str(candidate.get("question_id") or "").strip()
         evidence = evidence_by_question.get(question_id, {})
         validation_state = str(evidence.get("validation_state") or "").strip().lower()
         evidence_url = str(evidence.get("evidence_url") or "").strip()
@@ -382,6 +420,9 @@ def build_question_first_promotions(
             "evidence_focus": str(evidence.get("evidence_focus") or ""),
             "answer_kind": str(evidence.get("answer_kind") or ""),
             "validation_state": validation_state,
+            "rollout_phase": rollout_phase,
+            "execution_class": execution_class,
+            "structured_output_schema": structured_output_schema,
         }
         promoted.append(promoted_item)
 
@@ -399,6 +440,7 @@ def build_question_first_promotions(
         "promoted_count": len(promoted),
         "supporting_evidence_count": len({item["evidence_id"] or item["candidate_id"] for item in promoted}),
         "promotion_targets": targets,
+        "promotion_rollout_phase": allowed_rollout_phase,
     }
     discovery_summary.update(grouped)
 
