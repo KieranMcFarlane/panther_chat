@@ -7,7 +7,7 @@ import type { HomeGraphitiInsight } from '@/lib/home-graphiti-contract'
 import { buildGraphitiNotificationPayload, materializeGraphitiInsight, rankGraphitiInsights } from '@/lib/graphiti-insight-materializer'
 import { resolvePinnedSmokeEntities } from '@/lib/entity-smoke-set'
 import { resolveEntityUuid } from '@/lib/entity-public-id'
-import { getGraphitiStaleWindowHours } from '@/lib/runtime-env'
+import { allowDemoFallbacks, getGraphitiStaleWindowHours } from '@/lib/runtime-env'
 
 const RAW_HOME_INSIGHT_COLUMNS = [
   'insight_id',
