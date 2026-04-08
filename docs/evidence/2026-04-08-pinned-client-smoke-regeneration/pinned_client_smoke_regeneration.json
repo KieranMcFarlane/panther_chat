@@ -9,29 +9,53 @@
       "status": "ready",
       "questions_validated": 2,
       "source_refs": 6
+    },
+    {
+      "entity_id": "arsenal",
+      "source_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-arsenal/core-direct-batch/arsenal_opencode_batch_20260408_073048_question_first_run_v1.json",
+      "promoted_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/backend/data/dossiers/question_first/arsenal_opencode_batch_20260408_073048_question_first_run_v1.json",
+      "status": "ready",
+      "questions_validated": 2,
+      "source_refs": 7
+    },
+    {
+      "entity_id": "coventry-city",
+      "source_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-coventry-city/core-direct-batch/coventry-city_opencode_batch_20260408_073300_question_first_run_v1.json",
+      "promoted_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/backend/data/dossiers/question_first/coventry-city_opencode_batch_20260408_073300_question_first_run_v1.json",
+      "status": "ready",
+      "questions_validated": 2,
+      "source_refs": 6
+    },
+    {
+      "entity_id": "zimbabwe-cricket",
+      "source_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-zimbabwe-cricket/core-direct-batch/zimbabwe-cricket_opencode_batch_20260408_073852_question_first_run_v1.json",
+      "promoted_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/backend/data/dossiers/question_first/zimbabwe-cricket_opencode_batch_20260408_073852_question_first_run_v1.json",
+      "status": "ready",
+      "questions_validated": 2,
+      "source_refs": 8
     }
   ],
   "entities": [
     {
       "entity_id": "arsenal",
       "entity_name": "Arsenal Football Club",
-      "classification": "generated_but_not_ready",
-      "promoted": false,
-      "notes": "State file shows q1_foundation and q2_digital_stack validated, but no final question_first_run_v1 or question_first_dossier artifact was emitted in the captured pass."
+      "classification": "ready_canonical",
+      "promoted": true,
+      "notes": "Core direct batch completed with q1_foundation and q2_digital_stack both validated; promoted canonical question_first_run_v1 artifact."
     },
     {
       "entity_id": "coventry-city",
       "entity_name": "Coventry City",
-      "classification": "generated_but_not_ready",
-      "promoted": false,
-      "notes": "State file shows q1_foundation validated, but no final question_first_run_v1 or question_first_dossier artifact was emitted in the captured pass."
+      "classification": "ready_canonical",
+      "promoted": true,
+      "notes": "Core direct batch completed with q1_foundation and q2_digital_stack both validated; promoted canonical question_first_run_v1 artifact."
     },
     {
       "entity_id": "zimbabwe-cricket",
       "entity_name": "Zimbabwe Cricket",
-      "classification": "generated_but_not_ready",
-      "promoted": false,
-      "notes": "State file shows q1_foundation and q2_digital_stack validated, but no final question_first_run_v1 or question_first_dossier artifact was emitted in the captured pass."
+      "classification": "ready_canonical",
+      "promoted": true,
+      "notes": "Core direct batch completed with q1_foundation and q2_digital_stack both validated; promoted canonical question_first_run_v1 artifact."
     },
     {
       "entity_id": "major-league-cricket",
@@ -43,9 +67,9 @@
     {
       "entity_id": "zimbabwe-handball-federation",
       "entity_name": "Zimbabwe Handball Federation",
-      "classification": "no_artifact",
+      "classification": "run_failed",
       "promoted": false,
-      "notes": "No state or final canonical artifact was emitted during the captured pass."
+      "notes": "Core direct batch stalled in q1_foundation with tool_call_missing state and emitted no final question_first_run_v1 or question_first_dossier artifact."
     }
   ]
 }

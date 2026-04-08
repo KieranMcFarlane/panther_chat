@@ -1,0 +1,3152 @@
+{
+  "schema_version": "question_first_run_v1",
+  "generated_at": "2026-04-08T07:38:52.533Z",
+  "run_started_at": "2026-04-08T07:37:17.133Z",
+  "source": "opencode_agentic_batch",
+  "status": "ready",
+  "warnings": [],
+  "entity": {
+    "entity_id": "zimbabwe-cricket",
+    "entity_name": "Zimbabwe Cricket",
+    "entity_type": "SPORT_FEDERATION"
+  },
+  "preset": "zimbabwe-cricket-core-q1-q2",
+  "question_source_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-zimbabwe-cricket/_generated_question_sources/zimbabwe_cricket_core_q1_q2.json",
+  "questions": [
+    {
+      "question_id": "q1_foundation",
+      "question_family": "foundation",
+      "question_type": "foundation",
+      "question": "What year was Zimbabwe Cricket founded?",
+      "query": "\"Zimbabwe Cricket\" founded year",
+      "hop_budget": 8,
+      "evidence_extension_budget": 1,
+      "source_priority": [
+        "google_serp",
+        "official_site",
+        "wikipedia"
+      ],
+      "search_strategy": {
+        "search_queries": [
+          "\"Zimbabwe Cricket\" founded year",
+          "\"Zimbabwe Cricket\" official website",
+          "\"Zimbabwe Cricket\" wikipedia"
+        ]
+      },
+      "evidence_focus": "entity_fact",
+      "promotion_target": "profile",
+      "answer_kind": "fact",
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Zimbabwe Cricket",
+      "entity_id": "zimbabwe-cricket",
+      "entity_type": "SPORT_FEDERATION",
+      "preset": "zimbabwe-cricket-core-q1-q2",
+      "pack_role": "discovery",
+      "question_text": "What year was Zimbabwe Cricket founded?",
+      "answer": "1981",
+      "confidence": 1,
+      "validation_state": "validated",
+      "evidence_url": {
+        "url": "https://en.wikipedia.org/wiki/Zimbabwe_Cricket",
+        "title": "Zimbabwe Cricket - Wikipedia",
+        "excerpt": "Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)"
+      },
+      "signal_type": "FOUNDATION",
+      "recommended_next_query": "",
+      "notes": "",
+      "prompt_trace": {
+        "exit_code": 0,
+        "stdout_length": 77698,
+        "stderr_length": 0,
+        "has_structured_output": true
+      },
+      "message_trace": [
+        {
+          "role": "assistant",
+          "completed": true,
+          "type": "cli-run",
+          "has_structured_output": true,
+          "part_count": 1
+        }
+      ],
+      "raw_execution_trace": {
+        "exit_code": 0,
+        "stdout_length": 77698,
+        "stderr_length": 0,
+        "has_structured_output": true,
+        "stdout_excerpt": "ep_start\",\"timestamp\":1775633913473,\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"part\":{\"id\":\"prt_d6c0756750010CYGFrV19WtS1B\",\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"messageID\":\"msg_d6c072f90001qpaDxrrxZuaZmn\",\"type\":\"step-start\",\"snapshot\":\"\"}}\n{\"type\":\"text\",\"timestamp\":1775633924548,\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"part\":{\"id\":\"prt_d6c076e78001NYXgk0OwIoVFjS\",\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"messageID\":\"msg_d6c072f90001qpaDxrrxZuaZmn\",\"type\":\"text\",\"text\":\"```json\\n{\\n  \\\"answer\\\": \\\"1981\\\",\\n  \\\"confidence\\\": 1,\\n  \\\"sources\\\": [\\n    {\\n      \\\"url\\\": \\\"https://en.wikipedia.org/wiki/Zimbabwe_Cricket\\\",\\n      \\\"title\\\": \\\"Zimbabwe Cricket - Wikipedia\\\",\\n      \\\"excerpt\\\": \\\"Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)\\\"\\n    }\\n  ],\\n  \\\"validation_state\\\": \\\"validated\\\",\\n  \\\"evidence\\\": \\\"The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence.\\\"\\n}\\n```\",\"time\":{\"start\":1775633924543,\"end\":1775633924543}}}",
+        "stderr_excerpt": "",
+        "assistant_text_excerpt": "```json\n{\n  \"answer\": \"1981\",\n  \"confidence\": 1,\n  \"sources\": [\n    {\n      \"url\": \"https://en.wikipedia.org/wiki/Zimbabwe_Cricket\",\n      \"title\": \"Zimbabwe Cricket - Wikipedia\",\n      \"excerpt\": \"Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)\"\n    }\n  ],\n  \"validation_state\": \"validated\",\n  \"evidence\": \"The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence.\"\n}\n```",
+        "message_trace_summary": [
+          {
+            "role": "assistant",
+            "completed": true,
+            "type": "cli-run",
+            "has_structured_output": true,
+            "part_count": 1
+          }
+        ]
+      },
+      "started_at": "2026-04-08T07:37:17.145Z",
+      "completed_at": "2026-04-08T07:38:44.588Z",
+      "duration_seconds": 87.443,
+      "question_first_answer": {
+        "question_id": "q1_foundation",
+        "question_type": "foundation",
+        "question_text": "What year was Zimbabwe Cricket founded?",
+        "question": "What year was Zimbabwe Cricket founded?",
+        "query": "\"Zimbabwe Cricket\" founded year",
+        "hop_budget": 8,
+        "source_priority": [
+          "google_serp",
+          "official_site",
+          "wikipedia"
+        ],
+        "evidence_extension_budget": 1,
+        "evidence_extension_confidence_threshold": 0.65,
+        "question_timeout_ms": 180000,
+        "entity_name": "Zimbabwe Cricket",
+        "entity_id": "zimbabwe-cricket",
+        "entity_type": "SPORT_FEDERATION",
+        "preset": "zimbabwe-cricket-core-q1-q2",
+        "model_used": "zai-coding-plan/glm-5",
+        "session_id": "cli-1",
+        "agentic_plan": {
+          "source_priority": [
+            "google_serp",
+            "official_site",
+            "wikipedia"
+          ],
+          "stop_rule": "continue for up to 8 hops within OpenCode steps budget"
+        },
+        "reasoning": {
+          "structured_output": {
+            "answer": "1981",
+            "confidence": 1,
+            "sources": [
+              {
+                "url": "https://en.wikipedia.org/wiki/Zimbabwe_Cricket",
+                "title": "Zimbabwe Cricket - Wikipedia",
+                "excerpt": "Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)"
+              }
+            ],
+            "validation_state": "validated",
+            "evidence": "The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence."
+          },
+          "prompt_trace": {
+            "exit_code": 0,
+            "stdout_length": 77698,
+            "stderr_length": 0,
+            "has_structured_output": true
+          },
+          "message_trace": [
+            {
+              "role": "assistant",
+              "completed": true,
+              "type": "cli-run",
+              "has_structured_output": true,
+              "part_count": 1
+            }
+          ],
+          "raw_execution_trace": {
+            "exit_code": 0,
+            "stdout_length": 77698,
+            "stderr_length": 0,
+            "has_structured_output": true,
+            "stdout_excerpt": "ep_start\",\"timestamp\":1775633913473,\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"part\":{\"id\":\"prt_d6c0756750010CYGFrV19WtS1B\",\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"messageID\":\"msg_d6c072f90001qpaDxrrxZuaZmn\",\"type\":\"step-start\",\"snapshot\":\"\"}}\n{\"type\":\"text\",\"timestamp\":1775633924548,\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"part\":{\"id\":\"prt_d6c076e78001NYXgk0OwIoVFjS\",\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"messageID\":\"msg_d6c072f90001qpaDxrrxZuaZmn\",\"type\":\"text\",\"text\":\"```json\\n{\\n  \\\"answer\\\": \\\"1981\\\",\\n  \\\"confidence\\\": 1,\\n  \\\"sources\\\": [\\n    {\\n      \\\"url\\\": \\\"https://en.wikipedia.org/wiki/Zimbabwe_Cricket\\\",\\n      \\\"title\\\": \\\"Zimbabwe Cricket - Wikipedia\\\",\\n      \\\"excerpt\\\": \\\"Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)\\\"\\n    }\\n  ],\\n  \\\"validation_state\\\": \\\"validated\\\",\\n  \\\"evidence\\\": \\\"The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence.\\\"\\n}\\n```\",\"time\":{\"start\":1775633924543,\"end\":1775633924543}}}",
+            "stderr_excerpt": "",
+            "assistant_text_excerpt": "```json\n{\n  \"answer\": \"1981\",\n  \"confidence\": 1,\n  \"sources\": [\n    {\n      \"url\": \"https://en.wikipedia.org/wiki/Zimbabwe_Cricket\",\n      \"title\": \"Zimbabwe Cricket - Wikipedia\",\n      \"excerpt\": \"Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)\"\n    }\n  ],\n  \"validation_state\": \"validated\",\n  \"evidence\": \"The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence.\"\n}\n```",
+            "message_trace_summary": [
+              {
+                "role": "assistant",
+                "completed": true,
+                "type": "cli-run",
+                "has_structured_output": true,
+                "part_count": 1
+              }
+            ]
+          }
+        },
+        "prompt_trace": {
+          "exit_code": 0,
+          "stdout_length": 77698,
+          "stderr_length": 0,
+          "has_structured_output": true
+        },
+        "message_trace": [
+          {
+            "role": "assistant",
+            "completed": true,
+            "type": "cli-run",
+            "has_structured_output": true,
+            "part_count": 1
+          }
+        ],
+        "raw_execution_trace": {
+          "exit_code": 0,
+          "stdout_length": 77698,
+          "stderr_length": 0,
+          "has_structured_output": true,
+          "stdout_excerpt": "ep_start\",\"timestamp\":1775633913473,\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"part\":{\"id\":\"prt_d6c0756750010CYGFrV19WtS1B\",\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"messageID\":\"msg_d6c072f90001qpaDxrrxZuaZmn\",\"type\":\"step-start\",\"snapshot\":\"\"}}\n{\"type\":\"text\",\"timestamp\":1775633924548,\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"part\":{\"id\":\"prt_d6c076e78001NYXgk0OwIoVFjS\",\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"messageID\":\"msg_d6c072f90001qpaDxrrxZuaZmn\",\"type\":\"text\",\"text\":\"```json\\n{\\n  \\\"answer\\\": \\\"1981\\\",\\n  \\\"confidence\\\": 1,\\n  \\\"sources\\\": [\\n    {\\n      \\\"url\\\": \\\"https://en.wikipedia.org/wiki/Zimbabwe_Cricket\\\",\\n      \\\"title\\\": \\\"Zimbabwe Cricket - Wikipedia\\\",\\n      \\\"excerpt\\\": \\\"Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)\\\"\\n    }\\n  ],\\n  \\\"validation_state\\\": \\\"validated\\\",\\n  \\\"evidence\\\": \\\"The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence.\\\"\\n}\\n```\",\"time\":{\"start\":1775633924543,\"end\":1775633924543}}}",
+          "stderr_excerpt": "",
+          "assistant_text_excerpt": "```json\n{\n  \"answer\": \"1981\",\n  \"confidence\": 1,\n  \"sources\": [\n    {\n      \"url\": \"https://en.wikipedia.org/wiki/Zimbabwe_Cricket\",\n      \"title\": \"Zimbabwe Cricket - Wikipedia\",\n      \"excerpt\": \"Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)\"\n    }\n  ],\n  \"validation_state\": \"validated\",\n  \"evidence\": \"The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence.\"\n}\n```",
+          "message_trace_summary": [
+            {
+              "role": "assistant",
+              "completed": true,
+              "type": "cli-run",
+              "has_structured_output": true,
+              "part_count": 1
+            }
+          ]
+        },
+        "execution_query": "\"Zimbabwe Cricket\" founded year",
+        "answer": "1981",
+        "primary_owner": null,
+        "supporting_candidates": [],
+        "candidates": [],
+        "signal_type": "FOUNDATION",
+        "confidence": 1,
+        "validation_state": "validated",
+        "evidence_url": {
+          "url": "https://en.wikipedia.org/wiki/Zimbabwe_Cricket",
+          "title": "Zimbabwe Cricket - Wikipedia",
+          "excerpt": "Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)"
+        },
+        "recommended_next_query": "",
+        "notes": "",
+        "started_at": "2026-04-08T07:37:17.145Z",
+        "completed_at": "2026-04-08T07:38:44.588Z",
+        "duration_seconds": 87.443
+      }
+    },
+    {
+      "question_id": "q2_digital_stack",
+      "question_family": "digital_stack",
+      "question_type": "digital_stack",
+      "question": "What visible technologies, platforms, or vendors does Zimbabwe Cricket use, and what do they imply commercially?",
+      "query": "\"Zimbabwe Cricket\" technology stack",
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "source_priority": [
+        "apify_techstack",
+        "google_serp",
+        "news",
+        "press_release",
+        "official_site"
+      ],
+      "search_strategy": {
+        "search_queries": [
+          "\"Zimbabwe Cricket\" technology stack",
+          "\"Zimbabwe Cricket\" tech stack",
+          "\"Zimbabwe Cricket\" digital stack",
+          "\"Zimbabwe Cricket\" official website",
+          "\"Zimbabwe Cricket\" digital experience",
+          "\"Zimbabwe Cricket\" events platform",
+          "\"Zimbabwe Cricket\" membership platform",
+          "\"Zimbabwe Cricket\" results platform",
+          "\"Zimbabwe Cricket\" rankings platform",
+          "\"Zimbabwe Cricket\" athlete app",
+          "\"Zimbabwe Cricket\" mobile app",
+          "\"Zimbabwe Cricket\" broadcast partner",
+          "\"Zimbabwe Cricket\" technology partner",
+          "\"Zimbabwe Cricket\" digital partner",
+          "\"Zimbabwe Cricket\" official partner",
+          "\"Zimbabwe Cricket\" case study",
+          "\"Zimbabwe Cricket\" platform",
+          "\"Zimbabwe Cricket\" app"
+        ]
+      },
+      "deterministic_tools": [
+        "apify_techstack"
+      ],
+      "fallback_to_retrieval": true,
+      "deterministic_input": {
+        "source_question_id": "q1_foundation",
+        "official_site_only": true
+      },
+      "evidence_focus": "technology_stack",
+      "promotion_target": "technology_stack",
+      "answer_kind": "signal",
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Zimbabwe Cricket",
+      "entity_id": "zimbabwe-cricket",
+      "entity_type": "SPORT_FEDERATION",
+      "preset": "zimbabwe-cricket-core-q1-q2",
+      "pack_role": "discovery",
+      "question_text": "What visible technologies, platforms, or vendors does Zimbabwe Cricket use, and what do they imply commercially?",
+      "answer": "jQuery, reCAPTCHA, Google Fonts, Open Graph, PWA",
+      "confidence": 0.95,
+      "validation_state": "validated",
+      "evidence_url": "https://www.zimbabwecricket.com/",
+      "signal_type": "DIGITAL_STACK",
+      "recommended_next_query": "",
+      "notes": "",
+      "prompt_trace": {
+        "status": "deterministic_apify",
+        "has_structured_output": true,
+        "technologies_detected": 14,
+        "attempted_urls": [
+          "https://www.zimbabwecricket.com/",
+          "https://zimbabwecricket.com/",
+          "https://results.zimbabwecricket.com/",
+          "https://events.zimbabwecricket.com/",
+          "https://app.zimbabwecricket.com/",
+          "https://membership.zimbabwecricket.com/",
+          "https://rankings.zimbabwecricket.com/"
+        ]
+      },
+      "message_trace": [],
+      "raw_execution_trace": {
+        "exit_code": 0,
+        "stdout_length": 0,
+        "stderr_length": 0,
+        "has_structured_output": true,
+        "stdout_excerpt": "",
+        "stderr_excerpt": "",
+        "assistant_text_excerpt": "",
+        "message_trace_summary": []
+      },
+      "started_at": "2026-04-08T07:38:44.588Z",
+      "completed_at": "2026-04-08T07:38:52.528Z",
+      "duration_seconds": 7.94,
+      "question_first_answer": {
+        "question_id": "q2_digital_stack",
+        "question_type": "digital_stack",
+        "question_text": "What visible technologies, platforms, or vendors does Zimbabwe Cricket use, and what do they imply commercially?",
+        "question": "What visible technologies, platforms, or vendors does Zimbabwe Cricket use, and what do they imply commercially?",
+        "query": "\"Zimbabwe Cricket\" technology stack",
+        "hop_budget": 8,
+        "source_priority": [
+          "apify_techstack",
+          "google_serp",
+          "news",
+          "press_release",
+          "official_site"
+        ],
+        "evidence_extension_budget": 2,
+        "evidence_extension_confidence_threshold": 0.65,
+        "question_timeout_ms": 180000,
+        "entity_name": "Zimbabwe Cricket",
+        "entity_id": "zimbabwe-cricket",
+        "entity_type": "SPORT_FEDERATION",
+        "preset": "zimbabwe-cricket-core-q1-q2",
+        "model_used": "zai-coding-plan/glm-5",
+        "session_id": "cli-2",
+        "agentic_plan": {
+          "source_priority": [
+            "apify_techstack",
+            "google_serp",
+            "news",
+            "press_release",
+            "official_site"
+          ],
+          "stop_rule": "continue for up to 8 hops within OpenCode steps budget"
+        },
+        "reasoning": {
+          "structured_output": {
+            "answer": "jQuery, reCAPTCHA, Google Fonts, Open Graph, PWA",
+            "technologies": [
+              {
+                "name": "jQuery",
+                "version": "3.2.1",
+                "confidence": 100,
+                "categories": []
+              },
+              {
+                "name": "reCAPTCHA",
+                "version": "",
+                "confidence": 100,
+                "categories": []
+              },
+              {
+                "name": "Google Fonts",
+                "version": "",
+                "confidence": 100,
+                "categories": []
+              },
+              {
+                "name": "Open Graph",
+                "version": "",
+                "confidence": 100,
+                "categories": []
+              },
+              {
+                "name": "PWA",
+                "version": "",
+                "confidence": 57,
+                "categories": []
+              },
+              {
+                "name": "Cloudflare",
+                "version": "",
+                "confidence": 53,
+                "categories": []
+              },
+              {
+                "name": "ASP.NET",
+                "version": "",
+                "confidence": 45,
+                "categories": []
+              },
+              {
+                "name": "Recaptcha Enterprise",
+                "version": "",
+                "confidence": 44,
+                "categories": []
+              },
+              {
+                "name": "Typekit/Adobe Fonts",
+                "version": "",
+                "confidence": 43,
+                "categories": []
+              },
+              {
+                "name": "Google Analytics",
+                "version": "",
+                "confidence": 42,
+                "categories": []
+              },
+              {
+                "name": "Google Analytics 4",
+                "version": "",
+                "confidence": 42,
+                "categories": []
+              },
+              {
+                "name": "Google Tag Manager",
+                "version": "",
+                "confidence": 42,
+                "categories": []
+              },
+              {
+                "name": "PayPal",
+                "version": "",
+                "confidence": 25,
+                "categories": []
+              },
+              {
+                "name": "Material UI",
+                "version": "",
+                "confidence": 23,
+                "categories": []
+              }
+            ],
+            "categories": [],
+            "vendors": [
+              "jQuery",
+              "reCAPTCHA",
+              "Google Fonts",
+              "Open Graph",
+              "PWA",
+              "Cloudflare",
+              "ASP.NET",
+              "Recaptcha Enterprise",
+              "Typekit/Adobe Fonts",
+              "Google Analytics",
+              "Google Analytics 4",
+              "Google Tag Manager",
+              "PayPal",
+              "Material UI"
+            ],
+            "raw": {
+              "url": "https://www.zimbabwecricket.com/",
+              "domain": "www.zimbabwecricket.com",
+              "https": true,
+              "technologiesCount": 14,
+              "categories": "Analytics, CDN, CSS Framework, Font/Icon Library, JavaScript Library, PWA, Payment, Programming Language, SEO, Security, Tag Manager",
+              "technologies": [
+                {
+                  "name": "jQuery",
+                  "category": "JavaScript Library",
+                  "confidence": 100,
+                  "evidence": [
+                    {
+                      "type": "scripts",
+                      "matches": [
+                        "jquery.min.js"
+                      ]
+                    },
+                    {
+                      "type": "globalJs",
+                      "matches": [
+                        "jQuery"
+                      ]
+                    }
+                  ],
+                  "website": "https://jquery.com",
+                  "version": "3.2.1"
+                },
+                {
+                  "name": "reCAPTCHA",
+                  "category": "Security",
+                  "confidence": 100,
+                  "evidence": [
+                    {
+                      "type": "html",
+                      "matches": [
+                        "g-recaptcha"
+                      ]
+                    },
+                    {
+                      "type": "scripts",
+                      "matches": [
+                        "google.com/recaptcha",
+                        "gstatic.com/recaptcha"
+                      ]
+                    },
+                    {
+                      "type": "globalJs",
+                      "matches": [
+                        "grecaptcha"
+                      ]
+                    }
+                  ],
+                  "website": "https://www.google.com/recaptcha"
+                },
+                {
+                  "name": "Google Fonts",
+                  "category": "Font/Icon Library",
+                  "confidence": 100,
+                  "evidence": [
+                    {
+                      "type": "html",
+                      "matches": [
+                        "fonts.googleapis.com"
+                      ]
+                    },
+                    {
+                      "type": "css",
+                      "matches": [
+                        "fonts.googleapis.com"
+                      ]
+                    }
+                  ],
+                  "website": "https://fonts.google.com"
+                },
+                {
+                  "name": "Open Graph",
+                  "category": "SEO",
+                  "confidence": 100,
+                  "evidence": [
+                    {
+                      "type": "html",
+                      "matches": [
+                        "og:title",
+                        "og:description"
+                      ]
+                    },
+                    {
+                      "type": "meta",
+                      "matches": [
+                        "og:title=ZimbabweCricket.com is for sale | HugeDomains",
+                        "og:type=website",
+                        "og:image=https://static.hugedomains.com/images/hdv3-img/og_hugedomains.png"
+                      ]
+                    }
+                  ],
+                  "website": "https://ogp.me"
+                },
+                {
+                  "name": "PWA",
+                  "category": "PWA",
+                  "confidence": 57,
+                  "evidence": [
+                    {
+                      "type": "meta",
+                      "matches": [
+                        "theme-color=#4e73b7"
+                      ]
+                    }
+                  ],
+                  "website": "https://web.dev/progressive-web-apps"
+                },
+                {
+                  "name": "Cloudflare",
+                  "category": "CDN",
+                  "confidence": 53,
+                  "evidence": [
+                    {
+                      "type": "headers",
+                      "matches": [
+                        "Server: cloudflare",
+                        "CF-RAY: 9e8f9d50ba071f6d-IAD",
+                        "CF-Cache-Status: DYNAMIC"
+                      ]
+                    },
+                    {
+                      "type": "cookies",
+                      "matches": [
+                        "cf_clearance"
+                      ]
+                    }
+                  ],
+                  "website": "https://cloudflare.com"
+                },
+                {
+                  "name": "ASP.NET",
+                  "category": "Programming Language",
+                  "confidence": 45,
+                  "evidence": [
+                    {
+                      "type": "headers",
+                      "matches": [
+                        "X-Powered-By: ASP.NET"
+                      ]
+                    }
+                  ],
+                  "website": "https://dotnet.microsoft.com"
+                },
+                {
+                  "name": "Recaptcha Enterprise",
+                  "category": "Security",
+                  "confidence": 44,
+                  "evidence": [
+                    {
+                      "type": "scripts",
+                      "matches": [
+                        "recaptcha/enterprise.js"
+                      ]
+                    }
+                  ],
+                  "website": "https://cloud.google.com/recaptcha-enterprise"
+                },
+                {
+                  "name": "Typekit/Adobe Fonts",
+                  "category": "Font/Icon Library",
+                  "confidence": 43,
+                  "evidence": [
+                    {
+                      "type": "css",
+                      "matches": [
+                        "use.typekit.net"
+                      ]
+                    }
+                  ],
+                  "website": "https://fonts.adobe.com"
+                },
+                {
+                  "name": "Google Analytics",
+                  "category": "Analytics",
+                  "confidence": 42,
+                  "evidence": [
+                    {
+                      "type": "globalJs",
+                      "matches": [
+                        "gtag"
+                      ]
+                    }
+                  ],
+                  "website": "https://analytics.google.com"
+                },
+                {
+                  "name": "Google Analytics 4",
+                  "category": "Analytics",
+                  "confidence": 42,
+                  "evidence": [
+                    {
+                      "type": "globalJs",
+                      "matches": [
+                        "gtag",
+                        "dataLayer"
+                      ]
+                    }
+                  ],
+                  "website": "https://analytics.google.com"
+                },
+                {
+                  "name": "Google Tag Manager",
+                  "category": "Tag Manager",
+                  "confidence": 42,
+                  "evidence": [
+                    {
+                      "type": "globalJs",
+                      "matches": [
+                        "dataLayer"
+                      ]
+                    }
+                  ],
+                  "website": "https://tagmanager.google.com"
+                },
+                {
+                  "name": "PayPal",
+                  "category": "Payment",
+                  "confidence": 25,
+                  "evidence": [
+                    {
+                      "type": "html",
+                      "matches": [
+                        "paypal"
+                      ]
+                    }
+                  ],
+                  "website": "https://paypal.com"
+                },
+                {
+                  "name": "Material UI",
+                  "category": "CSS Framework",
+                  "confidence": 23,
+                  "evidence": [
+                    {
+                      "type": "html",
+                      "matches": [
+                        "Mui"
+                      ]
+                    }
+                  ],
+                  "website": "https://mui.com"
+                }
+              ],
+              "technologyGroups": {
+                "JavaScript Library": [
+                  "jQuery"
+                ],
+                "Security": [
+                  "reCAPTCHA",
+                  "Recaptcha Enterprise"
+                ],
+                "Font/Icon Library": [
+                  "Google Fonts",
+                  "Typekit/Adobe Fonts"
+                ],
+                "SEO": [
+                  "Open Graph"
+                ],
+                "PWA": [
+                  "PWA"
+                ],
+                "CDN": [
+                  "Cloudflare"
+                ],
+                "Programming Language": [
+                  "ASP.NET"
+                ],
+                "Analytics": [
+                  "Google Analytics",
+                  "Google Analytics 4"
+                ],
+                "Tag Manager": [
+                  "Google Tag Manager"
+                ],
+                "Payment": [
+                  "PayPal"
+                ],
+                "CSS Framework": [
+                  "Material UI"
+                ]
+              },
+              "analysisTimeMs": 3114,
+              "analyzedAt": "2026-04-08T07:38:51.547Z"
+            },
+            "confidence": 0.95,
+            "validation_state": "validated",
+            "sources": [
+              "https://www.zimbabwecricket.com/",
+              "https://zimbabwecricket.com/",
+              "https://results.zimbabwecricket.com/",
+              "https://events.zimbabwecricket.com/",
+              "https://app.zimbabwecricket.com/",
+              "https://membership.zimbabwecricket.com/",
+              "https://rankings.zimbabwecricket.com/"
+            ],
+            "source": "https://www.zimbabwecricket.com/",
+            "evidence_url": "https://www.zimbabwecricket.com/",
+            "signal_type": "DIGITAL_STACK",
+            "commercial_interpretation": "Visible modern web delivery and tagging stack. Mixed legacy frontend signals remain present",
+            "opportunity": "Measurement, data activation, and fan journey optimization; Legacy-to-modern platform transition planning",
+            "maturity_signal": "high"
+          },
+          "prompt_trace": {
+            "status": "deterministic_apify",
+            "has_structured_output": true,
+            "technologies_detected": 14,
+            "attempted_urls": [
+              "https://www.zimbabwecricket.com/",
+              "https://zimbabwecricket.com/",
+              "https://results.zimbabwecricket.com/",
+              "https://events.zimbabwecricket.com/",
+              "https://app.zimbabwecricket.com/",
+              "https://membership.zimbabwecricket.com/",
+              "https://rankings.zimbabwecricket.com/"
+            ]
+          },
+          "message_trace": [],
+          "raw_execution_trace": {
+            "exit_code": 0,
+            "stdout_length": 0,
+            "stderr_length": 0,
+            "has_structured_output": true,
+            "stdout_excerpt": "",
+            "stderr_excerpt": "",
+            "assistant_text_excerpt": "",
+            "message_trace_summary": []
+          }
+        },
+        "prompt_trace": {
+          "status": "deterministic_apify",
+          "has_structured_output": true,
+          "technologies_detected": 14,
+          "attempted_urls": [
+            "https://www.zimbabwecricket.com/",
+            "https://zimbabwecricket.com/",
+            "https://results.zimbabwecricket.com/",
+            "https://events.zimbabwecricket.com/",
+            "https://app.zimbabwecricket.com/",
+            "https://membership.zimbabwecricket.com/",
+            "https://rankings.zimbabwecricket.com/"
+          ]
+        },
+        "message_trace": [],
+        "raw_execution_trace": {
+          "exit_code": 0,
+          "stdout_length": 0,
+          "stderr_length": 0,
+          "has_structured_output": true,
+          "stdout_excerpt": "",
+          "stderr_excerpt": "",
+          "assistant_text_excerpt": "",
+          "message_trace_summary": []
+        },
+        "execution_query": "\"Zimbabwe Cricket\" technology stack",
+        "answer": "jQuery, reCAPTCHA, Google Fonts, Open Graph, PWA",
+        "primary_owner": null,
+        "supporting_candidates": [],
+        "candidates": [],
+        "signal_type": "DIGITAL_STACK",
+        "confidence": 0.95,
+        "validation_state": "validated",
+        "evidence_url": "https://www.zimbabwecricket.com/",
+        "recommended_next_query": "",
+        "notes": "",
+        "started_at": "2026-04-08T07:38:44.588Z",
+        "completed_at": "2026-04-08T07:38:52.528Z",
+        "duration_seconds": 7.94
+      }
+    }
+  ],
+  "answers": [
+    {
+      "question_id": "q1_foundation",
+      "question_type": "foundation",
+      "question_text": "What year was Zimbabwe Cricket founded?",
+      "question": "What year was Zimbabwe Cricket founded?",
+      "query": "\"Zimbabwe Cricket\" founded year",
+      "hop_budget": 8,
+      "source_priority": [
+        "google_serp",
+        "official_site",
+        "wikipedia"
+      ],
+      "evidence_extension_budget": 1,
+      "evidence_extension_confidence_threshold": 0.65,
+      "question_timeout_ms": 180000,
+      "entity_name": "Zimbabwe Cricket",
+      "entity_id": "zimbabwe-cricket",
+      "entity_type": "SPORT_FEDERATION",
+      "preset": "zimbabwe-cricket-core-q1-q2",
+      "model_used": "zai-coding-plan/glm-5",
+      "session_id": "cli-1",
+      "agentic_plan": {
+        "source_priority": [
+          "google_serp",
+          "official_site",
+          "wikipedia"
+        ],
+        "stop_rule": "continue for up to 8 hops within OpenCode steps budget"
+      },
+      "reasoning": {
+        "structured_output": {
+          "answer": "1981",
+          "confidence": 1,
+          "sources": [
+            {
+              "url": "https://en.wikipedia.org/wiki/Zimbabwe_Cricket",
+              "title": "Zimbabwe Cricket - Wikipedia",
+              "excerpt": "Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)"
+            }
+          ],
+          "validation_state": "validated",
+          "evidence": "The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence."
+        },
+        "prompt_trace": {
+          "exit_code": 0,
+          "stdout_length": 77698,
+          "stderr_length": 0,
+          "has_structured_output": true
+        },
+        "message_trace": [
+          {
+            "role": "assistant",
+            "completed": true,
+            "type": "cli-run",
+            "has_structured_output": true,
+            "part_count": 1
+          }
+        ],
+        "raw_execution_trace": {
+          "exit_code": 0,
+          "stdout_length": 77698,
+          "stderr_length": 0,
+          "has_structured_output": true,
+          "stdout_excerpt": "ep_start\",\"timestamp\":1775633913473,\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"part\":{\"id\":\"prt_d6c0756750010CYGFrV19WtS1B\",\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"messageID\":\"msg_d6c072f90001qpaDxrrxZuaZmn\",\"type\":\"step-start\",\"snapshot\":\"\"}}\n{\"type\":\"text\",\"timestamp\":1775633924548,\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"part\":{\"id\":\"prt_d6c076e78001NYXgk0OwIoVFjS\",\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"messageID\":\"msg_d6c072f90001qpaDxrrxZuaZmn\",\"type\":\"text\",\"text\":\"```json\\n{\\n  \\\"answer\\\": \\\"1981\\\",\\n  \\\"confidence\\\": 1,\\n  \\\"sources\\\": [\\n    {\\n      \\\"url\\\": \\\"https://en.wikipedia.org/wiki/Zimbabwe_Cricket\\\",\\n      \\\"title\\\": \\\"Zimbabwe Cricket - Wikipedia\\\",\\n      \\\"excerpt\\\": \\\"Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)\\\"\\n    }\\n  ],\\n  \\\"validation_state\\\": \\\"validated\\\",\\n  \\\"evidence\\\": \\\"The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence.\\\"\\n}\\n```\",\"time\":{\"start\":1775633924543,\"end\":1775633924543}}}",
+          "stderr_excerpt": "",
+          "assistant_text_excerpt": "```json\n{\n  \"answer\": \"1981\",\n  \"confidence\": 1,\n  \"sources\": [\n    {\n      \"url\": \"https://en.wikipedia.org/wiki/Zimbabwe_Cricket\",\n      \"title\": \"Zimbabwe Cricket - Wikipedia\",\n      \"excerpt\": \"Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)\"\n    }\n  ],\n  \"validation_state\": \"validated\",\n  \"evidence\": \"The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence.\"\n}\n```",
+          "message_trace_summary": [
+            {
+              "role": "assistant",
+              "completed": true,
+              "type": "cli-run",
+              "has_structured_output": true,
+              "part_count": 1
+            }
+          ]
+        }
+      },
+      "prompt_trace": {
+        "exit_code": 0,
+        "stdout_length": 77698,
+        "stderr_length": 0,
+        "has_structured_output": true
+      },
+      "message_trace": [
+        {
+          "role": "assistant",
+          "completed": true,
+          "type": "cli-run",
+          "has_structured_output": true,
+          "part_count": 1
+        }
+      ],
+      "raw_execution_trace": {
+        "exit_code": 0,
+        "stdout_length": 77698,
+        "stderr_length": 0,
+        "has_structured_output": true,
+        "stdout_excerpt": "ep_start\",\"timestamp\":1775633913473,\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"part\":{\"id\":\"prt_d6c0756750010CYGFrV19WtS1B\",\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"messageID\":\"msg_d6c072f90001qpaDxrrxZuaZmn\",\"type\":\"step-start\",\"snapshot\":\"\"}}\n{\"type\":\"text\",\"timestamp\":1775633924548,\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"part\":{\"id\":\"prt_d6c076e78001NYXgk0OwIoVFjS\",\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"messageID\":\"msg_d6c072f90001qpaDxrrxZuaZmn\",\"type\":\"text\",\"text\":\"```json\\n{\\n  \\\"answer\\\": \\\"1981\\\",\\n  \\\"confidence\\\": 1,\\n  \\\"sources\\\": [\\n    {\\n      \\\"url\\\": \\\"https://en.wikipedia.org/wiki/Zimbabwe_Cricket\\\",\\n      \\\"title\\\": \\\"Zimbabwe Cricket - Wikipedia\\\",\\n      \\\"excerpt\\\": \\\"Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)\\\"\\n    }\\n  ],\\n  \\\"validation_state\\\": \\\"validated\\\",\\n  \\\"evidence\\\": \\\"The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence.\\\"\\n}\\n```\",\"time\":{\"start\":1775633924543,\"end\":1775633924543}}}",
+        "stderr_excerpt": "",
+        "assistant_text_excerpt": "```json\n{\n  \"answer\": \"1981\",\n  \"confidence\": 1,\n  \"sources\": [\n    {\n      \"url\": \"https://en.wikipedia.org/wiki/Zimbabwe_Cricket\",\n      \"title\": \"Zimbabwe Cricket - Wikipedia\",\n      \"excerpt\": \"Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)\"\n    }\n  ],\n  \"validation_state\": \"validated\",\n  \"evidence\": \"The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence.\"\n}\n```",
+        "message_trace_summary": [
+          {
+            "role": "assistant",
+            "completed": true,
+            "type": "cli-run",
+            "has_structured_output": true,
+            "part_count": 1
+          }
+        ]
+      },
+      "execution_query": "\"Zimbabwe Cricket\" founded year",
+      "answer": "1981",
+      "primary_owner": null,
+      "supporting_candidates": [],
+      "candidates": [],
+      "signal_type": "FOUNDATION",
+      "confidence": 1,
+      "validation_state": "validated",
+      "evidence_url": {
+        "url": "https://en.wikipedia.org/wiki/Zimbabwe_Cricket",
+        "title": "Zimbabwe Cricket - Wikipedia",
+        "excerpt": "Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)"
+      },
+      "recommended_next_query": "",
+      "notes": "",
+      "started_at": "2026-04-08T07:37:17.145Z",
+      "completed_at": "2026-04-08T07:38:44.588Z",
+      "duration_seconds": 87.443
+    },
+    {
+      "question_id": "q2_digital_stack",
+      "question_type": "digital_stack",
+      "question_text": "What visible technologies, platforms, or vendors does Zimbabwe Cricket use, and what do they imply commercially?",
+      "question": "What visible technologies, platforms, or vendors does Zimbabwe Cricket use, and what do they imply commercially?",
+      "query": "\"Zimbabwe Cricket\" technology stack",
+      "hop_budget": 8,
+      "source_priority": [
+        "apify_techstack",
+        "google_serp",
+        "news",
+        "press_release",
+        "official_site"
+      ],
+      "evidence_extension_budget": 2,
+      "evidence_extension_confidence_threshold": 0.65,
+      "question_timeout_ms": 180000,
+      "entity_name": "Zimbabwe Cricket",
+      "entity_id": "zimbabwe-cricket",
+      "entity_type": "SPORT_FEDERATION",
+      "preset": "zimbabwe-cricket-core-q1-q2",
+      "model_used": "zai-coding-plan/glm-5",
+      "session_id": "cli-2",
+      "agentic_plan": {
+        "source_priority": [
+          "apify_techstack",
+          "google_serp",
+          "news",
+          "press_release",
+          "official_site"
+        ],
+        "stop_rule": "continue for up to 8 hops within OpenCode steps budget"
+      },
+      "reasoning": {
+        "structured_output": {
+          "answer": "jQuery, reCAPTCHA, Google Fonts, Open Graph, PWA",
+          "technologies": [
+            {
+              "name": "jQuery",
+              "version": "3.2.1",
+              "confidence": 100,
+              "categories": []
+            },
+            {
+              "name": "reCAPTCHA",
+              "version": "",
+              "confidence": 100,
+              "categories": []
+            },
+            {
+              "name": "Google Fonts",
+              "version": "",
+              "confidence": 100,
+              "categories": []
+            },
+            {
+              "name": "Open Graph",
+              "version": "",
+              "confidence": 100,
+              "categories": []
+            },
+            {
+              "name": "PWA",
+              "version": "",
+              "confidence": 57,
+              "categories": []
+            },
+            {
+              "name": "Cloudflare",
+              "version": "",
+              "confidence": 53,
+              "categories": []
+            },
+            {
+              "name": "ASP.NET",
+              "version": "",
+              "confidence": 45,
+              "categories": []
+            },
+            {
+              "name": "Recaptcha Enterprise",
+              "version": "",
+              "confidence": 44,
+              "categories": []
+            },
+            {
+              "name": "Typekit/Adobe Fonts",
+              "version": "",
+              "confidence": 43,
+              "categories": []
+            },
+            {
+              "name": "Google Analytics",
+              "version": "",
+              "confidence": 42,
+              "categories": []
+            },
+            {
+              "name": "Google Analytics 4",
+              "version": "",
+              "confidence": 42,
+              "categories": []
+            },
+            {
+              "name": "Google Tag Manager",
+              "version": "",
+              "confidence": 42,
+              "categories": []
+            },
+            {
+              "name": "PayPal",
+              "version": "",
+              "confidence": 25,
+              "categories": []
+            },
+            {
+              "name": "Material UI",
+              "version": "",
+              "confidence": 23,
+              "categories": []
+            }
+          ],
+          "categories": [],
+          "vendors": [
+            "jQuery",
+            "reCAPTCHA",
+            "Google Fonts",
+            "Open Graph",
+            "PWA",
+            "Cloudflare",
+            "ASP.NET",
+            "Recaptcha Enterprise",
+            "Typekit/Adobe Fonts",
+            "Google Analytics",
+            "Google Analytics 4",
+            "Google Tag Manager",
+            "PayPal",
+            "Material UI"
+          ],
+          "raw": {
+            "url": "https://www.zimbabwecricket.com/",
+            "domain": "www.zimbabwecricket.com",
+            "https": true,
+            "technologiesCount": 14,
+            "categories": "Analytics, CDN, CSS Framework, Font/Icon Library, JavaScript Library, PWA, Payment, Programming Language, SEO, Security, Tag Manager",
+            "technologies": [
+              {
+                "name": "jQuery",
+                "category": "JavaScript Library",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "type": "scripts",
+                    "matches": [
+                      "jquery.min.js"
+                    ]
+                  },
+                  {
+                    "type": "globalJs",
+                    "matches": [
+                      "jQuery"
+                    ]
+                  }
+                ],
+                "website": "https://jquery.com",
+                "version": "3.2.1"
+              },
+              {
+                "name": "reCAPTCHA",
+                "category": "Security",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "type": "html",
+                    "matches": [
+                      "g-recaptcha"
+                    ]
+                  },
+                  {
+                    "type": "scripts",
+                    "matches": [
+                      "google.com/recaptcha",
+                      "gstatic.com/recaptcha"
+                    ]
+                  },
+                  {
+                    "type": "globalJs",
+                    "matches": [
+                      "grecaptcha"
+                    ]
+                  }
+                ],
+                "website": "https://www.google.com/recaptcha"
+              },
+              {
+                "name": "Google Fonts",
+                "category": "Font/Icon Library",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "type": "html",
+                    "matches": [
+                      "fonts.googleapis.com"
+                    ]
+                  },
+                  {
+                    "type": "css",
+                    "matches": [
+                      "fonts.googleapis.com"
+                    ]
+                  }
+                ],
+                "website": "https://fonts.google.com"
+              },
+              {
+                "name": "Open Graph",
+                "category": "SEO",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "type": "html",
+                    "matches": [
+                      "og:title",
+                      "og:description"
+                    ]
+                  },
+                  {
+                    "type": "meta",
+                    "matches": [
+                      "og:title=ZimbabweCricket.com is for sale | HugeDomains",
+                      "og:type=website",
+                      "og:image=https://static.hugedomains.com/images/hdv3-img/og_hugedomains.png"
+                    ]
+                  }
+                ],
+                "website": "https://ogp.me"
+              },
+              {
+                "name": "PWA",
+                "category": "PWA",
+                "confidence": 57,
+                "evidence": [
+                  {
+                    "type": "meta",
+                    "matches": [
+                      "theme-color=#4e73b7"
+                    ]
+                  }
+                ],
+                "website": "https://web.dev/progressive-web-apps"
+              },
+              {
+                "name": "Cloudflare",
+                "category": "CDN",
+                "confidence": 53,
+                "evidence": [
+                  {
+                    "type": "headers",
+                    "matches": [
+                      "Server: cloudflare",
+                      "CF-RAY: 9e8f9d50ba071f6d-IAD",
+                      "CF-Cache-Status: DYNAMIC"
+                    ]
+                  },
+                  {
+                    "type": "cookies",
+                    "matches": [
+                      "cf_clearance"
+                    ]
+                  }
+                ],
+                "website": "https://cloudflare.com"
+              },
+              {
+                "name": "ASP.NET",
+                "category": "Programming Language",
+                "confidence": 45,
+                "evidence": [
+                  {
+                    "type": "headers",
+                    "matches": [
+                      "X-Powered-By: ASP.NET"
+                    ]
+                  }
+                ],
+                "website": "https://dotnet.microsoft.com"
+              },
+              {
+                "name": "Recaptcha Enterprise",
+                "category": "Security",
+                "confidence": 44,
+                "evidence": [
+                  {
+                    "type": "scripts",
+                    "matches": [
+                      "recaptcha/enterprise.js"
+                    ]
+                  }
+                ],
+                "website": "https://cloud.google.com/recaptcha-enterprise"
+              },
+              {
+                "name": "Typekit/Adobe Fonts",
+                "category": "Font/Icon Library",
+                "confidence": 43,
+                "evidence": [
+                  {
+                    "type": "css",
+                    "matches": [
+                      "use.typekit.net"
+                    ]
+                  }
+                ],
+                "website": "https://fonts.adobe.com"
+              },
+              {
+                "name": "Google Analytics",
+                "category": "Analytics",
+                "confidence": 42,
+                "evidence": [
+                  {
+                    "type": "globalJs",
+                    "matches": [
+                      "gtag"
+                    ]
+                  }
+                ],
+                "website": "https://analytics.google.com"
+              },
+              {
+                "name": "Google Analytics 4",
+                "category": "Analytics",
+                "confidence": 42,
+                "evidence": [
+                  {
+                    "type": "globalJs",
+                    "matches": [
+                      "gtag",
+                      "dataLayer"
+                    ]
+                  }
+                ],
+                "website": "https://analytics.google.com"
+              },
+              {
+                "name": "Google Tag Manager",
+                "category": "Tag Manager",
+                "confidence": 42,
+                "evidence": [
+                  {
+                    "type": "globalJs",
+                    "matches": [
+                      "dataLayer"
+                    ]
+                  }
+                ],
+                "website": "https://tagmanager.google.com"
+              },
+              {
+                "name": "PayPal",
+                "category": "Payment",
+                "confidence": 25,
+                "evidence": [
+                  {
+                    "type": "html",
+                    "matches": [
+                      "paypal"
+                    ]
+                  }
+                ],
+                "website": "https://paypal.com"
+              },
+              {
+                "name": "Material UI",
+                "category": "CSS Framework",
+                "confidence": 23,
+                "evidence": [
+                  {
+                    "type": "html",
+                    "matches": [
+                      "Mui"
+                    ]
+                  }
+                ],
+                "website": "https://mui.com"
+              }
+            ],
+            "technologyGroups": {
+              "JavaScript Library": [
+                "jQuery"
+              ],
+              "Security": [
+                "reCAPTCHA",
+                "Recaptcha Enterprise"
+              ],
+              "Font/Icon Library": [
+                "Google Fonts",
+                "Typekit/Adobe Fonts"
+              ],
+              "SEO": [
+                "Open Graph"
+              ],
+              "PWA": [
+                "PWA"
+              ],
+              "CDN": [
+                "Cloudflare"
+              ],
+              "Programming Language": [
+                "ASP.NET"
+              ],
+              "Analytics": [
+                "Google Analytics",
+                "Google Analytics 4"
+              ],
+              "Tag Manager": [
+                "Google Tag Manager"
+              ],
+              "Payment": [
+                "PayPal"
+              ],
+              "CSS Framework": [
+                "Material UI"
+              ]
+            },
+            "analysisTimeMs": 3114,
+            "analyzedAt": "2026-04-08T07:38:51.547Z"
+          },
+          "confidence": 0.95,
+          "validation_state": "validated",
+          "sources": [
+            "https://www.zimbabwecricket.com/",
+            "https://zimbabwecricket.com/",
+            "https://results.zimbabwecricket.com/",
+            "https://events.zimbabwecricket.com/",
+            "https://app.zimbabwecricket.com/",
+            "https://membership.zimbabwecricket.com/",
+            "https://rankings.zimbabwecricket.com/"
+          ],
+          "source": "https://www.zimbabwecricket.com/",
+          "evidence_url": "https://www.zimbabwecricket.com/",
+          "signal_type": "DIGITAL_STACK",
+          "commercial_interpretation": "Visible modern web delivery and tagging stack. Mixed legacy frontend signals remain present",
+          "opportunity": "Measurement, data activation, and fan journey optimization; Legacy-to-modern platform transition planning",
+          "maturity_signal": "high"
+        },
+        "prompt_trace": {
+          "status": "deterministic_apify",
+          "has_structured_output": true,
+          "technologies_detected": 14,
+          "attempted_urls": [
+            "https://www.zimbabwecricket.com/",
+            "https://zimbabwecricket.com/",
+            "https://results.zimbabwecricket.com/",
+            "https://events.zimbabwecricket.com/",
+            "https://app.zimbabwecricket.com/",
+            "https://membership.zimbabwecricket.com/",
+            "https://rankings.zimbabwecricket.com/"
+          ]
+        },
+        "message_trace": [],
+        "raw_execution_trace": {
+          "exit_code": 0,
+          "stdout_length": 0,
+          "stderr_length": 0,
+          "has_structured_output": true,
+          "stdout_excerpt": "",
+          "stderr_excerpt": "",
+          "assistant_text_excerpt": "",
+          "message_trace_summary": []
+        }
+      },
+      "prompt_trace": {
+        "status": "deterministic_apify",
+        "has_structured_output": true,
+        "technologies_detected": 14,
+        "attempted_urls": [
+          "https://www.zimbabwecricket.com/",
+          "https://zimbabwecricket.com/",
+          "https://results.zimbabwecricket.com/",
+          "https://events.zimbabwecricket.com/",
+          "https://app.zimbabwecricket.com/",
+          "https://membership.zimbabwecricket.com/",
+          "https://rankings.zimbabwecricket.com/"
+        ]
+      },
+      "message_trace": [],
+      "raw_execution_trace": {
+        "exit_code": 0,
+        "stdout_length": 0,
+        "stderr_length": 0,
+        "has_structured_output": true,
+        "stdout_excerpt": "",
+        "stderr_excerpt": "",
+        "assistant_text_excerpt": "",
+        "message_trace_summary": []
+      },
+      "execution_query": "\"Zimbabwe Cricket\" technology stack",
+      "answer": "jQuery, reCAPTCHA, Google Fonts, Open Graph, PWA",
+      "primary_owner": null,
+      "supporting_candidates": [],
+      "candidates": [],
+      "signal_type": "DIGITAL_STACK",
+      "confidence": 0.95,
+      "validation_state": "validated",
+      "evidence_url": "https://www.zimbabwecricket.com/",
+      "recommended_next_query": "",
+      "notes": "",
+      "started_at": "2026-04-08T07:38:44.588Z",
+      "completed_at": "2026-04-08T07:38:52.528Z",
+      "duration_seconds": 7.94
+    }
+  ],
+  "evidence_items": [],
+  "promotion_candidates": [],
+  "poi_graph": {
+    "schema_version": "poi_graph_v1",
+    "entity_id": "zimbabwe-cricket",
+    "entity_name": "Zimbabwe Cricket",
+    "nodes": [
+      {
+        "node_id": "zimbabwe-cricket",
+        "node_type": "entity",
+        "entity_id": "zimbabwe-cricket",
+        "name": "Zimbabwe Cricket"
+      }
+    ],
+    "edges": []
+  },
+  "categories": [
+    {
+      "category": "identity",
+      "question_count": 1,
+      "validated_count": 1,
+      "pending_count": 0,
+      "no_signal_count": 0,
+      "retry_count": 0
+    },
+    {
+      "category": "technology_stack",
+      "question_count": 1,
+      "validated_count": 1,
+      "pending_count": 0,
+      "no_signal_count": 0,
+      "retry_count": 0
+    }
+  ],
+  "question_timings": {
+    "q1_foundation": {
+      "started_at": "2026-04-08T07:37:17.145Z",
+      "completed_at": "2026-04-08T07:38:44.588Z",
+      "duration_seconds": 87.443
+    },
+    "q2_digital_stack": {
+      "started_at": "2026-04-08T07:38:44.588Z",
+      "completed_at": "2026-04-08T07:38:52.528Z",
+      "duration_seconds": 7.94
+    }
+  },
+  "run_rollup": {
+    "run_started_at": "2026-04-08T07:37:17.133Z",
+    "entity_name": "Zimbabwe Cricket",
+    "entity_id": "zimbabwe-cricket",
+    "entity_type": "SPORT_FEDERATION",
+    "preset": "zimbabwe-cricket-core-q1-q2",
+    "questions_total": 2,
+    "questions_validated": 2,
+    "questions_no_signal": 0,
+    "questions_provisional": 0,
+    "meta_result_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-zimbabwe-cricket/core-direct-batch/zimbabwe-cricket_opencode_batch_20260408_073852_meta.json",
+    "question_result_paths": [
+      "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-zimbabwe-cricket/core-direct-batch/zimbabwe-cricket_opencode_batch_20260408_073852_question_001.json",
+      "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-zimbabwe-cricket/core-direct-batch/zimbabwe-cricket_opencode_batch_20260408_073852_question_002.json"
+    ],
+    "question_results_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-zimbabwe-cricket/core-direct-batch/zimbabwe-cricket_opencode_batch_20260408_073852_meta.json",
+    "transcript_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-zimbabwe-cricket/core-direct-batch/zimbabwe-cricket_opencode_batch_20260408_073852.txt",
+    "question_first_run_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-zimbabwe-cricket/core-direct-batch/zimbabwe-cricket_opencode_batch_20260408_073852_question_first_run_v1.json"
+  },
+  "merge_patch": {
+    "metadata": {
+      "question_first": {
+        "enabled": true,
+        "schema_version": "question_first_run_v1",
+        "questions_answered": 2,
+        "categories": [
+          {
+            "category": "identity",
+            "question_count": 1,
+            "validated_count": 1,
+            "pending_count": 0,
+            "no_signal_count": 0,
+            "retry_count": 0
+          },
+          {
+            "category": "technology_stack",
+            "question_count": 1,
+            "validated_count": 1,
+            "pending_count": 0,
+            "no_signal_count": 0,
+            "retry_count": 0
+          }
+        ],
+        "evidence_items": [],
+        "promotion_candidates": [],
+        "poi_graph": {
+          "schema_version": "poi_graph_v1",
+          "entity_id": "zimbabwe-cricket",
+          "entity_name": "Zimbabwe Cricket",
+          "nodes": [
+            {
+              "node_id": "zimbabwe-cricket",
+              "node_type": "entity",
+              "entity_id": "zimbabwe-cricket",
+              "name": "Zimbabwe Cricket"
+            }
+          ],
+          "edges": []
+        },
+        "question_timings": {
+          "q1_foundation": {
+            "started_at": "2026-04-08T07:37:17.145Z",
+            "completed_at": "2026-04-08T07:38:44.588Z",
+            "duration_seconds": 87.443
+          },
+          "q2_digital_stack": {
+            "started_at": "2026-04-08T07:38:44.588Z",
+            "completed_at": "2026-04-08T07:38:52.528Z",
+            "duration_seconds": 7.94
+          }
+        },
+        "question_source_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-zimbabwe-cricket/_generated_question_sources/zimbabwe_cricket_core_q1_q2.json",
+        "generated_at": "2026-04-08T07:38:52.533Z",
+        "run_rollup": {
+          "run_started_at": "2026-04-08T07:37:17.133Z",
+          "entity_name": "Zimbabwe Cricket",
+          "entity_id": "zimbabwe-cricket",
+          "entity_type": "SPORT_FEDERATION",
+          "preset": "zimbabwe-cricket-core-q1-q2",
+          "questions_total": 2,
+          "questions_validated": 2,
+          "questions_no_signal": 0,
+          "questions_provisional": 0,
+          "meta_result_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-zimbabwe-cricket/core-direct-batch/zimbabwe-cricket_opencode_batch_20260408_073852_meta.json",
+          "question_result_paths": [
+            "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-zimbabwe-cricket/core-direct-batch/zimbabwe-cricket_opencode_batch_20260408_073852_question_001.json",
+            "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-zimbabwe-cricket/core-direct-batch/zimbabwe-cricket_opencode_batch_20260408_073852_question_002.json"
+          ],
+          "question_results_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-zimbabwe-cricket/core-direct-batch/zimbabwe-cricket_opencode_batch_20260408_073852_meta.json",
+          "transcript_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-zimbabwe-cricket/core-direct-batch/zimbabwe-cricket_opencode_batch_20260408_073852.txt",
+          "question_first_run_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-zimbabwe-cricket/core-direct-batch/zimbabwe-cricket_opencode_batch_20260408_073852_question_first_run_v1.json"
+        },
+        "warnings": []
+      }
+    },
+    "question_first": {
+      "enabled": true,
+      "schema_version": "question_first_run_v1",
+      "questions_answered": 2,
+      "categories": [
+        {
+          "category": "identity",
+          "question_count": 1,
+          "validated_count": 1,
+          "pending_count": 0,
+          "no_signal_count": 0,
+          "retry_count": 0
+        },
+        {
+          "category": "technology_stack",
+          "question_count": 1,
+          "validated_count": 1,
+          "pending_count": 0,
+          "no_signal_count": 0,
+          "retry_count": 0
+        }
+      ],
+      "answers": [
+        {
+          "question_id": "q1_foundation",
+          "question_type": "foundation",
+          "question_text": "What year was Zimbabwe Cricket founded?",
+          "question": "What year was Zimbabwe Cricket founded?",
+          "query": "\"Zimbabwe Cricket\" founded year",
+          "hop_budget": 8,
+          "source_priority": [
+            "google_serp",
+            "official_site",
+            "wikipedia"
+          ],
+          "evidence_extension_budget": 1,
+          "evidence_extension_confidence_threshold": 0.65,
+          "question_timeout_ms": 180000,
+          "entity_name": "Zimbabwe Cricket",
+          "entity_id": "zimbabwe-cricket",
+          "entity_type": "SPORT_FEDERATION",
+          "preset": "zimbabwe-cricket-core-q1-q2",
+          "model_used": "zai-coding-plan/glm-5",
+          "session_id": "cli-1",
+          "agentic_plan": {
+            "source_priority": [
+              "google_serp",
+              "official_site",
+              "wikipedia"
+            ],
+            "stop_rule": "continue for up to 8 hops within OpenCode steps budget"
+          },
+          "reasoning": {
+            "structured_output": {
+              "answer": "1981",
+              "confidence": 1,
+              "sources": [
+                {
+                  "url": "https://en.wikipedia.org/wiki/Zimbabwe_Cricket",
+                  "title": "Zimbabwe Cricket - Wikipedia",
+                  "excerpt": "Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)"
+                }
+              ],
+              "validation_state": "validated",
+              "evidence": "The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence."
+            },
+            "prompt_trace": {
+              "exit_code": 0,
+              "stdout_length": 77698,
+              "stderr_length": 0,
+              "has_structured_output": true
+            },
+            "message_trace": [
+              {
+                "role": "assistant",
+                "completed": true,
+                "type": "cli-run",
+                "has_structured_output": true,
+                "part_count": 1
+              }
+            ],
+            "raw_execution_trace": {
+              "exit_code": 0,
+              "stdout_length": 77698,
+              "stderr_length": 0,
+              "has_structured_output": true,
+              "stdout_excerpt": "ep_start\",\"timestamp\":1775633913473,\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"part\":{\"id\":\"prt_d6c0756750010CYGFrV19WtS1B\",\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"messageID\":\"msg_d6c072f90001qpaDxrrxZuaZmn\",\"type\":\"step-start\",\"snapshot\":\"\"}}\n{\"type\":\"text\",\"timestamp\":1775633924548,\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"part\":{\"id\":\"prt_d6c076e78001NYXgk0OwIoVFjS\",\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"messageID\":\"msg_d6c072f90001qpaDxrrxZuaZmn\",\"type\":\"text\",\"text\":\"```json\\n{\\n  \\\"answer\\\": \\\"1981\\\",\\n  \\\"confidence\\\": 1,\\n  \\\"sources\\\": [\\n    {\\n      \\\"url\\\": \\\"https://en.wikipedia.org/wiki/Zimbabwe_Cricket\\\",\\n      \\\"title\\\": \\\"Zimbabwe Cricket - Wikipedia\\\",\\n      \\\"excerpt\\\": \\\"Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)\\\"\\n    }\\n  ],\\n  \\\"validation_state\\\": \\\"validated\\\",\\n  \\\"evidence\\\": \\\"The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence.\\\"\\n}\\n```\",\"time\":{\"start\":1775633924543,\"end\":1775633924543}}}",
+              "stderr_excerpt": "",
+              "assistant_text_excerpt": "```json\n{\n  \"answer\": \"1981\",\n  \"confidence\": 1,\n  \"sources\": [\n    {\n      \"url\": \"https://en.wikipedia.org/wiki/Zimbabwe_Cricket\",\n      \"title\": \"Zimbabwe Cricket - Wikipedia\",\n      \"excerpt\": \"Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)\"\n    }\n  ],\n  \"validation_state\": \"validated\",\n  \"evidence\": \"The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence.\"\n}\n```",
+              "message_trace_summary": [
+                {
+                  "role": "assistant",
+                  "completed": true,
+                  "type": "cli-run",
+                  "has_structured_output": true,
+                  "part_count": 1
+                }
+              ]
+            }
+          },
+          "prompt_trace": {
+            "exit_code": 0,
+            "stdout_length": 77698,
+            "stderr_length": 0,
+            "has_structured_output": true
+          },
+          "message_trace": [
+            {
+              "role": "assistant",
+              "completed": true,
+              "type": "cli-run",
+              "has_structured_output": true,
+              "part_count": 1
+            }
+          ],
+          "raw_execution_trace": {
+            "exit_code": 0,
+            "stdout_length": 77698,
+            "stderr_length": 0,
+            "has_structured_output": true,
+            "stdout_excerpt": "ep_start\",\"timestamp\":1775633913473,\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"part\":{\"id\":\"prt_d6c0756750010CYGFrV19WtS1B\",\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"messageID\":\"msg_d6c072f90001qpaDxrrxZuaZmn\",\"type\":\"step-start\",\"snapshot\":\"\"}}\n{\"type\":\"text\",\"timestamp\":1775633924548,\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"part\":{\"id\":\"prt_d6c076e78001NYXgk0OwIoVFjS\",\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"messageID\":\"msg_d6c072f90001qpaDxrrxZuaZmn\",\"type\":\"text\",\"text\":\"```json\\n{\\n  \\\"answer\\\": \\\"1981\\\",\\n  \\\"confidence\\\": 1,\\n  \\\"sources\\\": [\\n    {\\n      \\\"url\\\": \\\"https://en.wikipedia.org/wiki/Zimbabwe_Cricket\\\",\\n      \\\"title\\\": \\\"Zimbabwe Cricket - Wikipedia\\\",\\n      \\\"excerpt\\\": \\\"Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)\\\"\\n    }\\n  ],\\n  \\\"validation_state\\\": \\\"validated\\\",\\n  \\\"evidence\\\": \\\"The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence.\\\"\\n}\\n```\",\"time\":{\"start\":1775633924543,\"end\":1775633924543}}}",
+            "stderr_excerpt": "",
+            "assistant_text_excerpt": "```json\n{\n  \"answer\": \"1981\",\n  \"confidence\": 1,\n  \"sources\": [\n    {\n      \"url\": \"https://en.wikipedia.org/wiki/Zimbabwe_Cricket\",\n      \"title\": \"Zimbabwe Cricket - Wikipedia\",\n      \"excerpt\": \"Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)\"\n    }\n  ],\n  \"validation_state\": \"validated\",\n  \"evidence\": \"The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence.\"\n}\n```",
+            "message_trace_summary": [
+              {
+                "role": "assistant",
+                "completed": true,
+                "type": "cli-run",
+                "has_structured_output": true,
+                "part_count": 1
+              }
+            ]
+          },
+          "execution_query": "\"Zimbabwe Cricket\" founded year",
+          "answer": "1981",
+          "primary_owner": null,
+          "supporting_candidates": [],
+          "candidates": [],
+          "signal_type": "FOUNDATION",
+          "confidence": 1,
+          "validation_state": "validated",
+          "evidence_url": {
+            "url": "https://en.wikipedia.org/wiki/Zimbabwe_Cricket",
+            "title": "Zimbabwe Cricket - Wikipedia",
+            "excerpt": "Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)"
+          },
+          "recommended_next_query": "",
+          "notes": "",
+          "started_at": "2026-04-08T07:37:17.145Z",
+          "completed_at": "2026-04-08T07:38:44.588Z",
+          "duration_seconds": 87.443
+        },
+        {
+          "question_id": "q2_digital_stack",
+          "question_type": "digital_stack",
+          "question_text": "What visible technologies, platforms, or vendors does Zimbabwe Cricket use, and what do they imply commercially?",
+          "question": "What visible technologies, platforms, or vendors does Zimbabwe Cricket use, and what do they imply commercially?",
+          "query": "\"Zimbabwe Cricket\" technology stack",
+          "hop_budget": 8,
+          "source_priority": [
+            "apify_techstack",
+            "google_serp",
+            "news",
+            "press_release",
+            "official_site"
+          ],
+          "evidence_extension_budget": 2,
+          "evidence_extension_confidence_threshold": 0.65,
+          "question_timeout_ms": 180000,
+          "entity_name": "Zimbabwe Cricket",
+          "entity_id": "zimbabwe-cricket",
+          "entity_type": "SPORT_FEDERATION",
+          "preset": "zimbabwe-cricket-core-q1-q2",
+          "model_used": "zai-coding-plan/glm-5",
+          "session_id": "cli-2",
+          "agentic_plan": {
+            "source_priority": [
+              "apify_techstack",
+              "google_serp",
+              "news",
+              "press_release",
+              "official_site"
+            ],
+            "stop_rule": "continue for up to 8 hops within OpenCode steps budget"
+          },
+          "reasoning": {
+            "structured_output": {
+              "answer": "jQuery, reCAPTCHA, Google Fonts, Open Graph, PWA",
+              "technologies": [
+                {
+                  "name": "jQuery",
+                  "version": "3.2.1",
+                  "confidence": 100,
+                  "categories": []
+                },
+                {
+                  "name": "reCAPTCHA",
+                  "version": "",
+                  "confidence": 100,
+                  "categories": []
+                },
+                {
+                  "name": "Google Fonts",
+                  "version": "",
+                  "confidence": 100,
+                  "categories": []
+                },
+                {
+                  "name": "Open Graph",
+                  "version": "",
+                  "confidence": 100,
+                  "categories": []
+                },
+                {
+                  "name": "PWA",
+                  "version": "",
+                  "confidence": 57,
+                  "categories": []
+                },
+                {
+                  "name": "Cloudflare",
+                  "version": "",
+                  "confidence": 53,
+                  "categories": []
+                },
+                {
+                  "name": "ASP.NET",
+                  "version": "",
+                  "confidence": 45,
+                  "categories": []
+                },
+                {
+                  "name": "Recaptcha Enterprise",
+                  "version": "",
+                  "confidence": 44,
+                  "categories": []
+                },
+                {
+                  "name": "Typekit/Adobe Fonts",
+                  "version": "",
+                  "confidence": 43,
+                  "categories": []
+                },
+                {
+                  "name": "Google Analytics",
+                  "version": "",
+                  "confidence": 42,
+                  "categories": []
+                },
+                {
+                  "name": "Google Analytics 4",
+                  "version": "",
+                  "confidence": 42,
+                  "categories": []
+                },
+                {
+                  "name": "Google Tag Manager",
+                  "version": "",
+                  "confidence": 42,
+                  "categories": []
+                },
+                {
+                  "name": "PayPal",
+                  "version": "",
+                  "confidence": 25,
+                  "categories": []
+                },
+                {
+                  "name": "Material UI",
+                  "version": "",
+                  "confidence": 23,
+                  "categories": []
+                }
+              ],
+              "categories": [],
+              "vendors": [
+                "jQuery",
+                "reCAPTCHA",
+                "Google Fonts",
+                "Open Graph",
+                "PWA",
+                "Cloudflare",
+                "ASP.NET",
+                "Recaptcha Enterprise",
+                "Typekit/Adobe Fonts",
+                "Google Analytics",
+                "Google Analytics 4",
+                "Google Tag Manager",
+                "PayPal",
+                "Material UI"
+              ],
+              "raw": {
+                "url": "https://www.zimbabwecricket.com/",
+                "domain": "www.zimbabwecricket.com",
+                "https": true,
+                "technologiesCount": 14,
+                "categories": "Analytics, CDN, CSS Framework, Font/Icon Library, JavaScript Library, PWA, Payment, Programming Language, SEO, Security, Tag Manager",
+                "technologies": [
+                  {
+                    "name": "jQuery",
+                    "category": "JavaScript Library",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "type": "scripts",
+                        "matches": [
+                          "jquery.min.js"
+                        ]
+                      },
+                      {
+                        "type": "globalJs",
+                        "matches": [
+                          "jQuery"
+                        ]
+                      }
+                    ],
+                    "website": "https://jquery.com",
+                    "version": "3.2.1"
+                  },
+                  {
+                    "name": "reCAPTCHA",
+                    "category": "Security",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "type": "html",
+                        "matches": [
+                          "g-recaptcha"
+                        ]
+                      },
+                      {
+                        "type": "scripts",
+                        "matches": [
+                          "google.com/recaptcha",
+                          "gstatic.com/recaptcha"
+                        ]
+                      },
+                      {
+                        "type": "globalJs",
+                        "matches": [
+                          "grecaptcha"
+                        ]
+                      }
+                    ],
+                    "website": "https://www.google.com/recaptcha"
+                  },
+                  {
+                    "name": "Google Fonts",
+                    "category": "Font/Icon Library",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "type": "html",
+                        "matches": [
+                          "fonts.googleapis.com"
+                        ]
+                      },
+                      {
+                        "type": "css",
+                        "matches": [
+                          "fonts.googleapis.com"
+                        ]
+                      }
+                    ],
+                    "website": "https://fonts.google.com"
+                  },
+                  {
+                    "name": "Open Graph",
+                    "category": "SEO",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "type": "html",
+                        "matches": [
+                          "og:title",
+                          "og:description"
+                        ]
+                      },
+                      {
+                        "type": "meta",
+                        "matches": [
+                          "og:title=ZimbabweCricket.com is for sale | HugeDomains",
+                          "og:type=website",
+                          "og:image=https://static.hugedomains.com/images/hdv3-img/og_hugedomains.png"
+                        ]
+                      }
+                    ],
+                    "website": "https://ogp.me"
+                  },
+                  {
+                    "name": "PWA",
+                    "category": "PWA",
+                    "confidence": 57,
+                    "evidence": [
+                      {
+                        "type": "meta",
+                        "matches": [
+                          "theme-color=#4e73b7"
+                        ]
+                      }
+                    ],
+                    "website": "https://web.dev/progressive-web-apps"
+                  },
+                  {
+                    "name": "Cloudflare",
+                    "category": "CDN",
+                    "confidence": 53,
+                    "evidence": [
+                      {
+                        "type": "headers",
+                        "matches": [
+                          "Server: cloudflare",
+                          "CF-RAY: 9e8f9d50ba071f6d-IAD",
+                          "CF-Cache-Status: DYNAMIC"
+                        ]
+                      },
+                      {
+                        "type": "cookies",
+                        "matches": [
+                          "cf_clearance"
+                        ]
+                      }
+                    ],
+                    "website": "https://cloudflare.com"
+                  },
+                  {
+                    "name": "ASP.NET",
+                    "category": "Programming Language",
+                    "confidence": 45,
+                    "evidence": [
+                      {
+                        "type": "headers",
+                        "matches": [
+                          "X-Powered-By: ASP.NET"
+                        ]
+                      }
+                    ],
+                    "website": "https://dotnet.microsoft.com"
+                  },
+                  {
+                    "name": "Recaptcha Enterprise",
+                    "category": "Security",
+                    "confidence": 44,
+                    "evidence": [
+                      {
+                        "type": "scripts",
+                        "matches": [
+                          "recaptcha/enterprise.js"
+                        ]
+                      }
+                    ],
+                    "website": "https://cloud.google.com/recaptcha-enterprise"
+                  },
+                  {
+                    "name": "Typekit/Adobe Fonts",
+                    "category": "Font/Icon Library",
+                    "confidence": 43,
+                    "evidence": [
+                      {
+                        "type": "css",
+                        "matches": [
+                          "use.typekit.net"
+                        ]
+                      }
+                    ],
+                    "website": "https://fonts.adobe.com"
+                  },
+                  {
+                    "name": "Google Analytics",
+                    "category": "Analytics",
+                    "confidence": 42,
+                    "evidence": [
+                      {
+                        "type": "globalJs",
+                        "matches": [
+                          "gtag"
+                        ]
+                      }
+                    ],
+                    "website": "https://analytics.google.com"
+                  },
+                  {
+                    "name": "Google Analytics 4",
+                    "category": "Analytics",
+                    "confidence": 42,
+                    "evidence": [
+                      {
+                        "type": "globalJs",
+                        "matches": [
+                          "gtag",
+                          "dataLayer"
+                        ]
+                      }
+                    ],
+                    "website": "https://analytics.google.com"
+                  },
+                  {
+                    "name": "Google Tag Manager",
+                    "category": "Tag Manager",
+                    "confidence": 42,
+                    "evidence": [
+                      {
+                        "type": "globalJs",
+                        "matches": [
+                          "dataLayer"
+                        ]
+                      }
+                    ],
+                    "website": "https://tagmanager.google.com"
+                  },
+                  {
+                    "name": "PayPal",
+                    "category": "Payment",
+                    "confidence": 25,
+                    "evidence": [
+                      {
+                        "type": "html",
+                        "matches": [
+                          "paypal"
+                        ]
+                      }
+                    ],
+                    "website": "https://paypal.com"
+                  },
+                  {
+                    "name": "Material UI",
+                    "category": "CSS Framework",
+                    "confidence": 23,
+                    "evidence": [
+                      {
+                        "type": "html",
+                        "matches": [
+                          "Mui"
+                        ]
+                      }
+                    ],
+                    "website": "https://mui.com"
+                  }
+                ],
+                "technologyGroups": {
+                  "JavaScript Library": [
+                    "jQuery"
+                  ],
+                  "Security": [
+                    "reCAPTCHA",
+                    "Recaptcha Enterprise"
+                  ],
+                  "Font/Icon Library": [
+                    "Google Fonts",
+                    "Typekit/Adobe Fonts"
+                  ],
+                  "SEO": [
+                    "Open Graph"
+                  ],
+                  "PWA": [
+                    "PWA"
+                  ],
+                  "CDN": [
+                    "Cloudflare"
+                  ],
+                  "Programming Language": [
+                    "ASP.NET"
+                  ],
+                  "Analytics": [
+                    "Google Analytics",
+                    "Google Analytics 4"
+                  ],
+                  "Tag Manager": [
+                    "Google Tag Manager"
+                  ],
+                  "Payment": [
+                    "PayPal"
+                  ],
+                  "CSS Framework": [
+                    "Material UI"
+                  ]
+                },
+                "analysisTimeMs": 3114,
+                "analyzedAt": "2026-04-08T07:38:51.547Z"
+              },
+              "confidence": 0.95,
+              "validation_state": "validated",
+              "sources": [
+                "https://www.zimbabwecricket.com/",
+                "https://zimbabwecricket.com/",
+                "https://results.zimbabwecricket.com/",
+                "https://events.zimbabwecricket.com/",
+                "https://app.zimbabwecricket.com/",
+                "https://membership.zimbabwecricket.com/",
+                "https://rankings.zimbabwecricket.com/"
+              ],
+              "source": "https://www.zimbabwecricket.com/",
+              "evidence_url": "https://www.zimbabwecricket.com/",
+              "signal_type": "DIGITAL_STACK",
+              "commercial_interpretation": "Visible modern web delivery and tagging stack. Mixed legacy frontend signals remain present",
+              "opportunity": "Measurement, data activation, and fan journey optimization; Legacy-to-modern platform transition planning",
+              "maturity_signal": "high"
+            },
+            "prompt_trace": {
+              "status": "deterministic_apify",
+              "has_structured_output": true,
+              "technologies_detected": 14,
+              "attempted_urls": [
+                "https://www.zimbabwecricket.com/",
+                "https://zimbabwecricket.com/",
+                "https://results.zimbabwecricket.com/",
+                "https://events.zimbabwecricket.com/",
+                "https://app.zimbabwecricket.com/",
+                "https://membership.zimbabwecricket.com/",
+                "https://rankings.zimbabwecricket.com/"
+              ]
+            },
+            "message_trace": [],
+            "raw_execution_trace": {
+              "exit_code": 0,
+              "stdout_length": 0,
+              "stderr_length": 0,
+              "has_structured_output": true,
+              "stdout_excerpt": "",
+              "stderr_excerpt": "",
+              "assistant_text_excerpt": "",
+              "message_trace_summary": []
+            }
+          },
+          "prompt_trace": {
+            "status": "deterministic_apify",
+            "has_structured_output": true,
+            "technologies_detected": 14,
+            "attempted_urls": [
+              "https://www.zimbabwecricket.com/",
+              "https://zimbabwecricket.com/",
+              "https://results.zimbabwecricket.com/",
+              "https://events.zimbabwecricket.com/",
+              "https://app.zimbabwecricket.com/",
+              "https://membership.zimbabwecricket.com/",
+              "https://rankings.zimbabwecricket.com/"
+            ]
+          },
+          "message_trace": [],
+          "raw_execution_trace": {
+            "exit_code": 0,
+            "stdout_length": 0,
+            "stderr_length": 0,
+            "has_structured_output": true,
+            "stdout_excerpt": "",
+            "stderr_excerpt": "",
+            "assistant_text_excerpt": "",
+            "message_trace_summary": []
+          },
+          "execution_query": "\"Zimbabwe Cricket\" technology stack",
+          "answer": "jQuery, reCAPTCHA, Google Fonts, Open Graph, PWA",
+          "primary_owner": null,
+          "supporting_candidates": [],
+          "candidates": [],
+          "signal_type": "DIGITAL_STACK",
+          "confidence": 0.95,
+          "validation_state": "validated",
+          "evidence_url": "https://www.zimbabwecricket.com/",
+          "recommended_next_query": "",
+          "notes": "",
+          "started_at": "2026-04-08T07:38:44.588Z",
+          "completed_at": "2026-04-08T07:38:52.528Z",
+          "duration_seconds": 7.94
+        }
+      ],
+      "evidence_items": [],
+      "promotion_candidates": [],
+      "poi_graph": {
+        "schema_version": "poi_graph_v1",
+        "entity_id": "zimbabwe-cricket",
+        "entity_name": "Zimbabwe Cricket",
+        "nodes": [
+          {
+            "node_id": "zimbabwe-cricket",
+            "node_type": "entity",
+            "entity_id": "zimbabwe-cricket",
+            "name": "Zimbabwe Cricket"
+          }
+        ],
+        "edges": []
+      },
+      "question_timings": {
+        "q1_foundation": {
+          "started_at": "2026-04-08T07:37:17.145Z",
+          "completed_at": "2026-04-08T07:38:44.588Z",
+          "duration_seconds": 87.443
+        },
+        "q2_digital_stack": {
+          "started_at": "2026-04-08T07:38:44.588Z",
+          "completed_at": "2026-04-08T07:38:52.528Z",
+          "duration_seconds": 7.94
+        }
+      },
+      "run_rollup": {
+        "run_started_at": "2026-04-08T07:37:17.133Z",
+        "entity_name": "Zimbabwe Cricket",
+        "entity_id": "zimbabwe-cricket",
+        "entity_type": "SPORT_FEDERATION",
+        "preset": "zimbabwe-cricket-core-q1-q2",
+        "questions_total": 2,
+        "questions_validated": 2,
+        "questions_no_signal": 0,
+        "questions_provisional": 0,
+        "meta_result_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-zimbabwe-cricket/core-direct-batch/zimbabwe-cricket_opencode_batch_20260408_073852_meta.json",
+        "question_result_paths": [
+          "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-zimbabwe-cricket/core-direct-batch/zimbabwe-cricket_opencode_batch_20260408_073852_question_001.json",
+          "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-zimbabwe-cricket/core-direct-batch/zimbabwe-cricket_opencode_batch_20260408_073852_question_002.json"
+        ],
+        "question_results_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-zimbabwe-cricket/core-direct-batch/zimbabwe-cricket_opencode_batch_20260408_073852_meta.json",
+        "transcript_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-zimbabwe-cricket/core-direct-batch/zimbabwe-cricket_opencode_batch_20260408_073852.txt",
+        "question_first_run_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-zimbabwe-cricket/core-direct-batch/zimbabwe-cricket_opencode_batch_20260408_073852_question_first_run_v1.json"
+      },
+      "question_source_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-zimbabwe-cricket/_generated_question_sources/zimbabwe_cricket_core_q1_q2.json",
+      "generated_at": "2026-04-08T07:38:52.533Z",
+      "warnings": []
+    },
+    "questions": [
+      {
+        "question_id": "q1_foundation",
+        "question_family": "foundation",
+        "question_type": "foundation",
+        "question": "What year was Zimbabwe Cricket founded?",
+        "query": "\"Zimbabwe Cricket\" founded year",
+        "hop_budget": 8,
+        "evidence_extension_budget": 1,
+        "source_priority": [
+          "google_serp",
+          "official_site",
+          "wikipedia"
+        ],
+        "search_strategy": {
+          "search_queries": [
+            "\"Zimbabwe Cricket\" founded year",
+            "\"Zimbabwe Cricket\" official website",
+            "\"Zimbabwe Cricket\" wikipedia"
+          ]
+        },
+        "evidence_focus": "entity_fact",
+        "promotion_target": "profile",
+        "answer_kind": "fact",
+        "question_shape": "atomic",
+        "question_timeout_ms": 180000,
+        "hop_timeout_ms": 180000,
+        "evidence_extension_confidence_threshold": 0.65,
+        "entity_name": "Zimbabwe Cricket",
+        "entity_id": "zimbabwe-cricket",
+        "entity_type": "SPORT_FEDERATION",
+        "preset": "zimbabwe-cricket-core-q1-q2",
+        "pack_role": "discovery",
+        "question_text": "What year was Zimbabwe Cricket founded?",
+        "answer": "1981",
+        "confidence": 1,
+        "validation_state": "validated",
+        "evidence_url": {
+          "url": "https://en.wikipedia.org/wiki/Zimbabwe_Cricket",
+          "title": "Zimbabwe Cricket - Wikipedia",
+          "excerpt": "Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)"
+        },
+        "signal_type": "FOUNDATION",
+        "recommended_next_query": "",
+        "notes": "",
+        "prompt_trace": {
+          "exit_code": 0,
+          "stdout_length": 77698,
+          "stderr_length": 0,
+          "has_structured_output": true
+        },
+        "message_trace": [
+          {
+            "role": "assistant",
+            "completed": true,
+            "type": "cli-run",
+            "has_structured_output": true,
+            "part_count": 1
+          }
+        ],
+        "raw_execution_trace": {
+          "exit_code": 0,
+          "stdout_length": 77698,
+          "stderr_length": 0,
+          "has_structured_output": true,
+          "stdout_excerpt": "ep_start\",\"timestamp\":1775633913473,\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"part\":{\"id\":\"prt_d6c0756750010CYGFrV19WtS1B\",\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"messageID\":\"msg_d6c072f90001qpaDxrrxZuaZmn\",\"type\":\"step-start\",\"snapshot\":\"\"}}\n{\"type\":\"text\",\"timestamp\":1775633924548,\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"part\":{\"id\":\"prt_d6c076e78001NYXgk0OwIoVFjS\",\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"messageID\":\"msg_d6c072f90001qpaDxrrxZuaZmn\",\"type\":\"text\",\"text\":\"```json\\n{\\n  \\\"answer\\\": \\\"1981\\\",\\n  \\\"confidence\\\": 1,\\n  \\\"sources\\\": [\\n    {\\n      \\\"url\\\": \\\"https://en.wikipedia.org/wiki/Zimbabwe_Cricket\\\",\\n      \\\"title\\\": \\\"Zimbabwe Cricket - Wikipedia\\\",\\n      \\\"excerpt\\\": \\\"Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)\\\"\\n    }\\n  ],\\n  \\\"validation_state\\\": \\\"validated\\\",\\n  \\\"evidence\\\": \\\"The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence.\\\"\\n}\\n```\",\"time\":{\"start\":1775633924543,\"end\":1775633924543}}}",
+          "stderr_excerpt": "",
+          "assistant_text_excerpt": "```json\n{\n  \"answer\": \"1981\",\n  \"confidence\": 1,\n  \"sources\": [\n    {\n      \"url\": \"https://en.wikipedia.org/wiki/Zimbabwe_Cricket\",\n      \"title\": \"Zimbabwe Cricket - Wikipedia\",\n      \"excerpt\": \"Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)\"\n    }\n  ],\n  \"validation_state\": \"validated\",\n  \"evidence\": \"The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence.\"\n}\n```",
+          "message_trace_summary": [
+            {
+              "role": "assistant",
+              "completed": true,
+              "type": "cli-run",
+              "has_structured_output": true,
+              "part_count": 1
+            }
+          ]
+        },
+        "started_at": "2026-04-08T07:37:17.145Z",
+        "completed_at": "2026-04-08T07:38:44.588Z",
+        "duration_seconds": 87.443,
+        "question_first_answer": {
+          "question_id": "q1_foundation",
+          "question_type": "foundation",
+          "question_text": "What year was Zimbabwe Cricket founded?",
+          "question": "What year was Zimbabwe Cricket founded?",
+          "query": "\"Zimbabwe Cricket\" founded year",
+          "hop_budget": 8,
+          "source_priority": [
+            "google_serp",
+            "official_site",
+            "wikipedia"
+          ],
+          "evidence_extension_budget": 1,
+          "evidence_extension_confidence_threshold": 0.65,
+          "question_timeout_ms": 180000,
+          "entity_name": "Zimbabwe Cricket",
+          "entity_id": "zimbabwe-cricket",
+          "entity_type": "SPORT_FEDERATION",
+          "preset": "zimbabwe-cricket-core-q1-q2",
+          "model_used": "zai-coding-plan/glm-5",
+          "session_id": "cli-1",
+          "agentic_plan": {
+            "source_priority": [
+              "google_serp",
+              "official_site",
+              "wikipedia"
+            ],
+            "stop_rule": "continue for up to 8 hops within OpenCode steps budget"
+          },
+          "reasoning": {
+            "structured_output": {
+              "answer": "1981",
+              "confidence": 1,
+              "sources": [
+                {
+                  "url": "https://en.wikipedia.org/wiki/Zimbabwe_Cricket",
+                  "title": "Zimbabwe Cricket - Wikipedia",
+                  "excerpt": "Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)"
+                }
+              ],
+              "validation_state": "validated",
+              "evidence": "The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence."
+            },
+            "prompt_trace": {
+              "exit_code": 0,
+              "stdout_length": 77698,
+              "stderr_length": 0,
+              "has_structured_output": true
+            },
+            "message_trace": [
+              {
+                "role": "assistant",
+                "completed": true,
+                "type": "cli-run",
+                "has_structured_output": true,
+                "part_count": 1
+              }
+            ],
+            "raw_execution_trace": {
+              "exit_code": 0,
+              "stdout_length": 77698,
+              "stderr_length": 0,
+              "has_structured_output": true,
+              "stdout_excerpt": "ep_start\",\"timestamp\":1775633913473,\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"part\":{\"id\":\"prt_d6c0756750010CYGFrV19WtS1B\",\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"messageID\":\"msg_d6c072f90001qpaDxrrxZuaZmn\",\"type\":\"step-start\",\"snapshot\":\"\"}}\n{\"type\":\"text\",\"timestamp\":1775633924548,\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"part\":{\"id\":\"prt_d6c076e78001NYXgk0OwIoVFjS\",\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"messageID\":\"msg_d6c072f90001qpaDxrrxZuaZmn\",\"type\":\"text\",\"text\":\"```json\\n{\\n  \\\"answer\\\": \\\"1981\\\",\\n  \\\"confidence\\\": 1,\\n  \\\"sources\\\": [\\n    {\\n      \\\"url\\\": \\\"https://en.wikipedia.org/wiki/Zimbabwe_Cricket\\\",\\n      \\\"title\\\": \\\"Zimbabwe Cricket - Wikipedia\\\",\\n      \\\"excerpt\\\": \\\"Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)\\\"\\n    }\\n  ],\\n  \\\"validation_state\\\": \\\"validated\\\",\\n  \\\"evidence\\\": \\\"The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence.\\\"\\n}\\n```\",\"time\":{\"start\":1775633924543,\"end\":1775633924543}}}",
+              "stderr_excerpt": "",
+              "assistant_text_excerpt": "```json\n{\n  \"answer\": \"1981\",\n  \"confidence\": 1,\n  \"sources\": [\n    {\n      \"url\": \"https://en.wikipedia.org/wiki/Zimbabwe_Cricket\",\n      \"title\": \"Zimbabwe Cricket - Wikipedia\",\n      \"excerpt\": \"Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)\"\n    }\n  ],\n  \"validation_state\": \"validated\",\n  \"evidence\": \"The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence.\"\n}\n```",
+              "message_trace_summary": [
+                {
+                  "role": "assistant",
+                  "completed": true,
+                  "type": "cli-run",
+                  "has_structured_output": true,
+                  "part_count": 1
+                }
+              ]
+            }
+          },
+          "prompt_trace": {
+            "exit_code": 0,
+            "stdout_length": 77698,
+            "stderr_length": 0,
+            "has_structured_output": true
+          },
+          "message_trace": [
+            {
+              "role": "assistant",
+              "completed": true,
+              "type": "cli-run",
+              "has_structured_output": true,
+              "part_count": 1
+            }
+          ],
+          "raw_execution_trace": {
+            "exit_code": 0,
+            "stdout_length": 77698,
+            "stderr_length": 0,
+            "has_structured_output": true,
+            "stdout_excerpt": "ep_start\",\"timestamp\":1775633913473,\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"part\":{\"id\":\"prt_d6c0756750010CYGFrV19WtS1B\",\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"messageID\":\"msg_d6c072f90001qpaDxrrxZuaZmn\",\"type\":\"step-start\",\"snapshot\":\"\"}}\n{\"type\":\"text\",\"timestamp\":1775633924548,\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"part\":{\"id\":\"prt_d6c076e78001NYXgk0OwIoVFjS\",\"sessionID\":\"ses_293f9cd35ffe2xJrOCuMRAHac3\",\"messageID\":\"msg_d6c072f90001qpaDxrrxZuaZmn\",\"type\":\"text\",\"text\":\"```json\\n{\\n  \\\"answer\\\": \\\"1981\\\",\\n  \\\"confidence\\\": 1,\\n  \\\"sources\\\": [\\n    {\\n      \\\"url\\\": \\\"https://en.wikipedia.org/wiki/Zimbabwe_Cricket\\\",\\n      \\\"title\\\": \\\"Zimbabwe Cricket - Wikipedia\\\",\\n      \\\"excerpt\\\": \\\"Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)\\\"\\n    }\\n  ],\\n  \\\"validation_state\\\": \\\"validated\\\",\\n  \\\"evidence\\\": \\\"The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence.\\\"\\n}\\n```\",\"time\":{\"start\":1775633924543,\"end\":1775633924543}}}",
+            "stderr_excerpt": "",
+            "assistant_text_excerpt": "```json\n{\n  \"answer\": \"1981\",\n  \"confidence\": 1,\n  \"sources\": [\n    {\n      \"url\": \"https://en.wikipedia.org/wiki/Zimbabwe_Cricket\",\n      \"title\": \"Zimbabwe Cricket - Wikipedia\",\n      \"excerpt\": \"Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)\"\n    }\n  ],\n  \"validation_state\": \"validated\",\n  \"evidence\": \"The Wikipedia page clearly states that Zimbabwe Cricket was founded in 1981, with the organization (originally known as the Zimbabwe Cricket Union) being elected as an associate member of the ICC on July 21, 1981 following Zimbabwe's independence.\"\n}\n```",
+            "message_trace_summary": [
+              {
+                "role": "assistant",
+                "completed": true,
+                "type": "cli-run",
+                "has_structured_output": true,
+                "part_count": 1
+              }
+            ]
+          },
+          "execution_query": "\"Zimbabwe Cricket\" founded year",
+          "answer": "1981",
+          "primary_owner": null,
+          "supporting_candidates": [],
+          "candidates": [],
+          "signal_type": "FOUNDATION",
+          "confidence": 1,
+          "validation_state": "validated",
+          "evidence_url": {
+            "url": "https://en.wikipedia.org/wiki/Zimbabwe_Cricket",
+            "title": "Zimbabwe Cricket - Wikipedia",
+            "excerpt": "Founded 1981; 45 years ago (1981). Affiliation date July 21, 1981; 44 years ago (1981-07-21)"
+          },
+          "recommended_next_query": "",
+          "notes": "",
+          "started_at": "2026-04-08T07:37:17.145Z",
+          "completed_at": "2026-04-08T07:38:44.588Z",
+          "duration_seconds": 87.443
+        }
+      },
+      {
+        "question_id": "q2_digital_stack",
+        "question_family": "digital_stack",
+        "question_type": "digital_stack",
+        "question": "What visible technologies, platforms, or vendors does Zimbabwe Cricket use, and what do they imply commercially?",
+        "query": "\"Zimbabwe Cricket\" technology stack",
+        "hop_budget": 8,
+        "evidence_extension_budget": 2,
+        "source_priority": [
+          "apify_techstack",
+          "google_serp",
+          "news",
+          "press_release",
+          "official_site"
+        ],
+        "search_strategy": {
+          "search_queries": [
+            "\"Zimbabwe Cricket\" technology stack",
+            "\"Zimbabwe Cricket\" tech stack",
+            "\"Zimbabwe Cricket\" digital stack",
+            "\"Zimbabwe Cricket\" official website",
+            "\"Zimbabwe Cricket\" digital experience",
+            "\"Zimbabwe Cricket\" events platform",
+            "\"Zimbabwe Cricket\" membership platform",
+            "\"Zimbabwe Cricket\" results platform",
+            "\"Zimbabwe Cricket\" rankings platform",
+            "\"Zimbabwe Cricket\" athlete app",
+            "\"Zimbabwe Cricket\" mobile app",
+            "\"Zimbabwe Cricket\" broadcast partner",
+            "\"Zimbabwe Cricket\" technology partner",
+            "\"Zimbabwe Cricket\" digital partner",
+            "\"Zimbabwe Cricket\" official partner",
+            "\"Zimbabwe Cricket\" case study",
+            "\"Zimbabwe Cricket\" platform",
+            "\"Zimbabwe Cricket\" app"
+          ]
+        },
+        "deterministic_tools": [
+          "apify_techstack"
+        ],
+        "fallback_to_retrieval": true,
+        "deterministic_input": {
+          "source_question_id": "q1_foundation",
+          "official_site_only": true
+        },
+        "evidence_focus": "technology_stack",
+        "promotion_target": "technology_stack",
+        "answer_kind": "signal",
+        "question_shape": "atomic",
+        "question_timeout_ms": 180000,
+        "hop_timeout_ms": 180000,
+        "evidence_extension_confidence_threshold": 0.65,
+        "entity_name": "Zimbabwe Cricket",
+        "entity_id": "zimbabwe-cricket",
+        "entity_type": "SPORT_FEDERATION",
+        "preset": "zimbabwe-cricket-core-q1-q2",
+        "pack_role": "discovery",
+        "question_text": "What visible technologies, platforms, or vendors does Zimbabwe Cricket use, and what do they imply commercially?",
+        "answer": "jQuery, reCAPTCHA, Google Fonts, Open Graph, PWA",
+        "confidence": 0.95,
+        "validation_state": "validated",
+        "evidence_url": "https://www.zimbabwecricket.com/",
+        "signal_type": "DIGITAL_STACK",
+        "recommended_next_query": "",
+        "notes": "",
+        "prompt_trace": {
+          "status": "deterministic_apify",
+          "has_structured_output": true,
+          "technologies_detected": 14,
+          "attempted_urls": [
+            "https://www.zimbabwecricket.com/",
+            "https://zimbabwecricket.com/",
+            "https://results.zimbabwecricket.com/",
+            "https://events.zimbabwecricket.com/",
+            "https://app.zimbabwecricket.com/",
+            "https://membership.zimbabwecricket.com/",
+            "https://rankings.zimbabwecricket.com/"
+          ]
+        },
+        "message_trace": [],
+        "raw_execution_trace": {
+          "exit_code": 0,
+          "stdout_length": 0,
+          "stderr_length": 0,
+          "has_structured_output": true,
+          "stdout_excerpt": "",
+          "stderr_excerpt": "",
+          "assistant_text_excerpt": "",
+          "message_trace_summary": []
+        },
+        "started_at": "2026-04-08T07:38:44.588Z",
+        "completed_at": "2026-04-08T07:38:52.528Z",
+        "duration_seconds": 7.94,
+        "question_first_answer": {
+          "question_id": "q2_digital_stack",
+          "question_type": "digital_stack",
+          "question_text": "What visible technologies, platforms, or vendors does Zimbabwe Cricket use, and what do they imply commercially?",
+          "question": "What visible technologies, platforms, or vendors does Zimbabwe Cricket use, and what do they imply commercially?",
+          "query": "\"Zimbabwe Cricket\" technology stack",
+          "hop_budget": 8,
+          "source_priority": [
+            "apify_techstack",
+            "google_serp",
+            "news",
+            "press_release",
+            "official_site"
+          ],
+          "evidence_extension_budget": 2,
+          "evidence_extension_confidence_threshold": 0.65,
+          "question_timeout_ms": 180000,
+          "entity_name": "Zimbabwe Cricket",
+          "entity_id": "zimbabwe-cricket",
+          "entity_type": "SPORT_FEDERATION",
+          "preset": "zimbabwe-cricket-core-q1-q2",
+          "model_used": "zai-coding-plan/glm-5",
+          "session_id": "cli-2",
+          "agentic_plan": {
+            "source_priority": [
+              "apify_techstack",
+              "google_serp",
+              "news",
+              "press_release",
+              "official_site"
+            ],
+            "stop_rule": "continue for up to 8 hops within OpenCode steps budget"
+          },
+          "reasoning": {
+            "structured_output": {
+              "answer": "jQuery, reCAPTCHA, Google Fonts, Open Graph, PWA",
+              "technologies": [
+                {
+                  "name": "jQuery",
+                  "version": "3.2.1",
+                  "confidence": 100,
+                  "categories": []
+                },
+                {
+                  "name": "reCAPTCHA",
+                  "version": "",
+                  "confidence": 100,
+                  "categories": []
+                },
+                {
+                  "name": "Google Fonts",
+                  "version": "",
+                  "confidence": 100,
+                  "categories": []
+                },
+                {
+                  "name": "Open Graph",
+                  "version": "",
+                  "confidence": 100,
+                  "categories": []
+                },
+                {
+                  "name": "PWA",
+                  "version": "",
+                  "confidence": 57,
+                  "categories": []
+                },
+                {
+                  "name": "Cloudflare",
+                  "version": "",
+                  "confidence": 53,
+                  "categories": []
+                },
+                {
+                  "name": "ASP.NET",
+                  "version": "",
+                  "confidence": 45,
+                  "categories": []
+                },
+                {
+                  "name": "Recaptcha Enterprise",
+                  "version": "",
+                  "confidence": 44,
+                  "categories": []
+                },
+                {
+                  "name": "Typekit/Adobe Fonts",
+                  "version": "",
+                  "confidence": 43,
+                  "categories": []
+                },
+                {
+                  "name": "Google Analytics",
+                  "version": "",
+                  "confidence": 42,
+                  "categories": []
+                },
+                {
+                  "name": "Google Analytics 4",
+                  "version": "",
+                  "confidence": 42,
+                  "categories": []
+                },
+                {
+                  "name": "Google Tag Manager",
+                  "version": "",
+                  "confidence": 42,
+                  "categories": []
+                },
+                {
+                  "name": "PayPal",
+                  "version": "",
+                  "confidence": 25,
+                  "categories": []
+                },
+                {
+                  "name": "Material UI",
+                  "version": "",
+                  "confidence": 23,
+                  "categories": []
+                }
+              ],
+              "categories": [],
+              "vendors": [
+                "jQuery",
+                "reCAPTCHA",
+                "Google Fonts",
+                "Open Graph",
+                "PWA",
+                "Cloudflare",
+                "ASP.NET",
+                "Recaptcha Enterprise",
+                "Typekit/Adobe Fonts",
+                "Google Analytics",
+                "Google Analytics 4",
+                "Google Tag Manager",
+                "PayPal",
+                "Material UI"
+              ],
+              "raw": {
+                "url": "https://www.zimbabwecricket.com/",
+                "domain": "www.zimbabwecricket.com",
+                "https": true,
+                "technologiesCount": 14,
+                "categories": "Analytics, CDN, CSS Framework, Font/Icon Library, JavaScript Library, PWA, Payment, Programming Language, SEO, Security, Tag Manager",
+                "technologies": [
+                  {
+                    "name": "jQuery",
+                    "category": "JavaScript Library",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "type": "scripts",
+                        "matches": [
+                          "jquery.min.js"
+                        ]
+                      },
+                      {
+                        "type": "globalJs",
+                        "matches": [
+                          "jQuery"
+                        ]
+                      }
+                    ],
+                    "website": "https://jquery.com",
+                    "version": "3.2.1"
+                  },
+                  {
+                    "name": "reCAPTCHA",
+                    "category": "Security",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "type": "html",
+                        "matches": [
+                          "g-recaptcha"
+                        ]
+                      },
+                      {
+                        "type": "scripts",
+                        "matches": [
+                          "google.com/recaptcha",
+                          "gstatic.com/recaptcha"
+                        ]
+                      },
+                      {
+                        "type": "globalJs",
+                        "matches": [
+                          "grecaptcha"
+                        ]
+                      }
+                    ],
+                    "website": "https://www.google.com/recaptcha"
+                  },
+                  {
+                    "name": "Google Fonts",
+                    "category": "Font/Icon Library",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "type": "html",
+                        "matches": [
+                          "fonts.googleapis.com"
+                        ]
+                      },
+                      {
+                        "type": "css",
+                        "matches": [
+                          "fonts.googleapis.com"
+                        ]
+                      }
+                    ],
+                    "website": "https://fonts.google.com"
+                  },
+                  {
+                    "name": "Open Graph",
+                    "category": "SEO",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "type": "html",
+                        "matches": [
+                          "og:title",
+                          "og:description"
+                        ]
+                      },
+                      {
+                        "type": "meta",
+                        "matches": [
+                          "og:title=ZimbabweCricket.com is for sale | HugeDomains",
+                          "og:type=website",
+                          "og:image=https://static.hugedomains.com/images/hdv3-img/og_hugedomains.png"
+                        ]
+                      }
+                    ],
+                    "website": "https://ogp.me"
+                  },
+                  {
+                    "name": "PWA",
+                    "category": "PWA",
+                    "confidence": 57,
+                    "evidence": [
+                      {
+                        "type": "meta",
+                        "matches": [
+                          "theme-color=#4e73b7"
+                        ]
+                      }
+                    ],
+                    "website": "https://web.dev/progressive-web-apps"
+                  },
+                  {
+                    "name": "Cloudflare",
+                    "category": "CDN",
+                    "confidence": 53,
+                    "evidence": [
+                      {
+                        "type": "headers",
+                        "matches": [
+                          "Server: cloudflare",
+                          "CF-RAY: 9e8f9d50ba071f6d-IAD",
+                          "CF-Cache-Status: DYNAMIC"
+                        ]
+                      },
+                      {
+                        "type": "cookies",
+                        "matches": [
+                          "cf_clearance"
+                        ]
+                      }
+                    ],
+                    "website": "https://cloudflare.com"
+                  },
+                  {
+                    "name": "ASP.NET",
+                    "category": "Programming Language",
+                    "confidence": 45,
+                    "evidence": [
+                      {
+                        "type": "headers",
+                        "matches": [
+                          "X-Powered-By: ASP.NET"
+                        ]
+                      }
+                    ],
+                    "website": "https://dotnet.microsoft.com"
+                  },
+                  {
+                    "name": "Recaptcha Enterprise",
+                    "category": "Security",
+                    "confidence": 44,
+                    "evidence": [
+                      {
+                        "type": "scripts",
+                        "matches": [
+                          "recaptcha/enterprise.js"
+                        ]
+                      }
+                    ],
+                    "website": "https://cloud.google.com/recaptcha-enterprise"
+                  },
+                  {
+                    "name": "Typekit/Adobe Fonts",
+                    "category": "Font/Icon Library",
+                    "confidence": 43,
+                    "evidence": [
+                      {
+                        "type": "css",
+                        "matches": [
+                          "use.typekit.net"
+                        ]
+                      }
+                    ],
+                    "website": "https://fonts.adobe.com"
+                  },
+                  {
+                    "name": "Google Analytics",
+                    "category": "Analytics",
+                    "confidence": 42,
+                    "evidence": [
+                      {
+                        "type": "globalJs",
+                        "matches": [
+                          "gtag"
+                        ]
+                      }
+                    ],
+                    "website": "https://analytics.google.com"
+                  },
+                  {
+                    "name": "Google Analytics 4",
+                    "category": "Analytics",
+                    "confidence": 42,
+                    "evidence": [
+                      {
+                        "type": "globalJs",
+                        "matches": [
+                          "gtag",
+                          "dataLayer"
+                        ]
+                      }
+                    ],
+                    "website": "https://analytics.google.com"
+                  },
+                  {
+                    "name": "Google Tag Manager",
+                    "category": "Tag Manager",
+                    "confidence": 42,
+                    "evidence": [
+                      {
+                        "type": "globalJs",
+                        "matches": [
+                          "dataLayer"
+                        ]
+                      }
+                    ],
+                    "website": "https://tagmanager.google.com"
+                  },
+                  {
+                    "name": "PayPal",
+                    "category": "Payment",
+                    "confidence": 25,
+                    "evidence": [
+                      {
+                        "type": "html",
+                        "matches": [
+                          "paypal"
+                        ]
+                      }
+                    ],
+                    "website": "https://paypal.com"
+                  },
+                  {
+                    "name": "Material UI",
+                    "category": "CSS Framework",
+                    "confidence": 23,
+                    "evidence": [
+                      {
+                        "type": "html",
+                        "matches": [
+                          "Mui"
+                        ]
+                      }
+                    ],
+                    "website": "https://mui.com"
+                  }
+                ],
+                "technologyGroups": {
+                  "JavaScript Library": [
+                    "jQuery"
+                  ],
+                  "Security": [
+                    "reCAPTCHA",
+                    "Recaptcha Enterprise"
+                  ],
+                  "Font/Icon Library": [
+                    "Google Fonts",
+                    "Typekit/Adobe Fonts"
+                  ],
+                  "SEO": [
+                    "Open Graph"
+                  ],
+                  "PWA": [
+                    "PWA"
+                  ],
+                  "CDN": [
+                    "Cloudflare"
+                  ],
+                  "Programming Language": [
+                    "ASP.NET"
+                  ],
+                  "Analytics": [
+                    "Google Analytics",
+                    "Google Analytics 4"
+                  ],
+                  "Tag Manager": [
+                    "Google Tag Manager"
+                  ],
+                  "Payment": [
+                    "PayPal"
+                  ],
+                  "CSS Framework": [
+                    "Material UI"
+                  ]
+                },
+                "analysisTimeMs": 3114,
+                "analyzedAt": "2026-04-08T07:38:51.547Z"
+              },
+              "confidence": 0.95,
+              "validation_state": "validated",
+              "sources": [
+                "https://www.zimbabwecricket.com/",
+                "https://zimbabwecricket.com/",
+                "https://results.zimbabwecricket.com/",
+                "https://events.zimbabwecricket.com/",
+                "https://app.zimbabwecricket.com/",
+                "https://membership.zimbabwecricket.com/",
+                "https://rankings.zimbabwecricket.com/"
+              ],
+              "source": "https://www.zimbabwecricket.com/",
+              "evidence_url": "https://www.zimbabwecricket.com/",
+              "signal_type": "DIGITAL_STACK",
+              "commercial_interpretation": "Visible modern web delivery and tagging stack. Mixed legacy frontend signals remain present",
+              "opportunity": "Measurement, data activation, and fan journey optimization; Legacy-to-modern platform transition planning",
+              "maturity_signal": "high"
+            },
+            "prompt_trace": {
+              "status": "deterministic_apify",
+              "has_structured_output": true,
+              "technologies_detected": 14,
+              "attempted_urls": [
+                "https://www.zimbabwecricket.com/",
+                "https://zimbabwecricket.com/",
+                "https://results.zimbabwecricket.com/",
+                "https://events.zimbabwecricket.com/",
+                "https://app.zimbabwecricket.com/",
+                "https://membership.zimbabwecricket.com/",
+                "https://rankings.zimbabwecricket.com/"
+              ]
+            },
+            "message_trace": [],
+            "raw_execution_trace": {
+              "exit_code": 0,
+              "stdout_length": 0,
+              "stderr_length": 0,
+              "has_structured_output": true,
+              "stdout_excerpt": "",
+              "stderr_excerpt": "",
+              "assistant_text_excerpt": "",
+              "message_trace_summary": []
+            }
+          },
+          "prompt_trace": {
+            "status": "deterministic_apify",
+            "has_structured_output": true,
+            "technologies_detected": 14,
+            "attempted_urls": [
+              "https://www.zimbabwecricket.com/",
+              "https://zimbabwecricket.com/",
+              "https://results.zimbabwecricket.com/",
+              "https://events.zimbabwecricket.com/",
+              "https://app.zimbabwecricket.com/",
+              "https://membership.zimbabwecricket.com/",
+              "https://rankings.zimbabwecricket.com/"
+            ]
+          },
+          "message_trace": [],
+          "raw_execution_trace": {
+            "exit_code": 0,
+            "stdout_length": 0,
+            "stderr_length": 0,
+            "has_structured_output": true,
+            "stdout_excerpt": "",
+            "stderr_excerpt": "",
+            "assistant_text_excerpt": "",
+            "message_trace_summary": []
+          },
+          "execution_query": "\"Zimbabwe Cricket\" technology stack",
+          "answer": "jQuery, reCAPTCHA, Google Fonts, Open Graph, PWA",
+          "primary_owner": null,
+          "supporting_candidates": [],
+          "candidates": [],
+          "signal_type": "DIGITAL_STACK",
+          "confidence": 0.95,
+          "validation_state": "validated",
+          "evidence_url": "https://www.zimbabwecricket.com/",
+          "recommended_next_query": "",
+          "notes": "",
+          "started_at": "2026-04-08T07:38:44.588Z",
+          "completed_at": "2026-04-08T07:38:52.528Z",
+          "duration_seconds": 7.94
+        }
+      }
+    ]
+  }
+}

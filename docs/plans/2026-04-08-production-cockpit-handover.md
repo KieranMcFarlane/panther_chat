@@ -228,21 +228,23 @@ Regeneration findings:
 
 - the first invocation failed immediately because a relative `--output-root` caused generated question source paths to resolve under `/Users/kieranmcfarlane/Downloads/panther_chat/apps/tmp/...` instead of the intended app-local `tmp/` directory
 - rerunning with an absolute output root fixed that path issue and produced live state files for Arsenal, Coventry City, Zimbabwe Cricket, and Major League Cricket
-- within the captured execution window, the rerun did not emit final `*_question_first_run_v1.json` or `*_question_first_dossier.json` artifacts for Arsenal, Coventry City, Zimbabwe Cricket, or Zimbabwe Handball Federation
-- Major League Cricket remains the only pinned entity with a real ready canonical artifact confirmed on disk
+- direct core-only reruns (`q1_foundation` + `q2_digital_stack`) produced final ready `question_first_run_v1` artifacts for Arsenal, Coventry City, and Zimbabwe Cricket
+- the direct core-only rerun for Zimbabwe Handball Federation stalled in `q1_foundation` with `tool_call_missing` and emitted no final canonical artifact
 
-Pinned entity classification after the captured pass:
+Pinned entity classification after the regeneration pass:
 
-- `arsenal`: `generated_but_not_ready`
-- `coventry-city`: `generated_but_not_ready`
-- `zimbabwe-cricket`: `generated_but_not_ready`
+- `arsenal`: `ready_canonical`
+- `coventry-city`: `ready_canonical`
+- `zimbabwe-cricket`: `ready_canonical`
 - `major-league-cricket`: `ready_canonical`
-- `zimbabwe-handball-federation`: `no_artifact`
+- `zimbabwe-handball-federation`: `run_failed`
 
 Promotion update:
 
 - promoted `.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_opencode_batch_20260330_183515_question_first_run_v1.json` into `apps/signal-noise-app/backend/data/dossiers/question_first/`
-- no other pinned entity was promoted because no other real ready canonical artifact exists yet
+- promoted `apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-arsenal/core-direct-batch/arsenal_opencode_batch_20260408_073048_question_first_run_v1.json` into `apps/signal-noise-app/backend/data/dossiers/question_first/`
+- promoted `apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-coventry-city/core-direct-batch/coventry-city_opencode_batch_20260408_073300_question_first_run_v1.json` into `apps/signal-noise-app/backend/data/dossiers/question_first/`
+- promoted `apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-zimbabwe-cricket/core-direct-batch/zimbabwe-cricket_opencode_batch_20260408_073852_question_first_run_v1.json` into `apps/signal-noise-app/backend/data/dossiers/question_first/`
 
 Portable evidence:
 
