@@ -927,6 +927,58 @@ test('runDeterministicToolQuestion prefers graph-first candidate paths for q12_c
   assert.equal(result.structuredOutput.candidate_paths[0].decision_score, 0.576);
 });
 
+test('runDeterministicToolQuestion emits typed scorecards for q13 q14 and q15', async () => {
+  const runState = {
+    questions: [
+      { question_id: 'q2_digital_stack', best_answer: 'Drupal 10, GTM' },
+      { question_id: 'q6_launch_signal', best_answer: 'New fan app launched' },
+      { question_id: 'q7_procurement_signal', best_answer: 'Vendor search underway' },
+      { question_id: 'q9_news_signal', best_answer: 'Commercial priorities reset' },
+      {
+        question_id: 'q11_decision_owner',
+        current_confidence: 0.8,
+        primary_owner: { name: 'Jane Doe' },
+      },
+      {
+        question_id: 'q12_connections',
+        reasoning: {
+          structured_output: {
+            path_type: 'direct',
+            q11_score: 0.8,
+            q12_score: 0.72,
+          },
+        },
+      },
+    ],
+  };
+
+  const q13 = await runDeterministicToolQuestion({ question_type: 'capability_gap' }, { runState });
+  assert.ok(Array.isArray(q13.structuredOutput.gap_scorecard));
+  assert.equal(q13.structuredOutput.graph_episode.episode_type, 'capability_gap');
+
+  const q14 = await runDeterministicToolQuestion(
+    { question_type: 'yp_fit' },
+    { runState: { questions: [...runState.questions, { question_id: 'q13_capability_gap', reasoning: { structured_output: q13.structuredOutput } }] } },
+  );
+  assert.ok(Array.isArray(q14.structuredOutput.fit_scorecard));
+  assert.equal(q14.structuredOutput.graph_episode.episode_type, 'yp_fit');
+
+  const q15 = await runDeterministicToolQuestion(
+    { question_type: 'outreach_strategy' },
+    {
+      runState: {
+        questions: [
+          ...runState.questions,
+          { question_id: 'q14_yp_fit', reasoning: { structured_output: q14.structuredOutput }, best_answer: q14.structuredOutput.answer },
+        ],
+      },
+    },
+  );
+  assert.equal(q15.structuredOutput.graph_episode.episode_type, 'outreach_strategy');
+  assert.equal(q15.structuredOutput.strategy_scorecard.strategy_score, 0.495);
+  assert.ok(Array.isArray(q15.structuredOutput.avoidances));
+});
+
 test('runOpenCodeQuestionSourceBatch resolves deterministic Apify enrichment before search', async () => {
   const outputDir = mkdtempSync(join(tmpdir(), 'opencode-digital-stack-'));
   const sourcePath = join(outputDir, 'source.json');

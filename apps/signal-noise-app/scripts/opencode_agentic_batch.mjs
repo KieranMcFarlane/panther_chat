@@ -174,6 +174,13 @@ function _candidatePoolFromLeadership(runState) {
   return [];
 }
 
+const DEFAULT_YP_TEAM = [
+  { name: 'Stuart Cope', role: 'Co-Founder & COO' },
+  { name: 'Andrew Rapley', role: 'Head of Projects' },
+  { name: 'Sarfraz Hussain', role: 'Head of Strategy' },
+  { name: 'Elliott Hillman', role: 'Senior Client Partner' },
+];
+
 function _normalizeGraphCandidate(value) {
   if (!value) return null;
   if (typeof value === 'string') {
@@ -290,6 +297,132 @@ function _deriveGraphFirstConnectionPaths({ graphContext, decisionOwnerState }) 
   return {
     candidatePaths: resolvedPaths,
     bestPath: resolvedPaths[0] || null,
+  };
+}
+
+function _buildRunConnectionsGraphContext({ sourcePayload = {}, runState = {}, entityId = '', entityName = '' } = {}) {
+  const explicitGraph = (sourcePayload.connections_graph && typeof sourcePayload.connections_graph === 'object')
+    ? sourcePayload.connections_graph
+    : (sourcePayload.graph_context && typeof sourcePayload.graph_context === 'object')
+      ? sourcePayload.graph_context
+      : (runState.connections_graph && typeof runState.connections_graph === 'object')
+        ? runState.connections_graph
+        : null;
+  const nodes = [];
+  const edges = [];
+  const seenNodes = new Set();
+  const seenEdges = new Set();
+  const addNode = (node) => {
+    const nodeId = String(node?.node_id || '').trim();
+    if (!nodeId || seenNodes.has(nodeId)) return;
+    seenNodes.add(nodeId);
+    nodes.push(node);
+  };
+  const addEdge = (edge) => {
+    const fromId = String(edge?.from_id || '').trim();
+    const edgeType = String(edge?.edge_type || '').trim();
+    const toId = String(edge?.to_id || '').trim();
+    const key = `${fromId}:${edgeType}:${toId}`;
+    if (!fromId || !edgeType || !toId || seenEdges.has(key)) return;
+    seenEdges.add(key);
+    edges.push(edge);
+  };
+
+  if (explicitGraph) {
+    for (const node of (Array.isArray(explicitGraph.nodes) ? explicitGraph.nodes : [])) {
+      if (node && typeof node === 'object') addNode({ ...node });
+    }
+    for (const edge of (Array.isArray(explicitGraph.edges) ? explicitGraph.edges : [])) {
+      if (edge && typeof edge === 'object') addEdge({ ...edge });
+    }
+  }
+
+  const entityNodeId = String(entityId || explicitGraph?.entity_id || '').trim() || `entity:${_slugify(entityName || explicitGraph?.entity_name || 'entity')}`;
+  addNode({
+    node_id: entityNodeId,
+    node_type: 'entity',
+    entity_id: entityId || explicitGraph?.entity_id || null,
+    name: entityName || explicitGraph?.entity_name || entityId || 'entity',
+  });
+
+  for (const ypMember of DEFAULT_YP_TEAM) {
+    addNode({
+      node_id: ypMember.name,
+      node_type: 'yp_member',
+      name: ypMember.name,
+      title: ypMember.role,
+    });
+  }
+
+  const bridgeContacts = Array.isArray(sourcePayload.bridge_contacts) ? sourcePayload.bridge_contacts : [];
+  for (const bridge of bridgeContacts) {
+    const bridgeName = String(bridge?.contact_name || bridge?.name || '').trim();
+    if (!bridgeName) continue;
+    const bridgeId = `bridge:${_slugify(bridgeName)}`;
+    addNode({
+      node_id: bridgeId,
+      node_type: 'bridge_contact',
+      name: bridgeName,
+      relationship_to_yp: String(bridge?.relationship_to_yp || '').trim(),
+      introduction_capability: String(bridge?.introduction_capability || '').trim(),
+    });
+    const relationship = String(bridge?.relationship_to_yp || '').trim();
+    for (const ypName of relationship.split(',').map((item) => item.trim()).filter(Boolean)) {
+      addEdge({
+        from_id: ypName,
+        to_id: bridgeId,
+        edge_type: 'bridge_connection',
+        confidence: 35,
+      });
+    }
+  }
+
+  const priorQuestions = Array.isArray(runState.questions) ? runState.questions : [];
+  const q3Leadership = priorQuestions.find((item) => String(item?.question_id || '').trim() === 'q3_leadership') || null;
+  const q11DecisionOwner = priorQuestions.find((item) => String(item?.question_id || '').trim() === 'q11_decision_owner') || null;
+  const leadershipCandidates = Array.isArray(q3Leadership?.candidates) ? q3Leadership.candidates : [];
+  const rankedCandidates = [
+    q11DecisionOwner?.primary_owner || null,
+    ...(Array.isArray(q11DecisionOwner?.secondary_candidates) ? q11DecisionOwner.secondary_candidates : []),
+    ...(Array.isArray(q11DecisionOwner?.supporting_candidates) ? q11DecisionOwner.supporting_candidates : []),
+    ...leadershipCandidates,
+  ]
+    .map((item) => _normalizeGraphCandidate(item))
+    .filter(Boolean)
+    .reduce((acc, candidate) => {
+      const key = String(candidate.name || '').trim().toLowerCase();
+      if (!key || acc.some((existing) => String(existing.name || '').trim().toLowerCase() === key)) return acc;
+      acc.push(candidate);
+      return acc;
+    }, []);
+
+  for (const candidate of rankedCandidates) {
+    const personId = `person:${_slugify(candidate.name)}`;
+    addNode({
+      node_id: personId,
+      node_type: 'person',
+      name: candidate.name,
+      title: candidate.title || '',
+      function_type: candidate.function_type || '',
+      seniority_level: candidate.seniority_level || '',
+      linkedin_url: candidate.linkedin_url || '',
+    });
+    addEdge({
+      from_id: entityNodeId,
+      to_id: personId,
+      edge_type: q11DecisionOwner?.primary_owner && String(q11DecisionOwner.primary_owner.name || '').trim().toLowerCase() === String(candidate.name || '').trim().toLowerCase()
+        ? 'primary_owner_of'
+        : 'supports',
+      confidence: Number(candidate.decision_score || q11DecisionOwner?.current_confidence || 0) || 0.5,
+    });
+  }
+
+  return {
+    schema_version: 'connections_graph_v1',
+    entity_id: entityId || explicitGraph?.entity_id || null,
+    entity_name: entityName || explicitGraph?.entity_name || null,
+    nodes,
+    edges,
   };
 }
 
@@ -1021,6 +1154,7 @@ export function buildPresetRunState(questions, { preset = 'major-league-cricket'
     run_started_at: timestamp,
     last_run_at: timestamp,
     preset,
+    connections_graph: null,
     questions: questions.map((question) => buildQuestionState(question, { runId, timestamp, creditBudgetOverrides, confidenceThreshold })),
   };
 }
@@ -1776,12 +1910,26 @@ export async function runDeterministicToolQuestion(
         cliResult: { code: 0, stdout: '', stderr: '' },
       };
     }
+    const gapScorecard = themes.map((theme, index) => ({
+      capability: theme,
+      gap_score: Math.max(0.45, 0.78 - (index * 0.08)),
+      severity: index === 0 ? 'high' : 'medium',
+      driver_question_ids: ['q2_digital_stack', 'q6_launch_signal', 'q7_procurement_signal', 'q9_news_signal'],
+    }));
+    const topGap = gapScorecard[0];
     return {
       structuredOutput: {
         answer: `Capability gaps inferred from ${themes.join(', ')}`,
-        summary: 'Capability gap inference derived from validated upstream commercial and digital signals.',
+        summary: 'Capability gap scorecard derived from validated upstream commercial and digital signals.',
         themes,
-        recommendations: themes.map((theme) => `Investigate ${theme.replaceAll('_', ' ')}`),
+        recommendations: gapScorecard.map((item) => `Close ${item.capability.replaceAll('_', ' ')} gap`),
+        gap_scorecard: gapScorecard,
+        top_gap: topGap?.capability || '',
+        graph_episode: {
+          episode_type: 'capability_gap',
+          label: topGap?.capability || 'capability_gap',
+          score: Number(topGap?.gap_score || 0),
+        },
         confidence: 0.6,
         validation_state: 'provisional',
         sources: [],
@@ -1798,6 +1946,9 @@ export async function runDeterministicToolQuestion(
     const themes = Array.isArray(capabilityGap?.reasoning?.structured_output?.themes)
       ? capabilityGap.reasoning.structured_output.themes
       : [];
+    const gapScorecard = Array.isArray(capabilityGap?.reasoning?.structured_output?.gap_scorecard)
+      ? capabilityGap.reasoning.structured_output.gap_scorecard
+      : [];
     if (themes.length === 0) {
       return {
         structuredOutput: _emptyStructuredOutputForQuestion(question, 'No capability-gap inference is available yet for YP fit mapping.'),
@@ -1806,12 +1957,25 @@ export async function runDeterministicToolQuestion(
         cliResult: { code: 0, stdout: '', stderr: '' },
       };
     }
+    const fitScorecard = [
+      { service: 'commercial_intelligence', fit_score: 0.86, based_on: themes.slice(0, 2) },
+      { service: 'platform_strategy', fit_score: themes.includes('digital_stack_maturity') ? 0.82 : 0.64, based_on: themes.filter((theme) => theme === 'digital_stack_maturity') },
+      { service: 'fan_engagement', fit_score: themes.includes('product_launch_pressure') ? 0.78 : 0.58, based_on: themes.filter((theme) => theme === 'product_launch_pressure') },
+    ].sort((left, right) => right.fit_score - left.fit_score);
+    const bestFit = fitScorecard[0];
     return {
       structuredOutput: {
-        answer: 'Yellow Panther fit inferred from capability gaps',
-        summary: 'Yellow Panther fit is strongest where the target shows capability gaps and active commercial change signals.',
+        answer: `Yellow Panther fit is strongest for ${bestFit?.service || 'commercial_intelligence'}`,
+        summary: 'Yellow Panther fit scorecard is mapped from capability gaps and active commercial change signals.',
         themes,
-        recommendations: ['fan engagement', 'commercial intelligence', 'platform strategy'],
+        recommendations: fitScorecard.map((item) => item.service),
+        fit_scorecard: fitScorecard,
+        best_service: bestFit?.service || '',
+        graph_episode: {
+          episode_type: 'yp_fit',
+          label: bestFit?.service || 'yp_fit',
+          score: Number(bestFit?.fit_score || 0),
+        },
         confidence: 0.62,
         validation_state: 'provisional',
         sources: [],
@@ -1840,14 +2004,34 @@ export async function runDeterministicToolQuestion(
       };
     }
     const route = String(connectionsState?.reasoning?.structured_output?.path_type || 'cold').trim() || 'cold';
+    const fitScorecard = Array.isArray(ypFitState?.reasoning?.structured_output?.fit_scorecard)
+      ? ypFitState.reasoning.structured_output.fit_scorecard
+      : [];
+    const bestFit = fitScorecard[0] || null;
+    const q11Score = Number(connectionsState?.reasoning?.structured_output?.q11_score || decisionOwnerState?.current_confidence || 0) || 0;
+    const q12Score = Number(connectionsState?.reasoning?.structured_output?.q12_score || 0) || 0;
+    const strategyScore = Math.round((q11Score * Math.max(q12Score, 0.2) * Math.max(Number(bestFit?.fit_score || 0.6), 0.4)) * 1000) / 1000;
     return {
       structuredOutput: {
         answer: `Target ${targetName} via ${route} route`,
-        summary: 'Outreach strategy derived from ranked buyer, network path, and YP fit signals.',
+        summary: 'Outreach strategy scorecard derived from ranked buyer, network path, and YP fit signals.',
         recommended_target: targetName,
         recommended_route: route,
-        recommended_angle: String(ypFitState?.best_answer || 'Commercial and digital capability support').trim(),
+        recommended_angle: String(ypFitState?.reasoning?.structured_output?.best_service || ypFitState?.best_answer || 'commercial_intelligence').trim(),
         recommendations: ['lead with current commercial change signal', 'anchor on a concrete capability gap'],
+        avoidances: ['avoid generic capabilities pitch', 'do not bypass identified buyer path'],
+        strategy_scorecard: {
+          target_name: targetName,
+          q11_score: q11Score,
+          q12_score: q12Score,
+          yp_fit_score: Number(bestFit?.fit_score || 0.6),
+          strategy_score: strategyScore,
+        },
+        graph_episode: {
+          episode_type: 'outreach_strategy',
+          label: targetName,
+          score: strategyScore,
+        },
         confidence: 0.58,
         validation_state: 'provisional',
         sources: [],
@@ -2574,6 +2758,7 @@ export async function runOpenCodePresetBatch({
   entityIdOverride = null,
   entityTypeOverride = null,
   questionSourcePath = null,
+  sourcePayload = null,
 } = {}) {
   const resolvedWorktreeRoot = _resolveOpencodeWorktreeRoot(worktreeRoot);
   let normalizedPreset = _slugify(preset || entityNameOverride || entityIdOverride || 'question-first');
@@ -2628,6 +2813,12 @@ export async function runOpenCodePresetBatch({
       return nextState;
     });
   }
+  runState.connections_graph = _buildRunConnectionsGraphContext({
+    sourcePayload: sourcePayload && typeof sourcePayload === 'object' ? sourcePayload : {},
+    runState,
+    entityId,
+    entityName,
+  });
   runState = _decorateRunStateCheckpoint(runState, {
     runPhase: 'initialized',
     activeQuestionIndex: questions.length > 0 ? 0 : null,
@@ -2711,6 +2902,7 @@ export async function runOpenCodePresetBatch({
           },
         );
         runState.questions[index] = _mergeQuestionState(existingQuestionState || currentQuestionState, questionPayload, new Date().toISOString());
+        runState.connections_graph = _buildRunConnectionsGraphContext({ sourcePayload, runState, entityId, entityName });
         await _writeJsonFile(statePath, runState);
         finalizeQuestionTiming();
         finalQuestions.push(questionPayload);
@@ -2772,6 +2964,7 @@ export async function runOpenCodePresetBatch({
             };
           }
           runState.questions[index] = updatedState;
+          runState.connections_graph = _buildRunConnectionsGraphContext({ sourcePayload, runState, entityId, entityName });
           await _writeJsonFile(statePath, runState);
           currentState = updatedState;
           existingQuestionState = updatedState;
@@ -2816,6 +3009,7 @@ export async function runOpenCodePresetBatch({
           },
         );
         runState.questions[index] = _mergeQuestionState(existingQuestionState || currentQuestionState, questionPayload, new Date().toISOString());
+        runState.connections_graph = _buildRunConnectionsGraphContext({ sourcePayload, runState, entityId, entityName });
         await _writeJsonFile(statePath, runState);
         finalizeQuestionTiming();
         finalQuestions.push(questionPayload);
@@ -3114,6 +3308,7 @@ export async function runOpenCodePresetBatch({
         };
       }
       runState.questions[index] = _mergeQuestionState(existingQuestionState || currentQuestionState, questionPayload, new Date().toISOString());
+      runState.connections_graph = _buildRunConnectionsGraphContext({ sourcePayload, runState, entityId, entityName });
       await _writeJsonFile(statePath, runState);
       finalizeQuestionTiming();
       }
@@ -3342,6 +3537,7 @@ export async function runOpenCodeQuestionSourceBatch({
     entityIdOverride: entityId,
     entityTypeOverride: entityType,
     questionSourcePath,
+    sourcePayload,
   });
 }
 

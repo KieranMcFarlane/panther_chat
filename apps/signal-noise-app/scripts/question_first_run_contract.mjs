@@ -439,6 +439,31 @@ export function buildPoiGraph({ entity_id, entity_name, answers = [] }) {
     }
   }
 
+  for (const answer of Array.isArray(answers) ? answers : []) {
+    const rawStructuredOutput = answer?.answer?.raw_structured_output;
+    const graphEpisode = rawStructuredOutput?.graph_episode;
+    const questionType = String(answer?.question_type || '').trim().toLowerCase();
+    if (!graphEpisode || typeof graphEpisode !== 'object') continue;
+    if (!['capability_gap', 'yp_fit', 'outreach_strategy'].includes(questionType)) continue;
+    const episodeId = `episode:${questionType}:${_slugify(graphEpisode.label || answer.question_id || questionType)}`;
+    addNode({
+      node_id: episodeId,
+      node_type: 'derived_episode',
+      name: String(graphEpisode.label || questionType).trim() || questionType,
+      episode_type: String(graphEpisode.episode_type || questionType).trim(),
+      score: Number(graphEpisode.score || answer?.confidence || 0),
+    });
+    if (entityId || entityName) {
+      addEdge({
+        from_id: entityId || `entity:${_slugify(entityName)}`,
+        to_id: episodeId,
+        edge_type: `derived_${questionType}`,
+        confidence: Number(answer?.confidence || graphEpisode.score || 0),
+        source_question_id: String(answer?.question_id || '').trim() || undefined,
+      });
+    }
+  }
+
   return {
     schema_version: 'poi_graph_v1',
     entity_id: entityId || null,

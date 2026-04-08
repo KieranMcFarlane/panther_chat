@@ -358,3 +358,45 @@ test('buildQuestionFirstRunArtifact writes trace refs instead of embedding raw e
   assert.equal(artifact.trace_index[0].path, '/tmp/question_001.debug.json');
   assert.ok(!('raw_execution_trace' in artifact.answer_records[0]));
 });
+
+test('buildQuestionFirstRunArtifact writes derived episodes into the canonical poi graph', () => {
+  const artifact = buildQuestionFirstRunArtifact({
+    entity_id: 'arsenal-fc',
+    entity_name: 'Arsenal Football Club',
+    entity_type: 'SPORT_CLUB',
+    question_specs: [],
+    answer_records: [
+      {
+        question_id: 'q13_capability_gap',
+        question_type: 'capability_gap',
+        status: 'answered',
+        validation_state: 'provisional',
+        confidence: 0.61,
+        signal_type: 'CAPABILITY_GAP',
+        answer: {
+          kind: 'summary',
+          summary: 'Capability gaps identified',
+          raw_structured_output: {
+            graph_episode: {
+              episode_type: 'capability_gap',
+              label: 'digital_stack_maturity',
+              score: 0.7,
+            },
+          },
+        },
+        evidence_refs: [],
+        trace_ref: null,
+        started_at: '2026-03-30T00:00:00+00:00',
+        completed_at: '2026-03-30T00:00:05+00:00',
+        duration_seconds: 5,
+      },
+    ],
+    evidence_items: [],
+    trace_index: [],
+    categories: [],
+    run_rollup: {},
+  });
+
+  assert.ok(artifact.poi_graph.nodes.some((node) => node.node_type === 'derived_episode'));
+  assert.ok(artifact.poi_graph.edges.some((edge) => edge.edge_type === 'derived_capability_gap'));
+});
