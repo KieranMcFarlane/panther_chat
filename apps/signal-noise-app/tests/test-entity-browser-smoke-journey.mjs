@@ -21,6 +21,8 @@ test('entity browser smoke journey presents the five-entity operator path', () =
   assert.match(smokeConfigSource, /Major League Cricket/)
   assert.match(smokeConfigSource, /Zimbabwe Handball Federation/)
   assert.match(smokeSetSource, /Pinned smoke entity is missing from the canonical snapshot/)
+  assert.match(smokeSetSource, /dossier_source === 'question_first_dossier'/)
+  assert.match(smokeSetSource, /dossier_source === 'question_first_run'/)
   assert.match(journeySource, /Open dossier/)
   assert.match(journeySource, /Find in browser/)
   assert.match(journeySource, /dossierStatus/)
@@ -32,6 +34,12 @@ test('entity browser page mounts the smoke journey above the entity grid with ca
   assert.match(browserPageSource, /smokeItems/)
   assert.match(browserPageSource, /<EntitySmokeJourney items=\{smokeItems\} \/>/)
   assert.doesNotMatch(browserPageSource, /Hidden by default/)
+})
+
+test('client-facing smoke journey only presents ready question-first dossiers', () => {
+  assert.match(journeySource, /Client-Ready Dossiers/)
+  assert.match(journeySource, /Only entities with a real canonical question-first dossier are shown here/)
+  assert.match(journeySource, /No client-ready dossiers are available yet/)
 })
 
 test('smoke runbook documents the live operator journey and acceptance criteria', () => {

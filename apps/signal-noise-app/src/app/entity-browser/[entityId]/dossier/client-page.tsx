@@ -65,12 +65,13 @@ export default function EntityDossierClientPage({
   const [isContentTransitioning, setIsContentTransitioning] = useState(false)
   const [backHref, setBackHref] = useState(fromPage !== '1' ? `/entity-browser?page=${fromPage}` : '/entity-browser')
   const dossierMetadata = dossier?.metadata || {}
+  const hasQuestionFirstDossier = Array.isArray(dossier?.tabs) && dossier.tabs.length > 0
   const dossierStatus = String(
     entity?.properties?.dossier_status ||
       dossierMetadata?.dossier_status ||
       ''
   ).trim()
-  const isPersistedDossier = Boolean(dossier)
+  const isPersistedDossier = hasQuestionFirstDossier
   const dossierConfidence = typeof dossierMetadata?.confidence_score === 'number'
     ? `${Math.round(dossierMetadata.confidence_score * 100)}%`
     : 'n/a'
@@ -132,7 +133,7 @@ export default function EntityDossierClientPage({
   const supportingEvidenceCount = Number(discoverySummary?.supporting_evidence_count || dossierPromotions.length || 0)
   const persistedStateSummary = isPersistedDossier
     ? 'This page leads with the stored dossier, then adds enrichment and opportunity context. The first question is whether the persisted entity state is strong enough to move into an active pursuit decision.'
-    : 'No persisted dossier is available yet, so this page starts from the entity state and enrichment context. The next step is to gather enough promoted evidence to decide whether this entity belongs in active pursuit.'
+    : 'No real question-first dossier is available yet. This page is showing entity and enrichment context only, and this entity should not be treated as demo-ready until a canonical dossier artifact exists.'
 
   useEffect(() => {
     const currentFrom = new URLSearchParams(window.location.search).get('from') || fromPage
@@ -165,8 +166,7 @@ export default function EntityDossierClientPage({
   // Intentionally exclude `dossier` from deps to avoid regeneration loops after a successful generation.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    if (!entity) return
-    if (!shouldGenerate && dossier) return
+    if (!entity || !shouldGenerate) return
 
     const controller = new AbortController()
 
@@ -517,12 +517,30 @@ export default function EntityDossierClientPage({
             className={`transition-opacity duration-200 ${isContentTransitioning ? 'opacity-0' : 'opacity-100'}`}
             style={{ viewTransitionName: "dossier-content" }}
           >
-            <EntityDossierRouter
-              key={dossierKey}
-              entity={entity}
-              onEmailEntity={handleEmailEntity}
-              dossier={dossier}
-            />
+            {hasQuestionFirstDossier ? (
+              <EntityDossierRouter
+                key={dossierKey}
+                entity={entity}
+                onEmailEntity={handleEmailEntity}
+                dossier={dossier}
+              />
+            ) : (
+              <Card className="border border-amber-700/40 bg-slate-950/90 text-slate-50 shadow-lg">
+                <CardContent className="p-6">
+                  <div className="max-w-3xl space-y-3">
+                    <div className="text-sm font-semibold uppercase tracking-[0.16em] text-amber-300">
+                      Canonical dossier not ready
+                    </div>
+                    <p className="text-sm leading-6 text-slate-300">
+                      This entity does not currently have a real question-first dossier artifact. The old legacy dossier views are intentionally hidden on this route so the client path only shows production-backed dossier content.
+                    </p>
+                    <p className="text-sm leading-6 text-slate-300">
+                      Use the operator controls to rerun or review the dossier pipeline. Once a canonical artifact exists, the question-first dossier tabs will appear here automatically.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
       </div>

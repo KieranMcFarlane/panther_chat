@@ -52,6 +52,12 @@ export async function getEntityBrowserSmokeItems(): Promise<EntitySmokeJourneyIt
 
   for (const resolved of resolvedEntities) {
     const dossierIndex = await getEntityDossierIndexRecord(resolved.entityId, resolved.entity)
+    const isCanonicalQuestionFirst = dossierIndex.dossier_source === 'question_first_dossier'
+      || dossierIndex.dossier_source === 'question_first_run'
+
+    if (!isCanonicalQuestionFirst) {
+      continue
+    }
 
     smokeItems.push({
       entityId: resolved.entityId,
