@@ -26,6 +26,6 @@ test('entity detail and dossier routes accept uuid as a direct lookup key', () =
 })
 
 test('graph id resolver prefers uuid before legacy fallbacks', () => {
-  assert.match(graphIdSource, /toIdString\(entity\.uuid\)\s*\?\?/) 
-  assert.match(graphIdSource, /toIdString\(entity\.neo4j_id\)\s*\?\?/) 
+  assert.match(graphIdSource, /toIdString\(entity\.uuid\)\s*\?\?/)
+  assert.match(graphIdSource, /toIdString\(entity\.neo4j_id\)\s*\?\?/)
 })

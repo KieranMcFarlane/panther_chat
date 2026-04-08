@@ -85,7 +85,7 @@ test('dossier entity loader defers canonical snapshot fallback until after direc
 
 test('entity browser server page seeds the first payload for SSR instead of booting empty', () => {
   const browserPageSource = readFileSync(new URL('../src/app/entity-browser/page.tsx', import.meta.url), 'utf8')
-  assert.match(browserPageSource, /import \{ getEntityBrowserPageData, getEntitiesTaxonomyData, type EntityBrowserFilters \} from ['"]@\/lib\/entity-browser-data['"]/) 
+  assert.match(browserPageSource, /import \{ getEntityBrowserPageData, getEntitiesTaxonomyData, type EntityBrowserFilters \} from ['"]@\/lib\/entity-browser-data['"]/)
   assert.match(browserPageSource, /const initialEntitiesData = await getEntityBrowserPageData\(/)
   assert.match(browserPageSource, /const initialTaxonomy = await getEntitiesTaxonomyData\(\)/)
   assert.match(browserPageSource, /<EntityBrowserClientPage[\s\S]*initialEntitiesData=\{initialEntitiesData\}[\s\S]*initialTaxonomy=\{initialTaxonomy\}/)

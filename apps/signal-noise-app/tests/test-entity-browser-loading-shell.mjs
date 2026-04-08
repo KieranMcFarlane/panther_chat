@@ -17,4 +17,3 @@ test('entity browser loading state matches the page layout instead of a blank sp
   assert.match(clientPageSource, /Array\.from\(\{ length: 5 \}\)\.map/)
   assert.match(clientPageSource, /Array\.from\(\{ length: 6 \}\)\.map/)
 })
-
