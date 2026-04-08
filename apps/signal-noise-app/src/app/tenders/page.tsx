@@ -28,18 +28,16 @@ import {
 } from 'lucide-react';
 
 import { supabase } from '@/lib/supabase-client';
-import { comprehensiveRfpOpportunities } from '@/lib/comprehensive-rfp-opportunities';
-import digitalRfpOpportunities from '@/lib/digital-rfp-opportunities';
 import { ScoutPanel } from '@/components/rfp/ScoutPanel';
 
-// Use digital-first opportunities for optimal Yellow Panther alignment
-const alignedOpportunities = digitalRfpOpportunities;
+const EMPTY_FEED_MESSAGE = 'No production-backed opportunities are available right now.';
 
 export default function TendersPage() {
   const [opportunities, setOpportunities] = useState([]);
   const [detectedRFPs, setDetectedRFPs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dataLoadedAt, setDataLoadedAt] = useState(null);
+  const [feedMessage, setFeedMessage] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [showDetectedOnly, setShowDetectedOnly] = useState(false);
@@ -242,6 +240,7 @@ const [filterSource, setFilterSource] = useState('all');
           setOpportunities(data.opportunities);
           setStats(calculateStatsFromOpportunities(data.opportunities));
           setDataLoadedAt(new Date());
+          setFeedMessage(null);
           console.log(`✅ SUCCESS: Loaded ${data.opportunities.length} filtered opportunities (${data.filtering_stats?.filtered_out || 0} broken URLs removed)`);
           console.log('📊 Data source:', data.source);
           if (data.filtering_stats) {
@@ -258,41 +257,18 @@ const [filterSource, setFilterSource] = useState('all');
             }
           });
         } else {
-          console.log('📊 API returned no filtered data, using digital-first opportunities optimized for Yellow Panther');
-          
-          // Use digital-first data as optimal fallback (aligned with Yellow Panther's agency expertise)
-          const digitalData = alignedOpportunities.map(opp => ({
-            ...opp,
-            source_url: opp.url || null, // Map 'url' field to 'source_url' for consistency
-            deadline: opp.deadline || null,
-            posted_date: opp.posted || null,
-            yellow_panther_fit: opp.yellow_panther_fit || 85,
-            category: opp.category || 'Digital Transformation',
-            status: opp.status || 'qualified'
-          }));
-          
-          setOpportunities(digitalData);
-          setStats(calculateStatsFromOpportunities(digitalData));
+          console.log('📊 API returned no production-backed opportunities');
+          setOpportunities([]);
+          setStats(calculateStatsFromOpportunities([]));
           setDataLoadedAt(new Date());
-          
-          console.log(`✅ SUCCESS: Using ${digitalData.length} digital-first opportunities optimized for agency services`);
-          console.log('📊 Data source: "Yellow Panther Digital-First Opportunities (Optimized for Agency Services)"');
-          
-          // Debug: Check first few digital opportunities for source URLs
-          console.log('🔍 DEBUG: First 5 digital opportunities source URL status:');
-          digitalData.slice(0, 5).forEach((opp, index) => {
-            console.log(`  ${index + 1}. ${opp.title.substring(0, 50)}... -> ${opp.source_url ? 'HAS SOURCE URL' : 'NO SOURCE URL'}`);
-            if (opp.source_url) {
-              console.log(`     URL: ${opp.source_url}`);
-            }
-          });
+          setFeedMessage(data.error || EMPTY_FEED_MESSAGE);
         }
       } catch (error) {
         console.error('❌ ERROR: Failed to load from API:', error);
         console.error('❌ Full error details:', error);
-        // Show error state instead of fallback data
         setOpportunities([]);
         setStats(calculateStatsFromOpportunities([]));
+        setFeedMessage(EMPTY_FEED_MESSAGE);
       }
       
       setLoading(false);
@@ -622,11 +598,11 @@ const [filterSource, setFilterSource] = useState('all');
       <div className="min-h-screen bg-background p-6 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <h2 className="text-xl font-semibold mb-2">Loading Quality-Filtered Opportunities</h2>
-          <p className="text-muted-foreground mb-4">Fetching real tender data with verified source links...</p>
+          <h2 className="text-xl font-semibold mb-2">Loading opportunity feed</h2>
+          <p className="text-muted-foreground mb-4">Checking production-backed opportunities and verified source links...</p>
           <div className="text-sm text-muted-foreground">
-            <p>🔍 Filtering out broken and placeholder URLs</p>
-            <p>📊 Validating source links for quality assurance</p>
+            <p>🔍 Verifying source URLs</p>
+            <p>📊 Waiting for live database results</p>
           </div>
         </div>
       </div>
@@ -638,9 +614,9 @@ const [filterSource, setFilterSource] = useState('all');
       <div className="min-h-screen bg-background p-6 flex items-center justify-center">
         <div className="text-center max-w-md">
           <div className="text-6xl mb-4">🔍</div>
-          <h2 className="text-xl font-semibold mb-2">No Quality Opportunities Available</h2>
+          <h2 className="text-xl font-semibold mb-2">No production-backed opportunities are available right now.</h2>
           <p className="text-muted-foreground mb-4">
-            We&apos;ve filtered out opportunities with broken source URLs to ensure the best user experience.
+            {feedMessage || EMPTY_FEED_MESSAGE}
           </p>
           <Button onClick={() => window.location.reload()}>
             <RefreshCw className="w-4 h-4 mr-2" />
@@ -775,22 +751,22 @@ const [filterSource, setFilterSource] = useState('all');
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Total Opportunities</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.total_opportunities}</div>
-            <div className="text-xs text-green-500 mt-1">From Comprehensive Analysis</div>
-          </CardContent>
-        </Card>
+                <CardTitle className="text-sm font-medium">Total Opportunities</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.total_opportunities}</div>
+                <div className="text-xs text-green-500 mt-1">Database-backed feed items</div>
+              </CardContent>
+            </Card>
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">Total Pipeline Value</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">£{stats.total_value_millions}M</div>
-            <div className="text-xs text-blue-500 mt-1">Confirmed Opportunities</div>
-          </CardContent>
-        </Card>
+              <CardContent>
+                <div className="text-2xl font-bold">£{stats.total_value_millions}M</div>
+                <div className="text-xs text-blue-500 mt-1">Current visible feed</div>
+              </CardContent>
+            </Card>
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">Urgent Deadlines</CardTitle>
@@ -897,13 +873,13 @@ const [filterSource, setFilterSource] = useState('all');
           )}
           
           {displayOpportunities.length > 0 && (
-            <>
-              <div className="mb-4">
-                <h2 className="text-xl font-semibold text-blue-700 mb-2">📊 RFP Opportunities</h2>
-                <p className="text-sm text-muted-foreground">
-                  {displayOpportunities.length} live opportunities from our database of {stats.total_opportunities || 325} total records
-                </p>
-              </div>
+                <>
+                  <div className="mb-4">
+                    <h2 className="text-xl font-semibold text-blue-700 mb-2">📊 RFP Opportunities</h2>
+                    <p className="text-sm text-muted-foreground">
+                      {displayOpportunities.length} live opportunities from the production-backed intake feed
+                    </p>
+                  </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
                 {displayOpportunities.map((opportunity, index) => generateTenderCard(opportunity, index))}
               </div>
@@ -913,13 +889,13 @@ const [filterSource, setFilterSource] = useState('all');
       )}
 
       {(filterSource === 'rfp_opportunities') && displayOpportunities.length > 0 && (
-        <>
-          <div className="mb-4">
-            <h2 className="text-xl font-semibold text-blue-700 mb-2">📊 RFP Opportunities</h2>
-            <p className="text-sm text-muted-foreground">
-              {displayOpportunities.length} live opportunities from our database of {stats.total_opportunities || 325} total records
-            </p>
-          </div>
+            <>
+              <div className="mb-4">
+                <h2 className="text-xl font-semibold text-blue-700 mb-2">📊 RFP Opportunities</h2>
+                <p className="text-sm text-muted-foreground">
+                  {displayOpportunities.length} live opportunities from the production-backed intake feed
+                </p>
+              </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
             {displayOpportunities.map((opportunity, index) => generateTenderCard(opportunity, index))}
           </div>

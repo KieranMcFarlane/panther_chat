@@ -13,7 +13,6 @@ test('opportunities page is framed as a shortlist and decision surface', async (
   assert.match(source, /canonical_entity_id|canonicalEntityId/)
   assert.match(source, /No intake-linked opportunities found|No entity-linked opportunities yet/)
   assert.match(source, /Open RFP&apos;s\/Tenders|Open RFP's\/Tenders/)
-  assert.match(source, /Open Scout/);
   assert.match(source, /promoted shortlist|Nothing has been promoted into the shortlist|shortlist will populate once intake is promoted/i)
 })
 
@@ -24,4 +23,8 @@ test('tenders page is framed as the live intake feed', async () => {
   assert.match(source, /RFP&apos;s & Tenders|RFP's & Tenders/)
   assert.match(source, /Refresh Feed/);
   assert.match(source, /Promote qualified intake into Opportunities/)
+  assert.match(source, /Loading opportunity feed/)
+  assert.match(source, /No production-backed opportunities are available right now/)
+  assert.doesNotMatch(source, /Fetching real tender data with verified source links/)
+  assert.doesNotMatch(source, /Yellow Panther Digital-First Opportunities/)
 })

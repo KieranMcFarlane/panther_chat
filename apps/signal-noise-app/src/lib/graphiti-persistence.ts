@@ -3,12 +3,11 @@ import { createHash } from 'node:crypto'
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
 import { getSupabaseAdmin } from '@/lib/supabase-client'
 import { filterHighSignalGraphitiInsightRows } from '@/lib/home-graphiti-feed.mjs'
-import { getDemoGraphitiInsights } from '@/lib/graphiti-demo-insights'
 import type { HomeGraphitiInsight } from '@/lib/home-graphiti-contract'
 import { buildGraphitiNotificationPayload, materializeGraphitiInsight, rankGraphitiInsights } from '@/lib/graphiti-insight-materializer'
 import { resolvePinnedSmokeEntities } from '@/lib/entity-smoke-set'
 import { resolveEntityUuid } from '@/lib/entity-public-id'
-import { allowDemoFallbacks, getGraphitiStaleWindowHours, isProductionRuntime } from '@/lib/runtime-env'
+import { getGraphitiStaleWindowHours } from '@/lib/runtime-env'
 
 const RAW_HOME_INSIGHT_COLUMNS = [
   'insight_id',
@@ -134,6 +133,16 @@ function distinctRowsByEntity(rows: Record<string, unknown>[]) {
     seen.add(key)
     return true
   })
+}
+
+function isDemoOriginInsight(row: Pick<PersistedGraphitiInsightRow, 'source_objective' | 'raw_payload'>) {
+  const sourceObjective = String(row.source_objective || '').trim().toLowerCase()
+  const rawPayload = row.raw_payload && typeof row.raw_payload === 'object'
+    ? row.raw_payload as Record<string, unknown>
+    : {}
+  const rawSource = String(rawPayload.source || '').trim().toLowerCase()
+
+  return sourceObjective === 'client_demo_seed' || rawSource === 'demo_fallback_materialization'
 }
 
 function computeStateHash(insight: HomeGraphitiInsight) {
@@ -337,7 +346,9 @@ export async function loadPersistedGraphitiInsights(limit = 25) {
     return { highlights: [] as HomeGraphitiInsight[], lastUpdatedAt: new Date().toISOString(), warnings }
   }
 
-  const rows = Array.isArray(response.data) ? response.data as PersistedGraphitiInsightRow[] : []
+  const rows = Array.isArray(response.data)
+    ? (response.data as PersistedGraphitiInsightRow[]).filter((row) => !isDemoOriginInsight(row))
+    : []
   const highlights = rankGraphitiInsights(rows.map(fromPersistedInsight)).slice(0, limit)
 
   return {
@@ -453,21 +464,6 @@ export async function materializeGraphitiInsights(limit = 100) {
 
   if (filteredRows.length === 0 && sourceRows.length > 0) {
     warnings.push('Materializing recent Graphiti pipeline context rows because no high-signal rows are currently available')
-  }
-
-  if (materializedSourceInsights.length === 0 && allowDemoFallbacks() && !isProductionRuntime()) {
-    materializedSourceInsights = await Promise.all(getDemoGraphitiInsights().map(async (insight) => ({
-      raw: {
-        ...insight,
-        raw_payload: {
-          source: 'demo_fallback_materialization',
-          sport: insight.sport,
-          league: insight.league,
-        },
-      },
-      insight: await resolveCanonicalGraphitiInsight(insight, insight as unknown as Record<string, unknown>),
-    })))
-    warnings.push('Materializing demo fallback Graphiti insights because no high-signal source rows are currently available')
   }
 
   const sourceIds = materializedSourceInsights.map(({ insight }) => insight.insight_id)

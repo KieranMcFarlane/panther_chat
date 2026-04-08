@@ -21,10 +21,14 @@ test('graphiti persistence computes state hashes and upserts notifications on st
   assert.match(persistenceSource, /ignoreDuplicates: true/)
 })
 
-test('graphiti persistence materializes the local demo fallback when no high-signal rows are available', () => {
-  assert.match(persistenceSource, /getDemoGraphitiInsights/)
-  assert.match(persistenceSource, /Materializing demo fallback Graphiti insights/)
-  assert.match(persistenceSource, /allowDemoFallbacks\(\)/)
+test('graphiti persistence does not persist demo fallback insights into the productionized materialized store', () => {
+  assert.doesNotMatch(persistenceSource, /Materializing demo fallback Graphiti insights/)
+  assert.doesNotMatch(persistenceSource, /getDemoGraphitiInsights/)
+})
+
+test('graphiti persisted loader filters demo-origin rows before serving the homepage feed', () => {
+  assert.match(persistenceSource, /function isDemoOriginInsight/)
+  assert.match(persistenceSource, /filter\(\(row\)\s*=>\s*!isDemoOriginInsight\(row\)\)/)
 })
 
 test('graphiti persistence prefers recent real pipeline rows before the demo fallback and resolves canonical dossier ids', () => {
