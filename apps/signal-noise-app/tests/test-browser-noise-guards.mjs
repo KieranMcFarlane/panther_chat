@@ -9,6 +9,7 @@ const entityBadgePath = new URL('../src/components/badge/EntityBadge.tsx', impor
 const badgeServicePath = new URL('../src/services/badge-service.ts', import.meta.url)
 const badgeDisplayStatePath = new URL('../src/lib/badge-display-state.ts', import.meta.url)
 const entityBrowserClientPagePath = new URL('../src/app/entity-browser/client-page.tsx', import.meta.url)
+const entityBrowserDataPath = new URL('../src/lib/entity-browser-data.ts', import.meta.url)
 
 const entitiesRouteSource = readFileSync(entitiesRoutePath, 'utf8')
 const entitySummaryRouteSource = readFileSync(entitySummaryRoutePath, 'utf8')
@@ -17,19 +18,20 @@ const entityBadgeSource = readFileSync(entityBadgePath, 'utf8')
 const badgeServiceSource = readFileSync(badgeServicePath, 'utf8')
 const badgeDisplayStateSource = readFileSync(badgeDisplayStatePath, 'utf8')
 const entityBrowserClientPageSource = readFileSync(entityBrowserClientPagePath, 'utf8')
+const entityBrowserDataSource = readFileSync(entityBrowserDataPath, 'utf8')
 
-test('entity browser API preserves badge metadata for client rendering', () => {
-  assert.match(entitiesRouteSource, /const resolvedBadgeUrl = resolveLocalBadgeUrl\(\{/)
-  assert.match(entitiesRouteSource, /badge_s3_url: resolvedBadgeUrl/)
-  assert.match(entitiesRouteSource, /badge_lookup_complete: true/)
-  assert.match(entitiesRouteSource, /badge_path: resolvedBadgeUrl/)
-  assert.match(entitiesRouteSource, /badge_s3_url: resolvedBadgeUrl/)
+test('entity browser shared data builder preserves badge metadata for client rendering', () => {
+  assert.match(entityBrowserDataSource, /const resolvedBadgeUrl = resolveLocalBadgeUrl\(\{/)
+  assert.match(entityBrowserDataSource, /badge_s3_url: resolvedBadgeUrl/)
+  assert.match(entityBrowserDataSource, /badge_lookup_complete: true/)
+  assert.match(entityBrowserDataSource, /badge_path: resolvedBadgeUrl/)
 })
 
 test('entity browser APIs use a shared cached canonical snapshot instead of rescanning Supabase each request', () => {
-  assert.match(entitiesRouteSource, /import \{ getCanonicalEntitiesSnapshot \} from ['"]@\/lib\/canonical-entities-snapshot['"]/)
+  assert.match(entitiesRouteSource, /getEntityBrowserPageData/)
+  assert.match(entityBrowserDataSource, /import \{ getCanonicalEntitiesSnapshot \} from ['"]@\/lib\/canonical-entities-snapshot['"]/)
+  assert.match(entityBrowserDataSource, /const canonicalEntities = await getCanonicalEntitiesSnapshot\(\)/)
   assert.match(entitySummaryRouteSource, /import \{ getCanonicalEntitiesSnapshot \} from ['"]@\/lib\/canonical-entities-snapshot['"]/)
-  assert.match(entitiesRouteSource, /const canonicalEntities = await getCanonicalEntitiesSnapshot\(\)/)
   assert.match(entitySummaryRouteSource, /const canonicalEntities = await getCanonicalEntitiesSnapshot\(\)/)
   assert.match(canonicalSnapshotSource, /const SNAPSHOT_TTL_MS = 15 \* 60_000/)
   assert.match(canonicalSnapshotSource, /export async function prewarmCanonicalEntitiesSnapshot\(\): Promise<void>/)
@@ -38,7 +40,7 @@ test('entity browser APIs use a shared cached canonical snapshot instead of resc
   assert.match(canonicalSnapshotSource, /let inFlightCanonicalEntitiesRequest: Promise<CanonicalEntity\[]> \| null = null/)
   assert.match(canonicalSnapshotSource, /while \(hasMore\)/)
   assert.match(canonicalSnapshotSource, /canonicalEntitiesCache = \{/)
-  assert.doesNotMatch(entitiesRouteSource, /while \(hasMore\)/)
+  assert.doesNotMatch(entityBrowserDataSource, /while \(hasMore\)/)
   assert.doesNotMatch(entitySummaryRouteSource, /while \(hasMore\)/)
 })
 
@@ -67,8 +69,9 @@ test('badge service caches misses and deduplicates in-flight lookups', () => {
 
 test('entities taxonomy api builds from the shared canonical snapshot instead of scanning cached_entities live', () => {
   const taxonomyRouteSource = readFileSync(new URL('../src/app/api/entities/taxonomy/route.ts', import.meta.url), 'utf8')
-  assert.match(taxonomyRouteSource, /getCanonicalEntitiesSnapshot/)
-  assert.match(taxonomyRouteSource, /buildEntitiesTaxonomy/)
+  assert.match(taxonomyRouteSource, /getEntitiesTaxonomyData/)
+  assert.match(entityBrowserDataSource, /buildEntitiesTaxonomy/)
+  assert.match(entityBrowserDataSource, /getCanonicalEntitiesSnapshot/)
   assert.doesNotMatch(taxonomyRouteSource, /from\('cached_entities'\)/)
 })
 
@@ -78,10 +81,19 @@ test('dossier entity loader defers canonical snapshot fallback until after direc
   assert.match(entityLoaderSource, /if \(!entity\) \{\s*const canonicalEntities = await getCanonicalEntitiesSnapshot\(\)/s)
   assert.doesNotMatch(entityLoaderSource, /const canonicalEntities = await getCanonicalEntitiesSnapshot\(\)[\s\S]*const canonicalUuidMatch/s)
 })
+
+
+test('entity browser server page seeds the first payload for SSR instead of booting empty', () => {
+  const browserPageSource = readFileSync(new URL('../src/app/entity-browser/page.tsx', import.meta.url), 'utf8')
+  assert.match(browserPageSource, /import \{ getEntityBrowserPageData, getEntitiesTaxonomyData, type EntityBrowserFilters \} from ['"]@\/lib\/entity-browser-data['"]/) 
+  assert.match(browserPageSource, /const initialEntitiesData = await getEntityBrowserPageData\(/)
+  assert.match(browserPageSource, /const initialTaxonomy = await getEntitiesTaxonomyData\(\)/)
+  assert.match(browserPageSource, /<EntityBrowserClientPage[\s\S]*initialEntitiesData=\{initialEntitiesData\}[\s\S]*initialTaxonomy=\{initialTaxonomy\}/)
+})
 test('entity browser loads the list and taxonomy through SWR hooks instead of direct fetch effects', () => {
   assert.match(entityBrowserClientPageSource, /import \{ useEntitiesBrowserData, useEntityTaxonomy \} from ['"]@\/lib\/swr-config['"]/)
   assert.match(entityBrowserClientPageSource, /const \{ entitiesData, entitiesError, entitiesLoading, entitiesValidating, reloadEntities \} = useEntitiesBrowserData\(/)
-  assert.match(entityBrowserClientPageSource, /const \{ taxonomy, taxonomyLoading \} = useEntityTaxonomy\(\)/)
+  assert.match(entityBrowserClientPageSource, /const \{ taxonomy, taxonomyLoading \} = useEntityTaxonomy\(initialTaxonomy\)/)
   assert.match(entityBrowserClientPageSource, /const availableSports = taxonomy\?\.sports \?\? \[\]/)
   assert.match(entityBrowserClientPageSource, /const availableLeagues = taxonomy\?\.leagues \?\? \[\]/)
   assert.match(entityBrowserClientPageSource, /const availableCountries = taxonomy\?\.countries \?\? \[\]/)

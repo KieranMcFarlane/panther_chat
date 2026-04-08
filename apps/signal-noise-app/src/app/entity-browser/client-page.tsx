@@ -14,6 +14,8 @@ import { EntityCard } from "@/components/EntityCard"
 import { EntitySmokeJourney } from "@/components/entity-browser/EntitySmokeJourney"
 import type { EntitySmokeJourneyItem } from "@/lib/entity-smoke-set"
 import { useEntitiesBrowserData, useEntityTaxonomy } from "@/lib/swr-config"
+import type { EntityBrowserFilters, EntityBrowserResponse } from "@/lib/entity-browser-data"
+import type { EntitiesTaxonomyResponse } from "@/lib/entities-taxonomy"
 import {
   Database,
   Search,
@@ -31,26 +33,6 @@ interface Entity {
   properties: Record<string, any>
 }
 
-interface EntityBrowserResponse {
-  entities: Entity[]
-  pagination: {
-    page: number
-    limit: number
-    total: number
-    totalPages: number
-    hasNext: boolean
-    hasPrev: boolean
-  }
-  filters: {
-    entityType: string
-    sport?: string
-    league?: string
-    country?: string
-    entityClass?: string
-    sortBy: string
-    sortOrder: string
-  }
-}
 
 interface AutocompleteEntity {
   id: string
@@ -59,24 +41,18 @@ interface AutocompleteEntity {
   type?: string
 }
 
-interface EntityTaxonomyResponse {
-  sports: string[]
-  leagues: string[]
-  countries: string[]
-  entityClasses: string[]
-  counts?: {
-    sports?: Record<string, number>
-    leagues?: Record<string, number>
-    countries?: Record<string, number>
-    entityClasses?: Record<string, number>
-  }
-}
 
 interface EntityBrowserClientPageProps {
   smokeItems: EntitySmokeJourneyItem[]
+  initialEntitiesData?: EntityBrowserResponse | null
+  initialTaxonomy?: EntitiesTaxonomyResponse | null
 }
 
-export default function EntityBrowserClientPage({ smokeItems }: EntityBrowserClientPageProps) {
+export default function EntityBrowserClientPage({
+  smokeItems,
+  initialEntitiesData = null,
+  initialTaxonomy = null,
+}: EntityBrowserClientPageProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const initialPageFromUrl = Number.parseInt(searchParams.get('page') || '1', 10)
@@ -89,7 +65,7 @@ export default function EntityBrowserClientPage({ smokeItems }: EntityBrowserCli
   const [currentPage, setCurrentPage] = useState(initialPageFromUrl)
   const [gridWidth, setGridWidth] = useState(0)
   const gridContainerRef = useRef<HTMLDivElement | null>(null)
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<EntityBrowserFilters>({
     entityType: "all",
     sport: "all",
     league: "all",
@@ -102,9 +78,10 @@ export default function EntityBrowserClientPage({ smokeItems }: EntityBrowserCli
   const { entitiesData, entitiesError, entitiesLoading, entitiesValidating, reloadEntities } = useEntitiesBrowserData(
     currentPage,
     appliedSearchTerm,
-    filters
+    filters,
+    currentPage === initialPageFromUrl && !appliedSearchTerm ? initialEntitiesData : null
   )
-  const { taxonomy, taxonomyLoading } = useEntityTaxonomy()
+  const { taxonomy, taxonomyLoading } = useEntityTaxonomy(initialTaxonomy)
   const availableSports = taxonomy?.sports ?? []
   const availableLeagues = taxonomy?.leagues ?? []
   const availableCountries = taxonomy?.countries ?? []
@@ -277,7 +254,7 @@ export default function EntityBrowserClientPage({ smokeItems }: EntityBrowserCli
     URL.revokeObjectURL(url)
   }
 
-  if (entitiesLoading && !entitiesData) {
+  if (entitiesLoading && !entitiesData && !initialEntitiesData) {
     return (
       <div className="min-h-screen bg-background">
         <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

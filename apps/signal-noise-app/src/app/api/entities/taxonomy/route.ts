@@ -1,18 +1,10 @@
 import { NextResponse } from 'next/server'
-import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
-import { buildEntitiesTaxonomy, buildEmptyEntitiesTaxonomy } from '@/lib/entities-taxonomy'
+import { buildEmptyEntitiesTaxonomy } from '@/lib/entities-taxonomy'
+import { getEntitiesTaxonomyData } from '@/lib/entity-browser-data'
 
 export async function GET() {
-  const startedAt = Date.now()
   try {
-    const canonicalEntities = await getCanonicalEntitiesSnapshot()
-
-    return NextResponse.json(
-      buildEntitiesTaxonomy(canonicalEntities, {
-        source: 'canonical_snapshot',
-        latencyMs: Date.now() - startedAt,
-      }),
-    )
+    return NextResponse.json(await getEntitiesTaxonomyData())
   } catch (error) {
     console.error('❌ Failed to fetch entities taxonomy:', error)
     return NextResponse.json(

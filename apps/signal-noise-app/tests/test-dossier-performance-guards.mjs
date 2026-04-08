@@ -108,3 +108,11 @@ test('app shell stays minimal and delegates layout to AppNavigation', () => {
   assert.match(appShellSource, /<AppNavigation authMenu=\{<AuthMenu \/>}/)
   assert.doesNotMatch(appShellSource, /CopilotKit|CopilotOverlay|TemporalIntelligenceTools|SimpleStreamingChat/)
 })
+
+
+test('dossier client defers ops-only panels instead of the core dossier renderer', () => {
+  const dossierClientPageSource = readFileSync(new URL('../src/app/entity-browser/[entityId]/dossier/client-page.tsx', import.meta.url), 'utf8')
+  assert.match(dossierClientPageSource, /const DossierOperatorControls = dynamic\(\(\) => import\(["']@\/components\/entity-dossier\/DossierOperatorControls["']\)/)
+  assert.match(dossierClientPageSource, /const EntityEnrichmentSummaryCard = dynamic\(\(\) => import\(["']@\/components\/entity-enrichment\/EntityEnrichmentSummaryCard["']\)/)
+  assert.match(dossierClientPageSource, /const EntityDossierRouter = dynamic\(\(\) => import\(["']@\/components\/entity-dossier\/EntityDossierRouter["']\), \{\s*ssr: true/s)
+})

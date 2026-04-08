@@ -15,7 +15,7 @@ const fetcher = async (url: string) => {
   return payload
 }
 
-type EntityBrowserFilters = {
+export type EntityBrowserFilters = {
   entityType: string
   sport: string
   league: string
@@ -58,11 +58,13 @@ function buildEntityBrowserQueryUrl(page: number, searchValue: string, filters: 
 export function useEntitiesBrowserData(
   page: number,
   searchValue: string,
-  filters: EntityBrowserFilters
+  filters: EntityBrowserFilters,
+  fallbackData: any = null
 ) {
   const url = buildEntityBrowserQueryUrl(page, searchValue, filters)
 
   const { data, error, isLoading, mutate, isValidating } = useSWR(url, fetcher, {
+    fallbackData,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     dedupingInterval: 60_000,
@@ -130,8 +132,9 @@ export function useEntitySummaries(url: string | null) {
   }
 }
 
-export function useEntityTaxonomy() {
+export function useEntityTaxonomy(fallbackData: any = null) {
   const { data, error, isLoading, mutate, isValidating } = useSWR('/api/entities/taxonomy', fetcher, {
+    fallbackData,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     dedupingInterval: 300_000,

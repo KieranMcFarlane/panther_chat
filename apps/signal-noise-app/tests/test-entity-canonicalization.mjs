@@ -3,19 +3,22 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 
 const entitiesRoutePath = new URL('../src/app/api/entities/route.ts', import.meta.url)
+const entityBrowserDataPath = new URL('../src/lib/entity-browser-data.ts', import.meta.url)
 const summaryRoutePath = new URL('../src/app/api/entities/summary/route.ts', import.meta.url)
 const snapshotPath = new URL('../src/lib/canonical-entities-snapshot.ts', import.meta.url)
 
 const entitiesRouteSource = readFileSync(entitiesRoutePath, 'utf8')
+const entityBrowserDataSource = readFileSync(entityBrowserDataPath, 'utf8')
 const summaryRouteSource = readFileSync(summaryRoutePath, 'utf8')
 const snapshotSource = readFileSync(snapshotPath, 'utf8')
 
 test('entities api uses the canonical entity snapshot before pagination', () => {
-  assert.match(entitiesRouteSource, /import \{ getCanonicalEntitiesSnapshot \} from ['"]@\/lib\/canonical-entities-snapshot['"]/)
-  assert.match(entitiesRouteSource, /const canonicalEntities = await getCanonicalEntitiesSnapshot\(\)/)
-  assert.match(entitiesRouteSource, /const filteredEntities = canonicalEntities\.filter\(/)
-  assert.match(entitiesRouteSource, /const paginatedEntities = filteredEntities\.slice\(/)
-  assert.match(entitiesRouteSource, /source: 'supabase'/)
+  assert.match(entitiesRouteSource, /getEntityBrowserPageData/)
+  assert.match(entityBrowserDataSource, /import \{ getCanonicalEntitiesSnapshot \} from ['"]@\/lib\/canonical-entities-snapshot['"]/)
+  assert.match(entityBrowserDataSource, /const canonicalEntities = await getCanonicalEntitiesSnapshot\(\)/)
+  assert.match(entityBrowserDataSource, /const filteredEntities = canonicalEntities\.filter\(/)
+  assert.match(entityBrowserDataSource, /const paginatedEntities = filteredEntities\.slice\(/)
+  assert.match(entityBrowserDataSource, /source: 'supabase'/)
 })
 
 test('entity summary api uses the canonical snapshot for summary data', () => {

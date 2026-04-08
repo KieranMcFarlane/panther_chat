@@ -8,15 +8,22 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft, CheckCircle2, Clock3, FileText, Info, Layers3, Target } from "lucide-react"
 
 import { DossierError } from "@/components/entity-dossier/DossierError"
-import { DossierOperatorControls } from "@/components/entity-dossier/DossierOperatorControls"
-import { EntityEnrichmentSummaryCard } from "@/components/entity-enrichment/EntityEnrichmentSummaryCard"
 import { resolveEntityBrowserReturnUrl } from "@/lib/entity-browser-history"
 import { pushWithViewTransition } from "@/lib/view-transition"
 import type { Entity } from "@/lib/entity-loader"
 
 const Header = dynamic(() => import("@/components/header/Header"), { ssr: false })
 const EmailComposeModal = dynamic(() => import("@/components/email/EmailComposeModal"), { ssr: false })
+const DossierOperatorControls = dynamic(() => import("@/components/entity-dossier/DossierOperatorControls").then((mod) => mod.DossierOperatorControls), {
+  ssr: false,
+  loading: () => <div className="mb-6 h-10 rounded-lg border border-slate-700 bg-slate-950/70" />
+})
+const EntityEnrichmentSummaryCard = dynamic(() => import("@/components/entity-enrichment/EntityEnrichmentSummaryCard").then((mod) => mod.EntityEnrichmentSummaryCard), {
+  ssr: false,
+  loading: () => <div className="mb-6 h-32 rounded-xl border border-slate-700 bg-slate-950/70" />
+})
 const EntityDossierRouter = dynamic(() => import("@/components/entity-dossier/EntityDossierRouter"), {
+  ssr: true,
   loading: () => (
     <div className="rounded-lg border border-gray-700 bg-[#1c1e2d] p-6">
       <div className="h-6 w-48 bg-gray-600 rounded animate-pulse mb-4" />
