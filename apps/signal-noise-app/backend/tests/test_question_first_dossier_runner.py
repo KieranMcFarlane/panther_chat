@@ -285,6 +285,53 @@ def test_resolve_question_first_worktree_root_honors_explicit_root(tmp_path):
     assert runner._resolve_question_first_worktree_root(explicit) == explicit
 
 
+def test_derive_question_first_batch_timeout_ms_scales_with_question_count():
+    source_payload = {
+        "questions": [
+            {"question_id": "q1"},
+            {"question_id": "q2"},
+            {"question_id": "q3"},
+        ]
+    }
+
+    timeout_ms = runner._derive_question_first_batch_timeout_ms(
+        source_payload=source_payload,
+        opencode_timeout_ms=1000,
+    )
+
+    assert timeout_ms > 1000
+    assert timeout_ms >= 3000
+
+
+def test_classify_question_first_batch_timeout_distinguishes_progress_states(tmp_path):
+    state_path = tmp_path / "runner_state.json"
+    state_path.write_text(json.dumps({"run_phase": "question_runner_enter", "active_question_id": "q3_leadership"}), encoding="utf-8")
+
+    classification = runner._classify_question_first_batch_timeout(
+        state_payload={"run_phase": "question_runner_enter", "active_question_id": "q3_leadership"},
+        state_path=state_path,
+        last_progress_mtime=state_path.stat().st_mtime,
+        progress_window_seconds=30.0,
+    )
+    assert classification == "still_progressing"
+
+    classification = runner._classify_question_first_batch_timeout(
+        state_payload={"run_phase": "completed", "active_question_id": "q3_leadership"},
+        state_path=state_path,
+        last_progress_mtime=state_path.stat().st_mtime - 120,
+        progress_window_seconds=30.0,
+    )
+    assert classification == "completed_not_harvested"
+
+    classification = runner._classify_question_first_batch_timeout(
+        state_payload={"run_phase": "question_runner_enter", "active_question_id": "q3_leadership"},
+        state_path=state_path,
+        last_progress_mtime=state_path.stat().st_mtime - 120,
+        progress_window_seconds=30.0,
+    )
+    assert classification == "stalled"
+
+
 @pytest.mark.asyncio
 async def test_run_question_first_dossier_from_payload_seeds_explicit_bridge_contacts(tmp_path):
     output_dir = tmp_path / "out"

@@ -124,6 +124,38 @@ def _build_question_first_state_path(
     return output_dir / f"{_slugify(entity_id)}_{_slugify(resolved_preset)}_state.json"
 
 
+def _derive_question_first_batch_timeout_ms(
+    *,
+    source_payload: Dict[str, Any],
+    opencode_timeout_ms: int,
+) -> int:
+    questions = source_payload.get("questions") if isinstance(source_payload, dict) else None
+    question_count = len(questions) if isinstance(questions, list) and questions else 1
+    base_timeout_ms = max(int(opencode_timeout_ms or 0), 1)
+    if question_count <= 1:
+        return base_timeout_ms
+    buffer_ms = min(60000, base_timeout_ms)
+    return max(base_timeout_ms, base_timeout_ms * question_count + buffer_ms)
+
+
+def _classify_question_first_batch_timeout(
+    *,
+    state_payload: Optional[Dict[str, Any]],
+    state_path: Path,
+    last_progress_mtime: Optional[float],
+    progress_window_seconds: float = 30.0,
+) -> str:
+    payload = state_payload if isinstance(state_payload, dict) else {}
+    run_phase = str(payload.get("run_phase") or "").strip().lower()
+    if run_phase == "completed":
+        return "completed_not_harvested"
+    if last_progress_mtime is not None and (time.time() - float(last_progress_mtime)) <= max(progress_window_seconds, 0.0):
+        return "still_progressing"
+    if payload or state_path.exists():
+        return "stalled"
+    return "true_timeout"
+
+
 @contextmanager
 def _acquire_question_first_launch_lock(worktree_root: Path):
     lock_dir = Path(worktree_root) / ".locks"
@@ -157,17 +189,29 @@ async def _wait_for_question_first_run_completion(
 ) -> Dict[str, Any]:
     deadline = time.monotonic() + max(timeout_ms, 1) / 1000.0
     last_state: Dict[str, Any] = {}
+    last_progress_mtime: Optional[float] = None
     while time.monotonic() <= deadline:
         if state_path.exists():
             try:
                 last_state = json.loads(state_path.read_text(encoding="utf-8"))
             except Exception:
                 last_state = {}
+            try:
+                current_mtime = state_path.stat().st_mtime
+            except OSError:
+                current_mtime = None
+            if current_mtime is not None and current_mtime != last_progress_mtime:
+                last_progress_mtime = current_mtime
             if str(last_state.get("run_phase") or "").lower() == "completed":
                 return last_state
         await asyncio.sleep(max(poll_interval_ms, 1) / 1000.0)
+    classification = _classify_question_first_batch_timeout(
+        state_payload=last_state,
+        state_path=state_path,
+        last_progress_mtime=last_progress_mtime,
+    )
     raise TimeoutError(
-        f"Timed out waiting for question-first batch to reach completed state at {state_path}"
+        f"Timed out waiting for question-first batch to reach completed state at {state_path} ({classification})"
     )
 
 
@@ -439,10 +483,16 @@ async def _launch_opencode_question_first_batch(
                 source_payload=source_payload,
                 preset=preset,
             )
-            deadline = time.monotonic() + max(opencode_timeout_ms, 1) / 1000.0
+            batch_timeout_ms = _derive_question_first_batch_timeout_ms(
+                source_payload=source_payload,
+                opencode_timeout_ms=opencode_timeout_ms,
+            )
+            deadline = time.monotonic() + max(batch_timeout_ms, 1) / 1000.0
             stdout_text = ""
             stderr_text = ""
             result: Dict[str, Any] = {}
+            last_state_payload: Dict[str, Any] = {}
+            last_progress_mtime: Optional[float] = None
 
             while time.monotonic() <= deadline:
                 if state_path.exists():
@@ -450,6 +500,13 @@ async def _launch_opencode_question_first_batch(
                         state_payload = json.loads(state_path.read_text(encoding="utf-8"))
                     except Exception:
                         state_payload = {}
+                    last_state_payload = state_payload if isinstance(state_payload, dict) else {}
+                    try:
+                        current_mtime = state_path.stat().st_mtime
+                    except OSError:
+                        current_mtime = None
+                    if current_mtime is not None and current_mtime != last_progress_mtime:
+                        last_progress_mtime = current_mtime
                     if str(state_payload.get("run_phase") or "").strip().lower() == "completed":
                         stdout_text, stderr_text = await _terminate_process(proc)
                         result = _parse_opencode_batch_stdout(stdout_text)
@@ -484,9 +541,14 @@ async def _launch_opencode_question_first_batch(
                 await asyncio.sleep(0.25)
 
             stdout_text, stderr_text = await _terminate_process(proc)
+            timeout_classification = _classify_question_first_batch_timeout(
+                state_payload=last_state_payload,
+                state_path=state_path,
+                last_progress_mtime=last_progress_mtime,
+            )
             raise TimeoutError(
                 "Timed out waiting for OpenCode question-first batch to complete "
-                f"at {state_path}: {stderr_text.strip() or stdout_text.strip()}"
+                f"at {state_path} ({timeout_classification}): {stderr_text.strip() or stdout_text.strip()}"
             )
     finally:
         try:
@@ -1115,7 +1177,13 @@ async def run_question_first_dossier_from_payload(
             worktree_root=worktree_root,
             opencode_timeout_ms=opencode_timeout_ms,
         )
-        await _wait_for_question_first_run_completion(state_path, timeout_ms=opencode_timeout_ms)
+        await _wait_for_question_first_run_completion(
+            state_path,
+            timeout_ms=_derive_question_first_batch_timeout_ms(
+                source_payload=source,
+                opencode_timeout_ms=opencode_timeout_ms,
+            ),
+        )
 
     artifact = _load_question_first_run_artifact(artifact_path)
     merged = merge_question_first_run_artifact_into_dossier(dossier_payload=source, artifact=artifact)
