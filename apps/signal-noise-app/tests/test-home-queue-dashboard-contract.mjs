@@ -55,4 +55,6 @@ test('home queue dashboard loader prefers Supabase pipeline runs and keeps manif
 
 test('home queue dashboard loader reads a published live queue snapshot before falling back to local diagnostics', () => {
   assert.match(dashboardLoaderSource, /question_first_live_queue_snapshot\.json/)
+  assert.match(dashboardLoaderSource, /from '\.\.\/\.\.\/backend\/data\/question_first_live_queue_snapshot\.json'/)
+  assert.match(dashboardLoaderSource, /from '\.\.\/\.\.\/backend\/data\/question_first_scale_batch_3000_live\.json'/)
 })

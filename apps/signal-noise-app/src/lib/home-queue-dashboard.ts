@@ -1,5 +1,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
+import liveQueueSnapshotData from '../../backend/data/question_first_live_queue_snapshot.json'
+import scaleManifestData from '../../backend/data/question_first_scale_batch_3000_live.json'
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
@@ -530,10 +532,8 @@ export async function buildHomeQueueDashboardPayload(options: BuildOptions = {})
   const progressPath = latestFile(diagnosticsRoot, 'question_first_scale_progress.json')
   const progress = (progressPath ? tryReadJson(progressPath) : null) as ScaleProgress | null
   const outputRoot = progressPath ? path.dirname(progressPath) : diagnosticsRoot
-  const manifestPath = path.join(appRoot, 'backend', 'data', 'question_first_scale_batch_3000_live.json')
-  const liveQueueSnapshotPath = path.join(appRoot, 'backend', 'data', 'question_first_live_queue_snapshot.json')
-  const liveQueueSnapshot = tryReadJson(liveQueueSnapshotPath) as LiveQueueSnapshot | null
-  const manifestPayload = tryReadJson(manifestPath)
+  const liveQueueSnapshot = (liveQueueSnapshotData || null) as LiveQueueSnapshot | null
+  const manifestPayload = (scaleManifestData || null) as Record<string, unknown> | null
   const manifestEntities = Array.isArray(manifestPayload?.entities) ? manifestPayload.entities as ManifestEntity[] : []
   const dossierRoot = path.join(appRoot, 'backend', 'data', 'dossiers', 'question_first')
   const canonicalEntities = await getCanonicalEntitiesSnapshot()
