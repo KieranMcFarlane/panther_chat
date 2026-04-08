@@ -56,8 +56,9 @@ test('dossier header defers entity summary loading until needed', () => {
   assert.doesNotMatch(leagueNavSource, /setSelectedSport\(null\)\s*[\s\S]*navigateToClub\(league\.clubs\[0\]\)/)
 })
 
-test('entity page passes the loaded entity into the shared header nav', () => {
-  assert.match(entityClientPageSource, /<Header currentEntity=\{entity\} \/>/)
+test('entity page still renders the shared header shell', () => {
+  assert.match(entityClientPageSource, /const Header = dynamic\(\(\) => import\("@\/components\/header\/Header"\), \{ ssr: false \}\)/)
+  assert.match(entityClientPageSource, /<Header \/>/)
 })
 
 test('enhanced dossier only enables procurement and outreach fetches for active tabs', () => {
@@ -96,24 +97,14 @@ test('hypothesis state hooks disable eager polling and focus revalidation by def
   assert.match(hypothesisHookSource, /revalidateOnFocus: options\?\.revalidateOnFocus \?\? false/)
 })
 
-test('app navigation skips auth session consumers on dossier routes', () => {
-  assert.match(appNavigationSource, /const isDossierRoute = pathname\?\.includes\(['"]\/dossier['"]\) \?\? false/)
-  assert.match(appNavigationSource, /\{authMenu && !isDossierRoute && !isEntityBrowserRoute && \(/)
+test('app navigation keeps the client sidebar visible on dossier and entity browser routes', () => {
+  assert.doesNotMatch(appNavigationSource, /!isDossierRoute && !isEntityBrowserRoute/)
+  assert.match(appNavigationSource, /<aside/)
 })
 
-test('app shell defers CopilotKit mounts on dossier routes until the launcher is clicked', () => {
-  assert.match(appShellSource, /const pathname = usePathname\(\)/)
-  assert.match(appShellSource, /const isDossierRoute = pathname\?\.includes\(['"]\/dossier['"]\) \?\? false/)
-  assert.match(appShellSource, /const isEntityBrowserRoute = pathname\?\.startsWith\(['"]\/entity-browser['"]\) \?\? false/)
-  assert.match(appShellSource, /const shouldDeferCopilot = isDossierRoute \|\| isEntityBrowserRoute/)
-  assert.match(appShellSource, /const \[isDeferredCopilotEnabled, setIsDeferredCopilotEnabled\] = useState\(false\)/)
-  assert.match(appShellSource, /function CopilotProviderShell\(\{ children \}: \{ children: React\.ReactNode \}\)/)
-  assert.match(appShellSource, /if \(shouldDeferCopilot\) \{/)
-  assert.match(appShellSource, /<CopilotProviderShell>\s*\{appContent\}/)
-  assert.match(appShellSource, /isDeferredCopilotEnabled \? \(\s*<CopilotOverlay initialChatOpen=\{true\} \/>\s*\)/)
-  assert.match(appShellSource, /onClick=\{\(\) => setIsDeferredCopilotEnabled\(true\)\}/)
-  assert.match(appShellSource, /aria-label="Open sports intelligence chat"/)
-  assert.match(appShellSource, /<CopilotKit/)
-  assert.match(appShellSource, /<TemporalIntelligenceTools \/>/)
-  assert.match(appShellSource, /<SimpleStreamingChat initialOpen=\{initialChatOpen\} \/>/)
+test('app shell stays minimal and delegates layout to AppNavigation', () => {
+  assert.match(appShellSource, /function AuthMenu\(\)/)
+  assert.match(appShellSource, /<BackgroundAnimation \/>/)
+  assert.match(appShellSource, /<AppNavigation authMenu=\{<AuthMenu \/>}/)
+  assert.doesNotMatch(appShellSource, /CopilotKit|CopilotOverlay|TemporalIntelligenceTools|SimpleStreamingChat/)
 })

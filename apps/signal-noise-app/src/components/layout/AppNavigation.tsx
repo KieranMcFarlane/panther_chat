@@ -29,8 +29,6 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const pathname = usePathname();
-  const isDossierRoute = pathname?.includes('/dossier') ?? false;
-  const isEntityBrowserRoute = pathname?.startsWith('/entity-browser') ?? false;
   const isFullScreenAuthRoute = pathname === '/sign-in' || pathname === '/login';
 
   if (isFullScreenAuthRoute) {
@@ -173,8 +171,7 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
   return (
     <div className="relative z-10 min-h-screen bg-custom-bg overflow-x-hidden">
       <div className="flex">
-        {!isDossierRoute && !isEntityBrowserRoute && (
-          <aside
+        <aside
             className={`${sidebarExpanded ? 'w-64' : 'w-20'} transition-all duration-300 border-r border-custom-border min-h-screen bg-custom-box/80 backdrop-blur-md relative z-50 flex-shrink-0`}
           >
             <div className="p-4">
@@ -204,7 +201,6 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
               </div>
             </div>
           </aside>
-        )}
 
         <div className="flex-1 min-w-0">
           <OperationalStatusStrip onOpenDetails={() => setDrawerOpen(true)} />
