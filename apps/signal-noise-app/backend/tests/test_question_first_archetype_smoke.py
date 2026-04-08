@@ -314,6 +314,35 @@ def test_load_archetypes_from_manifest_preserves_default_rollout_phase_override(
     assert payload["default_rollout_phase"] == "phase_3_decision"
 
 
+@pytest.mark.asyncio
+async def test_archetype_smoke_surfaces_retryable_upstream_failure_status(tmp_path):
+    async def retryable_runner(*, question_source_path, output_dir, opencode_timeout_ms):
+        raise RuntimeError("retryable_upstream_failure: too_many_requests")
+
+    output_root = tmp_path / "smoke"
+    summary = await smoke.run_smoke(
+        [
+            {
+                "entity_id": "arsenal",
+                "entity_name": "Arsenal Football Club",
+                "entity_type": "SPORT_CLUB",
+                "question_source_path": (
+                    Path("apps/signal-noise-app/backend/data/question_sources/arsenal_atomic_matrix.json")
+                ),
+            }
+        ],
+        output_root=output_root,
+        question_first_runner=retryable_runner,
+        opencode_timeout_ms=180000,
+    )
+
+    assert summary["entities_total"] == 1
+    assert summary["entities_completed"] == 0
+    assert summary["entities_failed"] == 1
+    assert summary["entities"][0]["status"] == "retryable_upstream_failure"
+    assert "retryable_upstream_failure" in summary["entities"][0]["error"]
+
+
 def test_build_rerun_archetypes_filters_failed_entities_and_failed_question(tmp_path):
     output_root = tmp_path / "smoke"
     summary_path = output_root / "question_first_archetype_smoke.json"

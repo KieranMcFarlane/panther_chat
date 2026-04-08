@@ -388,6 +388,182 @@ test('runOpenCodeQuestionSourceBatch writes contract-backed question timings int
   }
 });
 
+test('runOpenCodeQuestionSourceBatch retries transient upstream runner failures before succeeding', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-retryable-upstream-success-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  const previousRetryAttempts = process.env.OPENCODE_TRANSIENT_RETRY_ATTEMPTS;
+  const previousRetryDelayMs = process.env.OPENCODE_TRANSIENT_RETRY_DELAY_MS;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+  process.env.OPENCODE_TRANSIENT_RETRY_ATTEMPTS = '2';
+  process.env.OPENCODE_TRANSIENT_RETRY_DELAY_MS = '1';
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'arsenal-fc',
+        entity_name: 'Arsenal Football Club',
+        entity_type: 'SPORT_CLUB',
+        preset: 'arsenal-retry-success',
+        question_source_label: 'arsenal-retry-success',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        question_count: 1,
+        questions: [
+          {
+            question_id: 'q1_foundation',
+            question_family: 'foundation',
+            question_type: 'foundation',
+            question: 'When was {entity} founded?',
+            query: '"Arsenal Football Club" founded',
+            hop_budget: 1,
+            evidence_extension_budget: 0,
+            evidence_extension_confidence_threshold: 0.65,
+            question_timeout_ms: 180000,
+            hop_timeout_ms: 180000,
+            source_priority: ['google_serp', 'official_site', 'wikipedia'],
+            fallback_to_retrieval: true,
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  let attempts = 0;
+  try {
+    const result = await runOpenCodeQuestionSourceBatch({
+      questionSourcePath: sourcePath,
+      outputDir,
+      deterministicToolRunner: async () => null,
+      questionRunner: async () => {
+        attempts += 1;
+        if (attempts === 1) {
+          throw new Error('Too Many Requests');
+        }
+        return {
+          structuredOutput: {
+            answer: '1886',
+            confidence: 0.96,
+            validation_state: 'validated',
+            sources: ['https://www.arsenal.com/'],
+          },
+          promptTrace: { status: 'ok', has_structured_output: true },
+          messageTrace: [],
+          cliResult: { code: 0, stdout: '{"answer":"1886"}', stderr: '' },
+        };
+      },
+    });
+
+    assert.equal(attempts, 2);
+    const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+    assert.equal(artifact.answer_records[0].answer.value, '1886');
+  } finally {
+    if (previousRetryAttempts === undefined) {
+      delete process.env.OPENCODE_TRANSIENT_RETRY_ATTEMPTS;
+    } else {
+      process.env.OPENCODE_TRANSIENT_RETRY_ATTEMPTS = previousRetryAttempts;
+    }
+    if (previousRetryDelayMs === undefined) {
+      delete process.env.OPENCODE_TRANSIENT_RETRY_DELAY_MS;
+    } else {
+      process.env.OPENCODE_TRANSIENT_RETRY_DELAY_MS = previousRetryDelayMs;
+    }
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
+test('runOpenCodeQuestionSourceBatch surfaces exhausted transient upstream failures distinctly', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-retryable-upstream-failed-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  const previousRetryAttempts = process.env.OPENCODE_TRANSIENT_RETRY_ATTEMPTS;
+  const previousRetryDelayMs = process.env.OPENCODE_TRANSIENT_RETRY_DELAY_MS;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+  process.env.OPENCODE_TRANSIENT_RETRY_ATTEMPTS = '2';
+  process.env.OPENCODE_TRANSIENT_RETRY_DELAY_MS = '1';
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'arsenal-fc',
+        entity_name: 'Arsenal Football Club',
+        entity_type: 'SPORT_CLUB',
+        preset: 'arsenal-retry-failure',
+        question_source_label: 'arsenal-retry-failure',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        question_count: 1,
+        questions: [
+          {
+            question_id: 'q1_foundation',
+            question_family: 'foundation',
+            question_type: 'foundation',
+            question: 'When was {entity} founded?',
+            query: '"Arsenal Football Club" founded',
+            hop_budget: 1,
+            evidence_extension_budget: 0,
+            evidence_extension_confidence_threshold: 0.65,
+            question_timeout_ms: 180000,
+            hop_timeout_ms: 180000,
+            source_priority: ['google_serp', 'official_site', 'wikipedia'],
+            fallback_to_retrieval: true,
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  let attempts = 0;
+  try {
+    await assert.rejects(
+      () =>
+        runOpenCodeQuestionSourceBatch({
+          questionSourcePath: sourcePath,
+          outputDir,
+          deterministicToolRunner: async () => null,
+          questionRunner: async () => {
+            attempts += 1;
+            throw new Error('too_many_requests');
+          },
+        }),
+      /retryable_upstream_failure/i,
+    );
+    assert.equal(attempts, 2);
+  } finally {
+    if (previousRetryAttempts === undefined) {
+      delete process.env.OPENCODE_TRANSIENT_RETRY_ATTEMPTS;
+    } else {
+      process.env.OPENCODE_TRANSIENT_RETRY_ATTEMPTS = previousRetryAttempts;
+    }
+    if (previousRetryDelayMs === undefined) {
+      delete process.env.OPENCODE_TRANSIENT_RETRY_DELAY_MS;
+    } else {
+      process.env.OPENCODE_TRANSIENT_RETRY_DELAY_MS = previousRetryDelayMs;
+    }
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
 test('buildOpenCodeQuestionPrompt specializes decision-owner and related-pois outputs', () => {
   const decisionPrompt = buildOpenCodeQuestionPrompt({
     question_text: 'Who is the most suitable person for commercial partnerships or business development at Major League Cricket?',

@@ -368,6 +368,12 @@ async def run_smoke(
         },
     }
 
+    def classify_status(error_value: Optional[str]) -> str:
+        text = str(error_value or "").strip().lower()
+        if "retryable_upstream_failure" in text:
+            return "retryable_upstream_failure"
+        return "failed"
+
     for archetype in archetypes:
         entity_id = str(archetype["entity_id"])
         entity_name = str(archetype["entity_name"])
@@ -385,8 +391,8 @@ async def run_smoke(
             error = None
         except Exception as exc:  # noqa: BLE001
             merged = {}
-            status = "failed"
             error = str(exc)
+            status = classify_status(error)
 
         question_first_run = merged.get("question_first_run") if isinstance(merged, dict) else {}
         run_rollup = question_first_run.get("run_rollup") if isinstance(question_first_run, dict) else {}

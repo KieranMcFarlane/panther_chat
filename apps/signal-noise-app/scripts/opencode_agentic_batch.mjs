@@ -81,6 +81,51 @@ function _filterQuestionsForRollout(questions, rolloutPhase = 'phase_1_core') {
   return (Array.isArray(questions) ? questions : []).filter((question) => _phaseRank(question?.rollout_phase) <= activeRank);
 }
 
+function _errorText(error) {
+  if (!error) return '';
+  if (error instanceof Error) {
+    return [error.name, error.message, error.stack].filter(Boolean).join('\n');
+  }
+  return String(error);
+}
+
+function _isRetryableUpstreamError(error) {
+  const text = _errorText(error).toLowerCase();
+  if (!text) return false;
+  return [
+    'retryable_upstream_failure',
+    'too many requests',
+    'too_many_requests',
+    'network error',
+    'ai_apicallerror',
+    'econnreset',
+    'etimedout',
+    'temporarily unavailable',
+    'rate limit',
+    'rate-limit',
+    '429',
+  ].some((pattern) => text.includes(pattern));
+}
+
+function _buildRetryableUpstreamFailure(error, attempts) {
+  const message = _errorText(error).trim() || 'transient upstream failure';
+  const wrapped = new Error(`retryable_upstream_failure: ${message}`);
+  wrapped.name = 'RetryableUpstreamError';
+  wrapped.cause = error;
+  wrapped.retry_attempts = attempts;
+  return wrapped;
+}
+
+function _transientRetryAttempts() {
+  const parsed = Number.parseInt(process.env.OPENCODE_TRANSIENT_RETRY_ATTEMPTS || '3', 10);
+  return Number.isFinite(parsed) ? Math.max(1, parsed) : 3;
+}
+
+function _transientRetryDelayMs() {
+  const parsed = Number.parseInt(process.env.OPENCODE_TRANSIENT_RETRY_DELAY_MS || '1000', 10);
+  return Number.isFinite(parsed) ? Math.max(1, parsed) : 1000;
+}
+
 function _getQuestionStateById(runState, questionId) {
   return (Array.isArray(runState?.questions) ? runState.questions : []).find(
     (item) => String(item?.question_id || '').trim() === String(questionId || '').trim(),
@@ -2530,47 +2575,64 @@ function _spawnOpencodeRun(args, { cwd, env, timeoutMs = 300000 } = {}) {
 }
 
 async function _runQuestionRunnerWithTimeout(questionRunner, executionQuestion, options = {}, timeoutMs = 300000) {
-  const normalizedTimeoutMs = Number.isFinite(Number(timeoutMs))
-    ? Math.max(1, Number(timeoutMs))
-    : 300000;
-  const guardTimeoutMs = normalizedTimeoutMs + Math.min(5000, Math.max(1000, Math.ceil(normalizedTimeoutMs * 0.1)));
-  const runnerPromise = Promise.resolve().then(() => questionRunner(executionQuestion, options));
-  const timeoutResult = {
-    timedOut: true,
-    questionRun: {
-      structuredOutput: {
-        answer: '',
-        confidence: 0,
-        validation_state: 'no_signal',
-        sources: [],
+  const retryAttempts = _transientRetryAttempts();
+  const retryDelayMs = _transientRetryDelayMs();
+
+  for (let attempt = 1; attempt <= retryAttempts; attempt += 1) {
+    const normalizedTimeoutMs = Number.isFinite(Number(timeoutMs))
+      ? Math.max(1, Number(timeoutMs))
+      : 300000;
+    const guardTimeoutMs = normalizedTimeoutMs + Math.min(5000, Math.max(1000, Math.ceil(normalizedTimeoutMs * 0.1)));
+    const runnerPromise = Promise.resolve().then(() => questionRunner(executionQuestion, options));
+    const timeoutResult = {
+      timedOut: true,
+      questionRun: {
+        structuredOutput: {
+          answer: '',
+          confidence: 0,
+          validation_state: 'no_signal',
+          sources: [],
+        },
+        promptTrace: {
+          status: 'timeout',
+          exit_code: 124,
+          stdout_length: 0,
+          stderr_length: 0,
+          has_structured_output: false,
+          timeout_ms: timeoutMs,
+        },
+        messageTrace: [],
+        cliResult: {
+          code: 124,
+          stdout: '',
+          stderr: `question runner timed out after ${timeoutMs}ms`,
+        },
       },
-      promptTrace: {
-        status: 'timeout',
-        exit_code: 124,
-        stdout_length: 0,
-        stderr_length: 0,
-        has_structured_output: false,
-        timeout_ms: timeoutMs,
-      },
-      messageTrace: [],
-      cliResult: {
-        code: 124,
-        stdout: '',
-      stderr: `question runner timed out after ${timeoutMs}ms`,
-      },
-    },
-  };
-  const raceResult = await Promise.race([
-    runnerPromise.then((questionRun) => ({
-      timedOut: false,
-      questionRun,
-    })),
-    delay(guardTimeoutMs).then(() => timeoutResult),
-  ]);
-  if (raceResult.timedOut) {
-    runnerPromise.catch(() => {});
+    };
+    try {
+      const raceResult = await Promise.race([
+        runnerPromise.then((questionRun) => ({
+          timedOut: false,
+          questionRun,
+        })),
+        delay(guardTimeoutMs).then(() => timeoutResult),
+      ]);
+      if (raceResult.timedOut) {
+        runnerPromise.catch(() => {});
+      }
+      return raceResult;
+    } catch (error) {
+      if (!_isRetryableUpstreamError(error)) {
+        throw error;
+      }
+      if (attempt >= retryAttempts) {
+        throw _buildRetryableUpstreamFailure(error, attempt);
+      }
+      await delay(retryDelayMs * attempt);
+    }
   }
-  return raceResult;
+
+  throw _buildRetryableUpstreamFailure(new Error('transient upstream retries exhausted'), retryAttempts);
 }
 
 async function runOpenCodeCliQuestion(question, { worktreeRoot, opencodeTimeoutMs } = {}) {
