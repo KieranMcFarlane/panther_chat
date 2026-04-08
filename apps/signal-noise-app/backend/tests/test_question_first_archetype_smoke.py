@@ -24,7 +24,7 @@ class _FakeRunner:
         self.events.append(("end", entity_id))
 
         output_dir.mkdir(parents=True, exist_ok=True)
-        question_first_run_path = output_dir / f"{entity_id}_question_first_run_v1.json"
+        question_first_run_path = output_dir / f"{entity_id}_question_first_run_v2.json"
         dossier_report_path = output_dir / f"{entity_id}_question_first_dossier.json"
         questions = [
             {
@@ -102,7 +102,7 @@ class _FakeRunner:
         question_first_run_path.write_text(
             json.dumps(
                 {
-                    "schema_version": "question_first_run_v1",
+                    "schema_version": "question_first_run_v2",
                     "generated_at": "2026-04-01T00:00:30+00:00",
                     "run_started_at": "2026-04-01T00:00:00+00:00",
                     "source": "opencode_agentic_batch",
@@ -138,7 +138,7 @@ class _FakeRunner:
         dossier_report_path.write_text("{}", encoding="utf-8")
         return {
             "question_first_run": {
-                "schema_version": "question_first_run_v1",
+                "schema_version": "question_first_run_v2",
                 "generated_at": "2026-04-01T00:00:30+00:00",
                 "run_started_at": "2026-04-01T00:00:00+00:00",
                 "run_rollup": {
@@ -302,7 +302,7 @@ def test_build_rerun_archetypes_filters_failed_entities_and_failed_question(tmp_
                         "entity_type": "SPORT_CLUB",
                         "status": "completed",
                         "question_source_path": "apps/signal-noise-app/backend/data/question_sources/arsenal_atomic_matrix.json",
-                        "question_first_run_path": str(output_root / "arsenal" / "arsenal-fc_question_first_run_v1.json"),
+                        "question_first_run_path": str(output_root / "arsenal" / "arsenal-fc_question_first_run_v2.json"),
                         "question_first_dossier_path": str(output_root / "arsenal" / "arsenal-fc_question_first_dossier.json"),
                     },
                     {
@@ -311,7 +311,7 @@ def test_build_rerun_archetypes_filters_failed_entities_and_failed_question(tmp_
                         "entity_type": "SPORT_FEDERATION",
                         "status": "failed",
                         "question_source_path": "apps/signal-noise-app/backend/data/question_sources/icf_atomic_matrix.json",
-                        "question_first_run_path": str(output_root / "icf" / "international-canoe-federation_question_first_run_v1.json"),
+                        "question_first_run_path": str(output_root / "icf" / "international-canoe-federation_question_first_run_v2.json"),
                         "question_first_dossier_path": None,
                         "failed_questions": ["q2_digital_stack"],
                     },
@@ -347,7 +347,7 @@ def test_skip_complete_skips_entities_with_fresh_artifacts(tmp_path):
     output_root = tmp_path / "smoke"
     entity_dir = output_root / "arsenal"
     entity_dir.mkdir(parents=True, exist_ok=True)
-    (entity_dir / "arsenal-fc_question_first_run_v1.json").write_text("{}", encoding="utf-8")
+    (entity_dir / "arsenal-fc_question_first_run_v2.json").write_text("{}", encoding="utf-8")
     (entity_dir / "arsenal-fc_question_first_dossier.json").write_text("{}", encoding="utf-8")
 
     selected = smoke.build_rerun_archetypes(
@@ -364,11 +364,11 @@ async def test_backfill_dossiers_from_summary_uses_existing_run_artifact_without
     output_root = tmp_path / "smoke"
     entity_dir = output_root / "icf"
     entity_dir.mkdir(parents=True, exist_ok=True)
-    question_first_run_path = entity_dir / "international-canoe-federation_question_first_run_v1.json"
+    question_first_run_path = entity_dir / "international-canoe-federation_question_first_run_v2.json"
     question_first_run_path.write_text(
         json.dumps(
             {
-                "schema_version": "question_first_run_v1",
+                "schema_version": "question_first_run_v2",
                 "generated_at": "2026-04-01T00:00:30+00:00",
                 "run_started_at": "2026-04-01T00:00:00+00:00",
                 "source": "opencode_agentic_batch",
@@ -437,7 +437,7 @@ async def test_backfill_dossiers_from_summary_uses_existing_run_artifact_without
         dossier_path.write_text("{}", encoding="utf-8")
         return {
             "question_first_run": {
-                "schema_version": "question_first_run_v1",
+                "schema_version": "question_first_run_v2",
                 "generated_at": "2026-04-01T00:00:30+00:00",
                 "run_started_at": "2026-04-01T00:00:00+00:00",
                 "run_rollup": {

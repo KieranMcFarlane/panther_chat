@@ -409,7 +409,9 @@ async def run_smoke(
         retrieval_path_counts = durable_batch_metrics.get("retrieval_path_counts") if isinstance(durable_batch_metrics, dict) else {}
         baseline_features = durable_batch_metrics.get("baseline_features") if isinstance(durable_batch_metrics, dict) else {}
         baseline_features = baseline_features if isinstance(baseline_features, dict) else {}
-        question_first_run_path = next(entity_output_dir.glob("*_question_first_run_v1.json"), None)
+        question_first_run_path = next(entity_output_dir.glob("*_question_first_run_v2.json"), None)
+        if question_first_run_path is None:
+            question_first_run_path = next(entity_output_dir.glob("*_question_first_run_v1.json"), None)
         question_first_dossier_path = next(entity_output_dir.glob("*_question_first_dossier.json"), None)
 
         entity_summary = {

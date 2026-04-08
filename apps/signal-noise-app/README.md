@@ -20,7 +20,7 @@ These routes require Better Auth session access and redirect anonymous users to 
 The dossier UI is backed by question-first artifacts in this order:
 
 1. latest `question_first_dossier`
-2. latest `question_first_run_v1`, promoted/merged on demand
+2. latest `question_first_run_v2`, promoted/merged on demand
 3. legacy dossier fallback only when no question-first artifact exists
 
 The canonical app-facing dossier contract is served from:

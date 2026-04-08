@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://signal-noise-app.local/contracts/question_first_run_v2.schema.json",
+  "title": "question_first_run_v2",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "generated_at",
+    "run_started_at",
+    "source",
+    "status",
+    "entity",
+    "question_specs",
+    "answer_records",
+    "evidence_items",
+    "trace_index",
+    "categories",
+    "question_timings",
+    "run_rollup",
+    "merge_patch"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "question_first_run_v2"
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "run_started_at": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "entity": {
+      "type": "object",
+      "required": ["entity_id", "entity_name", "entity_type"],
+      "properties": {
+        "entity_id": { "type": "string" },
+        "entity_name": { "type": "string" },
+        "entity_type": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "preset": {
+      "type": ["string", "null"]
+    },
+    "question_source_path": {
+      "type": ["string", "null"]
+    },
+    "question_specs": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "answer_records": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "evidence_items": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "trace_index": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "promotion_candidates": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "poi_graph": {
+      "type": "object"
+    },
+    "question_timings": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "started_at": { "type": "string" },
+          "completed_at": { "type": "string" },
+          "duration_seconds": { "type": "number" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "categories": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "run_rollup": {
+      "type": "object"
+    },
+    "merge_patch": {
+      "type": "object",
+      "required": ["metadata", "question_first"],
+      "properties": {
+        "metadata": { "type": "object" },
+        "question_first": { "type": "object" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true
+}

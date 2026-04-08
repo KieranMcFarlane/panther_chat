@@ -110,7 +110,7 @@ def _write_question_first_run_artifact(path, *, entity_id, entity_name, question
         "edges": [],
     }
     payload = {
-        "schema_version": "question_first_run_v1",
+        "schema_version": "question_first_run_v2",
         "generated_at": "2026-03-30T00:00:30+00:00",
         "run_started_at": "2026-03-30T00:00:00+00:00",
         "source": "opencode_agentic_batch",
@@ -172,7 +172,7 @@ def _write_question_first_run_artifact(path, *, entity_id, entity_name, question
         "metadata": {
             "question_first": {
                 "enabled": True,
-                "schema_version": "question_first_run_v1",
+                "schema_version": "question_first_run_v2",
                 "questions_answered": len(answers),
                 "categories": categories,
                 "question_source_path": "backend/data/question_sources/major_league_cricket.json",
@@ -185,7 +185,7 @@ def _write_question_first_run_artifact(path, *, entity_id, entity_name, question
         },
         "question_first": {
             "enabled": True,
-            "schema_version": "question_first_run_v1",
+            "schema_version": "question_first_run_v2",
             "questions_answered": len(answers),
             "categories": categories,
             "answers": answers,
@@ -289,7 +289,7 @@ def test_resolve_question_first_worktree_root_honors_explicit_root(tmp_path):
 async def test_run_question_first_dossier_from_payload_seeds_explicit_bridge_contacts(tmp_path):
     output_dir = tmp_path / "out"
     output_dir.mkdir()
-    artifact_path = output_dir / "celtic-fc_question_first_run_v1.json"
+    artifact_path = output_dir / "celtic-fc_question_first_run_v2.json"
     _write_question_first_run_artifact(
         artifact_path,
         entity_id="celtic-fc",
@@ -353,7 +353,7 @@ async def test_run_question_first_dossier_from_payload_seeds_explicit_bridge_con
 async def test_run_question_first_dossier_from_payload_marks_connections_enrichment_as_optional_metadata(tmp_path, monkeypatch):
     output_dir = tmp_path / "out"
     output_dir.mkdir()
-    artifact_path = output_dir / "arsenal_question_first_run_v1.json"
+    artifact_path = output_dir / "arsenal_question_first_run_v2.json"
     _write_question_first_run_artifact(
         artifact_path,
         entity_id="arsenal",
@@ -411,7 +411,7 @@ async def test_run_question_first_dossier_from_payload_marks_connections_enrichm
 async def test_run_question_first_dossier_from_payload_adds_durable_batch_metrics(tmp_path, monkeypatch):
     output_dir = tmp_path / "out"
     output_dir.mkdir()
-    artifact_path = output_dir / "arsenal_question_first_run_v1.json"
+    artifact_path = output_dir / "arsenal_question_first_run_v2.json"
     _write_question_first_run_artifact(
         artifact_path,
         entity_id="arsenal",
@@ -515,7 +515,7 @@ async def test_run_question_first_dossier_from_payload_adds_durable_batch_metric
 async def test_run_question_first_dossier_prefers_contract_question_timings_over_mtimes(tmp_path):
     output_dir = tmp_path / "out"
     output_dir.mkdir()
-    artifact_path = output_dir / "arsenal_question_first_run_v1.json"
+    artifact_path = output_dir / "arsenal_question_first_run_v2.json"
     _write_question_first_run_artifact_with_timings(
         artifact_path,
         entity_id="arsenal",
@@ -660,7 +660,7 @@ async def test_question_first_runner_waits_for_completed_state_before_merging(tm
         source_payload=source_payload,
         preset=source_payload["preset"],
     )
-    artifact_path = output_dir / "leedsunited_question_first_run_v1.json"
+    artifact_path = output_dir / "leedsunited_question_first_run_v2.json"
     _write_question_first_run_artifact(
         artifact_path,
         entity_id="leedsunited",
@@ -801,7 +801,7 @@ async def test_question_first_runner_uses_saved_questions_and_writes_plain_text_
     result = await runner.run_question_first_dossier(question_source_path=dossier_path, output_dir=output_dir)
 
     assert result["entity_name"] == "Leeds United"
-    assert result["question_first"]["schema_version"] == "question_first_run_v1"
+    assert result["question_first"]["schema_version"] == "question_first_run_v2"
     assert result["question_first"]["questions_answered"] == 1
     assert result["question_first"]["evidence_items"][0]["promotion_target"] == "profile"
     assert result["question_first"]["promotion_candidates"][0]["promotion_candidate"] is True
@@ -809,7 +809,7 @@ async def test_question_first_runner_uses_saved_questions_and_writes_plain_text_
     assert result["question_first"]["discovery_summary"]["promoted_count"] == 1
     assert result["question_first"]["poi_graph"]["schema_version"] == "poi_graph_v1"
     assert result["question_first"]["connections_graph"]["schema_version"] == "connections_graph_v1"
-    assert result["question_first_run"]["schema_version"] == "question_first_run_v1"
+    assert result["question_first_run"]["schema_version"] == "question_first_run_v2"
     assert result["question_first_run"]["poi_graph"]["schema_version"] == "poi_graph_v1"
     assert result["question_first_run"]["evidence_items"][0]["promotion_target"] == "profile"
     assert result["question_first_run"]["promotion_candidates"][0]["promotion_candidate"] is True
@@ -951,7 +951,7 @@ async def test_question_first_runner_groups_by_category_and_retries_on_empty_sea
 async def test_launch_opencode_question_first_batch_falls_back_to_timestamped_artifact_when_stdout_is_not_json(tmp_path, monkeypatch):
     output_dir = tmp_path / "out"
     output_dir.mkdir(parents=True)
-    artifact_path = output_dir / "leedsunited_opencode_batch_20260406_120000_question_first_run_v1.json"
+    artifact_path = output_dir / "leedsunited_opencode_batch_20260406_120000_question_first_run_v2.json"
     _write_question_first_run_artifact(
         artifact_path,
         entity_id="leedsunited",
@@ -1035,7 +1035,7 @@ async def test_launch_opencode_question_first_batch_falls_back_to_timestamped_ar
 async def test_launch_opencode_question_first_batch_returns_after_terminal_state_even_if_child_lingers(tmp_path, monkeypatch):
     output_dir = tmp_path / "out"
     output_dir.mkdir(parents=True)
-    artifact_path = output_dir / "bundesliga_opencode_batch_20260407_120000_question_first_run_v1.json"
+    artifact_path = output_dir / "bundesliga_opencode_batch_20260407_120000_question_first_run_v2.json"
     _write_question_first_run_artifact(
         artifact_path,
         entity_id="bundesliga",

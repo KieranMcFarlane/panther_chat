@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Question-first dossier adapter around the canonical OpenCode artifact.
 
-This module now consumes a versioned ``question_first_run_v1`` artifact emitted
+This module now consumes a versioned ``question_first_run_v2`` artifact emitted
 by the OpenCode batch runner, merges it into a dossier payload, and optionally
 launches the canonical OpenCode batch when an artifact path is not supplied.
 """
@@ -22,7 +22,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Literal
 
 from dotenv import load_dotenv
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, Field, ValidationError, ConfigDict, model_validator
 
 try:
     from backend.brightdata_mcp_client import BrightDataMCPClient
@@ -184,7 +184,10 @@ def _resolve_question_first_worktree_root(worktree_root: Optional[Path] = None) 
 
 
 class QuestionFirstRunArtifact(BaseModel):
-    schema_version: Literal["question_first_run_v1"]
+    model_config = ConfigDict(extra="allow")
+
+    schema_version: Literal["question_first_run_v1", "question_first_run_v2"]
+    run_id: Optional[str] = None
     generated_at: str
     run_started_at: str
     source: str
@@ -193,15 +196,38 @@ class QuestionFirstRunArtifact(BaseModel):
     entity: Dict[str, Any] = Field(default_factory=dict)
     preset: Optional[str] = None
     question_source_path: Optional[str] = None
-    questions: List[Dict[str, Any]] = Field(default_factory=list)
-    answers: List[Dict[str, Any]] = Field(default_factory=list)
+    question_specs: List[Dict[str, Any]] = Field(default_factory=list)
+    answer_records: List[Dict[str, Any]] = Field(default_factory=list)
     question_timings: Dict[str, Any] = Field(default_factory=dict)
     evidence_items: List[Dict[str, Any]] = Field(default_factory=list)
     promotion_candidates: List[Dict[str, Any]] = Field(default_factory=list)
     poi_graph: Dict[str, Any] = Field(default_factory=dict)
+    trace_index: List[Dict[str, Any]] = Field(default_factory=list)
     categories: List[Dict[str, Any]] = Field(default_factory=list)
     run_rollup: Dict[str, Any] = Field(default_factory=dict)
     merge_patch: Dict[str, Any] = Field(default_factory=dict)
+
+    @model_validator(mode="before")
+    @classmethod
+    def _upgrade_v1_fields(cls, value: Any) -> Any:
+        if not isinstance(value, dict):
+            return value
+        upgraded = dict(value)
+        if "question_specs" not in upgraded and isinstance(upgraded.get("questions"), list):
+            upgraded["question_specs"] = upgraded.get("questions")
+        if "answer_records" not in upgraded and isinstance(upgraded.get("answers"), list):
+            upgraded["answer_records"] = upgraded.get("answers")
+        if "trace_index" not in upgraded:
+            upgraded["trace_index"] = []
+        return upgraded
+
+    @property
+    def questions(self) -> List[Dict[str, Any]]:
+        return list(self.question_specs or [])
+
+    @property
+    def answers(self) -> List[Dict[str, Any]]:
+        return list(self.answer_records or [])
 
 
 def _load_question_first_run_artifact(artifact_path: Path | str) -> QuestionFirstRunArtifact:
@@ -210,6 +236,50 @@ def _load_question_first_run_artifact(artifact_path: Path | str) -> QuestionFirs
         return QuestionFirstRunArtifact.model_validate_json(path.read_text(encoding="utf-8"))
     except ValidationError as exc:
         raise ValueError(f"Invalid question_first_run artifact at {path}") from exc
+
+
+def _build_legacy_merged_questions(artifact: QuestionFirstRunArtifact) -> List[Dict[str, Any]]:
+    merged_questions: List[Dict[str, Any]] = []
+    answer_index: Dict[str, Dict[str, Any]] = {}
+    for answer in artifact.answers:
+        if not isinstance(answer, dict):
+            continue
+        question_id = str(answer.get("question_id") or "").strip()
+        if question_id and question_id not in answer_index:
+            answer_index[question_id] = answer
+
+    for question in artifact.questions:
+        if not isinstance(question, dict):
+            continue
+        question_copy = dict(question)
+        question_id = str(question_copy.get("question_id") or "").strip()
+        timing = artifact.question_timings.get(question_id) if isinstance(artifact.question_timings, dict) else {}
+        if isinstance(timing, dict):
+            question_copy.update({key: value for key, value in timing.items() if value is not None})
+        answer = answer_index.get(question_id)
+        if isinstance(answer, dict):
+            answer_payload = {
+                "question_id": answer.get("question_id"),
+                "question_type": answer.get("question_type"),
+                "answer": answer.get("answer"),
+                "confidence": answer.get("confidence"),
+                "validation_state": answer.get("validation_state"),
+                "evidence_refs": answer.get("evidence_refs") or [],
+                "signal_type": answer.get("signal_type"),
+                "trace_ref": answer.get("trace_ref"),
+            }
+            question_copy.update(
+                {
+                    "answer": answer.get("answer"),
+                    "confidence": answer.get("confidence"),
+                    "validation_state": answer.get("validation_state"),
+                    "evidence_refs": answer.get("evidence_refs") or [],
+                    "signal_type": answer.get("signal_type"),
+                    "question_first_answer": answer_payload,
+                }
+            )
+        merged_questions.append(question_copy)
+    return merged_questions
 
 
 def _merge_question_first_run_patch(
@@ -232,8 +302,7 @@ def _merge_question_first_run_patch(
     if "question_first" in patch and isinstance(patch["question_first"], dict):
         payload["question_first"] = patch["question_first"]
 
-    if "questions" in patch and isinstance(patch["questions"], list):
-        payload["questions"] = patch["questions"]
+    payload["questions"] = _build_legacy_merged_questions(artifact)
 
     payload.setdefault("question_first", {})
     if isinstance(payload["question_first"], dict):
@@ -286,7 +355,8 @@ def _artifact_output_path(output_dir: Path, source_payload: Dict[str, Any], arti
         or source_payload.get("entity_id")
         or _slugify(entity_name)
     )
-    return output_dir / f"{_slugify(entity_id)}_question_first_run_v1.json"
+    suffix = "question_first_run_v2.json"
+    return output_dir / f"{_slugify(entity_id)}_{suffix}"
 
 
 def _find_existing_question_first_run_artifact(output_dir: Path, source_payload: Dict[str, Any]) -> Optional[Path]:
@@ -294,7 +364,7 @@ def _find_existing_question_first_run_artifact(output_dir: Path, source_payload:
     if canonical_path.exists():
         return canonical_path
     candidates = sorted(
-        output_dir.glob("*_question_first_run_v1.json"),
+        list(output_dir.glob("*_question_first_run_v2.json")) + list(output_dir.glob("*_question_first_run_v1.json")),
         key=lambda path: path.stat().st_mtime,
         reverse=True,
     )
@@ -625,9 +695,10 @@ def _build_category_summary(answers: List[Dict[str, Any]]) -> List[Dict[str, Any
         )
         bucket["question_count"] += 1
         bucket["retry_count"] += int(answer.get("retry_count") or 0)
-        if answer.get("search_hit") and float(answer.get("confidence") or 0.0) >= 0.5:
+        state = _validation_state_for_answer(answer)
+        if state == "validated":
             bucket["validated_count"] += 1
-        elif answer.get("search_hit"):
+        elif state in {"pending", "provisional", "partially_validated", "deterministic_detected", "inferred"}:
             bucket["pending_count"] += 1
         else:
             bucket["no_signal_count"] += 1
@@ -743,6 +814,12 @@ def build_question_first_durable_batch_metrics(
 
 
 def _validation_state_for_answer(answer: Dict[str, Any]) -> str:
+    explicit_state = str(answer.get("validation_state") or "").strip().lower()
+    if explicit_state:
+        if explicit_state in {"validated", "partially_validated", "deterministic_detected", "provisional", "inferred", "failed", "no_signal", "pending"}:
+            return explicit_state
+        if explicit_state in {"tool_call_missing", "exhausted"}:
+            return "no_signal"
     if not answer.get("search_hit"):
         return "no_signal"
     confidence = float(answer.get("confidence") or 0.0)
@@ -1169,7 +1246,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(description="Run a question-first dossier using the canonical OpenCode artifact")
     parser.add_argument("--question-source", required=True, help="Path to a dossier JSON file with questions")
     parser.add_argument("--output-dir", default="backend/data/question_first_dossiers")
-    parser.add_argument("--question-first-run-path", default=None, help="Path to a canonical question_first_run_v1 artifact")
+    parser.add_argument("--question-first-run-path", default=None, help="Path to a canonical question_first_run_v2 artifact")
     parser.add_argument("--opencode-timeout-ms", type=int, default=300000)
     parser.add_argument("--preset", default=None)
     args = parser.parse_args(argv)

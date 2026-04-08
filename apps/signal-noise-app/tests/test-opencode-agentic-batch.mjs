@@ -308,7 +308,7 @@ test('runOpenCodeQuestionSourceBatch stops after the first validated digital-sta
   }
 });
 
-test('runOpenCodeQuestionSourceBatch writes contract-backed question timings into question_first_run_v1', async () => {
+test('runOpenCodeQuestionSourceBatch writes contract-backed question timings into question_first_run_v2', async () => {
   const outputDir = mkdtempSync(join(tmpdir(), 'opencode-question-timings-'));
   const sourcePath = join(outputDir, 'source.json');
   const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
@@ -376,12 +376,9 @@ test('runOpenCodeQuestionSourceBatch writes contract-backed question timings int
     assert.equal(typeof artifact.question_timings.q1_foundation.completed_at, 'string');
     assert.equal(typeof artifact.question_timings.q1_foundation.duration_seconds, 'number');
     assert.equal(artifact.question_timings.q1_foundation.duration_seconds >= 0, true);
-    assert.equal(artifact.questions[0].started_at, artifact.question_timings.q1_foundation.started_at);
-    assert.equal(artifact.questions[0].completed_at, artifact.question_timings.q1_foundation.completed_at);
-    assert.equal(artifact.questions[0].duration_seconds, artifact.question_timings.q1_foundation.duration_seconds);
-    assert.equal(artifact.answers[0].started_at, artifact.question_timings.q1_foundation.started_at);
-    assert.equal(artifact.answers[0].completed_at, artifact.question_timings.q1_foundation.completed_at);
-    assert.equal(artifact.answers[0].duration_seconds, artifact.question_timings.q1_foundation.duration_seconds);
+    assert.equal(artifact.answer_records[0].started_at, artifact.question_timings.q1_foundation.started_at);
+    assert.equal(artifact.answer_records[0].completed_at, artifact.question_timings.q1_foundation.completed_at);
+    assert.equal(artifact.answer_records[0].duration_seconds, artifact.question_timings.q1_foundation.duration_seconds);
   } finally {
     if (previousZaiKey === undefined) {
       delete process.env.ANTHROPIC_AUTH_TOKEN;
@@ -588,7 +585,7 @@ test('runOpenCodeQuestionSourceBatch normalizes string decision-owner candidates
     });
 
     const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
-    const question = artifact.answers[0];
+    const question = artifact.answer_records[0];
     assert.equal(question.validation_state, 'validated');
     assert.equal(question.primary_owner.name, 'Oliver Smith');
     assert.deepEqual(
@@ -693,7 +690,7 @@ test('runOpenCodeQuestionSourceBatch derives related-pois from a validated decis
     });
 
     const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
-    const relatedPois = artifact.answers.find((question) => question.question_id === 'q5_related_pois');
+    const relatedPois = artifact.answer_records.find((question) => question.question_id === 'q5_related_pois');
     assert.deepEqual(seenQuestions, ['q4_decision_owner']);
     assert.equal(relatedPois.validation_state, 'validated');
     assert.deepEqual(
@@ -779,8 +776,8 @@ test('runOpenCodeQuestionSourceBatch preserves nuanced foundation validation ins
     assert.equal(result.questions_no_signal, 0);
     assert.equal(calls, 1);
     const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
-    assert.equal(artifact.answers[0].validation_state, 'validated');
-    assert.equal(artifact.answers[0].answer, '2019');
+    assert.equal(artifact.answer_records[0].validation_state, 'validated');
+    assert.equal(artifact.answer_records[0].answer.value, '2019');
   } finally {
     if (previousZaiKey === undefined) {
       delete process.env.ANTHROPIC_AUTH_TOKEN;
@@ -1738,13 +1735,15 @@ test('runOpenCodeQuestionSourceBatch writes the canonical question_first_run art
 
     assert.ok(result.question_first_run_path);
     const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
-    assert.equal(artifact.schema_version, 'question_first_run_v1');
-    assert.equal(artifact.questions.length, 1);
-    assert.equal(artifact.answers.length, 1);
-    assert.equal(artifact.questions[0].question_text, 'When was Major League Cricket founded?');
-    assert.equal(artifact.questions[0].question, 'When was Major League Cricket founded?');
-    assert.equal(artifact.merge_patch.question_first.schema_version, 'question_first_run_v1');
-    assert.equal(artifact.merge_patch.questions[0].question_first_answer.answer, '2023');
+    assert.equal(artifact.schema_version, 'question_first_run_v2');
+    assert.equal(artifact.question_specs.length, 1);
+    assert.equal(artifact.answer_records.length, 1);
+    assert.equal(artifact.question_specs[0].question_text, 'When was Major League Cricket founded?');
+    assert.equal(artifact.answer_records[0].answer.value, '2023');
+    assert.equal(artifact.merge_patch.question_first.schema_version, 'question_first_run_v2');
+    assert.ok(Array.isArray(artifact.trace_index));
+    assert.equal(artifact.trace_index.length, 1);
+    assert.match(artifact.trace_index[0].path, /question_001\.debug\.json$/);
     assert.equal(seenWorktreeRoots[0], '/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot');
   } finally {
     if (previousZaiKey === undefined) {
@@ -2104,9 +2103,11 @@ test('runOpenCodeQuestionSourceBatch preserves runner timeout trace when child s
       questionRunner,
     });
 
-    const runPath = readdirSync(outputDir).find((name) => name.endsWith('_question_first_run_v1.json'));
+    const runPath = readdirSync(outputDir).find((name) => name.endsWith('_question_first_run_v2.json'));
     const artifact = JSON.parse(readFileSync(join(outputDir, runPath), 'utf8'));
-    assert.equal(artifact.questions[0].raw_execution_trace.stderr_excerpt, 'child timed out late');
+    assert.equal(artifact.answer_records[0].trace_ref, artifact.trace_index[0].trace_id);
+    const debugPayload = JSON.parse(readFileSync(artifact.trace_index[0].path, 'utf8'));
+    assert.equal(debugPayload.raw_execution_trace.stderr_excerpt, 'child timed out late');
   } finally {
     if (previousZaiKey === undefined) {
       delete process.env.ANTHROPIC_AUTH_TOKEN;
@@ -2843,7 +2844,7 @@ test('runOpenCodeQuestionSourceBatch adds non-strict timeout salvage without cha
 
     assert.equal(result.questions_validated, 1);
     const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
-    const [celtic, barcelona, mls, mlc] = artifact.questions;
+    const [celtic, barcelona, mls, mlc] = artifact.answer_records;
     assert.equal(celtic.validation_state, 'tool_call_missing');
     assert.equal(celtic.timeout_salvage.counts_as_validated, false);
     assert.match(celtic.timeout_salvage.candidate_summary, /Mobile App Platform Manager|official Celtic FC partner/i);

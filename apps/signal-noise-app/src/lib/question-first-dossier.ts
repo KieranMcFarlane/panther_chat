@@ -173,6 +173,57 @@ function ensureObject(value: unknown): Record<string, any> {
   return value && typeof value === 'object' && !Array.isArray(value) ? { ...(value as Record<string, any>) } : {}
 }
 
+function buildLegacyMergedQuestions(
+  questionSpecs: Record<string, any>[],
+  answerRecords: Record<string, any>[],
+  questionTimings: Record<string, any>,
+): Record<string, any>[] {
+  const answerIndex = new Map<string, Record<string, any>>()
+  for (const answer of answerRecords) {
+    const questionId = toText(answer?.question_id)
+    if (questionId && !answerIndex.has(questionId)) {
+      answerIndex.set(questionId, answer)
+    }
+  }
+
+  return questionSpecs.map((question) => {
+    const questionId = toText(question.question_id)
+    const answer = questionId ? answerIndex.get(questionId) : null
+    const timing = questionId ? ensureObject(questionTimings[questionId]) : {}
+    const answerPayload = answer
+      ? {
+          question_id: answer.question_id,
+          question_type: answer.question_type,
+          answer: ensureObject(answer.answer).kind ? answer.answer : answer.answer ?? null,
+          confidence: answer.confidence,
+          validation_state: answer.validation_state,
+          evidence_refs: Array.isArray(answer.evidence_refs) ? answer.evidence_refs : [],
+          signal_type: answer.signal_type,
+          primary_owner: answer.primary_owner ?? null,
+          supporting_candidates: Array.isArray(answer.supporting_candidates) ? answer.supporting_candidates : [],
+          candidates: Array.isArray(answer.candidates) ? answer.candidates : [],
+          trace_ref: answer.trace_ref ?? null,
+          notes: answer.notes ?? null,
+        }
+      : null
+
+    return {
+      ...question,
+      ...timing,
+      ...(answer
+        ? {
+            answer: ensureObject(answer.answer).kind ? answer.answer : answer.answer ?? null,
+            confidence: answer.confidence,
+            validation_state: answer.validation_state,
+            signal_type: answer.signal_type,
+            evidence_refs: Array.isArray(answer.evidence_refs) ? answer.evidence_refs : [],
+            question_first_answer: answerPayload,
+          }
+        : {}),
+    }
+  })
+}
+
 export function mergeQuestionFirstRunArtifactIntoDossier(
   dossierPayload: Record<string, any>,
   artifact: Record<string, any>,
@@ -182,6 +233,10 @@ export function mergeQuestionFirstRunArtifactIntoDossier(
   const patch = ensureObject(artifact.merge_patch)
   const patchMetadata = ensureObject(patch.metadata)
   const questionFirstPatch = ensureObject(patch.question_first)
+  const answerRecords = Array.isArray(artifact.answer_records) ? artifact.answer_records : Array.isArray(artifact.answers) ? artifact.answers : []
+  const questionSpecs = Array.isArray(artifact.question_specs) ? artifact.question_specs : Array.isArray(artifact.questions) ? artifact.questions : []
+  const artifactQuestionTimings = ensureObject(artifact.question_timings)
+  const mergedQuestions = buildLegacyMergedQuestions(questionSpecs, answerRecords, artifactQuestionTimings)
 
   payload.metadata = {
     ...metadata,
@@ -191,11 +246,11 @@ export function mergeQuestionFirstRunArtifactIntoDossier(
   payload.question_first = {
     ...ensureObject(payload.question_first),
     ...questionFirstPatch,
-    schema_version: toText(questionFirstPatch.schema_version) || toText(artifact.schema_version) || 'question_first_run_v1',
+    schema_version: toText(questionFirstPatch.schema_version) || toText(artifact.schema_version) || 'question_first_run_v2',
     generated_at: toText(questionFirstPatch.generated_at) || toText(artifact.generated_at),
     run_rollup: ensureObject(questionFirstPatch.run_rollup).questions_total ? questionFirstPatch.run_rollup : artifact.run_rollup ?? payload.run_rollup ?? {},
     categories: Array.isArray(questionFirstPatch.categories) ? questionFirstPatch.categories : artifact.categories ?? payload.categories ?? [],
-    answers: Array.isArray(questionFirstPatch.answers) ? questionFirstPatch.answers : artifact.answers ?? payload.answers ?? [],
+    answers: Array.isArray(questionFirstPatch.answers) ? questionFirstPatch.answers : answerRecords ?? payload.answers ?? [],
     question_timings: ensureObject(questionFirstPatch.question_timings).constructor === Object
       ? { ...artifact.question_timings, ...questionFirstPatch.question_timings }
       : artifact.question_timings ?? payload.question_timings ?? {},
@@ -204,10 +259,10 @@ export function mergeQuestionFirstRunArtifactIntoDossier(
       ? questionFirstPatch.promotion_candidates
       : artifact.promotion_candidates ?? [],
     poi_graph: ensureObject(questionFirstPatch.poi_graph).schema_version ? questionFirstPatch.poi_graph : artifact.poi_graph ?? {},
-    questions_answered: Array.isArray(artifact.answers) ? artifact.answers.length : 0,
+    questions_answered: Array.isArray(answerRecords) ? answerRecords.length : 0,
   }
 
-  payload.questions = Array.isArray(patch.questions) ? patch.questions : Array.isArray(payload.questions) ? payload.questions : []
+  payload.questions = mergedQuestions.length > 0 ? mergedQuestions : Array.isArray(payload.questions) ? payload.questions : []
   payload.question_first_run = artifact
 
   return payload
@@ -224,7 +279,8 @@ export async function getLatestQuestionFirstRunArtifact(
   entityId: string,
   entity?: EntityLike | null,
 ): Promise<ArtifactMatch | null> {
-  return findLatestArtifact('_question_first_run_v1.json', entityId, entity)
+  return (await findLatestArtifact('_question_first_run_v2.json', entityId, entity))
+    ?? findLatestArtifact('_question_first_run_v1.json', entityId, entity)
 }
 
 export function normalizeQuestionFirstDossier(

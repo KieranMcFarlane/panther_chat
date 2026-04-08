@@ -2645,13 +2645,38 @@ export async function runOpenCodePresetBatch({
 	    const metaPath = path.join(outputDir, `${stem}_meta.json`);
 	    const rollupPath = path.join(outputDir, `${stem}_rollup.json`);
 	    const transcriptPath = path.join(outputDir, `${stem}.txt`);
-	    const questionFirstRunPath = path.join(outputDir, `${stem}_question_first_run_v1.json`);
+	    const questionFirstRunPath = path.join(outputDir, `${stem}_question_first_run_v2.json`);
 	    const questionPaths = [];
+      const traceIndex = [];
 
     for (const [index, payload] of perQuestionPayloads.entries()) {
       const questionPath = path.join(outputDir, `${stem}_question_${String(index + 1).padStart(3, '0')}.json`);
       await fs.writeFile(questionPath, JSON.stringify(payload, null, 2), 'utf8');
       questionPaths.push(questionPath);
+      const debugPath = path.join(outputDir, `${stem}_question_${String(index + 1).padStart(3, '0')}.debug.json`);
+      const questionTraceId = `${payload.question.question_id || `question_${index + 1}`}:debug`;
+      await fs.writeFile(
+        debugPath,
+        JSON.stringify(
+          {
+            trace_id: questionTraceId,
+            question_id: payload.question.question_id || `question_${index + 1}`,
+            prompt_trace: payload.question.prompt_trace || null,
+            message_trace: payload.question.message_trace || [],
+            raw_execution_trace: payload.question.raw_execution_trace || null,
+          },
+          null,
+          2,
+        ),
+        'utf8',
+      );
+      traceIndex.push({
+        trace_id: questionTraceId,
+        question_id: payload.question.question_id || `question_${index + 1}`,
+        trace_type: 'debug_bundle',
+        path: debugPath,
+        inline: null,
+      });
     }
 
 	    const metaPayload = {
@@ -2689,10 +2714,12 @@ export async function runOpenCodePresetBatch({
 	      entity_id: entityId,
 	      entity_name: entityName,
 	      entity_type: entityType,
+          run_id: stem,
 	      preset: normalizedPreset,
 	      question_source_path: questionSourcePath || `preset:${normalizedPreset}`,
-	      questions,
-	      answers: finalQuestions,
+	      question_specs: questions,
+	      answer_records: finalQuestions,
+          trace_index: traceIndex,
 	      categories: finalQuestions.length ? _buildCategorySummary(finalQuestions) : [],
 	      question_timings: questionTimings,
 	      run_rollup: rollupPayload,

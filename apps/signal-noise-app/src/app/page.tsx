@@ -177,7 +177,7 @@ export default async function Home() {
               <CheckCircle2 className="mb-3 h-5 w-5 text-emerald-300" />
               <div className="mb-1 text-sm font-semibold text-white">Canonical source of truth</div>
               <p className="text-sm leading-6 text-slate-300">
-                `question_first_run_v1` and the canonical dossier output are the only sources that should shape the client-visible entity narrative.
+                `question_first_run_v2` and the canonical dossier output are the only sources that should shape the client-visible entity narrative.
               </p>
             </CardContent>
           </Card>
