@@ -10,7 +10,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { TopOpportunities } from '@/components/home/FeaturedOpportunities'
+import { HomeQueueDashboard } from '@/components/home/HomeQueueDashboard'
 import { requirePageSession } from '@/lib/server-auth'
 
 export const dynamic = 'force-dynamic'
@@ -167,9 +167,7 @@ export default async function Home() {
           </Card>
         </section>
 
-        <section className="mt-10">
-          <TopOpportunities />
-        </section>
+        <HomeQueueDashboard />
 
         <section className="mt-10 grid gap-4 lg:grid-cols-3">
           <Card className="border-white/10 bg-white/[0.04]">
