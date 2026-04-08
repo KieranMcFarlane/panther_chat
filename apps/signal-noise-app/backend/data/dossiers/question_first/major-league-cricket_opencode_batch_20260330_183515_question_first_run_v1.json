@@ -1,0 +1,777 @@
+{
+  "schema_version": "question_first_run_v1",
+  "generated_at": "2026-03-30T18:35:15.862Z",
+  "run_started_at": "2026-03-30T18:31:44.511Z",
+  "source": "opencode_agentic_batch",
+  "status": "ready",
+  "warnings": [],
+  "entity": {
+    "entity_id": "major-league-cricket",
+    "entity_name": "Major League Cricket",
+    "entity_type": "LEAGUE"
+  },
+  "preset": "major-league-cricket",
+  "question_source_path": "/var/folders/hj/cw6t72kn5wd7cjqht1tpvfl00000gp/T/tmpd5v1eby3.json",
+  "questions": [
+    {
+      "question_id": "sl_league_mobile_app",
+      "question": "What evidence in the last 180 days shows Major League Cricket is planning or updating a league mobile app?",
+      "pack_role": "discovery",
+      "pack_stage": "entity_type",
+      "yp_service_fit": [
+        "MOBILE_APPS",
+        "FAN_ENGAGEMENT"
+      ],
+      "budget_range": "£200K-£500K",
+      "yp_advantage": "Olympic mobile app experience, multi-club deployment capability",
+      "positioning_strategy": "STRATEGIC_PARTNER",
+      "hypothesis_template": "{entity} will commission or update a league mobile app (£200K-£500K)",
+      "next_signals": [
+        "Graphiti communities: league app changes, member club coordination, or vendor switches",
+        "Job postings: Mobile Product Manager, League Digital Director",
+        "RFP keywords: mobile app, fan app, React Native, RFP, Request for Proposal, tender, ITT, EOI, procurement",
+        "League announcements: mobile strategy, app relaunch, digital fan experience"
+      ],
+      "hop_types": [
+        "RFP_PAGE",
+        "CAREERS_PAGE",
+        "PRESS_RELEASE"
+      ],
+      "accept_criteria": "Evidence of a league app project or a recent vendor search",
+      "confidence_boost": 0.2,
+      "graphiti_focus": "Graphiti communities: league app changes, member club coordination, or vendor switches, Job postings: Mobile Product Manager, League Digital Director",
+      "graphiti_sources": [
+        "Graphiti communities: league app changes, member club coordination, or vendor switches",
+        "Job postings: Mobile Product Manager, League Digital Director",
+        "RFP keywords: mobile app, fan app, React Native, RFP, Request for Proposal, tender, ITT, EOI, procurement"
+      ],
+      "graphiti_lookback_days": 180,
+      "question_text": "What evidence in the last 180 days shows Major League Cricket is planning or updating a league mobile app?",
+      "query": "\"Major League Cricket\" mobile app",
+      "search_strategy": {
+        "search_queries": [
+          "\"Major League Cricket\" mobile app",
+          "\"Major League Cricket\" fan app",
+          "\"Major League Cricket\" official app",
+          "\"Major League Cricket\" fan engagement platform",
+          "\"Major League Cricket\" React Native"
+        ]
+      },
+      "entity_name": "Major League Cricket"
+    },
+    {
+      "question_id": "sl_league_fan_experience",
+      "question": "What evidence in the last 180 days shows Major League Cricket is upgrading fan experience or supporter engagement?",
+      "pack_role": "discovery",
+      "pack_stage": "entity_type",
+      "yp_service_fit": [
+        "FAN_ENGAGEMENT",
+        "MOBILE_APPS"
+      ],
+      "budget_range": "£150K-£400K",
+      "yp_advantage": "FIBA 3×3 fan engagement platform, multi-federation experience",
+      "positioning_strategy": "INNOVATION_PARTNER",
+      "hypothesis_template": "{entity} will invest in a fan-experience upgrade (£150K-£400K) within 12 months",
+      "next_signals": [
+        "Graphiti communities: supporter journey changes, engagement tooling, or fan feedback",
+        "Job postings: Fan Engagement Manager, League CRM Lead",
+        "RFP keywords: fan experience, supporter platform, loyalty, CRM, RFP, Request for Proposal, tender, ITT, procurement",
+        "League announcements: engagement strategy, supporter experience, fan platform"
+      ],
+      "hop_types": [
+        "RFP_PAGE",
+        "CAREERS_PAGE",
+        "PRESS_RELEASE"
+      ],
+      "accept_criteria": "Evidence of a fan-experience initiative or a recent vendor search",
+      "confidence_boost": 0.18,
+      "graphiti_focus": "Graphiti communities: supporter journey changes, engagement tooling, or fan feedback, Job postings: Fan Engagement Manager, League CRM Lead",
+      "graphiti_sources": [
+        "Graphiti communities: supporter journey changes, engagement tooling, or fan feedback",
+        "Job postings: Fan Engagement Manager, League CRM Lead",
+        "RFP keywords: fan experience, supporter platform, loyalty, CRM, RFP, Request for Proposal, tender, ITT, procurement"
+      ],
+      "graphiti_lookback_days": 180,
+      "question_text": "What evidence in the last 180 days shows Major League Cricket is upgrading fan experience or supporter engagement?",
+      "query": "\"Major League Cricket\" What evidence in the last 180 days shows Major League Cricket is upgrading fan experience or supporter engagement",
+      "search_strategy": {
+        "search_queries": [
+          "\"Major League Cricket\" What evidence in the last 180 days shows Major League Cricket is upgrading fan experience or supporter engagement"
+        ]
+      },
+      "entity_name": "Major League Cricket"
+    }
+  ],
+  "answers": [
+    {
+      "question_id": "sl_league_mobile_app",
+      "question_text": "What evidence in the last 180 days shows Major League Cricket is planning or updating a league mobile app?",
+      "question": "What evidence in the last 180 days shows Major League Cricket is planning or updating a league mobile app?",
+      "query": "\"Major League Cricket\" mobile app",
+      "entity_name": "Major League Cricket",
+      "model_used": "opencode/gpt-5-nano",
+      "session_id": "cli-1",
+      "agentic_plan": {
+        "stop_rule": "continue for up to undefined hops within OpenCode steps budget"
+      },
+      "reasoning": {
+        "structured_output": {
+          "question": "What evidence in the last 180 days shows Major League Cricket is planning or updating a league mobile app?",
+          "answer": "Evidence within the last 180 days includes: 1) Jan 30, 2026: Major League Cricket announced a partnership with SecuTix to provide ticketing solutions and a fully integrated ticketing system, signaling a mobile-first approach to tickets (i.e., a mobile app or mobile ticketing component). 2) Related coverage and posts describe a mobile-first ticketing strategy as part of the SecuTix partnership. 3) The official MLC Fan FAQ references a Major League Cricket Mobile Ticketing App, confirming the existence of an app-based ticketing channel. Together, these indicate planning or updating of a mobile app/ticketing experience for MLC.",
+          "context": "MLC has moved to engage a dedicated ticketing platform provider (SecuTix) and publicized a mobile-first ticketing approach in early 2026, which implies development or update of a league mobile app or mobile ticketing system.",
+          "sources": [
+            {
+              "url": "https://www.secutix.com/news/major-league-cricket-expands-throughout-us-secutix-0",
+              "title": "Major League Cricket expands throughout the US with ticketing partner SECUTIX",
+              "description": "SecuTix news release about MLC partnership and mobile-first ticketing."
+            },
+            {
+              "url": "https://www.sportcal.com/sponsorship/mlc-taps-secutix-for-ticketing-solutions/",
+              "title": "MLC taps Secutix for ticketing solutions",
+              "description": "Sportcal coverage of MLC selecting SecuTix for ticketing solutions (Jan 2026)."
+            },
+            {
+              "url": "https://www.linkedin.com/posts/theticketingbusiness_major-league-cricket-partners-with-secutix-activity-7422985891259867137-EJCG",
+              "title": "LinkedIn: Major League Cricket partners with Secutix",
+              "description": "Post describing mobile-first ticketing as part of the partnership."
+            },
+            {
+              "url": "https://www.facebook.com/MLC/posts/were-thrilled-to-welcome-secutix-as-major-league-crickets-official-ticketing-par/948478980835565/",
+              "title": "MLC official ticketing partner SecuTix – Facebook",
+              "description": "Announcement of SecuTix partnership."
+            },
+            {
+              "url": "https://www.majorleaguecricket.com/fanfaq",
+              "title": "Fan FAQ",
+              "description": "References to the Major League Cricket Mobile Ticketing App."
+            }
+          ],
+          "confidence": 0.8
+        },
+        "prompt_trace": {
+          "exit_code": 0,
+          "stdout_length": 37727,
+          "stderr_length": 0,
+          "has_structured_output": true
+        },
+        "message_trace": [
+          {
+            "role": "assistant",
+            "completed": true,
+            "type": "cli-run",
+            "has_structured_output": true,
+            "part_count": 1
+          }
+        ]
+      },
+      "prompt_trace": {
+        "exit_code": 0,
+        "stdout_length": 37727,
+        "stderr_length": 0,
+        "has_structured_output": true
+      },
+      "message_trace": [
+        {
+          "role": "assistant",
+          "completed": true,
+          "type": "cli-run",
+          "has_structured_output": true,
+          "part_count": 1
+        }
+      ],
+      "execution_query": "\"Major League Cricket\" mobile app",
+      "answer": "Evidence within the last 180 days includes: 1) Jan 30, 2026: Major League Cricket announced a partnership with SecuTix to provide ticketing solutions and a fully integrated ticketing system, signaling a mobile-first approach to tickets (i.e., a mobile app or mobile ticketing component). 2) Related coverage and posts describe a mobile-first ticketing strategy as part of the SecuTix partnership. 3) The official MLC Fan FAQ references a Major League Cricket Mobile Ticketing App, confirming the existence of an app-based ticketing channel. Together, these indicate planning or updating of a mobile app/ticketing experience for MLC.",
+      "signal_type": "NO_SIGNAL",
+      "confidence": 0.8,
+      "validation_state": "validated",
+      "evidence_url": {
+        "url": "https://www.secutix.com/news/major-league-cricket-expands-throughout-us-secutix-0",
+        "title": "Major League Cricket expands throughout the US with ticketing partner SECUTIX",
+        "description": "SecuTix news release about MLC partnership and mobile-first ticketing."
+      },
+      "recommended_next_query": "",
+      "notes": "MLC has moved to engage a dedicated ticketing platform provider (SecuTix) and publicized a mobile-first ticketing approach in early 2026, which implies development or update of a league mobile app or mobile ticketing system."
+    },
+    {
+      "question_id": "sl_league_fan_experience",
+      "question_text": "What evidence in the last 180 days shows Major League Cricket is upgrading fan experience or supporter engagement?",
+      "question": "What evidence in the last 180 days shows Major League Cricket is upgrading fan experience or supporter engagement?",
+      "query": "\"Major League Cricket\" What evidence in the last 180 days shows Major League Cricket is upgrading fan experience or supporter engagement",
+      "entity_name": "Major League Cricket",
+      "model_used": "opencode/gpt-5-nano",
+      "session_id": "cli-2",
+      "agentic_plan": {
+        "stop_rule": "continue for up to undefined hops within OpenCode steps budget"
+      },
+      "reasoning": {
+        "structured_output": {
+          "question": "\"Major League Cricket\" What evidence in the last 180 days shows Major League Cricket is upgrading fan experience or supporter engagement",
+          "answer": "Evidence: On January 27, 2026, the Seattle Orcas announced two Women’s Cricket Brand Ambassadors, Anika Kolan and Jivana Aras, to lead women’s clinics, training sessions, and community outreach, aimed at expanding visibility of women’s cricket and engaging fans across the USA.",
+          "context": "Seattle Orcas press release (via EIN Presswire, republished by The Gardner News) dated Jan 27, 2026, describing ambassador-led initiatives to promote women’s cricket, clinics, and community outreach as a means to engage fans and supporters.",
+          "sources": [
+            "https://www.thegardnernews.com/press-release/story/26018/seattle-orcas-announce-anika-kolan-and-jivana-aras-as-womens-cricket-brand-ambassadors/"
+          ],
+          "confidence": 0.8
+        },
+        "prompt_trace": {
+          "exit_code": 0,
+          "stdout_length": 33940,
+          "stderr_length": 0,
+          "has_structured_output": true
+        },
+        "message_trace": [
+          {
+            "role": "assistant",
+            "completed": true,
+            "type": "cli-run",
+            "has_structured_output": true,
+            "part_count": 1
+          }
+        ]
+      },
+      "prompt_trace": {
+        "exit_code": 0,
+        "stdout_length": 33940,
+        "stderr_length": 0,
+        "has_structured_output": true
+      },
+      "message_trace": [
+        {
+          "role": "assistant",
+          "completed": true,
+          "type": "cli-run",
+          "has_structured_output": true,
+          "part_count": 1
+        }
+      ],
+      "execution_query": "\"Major League Cricket\" What evidence in the last 180 days shows Major League Cricket is upgrading fan experience or supporter engagement",
+      "answer": "Evidence: On January 27, 2026, the Seattle Orcas announced two Women’s Cricket Brand Ambassadors, Anika Kolan and Jivana Aras, to lead women’s clinics, training sessions, and community outreach, aimed at expanding visibility of women’s cricket and engaging fans across the USA.",
+      "signal_type": "NO_SIGNAL",
+      "confidence": 0.8,
+      "validation_state": "validated",
+      "evidence_url": "https://www.thegardnernews.com/press-release/story/26018/seattle-orcas-announce-anika-kolan-and-jivana-aras-as-womens-cricket-brand-ambassadors/",
+      "recommended_next_query": "",
+      "notes": "Seattle Orcas press release (via EIN Presswire, republished by The Gardner News) dated Jan 27, 2026, describing ambassador-led initiatives to promote women’s cricket, clinics, and community outreach as a means to engage fans and supporters."
+    }
+  ],
+  "categories": [
+    {
+      "category": "general",
+      "question_count": 2,
+      "validated_count": 2,
+      "pending_count": 0,
+      "no_signal_count": 0,
+      "retry_count": 0
+    }
+  ],
+  "run_rollup": {
+    "run_started_at": "2026-03-30T18:31:44.511Z",
+    "entity_name": "Major League Cricket",
+    "entity_id": "major-league-cricket",
+    "entity_type": "LEAGUE",
+    "preset": "major-league-cricket",
+    "questions_total": 2,
+    "questions_validated": 2,
+    "questions_no_signal": 0,
+    "questions_provisional": 0,
+    "meta_result_path": "/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_opencode_batch_20260330_183515_meta.json",
+    "tracker_path": "/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_major-league-cricket_tracker.json",
+    "question_result_paths": [
+      "/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_opencode_batch_20260330_183515_question_001.json",
+      "/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_opencode_batch_20260330_183515_question_002.json"
+    ],
+    "question_results_path": "/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_opencode_batch_20260330_183515_meta.json",
+    "transcript_path": "/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_opencode_batch_20260330_183515.txt",
+    "question_first_run_path": "/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_opencode_batch_20260330_183515_question_first_run_v1.json"
+  },
+  "merge_patch": {
+    "metadata": {
+      "question_first": {
+        "enabled": true,
+        "schema_version": "question_first_run_v1",
+        "questions_answered": 2,
+        "categories": [
+          {
+            "category": "general",
+            "question_count": 2,
+            "validated_count": 2,
+            "pending_count": 0,
+            "no_signal_count": 0,
+            "retry_count": 0
+          }
+        ],
+        "question_source_path": "/var/folders/hj/cw6t72kn5wd7cjqht1tpvfl00000gp/T/tmpd5v1eby3.json",
+        "generated_at": "2026-03-30T18:35:15.862Z",
+        "run_rollup": {
+          "run_started_at": "2026-03-30T18:31:44.511Z",
+          "entity_name": "Major League Cricket",
+          "entity_id": "major-league-cricket",
+          "entity_type": "LEAGUE",
+          "preset": "major-league-cricket",
+          "questions_total": 2,
+          "questions_validated": 2,
+          "questions_no_signal": 0,
+          "questions_provisional": 0,
+          "meta_result_path": "/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_opencode_batch_20260330_183515_meta.json",
+          "tracker_path": "/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_major-league-cricket_tracker.json",
+          "question_result_paths": [
+            "/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_opencode_batch_20260330_183515_question_001.json",
+            "/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_opencode_batch_20260330_183515_question_002.json"
+          ],
+          "question_results_path": "/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_opencode_batch_20260330_183515_meta.json",
+          "transcript_path": "/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_opencode_batch_20260330_183515.txt",
+          "question_first_run_path": "/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_opencode_batch_20260330_183515_question_first_run_v1.json"
+        },
+        "warnings": []
+      }
+    },
+    "question_first": {
+      "enabled": true,
+      "schema_version": "question_first_run_v1",
+      "questions_answered": 2,
+      "categories": [
+        {
+          "category": "general",
+          "question_count": 2,
+          "validated_count": 2,
+          "pending_count": 0,
+          "no_signal_count": 0,
+          "retry_count": 0
+        }
+      ],
+      "answers": [
+        {
+          "question_id": "sl_league_mobile_app",
+          "question_text": "What evidence in the last 180 days shows Major League Cricket is planning or updating a league mobile app?",
+          "question": "What evidence in the last 180 days shows Major League Cricket is planning or updating a league mobile app?",
+          "query": "\"Major League Cricket\" mobile app",
+          "entity_name": "Major League Cricket",
+          "model_used": "opencode/gpt-5-nano",
+          "session_id": "cli-1",
+          "agentic_plan": {
+            "stop_rule": "continue for up to undefined hops within OpenCode steps budget"
+          },
+          "reasoning": {
+            "structured_output": {
+              "question": "What evidence in the last 180 days shows Major League Cricket is planning or updating a league mobile app?",
+              "answer": "Evidence within the last 180 days includes: 1) Jan 30, 2026: Major League Cricket announced a partnership with SecuTix to provide ticketing solutions and a fully integrated ticketing system, signaling a mobile-first approach to tickets (i.e., a mobile app or mobile ticketing component). 2) Related coverage and posts describe a mobile-first ticketing strategy as part of the SecuTix partnership. 3) The official MLC Fan FAQ references a Major League Cricket Mobile Ticketing App, confirming the existence of an app-based ticketing channel. Together, these indicate planning or updating of a mobile app/ticketing experience for MLC.",
+              "context": "MLC has moved to engage a dedicated ticketing platform provider (SecuTix) and publicized a mobile-first ticketing approach in early 2026, which implies development or update of a league mobile app or mobile ticketing system.",
+              "sources": [
+                {
+                  "url": "https://www.secutix.com/news/major-league-cricket-expands-throughout-us-secutix-0",
+                  "title": "Major League Cricket expands throughout the US with ticketing partner SECUTIX",
+                  "description": "SecuTix news release about MLC partnership and mobile-first ticketing."
+                },
+                {
+                  "url": "https://www.sportcal.com/sponsorship/mlc-taps-secutix-for-ticketing-solutions/",
+                  "title": "MLC taps Secutix for ticketing solutions",
+                  "description": "Sportcal coverage of MLC selecting SecuTix for ticketing solutions (Jan 2026)."
+                },
+                {
+                  "url": "https://www.linkedin.com/posts/theticketingbusiness_major-league-cricket-partners-with-secutix-activity-7422985891259867137-EJCG",
+                  "title": "LinkedIn: Major League Cricket partners with Secutix",
+                  "description": "Post describing mobile-first ticketing as part of the partnership."
+                },
+                {
+                  "url": "https://www.facebook.com/MLC/posts/were-thrilled-to-welcome-secutix-as-major-league-crickets-official-ticketing-par/948478980835565/",
+                  "title": "MLC official ticketing partner SecuTix – Facebook",
+                  "description": "Announcement of SecuTix partnership."
+                },
+                {
+                  "url": "https://www.majorleaguecricket.com/fanfaq",
+                  "title": "Fan FAQ",
+                  "description": "References to the Major League Cricket Mobile Ticketing App."
+                }
+              ],
+              "confidence": 0.8
+            },
+            "prompt_trace": {
+              "exit_code": 0,
+              "stdout_length": 37727,
+              "stderr_length": 0,
+              "has_structured_output": true
+            },
+            "message_trace": [
+              {
+                "role": "assistant",
+                "completed": true,
+                "type": "cli-run",
+                "has_structured_output": true,
+                "part_count": 1
+              }
+            ]
+          },
+          "prompt_trace": {
+            "exit_code": 0,
+            "stdout_length": 37727,
+            "stderr_length": 0,
+            "has_structured_output": true
+          },
+          "message_trace": [
+            {
+              "role": "assistant",
+              "completed": true,
+              "type": "cli-run",
+              "has_structured_output": true,
+              "part_count": 1
+            }
+          ],
+          "execution_query": "\"Major League Cricket\" mobile app",
+          "answer": "Evidence within the last 180 days includes: 1) Jan 30, 2026: Major League Cricket announced a partnership with SecuTix to provide ticketing solutions and a fully integrated ticketing system, signaling a mobile-first approach to tickets (i.e., a mobile app or mobile ticketing component). 2) Related coverage and posts describe a mobile-first ticketing strategy as part of the SecuTix partnership. 3) The official MLC Fan FAQ references a Major League Cricket Mobile Ticketing App, confirming the existence of an app-based ticketing channel. Together, these indicate planning or updating of a mobile app/ticketing experience for MLC.",
+          "signal_type": "NO_SIGNAL",
+          "confidence": 0.8,
+          "validation_state": "validated",
+          "evidence_url": {
+            "url": "https://www.secutix.com/news/major-league-cricket-expands-throughout-us-secutix-0",
+            "title": "Major League Cricket expands throughout the US with ticketing partner SECUTIX",
+            "description": "SecuTix news release about MLC partnership and mobile-first ticketing."
+          },
+          "recommended_next_query": "",
+          "notes": "MLC has moved to engage a dedicated ticketing platform provider (SecuTix) and publicized a mobile-first ticketing approach in early 2026, which implies development or update of a league mobile app or mobile ticketing system."
+        },
+        {
+          "question_id": "sl_league_fan_experience",
+          "question_text": "What evidence in the last 180 days shows Major League Cricket is upgrading fan experience or supporter engagement?",
+          "question": "What evidence in the last 180 days shows Major League Cricket is upgrading fan experience or supporter engagement?",
+          "query": "\"Major League Cricket\" What evidence in the last 180 days shows Major League Cricket is upgrading fan experience or supporter engagement",
+          "entity_name": "Major League Cricket",
+          "model_used": "opencode/gpt-5-nano",
+          "session_id": "cli-2",
+          "agentic_plan": {
+            "stop_rule": "continue for up to undefined hops within OpenCode steps budget"
+          },
+          "reasoning": {
+            "structured_output": {
+              "question": "\"Major League Cricket\" What evidence in the last 180 days shows Major League Cricket is upgrading fan experience or supporter engagement",
+              "answer": "Evidence: On January 27, 2026, the Seattle Orcas announced two Women’s Cricket Brand Ambassadors, Anika Kolan and Jivana Aras, to lead women’s clinics, training sessions, and community outreach, aimed at expanding visibility of women’s cricket and engaging fans across the USA.",
+              "context": "Seattle Orcas press release (via EIN Presswire, republished by The Gardner News) dated Jan 27, 2026, describing ambassador-led initiatives to promote women’s cricket, clinics, and community outreach as a means to engage fans and supporters.",
+              "sources": [
+                "https://www.thegardnernews.com/press-release/story/26018/seattle-orcas-announce-anika-kolan-and-jivana-aras-as-womens-cricket-brand-ambassadors/"
+              ],
+              "confidence": 0.8
+            },
+            "prompt_trace": {
+              "exit_code": 0,
+              "stdout_length": 33940,
+              "stderr_length": 0,
+              "has_structured_output": true
+            },
+            "message_trace": [
+              {
+                "role": "assistant",
+                "completed": true,
+                "type": "cli-run",
+                "has_structured_output": true,
+                "part_count": 1
+              }
+            ]
+          },
+          "prompt_trace": {
+            "exit_code": 0,
+            "stdout_length": 33940,
+            "stderr_length": 0,
+            "has_structured_output": true
+          },
+          "message_trace": [
+            {
+              "role": "assistant",
+              "completed": true,
+              "type": "cli-run",
+              "has_structured_output": true,
+              "part_count": 1
+            }
+          ],
+          "execution_query": "\"Major League Cricket\" What evidence in the last 180 days shows Major League Cricket is upgrading fan experience or supporter engagement",
+          "answer": "Evidence: On January 27, 2026, the Seattle Orcas announced two Women’s Cricket Brand Ambassadors, Anika Kolan and Jivana Aras, to lead women’s clinics, training sessions, and community outreach, aimed at expanding visibility of women’s cricket and engaging fans across the USA.",
+          "signal_type": "NO_SIGNAL",
+          "confidence": 0.8,
+          "validation_state": "validated",
+          "evidence_url": "https://www.thegardnernews.com/press-release/story/26018/seattle-orcas-announce-anika-kolan-and-jivana-aras-as-womens-cricket-brand-ambassadors/",
+          "recommended_next_query": "",
+          "notes": "Seattle Orcas press release (via EIN Presswire, republished by The Gardner News) dated Jan 27, 2026, describing ambassador-led initiatives to promote women’s cricket, clinics, and community outreach as a means to engage fans and supporters."
+        }
+      ],
+      "run_rollup": {
+        "run_started_at": "2026-03-30T18:31:44.511Z",
+        "entity_name": "Major League Cricket",
+        "entity_id": "major-league-cricket",
+        "entity_type": "LEAGUE",
+        "preset": "major-league-cricket",
+        "questions_total": 2,
+        "questions_validated": 2,
+        "questions_no_signal": 0,
+        "questions_provisional": 0,
+        "meta_result_path": "/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_opencode_batch_20260330_183515_meta.json",
+        "tracker_path": "/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_major-league-cricket_tracker.json",
+        "question_result_paths": [
+          "/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_opencode_batch_20260330_183515_question_001.json",
+          "/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_opencode_batch_20260330_183515_question_002.json"
+        ],
+        "question_results_path": "/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_opencode_batch_20260330_183515_meta.json",
+        "transcript_path": "/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_opencode_batch_20260330_183515.txt",
+        "question_first_run_path": "/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_opencode_batch_20260330_183515_question_first_run_v1.json"
+      },
+      "question_source_path": "/var/folders/hj/cw6t72kn5wd7cjqht1tpvfl00000gp/T/tmpd5v1eby3.json",
+      "generated_at": "2026-03-30T18:35:15.862Z",
+      "warnings": []
+    },
+    "questions": [
+      {
+        "question_id": "sl_league_mobile_app",
+        "question": "What evidence in the last 180 days shows Major League Cricket is planning or updating a league mobile app?",
+        "pack_role": "discovery",
+        "pack_stage": "entity_type",
+        "yp_service_fit": [
+          "MOBILE_APPS",
+          "FAN_ENGAGEMENT"
+        ],
+        "budget_range": "£200K-£500K",
+        "yp_advantage": "Olympic mobile app experience, multi-club deployment capability",
+        "positioning_strategy": "STRATEGIC_PARTNER",
+        "hypothesis_template": "{entity} will commission or update a league mobile app (£200K-£500K)",
+        "next_signals": [
+          "Graphiti communities: league app changes, member club coordination, or vendor switches",
+          "Job postings: Mobile Product Manager, League Digital Director",
+          "RFP keywords: mobile app, fan app, React Native, RFP, Request for Proposal, tender, ITT, EOI, procurement",
+          "League announcements: mobile strategy, app relaunch, digital fan experience"
+        ],
+        "hop_types": [
+          "RFP_PAGE",
+          "CAREERS_PAGE",
+          "PRESS_RELEASE"
+        ],
+        "accept_criteria": "Evidence of a league app project or a recent vendor search",
+        "confidence_boost": 0.2,
+        "graphiti_focus": "Graphiti communities: league app changes, member club coordination, or vendor switches, Job postings: Mobile Product Manager, League Digital Director",
+        "graphiti_sources": [
+          "Graphiti communities: league app changes, member club coordination, or vendor switches",
+          "Job postings: Mobile Product Manager, League Digital Director",
+          "RFP keywords: mobile app, fan app, React Native, RFP, Request for Proposal, tender, ITT, EOI, procurement"
+        ],
+        "graphiti_lookback_days": 180,
+        "question_text": "What evidence in the last 180 days shows Major League Cricket is planning or updating a league mobile app?",
+        "query": "\"Major League Cricket\" mobile app",
+        "search_strategy": {
+          "search_queries": [
+            "\"Major League Cricket\" mobile app",
+            "\"Major League Cricket\" fan app",
+            "\"Major League Cricket\" official app",
+            "\"Major League Cricket\" fan engagement platform",
+            "\"Major League Cricket\" React Native"
+          ]
+        },
+        "entity_name": "Major League Cricket",
+        "answer": "Evidence within the last 180 days includes: 1) Jan 30, 2026: Major League Cricket announced a partnership with SecuTix to provide ticketing solutions and a fully integrated ticketing system, signaling a mobile-first approach to tickets (i.e., a mobile app or mobile ticketing component). 2) Related coverage and posts describe a mobile-first ticketing strategy as part of the SecuTix partnership. 3) The official MLC Fan FAQ references a Major League Cricket Mobile Ticketing App, confirming the existence of an app-based ticketing channel. Together, these indicate planning or updating of a mobile app/ticketing experience for MLC.",
+        "confidence": 0.8,
+        "validation_state": "validated",
+        "evidence_url": {
+          "url": "https://www.secutix.com/news/major-league-cricket-expands-throughout-us-secutix-0",
+          "title": "Major League Cricket expands throughout the US with ticketing partner SECUTIX",
+          "description": "SecuTix news release about MLC partnership and mobile-first ticketing."
+        },
+        "signal_type": "NO_SIGNAL",
+        "recommended_next_query": "",
+        "notes": "MLC has moved to engage a dedicated ticketing platform provider (SecuTix) and publicized a mobile-first ticketing approach in early 2026, which implies development or update of a league mobile app or mobile ticketing system.",
+        "question_first_answer": {
+          "question_id": "sl_league_mobile_app",
+          "question_text": "What evidence in the last 180 days shows Major League Cricket is planning or updating a league mobile app?",
+          "question": "What evidence in the last 180 days shows Major League Cricket is planning or updating a league mobile app?",
+          "query": "\"Major League Cricket\" mobile app",
+          "entity_name": "Major League Cricket",
+          "model_used": "opencode/gpt-5-nano",
+          "session_id": "cli-1",
+          "agentic_plan": {
+            "stop_rule": "continue for up to undefined hops within OpenCode steps budget"
+          },
+          "reasoning": {
+            "structured_output": {
+              "question": "What evidence in the last 180 days shows Major League Cricket is planning or updating a league mobile app?",
+              "answer": "Evidence within the last 180 days includes: 1) Jan 30, 2026: Major League Cricket announced a partnership with SecuTix to provide ticketing solutions and a fully integrated ticketing system, signaling a mobile-first approach to tickets (i.e., a mobile app or mobile ticketing component). 2) Related coverage and posts describe a mobile-first ticketing strategy as part of the SecuTix partnership. 3) The official MLC Fan FAQ references a Major League Cricket Mobile Ticketing App, confirming the existence of an app-based ticketing channel. Together, these indicate planning or updating of a mobile app/ticketing experience for MLC.",
+              "context": "MLC has moved to engage a dedicated ticketing platform provider (SecuTix) and publicized a mobile-first ticketing approach in early 2026, which implies development or update of a league mobile app or mobile ticketing system.",
+              "sources": [
+                {
+                  "url": "https://www.secutix.com/news/major-league-cricket-expands-throughout-us-secutix-0",
+                  "title": "Major League Cricket expands throughout the US with ticketing partner SECUTIX",
+                  "description": "SecuTix news release about MLC partnership and mobile-first ticketing."
+                },
+                {
+                  "url": "https://www.sportcal.com/sponsorship/mlc-taps-secutix-for-ticketing-solutions/",
+                  "title": "MLC taps Secutix for ticketing solutions",
+                  "description": "Sportcal coverage of MLC selecting SecuTix for ticketing solutions (Jan 2026)."
+                },
+                {
+                  "url": "https://www.linkedin.com/posts/theticketingbusiness_major-league-cricket-partners-with-secutix-activity-7422985891259867137-EJCG",
+                  "title": "LinkedIn: Major League Cricket partners with Secutix",
+                  "description": "Post describing mobile-first ticketing as part of the partnership."
+                },
+                {
+                  "url": "https://www.facebook.com/MLC/posts/were-thrilled-to-welcome-secutix-as-major-league-crickets-official-ticketing-par/948478980835565/",
+                  "title": "MLC official ticketing partner SecuTix – Facebook",
+                  "description": "Announcement of SecuTix partnership."
+                },
+                {
+                  "url": "https://www.majorleaguecricket.com/fanfaq",
+                  "title": "Fan FAQ",
+                  "description": "References to the Major League Cricket Mobile Ticketing App."
+                }
+              ],
+              "confidence": 0.8
+            },
+            "prompt_trace": {
+              "exit_code": 0,
+              "stdout_length": 37727,
+              "stderr_length": 0,
+              "has_structured_output": true
+            },
+            "message_trace": [
+              {
+                "role": "assistant",
+                "completed": true,
+                "type": "cli-run",
+                "has_structured_output": true,
+                "part_count": 1
+              }
+            ]
+          },
+          "prompt_trace": {
+            "exit_code": 0,
+            "stdout_length": 37727,
+            "stderr_length": 0,
+            "has_structured_output": true
+          },
+          "message_trace": [
+            {
+              "role": "assistant",
+              "completed": true,
+              "type": "cli-run",
+              "has_structured_output": true,
+              "part_count": 1
+            }
+          ],
+          "execution_query": "\"Major League Cricket\" mobile app",
+          "answer": "Evidence within the last 180 days includes: 1) Jan 30, 2026: Major League Cricket announced a partnership with SecuTix to provide ticketing solutions and a fully integrated ticketing system, signaling a mobile-first approach to tickets (i.e., a mobile app or mobile ticketing component). 2) Related coverage and posts describe a mobile-first ticketing strategy as part of the SecuTix partnership. 3) The official MLC Fan FAQ references a Major League Cricket Mobile Ticketing App, confirming the existence of an app-based ticketing channel. Together, these indicate planning or updating of a mobile app/ticketing experience for MLC.",
+          "signal_type": "NO_SIGNAL",
+          "confidence": 0.8,
+          "validation_state": "validated",
+          "evidence_url": {
+            "url": "https://www.secutix.com/news/major-league-cricket-expands-throughout-us-secutix-0",
+            "title": "Major League Cricket expands throughout the US with ticketing partner SECUTIX",
+            "description": "SecuTix news release about MLC partnership and mobile-first ticketing."
+          },
+          "recommended_next_query": "",
+          "notes": "MLC has moved to engage a dedicated ticketing platform provider (SecuTix) and publicized a mobile-first ticketing approach in early 2026, which implies development or update of a league mobile app or mobile ticketing system."
+        }
+      },
+      {
+        "question_id": "sl_league_fan_experience",
+        "question": "What evidence in the last 180 days shows Major League Cricket is upgrading fan experience or supporter engagement?",
+        "pack_role": "discovery",
+        "pack_stage": "entity_type",
+        "yp_service_fit": [
+          "FAN_ENGAGEMENT",
+          "MOBILE_APPS"
+        ],
+        "budget_range": "£150K-£400K",
+        "yp_advantage": "FIBA 3×3 fan engagement platform, multi-federation experience",
+        "positioning_strategy": "INNOVATION_PARTNER",
+        "hypothesis_template": "{entity} will invest in a fan-experience upgrade (£150K-£400K) within 12 months",
+        "next_signals": [
+          "Graphiti communities: supporter journey changes, engagement tooling, or fan feedback",
+          "Job postings: Fan Engagement Manager, League CRM Lead",
+          "RFP keywords: fan experience, supporter platform, loyalty, CRM, RFP, Request for Proposal, tender, ITT, procurement",
+          "League announcements: engagement strategy, supporter experience, fan platform"
+        ],
+        "hop_types": [
+          "RFP_PAGE",
+          "CAREERS_PAGE",
+          "PRESS_RELEASE"
+        ],
+        "accept_criteria": "Evidence of a fan-experience initiative or a recent vendor search",
+        "confidence_boost": 0.18,
+        "graphiti_focus": "Graphiti communities: supporter journey changes, engagement tooling, or fan feedback, Job postings: Fan Engagement Manager, League CRM Lead",
+        "graphiti_sources": [
+          "Graphiti communities: supporter journey changes, engagement tooling, or fan feedback",
+          "Job postings: Fan Engagement Manager, League CRM Lead",
+          "RFP keywords: fan experience, supporter platform, loyalty, CRM, RFP, Request for Proposal, tender, ITT, procurement"
+        ],
+        "graphiti_lookback_days": 180,
+        "question_text": "What evidence in the last 180 days shows Major League Cricket is upgrading fan experience or supporter engagement?",
+        "query": "\"Major League Cricket\" What evidence in the last 180 days shows Major League Cricket is upgrading fan experience or supporter engagement",
+        "search_strategy": {
+          "search_queries": [
+            "\"Major League Cricket\" What evidence in the last 180 days shows Major League Cricket is upgrading fan experience or supporter engagement"
+          ]
+        },
+        "entity_name": "Major League Cricket",
+        "answer": "Evidence: On January 27, 2026, the Seattle Orcas announced two Women’s Cricket Brand Ambassadors, Anika Kolan and Jivana Aras, to lead women’s clinics, training sessions, and community outreach, aimed at expanding visibility of women’s cricket and engaging fans across the USA.",
+        "confidence": 0.8,
+        "validation_state": "validated",
+        "evidence_url": "https://www.thegardnernews.com/press-release/story/26018/seattle-orcas-announce-anika-kolan-and-jivana-aras-as-womens-cricket-brand-ambassadors/",
+        "signal_type": "NO_SIGNAL",
+        "recommended_next_query": "",
+        "notes": "Seattle Orcas press release (via EIN Presswire, republished by The Gardner News) dated Jan 27, 2026, describing ambassador-led initiatives to promote women’s cricket, clinics, and community outreach as a means to engage fans and supporters.",
+        "question_first_answer": {
+          "question_id": "sl_league_fan_experience",
+          "question_text": "What evidence in the last 180 days shows Major League Cricket is upgrading fan experience or supporter engagement?",
+          "question": "What evidence in the last 180 days shows Major League Cricket is upgrading fan experience or supporter engagement?",
+          "query": "\"Major League Cricket\" What evidence in the last 180 days shows Major League Cricket is upgrading fan experience or supporter engagement",
+          "entity_name": "Major League Cricket",
+          "model_used": "opencode/gpt-5-nano",
+          "session_id": "cli-2",
+          "agentic_plan": {
+            "stop_rule": "continue for up to undefined hops within OpenCode steps budget"
+          },
+          "reasoning": {
+            "structured_output": {
+              "question": "\"Major League Cricket\" What evidence in the last 180 days shows Major League Cricket is upgrading fan experience or supporter engagement",
+              "answer": "Evidence: On January 27, 2026, the Seattle Orcas announced two Women’s Cricket Brand Ambassadors, Anika Kolan and Jivana Aras, to lead women’s clinics, training sessions, and community outreach, aimed at expanding visibility of women’s cricket and engaging fans across the USA.",
+              "context": "Seattle Orcas press release (via EIN Presswire, republished by The Gardner News) dated Jan 27, 2026, describing ambassador-led initiatives to promote women’s cricket, clinics, and community outreach as a means to engage fans and supporters.",
+              "sources": [
+                "https://www.thegardnernews.com/press-release/story/26018/seattle-orcas-announce-anika-kolan-and-jivana-aras-as-womens-cricket-brand-ambassadors/"
+              ],
+              "confidence": 0.8
+            },
+            "prompt_trace": {
+              "exit_code": 0,
+              "stdout_length": 33940,
+              "stderr_length": 0,
+              "has_structured_output": true
+            },
+            "message_trace": [
+              {
+                "role": "assistant",
+                "completed": true,
+                "type": "cli-run",
+                "has_structured_output": true,
+                "part_count": 1
+              }
+            ]
+          },
+          "prompt_trace": {
+            "exit_code": 0,
+            "stdout_length": 33940,
+            "stderr_length": 0,
+            "has_structured_output": true
+          },
+          "message_trace": [
+            {
+              "role": "assistant",
+              "completed": true,
+              "type": "cli-run",
+              "has_structured_output": true,
+              "part_count": 1
+            }
+          ],
+          "execution_query": "\"Major League Cricket\" What evidence in the last 180 days shows Major League Cricket is upgrading fan experience or supporter engagement",
+          "answer": "Evidence: On January 27, 2026, the Seattle Orcas announced two Women’s Cricket Brand Ambassadors, Anika Kolan and Jivana Aras, to lead women’s clinics, training sessions, and community outreach, aimed at expanding visibility of women’s cricket and engaging fans across the USA.",
+          "signal_type": "NO_SIGNAL",
+          "confidence": 0.8,
+          "validation_state": "validated",
+          "evidence_url": "https://www.thegardnernews.com/press-release/story/26018/seattle-orcas-announce-anika-kolan-and-jivana-aras-as-womens-cricket-brand-ambassadors/",
+          "recommended_next_query": "",
+          "notes": "Seattle Orcas press release (via EIN Presswire, republished by The Gardner News) dated Jan 27, 2026, describing ambassador-led initiatives to promote women’s cricket, clinics, and community outreach as a means to engage fans and supporters."
+        }
+      }
+    ]
+  }
+}

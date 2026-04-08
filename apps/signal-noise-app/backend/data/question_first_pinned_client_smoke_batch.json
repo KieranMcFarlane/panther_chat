@@ -1,0 +1,48 @@
+{
+  "schema_version": "question_first_scale_batch_v1",
+  "batch_name": "question-first-pinned-client-smoke",
+  "description": "Dedicated pinned-entity canonical regeneration batch for the client smoke journey.",
+  "entities": [
+    {
+      "entity_id": "arsenal",
+      "entity_name": "Arsenal Football Club",
+      "entity_type": "SPORT_CLUB"
+    },
+    {
+      "entity_id": "coventry-city",
+      "entity_name": "Coventry City",
+      "entity_type": "SPORT_CLUB"
+    },
+    {
+      "entity_id": "zimbabwe-cricket",
+      "entity_name": "Zimbabwe Cricket",
+      "entity_type": "SPORT_FEDERATION"
+    },
+    {
+      "entity_id": "major-league-cricket",
+      "entity_name": "Major League Cricket",
+      "entity_type": "SPORT_LEAGUE"
+    },
+    {
+      "entity_id": "zimbabwe-handball-federation",
+      "entity_name": "Zimbabwe Handball Federation",
+      "entity_type": "SPORT_FEDERATION"
+    }
+  ],
+  "metrics": {
+    "target_entities_completed": 5,
+    "target_entities_with_dossiers": 5,
+    "track_question_ids": [
+      "q1_foundation",
+      "q2_digital_stack",
+      "q3_procurement_signal",
+      "q4_decision_owner",
+      "q5_related_pois"
+    ],
+    "track_q2_modes": [
+      "deterministic_apify",
+      "retrieval_fallback",
+      "no_signal"
+    ]
+  }
+}

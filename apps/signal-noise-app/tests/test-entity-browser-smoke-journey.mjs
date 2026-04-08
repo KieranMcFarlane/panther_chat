@@ -23,6 +23,7 @@ test('entity browser smoke journey presents the five-entity operator path', () =
   assert.match(smokeSetSource, /Pinned smoke entity is missing from the canonical snapshot/)
   assert.match(smokeSetSource, /dossier_source === 'question_first_dossier'/)
   assert.match(smokeSetSource, /dossier_source === 'question_first_run'/)
+  assert.match(smokeSetSource, /dossierIndex\.dossier_status !== 'ready'/)
   assert.match(journeySource, /Open dossier/)
   assert.match(journeySource, /Find in browser/)
   assert.match(journeySource, /dossierStatus/)

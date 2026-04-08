@@ -55,7 +55,7 @@ export async function getEntityBrowserSmokeItems(): Promise<EntitySmokeJourneyIt
     const isCanonicalQuestionFirst = dossierIndex.dossier_source === 'question_first_dossier'
       || dossierIndex.dossier_source === 'question_first_run'
 
-    if (!isCanonicalQuestionFirst) {
+    if (!isCanonicalQuestionFirst || dossierIndex.dossier_status !== 'ready') {
       continue
     }
 

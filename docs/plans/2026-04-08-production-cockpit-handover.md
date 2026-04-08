@@ -55,6 +55,7 @@ Next step:
 - rerun the stable archetype or 25-entity batch using the latest `main`, or locate an external copy of the deleted `/tmp` outputs
 - promote only `status: ready` canonical `*_question_first_run_v1.json` or `*_question_first_dossier.json` artifacts into the app-facing artifact store
 - replace demo smoke dossiers only after each pinned smoke entity has a real canonical artifact
+- use `apps/signal-noise-app/backend/data/question_first_pinned_client_smoke_batch.json` as the dedicated regeneration manifest for the five pinned smoke entities instead of the 10/25-entity scale manifests
 
 ### 2. Rerun a narrow q3/q4 diagnostic slice
 
@@ -212,3 +213,38 @@ Remaining tuning work:
 
 - regenerate or recover real full-batch canonical artifacts before replacing the current tracked demo seed dossiers
 - continue q3/q4 quality hardening separately from the client demo checkpoint
+
+## Pinned Canonical Regeneration Update - 2026-04-08
+
+Dedicated manifest:
+
+- `apps/signal-noise-app/backend/data/question_first_pinned_client_smoke_batch.json`
+
+Captured regeneration root:
+
+- `/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-client-regeneration`
+
+Regeneration findings:
+
+- the first invocation failed immediately because a relative `--output-root` caused generated question source paths to resolve under `/Users/kieranmcfarlane/Downloads/panther_chat/apps/tmp/...` instead of the intended app-local `tmp/` directory
+- rerunning with an absolute output root fixed that path issue and produced live state files for Arsenal, Coventry City, Zimbabwe Cricket, and Major League Cricket
+- within the captured execution window, the rerun did not emit final `*_question_first_run_v1.json` or `*_question_first_dossier.json` artifacts for Arsenal, Coventry City, Zimbabwe Cricket, or Zimbabwe Handball Federation
+- Major League Cricket remains the only pinned entity with a real ready canonical artifact confirmed on disk
+
+Pinned entity classification after the captured pass:
+
+- `arsenal`: `generated_but_not_ready`
+- `coventry-city`: `generated_but_not_ready`
+- `zimbabwe-cricket`: `generated_but_not_ready`
+- `major-league-cricket`: `ready_canonical`
+- `zimbabwe-handball-federation`: `no_artifact`
+
+Promotion update:
+
+- promoted `.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_opencode_batch_20260330_183515_question_first_run_v1.json` into `apps/signal-noise-app/backend/data/dossiers/question_first/`
+- no other pinned entity was promoted because no other real ready canonical artifact exists yet
+
+Portable evidence:
+
+- `docs/evidence/2026-04-08-pinned-client-smoke-regeneration/README.md`
+- `docs/evidence/2026-04-08-pinned-client-smoke-regeneration/pinned_client_smoke_regeneration.json`

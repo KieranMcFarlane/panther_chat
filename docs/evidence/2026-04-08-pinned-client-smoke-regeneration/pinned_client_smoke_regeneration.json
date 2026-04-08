@@ -1,0 +1,51 @@
+{
+  "manifest_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/backend/data/question_first_pinned_client_smoke_batch.json",
+  "raw_output_root": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/tmp/question-first-diagnostics/2026-04-08-pinned-client-regeneration",
+  "promoted_artifacts": [
+    {
+      "entity_id": "major-league-cricket",
+      "source_path": "/Users/kieranmcfarlane/Downloads/panther_chat/.worktrees/opencode-question-first-ssot/backend/data/question_first_dossiers/major-league-cricket_opencode_batch_20260330_183515_question_first_run_v1.json",
+      "promoted_path": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/backend/data/dossiers/question_first/major-league-cricket_opencode_batch_20260330_183515_question_first_run_v1.json",
+      "status": "ready",
+      "questions_validated": 2,
+      "source_refs": 6
+    }
+  ],
+  "entities": [
+    {
+      "entity_id": "arsenal",
+      "entity_name": "Arsenal Football Club",
+      "classification": "generated_but_not_ready",
+      "promoted": false,
+      "notes": "State file shows q1_foundation and q2_digital_stack validated, but no final question_first_run_v1 or question_first_dossier artifact was emitted in the captured pass."
+    },
+    {
+      "entity_id": "coventry-city",
+      "entity_name": "Coventry City",
+      "classification": "generated_but_not_ready",
+      "promoted": false,
+      "notes": "State file shows q1_foundation validated, but no final question_first_run_v1 or question_first_dossier artifact was emitted in the captured pass."
+    },
+    {
+      "entity_id": "zimbabwe-cricket",
+      "entity_name": "Zimbabwe Cricket",
+      "classification": "generated_but_not_ready",
+      "promoted": false,
+      "notes": "State file shows q1_foundation and q2_digital_stack validated, but no final question_first_run_v1 or question_first_dossier artifact was emitted in the captured pass."
+    },
+    {
+      "entity_id": "major-league-cricket",
+      "entity_name": "Major League Cricket",
+      "classification": "ready_canonical",
+      "promoted": true,
+      "notes": "Existing real ready question_first_run_v1 artifact from the question-first SSOT worktree was promoted into the app-facing dossier root."
+    },
+    {
+      "entity_id": "zimbabwe-handball-federation",
+      "entity_name": "Zimbabwe Handball Federation",
+      "classification": "no_artifact",
+      "promoted": false,
+      "notes": "No state or final canonical artifact was emitted during the captured pass."
+    }
+  ]
+}
