@@ -1188,3 +1188,45 @@ async def test_launch_opencode_question_first_batch_returns_after_terminal_state
     assert question_first_run_path == artifact_path
     assert returned_state_path == state_path
     assert process.terminated is True
+
+
+@pytest.mark.asyncio
+async def test_launch_opencode_question_first_batch_raises_completed_without_artifact_error(tmp_path, monkeypatch):
+    output_dir = tmp_path / "out"
+    output_dir.mkdir(parents=True)
+
+    class _FakeProcess:
+        def poll(self):
+            return 0
+
+        def communicate(self, timeout=None):
+            return "", ""
+
+        def terminate(self):
+            return None
+
+        def kill(self):
+            return None
+
+    monkeypatch.setattr(runner.subprocess, "Popen", lambda *args, **kwargs: _FakeProcess())
+
+    source_payload = {
+        "entity_id": "arsenal",
+        "entity_name": "Arsenal Football Club",
+        "entity_type": "SPORT_CLUB",
+        "questions": [
+            {
+                "question_id": "q1_foundation",
+                "question_text": "When was Arsenal Football Club founded?",
+            }
+        ],
+    }
+
+    with pytest.raises(runner.CompletedWithoutArtifactError):
+        await runner._launch_opencode_question_first_batch(
+            source_payload=source_payload,
+            output_dir=output_dir,
+            preset="arsenal-atomic-matrix",
+            worktree_root=tmp_path,
+            opencode_timeout_ms=1000,
+        )

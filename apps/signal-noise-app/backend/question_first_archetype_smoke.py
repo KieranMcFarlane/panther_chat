@@ -13,13 +13,17 @@ import asyncio
 import json
 import logging
 import tempfile
+import re
+import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Awaitable, Callable, Dict, Iterable, List, Optional
+from urllib.parse import urlparse
 
 from dotenv import load_dotenv
 
 from question_first_dossier_runner import (
+    CompletedWithoutArtifactError,
     has_complete_question_first_artifacts,
     run_question_first_dossier,
 )
@@ -49,6 +53,196 @@ DEFAULT_ARCHETYPE_BATCH: List[Dict[str, Any]] = [
         "question_source_path": ROOT / "backend" / "data" / "question_sources" / "major_league_cricket_atomic_matrix.json",
     },
 ]
+
+_ALLOWED_SCALE_ENTITY_TYPES = {"SPORT_CLUB", "SPORT_FEDERATION", "SPORT_LEAGUE"}
+_NON_CREDIBLE_WEBSITE_HOSTS = {
+    "linkedin.com",
+    "www.linkedin.com",
+    "facebook.com",
+    "www.facebook.com",
+    "instagram.com",
+    "www.instagram.com",
+    "twitter.com",
+    "www.twitter.com",
+    "x.com",
+    "www.x.com",
+    "wikipedia.org",
+    "www.wikipedia.org",
+}
+
+
+def _canonical_slug(value: Any) -> str:
+    text = unicodedata.normalize("NFKD", str(value or "")).encode("ascii", "ignore").decode("ascii")
+    slug = re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+    return slug or "entity"
+
+
+def _extract_manifest_field(entity: Dict[str, Any], *keys: str) -> str:
+    for key in keys:
+        value = entity.get(key)
+        if value is None and isinstance(entity.get("metadata"), dict):
+            value = entity["metadata"].get(key)
+        if value is None and isinstance(entity.get("properties"), dict):
+            value = entity["properties"].get(key)
+        text = str(value or "").strip()
+        if text:
+            return text
+    return ""
+
+
+def _normalize_scale_entity_type(entity: Dict[str, Any]) -> str:
+    explicit_type = _extract_manifest_field(entity, "entity_type", "type").strip().upper()
+    if explicit_type in _ALLOWED_SCALE_ENTITY_TYPES:
+        return explicit_type
+
+    raw_type = _extract_manifest_field(entity, "entity_type", "type").strip().lower()
+    labels: List[str] = []
+    metadata = entity.get("metadata")
+    if isinstance(metadata, dict):
+        raw_labels = metadata.get("labels")
+        if isinstance(raw_labels, list):
+            labels.extend(str(label).strip().lower() for label in raw_labels if str(label).strip())
+    raw_labels = entity.get("labels")
+    if isinstance(raw_labels, list):
+        labels.extend(str(label).strip().lower() for label in raw_labels if str(label).strip())
+    label_blob = " ".join(labels)
+    entity_name = _extract_manifest_field(entity, "entity_name", "name").lower()
+
+    if raw_type in {"club", "sports club"} or "club" in label_blob:
+        return "SPORT_CLUB"
+    if raw_type in {"league", "sports league"} or "league" in label_blob:
+        return "SPORT_LEAGUE"
+    if raw_type in {"federation", "sports federation"}:
+        return "SPORT_FEDERATION"
+    federation_markers = ("federation", "association", "confederation", "governing", "international_federation")
+    if any(marker in label_blob for marker in federation_markers):
+        return "SPORT_FEDERATION"
+    if "league" in entity_name:
+        return "SPORT_LEAGUE"
+    if any(marker in entity_name for marker in ("federation", "association", "confederation", "board")):
+        return "SPORT_FEDERATION"
+    return explicit_type
+
+
+def _has_credible_website(entity: Dict[str, Any]) -> bool:
+    website = _extract_manifest_field(entity, "website", "official_website", "url", "domain")
+    if not website:
+        return False
+    parsed = urlparse(website if "://" in website else f"https://{website}")
+    host = (parsed.netloc or parsed.path or "").strip().lower()
+    if not host or "." not in host:
+        return False
+    return host not in _NON_CREDIBLE_WEBSITE_HOSTS
+
+
+def _looks_person_like(entity_name: str, entity_id: str) -> bool:
+    lowered_name = entity_name.strip().lower()
+    lowered_id = entity_id.strip().lower()
+    if not lowered_name:
+        return False
+    org_markers = (
+        "club",
+        "fc",
+        "cf",
+        "afc",
+        "united",
+        "city",
+        "league",
+        "federation",
+        "association",
+        "board",
+        "rugby",
+        "cricket",
+        "football",
+        "basketball",
+        "baseball",
+        "handball",
+        "hockey",
+        "tennis",
+        "golf",
+        "motorsport",
+        "olympic",
+    )
+    if any(marker in lowered_name for marker in org_markers) or any(marker in lowered_id for marker in org_markers):
+        return False
+    words = [word for word in re.split(r"\s+", entity_name.strip()) if word]
+    if len(words) not in {2, 3}:
+        return False
+    return all(re.fullmatch(r"[A-Z][A-Za-z'`.-]+", word) for word in words)
+
+
+def build_filtered_scale_manifest(
+    entities: Iterable[Dict[str, Any]],
+    *,
+    batch_name: str,
+    description: str,
+    default_rollout_phase: str = "phase_1_core",
+    require_website: bool = True,
+) -> Dict[str, Any]:
+    filtered_entities: List[Dict[str, Any]] = []
+    seen_ids: set[str] = set()
+    metrics = {
+        "source_entities_total": 0,
+        "selected_count": 0,
+        "excluded_missing_name": 0,
+        "excluded_unsupported_type": 0,
+        "excluded_placeholder": 0,
+        "excluded_person_like": 0,
+        "excluded_missing_website": 0,
+        "deduped": 0,
+        "default_rollout_phase": default_rollout_phase,
+        "require_website": bool(require_website),
+        "allowed_entity_types": sorted(_ALLOWED_SCALE_ENTITY_TYPES),
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+    for raw_entity in entities:
+        if not isinstance(raw_entity, dict):
+            continue
+        metrics["source_entities_total"] += 1
+        entity_name = _extract_manifest_field(raw_entity, "entity_name", "name")
+        if not entity_name:
+            metrics["excluded_missing_name"] += 1
+            continue
+        entity_type = _normalize_scale_entity_type(raw_entity)
+        if entity_type not in _ALLOWED_SCALE_ENTITY_TYPES:
+            metrics["excluded_unsupported_type"] += 1
+            continue
+        source_id = _extract_manifest_field(raw_entity, "entity_id", "id", "uuid")
+        if "missing_import" in source_id.lower() or "missing import" in entity_name.lower():
+            metrics["excluded_placeholder"] += 1
+            continue
+        if _looks_person_like(entity_name, source_id):
+            metrics["excluded_person_like"] += 1
+            continue
+        if require_website and not _has_credible_website(raw_entity):
+            metrics["excluded_missing_website"] += 1
+            continue
+
+        canonical_id = _canonical_slug(source_id)
+        if not canonical_id or canonical_id.isdigit():
+            canonical_id = _canonical_slug(entity_name)
+        if canonical_id in seen_ids:
+            metrics["deduped"] += 1
+            continue
+        seen_ids.add(canonical_id)
+        filtered_entities.append(
+            {
+                "entity_id": canonical_id,
+                "entity_name": entity_name,
+                "entity_type": entity_type,
+                "default_rollout_phase": default_rollout_phase,
+            }
+        )
+
+    metrics["selected_count"] = len(filtered_entities)
+    return {
+        "schema_version": "question_first_scale_batch_v1",
+        "batch_name": batch_name,
+        "description": description,
+        "entities": filtered_entities,
+        "metrics": metrics,
+    }
 
 
 def load_archetypes_from_manifest(manifest_path: Path, *, output_root: Path) -> List[Dict[str, Any]]:
@@ -338,6 +532,7 @@ def _build_scale_progress(summary: Dict[str, Any]) -> Dict[str, Any]:
     entities = entities if isinstance(entities, list) else []
     failure_breakdown = {
         "retryable_upstream_failure": 0,
+        "completed_without_artifact": 0,
         "stalled": 0,
         "grounding_failure": 0,
         "leadership_failure": 0,
@@ -366,6 +561,8 @@ def _build_scale_progress(summary: Dict[str, Any]) -> Dict[str, Any]:
 
         if status == "retryable_upstream_failure":
             failure_breakdown["retryable_upstream_failure"] += 1
+        elif status == "completed_without_artifact":
+            failure_breakdown["completed_without_artifact"] += 1
         elif status == "stalled":
             failure_breakdown["stalled"] += 1
         elif status != "completed":
@@ -438,10 +635,16 @@ async def run_smoke(
         },
     }
 
-    def classify_status(error_value: Optional[str]) -> str:
+    def classify_status(error_value: Optional[str], exc: Optional[Exception] = None) -> str:
+        if isinstance(exc, CompletedWithoutArtifactError):
+            return "completed_without_artifact"
         text = str(error_value or "").strip().lower()
         if "retryable_upstream_failure" in text:
             return "retryable_upstream_failure"
+        if "completed without producing a canonical question_first_run artifact" in text:
+            return "completed_without_artifact"
+        if "reached completed state without producing a canonical question_first_run artifact" in text:
+            return "completed_without_artifact"
         return "failed"
 
     for archetype in archetypes:
@@ -462,7 +665,7 @@ async def run_smoke(
         except Exception as exc:  # noqa: BLE001
             merged = {}
             error = str(exc)
-            status = classify_status(error)
+            status = classify_status(error, exc)
 
         question_first_run = merged.get("question_first_run") if isinstance(merged, dict) else {}
         run_rollup = question_first_run.get("run_rollup") if isinstance(question_first_run, dict) else {}

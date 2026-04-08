@@ -344,6 +344,33 @@ async def test_archetype_smoke_surfaces_retryable_upstream_failure_status(tmp_pa
 
 
 @pytest.mark.asyncio
+async def test_archetype_smoke_surfaces_completed_without_artifact_status(tmp_path):
+    async def incomplete_runner(*, question_source_path, output_dir, opencode_timeout_ms):
+        raise FileNotFoundError("OpenCode batch completed without producing a canonical question_first_run artifact")
+
+    output_root = tmp_path / "smoke"
+    summary = await smoke.run_smoke(
+        [
+            {
+                "entity_id": "arsenal",
+                "entity_name": "Arsenal Football Club",
+                "entity_type": "SPORT_CLUB",
+                "question_source_path": (
+                    Path("apps/signal-noise-app/backend/data/question_sources/arsenal_atomic_matrix.json")
+                ),
+            }
+        ],
+        output_root=output_root,
+        question_first_runner=incomplete_runner,
+        opencode_timeout_ms=180000,
+    )
+
+    assert summary["entities"][0]["status"] == "completed_without_artifact"
+    progress = json.loads((output_root / "question_first_scale_progress.json").read_text(encoding="utf-8"))
+    assert progress["failure_breakdown"]["completed_without_artifact"] == 1
+
+
+@pytest.mark.asyncio
 async def test_archetype_smoke_writes_scale_progress_artifact_with_client_ready_counts(tmp_path):
     runner = _FakeRunner()
     output_root = tmp_path / "smoke"
@@ -367,6 +394,58 @@ async def test_archetype_smoke_writes_scale_progress_artifact_with_client_ready_
     assert progress["last_successful_canonical_run_at"] == "2026-04-01T00:00:30+00:00"
     assert progress["failure_breakdown"]["completed_not_promotable"] == 3
     assert summary["scale_progress_path"] == str(progress_path)
+
+
+def test_filter_scale_manifest_entities_excludes_people_placeholders_and_missing_websites():
+    manifest = smoke.build_filtered_scale_manifest(
+        [
+            {
+                "entity_id": "arsenal",
+                "entity_name": "Arsenal Football Club",
+                "entity_type": "Club",
+                "website": "https://www.arsenal.com/",
+            },
+            {
+                "entity_id": "vinai_venkatesham_285",
+                "entity_name": "Vinai Venkatesham",
+                "entity_type": "SPORT_CLUB",
+                "website": "https://www.linkedin.com/in/vinai-venkatesham/",
+            },
+            {
+                "entity_id": "missing_import_bulgarian_basketball_1",
+                "entity_name": "Bulgarian Basketball Federation",
+                "entity_type": "Sports Entity",
+                "metadata": {"labels": ["Entity", "International_Federation"]},
+                "website": "https://basketball.bg/",
+            },
+            {
+                "entity_id": "144",
+                "entity_name": "West Ham United",
+                "entity_type": "SPORT_CLUB",
+                "website": "https://www.whufc.com/",
+            },
+            {
+                "entity_id": "blank-website",
+                "entity_name": "Unknown League",
+                "entity_type": "SPORT_LEAGUE",
+                "website": "",
+            },
+        ],
+        batch_name="question-first-scale-3000-live",
+        description="Filtered manifest",
+    )
+
+    entities = manifest["entities"]
+    metrics = manifest["metrics"]
+
+    assert [entity["entity_name"] for entity in entities] == ["Arsenal Football Club", "West Ham United"]
+    assert entities[0]["entity_id"] == "arsenal"
+    assert entities[1]["entity_id"] == "west-ham-united"
+    assert metrics["source_entities_total"] == 5
+    assert metrics["selected_count"] == 2
+    assert metrics["excluded_placeholder"] == 1
+    assert metrics["excluded_person_like"] == 1
+    assert metrics["excluded_missing_website"] == 1
 
 
 def test_build_rerun_archetypes_filters_failed_entities_and_failed_question(tmp_path):

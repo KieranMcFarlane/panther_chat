@@ -41,6 +41,10 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 
+class CompletedWithoutArtifactError(FileNotFoundError):
+    """Raised when a batch reaches a terminal success path but emits no canonical artifact."""
+
+
 def _iso_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -516,7 +520,7 @@ async def _launch_opencode_question_first_batch(
                         artifact_path = _find_existing_question_first_run_artifact(output_dir, source_payload)
                         if artifact_path is not None:
                             return artifact_path, state_path
-                        raise FileNotFoundError(
+                        raise CompletedWithoutArtifactError(
                             "OpenCode batch reached completed state without producing a canonical question_first_run artifact"
                         )
 
@@ -536,7 +540,9 @@ async def _launch_opencode_question_first_batch(
                     artifact_path = _find_existing_question_first_run_artifact(output_dir, source_payload)
                     if artifact_path is not None:
                         return artifact_path, state_path
-                    raise FileNotFoundError("OpenCode batch completed without producing a canonical question_first_run artifact")
+                    raise CompletedWithoutArtifactError(
+                        "OpenCode batch completed without producing a canonical question_first_run artifact"
+                    )
 
                 await asyncio.sleep(0.25)
 
