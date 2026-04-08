@@ -1,7 +1,7 @@
 /**
  * 🏆 Tenders Page
  * 
- * Live tender opportunities from our unified RFP analysis system
+ * Internal raw intake feed from our unified RFP analysis system
  */
 
 'use client';
@@ -634,15 +634,15 @@ const [filterSource, setFilterSource] = useState('all');
           <div className="max-w-3xl">
             <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-blue-300">
               <RefreshCw className="h-3.5 w-3.5" />
-              Live Intake Feed
+              Raw Intake Feed
             </div>
             <h1 className="text-3xl font-bold mb-2">RFP&apos;s & Tenders</h1>
             <p className="text-muted-foreground">
-              Freshly found procurement items and early signals in one place. This page is the broad intake surface before
-              items are curated into the opportunity shortlist.
+              Freshly found procurement items and early signals in one place. This is an internal intake surface before
+              anything is curated into the client-facing opportunity shortlist.
             </p>
             <p className="mt-3 text-sm text-muted-foreground">
-              Promote qualified intake into Opportunities once the source quality, timing, and Yellow Panther fit are strong enough.
+              Treat this feed as unvalidated scouting output. Only promoted, source-backed items should move into Opportunities.
             </p>
           </div>
           <Button onClick={() => window.location.reload()}>
@@ -755,7 +755,7 @@ const [filterSource, setFilterSource] = useState('all');
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{stats.total_opportunities}</div>
-                <div className="text-xs text-green-500 mt-1">Database-backed feed items</div>
+                <div className="text-xs text-green-500 mt-1">Internal intake rows</div>
               </CardContent>
             </Card>
         <Card>
@@ -764,7 +764,7 @@ const [filterSource, setFilterSource] = useState('all');
           </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">£{stats.total_value_millions}M</div>
-                <div className="text-xs text-blue-500 mt-1">Current visible feed</div>
+                <div className="text-xs text-blue-500 mt-1">Visible intake estimate</div>
               </CardContent>
             </Card>
         <Card>

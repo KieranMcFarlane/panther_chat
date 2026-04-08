@@ -595,10 +595,35 @@ async function handleGetOpportunities(searchParams: URLSearchParams) {
   const priority = searchParams.get('priority') || undefined;
   const orderBy = searchParams.get('orderBy') || 'detected_at';
   const orderDirection = searchParams.get('orderDirection') || 'desc';
+  const promotedOnly = searchParams.get('promoted_only') === 'true';
+
+  const now = new Date();
+  const isExpired = (deadline) => {
+    if (!deadline) return false;
+    const timestamp = Date.parse(deadline);
+    return Number.isFinite(timestamp) && timestamp < now.getTime();
+  };
+
+  const isPromotedOpportunity = (opp) => {
+    const hasCanonicalEntity = Boolean(opp.canonical_entity_id || opp.entity_id);
+    const hasVerifiedSource = typeof opp.source_url === 'string' && opp.source_url.trim().length > 0;
+    const category = String(opp.category || '').trim().toLowerCase();
+    const statusValue = String(opp.status || '').trim().toLowerCase();
+    const fitScore = Number(opp.yellow_panther_fit || 0);
+    const confidenceScore = Number(opp.confidence_score || 0);
+
+    if (!hasCanonicalEntity || !hasVerifiedSource) return false;
+    if (isExpired(opp.deadline) || statusValue === 'expired') return false;
+    if (!category || category === 'general') return false;
+    if (fitScore < 85) return false;
+    if (confidenceScore < 0.75) return false;
+
+    return true;
+  };
 
   try {
     console.log(`🏆 UNIFIED TENDERS API: Fetching from rfp_opportunities table (with source URLs)`);
-    console.log(`🔍 Filters:`, { status, source, limit, offset, category, min_fit, urgency, priority, orderBy, orderDirection });
+    console.log(`🔍 Filters:`, { status, source, limit, offset, category, min_fit, urgency, priority, orderBy, orderDirection, promotedOnly });
 
     // Build Supabase query - use rfp_opportunities table (325 records with source URLs)
     // rfp_opportunities table has source URLs populated and no RLS
@@ -669,6 +694,23 @@ async function handleGetOpportunities(searchParams: URLSearchParams) {
     
     // If no data from rfp_opportunities table, fall back to digital-first opportunities
     if (!opportunities || opportunities.length === 0) {
+      if (promotedOnly) {
+        return NextResponse.json({
+          opportunities: [],
+          total: 0,
+          filters: { status, source, category, min_fit, urgency, priority, promoted_only: true },
+          pagination: { limit, offset, has_more: false },
+          sources: {
+            rfp_opportunities: 0,
+            ai_detected: 0,
+            digital_first: 0,
+            comprehensive: 0,
+            static: 0
+          },
+          promoted_only: true,
+          source: 'Promoted opportunities only',
+        });
+      }
       console.log('📊 No data from rfp_opportunities table, falling back to digital-first opportunities');
       
       let fallbackData = alignedOpportunities;
@@ -792,24 +834,34 @@ async function handleGetOpportunities(searchParams: URLSearchParams) {
       return !shouldFilter;
     });
 
+    const clientFacingOpportunities = promotedOnly
+      ? filteredOpportunities.filter(isPromotedOpportunity)
+      : filteredOpportunities;
+
     console.log(`📊 URL Filtering Results:`);
     console.log(`   Total retrieved: ${mappedOpportunities.length}`);
     console.log(`   After URL filtering: ${filteredOpportunities.length}`);
     console.log(`   Filtered out: ${mappedOpportunities.length - filteredOpportunities.length}`);
+    if (promotedOnly) {
+      console.log(`   After promoted-only filtering: ${clientFacingOpportunities.length}`);
+    }
 
     return NextResponse.json({
-      opportunities: filteredOpportunities,
-      total: filteredOpportunities.length, // Update total to reflect filtered count
-      filters: { status, source, category, min_fit, urgency, priority },
-      pagination: { limit, offset, has_more: (offset + filteredOpportunities.length) < (count || 0) },
+      opportunities: clientFacingOpportunities,
+      total: clientFacingOpportunities.length,
+      filters: { status, source, category, min_fit, urgency, priority, promoted_only: promotedOnly },
+      pagination: { limit, offset, has_more: (offset + clientFacingOpportunities.length) < (count || 0) },
       sources: {
-        rfp_opportunities: filteredOpportunities.length,
+        rfp_opportunities: clientFacingOpportunities.length,
         ai_detected: 0,
         comprehensive: 0,
         static: 0
       },
       is_rfp_opportunities_data: true,
-      source: 'Yellow Panther rfp_opportunities Table (filtered - working URLs only)',
+      promoted_only: promotedOnly,
+      source: promotedOnly
+        ? 'Promoted opportunities only'
+        : 'Yellow Panther rfp_opportunities Table (filtered - working URLs only)',
       clean_run_filter: cleanRunDate ? {
         applied: true,
         cutoff_date: cleanRunDate,
@@ -821,6 +873,7 @@ async function handleGetOpportunities(searchParams: URLSearchParams) {
       filtering_stats: {
         total_retrieved: mappedOpportunities.length,
         after_url_filtering: filteredOpportunities.length,
+        after_promoted_only_filtering: promotedOnly ? clientFacingOpportunities.length : filteredOpportunities.length,
         filtered_out: mappedOpportunities.length - filteredOpportunities.length,
         filter_reason: 'Removed placeholder and broken URLs for better user experience'
       }

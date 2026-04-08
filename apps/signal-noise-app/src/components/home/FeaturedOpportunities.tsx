@@ -26,7 +26,7 @@ export function TopOpportunities() {
   useEffect(() => {
     const fetchRFPs = async () => {
       try {
-        const response = await fetch('/api/tenders?action=opportunities&limit=5&orderBy=yellow_panther_fit&orderDirection=desc')
+        const response = await fetch('/api/tenders?action=opportunities&limit=5&orderBy=yellow_panther_fit&orderDirection=desc&promoted_only=true')
         const data = await response.json()
         if (data.opportunities) {
           setRfps(data.opportunities.slice(0, 5))
@@ -104,7 +104,7 @@ export function TopOpportunities() {
               <TrendingUp className="w-5 h-5 text-yellow-400" />
               Top Opportunities for You
             </CardTitle>
-            <p className="text-sm text-fm-light-grey">Highest fit score opportunities</p>
+            <p className="text-sm text-fm-light-grey">Promoted production-backed opportunities only</p>
           </div>
           <Link href="/tenders">
             <Button variant="ghost" size="sm" className="text-fm-light-grey hover:text-white">

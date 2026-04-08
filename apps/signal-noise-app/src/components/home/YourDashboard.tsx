@@ -22,7 +22,7 @@ export function YourDashboard() {
     const fetchDashboardData = async () => {
       try {
         // Fetch new opportunities (last 24 hours)
-        const rfpResponse = await fetch('/api/tenders?action=opportunities&limit=100')
+        const rfpResponse = await fetch('/api/tenders?action=opportunities&limit=100&promoted_only=true')
         const rfpData = await rfpResponse.json()
         
         const now = new Date()
@@ -89,9 +89,9 @@ export function YourDashboard() {
       title: 'New Opportunities',
       count: data.newOpportunities,
       description: data.newOpportunities > 0 
-        ? `${data.newOpportunities} RFPs detected in the last 24 hours`
-        : 'No new opportunities',
-      link: '/tenders?filter=new',
+        ? `${data.newOpportunities} promoted opportunities updated in the last 24 hours`
+        : 'No new promoted opportunities',
+      link: '/opportunities',
       color: 'text-green-400',
       bgColor: 'bg-green-500/20',
       action: 'View New'
@@ -101,9 +101,9 @@ export function YourDashboard() {
       title: 'Upcoming Deadlines',
       count: data.upcomingDeadlines,
       description: data.upcomingDeadlines > 0
-        ? `${data.upcomingDeadlines} deadlines this week`
+        ? `${data.upcomingDeadlines} promoted opportunities close this week`
         : 'No upcoming deadlines',
-      link: '/tenders?filter=deadlines',
+      link: '/opportunities',
       color: 'text-orange-400',
       bgColor: 'bg-orange-500/20',
       action: 'View Calendar'
@@ -115,7 +115,7 @@ export function YourDashboard() {
       description: data.savedOpportunities > 0
         ? `${data.savedOpportunities} saved RFPs`
         : 'Save opportunities to track them',
-      link: '/tenders?filter=saved',
+      link: '/opportunities',
       color: 'text-yellow-400',
       bgColor: 'bg-yellow-500/20',
       action: 'Manage Saved'
@@ -165,7 +165,6 @@ export function YourDashboard() {
     </div>
   )
 }
-
 
 
 

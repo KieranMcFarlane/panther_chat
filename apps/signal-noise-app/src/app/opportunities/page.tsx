@@ -30,6 +30,8 @@ interface TenderOpportunityRecord {
   source_url: string | null;
   tags: string[] | null;
   detected_at: string | null;
+  status?: string | null;
+  confidence_score?: number | null;
 }
 
 interface OpportunityCard {
@@ -113,7 +115,7 @@ function OpportunitiesContent() {
         setLoading(true);
         setLoadError(null);
 
-        const response = await fetch('/api/tenders?action=opportunities&limit=100', {
+        const response = await fetch('/api/tenders?action=opportunities&limit=100&promoted_only=true', {
           cache: 'no-store',
         });
 
@@ -223,7 +225,7 @@ function OpportunitiesContent() {
               not for scanning the full raw feed.
             </p>
             <p className="mt-3 text-sm text-fm-medium-grey">
-              Only promoted shortlist candidates should live here. Raw intake stays in RFP&apos;s/Tenders.
+              Only promoted, non-expired, source-backed opportunities with canonical entity links live here. Raw intake stays in RFP&apos;s/Tenders.
             </p>
           </div>
           <Button className="self-start bg-yellow-500 text-black hover:bg-yellow-400 lg:self-auto">
