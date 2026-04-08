@@ -174,3 +174,15 @@ def test_universal_atomic_matrix_keeps_deterministic_and_derived_questions_out_o
     assert questions["q13_capability_gap"]["fallback_to_retrieval"] is False
     assert questions["q14_yp_fit"]["fallback_to_retrieval"] is False
     assert questions["q15_outreach_strategy"]["fallback_to_retrieval"] is False
+
+
+def test_universal_atomic_matrix_allows_default_rollout_phase_override():
+    payload = build_universal_atomic_question_source(
+        entity_type="SPORT_CLUB",
+        entity_name="Arsenal Football Club",
+        entity_id="arsenal-fc",
+        preset="arsenal-atomic-matrix",
+        default_rollout_phase="phase_3_decision",
+    )
+
+    assert payload["default_rollout_phase"] == "phase_3_decision"

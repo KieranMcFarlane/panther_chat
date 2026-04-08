@@ -6,27 +6,32 @@
     {
       "entity_id": "arsenal",
       "entity_name": "Arsenal Football Club",
-      "entity_type": "SPORT_CLUB"
+      "entity_type": "SPORT_CLUB",
+      "default_rollout_phase": "phase_3_decision"
     },
     {
       "entity_id": "coventry-city",
       "entity_name": "Coventry City",
-      "entity_type": "SPORT_CLUB"
+      "entity_type": "SPORT_CLUB",
+      "default_rollout_phase": "phase_3_decision"
     },
     {
       "entity_id": "zimbabwe-cricket",
       "entity_name": "Zimbabwe Cricket",
-      "entity_type": "SPORT_FEDERATION"
+      "entity_type": "SPORT_FEDERATION",
+      "default_rollout_phase": "phase_3_decision"
     },
     {
       "entity_id": "major-league-cricket",
       "entity_name": "Major League Cricket",
-      "entity_type": "SPORT_LEAGUE"
+      "entity_type": "SPORT_LEAGUE",
+      "default_rollout_phase": "phase_3_decision"
     },
     {
       "entity_id": "zimbabwe-handball-federation",
       "entity_name": "Zimbabwe Handball Federation",
-      "entity_type": "SPORT_FEDERATION"
+      "entity_type": "SPORT_FEDERATION",
+      "default_rollout_phase": "phase_3_decision"
     }
   ],
   "metrics": {

@@ -67,6 +67,7 @@ def load_archetypes_from_manifest(manifest_path: Path, *, output_root: Path) -> 
         entity_id = str(entity.get("entity_id") or "").strip()
         entity_name = str(entity.get("entity_name") or "").strip()
         entity_type = str(entity.get("entity_type") or "").strip()
+        default_rollout_phase = str(entity.get("default_rollout_phase") or "").strip() or None
         if not entity_id or not entity_name or not entity_type:
             raise ValueError("Each manifest entity must include entity_id, entity_name, and entity_type")
 
@@ -85,6 +86,7 @@ def load_archetypes_from_manifest(manifest_path: Path, *, output_root: Path) -> 
                         entity_id=entity_id,
                         preset=f"{_slugify(entity_id)}-atomic-matrix",
                         question_source_label=f"{_slugify(entity_id)}-atomic-matrix",
+                        default_rollout_phase=default_rollout_phase,
                     ),
                     indent=2,
                 )

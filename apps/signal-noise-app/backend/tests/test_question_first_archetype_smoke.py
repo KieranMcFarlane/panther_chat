@@ -288,6 +288,32 @@ def test_load_archetypes_from_manifest_materializes_missing_question_sources(tmp
     assert payload["entity_type"] == "SPORT_FEDERATION"
 
 
+def test_load_archetypes_from_manifest_preserves_default_rollout_phase_override(tmp_path):
+    manifest_path = tmp_path / "batch.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "question_first_scale_batch_v1",
+                "entities": [
+                    {
+                        "entity_id": "arsenal",
+                        "entity_name": "Arsenal Football Club",
+                        "entity_type": "SPORT_CLUB",
+                        "default_rollout_phase": "phase_3_decision",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    archetypes = smoke.load_archetypes_from_manifest(manifest_path, output_root=tmp_path / "out")
+
+    payload = json.loads(archetypes[0]["question_source_path"].read_text(encoding="utf-8"))
+
+    assert payload["default_rollout_phase"] == "phase_3_decision"
+
+
 def test_build_rerun_archetypes_filters_failed_entities_and_failed_question(tmp_path):
     output_root = tmp_path / "smoke"
     summary_path = output_root / "question_first_archetype_smoke.json"

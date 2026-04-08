@@ -488,6 +488,7 @@ def build_universal_atomic_question_source(
     *,
     preset: Optional[str] = None,
     question_source_label: Optional[str] = None,
+    default_rollout_phase: Optional[str] = None,
 ) -> Dict[str, Any]:
     resolved_preset = str(preset or f"{_slugify(entity_name)}-atomic-matrix").strip()
     source_label = str(question_source_label or resolved_preset).strip()
@@ -504,7 +505,7 @@ def build_universal_atomic_question_source(
         "pack_role": "discovery",
         "pack_stage": "atomic_matrix",
         "rollout_strategy": "phased_core",
-        "default_rollout_phase": "phase_1_core",
+        "default_rollout_phase": str(default_rollout_phase or "phase_1_core").strip() or "phase_1_core",
         "question_count": len(questions),
         "questions": questions,
     }
@@ -518,6 +519,7 @@ def write_universal_atomic_question_source(
     *,
     preset: Optional[str] = None,
     question_source_label: Optional[str] = None,
+    default_rollout_phase: Optional[str] = None,
 ) -> Path:
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -527,6 +529,7 @@ def write_universal_atomic_question_source(
         entity_id=entity_id,
         preset=preset,
         question_source_label=question_source_label,
+        default_rollout_phase=default_rollout_phase,
     )
     output_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return output_path
