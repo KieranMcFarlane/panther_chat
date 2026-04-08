@@ -590,6 +590,41 @@ def _build_scale_progress(summary: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+def _write_smoke_outputs(*, summary: Dict[str, Any], output_root: Path) -> None:
+    summary_path = output_root / "question_first_archetype_smoke.json"
+    md_path = output_root / "question_first_archetype_smoke.md"
+    scale_progress_path = output_root / "question_first_scale_progress.json"
+    scale_progress = _build_scale_progress(summary)
+    summary["scale_progress_path"] = str(scale_progress_path)
+    summary_path.write_text(json.dumps(summary, indent=2, default=str), encoding="utf-8")
+    scale_progress_path.write_text(json.dumps(scale_progress, indent=2, default=str), encoding="utf-8")
+
+    md_lines = [
+        "# Question-First Archetype Smoke",
+        "",
+        f"Run at: {summary['run_at']}",
+        f"OpenCode timeout ms: {summary['opencode_timeout_ms']}",
+        f"Entities completed: {summary['entities_completed']}/{summary['entities_total']}",
+        f"Validated questions: {summary['entities_with_validated_questions']}",
+        "",
+    ]
+    for entity in summary["entities"]:
+        md_lines.extend(
+            [
+                f"## {entity['entity_name']}",
+                f"- Entity ID: {entity['entity_id']}",
+                f"- Status: {entity['status']}",
+                f"- Entity runtime seconds: {entity['entity_runtime_seconds']}",
+                f"- Questions validated: {entity['questions_validated']}",
+                f"- Questions no signal: {entity['questions_no_signal']}",
+                f"- Enrichment enabled: {entity['baseline_features'].get('enrichment_enabled', False)}",
+                f"- Question-first report: {entity['question_first_report_path'] or 'n/a'}",
+                "",
+            ]
+        )
+    md_path.write_text("\n".join(md_lines).rstrip() + "\n", encoding="utf-8")
+
+
 def _load_repo_envs() -> None:
     seen: set[Path] = set()
     for parent in Path(__file__).resolve().parents:
@@ -614,12 +649,13 @@ async def run_smoke(
 ) -> Dict[str, Any]:
     _load_repo_envs()
     output_root.mkdir(parents=True, exist_ok=True)
+    archetype_list = list(archetypes)
 
     summary: Dict[str, Any] = {
         "run_at": _iso(),
         "opencode_timeout_ms": opencode_timeout_ms,
         "entities": [],
-        "entities_total": 0,
+        "entities_total": len(archetype_list),
         "entities_completed": 0,
         "entities_failed": 0,
         "entities_with_validated_questions": 0,
@@ -634,6 +670,7 @@ async def run_smoke(
             "connections_graph_enrichment_enabled": False,
         },
     }
+    _write_smoke_outputs(summary=summary, output_root=output_root)
 
     def classify_status(error_value: Optional[str], exc: Optional[Exception] = None) -> str:
         if isinstance(exc, CompletedWithoutArtifactError):
@@ -647,7 +684,7 @@ async def run_smoke(
             return "completed_without_artifact"
         return "failed"
 
-    for archetype in archetypes:
+    for archetype in archetype_list:
         entity_id = str(archetype["entity_id"])
         entity_name = str(archetype["entity_name"])
         question_source_path = Path(archetype["question_source_path"])
@@ -732,7 +769,6 @@ async def run_smoke(
             entity_summary["error"] = error
 
         summary["entities"].append(entity_summary)
-        summary["entities_total"] += 1
         if status == "completed":
             summary["entities_completed"] += 1
         else:
@@ -758,40 +794,11 @@ async def run_smoke(
         summary["baseline_features"]["connections_graph_enrichment_enabled"] = bool(summary["baseline_features"].get("connections_graph_enrichment_enabled")) or bool(
             baseline_features.get("connections_graph_enrichment_enabled")
         )
+        _write_smoke_outputs(summary=summary, output_root=output_root)
 
     summary_path = output_root / "question_first_archetype_smoke.json"
     md_path = output_root / "question_first_archetype_smoke.md"
     scale_progress_path = output_root / "question_first_scale_progress.json"
-    scale_progress = _build_scale_progress(summary)
-    summary["scale_progress_path"] = str(scale_progress_path)
-    summary_path.write_text(json.dumps(summary, indent=2, default=str), encoding="utf-8")
-    scale_progress_path.write_text(json.dumps(scale_progress, indent=2, default=str), encoding="utf-8")
-
-    md_lines = [
-        "# Question-First Archetype Smoke",
-        "",
-        f"Run at: {summary['run_at']}",
-        f"OpenCode timeout ms: {summary['opencode_timeout_ms']}",
-        f"Entities completed: {summary['entities_completed']}/{summary['entities_total']}",
-        f"Validated questions: {summary['entities_with_validated_questions']}",
-        "",
-    ]
-    for entity in summary["entities"]:
-        md_lines.extend(
-            [
-                f"## {entity['entity_name']}",
-                f"- Entity ID: {entity['entity_id']}",
-                f"- Status: {entity['status']}",
-                f"- Entity runtime seconds: {entity['entity_runtime_seconds']}",
-                f"- Questions validated: {entity['questions_validated']}",
-                f"- Questions no signal: {entity['questions_no_signal']}",
-                f"- Enrichment enabled: {entity['baseline_features'].get('enrichment_enabled', False)}",
-                f"- Question-first report: {entity['question_first_report_path'] or 'n/a'}",
-                "",
-            ]
-        )
-    md_path.write_text("\n".join(md_lines).rstrip() + "\n", encoding="utf-8")
-
     logger.info("Question-first archetype smoke summary written to %s", summary_path)
     print(str(summary_path))
     print(str(md_path))
