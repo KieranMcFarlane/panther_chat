@@ -5,14 +5,19 @@ import { readFileSync } from 'node:fs'
 const homePageSource = readFileSync(new URL('../src/app/page.tsx', import.meta.url), 'utf8')
 const dashboardSourcePath = new URL('../src/components/home/HomeQueueDashboard.tsx', import.meta.url)
 const dashboardApiPath = new URL('../src/app/api/home/queue-dashboard/route.ts', import.meta.url)
+const dashboardLoaderPath = new URL('../src/lib/home-queue-dashboard.ts', import.meta.url)
 
 let dashboardSource = ''
 let dashboardApiSource = ''
+let dashboardLoaderSource = ''
 try {
   dashboardSource = readFileSync(dashboardSourcePath, 'utf8')
 } catch {}
 try {
   dashboardApiSource = readFileSync(dashboardApiPath, 'utf8')
+} catch {}
+try {
+  dashboardLoaderSource = readFileSync(dashboardLoaderPath, 'utf8')
 } catch {}
 
 test('home page mounts the live queue dashboard instead of relying on the old static opportunity-only surface', () => {
@@ -38,4 +43,12 @@ test('home queue dashboard API exposes the normalized payload contract for loop 
   assert.match(dashboardApiSource, /rfp_cards/)
   assert.match(dashboardApiSource, /sales_summary/)
   assert.match(dashboardApiSource, /promoted_only=true/)
+})
+
+test('home queue dashboard loader prefers Supabase pipeline runs and keeps manifest ordering for production queue state', () => {
+  assert.match(dashboardLoaderSource, /cachedEntitiesSupabase as supabase/)
+  assert.match(dashboardLoaderSource, /\.from\('entity_pipeline_runs'\)/)
+  assert.match(dashboardLoaderSource, /buildLoopStatusFromRuns/)
+  assert.match(dashboardLoaderSource, /buildQueueStateFromDiagnostics/)
+  assert.match(dashboardLoaderSource, /manifestEntities\.map\(\(entity\) => entity\.entity_id\)/)
 })

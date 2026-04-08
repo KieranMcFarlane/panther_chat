@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
+import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
 import { normalizeQuestionFirstDossier } from '@/lib/question-first-dossier'
 
@@ -102,6 +103,16 @@ export type HomeQueueDashboardPayload = {
 type BuildOptions = {
   appRoot?: string
   tendersFetcher?: () => Promise<RfpCard[]>
+}
+
+type PipelineRunRecord = {
+  entity_id: string
+  entity_name: string
+  status: 'queued' | 'claiming' | 'running' | 'retrying' | 'completed' | 'failed'
+  phase: string | null
+  completed_at: string | null
+  started_at: string
+  metadata?: Record<string, unknown> | null
 }
 
 function toText(value: unknown): string {
@@ -252,6 +263,172 @@ function buildClientReadyDossiersStore(dossierRoot: string, canonicalEntities: a
 }
 
 function buildQueueState(
+  manifestEntities: ManifestEntity[],
+  runs: PipelineRunRecord[],
+  clientReadyIds: Set<string>,
+): HomeQueueDashboardPayload['queue'] {
+  const latestRunById = new Map<string, PipelineRunRecord>()
+  for (const run of runs) {
+    const existing = latestRunById.get(run.entity_id)
+    if (!existing) {
+      latestRunById.set(run.entity_id, run)
+      continue
+    }
+
+    const existingTime = Date.parse(existing.completed_at || existing.started_at || '')
+    const candidateTime = Date.parse(run.completed_at || run.started_at || '')
+    if (candidateTime >= existingTime) {
+      latestRunById.set(run.entity_id, run)
+    }
+  }
+
+  const activeStatuses = new Set(['queued', 'claiming', 'running', 'retrying'])
+  let activeIndex = -1
+  let highestProcessedIndex = -1
+  let inProgress: QueueEntityRecord | null = null
+  const completed: Array<QueueEntityRecord & { sortTime: number }> = []
+
+  for (const [index, entity] of manifestEntities.entries()) {
+    const run = latestRunById.get(entity.entity_id)
+    if (!run) continue
+    const clientReady = clientReadyIds.has(entity.entity_id)
+    const phase = toText(run.phase) || null
+    const summaryPhase = phase ? `Running ${phase}` : 'Canonical dossier run in progress'
+
+    highestProcessedIndex = Math.max(highestProcessedIndex, index)
+
+    if (activeStatuses.has(run.status)) {
+      if (activeIndex === -1) {
+        activeIndex = index
+        inProgress = {
+          entity_id: entity.entity_id,
+          entity_name: entity.entity_name,
+          entity_type: entity.entity_type,
+          state: 'in_progress',
+          client_ready: clientReady,
+          promoted: clientReady,
+          summary: summaryPhase,
+          generated_at: null,
+          active_question_id: phase,
+          run_phase: run.status,
+        }
+      }
+      continue
+    }
+
+    if (run.status === 'completed') {
+      const completedAt = Date.parse(run.completed_at || run.started_at || '')
+      completed.push({
+        entity_id: entity.entity_id,
+        entity_name: entity.entity_name,
+        entity_type: entity.entity_type,
+        state: 'completed',
+        client_ready: clientReady,
+        promoted: clientReady,
+        summary: clientReady ? 'Client-ready dossier promoted' : 'Completed run, awaiting client-ready promotion',
+        generated_at: run.completed_at || run.started_at || null,
+        run_phase: run.status,
+        sortTime: Number.isFinite(completedAt) ? completedAt : 0,
+      })
+    }
+  }
+
+  completed.sort((left, right) => right.sortTime - left.sortTime)
+  const boundaryIndex = activeIndex >= 0 ? activeIndex : highestProcessedIndex
+  const upcoming = manifestEntities
+    .slice(boundaryIndex + 1)
+    .filter((entity) => !latestRunById.has(entity.entity_id))
+    .slice(0, 8)
+    .map((entity) => ({
+      entity_id: entity.entity_id,
+      entity_name: entity.entity_name,
+      entity_type: entity.entity_type,
+      state: 'upcoming' as const,
+      client_ready: false,
+      promoted: false,
+      summary: 'Waiting in the serialized live loop',
+      generated_at: null,
+    }))
+
+  return {
+    completed_entities: completed.slice(0, 6).map(({ sortTime: _sortTime, ...item }) => item),
+    in_progress_entity: inProgress,
+    upcoming_entities: upcoming,
+  }
+}
+
+async function loadPipelineRuns(entityIds: string[]): Promise<PipelineRunRecord[]> {
+  const dedupedIds = Array.from(new Set(entityIds.filter(Boolean)))
+  if (dedupedIds.length === 0) {
+    return []
+  }
+
+  const runs: PipelineRunRecord[] = []
+  const chunkSize = 150
+
+  for (let index = 0; index < dedupedIds.length; index += chunkSize) {
+    const chunk = dedupedIds.slice(index, index + chunkSize)
+    const { data, error } = await supabase
+      .from('entity_pipeline_runs')
+      .select('entity_id, entity_name, status, phase, completed_at, started_at, metadata')
+      .in('entity_id', chunk)
+      .order('started_at', { ascending: false })
+
+    if (error) {
+      throw error
+    }
+
+    for (const row of data || []) {
+      runs.push(row as PipelineRunRecord)
+    }
+  }
+
+  return runs
+}
+
+function buildLoopStatusFromRuns(
+  manifestCount: number,
+  runs: PipelineRunRecord[],
+  clientReadyCount: number,
+  progress: ScaleProgress | null,
+): HomeQueueDashboardPayload['loop_status'] {
+  const latestRunById = new Map<string, PipelineRunRecord>()
+  for (const run of runs) {
+    const existing = latestRunById.get(run.entity_id)
+    if (!existing) {
+      latestRunById.set(run.entity_id, run)
+      continue
+    }
+
+    const existingTime = Date.parse(existing.completed_at || existing.started_at || '')
+    const candidateTime = Date.parse(run.completed_at || run.started_at || '')
+    if (candidateTime >= existingTime) {
+      latestRunById.set(run.entity_id, run)
+    }
+  }
+
+  const latestRuns = Array.from(latestRunById.values())
+  const completedRuns = latestRuns.filter((run) => run.status === 'completed')
+  const failedRuns = latestRuns.filter((run) => run.status === 'failed')
+  const retryableFailures = latestRuns.filter((run) => run.status === 'retrying').length
+  const lastSuccessfulCanonicalRunAt = completedRuns
+    .map((run) => run.completed_at || run.started_at)
+    .filter(Boolean)
+    .sort()
+    .at(-1) || null
+
+  return {
+    total_scheduled: manifestCount || Number(progress?.total_scheduled || 0),
+    completed: completedRuns.length || Number(progress?.completed || 0),
+    failed: failedRuns.length || Number(progress?.failed || 0),
+    retryable_failures: retryableFailures || Number(progress?.retryable_failures || 0),
+    client_ready_dossiers: clientReadyCount,
+    promoted_dossiers: clientReadyCount,
+    last_successful_canonical_run_at: lastSuccessfulCanonicalRunAt || toText(progress?.last_successful_canonical_run_at) || null,
+  }
+}
+
+function buildQueueStateFromDiagnostics(
   outputRoot: string,
   manifestEntities: ManifestEntity[],
   clientReadyIds: Set<string>,
@@ -355,18 +532,21 @@ export async function buildHomeQueueDashboardPayload(options: BuildOptions = {})
   const canonicalEntities = await getCanonicalEntitiesSnapshot()
   const { cards, sales, ids } = buildClientReadyDossiersStore(dossierRoot, canonicalEntities)
   const rfpCards = options.tendersFetcher ? await options.tendersFetcher() : []
+  let pipelineRuns: PipelineRunRecord[] = []
+
+  try {
+    pipelineRuns = await loadPipelineRuns(manifestEntities.map((entity) => entity.entity_id))
+  } catch {
+    pipelineRuns = []
+  }
+
+  const queue = pipelineRuns.length > 0
+    ? buildQueueState(manifestEntities, pipelineRuns, ids)
+    : buildQueueStateFromDiagnostics(outputRoot, manifestEntities, ids)
 
   return {
-    loop_status: {
-      total_scheduled: Number(progress?.total_scheduled || manifestEntities.length || 0),
-      completed: Number(progress?.completed || 0),
-      failed: Number(progress?.failed || 0),
-      retryable_failures: Number(progress?.retryable_failures || 0),
-      client_ready_dossiers: cards.length,
-      promoted_dossiers: cards.length,
-      last_successful_canonical_run_at: toText(progress?.last_successful_canonical_run_at) || null,
-    },
-    queue: buildQueueState(outputRoot, manifestEntities, ids),
+    loop_status: buildLoopStatusFromRuns(manifestEntities.length, pipelineRuns, cards.length, progress),
+    queue,
     client_ready_dossiers: cards.slice(0, 6),
     rfp_cards: rfpCards.slice(0, 6),
     sales_summary: {
