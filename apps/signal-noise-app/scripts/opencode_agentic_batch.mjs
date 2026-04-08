@@ -22,6 +22,11 @@ const DEFAULT_PROVIDER_ID = 'zai-coding-plan';
 const DEFAULT_MODEL_ID = 'glm-5';
 const DEFAULT_MODEL = `${DEFAULT_PROVIDER_ID}/${DEFAULT_MODEL_ID}`;
 const DEFAULT_QUESTION_MODEL = process.env.OPENCODE_QUESTION_MODEL || DEFAULT_MODEL;
+const ROLLOUT_PHASE_RANK = {
+  phase_1_core: 1,
+  phase_2_conditional: 2,
+  phase_3_decision: 3,
+};
 
 function _loadEnv() {
   for (const envPath of [
@@ -65,6 +70,108 @@ function _buildQuestionTiming(startedAt, completedAt = new Date().toISOString())
     completed_at: completedAt,
     duration_seconds: _secondsBetweenIso(startedAt, completedAt),
   };
+}
+
+function _phaseRank(value) {
+  return ROLLOUT_PHASE_RANK[String(value || '').trim()] || 1;
+}
+
+function _filterQuestionsForRollout(questions, rolloutPhase = 'phase_1_core') {
+  const activeRank = _phaseRank(rolloutPhase);
+  return (Array.isArray(questions) ? questions : []).filter((question) => _phaseRank(question?.rollout_phase) <= activeRank);
+}
+
+function _getQuestionStateById(runState, questionId) {
+  return (Array.isArray(runState?.questions) ? runState.questions : []).find(
+    (item) => String(item?.question_id || '').trim() === String(questionId || '').trim(),
+  ) || null;
+}
+
+function _questionConditionsMet(question, runState, entityType) {
+  const conditions = Array.isArray(question?.conditional_on) ? question.conditional_on : [];
+  if (conditions.length === 0) {
+    return true;
+  }
+
+  return conditions.every((condition) => {
+    const conditionType = String(condition?.type || '').trim();
+    if (conditionType === 'entity_type_in') {
+      const values = Array.isArray(condition?.values) ? condition.values.map((item) => String(item || '').trim()) : [];
+      return values.includes(String(entityType || '').trim());
+    }
+    if (conditionType === 'validated_question') {
+      const prior = _getQuestionStateById(runState, condition?.question_id);
+      return String(prior?.status || '').trim().toLowerCase() === 'validated';
+    }
+    if (conditionType === 'question_phase_enabled') {
+      return Boolean(_getQuestionStateById(runState, condition?.question_id));
+    }
+    return true;
+  });
+}
+
+function _emptyStructuredOutputForQuestion(question, note = '') {
+  const questionType = String(question?.question_type || '').trim().toLowerCase();
+  const base = {
+    answer: '',
+    confidence: 0,
+    sources: [],
+    validation_state: 'no_signal',
+  };
+  if (note) {
+    base.notes = note;
+    base.context = note;
+  }
+  if (questionType === 'decision_owner') {
+    return {
+      ...base,
+      primary_owner: null,
+      secondary_candidates: [],
+      supporting_candidates: [],
+      function_type: '',
+      seniority_level: '',
+      decision_score: 0,
+      confidence_score: 0,
+    };
+  }
+  if (questionType === 'leadership') {
+    return {
+      ...base,
+      candidates: [],
+      candidate_pool: [],
+    };
+  }
+  if (questionType === 'connections') {
+    return {
+      ...base,
+      candidate_paths: [],
+      best_yp_owner: '',
+      path_type: 'cold',
+      connection_score: 0,
+      q12_score: 0,
+    };
+  }
+  if (['capability_gap', 'yp_fit', 'outreach_strategy'].includes(questionType)) {
+    return {
+      ...base,
+      summary: '',
+      themes: [],
+      recommendations: [],
+    };
+  }
+  return base;
+}
+
+function _candidatePoolFromLeadership(runState) {
+  const leadershipState = _getQuestionStateById(runState, 'q3_leadership');
+  const structured = leadershipState?.reasoning?.structured_output;
+  if (Array.isArray(structured?.candidates) && structured.candidates.length > 0) {
+    return structured.candidates;
+  }
+  if (Array.isArray(leadershipState?.candidates) && leadershipState.candidates.length > 0) {
+    return leadershipState.candidates;
+  }
+  return [];
 }
 
 function _presetQuestionSpecs(entityName) {
@@ -1132,8 +1239,14 @@ export function buildOpenCodeQuestionPrompt(question) {
     ? `Suggested search queries: ${searchQueries.join(' | ')}.`
     : '';
   const questionType = String(question?.question_type || '').trim().toLowerCase();
+  if (questionType === 'leadership') {
+    return `${_questionText(question)} use brightdata. ${searchHint} Start with LinkedIn company and people results, then official leadership pages. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer, candidates, confidence, sources, and validation_state. candidates must be a broad typed pool of leadership and operating buyers, each with name, role, function_type, seniority_level, linkedin_url, and confidence. If you cannot validate a meaningful candidate pool, return exactly one fenced JSON code block with answer "", candidates [], confidence 0, sources [], validation_state "no_signal", then stop. Do not include prose outside the fenced JSON block.`;
+  }
   if (questionType === 'decision_owner') {
-    return `${_questionText(question)} use brightdata. ${searchHint} Start with search and use scraped pages only if the search results are not enough to validate the answer. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer set to the primary owner's name, primary_owner, supporting_candidates, confidence, sources, and validation_state. primary_owner must be the single best commercial buyer. supporting_candidates should include the next strongest people in rank order. If you cannot validate a supported primary owner within that budget, return exactly one fenced JSON code block with answer "", primary_owner null, supporting_candidates [], confidence 0, sources [], and validation_state "no_signal", then stop. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated primary owner.`;
+    const candidateHint = Array.isArray(question?.candidate_pool) && question.candidate_pool.length > 0
+      ? `Use this candidate pool as the starting point: ${JSON.stringify(question.candidate_pool)}.`
+      : '';
+    return `${_questionText(question)} use brightdata. ${candidateHint} ${searchHint} Start with company-anchored people evidence and only scrape pages needed to validate rank order. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer set to the primary owner's name, primary_owner, secondary_candidates, supporting_candidates, function_type, seniority_level, decision_score, confidence_score, reasoning, confidence, sources, and validation_state. primary_owner must be the highest probability buyer. secondary_candidates should be ranked next-best options, and supporting_candidates may mirror that list for compatibility. If you cannot validate a supported primary owner within that budget, return exactly one fenced JSON code block with answer "", primary_owner null, secondary_candidates [], supporting_candidates [], function_type "", seniority_level "", decision_score 0, confidence_score 0, reasoning "", confidence 0, sources [], and validation_state "no_signal", then stop. Do not include any prose outside the fenced JSON block.`;
   }
   if (questionType === 'related_pois') {
     return `${_questionText(question)} use brightdata. ${searchHint} Start with search and use scraped pages only if the search results are not enough to validate the answer. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer set to the best candidate name, candidates, confidence, sources, and validation_state. candidates should be a ranked list of 3 to 5 people with the best commercial relevance. If you cannot validate a ranked list of 3 to 5 candidates within that budget, return exactly one fenced JSON code block with answer "", candidates [], confidence 0, sources [], and validation_state "no_signal", then stop. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated ranked list.`;
@@ -1143,6 +1256,9 @@ export function buildOpenCodeQuestionPrompt(question) {
   }
   if (questionType === 'digital_stack') {
     return `${_questionText(question)} use brightdata. ${searchHint} Start with search and use scraped pages only if the search results are not enough to validate the answer. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer, technologies, categories, vendors, additional_domains, maturity_signal, commercial_interpretation, opportunity, confidence, sources, and validation_state. additional_domains should only include real digital services or subdomains worth separate tech-stack enrichment, such as ticketing, shop, app, or fan platform domains. commercial_interpretation must summarize the stack in business terms, not raw telemetry. opportunity must state the most credible commercial angle from the visible stack. If you cannot validate a supported answer within that budget, return exactly one fenced JSON code block with answer "", technologies [], categories [], vendors [], additional_domains [], maturity_signal "low", commercial_interpretation "", opportunity "", confidence 0, sources [], and validation_state "no_signal", then stop. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated answer.`;
+  }
+  if (questionType === 'news_signal' || questionType === 'launch_signal' || questionType === 'hiring_signal' || questionType === 'procurement_signal') {
+    return `${_questionText(question)} use brightdata. ${searchHint} Start with search and use scraped pages only if search results are not enough to validate the signal. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer, themes, confidence, sources, and validation_state. themes should be a short array of structured commercial themes. If you cannot validate a supported answer, return exactly one fenced JSON code block with answer "", themes [], confidence 0, sources [], and validation_state "no_signal". Do not include prose outside the fenced JSON block.`;
   }
   return `${_questionText(question)} use brightdata. ${searchHint} Start with search and use scraped pages only if the search results are not enough to validate the answer. You have at most ${hopBudget} hops. If you cannot validate a supported answer within that budget, return exactly one fenced JSON code block with answer "", confidence 0, sources [], and validation_state "no_signal", then stop. Otherwise return exactly one fenced JSON code block with the validated answer, confidence, and sources if available. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated answer.`;
 }
@@ -1184,7 +1300,25 @@ export function buildOpenCodeQuestionSchema() {
           additionalProperties: true,
         },
       },
+      secondary_candidates: {
+        type: 'array',
+        items: {
+          type: 'object',
+          additionalProperties: true,
+        },
+      },
+      candidate_paths: {
+        type: 'array',
+        items: {
+          type: 'object',
+          additionalProperties: true,
+        },
+      },
       context: { type: 'string' },
+      themes: {
+        type: 'array',
+        items: { type: 'string' },
+      },
       sources: {
         type: 'array',
         items: { type: 'string' },
@@ -1218,6 +1352,21 @@ export function buildOpenCodeQuestionSchema() {
       maturity_signal: { type: 'string' },
       commercial_interpretation: { type: 'string' },
       opportunity: { type: 'string' },
+      function_type: { type: 'string' },
+      seniority_level: { type: 'string' },
+      decision_score: { type: 'number' },
+      confidence_score: { type: 'number' },
+      q11_score: { type: 'number' },
+      q12_score: { type: 'number' },
+      path_type: { type: 'string' },
+      best_yp_owner: { type: 'string' },
+      recommended_target: { type: 'string' },
+      recommended_route: { type: 'string' },
+      recommended_angle: { type: 'string' },
+      recommendations: {
+        type: 'array',
+        items: { type: 'string' },
+      },
       confidence: { type: 'number' },
     },
     required: ['answer', 'confidence'],
@@ -1448,8 +1597,159 @@ export async function runDeterministicToolQuestion(
   } = {},
 ) {
   const questionType = String(question?.question_type || '').trim().toLowerCase();
+  const priorQuestions = Array.isArray(runState?.questions) ? runState.questions : [];
+  const getPriorQuestion = (questionId) => priorQuestions.find((item) => String(item?.question_id || '').trim() === String(questionId || '').trim()) || null;
+
+  if (questionType === 'connections') {
+    const decisionOwnerState = getPriorQuestion('q11_decision_owner');
+    const primaryOwner = decisionOwnerState?.primary_owner && typeof decisionOwnerState.primary_owner === 'object'
+      ? decisionOwnerState.primary_owner
+      : null;
+    const ownerName = String(primaryOwner?.name || '').trim();
+    if (!ownerName) {
+      return {
+        structuredOutput: _emptyStructuredOutputForQuestion(question, 'No ranked decision owner is available yet for graph-first path analysis.'),
+        promptTrace: { status: 'deterministic_connections_missing_q11', has_structured_output: true },
+        messageTrace: [],
+        cliResult: { code: 0, stdout: '', stderr: '' },
+      };
+    }
+    const q11Score = Number(decisionOwnerState?.current_confidence || 0);
+    const q12Score = 0.2;
+    return {
+      structuredOutput: {
+        answer: ownerName,
+        candidate_paths: [
+          {
+            name: ownerName,
+            function_type: String(primaryOwner?.function_type || '').trim(),
+            seniority_level: String(primaryOwner?.seniority_level || '').trim(),
+            path_type: 'cold',
+            connection_score: q12Score,
+            q11_score: q11Score,
+            q12_score: q12Score,
+            decision_score: Math.round(q11Score * q12Score * 1000) / 1000,
+          },
+        ],
+        best_yp_owner: 'Elliott Hillman',
+        path_type: 'cold',
+        connection_score: q12Score,
+        q11_score: q11Score,
+        q12_score: q12Score,
+        confidence: 0.35,
+        validation_state: 'provisional',
+        sources: [],
+        signal_type: 'CONNECTIONS',
+      },
+      promptTrace: { status: 'deterministic_connections_fallback', has_structured_output: true },
+      messageTrace: [],
+      cliResult: { code: 0, stdout: '', stderr: '' },
+    };
+  }
+
+  if (questionType === 'capability_gap') {
+    const digitalStack = getPriorQuestion('q2_digital_stack');
+    const launchSignal = getPriorQuestion('q6_launch_signal');
+    const procurementSignal = getPriorQuestion('q7_procurement_signal');
+    const newsSignal = getPriorQuestion('q9_news_signal');
+    const themes = [
+      String(digitalStack?.best_answer || '').trim() && 'digital_stack_maturity',
+      String(launchSignal?.best_answer || '').trim() && 'product_launch_pressure',
+      String(procurementSignal?.best_answer || '').trim() && 'vendor_change_motion',
+      String(newsSignal?.best_answer || '').trim() && 'current_priority_shift',
+    ].filter(Boolean);
+    if (themes.length === 0) {
+      return {
+        structuredOutput: _emptyStructuredOutputForQuestion(question, 'No upstream signals are available yet for capability-gap inference.'),
+        promptTrace: { status: 'derived_capability_gap_missing_dependencies', has_structured_output: true },
+        messageTrace: [],
+        cliResult: { code: 0, stdout: '', stderr: '' },
+      };
+    }
+    return {
+      structuredOutput: {
+        answer: `Capability gaps inferred from ${themes.join(', ')}`,
+        summary: 'Capability gap inference derived from validated upstream commercial and digital signals.',
+        themes,
+        recommendations: themes.map((theme) => `Investigate ${theme.replaceAll('_', ' ')}`),
+        confidence: 0.6,
+        validation_state: 'provisional',
+        sources: [],
+        signal_type: 'CAPABILITY_GAP',
+      },
+      promptTrace: { status: 'derived_capability_gap', has_structured_output: true },
+      messageTrace: [],
+      cliResult: { code: 0, stdout: '', stderr: '' },
+    };
+  }
+
+  if (questionType === 'yp_fit') {
+    const capabilityGap = getPriorQuestion('q13_capability_gap');
+    const themes = Array.isArray(capabilityGap?.reasoning?.structured_output?.themes)
+      ? capabilityGap.reasoning.structured_output.themes
+      : [];
+    if (themes.length === 0) {
+      return {
+        structuredOutput: _emptyStructuredOutputForQuestion(question, 'No capability-gap inference is available yet for YP fit mapping.'),
+        promptTrace: { status: 'derived_yp_fit_missing_q13', has_structured_output: true },
+        messageTrace: [],
+        cliResult: { code: 0, stdout: '', stderr: '' },
+      };
+    }
+    return {
+      structuredOutput: {
+        answer: 'Yellow Panther fit inferred from capability gaps',
+        summary: 'Yellow Panther fit is strongest where the target shows capability gaps and active commercial change signals.',
+        themes,
+        recommendations: ['fan engagement', 'commercial intelligence', 'platform strategy'],
+        confidence: 0.62,
+        validation_state: 'provisional',
+        sources: [],
+        signal_type: 'YP_FIT',
+      },
+      promptTrace: { status: 'derived_yp_fit', has_structured_output: true },
+      messageTrace: [],
+      cliResult: { code: 0, stdout: '', stderr: '' },
+    };
+  }
+
+  if (questionType === 'outreach_strategy') {
+    const decisionOwnerState = getPriorQuestion('q11_decision_owner');
+    const connectionsState = getPriorQuestion('q12_connections');
+    const ypFitState = getPriorQuestion('q14_yp_fit');
+    const primaryOwner = decisionOwnerState?.primary_owner && typeof decisionOwnerState.primary_owner === 'object'
+      ? decisionOwnerState.primary_owner
+      : null;
+    const targetName = String(primaryOwner?.name || '').trim();
+    if (!targetName) {
+      return {
+        structuredOutput: _emptyStructuredOutputForQuestion(question, 'No ranked target is available yet for outreach strategy.'),
+        promptTrace: { status: 'derived_outreach_strategy_missing_q11', has_structured_output: true },
+        messageTrace: [],
+        cliResult: { code: 0, stdout: '', stderr: '' },
+      };
+    }
+    const route = String(connectionsState?.reasoning?.structured_output?.path_type || 'cold').trim() || 'cold';
+    return {
+      structuredOutput: {
+        answer: `Target ${targetName} via ${route} route`,
+        summary: 'Outreach strategy derived from ranked buyer, network path, and YP fit signals.',
+        recommended_target: targetName,
+        recommended_route: route,
+        recommended_angle: String(ypFitState?.best_answer || 'Commercial and digital capability support').trim(),
+        recommendations: ['lead with current commercial change signal', 'anchor on a concrete capability gap'],
+        confidence: 0.58,
+        validation_state: 'provisional',
+        sources: [],
+        signal_type: 'OUTREACH_STRATEGY',
+      },
+      promptTrace: { status: 'derived_outreach_strategy', has_structured_output: true },
+      messageTrace: [],
+      cliResult: { code: 0, stdout: '', stderr: '' },
+    };
+  }
+
   if (questionType === 'related_pois') {
-    const priorQuestions = Array.isArray(runState?.questions) ? runState.questions : [];
     const decisionOwnerState = priorQuestions.find((item) => String(item?.question_id || '').trim() === 'q4_decision_owner');
     if (decisionOwnerState && String(decisionOwnerState.status || '').trim().toLowerCase() === 'validated') {
       const primaryOwner = decisionOwnerState?.primary_owner && typeof decisionOwnerState.primary_owner === 'object'
@@ -2021,6 +2321,9 @@ function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTr
   const validationState = _classifyValidationState(structuredOutput);
   const sources = Array.isArray(structuredOutput.sources) ? structuredOutput.sources : [];
   const { primaryOwner, supportingCandidates, candidates, answerText } = _structuredOwnerCandidates(structuredOutput);
+  const secondaryCandidates = Array.isArray(structuredOutput.secondary_candidates)
+    ? structuredOutput.secondary_candidates
+    : supportingCandidates;
   const evidenceUrl = structuredOutput.evidence_url || primaryOwner?.profile_url || primaryOwner?.linkedin_url || sources[0] || '';
   const notes = structuredOutput.notes || structuredOutput.context || '';
   const inferredSignalType = structuredOutput.signal_type || (question.question_type ? question.question_type.toUpperCase() : 'NO_SIGNAL');
@@ -2066,6 +2369,7 @@ function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTr
     execution_query: executionQuery || question.query,
     answer: answerText || structuredOutput.answer || '',
     primary_owner: primaryOwner,
+    secondary_candidates: secondaryCandidates,
     supporting_candidates: supportingCandidates,
     candidates,
     signal_type: inferredSignalType,
@@ -2082,14 +2386,17 @@ function _categoryForQuestion(question) {
   if (questionType === 'foundation') {
     return 'identity';
   }
-  if (questionType === 'launch' || questionType === 'opportunity_signal') {
+  if (questionType === 'launch' || questionType === 'launch_signal' || questionType === 'opportunity_signal') {
     return 'opportunity_signal';
   }
-  if (questionType === 'procurement') {
+  if (questionType === 'procurement' || questionType === 'procurement_signal') {
     return 'procurement_opportunity';
   }
   if (questionType === 'tender_docs') {
     return 'procurement_opportunity';
+  }
+  if (questionType === 'news_signal' || questionType === 'hiring_signal') {
+    return 'market_timing';
   }
   if (questionType === 'poi') {
     return 'connections';
@@ -2097,8 +2404,17 @@ function _categoryForQuestion(question) {
   if (questionType === 'leadership' || questionType === 'decision_owner' || questionType === 'related_pois') {
     return 'decision_owners';
   }
+  if (questionType === 'connections') {
+    return 'connections';
+  }
   if (questionType === 'digital_stack') {
     return 'technology_stack';
+  }
+  if (questionType === 'performance' || questionType === 'league_context') {
+    return 'context';
+  }
+  if (questionType === 'capability_gap' || questionType === 'yp_fit' || questionType === 'outreach_strategy') {
+    return 'derived_intelligence';
   }
   return 'general';
 }
@@ -2268,10 +2584,48 @@ export async function runOpenCodePresetBatch({
         ? pendingFrontierItems.slice(0, baseHopBudget).map((item) => item.query).filter(Boolean)
         : [];
       let hopIndex = 0;
-      const isAtomicDiscoveryQuestion = ['atomic', 'discovery'].includes(
-        String(question.question_shape || question.pack_role || '').trim().toLowerCase(),
-      );
+      const executionClass = String(question.execution_class || '').trim().toLowerCase() || 'atomic_retrieval';
+      const isAtomicDiscoveryQuestion = executionClass === 'atomic_retrieval';
       const fallbackToRetrieval = question.fallback_to_retrieval !== false;
+
+      if (!_questionConditionsMet(question, runState, entityType)) {
+        questionPayload = _buildQuestionPayload(
+          question,
+          _emptyStructuredOutputForQuestion(question, 'Question conditions were not met for this entity or prior signal state.'),
+          `cli-${index + 1}`,
+          {
+            promptTrace: { status: 'skipped_condition_unmet', has_structured_output: true },
+            messageTrace: [],
+            cliResult: { code: 0, stdout: '', stderr: '' },
+            executionQuery: question.query,
+          },
+        );
+        runState.questions[index] = _mergeQuestionState(existingQuestionState || currentQuestionState, questionPayload, new Date().toISOString());
+        await _writeJsonFile(statePath, runState);
+        finalizeQuestionTiming();
+        finalQuestions.push(questionPayload);
+        perQuestionPayloads.push({
+          run_started_at: runStartedAt,
+          entity_name: question.entity_name,
+          entity_id: question.entity_id,
+          entity_type: question.entity_type,
+          preset: question.preset,
+          started_at: questionTiming.started_at,
+          completed_at: questionTiming.completed_at,
+          duration_seconds: questionTiming.duration_seconds,
+          question: questionPayload,
+        });
+        transcripts.push(
+          [
+            `Question ${index + 1}: ${question.question_id}`,
+            `Prompt: ${question.query}`,
+            'Exit code: 0',
+            'Validation: no_signal',
+            'Answer: n/a',
+          ].join('\n'),
+        );
+        continue;
+      }
 
       if (typeof deterministicToolRunner === 'function') {
         const deterministicRun = await deterministicToolRunner(question, {
@@ -2339,6 +2693,45 @@ export async function runOpenCodePresetBatch({
         }
       }
 
+      if (!isAtomicDiscoveryQuestion && !fallbackToRetrieval) {
+        questionPayload = _buildQuestionPayload(
+          question,
+          _emptyStructuredOutputForQuestion(question, 'No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.'),
+          `cli-${index + 1}`,
+          {
+            promptTrace: { status: 'non_retrieval_no_signal', has_structured_output: true },
+            messageTrace: [],
+            cliResult: { code: 0, stdout: '', stderr: '' },
+            executionQuery: question.query,
+          },
+        );
+        runState.questions[index] = _mergeQuestionState(existingQuestionState || currentQuestionState, questionPayload, new Date().toISOString());
+        await _writeJsonFile(statePath, runState);
+        finalizeQuestionTiming();
+        finalQuestions.push(questionPayload);
+        perQuestionPayloads.push({
+          run_started_at: runStartedAt,
+          entity_name: question.entity_name,
+          entity_id: question.entity_id,
+          entity_type: question.entity_type,
+          preset: question.preset,
+          started_at: questionTiming.started_at,
+          completed_at: questionTiming.completed_at,
+          duration_seconds: questionTiming.duration_seconds,
+          question: questionPayload,
+        });
+        transcripts.push(
+          [
+            `Question ${index + 1}: ${question.question_id}`,
+            `Prompt: ${question.query}`,
+            'Exit code: 0',
+            'Validation: no_signal',
+            'Answer: n/a',
+          ].join('\n'),
+        );
+        continue;
+      }
+
       if (isAtomicDiscoveryQuestion) {
       while (hopIndex < hopLimit && Date.now() < questionDeadline) {
         const executionQuery = queuedQueries.length > 0 ? queuedQueries.shift() : activeQuery || question.query;
@@ -2348,6 +2741,9 @@ export async function runOpenCodePresetBatch({
         }
         const hopTimeoutMs = Math.max(1000, Math.min(atomicHopTimeoutMs, remainingMs));
         const executionQuestion = _buildExecutionQuestion(question, executionQuery, hopIndex);
+        if (String(question.question_id || '').trim() === 'q11_decision_owner') {
+          executionQuestion.candidate_pool = _candidatePoolFromLeadership(runState);
+        }
         runState = _decorateRunStateCheckpoint(runState, {
           runPhase: 'question_runner_enter',
           activeQuestionIndex: index,
@@ -2770,6 +3166,7 @@ export async function runOpenCodeQuestionSourceBatch({
   scrapeCredits,
   revisitCredits,
   confidenceThreshold,
+  rolloutPhase = null,
 } = {}) {
   if (!questionSourcePath) {
     throw new Error('questionSourcePath is required');
@@ -2783,7 +3180,9 @@ export async function runOpenCodeQuestionSourceBatch({
     throw new Error(`Question source ${JSON.stringify(questionSourcePath)} must resolve to a JSON object`);
   }
 
-  const questions = Array.isArray(sourcePayload.questions) ? sourcePayload.questions.filter((question) => question && typeof question === 'object') : [];
+  const canonicalQuestions = Array.isArray(sourcePayload.questions) ? sourcePayload.questions.filter((question) => question && typeof question === 'object') : [];
+  const resolvedRolloutPhase = String(rolloutPhase || sourcePayload.default_rollout_phase || 'phase_1_core').trim() || 'phase_1_core';
+  const questions = _filterQuestionsForRollout(canonicalQuestions, resolvedRolloutPhase);
   if (questions.length === 0) {
     throw new Error(`Question source ${JSON.stringify(questionSourcePath)} does not contain any questions`);
   }
@@ -2802,6 +3201,12 @@ export async function runOpenCodeQuestionSourceBatch({
       preset: question.preset || preset,
       question_shape: question.question_shape || sourcePayload.question_shape || 'atomic',
       pack_role: question.pack_role || sourcePayload.pack_role || 'discovery',
+      execution_class: question.execution_class || 'atomic_retrieval',
+      rollout_phase: question.rollout_phase || resolvedRolloutPhase,
+      conditional_on: Array.isArray(question.conditional_on) ? question.conditional_on : [],
+      depends_on: Array.isArray(question.depends_on) ? question.depends_on : [],
+      structured_output_schema: question.structured_output_schema || '',
+      graph_write_targets: Array.isArray(question.graph_write_targets) ? question.graph_write_targets : [],
       question_text: resolvedQuestionText,
       question: resolvedQuestionText,
     };

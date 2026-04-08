@@ -1,6 +1,6 @@
 {
   "schema_version": "atomic_question_source_v1",
-  "generated_at": "2026-04-07T10:50:41.216076+00:00",
+  "generated_at": "2026-04-08T09:23:34.405021+00:00",
   "entity_id": "arsenal-fc",
   "entity_name": "Arsenal Football Club",
   "entity_type": "SPORT_CLUB",
@@ -9,45 +9,59 @@
   "question_shape": "atomic",
   "pack_role": "discovery",
   "pack_stage": "atomic_matrix",
-  "question_count": 5,
+  "rollout_strategy": "phased_core",
+  "default_rollout_phase": "phase_1_core",
+  "question_count": 15,
   "questions": [
     {
       "question_id": "q1_foundation",
       "question_family": "foundation",
       "question_type": "foundation",
-      "question": "What year was Arsenal Football Club founded?",
+      "question": "What is the canonical identity and grounding profile for Arsenal Football Club?",
       "query": "\"Arsenal Football Club\" official website founded year",
-      "hop_budget": 8,
-      "evidence_extension_budget": 1,
       "source_priority": [
         "google_serp",
         "official_site",
         "wikipedia"
       ],
-      "search_strategy": {
-        "search_queries": [
-          "\"Arsenal Football Club\" official website",
-          "\"Arsenal Football Club\" history",
-          "\"Arsenal Football Club\" founded year",
-          "\"Arsenal Football Club\" wikipedia"
-        ]
-      },
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "foundation_v1",
+      "graph_write_targets": [
+        "entity_identity"
+      ],
       "evidence_focus": "entity_fact",
       "promotion_target": "profile",
       "answer_kind": "fact",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 1,
+      "search_strategy": {
+        "search_queries": [
+          "\"Arsenal Football Club\" official website",
+          "\"Arsenal Football Club\" founded year",
+          "\"Arsenal Football Club\" headquarters",
+          "\"Arsenal Football Club\" venue",
+          "\"Arsenal Football Club\" wikipedia"
+        ]
+      },
       "question_shape": "atomic",
       "question_timeout_ms": 180000,
       "hop_timeout_ms": 180000,
-      "evidence_extension_confidence_threshold": 0.65
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Arsenal Football Club",
+      "entity_id": "arsenal-fc",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
     },
     {
       "question_id": "q2_digital_stack",
       "question_family": "digital_stack",
       "question_type": "digital_stack",
       "question": "What visible technologies, platforms, or vendors does Arsenal Football Club use, and what do they imply commercially?",
-      "query": "\"Arsenal Football Club\" technology stack",
-      "hop_budget": 8,
-      "evidence_extension_budget": 2,
+      "query": "\"Arsenal Football Club\" official website",
       "source_priority": [
         "apify_techstack",
         "google_serp",
@@ -55,134 +69,58 @@
         "press_release",
         "official_site"
       ],
-      "search_strategy": {
-        "search_queries": [
-          "\"Arsenal Football Club\" technology stack",
-          "\"Arsenal Football Club\" tech stack",
-          "\"Arsenal Football Club\" digital stack",
-          "\"Arsenal Football Club\" official website",
-          "\"Arsenal Football Club\" digital experience",
-          "\"Arsenal Football Club\" case study",
-          "\"Arsenal Football Club\" official partner",
-          "\"Arsenal Football Club\" digital partner",
-          "\"Arsenal Football Club\" technology partner",
-          "\"Arsenal Football Club\" platform",
-          "\"Arsenal Football Club\" app",
-          "\"Arsenal Football Club\" mobile app",
-          "\"Arsenal Football Club\" CRM",
-          "\"Arsenal Football Club\" ticketing platform",
-          "\"Arsenal Football Club\" ecommerce",
-          "\"Arsenal Football Club\" analytics platform"
-        ]
-      },
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [
+        "q1_foundation"
+      ],
+      "structured_output_schema": "digital_stack_v1",
+      "graph_write_targets": [
+        "technology_signals"
+      ],
+      "evidence_focus": "technology_stack",
+      "promotion_target": "technology_stack",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
       "deterministic_tools": [
         "apify_techstack"
       ],
-      "fallback_to_retrieval": true,
       "deterministic_input": {
         "source_question_id": "q1_foundation",
         "official_site_only": true
       },
-      "evidence_focus": "technology_stack",
-      "promotion_target": "technology_stack",
-      "answer_kind": "signal",
-      "question_shape": "atomic",
-      "question_timeout_ms": 180000,
-      "hop_timeout_ms": 180000,
-      "evidence_extension_confidence_threshold": 0.65
-    },
-    {
-      "question_id": "q3_procurement_signal",
-      "question_family": "procurement",
-      "question_type": "procurement",
-      "question": "Is there evidence Arsenal Football Club is buying, launching, or reshaping its commercial or digital ecosystem through procurement, partnerships, hiring, or platform initiatives?",
-      "query": "\"Arsenal Football Club\" official partner commercial partner platform",
       "hop_budget": 8,
       "evidence_extension_budget": 2,
-      "source_priority": [
-        "official_site",
-        "press_release",
-        "news",
-        "google_serp",
-        "linkedin_posts"
-      ],
       "search_strategy": {
         "search_queries": [
           "\"Arsenal Football Club\" official website",
-          "\"Arsenal Football Club\" official partner",
-          "\"Arsenal Football Club\" commercial partner",
-          "\"Arsenal Football Club\" global partner",
-          "\"Arsenal Football Club\" sponsorship",
-          "\"Arsenal Football Club\" partnerships",
-          "\"Arsenal Football Club\" technology partner",
-          "\"Arsenal Football Club\" digital partner",
-          "\"Arsenal Football Club\" fan engagement platform",
-          "\"Arsenal Football Club\" data partner",
+          "\"Arsenal Football Club\" technology stack",
+          "\"Arsenal Football Club\" tech stack",
+          "\"Arsenal Football Club\" digital stack",
+          "\"Arsenal Football Club\" CRM",
+          "\"Arsenal Football Club\" analytics platform",
+          "\"Arsenal Football Club\" ticketing platform",
           "\"Arsenal Football Club\" mobile app",
-          "\"Arsenal Football Club\" analytics initiative",
-          "\"Arsenal Football Club\" broadcast partner",
-          "\"Arsenal Football Club\" media rights",
-          "\"Arsenal Football Club\" digital transformation",
-          "\"Arsenal Football Club\" procurement"
+          "\"Arsenal Football Club\" technology partner",
+          "\"Arsenal Football Club\" digital partner"
         ]
       },
-      "evidence_focus": "opportunity_signal",
-      "promotion_target": "opportunity_signals",
-      "answer_kind": "signal",
       "question_shape": "atomic",
       "question_timeout_ms": 180000,
       "hop_timeout_ms": 180000,
-      "evidence_extension_confidence_threshold": 0.65
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Arsenal Football Club",
+      "entity_id": "arsenal-fc",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
     },
     {
-      "question_id": "q4_decision_owner",
-      "question_family": "decision_owner",
-      "question_type": "decision_owner",
-      "question": "Who is the most suitable person for commercial partnerships or business development at Arsenal Football Club?",
-      "query": "\"Arsenal Football Club\" LinkedIn company profile",
-      "hop_budget": 8,
-      "evidence_extension_budget": 2,
-      "source_priority": [
-        "official_site",
-        "news",
-        "press_release",
-        "google_serp",
-        "linkedin_company_profile",
-        "linkedin_people_search",
-        "linkedin_person_profile"
-      ],
-      "search_strategy": {
-        "search_queries": [
-          "\"Arsenal Football Club\" official website leadership team",
-          "\"Arsenal Football Club\" executive committee",
-          "\"Arsenal Football Club\" commercial leadership",
-          "\"Arsenal Football Club\" partnerships team",
-          "\"Arsenal Football Club\" sponsorship team",
-          "\"Arsenal Football Club\" chief commercial officer",
-          "\"Arsenal Football Club\" chief business officer",
-          "\"Arsenal Football Club\" commercial director",
-          "\"Arsenal Football Club\" global partnerships",
-          "\"Arsenal Football Club\" business development director",
-          "\"Arsenal Football Club\" chief marketing officer",
-          "\"Arsenal Football Club\" LinkedIn company profile"
-        ]
-      },
-      "evidence_focus": "decision_owner",
-      "promotion_target": "decision_owners",
-      "answer_kind": "person",
-      "question_shape": "atomic",
-      "question_timeout_ms": 180000,
-      "hop_timeout_ms": 180000,
-      "evidence_extension_confidence_threshold": 0.65
-    },
-    {
-      "question_id": "q5_related_pois",
-      "question_family": "related_pois",
-      "question_type": "related_pois",
-      "question": "Which 3 to 5 people are the most relevant commercial, partnerships, or business development contacts at Arsenal Football Club?",
-      "query": "\"Arsenal Football Club\" LinkedIn company profile",
-      "hop_budget": 8,
-      "evidence_extension_budget": 2,
+      "question_id": "q3_leadership",
+      "question_family": "leadership",
+      "question_type": "leadership",
+      "question": "Who are the key leadership, commercial, partnerships, marketing, digital, technology, and strategy figures at Arsenal Football Club?",
+      "query": "\"Arsenal Football Club\" leadership team",
       "source_priority": [
         "linkedin_company_profile",
         "linkedin_people_search",
@@ -190,29 +128,588 @@
         "google_serp",
         "official_site"
       ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "leadership_candidates_v1",
+      "graph_write_targets": [
+        "person_candidates"
+      ],
+      "evidence_focus": "leadership_map",
+      "promotion_target": "leadership",
+      "answer_kind": "people_list",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
       "search_strategy": {
         "search_queries": [
           "\"Arsenal Football Club\" LinkedIn company profile",
-          "\"Arsenal Football Club\" LinkedIn commercial",
-          "\"Arsenal Football Club\" LinkedIn partnerships",
-          "\"Arsenal Football Club\" LinkedIn sponsorship",
-          "\"Arsenal Football Club\" LinkedIn business development",
-          "\"Arsenal Football Club\" LinkedIn marketing",
-          "\"Arsenal Football Club\" chief commercial officer",
-          "\"Arsenal Football Club\" commercial director",
-          "\"Arsenal Football Club\" partnerships director",
-          "\"Arsenal Football Club\" sponsorship director",
-          "\"Arsenal Football Club\" head of partnerships",
-          "\"Arsenal Football Club\" CEO"
+          "\"Arsenal Football Club\" leadership team",
+          "\"Arsenal Football Club\" executive team",
+          "\"Arsenal Football Club\" commercial team",
+          "\"Arsenal Football Club\" partnerships",
+          "\"Arsenal Football Club\" marketing",
+          "\"Arsenal Football Club\" digital",
+          "\"Arsenal Football Club\" technology",
+          "\"Arsenal Football Club\" strategy"
         ]
       },
-      "evidence_focus": "decision_owner",
-      "promotion_target": "decision_owners",
-      "answer_kind": "people_list",
       "question_shape": "atomic",
       "question_timeout_ms": 180000,
       "hop_timeout_ms": 180000,
-      "evidence_extension_confidence_threshold": 0.65
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Arsenal Football Club",
+      "entity_id": "arsenal-fc",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q6_launch_signal",
+      "question_family": "launch_signal",
+      "question_type": "launch_signal",
+      "question": "What products, apps, platforms, or fan experiences has Arsenal Football Club launched or announced?",
+      "query": "\"Arsenal Football Club\" launch app platform",
+      "source_priority": [
+        "official_site",
+        "press_release",
+        "news",
+        "google_serp"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "launch_signal_v1",
+      "graph_write_targets": [
+        "launch_signal_episodes"
+      ],
+      "evidence_focus": "launch_signal",
+      "promotion_target": "launch_signals",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "search_strategy": {
+        "search_queries": [
+          "\"Arsenal Football Club\" launch app",
+          "\"Arsenal Football Club\" digital platform launch",
+          "\"Arsenal Football Club\" fan engagement platform",
+          "\"Arsenal Football Club\" membership platform",
+          "\"Arsenal Football Club\" streaming platform",
+          "\"Arsenal Football Club\" ticketing launch"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Arsenal Football Club",
+      "entity_id": "arsenal-fc",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q7_procurement_signal",
+      "question_family": "procurement_signal",
+      "question_type": "procurement_signal",
+      "question": "Is there evidence Arsenal Football Club is buying, reshaping vendors, or changing its commercial or digital ecosystem?",
+      "query": "\"Arsenal Football Club\" official partner commercial partner platform",
+      "source_priority": [
+        "official_site",
+        "press_release",
+        "news",
+        "google_serp",
+        "linkedin_posts"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "procurement_signal_v1",
+      "graph_write_targets": [
+        "procurement_signal_episodes"
+      ],
+      "evidence_focus": "opportunity_signal",
+      "promotion_target": "opportunity_signals",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "search_strategy": {
+        "search_queries": [
+          "\"Arsenal Football Club\" official partner",
+          "\"Arsenal Football Club\" commercial partner",
+          "\"Arsenal Football Club\" sponsorship",
+          "\"Arsenal Football Club\" partnerships",
+          "\"Arsenal Football Club\" technology partner",
+          "\"Arsenal Football Club\" digital transformation",
+          "\"Arsenal Football Club\" procurement",
+          "\"Arsenal Football Club\" vendor"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Arsenal Football Club",
+      "entity_id": "arsenal-fc",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q8_explicit_rfp",
+      "question_family": "explicit_rfp",
+      "question_type": "tender_docs",
+      "question": "Are there published RFPs, tenders, or formal procurement documents for Arsenal Football Club?",
+      "query": "\"Arsenal Football Club\" tender RFP",
+      "source_priority": [
+        "official_site",
+        "google_serp",
+        "press_release",
+        "news"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_2_conditional",
+      "conditional_on": [
+        {
+          "type": "validated_question",
+          "question_id": "q7_procurement_signal"
+        }
+      ],
+      "depends_on": [
+        "q7_procurement_signal"
+      ],
+      "structured_output_schema": "explicit_rfp_v1",
+      "graph_write_targets": [
+        "explicit_rfp_episodes"
+      ],
+      "evidence_focus": "explicit_rfp",
+      "promotion_target": "rfp_signals",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 1,
+      "search_strategy": {
+        "search_queries": [
+          "\"Arsenal Football Club\" RFP",
+          "\"Arsenal Football Club\" tender",
+          "\"Arsenal Football Club\" invitation to tender",
+          "\"Arsenal Football Club\" filetype:pdf tender"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Arsenal Football Club",
+      "entity_id": "arsenal-fc",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q9_news_signal",
+      "question_family": "news_signal",
+      "question_type": "news_signal",
+      "question": "What recent news, partnerships, and strategic themes are most relevant for Arsenal Football Club right now?",
+      "query": "\"Arsenal Football Club\" news announcement partnership",
+      "source_priority": [
+        "news",
+        "press_release",
+        "official_site",
+        "google_serp"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "news_signal_v1",
+      "graph_write_targets": [
+        "news_signal_episodes"
+      ],
+      "evidence_focus": "news_signal",
+      "promotion_target": "news_signals",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "search_strategy": {
+        "search_queries": [
+          "\"Arsenal Football Club\" news",
+          "\"Arsenal Football Club\" announcement",
+          "\"Arsenal Football Club\" partnership",
+          "\"Arsenal Football Club\" digital",
+          "\"Arsenal Football Club\" strategy"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Arsenal Football Club",
+      "entity_id": "arsenal-fc",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q10_hiring_signal",
+      "question_family": "hiring_signal",
+      "question_type": "hiring_signal",
+      "question": "What hiring signals suggest current investment priorities for Arsenal Football Club?",
+      "query": "\"Arsenal Football Club\" jobs digital marketing CRM",
+      "source_priority": [
+        "google_serp",
+        "official_site",
+        "linkedin_posts",
+        "news"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_2_conditional",
+      "conditional_on": [
+        {
+          "type": "question_phase_enabled",
+          "question_id": "q9_news_signal"
+        }
+      ],
+      "depends_on": [
+        "q9_news_signal"
+      ],
+      "structured_output_schema": "hiring_signal_v1",
+      "graph_write_targets": [
+        "hiring_signal_episodes"
+      ],
+      "evidence_focus": "hiring_signal",
+      "promotion_target": "hiring_signals",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 1,
+      "search_strategy": {
+        "search_queries": [
+          "\"Arsenal Football Club\" jobs digital",
+          "\"Arsenal Football Club\" jobs CRM",
+          "\"Arsenal Football Club\" jobs partnerships",
+          "\"Arsenal Football Club\" jobs marketing",
+          "\"Arsenal Football Club\" jobs transformation"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Arsenal Football Club",
+      "entity_id": "arsenal-fc",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q4_performance",
+      "question_family": "performance",
+      "question_type": "performance",
+      "question": "What is the current sporting performance context for Arsenal Football Club?",
+      "query": "\"Arsenal Football Club\" standings",
+      "source_priority": [
+        "sports_data",
+        "official_site"
+      ],
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_2_conditional",
+      "conditional_on": [
+        {
+          "type": "entity_type_in",
+          "values": [
+            "SPORT_CLUB",
+            "SPORT_LEAGUE"
+          ]
+        }
+      ],
+      "depends_on": [],
+      "structured_output_schema": "performance_context_v1",
+      "graph_write_targets": [
+        "performance_context"
+      ],
+      "evidence_focus": "performance_context",
+      "promotion_target": "performance_context",
+      "answer_kind": "summary",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": [
+          "\"Arsenal Football Club\" standings",
+          "\"Arsenal Football Club\" table",
+          "\"Arsenal Football Club\" results"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Arsenal Football Club",
+      "entity_id": "arsenal-fc",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q5_league_context",
+      "question_family": "league_context",
+      "question_type": "league_context",
+      "question": "What peer and ecosystem context best frames Arsenal Football Club?",
+      "query": "\"Arsenal Football Club\" league context",
+      "source_priority": [
+        "graphiti_context",
+        "sports_data",
+        "official_site"
+      ],
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_2_conditional",
+      "conditional_on": [
+        {
+          "type": "entity_type_in",
+          "values": [
+            "SPORT_CLUB",
+            "SPORT_LEAGUE",
+            "SPORT_FEDERATION"
+          ]
+        }
+      ],
+      "depends_on": [],
+      "structured_output_schema": "league_context_v1",
+      "graph_write_targets": [
+        "peer_context"
+      ],
+      "evidence_focus": "league_context",
+      "promotion_target": "league_context",
+      "answer_kind": "summary",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": [
+          "\"Arsenal Football Club\" league competitors",
+          "\"Arsenal Football Club\" comparable clubs",
+          "\"Arsenal Football Club\" peer organisations"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Arsenal Football Club",
+      "entity_id": "arsenal-fc",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q11_decision_owner",
+      "question_family": "decision_owner",
+      "question_type": "decision_owner",
+      "question": "Who is the highest probability buyer at Arsenal Football Club given the current commercial and product context?",
+      "query": "\"Arsenal Football Club\" commercial partnerships leadership",
+      "source_priority": [
+        "linkedin_company_profile",
+        "linkedin_people_search",
+        "linkedin_person_profile",
+        "google_serp",
+        "official_site"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [],
+      "depends_on": [
+        "q3_leadership",
+        "q6_launch_signal",
+        "q7_procurement_signal",
+        "q9_news_signal",
+        "q10_hiring_signal"
+      ],
+      "structured_output_schema": "decision_owner_v1",
+      "graph_write_targets": [
+        "decision_owner_rankings"
+      ],
+      "evidence_focus": "decision_owner",
+      "promotion_target": "decision_owners",
+      "answer_kind": "person",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "search_strategy": {
+        "search_queries": [
+          "\"Arsenal Football Club\" LinkedIn company profile",
+          "\"Arsenal Football Club\" chief commercial officer",
+          "\"Arsenal Football Club\" commercial director",
+          "\"Arsenal Football Club\" head of partnerships",
+          "\"Arsenal Football Club\" marketing director",
+          "\"Arsenal Football Club\" chief digital officer",
+          "\"Arsenal Football Club\" strategy director"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Arsenal Football Club",
+      "entity_id": "arsenal-fc",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q12_connections",
+      "question_family": "connections",
+      "question_type": "connections",
+      "question": "What is the best Yellow Panther path to the ranked buying candidates at Arsenal Football Club?",
+      "query": "\"Arsenal Football Club\" connections",
+      "source_priority": [
+        "graphiti_connections",
+        "connections_graph",
+        "linkedin_network"
+      ],
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [
+        {
+          "type": "validated_question",
+          "question_id": "q11_decision_owner"
+        }
+      ],
+      "depends_on": [
+        "q11_decision_owner"
+      ],
+      "structured_output_schema": "connections_path_v1",
+      "graph_write_targets": [
+        "connection_paths"
+      ],
+      "evidence_focus": "connections",
+      "promotion_target": "connections",
+      "answer_kind": "scorecard",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": []
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Arsenal Football Club",
+      "entity_id": "arsenal-fc",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q13_capability_gap",
+      "question_family": "capability_gap",
+      "question_type": "capability_gap",
+      "question": "What capability gaps or weaknesses are most relevant for Arsenal Football Club versus peers?",
+      "query": "\"Arsenal Football Club\" capability gap",
+      "source_priority": [],
+      "execution_class": "derived_inference",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [],
+      "depends_on": [
+        "q2_digital_stack",
+        "q4_performance",
+        "q5_league_context",
+        "q6_launch_signal",
+        "q7_procurement_signal",
+        "q9_news_signal",
+        "q10_hiring_signal"
+      ],
+      "structured_output_schema": "capability_gap_v1",
+      "graph_write_targets": [
+        "capability_gap_episodes"
+      ],
+      "evidence_focus": "capability_gap",
+      "promotion_target": "capability_gap",
+      "answer_kind": "scorecard",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": []
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Arsenal Football Club",
+      "entity_id": "arsenal-fc",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q14_yp_fit",
+      "question_family": "yp_fit",
+      "question_type": "yp_fit",
+      "question": "Where does Yellow Panther fit best for Arsenal Football Club?",
+      "query": "\"Arsenal Football Club\" Yellow Panther fit",
+      "source_priority": [],
+      "execution_class": "derived_inference",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [],
+      "depends_on": [
+        "q13_capability_gap",
+        "q7_procurement_signal"
+      ],
+      "structured_output_schema": "yp_fit_v1",
+      "graph_write_targets": [
+        "yp_fit_episodes"
+      ],
+      "evidence_focus": "yp_fit",
+      "promotion_target": "yp_fit",
+      "answer_kind": "scorecard",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": []
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Arsenal Football Club",
+      "entity_id": "arsenal-fc",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q15_outreach_strategy",
+      "question_family": "outreach_strategy",
+      "question_type": "outreach_strategy",
+      "question": "What is the best outreach strategy for Yellow Panther at Arsenal Football Club?",
+      "query": "\"Arsenal Football Club\" outreach strategy",
+      "source_priority": [],
+      "execution_class": "derived_inference",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [],
+      "depends_on": [
+        "q11_decision_owner",
+        "q12_connections",
+        "q14_yp_fit"
+      ],
+      "structured_output_schema": "outreach_strategy_v1",
+      "graph_write_targets": [
+        "outreach_strategy_episodes"
+      ],
+      "evidence_focus": "outreach_strategy",
+      "promotion_target": "outreach_strategy",
+      "answer_kind": "scorecard",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": []
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Arsenal Football Club",
+      "entity_id": "arsenal-fc",
+      "entity_type": "SPORT_CLUB",
+      "pack_role": "discovery"
     }
   ]
 }

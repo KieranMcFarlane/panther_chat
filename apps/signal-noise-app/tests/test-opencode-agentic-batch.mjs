@@ -1444,7 +1444,7 @@ test('buildOpenCodeQuestionPrompt specializes decision-owner and related-pois ou
 
   assert.match(decisionPrompt, /primary_owner/i);
   assert.match(decisionPrompt, /supporting_candidates/i);
-  assert.match(decisionPrompt, /first validated primary owner/i);
+  assert.match(decisionPrompt, /highest probability buyer/i);
 
   const relatedPrompt = buildOpenCodeQuestionPrompt({
     question_text: 'Which 3 to 5 people are the most relevant commercial, partnerships, or business development contacts at Major League Cricket?',
@@ -1658,7 +1658,10 @@ test('runOpenCodePresetBatch writes a merged meta artifact for the preset', asyn
     });
 
     assert.equal(result.questions_total, 2);
-    assert.deepEqual(questionRuns, [
+    const baseQuestionRuns = Array.from(
+      new Set(questionRuns.map((questionId) => String(questionId).replace(/__hop_\d+$/, ''))),
+    );
+    assert.deepEqual(baseQuestionRuns, [
       'entity_founded_year',
       'sl_league_mobile_app',
     ]);
@@ -1752,6 +1755,171 @@ test('runOpenCodeQuestionSourceBatch writes the canonical question_first_run art
       process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
     }
   }
+});
+
+test('runOpenCodeQuestionSourceBatch defaults to the phase_1_core subset from a canonical fifteen-question source', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-rollout-phase-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const seenQuestionIds = [];
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'arsenal-fc',
+        entity_name: 'Arsenal Football Club',
+        entity_type: 'SPORT_CLUB',
+        preset: 'arsenal-atomic-matrix',
+        question_source_label: 'arsenal-atomic-matrix',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        rollout_strategy: 'phased_core',
+        default_rollout_phase: 'phase_1_core',
+        question_count: 3,
+        questions: [
+          {
+            question_id: 'q1_foundation',
+            question_type: 'foundation',
+            question: 'What year was {entity} founded?',
+            query: '"Arsenal Football Club" founded year',
+            hop_budget: 1,
+            execution_class: 'atomic_retrieval',
+            rollout_phase: 'phase_1_core',
+            fallback_to_retrieval: true,
+            source_priority: ['google_serp'],
+          },
+          {
+            question_id: 'q8_explicit_rfp',
+            question_type: 'tender_docs',
+            question: 'Are there published RFPs for {entity}?',
+            query: '"Arsenal Football Club" tender',
+            hop_budget: 1,
+            execution_class: 'atomic_retrieval',
+            rollout_phase: 'phase_2_conditional',
+            fallback_to_retrieval: true,
+            source_priority: ['google_serp'],
+            conditional_on: [{ type: 'validated_question', question_id: 'q7_procurement_signal' }],
+          },
+          {
+            question_id: 'q13_capability_gap',
+            question_type: 'capability_gap',
+            question: 'What capability gaps exist for {entity}?',
+            query: '"Arsenal Football Club" capability gap',
+            hop_budget: 1,
+            execution_class: 'derived_inference',
+            rollout_phase: 'phase_3_decision',
+            fallback_to_retrieval: false,
+            source_priority: [],
+            depends_on: ['q2_digital_stack'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  const result = await runOpenCodeQuestionSourceBatch({
+    questionSourcePath: sourcePath,
+    outputDir,
+    questionRunner: async (question) => {
+      seenQuestionIds.push(question.question_id);
+      return {
+        structuredOutput: {
+          answer: '1886',
+          confidence: 0.9,
+          sources: ['https://www.arsenal.com/history'],
+          validation_state: 'validated',
+        },
+        promptTrace: { status: 'ok', has_structured_output: true },
+        messageTrace: [],
+        cliResult: { code: 0, stdout: '', stderr: '' },
+      };
+    },
+    deterministicToolRunner: async () => null,
+  });
+
+  assert.deepEqual(seenQuestionIds, ['q1_foundation']);
+  assert.equal(result.questions_total, 1);
+});
+
+test('runOpenCodeQuestionSourceBatch does not send deterministic or derived questions into retrieval when fallback is disabled', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-execution-class-'));
+  const sourcePath = join(outputDir, 'source.json');
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'arsenal-fc',
+        entity_name: 'Arsenal Football Club',
+        entity_type: 'SPORT_CLUB',
+        preset: 'arsenal-phase-three',
+        question_source_label: 'arsenal-phase-three',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        rollout_strategy: 'phased_core',
+        default_rollout_phase: 'phase_3_decision',
+        question_count: 2,
+        questions: [
+          {
+            question_id: 'q4_performance',
+            question_type: 'performance',
+            question: 'What is the current sporting performance context for {entity}?',
+            query: '"Arsenal Football Club" table',
+            hop_budget: 1,
+            execution_class: 'deterministic_enrichment',
+            rollout_phase: 'phase_2_conditional',
+            fallback_to_retrieval: false,
+            source_priority: ['sports_data'],
+            conditional_on: [{ type: 'entity_type_in', values: ['SPORT_CLUB', 'SPORT_LEAGUE'] }],
+          },
+          {
+            question_id: 'q13_capability_gap',
+            question_type: 'capability_gap',
+            question: 'What capability gaps exist for {entity}?',
+            query: '"Arsenal Football Club" capability gap',
+            hop_budget: 1,
+            execution_class: 'derived_inference',
+            rollout_phase: 'phase_3_decision',
+            fallback_to_retrieval: false,
+            source_priority: [],
+            depends_on: ['q2_digital_stack'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  await runOpenCodeQuestionSourceBatch({
+    questionSourcePath: sourcePath,
+    outputDir,
+    questionRunner: async () => {
+      throw new Error('questionRunner should not be called for deterministic/derived questions without retrieval fallback');
+    },
+    deterministicToolRunner: async () => null,
+  });
+
+  const questionPaths = readdirSync(outputDir).filter((name) => /_question_\d{3}\.json$/.test(name));
+  assert.equal(questionPaths.length, 2);
+  const payloads = questionPaths
+    .map((name) => JSON.parse(readFileSync(join(outputDir, name), 'utf8')).question)
+    .sort((left, right) => left.question_id.localeCompare(right.question_id));
+  assert.deepEqual(
+    payloads.map((payload) => [payload.question_id, payload.validation_state]),
+    [
+      ['q13_capability_gap', 'no_signal'],
+      ['q4_performance', 'no_signal'],
+    ],
+  );
 });
 
 test('runOpenCodeQuestionSourceBatch writes an initial checkpoint before the first question completes', async () => {

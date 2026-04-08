@@ -1,6 +1,6 @@
 {
   "schema_version": "atomic_question_source_v1",
-  "generated_at": "2026-04-07T10:50:41.217731+00:00",
+  "generated_at": "2026-04-08T09:23:34.411200+00:00",
   "entity_id": "major-league-cricket",
   "entity_name": "Major League Cricket",
   "entity_type": "SPORT_LEAGUE",
@@ -9,35 +9,52 @@
   "question_shape": "atomic",
   "pack_role": "discovery",
   "pack_stage": "atomic_matrix",
-  "question_count": 5,
+  "rollout_strategy": "phased_core",
+  "default_rollout_phase": "phase_1_core",
+  "question_count": 15,
   "questions": [
     {
       "question_id": "q1_foundation",
       "question_family": "foundation",
       "question_type": "foundation",
-      "question": "What year was Major League Cricket founded?",
+      "question": "What is the canonical identity and grounding profile for Major League Cricket?",
       "query": "\"Major League Cricket\" official website founded year",
-      "hop_budget": 8,
-      "evidence_extension_budget": 1,
       "source_priority": [
         "google_serp",
         "official_site",
         "wikipedia"
       ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "foundation_v1",
+      "graph_write_targets": [
+        "entity_identity"
+      ],
+      "evidence_focus": "entity_fact",
+      "promotion_target": "profile",
+      "answer_kind": "fact",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 1,
       "search_strategy": {
         "search_queries": [
           "\"Major League Cricket\" official website",
           "\"Major League Cricket\" founded year",
+          "\"Major League Cricket\" headquarters",
+          "\"Major League Cricket\" venue",
           "\"Major League Cricket\" wikipedia"
         ]
       },
-      "evidence_focus": "entity_fact",
-      "promotion_target": "profile",
-      "answer_kind": "fact",
       "question_shape": "atomic",
       "question_timeout_ms": 180000,
       "hop_timeout_ms": 180000,
-      "evidence_extension_confidence_threshold": 0.65
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Major League Cricket",
+      "entity_id": "major-league-cricket",
+      "entity_type": "SPORT_LEAGUE",
+      "pack_role": "discovery"
     },
     {
       "question_id": "q2_digital_stack",
@@ -45,8 +62,6 @@
       "question_type": "digital_stack",
       "question": "What visible technologies, platforms, or vendors does Major League Cricket use, and what do they imply commercially?",
       "query": "\"Major League Cricket\" official website",
-      "hop_budget": 8,
-      "evidence_extension_budget": 2,
       "source_priority": [
         "apify_techstack",
         "google_serp",
@@ -54,133 +69,58 @@
         "press_release",
         "official_site"
       ],
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [
+        "q1_foundation"
+      ],
+      "structured_output_schema": "digital_stack_v1",
+      "graph_write_targets": [
+        "technology_signals"
+      ],
+      "evidence_focus": "technology_stack",
+      "promotion_target": "technology_stack",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
+      "deterministic_tools": [
+        "apify_techstack"
+      ],
+      "deterministic_input": {
+        "source_question_id": "q1_foundation",
+        "official_site_only": true
+      },
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
       "search_strategy": {
         "search_queries": [
           "\"Major League Cricket\" official website",
           "\"Major League Cricket\" technology stack",
           "\"Major League Cricket\" tech stack",
           "\"Major League Cricket\" digital stack",
-          "\"Major League Cricket\" digital experience",
           "\"Major League Cricket\" CRM",
           "\"Major League Cricket\" analytics platform",
           "\"Major League Cricket\" ticketing platform",
-          "\"Major League Cricket\" ecommerce",
           "\"Major League Cricket\" mobile app",
           "\"Major League Cricket\" technology partner",
-          "\"Major League Cricket\" digital partner",
-          "\"Major League Cricket\" official partner",
-          "\"Major League Cricket\" case study",
-          "\"Major League Cricket\" platform",
-          "\"Major League Cricket\" app"
+          "\"Major League Cricket\" digital partner"
         ]
       },
-      "deterministic_tools": [
-        "apify_techstack"
-      ],
-      "fallback_to_retrieval": true,
-      "deterministic_input": {
-        "source_question_id": "q1_foundation",
-        "official_site_only": true
-      },
-      "evidence_focus": "technology_stack",
-      "promotion_target": "technology_stack",
-      "answer_kind": "signal",
       "question_shape": "atomic",
       "question_timeout_ms": 180000,
       "hop_timeout_ms": 180000,
-      "evidence_extension_confidence_threshold": 0.65
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Major League Cricket",
+      "entity_id": "major-league-cricket",
+      "entity_type": "SPORT_LEAGUE",
+      "pack_role": "discovery"
     },
     {
-      "question_id": "q3_procurement_signal",
-      "question_family": "procurement",
-      "question_type": "procurement",
-      "question": "Is there evidence Major League Cricket is buying, launching, or reshaping its commercial or digital ecosystem through procurement, partnerships, hiring, or platform initiatives?",
-      "query": "\"Major League Cricket\" official partner broadcast rights media rights data platform",
-      "hop_budget": 8,
-      "evidence_extension_budget": 2,
-      "source_priority": [
-        "official_site",
-        "news",
-        "press_release",
-        "google_serp",
-        "linkedin_posts"
-      ],
-      "search_strategy": {
-        "search_queries": [
-          "\"Major League Cricket\" official website",
-          "\"Major League Cricket\" partner",
-          "\"Major League Cricket\" sponsor",
-          "\"Major League Cricket\" official partner",
-          "\"Major League Cricket\" broadcast partner",
-          "\"Major League Cricket\" broadcast rights",
-          "\"Major League Cricket\" media rights",
-          "\"Major League Cricket\" data partner",
-          "\"Major League Cricket\" analytics",
-          "\"Major League Cricket\" platform",
-          "\"Major League Cricket\" digital platform",
-          "\"Major League Cricket\" streaming platform",
-          "\"Major League Cricket\" mobile app",
-          "\"Major League Cricket\" digital transformation",
-          "\"Major League Cricket\" vendor",
-          "\"Major League Cricket\" procurement"
-        ]
-      },
-      "evidence_focus": "opportunity_signal",
-      "promotion_target": "opportunity_signals",
-      "answer_kind": "signal",
-      "question_shape": "atomic",
-      "question_timeout_ms": 180000,
-      "hop_timeout_ms": 180000,
-      "evidence_extension_confidence_threshold": 0.65
-    },
-    {
-      "question_id": "q4_decision_owner",
-      "question_family": "decision_owner",
-      "question_type": "decision_owner",
-      "question": "Who is the most suitable person for commercial partnerships or business development at Major League Cricket?",
-      "query": "\"Major League Cricket\" LinkedIn company profile",
-      "hop_budget": 8,
-      "evidence_extension_budget": 2,
-      "source_priority": [
-        "official_site",
-        "google_serp",
-        "news",
-        "press_release",
-        "linkedin_company_profile",
-        "linkedin_people_search",
-        "linkedin_person_profile"
-      ],
-      "search_strategy": {
-        "search_queries": [
-          "\"Major League Cricket\" official website",
-          "\"Major League Cricket\" staff",
-          "\"Major League Cricket\" leadership team",
-          "\"Major League Cricket\" partnerships",
-          "\"Major League Cricket\" sponsorship",
-          "\"Major League Cricket\" business operations",
-          "\"Major League Cricket\" commissioner",
-          "\"Major League Cricket\" chief commercial officer",
-          "\"Major League Cricket\" head of partnerships",
-          "\"Major League Cricket\" business development",
-          "\"Major League Cricket\" commercial director"
-        ]
-      },
-      "evidence_focus": "decision_owner",
-      "promotion_target": "decision_owners",
-      "answer_kind": "person",
-      "question_shape": "atomic",
-      "question_timeout_ms": 180000,
-      "hop_timeout_ms": 180000,
-      "evidence_extension_confidence_threshold": 0.65
-    },
-    {
-      "question_id": "q5_related_pois",
-      "question_family": "related_pois",
-      "question_type": "related_pois",
-      "question": "Which 3 to 5 people are the most relevant commercial, partnerships, or business development contacts at Major League Cricket?",
-      "query": "\"Major League Cricket\" LinkedIn company profile",
-      "hop_budget": 8,
-      "evidence_extension_budget": 2,
+      "question_id": "q3_leadership",
+      "question_family": "leadership",
+      "question_type": "leadership",
+      "question": "Who are the key leadership, commercial, partnerships, marketing, digital, technology, and strategy figures at Major League Cricket?",
+      "query": "\"Major League Cricket\" leadership team",
       "source_priority": [
         "linkedin_company_profile",
         "linkedin_people_search",
@@ -188,28 +128,588 @@
         "google_serp",
         "official_site"
       ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "leadership_candidates_v1",
+      "graph_write_targets": [
+        "person_candidates"
+      ],
+      "evidence_focus": "leadership_map",
+      "promotion_target": "leadership",
+      "answer_kind": "people_list",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
       "search_strategy": {
         "search_queries": [
           "\"Major League Cricket\" LinkedIn company profile",
-          "\"Major League Cricket\" LinkedIn commercial",
-          "\"Major League Cricket\" LinkedIn sponsorship",
-          "\"Major League Cricket\" LinkedIn partnerships",
-          "\"Major League Cricket\" LinkedIn revenue",
-          "\"Major League Cricket\" LinkedIn marketing",
-          "\"Major League Cricket\" vice president commercial",
-          "\"Major League Cricket\" chief commercial officer",
-          "\"Major League Cricket\" partnerships director",
-          "\"Major League Cricket\" sponsorship director",
-          "\"Major League Cricket\" CEO"
+          "\"Major League Cricket\" leadership team",
+          "\"Major League Cricket\" executive team",
+          "\"Major League Cricket\" commercial team",
+          "\"Major League Cricket\" partnerships",
+          "\"Major League Cricket\" marketing",
+          "\"Major League Cricket\" digital",
+          "\"Major League Cricket\" technology",
+          "\"Major League Cricket\" strategy"
         ]
       },
-      "evidence_focus": "decision_owner",
-      "promotion_target": "decision_owners",
-      "answer_kind": "people_list",
       "question_shape": "atomic",
       "question_timeout_ms": 180000,
       "hop_timeout_ms": 180000,
-      "evidence_extension_confidence_threshold": 0.65
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Major League Cricket",
+      "entity_id": "major-league-cricket",
+      "entity_type": "SPORT_LEAGUE",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q6_launch_signal",
+      "question_family": "launch_signal",
+      "question_type": "launch_signal",
+      "question": "What products, apps, platforms, or fan experiences has Major League Cricket launched or announced?",
+      "query": "\"Major League Cricket\" launch app platform",
+      "source_priority": [
+        "official_site",
+        "press_release",
+        "news",
+        "google_serp"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "launch_signal_v1",
+      "graph_write_targets": [
+        "launch_signal_episodes"
+      ],
+      "evidence_focus": "launch_signal",
+      "promotion_target": "launch_signals",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "search_strategy": {
+        "search_queries": [
+          "\"Major League Cricket\" launch app",
+          "\"Major League Cricket\" digital platform launch",
+          "\"Major League Cricket\" fan engagement platform",
+          "\"Major League Cricket\" membership platform",
+          "\"Major League Cricket\" streaming platform",
+          "\"Major League Cricket\" ticketing launch"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Major League Cricket",
+      "entity_id": "major-league-cricket",
+      "entity_type": "SPORT_LEAGUE",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q7_procurement_signal",
+      "question_family": "procurement_signal",
+      "question_type": "procurement_signal",
+      "question": "Is there evidence Major League Cricket is buying, reshaping vendors, or changing its commercial or digital ecosystem?",
+      "query": "\"Major League Cricket\" official partner commercial partner platform",
+      "source_priority": [
+        "official_site",
+        "press_release",
+        "news",
+        "google_serp",
+        "linkedin_posts"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "procurement_signal_v1",
+      "graph_write_targets": [
+        "procurement_signal_episodes"
+      ],
+      "evidence_focus": "opportunity_signal",
+      "promotion_target": "opportunity_signals",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "search_strategy": {
+        "search_queries": [
+          "\"Major League Cricket\" official partner",
+          "\"Major League Cricket\" commercial partner",
+          "\"Major League Cricket\" sponsorship",
+          "\"Major League Cricket\" partnerships",
+          "\"Major League Cricket\" technology partner",
+          "\"Major League Cricket\" digital transformation",
+          "\"Major League Cricket\" procurement",
+          "\"Major League Cricket\" vendor"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Major League Cricket",
+      "entity_id": "major-league-cricket",
+      "entity_type": "SPORT_LEAGUE",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q8_explicit_rfp",
+      "question_family": "explicit_rfp",
+      "question_type": "tender_docs",
+      "question": "Are there published RFPs, tenders, or formal procurement documents for Major League Cricket?",
+      "query": "\"Major League Cricket\" tender RFP",
+      "source_priority": [
+        "official_site",
+        "google_serp",
+        "press_release",
+        "news"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_2_conditional",
+      "conditional_on": [
+        {
+          "type": "validated_question",
+          "question_id": "q7_procurement_signal"
+        }
+      ],
+      "depends_on": [
+        "q7_procurement_signal"
+      ],
+      "structured_output_schema": "explicit_rfp_v1",
+      "graph_write_targets": [
+        "explicit_rfp_episodes"
+      ],
+      "evidence_focus": "explicit_rfp",
+      "promotion_target": "rfp_signals",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 1,
+      "search_strategy": {
+        "search_queries": [
+          "\"Major League Cricket\" RFP",
+          "\"Major League Cricket\" tender",
+          "\"Major League Cricket\" invitation to tender",
+          "\"Major League Cricket\" filetype:pdf tender"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Major League Cricket",
+      "entity_id": "major-league-cricket",
+      "entity_type": "SPORT_LEAGUE",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q9_news_signal",
+      "question_family": "news_signal",
+      "question_type": "news_signal",
+      "question": "What recent news, partnerships, and strategic themes are most relevant for Major League Cricket right now?",
+      "query": "\"Major League Cricket\" news announcement partnership",
+      "source_priority": [
+        "news",
+        "press_release",
+        "official_site",
+        "google_serp"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "news_signal_v1",
+      "graph_write_targets": [
+        "news_signal_episodes"
+      ],
+      "evidence_focus": "news_signal",
+      "promotion_target": "news_signals",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "search_strategy": {
+        "search_queries": [
+          "\"Major League Cricket\" news",
+          "\"Major League Cricket\" announcement",
+          "\"Major League Cricket\" partnership",
+          "\"Major League Cricket\" digital",
+          "\"Major League Cricket\" strategy"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Major League Cricket",
+      "entity_id": "major-league-cricket",
+      "entity_type": "SPORT_LEAGUE",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q10_hiring_signal",
+      "question_family": "hiring_signal",
+      "question_type": "hiring_signal",
+      "question": "What hiring signals suggest current investment priorities for Major League Cricket?",
+      "query": "\"Major League Cricket\" jobs digital marketing CRM",
+      "source_priority": [
+        "google_serp",
+        "official_site",
+        "linkedin_posts",
+        "news"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_2_conditional",
+      "conditional_on": [
+        {
+          "type": "question_phase_enabled",
+          "question_id": "q9_news_signal"
+        }
+      ],
+      "depends_on": [
+        "q9_news_signal"
+      ],
+      "structured_output_schema": "hiring_signal_v1",
+      "graph_write_targets": [
+        "hiring_signal_episodes"
+      ],
+      "evidence_focus": "hiring_signal",
+      "promotion_target": "hiring_signals",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 1,
+      "search_strategy": {
+        "search_queries": [
+          "\"Major League Cricket\" jobs digital",
+          "\"Major League Cricket\" jobs CRM",
+          "\"Major League Cricket\" jobs partnerships",
+          "\"Major League Cricket\" jobs marketing",
+          "\"Major League Cricket\" jobs transformation"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Major League Cricket",
+      "entity_id": "major-league-cricket",
+      "entity_type": "SPORT_LEAGUE",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q4_performance",
+      "question_family": "performance",
+      "question_type": "performance",
+      "question": "What is the current sporting performance context for Major League Cricket?",
+      "query": "\"Major League Cricket\" standings",
+      "source_priority": [
+        "sports_data",
+        "official_site"
+      ],
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_2_conditional",
+      "conditional_on": [
+        {
+          "type": "entity_type_in",
+          "values": [
+            "SPORT_CLUB",
+            "SPORT_LEAGUE"
+          ]
+        }
+      ],
+      "depends_on": [],
+      "structured_output_schema": "performance_context_v1",
+      "graph_write_targets": [
+        "performance_context"
+      ],
+      "evidence_focus": "performance_context",
+      "promotion_target": "performance_context",
+      "answer_kind": "summary",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": [
+          "\"Major League Cricket\" standings",
+          "\"Major League Cricket\" table",
+          "\"Major League Cricket\" results"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Major League Cricket",
+      "entity_id": "major-league-cricket",
+      "entity_type": "SPORT_LEAGUE",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q5_league_context",
+      "question_family": "league_context",
+      "question_type": "league_context",
+      "question": "What peer and ecosystem context best frames Major League Cricket?",
+      "query": "\"Major League Cricket\" league context",
+      "source_priority": [
+        "graphiti_context",
+        "sports_data",
+        "official_site"
+      ],
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_2_conditional",
+      "conditional_on": [
+        {
+          "type": "entity_type_in",
+          "values": [
+            "SPORT_CLUB",
+            "SPORT_LEAGUE",
+            "SPORT_FEDERATION"
+          ]
+        }
+      ],
+      "depends_on": [],
+      "structured_output_schema": "league_context_v1",
+      "graph_write_targets": [
+        "peer_context"
+      ],
+      "evidence_focus": "league_context",
+      "promotion_target": "league_context",
+      "answer_kind": "summary",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": [
+          "\"Major League Cricket\" league competitors",
+          "\"Major League Cricket\" comparable clubs",
+          "\"Major League Cricket\" peer organisations"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Major League Cricket",
+      "entity_id": "major-league-cricket",
+      "entity_type": "SPORT_LEAGUE",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q11_decision_owner",
+      "question_family": "decision_owner",
+      "question_type": "decision_owner",
+      "question": "Who is the highest probability buyer at Major League Cricket given the current commercial and product context?",
+      "query": "\"Major League Cricket\" commercial partnerships leadership",
+      "source_priority": [
+        "linkedin_company_profile",
+        "linkedin_people_search",
+        "linkedin_person_profile",
+        "google_serp",
+        "official_site"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [],
+      "depends_on": [
+        "q3_leadership",
+        "q6_launch_signal",
+        "q7_procurement_signal",
+        "q9_news_signal",
+        "q10_hiring_signal"
+      ],
+      "structured_output_schema": "decision_owner_v1",
+      "graph_write_targets": [
+        "decision_owner_rankings"
+      ],
+      "evidence_focus": "decision_owner",
+      "promotion_target": "decision_owners",
+      "answer_kind": "person",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "search_strategy": {
+        "search_queries": [
+          "\"Major League Cricket\" LinkedIn company profile",
+          "\"Major League Cricket\" chief commercial officer",
+          "\"Major League Cricket\" commercial director",
+          "\"Major League Cricket\" head of partnerships",
+          "\"Major League Cricket\" marketing director",
+          "\"Major League Cricket\" chief digital officer",
+          "\"Major League Cricket\" strategy director"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Major League Cricket",
+      "entity_id": "major-league-cricket",
+      "entity_type": "SPORT_LEAGUE",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q12_connections",
+      "question_family": "connections",
+      "question_type": "connections",
+      "question": "What is the best Yellow Panther path to the ranked buying candidates at Major League Cricket?",
+      "query": "\"Major League Cricket\" connections",
+      "source_priority": [
+        "graphiti_connections",
+        "connections_graph",
+        "linkedin_network"
+      ],
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [
+        {
+          "type": "validated_question",
+          "question_id": "q11_decision_owner"
+        }
+      ],
+      "depends_on": [
+        "q11_decision_owner"
+      ],
+      "structured_output_schema": "connections_path_v1",
+      "graph_write_targets": [
+        "connection_paths"
+      ],
+      "evidence_focus": "connections",
+      "promotion_target": "connections",
+      "answer_kind": "scorecard",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": []
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Major League Cricket",
+      "entity_id": "major-league-cricket",
+      "entity_type": "SPORT_LEAGUE",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q13_capability_gap",
+      "question_family": "capability_gap",
+      "question_type": "capability_gap",
+      "question": "What capability gaps or weaknesses are most relevant for Major League Cricket versus peers?",
+      "query": "\"Major League Cricket\" capability gap",
+      "source_priority": [],
+      "execution_class": "derived_inference",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [],
+      "depends_on": [
+        "q2_digital_stack",
+        "q4_performance",
+        "q5_league_context",
+        "q6_launch_signal",
+        "q7_procurement_signal",
+        "q9_news_signal",
+        "q10_hiring_signal"
+      ],
+      "structured_output_schema": "capability_gap_v1",
+      "graph_write_targets": [
+        "capability_gap_episodes"
+      ],
+      "evidence_focus": "capability_gap",
+      "promotion_target": "capability_gap",
+      "answer_kind": "scorecard",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": []
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Major League Cricket",
+      "entity_id": "major-league-cricket",
+      "entity_type": "SPORT_LEAGUE",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q14_yp_fit",
+      "question_family": "yp_fit",
+      "question_type": "yp_fit",
+      "question": "Where does Yellow Panther fit best for Major League Cricket?",
+      "query": "\"Major League Cricket\" Yellow Panther fit",
+      "source_priority": [],
+      "execution_class": "derived_inference",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [],
+      "depends_on": [
+        "q13_capability_gap",
+        "q7_procurement_signal"
+      ],
+      "structured_output_schema": "yp_fit_v1",
+      "graph_write_targets": [
+        "yp_fit_episodes"
+      ],
+      "evidence_focus": "yp_fit",
+      "promotion_target": "yp_fit",
+      "answer_kind": "scorecard",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": []
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Major League Cricket",
+      "entity_id": "major-league-cricket",
+      "entity_type": "SPORT_LEAGUE",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q15_outreach_strategy",
+      "question_family": "outreach_strategy",
+      "question_type": "outreach_strategy",
+      "question": "What is the best outreach strategy for Yellow Panther at Major League Cricket?",
+      "query": "\"Major League Cricket\" outreach strategy",
+      "source_priority": [],
+      "execution_class": "derived_inference",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [],
+      "depends_on": [
+        "q11_decision_owner",
+        "q12_connections",
+        "q14_yp_fit"
+      ],
+      "structured_output_schema": "outreach_strategy_v1",
+      "graph_write_targets": [
+        "outreach_strategy_episodes"
+      ],
+      "evidence_focus": "outreach_strategy",
+      "promotion_target": "outreach_strategy",
+      "answer_kind": "scorecard",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": []
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "Major League Cricket",
+      "entity_id": "major-league-cricket",
+      "entity_type": "SPORT_LEAGUE",
+      "pack_role": "discovery"
     }
   ]
 }

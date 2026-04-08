@@ -1,6 +1,6 @@
 {
   "schema_version": "atomic_question_source_v1",
-  "generated_at": "2026-04-07T10:50:41.217027+00:00",
+  "generated_at": "2026-04-08T09:23:34.410577+00:00",
   "entity_id": "international-canoe-federation",
   "entity_name": "International Canoe Federation",
   "entity_type": "SPORT_FEDERATION",
@@ -9,44 +9,59 @@
   "question_shape": "atomic",
   "pack_role": "discovery",
   "pack_stage": "atomic_matrix",
-  "question_count": 5,
+  "rollout_strategy": "phased_core",
+  "default_rollout_phase": "phase_1_core",
+  "question_count": 15,
   "questions": [
     {
       "question_id": "q1_foundation",
       "question_family": "foundation",
       "question_type": "foundation",
-      "question": "What year was International Canoe Federation founded?",
-      "query": "\"International Canoe Federation\" founded year",
-      "hop_budget": 8,
-      "evidence_extension_budget": 1,
+      "question": "What is the canonical identity and grounding profile for International Canoe Federation?",
+      "query": "\"International Canoe Federation\" official website founded year",
       "source_priority": [
         "google_serp",
         "official_site",
         "wikipedia"
       ],
-      "search_strategy": {
-        "search_queries": [
-          "\"International Canoe Federation\" founded year",
-          "\"International Canoe Federation\" official website",
-          "\"International Canoe Federation\" wikipedia"
-        ]
-      },
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "foundation_v1",
+      "graph_write_targets": [
+        "entity_identity"
+      ],
       "evidence_focus": "entity_fact",
       "promotion_target": "profile",
       "answer_kind": "fact",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 1,
+      "search_strategy": {
+        "search_queries": [
+          "\"International Canoe Federation\" official website",
+          "\"International Canoe Federation\" founded year",
+          "\"International Canoe Federation\" headquarters",
+          "\"International Canoe Federation\" venue",
+          "\"International Canoe Federation\" wikipedia"
+        ]
+      },
       "question_shape": "atomic",
       "question_timeout_ms": 180000,
       "hop_timeout_ms": 180000,
-      "evidence_extension_confidence_threshold": 0.65
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "International Canoe Federation",
+      "entity_id": "international-canoe-federation",
+      "entity_type": "SPORT_FEDERATION",
+      "pack_role": "discovery"
     },
     {
       "question_id": "q2_digital_stack",
       "question_family": "digital_stack",
       "question_type": "digital_stack",
       "question": "What visible technologies, platforms, or vendors does International Canoe Federation use, and what do they imply commercially?",
-      "query": "\"International Canoe Federation\" technology stack",
-      "hop_budget": 8,
-      "evidence_extension_budget": 2,
+      "query": "\"International Canoe Federation\" official website",
       "source_priority": [
         "apify_techstack",
         "google_serp",
@@ -54,121 +69,58 @@
         "press_release",
         "official_site"
       ],
-      "search_strategy": {
-        "search_queries": [
-          "\"International Canoe Federation\" technology stack",
-          "\"International Canoe Federation\" tech stack",
-          "\"International Canoe Federation\" digital stack",
-          "\"International Canoe Federation\" official website",
-          "\"International Canoe Federation\" digital experience",
-          "\"International Canoe Federation\" events platform",
-          "\"International Canoe Federation\" membership platform",
-          "\"International Canoe Federation\" results platform",
-          "\"International Canoe Federation\" rankings platform",
-          "\"International Canoe Federation\" athlete app",
-          "\"International Canoe Federation\" mobile app",
-          "\"International Canoe Federation\" broadcast partner",
-          "\"International Canoe Federation\" technology partner",
-          "\"International Canoe Federation\" digital partner",
-          "\"International Canoe Federation\" official partner",
-          "\"International Canoe Federation\" case study",
-          "\"International Canoe Federation\" platform",
-          "\"International Canoe Federation\" app"
-        ]
-      },
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [
+        "q1_foundation"
+      ],
+      "structured_output_schema": "digital_stack_v1",
+      "graph_write_targets": [
+        "technology_signals"
+      ],
+      "evidence_focus": "technology_stack",
+      "promotion_target": "technology_stack",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
       "deterministic_tools": [
         "apify_techstack"
       ],
-      "fallback_to_retrieval": true,
       "deterministic_input": {
         "source_question_id": "q1_foundation",
         "official_site_only": true
       },
-      "evidence_focus": "technology_stack",
-      "promotion_target": "technology_stack",
-      "answer_kind": "signal",
-      "question_shape": "atomic",
-      "question_timeout_ms": 180000,
-      "hop_timeout_ms": 180000,
-      "evidence_extension_confidence_threshold": 0.65
-    },
-    {
-      "question_id": "q3_procurement_signal",
-      "question_family": "tender_docs",
-      "question_type": "tender_docs",
-      "question": "Are there explicit tender documents or RFPs for digital or broadcast procurement at International Canoe Federation?",
-      "query": "\"International Canoe Federation\" tenders",
       "hop_budget": 8,
       "evidence_extension_budget": 2,
-      "source_priority": [
-        "official_site",
-        "google_serp",
-        "press_release",
-        "news"
-      ],
       "search_strategy": {
         "search_queries": [
-          "\"International Canoe Federation\" tenders",
-          "\"International Canoe Federation\" Paddle Worldwide digital ecosystem",
-          "\"International Canoe Federation\" OTT platform",
-          "site:canoeicf.com paddleworldwide_dxp_rfp.pdf",
-          "site:canoeicf.com ott platform 2026 pdf",
-          "site:canoeicf.com tenders"
+          "\"International Canoe Federation\" official website",
+          "\"International Canoe Federation\" technology stack",
+          "\"International Canoe Federation\" tech stack",
+          "\"International Canoe Federation\" digital stack",
+          "\"International Canoe Federation\" CRM",
+          "\"International Canoe Federation\" analytics platform",
+          "\"International Canoe Federation\" ticketing platform",
+          "\"International Canoe Federation\" mobile app",
+          "\"International Canoe Federation\" technology partner",
+          "\"International Canoe Federation\" digital partner"
         ]
       },
-      "evidence_focus": "opportunity_signal",
-      "promotion_target": "opportunity_signals",
-      "answer_kind": "signal",
       "question_shape": "atomic",
       "question_timeout_ms": 180000,
       "hop_timeout_ms": 180000,
-      "evidence_extension_confidence_threshold": 0.65
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "International Canoe Federation",
+      "entity_id": "international-canoe-federation",
+      "entity_type": "SPORT_FEDERATION",
+      "pack_role": "discovery"
     },
     {
-      "question_id": "q4_decision_owner",
-      "question_family": "decision_owner",
-      "question_type": "decision_owner",
-      "question": "Who is the most suitable senior commercial owner for sponsorship, broadcast, media rights, or marketing at International Canoe Federation?",
-      "query": "\"International Canoe Federation\" LinkedIn company profile",
-      "hop_budget": 6,
-      "evidence_extension_budget": 1,
-      "source_priority": [
-        "official_site",
-        "news",
-        "press_release",
-        "google_serp",
-        "linkedin_company_profile",
-        "linkedin_people_search",
-        "linkedin_person_profile"
-      ],
-      "search_strategy": {
-        "search_queries": [
-          "\"International Canoe Federation\" LinkedIn company profile",
-          "\"International Canoe Federation\" commercial and sponsorship",
-          "\"International Canoe Federation\" broadcast marketing",
-          "\"International Canoe Federation\" media rights",
-          "\"International Canoe Federation\" marketing director",
-          "\"International Canoe Federation\" commercial manager",
-          "\"International Canoe Federation\" sponsorship manager",
-          "\"International Canoe Federation\" director of tv broadcast marketing"
-        ]
-      },
-      "evidence_focus": "decision_owner",
-      "promotion_target": "decision_owners",
-      "answer_kind": "person",
-      "question_shape": "atomic",
-      "question_timeout_ms": 180000,
-      "hop_timeout_ms": 180000,
-      "evidence_extension_confidence_threshold": 0.65
-    },
-    {
-      "question_id": "q5_related_pois",
-      "question_family": "related_pois",
-      "question_type": "related_pois",
-      "question": "Which 3 to 5 people are the most relevant commercial, partnerships, or business development contacts at International Canoe Federation?",
-      "query": "\"International Canoe Federation\" LinkedIn company profile",
-      "hop_budget": 8,
-      "evidence_extension_budget": 2,
+      "question_id": "q3_leadership",
+      "question_family": "leadership",
+      "question_type": "leadership",
+      "question": "Who are the key leadership, commercial, partnerships, marketing, digital, technology, and strategy figures at International Canoe Federation?",
+      "query": "\"International Canoe Federation\" leadership team",
       "source_priority": [
         "linkedin_company_profile",
         "linkedin_people_search",
@@ -176,28 +128,588 @@
         "google_serp",
         "official_site"
       ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "leadership_candidates_v1",
+      "graph_write_targets": [
+        "person_candidates"
+      ],
+      "evidence_focus": "leadership_map",
+      "promotion_target": "leadership",
+      "answer_kind": "people_list",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
       "search_strategy": {
         "search_queries": [
           "\"International Canoe Federation\" LinkedIn company profile",
-          "\"International Canoe Federation\" LinkedIn commercial",
-          "\"International Canoe Federation\" LinkedIn sponsorship",
-          "\"International Canoe Federation\" LinkedIn marketing",
-          "\"International Canoe Federation\" LinkedIn broadcast",
-          "\"International Canoe Federation\" LinkedIn media rights",
-          "\"International Canoe Federation\" head of commercial and sponsorship",
-          "\"International Canoe Federation\" director of tv broadcast marketing",
-          "\"International Canoe Federation\" digital product owner",
-          "\"International Canoe Federation\" marketing director",
-          "\"International Canoe Federation\" secretary general"
+          "\"International Canoe Federation\" leadership team",
+          "\"International Canoe Federation\" executive team",
+          "\"International Canoe Federation\" commercial team",
+          "\"International Canoe Federation\" partnerships",
+          "\"International Canoe Federation\" marketing",
+          "\"International Canoe Federation\" digital",
+          "\"International Canoe Federation\" technology",
+          "\"International Canoe Federation\" strategy"
         ]
       },
-      "evidence_focus": "decision_owner",
-      "promotion_target": "decision_owners",
-      "answer_kind": "people_list",
       "question_shape": "atomic",
       "question_timeout_ms": 180000,
       "hop_timeout_ms": 180000,
-      "evidence_extension_confidence_threshold": 0.65
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "International Canoe Federation",
+      "entity_id": "international-canoe-federation",
+      "entity_type": "SPORT_FEDERATION",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q6_launch_signal",
+      "question_family": "launch_signal",
+      "question_type": "launch_signal",
+      "question": "What products, apps, platforms, or fan experiences has International Canoe Federation launched or announced?",
+      "query": "\"International Canoe Federation\" launch app platform",
+      "source_priority": [
+        "official_site",
+        "press_release",
+        "news",
+        "google_serp"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "launch_signal_v1",
+      "graph_write_targets": [
+        "launch_signal_episodes"
+      ],
+      "evidence_focus": "launch_signal",
+      "promotion_target": "launch_signals",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "search_strategy": {
+        "search_queries": [
+          "\"International Canoe Federation\" launch app",
+          "\"International Canoe Federation\" digital platform launch",
+          "\"International Canoe Federation\" fan engagement platform",
+          "\"International Canoe Federation\" membership platform",
+          "\"International Canoe Federation\" streaming platform",
+          "\"International Canoe Federation\" ticketing launch"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "International Canoe Federation",
+      "entity_id": "international-canoe-federation",
+      "entity_type": "SPORT_FEDERATION",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q7_procurement_signal",
+      "question_family": "procurement_signal",
+      "question_type": "procurement_signal",
+      "question": "Is there evidence International Canoe Federation is buying, reshaping vendors, or changing its commercial or digital ecosystem?",
+      "query": "\"International Canoe Federation\" official partner commercial partner platform",
+      "source_priority": [
+        "official_site",
+        "press_release",
+        "news",
+        "google_serp",
+        "linkedin_posts"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "procurement_signal_v1",
+      "graph_write_targets": [
+        "procurement_signal_episodes"
+      ],
+      "evidence_focus": "opportunity_signal",
+      "promotion_target": "opportunity_signals",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "search_strategy": {
+        "search_queries": [
+          "\"International Canoe Federation\" official partner",
+          "\"International Canoe Federation\" commercial partner",
+          "\"International Canoe Federation\" sponsorship",
+          "\"International Canoe Federation\" partnerships",
+          "\"International Canoe Federation\" technology partner",
+          "\"International Canoe Federation\" digital transformation",
+          "\"International Canoe Federation\" procurement",
+          "\"International Canoe Federation\" vendor"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "International Canoe Federation",
+      "entity_id": "international-canoe-federation",
+      "entity_type": "SPORT_FEDERATION",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q8_explicit_rfp",
+      "question_family": "explicit_rfp",
+      "question_type": "tender_docs",
+      "question": "Are there published RFPs, tenders, or formal procurement documents for International Canoe Federation?",
+      "query": "\"International Canoe Federation\" tender RFP",
+      "source_priority": [
+        "official_site",
+        "google_serp",
+        "press_release",
+        "news"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_2_conditional",
+      "conditional_on": [
+        {
+          "type": "validated_question",
+          "question_id": "q7_procurement_signal"
+        }
+      ],
+      "depends_on": [
+        "q7_procurement_signal"
+      ],
+      "structured_output_schema": "explicit_rfp_v1",
+      "graph_write_targets": [
+        "explicit_rfp_episodes"
+      ],
+      "evidence_focus": "explicit_rfp",
+      "promotion_target": "rfp_signals",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 1,
+      "search_strategy": {
+        "search_queries": [
+          "\"International Canoe Federation\" RFP",
+          "\"International Canoe Federation\" tender",
+          "\"International Canoe Federation\" invitation to tender",
+          "\"International Canoe Federation\" filetype:pdf tender"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "International Canoe Federation",
+      "entity_id": "international-canoe-federation",
+      "entity_type": "SPORT_FEDERATION",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q9_news_signal",
+      "question_family": "news_signal",
+      "question_type": "news_signal",
+      "question": "What recent news, partnerships, and strategic themes are most relevant for International Canoe Federation right now?",
+      "query": "\"International Canoe Federation\" news announcement partnership",
+      "source_priority": [
+        "news",
+        "press_release",
+        "official_site",
+        "google_serp"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_1_core",
+      "conditional_on": [],
+      "depends_on": [],
+      "structured_output_schema": "news_signal_v1",
+      "graph_write_targets": [
+        "news_signal_episodes"
+      ],
+      "evidence_focus": "news_signal",
+      "promotion_target": "news_signals",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "search_strategy": {
+        "search_queries": [
+          "\"International Canoe Federation\" news",
+          "\"International Canoe Federation\" announcement",
+          "\"International Canoe Federation\" partnership",
+          "\"International Canoe Federation\" digital",
+          "\"International Canoe Federation\" strategy"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "International Canoe Federation",
+      "entity_id": "international-canoe-federation",
+      "entity_type": "SPORT_FEDERATION",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q10_hiring_signal",
+      "question_family": "hiring_signal",
+      "question_type": "hiring_signal",
+      "question": "What hiring signals suggest current investment priorities for International Canoe Federation?",
+      "query": "\"International Canoe Federation\" jobs digital marketing CRM",
+      "source_priority": [
+        "google_serp",
+        "official_site",
+        "linkedin_posts",
+        "news"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_2_conditional",
+      "conditional_on": [
+        {
+          "type": "question_phase_enabled",
+          "question_id": "q9_news_signal"
+        }
+      ],
+      "depends_on": [
+        "q9_news_signal"
+      ],
+      "structured_output_schema": "hiring_signal_v1",
+      "graph_write_targets": [
+        "hiring_signal_episodes"
+      ],
+      "evidence_focus": "hiring_signal",
+      "promotion_target": "hiring_signals",
+      "answer_kind": "signal",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 1,
+      "search_strategy": {
+        "search_queries": [
+          "\"International Canoe Federation\" jobs digital",
+          "\"International Canoe Federation\" jobs CRM",
+          "\"International Canoe Federation\" jobs partnerships",
+          "\"International Canoe Federation\" jobs marketing",
+          "\"International Canoe Federation\" jobs transformation"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "International Canoe Federation",
+      "entity_id": "international-canoe-federation",
+      "entity_type": "SPORT_FEDERATION",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q4_performance",
+      "question_family": "performance",
+      "question_type": "performance",
+      "question": "What is the current sporting performance context for International Canoe Federation?",
+      "query": "\"International Canoe Federation\" standings",
+      "source_priority": [
+        "sports_data",
+        "official_site"
+      ],
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_2_conditional",
+      "conditional_on": [
+        {
+          "type": "entity_type_in",
+          "values": [
+            "SPORT_CLUB",
+            "SPORT_LEAGUE"
+          ]
+        }
+      ],
+      "depends_on": [],
+      "structured_output_schema": "performance_context_v1",
+      "graph_write_targets": [
+        "performance_context"
+      ],
+      "evidence_focus": "performance_context",
+      "promotion_target": "performance_context",
+      "answer_kind": "summary",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": [
+          "\"International Canoe Federation\" standings",
+          "\"International Canoe Federation\" table",
+          "\"International Canoe Federation\" results"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "International Canoe Federation",
+      "entity_id": "international-canoe-federation",
+      "entity_type": "SPORT_FEDERATION",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q5_league_context",
+      "question_family": "league_context",
+      "question_type": "league_context",
+      "question": "What peer and ecosystem context best frames International Canoe Federation?",
+      "query": "\"International Canoe Federation\" league context",
+      "source_priority": [
+        "graphiti_context",
+        "sports_data",
+        "official_site"
+      ],
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_2_conditional",
+      "conditional_on": [
+        {
+          "type": "entity_type_in",
+          "values": [
+            "SPORT_CLUB",
+            "SPORT_LEAGUE",
+            "SPORT_FEDERATION"
+          ]
+        }
+      ],
+      "depends_on": [],
+      "structured_output_schema": "league_context_v1",
+      "graph_write_targets": [
+        "peer_context"
+      ],
+      "evidence_focus": "league_context",
+      "promotion_target": "league_context",
+      "answer_kind": "summary",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": [
+          "\"International Canoe Federation\" league competitors",
+          "\"International Canoe Federation\" comparable clubs",
+          "\"International Canoe Federation\" peer organisations"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "International Canoe Federation",
+      "entity_id": "international-canoe-federation",
+      "entity_type": "SPORT_FEDERATION",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q11_decision_owner",
+      "question_family": "decision_owner",
+      "question_type": "decision_owner",
+      "question": "Who is the highest probability buyer at International Canoe Federation given the current commercial and product context?",
+      "query": "\"International Canoe Federation\" commercial partnerships leadership",
+      "source_priority": [
+        "linkedin_company_profile",
+        "linkedin_people_search",
+        "linkedin_person_profile",
+        "google_serp",
+        "official_site"
+      ],
+      "execution_class": "atomic_retrieval",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [],
+      "depends_on": [
+        "q3_leadership",
+        "q6_launch_signal",
+        "q7_procurement_signal",
+        "q9_news_signal",
+        "q10_hiring_signal"
+      ],
+      "structured_output_schema": "decision_owner_v1",
+      "graph_write_targets": [
+        "decision_owner_rankings"
+      ],
+      "evidence_focus": "decision_owner",
+      "promotion_target": "decision_owners",
+      "answer_kind": "person",
+      "fallback_to_retrieval": true,
+      "hop_budget": 8,
+      "evidence_extension_budget": 2,
+      "search_strategy": {
+        "search_queries": [
+          "\"International Canoe Federation\" LinkedIn company profile",
+          "\"International Canoe Federation\" chief commercial officer",
+          "\"International Canoe Federation\" commercial director",
+          "\"International Canoe Federation\" head of partnerships",
+          "\"International Canoe Federation\" marketing director",
+          "\"International Canoe Federation\" chief digital officer",
+          "\"International Canoe Federation\" strategy director"
+        ]
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "International Canoe Federation",
+      "entity_id": "international-canoe-federation",
+      "entity_type": "SPORT_FEDERATION",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q12_connections",
+      "question_family": "connections",
+      "question_type": "connections",
+      "question": "What is the best Yellow Panther path to the ranked buying candidates at International Canoe Federation?",
+      "query": "\"International Canoe Federation\" connections",
+      "source_priority": [
+        "graphiti_connections",
+        "connections_graph",
+        "linkedin_network"
+      ],
+      "execution_class": "deterministic_enrichment",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [
+        {
+          "type": "validated_question",
+          "question_id": "q11_decision_owner"
+        }
+      ],
+      "depends_on": [
+        "q11_decision_owner"
+      ],
+      "structured_output_schema": "connections_path_v1",
+      "graph_write_targets": [
+        "connection_paths"
+      ],
+      "evidence_focus": "connections",
+      "promotion_target": "connections",
+      "answer_kind": "scorecard",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": []
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "International Canoe Federation",
+      "entity_id": "international-canoe-federation",
+      "entity_type": "SPORT_FEDERATION",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q13_capability_gap",
+      "question_family": "capability_gap",
+      "question_type": "capability_gap",
+      "question": "What capability gaps or weaknesses are most relevant for International Canoe Federation versus peers?",
+      "query": "\"International Canoe Federation\" capability gap",
+      "source_priority": [],
+      "execution_class": "derived_inference",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [],
+      "depends_on": [
+        "q2_digital_stack",
+        "q4_performance",
+        "q5_league_context",
+        "q6_launch_signal",
+        "q7_procurement_signal",
+        "q9_news_signal",
+        "q10_hiring_signal"
+      ],
+      "structured_output_schema": "capability_gap_v1",
+      "graph_write_targets": [
+        "capability_gap_episodes"
+      ],
+      "evidence_focus": "capability_gap",
+      "promotion_target": "capability_gap",
+      "answer_kind": "scorecard",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": []
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "International Canoe Federation",
+      "entity_id": "international-canoe-federation",
+      "entity_type": "SPORT_FEDERATION",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q14_yp_fit",
+      "question_family": "yp_fit",
+      "question_type": "yp_fit",
+      "question": "Where does Yellow Panther fit best for International Canoe Federation?",
+      "query": "\"International Canoe Federation\" Yellow Panther fit",
+      "source_priority": [],
+      "execution_class": "derived_inference",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [],
+      "depends_on": [
+        "q13_capability_gap",
+        "q7_procurement_signal"
+      ],
+      "structured_output_schema": "yp_fit_v1",
+      "graph_write_targets": [
+        "yp_fit_episodes"
+      ],
+      "evidence_focus": "yp_fit",
+      "promotion_target": "yp_fit",
+      "answer_kind": "scorecard",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": []
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "International Canoe Federation",
+      "entity_id": "international-canoe-federation",
+      "entity_type": "SPORT_FEDERATION",
+      "pack_role": "discovery"
+    },
+    {
+      "question_id": "q15_outreach_strategy",
+      "question_family": "outreach_strategy",
+      "question_type": "outreach_strategy",
+      "question": "What is the best outreach strategy for Yellow Panther at International Canoe Federation?",
+      "query": "\"International Canoe Federation\" outreach strategy",
+      "source_priority": [],
+      "execution_class": "derived_inference",
+      "rollout_phase": "phase_3_decision",
+      "conditional_on": [],
+      "depends_on": [
+        "q11_decision_owner",
+        "q12_connections",
+        "q14_yp_fit"
+      ],
+      "structured_output_schema": "outreach_strategy_v1",
+      "graph_write_targets": [
+        "outreach_strategy_episodes"
+      ],
+      "evidence_focus": "outreach_strategy",
+      "promotion_target": "outreach_strategy",
+      "answer_kind": "scorecard",
+      "fallback_to_retrieval": false,
+      "hop_budget": 0,
+      "evidence_extension_budget": 0,
+      "search_strategy": {
+        "search_queries": []
+      },
+      "question_shape": "atomic",
+      "question_timeout_ms": 180000,
+      "hop_timeout_ms": 180000,
+      "evidence_extension_confidence_threshold": 0.65,
+      "entity_name": "International Canoe Federation",
+      "entity_id": "international-canoe-federation",
+      "entity_type": "SPORT_FEDERATION",
+      "pack_role": "discovery"
     }
   ]
 }

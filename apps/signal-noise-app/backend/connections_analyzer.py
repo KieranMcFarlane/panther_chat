@@ -116,8 +116,15 @@ class TargetPerson:
     person_name: str
     role: str
     linkedin_url: str = ""
+    function_type: str = ""
+    seniority_level: str = ""
     mutual_connections_yp: str = ""  # YP member name if known
     count_second_degree_paths: int = 0
+    q11_score: float = 0.0
+    q12_score: float = 0.0
+    decision_score: float = 0.0
+    path_type: str = ""
+    recommended_yp_owner: str = ""
 
 
 @dataclass
@@ -140,6 +147,9 @@ class YPConnectionAnalysis:
     connection_strength: str = "unknown"  # strong, medium, weak, none
     tier_2_bridges: List[str] = field(default_factory=list)
     success_probability: float = 0.0
+    path_type: str = ""
+    recommended_yp_owner: str = ""
+    q12_score: float = 0.0
     talking_points: List[str] = field(default_factory=list)
 
 

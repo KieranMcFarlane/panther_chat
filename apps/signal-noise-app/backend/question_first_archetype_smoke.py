@@ -154,7 +154,7 @@ def _write_filtered_question_source(
     bounded_questions = []
     for question in selected_questions:
         bounded_question = dict(question)
-        if question_id in {"q4_decision_owner", "q3_procurement_signal", "q2_digital_stack"}:
+        if question_id in {"q11_decision_owner", "q7_procurement_signal", "q2_digital_stack"}:
             bounded_question["hop_budget"] = min(max(int(question.get("hop_budget") or 1), 1), 4)
             bounded_question["evidence_extension_budget"] = min(max(int(question.get("evidence_extension_budget") or 0), 0), 1)
             if question.get("question_timeout_ms") is not None:
