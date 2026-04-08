@@ -20,6 +20,161 @@ interface EntityLookupResult {
   dossier: any | null
 }
 
+async function findEntityInLiveStores(entityId: string): Promise<Entity | null> {
+  const normalizedName = entityId
+    .replace(/-/g, ' ')
+    .replace(/_/g, ' ')
+    .replace(/%26/g, '&')
+
+  const directIdPredicate = [
+    `id.eq.${entityId}`,
+    `neo4j_id.eq.${entityId}`,
+    Number.isNaN(Number.parseInt(entityId, 10)) ? null : `neo4j_id.eq.${Number.parseInt(entityId, 10)}`
+  ].filter(Boolean).join(',')
+
+  const { data: cachedEntity, error: cacheError } = await supabase
+    .from('cached_entities')
+    .select('*')
+    .or(directIdPredicate)
+    .limit(1)
+    .single()
+
+  if (!cacheError && cachedEntity) {
+    return {
+      id: cachedEntity.id,
+      uuid: resolveEntityUuid({
+        id: cachedEntity.id,
+        neo4j_id: cachedEntity.neo4j_id,
+        graph_id: cachedEntity.graph_id,
+        supabase_id: cachedEntity.supabase_id || cachedEntity.properties?.supabase_id,
+        properties: cachedEntity.properties,
+      }) || undefined,
+      neo4j_id: cachedEntity.neo4j_id,
+      labels: cachedEntity.labels,
+      properties: cachedEntity.properties,
+    }
+  }
+
+  const { data: teamData, error: teamError } = await supabase
+    .from('teams')
+    .select(`
+      *,
+      leagues:league_id (
+        id,
+        name,
+        badge_path,
+        badge_s3_url
+      )
+    `)
+    .or(`id.eq.${entityId},neo4j_id.eq.${entityId},name.ilike.%${entityId}%`)
+    .single()
+
+  if (!teamError && teamData) {
+    return {
+      id: teamData.id,
+      uuid: resolveEntityUuid({
+        id: teamData.id,
+        neo4j_id: teamData.neo4j_id || teamData.id,
+        supabase_id: teamData.supabase_id || teamData.properties?.supabase_id,
+        properties: teamData,
+      }) || undefined,
+      neo4j_id: teamData.neo4j_id || teamData.id,
+      labels: ['Team'],
+      properties: {
+        name: teamData.name,
+        type: 'Team',
+        sport: teamData.sport,
+        country: teamData.country,
+        founded: teamData.founded,
+        headquarters: teamData.headquarters,
+        website: teamData.website,
+        linkedin: teamData.linkedin,
+        about: teamData.about,
+        company_size: teamData.company_size,
+        priority: teamData.priority,
+        estimated_value: teamData.estimated_value,
+        opportunity_score: teamData.opportunity_score,
+        digital_maturity_score: teamData.digital_maturity_score,
+        website_moderness_score: teamData.website_moderness_score,
+        digital_transformation_score: teamData.digital_transformation_score,
+        procurement_status: teamData.procurement_status,
+        enrichment_status: teamData.enrichment_status,
+        badge_path: teamData.badge_path,
+        badge_s3_url: teamData.badge_s3_url,
+        level: teamData.level,
+        tier: teamData.tier,
+        league_id: teamData.league_id,
+        league_name: teamData.leagues?.name,
+        league_badge_path: teamData.leagues?.badge_path,
+        league_badge_s3_url: teamData.leagues?.badge_s3_url,
+      },
+    }
+  }
+
+  const { data: leagueData, error: leagueError } = await supabase
+    .from('leagues')
+    .select('*')
+    .or(`id.eq.${entityId},neo4j_id.eq.${entityId}`)
+    .single()
+
+  if (!leagueError && leagueData) {
+    return {
+      id: leagueData.id,
+      uuid: resolveEntityUuid({
+        id: leagueData.id,
+        neo4j_id: leagueData.neo4j_id || leagueData.id,
+        supabase_id: leagueData.supabase_id || leagueData.properties?.supabase_id,
+        properties: leagueData,
+      }) || undefined,
+      neo4j_id: leagueData.neo4j_id || leagueData.id,
+      labels: ['League'],
+      properties: {
+        name: leagueData.name,
+        type: 'League',
+        sport: leagueData.sport,
+        country: leagueData.country,
+        website: leagueData.website,
+        linkedin: leagueData.linkedin,
+        description: leagueData.description,
+        digital_maturity_score: leagueData.digital_maturity_score,
+        estimated_value: leagueData.estimated_value,
+        priority_score: leagueData.priority_score,
+        badge_path: leagueData.badge_path,
+        badge_s3_url: leagueData.badge_s3_url,
+        tier: leagueData.tier,
+        original_name: leagueData.original_name,
+        league_id: leagueData.league_id,
+      },
+    }
+  }
+
+  const fallbackByName = await supabase
+    .from('cached_entities')
+    .select('*')
+    .ilike('properties->>name', `%${normalizedName}%`)
+    .limit(1)
+    .single()
+
+  if (fallbackByName.data) {
+    const nameEntity = fallbackByName.data
+    return {
+      id: nameEntity.id,
+      uuid: resolveEntityUuid({
+        id: nameEntity.id,
+        neo4j_id: nameEntity.neo4j_id,
+        graph_id: nameEntity.graph_id,
+        supabase_id: nameEntity.supabase_id || nameEntity.properties?.supabase_id,
+        properties: nameEntity.properties,
+      }) || undefined,
+      neo4j_id: nameEntity.neo4j_id,
+      labels: nameEntity.labels,
+      properties: nameEntity.properties,
+    }
+  }
+
+  return null
+}
+
 async function getPersistedDossier(entityId: string, neo4jId?: string | number, entityName?: string) {
   try {
     const candidateIds = [entityId, neo4jId != null ? String(neo4jId) : null]
@@ -191,164 +346,19 @@ export async function getEntityForDossierPage(entityId: string, tier = 'standard
   }
 
   let entity: Entity | null = null
-  const canonicalEntities = await getCanonicalEntitiesSnapshot()
-  const canonicalUuidMatch = canonicalEntities.find((candidate) => matchesEntityUuid(candidate, entityId))
-
-  if (canonicalUuidMatch) {
-    entity = {
-      id: String(canonicalUuidMatch.id),
-      uuid: resolveEntityUuid(canonicalUuidMatch) || undefined,
-      neo4j_id: canonicalUuidMatch.neo4j_id,
-      labels: canonicalUuidMatch.labels || [],
-      properties: canonicalUuidMatch.properties || {},
-    }
-  }
 
   try {
-    if (!entity) {
-    const { data: teamData, error: teamError } = await supabase
-      .from('teams')
-      .select(`
-        *,
-        leagues:league_id (
-          id,
-          name,
-          badge_path,
-          badge_s3_url
-        )
-      `)
-      .or(`id.eq.${entityId},neo4j_id.eq.${entityId},name.ilike.%${entityId}%`)
-      .single()
-
-    if (!teamError && teamData) {
-      entity = {
-        id: teamData.id,
-        uuid: resolveEntityUuid({
-          id: teamData.id,
-          neo4j_id: teamData.neo4j_id || teamData.id,
-          supabase_id: teamData.supabase_id || teamData.properties?.supabase_id,
-          properties: teamData,
-        }) || undefined,
-        neo4j_id: teamData.neo4j_id || teamData.id,
-        labels: ['Team'],
-        properties: {
-          name: teamData.name,
-          type: 'Team',
-          sport: teamData.sport,
-          country: teamData.country,
-          founded: teamData.founded,
-          headquarters: teamData.headquarters,
-          website: teamData.website,
-          linkedin: teamData.linkedin,
-          about: teamData.about,
-          company_size: teamData.company_size,
-          priority: teamData.priority,
-          estimated_value: teamData.estimated_value,
-          opportunity_score: teamData.opportunity_score,
-          digital_maturity_score: teamData.digital_maturity_score,
-          website_moderness_score: teamData.website_moderness_score,
-          digital_transformation_score: teamData.digital_transformation_score,
-          procurement_status: teamData.procurement_status,
-          enrichment_status: teamData.enrichment_status,
-          badge_path: teamData.badge_path,
-          badge_s3_url: teamData.badge_s3_url,
-          level: teamData.level,
-          tier: teamData.tier,
-          league_id: teamData.league_id,
-          league_name: teamData.leagues?.name,
-          league_badge_path: teamData.leagues?.badge_path,
-          league_badge_s3_url: teamData.leagues?.badge_s3_url
-        }
-      }
-    } else {
-      const { data: leagueData, error: leagueError } = await supabase
-        .from('leagues')
-        .select('*')
-        .or(`id.eq.${entityId},neo4j_id.eq.${entityId}`)
-        .single()
-
-      if (!leagueError && leagueData) {
-        entity = {
-          id: leagueData.id,
-          uuid: resolveEntityUuid({
-            id: leagueData.id,
-            neo4j_id: leagueData.neo4j_id || leagueData.id,
-            supabase_id: leagueData.supabase_id || leagueData.properties?.supabase_id,
-            properties: leagueData,
-          }) || undefined,
-          neo4j_id: leagueData.neo4j_id || leagueData.id,
-          labels: ['League'],
-          properties: {
-            name: leagueData.name,
-            type: 'League',
-            sport: leagueData.sport,
-            country: leagueData.country,
-            website: leagueData.website,
-            linkedin: leagueData.linkedin,
-            description: leagueData.description,
-            digital_maturity_score: leagueData.digital_maturity_score,
-            estimated_value: leagueData.estimated_value,
-            priority_score: leagueData.priority_score,
-            badge_path: leagueData.badge_path,
-            badge_s3_url: leagueData.badge_s3_url,
-            tier: leagueData.tier,
-            original_name: leagueData.original_name,
-            league_id: leagueData.league_id
-          }
-        }
-      } else {
-        let { data: cachedEntity, error: cacheError } = await supabase
-          .from('cached_entities')
-          .select('*')
-          .or(`id.eq.${entityId},neo4j_id.eq.${entityId},neo4j_id.eq.${parseInt(entityId, 10) || entityId}`)
-          .limit(1)
-          .single()
-
-        if (!cachedEntity || cacheError) {
-          const normalizedName = entityId
-            .replace(/-/g, ' ')
-            .replace(/_/g, ' ')
-            .replace(/%26/g, '&')
-
-          const result = await supabase
-            .from('cached_entities')
-            .select('*')
-            .ilike('properties->>name', `%${normalizedName}%`)
-            .limit(1)
-            .single()
-
-          if (result.data) {
-            cachedEntity = result.data
-            cacheError = null
-          }
-        }
-
-        if (!cacheError && cachedEntity) {
-          entity = {
-            id: cachedEntity.id,
-            uuid: resolveEntityUuid({
-              id: cachedEntity.id,
-              neo4j_id: cachedEntity.neo4j_id,
-              graph_id: cachedEntity.graph_id,
-              supabase_id: cachedEntity.supabase_id || cachedEntity.properties?.supabase_id,
-              properties: cachedEntity.properties,
-            }) || undefined,
-            neo4j_id: cachedEntity.neo4j_id,
-            labels: cachedEntity.labels,
-            properties: cachedEntity.properties
-          }
-        }
-      }
-    }
-    }
+    entity = await findEntityInLiveStores(entityId)
   } catch (error) {
     console.log('⚠️ Server-side entity lookup error:', error)
   }
 
   if (!entity) {
+    const canonicalEntities = await getCanonicalEntitiesSnapshot()
     const canonicalMatch = canonicalEntities.find((candidate) =>
+      matchesEntityUuid(candidate, entityId) ||
       String(candidate.id || '') === entityId ||
-      String(candidate.neo4j_id || '') === entityId,
+      String(candidate.neo4j_id || '') === entityId
     )
 
     if (canonicalMatch) {

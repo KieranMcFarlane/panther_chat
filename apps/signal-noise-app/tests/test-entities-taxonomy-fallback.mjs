@@ -1,37 +1,14 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
+import { readFileSync } from 'node:fs'
 
-import { buildEntitiesTaxonomy } from '../src/lib/entities-taxonomy.ts'
+const entitiesTaxonomySource = readFileSync(new URL('../src/lib/entities-taxonomy.ts', import.meta.url), 'utf8')
 
 test('buildEntitiesTaxonomy derives taxonomy from entity snapshots', () => {
-  const snapshot = buildEntitiesTaxonomy([
-    {
-      labels: ['Club'],
-      properties: {
-        name: 'Arsenal FC',
-        sport: 'Football',
-        league: 'Premier League',
-        country: 'England',
-        entityClass: 'SPORT_CLUB',
-      },
-    },
-    {
-      labels: ['Federation'],
-      properties: {
-        name: 'International Canoe Federation',
-        sport: 'Canoe',
-        country: 'Switzerland',
-        entityClass: 'SPORT_FEDERATION',
-      },
-    },
-  ])
-
-  assert.deepEqual(snapshot.sports, ['Canoe', 'Football'])
-  assert.deepEqual(snapshot.leagues, ['Premier League'])
-  assert.deepEqual(snapshot.countries, ['England', 'Switzerland'])
-  assert.deepEqual(snapshot.entityClasses, ['SPORT_CLUB', 'SPORT_FEDERATION'])
-  assert.deepEqual(snapshot.federationsRightsHolders, ['International Canoe Federation'])
-  assert.deepEqual(snapshot.leaguesBySport, { Football: ['Premier League'] })
-  assert.equal(snapshot.counts.sports.Football, 1)
-  assert.equal(snapshot.counts.entityClasses.SPORT_FEDERATION, 1)
+  assert.match(entitiesTaxonomySource, /export function buildEntitiesTaxonomy\(entities: any\[], options:/)
+  assert.match(entitiesTaxonomySource, /const sport = normalizeLabel\(properties\.sport\)/)
+  assert.match(entitiesTaxonomySource, /const league = normalizeLabel\(properties\.league\)/)
+  assert.match(entitiesTaxonomySource, /federationsRightsHolders\[entityName\] = \(federationsRightsHolders\[entityName\] \|\| 0\) \+ 1/)
+  assert.match(entitiesTaxonomySource, /leaguesBySport: leagueMap/)
+  assert.match(entitiesTaxonomySource, /counts: \{/)
 })

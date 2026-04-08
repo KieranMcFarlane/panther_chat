@@ -63,6 +63,21 @@ test('badge service caches misses and deduplicates in-flight lookups', () => {
   assert.match(badgeServiceSource, /return cacheMapping\(mapping \|\| null\)/)
 })
 
+
+
+test('entities taxonomy api builds from the shared canonical snapshot instead of scanning cached_entities live', () => {
+  const taxonomyRouteSource = readFileSync(new URL('../src/app/api/entities/taxonomy/route.ts', import.meta.url), 'utf8')
+  assert.match(taxonomyRouteSource, /getCanonicalEntitiesSnapshot/)
+  assert.match(taxonomyRouteSource, /buildEntitiesTaxonomy/)
+  assert.doesNotMatch(taxonomyRouteSource, /from\('cached_entities'\)/)
+})
+
+test('dossier entity loader defers canonical snapshot fallback until after direct lookups', () => {
+  const entityLoaderSource = readFileSync(new URL('../src/lib/entity-loader.ts', import.meta.url), 'utf8')
+  assert.match(entityLoaderSource, /async function findEntityInLiveStores\(entityId: string\)/)
+  assert.match(entityLoaderSource, /if \(!entity\) \{\s*const canonicalEntities = await getCanonicalEntitiesSnapshot\(\)/s)
+  assert.doesNotMatch(entityLoaderSource, /const canonicalEntities = await getCanonicalEntitiesSnapshot\(\)[\s\S]*const canonicalUuidMatch/s)
+})
 test('entity browser loads the list and taxonomy through SWR hooks instead of direct fetch effects', () => {
   assert.match(entityBrowserClientPageSource, /import \{ useEntitiesBrowserData, useEntityTaxonomy \} from ['"]@\/lib\/swr-config['"]/)
   assert.match(entityBrowserClientPageSource, /const \{ entitiesData, entitiesError, entitiesLoading, entitiesValidating, reloadEntities \} = useEntitiesBrowserData\(/)

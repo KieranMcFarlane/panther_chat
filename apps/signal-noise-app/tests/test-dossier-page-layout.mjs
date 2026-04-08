@@ -12,12 +12,12 @@ const entityLoaderSource = readFileSync(entityLoaderPath, 'utf8')
 const entityApiRouteSource = readFileSync(entityApiRoutePath, 'utf8')
 
 test('dossier page uses the shared Header with league badge modal support', () => {
-  assert.match(clientSource, /import Header from ["']@\/components\/header\/Header["']/)
+  assert.match(clientSource, /const Header = dynamic\(\(\) => import\(["']@\/components\/header\/Header["']\), \{ ssr: false \}\)/)
   assert.match(clientSource, /<Header currentEntity=\{entity\} \/>/)
 })
 
 test('dossier page keeps email modal support for dossier actions', () => {
-  assert.match(clientSource, /import EmailComposeModal from ["']@\/components\/email\/EmailComposeModal["']/)
+  assert.match(clientSource, /const EmailComposeModal = dynamic\(\(\) => import\(["']@\/components\/email\/EmailComposeModal["']\), \{ ssr: false \}\)/)
   assert.match(clientSource, /const \[showEmailModal, setShowEmailModal\] = useState\(false\)/)
   assert.match(clientSource, /onEmailEntity=\{handleEmailEntity\}/)
   assert.match(clientSource, /<EmailComposeModal/)
