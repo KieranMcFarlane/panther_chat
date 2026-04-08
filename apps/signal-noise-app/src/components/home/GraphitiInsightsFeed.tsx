@@ -18,9 +18,63 @@ export function GraphitiInsightsFeed() {
       try {
         const response = await fetch('/api/home/graphiti-insights', { cache: 'no-store' })
         const json = await response.json()
-        setData(json)
+        if (!response.ok) {
+          throw new Error(typeof json?.error === 'string' ? json.error : `Graphiti insights request failed (${response.status})`)
+        }
+        setData({
+          highlights: Array.isArray(json?.highlights) ? json.highlights : [],
+          related_entities: Array.isArray(json?.related_entities) ? json.related_entities : [],
+          snapshot: json?.snapshot && typeof json.snapshot === 'object'
+            ? {
+                entities_scanned: Number(json.snapshot.entities_scanned || 0),
+                insights_found: Number(json.snapshot.insights_found || 0),
+                high_confidence_insights: Number(json.snapshot.high_confidence_insights || 0),
+                last_updated_at: String(json.snapshot.last_updated_at || new Date().toISOString()),
+                freshness_window_hours: Number(json.snapshot.freshness_window_hours || 24),
+              }
+            : {
+                entities_scanned: 0,
+                insights_found: 0,
+                high_confidence_insights: 0,
+                last_updated_at: new Date().toISOString(),
+                freshness_window_hours: 24,
+              },
+          source: json?.source === 'graphiti' ? 'graphiti' : 'graphiti_pipeline',
+          query_context: json?.query_context && typeof json.query_context === 'object'
+            ? json.query_context
+            : {
+                scope: 'homepage',
+                as_of: new Date().toISOString(),
+                entity_scope: ['all materialized entities'],
+                freshness_window_hours: 24,
+              },
+          generated_at: String(json?.generated_at || new Date().toISOString()),
+          status: json?.status === 'ready' || json?.status === 'degraded' || json?.status === 'empty' ? json.status : 'empty',
+          warnings: Array.isArray(json?.warnings) ? json.warnings : undefined,
+        })
       } catch (error) {
         console.error('Error fetching Graphiti insights:', error)
+        setData({
+          source: 'graphiti_pipeline',
+          query_context: {
+            scope: 'homepage',
+            as_of: new Date().toISOString(),
+            entity_scope: ['all materialized entities'],
+            freshness_window_hours: 24,
+          },
+          snapshot: {
+            entities_scanned: 0,
+            insights_found: 0,
+            high_confidence_insights: 0,
+            last_updated_at: new Date().toISOString(),
+            freshness_window_hours: 24,
+          },
+          highlights: [],
+          related_entities: [],
+          generated_at: new Date().toISOString(),
+          status: 'empty',
+          warnings: ['Unable to load Graphiti insights right now.'],
+        })
       } finally {
         setLoading(false)
       }
@@ -55,7 +109,10 @@ export function GraphitiInsightsFeed() {
     )
   }
 
-  if (!data || data.highlights.length === 0) {
+  const highlights = Array.isArray(data?.highlights) ? data.highlights : []
+  const relatedEntities = Array.isArray(data?.related_entities) ? data.related_entities : []
+
+  if (!data || highlights.length === 0) {
     return (
       <Card className="border-white/10 bg-white/[0.04]">
         <CardHeader>
@@ -64,8 +121,15 @@ export function GraphitiInsightsFeed() {
             Fresh Graphiti Insights
           </CardTitle>
         </CardHeader>
-        <CardContent className="text-sm text-slate-300">
-          No materialized insights are available yet. Once the Graphiti pipeline writes fresh feed records, they will appear here.
+        <CardContent className="space-y-3 text-sm text-slate-300">
+          <div>
+            No materialized insights are available yet. Once the Graphiti pipeline writes fresh feed records, they will appear here.
+          </div>
+          {Array.isArray(data?.warnings) && data.warnings.length > 0 && (
+            <div className="rounded-xl border border-amber-400/20 bg-amber-500/10 p-3 text-amber-100">
+              {data.warnings[0]}
+            </div>
+          )}
         </CardContent>
       </Card>
     )
@@ -162,7 +226,7 @@ export function GraphitiInsightsFeed() {
 
       <CardContent className="space-y-4">
         <div className="grid gap-3">
-          {data.highlights.map((insight) => (
+          {highlights.map((insight) => (
             <div key={insight.insight_id} className="rounded-2xl border border-white/10 bg-black/20 p-5">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
@@ -271,7 +335,7 @@ export function GraphitiInsightsFeed() {
             Related entities
           </div>
           <div className="flex flex-wrap gap-2">
-            {data.related_entities.slice(0, 6).map((entity) => (
+            {relatedEntities.slice(0, 6).map((entity) => (
               <Badge key={entity.entity_id} className="border border-white/10 bg-white/5 text-slate-100 hover:bg-white/5">
                 <Network className="mr-1 h-3 w-3 text-amber-300" />
                 {entity.name}

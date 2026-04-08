@@ -39,6 +39,28 @@ function buildRelatedEntities(highlights: HomeGraphitiInsight[]): HomeGraphitiRe
   return Array.from(related.values()).slice(0, 6);
 }
 
+function buildEmptyGraphitiInsightsResponse(warnings: string[] = []): HomeGraphitiInsightsResponse {
+  return {
+    source: 'graphiti_pipeline',
+    query_context: {
+      ...DEFAULT_QUERY_CONTEXT,
+      as_of: new Date().toISOString(),
+    },
+    snapshot: {
+      entities_scanned: 0,
+      insights_found: 0,
+      high_confidence_insights: 0,
+      last_updated_at: new Date().toISOString(),
+      freshness_window_hours: DEFAULT_QUERY_CONTEXT.freshness_window_hours,
+    },
+    highlights: [],
+    related_entities: [],
+    generated_at: new Date().toISOString(),
+    status: 'empty',
+    ...(warnings.length > 0 ? { warnings } : {}),
+  };
+}
+
 export async function GET(request: NextRequest) {
   try {
     noStore();
@@ -95,8 +117,10 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Unknown Graphiti insight error' },
-      { status: 500 },
+      buildEmptyGraphitiInsightsResponse([
+        error instanceof Error ? error.message : 'Unknown Graphiti insight error',
+      ]),
+      { status: 200 },
     );
   }
 }

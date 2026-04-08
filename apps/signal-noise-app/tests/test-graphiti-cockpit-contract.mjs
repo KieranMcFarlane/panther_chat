@@ -16,6 +16,13 @@ test('home graphiti route uses protected ranked materialization instead of raw r
   assert.match(homeGraphitiRouteSource, /loadGraphitiInsights/)
 })
 
+test('home graphiti route fails soft to an empty payload instead of returning a client-breaking error shape', () => {
+  assert.match(homeGraphitiRouteSource, /buildEmptyGraphitiInsightsResponse/)
+  assert.match(homeGraphitiRouteSource, /highlights:\s*\[\]/)
+  assert.match(homeGraphitiRouteSource, /related_entities:\s*\[\]/)
+  assert.match(homeGraphitiRouteSource, /\{\s*status:\s*200\s*\}/)
+})
+
 test('homepage graphiti loader excludes operational refresh cards from client-facing highlights', () => {
   assert.match(materializerSource, /context refreshed/)
   assert.match(materializerSource, /no validated signals remained/)
