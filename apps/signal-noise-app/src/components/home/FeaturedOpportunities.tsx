@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { FileText, TrendingUp, ExternalLink, Target, Clock, Bookmark, Sparkles } from 'lucide-react'
+import { TrendingUp, ExternalLink, Target, Clock, Bookmark, Sparkles } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -47,7 +47,7 @@ export function TopOpportunities() {
         <CardHeader>
           <CardTitle className="text-white flex items-center gap-2">
             <TrendingUp className="w-5 h-5 text-yellow-400" />
-            Top Opportunities for You
+            Top Opportunities
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -65,7 +65,21 @@ export function TopOpportunities() {
   }
 
   if (rfps.length === 0) {
-    return null
+    return (
+      <Card className="bg-custom-box/80 backdrop-blur-md border border-custom-border">
+        <CardHeader>
+          <CardTitle className="text-white flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-yellow-400" />
+            Top Opportunities
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-fm-light-grey">
+            No promoted opportunities are available yet. This surface stays empty until the final system promotes source-backed rows.
+          </p>
+        </CardContent>
+      </Card>
+    )
   }
 
   const formatValue = (rfp: RFP) => {
@@ -102,13 +116,13 @@ export function TopOpportunities() {
           <div>
             <CardTitle className="text-white flex items-center gap-2 mb-1">
               <TrendingUp className="w-5 h-5 text-yellow-400" />
-              Top Opportunities for You
+              Top Opportunities
             </CardTitle>
             <p className="text-sm text-fm-light-grey">Promoted production-backed opportunities only</p>
           </div>
-          <Link href="/tenders">
+          <Link href="/opportunities">
             <Button variant="ghost" size="sm" className="text-fm-light-grey hover:text-white">
-              View All 40+
+              View All
               <ExternalLink className="w-4 h-4 ml-1" />
             </Button>
           </Link>
@@ -119,7 +133,7 @@ export function TopOpportunities() {
           {rfps.map((rfp, index) => {
             const daysUntil = getDaysUntilDeadline(rfp.deadline)
             const priorityBadge = getPriorityBadge(rfp.yellow_panther_fit, rfp.deadline)
-            
+
             return (
               <div
                 key={rfp.id || index}
@@ -139,7 +153,7 @@ export function TopOpportunities() {
                     {Math.round(rfp.yellow_panther_fit || 0)}% Match
                   </Badge>
                 </div>
-                
+
                 <div className="flex items-center gap-4 mb-3 text-xs text-fm-medium-grey">
                   <div className="flex items-center gap-1">
                     <Target className="w-3 h-3" />
@@ -152,30 +166,29 @@ export function TopOpportunities() {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="flex gap-2">
-                  <Link href={`/tenders#${rfp.id}`} className="flex-1">
+                  <Link href={`/opportunities#${rfp.id}`} className="flex-1">
                     <Button variant="outline" size="sm" className="w-full text-xs border-custom-border hover:border-yellow-400">
                       View Details
                     </Button>
                   </Link>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     className="text-xs"
                     onClick={() => {
-                      // TODO: Implement save functionality
                       console.log('Save opportunity:', rfp.id)
                     }}
                   >
                     <Bookmark className="w-3 h-3" />
                   </Button>
                   <Link href={`/entity-browser?search=${encodeURIComponent(rfp.organization)}`}>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       className="text-xs"
-                      title="Generate Intelligence Dossier"
+                      title="Open canonical entity path"
                     >
                       <Sparkles className="w-3 h-3" />
                     </Button>

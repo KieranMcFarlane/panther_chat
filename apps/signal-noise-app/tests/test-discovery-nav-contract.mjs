@@ -1,37 +1,23 @@
 import assert from 'node:assert/strict'
+import { readFile } from 'node:fs/promises'
 import { test } from 'node:test'
 
-import {
-  advancedOpsNavItems,
-  overviewNavItems,
-  primaryNavItems,
-  supportNavItems,
-} from '../src/components/layout/discovery-nav.ts'
+test('client nav source keeps only the canonical user-facing surfaces', async () => {
+  const source = await readFile(new URL('../src/components/layout/discovery-nav.ts', import.meta.url), 'utf8')
 
-test('workflow nav keeps only the primary user-facing surfaces in the main lane', () => {
-  assert.deepEqual(
-    primaryNavItems.map((item) => [item.label, item.href]),
-    [
-      ['Entities', '/entity-browser'],
-      ["RFP's/Tenders", '/tenders'],
-      ['Opportunities', '/opportunities'],
-    ],
-  )
+  assert.match(source, /label: 'Home', href: '\/'/)
+  assert.match(source, /label: 'Entities', href: '\/entity-browser'/)
+  assert.match(source, /label: 'Opportunities', href: '\/opportunities'/)
+  assert.doesNotMatch(source, /RFP's\/Tenders/)
+  assert.doesNotMatch(source, /Enrichment/)
+  assert.doesNotMatch(source, /Pipeline/)
+  assert.doesNotMatch(source, /Import CSV/)
 })
 
-test('advanced ops keeps scout and the thinner operational pages available', () => {
-  assert.deepEqual(advancedOpsNavItems.map((item) => [item.label, item.href]), [
-    ['Enrichment', '/entity-enrichment'],
-    ['Pipeline', '/entity-pipeline'],
-  ])
-})
+test('legacy operational nav groups are empty in the client shell config', async () => {
+  const source = await readFile(new URL('../src/components/layout/discovery-nav.ts', import.meta.url), 'utf8')
 
-test('overview and support nav stay intentionally slim', () => {
-  assert.deepEqual(overviewNavItems.map((item) => [item.label, item.href]), [
-    ['Home', '/'],
-  ])
-
-  assert.deepEqual(supportNavItems.map((item) => [item.label, item.href]), [
-    ['Import CSV', '/entity-import'],
-  ])
+  assert.match(source, /export const overviewNavItems = \[\] as const/)
+  assert.match(source, /export const advancedOpsNavItems = \[\] as const/)
+  assert.match(source, /export const supportNavItems = \[\] as const/)
 })
