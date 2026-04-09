@@ -6,6 +6,7 @@ import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supaba
 import { CANONICAL_GOVERNING_BODY_OVERRIDES } from '@/lib/canonical-governing-body-overrides'
 import { canonicalizeEntities, type CanonicalEntity } from '@/lib/entity-canonicalization'
 import { resolveEntityUuid } from '@/lib/entity-public-id'
+import scaleManifestData from '../../backend/data/question_first_scale_batch_3000_live.json'
 
 const SNAPSHOT_TTL_MS = 15 * 60_000
 const localFalkorExportPath = path.resolve(process.cwd(), 'backend', 'falkordb_export.json')
@@ -88,11 +89,34 @@ async function fetchCanonicalEntitiesFromLocalExport(): Promise<CanonicalEntity[
   return applyCanonicalOverrides(exportEntities.map(mapExportEntity))
 }
 
+function fetchCanonicalEntitiesFromBundledManifest(): CanonicalEntity[] {
+  const manifestEntities = Array.isArray(scaleManifestData?.entities) ? scaleManifestData.entities : []
+  return applyCanonicalOverrides(
+    manifestEntities.map((entity: any) => ({
+      id: entity.entity_id,
+      uuid: entity.entity_uuid || entity.entity_id,
+      neo4j_id: entity.entity_id,
+      badge_path: null,
+      badge_s3_url: null,
+      labels: [String(entity.entity_type || 'ENTITY')],
+      properties: {
+        name: entity.entity_name || entity.entity_id,
+        type: entity.entity_type || 'ENTITY',
+        entityClass: entity.entity_type || 'ENTITY',
+      },
+    })),
+  )
+}
+
 async function fetchCanonicalEntitiesFromBestAvailableSource(): Promise<CanonicalEntity[]> {
   if (!hasUsableSupabaseConfiguration) {
     console.log('Supabase configuration is not available in this environment')
-    console.log('Falling back to local Falkor export for canonical entities snapshot')
-    return fetchCanonicalEntitiesFromLocalExport()
+    if (existsSync(localFalkorExportPath)) {
+      console.log('Falling back to local Falkor export for canonical entities snapshot')
+      return fetchCanonicalEntitiesFromLocalExport()
+    }
+    console.log('Falling back to bundled manifest for canonical entities snapshot')
+    return fetchCanonicalEntitiesFromBundledManifest()
   }
 
   if (!preferSupabaseSnapshot && existsSync(localFalkorExportPath)) {
@@ -112,7 +136,8 @@ async function fetchCanonicalEntitiesFromBestAvailableSource(): Promise<Canonica
       return fetchCanonicalEntitiesFromLocalExport()
     }
 
-    throw supabaseError
+    console.warn('⚠️ Failed to load Supabase snapshot, falling back to bundled manifest:', supabaseError)
+    return fetchCanonicalEntitiesFromBundledManifest()
   }
 }
 

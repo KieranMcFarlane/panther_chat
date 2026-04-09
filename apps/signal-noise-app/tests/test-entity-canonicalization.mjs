@@ -30,9 +30,11 @@ test('entity summary api uses the canonical snapshot for summary data', () => {
   assert.match(summaryRouteSource, /total: filteredEntities\.length/)
 })
 
-test('canonical snapshot loader prefers the local Falkor export before the Supabase cold path', () => {
+test('canonical snapshot loader prefers local export, then bundled manifest, before failing cold', () => {
   assert.match(snapshotSource, /fetchCanonicalEntitiesFromLocalExport/)
+  assert.match(snapshotSource, /fetchCanonicalEntitiesFromBundledManifest/)
   assert.match(snapshotSource, /fetchCanonicalEntitiesFromBestAvailableSource/)
   assert.match(snapshotSource, /Falling back to local Falkor export for canonical entities snapshot/)
+  assert.match(snapshotSource, /Falling back to bundled manifest for canonical entities snapshot/)
   assert.match(snapshotSource, /hasUsableSupabaseConfiguration/)
 })

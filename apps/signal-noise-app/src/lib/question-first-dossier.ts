@@ -288,7 +288,10 @@ export function normalizeQuestionFirstDossier(
   entityId: string,
   entity?: EntityLike | null,
 ) {
-  const dossier = ensureObject(dossierPayload)
+  const rawDossier = ensureObject(dossierPayload)
+  const dossier = rawDossier.merged_dossier && typeof rawDossier.merged_dossier === 'object'
+    ? ensureObject(rawDossier.merged_dossier)
+    : rawDossier
   const entityUuid = resolveEntityUuid(entity ?? {
     id: dossier.entity_id || entityId,
     entity_uuid: dossier.entity_id,

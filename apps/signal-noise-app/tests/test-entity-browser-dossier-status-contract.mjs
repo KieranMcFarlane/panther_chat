@@ -19,6 +19,21 @@ test('entity browser shared data builder avoids per-row dossier index resolution
   assert.match(entityBrowserDataSource, /dossier_status:\s*lightweightDossierIndex\.dossier_status/)
 })
 
+test('entity browser normalizes default all filters instead of filtering out every entity', () => {
+  assert.match(entityBrowserDataSource, /function normalizeFilterValue\(value: string\)/)
+  assert.match(entityBrowserDataSource, /return normalized === 'all' \? '' : normalized/)
+  assert.match(entityBrowserDataSource, /const sport = normalizeFilterValue\(filters\.sport \|\| ''\)/)
+  assert.match(entityBrowserDataSource, /const league = normalizeFilterValue\(filters\.league \|\| ''\)/)
+  assert.match(entityBrowserDataSource, /const country = normalizeFilterValue\(filters\.country \|\| ''\)/)
+  assert.match(entityBrowserDataSource, /const entityClass = normalizeFilterValue\(filters\.entityClass \|\| ''\)/)
+})
+
+test('question-first dossier normalization unwraps merged dossiers from promoted artifacts', () => {
+  const questionFirstDossierSource = readFileSync(new URL('../src/lib/question-first-dossier.ts', import.meta.url), 'utf8')
+  assert.match(questionFirstDossierSource, /const rawDossier = ensureObject\(dossierPayload\)/)
+  assert.match(questionFirstDossierSource, /rawDossier\.merged_dossier && typeof rawDossier\.merged_dossier === 'object'/)
+})
+
 test('entity cards surface dossier availability and freshness status', () => {
   assert.match(entityCardSource, /dossier_status/)
   assert.match(entityCardSource, /Dossier ready|Dossier pending|Needs rerun/)

@@ -52,6 +52,11 @@ function toText(value: unknown): string {
   return String(value).trim()
 }
 
+function normalizeFilterValue(value: string): string {
+  const normalized = value.trim().toLowerCase()
+  return normalized === 'all' ? '' : normalized
+}
+
 function buildLightweightDossierIndexFromEntityState(entity: any): LightweightDossierIndex {
   const properties = entity?.properties || {}
   const dossierStatus = toText(properties.dossier_status).toLowerCase()
@@ -89,10 +94,10 @@ export async function getEntityBrowserPageData(options: {
   if (entityType === 'all') entityType = ''
   const sortBy = filters.sortBy || 'name'
   const sortOrder = filters.sortOrder || 'asc'
-  const sport = (filters.sport || '').trim()
-  const league = (filters.league || '').trim()
-  const country = (filters.country || '').trim()
-  const entityClass = (filters.entityClass || '').trim()
+  const sport = normalizeFilterValue(filters.sport || '')
+  const league = normalizeFilterValue(filters.league || '')
+  const country = normalizeFilterValue(filters.country || '')
+  const entityClass = normalizeFilterValue(filters.entityClass || '')
 
   const canonicalEntities = await getCanonicalEntitiesSnapshot()
   const normalizedSearch = search.trim().toLowerCase()
