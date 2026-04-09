@@ -24,14 +24,20 @@ export async function GET(request: NextRequest) {
   })
 
   return NextResponse.json({
-    loop_status: payload.loop_status,
+    loop_status: {
+      ...payload.loop_status,
+      runtime_counts: payload.loop_status.runtime_counts,
+    },
     queue: {
       completed_entities: payload.queue.completed_entities,
       in_progress_entity: payload.queue.in_progress_entity,
+      resume_needed_entities: payload.queue.resume_needed_entities,
       upcoming_entities: payload.queue.upcoming_entities,
     },
     client_ready_dossiers: payload.client_ready_dossiers,
     rfp_cards: payload.rfp_cards,
     sales_summary: payload.sales_summary,
+    dossier_quality: payload.dossier_quality,
+    rollout_proof_set: payload.rollout_proof_set,
   })
 }

@@ -1,0 +1,66 @@
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
+
+const lifecycleSource = readFileSync(new URL('../src/lib/entity-pipeline-lifecycle.ts', import.meta.url), 'utf8')
+const batchRouteSource = readFileSync(new URL('../src/app/api/entity-import/[batchId]/route.ts', import.meta.url), 'utf8')
+const importerSource = readFileSync(new URL('../src/components/entity-import/EntityCsvImporter.tsx', import.meta.url), 'utf8')
+const runDetailSource = readFileSync(new URL('../src/app/entity-import/[batchId]/[entityId]/page.tsx', import.meta.url), 'utf8')
+const homeQueueSource = readFileSync(new URL('../src/lib/home-queue-dashboard.ts', import.meta.url), 'utf8')
+
+test('pipeline lifecycle helper distinguishes artifact generation, dossier persistence, and client-ready promotion', () => {
+  assert.match(lifecycleSource, /EntityPipelineLifecycleStage/)
+  assert.match(lifecycleSource, /artifact_generated/)
+  assert.match(lifecycleSource, /complete_blocked/)
+  assert.match(lifecycleSource, /dossier_persisted/)
+  assert.match(lifecycleSource, /client_ready/)
+  assert.match(lifecycleSource, /stalled/)
+  assert.match(lifecycleSource, /retryable_failure/)
+  assert.match(lifecycleSource, /resume_needed/)
+  assert.match(lifecycleSource, /quality_blocked/)
+  assert.match(lifecycleSource, /quality_state/)
+  assert.match(lifecycleSource, /quality_summary/)
+  assert.match(lifecycleSource, /heartbeat_at/)
+  assert.match(lifecycleSource, /failure_reason/)
+  assert.match(lifecycleSource, /failure_category/)
+  assert.match(lifecycleSource, /resume_from_question/)
+  assert.match(lifecycleSource, /last_completed_question/)
+  assert.match(lifecycleSource, /checkpoint_consistent/)
+  assert.match(lifecycleSource, /non_terminal_question_ids/)
+  assert.match(lifecycleSource, /resolveCanonicalQuestionFirstDossier/)
+  assert.match(lifecycleSource, /question_first_run/)
+  assert.match(lifecycleSource, /question_first_dossier/)
+  assert.match(lifecycleSource, /awaiting canonical dossier persistence/)
+  assert.match(lifecycleSource, /awaiting client-ready promotion/)
+  assert.match(lifecycleSource, /Persisted dossier is blocked on downstream questions/)
+})
+
+test('entity import batch API enriches pipeline runs with lifecycle data', () => {
+  assert.match(batchRouteSource, /enrichPipelineRunsWithLifecycle/)
+  assert.match(batchRouteSource, /pipeline_runs:\s*enrichedRuns/)
+})
+
+test('entity import operator surfaces render lifecycle state instead of raw run status alone', () => {
+  assert.match(importerSource, /Lifecycle/)
+  assert.match(importerSource, /quality/i)
+  assert.match(importerSource, /artifact generated, not persisted yet/i)
+  assert.match(importerSource, /resume/i)
+  assert.match(runDetailSource, /End-to-end lifecycle/i)
+  assert.match(runDetailSource, /Pipeline complete/i)
+  assert.match(runDetailSource, /Quality state/i)
+  assert.match(runDetailSource, /Dossier persisted/i)
+  assert.match(runDetailSource, /Last completed question/i)
+  assert.match(runDetailSource, /Resume from question/i)
+  assert.match(runDetailSource, /Last completed question/i)
+  assert.match(runDetailSource, /Last error/i)
+  assert.match(runDetailSource, /client-ready blockers/i)
+})
+
+test('home queue dashboard derives queue card summaries from the shared lifecycle helper', () => {
+  assert.match(homeQueueSource, /deriveEntityPipelineLifecycle/)
+  assert.match(homeQueueSource, /lifecycleByEntityId/)
+  assert.match(homeQueueSource, /lifecycle\?\.summary/)
+  assert.match(homeQueueSource, /lifecycle\?\.latest_activity_at/)
+  assert.match(homeQueueSource, /stalled/i)
+  assert.match(homeQueueSource, /retryable/i)
+})

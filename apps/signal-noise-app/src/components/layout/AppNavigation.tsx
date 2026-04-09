@@ -1,15 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   Menu,
   ChevronDown,
+  Loader2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import VectorSearchDebounced from '@/components/ui/VectorSearch-debounced';
 import PageTransition from './PageTransition';
 import { primaryNavItems } from './discovery-nav';
 import { OperationalStatusStrip } from './OperationalStatusStrip';
@@ -28,8 +30,14 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [pendingHref, setPendingHref] = useState<string | null>(null);
   const pathname = usePathname();
+  const router = useRouter();
   const isFullScreenAuthRoute = pathname === '/sign-in' || pathname === '/login';
+
+  useEffect(() => {
+    setPendingHref(null);
+  }, [pathname]);
 
   if (isFullScreenAuthRoute) {
     return (
@@ -46,6 +54,7 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
   const renderNavItem = (item: NavItem) => {
     const isOpen = openSubmenu === item.label;
     const isActive = pathname === item.href || (item.hasSubmenu && pathname.startsWith(item.href));
+    const isPending = pendingHref === item.href;
 
     const handleClick = (e: React.MouseEvent) => {
       if (item.hasSubmenu) {
@@ -54,6 +63,15 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
       }
       if (item.isSearch) {
         e.preventDefault();
+        setPendingHref(null);
+      } else {
+        setPendingHref(item.href);
+      }
+    };
+
+    const handlePrefetch = () => {
+      if (!item.isSearch && item.href) {
+        router.prefetch(item.href);
       }
     };
 
@@ -65,7 +83,11 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
             : 'text-slate-300 hover:bg-custom-border hover:text-white font-body-medium'
         } ${!sidebarExpanded ? 'justify-center px-3' : ''}`}
       >
-        <item.icon className="w-5 h-5 flex-shrink-0" />
+        {isPending ? (
+          <Loader2 className="w-5 h-5 flex-shrink-0 animate-spin" />
+        ) : (
+          <item.icon className="w-5 h-5 flex-shrink-0" />
+        )}
         {sidebarExpanded && (
           <>
             <span className="flex-1">{item.label}</span>
@@ -125,7 +147,7 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
             onMouseEnter={() => setOpenSubmenu(item.label)}
             onMouseLeave={() => setOpenSubmenu(null)}
           >
-            <Link href={item.hasSubmenu ? '#' : item.href}>
+            <Link href={item.hasSubmenu ? '#' : item.href} onClick={handleClick} onMouseEnter={handlePrefetch}>
               {linkContent}
             </Link>
           </PopoverTrigger>
@@ -144,7 +166,7 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
 
     return (
       <div key={item.href} className="w-full">
-        <Link href={item.href} onClick={handleClick}>
+        <Link href={item.href} onClick={handleClick} onMouseEnter={handlePrefetch}>
           {linkContent}
         </Link>
       </div>
@@ -154,7 +176,7 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
   const renderSection = (section: typeof navSections[number]) => (
     <div key={section.key} className="space-y-2">
       {sidebarExpanded && section.key !== 'search' && (
-        <div className="px-3 pt-2 text-[0.6875rem] font-semibold uppercase tracking-[0.18em] text-slate-500">
+        <div className="px-3 pt-2 text-[0.6875rem] font-semibold uppercase tracking-[0.18em] text-slate-300">
           {section.label}
         </div>
       )}
@@ -170,11 +192,11 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
 
   return (
     <div className="relative z-10 min-h-screen bg-custom-bg overflow-x-hidden">
-      <div className="flex">
+      <div className="flex min-h-screen items-stretch">
         <aside
-            className={`${sidebarExpanded ? 'w-64' : 'w-20'} transition-all duration-300 border-r border-custom-border min-h-screen bg-custom-box/80 backdrop-blur-md relative z-50 flex-shrink-0`}
+            className={`${sidebarExpanded ? 'w-64' : 'w-20'} sticky top-0 h-screen overflow-y-auto transition-all duration-300 border-r border-custom-border bg-custom-box/80 backdrop-blur-md relative z-50 flex-shrink-0`}
           >
-            <div className="p-4">
+            <div className="flex min-h-full flex-col p-4">
               <div className="flex items-center justify-between mb-6">
                 {sidebarExpanded ? (
                   <div className="flex items-center gap-3">
@@ -191,23 +213,36 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
                   size="icon"
                   onClick={() => setSidebarExpanded(!sidebarExpanded)}
                   className="text-white hover:bg-custom-border"
+                  aria-label={sidebarExpanded ? 'Collapse navigation' : 'Expand navigation'}
                 >
                   <Menu className="h-5 w-5" />
                 </Button>
               </div>
 
-              <div className="space-y-6">
+              <div className="flex-1 space-y-6">
                 {navSections.map((section) => renderSection(section))}
               </div>
+
+              {sidebarExpanded && authMenu ? (
+                <div className="mt-6 border-t border-custom-border pt-4">{authMenu}</div>
+              ) : null}
             </div>
           </aside>
 
-        <div className="flex-1 min-w-0">
-          <OperationalStatusStrip onOpenDetails={() => setDrawerOpen(true)} />
-          <PageTransition>{children}</PageTransition>
+        <div className="flex min-h-screen min-w-0 flex-1 flex-col">
+          <div className="sticky top-0 z-40 border-b border-custom-border/70 bg-custom-bg/90 backdrop-blur supports-[backdrop-filter]:bg-custom-bg/75">
+            <div className="px-4 py-4 sm:px-6 lg:px-8">
+              <OperationalStatusStrip drawerOpen={drawerOpen} onToggleDrawer={() => setDrawerOpen((current) => !current)} />
+            </div>
+          </div>
+          <div className="min-w-0 flex-1">
+            <PageTransition>{children}</PageTransition>
+          </div>
         </div>
       </div>
-      <OperationalDrawer open={drawerOpen} onOpenChange={setDrawerOpen} authMenu={authMenu} />
+      <div className="px-4 pb-6 sm:px-6 lg:px-8">
+        <OperationalDrawer open={drawerOpen} />
+      </div>
     </div>
   );
 }

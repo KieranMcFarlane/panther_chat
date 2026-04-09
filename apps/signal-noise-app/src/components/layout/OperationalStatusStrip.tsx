@@ -99,7 +99,7 @@ export function OperationalStatusStrip({ drawerOpen, onToggleDrawer }: Operation
       <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {statusItems.map((item) => (
           <div key={item.label} className="rounded-xl border border-custom-border bg-custom-bg/70 p-3">
-            <div className="text-xs uppercase tracking-[0.16em] text-slate-500">{item.label}</div>
+            <div className="text-xs uppercase tracking-[0.16em] text-slate-300">{item.label}</div>
             <div className={`mt-1 text-2xl font-semibold ${item.tone}`}>{item.value}</div>
           </div>
         ))}

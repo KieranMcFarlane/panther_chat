@@ -155,17 +155,22 @@ function _questionConditionsMet(question, runState, entityType) {
   });
 }
 
-function _emptyStructuredOutputForQuestion(question, note = '') {
+function _emptyStructuredOutputForQuestion(question, note = '', overrides = {}) {
   const questionType = String(question?.question_type || '').trim().toLowerCase();
   const base = {
     answer: '',
     confidence: 0,
     sources: [],
     validation_state: 'no_signal',
+    terminal_state: overrides.terminal_state || 'no_signal',
   };
   if (note) {
     base.notes = note;
     base.context = note;
+    base.summary = note;
+  }
+  if (Array.isArray(overrides.blocked_by) && overrides.blocked_by.length > 0) {
+    base.blocked_by = overrides.blocked_by;
   }
   if (questionType === 'decision_owner') {
     return {
@@ -205,6 +210,57 @@ function _emptyStructuredOutputForQuestion(question, note = '') {
     };
   }
   return base;
+}
+
+function _describeUnmetQuestionConditions(question, runState, entityType) {
+  const conditions = Array.isArray(question?.conditional_on) ? question.conditional_on : [];
+  const blockedBy = Array.isArray(question?.depends_on) ? question.depends_on.filter(Boolean) : [];
+  const unmetReasons = [];
+
+  for (const condition of conditions) {
+    const conditionType = String(condition?.type || '').trim();
+    if (conditionType === 'entity_type_in') {
+      const values = Array.isArray(condition?.values) ? condition.values.map((item) => String(item || '').trim()) : [];
+      if (!values.includes(String(entityType || '').trim())) {
+        unmetReasons.push(`entity type ${String(entityType || '').trim() || 'unknown'} is outside ${values.join(', ')}`);
+      }
+      continue;
+    }
+    if (conditionType === 'validated_question') {
+      const dependencyId = String(condition?.question_id || '').trim();
+      const prior = _getQuestionStateById(runState, dependencyId);
+      if (String(prior?.status || '').trim().toLowerCase() !== 'validated') {
+        if (dependencyId && !blockedBy.includes(dependencyId)) {
+          blockedBy.push(dependencyId);
+        }
+        unmetReasons.push(`upstream question ${dependencyId || 'dependency'} did not validate`);
+      }
+      continue;
+    }
+    if (conditionType === 'question_phase_enabled') {
+      const dependencyId = String(condition?.question_id || '').trim();
+      if (!_getQuestionStateById(runState, dependencyId)) {
+        if (dependencyId && !blockedBy.includes(dependencyId)) {
+          blockedBy.push(dependencyId);
+        }
+        unmetReasons.push(`upstream question ${dependencyId || 'dependency'} was not enabled`);
+      }
+    }
+  }
+
+  if (unmetReasons.length === 0) {
+    return {
+      note: 'Question conditions were not met for this entity or prior signal state.',
+      blocked_by: blockedBy,
+      terminal_state: blockedBy.length > 0 ? 'blocked' : 'no_signal',
+    };
+  }
+
+  return {
+    note: `Question conditions were not met: ${unmetReasons.join('; ')}.`,
+    blocked_by: blockedBy,
+    terminal_state: blockedBy.length > 0 ? 'blocked' : 'no_signal',
+  };
 }
 
 function _candidatePoolFromLeadership(runState) {
@@ -1179,9 +1235,16 @@ export function buildQuestionState(question, { runId = 'cli', timestamp = new Da
       ? Number(confidenceThreshold)
       : _normalizeConfidenceThreshold(question, creditBudgetOverrides),
     status: 'running',
+    terminal_state: null,
     current_confidence: 0,
     best_answer: '',
     best_evidence_url: '',
+    question_output: null,
+    started_at: timestamp,
+    completed_at: null,
+    heartbeat_at: timestamp,
+    last_error: null,
+    retry_count: 0,
     frontier: _buildQuestionFrontier(question, timestamp),
     accepted_links: [],
     rejected_links: [],
@@ -1198,9 +1261,177 @@ export function buildPresetRunState(questions, { preset = 'major-league-cricket'
     run_id: runId,
     run_started_at: timestamp,
     last_run_at: timestamp,
+    heartbeat_at: timestamp,
     preset,
+    publish_status: 'draft',
+    failure_reason: null,
+    failure_category: null,
+    retryable: false,
+    last_error: null,
+    last_completed_question: null,
+    resume_from_question: questions[0]?.question_id || null,
+    non_terminal_question_ids: questions.map((question) => question?.question_id).filter(Boolean),
+    checkpoint_consistent: true,
     connections_graph: null,
     questions: questions.map((question) => buildQuestionState(question, { runId, timestamp, creditBudgetOverrides, confidenceThreshold })),
+  };
+}
+
+const TERMINAL_QUESTION_STATUSES = new Set(['validated', 'provisional', 'no_signal', 'blocked', 'exhausted', 'failed']);
+const PUBLISHED_LIKE_STATUSES = new Set(['staged', 'published', 'published_valid', 'published_shadow']);
+
+function _normalizeQuestionStatus(status) {
+  return String(status || '').trim().toLowerCase();
+}
+
+function _isTerminalQuestionState(questionState) {
+  if (!questionState || typeof questionState !== 'object') {
+    return false;
+  }
+  return TERMINAL_QUESTION_STATUSES.has(_normalizeQuestionStatus(questionState.status));
+}
+
+export function reconcileRunStateCheckpoint(runState, {
+  activeQuestion = null,
+  requiredQuestionCount = null,
+} = {}) {
+  const questions = Array.isArray(runState?.questions) ? runState.questions : [];
+  let lastCompletedQuestion = null;
+  let resumeFromQuestion = null;
+  const nonTerminalQuestionIds = [];
+
+  for (const questionState of questions) {
+    if (_isTerminalQuestionState(questionState)) {
+      lastCompletedQuestion = questionState.question_id || lastCompletedQuestion;
+      continue;
+    }
+    if (questionState?.question_id) {
+      nonTerminalQuestionIds.push(questionState.question_id);
+    }
+    if (!resumeFromQuestion) {
+      resumeFromQuestion = questionState.question_id || null;
+    }
+  }
+
+  if (!resumeFromQuestion && activeQuestion?.question_id) {
+    resumeFromQuestion = activeQuestion.question_id;
+  }
+
+  const normalizedRunPhase = String(runState?.run_phase || '').trim().toLowerCase();
+  const publishStatus = String(runState?.publish_status || '').trim().toLowerCase();
+  const requiredCount = Number.isFinite(Number(requiredQuestionCount)) ? Number(requiredQuestionCount) : null;
+  const hasExpectedQuestionCount = requiredCount === null || questions.length >= requiredCount;
+  const allTerminal = nonTerminalQuestionIds.length === 0 && hasExpectedQuestionCount;
+  const claimsCompletion = normalizedRunPhase === 'completed' || PUBLISHED_LIKE_STATUSES.has(publishStatus);
+  const checkpointConsistent = !claimsCompletion || allTerminal;
+  let derivedRunPhase = normalizedRunPhase || 'queued';
+  if (allTerminal) {
+    derivedRunPhase = normalizedRunPhase || 'completed';
+  } else if (Boolean(runState?.retryable) || String(runState?.failure_category || '').trim().toLowerCase() === 'retryable_failure') {
+    derivedRunPhase = 'retryable_failure';
+  } else if (normalizedRunPhase === 'stalled') {
+    derivedRunPhase = 'stalled';
+  } else if (normalizedRunPhase === 'running' || normalizedRunPhase === 'initialized' || normalizedRunPhase.startsWith('question_')) {
+    derivedRunPhase = normalizedRunPhase;
+  } else {
+    derivedRunPhase = 'resume_needed';
+  }
+
+  return {
+    all_terminal: allTerminal,
+    checkpoint_consistent: checkpointConsistent,
+    last_completed_question: lastCompletedQuestion,
+    resume_from_question: resumeFromQuestion,
+    non_terminal_question_ids: nonTerminalQuestionIds,
+    derived_run_phase: derivedRunPhase,
+  };
+}
+
+function _deriveRunCheckpointPointers(runState, activeQuestion = null) {
+  const reconciled = reconcileRunStateCheckpoint(runState, { activeQuestion });
+  return {
+    last_completed_question: reconciled.last_completed_question,
+    resume_from_question: reconciled.resume_from_question,
+    non_terminal_question_ids: reconciled.non_terminal_question_ids,
+    checkpoint_consistent: reconciled.checkpoint_consistent,
+  };
+}
+
+export function normalizeRunStateForResume(runState, {
+  timestamp = new Date().toISOString(),
+} = {}) {
+  const questions = Array.isArray(runState?.questions)
+    ? runState.questions.map((questionState) => {
+        const status = _normalizeQuestionStatus(questionState?.status);
+        if (status !== 'running') {
+          return questionState;
+        }
+        return {
+          ...questionState,
+          status: 'pending',
+          heartbeat_at: timestamp,
+        };
+      })
+    : [];
+  const normalizedState = {
+    ...runState,
+    questions,
+    heartbeat_at: timestamp,
+  };
+  const reconciled = reconcileRunStateCheckpoint(normalizedState);
+  return {
+    ...normalizedState,
+    run_phase: Boolean(normalizedState?.retryable) ? 'retryable_failure' : 'resume_needed',
+    publish_status: reconciled.non_terminal_question_ids.length > 0 ? 'draft' : (normalizedState.publish_status || 'draft'),
+    last_completed_question: reconciled.last_completed_question,
+    resume_from_question: reconciled.resume_from_question,
+    non_terminal_question_ids: reconciled.non_terminal_question_ids,
+    checkpoint_consistent: reconciled.checkpoint_consistent,
+  };
+}
+
+function _classifyRunFailure(error) {
+  const message = String(error instanceof Error ? error.message : error || '').trim();
+  const lowered = message.toLowerCase();
+  if (!message) {
+    return {
+      failure_reason: 'unknown_failure',
+      failure_category: 'failed',
+      retryable: false,
+    };
+  }
+  if (lowered.includes('enospc') || lowered.includes('no space left on device')) {
+    return {
+      failure_reason: message,
+      failure_category: 'infrastructure_failure',
+      retryable: false,
+    };
+  }
+  if (lowered.includes('retryable_upstream_failure') || lowered.includes('too many requests') || lowered.includes('429')) {
+    return {
+      failure_reason: message,
+      failure_category: 'retryable_failure',
+      retryable: true,
+    };
+  }
+  if (lowered.includes('tool_call_missing') || lowered.includes('parser')) {
+    return {
+      failure_reason: message,
+      failure_category: 'parser_failure',
+      retryable: false,
+    };
+  }
+  if (lowered.includes('checkpoint_inconsistency')) {
+    return {
+      failure_reason: message,
+      failure_category: 'checkpoint_inconsistency',
+      retryable: false,
+    };
+  }
+  return {
+    failure_reason: message,
+    failure_category: 'failed',
+    retryable: false,
   };
 }
 
@@ -1210,13 +1441,25 @@ function _mergeQuestionState(questionState, questionPayload, timestamp) {
   const acceptedLinkCandidates = Array.isArray(structuredOutput.sources)
     ? structuredOutput.sources.map((sourceUrl) => _scoreSourceRecord(questionState, sourceUrl, structuredOutput.answer || '', structuredOutput.confidence || 0))
     : [];
+  const validationState = _normalizeQuestionStatus(questionPayload.validation_state);
+  const nextStatus = TERMINAL_QUESTION_STATUSES.has(validationState)
+    ? validationState
+    : 'running';
   const nextState = {
     ...questionState,
     last_run_at: timestamp,
-    status: questionPayload.validation_state === 'validated' ? 'validated' : questionPayload.validation_state === 'provisional' ? 'provisional' : questionPayload.validation_state === 'no_signal' ? 'no_signal' : 'running',
+    heartbeat_at: timestamp,
+    status: nextStatus,
+    terminal_state: questionPayload.terminal_state || questionState.terminal_state || null,
     current_confidence: questionPayload.confidence ?? questionState.current_confidence ?? 0,
     best_answer: questionPayload.answer || questionState.best_answer || '',
     best_evidence_url: questionPayload.evidence_url || questionState.best_evidence_url || '',
+    question_output: questionPayload || questionState.question_output || null,
+    completed_at: TERMINAL_QUESTION_STATUSES.has(validationState)
+      ? timestamp
+      : (questionState.completed_at || null),
+    last_error: null,
+    retry_count: Number(questionState.retry_count || 0),
     frontier: [...(Array.isArray(questionState.frontier) ? questionState.frontier : []), ...frontierUpdates]
       .map((item, index, allItems) => ({
         ...item,
@@ -1284,7 +1527,17 @@ async function _loadJsonFile(filePath) {
 }
 
 async function _writeJsonFile(filePath, value) {
-  await fs.writeFile(filePath, JSON.stringify(value, null, 2), 'utf8');
+  const directory = path.dirname(filePath);
+  await fs.mkdir(directory, { recursive: true });
+  const tmpPath = path.join(directory, `.${path.basename(filePath)}.${process.pid}.${Date.now()}.tmp`);
+  const handle = await fs.open(tmpPath, 'w');
+  try {
+    await handle.writeFile(JSON.stringify(value, null, 2), 'utf8');
+    await handle.sync();
+  } finally {
+    await handle.close();
+  }
+  await fs.rename(tmpPath, filePath);
 }
 
 function _coerceNumber(value) {
@@ -1310,15 +1563,19 @@ function _decorateRunStateCheckpoint(runState, {
   const activeQuestionId = activeQuestion?.question_id || '';
   const activeQuestionType = activeQuestion?.question_type || '';
   const activeQuestionText = activeQuestion ? _questionText(activeQuestion) : '';
+  const heartbeatAt = new Date().toISOString();
+  const checkpointPointers = _deriveRunCheckpointPointers(runState, runPhase === 'completed' ? null : activeQuestion);
   return {
     ...runState,
     run_phase: runPhase,
+    heartbeat_at: heartbeatAt,
     active_question_index: activeQuestionIndex,
     active_question_id: activeQuestionId,
     active_question_type: activeQuestionType,
     active_question_text: activeQuestionText,
     active_hop_index: activeHopIndex,
     active_query: activeQuery,
+    ...checkpointPointers,
   };
 }
 
@@ -1538,13 +1795,13 @@ export function buildOpenCodeQuestionPrompt(question) {
     : '';
   const questionType = String(question?.question_type || '').trim().toLowerCase();
   if (questionType === 'leadership') {
-    return `${_questionText(question)} use brightdata. ${searchHint} Start with LinkedIn company and people results, then official leadership pages. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer, candidates, confidence, sources, and validation_state. candidates must be a broad typed pool of leadership and operating buyers, each with name, role, function_type, seniority_level, linkedin_url, and confidence. If you cannot validate a meaningful candidate pool, return exactly one fenced JSON code block with answer "", candidates [], confidence 0, sources [], validation_state "no_signal", then stop. Do not include prose outside the fenced JSON block.`;
+    return `${_questionText(question)} use brightdata. ${searchHint} Start with LinkedIn company and people results, then official leadership pages. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer, candidates, confidence, sources, and validation_state. candidates must be a broad typed pool of leadership and operating buyers, each with name, role, function_type, seniority_level, linkedin_url, email, bio, bio_evidence, recent_post_summary, recent_post_urls, and confidence. Only include email when it is directly sourced or explicitly verified in the evidence. bio may be synthesized from official site text, LinkedIn profile/about text, and recent LinkedIn posts when available. If you cannot validate a meaningful candidate pool, return exactly one fenced JSON code block with answer "", candidates [], confidence 0, sources [], validation_state "no_signal", then stop. Do not include prose outside the fenced JSON block.`;
   }
   if (questionType === 'decision_owner') {
     const candidateHint = Array.isArray(question?.candidate_pool) && question.candidate_pool.length > 0
       ? `Use this candidate pool as the starting point: ${JSON.stringify(question.candidate_pool)}.`
       : '';
-    return `${_questionText(question)} use brightdata. ${candidateHint} ${searchHint} Start with company-anchored people evidence and only scrape pages needed to validate rank order. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer set to the primary owner's name, primary_owner, secondary_candidates, supporting_candidates, function_type, seniority_level, decision_score, confidence_score, reasoning, confidence, sources, and validation_state. primary_owner must be the highest probability buyer. secondary_candidates should be ranked next-best options, and supporting_candidates may mirror that list for compatibility. If you cannot validate a supported primary owner within that budget, return exactly one fenced JSON code block with answer "", primary_owner null, secondary_candidates [], supporting_candidates [], function_type "", seniority_level "", decision_score 0, confidence_score 0, reasoning "", confidence 0, sources [], and validation_state "no_signal", then stop. Do not include any prose outside the fenced JSON block.`;
+    return `${_questionText(question)} use brightdata. ${candidateHint} ${searchHint} Start with company-anchored people evidence and only scrape pages needed to validate rank order. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer set to the primary owner's name, primary_owner, secondary_candidates, supporting_candidates, function_type, seniority_level, decision_score, confidence_score, reasoning, confidence, sources, and validation_state. primary_owner must be the highest probability buyer. secondary_candidates should be ranked next-best options, and supporting_candidates may mirror that list for compatibility. For primary_owner and supporting_candidates, include linkedin_url, email, bio, bio_evidence, recent_post_summary, and recent_post_urls when available. Only include email when it is directly sourced or explicitly verified in the evidence. bio may be synthesized from official site text, LinkedIn profile/about text, and recent LinkedIn posts when available. If you cannot validate a supported primary owner within that budget, return exactly one fenced JSON code block with answer "", primary_owner null, secondary_candidates [], supporting_candidates [], function_type "", seniority_level "", decision_score 0, confidence_score 0, reasoning "", confidence 0, sources [], and validation_state "no_signal", then stop. Do not include any prose outside the fenced JSON block.`;
   }
   if (questionType === 'related_pois') {
     return `${_questionText(question)} use brightdata. ${searchHint} Start with search and use scraped pages only if the search results are not enough to validate the answer. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer set to the best candidate name, candidates, confidence, sources, and validation_state. candidates should be a ranked list of 3 to 5 people with the best commercial relevance. If you cannot validate a ranked list of 3 to 5 candidates within that budget, return exactly one fenced JSON code block with answer "", candidates [], confidence 0, sources [], and validation_state "no_signal", then stop. Do not include any prose outside the fenced JSON block. Stop immediately after the first validated ranked list.`;
@@ -1996,7 +2253,11 @@ export async function runDeterministicToolQuestion(
       : [];
     if (themes.length === 0) {
       return {
-        structuredOutput: _emptyStructuredOutputForQuestion(question, 'No capability-gap inference is available yet for YP fit mapping.'),
+        structuredOutput: _emptyStructuredOutputForQuestion(
+          question,
+          'No capability-gap inference is available yet for YP fit mapping.',
+          { terminal_state: 'blocked', blocked_by: ['q13_capability_gap', 'q7_procurement_signal'] },
+        ),
         promptTrace: { status: 'derived_yp_fit_missing_q13', has_structured_output: true },
         messageTrace: [],
         cliResult: { code: 0, stdout: '', stderr: '' },
@@ -2300,6 +2561,60 @@ function _classifyValidationState(structuredOutput) {
   return 'provisional';
 }
 
+function _deriveTerminalState(question, structuredOutput, timeoutSalvage) {
+  const validationState = String(structuredOutput?.validation_state || '').trim().toLowerCase();
+  const answerText = String(
+    structuredOutput?.summary
+    || structuredOutput?.answer
+    || structuredOutput?.context
+    || structuredOutput?.notes
+    || '',
+  ).trim();
+  const blockedBy = Array.isArray(structuredOutput?.blocked_by) ? structuredOutput.blocked_by.filter(Boolean) : [];
+  const note = String(structuredOutput?.notes || structuredOutput?.context || '').trim().toLowerCase();
+
+  if (String(structuredOutput?.terminal_state || '').trim()) {
+    return structuredOutput.terminal_state;
+  }
+  if (answerText && ['validated', 'partially_validated', 'deterministic_detected', 'provisional', 'inferred'].includes(validationState)) {
+    return 'answered';
+  }
+  if (
+    note.includes('question conditions were not met')
+    || note.includes('no capability-gap inference')
+    || note.includes('upstream signals are available yet')
+    || blockedBy.length > 0
+  ) {
+    return 'blocked';
+  }
+  if (timeoutSalvage?.candidate_summary) {
+    return 'no_signal';
+  }
+  return 'no_signal';
+}
+
+function _deriveTerminalSummary(question, structuredOutput, timeoutSalvage, terminalState) {
+  const summary = String(
+    structuredOutput?.summary
+    || structuredOutput?.context
+    || structuredOutput?.notes
+    || structuredOutput?.commercial_interpretation?.summary
+    || '',
+  ).trim();
+  if (summary) {
+    return summary;
+  }
+  const salvageSummary = String(timeoutSalvage?.candidate_summary || '').trim();
+  if (salvageSummary) {
+    return `Evidence retained during timeout, but no validated answer was produced. ${salvageSummary}`;
+  }
+  const blockedBy = Array.isArray(structuredOutput?.blocked_by) ? structuredOutput.blocked_by.filter(Boolean) : [];
+  if (terminalState === 'blocked' && blockedBy.length > 0) {
+    return `Blocked by upstream question state: ${blockedBy.join(', ')}`;
+  }
+  return 'No deterministic answer was produced for this question.';
+}
+
 function _stripJsonFence(text) {
   return String(text || '')
     .trim()
@@ -2433,6 +2748,145 @@ function _extractBrightDataEvidenceText(text) {
   return value.replace(/\\n/g, '\n');
 }
 
+function _sourceTypeFromEvidenceUrl(url) {
+  const hostname = _safeUrlHostname(url).toLowerCase();
+  if (!hostname) return 'web';
+  if (hostname.includes('wikipedia.org')) return 'wikipedia';
+  if (hostname.includes('linkedin.com')) return 'linkedin_person_profile';
+  if (hostname.includes('datanyze.com') || hostname.includes('zippia.com') || hostname.includes('rocketreach.co')) return 'commercial_database';
+  if (
+    hostname.includes('press')
+    || hostname.includes('news')
+    || hostname.includes('timesofindia')
+    || hostname.includes('indiatimes')
+    || hostname.includes('reuters')
+    || hostname.includes('bbc')
+    || hostname.includes('espn')
+    || hostname.includes('cricbuzz')
+  ) return 'press_release';
+  return 'official_site';
+}
+
+function _titleCaseName(text) {
+  return String(text || '')
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((part) => {
+      if (!part) return part;
+      if (part.length === 1) return part.toUpperCase();
+      return part[0].toUpperCase() + part.slice(1).toLowerCase();
+    })
+    .join(' ');
+}
+
+function _entityPrefixPattern(entityName) {
+  const slug = String(entityName || '')
+    .normalize('NFKD')
+    .replace(/[^\w\s-]+/g, '')
+    .trim()
+    .replace(/[\s_]+/g, '-')
+    .toLowerCase();
+  if (!slug) return null;
+  return new RegExp(`^${slug.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}(?:-|\\s)+`, 'i');
+}
+
+function _sanitizePeopleCandidateName(name, { entityName = '', title = '' } = {}) {
+  let cleaned = String(name || '').trim();
+  if (!cleaned) return '';
+
+  const prefixPattern = _entityPrefixPattern(entityName);
+  cleaned = cleaned
+    .replace(/[_/]+/g, ' ')
+    .replace(/[-–—]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (prefixPattern) {
+    cleaned = cleaned.replace(prefixPattern, '').trim();
+  }
+
+  const rolePrefixPattern = /^(?:chief|chairman|president|ceo|secretary(?:\s+general)?|managing\s+director|director\s+general|commercial\s+director|marketing\s+director|technical\s+director)\s+/i;
+  cleaned = cleaned.replace(rolePrefixPattern, '').trim();
+
+  const slugCandidatePattern = /^(?:[a-z]+(?:\s+[a-z]+){0,4}\s+)?(?:chief|chairman|president|ceo|secretary(?:\s+general)?|managing\s+director|director\s+general)\s+([a-z]+(?:\s+[a-z]+){1,3})(?=\s+(?:mulls|eyes|says|joins|appointed|named|to|for|as|in|on|at|after|amid|over|under|seeks|wins|contesting)\b|$)/i;
+  const slugMatch = cleaned.match(slugCandidatePattern);
+  if (slugMatch?.[1]) {
+    cleaned = slugMatch[1];
+  }
+
+  const stopwordPattern = /\b(?:mulls|eyes|says|joins|appointed|named|contesting|contesting-icc|to|for|as|in|on|at|after|amid|over|under|seeks|wins)\b/i;
+  if (stopwordPattern.test(cleaned)) {
+    cleaned = cleaned.split(stopwordPattern)[0].trim();
+  }
+
+  const tokens = cleaned.split(/\s+/).filter((token) => /^[A-Za-zÀ-ÿ'’.`-]+$/.test(token));
+  if (tokens.length >= 2) {
+    cleaned = tokens.slice(0, 4).join(' ');
+  }
+
+  if (!/[A-ZÀ-Ÿ]/.test(cleaned)) {
+    cleaned = _titleCaseName(cleaned);
+  }
+
+  const titleText = String(title || '').trim().toLowerCase();
+  if (titleText && cleaned.toLowerCase().endsWith(titleText)) {
+    cleaned = cleaned.slice(0, cleaned.length - titleText.length).trim();
+  }
+
+  return cleaned.trim();
+}
+
+function _normalizeLeadershipTitle(value) {
+  const text = String(value || '').trim();
+  if (!text) return '';
+  const normalized = text.toLowerCase();
+  if (normalized === 'ceo') return 'Chief Executive Officer';
+  if (normalized === 'cco') return 'Chief Commercial Officer';
+  if (normalized === 'cio') return 'Chief Information Officer';
+  if (normalized === 'cto') return 'Chief Technology Officer';
+  if (normalized === 'sg') return 'Secretary General';
+  return text
+    .split(/\s+/)
+    .map((part) => part ? part[0].toUpperCase() + part.slice(1).toLowerCase() : part)
+    .join(' ');
+}
+
+function _extractLeadershipFallbackCandidates(evidenceText, urls = [], entityName = '') {
+  const trustedUrl = urls.find((url) => {
+    const sourceType = _sourceTypeFromEvidenceUrl(url);
+    return sourceType === 'wikipedia' || sourceType === 'official_site' || sourceType === 'linkedin_person_profile' || sourceType === 'press_release';
+  }) || urls[0] || '';
+  const sourceType = _sourceTypeFromEvidenceUrl(trustedUrl);
+  if (!trustedUrl || sourceType === 'commercial_database') {
+    return [];
+  }
+
+  const candidates = [];
+  const seen = new Set();
+  const titleFirstPattern = /\b(Chairman|Chief Executive Officer|CEO|Secretary General|President|Managing Director|Director General|Chief Commercial Officer|Commercial Director|Marketing Director|Technical Director|Head of Partnerships|Partnerships Manager)\b\s*[:\-]\s*([A-Z][A-Za-zÀ-ÿ'’. -]+?)(?=\.|,|;|\n|$)/gi;
+  const nameFirstPattern = /\b([A-Z][A-Za-zÀ-ÿ'’. -]+?)\b\s*[-–—,]\s*\b(Chairman|Chief Executive Officer|CEO|Secretary General|President|Managing Director|Director General|Chief Commercial Officer|Commercial Director|Marketing Director|Technical Director|Head of Partnerships|Partnerships Manager)\b/gi;
+
+  for (const match of evidenceText.matchAll(titleFirstPattern)) {
+    const title = _normalizeLeadershipTitle(match[1]);
+    const name = _sanitizePeopleCandidateName(match[2], { entityName, title });
+    if (!name || !title) continue;
+    const key = `${name.toLowerCase()}|${title.toLowerCase()}|${trustedUrl}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    candidates.push({ name, title, source_url: trustedUrl, source_type: sourceType });
+  }
+  for (const match of evidenceText.matchAll(nameFirstPattern)) {
+    const name = _sanitizePeopleCandidateName(match[1], { entityName, title: match[2] });
+    const title = _normalizeLeadershipTitle(match[2]);
+    if (!name || !title) continue;
+    const key = `${name.toLowerCase()}|${title.toLowerCase()}|${trustedUrl}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    candidates.push({ name, title, source_url: trustedUrl, source_type: sourceType });
+  }
+
+  return candidates.slice(0, 8);
+}
+
 function _containsBrightDataEvidence(text) {
   const value = String(text || '').toLowerCase();
   return value.includes('brightdata')
@@ -2473,6 +2927,7 @@ function _buildTimeoutSalvage(question, validationState, rawExecutionTrace) {
   }
 
   let candidateSummary = '';
+  let fallbackCandidates = [];
   if (questionId === 'q3_procurement_signal' || questionType === 'procurement') {
     const signalPatterns = [
       /[^.\n]*(?:partnership|partner|sponsor|sponsorship|platform|product launch|ticketing|mobile app|broadcast|media rights|data platform|vendor)[^.\n]*/ig,
@@ -2487,6 +2942,21 @@ function _buildTimeoutSalvage(question, validationState, rawExecutionTrace) {
       ...(evidenceText.match(roleFirstPattern) || []),
     ];
     candidateSummary = matches.map((item) => item.trim()).filter(Boolean).slice(0, 3).join(' | ');
+    fallbackCandidates = _extractLeadershipFallbackCandidates(evidenceText, urls, question?.entity_name);
+    if (!candidateSummary && fallbackCandidates.length > 0) {
+      candidateSummary = fallbackCandidates
+        .map((candidate) => `${candidate.name} - ${candidate.title}`)
+        .slice(0, 3)
+        .join(' | ');
+    }
+  } else if (questionType === 'leadership') {
+    fallbackCandidates = _extractLeadershipFallbackCandidates(evidenceText, urls, question?.entity_name);
+    if (fallbackCandidates.length > 0) {
+      candidateSummary = fallbackCandidates
+        .map((candidate) => `${candidate.name} - ${candidate.title}`)
+        .slice(0, 3)
+        .join(' | ');
+    }
   }
 
   if (!candidateSummary && isMlsRealEstateNoise) {
@@ -2502,7 +2972,50 @@ function _buildTimeoutSalvage(question, validationState, rawExecutionTrace) {
     counts_as_validated: false,
     candidate_summary: _boundedTraceText(candidateSummary, 1000),
     candidate_evidence_urls: urls,
+    ...(fallbackCandidates.length > 0 ? { fallback_candidates: fallbackCandidates } : {}),
     risk_notes: riskNotes,
+  };
+}
+
+function _applyPeopleTimeoutFallback(question, structuredOutput, timeoutSalvage) {
+  const questionType = String(question?.question_type || '').trim().toLowerCase();
+  if (!['leadership', 'decision_owner'].includes(questionType)) {
+    return structuredOutput;
+  }
+  const fallbackCandidates = Array.isArray(timeoutSalvage?.fallback_candidates) ? timeoutSalvage.fallback_candidates.filter(Boolean) : [];
+  if (fallbackCandidates.length === 0) {
+    return structuredOutput;
+  }
+  if (questionType === 'decision_owner') {
+    const [primaryOwner, ...supportingCandidates] = fallbackCandidates;
+    return {
+      ...structuredOutput,
+      answer: primaryOwner?.name || structuredOutput?.answer || '',
+      primary_owner: primaryOwner || null,
+      supporting_candidates: supportingCandidates,
+      candidates: fallbackCandidates,
+      candidate_pool: fallbackCandidates,
+      confidence: Math.max(_coerceConfidenceScore(structuredOutput?.confidence), 0.72),
+      validation_state: 'partially_validated',
+      summary: `Recovered ${fallbackCandidates.length} decision-owner candidates from trusted fallback sources.`,
+      notes: structuredOutput?.notes || 'Recovered from trusted timeout salvage after model output was missing.',
+      sources: Array.isArray(structuredOutput?.sources) && structuredOutput.sources.length > 0
+        ? structuredOutput.sources
+        : (Array.isArray(timeoutSalvage?.candidate_evidence_urls) ? timeoutSalvage.candidate_evidence_urls : []),
+    };
+  }
+  return {
+    ...structuredOutput,
+    answer: fallbackCandidates.map((candidate) => `${candidate.name} - ${candidate.title}`).join(', '),
+    candidates: fallbackCandidates,
+    candidate_pool: fallbackCandidates,
+    confidence: Math.max(_coerceConfidenceScore(structuredOutput?.confidence), 0.72),
+    validation_state: 'partially_validated',
+    summary: `Recovered ${fallbackCandidates.length} leadership candidates from trusted fallback sources.`,
+    notes: structuredOutput?.notes || 'Recovered from trusted timeout salvage after model output was missing.',
+    sources: Array.isArray(structuredOutput?.sources) && structuredOutput.sources.length > 0
+      ? structuredOutput.sources
+      : (Array.isArray(timeoutSalvage?.candidate_evidence_urls) ? timeoutSalvage.candidate_evidence_urls : []),
   };
 }
 
@@ -2674,17 +3187,32 @@ async function runOpenCodeCliQuestion(question, { worktreeRoot, opencodeTimeoutM
 }
 
 function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTrace = null, messageTrace = [], executionQuery = '', cliResult = null } = {}) {
-  const validationState = _classifyValidationState(structuredOutput);
-  const sources = Array.isArray(structuredOutput.sources) ? structuredOutput.sources : [];
-  const { primaryOwner, supportingCandidates, candidates, answerText } = _structuredOwnerCandidates(structuredOutput);
+  const initialValidationState = _classifyValidationState(structuredOutput);
+  const rawExecutionTrace = _buildRawExecutionTrace({ promptTrace, messageTrace, cliResult });
+  const timeoutSalvage = _buildTimeoutSalvage(question, initialValidationState, rawExecutionTrace);
+  const effectiveStructuredOutput = _applyPeopleTimeoutFallback(question, structuredOutput, timeoutSalvage);
+  const validationState = _classifyValidationState(effectiveStructuredOutput);
+  const sources = Array.isArray(effectiveStructuredOutput.sources) ? effectiveStructuredOutput.sources : [];
+  const { primaryOwner, supportingCandidates, candidates, answerText } = _structuredOwnerCandidates(effectiveStructuredOutput);
   const secondaryCandidates = Array.isArray(structuredOutput.secondary_candidates)
     ? structuredOutput.secondary_candidates
     : supportingCandidates;
-  const evidenceUrl = structuredOutput.evidence_url || primaryOwner?.profile_url || primaryOwner?.linkedin_url || sources[0] || '';
-  const notes = structuredOutput.notes || structuredOutput.context || '';
-  const inferredSignalType = structuredOutput.signal_type || (question.question_type ? question.question_type.toUpperCase() : 'NO_SIGNAL');
-  const rawExecutionTrace = _buildRawExecutionTrace({ promptTrace, messageTrace, cliResult });
-  const timeoutSalvage = _buildTimeoutSalvage(question, validationState, rawExecutionTrace);
+  const evidenceUrl = effectiveStructuredOutput.evidence_url || primaryOwner?.profile_url || primaryOwner?.linkedin_url || sources[0] || '';
+  const inferredSignalType = effectiveStructuredOutput.signal_type || (question.question_type ? question.question_type.toUpperCase() : 'NO_SIGNAL');
+  const terminalState = _deriveTerminalState(question, effectiveStructuredOutput, timeoutSalvage);
+  const terminalSummary = _deriveTerminalSummary(question, effectiveStructuredOutput, timeoutSalvage, terminalState);
+  const notes = effectiveStructuredOutput.notes || effectiveStructuredOutput.context || terminalSummary || '';
+  const normalizedStructuredOutput = {
+    ...effectiveStructuredOutput,
+    summary: effectiveStructuredOutput.summary || terminalSummary,
+    context: effectiveStructuredOutput.context || terminalSummary,
+    notes: effectiveStructuredOutput.notes || terminalSummary,
+    terminal_state: terminalState,
+    blocked_by: Array.isArray(effectiveStructuredOutput.blocked_by) ? effectiveStructuredOutput.blocked_by.filter(Boolean) : [],
+    sources: sources.length > 0
+      ? sources
+      : (Array.isArray(timeoutSalvage?.candidate_evidence_urls) ? timeoutSalvage.candidate_evidence_urls : []),
+  };
   return {
     question_id: question.question_id,
     question_type: question.question_type,
@@ -2713,7 +3241,7 @@ function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTr
       stop_rule: `continue for up to ${question.hop_budget} hops within OpenCode steps budget`,
     },
     reasoning: {
-      structured_output: structuredOutput,
+      structured_output: normalizedStructuredOutput,
       prompt_trace: promptTrace,
       message_trace: messageTrace,
       raw_execution_trace: rawExecutionTrace,
@@ -2723,14 +3251,17 @@ function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTr
     raw_execution_trace: rawExecutionTrace,
     ...(timeoutSalvage ? { timeout_salvage: timeoutSalvage } : {}),
     execution_query: executionQuery || question.query,
-    answer: answerText || structuredOutput.answer || '',
+    answer: answerText || effectiveStructuredOutput.answer || '',
     primary_owner: primaryOwner,
     secondary_candidates: secondaryCandidates,
     supporting_candidates: supportingCandidates,
     candidates,
     signal_type: inferredSignalType,
-    confidence: structuredOutput.confidence ?? 0,
+    confidence: effectiveStructuredOutput.confidence ?? 0,
     validation_state: validationState,
+    terminal_state: terminalState,
+    terminal_summary: terminalSummary,
+    blocked_by: Array.isArray(normalizedStructuredOutput.blocked_by) ? normalizedStructuredOutput.blocked_by : [],
     evidence_url: evidenceUrl,
     recommended_next_query: structuredOutput.recommended_next_query || '',
     notes,
@@ -2863,10 +3394,19 @@ export async function runOpenCodePresetBatch({
   const statePath = _buildStateFilePath(outputDir, normalizedPreset, entityId);
   const existingState = resume ? await _loadJsonFile(statePath) : null;
   let runState = existingState && typeof existingState === 'object' ? existingState : buildPresetRunState(questions, { preset: normalizedPreset, runId: 'cli', timestamp: runStartedAt });
+  if (resume && existingState && typeof existingState === 'object') {
+    runState = normalizeRunStateForResume(runState, { timestamp: runStartedAt });
+  }
   const budgetOverrides = _buildCreditOverrides({ searchCredits, scrapeCredits, revisitCredits, confidenceThreshold });
   runState.last_run_at = runStartedAt;
+  runState.heartbeat_at = runStartedAt;
   runState.preset = normalizedPreset;
+  runState.failure_reason = null;
+  runState.failure_category = null;
+  runState.retryable = false;
+  runState.last_error = null;
   runState.run_started_at = runState.run_started_at || runStartedAt;
+  runState.publish_status = runState.publish_status || 'draft';
   runState.questions = Array.isArray(runState.questions) ? runState.questions : buildPresetRunState(questions, { preset: normalizedPreset, runId: 'cli', timestamp: runStartedAt }).questions;
   if (Object.values(budgetOverrides).some((value) => Number.isFinite(value))) {
     runState.questions = runState.questions.map((questionState, index) => {
@@ -2900,8 +3440,67 @@ export async function runOpenCodePresetBatch({
       let existingQuestionState = runState.questions[index];
       const currentQuestionState = existingQuestionState || buildQuestionState(question, { runId: `cli-${index + 1}`, timestamp: runStartedAt, creditBudgetOverrides: budgetOverrides, confidenceThreshold: budgetOverrides.confidenceThreshold });
       existingQuestionState = currentQuestionState;
-      const questionStartedAt = new Date().toISOString();
+      let questionPayload;
+      let questionRun = null;
       let questionTiming = null;
+      if (resume && _isTerminalQuestionState(existingQuestionState)) {
+        questionPayload = existingQuestionState.question_output || {
+          question_id: question.question_id,
+          question_type: question.question_type,
+          question_text: _questionText(question),
+          question: _questionText(question),
+          query: existingQuestionState.last_executed_query || question.query,
+          hop_budget: question.hop_budget,
+          source_priority: question.source_priority,
+          entity_name: question.entity_name,
+          entity_id: question.entity_id,
+          entity_type: question.entity_type,
+          preset: question.preset,
+          model_used: DEFAULT_MODEL,
+          session_id: existingQuestionState.run_id || `cli-${index + 1}`,
+          answer: existingQuestionState.best_answer || '',
+          confidence: existingQuestionState.current_confidence || 0,
+          validation_state: existingQuestionState.status || 'no_signal',
+          terminal_state: existingQuestionState.terminal_state || 'answered',
+          evidence_url: existingQuestionState.best_evidence_url || '',
+          reasoning: {
+            structured_output: {
+              answer: existingQuestionState.best_answer || '',
+              confidence: existingQuestionState.current_confidence || 0,
+              sources: existingQuestionState.accepted_links?.map((link) => link.url).filter(Boolean) || [],
+            },
+          },
+        };
+        questionTiming = questionTimings[question.question_id] || {
+          started_at: existingQuestionState.started_at || questionStartedAt,
+          completed_at: existingQuestionState.completed_at || questionStartedAt,
+          duration_seconds: 0,
+        };
+        questionTimings[question.question_id] = questionTiming;
+        finalQuestions.push(questionPayload);
+        perQuestionPayloads.push({
+          run_started_at: runStartedAt,
+          entity_name: question.entity_name,
+          entity_id: question.entity_id,
+          entity_type: question.entity_type,
+          preset: question.preset,
+          started_at: questionTiming.started_at,
+          completed_at: questionTiming.completed_at,
+          duration_seconds: questionTiming.duration_seconds,
+          question: questionPayload,
+        });
+        transcripts.push(
+          [
+            `Question ${index + 1}: ${question.question_id}`,
+            `Prompt: ${question.query}`,
+            'Exit code: 0',
+            `Validation: ${questionPayload.validation_state}`,
+            `Answer: ${questionPayload.answer || 'n/a'}`,
+          ].join('\n'),
+        );
+        continue;
+      }
+      const questionStartedAt = new Date().toISOString();
       const finalizeQuestionTiming = () => {
         const completedAt = new Date().toISOString();
         questionTiming = _buildQuestionTiming(questionStartedAt, completedAt);
@@ -2939,8 +3538,6 @@ export async function runOpenCodePresetBatch({
         : Date.now() + Math.max(1000, baseHopBudget * atomicHopTimeoutMs);
       let hopLimit = baseHopBudget;
       let evidenceExtended = false;
-      let questionPayload;
-      let questionRun = null;
       let currentState = existingQuestionState;
       let activeQuery = question.query;
       const queuedQueries = shouldReplayFrontier
@@ -2952,9 +3549,13 @@ export async function runOpenCodePresetBatch({
       const fallbackToRetrieval = question.fallback_to_retrieval !== false;
 
       if (!_questionConditionsMet(question, runState, entityType)) {
+        const unmetCondition = _describeUnmetQuestionConditions(question, runState, entityType);
         questionPayload = _buildQuestionPayload(
           question,
-          _emptyStructuredOutputForQuestion(question, 'Question conditions were not met for this entity or prior signal state.'),
+          _emptyStructuredOutputForQuestion(question, unmetCondition.note, {
+            terminal_state: unmetCondition.terminal_state,
+            blocked_by: unmetCondition.blocked_by,
+          }),
           `cli-${index + 1}`,
           {
             promptTrace: { status: 'skipped_condition_unmet', has_structured_output: true },
@@ -3200,7 +3801,7 @@ export async function runOpenCodePresetBatch({
       const revisitBudget = Number(currentQuestionState.credit_budget?.revisit || 0);
       const executionQueue = shouldReplayFrontier
         ? pendingFrontierItems.slice(0, Math.max(1, Number(question.hop_budget || 0))).map((item, hopIndex) => _buildExecutionQuestion(question, item.query, hopIndex + 1))
-        : (resume && existingQuestionState && ['validated', 'provisional', 'no_signal'].includes(existingQuestionState.status) && existingQuestionState.best_answer)
+        : (resume && existingQuestionState && _isTerminalQuestionState(existingQuestionState))
           ? []
           : [question];
       if (executionQueue.length === 0) {
@@ -3400,10 +4001,39 @@ export async function runOpenCodePresetBatch({
       );
     }
 
-	    const slug = _slugify(entityId);
-	    const timestamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z').replace('T', '_').replace('Z', '');
-	    const stem = `${slug}_opencode_batch_${timestamp}`;
-	    await fs.mkdir(outputDir, { recursive: true });
+    const reconciliation = reconcileRunStateCheckpoint(runState, {
+      requiredQuestionCount: questions.length,
+    });
+    if (!reconciliation.all_terminal) {
+      const inconsistentRunState = _decorateRunStateCheckpoint({
+        ...runState,
+        last_run_at: new Date().toISOString(),
+        publish_status: 'draft',
+        failure_reason: `checkpoint_inconsistency: non-terminal questions remain (${reconciliation.non_terminal_question_ids.join(', ')})`,
+        failure_category: 'checkpoint_inconsistency',
+        retryable: false,
+        last_error: {
+          message: `checkpoint_inconsistency: non-terminal questions remain (${reconciliation.non_terminal_question_ids.join(', ')})`,
+          category: 'checkpoint_inconsistency',
+          retryable: false,
+          at: new Date().toISOString(),
+        },
+        questions: runState.questions,
+      }, {
+        runPhase: reconciliation.derived_run_phase,
+        activeQuestionIndex: questions.findIndex((question) => question?.question_id === reconciliation.resume_from_question),
+        activeQuestion: questions.find((question) => question?.question_id === reconciliation.resume_from_question) || null,
+        activeHopIndex: null,
+        activeQuery: '',
+      });
+      await _writeJsonFile(statePath, inconsistentRunState);
+      throw new Error(`checkpoint_inconsistency: non-terminal questions remain (${reconciliation.non_terminal_question_ids.join(', ')})`);
+    }
+
+    const slug = _slugify(entityId);
+    const timestamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z').replace('T', '_').replace('Z', '');
+    const stem = `${slug}_opencode_batch_${timestamp}`;
+    await fs.mkdir(outputDir, { recursive: true });
 
 	    const metaPath = path.join(outputDir, `${stem}_meta.json`);
 	    const rollupPath = path.join(outputDir, `${stem}_rollup.json`);
@@ -3491,11 +4121,16 @@ export async function runOpenCodePresetBatch({
 	      status: finalQuestions.some((item) => item.validation_state === 'validated') ? 'ready' : 'empty',
 	    });
 	    validateQuestionFirstRunArtifact(questionFirstArtifact);
-	    await fs.writeFile(questionFirstRunPath, JSON.stringify(questionFirstArtifact, null, 2), 'utf8');
+    await fs.writeFile(questionFirstRunPath, JSON.stringify(questionFirstArtifact, null, 2), 'utf8');
     await _writeJsonFile(statePath, _decorateRunStateCheckpoint({
       ...runState,
       last_run_at: new Date().toISOString(),
+      publish_status: 'staged',
       preset: normalizedPreset,
+      failure_reason: null,
+      failure_category: null,
+      retryable: false,
+      last_error: null,
       questions: runState.questions,
     }, {
       runPhase: 'completed',
@@ -3505,7 +4140,7 @@ export async function runOpenCodePresetBatch({
       activeQuery: '',
     }));
 
-    return {
+	    return {
       ...rollupPayload,
 	      rollup_path: rollupPath,
 	      meta_result_path: metaPath,
@@ -3515,6 +4150,58 @@ export async function runOpenCodePresetBatch({
 	      question_first_run_path: questionFirstRunPath,
 	      state_path: statePath,
 	    };
+  } catch (error) {
+    const timestamp = new Date().toISOString();
+    const failure = _classifyRunFailure(error);
+    const activeQuestion = Number.isFinite(Number(runState?.active_question_index))
+      ? questions[Number(runState.active_question_index)] || null
+      : null;
+    const failureRunPhase = failure.failure_category === 'checkpoint_inconsistency'
+      ? 'resume_needed'
+      : (failure.retryable ? 'retryable_failure' : 'failed');
+    const failedRunState = _decorateRunStateCheckpoint({
+      ...runState,
+      last_run_at: timestamp,
+      publish_status: failure.failure_category === 'checkpoint_inconsistency' ? 'draft' : 'failed',
+      failure_reason: failure.failure_reason,
+      failure_category: failure.failure_category,
+      retryable: failure.retryable,
+      last_error: {
+        message: failure.failure_reason,
+        category: failure.failure_category,
+        retryable: failure.retryable,
+        at: timestamp,
+      },
+      questions: Array.isArray(runState?.questions)
+        ? runState.questions.map((questionState) => (
+            questionState?.question_id === runState?.active_question_id
+              ? {
+                  ...questionState,
+                  heartbeat_at: timestamp,
+                  retry_count: Number(questionState?.retry_count || 0) + 1,
+                  last_error: {
+                    message: failure.failure_reason,
+                    category: failure.failure_category,
+                    retryable: failure.retryable,
+                    at: timestamp,
+                  },
+                }
+              : questionState
+          ))
+        : [],
+    }, {
+      runPhase: failureRunPhase,
+      activeQuestionIndex: runState?.active_question_index ?? null,
+      activeQuestion,
+      activeHopIndex: runState?.active_hop_index ?? null,
+      activeQuery: runState?.active_query || '',
+    });
+    try {
+      await _writeJsonFile(statePath, failedRunState);
+    } catch {
+      // Preserve original failure if checkpoint persistence also fails.
+    }
+    throw error;
   } finally {
   }
 }

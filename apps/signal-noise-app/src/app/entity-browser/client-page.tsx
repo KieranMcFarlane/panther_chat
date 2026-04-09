@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton"
 import { EntityCard } from "@/components/EntityCard"
 import { EntitySmokeJourney } from "@/components/entity-browser/EntitySmokeJourney"
+import { AppPageBody, AppPageHeader, AppPageShell } from "@/components/layout/AppPageShell"
 import type { EntitySmokeJourneyItem } from "@/lib/entity-smoke-set"
 import { useEntitiesBrowserData, useEntityTaxonomy } from "@/lib/swr-config"
 import type { EntityBrowserFilters, EntityBrowserResponse } from "@/lib/entity-browser-data"
@@ -256,10 +257,15 @@ export default function EntityBrowserClientPage({
 
   if (entitiesLoading && !entitiesData && !initialEntitiesData) {
     return (
-      <div className="min-h-screen bg-background">
-        <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="container mx-auto px-4 py-6">
-            <div className="flex items-center gap-4 mb-4">
+      <AppPageShell>
+        <AppPageHeader
+          eyebrow="Workspace"
+          title="Entity Browser"
+          description="Primary workspace for persisted entity dossiers, question-driven research, and entity-first follow-up."
+        />
+        <AppPageBody>
+          <section className="rounded-2xl border border-border/70 bg-card/80 p-5 shadow-sm">
+            <div className="mb-4 flex items-center gap-4">
               <div className="flex items-center gap-3">
                 <Skeleton className="h-8 w-8 rounded-full" />
                 <div className="space-y-2">
@@ -275,10 +281,7 @@ export default function EntityBrowserClientPage({
             <p className="mt-4 text-sm text-muted-foreground">
               Hydrating entity browser from cached snapshot and taxonomy.
             </p>
-          </div>
-        </div>
-
-        <div className="container mx-auto px-4 py-6">
+          </section>
           <div className="mb-4 rounded-2xl border border-slate-700/80 bg-slate-950/70 p-4">
             <div className="flex items-center justify-between gap-3">
               <div className="space-y-2">
@@ -339,14 +342,15 @@ export default function EntityBrowserClientPage({
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </AppPageBody>
+      </AppPageShell>
     )
   }
 
   if (entitiesError) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <AppPageShell size="narrow">
+        <AppPageBody className="min-h-[50vh] items-center justify-center">
         <Card className="w-full max-w-md">
           <CardContent className="p-6 text-center">
             <Database className="h-12 w-12 text-destructive mx-auto mb-4" />
@@ -357,7 +361,8 @@ export default function EntityBrowserClientPage({
             </Button>
           </CardContent>
         </Card>
-      </div>
+        </AppPageBody>
+      </AppPageShell>
     )
   }
 
@@ -388,32 +393,23 @@ export default function EntityBrowserClientPage({
   const columnGap = 24
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="border-b border-border/60 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-4 py-5">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div className="flex items-start gap-3">
-              <Database className="mt-0.5 h-7 w-7 text-primary" />
-              <div className="space-y-1">
-                <h1 className="text-2xl font-semibold tracking-tight">Entity Browser</h1>
-                <p className="max-w-2xl text-sm text-muted-foreground">
-                  Primary workspace for persisted entity dossiers, question-driven research, and entity-first follow-up
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Button asChild variant="outline" size="sm">
-                <Link href="/entity-import">Import CSV</Link>
-              </Button>
-              <Button asChild variant="outline" size="sm">
-                <Link href="/tenders">View tenders</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4 py-6">
+    <AppPageShell>
+      <AppPageHeader
+        eyebrow="Workspace"
+        title="Entity Browser"
+        description="Primary workspace for persisted entity dossiers, question-driven research, and entity-first follow-up."
+        actions={
+          <>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/entity-import">Import CSV</Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/tenders">View tenders</Link>
+            </Button>
+          </>
+        }
+      />
+      <AppPageBody>
         <div className="mb-4">
           <EntitySmokeJourney items={smokeItems} />
         </div>
@@ -688,9 +684,8 @@ export default function EntityBrowserClientPage({
             <ArrowRight className="h-4 w-4 ml-2" />
           </Button>
         </div>
-      </div>
-
-    </div>
+      </AppPageBody>
+    </AppPageShell>
   )
 }
 

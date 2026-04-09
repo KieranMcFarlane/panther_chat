@@ -32,6 +32,27 @@ type BatchStatus = {
     sales_readiness: string | null
     rfp_count: number
     metadata: Record<string, unknown>
+    lifecycle?: {
+      stage: string
+      label: string
+      summary: string
+      quality_state: string
+      quality_summary: string
+      artifact_source: string
+      pipeline_complete: boolean
+      artifact_generated: boolean
+      dossier_persisted: boolean
+      client_ready: boolean
+      artifact_path: string | null
+      dossier_path: string | null
+      blocker_summary: string | null
+      heartbeat_at?: string | null
+      failure_reason?: string | null
+      failure_category?: string | null
+      retryable?: boolean
+      resume_from_question?: string | null
+      last_completed_question?: string | null
+    }
   }>
   execution?: {
     mode: string
@@ -201,6 +222,8 @@ export default function EntityCsvImporter() {
                   <th className="py-2 pr-4">Run detail</th>
                   <th className="py-2 pr-4">Phase</th>
                   <th className="py-2 pr-4">Status</th>
+                  <th className="py-2 pr-4">Lifecycle</th>
+                  <th className="py-2 pr-4">Quality</th>
                   <th className="py-2 pr-4">Sales readiness</th>
                   <th className="py-2 pr-4">RFP count</th>
                   <th className="py-2 pr-4">Dossier</th>
@@ -245,6 +268,24 @@ export default function EntityCsvImporter() {
                             <div className="mt-1 text-xs text-red-600">{run.error_message}</div>
                           ) : null}
                         </td>
+                        <td className="py-3 pr-4">
+                          <div>{run.lifecycle?.label ?? 'Queued'}</div>
+                          <div className="mt-1 text-xs text-slate-500">
+                            {run.lifecycle?.summary ?? 'Waiting for end-to-end pipeline activity'}
+                          </div>
+                          <div className="mt-1 text-xs text-slate-500">
+                            resume: {run.lifecycle?.resume_from_question ?? 'n/a'}
+                          </div>
+                          {run.lifecycle?.blocker_summary ? (
+                            <div className="mt-1 text-xs text-amber-700">{run.lifecycle.blocker_summary}</div>
+                          ) : null}
+                        </td>
+                        <td className="py-3 pr-4">
+                          <div>{run.lifecycle?.quality_state ?? 'missing'}</div>
+                          <div className="mt-1 text-xs text-slate-500">
+                            {run.lifecycle?.quality_summary ?? 'No dossier quality assessment is available yet.'}
+                          </div>
+                        </td>
                         <td className="py-3 pr-4">{run.sales_readiness ?? 'Pending'}</td>
                         <td className="py-3 pr-4">
                           <div>{run.rfp_count}</div>
@@ -258,13 +299,15 @@ export default function EntityCsvImporter() {
                           ) : null}
                         </td>
                         <td className="py-3 pr-4">
-                          {run.dossier_id ? (
+                          {run.lifecycle?.dossier_persisted ? (
                             <a
                               href={`/entity-browser/${run.entity_id}/dossier?from=1`}
                               className="text-sky-700 underline underline-offset-2"
                             >
-                              Open dossier
+                              {run.lifecycle?.client_ready ? 'Open client dossier' : 'Open persisted dossier'}
                             </a>
+                          ) : run.lifecycle?.artifact_generated ? (
+                            <span className="text-xs text-slate-500">Artifact generated, not persisted yet</span>
                           ) : (
                             'Pending'
                           )}

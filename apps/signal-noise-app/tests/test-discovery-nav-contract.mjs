@@ -6,12 +6,13 @@ test('client nav source keeps only the canonical user-facing surfaces', async ()
   const source = await readFile(new URL('../src/components/layout/discovery-nav.ts', import.meta.url), 'utf8')
 
   assert.match(source, /label: 'Home', href: '\/'/)
+  assert.match(source, /label: 'Search', href: '\/search'/)
   assert.match(source, /label: 'Entities', href: '\/entity-browser'/)
   assert.match(source, /label: 'Opportunities', href: '\/opportunities'/)
-  assert.doesNotMatch(source, /RFP's\/Tenders/)
+  assert.match(source, /label: 'RFPs', href: '\/rfps'/)
+  assert.match(source, /label: 'CSV Import', href: '\/entity-import'/)
   assert.doesNotMatch(source, /Enrichment/)
   assert.doesNotMatch(source, /Pipeline/)
-  assert.doesNotMatch(source, /Import CSV/)
 })
 
 test('legacy operational nav groups are empty in the client shell config', async () => {

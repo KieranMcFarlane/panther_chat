@@ -5,6 +5,8 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 import {
+  reconcileRunStateCheckpoint,
+  normalizeRunStateForResume,
   buildMajorLeagueCricketPresetQuestions,
   buildMajorLeagueCricketPoiBatchAQuestions,
   buildMajorLeagueCricketPoiBatchBQuestions,
@@ -24,6 +26,83 @@ import {
 import {
   lookupApifyTechStack,
 } from '../scripts/apify_techstack_lookup.mjs';
+
+test('reconcileRunStateCheckpoint rejects completed checkpoints with lingering running questions', () => {
+  const timestamp = '2026-04-09T13:07:09.474Z';
+  const runState = {
+    run_phase: 'completed',
+    publish_status: 'staged',
+    questions: [
+      {
+        question_id: 'q1_foundation',
+        status: 'validated',
+        completed_at: timestamp,
+        question_output: { answer: '1981' },
+      },
+      {
+        question_id: 'q3_leadership',
+        status: 'running',
+        completed_at: null,
+        question_output: null,
+      },
+      {
+        question_id: 'q11_decision_owner',
+        status: 'validated',
+        completed_at: timestamp,
+        question_output: { answer: 'Wilfred Mukondiwa' },
+      },
+    ],
+  };
+
+  const reconciled = reconcileRunStateCheckpoint(runState, { requiredQuestionCount: 3 });
+
+  assert.equal(reconciled.all_terminal, false);
+  assert.equal(reconciled.checkpoint_consistent, false);
+  assert.equal(reconciled.derived_run_phase, 'resume_needed');
+  assert.equal(reconciled.last_completed_question, 'q11_decision_owner');
+  assert.equal(reconciled.resume_from_question, 'q3_leadership');
+  assert.deepEqual(reconciled.non_terminal_question_ids, ['q3_leadership']);
+});
+
+test('normalizeRunStateForResume converts stale running questions back to pending and preserves terminal ones', () => {
+  const timestamp = '2026-04-09T15:00:00.000Z';
+  const runState = {
+    run_phase: 'completed',
+    questions: [
+      {
+        question_id: 'q1_foundation',
+        status: 'validated',
+        completed_at: '2026-04-09T14:00:00.000Z',
+        question_output: { answer: '1981' },
+      },
+      {
+        question_id: 'q3_leadership',
+        status: 'running',
+        completed_at: null,
+        question_output: null,
+        terminal_state: null,
+      },
+      {
+        question_id: 'q7_procurement_signal',
+        status: 'running',
+        completed_at: null,
+        question_output: null,
+        terminal_state: null,
+      },
+    ],
+  };
+
+  const normalized = normalizeRunStateForResume(runState, { timestamp });
+
+  assert.equal(normalized.run_phase, 'resume_needed');
+  assert.equal(normalized.questions[0].status, 'validated');
+  assert.equal(normalized.questions[1].status, 'pending');
+  assert.equal(normalized.questions[2].status, 'pending');
+  assert.equal(normalized.publish_status, 'draft');
+  assert.equal(normalized.resume_from_question, 'q3_leadership');
+  assert.deepEqual(normalized.non_terminal_question_ids, ['q3_leadership', 'q7_procurement_signal']);
+  assert.equal(normalized.checkpoint_consistent, false);
+});
 
 test('buildOpenCodeConfig wires Z.AI and BrightData FastMCP for OpenCode', () => {
   const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
@@ -665,10 +744,30 @@ test('runOpenCodeQuestionSourceBatch preserves decision-owner primary owner and 
             name: 'Juliet Slot',
             title: 'Chief Commercial Officer',
             company: 'Arsenal Football Club',
+            linkedin_url: 'https://www.linkedin.com/in/juliet-slot/',
+            email: 'juliet.slot@arsenal.com',
+            bio: 'Chief Commercial Officer leading partnerships, growth, and fan revenue strategy at Arsenal.',
+            recent_post_summary: 'Recent LinkedIn activity emphasizes supporter experience, global partnerships, and digital commercial growth.',
+            recent_post_urls: [
+              'https://www.linkedin.com/posts/juliet-slot_example-post-1',
+              'https://www.linkedin.com/posts/juliet-slot_example-post-2',
+            ],
           },
           supporting_candidates: [
-            { name: 'Tom Fox', title: 'Commercial Director', company: 'Arsenal Football Club' },
-            { name: 'Richard Garlick', title: 'Managing Director', company: 'Arsenal Football Club' },
+            {
+              name: 'Tom Fox',
+              title: 'Commercial Director',
+              company: 'Arsenal Football Club',
+              linkedin_url: 'https://www.linkedin.com/in/tom-fox/',
+              bio: 'Commercial operator with prior leadership across partnerships and business growth.',
+            },
+            {
+              name: 'Richard Garlick',
+              title: 'Managing Director',
+              company: 'Arsenal Football Club',
+              linkedin_url: 'https://www.linkedin.com/in/richard-garlick/',
+              bio: 'Executive leader responsible for club operations and board-level decision making.',
+            },
           ],
           confidence: 0.95,
           validation_state: 'validated',
@@ -685,8 +784,13 @@ test('runOpenCodeQuestionSourceBatch preserves decision-owner primary owner and 
     assert.equal(question.validation_state, 'validated');
     assert.equal(question.answer, 'Juliet Slot');
     assert.equal(question.primary_owner.name, 'Juliet Slot');
+    assert.equal(question.primary_owner.linkedin_url, 'https://www.linkedin.com/in/juliet-slot/');
+    assert.equal(question.primary_owner.email, 'juliet.slot@arsenal.com');
+    assert.match(question.primary_owner.bio, /Chief Commercial Officer/);
+    assert.equal(question.primary_owner.recent_post_urls.length, 2);
     assert.equal(question.supporting_candidates.length, 2);
     assert.equal(question.supporting_candidates[0].name, 'Tom Fox');
+    assert.match(question.supporting_candidates[0].bio, /Commercial operator/);
   } finally {
     if (previousZaiKey === undefined) {
       delete process.env.ANTHROPIC_AUTH_TOKEN;
@@ -3304,6 +3408,300 @@ test('runOpenCodeQuestionSourceBatch adds non-strict timeout salvage without cha
   }
 });
 
+test('runOpenCodeQuestionSourceBatch recovers q3 leadership candidates from trusted timeout salvage evidence', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-leadership-salvage-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'zimbabwe-cricket',
+        entity_name: 'Zimbabwe Cricket',
+        entity_type: 'SPORT_FEDERATION',
+        preset: 'zimbabwe-cricket-atomic-matrix',
+        question_source_label: 'zimbabwe-cricket-atomic-matrix',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        question_count: 1,
+        questions: [
+          {
+            question_id: 'q3_leadership',
+            question_type: 'leadership',
+            entity_id: 'zimbabwe-cricket',
+            entity_name: 'Zimbabwe Cricket',
+            entity_type: 'SPORT_FEDERATION',
+            question: 'Who are the key leadership, commercial, partnerships, marketing, digital, technology, and strategy figures at Zimbabwe Cricket?',
+            query: '"Zimbabwe Cricket" leadership team',
+            hop_budget: 1,
+            source_priority: ['linkedin_company_profile', 'linkedin_people_search', 'linkedin_person_profile', 'google_serp', 'official_site'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  const brightDataSearch = (body) => JSON.stringify({
+    type: 'tool_use',
+    part: {
+      tool: 'brightData_search_engine',
+      state: {
+        output: body,
+      },
+    },
+  });
+
+  try {
+    const result = await runOpenCodeQuestionSourceBatch({
+      questionSourcePath: sourcePath,
+      outputDir,
+      questionRunner: async () => ({
+        structuredOutput: {},
+        promptTrace: {
+          exit_code: 124,
+          stdout_length: 500,
+          stderr_length: 36,
+          has_structured_output: false,
+        },
+        messageTrace: [{ role: 'assistant', completed: false, type: 'cli-run', has_structured_output: false, part_count: 1 }],
+        cliResult: {
+          code: 124,
+          stdout: brightDataSearch([
+            'Search results for "Zimbabwe Cricket leadership team" on google:',
+            '1. Zimbabwe Cricket - Wikipedia',
+            'URL: https://en.wikipedia.org/wiki/Zimbabwe_Cricket',
+            'Description: Chairman: Tavengwa Mukuhlani. CEO: Wilfred Mukondiwa.',
+            '2. Zimbabwe Cricket official site',
+            'URL: https://www.zimcricket.org/',
+            'Description: Official site for Zimbabwe Cricket.',
+            'Source: brightdata_sdk',
+          ].join('\n')),
+          stderr: 'opencode run timed out after 300000ms',
+        },
+      }),
+    });
+
+    const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+    const [leadership] = artifact.answer_records;
+    assert.equal(leadership.validation_state, 'partially_validated');
+    assert.equal(leadership.terminal_state, 'answered');
+    assert.match(leadership.terminal_summary, /Recovered 2 leadership candidates from trusted fallback sources/i);
+    assert.deepEqual(leadership.timeout_salvage.fallback_candidates, [
+      {
+        name: 'Tavengwa Mukuhlani',
+        title: 'Chairman',
+        source_url: 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket',
+        source_type: 'wikipedia',
+      },
+      {
+        name: 'Wilfred Mukondiwa',
+        title: 'Chief Executive Officer',
+        source_url: 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket',
+        source_type: 'wikipedia',
+      },
+    ]);
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
+test('runOpenCodeQuestionSourceBatch cleans noisy article-slug leadership candidates from trusted timeout salvage evidence', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-leadership-slug-cleanup-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'zimbabwe-cricket',
+        entity_name: 'Zimbabwe Cricket',
+        entity_type: 'SPORT_FEDERATION',
+        preset: 'zimbabwe-cricket-atomic-matrix',
+        question_source_label: 'zimbabwe-cricket-atomic-matrix',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        question_count: 1,
+        questions: [
+          {
+            question_id: 'q3_leadership',
+            question_type: 'leadership',
+            entity_id: 'zimbabwe-cricket',
+            entity_name: 'Zimbabwe Cricket',
+            entity_type: 'SPORT_FEDERATION',
+            question: 'Who are the key leadership figures at Zimbabwe Cricket?',
+            query: '"Zimbabwe Cricket" leadership team',
+            hop_budget: 1,
+            source_priority: ['wikipedia', 'official_site', 'linkedin_company_profile', 'linkedin_people_search', 'linkedin_person_profile', 'google_serp', 'news'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  const brightDataSearch = (body) => JSON.stringify({
+    type: 'tool_use',
+    part: { tool: 'brightData_search_engine', state: { output: body } },
+  });
+
+  try {
+    const result = await runOpenCodeQuestionSourceBatch({
+      questionSourcePath: sourcePath,
+      outputDir,
+      questionRunner: async () => ({
+        structuredOutput: {},
+        promptTrace: {
+          exit_code: 124,
+          stdout_length: 500,
+          stderr_length: 36,
+          has_structured_output: false,
+        },
+        messageTrace: [{ role: 'assistant', completed: false, type: 'cli-run', has_structured_output: false, part_count: 1 }],
+        cliResult: {
+          code: 124,
+          stdout: brightDataSearch([
+            'Search results for "Zimbabwe Cricket leadership team" on google:',
+            '1. Zimbabwe Cricket chief Tavengwa Mukuhlani mulls contesting ICC chairman elections',
+            'URL: https://timesofindia.indiatimes.com/sports/cricket/news/zimbabwe-cricket-chief-tavengwa-mukuhlani-mulls-contesting-icc-chairman-elections/articleshow/95316540.cms',
+            'Description: Zimbabwe Cricket chief Tavengwa Mukuhlani mulls contesting ICC chairman elections.',
+            'Source: brightdata_sdk',
+          ].join('\n')),
+          stderr: 'opencode run timed out after 300000ms',
+        },
+      }),
+    });
+
+    const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+    const [leadership] = artifact.answer_records;
+    assert.equal(leadership.validation_state, 'partially_validated');
+    assert.equal(leadership.timeout_salvage.fallback_candidates[0].name, 'Tavengwa Mukuhlani');
+    assert.equal(leadership.timeout_salvage.fallback_candidates[0].source_type, 'press_release');
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
+test('runOpenCodeQuestionSourceBatch recovers q11 decision-owner candidates from trusted timeout salvage evidence', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-decision-owner-salvage-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'zimbabwe-cricket',
+        entity_name: 'Zimbabwe Cricket',
+        entity_type: 'SPORT_FEDERATION',
+        preset: 'zimbabwe-cricket-atomic-matrix',
+        question_source_label: 'zimbabwe-cricket-atomic-matrix',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        question_count: 1,
+        questions: [
+          {
+            question_id: 'q11_decision_owner',
+            question_type: 'decision_owner',
+            entity_id: 'zimbabwe-cricket',
+            entity_name: 'Zimbabwe Cricket',
+            entity_type: 'SPORT_FEDERATION',
+            question: 'Who is the highest probability buyer at Zimbabwe Cricket given the current commercial and product context?',
+            query: '"Zimbabwe Cricket" commercial partnerships leadership',
+            hop_budget: 1,
+            source_priority: ['wikipedia', 'official_site', 'linkedin_company_profile', 'linkedin_people_search', 'linkedin_person_profile', 'google_serp', 'news', 'linkedin_posts'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  const brightDataSearch = (body) => JSON.stringify({
+    type: 'tool_use',
+    part: {
+      tool: 'brightData_search_engine',
+      state: {
+        output: body,
+      },
+    },
+  });
+
+  try {
+    const result = await runOpenCodeQuestionSourceBatch({
+      questionSourcePath: sourcePath,
+      outputDir,
+      questionRunner: async () => ({
+        structuredOutput: {},
+        promptTrace: {
+          exit_code: 124,
+          stdout_length: 500,
+          stderr_length: 36,
+          has_structured_output: false,
+        },
+        messageTrace: [{ role: 'assistant', completed: false, type: 'cli-run', has_structured_output: false, part_count: 1 }],
+        cliResult: {
+          code: 124,
+          stdout: brightDataSearch([
+            'Search results for "Zimbabwe Cricket commercial partnerships leadership" on google:',
+            '1. Zimbabwe Cricket - Wikipedia',
+            'URL: https://en.wikipedia.org/wiki/Zimbabwe_Cricket',
+            'Description: Chairman: Tavengwa Mukuhlani. CEO: Wilfred Mukondiwa.',
+            '2. Zimbabwe Cricket LinkedIn company profile',
+            'URL: https://zw.linkedin.com/company/zimbabwecricket',
+            'Description: Official company page.',
+            'Source: brightdata_sdk',
+          ].join('\n')),
+          stderr: 'opencode run timed out after 300000ms',
+        },
+      }),
+    });
+
+    const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+    const [decisionOwner] = artifact.answer_records;
+    assert.equal(decisionOwner.validation_state, 'partially_validated');
+    assert.equal(decisionOwner.terminal_state, 'answered');
+    assert.match(decisionOwner.terminal_summary, /Recovered 2 decision-owner candidates from trusted fallback sources/i);
+    assert.equal(decisionOwner.primary_owner.name, 'Tavengwa Mukuhlani');
+    assert.equal(decisionOwner.primary_owner.title, 'Chairman');
+    assert.equal(decisionOwner.supporting_candidates[0].name, 'Wilfred Mukondiwa');
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
 
 test('runOpenCodePresetBatch resumes from persisted validated state without re-running questions', async () => {
   const outputDir = mkdtempSync(join(tmpdir(), 'opencode-batch-resume-'));
@@ -3352,6 +3750,131 @@ test('runOpenCodePresetBatch resumes from persisted validated state without re-r
     assert.equal(state.questions[1].status, 'validated');
     assert.equal(state.questions[0].best_answer, 'stub-entity_founded_year');
     assert.equal(state.questions[1].best_answer, 'stub-sl_league_mobile_app');
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
+test('runOpenCodePresetBatch persists durable checkpoint metadata for resume and failure handling', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-batch-checkpoint-'));
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+
+  try {
+    const result = await runOpenCodePresetBatch({
+      outputDir,
+      preset: 'major-league-cricket-smoke',
+      questionRunner: async (question) => ({
+        structuredOutput: {
+          question: question.question_text,
+          answer: `stub-${question.question_id}`,
+          context: 'stubbed',
+          sources: ['https://example.com'],
+          confidence: 0.99,
+          validation_state: 'validated',
+        },
+        promptTrace: { status: 'ok', structured_output_keys: 1, has_structured_output: true },
+        messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
+        cliResult: { code: 0, stdout: '{"answer":"stub"}', stderr: '' },
+      }),
+    });
+
+    const state = JSON.parse(readFileSync(result.state_path, 'utf8'));
+    assert.equal(typeof state.heartbeat_at, 'string');
+    assert.equal(state.failure_reason ?? null, null);
+    assert.equal(state.failure_category ?? null, null);
+    assert.equal(state.retryable ?? false, false);
+    assert.equal(state.last_completed_question, 'sl_league_mobile_app');
+    assert.equal(state.resume_from_question ?? null, null);
+    assert.equal(state.publish_status, 'staged');
+    assert.equal(state.questions[0].terminal_state, 'answered');
+    assert.equal(typeof state.questions[0].completed_at, 'string');
+    assert.equal(state.questions[0].retry_count, 0);
+    assert.equal(state.questions[0].question_output.answer, 'stub-entity_founded_year');
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
+test('runOpenCodePresetBatch resumes only the first non-terminal question from checkpoint state', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-batch-midrun-resume-'));
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+
+  try {
+    const initial = await runOpenCodePresetBatch({
+      outputDir,
+      preset: 'major-league-cricket-smoke',
+      questionRunner: async (question) => ({
+        structuredOutput: {
+          question: question.question_text,
+          answer: `stub-${question.question_id}`,
+          context: 'stubbed',
+          sources: ['https://example.com'],
+          confidence: 0.99,
+          validation_state: 'validated',
+        },
+        promptTrace: { status: 'ok', structured_output_keys: 1, has_structured_output: true },
+        messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
+        cliResult: { code: 0, stdout: '{"answer":"stub"}', stderr: '' },
+      }),
+    });
+
+    const checkpoint = JSON.parse(readFileSync(initial.state_path, 'utf8'));
+    checkpoint.run_phase = 'question_runner_enter';
+    checkpoint.active_question_index = 1;
+    checkpoint.active_question_id = 'sl_league_mobile_app';
+    checkpoint.last_completed_question = 'entity_founded_year';
+    checkpoint.resume_from_question = 'sl_league_mobile_app';
+    checkpoint.questions[1] = {
+      ...checkpoint.questions[1],
+      status: 'running',
+      terminal_state: null,
+      best_answer: '',
+      question_output: null,
+      completed_at: null,
+    };
+    writeFileSync(initial.state_path, JSON.stringify(checkpoint, null, 2), 'utf8');
+
+    const resumedRuns = [];
+    const resumed = await runOpenCodePresetBatch({
+      outputDir,
+      preset: 'major-league-cricket-smoke',
+      resume: true,
+      questionRunner: async (question) => {
+        resumedRuns.push(question.question_id);
+        return {
+          structuredOutput: {
+            question: question.question_text,
+            answer: `resumed-${question.question_id}`,
+            context: 'resumed',
+            sources: ['https://example.com/resumed'],
+            confidence: 0.91,
+            validation_state: 'validated',
+          },
+          promptTrace: { status: 'ok', structured_output_keys: 1, has_structured_output: true },
+          messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
+          cliResult: { code: 0, stdout: '{"answer":"resumed"}', stderr: '' },
+        };
+      },
+    });
+
+    assert.deepEqual(resumedRuns, ['sl_league_mobile_app']);
+    const state = JSON.parse(readFileSync(resumed.state_path, 'utf8'));
+    assert.equal(state.last_completed_question, 'sl_league_mobile_app');
+    assert.equal(state.resume_from_question ?? null, null);
+    assert.equal(state.questions[0].best_answer, 'stub-entity_founded_year');
+    assert.equal(state.questions[1].best_answer, 'resumed-sl_league_mobile_app');
   } finally {
     if (previousZaiKey === undefined) {
       delete process.env.ANTHROPIC_AUTH_TOKEN;

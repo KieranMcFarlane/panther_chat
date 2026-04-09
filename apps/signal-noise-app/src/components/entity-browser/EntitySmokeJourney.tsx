@@ -15,33 +15,41 @@ const STATUS_LABELS: Record<EntitySmokeJourneyItem["dossierStatus"], string> = {
   missing: "No dossier yet",
 }
 
+const QUALITY_LABELS: Record<string, string> = {
+  client_ready: "Client-ready",
+  complete: "Complete",
+  blocked: "Blocked",
+  partial: "Partial",
+  missing: "Missing",
+}
+
 interface EntitySmokeJourneyProps {
   items: EntitySmokeJourneyItem[]
 }
 
 export function EntitySmokeJourney({ items }: EntitySmokeJourneyProps) {
-  const readyCount = items.length
+  const readyCount = items.filter((item) => item.qualityState === "client_ready").length
 
   return (
     <Card className="border-slate-700/80 bg-slate-950/70 shadow-sm">
       <CardHeader className="space-y-3">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <CardTitle className="text-base">Client-Ready Dossiers</CardTitle>
+            <CardTitle className="text-base">Local QA Dossiers</CardTitle>
             <p className="mt-1 max-w-2xl text-xs text-muted-foreground">
-              Only entities with a real canonical question-first dossier are shown here. Pending or legacy fallbacks are excluded from the demo path.
+              This local QA path tracks the 15-question rollout proof set. Each entry is expected to resolve through canonical question-first data and either meet or clearly miss the full-pack quality gate.
             </p>
           </div>
           <Badge variant="secondary" className="gap-1">
             <PlayCircle className="h-3.5 w-3.5" />
-            {readyCount} ready
+            {readyCount} client-ready
           </Badge>
         </div>
       </CardHeader>
       <CardContent className="space-y-2">
         {items.length === 0 ? (
           <div className="rounded-xl border border-dashed border-slate-700/80 bg-slate-950/60 p-4 text-sm text-slate-300">
-            No client-ready dossiers are available yet. Generate a canonical question-first dossier before using an entity in the smoke journey.
+            No canonical QA dossiers are available yet. Persist a question-first artifact before using an entity in the smoke journey.
           </div>
         ) : (
         <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-5">
@@ -72,6 +80,8 @@ export function EntitySmokeJourney({ items }: EntitySmokeJourneyProps) {
               <div className="mt-2 rounded-lg border border-slate-700/70 bg-slate-950/70 p-2">
                 <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Dossier status</p>
                 <p className="mt-1 text-sm font-medium text-slate-100">{STATUS_LABELS[item.dossierStatus]}</p>
+                <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-slate-500">Quality</p>
+                <p className="mt-1 text-sm font-medium text-slate-100">{QUALITY_LABELS[item.qualityState] || item.qualityState}</p>
                 <p className="mt-1 text-xs leading-5 text-slate-400">{item.dossierSummary}</p>
               </div>
 
@@ -97,9 +107,9 @@ export function EntitySmokeJourney({ items }: EntitySmokeJourneyProps) {
           <p className="text-sm font-medium text-slate-200">Smoke acceptance checklist</p>
           <ul className="mt-2 grid gap-2 text-xs text-slate-400 md:grid-cols-2">
             <li>Entity browser is the first screen, not the control center.</li>
-            <li>Each listed dossier has a real question-first artifact, not a legacy fallback.</li>
+            <li>Each listed dossier resolves through a real canonical question-first artifact, not a legacy fallback.</li>
+            <li>The proof set should converge on three 15-question dossiers through the canonical browser route.</li>
             <li>At least one dossier visibly reuses stored data on the page.</li>
-            <li>Only production-backed dossier content is shown in the client path.</li>
             <li>The control center remains available as a secondary live overview.</li>
           </ul>
         </div>

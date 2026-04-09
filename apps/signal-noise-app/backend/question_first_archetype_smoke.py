@@ -758,6 +758,8 @@ async def run_smoke(
             "question_first_run_path": str(question_first_run_path) if question_first_run_path else None,
             "question_first_dossier_path": str(question_first_dossier_path) if question_first_dossier_path else None,
             "question_first_report_path": question_first_report.get("json_report_path") if isinstance(question_first_report, dict) else None,
+            "failure_reason": error,
+            "failure_category": status if status != "completed" else None,
             "optional_enrichments": {
                 "connections_graph": {
                     "enabled": connections_graph_enrichment_enabled,
@@ -853,6 +855,8 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     if args.output_root:
         output_root = Path(args.output_root)
+        if not output_root.is_absolute():
+            output_root = (ROOT / output_root).resolve()
     else:
         ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
         output_root = ROOT / "backend" / "data" / "question_first_archetype_smokes" / f"question_first_archetype_smoke_{ts}"

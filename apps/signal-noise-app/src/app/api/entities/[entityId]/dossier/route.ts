@@ -12,10 +12,6 @@ import {
 } from '@/lib/entity-import-jobs'
 import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
 import {
-  getLatestQuestionFirstDossierArtifact,
-  getLatestQuestionFirstRunArtifact,
-  mergeQuestionFirstRunArtifactIntoDossier,
-  normalizeQuestionFirstDossier,
   resolveCanonicalQuestionFirstDossier,
 } from '@/lib/question-first-dossier'
 
@@ -102,7 +98,32 @@ async function resolveEntity(entityId: string): Promise<ResolvedEntity | null> {
     )
 
     if (!canonicalMatch) {
-      return null
+      const canonicalQuestionFirst = await resolveCanonicalQuestionFirstDossier(normalizedId, null)
+      if (!canonicalQuestionFirst.dossier) {
+        return null
+      }
+
+      const dossier = canonicalQuestionFirst.dossier
+      return {
+        id: String(dossier.entity_id ?? normalizedId),
+        uuid: resolveEntityUuid({
+          id: dossier.entity_id ?? normalizedId,
+          neo4j_id: dossier.entity_id ?? normalizedId,
+          supabase_id: dossier.entity_id ?? normalizedId,
+          properties: {
+            name: dossier.entity_name ?? normalizedName,
+            type: dossier.entity_type ?? 'ENTITY',
+          },
+        }) || undefined,
+        neo4j_id: dossier.entity_id ?? normalizedId,
+        labels: [dossier.entity_type ?? 'ENTITY'],
+        properties: {
+          name: dossier.entity_name ?? normalizedName,
+          type: dossier.entity_type ?? 'ENTITY',
+          sport: dossier.sport ?? 'Unknown',
+          dossier_data: JSON.stringify(dossier),
+        },
+      }
     }
 
     return {
@@ -215,6 +236,16 @@ function buildCanonicalDossierResponse(dossier: Record<string, any>, source: str
       question_timings: dossier.question_timings,
       poi_graph: dossier.poi_graph,
       tabs: dossier.tabs,
+      publish_status: dossier.publish_status,
+      run_id: dossier.run_id,
+      last_completed_question: dossier.last_completed_question,
+      resume_from_question: dossier.resume_from_question,
+      failure_reason: dossier.failure_reason,
+      failure_category: dossier.failure_category,
+      retryable: dossier.retryable,
+      heartbeat_at: dossier.heartbeat_at,
+      checkpoint_consistent: dossier.checkpoint_consistent,
+      non_terminal_question_ids: dossier.non_terminal_question_ids,
     },
   }
 }
@@ -297,19 +328,6 @@ async function handleRequest(entityId: string, forceQueue: boolean) {
   }
 
   if (!forceQueue) {
-    const latestQuestionFirstDossier = await getLatestQuestionFirstDossierArtifact(entityId, entity)
-    if (latestQuestionFirstDossier?.payload) {
-      const dossier = normalizeQuestionFirstDossier(latestQuestionFirstDossier.payload, entityId, entity)
-      return NextResponse.json(buildCanonicalDossierResponse(dossier, 'question_first_dossier'))
-    }
-
-    const latestQuestionFirstRun = await getLatestQuestionFirstRunArtifact(entityId, entity)
-    if (latestQuestionFirstRun?.payload) {
-      const mergedDossier = mergeQuestionFirstRunArtifactIntoDossier({}, latestQuestionFirstRun.payload)
-      const dossier = normalizeQuestionFirstDossier(mergedDossier, entityId, entity)
-      return NextResponse.json(buildCanonicalDossierResponse(dossier, 'question_first_run'))
-    }
-
     const canonicalQuestionFirst = await resolveCanonicalQuestionFirstDossier(entityId, entity)
     if (canonicalQuestionFirst.dossier) {
       return NextResponse.json(buildCanonicalDossierResponse(canonicalQuestionFirst.dossier, canonicalQuestionFirst.source))

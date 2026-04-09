@@ -7,6 +7,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { AppPageBody, AppPageHeader, AppPageShell } from '@/components/layout/AppPageShell';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -595,63 +596,76 @@ const [filterSource, setFilterSource] = useState('all');
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background p-6 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <h2 className="text-xl font-semibold mb-2">Loading opportunity feed</h2>
-          <p className="text-muted-foreground mb-4">Checking production-backed opportunities and verified source links...</p>
-          <div className="text-sm text-muted-foreground">
-            <p>🔍 Verifying source URLs</p>
-            <p>📊 Waiting for live database results</p>
+      <AppPageShell size="wide">
+        <AppPageHeader
+          eyebrow="Raw feed"
+          title="Raw tenders feed"
+          description="Loading the production-backed intake feed for RFP and tender monitoring."
+        />
+        <AppPageBody>
+          <div className="flex min-h-[16rem] items-center justify-center rounded-2xl border border-border/70 bg-card/70">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+              <h2 className="text-xl font-semibold mb-2">Loading opportunity feed</h2>
+              <p className="text-muted-foreground mb-4">Checking production-backed opportunities and verified source links...</p>
+              <div className="text-sm text-muted-foreground">
+                <p>🔍 Verifying source URLs</p>
+                <p>📊 Waiting for live database results</p>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </AppPageBody>
+      </AppPageShell>
     );
   }
 
   if (opportunities.length === 0) {
     return (
-      <div className="min-h-screen bg-background p-6 flex items-center justify-center">
-        <div className="text-center max-w-md">
-          <div className="text-6xl mb-4">🔍</div>
-          <h2 className="text-xl font-semibold mb-2">No production-backed opportunities are available right now.</h2>
-          <p className="text-muted-foreground mb-4">
-            {feedMessage || EMPTY_FEED_MESSAGE}
-          </p>
-          <Button onClick={() => window.location.reload()}>
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Refresh Data
-          </Button>
-        </div>
-      </div>
+      <AppPageShell size="wide">
+        <AppPageHeader
+          eyebrow="Raw feed"
+          title="Raw tenders feed"
+          description="Internal raw intake feed from the unified RFP analysis system."
+        />
+        <AppPageBody>
+          <div className="flex min-h-[16rem] items-center justify-center rounded-2xl border border-border/70 bg-card/70">
+            <div className="text-center max-w-md">
+              <div className="text-6xl mb-4">🔍</div>
+              <h2 className="text-xl font-semibold mb-2">No production-backed opportunities are available right now.</h2>
+              <p className="text-muted-foreground mb-4">
+                {feedMessage || EMPTY_FEED_MESSAGE}
+              </p>
+              <Button onClick={() => window.location.reload()}>
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Refresh Data
+              </Button>
+            </div>
+          </div>
+        </AppPageBody>
+      </AppPageShell>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="mb-8 rounded-2xl border border-border bg-card p-6">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-3xl">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-blue-300">
-              <RefreshCw className="h-3.5 w-3.5" />
-              Raw Intake Feed
-            </div>
-            <h1 className="text-3xl font-bold mb-2">RFP&apos;s & Tenders</h1>
-            <p className="text-muted-foreground">
-              Freshly found procurement items and early signals in one place. This is an internal intake surface before
-              anything is curated into the client-facing opportunity shortlist.
-            </p>
-            <p className="mt-3 text-sm text-muted-foreground">
-              Treat this feed as unvalidated scouting output. Only promoted, source-backed items should move into Opportunities.
-            </p>
-          </div>
-          <Button onClick={() => window.location.reload()}>
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Refresh Feed
-          </Button>
-        </div>
-
-        <div className="mt-6 grid gap-3 md:grid-cols-4">
+    <AppPageShell size="wide">
+      <AppPageHeader
+        eyebrow="Raw feed"
+        title="RFP&apos;s & Tenders"
+        description="Freshly found procurement items and early signals in one place. This is an internal intake surface before anything is curated into the client-facing opportunity shortlist."
+        actions={
+          <>
+            <Button asChild variant="outline" size="sm">
+              <a href="/rfps">Open found RFPs</a>
+            </Button>
+            <Button onClick={() => window.location.reload()} size="sm">
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Refresh Feed
+            </Button>
+          </>
+        }
+      />
+      <AppPageBody>
+        <div className="grid gap-3 md:grid-cols-4">
           <Card className="border-border/70 bg-background/60 shadow-none">
             <CardContent className="p-4">
               <div className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Feed Items</div>
@@ -683,7 +697,6 @@ const [filterSource, setFilterSource] = useState('all');
             </CardContent>
           </Card>
         </div>
-      </div>
 
       {/* A2A System Status */}
       {a2aRunning && (
@@ -914,6 +927,7 @@ const [filterSource, setFilterSource] = useState('all');
           </p>
         </div>
       )}
-    </div>
+      </AppPageBody>
+    </AppPageShell>
   );
 }

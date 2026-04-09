@@ -1,0 +1,29 @@
+{
+  "schema_version": "question_first_scale_batch_v1",
+  "batch_name": "question-first-pinned-zimbabwe-cricket",
+  "description": "Single-entity pinned regeneration batch for Zimbabwe Cricket.",
+  "entities": [
+    {
+      "entity_id": "zimbabwe-cricket",
+      "entity_name": "Zimbabwe Cricket",
+      "entity_type": "SPORT_FEDERATION",
+      "default_rollout_phase": "phase_3_decision"
+    }
+  ],
+  "metrics": {
+    "target_entities_completed": 5,
+    "target_entities_with_dossiers": 5,
+    "track_question_ids": [
+      "q1_foundation",
+      "q2_digital_stack",
+      "q3_procurement_signal",
+      "q4_decision_owner",
+      "q5_related_pois"
+    ],
+    "track_q2_modes": [
+      "deterministic_apify",
+      "retrieval_fallback",
+      "no_signal"
+    ]
+  }
+}

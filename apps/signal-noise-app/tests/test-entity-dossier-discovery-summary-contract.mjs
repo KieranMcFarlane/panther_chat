@@ -17,4 +17,5 @@ test('entity dossier client page renders promoted discovery summary ahead of the
 test('dossier shell copy distinguishes persisted and pending dossier states', () => {
   assert.match(dossierClientSource, /stored dossier, then adds enrichment and opportunity context/i)
   assert.match(dossierClientSource, /No persisted dossier is available yet, so this page starts from the entity state and enrichment context/i)
+  assert.match(dossierClientSource, /Nothing has been promoted to a client dossier yet/i)
 })

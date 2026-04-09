@@ -1,13 +1,12 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, X, Loader2 } from 'lucide-react';
 import { useDebouncedCallback } from 'use-debounce';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { resolveEntityUuid } from '@/lib/entity-public-id';
 
 interface SearchResult {
@@ -32,7 +31,8 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 	const [results, setResults] = useState<SearchResult[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const [searchCount, setSearchCount] = useState(0);
+	const [navigatingId, setNavigatingId] = useState<string | null>(null);
+	const [, startTransition] = useTransition();
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	// Debounced search function - only fires after user stops typing for 200ms
@@ -46,7 +46,6 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 
 			setLoading(true);
 			setError(null);
-			setSearchCount(prev => prev + 1);
 
 			try {
 				const response = await fetch('/api/vector-search', {
@@ -67,9 +66,7 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 				if (!response.ok) throw new Error(`HTTP ${response.status}`);
 				const data = await response.json();
 				setResults(data.results || []);
-				console.log('Vector search results for', searchQuery, ':', data.results);
 			} catch (err) {
-				console.error('Vector search error:', err);
 				setError('Search failed. Please try again.');
 				setResults([]);
 			} finally {
@@ -108,19 +105,8 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 	}, [isOpen]);
 
 	const handleResultClick = (result: SearchResult) => {
-		console.log('🎯 Vector Search: Clicked result:', result);
-		console.log('🔍 Vector Search: result.entity_id:', result.entity_id);
-		console.log('🔍 Vector Search: result.id:', result.id);
-		
-		// Close search immediately
-		setIsOpen(false);
-		setQuery('');
-		
-		// Navigate to entity page
 		const entityId = result.uuid || result.entity_id || result.id;
 		if (entityId) {
-			console.log('🆔 Vector Search: Extracted entityId:', entityId);
-			
 			// Check if it's one of our demo entities first
 			const demoEntityRoutes = {
 				'arsenal_fc_001': '/entity-browser/arsenal_fc_001/dossier?from=1',
@@ -129,32 +115,23 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 				'tender_premier_league_001': '/entity-browser/tender_premier_league_001/dossier?from=1',
 				'contact_sports_agent_001': '/entity-browser/contact_sports_agent_001/dossier?from=1'
 			};
-			
-			console.log('🗺️ Vector Search: Demo routes:', Object.keys(demoEntityRoutes));
-			console.log('❓ Vector Search: Is demo entity?', demoEntityRoutes.hasOwnProperty(entityId));
-			
+
 			let targetUrl;
 			const demoRoute = demoEntityRoutes[entityId] || demoEntityRoutes[resolveEntityUuid({ id: entityId, neo4j_id: entityId, supabase_id: entityId }) || '']
 			if (demoRoute) {
 				targetUrl = demoRoute;
-				console.log('🎭 Vector Search: Using demo route:', targetUrl);
 			} else {
 				targetUrl = `/entity-browser/${entityId}/dossier?from=1`;
-				console.log('🏟️ Vector Search: Using Neo4j route:', targetUrl);
 			}
-			
-			console.log('🚀 Vector Search: Final target URL:', targetUrl);
-			
-			// Use window.location for immediate navigation
-			window.location.href = targetUrl;
-			
-			// Fallback to router.push if window.location doesn't work
-			setTimeout(() => {
-				console.log('🔄 Vector Search: Using router.push fallback');
+
+			setNavigatingId(entityId);
+			setIsOpen(false);
+			setQuery('');
+			startTransition(() => {
 				router.push(targetUrl);
-			}, 100);
+			});
 		} else {
-			console.warn('⚠️ Vector Search: No entity_id found in result:', result);
+			setError('Unable to open this result right now.');
 		}
 	};
 
@@ -198,6 +175,7 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 			setResults([]);
 			setError(null);
 			setLoading(false);
+			setNavigatingId(null);
 		}
 	};
 
@@ -319,7 +297,11 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 
 							{!loading && !error && results.length > 0 && (
 								<div className="p-2">
-									{results.map((result) => (
+									{results.map((result) => {
+										const resultEntityId = result.uuid || result.entity_id || result.id
+										const isNavigatingResult = navigatingId === resultEntityId
+
+										return (
 										<div 
 											key={result.id} 
 											onClick={(e) => {
@@ -330,13 +312,19 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 											onMouseDown={(e) => e.preventDefault()}
 											className="flex items-center gap-4 p-4 rounded-md hover:bg-custom-bg cursor-pointer transition-colors select-none group"
 											title={`Click to view ${result.name}`}
+											aria-busy={isNavigatingResult}
 										>
 											<div className="flex-shrink-0">
-												<span className="text-2xl group-hover:scale-110 transition-transform">{getTypeIcon(result.type)}</span>
+												<span className="text-2xl group-hover:scale-110 transition-transform">
+													{isNavigatingResult ? <Loader2 className="h-6 w-6 animate-spin text-yellow-400" /> : getTypeIcon(result.type)}
+												</span>
 											</div>
 											<div className="flex-1 min-w-0">
 												<div className="flex items-center gap-3 mb-2">
 													<span className="font-semibold text-white text-lg truncate">{result.name}</span>
+													{isNavigatingResult && (
+														<span className="text-xs text-yellow-300">Opening…</span>
+													)}
 													<Badge variant="secondary" className={`${getTypeColor(result.type)} text-white text-sm px-2 py-1`}>
 														{result.type}
 													</Badge>
@@ -357,7 +345,8 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 												</Badge>
 											</div>
 										</div>
-									))}
+										)
+									})}
 								</div>
 							)}
 

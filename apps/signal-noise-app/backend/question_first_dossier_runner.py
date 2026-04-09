@@ -45,6 +45,9 @@ class CompletedWithoutArtifactError(FileNotFoundError):
     """Raised when a batch reaches a terminal success path but emits no canonical artifact."""
 
 
+DEFAULT_MIN_PUBLISH_QUESTION_COUNT = 15
+
+
 def _iso_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -286,6 +289,226 @@ def _load_question_first_run_artifact(artifact_path: Path | str) -> QuestionFirs
         raise ValueError(f"Invalid question_first_run artifact at {path}") from exc
 
 
+def _coerce_text(value: Any) -> str:
+    if value is None:
+        return ""
+    return str(value).strip()
+
+
+def _has_readable_value(value: Any) -> bool:
+    if isinstance(value, str):
+        return bool(value.strip())
+    if isinstance(value, (int, float, bool)):
+        return True
+    if isinstance(value, list):
+        return len(value) > 0
+    return value is not None
+
+
+def _collect_answer_sources(answer_payload: Dict[str, Any], timeout_salvage: Dict[str, Any]) -> List[str]:
+    raw_structured_output = answer_payload.get("raw_structured_output") if isinstance(answer_payload.get("raw_structured_output"), dict) else {}
+    structured_sources = raw_structured_output.get("sources") if isinstance(raw_structured_output.get("sources"), list) else []
+    salvage_sources = timeout_salvage.get("candidate_evidence_urls") if isinstance(timeout_salvage.get("candidate_evidence_urls"), list) else []
+    sources: List[str] = []
+    for candidate in [*structured_sources, *salvage_sources]:
+        text = _coerce_text(candidate)
+        if text and text not in sources:
+            sources.append(text)
+    return sources
+
+
+def _trusted_people_fallback_candidates(timeout_salvage: Dict[str, Any]) -> List[Dict[str, str]]:
+    raw_candidates = timeout_salvage.get("fallback_candidates") if isinstance(timeout_salvage.get("fallback_candidates"), list) else []
+    trusted_source_types = {"official_site", "official_website", "wikipedia", "linkedin_company_profile", "linkedin_person_profile", "linkedin_people_search", "news", "press_release"}
+    trusted_domains = ("linkedin.com", "wikipedia.org")
+    trusted_candidates: List[Dict[str, str]] = []
+    seen: set[tuple[str, str, str]] = set()
+
+    for candidate in raw_candidates:
+        if not isinstance(candidate, dict):
+            continue
+        name = _coerce_text(candidate.get("name"))
+        title = _coerce_text(candidate.get("title"))
+        source_url = _coerce_text(candidate.get("source_url"))
+        source_type = _coerce_text(candidate.get("source_type")).lower()
+        if not name or not title or not source_url:
+            continue
+        is_trusted = source_type in trusted_source_types or any(domain in source_url.lower() for domain in trusted_domains)
+        if not is_trusted:
+            continue
+        key = (name.lower(), title.lower(), source_url.lower())
+        if key in seen:
+            continue
+        seen.add(key)
+        trusted_candidates.append(
+            {
+                "name": name,
+                "title": title,
+                "source_url": source_url,
+                "source_type": source_type or "trusted_fallback",
+            }
+        )
+    return trusted_candidates
+
+
+def _derive_terminal_state(*, question: Dict[str, Any], answer: Dict[str, Any], answer_payload: Dict[str, Any], raw_structured_output: Dict[str, Any], raw_answer_value: Any) -> str:
+    validation_state = _coerce_text(answer.get("validation_state")).lower()
+    has_answer_text = (
+        _has_readable_value(answer_payload.get("summary"))
+        or _has_readable_value(answer_payload.get("value"))
+        or _has_readable_value(raw_structured_output.get("answer"))
+        or _has_readable_value(raw_answer_value)
+    )
+    blocking_note = _coerce_text(answer.get("notes") or raw_structured_output.get("notes") or raw_structured_output.get("context")).lower()
+    depends_on = question.get("depends_on") if isinstance(question.get("depends_on"), list) else []
+
+    if has_answer_text and validation_state in {"validated", "partially_validated", "deterministic_detected", "provisional", "inferred"}:
+        return "answered"
+    if (
+        "question conditions were not met" in blocking_note
+        or "no capability-gap inference" in blocking_note
+        or "upstream signals are available yet" in blocking_note
+        or (depends_on and validation_state == "no_signal" and not has_answer_text)
+    ):
+        return "blocked"
+    return "no_signal"
+
+
+def _derive_terminal_summary(
+    *,
+    question: Dict[str, Any],
+    answer: Dict[str, Any],
+    answer_payload: Dict[str, Any],
+    raw_structured_output: Dict[str, Any],
+    timeout_salvage: Dict[str, Any],
+    terminal_state: str,
+    raw_answer_value: Any,
+) -> str:
+    commercial_interpretation = answer_payload.get("commercial_interpretation") if isinstance(answer_payload.get("commercial_interpretation"), dict) else {}
+    summary_candidates = [
+        answer_payload.get("summary"),
+        answer_payload.get("value"),
+        raw_answer_value if not isinstance(raw_answer_value, dict) else None,
+        raw_structured_output.get("summary"),
+        raw_structured_output.get("answer"),
+        commercial_interpretation.get("summary") if isinstance(commercial_interpretation, dict) else "",
+        raw_structured_output.get("context"),
+        raw_structured_output.get("notes"),
+        answer.get("notes"),
+    ]
+    for candidate in summary_candidates:
+        text = _coerce_text(candidate)
+        if text:
+            return text
+
+    salvage_summary = _coerce_text(timeout_salvage.get("candidate_summary"))
+    if salvage_summary:
+        return f"Evidence retained during timeout, but no validated answer was produced. {salvage_summary}"
+
+    if terminal_state == "blocked":
+        depends_on = question.get("depends_on") if isinstance(question.get("depends_on"), list) else []
+        if depends_on:
+            return f"Blocked by upstream question state: {', '.join(_coerce_text(item) for item in depends_on if _coerce_text(item))}"
+
+    return "No deterministic answer was produced for this question."
+
+
+def _normalize_answer_record(answer: Dict[str, Any], question: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    normalized = dict(answer or {})
+    question_spec = question if isinstance(question, dict) else {}
+    answer_payload = normalized.get("answer") if isinstance(normalized.get("answer"), dict) else {}
+    raw_answer_value = normalized.get("answer")
+    answer_payload = dict(answer_payload)
+    raw_structured_output = answer_payload.get("raw_structured_output") if isinstance(answer_payload.get("raw_structured_output"), dict) else {}
+    raw_structured_output = dict(raw_structured_output)
+    timeout_salvage = normalized.get("timeout_salvage") if isinstance(normalized.get("timeout_salvage"), dict) else {}
+    timeout_salvage = dict(timeout_salvage)
+    question_type = _coerce_text(normalized.get("question_type") or question_spec.get("question_type")).lower()
+    trusted_people_candidates = _trusted_people_fallback_candidates(timeout_salvage) if question_type in {"leadership", "decision_owner"} else []
+    if question_type == "leadership" and trusted_people_candidates:
+        normalized["validation_state"] = "partially_validated"
+        answer_payload["kind"] = "list"
+        answer_payload["value"] = trusted_people_candidates
+        answer_payload["summary"] = f"Recovered {len(trusted_people_candidates)} leadership candidates from trusted fallback sources."
+        raw_structured_output["answer"] = trusted_people_candidates
+        raw_structured_output["summary"] = answer_payload["summary"]
+        raw_structured_output["validation_state"] = "partially_validated"
+        raw_answer_value = trusted_people_candidates
+    elif question_type == "decision_owner" and trusted_people_candidates:
+        primary_owner = trusted_people_candidates[0]
+        supporting_candidates = trusted_people_candidates[1:]
+        normalized["validation_state"] = "partially_validated"
+        normalized["primary_owner"] = primary_owner
+        normalized["supporting_candidates"] = supporting_candidates
+        normalized["candidates"] = trusted_people_candidates
+        answer_payload["kind"] = "list"
+        answer_payload["value"] = trusted_people_candidates
+        answer_payload["summary"] = f"Recovered {len(trusted_people_candidates)} decision-owner candidates from trusted fallback sources."
+        raw_structured_output["answer"] = primary_owner.get("name")
+        raw_structured_output["primary_owner"] = primary_owner
+        raw_structured_output["candidates"] = trusted_people_candidates
+        raw_structured_output["summary"] = answer_payload["summary"]
+        raw_structured_output["validation_state"] = "partially_validated"
+        raw_answer_value = trusted_people_candidates
+    elif question_type == "leadership" and _coerce_text(normalized.get("validation_state")).lower() == "failed":
+        normalized["validation_state"] = "no_signal"
+        answer_payload["summary"] = "No trusted leadership candidates could be recovered from fallback sources."
+        raw_structured_output["summary"] = answer_payload["summary"]
+        raw_structured_output["validation_state"] = "no_signal"
+    elif question_type == "decision_owner" and _coerce_text(normalized.get("validation_state")).lower() == "failed":
+        normalized["validation_state"] = "no_signal"
+        normalized["primary_owner"] = None
+        normalized["supporting_candidates"] = []
+        normalized["candidates"] = []
+        answer_payload["summary"] = "No trusted decision-owner candidates could be recovered from fallback sources."
+        raw_structured_output["summary"] = answer_payload["summary"]
+        raw_structured_output["validation_state"] = "no_signal"
+    terminal_state = _derive_terminal_state(
+        question=question_spec,
+        answer=normalized,
+        answer_payload=answer_payload,
+        raw_structured_output=raw_structured_output,
+        raw_answer_value=raw_answer_value,
+    )
+    terminal_summary = _derive_terminal_summary(
+        question=question_spec,
+        answer=normalized,
+        answer_payload=answer_payload,
+        raw_structured_output=raw_structured_output,
+        timeout_salvage=timeout_salvage,
+        terminal_state=terminal_state,
+        raw_answer_value=raw_answer_value,
+    )
+    blocked_by = [
+        _coerce_text(item)
+        for item in (question_spec.get("depends_on") if isinstance(question_spec.get("depends_on"), list) else [])
+        if _coerce_text(item)
+    ] if terminal_state == "blocked" else []
+    sources = _collect_answer_sources(answer_payload, timeout_salvage)
+
+    normalized["notes"] = _coerce_text(normalized.get("notes")) or terminal_summary
+    normalized["terminal_state"] = terminal_state
+    normalized["terminal_summary"] = terminal_summary
+    normalized["blocked_by"] = blocked_by
+    normalized["answer"] = {
+        **answer_payload,
+        "summary": _coerce_text(answer_payload.get("summary")) or (_coerce_text(raw_answer_value) if not isinstance(raw_answer_value, dict) else "") or terminal_summary,
+        "value": answer_payload.get("value", raw_answer_value if not isinstance(raw_answer_value, dict) else answer_payload.get("value")),
+        "raw_structured_output": {
+            **raw_structured_output,
+            "answer": raw_structured_output.get("answer") if raw_structured_output.get("answer") is not None else raw_answer_value,
+            "summary": _coerce_text(raw_structured_output.get("summary")) or (_coerce_text(raw_answer_value) if not isinstance(raw_answer_value, dict) else "") or terminal_summary,
+            "context": _coerce_text(raw_structured_output.get("context")) or terminal_summary,
+            "notes": _coerce_text(raw_structured_output.get("notes")) or terminal_summary,
+            "validation_state": _coerce_text(raw_structured_output.get("validation_state")) or _coerce_text(normalized.get("validation_state")) or "no_signal",
+            "sources": sources,
+        },
+        "terminal_state": terminal_state,
+        "blocked_by": blocked_by,
+    }
+    return normalized
+
+
 def _build_legacy_merged_questions(artifact: QuestionFirstRunArtifact) -> List[Dict[str, Any]]:
     merged_questions: List[Dict[str, Any]] = []
     answer_index: Dict[str, Dict[str, Any]] = {}
@@ -294,7 +517,7 @@ def _build_legacy_merged_questions(artifact: QuestionFirstRunArtifact) -> List[D
             continue
         question_id = str(answer.get("question_id") or "").strip()
         if question_id and question_id not in answer_index:
-            answer_index[question_id] = answer
+            answer_index[question_id] = dict(answer)
 
     for question in artifact.questions:
         if not isinstance(question, dict):
@@ -304,7 +527,8 @@ def _build_legacy_merged_questions(artifact: QuestionFirstRunArtifact) -> List[D
         timing = artifact.question_timings.get(question_id) if isinstance(artifact.question_timings, dict) else {}
         if isinstance(timing, dict):
             question_copy.update({key: value for key, value in timing.items() if value is not None})
-        answer = answer_index.get(question_id)
+        raw_answer = answer_index.get(question_id)
+        answer = _normalize_answer_record(raw_answer, question_copy) if isinstance(raw_answer, dict) else None
         if isinstance(answer, dict):
             answer_payload = {
                 "question_id": answer.get("question_id"),
@@ -315,15 +539,27 @@ def _build_legacy_merged_questions(artifact: QuestionFirstRunArtifact) -> List[D
                 "evidence_refs": answer.get("evidence_refs") or [],
                 "signal_type": answer.get("signal_type"),
                 "trace_ref": answer.get("trace_ref"),
+                "notes": answer.get("notes"),
+                "terminal_state": answer.get("terminal_state"),
+                "terminal_summary": answer.get("terminal_summary"),
+                "blocked_by": answer.get("blocked_by") or [],
+                "timeout_salvage": answer.get("timeout_salvage"),
             }
             question_copy.update(
                 {
-                    "answer": answer.get("answer"),
+                    "answer": (
+                        answer.get("answer")
+                        if isinstance(raw_answer, dict) and isinstance(raw_answer.get("answer"), dict)
+                        else (raw_answer.get("answer") if isinstance(raw_answer, dict) else answer.get("answer"))
+                    ),
                     "confidence": answer.get("confidence"),
                     "validation_state": answer.get("validation_state"),
                     "evidence_refs": answer.get("evidence_refs") or [],
                     "signal_type": answer.get("signal_type"),
                     "question_first_answer": answer_payload,
+                    "terminal_state": answer.get("terminal_state"),
+                    "terminal_summary": answer.get("terminal_summary"),
+                    "blocked_by": answer.get("blocked_by") or [],
                 }
             )
         merged_questions.append(question_copy)
@@ -348,7 +584,10 @@ def _merge_question_first_run_patch(
         metadata.update(patch_metadata)
 
     if "question_first" in patch and isinstance(patch["question_first"], dict):
-        payload["question_first"] = patch["question_first"]
+        payload["question_first"] = {
+            **patch["question_first"],
+            "answers": artifact.answers if artifact.answers else patch["question_first"].get("answers") or [],
+        }
 
     payload["questions"] = _build_legacy_merged_questions(artifact)
 
@@ -428,6 +667,164 @@ def _find_existing_question_first_dossier_artifact(output_dir: Path) -> Optional
     return canonical_candidates[0] if canonical_candidates else None
 
 
+def _coerce_int(value: Any, default: int = 0) -> int:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _extract_report_publish_metrics(payload: Dict[str, Any]) -> Dict[str, Any]:
+    merged_dossier = payload.get("merged_dossier") if isinstance(payload.get("merged_dossier"), dict) else {}
+    question_first = merged_dossier.get("question_first") if isinstance(merged_dossier.get("question_first"), dict) else {}
+    metadata_question_first = merged_dossier.get("metadata", {}).get("question_first") if isinstance(merged_dossier.get("metadata"), dict) and isinstance(merged_dossier.get("metadata", {}).get("question_first"), dict) else {}
+    run_rollup = payload.get("run_rollup") if isinstance(payload.get("run_rollup"), dict) else {}
+    answer_records = merged_dossier.get("question_first_run", {}).get("answer_records") if isinstance(merged_dossier.get("question_first_run"), dict) else []
+    answers = answer_records if isinstance(answer_records, list) else []
+    no_signal_count = sum(
+        1
+        for answer in answers
+        if str((answer or {}).get("validation_state") or "").strip().lower() in {"no_signal", "failed", "tool_call_missing", "exhausted"}
+    )
+    return {
+        "questions_answered": _coerce_int(payload.get("questions_answered"), _coerce_int(question_first.get("questions_answered"), len(answers))),
+        "questions_validated": _coerce_int(run_rollup.get("questions_validated")),
+        "questions_no_signal": _coerce_int(run_rollup.get("questions_no_signal"), no_signal_count),
+        "generated_at": _coerce_text(payload.get("generated_at") or merged_dossier.get("generated_at")),
+        "checkpoint_consistent": bool(
+            question_first.get("checkpoint_consistent")
+            if question_first.get("checkpoint_consistent") is not None
+            else metadata_question_first.get("checkpoint_consistent", True)
+        ),
+        "non_terminal_question_ids": (
+            question_first.get("non_terminal_question_ids")
+            if isinstance(question_first.get("non_terminal_question_ids"), list)
+            else metadata_question_first.get("non_terminal_question_ids")
+            if isinstance(metadata_question_first.get("non_terminal_question_ids"), list)
+            else []
+        ),
+    }
+
+
+def _publish_rank(metrics: Dict[str, Any]) -> Tuple[int, int, int, float]:
+    generated_at = _parse_iso_timestamp(metrics.get("generated_at")) or 0.0
+    return (
+        _coerce_int(metrics.get("questions_answered")),
+        _coerce_int(metrics.get("questions_validated")),
+        -_coerce_int(metrics.get("questions_no_signal")),
+        generated_at,
+    )
+
+
+def _expected_publish_question_count(*, source_payload: Dict[str, Any], artifact: QuestionFirstRunArtifact) -> int:
+    source_questions = source_payload.get("questions") if isinstance(source_payload.get("questions"), list) else []
+    source_count = len(source_questions)
+    artifact_count = len(artifact.questions or [])
+    known_count = max(source_count, artifact_count)
+    if known_count > 0:
+        return known_count
+    return DEFAULT_MIN_PUBLISH_QUESTION_COUNT
+
+
+def _should_publish_dossier_report(
+    *,
+    staged_payload: Dict[str, Any],
+    existing_payload: Optional[Dict[str, Any]],
+    min_question_count: int,
+) -> bool:
+    staged_metrics = _extract_report_publish_metrics(staged_payload)
+    if not staged_metrics["checkpoint_consistent"]:
+        return False
+    if staged_metrics["non_terminal_question_ids"]:
+        return False
+    if staged_metrics["questions_answered"] < max(min_question_count, 1):
+        return False
+    if existing_payload is None:
+        return True
+    existing_metrics = _extract_report_publish_metrics(existing_payload)
+    return _publish_rank(staged_metrics) >= _publish_rank(existing_metrics)
+
+
+def _read_json_if_exists(path: Path) -> Optional[Dict[str, Any]]:
+    if not path.exists():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
+def _publish_question_first_dossier_reports(
+    *,
+    output_dir: Path,
+    entity_id: str,
+    json_payload: Dict[str, Any],
+    plain_text_report: str,
+    min_question_count: int,
+) -> Dict[str, Any]:
+    slug = _slugify(entity_id)
+    staged_json_path = output_dir / f"{slug}_question_first_dossier.staged.json"
+    staged_txt_path = output_dir / f"{slug}_question_first_dossier.staged.txt"
+    published_json_path = output_dir / f"{slug}_question_first_dossier.json"
+    published_txt_path = output_dir / f"{slug}_question_first_dossier.txt"
+
+    staged_payload = dict(json_payload)
+    staged_payload["publish_status"] = "staged"
+    staged_json_path.write_text(json.dumps(staged_payload, indent=2, default=str), encoding="utf-8")
+    staged_txt_path.write_text(plain_text_report, encoding="utf-8")
+
+    existing_payload = _read_json_if_exists(published_json_path)
+    should_publish = _should_publish_dossier_report(
+        staged_payload=staged_payload,
+        existing_payload=existing_payload,
+        min_question_count=min_question_count,
+    )
+    publish_status = "staged"
+
+    if should_publish:
+        published_payload = dict(staged_payload)
+        published_payload["publish_status"] = "published"
+        staged_json_path.write_text(json.dumps(published_payload, indent=2, default=str), encoding="utf-8")
+        os.replace(staged_json_path, published_json_path)
+        os.replace(staged_txt_path, published_txt_path)
+        publish_status = "published"
+
+    return {
+        "publish_status": publish_status,
+        "staged_json_report_path": str(staged_json_path),
+        "staged_plain_text_path": str(staged_txt_path),
+        "json_report_path": str(published_json_path if should_publish else staged_json_path),
+        "plain_text_path": str(published_txt_path if should_publish else staged_txt_path),
+        "published_json_report_path": str(published_json_path) if should_publish else (str(published_json_path) if published_json_path.exists() else None),
+        "published_plain_text_path": str(published_txt_path) if should_publish else (str(published_txt_path) if published_txt_path.exists() else None),
+    }
+
+
+def _question_first_resume_attempt_limit() -> int:
+    raw_value = os.getenv("QUESTION_FIRST_RESUME_ATTEMPTS") or "2"
+    return max(_coerce_int(raw_value, 2), 0)
+
+
+def _should_retry_question_first_launch(
+    *,
+    state_payload: Dict[str, Any],
+    timeout_classification: Optional[str] = None,
+    attempt: int = 0,
+    max_resume_attempts: int = 0,
+) -> bool:
+    if attempt >= max_resume_attempts:
+        return False
+    failure_category = _coerce_text(state_payload.get("failure_category")).lower()
+    retryable = bool(state_payload.get("retryable"))
+    run_phase = _coerce_text(state_payload.get("run_phase")).lower()
+    if retryable and failure_category not in {"infrastructure_failure", "parser_failure"}:
+        return True
+    if timeout_classification in {"stalled", "completed_not_harvested"}:
+        return failure_category != "infrastructure_failure"
+    return run_phase in {"retryable_failure", "stalled", "question_runner_timeout", "resume_needed"} or failure_category == "checkpoint_inconsistency"
+
+
 def has_complete_question_first_artifacts(
     *,
     output_dir: Path,
@@ -448,6 +845,7 @@ async def _launch_opencode_question_first_batch(
     preset: Optional[str] = None,
     worktree_root: Optional[Path] = None,
     opencode_timeout_ms: int = 300000,
+    max_resume_attempts: Optional[int] = None,
 ) -> Tuple[Path, Optional[Path]]:
     backend_root = Path(__file__).resolve().parent
     app_root = backend_root.parent
@@ -461,27 +859,6 @@ async def _launch_opencode_question_first_batch(
 
     try:
         with _acquire_question_first_launch_lock(worktree_root):
-            command = [
-                "node",
-                str(script_path),
-                "--question-source",
-                str(temp_source_path),
-                "--output-dir",
-                str(output_dir),
-                "--opencode-timeout-ms",
-                str(opencode_timeout_ms),
-            ]
-            if preset:
-                command.extend(["--preset", preset])
-
-            proc = subprocess.Popen(
-                command,
-                cwd=str(worktree_root),
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                env=dict(os.environ),
-            )
             state_path = _build_question_first_state_path(
                 output_dir=output_dir,
                 source_payload=source_payload,
@@ -491,71 +868,129 @@ async def _launch_opencode_question_first_batch(
                 source_payload=source_payload,
                 opencode_timeout_ms=opencode_timeout_ms,
             )
-            deadline = time.monotonic() + max(batch_timeout_ms, 1) / 1000.0
-            stdout_text = ""
-            stderr_text = ""
-            result: Dict[str, Any] = {}
-            last_state_payload: Dict[str, Any] = {}
-            last_progress_mtime: Optional[float] = None
+            max_resume_attempts = _question_first_resume_attempt_limit() if max_resume_attempts is None else max(max_resume_attempts, 0)
+            attempt = 0
+            should_resume = False
 
-            while time.monotonic() <= deadline:
-                if state_path.exists():
-                    try:
-                        state_payload = json.loads(state_path.read_text(encoding="utf-8"))
-                    except Exception:
-                        state_payload = {}
-                    last_state_payload = state_payload if isinstance(state_payload, dict) else {}
-                    try:
-                        current_mtime = state_path.stat().st_mtime
-                    except OSError:
-                        current_mtime = None
-                    if current_mtime is not None and current_mtime != last_progress_mtime:
-                        last_progress_mtime = current_mtime
-                    if str(state_payload.get("run_phase") or "").strip().lower() == "completed":
-                        stdout_text, stderr_text = await _terminate_process(proc)
+            while True:
+                command = [
+                    "node",
+                    str(script_path),
+                    "--question-source",
+                    str(temp_source_path),
+                    "--output-dir",
+                    str(output_dir),
+                    "--opencode-timeout-ms",
+                    str(opencode_timeout_ms),
+                ]
+                if preset:
+                    command.extend(["--preset", preset])
+                if should_resume:
+                    command.append("--resume")
+
+                proc = subprocess.Popen(
+                    command,
+                    cwd=str(worktree_root),
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                    env=dict(os.environ),
+                )
+                deadline = time.monotonic() + max(batch_timeout_ms, 1) / 1000.0
+                stdout_text = ""
+                stderr_text = ""
+                result: Dict[str, Any] = {}
+                last_state_payload: Dict[str, Any] = {}
+                last_progress_mtime: Optional[float] = None
+
+                while time.monotonic() <= deadline:
+                    if state_path.exists():
+                        try:
+                            state_payload = json.loads(state_path.read_text(encoding="utf-8"))
+                        except Exception:
+                            state_payload = {}
+                        last_state_payload = state_payload if isinstance(state_payload, dict) else {}
+                        try:
+                            current_mtime = state_path.stat().st_mtime
+                        except OSError:
+                            current_mtime = None
+                        if current_mtime is not None and current_mtime != last_progress_mtime:
+                            last_progress_mtime = current_mtime
+                        if str(state_payload.get("run_phase") or "").strip().lower() == "completed":
+                            if state_payload.get("checkpoint_consistent") is False or state_payload.get("non_terminal_question_ids"):
+                                if _should_retry_question_first_launch(
+                                    state_payload=last_state_payload,
+                                    attempt=attempt,
+                                    max_resume_attempts=max_resume_attempts,
+                                ):
+                                    attempt += 1
+                                    should_resume = True
+                                    break
+                                raise RuntimeError(
+                                    "OpenCode batch reported completed with an inconsistent checkpoint"
+                                )
+                            stdout_text, stderr_text = await _terminate_process(proc)
+                            result = _parse_opencode_batch_stdout(stdout_text)
+                            question_first_run_path = result.get("question_first_run_path") or state_payload.get("question_first_run_path")
+                            if question_first_run_path:
+                                return Path(str(question_first_run_path)), state_path
+                            artifact_path = _find_existing_question_first_run_artifact(output_dir, source_payload)
+                            if artifact_path is not None:
+                                return artifact_path, state_path
+                            raise CompletedWithoutArtifactError(
+                                "OpenCode batch reached completed state without producing a canonical question_first_run artifact"
+                            )
+
+                    returncode = proc.poll()
+                    if returncode is not None:
+                        stdout_text, stderr_text = await asyncio.to_thread(proc.communicate)
                         result = _parse_opencode_batch_stdout(stdout_text)
-                        question_first_run_path = result.get("question_first_run_path") or state_payload.get("question_first_run_path")
+                        if returncode != 0:
+                            if _should_retry_question_first_launch(
+                                state_payload=last_state_payload,
+                                attempt=attempt,
+                                max_resume_attempts=max_resume_attempts,
+                            ):
+                                attempt += 1
+                                should_resume = True
+                                break
+                            raise RuntimeError(
+                                "OpenCode question-first batch failed with exit code "
+                                f"{returncode}: {stderr_text.strip() or stdout_text.strip()}"
+                            )
+                        question_first_run_path = result.get("question_first_run_path")
+                        state_path = Path(result.get("state_path") or state_path)
                         if question_first_run_path:
                             return Path(str(question_first_run_path)), state_path
                         artifact_path = _find_existing_question_first_run_artifact(output_dir, source_payload)
                         if artifact_path is not None:
                             return artifact_path, state_path
                         raise CompletedWithoutArtifactError(
-                            "OpenCode batch reached completed state without producing a canonical question_first_run artifact"
+                            "OpenCode batch completed without producing a canonical question_first_run artifact"
                         )
 
-                returncode = proc.poll()
-                if returncode is not None:
-                    stdout_text, stderr_text = await asyncio.to_thread(proc.communicate)
-                    result = _parse_opencode_batch_stdout(stdout_text)
-                    if returncode != 0:
-                        raise RuntimeError(
-                            "OpenCode question-first batch failed with exit code "
-                            f"{returncode}: {stderr_text.strip() or stdout_text.strip()}"
-                        )
-                    question_first_run_path = result.get("question_first_run_path")
-                    state_path = Path(result.get("state_path") or state_path)
-                    if question_first_run_path:
-                        return Path(str(question_first_run_path)), state_path
-                    artifact_path = _find_existing_question_first_run_artifact(output_dir, source_payload)
-                    if artifact_path is not None:
-                        return artifact_path, state_path
-                    raise CompletedWithoutArtifactError(
-                        "OpenCode batch completed without producing a canonical question_first_run artifact"
+                    await asyncio.sleep(0.25)
+                else:
+                    stdout_text, stderr_text = await _terminate_process(proc)
+                    timeout_classification = _classify_question_first_batch_timeout(
+                        state_payload=last_state_payload,
+                        state_path=state_path,
+                        last_progress_mtime=last_progress_mtime,
                     )
-
-                await asyncio.sleep(0.25)
-
-            stdout_text, stderr_text = await _terminate_process(proc)
-            timeout_classification = _classify_question_first_batch_timeout(
-                state_payload=last_state_payload,
-                state_path=state_path,
-                last_progress_mtime=last_progress_mtime,
-            )
-            raise TimeoutError(
-                "Timed out waiting for OpenCode question-first batch to complete "
-                f"at {state_path} ({timeout_classification}): {stderr_text.strip() or stdout_text.strip()}"
-            )
+                    if _should_retry_question_first_launch(
+                        state_payload=last_state_payload,
+                        timeout_classification=timeout_classification,
+                        attempt=attempt,
+                        max_resume_attempts=max_resume_attempts,
+                    ):
+                        attempt += 1
+                        should_resume = True
+                        continue
+                    raise TimeoutError(
+                        "Timed out waiting for OpenCode question-first batch to complete "
+                        f"at {state_path} ({timeout_classification}): {stderr_text.strip() or stdout_text.strip()}"
+                    )
+                continue
     finally:
         try:
             temp_source_path.unlink(missing_ok=True)
@@ -1121,9 +1556,9 @@ def merge_question_first_report_into_dossier(
             answer = question_answer_index.get(lookup_key)
             if isinstance(answer, dict):
                 question_copy.update(
-                    {
-                        "answer": answer.get("answer"),
-                        "confidence": answer.get("confidence"),
+                {
+                    "answer": raw_answer.get("answer") if isinstance(raw_answer, dict) else answer.get("answer"),
+                    "confidence": answer.get("confidence"),
                         "search_query": answer.get("search_query"),
                         "search_queries": answer.get("search_queries"),
                         "search_hit": answer.get("search_hit"),
@@ -1245,8 +1680,6 @@ async def run_question_first_dossier_from_payload(
       output_dir.mkdir(parents=True, exist_ok=True)
       entity_name = str(artifact.entity.get("entity_name") or source.get("entity_name") or source.get("entity_id") or "entity")
       entity_id = str(artifact.entity.get("entity_id") or source.get("entity_id") or _slugify(entity_name))
-      json_path = output_dir / f"{_slugify(entity_id)}_question_first_dossier.json"
-      txt_path = output_dir / f"{_slugify(entity_id)}_question_first_dossier.txt"
       report = {
           "generated_at": artifact.generated_at,
           "entity_id": entity_id,
@@ -1262,31 +1695,35 @@ async def run_question_first_dossier_from_payload(
           "connections_graph_enrichment_status": connections_graph_enrichment_status,
           **durable_batch_metrics,
       }
-      json_path.write_text(json.dumps({**report, "merged_dossier": merged}, indent=2, default=str), encoding="utf-8")
-      txt_path.write_text(
-          _render_plain_text_report(
-              {
-                  "entity_name": entity_name,
-                  "generated_at": artifact.generated_at,
-                  "question_source_path": report["question_source_path"],
-                  "questions_answered": report["questions_answered"],
-                  "answers": artifact.answers,
-                  "categories": artifact.categories,
-              }
-          ),
-          encoding="utf-8",
+      plain_text_report = _render_plain_text_report(
+          {
+              "entity_name": entity_name,
+              "generated_at": artifact.generated_at,
+              "question_source_path": report["question_source_path"],
+              "questions_answered": report["questions_answered"],
+              "answers": artifact.answers,
+              "categories": artifact.categories,
+          }
+      )
+      publish_result = _publish_question_first_dossier_reports(
+          output_dir=output_dir,
+          entity_id=entity_id,
+          json_payload={**report, "merged_dossier": merged},
+          plain_text_report=plain_text_report,
+          min_question_count=_expected_publish_question_count(source_payload=source, artifact=artifact),
       )
       merged.setdefault("question_first_report", {})
       if isinstance(merged["question_first_report"], dict):
           merged["question_first_report"].update(
               {
-                  "json_report_path": str(json_path),
-                  "plain_text_path": str(txt_path),
                   "connections_graph_enrichment_enabled": connections_graph_enrichment_enabled,
                   "connections_graph_enrichment_status": connections_graph_enrichment_status,
+                  **publish_result,
                   **durable_batch_metrics,
               }
           )
+      if isinstance(merged.get("question_first"), dict):
+          merged["question_first"]["publish_status"] = publish_result["publish_status"]
 
     return merged
 

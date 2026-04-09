@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getEntityPipelineRun } from '@/lib/entity-import-jobs'
+import { deriveEntityPipelineLifecycle } from '@/lib/entity-pipeline-lifecycle'
 
 export const dynamic = 'force-dynamic'
 
@@ -36,6 +37,11 @@ export default async function EntityImportRunDetailPage(
   if (!batch || !run) {
     notFound()
   }
+
+  const lifecycle = await deriveEntityPipelineLifecycle({
+    entityId: run.entity_id,
+    run,
+  })
 
   const phaseMap = typeof run.metadata?.phases === 'object' && run.metadata?.phases !== null
     ? (run.metadata.phases as Record<string, PhaseDetail>)
@@ -136,6 +142,9 @@ export default async function EntityImportRunDetailPage(
             <p>retry state: {String(runMetadata.retry_state ?? batchMetadata.retry_state ?? 'n/a')}</p>
             <p>lease owner: {String(runMetadata.lease_owner ?? batchMetadata.worker_id ?? 'n/a')}</p>
             <p>lease expires: {String(runMetadata.lease_expires_at ?? batchMetadata.lease_expires_at ?? 'n/a')}</p>
+            <p>lifecycle stage: {lifecycle.label}</p>
+            <p>artifact source: {lifecycle.artifact_source}</p>
+            <p>quality state: {lifecycle.quality_state}</p>
           </div>
 
           <div className="mt-4 flex flex-wrap gap-3">
@@ -157,7 +166,7 @@ export default async function EntityImportRunDetailPage(
               href="/tenders"
               className="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
             >
-              Open tenders
+              Open RFP page
             </Link>
           </div>
 
@@ -166,6 +175,41 @@ export default async function EntityImportRunDetailPage(
               {run.error_message}
             </p>
           ) : null}
+        </section>
+
+        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="text-lg font-semibold text-slate-950">End-to-end lifecycle</h2>
+          <p className="mt-2 text-sm text-slate-700">{lifecycle.summary}</p>
+          <div className="mt-4 grid gap-4 md:grid-cols-4">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Pipeline complete</p>
+              <p className="mt-2 text-lg font-semibold text-slate-950">{lifecycle.pipeline_complete ? 'Yes' : 'No'}</p>
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Artifact generated</p>
+              <p className="mt-2 text-lg font-semibold text-slate-950">{lifecycle.artifact_generated ? 'Yes' : 'No'}</p>
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Dossier persisted</p>
+              <p className="mt-2 text-lg font-semibold text-slate-950">{lifecycle.dossier_persisted ? 'Yes' : 'No'}</p>
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Client-ready</p>
+              <p className="mt-2 text-lg font-semibold text-slate-950">{lifecycle.client_ready ? 'Yes' : 'No'}</p>
+            </div>
+          </div>
+          <div className="mt-4 space-y-1 text-sm text-slate-700">
+            <p>Quality state: {lifecycle.quality_state}</p>
+            <p>quality summary: {lifecycle.quality_summary}</p>
+            <p>artifact path: {lifecycle.artifact_path ?? 'n/a'}</p>
+            <p>dossier path: {lifecycle.dossier_path ?? 'n/a'}</p>
+            <p>last lifecycle activity: {lifecycle.latest_activity_at ?? 'n/a'}</p>
+            <p>heartbeat at: {lifecycle.heartbeat_at ?? 'n/a'}</p>
+            <p>Last completed question: {lifecycle.last_completed_question ?? 'n/a'}</p>
+            <p>Resume from question: {lifecycle.resume_from_question ?? 'n/a'}</p>
+            <p>Last error: {lifecycle.failure_reason ?? 'None'}</p>
+            <p>client-ready blockers: {lifecycle.blocker_summary ?? 'None'}</p>
+          </div>
         </section>
 
         <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">

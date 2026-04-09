@@ -182,11 +182,13 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "question": "Who are the key leadership, commercial, partnerships, marketing, digital, technology, and strategy figures at {entity}?",
         "query": '"{entity}" leadership team',
         "source_priority": [
+            "wikipedia",
+            "official_site",
             "linkedin_company_profile",
             "linkedin_people_search",
             "linkedin_person_profile",
             "google_serp",
-            "official_site",
+            "news",
         ],
         "search_patterns": Q3_LEADERSHIP_SEARCH_QUERIES,
         "execution_class": "atomic_retrieval",
@@ -201,6 +203,8 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "fallback_to_retrieval": True,
         "hop_budget": HOP_BUDGET,
         "evidence_extension_budget": 2,
+        "question_timeout_ms": 300000,
+        "hop_timeout_ms": 300000,
     },
     {
         "question_id": "q6_launch_signal",
@@ -356,11 +360,14 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "question": "Who is the highest probability buyer at {entity} given the current commercial and product context?",
         "query": '"{entity}" commercial partnerships leadership',
         "source_priority": [
+            "wikipedia",
+            "official_site",
             "linkedin_company_profile",
             "linkedin_people_search",
             "linkedin_person_profile",
             "google_serp",
-            "official_site",
+            "news",
+            "linkedin_posts",
         ],
         "search_patterns": Q11_DECISION_OWNER_SEARCH_QUERIES,
         "execution_class": "atomic_retrieval",
@@ -375,6 +382,8 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "fallback_to_retrieval": True,
         "hop_budget": HOP_BUDGET,
         "evidence_extension_budget": 2,
+        "question_timeout_ms": 300000,
+        "hop_timeout_ms": 300000,
     },
     {
         "question_id": "q12_connections",
@@ -471,8 +480,8 @@ def _render_question_spec(spec: Dict[str, Any], entity_name: str, entity_id: str
         "search_queries": _search_queries(entity_name, list(rendered.pop("search_patterns", []))),
     }
     rendered["question_shape"] = "atomic"
-    rendered["question_timeout_ms"] = QUESTION_TIMEOUT_MS
-    rendered["hop_timeout_ms"] = HOP_TIMEOUT_MS
+    rendered["question_timeout_ms"] = int(rendered.get("question_timeout_ms") or QUESTION_TIMEOUT_MS)
+    rendered["hop_timeout_ms"] = int(rendered.get("hop_timeout_ms") or HOP_TIMEOUT_MS)
     rendered["evidence_extension_confidence_threshold"] = EVIDENCE_EXTENSION_CONFIDENCE_THRESHOLD
     rendered["entity_name"] = entity_name
     rendered["entity_id"] = entity_id

@@ -4,6 +4,7 @@ import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Calendar, Filter, Search, Star, Target, TrendingUp } from 'lucide-react';
+import { AppPageBody, AppPageHeader, AppPageShell } from '@/components/layout/AppPageShell';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -204,37 +205,41 @@ function OpportunitiesContent() {
 
   if (loading) {
     return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-yellow-400" />
-      </div>
+      <AppPageShell>
+        <AppPageHeader
+          eyebrow="Opportunities"
+          title="Opportunity Shortlist"
+          description="Loading the promoted shortlist of source-backed opportunities."
+        />
+        <AppPageBody>
+          <div className="flex h-64 items-center justify-center rounded-2xl border border-border/70 bg-card/70">
+            <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-yellow-400" />
+          </div>
+        </AppPageBody>
+      </AppPageShell>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="rounded-2xl border border-custom-border bg-custom-box px-6 py-8">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-3xl">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-yellow-500/30 bg-yellow-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-yellow-300">
-              <Star className="h-3.5 w-3.5" />
-              Decision Surface
-            </div>
-            <h1 className="mb-2 text-3xl font-bold text-white">Opportunity Shortlist</h1>
-            <p className="text-fm-light-grey">
-              Curated opportunities ranked for Yellow Panther action. This page is for deciding what to pursue next,
-              not for scanning the full raw feed.
-            </p>
-            <p className="mt-3 text-sm text-fm-medium-grey">
-              Only promoted, non-expired, source-backed opportunities with canonical entity links live here. Raw intake stays in RFP&apos;s/Tenders.
-            </p>
-          </div>
-          <Button className="self-start bg-yellow-500 text-black hover:bg-yellow-400 lg:self-auto">
-            <Target className="mr-2 h-4 w-4" />
-            Add to Pursuit Queue
-          </Button>
-        </div>
-
-        <div className="mt-6 grid gap-3 md:grid-cols-4">
+    <AppPageShell>
+      <AppPageHeader
+        eyebrow="Opportunities"
+        title="Opportunity Shortlist"
+        description="Curated opportunities ranked for Yellow Panther action. This page is for deciding what to pursue next, not for scanning the full raw feed."
+        actions={
+          <>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/rfps">Open found RFPs</Link>
+            </Button>
+            <Button className="bg-yellow-500 text-black hover:bg-yellow-400" size="sm">
+              <Target className="mr-2 h-4 w-4" />
+              Add to Pursuit Queue
+            </Button>
+          </>
+        }
+      />
+      <AppPageBody>
+        <div className="grid gap-3 md:grid-cols-4">
           <div className="rounded-xl border border-custom-border bg-custom-bg/60 p-4">
             <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">Shortlisted</div>
             <div className="mt-2 text-3xl font-semibold text-white">{filteredOpportunities.length}</div>
@@ -252,7 +257,6 @@ function OpportunitiesContent() {
             <div className="mt-2 text-3xl font-semibold text-white">{averageScore}</div>
           </div>
         </div>
-      </div>
 
       {(focusedEntityId || focusedEntityName) && (
         <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-4">
@@ -462,7 +466,8 @@ function OpportunitiesContent() {
           )}
         </div>
       )}
-    </div>
+      </AppPageBody>
+    </AppPageShell>
   );
 }
 

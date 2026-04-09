@@ -1,0 +1,19 @@
+{
+  "schema_version": "question_first_scale_batch_v1",
+  "batch_name": "question-first-pinned-fc-porto-2027",
+  "description": "Single-entity pinned regeneration batch for FC Porto.",
+  "entities": [
+    {
+      "entity_id": "fc-porto-2027",
+      "entity_name": "FC Porto",
+      "entity_type": "SPORT_CLUB",
+      "default_rollout_phase": "phase_3_decision"
+    }
+  ],
+  "metrics": {
+    "target_entities_completed": 1,
+    "target_entities_with_dossiers": 1,
+    "expected_question_count": 15,
+    "rollout_phase": "phase_3_decision"
+  }
+}

@@ -1,21 +1,21 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { 
   Home,
   Search,
   FileText,
   BarChart3,
   ChevronDown,
-  ChevronRight,
   Network,
   Monitor,
   Eye,
   Menu,
   X,
-  ArrowLeft,
-  Mail
+  Mail,
+  Upload,
+  Loader2,
 } from 'lucide-react';
 import { 
   Sidebar,
@@ -43,8 +43,10 @@ import { Button } from '@/components/ui/button';
 // Enhanced navigation items with graph submenu
 const navItems = [
   { icon: Home, label: 'Home', href: '/' },
+  { icon: Search, label: 'Search', href: '/search' },
   { icon: Search, label: 'Entities', href: '/entity-browser' },
   { icon: FileText, label: 'Tenders', href: '/tenders' },
+  { icon: Upload, label: 'CSV Import', href: '/entity-import' },
   { icon: Mail, label: 'Mailbox', href: '/mailbox' },
   { 
     icon: BarChart3, 
@@ -65,9 +67,11 @@ interface AppSidebarProps {
 
 export function AppSidebar({ className }: AppSidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [graphOpen, setGraphOpen] = useState(pathname?.startsWith('/graph') || false);
   const [isMobile, setIsMobile] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [pendingHref, setPendingHref] = useState<string | null>(null);
   
   // Detect mobile screen size
   useEffect(() => {
@@ -82,6 +86,10 @@ export function AppSidebar({ className }: AppSidebarProps) {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  useEffect(() => {
+    setPendingHref(null);
+  }, [pathname]);
 
   return (
     <SidebarProvider>
@@ -182,10 +190,17 @@ export function AppSidebar({ className }: AppSidebarProps) {
                         asChild={true}
                         tooltip={item.label}
                         isActive={isActive}
-                        onMouseEnter={() => prefetchPage(item.href)}
                       >
-                        <Link href={item.href}>
-                          {item.icon && <item.icon />}
+                        <Link
+                          href={item.href}
+                          onMouseEnter={() => router.prefetch(item.href)}
+                          onClick={() => setPendingHref(item.href)}
+                        >
+                          {pendingHref === item.href ? (
+                            <Loader2 className="animate-spin" />
+                          ) : (
+                            item.icon && <item.icon />
+                          )}
                           <span>{item.label}</span>
                         </Link>
                       </SidebarMenuButton>

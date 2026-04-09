@@ -1230,3 +1230,608 @@ async def test_launch_opencode_question_first_batch_raises_completed_without_art
             worktree_root=tmp_path,
             opencode_timeout_ms=1000,
         )
+
+
+@pytest.mark.asyncio
+async def test_launch_opencode_question_first_batch_retries_with_resume_on_retryable_checkpoint(tmp_path, monkeypatch):
+    output_dir = tmp_path / "out"
+    output_dir.mkdir(parents=True)
+    artifact_path = output_dir / "zimbabwe-cricket_opencode_batch_20260409_120000_question_first_run_v2.json"
+    _write_question_first_run_artifact(
+        artifact_path,
+        entity_id="zimbabwe-cricket",
+        entity_name="Zimbabwe Cricket",
+        questions=[
+            {
+                "question_id": "q1_foundation",
+                "section_id": "core_information",
+                "question_text": "When was Zimbabwe Cricket founded?",
+            }
+        ],
+        answers=[
+            {
+                "question_id": "q1_foundation",
+                "section_id": "core_information",
+                "question_text": "When was Zimbabwe Cricket founded?",
+                "answer": "1981",
+                "confidence": 0.91,
+                "evidence_url": "https://en.wikipedia.org/wiki/Zimbabwe_Cricket",
+                "validation_state": "validated",
+                "signal_type": "FOUNDATION",
+            }
+        ],
+        categories=[],
+    )
+
+    source_payload = {
+        "entity_id": "zimbabwe-cricket",
+        "entity_name": "Zimbabwe Cricket",
+        "entity_type": "CRICKET_BOARD",
+        "questions": [
+            {
+                "question_id": "q1_foundation",
+                "question_text": "When was Zimbabwe Cricket founded?",
+            }
+        ],
+    }
+    state_path = runner._build_question_first_state_path(
+        output_dir=output_dir,
+        source_payload=source_payload,
+        preset="zimbabwe-cricket-atomic-matrix",
+    )
+    state_path.write_text(
+        json.dumps(
+            {
+                "run_phase": "retryable_failure",
+                "retryable": True,
+                "failure_category": "retryable_failure",
+                "active_question_id": "q3_leadership",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    popen_calls = []
+
+    class _FirstProcess:
+        def poll(self):
+            return None
+
+        def communicate(self, timeout=None):
+            return "", ""
+
+        def terminate(self):
+            return None
+
+        def kill(self):
+            return None
+
+    class _SecondProcess:
+        def poll(self):
+            return 0
+
+        def communicate(self, timeout=None):
+            return json.dumps({"question_first_run_path": str(artifact_path), "state_path": str(state_path)}), ""
+
+        def terminate(self):
+            return None
+
+        def kill(self):
+            return None
+
+    processes = [_FirstProcess(), _SecondProcess()]
+
+    def _fake_popen(command, *args, **kwargs):
+        popen_calls.append(command)
+        return processes.pop(0)
+
+    monkeypatch.setattr(runner.subprocess, "Popen", _fake_popen)
+    async def _fake_sleep(_delay):
+        return None
+
+    monkeypatch.setattr(runner.asyncio, "sleep", _fake_sleep)
+
+    question_first_run_path, returned_state_path = await runner._launch_opencode_question_first_batch(
+        source_payload=source_payload,
+        output_dir=output_dir,
+        preset="zimbabwe-cricket-atomic-matrix",
+        worktree_root=tmp_path,
+        opencode_timeout_ms=1,
+        max_resume_attempts=1,
+    )
+
+    assert question_first_run_path == artifact_path
+    assert returned_state_path == state_path
+    assert len(popen_calls) == 2
+    assert "--resume" not in popen_calls[0]
+    assert "--resume" in popen_calls[1]
+
+
+def test_merge_question_first_run_artifact_backfills_terminal_context_for_timeout_salvage():
+    artifact = {
+        "schema_version": "question_first_run_v2",
+        "generated_at": "2026-04-08T16:42:59.751Z",
+        "run_started_at": "2026-04-08T16:33:56.363Z",
+        "source": "opencode_agentic_batch",
+        "status": "ready",
+        "entity": {
+            "entity_id": "arsenal",
+            "entity_name": "Arsenal Football Club",
+            "entity_type": "SPORT_CLUB",
+        },
+        "question_specs": [
+            {
+                "question_id": "q7_procurement_signal",
+                "question_text": "Is there evidence Arsenal Football Club is buying, reshaping vendors, or changing its commercial or digital ecosystem?",
+                "depends_on": [],
+            }
+        ],
+        "answer_records": [
+            {
+                "question_id": "q7_procurement_signal",
+                "question_type": "procurement_signal",
+                "validation_state": "failed",
+                "signal_type": "PROCUREMENT_SIGNAL",
+                "notes": "",
+                "answer": {
+                    "kind": "summary",
+                    "summary": None,
+                    "value": None,
+                    "raw_structured_output": None,
+                },
+                "timeout_salvage": {
+                    "candidate_summary": "BrightData evidence retained during timeout, but no safe candidate summary was extracted.",
+                    "candidate_evidence_urls": [
+                        "https://www.arsenal.com/news/visit-rwanda-update",
+                    ],
+                },
+            }
+        ],
+    }
+
+    merged = runner.merge_question_first_run_artifact_into_dossier(dossier_payload={}, artifact=artifact)
+    question = merged["questions"][0]
+
+    assert question["terminal_state"] == "no_signal"
+    assert "Evidence retained during timeout" in question["terminal_summary"]
+    assert "Evidence retained during timeout" in question["answer"]["summary"]
+    assert question["answer"]["raw_structured_output"]["sources"] == ["https://www.arsenal.com/news/visit-rwanda-update"]
+
+
+@pytest.mark.asyncio
+async def test_run_question_first_dossier_from_payload_stages_candidate_without_overwriting_better_published_dossier(tmp_path):
+    output_dir = tmp_path / "out"
+    output_dir.mkdir()
+    questions = [
+        {
+            "question_id": f"q{index}_signal",
+            "question_text": f"Question {index}?",
+            "section_id": "core_information",
+        }
+        for index in range(1, 16)
+    ]
+    better_answers = [
+        {
+            "question_id": question["question_id"],
+            "question_type": "foundation",
+            "question_text": question["question_text"],
+            "answer": f"Strong answer {index}",
+            "confidence": 0.95,
+            "validation_state": "validated",
+            "signal_type": "FOUNDATION",
+            "evidence_url": f"https://example.com/{index}",
+        }
+        for index, question in enumerate(questions, start=1)
+    ]
+    weaker_answers = [
+        {
+            "question_id": question["question_id"],
+            "question_type": "foundation",
+            "question_text": question["question_text"],
+            "answer": f"Weaker answer {index}",
+            "confidence": 0.2 if index > 10 else 0.9,
+            "validation_state": "no_signal" if index > 10 else "validated",
+            "signal_type": "FOUNDATION",
+            "evidence_url": f"https://example.com/weaker/{index}",
+        }
+        for index, question in enumerate(questions, start=1)
+    ]
+
+    existing_artifact_path = output_dir / "zimbabwe-cricket_existing_question_first_run_v2.json"
+    candidate_artifact_path = output_dir / "zimbabwe-cricket_candidate_question_first_run_v2.json"
+    _write_question_first_run_artifact(
+        existing_artifact_path,
+        entity_id="zimbabwe-cricket",
+        entity_name="Zimbabwe Cricket",
+        questions=questions,
+        answers=better_answers,
+        categories=[],
+    )
+    _write_question_first_run_artifact(
+        candidate_artifact_path,
+        entity_id="zimbabwe-cricket",
+        entity_name="Zimbabwe Cricket",
+        questions=questions,
+        answers=weaker_answers,
+        categories=[],
+    )
+
+    existing = await runner.run_question_first_dossier_from_payload(
+        source_payload={
+            "entity_id": "zimbabwe-cricket",
+            "entity_name": "Zimbabwe Cricket",
+            "questions": questions,
+        },
+        question_first_run_path=existing_artifact_path,
+        output_dir=output_dir,
+    )
+    published_path = output_dir / "zimbabwe-cricket_question_first_dossier.json"
+    published_payload = json.loads(published_path.read_text(encoding="utf-8"))
+    assert existing["question_first_report"]["publish_status"] == "published"
+    assert published_payload["questions_answered"] == 15
+
+    merged = await runner.run_question_first_dossier_from_payload(
+        source_payload={
+            "entity_id": "zimbabwe-cricket",
+            "entity_name": "Zimbabwe Cricket",
+            "questions": questions,
+        },
+        question_first_run_path=candidate_artifact_path,
+        output_dir=output_dir,
+    )
+
+    staged_path = output_dir / "zimbabwe-cricket_question_first_dossier.staged.json"
+    assert staged_path.exists()
+    assert merged["question_first_report"]["publish_status"] == "staged"
+    assert json.loads(published_path.read_text(encoding="utf-8"))["merged_dossier"]["question_first_run"]["answer_records"][0]["answer"] == "Strong answer 1"
+
+
+def test_merge_question_first_run_artifact_marks_dependency_blocked_questions_explicitly():
+    artifact = {
+        "schema_version": "question_first_run_v2",
+        "generated_at": "2026-04-08T16:42:59.751Z",
+        "run_started_at": "2026-04-08T16:33:56.363Z",
+        "source": "opencode_agentic_batch",
+        "status": "ready",
+        "entity": {
+            "entity_id": "arsenal",
+            "entity_name": "Arsenal Football Club",
+            "entity_type": "SPORT_CLUB",
+        },
+        "question_specs": [
+            {
+                "question_id": "q8_explicit_rfp",
+                "question_text": "Are there published RFPs, tenders, or formal procurement documents for Arsenal Football Club?",
+                "depends_on": ["q7_procurement_signal"],
+            }
+        ],
+        "answer_records": [
+            {
+                "question_id": "q8_explicit_rfp",
+                "question_type": "tender_docs",
+                "validation_state": "no_signal",
+                "signal_type": "TENDER_DOCS",
+                "notes": "Question conditions were not met for this entity or prior signal state.",
+                "answer": {
+                    "kind": "summary",
+                    "summary": None,
+                    "value": None,
+                    "raw_structured_output": {
+                        "context": "Question conditions were not met for this entity or prior signal state.",
+                    },
+                },
+            }
+        ],
+    }
+
+    merged = runner.merge_question_first_run_artifact_into_dossier(dossier_payload={}, artifact=artifact)
+    question = merged["questions"][0]
+
+    assert question["terminal_state"] == "blocked"
+    assert question["blocked_by"] == ["q7_procurement_signal"]
+    assert "Question conditions were not met" in question["terminal_summary"]
+
+
+def test_normalize_answer_record_recovers_minimal_q3_leadership_answer_from_trusted_fallback_candidates():
+    question = {
+        "question_id": "q3_leadership",
+        "question_text": "Who are the key leadership, commercial, partnerships, marketing, digital, technology, and strategy figures at Zimbabwe Cricket?",
+        "question_type": "leadership",
+        "depends_on": [],
+    }
+    answer = {
+        "question_id": "q3_leadership",
+        "question_type": "leadership",
+        "validation_state": "failed",
+        "signal_type": "LEADERSHIP",
+        "notes": "",
+        "answer": {
+            "kind": "list",
+            "summary": None,
+            "value": None,
+            "raw_structured_output": None,
+        },
+        "timeout_salvage": {
+            "candidate_summary": "Leadership evidence was discovered but the model did not emit structured JSON.",
+            "candidate_evidence_urls": [
+                "https://en.wikipedia.org/wiki/Zimbabwe_Cricket",
+                "https://www.zimcricket.org/",
+            ],
+            "fallback_candidates": [
+                {
+                    "name": "Tavengwa Mukuhlani",
+                    "title": "Chairman",
+                    "source_url": "https://en.wikipedia.org/wiki/Zimbabwe_Cricket",
+                    "source_type": "wikipedia",
+                },
+                {
+                    "name": "Wilfred Mukondiwa",
+                    "title": "Chief Executive Officer",
+                    "source_url": "https://en.wikipedia.org/wiki/Zimbabwe_Cricket",
+                    "source_type": "wikipedia",
+                },
+            ],
+        },
+    }
+
+    normalized = runner._normalize_answer_record(answer, question)
+
+    assert normalized["terminal_state"] == "answered"
+    assert normalized["validation_state"] == "partially_validated"
+    assert normalized["answer"]["kind"] == "list"
+    assert normalized["answer"]["value"] == [
+        {
+            "name": "Tavengwa Mukuhlani",
+            "title": "Chairman",
+            "source_url": "https://en.wikipedia.org/wiki/Zimbabwe_Cricket",
+            "source_type": "wikipedia",
+        },
+        {
+            "name": "Wilfred Mukondiwa",
+            "title": "Chief Executive Officer",
+            "source_url": "https://en.wikipedia.org/wiki/Zimbabwe_Cricket",
+            "source_type": "wikipedia",
+        },
+    ]
+    assert "Recovered 2 leadership candidates from trusted fallback sources." in normalized["terminal_summary"]
+    assert normalized["answer"]["raw_structured_output"]["sources"] == [
+        "https://en.wikipedia.org/wiki/Zimbabwe_Cricket",
+        "https://www.zimcricket.org/",
+    ]
+
+
+def test_normalize_answer_record_leaves_q3_as_no_signal_when_fallback_sources_are_low_trust_only():
+    question = {
+        "question_id": "q3_leadership",
+        "question_text": "Who are the key leadership, commercial, partnerships, marketing, digital, technology, and strategy figures at Zimbabwe Cricket?",
+        "question_type": "leadership",
+        "depends_on": [],
+    }
+    answer = {
+        "question_id": "q3_leadership",
+        "question_type": "leadership",
+        "validation_state": "failed",
+        "signal_type": "LEADERSHIP",
+        "notes": "",
+        "answer": {
+            "kind": "list",
+            "summary": None,
+            "value": None,
+            "raw_structured_output": None,
+        },
+        "timeout_salvage": {
+            "candidate_summary": "Leadership evidence was discovered but only generic commercial databases were available.",
+            "candidate_evidence_urls": [
+                "https://www.datanyze.com/companies/zimbabwe-cricket/347630736",
+                "https://www.zippia.com/zimbabwe-cricket-careers-1526687/executives/",
+            ],
+            "fallback_candidates": [
+                {
+                    "name": "Unknown Executive",
+                    "title": "Executive",
+                    "source_url": "https://www.datanyze.com/companies/zimbabwe-cricket/347630736",
+                    "source_type": "commercial_database",
+                },
+            ],
+        },
+    }
+
+    normalized = runner._normalize_answer_record(answer, question)
+
+    assert normalized["terminal_state"] == "no_signal"
+    assert normalized["validation_state"] == "no_signal"
+    assert normalized["answer"]["value"] is None
+    assert "Evidence retained during timeout" not in normalized["terminal_summary"]
+    assert "No trusted leadership candidates could be recovered from fallback sources." in normalized["terminal_summary"]
+
+
+def test_normalize_answer_record_preserves_enriched_poi_fields():
+    question = {
+        "question_id": "q11_decision_owner",
+        "question_text": "Who is the highest probability buyer at Arsenal Football Club given the current commercial and product context?",
+        "question_type": "decision_owner",
+        "depends_on": [],
+    }
+    answer = {
+        "question_id": "q11_decision_owner",
+        "question_type": "decision_owner",
+        "validation_state": "validated",
+        "signal_type": "DECISION_OWNER",
+        "primary_owner": {
+            "name": "Juliet Slot",
+            "title": "Chief Commercial Officer",
+            "linkedin_url": "https://www.linkedin.com/in/juliet-slot/",
+            "email": "juliet.slot@arsenal.com",
+            "bio": "Chief Commercial Officer leading partnerships, growth, and fan revenue strategy at Arsenal.",
+            "recent_post_summary": "Recent LinkedIn activity emphasizes supporter experience, global partnerships, and digital commercial growth.",
+            "recent_post_urls": [
+                "https://www.linkedin.com/posts/juliet-slot_example-post-1",
+            ],
+        },
+        "supporting_candidates": [
+            {
+                "name": "Tom Fox",
+                "title": "Commercial Director",
+                "linkedin_url": "https://www.linkedin.com/in/tom-fox/",
+                "bio": "Commercial operator with prior leadership across partnerships and business growth.",
+            }
+        ],
+        "answer": {
+            "kind": "summary",
+            "summary": "Juliet Slot",
+            "value": "Juliet Slot",
+            "raw_structured_output": {
+                "answer": "Juliet Slot",
+                "sources": ["https://www.arsenal.com/"],
+            },
+        },
+        "confidence": 0.95,
+    }
+
+    normalized = runner._normalize_answer_record(answer, question)
+
+    assert normalized["primary_owner"]["email"] == "juliet.slot@arsenal.com"
+    assert normalized["primary_owner"]["linkedin_url"] == "https://www.linkedin.com/in/juliet-slot/"
+    assert "fan revenue strategy" in normalized["primary_owner"]["bio"]
+    assert normalized["primary_owner"]["recent_post_urls"] == [
+        "https://www.linkedin.com/posts/juliet-slot_example-post-1",
+    ]
+    assert normalized["supporting_candidates"][0]["linkedin_url"] == "https://www.linkedin.com/in/tom-fox/"
+
+
+def test_normalize_answer_record_recovers_minimal_q11_decision_owner_answer_from_trusted_fallback_candidates():
+    question = {
+        "question_id": "q11_decision_owner",
+        "question_text": "Who is the highest probability buyer at Zimbabwe Cricket given the current commercial and product context?",
+        "question_type": "decision_owner",
+        "depends_on": ["q3_leadership", "q6_launch_signal"],
+    }
+    answer = {
+        "question_id": "q11_decision_owner",
+        "question_type": "decision_owner",
+        "validation_state": "failed",
+        "signal_type": "DECISION_OWNER",
+        "notes": "",
+        "answer": {
+            "kind": "list",
+            "summary": None,
+            "value": None,
+            "raw_structured_output": None,
+        },
+        "timeout_salvage": {
+            "candidate_summary": "Decision-owner evidence was discovered but the model did not emit structured JSON.",
+            "candidate_evidence_urls": [
+                "https://www.linkedin.com/company/zimbabwe-cricket/",
+                "https://en.wikipedia.org/wiki/Zimbabwe_Cricket",
+            ],
+            "fallback_candidates": [
+                {
+                    "name": "Wilfred Mukondiwa",
+                    "title": "Chief Executive Officer",
+                    "source_url": "https://en.wikipedia.org/wiki/Zimbabwe_Cricket",
+                    "source_type": "wikipedia",
+                },
+                {
+                    "name": "Tavengwa Mukuhlani",
+                    "title": "Chairman",
+                    "source_url": "https://en.wikipedia.org/wiki/Zimbabwe_Cricket",
+                    "source_type": "wikipedia",
+                },
+            ],
+        },
+    }
+
+    normalized = runner._normalize_answer_record(answer, question)
+
+    assert normalized["terminal_state"] == "answered"
+    assert normalized["validation_state"] == "partially_validated"
+    assert normalized["primary_owner"]["name"] == "Wilfred Mukondiwa"
+    assert normalized["primary_owner"]["title"] == "Chief Executive Officer"
+    assert normalized["supporting_candidates"][0]["name"] == "Tavengwa Mukuhlani"
+    assert "Recovered 2 decision-owner candidates from trusted fallback sources." in normalized["terminal_summary"]
+
+
+def test_normalize_answer_record_leaves_q11_as_no_signal_when_fallback_sources_are_low_trust_only():
+    question = {
+        "question_id": "q11_decision_owner",
+        "question_text": "Who is the highest probability buyer at Zimbabwe Cricket given the current commercial and product context?",
+        "question_type": "decision_owner",
+        "depends_on": ["q3_leadership", "q6_launch_signal"],
+    }
+    answer = {
+        "question_id": "q11_decision_owner",
+        "question_type": "decision_owner",
+        "validation_state": "failed",
+        "signal_type": "DECISION_OWNER",
+        "notes": "",
+        "answer": {
+            "kind": "list",
+            "summary": None,
+            "value": None,
+            "raw_structured_output": None,
+        },
+        "timeout_salvage": {
+            "candidate_summary": "Only generic commercial database evidence was available.",
+            "candidate_evidence_urls": [
+                "https://www.datanyze.com/companies/zimbabwe-cricket/347630736",
+            ],
+            "fallback_candidates": [
+                {
+                    "name": "Unknown Executive",
+                    "title": "Executive",
+                    "source_url": "https://www.datanyze.com/companies/zimbabwe-cricket/347630736",
+                    "source_type": "commercial_database",
+                },
+            ],
+        },
+    }
+
+    normalized = runner._normalize_answer_record(answer, question)
+
+    assert normalized["terminal_state"] == "no_signal"
+    assert normalized["validation_state"] == "no_signal"
+    assert normalized["primary_owner"] is None
+    assert "No trusted decision-owner candidates could be recovered from fallback sources." in normalized["terminal_summary"]
+
+
+def test_publish_question_first_dossier_reports_rejects_checkpoint_inconsistent_candidate(tmp_path):
+    output_dir = tmp_path / "out"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    staged_payload = {
+        "entity_id": "zimbabwe-cricket",
+        "entity_name": "Zimbabwe Cricket",
+        "questions_answered": 15,
+        "generated_at": "2026-04-09T13:07:09.474Z",
+        "merged_dossier": {
+            "quality_state": "blocked",
+            "question_first": {
+                "questions_answered": 15,
+                "checkpoint_consistent": False,
+                "non_terminal_question_ids": ["q3_leadership"],
+                "publish_status": "draft",
+            },
+            "question_first_run": {
+                "answer_records": [
+                    {"question_id": "q1_foundation", "validation_state": "validated", "answer": "1981"},
+                    {"question_id": "q3_leadership", "validation_state": "validated", "answer": "Tavengwa Mukuhlani"},
+                ]
+            },
+        },
+        "run_rollup": {
+            "questions_validated": 10,
+            "questions_no_signal": 2,
+        },
+    }
+
+    publish = runner._publish_question_first_dossier_reports(
+        output_dir=output_dir,
+        entity_id="zimbabwe-cricket",
+        json_payload=staged_payload,
+        plain_text_report="checkpoint inconsistent",
+        min_question_count=15,
+    )
+
+    assert publish["publish_status"] == "staged"
+    assert Path(publish["json_report_path"]).name.endswith(".staged.json")
+    assert not (output_dir / "zimbabwe-cricket_question_first_dossier.json").exists()

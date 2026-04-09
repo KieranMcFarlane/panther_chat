@@ -36,13 +36,36 @@ test('home queue dashboard renders loop status, queue lanes, client-ready dossie
 
 test('home queue dashboard API exposes the normalized payload contract for loop status, queue, dossiers, rfp cards, and sales summary', () => {
   assert.match(dashboardApiSource, /loop_status/)
+  assert.match(dashboardApiSource, /runtime_counts/)
   assert.match(dashboardApiSource, /completed_entities/)
   assert.match(dashboardApiSource, /in_progress_entity/)
+  assert.match(dashboardApiSource, /resume_needed_entities/)
   assert.match(dashboardApiSource, /upcoming_entities/)
   assert.match(dashboardApiSource, /client_ready_dossiers/)
   assert.match(dashboardApiSource, /rfp_cards/)
   assert.match(dashboardApiSource, /sales_summary/)
+  assert.match(dashboardApiSource, /dossier_quality/)
+  assert.match(dashboardApiSource, /rollout_proof_set/)
   assert.match(dashboardApiSource, /promoted_only=true/)
+})
+
+test('home queue dashboard payload includes dossier quality counts, incomplete artifacts, and the rollout proof set', () => {
+  assert.match(dashboardSource, /Running now/)
+  assert.match(dashboardSource, /Stalled runs/)
+  assert.match(dashboardSource, /Resume needed/)
+  assert.match(dashboardSource, /Partial dossiers/)
+  assert.match(dashboardSource, /Blocked dossiers/)
+  assert.match(dashboardSource, /Complete dossiers/)
+  assert.match(dashboardSource, /Needs full-pack completion/)
+  assert.match(dashboardSource, /Rollout proof set/)
+  assert.match(dashboardLoaderSource, /quality_counts/)
+  assert.match(dashboardLoaderSource, /runtime_counts/)
+  assert.match(dashboardLoaderSource, /resume_needed_entities/)
+  assert.match(dashboardLoaderSource, /buildRuntimeCounts/)
+  assert.match(dashboardLoaderSource, /buildDossierQualityOverview/)
+  assert.match(dashboardLoaderSource, /buildRolloutProofSet/)
+  assert.match(dashboardLoaderSource, /rollout_proof_set/)
+  assert.match(dashboardLoaderSource, /incomplete_entities/)
 })
 
 test('home queue dashboard loader prefers Supabase pipeline runs and keeps manifest ordering for production queue state', () => {
@@ -53,8 +76,21 @@ test('home queue dashboard loader prefers Supabase pipeline runs and keeps manif
   assert.match(dashboardLoaderSource, /manifestEntities\.map\(\(entity\) => entity\.entity_id\)/)
 })
 
-test('home queue dashboard loader reads a published live queue snapshot before falling back to local diagnostics', () => {
+test('home queue dashboard loader keeps the published snapshot as fallback-only and computes live loop health from runtime timestamps', () => {
   assert.match(dashboardLoaderSource, /question_first_live_queue_snapshot\.json/)
   assert.match(dashboardLoaderSource, /from '\.\.\/\.\.\/backend\/data\/question_first_live_queue_snapshot\.json'/)
   assert.match(dashboardLoaderSource, /from '\.\.\/\.\.\/backend\/data\/question_first_scale_batch_3000_live\.json'/)
+  assert.doesNotMatch(dashboardLoaderSource, /loop_status:\s*publishedLoopStatus\s*\|\|/)
+  assert.doesNotMatch(dashboardLoaderSource, /queue:\s*publishedQueue\s*\|\|/)
+  assert.match(dashboardLoaderSource, /health:\s*'/)
+  assert.match(dashboardLoaderSource, /last_activity_at/)
+  assert.match(dashboardLoaderSource, /selectQueueSource\(/)
+  assert.match(dashboardLoaderSource, /loop_status:\s*selectedSource\.loop_status/)
+  assert.match(dashboardLoaderSource, /queue:\s*selectedSource\.queue/)
+})
+
+test('home queue dashboard UI reflects computed loop health instead of always claiming active looping', () => {
+  assert.doesNotMatch(dashboardSource, /Continuous loop active over current validated universe/)
+  assert.match(dashboardSource, /Loop active|Loop stalled|Loop idle/)
+  assert.match(dashboardSource, /Source of truth|runtime source|Last observed activity/i)
 })

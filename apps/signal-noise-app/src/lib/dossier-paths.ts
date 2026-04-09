@@ -5,10 +5,15 @@ export function getDossierRoots() {
   const cwd = process.cwd()
   return [
     path.join(cwd, '..', '..', '..', '..', 'apps', 'signal-noise-app', 'backend', 'data', 'dossiers'),
+    path.join(cwd, '..', '..', '..', '..', 'apps', 'signal-noise-app', 'tmp', 'question-first-diagnostics'),
     path.join(cwd, 'apps', 'signal-noise-app', 'backend', 'data', 'dossiers'),
+    path.join(cwd, 'apps', 'signal-noise-app', 'tmp', 'question-first-diagnostics'),
     path.join(cwd, 'backend', 'data', 'dossiers'),
+    path.join(cwd, 'tmp', 'question-first-diagnostics'),
     path.join(cwd, '..', 'backend', 'data', 'dossiers'),
+    path.join(cwd, '..', 'tmp', 'question-first-diagnostics'),
     path.join(cwd, '..', '..', 'backend', 'data', 'dossiers'),
+    path.join(cwd, '..', '..', 'tmp', 'question-first-diagnostics'),
   ].filter((dir) => existsSync(dir))
 }
 

@@ -61,9 +61,10 @@ function buildLightweightDossierIndexFromEntityState(entity: any): LightweightDo
   const properties = entity?.properties || {}
   const dossierStatus = toText(properties.dossier_status).toLowerCase()
   const pipelineStatus = toText(properties.last_pipeline_status).toLowerCase()
+  const hasPersistedDossierArtifact = Boolean(toText(properties.latest_dossier_path))
 
   const normalizedStatus: LightweightDossierIndex['dossier_status'] =
-    dossierStatus === 'ready' || dossierStatus === 'stale' || dossierStatus === 'pending' || dossierStatus === 'rerun_needed'
+    hasPersistedDossierArtifact && (dossierStatus === 'ready' || dossierStatus === 'stale' || dossierStatus === 'pending' || dossierStatus === 'rerun_needed')
       ? dossierStatus
       : dossierStatus === 'missing'
         ? 'missing'

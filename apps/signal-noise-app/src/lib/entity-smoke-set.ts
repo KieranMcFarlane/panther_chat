@@ -2,6 +2,7 @@ import { getCanonicalEntitiesSnapshot } from "@/lib/canonical-entities-snapshot"
 import { PINNED_CLIENT_SMOKE_SET, type ClientSmokeConfigItem } from "@/lib/client-smoke-config"
 import { getEntityDossierIndexRecord, type DossierIndexRecord } from "@/lib/dossier-index"
 import { resolveEntityUuid } from "@/lib/entity-public-id"
+import { resolveCanonicalQuestionFirstDossier } from "@/lib/question-first-dossier"
 
 export type EntitySmokeJourneyItem = {
   entityId: string
@@ -11,6 +12,7 @@ export type EntitySmokeJourneyItem = {
   smokeNote: string
   accountPriority?: number
   dossierStatus: DossierIndexRecord["dossier_status"]
+  qualityState: string
   dossierSummary: string
 }
 
@@ -55,9 +57,12 @@ export async function getEntityBrowserSmokeItems(): Promise<EntitySmokeJourneyIt
     const isCanonicalQuestionFirst = dossierIndex.dossier_source === 'question_first_dossier'
       || dossierIndex.dossier_source === 'question_first_run'
 
-    if (!isCanonicalQuestionFirst || dossierIndex.dossier_status !== 'ready') {
+    if (!isCanonicalQuestionFirst) {
       continue
     }
+
+    const canonical = await resolveCanonicalQuestionFirstDossier(resolved.entityId, resolved.entity)
+    const qualityState = String(canonical.dossier?.quality_state || 'missing')
 
     smokeItems.push({
       entityId: resolved.entityId,
@@ -67,6 +72,7 @@ export async function getEntityBrowserSmokeItems(): Promise<EntitySmokeJourneyIt
       smokeNote: resolved.definition.smoke_note,
       accountPriority: resolved.definition.account_priority,
       dossierStatus: dossierIndex.dossier_status,
+      qualityState,
       dossierSummary: dossierIndex.dossier_summary,
     })
   }

@@ -337,6 +337,39 @@ async function getFallbackEntityFromDossier(entityId: string, tier = 'standard')
     }
   }
 
+  const canonicalQuestionFirst = await resolveCanonicalQuestionFirstDossier(entityId, null)
+  if (canonicalQuestionFirst.dossier) {
+    const dossier = canonicalQuestionFirst.dossier
+    return {
+      entity: {
+        id: dossier.entity_id || entityId,
+        uuid: resolveEntityUuid({
+          id: dossier.entity_id || entityId,
+          neo4j_id: dossier.entity_id || entityId,
+          supabase_id: dossier.entity_id || entityId,
+          properties: {
+            name:
+              dossier.entity_name ||
+              entityId.replace(/-/g, ' ').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+            type: dossier.entity_type || 'ENTITY',
+          },
+        }) || undefined,
+        neo4j_id: dossier.entity_id || entityId,
+        labels: [dossier.entity_type || 'ENTITY'],
+        properties: {
+          name:
+            dossier.entity_name ||
+            entityId.replace(/-/g, ' ').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+          type: dossier.entity_type || 'ENTITY',
+          sport: dossier.sport || 'Unknown',
+          dossier_data: JSON.stringify(dossier),
+        },
+      },
+      source: 'dossier-file',
+      dossier,
+    }
+  }
+
   return { entity: null, source: null, dossier: null }
 }
 
