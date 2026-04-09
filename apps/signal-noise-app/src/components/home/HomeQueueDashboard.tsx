@@ -92,6 +92,14 @@ function formatDate(value: string | null | undefined) {
 }
 
 function QueueCard({ item }: { item: QueueEntityRecord }) {
+  const stateLabel = item.client_ready
+    ? 'Client-ready'
+    : item.state === 'completed'
+      ? 'Run completed'
+      : item.state === 'in_progress'
+        ? 'In progress'
+        : 'Upcoming'
+
   return (
     <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
       <div className="flex items-start justify-between gap-3">
@@ -102,10 +110,13 @@ function QueueCard({ item }: { item: QueueEntityRecord }) {
         <Badge
           className={item.client_ready ? 'border-emerald-400/30 bg-emerald-500/10 text-emerald-200' : 'border-white/10 bg-white/5 text-slate-200'}
         >
-          {item.client_ready ? 'Client-ready' : item.state === 'completed' ? 'Completed' : item.state === 'in_progress' ? 'In progress' : 'Upcoming'}
+          {stateLabel}
         </Badge>
       </div>
       <p className="mt-3 text-sm leading-6 text-slate-300">{toText(item.summary) || 'No summary available yet.'}</p>
+      {!item.client_ready && item.state === 'completed' ? (
+        <p className="mt-2 text-xs uppercase tracking-[0.14em] text-amber-300">Not promoted to a client dossier yet</p>
+      ) : null}
       {item.generated_at ? (
         <p className="mt-3 text-xs text-slate-500">Updated {formatDate(item.generated_at)}</p>
       ) : null}
@@ -196,6 +207,9 @@ export function HomeQueueDashboard() {
         <Card className="border-white/10 bg-white/[0.04]">
           <CardHeader><CardTitle className="flex items-center gap-2 text-white"><Sparkles className="h-5 w-5 text-emerald-300" />Completed recently</CardTitle></CardHeader>
           <CardContent className="space-y-3">
+            <p className="text-xs leading-5 text-slate-400">
+              These cards prove loop progress. Only items in the separate <span className="text-emerald-300">Client-ready dossiers</span> section are safe to review as client dossier artifacts.
+            </p>
             {queue.completed_entities.length > 0 ? queue.completed_entities.map((item) => <QueueCard key={item.entity_id} item={item} />) : <p className="text-sm text-slate-300">No completed entities yet.</p>}
           </CardContent>
         </Card>
