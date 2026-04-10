@@ -2,14 +2,14 @@
 
 import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
-import { AlertCircle, ArrowUpRight, Building2, Calendar, ExternalLink, Filter, Loader2, MapPin, Search, Sparkles, Target } from 'lucide-react'
+import { AlertCircle, ArrowUpRight, Building2, Calendar, ExternalLink, Filter, Loader2, MapPin, Sparkles, Target } from 'lucide-react'
 
 import { AppPageBody, AppPageHeader, AppPageShell } from '@/components/layout/AppPageShell'
 import { FacetFilterBar } from '@/components/filters/FacetFilterBar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
+import { Command, CommandInput } from '@/components/ui/command'
 import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
 
 type FoundRfp = {
@@ -156,15 +156,14 @@ export default function RfpsPage() {
                 <h2 className="text-lg font-semibold text-foreground">Operator shortlist</h2>
                 <p className="text-sm text-muted-foreground">Search across the promoted RFP set without dropping into the raw tenders intake.</p>
               </div>
-              <div className="relative w-full max-w-md">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
+              <Command className="w-full max-w-md overflow-visible rounded-md border border-input bg-background shadow-sm">
+                <CommandInput
                   value={query}
-                  onChange={(event) => setQuery(event.target.value)}
+                  onValueChange={setQuery}
                   placeholder="Search organizations, titles, or categories..."
-                  className="pl-9"
+                  className="h-11 border-0 pl-2"
                 />
-              </div>
+              </Command>
             </div>
           }
           fields={[]}

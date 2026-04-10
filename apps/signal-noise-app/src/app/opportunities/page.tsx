@@ -3,12 +3,12 @@
 import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Calendar, Filter, Search, Star, Target, TrendingUp } from 'lucide-react';
+import { Calendar, Filter, Star, Target, TrendingUp } from 'lucide-react';
 import { AppPageBody, AppPageHeader, AppPageShell } from '@/components/layout/AppPageShell';
 import { FacetFilterBar, type FacetFilterField } from '@/components/filters/FacetFilterBar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Command, CommandInput } from '@/components/ui/command';
 
 interface TenderOpportunityRecord {
   id: string;
@@ -324,15 +324,14 @@ function OpportunitiesContent() {
 
       <FacetFilterBar
         searchSlot={
-          <div className="relative">
-            <Search className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-fm-medium-grey" />
-            <Input
-              placeholder="Search opportunities..."
+          <Command className="overflow-visible rounded-md border border-input bg-background shadow-sm">
+            <CommandInput
               value={searchQuery}
-              onChange={(event) => setSearchQuery(event.target.value)}
-              className="border-custom-border bg-custom-bg pl-9 text-white placeholder:text-fm-medium-grey"
+              onValueChange={setSearchQuery}
+              placeholder="Search opportunities..."
+              className="h-11 border-0 pl-2"
             />
-          </div>
+          </Command>
         }
         fields={filterFields}
         actions={[
