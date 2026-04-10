@@ -7,7 +7,7 @@ import { FixedSizeList, type ListChildComponentProps } from "react-window"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { Skeleton } from "@/components/ui/skeleton"
 import { EntityCard } from "@/components/EntityCard"
 import { EntitySmokeJourney } from "@/components/entity-browser/EntitySmokeJourney"
@@ -19,7 +19,6 @@ import type { EntityBrowserFilters, EntityBrowserResponse } from "@/lib/entity-b
 import type { EntitiesTaxonomyResponse } from "@/lib/entities-taxonomy"
 import {
   Database,
-  Search,
   Filter,
   ArrowLeft,
   ArrowRight,
@@ -62,6 +61,7 @@ export default function EntityBrowserClientPage({
   const deferredSearchTerm = useDeferredValue(searchTerm)
   const [autocompleteLoading, setAutocompleteLoading] = useState(false)
   const [autocompleteEntities, setAutocompleteEntities] = useState<AutocompleteEntity[]>([])
+  const [autocompleteOpen, setAutocompleteOpen] = useState(false)
   const [currentPage, setCurrentPage] = useState(initialPageFromUrl)
   const [gridWidth, setGridWidth] = useState(0)
   const gridContainerRef = useRef<HTMLDivElement | null>(null)
@@ -182,12 +182,14 @@ export default function EntityBrowserClientPage({
     if (term.length < 2) {
       setAutocompleteEntities([])
       setAutocompleteLoading(false)
+      setAutocompleteOpen(false)
       return
     }
 
     const controller = new AbortController()
     const loadAutocomplete = async () => {
       setAutocompleteLoading(true)
+      setAutocompleteEntities([])
       try {
         const params = new URLSearchParams({
           mode: 'autocomplete',
@@ -201,9 +203,11 @@ export default function EntityBrowserClientPage({
         const result = await response.json()
         const nextItems = Array.isArray(result.entities) ? result.entities.slice(0, 8) : []
         setAutocompleteEntities(nextItems)
+        setAutocompleteOpen(true)
       } catch (err) {
         if ((err as Error).name !== 'AbortError') {
           setAutocompleteEntities([])
+          setAutocompleteOpen(false)
         }
       } finally {
         setAutocompleteLoading(false)
@@ -534,48 +538,63 @@ export default function EntityBrowserClientPage({
         <div className="mb-4">
           <EntitySmokeJourney items={smokeItems} />
         </div>
-        <FacetFilterBar
-          className="mb-4"
-          searchSlot={
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Search entities..."
+      <FacetFilterBar
+        className="mb-4"
+        searchSlot={
+          <div className="relative">
+            <Command className="overflow-visible rounded-md border border-input bg-background shadow-sm">
+              <CommandInput
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onValueChange={(value) => {
+                  setSearchTerm(value)
+                  setAutocompleteOpen(value.trim().length >= 2)
+                }}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter') {
                     applyFilters()
+                    setAutocompleteOpen(false)
                   }
                 }}
-                className="pl-10"
+                onFocus={() => {
+                  if (searchTerm.trim().length >= 2) {
+                    setAutocompleteOpen(true)
+                  }
+                }}
+                placeholder="Search entities..."
+                className="h-11 border-0 pl-2"
               />
-              {(autocompleteLoading || autocompleteEntities.length > 0) && (
-                <div className="absolute z-20 mt-1 w-full rounded-md border bg-background p-2 shadow-lg">
+              {(autocompleteOpen || autocompleteLoading || autocompleteEntities.length > 0) ? (
+                <CommandList className="absolute z-20 mt-1 w-full rounded-md border bg-background p-2 shadow-lg">
                   {autocompleteLoading ? (
-                    <p className="px-1 py-1 text-xs text-muted-foreground">Loading suggestions...</p>
+                    <div className="px-1 py-1 text-xs text-muted-foreground">Loading suggestions...</div>
+                  ) : autocompleteEntities.length === 0 ? (
+                    <CommandEmpty>No matches found.</CommandEmpty>
                   ) : (
-                    autocompleteEntities.map((entity) => (
-                      <button
-                        key={entity.id}
-                        className="flex w-full items-center justify-between rounded-sm px-2 py-1 text-left text-sm hover:bg-accent"
-                        onClick={() => {
-                          setSearchTerm(entity.name || "")
-                          setAppliedSearchTerm(entity.name || "")
-                          setAutocompleteEntities([])
-                          setCurrentPage(1)
-                        }}
-                        type="button"
-                      >
-                        <span className="truncate">{entity.name}</span>
-                        <span className="ml-2 text-xs text-muted-foreground">{entity.type || "Entity"}</span>
-                      </button>
-                    ))
+                    <CommandGroup>
+                      {autocompleteEntities.map((entity) => (
+                        <CommandItem
+                          key={entity.id}
+                          value={entity.name}
+                          onSelect={(value) => {
+                            setSearchTerm(value)
+                            setAppliedSearchTerm(value)
+                            setAutocompleteEntities([])
+                            setAutocompleteOpen(false)
+                            setCurrentPage(1)
+                          }}
+                          className="flex items-center justify-between"
+                        >
+                          <span className="truncate">{entity.name}</span>
+                          <span className="ml-2 text-xs text-muted-foreground">{entity.type || "Entity"}</span>
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
                   )}
-                </div>
-              )}
-            </div>
-          }
+                </CommandList>
+              ) : null}
+            </Command>
+          </div>
+        }
           fields={filterFields}
           actions={[
             {
