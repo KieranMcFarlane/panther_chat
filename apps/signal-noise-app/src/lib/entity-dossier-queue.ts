@@ -4,12 +4,15 @@ import { normalizeImportedEntityRow } from '@/lib/entity-import-schema'
 import {
   createEntityImportBatch,
   createEntityPipelineRuns,
+  findActivePipelineRunByEntityId,
   queueEntityImportBatch,
   storeFallbackEntityImportState,
 } from '@/lib/entity-import-jobs'
 import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
+import { resolveCanonicalQuestionFirstDossier } from '@/lib/question-first-dossier'
 
 const ENTITY_IMPORT_QUEUE_MODE = process.env.ENTITY_IMPORT_QUEUE_MODE || 'durable_worker'
+const DEFAULT_REPAIR_RETRY_BUDGET = Number.parseInt(process.env.ENTITY_PIPELINE_REPAIR_RETRY_BUDGET || '3', 10) || 3
 
 type ResolvedEntity = {
   id: string
@@ -17,6 +20,18 @@ type ResolvedEntity = {
   neo4j_id?: string | number | null
   labels?: string[] | null
   properties: Record<string, any>
+}
+
+export type DossierRefreshMode = 'full' | 'question'
+
+export type DossierRefreshOptions = {
+  rerunReason?: string | null
+  mode?: DossierRefreshMode
+  questionId?: string | null
+  cascadeDependents?: boolean
+  repairSourceRunId?: string | null
+  repairSourceRunPath?: string | null
+  repairSourceDossierPath?: string | null
 }
 
 function toStringValue(value: unknown, fallback: string): string {
@@ -27,6 +42,23 @@ function toStringValue(value: unknown, fallback: string): string {
 function toNumberValue(value: unknown, fallback: number): number {
   const parsed = Number(value)
   return Number.isFinite(parsed) ? parsed : fallback
+}
+
+function hasLiveLease(metadata: Record<string, unknown>, runStartedAt?: string | null): boolean {
+  const leaseExpiresAt = String(metadata.lease_expires_at ?? '').trim()
+  if (leaseExpiresAt) {
+    const leaseExpiry = new Date(String(metadata.lease_expires_at)).getTime()
+    if (Number.isFinite(leaseExpiry)) {
+      return leaseExpiry > Date.now()
+    }
+  }
+
+  const startedAtMs = runStartedAt ? new Date(runStartedAt).getTime() : Number.NaN
+  if (Number.isFinite(startedAtMs)) {
+    return startedAtMs > Date.now() - (5 * 60 * 1000)
+  }
+
+  return true
 }
 
 export async function resolveEntityForDossierQueue(entityId: string): Promise<ResolvedEntity | null> {
@@ -80,18 +112,43 @@ export async function resolveEntityForDossierQueue(entityId: string): Promise<Re
     String(candidate.properties?.name || '').trim().toLowerCase() === normalizedName.toLowerCase(),
   )
 
-  if (!canonicalMatch) {
+  if (canonicalMatch) {
+    return {
+      id: String(canonicalMatch.id),
+      uuid: resolveEntityUuid(canonicalMatch) || undefined,
+      neo4j_id: canonicalMatch.neo4j_id,
+      labels: canonicalMatch.labels,
+      properties: typeof canonicalMatch.properties === 'object' && canonicalMatch.properties !== null
+        ? canonicalMatch.properties
+        : {},
+    }
+  }
+
+  const canonicalQuestionFirst = await resolveCanonicalQuestionFirstDossier(normalizedId, null)
+  if (!canonicalQuestionFirst.dossier) {
     return null
   }
 
+  const dossier = canonicalQuestionFirst.dossier
   return {
-    id: String(canonicalMatch.id),
-    uuid: resolveEntityUuid(canonicalMatch) || undefined,
-    neo4j_id: canonicalMatch.neo4j_id,
-    labels: canonicalMatch.labels,
-    properties: typeof canonicalMatch.properties === 'object' && canonicalMatch.properties !== null
-      ? canonicalMatch.properties
-      : {},
+    id: String(dossier.entity_id ?? normalizedId),
+    uuid: resolveEntityUuid({
+      id: dossier.entity_id ?? normalizedId,
+      neo4j_id: dossier.entity_id ?? normalizedId,
+      supabase_id: dossier.entity_id ?? normalizedId,
+      properties: {
+        name: dossier.entity_name ?? normalizedName,
+        type: dossier.entity_type ?? 'ENTITY',
+      },
+    }) || undefined,
+    neo4j_id: dossier.entity_id ?? normalizedId,
+    labels: [dossier.entity_type ?? 'ENTITY'],
+    properties: {
+      name: dossier.entity_name ?? normalizedName,
+      type: dossier.entity_type ?? 'ENTITY',
+      sport: dossier.sport ?? 'Unknown',
+      dossier_data: JSON.stringify(dossier),
+    },
   }
 }
 
@@ -141,13 +198,68 @@ async function markQueued(entity: ResolvedEntity, entityId: string, batchId: str
     .eq('id', entity.id)
 }
 
-export async function queueDossierRefresh(entityId: string, trigger: string, rerunReason?: string | null) {
+export async function queueDossierRefresh(entityId: string, trigger: string, options: DossierRefreshOptions = {}) {
   const entity = await resolveEntityForDossierQueue(entityId)
   if (!entity) {
     throw new Error('Entity not found')
   }
 
-  const row = toPipelineRow(entityId, entity)
+  const rerunMode: DossierRefreshMode = options.mode === 'question' ? 'question' : 'full'
+  const questionId = typeof options.questionId === 'string' ? options.questionId.trim() : ''
+  const cascadeDependents = options.cascadeDependents !== false
+  const rerunReason = typeof options.rerunReason === 'string' ? options.rerunReason.trim() : null
+  const repairMetadata = rerunMode === 'question'
+      ? {
+        rerun_mode: 'question',
+        question_id: questionId || null,
+        cascade_dependents: cascadeDependents,
+        repair_queue_source: 'manual',
+        repair_state: 'queued',
+        repair_retry_count: 0,
+        repair_retry_budget: DEFAULT_REPAIR_RETRY_BUDGET,
+        next_repair_question_id: questionId || null,
+        reconciliation_state: 'healthy',
+        repair_source_run_id: options.repairSourceRunId || null,
+        repair_source_run_path: options.repairSourceRunPath || null,
+        repair_source_dossier_path: options.repairSourceDossierPath || null,
+      }
+    : {
+        rerun_mode: 'full',
+        repair_queue_source: 'manual',
+      }
+  const row = {
+    ...toPipelineRow(entityId, entity),
+    pipeline_metadata: repairMetadata,
+  }
+  const activeRunState = await findActivePipelineRunByEntityId(entityId)
+  const activeRunMetadata = typeof activeRunState.run?.metadata === 'object' && activeRunState.run?.metadata !== null
+    ? activeRunState.run.metadata as Record<string, unknown>
+    : {}
+  const activeBatchStillActive = activeRunState.batch
+    ? !['completed', 'failed'].includes(String(activeRunState.batch.status || '').trim().toLowerCase())
+    : true
+  const activeRunStillLeased = activeRunState.run
+    ? hasLiveLease(activeRunMetadata, activeRunState.run.started_at ?? activeRunState.batch?.started_at ?? null)
+    : false
+  const isSameRepairRequest =
+    activeRunState.run
+    && activeBatchStillActive
+    && activeRunStillLeased
+    && String(activeRunMetadata.rerun_mode ?? 'full') === repairMetadata.rerun_mode
+    && String(activeRunMetadata.question_id ?? '') === String(repairMetadata.question_id ?? '')
+    && Boolean(activeRunMetadata.cascade_dependents ?? true) === Boolean(repairMetadata.cascade_dependents ?? true)
+
+  if (isSameRepairRequest) {
+    return {
+      entity,
+      batchId: activeRunState.run.batch_id,
+      queuedAt: String(activeRunState.batch?.started_at ?? activeRunState.run.started_at ?? new Date().toISOString()),
+      status: activeRunState.run.status as 'queued' | 'claiming' | 'running' | 'retrying',
+      reusedBatch: true,
+      reusedBatchId: activeRunState.run.batch_id,
+    }
+  }
+
   const batch = await createEntityImportBatch({
     filename: null,
     total_rows: 1,
@@ -156,6 +268,7 @@ export async function queueDossierRefresh(entityId: string, trigger: string, rer
       source: trigger,
       queue_mode: ENTITY_IMPORT_QUEUE_MODE,
       rerun_reason: rerunReason || null,
+      ...repairMetadata,
     },
   })
 
@@ -166,6 +279,7 @@ export async function queueDossierRefresh(entityId: string, trigger: string, rer
     queued_at: new Date().toISOString(),
     trigger,
     rerun_reason: rerunReason || null,
+    ...repairMetadata,
   })
   await markQueued(entity, entityId, batch.id)
 
@@ -174,5 +288,7 @@ export async function queueDossierRefresh(entityId: string, trigger: string, rer
     batchId: batch.id,
     queuedAt: new Date().toISOString(),
     status: 'queued' as const,
+    reusedBatch: false,
+    reusedBatchId: null,
   }
 }

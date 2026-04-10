@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Database, ExternalLink, Mail } from "lucide-react"
 import Link from "next/link"
 import { EmailComposeModal } from "@/components/email/EmailComposeModal"
+import { getEntityBrowserDossierHref } from "@/lib/entity-routing"
 
 interface Entity {
   id: string
@@ -173,7 +174,7 @@ export default function SimpleTestPage() {
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                   <CardTitle className="text-lg">{entity.properties.name}</CardTitle>
-                  <Link href={`/entity-browser/${entity.id}/dossier?from=1`}>
+                  <Link href={getEntityBrowserDossierHref(entity.id, '1') || `/entity-browser/${entity.id}/dossier?from=1`}>
                     <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                       <ExternalLink className="h-4 w-4" />
                     </Button>
@@ -210,7 +211,7 @@ export default function SimpleTestPage() {
                   </p>
                 )}
                 <div className="pt-2 flex gap-2">
-                  <Link href={`/entity-browser/${entity.id}/dossier?from=1`} className="flex-1">
+                  <Link href={getEntityBrowserDossierHref(entity.id, '1') || `/entity-browser/${entity.id}/dossier?from=1`} className="flex-1">
                     <Button variant="outline" size="sm" className="w-full">
                       <ExternalLink className="h-4 w-4 mr-2" />
                       Details

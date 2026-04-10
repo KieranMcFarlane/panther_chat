@@ -1,8 +1,9 @@
 import { readFile } from 'fs/promises'
 import { existsSync, readdirSync } from 'fs'
 import path from 'path'
-import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
+import { buildCachedEntityCanonicalLookup, dedupeCanonicalCachedEntityRows } from '@/lib/cached-entity-canonicalization.mjs'
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
+import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
 import { normalizeQuestionFirstDossier, resolveCanonicalQuestionFirstDossier } from '@/lib/question-first-dossier'
 
@@ -21,6 +22,24 @@ interface EntityLookupResult {
 }
 
 async function findEntityInLiveStores(entityId: string): Promise<Entity | null> {
+  const canonicalEntities = await getCanonicalEntitiesSnapshot()
+  const canonicalLookup = buildCachedEntityCanonicalLookup(canonicalEntities)
+
+  const canonicalMatch = canonicalEntities.find((entity) => {
+    const canonicalId = String(entity.id || '')
+    return canonicalId === entityId || String(entity.uuid || '') === entityId
+  })
+
+  if (canonicalMatch) {
+    return {
+      id: canonicalMatch.id,
+      uuid: canonicalMatch.uuid || canonicalMatch.id,
+      neo4j_id: canonicalMatch.neo4j_id,
+      labels: canonicalMatch.labels || [],
+      properties: canonicalMatch.properties,
+    }
+  }
+
   const normalizedName = entityId
     .replace(/-/g, ' ')
     .replace(/_/g, ' ')
@@ -29,6 +48,7 @@ async function findEntityInLiveStores(entityId: string): Promise<Entity | null> 
   const directIdPredicate = [
     `id.eq.${entityId}`,
     `neo4j_id.eq.${entityId}`,
+    `canonical_entity_id.eq.${entityId}`,
     Number.isNaN(Number.parseInt(entityId, 10)) ? null : `neo4j_id.eq.${Number.parseInt(entityId, 10)}`
   ].filter(Boolean).join(',')
 
@@ -150,22 +170,23 @@ async function findEntityInLiveStores(entityId: string): Promise<Entity | null> 
 
   const fallbackByName = await supabase
     .from('cached_entities')
-    .select('*')
+    .select('id, neo4j_id, graph_id, labels, properties, canonical_entity_id')
     .ilike('properties->>name', `%${normalizedName}%`)
-    .limit(1)
-    .single()
+    .limit(50)
 
-  if (fallbackByName.data) {
-    const nameEntity = fallbackByName.data
+  if (fallbackByName.data && fallbackByName.data.length > 0) {
+    const deduped = dedupeCanonicalCachedEntityRows(fallbackByName.data, canonicalLookup)
+    const nameEntity = deduped[0]
     return {
       id: nameEntity.id,
       uuid: resolveEntityUuid({
         id: nameEntity.id,
         neo4j_id: nameEntity.neo4j_id,
         graph_id: nameEntity.graph_id,
+        uuid: nameEntity.canonical_entity_id,
         supabase_id: nameEntity.supabase_id || nameEntity.properties?.supabase_id,
         properties: nameEntity.properties,
-      }) || undefined,
+      }) || nameEntity.canonical_entity_id || undefined,
       neo4j_id: nameEntity.neo4j_id,
       labels: nameEntity.labels,
       properties: nameEntity.properties,

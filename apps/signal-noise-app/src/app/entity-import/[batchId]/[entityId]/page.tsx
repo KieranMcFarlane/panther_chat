@@ -13,6 +13,25 @@ type PhaseDetail = {
   [key: string]: unknown
 }
 
+function toText(value: unknown): string {
+  if (value === null || value === undefined) return ''
+  return String(value).trim()
+}
+
+function formatRunType(publicationMode: string): string {
+  return publicationMode.startsWith('repair') ? 'Repair rerun' : 'Full run'
+}
+
+function formatPublicationHealth(publicationStatus: string, reconcileRequired: boolean): string {
+  if (publicationStatus === 'published_degraded') {
+    return reconcileRequired ? 'Published degraded' : 'Published degraded'
+  }
+  if (publicationStatus === 'published') {
+    return reconcileRequired ? 'Published healthy' : 'Published healthy'
+  }
+  return 'Publish failed'
+}
+
 function formatSubstepDetails(detail: Record<string, unknown> | null): string {
   if (!detail) {
     return ''
@@ -81,6 +100,33 @@ export default async function EntityImportRunDetailPage(
   const runMetadata = typeof run.metadata === 'object' && run.metadata !== null
     ? (run.metadata as Record<string, unknown>)
     : {}
+  const persistenceStatus = typeof runMetadata.persistence === 'object' && runMetadata.persistence !== null
+    ? (runMetadata.persistence as Record<string, unknown>)
+    : null
+  const publicationStatus = typeof runMetadata.publication_status === 'string'
+    ? runMetadata.publication_status
+    : lifecycle.publication_status ?? 'n/a'
+  const publicationMode = typeof runMetadata.publication_mode === 'string'
+    ? runMetadata.publication_mode
+    : lifecycle.publication_mode ?? 'n/a'
+  const runType = formatRunType(String(publicationMode))
+  const reconcileRequired = Boolean(
+    runMetadata.reconcile_required
+    ?? lifecycle.reconcile_required
+    ?? persistenceStatus?.reconcile_required
+  )
+  const publicationHealth = formatPublicationHealth(String(publicationStatus), reconcileRequired)
+  const repairState = toText(runMetadata.repair_state || lifecycle.repair_state) || 'idle'
+  const repairRetryCount = Number(runMetadata.repair_retry_count ?? lifecycle.repair_retry_count ?? 0)
+  const repairRetryBudget = Number(runMetadata.repair_retry_budget ?? lifecycle.repair_retry_budget ?? 0)
+  const nextRepairQuestionId = toText(runMetadata.next_repair_question_id || lifecycle.next_repair_question_id) || 'n/a'
+  const reconciliationState = toText(runMetadata.reconciliation_state || lifecycle.reconciliation_state) || 'healthy'
+  const repairMetadata = typeof runMetadata.question_first_repair === 'object' && runMetadata.question_first_repair !== null
+    ? (runMetadata.question_first_repair as Record<string, unknown>)
+    : null
+  const repairedQuestionIds = Array.isArray(repairMetadata?.repaired_question_ids)
+    ? repairMetadata.repaired_question_ids.map((value) => toText(value)).filter(Boolean)
+    : []
   const livePhaseDetails = typeof runMetadata.phase_details === 'object' && runMetadata.phase_details !== null
     ? (runMetadata.phase_details as Record<string, unknown>)
     : null
@@ -146,6 +192,13 @@ export default async function EntityImportRunDetailPage(
             <p>lifecycle stage: {lifecycle.label}</p>
             <p>artifact source: {lifecycle.artifact_source}</p>
             <p>quality state: {lifecycle.quality_state}</p>
+            <p>Run type: {runType}</p>
+            <p>publication status: {String(publicationStatus)}</p>
+            <p>publication mode: {String(publicationMode)}</p>
+            <p>Reconciliation status: {reconcileRequired ? 'Reconciliation pending' : 'Published healthy'}</p>
+            <p>Auto-repair queued / Repairing / Exhausted: {repairState}</p>
+            <p>retry budget: {repairRetryCount}/{repairRetryBudget}</p>
+            <p>next repair root: {nextRepairQuestionId}</p>
           </div>
 
           <div className="mt-4 flex flex-wrap gap-3">
@@ -210,6 +263,40 @@ export default async function EntityImportRunDetailPage(
             <p>Resume from question: {lifecycle.resume_from_question ?? 'n/a'}</p>
             <p>Last error: {lifecycle.failure_reason ?? 'None'}</p>
             <p>client-ready blockers: {lifecycle.blocker_summary ?? 'None'}</p>
+            <p>Run type: {runType}</p>
+            <p>publication status: {lifecycle.publication_status ?? String(publicationStatus)}</p>
+            <p>publication mode: {String(publicationMode)}</p>
+            <p>publication health: {publicationHealth}</p>
+            <p>reconciliation required: {lifecycle.reconcile_required ? 'Yes' : 'No'}</p>
+            <p>reconciliation state: {reconciliationState}</p>
+            <p>Auto-repair queued / Repairing / Exhausted: {repairState}</p>
+            <p>retry budget: {repairRetryCount}/{repairRetryBudget}</p>
+            <p>next repair root: {nextRepairQuestionId}</p>
+          </div>
+        </section>
+
+        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="text-lg font-semibold text-slate-950">Repair provenance</h2>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Publication</p>
+              <p className="mt-2">Run type: {runType}</p>
+              <p>publication status: {String(publicationStatus)}</p>
+              <p>publication mode: {String(publicationMode)}</p>
+              <p>Published degraded / healthy: {publicationHealth}</p>
+              <p>Reconciliation status: {reconcileRequired ? 'Reconciliation pending' : 'Published healthy'}</p>
+              <p>reconciliation state: {reconciliationState}</p>
+              <p>Auto-repair queued / Repairing / Exhausted: {repairState}</p>
+              <p>retry budget: {repairRetryCount}/{repairRetryBudget}</p>
+              <p>next repair root: {nextRepairQuestionId}</p>
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Repair provenance</p>
+              <p className="mt-2">Source run id: {toText(repairMetadata?.repair_source_run_id) || 'n/a'}</p>
+              <p>Source run path: {toText(repairMetadata?.repair_source_run_path) || 'n/a'}</p>
+              <p>Source dossier path: {toText(repairMetadata?.repair_source_dossier_path) || 'n/a'}</p>
+              <p>Repaired questions: {repairedQuestionIds.length > 0 ? repairedQuestionIds.join(', ') : 'n/a'}</p>
+            </div>
           </div>
         </section>
 

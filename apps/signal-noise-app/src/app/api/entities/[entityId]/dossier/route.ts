@@ -13,6 +13,7 @@ import {
 import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
 import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
 import {
+  normalizeQuestionFirstDossier,
   resolveCanonicalQuestionFirstDossier,
 } from '@/lib/question-first-dossier'
 
@@ -172,7 +173,7 @@ async function getPersistedDossier(entityId: string, entity?: ResolvedEntity | n
       .limit(1)
       .maybeSingle()
 
-    if (data?.dossier_data) {
+    if (data?.dossier_data && isCanonicalPersistedDossierCandidate(data.dossier_data)) {
       return data.dossier_data
     }
   }
@@ -187,12 +188,42 @@ async function getPersistedDossier(entityId: string, entity?: ResolvedEntity | n
       .limit(1)
       .maybeSingle()
 
-    if (data?.dossier_data) {
+    if (data?.dossier_data && isCanonicalPersistedDossierCandidate(data.dossier_data)) {
       return data.dossier_data
     }
   }
 
   return null
+}
+
+function isCanonicalPersistedDossierCandidate(dossier: unknown) {
+  if (!dossier || typeof dossier !== 'object') {
+    return false
+  }
+
+  const payload = dossier as Record<string, unknown>
+  const mergedDossier = payload.merged_dossier && typeof payload.merged_dossier === 'object'
+    ? payload.merged_dossier as Record<string, unknown>
+    : null
+  const questionFirst = payload.question_first && typeof payload.question_first === 'object'
+    ? payload.question_first as Record<string, unknown>
+    : mergedDossier?.question_first && typeof mergedDossier.question_first === 'object'
+      ? mergedDossier.question_first as Record<string, unknown>
+      : null
+  const hasQuestionFirstAnswers = Boolean(
+    questionFirst
+    && Array.isArray(questionFirst.answers)
+    && (questionFirst.answers as unknown[]).length > 0,
+  )
+  const hasTopLevelQuestions = (
+    Array.isArray(payload.questions) && payload.questions.length > 0
+  ) || (
+    Array.isArray(mergedDossier?.questions) && mergedDossier.questions.length > 0
+  )
+  const hasIdentity = Boolean(String(payload.entity_name ?? mergedDossier?.entity_name ?? '').trim())
+    && Boolean(String(payload.entity_id ?? mergedDossier?.entity_id ?? '').trim())
+
+  return hasIdentity && (hasQuestionFirstAnswers || hasTopLevelQuestions)
 }
 
 async function getLatestRun(entityId: string) {
@@ -329,15 +360,15 @@ async function handleRequest(entityId: string, forceQueue: boolean) {
   }
 
   if (!forceQueue) {
-    const canonicalQuestionFirst = await resolveCanonicalQuestionFirstDossier(entityId, entity)
-    if (canonicalQuestionFirst.dossier) {
-      return NextResponse.json(buildCanonicalDossierResponse(canonicalQuestionFirst.dossier, canonicalQuestionFirst.source))
-    }
-
     const persisted = await getPersistedDossier(entityId, entity)
     if (persisted) {
       const dossier = normalizeQuestionFirstDossier(persisted, entityId, entity)
-      return NextResponse.json(buildCanonicalDossierResponse(dossier, 'legacy_dossier'))
+      return NextResponse.json(buildCanonicalDossierResponse(dossier, 'supabase_persisted_dossier'))
+    }
+
+    const canonicalQuestionFirst = await resolveCanonicalQuestionFirstDossier(entityId, entity)
+    if (canonicalQuestionFirst.dossier) {
+      return NextResponse.json(buildCanonicalDossierResponse(canonicalQuestionFirst.dossier, canonicalQuestionFirst.source))
     }
   }
 

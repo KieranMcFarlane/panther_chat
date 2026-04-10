@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto'
 import { getSupabaseAdmin } from '@/lib/supabase-client'
 import type { EntityPipelineRunRecord } from '@/lib/entity-import-jobs'
+import { normalizeOpportunityTaxonomy } from '@/lib/opportunity-taxonomy.mjs'
 
 type PipelineSignal = {
   id?: string | null
@@ -92,6 +93,16 @@ export async function promoteImportedEntityRfps(
     const metadata = signal.metadata || {}
     const deadline = typeof metadata.deadline === 'string' ? metadata.deadline : null
     const sourceUrl = signal.url || (typeof metadata.url === 'string' ? metadata.url : null)
+    const taxonomy = normalizeOpportunityTaxonomy({
+      title: statement,
+      organization: run.entity_name,
+      description: statement,
+      category: 'Procurement',
+      type: signal.type || signal.subtype || 'RFP',
+      sport,
+      entity_type: entityType,
+      metadata,
+    })
 
     return {
       id: buildImportedRfpId(run.entity_id, statement, sourceUrl),
@@ -114,6 +125,7 @@ export async function promoteImportedEntityRfps(
       confidence_score: confidenceScore,
       confidence: confidenceScore,
       yellow_panther_fit: Math.max(priorityScore * 10, Math.round(confidenceScore * 100)),
+      taxonomy,
       entity_id: run.entity_id,
       entity_name: run.entity_name,
       entity_type: entityType,
@@ -127,6 +139,7 @@ export async function promoteImportedEntityRfps(
         original_signal_id: signal.id ?? null,
         sport,
         country,
+        taxonomy,
         dashboard_scores: result.artifacts?.scores ?? null,
       },
       link_status: sourceUrl ? 'unverified' : 'missing',

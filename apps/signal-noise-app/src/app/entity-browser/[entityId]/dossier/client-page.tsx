@@ -78,6 +78,7 @@ export default function EntityDossierClientPage({
       dossierMetadata?.dossier_status ||
       ''
   ).trim()
+  const dossierOperatorStatus = dossierStatus || String(dossier?.quality_state || '').trim()
   const isPersistedDossier = hasQuestionFirstDossier
   const dossierConfidence = typeof dossierMetadata?.confidence_score === 'number'
     ? `${Math.round(dossierMetadata.confidence_score * 100)}%`
@@ -417,7 +418,12 @@ export default function EntityDossierClientPage({
             </CardContent>
           </Card>
 
-          <DossierOperatorControls entityId={entityId} dossierStatus={dossierStatus} />
+          <DossierOperatorControls
+            entityId={entityId}
+            dossierStatus={dossierOperatorStatus}
+            questions={Array.isArray(dossier?.questions) ? dossier.questions : []}
+            dossier={dossier}
+          />
 
           <div className="mb-6">
             <EntityEnrichmentSummaryCard

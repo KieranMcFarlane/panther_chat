@@ -39,6 +39,8 @@ test('question-first dossier normalization unwraps merged dossiers from promoted
   const questionFirstDossierSource = readFileSync(new URL('../src/lib/question-first-dossier.ts', import.meta.url), 'utf8')
   assert.match(questionFirstDossierSource, /const rawDossier = ensureObject\(dossierPayload\)/)
   assert.match(questionFirstDossierSource, /rawDossier\.merged_dossier && typeof rawDossier\.merged_dossier === 'object'/)
+  assert.match(questionFirstDossierSource, /toText\(mergedDossier\.run_id\) \|\| toText\(rawDossier\.run_id\)/)
+  assert.match(questionFirstDossierSource, /toText\(mergedDossier\.publish_status\) \|\| toText\(rawDossier\.publish_status\)/)
   assert.match(questionFirstDossierSource, /function normalizeQuestionAnswerRecord/)
   assert.match(questionFirstDossierSource, /terminal_state/)
   assert.match(questionFirstDossierSource, /terminal_summary/)

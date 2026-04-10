@@ -29,6 +29,9 @@ test('home queue dashboard renders loop status, queue lanes, client-ready dossie
   assert.match(dashboardSource, /In progress now/)
   assert.match(dashboardSource, /Completed recently/)
   assert.match(dashboardSource, /Coming up next/)
+  assert.match(dashboardSource, /Repair run|Full run/)
+  assert.match(dashboardSource, /Published degraded|Published healthy|Reconciliation pending/i)
+  assert.match(dashboardSource, /Auto-repair queued|Repairing|Exhausted/i)
   assert.match(dashboardSource, /Client-ready dossiers/)
   assert.match(dashboardSource, /Promoted opportunities|RFP|Opportunity shortlist/)
   assert.match(dashboardSource, /Graphiti|sales brief|Yellow Panther/)
@@ -66,6 +69,8 @@ test('home queue dashboard payload includes dossier quality counts, incomplete a
   assert.match(dashboardLoaderSource, /buildRolloutProofSet/)
   assert.match(dashboardLoaderSource, /rollout_proof_set/)
   assert.match(dashboardLoaderSource, /incomplete_entities/)
+  assert.match(dashboardLoaderSource, /publication_status/)
+  assert.match(dashboardLoaderSource, /publication_mode/)
 })
 
 test('home queue dashboard loader prefers Supabase pipeline runs and keeps manifest ordering for production queue state', () => {

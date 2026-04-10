@@ -9,6 +9,16 @@ import { FacetFilterBar, type FacetFilterField } from '@/components/filters/Face
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Command, CommandInput } from '@/components/ui/command';
+import { buildCanonicalOpportunitySearchText, matchesCanonicalSearch } from '@/lib/canonical-search';
+import { buildOpportunityFacetOptions, getOpportunityTaxonomyDisplayValues, normalizeOpportunityTaxonomy } from '@/lib/opportunity-taxonomy.mjs';
+
+type OpportunityTaxonomy = {
+  sport: string;
+  competition: string;
+  entity_role: string;
+  opportunity_kind: string;
+  theme: string;
+};
 
 interface TenderOpportunityRecord {
   id: string;
@@ -28,6 +38,13 @@ interface TenderOpportunityRecord {
   canonical_entity_id?: string | null;
   canonical_entity_name?: string | null;
   entity_type: string | null;
+  sport?: string | null;
+  competition?: string | null;
+  entity_role?: string | null;
+  opportunity_kind?: string | null;
+  theme?: string | null;
+  taxonomy?: OpportunityTaxonomy | null;
+  metadata?: Record<string, unknown> | null;
   source_url: string | null;
   tags: string[] | null;
   detected_at: string | null;
@@ -38,10 +55,13 @@ interface TenderOpportunityRecord {
 interface OpportunityCard {
   id: string;
   title: string;
-  type: string;
+  opportunityKind: string;
   organization: string;
   sport: string;
+  competition: string;
+  entityRole: string;
   country: string;
+  theme: string;
   deadline?: string;
   value?: string;
   description: string;
@@ -58,22 +78,34 @@ interface OpportunityCard {
   canonicalEntityId?: string;
   canonicalEntityName?: string;
   sourceUrl?: string;
+  taxonomy: OpportunityTaxonomy;
 }
 
 function normalizeOpportunity(opp: TenderOpportunityRecord): OpportunityCard {
-  const category = opp.category || 'General';
   const organization = opp.canonical_entity_name || opp.entity_name || opp.organization || 'Unknown organization';
   const fit = opp.yellow_panther_fit ?? 0;
   const confidence = opp.confidence ?? 0;
   const priority = opp.priority_score ?? 0;
+  const taxonomy = opp.taxonomy || normalizeOpportunityTaxonomy({
+    ...opp,
+    organization,
+    title: opp.title,
+    description: opp.description,
+    category: opp.category,
+    metadata: opp.metadata || undefined,
+  });
+  const displayTaxonomy = getOpportunityTaxonomyDisplayValues(taxonomy);
 
   return {
     id: opp.id,
     title: opp.title || organization,
-    type: category.toLowerCase().includes('sponsor') ? 'sponsorship' : category.toLowerCase().includes('partner') ? 'partnership' : 'tender',
+    opportunityKind: taxonomy.opportunity_kind || 'Other',
     organization,
-    sport: category,
+    sport: displayTaxonomy.sport,
+    competition: displayTaxonomy.competition,
+    entityRole: displayTaxonomy.entity_role,
     country: opp.location || 'Unknown',
+    theme: displayTaxonomy.theme,
     deadline: opp.deadline || undefined,
     value: opp.value || undefined,
     description: opp.description || 'No description available',
@@ -90,6 +122,7 @@ function normalizeOpportunity(opp: TenderOpportunityRecord): OpportunityCard {
     canonicalEntityId: opp.canonical_entity_id || undefined,
     canonicalEntityName: opp.canonical_entity_name || undefined,
     sourceUrl: opp.source_url || undefined,
+    taxonomy,
   };
 }
 
@@ -100,8 +133,11 @@ function OpportunitiesContent() {
 
   const [opportunities, setOpportunities] = useState<OpportunityCard[]>([]);
   const [searchQuery, setSearchQuery] = useState(focusedEntityName);
-  const [typeFilter, setTypeFilter] = useState('all');
   const [sportFilter, setSportFilter] = useState('all');
+  const [competitionFilter, setCompetitionFilter] = useState('all');
+  const [entityRoleFilter, setEntityRoleFilter] = useState('all');
+  const [opportunityKindFilter, setOpportunityKindFilter] = useState('all');
+  const [themeFilter, setThemeFilter] = useState('all');
   const [scoreFilter, setScoreFilter] = useState('all');
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -139,7 +175,7 @@ function OpportunitiesContent() {
       }
     }
 
-    loadOpportunities();
+    void loadOpportunities();
   }, []);
 
   const filteredOpportunities = useMemo(() => {
@@ -155,18 +191,15 @@ function OpportunitiesContent() {
 
     if (searchQuery) {
       filtered = filtered.filter((opp) =>
-        [opp.title, opp.organization, opp.description].some((value) =>
-          String(value || '').toLowerCase().includes(searchQuery.toLowerCase()))
+        matchesCanonicalSearch(searchQuery, buildCanonicalOpportunitySearchText(opp)),
       );
     }
 
-    if (typeFilter !== 'all') {
-      filtered = filtered.filter((opp) => opp.type === typeFilter);
-    }
-
-    if (sportFilter !== 'all') {
-      filtered = filtered.filter((opp) => opp.sport === sportFilter);
-    }
+    if (sportFilter !== 'all') filtered = filtered.filter((opp) => opp.sport === sportFilter);
+    if (competitionFilter !== 'all') filtered = filtered.filter((opp) => opp.competition === competitionFilter);
+    if (entityRoleFilter !== 'all') filtered = filtered.filter((opp) => opp.entityRole === entityRoleFilter);
+    if (opportunityKindFilter !== 'all') filtered = filtered.filter((opp) => opp.opportunityKind === opportunityKindFilter);
+    if (themeFilter !== 'all') filtered = filtered.filter((opp) => opp.theme === themeFilter);
 
     if (scoreFilter !== 'all') {
       const minScore = scoreFilter === 'high' ? 8 : scoreFilter === 'medium' ? 6 : 0;
@@ -174,26 +207,50 @@ function OpportunitiesContent() {
     }
 
     return filtered.sort((a, b) => b.criticalOpportunityScore - a.criticalOpportunityScore);
-  }, [focusedEntityId, focusedEntityName, opportunities, scoreFilter, searchQuery, sportFilter, typeFilter]);
+  }, [competitionFilter, entityRoleFilter, focusedEntityId, focusedEntityName, opportunityKindFilter, opportunities, scoreFilter, searchQuery, sportFilter, themeFilter]);
 
-  const uniqueSports = Array.from(new Set(opportunities.map((opportunity) => opportunity.sport))).filter(Boolean);
-  const uniqueTypes = Array.from(new Set(opportunities.map((opportunity) => opportunity.type))).filter(Boolean);
+  const taxonomyFacetOptions = useMemo(() => buildOpportunityFacetOptions(opportunities), [opportunities]);
+
   const filterFields: FacetFilterField[] = [
-    {
-      key: 'type',
-      label: 'Type',
-      value: typeFilter,
-      placeholder: 'Type',
-      options: [{ value: 'all', label: 'All types' }, ...uniqueTypes.map((type) => ({ value: type, label: type }))],
-      onValueChange: setTypeFilter,
-    },
     {
       key: 'sport',
       label: 'Sport',
       value: sportFilter,
       placeholder: 'Sport',
-      options: [{ value: 'all', label: 'All categories' }, ...uniqueSports.map((sport) => ({ value: sport, label: sport }))],
+      options: taxonomyFacetOptions.sport,
       onValueChange: setSportFilter,
+    },
+    {
+      key: 'competition',
+      label: 'Competition',
+      value: competitionFilter,
+      placeholder: 'Competition',
+      options: taxonomyFacetOptions.competition,
+      onValueChange: setCompetitionFilter,
+    },
+    {
+      key: 'entity-role',
+      label: 'Role',
+      value: entityRoleFilter,
+      placeholder: 'Role',
+      options: taxonomyFacetOptions.entity_role,
+      onValueChange: setEntityRoleFilter,
+    },
+    {
+      key: 'opportunity-kind',
+      label: 'Opportunity Kind',
+      value: opportunityKindFilter,
+      placeholder: 'Opportunity Kind',
+      options: taxonomyFacetOptions.opportunity_kind,
+      onValueChange: setOpportunityKindFilter,
+    },
+    {
+      key: 'theme',
+      label: 'Theme',
+      value: themeFilter,
+      placeholder: 'Theme',
+      options: taxonomyFacetOptions.theme,
+      onValueChange: setThemeFilter,
     },
     {
       key: 'score',
@@ -209,18 +266,27 @@ function OpportunitiesContent() {
       onValueChange: setScoreFilter,
     },
   ];
+
   const filterChips = [
     searchQuery ? { key: 'query', label: `Search: ${searchQuery}`, onRemove: () => setSearchQuery('') } : null,
-    typeFilter !== 'all' ? { key: 'type', label: `Type: ${typeFilter}`, onRemove: () => setTypeFilter('all') } : null,
     sportFilter !== 'all' ? { key: 'sport', label: `Sport: ${sportFilter}`, onRemove: () => setSportFilter('all') } : null,
+    competitionFilter !== 'all' ? { key: 'competition', label: `Competition: ${competitionFilter}`, onRemove: () => setCompetitionFilter('all') } : null,
+    entityRoleFilter !== 'all' ? { key: 'entity-role', label: `Role: ${entityRoleFilter}`, onRemove: () => setEntityRoleFilter('all') } : null,
+    opportunityKindFilter !== 'all' ? { key: 'opportunity-kind', label: `Opportunity Kind: ${opportunityKindFilter}`, onRemove: () => setOpportunityKindFilter('all') } : null,
+    themeFilter !== 'all' ? { key: 'theme', label: `Theme: ${themeFilter}`, onRemove: () => setThemeFilter('all') } : null,
     scoreFilter !== 'all' ? { key: 'score', label: `Score: ${scoreFilter}`, onRemove: () => setScoreFilter('all') } : null,
   ].filter(Boolean) as { key: string; label: string; onRemove: () => void }[];
+
   const resetFilters = () => {
-    setSearchQuery('')
-    setTypeFilter('all')
-    setSportFilter('all')
-    setScoreFilter('all')
+    setSearchQuery('');
+    setSportFilter('all');
+    setCompetitionFilter('all');
+    setEntityRoleFilter('all');
+    setOpportunityKindFilter('all');
+    setThemeFilter('all');
+    setScoreFilter('all');
   };
+
   const highConvictionCount = filteredOpportunities.filter((opp) => opp.criticalOpportunityScore >= 8).length;
   const trackedValueCount = filteredOpportunities.filter((opp) => Boolean(opp.value)).length;
   const averageScore = filteredOpportunities.length
@@ -233,18 +299,30 @@ function OpportunitiesContent() {
     return 'text-red-400';
   };
 
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'tender':
+  const getOpportunityKindColor = (kind: string) => {
+    switch (kind) {
+      case 'RFP':
         return 'bg-blue-500';
-      case 'sponsorship':
-        return 'bg-green-500';
-      case 'partnership':
+      case 'Tender':
+        return 'bg-indigo-500';
+      case 'Procurement':
+        return 'bg-emerald-500';
+      case 'Partnership':
         return 'bg-purple-500';
+      case 'Grant':
+        return 'bg-teal-500';
+      case 'Hosting':
+        return 'bg-orange-500';
       default:
         return 'bg-gray-500';
     }
   };
+
+  const getCanonicalContext = (parts: Array<string | null | undefined>) =>
+    parts
+      .map((part) => String(part || '').trim())
+      .filter(Boolean)
+      .join(' · ');
 
   if (loading) {
     return (
@@ -301,184 +379,189 @@ function OpportunitiesContent() {
           </div>
         </div>
 
-      {(focusedEntityId || focusedEntityName) && (
-        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-4">
-          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-            <div>
-              <div className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300">Focused decision view</div>
-              <p className="mt-1 text-sm text-emerald-100/90">
-                Reviewing shortlist candidates for {focusedEntityName || focusedEntityId}. This keeps the entity and dossier handoff inside the decision surface.
-              </p>
-              {filteredOpportunities.length === 0 && (
-                <p className="mt-2 text-sm text-emerald-100/75">
-                  No intake-linked opportunities found for {focusedEntityName || focusedEntityId} yet. The live feed is still available in RFP&apos;s/Tenders, and this shortlist will populate once intake is promoted into the canonical entity.
-                </p>
-              )}
-            </div>
-            <Badge variant="outline" className="border-emerald-400/40 text-emerald-200">
-              {filteredOpportunities.length} matching opportunities
-            </Badge>
-          </div>
-        </div>
-      )}
-
-      <FacetFilterBar
-        searchSlot={
-          <Command className="overflow-visible rounded-md border border-input bg-background shadow-sm">
-            <CommandInput
-              value={searchQuery}
-              onValueChange={setSearchQuery}
-              placeholder="Search opportunities..."
-              className="h-11 border-0 pl-2"
-            />
-          </Command>
-        }
-        fields={filterFields}
-        actions={[
-          {
-            key: 'reset',
-            label: 'Reset filters',
-            onClick: resetFilters,
-            variant: 'outline',
-            icon: <Filter className="h-4 w-4" />,
-          },
-        ]}
-        chips={filterChips}
-        status={
-          <div className="flex items-center text-sm text-fm-light-grey">
-            <Filter className="mr-2 h-4 w-4" />
-            {filteredOpportunities.length} of {opportunities.length}
-          </div>
-        }
-      />
-
-      {loadError && (
-        <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-5 py-4 text-sm text-red-100">
-          {loadError}
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {filteredOpportunities.map((opportunity) => (
-          <div
-            key={opportunity.id}
-            className="rounded-lg border border-custom-border bg-custom-box p-4 transition-colors hover:border-yellow-400"
-          >
-            <div className="mb-3 flex items-start justify-between">
+        {(focusedEntityId || focusedEntityName) && (
+          <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-4">
+            <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
               <div>
-                <h3 className="text-lg font-semibold text-white">{opportunity.title}</h3>
-                <div className="flex flex-wrap items-center gap-2 text-sm text-fm-medium-grey">
-                  <span>{opportunity.organization}</span>
-                  <span>•</span>
-                  <span>{opportunity.sport}</span>
-                  <span>•</span>
-                  <span>{opportunity.country}</span>
-                </div>
+                <div className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300">Focused decision view</div>
+                <p className="mt-1 text-sm text-emerald-100/90">
+                  Reviewing shortlist candidates for {focusedEntityName || focusedEntityId}. This keeps the entity and dossier handoff inside the decision surface.
+                </p>
+                {filteredOpportunities.length === 0 && (
+                  <p className="mt-2 text-sm text-emerald-100/75">
+                    No intake-linked opportunities found for {focusedEntityName || focusedEntityId} yet. The live feed is still available in RFP&apos;s/Tenders, and this shortlist will populate once intake is promoted into the canonical entity.
+                  </p>
+                )}
               </div>
-              <Badge variant="secondary" className={`${getTypeColor(opportunity.type)} text-white text-xs`}>
-                {opportunity.type}
+              <Badge variant="outline" className="border-emerald-400/40 text-emerald-200">
+                {filteredOpportunities.length} matching opportunities
               </Badge>
             </div>
-
-            <p className="mb-4 text-sm text-fm-light-grey">{opportunity.description}</p>
-
-            <div className="mb-4 grid grid-cols-2 gap-4">
-              <div className="text-center">
-                <div className={`text-2xl font-bold ${getScoreColor(opportunity.criticalOpportunityScore)}`}>
-                  {opportunity.criticalOpportunityScore}
-                </div>
-                <div className="text-xs text-fm-medium-grey">Critical Score</div>
-              </div>
-              <div className="text-center">
-                <div className="text-lg font-semibold text-yellow-400">{opportunity.value || 'N/A'}</div>
-                <div className="text-xs text-fm-medium-grey">Value</div>
-              </div>
-            </div>
-
-            <div className="mb-4 grid grid-cols-4 gap-2 text-xs">
-              <div className="text-center">
-                <div className={`font-medium ${getScoreColor(opportunity.priorityScore)}`}>{opportunity.priorityScore}</div>
-                <div className="text-fm-medium-grey">Priority</div>
-              </div>
-              <div className="text-center">
-                <div className={`font-medium ${getScoreColor(opportunity.trustScore)}`}>{opportunity.trustScore}</div>
-                <div className="text-fm-medium-grey">Trust</div>
-              </div>
-              <div className="text-center">
-                <div className={`font-medium ${getScoreColor(opportunity.influenceScore)}`}>{opportunity.influenceScore}</div>
-                <div className="text-fm-medium-grey">Influence</div>
-              </div>
-              <div className="text-center">
-                <div className={`font-medium ${getScoreColor(opportunity.poiScore)}`}>{opportunity.poiScore}</div>
-                <div className="text-fm-medium-grey">POI</div>
-              </div>
-            </div>
-
-            <div className="mb-4 flex flex-wrap gap-1">
-              {opportunity.tags.map((tag) => (
-                <Badge key={`${opportunity.id}-${tag}`} variant="outline" className="text-xs">
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4 text-xs text-fm-medium-grey">
-                {opportunity.deadline && (
-                  <div className="flex items-center gap-1">
-                    <Calendar className="h-3 w-3" />
-                    <span>Decision date: {opportunity.deadline}</span>
-                  </div>
-                )}
-                <div className="flex items-center gap-1">
-                  <TrendingUp className="h-3 w-3" />
-                  <span>Vector: {Math.round(opportunity.vectorSimilarity * 100)}%</span>
-                </div>
-              </div>
-              <div className="text-xs text-fm-medium-grey">
-                Updated: {opportunity.lastUpdated}
-              </div>
-            </div>
-
-            <div className="mt-4 flex gap-2">
-              <Button size="sm" variant="outline" className="flex-1">
-                <Star className="mr-1 h-3 w-3" />
-                Review Fit
-              </Button>
-              <Button size="sm" variant="outline" className="flex-1" asChild>
-                <a href={opportunity.sourceUrl || '/tenders'}>
-                  <Target className="mr-1 h-3 w-3" />
-                  Add to Pipeline
-                </a>
-              </Button>
-            </div>
           </div>
-        ))}
-      </div>
+        )}
 
-      {filteredOpportunities.length === 0 && (
-        <div className="py-12 text-center">
-          <Target className="mx-auto mb-4 h-16 w-16 text-fm-medium-grey opacity-50" />
-          <h3 className="mb-2 text-xl font-semibold text-white">
-            {focusedEntityId || focusedEntityName ? 'No entity-linked opportunities yet' : 'Nothing has been promoted into the shortlist yet'}
-          </h3>
-          <p className="mx-auto max-w-2xl text-fm-medium-grey">
-            {focusedEntityId || focusedEntityName
-              ? `No shortlist items are linked to ${focusedEntityName || focusedEntityId} in the current intake feed. Review the live RFP feed or run Scout to create the first linked opportunity.`
-              : 'Adjust the filters or move back to RFP\'s/Tenders to review the broader live feed.'}
-          </p>
-          {(focusedEntityId || focusedEntityName) && (
-            <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-              <Button asChild variant="outline" className="border-custom-border bg-custom-box text-white hover:bg-custom-bg">
-                <Link href="/tenders">Open RFP&apos;s/Tenders</Link>
-              </Button>
-              <Button asChild className="bg-yellow-500 text-black hover:bg-yellow-400">
-                <Link href="/tenders">Open Live Feed</Link>
-              </Button>
+        <FacetFilterBar
+          searchSlot={(
+            <Command className="overflow-visible rounded-md border border-input bg-background shadow-sm">
+              <CommandInput
+                value={searchQuery}
+                onValueChange={setSearchQuery}
+                placeholder="Search club, sport, country, league..."
+                className="h-11 border-0 pl-2"
+              />
+            </Command>
+          )}
+          fields={filterFields}
+          actions={[
+            {
+              key: 'reset',
+              label: 'Reset filters',
+              onClick: resetFilters,
+              variant: 'outline',
+              icon: <Filter className="h-4 w-4" />,
+            },
+          ]}
+          chips={filterChips}
+          status={(
+            <div className="flex items-center text-sm text-fm-light-grey">
+              <Filter className="mr-2 h-4 w-4" />
+              {filteredOpportunities.length} of {opportunities.length}
             </div>
           )}
+        />
+
+        {loadError && (
+          <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-5 py-4 text-sm text-red-100">
+            {loadError}
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          {filteredOpportunities.map((opportunity) => (
+            <div
+              key={opportunity.id}
+              className="rounded-lg border border-custom-border bg-custom-box p-4 transition-colors hover:border-yellow-400"
+            >
+              <div className="mb-3 flex items-start justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-white">{opportunity.title}</h3>
+                  <div className="flex flex-wrap items-center gap-2 text-sm text-fm-medium-grey">
+                    <span>{opportunity.organization}</span>
+                  </div>
+                  <div className="mt-1 text-sm text-fm-light-grey">
+                    <span className="font-medium text-fm-medium-grey">Canonical context:</span>{' '}
+                    {getCanonicalContext([opportunity.sport, opportunity.country, opportunity.competition, opportunity.entityRole])}
+                  </div>
+                </div>
+                <Badge variant="secondary" className={`${getOpportunityKindColor(opportunity.opportunityKind)} text-white text-xs`}>
+                  {opportunity.opportunityKind}
+                </Badge>
+              </div>
+
+              <p className="mb-4 text-sm text-fm-light-grey">{opportunity.description}</p>
+
+              <div className="mb-4 grid grid-cols-2 gap-4">
+                <div className="text-center">
+                  <div className={`text-2xl font-bold ${getScoreColor(opportunity.criticalOpportunityScore)}`}>
+                    {opportunity.criticalOpportunityScore}
+                  </div>
+                  <div className="text-xs text-fm-medium-grey">Critical Score</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-lg font-semibold text-yellow-400">{opportunity.value || 'N/A'}</div>
+                  <div className="text-xs text-fm-medium-grey">Value</div>
+                </div>
+              </div>
+
+              <div className="mb-4 grid grid-cols-4 gap-2 text-xs">
+                <div className="text-center">
+                  <div className={`font-medium ${getScoreColor(opportunity.priorityScore)}`}>{opportunity.priorityScore}</div>
+                  <div className="text-fm-medium-grey">Priority</div>
+                </div>
+                <div className="text-center">
+                  <div className={`font-medium ${getScoreColor(opportunity.trustScore)}`}>{opportunity.trustScore}</div>
+                  <div className="text-fm-medium-grey">Trust</div>
+                </div>
+                <div className="text-center">
+                  <div className={`font-medium ${getScoreColor(opportunity.influenceScore)}`}>{opportunity.influenceScore}</div>
+                  <div className="text-fm-medium-grey">Influence</div>
+                </div>
+                <div className="text-center">
+                  <div className={`font-medium ${getScoreColor(opportunity.poiScore)}`}>{opportunity.poiScore}</div>
+                  <div className="text-fm-medium-grey">POI</div>
+                </div>
+              </div>
+
+              <div className="mb-4 flex flex-wrap gap-1">
+                {opportunity.theme ? (
+                  <Badge key={`${opportunity.id}-theme`} variant="outline" className="text-xs">
+                    {opportunity.theme}
+                  </Badge>
+                ) : null}
+                {opportunity.tags.map((tag) => (
+                  <Badge key={`${opportunity.id}-${tag}`} variant="outline" className="text-xs">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4 text-xs text-fm-medium-grey">
+                  {opportunity.deadline && (
+                    <div className="flex items-center gap-1">
+                      <Calendar className="h-3 w-3" />
+                      <span>Decision date: {opportunity.deadline}</span>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-1">
+                    <TrendingUp className="h-3 w-3" />
+                    <span>Vector: {Math.round(opportunity.vectorSimilarity * 100)}%</span>
+                  </div>
+                </div>
+                <div className="text-xs text-fm-medium-grey">
+                  Updated: {opportunity.lastUpdated}
+                </div>
+              </div>
+
+              <div className="mt-4 flex gap-2">
+                <Button size="sm" variant="outline" className="flex-1">
+                  <Star className="mr-1 h-3 w-3" />
+                  Review Fit
+                </Button>
+                <Button size="sm" variant="outline" className="flex-1" asChild>
+                  <a href={opportunity.sourceUrl || '/tenders'}>
+                    <Target className="mr-1 h-3 w-3" />
+                    Add to Pipeline
+                  </a>
+                </Button>
+              </div>
+            </div>
+          ))}
         </div>
-      )}
+
+        {filteredOpportunities.length === 0 && (
+          <div className="py-12 text-center">
+            <Target className="mx-auto mb-4 h-16 w-16 text-fm-medium-grey opacity-50" />
+            <h3 className="mb-2 text-xl font-semibold text-white">
+              {focusedEntityId || focusedEntityName ? 'No entity-linked opportunities yet' : 'Nothing has been promoted into the shortlist yet'}
+            </h3>
+            <p className="mx-auto max-w-2xl text-fm-medium-grey">
+              {focusedEntityId || focusedEntityName
+                ? `No shortlist items are linked to ${focusedEntityName || focusedEntityId} in the current intake feed. Review the live RFP feed or run Scout to create the first linked opportunity.`
+                : 'Adjust the filters or move back to RFP\'s/Tenders to review the broader live feed.'}
+            </p>
+            {(focusedEntityId || focusedEntityName) && (
+              <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+                <Button asChild variant="outline" className="border-custom-border bg-custom-box text-white hover:bg-custom-bg">
+                  <Link href="/tenders">Open RFP&apos;s/Tenders</Link>
+                </Button>
+                <Button asChild className="bg-yellow-500 text-black hover:bg-yellow-400">
+                  <Link href="/tenders">Open Live Feed</Link>
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
       </AppPageBody>
     </AppPageShell>
   );

@@ -132,6 +132,26 @@ function _getQuestionStateById(runState, questionId) {
   ) || null;
 }
 
+function _isAcceptedDependencyState(questionState) {
+  const status = String(questionState?.status || '').trim().toLowerCase();
+  const terminalState = String(
+    questionState?.terminal_state
+    || questionState?.question_output?.terminal_state
+    || questionState?.reasoning?.structured_output?.terminal_state
+    || '',
+  ).trim().toLowerCase();
+  const validationState = String(
+    questionState?.validation_state
+    || questionState?.question_output?.validation_state
+    || questionState?.reasoning?.structured_output?.validation_state
+    || '',
+  ).trim().toLowerCase();
+  return status === 'validated'
+    || status === 'answered'
+    || terminalState === 'answered'
+    || ACCEPTED_ANSWER_VALIDATION_STATES.has(validationState);
+}
+
 function _questionConditionsMet(question, runState, entityType) {
   const conditions = Array.isArray(question?.conditional_on) ? question.conditional_on : [];
   if (conditions.length === 0) {
@@ -146,7 +166,7 @@ function _questionConditionsMet(question, runState, entityType) {
     }
     if (conditionType === 'validated_question') {
       const prior = _getQuestionStateById(runState, condition?.question_id);
-      return String(prior?.status || '').trim().toLowerCase() === 'validated';
+      return _isAcceptedDependencyState(prior);
     }
     if (conditionType === 'question_phase_enabled') {
       return Boolean(_getQuestionStateById(runState, condition?.question_id));
@@ -229,7 +249,7 @@ function _describeUnmetQuestionConditions(question, runState, entityType) {
     if (conditionType === 'validated_question') {
       const dependencyId = String(condition?.question_id || '').trim();
       const prior = _getQuestionStateById(runState, dependencyId);
-      if (String(prior?.status || '').trim().toLowerCase() !== 'validated') {
+      if (!_isAcceptedDependencyState(prior)) {
         if (dependencyId && !blockedBy.includes(dependencyId)) {
           blockedBy.push(dependencyId);
         }
@@ -803,6 +823,75 @@ function _extractUrlString(value) {
   return '';
 }
 
+function _normalizeSourceList(items = []) {
+  const normalized = [];
+  for (const item of Array.isArray(items) ? items : []) {
+    const value = _extractUrlString(item);
+    if (value && !normalized.includes(value)) {
+      normalized.push(value);
+    }
+  }
+  return normalized;
+}
+
+function _normalizePeopleFallbackCandidate(candidate) {
+  if (!candidate || typeof candidate !== 'object') return null;
+  const name = String(candidate.name || candidate.full_name || candidate.person || '').trim();
+  const title = String(candidate.title || candidate.role || '').trim();
+  const sourceUrl = _extractUrlString(candidate.source_url || candidate.url || candidate.href);
+  if (!name || !title || !sourceUrl) return null;
+  return {
+    ...candidate,
+    name,
+    title,
+    source_url: sourceUrl,
+    source_type: String(candidate.source_type || _sourceKindFromUrl(sourceUrl) || 'trusted_fallback').trim().toLowerCase(),
+  };
+}
+
+function _decisionOwnerFallbackRank(candidate) {
+  const title = String(candidate?.title || '').trim().toLowerCase();
+  const operatingPriority = [
+    'chief commercial officer',
+    'commercial director',
+    'chief executive officer',
+    'ceo',
+    'managing director',
+    'director general',
+    'secretary general',
+    'head of partnerships',
+    'partnerships manager',
+    'marketing director',
+    'chief marketing officer',
+    'chief digital officer',
+    'technology director',
+  ];
+  const governancePriority = [
+    'chairman',
+    'chair',
+    'president',
+    'vice chairman',
+    'vice president',
+    'secretary',
+    'treasurer',
+  ];
+  const operatingIndex = operatingPriority.findIndex((role) => title.includes(role));
+  if (operatingIndex >= 0) return [0, operatingIndex, title];
+  const governanceIndex = governancePriority.findIndex((role) => title.includes(role));
+  if (governanceIndex >= 0) return [1, governanceIndex, title];
+  return [2, 999, title];
+}
+
+function _rankDecisionOwnerFallbackCandidates(candidates = []) {
+  return [...candidates].sort((a, b) => {
+    const [groupA, indexA, titleA] = _decisionOwnerFallbackRank(a);
+    const [groupB, indexB, titleB] = _decisionOwnerFallbackRank(b);
+    if (groupA !== groupB) return groupA - groupB;
+    if (indexA !== indexB) return indexA - indexB;
+    return titleA.localeCompare(titleB);
+  });
+}
+
 function _scoreSourceRecord(questionState, url, title = '', confidence = 0) {
   const sourceKind = _sourceKindFromUrl(url);
   const questionType = questionState.question_type;
@@ -1093,9 +1182,13 @@ function _structuredOwnerCandidates(structuredOutput = {}) {
     if (typeof value === 'object') {
       const name = String(value.name || value.full_name || value.person || value.primary_owner || '').trim();
       if (!name) return null;
+      const sourceUrl = _extractUrlString(value.source_url || value.url || value.href);
+      const linkedinUrl = _extractUrlString(value.linkedin_url || value.linkedin || value.profile_url);
       return {
         ...value,
         name,
+        ...(sourceUrl ? { source_url: sourceUrl } : {}),
+        ...(linkedinUrl ? { linkedin_url: linkedinUrl } : {}),
       };
     }
     return null;
@@ -1277,8 +1370,9 @@ export function buildPresetRunState(questions, { preset = 'major-league-cricket'
   };
 }
 
-const TERMINAL_QUESTION_STATUSES = new Set(['validated', 'provisional', 'no_signal', 'blocked', 'exhausted', 'failed']);
+const TERMINAL_QUESTION_STATUSES = new Set(['validated', 'partially_validated', 'provisional', 'no_signal', 'blocked', 'exhausted', 'failed']);
 const PUBLISHED_LIKE_STATUSES = new Set(['staged', 'published', 'published_valid', 'published_shadow']);
+const ACCEPTED_ANSWER_VALIDATION_STATES = new Set(['validated', 'partially_validated', 'provisional', 'deterministic_detected', 'inferred']);
 
 function _normalizeQuestionStatus(status) {
   return String(status || '').trim().toLowerCase();
@@ -1288,7 +1382,28 @@ function _isTerminalQuestionState(questionState) {
   if (!questionState || typeof questionState !== 'object') {
     return false;
   }
-  return TERMINAL_QUESTION_STATUSES.has(_normalizeQuestionStatus(questionState.status));
+  const normalizedStatus = _normalizeQuestionStatus(questionState.status);
+  if (TERMINAL_QUESTION_STATUSES.has(normalizedStatus)) {
+    return true;
+  }
+  const payloadTerminalState = _normalizeQuestionStatus(
+    questionState.terminal_state
+      || questionState.question_output?.terminal_state
+      || questionState.question_output?.reasoning?.structured_output?.terminal_state,
+  );
+  return payloadTerminalState === 'no_signal' || payloadTerminalState === 'blocked';
+}
+
+function _shouldStopAfterQuestionPayload(questionPayload, updatedState) {
+  const validationState = _normalizeQuestionStatus(questionPayload?.validation_state);
+  if (updatedState?.status && _isTerminalQuestionState(updatedState)) {
+    return true;
+  }
+  if (validationState === 'validated') {
+    return true;
+  }
+  const terminalState = String(questionPayload?.terminal_state || '').trim().toLowerCase();
+  return terminalState === 'answered' && ACCEPTED_ANSWER_VALIDATION_STATES.has(validationState);
 }
 
 export function reconcileRunStateCheckpoint(runState, {
@@ -1319,11 +1434,14 @@ export function reconcileRunStateCheckpoint(runState, {
 
   const normalizedRunPhase = String(runState?.run_phase || '').trim().toLowerCase();
   const publishStatus = String(runState?.publish_status || '').trim().toLowerCase();
+  const failureCategory = String(runState?.failure_category || '').trim().toLowerCase();
   const requiredCount = Number.isFinite(Number(requiredQuestionCount)) ? Number(requiredQuestionCount) : null;
   const hasExpectedQuestionCount = requiredCount === null || questions.length >= requiredCount;
   const allTerminal = nonTerminalQuestionIds.length === 0 && hasExpectedQuestionCount;
   const claimsCompletion = normalizedRunPhase === 'completed' || PUBLISHED_LIKE_STATUSES.has(publishStatus);
-  const checkpointConsistent = !claimsCompletion || allTerminal;
+  const checkpointConsistent = failureCategory === 'checkpoint_inconsistency'
+    ? false
+    : (!claimsCompletion || allTerminal);
   let derivedRunPhase = normalizedRunPhase || 'queued';
   if (allTerminal) {
     derivedRunPhase = normalizedRunPhase || 'completed';
@@ -1442,9 +1560,12 @@ function _mergeQuestionState(questionState, questionPayload, timestamp) {
     ? structuredOutput.sources.map((sourceUrl) => _scoreSourceRecord(questionState, sourceUrl, structuredOutput.answer || '', structuredOutput.confidence || 0))
     : [];
   const validationState = _normalizeQuestionStatus(questionPayload.validation_state);
+  const terminalState = String(questionPayload?.terminal_state || structuredOutput?.terminal_state || '').trim().toLowerCase();
   const nextStatus = TERMINAL_QUESTION_STATUSES.has(validationState)
     ? validationState
-    : 'running';
+    : (terminalState === 'no_signal' || terminalState === 'blocked')
+        ? terminalState
+        : 'running';
   const nextState = {
     ...questionState,
     last_run_at: timestamp,
@@ -1455,7 +1576,7 @@ function _mergeQuestionState(questionState, questionPayload, timestamp) {
     best_answer: questionPayload.answer || questionState.best_answer || '',
     best_evidence_url: questionPayload.evidence_url || questionState.best_evidence_url || '',
     question_output: questionPayload || questionState.question_output || null,
-    completed_at: TERMINAL_QUESTION_STATUSES.has(validationState)
+    completed_at: TERMINAL_QUESTION_STATUSES.has(nextStatus)
       ? timestamp
       : (questionState.completed_at || null),
     last_error: null,
@@ -1795,7 +1916,7 @@ export function buildOpenCodeQuestionPrompt(question) {
     : '';
   const questionType = String(question?.question_type || '').trim().toLowerCase();
   if (questionType === 'leadership') {
-    return `${_questionText(question)} use brightdata. ${searchHint} Start with LinkedIn company and people results, then official leadership pages. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer, candidates, confidence, sources, and validation_state. candidates must be a broad typed pool of leadership and operating buyers, each with name, role, function_type, seniority_level, linkedin_url, email, bio, bio_evidence, recent_post_summary, recent_post_urls, and confidence. Only include email when it is directly sourced or explicitly verified in the evidence. bio may be synthesized from official site text, LinkedIn profile/about text, and recent LinkedIn posts when available. If you cannot validate a meaningful candidate pool, return exactly one fenced JSON code block with answer "", candidates [], confidence 0, sources [], validation_state "no_signal", then stop. Do not include prose outside the fenced JSON block.`;
+    return `${_questionText(question)} use brightdata. ${searchHint} Wikipedia and official board or leadership pages are valid grounding sources. Start with those, then use LinkedIn company and people results only to enrich or validate named candidates. Search explicitly for chairman, chief executive officer, secretary general, president, or managing director roles before generic leadership-team browsing. Avoid generic company-page or unrelated profile results unless they clearly validate a named person at this entity. You have at most ${hopBudget} hops. Return exactly one fenced JSON code block with answer, candidates, confidence, sources, and validation_state. candidates must be a broad typed pool of leadership and operating buyers, each with name, role, function_type, seniority_level, linkedin_url, email, bio, bio_evidence, recent_post_summary, recent_post_urls, and confidence. Only include email when it is directly sourced or explicitly verified in the evidence. bio may be synthesized from official site text, LinkedIn profile/about text, and recent LinkedIn posts when available. If you cannot validate a meaningful candidate pool, return exactly one fenced JSON code block with answer "", candidates [], confidence 0, sources [], validation_state "no_signal", then stop. Do not include prose outside the fenced JSON block.`;
   }
   if (questionType === 'decision_owner') {
     const candidateHint = Array.isArray(question?.candidate_pool) && question.candidate_pool.length > 0
@@ -2779,6 +2900,52 @@ function _titleCaseName(text) {
     .join(' ');
 }
 
+function _isTrustedLeadershipTitle(title) {
+  const normalized = _normalizeLeadershipTitle(title).toLowerCase();
+  return [
+    'chairman',
+    'chief executive officer',
+    'ceo',
+    'secretary general',
+    'president',
+    'managing director',
+    'director general',
+    'chief commercial officer',
+    'commercial director',
+    'marketing director',
+    'technical director',
+    'head of partnerships',
+    'partnerships manager',
+    'vice president',
+    'vice chairman',
+    'secretary',
+    'treasurer',
+  ].includes(normalized);
+}
+
+function _isLikelyPeopleName(value) {
+  const cleaned = String(value || '').trim();
+  if (!cleaned) return false;
+  if (/(https?:\/\/|linkedin|datanyze|zippia|rocketreach|company profile|see all employees)/i.test(cleaned)) {
+    return false;
+  }
+  if (/\b(abbreviation|official website|governing body|domestic teams|domestic competitions|headquarters|founded|sponsors?)\b/i.test(cleaned)) {
+    return false;
+  }
+  const tokens = cleaned.split(/\s+/).filter(Boolean);
+  if (tokens.length < 2 || tokens.length > 5) {
+    return false;
+  }
+  if (String(tokens[0] || '').toLowerCase() === 'the') {
+    return false;
+  }
+  const properNameTokenCount = tokens.filter((token) => /^[A-ZÀ-Ÿ][A-Za-zÀ-ÿ'’.`-]+$/.test(token)).length;
+  if (properNameTokenCount < 2) {
+    return false;
+  }
+  return tokens.every((token) => /^[A-Za-zÀ-ÿ'’.`-]+$/.test(token));
+}
+
 function _entityPrefixPattern(entityName) {
   const slug = String(entityName || '')
     .normalize('NFKD')
@@ -2850,6 +3017,61 @@ function _normalizeLeadershipTitle(value) {
     .join(' ');
 }
 
+function _collectSeedUrls(...urlLists) {
+  const urls = new Set();
+  for (const value of urlLists) {
+    if (!Array.isArray(value)) continue;
+    for (const url of value) {
+      const text = _extractUrlString(url);
+      if (text) urls.add(text);
+    }
+  }
+  return [...urls];
+}
+
+function _foundationLeadershipSeedCandidates(runState, entityName = '') {
+  const foundationState = _getQuestionStateById(runState, 'q1_foundation');
+  if (!foundationState || typeof foundationState !== 'object') {
+    return [];
+  }
+  const structured = foundationState?.question_output?.reasoning?.structured_output || {};
+  const evidenceText = [
+    foundationState.best_answer,
+    structured.answer,
+    structured.summary,
+    structured.context,
+    structured.notes,
+    foundationState?.question_output?.terminal_summary,
+    foundationState?.question_output?.raw_execution_trace?.assistant_text_excerpt,
+    foundationState?.question_output?.raw_execution_trace?.stdout_excerpt,
+  ]
+    .map((value) => String(value || '').trim())
+    .filter(Boolean)
+    .join('\n');
+  const seedUrls = _collectSeedUrls(
+    Array.isArray(structured.sources) ? structured.sources : [],
+    Array.isArray(foundationState.accepted_links) ? foundationState.accepted_links.map((item) => item?.url) : [],
+    [foundationState.best_evidence_url],
+  );
+  return _extractLeadershipFallbackCandidates(evidenceText, seedUrls, entityName);
+}
+
+function _decorateQuestionWithFallbackSeeds(question, runState) {
+  const questionType = String(question?.question_type || '').trim().toLowerCase();
+  if (!['leadership', 'decision_owner'].includes(questionType)) {
+    return question;
+  }
+  const seedCandidates = _foundationLeadershipSeedCandidates(runState, question?.entity_name || '');
+  if (seedCandidates.length === 0) {
+    return question;
+  }
+  return {
+    ...question,
+    foundation_seed_candidates: seedCandidates,
+    fallback_seed_urls: _collectSeedUrls(seedCandidates.map((candidate) => candidate?.source_url)),
+  };
+}
+
 function _extractLeadershipFallbackCandidates(evidenceText, urls = [], entityName = '') {
   const trustedUrl = urls.find((url) => {
     const sourceType = _sourceTypeFromEvidenceUrl(url);
@@ -2862,26 +3084,32 @@ function _extractLeadershipFallbackCandidates(evidenceText, urls = [], entityNam
 
   const candidates = [];
   const seen = new Set();
-  const titleFirstPattern = /\b(Chairman|Chief Executive Officer|CEO|Secretary General|President|Managing Director|Director General|Chief Commercial Officer|Commercial Director|Marketing Director|Technical Director|Head of Partnerships|Partnerships Manager)\b\s*[:\-]\s*([A-Z][A-Za-zÀ-ÿ'’. -]+?)(?=\.|,|;|\n|$)/gi;
+  const titleFirstPattern = /\b(Chairman|Chief Executive Officer|CEO|Secretary General|President|Managing Director|Director General|Chief Commercial Officer|Commercial Director|Marketing Director|Technical Director|Head of Partnerships|Partnerships Manager|Vice President|Vice Chairman|Secretary|Treasurer)\b\s*[:\-]\s*([A-Z][A-Za-zÀ-ÿ'’. -]+?)(?=\.|,|;|\n|$)/gi;
   const nameFirstPattern = /\b([A-Z][A-Za-zÀ-ÿ'’. -]+?)\b\s*[-–—,]\s*\b(Chairman|Chief Executive Officer|CEO|Secretary General|President|Managing Director|Director General|Chief Commercial Officer|Commercial Director|Marketing Director|Technical Director|Head of Partnerships|Partnerships Manager)\b/gi;
+  const titleInlinePattern = /\b(Chairman|Chief Executive Officer|CEO|Secretary General|President|Managing Director|Director General|Chief Commercial Officer|Commercial Director|Marketing Director|Technical Director|Head of Partnerships|Partnerships Manager|Vice President|Vice Chairman|Secretary|Treasurer)\b\s+([A-Z][A-Za-zÀ-ÿ'’. -]+?)(?=\s*(?:\(|,|;|\.|$)|\s+(?:and|who|term|since|of|at|for)\b)/gi;
+  const nameIsTitlePattern = /\b([A-Z][A-Za-zÀ-ÿ'’. -]+?)\s+is\s+(?:the\s+)?(Chairman|Chief Executive Officer|CEO|Secretary General|President|Managing Director|Director General|Chief Commercial Officer|Commercial Director|Marketing Director|Technical Director|Head of Partnerships|Partnerships Manager|Vice President|Vice Chairman|Secretary|Treasurer)\b/gi;
+
+  const registerCandidate = (rawName, rawTitle) => {
+    const title = _normalizeLeadershipTitle(rawTitle);
+    const name = _sanitizePeopleCandidateName(rawName, { entityName, title });
+    if (!name || !title || !_isTrustedLeadershipTitle(title) || !_isLikelyPeopleName(name)) return;
+    const key = `${name.toLowerCase()}|${title.toLowerCase()}|${trustedUrl}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    candidates.push({ name, title, source_url: trustedUrl, source_type: sourceType });
+  };
 
   for (const match of evidenceText.matchAll(titleFirstPattern)) {
-    const title = _normalizeLeadershipTitle(match[1]);
-    const name = _sanitizePeopleCandidateName(match[2], { entityName, title });
-    if (!name || !title) continue;
-    const key = `${name.toLowerCase()}|${title.toLowerCase()}|${trustedUrl}`;
-    if (seen.has(key)) continue;
-    seen.add(key);
-    candidates.push({ name, title, source_url: trustedUrl, source_type: sourceType });
+    registerCandidate(match[2], match[1]);
+  }
+  for (const match of evidenceText.matchAll(titleInlinePattern)) {
+    registerCandidate(match[2], match[1]);
   }
   for (const match of evidenceText.matchAll(nameFirstPattern)) {
-    const name = _sanitizePeopleCandidateName(match[1], { entityName, title: match[2] });
-    const title = _normalizeLeadershipTitle(match[2]);
-    if (!name || !title) continue;
-    const key = `${name.toLowerCase()}|${title.toLowerCase()}|${trustedUrl}`;
-    if (seen.has(key)) continue;
-    seen.add(key);
-    candidates.push({ name, title, source_url: trustedUrl, source_type: sourceType });
+    registerCandidate(match[1], match[2]);
+  }
+  for (const match of evidenceText.matchAll(nameIsTitlePattern)) {
+    registerCandidate(match[1], match[2]);
   }
 
   return candidates.slice(0, 8);
@@ -2982,26 +3210,31 @@ function _applyPeopleTimeoutFallback(question, structuredOutput, timeoutSalvage)
   if (!['leadership', 'decision_owner'].includes(questionType)) {
     return structuredOutput;
   }
-  const fallbackCandidates = Array.isArray(timeoutSalvage?.fallback_candidates) ? timeoutSalvage.fallback_candidates.filter(Boolean) : [];
+  const fallbackCandidates = Array.isArray(timeoutSalvage?.fallback_candidates) && timeoutSalvage.fallback_candidates.length > 0
+    ? timeoutSalvage.fallback_candidates.map((candidate) => _normalizePeopleFallbackCandidate(candidate)).filter(Boolean)
+    : (Array.isArray(question?.foundation_seed_candidates) ? question.foundation_seed_candidates.map((candidate) => _normalizePeopleFallbackCandidate(candidate)).filter(Boolean) : []);
   if (fallbackCandidates.length === 0) {
     return structuredOutput;
   }
   if (questionType === 'decision_owner') {
-    const [primaryOwner, ...supportingCandidates] = fallbackCandidates;
+    const rankedCandidates = _rankDecisionOwnerFallbackCandidates(fallbackCandidates);
+    const [primaryOwner, ...supportingCandidates] = rankedCandidates;
     return {
       ...structuredOutput,
       answer: primaryOwner?.name || structuredOutput?.answer || '',
       primary_owner: primaryOwner || null,
       supporting_candidates: supportingCandidates,
-      candidates: fallbackCandidates,
-      candidate_pool: fallbackCandidates,
+      candidates: rankedCandidates,
+      candidate_pool: rankedCandidates,
       confidence: Math.max(_coerceConfidenceScore(structuredOutput?.confidence), 0.72),
       validation_state: 'partially_validated',
-      summary: `Recovered ${fallbackCandidates.length} decision-owner candidates from trusted fallback sources.`,
+      summary: `Recovered ${rankedCandidates.length} decision-owner candidates from trusted fallback sources.`,
       notes: structuredOutput?.notes || 'Recovered from trusted timeout salvage after model output was missing.',
       sources: Array.isArray(structuredOutput?.sources) && structuredOutput.sources.length > 0
-        ? structuredOutput.sources
-        : (Array.isArray(timeoutSalvage?.candidate_evidence_urls) ? timeoutSalvage.candidate_evidence_urls : []),
+        ? _normalizeSourceList(structuredOutput.sources)
+        : (Array.isArray(timeoutSalvage?.candidate_evidence_urls) && timeoutSalvage.candidate_evidence_urls.length > 0
+            ? _normalizeSourceList(timeoutSalvage.candidate_evidence_urls)
+            : _normalizeSourceList(Array.isArray(question?.fallback_seed_urls) ? question.fallback_seed_urls : [])),
     };
   }
   return {
@@ -3014,8 +3247,10 @@ function _applyPeopleTimeoutFallback(question, structuredOutput, timeoutSalvage)
     summary: `Recovered ${fallbackCandidates.length} leadership candidates from trusted fallback sources.`,
     notes: structuredOutput?.notes || 'Recovered from trusted timeout salvage after model output was missing.',
     sources: Array.isArray(structuredOutput?.sources) && structuredOutput.sources.length > 0
-      ? structuredOutput.sources
-      : (Array.isArray(timeoutSalvage?.candidate_evidence_urls) ? timeoutSalvage.candidate_evidence_urls : []),
+      ? _normalizeSourceList(structuredOutput.sources)
+      : (Array.isArray(timeoutSalvage?.candidate_evidence_urls) && timeoutSalvage.candidate_evidence_urls.length > 0
+          ? _normalizeSourceList(timeoutSalvage.candidate_evidence_urls)
+          : _normalizeSourceList(Array.isArray(question?.fallback_seed_urls) ? question.fallback_seed_urls : [])),
   };
 }
 
@@ -3087,7 +3322,7 @@ function _spawnOpencodeRun(args, { cwd, env, timeoutMs = 300000 } = {}) {
   });
 }
 
-async function _runQuestionRunnerWithTimeout(questionRunner, executionQuestion, options = {}, timeoutMs = 300000) {
+export async function _runQuestionRunnerWithTimeout(questionRunner, executionQuestion, options = {}, timeoutMs = 300000) {
   const retryAttempts = _transientRetryAttempts();
   const retryDelayMs = _transientRetryDelayMs();
 
@@ -3096,6 +3331,64 @@ async function _runQuestionRunnerWithTimeout(questionRunner, executionQuestion, 
       ? Math.max(1, Number(timeoutMs))
       : 300000;
     const guardTimeoutMs = normalizedTimeoutMs + Math.min(5000, Math.max(1000, Math.ceil(normalizedTimeoutMs * 0.1)));
+    const heartbeatIntervalMs = Math.max(
+      1000,
+      Math.min(
+        15000,
+        Number.isFinite(Number(options?.heartbeatIntervalMs))
+          ? Number(options.heartbeatIntervalMs)
+          : Math.ceil(normalizedTimeoutMs / 4),
+      ),
+    );
+    const onHeartbeat = typeof options?.onHeartbeat === 'function'
+      ? options.onHeartbeat
+      : null;
+    const watchdogTimeoutMs = Math.max(
+      heartbeatIntervalMs + 250,
+      Math.min(
+        30000,
+        Number.isFinite(Number(options?.watchdogTimeoutMs))
+          ? Number(options.watchdogTimeoutMs)
+          : heartbeatIntervalMs * 2,
+      ),
+    );
+    let runnerSettled = false;
+    let heartbeatCount = 0;
+    let lastHeartbeatAt = Date.now();
+    const heartbeatLoop = onHeartbeat
+      ? (async () => {
+          while (!runnerSettled) {
+            await delay(heartbeatIntervalMs);
+            if (runnerSettled) {
+              break;
+            }
+            await onHeartbeat({
+              attempt,
+              executionQuestion,
+              timeoutMs: normalizedTimeoutMs,
+              heartbeatIntervalMs,
+            });
+            heartbeatCount += 1;
+            lastHeartbeatAt = Date.now();
+          }
+        })().catch(() => {})
+      : null;
+    const watchdogLoop = onHeartbeat
+      ? (async () => {
+          while (!runnerSettled) {
+            await delay(Math.min(heartbeatIntervalMs, 1000));
+            if (runnerSettled) {
+              break;
+            }
+            if (Date.now() - lastHeartbeatAt > watchdogTimeoutMs) {
+              throw _buildRetryableUpstreamFailure(
+                new Error(`runner heartbeat stalled for ${executionQuestion?.question_id || 'question'} after ${watchdogTimeoutMs}ms`),
+                attempt,
+              );
+            }
+          }
+        })()
+      : null;
     const runnerPromise = Promise.resolve().then(() => questionRunner(executionQuestion, options));
     const timeoutResult = {
       timedOut: true,
@@ -3128,13 +3421,30 @@ async function _runQuestionRunnerWithTimeout(questionRunner, executionQuestion, 
           timedOut: false,
           questionRun,
         })),
+        ...(watchdogLoop ? [watchdogLoop] : []),
         delay(guardTimeoutMs).then(() => timeoutResult),
       ]);
+      runnerSettled = true;
+      await heartbeatLoop;
+      if (watchdogLoop) {
+        try {
+          await watchdogLoop;
+        } catch (error) {
+          if (raceResult?.timedOut) {
+            throw error;
+          }
+        }
+      }
       if (raceResult.timedOut) {
         runnerPromise.catch(() => {});
       }
       return raceResult;
     } catch (error) {
+      runnerSettled = true;
+      await heartbeatLoop;
+      if (watchdogLoop) {
+        await watchdogLoop.catch(() => {});
+      }
       if (!_isRetryableUpstreamError(error)) {
         throw error;
       }
@@ -3202,6 +3512,8 @@ function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTr
   const terminalState = _deriveTerminalState(question, effectiveStructuredOutput, timeoutSalvage);
   const terminalSummary = _deriveTerminalSummary(question, effectiveStructuredOutput, timeoutSalvage, terminalState);
   const notes = effectiveStructuredOutput.notes || effectiveStructuredOutput.context || terminalSummary || '';
+  const isLeadershipQuestion = String(question?.question_type || '').trim().toLowerCase() === 'leadership';
+  const isDecisionOwnerQuestion = String(question?.question_type || '').trim().toLowerCase() === 'decision_owner';
   const normalizedStructuredOutput = {
     ...effectiveStructuredOutput,
     summary: effectiveStructuredOutput.summary || terminalSummary,
@@ -3213,6 +3525,29 @@ function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTr
       ? sources
       : (Array.isArray(timeoutSalvage?.candidate_evidence_urls) ? timeoutSalvage.candidate_evidence_urls : []),
   };
+  if (isLeadershipQuestion && candidates.length > 0) {
+    normalizedStructuredOutput.candidates = candidates;
+    normalizedStructuredOutput.answer = candidates;
+    if (!String(normalizedStructuredOutput.summary || '').includes('[object Object]')) {
+      // preserve existing meaningful summary
+    } else {
+      normalizedStructuredOutput.summary = answerText || terminalSummary;
+    }
+  }
+  if (isDecisionOwnerQuestion) {
+    if (primaryOwner) {
+      normalizedStructuredOutput.primary_owner = primaryOwner;
+    }
+    if (candidates.length > 0) {
+      normalizedStructuredOutput.candidates = candidates;
+      normalizedStructuredOutput.answer = primaryOwner?.name || answerText || terminalSummary;
+    }
+    if (!String(normalizedStructuredOutput.summary || '').includes('[object Object]')) {
+      // preserve existing meaningful summary
+    } else {
+      normalizedStructuredOutput.summary = answerText || terminalSummary;
+    }
+  }
   return {
     question_id: question.question_id,
     question_type: question.question_type,
@@ -3437,6 +3772,7 @@ export async function runOpenCodePresetBatch({
 
   try {
     for (const [index, question] of questions.entries()) {
+      const payloadQuestion = _decorateQuestionWithFallbackSeeds(question, runState);
       let existingQuestionState = runState.questions[index];
       const currentQuestionState = existingQuestionState || buildQuestionState(question, { runId: `cli-${index + 1}`, timestamp: runStartedAt, creditBudgetOverrides: budgetOverrides, confidenceThreshold: budgetOverrides.confidenceThreshold });
       existingQuestionState = currentQuestionState;
@@ -3471,10 +3807,12 @@ export async function runOpenCodePresetBatch({
             },
           },
         };
+        const resumedStartedAt = existingQuestionState.started_at || runStartedAt;
+        const resumedCompletedAt = existingQuestionState.completed_at || resumedStartedAt;
         questionTiming = questionTimings[question.question_id] || {
-          started_at: existingQuestionState.started_at || questionStartedAt,
-          completed_at: existingQuestionState.completed_at || questionStartedAt,
-          duration_seconds: 0,
+          started_at: resumedStartedAt,
+          completed_at: resumedCompletedAt,
+          duration_seconds: _secondsBetweenIso(resumedStartedAt, resumedCompletedAt),
         };
         questionTimings[question.question_id] = questionTiming;
         finalQuestions.push(questionPayload);
@@ -3551,7 +3889,7 @@ export async function runOpenCodePresetBatch({
       if (!_questionConditionsMet(question, runState, entityType)) {
         const unmetCondition = _describeUnmetQuestionConditions(question, runState, entityType);
         questionPayload = _buildQuestionPayload(
-          question,
+          payloadQuestion,
           _emptyStructuredOutputForQuestion(question, unmetCondition.note, {
             terminal_state: unmetCondition.terminal_state,
             blocked_by: unmetCondition.blocked_by,
@@ -3609,7 +3947,7 @@ export async function runOpenCodePresetBatch({
           );
           questionRun = deterministicRun;
           questionPayload = _buildQuestionPayload(
-            question,
+            payloadQuestion,
             deterministicStructuredOutput,
             `cli-${index + 1}`,
             {
@@ -3661,7 +3999,7 @@ export async function runOpenCodePresetBatch({
 
       if (!isAtomicDiscoveryQuestion && !fallbackToRetrieval) {
         questionPayload = _buildQuestionPayload(
-          question,
+          payloadQuestion,
           _emptyStructuredOutputForQuestion(question, 'No deterministic or derived output was produced and retrieval fallback is disabled for this execution class.'),
           `cli-${index + 1}`,
           {
@@ -3707,7 +4045,7 @@ export async function runOpenCodePresetBatch({
           break;
         }
         const hopTimeoutMs = Math.max(1000, Math.min(atomicHopTimeoutMs, remainingMs));
-        const executionQuestion = _buildExecutionQuestion(question, executionQuery, hopIndex);
+        const executionQuestion = _buildExecutionQuestion(payloadQuestion, executionQuery, hopIndex);
         if (String(question.question_id || '').trim() === 'q11_decision_owner') {
           executionQuestion.candidate_pool = _candidatePoolFromLeadership(runState);
         }
@@ -3718,12 +4056,38 @@ export async function runOpenCodePresetBatch({
           activeHopIndex: hopIndex,
           activeQuery: executionQuestion.query,
         });
+        runState.runner_debug = {
+          phase: 'before_runner',
+          question_id: executionQuestion.question_id,
+          hop_index: hopIndex,
+          at: new Date().toISOString(),
+        };
         runState.questions[index] = existingQuestionState;
         await _writeJsonFile(statePath, runState);
         const runnerResult = await _runQuestionRunnerWithTimeout(
           questionRunner,
           executionQuestion,
-          { worktreeRoot: resolvedWorktreeRoot, opencodeTimeoutMs: hopTimeoutMs },
+          {
+            worktreeRoot: resolvedWorktreeRoot,
+            opencodeTimeoutMs: hopTimeoutMs,
+            onHeartbeat: async () => {
+              runState = _decorateRunStateCheckpoint(runState, {
+                runPhase: 'question_runner_enter',
+                activeQuestionIndex: index,
+                activeQuestion: executionQuestion,
+                activeHopIndex: hopIndex,
+                activeQuery: executionQuestion.query,
+              });
+              runState.runner_debug = {
+                phase: 'heartbeat',
+                question_id: executionQuestion.question_id,
+                hop_index: hopIndex,
+                at: new Date().toISOString(),
+              };
+              runState.questions[index] = existingQuestionState;
+              await _writeJsonFile(statePath, runState);
+            },
+          },
           hopTimeoutMs,
         );
         questionRun = runnerResult.questionRun;
@@ -3745,10 +4109,16 @@ export async function runOpenCodePresetBatch({
           activeHopIndex: hopIndex,
           activeQuery: executionQuestion.query,
         });
+        runState.runner_debug = {
+          phase: runnerResult.timedOut ? 'after_runner_timeout' : 'after_runner',
+          question_id: executionQuestion.question_id,
+          hop_index: hopIndex,
+          at: new Date().toISOString(),
+        };
         runState.questions[index] = existingQuestionState;
         await _writeJsonFile(statePath, runState);
         questionPayload = _buildQuestionPayload(
-          question,
+          payloadQuestion,
           questionRun.structuredOutput || {},
           `cli-${index + 1}`,
           {
@@ -3779,7 +4149,7 @@ export async function runOpenCodePresetBatch({
         await _writeJsonFile(statePath, runState);
         currentState = updatedState;
         existingQuestionState = updatedState;
-        if (String(questionPayload?.validation_state || '').trim().toLowerCase() === 'validated' || updatedState.status === 'validated') {
+        if (_shouldStopAfterQuestionPayload(questionPayload, updatedState)) {
           break;
         }
 
@@ -3800,7 +4170,7 @@ export async function runOpenCodePresetBatch({
       const revisitSpent = Number(currentQuestionState.credits_spent?.revisit || 0);
       const revisitBudget = Number(currentQuestionState.credit_budget?.revisit || 0);
       const executionQueue = shouldReplayFrontier
-        ? pendingFrontierItems.slice(0, Math.max(1, Number(question.hop_budget || 0))).map((item, hopIndex) => _buildExecutionQuestion(question, item.query, hopIndex + 1))
+        ? pendingFrontierItems.slice(0, Math.max(1, Number(question.hop_budget || 0))).map((item, hopIndex) => _buildExecutionQuestion(payloadQuestion, item.query, hopIndex + 1))
         : (resume && existingQuestionState && _isTerminalQuestionState(existingQuestionState))
           ? []
           : [question];
@@ -3868,12 +4238,38 @@ export async function runOpenCodePresetBatch({
             activeHopIndex: hopIndex,
             activeQuery: executionQuestion.query,
           });
+          runState.runner_debug = {
+            phase: 'before_runner',
+            question_id: executionQuestion.question_id,
+            hop_index: hopIndex,
+            at: new Date().toISOString(),
+          };
           runState.questions[index] = existingQuestionState;
           await _writeJsonFile(statePath, runState);
           const runnerResult = await _runQuestionRunnerWithTimeout(
             questionRunner,
             executionQuestion,
-            { worktreeRoot: resolvedWorktreeRoot, opencodeTimeoutMs },
+            {
+              worktreeRoot: resolvedWorktreeRoot,
+              opencodeTimeoutMs,
+              onHeartbeat: async () => {
+                runState = _decorateRunStateCheckpoint(runState, {
+                  runPhase: 'question_runner_enter',
+                  activeQuestionIndex: index,
+                  activeQuestion: executionQuestion,
+                  activeHopIndex: hopIndex,
+                  activeQuery: executionQuestion.query,
+                });
+                runState.runner_debug = {
+                  phase: 'heartbeat',
+                  question_id: executionQuestion.question_id,
+                  hop_index: hopIndex,
+                  at: new Date().toISOString(),
+                };
+                runState.questions[index] = existingQuestionState;
+                await _writeJsonFile(statePath, runState);
+              },
+            },
             opencodeTimeoutMs,
           );
           questionRun = runnerResult.questionRun;
@@ -3884,10 +4280,16 @@ export async function runOpenCodePresetBatch({
             activeHopIndex: hopIndex,
             activeQuery: executionQuestion.query,
           });
+          runState.runner_debug = {
+            phase: runnerResult.timedOut ? 'after_runner_timeout' : 'after_runner',
+            question_id: executionQuestion.question_id,
+            hop_index: hopIndex,
+            at: new Date().toISOString(),
+          };
           runState.questions[index] = existingQuestionState;
           await _writeJsonFile(statePath, runState);
           questionPayload = _buildQuestionPayload(
-            question,
+            payloadQuestion,
             questionRun.structuredOutput || {},
             `cli-${index + 1}`,
             {
@@ -3920,7 +4322,7 @@ export async function runOpenCodePresetBatch({
         runState.questions[index] = updatedState;
         await _writeJsonFile(statePath, runState);
         existingQuestionState = runState.questions[index];
-        if (updatedState.status === 'validated') {
+        if (_shouldStopAfterQuestionPayload(questionPayload, updatedState)) {
           break;
         }
         if (runnerResult.timedOut || existingQuestionState.status === 'exhausted') {

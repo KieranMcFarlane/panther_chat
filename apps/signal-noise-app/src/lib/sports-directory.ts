@@ -1,4 +1,5 @@
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
+import { getCanonicalEntityRole } from '@/lib/entity-role-taxonomy'
 import { resolveEntityUuid } from '@/lib/entity-public-id'
 import { isPreferredFacetLabel, normalizeFacetKey, normalizeFacetLabel } from '@/lib/facet-normalization'
 
@@ -60,19 +61,13 @@ function toTimestamp(value: unknown): string {
 }
 
 function isLeagueEntity(entity: any): boolean {
-  const properties = entity?.properties || {}
-  const labels = (entity?.labels || []).map((label: string) => normalizeFacetKey(label))
-  const entityType = normalizeFacetKey(properties.type || properties.entityClass || properties.entity_class || '')
-
-  return labels.includes('league') || entityType === 'league'
+  const role = getCanonicalEntityRole(entity)
+  return role === 'League' || role === 'Competition'
 }
 
 function isTeamEntity(entity: any): boolean {
-  const properties = entity?.properties || {}
-  const labels = (entity?.labels || []).map((label: string) => normalizeFacetKey(label))
-  const entityType = normalizeFacetKey(properties.type || properties.entityClass || properties.entity_class || '')
-
-  return labels.some((label: string) => ['club', 'team'].includes(label)) || ['club', 'team'].includes(entityType)
+  const role = getCanonicalEntityRole(entity)
+  return role === 'Club' || role === 'Team'
 }
 
 function resolveDirectoryEntityId(entity: any, properties: Record<string, any>): string {

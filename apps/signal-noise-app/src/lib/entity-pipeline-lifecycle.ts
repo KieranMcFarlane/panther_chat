@@ -12,6 +12,8 @@ type EntityLike = {
 export type EntityPipelineLifecycleStage =
   | 'queued'
   | 'running'
+  | 'repairing'
+  | 'reconciling'
   | 'stalled'
   | 'retryable_failure'
   | 'resume_needed'
@@ -42,6 +44,14 @@ export type EntityPipelineLifecycle = {
   heartbeat_at: string | null
   failure_reason: string | null
   failure_category: string | null
+  publication_status: string | null
+  publication_mode: string | null
+  reconcile_required: boolean
+  repair_state: 'idle' | 'queued' | 'repairing' | 'exhausted'
+  repair_retry_count: number
+  repair_retry_budget: number
+  next_repair_question_id: string | null
+  reconciliation_state: 'healthy' | 'pending' | 'retrying' | 'exhausted'
   retryable: boolean
   resume_from_question: string | null
   last_completed_question: string | null
@@ -137,7 +147,22 @@ function buildLifecycleSummary(input: {
   blockers: string[]
   failureReason?: string | null
   resumeFromQuestion?: string | null
+  publicationStatus?: string | null
+  reconcileRequired?: boolean
 }): string {
+  if (input.publicationStatus === 'published_degraded') {
+    return input.reconcileRequired
+      ? 'Canonical dossier published_degraded; reconciliation is still required for secondary persistence'
+      : 'Canonical dossier published_degraded and is awaiting operator review'
+  }
+  if (input.stage === 'reconciling') {
+    return 'Canonical dossier is published; secondary reconciliation is still running'
+  }
+  if (input.stage === 'repairing') {
+    return input.resumeFromQuestion
+      ? `Repairing incomplete dossier from ${input.resumeFromQuestion}`
+      : 'Repairing incomplete dossier from the next retryable root question'
+  }
   if (input.stage === 'failed') {
     return 'Pipeline failed before dossier persistence'
   }
@@ -189,6 +214,10 @@ function buildLifecycleLabel(stage: EntityPipelineLifecycleStage): string {
       return 'Queued'
     case 'running':
       return 'Running'
+    case 'repairing':
+      return 'Repairing'
+    case 'reconciling':
+      return 'Reconciling'
     case 'stalled':
       return 'Stalled'
     case 'retryable_failure':
@@ -222,6 +251,18 @@ function getCheckpointMetadata(dossier: Record<string, any> | null, run: Lifecyc
     heartbeat_at: toText(questionFirst.heartbeat_at || runMetadata.heartbeat_at) || null,
     failure_reason: toText(questionFirst.failure_reason || runMetadata.failure_reason || runMetadata.error_message) || null,
     failure_category: toText(questionFirst.failure_category || runMetadata.failure_category) || null,
+    publication_status: toText(runMetadata.publication_status || questionFirst.publication_status) || null,
+    publication_mode: toText(runMetadata.publication_mode || questionFirst.publication_mode) || null,
+    reconcile_required: Boolean(
+      questionFirst.reconcile_required
+      ?? runMetadata.reconcile_required
+      ?? (runMetadata.persistence as Record<string, any> | undefined)?.reconcile_required
+    ),
+    repair_state: (toText(questionFirst.repair_state || runMetadata.repair_state).toLowerCase() || 'idle') as EntityPipelineLifecycle['repair_state'],
+    repair_retry_count: Number(questionFirst.repair_retry_count ?? runMetadata.repair_retry_count ?? 0),
+    repair_retry_budget: Number(questionFirst.repair_retry_budget ?? runMetadata.repair_retry_budget ?? 0),
+    next_repair_question_id: toText(questionFirst.next_repair_question_id || runMetadata.next_repair_question_id) || null,
+    reconciliation_state: (toText(questionFirst.reconciliation_state || runMetadata.reconciliation_state).toLowerCase() || 'healthy') as EntityPipelineLifecycle['reconciliation_state'],
     retryable: Boolean(questionFirst.retryable ?? runMetadata.retryable),
     resume_from_question: toText(questionFirst.resume_from_question || runMetadata.resume_from_question) || null,
     last_completed_question: toText(questionFirst.last_completed_question || runMetadata.last_completed_question) || null,
@@ -257,7 +298,11 @@ export async function deriveEntityPipelineLifecycle(input: {
   )
 
   let stage = baseStage
-  if (checkpoint.retryable) {
+  if (checkpoint.reconciliation_state === 'pending' || checkpoint.reconciliation_state === 'retrying') {
+    stage = 'reconciling'
+  } else if (checkpoint.repair_state === 'queued' || checkpoint.repair_state === 'repairing') {
+    stage = 'repairing'
+  } else if (checkpoint.retryable) {
     stage = 'retryable_failure'
   } else if (!checkpoint.checkpoint_consistent || checkpoint.non_terminal_question_ids.length > 0) {
     stage = isStalled ? 'stalled' : 'resume_needed'
@@ -291,6 +336,8 @@ export async function deriveEntityPipelineLifecycle(input: {
       blockers: qualityBlockers.length > 0 ? qualityBlockers : blockers,
       failureReason: checkpoint.failure_reason,
       resumeFromQuestion: checkpoint.resume_from_question,
+      publicationStatus: checkpoint.publication_status,
+      reconcileRequired: checkpoint.reconcile_required,
     }),
     quality_state: (qualityState as EntityPipelineLifecycle['quality_state']),
     quality_summary: qualitySummary,
@@ -308,6 +355,14 @@ export async function deriveEntityPipelineLifecycle(input: {
     heartbeat_at: checkpoint.heartbeat_at,
     failure_reason: checkpoint.failure_reason,
     failure_category: checkpoint.failure_category,
+    publication_status: checkpoint.publication_status,
+    publication_mode: checkpoint.publication_mode,
+    reconcile_required: checkpoint.reconcile_required,
+    repair_state: checkpoint.repair_state,
+    repair_retry_count: checkpoint.repair_retry_count,
+    repair_retry_budget: checkpoint.repair_retry_budget,
+    next_repair_question_id: checkpoint.next_repair_question_id,
+    reconciliation_state: checkpoint.reconciliation_state,
     retryable: checkpoint.retryable,
     resume_from_question: checkpoint.resume_from_question,
     last_completed_question: checkpoint.last_completed_question,

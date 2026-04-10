@@ -90,6 +90,7 @@ async def test_dual_write_coordinator_reports_reconcile_payload_on_failure():
     assert result["dual_write_ok"] is False
     assert result["reconcile_required"] is True
     assert result["reconciliation_payload"]["idempotency_key"]
+    assert result["reconciliation_payload"]["envelope"]["payload"] == {"score": 2}
     assert result["falkordb"]["error_class"] == "missing_writer"
 
 

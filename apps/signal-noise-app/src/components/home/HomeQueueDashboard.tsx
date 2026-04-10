@@ -18,6 +18,13 @@ type QueueEntityRecord = {
   summary: string | null
   generated_at: string | null
   active_question_id?: string | null
+  publication_status?: string | null
+  publication_mode?: string | null
+  repair_state?: string | null
+  repair_retry_count?: number | null
+  repair_retry_budget?: number | null
+  next_repair_question_id?: string | null
+  reconciliation_state?: string | null
 }
 
 type ClientReadyDossierCard = {
@@ -142,6 +149,24 @@ function formatQualityState(value: string) {
   return 'Missing'
 }
 
+function formatRunType(value: string | null | undefined) {
+  return String(value || '').startsWith('repair') ? 'Repair run' : 'Full run'
+}
+
+function formatPublicationState(value: string | null | undefined) {
+  if (value === 'published_degraded') return 'Published degraded'
+  if (value === 'published') return 'Published healthy'
+  if (value === 'publish_failed') return 'Publish failed'
+  return null
+}
+
+function formatRepairState(value: string | null | undefined) {
+  if (value === 'queued') return 'Auto-repair queued'
+  if (value === 'repairing') return 'Repairing'
+  if (value === 'exhausted') return 'Exhausted'
+  return null
+}
+
 function QueueCard({ item }: { item: QueueEntityRecord }) {
   const stateLabel = item.client_ready
     ? 'Client-ready'
@@ -166,7 +191,23 @@ function QueueCard({ item }: { item: QueueEntityRecord }) {
           {stateLabel}
         </Badge>
       </div>
+      <div className="mt-3 flex flex-wrap gap-2 text-xs uppercase tracking-[0.14em] text-slate-400">
+        <span>{formatRunType(item.publication_mode)}</span>
+        {formatPublicationState(item.publication_status) ? <span>{formatPublicationState(item.publication_status)}</span> : null}
+        {item.publication_status === 'published_degraded' ? <span>Reconciliation pending</span> : null}
+        {formatRepairState(item.repair_state) ? <span>{formatRepairState(item.repair_state)}</span> : null}
+      </div>
       <p className="mt-3 text-sm leading-6 text-slate-300">{toText(item.summary) || 'No summary available yet.'}</p>
+      {item.next_repair_question_id ? (
+        <p className="mt-2 text-xs uppercase tracking-[0.14em] text-sky-300">
+          next repair root: {item.next_repair_question_id}
+        </p>
+      ) : null}
+      {typeof item.repair_retry_count === 'number' || typeof item.repair_retry_budget === 'number' ? (
+        <p className="mt-2 text-xs uppercase tracking-[0.14em] text-slate-400">
+          retry budget: {item.repair_retry_count ?? 0}/{item.repair_retry_budget ?? 0}
+        </p>
+      ) : null}
       {!item.client_ready && item.state === 'completed' ? (
         <p className="mt-2 text-xs uppercase tracking-[0.14em] text-amber-300">Not promoted to a client dossier yet</p>
       ) : null}

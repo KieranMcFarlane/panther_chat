@@ -4,11 +4,10 @@ import { readFileSync } from 'node:fs'
 
 const entityDossierRouteSource = readFileSync(new URL('../src/app/api/entities/[entityId]/dossier/route.ts', import.meta.url), 'utf8')
 
-test('dossier api resolves canonical question-first artifacts before legacy dossier rows', () => {
+test('dossier api prefers the latest Supabase-published dossier before falling back to canonical filesystem artifacts', () => {
   assert.match(entityDossierRouteSource, /resolveCanonicalQuestionFirstDossier/)
-  assert.doesNotMatch(entityDossierRouteSource, /getLatestQuestionFirstDossierArtifact/)
-  assert.doesNotMatch(entityDossierRouteSource, /getLatestQuestionFirstRunArtifact/)
-  assert.doesNotMatch(entityDossierRouteSource, /mergeQuestionFirstRunArtifactIntoDossier/)
+  assert.match(entityDossierRouteSource, /getPersistedDossier/)
+  assert.match(entityDossierRouteSource, /supabase_persisted_dossier/)
 })
 
 test('dossier api exposes the normalized question-first payload expected by the app', () => {
@@ -49,6 +48,13 @@ test('canonical dossier resolution keeps better published dossiers ahead of wors
   assert.match(questionFirstDossierSource, /shouldHydrateCanonicalDossierWithRun/)
   assert.match(questionFirstDossierSource, /runQuestionCount < dossierQuestionCount/)
   assert.match(questionFirstDossierSource, /runQualityPriority < dossierQualityPriority/)
+})
+
+test('dossier api rejects malformed persisted dossier cache rows before falling back to canonical question-first artifacts', () => {
+  assert.match(entityDossierRouteSource, /isCanonicalPersistedDossierCandidate/)
+  assert.match(entityDossierRouteSource, /hasQuestionFirstAnswers/)
+  assert.match(entityDossierRouteSource, /merged_dossier/)
+  assert.match(entityDossierRouteSource, /hasTopLevelQuestions/)
 })
 
 test('dossier api can synthesize an entity from canonical question-first artifacts when no live row exists', () => {

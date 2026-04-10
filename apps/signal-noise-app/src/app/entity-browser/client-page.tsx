@@ -85,7 +85,7 @@ export default function EntityBrowserClientPage({
   const availableSports = taxonomy?.sports ?? []
   const availableLeagues = taxonomy?.leagues ?? []
   const availableCountries = taxonomy?.countries ?? []
-  const availableEntityClasses = taxonomy?.entityClasses ?? []
+  const availableEntityRoles = taxonomy?.entityRoles ?? taxonomy?.entityClasses ?? []
 
   const syncEntityBrowserHistory = useCallback((browserUrl: string) => {
     const rawStack = sessionStorage.getItem('entityBrowserHistoryStack')
@@ -386,7 +386,7 @@ export default function EntityBrowserClientPage({
     filters.sport !== 'all' ? { key: 'sport', label: `Sport: ${filters.sport}` } : null,
     filters.league !== 'all' ? { key: 'league', label: `League: ${filters.league}` } : null,
     filters.country !== 'all' ? { key: 'country', label: `Country: ${filters.country}` } : null,
-    filters.entityClass !== 'all' ? { key: 'entityClass', label: `Class: ${filters.entityClass}` } : null,
+    filters.entityClass !== 'all' ? { key: 'entityClass', label: `Role: ${filters.entityClass}` } : null,
     filters.entityType !== 'all' ? { key: 'entityType', label: `Type: ${filters.entityType}` } : null,
   ].filter(Boolean) as Array<{ key: 'sport' | 'league' | 'country' | 'entityClass' | 'entityType', label: string }>
   const columnCount = gridWidth >= 1100 ? 3 : gridWidth >= 720 ? 2 : 1
@@ -457,15 +457,15 @@ export default function EntityBrowserClientPage({
     },
     {
       key: 'entityClass',
-      label: 'Entity Class',
+      label: 'Role',
       value: filters.entityClass,
-      placeholder: 'Entity Class',
+      placeholder: 'Role',
       options: [
-        { value: 'all', label: 'All Classes' },
-        ...availableEntityClasses.map((entityClass) => ({
-          value: entityClass,
-          label: entityClass,
-          count: taxonomy?.counts?.entityClasses?.[entityClass] ?? 0,
+        { value: 'all', label: 'All Roles' },
+        ...availableEntityRoles.map((entityRole) => ({
+          value: entityRole,
+          label: entityRole,
+          count: taxonomy?.counts?.entityRoles?.[entityRole] ?? taxonomy?.counts?.entityClasses?.[entityRole] ?? 0,
         })),
       ],
       onValueChange: (value) => updateFilters((prev) => ({ ...prev, entityClass: value })),
@@ -560,7 +560,7 @@ export default function EntityBrowserClientPage({
                     setAutocompleteOpen(true)
                   }
                 }}
-                placeholder="Search entities..."
+                placeholder="Search club, sport, country, league..."
                 className="h-11 border-0 pl-2"
               />
               {(autocompleteOpen || autocompleteLoading || autocompleteEntities.length > 0) ? (

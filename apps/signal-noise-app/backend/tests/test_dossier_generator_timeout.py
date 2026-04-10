@@ -4,6 +4,7 @@ Tests for timeout-safe dossier generation behavior in phase 0.
 """
 
 import asyncio
+import json
 import sys
 import types
 from pathlib import Path
@@ -287,6 +288,203 @@ async def test_run_entity_pipeline_degrades_when_phase0_timeout_mode_is_degraded
 
     assert result.phases["dossier_generation"]["status"] in {"completed", "failed"}
     assert result.artifacts["dossier"]["metadata"]["generation_mode"] == "timeout_degraded"
+
+
+@pytest.mark.asyncio
+async def test_run_entity_pipeline_bypasses_generate_dossier_for_question_repair(monkeypatch, tmp_path):
+    repair_source_path = tmp_path / "fc-porto_question_first_dossier.json"
+    repair_source_path.write_text(
+        json.dumps(
+            {
+                "entity_id": "fc-porto-2027",
+                "entity_name": "FC Porto",
+                "entity_type": "SPORT_CLUB",
+                "question_first": {
+                    "answers": [{"question_id": "q11_decision_owner", "status": "no_signal"}],
+                    "publish_status": "published",
+                    "run_id": "fc-porto-base",
+                    "quality_state": "blocked",
+                },
+                "questions": [{"question_id": "q11_decision_owner", "status": "no_signal"}],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    async def fail_generate_dossier(*_args, **_kwargs):
+        raise AssertionError("generate_dossier should not run for question repairs")
+
+    monkeypatch.setattr("main.generate_dossier", fail_generate_dossier)
+
+    orchestrator_module = types.ModuleType("backend.pipeline_orchestrator")
+
+    class _DummyOrchestrator:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def run_entity_pipeline(self, **kwargs):
+            now = "2026-03-15T00:00:00+00:00"
+            return {
+                "entity_id": kwargs.get("entity_id", "unknown"),
+                "entity_name": kwargs.get("entity_name", "unknown"),
+                "phases": {"dossier_generation": {"status": "completed"}},
+                "validated_signal_count": 0,
+                "capability_signal_count": 0,
+                "rfp_count": 0,
+                "sales_readiness": "MONITOR",
+                "artifacts": {"dossier": kwargs.get("initial_dossier", {})},
+                "completed_at": now,
+            }
+
+    orchestrator_module.PipelineOrchestrator = _DummyOrchestrator
+    monkeypatch.setitem(sys.modules, "backend.pipeline_orchestrator", orchestrator_module)
+
+    graphiti_module = types.ModuleType("backend.graphiti_service")
+
+    class _DummyGraphitiService:
+        async def initialize(self):
+            return None
+
+    graphiti_module.GraphitiService = _DummyGraphitiService
+    monkeypatch.setitem(sys.modules, "backend.graphiti_service", graphiti_module)
+
+    discovery_module = types.ModuleType("backend.hypothesis_driven_discovery")
+    discovery_module.HypothesisDrivenDiscovery = type(
+        "HypothesisDrivenDiscovery",
+        (),
+        {"__init__": lambda self, *args, **kwargs: None},
+    )
+    monkeypatch.setitem(sys.modules, "backend.hypothesis_driven_discovery", discovery_module)
+
+    ralph_module = types.ModuleType("backend.ralph_loop")
+    ralph_module.RalphLoop = type("RalphLoop", (), {"__init__": lambda self, *args, **kwargs: None})
+    monkeypatch.setitem(sys.modules, "backend.ralph_loop", ralph_module)
+
+    scorer_module = types.ModuleType("backend.dashboard_scorer")
+    scorer_module.DashboardScorer = type("DashboardScorer", (), {"__init__": lambda self, *args, **kwargs: None})
+    monkeypatch.setitem(sys.modules, "backend.dashboard_scorer", scorer_module)
+
+    baseline_module = types.ModuleType("backend.baseline_monitoring")
+    baseline_module.BaselineMonitoringRunner = type("BaselineMonitoringRunner", (), {"__init__": lambda self, *args, **kwargs: None})
+    baseline_module.build_compact_candidate_validator = lambda *_args, **_kwargs: (lambda *_a, **_k: [])
+    monkeypatch.setitem(sys.modules, "backend.baseline_monitoring", baseline_module)
+
+    result = await run_entity_pipeline(
+        EntityPipelineRequest(
+            entity_id="fc-porto-2027",
+            entity_name="FC Porto",
+            entity_type="SPORT_CLUB",
+            priority_score=91,
+            metadata={
+                "rerun_mode": "question",
+                "question_id": "q11_decision_owner",
+                "repair_source_dossier_path": str(repair_source_path),
+            },
+        )
+    )
+
+    assert result.artifacts["dossier"]["question_first"]["run_id"] == "fc-porto-base"
+    assert result.artifacts["dossier"]["question_first"]["quality_state"] == "blocked"
+
+
+@pytest.mark.asyncio
+async def test_run_entity_pipeline_recovers_question_repair_source_from_artifacts_when_metadata_path_is_missing(monkeypatch, tmp_path):
+    repair_root = tmp_path / "question-first-diagnostics" / "fc-porto-2027"
+    repair_root.mkdir(parents=True)
+    repair_source_path = repair_root / "fc-porto-2027_question_first_dossier.json"
+    repair_source_path.write_text(
+        json.dumps(
+            {
+                "entity_id": "fc-porto-2027",
+                "entity_name": "FC Porto",
+                "entity_type": "SPORT_CLUB",
+                "question_first": {
+                    "answers": [{"question_id": "q11_decision_owner", "status": "answered"}],
+                    "publish_status": "published",
+                    "run_id": "fc-porto-recovered",
+                    "quality_state": "complete",
+                },
+                "questions": [{"question_id": "q11_decision_owner", "status": "answered"}],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    monkeypatch.setenv("QUESTION_REPAIR_SOURCE_ROOTS", str(tmp_path))
+
+    async def fail_generate_dossier(*_args, **_kwargs):
+        raise AssertionError("generate_dossier should not run when a repair artifact can be recovered")
+
+    monkeypatch.setattr("main.generate_dossier", fail_generate_dossier)
+
+    orchestrator_module = types.ModuleType("backend.pipeline_orchestrator")
+
+    class _DummyOrchestrator:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def run_entity_pipeline(self, **kwargs):
+            now = "2026-03-15T00:00:00+00:00"
+            return {
+                "entity_id": kwargs.get("entity_id", "unknown"),
+                "entity_name": kwargs.get("entity_name", "unknown"),
+                "phases": {"dossier_generation": {"status": "completed"}},
+                "validated_signal_count": 0,
+                "capability_signal_count": 0,
+                "rfp_count": 0,
+                "sales_readiness": "MONITOR",
+                "artifacts": {"dossier": kwargs.get("initial_dossier", {})},
+                "completed_at": now,
+            }
+
+    orchestrator_module.PipelineOrchestrator = _DummyOrchestrator
+    monkeypatch.setitem(sys.modules, "backend.pipeline_orchestrator", orchestrator_module)
+
+    graphiti_module = types.ModuleType("backend.graphiti_service")
+
+    class _DummyGraphitiService:
+        async def initialize(self):
+            return None
+
+    graphiti_module.GraphitiService = _DummyGraphitiService
+    monkeypatch.setitem(sys.modules, "backend.graphiti_service", graphiti_module)
+
+    discovery_module = types.ModuleType("backend.hypothesis_driven_discovery")
+    discovery_module.HypothesisDrivenDiscovery = type(
+        "HypothesisDrivenDiscovery",
+        (),
+        {"__init__": lambda self, *args, **kwargs: None},
+    )
+    monkeypatch.setitem(sys.modules, "backend.hypothesis_driven_discovery", discovery_module)
+
+    ralph_module = types.ModuleType("backend.ralph_loop")
+    ralph_module.RalphLoop = type("RalphLoop", (), {"__init__": lambda self, *args, **kwargs: None})
+    monkeypatch.setitem(sys.modules, "backend.ralph_loop", ralph_module)
+
+    scorer_module = types.ModuleType("backend.dashboard_scorer")
+    scorer_module.DashboardScorer = type("DashboardScorer", (), {"__init__": lambda self, *args, **kwargs: None})
+    monkeypatch.setitem(sys.modules, "backend.dashboard_scorer", scorer_module)
+
+    baseline_module = types.ModuleType("backend.baseline_monitoring")
+    baseline_module.BaselineMonitoringRunner = type("BaselineMonitoringRunner", (), {"__init__": lambda self, *args, **kwargs: None})
+    baseline_module.build_compact_candidate_validator = lambda *_args, **_kwargs: (lambda *_a, **_k: [])
+    monkeypatch.setitem(sys.modules, "backend.baseline_monitoring", baseline_module)
+
+    result = await run_entity_pipeline(
+        EntityPipelineRequest(
+            entity_id="fc-porto-2027",
+            entity_name="FC Porto",
+            entity_type="SPORT_CLUB",
+            priority_score=91,
+            metadata={
+                "rerun_mode": "question",
+                "question_id": "q11_decision_owner",
+            },
+        )
+    )
+
+    assert result.artifacts["dossier"]["question_first"]["run_id"] == "fc-porto-recovered"
+    assert result.artifacts["dossier"]["question_first"]["quality_state"] == "complete"
 
 
 def test_resolve_phase0_timeout_seconds_defaults_to_300(monkeypatch):

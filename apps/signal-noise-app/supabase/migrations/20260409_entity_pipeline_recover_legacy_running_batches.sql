@@ -14,6 +14,7 @@ begin
           'lease_expires_at', null
         )
   where status = 'running'
+    and completed_at is null
     and (
       coalesce((metadata->>'heartbeat_at')::timestamptz, started_at) < stale_before
       or coalesce((metadata->>'lease_expires_at')::timestamptz, started_at) < now()

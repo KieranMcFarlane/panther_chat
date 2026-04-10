@@ -119,6 +119,15 @@ export default async function Home() {
                   Open Opportunities
                 </Button>
               </Link>
+              <Link href="/entity-pipeline/live-repair-verification">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-sky-400/30 bg-sky-500/10 text-sky-100 hover:bg-sky-500/20 hover:text-sky-50"
+                >
+                  Live repair verification
+                </Button>
+              </Link>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-3">

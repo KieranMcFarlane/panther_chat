@@ -159,6 +159,24 @@ def test_universal_atomic_matrix_prioritizes_wikipedia_and_official_sources_for_
     assert "linkedin_posts" in questions["q11_decision_owner"]["source_priority"]
 
 
+def test_universal_atomic_matrix_uses_role_specific_leadership_search_patterns_for_federations():
+    payload = build_universal_atomic_question_source(
+        entity_type="SPORT_FEDERATION",
+        entity_name="Zimbabwe Cricket",
+        entity_id="zimbabwe-cricket",
+        preset="zimbabwe-cricket-atomic-matrix",
+    )
+    questions = _question_index(payload)
+
+    search_patterns = questions["q3_leadership"]["search_strategy"]["search_queries"]
+
+    assert '"Zimbabwe Cricket" chairman' in search_patterns
+    assert '"Zimbabwe Cricket" chief executive officer' in search_patterns
+    assert '"Zimbabwe Cricket" secretary general' in search_patterns
+    assert '"Zimbabwe Cricket" board' in search_patterns
+    assert '"Zimbabwe Cricket" wikipedia' in search_patterns
+
+
 def test_universal_atomic_matrix_marks_conditional_questions_explicitly():
     payload = build_universal_atomic_question_source(
         entity_type="SPORT_LEAGUE",

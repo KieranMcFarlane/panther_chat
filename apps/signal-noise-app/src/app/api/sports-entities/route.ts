@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot';
+import { getCanonicalEntityRole } from '@/lib/entity-role-taxonomy';
 import { resolveEntityUuid } from '@/lib/entity-public-id';
 
 export const dynamic = 'force-dynamic';
@@ -9,10 +10,12 @@ function matchesType(entity: any, type: string): boolean {
   const labels = (entity.labels || []).map((label: string) => String(label).toLowerCase());
   const props = entity.properties || {};
   const entityType = String(props.type || '').toLowerCase();
+  const entityRole = getCanonicalEntityRole(entity).toLowerCase();
   const normalized = type.toLowerCase();
 
   return labels.includes(normalized) ||
     entityType === normalized ||
+    entityRole === normalized ||
     String(props.entityClass || props.entity_class || '').toLowerCase() === normalized;
 }
 
@@ -21,10 +24,20 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get('limit') || '50');
     const type = searchParams.get('type') || 'all';
+    const sport = (searchParams.get('sport') || '').trim().toLowerCase();
+    const country = (searchParams.get('country') || '').trim().toLowerCase();
 
     const entities = await getCanonicalEntitiesSnapshot();
     const filtered = entities
-      .filter((entity) => matchesType(entity, type))
+      .filter((entity) => {
+        if (!matchesType(entity, type)) return false
+        const props = entity.properties || {};
+        const entitySport = String(props.sport || '').toLowerCase();
+        const entityCountry = String(props.country || '').toLowerCase();
+        if (sport && entitySport !== sport) return false
+        if (country && entityCountry !== country) return false
+        return true
+      })
       .slice(0, limit)
       .map((entity) => {
         const properties = entity.properties || {};
@@ -42,6 +55,7 @@ export async function GET(request: NextRequest) {
           neo4j_id: entity.neo4j_id || entityId,
           labels: entity.labels || [],
           entity_type: String(properties.type || entity.labels?.[0] || 'entity').toLowerCase(),
+          entity_role: getCanonicalEntityRole(entity),
           uuid,
           name: properties.name || 'Unknown Entity',
           description: properties.description || '',

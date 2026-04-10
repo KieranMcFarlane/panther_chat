@@ -15,11 +15,11 @@ export function AppPageShell({
     size === 'wide' ? 'max-w-[96rem]' : size === 'narrow' ? 'max-w-4xl' : 'max-w-7xl'
 
   return (
-    <main className={cn('min-h-screen bg-background text-foreground', className)}>
+    <section className={cn('w-full text-foreground', className)}>
       <div className={cn('mx-auto flex w-full flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8', widthClass)}>
         {children}
       </div>
-    </main>
+    </section>
   )
 }
 

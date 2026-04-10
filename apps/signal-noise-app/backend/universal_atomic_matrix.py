@@ -53,6 +53,14 @@ Q2_DIGITAL_STACK_SEARCH_QUERIES = [
 ]
 
 Q3_LEADERSHIP_SEARCH_QUERIES = [
+    '"{entity}" wikipedia',
+    '"{entity}" chairman',
+    '"{entity}" chief executive officer',
+    '"{entity}" ceo',
+    '"{entity}" secretary general',
+    '"{entity}" managing director',
+    '"{entity}" board',
+    '"{entity}" board of directors',
     '"{entity}" LinkedIn company profile',
     '"{entity}" leadership team',
     '"{entity}" executive team',
@@ -180,7 +188,7 @@ UNIVERSAL_ATOMIC_QUESTION_SPECS: List[Dict[str, Any]] = [
         "question_family": "leadership",
         "question_type": "leadership",
         "question": "Who are the key leadership, commercial, partnerships, marketing, digital, technology, and strategy figures at {entity}?",
-        "query": '"{entity}" leadership team',
+        "query": '"{entity}" chairman chief executive officer secretary general board',
         "source_priority": [
             "wikipedia",
             "official_site",

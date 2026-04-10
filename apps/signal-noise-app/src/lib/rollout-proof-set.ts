@@ -38,11 +38,11 @@ export const ROLLOUT_PROOF_SET: RolloutProofSetItem[] = [
   {
     entity_uuid: 'fedd8440-4082-5ce4-b07a-2d662a4c200e',
     display_name: 'Zimbabwe Cricket',
-    expected_quality_state: 'complete',
+    expected_quality_state: 'blocked',
     expected_question_count: 15,
     role: 'validation',
-    purpose: 'Full-pack federation dossier',
-    smoke_note: 'Use this to verify a 15-question federation dossier once the rerun completes and persists through the canonical browser route.',
+    purpose: 'Full-pack blocked federation dossier',
+    smoke_note: 'Use this to verify a 15-question federation dossier that persists cleanly through the canonical browser route but remains blocked by downstream quality gates.',
     account_priority: 90,
   },
 ]

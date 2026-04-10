@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { buildCachedEntityCanonicalLookup, dedupeCanonicalCachedEntityRows } from '@/lib/cached-entity-canonicalization.mjs'
+import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
+import { buildCanonicalEntitySearchText } from '@/lib/canonical-search'
+import { canonicalizeEntities } from '@/lib/entity-canonicalization'
 import { resolveGraphId } from '@/lib/graph-id'
 import { resolveEntityUuid } from '@/lib/entity-public-id'
+import { getCanonicalEntityRole } from '@/lib/entity-role-taxonomy'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
@@ -26,6 +31,46 @@ function buildVectorBackedFallbackSearch(search: string, value: string): number 
   return 0
 }
 
+function fieldMatchScore(search: string, value: unknown): number {
+  const normalizedSearch = search.trim().toLowerCase()
+  const normalizedValue = String(value || '').trim().toLowerCase()
+  if (!normalizedSearch || !normalizedValue) return 0
+  if (normalizedValue === normalizedSearch) return 100
+  if (normalizedValue.startsWith(normalizedSearch)) return 85
+  if (normalizedValue.includes(normalizedSearch)) return 70
+
+  const searchTokens = normalizedSearch.split(/\s+/).filter(Boolean)
+  if (searchTokens.length > 1 && searchTokens.every((token) => normalizedValue.includes(token))) {
+    return 60
+  }
+
+  return 0
+}
+
+function toCanonicalSearchEntity(entity: any) {
+  const uuid = entity.canonical_entity_id || resolveEntityUuid({
+    id: entity.id,
+    neo4j_id: entity.neo4j_id,
+    graph_id: entity.graph_id,
+    uuid: entity.uuid,
+    supabase_id: entity.properties?.supabase_id,
+    properties: entity.properties,
+  }) || resolveGraphId(entity) || entity.id
+
+  return {
+    id: String(entity.canonical_entity_id || entity.id || uuid),
+    uuid: String(uuid),
+    neo4j_id: entity.neo4j_id ?? entity.id,
+    labels: Array.isArray(entity.labels) ? entity.labels : [],
+    properties: {
+      ...(entity.properties || {}),
+      name: entity.properties?.name || uuid || `Entity ${entity.id}`,
+      type: entity.properties?.type || entity.labels?.[0] || 'Unknown',
+      canonical_entity_id: entity.canonical_entity_id || entity.properties?.canonical_entity_id || null,
+    },
+  }
+}
+
 export async function GET(request: NextRequest) {
   const startedAt = Date.now()
   try {
@@ -34,16 +79,16 @@ export async function GET(request: NextRequest) {
     const search = (searchParams.get('search') || '').trim()
     const defaultLimit = mode === 'autocomplete' ? 8 : 20
     const limit = Math.max(1, Math.min(Math.floor(parseInt(searchParams.get('limit') || String(defaultLimit))), 100))
-    const overscanLimit = Math.min(limit * 3, 100)
+    const overscanLimit = search ? 100 : Math.min(limit * 3, 100)
 
     let query = supabase
       .from('cached_entities')
-      .select('id, graph_id, neo4j_id, labels, properties')
+      .select('id, graph_id, neo4j_id, labels, properties, canonical_entity_id')
       .limit(overscanLimit)
 
     if (search) {
       query = query.or(
-        `properties->>name.ilike.%${search}%,properties->>type.ilike.%${search}%,properties->>sport.ilike.%${search}%,properties->>country.ilike.%${search}%`
+        `properties->>name.ilike.%${search}%,properties->>type.ilike.%${search}%,properties->>entityClass.ilike.%${search}%,properties->>entity_class.ilike.%${search}%,properties->>sport.ilike.%${search}%,properties->>country.ilike.%${search}%,properties->>league.ilike.%${search}%,properties->>competition.ilike.%${search}%,properties->>level.ilike.%${search}%`
       )
     }
 
@@ -53,20 +98,38 @@ export async function GET(request: NextRequest) {
       throw error
     }
 
-    const ranked = (data || []).map((entity: any) => {
-      const uuid = resolveEntityUuid({
-        id: entity.id,
-        neo4j_id: entity.neo4j_id,
-        graph_id: entity.graph_id,
-        uuid: entity.uuid,
-        supabase_id: entity.properties?.supabase_id,
-        properties: entity.properties,
-      }) || resolveGraphId(entity) || entity.id
+    const canonicalLookup = buildCachedEntityCanonicalLookup(await getCanonicalEntitiesSnapshot())
+    const deduped = dedupeCanonicalCachedEntityRows(data || [], canonicalLookup)
+    const canonicalized = canonicalizeEntities(deduped.map((entity: any) => toCanonicalSearchEntity(entity)))
+
+    const ranked = canonicalized.map((entity: any) => {
+      const uuid = String(entity.uuid || entity.id)
       const name = entity.properties?.name || uuid || `Entity ${entity.id}`
       const type = entity.properties?.type || entity.labels?.[0] || 'Unknown'
       const sport = entity.properties?.sport || ''
       const country = entity.properties?.country || ''
+      const entity_role = getCanonicalEntityRole(entity)
+      const normalizedSearch = search.toLowerCase()
       const lexicalScore = buildVectorBackedFallbackSearch(search, String(name))
+      const canonicalSearchText = buildCanonicalEntitySearchText(entity)
+      const searchScore = search
+        ? Math.max(
+            fieldMatchScore(search, name),
+            fieldMatchScore(search, entity_role),
+            fieldMatchScore(search, sport),
+            fieldMatchScore(search, country),
+            fieldMatchScore(search, entity.properties?.league || entity.properties?.competition || entity.properties?.level),
+            fieldMatchScore(search, canonicalSearchText),
+          )
+        : 0
+      const roleBoost =
+        (normalizedSearch.includes('league') && entity_role.toLowerCase() === 'league') ||
+        (normalizedSearch.includes('competition') && entity_role.toLowerCase() === 'competition') ||
+        (normalizedSearch.includes('federation') && entity_role.toLowerCase() === 'federation') ||
+        (normalizedSearch.includes('club') && entity_role.toLowerCase() === 'club') ||
+        (normalizedSearch.includes('team') && entity_role.toLowerCase() === 'team')
+          ? 20
+          : 0
       const popularityScore = Number(entity.properties?.priorityScore || entity.properties?.yellowPantherPriority || 0)
       return ({
         id: uuid,
@@ -76,7 +139,8 @@ export async function GET(request: NextRequest) {
         type,
         sport,
         country,
-        _score: lexicalScore + popularityScore
+        entity_role,
+        _score: search ? (searchScore * 1000) + roleBoost + popularityScore + lexicalScore : popularityScore + lexicalScore
       })
     })
 

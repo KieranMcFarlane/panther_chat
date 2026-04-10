@@ -864,13 +864,17 @@ async def test_question_first_runner_uses_saved_questions_and_writes_plain_text_
     assert result["discovery_summary"]["profile"][0]["candidate_id"] == "q1:profile"
     assert result["poi_graph"]["schema_version"] == "poi_graph_v1"
     assert result["connections_graph"]["schema_version"] == "connections_graph_v1"
-    assert result["questions"][0]["answer"] == "1919"
+    assert result["questions"][0]["answer"]["summary"] == "1919"
     assert result["questions"][0]["validation_state"] == "validated"
 
     json_report = output_dir / "leedsunited_question_first_dossier.json"
     txt_report = output_dir / "leedsunited_question_first_dossier.txt"
     assert json_report.exists()
     assert txt_report.exists()
+    published_payload = json.loads(json_report.read_text(encoding="utf-8"))
+    assert len(published_payload["questions"]) == 1
+    assert published_payload["quality_state"] == "complete"
+    assert published_payload["quality_summary"].startswith("Complete dossier:")
     assert "When was Leeds United founded?" in txt_report.read_text()
     assert "1919" in txt_report.read_text()
 
@@ -989,8 +993,8 @@ async def test_question_first_runner_groups_by_category_and_retries_on_empty_sea
     assert result["question_first"]["categories"][0]["category"] == "identity"
     assert any(cat["category"] == "leadership" for cat in result["question_first"]["categories"])
     assert len(result["question_first"]["answers"][0]["search_attempts"]) == 1
-    assert result["questions"][0]["answer"] == "1919"
-    assert result["questions"][1]["answer"] == "Chairman answer"
+    assert result["questions"][0]["answer"]["summary"] == "1919"
+    assert result["questions"][1]["answer"]["summary"] == "Chairman answer"
     assert result["questions"][1]["validation_state"] == "validated"
 
 
@@ -1483,7 +1487,104 @@ async def test_run_question_first_dossier_from_payload_stages_candidate_without_
     staged_path = output_dir / "zimbabwe-cricket_question_first_dossier.staged.json"
     assert staged_path.exists()
     assert merged["question_first_report"]["publish_status"] == "staged"
-    assert json.loads(published_path.read_text(encoding="utf-8"))["merged_dossier"]["question_first_run"]["answer_records"][0]["answer"] == "Strong answer 1"
+    assert json.loads(published_path.read_text(encoding="utf-8"))["merged_dossier"]["question_first_run"]["answer_records"][0]["answer"]["summary"] == "Strong answer 1"
+
+
+@pytest.mark.asyncio
+async def test_run_question_first_dossier_from_payload_merges_single_question_repair_into_base_artifact(tmp_path):
+    output_dir = tmp_path / "out"
+    output_dir.mkdir()
+    questions = [
+        {
+            "question_id": f"q{index}_signal",
+            "question_text": f"Question {index}?",
+            "section_id": "core_information",
+        }
+        for index in range(1, 16)
+    ]
+    base_answers = [
+        {
+            "question_id": question["question_id"],
+            "question_type": "foundation",
+            "question_text": question["question_text"],
+            "answer": f"Base answer {index}",
+            "confidence": 0.92,
+            "validation_state": "validated",
+            "signal_type": "FOUNDATION",
+            "evidence_url": f"https://example.com/base/{index}",
+        }
+        for index, question in enumerate(questions, start=1)
+    ]
+    base_answers[10] = {
+        "question_id": "q11_signal",
+        "question_type": "decision_owner",
+        "question_text": "Question 11?",
+        "answer": "No answer found",
+        "confidence": 0.0,
+        "validation_state": "no_signal",
+        "signal_type": "DECISION_OWNER",
+        "evidence_url": None,
+    }
+    repaired_answers = [
+        {
+            "question_id": "q11_signal",
+            "question_type": "decision_owner",
+            "question_text": "Question 11?",
+            "answer": "Wilfred Mukondiwa",
+            "confidence": 0.77,
+            "validation_state": "partially_validated",
+            "signal_type": "DECISION_OWNER",
+            "evidence_url": "https://example.com/repair/q11",
+        }
+    ]
+
+    base_artifact_path = output_dir / "zimbabwe-cricket_base_question_first_run_v2.json"
+    repair_artifact_path = output_dir / "zimbabwe-cricket_repair_question_first_run_v2.json"
+    _write_question_first_run_artifact(
+        base_artifact_path,
+        entity_id="zimbabwe-cricket",
+        entity_name="Zimbabwe Cricket",
+        questions=questions,
+        answers=base_answers,
+        categories=[],
+    )
+    _write_question_first_run_artifact(
+        repair_artifact_path,
+        entity_id="zimbabwe-cricket",
+        entity_name="Zimbabwe Cricket",
+        questions=[questions[10]],
+        answers=repaired_answers,
+        categories=[],
+    )
+
+    merged = await runner.run_question_first_dossier_from_payload(
+        source_payload={
+            "entity_id": "zimbabwe-cricket",
+            "entity_name": "Zimbabwe Cricket",
+            "questions": questions,
+            "metadata": {
+                "question_first_repair": {
+                    "mode": "question",
+                    "question_id": "q11_signal",
+                    "repaired_question_ids": ["q11_signal"],
+                    "repair_source_run_path": str(base_artifact_path),
+                    "repair_source_run_id": "base-run-1",
+                }
+            },
+        },
+        question_first_run_path=repair_artifact_path,
+        output_dir=output_dir,
+    )
+
+    assert len(merged["questions"]) == 15
+    repaired_question = next(question for question in merged["questions"] if question["question_id"] == "q11_signal")
+    untouched_question = next(question for question in merged["questions"] if question["question_id"] == "q10_signal")
+    assert repaired_question["answer"]["summary"] == "Wilfred Mukondiwa"
+    assert repaired_question["validation_state"] == "partially_validated"
+    assert untouched_question["answer"]["summary"] == "Base answer 10"
+    assert merged["question_first_run"]["repair_run"]["repair_source_run_id"] == "base-run-1"
+    assert merged["question_first_run"]["repair_run"]["repaired_question_ids"] == ["q11_signal"]
+    assert merged["quality_state"] == "complete"
 
 
 def test_merge_question_first_run_artifact_marks_dependency_blocked_questions_explicitly():
@@ -1598,6 +1699,58 @@ def test_normalize_answer_record_recovers_minimal_q3_leadership_answer_from_trus
         "https://en.wikipedia.org/wiki/Zimbabwe_Cricket",
         "https://www.zimcricket.org/",
     ]
+
+
+def test_normalize_answer_record_flattens_existing_q3_candidate_source_urls():
+    question = {
+        "question_id": "q3_leadership",
+        "question_text": "Who are the key leadership figures at Zimbabwe Cricket?",
+        "question_type": "leadership",
+        "depends_on": [],
+    }
+    answer = {
+        "question_id": "q3_leadership",
+        "question_type": "leadership",
+        "validation_state": "partially_validated",
+        "signal_type": "LEADERSHIP",
+        "answer": {
+            "kind": "list",
+            "summary": "Tavengwa Mukuhlani - Chairman, Wilfred Mukondiwa - Chief Executive Officer",
+            "value": None,
+            "raw_structured_output": {
+                "candidates": [
+                    {
+                        "name": "Tavengwa Mukuhlani",
+                        "title": "Chairman",
+                        "source_url": {"url": "https://en.wikipedia.org/wiki/Zimbabwe_Cricket"},
+                    },
+                    {
+                        "name": "Wilfred Mukondiwa",
+                        "title": "Chief Executive Officer",
+                        "source_url": {"href": "https://www.zimcricket.org/"},
+                    },
+                ]
+            },
+        },
+        "candidates": [
+            {
+                "name": "Tavengwa Mukuhlani",
+                "title": "Chairman",
+                "source_url": {"url": "https://en.wikipedia.org/wiki/Zimbabwe_Cricket"},
+            },
+            {
+                "name": "Wilfred Mukondiwa",
+                "title": "Chief Executive Officer",
+                "source_url": {"href": "https://www.zimcricket.org/"},
+            },
+        ],
+    }
+
+    normalized = runner._normalize_answer_record(answer, question)
+
+    assert normalized["candidates"][0]["source_url"] == "https://en.wikipedia.org/wiki/Zimbabwe_Cricket"
+    assert normalized["candidates"][1]["source_url"] == "https://www.zimcricket.org/"
+    assert normalized["answer"]["raw_structured_output"]["candidates"][0]["source_url"] == "https://en.wikipedia.org/wiki/Zimbabwe_Cricket"
 
 
 def test_normalize_answer_record_leaves_q3_as_no_signal_when_fallback_sources_are_low_trust_only():
@@ -1751,6 +1904,55 @@ def test_normalize_answer_record_recovers_minimal_q11_decision_owner_answer_from
     assert "Recovered 2 decision-owner candidates from trusted fallback sources." in normalized["terminal_summary"]
 
 
+def test_normalize_answer_record_prefers_operating_buyer_over_governance_chair_for_q11_fallback():
+    question = {
+        "question_id": "q11_decision_owner",
+        "question_text": "Who is the highest probability buyer at Zimbabwe Cricket given the current commercial and product context?",
+        "question_type": "decision_owner",
+        "depends_on": ["q3_leadership", "q6_launch_signal"],
+    }
+    answer = {
+        "question_id": "q11_decision_owner",
+        "question_type": "decision_owner",
+        "validation_state": "failed",
+        "signal_type": "DECISION_OWNER",
+        "notes": "",
+        "answer": {
+            "kind": "list",
+            "summary": None,
+            "value": None,
+            "raw_structured_output": None,
+        },
+        "timeout_salvage": {
+            "candidate_summary": "Leadership evidence was discovered but the model did not emit structured JSON.",
+            "candidate_evidence_urls": [
+                {"url": "https://www.heraldonline.co.zw/mukuhlani-re-elected-zc-chairman/"},
+                {"url": "https://en.wikipedia.org/wiki/Zimbabwe_Cricket"},
+            ],
+            "fallback_candidates": [
+                {
+                    "name": "Tavengwa Mukuhlani",
+                    "title": "Chairman",
+                    "source_url": {"url": "https://www.heraldonline.co.zw/mukuhlani-re-elected-zc-chairman/"},
+                    "source_type": "news",
+                },
+                {
+                    "name": "Wilfred Mukondiwa",
+                    "title": "Chief Executive Officer",
+                    "source_url": {"url": "https://en.wikipedia.org/wiki/Zimbabwe_Cricket"},
+                    "source_type": "wikipedia",
+                },
+            ],
+        },
+    }
+
+    normalized = runner._normalize_answer_record(answer, question)
+
+    assert normalized["primary_owner"]["name"] == "Wilfred Mukondiwa"
+    assert normalized["primary_owner"]["source_url"] == "https://en.wikipedia.org/wiki/Zimbabwe_Cricket"
+    assert normalized["supporting_candidates"][0]["name"] == "Tavengwa Mukuhlani"
+
+
 def test_normalize_answer_record_leaves_q11_as_no_signal_when_fallback_sources_are_low_trust_only():
     question = {
         "question_id": "q11_decision_owner",
@@ -1790,8 +1992,32 @@ def test_normalize_answer_record_leaves_q11_as_no_signal_when_fallback_sources_a
 
     assert normalized["terminal_state"] == "no_signal"
     assert normalized["validation_state"] == "no_signal"
-    assert normalized["primary_owner"] is None
-    assert "No trusted decision-owner candidates could be recovered from fallback sources." in normalized["terminal_summary"]
+
+
+def test_derive_dossier_quality_summary_ignores_entity_type_inapplicable_blockers():
+    merged_dossier = {
+        "questions": [
+            {
+                "question_id": "q1_foundation",
+                "terminal_state": "answered",
+                "question_first_answer": {"terminal_state": "answered"},
+            },
+            {
+                "question_id": "q8_explicit_rfp",
+                "terminal_state": "blocked",
+                "terminal_summary": "Question conditions were not met: entity type SPORT_FEDERATION is outside SPORT_CLUB, SPORT_LEAGUE.",
+                "question_first_answer": {
+                    "terminal_state": "blocked",
+                    "terminal_summary": "Question conditions were not met: entity type SPORT_FEDERATION is outside SPORT_CLUB, SPORT_LEAGUE.",
+                },
+            },
+        ]
+    }
+
+    summary = runner._derive_dossier_quality_summary(merged_dossier=merged_dossier, expected_question_count=2)
+
+    assert summary["quality_state"] == "complete"
+    assert summary["quality_blockers"] == []
 
 
 def test_publish_question_first_dossier_reports_rejects_checkpoint_inconsistent_candidate(tmp_path):

@@ -45,6 +45,9 @@ function _normalizeCandidate(value) {
   const title = String(value.title || value.role || '').trim();
   const organization = String(value.organization || value.company || '').trim();
   const linkedin_url = String(value.linkedin_url || value.linkedin || value.profile_url || '').trim();
+  const source_url = typeof value.source_url === 'object'
+    ? String(value.source_url?.url || value.source_url?.href || '').trim()
+    : String(value.source_url || '').trim();
   const email = String(value.email || '').trim();
   const bio = String(value.bio || value.summary || '').trim();
   const recent_post_summary = String(value.recent_post_summary || '').trim();
@@ -54,6 +57,7 @@ function _normalizeCandidate(value) {
   const candidate = { name };
   if (title) candidate.title = title;
   if (organization) candidate.organization = organization;
+  if (source_url) candidate.source_url = source_url;
   if (linkedin_url) candidate.linkedin_url = linkedin_url;
   if (email) candidate.email = email;
   if (bio) candidate.bio = bio;

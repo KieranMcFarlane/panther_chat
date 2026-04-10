@@ -292,6 +292,10 @@ def _load_question_first_run_artifact(artifact_path: Path | str) -> QuestionFirs
 def _coerce_text(value: Any) -> str:
     if value is None:
         return ""
+    if isinstance(value, dict):
+        nested = value.get("url") or value.get("href") or value.get("source_url")
+        if nested is not None:
+            return str(nested).strip()
     return str(value).strip()
 
 
@@ -349,6 +353,92 @@ def _trusted_people_fallback_candidates(timeout_salvage: Dict[str, Any]) -> List
             }
         )
     return trusted_candidates
+
+
+def _normalize_people_candidate(candidate: Any) -> Optional[Dict[str, Any]]:
+    if not isinstance(candidate, dict):
+        return None
+    normalized = dict(candidate)
+    name = _coerce_text(normalized.get("name") or normalized.get("full_name") or normalized.get("person"))
+    title = _coerce_text(normalized.get("title") or normalized.get("role"))
+    source_url = _coerce_text(normalized.get("source_url") or normalized.get("url") or normalized.get("href"))
+    if not name or not title:
+        return None
+    normalized["name"] = name
+    normalized["title"] = title
+    if source_url:
+        normalized["source_url"] = source_url
+    elif "source_url" in normalized:
+        normalized.pop("source_url", None)
+    for field in ("linkedin_url", "email", "bio", "recent_post_summary"):
+        value = _coerce_text(normalized.get(field))
+        if value:
+            normalized[field] = value
+        elif field in normalized:
+            normalized.pop(field, None)
+    if isinstance(normalized.get("recent_post_urls"), list):
+        normalized["recent_post_urls"] = [_coerce_text(item) for item in normalized["recent_post_urls"] if _coerce_text(item)]
+    return normalized
+
+
+def _normalize_people_candidate_list(candidates: Any) -> List[Dict[str, Any]]:
+    normalized: List[Dict[str, Any]] = []
+    seen: set[tuple[str, str, str]] = set()
+    if not isinstance(candidates, list):
+        return normalized
+    for candidate in candidates:
+        normalized_candidate = _normalize_people_candidate(candidate)
+        if not normalized_candidate:
+            continue
+        key = (
+            normalized_candidate["name"].lower(),
+            normalized_candidate["title"].lower(),
+            _coerce_text(normalized_candidate.get("source_url")).lower(),
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        normalized.append(normalized_candidate)
+    return normalized
+
+
+def _decision_owner_rank(candidate: Dict[str, str]) -> tuple[int, int, str]:
+    title = _coerce_text(candidate.get("title")).lower()
+    operating_priority = [
+        "chief commercial officer",
+        "commercial director",
+        "chief executive officer",
+        "ceo",
+        "managing director",
+        "director general",
+        "secretary general",
+        "head of partnerships",
+        "partnerships manager",
+        "marketing director",
+        "chief marketing officer",
+        "chief digital officer",
+        "technology director",
+    ]
+    governance_priority = [
+        "chairman",
+        "chair",
+        "president",
+        "vice chairman",
+        "vice president",
+        "secretary",
+        "treasurer",
+    ]
+    for index, role in enumerate(operating_priority):
+        if role in title:
+            return (0, index, title)
+    for index, role in enumerate(governance_priority):
+        if role in title:
+            return (1, index, title)
+    return (2, 999, title)
+
+
+def _rank_decision_owner_candidates(candidates: List[Dict[str, str]]) -> List[Dict[str, str]]:
+    return sorted(candidates, key=_decision_owner_rank)
 
 
 def _derive_terminal_state(*, question: Dict[str, Any], answer: Dict[str, Any], answer_payload: Dict[str, Any], raw_structured_output: Dict[str, Any], raw_answer_value: Any) -> str:
@@ -424,6 +514,17 @@ def _normalize_answer_record(answer: Dict[str, Any], question: Optional[Dict[str
     timeout_salvage = normalized.get("timeout_salvage") if isinstance(normalized.get("timeout_salvage"), dict) else {}
     timeout_salvage = dict(timeout_salvage)
     question_type = _coerce_text(normalized.get("question_type") or question_spec.get("question_type")).lower()
+    existing_candidates = _normalize_people_candidate_list(
+        normalized.get("candidates")
+        if isinstance(normalized.get("candidates"), list)
+        else raw_structured_output.get("candidates")
+        if isinstance(raw_structured_output.get("candidates"), list)
+        else answer_payload.get("value")
+        if isinstance(answer_payload.get("value"), list)
+        else []
+    )
+    existing_primary_owner = _normalize_people_candidate(normalized.get("primary_owner"))
+    existing_supporting_candidates = _normalize_people_candidate_list(normalized.get("supporting_candidates"))
     trusted_people_candidates = _trusted_people_fallback_candidates(timeout_salvage) if question_type in {"leadership", "decision_owner"} else []
     if question_type == "leadership" and trusted_people_candidates:
         normalized["validation_state"] = "partially_validated"
@@ -434,22 +535,44 @@ def _normalize_answer_record(answer: Dict[str, Any], question: Optional[Dict[str
         raw_structured_output["summary"] = answer_payload["summary"]
         raw_structured_output["validation_state"] = "partially_validated"
         raw_answer_value = trusted_people_candidates
+    elif question_type == "leadership" and existing_candidates:
+        normalized["candidates"] = existing_candidates
+        answer_payload["kind"] = "list"
+        answer_payload["value"] = existing_candidates
+        raw_structured_output["candidates"] = existing_candidates
+        if isinstance(raw_structured_output.get("answer"), list):
+            raw_structured_output["answer"] = existing_candidates
+        raw_answer_value = existing_candidates
     elif question_type == "decision_owner" and trusted_people_candidates:
-        primary_owner = trusted_people_candidates[0]
-        supporting_candidates = trusted_people_candidates[1:]
+        ranked_candidates = _rank_decision_owner_candidates(trusted_people_candidates)
+        primary_owner = ranked_candidates[0]
+        supporting_candidates = ranked_candidates[1:]
         normalized["validation_state"] = "partially_validated"
         normalized["primary_owner"] = primary_owner
         normalized["supporting_candidates"] = supporting_candidates
-        normalized["candidates"] = trusted_people_candidates
+        normalized["candidates"] = ranked_candidates
         answer_payload["kind"] = "list"
-        answer_payload["value"] = trusted_people_candidates
-        answer_payload["summary"] = f"Recovered {len(trusted_people_candidates)} decision-owner candidates from trusted fallback sources."
+        answer_payload["value"] = ranked_candidates
+        answer_payload["summary"] = f"Recovered {len(ranked_candidates)} decision-owner candidates from trusted fallback sources."
         raw_structured_output["answer"] = primary_owner.get("name")
         raw_structured_output["primary_owner"] = primary_owner
-        raw_structured_output["candidates"] = trusted_people_candidates
+        raw_structured_output["candidates"] = ranked_candidates
         raw_structured_output["summary"] = answer_payload["summary"]
         raw_structured_output["validation_state"] = "partially_validated"
-        raw_answer_value = trusted_people_candidates
+        raw_answer_value = ranked_candidates
+    elif question_type == "decision_owner" and (existing_primary_owner or existing_candidates):
+        ranked_candidates = _rank_decision_owner_candidates(existing_candidates or ([existing_primary_owner] if existing_primary_owner else []))
+        primary_owner = existing_primary_owner or (ranked_candidates[0] if ranked_candidates else None)
+        supporting_candidates = existing_supporting_candidates or ([candidate for candidate in ranked_candidates if not primary_owner or candidate != primary_owner])
+        if primary_owner:
+            normalized["primary_owner"] = primary_owner
+            raw_structured_output["primary_owner"] = primary_owner
+        normalized["supporting_candidates"] = supporting_candidates
+        normalized["candidates"] = ranked_candidates
+        answer_payload["kind"] = "list"
+        answer_payload["value"] = ranked_candidates
+        raw_structured_output["candidates"] = ranked_candidates
+        raw_answer_value = ranked_candidates
     elif question_type == "leadership" and _coerce_text(normalized.get("validation_state")).lower() == "failed":
         normalized["validation_state"] = "no_signal"
         answer_payload["summary"] = "No trusted leadership candidates could be recovered from fallback sources."
@@ -506,6 +629,23 @@ def _normalize_answer_record(answer: Dict[str, Any], question: Optional[Dict[str
         "terminal_state": terminal_state,
         "blocked_by": blocked_by,
     }
+    if question_type == "leadership":
+        normalized["candidates"] = _normalize_people_candidate_list(normalized.get("candidates"))
+        if isinstance(normalized["answer"].get("raw_structured_output"), dict):
+            normalized["answer"]["raw_structured_output"]["candidates"] = _normalize_people_candidate_list(
+                normalized["answer"]["raw_structured_output"].get("candidates")
+            )
+    if question_type == "decision_owner":
+        normalized["primary_owner"] = _normalize_people_candidate(normalized.get("primary_owner"))
+        normalized["supporting_candidates"] = _normalize_people_candidate_list(normalized.get("supporting_candidates"))
+        normalized["candidates"] = _normalize_people_candidate_list(normalized.get("candidates"))
+        if isinstance(normalized["answer"].get("raw_structured_output"), dict):
+            normalized["answer"]["raw_structured_output"]["primary_owner"] = _normalize_people_candidate(
+                normalized["answer"]["raw_structured_output"].get("primary_owner")
+            )
+            normalized["answer"]["raw_structured_output"]["candidates"] = _normalize_people_candidate_list(
+                normalized["answer"]["raw_structured_output"].get("candidates")
+            )
     return normalized
 
 
@@ -603,6 +743,8 @@ def _merge_question_first_run_patch(
         payload["question_first"].setdefault("promotion_candidates", artifact.promotion_candidates)
         payload["question_first"].setdefault("poi_graph", artifact.poi_graph)
         payload["question_first"].setdefault("questions_answered", len(artifact.answers))
+        if getattr(artifact, "repair_run", None):
+            payload["question_first"].setdefault("repair_run", getattr(artifact, "repair_run"))
 
     metadata.setdefault("question_first", {})
     if isinstance(metadata["question_first"], dict):
@@ -616,6 +758,8 @@ def _merge_question_first_run_patch(
         metadata["question_first"].setdefault("poi_graph", artifact.poi_graph)
         metadata["question_first"].setdefault("question_source_path", artifact.question_source_path)
         metadata["question_first"].setdefault("run_rollup", artifact.run_rollup)
+        if getattr(artifact, "repair_run", None):
+            metadata["question_first"].setdefault("repair_run", getattr(artifact, "repair_run"))
 
     payload["question_first_run"] = artifact.model_dump()
     return payload
@@ -628,6 +772,160 @@ def merge_question_first_run_artifact_into_dossier(
 ) -> Dict[str, Any]:
     artifact_model = artifact if isinstance(artifact, QuestionFirstRunArtifact) else QuestionFirstRunArtifact.model_validate(artifact)
     return _merge_question_first_run_patch(dossier_payload=dossier_payload, artifact=artifact_model)
+
+
+def _extract_question_first_repair(source_payload: Dict[str, Any]) -> Dict[str, Any]:
+    metadata = source_payload.get("metadata") if isinstance(source_payload.get("metadata"), dict) else {}
+    repair = metadata.get("question_first_repair") if isinstance(metadata.get("question_first_repair"), dict) else {}
+    if not repair:
+        return {}
+    repaired_question_ids = repair.get("repaired_question_ids")
+    if not isinstance(repaired_question_ids, list) or not repaired_question_ids:
+        repaired_question_ids = [repair.get("question_id")] if repair.get("question_id") else []
+    return {
+        "mode": str(repair.get("mode") or "full").strip().lower() or "full",
+        "question_id": str(repair.get("question_id") or "").strip() or None,
+        "repaired_question_ids": [str(value).strip() for value in repaired_question_ids if str(value or "").strip()],
+        "cascade_dependents": bool(repair.get("cascade_dependents", True)),
+        "repair_source_run_id": str(repair.get("repair_source_run_id") or "").strip() or None,
+        "repair_source_run_path": str(repair.get("repair_source_run_path") or "").strip() or None,
+        "repair_source_dossier_path": str(repair.get("repair_source_dossier_path") or "").strip() or None,
+    }
+
+
+def _is_no_signal_validation_state(state: str) -> bool:
+    return state in {"no_signal", "failed", "tool_call_missing", "exhausted"}
+
+
+def _is_provisional_validation_state(state: str) -> bool:
+    return state in {"pending", "provisional", "partially_validated", "deterministic_detected", "inferred"}
+
+
+def _dedupe_evidence_items(items: Iterable[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    deduped: List[Dict[str, Any]] = []
+    seen: set[str] = set()
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        key = json.dumps(item, sort_keys=True, default=str)
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(item)
+    return deduped
+
+
+def _recompute_run_rollup(question_specs: List[Dict[str, Any]], answer_records: List[Dict[str, Any]], artifact: QuestionFirstRunArtifact) -> Dict[str, Any]:
+    provisional_count = 0
+    validated_count = 0
+    no_signal_count = 0
+    for answer in answer_records:
+        state = _validation_state_for_answer(answer)
+        if state == "validated":
+            validated_count += 1
+        elif _is_no_signal_validation_state(state):
+            no_signal_count += 1
+        elif _is_provisional_validation_state(state):
+            provisional_count += 1
+    return {
+        **(artifact.run_rollup if isinstance(artifact.run_rollup, dict) else {}),
+        "questions_total": len(question_specs),
+        "questions_validated": validated_count,
+        "questions_no_signal": no_signal_count,
+        "questions_provisional": provisional_count,
+        "entity_id": (artifact.entity or {}).get("entity_id"),
+        "entity_name": (artifact.entity or {}).get("entity_name"),
+        "entity_type": (artifact.entity or {}).get("entity_type"),
+        "preset": artifact.preset,
+    }
+
+
+def _merge_repair_artifact(
+    *,
+    base_artifact: QuestionFirstRunArtifact,
+    repair_artifact: QuestionFirstRunArtifact,
+    repair_context: Dict[str, Any],
+) -> QuestionFirstRunArtifact:
+    base_question_index = {
+        str(question.get("question_id") or "").strip(): question
+        for question in (base_artifact.questions or [])
+        if isinstance(question, dict)
+    }
+    normalized_base_answers = [
+        _normalize_answer_record(answer, base_question_index.get(str(answer.get("question_id") or "").strip()))
+        for answer in (base_artifact.answers or [])
+        if isinstance(answer, dict)
+    ]
+    repaired_question_ids = repair_context.get("repaired_question_ids") or [
+        str(answer.get("question_id") or "").strip()
+        for answer in repair_artifact.answers
+        if isinstance(answer, dict) and str(answer.get("question_id") or "").strip()
+    ]
+    repaired_question_ids = [question_id for question_id in repaired_question_ids if question_id]
+
+    base_payload = base_artifact.model_dump()
+    base_payload["answer_records"] = normalized_base_answers
+    question_specs = [
+        question
+        for question in (base_payload.get("question_specs") or [])
+        if isinstance(question, dict)
+    ]
+    repair_question_specs = {
+        str(question.get("question_id") or "").strip(): question
+        for question in (repair_artifact.question_specs or [])
+        if isinstance(question, dict) and str(question.get("question_id") or "").strip()
+    }
+    merged_question_specs = [
+        repair_question_specs.get(str(question.get("question_id") or "").strip(), question)
+        for question in question_specs
+    ]
+
+    base_answers = {
+        str(answer.get("question_id") or "").strip(): answer
+        for answer in (base_payload.get("answer_records") or [])
+        if isinstance(answer, dict) and str(answer.get("question_id") or "").strip()
+    }
+    repair_answers = {
+        str(answer.get("question_id") or "").strip(): answer
+        for answer in (repair_artifact.answers or [])
+        if isinstance(answer, dict) and str(answer.get("question_id") or "").strip()
+    }
+    base_answers.update(repair_answers)
+    merged_answer_records = [
+        base_answers[str(question.get("question_id") or "").strip()]
+        for question in merged_question_specs
+        if str(question.get("question_id") or "").strip() in base_answers
+    ]
+
+    merged_question_timings = _normalize_question_timings(base_artifact.question_timings)
+    merged_question_timings.update(_normalize_question_timings(repair_artifact.question_timings))
+    merged_evidence_items = _dedupe_evidence_items([*(base_artifact.evidence_items or []), *(repair_artifact.evidence_items or [])])
+    merged_promotion_candidates = _dedupe_evidence_items([*(base_artifact.promotion_candidates or []), *(repair_artifact.promotion_candidates or [])])
+    merged_categories = _build_category_summary(merged_answer_records)
+
+    merged_payload = {
+        **base_payload,
+        "generated_at": repair_artifact.generated_at,
+        "status": repair_artifact.status,
+        "question_specs": merged_question_specs,
+        "answer_records": merged_answer_records,
+        "question_timings": merged_question_timings,
+        "evidence_items": merged_evidence_items,
+        "promotion_candidates": merged_promotion_candidates,
+        "categories": merged_categories,
+        "run_rollup": _recompute_run_rollup(merged_question_specs, merged_answer_records, base_artifact),
+        "repair_run": {
+            "mode": "question",
+            "repaired_question_ids": repaired_question_ids,
+            "question_id": repair_context.get("question_id"),
+            "cascade_dependents": bool(repair_context.get("cascade_dependents", True)),
+            "repair_timestamp": repair_artifact.generated_at,
+            "repair_source_run_id": repair_context.get("repair_source_run_id"),
+            "repair_source_run_path": repair_context.get("repair_source_run_path"),
+            "repair_artifact_run_id": repair_artifact.run_id,
+        },
+    }
+    return QuestionFirstRunArtifact.model_validate(merged_payload)
 
 
 def _artifact_output_path(output_dir: Path, source_payload: Dict[str, Any], artifact: QuestionFirstRunArtifact | None = None) -> Path:
@@ -714,6 +1012,55 @@ def _publish_rank(metrics: Dict[str, Any]) -> Tuple[int, int, int, float]:
         -_coerce_int(metrics.get("questions_no_signal")),
         generated_at,
     )
+
+
+def _derive_dossier_quality_summary(*, merged_dossier: Dict[str, Any], expected_question_count: int) -> Dict[str, Any]:
+    def _is_non_blocking_question(question: Dict[str, Any]) -> bool:
+        summary = _coerce_text(question.get("terminal_summary") or question.get("question_first_answer", {}).get("terminal_summary"))
+        return "entity type" in summary.lower() and "is outside" in summary.lower()
+
+    questions = merged_dossier.get("questions") if isinstance(merged_dossier.get("questions"), list) else []
+    normalized_questions = [question for question in questions if isinstance(question, dict)]
+    answered_questions = [
+        question
+        for question in normalized_questions
+        if _coerce_text(question.get("terminal_state") or question.get("question_first_answer", {}).get("terminal_state")).lower() == "answered"
+    ]
+    blocked_questions = [
+        question
+        for question in normalized_questions
+        if _coerce_text(question.get("terminal_state") or question.get("question_first_answer", {}).get("terminal_state")).lower() == "blocked"
+    ]
+    non_blocking_questions = [question for question in blocked_questions if _is_non_blocking_question(question)]
+    blocking_questions = [question for question in blocked_questions if not _is_non_blocking_question(question)]
+    satisfied_questions = answered_questions + non_blocking_questions
+    missing_count = max(expected_question_count - len(normalized_questions), 0)
+    quality_state = "complete"
+    quality_summary = "Complete dossier: the persisted artifact includes the full expected question pack."
+    quality_blockers: List[str] = []
+    if len(normalized_questions) < max(expected_question_count, 1):
+        quality_state = "partial"
+        quality_summary = f"Partial dossier: only {len(normalized_questions)} of {expected_question_count} expected questions are present."
+        quality_blockers.append(f"{missing_count} expected questions are still missing.")
+    elif blocking_questions:
+        quality_state = "blocked"
+        quality_summary = "Blocked dossier: the persisted artifact exists, but downstream questions are still unresolved."
+        quality_blockers.extend(
+            [
+                _coerce_text(question.get("terminal_summary") or question.get("question_first_answer", {}).get("terminal_summary"))
+                for question in blocking_questions
+                if _coerce_text(question.get("terminal_summary") or question.get("question_first_answer", {}).get("terminal_summary"))
+            ]
+        )
+    elif len(satisfied_questions) < max(expected_question_count, 1):
+        quality_state = "partial"
+        quality_summary = f"Partial dossier: only {len(satisfied_questions)} of {expected_question_count} expected questions reached answered or non-applicable state."
+        quality_blockers.append(f"{expected_question_count - len(satisfied_questions)} questions are present but still unresolved.")
+    return {
+        "quality_state": quality_state,
+        "quality_summary": quality_summary,
+        "quality_blockers": quality_blockers,
+    }
 
 
 def _expected_publish_question_count(*, source_payload: Dict[str, Any], artifact: QuestionFirstRunArtifact) -> int:
@@ -1596,6 +1943,7 @@ def merge_question_first_report_into_dossier(
 async def run_question_first_dossier_from_payload(
     *,
     source_payload: Dict[str, Any],
+    launch_source_payload: Optional[Dict[str, Any]] = None,
     output_dir: Optional[Path] = None,
     question_first_run_path: Optional[Path | str] = None,
     worktree_root: Optional[Path] = None,
@@ -1606,27 +1954,57 @@ async def run_question_first_dossier_from_payload(
     **_legacy_kwargs: Any,
 ) -> Dict[str, Any]:
     source = dict(source_payload or {})
+    launch_source = dict(launch_source_payload or source)
+    repair_context = _extract_question_first_repair(source)
     artifact_path_value = question_first_run_path or source.get("question_first_run_path")
     if artifact_path_value:
         artifact_path = Path(artifact_path_value)
     else:
         target_output_dir = Path(output_dir) if output_dir is not None else Path(tempfile.mkdtemp(prefix="question-first-run-"))
         artifact_path, state_path = await _launch_opencode_question_first_batch(
-            source_payload=source,
+            source_payload=launch_source,
             output_dir=target_output_dir,
-            preset=preset or source.get("preset") or source.get("question_source_label") or None,
+            preset=preset or launch_source.get("preset") or source.get("question_source_label") or None,
             worktree_root=worktree_root,
             opencode_timeout_ms=opencode_timeout_ms,
         )
         await _wait_for_question_first_run_completion(
             state_path,
             timeout_ms=_derive_question_first_batch_timeout_ms(
-                source_payload=source,
+                source_payload=launch_source,
                 opencode_timeout_ms=opencode_timeout_ms,
             ),
         )
 
     artifact = _load_question_first_run_artifact(artifact_path)
+    question_index = {
+        str(question.get("question_id") or "").strip(): question
+        for question in (artifact.questions or [])
+        if isinstance(question, dict)
+    }
+    normalized_answer_records = [
+        _normalize_answer_record(answer, question_index.get(str(answer.get("question_id") or "").strip()))
+        for answer in (artifact.answers or [])
+        if isinstance(answer, dict)
+    ]
+    artifact_payload = artifact.model_dump()
+    artifact_payload["answer_records"] = normalized_answer_records
+    artifact = QuestionFirstRunArtifact.model_validate(artifact_payload)
+    if repair_context.get("mode") == "question" and repair_context.get("repair_source_run_path"):
+        base_artifact = _load_question_first_run_artifact(repair_context["repair_source_run_path"])
+        artifact = _merge_repair_artifact(
+            base_artifact=base_artifact,
+            repair_artifact=artifact,
+            repair_context=repair_context,
+        )
+        artifact_payload = artifact.model_dump()
+    if artifact_path:
+        Path(artifact_path).write_text(json.dumps(artifact_payload, indent=2, default=str), encoding="utf-8")
+    if output_dir is not None:
+        Path(output_dir).mkdir(parents=True, exist_ok=True)
+        canonical_artifact_path = _artifact_output_path(Path(output_dir), source, artifact)
+        canonical_artifact_path.write_text(json.dumps(artifact_payload, indent=2, default=str), encoding="utf-8")
+
     merged = merge_question_first_run_artifact_into_dossier(dossier_payload=source, artifact=artifact)
     promotions = build_question_first_promotions(
         answers=artifact.answers,
@@ -1661,6 +2039,7 @@ async def run_question_first_dossier_from_payload(
         connections_graph_enrichment_enabled=connections_graph_enrichment_enabled,
         connections_graph_enrichment_status=connections_graph_enrichment_status,
     )
+    merged["question_first_run"] = artifact_payload
     merged["dossier_promotions"] = promotions["dossier_promotions"]
     merged["discovery_summary"] = promotions["discovery_summary"]
     merged["poi_graph"] = promotions["poi_graph"]
@@ -1674,6 +2053,11 @@ async def run_question_first_dossier_from_payload(
         merged["question_first"]["connections_graph_enrichment_enabled"] = connections_graph_enrichment_enabled
         merged["question_first"]["connections_graph_enrichment_status"] = connections_graph_enrichment_status
         merged["question_first"].update(durable_batch_metrics)
+    quality = _derive_dossier_quality_summary(
+        merged_dossier=merged,
+        expected_question_count=_expected_publish_question_count(source_payload=source, artifact=artifact),
+    )
+    merged.update(quality)
 
     if output_dir is not None:
       output_dir = Path(output_dir)
@@ -1695,6 +2079,24 @@ async def run_question_first_dossier_from_payload(
           "connections_graph_enrichment_status": connections_graph_enrichment_status,
           **durable_batch_metrics,
       }
+      published_payload = {
+          **merged,
+          **quality,
+          "generated_at": artifact.generated_at,
+          "entity_id": entity_id,
+          "entity_name": entity_name,
+          "tier": source.get("tier"),
+          "question_source_path": report["question_source_path"],
+          "questions_answered": len(artifact.answers),
+          "answers": artifact.answers,
+          "categories": artifact.categories,
+          "run_rollup": artifact.run_rollup,
+          "schema_version": artifact.schema_version,
+          "connections_graph_enrichment_enabled": connections_graph_enrichment_enabled,
+          "connections_graph_enrichment_status": connections_graph_enrichment_status,
+          "merged_dossier": merged,
+          **durable_batch_metrics,
+      }
       plain_text_report = _render_plain_text_report(
           {
               "entity_name": entity_name,
@@ -1708,7 +2110,7 @@ async def run_question_first_dossier_from_payload(
       publish_result = _publish_question_first_dossier_reports(
           output_dir=output_dir,
           entity_id=entity_id,
-          json_payload={**report, "merged_dossier": merged},
+          json_payload=published_payload,
           plain_text_report=plain_text_report,
           min_question_count=_expected_publish_question_count(source_payload=source, artifact=artifact),
       )

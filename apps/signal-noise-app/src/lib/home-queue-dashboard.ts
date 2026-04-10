@@ -42,6 +42,13 @@ type QueueEntityRecord = {
   generated_at: string | null
   active_question_id?: string | null
   run_phase?: string | null
+  publication_status?: string | null
+  publication_mode?: string | null
+  repair_state?: string | null
+  repair_retry_count?: number | null
+  repair_retry_budget?: number | null
+  next_repair_question_id?: string | null
+  reconciliation_state?: string | null
 }
 
 type RuntimeState = 'running' | 'stalled' | 'retryable' | 'resume_needed'
@@ -531,6 +538,13 @@ async function buildQueueState(
         generated_at: lifecycle.latest_activity_at || null,
         active_question_id: lifecycle.resume_from_question || phase,
         run_phase: lifecycle.stage,
+        publication_status: lifecycle.publication_status,
+        publication_mode: lifecycle.publication_mode,
+        repair_state: lifecycle.repair_state,
+        repair_retry_count: lifecycle.repair_retry_count,
+        repair_retry_budget: lifecycle.repair_retry_budget,
+        next_repair_question_id: lifecycle.next_repair_question_id,
+        reconciliation_state: lifecycle.reconciliation_state,
       })
       continue
     }
@@ -549,6 +563,13 @@ async function buildQueueState(
           generated_at: lifecycle?.latest_activity_at || null,
           active_question_id: phase,
           run_phase: run.status,
+          publication_status: lifecycle?.publication_status || null,
+          publication_mode: lifecycle?.publication_mode || null,
+          repair_state: lifecycle?.repair_state || null,
+          repair_retry_count: lifecycle?.repair_retry_count ?? null,
+          repair_retry_budget: lifecycle?.repair_retry_budget ?? null,
+          next_repair_question_id: lifecycle?.next_repair_question_id || null,
+          reconciliation_state: lifecycle?.reconciliation_state || null,
         }
       }
       continue
@@ -566,6 +587,13 @@ async function buildQueueState(
         summary: lifecycle?.summary || (clientReady ? 'Client-ready dossier promoted' : 'Run completed. Not promoted to a client dossier yet.'),
         generated_at: lifecycle?.latest_activity_at || run.completed_at || run.started_at || null,
         run_phase: run.status,
+        publication_status: lifecycle?.publication_status || null,
+        publication_mode: lifecycle?.publication_mode || null,
+        repair_state: lifecycle?.repair_state || null,
+        repair_retry_count: lifecycle?.repair_retry_count ?? null,
+        repair_retry_budget: lifecycle?.repair_retry_budget ?? null,
+        next_repair_question_id: lifecycle?.next_repair_question_id || null,
+        reconciliation_state: lifecycle?.reconciliation_state || null,
         sortTime: Number.isFinite(completedAt) ? completedAt : 0,
       })
     }
@@ -930,6 +958,13 @@ async function buildQueueStateFromDiagnostics(
         generated_at: lifecycle.latest_activity_at || null,
         active_question_id: state.active_question_id ? toText(state.active_question_id) : null,
         run_phase: runPhase,
+        publication_status: lifecycle.publication_status,
+        publication_mode: lifecycle.publication_mode,
+        repair_state: lifecycle.repair_state,
+        repair_retry_count: lifecycle.repair_retry_count,
+        repair_retry_budget: lifecycle.repair_retry_budget,
+        next_repair_question_id: lifecycle.next_repair_question_id,
+        reconciliation_state: lifecycle.reconciliation_state,
       })
       continue
     }
@@ -947,6 +982,13 @@ async function buildQueueStateFromDiagnostics(
         generated_at: lifecycle?.latest_activity_at || null,
         active_question_id: activeQuestionId,
         run_phase: runPhase,
+        publication_status: lifecycle?.publication_status || null,
+        publication_mode: lifecycle?.publication_mode || null,
+        repair_state: lifecycle?.repair_state || null,
+        repair_retry_count: lifecycle?.repair_retry_count ?? null,
+        repair_retry_budget: lifecycle?.repair_retry_budget ?? null,
+        next_repair_question_id: lifecycle?.next_repair_question_id || null,
+        reconciliation_state: lifecycle?.reconciliation_state || null,
       }
       continue
     }
@@ -963,6 +1005,13 @@ async function buildQueueStateFromDiagnostics(
         summary: lifecycle?.summary || (clientReady ? 'Client-ready dossier promoted' : 'Run completed. Not promoted to a client dossier yet.'),
         generated_at: lifecycle?.latest_activity_at || new Date(mtimeMs).toISOString(),
         run_phase: runPhase,
+        publication_status: lifecycle?.publication_status || null,
+        publication_mode: lifecycle?.publication_mode || null,
+        repair_state: lifecycle?.repair_state || null,
+        repair_retry_count: lifecycle?.repair_retry_count ?? null,
+        repair_retry_budget: lifecycle?.repair_retry_budget ?? null,
+        next_repair_question_id: lifecycle?.next_repair_question_id || null,
+        reconciliation_state: lifecycle?.reconciliation_state || null,
         sortTime: mtimeMs,
       })
     }

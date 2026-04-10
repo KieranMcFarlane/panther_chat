@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
+import { readFile } from 'node:fs/promises'
 import { readFileSync } from 'node:fs'
 
 const filterBarSource = readFileSync(new URL('../src/components/filters/FacetFilterBar.tsx', import.meta.url), 'utf8')
@@ -18,6 +19,7 @@ test('facet filter bar centralizes select rendering and chip actions', () => {
 test('entity browser uses the shared facet filter bar instead of inline select markup', () => {
   assert.match(entityBrowserSource, /import \{ FacetFilterBar, type FacetFilterField \} from ["']@\/components\/filters\/FacetFilterBar["']/)
   assert.match(entityBrowserSource, /const filterFields: FacetFilterField\[] = \[/)
+  assert.match(entityBrowserSource, /label: 'Role'/)
   assert.match(entityBrowserSource, /<FacetFilterBar/)
   assert.match(entityBrowserSource, /import \{ Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList \} from ["']@\/components\/ui\/command["']/)
   assert.match(entityBrowserSource, /<CommandInput/)
@@ -32,4 +34,11 @@ test('command component is available as the shadcn search primitive', () => {
   assert.match(commandSource, /CommandInput/)
   assert.match(commandSource, /CommandList/)
   assert.match(commandSource, /CommandItem/)
+})
+
+test('canonical opportunity taxonomy helper is available for shared normalization', async () => {
+  const helperSource = await readFile(new URL('../src/lib/opportunity-taxonomy.mjs', import.meta.url), 'utf8')
+  assert.match(helperSource, /function normalizeOpportunityTaxonomy\(/)
+  assert.match(helperSource, /function buildOpportunityFacetOptions\(/)
+  assert.match(helperSource, /function getOpportunityTaxonomyDisplayValues\(/)
 })

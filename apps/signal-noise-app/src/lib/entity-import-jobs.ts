@@ -38,6 +38,7 @@ export interface EntityPipelineActivitySummary {
 
 const entityImportBatchesMemoryStore = new Map<string, EntityImportBatchRecord>()
 const entityPipelineRunsMemoryStore = new Map<string, EntityPipelineRunRecord[]>()
+const TERMINAL_BATCH_STATUSES = new Set(['completed', 'failed'])
 
 function nowIso(): string {
   return new Date().toISOString()
@@ -109,6 +110,9 @@ export async function createEntityPipelineRuns(batch_id: string, rows: ImportedE
       country: row.country,
       website: row.website ?? null,
       league: row.league ?? null,
+      ...(typeof (row as ImportedEntityRow & { pipeline_metadata?: Record<string, unknown> }).pipeline_metadata === 'object'
+        ? (row as ImportedEntityRow & { pipeline_metadata?: Record<string, unknown> }).pipeline_metadata
+        : {}),
     },
   }))
 
@@ -205,6 +209,9 @@ export async function findActivePipelineRunByEntityId(entity_id: string) {
   const fallbackBatch = fallbackRun
     ? entityImportBatchesMemoryStore.get(fallbackRun.batch_id) ?? null
     : null
+  const fallbackBatchStillActive = fallbackBatch
+    ? !TERMINAL_BATCH_STATUSES.has(String(fallbackBatch.status || '').trim().toLowerCase())
+    : true
 
   try {
     const { data: runData } = await supabase
@@ -225,7 +232,9 @@ export async function findActivePipelineRunByEntityId(entity_id: string) {
 
       return {
         batch: (batchData ?? null) as EntityImportBatchRecord | null,
-        run: runData as EntityPipelineRunRecord,
+        run: batchData && TERMINAL_BATCH_STATUSES.has(String(batchData.status || '').trim().toLowerCase())
+          ? null
+          : runData as EntityPipelineRunRecord,
       }
     }
   } catch {
@@ -234,7 +243,7 @@ export async function findActivePipelineRunByEntityId(entity_id: string) {
 
   return {
     batch: fallbackBatch,
-    run: fallbackRun ?? null,
+    run: fallbackBatchStillActive ? (fallbackRun ?? null) : null,
   }
 }
 

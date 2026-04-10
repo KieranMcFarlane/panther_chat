@@ -258,6 +258,15 @@ function getQuestionTerminalState(question: Record<string, any>): string {
   ).toLowerCase()
 }
 
+function isNonBlockingQuestion(question: Record<string, any>): boolean {
+  const summary = toText(
+    question.terminal_summary
+      ?? question.question_first_answer?.terminal_summary
+      ?? question.answer?.summary,
+  ).toLowerCase()
+  return summary.includes('entity type') && summary.includes('is outside')
+}
+
 function deriveQuestionTerminalState(input: {
   questionSpec?: Record<string, any>
   answerRecord: Record<string, any>
@@ -532,8 +541,44 @@ export function normalizeQuestionFirstDossier(
   entity?: EntityLike | null,
 ) {
   const rawDossier = ensureObject(dossierPayload)
-  const dossier = rawDossier.merged_dossier && typeof rawDossier.merged_dossier === 'object'
+  const mergedDossier = rawDossier.merged_dossier && typeof rawDossier.merged_dossier === 'object'
     ? ensureObject(rawDossier.merged_dossier)
+    : null
+  const dossier = mergedDossier
+    ? {
+        ...rawDossier,
+        ...mergedDossier,
+        generated_at: toText(mergedDossier.generated_at) || toText(rawDossier.generated_at) || undefined,
+        run_id: toText(mergedDossier.run_id) || toText(rawDossier.run_id) || undefined,
+        publish_status: toText(mergedDossier.publish_status) || toText(rawDossier.publish_status) || undefined,
+        question_first: {
+          ...ensureObject(rawDossier.question_first),
+          ...ensureObject(mergedDossier.question_first),
+          generated_at: toText(ensureObject(mergedDossier.question_first).generated_at) || toText(ensureObject(rawDossier.question_first).generated_at) || undefined,
+          run_id: toText(ensureObject(mergedDossier.question_first).run_id) || toText(ensureObject(rawDossier.question_first).run_id) || toText(rawDossier.run_id) || undefined,
+          publish_status: toText(ensureObject(mergedDossier.question_first).publish_status) || toText(ensureObject(rawDossier.question_first).publish_status) || toText(rawDossier.publish_status) || undefined,
+        },
+        metadata: {
+          ...ensureObject(rawDossier.metadata),
+          ...ensureObject(mergedDossier.metadata),
+          question_first: {
+            ...ensureObject(ensureObject(rawDossier.metadata).question_first),
+            ...ensureObject(ensureObject(mergedDossier.metadata).question_first),
+            generated_at: toText(ensureObject(ensureObject(mergedDossier.metadata).question_first).generated_at)
+              || toText(ensureObject(ensureObject(rawDossier.metadata).question_first).generated_at)
+              || toText(rawDossier.generated_at)
+              || undefined,
+            run_id: toText(ensureObject(ensureObject(mergedDossier.metadata).question_first).run_id)
+              || toText(ensureObject(ensureObject(rawDossier.metadata).question_first).run_id)
+              || toText(rawDossier.run_id)
+              || undefined,
+            publish_status: toText(ensureObject(ensureObject(mergedDossier.metadata).question_first).publish_status)
+              || toText(ensureObject(ensureObject(rawDossier.metadata).question_first).publish_status)
+              || toText(rawDossier.publish_status)
+              || undefined,
+          },
+        },
+      }
     : rawDossier
   const entityUuid = resolveEntityUuid(entity ?? {
     id: dossier.entity_id || entityId,
@@ -553,14 +598,15 @@ export function normalizeQuestionFirstDossier(
   const failureReason = toText(questionFirst.failure_reason || metadataQuestionFirst.failure_reason || dossier.failure_reason)
   const failureCategory = toText(questionFirst.failure_category || metadataQuestionFirst.failure_category || dossier.failure_category)
   const retryable = Boolean(questionFirst.retryable ?? metadataQuestionFirst.retryable ?? dossier.retryable)
-  const checkpointConsistent = Boolean(
-    questionFirst.checkpoint_consistent ?? metadataQuestionFirst.checkpoint_consistent ?? true,
-  )
+  const rawCheckpointConsistent = questionFirst.checkpoint_consistent ?? metadataQuestionFirst.checkpoint_consistent ?? true
   const nonTerminalQuestionIds = Array.isArray(questionFirst.non_terminal_question_ids)
     ? questionFirst.non_terminal_question_ids.map((value: unknown) => toText(value)).filter(Boolean)
     : Array.isArray(metadataQuestionFirst.non_terminal_question_ids)
       ? metadataQuestionFirst.non_terminal_question_ids.map((value: unknown) => toText(value)).filter(Boolean)
       : []
+  const checkpointConsistent = failureCategory.toLowerCase() === 'checkpoint_inconsistency'
+    ? false
+    : (Boolean(rawCheckpointConsistent) && nonTerminalQuestionIds.length === 0)
   const publishStatus = toText(questionFirst.publish_status || metadataQuestionFirst.publish_status || dossier.publish_status)
   const runRollup = ensureObject(questionFirst.run_rollup).questions_total
     ? questionFirst.run_rollup
@@ -593,6 +639,9 @@ export function normalizeQuestionFirstDossier(
   const questionsPresent = questions.length > 0 ? questions : answers
   const answeredQuestions = questionsPresent.filter((question) => getQuestionTerminalState(ensureObject(question)) === 'answered')
   const blockedQuestions = questionsPresent.filter((question) => getQuestionTerminalState(ensureObject(question)) === 'blocked')
+  const nonBlockingQuestions = blockedQuestions.filter((question) => isNonBlockingQuestion(ensureObject(question)))
+  const blockingQuestions = blockedQuestions.filter((question) => !isNonBlockingQuestion(ensureObject(question)))
+  const satisfiedQuestionsCount = answeredQuestions.length + nonBlockingQuestions.length
   const questionIdsPresent = new Set(
     questionsPresent
       .map((question) => toText(ensureObject(question).question_id))
@@ -632,14 +681,20 @@ export function normalizeQuestionFirstDossier(
       `Only ${questionsPresent.length} of ${FULL_QUESTION_FIRST_PACK_SIZE} expected questions are present.`,
     ]
     qualitySummary = 'Partial dossier: this persisted artifact does not contain the full 15-question pack yet.'
-  } else if (requiredQuestionBlockers.length > 0 || blockedQuestions.length > 0) {
+  } else if (requiredQuestionBlockers.length > 0 || blockingQuestions.length > 0) {
     qualityState = 'blocked'
     qualityBlockers = requiredQuestionBlockers.length > 0
       ? requiredQuestionBlockers
-      : blockedQuestions
+      : blockingQuestions
           .map((question) => toText(ensureObject(question).terminal_summary))
           .filter(Boolean)
     qualitySummary = 'Blocked dossier: the persisted artifact exists, but downstream questions are still unresolved.'
+  } else if (satisfiedQuestionsCount < FULL_QUESTION_FIRST_PACK_SIZE) {
+    qualityState = 'partial'
+    qualityBlockers = [
+      `${FULL_QUESTION_FIRST_PACK_SIZE - satisfiedQuestionsCount} questions are present but still unresolved.`,
+    ]
+    qualitySummary = 'Partial dossier: some persisted questions are unresolved even after excluding non-applicable conditions.'
   } else {
     qualityState = 'complete'
     qualitySummary = 'Complete dossier: the full 15-question pack is present and persisted.'
@@ -682,6 +737,7 @@ export function normalizeQuestionFirstDossier(
     questions,
     question_timings: questionTimings,
     poi_graph: poiGraph,
+    question_first_run_path: toText(dossier.question_first_run_path || rawDossier.question_first_run_path) || null,
     quality_state: qualityState,
     quality_summary: qualitySummary,
     quality_blockers: qualityBlockers,
@@ -716,6 +772,7 @@ export function normalizeQuestionFirstDossier(
     validation_sample: false,
     expected_question_count: FULL_QUESTION_FIRST_PACK_SIZE,
     answered_question_count: answeredQuestions.length,
+    question_first_run_path: normalized.question_first_run_path,
   }
   normalized.tabs = buildDossierTabs(normalized, { entityType: normalized.entity_type })
   return normalized
@@ -776,9 +833,7 @@ function applyCheckpointMetadata(
   const failureReason = toText(checkpoint?.failure_reason || metadataQuestionFirst.failure_reason || dossier.failure_reason)
   const failureCategory = toText(checkpoint?.failure_category || metadataQuestionFirst.failure_category || dossier.failure_category)
   const retryable = Boolean(checkpoint?.retryable ?? metadataQuestionFirst.retryable ?? dossier.retryable)
-  const checkpointConsistent = Boolean(
-    checkpoint?.checkpoint_consistent ?? metadataQuestionFirst.checkpoint_consistent ?? dossier.checkpoint_consistent ?? true,
-  )
+  const rawCheckpointConsistent = checkpoint?.checkpoint_consistent ?? metadataQuestionFirst.checkpoint_consistent ?? dossier.checkpoint_consistent ?? true
   const nonTerminalQuestionIds = Array.isArray(checkpoint?.non_terminal_question_ids)
     ? checkpoint.non_terminal_question_ids.map((value: unknown) => toText(value)).filter(Boolean)
     : Array.isArray(metadataQuestionFirst.non_terminal_question_ids)
@@ -786,6 +841,9 @@ function applyCheckpointMetadata(
       : Array.isArray(dossier.non_terminal_question_ids)
         ? dossier.non_terminal_question_ids.map((value: unknown) => toText(value)).filter(Boolean)
         : []
+  const checkpointConsistent = failureCategory.toLowerCase() === 'checkpoint_inconsistency'
+    ? false
+    : (Boolean(rawCheckpointConsistent) && nonTerminalQuestionIds.length === 0)
   const lastCompletedQuestion = toText(checkpoint?.last_completed_question || metadataQuestionFirst.last_completed_question || dossier.last_completed_question)
   const resumeFromQuestion = toText(checkpoint?.resume_from_question || metadataQuestionFirst.resume_from_question || dossier.resume_from_question)
   const runId = toText(checkpoint?.run_id || metadataQuestionFirst.run_id || dossier.run_id)

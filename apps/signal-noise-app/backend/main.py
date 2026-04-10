@@ -586,6 +586,7 @@ class EntityPipelineRequest(BaseModel):
     priority_score: int = Field(default=85, ge=0, le=100, description="Priority score")
     batch_id: Optional[str] = Field(default=None, description="Optional import batch ID for live phase updates")
     run_objective: str = Field(default="rfp_web", description="Objective profile for objective-first runtime")
+    metadata: Dict[str, Any] = Field(default_factory=dict, description="Optional run metadata forwarded from the operator queue")
 
 
 class EntityPipelineResponse(BaseModel):
@@ -606,6 +607,9 @@ class EntityPipelineResponse(BaseModel):
     run_profile: str = "bounded_production"
     degraded_mode: bool = False
     dual_write_ok: Optional[bool] = None
+    publication_status: Optional[str] = None
+    publication_mode: Optional[str] = None
+    reconcile_required: Optional[bool] = None
     persistence_status: Dict[str, Any] = Field(default_factory=dict)
     step_artifact_counts: Dict[str, Any] = Field(default_factory=dict)
     step_failure_taxonomy: Dict[str, Any] = Field(default_factory=dict)
@@ -787,6 +791,148 @@ def build_timeout_fallback_dossier_response(request: EntityPipelineRequest) -> D
     )
 
 
+def enrich_persisted_dossier_payload(
+    dossier: Dict[str, Any],
+    *,
+    entity_id: str,
+    entity_name: str,
+    entity_type: str,
+) -> Dict[str, Any]:
+    payload = deepcopy(dossier if isinstance(dossier, dict) else {})
+    payload["entity_id"] = str(payload.get("entity_id") or entity_id)
+    payload["entity_name"] = str(payload.get("entity_name") or entity_name)
+    payload["entity_type"] = str(payload.get("entity_type") or entity_type)
+    payload.setdefault("generated_at", datetime.now().isoformat())
+
+    metadata = payload.get("metadata") if isinstance(payload.get("metadata"), dict) else {}
+    payload["metadata"] = metadata
+    metadata.setdefault("entity_id", payload["entity_id"])
+    metadata.setdefault("entity_name", payload["entity_name"])
+    metadata.setdefault("entity_type", payload["entity_type"])
+
+    question_first = payload.get("question_first") if isinstance(payload.get("question_first"), dict) else {}
+    if question_first:
+        payload["question_first"] = question_first
+        payload.setdefault("publish_status", question_first.get("publish_status") or "staged")
+        payload.setdefault("run_id", question_first.get("run_id") or "legacy-dossier-cache")
+        payload.setdefault("quality_state", question_first.get("quality_state"))
+        payload.setdefault("question_timings", question_first.get("question_timings"))
+        payload.setdefault("answers", question_first.get("answers"))
+    else:
+        payload.setdefault("publish_status", "staged")
+        payload.setdefault("run_id", "legacy-dossier-cache")
+
+    return payload
+
+
+def build_question_repair_source_dossier_response(request: EntityPipelineRequest) -> Optional[DossierResponse]:
+    metadata = request.metadata if isinstance(request.metadata, dict) else {}
+    if str(metadata.get("rerun_mode") or "").strip().lower() != "question":
+        return None
+
+    source_candidates = [
+        str(metadata.get("repair_source_dossier_path") or "").strip(),
+        str(metadata.get("repair_source_run_path") or "").strip(),
+    ]
+    source_path = next((candidate for candidate in source_candidates if candidate), "")
+    if not source_path:
+        source_path = resolve_question_repair_source_path(
+            entity_id=request.entity_id,
+            entity_name=request.entity_name,
+        )
+    if not source_path:
+        return None
+
+    try:
+        from question_first_repair import load_question_source_payload  # type: ignore
+    except ImportError:
+        from backend.question_first_repair import load_question_source_payload  # type: ignore
+
+    try:
+        dossier = load_question_source_payload(Path(source_path))
+    except Exception as error:  # noqa: BLE001
+        logger.warning("⚠️ Failed to load question-repair source dossier from %s: %s", source_path, error)
+        return None
+
+    persisted_dossier = enrich_persisted_dossier_payload(
+        dossier,
+        entity_id=request.entity_id,
+        entity_name=request.entity_name,
+        entity_type=request.entity_type,
+    )
+    generated_at = str(
+        persisted_dossier.get("generated_at")
+        or (persisted_dossier.get("metadata", {}) if isinstance(persisted_dossier.get("metadata"), dict) else {}).get("generated_at")
+        or datetime.now().isoformat()
+    )
+    tier = determine_dossier_tier_from_priority(request.priority_score)
+
+    return DossierResponse(
+        entity_id=request.entity_id,
+        entity_name=request.entity_name,
+        dossier_data=persisted_dossier,
+        metadata=build_dossier_response_metadata(
+            persisted_dossier,
+            tier=tier,
+            priority_score=request.priority_score,
+            total_cost_usd=0,
+        ),
+        cache_status="QUESTION_REPAIR_SOURCE",
+        generated_at=generated_at,
+    )
+
+
+def iter_question_repair_source_roots() -> List[Path]:
+    configured_roots = [
+        Path(candidate)
+        for candidate in os.getenv("QUESTION_REPAIR_SOURCE_ROOTS", "").split(os.pathsep)
+        if str(candidate or "").strip()
+    ]
+    if configured_roots:
+        return configured_roots
+
+    cwd = Path.cwd()
+    backend_dir = Path(__file__).resolve().parent
+    app_dir = backend_dir.parent
+    return [
+        app_dir / "tmp/question-first-diagnostics",
+        app_dir / "backend/data/question_first_dossiers",
+        app_dir / "backend/data/dossiers",
+        cwd / "tmp/question-first-diagnostics",
+        cwd / "backend/data/question_first_dossiers",
+        cwd / "backend/data/dossiers",
+        cwd / "apps/signal-noise-app/tmp/question-first-diagnostics",
+        cwd / "apps/signal-noise-app/backend/data/question_first_dossiers",
+        cwd / "apps/signal-noise-app/backend/data/dossiers",
+    ]
+
+
+def resolve_question_repair_source_path(*, entity_id: str, entity_name: str) -> str:
+    entity_slug = str(entity_id or "").strip().lower()
+    name_slug = str(entity_name or "").strip().lower().replace(" ", "-")
+    candidates: List[tuple[float, str]] = []
+    suffixes = ("_question_first_dossier.json", "_question_first_run_v2.json", "_question_first_run_v1.json")
+
+    for root in iter_question_repair_source_roots():
+        if not root.exists():
+            continue
+        for suffix in suffixes:
+            for path in root.rglob(f"*{suffix}"):
+                lowered = path.name.lower()
+                if entity_slug and entity_slug not in lowered and name_slug and name_slug not in lowered:
+                    continue
+                try:
+                    candidates.append((path.stat().st_mtime, str(path)))
+                except OSError:
+                    continue
+
+    if not candidates:
+        return ""
+
+    candidates.sort(key=lambda item: item[0], reverse=True)
+    return candidates[0][1]
+
+
 @app.post("/api/dossiers/generate", response_model=DossierResponse)
 async def generate_dossier(request: DossierRequest):
     """
@@ -964,16 +1110,23 @@ async def generate_dossier(request: DossierRequest):
             # Calculate expiration (7 days from now)
             expires_at = datetime.now() + timedelta(days=7)
 
+            persisted_dossier = enrich_persisted_dossier_payload(
+                dossier,
+                entity_id=request.entity_id,
+                entity_name=request.entity_name,
+                entity_type=request.entity_type,
+            )
+
             dossier_record = {
                 "entity_id": request.entity_id,
                 "entity_name": request.entity_name,
                 "entity_type": request.entity_type,
                 "priority_score": request.priority_score,
                 "tier": tier,
-                "dossier_data": dossier,
+                "dossier_data": persisted_dossier,
                 "sections": [],  # Maintained for backward compatibility
                 "generated_at": datetime.now().isoformat(),
-                "generation_time_seconds": dossier.get("generation_time_seconds", 0),
+                "generation_time_seconds": persisted_dossier.get("generation_time_seconds", 0),
                 "total_cost_usd": 0.0095,  # Approximate cost
                 "cache_status": "FRESH",
                 "expires_at": expires_at.isoformat(),
@@ -1150,17 +1303,31 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
         phase0_timeout_mode = (os.getenv("PIPELINE_PHASE0_TIMEOUT_MODE") or default_timeout_mode).strip().lower()
         callback_token = _pipeline_phase_callback_ctx.set(emit_phase_update)
         try:
+            repair_source_response = build_question_repair_source_dossier_response(request)
             try:
-                logger.warning("🚦 Pipeline boundary: dossier_generation_call:start")
-                if dossier_timeout_seconds > 0:
-                    dossier_response = await asyncio.wait_for(
-                        generate_dossier(dossier_generation_request),
-                        timeout=dossier_timeout_seconds,
+                if repair_source_response is not None:
+                    logger.warning("🚦 Pipeline boundary: dossier_generation_call:question_repair_source")
+                    await emit_phase_update(
+                        "dossier_generation",
+                        {
+                            "status": "completed",
+                            "reason": "question_repair_source_loaded",
+                            "generation_mode": "question_repair_source",
+                            "source_path": str(request.metadata.get("repair_source_dossier_path") or request.metadata.get("repair_source_run_path") or ""),
+                        },
                     )
+                    dossier_response = repair_source_response
                 else:
-                    dossier_response = await generate_dossier(dossier_generation_request)
-                logger.warning("🚦 Pipeline boundary: dossier_generation_call:complete")
-                logger.warning("🚦 Pipeline boundary: dossier_response_received")
+                    logger.warning("🚦 Pipeline boundary: dossier_generation_call:start")
+                    if dossier_timeout_seconds > 0:
+                        dossier_response = await asyncio.wait_for(
+                            generate_dossier(dossier_generation_request),
+                            timeout=dossier_timeout_seconds,
+                        )
+                    else:
+                        dossier_response = await generate_dossier(dossier_generation_request)
+                    logger.warning("🚦 Pipeline boundary: dossier_generation_call:complete")
+                    logger.warning("🚦 Pipeline boundary: dossier_response_received")
             except asyncio.TimeoutError:
                 logger.error(
                     "⏱️ Dossier generation timed out after %.2fs for entity %s",
@@ -1315,6 +1482,7 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             run_objective=request.run_objective,
             initial_dossier=dossier_response.dossier_data,
             phase_callback=emit_phase_update,
+            request_metadata=request.metadata,
         )
         logger.warning("🚦 Pipeline boundary: orchestrator_run:complete")
 

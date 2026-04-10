@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { searchEntityEmbeddings } from '@/lib/embeddings'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
+import { buildCanonicalEntitySearchText } from '@/lib/canonical-search'
+import { getCanonicalEntityKey } from '@/lib/entity-canonicalization'
+import { getCanonicalEntityRole } from '@/lib/entity-role-taxonomy'
+import { resolveEntityUuid } from '@/lib/entity-public-id'
 import { recordVectorSearchMetric } from '@/lib/vector-search-observability'
 
 export const dynamic = 'force-dynamic'
@@ -16,9 +20,13 @@ type FilterInput = {
 
 type Candidate = {
   id: string
+  uuid: string
   entity_id: string
   name: string
   type: string
+  role: string
+  canonical_key: string
+  searchText: string
   metadata: Record<string, any>
   lexical_score: number
   semantic_score: number
@@ -105,6 +113,49 @@ function lexicalScore(query: string, name: string, aliases: string[] = []): numb
   return 0
 }
 
+function searchTextBoost(query: string, searchText: string): number {
+  if (!query || !searchText) return 0
+  const normalizedQuery = normalize(query)
+  const normalizedSearchText = normalize(searchText)
+  if (!normalizedQuery || !normalizedSearchText) return 0
+
+  if (normalizedSearchText === normalizedQuery) return 22
+  if (normalizedSearchText.startsWith(normalizedQuery)) return 16
+  if (normalizedSearchText.includes(normalizedQuery)) return 12
+  return 0
+}
+
+function roleBoost(role: string, query: string, searchText: string): number {
+  const normalizedQuery = normalize(query)
+  const normalizedSearchText = normalize(searchText)
+  const normalizedRole = normalize(role)
+  if (!normalizedQuery || !normalizedRole) return 0
+
+  let boost = 0
+
+  if (normalizedSearchText.includes(normalizedRole)) {
+    boost += 6
+  }
+
+  if (normalizedRole === 'league' && /\bleague\b|\bdivision\b|\bconference\b|\bpremiership\b/.test(normalizedQuery)) {
+    boost += 14
+  }
+  if (normalizedRole === 'competition' && /\bcompetition\b|\bchampionship\b|\bcup\b|\btournament\b|\bseries\b|\bopen\b|\bgames\b|\bgrand prix\b/.test(normalizedQuery)) {
+    boost += 14
+  }
+  if (normalizedRole === 'federation' && /\bfederation\b|\bassociation\b|\bunion\b|\bgoverning\b|\brightsholder\b|\bcommittee\b/.test(normalizedQuery)) {
+    boost += 14
+  }
+  if (normalizedRole === 'club' && /\bclub\b|\bfc\b|\bcf\b/.test(normalizedQuery)) {
+    boost += 10
+  }
+  if (normalizedRole === 'team' && /\bteam\b|\bsquad\b/.test(normalizedQuery)) {
+    boost += 10
+  }
+
+  return boost
+}
+
 function facetBoost(metadata: Record<string, any>, filters: FilterInput): number {
   let boost = 0
   if (filters.sport && includesNormalized(String(metadata.sport || ''), filters.sport)) boost += 20
@@ -136,8 +187,13 @@ function passesFacetFilter(metadata: Record<string, any>, filters: FilterInput):
   return true
 }
 
-function buildKey(name: string, type: string): string {
-  return `${normalize(name)}::${normalize(type)}`
+function buildKey(candidate: Candidate): string {
+  return (
+    candidate.canonical_key ||
+    candidate.uuid ||
+    candidate.entity_id ||
+    `${normalize(candidate.name)}::${normalize(candidate.role || candidate.type)}`
+  )
 }
 
 function deriveIntent(query: string): QueryIntent {
@@ -213,24 +269,44 @@ async function loadLexicalCandidates(
   }
 
   return rows.map((row: any) => {
+    const properties = row.properties || {}
     const metadata = {
-      ...(row.properties || {}),
-      sport: row.sport || '',
-      league: row.league || '',
-      country: row.country || '',
-      entity_type: row.entity_type || '',
+      ...properties,
+      sport: row.sport || properties.sport || '',
+      league: row.league || properties.league || '',
+      country: row.country || properties.country || '',
+      entity_type: row.entity_type || properties.entity_type || '',
       aliases: Array.isArray(row.aliases) ? row.aliases : [],
     }
     const lexical_score = lexicalScore(query, row.name || '', metadata.aliases)
     const metadata_boost = facetBoost(metadata, filters)
     const semantic_score = 0
-    const final_score = lexical_score * 0.5 + semantic_score * 0.25 + metadata_boost * 0.25
+    const sourceEntity = {
+      id: row.id,
+      uuid: row.uuid,
+      entity_uuid: row.entity_uuid,
+      graph_id: row.graph_id,
+      neo4j_id: row.neo4j_id,
+      properties: {
+        ...metadata,
+        name: row.name || properties.name || '',
+        type: row.entity_type || properties.type || metadata.entity_type || 'unknown',
+      },
+    }
+    const role = getCanonicalEntityRole(sourceEntity)
+    const searchText = buildCanonicalEntitySearchText(sourceEntity)
+    const canonical_key = getCanonicalEntityKey(sourceEntity) || resolveEntityUuid(sourceEntity) || `${normalize(row.name || '')}::${normalize(role || row.entity_type || '')}`
+    const final_score = lexical_score * 0.4 + semantic_score * 0.3 + (metadata_boost + searchTextBoost(query, searchText) + roleBoost(role, query, searchText)) * 0.3
 
     return {
-      id: String(row.id),
-      entity_id: String(row.id),
+      id: String(resolveEntityUuid(sourceEntity) || row.id),
+      uuid: String(resolveEntityUuid(sourceEntity) || row.uuid || row.id),
+      entity_id: String(row.entity_id || row.id),
       name: row.name || String(row.id),
-      type: row.entity_type || 'unknown',
+      type: role !== 'Unknown' ? role : (row.entity_type || metadata.entity_type || 'unknown'),
+      role,
+      canonical_key,
+      searchText,
       metadata,
       lexical_score,
       semantic_score,
@@ -298,15 +374,34 @@ export async function POST(request: NextRequest) {
     const semanticCandidates: Candidate[] = semanticRows
       .map((row: any) => {
         const metadata = { ...(row.metadata || {}) }
+        const sourceEntity = {
+          id: row.id,
+          uuid: row.uuid,
+          entity_uuid: row.entity_uuid,
+          graph_id: row.graph_id,
+          neo4j_id: row.neo4j_id,
+          properties: {
+            ...metadata,
+            name: row.name || metadata.name || '',
+            type: row.entity_type || metadata.entity_type || metadata.type || 'unknown',
+          },
+        }
         const lexical_score = lexicalScore(query, row.name || '', Array.isArray(metadata.aliases) ? metadata.aliases : [])
         const semantic_score = Math.max(0, Math.min(100, Number(row.similarity || 0) * 100))
-        const metadata_boost = facetBoost(metadata, filters)
-        const final_score = lexical_score * 0.5 + semantic_score * 0.25 + metadata_boost * 0.25
+        const role = getCanonicalEntityRole(sourceEntity)
+        const searchText = buildCanonicalEntitySearchText(sourceEntity)
+        const metadata_boost = facetBoost(metadata, filters) + searchTextBoost(query, searchText) + roleBoost(role, query, searchText)
+        const final_score = lexical_score * 0.4 + semantic_score * 0.3 + metadata_boost * 0.3
+        const canonical_key = getCanonicalEntityKey(sourceEntity) || resolveEntityUuid(sourceEntity) || `${normalize(row.name || '')}::${normalize(role || row.entity_type || metadata.entity_type || '')}`
         return {
-          id: String(row.id),
+          id: String(resolveEntityUuid(sourceEntity) || row.id),
+          uuid: String(resolveEntityUuid(sourceEntity) || row.uuid || row.entity_id || row.id),
           entity_id: String(row.entity_id || row.id),
           name: row.name || String(row.entity_id || row.id),
-          type: row.entity_type || metadata.entity_type || 'unknown',
+          type: role !== 'Unknown' ? role : (row.entity_type || metadata.entity_type || 'unknown'),
+          role,
+          canonical_key,
+          searchText,
           metadata,
           lexical_score,
           semantic_score,
@@ -320,7 +415,7 @@ export async function POST(request: NextRequest) {
 
     const merged = new Map<string, Candidate>()
     for (const candidate of [...lexicalCandidates, ...semanticCandidates]) {
-      const key = buildKey(candidate.name, candidate.type)
+      const key = buildKey(candidate)
       const existing = merged.get(key)
       if (!existing) {
         merged.set(key, candidate)
@@ -330,6 +425,10 @@ export async function POST(request: NextRequest) {
         ...existing,
         id: existing.id || candidate.id,
         entity_id: existing.entity_id || candidate.entity_id,
+        uuid: existing.uuid || candidate.uuid,
+        canonical_key: existing.canonical_key || candidate.canonical_key,
+        role: existing.role || candidate.role,
+        searchText: existing.searchText || candidate.searchText,
         metadata: { ...candidate.metadata, ...existing.metadata },
         lexical_score: Math.max(existing.lexical_score, candidate.lexical_score),
         semantic_score: Math.max(existing.semantic_score, candidate.semantic_score),
@@ -379,6 +478,7 @@ export async function POST(request: NextRequest) {
       ...(note ? { note } : {}),
       results: ranked.map((candidate) => ({
         id: candidate.id,
+        uuid: candidate.uuid,
         entity_id: candidate.entity_id,
         name: candidate.name,
         type: candidate.type,

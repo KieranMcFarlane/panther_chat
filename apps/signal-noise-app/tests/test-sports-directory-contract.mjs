@@ -12,6 +12,7 @@ test('sports directory is derived from the canonical snapshot rather than mock r
   assert.match(sportsDirectorySource, /isLeagueEntity/)
   assert.match(sportsDirectorySource, /isTeamEntity/)
   assert.match(sportsDirectorySource, /normalizeLeagueAssociation/)
+  assert.match(sportsDirectorySource, /getCanonicalEntityRole/)
 })
 
 test('league and team routes are powered by canonical snapshot projections instead of mocks', () => {

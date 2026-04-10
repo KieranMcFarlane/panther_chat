@@ -1,4 +1,6 @@
 import { isPreferredFacetLabel, normalizeFacetKey, normalizeFacetLabel } from '@/lib/facet-normalization'
+import { getCanonicalEntityRole } from '@/lib/entity-role-taxonomy'
+import { shouldIncludeInSportsHierarchy } from '@/lib/sports-hierarchy-taxonomy.mjs'
 
 type CountMap = Record<string, number>
 
@@ -6,8 +8,10 @@ export type EntitiesTaxonomyResponse = {
   sports: string[]
   leagues: string[]
   countries: string[]
+  entityRoles: string[]
   entityClasses: string[]
   federationsRightsHolders: string[]
+  entityRolesBySport: Record<string, string[]>
   leaguesBySport: Record<string, string[]>
   metadata: {
     scanned_entities: number
@@ -18,6 +22,7 @@ export type EntitiesTaxonomyResponse = {
     sports: CountMap
     leagues: CountMap
     countries: CountMap
+    entityRoles: CountMap
     entityClasses: CountMap
     federationsRightsHolders: CountMap
   }
@@ -32,6 +37,7 @@ function createEmptyCounts(): EntitiesTaxonomyResponse['counts'] {
     sports: {},
     leagues: {},
     countries: {},
+    entityRoles: {},
     entityClasses: {},
     federationsRightsHolders: {},
   }
@@ -41,8 +47,9 @@ export function buildEntitiesTaxonomy(entities: any[], options: { source?: strin
   const sports = new Map<string, { label: string; count: number }>()
   const leagues = new Map<string, { label: string; count: number }>()
   const countries = new Map<string, { label: string; count: number }>()
-  const classes = new Map<string, { label: string; count: number }>()
+  const entityRoles = new Map<string, { label: string; count: number }>()
   const federationsRightsHolders = new Map<string, { label: string; count: number }>()
+  const entityRolesBySport = new Map<string, Map<string, { label: string; count: number }>>()
   const leaguesBySport = new Map<string, Map<string, { label: string; count: number }>>()
 
   const bumpFacet = (bucket: Map<string, { label: string; count: number }>, rawValue: unknown) => {
@@ -101,13 +108,22 @@ export function buildEntitiesTaxonomy(entities: any[], options: { source?: strin
     const entityName = normalizeFacetLabel(properties.name)
     const lowerClass = entityClass.toLowerCase()
     const lowerName = entityName.toLowerCase()
+    const inSportsHierarchy = shouldIncludeInSportsHierarchy(entity)
 
-    bumpFacet(sports, sport)
-    bumpFacet(leagues, league)
-    bumpFacet(countries, country)
-    bumpFacet(classes, entityClass)
+    const canonicalRole = getCanonicalEntityRole(entity)
+    bumpFacet(entityRoles, canonicalRole)
 
-    if (isNonEmpty(sport) && isNonEmpty(league)) {
+    if (inSportsHierarchy) {
+      bumpFacet(sports, sport)
+      bumpFacet(leagues, league)
+      bumpFacet(countries, country)
+    }
+
+    if (inSportsHierarchy && isNonEmpty(sport) && isNonEmpty(canonicalRole)) {
+      bumpNestedFacet(entityRolesBySport, sport, canonicalRole)
+    }
+
+    if (inSportsHierarchy && isNonEmpty(sport) && isNonEmpty(league)) {
       bumpNestedFacet(leaguesBySport, sport, league)
     }
 
@@ -149,8 +165,22 @@ export function buildEntitiesTaxonomy(entities: any[], options: { source?: strin
     sports: [...sports.values()].sort((a, b) => sortAsc(a.label, b.label)).map(({ label }) => label),
     leagues: [...leagues.values()].sort((a, b) => sortAsc(a.label, b.label)).map(({ label }) => label),
     countries: [...countries.values()].sort((a, b) => sortAsc(a.label, b.label)).map(({ label }) => label),
-    entityClasses: [...classes.values()].sort((a, b) => sortAsc(a.label, b.label)).map(({ label }) => label),
+    entityRoles: [...entityRoles.values()].sort((a, b) => sortAsc(a.label, b.label)).map(({ label }) => label),
+    entityClasses: [...entityRoles.values()].sort((a, b) => sortAsc(a.label, b.label)).map(({ label }) => label),
     federationsRightsHolders: [...federationsRightsHolders.values()].sort((a, b) => sortAsc(a.label, b.label)).map(({ label }) => label),
+    entityRolesBySport: Object.fromEntries(
+      [...entityRolesBySport.entries()]
+        .sort(([left], [right]) => sortAsc(sports.get(left)?.label || left, sports.get(right)?.label || right))
+        .map(([sportKey, roleBucket]) => {
+          const sportLabel = sports.get(sportKey)?.label || sportKey
+          return [
+            sportLabel,
+            [...roleBucket.values()]
+              .sort((left, right) => sortAsc(left.label, right.label))
+              .map(({ label }) => label),
+          ]
+        })
+    ),
     leaguesBySport: leagueMap,
     metadata: {
       scanned_entities: entities.length,
@@ -161,7 +191,8 @@ export function buildEntitiesTaxonomy(entities: any[], options: { source?: strin
       sports: toSortedCountMap(sports),
       leagues: toSortedCountMap(leagues),
       countries: toSortedCountMap(countries),
-      entityClasses: toSortedCountMap(classes),
+      entityRoles: toSortedCountMap(entityRoles),
+      entityClasses: toSortedCountMap(entityRoles),
       federationsRightsHolders: toSortedCountMap(federationsRightsHolders),
     },
   }
@@ -172,8 +203,10 @@ export function buildEmptyEntitiesTaxonomy(options: { source?: string } = {}): E
     sports: [],
     leagues: [],
     countries: [],
+    entityRoles: [],
     entityClasses: [],
     federationsRightsHolders: [],
+    entityRolesBySport: {},
     leaguesBySport: {},
     metadata: {
       scanned_entities: 0,

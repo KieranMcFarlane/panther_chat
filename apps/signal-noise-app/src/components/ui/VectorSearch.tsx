@@ -16,6 +16,8 @@ interface SearchResult {
 	name: string;
 	type: 'club' | 'sportsperson' | 'poi' | 'tender' | 'contact' | 'unknown';
 	score: number;
+	sport?: string;
+	country?: string;
 	metadata?: Record<string, any>;
 }
 

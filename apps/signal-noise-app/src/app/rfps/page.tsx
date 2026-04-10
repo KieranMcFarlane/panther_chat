@@ -5,12 +5,22 @@ import { useEffect, useMemo, useState } from 'react'
 import { AlertCircle, ArrowUpRight, Building2, Calendar, ExternalLink, Filter, Loader2, MapPin, Sparkles, Target } from 'lucide-react'
 
 import { AppPageBody, AppPageHeader, AppPageShell } from '@/components/layout/AppPageShell'
-import { FacetFilterBar } from '@/components/filters/FacetFilterBar'
+import { FacetFilterBar, type FacetFilterField } from '@/components/filters/FacetFilterBar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Command, CommandInput } from '@/components/ui/command'
+import { buildCanonicalOpportunitySearchText, matchesCanonicalSearch } from '@/lib/canonical-search'
 import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
+import { buildOpportunityFacetOptions, getOpportunityTaxonomyDisplayValues, normalizeOpportunityTaxonomy } from '@/lib/opportunity-taxonomy.mjs'
+
+type OpportunityTaxonomy = {
+  sport: string
+  competition: string
+  entity_role: string
+  opportunity_kind: string
+  theme: string
+}
 
 type FoundRfp = {
   id: string
@@ -25,6 +35,13 @@ type FoundRfp = {
   entity_name: string | null
   location?: string | null
   source?: string | null
+  sport?: string | null
+  competition?: string | null
+  entity_role?: string | null
+  opportunity_kind?: string | null
+  theme?: string | null
+  taxonomy?: OpportunityTaxonomy | null
+  metadata?: Record<string, unknown> | null
 }
 
 type ApiPayload = {
@@ -46,11 +63,44 @@ function fitTone(score: number | null): 'default' | 'secondary' | 'outline' {
   return 'secondary'
 }
 
+function normalizeRfp(opportunity: FoundRfp) {
+  const taxonomy = opportunity.taxonomy || normalizeOpportunityTaxonomy({
+    ...opportunity,
+    title: opportunity.title,
+    organization: opportunity.organization,
+    description: opportunity.description,
+    category: opportunity.category,
+    metadata: opportunity.metadata || undefined,
+  })
+  const displayTaxonomy = getOpportunityTaxonomyDisplayValues(taxonomy)
+
+  return {
+    ...opportunity,
+    taxonomy,
+    sport: displayTaxonomy.sport,
+    competition: displayTaxonomy.competition,
+    entity_role: displayTaxonomy.entity_role,
+    opportunity_kind: displayTaxonomy.opportunity_kind,
+    theme: displayTaxonomy.theme,
+  }
+}
+
+function getCanonicalContext(parts: Array<string | null | undefined>): string {
+  return parts
+    .map((part) => String(part || '').trim())
+    .filter(Boolean)
+    .join(' · ')
+}
+
 export default function RfpsPage() {
-  const [rfps, setRfps] = useState<FoundRfp[]>([])
+  const [rfps, setRfps] = useState<ReturnType<typeof normalizeRfp>[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [query, setQuery] = useState('')
+  const [sportFilter, setSportFilter] = useState('all')
+  const [competitionFilter, setCompetitionFilter] = useState('all')
+  const [entityRoleFilter, setEntityRoleFilter] = useState('all')
+  const [opportunityKindFilter, setOpportunityKindFilter] = useState('all')
 
   useEffect(() => {
     let ignore = false
@@ -65,7 +115,7 @@ export default function RfpsPage() {
         }
         const payload = (await response.json()) as ApiPayload
         if (!ignore) {
-          setRfps(Array.isArray(payload.opportunities) ? payload.opportunities : [])
+          setRfps(Array.isArray(payload.opportunities) ? payload.opportunities.map(normalizeRfp) : [])
         }
       } catch (err) {
         if (!ignore) {
@@ -88,15 +138,74 @@ export default function RfpsPage() {
 
   const filteredRfps = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase()
-    if (!normalizedQuery) return rfps
-    return rfps.filter((rfp) =>
-      [rfp.title, rfp.organization, rfp.description, rfp.category, rfp.entity_name]
-        .filter(Boolean)
-        .some((value) => String(value).toLowerCase().includes(normalizedQuery)),
-    )
-  }, [rfps, query])
+    let filtered = [...rfps]
+
+    if (normalizedQuery) {
+      filtered = filtered.filter((rfp) =>
+        matchesCanonicalSearch(normalizedQuery, buildCanonicalOpportunitySearchText(rfp)),
+      )
+    }
+
+    if (sportFilter !== 'all') filtered = filtered.filter((rfp) => rfp.sport === sportFilter)
+    if (competitionFilter !== 'all') filtered = filtered.filter((rfp) => rfp.competition === competitionFilter)
+    if (entityRoleFilter !== 'all') filtered = filtered.filter((rfp) => rfp.entity_role === entityRoleFilter)
+    if (opportunityKindFilter !== 'all') filtered = filtered.filter((rfp) => rfp.opportunity_kind === opportunityKindFilter)
+    return filtered
+  }, [competitionFilter, entityRoleFilter, opportunityKindFilter, query, rfps, sportFilter])
+
+  const taxonomyFacetOptions = useMemo(() => buildOpportunityFacetOptions(rfps), [rfps])
+  const filterFields: FacetFilterField[] = [
+    {
+      key: 'sport',
+      label: 'Sport',
+      value: sportFilter,
+      placeholder: 'Sport',
+      options: taxonomyFacetOptions.sport,
+      onValueChange: setSportFilter,
+    },
+    {
+      key: 'competition',
+      label: 'Competition',
+      value: competitionFilter,
+      placeholder: 'Competition',
+      options: taxonomyFacetOptions.competition,
+      onValueChange: setCompetitionFilter,
+    },
+    {
+      key: 'entity-role',
+      label: 'Role',
+      value: entityRoleFilter,
+      placeholder: 'Role',
+      options: taxonomyFacetOptions.entity_role,
+      onValueChange: setEntityRoleFilter,
+    },
+    {
+      key: 'opportunity-kind',
+      label: 'Opportunity Kind',
+      value: opportunityKindFilter,
+      placeholder: 'Opportunity Kind',
+      options: taxonomyFacetOptions.opportunity_kind,
+      onValueChange: setOpportunityKindFilter,
+    },
+  ]
+
+  const chips = [
+    query ? { key: 'query', label: `Search: ${query}`, onRemove: () => setQuery('') } : null,
+    sportFilter !== 'all' ? { key: 'sport', label: `Sport: ${sportFilter}`, onRemove: () => setSportFilter('all') } : null,
+    competitionFilter !== 'all' ? { key: 'competition', label: `Competition: ${competitionFilter}`, onRemove: () => setCompetitionFilter('all') } : null,
+    entityRoleFilter !== 'all' ? { key: 'entity-role', label: `Role: ${entityRoleFilter}`, onRemove: () => setEntityRoleFilter('all') } : null,
+    opportunityKindFilter !== 'all' ? { key: 'opportunity-kind', label: `Opportunity Kind: ${opportunityKindFilter}`, onRemove: () => setOpportunityKindFilter('all') } : null,
+  ].filter(Boolean) as { key: string; label: string; onRemove: () => void }[]
 
   const highFitCount = filteredRfps.filter((rfp) => Number(rfp.yellow_panther_fit || 0) >= 90).length
+
+  const resetFilters = () => {
+    setQuery('')
+    setSportFilter('all')
+    setCompetitionFilter('all')
+    setEntityRoleFilter('all')
+    setOpportunityKindFilter('all')
+  }
 
   return (
     <AppPageShell>
@@ -150,30 +259,36 @@ export default function RfpsPage() {
         </section>
 
         <FacetFilterBar
-          searchSlot={
+          searchSlot={(
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div className="space-y-1">
                 <h2 className="text-lg font-semibold text-foreground">Operator shortlist</h2>
-                <p className="text-sm text-muted-foreground">Search across the promoted RFP set without dropping into the raw tenders intake.</p>
+                <p className="text-sm text-muted-foreground">Search and filter the promoted RFP set without dropping into the raw intake feed.</p>
               </div>
               <Command className="w-full max-w-md overflow-visible rounded-md border border-input bg-background shadow-sm">
                 <CommandInput
                   value={query}
                   onValueChange={setQuery}
-                  placeholder="Search organizations, titles, or categories..."
+                  placeholder="Search club, sport, country, league..."
                   className="h-11 border-0 pl-2"
                 />
               </Command>
             </div>
-          }
-          fields={[]}
-          actions={query ? [{
-            key: 'clear-query',
-            label: 'Clear search',
-            onClick: () => setQuery(''),
+          )}
+          fields={filterFields}
+          actions={query || sportFilter !== 'all' || competitionFilter !== 'all' || entityRoleFilter !== 'all' || opportunityKindFilter !== 'all' ? [{
+            key: 'clear-filters',
+            label: 'Clear filters',
+            onClick: resetFilters,
             variant: 'outline',
           }] : []}
-          chips={query ? [{ key: 'query', label: `Search: ${query}`, onRemove: () => setQuery('') }] : []}
+          chips={chips}
+          status={(
+            <div className="flex items-center text-sm text-fm-light-grey">
+              <Filter className="mr-2 h-4 w-4" />
+              {filteredRfps.length} of {rfps.length}
+            </div>
+          )}
         />
 
         {loading ? (
@@ -199,7 +314,7 @@ export default function RfpsPage() {
               <Filter className="h-4 w-4 text-muted-foreground" />
               No promoted RFPs match the current filter
             </div>
-            <p className="mt-2 text-sm text-muted-foreground">Try clearing the search or inspect the raw tenders feed for unpromoted intake items.</p>
+            <p className="mt-2 text-sm text-muted-foreground">Try clearing the filters or inspect the raw tenders feed for unpromoted intake items.</p>
           </section>
         ) : (
           <section className="grid gap-4 xl:grid-cols-2">
@@ -221,6 +336,10 @@ export default function RfpsPage() {
                           </span>
                         ) : null}
                       </div>
+                      <div className="text-sm text-muted-foreground">
+                        <span className="font-medium text-foreground/80">Canonical context:</span>{' '}
+                        {getCanonicalContext([rfp.sport, rfp.competition, rfp.entity_role, rfp.theme])}
+                      </div>
                     </div>
                     <Badge variant={fitTone(rfp.yellow_panther_fit)}>
                       <Target className="mr-1 h-3.5 w-3.5" />
@@ -233,7 +352,11 @@ export default function RfpsPage() {
                     {rfp.description || 'No summary was stored for this promoted RFP.'}
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    {rfp.category ? <Badge variant="outline">{rfp.category}</Badge> : null}
+                    {rfp.sport ? <Badge variant="outline">{rfp.sport}</Badge> : null}
+                    {rfp.competition ? <Badge variant="outline">{rfp.competition}</Badge> : null}
+                    {rfp.entity_role ? <Badge variant="outline">{rfp.entity_role}</Badge> : null}
+                    {rfp.opportunity_kind ? <Badge variant="outline">{rfp.opportunity_kind}</Badge> : null}
+                    {rfp.theme ? <Badge variant="outline">{rfp.theme}</Badge> : null}
                     <Badge variant="outline">
                       <Calendar className="mr-1 h-3.5 w-3.5" />
                       {formatDeadline(rfp.deadline)}

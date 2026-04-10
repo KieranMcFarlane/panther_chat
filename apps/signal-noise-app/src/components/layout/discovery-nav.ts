@@ -11,7 +11,6 @@ export interface DiscoveryNavItem {
   icon: typeof Home
   label: string
   href: string
-  isSearch?: boolean
   hasSubmenu?: boolean
   badge?: {
     text: string
@@ -21,7 +20,7 @@ export interface DiscoveryNavItem {
 
 export const primaryNavItems: DiscoveryNavItem[] = [
   { icon: Home, label: 'Home', href: '/' },
-  { icon: Search, label: 'Search', href: '/search', isSearch: true },
+  { icon: Search, label: 'Search', href: '/search' },
   { icon: Database, label: 'Entities', href: '/entity-browser' },
   { icon: Briefcase, label: 'Opportunities', href: '/opportunities' },
   { icon: FileSearch, label: 'RFPs', href: '/rfps' },

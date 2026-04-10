@@ -98,6 +98,16 @@ def merge_pipeline_run_metadata(
     run_profile: Optional[str] = None,
     degraded_mode: Optional[bool] = None,
     persistence_status: Optional[Dict[str, Any]] = None,
+    publication_status: Optional[str] = None,
+    publication_mode: Optional[str] = None,
+    reconcile_required: Optional[bool] = None,
+    repair_state: Optional[str] = None,
+    repair_retry_count: Optional[int] = None,
+    repair_retry_budget: Optional[int] = None,
+    next_repair_question_id: Optional[str] = None,
+    reconciliation_state: Optional[str] = None,
+    reconciliation_payload: Optional[Dict[str, Any]] = None,
+    reconciliation_payloads: Optional[list[Dict[str, Any]]] = None,
     step_artifact_counts: Optional[Dict[str, Any]] = None,
     step_failure_taxonomy: Optional[Dict[str, Any]] = None,
     promoted_rfp_ids: Optional[list[str]] = None,
@@ -144,6 +154,26 @@ def merge_pipeline_run_metadata(
         metadata["degraded_mode"] = bool(degraded_mode)
     if persistence_status is not None:
         metadata["persistence"] = persistence_status
+    if publication_status is not None:
+        metadata["publication_status"] = publication_status
+    if publication_mode is not None:
+        metadata["publication_mode"] = publication_mode
+    if reconcile_required is not None:
+        metadata["reconcile_required"] = bool(reconcile_required)
+    if repair_state is not None:
+        metadata["repair_state"] = repair_state
+    if repair_retry_count is not None:
+        metadata["repair_retry_count"] = int(repair_retry_count)
+    if repair_retry_budget is not None:
+        metadata["repair_retry_budget"] = int(repair_retry_budget)
+    if next_repair_question_id is not None:
+        metadata["next_repair_question_id"] = next_repair_question_id
+    if reconciliation_state is not None:
+        metadata["reconciliation_state"] = reconciliation_state
+    if reconciliation_payload is not None:
+        metadata["reconciliation_payload"] = reconciliation_payload
+    if reconciliation_payloads is not None:
+        metadata["reconciliation_payloads"] = reconciliation_payloads
     if step_artifact_counts is not None:
         metadata["step_artifact_counts"] = step_artifact_counts
     if step_failure_taxonomy is not None:

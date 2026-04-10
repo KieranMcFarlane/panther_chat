@@ -11,7 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import VectorSearchDebounced from '@/components/ui/VectorSearch-debounced';
+import VectorSearch from '@/components/ui/VectorSearch-debounced';
 import PageTransition from './PageTransition';
 import { primaryNavItems } from './discovery-nav';
 import { OperationalStatusStrip } from './OperationalStatusStrip';
@@ -56,21 +56,26 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
     const isActive = pathname === item.href || (item.hasSubmenu && pathname.startsWith(item.href));
     const isPending = pendingHref === item.href;
 
+    if (item.href === '/search') {
+      return (
+        <VectorSearch
+          variant="navitem"
+          compact={!sidebarExpanded}
+          className={isActive ? 'bg-yellow-500 text-black font-body-medium' : ''}
+        />
+      );
+    }
+
     const handleClick = (e: React.MouseEvent) => {
       if (item.hasSubmenu) {
         e.preventDefault();
         setOpenSubmenu(isOpen ? null : item.label);
       }
-      if (item.isSearch) {
-        e.preventDefault();
-        setPendingHref(null);
-      } else {
-        setPendingHref(item.href);
-      }
+      setPendingHref(item.href);
     };
 
     const handlePrefetch = () => {
-      if (!item.isSearch && item.href) {
+      if (item.href) {
         router.prefetch(item.href);
       }
     };
@@ -105,39 +110,6 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
         )}
       </div>
     );
-
-    if (item.isSearch) {
-      if (!sidebarExpanded) {
-        return (
-          <Popover key={item.label} open={isOpen} onOpenChange={(open) => setOpenSubmenu(open ? item.label : null)}>
-            <PopoverTrigger
-              asChild
-              onMouseEnter={() => setOpenSubmenu(item.label)}
-              onMouseLeave={() => setOpenSubmenu(null)}
-            >
-              <div className="cursor-pointer">
-                <VectorSearchDebounced variant="navitem" className="w-full justify-center" />
-              </div>
-            </PopoverTrigger>
-            <PopoverContent
-              side="right"
-              className="w-auto p-2"
-              sideOffset={8}
-              onMouseEnter={() => setOpenSubmenu(item.label)}
-              onMouseLeave={() => setOpenSubmenu(null)}
-            >
-              <p className="text-sm font-medium">{item.label}</p>
-            </PopoverContent>
-          </Popover>
-        );
-      }
-
-      return (
-        <div key={item.href} className="w-full">
-          <VectorSearchDebounced variant="navitem" className="w-full" />
-        </div>
-      );
-    }
 
     if (!sidebarExpanded) {
       return (
@@ -200,23 +172,33 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
               <div className="flex items-center justify-between mb-6">
                 {sidebarExpanded ? (
                   <div className="flex items-center gap-3">
-                    <img src="/yellow-panther-logo.png" alt="Yellow Panther Logo" className="h-10 w-10 object-contain" />
+                    <img src="/yp_logo.svg" alt="Yellow Panther Logo" className="h-10 w-10 object-contain" />
                     <span className="text-white font-semibold">Reverse</span>
                   </div>
                 ) : (
-                  <div className="flex justify-center w-full">
-                    <img src="/yellow-panther-logo.png" alt="Yellow Panther Logo" className="h-10 w-10 object-contain" />
+                  <div className="flex w-full justify-center">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setSidebarExpanded(!sidebarExpanded)}
+                      className="text-white hover:bg-custom-border"
+                      aria-label={sidebarExpanded ? 'Collapse navigation' : 'Expand navigation'}
+                    >
+                      <Menu className="h-5 w-5" />
+                    </Button>
                   </div>
                 )}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setSidebarExpanded(!sidebarExpanded)}
-                  className="text-white hover:bg-custom-border"
-                  aria-label={sidebarExpanded ? 'Collapse navigation' : 'Expand navigation'}
-                >
-                  <Menu className="h-5 w-5" />
-                </Button>
+                {sidebarExpanded ? (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setSidebarExpanded(!sidebarExpanded)}
+                    className="text-white hover:bg-custom-border"
+                    aria-label={sidebarExpanded ? 'Collapse navigation' : 'Expand navigation'}
+                  >
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                ) : null}
               </div>
 
               <div className="flex-1 space-y-6">

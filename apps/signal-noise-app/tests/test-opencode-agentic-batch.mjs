@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 import {
+  _runQuestionRunnerWithTimeout,
   reconcileRunStateCheckpoint,
   normalizeRunStateForResume,
   buildMajorLeagueCricketPresetQuestions,
@@ -102,6 +103,163 @@ test('normalizeRunStateForResume converts stale running questions back to pendin
   assert.equal(normalized.resume_from_question, 'q3_leadership');
   assert.deepEqual(normalized.non_terminal_question_ids, ['q3_leadership', 'q7_procurement_signal']);
   assert.equal(normalized.checkpoint_consistent, false);
+});
+
+test('_runQuestionRunnerWithTimeout emits in-flight heartbeat callbacks while a question is still running', async () => {
+  const heartbeatEvents = [];
+  const startedAt = Date.now();
+  const result = await _runQuestionRunnerWithTimeout(
+    async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1200));
+      return {
+        structuredOutput: {
+          answer: 'done',
+          confidence: 0.9,
+          validation_state: 'validated',
+          sources: ['https://example.com'],
+        },
+        promptTrace: { status: 'ok' },
+        messageTrace: [],
+        cliResult: { code: 0, stdout: '', stderr: '' },
+      };
+    },
+    { question_id: 'q6_launch_signal', query: 'test query' },
+    {
+      heartbeatIntervalMs: 20,
+      onHeartbeat: async ({ executionQuestion, attempt }) => {
+        heartbeatEvents.push({
+          question_id: executionQuestion.question_id,
+          attempt,
+          elapsed_ms: Date.now() - startedAt,
+        });
+      },
+    },
+    2500,
+  );
+
+  assert.equal(result.timedOut, false);
+  assert.ok(heartbeatEvents.length >= 1);
+  assert.equal(heartbeatEvents[0].question_id, 'q6_launch_signal');
+});
+
+test('_runQuestionRunnerWithTimeout fails fast when the heartbeat callback stalls', async () => {
+  const previousAttempts = process.env.OPENCODE_TRANSIENT_RETRY_ATTEMPTS;
+  process.env.OPENCODE_TRANSIENT_RETRY_ATTEMPTS = '1';
+  try {
+    await assert.rejects(
+      () => _runQuestionRunnerWithTimeout(
+        async () => {
+          await new Promise((resolve) => setTimeout(resolve, 2600));
+          return {
+            structuredOutput: {
+              answer: 'done',
+              confidence: 0.9,
+              validation_state: 'validated',
+              sources: ['https://example.com'],
+            },
+            promptTrace: { status: 'ok' },
+            messageTrace: [],
+            cliResult: { code: 0, stdout: '', stderr: '' },
+          };
+        },
+        { question_id: 'q6_launch_signal', query: 'test query' },
+        {
+          heartbeatIntervalMs: 50,
+          watchdogTimeoutMs: 150,
+          onHeartbeat: async () => {
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+          },
+        },
+        5000,
+      ),
+      /runner heartbeat stalled/i,
+    );
+  } finally {
+    if (previousAttempts === undefined) {
+      delete process.env.OPENCODE_TRANSIENT_RETRY_ATTEMPTS;
+    } else {
+      process.env.OPENCODE_TRANSIENT_RETRY_ATTEMPTS = previousAttempts;
+    }
+  }
+});
+
+test('reconcileRunStateCheckpoint keeps checkpoint inconsistency flagged after downgrade to resume_needed', () => {
+  const runState = {
+    run_phase: 'resume_needed',
+    publish_status: 'draft',
+    failure_category: 'checkpoint_inconsistency',
+    questions: [
+      {
+        question_id: 'q1_foundation',
+        status: 'validated',
+        completed_at: '2026-04-09T14:00:00.000Z',
+        question_output: { answer: '1981' },
+      },
+      {
+        question_id: 'q3_leadership',
+        status: 'pending',
+        completed_at: null,
+        question_output: { validation_state: 'tool_call_missing' },
+      },
+    ],
+  };
+
+  const reconciled = reconcileRunStateCheckpoint(runState, { requiredQuestionCount: 2 });
+  assert.equal(reconciled.checkpoint_consistent, false);
+  assert.equal(reconciled.derived_run_phase, 'resume_needed');
+  assert.equal(reconciled.resume_from_question, 'q3_leadership');
+});
+
+test('reconcileRunStateCheckpoint treats running questions with terminal no_signal payloads as terminal', () => {
+  const timestamp = '2026-04-10T02:10:12.947Z';
+  const runState = {
+    run_phase: 'completed',
+    publish_status: 'staged',
+    questions: [
+      {
+        question_id: 'q9_news_signal',
+        status: 'running',
+        completed_at: null,
+        terminal_state: 'no_signal',
+        question_output: {
+          validation_state: 'tool_call_missing',
+          terminal_state: 'no_signal',
+          terminal_summary: 'No deterministic answer was produced for this question.',
+        },
+      },
+      {
+        question_id: 'q10_hiring_signal',
+        status: 'running',
+        completed_at: null,
+        terminal_state: 'no_signal',
+        question_output: {
+          validation_state: 'tool_call_missing',
+          terminal_state: 'no_signal',
+          terminal_summary: 'No deterministic answer was produced for this question.',
+        },
+      },
+      {
+        question_id: 'q11_decision_owner',
+        status: 'running',
+        completed_at: null,
+        terminal_state: 'no_signal',
+        question_output: {
+          validation_state: 'tool_call_missing',
+          terminal_state: 'no_signal',
+          terminal_summary: 'No deterministic answer was produced for this question.',
+        },
+      },
+    ],
+    last_completed_question: 'q15_outreach_strategy',
+    heartbeat_at: timestamp,
+  };
+
+  const reconciled = reconcileRunStateCheckpoint(runState, { requiredQuestionCount: 3 });
+
+  assert.equal(reconciled.all_terminal, true);
+  assert.equal(reconciled.checkpoint_consistent, true);
+  assert.equal(reconciled.derived_run_phase, 'completed');
+  assert.deepEqual(reconciled.non_terminal_question_ids, []);
 });
 
 test('buildOpenCodeConfig wires Z.AI and BrightData FastMCP for OpenCode', () => {
@@ -681,6 +839,30 @@ test('buildOpenCodeQuestionPrompt specializes decision-owner and related-pois ou
   assert.match(relatedPrompt, /3 to 5 people/i);
   assert.match(relatedPrompt, /candidates/i);
   assert.match(relatedPrompt, /ranked list/i);
+});
+
+test('buildOpenCodeQuestionPrompt specializes leadership discovery for federation-style executive roles', () => {
+  const leadershipPrompt = buildOpenCodeQuestionPrompt({
+    question_text: 'Who are the key leadership figures at Zimbabwe Cricket?',
+    question_type: 'leadership',
+    source_priority: ['wikipedia', 'official_site', 'linkedin_company_profile', 'linkedin_people_search', 'linkedin_person_profile', 'google_serp', 'news'],
+    hop_budget: 2,
+    query: '"Zimbabwe Cricket" leadership team',
+    search_strategy: {
+      search_queries: [
+        '"Zimbabwe Cricket" chairman',
+        '"Zimbabwe Cricket" chief executive officer',
+        '"Zimbabwe Cricket" secretary general',
+        '"Zimbabwe Cricket" board',
+        '"Zimbabwe Cricket" wikipedia',
+      ],
+    },
+  });
+
+  assert.match(leadershipPrompt, /Wikipedia and official board or leadership pages are valid grounding sources/i);
+  assert.match(leadershipPrompt, /chairman, chief executive officer, secretary general, president, or managing director/i);
+  assert.match(leadershipPrompt, /avoid generic company-page or unrelated profile results/i);
+  assert.match(leadershipPrompt, /candidates must be a broad typed pool of leadership and operating buyers/i);
 });
 
 test('runOpenCodeQuestionSourceBatch preserves decision-owner primary owner and supporting candidates', async () => {
@@ -2222,6 +2404,95 @@ test('runOpenCodeQuestionSourceBatch defaults to the phase_1_core subset from a 
   assert.equal(result.questions_total, 1);
 });
 
+test('runOpenCodeQuestionSourceBatch accepts partially validated upstream answers for validated_question conditions', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-partial-conditional-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const seenQuestionIds = [];
+  const seenDeterministicQuestionIds = [];
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'zimbabwe-cricket',
+        entity_name: 'Zimbabwe Cricket',
+        entity_type: 'SPORT_FEDERATION',
+        preset: 'zimbabwe-conditional-test',
+        question_source_label: 'zimbabwe-conditional-test',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        rollout_strategy: 'phased_core',
+        default_rollout_phase: 'phase_3_decision',
+        question_count: 2,
+        questions: [
+          {
+            question_id: 'q11_decision_owner',
+            question_type: 'decision_owner',
+            question: 'Who is the highest probability buyer at {entity}?',
+            query: '"Zimbabwe Cricket" commercial partnerships leadership',
+            hop_budget: 1,
+            execution_class: 'atomic_retrieval',
+            rollout_phase: 'phase_3_decision',
+            fallback_to_retrieval: true,
+            source_priority: ['wikipedia'],
+          },
+          {
+            question_id: 'q12_connections',
+            question_type: 'connections',
+            question: 'What is the best Yellow Panther path to the ranked buying candidates at {entity}?',
+            query: '"Zimbabwe Cricket" connections',
+            hop_budget: 0,
+            execution_class: 'deterministic_enrichment',
+            rollout_phase: 'phase_3_decision',
+            fallback_to_retrieval: false,
+            source_priority: ['connections_graph'],
+            conditional_on: [{ type: 'validated_question', question_id: 'q11_decision_owner' }],
+            depends_on: ['q11_decision_owner'],
+            deterministic_tools: ['connections_graph'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  const result = await runOpenCodeQuestionSourceBatch({
+    questionSourcePath: sourcePath,
+    outputDir,
+    questionRunner: async (question) => {
+      seenQuestionIds.push(question.question_id);
+      return {
+        structuredOutput: {
+          answer: 'Wilfred Mukondiwa',
+          confidence: 0.72,
+          sources: ['https://en.wikipedia.org/wiki/Zimbabwe_Cricket'],
+          validation_state: 'partially_validated',
+        },
+        promptTrace: { status: 'ok', has_structured_output: true },
+        messageTrace: [],
+        cliResult: { code: 0, stdout: '', stderr: '' },
+      };
+    },
+    deterministicToolRunner: async ({ question }) => {
+      seenDeterministicQuestionIds.push(question.question_id);
+      return {
+        answer: 'Cold path via Wilfred Mukondiwa',
+        confidence: 0.61,
+        sources: ['connections-graph'],
+        validation_state: 'deterministic_detected',
+      };
+    },
+  });
+
+  assert.deepEqual(seenQuestionIds, ['q11_decision_owner']);
+  assert.deepEqual(seenDeterministicQuestionIds, ['q12_connections']);
+  assert.equal(result.questions_total, 2);
+});
+
 test('runOpenCodeQuestionSourceBatch does not send deterministic or derived questions into retrieval when fallback is disabled', async () => {
   const outputDir = mkdtempSync(join(tmpdir(), 'opencode-execution-class-'));
   const sourcePath = join(outputDir, 'source.json');
@@ -3604,6 +3875,364 @@ test('runOpenCodeQuestionSourceBatch cleans noisy article-slug leadership candid
   }
 });
 
+test('runOpenCodeQuestionSourceBatch recovers q3 leadership candidates from trusted q1 grounding when live timeout evidence is noisy', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-leadership-grounding-seed-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'zimbabwe-cricket',
+        entity_name: 'Zimbabwe Cricket',
+        entity_type: 'SPORT_FEDERATION',
+        preset: 'zimbabwe-cricket-atomic-matrix',
+        question_source_label: 'zimbabwe-cricket-atomic-matrix',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        question_count: 2,
+        questions: [
+          {
+            question_id: 'q1_foundation',
+            question_type: 'foundation',
+            entity_id: 'zimbabwe-cricket',
+            entity_name: 'Zimbabwe Cricket',
+            entity_type: 'SPORT_FEDERATION',
+            question: 'What is the canonical identity and grounding profile for Zimbabwe Cricket?',
+            query: '"Zimbabwe Cricket" official website founded year',
+            hop_budget: 1,
+            source_priority: ['google_serp', 'official_site', 'wikipedia'],
+          },
+          {
+            question_id: 'q3_leadership',
+            question_type: 'leadership',
+            entity_id: 'zimbabwe-cricket',
+            entity_name: 'Zimbabwe Cricket',
+            entity_type: 'SPORT_FEDERATION',
+            question: 'Who are the key leadership figures at Zimbabwe Cricket?',
+            query: '"Zimbabwe Cricket" leadership team',
+            hop_budget: 1,
+            source_priority: ['wikipedia', 'official_site', 'linkedin_company_profile', 'linkedin_people_search', 'linkedin_person_profile', 'google_serp', 'news'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  const brightDataSearch = (body) => JSON.stringify({
+    type: 'tool_use',
+    part: { tool: 'brightData_search_engine', state: { output: body } },
+  });
+
+  let callCount = 0;
+  try {
+    const result = await runOpenCodeQuestionSourceBatch({
+      questionSourcePath: sourcePath,
+      outputDir,
+      questionRunner: async (question) => {
+        callCount += 1;
+        if (question.question_id === 'q1_foundation') {
+          return {
+            structuredOutput: {
+              answer: 'Zimbabwe Cricket was founded in 1981. Key officials include Chairman Tavengwa Mukuhlani and CEO Wilfred Mukondiwa.',
+              confidence: 0.95,
+              validation_state: 'validated',
+              sources: [{ url: 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket' }],
+              evidence_url: 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket',
+              signal_type: 'FOUNDATION',
+            },
+            promptTrace: { exit_code: 0, stdout_length: 100, stderr_length: 0, has_structured_output: true },
+            messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
+            cliResult: { code: 0, stdout: '', stderr: '' },
+          };
+        }
+        return {
+          structuredOutput: {},
+          promptTrace: { exit_code: 124, stdout_length: 500, stderr_length: 36, has_structured_output: false },
+          messageTrace: [{ role: 'assistant', completed: false, type: 'cli-run', has_structured_output: false, part_count: 1 }],
+          cliResult: {
+            code: 124,
+            stdout: brightDataSearch([
+              '3. https://zw.linkedin.com/in/kudzai-muza-a36bb679',
+              'Content preview: unrelated profile text',
+              '4. https://zw.linkedin.com/in/esther-chagadama-1861a91b0',
+              'Content preview: unrelated finance text',
+              'Source: brightdata_sdk',
+            ].join('\n')),
+            stderr: 'opencode run timed out after 300000ms',
+          },
+        };
+      },
+    });
+
+    const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+    const leadership = artifact.answer_records.find((item) => item.question_id === 'q3_leadership');
+    assert.equal(leadership.validation_state, 'partially_validated');
+    assert.equal(leadership.terminal_state, 'answered');
+    assert.match(leadership.terminal_summary, /Recovered 2 leadership candidates from trusted fallback sources/i);
+    assert.deepEqual(leadership.timeout_salvage.fallback_candidates, [
+      {
+        name: 'Tavengwa Mukuhlani',
+        title: 'Chairman',
+        source_url: 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket',
+        source_type: 'wikipedia',
+      },
+      {
+        name: 'Wilfred Mukondiwa',
+        title: 'Chief Executive Officer',
+        source_url: 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket',
+        source_type: 'wikipedia',
+      },
+    ]);
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
+test('runOpenCodeQuestionSourceBatch excludes non-person grounding phrases from q3 leadership fallback candidates', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-leadership-grounding-clean-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'zimbabwe-cricket',
+        entity_name: 'Zimbabwe Cricket',
+        entity_type: 'SPORT_FEDERATION',
+        preset: 'zimbabwe-cricket-atomic-matrix',
+        question_source_label: 'zimbabwe-cricket-atomic-matrix',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        question_count: 2,
+        questions: [
+          {
+            question_id: 'q1_foundation',
+            question_type: 'foundation',
+            entity_id: 'zimbabwe-cricket',
+            entity_name: 'Zimbabwe Cricket',
+            entity_type: 'SPORT_FEDERATION',
+            question: 'What is the canonical identity and grounding profile for Zimbabwe Cricket?',
+            query: '"Zimbabwe Cricket" official website founded year',
+            hop_budget: 1,
+            source_priority: ['google_serp', 'official_site', 'wikipedia'],
+          },
+          {
+            question_id: 'q3_leadership',
+            question_type: 'leadership',
+            entity_id: 'zimbabwe-cricket',
+            entity_name: 'Zimbabwe Cricket',
+            entity_type: 'SPORT_FEDERATION',
+            question: 'Who are the key leadership figures at Zimbabwe Cricket?',
+            query: '"Zimbabwe Cricket" leadership team',
+            hop_budget: 1,
+            source_priority: ['wikipedia', 'official_site', 'linkedin_company_profile', 'linkedin_people_search', 'linkedin_person_profile', 'google_serp', 'news'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  try {
+    const result = await runOpenCodeQuestionSourceBatch({
+      questionSourcePath: sourcePath,
+      outputDir,
+      questionRunner: async (question) => {
+        if (question.question_id === 'q1_foundation') {
+          return {
+            structuredOutput: {
+              answer: 'Zimbabwe Cricket (ZC) is the governing body for cricket in Zimbabwe. The abbreviation is ZC. Key personnel include Chairman Tavengwa Mukuhlani and CEO Wilfred Mukondiwa.',
+              confidence: 0.95,
+              validation_state: 'validated',
+              sources: ['https://en.wikipedia.org/wiki/Zimbabwe_Cricket'],
+              evidence_url: 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket',
+              signal_type: 'FOUNDATION',
+            },
+            promptTrace: { exit_code: 0, stdout_length: 100, stderr_length: 0, has_structured_output: true },
+            messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
+            cliResult: { code: 0, stdout: '', stderr: '' },
+          };
+        }
+        return {
+          structuredOutput: {},
+          promptTrace: { exit_code: 124, stdout_length: 0, stderr_length: 36, has_structured_output: false },
+          messageTrace: [],
+          cliResult: {
+            code: 124,
+            stdout: '',
+            stderr: 'question runner timed out after 300000ms',
+          },
+        };
+      },
+    });
+
+    const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+    const leadership = artifact.answer_records.find((item) => item.question_id === 'q3_leadership');
+    assert.equal(leadership.validation_state, 'partially_validated');
+    assert.deepEqual(leadership.timeout_salvage.fallback_candidates, [
+      {
+        name: 'Tavengwa Mukuhlani',
+        title: 'Chairman',
+        source_url: 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket',
+        source_type: 'wikipedia',
+      },
+      {
+        name: 'Wilfred Mukondiwa',
+        title: 'Chief Executive Officer',
+        source_url: 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket',
+        source_type: 'wikipedia',
+      },
+    ]);
+    assert.doesNotMatch(leadership.answer.answer, /The abbreviation is ZC/i);
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
+test('runOpenCodeQuestionSourceBatch stops q3 after a partially validated answered fallback instead of looping indefinitely', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-leadership-stop-on-partial-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'zimbabwe-cricket',
+        entity_name: 'Zimbabwe Cricket',
+        entity_type: 'SPORT_FEDERATION',
+        preset: 'zimbabwe-cricket-atomic-matrix',
+        question_source_label: 'zimbabwe-cricket-atomic-matrix',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        question_count: 2,
+        questions: [
+          {
+            question_id: 'q1_foundation',
+            question_type: 'foundation',
+            entity_id: 'zimbabwe-cricket',
+            entity_name: 'Zimbabwe Cricket',
+            entity_type: 'SPORT_FEDERATION',
+            question: 'What is the canonical identity and grounding profile for Zimbabwe Cricket?',
+            query: '"Zimbabwe Cricket" official website founded year',
+            hop_budget: 1,
+            source_priority: ['google_serp', 'official_site', 'wikipedia'],
+          },
+          {
+            question_id: 'q3_leadership',
+            question_type: 'leadership',
+            entity_id: 'zimbabwe-cricket',
+            entity_name: 'Zimbabwe Cricket',
+            entity_type: 'SPORT_FEDERATION',
+            question: 'Who are the key leadership figures at Zimbabwe Cricket?',
+            query: '"Zimbabwe Cricket" chairman chief executive officer secretary general board',
+            hop_budget: 3,
+            source_priority: ['wikipedia', 'official_site', 'linkedin_company_profile', 'linkedin_people_search', 'linkedin_person_profile', 'google_serp', 'news'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  let q3CallCount = 0;
+  try {
+    const result = await runOpenCodeQuestionSourceBatch({
+      questionSourcePath: sourcePath,
+      outputDir,
+      questionRunner: async (question) => {
+        if (question.question_id === 'q1_foundation') {
+          return {
+            structuredOutput: {
+              answer: 'Zimbabwe Cricket was founded in 1981. Key officials include Chairman Tavengwa Mukuhlani and CEO Wilfred Mukondiwa.',
+              confidence: 0.95,
+              validation_state: 'validated',
+              sources: ['https://en.wikipedia.org/wiki/Zimbabwe_Cricket'],
+              evidence_url: 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket',
+              signal_type: 'FOUNDATION',
+            },
+            promptTrace: { exit_code: 0, stdout_length: 100, stderr_length: 0, has_structured_output: true },
+            messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
+            cliResult: { code: 0, stdout: '', stderr: '' },
+          };
+        }
+        q3CallCount += 1;
+        return {
+          structuredOutput: {
+            answer: 'Tavengwa Mukuhlani - Chairman, Wilfred Mukondiwa - Chief Executive Officer',
+            candidates: [
+              {
+                name: 'Tavengwa Mukuhlani',
+                title: 'Chairman',
+                source_url: 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket',
+                source_type: 'wikipedia',
+              },
+              {
+                name: 'Wilfred Mukondiwa',
+                title: 'Chief Executive Officer',
+                source_url: 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket',
+                source_type: 'wikipedia',
+              },
+            ],
+            confidence: 0.78,
+            validation_state: 'partially_validated',
+            terminal_state: 'answered',
+            sources: ['https://en.wikipedia.org/wiki/Zimbabwe_Cricket'],
+          },
+          promptTrace: { exit_code: 0, stdout_length: 100, stderr_length: 0, has_structured_output: true },
+          messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
+          cliResult: { code: 0, stdout: '', stderr: '' },
+        };
+      },
+    });
+
+    const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+    const leadership = artifact.answer_records.find((item) => item.question_id === 'q3_leadership');
+    assert.equal(q3CallCount, 1);
+    assert.equal(leadership.validation_state, 'partially_validated');
+    assert.equal(leadership.terminal_state, 'answered');
+    assert.equal(leadership.answer.validation_state, 'partially_validated');
+    assert.match(leadership.answer.answer, /Tavengwa Mukuhlani/);
+    assert.equal(leadership.candidates[0].source_url, 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket');
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
 test('runOpenCodeQuestionSourceBatch recovers q11 decision-owner candidates from trusted timeout salvage evidence', async () => {
   const outputDir = mkdtempSync(join(tmpdir(), 'opencode-decision-owner-salvage-'));
   const sourcePath = join(outputDir, 'source.json');
@@ -3690,9 +4319,224 @@ test('runOpenCodeQuestionSourceBatch recovers q11 decision-owner candidates from
     assert.equal(decisionOwner.validation_state, 'partially_validated');
     assert.equal(decisionOwner.terminal_state, 'answered');
     assert.match(decisionOwner.terminal_summary, /Recovered 2 decision-owner candidates from trusted fallback sources/i);
-    assert.equal(decisionOwner.primary_owner.name, 'Tavengwa Mukuhlani');
-    assert.equal(decisionOwner.primary_owner.title, 'Chairman');
-    assert.equal(decisionOwner.supporting_candidates[0].name, 'Wilfred Mukondiwa');
+    assert.equal(decisionOwner.primary_owner.name, 'Wilfred Mukondiwa');
+    assert.equal(decisionOwner.primary_owner.title, 'Chief Executive Officer');
+    assert.equal(decisionOwner.primary_owner.source_url, 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket');
+    assert.equal(decisionOwner.supporting_candidates[0].name, 'Tavengwa Mukuhlani');
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
+test('runOpenCodeQuestionSourceBatch flattens object-shaped evidence sources for q11 timeout salvage', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-decision-owner-source-flatten-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'zimbabwe-cricket',
+        entity_name: 'Zimbabwe Cricket',
+        entity_type: 'SPORT_FEDERATION',
+        preset: 'zimbabwe-cricket-atomic-matrix',
+        question_source_label: 'zimbabwe-cricket-atomic-matrix',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        question_count: 1,
+        questions: [
+          {
+            question_id: 'q11_decision_owner',
+            question_type: 'decision_owner',
+            entity_id: 'zimbabwe-cricket',
+            entity_name: 'Zimbabwe Cricket',
+            entity_type: 'SPORT_FEDERATION',
+            question: 'Who is the highest probability buyer at Zimbabwe Cricket given the current commercial and product context?',
+            query: '"Zimbabwe Cricket" commercial partnerships leadership',
+            hop_budget: 1,
+            source_priority: ['wikipedia', 'official_site', 'linkedin_company_profile', 'linkedin_people_search', 'linkedin_person_profile', 'google_serp', 'news', 'linkedin_posts'],
+            foundation_seed_candidates: [
+              {
+                name: 'Tavengwa Mukuhlani',
+                title: 'Chairman',
+                source_url: { url: 'https://www.heraldonline.co.zw/mukuhlani-re-elected-zc-chairman/' },
+                source_type: 'news',
+              },
+              {
+                name: 'Wilfred Mukondiwa',
+                title: 'Chief Executive Officer',
+                source_url: { url: 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket' },
+                source_type: 'wikipedia',
+              },
+            ],
+            fallback_seed_urls: [
+              { url: 'https://www.heraldonline.co.zw/mukuhlani-re-elected-zc-chairman/' },
+              { url: 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket' },
+            ],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  try {
+    const result = await runOpenCodeQuestionSourceBatch({
+      questionSourcePath: sourcePath,
+      outputDir,
+      questionRunner: async () => ({
+        structuredOutput: {},
+        promptTrace: { status: 'timeout', exit_code: 124, stdout_length: 0, stderr_length: 0, has_structured_output: false, timeout_ms: 1000 },
+        messageTrace: [],
+        cliResult: {
+          code: 124,
+          stdout: '',
+          stderr: 'question runner timed out after 1000ms',
+        },
+      }),
+    });
+
+    const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+    const [decisionOwner] = artifact.answer_records;
+    assert.equal(decisionOwner.primary_owner.source_url, 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket');
+    assert.deepEqual(
+      decisionOwner.answer.raw_structured_output.candidates.map((candidate) => candidate.source_url).filter(Boolean).slice(0, 2),
+      [
+        'https://en.wikipedia.org/wiki/Zimbabwe_Cricket',
+        'https://www.heraldonline.co.zw/mukuhlani-re-elected-zc-chairman/',
+      ],
+    );
+  } finally {
+    if (previousZaiKey === undefined) {
+      delete process.env.ANTHROPIC_AUTH_TOKEN;
+    } else {
+      process.env.ANTHROPIC_AUTH_TOKEN = previousZaiKey;
+    }
+  }
+});
+
+test('runOpenCodeQuestionSourceBatch flattens object-shaped candidate URLs in final q3 and q11 payloads', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-structured-owner-flatten-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiKey = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.CHUTES_API_KEY;
+  process.env.ANTHROPIC_AUTH_TOKEN = 'test-zai-token';
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        schema_version: 'atomic_question_source_v1',
+        entity_id: 'zimbabwe-cricket',
+        entity_name: 'Zimbabwe Cricket',
+        entity_type: 'SPORT_FEDERATION',
+        preset: 'zimbabwe-cricket-atomic-matrix',
+        question_source_label: 'zimbabwe-cricket-atomic-matrix',
+        question_shape: 'atomic',
+        pack_role: 'discovery',
+        pack_stage: 'atomic_matrix',
+        question_count: 2,
+        questions: [
+          {
+            question_id: 'q3_leadership',
+            question_type: 'leadership',
+            entity_id: 'zimbabwe-cricket',
+            entity_name: 'Zimbabwe Cricket',
+            entity_type: 'SPORT_FEDERATION',
+            question: 'Who are the key leadership figures at Zimbabwe Cricket?',
+            query: '"Zimbabwe Cricket" leadership team',
+            hop_budget: 1,
+            source_priority: ['wikipedia', 'official_site'],
+          },
+          {
+            question_id: 'q11_decision_owner',
+            question_type: 'decision_owner',
+            entity_id: 'zimbabwe-cricket',
+            entity_name: 'Zimbabwe Cricket',
+            entity_type: 'SPORT_FEDERATION',
+            question: 'Who is the highest probability buyer at Zimbabwe Cricket?',
+            query: '"Zimbabwe Cricket" commercial partnerships leadership',
+            hop_budget: 1,
+            source_priority: ['wikipedia', 'official_site'],
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  let callIndex = 0;
+  try {
+    const result = await runOpenCodeQuestionSourceBatch({
+      questionSourcePath: sourcePath,
+      outputDir,
+      questionRunner: async () => {
+        callIndex += 1;
+        if (callIndex === 1) {
+          return {
+            structuredOutput: {
+              answer: 'Tavengwa Mukuhlani - Chairman, Wilfred Mukondiwa - Chief Executive Officer',
+              candidates: [
+                { name: 'Tavengwa Mukuhlani', title: 'Chairman', source_url: { url: 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket' } },
+                { name: 'Wilfred Mukondiwa', title: 'Chief Executive Officer', source_url: { href: 'https://www.zimcricket.org/' } },
+              ],
+              confidence: 0.78,
+              validation_state: 'partially_validated',
+              terminal_state: 'answered',
+              sources: ['https://en.wikipedia.org/wiki/Zimbabwe_Cricket'],
+            },
+            promptTrace: { exit_code: 0, stdout_length: 100, stderr_length: 0, has_structured_output: true },
+            messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
+            cliResult: { code: 0, stdout: '', stderr: '' },
+          };
+        }
+        return {
+          structuredOutput: {
+            answer: 'Wilfred Mukondiwa',
+            primary_owner: { name: 'Wilfred Mukondiwa', title: 'Chief Executive Officer', source_url: { url: 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket' } },
+            supporting_candidates: [
+              { name: 'Tavengwa Mukuhlani', title: 'Chairman', source_url: { href: 'https://www.zimcricket.org/' } },
+            ],
+            candidates: [
+              { name: 'Wilfred Mukondiwa', title: 'Chief Executive Officer', source_url: { url: 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket' } },
+              { name: 'Tavengwa Mukuhlani', title: 'Chairman', source_url: { href: 'https://www.zimcricket.org/' } },
+            ],
+            confidence: 0.82,
+            validation_state: 'partially_validated',
+            terminal_state: 'answered',
+            sources: ['https://en.wikipedia.org/wiki/Zimbabwe_Cricket'],
+          },
+          promptTrace: { exit_code: 0, stdout_length: 100, stderr_length: 0, has_structured_output: true },
+          messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
+          cliResult: { code: 0, stdout: '', stderr: '' },
+        };
+      },
+    });
+
+    const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+    const q3 = artifact.answer_records.find((item) => item.question_id === 'q3_leadership');
+    const q11 = artifact.answer_records.find((item) => item.question_id === 'q11_decision_owner');
+    assert.equal(q3.candidates[0].source_url, 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket');
+    assert.equal(q3.answer.raw_structured_output.candidates[1].source_url, 'https://www.zimcricket.org/');
+    assert.equal(q3.answer.raw_structured_output.answer[0].source_url, 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket');
+    assert.equal(q3.answer.raw_structured_output.summary.includes('[object Object]'), false);
+    assert.equal(q11.primary_owner.source_url, 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket');
+    assert.equal(q11.candidates[1].source_url, 'https://www.zimcricket.org/');
+    assert.equal(q11.answer.raw_structured_output.primary_owner.source_url, 'https://en.wikipedia.org/wiki/Zimbabwe_Cricket');
+    assert.equal(q11.answer.raw_structured_output.summary.includes('[object Object]'), false);
   } finally {
     if (previousZaiKey === undefined) {
       delete process.env.ANTHROPIC_AUTH_TOKEN;

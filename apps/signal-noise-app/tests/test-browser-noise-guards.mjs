@@ -97,6 +97,7 @@ test('entity browser loads the list and taxonomy through SWR hooks instead of di
   assert.match(entityBrowserClientPageSource, /const availableSports = taxonomy\?\.sports \?\? \[\]/)
   assert.match(entityBrowserClientPageSource, /const availableLeagues = taxonomy\?\.leagues \?\? \[\]/)
   assert.match(entityBrowserClientPageSource, /const availableCountries = taxonomy\?\.countries \?\? \[\]/)
+  assert.match(entityBrowserClientPageSource, /const availableEntityRoles = taxonomy\?\.entityRoles \?\? taxonomy\?\.entityClasses \?\? \[\]/)
   assert.doesNotMatch(entityBrowserClientPageSource, /fetchEntities\(/)
   assert.doesNotMatch(entityBrowserClientPageSource, /fetch\('\/api\/entities\/taxonomy'\)/)
 })

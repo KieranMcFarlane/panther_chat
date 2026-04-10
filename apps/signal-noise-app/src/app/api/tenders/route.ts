@@ -14,6 +14,7 @@ import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
 import digitalRfpOpportunities from '@/lib/digital-rfp-opportunities.js';
 import realRfpOpportunities from '@/lib/real-rfp-opportunities.js';
 import { linkOpportunityToCanonicalEntity } from '@/lib/opportunity-entity-linking';
+import { normalizeOpportunityTaxonomy } from '@/lib/opportunity-taxonomy.mjs';
 
 export const dynamic = 'force-dynamic';
 
@@ -131,6 +132,11 @@ function normalizeCuratedOpportunity(
     },
     canonicalEntities,
   )
+  const taxonomy = normalizeOpportunityTaxonomy({
+    ...opportunity,
+    canonical_entity_id: linked.canonical_entity_id,
+    canonical_entity_name: linked.canonical_entity_name,
+  }, canonicalEntities)
 
   const sourceUrl = opportunity.url || null
   const detectedAt = parseOpportunityDate(opportunity.posted || opportunity.published, nowIso)
@@ -160,6 +166,7 @@ function normalizeCuratedOpportunity(
     confidence: confidenceValue,
     urgency: null,
     yellow_panther_fit: opportunity.yellow_panther_fit || 80,
+    taxonomy,
     entity_id: linked.canonical_entity_id || null,
     entity_name:
       linked.canonical_entity_name || opportunity.organization || null,
@@ -174,6 +181,7 @@ function normalizeCuratedOpportunity(
       original_type: opportunity.type || null,
       original_priority_score: opportunity.priority_score || null,
       original_confidence: confidenceScore,
+      taxonomy,
     },
     link_status: sourceUrl ? 'unverified' : 'missing',
     link_verified_at: null,
@@ -792,38 +800,66 @@ async function handleGetOpportunities(searchParams: URLSearchParams) {
     const canonicalEntities = await getCanonicalEntitiesSnapshot().catch(() => [])
 
     // Map the rfp_opportunities fields to the expected format
-    const mappedOpportunities = (opportunities || []).map(opp => linkOpportunityToCanonicalEntity({
-      id: opp.id,
-      title: opp.title || 'Untitled Opportunity',
-      organization: opp.organization || 'Unknown Organization',
-      description: opp.description || null,
-      location: opp.location || 'United Kingdom',
-      value: opp.value || null,
-      currency: opp.currency || 'GBP',
-      deadline: opp.deadline || null,
-      posted_date: opp.posted_date || opp.created_at,
-      category: opp.category || 'General',
-      subcategory: opp.subcategory || null,
-      status: opp.status || 'active',
-      priority: opp.priority || 'medium',
-      priority_score: opp.priority_score || 5,
-      confidence_score: opp.confidence_score || 0.8,
-      confidence: Math.round((opp.confidence_score || 0.8) * 100),
-      yellow_panther_fit: opp.yellow_panther_fit || 75,
-      entity_id: opp.entity_id || null,
-      entity_name: opp.entity_name || opp.organization,
-      entity_type: opp.entity_type || 'organization',
-      source_url: opp.source_url || null,
-      tags: opp.tags || [],
-      keywords: opp.keywords || [],
-      requirements: opp.requirements || null,
-      award_criteria: opp.award_criteria || null,
-      evaluation_process: opp.evaluation_process || null,
-      contact_info: opp.contact_info || null,
-      detected_at: opp.created_at || new Date().toISOString(),
-      source: 'rfp_opportunities',
-      metadata: opp.metadata || {}
-    }, canonicalEntities));
+    const mappedOpportunities = (opportunities || []).map((opp) => {
+      const linkedOpportunity = linkOpportunityToCanonicalEntity(
+        {
+          id: opp.id,
+          title: opp.title || 'Untitled Opportunity',
+          organization: opp.organization || 'Unknown Organization',
+          description: opp.description || null,
+          location: opp.location || 'United Kingdom',
+          value: opp.value || null,
+          currency: opp.currency || 'GBP',
+          deadline: opp.deadline || null,
+          posted_date: opp.posted_date || opp.created_at,
+          category: opp.category || 'General',
+          subcategory: opp.subcategory || null,
+          status: opp.status || 'active',
+          priority: opp.priority || 'medium',
+          priority_score: opp.priority_score || 5,
+          confidence_score: opp.confidence_score || 0.8,
+          confidence: Math.round((opp.confidence_score || 0.8) * 100),
+          yellow_panther_fit: opp.yellow_panther_fit || 75,
+          entity_id: opp.entity_id || null,
+          entity_name: opp.entity_name || opp.organization,
+          entity_type: opp.entity_type || 'organization',
+          source_url: opp.source_url || null,
+          tags: opp.tags || [],
+          keywords: opp.keywords || [],
+          requirements: opp.requirements || null,
+          award_criteria: opp.award_criteria || null,
+          evaluation_process: opp.evaluation_process || null,
+          contact_info: opp.contact_info || null,
+          detected_at: opp.created_at || new Date().toISOString(),
+          source: 'rfp_opportunities',
+          metadata: opp.metadata || {},
+        },
+        canonicalEntities,
+      )
+
+      const taxonomy = normalizeOpportunityTaxonomy(
+        {
+          ...linkedOpportunity,
+          sport: opp.sport,
+          competition: opp.competition,
+          entity_role: opp.entity_role,
+          opportunity_kind: opp.opportunity_kind,
+          theme: opp.theme,
+          metadata: opp.metadata || {},
+        },
+        canonicalEntities,
+      )
+
+      return {
+        ...linkedOpportunity,
+        taxonomy,
+        sport: taxonomy.sport,
+        competition: taxonomy.competition,
+        entity_role: taxonomy.entity_role,
+        opportunity_kind: taxonomy.opportunity_kind,
+        theme: taxonomy.theme,
+      }
+    })
 
     // Filter out opportunities with broken or placeholder URLs
     const filteredOpportunities = mappedOpportunities.filter(opp => {

@@ -21,6 +21,7 @@ from pipeline_run_metadata import (
     derive_monitoring_summary,
     merge_pipeline_run_metadata,
 )
+from repair_root_selector import select_repair_root_question_id
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
@@ -54,6 +55,8 @@ POLL_INTERVAL_SECONDS = int(os.getenv("ENTITY_PIPELINE_WORKER_POLL_SECONDS", "10
 STALE_MINUTES = int(os.getenv("ENTITY_PIPELINE_STALE_MINUTES", "30"))
 LEASE_SECONDS = int(os.getenv("ENTITY_PIPELINE_LEASE_SECONDS", "90"))
 MAX_RUN_ATTEMPTS = int(os.getenv("ENTITY_PIPELINE_MAX_RUN_ATTEMPTS", "2"))
+DEFAULT_REPAIR_RETRY_BUDGET = int(os.getenv("ENTITY_PIPELINE_REPAIR_RETRY_BUDGET", "3"))
+TERMINAL_BATCH_STATUSES = {"completed", "failed"}
 
 
 def should_process_in_process(queue_mode: Optional[str]) -> bool:
@@ -198,6 +201,8 @@ def build_run_start_metadata(
     metadata["lease_expires_at"] = (datetime.fromisoformat(now_iso) + timedelta(seconds=lease_seconds)).isoformat()
     metadata["retryable"] = False
     metadata["retry_state"] = "running"
+    if str(metadata.get("rerun_mode") or "").strip().lower() == "question" or str(metadata.get("repair_state") or "").strip().lower() == "queued":
+        metadata["repair_state"] = "repairing"
     return metadata
 
 
@@ -265,6 +270,7 @@ class EntityPipelineWorker:
         self.worker_id = f"{socket.gethostname()}-{os.getpid()}"
         self.lease_seconds = LEASE_SECONDS
         self.max_run_attempts = MAX_RUN_ATTEMPTS
+        self.repair_retry_budget = DEFAULT_REPAIR_RETRY_BUDGET
 
     def _now_iso(self) -> str:
         return datetime.now(timezone.utc).isoformat()
@@ -349,13 +355,20 @@ class EntityPipelineWorker:
         return response.data or []
 
     def call_pipeline(self, run: Dict[str, Any], batch_id: str) -> Dict[str, Any]:
+        batch_metadata = self._get_batch_metadata(batch_id) if hasattr(self, "supabase") else {}
+        run_metadata = run.get("metadata") if isinstance(run.get("metadata"), dict) else {}
+        merged_metadata = {
+            **(batch_metadata if isinstance(batch_metadata, dict) else {}),
+            **(run_metadata if isinstance(run_metadata, dict) else {}),
+        }
         payload = {
             "batch_id": batch_id,
             "entity_id": run["entity_id"],
             "entity_name": run["entity_name"],
-            "entity_type": str((run.get("metadata") or {}).get("entity_type") or "CLUB"),
-            "priority_score": int((run.get("metadata") or {}).get("priority_score") or 50),
-            "run_objective": str((run.get("metadata") or {}).get("run_objective") or "dossier_core"),
+            "entity_type": str(merged_metadata.get("entity_type") or "CLUB"),
+            "priority_score": int(merged_metadata.get("priority_score") or 50),
+            "run_objective": str(merged_metadata.get("run_objective") or "dossier_core"),
+            "metadata": merged_metadata,
         }
         started_at = time.perf_counter()
         logger.info(
@@ -519,6 +532,17 @@ class EntityPipelineWorker:
         metadata = ((response.data or [{}])[0]).get("metadata")
         return metadata if isinstance(metadata, dict) else {}
 
+    def _get_batch_record(self, batch_id: str) -> Dict[str, Any]:
+        response = (
+            self.supabase.table("entity_import_batches")
+            .select("*")
+            .eq("id", batch_id)
+            .limit(1)
+            .execute()
+        )
+        batch = (response.data or [{}])[0]
+        return batch if isinstance(batch, dict) else {}
+
     def _classify_error(self, error: Exception) -> tuple[bool, str]:
         if isinstance(error, TimeoutError):
             return True, "timeout"
@@ -532,11 +556,227 @@ class EntityPipelineWorker:
             return False, "value_error"
         return False, error.__class__.__name__.lower()
 
+    def find_active_repair_run(self, entity_id: str, question_id: str, cascade_dependents: bool = True) -> Optional[Dict[str, Any]]:
+        response = (
+            self.supabase.table("entity_pipeline_runs")
+            .select("*")
+            .eq("entity_id", entity_id)
+            .limit(20)
+            .execute()
+        )
+        runs = response.data or []
+        for run in runs:
+            if str(run.get("status") or "").strip().lower() not in {"queued", "claiming", "running", "retrying"}:
+                continue
+            batch_id = str(run.get("batch_id") or "").strip()
+            if batch_id:
+                batch = self._get_batch_record(batch_id)
+                batch_status = str(batch.get("status") or "").strip().lower()
+                if batch_status in TERMINAL_BATCH_STATUSES:
+                    continue
+            metadata = run.get("metadata") if isinstance(run.get("metadata"), dict) else {}
+            if (
+                str(metadata.get("rerun_mode") or "full").strip().lower() == "question"
+                and str(metadata.get("question_id") or "").strip() == question_id
+                and bool(metadata.get("cascade_dependents", True)) == bool(cascade_dependents)
+            ):
+                return run
+        return None
+
+    def _build_follow_on_repair_batch_id(self) -> str:
+        return f"import_{int(time.time() * 1000)}"
+
+    def _queue_follow_on_repair(
+        self,
+        *,
+        run: Dict[str, Any],
+        latest_metadata: Dict[str, Any],
+        result: Dict[str, Any],
+        question_id: str,
+        repair_retry_count: int,
+        repair_retry_budget: int,
+        reconcile_required: bool,
+    ) -> Optional[str]:
+        existing = self.find_active_repair_run(run["entity_id"], question_id, cascade_dependents=True)
+        if existing:
+            return str(existing.get("batch_id") or "").strip() or None
+
+        now_iso = self._now_iso()
+        follow_on_batch_id = self._build_follow_on_repair_batch_id()
+        queue_mode = str(latest_metadata.get("queue_mode") or QUEUE_MODE)
+        batch_row = {
+            "id": follow_on_batch_id,
+            "filename": None,
+            "status": "queued",
+            "total_rows": 1,
+            "created_rows": 0,
+            "updated_rows": 0,
+            "invalid_rows": 0,
+            "started_at": now_iso,
+            "completed_at": None,
+            "metadata": {
+                "source": "self_healing_repair",
+                "queue_mode": queue_mode,
+                "rerun_mode": "question",
+                "question_id": question_id,
+                "cascade_dependents": True,
+                "repair_queue_source": "auto",
+                "repair_state": "queued",
+                "repair_retry_count": repair_retry_count,
+                "repair_retry_budget": repair_retry_budget,
+                "next_repair_question_id": question_id,
+                "reconciliation_state": "pending" if reconcile_required else "healthy",
+                "rerun_reason": f"Auto-repair queued for {question_id}",
+            },
+        }
+        run_row = {
+            "id": f"{follow_on_batch_id}_{run['entity_id']}",
+            "batch_id": follow_on_batch_id,
+            "entity_id": run["entity_id"],
+            "entity_name": run["entity_name"],
+            "status": "queued",
+            "phase": "entity_registration",
+            "error_message": None,
+            "dossier_id": run["entity_id"],
+            "sales_readiness": result.get("sales_readiness"),
+            "rfp_count": int(result.get("rfp_count") or 0),
+            "started_at": now_iso,
+            "completed_at": None,
+            "metadata": {
+                "source": "self_healing_repair",
+                "priority_score": latest_metadata.get("priority_score"),
+                "entity_type": latest_metadata.get("entity_type"),
+                "sport": latest_metadata.get("sport"),
+                "country": latest_metadata.get("country"),
+                "website": latest_metadata.get("website"),
+                "league": latest_metadata.get("league"),
+                "queue_mode": queue_mode,
+                "rerun_mode": "question",
+                "question_id": question_id,
+                "cascade_dependents": True,
+                "repair_source_run_id": run.get("id") or f"{run.get('batch_id')}_{run['entity_id']}",
+                "repair_queue_source": "auto",
+                "repair_state": "queued",
+                "repair_retry_count": repair_retry_count,
+                "repair_retry_budget": repair_retry_budget,
+                "next_repair_question_id": question_id,
+                "reconciliation_state": "pending" if reconcile_required else "healthy",
+            },
+        }
+        self._safe_execute(
+            lambda: self.supabase.table("entity_import_batches").insert(batch_row).execute(),
+            context=f"insert self-healing batch {follow_on_batch_id}",
+        )
+        self._safe_execute(
+            lambda: self.supabase.table("entity_pipeline_runs").insert([run_row]).execute(),
+            context=f"insert self-healing run {follow_on_batch_id}/{run['entity_id']}",
+        )
+        return follow_on_batch_id
+
+    def _derive_follow_on_repair_metadata(
+        self,
+        *,
+        run: Dict[str, Any],
+        latest_metadata: Dict[str, Any],
+        result: Dict[str, Any],
+        publication_succeeded: bool,
+        reconcile_required: bool,
+    ) -> Dict[str, Any]:
+        repair_retry_budget = int(
+            latest_metadata.get("repair_retry_budget")
+            or getattr(self, "repair_retry_budget", DEFAULT_REPAIR_RETRY_BUDGET)
+            or DEFAULT_REPAIR_RETRY_BUDGET
+        )
+        repair_retry_count = int(latest_metadata.get("repair_retry_count", 0) or 0)
+        exhausted_question_ids = {
+            str(question_id).strip()
+            for question_id in (latest_metadata.get("exhausted_question_ids") or [])
+            if str(question_id or "").strip()
+        }
+        base_metadata = {
+            "repair_state": "idle",
+            "repair_retry_count": repair_retry_count,
+            "repair_retry_budget": repair_retry_budget,
+            "next_repair_question_id": None,
+            "reconciliation_state": "pending" if reconcile_required else "healthy",
+            "repair_queue_source": latest_metadata.get("repair_queue_source") or None,
+            "exhausted_question_ids": sorted(exhausted_question_ids),
+        }
+        if not publication_succeeded:
+            return base_metadata
+
+        dossier = ((result.get("artifacts") or {}).get("dossier") or {})
+        quality_state = str(dossier.get("quality_state") or "").strip().lower()
+        if quality_state not in {"blocked", "partial"}:
+            return base_metadata
+
+        questions = dossier.get("questions") if isinstance(dossier.get("questions"), list) else []
+        next_repair_question_id = select_repair_root_question_id(
+            source_payload={"questions": questions},
+            canonical_dossier=dossier if isinstance(dossier, dict) else {"questions": questions},
+            exhausted_question_ids=exhausted_question_ids,
+        )
+        if not next_repair_question_id:
+            return {
+                **base_metadata,
+                "repair_state": "exhausted",
+            }
+
+        next_retry_count = repair_retry_count + 1
+        if next_retry_count > repair_retry_budget:
+            exhausted_question_ids.add(next_repair_question_id)
+            return {
+                **base_metadata,
+                "repair_state": "exhausted",
+                "exhausted_question_ids": sorted(exhausted_question_ids),
+            }
+
+        queued_batch_id = self._queue_follow_on_repair(
+            run=run,
+            latest_metadata=latest_metadata,
+            result=result,
+            question_id=next_repair_question_id,
+            repair_retry_count=next_retry_count,
+            repair_retry_budget=repair_retry_budget,
+            reconcile_required=reconcile_required,
+        )
+        return {
+            **base_metadata,
+            "repair_state": "queued",
+            "repair_retry_count": next_retry_count,
+            "next_repair_question_id": next_repair_question_id,
+            "repair_queue_source": "auto",
+            "queued_repair_batch_id": queued_batch_id,
+        }
+
     def process_batch(self, batch: Dict[str, Any]) -> None:
         batch_id = batch["id"]
         max_run_attempts = getattr(self, "max_run_attempts", MAX_RUN_ATTEMPTS)
         lease_seconds = getattr(self, "lease_seconds", LEASE_SECONDS)
         worker_id = getattr(self, "worker_id", "worker-test")
+        claimed_batch = self._get_batch_record(batch_id)
+        claimed_batch_status = str(claimed_batch.get("status") or batch.get("status") or "").strip().lower()
+        if claimed_batch_status in TERMINAL_BATCH_STATUSES:
+            latest_batch_metadata = self._batch_metadata(claimed_batch or batch)
+            completed_at = str(claimed_batch.get("completed_at") or "").strip()
+            terminal_update = (
+                build_batch_failed_update(latest_batch_metadata, now_iso=self._now_iso())
+                if claimed_batch_status == "failed"
+                else build_batch_completed_update(
+                    latest_batch_metadata,
+                    worker_id=worker_id,
+                    now_iso=completed_at or self._now_iso(),
+                )
+            )
+            batch["metadata"] = terminal_update["metadata"]
+            self._safe_execute(
+                lambda: self.supabase.table("entity_import_batches").update(
+                    terminal_update
+                ).eq("id", batch_id).execute(),
+                context=f"normalize already-terminal batch metadata {batch_id}",
+            )
+            logger.info("Skipping claimed terminal batch %s with status=%s", batch_id, claimed_batch_status)
+            return
         batch["metadata"] = build_batch_claim_metadata(
             self._batch_metadata(batch),
             worker_id=worker_id,
@@ -590,6 +830,20 @@ class EntityPipelineWorker:
                 completed_phases = [name for name, detail in phases.items() if detail.get("status") == "completed"]
                 last_phase = completed_phases[-1] if completed_phases else "dashboard_scoring"
                 latest_metadata = self._get_run_metadata(batch_id, run["entity_id"])
+                publication_status = str(result.get("publication_status") or "").strip().lower()
+                dual_write_ok = bool(result.get("dual_write_ok", True))
+                publication_succeeded = publication_status in {"published", "published_degraded"} or dual_write_ok
+                reconcile_required = bool(
+                    result.get("reconcile_required")
+                    or ((result.get("persistence_status") or {}).get("reconcile_required"))
+                )
+                follow_on_repair_metadata = self._derive_follow_on_repair_metadata(
+                    run=run,
+                    latest_metadata=latest_metadata if isinstance(latest_metadata, dict) else run_metadata,
+                    result=result,
+                    publication_succeeded=publication_succeeded,
+                    reconcile_required=reconcile_required,
+                )
                 metadata = merge_pipeline_run_metadata(
                     build_run_success_metadata(latest_metadata if isinstance(latest_metadata, dict) else run_metadata),
                     phases=phases,
@@ -604,13 +858,30 @@ class EntityPipelineWorker:
                     run_profile=result.get("run_profile"),
                     degraded_mode=result.get("degraded_mode"),
                     persistence_status=result.get("persistence_status"),
+                    publication_status=result.get("publication_status"),
+                    publication_mode=result.get("publication_mode"),
+                    reconcile_required=reconcile_required,
+                    repair_state=follow_on_repair_metadata.get("repair_state"),
+                    repair_retry_count=follow_on_repair_metadata.get("repair_retry_count"),
+                    repair_retry_budget=follow_on_repair_metadata.get("repair_retry_budget"),
+                    next_repair_question_id=follow_on_repair_metadata.get("next_repair_question_id"),
+                    reconciliation_state=follow_on_repair_metadata.get("reconciliation_state"),
+                    reconciliation_payload=((result.get("persistence_status") or {}).get("reconciliation_payload")),
+                    reconciliation_payloads=(
+                        (((result.get("persistence_status") or {}).get("step_artifacts") or {}).get("reconciliation_payloads"))
+                    ),
                     step_artifact_counts=result.get("step_artifact_counts"),
                     step_failure_taxonomy=result.get("step_failure_taxonomy"),
                     promoted_rfp_ids=[],
                     completed_at=result.get("completed_at"),
                 )
-                dual_write_ok = bool(result.get("dual_write_ok", True))
-                final_status = "completed" if dual_write_ok else "failed"
+                if follow_on_repair_metadata.get("repair_queue_source") is not None:
+                    metadata["repair_queue_source"] = follow_on_repair_metadata.get("repair_queue_source")
+                if follow_on_repair_metadata.get("queued_repair_batch_id") is not None:
+                    metadata["queued_repair_batch_id"] = follow_on_repair_metadata.get("queued_repair_batch_id")
+                if follow_on_repair_metadata.get("exhausted_question_ids") is not None:
+                    metadata["exhausted_question_ids"] = follow_on_repair_metadata.get("exhausted_question_ids")
+                final_status = "completed" if publication_succeeded else "failed"
                 if final_status == "completed":
                     self.persist_monitoring_outputs(batch_id, run, result)
                     self.sync_cached_entity(batch_id, run, result, "completed")
@@ -625,7 +896,7 @@ class EntityPipelineWorker:
                         "dossier_id": ((result.get("artifacts") or {}).get("dossier_id")) or run["entity_id"],
                         "sales_readiness": result.get("sales_readiness"),
                         "rfp_count": int(result.get("rfp_count") or 0),
-                        "error_message": None if dual_write_ok else "dual_write_incomplete",
+                        "error_message": None if publication_succeeded else ("dual_write_incomplete" if not dual_write_ok else None),
                         "completed_at": self._now_iso(),
                         "metadata": metadata,
                     },

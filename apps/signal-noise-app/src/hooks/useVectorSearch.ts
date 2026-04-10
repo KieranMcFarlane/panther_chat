@@ -1,18 +1,6 @@
 import { useState, useEffect } from 'react'
-
-export interface SearchResult {
-  entity: {
-    id: string | number
-    labels: string[]
-    properties: Record<string, any>
-  }
-  similarity: number
-  connections: Array<{
-    relationship: string
-    target: string
-    target_type: string
-  }>
-}
+import { searchVectorEntities } from '@/lib/vector-search-client'
+import type { VectorSearchResult } from '@/lib/vector-search-client'
 
 export interface VectorSearchOptions {
   limit?: number
@@ -25,14 +13,17 @@ export const useVectorSearch = (
   options: VectorSearchOptions = {},
   searchType: 'vector' | 'text' = 'vector'
 ) => {
-  const [results, setResults] = useState<SearchResult[]>([])
+  const [results, setResults] = useState<VectorSearchResult[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   
   useEffect(() => {
+    const controller = new AbortController()
     const search = async () => {
       if (!query.trim()) {
         setResults([])
+        setLoading(false)
+        setError(null)
         return
       }
       
@@ -40,29 +31,20 @@ export const useVectorSearch = (
       setError(null)
       
       try {
-        console.log('🔍 Searching for:', query, searchType, options)
-        const response = await fetch('/api/search', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
+        const data = await searchVectorEntities(
+          {
             query,
+            limit: options.limit ?? 12,
+            score_threshold: options.threshold ?? 0.15,
+            entity_type: options.entityType || null,
             searchType,
-            options
-          })
-        })
-        
-        if (!response.ok) {
-          throw new Error(`Search failed with status ${response.status}`)
-        }
-        
-        const data = await response.json()
-        console.log('📊 Search results:', data.results?.length || 0)
+          },
+          { signal: controller.signal }
+        )
         setResults(data.results || [])
       } catch (err) {
+        if ((err as Error)?.name === 'AbortError') return
         setError(err instanceof Error ? err.message : 'Search failed')
-        console.error('❌ Search error:', err)
       } finally {
         setLoading(false)
       }
@@ -70,7 +52,10 @@ export const useVectorSearch = (
     
     // Debounce the search
     const timer = setTimeout(search, 300)
-    return () => clearTimeout(timer)
+    return () => {
+      clearTimeout(timer)
+      controller.abort()
+    }
   }, [query, JSON.stringify(options), searchType])
   
   return { results, loading, error }
