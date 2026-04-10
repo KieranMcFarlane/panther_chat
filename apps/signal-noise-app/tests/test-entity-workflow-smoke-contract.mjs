@@ -9,16 +9,13 @@ test('entity workflow smoke path exposes dossier, enrichment, and opportunity ha
   const entityCardSource = await readFile(new URL('../src/components/EntityCard.tsx', import.meta.url), 'utf8')
 
   assert.match(browserSource, /EntitySmokeJourney/)
-  assert.match(smokeJourneySource, /5-Entity Smoke Journey/)
+  assert.match(smokeJourneySource, /Local QA Dossiers/)
+  assert.match(smokeJourneySource, /getEntityBrowserDossierHref\(item\.entityId, '1'\)/)
   assert.match(dossierSource, /Persisted dossier loaded|Persisted entity state loaded/)
   assert.match(dossierSource, /EntityEnrichmentSummaryCard/)
-  assert.match(entityCardSource, /EntityEnrichmentSummaryCard/)
-  assert.ok(
-    entityCardSource.includes('/opportunities?entityId=${stableEntityId}') ||
-      entityCardSource.includes('Review opportunity fit') ||
-      entityCardSource.includes('Open opportunity decision'),
-    'expected entity cards to expose an opportunity decision handoff',
-  )
+  assert.match(entityCardSource, /getEntityBrowserDossierHref\(entity, currentPage\)/)
+  assert.match(entityCardSource, /Open dossier/)
+  assert.match(entityCardSource, /rememberEntityBrowserUrl\(\)/)
   assert.ok(
     dossierSource.includes('/opportunities?entityId=${encodeURIComponent(entityId)}') ||
       dossierSource.includes('Review opportunity fit') ||

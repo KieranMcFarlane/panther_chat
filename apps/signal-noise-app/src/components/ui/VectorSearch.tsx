@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { resolveEntityUuid } from '@/lib/entity-public-id';
+import { getEntityBrowserDossierHref } from '@/lib/entity-routing';
 
 interface SearchResult {
 	id: string;
@@ -94,26 +94,17 @@ export default function VectorSearch({ className }: VectorSearchProps) {
 		setIsOpen(false);
 		setQuery('');
 		
-		// Navigate to entity page
-		const entityId = result.uuid || result.entity_id || result.id;
-		if (entityId) {
-			
-			// Check if it's one of our demo entities first
-			const demoEntityRoutes = {
-				'arsenal_fc_001': '/entity-browser/arsenal_fc_001/dossier?from=1',
-				'chelsea_fc_002': '/entity-browser/chelsea_fc_002/dossier?from=1', 
-				'martin_odegaard_003': '/entity-browser/martin_odegaard_003/dossier?from=1',
-				'tender_premier_league_001': '/entity-browser/tender_premier_league_001/dossier?from=1',
-				'contact_sports_agent_001': '/entity-browser/contact_sports_agent_001/dossier?from=1'
-			};
-			
-			const demoRoute = demoEntityRoutes[entityId] || demoEntityRoutes[resolveEntityUuid({ id: entityId, neo4j_id: entityId, supabase_id: entityId }) || '']
-			if (demoRoute) {
-				router.push(demoRoute);
-				return;
-			}
-			
-			router.push(`/entity-browser/${entityId}/dossier?from=1`);
+		const href = getEntityBrowserDossierHref({
+			...result,
+			properties: {
+				name: result.name,
+				type: result.type,
+				sport: result.sport,
+				country: result.country,
+			},
+		}, '1')
+		if (href) {
+			router.push(href);
 		}
 	};
 

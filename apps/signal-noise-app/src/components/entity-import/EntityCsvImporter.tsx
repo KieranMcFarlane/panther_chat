@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Importer, ImporterField } from 'react-csv-importer'
 import 'react-csv-importer/dist/index.css'
 import { REQUIRED_ENTITY_IMPORT_COLUMNS, OPTIONAL_ENTITY_IMPORT_COLUMNS } from '@/lib/entity-import-schema'
+import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
 
 type ImportSummary = {
   batchId?: string
@@ -300,10 +301,10 @@ export default function EntityCsvImporter() {
                         </td>
                         <td className="py-3 pr-4">
                           {run.lifecycle?.dossier_persisted ? (
-                            <a
-                              href={`/entity-browser/${run.entity_id}/dossier?from=1`}
-                              className="text-sky-700 underline underline-offset-2"
-                            >
+                          <a
+                            href={getEntityBrowserDossierHref(run.entity_id, '1') || `/entity-browser/${run.entity_id}/dossier?from=1`}
+                            className="text-sky-700 underline underline-offset-2"
+                          >
                               {run.lifecycle?.client_ready ? 'Open client dossier' : 'Open persisted dossier'}
                             </a>
                           ) : run.lifecycle?.artifact_generated ? (

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { EntityBadge } from '@/components/badge/EntityBadge';
 import { useEntities, useEntity } from '@/lib/swr-config';
+import { getEntityBrowserDossierHref } from '@/lib/entity-routing';
 import {
   Dialog,
   DialogContent,
@@ -65,7 +66,10 @@ export default function LeagueNav() {
   // Navigation handlers
   const handleClubSelect = (club: Club) => {
     setIsNavigating(true)
-    router.push(`/entity-browser/${club.id}/dossier?from=1`)
+    const href = getEntityBrowserDossierHref(club.id, '1')
+    if (href) {
+      router.push(href)
+    }
     setIsModalOpen(false)
     setTimeout(() => setIsNavigating(false), 500)
   }
@@ -690,7 +694,7 @@ export default function LeagueNav() {
       fromClubId: currentLeague.clubs[actualCurrentClubIndex]?.id,
       toClubName: previousClub?.properties?.name,
       toClubId: previousClub?.id,
-      navigationUrl: previousClub ? `/entity-browser/${previousClub.id}/dossier?from=1` : 'NO TARGET',
+      navigationUrl: previousClub ? (getEntityBrowserDossierHref(previousClub.id, '1') || 'NO TARGET') : 'NO TARGET',
       wrapAround: actualCurrentClubIndex === 0
     })
     
@@ -700,7 +704,10 @@ export default function LeagueNav() {
     setIsNavigating(true)
     
     if (previousClub) {
-      router.push(`/entity-browser/${previousClub.id}/dossier?from=1`)
+      const href = getEntityBrowserDossierHref(previousClub.id, '1')
+      if (href) {
+        router.push(href)
+      }
     }
     
     setTimeout(() => setIsNavigating(false), 500)
@@ -792,7 +799,7 @@ export default function LeagueNav() {
       fromClubId: currentLeague.clubs[actualCurrentClubIndex]?.id,
       toClubName: nextClub?.properties?.name,
       toClubId: nextClub?.id,
-      navigationUrl: nextClub ? `/entity-browser/${nextClub.id}/dossier?from=1` : 'NO TARGET'
+      navigationUrl: nextClub ? (getEntityBrowserDossierHref(nextClub.id, '1') || 'NO TARGET') : 'NO TARGET'
     })
     
     setSelectedClubIndex(newIndex)
@@ -801,7 +808,10 @@ export default function LeagueNav() {
     setIsNavigating(true)
     
     if (nextClub) {
-        router.push(`/entity-browser/${nextClub.id}/dossier?from=1`)
+        const href = getEntityBrowserDossierHref(nextClub.id, '1')
+        if (href) {
+          router.push(href)
+        }
     }
     
     setTimeout(() => setIsNavigating(false), 500)
@@ -818,7 +828,10 @@ export default function LeagueNav() {
       
       const firstClub = sportsData[sportIndex]?.leagues[leagueIndex]?.clubs[0]
       if (firstClub) {
-        router.push(`/entity-browser/${firstClub.id}/dossier?from=1`)
+        const href = getEntityBrowserDossierHref(firstClub.id, '1')
+        if (href) {
+          router.push(href)
+        }
       }
       
       setTimeout(() => setIsNavigating(false), 1500)

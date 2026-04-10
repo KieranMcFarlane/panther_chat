@@ -10,6 +10,7 @@ import {
   queueEntityImportBatch,
   storeFallbackEntityImportState,
 } from '@/lib/entity-import-jobs'
+import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
 import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
 import {
   resolveCanonicalQuestionFirstDossier,
@@ -212,7 +213,7 @@ function buildQueuePayload(entityId: string, batchId: string, state: string, mes
     status: state,
     statusUrl: `/api/entity-import/${batchId}`,
     runDetailUrl: `/entity-import/${batchId}/${entityId}`,
-    dossierUrl: `/entity-browser/${entityId}/dossier?from=1`,
+    dossierUrl: getEntityBrowserDossierHref(entityId, '1') || '/entity-browser',
     dossierApiUrl: `/api/entities/${entityId}/dossier`,
     message,
   }

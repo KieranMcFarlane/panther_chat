@@ -6,6 +6,7 @@ import { ArrowRight, Briefcase, Clock3, Route, Sparkles, Target, Users } from 'l
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
 
 type QueueEntityRecord = {
   entity_id: string
@@ -325,7 +326,7 @@ export function HomeQueueDashboard() {
                 <p className="mt-3 text-sm leading-6 text-slate-300">{toText(item.summary) || 'No persisted dossier summary is available yet.'}</p>
                 <div className="mt-4">
                   <Button asChild size="sm" variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10">
-                    <Link href={`/entity-browser/${encodeURIComponent(item.browser_entity_id)}/dossier?from=1`}>
+                    <Link href={getEntityBrowserDossierHref(item.browser_entity_id, '1') || `/entity-browser/${encodeURIComponent(item.browser_entity_id)}/dossier?from=1`}>
                       Open dossier
                     </Link>
                   </Button>
@@ -354,10 +355,10 @@ export function HomeQueueDashboard() {
                   {item.best_path ? <span>Path: {item.best_path}</span> : null}
                 </div>
                 <div className="mt-4">
-                      <Link href={`/entity-browser/${encodeURIComponent(item.browser_entity_id)}/dossier`}>
-                        <Button size="sm" variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10">
-                          Open dossier
-                        </Button>
+                  <Link href={getEntityBrowserDossierHref(item.browser_entity_id, '1') || `/entity-browser/${encodeURIComponent(item.browser_entity_id)}/dossier`}>
+                    <Button size="sm" variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10">
+                      Open dossier
+                    </Button>
                   </Link>
                 </div>
               </div>

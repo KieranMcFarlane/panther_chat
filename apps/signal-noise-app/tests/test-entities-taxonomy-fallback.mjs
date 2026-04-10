@@ -4,11 +4,15 @@ import { readFileSync } from 'node:fs'
 
 const entitiesTaxonomySource = readFileSync(new URL('../src/lib/entities-taxonomy.ts', import.meta.url), 'utf8')
 
-test('buildEntitiesTaxonomy derives taxonomy from entity snapshots', () => {
-  assert.match(entitiesTaxonomySource, /export function buildEntitiesTaxonomy\(entities: any\[], options:/)
-  assert.match(entitiesTaxonomySource, /const sport = normalizeLabel\(properties\.sport\)/)
-  assert.match(entitiesTaxonomySource, /const league = normalizeLabel\(properties\.league\)/)
-  assert.match(entitiesTaxonomySource, /federationsRightsHolders\[entityName\] = \(federationsRightsHolders\[entityName\] \|\| 0\) \+ 1/)
-  assert.match(entitiesTaxonomySource, /leaguesBySport: leagueMap/)
-  assert.match(entitiesTaxonomySource, /counts: \{/)
+test('buildEntitiesTaxonomy deduplicates canonical facet keys instead of raw labels', () => {
+  assert.match(entitiesTaxonomySource, /normalizeFacetKey/)
+  assert.match(entitiesTaxonomySource, /normalizeFacetLabel/)
+  assert.match(entitiesTaxonomySource, /isPreferredFacetLabel/)
+  assert.match(entitiesTaxonomySource, /const sports = new Map<string, \{ label: string; count: number \}>/)
+  assert.match(entitiesTaxonomySource, /const leaguesBySport = new Map<string, Map<string, \{ label: string; count: number \}>>/)
+  assert.match(entitiesTaxonomySource, /const bumpFacet = \(bucket: Map<string, \{ label: string; count: number \}>, rawValue: unknown\)/)
+  assert.match(entitiesTaxonomySource, /bumpNestedFacet\(leaguesBySport, sport, league\)/)
+  assert.ok(entitiesTaxonomySource.includes('sports: [...sports.values()].sort'))
+  assert.ok(entitiesTaxonomySource.includes('counts: {'))
+  assert.ok(entitiesTaxonomySource.includes('sports: toSortedCountMap(sports)'))
 })

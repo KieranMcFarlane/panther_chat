@@ -5,6 +5,7 @@ import { ArrowRight, CheckCircle2, PlayCircle } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { getEntityBrowserDossierHref } from "@/lib/entity-routing"
 import type { EntitySmokeJourneyItem } from "@/lib/entity-smoke-set"
 
 const STATUS_LABELS: Record<EntitySmokeJourneyItem["dossierStatus"], string> = {
@@ -87,7 +88,7 @@ export function EntitySmokeJourney({ items }: EntitySmokeJourneyProps) {
 
               <div className="mt-2 flex flex-wrap gap-2">
                 <Button asChild size="sm" className="gap-1.5 px-3 py-1.5 text-xs">
-                  <Link href={`/entity-browser/${item.entityId}/dossier?from=1`}>
+                  <Link href={getEntityBrowserDossierHref(item.entityId, '1') || `/entity-browser/${item.entityId}/dossier?from=1`}>
                     Open dossier
                     <ArrowRight className="h-3.5 w-3.5" />
                   </Link>

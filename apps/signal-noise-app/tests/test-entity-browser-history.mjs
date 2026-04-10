@@ -11,8 +11,8 @@ const historyNavSource = readFileSync(historyNavPath, 'utf8')
 const appNavigationSource = readFileSync(appNavigationPath, 'utf8')
 
 test('app navigation defers auth session consumers on entity browser routes', () => {
-  assert.match(appNavigationSource, /const isEntityBrowserRoute = pathname\?\.startsWith\(['"]\/entity-browser['"]\) \?\? false/)
-  assert.match(appNavigationSource, /\{authMenu && !isDossierRoute && !isEntityBrowserRoute && \(/)
+  assert.match(appNavigationSource, /const isFullScreenAuthRoute = pathname === '\/sign-in' \|\| pathname === '\/login'/)
+  assert.match(appNavigationSource, /if \(isFullScreenAuthRoute\)/)
 })
 
 test('entity browser initializes current page from the URL and keeps it in sync', () => {
@@ -23,17 +23,14 @@ test('entity browser initializes current page from the URL and keeps it in sync'
   assert.match(entityBrowserPageSource, /const \[currentPage, setCurrentPage\] = useState\(initialPageFromUrl\)/)
   assert.match(entityBrowserPageSource, /useEffect\(\(\) => \{\s*const nextPage = Number\.parseInt\(searchParams\.get\(['"]page['"]\) \|\| ['"]1['"], 10\)/)
   assert.match(entityBrowserPageSource, /\}, \[currentPage, searchParams\]\)/)
-  assert.match(entityBrowserPageSource, /const lastFetchedRequestKeyRef = useRef<string \| null>\(null\)/)
-  assert.match(entityBrowserPageSource, /const buildEntityQueryParams = useCallback\(\(page: number\) => \{/)
-  assert.match(entityBrowserPageSource, /const requestKey = buildEntityQueryParams\(currentPage\)\.toString\(\)/)
-  assert.match(entityBrowserPageSource, /if \(lastFetchedRequestKeyRef\.current === requestKey\) \{\s*return\s*\}/)
   assert.match(entityBrowserPageSource, /const currentUrl = `\/entity-browser\$\{searchParams\.toString\(\) \? `\?\$\{searchParams\.toString\(\)\}` : ''\}`/)
   assert.match(entityBrowserPageSource, /if \(nextUrl !== currentUrl\) \{\s*router\.push\(nextUrl, \{ scroll: false \}\)/)
   assert.doesNotMatch(entityBrowserPageSource, /router\.replace\(/)
   assert.match(entityBrowserPageSource, /params\.set\(['"]page['"], currentPage\.toString\(\)\)/)
   assert.match(entityBrowserPageSource, /const updateFilters = useCallback\(\(updater: \(prev: typeof filters\) => typeof filters\) => \{/)
   assert.match(entityBrowserPageSource, /setCurrentPage\(1\)/)
-  assert.doesNotMatch(entityBrowserPageSource, /useEffect\(\(\) => \{\s*if \(typeof window !== 'undefined'\) \{\s*setCurrentPage\(1\)/)
+  assert.match(entityBrowserPageSource, /sessionStorage\.setItem\(['"]lastEntityBrowserUrl['"], browserUrl\)/)
+  assert.match(entityBrowserPageSource, /syncEntityBrowserHistory\(browserUrl\)/)
 })
 
 test('entity browser persists the last visited browser URL for dossier back navigation', () => {

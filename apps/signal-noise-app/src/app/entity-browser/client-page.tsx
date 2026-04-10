@@ -4,14 +4,14 @@ import Link from "next/link"
 import { useState, useEffect, useCallback, useRef, useDeferredValue } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { FixedSizeList, type ListChildComponentProps } from "react-window"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Skeleton } from "@/components/ui/skeleton"
 import { EntityCard } from "@/components/EntityCard"
 import { EntitySmokeJourney } from "@/components/entity-browser/EntitySmokeJourney"
+import { FacetFilterBar, type FacetFilterField } from "@/components/filters/FacetFilterBar"
 import { AppPageBody, AppPageHeader, AppPageShell } from "@/components/layout/AppPageShell"
 import type { EntitySmokeJourneyItem } from "@/lib/entity-smoke-set"
 import { useEntitiesBrowserData, useEntityTaxonomy } from "@/lib/swr-config"
@@ -21,7 +21,6 @@ import {
   Database,
   Search,
   Filter,
-  ArrowUpDown,
   ArrowLeft,
   ArrowRight,
   Download
@@ -82,7 +81,7 @@ export default function EntityBrowserClientPage({
     filters,
     currentPage === initialPageFromUrl && !appliedSearchTerm ? initialEntitiesData : null
   )
-  const { taxonomy, taxonomyLoading } = useEntityTaxonomy(initialTaxonomy)
+  const { taxonomy } = useEntityTaxonomy(initialTaxonomy)
   const availableSports = taxonomy?.sports ?? []
   const availableLeagues = taxonomy?.leagues ?? []
   const availableCountries = taxonomy?.countries ?? []
@@ -391,6 +390,128 @@ export default function EntityBrowserClientPage({
   const rowHeight = 300
   const listHeight = Math.min(900, Math.max(rowHeight, rowCount * rowHeight))
   const columnGap = 24
+  const filterFields: FacetFilterField[] = [
+    {
+      key: 'entityType',
+      label: 'Entity Type',
+      value: filters.entityType,
+      placeholder: 'Entity Type',
+      options: [
+        { value: 'all', label: 'All Types' },
+        { value: 'Entity', label: 'Entity' },
+        { value: 'TopTierSport', label: 'Top Tier Sport' },
+        { value: 'Club', label: 'Club' },
+        { value: 'League', label: 'League' },
+        { value: 'Person', label: 'Person' },
+      ],
+      onValueChange: (value) => updateFilters((prev) => ({ ...prev, entityType: value })),
+    },
+    {
+      key: 'sport',
+      label: 'Sport',
+      value: filters.sport,
+      placeholder: 'Sport',
+      options: [
+        { value: 'all', label: 'All Sports' },
+        ...availableSports.map((sport) => ({
+          value: sport,
+          label: sport,
+          count: taxonomy?.counts?.sports?.[sport] ?? 0,
+        })),
+      ],
+      onValueChange: (value) => updateFilters((prev) => ({ ...prev, sport: value })),
+    },
+    {
+      key: 'league',
+      label: 'League',
+      value: filters.league,
+      placeholder: 'League',
+      options: [
+        { value: 'all', label: 'All Leagues' },
+        ...availableLeagues.map((league) => ({
+          value: league,
+          label: league,
+          count: taxonomy?.counts?.leagues?.[league] ?? 0,
+        })),
+      ],
+      onValueChange: (value) => updateFilters((prev) => ({ ...prev, league: value })),
+    },
+    {
+      key: 'country',
+      label: 'Country',
+      value: filters.country,
+      placeholder: 'Country',
+      options: [
+        { value: 'all', label: 'All Countries' },
+        ...availableCountries.map((country) => ({
+          value: country,
+          label: country,
+          count: taxonomy?.counts?.countries?.[country] ?? 0,
+        })),
+      ],
+      onValueChange: (value) => updateFilters((prev) => ({ ...prev, country: value })),
+    },
+    {
+      key: 'entityClass',
+      label: 'Entity Class',
+      value: filters.entityClass,
+      placeholder: 'Entity Class',
+      options: [
+        { value: 'all', label: 'All Classes' },
+        ...availableEntityClasses.map((entityClass) => ({
+          value: entityClass,
+          label: entityClass,
+          count: taxonomy?.counts?.entityClasses?.[entityClass] ?? 0,
+        })),
+      ],
+      onValueChange: (value) => updateFilters((prev) => ({ ...prev, entityClass: value })),
+    },
+    {
+      key: 'sortBy',
+      label: 'Sort By',
+      value: filters.sortBy,
+      placeholder: 'Sort By',
+      options: [
+        { value: 'popular', label: 'Popular' },
+        { value: 'name', label: 'Name' },
+        { value: 'type', label: 'Type' },
+        { value: 'sport', label: 'Sport' },
+        { value: 'country', label: 'Country' },
+        { value: 'priorityScore', label: 'Priority Score' },
+        { value: 'estimatedValue', label: 'Estimated Value' },
+      ],
+      onValueChange: (value) => updateFilters((prev) => ({ ...prev, sortBy: value })),
+    },
+    {
+      key: 'sortOrder',
+      label: 'Sort Order',
+      value: filters.sortOrder,
+      placeholder: 'Sort Order',
+      options: [
+        { value: 'asc', label: 'Ascending' },
+        { value: 'desc', label: 'Descending' },
+      ],
+      onValueChange: (value) => updateFilters((prev) => ({ ...prev, sortOrder: value as 'asc' | 'desc' })),
+    },
+    {
+      key: 'limit',
+      label: 'Per Page',
+      value: filters.limit,
+      placeholder: 'Per Page',
+      options: [
+        { value: '5', label: '5 per page (Fast)' },
+        { value: '10', label: '10 per page (Default)' },
+        { value: '20', label: '20 per page' },
+        { value: '50', label: '50 per page' },
+      ],
+      onValueChange: (value) => updateFilters((prev) => ({ ...prev, limit: value })),
+    },
+  ]
+  const filterChips = activeFilterChips.map((chip) => ({
+    key: chip.key,
+    label: chip.label,
+    onRemove: () => updateFilters((prev) => ({ ...prev, [chip.key]: 'all' })),
+  }))
 
   return (
     <AppPageShell>
@@ -413,189 +534,75 @@ export default function EntityBrowserClientPage({
         <div className="mb-4">
           <EntitySmokeJourney items={smokeItems} />
         </div>
-        <Card className="mb-4 border-border/70 shadow-sm">
-          <CardContent className="p-3.5 md:p-4">
-            <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search entities..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      applyFilters()
-                    }
-                  }}
-                  className="pl-10"
-                />
-                {(autocompleteLoading || autocompleteEntities.length > 0) && (
-                  <div className="absolute z-20 mt-1 w-full rounded-md border bg-background p-2 shadow-lg">
-                    {autocompleteLoading ? (
-                      <p className="text-xs text-muted-foreground px-1 py-1">Loading suggestions...</p>
-                    ) : (
-                      autocompleteEntities.map((entity) => (
-                        <button
-                          key={entity.id}
-                          className="flex w-full items-center justify-between rounded-sm px-2 py-1 text-left text-sm hover:bg-accent"
-                          onClick={() => {
-                            setSearchTerm(entity.name || "")
-                            setAppliedSearchTerm(entity.name || "")
-                            setAutocompleteEntities([])
-                            setCurrentPage(1)
-                          }}
-                          type="button"
-                        >
-                          <span className="truncate">{entity.name}</span>
-                          <span className="ml-2 text-xs text-muted-foreground">{entity.type || "Entity"}</span>
-                        </button>
-                      ))
-                    )}
-                  </div>
-                )}
-              </div>
-
-              <Select value={filters.entityType} onValueChange={(value) => updateFilters(prev => ({ ...prev, entityType: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Entity Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="Entity">Entity</SelectItem>
-                  <SelectItem value="TopTierSport">Top Tier Sport</SelectItem>
-                  <SelectItem value="Club">Club</SelectItem>
-                  <SelectItem value="League">League</SelectItem>
-                  <SelectItem value="Person">Person</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select value={filters.sport} onValueChange={(value) => updateFilters(prev => ({ ...prev, sport: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Sport" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Sports</SelectItem>
-                  {availableSports.map((sport) => (
-                    <SelectItem key={sport} value={sport}>
-                      {sport} ({taxonomy.counts?.sports?.[sport] ?? 0})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={filters.league} onValueChange={(value) => updateFilters(prev => ({ ...prev, league: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="League" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Leagues</SelectItem>
-                  {availableLeagues.map((league) => (
-                    <SelectItem key={league} value={league}>
-                      {league} ({taxonomy.counts?.leagues?.[league] ?? 0})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={filters.country} onValueChange={(value) => updateFilters(prev => ({ ...prev, country: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Country" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Countries</SelectItem>
-                  {availableCountries.map((country) => (
-                    <SelectItem key={country} value={country}>
-                      {country} ({taxonomy.counts?.countries?.[country] ?? 0})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={filters.entityClass} onValueChange={(value) => updateFilters(prev => ({ ...prev, entityClass: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Entity Class" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Classes</SelectItem>
-                  {availableEntityClasses.map((entityClass) => (
-                    <SelectItem key={entityClass} value={entityClass}>
-                      {entityClass} ({taxonomy.counts?.entityClasses?.[entityClass] ?? 0})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={filters.sortBy} onValueChange={(value) => updateFilters(prev => ({ ...prev, sortBy: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Sort By" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="popular">Popular</SelectItem>
-                  <SelectItem value="name">Name</SelectItem>
-                  <SelectItem value="type">Type</SelectItem>
-                  <SelectItem value="sport">Sport</SelectItem>
-                  <SelectItem value="country">Country</SelectItem>
-                  <SelectItem value="priorityScore">Priority Score</SelectItem>
-                  <SelectItem value="estimatedValue">Estimated Value</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select value={filters.sortOrder} onValueChange={(value) => updateFilters(prev => ({ ...prev, sortOrder: value as "asc" | "desc" }))}>
-                <SelectTrigger>
-                  <ArrowUpDown className="h-4 w-4 mr-2" />
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="asc">Ascending</SelectItem>
-                  <SelectItem value="desc">Descending</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select value={filters.limit} onValueChange={(value) => updateFilters(prev => ({ ...prev, limit: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Per Page" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="5">5 per page (Fast)</SelectItem>
-                  <SelectItem value="10">10 per page (Default)</SelectItem>
-                  <SelectItem value="20">20 per page</SelectItem>
-                  <SelectItem value="50">50 per page</SelectItem>
-                </SelectContent>
-              </Select>
+        <FacetFilterBar
+          className="mb-4"
+          searchSlot={
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search entities..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    applyFilters()
+                  }
+                }}
+                className="pl-10"
+              />
+              {(autocompleteLoading || autocompleteEntities.length > 0) && (
+                <div className="absolute z-20 mt-1 w-full rounded-md border bg-background p-2 shadow-lg">
+                  {autocompleteLoading ? (
+                    <p className="px-1 py-1 text-xs text-muted-foreground">Loading suggestions...</p>
+                  ) : (
+                    autocompleteEntities.map((entity) => (
+                      <button
+                        key={entity.id}
+                        className="flex w-full items-center justify-between rounded-sm px-2 py-1 text-left text-sm hover:bg-accent"
+                        onClick={() => {
+                          setSearchTerm(entity.name || "")
+                          setAppliedSearchTerm(entity.name || "")
+                          setAutocompleteEntities([])
+                          setCurrentPage(1)
+                        }}
+                        type="button"
+                      >
+                        <span className="truncate">{entity.name}</span>
+                        <span className="ml-2 text-xs text-muted-foreground">{entity.type || "Entity"}</span>
+                      </button>
+                    ))
+                  )}
+                </div>
+              )}
             </div>
-
-            <div className="flex gap-2 mt-4">
-              <Button onClick={applyFilters} variant="outline" size="sm">
-                <Filter className="h-4 w-4 mr-2" />
-                Apply Filters
-              </Button>
-              <Button onClick={resetAndReload} variant="outline" size="sm">
-                Reset
-              </Button>
-              <Button onClick={exportToJSON} variant="outline" size="sm">
-                <Download className="h-4 w-4 mr-2" />
-                Export JSON
-              </Button>
-              <Badge variant="outline" className="ml-auto">
-                Showing {entities.length} of {pagination.total.toLocaleString()} entities
-              </Badge>
-            </div>
-            {activeFilterChips.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-2">
-                {activeFilterChips.map((chip) => (
-                  <Button
-                    key={chip.key}
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => updateFilters((prev) => ({ ...prev, [chip.key]: 'all' }))}
-                  >
-                    {chip.label} ×
-                  </Button>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+          }
+          fields={filterFields}
+          actions={[
+            {
+              key: 'apply',
+              label: 'Apply Filters',
+              onClick: applyFilters,
+              icon: <Filter className="h-4 w-4" />,
+            },
+            {
+              key: 'reset',
+              label: 'Reset',
+              onClick: resetAndReload,
+            },
+            {
+              key: 'export',
+              label: 'Export JSON',
+              onClick: exportToJSON,
+              icon: <Download className="h-4 w-4" />,
+            },
+          ]}
+          chips={filterChips}
+          status={
+            <Badge variant="outline">
+              Showing {entities.length} of {pagination.total.toLocaleString()} entities
+            </Badge>
+          }
+        />
 
         <div ref={gridContainerRef} className="w-full">
           {entitiesValidating ? (

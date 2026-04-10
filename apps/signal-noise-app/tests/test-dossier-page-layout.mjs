@@ -12,7 +12,7 @@ const entityLoaderSource = readFileSync(entityLoaderPath, 'utf8')
 const entityApiRouteSource = readFileSync(entityApiRoutePath, 'utf8')
 
 test('dossier page uses the shared Header with league badge modal support', () => {
-  assert.match(clientSource, /const Header = dynamic\(\(\) => import\(["']@\/components\/header\/Header["']\), \{ ssr: false \}\)/)
+  assert.match(clientSource, /import Header from ["']@\/components\/header\/Header["']/)
   assert.match(clientSource, /<Header currentEntity=\{entity\} \/>/)
 })
 
@@ -26,8 +26,12 @@ test('dossier page keeps email modal support for dossier actions', () => {
 test('dossier page server-renders the entity and hands it to the client page', () => {
   assert.match(source, /import EntityDossierClientPage from ["']\.\/client-page["']/)
   assert.match(source, /import \{ getEntityForDossierPage \} from ["']@\/lib\/entity-loader["']/)
+  assert.match(source, /import \{ getEntityBrowserDossierHref \} from ["']@\/lib\/entity-routing["']/)
+  assert.match(source, /import \{ redirect \} from ["']next\/navigation["']/)
   assert.match(source, /export default async function EntityDossierPage/)
   assert.match(source, /const entityData = await getEntityForDossierPage\(entityId, tier\)/)
+  assert.match(source, /const canonicalHref = entityData\.entity \? getEntityBrowserDossierHref\(entityData\.entity, fromPage\) : null/)
+  assert.match(source, /if \(canonicalHref && canonicalHref !== `\/entity-browser\/\$\{entityId\}\/dossier\?from=\$\{fromPage\}`\)/)
   assert.match(source, /<EntityDossierClientPage[\s\S]*initialEntity=\{entityData\.entity\}/)
 })
 

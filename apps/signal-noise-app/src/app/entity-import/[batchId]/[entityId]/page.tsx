@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getEntityPipelineRun } from '@/lib/entity-import-jobs'
 import { deriveEntityPipelineLifecycle } from '@/lib/entity-pipeline-lifecycle'
+import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
 
 export const dynamic = 'force-dynamic'
 
@@ -156,7 +157,7 @@ export default async function EntityImportRunDetailPage(
             </Link>
             {run.dossier_id ? (
               <Link
-                href={`/entity-browser/${run.entity_id}/dossier?from=1`}
+                href={getEntityBrowserDossierHref(run.entity_id, '1') || `/entity-browser/${run.entity_id}/dossier?from=1`}
                 className="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
               >
                 Open dossier

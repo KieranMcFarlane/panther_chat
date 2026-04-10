@@ -93,7 +93,7 @@ test('entity browser server page seeds the first payload for SSR instead of boot
 test('entity browser loads the list and taxonomy through SWR hooks instead of direct fetch effects', () => {
   assert.match(entityBrowserClientPageSource, /import \{ useEntitiesBrowserData, useEntityTaxonomy \} from ['"]@\/lib\/swr-config['"]/)
   assert.match(entityBrowserClientPageSource, /const \{ entitiesData, entitiesError, entitiesLoading, entitiesValidating, reloadEntities \} = useEntitiesBrowserData\(/)
-  assert.match(entityBrowserClientPageSource, /const \{ taxonomy, taxonomyLoading \} = useEntityTaxonomy\(initialTaxonomy\)/)
+  assert.match(entityBrowserClientPageSource, /const \{ taxonomy \} = useEntityTaxonomy\(initialTaxonomy\)/)
   assert.match(entityBrowserClientPageSource, /const availableSports = taxonomy\?\.sports \?\? \[\]/)
   assert.match(entityBrowserClientPageSource, /const availableLeagues = taxonomy\?\.leagues \?\? \[\]/)
   assert.match(entityBrowserClientPageSource, /const availableCountries = taxonomy\?\.countries \?\? \[\]/)

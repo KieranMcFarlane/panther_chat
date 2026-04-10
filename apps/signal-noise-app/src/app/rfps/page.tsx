@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
 
 type FoundRfp = {
   id: string
@@ -232,7 +233,7 @@ export default function RfpsPage() {
                   <div className="flex flex-wrap gap-2">
                     {rfp.entity_id ? (
                       <Button asChild variant="outline" size="sm">
-                        <Link href={`/entity-browser/${rfp.entity_id}/dossier?from=1`}>
+                        <Link href={getEntityBrowserDossierHref(rfp.entity_id, '1') || `/entity-browser/${rfp.entity_id}/dossier?from=1`}>
                           Open dossier
                           <ArrowUpRight className="ml-1 h-4 w-4" />
                         </Link>

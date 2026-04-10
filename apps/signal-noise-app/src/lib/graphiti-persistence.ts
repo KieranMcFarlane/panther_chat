@@ -7,6 +7,7 @@ import type { HomeGraphitiInsight } from '@/lib/home-graphiti-contract'
 import { buildGraphitiNotificationPayload, materializeGraphitiInsight, rankGraphitiInsights } from '@/lib/graphiti-insight-materializer'
 import { resolvePinnedSmokeEntities } from '@/lib/entity-smoke-set'
 import { resolveEntityUuid } from '@/lib/entity-public-id'
+import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
 import { allowDemoFallbacks, getGraphitiStaleWindowHours } from '@/lib/runtime-env'
 
 const RAW_HOME_INSIGHT_COLUMNS = [
@@ -210,7 +211,7 @@ function toPersistedInsight(
     freshness: normalized.freshness,
     insight_type: normalized.insight_type || 'watch_item',
     priority: normalized.priority || 'medium',
-    destination_url: normalized.destination_url || `/entity-browser/${normalized.entity_id}/dossier?from=1`,
+    destination_url: normalized.destination_url || getEntityBrowserDossierHref(normalized.entity_id, '1') || '/entity-browser',
     evidence: normalized.evidence,
     relationships: normalized.relationships,
     source_run_id: normalized.source_run_id || null,
@@ -296,7 +297,7 @@ async function resolveCanonicalGraphitiInsight(insight: HomeGraphitiInsight, raw
       entity_type: String(pinnedMatch.entity.properties?.type || insight.entity_type),
       sport: String(pinnedMatch.entity.properties?.sport || insight.sport || 'unknown'),
       league: String(pinnedMatch.entity.properties?.league || insight.league || '').trim() || undefined,
-      destination_url: `/entity-browser/${pinnedMatch.entityId}/dossier?from=1`,
+      destination_url: getEntityBrowserDossierHref(pinnedMatch.entityId, '1') || '/entity-browser',
     }
   }
 
@@ -327,7 +328,7 @@ async function resolveCanonicalGraphitiInsight(insight: HomeGraphitiInsight, raw
     entity_type: String(match.properties?.type || insight.entity_type),
     sport: String(match.properties?.sport || insight.sport || 'unknown'),
     league: String(match.properties?.league || insight.league || '').trim() || undefined,
-    destination_url: `/entity-browser/${entityId}/dossier?from=1`,
+    destination_url: getEntityBrowserDossierHref(entityId, '1') || '/entity-browser',
   }
 }
 

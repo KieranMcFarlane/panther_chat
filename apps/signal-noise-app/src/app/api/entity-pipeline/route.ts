@@ -10,6 +10,7 @@ import {
   queueEntityImportBatch,
   storeFallbackEntityImportState,
 } from '@/lib/entity-import-jobs'
+import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
 
 const ENTITY_IMPORT_QUEUE_MODE = process.env.ENTITY_IMPORT_QUEUE_MODE || 'durable_worker'
 
@@ -38,7 +39,7 @@ export async function POST(request: NextRequest) {
           entityId: row.entity_id,
           statusUrl: `/api/entity-import/${activeRun.batch.id}`,
           runDetailUrl: `/entity-import/${activeRun.batch.id}/${row.entity_id}`,
-          dossierUrl: `/entity-browser/${row.entity_id}/dossier?from=1`,
+          dossierUrl: getEntityBrowserDossierHref(row.entity_id, '1') || '/entity-browser',
           rfpUrl: '/tenders',
           message: 'Entity pipeline already queued or running',
         },
@@ -82,7 +83,7 @@ export async function POST(request: NextRequest) {
         falkor_sync_error,
         statusUrl: `/api/entity-import/${batch.id}`,
         runDetailUrl: `/entity-import/${batch.id}/${row.entity_id}`,
-        dossierUrl: `/entity-browser/${row.entity_id}/dossier?from=1`,
+        dossierUrl: getEntityBrowserDossierHref(row.entity_id, '1') || '/entity-browser',
         rfpUrl: '/tenders',
       },
       { status: 202 },

@@ -8,6 +8,7 @@ import { EntityBadge } from '@/components/badge/EntityBadge';
 import { useEntitySummaries, useEntity } from '@/lib/swr-config';
 import { formatValue } from '@/lib/formatValue';
 import { getCanonicalEntityKey } from '@/lib/entity-canonicalization';
+import { getEntityBrowserDossierHref } from '@/lib/entity-routing';
 import { useVectorSearch } from '@/hooks/useVectorSearch';
 import {
   Dialog,
@@ -592,7 +593,10 @@ export default function LeagueNavSimple({ currentEntity = null }: LeagueNavSimpl
       await loadFullEntity(club.id)
     }
     
-    router.push(`/entity-browser/${club.id}/dossier?from=1`)
+    const href = getEntityBrowserDossierHref(club.id, '1')
+    if (href) {
+      router.push(href)
+    }
     setTimeout(() => setIsNavigating(false), 500)
   }
   
