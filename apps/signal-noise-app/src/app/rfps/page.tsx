@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { AlertCircle, ArrowUpRight, Building2, Calendar, ExternalLink, Filter, Loader2, MapPin, Search, Sparkles, Target } from 'lucide-react'
 
 import { AppPageBody, AppPageHeader, AppPageShell } from '@/components/layout/AppPageShell'
+import { FacetFilterBar } from '@/components/filters/FacetFilterBar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -148,23 +149,33 @@ export default function RfpsPage() {
           </Card>
         </section>
 
-        <section className="rounded-2xl border border-border/70 bg-card/70 p-5 shadow-sm">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="space-y-1">
-              <h2 className="text-lg font-semibold text-foreground">Operator shortlist</h2>
-              <p className="text-sm text-muted-foreground">Search across the promoted RFP set without dropping into the raw tenders intake.</p>
+        <FacetFilterBar
+          searchSlot={
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div className="space-y-1">
+                <h2 className="text-lg font-semibold text-foreground">Operator shortlist</h2>
+                <p className="text-sm text-muted-foreground">Search across the promoted RFP set without dropping into the raw tenders intake.</p>
+              </div>
+              <div className="relative w-full max-w-md">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Search organizations, titles, or categories..."
+                  className="pl-9"
+                />
+              </div>
             </div>
-            <div className="relative w-full max-w-md">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search organizations, titles, or categories..."
-                className="pl-9"
-              />
-            </div>
-          </div>
-        </section>
+          }
+          fields={[]}
+          actions={query ? [{
+            key: 'clear-query',
+            label: 'Clear search',
+            onClick: () => setQuery(''),
+            variant: 'outline',
+          }] : []}
+          chips={query ? [{ key: 'query', label: `Search: ${query}`, onRemove: () => setQuery('') }] : []}
+        />
 
         {loading ? (
           <section className="rounded-2xl border border-border/70 bg-card/70 p-8">

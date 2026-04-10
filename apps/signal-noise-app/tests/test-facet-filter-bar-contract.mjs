@@ -6,12 +6,12 @@ const filterBarSource = readFileSync(new URL('../src/components/filters/FacetFil
 const entityBrowserSource = readFileSync(new URL('../src/app/entity-browser/client-page.tsx', import.meta.url), 'utf8')
 
 test('facet filter bar centralizes select rendering and chip actions', () => {
+  assert.match(filterBarSource, /import \{ SharedFilterShell, type SharedFilterShellProps \} from ["']\.\/SharedFilterShell["']/)
+  assert.match(filterBarSource, /export type \{ FacetFilterAction, FacetFilterChip, FacetFilterField, FacetFilterOption \} from ["']\.\/SharedFilterShell["']/)
   assert.match(filterBarSource, /export function FacetFilterBar\(/)
-  assert.match(filterBarSource, /fields\.map\(\(field\) =>/)
-  assert.match(filterBarSource, /field\.options\.map\(\(option\) =>/)
-  assert.match(filterBarSource, /typeof option\.count === 'number'/)
-  assert.match(filterBarSource, /chips\.map\(\(chip\) =>/)
-  assert.match(filterBarSource, /actions\.map\(\(action\) =>/)
+  assert.match(filterBarSource, /return <SharedFilterShell \{\.\.\.props\} \/>/)
+  assert.doesNotMatch(filterBarSource, /fields\.map\(\(field\) =>/)
+  assert.doesNotMatch(filterBarSource, /chips\.map\(\(chip\) =>/)
 })
 
 test('entity browser uses the shared facet filter bar instead of inline select markup', () => {

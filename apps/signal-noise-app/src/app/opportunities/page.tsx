@@ -5,10 +5,10 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Calendar, Filter, Search, Star, Target, TrendingUp } from 'lucide-react';
 import { AppPageBody, AppPageHeader, AppPageShell } from '@/components/layout/AppPageShell';
+import { FacetFilterBar, type FacetFilterField } from '@/components/filters/FacetFilterBar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface TenderOpportunityRecord {
   id: string;
@@ -178,6 +178,49 @@ function OpportunitiesContent() {
 
   const uniqueSports = Array.from(new Set(opportunities.map((opportunity) => opportunity.sport))).filter(Boolean);
   const uniqueTypes = Array.from(new Set(opportunities.map((opportunity) => opportunity.type))).filter(Boolean);
+  const filterFields: FacetFilterField[] = [
+    {
+      key: 'type',
+      label: 'Type',
+      value: typeFilter,
+      placeholder: 'Type',
+      options: [{ value: 'all', label: 'All types' }, ...uniqueTypes.map((type) => ({ value: type, label: type }))],
+      onValueChange: setTypeFilter,
+    },
+    {
+      key: 'sport',
+      label: 'Sport',
+      value: sportFilter,
+      placeholder: 'Sport',
+      options: [{ value: 'all', label: 'All categories' }, ...uniqueSports.map((sport) => ({ value: sport, label: sport }))],
+      onValueChange: setSportFilter,
+    },
+    {
+      key: 'score',
+      label: 'Score',
+      value: scoreFilter,
+      placeholder: 'Score',
+      options: [
+        { value: 'all', label: 'All scores' },
+        { value: 'high', label: 'High (8+)' },
+        { value: 'medium', label: 'Medium (6+)' },
+        { value: 'low', label: 'Low (0+)' },
+      ],
+      onValueChange: setScoreFilter,
+    },
+  ];
+  const filterChips = [
+    searchQuery ? { key: 'query', label: `Search: ${searchQuery}`, onRemove: () => setSearchQuery('') } : null,
+    typeFilter !== 'all' ? { key: 'type', label: `Type: ${typeFilter}`, onRemove: () => setTypeFilter('all') } : null,
+    sportFilter !== 'all' ? { key: 'sport', label: `Sport: ${sportFilter}`, onRemove: () => setSportFilter('all') } : null,
+    scoreFilter !== 'all' ? { key: 'score', label: `Score: ${scoreFilter}`, onRemove: () => setScoreFilter('all') } : null,
+  ].filter(Boolean) as { key: string; label: string; onRemove: () => void }[];
+  const resetFilters = () => {
+    setSearchQuery('')
+    setTypeFilter('all')
+    setSportFilter('all')
+    setScoreFilter('all')
+  };
   const highConvictionCount = filteredOpportunities.filter((opp) => opp.criticalOpportunityScore >= 8).length;
   const trackedValueCount = filteredOpportunities.filter((opp) => Boolean(opp.value)).length;
   const averageScore = filteredOpportunities.length
@@ -279,18 +322,8 @@ function OpportunitiesContent() {
         </div>
       )}
 
-      <div className="rounded-lg border border-custom-border bg-custom-box p-4">
-        <div className="mb-4 flex items-center justify-between gap-4">
-          <div>
-            <h2 className="text-base font-semibold text-white">Shortlist Filters</h2>
-            <p className="text-sm text-fm-medium-grey">Refine what is worth review, outreach, or pursuit.</p>
-          </div>
-          <div className="flex items-center text-sm text-fm-light-grey">
-            <Filter className="mr-2 h-4 w-4" />
-            {filteredOpportunities.length} of {opportunities.length}
-          </div>
-        </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
+      <FacetFilterBar
+        searchSlot={
           <div className="relative">
             <Search className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-fm-medium-grey" />
             <Input
@@ -300,44 +333,25 @@ function OpportunitiesContent() {
               className="border-custom-border bg-custom-bg pl-9 text-white placeholder:text-fm-medium-grey"
             />
           </div>
-
-          <Select value={typeFilter} onValueChange={setTypeFilter}>
-            <SelectTrigger className="border-custom-border bg-custom-bg text-white">
-              <SelectValue placeholder="Type" />
-            </SelectTrigger>
-            <SelectContent className="border-custom-border bg-custom-box text-white">
-              <SelectItem value="all">All types</SelectItem>
-              {uniqueTypes.map((type) => (
-                <SelectItem key={type} value={type}>{type}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select value={sportFilter} onValueChange={setSportFilter}>
-            <SelectTrigger className="border-custom-border bg-custom-bg text-white">
-              <SelectValue placeholder="Sport" />
-            </SelectTrigger>
-            <SelectContent className="border-custom-border bg-custom-box text-white">
-              <SelectItem value="all">All categories</SelectItem>
-              {uniqueSports.map((sport) => (
-                <SelectItem key={sport} value={sport}>{sport}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select value={scoreFilter} onValueChange={setScoreFilter}>
-            <SelectTrigger className="border-custom-border bg-custom-bg text-white">
-              <SelectValue placeholder="Score" />
-            </SelectTrigger>
-            <SelectContent className="border-custom-border bg-custom-box text-white">
-              <SelectItem value="all">All scores</SelectItem>
-              <SelectItem value="high">High (8+)</SelectItem>
-              <SelectItem value="medium">Medium (6+)</SelectItem>
-              <SelectItem value="low">Low (0+)</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+        }
+        fields={filterFields}
+        actions={[
+          {
+            key: 'reset',
+            label: 'Reset filters',
+            onClick: resetFilters,
+            variant: 'outline',
+            icon: <Filter className="h-4 w-4" />,
+          },
+        ]}
+        chips={filterChips}
+        status={
+          <div className="flex items-center text-sm text-fm-light-grey">
+            <Filter className="mr-2 h-4 w-4" />
+            {filteredOpportunities.length} of {opportunities.length}
+          </div>
+        }
+      />
 
       {loadError && (
         <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-5 py-4 text-sm text-red-100">
