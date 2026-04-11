@@ -103,6 +103,7 @@ test('home queue dashboard payload includes dossier quality counts, incomplete a
   assert.match(dashboardSource, /Complete dossiers/)
   assert.match(dashboardSource, /Needs full-pack completion/)
   assert.match(dashboardSource, /Rollout proof set/)
+  assert.match(dashboardSource, /Queue this entity/)
   assert.match(dashboardLoaderSource, /quality_counts/)
   assert.match(dashboardLoaderSource, /runtime_counts/)
   assert.match(dashboardLoaderSource, /resume_needed_entities/)

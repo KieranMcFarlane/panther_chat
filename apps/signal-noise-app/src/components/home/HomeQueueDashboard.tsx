@@ -276,6 +276,36 @@ function formatActiveRepairLabel(item: QueueEntityRecord | null | undefined) {
 export function HomeQueueDashboard() {
   const [data, setData] = useState<HomeQueueDashboardPayload | null>(null)
   const [loading, setLoading] = useState(true)
+  const [queueingEntityId, setQueueingEntityId] = useState<string | null>(null)
+
+  async function queueEntity(entityId: string) {
+    if (!entityId) return
+    setQueueingEntityId(entityId)
+    try {
+      const response = await fetch(`/api/entities/${encodeURIComponent(entityId)}/dossier/rerun`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          mode: 'full',
+          rerun_reason: 'Queued from Home Dashboard',
+          cascade_dependents: true,
+        }),
+      })
+      if (!response.ok) {
+        throw new Error(`Failed to queue entity (${response.status})`)
+      }
+      const responsePayload = await fetch('/api/home/queue-dashboard', { cache: 'no-store' })
+      if (responsePayload.ok) {
+        setData(await responsePayload.json())
+      }
+    } catch {
+      // Keep the dashboard visible and leave the existing state intact.
+    } finally {
+      setQueueingEntityId(null)
+    }
+  }
 
   useEffect(() => {
     async function load() {
@@ -452,6 +482,17 @@ export function HomeQueueDashboard() {
                 </div>
                 <p className="mt-3 text-sm leading-6 text-slate-300">{toText(item.summary) || 'No persisted dossier summary is available yet.'}</p>
                 <div className="mt-4">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="border-white/10 bg-white/5 text-white hover:bg-white/10"
+                    onClick={() => void queueEntity(item.browser_entity_id)}
+                    disabled={queueingEntityId === item.browser_entity_id}
+                  >
+                    Queue this entity
+                  </Button>
+                </div>
+                <div className="mt-4">
                   <Button asChild size="sm" variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10">
                     <Link href={getEntityBrowserDossierHref(item.browser_entity_id, '1') || `/entity-browser/${encodeURIComponent(item.browser_entity_id)}/dossier?from=1`}>
                       Open dossier
@@ -556,6 +597,17 @@ export function HomeQueueDashboard() {
                 </div>
                 <p className="mt-3 text-sm leading-6 text-slate-300">{toText(item.quality_summary) || 'Partial artifact: full-pack completion has not been reached yet.'}</p>
                 <p className="mt-2 text-xs text-slate-500">Updated {formatDate(item.generated_at)}</p>
+                <div className="mt-3">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="border-white/10 bg-white/5 text-white hover:bg-white/10"
+                    onClick={() => void queueEntity(item.browser_entity_id)}
+                    disabled={queueingEntityId === item.browser_entity_id}
+                  >
+                    Queue this entity
+                  </Button>
+                </div>
               </div>
             )) : <p className="text-sm text-slate-300">No partial artifacts are currently visible in the canonical dossier store.</p>}
           </CardContent>
