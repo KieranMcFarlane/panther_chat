@@ -11,6 +11,8 @@ test('wide research route references Manus execution and canonical entity reconc
   assert.match(source, /API_KEY/)
   assert.match(source, /focusArea/)
   assert.match(source, /web-platforms/)
+  assert.match(source, /searchGraphitiEntities/)
+  assert.match(source, /syncWideRfpBatchToGraphiti/)
   assert.match(source, /toText\(body\.prompt\) \|\| buildWideRfpResearchPrompt/)
   assert.match(source, /getDefaultWideRfpSeedQuery/)
   assert.match(source, /buildWideRfpResearchPrompt/)

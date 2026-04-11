@@ -5,6 +5,7 @@ import { getSupabaseAdmin } from '@/lib/supabase-client'
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
 import { linkOpportunityToCanonicalEntity } from '@/lib/opportunity-entity-linking'
 import { normalizeOpportunityTaxonomy } from '@/lib/opportunity-taxonomy.mjs'
+import { searchGraphitiEntities, syncWideRfpBatchToGraphiti } from '@/lib/rfp-graphiti-bridge'
 import {
   DEFAULT_WIDE_RFP_FOCUS_AREA,
   buildWideRfpResearchPrompt,
@@ -259,18 +260,30 @@ async function ensureCanonicalEntity(
   } = {},
 ) {
   const organization = toText(opportunity?.organization || opportunity?.entity_name)
-  const linked = linkOpportunityToCanonicalEntity(
-    {
-      entity_name: organization,
-      organization,
-      title: opportunity?.title,
-      description: opportunity?.description,
-      source_url: opportunity?.source_url,
-    },
-    canonicalEntities,
+  const graphitiCandidates = await searchGraphitiEntities(
+    organization || opportunity?.title || opportunity?.description || '',
+    5,
   )
+  const candidateNames = Array.from(new Set([
+    organization,
+    toText(opportunity?.entity_name),
+    ...graphitiCandidates.map((candidate) => toText(candidate.name || candidate.properties?.name || candidate.id)),
+  ])).filter(Boolean)
 
-  if (linked.canonical_entity_id) {
+  const linked = candidateNames
+    .map((candidateName) => linkOpportunityToCanonicalEntity(
+      {
+        entity_name: candidateName,
+        organization: candidateName,
+        title: opportunity?.title,
+        description: opportunity?.description,
+        source_url: opportunity?.source_url,
+      },
+      canonicalEntities,
+    ))
+    .find((candidate) => Boolean(candidate.canonical_entity_id))
+
+  if (linked?.canonical_entity_id) {
     return {
       canonical_entity_id: linked.canonical_entity_id,
       canonical_entity_name: linked.canonical_entity_name || organization || null,
@@ -279,7 +292,7 @@ async function ensureCanonicalEntity(
   }
 
   const canonicalEntityId = `canonical-${slugify(organization)}-${crypto.createHash('sha1').update(organization || 'entity').digest('hex').slice(0, 10)}`
-  const canonicalEntityName = organization || linked.canonical_entity_name || 'Unknown organization'
+  const canonicalEntityName = organization || linked?.canonical_entity_name || 'Unknown organization'
   const inferredType = inferEntityType(opportunity)
   const properties = {
     name: canonicalEntityName,
@@ -417,11 +430,23 @@ export async function POST(request: NextRequest) {
       outputDir: body.outputDir,
       batch: enrichedBatch,
     })
+    const graphitiSync = await syncWideRfpBatchToGraphiti(
+      enrichedBatch.opportunities,
+      {
+        run_id: enrichedBatch.run_id,
+        generated_at: enrichedBatch.generated_at,
+        focus_area: enrichedBatch.focus_area,
+        lane_label: enrichedBatch.lane_label,
+        seed_query: enrichedBatch.seed_query,
+      },
+      request.url,
+    )
 
     return NextResponse.json({
       success: true,
       data: enrichedBatch,
       artifact: artifact.filePath,
+      graphiti: graphitiSync,
     })
   } catch (error) {
     console.error('Wide RFP research failed:', error)

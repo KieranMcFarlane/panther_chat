@@ -2,12 +2,10 @@
 
 import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import Link from 'next/link';
-import { Calendar, Filter, Star, Target, TrendingUp } from 'lucide-react';
+import { Calendar, Filter, Target, TrendingUp } from 'lucide-react';
 import { AppPageBody, AppPageHeader, AppPageShell } from '@/components/layout/AppPageShell';
 import { FacetFilterBar, type FacetFilterField } from '@/components/filters/FacetFilterBar';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Command, CommandInput } from '@/components/ui/command';
 import { buildCanonicalOpportunitySearchText, matchesCanonicalSearch } from '@/lib/canonical-search';
 import { buildOpportunityFacetOptions, getOpportunityTaxonomyDisplayValues, normalizeOpportunityTaxonomy } from '@/lib/opportunity-taxonomy.mjs';
@@ -287,12 +285,6 @@ function OpportunitiesContent() {
     setScoreFilter('all');
   };
 
-  const highConvictionCount = filteredOpportunities.filter((opp) => opp.criticalOpportunityScore >= 8).length;
-  const trackedValueCount = filteredOpportunities.filter((opp) => Boolean(opp.value)).length;
-  const averageScore = filteredOpportunities.length
-    ? (filteredOpportunities.reduce((sum, opp) => sum + opp.criticalOpportunityScore, 0) / filteredOpportunities.length).toFixed(1)
-    : '0.0';
-
   const getScoreColor = (score: number) => {
     if (score >= 8) return 'text-green-400';
     if (score >= 6) return 'text-yellow-400';
@@ -329,8 +321,8 @@ function OpportunitiesContent() {
       <AppPageShell>
         <AppPageHeader
           eyebrow="Opportunities"
-          title="Opportunity Shortlist"
-          description="Loading the promoted shortlist of source-backed opportunities."
+          title="Canonical opportunities"
+          description="Loading the canonical source-of-truth opportunities."
         />
         <AppPageBody>
           <div className="flex h-64 items-center justify-center rounded-2xl border border-border/70 bg-card/70">
@@ -345,53 +337,18 @@ function OpportunitiesContent() {
     <AppPageShell>
       <AppPageHeader
         eyebrow="Opportunities"
-        title="Opportunity Shortlist"
-        description="Curated opportunities ranked for Yellow Panther action. This page is for deciding what to pursue next, not for scanning the full raw feed."
-        actions={
-          <>
-            <Button asChild variant="outline" size="sm">
-              <Link href="/rfps">Open found RFPs</Link>
-            </Button>
-            <Button className="bg-yellow-500 text-black hover:bg-yellow-400" size="sm">
-              <Target className="mr-2 h-4 w-4" />
-              Add to Pursuit Queue
-            </Button>
-          </>
-        }
+        title="Canonical opportunities"
+        description="This page shows canonicalized opportunities promoted from intake. Legacy content has been removed."
       />
       <AppPageBody>
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <div className="min-w-0 rounded-xl border border-custom-border bg-custom-bg/60 p-4">
-            <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">Shortlisted</div>
-            <div className="mt-2 text-3xl font-semibold text-white">{filteredOpportunities.length}</div>
-          </div>
-          <div className="min-w-0 rounded-xl border border-custom-border bg-custom-bg/60 p-4">
-            <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">High Conviction</div>
-            <div className="mt-2 text-3xl font-semibold text-green-400">{highConvictionCount}</div>
-          </div>
-          <div className="min-w-0 rounded-xl border border-custom-border bg-custom-bg/60 p-4">
-            <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">With Value Signal</div>
-            <div className="mt-2 text-3xl font-semibold text-yellow-300">{trackedValueCount}</div>
-          </div>
-          <div className="min-w-0 rounded-xl border border-custom-border bg-custom-bg/60 p-4">
-            <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">Average Score</div>
-            <div className="mt-2 text-3xl font-semibold text-white">{averageScore}</div>
-          </div>
-        </div>
-
         {(focusedEntityId || focusedEntityName) && (
           <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-4">
             <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
               <div>
-                <div className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300">Focused decision view</div>
+                <div className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300">Focused canonical view</div>
                 <p className="mt-1 text-sm text-emerald-100/90">
-                  Reviewing shortlist candidates for {focusedEntityName || focusedEntityId}. This keeps the entity and dossier handoff inside the decision surface.
+                  Reviewing canonical opportunities for {focusedEntityName || focusedEntityId}. This keeps the entity and dossier handoff inside the source of truth.
                 </p>
-                {filteredOpportunities.length === 0 && (
-                  <p className="mt-2 text-sm text-emerald-100/75">
-                    No intake-linked opportunities found for {focusedEntityName || focusedEntityId} yet. The live feed is still available in RFP&apos;s/Tenders, and this shortlist will populate once intake is promoted into the canonical entity.
-                  </p>
-                )}
               </div>
               <Badge variant="outline" className="border-emerald-400/40 text-emerald-200">
                 {filteredOpportunities.length} matching opportunities
@@ -498,7 +455,7 @@ function OpportunitiesContent() {
                     {opportunity.theme}
                   </Badge>
                 ) : null}
-                {opportunity.tags.map((tag) => (
+              {opportunity.tags.map((tag) => (
                   <Badge key={`${opportunity.id}-${tag}`} variant="outline" className="text-xs">
                     {tag}
                   </Badge>
@@ -522,18 +479,25 @@ function OpportunitiesContent() {
                   Updated: {opportunity.lastUpdated}
                 </div>
               </div>
-
-              <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-                <Button size="sm" variant="outline" className="flex-1">
-                  <Star className="mr-1 h-3 w-3" />
-                  Review Fit
-                </Button>
-                <Button size="sm" variant="outline" className="flex-1" asChild>
-                  <a href={opportunity.sourceUrl || '/tenders'}>
-                    <Target className="mr-1 h-3 w-3" />
-                    Add to Pipeline
+              <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-fm-medium-grey">
+                {opportunity.canonicalEntityId && (
+                  <a
+                    className="underline underline-offset-4 hover:text-white"
+                    href={`/entity-browser/${encodeURIComponent(opportunity.canonicalEntityId)}/dossier?from=1`}
+                  >
+                    Open canonical dossier
                   </a>
-                </Button>
+                )}
+                {opportunity.sourceUrl && (
+                  <a
+                    className="underline underline-offset-4 hover:text-white"
+                    href={opportunity.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Open source
+                  </a>
+                )}
               </div>
             </div>
           ))}
@@ -543,23 +507,13 @@ function OpportunitiesContent() {
           <div className="py-12 text-center">
             <Target className="mx-auto mb-4 h-16 w-16 text-fm-medium-grey opacity-50" />
             <h3 className="mb-2 text-xl font-semibold text-white">
-              {focusedEntityId || focusedEntityName ? 'No entity-linked opportunities yet' : 'Nothing has been promoted into the shortlist yet'}
+              {focusedEntityId || focusedEntityName ? 'No canonical matches yet' : 'Nothing has been promoted into the canonical surface yet'}
             </h3>
             <p className="mx-auto max-w-2xl text-fm-medium-grey">
               {focusedEntityId || focusedEntityName
-                ? `No shortlist items are linked to ${focusedEntityName || focusedEntityId} in the current intake feed. Review the live RFP feed or run Scout to create the first linked opportunity.`
+                ? `No canonical opportunities are linked to ${focusedEntityName || focusedEntityId} yet. Review the live RFP feed or rerun scout to create the first canonical match.`
                 : 'Adjust the filters or move back to RFP\'s/Tenders to review the broader live feed.'}
             </p>
-            {(focusedEntityId || focusedEntityName) && (
-              <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-                <Button asChild variant="outline" className="border-custom-border bg-custom-box text-white hover:bg-custom-bg">
-                  <Link href="/tenders">Open RFP&apos;s/Tenders</Link>
-                </Button>
-                <Button asChild className="bg-yellow-500 text-black hover:bg-yellow-400">
-                  <Link href="/tenders">Open Live Feed</Link>
-                </Button>
-              </div>
-            )}
           </div>
         )}
       </AppPageBody>
