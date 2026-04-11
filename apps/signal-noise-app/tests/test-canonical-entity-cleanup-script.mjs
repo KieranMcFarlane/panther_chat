@@ -14,3 +14,9 @@ test('canonical entity cleanup script audits quarantine and deletes only audited
   assert.match(source, /invalidateCanonicalEntitiesSnapshot/)
   assert.match(source, /delete/)
 })
+
+test('canonical entity cleanup script can target json_seed entities and write a keep delete shortlist', () => {
+  assert.match(source, /json_seed/i)
+  assert.match(source, /keep-delete/i)
+  assert.match(source, /keep_delete/i)
+})

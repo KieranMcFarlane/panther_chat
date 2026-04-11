@@ -85,6 +85,40 @@ function auditEntity(row) {
   return reasons.length > 0 ? reasons : null
 }
 
+function isJsonSeedEntity(row) {
+  const name = getEntityName(row)
+  const canonicalKey = getCanonicalKey(row)
+  const combined = `${name} ${canonicalKey}`.toLowerCase()
+  return combined.includes('json_seed') || combined.includes('json seed')
+}
+
+function isSportsLikeEntity(row) {
+  const name = getEntityName(row)
+  const canonicalKey = getCanonicalKey(row)
+  const entityType = getEntityType(row)
+  const combined = `${name} ${canonicalKey} ${entityType}`.toLowerCase()
+  return /football|soccer|basketball|baseball|hockey|volleyball|tennis|archery|athletics|cycling|biathlon|motorsport|league|team|federation|club|sports?|olympic|rugby|cricket|golf|esports|e-sports|championship|tournament|recreation|athletic|marathon|formula|boxing|badminton|bobsleigh|skeleton|aquatics|rowing|ski|running|wrestling|table tennis|swimming|canoe|kayak|handball|field hockey/i.test(combined)
+}
+
+function buildKeepDeleteShortlist(rows) {
+  return rows
+    .filter((row) => isSportsLikeEntity(row) || isJsonSeedEntity(row))
+    .map((row) => {
+      const reasons = []
+      if (isJsonSeedEntity(row)) reasons.push('json_seed_artifact')
+      if (/^\d+$/.test(getEntityName(row))) reasons.push('numeric_name')
+      if (/^Entity\b/i.test(getEntityName(row))) reasons.push('generic_entity_name')
+      return {
+        id: row.id,
+        name: getEntityName(row),
+        entity_type: getEntityType(row),
+        canonical_key: getCanonicalKey(row),
+        action: reasons.includes('json_seed_artifact') || reasons.includes('numeric_name') || reasons.includes('generic_entity_name') ? 'delete' : 'keep',
+        reasons,
+      }
+    })
+}
+
 async function fetchSupabaseJson(url, key, pathName, options = {}) {
   const response = await fetch(`${url}/rest/v1/${pathName}`, {
     ...options,
@@ -170,6 +204,7 @@ async function invalidateCanonicalEntitiesSnapshot(reason) {
 async function main() {
   resolveEnv()
   const apply = process.argv.includes('--apply')
+  const jsonSeedOnly = process.argv.includes('--json-seed-only')
   const projectRoot = process.cwd()
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || ''
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
@@ -191,32 +226,59 @@ async function main() {
       labels: Array.isArray(row.labels) ? row.labels : [],
       reasons,
     }))
+  const jsonSeedCandidates = allRows
+    .filter((row) => isJsonSeedEntity(row))
+    .map((row) => ({
+      id: row.id,
+      name: getEntityName(row),
+      entity_type: getEntityType(row),
+      canonical_key: getCanonicalKey(row),
+      reasons: ['json_seed_artifact'],
+    }))
 
   const duplicateKeys = buildDuplicateKeySummary(allRows)
-  const exportDir = path.resolve(projectRoot, 'tmp', 'canonical-entity-quarantine')
+  const exportDir = path.resolve(projectRoot, 'tmp', jsonSeedOnly ? 'canonical-entity-keep-delete-shortlist' : 'canonical-entity-quarantine')
   mkdirSync(exportDir, { recursive: true })
-  const exportPath = path.resolve(exportDir, `canonical-entity-quarantine-${startedAt.replace(/[:.]/g, '-')}.json`)
+  const exportPath = path.resolve(exportDir, `${jsonSeedOnly ? 'keep-delete-shortlist' : 'canonical-entity-quarantine'}-${startedAt.replace(/[:.]/g, '-')}.json`)
+  const shortlistMdPath = path.resolve(exportDir, `${jsonSeedOnly ? 'keep-delete-shortlist' : 'canonical-entity-quarantine'}-${startedAt.replace(/[:.]/g, '-')}.md`)
+  const shortlistRows = buildKeepDeleteShortlist(allRows)
   const exportPayload = {
     started_at: startedAt,
     total_entities: allRows.length,
-    candidate_count: candidates.length,
+    candidate_count: jsonSeedOnly ? jsonSeedCandidates.length : candidates.length,
     duplicate_canonical_keys: duplicateKeys.length,
-    candidates,
+    candidates: jsonSeedOnly ? jsonSeedCandidates : candidates,
     duplicate_keys: duplicateKeys,
     quarantine: {
-      candidate_ids: candidates.map((candidate) => candidate.id).filter(Boolean),
-      candidate_count: candidates.length,
+      candidate_ids: (jsonSeedOnly ? jsonSeedCandidates : candidates).map((candidate) => candidate.id).filter(Boolean),
+      candidate_count: jsonSeedOnly ? jsonSeedCandidates.length : candidates.length,
     },
+    keep_delete_shortlist: shortlistRows,
   }
   writeFileSync(exportPath, JSON.stringify(exportPayload, null, 2) + '\n', 'utf8')
 
+  const shortlistMarkdown = [
+    '# Keep Delete Shortlist',
+    '',
+    `Target: ${jsonSeedOnly ? 'json_seed' : 'broken_rows'}`,
+    `Generated: ${startedAt}`,
+    `Rows: ${shortlistRows.length}`,
+    '',
+    '| action | name | entity_type | canonical_key | reasons |',
+    '|---|---|---|---|---|',
+    ...shortlistRows.map((row) => `| ${row.action} | ${String(row.name).replace(/\\|/g, '\\\\|')} | ${String(row.entity_type).replace(/\\|/g, '\\\\|')} | ${String(row.canonical_key).replace(/\\|/g, '\\\\|')} | ${(row.reasons || []).join(', ')} |`),
+  ].join('\\n')
+  writeFileSync(shortlistMdPath, shortlistMarkdown + '\\n', 'utf8')
+
   console.log(JSON.stringify({
     mode: apply ? 'apply' : 'audit',
+    target: jsonSeedOnly ? 'json_seed' : 'broken_rows',
     started_at: startedAt,
     total_entities: allRows.length,
-    candidate_count: candidates.length,
+    candidate_count: jsonSeedOnly ? jsonSeedCandidates.length : candidates.length,
     duplicate_canonical_keys: duplicateKeys.length,
     export_path: exportPath,
+    shortlist_md_path: shortlistMdPath,
     quarantine_path: exportPath,
   }, null, 2))
 
@@ -224,7 +286,7 @@ async function main() {
     return
   }
 
-  const ids = candidates.map((candidate) => candidate.id).filter(Boolean)
+  const ids = (jsonSeedOnly ? jsonSeedCandidates : candidates).map((candidate) => candidate.id).filter(Boolean)
   const syncRunId = `canonical-entity-cleanup-${startedAt.replace(/[:.]/g, '')}`
   const steps = []
   let deletedCount = 0
@@ -255,14 +317,15 @@ async function main() {
       duration_ms: 0,
       steps,
       error_message: null,
-      metadata: {
-        exported_to: exportPath,
-        total_entities: allRows.length,
-        candidate_count: candidates.length,
-        duplicate_canonical_keys: duplicateKeys.length,
-        deleted_count: deletedCount,
-      },
-    }),
+    metadata: {
+      exported_to: exportPath,
+      total_entities: allRows.length,
+      candidate_count: jsonSeedOnly ? jsonSeedCandidates.length : candidates.length,
+      duplicate_canonical_keys: duplicateKeys.length,
+      deleted_count: deletedCount,
+      target: jsonSeedOnly ? 'json_seed' : 'broken_rows',
+    },
+  }),
   })
 
   steps.push({ command: 'record canonical maintenance audit', durationMs: Date.now() - auditStarted })
