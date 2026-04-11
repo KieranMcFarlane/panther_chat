@@ -18,7 +18,7 @@ import { OperationalStatusStrip } from './OperationalStatusStrip';
 import { OperationalDrawer } from './OperationalDrawer';
 
 const navSections = [
-  { key: 'client-path', label: 'Client Path', items: primaryNavItems },
+  { key: 'client-path', label: '', items: primaryNavItems },
 ] as const
 
 interface AppNavigationProps {
@@ -148,11 +148,11 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
 
   const renderSection = (section: typeof navSections[number]) => (
     <div key={section.key} className="space-y-2">
-      {sidebarExpanded && section.key !== 'search' && (
+      {sidebarExpanded && section.key !== 'search' && section.label ? (
         <div className="px-3 pt-2 text-[0.6875rem] font-semibold uppercase tracking-[0.18em] text-slate-300">
           {section.label}
         </div>
-      )}
+      ) : null}
       <div className="space-y-2">
         {section.items.map((item) => (
           <div key={item.href}>

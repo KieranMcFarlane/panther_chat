@@ -31,4 +31,5 @@ test('app navigation keeps the sidebar fixed while the main pane scrolls', async
   assert.match(navigationSource, /sticky top-0 h-screen/)
   assert.doesNotMatch(navigationSource, /sticky top-0 h-screen overflow-y-auto/)
   assert.match(navigationSource, /min-h-0[\s\S]*flex-1[\s\S]*overflow-y-auto/)
+  assert.doesNotMatch(navigationSource, /Client Path/)
 })

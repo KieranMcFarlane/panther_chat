@@ -127,7 +127,7 @@ export default function RfpsPage() {
   const activeLaneLabel = wideResearchBatch?.lane_label || wideResearchBatch?.focus_area || 'Unknown lane'
 
   return (
-    <AppPageShell>
+    <AppPageShell className={`transition-opacity duration-500 ${wideResearchLoading ? 'opacity-70' : 'opacity-100'}`}>
       <AppPageHeader
         eyebrow="Canonical RFPs"
         title="Canonical source of truth"
