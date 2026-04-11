@@ -5,11 +5,13 @@ import Link from 'next/link'
 import { AlertCircle, CheckCircle2, ListChecks, Loader2, Radar } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
 import {
   getCachedOperationalDrilldownPayload,
   loadOperationalDrilldownPayload,
+  refreshOperationalDrilldownPayload,
   type OperationalDrilldownPayload,
 } from '@/lib/operational-drilldown-client'
 
@@ -296,6 +298,7 @@ export function OperationalDrawer({ open, activeSection, onSelectSection }: Oper
   const [dashboard, setDashboard] = useState<DashboardPayload>(fallbackDashboard)
   const [isLoading, setIsLoading] = useState(false)
   const [loadError, setLoadError] = useState<string | null>(null)
+  const [isQueueingBatch, setIsQueueingBatch] = useState(false)
 
   useEffect(() => {
     if (!open) return
@@ -474,12 +477,40 @@ export function OperationalDrawer({ open, activeSection, onSelectSection }: Oper
         : activeSection === 'completed'
           ? (completedItems[0] ?? null)
           : (entityItems[0] ?? null)
+  const nextUpcomingEntity = dashboard.queue.upcoming_entities?.[0] ?? null
   const hasActiveEntity = Boolean(dashboard.queue?.in_progress_entity)
   const intakeStatusLabel = dashboard.control?.is_paused
     ? 'Pipeline intake paused'
     : hasActiveEntity
       ? 'Pipeline intake running'
       : 'Pipeline intake running - waiting for claimable work'
+
+  async function queueNextBatch() {
+    if (!nextUpcomingEntity?.entity_id) return
+    setIsQueueingBatch(true)
+    try {
+      const response = await fetch(`/api/entities/${encodeURIComponent(nextUpcomingEntity.entity_id)}/dossier/rerun`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          mode: 'full',
+          rerun_reason: 'Queued from Operational Snapshot',
+          cascade_dependents: true,
+        }),
+      })
+      if (!response.ok) {
+        throw new Error(`Failed to queue next batch (${response.status})`)
+      }
+      const payload = await refreshOperationalDrilldownPayload()
+      setDashboard(payload as DashboardPayload)
+    } catch {
+      // leave the current drilldown visible if the queue request fails
+    } finally {
+      setIsQueueingBatch(false)
+    }
+  }
 
   return (
     <Card className="border-custom-border bg-custom-box shadow-sm">
@@ -516,6 +547,25 @@ export function OperationalDrawer({ open, activeSection, onSelectSection }: Oper
         <div className="text-sm text-slate-300">
           {intakeStatusLabel}
           {dashboard.control?.pause_reason ? ` · ${dashboard.control.pause_reason}` : ''}
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="border-custom-border"
+            onClick={queueNextBatch}
+            disabled={isQueueingBatch || !nextUpcomingEntity?.entity_id}
+          >
+            Queue next batch
+          </Button>
+          {nextUpcomingEntity?.entity_id ? (
+            <span className="text-xs text-slate-400">
+              Next up: {nextUpcomingEntity.entity_name}
+            </span>
+          ) : (
+            <span className="text-xs text-slate-400">No queued entity available to trigger.</span>
+          )}
         </div>
       </CardHeader>
       <CardContent className="max-h-[calc(100vh-14rem)] space-y-4 overflow-y-auto pr-2">

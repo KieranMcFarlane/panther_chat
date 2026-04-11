@@ -86,6 +86,12 @@ export async function loadOperationalDrilldownPayload() {
   return inFlightOperationalDrilldownRequest
 }
 
+export async function refreshOperationalDrilldownPayload() {
+  cachedOperationalDrilldownPayload = null
+  inFlightOperationalDrilldownRequest = null
+  return loadOperationalDrilldownPayload()
+}
+
 export function primeOperationalDrilldownPayload() {
   void loadOperationalDrilldownPayload().catch(() => {
     // Best-effort prewarm only.

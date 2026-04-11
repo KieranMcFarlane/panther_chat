@@ -9,6 +9,7 @@ import {
   getCachedOperationalDrilldownPayload,
   loadOperationalDrilldownPayload,
   primeOperationalDrilldownPayload,
+  refreshOperationalDrilldownPayload,
   type OperationalDrilldownPayload,
 } from '@/lib/operational-drilldown-client'
 
@@ -23,6 +24,7 @@ export function OperationalStatusStrip({
   const [drilldown, setDrilldown] = useState<OperationalDrilldownPayload | null>(null)
   const [controlState, setControlState] = useState<OperationalDrilldownPayload['control'] | null>(null)
   const [isTogglingPipeline, setIsTogglingPipeline] = useState(false)
+  const [isQueueingBatch, setIsQueueingBatch] = useState(false)
   const [isExpanded, setIsExpanded] = useState(true)
 
   function formatRunningDuration(value: string | null | undefined) {
@@ -88,6 +90,7 @@ export function OperationalStatusStrip({
   }, [])
 
   const inProgressEntity = drilldown?.queue?.in_progress_entity ?? null
+  const nextUpcomingEntity = drilldown?.queue?.upcoming_entities?.[0] ?? null
   const queuedEntityCount = drilldown?.queue?.upcoming_entities?.length ?? 0
   const pipelinePaused = controlState?.is_paused === true
   const ignitionState = controlState?.transition_state
@@ -163,6 +166,34 @@ export function OperationalStatusStrip({
     }
   }
 
+  async function queueNextBatch() {
+    if (!nextUpcomingEntity?.entity_id) return
+    setIsQueueingBatch(true)
+    try {
+      const response = await fetch(`/api/entities/${encodeURIComponent(nextUpcomingEntity.entity_id)}/dossier/rerun`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          mode: 'full',
+          rerun_reason: 'Queued from Live Ops',
+          cascade_dependents: true,
+        }),
+      })
+      if (!response.ok) {
+        throw new Error(`Failed to queue next batch (${response.status})`)
+      }
+      const payload = await refreshOperationalDrilldownPayload()
+      setDrilldown(payload)
+      setControlState(payload.control ?? null)
+    } catch {
+      // keep current live state; the drawer will continue to show the last known payload
+    } finally {
+      setIsQueueingBatch(false)
+    }
+  }
+
   return (
     <section
       className={`overflow-hidden rounded-2xl border border-custom-border bg-custom-box px-4 shadow-sm transition-[max-height] duration-300 ease-out ${
@@ -185,6 +216,14 @@ export function OperationalStatusStrip({
           </div>
 
           <div className="flex flex-wrap items-center justify-end gap-2 xl:pl-3">
+            <Button
+              variant="outline"
+              className="h-9 border-custom-border px-3 py-1.5"
+              onClick={queueNextBatch}
+              disabled={isQueueingBatch || !nextUpcomingEntity?.entity_id}
+            >
+              Queue next batch
+            </Button>
             <Button
               variant="outline"
               className="h-9 border-custom-border px-3 py-1.5"
