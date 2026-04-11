@@ -20,3 +20,9 @@ test('canonical entity cleanup script can target json_seed entities and write a 
   assert.match(source, /keep-delete/i)
   assert.match(source, /keep_delete/i)
 })
+
+test('canonical entity cleanup script can merge compatible duplicate canonical entities', () => {
+  assert.match(source, /compatibleDuplicateGroups/)
+  assert.match(source, /merge-compatible-duplicates/)
+  assert.match(source, /resolveCanonicalMergeWinner/)
+})

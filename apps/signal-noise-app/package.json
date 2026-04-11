@@ -60,7 +60,9 @@
     "cleanup:canonical-entities": "node scripts/cleanup-canonical-entities.mjs",
     "cleanup:canonical-entities:apply": "node scripts/cleanup-canonical-entities.mjs --apply",
     "cleanup:canonical-entities:json-seed": "node scripts/cleanup-canonical-entities.mjs --json-seed-only",
-    "cleanup:canonical-entities:json-seed:apply": "node scripts/cleanup-canonical-entities.mjs --json-seed-only --apply"
+    "cleanup:canonical-entities:json-seed:apply": "node scripts/cleanup-canonical-entities.mjs --json-seed-only --apply",
+    "cleanup:canonical-entities:merge": "node scripts/cleanup-canonical-entities.mjs --merge-compatible-duplicates",
+    "cleanup:canonical-entities:merge:apply": "node scripts/cleanup-canonical-entities.mjs --merge-compatible-duplicates --apply"
   },
   "dependencies": {
     "@ag-ui/mastra": "0.0.11",
