@@ -56,7 +56,9 @@
     "vector-search:init": "node scripts/initialize-embeddings.js",
     "embeddings": "node scripts/initialize-embeddings.js",
     "embed:supabase": "node scripts/embed-supabase-tables.js",
-    "discover:tables": "bash scripts/discover-supabase-tables.sh"
+    "discover:tables": "bash scripts/discover-supabase-tables.sh",
+    "cleanup:canonical-entities": "node scripts/cleanup-canonical-entities.mjs",
+    "cleanup:canonical-entities:apply": "node scripts/cleanup-canonical-entities.mjs --apply"
   },
   "dependencies": {
     "@ag-ui/mastra": "0.0.11",
