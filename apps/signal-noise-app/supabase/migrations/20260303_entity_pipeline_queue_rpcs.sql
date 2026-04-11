@@ -11,6 +11,7 @@ begin
     select id
     from entity_import_batches
     where status = 'queued'
+      and completed_at is null
     order by started_at
     limit 1
     for update skip locked
@@ -69,6 +70,7 @@ begin
           'last_error', 'Recovered stale batch lease'
         )
   where status = 'running'
+    and completed_at is null
     and (
       (metadata->>'heartbeat_at')::timestamptz < stale_before
       or (metadata->>'lease_expires_at')::timestamptz < now()

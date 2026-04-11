@@ -1,0 +1,19 @@
+{
+  "schema_version": "question_first_scale_batch_v1",
+  "batch_name": "question-first-pinned-paraguayan-basketball-federation-4026",
+  "description": "Single-entity pinned regeneration batch for Paraguayan Basketball Federation.",
+  "entities": [
+    {
+      "entity_id": "paraguayan-basketball-federation-4026",
+      "entity_name": "Paraguayan Basketball Federation",
+      "entity_type": "SPORT_FEDERATION",
+      "default_rollout_phase": "phase_3_decision"
+    }
+  ],
+  "metrics": {
+    "target_entities_completed": 1,
+    "target_entities_with_dossiers": 1,
+    "expected_question_count": 15,
+    "rollout_phase": "phase_3_decision"
+  }
+}

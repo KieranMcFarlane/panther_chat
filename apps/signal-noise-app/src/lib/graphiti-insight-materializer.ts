@@ -1,4 +1,5 @@
 import type { HomeGraphitiInsight } from '@/lib/home-graphiti-contract'
+import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
 
 function readString(value: unknown): string {
   return typeof value === 'string' ? value.trim() : ''
@@ -136,7 +137,7 @@ export function materializeGraphitiInsight(row: Record<string, unknown>): HomeGr
     relationships: normalizeRelationships(row.relationships),
     suggested_action: suggestedAction || fallbackSuggestedAction,
     priority: inferPriority(confidence, insightType),
-    destination_url: entityId ? `/entity-browser/${entityId}/dossier?from=1` : '/entity-browser',
+    destination_url: entityId ? getEntityBrowserDossierHref(entityId, '1') || '/entity-browser' : '/entity-browser',
     detected_at: String(row.detected_at || row.materialized_at || new Date().toISOString()),
     source_run_id: row.source_run_id ? String(row.source_run_id) : undefined,
     source_signal_id: row.source_signal_id ? String(row.source_signal_id) : undefined,
@@ -169,7 +170,7 @@ export function buildGraphitiNotificationPayload(insight: HomeGraphitiInsight) {
     title: insight.title,
     short_message: insight.summary,
     priority: insight.priority || 'medium',
-    destination_url: insight.destination_url || `/entity-browser/${insight.entity_id}/dossier?from=1`,
+    destination_url: insight.destination_url || getEntityBrowserDossierHref(insight.entity_id, '1') || '/entity-browser',
     created_at: insight.materialized_at || insight.detected_at,
     sent_state: 'pending',
     read_state: 'unread',

@@ -185,7 +185,7 @@ export class RealtimeSyncService {
   private async getExistingSupabaseEntities() {
     const { data, error } = await supabase
       .from('cached_entities')
-      .select('neo4j_id, uuid, properties, updated_at')
+      .select('neo4j_id, uuid, canonical_entity_id, properties, updated_at')
 
     if (error) throw error
     return data || []
@@ -218,6 +218,7 @@ export class RealtimeSyncService {
       neo4j_id: entity.neo4j_id,
       properties: entity.properties,
     }) || entity.neo4j_id
+    const canonicalEntityId = uuid
 
     await supabase
       .from('cached_entities')
@@ -225,10 +226,12 @@ export class RealtimeSyncService {
         {
           neo4j_id: entity.neo4j_id,
           uuid,
+          canonical_entity_id: canonicalEntityId,
           labels: entity.labels,
           properties: {
             ...entity.properties,
             uuid,
+            canonical_entity_id: canonicalEntityId,
           },
           cache_version: 1,
           updated_at: new Date().toISOString(),

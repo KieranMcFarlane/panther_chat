@@ -1,7 +1,6 @@
 import { Suspense } from "react"
 
 import EntityBrowserClientPage from "./client-page"
-import { getEntityBrowserSmokeItems } from "@/lib/entity-smoke-set"
 import { getEntityBrowserPageData, getEntitiesTaxonomyData, type EntityBrowserFilters } from '@/lib/entity-browser-data'
 import { requirePageSession } from "@/lib/server-auth"
 
@@ -15,7 +14,6 @@ function getFirst(value: string | string[] | undefined): string | undefined {
 
 export default async function EntityBrowserPage({ searchParams = {} }: { searchParams?: SearchParams }) {
   await requirePageSession('/entity-browser')
-  const smokeItems = await getEntityBrowserSmokeItems()
 
   const page = Number.parseInt(getFirst(searchParams.page) || '1', 10)
   const search = getFirst(searchParams.search) || ''
@@ -33,12 +31,11 @@ export default async function EntityBrowserPage({ searchParams = {} }: { searchP
   const initialTaxonomy = await getEntitiesTaxonomyData()
 
   return (
-    <Suspense fallback={null}>
+    <>
       <EntityBrowserClientPage
-        smokeItems={smokeItems}
         initialEntitiesData={initialEntitiesData}
         initialTaxonomy={initialTaxonomy}
       />
-    </Suspense>
+    </>
   )
 }

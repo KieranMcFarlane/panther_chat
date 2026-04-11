@@ -1,5 +1,7 @@
 import { resolveLocalBadgeUrl } from '@/lib/badge-resolver'
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
+import { buildCanonicalEntitySearchText, matchesCanonicalSearch } from '@/lib/canonical-search'
+import { getCanonicalEntityRole } from '@/lib/entity-role-taxonomy'
 import { resolveEntityUuid } from '@/lib/entity-public-id'
 import { buildEntitiesTaxonomy } from '@/lib/entities-taxonomy'
 
@@ -61,9 +63,10 @@ function buildLightweightDossierIndexFromEntityState(entity: any): LightweightDo
   const properties = entity?.properties || {}
   const dossierStatus = toText(properties.dossier_status).toLowerCase()
   const pipelineStatus = toText(properties.last_pipeline_status).toLowerCase()
+  const hasPersistedDossierArtifact = Boolean(toText(properties.latest_dossier_path))
 
   const normalizedStatus: LightweightDossierIndex['dossier_status'] =
-    dossierStatus === 'ready' || dossierStatus === 'stale' || dossierStatus === 'pending' || dossierStatus === 'rerun_needed'
+    hasPersistedDossierArtifact && (dossierStatus === 'ready' || dossierStatus === 'stale' || dossierStatus === 'pending' || dossierStatus === 'rerun_needed')
       ? dossierStatus
       : dossierStatus === 'missing'
         ? 'missing'
@@ -114,6 +117,7 @@ export async function getEntityBrowserPageData(options: {
     const propSport = String(properties.sport || '').toLowerCase()
     const propLeague = String(properties.league || '').toLowerCase()
     const propCountry = String(properties.country || '').toLowerCase()
+    const canonicalEntityRole = getCanonicalEntityRole(entity).toLowerCase()
 
     if (
       entityType &&
@@ -128,15 +132,18 @@ export async function getEntityBrowserPageData(options: {
     if (normalizedSport && propSport !== normalizedSport) return false
     if (normalizedLeague && propLeague !== normalizedLeague) return false
     if (normalizedCountry && propCountry !== normalizedCountry) return false
-    if (normalizedEntityClass && propEntityClass !== normalizedEntityClass && propType !== normalizedEntityClass) return false
+    if (
+      normalizedEntityClass &&
+      canonicalEntityRole !== normalizedEntityClass &&
+      propEntityClass !== normalizedEntityClass &&
+      propType !== normalizedEntityClass
+    ) {
+      return false
+    }
 
     if (!normalizedSearch) return true
 
-    const haystack = [properties.name, properties.type, properties.sport, properties.country, properties.description]
-      .map((value) => String(value || '').toLowerCase())
-      .join(' ')
-
-    return haystack.includes(normalizedSearch)
+    return matchesCanonicalSearch(normalizedSearch, buildCanonicalEntitySearchText(entity))
   })
 
   const ascending = sortOrder.toLowerCase() !== 'desc'
@@ -152,8 +159,11 @@ export async function getEntityBrowserPageData(options: {
 
   const entities = paginatedEntities.map((entity: any) => {
     const entityName = entity.properties?.name || entity.neo4j_id
+    const canonicalEntityRole = getCanonicalEntityRole(entity)
     const uuid = resolveEntityUuid({
+      canonical_entity_id: entity.uuid || entity.id,
       id: entity.id,
+      uuid: entity.uuid,
       neo4j_id: entity.neo4j_id,
       graph_id: entity.graph_id,
       supabase_id: entity.supabase_id || entity.properties?.supabase_id,
@@ -198,6 +208,7 @@ export async function getEntityBrowserPageData(options: {
         rerun_reason: lightweightDossierIndex.rerun_reason,
         name: entityName,
         type: entity.properties?.type || entity.labels?.[0] || 'ENTITY',
+        entity_role: canonicalEntityRole,
       },
     }
   })

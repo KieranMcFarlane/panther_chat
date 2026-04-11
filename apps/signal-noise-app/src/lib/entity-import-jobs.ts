@@ -18,6 +18,7 @@ export interface EntityPipelineRunRecord {
   id: string
   batch_id: string
   entity_id: string
+  canonical_entity_id?: string | null
   entity_name: string
   status: 'queued' | 'claiming' | 'running' | 'retrying' | 'completed' | 'failed'
   phase: string
@@ -38,6 +39,7 @@ export interface EntityPipelineActivitySummary {
 
 const entityImportBatchesMemoryStore = new Map<string, EntityImportBatchRecord>()
 const entityPipelineRunsMemoryStore = new Map<string, EntityPipelineRunRecord[]>()
+const TERMINAL_BATCH_STATUSES = new Set(['completed', 'failed'])
 
 function nowIso(): string {
   return new Date().toISOString()
@@ -92,6 +94,7 @@ export async function createEntityPipelineRuns(batch_id: string, rows: ImportedE
     id: createRunId(batch_id, row.entity_id),
     batch_id,
     entity_id: row.entity_id,
+    canonical_entity_id: (row as ImportedEntityRow & { canonical_entity_id?: string | null }).canonical_entity_id ?? null,
     entity_name: row.name,
     status: 'queued',
     phase: 'entity_registration',
@@ -109,6 +112,9 @@ export async function createEntityPipelineRuns(batch_id: string, rows: ImportedE
       country: row.country,
       website: row.website ?? null,
       league: row.league ?? null,
+      ...(typeof (row as ImportedEntityRow & { pipeline_metadata?: Record<string, unknown> }).pipeline_metadata === 'object'
+        ? (row as ImportedEntityRow & { pipeline_metadata?: Record<string, unknown> }).pipeline_metadata
+        : {}),
     },
   }))
 
@@ -197,24 +203,50 @@ export async function getEntityPipelineRun(batch_id: string, entity_id: string) 
   }
 }
 
-export async function findActivePipelineRunByEntityId(entity_id: string) {
+export async function findActivePipelineRunByEntityId(entity_id: string, canonical_entity_id?: string | null) {
+  const candidateIds = [entity_id, canonical_entity_id ?? null].filter(
+    (value, index, arr): value is string => Boolean(value) && arr.indexOf(value) === index,
+  )
   const fallbackRun = [...entityPipelineRunsMemoryStore.values()]
     .flat()
-    .find((run) => run.entity_id === entity_id && ['queued', 'claiming', 'running', 'retrying'].includes(run.status))
+    .find((run) =>
+      ['queued', 'claiming', 'running', 'retrying'].includes(run.status)
+      && candidateIds.includes(String(run.canonical_entity_id || run.entity_id)),
+    )
 
   const fallbackBatch = fallbackRun
     ? entityImportBatchesMemoryStore.get(fallbackRun.batch_id) ?? null
     : null
+  const fallbackBatchStillActive = fallbackBatch
+    ? !TERMINAL_BATCH_STATUSES.has(String(fallbackBatch.status || '').trim().toLowerCase())
+    : true
 
   try {
-    const { data: runData } = await supabase
-      .from('entity_pipeline_runs')
-      .select('*')
-      .eq('entity_id', entity_id)
-      .in('status', ['queued', 'claiming', 'running', 'retrying'])
-      .order('started_at', { ascending: false })
-      .limit(1)
-      .maybeSingle()
+    let runData: EntityPipelineRunRecord | null = null
+
+    if (canonical_entity_id) {
+      const canonicalResponse = await supabase
+        .from('entity_pipeline_runs')
+        .select('*')
+        .eq('canonical_entity_id', canonical_entity_id)
+        .in('status', ['queued', 'claiming', 'running', 'retrying'])
+        .order('started_at', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+      runData = (canonicalResponse.data ?? null) as EntityPipelineRunRecord | null
+    }
+
+    if (!runData) {
+      const legacyResponse = await supabase
+        .from('entity_pipeline_runs')
+        .select('*')
+        .eq('entity_id', entity_id)
+        .in('status', ['queued', 'claiming', 'running', 'retrying'])
+        .order('started_at', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+      runData = (legacyResponse.data ?? null) as EntityPipelineRunRecord | null
+    }
 
     if (runData) {
       const { data: batchData } = await supabase
@@ -225,7 +257,9 @@ export async function findActivePipelineRunByEntityId(entity_id: string) {
 
       return {
         batch: (batchData ?? null) as EntityImportBatchRecord | null,
-        run: runData as EntityPipelineRunRecord,
+        run: batchData && TERMINAL_BATCH_STATUSES.has(String(batchData.status || '').trim().toLowerCase())
+          ? null
+          : runData as EntityPipelineRunRecord,
       }
     }
   } catch {
@@ -234,7 +268,7 @@ export async function findActivePipelineRunByEntityId(entity_id: string) {
 
   return {
     batch: fallbackBatch,
-    run: fallbackRun ?? null,
+    run: fallbackBatchStillActive ? (fallbackRun ?? null) : null,
   }
 }
 

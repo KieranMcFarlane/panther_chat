@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS entity_dossiers (
 
     -- Entity identification
     entity_id TEXT UNIQUE NOT NULL,
+    canonical_entity_id UUID,
     entity_name TEXT NOT NULL,
     entity_type TEXT NOT NULL,  -- CLUB, LEAGUE, VENUE, etc.
     priority_score INTEGER NOT NULL CHECK (priority_score >= 0 AND priority_score <= 100),
@@ -39,6 +40,7 @@ CREATE TABLE IF NOT EXISTS entity_dossiers (
 
 -- Indexes for fast lookups
 CREATE INDEX idx_dossiers_entity_id ON entity_dossiers(entity_id);
+CREATE INDEX idx_dossiers_canonical_entity_id ON entity_dossiers(canonical_entity_id);
 CREATE INDEX idx_dossiers_tier ON entity_dossiers(tier);
 CREATE INDEX idx_dossiers_cache_status ON entity_dossiers(cache_status);
 CREATE INDEX idx_dossiers_expires_at ON entity_dossiers(expires_at);

@@ -124,6 +124,7 @@ class DualWritePersistenceCoordinator:
                 "phase": phase,
                 "record_type": record_type,
                 "record_id": record_id,
+                "envelope": envelope,
                 "retry_after_seconds": 30,
             },
         }
@@ -172,6 +173,7 @@ class DualWritePersistenceCoordinator:
                         "phase": phase,
                         "record_type": step_type,
                         "record_id": step_id,
+                        "envelope": envelope,
                         "retry_after_seconds": 30,
                     }
                 )

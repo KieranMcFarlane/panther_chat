@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getEntityImportBatchStatus } from '@/lib/entity-import-jobs'
+import { enrichPipelineRunsWithLifecycle } from '@/lib/entity-pipeline-lifecycle'
 
 export async function GET(
   _request: NextRequest,
@@ -15,7 +16,12 @@ export async function GET(
       )
     }
 
-    return NextResponse.json(status)
+    const enrichedRuns = await enrichPipelineRunsWithLifecycle(status.pipeline_runs ?? [])
+
+    return NextResponse.json({
+      ...status,
+      pipeline_runs: enrichedRuns,
+    })
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to fetch batch status' },

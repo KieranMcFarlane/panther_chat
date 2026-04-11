@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
 import type { HomeGraphitiInsightsResponse } from '@/lib/home-graphiti-contract'
 
 export function GraphitiInsightsFeed() {
@@ -292,14 +293,14 @@ export function GraphitiInsightsFeed() {
                         Mark for review
                       </Button>
                       <Button asChild size="sm" variant="ghost" className="text-slate-200 hover:bg-white/5 hover:text-white">
-                        <Link href={`${insight.destination_url || `/entity-browser/${insight.entity_id}/dossier?from=1`}#missing-evidence`}>
+                        <Link href={`${insight.destination_url || getEntityBrowserDossierHref(insight.entity_id, '1') || '/entity-browser'}#missing-evidence`}>
                           Inspect missing evidence
                         </Link>
                       </Button>
                     </>
                   )}
                   <Button asChild size="sm" className="bg-amber-400 text-black hover:bg-amber-300">
-                    <Link href={insight.destination_url || `/entity-browser/${insight.entity_id}/dossier?from=1`}>
+                    <Link href={insight.destination_url || getEntityBrowserDossierHref(insight.entity_id, '1') || '/entity-browser'}>
                       Open dossier
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>

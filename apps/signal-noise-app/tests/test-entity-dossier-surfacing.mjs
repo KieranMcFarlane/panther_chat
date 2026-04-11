@@ -23,6 +23,12 @@ test('entity loader searches both premium and standard dossier stores before giv
   assert.match(loaderSource, /candidateTierDirs/)
 })
 
+test('entity loader can synthesize a browser entity from canonical question-first artifacts when no live entity row exists', () => {
+  assert.match(loaderSource, /const canonicalQuestionFirst = await resolveCanonicalQuestionFirstDossier\(entityId, null\)/)
+  assert.match(loaderSource, /source: 'dossier-file'/)
+  assert.match(loaderSource, /dossier_data: JSON\.stringify\(dossier\)/)
+})
+
 test('entity browser dossier page passes the persisted dossier into the client page and dossier router', () => {
   assert.match(dossierPageSource, /initialDossier=\{entityData\.dossier\}/)
   assert.match(dossierClientSource, /initialDossier\?: any \| null/)

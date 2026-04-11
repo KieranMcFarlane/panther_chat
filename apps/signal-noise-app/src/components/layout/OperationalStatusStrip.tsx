@@ -1,123 +1,234 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { BarChart3, CircleDot, Clock3, Radar } from 'lucide-react'
+import { BarChart3, ChevronDown, ChevronUp } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import type { OperationalSummary } from '@/lib/operational-summary'
+import {
+  getCachedOperationalDrilldownPayload,
+  loadOperationalDrilldownPayload,
+  primeOperationalDrilldownPayload,
+  type OperationalDrilldownPayload,
+} from '@/lib/operational-drilldown-client'
 
 interface OperationalStatusStripProps {
   drawerOpen: boolean
   onToggleDrawer: () => void
 }
+export function OperationalStatusStrip({
+  drawerOpen,
+  onToggleDrawer,
+}: OperationalStatusStripProps) {
+  const [drilldown, setDrilldown] = useState<OperationalDrilldownPayload | null>(null)
+  const [controlState, setControlState] = useState<OperationalDrilldownPayload['control'] | null>(null)
+  const [isTogglingPipeline, setIsTogglingPipeline] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(true)
 
-const fallbackSummary: OperationalSummary = {
-  updatedAt: 'Loading...',
-  cards: {
-    entitiesActive: '…',
-    pipelineLive: '…',
-    blocked: '…',
-    recentCompletions: '…',
-  },
-  scout: {
-    statusLabel: 'Loading',
-    detail: 'Waiting for operational summary',
-  },
-  enrichment: {
-    statusLabel: 'Loading',
-    detail: 'Waiting for enrichment progress',
-  },
-  pipeline: {
-    statusLabel: 'Loading',
-    detail: 'Waiting for pipeline summary',
-  },
-}
+  function formatRunningDuration(value: string | null | undefined) {
+    if (!value) return 'running for unknown duration'
+    const timestamp = new Date(value).getTime()
+    if (Number.isNaN(timestamp)) return 'running for unknown duration'
+    const elapsedMs = Math.max(0, Date.now() - timestamp)
+    const minutes = Math.floor(elapsedMs / 60000)
+    const hours = Math.floor(minutes / 60)
+    if (hours > 0) {
+      const remainingMinutes = minutes % 60
+      return `running for ${hours}h ${remainingMinutes}m`
+    }
+    if (minutes > 0) {
+      return `running for ${minutes}m`
+    }
+    return `running for ${Math.max(1, Math.floor(elapsedMs / 1000))}s`
+  }
 
-export function OperationalStatusStrip({ drawerOpen, onToggleDrawer }: OperationalStatusStripProps) {
-  const [summary, setSummary] = useState<OperationalSummary>(fallbackSummary)
+  function formatQuestionProgress(questionId: string | null | undefined) {
+    if (!questionId) return 'Question unavailable'
+    const match = String(questionId).match(/q(\d+)/i)
+    if (!match) return `Question ${questionId}`
+    return `Question ${Number(match[1])} of 15`
+  }
 
   useEffect(() => {
     let cancelled = false
-
-    async function loadSummary() {
-      try {
-        const response = await fetch('/api/operational-summary')
-        if (!response.ok) {
-          throw new Error(`Failed to load operational summary (${response.status})`)
-        }
-
+    void fetch('/api/home/pipeline-control', { cache: 'no-store' })
+      .then(async (response) => {
+        if (!response.ok) return null
         const payload = await response.json()
-        if (!cancelled && payload?.data) {
-          setSummary(payload.data as OperationalSummary)
+        return payload?.control ?? null
+      })
+      .then((control) => {
+        if (!cancelled && control) {
+          setControlState(control)
         }
-      } catch {
-        if (!cancelled) {
-          setSummary((current) => current)
-        }
-      }
-    }
+      })
+      .catch(() => {
+        // keep the default state
+      })
 
-    loadSummary()
+    primeOperationalDrilldownPayload()
+    const cachedPayload = getCachedOperationalDrilldownPayload()
+    if (cachedPayload && !cancelled) {
+      setDrilldown(cachedPayload)
+    }
+    void loadOperationalDrilldownPayload()
+      .then((payload) => {
+        if (!cancelled) {
+          setDrilldown(payload)
+          setControlState(payload.control ?? null)
+        }
+      })
+      .catch(() => {
+        // leave summary fallback in place
+      })
 
     return () => {
       cancelled = true
     }
   }, [])
 
+  const inProgressEntity = drilldown?.queue?.in_progress_entity ?? null
+  const queuedEntityCount = drilldown?.queue?.upcoming_entities?.length ?? 0
+  const pipelinePaused = controlState?.is_paused === true
+  const ignitionState = controlState?.transition_state
+    || controlState?.observed_state
+    || (pipelinePaused ? 'paused' : 'running')
+  const isWaitingForClaim = !pipelinePaused && !inProgressEntity && (ignitionState === 'starting' || ignitionState === 'running')
+  const ignitionLabel = ignitionState === 'starting'
+    ? 'Ignition starting'
+    : ignitionState === 'stopping'
+      ? 'Stopping intake'
+      : ignitionState === 'paused'
+        ? 'Paused'
+        : isWaitingForClaim
+          ? 'Waiting for claimable work'
+          : 'Engine running'
+  const activeQuestionLabel = inProgressEntity
+    ? formatQuestionProgress(inProgressEntity.current_question_id || inProgressEntity.active_question_id)
+    : null
+  const liveEntityTicker = inProgressEntity
+    ? `Running — ${inProgressEntity.entity_name} — Enrichment — ${activeQuestionLabel ?? 'Question unavailable'} — Pipeline Active — ${formatRunningDuration(inProgressEntity.started_at || inProgressEntity.generated_at)}`
+    : pipelinePaused
+      ? 'Pipeline intake paused.'
+      : queuedEntityCount > 0
+        ? `Waiting for claimable work — ${queuedEntityCount} queued entities`
+        : 'Waiting for claimable work.'
+  const compactTicker = liveEntityTicker
+  const loopStatus = drilldown?.loop_status
   const statusItems = [
-    { label: 'Entities active', value: summary.cards.entitiesActive, tone: 'text-white' },
-    { label: 'Pipeline live', value: summary.cards.pipelineLive, tone: 'text-sky-300' },
-    { label: 'Blocked', value: summary.cards.blocked, tone: 'text-amber-300' },
-    { label: 'Recent completions', value: summary.cards.recentCompletions, tone: 'text-emerald-300' },
+    {
+      label: 'Entities active',
+      value: String(loopStatus?.total_scheduled ?? '…'),
+      tone: 'text-white',
+    },
+    {
+      label: 'Pipeline live',
+      value: String(loopStatus?.runtime_counts?.running ?? '…'),
+      tone: 'text-sky-300',
+    },
+    {
+      label: 'Blocked',
+      value: String(loopStatus?.quality_counts?.blocked ?? '…'),
+      tone: 'text-amber-300',
+    },
+    {
+      label: 'Recent completions',
+      value: String(loopStatus?.completed ?? '…'),
+      tone: 'text-emerald-300',
+    },
   ] as const
 
+  async function togglePipelinePaused() {
+    setIsTogglingPipeline(true)
+    try {
+      const response = await fetch('/api/home/pipeline-control', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          is_paused: !pipelinePaused,
+          pause_reason: !pipelinePaused ? 'Paused from Live Ops' : null,
+        }),
+      })
+      if (!response.ok) {
+        throw new Error(`Failed to update pipeline control (${response.status})`)
+      }
+      const payload = await response.json()
+      setControlState(payload?.control ?? null)
+    } catch {
+      setControlState((current) => current)
+    } finally {
+      setIsTogglingPipeline(false)
+    }
+  }
+
   return (
-    <section className="rounded-2xl border border-custom-border bg-custom-box px-4 py-4 shadow-sm">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex flex-wrap items-center gap-3">
-          <Badge className="gap-1.5 border border-sky-500/30 bg-sky-500/10 text-sky-200 hover:bg-sky-500/15">
-            <Radar className="h-3.5 w-3.5" />
-            Live Ops
-          </Badge>
-          <Badge variant="outline" className="gap-1.5 border-custom-border text-fm-light-grey">
-            <CircleDot className="h-3.5 w-3.5 text-emerald-400" />
-            API-backed runtime state
-          </Badge>
-          <Badge variant="outline" className="gap-1.5 border-custom-border text-fm-light-grey">
-            <Clock3 className="h-3.5 w-3.5" />
-            {summary.updatedAt}
-          </Badge>
+    <section
+      className={`overflow-hidden rounded-2xl border border-custom-border bg-custom-box px-4 shadow-sm transition-[max-height] duration-300 ease-out ${
+        isExpanded ? 'max-h-[40rem] py-4' : 'max-h-16 py-2'
+      }`}
+    >
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
+          <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4 xl:justify-items-start">
+            {statusItems.map((item) => (
+              <button
+                key={item.label}
+                type="button"
+                className="min-w-[146px] rounded-lg border border-custom-border bg-custom-bg/70 px-2.5 py-2 text-left transition hover:border-white/30"
+              >
+                <div className="text-[0.55rem] uppercase tracking-[0.14em] text-slate-300">{item.label}</div>
+                <div className={`mt-0.5 text-lg font-semibold leading-none ${item.tone}`}>{item.value}</div>
+              </button>
+            ))}
+          </div>
+
+          <div className="flex flex-wrap items-center justify-end gap-2 xl:pl-3">
+            <Button
+              variant="outline"
+              className="h-9 border-custom-border px-3 py-1.5"
+              onClick={togglePipelinePaused}
+              disabled={isTogglingPipeline}
+            >
+              {pipelinePaused ? 'Start pipeline' : 'Stop intake'}
+            </Button>
+            <Button
+              variant="outline"
+              className="h-9 border-custom-border px-3 py-1.5"
+              onClick={() => setIsExpanded((current) => !current)}
+              aria-expanded={isExpanded}
+              aria-label={isExpanded ? 'Minimize live ops header' : 'Expand live ops header'}
+            >
+              {isExpanded ? <ChevronUp className="mr-2 h-4 w-4" /> : <ChevronDown className="mr-2 h-4 w-4" />}
+              {isExpanded ? 'Minimize' : 'Expand'}
+            </Button>
+            <Button variant="outline" className="h-9 border-custom-border px-3 py-1.5" onClick={onToggleDrawer}>
+              <BarChart3 className="mr-2 h-4 w-4" />
+              {drawerOpen ? 'Hide run details' : 'Show run details'}
+            </Button>
+          </div>
         </div>
 
-        <Button variant="outline" className="border-custom-border" onClick={onToggleDrawer}>
-          <BarChart3 className="mr-2 h-4 w-4" />
-          {drawerOpen ? 'Hide run details' : 'Show run details'}
-        </Button>
-      </div>
-
-      <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        {statusItems.map((item) => (
-          <div key={item.label} className="rounded-xl border border-custom-border bg-custom-bg/70 p-3">
-            <div className="text-xs uppercase tracking-[0.16em] text-slate-500">{item.label}</div>
-            <div className={`mt-1 text-2xl font-semibold ${item.tone}`}>{item.value}</div>
+        <div className="flex items-center gap-2 overflow-x-auto whitespace-nowrap pb-1">
+          <div className="flex min-w-0 flex-1 items-center gap-2 rounded-xl border border-custom-border bg-custom-bg/70 px-3 py-2">
+            <Badge variant="outline" className="border-sky-500/30 text-sky-300">
+              {ignitionLabel}
+            </Badge>
+            <div className="min-w-0 overflow-hidden">
+              <div className="animate-marquee flex w-max items-center gap-8 whitespace-nowrap text-[0.72rem] font-medium uppercase tracking-[0.12em] text-fm-light-grey">
+                <span>{compactTicker}</span>
+                <span aria-hidden="true">{compactTicker}</span>
+              </div>
+            </div>
           </div>
-        ))}
-      </div>
+        </div>
 
-      <div className="mt-4 flex flex-wrap gap-2">
-        <Badge variant="outline" className="border-emerald-500/30 text-emerald-300">
-          Scout: {summary.scout.statusLabel}
-        </Badge>
-        <Badge variant="outline" className="border-amber-500/30 text-amber-300">
-          Enrichment: {summary.enrichment.statusLabel}
-        </Badge>
-        <Badge variant="outline" className="border-blue-500/30 text-blue-300">
-          Pipeline: {summary.pipeline.statusLabel}
-        </Badge>
-        <Badge variant="outline" className="border-fuchsia-500/30 text-fuchsia-300">
-          Entities: {summary.cards.entitiesActive}
-        </Badge>
+        {isExpanded ? (
+          <div className="rounded-xl border border-custom-border bg-black/20 px-3 py-2 text-[0.72rem] uppercase tracking-[0.12em] text-fm-light-grey">
+            {liveEntityTicker}
+          </div>
+        ) : null}
       </div>
     </section>
   )

@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { resolveEntityUuid } from '@/lib/entity-public-id';
+import { getEntityBrowserDossierHref } from '@/lib/entity-routing';
+import { searchVectorEntities } from '@/lib/vector-search-client';
 
 interface SearchResult {
 	id: string;
@@ -16,6 +17,8 @@ interface SearchResult {
 	name: string;
 	type: 'club' | 'sportsperson' | 'poi' | 'tender' | 'contact' | 'unknown';
 	score: number;
+	sport?: string;
+	country?: string;
 	metadata?: Record<string, any>;
 }
 
@@ -42,23 +45,12 @@ export default function VectorSearch({ className }: VectorSearchProps) {
 		setError(null);
 
 		try {
-			const response = await fetch('/api/vector-search', {
-				method: 'POST',
-				headers: { 
-					'Content-Type': 'application/json',
-					'Cache-Control': 'no-cache',
-					'Pragma': 'no-cache'
-				},
-				body: JSON.stringify({ 
-					query: searchQuery, 
-					limit: 10, 
-					score_threshold: 0.1,
-					entity_types: null,
-					timestamp: Date.now() // Add timestamp to prevent caching
-				}),
+			const data = await searchVectorEntities({
+				query: searchQuery,
+				limit: 10,
+				score_threshold: 0.1,
+				entity_types: null,
 			});
-			if (!response.ok) throw new Error(`HTTP ${response.status}`);
-			const data = await response.json();
 			setResults(data.results || []);
 			console.log('Vector search results for', searchQuery, ':', data.results);
 			
@@ -94,26 +86,17 @@ export default function VectorSearch({ className }: VectorSearchProps) {
 		setIsOpen(false);
 		setQuery('');
 		
-		// Navigate to entity page
-		const entityId = result.uuid || result.entity_id || result.id;
-		if (entityId) {
-			
-			// Check if it's one of our demo entities first
-			const demoEntityRoutes = {
-				'arsenal_fc_001': '/entity-browser/arsenal_fc_001/dossier?from=1',
-				'chelsea_fc_002': '/entity-browser/chelsea_fc_002/dossier?from=1', 
-				'martin_odegaard_003': '/entity-browser/martin_odegaard_003/dossier?from=1',
-				'tender_premier_league_001': '/entity-browser/tender_premier_league_001/dossier?from=1',
-				'contact_sports_agent_001': '/entity-browser/contact_sports_agent_001/dossier?from=1'
-			};
-			
-			const demoRoute = demoEntityRoutes[entityId] || demoEntityRoutes[resolveEntityUuid({ id: entityId, neo4j_id: entityId, supabase_id: entityId }) || '']
-			if (demoRoute) {
-				router.push(demoRoute);
-				return;
-			}
-			
-			router.push(`/entity-browser/${entityId}/dossier?from=1`);
+		const href = getEntityBrowserDossierHref({
+			...result,
+			properties: {
+				name: result.name,
+				type: result.type,
+				sport: result.sport,
+				country: result.country,
+			},
+		}, '1')
+		if (href) {
+			router.push(href);
 		}
 	};
 

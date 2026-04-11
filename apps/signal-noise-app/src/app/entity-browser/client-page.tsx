@@ -4,23 +4,20 @@ import Link from "next/link"
 import { useState, useEffect, useCallback, useRef, useDeferredValue } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { FixedSizeList, type ListChildComponentProps } from "react-window"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { Skeleton } from "@/components/ui/skeleton"
 import { EntityCard } from "@/components/EntityCard"
-import { EntitySmokeJourney } from "@/components/entity-browser/EntitySmokeJourney"
-import type { EntitySmokeJourneyItem } from "@/lib/entity-smoke-set"
+import { FacetFilterBar, type FacetFilterField } from "@/components/filters/FacetFilterBar"
+import { AppPageBody, AppPageHeader, AppPageShell } from "@/components/layout/AppPageShell"
 import { useEntitiesBrowserData, useEntityTaxonomy } from "@/lib/swr-config"
 import type { EntityBrowserFilters, EntityBrowserResponse } from "@/lib/entity-browser-data"
 import type { EntitiesTaxonomyResponse } from "@/lib/entities-taxonomy"
 import {
   Database,
-  Search,
   Filter,
-  ArrowUpDown,
   ArrowLeft,
   ArrowRight,
   Download
@@ -43,13 +40,11 @@ interface AutocompleteEntity {
 
 
 interface EntityBrowserClientPageProps {
-  smokeItems: EntitySmokeJourneyItem[]
   initialEntitiesData?: EntityBrowserResponse | null
   initialTaxonomy?: EntitiesTaxonomyResponse | null
 }
 
 export default function EntityBrowserClientPage({
-  smokeItems,
   initialEntitiesData = null,
   initialTaxonomy = null,
 }: EntityBrowserClientPageProps) {
@@ -62,6 +57,7 @@ export default function EntityBrowserClientPage({
   const deferredSearchTerm = useDeferredValue(searchTerm)
   const [autocompleteLoading, setAutocompleteLoading] = useState(false)
   const [autocompleteEntities, setAutocompleteEntities] = useState<AutocompleteEntity[]>([])
+  const [autocompleteOpen, setAutocompleteOpen] = useState(false)
   const [currentPage, setCurrentPage] = useState(initialPageFromUrl)
   const [gridWidth, setGridWidth] = useState(0)
   const gridContainerRef = useRef<HTMLDivElement | null>(null)
@@ -81,11 +77,11 @@ export default function EntityBrowserClientPage({
     filters,
     currentPage === initialPageFromUrl && !appliedSearchTerm ? initialEntitiesData : null
   )
-  const { taxonomy, taxonomyLoading } = useEntityTaxonomy(initialTaxonomy)
+  const { taxonomy } = useEntityTaxonomy(initialTaxonomy)
   const availableSports = taxonomy?.sports ?? []
   const availableLeagues = taxonomy?.leagues ?? []
   const availableCountries = taxonomy?.countries ?? []
-  const availableEntityClasses = taxonomy?.entityClasses ?? []
+  const availableEntityRoles = taxonomy?.entityRoles ?? taxonomy?.entityClasses ?? []
 
   const syncEntityBrowserHistory = useCallback((browserUrl: string) => {
     const rawStack = sessionStorage.getItem('entityBrowserHistoryStack')
@@ -182,12 +178,14 @@ export default function EntityBrowserClientPage({
     if (term.length < 2) {
       setAutocompleteEntities([])
       setAutocompleteLoading(false)
+      setAutocompleteOpen(false)
       return
     }
 
     const controller = new AbortController()
     const loadAutocomplete = async () => {
       setAutocompleteLoading(true)
+      setAutocompleteEntities([])
       try {
         const params = new URLSearchParams({
           mode: 'autocomplete',
@@ -201,9 +199,11 @@ export default function EntityBrowserClientPage({
         const result = await response.json()
         const nextItems = Array.isArray(result.entities) ? result.entities.slice(0, 8) : []
         setAutocompleteEntities(nextItems)
+        setAutocompleteOpen(true)
       } catch (err) {
         if ((err as Error).name !== 'AbortError') {
           setAutocompleteEntities([])
+          setAutocompleteOpen(false)
         }
       } finally {
         setAutocompleteLoading(false)
@@ -256,10 +256,15 @@ export default function EntityBrowserClientPage({
 
   if (entitiesLoading && !entitiesData && !initialEntitiesData) {
     return (
-      <div className="min-h-screen bg-background">
-        <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="container mx-auto px-4 py-6">
-            <div className="flex items-center gap-4 mb-4">
+      <AppPageShell>
+        <AppPageHeader
+          eyebrow="Workspace"
+          title="Entity Browser"
+          description="Primary workspace for persisted entity dossiers, question-driven research, and entity-first follow-up."
+        />
+        <AppPageBody>
+          <section className="rounded-2xl border border-border/70 bg-card/80 p-5 shadow-sm">
+            <div className="mb-4 flex items-center gap-4">
               <div className="flex items-center gap-3">
                 <Skeleton className="h-8 w-8 rounded-full" />
                 <div className="space-y-2">
@@ -275,10 +280,7 @@ export default function EntityBrowserClientPage({
             <p className="mt-4 text-sm text-muted-foreground">
               Hydrating entity browser from cached snapshot and taxonomy.
             </p>
-          </div>
-        </div>
-
-        <div className="container mx-auto px-4 py-6">
+          </section>
           <div className="mb-4 rounded-2xl border border-slate-700/80 bg-slate-950/70 p-4">
             <div className="flex items-center justify-between gap-3">
               <div className="space-y-2">
@@ -339,14 +341,15 @@ export default function EntityBrowserClientPage({
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </AppPageBody>
+      </AppPageShell>
     )
   }
 
   if (entitiesError) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <AppPageShell size="narrow">
+        <AppPageBody className="min-h-[50vh] items-center justify-center">
         <Card className="w-full max-w-md">
           <CardContent className="p-6 text-center">
             <Database className="h-12 w-12 text-destructive mx-auto mb-4" />
@@ -357,7 +360,8 @@ export default function EntityBrowserClientPage({
             </Button>
           </CardContent>
         </Card>
-      </div>
+        </AppPageBody>
+      </AppPageShell>
     )
   }
 
@@ -378,7 +382,7 @@ export default function EntityBrowserClientPage({
     filters.sport !== 'all' ? { key: 'sport', label: `Sport: ${filters.sport}` } : null,
     filters.league !== 'all' ? { key: 'league', label: `League: ${filters.league}` } : null,
     filters.country !== 'all' ? { key: 'country', label: `Country: ${filters.country}` } : null,
-    filters.entityClass !== 'all' ? { key: 'entityClass', label: `Class: ${filters.entityClass}` } : null,
+    filters.entityClass !== 'all' ? { key: 'entityClass', label: `Role: ${filters.entityClass}` } : null,
     filters.entityType !== 'all' ? { key: 'entityType', label: `Type: ${filters.entityType}` } : null,
   ].filter(Boolean) as Array<{ key: 'sport' | 'league' | 'country' | 'entityClass' | 'entityType', label: string }>
   const columnCount = gridWidth >= 1100 ? 3 : gridWidth >= 720 ? 2 : 1
@@ -386,220 +390,231 @@ export default function EntityBrowserClientPage({
   const rowHeight = 300
   const listHeight = Math.min(900, Math.max(rowHeight, rowCount * rowHeight))
   const columnGap = 24
+  const filterFields: FacetFilterField[] = [
+    {
+      key: 'entityType',
+      label: 'Entity Type',
+      value: filters.entityType,
+      placeholder: 'Entity Type',
+      options: [
+        { value: 'all', label: 'All Types' },
+        { value: 'Entity', label: 'Entity' },
+        { value: 'TopTierSport', label: 'Top Tier Sport' },
+        { value: 'Club', label: 'Club' },
+        { value: 'League', label: 'League' },
+        { value: 'Person', label: 'Person' },
+      ],
+      onValueChange: (value) => updateFilters((prev) => ({ ...prev, entityType: value })),
+    },
+    {
+      key: 'sport',
+      label: 'Sport',
+      value: filters.sport,
+      placeholder: 'Sport',
+      options: [
+        { value: 'all', label: 'All Sports' },
+        ...availableSports.map((sport) => ({
+          value: sport,
+          label: sport,
+          count: taxonomy?.counts?.sports?.[sport] ?? 0,
+        })),
+      ],
+      onValueChange: (value) => updateFilters((prev) => ({ ...prev, sport: value })),
+    },
+    {
+      key: 'league',
+      label: 'League',
+      value: filters.league,
+      placeholder: 'League',
+      options: [
+        { value: 'all', label: 'All Leagues' },
+        ...availableLeagues.map((league) => ({
+          value: league,
+          label: league,
+          count: taxonomy?.counts?.leagues?.[league] ?? 0,
+        })),
+      ],
+      onValueChange: (value) => updateFilters((prev) => ({ ...prev, league: value })),
+    },
+    {
+      key: 'country',
+      label: 'Country',
+      value: filters.country,
+      placeholder: 'Country',
+      options: [
+        { value: 'all', label: 'All Countries' },
+        ...availableCountries.map((country) => ({
+          value: country,
+          label: country,
+          count: taxonomy?.counts?.countries?.[country] ?? 0,
+        })),
+      ],
+      onValueChange: (value) => updateFilters((prev) => ({ ...prev, country: value })),
+    },
+    {
+      key: 'entityClass',
+      label: 'Role',
+      value: filters.entityClass,
+      placeholder: 'Role',
+      options: [
+        { value: 'all', label: 'All Roles' },
+        ...availableEntityRoles.map((entityRole) => ({
+          value: entityRole,
+          label: entityRole,
+          count: taxonomy?.counts?.entityRoles?.[entityRole] ?? taxonomy?.counts?.entityClasses?.[entityRole] ?? 0,
+        })),
+      ],
+      onValueChange: (value) => updateFilters((prev) => ({ ...prev, entityClass: value })),
+    },
+    {
+      key: 'sortBy',
+      label: 'Sort By',
+      value: filters.sortBy,
+      placeholder: 'Sort By',
+      options: [
+        { value: 'popular', label: 'Popular' },
+        { value: 'name', label: 'Name' },
+        { value: 'type', label: 'Type' },
+        { value: 'sport', label: 'Sport' },
+        { value: 'country', label: 'Country' },
+        { value: 'priorityScore', label: 'Priority Score' },
+        { value: 'estimatedValue', label: 'Estimated Value' },
+      ],
+      onValueChange: (value) => updateFilters((prev) => ({ ...prev, sortBy: value })),
+    },
+    {
+      key: 'sortOrder',
+      label: 'Sort Order',
+      value: filters.sortOrder,
+      placeholder: 'Sort Order',
+      options: [
+        { value: 'asc', label: 'Ascending' },
+        { value: 'desc', label: 'Descending' },
+      ],
+      onValueChange: (value) => updateFilters((prev) => ({ ...prev, sortOrder: value as 'asc' | 'desc' })),
+    },
+    {
+      key: 'limit',
+      label: 'Per Page',
+      value: filters.limit,
+      placeholder: 'Per Page',
+      options: [
+        { value: '5', label: '5 per page (Fast)' },
+        { value: '10', label: '10 per page (Default)' },
+        { value: '20', label: '20 per page' },
+        { value: '50', label: '50 per page' },
+      ],
+      onValueChange: (value) => updateFilters((prev) => ({ ...prev, limit: value })),
+    },
+  ]
+  const filterChips = activeFilterChips.map((chip) => ({
+    key: chip.key,
+    label: chip.label,
+    onRemove: () => updateFilters((prev) => ({ ...prev, [chip.key]: 'all' })),
+  }))
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="border-b border-border/60 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-4 py-5">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div className="flex items-start gap-3">
-              <Database className="mt-0.5 h-7 w-7 text-primary" />
-              <div className="space-y-1">
-                <h1 className="text-2xl font-semibold tracking-tight">Entity Browser</h1>
-                <p className="max-w-2xl text-sm text-muted-foreground">
-                  Primary workspace for persisted entity dossiers, question-driven research, and entity-first follow-up
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Button asChild variant="outline" size="sm">
-                <Link href="/entity-import">Import CSV</Link>
-              </Button>
-              <Button asChild variant="outline" size="sm">
-                <Link href="/tenders">View tenders</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4 py-6">
-        <div className="mb-4">
-          <EntitySmokeJourney items={smokeItems} />
-        </div>
-        <Card className="mb-4 border-border/70 shadow-sm">
-          <CardContent className="p-3.5 md:p-4">
-            <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search entities..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      applyFilters()
-                    }
-                  }}
-                  className="pl-10"
-                />
-                {(autocompleteLoading || autocompleteEntities.length > 0) && (
-                  <div className="absolute z-20 mt-1 w-full rounded-md border bg-background p-2 shadow-lg">
-                    {autocompleteLoading ? (
-                      <p className="text-xs text-muted-foreground px-1 py-1">Loading suggestions...</p>
-                    ) : (
-                      autocompleteEntities.map((entity) => (
-                        <button
+    <AppPageShell>
+      <AppPageHeader
+        eyebrow="Workspace"
+        title="Entity Browser"
+        description="Primary workspace for persisted entity dossiers, question-driven research, and entity-first follow-up."
+        actions={
+          <>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/entity-import">Import CSV</Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/tenders">View tenders</Link>
+            </Button>
+          </>
+        }
+      />
+      <AppPageBody>
+        <FacetFilterBar
+        className="mb-4"
+        searchSlot={
+          <div className="relative">
+            <Command className="overflow-visible rounded-md border border-input bg-background shadow-sm">
+              <CommandInput
+                value={searchTerm}
+                onValueChange={(value) => {
+                  setSearchTerm(value)
+                  setAutocompleteOpen(value.trim().length >= 2)
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    applyFilters()
+                    setAutocompleteOpen(false)
+                  }
+                }}
+                onFocus={() => {
+                  if (searchTerm.trim().length >= 2) {
+                    setAutocompleteOpen(true)
+                  }
+                }}
+                placeholder="Search club, sport, country, league..."
+                className="h-11 border-0 pl-2"
+              />
+              {(autocompleteOpen || autocompleteLoading || autocompleteEntities.length > 0) ? (
+                <CommandList className="absolute z-20 mt-1 w-full rounded-md border bg-background p-2 shadow-lg">
+                  {autocompleteLoading ? (
+                    <div className="px-1 py-1 text-xs text-muted-foreground">Loading suggestions...</div>
+                  ) : autocompleteEntities.length === 0 ? (
+                    <CommandEmpty>No matches found.</CommandEmpty>
+                  ) : (
+                    <CommandGroup>
+                      {autocompleteEntities.map((entity) => (
+                        <CommandItem
                           key={entity.id}
-                          className="flex w-full items-center justify-between rounded-sm px-2 py-1 text-left text-sm hover:bg-accent"
-                          onClick={() => {
-                            setSearchTerm(entity.name || "")
-                            setAppliedSearchTerm(entity.name || "")
+                          value={entity.name}
+                          onSelect={(value) => {
+                            setSearchTerm(value)
+                            setAppliedSearchTerm(value)
                             setAutocompleteEntities([])
+                            setAutocompleteOpen(false)
                             setCurrentPage(1)
                           }}
-                          type="button"
+                          className="flex items-center justify-between"
                         >
                           <span className="truncate">{entity.name}</span>
                           <span className="ml-2 text-xs text-muted-foreground">{entity.type || "Entity"}</span>
-                        </button>
-                      ))
-                    )}
-                  </div>
-                )}
-              </div>
-
-              <Select value={filters.entityType} onValueChange={(value) => updateFilters(prev => ({ ...prev, entityType: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Entity Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="Entity">Entity</SelectItem>
-                  <SelectItem value="TopTierSport">Top Tier Sport</SelectItem>
-                  <SelectItem value="Club">Club</SelectItem>
-                  <SelectItem value="League">League</SelectItem>
-                  <SelectItem value="Person">Person</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select value={filters.sport} onValueChange={(value) => updateFilters(prev => ({ ...prev, sport: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Sport" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Sports</SelectItem>
-                  {availableSports.map((sport) => (
-                    <SelectItem key={sport} value={sport}>
-                      {sport} ({taxonomy.counts?.sports?.[sport] ?? 0})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={filters.league} onValueChange={(value) => updateFilters(prev => ({ ...prev, league: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="League" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Leagues</SelectItem>
-                  {availableLeagues.map((league) => (
-                    <SelectItem key={league} value={league}>
-                      {league} ({taxonomy.counts?.leagues?.[league] ?? 0})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={filters.country} onValueChange={(value) => updateFilters(prev => ({ ...prev, country: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Country" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Countries</SelectItem>
-                  {availableCountries.map((country) => (
-                    <SelectItem key={country} value={country}>
-                      {country} ({taxonomy.counts?.countries?.[country] ?? 0})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={filters.entityClass} onValueChange={(value) => updateFilters(prev => ({ ...prev, entityClass: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Entity Class" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Classes</SelectItem>
-                  {availableEntityClasses.map((entityClass) => (
-                    <SelectItem key={entityClass} value={entityClass}>
-                      {entityClass} ({taxonomy.counts?.entityClasses?.[entityClass] ?? 0})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={filters.sortBy} onValueChange={(value) => updateFilters(prev => ({ ...prev, sortBy: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Sort By" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="popular">Popular</SelectItem>
-                  <SelectItem value="name">Name</SelectItem>
-                  <SelectItem value="type">Type</SelectItem>
-                  <SelectItem value="sport">Sport</SelectItem>
-                  <SelectItem value="country">Country</SelectItem>
-                  <SelectItem value="priorityScore">Priority Score</SelectItem>
-                  <SelectItem value="estimatedValue">Estimated Value</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select value={filters.sortOrder} onValueChange={(value) => updateFilters(prev => ({ ...prev, sortOrder: value as "asc" | "desc" }))}>
-                <SelectTrigger>
-                  <ArrowUpDown className="h-4 w-4 mr-2" />
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="asc">Ascending</SelectItem>
-                  <SelectItem value="desc">Descending</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select value={filters.limit} onValueChange={(value) => updateFilters(prev => ({ ...prev, limit: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Per Page" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="5">5 per page (Fast)</SelectItem>
-                  <SelectItem value="10">10 per page (Default)</SelectItem>
-                  <SelectItem value="20">20 per page</SelectItem>
-                  <SelectItem value="50">50 per page</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="flex gap-2 mt-4">
-              <Button onClick={applyFilters} variant="outline" size="sm">
-                <Filter className="h-4 w-4 mr-2" />
-                Apply Filters
-              </Button>
-              <Button onClick={resetAndReload} variant="outline" size="sm">
-                Reset
-              </Button>
-              <Button onClick={exportToJSON} variant="outline" size="sm">
-                <Download className="h-4 w-4 mr-2" />
-                Export JSON
-              </Button>
-              <Badge variant="outline" className="ml-auto">
-                Showing {entities.length} of {pagination.total.toLocaleString()} entities
-              </Badge>
-            </div>
-            {activeFilterChips.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-2">
-                {activeFilterChips.map((chip) => (
-                  <Button
-                    key={chip.key}
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => updateFilters((prev) => ({ ...prev, [chip.key]: 'all' }))}
-                  >
-                    {chip.label} ×
-                  </Button>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  )}
+                </CommandList>
+              ) : null}
+            </Command>
+          </div>
+        }
+          fields={filterFields}
+          actions={[
+            {
+              key: 'apply',
+              label: 'Apply Filters',
+              onClick: applyFilters,
+              icon: <Filter className="h-4 w-4" />,
+            },
+            {
+              key: 'reset',
+              label: 'Reset',
+              onClick: resetAndReload,
+            },
+            {
+              key: 'export',
+              label: 'Export JSON',
+              onClick: exportToJSON,
+              icon: <Download className="h-4 w-4" />,
+            },
+          ]}
+          chips={filterChips}
+          status={
+            <Badge variant="outline">
+              Showing {entities.length} of {pagination.total.toLocaleString()} entities
+            </Badge>
+          }
+        />
 
         <div ref={gridContainerRef} className="w-full">
           {entitiesValidating ? (
@@ -688,9 +703,8 @@ export default function EntityBrowserClientPage({
             <ArrowRight className="h-4 w-4 ml-2" />
           </Button>
         </div>
-      </div>
-
-    </div>
+      </AppPageBody>
+    </AppPageShell>
   )
 }
 

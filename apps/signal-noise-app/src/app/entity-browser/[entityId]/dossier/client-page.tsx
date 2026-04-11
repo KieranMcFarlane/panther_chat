@@ -7,12 +7,12 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, CheckCircle2, Clock3, FileText, Info, Layers3, Target } from "lucide-react"
 
+import Header from "@/components/header/Header"
 import { DossierError } from "@/components/entity-dossier/DossierError"
 import { resolveEntityBrowserReturnUrl } from "@/lib/entity-browser-history"
 import { pushWithViewTransition } from "@/lib/view-transition"
 import type { Entity } from "@/lib/entity-loader"
 
-const Header = dynamic(() => import("@/components/header/Header"), { ssr: false })
 const EmailComposeModal = dynamic(() => import("@/components/email/EmailComposeModal"), { ssr: false })
 const DossierOperatorControls = dynamic(() => import("@/components/entity-dossier/DossierOperatorControls").then((mod) => mod.DossierOperatorControls), {
   ssr: false,
@@ -78,6 +78,7 @@ export default function EntityDossierClientPage({
       dossierMetadata?.dossier_status ||
       ''
   ).trim()
+  const dossierOperatorStatus = dossierStatus || String(dossier?.quality_state || '').trim()
   const isPersistedDossier = hasQuestionFirstDossier
   const dossierConfidence = typeof dossierMetadata?.confidence_score === 'number'
     ? `${Math.round(dossierMetadata.confidence_score * 100)}%`
@@ -140,7 +141,7 @@ export default function EntityDossierClientPage({
   const supportingEvidenceCount = Number(discoverySummary?.supporting_evidence_count || dossierPromotions.length || 0)
   const persistedStateSummary = isPersistedDossier
     ? 'This page leads with the stored dossier, then adds enrichment and opportunity context. The first question is whether the persisted entity state is strong enough to move into an active pursuit decision.'
-    : 'No real question-first dossier is available yet. This page is showing entity and enrichment context only, and this entity should not be treated as demo-ready until a canonical dossier artifact exists.'
+    : 'No persisted dossier is available yet, so this page starts from the entity state and enrichment context. Nothing has been promoted to a client dossier yet, and this entity should not be treated as demo-ready until a canonical dossier artifact exists.'
 
   useEffect(() => {
     const currentFrom = new URLSearchParams(window.location.search).get('from') || fromPage
@@ -417,7 +418,12 @@ export default function EntityDossierClientPage({
             </CardContent>
           </Card>
 
-          <DossierOperatorControls entityId={entityId} dossierStatus={dossierStatus} />
+          <DossierOperatorControls
+            entityId={entityId}
+            dossierStatus={dossierOperatorStatus}
+            questions={Array.isArray(dossier?.questions) ? dossier.questions : []}
+            dossier={dossier}
+          />
 
           <div className="mb-6">
             <EntityEnrichmentSummaryCard

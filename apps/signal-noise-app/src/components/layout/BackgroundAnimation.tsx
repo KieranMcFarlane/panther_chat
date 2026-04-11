@@ -5,7 +5,6 @@ import gsap from 'gsap'
 
 const BackgroundAnimation = () => {
   const containerRef = useRef<HTMLDivElement>(null)
-  const buttonRef = useRef<HTMLButtonElement>(null)
   const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
@@ -15,29 +14,15 @@ const BackgroundAnimation = () => {
   useEffect(() => {
     if (!isClient || typeof window === 'undefined') return
     
-    // Use refs to access DOM elements after render
     const paths = Array.from(document.querySelectorAll('#background-svg path'))
     const background = document.querySelector('.background-container')
-    const button = buttonRef.current
     
-    console.log('BackgroundAnimation: Initializing...', {
-      pathsFound: paths.length,
-      buttonFound: !!button,
-      backgroundFound: !!background
-    })
-    
-    if (!button || paths.length === 0) {
-      console.log('BackgroundAnimation: Missing required elements')
+    if (paths.length === 0) {
       return
     }
-    
-    let isReversed = false
-    let isAnimating = true
 
     const masterTl = gsap.timeline({
       paused: true,
-      onComplete: () => isAnimating = false,
-      onReverseComplete: () => isAnimating = false,
     })
 
     masterTl.from(paths, {
@@ -54,34 +39,11 @@ const BackgroundAnimation = () => {
 
     masterTl.play()
 
-    const handleClick = () => {
-      console.log('BackgroundAnimation: Button clicked!', {
-        isAnimating,
-        isReversed: !isReversed
-      })
-      
-      if (isAnimating) return
-      isAnimating = true
-      isReversed = !isReversed
-
-      if (button) {
-        if (isReversed) {
-          button.textContent = "Play Forward"
-          gsap.to(background, { backgroundColor: "#E31B23", duration: masterTl.duration() })
-          masterTl.reverse()
-        } else {
-          button.textContent = "Reverse"
-          gsap.to(background, { backgroundColor: "#FDEE00", duration: masterTl.duration() })
-          masterTl.play()
-        }
-      }
-    }
-
-    // Add click handler to the button
-    button.addEventListener('click', handleClick)
-
     return () => {
-      button.removeEventListener('click', handleClick)
+      masterTl.kill()
+      if (background) {
+        gsap.killTweensOf(background)
+      }
     }
   }, [isClient])
 
@@ -174,14 +136,6 @@ const BackgroundAnimation = () => {
           </svg>
         </div>
       </div>
-      
-      {/* Button for animation control */}
-      <button
-        ref={buttonRef}
-        className="fixed top-4 right-4 z-50 px-4 py-2 bg-black text-white rounded-lg shadow-lg hover:bg-gray-800 transition-colors"
-      >
-        Reverse
-      </button>
     </>
   )
 }

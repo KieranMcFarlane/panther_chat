@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Search, Filter, RefreshCw, Database, Zap, Grid3X3 } from "lucide-react"
+import type { VectorSearchResult } from "@/lib/vector-search-client"
 
 
 export function VectorSearch() {
@@ -20,6 +21,20 @@ export function VectorSearch() {
   })
   
   const { results, loading, error } = useVectorSearch(query, filters, searchType)
+
+  const toEntity = (result: VectorSearchResult) => ({
+    id: result.uuid || result.entity_id || result.id,
+    labels: [result.type].filter(Boolean),
+    properties: {
+      ...(result.metadata || {}),
+      name: result.name,
+      type: result.type,
+      sport: result.sport,
+      country: result.country,
+      uuid: result.uuid,
+      entity_id: result.entity_id,
+    },
+  })
   
   return (
     <div className="min-h-screen bg-background">
@@ -213,10 +228,10 @@ export function VectorSearch() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {results.map((result, index) => (
                 <EntityCard
-                  key={result.entity.id}
-                  entity={result.entity}
-                  similarity={result.similarity}
-                  connections={result.connections}
+                  key={result.uuid || result.entity_id || result.id}
+                  entity={toEntity(result)}
+                  similarity={result.score}
+                  connections={[]}
                   rank={index + 1}
                 />
               ))}

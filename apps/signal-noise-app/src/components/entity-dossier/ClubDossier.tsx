@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { getEntityBrowserDossierHref } from "@/lib/entity-routing"
 import { 
   ArrowLeft,
   RefreshCw,
@@ -239,7 +240,10 @@ export function ClubDossier({ entity, onEmailEntity }: ClubDossierProps) {
     }
 
     console.log(`👤 Navigating to person: ${personName} (ID: ${resolvedId})`)
-    router.push(`/entity-browser/${resolvedId}/dossier?from=1`)
+    const href = getEntityBrowserDossierHref(resolvedId, '1')
+    if (href) {
+      router.push(href)
+    }
   }
 
   const createPersonLink = (personName: string, role?: string) => {

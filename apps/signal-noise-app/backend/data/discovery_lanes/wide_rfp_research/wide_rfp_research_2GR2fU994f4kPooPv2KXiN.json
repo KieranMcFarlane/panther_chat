@@ -1,0 +1,13 @@
+{
+  "run_id": "2GR2fU994f4kPooPv2KXiN",
+  "source": "manus",
+  "prompt": "You are running a wide web research sweep to find Yellow Panther fit (web-platform) RFPs, tenders, procurement notices, and adjacent opportunity signals.\n\nRepository context:\nCurrent intake page: /tenders\nNormalized RFP page: /rfps\nTarget outcome: discover Yellow Panther web-platform opportunities and normalize them into the RFP surface.\nRequested sub-vertical: Web Platforms.\nCanonical-first source of truth: check canonical_entities before creating anything new.\nIf an entity exists, link to it and reuse its canonical identity.\nIf no entity exists, create an entity with canonical-first fields and do not invent a parallel source of truth.\nReturn normalized JSON only.\n\nDiscovery rules:\n- Search broadly across the web, official procurement pages, press releases, and relevant organizational announcements.\n- Narrow the hunt to web-platform opportunities instead of a generic digital sweep.\n- Prioritize website rebuilds, CMS programs, portals, app shells, frontend modernization, UX/UI redesign, design systems, and platform migrations.\n- Look for website redesign tenders, CMS replacement, portal procurement, platform modernization, mobile-responsive rebuilds, and digital experience platforms.\n- Focus on sports, leagues, clubs, federations, venues, governing bodies, and adjacent organizations where Yellow Panther could credibly deliver digital work.\n- Rank each opportunity for Yellow Panther digital fit, not just generic procurement volume.\n- Keep signal and noise separate. Prefer source URLs and brief evidence over prose.\n- Avoid duplicates when the same opportunity appears on multiple pages.\n- Normalize entity identity against the canonical-first model before output.\n\nOutput contract:\n- Return normalized JSON only.\n- Include opportunities with: title, organization, source_url, confidence, yellow_panther_fit, entity_name, canonical_entity_id, canonical_entity_name, category, status, deadline, description, metadata.\n- When possible, include a short web-platform fit rationale in metadata and prefer opportunities that map cleanly to web, CMS, portal, frontend, platform, or app-shell work.\n- Include entity_actions for every organization you link, reuse, or create.\n- Include the prompt execution metadata needed to render the batch on the RFP page.\n\nSeed query: Yellow Panther web-platform RFP discovery\nUse the MANUS_API key with the Manus API to execute the research request.",
+  "generated_at": "2026-04-11T05:19:34.303Z",
+  "opportunities": [],
+  "entity_actions": [],
+  "summary": {
+    "total_opportunities": 0,
+    "linked_entities": 0,
+    "entities_to_create": 0
+  }
+}

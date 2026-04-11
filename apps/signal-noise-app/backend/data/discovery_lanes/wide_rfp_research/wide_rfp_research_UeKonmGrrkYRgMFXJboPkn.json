@@ -1,0 +1,13 @@
+{
+  "run_id": "UeKonmGrrkYRgMFXJboPkn",
+  "source": "manus",
+  "prompt": "You are running a wide web research sweep to find Yellow Panther fit (crm) RFPs, tenders, procurement notices, and adjacent opportunity signals.\n\nRepository context:\nCurrent intake page: /tenders\nNormalized RFP page: /rfps\nTarget outcome: discover Yellow Panther crm opportunities and normalize them into the RFP surface.\nRequested sub-vertical: CRM.\nCanonical-first source of truth: check canonical_entities before creating anything new.\nIf an entity exists, link to it and reuse its canonical identity.\nIf no entity exists, create an entity with canonical-first fields and do not invent a parallel source of truth.\nReturn normalized JSON only.\n\nDiscovery rules:\n- Search broadly across the web, official procurement pages, press releases, and relevant organizational announcements.\n- Narrow the hunt to crm opportunities instead of a generic digital sweep.\n- Prioritize CRM platforms, membership systems, ticketing CRM, lifecycle marketing, customer data platforms, segmentation, martech orchestration, and supporter databases.\n- Look for CRM procurement, membership CRM, customer data modernization, marketing automation, supporter lifecycle tooling, and audience segmentation programs.\n- Focus on sports, leagues, clubs, federations, venues, governing bodies, and adjacent organizations where Yellow Panther could credibly deliver digital work.\n- Rank each opportunity for Yellow Panther digital fit, not just generic procurement volume.\n- Keep signal and noise separate. Prefer source URLs and brief evidence over prose.\n- Avoid duplicates when the same opportunity appears on multiple pages.\n- Normalize entity identity against the canonical-first model before output.\n\nOutput contract:\n- Return normalized JSON only.\n- Include opportunities with: title, organization, source_url, confidence, yellow_panther_fit, entity_name, canonical_entity_id, canonical_entity_name, category, status, deadline, description, metadata.\n- When possible, include a short crm fit rationale in metadata and prefer opportunities that map cleanly to CRM, membership, ticketing CRM, customer data, segmentation, or lifecycle marketing work.\n- Include entity_actions for every organization you link, reuse, or create.\n- Include the prompt execution metadata needed to render the batch on the RFP page.\n\nSeed query: Yellow Panther CRM RFP discovery\nUse the MANUS_API key with the Manus API to execute the research request.",
+  "generated_at": "2026-04-11T05:19:39.844Z",
+  "opportunities": [],
+  "entity_actions": [],
+  "summary": {
+    "total_opportunities": 0,
+    "linked_entities": 0,
+    "entities_to_create": 0
+  }
+}

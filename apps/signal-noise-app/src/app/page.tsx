@@ -9,7 +9,7 @@ import {
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { HomeQueueDashboard } from '@/components/home/HomeQueueDashboard'
 import { requirePageSession } from '@/lib/server-auth'
 
@@ -119,6 +119,15 @@ export default async function Home() {
                   Open Opportunities
                 </Button>
               </Link>
+              <Link href="/entity-pipeline/live-repair-verification">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-sky-400/30 bg-sky-500/10 text-sky-100 hover:bg-sky-500/20 hover:text-sky-50"
+                >
+                  Live repair verification
+                </Button>
+              </Link>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-3">
@@ -136,7 +145,7 @@ export default async function Home() {
 
           <Card className="border-white/10 bg-white/[0.05] backdrop-blur-md">
             <CardHeader>
-              <CardTitle className="text-white">Client path</CardTitle>
+              <div className="text-xl font-semibold text-white">Client path</div>
               <p className="text-sm text-slate-400">
                 Everything else is ops tooling or raw intake and should stay out of the client review path.
               </p>

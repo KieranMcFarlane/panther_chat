@@ -1,41 +1,37 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, X, Loader2 } from 'lucide-react';
 import { useDebouncedCallback } from 'use-debounce';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { resolveEntityUuid } from '@/lib/entity-public-id';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { getEntityBrowserDossierHref } from '@/lib/entity-routing';
+import { searchVectorEntities } from '@/lib/vector-search-client';
 
-interface SearchResult {
-	id: string;
-	uuid?: string;
-	entity_id?: string;
-	name: string;
-	type: 'club' | 'sportsperson' | 'poi' | 'tender' | 'contact' | 'unknown';
-	score: number;
-	metadata?: Record<string, any>;
-}
+type SearchResult = Awaited<ReturnType<typeof searchVectorEntities>>['results'][number]
 
 interface VectorSearchProps {
 	className?: string;
 	variant?: 'default' | 'navitem';
+	compact?: boolean;
+	defaultOpen?: boolean;
 }
 
-export default function VectorSearch({ className, variant = 'default' }: VectorSearchProps) {
+export default function VectorSearch({ className, variant = 'default', compact = false, defaultOpen = false }: VectorSearchProps) {
 	const router = useRouter();
-	const [isOpen, setIsOpen] = useState(false);
+	const [isOpen, setIsOpen] = useState(defaultOpen);
 	const [query, setQuery] = useState('');
 	const [results, setResults] = useState<SearchResult[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const [searchCount, setSearchCount] = useState(0);
+	const [navigatingId, setNavigatingId] = useState<string | null>(null);
+	const [, startTransition] = useTransition();
 	const inputRef = useRef<HTMLInputElement>(null);
 
-	// Debounced search function - only fires after user stops typing for 200ms
+	// Debounced search function - only fires after user stops typing briefly.
 	const debouncedSearch = useDebouncedCallback(
 		async (searchQuery: string) => {
 			if (!searchQuery.trim()) {
@@ -46,37 +42,23 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 
 			setLoading(true);
 			setError(null);
-			setSearchCount(prev => prev + 1);
 
 			try {
-				const response = await fetch('/api/vector-search', {
-					method: 'POST',
-					headers: { 
-						'Content-Type': 'application/json',
-						'Cache-Control': 'no-cache',
-						'Pragma': 'no-cache'
-					},
-					body: JSON.stringify({ 
-						query: searchQuery, 
-						limit: 10, 
-						score_threshold: 0.1,
-						entity_types: null,
-						timestamp: Date.now() // Add timestamp to prevent caching
-					}),
+				const data = await searchVectorEntities({
+					query: searchQuery,
+					limit: 10,
+					score_threshold: 0.1,
+					entity_types: null,
 				});
-				if (!response.ok) throw new Error(`HTTP ${response.status}`);
-				const data = await response.json();
 				setResults(data.results || []);
-				console.log('Vector search results for', searchQuery, ':', data.results);
 			} catch (err) {
-				console.error('Vector search error:', err);
 				setError('Search failed. Please try again.');
 				setResults([]);
 			} finally {
 				setLoading(false);
 			}
 		},
-		200, // 200ms delay - much more responsive!
+		80,
 		{ leading: false, trailing: true, maxWait: 1000 }
 	);
 
@@ -108,53 +90,27 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 	}, [isOpen]);
 
 	const handleResultClick = (result: SearchResult) => {
-		console.log('🎯 Vector Search: Clicked result:', result);
-		console.log('🔍 Vector Search: result.entity_id:', result.entity_id);
-		console.log('🔍 Vector Search: result.id:', result.id);
-		
-		// Close search immediately
-		setIsOpen(false);
-		setQuery('');
-		
-		// Navigate to entity page
-		const entityId = result.uuid || result.entity_id || result.id;
-		if (entityId) {
-			console.log('🆔 Vector Search: Extracted entityId:', entityId);
-			
-			// Check if it's one of our demo entities first
-			const demoEntityRoutes = {
-				'arsenal_fc_001': '/entity-browser/arsenal_fc_001/dossier?from=1',
-				'chelsea_fc_002': '/entity-browser/chelsea_fc_002/dossier?from=1', 
-				'martin_odegaard_003': '/entity-browser/martin_odegaard_003/dossier?from=1',
-				'tender_premier_league_001': '/entity-browser/tender_premier_league_001/dossier?from=1',
-				'contact_sports_agent_001': '/entity-browser/contact_sports_agent_001/dossier?from=1'
-			};
-			
-			console.log('🗺️ Vector Search: Demo routes:', Object.keys(demoEntityRoutes));
-			console.log('❓ Vector Search: Is demo entity?', demoEntityRoutes.hasOwnProperty(entityId));
-			
-			let targetUrl;
-			const demoRoute = demoEntityRoutes[entityId] || demoEntityRoutes[resolveEntityUuid({ id: entityId, neo4j_id: entityId, supabase_id: entityId }) || '']
-			if (demoRoute) {
-				targetUrl = demoRoute;
-				console.log('🎭 Vector Search: Using demo route:', targetUrl);
-			} else {
-				targetUrl = `/entity-browser/${entityId}/dossier?from=1`;
-				console.log('🏟️ Vector Search: Using Neo4j route:', targetUrl);
-			}
-			
-			console.log('🚀 Vector Search: Final target URL:', targetUrl);
-			
-			// Use window.location for immediate navigation
-			window.location.href = targetUrl;
-			
-			// Fallback to router.push if window.location doesn't work
-			setTimeout(() => {
-				console.log('🔄 Vector Search: Using router.push fallback');
-				router.push(targetUrl);
-			}, 100);
+		const href = getEntityBrowserDossierHref({
+			id: result.uuid || result.entity_id || result.id,
+			properties: {
+				name: result.name,
+				type: result.type,
+				sport: result.sport,
+				country: result.country,
+				league: result.metadata?.league,
+				entity_id: result.entity_id,
+				uuid: result.uuid,
+			},
+		}, '1')
+		if (href) {
+			setNavigatingId(result.uuid || result.entity_id || result.id);
+			setIsOpen(false);
+			setQuery('');
+			startTransition(() => {
+				router.push(href);
+			});
 		} else {
-			console.warn('⚠️ Vector Search: No entity_id found in result:', result);
+			setError('Unable to open this result right now.');
 		}
 	};
 
@@ -167,37 +123,54 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 
 	const getTypeColor = (type: string) => {
 		switch (type) {
-			case 'club': return 'bg-blue-500';
-			case 'sportsperson': return 'bg-green-500';
-			case 'tender': return 'bg-yellow-500';
-			case 'poi': return 'bg-purple-500';
-			case 'contact': return 'bg-orange-500';
+			case 'Club': return 'bg-blue-500';
+			case 'Team': return 'bg-sky-500';
+			case 'Competition': return 'bg-violet-500';
+			case 'League': return 'bg-indigo-500';
+			case 'Federation': return 'bg-emerald-500';
+			case 'Organization': return 'bg-teal-500';
+			case 'Person': return 'bg-green-500';
+			case 'Brand': return 'bg-amber-500';
 			default: return 'bg-gray-500';
 		}
 	};
 
 	const getTypeIcon = (type: string) => {
 		switch (type) {
-			case 'club': return '🏟️';
-			case 'sportsperson': return '⚽';
-			case 'tender': return '📋';
-			case 'poi': return '👤';
-			case 'contact': return '📞';
+			case 'Club': return '🏟️';
+			case 'Team': return '👥';
+			case 'Competition': return '🏆';
+			case 'League': return '🥇';
+			case 'Federation': return '🛡️';
+			case 'Organization': return '🏢';
+			case 'Person': return '👤';
+			case 'Brand': return '🏷️';
 			default: return '🔍';
 		}
 	};
+
+	const getResultContext = (result: SearchResult) => {
+		const parts = [
+			result.sport,
+			result.metadata?.league || result.metadata?.competition,
+			result.country,
+		].filter(Boolean)
+		return parts.join(' • ')
+	}
 
 	const handleOpenChange = (open: boolean) => {
 		setIsOpen(open);
 		if (open) {
 			// Focus input when popover opens
 			setTimeout(() => inputRef.current?.focus(), 100);
-		} else {
-			// Clear state when closed
-			setQuery('');
-			setResults([]);
-			setError(null);
-			setLoading(false);
+			} else {
+				// Clear state when closed
+				debouncedSearch.cancel?.();
+				setQuery('');
+				setResults([]);
+				setError(null);
+				setLoading(false);
+			setNavigatingId(null);
 		}
 	};
 
@@ -205,14 +178,15 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 	const getTriggerButton = () => {
 		if (variant === 'navitem') {
 			return (
-				<div
-					className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors text-slate-300 hover:bg-custom-border hover:text-white font-body-medium cursor-pointer ${className}`}
+				<button
+					type="button"
+					className={`flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm font-medium transition-colors text-slate-300 hover:bg-custom-border hover:text-white font-body-medium cursor-pointer ${compact ? 'justify-center px-3' : 'justify-start'} ${className}`}
 					onClick={() => setIsOpen(true)}
+					aria-label="Open search"
 				>
 					<Search className="w-5 h-5 flex-shrink-0" />
-					<span className="flex-1">Search</span>
-					<div className="flex items-center gap-2"></div>
-				</div>
+					{!compact && <span className="flex-1 text-left">Search</span>}
+				</button>
 			);
 		}
 
@@ -234,17 +208,15 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 			{/* Trigger Button */}
 			{getTriggerButton()}
 
-			{/* Modal Overlay */}
-			{isOpen && (
-				<div className="fixed inset-0 z-50 flex items-start justify-center pt-20" onClick={() => handleOpenChange(false)}>
-					{/* Modal Content */}
-					<div className="relative w-full max-w-2xl mx-4 bg-custom-box border border-custom-border rounded-lg shadow-2xl" onClick={(e) => e.stopPropagation()}>
+			<Dialog open={isOpen} onOpenChange={handleOpenChange}>
+				<DialogContent className="max-h-[calc(100vh-2rem)] w-[calc(100vw-2rem)] max-w-[640px] overflow-hidden rounded-2xl border border-white/10 bg-[#1e2430] p-0 shadow-2xl">
+					<div className="flex h-full w-full flex-col">
 						{/* Header */}
-						<div className="flex items-center gap-3 p-6 border-b border-custom-border">
+						<div className="flex items-center gap-3 border-b border-custom-border p-6">
 							<Search className="w-6 h-6 text-fm-medium-grey" />
 							<Input
 								ref={inputRef}
-								placeholder="Search clubs, players, tenders, contacts... (try 'football' then wait 200ms)"
+								placeholder="Search clubs, players, tenders, contacts... (try 'football' then wait briefly)"
 								value={query}
 								onChange={(e) => handleInputChange(e.target.value)}
 								className="flex-1 bg-custom-bg border-custom-border text-white placeholder:text-fm-medium-grey text-lg px-4 py-3"
@@ -254,11 +226,7 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 								<Button 
 									variant="ghost" 
 									size="sm" 
-									onClick={() => {
-										setQuery('');
-										setResults([]);
-										setLoading(false);
-									}} 
+									onClick={() => handleOpenChange(false)} 
 									className="text-fm-medium-grey hover:text-white p-2"
 								>
 									<X className="w-5 h-5" />
@@ -268,7 +236,7 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 						
 						{/* Search Status */}
 						{query && (
-							<div className="flex items-center justify-between px-6 py-3 text-sm text-fm-medium-grey border-b border-custom-border">
+							<div className="flex items-center justify-between border-b border-custom-border px-6 py-3 text-sm text-fm-medium-grey">
 								<span>
 									{loading ? (
 										<span className="flex items-center gap-2 text-yellow-400">
@@ -283,33 +251,13 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 						)}
 
 						{/* Results */}
-						<div className="max-h-96 overflow-y-auto">
-							{loading && query && (
-								<div className="p-2">
-									{/* Enhanced skeleton loading cards with detailed line structure */}
-									{[1, 2, 3, 4].map((i) => (
-										<div key={i} className="flex items-center gap-4 p-4 rounded-md hover:bg-custom-bg cursor-pointer transition-colors select-none group animate-pulse">
-											<div className="flex-shrink-0">
-												<span className="text-2xl group-hover:scale-110 transition-transform text-custom-bg">🔍</span>
-											</div>
-											<div className="flex-1 min-w-0">
-												<div className="flex items-center gap-3 mb-2">
-													<div className="h-6 bg-custom-bg rounded w-56 font-semibold"></div>
-													<div className="inline-flex items-center rounded-full border font-semibold transition-colors text-sm px-2 py-1 h-5 bg-custom-bg rounded w-16"></div>
-												</div>
-												<div className="text-sm text-fm-medium-grey space-x-3">
-													<span className="inline-block h-3 bg-custom-bg rounded w-12"></span>
-													<span className="inline-block h-3 bg-custom-bg rounded w-20"></span>
-													<span className="inline-block h-3 bg-custom-bg rounded w-16"></span>
-												</div>
-											</div>
-											<div className="flex-shrink-0">
-												<div className="inline-flex items-center rounded-full border font-semibold text-sm px-2 py-1 h-6 bg-custom-bg rounded w-12"></div>
-											</div>
-										</div>
-									))}
-								</div>
-							)}
+						<div className="flex-1 overflow-y-auto">
+						{loading && query && (
+							<div className="flex items-center justify-center gap-3 p-8 text-fm-medium-grey">
+								<Loader2 className="w-5 h-5 animate-spin text-yellow-400" />
+								<span>Searching...</span>
+							</div>
+						)}
 
 							{error && (
 								<div className="p-6 text-fm-orange text-sm text-center">
@@ -319,7 +267,11 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 
 							{!loading && !error && results.length > 0 && (
 								<div className="p-2">
-									{results.map((result) => (
+									{results.map((result) => {
+										const resultEntityId = result.uuid || result.entity_id || result.id
+										const isNavigatingResult = navigatingId === resultEntityId
+
+										return (
 										<div 
 											key={result.id} 
 											onClick={(e) => {
@@ -330,26 +282,34 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 											onMouseDown={(e) => e.preventDefault()}
 											className="flex items-center gap-4 p-4 rounded-md hover:bg-custom-bg cursor-pointer transition-colors select-none group"
 											title={`Click to view ${result.name}`}
+											aria-busy={isNavigatingResult}
 										>
 											<div className="flex-shrink-0">
-												<span className="text-2xl group-hover:scale-110 transition-transform">{getTypeIcon(result.type)}</span>
+												<span className="text-2xl group-hover:scale-110 transition-transform">
+													{isNavigatingResult ? <Loader2 className="h-6 w-6 animate-spin text-yellow-400" /> : getTypeIcon(result.type)}
+												</span>
 											</div>
 											<div className="flex-1 min-w-0">
-												<div className="flex items-center gap-3 mb-2">
-													<span className="font-semibold text-white text-lg truncate">{result.name}</span>
-													<Badge variant="secondary" className={`${getTypeColor(result.type)} text-white text-sm px-2 py-1`}>
-														{result.type}
-													</Badge>
-												</div>
-												{result.metadata && (
-													<div className="text-sm text-fm-medium-grey space-x-3">
-														{Object.entries(result.metadata).slice(0, 3).map(([key, value]) => (
-															<span key={key} className="inline-block">
-																<strong>{key}:</strong> {String(value)}
-															</span>
-														))}
-													</div>
+											<div className="flex items-center gap-3 mb-2">
+												<span className="font-semibold text-white text-lg truncate">{result.name}</span>
+												{isNavigatingResult && (
+													<span className="text-xs text-yellow-300">Opening…</span>
 												)}
+												<Badge variant="secondary" className={`${getTypeColor(result.type)} text-white text-sm px-2 py-1`}>
+													{result.type}
+												</Badge>
+											</div>
+												<div className="text-sm text-fm-medium-grey space-x-3">
+													{getResultContext(result) && (
+														<span className="inline-block">{getResultContext(result)}</span>
+													)}
+													{typeof result.lexical_score === 'number' && (
+														<span className="inline-block">Lexical {Math.round(result.lexical_score)}%</span>
+													)}
+													{typeof result.semantic_score === 'number' && (
+														<span className="inline-block">Semantic {Math.round(result.semantic_score)}%</span>
+													)}
+												</div>
 											</div>
 											<div className="flex-shrink-0">
 												<Badge variant="outline" className="text-sm px-2 py-1 group-hover:border-yellow-400 transition-colors">
@@ -357,7 +317,8 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 												</Badge>
 											</div>
 										</div>
-									))}
+										)
+									})}
 								</div>
 							)}
 
@@ -374,9 +335,9 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 									<Search className="w-12 h-12 mx-auto mb-4 opacity-50" />
 									<p className="text-lg mb-2">Start typing to search</p>
 									<p className="text-sm mb-6">Search across clubs, players, tenders, and contacts</p>
-									<div className="space-y-2 text-xs text-fm-light-grey bg-custom-bg/50 rounded-lg p-4 mx-auto max-w-md">
-										<p>💡 <strong>Debounced Search:</strong> Results appear 200ms after you stop typing</p>
-										<p>🧪 <strong>Test it:</strong> Type &quot;football&quot; then wait 200ms before typing &quot;club&quot;</p>
+									<div className="space-y-2 text-xs text-fm-light-grey bg-black/20 rounded-lg p-4 mx-auto max-w-md">
+										<p>💡 <strong>Debounced Search:</strong> Results appear shortly after you stop typing</p>
+										<p>🧪 <strong>Test it:</strong> Type &quot;football&quot; then pause briefly before typing &quot;club&quot;</p>
 										<p>⚡ <strong>Smart Matching:</strong> Finds entities by name, type, and metadata</p>
 									</div>
 								</div>
@@ -384,12 +345,12 @@ export default function VectorSearch({ className, variant = 'default' }: VectorS
 						</div>
 						
 						{/* Footer */}
-						<div className="px-6 py-3 border-t border-custom-border text-xs text-fm-light-grey text-center">
+						<div className="border-t border-custom-border px-6 py-3 text-center text-xs text-fm-light-grey">
 							Press <kbd className="px-2 py-1 bg-custom-bg rounded">Esc</kbd> to close • Click outside to dismiss
 						</div>
 					</div>
-				</div>
-			)}
+				</DialogContent>
+			</Dialog>
 		</>
 	);
 }

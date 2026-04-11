@@ -1,6 +1,8 @@
 import EntityDossierClientPage from './client-page'
 import { getEntityForDossierPage } from '@/lib/entity-loader'
+import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
 import { requirePageSession } from '@/lib/server-auth'
+import { redirect } from 'next/navigation'
 
 export const dynamic = 'force-dynamic'
 
@@ -30,6 +32,22 @@ export default async function EntityDossierPage({ params, searchParams = {} }: E
   const tier = getSearchParamValue(searchParams.tier, 'standard')
 
   const entityData = await getEntityForDossierPage(entityId, tier)
+  if (!entityData.entity) {
+    redirect('/entity-browser')
+  }
+  const canonicalHref = entityData.entity ? getEntityBrowserDossierHref(entityData.entity, fromPage) : null
+
+  if (canonicalHref && canonicalHref !== `/entity-browser/${entityId}/dossier?from=${fromPage}`) {
+    const query = new URLSearchParams()
+    if (searchParams.from !== undefined) query.set('from', fromPage)
+    if (searchParams.generate !== undefined) query.set('generate', getSearchParamValue(searchParams.generate, 'false'))
+    if (searchParams.includeSignals !== undefined) query.set('includeSignals', getSearchParamValue(searchParams.includeSignals, 'true'))
+    if (searchParams.includeConnections !== undefined) query.set('includeConnections', getSearchParamValue(searchParams.includeConnections, 'true'))
+    if (searchParams.deepResearch !== undefined) query.set('deepResearch', getSearchParamValue(searchParams.deepResearch, 'false'))
+    if (searchParams.tier !== undefined) query.set('tier', tier)
+
+    redirect(query.toString() ? `${canonicalHref.split('?')[0]}?${query.toString()}` : canonicalHref)
+  }
 
   return (
     <EntityDossierClientPage

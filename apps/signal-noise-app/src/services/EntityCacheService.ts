@@ -148,14 +148,17 @@ export class EntityCacheService {
         id: node.identity.toString(),
         properties: node.properties,
       }) || node.identity.toString()
+      const canonicalEntityId = uuid
       // Canonical source-of-truth remains resolveEntityUuid(...).
       return {
         neo4j_id: node.identity.toString(),
         uuid,
+        canonical_entity_id: canonicalEntityId,
         labels: node.labels,
         properties: {
           ...node.properties,
           uuid,
+          canonical_entity_id: canonicalEntityId,
         },
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -353,9 +356,10 @@ export class EntityCacheService {
           
           console.log(`✅ Cache search successful, found ${filteredEntities.length} results, returning ${paginatedEntities.length}`)
           
-          return {
-            entities: paginatedEntities.map(entity => ({
-              id: entity.neo4j_id,
+      return {
+        entities: paginatedEntities.map(entity => ({
+              id: entity.uuid || entity.canonical_entity_id || entity.neo4j_id,
+              canonical_entity_id: entity.canonical_entity_id || entity.uuid || null,
               neo4j_id: entity.neo4j_id,
               labels: entity.labels,
               properties: entity.properties
@@ -441,7 +445,8 @@ export class EntityCacheService {
       
       return {
         entities: entities.map(entity => ({
-          id: entity.neo4j_id,
+          id: entity.uuid || entity.canonical_entity_id || entity.neo4j_id,
+          canonical_entity_id: entity.canonical_entity_id || entity.uuid || null,
           neo4j_id: entity.neo4j_id,
           labels: entity.labels,
           properties: entity.properties

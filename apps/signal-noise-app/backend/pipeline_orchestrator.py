@@ -91,6 +91,69 @@ class PipelineOrchestrator:
         self._last_question_first_report: Dict[str, Any] | None = None
         self.persistence_coordinator = persistence_coordinator or self._build_default_persistence_coordinator()
 
+    def _build_canonical_publication_dossier(
+        self,
+        *,
+        dossier: Dict[str, Any],
+        entity_id: str,
+        entity_name: str,
+        entity_type: str,
+        run_id: str,
+        request_metadata: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        payload = deepcopy(dossier if isinstance(dossier, dict) else {})
+        now_iso = datetime.now(timezone.utc).isoformat()
+        payload["entity_id"] = entity_id
+        payload["entity_name"] = entity_name
+        payload["entity_type"] = entity_type
+        payload["generated_at"] = now_iso
+        payload["run_id"] = run_id
+        payload["publish_status"] = "published"
+
+        metadata = payload.get("metadata") if isinstance(payload.get("metadata"), dict) else {}
+        payload["metadata"] = metadata
+        metadata["entity_id"] = entity_id
+        metadata["entity_name"] = entity_name
+        metadata["entity_type"] = entity_type
+
+        question_first = payload.get("question_first") if isinstance(payload.get("question_first"), dict) else {}
+        if question_first:
+            payload["question_first"] = question_first
+            quality_state = str(question_first.get("quality_state") or payload.get("quality_state") or "").strip() or None
+            payload["quality_state"] = quality_state
+            payload["answers"] = question_first.get("answers") if isinstance(question_first.get("answers"), list) else payload.get("answers")
+            payload["question_timings"] = (
+                question_first.get("question_timings")
+                if isinstance(question_first.get("question_timings"), dict)
+                else payload.get("question_timings")
+            )
+            question_first["generated_at"] = now_iso
+            question_first["run_id"] = run_id
+            question_first["publish_status"] = "published"
+
+            metadata_question_first = metadata.get("question_first") if isinstance(metadata.get("question_first"), dict) else {}
+            metadata["question_first"] = {
+                **metadata_question_first,
+                "generated_at": now_iso,
+                "run_id": run_id,
+                "publish_status": "published",
+                "quality_state": quality_state,
+            }
+
+            if str((request_metadata or {}).get("rerun_mode") or "").strip().lower() == "question":
+                repair_meta = {
+                    "mode": "question",
+                    "question_id": str((request_metadata or {}).get("question_id") or "").strip() or None,
+                    "cascade_dependents": bool((request_metadata or {}).get("cascade_dependents", True)),
+                    "repair_source_run_id": str((request_metadata or {}).get("repair_source_run_id") or "").strip() or None,
+                    "repair_source_run_path": str((request_metadata or {}).get("repair_source_run_path") or "").strip() or None,
+                    "repair_source_dossier_path": str((request_metadata or {}).get("repair_source_dossier_path") or "").strip() or None,
+                }
+                metadata["question_first"]["repair_run"] = repair_meta
+                question_first["repair_run"] = repair_meta
+
+        return payload
+
     def _build_default_persistence_coordinator(self):
         supabase_writer = getattr(self.graphiti_service, "persist_pipeline_record_supabase", None)
         falkordb_writer = getattr(self.graphiti_service, "persist_pipeline_record_falkordb", None)
@@ -108,6 +171,7 @@ class PipelineOrchestrator:
         run_objective: Optional[str] = None,
         initial_dossier: Optional[Dict[str, Any]] = None,
         phase_callback: Optional[Callable[[str, Dict[str, Any]], Awaitable[None]]] = None,
+        request_metadata: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         logger.warning("🚦 Pipeline boundary: orchestrator:start")
         requested_objective = str(run_objective or "").strip().lower() or DEFAULT_PIPELINE_OBJECTIVE
@@ -155,6 +219,7 @@ class PipelineOrchestrator:
                     dossier=dossier,
                     entity_id=entity_id,
                     entity_name=entity_name,
+                    request_metadata=request_metadata,
                 )
                 question_first_meta = (dossier.get("question_first") or {}) if isinstance(dossier, dict) else {}
                 self._last_question_first_report = question_first_meta.get("report") if isinstance(question_first_meta, dict) else None
@@ -189,6 +254,35 @@ class PipelineOrchestrator:
             step_artifacts.extend(self._build_dossier_step_artifacts(dossier=dossier, entity_id=entity_id))
         else:
             dossier = self._coerce_dossier_payload(dossier)
+            if self.question_first_enabled:
+                is_question_repair = str((request_metadata or {}).get("rerun_mode") or "").strip().lower() == "question"
+                question_first_meta = dossier.get("question_first") if isinstance(dossier.get("question_first"), dict) else {}
+                has_question_first_answers = isinstance(question_first_meta.get("answers"), list) and len(question_first_meta.get("answers") or []) > 0
+                if is_question_repair or not has_question_first_answers:
+                    logger.warning("🚦 Pipeline boundary: question_first_enrichment:start")
+                    await self._emit_phase_update(phase_callback, "dossier_generation", {"status": "question_first_running"})
+                    dossier = await self._run_question_first_enrichment(
+                        dossier=dossier,
+                        entity_id=entity_id,
+                        entity_name=entity_name,
+                        request_metadata=request_metadata,
+                    )
+                    question_first_meta = (dossier.get("question_first") or {}) if isinstance(dossier, dict) else {}
+                    self._last_question_first_report = question_first_meta.get("report") if isinstance(question_first_meta, dict) else None
+                    await self._emit_phase_update(
+                        phase_callback,
+                        "dossier_generation",
+                        {
+                            "status": "question_first_completed",
+                            "questions_answered": int(question_first_meta.get("questions_answered") or 0),
+                            "category_count": len(question_first_meta.get("categories") or []),
+                            "connections_graph_enrichment_enabled": bool(question_first_meta.get("connections_graph_enrichment_enabled")),
+                            "connections_graph_enrichment_status": str(
+                                question_first_meta.get("connections_graph_enrichment_status") or ("optional")
+                            ),
+                        },
+                    )
+                    logger.warning("🚦 Pipeline boundary: question_first_enrichment:complete")
             phase_results["dossier_generation"] = {"status": "completed"}
             step_artifacts.extend(self._build_dossier_step_artifacts(dossier=dossier, entity_id=entity_id))
 
@@ -324,6 +418,14 @@ class PipelineOrchestrator:
             },
         }
         if temporal_status == "completed":
+            dossier = self._build_canonical_publication_dossier(
+                dossier=dossier,
+                entity_id=entity_id,
+                entity_name=entity_name,
+                entity_type=entity_type,
+                run_id=run_id,
+                request_metadata=request_metadata,
+            )
             persistence_status = await self.persistence_coordinator.persist_run_artifacts(
                 run_id=run_id,
                 entity_id=entity_id,
@@ -360,19 +462,23 @@ class PipelineOrchestrator:
             }
         dual_write_ok = bool(persistence_status.get("dual_write_ok"))
         step_dual_write_ok = bool(step_persistence_status.get("dual_write_ok"))
-        if temporal_status == "completed" and self.require_dual_write and not dual_write_ok:
-            phase_results["temporal_persistence"] = {
-                "status": "failed",
-                "error": "dual_write_incomplete",
-            }
-            failure_taxonomy["supabase_write_failure"] = int(not (persistence_status.get("supabase") or {}).get("ok"))
-            failure_taxonomy["falkordb_write_failure"] = int(not (persistence_status.get("falkordb") or {}).get("ok"))
-            failure_taxonomy["dual_write_incomplete"] = 1
+        supabase_published = bool((persistence_status.get("supabase") or {}).get("ok"))
+        falkordb_published = bool((persistence_status.get("falkordb") or {}).get("ok"))
+        step_failure_taxonomy = step_persistence_status.get("failure_taxonomy", {}) or {}
+        step_supabase_ok = int(step_failure_taxonomy.get("supabase_write_failure", 0) or 0) == 0
+        publication_succeeded = temporal_status == "completed" and supabase_published and step_supabase_ok
+        reconcile_required = bool(
+            persistence_status.get("reconcile_required")
+            or step_persistence_status.get("reconcile_required")
+        )
+        if temporal_status == "completed":
+            failure_taxonomy["supabase_write_failure"] = int(not supabase_published)
+            failure_taxonomy["falkordb_write_failure"] = int(not falkordb_published)
+            failure_taxonomy["dual_write_incomplete"] = int(not dual_write_ok)
         else:
             failure_taxonomy["supabase_write_failure"] = 0
             failure_taxonomy["falkordb_write_failure"] = 0
             failure_taxonomy["dual_write_incomplete"] = 0
-        step_failure_taxonomy = step_persistence_status.get("failure_taxonomy", {})
         failure_taxonomy["supabase_write_failure"] = max(
             int(failure_taxonomy.get("supabase_write_failure", 0) or 0),
             int(step_failure_taxonomy.get("supabase_write_failure", 0) or 0),
@@ -395,8 +501,8 @@ class PipelineOrchestrator:
             phase_results=phase_results,
             raw_signals=raw_signals,
             validated_signals=validated_signals,
-            dual_write_ok=bool(dual_write_ok and step_dual_write_ok),
-            enforce_dual_write_gate=(temporal_status == "completed"),
+            dual_write_ok=publication_succeeded,
+            enforce_dual_write_gate=(temporal_status == "completed" and not publication_succeeded),
         )
         acceptance_step_artifact = self._build_acceptance_step_artifact(
             discovery_result=discovery_result,
@@ -444,6 +550,10 @@ class PipelineOrchestrator:
                 ),
             }
             step_persistence_status["dual_write_ok"] = int(step_persistence_status.get("failed_count", 0) or 0) == 0
+            reconcile_required = bool(
+                reconcile_required
+                or step_persistence_status.get("reconcile_required")
+            )
         homepage_materialization_status: Dict[str, Any] = {
             "status": "skipped",
             "reason": "temporal_persistence_incomplete" if temporal_status != "completed" else "materializer_missing",
@@ -480,11 +590,31 @@ class PipelineOrchestrator:
             for details in phase_results.values()
             if isinstance(details, dict)
         )
+        publication_status = "publish_failed"
+        if publication_succeeded:
+            publication_status = "published" if dual_write_ok and step_dual_write_ok else "published_degraded"
+        publication_mode = "repair" if objective == "question_repair" else "full"
+        if publication_status == "published_degraded":
+            publication_mode = f"{publication_mode}_degraded"
+            acceptance_gate = {
+                **acceptance_gate,
+                "passed": True,
+                "reasons": [
+                    reason
+                    for reason in list(acceptance_gate.get("reasons") or [])
+                    if reason != "dual_write_incomplete"
+                ],
+            }
 
         canonical_phase_details = canonicalize_phase_details_by_phase(phase_results)
         logger.warning("🚦 Pipeline boundary: orchestrator:complete")
         return {
             "entity_id": entity_id,
+            "canonical_entity_id": (
+                str((request_metadata or {}).get("canonical_entity_id") or "").strip()
+                or str((dossier.get("canonical_entity_id") if isinstance(dossier, dict) else "") or "").strip()
+                or None
+            ),
             "entity_name": entity_name,
             "run_id": run_id,
             "requested_objective": requested_objective,
@@ -513,10 +643,14 @@ class PipelineOrchestrator:
             "degraded_mode": degraded_mode,
             "homepage_materialization": homepage_materialization_status,
             "dual_write_ok": bool(dual_write_ok and step_dual_write_ok),
+            "publication_status": publication_status,
+            "publication_mode": publication_mode,
+            "reconcile_required": reconcile_required,
             "persistence_status": {
                 **persistence_status,
                 "step_artifacts": step_persistence_status,
                 "dual_write_ok": bool(dual_write_ok and step_dual_write_ok),
+                "reconcile_required": reconcile_required,
             },
             "step_artifact_counts": step_artifact_counts,
             "step_failure_taxonomy": step_failure_taxonomy,
@@ -732,23 +866,64 @@ class PipelineOrchestrator:
         dossier: Dict[str, Any],
         entity_id: str,
         entity_name: str,
+        request_metadata: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         questions = dossier.get("questions")
         if not isinstance(questions, list) or not questions:
             logger.info("Question-first enrichment skipped for %s: no questions on dossier", entity_id)
             return dossier
 
+        source_payload = dict(dossier)
+        if isinstance(request_metadata, dict) and request_metadata:
+            repair_meta = {
+                "mode": str(request_metadata.get("rerun_mode") or "full").strip().lower() or "full",
+                "question_id": str(request_metadata.get("question_id") or "").strip() or None,
+                "cascade_dependents": bool(request_metadata.get("cascade_dependents", True)),
+                "repair_source_run_id": str(request_metadata.get("repair_source_run_id") or "").strip() or None,
+                "repair_source_run_path": str(request_metadata.get("repair_source_run_path") or "").strip() or None,
+                "repair_source_dossier_path": str(request_metadata.get("repair_source_dossier_path") or "").strip() or None,
+            }
+            source_payload["metadata"] = {
+                **(source_payload.get("metadata") if isinstance(source_payload.get("metadata"), dict) else {}),
+                "question_first_repair": repair_meta,
+            }
+
         try:
             from backend import question_first_dossier_runner as question_first_runner
+            from backend.question_first_repair import (
+                build_filtered_question_source_payload,
+                derive_repair_question_ids,
+            )
         except ImportError:
             import question_first_dossier_runner as question_first_runner  # type: ignore
+            from question_first_repair import build_filtered_question_source_payload, derive_repair_question_ids  # type: ignore
 
+        launch_source_payload = None
+        repair_meta = (
+            source_payload.get("metadata", {}).get("question_first_repair")
+            if isinstance(source_payload.get("metadata"), dict)
+            and isinstance(source_payload.get("metadata", {}).get("question_first_repair"), dict)
+            else {}
+        )
+        if repair_meta.get("mode") == "question" and repair_meta.get("question_id"):
+            repaired_question_ids = derive_repair_question_ids(
+                source_payload=source_payload,
+                question_id=str(repair_meta.get("question_id")),
+                cascade_dependents=bool(repair_meta.get("cascade_dependents", True)),
+            )
+            repair_meta["repaired_question_ids"] = repaired_question_ids
+            source_payload["metadata"]["question_first_repair"] = repair_meta
+            launch_source_payload = build_filtered_question_source_payload(
+                source_payload=source_payload,
+                question_ids=repaired_question_ids,
+            )
         merged_dossier = await question_first_runner.run_question_first_dossier_from_payload(
-            source_payload=dossier,
+            source_payload=source_payload,
+            launch_source_payload=launch_source_payload,
             output_dir=Path(self.question_first_output_dir) if self.question_first_persist_reports else None,
-            question_first_run_path=dossier.get("question_first_run_path"),
+            question_first_run_path=source_payload.get("question_first_run_path"),
             opencode_timeout_ms=self.question_first_opencode_timeout,
-            preset=dossier.get("preset"),
+            preset=source_payload.get("preset"),
             question_source_label=f"{entity_id}::question-first",
         )
         return merged_dossier if isinstance(merged_dossier, dict) else dossier

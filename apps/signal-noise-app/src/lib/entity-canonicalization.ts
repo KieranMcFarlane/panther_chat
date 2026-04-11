@@ -26,6 +26,26 @@ const STOP_TOKENS = new Set([
   'the',
 ])
 
+const SPORT_TOKENS = new Set([
+  'football',
+  'soccer',
+  'basketball',
+  'baseball',
+  'cricket',
+  'tennis',
+  'rugby',
+  'hockey',
+  'handball',
+  'volleyball',
+  'cycling',
+  'athletics',
+  'equestrian',
+  'motorsport',
+  'formula',
+  'golf',
+  'f1',
+])
+
 function stripDiacritics(value: string): string {
   return value.normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
 }
@@ -40,6 +60,7 @@ function normalizeType(type: unknown): string {
 
   if (!normalized) return 'Entity'
   if (normalized.includes('club') || normalized.includes('team')) return 'Club'
+  if (normalized.includes('sports entity') || normalized.includes('sport entity') || normalized.includes('sport club')) return 'Club'
   if (normalized.includes('league')) return 'League'
   if (normalized.includes('federation')) return 'Federation'
   if (normalized.includes('organization')) return 'Organization'
@@ -49,7 +70,9 @@ function normalizeType(type: unknown): string {
   return normalizeText(type) || 'Entity'
 }
 
-function normalizeNameForKey(name: unknown): string {
+function normalizeNameForKey(name: unknown, type?: unknown): string {
+  const normalizedType = normalizeType(type)
+  const stripSportTokens = normalizedType === 'Club' || normalizedType === 'Team' || normalizedType === 'League' || normalizedType === 'Competition'
   const normalized = stripDiacritics(
     normalizeText(name)
       .toLowerCase()
@@ -61,6 +84,7 @@ function normalizeNameForKey(name: unknown): string {
     .split(/[^a-z0-9]+/)
     .filter(Boolean)
     .filter((token) => !STOP_TOKENS.has(token))
+    .filter((token) => !(stripSportTokens && SPORT_TOKENS.has(token)))
     .map((token) => {
       if (!/[a-z]/.test(token) || token.length <= 3) {
         return token
@@ -172,7 +196,7 @@ export function getCanonicalEntityKey(entity: CanonicalEntity | null | undefined
     normalizeType(properties.type),
     normalizeSport(properties.sport),
     normalizeCountry(properties.country),
-    normalizeNameForKey(properties.name),
+    normalizeNameForKey(properties.name, properties.type),
   ].join('|')
 }
 
@@ -183,7 +207,7 @@ function getEntitySignature(entity: CanonicalEntity): EntitySignature {
     type: normalizeType(properties.type),
     sport: normalizeSport(properties.sport),
     country: normalizeCountry(properties.country),
-    name: normalizeNameForKey(properties.name),
+    name: normalizeNameForKey(properties.name, properties.type),
   }
 }
 

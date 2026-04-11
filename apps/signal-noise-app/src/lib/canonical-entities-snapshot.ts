@@ -5,7 +5,6 @@ import path from 'node:path'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { CANONICAL_GOVERNING_BODY_OVERRIDES } from '@/lib/canonical-governing-body-overrides'
 import { canonicalizeEntities, type CanonicalEntity } from '@/lib/entity-canonicalization'
-import { resolveEntityUuid } from '@/lib/entity-public-id'
 import scaleManifestData from '../../backend/data/question_first_scale_batch_3000_live.json'
 
 const SNAPSHOT_TTL_MS = 15 * 60_000
@@ -23,26 +22,30 @@ const preferSupabaseSnapshot = String(process.env.ENTITY_SNAPSHOT_SOURCE || defa
 let canonicalEntitiesCache: { entities: CanonicalEntity[]; expiresAt: number } | null = null
 let inFlightCanonicalEntitiesRequest: Promise<CanonicalEntity[]> | null = null
 
-function mapExportEntity(entity: any): CanonicalEntity {
-  const uuid = resolveEntityUuid({
-    id: entity.id,
-    neo4j_id: entity.neo4j_id,
-    graph_id: entity.graph_id,
-    supabase_id: entity.supabase_id || entity.properties?.supabase_id,
-    properties: entity.properties,
-  }) || undefined
+function mapCanonicalEntityRow(entity: any): CanonicalEntity {
+  const sourceNeo4jId = Array.isArray(entity.source_neo4j_ids) && entity.source_neo4j_ids.length > 0
+    ? entity.source_neo4j_ids[0]
+    : Array.isArray(entity.source_graph_ids) && entity.source_graph_ids.length > 0
+      ? entity.source_graph_ids[0]
+      : Array.isArray(entity.source_entity_ids) && entity.source_entity_ids.length > 0
+        ? entity.source_entity_ids[0]
+        : entity.id
 
   return {
     id: entity.id,
-    uuid,
-    neo4j_id: entity.neo4j_id,
-    badge_path: entity.badge_path || entity.properties?.badge_path || null,
-    badge_s3_url: entity.badge_s3_url || entity.properties?.badge_s3_url || null,
-    labels: entity.labels || [],
+    uuid: entity.id,
+    neo4j_id: sourceNeo4jId,
+    badge_path: entity.properties?.badge_path || null,
+    badge_s3_url: entity.properties?.badge_s3_url || null,
+    labels: entity.labels || (entity.properties?.labels || []),
     properties: {
       ...entity.properties,
-      name: entity.properties?.name || entity.neo4j_id,
-      type: entity.properties?.type || entity.labels?.[0] || 'ENTITY',
+      name: entity.name || entity.properties?.name || entity.id,
+      type: entity.entity_type || entity.properties?.type || entity.labels?.[0] || 'ENTITY',
+      sport: entity.sport || entity.properties?.sport || '',
+      league: entity.league || entity.properties?.league || '',
+      country: entity.country || entity.properties?.country || '',
+      canonical_key: entity.canonical_key || entity.properties?.canonical_key || '',
     },
   }
 }
@@ -59,9 +62,9 @@ async function fetchCanonicalEntitiesFromSupabase(): Promise<CanonicalEntity[]> 
 
   while (hasMore) {
     const { data, error } = await supabase
-      .from('cached_entities')
+      .from('canonical_entities')
       .select('*')
-      .order('properties->>name', { ascending: true })
+      .order('name', { ascending: true })
       .range(offset, offset + pageSize - 1)
 
     if (error) {
@@ -74,7 +77,7 @@ async function fetchCanonicalEntitiesFromSupabase(): Promise<CanonicalEntity[]> 
     hasMore = pageEntities.length === pageSize
   }
 
-  return applyCanonicalOverrides(allEntities.map(mapExportEntity))
+  return applyCanonicalOverrides(allEntities.map(mapCanonicalEntityRow))
 }
 
 async function fetchCanonicalEntitiesFromLocalExport(): Promise<CanonicalEntity[]> {
@@ -86,7 +89,7 @@ async function fetchCanonicalEntitiesFromLocalExport(): Promise<CanonicalEntity[
   const parsedExport = JSON.parse(fileContents) as { entities?: any[] }
   const exportEntities = Array.isArray(parsedExport.entities) ? parsedExport.entities : []
 
-  return applyCanonicalOverrides(exportEntities.map(mapExportEntity))
+  return applyCanonicalOverrides(exportEntities.map(mapCanonicalEntityRow))
 }
 
 function fetchCanonicalEntitiesFromBundledManifest(): CanonicalEntity[] {

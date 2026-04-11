@@ -2,6 +2,7 @@
 
 import { useCopilotAction } from "@copilotkit/react-core"
 import { useRouter } from "next/navigation"
+import { getEntityBrowserDossierHref } from "@/lib/entity-routing"
 
 interface DossierGenerationParams {
   entityId: string
@@ -63,7 +64,10 @@ export function useDossierCopilotActions() {
         deepResearch: deepResearch.toString()
       })
       
-      router.push(`/entity-browser/${entityId}/dossier?${params.toString()}`)
+      const href = getEntityBrowserDossierHref(entityId, '1')
+      if (href) {
+        router.push(`${href}&${params.toString()}`)
+      }
       
       return `📋 Generating intelligence dossier for ${entityName}...\n\nThe dossier will include:\n• Entity analysis and opportunity scoring\n• Persons of interest with connection paths\n• Recent signals and events${includeConnections ? '\n• Connection path analysis' : ''}${deepResearch ? '\n• Deep research and extended analysis' : ''}\n\nRedirecting to dossier view...`
     }
@@ -91,7 +95,10 @@ export function useDossierCopilotActions() {
       
       console.log(`📍 Navigating to dossier for ${entityName} (ID: ${entityId})`)
       
-      router.push(`/entity-browser/${entityId}/dossier`)
+      const href = getEntityBrowserDossierHref(entityId, '1')
+      if (href) {
+        router.push(href)
+      }
       
       return `📄 Opening intelligence dossier for ${entityName}...`
     }

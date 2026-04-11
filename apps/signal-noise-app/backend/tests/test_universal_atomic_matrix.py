@@ -129,6 +129,52 @@ def test_universal_atomic_matrix_adds_execution_class_phase_and_schema_metadata(
     assert questions["q11_decision_owner"]["graph_write_targets"] == ["decision_owner_rankings"]
     assert questions["q12_connections"]["graph_write_targets"] == ["connection_paths"]
     assert questions["q13_capability_gap"]["graph_write_targets"] == ["capability_gap_episodes"]
+    assert questions["q3_leadership"]["question_timeout_ms"] == 300000
+    assert questions["q3_leadership"]["hop_timeout_ms"] == 300000
+    assert questions["q11_decision_owner"]["question_timeout_ms"] == 300000
+    assert questions["q11_decision_owner"]["hop_timeout_ms"] == 300000
+
+
+def test_universal_atomic_matrix_prioritizes_wikipedia_and_official_sources_for_people_questions():
+    payload = build_universal_atomic_question_source(
+        entity_type="SPORT_FEDERATION",
+        entity_name="Zimbabwe Cricket",
+        entity_id="zimbabwe-cricket",
+        preset="zimbabwe-cricket-atomic-matrix",
+    )
+    questions = _question_index(payload)
+
+    assert questions["q3_leadership"]["source_priority"][:4] == [
+        "wikipedia",
+        "official_site",
+        "linkedin_company_profile",
+        "linkedin_people_search",
+    ]
+    assert questions["q11_decision_owner"]["source_priority"][:4] == [
+        "wikipedia",
+        "official_site",
+        "linkedin_company_profile",
+        "linkedin_people_search",
+    ]
+    assert "linkedin_posts" in questions["q11_decision_owner"]["source_priority"]
+
+
+def test_universal_atomic_matrix_uses_role_specific_leadership_search_patterns_for_federations():
+    payload = build_universal_atomic_question_source(
+        entity_type="SPORT_FEDERATION",
+        entity_name="Zimbabwe Cricket",
+        entity_id="zimbabwe-cricket",
+        preset="zimbabwe-cricket-atomic-matrix",
+    )
+    questions = _question_index(payload)
+
+    search_patterns = questions["q3_leadership"]["search_strategy"]["search_queries"]
+
+    assert '"Zimbabwe Cricket" chairman' in search_patterns
+    assert '"Zimbabwe Cricket" chief executive officer' in search_patterns
+    assert '"Zimbabwe Cricket" secretary general' in search_patterns
+    assert '"Zimbabwe Cricket" board' in search_patterns
+    assert '"Zimbabwe Cricket" wikipedia' in search_patterns
 
 
 def test_universal_atomic_matrix_marks_conditional_questions_explicitly():

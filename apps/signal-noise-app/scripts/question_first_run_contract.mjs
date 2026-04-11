@@ -45,11 +45,25 @@ function _normalizeCandidate(value) {
   const title = String(value.title || value.role || '').trim();
   const organization = String(value.organization || value.company || '').trim();
   const linkedin_url = String(value.linkedin_url || value.linkedin || value.profile_url || '').trim();
+  const source_url = typeof value.source_url === 'object'
+    ? String(value.source_url?.url || value.source_url?.href || '').trim()
+    : String(value.source_url || '').trim();
+  const email = String(value.email || '').trim();
+  const bio = String(value.bio || value.summary || '').trim();
+  const recent_post_summary = String(value.recent_post_summary || '').trim();
+  const bio_evidence = Array.isArray(value.bio_evidence) ? value.bio_evidence.map((item) => _clone(item)).filter(Boolean) : [];
+  const recent_post_urls = Array.isArray(value.recent_post_urls) ? value.recent_post_urls.map((item) => String(item || '').trim()).filter(Boolean) : [];
   const relevance = String(value.relevance || '').trim();
   const candidate = { name };
   if (title) candidate.title = title;
   if (organization) candidate.organization = organization;
+  if (source_url) candidate.source_url = source_url;
   if (linkedin_url) candidate.linkedin_url = linkedin_url;
+  if (email) candidate.email = email;
+  if (bio) candidate.bio = bio;
+  if (recent_post_summary) candidate.recent_post_summary = recent_post_summary;
+  if (bio_evidence.length > 0) candidate.bio_evidence = bio_evidence;
+  if (recent_post_urls.length > 0) candidate.recent_post_urls = recent_post_urls;
   if (relevance) candidate.relevance = relevance;
   return candidate;
 }

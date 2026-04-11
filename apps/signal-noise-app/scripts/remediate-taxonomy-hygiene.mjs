@@ -1,6 +1,11 @@
 #!/usr/bin/env node
 import 'dotenv/config'
 import { createClient } from '@supabase/supabase-js'
+import {
+  buildCanonicalLeagueLookup,
+  buildSportsHierarchyBackfill,
+  shouldIncludeInSportsHierarchy,
+} from '../src/lib/sports-hierarchy-taxonomy.mjs'
 
 const DRY_RUN = process.argv.includes('--dry-run')
 
@@ -80,7 +85,7 @@ async function fetchAllEntities() {
   while (true) {
     const { data, error } = await supabase
       .from('canonical_entities')
-      .select('id,name,normalized_name,entity_type,league,properties')
+      .select('id,name,normalized_name,entity_type,sport,league,country,canonical_key,properties')
       .order('id', { ascending: true })
       .range(offset, offset + chunk - 1)
     if (error) throw error
@@ -92,18 +97,27 @@ async function fetchAllEntities() {
   return rows
 }
 
+function trimText(value) {
+  return String(value || '').trim()
+}
+
 async function run() {
   const rows = await fetchAllEntities()
+  const leagueLookup = buildCanonicalLeagueLookup(rows)
   let updated = 0
   let normalizedLeagueAliases = 0
   let coercedJunkLeagueToNull = 0
   let canonicalizedLeagueNameRows = 0
+  let hierarchyBackfills = 0
+  let hierarchyLinksCleared = 0
+  let federationCoreBackfills = 0
 
   for (const row of rows) {
     const patch = {}
     const props = { ...(row.properties || {}) }
-    const entityType = normalizeText(row.entity_type)
+    const entityType = trimText(row.entity_type)
     const rawLeague = String(row.league || props.league || props.level || '').trim()
+    const sportsHierarchy = buildSportsHierarchyBackfill(row, leagueLookup)
 
     if (entityType === 'league') {
       const canonicalName = canonicalizeLeague(row.name || row.normalized_name || '')
@@ -141,6 +155,62 @@ async function run() {
       }
     }
 
+    if (shouldIncludeInSportsHierarchy(row)) {
+      if (sportsHierarchy.sport && trimText(row.sport) !== trimText(sportsHierarchy.sport)) {
+        patch.sport = sportsHierarchy.sport
+        props.sport = sportsHierarchy.sport
+        hierarchyBackfills += 1
+      }
+      if (sportsHierarchy.country && trimText(row.country) !== trimText(sportsHierarchy.country)) {
+        patch.country = sportsHierarchy.country
+        props.country = sportsHierarchy.country
+        hierarchyBackfills += 1
+      }
+
+      if ((entityType === 'team' || entityType === 'organisation' || entityType === 'club') && sportsHierarchy.league_canonical_entity_id) {
+        if (String(row.league_canonical_entity_id || '') !== sportsHierarchy.league_canonical_entity_id) {
+          patch.league_canonical_entity_id = sportsHierarchy.league_canonical_entity_id
+          props.league_canonical_entity_id = sportsHierarchy.league_canonical_entity_id
+          hierarchyBackfills += 1
+        }
+        if (String(row.parent_canonical_entity_id || '') !== sportsHierarchy.parent_canonical_entity_id) {
+          patch.parent_canonical_entity_id = sportsHierarchy.parent_canonical_entity_id
+          props.parent_canonical_entity_id = sportsHierarchy.parent_canonical_entity_id
+          hierarchyBackfills += 1
+        }
+        if (sportsHierarchy.league && trimText(row.league) !== trimText(sportsHierarchy.league)) {
+          patch.league = sportsHierarchy.league
+          props.league = sportsHierarchy.league
+          hierarchyBackfills += 1
+        }
+      }
+
+      if (entityType === 'federation') {
+        if (sportsHierarchy.sport && trimText(row.sport) !== trimText(sportsHierarchy.sport)) {
+          patch.sport = sportsHierarchy.sport
+          props.sport = sportsHierarchy.sport
+          federationCoreBackfills += 1
+        }
+        if (sportsHierarchy.country && trimText(row.country) !== trimText(sportsHierarchy.country)) {
+          patch.country = sportsHierarchy.country
+          props.country = sportsHierarchy.country
+          federationCoreBackfills += 1
+        }
+      }
+    } else {
+      if (row.league_canonical_entity_id || row.parent_canonical_entity_id) {
+        if (row.league_canonical_entity_id) {
+          patch.league_canonical_entity_id = null
+          props.league_canonical_entity_id = null
+        }
+        if (row.parent_canonical_entity_id) {
+          patch.parent_canonical_entity_id = null
+          props.parent_canonical_entity_id = null
+        }
+        hierarchyLinksCleared += 1
+      }
+    }
+
     if (Object.keys(patch).length > 0 || JSON.stringify(props) !== JSON.stringify(row.properties || {})) {
       patch.properties = props
       if (!DRY_RUN) {
@@ -161,6 +231,9 @@ async function run() {
   console.log(`- Team/org league aliases normalized: ${normalizedLeagueAliases}`)
   console.log(`- Team/org junk league values cleared: ${coercedJunkLeagueToNull}`)
   console.log(`- League entities canonicalized: ${canonicalizedLeagueNameRows}`)
+  console.log(`- Sports hierarchy fields backfilled: ${hierarchyBackfills}`)
+  console.log(`- Federation sport/country fields backfilled: ${federationCoreBackfills}`)
+  console.log(`- Non-sport hierarchy links cleared: ${hierarchyLinksCleared}`)
 }
 
 run().catch((error) => {

@@ -27,6 +27,10 @@ from question_first_dossier_runner import (
     has_complete_question_first_artifacts,
     run_question_first_dossier,
 )
+from question_first_repair import (
+    load_question_source_payload as _shared_load_question_source_payload,
+    write_filtered_question_source as _shared_write_filtered_question_source,
+)
 from universal_atomic_matrix import build_universal_atomic_question_source
 
 logger = logging.getLogger(__name__)
@@ -329,10 +333,7 @@ def _entity_summary_map(summary_payload: Dict[str, Any]) -> Dict[str, Dict[str, 
 
 
 def _load_question_source_payload(question_source_path: Path) -> Dict[str, Any]:
-    payload = json.loads(Path(question_source_path).read_text(encoding="utf-8"))
-    if not isinstance(payload, dict):
-        raise ValueError("Question source must be a JSON object")
-    return payload
+    return _shared_load_question_source_payload(question_source_path)
 
 
 def _write_filtered_question_source(
@@ -342,38 +343,13 @@ def _write_filtered_question_source(
     entity_id: str,
     question_id: str,
 ) -> Path:
-    payload = _load_question_source_payload(source_path)
-    questions = payload.get("questions") if isinstance(payload.get("questions"), list) else []
-    selected_questions = [question for question in questions if isinstance(question, dict) and str(question.get("question_id") or "").strip() == question_id]
-    if not selected_questions:
-        raise ValueError(f"Question id {question_id!r} not found in {source_path}")
-    bounded_questions = []
-    for question in selected_questions:
-        bounded_question = dict(question)
-        if question_id in {"q11_decision_owner", "q7_procurement_signal", "q2_digital_stack"}:
-            bounded_question["hop_budget"] = min(max(int(question.get("hop_budget") or 1), 1), 4)
-            bounded_question["evidence_extension_budget"] = min(max(int(question.get("evidence_extension_budget") or 0), 0), 1)
-            if question.get("question_timeout_ms") is not None:
-                bounded_question["question_timeout_ms"] = min(max(int(question.get("question_timeout_ms") or 1000), 1000), 120000)
-            else:
-                bounded_question["question_timeout_ms"] = 120000
-            if question.get("hop_timeout_ms") is not None:
-                bounded_question["hop_timeout_ms"] = min(max(int(question.get("hop_timeout_ms") or 1000), 1000), 60000)
-            else:
-                bounded_question["hop_timeout_ms"] = 60000
-        bounded_questions.append(bounded_question)
-
-    filtered = {
-        **payload,
-        "questions": bounded_questions,
-        "question_count": len(bounded_questions),
-        "rerun_profile": "bounded_single_question",
-    }
-    rerun_dir = output_root / "_rerun_question_sources"
-    rerun_dir.mkdir(parents=True, exist_ok=True)
-    rerun_path = rerun_dir / f"{_slugify(entity_id)}_{_slugify(question_id)}.json"
-    rerun_path.write_text(json.dumps(filtered, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    return rerun_path
+    return _shared_write_filtered_question_source(
+        source_path=source_path,
+        output_root=output_root,
+        entity_id=entity_id,
+        question_ids=[question_id],
+        rerun_profile="bounded_single_question",
+    )
 
 
 def build_rerun_archetypes(
@@ -758,6 +734,8 @@ async def run_smoke(
             "question_first_run_path": str(question_first_run_path) if question_first_run_path else None,
             "question_first_dossier_path": str(question_first_dossier_path) if question_first_dossier_path else None,
             "question_first_report_path": question_first_report.get("json_report_path") if isinstance(question_first_report, dict) else None,
+            "failure_reason": error,
+            "failure_category": status if status != "completed" else None,
             "optional_enrichments": {
                 "connections_graph": {
                     "enabled": connections_graph_enrichment_enabled,
@@ -853,6 +831,8 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     if args.output_root:
         output_root = Path(args.output_root)
+        if not output_root.is_absolute():
+            output_root = (ROOT / output_root).resolve()
     else:
         ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
         output_root = ROOT / "backend" / "data" / "question_first_archetype_smokes" / f"question_first_archetype_smoke_{ts}"

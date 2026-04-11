@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { AppPageBody, AppPageHeader, AppPageShell } from '@/components/layout/AppPageShell'
 
 type AuditRow = {
   id: string
@@ -53,20 +54,22 @@ export default function CanonicalMaintenanceAuditPage() {
   }, [status, loadRows])
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">Canonical Maintenance Audit</h1>
-          <p className="text-sm text-muted-foreground">Latest post-sync remediation and QA runs</p>
-        </div>
-        <div className="flex gap-2">
-          <Button asChild variant="outline" size="sm">
-            <Link href="/entity-pipeline">Entity Pipeline</Link>
-          </Button>
-          <Button onClick={() => loadRows(status)} variant="outline" size="sm">Refresh</Button>
-        </div>
-      </div>
+    <AppPageShell>
+      <AppPageHeader
+        eyebrow="Admin"
+        title="Canonical Maintenance Audit"
+        description="Latest post-sync remediation and QA runs."
+        actions={
+          <>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/entity-pipeline">Entity Pipeline</Link>
+            </Button>
+            <Button onClick={() => loadRows(status)} variant="outline" size="sm">Refresh</Button>
+          </>
+        }
+      />
 
+      <AppPageBody>
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-base">Filters</CardTitle>
@@ -129,6 +132,7 @@ export default function CanonicalMaintenanceAuditPage() {
           </Card>
         ))}
       </div>
-    </div>
+      </AppPageBody>
+    </AppPageShell>
   )
 }
