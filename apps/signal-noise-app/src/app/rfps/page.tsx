@@ -127,7 +127,7 @@ export default function RfpsPage() {
   const activeLaneLabel = wideResearchBatch?.lane_label || wideResearchBatch?.focus_area || 'Unknown lane'
 
   return (
-    <AppPageShell className={`transition-opacity duration-500 ${wideResearchLoading ? 'opacity-70' : 'opacity-100'}`}>
+    <AppPageShell className="opacity-100">
       <AppPageHeader
         eyebrow="Canonical RFPs"
         title="Canonical source of truth"
@@ -135,7 +135,7 @@ export default function RfpsPage() {
       />
       <AppPageBody>
         <section className="grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
-          <Card className="border-border/70 bg-card/70">
+          <Card className="border-border/70 bg-card">
             <CardHeader className="space-y-2">
               <div className="flex items-center justify-between gap-3">
                 <CardTitle className="text-sm font-medium text-muted-foreground">Latest wide research</CardTitle>
@@ -183,7 +183,7 @@ export default function RfpsPage() {
                 <span className="font-medium text-foreground/80">Seed prompt:</span>{' '}
                 {wideResearchBatch?.seed_query || 'Awaiting first Manus batch'}
               </div>
-              <div className="rounded-xl border border-dashed border-border/70 bg-background/40 px-3 py-2 text-xs text-muted-foreground">
+                <div className="rounded-xl border border-dashed border-border/70 bg-background/40 px-3 py-2 text-xs text-muted-foreground">
                 Canonical entity ingestion happens automatically from the normalized Manus batch. Missing entities are created in the source of truth with the available opportunity context.
               </div>
             </CardContent>
@@ -203,7 +203,7 @@ export default function RfpsPage() {
             </div>
             <div className="grid gap-4 xl:grid-cols-2">
               {wideResearchOpportunities.map((rfp) => (
-                <Card key={rfp.id} className="border-border/70 bg-card/70 shadow-sm">
+                <Card key={rfp.id} className="border-border/70 bg-card shadow-sm">
                   <CardHeader className="space-y-3">
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div className="space-y-2">
