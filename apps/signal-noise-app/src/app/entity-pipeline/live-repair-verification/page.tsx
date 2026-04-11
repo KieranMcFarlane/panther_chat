@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { getEntityPipelineRun } from '@/lib/entity-import-jobs'
 import { deriveEntityPipelineLifecycle } from '@/lib/entity-pipeline-lifecycle'
+import { readPipelineControlState } from '@/lib/pipeline-control-state'
 import { resolveCanonicalQuestionFirstDossier } from '@/lib/question-first-dossier'
 import { requirePageSession } from '@/lib/server-auth'
 
@@ -46,6 +47,13 @@ function formatPublicationHealth(publicationStatus: string, reconcileRequired: b
   return reconcileRequired ? 'Publish failed' : 'Publish failed'
 }
 
+function formatIgnitionLabel(value: string): string {
+  if (value === 'starting') return 'Ignition starting'
+  if (value === 'stopping') return 'Stopping intake'
+  if (value === 'paused') return 'Paused'
+  return 'Engine running'
+}
+
 export default async function LiveRepairVerificationPage() {
   await requirePageSession('/entity-pipeline/live-repair-verification')
 
@@ -58,6 +66,7 @@ export default async function LiveRepairVerificationPage() {
   const lifecycle = run
     ? await deriveEntityPipelineLifecycle({ entityId: ENTITY_ID, run })
     : null
+  const controlState = await readPipelineControlState()
 
   const runMetadata = run?.metadata && typeof run.metadata === 'object'
     ? run.metadata as Record<string, any>
@@ -75,7 +84,17 @@ export default async function LiveRepairVerificationPage() {
   const repairRetryCount = Number(runMetadata.repair_retry_count ?? lifecycle?.repair_retry_count ?? 0)
   const repairRetryBudget = Number(runMetadata.repair_retry_budget ?? lifecycle?.repair_retry_budget ?? 0)
   const nextRepairQuestionId = toText(runMetadata.next_repair_question_id || lifecycle?.next_repair_question_id) || 'n/a'
+  const nextRepairBatchId = toText(runMetadata.next_repair_batch_id || lifecycle?.next_repair_batch_id) || 'n/a'
+  const nextRepairBatchHref = nextRepairBatchId !== 'n/a'
+    ? `/entity-import/${encodeURIComponent(nextRepairBatchId)}/${encodeURIComponent(ENTITY_ID)}`
+    : null
   const reconciliationState = toText(runMetadata.reconciliation_state || lifecycle?.reconciliation_state) || 'healthy'
+  const ignitionState = toText(
+    controlState.transition_state
+    || controlState.observed_state
+    || (controlState.is_paused ? 'paused' : 'running'),
+  ) || 'running'
+  const ignitionLabel = formatIgnitionLabel(ignitionState)
 
   const targetQuestions = [
     'q11_decision_owner',
@@ -117,6 +136,26 @@ export default async function LiveRepairVerificationPage() {
             </Button>
           </div>
         </header>
+
+        <Card className="border-white/10 bg-white/[0.04]">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-white">
+              <Gauge className="h-5 w-5 text-sky-300" />
+              Pipeline ignition
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm text-slate-300">
+            <p>Control state: <span className="font-semibold text-white">{ignitionLabel}</span></p>
+            <p>requested: <span className="font-semibold text-white">{controlState.requested_state ?? 'running'}</span></p>
+            <p>acknowledged: <span className="font-semibold text-white">{controlState.observed_state ?? ignitionState}</span></p>
+            <p>running: <span className="font-semibold text-white">{controlState.observed_state === 'running' ? 'running' : 'starting'}</span></p>
+            <p>paused: <span className="font-semibold text-white">{controlState.is_paused ? 'paused' : 'no'}</span></p>
+            <p>Start pipeline / Stop intake affordance: <span className="font-semibold text-white">Visible in Live Ops</span></p>
+            {nextRepairBatchHref ? (
+              <p>Open next repair batch: <Link className="font-semibold text-white underline" href={nextRepairBatchHref}>{nextRepairBatchId}</Link></p>
+            ) : null}
+          </CardContent>
+        </Card>
 
         <section className="grid gap-6 lg:grid-cols-3">
           <Card className="border-white/10 bg-white/[0.04]">

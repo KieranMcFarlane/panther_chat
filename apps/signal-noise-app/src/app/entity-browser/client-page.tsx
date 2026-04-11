@@ -10,10 +10,8 @@ import { Button } from "@/components/ui/button"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { Skeleton } from "@/components/ui/skeleton"
 import { EntityCard } from "@/components/EntityCard"
-import { EntitySmokeJourney } from "@/components/entity-browser/EntitySmokeJourney"
 import { FacetFilterBar, type FacetFilterField } from "@/components/filters/FacetFilterBar"
 import { AppPageBody, AppPageHeader, AppPageShell } from "@/components/layout/AppPageShell"
-import type { EntitySmokeJourneyItem } from "@/lib/entity-smoke-set"
 import { useEntitiesBrowserData, useEntityTaxonomy } from "@/lib/swr-config"
 import type { EntityBrowserFilters, EntityBrowserResponse } from "@/lib/entity-browser-data"
 import type { EntitiesTaxonomyResponse } from "@/lib/entities-taxonomy"
@@ -42,13 +40,11 @@ interface AutocompleteEntity {
 
 
 interface EntityBrowserClientPageProps {
-  smokeItems: EntitySmokeJourneyItem[]
   initialEntitiesData?: EntityBrowserResponse | null
   initialTaxonomy?: EntitiesTaxonomyResponse | null
 }
 
 export default function EntityBrowserClientPage({
-  smokeItems,
   initialEntitiesData = null,
   initialTaxonomy = null,
 }: EntityBrowserClientPageProps) {
@@ -535,10 +531,7 @@ export default function EntityBrowserClientPage({
         }
       />
       <AppPageBody>
-        <div className="mb-4">
-          <EntitySmokeJourney items={smokeItems} />
-        </div>
-      <FacetFilterBar
+        <FacetFilterBar
         className="mb-4"
         searchSlot={
           <div className="relative">

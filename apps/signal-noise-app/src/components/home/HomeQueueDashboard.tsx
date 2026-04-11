@@ -24,6 +24,9 @@ type QueueEntityRecord = {
   repair_retry_count?: number | null
   repair_retry_budget?: number | null
   next_repair_question_id?: string | null
+  next_repair_status?: string | null
+  next_repair_batch_id?: string | null
+  next_repair_batch_status?: string | null
   reconciliation_state?: string | null
 }
 
@@ -167,6 +170,20 @@ function formatRepairState(value: string | null | undefined) {
   return null
 }
 
+function formatNextRepairStatus(value: string | null | undefined) {
+  if (value === 'planned') return 'Next repair planned'
+  if (value === 'queued') return 'Next repair queued'
+  if (value === 'running') return 'Next repair running'
+  if (value === 'completed') return 'Next repair completed'
+  if (value === 'failed') return 'Next repair failed'
+  if (value === 'exhausted') return 'Next repair exhausted'
+  return null
+}
+
+function isSelfHealingRunning(item: QueueEntityRecord) {
+  return item.state === 'in_progress' && item.next_repair_status === 'running'
+}
+
 function QueueCard({ item }: { item: QueueEntityRecord }) {
   const stateLabel = item.client_ready
     ? 'Client-ready'
@@ -185,22 +202,35 @@ function QueueCard({ item }: { item: QueueEntityRecord }) {
           <p className="text-sm font-semibold text-white">{item.entity_name}</p>
           <p className="mt-1 text-xs uppercase tracking-[0.16em] text-slate-400">{item.entity_type}</p>
         </div>
-        <Badge
-          className={item.client_ready ? 'border-emerald-400/30 bg-emerald-500/10 text-emerald-200' : 'border-white/10 bg-white/5 text-slate-200'}
-        >
-          {stateLabel}
-        </Badge>
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          {isSelfHealingRunning(item) ? (
+            <Badge className="border border-cyan-400/30 bg-cyan-500/10 text-cyan-200">
+              Next repair running
+            </Badge>
+          ) : null}
+          <Badge
+            className={item.client_ready ? 'border-emerald-400/30 bg-emerald-500/10 text-emerald-200' : 'border-white/10 bg-white/5 text-slate-200'}
+          >
+            {stateLabel}
+          </Badge>
+        </div>
       </div>
       <div className="mt-3 flex flex-wrap gap-2 text-xs uppercase tracking-[0.14em] text-slate-400">
         <span>{formatRunType(item.publication_mode)}</span>
         {formatPublicationState(item.publication_status) ? <span>{formatPublicationState(item.publication_status)}</span> : null}
         {item.publication_status === 'published_degraded' ? <span>Reconciliation pending</span> : null}
         {formatRepairState(item.repair_state) ? <span>{formatRepairState(item.repair_state)}</span> : null}
+        {formatNextRepairStatus(item.next_repair_status) ? <span>{formatNextRepairStatus(item.next_repair_status)}</span> : null}
       </div>
       <p className="mt-3 text-sm leading-6 text-slate-300">{toText(item.summary) || 'No summary available yet.'}</p>
       {item.next_repair_question_id ? (
         <p className="mt-2 text-xs uppercase tracking-[0.14em] text-sky-300">
           next repair root: {item.next_repair_question_id}
+        </p>
+      ) : null}
+      {item.next_repair_batch_id ? (
+        <p className="mt-2 text-xs uppercase tracking-[0.14em] text-cyan-300">
+          next repair batch: {item.next_repair_batch_id}
         </p>
       ) : null}
       {typeof item.repair_retry_count === 'number' || typeof item.repair_retry_budget === 'number' ? (
@@ -214,8 +244,33 @@ function QueueCard({ item }: { item: QueueEntityRecord }) {
       {item.generated_at ? (
         <p className="mt-3 text-xs text-slate-500">Updated {formatDate(item.generated_at)}</p>
       ) : null}
+      {item.next_repair_batch_id ? (
+        <div className="mt-3">
+          <Button asChild size="sm" variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10">
+            <Link href={`/entity-import/${encodeURIComponent(item.next_repair_batch_id)}/${encodeURIComponent(item.entity_id)}`}>
+              Open next repair batch
+            </Link>
+          </Button>
+        </div>
+      ) : null}
     </div>
   )
+}
+
+function hasFollowOnRepair(item: QueueEntityRecord | null | undefined) {
+  if (!item) return false
+  return Boolean(
+    item.next_repair_batch_id
+    && (item.next_repair_status === 'planned' || item.next_repair_status === 'queued' || item.next_repair_status === 'running')
+  )
+}
+
+function formatActiveRepairLabel(item: QueueEntityRecord | null | undefined) {
+  if (!item) return null
+  if (item.next_repair_status === 'running') return 'Next repair running'
+  if (item.next_repair_status === 'queued') return 'Next repair queued'
+  if (item.next_repair_status === 'planned') return 'Next repair planned'
+  return null
 }
 
 export function HomeQueueDashboard() {
@@ -264,6 +319,11 @@ export function HomeQueueDashboard() {
 
   const { loop_status, queue, client_ready_dossiers, rfp_cards, sales_summary, dossier_quality, rollout_proof_set } = data
   const healthLabel = formatLoopHealth(loop_status.health)
+  const activeFollowOnRepair = queue.in_progress_entity && hasFollowOnRepair(queue.in_progress_entity)
+    ? queue.in_progress_entity
+    : queue.resume_needed_entities.find((item) => hasFollowOnRepair(item))
+      || queue.completed_entities.find((item) => hasFollowOnRepair(item))
+      || null
 
   return (
     <div className="mt-10 space-y-8">
@@ -310,13 +370,39 @@ export function HomeQueueDashboard() {
           <Card className="border-white/10 bg-black/20"><CardContent className="p-5"><p className="text-xs uppercase tracking-[0.16em] text-slate-400">Complete dossiers</p><p className="mt-3 text-3xl font-semibold text-sky-200">{loop_status.quality_counts.complete}</p></CardContent></Card>
           <Card className="border-white/10 bg-black/20"><CardContent className="p-5"><p className="text-xs uppercase tracking-[0.16em] text-slate-400">Client-ready quality</p><p className="mt-3 text-3xl font-semibold text-emerald-300">{loop_status.quality_counts.client_ready}</p></CardContent></Card>
         </div>
+
+        {activeFollowOnRepair ? (
+          <div className="mt-4 rounded-2xl border border-cyan-400/20 bg-cyan-500/10 p-4">
+            <div className="flex flex-wrap items-center gap-3">
+              <Badge className="border border-cyan-400/30 bg-cyan-500/10 text-cyan-200">
+                {formatActiveRepairLabel(activeFollowOnRepair) || 'Active follow-on repair'}
+              </Badge>
+              <span className="text-sm font-medium text-white">{activeFollowOnRepair.entity_name}</span>
+              <span className="text-xs uppercase tracking-[0.14em] text-cyan-100/80">
+                {activeFollowOnRepair.next_repair_question_id ? `Root ${activeFollowOnRepair.next_repair_question_id}` : 'Follow-on repair'}
+              </span>
+            </div>
+            <p className="mt-2 text-sm text-cyan-50/90">
+              The live repair chain has a concrete follow-on batch ready to inspect.
+            </p>
+            {activeFollowOnRepair.next_repair_batch_id ? (
+              <div className="mt-3">
+                <Button asChild size="sm" variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10">
+                  <Link href={`/entity-import/${encodeURIComponent(activeFollowOnRepair.next_repair_batch_id)}/${encodeURIComponent(activeFollowOnRepair.entity_id)}`}>
+                    Open next repair batch
+                  </Link>
+                </Button>
+              </div>
+            ) : null}
+          </div>
+        ) : null}
       </section>
 
       <section className="grid gap-6 xl:grid-cols-4">
         <Card className="border-white/10 bg-white/[0.04]">
           <CardHeader><CardTitle className="flex items-center gap-2 text-white"><Clock3 className="h-5 w-5 text-amber-300" />In progress now</CardTitle></CardHeader>
           <CardContent>
-            {queue.in_progress_entity ? <QueueCard item={queue.in_progress_entity} /> : <p className="text-sm text-slate-300">No entity is actively running right now.</p>}
+            {queue.in_progress_entity ? <QueueCard item={queue.in_progress_entity} /> : <p className="text-sm text-slate-300">Waiting for claimable work.</p>}
           </CardContent>
         </Card>
         <Card className="border-white/10 bg-white/[0.04]">

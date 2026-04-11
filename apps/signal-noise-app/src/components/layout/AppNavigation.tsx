@@ -30,6 +30,7 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [activeOpsSection, setActiveOpsSection] = useState<'running' | 'blocked' | 'completed' | 'entities'>('running');
   const [pendingHref, setPendingHref] = useState<string | null>(null);
   const pathname = usePathname();
   const router = useRouter();
@@ -163,10 +164,10 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
   )
 
   return (
-    <div className="relative z-10 min-h-screen bg-custom-bg overflow-x-hidden">
-      <div className="flex min-h-screen items-stretch">
+    <div className="relative z-10 h-screen overflow-hidden bg-custom-bg overflow-x-hidden">
+      <div className="flex h-full items-stretch">
         <aside
-            className={`${sidebarExpanded ? 'w-64' : 'w-20'} sticky top-0 h-screen overflow-y-auto transition-all duration-300 border-r border-custom-border bg-custom-box/80 backdrop-blur-md relative z-50 flex-shrink-0`}
+            className={`${sidebarExpanded ? 'w-64' : 'w-20'} sticky top-0 h-screen overflow-hidden transition-all duration-300 border-r border-custom-border bg-custom-box/80 backdrop-blur-md relative z-50 flex-shrink-0`}
           >
             <div className="flex min-h-full flex-col p-4">
               <div className="flex items-center justify-between mb-6">
@@ -211,19 +212,24 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
             </div>
           </aside>
 
-        <div className="flex min-h-screen min-w-0 flex-1 flex-col">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto">
           <div className="sticky top-0 z-40 border-b border-custom-border/70 bg-custom-bg/90 backdrop-blur supports-[backdrop-filter]:bg-custom-bg/75">
             <div className="px-4 py-4 sm:px-6 lg:px-8">
-              <OperationalStatusStrip drawerOpen={drawerOpen} onToggleDrawer={() => setDrawerOpen((current) => !current)} />
+              <OperationalStatusStrip
+                drawerOpen={drawerOpen}
+                onToggleDrawer={() => setDrawerOpen((current) => !current)}
+              />
             </div>
+            {drawerOpen ? (
+              <div className="px-4 pb-6 sm:px-6 lg:px-8">
+                <OperationalDrawer open={drawerOpen} activeSection={activeOpsSection} onSelectSection={setActiveOpsSection} />
+              </div>
+            ) : null}
           </div>
-          <div className="min-w-0 flex-1">
+          <div className="min-h-0 min-w-0 flex-1">
             <PageTransition>{children}</PageTransition>
           </div>
         </div>
-      </div>
-      <div className="px-4 pb-6 sm:px-6 lg:px-8">
-        <OperationalDrawer open={drawerOpen} />
       </div>
     </div>
   );

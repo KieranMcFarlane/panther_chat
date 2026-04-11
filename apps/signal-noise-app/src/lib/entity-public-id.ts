@@ -1,8 +1,10 @@
 import { v5 as uuidv5 } from 'uuid'
+import entityUuidAliases from '@/lib/entity-public-id-aliases.js'
 
 type PublicIdEntity = {
   uuid?: unknown
   entity_uuid?: unknown
+  canonical_entity_id?: unknown
   graph_id?: unknown
   neo4j_id?: unknown
   id?: unknown
@@ -20,6 +22,8 @@ function toText(value: unknown): string {
 function getSourceSeed(entity: PublicIdEntity): string {
   const properties = entity.properties ?? {}
   const candidateValues = [
+    entity.canonical_entity_id,
+    properties.canonical_entity_id,
     entity.uuid,
     entity.entity_uuid,
     properties.uuid,
@@ -44,8 +48,29 @@ function getSourceSeed(entity: PublicIdEntity): string {
 export function resolveEntityUuid(entity: PublicIdEntity | null | undefined): string | null {
   if (!entity) return null
 
-  const existingUuid = toText(entity.uuid) || toText(entity.entity_uuid) || toText(entity.properties?.uuid) || toText(entity.properties?.entity_uuid)
-  if (existingUuid) return existingUuid
+  const aliasCandidates = [
+    entity.canonical_entity_id,
+    entity.properties?.canonical_entity_id,
+    entity.uuid,
+    entity.entity_uuid,
+    entity.properties?.uuid,
+    entity.properties?.entity_uuid,
+    entity.supabase_id,
+    entity.properties?.supabase_id,
+    entity.graph_id,
+    entity.neo4j_id,
+    entity.id,
+  ]
+
+  for (const candidate of aliasCandidates) {
+    const text = toText(candidate)
+    if (!text) continue
+
+    const canonicalAlias = entityUuidAliases.resolveCanonicalEntityUuidAlias(text)
+    if (canonicalAlias) return canonicalAlias
+
+    if (text) return text
+  }
 
   return uuidv5(getSourceSeed(entity), ENTITY_PUBLIC_ID_NAMESPACE)
 }
@@ -59,6 +84,8 @@ export function matchesEntityUuid(entity: PublicIdEntity | null | undefined, can
 
   const properties = entity.properties ?? {}
   return [
+    entity.canonical_entity_id,
+    properties.canonical_entity_id,
     entity.uuid,
     entity.entity_uuid,
     properties.uuid,
@@ -66,6 +93,5 @@ export function matchesEntityUuid(entity: PublicIdEntity | null | undefined, can
   ]
     .map(toText)
     .filter(Boolean)
-    .some((value) => value === normalizedCandidate)
+    .some((value) => value === normalizedCandidate || entityUuidAliases.resolveCanonicalEntityUuidAlias(value) === normalizedCandidate)
 }
-

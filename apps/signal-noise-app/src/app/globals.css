@@ -252,6 +252,19 @@ body.static-bg {
   }
 }
 
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 22s linear infinite;
+}
+
 /* High contrast version */
 .shiny-text.high-contrast {
   background: linear-gradient(
@@ -702,4 +715,3 @@ body.static-bg {
     border-color: hsl(var(--border));
   }
 }
-

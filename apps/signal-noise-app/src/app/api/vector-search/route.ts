@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { searchEntityEmbeddings } from '@/lib/embeddings'
+import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { buildCanonicalEntitySearchText } from '@/lib/canonical-search'
 import { getCanonicalEntityKey } from '@/lib/entity-canonicalization'
@@ -22,6 +23,7 @@ type Candidate = {
   id: string
   uuid: string
   entity_id: string
+  canonical_entity_id: string
   name: string
   type: string
   role: string
@@ -38,6 +40,48 @@ type QueryIntent = {
   impliedLeague?: string
   impliedEntityType?: string
 }
+
+type CanonicalSearchLookup = Map<string, {
+  id: string
+  canonical_key: string
+  name: string
+  entity_type: string
+  sport: string
+  country: string
+  league: string
+  quality_score: number
+}>
+
+const SEARCH_STOP_TOKENS = new Set([
+  'fc',
+  'cf',
+  'club',
+  'team',
+  'json',
+  'seed',
+  'jsonseed',
+  'the',
+])
+
+const SEARCH_SPORT_TOKENS = new Set([
+  'football',
+  'soccer',
+  'basketball',
+  'baseball',
+  'cricket',
+  'tennis',
+  'rugby',
+  'hockey',
+  'handball',
+  'volleyball',
+  'cycling',
+  'athletics',
+  'equestrian',
+  'motorsport',
+  'formula',
+  'golf',
+  'f1',
+])
 
 function boundedLevenshtein(a: string, b: string, maxDistance = 3): number {
   if (a === b) return 0
@@ -86,6 +130,101 @@ function normalize(value: string | null | undefined): string {
     .replace(/[^\p{L}\p{N}\s]/gu, ' ')
     .replace(/\s+/g, ' ')
     .trim()
+}
+
+function normalizeSearchName(value: string | null | undefined, type: string | null | undefined): string {
+  const normalizedType = normalize(type)
+  const normalizedValue = normalize(value)
+  const stripSportTokens = normalizedType.includes('club')
+    || normalizedType.includes('team')
+    || normalizedType.includes('league')
+    || normalizedType.includes('competition')
+    || normalizedType.includes('federation')
+    || /\bclub\b|\bteam\b|\bfc\b|\bcf\b/.test(normalizedValue)
+
+  return normalizedValue
+    .split(' ')
+    .filter(Boolean)
+    .filter((token) => !SEARCH_STOP_TOKENS.has(token))
+    .filter((token) => !(stripSportTokens && SEARCH_SPORT_TOKENS.has(token)))
+    .map((token) => {
+      if (!/[a-z]/.test(token) || token.length <= 3) {
+        return token
+      }
+      return token[0] + token.slice(1).replace(/[aeiou]/g, '')
+    })
+    .join(' ')
+}
+
+function buildCanonicalSearchKeys(name: string, type: string, sport: string, country: string, league: string): string[] {
+  const normalizedName = normalizeSearchName(name, type)
+  const normalizedSport = normalize(sport)
+  const normalizedCountry = normalize(country)
+  const normalizedLeague = normalize(league)
+
+  const keyParts = [
+    [normalizedName, normalizedSport, normalizedCountry, normalizedLeague],
+    [normalizedName, normalizedSport, normalizedCountry],
+    [normalizedName, normalizedSport],
+    [normalizedName],
+  ]
+
+  return keyParts
+    .map((parts) => parts.filter(Boolean).join('|'))
+    .filter(Boolean)
+}
+
+function pickCanonicalSearchEntity(candidate: any, canonicalLookup: CanonicalSearchLookup): any | null {
+  const properties = candidate?.properties || {}
+  const keys = buildCanonicalSearchKeys(
+    candidate?.name || properties.name || '',
+    candidate?.type || properties.type || candidate?.entity_type || properties.entity_type || '',
+    candidate?.sport || properties.sport || '',
+    candidate?.country || properties.country || '',
+    candidate?.league || properties.league || properties.level || '',
+  )
+
+  for (const key of keys) {
+    const canonicalEntity = canonicalLookup.get(key)
+    if (canonicalEntity) return canonicalEntity
+  }
+
+  return null
+}
+
+async function loadCanonicalSearchLookup(): Promise<CanonicalSearchLookup> {
+  const canonicalEntities = await getCanonicalEntitiesSnapshot()
+  const lookup: CanonicalSearchLookup = new Map()
+
+  for (const entity of canonicalEntities) {
+    const properties = entity.properties || {}
+    const keys = buildCanonicalSearchKeys(
+      entity.name || properties.name || '',
+      entity.entity_type || properties.type || '',
+      entity.sport || properties.sport || '',
+      entity.country || properties.country || '',
+      entity.league || properties.league || properties.level || '',
+    )
+
+    const qualityScore = Number((entity as any).quality_score || 0)
+    for (const key of keys) {
+      const existing = lookup.get(key)
+      if (!existing || qualityScore > existing.quality_score) {
+        lookup.set(key, {
+          id: String(entity.id),
+          canonical_key: String((entity as any).canonical_key || ''),
+          name: String(entity.name || properties.name || entity.id),
+          entity_type: String(entity.entity_type || properties.type || ''),
+          sport: String(entity.sport || properties.sport || ''),
+          country: String(entity.country || properties.country || ''),
+          league: String(entity.league || properties.league || properties.level || ''),
+          quality_score: qualityScore,
+        })
+      }
+    }
+  }
+
+  return lookup
 }
 
 function includesNormalized(haystack: string, needle: string): boolean {
@@ -189,6 +328,7 @@ function passesFacetFilter(metadata: Record<string, any>, filters: FilterInput):
 
 function buildKey(candidate: Candidate): string {
   return (
+    candidate.canonical_entity_id ||
     candidate.canonical_key ||
     candidate.uuid ||
     candidate.entity_id ||
@@ -231,7 +371,8 @@ function isMeaningfulCandidate(candidate: Candidate): boolean {
 async function loadLexicalCandidates(
   query: string,
   filters: FilterInput,
-  poolSize: number
+  poolSize: number,
+  canonicalLookup: CanonicalSearchLookup
 ): Promise<Candidate[]> {
   const probe = await supabase.from('canonical_entities').select('id').limit(1)
   const useCanonical = !probe.error
@@ -276,6 +417,7 @@ async function loadLexicalCandidates(
       league: row.league || properties.league || '',
       country: row.country || properties.country || '',
       entity_type: row.entity_type || properties.entity_type || '',
+      canonical_entity_id: row.canonical_entity_id || properties.canonical_entity_id || '',
       aliases: Array.isArray(row.aliases) ? row.aliases : [],
     }
     const lexical_score = lexicalScore(query, row.name || '', metadata.aliases)
@@ -293,17 +435,29 @@ async function loadLexicalCandidates(
         type: row.entity_type || properties.type || metadata.entity_type || 'unknown',
       },
     }
+    const canonicalSearchEntity = pickCanonicalSearchEntity(sourceEntity, canonicalLookup)
     const role = getCanonicalEntityRole(sourceEntity)
     const searchText = buildCanonicalEntitySearchText(sourceEntity)
-    const canonical_key = getCanonicalEntityKey(sourceEntity) || resolveEntityUuid(sourceEntity) || `${normalize(row.name || '')}::${normalize(role || row.entity_type || '')}`
+    const canonical_key =
+      canonicalSearchEntity?.canonical_key ||
+      getCanonicalEntityKey(sourceEntity) ||
+      resolveEntityUuid(sourceEntity) ||
+      `${normalize(row.name || '')}::${normalize(role || row.entity_type || '')}`
     const final_score = lexical_score * 0.4 + semantic_score * 0.3 + (metadata_boost + searchTextBoost(query, searchText) + roleBoost(role, query, searchText)) * 0.3
 
     return {
-      id: String(resolveEntityUuid(sourceEntity) || row.id),
-      uuid: String(resolveEntityUuid(sourceEntity) || row.uuid || row.id),
+      id: String(canonicalSearchEntity?.id || resolveEntityUuid(sourceEntity) || row.id),
+      uuid: String(canonicalSearchEntity?.id || resolveEntityUuid(sourceEntity) || row.uuid || row.id),
       entity_id: String(row.entity_id || row.id),
+      canonical_entity_id: String(
+        canonicalSearchEntity?.id ||
+        row.canonical_entity_id ||
+        properties.canonical_entity_id ||
+        resolveEntityUuid(sourceEntity) ||
+        row.id,
+      ),
       name: row.name || String(row.id),
-      type: role !== 'Unknown' ? role : (row.entity_type || metadata.entity_type || 'unknown'),
+      type: canonicalSearchEntity?.entity_type || (role !== 'Unknown' ? role : (row.entity_type || metadata.entity_type || 'unknown')),
       role,
       canonical_key,
       searchText,
@@ -354,6 +508,8 @@ export async function POST(request: NextRequest) {
       })
     }
 
+    const canonicalLookup = await loadCanonicalSearchLookup()
+
     const requestedEntityTypes = [
       ...(filters.entity_types || []),
       ...(filters.entity_type ? [filters.entity_type] : []),
@@ -377,6 +533,7 @@ export async function POST(request: NextRequest) {
         const sourceEntity = {
           id: row.id,
           uuid: row.uuid,
+          canonical_entity_id: row.canonical_entity_id || row.metadata?.canonical_entity_id,
           entity_uuid: row.entity_uuid,
           graph_id: row.graph_id,
           neo4j_id: row.neo4j_id,
@@ -386,19 +543,38 @@ export async function POST(request: NextRequest) {
             type: row.entity_type || metadata.entity_type || metadata.type || 'unknown',
           },
         }
+        const canonicalSearchEntity = pickCanonicalSearchEntity({
+          name: row.name || metadata.name || '',
+          type: metadata.properties?.type || row.entity_type || metadata.entity_type || metadata.type || 'unknown',
+          sport: metadata.properties?.sport || row.sport || metadata.sport || '',
+          country: metadata.properties?.country || row.country || metadata.country || '',
+          league: metadata.properties?.league || metadata.properties?.level || row.league || metadata.league || '',
+          properties: metadata.properties || {},
+        }, canonicalLookup)
         const lexical_score = lexicalScore(query, row.name || '', Array.isArray(metadata.aliases) ? metadata.aliases : [])
         const semantic_score = Math.max(0, Math.min(100, Number(row.similarity || 0) * 100))
         const role = getCanonicalEntityRole(sourceEntity)
         const searchText = buildCanonicalEntitySearchText(sourceEntity)
         const metadata_boost = facetBoost(metadata, filters) + searchTextBoost(query, searchText) + roleBoost(role, query, searchText)
         const final_score = lexical_score * 0.4 + semantic_score * 0.3 + metadata_boost * 0.3
-        const canonical_key = getCanonicalEntityKey(sourceEntity) || resolveEntityUuid(sourceEntity) || `${normalize(row.name || '')}::${normalize(role || row.entity_type || metadata.entity_type || '')}`
+        const canonical_key =
+          canonicalSearchEntity?.canonical_key ||
+          getCanonicalEntityKey(sourceEntity) ||
+          resolveEntityUuid(sourceEntity) ||
+          `${normalize(row.name || '')}::${normalize(role || row.entity_type || metadata.entity_type || '')}`
         return {
-          id: String(resolveEntityUuid(sourceEntity) || row.id),
-          uuid: String(resolveEntityUuid(sourceEntity) || row.uuid || row.entity_id || row.id),
+          id: String(canonicalSearchEntity?.id || resolveEntityUuid(sourceEntity) || row.id),
+          uuid: String(canonicalSearchEntity?.id || resolveEntityUuid(sourceEntity) || row.uuid || row.entity_id || row.id),
           entity_id: String(row.entity_id || row.id),
+          canonical_entity_id: String(
+            canonicalSearchEntity?.id ||
+            row.canonical_entity_id ||
+            row.metadata?.canonical_entity_id ||
+            resolveEntityUuid(sourceEntity) ||
+            row.id,
+          ),
           name: row.name || String(row.entity_id || row.id),
-          type: role !== 'Unknown' ? role : (row.entity_type || metadata.entity_type || 'unknown'),
+          type: canonicalSearchEntity?.entity_type || (role !== 'Unknown' ? role : (row.entity_type || metadata.entity_type || 'unknown')),
           role,
           canonical_key,
           searchText,
@@ -411,7 +587,7 @@ export async function POST(request: NextRequest) {
       })
       .filter((candidate) => passesFacetFilter({ ...candidate.metadata, type: candidate.type }, filters))
 
-    const lexicalCandidates = await loadLexicalCandidates(query, filters, Math.min(limit * 8, 120))
+    const lexicalCandidates = await loadLexicalCandidates(query, filters, Math.min(limit * 8, 120), canonicalLookup)
 
     const merged = new Map<string, Candidate>()
     for (const candidate of [...lexicalCandidates, ...semanticCandidates]) {

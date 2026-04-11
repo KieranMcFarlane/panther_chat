@@ -610,6 +610,11 @@ class PipelineOrchestrator:
         logger.warning("🚦 Pipeline boundary: orchestrator:complete")
         return {
             "entity_id": entity_id,
+            "canonical_entity_id": (
+                str((request_metadata or {}).get("canonical_entity_id") or "").strip()
+                or str((dossier.get("canonical_entity_id") if isinstance(dossier, dict) else "") or "").strip()
+                or None
+            ),
             "entity_name": entity_name,
             "run_id": run_id,
             "requested_objective": requested_objective,

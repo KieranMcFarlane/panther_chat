@@ -5,6 +5,7 @@ import { existsSync, readFileSync } from 'node:fs'
 const opsRoute = new URL('../src/app/api/entities/[entityId]/dossier/ops/route.ts', import.meta.url)
 const reviewRoute = new URL('../src/app/api/entities/[entityId]/dossier/review/route.ts', import.meta.url)
 const rerunRoute = new URL('../src/app/api/entities/[entityId]/dossier/rerun/route.ts', import.meta.url)
+const verificationPageSource = readFileSync(new URL('../src/app/entity-pipeline/live-repair-verification/page.tsx', import.meta.url), 'utf8')
 const controlsSource = readFileSync(new URL('../src/components/entity-dossier/DossierOperatorControls.tsx', import.meta.url), 'utf8')
 const feedSource = readFileSync(new URL('../src/components/home/GraphitiInsightsFeed.tsx', import.meta.url), 'utf8')
 
@@ -44,6 +45,9 @@ test('dossier page exposes rerun, review, and missing evidence controls for stal
   assert.match(controlsSource, /Exhausted/i)
   assert.match(controlsSource, /retry budget/i)
   assert.match(controlsSource, /next repair root/i)
+  assert.match(controlsSource, /Next repair planned|Next repair queued|Next repair running/i)
+  assert.match(controlsSource, /next repair batch id/i)
+  assert.match(controlsSource, /Open next repair batch/i)
   assert.match(controlsSource, /Reconciliation pending/i)
   assert.match(controlsSource, /Mark for review/)
   assert.match(controlsSource, /Inspect missing evidence/)
@@ -55,4 +59,11 @@ test('operational graphiti cards expose operator actions', () => {
   assert.match(feedSource, /Rerun dossier/)
   assert.match(feedSource, /Mark for review/)
   assert.match(feedSource, /Inspect missing evidence/)
+})
+
+test('live repair verification page surfaces the ignition state and follow-on batch affordance', () => {
+  assert.match(verificationPageSource, /Pipeline ignition/i)
+  assert.match(verificationPageSource, /Ignition starting|Engine running|Stopping intake|Paused/i)
+  assert.match(verificationPageSource, /Start pipeline \/ Stop intake affordance/i)
+  assert.match(verificationPageSource, /Open next repair batch/)
 })

@@ -1,0 +1,265 @@
+{
+  "run_id": "yellow-panther-rfp-2026-04-11T005900Z",
+  "source": "[object Object]",
+  "prompt": "You are running a wide web research sweep to find Yellow Panther fit (web-platform) RFPs, tenders, procurement notices, and adjacent opportunity signals.\n\nRepository context:\nCurrent intake page: /tenders\nNormalized RFP page: /rfps\nTarget outcome: discover Yellow Panther web-platform opportunities and normalize them into the RFP surface.\nRequested sub-vertical: Web Platforms.\nCanonical-first source of truth: check canonical_entities before creating anything new.\nIf an entity exists, link to it and reuse its canonical identity.\nIf no entity exists, create an entity with canonical-first fields and do not invent a parallel source of truth.\nReturn normalized JSON only.\n\nDiscovery rules:\n- Search broadly across the web, official procurement pages, press releases, and relevant organizational announcements.\n- Narrow the hunt to web-platform opportunities instead of a generic digital sweep.\n- Prioritize website rebuilds, CMS programs, portals, app shells, frontend modernization, UX/UI redesign, design systems, and platform migrations.\n- Look for website redesign tenders, CMS replacement, portal procurement, platform modernization, mobile-responsive rebuilds, and digital experience platforms.\n- Focus on sports, leagues, clubs, federations, venues, governing bodies, and adjacent organizations where Yellow Panther could credibly deliver digital work.\n- Rank each opportunity for Yellow Panther digital fit, not just generic procurement volume.\n- Keep signal and noise separate. Prefer source URLs and brief evidence over prose.\n- Avoid duplicates when the same opportunity appears on multiple pages.\n- Normalize entity identity against the canonical-first model before output.\n\nOutput contract:\n- Return normalized JSON only.\n- Include opportunities with: title, organization, source_url, confidence, yellow_panther_fit, entity_name, canonical_entity_id, canonical_entity_name, category, status, deadline, description, metadata.\n- When possible, include a short web-platform fit rationale in metadata and prefer opportunities that map cleanly to web, CMS, portal, frontend, platform, or app-shell work.\n- Include entity_actions for every organization you link, reuse, or create.\n- Include the prompt execution metadata needed to render the batch on the RFP page.\n\nSeed query: Yellow Panther web-platform RFP discovery\nUse the MANUS_API key with the Manus API to execute the research request.",
+  "generated_at": "2026-04-11T04:51:23.614Z",
+  "opportunities": [
+    {
+      "id": "wide-rfp-1",
+      "title": "Open Tender Enquiry for Development, Management and Maintenance of Website, State Sports & Youth Repository and Games Management System (GMS)",
+      "organization": "Directorate of Sports & Youth Affairs, Government of Meghalaya",
+      "source_url": "https://megsports.gov.in/tenders/Corrigendum%2002%20-%20GMS.pdf",
+      "confidence": 0.96,
+      "yellow_panther_fit": 96,
+      "entity_name": "Directorate of Sports & Youth Affairs, Government of Meghalaya",
+      "canonical_entity_id": "ce_directorate_of_sports_and_youth_affairs_meghalaya",
+      "canonical_entity_name": "Directorate of Sports & Youth Affairs, Government of Meghalaya",
+      "category": "state_sports_authority",
+      "status": "open",
+      "deadline": "2026-04-13T17:00:00+05:30",
+      "description": "The Directorate is procuring an agency to develop, manage, and maintain a website, a state sports and youth repository, and a Games Management System, with requirements spanning portal delivery, mobile app continuity, analytics, content management, and live multi-sport operations support.",
+      "metadata": {
+        "document_type": "corrigendum",
+        "corrigendum_date": "2026-03-24",
+        "tender_id": "2026_DSYA_1936_1",
+        "technical_proposal_opening": "2026-04-14T12:00:00+05:30",
+        "delivery_scope": [
+          "website or portal development",
+          "sports repository platform",
+          "games management system",
+          "mobile application support",
+          "analytics and insights",
+          "automated content management",
+          "multi-sport operations support"
+        ],
+        "notes": "Corrigendum extends the bid deadline from 2026-04-06 17:00 to 2026-04-13 17:00 and broadens AI-related functionality including analytics, content support, scheduling assistance, and multilingual interaction.",
+        "normalized": true
+      }
+    },
+    {
+      "id": "wide-rfp-2",
+      "title": "RFP for Web Design & Web Development Agencies",
+      "organization": "Greater Miami Convention & Visitors Bureau",
+      "source_url": "https://www.miamiandbeaches.com/getmedia/ae7f0a6f-5867-42a9-8500-7cbf79989033/Web_Design_and_Development_Agency_RFP_Final.pdf",
+      "confidence": 0.91,
+      "yellow_panther_fit": 91,
+      "entity_name": "Greater Miami Convention & Visitors Bureau",
+      "canonical_entity_id": "ce_greater_miami_convention_and_visitors_bureau",
+      "canonical_entity_name": "Greater Miami Convention & Visitors Bureau",
+      "category": "sports_adjacent_tourism_destination_org",
+      "status": "open",
+      "deadline": "2026-04-30T17:00:00-04:00",
+      "description": "GMCVB is seeking web design and web development agency support for MiamiandBeaches.com, covering strategy, UX/UI, mobile-first optimization, analytics, testing, CRM initiatives, and ongoing website enhancements for a major sports-tourism-adjacent destination platform.",
+      "metadata": {
+        "release_date": "2026-01-26",
+        "intent_to_respond_deadline": "2026-02-20T17:00:00-05:00",
+        "platform": "MiamiandBeaches.com",
+        "delivery_scope": [
+          "web strategy",
+          "UX and UI design",
+          "web development",
+          "mobile-first optimization",
+          "analytics and reporting",
+          "testing and personalization",
+          "CRM initiatives"
+        ],
+        "notes": "The RFP states more than 70% of site visitors are on mobile devices and emphasizes website enhancements for 2026-2027 based on usability research, engagement metrics, and heuristic review.",
+        "normalized": true
+      }
+    },
+    {
+      "id": "wide-rfp-3",
+      "title": "REQUEST FOR PROPOSAL (RFP) USARCHERY.ORG – Website Rebuild & Modernization Project",
+      "organization": "USA Archery",
+      "source_url": "https://www.usarchery.org/resource/usa-archery-request-for-proposal---website",
+      "confidence": 0.98,
+      "yellow_panther_fit": 98,
+      "entity_name": "USA Archery",
+      "canonical_entity_id": "ce_usa_archery",
+      "canonical_entity_name": "USA Archery",
+      "category": "national_governing_body",
+      "status": "closed",
+      "deadline": "2026-03-31",
+      "description": "USA Archery sought proposals for a full rebuild and modernization of usarchery.org, including WordPress implementation, UX and accessibility improvements, responsive design, content architecture, and scoped integrations for membership tools and event discovery.",
+      "metadata": {
+        "budget_estimate_usd": 50000,
+        "platform": "WordPress",
+        "submission_contact": "careers@usarchery.org",
+        "delivery_scope": [
+          "website rebuild",
+          "frontend modernization",
+          "UX and UI redesign",
+          "responsive design system",
+          "content architecture",
+          "accessibility audit",
+          "integration scoping"
+        ],
+        "notes": "The source states proposals were due 2026-03-31, vendor selection was anticipated within six weeks, and project kickoff was targeted for May 2026.",
+        "normalized": true
+      }
+    },
+    {
+      "id": "wide-rfp-4",
+      "title": "2026-012-TS - Website Design and Development for Athletics and Recreation",
+      "organization": "Toronto Metropolitan University Athletics and Recreation",
+      "source_url": "https://www.merx.com/oupma/torontomu/solicitations/Website-Design-and-Development-for-Athletics-and-Recreation/0000313763",
+      "confidence": 0.93,
+      "yellow_panther_fit": 93,
+      "entity_name": "Toronto Metropolitan University Athletics and Recreation",
+      "canonical_entity_id": "ce_toronto_metropolitan_university_athletics_and_recreation",
+      "canonical_entity_name": "Toronto Metropolitan University Athletics and Recreation",
+      "category": "university_athletics_recreation",
+      "status": "closed",
+      "deadline": "2026-03-17T11:00:00-04:00",
+      "description": "Toronto Metropolitan University issued an RFP for website design and development services for its Athletics and Recreation unit, making it directly relevant to sports-sector web-platform delivery.",
+      "metadata": {
+        "source_platform": "MERX",
+        "solicitation_number": "2026-012-TS",
+        "published_date": "2026-02-09",
+        "delivery_date": "2026-04-30",
+        "delivery_scope": [
+          "website design",
+          "website development",
+          "athletics and recreation digital presence"
+        ],
+        "notes": "The MERX listing was explicitly marked closed at the time of verification.",
+        "normalized": true
+      }
+    },
+    {
+      "id": "wide-rfp-5",
+      "title": "Volleyball Canada Website Development and Hosting RFP 2026",
+      "organization": "Volleyball Canada",
+      "source_url": "https://volleyball.ca/uploads/About/RFP/VCWebsite_RFP_QandA.pdf",
+      "confidence": 0.9,
+      "yellow_panther_fit": 90,
+      "entity_name": "Volleyball Canada",
+      "canonical_entity_id": "ce_volleyball_canada",
+      "canonical_entity_name": "Volleyball Canada",
+      "category": "national_sport_federation",
+      "status": "closed",
+      "deadline": "2026-02-10",
+      "description": "Volleyball Canada ran a website development and hosting procurement focused on a production-ready, mobile-friendly, bilingual platform with CMS flexibility, API continuity for its mobile ecosystem, and support for integrations, analytics, and future managed services.",
+      "metadata": {
+        "document_type": "questions_and_responses",
+        "document_date": "2026-02-04",
+        "budget_disclosed": false,
+        "budget_note": "The organization states an internal budget range exists but no specific dollar value is disclosed.",
+        "delivery_scope": [
+          "website development",
+          "hosting",
+          "CMS modernization",
+          "mobile-responsive rebuild",
+          "bilingual experience",
+          "API continuity for mobile app",
+          "analytics and integrations"
+        ],
+        "notes": "The Q&A confirms there was no extension to the 2026-02-10 proposal deadline and highlights challenges around navigation, user experience, admin efficiency, and mobile-friendly responsive design.",
+        "normalized": true
+      }
+    },
+    {
+      "id": "wide-rfp-6",
+      "title": "JAAA Announces Major Digital Transformation: Request for Proposals Issued for Website Redesign",
+      "organization": "Jamaica Athletics Administrative Association",
+      "source_url": "https://athleticsja.org/2026/01/jaaa-announces-major-digital-transformation-request-for-proposals-issued-for-website-redesign/",
+      "confidence": 0.95,
+      "yellow_panther_fit": 95,
+      "entity_name": "Jamaica Athletics Administrative Association",
+      "canonical_entity_id": "ce_jamaica_athletics_administrative_association",
+      "canonical_entity_name": "Jamaica Athletics Administrative Association",
+      "category": "national_sport_federation",
+      "status": "closed",
+      "deadline": "2026-02-16",
+      "description": "JAAA sought a vendor to redesign athleticsja.org into a modern digital hub with mobile-friendly UX, athlete dashboards, interactive event calendars, automated notifications, and secure member and official portals.",
+      "metadata": {
+        "project_kickoff": "2026-03-09",
+        "target_launch_date": "2026-06-26",
+        "submission_email": "JAAAWebRFP@gmail.com",
+        "delivery_scope": [
+          "website redesign",
+          "mobile-responsive rebuild",
+          "user portals",
+          "event calendar",
+          "notification workflows",
+          "athlete dashboard"
+        ],
+        "notes": "The announcement says proposals were to be submitted in PDF format by email and that the RFP was republished on 2026-01-11 with an updated document.",
+        "normalized": true
+      }
+    }
+  ],
+  "entity_actions": [
+    {
+      "action": "create",
+      "entity_name": "Directorate of Sports & Youth Affairs, Government of Meghalaya",
+      "canonical_entity_id": "ce_directorate_of_sports_and_youth_affairs_meghalaya",
+      "canonical_entity_name": "Directorate of Sports & Youth Affairs, Government of Meghalaya",
+      "entity_type": "organization",
+      "source_url": "https://megsports.gov.in/tenders/Corrigendum%2002%20-%20GMS.pdf",
+      "confidence": 0.98,
+      "reason": "No canonical entity record was found in the workspace; created from a verified primary-source tender document.",
+      "organization": "Unknown organization"
+    },
+    {
+      "action": "create",
+      "entity_name": "Greater Miami Convention & Visitors Bureau",
+      "canonical_entity_id": "ce_greater_miami_convention_and_visitors_bureau",
+      "canonical_entity_name": "Greater Miami Convention & Visitors Bureau",
+      "entity_type": "organization",
+      "source_url": "https://www.miamiandbeaches.com/getmedia/ae7f0a6f-5867-42a9-8500-7cbf79989033/Web_Design_and_Development_Agency_RFP_Final.pdf",
+      "confidence": 0.97,
+      "reason": "No canonical entity record was found in the workspace; created from a verified primary-source RFP PDF.",
+      "organization": "Unknown organization"
+    },
+    {
+      "action": "create",
+      "entity_name": "USA Archery",
+      "canonical_entity_id": "ce_usa_archery",
+      "canonical_entity_name": "USA Archery",
+      "entity_type": "organization",
+      "source_url": "https://www.usarchery.org/resource/usa-archery-request-for-proposal---website",
+      "confidence": 0.99,
+      "reason": "No canonical entity record was found in the workspace; created from a verified primary-source RFP.",
+      "organization": "Unknown organization"
+    },
+    {
+      "action": "create",
+      "entity_name": "Toronto Metropolitan University Athletics and Recreation",
+      "canonical_entity_id": "ce_toronto_metropolitan_university_athletics_and_recreation",
+      "canonical_entity_name": "Toronto Metropolitan University Athletics and Recreation",
+      "entity_type": "organization_unit",
+      "source_url": "https://www.merx.com/oupma/torontomu/solicitations/Website-Design-and-Development-for-Athletics-and-Recreation/0000313763",
+      "confidence": 0.95,
+      "reason": "No canonical entity record was found in the workspace; created from a verified source listing for the Athletics and Recreation business unit.",
+      "organization": "Unknown organization"
+    },
+    {
+      "action": "create",
+      "entity_name": "Volleyball Canada",
+      "canonical_entity_id": "ce_volleyball_canada",
+      "canonical_entity_name": "Volleyball Canada",
+      "entity_type": "organization",
+      "source_url": "https://volleyball.ca/uploads/About/RFP/VCWebsite_RFP_QandA.pdf",
+      "confidence": 0.98,
+      "reason": "No canonical entity record was found in the workspace; created from a verified primary-source procurement document.",
+      "organization": "Unknown organization"
+    },
+    {
+      "action": "create",
+      "entity_name": "Jamaica Athletics Administrative Association",
+      "canonical_entity_id": "ce_jamaica_athletics_administrative_association",
+      "canonical_entity_name": "Jamaica Athletics Administrative Association",
+      "entity_type": "organization",
+      "source_url": "https://athleticsja.org/2026/01/jaaa-announces-major-digital-transformation-request-for-proposals-issued-for-website-redesign/",
+      "confidence": 0.98,
+      "reason": "No canonical entity record was found in the workspace; created from a verified primary-source announcement.",
+      "organization": "Unknown organization"
+    }
+  ],
+  "summary": {
+    "total_opportunities": 6,
+    "linked_entities": 0,
+    "entities_to_create": 6
+  }
+}

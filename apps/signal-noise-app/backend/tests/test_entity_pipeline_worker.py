@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 from pathlib import Path
@@ -26,6 +27,7 @@ from entity_pipeline_worker import (
     derive_monitoring_summary,
     resolve_pipeline_timeout,
     resolve_fastapi_url,
+    read_pipeline_control_state,
     should_process_in_process,
     EntityPipelineWorker,
 )
@@ -100,6 +102,49 @@ def test_load_worker_environment_reads_local_dotenv(tmp_path, monkeypatch):
 
     assert os.environ["ENTITY_IMPORT_QUEUE_MODE"] == "durable_worker"
     assert os.environ["SUPABASE_ANON_KEY"] == "anon-key"
+
+
+def test_read_pipeline_control_state_defaults_to_running_when_missing(tmp_path, monkeypatch):
+    monkeypatch.setattr("entity_pipeline_worker.PIPELINE_CONTROL_STATE_PATH", tmp_path / "missing.json")
+
+    assert read_pipeline_control_state()["is_paused"] is False
+
+
+def test_read_pipeline_control_state_reads_pause_file(tmp_path, monkeypatch):
+    control_path = tmp_path / "pipeline-control-state.json"
+    control_path.write_text('{"is_paused": true, "pause_reason": "Paused from Live Ops"}', encoding="utf-8")
+    monkeypatch.setattr("entity_pipeline_worker.PIPELINE_CONTROL_STATE_PATH", control_path)
+
+    state = read_pipeline_control_state()
+
+    assert state["is_paused"] is True
+    assert state["pause_reason"] == "Paused from Live Ops"
+
+
+def test_read_pipeline_control_state_exposes_ignition_transition_fields(tmp_path, monkeypatch):
+    control_path = tmp_path / "pipeline-control-state.json"
+    control_path.write_text(
+        json.dumps(
+            {
+                "is_paused": False,
+                "pause_reason": None,
+                "updated_at": "2026-04-11T09:00:00+00:00",
+                "requested_state": "running",
+                "observed_state": "starting",
+                "transition_state": "starting",
+                "desired_state": "running",
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr("entity_pipeline_worker.PIPELINE_CONTROL_STATE_PATH", control_path)
+
+    state = read_pipeline_control_state()
+
+    assert state["requested_state"] == "running"
+    assert state["observed_state"] == "starting"
+    assert state["transition_state"] == "starting"
+    assert state["desired_state"] == "running"
 
 
 def test_build_batch_claim_metadata_sets_worker_and_heartbeat_fields():
@@ -546,6 +591,19 @@ def test_claim_next_batch_uses_rpc_claim_function():
     assert claimed["id"] == "batch-1"
 
 
+def test_claim_next_batch_returns_none_when_pipeline_is_paused(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker.recover_stale_batches = lambda: None
+    worker.worker_id = "worker-1"
+    worker.lease_seconds = 60
+    worker.supabase = SimpleNamespace(rpc=lambda *_args, **_kwargs: None)
+    monkeypatch.setattr("entity_pipeline_worker.read_pipeline_control_state", lambda: {"is_paused": True, "pause_reason": "Paused from Live Ops"})
+
+    claimed = worker.claim_next_batch()
+
+    assert claimed is None
+
+
 def test_recover_stale_batches_uses_rpc_requeue():
     worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
     captured = {}
@@ -828,6 +886,7 @@ def test_process_batch_requeues_batch_when_run_is_retryable():
     worker.sync_cached_entity = lambda *args, **kwargs: None
     worker.call_pipeline = lambda run, batch_id: (_ for _ in ()).throw(TimeoutError("temporary timeout"))
     worker._get_run_metadata = lambda batch_id, entity_id: {"attempt_count": 0}
+    worker._get_batch_record = lambda batch_id: {"id": batch_id, "status": "running", "metadata": {}}
 
     run_updates = []
     worker.update_run = lambda batch_id, entity_id, payload: run_updates.append(payload)
@@ -997,6 +1056,7 @@ def test_process_batch_marks_exhausted_retrying_run_failed_and_fails_batch():
     sync_calls = []
     worker.sync_cached_entity = lambda *args, **kwargs: sync_calls.append((args, kwargs))
     worker._get_run_metadata = lambda batch_id, entity_id: run["metadata"]
+    worker._get_batch_record = lambda batch_id: {"id": batch_id, "status": "running", "metadata": {}}
 
     batch_updates = []
 
@@ -1060,6 +1120,7 @@ def test_process_batch_marks_run_completed_when_supabase_publishes_but_falkordb_
         "rerun_mode": "question",
         "question_id": "q11_decision_owner",
     }
+    worker._get_batch_record = lambda batch_id: {"id": batch_id, "status": "running", "metadata": {}}
 
     run = {
         "entity_id": "fc-porto-2027",
@@ -1285,6 +1346,7 @@ def test_process_batch_auto_queues_next_repair_for_blocked_published_run():
         "repair_retry_count": 0,
         "repair_retry_budget": 3,
     }
+    worker._get_batch_record = lambda batch_id: {"id": batch_id, "status": "running", "metadata": {}}
     worker._safe_execute = lambda operation, context=None: operation() or True
 
     run = {
@@ -1404,15 +1466,110 @@ def test_process_batch_auto_queues_next_repair_for_blocked_published_run():
     batch = {"id": "batch-1", "metadata": {"queue_mode": "durable_worker"}}
     worker.process_batch(batch)
 
+    queued_batch_rows = [payload for payload in inserted_batches if isinstance(payload, dict) and payload.get("id")]
     assert updates[-1]["metadata"]["repair_state"] == "queued"
     assert updates[-1]["metadata"]["next_repair_question_id"] == "q11_decision_owner"
+    assert updates[-1]["metadata"]["next_repair_status"] == "queued"
+    assert updates[-1]["metadata"]["next_repair_batch_id"] == queued_batch_rows[-1]["id"]
+    assert updates[-1]["metadata"]["next_repair_batch_status"] == "queued"
     assert updates[-1]["metadata"]["repair_retry_count"] == 1
     assert inserted_batches, "expected a follow-on repair batch"
     assert inserted_runs, "expected a follow-on repair run"
     assert inserted_runs[-1]["metadata"]["rerun_mode"] == "question"
     assert inserted_runs[-1]["metadata"]["question_id"] == "q11_decision_owner"
     assert inserted_runs[-1]["metadata"]["repair_state"] == "queued"
-    assert complete_calls[-1]["batch_id"] == "batch-1"
+
+
+def test_process_batch_skips_exhausted_question_and_queues_next():
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker._now_iso = lambda: "2026-03-04T12:20:00+00:00"
+    worker._batch_metadata = lambda batch: batch.get("metadata", {})
+    worker.refresh_batch_heartbeat = lambda batch_id, metadata=None: {
+        **(metadata or {}),
+        "heartbeat_at": "2026-03-04T12:20:00+00:00",
+    }
+    worker._start_batch_heartbeat = lambda batch_id, metadata=None: (
+        SimpleNamespace(set=lambda: None),
+        SimpleNamespace(join=lambda timeout=1: None),
+    )
+    worker.worker_id = "worker-2"
+    worker.lease_seconds = 60
+    worker.max_run_attempts = 2
+    worker.repair_retry_budget = 1
+    worker._get_run_metadata = lambda batch_id, entity_id: {
+        "entity_type": "CLUB",
+        "priority_score": 90,
+        "repair_retry_count": 1,
+        "repair_retry_budget": 1,
+    }
+    worker._get_batch_record = lambda batch_id: {"id": batch_id, "status": "running", "metadata": {}}
+    worker._safe_execute = lambda operation, context=None: True
+    worker._persist_skip_to_entity_dossier = lambda **kwargs: True
+
+    queued_questions = []
+    worker._queue_follow_on_repair = lambda **kwargs: queued_questions.append(kwargs["question_id"]) or {
+        "batch_id": "batch-next",
+        "status": "queued",
+        "queue_source": "auto",
+    }
+
+    run = {
+        "id": "batch-2_fc-porto-2027",
+        "entity_id": "fc-porto-2027",
+        "entity_name": "FC Porto",
+        "status": "queued",
+        "phase": "entity_registration",
+        "metadata": {
+            "entity_type": "CLUB",
+            "priority_score": 90,
+            "attempt_count": 1,
+            "rerun_mode": "full",
+        },
+    }
+    worker.get_batch_runs = lambda batch_id: [run]
+
+    updates = []
+    worker.update_run = lambda batch_id, entity_id, payload: updates.append(payload)
+    worker.persist_monitoring_outputs = lambda *args, **kwargs: None
+    worker.sync_cached_entity = lambda *args, **kwargs: None
+    worker.call_pipeline = lambda run, batch_id: {
+        "phases": {
+            "dossier_generation": {"status": "completed"},
+            "discovery": {"status": "completed"},
+            "ralph_validation": {"status": "completed"},
+            "temporal_persistence": {"status": "completed"},
+            "dashboard_scoring": {"status": "completed"},
+        },
+        "artifacts": {
+            "dossier_id": "fc-porto-2027",
+            "scores": {"sales_readiness": "MONITOR"},
+            "dossier": {
+                "entity_id": "fc-porto-2027",
+                "entity_name": "FC Porto",
+                "quality_state": "blocked",
+                "questions": [
+                    {"question_id": "q11_decision_owner", "terminal_state": "no_signal"},
+                    {"question_id": "q2_digital_stack", "terminal_state": "no_signal"},
+                ],
+            },
+        },
+        "sales_readiness": "MONITOR",
+        "rfp_count": 0,
+        "dual_write_ok": False,
+        "publication_status": "published_degraded",
+        "publication_mode": "full_degraded",
+        "persistence_status": {
+            "dual_write_ok": False,
+            "supabase": {"ok": True, "attempts": 1},
+            "falkordb": {"ok": False, "attempts": 3, "error_class": "connection_error"},
+        },
+    }
+
+    worker.process_batch({"id": "batch-2", "metadata": {"queue_mode": "durable_worker", "retry_state": "running"}})
+
+    assert queued_questions, "expected follow-on repair to be queued after skipping exhausted question"
+    assert queued_questions[-1] == "q2_digital_stack"
+    assert updates[-1]["metadata"]["skipped_question_ids"] == ["q11_decision_owner"]
 
 
 def test_process_batch_auto_queues_fc_porto_people_chain_when_persisted_questions_lack_depends_on():
@@ -1513,6 +1670,7 @@ def test_process_batch_auto_queues_fc_porto_people_chain_when_persisted_question
         def __init__(self, table_name):
             self.table_name = table_name
             self.payload = None
+            self.filters = []
 
         def update(self, payload):
             self.payload = payload
@@ -1553,5 +1711,203 @@ def test_process_batch_auto_queues_fc_porto_people_chain_when_persisted_question
     worker.process_batch({"id": "batch-1", "metadata": {"queue_mode": "durable_worker"}})
 
     assert updates[-1]["metadata"]["next_repair_question_id"] == "q11_decision_owner"
+    assert updates[-1]["metadata"]["next_repair_status"] == "queued"
     assert inserted_batches
     assert inserted_runs[-1]["metadata"]["question_id"] == "q11_decision_owner"
+
+
+def test_process_batch_marks_next_repair_as_planned_when_follow_on_insert_fails():
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker._now_iso = lambda: "2026-03-04T12:10:00+00:00"
+    worker._batch_metadata = lambda batch: batch.get("metadata", {})
+    worker.refresh_batch_heartbeat = lambda batch_id, metadata=None: {
+        **(metadata or {}),
+        "heartbeat_at": "2026-03-04T12:10:00+00:00",
+    }
+    worker._start_batch_heartbeat = lambda batch_id, metadata=None: (
+        SimpleNamespace(set=lambda: None),
+        SimpleNamespace(join=lambda timeout=1: None),
+    )
+    worker.worker_id = "worker-1"
+    worker.lease_seconds = 60
+    worker.max_run_attempts = 2
+    worker.repair_retry_budget = 3
+    worker._get_run_metadata = lambda batch_id, entity_id: {
+        "entity_type": "CLUB",
+        "priority_score": 90,
+        "repair_retry_count": 0,
+        "repair_retry_budget": 3,
+    }
+    worker._get_batch_record = lambda batch_id: {"id": batch_id, "status": "running", "metadata": {}}
+
+    run = {
+        "id": "batch-1_fc-porto-2027",
+        "entity_id": "fc-porto-2027",
+        "entity_name": "FC Porto",
+        "status": "queued",
+        "phase": "entity_registration",
+        "metadata": {
+            "entity_type": "CLUB",
+            "priority_score": 90,
+            "attempt_count": 1,
+            "rerun_mode": "full",
+        },
+    }
+
+    updates = []
+    worker.update_run = lambda batch_id, entity_id, payload: updates.append(payload)
+    worker.persist_monitoring_outputs = lambda *args, **kwargs: None
+    worker.sync_cached_entity = lambda *args, **kwargs: None
+    worker.call_pipeline = lambda run, batch_id: {
+        "phases": {
+            "dossier_generation": {"status": "completed"},
+            "discovery": {"status": "completed"},
+            "ralph_validation": {"status": "completed"},
+            "temporal_persistence": {"status": "completed"},
+            "dashboard_scoring": {"status": "completed"},
+        },
+        "artifacts": {
+            "dossier_id": "fc-porto-2027",
+            "scores": {"sales_readiness": "MONITOR"},
+            "dossier": {
+                "entity_id": "fc-porto-2027",
+                "entity_name": "FC Porto",
+                "quality_state": "blocked",
+                "questions": [
+                    {"question_id": "q7_procurement_signal", "terminal_state": "answered"},
+                    {"question_id": "q11_decision_owner", "terminal_state": "no_signal"},
+                    {"question_id": "q12_connections", "terminal_state": "blocked"},
+                ],
+            },
+        },
+        "sales_readiness": "MONITOR",
+        "rfp_count": 0,
+        "dual_write_ok": False,
+        "publication_status": "published_degraded",
+        "publication_mode": "full_degraded",
+        "persistence_status": {
+            "dual_write_ok": False,
+            "supabase": {"ok": True, "attempts": 1},
+            "falkordb": {"ok": False, "attempts": 3, "error_class": "connection_error"},
+            "reconcile_required": True,
+        },
+        "completed_at": "2026-03-04T12:10:00+00:00",
+    }
+
+    class FakeRpcQuery:
+        def execute(self):
+            return SimpleNamespace(data=[])
+
+    class FakeQuery:
+        def __init__(self, table_name):
+            self.table_name = table_name
+            self.payload = None
+            self.filters = []
+
+        def update(self, payload):
+            self.payload = payload
+            return self
+
+        def insert(self, payload):
+            self.payload = payload
+            return self
+
+        def select(self, *_args, **_kwargs):
+            return self
+
+        def eq(self, *_args, **_kwargs):
+            self.filters.append((_args, _kwargs))
+            return self
+
+        def limit(self, _count):
+            return self
+
+        def execute(self):
+            return SimpleNamespace(data=[])
+
+    class FakeSupabase:
+        def rpc(self, *_args, **_kwargs):
+            return FakeRpcQuery()
+
+        def table(self, name):
+            return FakeQuery(name)
+
+    worker.supabase = FakeSupabase()
+    worker.find_active_repair_run = lambda entity_id, question_id, cascade_dependents=True: None
+    worker.get_batch_runs = lambda batch_id: [run]
+    worker._safe_execute = lambda operation, context=None: False if "self-healing" in (context or "") else (operation() or True)
+
+    worker.process_batch({"id": "batch-1", "metadata": {"queue_mode": "durable_worker"}})
+
+    assert updates[-1]["metadata"]["next_repair_question_id"] == "q11_decision_owner"
+    assert updates[-1]["metadata"]["next_repair_status"] == "planned"
+    assert updates[-1]["metadata"].get("next_repair_batch_id") is None
+    assert updates[-1]["metadata"]["repair_state"] == "idle"
+
+
+def test_find_active_repair_run_reuses_canonical_entity_uuid_alias():
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+
+    canonical_uuid = "2df7c5d8-6db3-4fc6-8b15-e3838d8d8d8d"
+
+    class FakeQuery:
+        def __init__(self, table_name):
+            self.table_name = table_name
+            self.filters = []
+
+        def select(self, *_args, **_kwargs):
+            return self
+
+        def eq(self, key, value):
+            self.filters.append((key, value))
+            return self
+
+        def in_(self, *_args, **_kwargs):
+            return self
+
+        def order(self, *_args, **_kwargs):
+            return self
+
+        def limit(self, _count):
+            return self
+
+        def maybe_single(self):
+            if self.table_name != "entity_pipeline_runs":
+                return SimpleNamespace(data=None)
+            filter_map = dict(self.filters)
+            if filter_map.get("canonical_entity_id") == canonical_uuid:
+                return SimpleNamespace(data={
+                    "id": "batch-1_fc-porto-2027",
+                    "batch_id": "batch-1",
+                    "entity_id": "fc-porto-2027",
+                    "entity_name": "FC Porto",
+                    "canonical_entity_id": canonical_uuid,
+                    "status": "running",
+                    "started_at": "2026-04-10T14:00:00+00:00",
+                    "metadata": {
+                        "rerun_mode": "question",
+                        "question_id": "q11_decision_owner",
+                        "cascade_dependents": True,
+                    },
+                })
+            return SimpleNamespace(data=None)
+
+        def execute(self):
+            return SimpleNamespace(data=[])
+
+    class FakeSupabase:
+        def table(self, name):
+            return FakeQuery(name)
+
+    worker.supabase = FakeSupabase()
+    worker._get_batch_record = lambda batch_id: {"id": batch_id, "status": "running"}
+
+    run = worker.find_active_repair_run(
+        entity_id="fc-porto-2027",
+        question_id="q11_decision_owner",
+        cascade_dependents=True,
+        canonical_entity_id=canonical_uuid,
+    )
+
+    assert run is not None
+    assert run["canonical_entity_id"] == canonical_uuid

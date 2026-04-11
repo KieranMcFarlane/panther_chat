@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { getEntityBrowserDossierHref } from '@/lib/entity-routing';
+import { searchVectorEntities } from '@/lib/vector-search-client';
 
 interface SearchResult {
 	id: string;
@@ -44,23 +45,12 @@ export default function VectorSearch({ className }: VectorSearchProps) {
 		setError(null);
 
 		try {
-			const response = await fetch('/api/vector-search', {
-				method: 'POST',
-				headers: { 
-					'Content-Type': 'application/json',
-					'Cache-Control': 'no-cache',
-					'Pragma': 'no-cache'
-				},
-				body: JSON.stringify({ 
-					query: searchQuery, 
-					limit: 10, 
-					score_threshold: 0.1,
-					entity_types: null,
-					timestamp: Date.now() // Add timestamp to prevent caching
-				}),
+			const data = await searchVectorEntities({
+				query: searchQuery,
+				limit: 10,
+				score_threshold: 0.1,
+				entity_types: null,
 			});
-			if (!response.ok) throw new Error(`HTTP ${response.status}`);
-			const data = await response.json();
 			setResults(data.results || []);
 			console.log('Vector search results for', searchQuery, ':', data.results);
 			

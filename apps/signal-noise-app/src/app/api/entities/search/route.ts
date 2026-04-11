@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { buildCachedEntityCanonicalLookup, dedupeCanonicalCachedEntityRows } from '@/lib/cached-entity-canonicalization.mjs'
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
-import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { buildCanonicalEntitySearchText } from '@/lib/canonical-search'
-import { canonicalizeEntities } from '@/lib/entity-canonicalization'
 import { resolveGraphId } from '@/lib/graph-id'
 import { resolveEntityUuid } from '@/lib/entity-public-id'
 import { getCanonicalEntityRole } from '@/lib/entity-role-taxonomy'
@@ -79,28 +76,14 @@ export async function GET(request: NextRequest) {
     const search = (searchParams.get('search') || '').trim()
     const defaultLimit = mode === 'autocomplete' ? 8 : 20
     const limit = Math.max(1, Math.min(Math.floor(parseInt(searchParams.get('limit') || String(defaultLimit))), 100))
-    const overscanLimit = search ? 100 : Math.min(limit * 3, 100)
-
-    let query = supabase
-      .from('cached_entities')
-      .select('id, graph_id, neo4j_id, labels, properties, canonical_entity_id')
-      .limit(overscanLimit)
-
-    if (search) {
-      query = query.or(
-        `properties->>name.ilike.%${search}%,properties->>type.ilike.%${search}%,properties->>entityClass.ilike.%${search}%,properties->>entity_class.ilike.%${search}%,properties->>sport.ilike.%${search}%,properties->>country.ilike.%${search}%,properties->>league.ilike.%${search}%,properties->>competition.ilike.%${search}%,properties->>level.ilike.%${search}%`
-      )
-    }
-
-    const { data, error } = await query.order('properties->>priorityScore', { ascending: false, nullsFirst: false })
-
-    if (error) {
-      throw error
-    }
-
-    const canonicalLookup = buildCachedEntityCanonicalLookup(await getCanonicalEntitiesSnapshot())
-    const deduped = dedupeCanonicalCachedEntityRows(data || [], canonicalLookup)
-    const canonicalized = canonicalizeEntities(deduped.map((entity: any) => toCanonicalSearchEntity(entity)))
+    const canonicalized = (await getCanonicalEntitiesSnapshot()).map((entity: any) => toCanonicalSearchEntity({
+      id: entity.id,
+      uuid: entity.uuid,
+      neo4j_id: entity.neo4j_id,
+      labels: entity.labels,
+      properties: entity.properties,
+      canonical_entity_id: entity.id,
+    }))
 
     const ranked = canonicalized.map((entity: any) => {
       const uuid = String(entity.uuid || entity.id)
@@ -143,6 +126,7 @@ export async function GET(request: NextRequest) {
         _score: search ? (searchScore * 1000) + roleBoost + popularityScore + lexicalScore : popularityScore + lexicalScore
       })
     })
+      .filter((entity) => !search || entity._score > 0)
 
     ranked.sort((a, b) => b._score - a._score || a.name.localeCompare(b.name))
     const windowed = ranked.slice(0, limit)

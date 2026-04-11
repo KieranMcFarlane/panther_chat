@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 
 const journeyComponentPath = new URL('../src/components/entity-browser/EntitySmokeJourney.tsx', import.meta.url)
-const browserPagePath = new URL('../src/app/entity-browser/client-page.tsx', import.meta.url)
+const browserPagePath = new URL('../src/app/entity-browser/page.tsx', import.meta.url)
 const smokeSetPath = new URL('../src/lib/entity-smoke-set.ts', import.meta.url)
 const smokeConfigPath = new URL('../src/lib/client-smoke-config.ts', import.meta.url)
 const proofSetPath = new URL('../src/lib/rollout-proof-set.ts', import.meta.url)
@@ -23,6 +23,8 @@ test('entity browser smoke journey presents the truthful three-entity qa path', 
   assert.match(proofSetSource, /Zimbabwe Cricket/)
   assert.doesNotMatch(proofSetSource, /La Vuelta Ciclista a España/)
   assert.match(smokeSetSource, /Pinned smoke entity is missing from the canonical snapshot/)
+  assert.match(smokeSetSource, /console\.warn/)
+  assert.doesNotMatch(smokeSetSource, /throw new Error/)
   assert.match(smokeSetSource, /dossier_source === 'question_first_dossier'/)
   assert.match(smokeSetSource, /dossier_source === 'question_first_run'/)
   assert.doesNotMatch(smokeSetSource, /dossierIndex\.dossier_status !== 'ready'/)
@@ -34,11 +36,13 @@ test('entity browser smoke journey presents the truthful three-entity qa path', 
   assert.match(journeySource, /dossierSummary/)
 })
 
-test('entity browser page mounts the smoke journey above the entity grid with canonical smoke items', () => {
-  assert.match(browserPageSource, /import \{ EntitySmokeJourney \} from "@\/components\/entity-browser\/EntitySmokeJourney"/)
-  assert.match(browserPageSource, /smokeItems/)
-  assert.match(browserPageSource, /<EntitySmokeJourney items=\{smokeItems\} \/>/)
-  assert.doesNotMatch(browserPageSource, /Hidden by default/)
+test('entity browser page streams the smoke journey separately from the main browser shell', () => {
+  assert.doesNotMatch(browserPageSource, /EntitySmokeJourney/)
+  assert.doesNotMatch(browserPageSource, /SmokeJourneySlot/)
+  assert.doesNotMatch(browserPageSource, /getEntityBrowserSmokeItems\(\)\.catch\(\(\) => \[\]\)/)
+  assert.doesNotMatch(browserPageSource, /<EntitySmokeJourney items=\{smokeItems\} \/>/)
+  assert.doesNotMatch(browserPageSource, /<Suspense fallback=\{null\}>/)
+  assert.match(browserPageSource, /<EntityBrowserClientPage/)
 })
 
 test('client-facing smoke journey presents one truthful qa example per quality state', () => {

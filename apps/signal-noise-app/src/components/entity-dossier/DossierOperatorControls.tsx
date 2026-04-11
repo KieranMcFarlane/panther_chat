@@ -46,6 +46,16 @@ function formatReconciliationState(value: string): string {
   return 'Healthy'
 }
 
+function formatNextRepairStatus(value: string): string {
+  if (value === 'planned') return 'Next repair planned'
+  if (value === 'queued') return 'Next repair queued'
+  if (value === 'running') return 'Next repair running'
+  if (value === 'completed') return 'Next repair completed'
+  if (value === 'failed') return 'Next repair failed'
+  if (value === 'exhausted') return 'Next repair exhausted'
+  return 'No follow-on repair'
+}
+
 const REPAIR_CHAINS = [
   ['q11_decision_owner', 'q12_connections', 'q15_outreach_strategy'],
   ['q7_procurement_signal', 'q8_explicit_rfp', 'q13_capability_gap', 'q14_yp_fit', 'q15_outreach_strategy'],
@@ -178,6 +188,19 @@ export function DossierOperatorControls({ entityId, dossierStatus, questions = [
     || dossier?.question_first?.next_repair_question_id
     || dossier?.next_repair_question_id,
   ) || null
+  const nextRepairStatus = toText(
+    metadataQuestionFirst.next_repair_status
+    || dossier?.question_first?.next_repair_status
+    || dossier?.next_repair_status,
+  ).toLowerCase() || 'idle'
+  const nextRepairBatchId = toText(
+    metadataQuestionFirst.next_repair_batch_id
+    || dossier?.question_first?.next_repair_batch_id
+    || dossier?.next_repair_batch_id,
+  ) || null
+  const nextRepairBatchHref = nextRepairBatchId
+    ? `/entity-import/${encodeURIComponent(nextRepairBatchId)}/${encodeURIComponent(entityId)}`
+    : null
   const reconciliationState = toText(
     metadataQuestionFirst.reconciliation_state
     || dossier?.question_first?.reconciliation_state
@@ -312,6 +335,15 @@ export function DossierOperatorControls({ entityId, dossierStatus, questions = [
                   <div>{formatRepairState(repairState)}</div>
                   <div>retry budget: {repairRetryCount}/{repairRetryBudget || 0}</div>
                   <div>next repair root: {nextRepairQuestionId || 'n/a'}</div>
+                  <div>next repair status: {formatNextRepairStatus(nextRepairStatus)}</div>
+                  <div>next repair batch id: {nextRepairBatchId || 'n/a'}</div>
+                  {nextRepairBatchHref ? (
+                    <div>
+                      <Link href={nextRepairBatchHref} className="underline">
+                        Open next repair batch
+                      </Link>
+                    </div>
+                  ) : null}
                   <div>publication mode: {publicationMode}</div>
                   <div>publication status: {publicationStatus}</div>
                   <div>reconcile_required: {reconcileRequired ? 'true' : 'false'}</div>

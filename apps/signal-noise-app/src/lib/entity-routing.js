@@ -1,3 +1,4 @@
+const { resolveCanonicalEntityUuidAlias } = require('./entity-public-id-aliases.js')
 const ENTITY_PUBLIC_ID_NAMESPACE = 'f5c2b2b8-9cf2-4e66-a1c2-38cde7bc3f4e'
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
@@ -145,11 +146,15 @@ function resolveCanonicalDossierId(entity) {
   if (typeof entity === 'string') {
     const text = toValidId(entity)
     if (!text) return null
+    const canonicalAlias = resolveCanonicalEntityUuidAlias(text)
+    if (canonicalAlias) return canonicalAlias
     if (looksLikeUuid(text)) return text
-    return uuidv5FromSeed(text, ENTITY_PUBLIC_ID_NAMESPACE)
+    return text
   }
 
   const candidateValues = [
+    entity.canonical_entity_id,
+    entity.properties?.canonical_entity_id,
     entity.uuid,
     entity.entity_uuid,
     entity.properties?.uuid,
@@ -163,10 +168,16 @@ function resolveCanonicalDossierId(entity) {
 
   for (const candidate of candidateValues) {
     const text = toValidId(candidate)
+    if (!text) continue
+
+    const canonicalAlias = resolveCanonicalEntityUuidAlias(text)
+    if (canonicalAlias) return canonicalAlias
     if (looksLikeUuid(text)) return text
   }
 
   const seed =
+    toValidId(entity.canonical_entity_id) ||
+    toValidId(entity.properties?.canonical_entity_id) ||
     toValidId(entity.uuid) ||
     toValidId(entity.entity_uuid) ||
     toValidId(entity.properties?.uuid) ||

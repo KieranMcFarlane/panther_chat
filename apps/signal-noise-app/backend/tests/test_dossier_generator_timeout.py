@@ -495,3 +495,344 @@ def test_resolve_phase0_timeout_seconds_defaults_to_300(monkeypatch):
 def test_resolve_phase0_timeout_seconds_respects_env_override(monkeypatch):
     monkeypatch.setenv("DOSSIER_PHASE0_TIMEOUT_SECONDS", "240")
     assert main.resolve_phase0_timeout_seconds() == 240.0
+
+
+def test_should_replace_persisted_dossier_rejects_newer_empty_candidate():
+    existing = {
+        "publish_status": "published_degraded",
+        "quality_state": "blocked",
+        "questions": [
+            {"question_id": "q7_procurement_signal", "terminal_state": "answered"},
+            {"question_id": "q13_capability_gap", "terminal_state": "answered"},
+            {"question_id": "q14_yp_fit", "terminal_state": "answered"},
+        ],
+    }
+    candidate = {
+        "publish_status": "published",
+        "questions": [],
+    }
+
+    assert main.score_persisted_dossier_candidate(existing) > main.score_persisted_dossier_candidate(candidate)
+    assert main.should_replace_persisted_dossier(existing=existing, candidate=candidate) is False
+
+
+def test_should_replace_persisted_dossier_accepts_better_complete_candidate():
+    existing = {
+        "publish_status": "published_degraded",
+        "quality_state": "blocked",
+        "questions": [
+            {"question_id": "q7_procurement_signal", "terminal_state": "answered"},
+            {"question_id": "q13_capability_gap", "terminal_state": "answered"},
+            {"question_id": "q14_yp_fit", "terminal_state": "blocked"},
+        ],
+    }
+    candidate = {
+        "publish_status": "published",
+        "quality_state": "complete",
+        "questions": [
+            {"question_id": f"q{i}", "terminal_state": "answered"}
+            for i in range(1, 16)
+        ],
+    }
+
+    assert main.score_persisted_dossier_candidate(candidate) > main.score_persisted_dossier_candidate(existing)
+    assert main.should_replace_persisted_dossier(existing=existing, candidate=candidate) is True
+
+
+def test_build_question_repair_source_dossier_response_synthesizes_q14_from_q13_and_q7(monkeypatch, tmp_path):
+    repair_root = tmp_path / "question-first-diagnostics" / "fc-porto-2027"
+    repair_root.mkdir(parents=True)
+    repair_source_path = repair_root / "fc-porto-2027_question_first_dossier.json"
+    repair_source_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "question_first_run_v2",
+                "generated_at": "2026-04-10T08:00:00+00:00",
+                "entity_id": "fc-porto-2027",
+                "entity_name": "FC Porto",
+                "entity_type": "SPORT_CLUB",
+                "questions": [
+                    {
+                        "question_id": "q7_procurement_signal",
+                        "question_text": "Procurement motion",
+                        "question_first_answer": {
+                            "question_id": "q7_procurement_signal",
+                            "validation_state": "validated",
+                            "confidence": 0.92,
+                            "answer": {
+                                "kind": "summary",
+                                "summary": "FC Porto is actively reshaping its digital and commercial ecosystem.",
+                                "raw_structured_output": {
+                                    "answer": "FC Porto is actively reshaping its digital and commercial ecosystem.",
+                                    "summary": "FC Porto is actively reshaping its digital and commercial ecosystem.",
+                                    "themes": [
+                                        {"theme": "Digital transformation"},
+                                        {"theme": "Commercial platform refresh"},
+                                    ],
+                                    "terminal_state": "answered",
+                                    "validation_state": "validated",
+                                    "blocked_by": [],
+                                    "sources": [],
+                                },
+                                "terminal_state": "answered",
+                                "blocked_by": [],
+                            },
+                        },
+                    },
+                    {
+                        "question_id": "q13_capability_gap",
+                        "question_text": "Capability gap",
+                        "question_first_answer": {
+                            "question_id": "q13_capability_gap",
+                            "validation_state": "provisional",
+                            "confidence": 0.6,
+                            "answer": {
+                                "kind": "summary",
+                                "summary": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+                                "raw_structured_output": {
+                                    "answer": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+                                    "summary": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+                                    "top_gap": "digital_stack_maturity",
+                                    "themes": ["digital_stack_maturity", "vendor_change_motion"],
+                                    "gap_scorecard": [
+                                        {
+                                            "capability": "digital_stack_maturity",
+                                            "gap_score": 0.78,
+                                            "severity": "high",
+                                        }
+                                    ],
+                                    "recommendations": ["Close digital stack maturity gap"],
+                                    "terminal_state": "answered",
+                                    "validation_state": "provisional",
+                                    "blocked_by": [],
+                                    "sources": [],
+                                },
+                                "terminal_state": "answered",
+                                "blocked_by": [],
+                            },
+                        },
+                    },
+                    {
+                        "question_id": "q14_yp_fit",
+                        "question_text": "YP fit",
+                        "question_first_answer": {
+                            "question_id": "q14_yp_fit",
+                            "validation_state": "no_signal",
+                            "confidence": 0.0,
+                            "answer": {
+                                "kind": "summary",
+                                "summary": "No capability-gap inference is available yet for YP fit mapping.",
+                                "raw_structured_output": {
+                                    "answer": "",
+                                    "summary": "No capability-gap inference is available yet for YP fit mapping.",
+                                    "notes": "No capability-gap inference is available yet for YP fit mapping.",
+                                    "context": "No capability-gap inference is available yet for YP fit mapping.",
+                                    "terminal_state": "blocked",
+                                    "validation_state": "no_signal",
+                                    "blocked_by": ["q13_capability_gap", "q7_procurement_signal"],
+                                    "sources": [],
+                                },
+                                "terminal_state": "blocked",
+                                "blocked_by": ["q13_capability_gap", "q7_procurement_signal"],
+                            },
+                        },
+                    },
+                ],
+                "question_first": {
+                    "schema_version": "question_first_run_v2",
+                    "run_id": "fc-porto-source",
+                    "quality_state": "blocked",
+                    "answers": [
+                        {
+                            "question_id": "q7_procurement_signal",
+                            "validation_state": "validated",
+                            "confidence": 0.92,
+                            "answer": {
+                                "kind": "summary",
+                                "summary": "FC Porto is actively reshaping its digital and commercial ecosystem.",
+                                "raw_structured_output": {
+                                    "answer": "FC Porto is actively reshaping its digital and commercial ecosystem.",
+                                    "summary": "FC Porto is actively reshaping its digital and commercial ecosystem.",
+                                    "themes": [
+                                        {"theme": "Digital transformation"},
+                                        {"theme": "Commercial platform refresh"},
+                                    ],
+                                    "terminal_state": "answered",
+                                    "validation_state": "validated",
+                                    "blocked_by": [],
+                                    "sources": [],
+                                },
+                                "terminal_state": "answered",
+                                "blocked_by": [],
+                            },
+                        },
+                        {
+                            "question_id": "q13_capability_gap",
+                            "validation_state": "provisional",
+                            "confidence": 0.6,
+                            "answer": {
+                                "kind": "summary",
+                                "summary": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+                                "raw_structured_output": {
+                                    "answer": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+                                    "summary": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+                                    "top_gap": "digital_stack_maturity",
+                                    "themes": ["digital_stack_maturity", "vendor_change_motion"],
+                                    "gap_scorecard": [
+                                        {
+                                            "capability": "digital_stack_maturity",
+                                            "gap_score": 0.78,
+                                            "severity": "high",
+                                        }
+                                    ],
+                                    "recommendations": ["Close digital stack maturity gap"],
+                                    "terminal_state": "answered",
+                                    "validation_state": "provisional",
+                                    "blocked_by": [],
+                                    "sources": [],
+                                },
+                                "terminal_state": "answered",
+                                "blocked_by": [],
+                            },
+                        },
+                        {
+                            "question_id": "q14_yp_fit",
+                            "validation_state": "no_signal",
+                            "confidence": 0.0,
+                            "answer": {
+                                "kind": "summary",
+                                "summary": "No capability-gap inference is available yet for YP fit mapping.",
+                                "raw_structured_output": {
+                                    "answer": "",
+                                    "summary": "No capability-gap inference is available yet for YP fit mapping.",
+                                    "notes": "No capability-gap inference is available yet for YP fit mapping.",
+                                    "context": "No capability-gap inference is available yet for YP fit mapping.",
+                                    "terminal_state": "blocked",
+                                    "validation_state": "no_signal",
+                                    "blocked_by": ["q13_capability_gap", "q7_procurement_signal"],
+                                    "sources": [],
+                                },
+                                "terminal_state": "blocked",
+                                "blocked_by": ["q13_capability_gap", "q7_procurement_signal"],
+                            },
+                        },
+                    ],
+                },
+                    "question_first_run": {
+                        "schema_version": "question_first_run_v2",
+                        "run_id": "fc-porto-source",
+                    "generated_at": "2026-04-10T08:00:00+00:00",
+                    "run_started_at": "2026-04-10T08:00:00+00:00",
+                    "source": "opencode_agentic_batch",
+                    "status": "ready",
+                    "entity": {
+                        "entity_id": "fc-porto-2027",
+                        "entity_name": "FC Porto",
+                        "entity_type": "SPORT_CLUB",
+                    },
+                        "question_specs": [
+                            {"question_id": "q7_procurement_signal"},
+                            {"question_id": "q13_capability_gap"},
+                            {"question_id": "q14_yp_fit"},
+                        ],
+                        "answer_records": [
+                            {
+                                "question_id": "q7_procurement_signal",
+                                "validation_state": "validated",
+                                "confidence": 0.92,
+                                "answer": {
+                                    "kind": "summary",
+                                    "summary": "FC Porto is actively reshaping its digital and commercial ecosystem.",
+                                    "raw_structured_output": {
+                                        "answer": "FC Porto is actively reshaping its digital and commercial ecosystem.",
+                                        "summary": "FC Porto is actively reshaping its digital and commercial ecosystem.",
+                                        "themes": [
+                                            {"theme": "Digital transformation"},
+                                            {"theme": "Commercial platform refresh"},
+                                        ],
+                                        "terminal_state": "answered",
+                                        "validation_state": "validated",
+                                        "blocked_by": [],
+                                        "sources": [],
+                                    },
+                                    "terminal_state": "answered",
+                                    "blocked_by": [],
+                                },
+                            },
+                            {
+                                "question_id": "q13_capability_gap",
+                                "validation_state": "provisional",
+                                "confidence": 0.6,
+                                "answer": {
+                                    "kind": "summary",
+                                    "summary": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+                                    "raw_structured_output": {
+                                        "answer": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+                                        "summary": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+                                        "top_gap": "digital_stack_maturity",
+                                        "themes": ["digital_stack_maturity", "vendor_change_motion"],
+                                        "gap_scorecard": [
+                                            {
+                                                "capability": "digital_stack_maturity",
+                                                "gap_score": 0.78,
+                                                "severity": "high",
+                                            }
+                                        ],
+                                        "recommendations": ["Close digital stack maturity gap"],
+                                        "terminal_state": "answered",
+                                        "validation_state": "provisional",
+                                        "blocked_by": [],
+                                        "sources": [],
+                                    },
+                                    "terminal_state": "answered",
+                                    "blocked_by": [],
+                                },
+                            },
+                            {
+                                "question_id": "q14_yp_fit",
+                                "validation_state": "no_signal",
+                                "confidence": 0.0,
+                                "answer": {
+                                    "kind": "summary",
+                                    "summary": "No capability-gap inference is available yet for YP fit mapping.",
+                                    "raw_structured_output": {
+                                        "answer": "",
+                                        "summary": "No capability-gap inference is available yet for YP fit mapping.",
+                                        "notes": "No capability-gap inference is available yet for YP fit mapping.",
+                                        "context": "No capability-gap inference is available yet for YP fit mapping.",
+                                        "terminal_state": "blocked",
+                                        "validation_state": "no_signal",
+                                        "blocked_by": ["q13_capability_gap", "q7_procurement_signal"],
+                                        "sources": [],
+                                    },
+                                    "terminal_state": "blocked",
+                                    "blocked_by": ["q13_capability_gap", "q7_procurement_signal"],
+                                },
+                            },
+                        ],
+                    },
+                }
+            ),
+        encoding="utf-8",
+    )
+
+    monkeypatch.setenv("QUESTION_REPAIR_SOURCE_ROOTS", str(tmp_path))
+
+    response = main.build_question_repair_source_dossier_response(
+        EntityPipelineRequest(
+            entity_id="fc-porto-2027",
+            entity_name="FC Porto",
+            entity_type="SPORT_CLUB",
+            priority_score=91,
+            metadata={
+                "rerun_mode": "question",
+                "question_id": "q14_yp_fit",
+            },
+        )
+    )
+
+    assert response is not None
+    q14 = next(question for question in response.dossier_data["questions"] if question["question_id"] == "q14_yp_fit")
+    assert q14["terminal_state"] == "answered"
+    assert "No capability-gap inference is available yet" not in q14["terminal_summary"]
+    assert q14["answer"]["raw_structured_output"]["best_service"] == "DIGITAL_TRANSFORMATION"

@@ -65,19 +65,24 @@ export function SharedFilterShell({
         {fields.length > 0 ? (
           <div className={cn('grid', gridClassName)}>
             {fields.map((field) => (
-              <Select key={field.key} value={field.value} onValueChange={field.onValueChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder={field.placeholder || field.label} />
-                </SelectTrigger>
-                <SelectContent>
-                  {field.options.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                      {typeof option.count === 'number' ? ` (${option.count})` : ''}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div key={field.key} className="space-y-1.5">
+                <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  {field.label}
+                </div>
+                <Select value={field.value} onValueChange={field.onValueChange}>
+                  <SelectTrigger aria-label={field.label}>
+                    <SelectValue placeholder={field.placeholder || field.label} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {field.options.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                        {typeof option.count === 'number' ? ` (${option.count})` : ''}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             ))}
           </div>
         ) : null}

@@ -336,6 +336,7 @@ function getQuestionStatusLabel(item: QuestionRecord) {
   const terminalState = getQuestionTerminalState(item)
   if (terminalState === "answered") return "Answered"
   if (terminalState === "blocked") return "Blocked"
+  if (terminalState === "skipped") return "Skipped"
   return "No signal"
 }
 
@@ -346,6 +347,9 @@ function getQuestionStatusClasses(item: QuestionRecord) {
   }
   if (terminalState === "blocked") {
     return "border-amber-400/30 bg-amber-500/10 text-amber-200"
+  }
+  if (terminalState === "skipped") {
+    return "border-slate-400/40 bg-slate-500/10 text-slate-200"
   }
   return "border-white/10 bg-white/5 text-slate-200"
 }

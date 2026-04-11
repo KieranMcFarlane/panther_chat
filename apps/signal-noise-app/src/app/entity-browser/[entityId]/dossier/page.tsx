@@ -32,6 +32,9 @@ export default async function EntityDossierPage({ params, searchParams = {} }: E
   const tier = getSearchParamValue(searchParams.tier, 'standard')
 
   const entityData = await getEntityForDossierPage(entityId, tier)
+  if (!entityData.entity) {
+    redirect('/entity-browser')
+  }
   const canonicalHref = entityData.entity ? getEntityBrowserDossierHref(entityData.entity, fromPage) : null
 
   if (canonicalHref && canonicalHref !== `/entity-browser/${entityId}/dossier?from=${fromPage}`) {

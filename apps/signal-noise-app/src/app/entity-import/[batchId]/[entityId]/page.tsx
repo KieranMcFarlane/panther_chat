@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { getEntityPipelineRun } from '@/lib/entity-import-jobs'
 import { deriveEntityPipelineLifecycle } from '@/lib/entity-pipeline-lifecycle'
 import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
+import { readPipelineControlState } from '@/lib/pipeline-control-state'
 
 export const dynamic = 'force-dynamic'
 
@@ -30,6 +31,23 @@ function formatPublicationHealth(publicationStatus: string, reconcileRequired: b
     return reconcileRequired ? 'Published healthy' : 'Published healthy'
   }
   return 'Publish failed'
+}
+
+function formatNextRepairStatus(value: string): string {
+  if (value === 'planned') return 'Next repair planned'
+  if (value === 'queued') return 'Next repair queued'
+  if (value === 'running') return 'Next repair running'
+  if (value === 'completed') return 'Next repair completed'
+  if (value === 'failed') return 'Next repair failed'
+  if (value === 'exhausted') return 'Next repair exhausted'
+  return 'No follow-on repair'
+}
+
+function formatIgnitionLabel(value: string): string {
+  if (value === 'starting') return 'Ignition starting'
+  if (value === 'stopping') return 'Stopping intake'
+  if (value === 'paused') return 'Paused'
+  return 'Engine running'
 }
 
 function formatSubstepDetails(detail: Record<string, unknown> | null): string {
@@ -62,6 +80,7 @@ export default async function EntityImportRunDetailPage(
     entityId: run.entity_id,
     run,
   })
+  const controlState = await readPipelineControlState()
 
   const phaseMap = typeof run.metadata?.phases === 'object' && run.metadata?.phases !== null
     ? (run.metadata.phases as Record<string, PhaseDetail>)
@@ -120,6 +139,11 @@ export default async function EntityImportRunDetailPage(
   const repairRetryCount = Number(runMetadata.repair_retry_count ?? lifecycle.repair_retry_count ?? 0)
   const repairRetryBudget = Number(runMetadata.repair_retry_budget ?? lifecycle.repair_retry_budget ?? 0)
   const nextRepairQuestionId = toText(runMetadata.next_repair_question_id || lifecycle.next_repair_question_id) || 'n/a'
+  const nextRepairStatus = toText(runMetadata.next_repair_status || lifecycle.next_repair_status) || 'n/a'
+  const nextRepairBatchId = toText(runMetadata.next_repair_batch_id || lifecycle.next_repair_batch_id) || 'n/a'
+  const nextRepairBatchHref = nextRepairBatchId !== 'n/a'
+    ? `/entity-import/${encodeURIComponent(nextRepairBatchId)}/${encodeURIComponent(run.entity_id)}`
+    : null
   const reconciliationState = toText(runMetadata.reconciliation_state || lifecycle.reconciliation_state) || 'healthy'
   const repairMetadata = typeof runMetadata.question_first_repair === 'object' && runMetadata.question_first_repair !== null
     ? (runMetadata.question_first_repair as Record<string, unknown>)
@@ -136,6 +160,12 @@ export default async function EntityImportRunDetailPage(
   const inferenceRuntime = typeof livePhaseDetails?.inference_runtime === 'object' && livePhaseDetails.inference_runtime !== null
     ? (livePhaseDetails.inference_runtime as Record<string, unknown>)
     : null
+  const ignitionState = toText(
+    controlState.transition_state
+    || controlState.observed_state
+    || (controlState.is_paused ? 'paused' : 'running'),
+  ) || 'running'
+  const ignitionLabel = formatIgnitionLabel(ignitionState)
 
   const hopTimings = Array.isArray(performanceSummary?.hop_timings)
     ? (performanceSummary?.hop_timings as Array<Record<string, unknown>>)
@@ -199,6 +229,17 @@ export default async function EntityImportRunDetailPage(
             <p>Auto-repair queued / Repairing / Exhausted: {repairState}</p>
             <p>retry budget: {repairRetryCount}/{repairRetryBudget}</p>
             <p>next repair root: {nextRepairQuestionId}</p>
+            <p>next repair status: {formatNextRepairStatus(nextRepairStatus)}</p>
+            <p>next repair batch id: {nextRepairBatchId}</p>
+          </div>
+          <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Pipeline ignition</p>
+            <p className="mt-2">Control state: {ignitionLabel}</p>
+            <p>requested: {controlState.requested_state ?? 'running'}</p>
+            <p>acknowledged: {controlState.observed_state ?? ignitionState}</p>
+            <p>running: {controlState.observed_state === 'running' ? 'running' : 'starting'}</p>
+            <p>paused: {controlState.is_paused ? 'paused' : 'no'}</p>
+            <p>Start pipeline / Stop intake affordance: Visible in Live Ops</p>
           </div>
 
           <div className="mt-4 flex flex-wrap gap-3">
@@ -222,6 +263,14 @@ export default async function EntityImportRunDetailPage(
             >
               Open RFP page
             </Link>
+            {nextRepairBatchHref ? (
+              <Link
+                href={nextRepairBatchHref}
+                className="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-950 hover:text-slate-950"
+              >
+                Open next repair batch
+              </Link>
+            ) : null}
           </div>
 
           {run.error_message ? (
@@ -272,6 +321,8 @@ export default async function EntityImportRunDetailPage(
             <p>Auto-repair queued / Repairing / Exhausted: {repairState}</p>
             <p>retry budget: {repairRetryCount}/{repairRetryBudget}</p>
             <p>next repair root: {nextRepairQuestionId}</p>
+            <p>next repair status: {formatNextRepairStatus(nextRepairStatus)}</p>
+            <p>next repair batch id: {nextRepairBatchId}</p>
           </div>
         </section>
 
@@ -289,6 +340,16 @@ export default async function EntityImportRunDetailPage(
               <p>Auto-repair queued / Repairing / Exhausted: {repairState}</p>
               <p>retry budget: {repairRetryCount}/{repairRetryBudget}</p>
               <p>next repair root: {nextRepairQuestionId}</p>
+              <p>next repair status: {formatNextRepairStatus(nextRepairStatus)}</p>
+              <p>next repair batch id: {nextRepairBatchId}</p>
+              {nextRepairBatchHref ? (
+                <p>
+                  Next repair batch link:{' '}
+                  <Link className="text-sky-700 underline" href={nextRepairBatchHref}>
+                    Open next repair batch
+                  </Link>
+                </p>
+              ) : null}
             </div>
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Repair provenance</p>

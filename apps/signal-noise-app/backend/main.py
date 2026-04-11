@@ -826,6 +826,95 @@ def enrich_persisted_dossier_payload(
     return payload
 
 
+def _persisted_dossier_question_count(dossier: Dict[str, Any]) -> int:
+    if not isinstance(dossier, dict):
+        return 0
+
+    merged_dossier = dossier.get("merged_dossier") if isinstance(dossier.get("merged_dossier"), dict) else {}
+    question_first = dossier.get("question_first") if isinstance(dossier.get("question_first"), dict) else {}
+    merged_question_first = merged_dossier.get("question_first") if isinstance(merged_dossier.get("question_first"), dict) else {}
+
+    top_level_questions = dossier.get("questions") if isinstance(dossier.get("questions"), list) else []
+    merged_questions = merged_dossier.get("questions") if isinstance(merged_dossier.get("questions"), list) else []
+    top_level_answers = question_first.get("answers") if isinstance(question_first.get("answers"), list) else []
+    merged_answers = merged_question_first.get("answers") if isinstance(merged_question_first.get("answers"), list) else []
+
+    return max(len(top_level_questions), len(merged_questions), len(top_level_answers), len(merged_answers))
+
+
+def _persisted_dossier_quality_state(dossier: Dict[str, Any]) -> str:
+    if not isinstance(dossier, dict):
+        return ""
+
+    merged_dossier = dossier.get("merged_dossier") if isinstance(dossier.get("merged_dossier"), dict) else {}
+    question_first = dossier.get("question_first") if isinstance(dossier.get("question_first"), dict) else {}
+    metadata = dossier.get("metadata") if isinstance(dossier.get("metadata"), dict) else {}
+    metadata_question_first = metadata.get("question_first") if isinstance(metadata.get("question_first"), dict) else {}
+    merged_question_first = merged_dossier.get("question_first") if isinstance(merged_dossier.get("question_first"), dict) else {}
+
+    return str(
+        dossier.get("quality_state")
+        or question_first.get("quality_state")
+        or metadata_question_first.get("quality_state")
+        or merged_dossier.get("quality_state")
+        or merged_question_first.get("quality_state")
+        or ""
+    ).strip().lower()
+
+
+def _persisted_dossier_publish_status(dossier: Dict[str, Any]) -> str:
+    if not isinstance(dossier, dict):
+        return ""
+
+    merged_dossier = dossier.get("merged_dossier") if isinstance(dossier.get("merged_dossier"), dict) else {}
+    question_first = dossier.get("question_first") if isinstance(dossier.get("question_first"), dict) else {}
+    metadata = dossier.get("metadata") if isinstance(dossier.get("metadata"), dict) else {}
+    metadata_question_first = metadata.get("question_first") if isinstance(metadata.get("question_first"), dict) else {}
+    merged_question_first = merged_dossier.get("question_first") if isinstance(merged_dossier.get("question_first"), dict) else {}
+
+    return str(
+        dossier.get("publish_status")
+        or question_first.get("publish_status")
+        or metadata_question_first.get("publish_status")
+        or merged_dossier.get("publish_status")
+        or merged_question_first.get("publish_status")
+        or ""
+    ).strip().lower()
+
+
+def score_persisted_dossier_candidate(dossier: Dict[str, Any]) -> int:
+    quality_priority = {
+        "missing": 0,
+        "partial": 1,
+        "blocked": 2,
+        "complete": 3,
+        "client_ready": 4,
+    }
+
+    question_count = _persisted_dossier_question_count(dossier)
+    quality_state = _persisted_dossier_quality_state(dossier)
+    publish_status = _persisted_dossier_publish_status(dossier)
+    score = question_count + (quality_priority.get(quality_state, 0) * 100)
+
+    if publish_status.startswith("published"):
+        score += 1000
+    elif publish_status in {"draft", "staged"}:
+        score -= 100
+
+    if not quality_state:
+        score -= 500
+    if question_count == 0:
+        score -= 1000
+
+    return score
+
+
+def should_replace_persisted_dossier(*, existing: Optional[Dict[str, Any]], candidate: Dict[str, Any]) -> bool:
+    if not isinstance(existing, dict) or not existing:
+        return True
+    return score_persisted_dossier_candidate(candidate) >= score_persisted_dossier_candidate(existing)
+
+
 def build_question_repair_source_dossier_response(request: EntityPipelineRequest) -> Optional[DossierResponse]:
     metadata = request.metadata if isinstance(request.metadata, dict) else {}
     if str(metadata.get("rerun_mode") or "").strip().lower() != "question":
@@ -848,12 +937,34 @@ def build_question_repair_source_dossier_response(request: EntityPipelineRequest
         from question_first_repair import load_question_source_payload  # type: ignore
     except ImportError:
         from backend.question_first_repair import load_question_source_payload  # type: ignore
+    try:
+        from question_first_dossier_runner import merge_question_first_run_artifact_into_dossier  # type: ignore
+    except ImportError:
+        from backend.question_first_dossier_runner import merge_question_first_run_artifact_into_dossier  # type: ignore
 
     try:
         dossier = load_question_source_payload(Path(source_path))
     except Exception as error:  # noqa: BLE001
         logger.warning("⚠️ Failed to load question-repair source dossier from %s: %s", source_path, error)
         return None
+
+    question_first_artifact = (
+        dossier.get("question_first_run")
+        if isinstance(dossier, dict) and isinstance(dossier.get("question_first_run"), dict)
+        else None
+    )
+    if question_first_artifact:
+        try:
+            dossier = merge_question_first_run_artifact_into_dossier(
+                dossier_payload=dossier,
+                artifact=question_first_artifact,
+            )
+        except Exception as error:  # noqa: BLE001
+            logger.warning(
+                "⚠️ Failed to normalize question-repair source dossier from %s via question_first_run merge: %s",
+                source_path,
+                error,
+            )
 
     persisted_dossier = enrich_persisted_dossier_payload(
         dossier,
@@ -1147,21 +1258,28 @@ async def generate_dossier(request: DossierRequest):
             # Upsert to Supabase (update if exists, insert if not)
             try:
                 # Check if exists
-                existing_query = supabase.table("entity_dossiers").select("id")
+                existing_query = supabase.table("entity_dossiers").select("id, dossier_data")
                 if canonical_entity_id:
                     existing = existing_query.eq("canonical_entity_id", canonical_entity_id).limit(1).execute()
                 else:
                     existing = existing_query.eq("entity_id", request.entity_id).execute()
 
                 if existing.data:
-                    # Update existing
-                    update_query = supabase.table("entity_dossiers").update(dossier_record)
-                    if canonical_entity_id:
-                        update_query = update_query.eq("canonical_entity_id", canonical_entity_id)
+                    existing_row = existing.data[0] if isinstance(existing.data, list) and existing.data else {}
+                    existing_dossier_data = existing_row.get("dossier_data") if isinstance(existing_row, dict) else None
+                    if should_replace_persisted_dossier(
+                        existing=existing_dossier_data if isinstance(existing_dossier_data, dict) else None,
+                        candidate=persisted_dossier,
+                    ):
+                        update_query = supabase.table("entity_dossiers").update(dossier_record)
+                        if canonical_entity_id:
+                            update_query = update_query.eq("canonical_entity_id", canonical_entity_id)
+                        else:
+                            update_query = update_query.eq("entity_id", request.entity_id)
+                        update_query.execute()
+                        logger.info("✅ Updated existing dossier in Supabase")
                     else:
-                        update_query = update_query.eq("entity_id", request.entity_id)
-                    update_query.execute()
-                    logger.info("✅ Updated existing dossier in Supabase")
+                        logger.info("✅ Preserved higher-quality existing dossier in Supabase")
                 else:
                     # Insert new
                     supabase.table("entity_dossiers").insert(dossier_record).execute()

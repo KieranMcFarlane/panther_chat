@@ -9,6 +9,7 @@ test('vector search route uses canonical entity search text and canonical dedupe
   assert.match(source, /getCanonicalEntityRole/)
   assert.match(source, /resolveEntityUuid/)
   assert.match(source, /getCanonicalEntityKey/)
+  assert.match(source, /canonical_entity_id/)
   assert.match(source, /canonical.*key/i)
   assert.match(source, /roleBoost/i)
   assert.match(source, /searchText/i)

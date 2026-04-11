@@ -1,116 +1,485 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { AlertCircle, CheckCircle2, Clock3, ListChecks, Loader2 } from 'lucide-react'
+import Link from 'next/link'
+import { AlertCircle, CheckCircle2, ListChecks, Loader2, Radar } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import type { OperationalSummary } from '@/lib/operational-summary'
+import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
+import {
+  getCachedOperationalDrilldownPayload,
+  loadOperationalDrilldownPayload,
+  type OperationalDrilldownPayload,
+} from '@/lib/operational-drilldown-client'
 
 interface OperationalDrawerProps {
   open: boolean
+  activeSection: 'running' | 'blocked' | 'completed' | 'entities'
+  onSelectSection: (section: 'running' | 'blocked' | 'completed' | 'entities') => void
 }
 
-const fallbackSummary: OperationalSummary = {
-  updatedAt: 'Loading...',
-  cards: {
-    entitiesActive: '…',
-    pipelineLive: '…',
-    blocked: '…',
-    recentCompletions: '…',
+type QueueEntityRecord = {
+  entity_id: string
+  entity_name: string
+  entity_type: string
+  summary: string | null
+  generated_at: string | null
+  active_question_id?: string | null
+  run_phase?: string | null
+  queue_position?: number | null
+  publication_status?: string | null
+  next_repair_question_id?: string | null
+  next_repair_status?: string | null
+  next_repair_batch_id?: string | null
+  current_question_id?: string | null
+  next_action?: string | null
+  lifecycle_stage?: string | null
+  lifecycle_label?: string | null
+  lifecycle_summary?: string | null
+  movement_state?: string | null
+}
+
+type DashboardPayload = OperationalDrilldownPayload & {
+  queue: {
+    in_progress_entity: QueueEntityRecord | null
+    completed_entities: QueueEntityRecord[]
+    resume_needed_entities: QueueEntityRecord[]
+    upcoming_entities: QueueEntityRecord[]
+  }
+  dossier_quality: {
+    incomplete_entities: Array<{
+      entity_id: string
+      browser_entity_id: string
+      entity_name: string
+      entity_type: string
+      quality_state: string
+      quality_summary: string | null
+      generated_at: string | null
+    }>
+  }
+}
+
+const fallbackDashboard: DashboardPayload = {
+  control: {
+    is_paused: false,
+    pause_reason: null,
+    updated_at: null,
   },
-  scout: {
-    statusLabel: 'Loading',
-    detail: 'Waiting for scout summary',
+  loop_status: {
+    total_scheduled: 0,
+    completed: 0,
+    failed: 0,
+    retryable_failures: 0,
+    quality_counts: {
+      partial: 0,
+      blocked: 0,
+      complete: 0,
+      client_ready: 0,
+    },
+    runtime_counts: {
+      running: 0,
+      stalled: 0,
+      retryable: 0,
+      resume_needed: 0,
+    },
   },
-  enrichment: {
-    statusLabel: 'Loading',
-    detail: 'Waiting for enrichment summary',
+  queue: {
+    in_progress_entity: null,
+    running_entities: [],
+    completed_entities: [],
+    resume_needed_entities: [],
+    upcoming_entities: [],
   },
-  pipeline: {
-    statusLabel: 'Loading',
-    detail: 'Waiting for pipeline summary',
+  dossier_quality: {
+    incomplete_entities: [],
   },
 }
 
-export function OperationalDrawer({ open }: OperationalDrawerProps) {
-  const [summary, setSummary] = useState<OperationalSummary>(fallbackSummary)
+function formatDate(value: string | null | undefined) {
+  if (!value) return 'Not available'
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return value
+  return date.toLocaleString()
+}
+
+function toText(value: unknown) {
+  if (value === null || value === undefined) return ''
+  return String(value)
+}
+
+function formatPublicationState(value: string | null | undefined) {
+  if (value === 'published_degraded') return 'Published degraded'
+  if (value === 'published') return 'Published healthy'
+  return 'Pending publication'
+}
+
+function formatMovementState(value: string | null | undefined) {
+  if (value === 'moving') return 'Moving'
+  if (value === 'queued') return 'Queued'
+  if (value === 'review') return 'Review needed'
+  return 'Blocked'
+}
+
+function formatNextRepair(value: string | null | undefined) {
+  if (value === 'running') return 'Next repair running'
+  if (value === 'queued') return 'Next repair queued'
+  if (value === 'planned') return 'Next repair planned'
+  return null
+}
+
+function EntityListCard({
+  title,
+  icon,
+  items,
+  emptyLabel,
+}: {
+  title: string
+  icon: React.ReactNode
+  items: Array<{
+    key: string
+    title: string
+    subtitle: string
+    detail: string
+    href?: string | null
+    badge?: string | null
+    meta?: string | null
+    facts?: string[]
+  }>
+  emptyLabel: string
+}) {
+  return (
+    <div className="space-y-3 rounded-xl border border-custom-border bg-custom-bg/70 p-4">
+      <div className="flex items-center gap-2 text-sm font-medium text-white">
+        {icon}
+        {title}
+      </div>
+      <div className="space-y-2">
+        {items.length > 0 ? items.map((item) => (
+          <div key={item.key} className="rounded-lg border border-custom-border/80 bg-custom-box/60 p-3">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <div className="font-medium text-white">{item.title}</div>
+                <div className="mt-1 text-xs uppercase tracking-[0.16em] text-slate-400">{item.subtitle}</div>
+              </div>
+              {item.badge ? (
+                <Badge variant="outline" className="border-sky-500/30 text-sky-300">
+                  {item.badge}
+                </Badge>
+              ) : null}
+            </div>
+            <div className="mt-2 text-sm text-fm-light-grey">{item.detail}</div>
+            {item.facts && item.facts.length > 0 ? (
+              <div className="mt-2 space-y-1 text-xs text-slate-300">
+                {item.facts.map((fact) => (
+                  <div key={fact}>{fact}</div>
+                ))}
+              </div>
+            ) : null}
+            {item.meta ? <div className="mt-2 text-xs text-slate-400">{item.meta}</div> : null}
+            {item.href ? (
+              <div className="mt-3">
+                <Link href={item.href} className="text-sm text-sky-300 underline">
+                  Open dossier
+                </Link>
+              </div>
+            ) : null}
+          </div>
+        )) : (
+          <div className="rounded-lg border border-custom-border/80 bg-custom-box/60 p-3 text-sm text-fm-light-grey">
+            {emptyLabel}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function FocusCard({
+  title,
+  subtitle,
+  detail,
+  nextAction,
+  currentQuestion,
+  currentStage,
+  href,
+  activeBatchHref,
+  facts,
+  badge,
+  lifecycleLabel,
+  movementState,
+}: {
+  title: string
+  subtitle: string
+  detail: string
+  nextAction: string
+  currentQuestion: string
+  currentStage: string
+  href: string | null
+  activeBatchHref?: string | null
+  facts: string[]
+  badge: string | null
+  lifecycleLabel: string | null
+  movementState: string | null
+}) {
+  return (
+    <div className="rounded-xl border border-white/10 bg-black/25 p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="text-xs uppercase tracking-[0.16em] text-slate-400">Current entity</div>
+          <div className="mt-1 text-lg font-semibold text-white">{title}</div>
+          <div className="mt-1 text-xs uppercase tracking-[0.14em] text-slate-400">{subtitle}</div>
+        </div>
+        {badge ? (
+          <Badge variant="outline" className="border-sky-500/30 text-sky-300">
+            {badge}
+          </Badge>
+        ) : null}
+      </div>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {lifecycleLabel ? (
+          <Badge variant="outline" className="border-emerald-500/30 text-emerald-300">
+            {lifecycleLabel}
+          </Badge>
+        ) : null}
+        {movementState ? (
+          <Badge variant="outline" className="border-amber-500/30 text-amber-300">
+            {formatMovementState(movementState)}
+          </Badge>
+        ) : null}
+      </div>
+      <div className="mt-3 text-sm text-fm-light-grey">{detail}</div>
+      <div className="mt-3 grid gap-2 text-sm text-slate-300 sm:grid-cols-2">
+        <div>
+          <div className="text-xs uppercase tracking-[0.14em] text-slate-500">Current question</div>
+          <div className="mt-1 text-white">{currentQuestion || facts[0] || 'Not available'}</div>
+        </div>
+        <div>
+          <div className="text-xs uppercase tracking-[0.14em] text-slate-500">Current stage</div>
+          <div className="mt-1 text-white">{currentStage || 'Not available'}</div>
+        </div>
+        <div>
+          <div className="text-xs uppercase tracking-[0.14em] text-slate-500">Next action</div>
+          <div className="mt-1 text-white">{nextAction}</div>
+        </div>
+        <div>
+          <div className="text-xs uppercase tracking-[0.14em] text-slate-500">Active batch</div>
+          <div className="mt-1 text-white">{activeBatchHref ? 'Open next repair batch' : 'Not available'}</div>
+        </div>
+      </div>
+      {facts.length > 1 ? (
+        <div className="mt-3 space-y-1 text-xs text-slate-400">
+          {facts.slice(1).map((fact) => (
+            <div key={fact}>{fact}</div>
+          ))}
+        </div>
+      ) : null}
+      {activeBatchHref ? (
+        <div className="mt-4">
+          <Link href={activeBatchHref} className="text-sm text-sky-300 underline">
+            Open next repair batch
+          </Link>
+        </div>
+      ) : null}
+      {href ? (
+        <div className="mt-4">
+          <Link href={href} className="text-sm text-sky-300 underline">
+            Open dossier
+          </Link>
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
+export function OperationalDrawer({ open, activeSection, onSelectSection }: OperationalDrawerProps) {
+  const [dashboard, setDashboard] = useState<DashboardPayload>(fallbackDashboard)
+  const [isLoading, setIsLoading] = useState(false)
+  const [loadError, setLoadError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!open) {
-      return
-    }
+    if (!open) return
 
     let cancelled = false
 
-    async function loadSummary() {
-      try {
-        const response = await fetch('/api/operational-summary')
-        if (!response.ok) {
-          throw new Error(`Failed to load operational summary (${response.status})`)
+    async function loadData() {
+      if (!cancelled) {
+        setIsLoading(true)
+        setLoadError(null)
+        const cachedPayload = getCachedOperationalDrilldownPayload()
+        if (cachedPayload) {
+          setDashboard(cachedPayload as DashboardPayload)
         }
-
-        const payload = await response.json()
-        if (!cancelled && payload?.data) {
-          setSummary(payload.data as OperationalSummary)
+      }
+      try {
+        const dashboardPayload = await loadOperationalDrilldownPayload()
+        if (!cancelled) {
+          setDashboard(dashboardPayload as DashboardPayload)
+          setIsLoading(false)
         }
       } catch {
         if (!cancelled) {
-          setSummary((current) => current)
+          setDashboard((current) => current)
+          setLoadError('Live run details are taking too long to load.')
+          setIsLoading(false)
         }
       }
     }
 
-    loadSummary()
+    loadData()
 
     return () => {
       cancelled = true
     }
   }, [open])
 
-  const activeRuns = useMemo(
-    () => [
-      { label: 'Scout', detail: summary.scout.detail, badge: summary.scout.statusLabel },
-      { label: 'Enrichment', detail: summary.enrichment.detail, badge: summary.enrichment.statusLabel },
-      { label: 'Pipeline', detail: summary.pipeline.detail, badge: summary.pipeline.statusLabel },
-    ],
-    [summary],
-  )
+  const runningItems = useMemo(() => {
+    const running = Array.isArray(dashboard.queue.running_entities) ? dashboard.queue.running_entities : []
+    const resumeNeeded = dashboard.queue.resume_needed_entities
+      const items = running.map((inProgress) => ({
+      key: `running-${inProgress.entity_id}-${inProgress.queue_position ?? 'now'}`,
+      title: inProgress.entity_name,
+      subtitle: inProgress.entity_type,
+      detail: toText(inProgress.summary) || 'Pipeline execution is active.',
+      href: getEntityBrowserDossierHref(inProgress.entity_id, '1') || `/entity-browser/${encodeURIComponent(inProgress.entity_id)}/dossier?from=1`,
+      badge: formatNextRepair(inProgress.next_repair_status) || formatPublicationState(inProgress.publication_status),
+      current_question_id: toText(inProgress.active_question_id) || null,
+      current_stage: toText(inProgress.run_phase) || null,
+      next_action: inProgress.next_repair_question_id
+        ? `Repair question ${inProgress.next_repair_question_id}`
+        : 'Continue the active question',
+      lifecycle_label: toText(inProgress.lifecycle_label) || null,
+      lifecycle_summary: toText(inProgress.lifecycle_summary) || null,
+      movement_state: toText(inProgress.movement_state) || null,
+      facts: [
+        `Current question: ${toText(inProgress.active_question_id) || 'n/a'}`,
+        `Run phase: ${toText(inProgress.run_phase) || 'n/a'}`,
+        `Queue order: ${typeof inProgress.queue_position === 'number' ? inProgress.queue_position : 'now'}`,
+      ],
+      meta: inProgress.next_repair_batch_id ? `next repair batch: ${inProgress.next_repair_batch_id}` : null,
+      next_repair_batch_href: inProgress.next_repair_batch_id
+        ? `/entity-import/${encodeURIComponent(inProgress.next_repair_batch_id)}/${encodeURIComponent(inProgress.entity_id)}`
+        : null,
+    }))
+    for (const item of resumeNeeded) {
+      items.push({
+        key: `resume-${item.entity_id}`,
+        title: item.entity_name,
+        subtitle: item.entity_type,
+        detail: toText(item.summary) || 'Resume is required.',
+        href: getEntityBrowserDossierHref(item.entity_id, '1') || `/entity-browser/${encodeURIComponent(item.entity_id)}/dossier?from=1`,
+        badge: 'Resume needed',
+        current_question_id: toText(item.active_question_id) || null,
+        next_action: item.next_repair_question_id
+          ? `Repair question ${item.next_repair_question_id}`
+          : 'Resume the pipeline',
+        current_stage: toText(item.run_phase) || null,
+        lifecycle_label: toText(item.lifecycle_label) || null,
+        lifecycle_summary: toText(item.lifecycle_summary) || null,
+        movement_state: toText(item.movement_state) || null,
+        facts: [
+          `Current question: ${toText(item.active_question_id) || 'n/a'}`,
+          `Run phase: ${toText(item.run_phase) || 'resume_needed'}`,
+          'Queue order: blocked until resumed',
+        ],
+        meta: item.next_repair_question_id ? `next repair root: ${item.next_repair_question_id}` : null,
+        next_repair_batch_href: item.next_repair_batch_id
+          ? `/entity-import/${encodeURIComponent(item.next_repair_batch_id)}/${encodeURIComponent(item.entity_id)}`
+          : null,
+      })
+    }
+    return items
+  }, [dashboard])
 
-  const blockedRuns = useMemo(
-    () =>
-      [
-        { label: 'Scout', item: summary.scout },
-        { label: 'Enrichment', item: summary.enrichment },
-        { label: 'Pipeline', item: summary.pipeline },
-      ]
-        .filter(({ item }) => /blocked|failed|degraded/i.test(item.statusLabel))
-        .map(({ label, item }) => ({
-          label,
-          detail: item.detail,
-        })),
-    [summary],
-  )
+  const blockedItems = useMemo(() => {
+    return dashboard.dossier_quality.incomplete_entities
+      .filter((item) => item.quality_state === 'blocked')
+      .slice(0, 8)
+      .map((item) => ({
+        key: `blocked-${item.entity_id}`,
+        title: item.entity_name,
+        subtitle: item.entity_type,
+      detail: toText(item.quality_summary) || 'Blocked dossier.',
+      href: getEntityBrowserDossierHref(item.browser_entity_id, '1') || `/entity-browser/${encodeURIComponent(item.browser_entity_id)}/dossier?from=1`,
+      badge: 'Blocked',
+      current_question_id: toText(item.current_question_id) || null,
+        next_action: toText(item.next_action) || 'Rerun dossier',
+        current_stage: toText(item.lifecycle_label) || null,
+        lifecycle_label: toText(item.lifecycle_label) || null,
+        lifecycle_summary: toText(item.lifecycle_summary) || null,
+        movement_state: toText(item.movement_state) || null,
+        meta: item.generated_at ? `updated ${formatDate(item.generated_at)}` : null,
+        next_repair_batch_href: item.next_repair_batch_id
+          ? `/entity-import/${encodeURIComponent(item.next_repair_batch_id)}/${encodeURIComponent(item.entity_id)}`
+          : null,
+      }))
+  }, [dashboard])
 
-  const staleItems = useMemo(
-    () => [
-      { label: 'Last runtime refresh', detail: summary.updatedAt },
-      { label: 'Entities active', detail: `${summary.cards.entitiesActive} entities in active workspace` },
-    ],
-    [summary],
-  )
+  const completedItems = useMemo(() => {
+    return dashboard.queue.completed_entities.slice(0, 8).map((item) => ({
+      key: `completed-${item.entity_id}`,
+      title: item.entity_name,
+      subtitle: item.entity_type,
+      detail: toText(item.summary) || 'Completed recently.',
+      href: getEntityBrowserDossierHref(item.entity_id, '1') || `/entity-browser/${encodeURIComponent(item.entity_id)}/dossier?from=1`,
+      badge: formatPublicationState(item.publication_status),
+      current_question_id: toText(item.active_question_id) || null,
+      next_action: 'Review the completed dossier',
+      lifecycle_label: toText(item.lifecycle_label) || null,
+      lifecycle_summary: toText(item.lifecycle_summary) || null,
+      movement_state: toText(item.movement_state) || null,
+      facts: [
+        `Current question: ${toText(item.active_question_id) || 'completed'}`,
+        `Run phase: ${toText(item.run_phase) || 'completed'}`,
+      ],
+      meta: item.generated_at ? `updated ${formatDate(item.generated_at)}` : null,
+    }))
+  }, [dashboard])
 
-  const recentCompletions = useMemo(
-    () => [
-      { label: 'Recent completions', detail: `${summary.cards.recentCompletions} completed recently` },
-      { label: 'Pipeline live', detail: `${summary.cards.pipelineLive} active pipeline runs` },
-    ],
-    [summary],
-  )
+  const entityItems = useMemo(() => {
+    return dashboard.queue.upcoming_entities.slice(0, 8).map((item) => ({
+      key: `entity-${item.entity_id}`,
+      title: item.entity_name,
+      subtitle: item.entity_type,
+      detail: toText(item.summary) || 'Waiting in the serialized live loop.',
+      href: getEntityBrowserDossierHref(item.entity_id, '1') || `/entity-browser/${encodeURIComponent(item.entity_id)}/dossier?from=1`,
+      badge: 'Upcoming',
+      current_question_id: toText(item.active_question_id) || null,
+        next_action: 'Open the dossier when this entity is claimed',
+        current_stage: toText(item.run_phase) || null,
+        lifecycle_label: toText(item.lifecycle_label) || null,
+        lifecycle_summary: toText(item.lifecycle_summary) || null,
+        movement_state: toText(item.movement_state) || null,
+        facts: [
+          `Current question: ${toText(item.active_question_id) || 'not started'}`,
+        `Run phase: ${toText(item.run_phase) || 'queued'}`,
+        `Queue order: ${typeof item.queue_position === 'number' ? item.queue_position : 'n/a'}`,
+      ],
+        meta: null,
+        next_repair_batch_href: item.next_repair_batch_id
+          ? `/entity-import/${encodeURIComponent(item.next_repair_batch_id)}/${encodeURIComponent(item.entity_id)}`
+          : null,
+      }))
+  }, [dashboard])
 
   if (!open) {
     return null
   }
+
+  const focusEntity =
+    activeSection === 'running'
+      ? (runningItems[0] ?? null)
+      : activeSection === 'blocked'
+        ? (blockedItems[0] ?? null)
+        : activeSection === 'completed'
+          ? (completedItems[0] ?? null)
+          : (entityItems[0] ?? null)
+  const hasActiveEntity = Boolean(dashboard.queue?.in_progress_entity)
+  const intakeStatusLabel = dashboard.control?.is_paused
+    ? 'Pipeline intake paused'
+    : hasActiveEntity
+      ? 'Pipeline intake running'
+      : 'Pipeline intake running - waiting for claimable work'
 
   return (
     <Card className="border-custom-border bg-custom-box shadow-sm">
@@ -119,71 +488,78 @@ export function OperationalDrawer({ open }: OperationalDrawerProps) {
           <ListChecks className="h-4 w-4 text-yellow-400" />
           Operational Snapshot
         </CardTitle>
+        <div className="flex flex-wrap gap-2">
+          {[
+            { key: 'running', label: 'Running' },
+            { key: 'blocked', label: 'Blocked' },
+            { key: 'completed', label: 'Completed' },
+            { key: 'entities', label: 'Entities' },
+          ].map((tab) => (
+            <button
+              key={tab.key}
+              type="button"
+              onClick={() => onSelectSection(tab.key as 'running' | 'blocked' | 'completed' | 'entities')}
+              className={`rounded-full border px-3 py-1 text-xs uppercase tracking-[0.14em] ${
+                activeSection === tab.key ? 'border-white/40 text-white' : 'border-custom-border text-slate-400'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+        {isLoading ? (
+          <div className="text-sm text-slate-400">Loading live run details…</div>
+        ) : null}
+        {loadError ? (
+          <div className="text-sm text-amber-300">{loadError}</div>
+        ) : null}
+        <div className="text-sm text-slate-300">
+          {intakeStatusLabel}
+          {dashboard.control?.pause_reason ? ` · ${dashboard.control.pause_reason}` : ''}
+        </div>
       </CardHeader>
-      <CardContent className="grid gap-4 lg:grid-cols-4">
-        <div className="space-y-3 rounded-xl border border-custom-border bg-custom-bg/70 p-4">
-          <div className="flex items-center gap-2 text-sm font-medium text-white">
-            <Loader2 className="h-4 w-4 text-sky-300" />
-            Active runs
-          </div>
-          <div className="space-y-2">
-            {activeRuns.map((item) => (
-              <div key={item.label} className="rounded-lg border border-custom-border/80 bg-custom-box/60 p-3">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="font-medium text-white">{item.label}</div>
-                  <Badge variant="outline" className="border-sky-500/30 text-sky-300">
-                    {item.badge}
-                  </Badge>
-                </div>
-                <div className="mt-1 text-sm text-fm-light-grey">{item.detail}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="space-y-3 rounded-xl border border-custom-border bg-custom-bg/70 p-4">
-          <div className="flex items-center gap-2 text-sm font-medium text-white">
-            <AlertCircle className="h-4 w-4 text-amber-300" />
-            Blocked
-          </div>
-          <div className="space-y-2">
-            {blockedRuns.map((item) => (
-              <div key={item.label} className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-3">
-                <div className="font-medium text-amber-100">{item.label}</div>
-                <div className="mt-1 text-sm text-fm-light-grey">{item.detail}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="space-y-3 rounded-xl border border-custom-border bg-custom-bg/70 p-4">
-          <div className="flex items-center gap-2 text-sm font-medium text-white">
-            <Clock3 className="h-4 w-4 text-slate-300" />
-            Stale
-          </div>
-          <div className="space-y-2">
-            {staleItems.map((item) => (
-              <div key={item.label} className="rounded-lg border border-slate-600/60 bg-slate-900/30 p-3">
-                <div className="font-medium text-white">{item.label}</div>
-                <div className="mt-1 text-sm text-fm-light-grey">{item.detail}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="space-y-3 rounded-xl border border-custom-border bg-custom-bg/70 p-4">
-          <div className="flex items-center gap-2 text-sm font-medium text-white">
-            <CheckCircle2 className="h-4 w-4 text-emerald-300" />
-            Recent completions
-          </div>
-          <div className="space-y-2">
-            {recentCompletions.map((item) => (
-              <div key={item.label} className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
-                <div className="font-medium text-emerald-100">{item.label}</div>
-                <div className="mt-1 text-sm text-fm-light-grey">{item.detail}</div>
-              </div>
-            ))}
-          </div>
+      <CardContent className="max-h-[calc(100vh-14rem)] space-y-4 overflow-y-auto pr-2">
+        {focusEntity ? (
+          <FocusCard
+            title={focusEntity.title}
+            subtitle={focusEntity.subtitle}
+            detail={focusEntity.detail}
+            nextAction={focusEntity.next_action || 'Not available'}
+            currentQuestion={focusEntity.current_question_id || ''}
+            currentStage={focusEntity.current_stage || ''}
+            href={focusEntity.href ?? null}
+            activeBatchHref={focusEntity.next_repair_batch_href ?? null}
+            facts={focusEntity.facts || []}
+            badge={focusEntity.badge ?? null}
+            lifecycleLabel={focusEntity.lifecycle_label ?? null}
+            movementState={focusEntity.movement_state ?? null}
+          />
+        ) : null}
+        <div className="grid gap-4 lg:grid-cols-4">
+        <EntityListCard
+          title="Running entities"
+          icon={<Loader2 className="h-4 w-4 text-sky-300" />}
+          items={activeSection === 'running' ? runningItems : []}
+          emptyLabel="Waiting for claimable work."
+        />
+        <EntityListCard
+          title="Blocked dossiers"
+          icon={<AlertCircle className="h-4 w-4 text-amber-300" />}
+          items={activeSection === 'blocked' ? blockedItems : []}
+          emptyLabel="No blocked dossiers right now."
+        />
+        <EntityListCard
+          title="Recent completions"
+          icon={<CheckCircle2 className="h-4 w-4 text-emerald-300" />}
+          items={activeSection === 'completed' ? completedItems : []}
+          emptyLabel="No completed entities yet."
+        />
+        <EntityListCard
+          title="Active universe"
+          icon={<Radar className="h-4 w-4 text-slate-300" />}
+          items={activeSection === 'entities' ? entityItems : []}
+          emptyLabel="No queued entities are visible right now."
+        />
         </div>
       </CardContent>
     </Card>

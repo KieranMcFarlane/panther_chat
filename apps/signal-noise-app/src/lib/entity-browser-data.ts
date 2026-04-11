@@ -161,7 +161,9 @@ export async function getEntityBrowserPageData(options: {
     const entityName = entity.properties?.name || entity.neo4j_id
     const canonicalEntityRole = getCanonicalEntityRole(entity)
     const uuid = resolveEntityUuid({
+      canonical_entity_id: entity.uuid || entity.id,
       id: entity.id,
+      uuid: entity.uuid,
       neo4j_id: entity.neo4j_id,
       graph_id: entity.graph_id,
       supabase_id: entity.supabase_id || entity.properties?.supabase_id,

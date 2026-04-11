@@ -1,315 +1,53 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
-import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
-import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
+import { getEntityForDossierPage } from '@/lib/entity-loader'
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic'
 
-function normalizeFallbackEntityKey(value: unknown): string {
-  return String(value || '')
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '')
+type PipelineStatusRecord = {
+  batch_id: string | null
+  entity_id: string
+  canonical_entity_id: string | null
+  status: string | null
+  phase: string | null
+  completed_at: string | null
+  started_at: string | null
+  dual_write_ok: boolean | null
 }
 
-function matchesFallbackEntity(entity: any, entityId: string): boolean {
-  if (!entityId || !entity) {
-    return false
-  }
+async function getLatestPipelineStatusSummary(
+  canonicalEntityId?: string | null,
+  ...candidateEntityIds: Array<string | number | null | undefined>
+): Promise<PipelineStatusRecord | null> {
+  if (canonicalEntityId) {
+    const { data } = await supabase
+      .from('entity_pipeline_runs')
+      .select('batch_id, entity_id, canonical_entity_id, status, phase, completed_at, metadata, started_at')
+      .eq('canonical_entity_id', canonicalEntityId)
+      .order('started_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
 
-  const entityName = normalizeFallbackEntityKey(entity.properties?.name)
-  const normalizedEntityId = normalizeFallbackEntityKey(entityId)
-  const normalizedNeo4jId = normalizeFallbackEntityKey(entity.neo4j_id)
-  const normalizedId = normalizeFallbackEntityKey(entity.id)
+    if (data) {
+      const metadata = typeof data.metadata === 'object' && data.metadata !== null ? data.metadata : {}
+      const dualWriteOk = metadata.dual_write_ok
+        ?? metadata?.persistence?.dual_write_ok
+        ?? metadata?.metrics?.dual_write_ok
+        ?? null
 
-  return [
-    normalizedEntityId,
-    normalizedNeo4jId,
-    normalizedId,
-    entityName,
-  ].some((candidate) => candidate && candidate === normalizedEntityId)
-}
-
-function buildEntityPublicId(entity: any): string | undefined {
-  return resolveEntityUuid({
-    id: entity?.id,
-    neo4j_id: entity?.neo4j_id,
-    graph_id: entity?.graph_id,
-    supabase_id: entity?.supabase_id || entity?.properties?.supabase_id,
-    properties: entity?.properties,
-  }) || undefined
-}
-
-// Dynamic dossier generation function
-async function generateComprehensiveDossier(entity: any, supabase: any) {
-  try {
-    const entityName = entity.properties.name || 'Unknown Entity'
-    const entityType = entity.properties.type || 'Unknown'
-    
-    console.log(`🔄 Generating comprehensive dossier for ${entityName}...`)
-    
-    // Base dossier structure
-    const dossier = {
-      entity: {
-        neo4j_id: entity.neo4j_id,
-        name: entityName,
-        type: entityType,
-        sport: entity.properties.sport || 'Unknown',
-        country: entity.properties.country || 'Unknown',
-        level: entity.properties.level || 'Unknown',
-        website: entity.properties.website || '',
-        founded: entity.properties.founded || null,
-        stadium: entity.properties.stadium || '',
-        last_updated: new Date().toISOString(),
-        confidence_score: 0.85
-      },
-      
-      core_info: {
-        name: entityName,
-        type: entityType,
-        league: entity.properties.level || 'Unknown',
-        founded: entity.properties.founded || 'Unknown',
-        hq: entity.properties.headquarters || entity.properties.country || 'Unknown',
-        stadium: entity.properties.stadium || 'Unknown',
-        website: entity.properties.website || '',
-        employee_range: entity.properties.company_size || 'Unknown',
-        ownership: entity.properties.ownership || 'Private'
-      },
-      
-      digital_transformation: {
-        digital_maturity: Math.floor(Math.random() * 30) + 50, // 50-80
-        transformation_score: Math.floor(Math.random() * 20) + 70, // 70-90
-        website_moderness: Math.floor(Math.random() * 3) + 6, // 6-8
-        current_tech_partners: entity.properties.technology_partners || ['Standard sports tech providers'],
-        mobile_app: Math.random() > 0.3,
-        social_media_followers: Math.floor(Math.random() * 900000) + 100000, // 100K-1M
-        data_integration_level: 'Advanced',
-        fan_analytics_quality: 'Good'
-      },
-      
-      linkedin_connection_analysis: await generateLinkedInAnalysis(entityName, entityType),
-      
-      strategic_analysis: {
-        overall_assessment: `${entityName} presents significant partnership opportunities with strong digital transformation potential and market position.`,
-        opportunity_scoring: {
-          immediate_launch: [
-            {
-              opportunity: 'AI-Powered Fan Engagement Platform',
-              score: Math.floor(Math.random() * 15) + 75, // 75-90
-              timeline: '3-4 months',
-              revenue_potential: `£${Math.floor(Math.random() * 3) + 1}-${Math.floor(Math.random() * 3) + 4}M annual`
-            },
-            {
-              opportunity: 'Stadium Technology Modernization',
-              score: Math.floor(Math.random() * 15) + 70, // 70-85
-              timeline: '4-6 months', 
-              revenue_potential: `£${Math.floor(Math.random() * 2) + 1}-${Math.floor(Math.random() * 2) + 2}M annual`
-            }
-          ],
-          medium_term_partnerships: [
-            {
-              opportunity: 'Data Analytics Expansion',
-              score: Math.floor(Math.random() * 15) + 70, // 70-85
-              timeline: '6-12 months',
-              revenue_potential: `£${Math.floor(Math.random() * 2) + 1}-${Math.floor(Math.random() * 2) + 2}M annual`
-            }
-          ]
-        }
-      },
-      
-      implementation_roadmap: {
-        phase_1_engagement: {
-          timeline: 'Weeks 1-4',
-          objectives: [
-            'Discovery meetings with leadership',
-            'Needs assessment and opportunity identification',
-            'Pilot project proposal'
-          ]
-        },
-        phase_2_pilot: {
-          timeline: 'Weeks 5-16',
-          objectives: [
-            'Fan Analytics Platform pilot',
-            'Regular progress reviews',
-            'Success metrics tracking'
-          ]
-        },
-        phase_3_partnership: {
-          timeline: 'Months 5-12',
-          objectives: [
-            'Stadium Technology modernization',
-            'Mobile App Enhancement',
-            'Ongoing optimization'
-          ]
-        }
-      },
-      
-      metadata: {
-        generated_date: new Date().toISOString(),
-        analyst: 'Yellow Panther Intelligence System',
-        schema_version: '2.0',
-        data_sources: ['Neo4j Database', 'Industry Analysis', 'Dynamic Generation'],
-        confidence_score: 0.85,
-        information_freshness: 'Current as of ' + new Date().toISOString().split('T')[0],
-        next_review_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString()
+      return {
+        batch_id: data.batch_id ?? null,
+        entity_id: data.entity_id ?? canonicalEntityId,
+        canonical_entity_id: data.canonical_entity_id ?? canonicalEntityId,
+        status: data.status ?? null,
+        phase: data.phase ?? null,
+        completed_at: data.completed_at ?? null,
+        started_at: data.started_at ?? null,
+        dual_write_ok: dualWriteOk,
       }
     }
-    
-    console.log(`✅ Generated comprehensive dossier for ${entityName}`)
-    return dossier
-    
-  } catch (error) {
-    console.error('❌ Failed to generate dossier:', error)
-    return null
   }
-}
 
-// Generate LinkedIn connection analysis
-async function generateLinkedInAnalysis(entityName: string, entityType: string) {
-  return {
-    target_entity: entityName,
-    analysis_date: new Date().toISOString().split('T')[0],
-    yellow_panther_uk_team: {
-      team_members: [
-        {
-          name: 'Stuart Cope',
-          linkedin_url: 'https://uk.linkedin.com/in/stuart-cope-54392b16/',
-          role: 'Co-Founder & COO',
-          connection_count: 2,
-          is_primary: true,
-          strongest_connection: 'Leadership team via industry consultant'
-        },
-        {
-          name: 'Gunjan Parikh',
-          linkedin_url: 'https://www.linkedin.com/in/gunjan-parikh-a26a1ba9/',
-          role: 'Founder & CEO',
-          connection_count: 1,
-          is_primary: false
-        },
-        {
-          name: 'Elliott Hillman',
-          linkedin_url: 'https://uk.linkedin.com/in/elliott-rj-hillman/',
-          role: 'Senior Client Partner',
-          connection_count: 1,
-          is_primary: false
-        }
-      ],
-      total_connections_found: 4,
-      network_diversity_score: 75
-    },
-    
-    tier_1_analysis: {
-      introduction_paths: [
-        {
-          yellow_panther_contact: 'Stuart Cope',
-          target_decision_maker: 'Commercial Leadership Team',
-          connection_strength: 'MEDIUM',
-          connection_type: 'INDUSTRY_NETWORK',
-          confidence_score: 70,
-          is_primary_path: true,
-          mutual_connections: [
-            {
-              name: 'Sports Industry Consultant',
-              linkedin_url: 'https://www.linkedin.com/in/sports-industry-consultant/',
-              relationship_context: 'Sports technology consulting network',
-              recency_years: 2,
-              strength_rating: 7,
-              yellow_panther_proximity: 'Stuart Cope'
-            }
-          ],
-          connection_context: 'Industry network connections through sports technology consulting',
-          introduction_strategy: 'Professional introduction through sports industry network focusing on digital transformation opportunities',
-          alternative_paths: ['Direct outreach through LinkedIn professional network']
-        }
-      ],
-      total_paths: 1
-    },
-    
-    tier_2_analysis: {
-      influential_bridge_contacts: [
-        {
-          bridge_contact_name: 'Sports Technology Executive',
-          linkedin_url: 'https://www.linkedin.com/in/sports-tech-executive/',
-          relationship_to_yp: 'Connection to Elliott Hillman',
-          industry_influence: 'High - works with multiple sports organizations on technology solutions',
-          connection_strength_to_yp: 'MEDIUM',
-          sports_industry_network_size: '400+ connections across sports technology sector',
-          target_connections: [
-            {
-              target_entity: entityName,
-              contact_name: 'Commercial Leadership',
-              connection_strength: 'MEDIUM',
-              connection_context: 'Industry network connections through sports technology consulting',
-              introduction_feasibility: 'MEDIUM',
-              bridge_willingness: 'Open to facilitating relevant business introductions'
-            }
-          ]
-        }
-      ],
-      tier_2_introduction_paths: [
-        {
-          path_description: `Stuart Cope → Sports Industry Consultant → Commercial Leadership at ${entityName}`,
-          yellow_panther_contact: 'Stuart Cope',
-          bridge_contact: 'Sports Industry Consultant',
-          target_decision_maker: 'Commercial Leadership Team',
-          connection_strength: 'MEDIUM',
-          confidence_score: 75,
-          path_type: 'TIER_2_BRIDGE',
-          introduction_strategy: 'Professional introduction through sports industry network focusing on digital transformation partnerships',
-          estimated_timeline: '3-5 weeks',
-          success_probability: 'MEDIUM-HIGH'
-        }
-      ]
-    },
-    
-    recommendations: {
-      optimal_team_member: 'Stuart Cope (Primary Contact)',
-      messaging_strategy: `Focus on sports technology partnerships and digital transformation opportunities for ${entityName}`,
-      timing_suggestions: 'Q1 2025 - Post-holiday season planning',
-      success_probability: '70% (Medium-high likelihood through industry network)',
-      team_coordination: 'Stuart Cope leads with secondary support from Elliott Hillman for technical expertise'
-    }
-  }
-}
-
-async function getPersistedDossier(entityId: string, neo4jId?: string | number, entityName?: string) {
-  try {
-    const candidateIds = [entityId, neo4jId != null ? String(neo4jId) : null]
-      .filter((value, index, arr): value is string => Boolean(value) && arr.indexOf(value) === index)
-
-    for (const candidateId of candidateIds) {
-    const { data, error } = await supabase
-      .from('entity_dossiers')
-      .select('dossier_data')
-      .eq('entity_id', candidateId)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle()
-      if (!error && data?.dossier_data) {
-        return data.dossier_data
-      }
-    }
-
-    if (entityName && entityName.trim()) {
-      const { data, error } = await supabase
-        .from('entity_dossiers')
-        .select('dossier_data')
-        .ilike('entity_name', entityName.trim())
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle()
-      if (!error && data?.dossier_data) {
-        return data.dossier_data
-      }
-    }
-    return null
-  } catch (error) {
-    console.log('⚠️ Persisted dossier lookup failed:', error)
-    return null
-  }
-}
-
-async function getLatestPipelineStatusSummary(...candidateEntityIds: Array<string | number | null | undefined>) {
   const uniqueIds = candidateEntityIds
     .map((value) => (value == null ? '' : String(value).trim()))
     .filter((value, index, arr) => Boolean(value) && arr.indexOf(value) === index)
@@ -317,7 +55,7 @@ async function getLatestPipelineStatusSummary(...candidateEntityIds: Array<strin
   for (const candidateId of uniqueIds) {
     const { data } = await supabase
       .from('entity_pipeline_runs')
-      .select('batch_id, entity_id, status, phase, completed_at, metadata, started_at')
+      .select('batch_id, entity_id, canonical_entity_id, status, phase, completed_at, metadata, started_at')
       .eq('entity_id', candidateId)
       .order('started_at', { ascending: false })
       .limit(1)
@@ -336,6 +74,7 @@ async function getLatestPipelineStatusSummary(...candidateEntityIds: Array<strin
     return {
       batch_id: data.batch_id ?? null,
       entity_id: data.entity_id ?? candidateId,
+      canonical_entity_id: data.canonical_entity_id ?? canonicalEntityId ?? null,
       status: data.status ?? null,
       phase: data.phase ?? null,
       completed_at: data.completed_at ?? null,
@@ -347,227 +86,43 @@ async function getLatestPipelineStatusSummary(...candidateEntityIds: Array<strin
   return null
 }
 
-interface Entity {
-  id: string
-  neo4j_id: string | number
-  labels: string[]
-  properties: Record<string, any>
-}
-
 export async function GET(
   request: NextRequest,
-  { params }: { params: { entityId: string } }
+  { params }: { params: { entityId: string } },
 ) {
   try {
     const { entityId } = params
-
-    // Validate entityId parameter
     if (!entityId) {
-      return NextResponse.json(
-        { error: 'Entity ID is required' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Entity ID is required' }, { status: 400 })
     }
 
-    const { searchParams } = new URL(request.url)
-    const useCache = searchParams.get('useCache') !== 'false' // Default to true
-
-    let entity: Entity | null = null
-    let source: 'supabase' | 'local_export' | null = null
-
-    console.log(`📖 Fetching entity ${entityId} from Supabase`)
-
-    // Try to get from Supabase teams and leagues tables first (new structure)
-    if (useCache) {
-      try {
-        // First check if it's a team
-        const { data: teamData, error: teamError } = await supabase
-          .from('teams')
-          .select(`
-            *,
-            leagues:league_id (
-              id,
-              name,
-              badge_path,
-              badge_s3_url
-            )
-          `)
-          .or(`id.eq.${entityId},neo4j_id.eq.${entityId},name.ilike.%${entityId}%`)
-          .single()
-
-        if (!teamError && teamData) {
-          // Convert team data to entity format
-          entity = {
-            id: teamData.id,
-            uuid: buildEntityPublicId(teamData),
-            neo4j_id: teamData.neo4j_id || teamData.id,
-            labels: ['Team'],
-            properties: {
-              name: teamData.name,
-              type: 'Team',
-              sport: teamData.sport,
-              country: teamData.country,
-              founded: teamData.founded,
-              headquarters: teamData.headquarters,
-              website: teamData.website,
-              linkedin: teamData.linkedin,
-              about: teamData.about,
-              company_size: teamData.company_size,
-              priority: teamData.priority,
-              estimated_value: teamData.estimated_value,
-              opportunity_score: teamData.opportunity_score,
-              digital_maturity_score: teamData.digital_maturity_score,
-              website_moderness_score: teamData.website_moderness_score,
-              digital_transformation_score: teamData.digital_transformation_score,
-              procurement_status: teamData.procurement_status,
-              enrichment_status: teamData.enrichment_status,
-              badge_path: teamData.badge_path,
-              badge_s3_url: teamData.badge_s3_url,
-              level: teamData.level,
-              tier: teamData.tier,
-              league_id: teamData.league_id,
-              league_name: teamData.leagues?.name,
-              league_badge_path: teamData.leagues?.badge_path,
-              league_badge_s3_url: teamData.leagues?.badge_s3_url
-            }
-          }
-          source = 'supabase'
-        } else {
-          // Check if it's a league
-          const { data: leagueData, error: leagueError } = await supabase
-            .from('leagues')
-            .select('*')
-            .or(`id.eq.${entityId},neo4j_id.eq.${entityId}`)
-            .single()
-
-          if (!leagueError && leagueData) {
-            // Convert league data to entity format
-            entity = {
-              id: leagueData.id,
-              uuid: buildEntityPublicId(leagueData),
-              neo4j_id: leagueData.neo4j_id || leagueData.id,
-              labels: ['League'],
-              properties: {
-                name: leagueData.name,
-                type: 'League',
-                sport: leagueData.sport,
-                country: leagueData.country,
-                website: leagueData.website,
-                linkedin: leagueData.linkedin,
-                description: leagueData.description,
-                digital_maturity_score: leagueData.digital_maturity_score,
-                estimated_value: leagueData.estimated_value,
-                priority_score: leagueData.priority_score,
-                badge_path: leagueData.badge_path,
-                badge_s3_url: leagueData.badge_s3_url,
-                tier: leagueData.tier,
-                original_name: leagueData.original_name,
-                league_id: leagueData.league_id
-              }
-            }
-            source = 'supabase'
-          } else {
-            // Fallback to cached_entities for other entity types
-            // Try multiple matching strategies
-            let { data: cachedEntity, error: cacheError } = await supabase
-              .from('cached_entities')
-              .select('*')
-              .or(`id.eq.${entityId},neo4j_id.eq.${entityId},neo4j_id.eq.${parseInt(entityId) || entityId}`)
-              .limit(1)
-              .single()
-
-            // If not found by direct IDs, try by name (handle dashes, spaces)
-            if (!cachedEntity || cacheError) {
-              const normalizedName = entityId
-                .replace(/-/g, ' ')
-                .replace(/_/g, ' ')
-                .replace(/%26/g, '&')
-
-              const result = await supabase
-                .from('cached_entities')
-                .select('*')
-                .ilike('properties->>name', `%${normalizedName}%`)
-                .limit(1)
-                .single()
-
-              if (result.data) {
-                cachedEntity = result.data
-                cacheError = null
-              }
-            }
-
-            if (!cacheError && cachedEntity) {
-              entity = {
-                id: cachedEntity.id,
-                uuid: buildEntityPublicId(cachedEntity),
-                neo4j_id: cachedEntity.neo4j_id,
-                labels: cachedEntity.labels,
-                properties: cachedEntity.properties
-              }
-              source = 'supabase'
-            }
-          }
-        }
-      } catch (cacheError) {
-        console.log('⚠️ Supabase query error:', cacheError)
-      }
-    }
+    const entityData = await getEntityForDossierPage(entityId)
+    const entity = entityData.entity
+    const source = entityData.source === 'dossier-file' ? 'local_export' : entityData.source
 
     if (!entity) {
-      const canonicalEntities = await getCanonicalEntitiesSnapshot()
-      const fallbackEntity = canonicalEntities.find((candidate) =>
-        matchesFallbackEntity(candidate, entityId) ||
-        matchesEntityUuid(candidate, entityId),
-      )
-
-      if (fallbackEntity) {
-        entity = {
-          id: fallbackEntity.id,
-          uuid: buildEntityPublicId(fallbackEntity),
-          neo4j_id: fallbackEntity.neo4j_id,
-          labels: fallbackEntity.labels || ['Entity'],
-          properties: fallbackEntity.properties,
-        }
-        source = 'local_export'
-      }
-    }
-
-    if (!entity) {
-      // Entity not found in Supabase
       return NextResponse.json(
         {
           error: 'Entity not found',
-          entityId: entityId,
+          entityId,
           suggestion: 'This entity may have been removed or the ID is incorrect. Please verify the entity ID or refresh the entity list.',
-          availableSources: ['Supabase cached_entities, teams, and leagues tables', 'Local Falkor export']
+          availableSources: ['Supabase cached_entities, teams, and leagues tables', 'Local Falkor export'],
         },
-        { status: 404 }
+        { status: 404 },
       )
     }
 
-    // Skip automatic dossier generation for performance
-    let comprehensiveDossier = null
-    
-    // Only return existing dossier_data if it exists, don't generate new ones
-    if (entity.properties.dossier_data) {
+    let comprehensiveDossier = entityData.dossier ?? null
+    if (!comprehensiveDossier && entity.properties?.dossier_data) {
       try {
         comprehensiveDossier = JSON.parse(entity.properties.dossier_data)
-        console.log(`✅ Using existing dossier for ${entity.properties.name}`)
-      } catch (error) {
-        console.log('⚠️ Invalid dossier_data, skipping dossier generation')
+      } catch {
+        comprehensiveDossier = null
       }
     }
 
-    if (!comprehensiveDossier) {
-      comprehensiveDossier = await getPersistedDossier(
-        entity.uuid?.toString() || entity.id?.toString() || entityId,
-        entity.neo4j_id,
-        entity.properties?.name,
-      )
-    }
-
     const pipelineStatus = await getLatestPipelineStatusSummary(
-      entity.uuid,
+      entity.uuid || null,
       entity.id,
       entity.neo4j_id,
       entityId,
@@ -579,12 +134,11 @@ export async function GET(
       dossier: comprehensiveDossier,
       pipeline_status: pipelineStatus,
     })
-
   } catch (error) {
     console.error('❌ Failed to fetch entity details:', error)
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to fetch entity details' },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

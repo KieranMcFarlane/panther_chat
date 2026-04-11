@@ -6,6 +6,7 @@ from __future__ import annotations
 from typing import Any, Dict, Iterable, Optional
 
 RETRYABLE_STATES = {"blocked", "no_signal", "failed"}
+SKIPPED_STATES = {"skipped"}
 PROCUREMENT_CHAIN = (
     "q7_procurement_signal",
     "q8_explicit_rfp",
@@ -62,6 +63,10 @@ def _is_retryable_state(state: str) -> bool:
     return state in RETRYABLE_STATES
 
 
+def _is_skipped_state(state: str) -> bool:
+    return state in SKIPPED_STATES
+
+
 def _select_chain_root(
     *,
     chain_root: str,
@@ -74,7 +79,7 @@ def _select_chain_root(
         return None
     root_question = dossier_question_map.get(chain_root)
     root_state = _get_question_state(root_question or {})
-    if not _is_retryable_state(root_state):
+    if _is_skipped_state(root_state) or not _is_retryable_state(root_state):
         return None
     has_retryable_chain_step = any(
         _is_retryable_state(_get_question_state(dossier_question_map.get(question_id) or {}))
@@ -133,7 +138,7 @@ def select_repair_root_question_id(
         if not isinstance(dossier_question, dict):
             continue
         question_state = _get_question_state(dossier_question)
-        if not _is_retryable_state(question_state):
+        if _is_skipped_state(question_state) or not _is_retryable_state(question_state):
             continue
         depends_on = question.get("depends_on") if isinstance(question.get("depends_on"), list) else []
         normalized_depends_on = [_to_text(dep) for dep in depends_on if _to_text(dep)]
@@ -143,9 +148,11 @@ def select_repair_root_question_id(
                 upstream_is_problematic = True
                 break
             dependency_question = dossier_question_map.get(dependency_id)
-            if isinstance(dependency_question, dict) and _is_retryable_state(_get_question_state(dependency_question)):
-                upstream_is_problematic = True
-                break
+            if isinstance(dependency_question, dict):
+                dependency_state = _get_question_state(dependency_question)
+                if _is_skipped_state(dependency_state) or _is_retryable_state(dependency_state):
+                    upstream_is_problematic = True
+                    break
             if dependency_id not in source_question_map:
                 upstream_is_problematic = True
                 break

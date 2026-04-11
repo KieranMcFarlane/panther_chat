@@ -18,6 +18,7 @@ export interface EntityPipelineRunRecord {
   id: string
   batch_id: string
   entity_id: string
+  canonical_entity_id?: string | null
   entity_name: string
   status: 'queued' | 'claiming' | 'running' | 'retrying' | 'completed' | 'failed'
   phase: string
@@ -93,6 +94,7 @@ export async function createEntityPipelineRuns(batch_id: string, rows: ImportedE
     id: createRunId(batch_id, row.entity_id),
     batch_id,
     entity_id: row.entity_id,
+    canonical_entity_id: (row as ImportedEntityRow & { canonical_entity_id?: string | null }).canonical_entity_id ?? null,
     entity_name: row.name,
     status: 'queued',
     phase: 'entity_registration',
@@ -201,10 +203,16 @@ export async function getEntityPipelineRun(batch_id: string, entity_id: string) 
   }
 }
 
-export async function findActivePipelineRunByEntityId(entity_id: string) {
+export async function findActivePipelineRunByEntityId(entity_id: string, canonical_entity_id?: string | null) {
+  const candidateIds = [entity_id, canonical_entity_id ?? null].filter(
+    (value, index, arr): value is string => Boolean(value) && arr.indexOf(value) === index,
+  )
   const fallbackRun = [...entityPipelineRunsMemoryStore.values()]
     .flat()
-    .find((run) => run.entity_id === entity_id && ['queued', 'claiming', 'running', 'retrying'].includes(run.status))
+    .find((run) =>
+      ['queued', 'claiming', 'running', 'retrying'].includes(run.status)
+      && candidateIds.includes(String(run.canonical_entity_id || run.entity_id)),
+    )
 
   const fallbackBatch = fallbackRun
     ? entityImportBatchesMemoryStore.get(fallbackRun.batch_id) ?? null
@@ -214,14 +222,31 @@ export async function findActivePipelineRunByEntityId(entity_id: string) {
     : true
 
   try {
-    const { data: runData } = await supabase
-      .from('entity_pipeline_runs')
-      .select('*')
-      .eq('entity_id', entity_id)
-      .in('status', ['queued', 'claiming', 'running', 'retrying'])
-      .order('started_at', { ascending: false })
-      .limit(1)
-      .maybeSingle()
+    let runData: EntityPipelineRunRecord | null = null
+
+    if (canonical_entity_id) {
+      const canonicalResponse = await supabase
+        .from('entity_pipeline_runs')
+        .select('*')
+        .eq('canonical_entity_id', canonical_entity_id)
+        .in('status', ['queued', 'claiming', 'running', 'retrying'])
+        .order('started_at', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+      runData = (canonicalResponse.data ?? null) as EntityPipelineRunRecord | null
+    }
+
+    if (!runData) {
+      const legacyResponse = await supabase
+        .from('entity_pipeline_runs')
+        .select('*')
+        .eq('entity_id', entity_id)
+        .in('status', ['queued', 'claiming', 'running', 'retrying'])
+        .order('started_at', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+      runData = (legacyResponse.data ?? null) as EntityPipelineRunRecord | null
+    }
 
     if (runData) {
       const { data: batchData } = await supabase

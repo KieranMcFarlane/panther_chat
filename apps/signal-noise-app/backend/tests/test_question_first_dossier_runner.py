@@ -1633,6 +1633,658 @@ def test_merge_question_first_run_artifact_marks_dependency_blocked_questions_ex
     assert "Question conditions were not met" in question["terminal_summary"]
 
 
+def test_merge_question_first_run_artifact_synthesizes_q14_from_q13_and_q7():
+    artifact = {
+        "schema_version": "question_first_run_v2",
+        "generated_at": "2026-04-10T18:18:42Z",
+        "run_started_at": "2026-04-10T18:18:00Z",
+        "source": "opencode_agentic_batch",
+        "status": "ready",
+        "entity": {
+            "entity_id": "fc-porto-2027",
+            "entity_name": "FC Porto",
+            "entity_type": "SPORT_CLUB",
+        },
+        "question_specs": [
+            {
+                "question_id": "q7_procurement_signal",
+                "question_text": "Is there evidence FC Porto is buying, reshaping vendors, or changing its commercial or digital ecosystem?",
+                "question_type": "procurement_signal",
+                "depends_on": [],
+            },
+            {
+                "question_id": "q13_capability_gap",
+                "question_text": "What capability gaps or weaknesses are most relevant for FC Porto versus peers?",
+                "question_type": "capability_gap",
+                "depends_on": ["q7_procurement_signal"],
+            },
+            {
+                "question_id": "q14_yp_fit",
+                "question_text": "Where does Yellow Panther fit best for FC Porto?",
+                "question_type": "yp_fit",
+                "depends_on": ["q13_capability_gap", "q7_procurement_signal"],
+            },
+        ],
+        "answer_records": [
+            {
+                "question_id": "q7_procurement_signal",
+                "question_type": "procurement_signal",
+                "validation_state": "validated",
+                "signal_type": "PROCUREMENT_SIGNAL",
+                "answer": {
+                    "kind": "summary",
+                    "summary": "FC Porto is actively reshaping its commercial and digital ecosystem.",
+                    "raw_structured_output": {
+                        "answer": "FC Porto is actively reshaping its commercial and digital ecosystem.",
+                        "themes": [
+                            "Digital transformation",
+                            "New digital platforms",
+                            "Vendor ecosystem change",
+                        ],
+                        "summary": "FC Porto is actively reshaping its commercial and digital ecosystem.",
+                        "validation_state": "validated",
+                    },
+                },
+            },
+            {
+                "question_id": "q13_capability_gap",
+                "question_type": "capability_gap",
+                "validation_state": "provisional",
+                "signal_type": "CAPABILITY_GAP",
+                "answer": {
+                    "kind": "summary",
+                    "summary": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+                    "raw_structured_output": {
+                        "answer": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+                        "summary": "Capability gap scorecard derived from validated upstream commercial and digital signals.",
+                        "top_gap": "digital_stack_maturity",
+                        "themes": ["digital_stack_maturity", "vendor_change_motion"],
+                        "recommendations": [
+                            "Close digital stack maturity gap",
+                            "Close vendor change motion gap",
+                        ],
+                        "gap_scorecard": [
+                            {
+                                "capability": "digital_stack_maturity",
+                                "gap_score": 0.78,
+                                "severity": "high",
+                            }
+                        ],
+                        "validation_state": "provisional",
+                    },
+                },
+            },
+            {
+                "question_id": "q14_yp_fit",
+                "question_type": "yp_fit",
+                "validation_state": "no_signal",
+                "signal_type": "YP_FIT",
+                "answer": {
+                    "kind": "summary",
+                    "summary": "No capability-gap inference is available yet for YP fit mapping.",
+                    "raw_structured_output": {
+                        "answer": "",
+                        "summary": "No capability-gap inference is available yet for YP fit mapping.",
+                        "notes": "No capability-gap inference is available yet for YP fit mapping.",
+                        "context": "No capability-gap inference is available yet for YP fit mapping.",
+                        "validation_state": "no_signal",
+                    },
+                },
+            },
+        ],
+    }
+
+    merged = runner.merge_question_first_run_artifact_into_dossier(dossier_payload={}, artifact=artifact)
+    question = next(question for question in merged["questions"] if question["question_id"] == "q14_yp_fit")
+    answer_record = next(answer for answer in merged["question_first_run"]["answer_records"] if answer["question_id"] == "q14_yp_fit")
+
+    assert question["terminal_state"] == "answered"
+    assert question["validation_state"] == "provisional"
+    assert "No capability-gap inference is available yet" not in question["terminal_summary"]
+    assert question["answer"]["raw_structured_output"]["best_service"]
+    assert question["answer"]["raw_structured_output"]["service_alignment"]
+    assert answer_record["validation_state"] == "provisional"
+    assert answer_record["answer"]["raw_structured_output"]["best_service"]
+
+
+def test_merge_question_first_run_artifact_overwrites_stale_question_first_answers_with_synthesized_q14():
+    stale_q14 = {
+        "question_id": "q14_yp_fit",
+        "question_type": "yp_fit",
+        "validation_state": "no_signal",
+        "answer": {
+            "kind": "summary",
+            "summary": "No capability-gap inference is available yet for YP fit mapping.",
+            "raw_structured_output": {
+                "summary": "No capability-gap inference is available yet for YP fit mapping.",
+                "notes": "No capability-gap inference is available yet for YP fit mapping.",
+                "context": "No capability-gap inference is available yet for YP fit mapping.",
+                "validation_state": "no_signal",
+            },
+        },
+    }
+    artifact = {
+        "schema_version": "question_first_run_v2",
+        "generated_at": "2026-04-10T18:18:42Z",
+        "run_started_at": "2026-04-10T18:18:00Z",
+        "source": "opencode_agentic_batch",
+        "status": "ready",
+        "entity": {
+            "entity_id": "fc-porto-2027",
+            "entity_name": "FC Porto",
+            "entity_type": "SPORT_CLUB",
+        },
+        "question_specs": [
+            {
+                "question_id": "q7_procurement_signal",
+                "question_text": "Is there evidence FC Porto is buying, reshaping vendors, or changing its commercial or digital ecosystem?",
+                "question_type": "procurement_signal",
+                "depends_on": [],
+            },
+            {
+                "question_id": "q13_capability_gap",
+                "question_text": "What capability gaps or weaknesses are most relevant for FC Porto versus peers?",
+                "question_type": "capability_gap",
+                "depends_on": ["q7_procurement_signal"],
+            },
+            {
+                "question_id": "q14_yp_fit",
+                "question_text": "Where does Yellow Panther fit best for FC Porto?",
+                "question_type": "yp_fit",
+                "depends_on": ["q13_capability_gap", "q7_procurement_signal"],
+            },
+        ],
+        "answer_records": [
+            {
+                "question_id": "q7_procurement_signal",
+                "question_type": "procurement_signal",
+                "validation_state": "validated",
+                "signal_type": "PROCUREMENT_SIGNAL",
+                "answer": {
+                    "kind": "summary",
+                    "summary": "FC Porto is actively reshaping its commercial and digital ecosystem.",
+                    "raw_structured_output": {
+                        "answer": "FC Porto is actively reshaping its commercial and digital ecosystem.",
+                        "themes": ["Digital transformation"],
+                        "summary": "FC Porto is actively reshaping its commercial and digital ecosystem.",
+                        "validation_state": "validated",
+                    },
+                },
+            },
+            {
+                "question_id": "q13_capability_gap",
+                "question_type": "capability_gap",
+                "validation_state": "provisional",
+                "signal_type": "CAPABILITY_GAP",
+                "answer": {
+                    "kind": "summary",
+                    "summary": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+                    "raw_structured_output": {
+                        "answer": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+                        "summary": "Capability gap scorecard derived from validated upstream commercial and digital signals.",
+                        "top_gap": "digital_stack_maturity",
+                        "themes": ["digital_stack_maturity", "vendor_change_motion"],
+                        "recommendations": ["Close digital stack maturity gap"],
+                        "gap_scorecard": [
+                            {
+                                "capability": "digital_stack_maturity",
+                                "gap_score": 0.78,
+                                "severity": "high",
+                            }
+                        ],
+                        "validation_state": "provisional",
+                    },
+                },
+            },
+            stale_q14,
+        ],
+    }
+    dossier_payload = {
+        "question_first": {
+            "answers": [stale_q14],
+        },
+        "metadata": {
+            "question_first": {
+                "validation_by_question": {
+                    "q14_yp_fit": {"validated": 0, "no_signal": 1, "provisional": 0, "pending": 0}
+                }
+            }
+        },
+    }
+
+    merged = runner.merge_question_first_run_artifact_into_dossier(
+        dossier_payload=dossier_payload,
+        artifact=artifact,
+    )
+
+    q14_answer = next(answer for answer in merged["question_first"]["answers"] if answer["question_id"] == "q14_yp_fit")
+
+    assert q14_answer["validation_state"] == "provisional"
+    assert q14_answer["answer"]["raw_structured_output"]["best_service"]
+    assert "No capability-gap inference is available yet" not in q14_answer["answer"]["summary"]
+
+
+def test_merge_question_first_run_artifact_overwrites_stale_merged_dossier_with_synthesized_q14():
+    stale_q14 = {
+        "question_id": "q14_yp_fit",
+        "question_type": "yp_fit",
+        "validation_state": "no_signal",
+        "terminal_state": "blocked",
+        "terminal_summary": "No capability-gap inference is available yet for YP fit mapping.",
+        "answer": {
+            "kind": "summary",
+            "summary": "No capability-gap inference is available yet for YP fit mapping.",
+            "raw_structured_output": {
+                "summary": "No capability-gap inference is available yet for YP fit mapping.",
+                "notes": "No capability-gap inference is available yet for YP fit mapping.",
+                "context": "No capability-gap inference is available yet for YP fit mapping.",
+                "validation_state": "no_signal",
+            },
+        },
+        "question_first_answer": {
+            "terminal_state": "blocked",
+            "terminal_summary": "No capability-gap inference is available yet for YP fit mapping.",
+            "validation_state": "no_signal",
+            "answer": {
+                "summary": "No capability-gap inference is available yet for YP fit mapping.",
+                "raw_structured_output": {
+                    "validation_state": "no_signal",
+                },
+            },
+        },
+    }
+    artifact = {
+        "schema_version": "question_first_run_v2",
+        "generated_at": "2026-04-10T18:18:42Z",
+        "run_started_at": "2026-04-10T18:18:00Z",
+        "source": "opencode_agentic_batch",
+        "status": "ready",
+        "entity": {
+            "entity_id": "fc-porto-2027",
+            "entity_name": "FC Porto",
+            "entity_type": "SPORT_CLUB",
+        },
+        "question_specs": [
+            {
+                "question_id": "q7_procurement_signal",
+                "question_text": "Is there evidence FC Porto is buying, reshaping vendors, or changing its commercial or digital ecosystem?",
+                "question_type": "procurement_signal",
+                "depends_on": [],
+            },
+            {
+                "question_id": "q13_capability_gap",
+                "question_text": "What capability gaps or weaknesses are most relevant for FC Porto versus peers?",
+                "question_type": "capability_gap",
+                "depends_on": ["q7_procurement_signal"],
+            },
+            {
+                "question_id": "q14_yp_fit",
+                "question_text": "Where does Yellow Panther fit best for FC Porto?",
+                "question_type": "yp_fit",
+                "depends_on": ["q13_capability_gap", "q7_procurement_signal"],
+            },
+        ],
+        "answer_records": [
+            {
+                "question_id": "q7_procurement_signal",
+                "question_type": "procurement_signal",
+                "validation_state": "validated",
+                "signal_type": "PROCUREMENT_SIGNAL",
+                "answer": {
+                    "kind": "summary",
+                    "summary": "FC Porto is actively reshaping its commercial and digital ecosystem.",
+                    "raw_structured_output": {
+                        "answer": "FC Porto is actively reshaping its commercial and digital ecosystem.",
+                        "themes": ["Digital transformation"],
+                        "summary": "FC Porto is actively reshaping its commercial and digital ecosystem.",
+                        "validation_state": "validated",
+                    },
+                },
+            },
+            {
+                "question_id": "q13_capability_gap",
+                "question_type": "capability_gap",
+                "validation_state": "provisional",
+                "signal_type": "CAPABILITY_GAP",
+                "answer": {
+                    "kind": "summary",
+                    "summary": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+                    "raw_structured_output": {
+                        "answer": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+                        "summary": "Capability gap scorecard derived from validated upstream commercial and digital signals.",
+                        "top_gap": "digital_stack_maturity",
+                        "themes": ["digital_stack_maturity", "vendor_change_motion"],
+                        "recommendations": ["Close digital stack maturity gap"],
+                        "gap_scorecard": [
+                            {
+                                "capability": "digital_stack_maturity",
+                                "gap_score": 0.78,
+                                "severity": "high",
+                            }
+                        ],
+                        "validation_state": "provisional",
+                    },
+                },
+            },
+            {
+                "question_id": "q14_yp_fit",
+                "question_type": "yp_fit",
+                "validation_state": "no_signal",
+                "signal_type": "YP_FIT",
+                "answer": {
+                    "kind": "summary",
+                    "summary": "No capability-gap inference is available yet for YP fit mapping.",
+                    "raw_structured_output": {
+                        "summary": "No capability-gap inference is available yet for YP fit mapping.",
+                        "notes": "No capability-gap inference is available yet for YP fit mapping.",
+                        "context": "No capability-gap inference is available yet for YP fit mapping.",
+                        "validation_state": "no_signal",
+                    },
+                },
+            },
+        ],
+    }
+    dossier_payload = {
+        "merged_dossier": {
+            "question_first": {
+                "answers": [stale_q14],
+            },
+            "questions": [stale_q14],
+        }
+    }
+
+    merged = runner.merge_question_first_run_artifact_into_dossier(
+        dossier_payload=dossier_payload,
+        artifact=artifact,
+    )
+
+    nested_q14_answer = next(answer for answer in merged["merged_dossier"]["question_first"]["answers"] if answer["question_id"] == "q14_yp_fit")
+    nested_q14_question = next(question for question in merged["merged_dossier"]["questions"] if question["question_id"] == "q14_yp_fit")
+
+    assert nested_q14_answer["validation_state"] == "provisional"
+    assert nested_q14_answer["answer"]["raw_structured_output"]["best_service"]
+    assert nested_q14_question["terminal_state"] == "answered"
+
+
+@pytest.mark.asyncio
+async def test_run_question_first_dossier_from_payload_tracks_synthesized_q14_in_validation_metrics(tmp_path):
+    output_dir = tmp_path / "out"
+    output_dir.mkdir()
+    artifact_path = output_dir / "fc-porto_question_first_run_v2.json"
+    artifact = {
+        "schema_version": "question_first_run_v2",
+        "generated_at": "2026-04-10T18:18:42Z",
+        "run_started_at": "2026-04-10T18:18:00Z",
+        "source": "opencode_agentic_batch",
+        "status": "ready",
+        "entity": {
+            "entity_id": "fc-porto-2027",
+            "entity_name": "FC Porto",
+            "entity_type": "SPORT_CLUB",
+        },
+        "question_specs": [
+            {
+                "question_id": "q7_procurement_signal",
+                "question_text": "Is there evidence FC Porto is buying, reshaping vendors, or changing its commercial or digital ecosystem?",
+                "question_type": "procurement_signal",
+                "depends_on": [],
+            },
+            {
+                "question_id": "q13_capability_gap",
+                "question_text": "What capability gaps or weaknesses are most relevant for FC Porto versus peers?",
+                "question_type": "capability_gap",
+                "depends_on": ["q7_procurement_signal"],
+            },
+            {
+                "question_id": "q14_yp_fit",
+                "question_text": "Where does Yellow Panther fit best for FC Porto?",
+                "question_type": "yp_fit",
+                "depends_on": ["q13_capability_gap", "q7_procurement_signal"],
+            },
+        ],
+        "answer_records": [
+            {
+                "question_id": "q7_procurement_signal",
+                "question_type": "procurement_signal",
+                "validation_state": "validated",
+                "signal_type": "PROCUREMENT_SIGNAL",
+                "answer": {
+                    "kind": "summary",
+                    "summary": "FC Porto is actively reshaping its commercial and digital ecosystem.",
+                    "raw_structured_output": {
+                        "answer": "FC Porto is actively reshaping its commercial and digital ecosystem.",
+                        "themes": ["Digital transformation"],
+                        "summary": "FC Porto is actively reshaping its commercial and digital ecosystem.",
+                        "validation_state": "validated",
+                    },
+                },
+            },
+            {
+                "question_id": "q13_capability_gap",
+                "question_type": "capability_gap",
+                "validation_state": "provisional",
+                "signal_type": "CAPABILITY_GAP",
+                "answer": {
+                    "kind": "summary",
+                    "summary": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+                    "raw_structured_output": {
+                        "answer": "Capability gaps inferred from digital_stack_maturity, vendor_change_motion",
+                        "summary": "Capability gap scorecard derived from validated upstream commercial and digital signals.",
+                        "top_gap": "digital_stack_maturity",
+                        "themes": ["digital_stack_maturity", "vendor_change_motion"],
+                        "recommendations": ["Close digital stack maturity gap"],
+                        "gap_scorecard": [
+                            {
+                                "capability": "digital_stack_maturity",
+                                "gap_score": 0.78,
+                                "severity": "high",
+                            }
+                        ],
+                        "validation_state": "provisional",
+                    },
+                },
+            },
+            {
+                "question_id": "q14_yp_fit",
+                "question_type": "yp_fit",
+                "validation_state": "no_signal",
+                "signal_type": "YP_FIT",
+                "answer": {
+                    "kind": "summary",
+                    "summary": "No capability-gap inference is available yet for YP fit mapping.",
+                    "raw_structured_output": {
+                        "summary": "No capability-gap inference is available yet for YP fit mapping.",
+                        "notes": "No capability-gap inference is available yet for YP fit mapping.",
+                        "context": "No capability-gap inference is available yet for YP fit mapping.",
+                        "validation_state": "no_signal",
+                    },
+                },
+            },
+        ],
+    }
+    artifact_path.write_text(json.dumps(artifact, indent=2), encoding="utf-8")
+
+    merged = await runner.run_question_first_dossier_from_payload(
+        source_payload={
+            "entity_id": "fc-porto-2027",
+            "entity_name": "FC Porto",
+            "entity_type": "SPORT_CLUB",
+            "question_first": {
+                "answers": [
+                    {
+                        "question_id": "q14_yp_fit",
+                        "validation_state": "no_signal",
+                        "answer": {"summary": "No capability-gap inference is available yet for YP fit mapping."},
+                    }
+                ]
+            },
+            "questions": artifact["question_specs"],
+        },
+        question_first_run_path=artifact_path,
+        output_dir=output_dir,
+    )
+
+    assert merged["question_first"]["validation_by_question"]["q14_yp_fit"]["provisional"] == 1
+    assert merged["question_first"]["validation_by_question"]["q14_yp_fit"]["no_signal"] == 0
+    assert merged["validation_by_question"]["q14_yp_fit"]["provisional"] == 1
+    assert merged["validation_by_question"]["q14_yp_fit"]["no_signal"] == 0
+    q14_question = next(question for question in merged["questions"] if question["question_id"] == "q14_yp_fit")
+    assert q14_question["terminal_state"] == "answered"
+    published_payload = json.loads((output_dir / "fc-porto-2027_question_first_dossier.json").read_text(encoding="utf-8"))
+    published_top_level_q14 = next(answer for answer in published_payload["answers"] if answer["question_id"] == "q14_yp_fit")
+    published_q14 = next(answer for answer in published_payload["question_first"]["answers"] if answer["question_id"] == "q14_yp_fit")
+    assert published_top_level_q14["validation_state"] == "provisional"
+    assert published_q14["validation_state"] == "provisional"
+    assert published_payload["validation_by_question"]["q14_yp_fit"]["provisional"] == 1
+    assert published_payload["merged_dossier"]["question_first"]["validation_by_question"]["q14_yp_fit"]["provisional"] == 1
+
+
+@pytest.mark.asyncio
+async def test_merge_question_first_run_artifact_preserves_skipped_questions(tmp_path):
+    artifact_path = tmp_path / "skipped_q1.json"
+    answers = [
+        {
+            "question_id": "q1_foundation",
+            "question_type": "foundation",
+            "validation_state": "skipped",
+            "skip_reason": "retry_exhausted",
+            "skip_note": "Schema error after three attempts",
+            "signal_type": "FOUNDATION",
+            "answer": {
+                "kind": "summary",
+                "summary": "Skipped due to repeated schema failures.",
+                "raw_structured_output": {
+                    "answer": None,
+                    "validation_state": "skipped",
+                },
+            },
+        }
+    ]
+    _write_question_first_run_artifact(
+        artifact_path,
+        entity_id="skipped-entity",
+        entity_name="Skipped Entity",
+        questions=[
+            {
+                "question_id": "q1_foundation",
+                "question_text": "What is the canonical identity and grounding profile?",
+                "question_type": "foundation",
+                "depends_on": [],
+            }
+        ],
+        answers=answers,
+        categories=[],
+        entity_type="SPORT_CLUB",
+    )
+    merged = await runner.run_question_first_dossier_from_payload(
+        source_payload={
+            "entity_id": "skipped-entity",
+            "entity_name": "Skipped Entity",
+            "entity_type": "SPORT_CLUB",
+            "questions": [
+                {
+                    "question_id": "q1_foundation",
+                    "question_text": "What is the canonical identity and grounding profile?",
+                    "question_type": "foundation",
+                    "depends_on": [],
+                }
+            ],
+        },
+        question_first_run_path=artifact_path,
+        output_dir=tmp_path,
+    )
+    skipped_question = next(question for question in merged["questions"] if question["question_id"] == "q1_foundation")
+    assert skipped_question["terminal_state"] == "skipped"
+    assert skipped_question["terminal_summary"] == "Skipped due to repeated schema failures."
+
+def test_merge_question_first_run_artifact_keeps_q14_blocked_when_q13_is_missing():
+    artifact = {
+        "schema_version": "question_first_run_v2",
+        "generated_at": "2026-04-10T18:18:42Z",
+        "run_started_at": "2026-04-10T18:18:00Z",
+        "source": "opencode_agentic_batch",
+        "status": "ready",
+        "entity": {
+            "entity_id": "fc-porto-2027",
+            "entity_name": "FC Porto",
+            "entity_type": "SPORT_CLUB",
+        },
+        "question_specs": [
+            {
+                "question_id": "q7_procurement_signal",
+                "question_text": "Is there evidence FC Porto is buying, reshaping vendors, or changing its commercial or digital ecosystem?",
+                "question_type": "procurement_signal",
+                "depends_on": [],
+            },
+            {
+                "question_id": "q13_capability_gap",
+                "question_text": "What capability gaps or weaknesses are most relevant for FC Porto versus peers?",
+                "question_type": "capability_gap",
+                "depends_on": ["q7_procurement_signal"],
+            },
+            {
+                "question_id": "q14_yp_fit",
+                "question_text": "Where does Yellow Panther fit best for FC Porto?",
+                "question_type": "yp_fit",
+                "depends_on": ["q13_capability_gap", "q7_procurement_signal"],
+            },
+        ],
+        "answer_records": [
+            {
+                "question_id": "q7_procurement_signal",
+                "question_type": "procurement_signal",
+                "validation_state": "validated",
+                "signal_type": "PROCUREMENT_SIGNAL",
+                "answer": {
+                    "kind": "summary",
+                    "summary": "FC Porto is actively reshaping its commercial and digital ecosystem.",
+                    "raw_structured_output": {
+                        "answer": "FC Porto is actively reshaping its commercial and digital ecosystem.",
+                        "validation_state": "validated",
+                    },
+                },
+            },
+            {
+                "question_id": "q13_capability_gap",
+                "question_type": "capability_gap",
+                "validation_state": "no_signal",
+                "signal_type": "CAPABILITY_GAP",
+                "answer": {
+                    "kind": "summary",
+                    "summary": "No capability gaps were inferred.",
+                    "raw_structured_output": {
+                        "summary": "No capability gaps were inferred.",
+                        "validation_state": "no_signal",
+                    },
+                },
+            },
+            {
+                "question_id": "q14_yp_fit",
+                "question_type": "yp_fit",
+                "validation_state": "no_signal",
+                "signal_type": "YP_FIT",
+                "answer": {
+                    "kind": "summary",
+                    "summary": "No capability-gap inference is available yet for YP fit mapping.",
+                    "raw_structured_output": {
+                        "answer": "",
+                        "summary": "No capability-gap inference is available yet for YP fit mapping.",
+                        "notes": "No capability-gap inference is available yet for YP fit mapping.",
+                        "context": "No capability-gap inference is available yet for YP fit mapping.",
+                        "validation_state": "no_signal",
+                    },
+                },
+            },
+        ],
+    }
+
+    merged = runner.merge_question_first_run_artifact_into_dossier(dossier_payload={}, artifact=artifact)
+    question = next(question for question in merged["questions"] if question["question_id"] == "q14_yp_fit")
+
+    assert question["terminal_state"] == "blocked"
+    assert question["terminal_summary"] == "No capability-gap inference is available yet for YP fit mapping."
+
+
 def test_normalize_answer_record_recovers_minimal_q3_leadership_answer_from_trusted_fallback_candidates():
     question = {
         "question_id": "q3_leadership",

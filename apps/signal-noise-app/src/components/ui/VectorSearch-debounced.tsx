@@ -31,7 +31,7 @@ export default function VectorSearch({ className, variant = 'default', compact =
 	const [, startTransition] = useTransition();
 	const inputRef = useRef<HTMLInputElement>(null);
 
-	// Debounced search function - only fires after user stops typing for 200ms
+	// Debounced search function - only fires after user stops typing briefly.
 	const debouncedSearch = useDebouncedCallback(
 		async (searchQuery: string) => {
 			if (!searchQuery.trim()) {
@@ -58,7 +58,7 @@ export default function VectorSearch({ className, variant = 'default', compact =
 				setLoading(false);
 			}
 		},
-		200, // 200ms delay - much more responsive!
+		80,
 		{ leading: false, trailing: true, maxWait: 1000 }
 	);
 
@@ -163,13 +163,13 @@ export default function VectorSearch({ className, variant = 'default', compact =
 		if (open) {
 			// Focus input when popover opens
 			setTimeout(() => inputRef.current?.focus(), 100);
-		} else {
-			// Clear state when closed
-			debouncedSearch.cancel?.();
-			setQuery('');
-			setResults([]);
-			setError(null);
-			setLoading(false);
+			} else {
+				// Clear state when closed
+				debouncedSearch.cancel?.();
+				setQuery('');
+				setResults([]);
+				setError(null);
+				setLoading(false);
 			setNavigatingId(null);
 		}
 	};
@@ -180,12 +180,12 @@ export default function VectorSearch({ className, variant = 'default', compact =
 			return (
 				<button
 					type="button"
-					className={`flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors text-slate-300 hover:bg-custom-border hover:text-white font-body-medium cursor-pointer ${compact ? 'justify-center px-3' : ''} ${className}`}
+					className={`flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm font-medium transition-colors text-slate-300 hover:bg-custom-border hover:text-white font-body-medium cursor-pointer ${compact ? 'justify-center px-3' : 'justify-start'} ${className}`}
 					onClick={() => setIsOpen(true)}
 					aria-label="Open search"
 				>
 					<Search className="w-5 h-5 flex-shrink-0" />
-					{!compact && <span className="flex-1">Search</span>}
+					{!compact && <span className="flex-1 text-left">Search</span>}
 				</button>
 			);
 		}
@@ -209,14 +209,14 @@ export default function VectorSearch({ className, variant = 'default', compact =
 			{getTriggerButton()}
 
 			<Dialog open={isOpen} onOpenChange={handleOpenChange}>
-				<DialogContent className="max-h-[calc(100vh-2rem)] w-[calc(100vw-2rem)] max-w-[640px] overflow-hidden rounded-2xl border-0 bg-custom-box p-0 shadow-2xl">
+				<DialogContent className="max-h-[calc(100vh-2rem)] w-[calc(100vw-2rem)] max-w-[640px] overflow-hidden rounded-2xl border border-white/10 bg-[#1e2430] p-0 shadow-2xl">
 					<div className="flex h-full w-full flex-col">
 						{/* Header */}
 						<div className="flex items-center gap-3 border-b border-custom-border p-6">
 							<Search className="w-6 h-6 text-fm-medium-grey" />
 							<Input
 								ref={inputRef}
-								placeholder="Search clubs, players, tenders, contacts... (try 'football' then wait 200ms)"
+								placeholder="Search clubs, players, tenders, contacts... (try 'football' then wait briefly)"
 								value={query}
 								onChange={(e) => handleInputChange(e.target.value)}
 								className="flex-1 bg-custom-bg border-custom-border text-white placeholder:text-fm-medium-grey text-lg px-4 py-3"
@@ -252,32 +252,12 @@ export default function VectorSearch({ className, variant = 'default', compact =
 
 						{/* Results */}
 						<div className="flex-1 overflow-y-auto">
-							{loading && query && (
-								<div className="p-2">
-									{/* Enhanced skeleton loading cards with detailed line structure */}
-									{[1, 2, 3, 4].map((i) => (
-										<div key={i} className="flex items-center gap-4 p-4 rounded-md hover:bg-custom-bg cursor-pointer transition-colors select-none group animate-pulse">
-											<div className="flex-shrink-0">
-												<span className="text-2xl group-hover:scale-110 transition-transform text-custom-bg">🔍</span>
-											</div>
-											<div className="flex-1 min-w-0">
-												<div className="flex items-center gap-3 mb-2">
-													<div className="h-6 bg-custom-bg rounded w-56 font-semibold"></div>
-													<div className="inline-flex items-center rounded-full border font-semibold transition-colors text-sm px-2 py-1 h-5 bg-custom-bg rounded w-16"></div>
-												</div>
-												<div className="text-sm text-fm-medium-grey space-x-3">
-													<span className="inline-block h-3 bg-custom-bg rounded w-12"></span>
-													<span className="inline-block h-3 bg-custom-bg rounded w-20"></span>
-													<span className="inline-block h-3 bg-custom-bg rounded w-16"></span>
-												</div>
-											</div>
-											<div className="flex-shrink-0">
-												<div className="inline-flex items-center rounded-full border font-semibold text-sm px-2 py-1 h-6 bg-custom-bg rounded w-12"></div>
-											</div>
-										</div>
-									))}
-								</div>
-							)}
+						{loading && query && (
+							<div className="flex items-center justify-center gap-3 p-8 text-fm-medium-grey">
+								<Loader2 className="w-5 h-5 animate-spin text-yellow-400" />
+								<span>Searching...</span>
+							</div>
+						)}
 
 							{error && (
 								<div className="p-6 text-fm-orange text-sm text-center">
@@ -355,9 +335,9 @@ export default function VectorSearch({ className, variant = 'default', compact =
 									<Search className="w-12 h-12 mx-auto mb-4 opacity-50" />
 									<p className="text-lg mb-2">Start typing to search</p>
 									<p className="text-sm mb-6">Search across clubs, players, tenders, and contacts</p>
-									<div className="space-y-2 text-xs text-fm-light-grey bg-custom-bg/50 rounded-lg p-4 mx-auto max-w-md">
-										<p>💡 <strong>Debounced Search:</strong> Results appear 200ms after you stop typing</p>
-										<p>🧪 <strong>Test it:</strong> Type &quot;football&quot; then wait 200ms before typing &quot;club&quot;</p>
+									<div className="space-y-2 text-xs text-fm-light-grey bg-black/20 rounded-lg p-4 mx-auto max-w-md">
+										<p>💡 <strong>Debounced Search:</strong> Results appear shortly after you stop typing</p>
+										<p>🧪 <strong>Test it:</strong> Type &quot;football&quot; then pause briefly before typing &quot;club&quot;</p>
 										<p>⚡ <strong>Smart Matching:</strong> Finds entities by name, type, and metadata</p>
 									</div>
 								</div>

@@ -9,6 +9,7 @@ launches the canonical OpenCode batch when an artifact path is not supplied.
 from __future__ import annotations
 
 import asyncio
+from copy import deepcopy
 import json
 import logging
 import os
@@ -32,11 +33,13 @@ try:
         connections_enrichment_enabled_by_default,
     )
     from backend.question_first_promoter import build_question_first_promotions
+    from backend.yellow_panther_scorer import score_yp_fit
 except ImportError:
     from brightdata_mcp_client import BrightDataMCPClient  # type: ignore
     from claude_client import ClaudeClient  # type: ignore
     from connections_graph_enricher import build_default_connections_graph_enricher, connections_enrichment_enabled_by_default  # type: ignore
     from question_first_promoter import build_question_first_promotions  # type: ignore
+    from yellow_panther_scorer import score_yp_fit  # type: ignore
 
 logger = logging.getLogger(__name__)
 
@@ -452,6 +455,9 @@ def _derive_terminal_state(*, question: Dict[str, Any], answer: Dict[str, Any], 
     blocking_note = _coerce_text(answer.get("notes") or raw_structured_output.get("notes") or raw_structured_output.get("context")).lower()
     depends_on = question.get("depends_on") if isinstance(question.get("depends_on"), list) else []
 
+    if validation_state == "skipped" or _coerce_text(answer.get("skip_reason")):
+        return "skipped"
+
     if has_answer_text and validation_state in {"validated", "partially_validated", "deterministic_detected", "provisional", "inferred"}:
         return "answered"
     if (
@@ -494,6 +500,16 @@ def _derive_terminal_summary(
     salvage_summary = _coerce_text(timeout_salvage.get("candidate_summary"))
     if salvage_summary:
         return f"Evidence retained during timeout, but no validated answer was produced. {salvage_summary}"
+
+    if terminal_state == "skipped":
+        reason = _coerce_text(answer.get("skip_reason"))
+        note = _coerce_text(answer.get("skip_note"))
+        if reason and note:
+            return f"Skipped: {reason}. {note}"
+        if reason:
+            return f"Skipped: {reason}"
+        if note:
+            return f"Skipped: {note}"
 
     if terminal_state == "blocked":
         depends_on = question.get("depends_on") if isinstance(question.get("depends_on"), list) else []
@@ -649,15 +665,172 @@ def _normalize_answer_record(answer: Dict[str, Any], question: Optional[Dict[str
     return normalized
 
 
-def _build_legacy_merged_questions(artifact: QuestionFirstRunArtifact) -> List[Dict[str, Any]]:
-    merged_questions: List[Dict[str, Any]] = []
+def _extract_raw_structured_output(answer: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    if not isinstance(answer, dict):
+        return {}
+    answer_payload = answer.get("answer")
+    if isinstance(answer_payload, dict):
+        raw = answer_payload.get("raw_structured_output")
+        if isinstance(raw, dict):
+            return dict(raw)
+    raw = answer.get("raw_structured_output")
+    return dict(raw) if isinstance(raw, dict) else {}
+
+
+def _synthesize_yp_fit_answer_record(
+    *,
+    q14_answer: Optional[Dict[str, Any]],
+    q13_answer: Optional[Dict[str, Any]],
+    q7_answer: Optional[Dict[str, Any]],
+    entity_name: str,
+    entity_type: str,
+) -> Optional[Dict[str, Any]]:
+    q13_state = _validation_state_for_answer(q13_answer or {})
+    q7_state = _validation_state_for_answer(q7_answer or {})
+    if q13_state not in {"validated", "partially_validated", "deterministic_detected", "provisional", "inferred"}:
+        return None
+    if q7_state not in {"validated", "partially_validated", "deterministic_detected", "provisional", "inferred"}:
+        return None
+
+    existing_q14_raw = _extract_raw_structured_output(q14_answer)
+    if _has_readable_value(existing_q14_raw.get("best_service")) or _has_readable_value(existing_q14_raw.get("recommended_service")):
+        return None
+
+    q13_raw = _extract_raw_structured_output(q13_answer)
+    q7_raw = _extract_raw_structured_output(q7_answer)
+    top_gap = _coerce_text(q13_raw.get("top_gap"))
+    gap_scorecard = q13_raw.get("gap_scorecard") if isinstance(q13_raw.get("gap_scorecard"), list) else []
+    if not top_gap and gap_scorecard and isinstance(gap_scorecard[0], dict):
+        top_gap = _coerce_text(gap_scorecard[0].get("capability"))
+    if not top_gap:
+        return None
+
+    evidence_content: List[str] = [
+        _coerce_text((q7_answer or {}).get("answer", {}).get("summary") if isinstance((q7_answer or {}).get("answer"), dict) else ""),
+        _coerce_text(q7_raw.get("answer")),
+        _coerce_text(q13_raw.get("answer")),
+        _coerce_text(q13_raw.get("summary")),
+        top_gap.replace("_", " "),
+    ]
+    q7_themes = q7_raw.get("themes") if isinstance(q7_raw.get("themes"), list) else []
+    q13_themes = q13_raw.get("themes") if isinstance(q13_raw.get("themes"), list) else []
+    q13_recommendations = q13_raw.get("recommendations") if isinstance(q13_raw.get("recommendations"), list) else []
+    evidence_content.extend(_coerce_text(theme.get("theme") if isinstance(theme, dict) else theme) for theme in q7_themes)
+    evidence_content.extend(_coerce_text(theme) for theme in q13_themes)
+    evidence_content.extend(_coerce_text(item) for item in q13_recommendations)
+    evidence = [{"content": " ".join(part for part in evidence_content if part)}]
+    signal = {
+        "signal_category": top_gap.replace("_", " "),
+        "evidence": evidence,
+        "confidence": max(float((q13_answer or {}).get("confidence") or 0.0), 0.6),
+    }
+    entity_context = {
+        "name": entity_name,
+        "type": entity_type,
+    }
+    yp_fit = score_yp_fit(signal, entity_context)
+    service_alignment = yp_fit.get("service_alignment") if isinstance(yp_fit.get("service_alignment"), list) else []
+    if not service_alignment:
+        return None
+
+    best_service = _coerce_text(service_alignment[0])
+    summary = f"Yellow Panther fits best around {best_service} for {entity_name}, driven by the {top_gap.replace('_', ' ')} capability gap."
+    return {
+        "question_id": "q14_yp_fit",
+        "question_type": "yp_fit",
+        "status": "ready",
+        "validation_state": "provisional",
+        "confidence": max(float(yp_fit.get("fit_score") or 0.0) / 100.0, 0.6),
+        "signal_type": "YP_FIT",
+        "execution_class": "derived_inference",
+        "answer": {
+            "kind": "summary",
+            "value": best_service,
+            "summary": summary,
+            "top_signals": [],
+            "commercial_interpretation": {
+                "summary": summary,
+                "themes": [_coerce_text(top_gap)],
+                "implication_strength": "medium",
+            },
+            "opportunity_hypotheses": [],
+            "maturity_signal": None,
+            "raw_structured_output": {
+                "answer": summary,
+                "summary": summary,
+                "context": summary,
+                "notes": summary,
+                "validation_state": "provisional",
+                "terminal_state": "answered",
+                "blocked_by": [],
+                "top_gap": top_gap,
+                "best_service": best_service,
+                "recommended_service": best_service,
+                "service_alignment": service_alignment,
+                "fit_score": yp_fit.get("fit_score"),
+                "priority": yp_fit.get("priority"),
+                "budget_alignment": yp_fit.get("budget_alignment"),
+                "recommended_actions": yp_fit.get("recommended_actions") if isinstance(yp_fit.get("recommended_actions"), list) else [],
+                "yp_advantages": yp_fit.get("yp_advantages") if isinstance(yp_fit.get("yp_advantages"), list) else [],
+                "sources": [],
+            },
+            "terminal_state": "answered",
+            "blocked_by": [],
+        },
+        "notes": summary,
+    }
+
+
+def _apply_synthesized_derived_answers(
+    *,
+    question_specs: List[Dict[str, Any]],
+    answers: List[Dict[str, Any]],
+    entity_name: str,
+    entity_type: str,
+) -> List[Dict[str, Any]]:
     answer_index: Dict[str, Dict[str, Any]] = {}
-    for answer in artifact.answers:
+    for answer in answers:
         if not isinstance(answer, dict):
             continue
         question_id = str(answer.get("question_id") or "").strip()
         if question_id and question_id not in answer_index:
             answer_index[question_id] = dict(answer)
+
+    synthesized_q14 = _synthesize_yp_fit_answer_record(
+        q14_answer=answer_index.get("q14_yp_fit"),
+        q13_answer=answer_index.get("q13_capability_gap"),
+        q7_answer=answer_index.get("q7_procurement_signal"),
+        entity_name=entity_name,
+        entity_type=entity_type,
+    )
+    if synthesized_q14:
+        answer_index["q14_yp_fit"] = synthesized_q14
+
+    ordered_answers: List[Dict[str, Any]] = []
+    for question in question_specs:
+        question_id = str(question.get("question_id") or "").strip()
+        if question_id and question_id in answer_index:
+            ordered_answers.append(answer_index[question_id])
+    for answer in answers:
+        question_id = str(answer.get("question_id") or "").strip()
+        if question_id and all(str(existing.get("question_id") or "").strip() != question_id for existing in ordered_answers):
+            ordered_answers.append(answer_index[question_id])
+    return ordered_answers
+
+
+def _build_legacy_merged_questions(artifact: QuestionFirstRunArtifact) -> List[Dict[str, Any]]:
+    merged_questions: List[Dict[str, Any]] = []
+    synthesized_answers = _apply_synthesized_derived_answers(
+        question_specs=artifact.questions or [],
+        answers=artifact.answers or [],
+        entity_name=str((artifact.entity or {}).get("entity_name") or ""),
+        entity_type=str((artifact.entity or {}).get("entity_type") or ""),
+    )
+    answer_index = {
+        str(answer.get("question_id") or "").strip(): dict(answer)
+        for answer in synthesized_answers
+        if isinstance(answer, dict) and str(answer.get("question_id") or "").strip()
+    }
 
     for question in artifact.questions:
         if not isinstance(question, dict):
@@ -713,6 +886,14 @@ def _merge_question_first_run_patch(
 ) -> Dict[str, Any]:
     payload = dict(dossier_payload or {})
     patch = artifact.merge_patch if isinstance(artifact.merge_patch, dict) else {}
+    synthesized_answers = _apply_synthesized_derived_answers(
+        question_specs=artifact.questions or [],
+        answers=artifact.answers or [],
+        entity_name=str((artifact.entity or {}).get("entity_name") or ""),
+        entity_type=str((artifact.entity or {}).get("entity_type") or ""),
+    )
+    artifact_payload = artifact.model_dump()
+    artifact_payload["answer_records"] = synthesized_answers
 
     metadata = payload.setdefault("metadata", {})
     if not isinstance(metadata, dict):
@@ -726,42 +907,58 @@ def _merge_question_first_run_patch(
     if "question_first" in patch and isinstance(patch["question_first"], dict):
         payload["question_first"] = {
             **patch["question_first"],
-            "answers": artifact.answers if artifact.answers else patch["question_first"].get("answers") or [],
+            "answers": synthesized_answers if synthesized_answers else patch["question_first"].get("answers") or [],
         }
 
     payload["questions"] = _build_legacy_merged_questions(artifact)
 
-    payload.setdefault("question_first", {})
-    if isinstance(payload["question_first"], dict):
-        payload["question_first"].setdefault("schema_version", artifact.schema_version)
-        payload["question_first"].setdefault("generated_at", artifact.generated_at)
-        payload["question_first"].setdefault("run_rollup", artifact.run_rollup)
-        payload["question_first"].setdefault("categories", artifact.categories)
-        payload["question_first"].setdefault("answers", artifact.answers)
-        payload["question_first"].setdefault("question_timings", artifact.question_timings)
-        payload["question_first"].setdefault("evidence_items", artifact.evidence_items)
-        payload["question_first"].setdefault("promotion_candidates", artifact.promotion_candidates)
-        payload["question_first"].setdefault("poi_graph", artifact.poi_graph)
-        payload["question_first"].setdefault("questions_answered", len(artifact.answers))
-        if getattr(artifact, "repair_run", None):
-            payload["question_first"].setdefault("repair_run", getattr(artifact, "repair_run"))
+    existing_question_first = payload.get("question_first") if isinstance(payload.get("question_first"), dict) else {}
+    payload["question_first"] = {
+        **existing_question_first,
+        "schema_version": artifact.schema_version,
+        "generated_at": artifact.generated_at,
+        "run_rollup": artifact.run_rollup,
+        "categories": artifact.categories,
+        "answers": synthesized_answers,
+        "question_timings": artifact.question_timings,
+        "evidence_items": artifact.evidence_items,
+        "promotion_candidates": artifact.promotion_candidates,
+        "poi_graph": artifact.poi_graph,
+        "questions_answered": len(synthesized_answers),
+        **({"repair_run": getattr(artifact, "repair_run")} if getattr(artifact, "repair_run", None) else {}),
+    }
 
     metadata.setdefault("question_first", {})
     if isinstance(metadata["question_first"], dict):
-        metadata["question_first"].setdefault("schema_version", artifact.schema_version)
-        metadata["question_first"].setdefault("generated_at", artifact.generated_at)
-        metadata["question_first"].setdefault("questions_answered", len(artifact.answers))
-        metadata["question_first"].setdefault("categories", artifact.categories)
-        metadata["question_first"].setdefault("question_timings", artifact.question_timings)
-        metadata["question_first"].setdefault("evidence_items", artifact.evidence_items)
-        metadata["question_first"].setdefault("promotion_candidates", artifact.promotion_candidates)
-        metadata["question_first"].setdefault("poi_graph", artifact.poi_graph)
-        metadata["question_first"].setdefault("question_source_path", artifact.question_source_path)
-        metadata["question_first"].setdefault("run_rollup", artifact.run_rollup)
-        if getattr(artifact, "repair_run", None):
-            metadata["question_first"].setdefault("repair_run", getattr(artifact, "repair_run"))
+        metadata["question_first"] = {
+            **metadata["question_first"],
+            "schema_version": artifact.schema_version,
+            "generated_at": artifact.generated_at,
+            "questions_answered": len(synthesized_answers),
+            "categories": artifact.categories,
+            "question_timings": artifact.question_timings,
+            "evidence_items": artifact.evidence_items,
+            "promotion_candidates": artifact.promotion_candidates,
+            "poi_graph": artifact.poi_graph,
+            "question_source_path": artifact.question_source_path,
+            "run_rollup": artifact.run_rollup,
+            **({"repair_run": getattr(artifact, "repair_run")} if getattr(artifact, "repair_run", None) else {}),
+        }
 
-    payload["question_first_run"] = artifact.model_dump()
+    payload["question_first_run"] = artifact_payload
+    merged_dossier = payload.get("merged_dossier") if isinstance(payload.get("merged_dossier"), dict) else None
+    if merged_dossier is not None:
+        merged_dossier["questions"] = deepcopy(payload.get("questions") or [])
+        merged_dossier["question_first"] = {
+            **(merged_dossier.get("question_first") if isinstance(merged_dossier.get("question_first"), dict) else {}),
+            **deepcopy(payload.get("question_first") or {}),
+        }
+        if isinstance(payload.get("metadata"), dict):
+            merged_dossier["metadata"] = {
+                **(merged_dossier.get("metadata") if isinstance(merged_dossier.get("metadata"), dict) else {}),
+                "question_first": deepcopy((payload.get("metadata") or {}).get("question_first") or {}),
+            }
+        merged_dossier["question_first_run"] = deepcopy(artifact_payload)
     return payload
 
 
@@ -794,7 +991,7 @@ def _extract_question_first_repair(source_payload: Dict[str, Any]) -> Dict[str, 
 
 
 def _is_no_signal_validation_state(state: str) -> bool:
-    return state in {"no_signal", "failed", "tool_call_missing", "exhausted"}
+    return state in {"no_signal", "failed", "tool_call_missing", "exhausted", "skipped"}
 
 
 def _is_provisional_validation_state(state: str) -> bool:
@@ -896,6 +1093,12 @@ def _merge_repair_artifact(
         for question in merged_question_specs
         if str(question.get("question_id") or "").strip() in base_answers
     ]
+    merged_answer_records = _apply_synthesized_derived_answers(
+        question_specs=merged_question_specs,
+        answers=merged_answer_records,
+        entity_name=str((repair_artifact.entity or {}).get("entity_name") or (base_artifact.entity or {}).get("entity_name") or ""),
+        entity_type=str((repair_artifact.entity or {}).get("entity_type") or (base_artifact.entity or {}).get("entity_type") or ""),
+    )
 
     merged_question_timings = _normalize_question_timings(base_artifact.question_timings)
     merged_question_timings.update(_normalize_question_timings(repair_artifact.question_timings))
@@ -1031,9 +1234,14 @@ def _derive_dossier_quality_summary(*, merged_dossier: Dict[str, Any], expected_
         for question in normalized_questions
         if _coerce_text(question.get("terminal_state") or question.get("question_first_answer", {}).get("terminal_state")).lower() == "blocked"
     ]
+    skipped_questions = [
+        question
+        for question in normalized_questions
+        if _coerce_text(question.get("terminal_state") or question.get("question_first_answer", {}).get("terminal_state")).lower() == "skipped"
+    ]
     non_blocking_questions = [question for question in blocked_questions if _is_non_blocking_question(question)]
     blocking_questions = [question for question in blocked_questions if not _is_non_blocking_question(question)]
-    satisfied_questions = answered_questions + non_blocking_questions
+    satisfied_questions = answered_questions + non_blocking_questions + skipped_questions
     missing_count = max(expected_question_count - len(normalized_questions), 0)
     quality_state = "complete"
     quality_summary = "Complete dossier: the persisted artifact includes the full expected question pack."
@@ -1562,7 +1770,12 @@ def build_question_first_durable_batch_metrics(
     connections_graph_enrichment_enabled: bool = False,
     connections_graph_enrichment_status: str = "optional",
 ) -> Dict[str, Any]:
-    answers = [answer for answer in artifact.answers if isinstance(answer, dict)]
+    answers = _apply_synthesized_derived_answers(
+        question_specs=[question for question in artifact.questions if isinstance(question, dict)],
+        answers=[answer for answer in artifact.answers if isinstance(answer, dict)],
+        entity_name=str((artifact.entity or {}).get("entity_name") or ""),
+        entity_type=str((artifact.entity or {}).get("entity_type") or ""),
+    )
     questions = [question for question in artifact.questions if isinstance(question, dict)]
     answer_index: Dict[str, Dict[str, Any]] = {}
     for answer in answers:
@@ -1666,7 +1879,7 @@ def build_question_first_durable_batch_metrics(
 def _validation_state_for_answer(answer: Dict[str, Any]) -> str:
     explicit_state = str(answer.get("validation_state") or "").strip().lower()
     if explicit_state:
-        if explicit_state in {"validated", "partially_validated", "deterministic_detected", "provisional", "inferred", "failed", "no_signal", "pending"}:
+        if explicit_state in {"validated", "partially_validated", "deterministic_detected", "provisional", "inferred", "failed", "no_signal", "pending", "skipped"}:
             return explicit_state
         if explicit_state in {"tool_call_missing", "exhausted"}:
             return "no_signal"
@@ -1998,6 +2211,14 @@ async def run_question_first_dossier_from_payload(
             repair_context=repair_context,
         )
         artifact_payload = artifact.model_dump()
+    synthesized_answer_records = _apply_synthesized_derived_answers(
+        question_specs=[question for question in artifact.questions if isinstance(question, dict)],
+        answers=[answer for answer in artifact.answers if isinstance(answer, dict)],
+        entity_name=str((artifact.entity or {}).get("entity_name") or source.get("entity_name") or ""),
+        entity_type=str((artifact.entity or {}).get("entity_type") or source.get("entity_type") or ""),
+    )
+    artifact_payload["answer_records"] = synthesized_answer_records
+    artifact = QuestionFirstRunArtifact.model_validate(artifact_payload)
     if artifact_path:
         Path(artifact_path).write_text(json.dumps(artifact_payload, indent=2, default=str), encoding="utf-8")
     if output_dir is not None:
@@ -2053,6 +2274,13 @@ async def run_question_first_dossier_from_payload(
         merged["question_first"]["connections_graph_enrichment_enabled"] = connections_graph_enrichment_enabled
         merged["question_first"]["connections_graph_enrichment_status"] = connections_graph_enrichment_status
         merged["question_first"].update(durable_batch_metrics)
+    merged.update(durable_batch_metrics)
+    merged_dossier = merged.get("merged_dossier") if isinstance(merged.get("merged_dossier"), dict) else None
+    if merged_dossier is not None:
+        merged_dossier.update(durable_batch_metrics)
+        merged_dossier.setdefault("question_first", {})
+        if isinstance(merged_dossier.get("question_first"), dict):
+            merged_dossier["question_first"].update(durable_batch_metrics)
     quality = _derive_dossier_quality_summary(
         merged_dossier=merged,
         expected_question_count=_expected_publish_question_count(source_payload=source, artifact=artifact),
@@ -2070,8 +2298,8 @@ async def run_question_first_dossier_from_payload(
           "entity_name": entity_name,
           "tier": source.get("tier"),
           "question_source_path": question_source_label or artifact.question_source_path or source.get("question_source_path") or source.get("source_path") or None,
-          "questions_answered": len(artifact.answers),
-          "answers": artifact.answers,
+          "questions_answered": len(synthesized_answer_records),
+          "answers": synthesized_answer_records,
           "categories": artifact.categories,
           "run_rollup": artifact.run_rollup,
           "schema_version": artifact.schema_version,
@@ -2087,8 +2315,8 @@ async def run_question_first_dossier_from_payload(
           "entity_name": entity_name,
           "tier": source.get("tier"),
           "question_source_path": report["question_source_path"],
-          "questions_answered": len(artifact.answers),
-          "answers": artifact.answers,
+          "questions_answered": len(synthesized_answer_records),
+          "answers": synthesized_answer_records,
           "categories": artifact.categories,
           "run_rollup": artifact.run_rollup,
           "schema_version": artifact.schema_version,
@@ -2103,7 +2331,7 @@ async def run_question_first_dossier_from_payload(
               "generated_at": artifact.generated_at,
               "question_source_path": report["question_source_path"],
               "questions_answered": report["questions_answered"],
-              "answers": artifact.answers,
+              "answers": synthesized_answer_records,
               "categories": artifact.categories,
           }
       )

@@ -5,7 +5,7 @@ import { buildCachedEntityCanonicalLookup, dedupeCanonicalCachedEntityRows } fro
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
-import { normalizeQuestionFirstDossier, resolveCanonicalQuestionFirstDossier } from '@/lib/question-first-dossier'
+import { normalizeQuestionFirstDossier, resolveCanonicalQuestionFirstDossier, selectBestPersistedDossierCandidate } from '@/lib/question-first-dossier'
 
 export interface Entity {
   id: string
@@ -19,6 +19,16 @@ interface EntityLookupResult {
   entity: Entity | null
   source: 'supabase' | 'dossier-file' | null
   dossier: any | null
+}
+
+function buildNameCandidates(entityId: string): string[] {
+  const normalized = entityId
+    .replace(/-/g, ' ')
+    .replace(/_/g, ' ')
+    .replace(/%26/g, '&')
+    .trim()
+  const withoutYear = normalized.replace(/\b20\d{2}\b/g, '').replace(/\s+/g, ' ').trim()
+  return [normalized, withoutYear].filter((value, index, arr) => Boolean(value) && arr.indexOf(value) === index)
 }
 
 async function findEntityInLiveStores(entityId: string): Promise<Entity | null> {
@@ -40,10 +50,7 @@ async function findEntityInLiveStores(entityId: string): Promise<Entity | null> 
     }
   }
 
-  const normalizedName = entityId
-    .replace(/-/g, ' ')
-    .replace(/_/g, ' ')
-    .replace(/%26/g, '&')
+  const [normalizedName] = buildNameCandidates(entityId)
 
   const directIdPredicate = [
     `id.eq.${entityId}`,
@@ -63,6 +70,7 @@ async function findEntityInLiveStores(entityId: string): Promise<Entity | null> 
     return {
       id: cachedEntity.id,
       uuid: resolveEntityUuid({
+        canonical_entity_id: cachedEntity.canonical_entity_id,
         id: cachedEntity.id,
         neo4j_id: cachedEntity.neo4j_id,
         graph_id: cachedEntity.graph_id,
@@ -72,6 +80,34 @@ async function findEntityInLiveStores(entityId: string): Promise<Entity | null> 
       neo4j_id: cachedEntity.neo4j_id,
       labels: cachedEntity.labels,
       properties: cachedEntity.properties,
+    }
+  }
+
+  for (const candidateName of buildNameCandidates(entityId)) {
+    const fallbackByName = await supabase
+      .from('cached_entities')
+      .select('id, neo4j_id, graph_id, labels, properties, canonical_entity_id')
+      .ilike('properties->>name', `%${candidateName}%`)
+      .limit(50)
+
+    if (fallbackByName.data && fallbackByName.data.length > 0) {
+      const deduped = dedupeCanonicalCachedEntityRows(fallbackByName.data, canonicalLookup)
+      const nameEntity = deduped[0]
+      return {
+        id: nameEntity.id,
+        uuid: resolveEntityUuid({
+          canonical_entity_id: nameEntity.canonical_entity_id,
+          id: nameEntity.id,
+          neo4j_id: nameEntity.neo4j_id,
+          graph_id: nameEntity.graph_id,
+          uuid: nameEntity.canonical_entity_id,
+          supabase_id: nameEntity.supabase_id || nameEntity.properties?.supabase_id,
+          properties: nameEntity.properties,
+        }) || nameEntity.canonical_entity_id || undefined,
+        neo4j_id: nameEntity.neo4j_id,
+        labels: nameEntity.labels,
+        properties: nameEntity.properties,
+      }
     }
   }
 
@@ -86,13 +122,14 @@ async function findEntityInLiveStores(entityId: string): Promise<Entity | null> 
         badge_s3_url
       )
     `)
-    .or(`id.eq.${entityId},neo4j_id.eq.${entityId},name.ilike.%${entityId}%`)
+    .or(`id.eq.${entityId},neo4j_id.eq.${entityId}`)
     .single()
 
   if (!teamError && teamData) {
     return {
       id: teamData.id,
       uuid: resolveEntityUuid({
+        canonical_entity_id: teamData.canonical_entity_id,
         id: teamData.id,
         neo4j_id: teamData.neo4j_id || teamData.id,
         supabase_id: teamData.supabase_id || teamData.properties?.supabase_id,
@@ -141,6 +178,7 @@ async function findEntityInLiveStores(entityId: string): Promise<Entity | null> 
     return {
       id: leagueData.id,
       uuid: resolveEntityUuid({
+        canonical_entity_id: leagueData.canonical_entity_id,
         id: leagueData.id,
         neo4j_id: leagueData.neo4j_id || leagueData.id,
         supabase_id: leagueData.supabase_id || leagueData.properties?.supabase_id,
@@ -168,62 +206,50 @@ async function findEntityInLiveStores(entityId: string): Promise<Entity | null> 
     }
   }
 
-  const fallbackByName = await supabase
-    .from('cached_entities')
-    .select('id, neo4j_id, graph_id, labels, properties, canonical_entity_id')
-    .ilike('properties->>name', `%${normalizedName}%`)
-    .limit(50)
-
-  if (fallbackByName.data && fallbackByName.data.length > 0) {
-    const deduped = dedupeCanonicalCachedEntityRows(fallbackByName.data, canonicalLookup)
-    const nameEntity = deduped[0]
-    return {
-      id: nameEntity.id,
-      uuid: resolveEntityUuid({
-        id: nameEntity.id,
-        neo4j_id: nameEntity.neo4j_id,
-        graph_id: nameEntity.graph_id,
-        uuid: nameEntity.canonical_entity_id,
-        supabase_id: nameEntity.supabase_id || nameEntity.properties?.supabase_id,
-        properties: nameEntity.properties,
-      }) || nameEntity.canonical_entity_id || undefined,
-      neo4j_id: nameEntity.neo4j_id,
-      labels: nameEntity.labels,
-      properties: nameEntity.properties,
-    }
-  }
-
   return null
 }
 
-async function getPersistedDossier(entityId: string, neo4jId?: string | number, entityName?: string) {
+async function getPersistedDossier(entityId: string, neo4jId?: string | number, entityName?: string, canonicalEntityId?: string | null) {
   try {
+    if (canonicalEntityId) {
+      const { data, error } = await supabase
+        .from('entity_dossiers')
+        .select('dossier_data, created_at, generated_at')
+        .eq('canonical_entity_id', canonicalEntityId)
+        .order('created_at', { ascending: false })
+        .limit(5)
+      const preferred = !error ? selectBestPersistedDossierCandidate(data ?? []) : null
+      if (preferred?.dossier_data) {
+        return preferred.dossier_data
+      }
+    }
+
     const candidateIds = [entityId, neo4jId != null ? String(neo4jId) : null]
       .filter((value, index, arr): value is string => Boolean(value) && arr.indexOf(value) === index)
 
     for (const candidateId of candidateIds) {
       const { data, error } = await supabase
         .from('entity_dossiers')
-        .select('dossier_data')
+        .select('dossier_data, created_at, generated_at')
         .eq('entity_id', candidateId)
         .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle()
-      if (!error && data?.dossier_data) {
-        return data.dossier_data
+        .limit(5)
+      const preferred = !error ? selectBestPersistedDossierCandidate(data ?? []) : null
+      if (preferred?.dossier_data) {
+        return preferred.dossier_data
       }
     }
 
     if (entityName && entityName.trim()) {
       const { data, error } = await supabase
         .from('entity_dossiers')
-        .select('dossier_data')
+        .select('dossier_data, created_at, generated_at')
         .ilike('entity_name', entityName.trim())
         .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle()
-      if (!error && data?.dossier_data) {
-        return data.dossier_data
+        .limit(5)
+      const preferred = !error ? selectBestPersistedDossierCandidate(data ?? []) : null
+      if (preferred?.dossier_data) {
+        return preferred.dossier_data
       }
     }
     return null
@@ -461,6 +487,7 @@ export async function getEntityForDossierPage(entityId: string, tier = 'standard
       entity.id?.toString() || entityId,
       entity.neo4j_id,
       entity.properties?.name,
+      entity.uuid || null,
     )
     dossier = persistedDossier ? normalizeQuestionFirstDossier(persistedDossier, entityId, entity) : null
   }

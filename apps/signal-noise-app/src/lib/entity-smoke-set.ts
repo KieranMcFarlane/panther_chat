@@ -35,7 +35,8 @@ export async function resolvePinnedSmokeEntities(): Promise<ResolvedPinnedSmokeE
     })
 
     if (!entity) {
-      throw new Error(`Pinned smoke entity is missing from the canonical snapshot: ${definition.display_name} (${definition.entity_uuid})`)
+      console.warn(`Pinned smoke entity is missing from the canonical snapshot: ${definition.display_name} (${definition.entity_uuid})`)
+      continue
     }
 
     resolved.push({

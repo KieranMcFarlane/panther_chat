@@ -9,6 +9,14 @@ type EntityLike = {
   properties?: Record<string, unknown> | null
 }
 
+export type PipelineControlObservedState = 'starting' | 'running' | 'stopping' | 'paused'
+
+export type PipelineControlStateSnapshot = {
+  requested_state: 'running' | 'paused'
+  observed_state: PipelineControlObservedState
+  transition_state: PipelineControlObservedState
+}
+
 export type EntityPipelineLifecycleStage =
   | 'queued'
   | 'running'
@@ -51,7 +59,11 @@ export type EntityPipelineLifecycle = {
   repair_retry_count: number
   repair_retry_budget: number
   next_repair_question_id: string | null
+  next_repair_status: 'planned' | 'queued' | 'running' | 'completed' | 'failed' | 'exhausted' | null
+  next_repair_batch_id: string | null
+  next_repair_batch_status: 'planned' | 'queued' | 'running' | 'completed' | 'failed' | 'exhausted' | null
   reconciliation_state: 'healthy' | 'pending' | 'retrying' | 'exhausted'
+  control_state: PipelineControlStateSnapshot | null
   retryable: boolean
   resume_from_question: string | null
   last_completed_question: string | null
@@ -247,6 +259,13 @@ function parseTimestamp(value: unknown): number | null {
 function getCheckpointMetadata(dossier: Record<string, any> | null, run: LifecycleRunLike | null) {
   const questionFirst = dossier?.metadata?.question_first ?? dossier?.question_first ?? {}
   const runMetadata = (run?.metadata && typeof run.metadata === 'object') ? run.metadata as Record<string, any> : {}
+  const controlState = questionFirst.control_state && typeof questionFirst.control_state === 'object'
+    ? questionFirst.control_state as Record<string, any>
+    : runMetadata.control_state && typeof runMetadata.control_state === 'object'
+      ? runMetadata.control_state as Record<string, any>
+      : runMetadata.pipeline_control_state && typeof runMetadata.pipeline_control_state === 'object'
+        ? runMetadata.pipeline_control_state as Record<string, any>
+        : null
   return {
     heartbeat_at: toText(questionFirst.heartbeat_at || runMetadata.heartbeat_at) || null,
     failure_reason: toText(questionFirst.failure_reason || runMetadata.failure_reason || runMetadata.error_message) || null,
@@ -262,7 +281,17 @@ function getCheckpointMetadata(dossier: Record<string, any> | null, run: Lifecyc
     repair_retry_count: Number(questionFirst.repair_retry_count ?? runMetadata.repair_retry_count ?? 0),
     repair_retry_budget: Number(questionFirst.repair_retry_budget ?? runMetadata.repair_retry_budget ?? 0),
     next_repair_question_id: toText(questionFirst.next_repair_question_id || runMetadata.next_repair_question_id) || null,
+    next_repair_status: (toText(questionFirst.next_repair_status || runMetadata.next_repair_status).toLowerCase() || null) as EntityPipelineLifecycle['next_repair_status'],
+    next_repair_batch_id: toText(questionFirst.next_repair_batch_id || runMetadata.next_repair_batch_id || runMetadata.queued_repair_batch_id) || null,
+    next_repair_batch_status: (toText(questionFirst.next_repair_batch_status || runMetadata.next_repair_batch_status).toLowerCase() || null) as EntityPipelineLifecycle['next_repair_batch_status'],
     reconciliation_state: (toText(questionFirst.reconciliation_state || runMetadata.reconciliation_state).toLowerCase() || 'healthy') as EntityPipelineLifecycle['reconciliation_state'],
+    control_state: controlState
+      ? {
+          requested_state: toText(controlState.requested_state || (controlState.is_paused ? 'paused' : 'running')).toLowerCase() === 'paused' ? 'paused' : 'running',
+          observed_state: (toText(controlState.observed_state).toLowerCase() || 'running') as PipelineControlObservedState,
+          transition_state: (toText(controlState.transition_state).toLowerCase() || 'running') as PipelineControlObservedState,
+        }
+      : null,
     retryable: Boolean(questionFirst.retryable ?? runMetadata.retryable),
     resume_from_question: toText(questionFirst.resume_from_question || runMetadata.resume_from_question) || null,
     last_completed_question: toText(questionFirst.last_completed_question || runMetadata.last_completed_question) || null,
@@ -362,12 +391,16 @@ export async function deriveEntityPipelineLifecycle(input: {
     repair_retry_count: checkpoint.repair_retry_count,
     repair_retry_budget: checkpoint.repair_retry_budget,
     next_repair_question_id: checkpoint.next_repair_question_id,
-    reconciliation_state: checkpoint.reconciliation_state,
-    retryable: checkpoint.retryable,
-    resume_from_question: checkpoint.resume_from_question,
-    last_completed_question: checkpoint.last_completed_question,
-    checkpoint_consistent: checkpoint.checkpoint_consistent,
-    non_terminal_question_ids: checkpoint.non_terminal_question_ids,
+    next_repair_status: checkpoint.next_repair_status,
+        next_repair_batch_id: checkpoint.next_repair_batch_id,
+        next_repair_batch_status: checkpoint.next_repair_batch_status,
+        reconciliation_state: checkpoint.reconciliation_state,
+        control_state: checkpoint.control_state,
+        retryable: checkpoint.retryable,
+        resume_from_question: checkpoint.resume_from_question,
+        last_completed_question: checkpoint.last_completed_question,
+        checkpoint_consistent: checkpoint.checkpoint_consistent,
+        non_terminal_question_ids: checkpoint.non_terminal_question_ids,
   }
 }
 

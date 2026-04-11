@@ -57,6 +57,17 @@ test('dossier api rejects malformed persisted dossier cache rows before falling 
   assert.match(entityDossierRouteSource, /hasTopLevelQuestions/)
 })
 
+test('dossier api ranks persisted dossier candidates so malformed newer rows cannot outrank a valid published repair', () => {
+  const questionFirstDossierSource = readFileSync(new URL('../src/lib/question-first-dossier.ts', import.meta.url), 'utf8')
+  assert.match(questionFirstDossierSource, /export function scorePersistedDossierCandidate/)
+  assert.match(questionFirstDossierSource, /export function selectBestPersistedDossierCandidate/)
+  assert.match(questionFirstDossierSource, /if \(publishStatus\.startsWith\('published'\)\)/)
+  assert.match(questionFirstDossierSource, /if \(!qualityState\)/)
+  assert.match(questionFirstDossierSource, /if \(questionCount === 0\)/)
+  assert.match(entityDossierRouteSource, /selectBestPersistedDossierCandidate/)
+  assert.match(entityDossierRouteSource, /\.limit\(5\)/)
+})
+
 test('dossier api can synthesize an entity from canonical question-first artifacts when no live row exists', () => {
   assert.match(entityDossierRouteSource, /const canonicalQuestionFirst = await resolveCanonicalQuestionFirstDossier\(normalizedId, null\)/)
   assert.match(entityDossierRouteSource, /dossier_data: JSON\.stringify\(dossier\)/)

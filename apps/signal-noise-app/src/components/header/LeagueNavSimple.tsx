@@ -44,15 +44,19 @@ function toBrowserEntity(entity: any): BrowserEntity {
   }
 }
 
-function getEntityContext(entity: BrowserEntity | null | undefined) {
+function getCanonicalEntityContext(entity: BrowserEntity | null | undefined) {
   if (!entity) return ''
   const parts = [
-    formatValue(entity.properties?.entity_role || entity.properties?.type),
     formatValue(entity.properties?.sport),
-    formatValue(entity.properties?.league || entity.properties?.level),
     formatValue(entity.properties?.country),
+    formatValue(entity.properties?.league || entity.properties?.level),
+    formatValue(entity.properties?.entity_role || entity.properties?.type),
   ].filter(Boolean)
   return parts.join(' • ')
+}
+
+function getEntityContext(entity: BrowserEntity | null | undefined) {
+  return getCanonicalEntityContext(entity)
 }
 
 function buildFilterFields(
@@ -61,27 +65,11 @@ function buildFilterFields(
   updateFilters: (updater: (prev: EntityBrowserFilters) => EntityBrowserFilters) => void,
 ): FacetFilterField[] {
   const availableSports = taxonomy?.sports ?? []
-  const availableLeagues = taxonomy?.leagues ?? []
   const availableCountries = taxonomy?.countries ?? []
   const availableEntityRoles = taxonomy?.entityRoles ?? taxonomy?.entityClasses ?? []
+  const availableCompetitions = taxonomy?.leagues ?? []
 
   return [
-    {
-      key: 'entityType',
-      label: 'Entity Type',
-      value: filters.entityType,
-      placeholder: 'Entity Type',
-      options: [
-        { value: 'all', label: 'All Types' },
-        { value: 'Entity', label: 'Entity' },
-        { value: 'Club', label: 'Club' },
-        { value: 'League', label: 'League' },
-        { value: 'Federation', label: 'Federation' },
-        { value: 'Competition', label: 'Competition' },
-        { value: 'Person', label: 'Person' },
-      ],
-      onValueChange: (value) => updateFilters((prev) => ({ ...prev, entityType: value })),
-    },
     {
       key: 'sport',
       label: 'Sport',
@@ -92,17 +80,6 @@ function buildFilterFields(
         ...availableSports.map((sport) => ({ value: sport, label: sport, count: taxonomy?.counts?.sports?.[sport] ?? 0 })),
       ],
       onValueChange: (value) => updateFilters((prev) => ({ ...prev, sport: value })),
-    },
-    {
-      key: 'league',
-      label: 'League',
-      value: filters.league,
-      placeholder: 'League',
-      options: [
-        { value: 'all', label: 'All Leagues' },
-        ...availableLeagues.map((league) => ({ value: league, label: league, count: taxonomy?.counts?.leagues?.[league] ?? 0 })),
-      ],
-      onValueChange: (value) => updateFilters((prev) => ({ ...prev, league: value })),
     },
     {
       key: 'country',
@@ -116,10 +93,25 @@ function buildFilterFields(
       onValueChange: (value) => updateFilters((prev) => ({ ...prev, country: value })),
     },
     {
+      key: 'league',
+      label: 'Competition',
+      value: filters.league,
+      placeholder: 'Competition',
+      options: [
+        { value: 'all', label: 'All Competitions' },
+        ...availableCompetitions.map((competition) => ({
+          value: competition,
+          label: competition,
+          count: taxonomy?.counts?.leagues?.[competition] ?? 0,
+        })),
+      ],
+      onValueChange: (value) => updateFilters((prev) => ({ ...prev, league: value })),
+    },
+    {
       key: 'entityClass',
-      label: 'Entity Role',
+      label: 'Role',
       value: filters.entityClass,
-      placeholder: 'Entity Role',
+      placeholder: 'Role',
       options: [
         { value: 'all', label: 'All Roles' },
         ...availableEntityRoles.map((entityRole) => ({
@@ -138,7 +130,6 @@ function buildFilterFields(
       options: [
         { value: 'popular', label: 'Popular' },
         { value: 'name', label: 'Name' },
-        { value: 'type', label: 'Type' },
         { value: 'sport', label: 'Sport' },
         { value: 'country', label: 'Country' },
       ],
@@ -213,10 +204,9 @@ export default function LeagueNavSimple({ currentEntity = null }: LeagueNavSimpl
 
   const activeFilterChips = [
     filters.sport !== 'all' ? { key: 'sport', label: `Sport: ${filters.sport}` } : null,
-    filters.league !== 'all' ? { key: 'league', label: `League: ${filters.league}` } : null,
     filters.country !== 'all' ? { key: 'country', label: `Country: ${filters.country}` } : null,
+    filters.league !== 'all' ? { key: 'league', label: `Competition: ${filters.league}` } : null,
     filters.entityClass !== 'all' ? { key: 'entityClass', label: `Role: ${filters.entityClass}` } : null,
-    filters.entityType !== 'all' ? { key: 'entityType', label: `Type: ${filters.entityType}` } : null,
   ].filter(Boolean) as Array<{ key: 'sport' | 'league' | 'country' | 'entityClass' | 'entityType', label: string }>
 
   const filterFields = useMemo(() => buildFilterFields(filters, taxonomy, updateFilters), [filters, taxonomy, updateFilters])
@@ -277,9 +267,9 @@ export default function LeagueNavSimple({ currentEntity = null }: LeagueNavSimpl
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [handleDown, handleUp, isModalOpen])
 
-  const currentContext = getEntityContext(currentEntityRecord)
+  const currentContext = getCanonicalEntityContext(currentEntityRecord)
   const title = currentEntityRecord?.properties?.name || 'Browse Entities'
-  const description = 'Search by club, sport, country, league, federation, or competition using the canonical entity browser taxonomy.'
+  const description = 'Search by club, sport, country, competition, federation, or role using the canonical entity browser taxonomy.'
 
   return (
     <div className="flex items-center gap-2">
@@ -299,7 +289,7 @@ export default function LeagueNavSimple({ currentEntity = null }: LeagueNavSimpl
                       <CommandInput
                         value={searchTerm}
                         onValueChange={setSearchTerm}
-                        placeholder="Search club, sport, country, league..."
+                        placeholder="Search club, sport, country, competition..."
                         className="h-11 border-0 pl-2"
                       />
                     </Command>
@@ -392,7 +382,7 @@ export default function LeagueNavSimple({ currentEntity = null }: LeagueNavSimpl
               <div className="flex items-center justify-between border-t border-white/10 pt-4">
                 <div className="text-sm text-white/60">
                   {currentEntityRecord
-                    ? `Browsing: ${getEntityContext(currentEntityRecord) || 'Canonical entity'}`
+                    ? `Browsing: ${getCanonicalEntityContext(currentEntityRecord) || 'Canonical entity'}`
                     : 'Browsing canonical entity data'}
                 </div>
                 <div className="flex items-center gap-2">
@@ -406,11 +396,24 @@ export default function LeagueNavSimple({ currentEntity = null }: LeagueNavSimpl
         </DialogContent>
       </Dialog>
 
-      <EntityBadge
-        entity={currentEntityRecord}
-        size="xl"
+      <div
+        data-testid="league-nav-simple-trigger"
+        role="button"
+        tabIndex={0}
         onClick={() => setIsModalOpen(true)}
-      />
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault()
+            setIsModalOpen(true)
+          }
+        }}
+      >
+        <EntityBadge
+          entity={currentEntityRecord}
+          size="xl"
+          onClick={() => setIsModalOpen(true)}
+        />
+      </div>
 
       <div className="flex flex-col gap-1">
         <Button

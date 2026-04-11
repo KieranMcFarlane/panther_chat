@@ -4,14 +4,19 @@ import { readFileSync } from 'node:fs'
 
 const homePageSource = readFileSync(new URL('../src/app/page.tsx', import.meta.url), 'utf8')
 const dashboardSourcePath = new URL('../src/components/home/HomeQueueDashboard.tsx', import.meta.url)
+const stripSourcePath = new URL('../src/components/layout/OperationalStatusStrip.tsx', import.meta.url)
 const dashboardApiPath = new URL('../src/app/api/home/queue-dashboard/route.ts', import.meta.url)
 const dashboardLoaderPath = new URL('../src/lib/home-queue-dashboard.ts', import.meta.url)
 
 let dashboardSource = ''
+let stripSource = ''
 let dashboardApiSource = ''
 let dashboardLoaderSource = ''
 try {
   dashboardSource = readFileSync(dashboardSourcePath, 'utf8')
+} catch {}
+try {
+  stripSource = readFileSync(stripSourcePath, 'utf8')
 } catch {}
 try {
   dashboardApiSource = readFileSync(dashboardApiPath, 'utf8')
@@ -32,9 +37,33 @@ test('home queue dashboard renders loop status, queue lanes, client-ready dossie
   assert.match(dashboardSource, /Repair run|Full run/)
   assert.match(dashboardSource, /Published degraded|Published healthy|Reconciliation pending/i)
   assert.match(dashboardSource, /Auto-repair queued|Repairing|Exhausted/i)
+  assert.match(dashboardSource, /Next repair planned|Next repair queued|Next repair running/i)
+  assert.match(dashboardSource, /Active follow-on repair|follow-on batch ready to inspect/i)
+  assert.match(dashboardSource, /next repair batch/i)
+  assert.match(dashboardSource, /Open next repair batch/i)
   assert.match(dashboardSource, /Client-ready dossiers/)
   assert.match(dashboardSource, /Promoted opportunities|RFP|Opportunity shortlist/)
   assert.match(dashboardSource, /Graphiti|sales brief|Yellow Panther/)
+})
+
+test('live ops strip exposes compact ignition mode with expand and minimize controls', () => {
+  assert.match(stripSource, /Expand|Minimize/)
+  assert.match(stripSource, /max-h-16|max-h-\[40rem\]/)
+  assert.match(stripSource, /Start pipeline|Stop intake/)
+  assert.match(stripSource, /animate-marquee/)
+  assert.match(stripSource, /Entities active/)
+  assert.match(stripSource, /Pipeline live/)
+  assert.match(stripSource, /Blocked/)
+  assert.match(stripSource, /Recent completions/)
+  assert.match(stripSource, /Running —/)
+  assert.match(stripSource, /Enrichment/)
+  assert.match(stripSource, /Question unavailable|formatQuestionProgress/)
+  assert.match(stripSource, /Pipeline Active/)
+  assert.match(stripSource, /running for (?:unknown duration|\d+[sm]|\d+h \d+m)/i)
+  assert.match(stripSource, /Waiting for claimable work/)
+  assert.doesNotMatch(stripSource, /requested: .*acknowledged: .*running: .*paused:/i)
+  assert.doesNotMatch(stripSource, /No entity is actively running right now/)
+  assert.doesNotMatch(stripSource, /No entities are currently running\./)
 })
 
 test('home queue dashboard API exposes the normalized payload contract for loop status, queue, dossiers, rfp cards, and sales summary', () => {
@@ -50,6 +79,18 @@ test('home queue dashboard API exposes the normalized payload contract for loop 
   assert.match(dashboardApiSource, /dossier_quality/)
   assert.match(dashboardApiSource, /rollout_proof_set/)
   assert.match(dashboardApiSource, /promoted_only=true/)
+})
+
+test('home queue dashboard drilldown contract carries ignition control state and active-question detail', () => {
+  assert.match(dashboardLoaderSource, /control/)
+  assert.match(dashboardLoaderSource, /desired_state/)
+  assert.match(dashboardLoaderSource, /requested_state/)
+  assert.match(dashboardLoaderSource, /observed_state/)
+  assert.match(dashboardLoaderSource, /transition_state/)
+  assert.match(dashboardLoaderSource, /active_question_id/)
+  assert.match(dashboardLoaderSource, /current_question_id/)
+  assert.match(dashboardLoaderSource, /next_repair_batch_id/)
+  assert.match(dashboardLoaderSource, /next_action|Next action/)
 })
 
 test('home queue dashboard payload includes dossier quality counts, incomplete artifacts, and the rollout proof set', () => {
@@ -71,6 +112,9 @@ test('home queue dashboard payload includes dossier quality counts, incomplete a
   assert.match(dashboardLoaderSource, /incomplete_entities/)
   assert.match(dashboardLoaderSource, /publication_status/)
   assert.match(dashboardLoaderSource, /publication_mode/)
+  assert.match(dashboardLoaderSource, /next_repair_status/)
+  assert.match(dashboardLoaderSource, /next_repair_batch_id/)
+  assert.match(dashboardLoaderSource, /isActiveRepairFocus/)
 })
 
 test('home queue dashboard loader prefers Supabase pipeline runs and keeps manifest ordering for production queue state', () => {

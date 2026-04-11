@@ -105,6 +105,9 @@ def merge_pipeline_run_metadata(
     repair_retry_count: Optional[int] = None,
     repair_retry_budget: Optional[int] = None,
     next_repair_question_id: Optional[str] = None,
+    next_repair_status: Optional[str] = None,
+    next_repair_batch_id: Optional[str] = None,
+    next_repair_batch_status: Optional[str] = None,
     reconciliation_state: Optional[str] = None,
     reconciliation_payload: Optional[Dict[str, Any]] = None,
     reconciliation_payloads: Optional[list[Dict[str, Any]]] = None,
@@ -168,6 +171,12 @@ def merge_pipeline_run_metadata(
         metadata["repair_retry_budget"] = int(repair_retry_budget)
     if next_repair_question_id is not None:
         metadata["next_repair_question_id"] = next_repair_question_id
+    if next_repair_status is not None:
+        metadata["next_repair_status"] = next_repair_status
+    if next_repair_batch_id is not None:
+        metadata["next_repair_batch_id"] = next_repair_batch_id
+    if next_repair_batch_status is not None:
+        metadata["next_repair_batch_status"] = next_repair_batch_status
     if reconciliation_state is not None:
         metadata["reconciliation_state"] = reconciliation_state
     if reconciliation_payload is not None:

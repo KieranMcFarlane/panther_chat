@@ -77,3 +77,31 @@ test('entity routing preserves uuid-shaped identifiers as-is', () => {
     'dbb4b0d7-68e4-49d7-929a-b1a0613454fd'
   )
 })
+
+test('entity routing preserves slug strings for public dossier routes', () => {
+  assert.equal(
+    getEntityBrowserDossierHref('fc-porto-2027', '1'),
+    '/entity-browser/fc-porto-2027/dossier?from=1'
+  )
+})
+
+test('entity routing resolves known legacy arsenal uuids to the current canonical arsenal uuid', () => {
+  const canonicalArsenalUuid = 'b61e07d3-b0e5-4d5c-908e-064de77eb955'
+
+  for (const legacyUuid of [
+    '7014d188-d031-5d67-a1cb-eadd127f9b67',
+    'b11d37c8-ece8-56d2-aa6e-757d0b8add7b',
+  ]) {
+    const href = getEntityBrowserDossierHref({ id: legacyUuid }, '1')
+    assert.equal(
+      href,
+      `/entity-browser/${canonicalArsenalUuid}/dossier?from=1`,
+      `expected ${legacyUuid} to canonicalize to the live Arsenal UUID`,
+    )
+    assert.equal(
+      getEntityPrefetchId({ id: legacyUuid }),
+      canonicalArsenalUuid,
+      `expected ${legacyUuid} to prefetch the live Arsenal UUID`,
+    )
+  }
+})

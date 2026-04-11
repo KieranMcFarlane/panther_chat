@@ -7,6 +7,7 @@ const rerunRouteSource = readFileSync(new URL('../src/app/api/entities/[entityId
 
 test('question repair queue dedupes active reruns by repair key and exposes reused batch metadata', () => {
   assert.match(queueSource, /findActivePipelineRunByEntityId/)
+  assert.match(queueSource, /canonical_entity_id/)
   assert.match(queueSource, /rerun_mode/)
   assert.match(queueSource, /question_id/)
   assert.match(queueSource, /cascade_dependents/)
@@ -35,4 +36,10 @@ test('question repair dedupe ignores runs whose batch row is already terminal', 
   assert.match(queueSource, /activeRunState\.batch/)
   assert.match(queueSource, /activeBatchStillActive/)
   assert.match(queueSource, /!\['completed', 'failed'\]\.includes/)
+})
+
+test('question repair dedupe can collapse slug and uuid requests onto the same canonical entity', () => {
+  assert.match(queueSource, /entity\.uuid/)
+  assert.match(queueSource, /findActivePipelineRunByEntityId\(/)
+  assert.match(rerunRouteSource, /resolveEntityForDossierQueue/)
 })

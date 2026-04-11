@@ -274,7 +274,7 @@ function deriveQuestionTerminalState(input: {
   rawStructuredOutput: Record<string, any>
   timeoutSalvage: Record<string, any>
   rawAnswerValue: unknown
-}): 'answered' | 'no_signal' | 'blocked' {
+}): 'answered' | 'no_signal' | 'blocked' | 'skipped' {
   const validationState = toText(input.answerRecord.validation_state).toLowerCase()
   const hasAnswerText = hasReadableValue(input.answer.summary)
     || hasReadableValue(input.answer.value)
@@ -282,6 +282,10 @@ function deriveQuestionTerminalState(input: {
     || hasReadableValue(input.rawAnswerValue)
   const blockedNote = toText(input.answerRecord.notes || input.rawStructuredOutput.notes || input.rawStructuredOutput.context).toLowerCase()
   const dependsOn = Array.isArray(input.questionSpec?.depends_on) ? input.questionSpec?.depends_on : []
+
+  if (validationState === 'skipped' || toText(input.answerRecord.skip_reason)) {
+    return 'skipped'
+  }
 
   if (hasAnswerText && ['validated', 'partially_validated', 'deterministic_detected', 'provisional', 'inferred'].includes(validationState)) {
     return 'answered'
@@ -305,7 +309,7 @@ function deriveQuestionTerminalSummary(input: {
   answer: Record<string, any>
   rawStructuredOutput: Record<string, any>
   timeoutSalvage: Record<string, any>
-  terminalState: 'answered' | 'no_signal' | 'blocked'
+  terminalState: 'answered' | 'no_signal' | 'blocked' | 'skipped'
   rawAnswerValue: unknown
 }): string {
   const commercialInterpretation = ensureObject(input.answer.commercial_interpretation)
@@ -339,6 +343,20 @@ function deriveQuestionTerminalSummary(input: {
       ? ` Retained evidence: ${salvageUrls.slice(0, 2).join(', ')}.`
       : ''
     return `Validation timed out after retaining procurement evidence. ${salvageReason}${sourceHint}`
+  }
+
+  if (input.terminalState === 'skipped') {
+    const reason = toText(input.answerRecord.skip_reason)
+    const note = toText(input.answerRecord.skip_note)
+    if (reason && note) {
+      return `Skipped: ${reason}. ${note}`
+    }
+    if (reason) {
+      return `Skipped: ${reason}`
+    }
+    if (note) {
+      return `Skipped: ${note}`
+    }
   }
 
   if (input.terminalState === 'blocked') {
@@ -639,9 +657,10 @@ export function normalizeQuestionFirstDossier(
   const questionsPresent = questions.length > 0 ? questions : answers
   const answeredQuestions = questionsPresent.filter((question) => getQuestionTerminalState(ensureObject(question)) === 'answered')
   const blockedQuestions = questionsPresent.filter((question) => getQuestionTerminalState(ensureObject(question)) === 'blocked')
+  const skippedQuestions = questionsPresent.filter((question) => getQuestionTerminalState(ensureObject(question)) === 'skipped')
   const nonBlockingQuestions = blockedQuestions.filter((question) => isNonBlockingQuestion(ensureObject(question)))
   const blockingQuestions = blockedQuestions.filter((question) => !isNonBlockingQuestion(ensureObject(question)))
-  const satisfiedQuestionsCount = answeredQuestions.length + nonBlockingQuestions.length
+  const satisfiedQuestionsCount = answeredQuestions.length + nonBlockingQuestions.length + skippedQuestions.length
   const questionIdsPresent = new Set(
     questionsPresent
       .map((question) => toText(ensureObject(question).question_id))
@@ -655,7 +674,7 @@ export function normalizeQuestionFirstDossier(
 
     const normalizedQuestion = ensureObject(question)
     const terminalState = getQuestionTerminalState(normalizedQuestion)
-    if (terminalState === 'answered') {
+    if (terminalState === 'answered' || terminalState === 'skipped') {
       return []
     }
 
@@ -776,6 +795,117 @@ export function normalizeQuestionFirstDossier(
   }
   normalized.tabs = buildDossierTabs(normalized, { entityType: normalized.entity_type })
   return normalized
+}
+
+function getPersistedDossierQuestionCount(dossier: unknown): number {
+  if (!dossier || typeof dossier !== 'object') {
+    return 0
+  }
+
+  const payload = dossier as Record<string, unknown>
+  const mergedDossier = payload.merged_dossier && typeof payload.merged_dossier === 'object'
+    ? payload.merged_dossier as Record<string, unknown>
+    : null
+  const topLevelQuestions = Array.isArray(payload.questions) ? payload.questions.length : 0
+  const mergedQuestions = Array.isArray(mergedDossier?.questions) ? mergedDossier.questions.length : 0
+  const questionFirst = payload.question_first && typeof payload.question_first === 'object'
+    ? payload.question_first as Record<string, unknown>
+    : mergedDossier?.question_first && typeof mergedDossier.question_first === 'object'
+      ? mergedDossier.question_first as Record<string, unknown>
+      : null
+  const questionFirstAnswers = Array.isArray(questionFirst?.answers) ? questionFirst.answers.length : 0
+
+  return Math.max(topLevelQuestions, mergedQuestions, questionFirstAnswers)
+}
+
+function getPersistedDossierQualityState(dossier: unknown): string {
+  if (!dossier || typeof dossier !== 'object') {
+    return ''
+  }
+
+  const payload = dossier as Record<string, unknown>
+  const mergedDossier = payload.merged_dossier && typeof payload.merged_dossier === 'object'
+    ? payload.merged_dossier as Record<string, unknown>
+    : null
+
+  return toText(
+    payload.quality_state
+      ?? payload.question_first?.quality_state
+      ?? payload.metadata?.question_first?.quality_state
+      ?? mergedDossier?.quality_state
+      ?? mergedDossier?.question_first?.quality_state,
+  ).toLowerCase()
+}
+
+function getPersistedDossierPublishStatus(dossier: unknown): string {
+  if (!dossier || typeof dossier !== 'object') {
+    return ''
+  }
+
+  const payload = dossier as Record<string, unknown>
+  const mergedDossier = payload.merged_dossier && typeof payload.merged_dossier === 'object'
+    ? payload.merged_dossier as Record<string, unknown>
+    : null
+
+  return toText(
+    payload.publish_status
+      ?? payload.question_first?.publish_status
+      ?? payload.metadata?.question_first?.publish_status
+      ?? mergedDossier?.publish_status
+      ?? mergedDossier?.question_first?.publish_status,
+  ).toLowerCase()
+}
+
+export function scorePersistedDossierCandidate(dossier: unknown): number {
+  const questionCount = getPersistedDossierQuestionCount(dossier)
+  const qualityState = getPersistedDossierQualityState(dossier)
+  const publishStatus = getPersistedDossierPublishStatus(dossier)
+  const qualityPriority = QUALITY_PRIORITY[qualityState] ?? 0
+
+  let score = questionCount
+  score += qualityPriority * 100
+
+  if (publishStatus.startsWith('published')) {
+    score += 1000
+  } else if (publishStatus === 'draft' || publishStatus === 'staged') {
+    score -= 100
+  }
+
+  if (!qualityState) {
+    score -= 500
+  }
+
+  if (questionCount === 0) {
+    score -= 1000
+  }
+
+  return score
+}
+
+export function selectBestPersistedDossierCandidate<T extends { dossier_data?: unknown; created_at?: string | null; generated_at?: string | null }>(
+  rows: T[] | null | undefined,
+): T | null {
+  if (!Array.isArray(rows) || rows.length === 0) {
+    return null
+  }
+
+  const candidates = rows.filter((row) => row?.dossier_data)
+  if (candidates.length === 0) {
+    return null
+  }
+
+  return candidates
+    .slice()
+    .sort((left, right) => {
+      const scoreDiff = scorePersistedDossierCandidate(right.dossier_data) - scorePersistedDossierCandidate(left.dossier_data)
+      if (scoreDiff !== 0) {
+        return scoreDiff
+      }
+
+      const rightTime = Date.parse(String(right.created_at || right.generated_at || '')) || 0
+      const leftTime = Date.parse(String(left.created_at || left.generated_at || '')) || 0
+      return rightTime - leftTime
+    })[0] ?? null
 }
 
 function shouldMarkValidationSample(

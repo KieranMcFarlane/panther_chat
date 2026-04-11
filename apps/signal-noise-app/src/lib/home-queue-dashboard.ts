@@ -7,6 +7,7 @@ import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supaba
 import { deriveEntityPipelineLifecycle } from '@/lib/entity-pipeline-lifecycle'
 import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
 import { mergeQuestionFirstRunArtifactIntoDossier, normalizeQuestionFirstDossier, resolveCanonicalQuestionFirstDossier } from '@/lib/question-first-dossier'
+import { readPipelineControlState } from '@/lib/pipeline-control-state'
 import { ROLLOUT_PROOF_SET } from '@/lib/rollout-proof-set'
 
 type ScaleProgress = {
@@ -40,7 +41,10 @@ type QueueEntityRecord = {
   promoted: boolean
   summary: string | null
   generated_at: string | null
+  started_at?: string | null
   active_question_id?: string | null
+  current_question_id?: string | null
+  next_action?: string | null
   run_phase?: string | null
   publication_status?: string | null
   publication_mode?: string | null
@@ -48,6 +52,9 @@ type QueueEntityRecord = {
   repair_retry_count?: number | null
   repair_retry_budget?: number | null
   next_repair_question_id?: string | null
+  next_repair_status?: string | null
+  next_repair_batch_id?: string | null
+  next_repair_batch_status?: string | null
   reconciliation_state?: string | null
 }
 
@@ -116,6 +123,15 @@ type RolloutProofCard = {
 }
 
 export type HomeQueueDashboardPayload = {
+  control: {
+    is_paused: boolean
+    pause_reason: string | null
+    updated_at: string | null
+    desired_state: 'running' | 'paused'
+    requested_state: 'running' | 'paused'
+    observed_state: 'starting' | 'running' | 'stopping' | 'paused'
+    transition_state: 'starting' | 'running' | 'stopping' | 'paused'
+  }
   loop_status: {
     total_scheduled: number
     completed: number
@@ -152,6 +168,11 @@ export type HomeQueueDashboardPayload = {
 type BuildOptions = {
   appRoot?: string
   tendersFetcher?: () => Promise<RfpCard[]>
+  includeClientReadyDossiers?: boolean
+  includeRfpCards?: boolean
+  includeSalesSummary?: boolean
+  includeDossierQuality?: boolean
+  includeRolloutProofSet?: boolean
 }
 
 type LiveQueueSnapshot = {
@@ -161,6 +182,7 @@ type LiveQueueSnapshot = {
 
 type PipelineRunRecord = {
   entity_id: string
+  canonical_entity_id?: string | null
   entity_name: string
   status: 'queued' | 'claiming' | 'running' | 'retrying' | 'completed' | 'failed'
   phase: string | null
@@ -179,6 +201,7 @@ type QueueSourceSelection = {
   queue: HomeQueueDashboardPayload['queue']
   loop_status: LoopStatus
   last_activity_at: string | null
+  priority: number
 }
 
 const LOOP_ACTIVE_WINDOW_MS = 20 * 60 * 1000
@@ -206,6 +229,28 @@ function parseTimestamp(value: unknown): number | null {
   if (!text) return null
   const timestamp = Date.parse(text)
   return Number.isFinite(timestamp) ? timestamp : null
+}
+
+function isActiveRepairFocus(lifecycle: Awaited<ReturnType<typeof deriveEntityPipelineLifecycle>> | undefined): boolean {
+  if (!lifecycle) return false
+  const nextRepairStatus = toText(lifecycle.next_repair_status).toLowerCase()
+  const repairState = toText(lifecycle.repair_state).toLowerCase()
+  return (
+    (nextRepairStatus === 'queued' || nextRepairStatus === 'running')
+    || ((repairState === 'queued' || repairState === 'repairing') && Boolean(lifecycle.next_repair_question_id))
+  )
+}
+
+function queueHasActiveRepairFocus(queue: HomeQueueDashboardPayload['queue']): boolean {
+  const inProgress = queue.in_progress_entity
+  if (!inProgress) return false
+  const nextRepairStatus = toText(inProgress.next_repair_status).toLowerCase()
+  const repairState = toText(inProgress.repair_state).toLowerCase()
+  return (
+    nextRepairStatus === 'queued'
+    || nextRepairStatus === 'running'
+    || ((repairState === 'queued' || repairState === 'repairing') && Boolean(inProgress.next_repair_question_id))
+  )
 }
 
 function toIsoString(timestamp: number | null): string | null {
@@ -499,6 +544,7 @@ async function buildQueueState(
   const activeStatuses = new Set(['queued', 'claiming', 'running', 'retrying'])
   let activeIndex = -1
   let highestProcessedIndex = -1
+  let inProgressPriority = -1
   let inProgress: QueueEntityRecord | null = null
   const completed: Array<QueueEntityRecord & { sortTime: number }> = []
   const resumeNeeded: QueueEntityRecord[] = []
@@ -536,7 +582,12 @@ async function buildQueueState(
         promoted: clientReady,
         summary: lifecycle.summary,
         generated_at: lifecycle.latest_activity_at || null,
+        started_at: run.started_at,
         active_question_id: lifecycle.resume_from_question || phase,
+        current_question_id: lifecycle.resume_from_question || phase,
+        next_action: lifecycle.next_repair_question_id
+          ? `Repair question ${lifecycle.next_repair_question_id}`
+          : 'Resume the pipeline',
         run_phase: lifecycle.stage,
         publication_status: lifecycle.publication_status,
         publication_mode: lifecycle.publication_mode,
@@ -544,14 +595,19 @@ async function buildQueueState(
         repair_retry_count: lifecycle.repair_retry_count,
         repair_retry_budget: lifecycle.repair_retry_budget,
         next_repair_question_id: lifecycle.next_repair_question_id,
+        next_repair_status: lifecycle.next_repair_status,
+        next_repair_batch_id: lifecycle.next_repair_batch_id,
+        next_repair_batch_status: lifecycle.next_repair_batch_status,
         reconciliation_state: lifecycle.reconciliation_state,
       })
       continue
     }
 
     if (activeStatuses.has(run.status)) {
-      if (activeIndex === -1) {
+      const candidatePriority = isActiveRepairFocus(lifecycle) ? 2 : 1
+      if (candidatePriority > inProgressPriority || (candidatePriority === inProgressPriority && activeIndex === -1)) {
         activeIndex = index
+        inProgressPriority = candidatePriority
         inProgress = {
           entity_id: entity.entity_id,
           entity_name: entity.entity_name,
@@ -561,7 +617,12 @@ async function buildQueueState(
           promoted: clientReady,
           summary: summaryPhase,
           generated_at: lifecycle?.latest_activity_at || null,
+          started_at: run.started_at,
           active_question_id: phase,
+          current_question_id: phase,
+          next_action: lifecycle?.next_repair_question_id
+            ? `Repair question ${lifecycle.next_repair_question_id}`
+            : 'Continue the active question',
           run_phase: run.status,
           publication_status: lifecycle?.publication_status || null,
           publication_mode: lifecycle?.publication_mode || null,
@@ -569,6 +630,9 @@ async function buildQueueState(
           repair_retry_count: lifecycle?.repair_retry_count ?? null,
           repair_retry_budget: lifecycle?.repair_retry_budget ?? null,
           next_repair_question_id: lifecycle?.next_repair_question_id || null,
+          next_repair_status: lifecycle?.next_repair_status || null,
+          next_repair_batch_id: lifecycle?.next_repair_batch_id || null,
+          next_repair_batch_status: lifecycle?.next_repair_batch_status || null,
           reconciliation_state: lifecycle?.reconciliation_state || null,
         }
       }
@@ -586,6 +650,9 @@ async function buildQueueState(
         promoted: clientReady,
         summary: lifecycle?.summary || (clientReady ? 'Client-ready dossier promoted' : 'Run completed. Not promoted to a client dossier yet.'),
         generated_at: lifecycle?.latest_activity_at || run.completed_at || run.started_at || null,
+        started_at: run.started_at,
+        next_action: 'Review the completed dossier',
+        current_question_id: null,
         run_phase: run.status,
         publication_status: lifecycle?.publication_status || null,
         publication_mode: lifecycle?.publication_mode || null,
@@ -593,6 +660,9 @@ async function buildQueueState(
         repair_retry_count: lifecycle?.repair_retry_count ?? null,
         repair_retry_budget: lifecycle?.repair_retry_budget ?? null,
         next_repair_question_id: lifecycle?.next_repair_question_id || null,
+        next_repair_status: lifecycle?.next_repair_status || null,
+        next_repair_batch_id: lifecycle?.next_repair_batch_id || null,
+        next_repair_batch_status: lifecycle?.next_repair_batch_status || null,
         reconciliation_state: lifecycle?.reconciliation_state || null,
         sortTime: Number.isFinite(completedAt) ? completedAt : 0,
       })
@@ -614,6 +684,7 @@ async function buildQueueState(
       promoted: false,
       summary: 'Waiting in the serialized live loop',
       generated_at: null,
+      started_at: null,
     }))
 
   return {
@@ -637,7 +708,7 @@ async function loadPipelineRuns(entityIds: string[]): Promise<PipelineRunRecord[
     const chunk = dedupedIds.slice(index, index + chunkSize)
     const { data, error } = await supabase
       .from('entity_pipeline_runs')
-      .select('entity_id, entity_name, status, phase, completed_at, started_at, metadata')
+      .select('entity_id, canonical_entity_id, entity_name, status, phase, completed_at, started_at, metadata')
       .in('entity_id', chunk)
       .order('started_at', { ascending: false })
 
@@ -651,6 +722,35 @@ async function loadPipelineRuns(entityIds: string[]): Promise<PipelineRunRecord[
   }
 
   return runs
+}
+
+async function loadActiveRepairFocusRuns(): Promise<PipelineRunRecord[]> {
+  const { data, error } = await supabase
+    .from('entity_pipeline_runs')
+    .select('entity_id, canonical_entity_id, entity_name, status, phase, completed_at, started_at, metadata')
+    .in('status', ['queued', 'claiming', 'running', 'retrying'])
+    .order('started_at', { ascending: false })
+    .limit(50)
+
+  if (error) {
+    throw error
+  }
+
+  return (data || [])
+    .map((row) => row as PipelineRunRecord)
+    .filter((run) => {
+      const metadata = (run.metadata && typeof run.metadata === 'object') ? run.metadata as Record<string, unknown> : {}
+      const rerunMode = toText(metadata.rerun_mode).toLowerCase()
+      const repairState = toText(metadata.repair_state).toLowerCase()
+      const nextRepairStatus = toText(metadata.next_repair_status).toLowerCase()
+      const nextRepairQuestionId = toText(metadata.next_repair_question_id)
+      return (
+        rerunMode === 'question'
+        || ((repairState === 'queued' || repairState === 'repairing') && Boolean(nextRepairQuestionId))
+        || nextRepairStatus === 'queued'
+        || nextRepairStatus === 'running'
+      )
+    })
 }
 
 function buildLoopStatusFromRuns(
@@ -780,6 +880,7 @@ function computeLoopHealth(
 }
 
 function selectQueueSource(options: {
+  control: Awaited<ReturnType<typeof readPipelineControlState>>
   manifestCount: number
   progress: ScaleProgress | null
   progressPath: string | null
@@ -793,6 +894,7 @@ function selectQueueSource(options: {
   qualityCounts: Record<DossierQualityState, number>
 }): QueueSourceSelection {
   const {
+    control,
     manifestCount,
     progress,
     progressPath,
@@ -806,6 +908,9 @@ function selectQueueSource(options: {
     qualityCounts,
   } = options
 
+  const controlObservedState = toText(control.observed_state).toLowerCase()
+  const controlTransitionState = toText(control.transition_state).toLowerCase()
+  const preferLivePipelineRuns = controlObservedState === 'running' || controlTransitionState === 'starting' || controlTransitionState === 'stopping'
   const pipelineLastActivityAt = toIsoString(maxTimestamp(pipelineRuns.flatMap((run) => [run.completed_at, run.started_at])))
   const diagnosticsLastActivityAt = toIsoString(maxTimestamp([
     progress?.last_successful_canonical_run_at,
@@ -827,6 +932,7 @@ function selectQueueSource(options: {
     candidates.push({
       source: 'pipeline_runs',
       queue: runsQueue,
+      priority: preferLivePipelineRuns ? 2 : 0,
       loop_status: normalizeLoopStatus(
         buildLoopStatusFromRuns(manifestCount, pipelineRuns, clientReadyCount, progress),
         'pipeline_runs',
@@ -842,6 +948,7 @@ function selectQueueSource(options: {
     candidates.push({
       source: 'diagnostics',
       queue: diagnosticsQueue,
+      priority: 0,
       loop_status: normalizeLoopStatus(
         buildLoopStatusFromProgress(manifestCount, progress, clientReadyCount, diagnosticsLastActivityAt, qualityCounts),
         'diagnostics',
@@ -857,13 +964,24 @@ function selectQueueSource(options: {
     candidates.push({
       source: 'snapshot',
       queue: snapshotQueue,
+      priority: 0,
       loop_status: normalizeLoopStatus(snapshotLoopStatus, 'snapshot', clientReadyCount, snapshotLastActivityAt, qualityCounts),
       last_activity_at: snapshotLastActivityAt,
     })
   }
 
   const selectedSource = candidates
-    .sort((left, right) => (parseTimestamp(right.last_activity_at) || 0) - (parseTimestamp(left.last_activity_at) || 0))[0]
+    .sort((left, right) => {
+      const priorityDelta = (right.priority || 0) - (left.priority || 0)
+      if (priorityDelta !== 0) {
+        return priorityDelta
+      }
+      const repairFocusDelta = Number(queueHasActiveRepairFocus(right.queue)) - Number(queueHasActiveRepairFocus(left.queue))
+      if (repairFocusDelta !== 0) {
+        return repairFocusDelta
+      }
+      return (parseTimestamp(right.last_activity_at) || 0) - (parseTimestamp(left.last_activity_at) || 0)
+    })[0]
 
   if (selectedSource) {
     return {
@@ -922,6 +1040,7 @@ async function buildQueueStateFromDiagnostics(
   const terminalPhases = new Set(['completed', 'failed'])
   let activeIndex = -1
   let highestMaterializedIndex = -1
+  let inProgressPriority = -1
   const completed: Array<QueueEntityRecord & { sortTime: number }> = []
   let inProgress: QueueEntityRecord | null = null
   const resumeNeeded: QueueEntityRecord[] = []
@@ -957,6 +1076,8 @@ async function buildQueueStateFromDiagnostics(
         summary: lifecycle.summary,
         generated_at: lifecycle.latest_activity_at || null,
         active_question_id: state.active_question_id ? toText(state.active_question_id) : null,
+        current_question_id: state.active_question_id ? toText(state.active_question_id) : null,
+        next_action: state.active_question_id ? `Repair question ${state.active_question_id}` : 'Resume the pipeline',
         run_phase: runPhase,
         publication_status: lifecycle.publication_status,
         publication_mode: lifecycle.publication_mode,
@@ -964,31 +1085,45 @@ async function buildQueueStateFromDiagnostics(
         repair_retry_count: lifecycle.repair_retry_count,
         repair_retry_budget: lifecycle.repair_retry_budget,
         next_repair_question_id: lifecycle.next_repair_question_id,
+        next_repair_status: lifecycle.next_repair_status,
+        next_repair_batch_id: lifecycle.next_repair_batch_id,
+        next_repair_batch_status: lifecycle.next_repair_batch_status,
         reconciliation_state: lifecycle.reconciliation_state,
       })
       continue
     }
 
     if (runPhase && !terminalPhases.has(runPhase)) {
-      activeIndex = index
-      inProgress = {
-        entity_id: entity.entity_id,
-        entity_name: entity.entity_name,
-        entity_type: entity.entity_type,
-        state: 'in_progress',
-        client_ready: clientReady,
-        promoted: clientReady,
-        summary: lifecycle?.summary || (activeQuestionId ? `Running ${activeQuestionId}` : 'Canonical dossier run in progress'),
-        generated_at: lifecycle?.latest_activity_at || null,
-        active_question_id: activeQuestionId,
-        run_phase: runPhase,
-        publication_status: lifecycle?.publication_status || null,
-        publication_mode: lifecycle?.publication_mode || null,
-        repair_state: lifecycle?.repair_state || null,
-        repair_retry_count: lifecycle?.repair_retry_count ?? null,
-        repair_retry_budget: lifecycle?.repair_retry_budget ?? null,
-        next_repair_question_id: lifecycle?.next_repair_question_id || null,
-        reconciliation_state: lifecycle?.reconciliation_state || null,
+      const candidatePriority = isActiveRepairFocus(lifecycle) ? 2 : 1
+      if (candidatePriority > inProgressPriority || (candidatePriority === inProgressPriority && activeIndex === -1)) {
+        activeIndex = index
+        inProgressPriority = candidatePriority
+        inProgress = {
+          entity_id: entity.entity_id,
+          entity_name: entity.entity_name,
+          entity_type: entity.entity_type,
+          state: 'in_progress',
+          client_ready: clientReady,
+          promoted: clientReady,
+          summary: lifecycle?.summary || (activeQuestionId ? `Running ${activeQuestionId}` : 'Canonical dossier run in progress'),
+          generated_at: lifecycle?.latest_activity_at || null,
+          active_question_id: activeQuestionId,
+          current_question_id: activeQuestionId,
+          next_action: activeQuestionId
+            ? `Repair question ${activeQuestionId}`
+            : 'Continue the active question',
+          run_phase: runPhase,
+          publication_status: lifecycle?.publication_status || null,
+          publication_mode: lifecycle?.publication_mode || null,
+          repair_state: lifecycle?.repair_state || null,
+          repair_retry_count: lifecycle?.repair_retry_count ?? null,
+          repair_retry_budget: lifecycle?.repair_retry_budget ?? null,
+          next_repair_question_id: lifecycle?.next_repair_question_id || null,
+          next_repair_status: lifecycle?.next_repair_status || null,
+          next_repair_batch_id: lifecycle?.next_repair_batch_id || null,
+          next_repair_batch_status: lifecycle?.next_repair_batch_status || null,
+          reconciliation_state: lifecycle?.reconciliation_state || null,
+        }
       }
       continue
     }
@@ -1004,6 +1139,8 @@ async function buildQueueStateFromDiagnostics(
         promoted: clientReady,
         summary: lifecycle?.summary || (clientReady ? 'Client-ready dossier promoted' : 'Run completed. Not promoted to a client dossier yet.'),
         generated_at: lifecycle?.latest_activity_at || new Date(mtimeMs).toISOString(),
+        current_question_id: null,
+        next_action: 'Review the completed dossier',
         run_phase: runPhase,
         publication_status: lifecycle?.publication_status || null,
         publication_mode: lifecycle?.publication_mode || null,
@@ -1011,6 +1148,9 @@ async function buildQueueStateFromDiagnostics(
         repair_retry_count: lifecycle?.repair_retry_count ?? null,
         repair_retry_budget: lifecycle?.repair_retry_budget ?? null,
         next_repair_question_id: lifecycle?.next_repair_question_id || null,
+        next_repair_status: lifecycle?.next_repair_status || null,
+        next_repair_batch_id: lifecycle?.next_repair_batch_id || null,
+        next_repair_batch_status: lifecycle?.next_repair_batch_status || null,
         reconciliation_state: lifecycle?.reconciliation_state || null,
         sortTime: mtimeMs,
       })
@@ -1044,6 +1184,11 @@ async function buildQueueStateFromDiagnostics(
 
 export async function buildHomeQueueDashboardPayload(options: BuildOptions = {}): Promise<HomeQueueDashboardPayload> {
   const appRoot = options.appRoot || process.cwd()
+  const includeClientReadyDossiers = options.includeClientReadyDossiers ?? true
+  const includeRfpCards = options.includeRfpCards ?? true
+  const includeSalesSummary = options.includeSalesSummary ?? true
+  const includeDossierQuality = options.includeDossierQuality ?? true
+  const includeRolloutProofSet = options.includeRolloutProofSet ?? true
   const diagnosticsRoot = path.join(appRoot, 'tmp', 'question-first-diagnostics')
   const progressPath = latestFile(diagnosticsRoot, 'question_first_scale_progress.json')
   const progress = (progressPath ? tryReadJson(progressPath) : null) as ScaleProgress | null
@@ -1054,14 +1199,24 @@ export async function buildHomeQueueDashboardPayload(options: BuildOptions = {})
   const manifestEntities = Array.isArray(manifestPayload?.entities) ? manifestPayload.entities as ManifestEntity[] : []
   const dossierRoot = path.join(appRoot, 'backend', 'data', 'dossiers', 'question_first')
   const canonicalEntities = await getCanonicalEntitiesSnapshot()
-  const { cards, sales, ids } = buildClientReadyDossiersStore(dossierRoot, canonicalEntities)
-  const dossierQuality = await buildDossierQualityOverview(
-    Array.from(new Set([dossierRoot, outputRoot].filter((value) => existsSync(value)))),
-    canonicalEntities,
-  )
-  const rolloutProofSet = await buildRolloutProofSet(canonicalEntities)
-  const rfpCards = options.tendersFetcher ? await options.tendersFetcher() : []
+  const clientReadyStore = includeClientReadyDossiers || includeSalesSummary
+    ? buildClientReadyDossiersStore(dossierRoot, canonicalEntities)
+    : { cards: [] as ClientReadyDossierCard[], sales: [] as SalesSummaryItem[], ids: new Set<string>() }
+  const { cards, sales, ids } = clientReadyStore
+  const dossierQuality = includeDossierQuality
+    ? await buildDossierQualityOverview(
+        Array.from(new Set([dossierRoot, outputRoot].filter((value) => existsSync(value)))),
+        canonicalEntities,
+      )
+    : {
+        counts: { ...EMPTY_QUALITY_COUNTS },
+        incomplete_entities: [] as DossierQualityCard[],
+      }
+  const rolloutProofSet = includeRolloutProofSet ? await buildRolloutProofSet(canonicalEntities) : []
+  const rfpCards = includeRfpCards && options.tendersFetcher ? await options.tendersFetcher() : []
+  const control = await readPipelineControlState()
   let pipelineRuns: PipelineRunRecord[] = []
+  let activeRepairRuns: PipelineRunRecord[] = []
 
   try {
     pipelineRuns = await loadPipelineRuns(manifestEntities.map((entity) => entity.entity_id))
@@ -1069,17 +1224,39 @@ export async function buildHomeQueueDashboardPayload(options: BuildOptions = {})
     pipelineRuns = []
   }
 
-  const queue = pipelineRuns.length > 0
-    ? await buildQueueState(manifestEntities, pipelineRuns, ids)
-    : await buildQueueStateFromDiagnostics(outputRoot, manifestEntities, ids)
-  const diagnosticsQueue = await buildQueueStateFromDiagnostics(outputRoot, manifestEntities, ids)
+  try {
+    activeRepairRuns = await loadActiveRepairFocusRuns()
+  } catch {
+    activeRepairRuns = []
+  }
+
+  const dashboardEntities = [
+    ...manifestEntities,
+    ...activeRepairRuns
+      .filter((run) => !manifestEntities.some((entity) => entity.entity_id === run.entity_id))
+      .map((run) => {
+        const metadata = (run.metadata && typeof run.metadata === 'object') ? run.metadata as Record<string, unknown> : {}
+        return {
+          entity_id: run.entity_id,
+          entity_name: run.entity_name,
+          entity_type: toText(metadata.entity_type) || 'UNKNOWN',
+        }
+      }),
+  ]
+  const allPipelineRuns = [...pipelineRuns, ...activeRepairRuns]
+
+  const queue = allPipelineRuns.length > 0
+    ? await buildQueueState(dashboardEntities, allPipelineRuns, ids)
+    : await buildQueueStateFromDiagnostics(outputRoot, dashboardEntities, ids)
+  const diagnosticsQueue = await buildQueueStateFromDiagnostics(outputRoot, dashboardEntities, ids)
   const publishedQueue = liveQueueSnapshot?.queue
   const publishedLoopStatus = liveQueueSnapshot?.loop_status
   const selectedSource = selectQueueSource({
+    control,
     manifestCount: manifestEntities.length,
     progress,
     progressPath,
-    pipelineRuns,
+    pipelineRuns: allPipelineRuns,
     diagnosticsQueue,
     runsQueue: queue,
     snapshotQueue: publishedQueue,
@@ -1103,13 +1280,14 @@ export async function buildHomeQueueDashboardPayload(options: BuildOptions = {})
   }
 
   return {
+    control,
     loop_status: selectedSource.loop_status,
     queue: selectedSource.queue,
-    client_ready_dossiers: cards.slice(0, 6),
+    client_ready_dossiers: includeClientReadyDossiers ? cards.slice(0, 6) : [],
     rfp_cards: rfpCards.slice(0, 6),
     sales_summary: {
-      status: sales.length > 0 ? 'available' : 'empty',
-      highlights: sales.slice(0, 6),
+      status: includeSalesSummary && sales.length > 0 ? 'available' : 'empty',
+      highlights: includeSalesSummary ? sales.slice(0, 6) : [],
     },
     dossier_quality: dossierQuality,
     rollout_proof_set: rolloutProofSet,
