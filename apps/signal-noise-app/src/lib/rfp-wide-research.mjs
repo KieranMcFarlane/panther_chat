@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process'
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 
@@ -72,7 +73,7 @@ export function normalizeWideRfpResearchBatch(input) {
 }
 
 export async function writeWideRfpResearchArtifact(input) {
-  const outputDir = toText(input?.outputDir) || join(process.cwd(), 'backend', 'data', 'discovery_lanes', 'wide_rfp_research')
+  const outputDir = toText(input?.outputDir) || resolvePrimaryWideRfpResearchOutputDir()
   const batch = input?.batch || normalizeWideRfpResearchBatch({
     run_id: input?.run_id || `wide-rfp-${Date.now()}`,
     opportunities: [],
@@ -88,21 +89,31 @@ export async function writeWideRfpResearchArtifact(input) {
 }
 
 export async function readLatestWideRfpResearchArtifact(input) {
-  const outputDir = toText(input?.outputDir) || join(process.cwd(), 'backend', 'data', 'discovery_lanes', 'wide_rfp_research')
-
   try {
-    const entries = await readdir(outputDir, { withFileTypes: true })
     const candidates = []
+    const seen = new Set()
 
-    for (const entry of entries) {
-      if (!entry.isFile() || !entry.name.startsWith('wide_rfp_research_') || !entry.name.endsWith('.json')) continue
-      const filePath = join(outputDir, entry.name)
-      const fileStat = await readFile(filePath, 'utf8')
-      candidates.push({
-        filePath,
-        generatedAt: extractGeneratedAt(fileStat),
-        hasSignal: hasWideResearchSignal(parseJson(fileStat)),
-      })
+    for (const outputDir of resolveWideRfpResearchSearchDirs(input)) {
+      let entries
+      try {
+        entries = await readdir(outputDir, { withFileTypes: true })
+      } catch {
+        continue
+      }
+
+      for (const entry of entries) {
+        if (!entry.isFile() || !entry.name.startsWith('wide_rfp_research_') || !entry.name.endsWith('.json')) continue
+        const filePath = join(outputDir, entry.name)
+        if (seen.has(filePath)) continue
+        seen.add(filePath)
+
+        const fileStat = await readFile(filePath, 'utf8')
+        candidates.push({
+          filePath,
+          generatedAt: extractGeneratedAt(fileStat),
+          hasSignal: hasWideResearchSignal(parseJson(fileStat)),
+        })
+      }
     }
 
     candidates.sort((left, right) => String(right.generatedAt || '').localeCompare(String(left.generatedAt || '')))
@@ -121,6 +132,73 @@ export async function readLatestWideRfpResearchArtifact(input) {
     }
   } catch {
     return null
+  }
+}
+
+function resolvePrimaryWideRfpResearchOutputDir() {
+  const envDir = toText(process.env.RFP_WIDE_RESEARCH_CACHE_DIR)
+  if (envDir) return envDir
+
+  const gitCommonDir = resolveGitCommonDir()
+  if (gitCommonDir) {
+    return join(gitCommonDir, 'rfp-wide-research')
+  }
+
+  return join(process.cwd(), 'backend', 'data', 'discovery_lanes', 'wide_rfp_research')
+}
+
+function resolveWideRfpResearchSearchDirs(input) {
+  const dirs = new Set()
+
+  const explicitDir = toText(input?.outputDir)
+  if (explicitDir) {
+    dirs.add(explicitDir)
+  }
+
+  dirs.add(resolvePrimaryWideRfpResearchOutputDir())
+  dirs.add(join(process.cwd(), 'backend', 'data', 'discovery_lanes', 'wide_rfp_research'))
+
+  for (const worktreeRoot of resolveGitWorktreeRoots()) {
+    dirs.add(join(worktreeRoot, 'apps', 'signal-noise-app', 'backend', 'data', 'discovery_lanes', 'wide_rfp_research'))
+    dirs.add(join(worktreeRoot, 'backend', 'data', 'discovery_lanes', 'wide_rfp_research'))
+  }
+
+  return Array.from(dirs)
+}
+
+function resolveGitCommonDir() {
+  try {
+    const raw = execFileSync('git', ['rev-parse', '--git-common-dir'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim()
+
+    if (!raw) return null
+    return raw.startsWith('/') ? raw : join(process.cwd(), raw)
+  } catch {
+    return null
+  }
+}
+
+function resolveGitWorktreeRoots() {
+  try {
+    const raw = execFileSync('git', ['worktree', 'list', '--porcelain'], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    })
+
+    const roots = []
+    for (const line of raw.split('\n')) {
+      if (!line.startsWith('worktree ')) continue
+      const root = line.slice('worktree '.length).trim()
+      if (root) roots.push(root)
+    }
+
+    return roots
+  } catch {
+    return []
   }
 }
 

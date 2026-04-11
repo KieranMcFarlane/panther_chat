@@ -104,3 +104,10 @@ test('readLatestWideRfpResearchArtifact prefers the latest non-empty batch', asy
   assert.equal(latest?.batch?.lane_label, 'Web Platforms')
   assert.equal(latest?.batch?.opportunities?.length, 1)
 })
+
+test('readLatestWideRfpResearchArtifact discovers the shared worktree cache by default', async () => {
+  const latest = await readLatestWideRfpResearchArtifact({})
+
+  assert.equal(latest?.batch?.run_id, 'yellow-panther-rfp-2026-04-11T005900Z')
+  assert.match(String(latest?.filePath || ''), /wide_rfp_research_yellow-panther-rfp-2026-04-11T005900Z\.json/)
+})
