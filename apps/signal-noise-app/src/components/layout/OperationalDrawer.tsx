@@ -14,7 +14,6 @@ import {
   refreshOperationalDrilldownPayload,
   type OperationalDrilldownPayload,
 } from '@/lib/operational-drilldown-client'
-import { deriveOperationalQueueCandidates, type OperationalQueueCandidate } from '@/lib/operational-queue-candidates'
 
 interface OperationalDrawerProps {
   open: boolean
@@ -199,6 +198,7 @@ function EntityListCard({
 }
 
 function FocusCard({
+  entityId,
   title,
   subtitle,
   detail,
@@ -211,7 +211,10 @@ function FocusCard({
   badge,
   lifecycleLabel,
   movementState,
+  onQueueEntity,
+  isQueueingBatch,
 }: {
+  entityId: string | null
   title: string
   subtitle: string
   detail: string
@@ -224,6 +227,8 @@ function FocusCard({
   badge: string | null
   lifecycleLabel: string | null
   movementState: string | null
+  onQueueEntity: ((entityId: string) => void) | null
+  isQueueingBatch: boolean
 }) {
   return (
     <div className="rounded-xl border border-white/10 bg-black/25 p-4">
@@ -291,6 +296,20 @@ function FocusCard({
           </Link>
         </div>
       ) : null}
+      {entityId && movementState !== 'moving' && onQueueEntity ? (
+        <div className="mt-4">
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            className="border-custom-border"
+            onClick={() => onQueueEntity(entityId)}
+            disabled={isQueueingBatch}
+          >
+            Queue this entity
+          </Button>
+        </div>
+      ) : null}
     </div>
   )
 }
@@ -300,8 +319,6 @@ export function OperationalDrawer({ open, activeSection, onSelectSection }: Oper
   const [isLoading, setIsLoading] = useState(false)
   const [loadError, setLoadError] = useState<string | null>(null)
   const [isQueueingBatch, setIsQueueingBatch] = useState(false)
-  const [queueCandidates, setQueueCandidates] = useState<OperationalQueueCandidate[]>([])
-  const [selectedQueueCandidateId, setSelectedQueueCandidateId] = useState('')
 
   useEffect(() => {
     if (!open) return
@@ -334,31 +351,44 @@ export function OperationalDrawer({ open, activeSection, onSelectSection }: Oper
 
     loadData()
 
-    void fetch('/api/home/queue-dashboard', { cache: 'no-store' })
-      .then(async (response) => {
-        if (!response.ok) return null
-        return response.json()
-      })
-      .then((payload) => {
-        if (cancelled || !payload) return
-        const candidates = deriveOperationalQueueCandidates(payload)
-        setQueueCandidates(candidates)
-        setSelectedQueueCandidateId((current) => current || candidates[0]?.browser_entity_id || candidates[0]?.entity_id || '')
-      })
-      .catch(() => {
-        // keep the current drawer payload visible if the queue source fails
-      })
-
     return () => {
       cancelled = true
     }
   }, [open])
 
+  async function queueEntity(entityId: string, rerunReason: string) {
+    if (!entityId) return
+    setIsQueueingBatch(true)
+    try {
+      const response = await fetch(`/api/entities/${encodeURIComponent(entityId)}/dossier/rerun`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          mode: 'full',
+          rerun_reason: rerunReason,
+          cascade_dependents: true,
+        }),
+      })
+      if (!response.ok) {
+        throw new Error(`Failed to queue entity rerun (${response.status})`)
+      }
+      const payload = await refreshOperationalDrilldownPayload()
+      setDashboard(payload as DashboardPayload)
+    } catch {
+      // keep the current drilldown visible if the queue request fails
+    } finally {
+      setIsQueueingBatch(false)
+    }
+  }
+
   const runningItems = useMemo(() => {
     const running = Array.isArray(dashboard.queue.running_entities) ? dashboard.queue.running_entities : []
     const resumeNeeded = dashboard.queue.resume_needed_entities
-      const items = running.map((inProgress) => ({
+    const items = running.map((inProgress) => ({
       key: `running-${inProgress.entity_id}-${inProgress.queue_position ?? 'now'}`,
+      entity_id: inProgress.entity_id,
       title: inProgress.entity_name,
       subtitle: inProgress.entity_type,
       detail: toText(inProgress.summary) || 'Pipeline execution is active.',
@@ -385,6 +415,7 @@ export function OperationalDrawer({ open, activeSection, onSelectSection }: Oper
     for (const item of resumeNeeded) {
       items.push({
         key: `resume-${item.entity_id}`,
+        entity_id: item.entity_id,
         title: item.entity_name,
         subtitle: item.entity_type,
         detail: toText(item.summary) || 'Resume is required.',
@@ -418,6 +449,7 @@ export function OperationalDrawer({ open, activeSection, onSelectSection }: Oper
       .slice(0, 8)
       .map((item) => ({
         key: `blocked-${item.entity_id}`,
+        entity_id: item.entity_id,
         title: item.entity_name,
         subtitle: item.entity_type,
       detail: toText(item.quality_summary) || 'Blocked dossier.',
@@ -439,6 +471,7 @@ export function OperationalDrawer({ open, activeSection, onSelectSection }: Oper
   const completedItems = useMemo(() => {
     return dashboard.queue.completed_entities.slice(0, 8).map((item) => ({
       key: `completed-${item.entity_id}`,
+      entity_id: item.entity_id,
       title: item.entity_name,
       subtitle: item.entity_type,
       detail: toText(item.summary) || 'Completed recently.',
@@ -460,6 +493,7 @@ export function OperationalDrawer({ open, activeSection, onSelectSection }: Oper
   const entityItems = useMemo(() => {
     return dashboard.queue.upcoming_entities.slice(0, 8).map((item) => ({
       key: `entity-${item.entity_id}`,
+      entity_id: item.entity_id,
       title: item.entity_name,
       subtitle: item.entity_type,
       detail: toText(item.summary) || 'Waiting in the serialized live loop.',
@@ -495,51 +529,12 @@ export function OperationalDrawer({ open, activeSection, onSelectSection }: Oper
         : activeSection === 'completed'
           ? (completedItems[0] ?? null)
           : (entityItems[0] ?? null)
-  const nextUpcomingEntity = dashboard.queue.upcoming_entities?.[0] ?? null
-  const selectedQueueCandidate = queueCandidates.find((item) => item.browser_entity_id === selectedQueueCandidateId || item.entity_id === selectedQueueCandidateId) ?? null
   const hasActiveEntity = Boolean(dashboard.queue?.in_progress_entity)
   const intakeStatusLabel = dashboard.control?.is_paused
     ? 'Pipeline intake paused'
     : hasActiveEntity
       ? 'Pipeline intake running'
       : 'Pipeline intake running - waiting for claimable work'
-
-  async function queueEntity(entityId: string, rerunReason: string) {
-    if (!entityId) return
-    setIsQueueingBatch(true)
-    try {
-      const response = await fetch(`/api/entities/${encodeURIComponent(entityId)}/dossier/rerun`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          mode: 'full',
-          rerun_reason: rerunReason,
-          cascade_dependents: true,
-        }),
-      })
-      if (!response.ok) {
-        throw new Error(`Failed to queue next batch (${response.status})`)
-      }
-      const payload = await refreshOperationalDrilldownPayload()
-      setDashboard(payload as DashboardPayload)
-    } catch {
-      // leave the current drilldown visible if the queue request fails
-    } finally {
-      setIsQueueingBatch(false)
-    }
-  }
-
-  async function queueSelectedEntity() {
-    if (!selectedQueueCandidate) return
-    await queueEntity(selectedQueueCandidate.browser_entity_id || selectedQueueCandidate.entity_id, 'Queued from Operational Snapshot selector')
-  }
-
-  async function queueNextBatch() {
-    if (!nextUpcomingEntity?.entity_id) return
-    await queueEntity(nextUpcomingEntity.entity_id, 'Queued from Operational Snapshot')
-  }
 
   return (
     <Card className="border-custom-border bg-custom-box shadow-sm">
@@ -577,53 +572,11 @@ export function OperationalDrawer({ open, activeSection, onSelectSection }: Oper
           {intakeStatusLabel}
           {dashboard.control?.pause_reason ? ` · ${dashboard.control.pause_reason}` : ''}
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <select
-            aria-label="Queue entity"
-            value={selectedQueueCandidateId}
-            onChange={(event) => setSelectedQueueCandidateId(event.target.value)}
-            className="h-9 min-w-[12rem] rounded-md border border-custom-border bg-custom-box/70 px-2 text-xs text-white outline-none"
-          >
-            {queueCandidates.length > 0 ? queueCandidates.map((candidate) => (
-              <option key={candidate.browser_entity_id} value={candidate.browser_entity_id}>
-                {candidate.label}
-              </option>
-            )) : (
-              <option value="">No queueable entities</option>
-            )}
-          </select>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="border-custom-border"
-            onClick={() => void queueSelectedEntity()}
-            disabled={isQueueingBatch || !selectedQueueCandidate}
-          >
-            Queue selected
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="border-custom-border"
-            onClick={queueNextBatch}
-            disabled={isQueueingBatch || !nextUpcomingEntity?.entity_id}
-          >
-            Queue next batch
-          </Button>
-          {nextUpcomingEntity?.entity_id ? (
-            <span className="text-xs text-slate-400">
-              Next up: {nextUpcomingEntity.entity_name}
-            </span>
-          ) : (
-            <span className="text-xs text-slate-400">No queued entity available to trigger.</span>
-          )}
-        </div>
       </CardHeader>
       <CardContent className="max-h-[calc(100vh-14rem)] space-y-4 overflow-y-auto pr-2">
         {focusEntity ? (
           <FocusCard
+            entityId={focusEntity.entity_id ?? null}
             title={focusEntity.title}
             subtitle={focusEntity.subtitle}
             detail={focusEntity.detail}
@@ -636,6 +589,8 @@ export function OperationalDrawer({ open, activeSection, onSelectSection }: Oper
             badge={focusEntity.badge ?? null}
             lifecycleLabel={focusEntity.lifecycle_label ?? null}
             movementState={focusEntity.movement_state ?? null}
+            onQueueEntity={queueEntity}
+            isQueueingBatch={isQueueingBatch}
           />
         ) : null}
         <div className="grid gap-4 lg:grid-cols-4">

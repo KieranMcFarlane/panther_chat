@@ -234,6 +234,7 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
               <div className="min-w-0 flex-1">
                 <OperationalStatusStrip
                   drawerOpen={drawerOpen}
+                  activeSection={activeOpsSection}
                   onToggleDrawer={() => setDrawerOpen((current) => !current)}
                 />
               </div>
