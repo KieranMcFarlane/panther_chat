@@ -33,6 +33,24 @@ import { ScoutPanel } from '@/components/rfp/ScoutPanel';
 
 const EMPTY_FEED_MESSAGE = 'No production-backed opportunities are available right now.';
 
+function getDefaultWideRfpSeedQuery(focusArea: string): string {
+  const normalizedFocusArea = focusArea.trim().toLowerCase()
+
+  if (['web', 'web-platform', 'web-platforms', 'platform', 'platforms'].includes(normalizedFocusArea)) {
+    return 'Yellow Panther web-platform RFP discovery'
+  }
+
+  if (['fan-engagement', 'fan engagement', 'engagement', 'fans'].includes(normalizedFocusArea)) {
+    return 'Yellow Panther fan-engagement RFP discovery'
+  }
+
+  if (['crm', 'customer-relationship-management', 'customer relationship management', 'lifecycle'].includes(normalizedFocusArea)) {
+    return 'Yellow Panther CRM RFP discovery'
+  }
+
+  return 'Yellow Panther web-platform RFP discovery'
+}
+
 export default function TendersPage() {
   const [opportunities, setOpportunities] = useState([]);
   const [detectedRFPs, setDetectedRFPs] = useState([]);
@@ -150,12 +168,12 @@ const [filterSource, setFilterSource] = useState('all');
   // Check A2A system status
   const checkA2AStatus = async () => {
     try {
-      const response = await fetch('/api/a2a-system/start');
+      const response = await fetch('/api/rfp-wide-research');
       const data = await response.json();
       
       if (data.success) {
-        setA2aStatus(data.status);
-        setA2aRunning(data.apiStatus?.isCurrentlyRunning || false);
+        setA2aStatus(data.data?.summary || data.status || null);
+        setA2aRunning(false);
       }
     } catch (error) {
       console.error('Failed to check A2A status:', error);
@@ -163,63 +181,42 @@ const [filterSource, setFilterSource] = useState('all');
   };
 
   // Start A2A system
-  const startA2A = async () => {
+  const startA2A = async (focusArea = 'web-platforms') => {
     if (a2aRunning) {
-      console.log('A2A system is already running');
+      console.log('Wide research run is already in progress');
       return;
     }
 
     try {
       setA2aRunning(true);
       
-      const response = await fetch('/api/a2a-system/start', {
+      const response = await fetch('/api/rfp-wide-research', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          entityLimit: 50,
-          startImmediate: true,
-          monitoringMode: 'discovery'
+          seedQuery: getDefaultWideRfpSeedQuery(focusArea),
+          focusArea,
+          currentIntakePage: '/tenders',
+          currentRfpPage: '/rfps',
         })
       });
 
       const result = await response.json();
       
       if (result.success) {
-        console.log('🚀 A2A system started successfully');
-        setA2aStatus('running');
-        
-        // Check status every 30 seconds
-        const statusInterval = setInterval(async () => {
-          const statusResponse = await fetch('/api/a2a-system/start');
-          const statusData = await statusResponse.json();
-          
-          if (statusData.success) {
-            setA2aStatus(statusData.status);
-            
-            // Stop checking when system is no longer running
-            if (!statusData.apiStatus?.isCurrentlyRunning) {
-              clearInterval(statusInterval);
-              setA2aRunning(false);
-              // Reload detected RFPs to get new opportunities
-              window.location.reload();
-            }
-          }
-        }, 30000);
-
-        // Auto-stop checking after 10 minutes
-        setTimeout(() => {
-          clearInterval(statusInterval);
-          setA2aRunning(false);
-        }, 10 * 60 * 1000);
+        console.log('🚀 Wide research completed successfully');
+        setA2aStatus(result.data?.summary || 'completed');
+        setA2aRunning(false);
+        window.location.href = '/rfps';
 
       } else {
-        console.error('Failed to start A2A system:', result);
+        console.error('Failed to run wide research:', result);
         setA2aRunning(false);
       }
     } catch (error) {
-      console.error('Error starting A2A system:', error);
+      console.error('Error running wide research:', error);
       setA2aRunning(false);
     }
   };
@@ -597,11 +594,11 @@ const [filterSource, setFilterSource] = useState('all');
   if (loading) {
     return (
       <AppPageShell size="wide">
-        <AppPageHeader
-          eyebrow="Raw feed"
-          title="Raw tenders feed"
-          description="Loading the production-backed intake feed for RFP and tender monitoring."
-        />
+          <AppPageHeader
+            eyebrow="Live Intake Feed"
+            title="Raw tenders feed"
+            description="Loading the production-backed intake feed for RFP and tender monitoring."
+          />
         <AppPageBody>
           <div className="flex min-h-[16rem] items-center justify-center rounded-2xl border border-border/70 bg-card/70">
             <div className="text-center">
@@ -622,11 +619,11 @@ const [filterSource, setFilterSource] = useState('all');
   if (opportunities.length === 0) {
     return (
       <AppPageShell size="wide">
-        <AppPageHeader
-          eyebrow="Raw feed"
-          title="Raw tenders feed"
-          description="Internal raw intake feed from the unified RFP analysis system."
-        />
+          <AppPageHeader
+            eyebrow="Live Intake Feed"
+            title="Raw tenders feed"
+            description="Internal raw intake feed from the unified RFP analysis system."
+          />
         <AppPageBody>
           <div className="flex min-h-[16rem] items-center justify-center rounded-2xl border border-border/70 bg-card/70">
             <div className="text-center max-w-md">
@@ -647,11 +644,11 @@ const [filterSource, setFilterSource] = useState('all');
   }
 
   return (
-    <AppPageShell size="wide">
-      <AppPageHeader
-        eyebrow="Raw feed"
-        title="RFP&apos;s & Tenders"
-        description="Freshly found procurement items and early signals in one place. This is an internal intake surface before anything is curated into the client-facing opportunity shortlist."
+        <AppPageShell size="wide">
+          <AppPageHeader
+            eyebrow="Live Intake Feed"
+            title="RFP&apos;s & Tenders"
+            description="Freshly found procurement items and early signals in one place. This is an internal intake surface before anything is curated into the client-facing opportunity shortlist."
         actions={
           <>
             <Button asChild variant="outline" size="sm">

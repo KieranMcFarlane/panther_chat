@@ -1,25 +1,70 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useMemo, useState } from 'react'
-import { AlertCircle, ArrowUpRight, Building2, Calendar, ExternalLink, Filter, Loader2, MapPin, Sparkles, Target } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { ArrowUpRight, Building2, Calendar, ExternalLink, Sparkles, Target } from 'lucide-react'
 
 import { AppPageBody, AppPageHeader, AppPageShell } from '@/components/layout/AppPageShell'
-import { FacetFilterBar, type FacetFilterField } from '@/components/filters/FacetFilterBar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Command, CommandInput } from '@/components/ui/command'
-import { buildCanonicalOpportunitySearchText, matchesCanonicalSearch } from '@/lib/canonical-search'
 import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
-import { buildOpportunityFacetOptions, getOpportunityTaxonomyDisplayValues, normalizeOpportunityTaxonomy } from '@/lib/opportunity-taxonomy.mjs'
 
-type OpportunityTaxonomy = {
-  sport: string
-  competition: string
-  entity_role: string
-  opportunity_kind: string
-  theme: string
+type WideResearchOpportunity = FoundRfp & {
+  canonical_entity_id?: string | null
+  canonical_entity_name?: string | null
+}
+
+type WideResearchBatch = {
+  run_id: string
+  source: string
+  prompt: string
+  generated_at: string
+  focus_area?: string | null
+  lane_label?: string | null
+  seed_query?: string | null
+  opportunities: WideResearchOpportunity[]
+  entity_actions: Array<{
+    action: 'link' | 'create' | 'reuse'
+    organization: string
+    canonical_entity_id?: string | null
+    canonical_entity_name?: string | null
+    source_url?: string | null
+  }>
+  summary: {
+    total_opportunities: number
+    linked_entities: number
+    entities_to_create: number
+  }
+}
+
+const WIDE_RFP_RESEARCH_ENDPOINT = '/api/rfp-wide-research'
+
+function formatDeadline(value: string | null): string {
+  if (!value) return 'No deadline listed'
+  const parsed = Date.parse(value)
+  if (!Number.isFinite(parsed)) return value
+  return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(parsed))
+}
+
+function formatRunTimestamp(value: string | null): string {
+  if (!value) return 'Awaiting first Manus batch'
+  const parsed = Date.parse(value)
+  if (!Number.isFinite(parsed)) return value
+  return new Intl.DateTimeFormat('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(new Date(parsed))
+}
+
+function fitTone(score: number | null): 'default' | 'secondary' | 'outline' {
+  if (typeof score !== 'number') return 'outline'
+  if (score >= 90) return 'default'
+  return 'secondary'
 }
 
 type FoundRfp = {
@@ -33,186 +78,61 @@ type FoundRfp = {
   source_url: string | null
   entity_id: string | null
   entity_name: string | null
+  canonical_entity_id?: string | null
+  canonical_entity_name?: string | null
   location?: string | null
-  source?: string | null
-  sport?: string | null
-  competition?: string | null
-  entity_role?: string | null
-  opportunity_kind?: string | null
-  theme?: string | null
-  taxonomy?: OpportunityTaxonomy | null
-  metadata?: Record<string, unknown> | null
-}
-
-type ApiPayload = {
-  opportunities?: FoundRfp[]
-}
-
-const FOUND_RFPS_ENDPOINT = '/api/tenders?action=opportunities&limit=50&orderBy=yellow_panther_fit&orderDirection=desc&promoted_only=true'
-
-function formatDeadline(value: string | null): string {
-  if (!value) return 'No deadline listed'
-  const parsed = Date.parse(value)
-  if (!Number.isFinite(parsed)) return value
-  return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(parsed))
-}
-
-function fitTone(score: number | null): 'default' | 'secondary' | 'outline' {
-  if (typeof score !== 'number') return 'outline'
-  if (score >= 90) return 'default'
-  return 'secondary'
-}
-
-function normalizeRfp(opportunity: FoundRfp) {
-  const taxonomy = opportunity.taxonomy || normalizeOpportunityTaxonomy({
-    ...opportunity,
-    title: opportunity.title,
-    organization: opportunity.organization,
-    description: opportunity.description,
-    category: opportunity.category,
-    metadata: opportunity.metadata || undefined,
-  })
-  const displayTaxonomy = getOpportunityTaxonomyDisplayValues(taxonomy)
-
-  return {
-    ...opportunity,
-    taxonomy,
-    sport: displayTaxonomy.sport,
-    competition: displayTaxonomy.competition,
-    entity_role: displayTaxonomy.entity_role,
-    opportunity_kind: displayTaxonomy.opportunity_kind,
-    theme: displayTaxonomy.theme,
-  }
-}
-
-function getCanonicalContext(parts: Array<string | null | undefined>): string {
-  return parts
-    .map((part) => String(part || '').trim())
-    .filter(Boolean)
-    .join(' · ')
 }
 
 export default function RfpsPage() {
-  const [rfps, setRfps] = useState<ReturnType<typeof normalizeRfp>[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [query, setQuery] = useState('')
-  const [sportFilter, setSportFilter] = useState('all')
-  const [competitionFilter, setCompetitionFilter] = useState('all')
-  const [entityRoleFilter, setEntityRoleFilter] = useState('all')
-  const [opportunityKindFilter, setOpportunityKindFilter] = useState('all')
+  const [wideResearchBatch, setWideResearchBatch] = useState<WideResearchBatch | null>(null)
+  const [wideResearchLoading, setWideResearchLoading] = useState(true)
+  const [wideResearchError, setWideResearchError] = useState<string | null>(null)
 
   useEffect(() => {
     let ignore = false
 
-    async function load() {
-      setLoading(true)
-      setError(null)
+    async function loadWideResearch() {
+      setWideResearchLoading(true)
+      setWideResearchError(null)
       try {
-        const response = await fetch(FOUND_RFPS_ENDPOINT, { cache: 'no-store' })
+        const response = await fetch(WIDE_RFP_RESEARCH_ENDPOINT, { cache: 'no-store' })
         if (!response.ok) {
           throw new Error(`Request failed with ${response.status}`)
         }
-        const payload = (await response.json()) as ApiPayload
+
+        const payload = await response.json()
         if (!ignore) {
-          setRfps(Array.isArray(payload.opportunities) ? payload.opportunities.map(normalizeRfp) : [])
+          setWideResearchBatch(payload?.data || null)
         }
       } catch (err) {
         if (!ignore) {
-          setError(err instanceof Error ? err.message : 'Failed to load found RFPs')
-          setRfps([])
+          setWideResearchError(err instanceof Error ? err.message : 'Failed to load wide research output')
+          setWideResearchBatch(null)
         }
       } finally {
         if (!ignore) {
-          setLoading(false)
+          setWideResearchLoading(false)
         }
       }
     }
 
-    void load()
+    void loadWideResearch()
 
     return () => {
       ignore = true
     }
   }, [])
-
-  const filteredRfps = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase()
-    let filtered = [...rfps]
-
-    if (normalizedQuery) {
-      filtered = filtered.filter((rfp) =>
-        matchesCanonicalSearch(normalizedQuery, buildCanonicalOpportunitySearchText(rfp)),
-      )
-    }
-
-    if (sportFilter !== 'all') filtered = filtered.filter((rfp) => rfp.sport === sportFilter)
-    if (competitionFilter !== 'all') filtered = filtered.filter((rfp) => rfp.competition === competitionFilter)
-    if (entityRoleFilter !== 'all') filtered = filtered.filter((rfp) => rfp.entity_role === entityRoleFilter)
-    if (opportunityKindFilter !== 'all') filtered = filtered.filter((rfp) => rfp.opportunity_kind === opportunityKindFilter)
-    return filtered
-  }, [competitionFilter, entityRoleFilter, opportunityKindFilter, query, rfps, sportFilter])
-
-  const taxonomyFacetOptions = useMemo(() => buildOpportunityFacetOptions(rfps), [rfps])
-  const filterFields: FacetFilterField[] = [
-    {
-      key: 'sport',
-      label: 'Sport',
-      value: sportFilter,
-      placeholder: 'Sport',
-      options: taxonomyFacetOptions.sport,
-      onValueChange: setSportFilter,
-    },
-    {
-      key: 'competition',
-      label: 'Competition',
-      value: competitionFilter,
-      placeholder: 'Competition',
-      options: taxonomyFacetOptions.competition,
-      onValueChange: setCompetitionFilter,
-    },
-    {
-      key: 'entity-role',
-      label: 'Role',
-      value: entityRoleFilter,
-      placeholder: 'Role',
-      options: taxonomyFacetOptions.entity_role,
-      onValueChange: setEntityRoleFilter,
-    },
-    {
-      key: 'opportunity-kind',
-      label: 'Opportunity Kind',
-      value: opportunityKindFilter,
-      placeholder: 'Opportunity Kind',
-      options: taxonomyFacetOptions.opportunity_kind,
-      onValueChange: setOpportunityKindFilter,
-    },
-  ]
-
-  const chips = [
-    query ? { key: 'query', label: `Search: ${query}`, onRemove: () => setQuery('') } : null,
-    sportFilter !== 'all' ? { key: 'sport', label: `Sport: ${sportFilter}`, onRemove: () => setSportFilter('all') } : null,
-    competitionFilter !== 'all' ? { key: 'competition', label: `Competition: ${competitionFilter}`, onRemove: () => setCompetitionFilter('all') } : null,
-    entityRoleFilter !== 'all' ? { key: 'entity-role', label: `Role: ${entityRoleFilter}`, onRemove: () => setEntityRoleFilter('all') } : null,
-    opportunityKindFilter !== 'all' ? { key: 'opportunity-kind', label: `Opportunity Kind: ${opportunityKindFilter}`, onRemove: () => setOpportunityKindFilter('all') } : null,
-  ].filter(Boolean) as { key: string; label: string; onRemove: () => void }[]
-
-  const highFitCount = filteredRfps.filter((rfp) => Number(rfp.yellow_panther_fit || 0) >= 90).length
-
-  const resetFilters = () => {
-    setQuery('')
-    setSportFilter('all')
-    setCompetitionFilter('all')
-    setEntityRoleFilter('all')
-    setOpportunityKindFilter('all')
-  }
+  const wideResearchOpportunities = wideResearchBatch?.opportunities || []
+  const latestWideResearchGeneratedAt = wideResearchBatch?.generated_at || null
+  const canonicalEntityActions = wideResearchBatch?.entity_actions || []
+  const activeLaneLabel = wideResearchBatch?.lane_label || wideResearchBatch?.focus_area || 'Unknown lane'
 
   return (
     <AppPageShell>
       <AppPageHeader
-        eyebrow="Found RFPs"
-        title="Promoted RFP opportunities"
-        description="Only verified, promoted opportunities that survived the intake and quality filters. This is the clean operator view, not the raw tenders feed."
+        eyebrow="Canonical RFPs"
+        title="Canonical source of truth"
+        description="This surface only shows Manus wide research after canonical-first normalization and ingestion into the source of truth."
         actions={(
           <>
             <Button asChild variant="outline" size="sm">
@@ -225,165 +145,175 @@ export default function RfpsPage() {
         )}
       />
       <AppPageBody>
-        <section className="grid gap-4 md:grid-cols-3">
+        <section className="grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
           <Card className="border-border/70 bg-card/70">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Found RFPs</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-semibold text-foreground">{loading ? '...' : filteredRfps.length}</div>
-              <p className="mt-2 text-sm text-muted-foreground">Promoted and entity-linked opportunities only.</p>
-            </CardContent>
-          </Card>
-          <Card className="border-border/70 bg-card/70">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">High fit</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-semibold text-foreground">{loading ? '...' : highFitCount}</div>
-              <p className="mt-2 text-sm text-muted-foreground">Yellow Panther fit score of 90 or above.</p>
-            </CardContent>
-          </Card>
-          <Card className="border-border/70 bg-card/70">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Source policy</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="inline-flex items-center gap-2 text-sm font-medium text-foreground">
-                <Sparkles className="h-4 w-4 text-sky-400" />
-                Verified and promoted only
+            <CardHeader className="space-y-2">
+              <div className="flex items-center justify-between gap-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Latest wide research</CardTitle>
+                <Badge variant="outline">Normalized output</Badge>
               </div>
-              <p className="mt-2 text-sm text-muted-foreground">Expired, weak-fit, and unlinked items stay out of this surface.</p>
+              <div className="text-lg font-semibold text-foreground">
+                {wideResearchLoading ? 'Loading Manus output…' : wideResearchBatch ? `Run ${wideResearchBatch.run_id}` : 'No wide research run yet'}
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Manus-wide discovery output lands here after canonical-first reconciliation, normalization, and ingestion.
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {wideResearchBatch ? (
+                <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                  <Badge variant="secondary">{activeLaneLabel}</Badge>
+                  <span>
+                    Last successful run:{' '}
+                    <span className="font-medium text-foreground">{formatRunTimestamp(latestWideResearchGeneratedAt)}</span>
+                  </span>
+                </div>
+              ) : null}
+              {wideResearchError ? (
+                <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 px-3 py-2 text-sm text-amber-900">
+                  {wideResearchError}
+                </div>
+              ) : null}
+              {wideResearchBatch ? (
+                <div className="grid gap-3 sm:grid-cols-3">
+                  <div className="rounded-xl border border-border/70 bg-background/70 p-3">
+                    <div className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Opportunities</div>
+                    <div className="mt-1 text-2xl font-semibold text-foreground">{wideResearchBatch.summary.total_opportunities}</div>
+                  </div>
+                  <div className="rounded-xl border border-border/70 bg-background/70 p-3">
+                    <div className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Linked</div>
+                    <div className="mt-1 text-2xl font-semibold text-foreground">{wideResearchBatch.summary.linked_entities}</div>
+                  </div>
+                  <div className="rounded-xl border border-border/70 bg-background/70 p-3">
+                    <div className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Create</div>
+                    <div className="mt-1 text-2xl font-semibold text-foreground">{wideResearchBatch.summary.entities_to_create}</div>
+                  </div>
+                </div>
+              ) : null}
+              <div className="text-sm text-muted-foreground">
+                <span className="font-medium text-foreground/80">Seed prompt:</span>{' '}
+                {wideResearchBatch?.seed_query || 'Awaiting first Manus batch'}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-border/70 bg-card/70">
+            <CardHeader className="space-y-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Canonical entity actions</CardTitle>
+              <div className="text-lg font-semibold text-foreground">Create only when missing</div>
+              <p className="text-sm text-muted-foreground">
+                Manus links to an existing canonical entity first. Only missing matches are created as new canonical source-of-truth records.
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {canonicalEntityActions.length ? (
+                canonicalEntityActions.slice(0, 4).map((action, index) => (
+                  <div key={`${action.organization}-${index}`} className="rounded-xl border border-border/70 bg-background/70 p-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="font-medium text-foreground">{action.organization}</div>
+                      <Badge variant={action.action === 'create' ? 'secondary' : 'outline'}>{action.action}</Badge>
+                    </div>
+                    <div className="mt-1 text-xs text-muted-foreground">
+                      {action.canonical_entity_name || action.canonical_entity_id || 'No canonical entity resolved yet'}
+                    </div>
+                    {action.canonical_entity_id ? (
+                      <div className="mt-2">
+                        <Button asChild variant="ghost" size="sm" className="h-8 px-0 text-xs text-blue-700 hover:bg-transparent hover:text-blue-800">
+                          <Link href={getEntityBrowserDossierHref(action.canonical_entity_id, '1') || `/entity-browser/${action.canonical_entity_id}/dossier?from=1`}>
+                            Open canonical dossier
+                            <ArrowUpRight className="ml-1 h-3.5 w-3.5" />
+                          </Link>
+                        </Button>
+                      </div>
+                    ) : null}
+                  </div>
+                ))
+              ) : (
+                <div className="rounded-xl border border-dashed border-border/70 bg-background/40 p-4 text-sm text-muted-foreground">
+                  {wideResearchLoading ? 'Waiting for the first Manus output…' : 'No canonical entity actions have been recorded yet.'}
+                </div>
+              )}
             </CardContent>
           </Card>
         </section>
 
-        <FacetFilterBar
-          searchSlot={(
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div className="space-y-1">
-                <h2 className="text-lg font-semibold text-foreground">Operator shortlist</h2>
-                <p className="text-sm text-muted-foreground">Search and filter the promoted RFP set without dropping into the raw intake feed.</p>
-              </div>
-              <Command className="w-full max-w-md overflow-visible rounded-md border border-input bg-background shadow-sm">
-                <CommandInput
-                  value={query}
-                  onValueChange={setQuery}
-                  placeholder="Search club, sport, country, league..."
-                  className="h-11 border-0 pl-2"
-                />
-              </Command>
-            </div>
-          )}
-          fields={filterFields}
-          actions={query || sportFilter !== 'all' || competitionFilter !== 'all' || entityRoleFilter !== 'all' || opportunityKindFilter !== 'all' ? [{
-            key: 'clear-filters',
-            label: 'Clear filters',
-            onClick: resetFilters,
-            variant: 'outline',
-          }] : []}
-          chips={chips}
-          status={(
-            <div className="flex items-center text-sm text-fm-light-grey">
-              <Filter className="mr-2 h-4 w-4" />
-              {filteredRfps.length} of {rfps.length}
-            </div>
-          )}
-        />
-
-        {loading ? (
-          <section className="rounded-2xl border border-border/70 bg-card/70 p-8">
-            <div className="inline-flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Loading promoted RFP opportunities…
-            </div>
-          </section>
-        ) : error ? (
-          <section className="rounded-2xl border border-rose-500/30 bg-rose-500/5 p-6">
-            <div className="flex items-start gap-3">
-              <AlertCircle className="mt-0.5 h-5 w-5 text-rose-300" />
+        {wideResearchBatch ? (
+          <section className="space-y-3">
+            <div className="flex items-center justify-between gap-3">
               <div>
-                <h2 className="text-base font-semibold text-foreground">Could not load found RFPs</h2>
-                <p className="mt-1 text-sm text-muted-foreground">{error}</p>
+                <h2 className="text-lg font-semibold text-foreground">Normalized wide research output</h2>
+                <p className="text-sm text-muted-foreground">
+                  This is the Manus batch normalized into the same operator-friendly fields used by the rest of the RFP surface.
+                </p>
               </div>
+              <Badge variant="outline">canonical-first</Badge>
             </div>
-          </section>
-        ) : filteredRfps.length === 0 ? (
-          <section className="rounded-2xl border border-border/70 bg-card/70 p-8">
-            <div className="inline-flex items-center gap-2 text-sm font-medium text-foreground">
-              <Filter className="h-4 w-4 text-muted-foreground" />
-              No promoted RFPs match the current filter
+            <div className="grid gap-4 xl:grid-cols-2">
+              {wideResearchOpportunities.map((rfp) => (
+                <Card key={rfp.id} className="border-border/70 bg-card/70 shadow-sm">
+                  <CardHeader className="space-y-3">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div className="space-y-2">
+                        <CardTitle className="text-xl leading-tight text-foreground">{rfp.title}</CardTitle>
+                        <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                          <span className="inline-flex items-center gap-1.5">
+                            <Building2 className="h-4 w-4" />
+                            {rfp.organization}
+                          </span>
+                          {rfp.canonical_entity_name ? (
+                            <span className="inline-flex items-center gap-1.5">
+                              <Sparkles className="h-4 w-4" />
+                              {rfp.canonical_entity_name}
+                            </span>
+                          ) : null}
+                        </div>
+                      </div>
+                      <Badge variant={fitTone(rfp.yellow_panther_fit)}>
+                        <Target className="mr-1 h-3.5 w-3.5" />
+                        {typeof rfp.yellow_panther_fit === 'number' ? `${rfp.yellow_panther_fit}% fit` : 'Fit pending'}
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <p className="text-sm leading-6 text-muted-foreground">
+                      {rfp.description || 'No summary was stored for this normalized opportunity.'}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {rfp.canonical_entity_id ? <Badge variant="outline">{rfp.canonical_entity_id}</Badge> : null}
+                      {rfp.category ? <Badge variant="outline">{rfp.category}</Badge> : null}
+                      {rfp.status ? <Badge variant="outline">{rfp.status}</Badge> : null}
+                      <Badge variant="outline">
+                        <Calendar className="mr-1 h-3.5 w-3.5" />
+                        {formatDeadline(rfp.deadline)}
+                      </Badge>
+                      {rfp.entity_name ? <Badge variant="secondary">{rfp.entity_name}</Badge> : null}
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {rfp.canonical_entity_id ? (
+                        <Button asChild variant="outline" size="sm">
+                          <Link href={getEntityBrowserDossierHref(rfp.canonical_entity_id, '1') || `/entity-browser/${rfp.canonical_entity_id}/dossier?from=1`}>
+                            Open canonical dossier
+                            <ArrowUpRight className="ml-1 h-4 w-4" />
+                          </Link>
+                        </Button>
+                      ) : null}
+                      {rfp.source_url ? (
+                        <Button asChild size="sm">
+                          <a href={rfp.source_url} target="_blank" rel="noreferrer">
+                            Open source
+                            <ExternalLink className="ml-1 h-4 w-4" />
+                          </a>
+                        </Button>
+                      ) : null}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
-            <p className="mt-2 text-sm text-muted-foreground">Try clearing the filters or inspect the raw tenders feed for unpromoted intake items.</p>
           </section>
         ) : (
-          <section className="grid gap-4 xl:grid-cols-2">
-            {filteredRfps.map((rfp) => (
-              <Card key={rfp.id} className="border-border/70 bg-card/70 shadow-sm">
-                <CardHeader className="space-y-3">
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div className="space-y-2">
-                      <CardTitle className="text-xl leading-tight text-foreground">{rfp.title}</CardTitle>
-                      <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                        <span className="inline-flex items-center gap-1.5">
-                          <Building2 className="h-4 w-4" />
-                          {rfp.organization}
-                        </span>
-                        {rfp.location ? (
-                          <span className="inline-flex items-center gap-1.5">
-                            <MapPin className="h-4 w-4" />
-                            {rfp.location}
-                          </span>
-                        ) : null}
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        <span className="font-medium text-foreground/80">Canonical context:</span>{' '}
-                        {getCanonicalContext([rfp.sport, rfp.competition, rfp.entity_role, rfp.theme])}
-                      </div>
-                    </div>
-                    <Badge variant={fitTone(rfp.yellow_panther_fit)}>
-                      <Target className="mr-1 h-3.5 w-3.5" />
-                      {typeof rfp.yellow_panther_fit === 'number' ? `${rfp.yellow_panther_fit}% fit` : 'Fit pending'}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-sm leading-6 text-muted-foreground">
-                    {rfp.description || 'No summary was stored for this promoted RFP.'}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {rfp.sport ? <Badge variant="outline">{rfp.sport}</Badge> : null}
-                    {rfp.competition ? <Badge variant="outline">{rfp.competition}</Badge> : null}
-                    {rfp.entity_role ? <Badge variant="outline">{rfp.entity_role}</Badge> : null}
-                    {rfp.opportunity_kind ? <Badge variant="outline">{rfp.opportunity_kind}</Badge> : null}
-                    {rfp.theme ? <Badge variant="outline">{rfp.theme}</Badge> : null}
-                    <Badge variant="outline">
-                      <Calendar className="mr-1 h-3.5 w-3.5" />
-                      {formatDeadline(rfp.deadline)}
-                    </Badge>
-                    {rfp.entity_name ? <Badge variant="secondary">{rfp.entity_name}</Badge> : null}
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {rfp.entity_id ? (
-                      <Button asChild variant="outline" size="sm">
-                        <Link href={getEntityBrowserDossierHref(rfp.entity_id, '1') || `/entity-browser/${rfp.entity_id}/dossier?from=1`}>
-                          Open dossier
-                          <ArrowUpRight className="ml-1 h-4 w-4" />
-                        </Link>
-                      </Button>
-                    ) : null}
-                    {rfp.source_url ? (
-                      <Button asChild size="sm">
-                        <a href={rfp.source_url} target="_blank" rel="noreferrer">
-                          Open source
-                          <ExternalLink className="ml-1 h-4 w-4" />
-                        </a>
-                      </Button>
-                    ) : null}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+          <section className="rounded-2xl border border-dashed border-border/70 bg-card/50 p-8 text-sm text-muted-foreground">
+            {wideResearchLoading ? 'Waiting for the first Manus output…' : 'No wide research output has been ingested yet.'}
           </section>
         )}
       </AppPageBody>
