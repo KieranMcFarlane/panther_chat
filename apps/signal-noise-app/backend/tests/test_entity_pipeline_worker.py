@@ -1572,6 +1572,123 @@ def test_process_batch_skips_exhausted_question_and_queues_next():
     assert updates[-1]["metadata"]["skipped_question_ids"] == ["q11_decision_owner"]
 
 
+def test_process_batch_auto_persists_skip_markers_for_question_local_repair_failure():
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker._now_iso = lambda: "2026-04-11T12:20:00+00:00"
+    worker._batch_metadata = lambda batch: batch.get("metadata", {})
+    worker.refresh_batch_heartbeat = lambda batch_id, metadata=None: {
+        **(metadata or {}),
+        "heartbeat_at": "2026-04-11T12:20:00+00:00",
+    }
+    worker._start_batch_heartbeat = lambda batch_id, metadata=None: (
+        SimpleNamespace(set=lambda: None),
+        SimpleNamespace(join=lambda timeout=1: None),
+    )
+    worker.worker_id = "worker-3"
+    worker.lease_seconds = 60
+    worker.max_run_attempts = 1
+    worker._get_run_metadata = lambda batch_id, entity_id: {
+        "entity_type": "CLUB",
+        "priority_score": 90,
+        "repair_retry_count": 0,
+        "repair_retry_budget": 1,
+        "rerun_mode": "question",
+        "question_id": "q11_decision_owner",
+        "canonical_entity_id": "fc-porto-canonical",
+    }
+    worker._get_batch_record = lambda batch_id: {"id": batch_id, "status": "running", "metadata": {}}
+
+    run = {
+        "id": "batch-3_fc-porto",
+        "entity_id": "fc-porto-2027",
+        "entity_name": "FC Porto",
+        "canonical_entity_id": "fc-porto-canonical",
+        "status": "running",
+        "phase": "entity_registration",
+        "metadata": {
+            "entity_type": "CLUB",
+            "priority_score": 90,
+            "attempt_count": 0,
+            "rerun_mode": "question",
+            "question_id": "q11_decision_owner",
+            "repair_retry_count": 0,
+            "repair_retry_budget": 1,
+        },
+    }
+
+    dossier = {
+        "entity_id": "fc-porto-2027",
+        "entity_name": "FC Porto",
+        "quality_state": "blocked",
+        "questions": [
+            {"question_id": "q11_decision_owner", "terminal_state": "no_signal"},
+            {"question_id": "q12_connections", "terminal_state": "blocked"},
+        ],
+    }
+
+    persisted_skip_calls = []
+    worker._persist_skip_to_entity_dossier = lambda **kwargs: persisted_skip_calls.append(kwargs) or True
+    worker._load_persisted_dossier = lambda entity_id, canonical_entity_id: ("dossier-1", dossier)
+    queued_questions = []
+    worker._queue_follow_on_repair = lambda **kwargs: queued_questions.append(kwargs["question_id"]) or {
+        "batch_id": "batch-next",
+        "status": "queued",
+        "queue_source": "auto",
+    }
+    worker.persist_monitoring_outputs = lambda *args, **kwargs: None
+    worker.sync_cached_entity = lambda *args, **kwargs: None
+
+    updates = []
+    worker.update_run = lambda batch_id, entity_id, payload: updates.append(payload)
+
+    class FakeRpcQuery:
+        def execute(self):
+            return SimpleNamespace(data=[])
+
+    class FakeQuery:
+        def __init__(self, table_name):
+            self.table_name = table_name
+
+        def update(self, payload):
+            self.payload = payload
+            return self
+
+        def select(self, *_args, **_kwargs):
+            return self
+
+        def eq(self, *_args, **_kwargs):
+            return self
+
+        def limit(self, _count):
+            return self
+
+        def execute(self):
+            return SimpleNamespace(data=[])
+
+    class FakeSupabase:
+        def rpc(self, *_args, **_kwargs):
+            return FakeRpcQuery()
+
+        def table(self, name):
+            return FakeQuery(name)
+
+    worker.supabase = FakeSupabase()
+    worker.call_pipeline = lambda run, batch_id: (_ for _ in ()).throw(ValueError("schema failure for q11"))
+    worker.get_batch_runs = lambda batch_id: [run]
+
+    worker.process_batch({"id": "batch-3", "metadata": {"queue_mode": "durable_worker"}})
+
+    assert persisted_skip_calls, "expected the worker to persist skip markers automatically"
+    assert persisted_skip_calls[-1]["question_id"] == "q11_decision_owner"
+    assert persisted_skip_calls[-1]["skip_reason"] == "value_error"
+    assert persisted_skip_calls[-1]["skip_note"] == "schema failure for q11"
+    assert queued_questions[-1] == "q12_connections"
+    assert updates[-1]["metadata"]["skipped_question_ids"] == ["q11_decision_owner"]
+    assert updates[-1]["metadata"]["last_skipped_question_id"] == "q11_decision_owner"
+    assert updates[-1]["metadata"]["last_skip_reason"] == "value_error"
+    assert updates[-1]["metadata"]["last_skip_note"] == "schema failure for q11"
+
+
 def test_process_batch_auto_queues_fc_porto_people_chain_when_persisted_questions_lack_depends_on():
     worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
     worker._now_iso = lambda: "2026-03-04T12:10:00+00:00"

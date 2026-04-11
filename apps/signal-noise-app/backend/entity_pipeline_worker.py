@@ -840,6 +840,55 @@ class EntityPipelineWorker:
             context=f"persist skipped question {entity_id}/{question_id}",
         )
 
+    def _build_skip_metadata(
+        self,
+        *,
+        entity_id: str,
+        canonical_entity_id: Optional[str],
+        existing_metadata: Dict[str, Any],
+        dossier: Optional[Dict[str, Any]],
+        question_id: str,
+        skip_reason: str,
+        skip_note: str,
+        skip_error_class: Optional[str],
+        skipped_at: str,
+    ) -> tuple[Dict[str, Any], set[str], Optional[Dict[str, Any]]]:
+        skipped_question_ids = {
+            str(question).strip()
+            for question in (existing_metadata.get("skipped_question_ids") or [])
+            if str(question or "").strip()
+        }
+        skipped_question_ids.add(question_id)
+        self._persist_skip_to_entity_dossier(
+            entity_id=entity_id,
+            canonical_entity_id=canonical_entity_id,
+            question_id=question_id,
+            skip_reason=skip_reason,
+            skip_note=skip_note,
+            skip_error_class=skip_error_class,
+            skipped_at=skipped_at,
+        )
+        retry_metadata = {
+            "skipped_question_ids": sorted(skipped_question_ids),
+            "last_skipped_question_id": question_id,
+            "last_skip_reason": skip_reason,
+            "last_skip_note": skip_note,
+            "last_skip_error_class": skip_error_class,
+            "last_skipped_at": skipped_at,
+        }
+        if dossier is None:
+            _, dossier = self._load_persisted_dossier(entity_id, canonical_entity_id)
+        if isinstance(dossier, dict):
+            self._apply_skip_to_dossier_payload(
+                dossier,
+                question_id=question_id,
+                skip_reason=skip_reason,
+                skip_note=skip_note,
+                skip_error_class=skip_error_class,
+                skipped_at=skipped_at,
+            )
+        return retry_metadata, skipped_question_ids, dossier
+
     def find_active_repair_run(
         self,
         entity_id: str,
@@ -1092,24 +1141,18 @@ class EntityPipelineWorker:
             skip_reason = "retry_exhausted"
             skip_note = _derive_skip_note(latest_metadata)
             skip_error_class = str(latest_metadata.get("last_error_type") or "retry_exhausted").strip() or None
-            skipped_question_ids.add(next_repair_question_id)
-            self._apply_skip_to_dossier_payload(
-                dossier if isinstance(dossier, dict) else {},
-                question_id=next_repair_question_id,
-                skip_reason=skip_reason,
-                skip_note=skip_note,
-                skip_error_class=skip_error_class,
-                skipped_at=skipped_at,
-            )
-            self._persist_skip_to_entity_dossier(
+            skip_metadata, skipped_question_ids, dossier = self._build_skip_metadata(
                 entity_id=run.get("entity_id") or "",
                 canonical_entity_id=str(run.get("canonical_entity_id") or latest_metadata.get("canonical_entity_id") or "").strip() or None,
+                existing_metadata=latest_metadata if isinstance(latest_metadata, dict) else {},
+                dossier=dossier if isinstance(dossier, dict) else None,
                 question_id=next_repair_question_id,
                 skip_reason=skip_reason,
                 skip_note=skip_note,
                 skip_error_class=skip_error_class,
                 skipped_at=skipped_at,
             )
+            skipped_question_ids.add(next_repair_question_id)
             questions = dossier.get("questions") if isinstance(dossier.get("questions"), list) else []
             follow_on_question_id = select_repair_root_question_id(
                 source_payload={"questions": questions},
@@ -1151,12 +1194,7 @@ class EntityPipelineWorker:
                 "next_repair_batch_status": next_repair_status if queued_batch_id else None,
                 "repair_queue_source": queue_result.get("queue_source") or "auto",
                 "queued_repair_batch_id": queued_batch_id,
-                "skipped_question_ids": sorted(skipped_question_ids),
-                "last_skipped_question_id": next_repair_question_id,
-                "last_skip_reason": skip_reason,
-                "last_skip_note": skip_note,
-                "last_skip_error_class": skip_error_class,
-                "last_skipped_at": skipped_at,
+                **skip_metadata,
             }
 
         queue_result = self._queue_follow_on_repair(
@@ -1372,41 +1410,18 @@ class EntityPipelineWorker:
                     skip_reason = error_type
                     skip_note = str(error)
                     skip_error_class = error_type
-                    skipped_question_ids = {
-                        str(question).strip()
-                        for question in (latest_metadata.get("skipped_question_ids") or [])
-                        if str(question or "").strip()
-                    }
-                    skipped_question_ids.add(question_id)
-                    self._persist_skip_to_entity_dossier(
+                    skip_metadata, skipped_question_ids, dossier = self._build_skip_metadata(
                         entity_id=run.get("entity_id") or "",
                         canonical_entity_id=canonical_entity_id,
+                        existing_metadata=latest_metadata if isinstance(latest_metadata, dict) else {},
+                        dossier=None,
                         question_id=question_id,
                         skip_reason=skip_reason,
                         skip_note=skip_note,
                         skip_error_class=skip_error_class,
                         skipped_at=skipped_at,
                     )
-                    retry_metadata.update(
-                        {
-                            "skipped_question_ids": sorted(skipped_question_ids),
-                            "last_skipped_question_id": question_id,
-                            "last_skip_reason": skip_reason,
-                            "last_skip_note": skip_note,
-                            "last_skip_error_class": skip_error_class,
-                            "last_skipped_at": skipped_at,
-                        }
-                    )
-                    _, dossier = self._load_persisted_dossier(run.get("entity_id") or "", canonical_entity_id)
-                    if isinstance(dossier, dict):
-                        self._apply_skip_to_dossier_payload(
-                            dossier,
-                            question_id=question_id,
-                            skip_reason=skip_reason,
-                            skip_note=skip_note,
-                            skip_error_class=skip_error_class,
-                            skipped_at=skipped_at,
-                        )
+                    retry_metadata.update(skip_metadata)
                     questions = dossier.get("questions") if isinstance(dossier, dict) and isinstance(dossier.get("questions"), list) else []
                     next_question_id = select_repair_root_question_id(
                         source_payload={"questions": questions},
