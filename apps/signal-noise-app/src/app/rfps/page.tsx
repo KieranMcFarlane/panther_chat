@@ -124,7 +124,6 @@ export default function RfpsPage() {
   }, [])
   const wideResearchOpportunities = wideResearchBatch?.opportunities || []
   const latestWideResearchGeneratedAt = wideResearchBatch?.generated_at || null
-  const canonicalEntityActions = wideResearchBatch?.entity_actions || []
   const activeLaneLabel = wideResearchBatch?.lane_label || wideResearchBatch?.focus_area || 'Unknown lane'
 
   return (
@@ -133,16 +132,6 @@ export default function RfpsPage() {
         eyebrow="Canonical RFPs"
         title="Canonical source of truth"
         description="This surface only shows Manus wide research after canonical-first normalization and ingestion into the source of truth."
-        actions={(
-          <>
-            <Button asChild variant="outline" size="sm">
-              <Link href="/opportunities">Open opportunities</Link>
-            </Button>
-            <Button asChild variant="outline" size="sm">
-              <Link href="/tenders">Open raw tenders feed</Link>
-            </Button>
-          </>
-        )}
       />
       <AppPageBody>
         <section className="grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
@@ -194,45 +183,9 @@ export default function RfpsPage() {
                 <span className="font-medium text-foreground/80">Seed prompt:</span>{' '}
                 {wideResearchBatch?.seed_query || 'Awaiting first Manus batch'}
               </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border/70 bg-card/70">
-            <CardHeader className="space-y-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Canonical entity actions</CardTitle>
-              <div className="text-lg font-semibold text-foreground">Create only when missing</div>
-              <p className="text-sm text-muted-foreground">
-                Manus links to an existing canonical entity first. Only missing matches are created as new canonical source-of-truth records.
-              </p>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {canonicalEntityActions.length ? (
-                canonicalEntityActions.slice(0, 4).map((action, index) => (
-                  <div key={`${action.organization}-${index}`} className="rounded-xl border border-border/70 bg-background/70 p-3">
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="font-medium text-foreground">{action.organization}</div>
-                      <Badge variant={action.action === 'create' ? 'secondary' : 'outline'}>{action.action}</Badge>
-                    </div>
-                    <div className="mt-1 text-xs text-muted-foreground">
-                      {action.canonical_entity_name || action.canonical_entity_id || 'No canonical entity resolved yet'}
-                    </div>
-                    {action.canonical_entity_id ? (
-                      <div className="mt-2">
-                        <Button asChild variant="ghost" size="sm" className="h-8 px-0 text-xs text-blue-700 hover:bg-transparent hover:text-blue-800">
-                          <Link href={getEntityBrowserDossierHref(action.canonical_entity_id, '1') || `/entity-browser/${action.canonical_entity_id}/dossier?from=1`}>
-                            Open canonical dossier
-                            <ArrowUpRight className="ml-1 h-3.5 w-3.5" />
-                          </Link>
-                        </Button>
-                      </div>
-                    ) : null}
-                  </div>
-                ))
-              ) : (
-                <div className="rounded-xl border border-dashed border-border/70 bg-background/40 p-4 text-sm text-muted-foreground">
-                  {wideResearchLoading ? 'Waiting for the first Manus output…' : 'No canonical entity actions have been recorded yet.'}
-                </div>
-              )}
+              <div className="rounded-xl border border-dashed border-border/70 bg-background/40 px-3 py-2 text-xs text-muted-foreground">
+                Canonical entity ingestion happens automatically from the normalized Manus batch. Missing entities are created in the source of truth with the available opportunity context.
+              </div>
             </CardContent>
           </Card>
         </section>

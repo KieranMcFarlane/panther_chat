@@ -247,7 +247,17 @@ async function callManusApi(prompt: string): Promise<ManusResearchResponse> {
     : { ...manuscript, prompt, source: 'manus' }
 }
 
-async function ensureCanonicalEntity(opportunity: any, canonicalEntities: Awaited<ReturnType<typeof getCanonicalEntitiesSnapshot>>) {
+async function ensureCanonicalEntity(
+  opportunity: any,
+  canonicalEntities: Awaited<ReturnType<typeof getCanonicalEntitiesSnapshot>>,
+  context: {
+    focus_area?: string | null
+    lane_label?: string | null
+    seed_query?: string | null
+    generated_at?: string | null
+    run_id?: string | null
+  } = {},
+) {
   const organization = toText(opportunity?.organization || opportunity?.entity_name)
   const linked = linkOpportunityToCanonicalEntity(
     {
@@ -279,6 +289,19 @@ async function ensureCanonicalEntity(opportunity: any, canonicalEntities: Awaite
     created_via: 'rfp-wide-research',
     aliases: Array.from(new Set([canonicalEntityName, toText(opportunity?.entity_name), toText(opportunity?.organization)])).filter(Boolean),
     original_source_url: toText(opportunity?.source_url) || null,
+    opportunity_title: toText(opportunity?.title) || null,
+    opportunity_description: toText(opportunity?.description) || null,
+    opportunity_category: toText(opportunity?.category) || null,
+    opportunity_status: toText(opportunity?.status) || null,
+    opportunity_deadline: toText(opportunity?.deadline) || null,
+    opportunity_source_url: toText(opportunity?.source_url) || null,
+    opportunity_confidence: typeof opportunity?.confidence === 'number' ? opportunity.confidence : null,
+    opportunity_fit_score: typeof opportunity?.yellow_panther_fit === 'number' ? opportunity.yellow_panther_fit : null,
+    wide_research_focus_area: toText(context.focus_area) || null,
+    wide_research_lane_label: toText(context.lane_label) || null,
+    wide_research_seed_query: toText(context.seed_query) || null,
+    wide_research_generated_at: toText(context.generated_at) || null,
+    wide_research_run_id: toText(context.run_id) || null,
   }
 
   const supabaseAdmin = getSupabaseAdmin()
@@ -314,7 +337,13 @@ async function enrichBatchWithCanonicalEntities(batch: ReturnType<typeof normali
   const entityActions = []
 
   for (const opportunity of batch.opportunities) {
-    const resolved = await ensureCanonicalEntity(opportunity, canonicalEntities)
+    const resolved = await ensureCanonicalEntity(opportunity, canonicalEntities, {
+      focus_area: batch.focus_area,
+      lane_label: batch.lane_label,
+      seed_query: batch.seed_query,
+      generated_at: batch.generated_at,
+      run_id: batch.run_id,
+    })
     const normalizedOpportunity = {
       ...opportunity,
       canonical_entity_id: opportunity.canonical_entity_id || resolved.canonical_entity_id,
