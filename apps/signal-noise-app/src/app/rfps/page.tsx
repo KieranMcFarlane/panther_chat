@@ -1,14 +1,31 @@
-'use client'
-
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
 import { ArrowUpRight, Building2, Calendar, ExternalLink, Sparkles, Target } from 'lucide-react'
 
 import { AppPageBody, AppPageHeader, AppPageShell } from '@/components/layout/AppPageShell'
+import { WideResearchRefreshButton } from '@/components/rfp/WideResearchRefreshButton'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
+import { readLatestWideRfpResearchArtifact } from '@/lib/rfp-wide-research.mjs'
+
+export const dynamic = 'force-dynamic'
+
+type FoundRfp = {
+  id: string
+  title: string
+  organization: string
+  description: string | null
+  yellow_panther_fit: number | null
+  category: string | null
+  deadline: string | null
+  source_url: string | null
+  entity_id: string | null
+  entity_name: string | null
+  canonical_entity_id?: string | null
+  canonical_entity_name?: string | null
+  location?: string | null
+}
 
 type WideResearchOpportunity = FoundRfp & {
   canonical_entity_id?: string | null
@@ -38,8 +55,6 @@ type WideResearchBatch = {
   }
 }
 
-const WIDE_RFP_RESEARCH_ENDPOINT = '/api/rfp-wide-research'
-
 function formatDeadline(value: string | null): string {
   if (!value) return 'No deadline listed'
   const parsed = Date.parse(value)
@@ -67,61 +82,9 @@ function fitTone(score: number | null): 'default' | 'secondary' | 'outline' {
   return 'secondary'
 }
 
-type FoundRfp = {
-  id: string
-  title: string
-  organization: string
-  description: string | null
-  yellow_panther_fit: number | null
-  category: string | null
-  deadline: string | null
-  source_url: string | null
-  entity_id: string | null
-  entity_name: string | null
-  canonical_entity_id?: string | null
-  canonical_entity_name?: string | null
-  location?: string | null
-}
-
-export default function RfpsPage() {
-  const [wideResearchBatch, setWideResearchBatch] = useState<WideResearchBatch | null>(null)
-  const [wideResearchLoading, setWideResearchLoading] = useState(true)
-  const [wideResearchError, setWideResearchError] = useState<string | null>(null)
-
-  useEffect(() => {
-    let ignore = false
-
-    async function loadWideResearch() {
-      setWideResearchLoading(true)
-      setWideResearchError(null)
-      try {
-        const response = await fetch(WIDE_RFP_RESEARCH_ENDPOINT, { cache: 'no-store' })
-        if (!response.ok) {
-          throw new Error(`Request failed with ${response.status}`)
-        }
-
-        const payload = await response.json()
-        if (!ignore) {
-          setWideResearchBatch(payload?.data || null)
-        }
-      } catch (err) {
-        if (!ignore) {
-          setWideResearchError(err instanceof Error ? err.message : 'Failed to load wide research output')
-          setWideResearchBatch(null)
-        }
-      } finally {
-        if (!ignore) {
-          setWideResearchLoading(false)
-        }
-      }
-    }
-
-    void loadWideResearch()
-
-    return () => {
-      ignore = true
-    }
-  }, [])
+export default async function RfpsPage() {
+  const latest = await readLatestWideRfpResearchArtifact({})
+  const wideResearchBatch = (latest?.batch || null) as WideResearchBatch | null
   const wideResearchOpportunities = wideResearchBatch?.opportunities || []
   const latestWideResearchGeneratedAt = wideResearchBatch?.generated_at || null
   const activeLaneLabel = wideResearchBatch?.lane_label || wideResearchBatch?.focus_area || 'Unknown lane'
@@ -138,47 +101,31 @@ export default function RfpsPage() {
           <Card className="min-w-0 border-border/70 bg-card">
             <CardHeader className="space-y-2">
               <div className="flex items-center justify-between gap-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Latest wide research</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">Latest cached wide research</CardTitle>
                 <Badge variant="outline">Normalized output</Badge>
               </div>
               <div className="text-lg font-semibold text-foreground">
-                {wideResearchLoading ? 'Loading Manus output…' : wideResearchBatch ? `Run ${wideResearchBatch.run_id}` : 'No wide research run yet'}
+                {wideResearchBatch ? `Run ${wideResearchBatch.run_id}` : 'No cached wide research batch yet'}
               </div>
               <p className="text-sm text-muted-foreground">
-                Manus-wide discovery output lands here after canonical-first reconciliation, normalization, and ingestion.
+                Manus-wide discovery output is cached on the server after canonical-first reconciliation, normalization, and ingestion.
               </p>
             </CardHeader>
             <CardContent className="space-y-3">
-              {wideResearchBatch ? (
-                <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                  <Badge variant="secondary">{activeLaneLabel}</Badge>
-                  <span>
-                    Last successful run:{' '}
-                    <span className="font-medium text-foreground">{formatRunTimestamp(latestWideResearchGeneratedAt)}</span>
-                  </span>
-                </div>
-              ) : null}
-              {wideResearchError ? (
-                <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 px-3 py-2 text-sm text-amber-900">
-                  {wideResearchError}
-                </div>
-              ) : null}
-              {wideResearchBatch ? (
-                <div className="grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-xl border border-border/70 bg-background/70 p-3">
-                    <div className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Opportunities</div>
-                    <div className="mt-1 text-2xl font-semibold text-foreground">{wideResearchBatch.summary.total_opportunities}</div>
+              <div className="flex flex-wrap items-center gap-3">
+                {wideResearchBatch ? (
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                    <Badge variant="secondary">{activeLaneLabel}</Badge>
+                    <span>
+                      Last cached run:{' '}
+                      <span className="font-medium text-foreground">{formatRunTimestamp(latestWideResearchGeneratedAt)}</span>
+                    </span>
                   </div>
-                  <div className="rounded-xl border border-border/70 bg-background/70 p-3">
-                    <div className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Linked</div>
-                    <div className="mt-1 text-2xl font-semibold text-foreground">{wideResearchBatch.summary.linked_entities}</div>
-                  </div>
-                  <div className="rounded-xl border border-border/70 bg-background/70 p-3">
-                    <div className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Create</div>
-                    <div className="mt-1 text-2xl font-semibold text-foreground">{wideResearchBatch.summary.entities_to_create}</div>
-                  </div>
-                </div>
-              ) : null}
+                ) : (
+                  <div className="text-sm text-muted-foreground">Waiting for the first Manus output to be cached.</div>
+                )}
+                <WideResearchRefreshButton />
+              </div>
               <div className="text-sm text-muted-foreground">
                 <span className="font-medium text-foreground/80">Seed prompt:</span>{' '}
                 {wideResearchBatch?.seed_query || 'Awaiting first Manus batch'}
@@ -236,7 +183,7 @@ export default function RfpsPage() {
                       {rfp.category ? <Badge variant="outline">{rfp.category}</Badge> : null}
                       {rfp.status ? <Badge variant="outline">{rfp.status}</Badge> : null}
                       <Badge variant="outline">
-                        <Calendar className="mr-1 h-3.5 w-3.5" />
+                        <Calendar className="mr-1 h-4 w-4" />
                         {formatDeadline(rfp.deadline)}
                       </Badge>
                       {rfp.entity_name ? <Badge variant="secondary">{rfp.entity_name}</Badge> : null}
@@ -266,7 +213,7 @@ export default function RfpsPage() {
           </section>
         ) : (
           <section className="rounded-2xl border border-dashed border-border/70 bg-card/50 p-8 text-sm text-muted-foreground">
-            {wideResearchLoading ? 'Waiting for the first Manus output…' : 'No wide research output has been ingested yet.'}
+            No cached wide research output has been ingested yet. Use the refresh action to seed the first Manus batch.
           </section>
         )}
       </AppPageBody>
