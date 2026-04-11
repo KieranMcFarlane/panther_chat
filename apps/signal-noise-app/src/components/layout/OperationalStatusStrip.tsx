@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { BarChart3, ChevronDown, ChevronUp } from 'lucide-react'
+import { BarChart3, ChevronDown, ChevronUp, PauseCircle, PlayCircle, SkipForward } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -12,6 +12,7 @@ import {
   refreshOperationalDrilldownPayload,
   type OperationalDrilldownPayload,
 } from '@/lib/operational-drilldown-client'
+import { deriveOperationalQueueCandidates, type OperationalQueueCandidate } from '@/lib/operational-queue-candidates'
 
 interface OperationalStatusStripProps {
   drawerOpen: boolean
@@ -25,6 +26,8 @@ export function OperationalStatusStrip({
   const [controlState, setControlState] = useState<OperationalDrilldownPayload['control'] | null>(null)
   const [isTogglingPipeline, setIsTogglingPipeline] = useState(false)
   const [isQueueingBatch, setIsQueueingBatch] = useState(false)
+  const [queueCandidates, setQueueCandidates] = useState<OperationalQueueCandidate[]>([])
+  const [selectedQueueCandidateId, setSelectedQueueCandidateId] = useState('')
   const [isExpanded, setIsExpanded] = useState(true)
 
   function formatRunningDuration(value: string | null | undefined) {
@@ -84,6 +87,21 @@ export function OperationalStatusStrip({
         // leave summary fallback in place
       })
 
+    void fetch('/api/home/queue-dashboard', { cache: 'no-store' })
+      .then(async (response) => {
+        if (!response.ok) return null
+        return response.json()
+      })
+      .then((payload) => {
+        if (cancelled || !payload) return
+        const candidates = deriveOperationalQueueCandidates(payload)
+        setQueueCandidates(candidates)
+        setSelectedQueueCandidateId((current) => current || candidates[0]?.browser_entity_id || candidates[0]?.entity_id || '')
+      })
+      .catch(() => {
+        // keep current candidates if the dashboard payload is unavailable
+      })
+
     return () => {
       cancelled = true
     }
@@ -113,6 +131,7 @@ export function OperationalStatusStrip({
   const activeQuestionLabel = inProgressEntity
     ? formatQuestionProgress(inProgressEntity.current_question_id || inProgressEntity.active_question_id)
     : null
+  const selectedQueueCandidate = queueCandidates.find((item) => item.browser_entity_id === selectedQueueCandidateId || item.entity_id === selectedQueueCandidateId) ?? null
   const liveEntityTicker = inProgressEntity
     ? `${repairFocus ? 'Repairing' : 'Now playing'} — ${inProgressEntity.entity_name} — Enrichment — ${activeQuestionLabel ?? 'Question unavailable'} — Pipeline Active — ${formatRunningDuration(inProgressEntity.started_at || inProgressEntity.generated_at)}`
     : pipelinePaused
@@ -170,18 +189,18 @@ export function OperationalStatusStrip({
     }
   }
 
-  async function queueNextBatch() {
-    if (!nextUpcomingEntity?.entity_id) return
+  async function queueEntity(entityId: string, rerunReason: string) {
+    if (!entityId) return
     setIsQueueingBatch(true)
     try {
-      const response = await fetch(`/api/entities/${encodeURIComponent(nextUpcomingEntity.entity_id)}/dossier/rerun`, {
+      const response = await fetch(`/api/entities/${encodeURIComponent(entityId)}/dossier/rerun`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           mode: 'full',
-          rerun_reason: 'Queued from Live Ops',
+          rerun_reason: rerunReason,
           cascade_dependents: true,
         }),
       })
@@ -198,10 +217,20 @@ export function OperationalStatusStrip({
     }
   }
 
+  async function queueSelectedEntity() {
+    if (!selectedQueueCandidate) return
+    await queueEntity(selectedQueueCandidate.browser_entity_id || selectedQueueCandidate.entity_id, 'Queued from Live Ops selector')
+  }
+
+  async function queueNextBatch() {
+    if (!nextUpcomingEntity?.entity_id) return
+    await queueEntity(nextUpcomingEntity.entity_id, 'Queued from Live Ops')
+  }
+
   return (
     <section
       className={`overflow-hidden rounded-2xl border border-custom-border bg-custom-box px-4 shadow-sm transition-[max-height] duration-300 ease-out ${
-        isExpanded ? 'max-h-[40rem] py-4' : 'max-h-16 py-2'
+        isExpanded ? 'max-h-[40rem] py-4' : 'max-h-28 py-2'
       }`}
     >
       <div className="flex flex-col gap-3">
@@ -234,39 +263,75 @@ export function OperationalStatusStrip({
 
             <div className="flex flex-wrap items-center justify-end gap-2">
               <div className="flex flex-wrap items-center gap-2 rounded-full border border-custom-border bg-custom-bg/70 px-2.5 py-1.5">
-                <span className="text-[0.55rem] uppercase tracking-[0.16em] text-slate-400">Transport</span>
+                <select
+                  aria-label="Queue entity"
+                  value={selectedQueueCandidateId}
+                  onChange={(event) => setSelectedQueueCandidateId(event.target.value)}
+                  className="h-9 min-w-[12rem] rounded-md border border-custom-border bg-custom-box/70 px-2 text-xs text-white outline-none"
+                >
+                  {queueCandidates.length > 0 ? queueCandidates.map((candidate) => (
+                    <option key={candidate.browser_entity_id} value={candidate.browser_entity_id}>
+                      {candidate.label}
+                    </option>
+                  )) : (
+                    <option value="">No queueable entities</option>
+                  )}
+                </select>
+                <Button
+                  variant="outline"
+                  className="h-9 border-custom-border px-3 py-1.5"
+                  onClick={() => void queueSelectedEntity()}
+                  disabled={isQueueingBatch || !selectedQueueCandidate}
+                  aria-label="Queue selected entity"
+                  title="Queue selected entity"
+                >
+                  <SkipForward className="mr-2 h-4 w-4" />
+                  Queue
+                </Button>
                 <Button
                   variant="outline"
                   className="h-9 border-custom-border px-3 py-1.5"
                   onClick={queueNextBatch}
                   disabled={isQueueingBatch || !nextUpcomingEntity?.entity_id}
+                  aria-label="Queue next batch"
+                  title="Queue next batch"
                 >
-                  Queue next batch
+                  <SkipForward className="mr-2 h-4 w-4" />
+                  Next
                 </Button>
                 <Button
                   variant="outline"
                   className="h-9 border-custom-border px-3 py-1.5"
                   onClick={togglePipelinePaused}
                   disabled={isTogglingPipeline}
+                  aria-label={pipelinePaused ? 'Start pipeline' : 'Stop intake'}
+                  title={pipelinePaused ? 'Start pipeline' : 'Stop intake'}
                 >
-                  {pipelinePaused ? 'Start pipeline' : 'Stop intake'}
+                  {pipelinePaused ? <PlayCircle className="mr-2 h-4 w-4" /> : <PauseCircle className="mr-2 h-4 w-4" />}
+                  {pipelinePaused ? 'Start' : 'Stop'}
                 </Button>
               </div>
               <div className="flex flex-wrap items-center gap-2 rounded-full border border-custom-border bg-custom-bg/70 px-2.5 py-1.5">
-                <span className="text-[0.55rem] uppercase tracking-[0.16em] text-slate-400">Visibility</span>
                 <Button
                   variant="outline"
                   className="h-9 border-custom-border px-3 py-1.5"
                   onClick={() => setIsExpanded((current) => !current)}
                   aria-expanded={isExpanded}
                   aria-label={isExpanded ? 'Minimize live ops header' : 'Expand live ops header'}
+                  title={isExpanded ? 'Minimize' : 'Expand'}
                 >
-                  {isExpanded ? <ChevronUp className="mr-2 h-4 w-4" /> : <ChevronDown className="mr-2 h-4 w-4" />}
-                  {isExpanded ? 'Minimize' : 'Expand'}
+                  {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                  <span className="sr-only">{isExpanded ? 'Minimize' : 'Expand'}</span>
                 </Button>
-                <Button variant="outline" className="h-9 border-custom-border px-3 py-1.5" onClick={onToggleDrawer}>
-                  <BarChart3 className="mr-2 h-4 w-4" />
-                  {drawerOpen ? 'Hide run details' : 'Show run details'}
+                <Button
+                  variant="outline"
+                  className="h-9 border-custom-border px-3 py-1.5"
+                  onClick={onToggleDrawer}
+                  aria-label={drawerOpen ? 'Hide run details' : 'Show run details'}
+                  title={drawerOpen ? 'Hide run details' : 'Show run details'}
+                >
+                  <BarChart3 className="h-4 w-4" />
+                  <span className="sr-only">{drawerOpen ? 'Hide run details' : 'Show run details'}</span>
                 </Button>
               </div>
             </div>

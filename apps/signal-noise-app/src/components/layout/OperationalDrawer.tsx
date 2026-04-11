@@ -14,6 +14,7 @@ import {
   refreshOperationalDrilldownPayload,
   type OperationalDrilldownPayload,
 } from '@/lib/operational-drilldown-client'
+import { deriveOperationalQueueCandidates, type OperationalQueueCandidate } from '@/lib/operational-queue-candidates'
 
 interface OperationalDrawerProps {
   open: boolean
@@ -299,6 +300,8 @@ export function OperationalDrawer({ open, activeSection, onSelectSection }: Oper
   const [isLoading, setIsLoading] = useState(false)
   const [loadError, setLoadError] = useState<string | null>(null)
   const [isQueueingBatch, setIsQueueingBatch] = useState(false)
+  const [queueCandidates, setQueueCandidates] = useState<OperationalQueueCandidate[]>([])
+  const [selectedQueueCandidateId, setSelectedQueueCandidateId] = useState('')
 
   useEffect(() => {
     if (!open) return
@@ -330,6 +333,21 @@ export function OperationalDrawer({ open, activeSection, onSelectSection }: Oper
     }
 
     loadData()
+
+    void fetch('/api/home/queue-dashboard', { cache: 'no-store' })
+      .then(async (response) => {
+        if (!response.ok) return null
+        return response.json()
+      })
+      .then((payload) => {
+        if (cancelled || !payload) return
+        const candidates = deriveOperationalQueueCandidates(payload)
+        setQueueCandidates(candidates)
+        setSelectedQueueCandidateId((current) => current || candidates[0]?.browser_entity_id || candidates[0]?.entity_id || '')
+      })
+      .catch(() => {
+        // keep the current drawer payload visible if the queue source fails
+      })
 
     return () => {
       cancelled = true
@@ -478,6 +496,7 @@ export function OperationalDrawer({ open, activeSection, onSelectSection }: Oper
           ? (completedItems[0] ?? null)
           : (entityItems[0] ?? null)
   const nextUpcomingEntity = dashboard.queue.upcoming_entities?.[0] ?? null
+  const selectedQueueCandidate = queueCandidates.find((item) => item.browser_entity_id === selectedQueueCandidateId || item.entity_id === selectedQueueCandidateId) ?? null
   const hasActiveEntity = Boolean(dashboard.queue?.in_progress_entity)
   const intakeStatusLabel = dashboard.control?.is_paused
     ? 'Pipeline intake paused'
@@ -485,18 +504,18 @@ export function OperationalDrawer({ open, activeSection, onSelectSection }: Oper
       ? 'Pipeline intake running'
       : 'Pipeline intake running - waiting for claimable work'
 
-  async function queueNextBatch() {
-    if (!nextUpcomingEntity?.entity_id) return
+  async function queueEntity(entityId: string, rerunReason: string) {
+    if (!entityId) return
     setIsQueueingBatch(true)
     try {
-      const response = await fetch(`/api/entities/${encodeURIComponent(nextUpcomingEntity.entity_id)}/dossier/rerun`, {
+      const response = await fetch(`/api/entities/${encodeURIComponent(entityId)}/dossier/rerun`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           mode: 'full',
-          rerun_reason: 'Queued from Operational Snapshot',
+          rerun_reason: rerunReason,
           cascade_dependents: true,
         }),
       })
@@ -510,6 +529,16 @@ export function OperationalDrawer({ open, activeSection, onSelectSection }: Oper
     } finally {
       setIsQueueingBatch(false)
     }
+  }
+
+  async function queueSelectedEntity() {
+    if (!selectedQueueCandidate) return
+    await queueEntity(selectedQueueCandidate.browser_entity_id || selectedQueueCandidate.entity_id, 'Queued from Operational Snapshot selector')
+  }
+
+  async function queueNextBatch() {
+    if (!nextUpcomingEntity?.entity_id) return
+    await queueEntity(nextUpcomingEntity.entity_id, 'Queued from Operational Snapshot')
   }
 
   return (
@@ -549,6 +578,30 @@ export function OperationalDrawer({ open, activeSection, onSelectSection }: Oper
           {dashboard.control?.pause_reason ? ` · ${dashboard.control.pause_reason}` : ''}
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          <select
+            aria-label="Queue entity"
+            value={selectedQueueCandidateId}
+            onChange={(event) => setSelectedQueueCandidateId(event.target.value)}
+            className="h-9 min-w-[12rem] rounded-md border border-custom-border bg-custom-box/70 px-2 text-xs text-white outline-none"
+          >
+            {queueCandidates.length > 0 ? queueCandidates.map((candidate) => (
+              <option key={candidate.browser_entity_id} value={candidate.browser_entity_id}>
+                {candidate.label}
+              </option>
+            )) : (
+              <option value="">No queueable entities</option>
+            )}
+          </select>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="border-custom-border"
+            onClick={() => void queueSelectedEntity()}
+            disabled={isQueueingBatch || !selectedQueueCandidate}
+          >
+            Queue selected
+          </Button>
           <Button
             type="button"
             variant="outline"
