@@ -56,7 +56,7 @@ test('live ops strip exposes compact ignition mode with expand and minimize cont
   assert.match(stripSource, /Pipeline live/)
   assert.match(stripSource, /Blocked/)
   assert.match(stripSource, /Recent completions/)
-  assert.match(stripSource, /Running —/)
+  assert.match(stripSource, /Now playing|Waiting|Repairing|Paused/)
   assert.match(stripSource, /Enrichment/)
   assert.match(stripSource, /Question unavailable|formatQuestionProgress/)
   assert.match(stripSource, /Pipeline Active/)

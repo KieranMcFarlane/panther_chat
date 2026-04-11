@@ -97,22 +97,26 @@ export function OperationalStatusStrip({
     || controlState?.observed_state
     || (pipelinePaused ? 'paused' : 'running')
   const isWaitingForClaim = !pipelinePaused && !inProgressEntity && (ignitionState === 'starting' || ignitionState === 'running')
-  const ignitionLabel = ignitionState === 'starting'
-    ? 'Ignition starting'
-    : ignitionState === 'stopping'
-      ? 'Stopping intake'
-      : ignitionState === 'paused'
-        ? 'Paused'
-        : isWaitingForClaim
-          ? 'Waiting for claimable work'
-          : 'Engine running'
+  const repairFocus = Boolean(
+    inProgressEntity && (
+      inProgressEntity.repair_state === 'repairing'
+      || inProgressEntity.next_repair_status === 'running'
+    ),
+  )
+  const playerStatusLabel = pipelinePaused
+    ? 'Paused'
+    : repairFocus
+      ? 'Repairing'
+      : inProgressEntity
+        ? 'Now playing'
+        : 'Waiting'
   const activeQuestionLabel = inProgressEntity
     ? formatQuestionProgress(inProgressEntity.current_question_id || inProgressEntity.active_question_id)
     : null
   const liveEntityTicker = inProgressEntity
-    ? `Running — ${inProgressEntity.entity_name} — Enrichment — ${activeQuestionLabel ?? 'Question unavailable'} — Pipeline Active — ${formatRunningDuration(inProgressEntity.started_at || inProgressEntity.generated_at)}`
+    ? `${repairFocus ? 'Repairing' : 'Now playing'} — ${inProgressEntity.entity_name} — Enrichment — ${activeQuestionLabel ?? 'Question unavailable'} — Pipeline Active — ${formatRunningDuration(inProgressEntity.started_at || inProgressEntity.generated_at)}`
     : pipelinePaused
-      ? 'Pipeline intake paused.'
+      ? 'Paused'
       : queuedEntityCount > 0
         ? `Waiting for claimable work — ${queuedEntityCount} queued entities`
         : 'Waiting for claimable work.'
@@ -215,49 +219,55 @@ export function OperationalStatusStrip({
             ))}
           </div>
 
-          <div className="flex flex-wrap items-center justify-end gap-2 xl:pl-3">
-            <Button
-              variant="outline"
-              className="h-9 border-custom-border px-3 py-1.5"
-              onClick={queueNextBatch}
-              disabled={isQueueingBatch || !nextUpcomingEntity?.entity_id}
-            >
-              Queue next batch
-            </Button>
-            <Button
-              variant="outline"
-              className="h-9 border-custom-border px-3 py-1.5"
-              onClick={togglePipelinePaused}
-              disabled={isTogglingPipeline}
-            >
-              {pipelinePaused ? 'Start pipeline' : 'Stop intake'}
-            </Button>
-            <Button
-              variant="outline"
-              className="h-9 border-custom-border px-3 py-1.5"
-              onClick={() => setIsExpanded((current) => !current)}
-              aria-expanded={isExpanded}
-              aria-label={isExpanded ? 'Minimize live ops header' : 'Expand live ops header'}
-            >
-              {isExpanded ? <ChevronUp className="mr-2 h-4 w-4" /> : <ChevronDown className="mr-2 h-4 w-4" />}
-              {isExpanded ? 'Minimize' : 'Expand'}
-            </Button>
-            <Button variant="outline" className="h-9 border-custom-border px-3 py-1.5" onClick={onToggleDrawer}>
-              <BarChart3 className="mr-2 h-4 w-4" />
-              {drawerOpen ? 'Hide run details' : 'Show run details'}
-            </Button>
-          </div>
-        </div>
+          <div className="flex min-w-0 flex-1 flex-col gap-2 xl:pl-3">
+            <div className="flex items-center gap-2 overflow-hidden rounded-full border border-custom-border bg-custom-bg/70 px-3 py-2">
+              <Badge variant="outline" className="shrink-0 border-sky-500/30 text-sky-300">
+                {playerStatusLabel}
+              </Badge>
+              <div className="min-w-0 overflow-hidden">
+                <div className="animate-marquee flex w-max items-center gap-8 whitespace-nowrap text-[0.72rem] font-medium uppercase tracking-[0.12em] text-fm-light-grey">
+                  <span>{compactTicker}</span>
+                  <span aria-hidden="true">{compactTicker}</span>
+                </div>
+              </div>
+            </div>
 
-        <div className="flex items-center gap-2 overflow-x-auto whitespace-nowrap pb-1">
-          <div className="flex min-w-0 flex-1 items-center gap-2 rounded-xl border border-custom-border bg-custom-bg/70 px-3 py-2">
-            <Badge variant="outline" className="border-sky-500/30 text-sky-300">
-              {ignitionLabel}
-            </Badge>
-            <div className="min-w-0 overflow-hidden">
-              <div className="animate-marquee flex w-max items-center gap-8 whitespace-nowrap text-[0.72rem] font-medium uppercase tracking-[0.12em] text-fm-light-grey">
-                <span>{compactTicker}</span>
-                <span aria-hidden="true">{compactTicker}</span>
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              <div className="flex flex-wrap items-center gap-2 rounded-full border border-custom-border bg-custom-bg/70 px-2.5 py-1.5">
+                <span className="text-[0.55rem] uppercase tracking-[0.16em] text-slate-400">Transport</span>
+                <Button
+                  variant="outline"
+                  className="h-9 border-custom-border px-3 py-1.5"
+                  onClick={queueNextBatch}
+                  disabled={isQueueingBatch || !nextUpcomingEntity?.entity_id}
+                >
+                  Queue next batch
+                </Button>
+                <Button
+                  variant="outline"
+                  className="h-9 border-custom-border px-3 py-1.5"
+                  onClick={togglePipelinePaused}
+                  disabled={isTogglingPipeline}
+                >
+                  {pipelinePaused ? 'Start pipeline' : 'Stop intake'}
+                </Button>
+              </div>
+              <div className="flex flex-wrap items-center gap-2 rounded-full border border-custom-border bg-custom-bg/70 px-2.5 py-1.5">
+                <span className="text-[0.55rem] uppercase tracking-[0.16em] text-slate-400">Visibility</span>
+                <Button
+                  variant="outline"
+                  className="h-9 border-custom-border px-3 py-1.5"
+                  onClick={() => setIsExpanded((current) => !current)}
+                  aria-expanded={isExpanded}
+                  aria-label={isExpanded ? 'Minimize live ops header' : 'Expand live ops header'}
+                >
+                  {isExpanded ? <ChevronUp className="mr-2 h-4 w-4" /> : <ChevronDown className="mr-2 h-4 w-4" />}
+                  {isExpanded ? 'Minimize' : 'Expand'}
+                </Button>
+                <Button variant="outline" className="h-9 border-custom-border px-3 py-1.5" onClick={onToggleDrawer}>
+                  <BarChart3 className="mr-2 h-4 w-4" />
+                  {drawerOpen ? 'Hide run details' : 'Show run details'}
+                </Button>
               </div>
             </div>
           </div>
