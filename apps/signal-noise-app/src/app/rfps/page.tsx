@@ -135,7 +135,7 @@ export default function RfpsPage() {
       />
       <AppPageBody>
         <section className="grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
-          <Card className="border-border/70 bg-card">
+          <Card className="min-w-0 border-border/70 bg-card">
             <CardHeader className="space-y-2">
               <div className="flex items-center justify-between gap-3">
                 <CardTitle className="text-sm font-medium text-muted-foreground">Latest wide research</CardTitle>
@@ -183,7 +183,7 @@ export default function RfpsPage() {
                 <span className="font-medium text-foreground/80">Seed prompt:</span>{' '}
                 {wideResearchBatch?.seed_query || 'Awaiting first Manus batch'}
               </div>
-                <div className="rounded-xl border border-dashed border-border/70 bg-background/40 px-3 py-2 text-xs text-muted-foreground">
+              <div className="rounded-xl border border-dashed border-border/70 bg-background/40 px-3 py-2 text-xs text-muted-foreground">
                 Canonical entity ingestion happens automatically from the normalized Manus batch. Missing entities are created in the source of truth with the available opportunity context.
               </div>
             </CardContent>
@@ -203,11 +203,11 @@ export default function RfpsPage() {
             </div>
             <div className="grid gap-4 xl:grid-cols-2">
               {wideResearchOpportunities.map((rfp) => (
-                <Card key={rfp.id} className="border-border/70 bg-card shadow-sm">
+                <Card key={rfp.id} className="min-w-0 border-border/70 bg-card shadow-sm">
                   <CardHeader className="space-y-3">
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div className="space-y-2">
-                        <CardTitle className="text-xl leading-tight text-foreground">{rfp.title}</CardTitle>
+                        <CardTitle className="break-words text-xl leading-tight text-foreground">{rfp.title}</CardTitle>
                         <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
                           <span className="inline-flex items-center gap-1.5">
                             <Building2 className="h-4 w-4" />

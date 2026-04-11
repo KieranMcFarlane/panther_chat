@@ -28,7 +28,9 @@ test('app navigation keeps the sidebar fixed while the main pane scrolls', async
   const navigationSource = await readFile(new URL('../src/components/layout/AppNavigation.tsx', import.meta.url), 'utf8')
 
   assert.match(navigationSource, /h-screen[\s\S]*overflow-hidden[\s\S]*bg-custom-bg[\s\S]*overflow-x-hidden/)
-  assert.match(navigationSource, /sticky top-0 h-screen/)
+  assert.match(navigationSource, /hidden h-screen overflow-hidden[\s\S]*lg:flex/)
+  assert.match(navigationSource, /lg:hidden/)
+  assert.match(navigationSource, /Dialog open=\{mobileNavOpen\}/)
   assert.doesNotMatch(navigationSource, /sticky top-0 h-screen overflow-y-auto/)
   assert.match(navigationSource, /min-h-0[\s\S]*flex-1[\s\S]*overflow-y-auto/)
   assert.doesNotMatch(navigationSource, /Client Path/)

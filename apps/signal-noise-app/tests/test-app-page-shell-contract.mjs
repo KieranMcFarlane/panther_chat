@@ -7,5 +7,6 @@ test('shared page shell inherits the global app shell instead of forcing its own
 
   assert.match(source, /<section className=\{cn\('w-full text-foreground'/)
   assert.match(source, /mx-auto flex w-full flex-col gap-6/)
+  assert.match(source, /px-3 py-4 sm:px-6 sm:py-6 lg:px-8/)
   assert.doesNotMatch(source, /<main className=\{cn\('min-h-screen bg-background text-foreground'/)
 })

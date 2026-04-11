@@ -16,7 +16,7 @@ export function AppPageShell({
 
   return (
     <section className={cn('w-full text-foreground', className)}>
-      <div className={cn('mx-auto flex w-full flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8', widthClass)}>
+      <div className={cn('mx-auto flex w-full flex-col gap-6 px-3 py-4 sm:px-6 sm:py-6 lg:px-8', widthClass)}>
         {children}
       </div>
     </section>
@@ -39,7 +39,7 @@ export function AppPageHeader({
   return (
     <header
       className={cn(
-        'rounded-2xl border border-border/70 bg-card/80 p-5 shadow-sm backdrop-blur sm:p-6',
+        'rounded-2xl border border-border/70 bg-card/80 p-4 shadow-sm backdrop-blur sm:p-6',
         className,
       )}
     >

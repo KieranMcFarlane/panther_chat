@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import VectorSearch from '@/components/ui/VectorSearch-debounced';
 import PageTransition from './PageTransition';
@@ -30,6 +31,7 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [activeOpsSection, setActiveOpsSection] = useState<'running' | 'blocked' | 'completed' | 'entities'>('running');
   const [pendingHref, setPendingHref] = useState<string | null>(null);
   const pathname = usePathname();
@@ -38,6 +40,7 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
 
   useEffect(() => {
     setPendingHref(null);
+    setMobileNavOpen(false);
   }, [pathname]);
 
   if (isFullScreenAuthRoute) {
@@ -163,62 +166,77 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
     </div>
   )
 
+  const renderSidebarContent = (expanded: boolean) => (
+    <div className="flex min-h-full flex-col p-4">
+      <div className="mb-6 flex items-center justify-between">
+        {expanded ? (
+          <div className="flex items-center gap-3">
+            <img src="/yp_logo.svg" alt="Yellow Panther Logo" className="h-10 w-10 object-contain" />
+            <span className="text-white font-semibold">Reverse</span>
+          </div>
+        ) : (
+          <div className="flex w-full justify-center">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setSidebarExpanded(!sidebarExpanded)}
+              className="text-white hover:bg-custom-border"
+              aria-label={sidebarExpanded ? 'Collapse navigation' : 'Expand navigation'}
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+          </div>
+        )}
+        {expanded ? (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSidebarExpanded(!sidebarExpanded)}
+            className="text-white hover:bg-custom-border"
+            aria-label={sidebarExpanded ? 'Collapse navigation' : 'Expand navigation'}
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+        ) : null}
+      </div>
+
+      <div className="flex-1 space-y-6">
+        {navSections.map((section) => renderSection(section))}
+      </div>
+
+      {expanded && authMenu ? (
+        <div className="mt-6 border-t border-custom-border pt-4">{authMenu}</div>
+      ) : null}
+    </div>
+  );
+
   return (
     <div className="relative z-10 h-screen overflow-hidden bg-custom-bg overflow-x-hidden">
       <div className="flex h-full items-stretch">
         <aside
-            className={`${sidebarExpanded ? 'w-64' : 'w-20'} sticky top-0 h-screen overflow-hidden transition-all duration-300 border-r border-custom-border bg-custom-box/80 backdrop-blur-md relative z-50 flex-shrink-0`}
-          >
-            <div className="flex min-h-full flex-col p-4">
-              <div className="flex items-center justify-between mb-6">
-                {sidebarExpanded ? (
-                  <div className="flex items-center gap-3">
-                    <img src="/yp_logo.svg" alt="Yellow Panther Logo" className="h-10 w-10 object-contain" />
-                    <span className="text-white font-semibold">Reverse</span>
-                  </div>
-                ) : (
-                  <div className="flex w-full justify-center">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setSidebarExpanded(!sidebarExpanded)}
-                      className="text-white hover:bg-custom-border"
-                      aria-label={sidebarExpanded ? 'Collapse navigation' : 'Expand navigation'}
-                    >
-                      <Menu className="h-5 w-5" />
-                    </Button>
-                  </div>
-                )}
-                {sidebarExpanded ? (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setSidebarExpanded(!sidebarExpanded)}
-                    className="text-white hover:bg-custom-border"
-                    aria-label={sidebarExpanded ? 'Collapse navigation' : 'Expand navigation'}
-                  >
-                    <Menu className="h-5 w-5" />
-                  </Button>
-                ) : null}
-              </div>
-
-              <div className="flex-1 space-y-6">
-                {navSections.map((section) => renderSection(section))}
-              </div>
-
-              {sidebarExpanded && authMenu ? (
-                <div className="mt-6 border-t border-custom-border pt-4">{authMenu}</div>
-              ) : null}
-            </div>
-          </aside>
+          className={`${sidebarExpanded ? 'w-64' : 'w-20'} sticky top-0 hidden h-screen overflow-hidden border-r border-custom-border bg-custom-box/80 backdrop-blur-md relative z-50 flex-shrink-0 transition-all duration-300 lg:flex`}
+        >
+          {renderSidebarContent(sidebarExpanded)}
+        </aside>
 
         <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto">
           <div className="sticky top-0 z-40 border-b border-custom-border/70 bg-custom-bg/90 backdrop-blur supports-[backdrop-filter]:bg-custom-bg/75">
-            <div className="px-4 py-4 sm:px-6 lg:px-8">
-              <OperationalStatusStrip
-                drawerOpen={drawerOpen}
-                onToggleDrawer={() => setDrawerOpen((current) => !current)}
-              />
+            <div className="flex items-center gap-3 px-3 py-3 sm:px-6 lg:px-8">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="lg:hidden text-white hover:bg-custom-border"
+                aria-label={mobileNavOpen ? 'Close navigation' : 'Open navigation'}
+                onClick={() => setMobileNavOpen((current) => !current)}
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+              <div className="min-w-0 flex-1">
+                <OperationalStatusStrip
+                  drawerOpen={drawerOpen}
+                  onToggleDrawer={() => setDrawerOpen((current) => !current)}
+                />
+              </div>
             </div>
             {drawerOpen ? (
               <div className="px-4 pb-6 sm:px-6 lg:px-8">
@@ -231,6 +249,14 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
           </div>
         </div>
       </div>
+      <Dialog open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
+        <DialogContent className="left-0 top-0 h-full w-[min(18rem,calc(100vw-1rem))] max-w-none translate-x-0 translate-y-0 rounded-none border-r border-border/70 bg-custom-box p-0 text-white shadow-2xl sm:rounded-none">
+          <DialogTitle className="sr-only">Navigation</DialogTitle>
+          <div className="h-full overflow-y-auto">
+            {renderSidebarContent(true)}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
