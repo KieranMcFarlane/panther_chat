@@ -360,20 +360,20 @@ function OpportunitiesContent() {
         }
       />
       <AppPageBody>
-        <div className="grid gap-3 md:grid-cols-4">
-          <div className="rounded-xl border border-custom-border bg-custom-bg/60 p-4">
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="min-w-0 rounded-xl border border-custom-border bg-custom-bg/60 p-4">
             <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">Shortlisted</div>
             <div className="mt-2 text-3xl font-semibold text-white">{filteredOpportunities.length}</div>
           </div>
-          <div className="rounded-xl border border-custom-border bg-custom-bg/60 p-4">
+          <div className="min-w-0 rounded-xl border border-custom-border bg-custom-bg/60 p-4">
             <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">High Conviction</div>
             <div className="mt-2 text-3xl font-semibold text-green-400">{highConvictionCount}</div>
           </div>
-          <div className="rounded-xl border border-custom-border bg-custom-bg/60 p-4">
+          <div className="min-w-0 rounded-xl border border-custom-border bg-custom-bg/60 p-4">
             <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">With Value Signal</div>
             <div className="mt-2 text-3xl font-semibold text-yellow-300">{trackedValueCount}</div>
           </div>
-          <div className="rounded-xl border border-custom-border bg-custom-bg/60 p-4">
+          <div className="min-w-0 rounded-xl border border-custom-border bg-custom-bg/60 p-4">
             <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">Average Score</div>
             <div className="mt-2 text-3xl font-semibold text-white">{averageScore}</div>
           </div>
@@ -440,11 +440,11 @@ function OpportunitiesContent() {
           {filteredOpportunities.map((opportunity) => (
             <div
               key={opportunity.id}
-              className="rounded-lg border border-custom-border bg-custom-box p-4 transition-colors hover:border-yellow-400"
+              className="min-w-0 rounded-lg border border-custom-border bg-custom-box p-4 transition-colors hover:border-yellow-400"
             >
-              <div className="mb-3 flex items-start justify-between">
+              <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                  <h3 className="text-lg font-semibold text-white">{opportunity.title}</h3>
+                  <h3 className="break-words text-lg font-semibold text-white">{opportunity.title}</h3>
                   <div className="flex flex-wrap items-center gap-2 text-sm text-fm-medium-grey">
                     <span>{opportunity.organization}</span>
                   </div>
@@ -460,7 +460,7 @@ function OpportunitiesContent() {
 
               <p className="mb-4 text-sm text-fm-light-grey">{opportunity.description}</p>
 
-              <div className="mb-4 grid grid-cols-2 gap-4">
+              <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div className="text-center">
                   <div className={`text-2xl font-bold ${getScoreColor(opportunity.criticalOpportunityScore)}`}>
                     {opportunity.criticalOpportunityScore}
@@ -473,7 +473,7 @@ function OpportunitiesContent() {
                 </div>
               </div>
 
-              <div className="mb-4 grid grid-cols-4 gap-2 text-xs">
+              <div className="mb-4 grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
                 <div className="text-center">
                   <div className={`font-medium ${getScoreColor(opportunity.priorityScore)}`}>{opportunity.priorityScore}</div>
                   <div className="text-fm-medium-grey">Priority</div>
@@ -505,8 +505,8 @@ function OpportunitiesContent() {
                 ))}
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4 text-xs text-fm-medium-grey">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-wrap items-center gap-4 text-xs text-fm-medium-grey">
                   {opportunity.deadline && (
                     <div className="flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
@@ -523,7 +523,7 @@ function OpportunitiesContent() {
                 </div>
               </div>
 
-              <div className="mt-4 flex gap-2">
+              <div className="mt-4 flex flex-col gap-2 sm:flex-row">
                 <Button size="sm" variant="outline" className="flex-1">
                   <Star className="mr-1 h-3 w-3" />
                   Review Fit
