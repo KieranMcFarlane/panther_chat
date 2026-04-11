@@ -5,7 +5,9 @@ import path from 'node:path'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { CANONICAL_GOVERNING_BODY_OVERRIDES } from '@/lib/canonical-governing-body-overrides'
 import { canonicalizeEntities, type CanonicalEntity } from '@/lib/entity-canonicalization'
-import scaleManifestData from '../../backend/data/question_first_scale_batch_3000_live.json'
+import { loadQuestionFirstScaleManifest } from '@/lib/question-first-manifest'
+
+const scaleManifestData = loadQuestionFirstScaleManifest()
 
 const SNAPSHOT_TTL_MS = 15 * 60_000
 const localFalkorExportPath = path.resolve(process.cwd(), 'backend', 'falkordb_export.json')

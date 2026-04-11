@@ -128,8 +128,8 @@ test('home queue dashboard loader prefers Supabase pipeline runs and keeps manif
 
 test('home queue dashboard loader keeps the published snapshot as fallback-only and computes live loop health from runtime timestamps', () => {
   assert.match(dashboardLoaderSource, /question_first_live_queue_snapshot\.json/)
-  assert.match(dashboardLoaderSource, /from '\.\.\/\.\.\/backend\/data\/question_first_live_queue_snapshot\.json'/)
-  assert.match(dashboardLoaderSource, /from '\.\.\/\.\.\/backend\/data\/question_first_scale_batch_3000_live\.json'/)
+  assert.match(dashboardLoaderSource, /loadQuestionFirstLiveQueueSnapshot/)
+  assert.match(dashboardLoaderSource, /loadQuestionFirstScaleManifest/)
   assert.doesNotMatch(dashboardLoaderSource, /loop_status:\s*publishedLoopStatus\s*\|\|/)
   assert.doesNotMatch(dashboardLoaderSource, /queue:\s*publishedQueue\s*\|\|/)
   assert.match(dashboardLoaderSource, /health:\s*'/)

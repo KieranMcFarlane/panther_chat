@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server'
-import scaleManifestData from '../../../../../backend/data/question_first_scale_batch_3000_live.json'
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
 import { deriveEntityPipelineLifecycle } from '@/lib/entity-pipeline-lifecycle'
 import { readPipelineControlState } from '@/lib/pipeline-control-state'
+import { loadQuestionFirstScaleManifest } from '@/lib/question-first-manifest'
+
+const scaleManifestData = loadQuestionFirstScaleManifest()
 
 export const dynamic = 'force-dynamic'
 

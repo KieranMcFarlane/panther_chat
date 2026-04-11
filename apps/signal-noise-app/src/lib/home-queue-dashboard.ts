@@ -1,13 +1,12 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
-import liveQueueSnapshotData from '../../backend/data/question_first_live_queue_snapshot.json'
-import scaleManifestData from '../../backend/data/question_first_scale_batch_3000_live.json'
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { deriveEntityPipelineLifecycle } from '@/lib/entity-pipeline-lifecycle'
 import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
 import { mergeQuestionFirstRunArtifactIntoDossier, normalizeQuestionFirstDossier, resolveCanonicalQuestionFirstDossier } from '@/lib/question-first-dossier'
 import { readPipelineControlState } from '@/lib/pipeline-control-state'
+import { loadQuestionFirstLiveQueueSnapshot, loadQuestionFirstScaleManifest } from '@/lib/question-first-manifest'
 import { ROLLOUT_PROOF_SET } from '@/lib/rollout-proof-set'
 
 type ScaleProgress = {
@@ -1193,9 +1192,9 @@ export async function buildHomeQueueDashboardPayload(options: BuildOptions = {})
   const progressPath = latestFile(diagnosticsRoot, 'question_first_scale_progress.json')
   const progress = (progressPath ? tryReadJson(progressPath) : null) as ScaleProgress | null
   const outputRoot = progressPath ? path.dirname(progressPath) : diagnosticsRoot
-  const liveQueueSnapshot = (liveQueueSnapshotData || null) as LiveQueueSnapshot | null
+  const liveQueueSnapshot = loadQuestionFirstLiveQueueSnapshot(appRoot) as LiveQueueSnapshot | null
   const snapshotPath = path.join(appRoot, 'backend', 'data', 'question_first_live_queue_snapshot.json')
-  const manifestPayload = (scaleManifestData || null) as Record<string, unknown> | null
+  const manifestPayload = loadQuestionFirstScaleManifest(appRoot) as Record<string, unknown> | null
   const manifestEntities = Array.isArray(manifestPayload?.entities) ? manifestPayload.entities as ManifestEntity[] : []
   const dossierRoot = path.join(appRoot, 'backend', 'data', 'dossiers', 'question_first')
   const canonicalEntities = await getCanonicalEntitiesSnapshot()
