@@ -23,26 +23,38 @@ class ReconciliationWorker:
         self.falkordb_writer = falkordb_writer
         self.max_attempts = max(1, int(max_attempts))
 
-    def _get_run(self, batch_id: str, entity_id: str) -> Optional[Dict[str, Any]]:
-        response = (
+    def _get_run(self, batch_id: str, entity_id: str, canonical_entity_id: Optional[str] = None) -> Optional[Dict[str, Any]]:
+        query = (
             self.supabase.table("entity_pipeline_runs")
             .select("*")
             .eq("batch_id", batch_id)
-            .eq("entity_id", entity_id)
-            .limit(1)
-            .execute()
         )
+        if canonical_entity_id:
+            query = query.eq("canonical_entity_id", canonical_entity_id)
+        else:
+            query = query.eq("entity_id", entity_id)
+
+        response = query.limit(1).execute()
         data = response.data or []
         return data[0] if data else None
 
-    def _update_run_metadata(self, batch_id: str, entity_id: str, metadata: Dict[str, Any]) -> None:
-        (
+    def _update_run_metadata(
+        self,
+        batch_id: str,
+        entity_id: str,
+        metadata: Dict[str, Any],
+        canonical_entity_id: Optional[str] = None,
+    ) -> None:
+        query = (
             self.supabase.table("entity_pipeline_runs")
             .update({"metadata": metadata})
             .eq("batch_id", batch_id)
-            .eq("entity_id", entity_id)
-            .execute()
         )
+        if canonical_entity_id:
+            query = query.eq("canonical_entity_id", canonical_entity_id)
+        else:
+            query = query.eq("entity_id", entity_id)
+        query.execute()
 
     async def process_run(self, batch_id: str, entity_id: str) -> Dict[str, Any]:
         run = self._get_run(batch_id, entity_id)
@@ -50,6 +62,11 @@ class ReconciliationWorker:
             return {"status": "missing"}
 
         metadata = deepcopy(run.get("metadata") or {})
+        canonical_entity_id = str(
+            run.get("canonical_entity_id")
+            or (metadata.get("canonical_entity_id") if isinstance(metadata, dict) else "")
+            or ""
+        ).strip() or None
         if not isinstance(metadata, dict) or not metadata.get("reconcile_required"):
             return {"status": "skipped"}
 
@@ -63,7 +80,7 @@ class ReconciliationWorker:
         if not payloads:
             metadata["reconcile_required"] = False
             metadata["reconciliation_state"] = "healthy"
-            self._update_run_metadata(batch_id, entity_id, metadata)
+            self._update_run_metadata(batch_id, entity_id, metadata, canonical_entity_id=canonical_entity_id)
             return {"status": "completed"}
 
         failures = []
@@ -83,7 +100,7 @@ class ReconciliationWorker:
             metadata["reconciliation_retry_count"] = retry_count
             metadata["reconciliation_payload"] = None
             metadata["reconciliation_payloads"] = []
-            self._update_run_metadata(batch_id, entity_id, metadata)
+            self._update_run_metadata(batch_id, entity_id, metadata, canonical_entity_id=canonical_entity_id)
             return {"status": "completed"}
 
         retry_count += 1
@@ -91,9 +108,9 @@ class ReconciliationWorker:
         metadata["reconciliation_retry_count"] = retry_count
         if retry_count >= self.max_attempts:
             metadata["reconciliation_state"] = "exhausted"
-            self._update_run_metadata(batch_id, entity_id, metadata)
+            self._update_run_metadata(batch_id, entity_id, metadata, canonical_entity_id=canonical_entity_id)
             return {"status": "exhausted", "failures": failures}
 
         metadata["reconciliation_state"] = "retrying"
-        self._update_run_metadata(batch_id, entity_id, metadata)
+        self._update_run_metadata(batch_id, entity_id, metadata, canonical_entity_id=canonical_entity_id)
         return {"status": "retrying", "failures": failures}

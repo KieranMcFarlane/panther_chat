@@ -82,6 +82,12 @@ class FalkorDBImporter:
             FOR (n:Entity)
             REQUIRE n.neo4j_id IS UNIQUE
             """,
+            """
+            CREATE CONSTRAINT entity_canonical_entity_id_unique
+            IF NOT EXISTS
+            FOR (n:Entity)
+            REQUIRE n.canonical_entity_id IS UNIQUE
+            """,
             # Unique constraint for name on commonly used labels
             """
             CREATE CONSTRAINT club_name_unique
@@ -109,6 +115,7 @@ class FalkorDBImporter:
             "CREATE INDEX entity_type_index IF NOT EXISTS FOR (n:Entity) ON (n.type)",
             "CREATE INDEX entity_sport_index IF NOT EXISTS FOR (n:Entity) ON (n.sport)",
             "CREATE INDEX entity_country_index IF NOT EXISTS FOR (n:Entity) ON (n.country)",
+            "CREATE INDEX entity_canonical_id_index IF NOT EXISTS FOR (n:Entity) ON (n.canonical_entity_id)",
         ]
 
         with self.driver.session(database=self.database) as session:
@@ -178,6 +185,7 @@ class FalkorDBImporter:
         labels = entity.get('labels', ['Entity'])
         props = entity.get('properties', {})
         neo4j_id = entity.get('neo4j_id')
+        canonical_entity_id = entity.get('canonical_entity_id') or props.get('canonical_entity_id') or entity.get('uuid') or props.get('uuid')
 
         if not neo4j_id:
             raise ValueError("Entity missing neo4j_id")
@@ -187,6 +195,9 @@ class FalkorDBImporter:
 
         # Add neo4j_id to properties
         all_props = {**props, 'neo4j_id': neo4j_id}
+        if canonical_entity_id:
+            all_props['canonical_entity_id'] = canonical_entity_id
+            all_props['uuid'] = canonical_entity_id
 
         # Add badge_s3_url if present
         if entity.get('badge_s3_url'):

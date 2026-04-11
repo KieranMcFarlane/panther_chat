@@ -581,6 +581,7 @@ class DossierResponse(BaseModel):
 class EntityPipelineRequest(BaseModel):
     """Request for running one entity through the full intelligence pipeline."""
     entity_id: str = Field(..., description="Entity ID (e.g., 'arsenal-fc')")
+    canonical_entity_id: Optional[str] = Field(default=None, description="Canonical UUID for internal identity normalization")
     entity_name: str = Field(..., description="Entity display name")
     entity_type: str = Field(default="CLUB", description="Entity type")
     priority_score: int = Field(default=85, ge=0, le=100, description="Priority score")
@@ -975,6 +976,11 @@ async def generate_dossier(request: DossierRequest):
         supabase: Client = create_client(supabase_url, supabase_key)
 
         logger.info(f"📊 Dossier generation requested for {request.entity_name} (entity_id: {request.entity_id})")
+        canonical_entity_id = str(
+            request.canonical_entity_id
+            or (request.metadata or {}).get("canonical_entity_id")
+            or ""
+        ).strip() or None
         phase0_substeps: Dict[str, Dict[str, Any]] = {
             step: {"status": "pending"} for step in PHASE0_SUBSTEP_ORDER
         }
@@ -1008,7 +1014,11 @@ async def generate_dossier(request: DossierRequest):
         await emit_dossier_substep("cache_lookup", "running")
         if not request.force_refresh:
             try:
-                cached = supabase.table("entity_dossiers").select("*").eq("entity_id", request.entity_id).execute()
+                cache_query = supabase.table("entity_dossiers").select("*")
+                if canonical_entity_id:
+                    cached = cache_query.eq("canonical_entity_id", canonical_entity_id).order("created_at", desc=True).limit(1).execute()
+                else:
+                    cached = cache_query.eq("entity_id", request.entity_id).execute()
 
                 if cached.data:
                     cached_dossier = cached.data[0]
@@ -1119,6 +1129,7 @@ async def generate_dossier(request: DossierRequest):
 
             dossier_record = {
                 "entity_id": request.entity_id,
+                "canonical_entity_id": canonical_entity_id,
                 "entity_name": request.entity_name,
                 "entity_type": request.entity_type,
                 "priority_score": request.priority_score,
@@ -1136,11 +1147,20 @@ async def generate_dossier(request: DossierRequest):
             # Upsert to Supabase (update if exists, insert if not)
             try:
                 # Check if exists
-                existing = supabase.table("entity_dossiers").select("id").eq("entity_id", request.entity_id).execute()
+                existing_query = supabase.table("entity_dossiers").select("id")
+                if canonical_entity_id:
+                    existing = existing_query.eq("canonical_entity_id", canonical_entity_id).limit(1).execute()
+                else:
+                    existing = existing_query.eq("entity_id", request.entity_id).execute()
 
                 if existing.data:
                     # Update existing
-                    supabase.table("entity_dossiers").update(dossier_record).eq("entity_id", request.entity_id).execute()
+                    update_query = supabase.table("entity_dossiers").update(dossier_record)
+                    if canonical_entity_id:
+                        update_query = update_query.eq("canonical_entity_id", canonical_entity_id)
+                    else:
+                        update_query = update_query.eq("entity_id", request.entity_id)
+                    update_query.execute()
                     logger.info("✅ Updated existing dossier in Supabase")
                 else:
                     # Insert new
@@ -1238,6 +1258,11 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
         supabase_url = os.getenv("SUPABASE_URL") or os.getenv("NEXT_PUBLIC_SUPABASE_URL")
         supabase_key = os.getenv("SUPABASE_ANON_KEY") or os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
         pipeline_supabase: Optional[Client] = None
+        canonical_entity_id = str(
+            request.canonical_entity_id
+            or (request.metadata or {}).get("canonical_entity_id")
+            or ""
+        ).strip() or None
         if request.batch_id and supabase_url and supabase_key:
             pipeline_supabase = create_client(supabase_url, supabase_key)
 
@@ -1247,12 +1272,11 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
 
             existing_metadata: Dict[str, Any] = {}
             try:
-                existing = pipeline_supabase.table("entity_pipeline_runs") \
-                    .select("metadata") \
-                    .eq("batch_id", request.batch_id) \
-                    .eq("entity_id", request.entity_id) \
-                    .limit(1) \
-                    .execute()
+                existing_query = pipeline_supabase.table("entity_pipeline_runs").select("metadata").eq("batch_id", request.batch_id)
+                if canonical_entity_id:
+                    existing = existing_query.eq("canonical_entity_id", canonical_entity_id).limit(1).execute()
+                else:
+                    existing = existing_query.eq("entity_id", request.entity_id).limit(1).execute()
                 current_metadata = ((existing.data or [{}])[0]).get("metadata")
                 if isinstance(current_metadata, dict):
                     existing_metadata = current_metadata
@@ -1268,11 +1292,12 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             }
 
             try:
-                pipeline_supabase.table("entity_pipeline_runs") \
-                    .update(update_payload) \
-                    .eq("batch_id", request.batch_id) \
-                    .eq("entity_id", request.entity_id) \
-                    .execute()
+                update_query = pipeline_supabase.table("entity_pipeline_runs").update(update_payload).eq("batch_id", request.batch_id)
+                if canonical_entity_id:
+                    update_query = update_query.eq("canonical_entity_id", canonical_entity_id)
+                else:
+                    update_query = update_query.eq("entity_id", request.entity_id)
+                update_query.execute()
             except Exception as phase_error:
                 logger.warning(f"⚠️ Failed to emit phase update for {request.entity_id}/{phase}: {phase_error}")
 

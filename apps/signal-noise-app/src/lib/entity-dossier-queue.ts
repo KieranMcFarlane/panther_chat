@@ -61,55 +61,31 @@ function hasLiveLease(metadata: Record<string, unknown>, runStartedAt?: string |
   return true
 }
 
+function buildNameCandidates(entityId: string): string[] {
+  const normalized = String(entityId || '')
+    .replace(/-/g, ' ')
+    .replace(/_/g, ' ')
+    .replace(/%26/g, '&')
+    .trim()
+  const withoutYear = normalized.replace(/\b20\d{2}\b/g, '').replace(/\s+/g, ' ').trim()
+  return [normalized, withoutYear].filter((value, index, arr) => Boolean(value) && arr.indexOf(value) === index)
+}
+
 export async function resolveEntityForDossierQueue(entityId: string): Promise<ResolvedEntity | null> {
   const normalizedId = String(entityId || '').trim()
   if (!normalizedId) {
     return null
   }
 
-  const parsedId = Number.parseInt(normalizedId, 10)
-  const idFilters = [`id.eq.${normalizedId}`, `neo4j_id.eq.${normalizedId}`]
-  if (Number.isFinite(parsedId)) {
-    idFilters.push(`neo4j_id.eq.${parsedId}`)
-  }
-
-  const directResult = await supabase
-    .from('cached_entities')
-    .select('id, neo4j_id, labels, properties')
-    .or(idFilters.join(','))
-    .limit(1)
-    .maybeSingle()
-
-  if (directResult.data) {
-    return {
-      id: String(directResult.data.id ?? normalizedId),
-      uuid: resolveEntityUuid({
-        id: directResult.data.id,
-        neo4j_id: directResult.data.neo4j_id,
-        graph_id: directResult.data.graph_id,
-        supabase_id: directResult.data.supabase_id || directResult.data.properties?.supabase_id,
-        properties: directResult.data.properties,
-      }) || undefined,
-      neo4j_id: directResult.data.neo4j_id,
-      labels: directResult.data.labels,
-      properties: typeof directResult.data.properties === 'object' && directResult.data.properties !== null
-        ? directResult.data.properties
-        : {},
-    }
-  }
-
-  const normalizedName = normalizedId
-    .replace(/-/g, ' ')
-    .replace(/_/g, ' ')
-    .replace(/%26/g, '&')
-    .trim()
-
   const canonicalEntities = await getCanonicalEntitiesSnapshot()
+  const canonicalNameCandidates = buildNameCandidates(normalizedId)
   const canonicalMatch = canonicalEntities.find((candidate) =>
     matchesEntityUuid(candidate, normalizedId) ||
     String(candidate.id || '') === normalizedId ||
     String(candidate.neo4j_id || '') === normalizedId ||
-    String(candidate.properties?.name || '').trim().toLowerCase() === normalizedName.toLowerCase(),
+    canonicalNameCandidates.some((candidateName) =>
+      String(candidate.properties?.name || '').trim().toLowerCase() === candidateName.toLowerCase(),
+    ),
   )
 
   if (canonicalMatch) {
@@ -121,6 +97,68 @@ export async function resolveEntityForDossierQueue(entityId: string): Promise<Re
       properties: typeof canonicalMatch.properties === 'object' && canonicalMatch.properties !== null
         ? canonicalMatch.properties
         : {},
+    }
+  }
+
+  const parsedId = Number.parseInt(normalizedId, 10)
+  const idFilters = [`id.eq.${normalizedId}`, `neo4j_id.eq.${normalizedId}`, `canonical_entity_id.eq.${normalizedId}`]
+  if (Number.isFinite(parsedId)) {
+    idFilters.push(`neo4j_id.eq.${parsedId}`)
+  }
+
+  const directResult = await supabase
+    .from('cached_entities')
+    .select('id, neo4j_id, labels, properties, canonical_entity_id')
+    .or(idFilters.join(','))
+    .limit(1)
+    .maybeSingle()
+
+  if (directResult.data) {
+    return {
+      id: String(directResult.data.id ?? normalizedId),
+      uuid: resolveEntityUuid({
+        id: directResult.data.id,
+        uuid: directResult.data.canonical_entity_id,
+        neo4j_id: directResult.data.neo4j_id,
+        graph_id: directResult.data.graph_id,
+        supabase_id: directResult.data.supabase_id || directResult.data.properties?.supabase_id,
+        properties: directResult.data.properties,
+      }) || directResult.data.canonical_entity_id || undefined,
+      neo4j_id: directResult.data.neo4j_id,
+      labels: directResult.data.labels,
+      properties: typeof directResult.data.properties === 'object' && directResult.data.properties !== null
+        ? directResult.data.properties
+        : {},
+    }
+  }
+
+  const [normalizedName] = canonicalNameCandidates
+
+  for (const candidateName of canonicalNameCandidates) {
+    const nameResult = await supabase
+      .from('cached_entities')
+      .select('id, neo4j_id, labels, properties, canonical_entity_id')
+      .ilike('properties->>name', `%${candidateName}%`)
+      .limit(1)
+      .maybeSingle()
+
+    if (nameResult.data) {
+      return {
+        id: String(nameResult.data.id ?? normalizedId),
+        uuid: resolveEntityUuid({
+          id: nameResult.data.id,
+          uuid: nameResult.data.canonical_entity_id,
+          neo4j_id: nameResult.data.neo4j_id,
+          graph_id: nameResult.data.graph_id,
+          supabase_id: nameResult.data.supabase_id || nameResult.data.properties?.supabase_id,
+          properties: nameResult.data.properties,
+        }) || nameResult.data.canonical_entity_id || undefined,
+        neo4j_id: nameResult.data.neo4j_id,
+        labels: nameResult.data.labels,
+        properties: typeof nameResult.data.properties === 'object' && nameResult.data.properties !== null
+          ? nameResult.data.properties
+          : {},
+      }
     }
   }
 
@@ -176,6 +214,7 @@ function toPipelineRow(entityId: string, entity: ResolvedEntity) {
   return {
     ...normalized.row,
     entity_id: entityId,
+    canonical_entity_id: entity.uuid || null,
   }
 }
 
@@ -210,6 +249,7 @@ export async function queueDossierRefresh(entityId: string, trigger: string, opt
   const rerunReason = typeof options.rerunReason === 'string' ? options.rerunReason.trim() : null
   const repairMetadata = rerunMode === 'question'
       ? {
+        canonical_entity_id: entity.uuid || null,
         rerun_mode: 'question',
         question_id: questionId || null,
         cascade_dependents: cascadeDependents,
@@ -224,6 +264,7 @@ export async function queueDossierRefresh(entityId: string, trigger: string, opt
         repair_source_dossier_path: options.repairSourceDossierPath || null,
       }
     : {
+        canonical_entity_id: entity.uuid || null,
         rerun_mode: 'full',
         repair_queue_source: 'manual',
       }
@@ -231,7 +272,7 @@ export async function queueDossierRefresh(entityId: string, trigger: string, opt
     ...toPipelineRow(entityId, entity),
     pipeline_metadata: repairMetadata,
   }
-  const activeRunState = await findActivePipelineRunByEntityId(entityId)
+  const activeRunState = await findActivePipelineRunByEntityId(entityId, entity.uuid || null)
   const activeRunMetadata = typeof activeRunState.run?.metadata === 'object' && activeRunState.run?.metadata !== null
     ? activeRunState.run.metadata as Record<string, unknown>
     : {}

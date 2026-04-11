@@ -51,6 +51,7 @@ class SupabaseEntity:
     entity_id: str
     entity_name: str
     entity_type: str
+    canonical_entity_id: Optional[str] = None
     sport: Optional[str] = None
     country: Optional[str] = None
     league: Optional[str] = None
@@ -120,7 +121,9 @@ class SupabaseDataCollector:
                 f'properties->>name.eq.{entity_id},'
                 f'properties->>name.ilike.%{normalized_id}%,'
                 f'properties->>supabase_id.eq.{entity_id},'
-                f'properties->>neo4j_id.eq.{entity_id}'
+                f'properties->>neo4j_id.eq.{entity_id},'
+                f'canonical_entity_id.eq.{entity_id},'
+                f'properties->>canonical_entity_id.eq.{entity_id}'
             ).limit(10).execute()
 
             # If no results, try broader search
@@ -175,11 +178,14 @@ class SupabaseDataCollector:
 
         # Extract basic fields from properties
         entity_id = (
+            row.get('canonical_entity_id') or
+            props.get('canonical_entity_id') or
             props.get('supabase_id') or
             props.get('neo4j_id') or
             props.get('name', '').lower().replace(' ', '-') or
             str(row.get('id', ''))
         )
+        legacy_entity_id = props.get('neo4j_id') or row.get('neo4j_id')
 
         # Parse founded year - may be stored as {'low': year, 'high': 0}
         founded = props.get('founded', '')
@@ -210,6 +216,7 @@ class SupabaseDataCollector:
 
         return SupabaseEntity(
             entity_id=entity_id,
+            canonical_entity_id=row.get('canonical_entity_id') or props.get('canonical_entity_id') or entity_id,
             entity_name=props.get('name', ''),
             entity_type=entity_type or 'CLUB',
             sport=props.get('sport'),
@@ -224,6 +231,8 @@ class SupabaseDataCollector:
             metadata={
                 'properties': props,
                 'neo4j_id': row.get('neo4j_id'),
+                'canonical_entity_id': row.get('canonical_entity_id') or props.get('canonical_entity_id'),
+                'legacy_entity_id': legacy_entity_id,
                 'labels': labels,
                 'badge_s3_url': row.get('badge_s3_url'),
                 'priority_score': row.get('priority_score'),
@@ -279,7 +288,9 @@ class SupabaseDataCollector:
 
             for table_name in tables_to_try:
                 try:
-                    response = self.client.table(table_name).select('*').eq('entity_id', entity_id).execute()
+                    response = self.client.table(table_name).select('*').or_(
+                        f'entity_id.eq.{entity_id},canonical_entity_id.eq.{entity_id}'
+                    ).execute()
 
                     if response.data:
                         logger.info(f"Found {len(response.data)} leadership records in {table_name}")
@@ -312,12 +323,13 @@ class SupabaseDataCollector:
             }
 
         # Get leadership
-        leadership = self.get_leadership(entity_id)
+        leadership = self.get_leadership(entity.canonical_entity_id or entity.entity_id)
 
         # Build dossier data dict
         dossier_data = {
             # Core info
             "entity_id": entity.entity_id,
+            "canonical_entity_id": entity.canonical_entity_id,
             "entity_name": entity.entity_name,
             "entity_type": entity.entity_type,
             "sport": entity.sport,
@@ -356,6 +368,7 @@ class SupabaseDataCollector:
             f"Sport: {entity.sport or 'N/A'}",
             f"Country: {entity.country or 'N/A'}",
             f"League: {entity.league or 'N/A'}",
+            f"Canonical ID: {entity.canonical_entity_id or entity.entity_id}",
         ]
 
         if entity.website:
@@ -403,7 +416,7 @@ class SupabaseDataCollector:
             with open(core_csv, 'w', newline='', encoding='utf-8') as f:
                 writer = csv.writer(f)
                 writer.writerow([
-                    "entity_id", "official_name", "type", "sport", "country",
+                    "entity_id", "canonical_entity_id", "official_name", "type", "sport", "country",
                     "league", "founded_year", "stadium_name", "capacity",
                     "website_url", "employee_count", "description"
                 ])
@@ -415,6 +428,7 @@ class SupabaseDataCollector:
 
                     writer.writerow([
                         entity.entity_id,
+                        entity.canonical_entity_id or "",
                         entity.entity_name,
                         entity.entity_type,
                         entity.sport or "",

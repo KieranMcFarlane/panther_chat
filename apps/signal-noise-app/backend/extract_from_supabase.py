@@ -67,6 +67,8 @@ class GraphNode:
     neo4j_id: str
     labels: List[str]
     properties: Dict[str, Any]
+    uuid: Optional[str] = None
+    canonical_entity_id: Optional[str] = None
     badge_s3_url: Optional[str] = None
 
     def to_dict(self) -> Dict[str, Any]:
@@ -171,10 +173,19 @@ class SupabaseExtractor:
                     logger.warning(f"⚠️  Entity missing neo4j_id, skipping: {properties.get('name', 'Unknown')}")
                     continue
 
+                uuid = entity.get('uuid') or entity.get('canonical_entity_id') or properties.get('uuid') or properties.get('canonical_entity_id')
+                canonical_entity_id = entity.get('canonical_entity_id') or uuid
+
                 node = GraphNode(
                     neo4j_id=neo4j_id,
+                    uuid=uuid,
+                    canonical_entity_id=canonical_entity_id,
                     labels=labels,
-                    properties=properties,
+                    properties={
+                        **properties,
+                        **({"uuid": uuid} if uuid else {}),
+                        **({"canonical_entity_id": canonical_entity_id} if canonical_entity_id else {}),
+                    },
                     badge_s3_url=entity.get('badge_s3_url')
                 )
                 nodes.append(node)

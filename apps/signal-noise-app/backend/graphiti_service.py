@@ -600,9 +600,16 @@ class GraphitiService:
             or run_payload.get("entity_type")
             or "CLUB"
         ).strip().upper() or "CLUB"
+        canonical_entity_id = str(
+            dossier.get("canonical_entity_id")
+            or metadata.get("canonical_entity_id")
+            or run_payload.get("canonical_entity_id")
+            or ""
+        ).strip() or None
 
         record = {
             "entity_id": entity_id,
+            "canonical_entity_id": canonical_entity_id,
             "entity_name": str(
                 dossier.get("entity_name")
                 or run_payload.get("entity_name")
@@ -623,7 +630,8 @@ class GraphitiService:
             "created_at": generated_at,
         }
         # Upsert avoids race conditions and duplicate key insert failures across retries/workers.
-        self.supabase_client.table("entity_dossiers").upsert(record, on_conflict="entity_id").execute()
+        conflict_key = "canonical_entity_id" if canonical_entity_id else "entity_id"
+        self.supabase_client.table("entity_dossiers").upsert(record, on_conflict=conflict_key).execute()
 
     async def persist_pipeline_record_falkordb(self, envelope: Dict[str, Any]) -> Dict[str, Any]:
         """

@@ -7,6 +7,8 @@
  * - MCP Integration: Both storage systems accessible via MCP tools
  */
 
+import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot';
+import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id';
 import { supabase } from '@/lib/supabase-client';
 
 export interface RFPData {
@@ -71,6 +73,13 @@ export interface RFPStorageResult {
   relationshipsCreated?: number;
   error?: string;
 }
+
+type ResolvedLinkedEntity = {
+  canonicalEntityId: string | null;
+  rawEntityId: string | null;
+  entityName: string | null;
+  entityType: string | null;
+};
 
 export class RFPStorageService {
   private neo4j: any;
@@ -144,6 +153,8 @@ export class RFPStorageService {
    * Save RFP to Unified Supabase Table for UI display
    */
   private async saveToSupabase(rfpData: RFPData) {
+    const linkedEntity = await this.resolveLinkedEntityInfo(rfpData.entityId);
+
     // Parse numeric value for sorting
     const valueNumeric = this.parseValue(rfpData.estimatedValue);
     const currency = this.extractCurrency(rfpData.estimatedValue);
@@ -168,9 +179,9 @@ export class RFPStorageService {
       confidence_score: rfpData.confidence || 0.5,
       confidence: Math.round((rfpData.confidence || 0.5) * 100), // Convert to percentage
       yellow_panther_fit: Math.round((rfpData.confidence || 0.5) * 100), // Map confidence to fit score
-      entity_id: rfpData.entityId,
-      entity_name: null, // Will be populated from cached_entities
-      entity_type: null, // Will be populated from cached_entities
+      entity_id: linkedEntity.canonicalEntityId || rfpData.entityId,
+      entity_name: linkedEntity.entityName,
+      entity_type: linkedEntity.entityType,
       neo4j_id: null, // Will be set after Neo4j creation
       batch_id: rfpData.batchId || null,
       requirements: null, // Will be populated if available
@@ -179,7 +190,11 @@ export class RFPStorageService {
       competition_info: rfpData.competitionInfo || {},
       metadata: {
         original_source: rfpData.source || 'a2a-automation',
-        detection_method: 'ai-analysis'
+        detection_method: 'ai-analysis',
+        canonical_entity_id: linkedEntity.canonicalEntityId,
+        legacy_entity_id: linkedEntity.rawEntityId && linkedEntity.rawEntityId !== linkedEntity.canonicalEntityId
+          ? linkedEntity.rawEntityId
+          : null,
       },
       tags: [], // Will be populated if available
       keywords: [], // Will be extracted from description
@@ -202,8 +217,8 @@ export class RFPStorageService {
       throw new Error(`Supabase storage failed: ${error.message}`);
     }
 
-    // Update entity information from cached_entities if available
-    await this.updateEntityInfo(data.id, rfpData.entityId);
+    // Backfill any missing entity context from canonical-first enrichment.
+    await this.updateEntityInfo(data.id, rfpData.entityId, linkedEntity);
 
     // Calculate and update priority and priority score
     const priority = await this.calculateAndSetUnifiedPriority(data.id, valueNumeric, rfpData.confidence || 0.5, rfpData.deadline);
@@ -364,37 +379,111 @@ export class RFPStorageService {
   }
 
   /**
-   * Update entity information from cached_entities table
+   * Resolve the linked entity against canonical entities first, then raw cache as a compatibility fallback.
    */
-  private async updateEntityInfo(rfpId: string, entityId: string) {
-    if (!entityId) return;
+  private async resolveLinkedEntityInfo(entityId: string): Promise<ResolvedLinkedEntity> {
+    const normalizedId = String(entityId || '').trim();
+    if (!normalizedId) {
+      return {
+        canonicalEntityId: null,
+        rawEntityId: null,
+        entityName: null,
+        entityType: null,
+      };
+    }
+
+    const canonicalEntities = await getCanonicalEntitiesSnapshot();
+    const canonicalMatch = canonicalEntities.find((candidate) =>
+      matchesEntityUuid(candidate, normalizedId) ||
+      String(candidate.id || '') === normalizedId ||
+      String(candidate.neo4j_id || '') === normalizedId ||
+      String(candidate.properties?.name || '').trim().toLowerCase() === normalizedId.toLowerCase()
+    );
+
+    if (canonicalMatch) {
+      return {
+        canonicalEntityId: resolveEntityUuid(canonicalMatch) || String(canonicalMatch.id || ''),
+        rawEntityId: normalizedId,
+        entityName: String(canonicalMatch.properties?.name || '').trim() || null,
+        entityType: String(
+          canonicalMatch.properties?.type ||
+          canonicalMatch.properties?.entityType ||
+          canonicalMatch.labels?.[0] ||
+          ''
+        ).trim() || null,
+      };
+    }
 
     try {
       const { data: entityData, error } = await supabase
         .from('cached_entities')
-        .select('properties, labels')
-        .eq('neo4j_id', entityId)
-        .single();
+        .select('id, neo4j_id, labels, properties, canonical_entity_id')
+        .or(`neo4j_id.eq.${normalizedId},id.eq.${normalizedId},canonical_entity_id.eq.${normalizedId}`)
+        .limit(1)
+        .maybeSingle();
 
       if (error || !entityData) {
-        console.warn(`Entity ${entityId} not found in cached_entities`);
-        return;
+        return {
+          canonicalEntityId: null,
+          rawEntityId: normalizedId,
+          entityName: null,
+          entityType: null,
+        };
       }
 
-      const entityName = entityData.properties?.name || 'Unknown';
-      const entityType = entityData.properties?.type || 
-                       entityData.properties?.entityType || 
-                       (entityData.labels?.includes('Entity') ? 'Entity' : 'Unknown');
+      const canonicalEntityId = resolveEntityUuid({
+        id: entityData.id,
+        canonical_entity_id: entityData.canonical_entity_id,
+        uuid: entityData.canonical_entity_id,
+        neo4j_id: entityData.neo4j_id,
+        properties: entityData.properties,
+      }) || String(entityData.canonical_entity_id || '').trim() || null;
+
+      return {
+        canonicalEntityId,
+        rawEntityId: normalizedId,
+        entityName: String(entityData.properties?.name || '').trim() || null,
+        entityType: String(
+          entityData.properties?.type ||
+          entityData.properties?.entityType ||
+          (entityData.labels?.includes('Entity') ? 'Entity' : '') ||
+          ''
+        ).trim() || null,
+      };
+    } catch (error) {
+      console.warn('Failed to resolve linked entity info:', error);
+      return {
+        canonicalEntityId: null,
+        rawEntityId: normalizedId,
+        entityName: null,
+        entityType: null,
+      };
+    }
+  }
+
+  /**
+   * Update entity information after insert when the initial payload was incomplete.
+   */
+  private async updateEntityInfo(rfpId: string, entityId: string, resolvedEntity?: ResolvedLinkedEntity) {
+    if (!entityId) return;
+
+    try {
+      const entity = resolvedEntity ?? await this.resolveLinkedEntityInfo(entityId);
+      if (!entity.entityName && !entity.entityType && !entity.canonicalEntityId) {
+        console.warn(`Entity ${entityId} not found in canonical or cached entity stores`);
+        return;
+      }
 
       await supabase
         .from('rfp_opportunities_unified')
         .update({
-          entity_name: entityName,
-          entity_type: entityType
+          entity_id: entity.canonicalEntityId || entityId,
+          entity_name: entity.entityName || 'Unknown',
+          entity_type: entity.entityType || 'Unknown',
         })
         .eq('id', rfpId);
 
-      console.log(`Updated entity info for RFP ${rfpId}: ${entityName} (${entityType})`);
+      console.log(`Updated entity info for RFP ${rfpId}: ${entity.entityName || 'Unknown'} (${entity.entityType || 'Unknown'})`);
     } catch (error) {
       console.warn('Failed to update entity info:', error);
     }
