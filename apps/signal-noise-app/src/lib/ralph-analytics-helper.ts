@@ -323,7 +323,9 @@ export async function loadEntityClusterMapping(): Promise<Record<string, string>
     const content = await fs.readFile(mappingPath, 'utf-8');
     return JSON.parse(content);
   } catch (error) {
-    console.error('Error loading entity cluster mapping:', error);
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+      console.error('Error loading entity cluster mapping:', error);
+    }
     return {};
   }
 }
@@ -346,7 +348,9 @@ export async function loadProductionClusters(): Promise<Record<string, string>> 
 
     return clusterMap;
   } catch (error) {
-    console.error('Error loading production clusters:', error);
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+      console.error('Error loading production clusters:', error);
+    }
     return {};
   }
 }

@@ -36,7 +36,7 @@ function isBuildPhase() {
 }
 
 function isHostedProductionRuntime() {
-  return process.env.NODE_ENV === "production" || process.env.VERCEL === "1" || process.env.VERCEL_ENV === "production";
+  return process.env.VERCEL === "1" || process.env.VERCEL_ENV === "production";
 }
 
 function normalizeBaseUrl(value?: string | null) {

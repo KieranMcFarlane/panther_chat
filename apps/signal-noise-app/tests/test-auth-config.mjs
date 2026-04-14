@@ -18,6 +18,8 @@ test('better auth honors DATABASE_URL sqlite paths and refuses memory fallback i
   assert.match(authSource, /process\.env\.DATABASE_URL/)
   assert.match(authSource, /join\("\/tmp",\s*basename\(configuredPath\)\)/)
   assert.match(authSource, /no durable database available in production/)
+  assert.doesNotMatch(authSource, /process\.env\.NODE_ENV === "production".*isHostedProductionRuntime/s)
+  assert.match(authSource, /process\.env\.VERCEL === "1" \|\| process\.env\.VERCEL_ENV === "production"/)
 })
 
 test('better auth supports postgres-backed storage for hosted production', () => {
