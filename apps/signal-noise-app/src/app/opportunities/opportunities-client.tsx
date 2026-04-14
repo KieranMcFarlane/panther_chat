@@ -65,6 +65,9 @@ interface OpportunityCard {
   deadline?: string;
   value?: string;
   description: string;
+  whyItMatters: string;
+  suggestedAction: string;
+  signalSummary: string;
   lastUpdated: string;
   criticalOpportunityScore: number;
   priorityScore: number;
@@ -81,11 +84,75 @@ interface OpportunityCard {
   taxonomy: OpportunityTaxonomy;
 }
 
+function toText(value: unknown): string {
+  return value === null || value === undefined ? '' : String(value).trim();
+}
+
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
+}
+
+function toLabel(value: unknown): string {
+  if (value === null || value === undefined) return '';
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') return String(value).trim();
+  if (Array.isArray(value)) return value.map(toLabel).filter(Boolean).join(', ');
+  if (typeof value === 'object') {
+    const record = value as Record<string, unknown>;
+    return toText(record.name || record.title || record.label || record.value || record.summary || record.description);
+  }
+  return String(value).trim();
+}
+
+function toLabelList(values: unknown): string[] {
+  if (!Array.isArray(values)) return [];
+  return values.map(toLabel).filter(Boolean);
+}
+
+function readDossierNarrative(metadata: Record<string, unknown>) {
+  const graphitiSalesBrief = asRecord(metadata.graphiti_sales_brief);
+  const yellowPantherOpportunity = asRecord(metadata.yellow_panther_opportunity);
+  const serviceFit = toLabelList(yellowPantherOpportunity.service_fit).length > 0
+    ? toLabelList(yellowPantherOpportunity.service_fit)
+    : toLabelList(graphitiSalesBrief.service_fit);
+  const decisionOwners = toLabelList(metadata.decision_owners);
+
+  const whyItMatters =
+    toText(graphitiSalesBrief.capability_gap) ||
+    toText(yellowPantherOpportunity.competitive_advantage) ||
+    toText(metadata.why_it_matters) ||
+    toText(metadata.summary) ||
+    'This dossier has a qualified commercial signal.';
+
+  const suggestedAction =
+    toText(graphitiSalesBrief.outreach_route) ||
+    toText(graphitiSalesBrief.outreach_target) ||
+    toText(graphitiSalesBrief.best_path_owner) ||
+    toText(yellowPantherOpportunity.entry_point) ||
+    toText(metadata.suggested_action) ||
+    'Open the dossier and review the buyer hypothesis.';
+
+  const signalSummary = [
+    serviceFit.length > 0 ? `YP fit: ${serviceFit.slice(0, 3).join(', ')}` : '',
+    decisionOwners.length > 0 ? `Decision owners: ${decisionOwners.slice(0, 3).join(', ')}` : '',
+    toText(graphitiSalesBrief.outreach_angle) ? `Angle: ${toText(graphitiSalesBrief.outreach_angle)}` : '',
+    toText(yellowPantherOpportunity.entry_point) ? `Entry point: ${toText(yellowPantherOpportunity.entry_point)}` : '',
+    toText(metadata.quality_state) ? `Quality: ${toText(metadata.quality_state)}` : '',
+  ].filter(Boolean).join(' · ');
+
+  return {
+    whyItMatters,
+    suggestedAction,
+    signalSummary,
+  };
+}
+
 function normalizeOpportunity(opp: TenderOpportunityRecord): OpportunityCard {
   const organization = opp.canonical_entity_name || opp.entity_name || opp.organization || 'Unknown organization';
   const fit = opp.yellow_panther_fit ?? 0;
   const confidence = opp.confidence ?? 0;
   const priority = opp.priority_score ?? 0;
+  const metadata = asRecord(opp.metadata);
+  const narrative = readDossierNarrative(metadata);
   const taxonomy = opp.taxonomy || normalizeOpportunityTaxonomy({
     ...opp,
     organization,
@@ -108,7 +175,10 @@ function normalizeOpportunity(opp: TenderOpportunityRecord): OpportunityCard {
     theme: displayTaxonomy.theme,
     deadline: opp.deadline || undefined,
     value: opp.value || undefined,
-    description: opp.description || 'No description available',
+    description: narrative.whyItMatters || opp.description || 'No description available',
+    whyItMatters: narrative.whyItMatters,
+    suggestedAction: narrative.suggestedAction,
+    signalSummary: narrative.signalSummary,
     lastUpdated: opp.detected_at || 'Unknown',
     criticalOpportunityScore: Math.round(fit / 10),
     priorityScore: Math.max(0, Math.round(priority)),
@@ -452,7 +522,26 @@ function OpportunitiesContent() {
                 </Badge>
               </div>
 
-              <p className="mb-4 text-sm text-fm-light-grey">{opportunity.description}</p>
+              <div className="mb-4 space-y-3">
+                <p className="text-sm text-fm-light-grey">{opportunity.description}</p>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-md border border-custom-border bg-black/10 p-3">
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Why it matters</div>
+                    <div className="mt-1 text-sm text-white">{opportunity.whyItMatters}</div>
+                  </div>
+                  <div className="rounded-md border border-custom-border bg-black/10 p-3">
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Suggested action</div>
+                    <div className="mt-1 text-sm text-white">{opportunity.suggestedAction}</div>
+                  </div>
+                </div>
+
+                {opportunity.signalSummary ? (
+                  <div className="rounded-md border border-yellow-400/20 bg-yellow-400/10 p-3 text-sm text-yellow-50">
+                    {opportunity.signalSummary}
+                  </div>
+                ) : null}
+              </div>
 
               <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div className="text-center">
@@ -492,8 +581,8 @@ function OpportunitiesContent() {
                     {opportunity.theme}
                   </Badge>
                 ) : null}
-                {opportunity.tags.map((tag) => (
-                  <Badge key={`${opportunity.id}-${tag}`} variant="outline" className="text-xs">
+                {[...new Set(opportunity.tags)].map((tag, index) => (
+                  <Badge key={`${opportunity.id}-${tag}-${index}`} variant="outline" className="text-xs">
                     {tag}
                   </Badge>
                 ))}
@@ -522,7 +611,7 @@ function OpportunitiesContent() {
                 <Button size="sm" variant="outline" className="flex-1" asChild>
                   <a href={opportunity.sourceUrl || '/entity-browser'}>
                     <Target className="mr-1 h-3 w-3" />
-                    Add to Pipeline
+                    Open dossier
                   </a>
                 </Button>
               </div>
