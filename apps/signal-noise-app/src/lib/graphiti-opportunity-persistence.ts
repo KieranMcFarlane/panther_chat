@@ -1,4 +1,6 @@
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
+import { getDossierRoots } from '@/lib/dossier-paths'
+import { normalizeQuestionFirstDossier } from '@/lib/question-first-dossier'
 import { getSupabaseAdmin } from '@/lib/supabase-client'
 import { getGraphitiStaleWindowHours } from '@/lib/runtime-env'
 import { materializeGraphitiOpportunity, rankGraphitiOpportunities } from '@/lib/graphiti-opportunity-materializer'
@@ -7,6 +9,9 @@ import type {
   GraphitiOpportunityResponse,
   GraphitiOpportunitySourceRow,
 } from '@/lib/graphiti-opportunity-contract'
+import { existsSync, readdirSync, statSync } from 'node:fs'
+import { readFile } from 'node:fs/promises'
+import path from 'node:path'
 
 const SOURCE_COLUMNS = [
   'insight_id',
@@ -191,6 +196,140 @@ function isOpportunityCandidateSource(row: GraphitiOpportunitySourceRow): boolea
   return row.priority === 'high'
 }
 
+function walkFiles(root: string, maxDepth = 3): string[] {
+  const files: string[] = []
+  const stack: Array<{ dir: string; depth: number }> = [{ dir: root, depth: 0 }]
+
+  while (stack.length > 0) {
+    const current = stack.pop()
+    if (!current || current.depth > maxDepth || !existsSync(current.dir)) continue
+
+    for (const entry of readdirSync(current.dir, { withFileTypes: true })) {
+      const entryPath = path.join(current.dir, entry.name)
+      if (entry.isDirectory()) {
+        stack.push({ dir: entryPath, depth: current.depth + 1 })
+        continue
+      }
+      files.push(entryPath)
+    }
+  }
+
+  return files
+}
+
+async function loadDossierOpportunitySources(limit: number): Promise<GraphitiOpportunitySourceRow[]> {
+  const seen = new Set<string>()
+  const sourceRows: GraphitiOpportunitySourceRow[] = []
+
+  for (const root of getDossierRoots()) {
+    const dossierFiles = walkFiles(root, 3).filter((filePath) => filePath.endsWith('_question_first_dossier.json'))
+
+    for (const filePath of dossierFiles) {
+      if (sourceRows.length >= Math.max(limit * 4, 100)) {
+        break
+      }
+
+      let payload: Record<string, unknown> | null = null
+      try {
+        payload = JSON.parse(await readFile(filePath, 'utf8'))
+      } catch {
+        continue
+      }
+
+      if (!payload) continue
+
+      const normalized = normalizeQuestionFirstDossier(
+        (payload.merged_dossier && typeof payload.merged_dossier === 'object') ? payload.merged_dossier as Record<string, any> : payload,
+        String(payload.entity_id || payload?.merged_dossier?.entity_id || path.basename(filePath)),
+      )
+      const discoverySummary = normalized?.question_first?.discovery_summary || {}
+      const graphiti = discoverySummary?.graphiti_sales_brief || {}
+      const qualityState = String(normalized?.quality_state || '').toLowerCase()
+      if (!['partial', 'blocked', 'complete', 'client_ready'].includes(qualityState)) {
+        continue
+      }
+
+      const entityId = String(normalized?.entity_id || payload.entity_id || '').trim()
+      const entityName = String(normalized?.entity_name || payload.entity_name || entityId).trim()
+      if (!entityId || !entityName) continue
+
+      const key = [entityId, entityName].join('|').toLowerCase()
+      if (seen.has(key)) continue
+      seen.add(key)
+
+      const confidence = Number(
+        discoverySummary?.yellow_panther_opportunity?.estimated_probability
+          ?? graphiti?.estimated_probability
+          ?? graphiti?.win_probability
+          ?? 0,
+      )
+      const serviceFit = Array.isArray(discoverySummary?.yellow_panther_opportunity?.service_fit)
+        ? discoverySummary.yellow_panther_opportunity.service_fit
+        : []
+      const title = String(graphiti?.outreach_angle || discoverySummary?.summary || `${entityName} has a dossier-backed opportunity signal`).trim()
+      const summary = String(
+        graphiti?.outreach_angle
+          || graphiti?.capability_gap
+          || discoverySummary?.summary
+          || '',
+      ).trim()
+      const suggestedAction = String(
+        graphiti?.outreach_route
+          || graphiti?.outreach_target
+          || graphiti?.best_path_owner
+          || 'Open the canonical dossier and review the buyer hypothesis.',
+      ).trim()
+      const whyItMatters = String(
+        graphiti?.capability_gap
+          || discoverySummary?.quality_summary
+          || 'This dossier surfaced a qualified Yellow Panther fit signal.',
+      ).trim()
+      const confidenceScore = Number.isFinite(confidence)
+        ? Math.max(0, Math.min(1, confidence > 1 ? confidence / 100 : confidence))
+        : 0
+
+      sourceRows.push({
+        insight_id: `dossier-opportunity:${entityId}`,
+        entity_id: entityId,
+        entity_name: entityName,
+        entity_type: String(normalized?.entity_type || 'Entity'),
+        insight_type: 'opportunity',
+        title,
+        summary,
+        why_it_matters: whyItMatters,
+        suggested_action: suggestedAction,
+        confidence: confidenceScore,
+        freshness: normalized?.quality_state === 'client_ready' ? 'new' : 'recent',
+        evidence: [],
+        relationships: [],
+        priority: confidenceScore >= 0.8 || serviceFit.length > 0 ? 'high' : confidenceScore >= 0.5 ? 'medium' : 'low',
+        destination_url: normalized?.entity_id ? `/entity-browser/${encodeURIComponent(entityId)}/dossier?from=1` : '/entity-browser',
+        detected_at: String(normalized?.question_first?.generated_at || normalized?.metadata?.question_first?.generated_at || new Date().toISOString()),
+        materialized_at: String(normalized?.question_first?.generated_at || normalized?.metadata?.question_first?.generated_at || new Date().toISOString()),
+        source_run_id: String(normalized?.question_first?.run_id || normalized?.metadata?.question_first?.run_id || ''),
+        source_signal_id: undefined,
+        source_episode_id: undefined,
+        source_objective: String(graphiti?.outreach_angle || discoverySummary?.summary || ''),
+        raw_payload: {
+          source: 'question_first_dossier',
+          dossier_path: filePath,
+          quality_state: normalized?.quality_state,
+          client_ready: discoverySummary?.client_ready === true,
+          graphiti_sales_brief: graphiti,
+          yellow_panther_opportunity: discoverySummary?.yellow_panther_opportunity,
+          decision_owners: discoverySummary?.decision_owners || [],
+          service_fit: serviceFit,
+          best_path_owner: graphiti?.best_path_owner || null,
+          outreach_route: graphiti?.outreach_route || graphiti?.outreach_target || null,
+          capability_gap: graphiti?.capability_gap || null,
+        },
+      })
+    }
+  }
+
+  return sourceRows
+}
+
 function isStale(lastSeenAt: string | null | undefined) {
   if (!lastSeenAt) return true
   const timestamp = Date.parse(lastSeenAt)
@@ -212,7 +351,15 @@ async function loadSourceOpportunities(limit: number) {
   }
 
   const rows = Array.isArray(response.data) ? (response.data as GraphitiOpportunitySourceRow[]) : []
-  return rows.filter(isOpportunityCandidateSource)
+  const dossierRows = await loadDossierOpportunitySources(limit)
+  const combined = [...rows.filter(isOpportunityCandidateSource), ...dossierRows]
+  const seen = new Set<string>()
+  return combined.filter((row) => {
+    const key = [row.entity_id, row.title.toLowerCase()].join('|')
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
 }
 
 export async function loadPersistedGraphitiOpportunities(limit = 25) {
@@ -252,7 +399,8 @@ export async function loadPersistedGraphitiOpportunities(limit = 25) {
 
 export async function loadGraphitiOpportunities(limit = 25): Promise<GraphitiOpportunityResponse> {
   const persisted = await loadPersistedGraphitiOpportunities(limit)
-  if (persisted.status === 'ready') {
+  const sourceRows = await loadSourceOpportunities(limit)
+  if (persisted.status === 'ready' && persisted.opportunities.length >= sourceRows.length) {
     return {
       source: persisted.source,
       status: persisted.status,
@@ -269,7 +417,6 @@ export async function loadGraphitiOpportunities(limit = 25): Promise<GraphitiOpp
     }
   }
 
-  const sourceRows = await loadSourceOpportunities(limit)
   const canonicalEntities = await getCanonicalEntitiesSnapshot().catch(() => [])
   const opportunities = rankGraphitiOpportunities(
     sourceRows.map((row) => materializeGraphitiOpportunity(row, canonicalEntities)),
@@ -278,7 +425,7 @@ export async function loadGraphitiOpportunities(limit = 25): Promise<GraphitiOpp
   if (opportunities.length > 0) {
     return {
       source: 'graphiti_pipeline',
-      status: 'degraded',
+      status: persisted.status === 'ready' ? 'degraded' : 'ready',
       generated_at: new Date().toISOString(),
       last_updated_at: sourceRows[0]?.materialized_at || sourceRows[0]?.detected_at || new Date().toISOString(),
       opportunities,
@@ -290,7 +437,9 @@ export async function loadGraphitiOpportunities(limit = 25): Promise<GraphitiOpp
       },
       warnings: [
         ...(persisted.warnings || []),
-        'Dedicated Graphiti opportunities projection is empty; falling back to materialized Graphiti insights only.',
+        persisted.status === 'ready'
+          ? 'Persisted Graphiti opportunities are smaller than the dossier-derived canonical candidate set; serving the richer canonical dossier view.'
+          : 'Dedicated Graphiti opportunities projection is empty; falling back to canonical dossier-derived signals.',
       ],
     }
   }
