@@ -11,6 +11,22 @@ function readNumber(value: unknown): number {
   return Number.isFinite(parsed) ? parsed : 0
 }
 
+function isCommercialOpportunityLanguage(value: string): boolean {
+  return [
+    'opportunity',
+    'opening',
+    'procurement',
+    'commercial',
+    'partnership',
+    'deal',
+    'rfp',
+    'tender',
+    'sales',
+    'buying signal',
+    'why now',
+  ].some((term) => value.includes(term))
+}
+
 function normalizeEvidence(value: unknown): HomeGraphitiInsight['evidence'] {
   if (!Array.isArray(value)) return []
 
@@ -52,6 +68,15 @@ function inferInsightType(row: Record<string, unknown>): HomeGraphitiInsight['in
   const whyItMatters = readString(row.why_it_matters).toLowerCase()
   const signalBasis = readString(rawPayload.signal_basis).toLowerCase()
   const salesReadiness = readString(rawPayload.sales_readiness).toUpperCase()
+  const confidence = readNumber(row.confidence || rawPayload.confidence)
+  const commercialLanguage = [
+    title,
+    summary,
+    whyItMatters,
+    readString(row.suggested_action).toLowerCase(),
+    readString(rawPayload.opportunity_kind).toLowerCase(),
+    readString(rawPayload.category).toLowerCase(),
+  ].join(' ')
 
   if (
     title.includes('context refreshed') ||
@@ -70,7 +95,8 @@ function inferInsightType(row: Record<string, unknown>): HomeGraphitiInsight['in
     title.includes('opportunity') ||
     whyItMatters.includes('why now') ||
     signalBasis === 'sales_readiness' ||
-    readNumber(rawPayload.active_probability) >= 0.8
+    readNumber(rawPayload.active_probability) >= 0.8 ||
+    (confidence >= 0.85 && isCommercialOpportunityLanguage(commercialLanguage))
   ) {
     return 'opportunity'
   }

@@ -10,6 +10,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { GraphitiMixedShortlist } from '@/components/home/GraphitiMixedShortlist'
 import { HomeQueueDashboard } from '@/components/home/HomeQueueDashboard'
 import { requirePageSession } from '@/lib/server-auth'
 
@@ -177,6 +178,10 @@ export default async function Home() {
         </section>
 
         <HomeQueueDashboard />
+
+        <section className="mt-10">
+          <GraphitiMixedShortlist />
+        </section>
 
         <section className="mt-10 grid gap-4 lg:grid-cols-3">
           <Card className="border-white/10 bg-white/[0.04]">
