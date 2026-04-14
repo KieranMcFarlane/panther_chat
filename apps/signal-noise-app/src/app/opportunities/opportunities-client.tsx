@@ -25,6 +25,11 @@ interface TenderOpportunityRecord {
   title: string;
   organization: string;
   description: string | null;
+  why_this_is_an_opportunity?: string | null;
+  yellow_panther_fit_feedback?: string | null;
+  next_steps?: string[] | null;
+  supporting_signals?: string[] | null;
+  read_more_context?: string | null;
   location: string | null;
   value: string | null;
   deadline: string | null;
@@ -69,8 +74,9 @@ interface OpportunityCard {
   fitFeedback: string;
   suggestedAction: string;
   nextSteps: string;
+  supportingSignals: string[];
   signalSummary: string;
-  readMoreSummary: string;
+  readMoreContext: string;
   lastUpdated: string;
   criticalOpportunityScore: number;
   priorityScore: number;
@@ -107,8 +113,9 @@ function toLabel(value: unknown): string {
 }
 
 function toLabelList(values: unknown): string[] {
-  if (!Array.isArray(values)) return [];
-  return values.map(toLabel).filter(Boolean);
+  if (Array.isArray(values)) return values.map(toLabel).filter(Boolean);
+  const label = toLabel(values);
+  return label ? [label] : [];
 }
 
 function readDossierNarrative(metadata: Record<string, unknown>) {
@@ -118,12 +125,6 @@ function readDossierNarrative(metadata: Record<string, unknown>) {
     ? toLabelList(yellowPantherOpportunity.service_fit)
     : toLabelList(graphitiSalesBrief.service_fit);
   const decisionOwners = toLabelList(metadata.decision_owners);
-  const signals = [
-    ...toLabelList(yellowPantherOpportunity.signals),
-    ...toLabelList(graphitiSalesBrief.signals),
-    ...toLabelList(metadata.signals),
-    ...toLabelList(metadata.evidence),
-  ];
 
   const whyItMatters =
     toText(graphitiSalesBrief.capability_gap) ||
@@ -148,6 +149,14 @@ function readDossierNarrative(metadata: Record<string, unknown>) {
       : 'Yellow Panther fit is inferred from the dossier-level commercial signal and the closest service adjacency.');
 
   const nextSteps =
+    [
+      ...toLabelList(graphitiSalesBrief.next_steps),
+      ...toLabelList(yellowPantherOpportunity.next_steps),
+      ...toLabelList(metadata.next_steps),
+    ]
+      .filter(Boolean)
+      .slice(0, 3)
+      .join(' · ') ||
     toText(graphitiSalesBrief.next_step) ||
     toText(graphitiSalesBrief.action_plan) ||
     toText(yellowPantherOpportunity.next_step) ||
@@ -155,6 +164,13 @@ function readDossierNarrative(metadata: Record<string, unknown>) {
     (decisionOwners.length > 0
       ? `Open the dossier, validate the decision owners, and draft outreach toward ${decisionOwners.slice(0, 3).join(', ')}.`
       : 'Open the dossier, validate the buyer hypothesis, and draft a targeted outreach step.');
+
+  const supportingSignals = [
+    ...toLabelList(yellowPantherOpportunity.signals),
+    ...toLabelList(graphitiSalesBrief.signals),
+    ...toLabelList(metadata.signals),
+    ...toLabelList(metadata.evidence),
+  ];
 
   const signalSummary = [
     serviceFit.length > 0 ? `YP fit: ${serviceFit.slice(0, 3).join(', ')}` : '',
@@ -170,7 +186,12 @@ function readDossierNarrative(metadata: Record<string, unknown>) {
     suggestedAction,
     nextSteps,
     signalSummary,
-    readMoreSummary: signals.slice(0, 4).join(' · '),
+    readMoreContext: [
+      whyItMatters,
+      fitFeedback,
+      supportingSignals.slice(0, 4).join(' · '),
+      decisionOwners.length > 0 ? `Decision owners: ${decisionOwners.slice(0, 3).join(', ')}` : '',
+    ].filter(Boolean).join(' · '),
   };
 }
 
@@ -181,6 +202,8 @@ function normalizeOpportunity(opp: TenderOpportunityRecord): OpportunityCard {
   const priority = opp.priority_score ?? 0;
   const metadata = asRecord(opp.metadata);
   const narrative = readDossierNarrative(metadata);
+  const materializedNextSteps = Array.isArray(opp.next_steps) ? opp.next_steps.map(toText).filter(Boolean) : [];
+  const materializedSignals = Array.isArray(opp.supporting_signals) ? opp.supporting_signals.map(toText).filter(Boolean) : [];
   const taxonomy = opp.taxonomy || normalizeOpportunityTaxonomy({
     ...opp,
     organization,
@@ -203,10 +226,17 @@ function normalizeOpportunity(opp: TenderOpportunityRecord): OpportunityCard {
     theme: displayTaxonomy.theme,
     deadline: opp.deadline || undefined,
     value: opp.value || undefined,
-    description: narrative.whyItMatters || opp.description || 'No description available',
-    whyItMatters: narrative.whyItMatters,
+    description: toText(opp.why_this_is_an_opportunity) || narrative.whyItMatters || opp.description || 'No description available',
+    whyItMatters: toText(opp.why_this_is_an_opportunity) || narrative.whyItMatters,
+    fitFeedback: toText(opp.yellow_panther_fit_feedback) || narrative.fitFeedback,
     suggestedAction: narrative.suggestedAction,
-    signalSummary: narrative.signalSummary,
+    nextSteps: materializedNextSteps.length > 0 ? materializedNextSteps[0] : narrative.nextSteps,
+    supportingSignals: materializedSignals.length > 0 ? materializedSignals : [],
+    signalSummary: [
+      ...materializedSignals.slice(0, 3),
+      toText(opp.yellow_panther_fit_feedback) || narrative.fitFeedback,
+    ].filter(Boolean).join(' · '),
+    readMoreContext: toText(opp.read_more_context) || narrative.readMoreContext,
     lastUpdated: opp.detected_at || 'Unknown',
     criticalOpportunityScore: Math.round(fit / 10),
     priorityScore: Math.max(0, Math.round(priority)),
@@ -580,15 +610,25 @@ function OpportunitiesContent() {
                 ) : null}
               </div>
 
-              {openOpportunityId === opportunity.id && (
+                {openOpportunityId === opportunity.id && (
                 <div className="mb-4 rounded-lg border border-yellow-400/20 bg-yellow-400/5 p-4">
                   <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Read more</div>
                   <div className="mt-2 grid gap-3 text-sm text-white sm:grid-cols-2">
                     <div>
                       <div className="font-medium text-yellow-100">What to look for</div>
                       <div className="mt-1 text-fm-light-grey">
-                        {opportunity.readMoreSummary || 'Review the dossier for the supporting evidence, decision owners, and commercial signal details.'}
+                        {opportunity.readMoreContext || 'Review the dossier for the supporting evidence, decision owners, and commercial signal details.'}
                       </div>
+                      {opportunity.supportingSignals.length > 0 && (
+                        <ul className="mt-3 space-y-1 text-fm-light-grey">
+                          {opportunity.supportingSignals.slice(0, 4).map((signal) => (
+                            <li key={`${opportunity.id}-${signal}`} className="flex gap-2">
+                              <span className="mt-1 h-1.5 w-1.5 rounded-full bg-yellow-300" />
+                              <span>{signal}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
                     <div>
                       <div className="font-medium text-yellow-100">What to do next</div>

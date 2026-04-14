@@ -9,6 +9,7 @@ test('opportunity cards expose dossier-specific narrative instead of generic pip
   assert.match(clientSource, /Yellow Panther fit/)
   assert.match(clientSource, /Suggested action/)
   assert.match(clientSource, /Next steps/)
+  assert.match(clientSource, /readMoreContext/)
   assert.match(clientSource, /Open dossier/)
   assert.match(clientSource, /signalSummary/)
 })

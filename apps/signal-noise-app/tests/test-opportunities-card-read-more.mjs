@@ -8,4 +8,5 @@ test('opportunity cards expose an inline read more disclosure for dossier detail
   assert.match(clientSource, /Read more/)
   assert.match(clientSource, /Read less/)
   assert.match(clientSource, /openOpportunityId/)
+  assert.match(clientSource, /readMoreContext/)
 })

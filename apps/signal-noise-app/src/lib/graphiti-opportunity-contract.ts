@@ -15,6 +15,11 @@ export type GraphitiOpportunityCard = {
   title: string
   organization: string
   description: string
+  why_this_is_an_opportunity?: string
+  yellow_panther_fit_feedback?: string
+  next_steps?: string[]
+  supporting_signals?: string[]
+  read_more_context?: string
   location: string | null
   value: string | null
   deadline: string | null

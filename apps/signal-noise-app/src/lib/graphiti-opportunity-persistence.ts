@@ -51,6 +51,11 @@ const PERSISTED_COLUMNS = [
   'summary',
   'why_it_matters',
   'suggested_action',
+  'why_this_is_an_opportunity',
+  'yellow_panther_fit_feedback',
+  'next_steps',
+  'supporting_signals',
+  'read_more_context',
   'confidence',
   'confidence_score',
   'priority',
@@ -89,6 +94,11 @@ type PersistedGraphitiOpportunityRow = GraphitiOpportunityCard & {
   summary: string
   why_it_matters: string
   suggested_action: string
+  why_this_is_an_opportunity: string
+  yellow_panther_fit_feedback: string
+  next_steps: string[]
+  supporting_signals: string[]
+  read_more_context: string
   freshness?: GraphitiOpportunitySourceRow['freshness']
   state_hash: string
   is_active: boolean
@@ -117,7 +127,12 @@ function toRecord(row: PersistedGraphitiOpportunityRow): GraphitiOpportunityCard
     id: row.opportunity_id,
     title: row.title,
     organization: row.organization,
-    description: row.summary || row.why_it_matters || row.suggested_action || '',
+    description: row.why_this_is_an_opportunity || row.summary || row.why_it_matters || row.suggested_action || '',
+    why_this_is_an_opportunity: row.why_this_is_an_opportunity || row.summary || row.why_it_matters || '',
+    yellow_panther_fit_feedback: row.yellow_panther_fit_feedback || '',
+    next_steps: Array.isArray(row.next_steps) ? row.next_steps : [],
+    supporting_signals: Array.isArray(row.supporting_signals) ? row.supporting_signals : [],
+    read_more_context: row.read_more_context || '',
     location: row.location || null,
     value: row.value || null,
     deadline: row.deadline || null,
@@ -399,78 +414,16 @@ export async function loadPersistedGraphitiOpportunities(limit = 25) {
 
 export async function loadGraphitiOpportunities(limit = 25): Promise<GraphitiOpportunityResponse> {
   const persisted = await loadPersistedGraphitiOpportunities(limit)
-  const sourceRows = await loadSourceOpportunities(limit)
-  if (persisted.status === 'ready' && persisted.opportunities.length >= sourceRows.length) {
-    return {
-      source: persisted.source,
-      status: persisted.status,
-      generated_at: new Date().toISOString(),
-      last_updated_at: persisted.lastUpdatedAt,
-      opportunities: persisted.opportunities,
-      snapshot: {
-        opportunities_scanned: persisted.opportunities.length,
-        opportunities_materialized: persisted.opportunities.length,
-        active_opportunities: persisted.opportunities.length,
-        freshness_window_hours: getGraphitiStaleWindowHours(),
-      },
-      warnings: persisted.warnings,
-    }
-  }
-
-  const canonicalEntities = await getCanonicalEntitiesSnapshot().catch(() => [])
-  const opportunities = rankGraphitiOpportunities(
-    sourceRows.map((row) => materializeGraphitiOpportunity(row, canonicalEntities)),
-  ).slice(0, limit)
-
-  if (opportunities.length > 0) {
-    return {
-      source: 'graphiti_pipeline',
-      status: persisted.status === 'ready' ? 'degraded' : 'ready',
-      generated_at: new Date().toISOString(),
-      last_updated_at: sourceRows[0]?.materialized_at || sourceRows[0]?.detected_at || new Date().toISOString(),
-      opportunities,
-      snapshot: {
-        opportunities_scanned: sourceRows.length,
-        opportunities_materialized: opportunities.length,
-        active_opportunities: opportunities.length,
-        freshness_window_hours: getGraphitiStaleWindowHours(),
-      },
-      warnings: [
-        ...(persisted.warnings || []),
-        persisted.status === 'ready'
-          ? 'Persisted Graphiti opportunities are smaller than the dossier-derived canonical candidate set; serving the richer canonical dossier view.'
-          : 'Dedicated Graphiti opportunities projection is empty; falling back to canonical dossier-derived signals.',
-      ],
-    }
-  }
-
-  if (persisted.opportunities.length > 0) {
-    return {
-      source: persisted.source,
-      status: persisted.status,
-      generated_at: new Date().toISOString(),
-      last_updated_at: persisted.lastUpdatedAt,
-      opportunities: persisted.opportunities,
-      snapshot: {
-        opportunities_scanned: persisted.opportunities.length,
-        opportunities_materialized: persisted.opportunities.length,
-        active_opportunities: persisted.opportunities.length,
-        freshness_window_hours: getGraphitiStaleWindowHours(),
-      },
-      warnings: persisted.warnings,
-    }
-  }
-
   return {
     source: 'graphiti_opportunities',
-    status: 'empty',
+    status: persisted.status,
     generated_at: new Date().toISOString(),
     last_updated_at: persisted.lastUpdatedAt,
-    opportunities: [],
+    opportunities: persisted.opportunities.slice(0, limit),
     snapshot: {
-      opportunities_scanned: 0,
-      opportunities_materialized: 0,
-      active_opportunities: 0,
+      opportunities_scanned: persisted.opportunities.length,
+      opportunities_materialized: persisted.opportunities.length,
+      active_opportunities: persisted.opportunities.length,
       freshness_window_hours: getGraphitiStaleWindowHours(),
     },
     warnings: persisted.warnings,
