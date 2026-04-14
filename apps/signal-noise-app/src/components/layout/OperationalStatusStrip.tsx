@@ -1,98 +1,132 @@
-"use client";
+'use client'
 
-import { useEffect, useMemo, useState } from "react";
-import {
-  AlertCircle,
-  ChevronDown,
-  ChevronUp,
-  ListChecks,
-  Loader2,
-  PauseCircle,
-  PlayCircle,
-} from "lucide-react";
+import { useEffect, useState, type ReactNode } from 'react'
+import { AlertCircle, CheckCircle2, ChevronDown, ChevronUp, ListChecks, Loader2, PauseCircle, PlayCircle } from 'lucide-react'
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
   getCachedOperationalDrilldownPayload,
+  loadOperationalDrilldownPayload,
+  primeOperationalDrilldownPayload,
   refreshOperationalDrilldownPayload,
   type OperationalDrilldownPayload,
-} from "@/lib/operational-drilldown-client";
-import { formatQuestionProgress } from "@/lib/operational-formatters";
-import {
-  buildOperationalDrawerViewModel,
-  buildOperationalStatusViewModel,
-  type OperationalDrawerPayload,
-} from "@/lib/operational-view-model";
-import {
-  resolvePipelineStartTarget,
-  type OperationalStartSection,
-} from "@/lib/operational-start-target";
+} from '@/lib/operational-drilldown-client'
+import { buildOperationalStatusHero, formatRelativeTimestamp } from '@/lib/operational-status-hero'
+import { resolvePipelineStartTarget, type OperationalStartSection } from '@/lib/operational-start-target'
 
 interface OperationalStatusStripProps {
-  drawerOpen: boolean;
-  activeSection: OperationalStartSection;
-  onToggleDrawer: () => void;
+  drawerOpen: boolean
+  activeSection: OperationalStartSection
+  onToggleDrawer: () => void
 }
 
-const fallbackDrawerPayload: OperationalDrawerPayload = {
-  control: {
-    is_paused: false,
-    pause_reason: null,
-    updated_at: null,
-  },
-  loop_status: {
-    total_scheduled: 0,
-    completed: 0,
-    failed: 0,
-    retryable_failures: 0,
-    quality_counts: {
-      partial: 0,
-      blocked: 0,
-      complete: 0,
-      client_ready: 0,
-    },
-    runtime_counts: {
-      running: 0,
-      stalled: 0,
-      retryable: 0,
-      resume_needed: 0,
-    },
-  },
-  queue: {
-    in_progress_entity: null,
-    running_entities: [],
-    stale_active_rows: [],
-    completed_entities: [],
-    resume_needed_entities: [],
-    upcoming_entities: [],
-  },
-  playlist_sort_key: [],
-  dossier_quality: {
-    incomplete_entities: [],
-  },
-};
+type SnapshotKind = 'queue' | 'running' | 'blocked' | 'completed'
 
-function EntityListCard({
+type SnapshotItem = Record<string, unknown> & {
+  entity_id: string
+  entity_name?: string | null
+  entity_type?: string | null
+  summary?: string | null
+  generated_at?: string | null
+  started_at?: string | null
+  completed_at?: string | null
+  active_question_id?: string | null
+  current_question_id?: string | null
+  next_repair_question_id?: string | null
+  run_phase?: string | null
+  current_stage?: string | null
+  queue_position?: number | null
+  publication_status?: string | null
+  next_repair_status?: string | null
+  next_repair_batch_id?: string | null
+  quality_state?: string | null
+  quality_summary?: string | null
+  lifecycle_label?: string | null
+  lifecycle_summary?: string | null
+  movement_state?: string | null
+  next_action?: string | null
+}
+
+function toText(value: unknown): string {
+  if (value === null || value === undefined) return ''
+  return String(value).trim()
+}
+
+function getEntityHref(entityId: string) {
+  return `/entity-browser/${encodeURIComponent(entityId)}/dossier?from=1`
+}
+
+function getEntityQuestionLabel(item: SnapshotItem, kind: SnapshotKind) {
+  const questionId = toText(
+    item.current_question_id
+    || item.active_question_id
+    || item.next_repair_question_id,
+  )
+  if (questionId) {
+    return questionId.toLowerCase() === 'completed' ? 'completed' : questionId
+  }
+  return kind === 'completed' ? 'completed' : 'not started'
+}
+
+function normalizeSnapshotItem(item: SnapshotItem, kind: SnapshotKind) {
+  const entityName = toText(item.entity_name) || 'Unknown entity'
+  const entityType = toText(item.entity_type) || 'Entity'
+  const summary = toText(
+    item.summary
+    || item.quality_summary
+    || item.lifecycle_summary
+    || item.next_action
+    || (kind === 'queue' ? 'Waiting in the serialized live loop.' : '')
+    || (kind === 'completed' ? 'Completed dossier.' : ''),
+  ) || null
+  const currentQuestion = getEntityQuestionLabel(item, kind)
+  const runPhase = toText(item.run_phase || item.current_stage || item.lifecycle_label) || (kind === 'queue' ? 'queued' : 'n/a')
+  const heartbeatSource = item.started_at || item.generated_at || item.completed_at || null
+  const updatedSource = item.completed_at || item.generated_at || item.started_at || null
+
+  const statusLabel = kind === 'queue'
+    ? 'Waiting'
+    : kind === 'running'
+      ? (toText(item.next_repair_status).toLowerCase() === 'running' ? 'Repairing' : 'Running')
+      : kind === 'blocked'
+        ? (toText(item.quality_state).toLowerCase() === 'blocked' ? 'Blocked' : 'Stale')
+        : toText(item.publication_status).toLowerCase() === 'published'
+          ? 'Published healthy'
+          : 'Published degraded'
+
+  return {
+    entityName,
+    entityType,
+    summary,
+    statusLabel,
+    currentQuestion,
+    runPhase,
+    heartbeatSource,
+    updatedSource,
+    queuePosition: typeof item.queue_position === 'number' ? item.queue_position : null,
+    href: getEntityHref(item.entity_id),
+    facts: [
+      `Current question: ${currentQuestion}`,
+      `Run phase: ${runPhase}`,
+      `Heartbeat: ${heartbeatSource ? formatRelativeTimestamp(heartbeatSource, 'Heartbeat') : 'No active worker'}`,
+      `Updated: ${updatedSource ? formatRelativeTimestamp(updatedSource, 'Updated') : 'Updated unavailable'}`,
+    ],
+  }
+}
+
+function SnapshotLane({
   title,
   icon,
   items,
   emptyLabel,
+  kind,
 }: {
-  title: string;
-  icon: React.ReactNode;
-  items: Array<{
-    key: string;
-    title: string;
-    subtitle: string;
-    detail: string;
-    href?: string | null;
-    badge?: string | null;
-    meta?: string | null;
-    facts?: string[];
-  }>;
-  emptyLabel: string;
+  title: string
+  icon: ReactNode
+  items: SnapshotItem[]
+  emptyLabel: string
+  kind: SnapshotKind
 }) {
   return (
     <div className="space-y-3 rounded-xl border border-custom-border bg-custom-bg/70 p-4">
@@ -101,528 +135,396 @@ function EntityListCard({
         {title}
       </div>
       <div className="space-y-2">
-        {items.length > 0 ? (
-          items.map((item) => (
-            <div
-              key={item.key}
-              className="rounded-lg border border-custom-border/80 bg-custom-box/60 p-3"
-            >
+        {items.length > 0 ? items.map((item, index) => {
+          const normalized = normalizeSnapshotItem(item, kind)
+          return (
+            <div key={item.entity_id || `${title}-${index}`} className="rounded-lg border border-custom-border/80 bg-custom-box/60 p-3">
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <div className="font-medium text-white">{item.title}</div>
-                  <div className="mt-1 text-xs uppercase tracking-[0.16em] text-slate-400">
-                    {item.subtitle}
-                  </div>
+                  <div className="font-medium text-white">{normalized.entityName}</div>
+                  <div className="mt-1 text-xs uppercase tracking-[0.16em] text-slate-400">{normalized.entityType}</div>
                 </div>
-                {item.badge ? (
-                  <Badge
-                    variant="outline"
-                    className="border-sky-500/30 text-sky-300"
-                  >
-                    {item.badge}
-                  </Badge>
+                <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-sky-500/30 text-sky-300">
+                  {normalized.statusLabel}
+                </div>
+              </div>
+              {normalized.summary ? (
+                <div className="mt-2 text-sm text-fm-light-grey">{normalized.summary}</div>
+              ) : null}
+              <div className="mt-2 space-y-1 text-xs text-slate-300">
+                {normalized.facts.map((fact) => (
+                  <div key={fact}>{fact}</div>
+                ))}
+                {normalized.queuePosition !== null ? (
+                  <div>Queue order: {normalized.queuePosition}</div>
                 ) : null}
               </div>
-              <div className="mt-2 text-sm text-fm-light-grey">
-                {item.detail}
+              <div className="mt-3">
+                <a className="text-sm text-sky-300 underline" href={normalized.href}>Open dossier</a>
               </div>
-              {item.facts && item.facts.length > 0 ? (
-                <div className="mt-2 space-y-1 text-xs text-slate-300">
-                  {item.facts.map((fact) => (
-                    <div key={fact}>{fact}</div>
-                  ))}
-                </div>
-              ) : null}
-              {item.meta ? (
-                <div className="mt-2 text-xs text-slate-400">{item.meta}</div>
-              ) : null}
-              {item.href ? (
-                <div className="mt-3">
-                  <a
-                    href={item.href}
-                    className="text-sm text-sky-300 underline"
-                  >
-                    Open dossier
-                  </a>
-                </div>
-              ) : null}
             </div>
-          ))
-        ) : (
+          )
+        }) : (
           <div className="rounded-lg border border-custom-border/80 bg-custom-box/60 p-3 text-sm text-fm-light-grey">
             {emptyLabel}
           </div>
         )}
       </div>
     </div>
-  );
-}
-
-function formatSessionTimestamp(value: string | null | undefined) {
-  if (!value) return "Not available";
-  const timestamp = new Date(value);
-  if (Number.isNaN(timestamp.getTime())) return value;
-  return timestamp.toLocaleString();
-}
-
-function describeStartTarget(
-  target: ReturnType<typeof resolvePipelineStartTarget>,
-  drilldown: OperationalDrilldownPayload | null,
-) {
-  if (!target) return null;
-  const queueItems = [
-    drilldown?.queue?.in_progress_entity,
-    ...(drilldown?.queue?.running_entities ?? []),
-    ...(drilldown?.queue?.stale_active_rows ?? []),
-    ...(drilldown?.queue?.completed_entities ?? []),
-    ...(drilldown?.queue?.resume_needed_entities ?? []),
-    ...(drilldown?.queue?.upcoming_entities ?? []),
-    ...(drilldown?.dossier_quality?.incomplete_entities ?? []),
-  ];
-  const match = queueItems.find(
-    (item) => item && String(item.entity_id || "").trim() === target.entityId,
-  );
-  const entityName = String(match?.entity_name || target.entityId).trim();
-  if (target.mode === "question" && target.questionId) {
-    return `${entityName} · ${formatQuestionProgress(target.questionId)}`;
-  }
-  return `${entityName} · full rerun`;
+  )
 }
 
 export function OperationalStatusStrip({
-  drawerOpen,
+  drawerOpen: _drawerOpen,
   activeSection,
-  onToggleDrawer,
+  onToggleDrawer: _onToggleDrawer,
 }: OperationalStatusStripProps) {
-  const [drilldown, setDrilldown] =
-    useState<OperationalDrilldownPayload | null>(null);
-  const [controlState, setControlState] = useState<
-    OperationalDrilldownPayload["control"] | null
-  >(null);
-  const [isTogglingPipeline, setIsTogglingPipeline] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(true);
-  const [, setHeartbeatTick] = useState(0);
+  const [drilldown, setDrilldown] = useState<OperationalDrilldownPayload | null>(null)
+  const [controlState, setControlState] = useState<OperationalDrilldownPayload['control'] | null>(null)
+  const [isTogglingPipeline, setIsTogglingPipeline] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(true)
 
   useEffect(() => {
-    let cancelled = false;
-    async function syncLiveOpsState() {
-      try {
-        const [controlResponse, payload] = await Promise.all([
-          fetch("/api/home/pipeline-control", { cache: "no-store" }).then(
-            async (response) => {
-              if (!response.ok) return null;
-              const data = await response.json();
-              return data?.control ?? null;
-            },
-          ),
-          refreshOperationalDrilldownPayload(),
-        ]);
+    let cancelled = false
+    void fetch('/api/home/pipeline-control', { cache: 'no-store' })
+      .then(async (response) => {
+        if (!response.ok) return null
+        const payload = await response.json()
+        return payload?.control ?? null
+      })
+      .then((control) => {
+        if (!cancelled && control) {
+          setControlState(control)
+        }
+      })
+      .catch(() => {
+        // keep the default state
+      })
 
-        if (cancelled) return;
-        setDrilldown(payload);
-        setControlState(controlResponse ?? payload.control ?? null);
-      } catch {
-        if (cancelled) return;
-        // keep the last visible state on intermittent refresh failures
-      }
-    }
-
-    const cachedPayload = getCachedOperationalDrilldownPayload();
+    primeOperationalDrilldownPayload()
+    const cachedPayload = getCachedOperationalDrilldownPayload()
     if (cachedPayload && !cancelled) {
-      setDrilldown(cachedPayload);
-      setControlState(cachedPayload.control ?? null);
+      setDrilldown(cachedPayload)
     }
-    void syncLiveOpsState();
-    const intervalId = window.setInterval(() => {
-      void syncLiveOpsState();
-    }, 5000);
-    const heartbeatIntervalId = window.setInterval(() => {
-      setHeartbeatTick((current) => current + 1);
-    }, 1000);
+    void loadOperationalDrilldownPayload()
+      .then((payload) => {
+        if (!cancelled) {
+          setDrilldown(payload)
+          setControlState(payload.control ?? null)
+        }
+      })
+      .catch(() => {
+        // leave summary fallback in place
+      })
 
     return () => {
-      cancelled = true;
-      window.clearInterval(intervalId);
-      window.clearInterval(heartbeatIntervalId);
-    };
-  }, []);
+      cancelled = true
+    }
+  }, [])
 
-  const statusVm = buildOperationalStatusViewModel({ drilldown, controlState });
-  const snapshotVm = useMemo(
-    () =>
-      buildOperationalDrawerViewModel({
-        dashboard: (drilldown ??
-          fallbackDrawerPayload) as OperationalDrawerPayload,
-        activeSection,
-      }),
-    [drilldown, activeSection],
-  );
-  const currentStartTarget = resolvePipelineStartTarget({
+  const inProgressEntity = drilldown?.queue?.in_progress_entity ?? null
+  const runningEntities = (drilldown?.queue?.running_entities as SnapshotItem[] | undefined) ?? (inProgressEntity ? [inProgressEntity as SnapshotItem] : [])
+  const completedEntities = (drilldown?.queue?.completed_entities as SnapshotItem[] | undefined) ?? []
+  const blockedEntities = (drilldown?.dossier_quality?.incomplete_entities as SnapshotItem[] | undefined) ?? []
+  const upcomingEntities = (drilldown?.queue?.upcoming_entities as SnapshotItem[] | undefined) ?? []
+  const resumedEntities = (drilldown?.queue?.resume_needed_entities as SnapshotItem[] | undefined) ?? []
+
+  const pipelinePaused = controlState?.is_paused === true
+  const workerState = controlState?.transition_state
+    || controlState?.observed_state
+    || (pipelinePaused ? 'paused' : 'running')
+  const repairFocus = Boolean(
+    inProgressEntity && (
+      toText(inProgressEntity.next_repair_status).toLowerCase() === 'running'
+      || toText(inProgressEntity.next_repair_status).toLowerCase() === 'queued'
+      || Boolean(inProgressEntity.next_repair_batch_id)
+    ),
+  )
+  const startTarget = resolvePipelineStartTarget({
     activeSection,
     drilldown,
-  });
-  const currentStartTargetHint = describeStartTarget(
-    currentStartTarget,
+  })
+  const startTargetEntity = startTarget
+    ? [...runningEntities, ...completedEntities, ...resumedEntities, ...upcomingEntities, ...blockedEntities]
+      .find((entity) => toText(entity.entity_id) === startTarget.entityId) || null
+    : null
+  const currentTargetLabel = startTarget
+    ? `${toText(startTargetEntity?.entity_name) || startTarget.entityId} · ${startTarget.mode === 'full' ? 'full rerun' : 'question rerun'}`
+    : null
+
+  const statusHero = buildOperationalStatusHero({
     drilldown,
-  );
-  const primaryActionTitle =
-    statusVm.primaryActionLabel === "Resume pipeline" && currentStartTargetHint
-      ? `Resume pipeline and rerun target: ${currentStartTargetHint}`
-      : statusVm.primaryActionTitle;
-  const primaryActionHint =
-    statusVm.primaryActionLabel === "Resume pipeline" && currentStartTargetHint
-      ? `Resume will also queue ${currentStartTargetHint}.`
-      : statusVm.primaryActionHint;
+    controlState,
+    currentTargetLabel,
+  })
+
+  const statusBadgeLabel = workerState === 'stopping'
+    ? 'Stopping'
+    : workerState === 'starting'
+      ? 'Starting'
+      : pipelinePaused
+        ? 'Paused'
+        : repairFocus
+          ? 'Repairing'
+          : inProgressEntity
+            ? 'Running'
+            : 'Waiting'
+  const compactTicker = statusHero.headline
+
+  const loopStatus = drilldown?.loop_status
+  const statusItems = [
+    {
+      label: 'Universe',
+      value: String(loopStatus?.total_scheduled ?? '…'),
+      tone: 'text-white',
+    },
+    {
+      label: 'Running now',
+      value: String(loopStatus?.runtime_counts?.running ?? '…'),
+      tone: 'text-sky-300',
+    },
+    {
+      label: 'Blocked / partial',
+      value: String((loopStatus?.quality_counts?.blocked ?? 0) + (loopStatus?.quality_counts?.partial ?? 0)),
+      tone: 'text-amber-300',
+    },
+    {
+      label: 'Recent completions',
+      value: String(loopStatus?.completed ?? '…'),
+      tone: 'text-emerald-300',
+    },
+  ] as const
 
   async function togglePipelinePaused() {
-    setIsTogglingPipeline(true);
+    setIsTogglingPipeline(true)
     try {
-      const refreshedBeforeAction = await refreshOperationalDrilldownPayload();
-      const refreshedControlState =
-        refreshedBeforeAction.control ?? controlState ?? null;
-      const actionVm = buildOperationalStatusViewModel({
-        drilldown: refreshedBeforeAction,
-        controlState: refreshedControlState,
-      });
-      setDrilldown(refreshedBeforeAction);
-      setControlState(refreshedControlState);
-
-      let controlResponse: Response | null = null;
-      const startTarget = resolvePipelineStartTarget({
-        activeSection,
-        drilldown: refreshedBeforeAction,
-      });
-      const shouldResume = actionVm.primaryActionLabel === "Resume pipeline";
-      const shouldRestartStoppedRun = actionVm.isStaleOrStopped;
-
-      if (shouldResume) {
-        if (shouldRestartStoppedRun) {
-          const stopResponse = await fetch("/api/home/pipeline-control", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              action: "stop",
-              is_paused: true,
-              pause_reason: "Restarted from Live Ops",
-            }),
-          });
-          if (!stopResponse.ok) {
-            throw new Error(
-              `Failed to stop pipeline before restart (${stopResponse.status})`,
-            );
-          }
-        }
-
-        if (startTarget) {
-          const response = await fetch(
-            `/api/entities/${encodeURIComponent(startTarget.entityId)}/dossier/rerun`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                mode: startTarget.mode,
-                question_id: startTarget.questionId,
-                cascade_dependents: true,
-                rerun_reason: shouldRestartStoppedRun
-                  ? "Pipeline restart from Live Ops"
-                  : "Pipeline resume from Live Ops",
-              }),
-            },
-          );
-          if (!response.ok) {
-            throw new Error(
-              `Failed to queue start target (${response.status})`,
-            );
-          }
-        }
-        controlResponse = await fetch("/api/home/pipeline-control", {
-          method: "POST",
+      if (pipelinePaused) {
+        const response = await fetch('/api/home/pipeline-control', {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            action: "start",
+            action: 'start',
             is_paused: false,
             pause_reason: null,
           }),
-        });
-        if (!controlResponse.ok) {
-          throw new Error(
-            `Failed to update pipeline control (${controlResponse.status})`,
-          );
+        })
+        if (!response.ok) {
+          throw new Error(`Failed to update pipeline control (${response.status})`)
+        }
+        if (startTarget) {
+          const queuedResponse = await fetch(`/api/entities/${encodeURIComponent(startTarget.entityId)}/dossier/rerun`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              mode: startTarget.mode,
+              question_id: startTarget.questionId,
+              cascade_dependents: true,
+              rerun_reason: 'Pipeline start from Live Ops',
+            }),
+          })
+          if (!queuedResponse.ok) {
+            throw new Error(`Failed to queue start target (${queuedResponse.status})`)
+          }
         }
       } else {
-        controlResponse = await fetch("/api/home/pipeline-control", {
-          method: "POST",
+        const response = await fetch('/api/home/pipeline-control', {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            action: "stop",
+            action: 'stop',
             is_paused: true,
-            pause_reason: "Paused from Live Ops",
+            pause_reason: 'Paused from Live Ops',
           }),
-        });
-        if (!controlResponse.ok) {
-          throw new Error(
-            `Failed to update pipeline control (${controlResponse.status})`,
-          );
+        })
+        if (!response.ok) {
+          throw new Error(`Failed to update pipeline control (${response.status})`)
         }
       }
-      const payload = controlResponse ? await controlResponse.json() : null;
-      const refreshedPayload = await refreshOperationalDrilldownPayload();
-      setDrilldown(refreshedPayload);
-      setControlState(refreshedPayload.control ?? payload?.control ?? null);
-    } catch (error) {
-      console.error("Failed to toggle pipeline pause state", error);
+
+      const refreshedPayload = await refreshOperationalDrilldownPayload()
+      setDrilldown(refreshedPayload)
+      setControlState(refreshedPayload.control ?? null)
+    } catch {
+      setControlState((current) => current)
     } finally {
-      setIsTogglingPipeline(false);
+      setIsTogglingPipeline(false)
     }
   }
 
   return (
     <section
       className="overflow-hidden rounded-2xl border border-custom-border bg-custom-box shadow-sm transition-[max-height] duration-300 ease-out"
-      style={{ maxHeight: isExpanded ? "40rem" : "7rem", padding: "0.7rem" }}
+      style={{ maxHeight: isExpanded ? '40rem' : '7rem', padding: '0.7rem' }}
     >
       <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-4 xl:justify-items-start">
-            {statusVm.statusItems.map((item) => (
+        <div className="flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
+          <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4 xl:justify-items-start">
+            {statusItems.map((item) => (
               <button
                 key={item.label}
                 type="button"
                 className="min-w-[140px] rounded-lg border border-custom-border bg-custom-bg/70 px-2.5 py-2 text-left transition hover:border-white/30"
               >
-                <div className="text-[0.55rem] uppercase tracking-[0.14em] text-slate-300">
-                  {item.label}
-                </div>
-                <div
-                  className={`mt-0.5 text-lg font-semibold leading-none ${item.tone}`}
-                >
-                  {item.value}
-                </div>
+                <div className="text-[0.55rem] uppercase tracking-[0.14em] text-slate-300">{item.label}</div>
+                <div className={`mt-0.5 text-lg font-semibold leading-none ${item.tone}`}>{item.value}</div>
               </button>
             ))}
           </div>
 
-          <div className="flex min-w-0 flex-1 flex-col gap-2 xl:flex-row xl:items-center xl:justify-end">
-            <div className="mr-[6px] flex items-center gap-1.5 overflow-hidden rounded-[8px] border border-custom-border bg-custom-bg/70 px-4 py-[0.8rem]">
-              <Badge
-                variant="outline"
-                className="shrink-0 border-sky-500/30 text-sky-300"
-              >
-                {statusVm.statusBadgeLabel}
+          <div className="flex min-w-0 flex-1 flex-col gap-2 xl:pl-3">
+            <div className="flex items-center gap-1.5 overflow-hidden rounded-full border border-custom-border bg-custom-bg/70 px-2.5 py-2">
+              <Badge variant="outline" className="shrink-0 border-sky-500/30 text-sky-300">
+                {statusBadgeLabel}
               </Badge>
               <div className="min-w-0 overflow-hidden">
                 <div className="animate-marquee flex min-w-max items-center whitespace-nowrap text-[0.72rem] font-medium uppercase tracking-[0.12em] text-fm-light-grey">
                   <div className="flex shrink-0 items-center gap-8 pr-6 sm:pr-8">
-                    <span>{statusVm.liveEntityTicker}</span>
+                    <span>{compactTicker}</span>
                   </div>
-                  <div
-                    className="flex shrink-0 items-center gap-8 pr-6 sm:pr-8"
-                    aria-hidden="true"
-                  >
-                    <span>{statusVm.liveEntityTicker}</span>
+                  <div className="flex shrink-0 items-center gap-8 pr-6 sm:pr-8" aria-hidden="true">
+                    <span>{compactTicker}</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="flex w-full flex-nowrap items-center justify-end gap-1.5 xl:w-auto xl:max-w-[181px]">
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              <span className="text-[0.55rem] uppercase tracking-[0.16em] text-slate-400">Transport</span>
               <Button
                 variant="outline"
-                className="h-9 shrink-0 border-custom-border px-2 py-1.5 text-[0.72rem] sm:px-3 sm:text-sm"
+                className="h-9 border-custom-border px-3 py-1.5"
                 onClick={togglePipelinePaused}
                 disabled={isTogglingPipeline}
-                aria-label={primaryActionTitle}
-                title={primaryActionTitle}
+                aria-label={statusHero.primaryActionTitle}
+                title={statusHero.primaryActionTitle}
               >
-                {statusVm.primaryActionLabel === "Resume pipeline" ? (
-                  <PlayCircle className="mr-1 h-3.5 w-3.5 sm:mr-2 sm:h-4 sm:w-4" />
-                ) : (
-                  <PauseCircle className="mr-1 h-3.5 w-3.5 sm:mr-2 sm:h-4 sm:w-4" />
-                )}
-                {statusVm.primaryActionLabel}
+                {statusHero.primaryActionLabel === 'Resume pipeline'
+                  ? <PlayCircle className="mr-2 h-4 w-4" />
+                  : <PauseCircle className="mr-2 h-4 w-4" />}
+                {statusHero.primaryActionLabel}
               </Button>
               <Button
                 variant="outline"
-                className="h-9 shrink-0 border-custom-border px-2 py-1.5 text-[0.72rem] sm:px-3 sm:text-sm"
+                className="h-9 border-custom-border px-3 py-1.5"
                 onClick={() => setIsExpanded((current) => !current)}
                 aria-expanded={isExpanded}
-                aria-label={
-                  isExpanded
-                    ? "Minimize live ops header"
-                    : "Expand live ops header"
-                }
-                title={isExpanded ? "Minimize" : "Expand"}
+                aria-label={isExpanded ? 'Minimize live ops header' : 'Expand live ops header'}
+                title={isExpanded ? 'Minimize' : 'Expand'}
               >
-                {isExpanded ? (
-                  <ChevronUp className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                ) : (
-                  <ChevronDown className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                )}
-                <span className="sr-only">
-                  {isExpanded ? "Minimize" : "Expand"}
-                </span>
+                {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                <span className="sr-only">{isExpanded ? 'Minimize' : 'Expand'}</span>
               </Button>
             </div>
           </div>
         </div>
 
         {isExpanded ? (
-          <div className="rounded-xl border border-custom-border bg-black/20 p-4 text-[0.72rem] text-fm-light-grey">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-              <div className="min-w-0 space-y-2">
-                <div className="text-xs uppercase tracking-[0.14em] text-slate-400">
-                  {statusVm.statusBadgeLabel} · Status
-                </div>
-                <div className="text-lg font-semibold tracking-tight text-white sm:text-xl">
-                  {statusVm.statusHero.headline}
-                </div>
-                <div className="max-w-3xl text-sm leading-6 text-slate-300">
-                  {statusVm.statusHero.supportingLine}
-                </div>
-                {statusVm.statusHero.issueSummary ? (
-                  <div className="rounded-lg border border-amber-400/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">
-                    <div className="font-medium">
-                      {statusVm.statusHero.issueSummary}
-                    </div>
-                    {currentStartTargetHint ? (
-                      <div className="mt-1 text-xs uppercase tracking-[0.12em] text-amber-100/80">
-                        Resume will queue {currentStartTargetHint}.
+          <div className="space-y-3">
+            <div className="rounded-xl border border-custom-border bg-black/20 px-3 py-3 text-[0.72rem] tracking-[0.12em] text-fm-light-grey">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="min-w-0 space-y-2">
+                  <div className="text-sm font-semibold uppercase tracking-[0.14em] text-white">{statusHero.headline}</div>
+                  <div className="text-sm text-slate-200">{statusHero.supportingLine}</div>
+                  {statusHero.issueSummary ? (
+                    <div className="flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-amber-100">
+                      <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" />
+                      <div className="space-y-0.5">
+                        <div className="text-[0.65rem] uppercase tracking-[0.16em] text-amber-200">Issue detected</div>
+                        <div className="text-sm">{statusHero.issueSummary}</div>
                       </div>
-                    ) : null}
-                  </div>
-                ) : null}
-              </div>
-
-              <div className="flex min-w-[16rem] flex-col gap-2 lg:items-end">
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    className={`h-9 shrink-0 border-custom-border px-2 py-1.5 text-[0.72rem] sm:px-3 sm:text-sm ${
-                      statusVm.statusHero.primaryActionRecommended
-                        ? "border-amber-300/40 bg-amber-500/10 text-amber-100 hover:bg-amber-500/15"
-                        : ""
-                    }`}
-                    onClick={togglePipelinePaused}
-                    disabled={isTogglingPipeline}
-                    aria-label={primaryActionTitle}
-                    title={primaryActionTitle}
-                  >
-                    {statusVm.primaryActionLabel === "Resume pipeline" ? (
-                      <PlayCircle className="mr-1 h-3.5 w-3.5 sm:mr-2 sm:h-4 sm:w-4" />
-                    ) : (
-                      <PauseCircle className="mr-1 h-3.5 w-3.5 sm:mr-2 sm:h-4 sm:w-4" />
-                    )}
-                    {statusVm.primaryActionLabel}
-                  </Button>
-                  {statusVm.statusHero.primaryActionRecommended ? (
-                    <Badge
-                      variant="outline"
-                      className="border-amber-300/40 text-amber-100"
-                    >
-                      Recommended
-                    </Badge>
+                    </div>
                   ) : null}
                 </div>
-                <div className="max-w-md text-right text-xs leading-5 text-slate-300">
-                  {statusVm.statusHero.primaryActionHint}
-                </div>
-              </div>
-            </div>
 
-            <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
-              {statusVm.statusHero.detailRows.map((row) => (
-                <div
-                  key={row.label}
-                  className="rounded-lg border border-custom-border/80 bg-custom-box/60 px-3 py-2"
-                >
-                  <div className="text-[0.55rem] uppercase tracking-[0.14em] text-slate-400">
-                    {row.label}
+                <div className="flex min-w-[16rem] flex-col items-end gap-2 text-right">
+                  <Button
+                    variant="outline"
+                    className="h-10 border-sky-400/40 bg-sky-500/10 px-4 text-sm font-semibold text-white shadow-sm hover:border-sky-300 hover:bg-sky-500/20"
+                    onClick={togglePipelinePaused}
+                    disabled={isTogglingPipeline}
+                    aria-label={statusHero.primaryActionTitle}
+                    title={statusHero.primaryActionTitle}
+                  >
+                    {statusHero.primaryActionLabel === 'Resume pipeline'
+                      ? <PlayCircle className="mr-2 h-4 w-4" />
+                      : <PauseCircle className="mr-2 h-4 w-4" />}
+                    {statusHero.primaryActionLabel}
+                  </Button>
+                  {statusHero.primaryActionRecommended ? (
+                    <Badge variant="outline" className="border-emerald-400/30 text-emerald-200">Recommended</Badge>
+                  ) : null}
+                  <div className="max-w-sm text-[0.68rem] uppercase tracking-[0.12em] text-slate-300">
+                    {statusHero.primaryActionHint}
                   </div>
-                  <div className="mt-1 text-sm font-medium text-white">
-                    {row.value}
+                </div>
+              </div>
+
+              <div className="mt-3 grid gap-1 text-[0.68rem] tracking-[0.1em] text-slate-300 sm:grid-cols-2 xl:grid-cols-3">
+                {statusHero.detailRows.map((row) => (
+                  <div key={row.label}>
+                    <span className="text-slate-400">{row.label}: </span>
+                    <span className="text-slate-100">{row.value}</span>
                   </div>
-                </div>
-              ))}
-            </div>
-
-            {statusVm.statusHero.debugSummary ||
-            statusVm.statusHero.debugCompactLine ? (
-              <div className="mt-3 border-t border-white/10 pt-3 text-[0.68rem] tracking-[0.1em] text-slate-300">
-                <div className="uppercase tracking-[0.14em] text-slate-400">
-                  Debug details
-                </div>
-                {statusVm.statusHero.debugSummary ? (
-                  <div className="mt-1">{statusVm.statusHero.debugSummary}</div>
-                ) : null}
-                {statusVm.statusHero.debugCompactLine ? (
-                  <div>{statusVm.statusHero.debugCompactLine}</div>
-                ) : null}
+                ))}
               </div>
-            ) : null}
-          </div>
-        ) : null}
 
-        {isExpanded ? (
-          <Card className="border-custom-border bg-custom-box shadow-sm">
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-base">
-                <ListChecks className="h-4 w-4 text-yellow-400" />
-                Operational Snapshot
-              </CardTitle>
-              <div className="text-sm text-slate-300">
-                {snapshotVm.intakeStatusLabel}
-                {drilldown?.control?.pause_reason
-                  ? ` · ${drilldown.control.pause_reason}`
-                  : ""}
-              </div>
-              {snapshotVm.stopReason ? (
-                <div className="text-xs uppercase tracking-[0.14em] text-amber-300">
-                  Stop reason: {snapshotVm.stopReason.replaceAll("_", " ")}
+              {statusHero.debugSummary || statusHero.debugCompactLine ? (
+                <div className="mt-3 space-y-1 rounded-lg border border-custom-border/60 bg-custom-box/60 px-3 py-2 text-[0.68rem] uppercase tracking-[0.1em] text-slate-300">
+                  <div className="text-[0.62rem] uppercase tracking-[0.16em] text-slate-400">System details</div>
+                  {statusHero.debugSummary ? <div className="mt-1">{statusHero.debugSummary}</div> : null}
+                  {statusHero.debugCompactLine ? <div>{statusHero.debugCompactLine}</div> : null}
                 </div>
               ) : null}
-              <div className="text-xs uppercase tracking-[0.14em] text-slate-400">
-                Queue order: {snapshotVm.playlistSortKeyLabel}
+            </div>
+
+            <div className="rounded-xl border border-custom-border bg-black/20 px-3 py-3 text-[0.72rem] tracking-[0.12em] text-fm-light-grey">
+              <div className="flex items-center gap-2 text-sm font-medium text-white">
+                <ListChecks className="h-4 w-4 text-yellow-400" />
+                Operational Snapshot
               </div>
-            </CardHeader>
-            <CardContent className="max-h-[calc(100vh-14rem)] space-y-4 overflow-y-auto pr-2">
-              <div className="grid gap-4 lg:grid-cols-4">
-                <EntityListCard
+              <div className="mt-1 text-sm text-slate-300">
+                Queue order: priority_score DESC · entity_type ASC · entity_name ASC · entity_id ASC
+              </div>
+              <div className="mt-4 grid gap-4 lg:grid-cols-4">
+                <SnapshotLane
                   title="Queue"
-                  icon={<AlertCircle className="h-4 w-4 text-amber-300" />}
-                  items={snapshotVm.queueItems}
+                  icon={<AlertCircle className="h-4 w-4 text-sky-300" />}
+                  items={upcomingEntities}
                   emptyLabel="Waiting for claimable work."
+                  kind="queue"
                 />
-                <EntityListCard
+                <SnapshotLane
                   title="Running entities"
                   icon={<Loader2 className="h-4 w-4 text-sky-300" />}
-                  items={snapshotVm.runningItems}
+                  items={runningEntities}
                   emptyLabel="Nothing is running right now."
+                  kind="running"
                 />
-                <EntityListCard
+                <SnapshotLane
                   title="Stale / blocked"
                   icon={<AlertCircle className="h-4 w-4 text-amber-300" />}
-                  items={snapshotVm.stoppedItems}
+                  items={[...blockedEntities, ...resumedEntities]}
                   emptyLabel="No stale or blocked entities right now."
+                  kind="blocked"
                 />
-                <EntityListCard
+                <SnapshotLane
                   title="Completed"
-                  icon={<ListChecks className="h-4 w-4 text-emerald-300" />}
-                  items={snapshotVm.completedItems}
+                  icon={<CheckCircle2 className="h-4 w-4 text-emerald-300" />}
+                  items={completedEntities}
                   emptyLabel="No completed entities yet."
+                  kind="completed"
                 />
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         ) : null}
       </div>
     </section>
-  );
+  )
 }
