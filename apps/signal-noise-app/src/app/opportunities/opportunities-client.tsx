@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Calendar, Filter, Target, TrendingUp } from 'lucide-react';
+import { Calendar, ChevronDown, ChevronUp, Filter, Target, TrendingUp } from 'lucide-react';
 import { AppPageBody, AppPageHeader, AppPageShell } from '@/components/layout/AppPageShell';
 import { FacetFilterBar, type FacetFilterField } from '@/components/filters/FacetFilterBar';
 import { Badge } from '@/components/ui/badge';
@@ -66,8 +66,11 @@ interface OpportunityCard {
   value?: string;
   description: string;
   whyItMatters: string;
+  fitFeedback: string;
   suggestedAction: string;
+  nextSteps: string;
   signalSummary: string;
+  readMoreSummary: string;
   lastUpdated: string;
   criticalOpportunityScore: number;
   priorityScore: number;
@@ -115,6 +118,12 @@ function readDossierNarrative(metadata: Record<string, unknown>) {
     ? toLabelList(yellowPantherOpportunity.service_fit)
     : toLabelList(graphitiSalesBrief.service_fit);
   const decisionOwners = toLabelList(metadata.decision_owners);
+  const signals = [
+    ...toLabelList(yellowPantherOpportunity.signals),
+    ...toLabelList(graphitiSalesBrief.signals),
+    ...toLabelList(metadata.signals),
+    ...toLabelList(metadata.evidence),
+  ];
 
   const whyItMatters =
     toText(graphitiSalesBrief.capability_gap) ||
@@ -131,6 +140,22 @@ function readDossierNarrative(metadata: Record<string, unknown>) {
     toText(metadata.suggested_action) ||
     'Open the dossier and review the buyer hypothesis.';
 
+  const fitFeedback =
+    toText(yellowPantherOpportunity.fit_feedback) ||
+    toText(metadata.yellow_panther_fit_feedback) ||
+    (serviceFit.length > 0
+      ? `Yellow Panther fit is strongest where the dossier maps to ${serviceFit.slice(0, 3).join(', ')}.`
+      : 'Yellow Panther fit is inferred from the dossier-level commercial signal and the closest service adjacency.');
+
+  const nextSteps =
+    toText(graphitiSalesBrief.next_step) ||
+    toText(graphitiSalesBrief.action_plan) ||
+    toText(yellowPantherOpportunity.next_step) ||
+    toText(metadata.next_step) ||
+    (decisionOwners.length > 0
+      ? `Open the dossier, validate the decision owners, and draft outreach toward ${decisionOwners.slice(0, 3).join(', ')}.`
+      : 'Open the dossier, validate the buyer hypothesis, and draft a targeted outreach step.');
+
   const signalSummary = [
     serviceFit.length > 0 ? `YP fit: ${serviceFit.slice(0, 3).join(', ')}` : '',
     decisionOwners.length > 0 ? `Decision owners: ${decisionOwners.slice(0, 3).join(', ')}` : '',
@@ -141,8 +166,11 @@ function readDossierNarrative(metadata: Record<string, unknown>) {
 
   return {
     whyItMatters,
+    fitFeedback,
     suggestedAction,
+    nextSteps,
     signalSummary,
+    readMoreSummary: signals.slice(0, 4).join(' · '),
   };
 }
 
@@ -209,6 +237,7 @@ function OpportunitiesContent() {
   const [opportunityKindFilter, setOpportunityKindFilter] = useState('all');
   const [themeFilter, setThemeFilter] = useState('all');
   const [scoreFilter, setScoreFilter] = useState('all');
+  const [openOpportunityId, setOpenOpportunityId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
 
@@ -527,12 +556,20 @@ function OpportunitiesContent() {
 
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div className="rounded-md border border-custom-border bg-black/10 p-3">
-                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Why it matters</div>
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Why this is an opportunity</div>
                     <div className="mt-1 text-sm text-white">{opportunity.whyItMatters}</div>
+                  </div>
+                  <div className="rounded-md border border-custom-border bg-black/10 p-3">
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Yellow Panther fit</div>
+                    <div className="mt-1 text-sm text-white">{opportunity.fitFeedback}</div>
                   </div>
                   <div className="rounded-md border border-custom-border bg-black/10 p-3">
                     <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Suggested action</div>
                     <div className="mt-1 text-sm text-white">{opportunity.suggestedAction}</div>
+                  </div>
+                  <div className="rounded-md border border-custom-border bg-black/10 p-3">
+                    <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Next steps</div>
+                    <div className="mt-1 text-sm text-white">{opportunity.nextSteps}</div>
                   </div>
                 </div>
 
@@ -542,6 +579,24 @@ function OpportunitiesContent() {
                   </div>
                 ) : null}
               </div>
+
+              {openOpportunityId === opportunity.id && (
+                <div className="mb-4 rounded-lg border border-yellow-400/20 bg-yellow-400/5 p-4">
+                  <div className="text-[11px] uppercase tracking-[0.14em] text-fm-medium-grey">Read more</div>
+                  <div className="mt-2 grid gap-3 text-sm text-white sm:grid-cols-2">
+                    <div>
+                      <div className="font-medium text-yellow-100">What to look for</div>
+                      <div className="mt-1 text-fm-light-grey">
+                        {opportunity.readMoreSummary || 'Review the dossier for the supporting evidence, decision owners, and commercial signal details.'}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="font-medium text-yellow-100">What to do next</div>
+                      <div className="mt-1 text-fm-light-grey">{opportunity.nextSteps}</div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div className="text-center">
@@ -608,6 +663,19 @@ function OpportunitiesContent() {
               </div>
 
               <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => setOpenOpportunityId(openOpportunityId === opportunity.id ? null : opportunity.id)}
+                >
+                  {openOpportunityId === opportunity.id ? (
+                    <ChevronUp className="mr-1 h-3 w-3" />
+                  ) : (
+                    <ChevronDown className="mr-1 h-3 w-3" />
+                  )}
+                  {openOpportunityId === opportunity.id ? 'Read less' : 'Read more'}
+                </Button>
                 <Button size="sm" variant="outline" className="flex-1" asChild>
                   <a href={opportunity.sourceUrl || '/entity-browser'}>
                     <Target className="mr-1 h-3 w-3" />
