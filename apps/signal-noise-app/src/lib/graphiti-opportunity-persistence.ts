@@ -13,6 +13,7 @@ const SOURCE_COLUMNS = [
   'entity_id',
   'entity_name',
   'entity_type',
+  'insight_type',
   'title',
   'summary',
   'why_it_matters',
@@ -102,6 +103,10 @@ function toIso(value: unknown, fallback = new Date().toISOString()) {
   return Number.isFinite(timestamp) ? new Date(timestamp).toISOString() : fallback
 }
 
+function toText(value: unknown): string {
+  return value === null || value === undefined ? '' : String(value).trim()
+}
+
 function toRecord(row: PersistedGraphitiOpportunityRow): GraphitiOpportunityCard {
   return {
     id: row.opportunity_id,
@@ -138,6 +143,54 @@ function toRecord(row: PersistedGraphitiOpportunityRow): GraphitiOpportunityCard
   }
 }
 
+function isCommercialOpportunityLanguage(value: string): boolean {
+  return [
+    'opportunity',
+    'opening',
+    'procurement',
+    'commercial',
+    'partnership',
+    'deal',
+    'rfp',
+    'tender',
+    'sales',
+    'buying signal',
+    'why now',
+  ].some((term) => value.includes(term))
+}
+
+function isOpportunityCandidateSource(row: GraphitiOpportunitySourceRow): boolean {
+  if (row.insight_type === 'opportunity') return true
+
+  const confidence = Number(row.confidence || 0)
+  const rawPayload = row.raw_payload && typeof row.raw_payload === 'object'
+    ? row.raw_payload as Record<string, unknown>
+    : {}
+  const commercialLanguage = [
+    toText(row.title).toLowerCase(),
+    toText(row.summary).toLowerCase(),
+    toText(row.why_it_matters).toLowerCase(),
+    toText(row.suggested_action).toLowerCase(),
+    toText(rawPayload.opportunity_kind).toLowerCase(),
+    toText(rawPayload.category).toLowerCase(),
+    toText(rawPayload.signal_basis).toLowerCase(),
+  ].join(' ')
+
+  if (confidence >= 0.85 && isCommercialOpportunityLanguage(commercialLanguage)) {
+    return true
+  }
+
+  if (confidence >= 0.75 && (
+    toText(row.why_it_matters).toLowerCase().includes('why now') ||
+    toText(rawPayload.active_probability) === '1' ||
+    Number(rawPayload.active_probability || 0) >= 0.8
+  )) {
+    return true
+  }
+
+  return row.priority === 'high'
+}
+
 function isStale(lastSeenAt: string | null | undefined) {
   if (!lastSeenAt) return true
   const timestamp = Date.parse(lastSeenAt)
@@ -151,15 +204,15 @@ async function loadSourceOpportunities(limit: number) {
   const response = await supabase
     .from('graphiti_materialized_insights')
     .select(SOURCE_COLUMNS)
-    .eq('insight_type', 'opportunity')
     .order('last_seen_at', { ascending: false })
-    .limit(Math.max(limit, 25))
+    .limit(Math.max(limit * 4, 100))
 
   if (response.error) {
     throw new Error(`Failed to load Graphiti source opportunities: ${response.error.message}`)
   }
 
-  return Array.isArray(response.data) ? (response.data as GraphitiOpportunitySourceRow[]) : []
+  const rows = Array.isArray(response.data) ? (response.data as GraphitiOpportunitySourceRow[]) : []
+  return rows.filter(isOpportunityCandidateSource)
 }
 
 export async function loadPersistedGraphitiOpportunities(limit = 25) {
