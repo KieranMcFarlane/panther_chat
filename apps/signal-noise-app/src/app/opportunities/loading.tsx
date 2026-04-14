@@ -4,8 +4,8 @@ export default function Loading() {
   return (
     <RouteLoadingScreen
       eyebrow="Opportunities"
-      title="Loading opportunities"
-      description="Preparing the current opportunity set and supporting commercial context."
+      title="Loading canonical opportunities"
+      description="Preparing the Graphiti-backed shortlist and supporting commercial context."
     />
   )
 }
