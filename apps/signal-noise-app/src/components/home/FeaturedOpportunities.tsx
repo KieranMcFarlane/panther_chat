@@ -26,7 +26,7 @@ export function TopOpportunities() {
   useEffect(() => {
     const fetchRFPs = async () => {
       try {
-        const response = await fetch('/api/tenders?action=opportunities&limit=5&orderBy=yellow_panther_fit&orderDirection=desc&promoted_only=true')
+        const response = await fetch('/api/opportunities', { cache: 'no-store' })
         const data = await response.json()
         if (data.opportunities) {
           setRfps(data.opportunities.slice(0, 5))

@@ -263,6 +263,7 @@ body.static-bg {
 
 .animate-marquee {
   animation: marquee 22s linear infinite;
+  will-change: transform;
 }
 
 /* High contrast version */

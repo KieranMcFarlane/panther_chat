@@ -43,6 +43,18 @@ export default function AppNavigation({ children, authMenu }: AppNavigationProps
     setMobileNavOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    const openKanban = () => {
+      setActiveOpsSection('running');
+      setDrawerOpen(true);
+    };
+
+    window.addEventListener('open-operational-kanban', openKanban as EventListener);
+    return () => {
+      window.removeEventListener('open-operational-kanban', openKanban as EventListener);
+    };
+  }, []);
+
   if (isFullScreenAuthRoute) {
     return (
       <div className="relative z-10 min-h-screen">

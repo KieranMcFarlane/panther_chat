@@ -21,6 +21,8 @@ interface OperationalStatusStripProps {
   onToggleDrawer: () => void
 }
 
+const OPERATIONAL_STATUS_STRIP_STORAGE_KEY = 'yellow-panther:operational-status-strip:is-expanded'
+
 type SnapshotKind = 'queue' | 'running' | 'blocked' | 'completed'
 
 type SnapshotItem = Record<string, unknown> & {
@@ -33,7 +35,10 @@ type SnapshotItem = Record<string, unknown> & {
   completed_at?: string | null
   active_question_id?: string | null
   current_question_id?: string | null
+  current_question_text?: string | null
   next_repair_question_id?: string | null
+  next_repair_question_text?: string | null
+  last_completed_question_text?: string | null
   run_phase?: string | null
   current_stage?: string | null
   queue_position?: number | null
@@ -58,6 +63,15 @@ function getEntityHref(entityId: string) {
 }
 
 function getEntityQuestionLabel(item: SnapshotItem, kind: SnapshotKind) {
+  const questionText = toText(
+    item.current_question_text
+    || item.next_repair_question_text
+    || item.last_completed_question_text,
+  )
+  if (questionText) {
+    return questionText
+  }
+
   const questionId = toText(
     item.current_question_id
     || item.active_question_id
@@ -182,7 +196,8 @@ export function OperationalStatusStrip({
   const [drilldown, setDrilldown] = useState<OperationalDrilldownPayload | null>(null)
   const [controlState, setControlState] = useState<OperationalDrilldownPayload['control'] | null>(null)
   const [isTogglingPipeline, setIsTogglingPipeline] = useState(false)
-  const [isExpanded, setIsExpanded] = useState(true)
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [hasHydratedExpansionState, setHasHydratedExpansionState] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -217,22 +232,61 @@ export function OperationalStatusStrip({
         // leave summary fallback in place
       })
 
+    try {
+      const stored = window.localStorage.getItem(OPERATIONAL_STATUS_STRIP_STORAGE_KEY)
+      if (!cancelled && stored !== null) {
+        setIsExpanded(stored === 'true')
+      }
+    } catch {
+      // keep collapsed fallback if storage is unavailable
+    } finally {
+      if (!cancelled) {
+        setHasHydratedExpansionState(true)
+      }
+    }
+
     return () => {
       cancelled = true
     }
   }, [])
 
-  const inProgressEntity = drilldown?.queue?.in_progress_entity ?? null
-  const runningEntities = (drilldown?.queue?.running_entities as SnapshotItem[] | undefined) ?? (inProgressEntity ? [inProgressEntity as SnapshotItem] : [])
+  useEffect(() => {
+    if (!hasHydratedExpansionState) return
+
+    try {
+      window.localStorage.setItem(OPERATIONAL_STATUS_STRIP_STORAGE_KEY, String(isExpanded))
+    } catch {
+      // ignore persistence failures in private/incognito contexts
+    }
+  }, [hasHydratedExpansionState, isExpanded])
+
+  const liveState = drilldown?.live_state ?? null
+  const backlogHealth = drilldown?.backlog_health ?? null
+  const inProgressEntity = (liveState?.in_progress_entity as SnapshotItem | undefined) ?? drilldown?.queue?.in_progress_entity ?? null
+  const runningEntities = (liveState?.running_entities as SnapshotItem[] | undefined)
+    ?? (drilldown?.queue?.running_entities as SnapshotItem[] | undefined)
+    ?? (inProgressEntity ? [inProgressEntity as SnapshotItem] : [])
+  const staleActiveRows = (drilldown?.queue?.stale_active_rows as SnapshotItem[] | undefined) ?? []
   const completedEntities = (drilldown?.queue?.completed_entities as SnapshotItem[] | undefined) ?? []
   const blockedEntities = (drilldown?.dossier_quality?.incomplete_entities as SnapshotItem[] | undefined) ?? []
   const upcomingEntities = (drilldown?.queue?.upcoming_entities as SnapshotItem[] | undefined) ?? []
   const resumedEntities = (drilldown?.queue?.resume_needed_entities as SnapshotItem[] | undefined) ?? []
+  const runtime = drilldown?.runtime ?? null
+  const workerState = runtime?.worker?.worker_process_state
+    || liveState?.worker_process_state
+    || controlState?.transition_state
+    || controlState?.observed_state
+    || (controlState?.is_paused ? 'paused' : 'running')
+  const fastmcpHealth = runtime?.fastmcp?.reachable === false
+    ? 'unreachable'
+    : runtime?.fastmcp?.reachable === true
+      ? 'reachable'
+      : 'unknown'
+  const currentRun = liveState?.current_run ?? runtime?.current_run ?? inProgressEntity
+  const recentFailureCount = runtime?.recent_failures?.length ?? 0
+  const failureBuckets = runtime?.failure_buckets ?? {}
 
   const pipelinePaused = controlState?.is_paused === true
-  const workerState = controlState?.transition_state
-    || controlState?.observed_state
-    || (pipelinePaused ? 'paused' : 'running')
   const repairFocus = Boolean(
     inProgressEntity && (
       toText(inProgressEntity.next_repair_status).toLowerCase() === 'running'
@@ -258,15 +312,20 @@ export function OperationalStatusStrip({
     currentTargetLabel,
   })
 
+  const liveOperationalState = liveState?.operational_state ?? drilldown?.operational_state
   const statusBadgeLabel = workerState === 'stopping'
     ? 'Stopping'
     : workerState === 'starting'
       ? 'Starting'
+      : workerState === 'crashed'
+        ? 'Crashed'
+        : fastmcpHealth === 'unreachable' && workerState === 'running'
+          ? 'Degraded'
       : pipelinePaused
         ? 'Paused'
-        : repairFocus
-          ? 'Repairing'
-          : inProgressEntity
+          : repairFocus
+            ? 'Repairing'
+          : liveOperationalState === 'running' || inProgressEntity
             ? 'Running'
             : 'Waiting'
   const compactTicker = statusHero.headline
@@ -274,24 +333,36 @@ export function OperationalStatusStrip({
   const loopStatus = drilldown?.loop_status
   const statusItems = [
     {
+      label: 'Worker',
+      value: String(workerState),
+      tone: workerState === 'running' ? 'text-emerald-300' : workerState === 'crashed' ? 'text-rose-300' : 'text-sky-300',
+    },
+    {
+      label: 'Fast MCP',
+      value: fastmcpHealth,
+      tone: fastmcpHealth === 'reachable' ? 'text-emerald-300' : fastmcpHealth === 'unreachable' ? 'text-rose-300' : 'text-slate-300',
+    },
+    {
       label: 'Universe',
-      value: String(loopStatus?.total_scheduled ?? '…'),
+      value: String(loopStatus?.universe_count ?? loopStatus?.total_scheduled ?? '…'),
       tone: 'text-white',
     },
     {
-      label: 'Running now',
-      value: String(loopStatus?.runtime_counts?.running ?? '…'),
+      label: 'Current run',
+      value: currentRun
+        ? `${toText(currentRun.entity_name) || currentRun.entity_id} · ${toText(currentRun.current_question_text) || toText(currentRun.current_question_id) || toText(currentRun.current_action) || toText(currentRun.phase) || 'n/a'}`
+        : 'None',
       tone: 'text-sky-300',
     },
     {
-      label: 'Blocked / partial',
-      value: String((loopStatus?.quality_counts?.blocked ?? 0) + (loopStatus?.quality_counts?.partial ?? 0)),
-      tone: 'text-amber-300',
-    },
-    {
-      label: 'Recent completions',
-      value: String(loopStatus?.completed ?? '…'),
-      tone: 'text-emerald-300',
+      label: 'Backlog',
+      value: String(
+        (backlogHealth?.stale_active_count ?? 0)
+        + (backlogHealth?.published_degraded_count ?? 0)
+        + (backlogHealth?.reconciling_count ?? 0)
+        + (backlogHealth?.retrying_count ?? 0),
+      ),
+      tone: recentFailureCount > 0 ? 'text-amber-300' : 'text-emerald-300',
     },
   ] as const
 
@@ -377,7 +448,7 @@ export function OperationalStatusStrip({
             ))}
           </div>
 
-          <div className="flex min-w-0 flex-1 flex-col gap-2 xl:pl-3">
+          <div className="flex min-w-0 flex-1 flex-row gap-2 xl:pl-3">
             <div className="flex items-center gap-1.5 overflow-hidden rounded-full border border-custom-border bg-custom-bg/70 px-2.5 py-2">
               <Badge variant="outline" className="shrink-0 border-sky-500/30 text-sky-300">
                 {statusBadgeLabel}
@@ -394,8 +465,7 @@ export function OperationalStatusStrip({
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center justify-end gap-2">
-              <span className="text-[0.55rem] uppercase tracking-[0.16em] text-slate-400">Transport</span>
+            <div className="flex flex-nowrap items-center justify-end gap-2">
               <Button
                 variant="outline"
                 className="h-9 border-custom-border px-3 py-1.5"
@@ -443,19 +513,6 @@ export function OperationalStatusStrip({
                 </div>
 
                 <div className="flex min-w-[16rem] flex-col items-end gap-2 text-right">
-                  <Button
-                    variant="outline"
-                    className="h-10 border-sky-400/40 bg-sky-500/10 px-4 text-sm font-semibold text-white shadow-sm hover:border-sky-300 hover:bg-sky-500/20"
-                    onClick={togglePipelinePaused}
-                    disabled={isTogglingPipeline}
-                    aria-label={statusHero.primaryActionTitle}
-                    title={statusHero.primaryActionTitle}
-                  >
-                    {statusHero.primaryActionLabel === 'Resume pipeline'
-                      ? <PlayCircle className="mr-2 h-4 w-4" />
-                      : <PauseCircle className="mr-2 h-4 w-4" />}
-                    {statusHero.primaryActionLabel}
-                  </Button>
                   {statusHero.primaryActionRecommended ? (
                     <Badge variant="outline" className="border-emerald-400/30 text-emerald-200">Recommended</Badge>
                   ) : null}
@@ -472,6 +529,26 @@ export function OperationalStatusStrip({
                     <span className="text-slate-100">{row.value}</span>
                   </div>
                 ))}
+              </div>
+
+              <div className="mt-3 rounded-lg border border-sky-500/20 bg-sky-500/5 px-3 py-2 text-[0.68rem] tracking-[0.1em] text-slate-200">
+                <div className="text-[0.62rem] uppercase tracking-[0.16em] text-slate-400">Runtime</div>
+                <div className="mt-2 grid gap-1 sm:grid-cols-2 xl:grid-cols-3">
+                  <div>Worker process: <span className="text-white">{runtime?.worker?.worker_process_state || 'unknown'}</span></div>
+                  <div>Worker pid: <span className="text-white">{runtime?.worker?.worker_pid ?? 'n/a'}</span></div>
+                  <div>Fast MCP: <span className="text-white">{fastmcpHealth}</span></div>
+                  <div>Live state: <span className="text-white">{toText(liveOperationalState) || 'unknown'}</span></div>
+                  <div>Current entity: <span className="text-white">{toText(currentRun?.entity_name) || toText(currentRun?.entity_id) || 'n/a'}</span></div>
+                  <div>Current question: <span className="text-white">{toText(currentRun?.current_question_text) || toText(currentRun?.current_question_id) || 'unavailable'}</span></div>
+                  <div>Question ID: <span className="text-white">{toText(currentRun?.current_question_id) || 'unavailable'}</span></div>
+                  <div>Current action: <span className="text-white">{toText(currentRun?.current_action) || toText(currentRun?.phase) || 'unavailable'}</span></div>
+                </div>
+                <div className="mt-2 text-slate-300">
+                  Failure buckets: worker stale {String(failureBuckets.worker_stale ?? 0)}, retrying {String(failureBuckets.retrying ?? 0)}, reconciling {String(failureBuckets.reconciling ?? 0)}, degraded {String(failureBuckets.published_degraded ?? 0)}, terminal {String(failureBuckets.failed_terminal ?? 0)}
+                </div>
+                <div className="mt-2 text-slate-300">
+                  Backlog diagnostics: stale rows {String(backlogHealth?.stale_active_count ?? 0)}, retrying {String(backlogHealth?.retrying_count ?? 0)}, reconciling {String(backlogHealth?.reconciling_count ?? 0)}, degraded completions {String(backlogHealth?.published_degraded_count ?? 0)}
+                </div>
               </div>
 
               {statusHero.debugSummary || statusHero.debugCompactLine ? (
@@ -507,10 +584,10 @@ export function OperationalStatusStrip({
                   kind="running"
                 />
                 <SnapshotLane
-                  title="Stale / blocked"
+                  title="Backlog diagnostics"
                   icon={<AlertCircle className="h-4 w-4 text-amber-300" />}
-                  items={[...blockedEntities, ...resumedEntities]}
-                  emptyLabel="No stale or blocked entities right now."
+                  items={[...staleActiveRows, ...blockedEntities, ...resumedEntities]}
+                  emptyLabel="No stale, blocked, or resume-needed backlog right now."
                   kind="blocked"
                 />
                 <SnapshotLane

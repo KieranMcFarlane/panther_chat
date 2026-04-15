@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Command, CommandInput } from '@/components/ui/command';
 import { buildCanonicalOpportunitySearchText, matchesCanonicalSearch } from '@/lib/canonical-search';
+import type { GraphitiOpportunityCard, GraphitiOpportunityResponse } from '@/lib/graphiti-opportunity-contract';
 import { buildOpportunityFacetOptions, getOpportunityTaxonomyDisplayValues, normalizeOpportunityTaxonomy } from '@/lib/opportunity-taxonomy.mjs';
 
 type OpportunityTaxonomy = {
@@ -19,43 +20,6 @@ type OpportunityTaxonomy = {
   opportunity_kind: string;
   theme: string;
 };
-
-interface TenderOpportunityRecord {
-  id: string;
-  title: string;
-  organization: string;
-  description: string | null;
-  why_this_is_an_opportunity?: string | null;
-  yellow_panther_fit_feedback?: string | null;
-  next_steps?: string[] | null;
-  supporting_signals?: string[] | null;
-  read_more_context?: string | null;
-  location: string | null;
-  value: string | null;
-  deadline: string | null;
-  category: string | null;
-  priority: string | null;
-  priority_score: number | null;
-  confidence: number | null;
-  yellow_panther_fit: number | null;
-  entity_id: string | null;
-  entity_name: string | null;
-  canonical_entity_id?: string | null;
-  canonical_entity_name?: string | null;
-  entity_type: string | null;
-  sport?: string | null;
-  competition?: string | null;
-  entity_role?: string | null;
-  opportunity_kind?: string | null;
-  theme?: string | null;
-  taxonomy?: OpportunityTaxonomy | null;
-  metadata?: Record<string, unknown> | null;
-  source_url: string | null;
-  tags: string[] | null;
-  detected_at: string | null;
-  status?: string | null;
-  confidence_score?: number | null;
-}
 
 interface OpportunityCard {
   id: string;
@@ -93,117 +57,53 @@ interface OpportunityCard {
   taxonomy: OpportunityTaxonomy;
 }
 
+type PipelineStatusRecord = {
+  entity_id: string;
+  entity_name: string;
+  quality_state: 'complete' | 'partial' | 'blocked' | 'client_ready' | 'missing';
+  lifecycle_label: string;
+  lifecycle_summary: string;
+  latest_activity_at: string | null;
+  artifact_path: string | null;
+  dossier_path: string | null;
+  source_objective: string | null;
+}
+
+type PipelineStatusResponse = {
+  source: 'entity_pipeline_runs';
+  status: 'ready' | 'empty' | 'degraded';
+  generated_at: string;
+  snapshot: {
+    runs_scanned: number;
+    unique_entities: number;
+    completed: number;
+    partial: number;
+    blocked: number;
+    client_ready: number;
+    missing: number;
+    published_degraded: number;
+    running: number;
+    retrying: number;
+    stalled: number;
+    resume_needed: number;
+  };
+  completed_entities: PipelineStatusRecord[];
+  partial_entities: PipelineStatusRecord[];
+  blocked_entities: PipelineStatusRecord[];
+  client_ready_entities: PipelineStatusRecord[];
+  warnings: string[];
+}
+
 function toText(value: unknown): string {
   return value === null || value === undefined ? '' : String(value).trim();
 }
 
-function asRecord(value: unknown): Record<string, unknown> {
-  return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
-}
-
-function toLabel(value: unknown): string {
-  if (value === null || value === undefined) return '';
-  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') return String(value).trim();
-  if (Array.isArray(value)) return value.map(toLabel).filter(Boolean).join(', ');
-  if (typeof value === 'object') {
-    const record = value as Record<string, unknown>;
-    return toText(record.name || record.title || record.label || record.value || record.summary || record.description);
-  }
-  return String(value).trim();
-}
-
-function toLabelList(values: unknown): string[] {
-  if (Array.isArray(values)) return values.map(toLabel).filter(Boolean);
-  const label = toLabel(values);
-  return label ? [label] : [];
-}
-
-function readDossierNarrative(metadata: Record<string, unknown>) {
-  const graphitiSalesBrief = asRecord(metadata.graphiti_sales_brief);
-  const yellowPantherOpportunity = asRecord(metadata.yellow_panther_opportunity);
-  const serviceFit = toLabelList(yellowPantherOpportunity.service_fit).length > 0
-    ? toLabelList(yellowPantherOpportunity.service_fit)
-    : toLabelList(graphitiSalesBrief.service_fit);
-  const decisionOwners = toLabelList(metadata.decision_owners);
-
-  const whyItMatters =
-    toText(graphitiSalesBrief.capability_gap) ||
-    toText(yellowPantherOpportunity.competitive_advantage) ||
-    toText(metadata.why_it_matters) ||
-    toText(metadata.summary) ||
-    'This dossier has a qualified commercial signal.';
-
-  const suggestedAction =
-    toText(graphitiSalesBrief.outreach_route) ||
-    toText(graphitiSalesBrief.outreach_target) ||
-    toText(graphitiSalesBrief.best_path_owner) ||
-    toText(yellowPantherOpportunity.entry_point) ||
-    toText(metadata.suggested_action) ||
-    'Open the dossier and review the buyer hypothesis.';
-
-  const fitFeedback =
-    toText(yellowPantherOpportunity.fit_feedback) ||
-    toText(metadata.yellow_panther_fit_feedback) ||
-    (serviceFit.length > 0
-      ? `Yellow Panther fit is strongest where the dossier maps to ${serviceFit.slice(0, 3).join(', ')}.`
-      : 'Yellow Panther fit is inferred from the dossier-level commercial signal and the closest service adjacency.');
-
-  const nextSteps =
-    [
-      ...toLabelList(graphitiSalesBrief.next_steps),
-      ...toLabelList(yellowPantherOpportunity.next_steps),
-      ...toLabelList(metadata.next_steps),
-    ]
-      .filter(Boolean)
-      .slice(0, 3)
-      .join(' · ') ||
-    toText(graphitiSalesBrief.next_step) ||
-    toText(graphitiSalesBrief.action_plan) ||
-    toText(yellowPantherOpportunity.next_step) ||
-    toText(metadata.next_step) ||
-    (decisionOwners.length > 0
-      ? `Open the dossier, validate the decision owners, and draft outreach toward ${decisionOwners.slice(0, 3).join(', ')}.`
-      : 'Open the dossier, validate the buyer hypothesis, and draft a targeted outreach step.');
-
-  const supportingSignals = [
-    ...toLabelList(yellowPantherOpportunity.signals),
-    ...toLabelList(graphitiSalesBrief.signals),
-    ...toLabelList(metadata.signals),
-    ...toLabelList(metadata.evidence),
-  ];
-
-  const signalSummary = [
-    serviceFit.length > 0 ? `YP fit: ${serviceFit.slice(0, 3).join(', ')}` : '',
-    decisionOwners.length > 0 ? `Decision owners: ${decisionOwners.slice(0, 3).join(', ')}` : '',
-    toText(graphitiSalesBrief.outreach_angle) ? `Angle: ${toText(graphitiSalesBrief.outreach_angle)}` : '',
-    toText(yellowPantherOpportunity.entry_point) ? `Entry point: ${toText(yellowPantherOpportunity.entry_point)}` : '',
-    toText(metadata.quality_state) ? `Quality: ${toText(metadata.quality_state)}` : '',
-  ].filter(Boolean).join(' · ');
-
-  return {
-    whyItMatters,
-    fitFeedback,
-    suggestedAction,
-    nextSteps,
-    signalSummary,
-    readMoreContext: [
-      whyItMatters,
-      fitFeedback,
-      supportingSignals.slice(0, 4).join(' · '),
-      decisionOwners.length > 0 ? `Decision owners: ${decisionOwners.slice(0, 3).join(', ')}` : '',
-    ].filter(Boolean).join(' · '),
-  };
-}
-
-function normalizeOpportunity(opp: TenderOpportunityRecord): OpportunityCard {
+function normalizeOpportunity(opp: GraphitiOpportunityCard): OpportunityCard {
   const organization = opp.canonical_entity_name || opp.entity_name || opp.organization || 'Unknown organization';
   const fit = opp.yellow_panther_fit ?? 0;
   const confidence = opp.confidence ?? 0;
   const priority = opp.priority_score ?? 0;
-  const metadata = asRecord(opp.metadata);
-  const narrative = readDossierNarrative(metadata);
-  const materializedNextSteps = Array.isArray(opp.next_steps) ? opp.next_steps.map(toText).filter(Boolean) : [];
-  const materializedSignals = Array.isArray(opp.supporting_signals) ? opp.supporting_signals.map(toText).filter(Boolean) : [];
+  const metadata = typeof opp.metadata === 'object' && opp.metadata && !Array.isArray(opp.metadata) ? opp.metadata : {};
   const taxonomy = opp.taxonomy || normalizeOpportunityTaxonomy({
     ...opp,
     organization,
@@ -226,17 +126,17 @@ function normalizeOpportunity(opp: TenderOpportunityRecord): OpportunityCard {
     theme: displayTaxonomy.theme,
     deadline: opp.deadline || undefined,
     value: opp.value || undefined,
-    description: toText(opp.why_this_is_an_opportunity) || narrative.whyItMatters || opp.description || 'No description available',
-    whyItMatters: toText(opp.why_this_is_an_opportunity) || narrative.whyItMatters,
-    fitFeedback: toText(opp.yellow_panther_fit_feedback) || narrative.fitFeedback,
-    suggestedAction: narrative.suggestedAction,
-    nextSteps: materializedNextSteps.length > 0 ? materializedNextSteps[0] : narrative.nextSteps,
-    supportingSignals: materializedSignals.length > 0 ? materializedSignals : [],
+    description: toText(opp.why_this_is_an_opportunity) || toText(opp.description) || 'No description available',
+    whyItMatters: toText(opp.why_this_is_an_opportunity) || toText(opp.description),
+    fitFeedback: toText(opp.yellow_panther_fit_feedback) || 'Yellow Panther fit is inferred from the dossier-level commercial signal and the closest service adjacency.',
+    suggestedAction: toText(opp.description) || 'Open the dossier and review the buyer hypothesis.',
+    nextSteps: Array.isArray(opp.next_steps) && opp.next_steps.length > 0 ? opp.next_steps.map(toText).filter(Boolean)[0] : 'Open the dossier and review the buyer hypothesis.',
+    supportingSignals: Array.isArray(opp.supporting_signals) ? opp.supporting_signals.map(toText).filter(Boolean) : [],
     signalSummary: [
-      ...materializedSignals.slice(0, 3),
-      toText(opp.yellow_panther_fit_feedback) || narrative.fitFeedback,
+      ...(Array.isArray(opp.supporting_signals) ? opp.supporting_signals.slice(0, 3).map(toText) : []),
+      toText(opp.yellow_panther_fit_feedback),
     ].filter(Boolean).join(' · '),
-    readMoreContext: toText(opp.read_more_context) || narrative.readMoreContext,
+    readMoreContext: toText(opp.read_more_context) || toText(opp.description),
     lastUpdated: opp.detected_at || 'Unknown',
     criticalOpportunityScore: Math.round(fit / 10),
     priorityScore: Math.max(0, Math.round(priority)),
@@ -270,6 +170,9 @@ function OpportunitiesContent() {
   const [openOpportunityId, setOpenOpportunityId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [pipelineStatus, setPipelineStatus] = useState<PipelineStatusResponse | null>(null);
+  const [pipelineStatusLoading, setPipelineStatusLoading] = useState(true);
+  const [pipelineStatusError, setPipelineStatusError] = useState<string | null>(null);
 
   useEffect(() => {
     setSearchQuery(focusedEntityName);
@@ -289,7 +192,7 @@ function OpportunitiesContent() {
           throw new Error(`Failed to load opportunities (${response.status})`);
         }
 
-        const payload = await response.json();
+        const payload = await response.json() as GraphitiOpportunityResponse;
         const mapped = Array.isArray(payload?.opportunities)
           ? payload.opportunities.map(normalizeOpportunity)
           : [];
@@ -305,6 +208,34 @@ function OpportunitiesContent() {
     }
 
     void loadOpportunities();
+  }, []);
+
+  useEffect(() => {
+    async function loadPipelineStatus() {
+      try {
+        setPipelineStatusLoading(true);
+        setPipelineStatusError(null);
+
+        const response = await fetch('/api/home/pipeline-status?limit=6', {
+          cache: 'no-store',
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to load pipeline status (${response.status})`);
+        }
+
+        const payload = await response.json() as PipelineStatusResponse;
+        setPipelineStatus(payload);
+      } catch (error) {
+        console.error('Error loading pipeline status:', error);
+        setPipelineStatusError(error instanceof Error ? error.message : 'Failed to load pipeline status');
+        setPipelineStatus(null);
+      } finally {
+        setPipelineStatusLoading(false);
+      }
+    }
+
+    void loadPipelineStatus();
   }, []);
 
   const filteredOpportunities = useMemo(() => {
@@ -430,18 +361,12 @@ function OpportunitiesContent() {
 
   const getOpportunityKindColor = (kind: string) => {
     switch (kind) {
-      case 'RFP':
-        return 'bg-blue-500';
-      case 'Tender':
-        return 'bg-indigo-500';
-      case 'Procurement':
+      case 'Opportunity':
         return 'bg-emerald-500';
-      case 'Partnership':
-        return 'bg-purple-500';
-      case 'Grant':
-        return 'bg-teal-500';
-      case 'Hosting':
-        return 'bg-orange-500';
+      case 'Watch item':
+        return 'bg-blue-500';
+      case 'Operational':
+        return 'bg-slate-500';
       default:
         return 'bg-gray-500';
     }
@@ -452,6 +377,13 @@ function OpportunitiesContent() {
       .map((part) => String(part || '').trim())
       .filter(Boolean)
       .join(' · ');
+
+  const pipelineStatusCards = [
+    { key: 'completed', label: 'Completed', value: pipelineStatus?.snapshot.completed ?? 0, tone: 'text-emerald-300' },
+    { key: 'partial', label: 'Partial', value: pipelineStatus?.snapshot.partial ?? 0, tone: 'text-yellow-300' },
+    { key: 'blocked', label: 'Blocked', value: pipelineStatus?.snapshot.blocked ?? 0, tone: 'text-red-300' },
+    { key: 'client-ready', label: 'Client Ready', value: pipelineStatus?.snapshot.client_ready ?? 0, tone: 'text-cyan-300' },
+  ];
 
   if (loading) {
     return (
@@ -522,6 +454,110 @@ function OpportunitiesContent() {
             </div>
           </div>
         )}
+
+        <div className="rounded-2xl border border-custom-border bg-custom-box p-5">
+          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div>
+              <div className="text-xs uppercase tracking-[0.16em] text-fm-medium-grey">Canonical pipeline status</div>
+              <h3 className="mt-1 text-lg font-semibold text-white">Completed and partial entities since the pipeline started</h3>
+              <p className="mt-1 max-w-3xl text-sm text-fm-light-grey">
+                This panel reads the canonical Supabase pipeline ledger. Dossier artifacts remain on disk as pipeline outputs, but the UI is now showing DB-backed status only.
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge
+                variant="outline"
+                className={pipelineStatus?.status === 'ready'
+                  ? 'border-emerald-400/50 text-emerald-200'
+                  : pipelineStatus?.status === 'degraded'
+                    ? 'border-amber-400/50 text-amber-200'
+                    : 'border-custom-border text-fm-medium-grey'}
+              >
+                {pipelineStatusLoading ? 'Loading' : pipelineStatus?.status || 'empty'}
+              </Badge>
+              <Badge variant="outline" className="border-custom-border text-fm-medium-grey">
+                {pipelineStatus?.source || 'entity_pipeline_runs'}
+              </Badge>
+            </div>
+          </div>
+
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {pipelineStatusCards.map((item) => (
+              <div key={item.key} className="rounded-xl border border-custom-border bg-black/10 p-4">
+                <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">{item.label}</div>
+                <div className={`mt-2 text-3xl font-semibold ${item.tone}`}>{item.value}</div>
+              </div>
+            ))}
+          </div>
+
+          {pipelineStatusError && (
+            <div className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-100">
+              {pipelineStatusError}
+            </div>
+          )}
+
+          {pipelineStatus?.warnings?.length ? (
+            <div className="mt-4 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+              {pipelineStatus.warnings[0]}
+            </div>
+          ) : null}
+
+          <div className="mt-5 grid gap-4 lg:grid-cols-2">
+            <div className="rounded-xl border border-custom-border bg-black/10 p-4">
+              <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">Latest completed</div>
+              <div className="mt-3 space-y-3">
+                {(pipelineStatus?.completed_entities || []).slice(0, 3).map((record) => (
+                  <div key={record.entity_id} className="rounded-lg border border-custom-border/70 bg-black/10 p-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <div className="font-medium text-white">{record.entity_name}</div>
+                        <div className="text-xs uppercase tracking-[0.14em] text-emerald-200">{record.lifecycle_label}</div>
+                      </div>
+                      <Badge variant="outline" className="border-emerald-400/40 text-emerald-200">
+                        {record.quality_state}
+                      </Badge>
+                    </div>
+                    <p className="mt-2 text-sm text-fm-light-grey">{record.lifecycle_summary}</p>
+                    <div className="mt-2 text-xs text-fm-medium-grey">
+                      {record.source_objective ? `Objective: ${record.source_objective}` : 'Canonical DB row'}
+                    </div>
+                  </div>
+                ))}
+                {!pipelineStatusLoading && (pipelineStatus?.completed_entities?.length ?? 0) === 0 && (
+                  <div className="text-sm text-fm-medium-grey">No completed entities yet.</div>
+                )}
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-custom-border bg-black/10 p-4">
+              <div className="text-xs uppercase tracking-[0.14em] text-fm-medium-grey">Partial or blocked</div>
+              <div className="mt-3 space-y-3">
+                {[...(pipelineStatus?.partial_entities || []), ...(pipelineStatus?.blocked_entities || [])]
+                  .slice(0, 3)
+                  .map((record) => (
+                    <div key={record.entity_id} className="rounded-lg border border-custom-border/70 bg-black/10 p-3">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <div className="font-medium text-white">{record.entity_name}</div>
+                          <div className="text-xs uppercase tracking-[0.14em] text-yellow-200">{record.lifecycle_label}</div>
+                        </div>
+                        <Badge variant="outline" className="border-yellow-400/40 text-yellow-200">
+                          {record.quality_state}
+                        </Badge>
+                      </div>
+                      <p className="mt-2 text-sm text-fm-light-grey">{record.lifecycle_summary}</p>
+                      <div className="mt-2 text-xs text-fm-medium-grey">
+                        {record.dossier_path || record.artifact_path || 'Canonical DB row'}
+                      </div>
+                    </div>
+                  ))}
+                {!pipelineStatusLoading && ((pipelineStatus?.partial_entities?.length ?? 0) + (pipelineStatus?.blocked_entities?.length ?? 0) === 0) && (
+                  <div className="text-sm text-fm-medium-grey">No partial or blocked entities surfaced yet.</div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
 
         <FacetFilterBar
           searchSlot={(

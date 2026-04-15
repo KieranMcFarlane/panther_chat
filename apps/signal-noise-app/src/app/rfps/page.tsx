@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
-import { readLatestWideRfpResearchArtifact } from '@/lib/rfp-wide-research.mjs'
+import { loadLatestWideRfpResearchBatch } from '@/lib/rfp-wide-research-store'
 
 export const dynamic = 'force-dynamic'
 
@@ -25,6 +25,7 @@ type FoundRfp = {
   canonical_entity_id?: string | null
   canonical_entity_name?: string | null
   location?: string | null
+  status?: string | null
 }
 
 type WideResearchOpportunity = FoundRfp & {
@@ -40,6 +41,8 @@ type WideResearchBatch = {
   focus_area?: string | null
   lane_label?: string | null
   seed_query?: string | null
+  target_year?: number | null
+  excluded_names?: string[] | null
   opportunities: WideResearchOpportunity[]
   entity_actions: Array<{
     action: 'link' | 'create' | 'reuse'
@@ -82,56 +85,76 @@ function fitTone(score: number | null): 'default' | 'secondary' | 'outline' {
   return 'secondary'
 }
 
+function collectAlreadyFoundTitles(opportunities: WideResearchOpportunity[]): string[] {
+  const seen = new Set<string>()
+  const names: string[] = []
+
+  for (const opportunity of opportunities) {
+    const candidate = opportunity.title || opportunity.organization || opportunity.entity_name || opportunity.canonical_entity_name
+    const name = candidate?.trim()
+    if (!name) continue
+    const key = name.toLowerCase()
+    if (seen.has(key)) continue
+    seen.add(key)
+    names.push(name)
+  }
+
+  return names
+}
+
 export default async function RfpsPage() {
-  const latest = await readLatestWideRfpResearchArtifact({})
+  const latest = await loadLatestWideRfpResearchBatch({})
   const wideResearchBatch = (latest?.batch || null) as WideResearchBatch | null
   const wideResearchOpportunities = wideResearchBatch?.opportunities || []
+  const alreadyFoundTitles = collectAlreadyFoundTitles(wideResearchOpportunities)
   const latestWideResearchGeneratedAt = wideResearchBatch?.generated_at || null
-  const activeLaneLabel = wideResearchBatch?.lane_label || wideResearchBatch?.focus_area || 'Unknown lane'
 
   return (
     <AppPageShell className="opacity-100">
       <AppPageHeader
         eyebrow="Canonical RFPs"
-        title="Canonical source of truth"
-        description="This surface only shows Manus wide research after canonical-first normalization and ingestion into the source of truth."
+        title="Merged Manus wide research batch"
+        description="This surface shows the merged Manus wide research batch from wide_rfp_research_batches, which feeds the canonical source of truth."
       />
       <AppPageBody>
         <section className="grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
           <Card className="min-w-0 border-border/70 bg-card">
             <CardHeader className="space-y-2">
               <div className="flex items-center justify-between gap-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Latest cached wide research</CardTitle>
-                <Badge variant="outline">Normalized output</Badge>
+                <CardTitle className="text-sm font-medium text-muted-foreground">Merged Manus wide research batch</CardTitle>
+                <Badge variant="outline">wide_rfp_research_batches</Badge>
               </div>
               <div className="text-lg font-semibold text-foreground">
-                {wideResearchBatch ? `Run ${wideResearchBatch.run_id}` : 'No cached wide research batch yet'}
+                {wideResearchBatch ? `Run ${wideResearchBatch.run_id}` : 'No merged Manus batch yet'}
               </div>
               <p className="text-sm text-muted-foreground">
-                Manus-wide discovery output is cached on the server after canonical-first reconciliation, normalization, and ingestion.
+                Manus wide research JSON is merged into one batch so the page reflects the original broad sweep rather than a split source list.
               </p>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex flex-wrap items-center gap-3">
                 {wideResearchBatch ? (
                   <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                    <Badge variant="secondary">{activeLaneLabel}</Badge>
+                    <Badge variant="outline">Target year: {wideResearchBatch.target_year || 'any'}</Badge>
                     <span>
-                      Last cached run:{' '}
+                      Last merged run:{' '}
                       <span className="font-medium text-foreground">{formatRunTimestamp(latestWideResearchGeneratedAt)}</span>
                     </span>
                   </div>
                 ) : (
-                  <div className="text-sm text-muted-foreground">Waiting for the first Manus output to be cached.</div>
+                  <div className="text-sm text-muted-foreground">Waiting for the first Manus output to be merged.</div>
                 )}
-                <WideResearchRefreshButton />
+                <WideResearchRefreshButton
+                  alreadyFoundTitles={alreadyFoundTitles}
+                  defaultTargetYear={wideResearchBatch?.target_year || new Date().getFullYear()}
+                />
               </div>
               <div className="text-sm text-muted-foreground">
                 <span className="font-medium text-foreground/80">Seed prompt:</span>{' '}
                 {wideResearchBatch?.seed_query || 'Awaiting first Manus batch'}
               </div>
               <div className="rounded-xl border border-dashed border-border/70 bg-background/40 px-3 py-2 text-xs text-muted-foreground">
-                Canonical entity ingestion happens automatically from the normalized Manus batch. Missing entities are created in the source of truth with the available opportunity context.
+                Manus wide research JSON is preserved in the merged batch so the page stays aligned to the original batch contents.
               </div>
             </CardContent>
           </Card>
@@ -141,9 +164,9 @@ export default async function RfpsPage() {
           <section className="space-y-3">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <h2 className="text-lg font-semibold text-foreground">Normalized wide research output</h2>
+                <h2 className="text-lg font-semibold text-foreground">Merged Manus wide research output</h2>
                 <p className="text-sm text-muted-foreground">
-                  This is the Manus batch normalized into the same operator-friendly fields used by the rest of the RFP surface.
+                  This is the merged batch normalized into the same operator-friendly fields used by the RFP surface.
                 </p>
               </div>
               <Badge variant="outline">canonical-first</Badge>
@@ -176,7 +199,7 @@ export default async function RfpsPage() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <p className="text-sm leading-6 text-muted-foreground">
-                      {rfp.description || 'No summary was stored for this normalized opportunity.'}
+                      {rfp.description || 'No summary was stored for this merged Manus opportunity.'}
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {rfp.canonical_entity_id ? <Badge variant="outline">{rfp.canonical_entity_id}</Badge> : null}
@@ -213,7 +236,7 @@ export default async function RfpsPage() {
           </section>
         ) : (
           <section className="rounded-2xl border border-dashed border-border/70 bg-card/50 p-8 text-sm text-muted-foreground">
-            No cached wide research output has been ingested yet. Use the refresh action to seed the first Manus batch.
+            No merged Manus wide research output is available yet. Import the validated Manus JSON batches to seed the merged batch.
           </section>
         )}
       </AppPageBody>

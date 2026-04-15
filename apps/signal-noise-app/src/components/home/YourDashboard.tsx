@@ -22,7 +22,7 @@ export function YourDashboard() {
     const fetchDashboardData = async () => {
       try {
         // Fetch new opportunities (last 24 hours)
-        const rfpResponse = await fetch('/api/tenders?action=opportunities&limit=100&promoted_only=true')
+        const rfpResponse = await fetch('/api/opportunities', { cache: 'no-store' })
         const rfpData = await rfpResponse.json()
         
         const now = new Date()
@@ -165,7 +165,6 @@ export function YourDashboard() {
     </div>
   )
 }
-
 
 
 

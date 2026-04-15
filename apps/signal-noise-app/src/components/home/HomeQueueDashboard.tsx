@@ -1,12 +1,13 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight, Briefcase, Clock3, Route, Sparkles, Target, Users } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
+import { formatPlaylistSortKey } from '@/lib/playlist-sort-key'
 
 type QueueEntityRecord = {
   entity_id: string
@@ -18,6 +19,7 @@ type QueueEntityRecord = {
   summary: string | null
   generated_at: string | null
   active_question_id?: string | null
+  current_action?: string | null
   publication_status?: string | null
   publication_mode?: string | null
   repair_state?: string | null
@@ -68,7 +70,14 @@ type SalesSummaryItem = {
 }
 
 type HomeQueueDashboardPayload = {
+  control?: {
+    is_paused?: boolean
+    requested_state?: 'running' | 'paused'
+    observed_state?: 'starting' | 'running' | 'stopping' | 'paused'
+    transition_state?: 'starting' | 'running' | 'stopping' | 'paused'
+  }
   loop_status: {
+    universe_count: number
     total_scheduled: number
     completed: number
     failed: number
@@ -80,14 +89,17 @@ type HomeQueueDashboardPayload = {
     source: 'pipeline_runs' | 'diagnostics' | 'snapshot'
     last_activity_at: string | null
     quality_counts: Record<'partial' | 'blocked' | 'complete' | 'client_ready', number>
-    runtime_counts: Record<'running' | 'stalled' | 'retryable' | 'resume_needed', number>
+    runtime_counts: Record<'running' | 'queued' | 'stalled' | 'retryable' | 'resume_needed', number>
   }
   queue: {
     completed_entities: QueueEntityRecord[]
     in_progress_entity: QueueEntityRecord | null
+    running_entities: QueueEntityRecord[]
+    stale_active_rows: QueueEntityRecord[]
     resume_needed_entities: QueueEntityRecord[]
     upcoming_entities: QueueEntityRecord[]
   }
+  playlist_sort_key: string[]
   client_ready_dossiers: ClientReadyDossierCard[]
   rfp_cards: RfpCard[]
   sales_summary: {
@@ -134,7 +146,7 @@ function formatDate(value: string | null | undefined) {
 
 function formatLoopHealth(health: HomeQueueDashboardPayload['loop_status']['health']) {
   if (health === 'active') return 'Loop active'
-  if (health === 'stale') return 'Loop stalled'
+  if (health === 'stale') return 'Stale data'
   return 'Loop idle'
 }
 
@@ -163,6 +175,14 @@ function formatPublicationState(value: string | null | undefined) {
   return null
 }
 
+function openOperationalKanban() {
+  window.dispatchEvent(
+    new CustomEvent('open-operational-kanban', {
+      detail: { activeSection: 'running' },
+    }),
+  )
+}
+
 function formatRepairState(value: string | null | undefined) {
   if (value === 'queued') return 'Auto-repair queued'
   if (value === 'repairing') return 'Repairing'
@@ -187,6 +207,8 @@ function isSelfHealingRunning(item: QueueEntityRecord) {
 function QueueCard({ item }: { item: QueueEntityRecord }) {
   const stateLabel = item.client_ready
     ? 'Client-ready'
+    : item.run_phase === 'stalled'
+      ? 'Stopped'
     : item.state === 'resume_needed'
       ? 'Resume needed'
     : item.state === 'completed'
@@ -223,6 +245,11 @@ function QueueCard({ item }: { item: QueueEntityRecord }) {
         {formatNextRepairStatus(item.next_repair_status) ? <span>{formatNextRepairStatus(item.next_repair_status)}</span> : null}
       </div>
       <p className="mt-3 text-sm leading-6 text-slate-300">{toText(item.summary) || 'No summary available yet.'}</p>
+      {item.current_action ? (
+        <p className="mt-2 text-xs uppercase tracking-[0.14em] text-cyan-300">
+          current action: {item.current_action}
+        </p>
+      ) : null}
       {item.next_repair_question_id ? (
         <p className="mt-2 text-xs uppercase tracking-[0.14em] text-sky-300">
           next repair root: {item.next_repair_question_id}
@@ -273,10 +300,36 @@ function formatActiveRepairLabel(item: QueueEntityRecord | null | undefined) {
   return null
 }
 
+function dedupeQueueItems(items: Array<QueueEntityRecord | null | undefined>) {
+  const seen = new Set<string>()
+  const deduped: QueueEntityRecord[] = []
+  for (const item of items) {
+    if (!item?.entity_id || seen.has(item.entity_id)) continue
+    seen.add(item.entity_id)
+    deduped.push(item)
+  }
+  return deduped
+}
+
+// Legacy contract marker: In progress now
+
+function mergeDashboardPayload(
+  previous: HomeQueueDashboardPayload | null,
+  next: HomeQueueDashboardPayload,
+): HomeQueueDashboardPayload {
+  if (!previous) return next
+
+  return {
+    ...next,
+    rfp_cards: next.rfp_cards.length > 0 ? next.rfp_cards : previous.rfp_cards,
+  }
+}
+
 export function HomeQueueDashboard() {
   const [data, setData] = useState<HomeQueueDashboardPayload | null>(null)
   const [loading, setLoading] = useState(true)
   const [queueingEntityId, setQueueingEntityId] = useState<string | null>(null)
+  const didLoadRfpCardsRef = useRef(false)
 
   async function queueEntity(entityId: string) {
     if (!entityId) return
@@ -298,7 +351,8 @@ export function HomeQueueDashboard() {
       }
       const responsePayload = await fetch('/api/home/queue-dashboard', { cache: 'no-store' })
       if (responsePayload.ok) {
-        setData(await responsePayload.json())
+        const nextPayload = await responsePayload.json()
+        setData((current) => mergeDashboardPayload(current, nextPayload))
       }
     } catch {
       // Keep the dashboard visible and leave the existing state intact.
@@ -312,13 +366,39 @@ export function HomeQueueDashboard() {
       try {
         const response = await fetch('/api/home/queue-dashboard', { cache: 'no-store' })
         const payload = await response.json()
-        setData(payload)
+        setData((current) => mergeDashboardPayload(current, payload))
       } finally {
         setLoading(false)
       }
     }
     load()
   }, [])
+
+  useEffect(() => {
+    if (loading || !data || data.rfp_cards.length > 0 || didLoadRfpCardsRef.current) {
+      return
+    }
+
+    didLoadRfpCardsRef.current = true
+
+    async function loadRfpCards() {
+      try {
+        const response = await fetch(
+          '/api/opportunities',
+          { cache: 'no-store' },
+        )
+        if (!response.ok) return
+        const payload = await response.json()
+        const cards = Array.isArray(payload?.opportunities) ? payload.opportunities : []
+        if (cards.length === 0) return
+        setData((current) => current ? { ...current, rfp_cards: cards } : current)
+      } catch {
+        // Leave the dashboard rendered; promoted opportunities can stay empty on failure.
+      }
+    }
+
+    void loadRfpCards()
+  }, [data, loading])
 
   if (loading) {
     return (
@@ -347,8 +427,28 @@ export function HomeQueueDashboard() {
     )
   }
 
-  const { loop_status, queue, client_ready_dossiers, rfp_cards, sales_summary, dossier_quality, rollout_proof_set } = data
+  const { loop_status, queue, playlist_sort_key, client_ready_dossiers, rfp_cards, sales_summary, dossier_quality, rollout_proof_set } = data
   const healthLabel = formatLoopHealth(loop_status.health)
+  const controlRequestedState = data.control?.requested_state === 'paused' || data.control?.is_paused
+    ? 'paused'
+    : 'running'
+  const controlObservedState = data.control?.observed_state || data.control?.transition_state || null
+  const operationalState = controlObservedState === 'starting'
+    ? 'starting'
+    : controlObservedState === 'stopping'
+      ? 'stopping'
+      : controlRequestedState === 'paused'
+        ? 'paused'
+        : loop_status.runtime_counts.stalled > 0
+          ? 'stopped'
+          : loop_status.runtime_counts.running > 0
+            ? 'running'
+            : 'waiting'
+  const runningEntities = dedupeQueueItems([
+    queue.in_progress_entity,
+    ...queue.running_entities,
+  ])
+  const blockedPipelineCount = loop_status.quality_counts.partial + loop_status.quality_counts.blocked
   const activeFollowOnRepair = queue.in_progress_entity && hasFollowOnRepair(queue.in_progress_entity)
     ? queue.in_progress_entity
     : queue.resume_needed_entities.find((item) => hasFollowOnRepair(item))
@@ -375,30 +475,46 @@ export function HomeQueueDashboard() {
             <p className="mt-2 text-xs leading-5 text-slate-400">
               Source of truth: {formatLoopSource(loop_status.source)}. Last observed activity: {formatDate(loop_status.last_activity_at)}.
             </p>
+            <p className="mt-2 text-xs uppercase tracking-[0.14em] text-slate-400">
+              State: {operationalState === 'starting'
+                ? 'Starting'
+                : operationalState === 'stopping'
+                  ? 'Stopping'
+                  : operationalState === 'paused'
+                    ? 'Paused'
+                    : operationalState === 'stopped'
+                      ? 'Stopped'
+                      : operationalState === 'waiting'
+                        ? 'Waiting'
+                        : 'Running'}
+            </p>
+            <p className="mt-2 text-xs leading-5 text-slate-400">
+              Queue order: {formatPlaylistSortKey(playlist_sort_key)}
+            </p>
           </div>
           <div className="text-sm text-slate-400">
             Last successful canonical run: {formatDate(loop_status.last_successful_canonical_run_at)}
           </div>
         </div>
-        <div className="mt-6 grid gap-4 md:grid-cols-4 xl:grid-cols-6">
-          <Card className="border-white/10 bg-black/20"><CardContent className="p-5"><p className="text-xs uppercase tracking-[0.16em] text-slate-400">Universe</p><p className="mt-3 text-3xl font-semibold text-white">{loop_status.total_scheduled}</p></CardContent></Card>
-          <Card className="border-white/10 bg-black/20"><CardContent className="p-5"><p className="text-xs uppercase tracking-[0.16em] text-slate-400">Completed</p><p className="mt-3 text-3xl font-semibold text-white">{loop_status.completed}</p></CardContent></Card>
-          <Card className="border-white/10 bg-black/20"><CardContent className="p-5"><p className="text-xs uppercase tracking-[0.16em] text-slate-400">Failed</p><p className="mt-3 text-3xl font-semibold text-white">{loop_status.failed}</p></CardContent></Card>
-          <Card className="border-white/10 bg-black/20"><CardContent className="p-5"><p className="text-xs uppercase tracking-[0.16em] text-slate-400">Retryable</p><p className="mt-3 text-3xl font-semibold text-white">{loop_status.retryable_failures}</p></CardContent></Card>
-          <Card className="border-white/10 bg-black/20"><CardContent className="p-5"><p className="text-xs uppercase tracking-[0.16em] text-slate-400">Client-ready dossiers</p><p className="mt-3 text-3xl font-semibold text-emerald-300">{loop_status.client_ready_dossiers}</p></CardContent></Card>
-          <Card className="border-white/10 bg-black/20"><CardContent className="p-5"><p className="text-xs uppercase tracking-[0.16em] text-slate-400">Promoted dossiers</p><p className="mt-3 text-3xl font-semibold text-amber-300">{loop_status.promoted_dossiers}</p></CardContent></Card>
-        </div>
-        <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+          <Card className="border-white/10 bg-black/20"><CardContent className="p-5"><p className="text-xs uppercase tracking-[0.16em] text-slate-400">Universe</p><p className="mt-3 text-3xl font-semibold text-white">{loop_status.universe_count}</p></CardContent></Card>
           <Card className="border-white/10 bg-black/20"><CardContent className="p-5"><p className="text-xs uppercase tracking-[0.16em] text-slate-400">Running now</p><p className="mt-3 text-3xl font-semibold text-white">{loop_status.runtime_counts.running}</p></CardContent></Card>
-          <Card className="border-white/10 bg-black/20"><CardContent className="p-5"><p className="text-xs uppercase tracking-[0.16em] text-slate-400">Stalled runs</p><p className="mt-3 text-3xl font-semibold text-amber-200">{loop_status.runtime_counts.stalled}</p></CardContent></Card>
-          <Card className="border-white/10 bg-black/20"><CardContent className="p-5"><p className="text-xs uppercase tracking-[0.16em] text-slate-400">Retryable runs</p><p className="mt-3 text-3xl font-semibold text-orange-200">{loop_status.runtime_counts.retryable}</p></CardContent></Card>
+          <Card className="border-white/10 bg-black/20"><CardContent className="p-5"><p className="text-xs uppercase tracking-[0.16em] text-slate-400">Blocked / partial</p><p className="mt-3 text-3xl font-semibold text-amber-200">{blockedPipelineCount}</p></CardContent></Card>
+          <Card className="border-white/10 bg-black/20">
+            <CardContent className="p-5">
+              <button
+                type="button"
+                className="w-full text-left transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-amber-300/70 focus:ring-offset-2 focus:ring-offset-black/20"
+                onClick={openOperationalKanban}
+                aria-label="Open pipeline kanban"
+                title="Open pipeline kanban"
+              >
+                <p className="text-xs uppercase tracking-[0.16em] text-slate-400">Completions</p>
+                <p className="mt-3 text-3xl font-semibold text-emerald-300">{loop_status.completed}</p>
+              </button>
+            </CardContent>
+          </Card>
           <Card className="border-white/10 bg-black/20"><CardContent className="p-5"><p className="text-xs uppercase tracking-[0.16em] text-slate-400">Resume needed</p><p className="mt-3 text-3xl font-semibold text-sky-200">{loop_status.runtime_counts.resume_needed}</p></CardContent></Card>
-        </div>
-        <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <Card className="border-white/10 bg-black/20"><CardContent className="p-5"><p className="text-xs uppercase tracking-[0.16em] text-slate-400">Partial dossiers</p><p className="mt-3 text-3xl font-semibold text-amber-200">{loop_status.quality_counts.partial}</p></CardContent></Card>
-          <Card className="border-white/10 bg-black/20"><CardContent className="p-5"><p className="text-xs uppercase tracking-[0.16em] text-slate-400">Blocked dossiers</p><p className="mt-3 text-3xl font-semibold text-orange-200">{loop_status.quality_counts.blocked}</p></CardContent></Card>
-          <Card className="border-white/10 bg-black/20"><CardContent className="p-5"><p className="text-xs uppercase tracking-[0.16em] text-slate-400">Complete dossiers</p><p className="mt-3 text-3xl font-semibold text-sky-200">{loop_status.quality_counts.complete}</p></CardContent></Card>
-          <Card className="border-white/10 bg-black/20"><CardContent className="p-5"><p className="text-xs uppercase tracking-[0.16em] text-slate-400">Client-ready quality</p><p className="mt-3 text-3xl font-semibold text-emerald-300">{loop_status.quality_counts.client_ready}</p></CardContent></Card>
         </div>
 
         {activeFollowOnRepair ? (
@@ -430,9 +546,11 @@ export function HomeQueueDashboard() {
 
       <section className="grid gap-6 xl:grid-cols-4">
         <Card className="border-white/10 bg-white/[0.04]">
-          <CardHeader><CardTitle className="flex items-center gap-2 text-white"><Clock3 className="h-5 w-5 text-amber-300" />In progress now</CardTitle></CardHeader>
+          <CardHeader><CardTitle className="flex items-center gap-2 text-white"><Clock3 className="h-5 w-5 text-amber-300" />Running now</CardTitle></CardHeader>
           <CardContent>
-            {queue.in_progress_entity ? <QueueCard item={queue.in_progress_entity} /> : <p className="text-sm text-slate-300">Waiting for claimable work.</p>}
+            <div className="space-y-3">
+              {runningEntities.length > 0 ? runningEntities.map((item) => <QueueCard key={item.entity_id} item={item} />) : <p className="text-sm text-slate-300">Waiting for claimable work.</p>}
+            </div>
           </CardContent>
         </Card>
         <Card className="border-white/10 bg-white/[0.04]">
