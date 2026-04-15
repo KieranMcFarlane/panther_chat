@@ -12,21 +12,21 @@ const dossierClientSource = readFileSync(dossierClientPath, 'utf8')
 
 test('entity loader falls back to persisted entity_dossiers when cached entity properties lack dossier_data', () => {
   assert.match(loaderSource, /from\('entity_dossiers'\)/)
-  assert.match(loaderSource, /select\('dossier_data'\)/)
+  assert.match(loaderSource, /select\('dossier_data, created_at, generated_at'\)/)
   assert.match(loaderSource, /if \(!dossier\)/)
   assert.match(loaderSource, /getPersistedDossier/)
 })
 
-test('entity loader searches both premium and standard dossier stores before giving up', () => {
-  assert.match(loaderSource, /path\.join\(DOSSIERS_DIR, 'premium'\)/)
-  assert.match(loaderSource, /path\.join\(DOSSIERS_DIR, 'standard'\)/)
-  assert.match(loaderSource, /candidateTierDirs/)
+test('entity loader does not search filesystem dossier stores on surfaced reads', () => {
+  assert.doesNotMatch(loaderSource, /DOSSIERS_DIR/)
+  assert.doesNotMatch(loaderSource, /candidateTierDirs/)
+  assert.doesNotMatch(loaderSource, /readFile/)
 })
 
-test('entity loader can synthesize a browser entity from canonical question-first artifacts when no live entity row exists', () => {
-  assert.match(loaderSource, /const canonicalQuestionFirst = await resolveCanonicalQuestionFirstDossier\(entityId, null\)/)
-  assert.match(loaderSource, /source: 'dossier-file'/)
-  assert.match(loaderSource, /dossier_data: JSON\.stringify\(dossier\)/)
+test('entity loader no longer synthesizes browser entities from question-first artifacts', () => {
+  assert.doesNotMatch(loaderSource, /resolveCanonicalQuestionFirstDossier/)
+  assert.doesNotMatch(loaderSource, /source: 'dossier-file'/)
+  assert.doesNotMatch(loaderSource, /dossier_data: JSON\.stringify\(dossier\)/)
 })
 
 test('entity browser dossier page passes the persisted dossier into the client page and dossier router', () => {

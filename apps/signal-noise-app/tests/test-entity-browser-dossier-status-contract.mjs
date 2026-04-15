@@ -69,8 +69,8 @@ test('dossier index downgrades canonical dossiers that are not client-ready', ()
   assert.match(dossierIndexSource, /rerun_needed/)
 })
 
-test('entity dossier API uses canonical dossier resolution before raw artifact shortcuts', () => {
-  assert.match(dossierRouteSource, /resolveCanonicalQuestionFirstDossier/)
-  assert.doesNotMatch(dossierRouteSource, /getLatestQuestionFirstDossierArtifact/)
-  assert.doesNotMatch(dossierRouteSource, /getLatestQuestionFirstRunArtifact/)
+test('entity dossier API stays on persisted dossier rows before queueing new work', () => {
+  assert.match(dossierRouteSource, /getPersistedDossier/)
+  assert.match(dossierRouteSource, /from\('entity_dossiers'\)/)
+  assert.doesNotMatch(dossierRouteSource, /resolveCanonicalQuestionFirstDossier/)
 })

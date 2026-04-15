@@ -8,7 +8,8 @@ test('entity api route delegates entity resolution to the dossier-page canonical
   assert.match(routeSource, /import \{ getEntityForDossierPage \} from ["']@\/lib\/entity-loader["']/)
   assert.match(routeSource, /const entityData = await getEntityForDossierPage\(entityId\)/)
   assert.match(routeSource, /const entity = entityData\.entity/)
-  assert.match(routeSource, /const source = entityData\.source === 'dossier-file' \? 'local_export' : entityData\.source/)
+  assert.match(routeSource, /const source = entityData\.source/)
+  assert.doesNotMatch(routeSource, /local_export/)
 })
 
 test('entity api route no longer performs broad team-name lookups ahead of canonical loader resolution', () => {

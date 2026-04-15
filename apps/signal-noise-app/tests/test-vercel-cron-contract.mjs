@@ -13,6 +13,7 @@ test('vercel cron is configured for dossier refresh, graphiti materialization, d
   assert.match(vercelSource, /"path": "\/api\/cron\/graphiti\/materialize"/)
   assert.match(vercelSource, /"path": "\/api\/cron\/daily-sales-digest"/)
   assert.match(vercelSource, /"path": "\/api\/cron\/rfp-wide-research"/)
+  assert.match(vercelSource, /"schedule": "0 4 \* \* \*"/)
 })
 
 test('cron routes exist and require the cron secret', () => {
@@ -24,5 +25,5 @@ test('cron routes exist and require the cron secret', () => {
   assert.match(readFileSync(materializeCronPath, 'utf8'), /requireCronSecret/)
   assert.match(readFileSync(digestCronPath, 'utf8'), /requireCronSecret/)
   assert.match(readFileSync(wideRfpCronPath, 'utf8'), /requireCronSecret/)
-  assert.match(readFileSync(wideRfpCronPath, 'utf8'), /readLatestWideRfpResearchArtifact/)
+  assert.match(readFileSync(wideRfpCronPath, 'utf8'), /loadLatestWideRfpResearchBatch/)
 })

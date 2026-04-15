@@ -4,10 +4,10 @@ import { readFileSync } from 'node:fs'
 
 const entityDossierRouteSource = readFileSync(new URL('../src/app/api/entities/[entityId]/dossier/route.ts', import.meta.url), 'utf8')
 
-test('dossier api prefers the latest Supabase-published dossier before falling back to canonical filesystem artifacts', () => {
-  assert.match(entityDossierRouteSource, /resolveCanonicalQuestionFirstDossier/)
+test('dossier api reads the latest Supabase-published dossier without filesystem fallbacks', () => {
   assert.match(entityDossierRouteSource, /getPersistedDossier/)
   assert.match(entityDossierRouteSource, /supabase_persisted_dossier/)
+  assert.doesNotMatch(entityDossierRouteSource, /resolveCanonicalQuestionFirstDossier/)
 })
 
 test('dossier api exposes the normalized question-first payload expected by the app', () => {
@@ -50,7 +50,7 @@ test('canonical dossier resolution keeps better published dossiers ahead of wors
   assert.match(questionFirstDossierSource, /runQualityPriority < dossierQualityPriority/)
 })
 
-test('dossier api rejects malformed persisted dossier cache rows before falling back to canonical question-first artifacts', () => {
+test('dossier api rejects malformed persisted dossier cache rows before queueing canonical regeneration', () => {
   assert.match(entityDossierRouteSource, /isCanonicalPersistedDossierCandidate/)
   assert.match(entityDossierRouteSource, /hasQuestionFirstAnswers/)
   assert.match(entityDossierRouteSource, /merged_dossier/)
@@ -68,7 +68,7 @@ test('dossier api ranks persisted dossier candidates so malformed newer rows can
   assert.match(entityDossierRouteSource, /\.limit\(5\)/)
 })
 
-test('dossier api can synthesize an entity from canonical question-first artifacts when no live row exists', () => {
-  assert.match(entityDossierRouteSource, /const canonicalQuestionFirst = await resolveCanonicalQuestionFirstDossier\(normalizedId, null\)/)
-  assert.match(entityDossierRouteSource, /dossier_data: JSON\.stringify\(dossier\)/)
+test('dossier api does not synthesize entities from question-first artifacts when no live row exists', () => {
+  assert.doesNotMatch(entityDossierRouteSource, /resolveCanonicalQuestionFirstDossier/)
+  assert.doesNotMatch(entityDossierRouteSource, /dossier_data: JSON\.stringify\(dossier\)/)
 })

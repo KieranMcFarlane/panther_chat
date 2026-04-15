@@ -11,12 +11,16 @@
       "schedule": "15 5 * * *"
     },
     {
+      "path": "/api/cron/graphiti/opportunities/materialize",
+      "schedule": "25 5 * * *"
+    },
+    {
       "path": "/api/cron/daily-sales-digest",
       "schedule": "30 5 * * 1-5"
     },
     {
       "path": "/api/cron/rfp-wide-research",
-      "schedule": "0 4 * * 1"
+      "schedule": "0 4 * * *"
     }
   ],
   "headers": [

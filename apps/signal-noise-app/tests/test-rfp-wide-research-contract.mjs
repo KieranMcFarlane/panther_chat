@@ -25,20 +25,33 @@ test('buildWideRfpResearchPrompt includes the repo-specific rfp surfaces and can
   assert.match(prompt, /MANUS_API/i)
   assert.match(prompt, /digital-fit/i)
   assert.match(prompt, /Yellow Panther/i)
+  assert.match(prompt, /Prioritize digital opportunities/i)
+  assert.match(prompt, /Iterate through the RFPS already found/i)
 })
 
-test('buildWideRfpResearchPrompt can narrow discovery to a crm sub-vertical', () => {
+test('buildWideRfpResearchPrompt uses the generic yellow panther discovery prompt by default', () => {
   const prompt = buildWideRfpResearchPrompt({
-    seedQuery: 'Yellow Panther crm-fit RFP discovery',
     currentRfpPage: '/rfps',
     currentIntakePage: '/tenders',
-    focusArea: 'crm',
   })
 
-  assert.match(prompt, /CRM/i)
-  assert.match(prompt, /membership/i)
-  assert.match(prompt, /customer data/i)
-  assert.doesNotMatch(prompt, /websites, apps, portals, UX\/UI, CMS, content, CRM, martech, analytics, data, automation, digital transformation, fan engagement, and technology procurement/i)
+  assert.match(prompt, /Yellow Panther digital-fit RFP discovery/i)
+  assert.match(prompt, /websites, apps, portals, UX\/UI, CMS, content, CRM, martech, analytics, data, automation, digital transformation, fan engagement, and technology procurement/i)
+})
+
+test('buildWideRfpResearchPrompt can target a year and exclude already found titles', () => {
+  const prompt = buildWideRfpResearchPrompt({
+    currentRfpPage: '/rfps',
+    currentIntakePage: '/tenders',
+    targetYear: 2026,
+    excludeTitles: ['BC Athletics Rebrand and Website Development', 'RFP World Skate Website'],
+  })
+
+  assert.match(prompt, /Target year: 2026/i)
+  assert.match(prompt, /Already found RFP titles \(exclude these from the next sweep\)/i)
+  assert.match(prompt, /BC Athletics Rebrand and Website Development/i)
+  assert.match(prompt, /RFP World Skate Website/i)
+  assert.match(prompt, /long-tail/i)
 })
 
 test('normalizeWideRfpResearchBatch produces canonical opportunity rows and entity actions', () => {
@@ -67,7 +80,7 @@ test('normalizeWideRfpResearchBatch produces canonical opportunity rows and enti
   assert.equal(batch.run_id, 'wide-rfp-001')
   assert.equal(batch.focus_area, 'web-platforms')
   assert.equal(batch.lane_label, 'Web Platforms')
-  assert.equal(batch.seed_query, 'Yellow Panther web-platform RFP discovery')
+  assert.equal(batch.seed_query, 'Yellow Panther digital-fit RFP discovery')
   assert.equal(batch.opportunities.length, 1)
   assert.equal(batch.opportunities[0].organization, 'Example FC')
   assert.equal(batch.opportunities[0].canonical_entity_id, 'entity-123')

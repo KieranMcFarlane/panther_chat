@@ -12,7 +12,7 @@ const vercelSource = readFileSync(new URL('../vercel.json', import.meta.url), 'u
 test('opportunities page and API route are wired to the canonical Graphiti opportunity stack', () => {
   assert.match(pageSource, /requirePageSession\('\/opportunities'\)/)
   assert.match(clientSource, /fetch\(['"]\/api\/opportunities['"]/)
-  assert.match(routeSource, /loadGraphitiOpportunities/)
+  assert.match(routeSource, /loadGraphitiOpportunitiesFromDb/)
   assert.match(persistenceSource, /graphiti_materialized_opportunities/)
   assert.match(persistenceSource, /why_this_is_an_opportunity/)
   assert.match(persistenceSource, /yellow_panther_fit_feedback/)

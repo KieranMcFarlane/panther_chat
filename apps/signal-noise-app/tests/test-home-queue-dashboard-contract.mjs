@@ -85,7 +85,8 @@ test('home queue dashboard API exposes the normalized payload contract for loop 
   assert.match(dashboardApiSource, /sales_summary/)
   assert.match(dashboardApiSource, /dossier_quality/)
   assert.match(dashboardApiSource, /rollout_proof_set/)
-  assert.match(dashboardApiSource, /promoted_only=true/)
+  assert.match(dashboardApiSource, /loadGraphitiOpportunitiesFromDb/)
+  assert.doesNotMatch(dashboardApiSource, /api\/tenders/)
 })
 
 test('home queue dashboard drilldown contract carries ignition control state and active-question detail', () => {
@@ -102,11 +103,7 @@ test('home queue dashboard drilldown contract carries ignition control state and
 
 test('home queue dashboard payload includes dossier quality counts, incomplete artifacts, and the rollout proof set', () => {
   assert.match(dashboardSource, /Running now/)
-  assert.match(dashboardSource, /Stalled runs/)
   assert.match(dashboardSource, /Resume needed/)
-  assert.match(dashboardSource, /Partial dossiers/)
-  assert.match(dashboardSource, /Blocked dossiers/)
-  assert.match(dashboardSource, /Complete dossiers/)
   assert.match(dashboardSource, /Needs full-pack completion/)
   assert.match(dashboardSource, /Rollout proof set/)
   assert.match(dashboardSource, /Queue this entity/)

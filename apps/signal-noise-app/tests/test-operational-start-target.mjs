@@ -58,7 +58,7 @@ test('start falls back to an entity run when no question is available', () => {
   assert.equal(target?.mode, 'full')
 })
 
-test('start falls back to the latest completed entity when the running section is empty', () => {
+test('start prefers the next upcoming entity when the running section is empty', () => {
   const target = resolvePipelineStartTarget({
     activeSection: 'running',
     drilldown: {
@@ -90,7 +90,7 @@ test('start falls back to the latest completed entity when the running section i
     },
   })
 
-  assert.equal(target?.entityId, 'fc-porto-2027')
-  assert.equal(target?.questionId, 'q11_decision_owner')
-  assert.equal(target?.mode, 'question')
+  assert.equal(target?.entityId, 'fifa')
+  assert.equal(target?.questionId, null)
+  assert.equal(target?.mode, 'full')
 })

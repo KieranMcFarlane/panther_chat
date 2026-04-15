@@ -83,3 +83,13 @@ test('home queue dashboard derives queue card summaries from the shared lifecycl
   assert.match(homeQueueSource, /stalled/i)
   assert.match(homeQueueSource, /retryable/i)
 })
+
+test('active running rows are not downgraded to stalled solely by persisted checkpoint gaps', () => {
+  assert.match(lifecycleSource, /baseStage === 'running'/)
+  assert.match(lifecycleSource, /const hasCheckpointGap = !checkpoint\.checkpoint_consistent \|\| checkpoint\.non_terminal_question_ids\.length > 0/)
+  assert.match(lifecycleSource, /baseStage !== 'running' && hasCheckpointGap/)
+  assert.match(lifecycleSource, /const hasActiveRun = baseStage === 'running' \|\| baseStage === 'queued'/)
+  assert.match(lifecycleSource, /!hasActiveRun && canonical\.source === 'question_first_dossier'/)
+  assert.match(lifecycleSource, /const activeRunHeartbeatAt = baseStage === 'running'/)
+  assert.match(lifecycleSource, /toText\(runMetadata\.heartbeat_at\) \|\| toText\(run\?\.started_at\)/)
+})
