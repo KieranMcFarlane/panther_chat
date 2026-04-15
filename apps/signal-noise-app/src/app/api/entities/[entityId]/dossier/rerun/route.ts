@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { markEntityDossierRerunRequested } from '@/lib/dossier-ops'
 import { queueDossierRefresh, resolveEntityForDossierQueue } from '@/lib/entity-dossier-queue'
 import { requireOperatorApiSession } from '@/lib/operator-access'
-import { resolveCanonicalQuestionFirstDossier } from '@/lib/question-first-dossier'
+import { loadNormalizedPersistedDossier } from '@/lib/persisted-dossier'
 import { UnauthorizedError } from '@/lib/server-auth'
 
 function toText(value: unknown): string {
@@ -33,14 +33,9 @@ export async function POST(
     if (!entity) {
       return NextResponse.json({ error: 'Entity not found' }, { status: 404 })
     }
-    const canonical = await resolveCanonicalQuestionFirstDossier(params.entityId, entity)
-    const canonicalDossier = canonical.dossier && typeof canonical.dossier === 'object' ? canonical.dossier : null
-    const repairSourceRunPath = canonical.source === 'question_first_run'
-      ? toText(canonical.artifactPath) || null
-      : toText(canonicalDossier?.question_first_run_path) || null
-    const repairSourceDossierPath = canonical.source === 'question_first_dossier'
-      ? toText(canonical.artifactPath) || null
-      : toText(canonicalDossier?.question_first_report?.json_report_path) || null
+    const canonicalDossier = await loadNormalizedPersistedDossier(params.entityId, entity)
+    const repairSourceRunPath = toText(canonicalDossier?.question_first_run_path) || null
+    const repairSourceDossierPath = toText(canonicalDossier?.question_first_report?.json_report_path) || null
 
     if (mode === 'question') {
       const questions = Array.isArray(canonicalDossier?.questions) ? canonicalDossier.questions : []

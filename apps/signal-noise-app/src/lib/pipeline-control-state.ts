@@ -7,6 +7,8 @@ export type PipelineControlObservedState = 'starting' | 'running' | 'stopping' |
 export type PipelineControlState = {
   is_paused: boolean
   pause_reason: string | null
+  stop_reason?: string | null
+  stop_details?: Record<string, unknown> | null
   updated_at: string | null
   desired_state: PipelineControlRequestedState
   requested_state: PipelineControlRequestedState
@@ -17,6 +19,8 @@ export type PipelineControlState = {
 const DEFAULT_CONTROL_STATE: PipelineControlState = {
   is_paused: false,
   pause_reason: null,
+  stop_reason: null,
+  stop_details: null,
   updated_at: null,
   desired_state: 'running',
   requested_state: 'running',
@@ -55,6 +59,12 @@ export async function readPipelineControlState(): Promise<PipelineControlState> 
       pause_reason: typeof parsed.pause_reason === 'string' && parsed.pause_reason.trim().length > 0
         ? parsed.pause_reason.trim()
         : null,
+      stop_reason: typeof parsed.stop_reason === 'string' && parsed.stop_reason.trim().length > 0
+        ? parsed.stop_reason.trim()
+        : null,
+      stop_details: parsed.stop_details && typeof parsed.stop_details === 'object'
+        ? parsed.stop_details as Record<string, unknown>
+        : null,
       updated_at: typeof parsed.updated_at === 'string' && parsed.updated_at.trim().length > 0
         ? parsed.updated_at
         : null,
@@ -71,6 +81,9 @@ export async function readPipelineControlState(): Promise<PipelineControlState> 
 export async function writePipelineControlState(input: {
   is_paused?: boolean
   pause_reason?: string | null
+  stop_reason?: string | null
+  stop_details?: Record<string, unknown> | null
+  desired_state?: PipelineControlRequestedState
   requested_state?: PipelineControlRequestedState
   observed_state?: PipelineControlObservedState
   transition_state?: PipelineControlObservedState
@@ -87,6 +100,12 @@ export async function writePipelineControlState(input: {
     is_paused: isPaused === true,
     pause_reason: isPaused && typeof input.pause_reason === 'string' && input.pause_reason.trim().length > 0
       ? input.pause_reason.trim()
+      : null,
+    stop_reason: typeof input.stop_reason === 'string' && input.stop_reason.trim().length > 0
+      ? input.stop_reason.trim()
+      : null,
+    stop_details: input.stop_details && typeof input.stop_details === 'object'
+      ? input.stop_details
       : null,
     updated_at: new Date().toISOString(),
     desired_state: desiredState,

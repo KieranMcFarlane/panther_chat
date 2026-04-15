@@ -11,7 +11,7 @@ const scaleManifestData = loadQuestionFirstScaleManifest()
 
 const SNAPSHOT_TTL_MS = 15 * 60_000
 const localFalkorExportPath = path.resolve(process.cwd(), 'backend', 'falkordb_export.json')
-const canonicalEntitiesInvalidationPath = path.resolve(process.cwd(), 'tmp', 'canonical-entities-cache.invalidated.json')
+const canonicalEntitySelectColumns = 'id, labels, properties, source_neo4j_ids, source_graph_ids, source_entity_ids'
 const hasUsableSupabaseConfiguration = Boolean(
   process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
 ) && Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY)
@@ -66,7 +66,7 @@ async function fetchCanonicalEntitiesFromSupabase(): Promise<CanonicalEntity[]> 
   while (hasMore) {
     const { data, error } = await supabase
       .from('canonical_entities')
-      .select('*')
+      .select(canonicalEntitySelectColumns)
       .order('name', { ascending: true })
       .range(offset, offset + pageSize - 1)
 

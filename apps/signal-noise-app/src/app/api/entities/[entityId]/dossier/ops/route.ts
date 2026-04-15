@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getEntityDossierIndexRecord } from '@/lib/dossier-index'
 import { getEntityDossierOpsRecord } from '@/lib/dossier-ops'
 import { resolveEntityForDossierQueue } from '@/lib/entity-dossier-queue'
-import { resolveCanonicalQuestionFirstDossier } from '@/lib/question-first-dossier'
+import { loadNormalizedPersistedDossier } from '@/lib/persisted-dossier'
 import { requireApiSession, UnauthorizedError } from '@/lib/server-auth'
 
 export async function GET(
@@ -17,9 +17,9 @@ export async function GET(
       return NextResponse.json({ error: 'Entity not found' }, { status: 404 })
     }
 
-    const canonical = await resolveCanonicalQuestionFirstDossier(params.entityId, entity)
+    const dossier = await loadNormalizedPersistedDossier(params.entityId, entity)
     const [ops, dossierIndex] = await Promise.all([
-      getEntityDossierOpsRecord(params.entityId, canonical.dossier),
+      getEntityDossierOpsRecord(params.entityId, dossier),
       getEntityDossierIndexRecord(params.entityId, entity),
     ])
 

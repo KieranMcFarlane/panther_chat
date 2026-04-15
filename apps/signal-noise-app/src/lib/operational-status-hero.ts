@@ -7,6 +7,9 @@ type QueueEntity = NonNullable<OperationalDrilldownPayload['queue']['in_progress
   next_repair_status?: string | null
   next_repair_batch_id?: string | null
   next_repair_question_id?: string | null
+  current_question_text?: string | null
+  next_repair_question_text?: string | null
+  last_completed_question_text?: string | null
   started_at?: string | null
   generated_at?: string | null
 }
@@ -58,6 +61,12 @@ function formatQuestionProgress(questionId: string | null | undefined) {
   return `Question ${Number(match[1])} of 15`
 }
 
+function formatQuestionLabel(questionText: string | null | undefined, questionId: string | null | undefined) {
+  const text = toText(questionText)
+  if (text) return text
+  return formatQuestionProgress(questionId)
+}
+
 function formatRelativeTimestamp(value: string | null | undefined, prefix: string) {
   if (!value) return `${prefix} unavailable`
   const timestamp = new Date(value).getTime()
@@ -91,14 +100,17 @@ export function buildOperationalStatusHero(input: {
   controlState: ControlState | null
   currentTargetLabel?: string | null
 }): OperationalStatusHero {
-  const inProgressEntity = input.drilldown?.queue?.in_progress_entity ?? null
+  const liveState = input.drilldown?.live_state ?? null
+  const backlogHealth = input.drilldown?.backlog_health ?? null
+  const inProgressEntity = liveState?.in_progress_entity ?? input.drilldown?.queue?.in_progress_entity ?? null
   const queuedEntityCount = input.drilldown?.queue?.upcoming_entities?.length ?? 0
   const completedEntities = input.drilldown?.queue?.completed_entities ?? []
   const controlUpdatedLabel = formatRelativeTimestamp(input.controlState?.updated_at ?? null, 'Updated')
   const controlUpdatedExactLabel = formatExactTimestamp(input.controlState?.updated_at ?? null)
   const pipelinePaused = input.controlState?.is_paused === true
   const requestedState = input.controlState?.requested_state ?? (pipelinePaused ? 'paused' : 'running')
-  const workerState = input.controlState?.transition_state
+  const workerState = liveState?.worker_process_state
+    || input.controlState?.transition_state
     || input.controlState?.observed_state
     || (pipelinePaused ? 'paused' : 'running')
   const repairFocus = Boolean(
@@ -109,7 +121,10 @@ export function buildOperationalStatusHero(input: {
     ),
   )
   const activeQuestionLabel = inProgressEntity
-    ? formatQuestionProgress(inProgressEntity.current_question_id || inProgressEntity.active_question_id || inProgressEntity.next_repair_question_id)
+    ? formatQuestionLabel(
+      inProgressEntity.current_question_text,
+      inProgressEntity.current_question_id || inProgressEntity.active_question_id || inProgressEntity.next_repair_question_id,
+    )
     : null
   const currentTargetLabel = input.currentTargetLabel || null
   const currentTargetHint = currentTargetLabel
@@ -139,14 +154,20 @@ export function buildOperationalStatusHero(input: {
           ? `Currently processing ${inProgressEntity.entity_name}.`
           : 'The queue is waiting for claimable work.'
 
-  const issueSummary = pipelinePaused || workerState === 'stopping' || repairFocus
-    ? (inProgressEntity
-      ? `Stale session detected for ${inProgressEntity.entity_name}.`
-      : queuedEntityCount > 0
-        ? `${queuedEntityCount} queued entities are waiting for a worker.`
-        : 'No active worker.'
+  const issueSummary = pipelinePaused || workerState === 'stopping'
+    ? (queuedEntityCount > 0
+      ? `${queuedEntityCount} queued entities are waiting for a worker.`
+      : 'No active worker.')
+    : workerState === 'running' && (
+      Number(backlogHealth?.stale_active_count ?? 0) > 0
+      || Number(backlogHealth?.published_degraded_count ?? 0) > 0
+      || Number(backlogHealth?.reconciling_count ?? 0) > 0
+      || Number(backlogHealth?.retrying_count ?? 0) > 0
     )
-    : null
+      ? 'Historical stale backlog remains while live processing continues.'
+      : repairFocus
+        ? (inProgressEntity ? `Repair queue active for ${inProgressEntity.entity_name}.` : 'Repair queue is active.')
+        : null
 
   const primaryActionRecommended = pipelinePaused || workerState !== 'running' || repairFocus
   const primaryActionLabel = primaryActionRecommended ? 'Resume pipeline' : 'Pause pipeline'
@@ -163,7 +184,9 @@ export function buildOperationalStatusHero(input: {
     { label: 'Activity', value: inProgressEntity ? (repairFocus ? 'repairing' : 'running') : pipelinePaused ? 'paused' : 'waiting' },
     { label: 'Current question', value: activeQuestionLabel || 'Question unavailable' },
     { label: 'Elapsed', value: inProgressEntity ? formatRunningDuration(inProgressEntity.started_at || inProgressEntity.generated_at) : 'Not running' },
-    { label: 'Last completed', value: completedEntities[0] ? `${completedEntities[0].entity_name} · ${formatQuestionProgress(completedEntities[0].current_question_id || completedEntities[0].active_question_id)}` : 'No recent completions' },
+    { label: 'Last completed', value: completedEntities[0]
+      ? `${completedEntities[0].entity_name} · ${formatQuestionLabel(completedEntities[0].last_completed_question_text || completedEntities[0].current_question_text, completedEntities[0].current_question_id || completedEntities[0].active_question_id)}`
+      : 'No recent completions' },
     { label: 'Control updated', value: controlUpdatedLabel },
     { label: 'Updated at', value: controlUpdatedExactLabel },
   ] satisfies OperationalStatusHeroDetailRow[]

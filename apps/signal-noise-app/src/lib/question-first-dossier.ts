@@ -96,6 +96,45 @@ function getEntityCandidates(entityId: string, entity?: EntityLike | null): stri
   ])
 }
 
+function normalizeComparableText(value: unknown): string {
+  return toText(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '')
+}
+
+function dossierMatchesEntityIdentity(
+  dossier: Record<string, any>,
+  entityId: string,
+  entity?: EntityLike | null,
+): boolean {
+  const dossierEntityId = toText(dossier.entity_id)
+  const dossierEntityName = toText(dossier.entity_name)
+  const dossierEntityType = normalizeComparableText(dossier.entity_type)
+  const entityName = toText(entity?.properties?.name)
+  const entityType = normalizeComparableText(entity?.properties?.type || (Array.isArray(entity?.labels) ? entity?.labels[0] : ''))
+  const entityUuid = resolveEntityUuid(entity ?? null)
+
+  if (entityUuid && dossierEntityId && normalizeComparableText(dossierEntityId) === normalizeComparableText(entityUuid)) {
+    return true
+  }
+
+  if (normalizeComparableText(dossierEntityName) && normalizeComparableText(entityName)) {
+    if (normalizeComparableText(dossierEntityName) !== normalizeComparableText(entityName)) {
+      return false
+    }
+  } else if (normalizeComparableText(dossierEntityId) && normalizeComparableText(entityId)) {
+    if (normalizeComparableText(dossierEntityId) !== normalizeComparableText(entityId)) {
+      return false
+    }
+  }
+
+  if (entityType && dossierEntityType && dossierEntityType !== entityType) {
+    return false
+  }
+
+  return true
+}
+
 function walkDirectory(root: string, maxDepth = 4): string[] {
   const files: string[] = []
   const stack: Array<{ dir: string; depth: number }> = [{ dir: root, depth: 0 }]
@@ -1072,6 +1111,13 @@ export async function resolveCanonicalQuestionFirstDossier(entityId: string, ent
       latestQuestionFirstState?.payload || null,
       'question_first_run',
     )
+    if (entity && !dossierMatchesEntityIdentity(normalized, entityId, entity)) {
+      return {
+        dossier: null,
+        source: null,
+        artifactPath: null,
+      }
+    }
     return {
       dossier: applyValidationSamplePolicy(normalized, 'question_first_run'),
       source: 'question_first_run' as const,
@@ -1099,6 +1145,13 @@ export async function resolveCanonicalQuestionFirstDossier(entityId: string, ent
       latestQuestionFirstState?.payload || null,
       'question_first_dossier',
     )
+    if (entity && !dossierMatchesEntityIdentity(normalized, entityId, entity)) {
+      return {
+        dossier: null,
+        source: null,
+        artifactPath: null,
+      }
+    }
     return {
       dossier: applyValidationSamplePolicy(normalized, 'question_first_dossier'),
       source: 'question_first_dossier' as const,
@@ -1113,6 +1166,13 @@ export async function resolveCanonicalQuestionFirstDossier(entityId: string, ent
       latestQuestionFirstState?.payload || null,
       'question_first_run',
     )
+    if (entity && !dossierMatchesEntityIdentity(normalized, entityId, entity)) {
+      return {
+        dossier: null,
+        source: null,
+        artifactPath: null,
+      }
+    }
     return {
       dossier: applyValidationSamplePolicy(normalized, 'question_first_run'),
       source: 'question_first_run' as const,

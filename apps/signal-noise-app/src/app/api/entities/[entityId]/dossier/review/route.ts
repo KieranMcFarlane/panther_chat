@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import { ReviewStatus, updateEntityReviewStatus } from '@/lib/dossier-ops'
 import { resolveEntityForDossierQueue } from '@/lib/entity-dossier-queue'
-import { resolveCanonicalQuestionFirstDossier } from '@/lib/question-first-dossier'
+import { loadNormalizedPersistedDossier } from '@/lib/persisted-dossier'
 import { requireOperatorApiSession } from '@/lib/operator-access'
 import { UnauthorizedError } from '@/lib/server-auth'
 
@@ -27,8 +27,8 @@ export async function POST(
       return NextResponse.json({ error: 'Entity not found' }, { status: 404 })
     }
 
-    const canonical = await resolveCanonicalQuestionFirstDossier(params.entityId, entity)
-    const ops = await updateEntityReviewStatus(params.entityId, reviewStatus, reviewNote, canonical.dossier)
+    const dossier = await loadNormalizedPersistedDossier(params.entityId, entity)
+    const ops = await updateEntityReviewStatus(params.entityId, reviewStatus, reviewNote, dossier)
 
     return NextResponse.json({
       entity_id: params.entityId,

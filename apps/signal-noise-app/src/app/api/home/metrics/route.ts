@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase-client';
+import { loadUnifiedRfpOpportunities } from '@/lib/rfp-unified-store';
 
 export const dynamic = 'force-dynamic';
 
@@ -79,64 +80,24 @@ async function getEntitiesMetrics() {
  */
 async function getRFPsMetrics() {
   try {
-    const supabase = getSupabaseAdmin();
-    
-    // Get total count
-    const { count: totalCount, error: countError } = await supabase
-      .from('rfp_opportunities')
-      .select('*', { count: 'exact', head: true });
-
-    if (countError) {
-      console.error('Error fetching RFP count:', countError);
-      // Fallback: try to get from API
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3005'}/api/tenders?action=stats`, {
-          cache: 'no-store'
-        });
-        if (response.ok) {
-          const stats = await response.json();
-          return {
-            total: stats.total_opportunities || 40,
-            pipeline_value: stats.total_value_millions ? parseFloat(stats.total_value_millions.replace(/[£M+]/g, '')) * 1000000 : 21000000,
-            pipeline_value_formatted: stats.total_value_millions || '£21M+',
-            high_fit: stats.high_fit_score || 15,
-            recent: stats.recent || 5
-          };
-        }
-      } catch (apiError) {
-        console.error('Error fetching from API:', apiError);
-      }
-    }
-
-    // Get pipeline value
-    const { data: opportunities, error: oppError } = await supabase
-      .from('rfp_opportunities')
-      .select('value_numeric')
-      .not('value_numeric', 'is', null);
-
-    const pipelineValue = opportunities?.reduce((sum, opp) => sum + (opp.value_numeric || 0), 0) || 21000000;
-
-    // Get high fit score count (>= 90)
-    const { count: highFitCount } = await supabase
-      .from('rfp_opportunities')
-      .select('*', { count: 'exact', head: true })
-      .gte('yellow_panther_fit', 90);
-
-    // Get recent count (last 7 days)
+    const canonical = await loadUnifiedRfpOpportunities()
+    const opportunities = canonical.opportunities
     const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
-    const { count: recentCount } = await supabase
-      .from('rfp_opportunities')
-      .select('*', { count: 'exact', head: true })
-      .gte('detected_at', weekAgo);
+    const recentCount = opportunities.filter((opportunity) => {
+      const detectedAt = opportunity.detected_at || opportunity.created_at
+      return Boolean(detectedAt) && detectedAt >= weekAgo
+    }).length
+    const highFitCount = opportunities.filter((opportunity) => (opportunity.yellow_panther_fit || 0) >= 90).length
+    const pipelineValue = 0
 
     return {
-      total: totalCount || 40,
+      total: opportunities.length,
       pipeline_value: pipelineValue,
       pipeline_value_formatted: pipelineValue > 1000000 
         ? `£${Math.round(pipelineValue / 1000000)}M+`
         : `£${Math.round(pipelineValue / 1000)}K+`,
-      high_fit: highFitCount || 15,
-      recent: recentCount || 5
+      high_fit: highFitCount,
+      recent: recentCount
     };
   } catch (error) {
     console.error('Error fetching RFPs metrics:', error);
@@ -257,23 +218,18 @@ async function getActivityFeed() {
 
     // Get recent RFPs (last 24 hours)
     const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-    const { data: recentRFPs, error: rfpError } = await supabase
-      .from('rfp_opportunities')
-      .select('title, organization, yellow_panther_fit, detected_at')
-      .gte('detected_at', dayAgo)
-      .order('detected_at', { ascending: false })
-      .limit(5);
-
-    if (!rfpError && recentRFPs) {
-      recentRFPs.forEach(rfp => {
+    const canonicalRfps = await loadUnifiedRfpOpportunities()
+    canonicalRfps.opportunities
+      .filter((rfp) => Boolean(rfp.detected_at) && String(rfp.detected_at) >= dayAgo)
+      .slice(0, 5)
+      .forEach((rfp) => {
         activities.push({
           type: 'rfp',
           message: `New RFP detected: ${rfp.organization} (${Math.round(rfp.yellow_panther_fit || 0)}% fit)`,
           timestamp: rfp.detected_at,
-          link: '/tenders'
+          link: '/rfps'
         });
-      });
-    }
+      })
 
     // Get recent conventions (last 7 days)
     const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();

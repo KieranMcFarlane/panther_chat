@@ -150,7 +150,7 @@ export async function promoteImportedEntityRfps(
   })
 
   const { data, error } = await supabaseAdmin
-    .from('rfp_opportunities')
+    .from('rfp_opportunities_unified')
     .upsert(rows, { onConflict: 'id' })
     .select('id')
 

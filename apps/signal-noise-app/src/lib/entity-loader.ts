@@ -1,11 +1,8 @@
-import { readFile } from 'fs/promises'
-import { existsSync, readdirSync } from 'fs'
-import path from 'path'
 import { buildCachedEntityCanonicalLookup, dedupeCanonicalCachedEntityRows } from '@/lib/cached-entity-canonicalization.mjs'
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
-import { normalizeQuestionFirstDossier, resolveCanonicalQuestionFirstDossier, selectBestPersistedDossierCandidate } from '@/lib/question-first-dossier'
+import { normalizeQuestionFirstDossier, selectBestPersistedDossierCandidate } from '@/lib/question-first-dossier'
 
 export interface Entity {
   id: string
@@ -17,7 +14,7 @@ export interface Entity {
 
 interface EntityLookupResult {
   entity: Entity | null
-  source: 'supabase' | 'dossier-file' | null
+  source: 'supabase' | null
   dossier: any | null
 }
 
@@ -259,167 +256,6 @@ async function getPersistedDossier(entityId: string, neo4jId?: string | number, 
   }
 }
 
-const getParentDir = (currentPath: string, depth = 1) => {
-  let nextPath = currentPath
-  for (let i = 0; i < depth; i += 1) {
-    nextPath = path.dirname(nextPath)
-  }
-  return nextPath
-}
-
-const getPossibleDossierDirs = () => {
-  const cwd = process.cwd()
-  return [
-    path.join(cwd, 'backend', 'data', 'dossiers'),
-    path.join(cwd, '..', 'backend', 'data', 'dossiers'),
-    path.join(cwd, '..', '..', 'backend', 'data', 'dossiers'),
-    path.join(getParentDir(cwd, 2), 'backend', 'data', 'dossiers'),
-  ]
-}
-
-const DOSSIERS_DIR = getPossibleDossierDirs().find(existsSync) ?? getPossibleDossierDirs()[0]
-const ENABLE_LEGACY_DOSSIER_FILE_FALLBACK = String(
-  process.env.ENTITY_DOSSIER_ENABLE_LEGACY_FILE_FALLBACK || 'false',
-).toLowerCase() === 'true'
-
-function findDossierFile(entityId: string, tierDir: string): string | null {
-  const decodedEntityId = decodeURIComponent(entityId)
-  const exactMatch = path.join(tierDir, `${decodedEntityId}.json`)
-
-  if (existsSync(exactMatch)) {
-    return decodedEntityId
-  }
-
-  for (const file of readdirSync(tierDir)) {
-    if (!file.endsWith('.json')) continue
-
-    const filename = file.replace('.json', '')
-    if (filename.endsWith(decodedEntityId) || filename.endsWith(entityId)) {
-      return filename
-    }
-  }
-
-  return null
-}
-
-async function findDossierByNamePattern(entityName: string, tierDir: string): Promise<string | null> {
-  const normalizedName = entityName
-    .toLowerCase()
-    .replace(/[^a-z0-9]/g, '')
-    .replace(/\s+/g, '_')
-
-  const patterns = [
-    normalizedName,
-    `${normalizedName}_fc`,
-    normalizedName.replace('_', '-'),
-    `${normalizedName}-fc`,
-  ]
-
-  for (const file of readdirSync(tierDir)) {
-    if (!file.endsWith('.json')) continue
-
-    const filename = file.replace('.json', '').toLowerCase()
-    for (const pattern of patterns) {
-      if (filename === pattern || filename.endsWith(pattern)) {
-        return file.replace('.json', '')
-      }
-    }
-  }
-
-  return null
-}
-
-async function getFallbackEntityFromDossier(entityId: string, tier = 'standard'): Promise<EntityLookupResult> {
-  const normalizedTier = tier.toLowerCase()
-  const candidateTierDirs = Array.from(
-    new Set([
-      path.join(DOSSIERS_DIR, normalizedTier),
-      path.join(DOSSIERS_DIR, 'premium'),
-      path.join(DOSSIERS_DIR, 'standard'),
-    ]),
-  ).filter((tierDir) => existsSync(tierDir))
-
-  for (const tierDir of candidateTierDirs) {
-    let foundFilename = findDossierFile(entityId, tierDir)
-    if (!foundFilename) {
-      foundFilename = await findDossierByNamePattern(entityId, tierDir)
-    }
-
-    if (!foundFilename) {
-      continue
-    }
-
-    const fileContent = await readFile(path.join(tierDir, `${foundFilename}.json`), 'utf-8')
-    const dossier = JSON.parse(fileContent)
-
-    return {
-      entity: {
-        id: dossier.entity_id || entityId,
-        uuid: resolveEntityUuid({
-          id: dossier.entity_id || entityId,
-          neo4j_id: dossier.entity_id || entityId,
-          supabase_id: dossier.entity_id || entityId,
-          properties: {
-            name:
-              dossier.entity_name ||
-              entityId.replace(/-/g, ' ').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
-            type: dossier.entity_type || 'CLUB',
-          },
-        }) || undefined,
-        neo4j_id: dossier.entity_id || entityId,
-        labels: [dossier.entity_type || 'CLUB'],
-        properties: {
-          name:
-            dossier.entity_name ||
-            entityId.replace(/-/g, ' ').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
-          type: dossier.entity_type || 'CLUB',
-          sport: 'Football',
-          tier: dossier.tier,
-          priority: dossier.priority_score,
-          dossier_data: JSON.stringify(dossier),
-        },
-      },
-      source: 'dossier-file',
-      dossier,
-    }
-  }
-
-  const canonicalQuestionFirst = await resolveCanonicalQuestionFirstDossier(entityId, null)
-  if (canonicalQuestionFirst.dossier) {
-    const dossier = canonicalQuestionFirst.dossier
-    return {
-      entity: {
-        id: dossier.entity_id || entityId,
-        uuid: resolveEntityUuid({
-          id: dossier.entity_id || entityId,
-          neo4j_id: dossier.entity_id || entityId,
-          supabase_id: dossier.entity_id || entityId,
-          properties: {
-            name:
-              dossier.entity_name ||
-              entityId.replace(/-/g, ' ').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
-            type: dossier.entity_type || 'ENTITY',
-          },
-        }) || undefined,
-        neo4j_id: dossier.entity_id || entityId,
-        labels: [dossier.entity_type || 'ENTITY'],
-        properties: {
-          name:
-            dossier.entity_name ||
-            entityId.replace(/-/g, ' ').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
-          type: dossier.entity_type || 'ENTITY',
-          sport: dossier.sport || 'Unknown',
-          dossier_data: JSON.stringify(dossier),
-        },
-      },
-      source: 'dossier-file',
-      dossier,
-    }
-  }
-
-  return { entity: null, source: null, dossier: null }
-}
-
 export async function getEntityForDossierPage(entityId: string, tier = 'standard'): Promise<EntityLookupResult> {
   if (!entityId) {
     return { entity: null, source: null, dossier: null }
@@ -453,26 +289,10 @@ export async function getEntityForDossierPage(entityId: string, tier = 'standard
   }
 
   if (!entity) {
-    // Keep the dossier route usable even when the live entity row is missing.
-    // This lets persisted dossier artifacts like Arsenal still render in the browser.
-    const fallbackResult = await getFallbackEntityFromDossier(entityId, tier)
-    if (fallbackResult.entity) {
-      return fallbackResult
-    }
-
-    if (ENABLE_LEGACY_DOSSIER_FILE_FALLBACK) {
-      return fallbackResult
-    }
-
     return { entity: null, source: null, dossier: null }
   }
 
   let dossier = null
-  const canonicalQuestionFirst = await resolveCanonicalQuestionFirstDossier(entityId, entity)
-
-  if (canonicalQuestionFirst.dossier) {
-    dossier = canonicalQuestionFirst.dossier
-  }
 
   if (entity.properties.dossier_data) {
     try {

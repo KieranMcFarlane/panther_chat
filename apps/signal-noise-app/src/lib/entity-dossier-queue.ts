@@ -9,7 +9,6 @@ import {
   storeFallbackEntityImportState,
 } from '@/lib/entity-import-jobs'
 import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
-import { resolveCanonicalQuestionFirstDossier } from '@/lib/question-first-dossier'
 
 const ENTITY_IMPORT_QUEUE_MODE = process.env.ENTITY_IMPORT_QUEUE_MODE || 'durable_worker'
 const DEFAULT_REPAIR_RETRY_BUDGET = Number.parseInt(process.env.ENTITY_PIPELINE_REPAIR_RETRY_BUDGET || '3', 10) || 3
@@ -132,8 +131,6 @@ export async function resolveEntityForDossierQueue(entityId: string): Promise<Re
     }
   }
 
-  const [normalizedName] = canonicalNameCandidates
-
   for (const candidateName of canonicalNameCandidates) {
     const nameResult = await supabase
       .from('cached_entities')
@@ -162,32 +159,7 @@ export async function resolveEntityForDossierQueue(entityId: string): Promise<Re
     }
   }
 
-  const canonicalQuestionFirst = await resolveCanonicalQuestionFirstDossier(normalizedId, null)
-  if (!canonicalQuestionFirst.dossier) {
-    return null
-  }
-
-  const dossier = canonicalQuestionFirst.dossier
-  return {
-    id: String(dossier.entity_id ?? normalizedId),
-    uuid: resolveEntityUuid({
-      id: dossier.entity_id ?? normalizedId,
-      neo4j_id: dossier.entity_id ?? normalizedId,
-      supabase_id: dossier.entity_id ?? normalizedId,
-      properties: {
-        name: dossier.entity_name ?? normalizedName,
-        type: dossier.entity_type ?? 'ENTITY',
-      },
-    }) || undefined,
-    neo4j_id: dossier.entity_id ?? normalizedId,
-    labels: [dossier.entity_type ?? 'ENTITY'],
-    properties: {
-      name: dossier.entity_name ?? normalizedName,
-      type: dossier.entity_type ?? 'ENTITY',
-      sport: dossier.sport ?? 'Unknown',
-      dossier_data: JSON.stringify(dossier),
-    },
-  }
+  return null
 }
 
 function toPipelineRow(entityId: string, entity: ResolvedEntity) {

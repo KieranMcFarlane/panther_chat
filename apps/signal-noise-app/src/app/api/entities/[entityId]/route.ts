@@ -98,7 +98,7 @@ export async function GET(
 
     const entityData = await getEntityForDossierPage(entityId)
     const entity = entityData.entity
-    const source = entityData.source === 'dossier-file' ? 'local_export' : entityData.source
+    const source = entityData.source
 
     if (!entity) {
       return NextResponse.json(
@@ -106,7 +106,7 @@ export async function GET(
           error: 'Entity not found',
           entityId,
           suggestion: 'This entity may have been removed or the ID is incorrect. Please verify the entity ID or refresh the entity list.',
-          availableSources: ['Supabase cached_entities, teams, and leagues tables', 'Local Falkor export'],
+          availableSources: ['Supabase cached_entities, teams, and leagues tables'],
         },
         { status: 404 },
       )

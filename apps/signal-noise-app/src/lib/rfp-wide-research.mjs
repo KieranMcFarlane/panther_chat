@@ -2,49 +2,39 @@ import { execFileSync } from 'node:child_process'
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 
-export const DEFAULT_WIDE_RFP_FOCUS_AREA = 'web-platforms'
+export {
+  DEFAULT_WIDE_RFP_FOCUS_AREA,
+  buildWideRfpResearchPrompt,
+  getDefaultWideRfpSeedQuery,
+  getWideRfpLaneLabel,
+  inferFocusAreaFromPrompt,
+  inferTargetYearFromPrompt,
+  normalizeFocusArea,
+  normalizeTargetYear,
+  normalizeWideRfpExclusionNames,
+} from './rfp-wide-research-prompt.mjs'
 
-export function buildWideRfpResearchPrompt(input) {
-  const focusArea = normalizeFocusArea(input?.focusArea)
-  const focusProfile = getFocusProfile(focusArea)
-  const query = toText(input?.seedQuery) || getDefaultWideRfpSeedQuery(focusArea)
-
-  return [
-    `You are running a wide web research sweep to find Yellow Panther fit (${focusProfile.shortLabel}) RFPs, tenders, procurement notices, and adjacent opportunity signals.`,
-    '',
-    'Repository context:',
-    buildPromptScope(input, focusProfile),
-    '',
-    'Discovery rules:',
-    '- Search broadly across the web, official procurement pages, press releases, and relevant organizational announcements.',
-    `- Narrow the hunt to ${focusProfile.shortLabel} opportunities instead of a generic digital sweep.`,
-    `- Prioritize ${focusProfile.priorityLine}`,
-    `- Look for ${focusProfile.examplesLine}`,
-    '- Focus on sports, leagues, clubs, federations, venues, governing bodies, and adjacent organizations where Yellow Panther could credibly deliver digital work.',
-    '- Rank each opportunity for Yellow Panther digital fit, not just generic procurement volume.',
-    '- Keep signal and noise separate. Prefer source URLs and brief evidence over prose.',
-    '- Avoid duplicates when the same opportunity appears on multiple pages.',
-    '- Normalize entity identity against the canonical-first model before output.',
-    '',
-    'Output contract:',
-    '- Return normalized JSON only.',
-    '- Include opportunities with: title, organization, source_url, confidence, yellow_panther_fit, entity_name, canonical_entity_id, canonical_entity_name, category, status, deadline, description, metadata.',
-    `- When possible, include a short ${focusProfile.metadataLabel} rationale in metadata and prefer opportunities that map cleanly to ${focusProfile.metadataTargets}.`,
-    '- Include entity_actions for every organization you link, reuse, or create.',
-    '- Include the prompt execution metadata needed to render the batch on the RFP page.',
-    '',
-    `Seed query: ${query}`,
-    'Use the MANUS_API key with the Manus API to execute the research request.',
-  ].join('\n')
-}
+import {
+  DEFAULT_WIDE_RFP_FOCUS_AREA,
+  buildWideRfpResearchPrompt,
+  getDefaultWideRfpSeedQuery,
+  getWideRfpLaneLabel,
+  inferFocusAreaFromPrompt,
+  inferTargetYearFromPrompt,
+  normalizeFocusArea,
+  normalizeTargetYear,
+  normalizeWideRfpExclusionNames,
+} from './rfp-wide-research-prompt.mjs'
 
 export function normalizeWideRfpResearchBatch(input) {
   const prompt = toText(input?.prompt) || buildWideRfpResearchPrompt({ seedQuery: getDefaultWideRfpSeedQuery(DEFAULT_WIDE_RFP_FOCUS_AREA), focusArea: DEFAULT_WIDE_RFP_FOCUS_AREA })
   const source = typeof input?.source === 'string' && input.source.trim() ? input.source.trim() : 'manus'
   const generatedAt = toText(input?.generated_at) || new Date().toISOString()
-  const focusArea = normalizeFocusArea(input?.focusArea || input?.focus_area || inferFocusAreaFromPrompt(prompt))
+  const focusArea = normalizeFocusArea(input?.focusArea || input?.focus_area || DEFAULT_WIDE_RFP_FOCUS_AREA)
   const laneLabel = getWideRfpLaneLabel(focusArea)
   const seedQuery = toText(input?.seedQuery) || toText(input?.seed_query) || getDefaultWideRfpSeedQuery(focusArea)
+  const targetYear = normalizeTargetYear(input?.targetYear || input?.target_year || inferTargetYearFromPrompt(prompt))
+  const excludedNames = normalizeWideRfpExclusionNames(input?.excludeNames || input?.excluded_names)
   const opportunities = (input?.opportunities || []).map((opportunity, index) => normalizeOpportunity(opportunity, index))
   const entityActions = (input?.entity_actions || []).map((action) => ({
     ...action,
@@ -62,6 +52,8 @@ export function normalizeWideRfpResearchBatch(input) {
     focus_area: focusArea,
     lane_label: laneLabel,
     seed_query: seedQuery,
+    target_year: targetYear,
+    excluded_names: excludedNames,
     opportunities,
     entity_actions: entityActions,
     summary: {
@@ -70,6 +62,59 @@ export function normalizeWideRfpResearchBatch(input) {
       entities_to_create: entityActions.filter((action) => action.action === 'create').length,
     },
   }
+}
+
+export function joinWideRfpResearchBatches(batches) {
+  const normalizedBatches = (batches || [])
+    .filter(Boolean)
+    .map((batch, index) => normalizeWideRfpResearchBatch({
+      ...batch,
+      run_id: toText(batch?.run_id) || `wide-rfp-merged-source-${index + 1}`,
+    }))
+
+  if (normalizedBatches.length === 0) {
+    return normalizeWideRfpResearchBatch({
+      run_id: 'manus-rfp-wide-research-merged',
+      source: 'manus',
+      prompt: buildWideRfpResearchPrompt({
+        seedQuery: getDefaultWideRfpSeedQuery(DEFAULT_WIDE_RFP_FOCUS_AREA),
+        focusArea: DEFAULT_WIDE_RFP_FOCUS_AREA,
+      }),
+      opportunities: [],
+      entity_actions: [],
+      generated_at: new Date().toISOString(),
+    })
+  }
+
+  const prompt = normalizedBatches.find((batch) => toText(batch.prompt))?.prompt || normalizedBatches[0].prompt || ''
+  const focusArea = normalizedBatches.find((batch) => toText(batch.focus_area))?.focus_area || normalizedBatches[0].focus_area || DEFAULT_WIDE_RFP_FOCUS_AREA
+  const laneLabel = normalizedBatches.find((batch) => toText(batch.lane_label))?.lane_label || normalizedBatches[0].lane_label || getWideRfpLaneLabel(focusArea)
+  const seedQuery = normalizedBatches.find((batch) => toText(batch.seed_query))?.seed_query || normalizedBatches[0].seed_query || getDefaultWideRfpSeedQuery(focusArea)
+  const targetYear = normalizedBatches.find((batch) => normalizeTargetYear(batch.target_year) !== null)?.target_year ?? null
+  const excludedNames = normalizeWideRfpExclusionNames(normalizedBatches.flatMap((batch) => batch.excluded_names || []))
+  const generatedAt = normalizedBatches
+    .map((batch) => toText(batch.generated_at))
+    .filter(Boolean)
+    .sort()
+    .at(-1) || new Date().toISOString()
+
+  const opportunities = normalizedBatches.flatMap((batch) => batch.opportunities || [])
+  const entityActions = normalizedBatches.flatMap((batch) => batch.entity_actions || [])
+  const mergedSource = normalizedBatches.some((batch) => toText(batch.source) === 'manus') ? 'manus' : normalizedBatches[0].source || 'manus'
+
+  return normalizeWideRfpResearchBatch({
+    run_id: 'manus-rfp-wide-research-merged',
+    source: mergedSource,
+    prompt,
+    generated_at: generatedAt,
+    focus_area: focusArea,
+    lane_label: laneLabel,
+    seed_query: seedQuery,
+    target_year: targetYear,
+    excluded_names: excludedNames,
+    opportunities,
+    entity_actions: entityActions,
+  })
 }
 
 export async function writeWideRfpResearchArtifact(input) {
@@ -217,16 +262,20 @@ function parseJson(rawJson) {
 function enrichWideRfpResearchBatch(batch) {
   if (!batch || typeof batch !== 'object') return batch
   const prompt = toText(batch.prompt)
-  const focusArea = normalizeFocusArea(batch.focus_area || inferFocusAreaFromPrompt(prompt))
+  const focusArea = normalizeFocusArea(batch.focus_area || DEFAULT_WIDE_RFP_FOCUS_AREA)
   const source = typeof batch.source === 'string' && batch.source.trim() && batch.source.trim() !== '[object Object]'
     ? batch.source.trim()
     : 'manus'
+  const targetYear = normalizeTargetYear(batch.target_year || inferTargetYearFromPrompt(prompt))
+  const excludedNames = normalizeWideRfpExclusionNames(batch.excluded_names)
   return {
     ...batch,
     source,
     focus_area: focusArea,
     lane_label: toText(batch.lane_label) || getWideRfpLaneLabel(focusArea),
     seed_query: toText(batch.seed_query) || getDefaultWideRfpSeedQuery(focusArea),
+    target_year: targetYear,
+    excluded_names: excludedNames,
   }
 }
 
@@ -260,85 +309,6 @@ function normalizeConfidence(value, fallback) {
   const score = normalizeNumber(value, fallback)
   if (score > 1) return Math.max(0, Math.min(1, score / 100))
   return Math.max(0, Math.min(1, score))
-}
-
-export function getDefaultWideRfpSeedQuery(focusArea) {
-  const normalizedFocusArea = normalizeFocusArea(focusArea)
-  return {
-    'web-platforms': 'Yellow Panther web-platform RFP discovery',
-    'fan-engagement': 'Yellow Panther fan-engagement RFP discovery',
-    crm: 'Yellow Panther CRM RFP discovery',
-  }[normalizedFocusArea]
-}
-
-export function getWideRfpLaneLabel(focusArea) {
-  const normalizedFocusArea = normalizeFocusArea(focusArea)
-  return {
-    'web-platforms': 'Web Platforms',
-    'fan-engagement': 'Fan Engagement',
-    crm: 'CRM',
-  }[normalizedFocusArea]
-}
-
-function buildPromptScope(input, focusProfile) {
-  return [
-    `Current intake page: ${input?.currentIntakePage || '/tenders'}`,
-    `Normalized RFP page: ${input?.currentRfpPage || '/rfps'}`,
-    `Target outcome: discover Yellow Panther ${focusProfile.shortLabel} opportunities and normalize them into the RFP surface.`,
-    `Requested sub-vertical: ${focusProfile.title}.`,
-    'Canonical-first source of truth: check canonical_entities before creating anything new.',
-    'If an entity exists, link to it and reuse its canonical identity.',
-    'If no entity exists, create an entity with canonical-first fields and do not invent a parallel source of truth.',
-    'Return normalized JSON only.',
-  ].join('\n')
-}
-
-function normalizeFocusArea(value) {
-  const normalized = toText(value).toLowerCase()
-
-  if (['web', 'web-platform', 'web-platforms', 'platform', 'platforms'].includes(normalized)) return 'web-platforms'
-  if (['fan-engagement', 'fan engagement', 'engagement', 'fans'].includes(normalized)) return 'fan-engagement'
-  if (['crm', 'customer-relationship-management', 'customer relationship management', 'lifecycle'].includes(normalized)) return 'crm'
-  return DEFAULT_WIDE_RFP_FOCUS_AREA
-}
-
-function inferFocusAreaFromPrompt(prompt) {
-  const normalizedPrompt = toText(prompt).toLowerCase()
-  if (normalizedPrompt.includes('fan-engagement') || normalizedPrompt.includes('fan engagement')) return 'fan-engagement'
-  if (normalizedPrompt.includes('crm')) return 'crm'
-  if (normalizedPrompt.includes('web-platform') || normalizedPrompt.includes('web platform') || normalizedPrompt.includes('website') || normalizedPrompt.includes('cms')) return 'web-platforms'
-  return DEFAULT_WIDE_RFP_FOCUS_AREA
-}
-
-function getFocusProfile(focusArea) {
-  const normalizedFocusArea = normalizeFocusArea(focusArea)
-
-  return {
-    'web-platforms': {
-      title: 'Web Platforms',
-      shortLabel: 'web-platform',
-      priorityLine: 'website rebuilds, CMS programs, portals, app shells, frontend modernization, UX/UI redesign, design systems, and platform migrations.',
-      examplesLine: 'website redesign tenders, CMS replacement, portal procurement, platform modernization, mobile-responsive rebuilds, and digital experience platforms.',
-      metadataLabel: 'web-platform fit',
-      metadataTargets: 'web, CMS, portal, frontend, platform, or app-shell work',
-    },
-    'fan-engagement': {
-      title: 'Fan Engagement',
-      shortLabel: 'fan-engagement',
-      priorityLine: 'fan portals, loyalty and membership products, mobile engagement journeys, personalization, content programs, and second-screen experiences.',
-      examplesLine: 'fan experience procurement, loyalty programs, engagement apps, membership activation platforms, community products, and audience growth initiatives.',
-      metadataLabel: 'fan-engagement fit',
-      metadataTargets: 'fan experience, loyalty, membership, community, mobile engagement, or personalized content work',
-    },
-    crm: {
-      title: 'CRM',
-      shortLabel: 'crm',
-      priorityLine: 'CRM platforms, membership systems, ticketing CRM, lifecycle marketing, customer data platforms, segmentation, martech orchestration, and supporter databases.',
-      examplesLine: 'CRM procurement, membership CRM, customer data modernization, marketing automation, supporter lifecycle tooling, and audience segmentation programs.',
-      metadataLabel: 'crm fit',
-      metadataTargets: 'CRM, membership, ticketing CRM, customer data, segmentation, or lifecycle marketing work',
-    },
-  }[normalizedFocusArea]
 }
 
 function normalizeOpportunity(opportunity, index) {

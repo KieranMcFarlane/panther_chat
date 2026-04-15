@@ -11,9 +11,8 @@ import {
   buildWideRfpResearchPrompt,
   getDefaultWideRfpSeedQuery,
   normalizeWideRfpResearchBatch,
-  readLatestWideRfpResearchArtifact,
-  writeWideRfpResearchArtifact,
 } from '@/lib/rfp-wide-research.mjs'
+import { loadLatestWideRfpResearchBatch, persistWideRfpResearchBatch } from '@/lib/rfp-wide-research-store'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
@@ -25,6 +24,8 @@ type ManusResearchRequest = {
   currentIntakePage?: string
   prompt?: string
   outputDir?: string
+  targetYear?: number | string | null
+  excludeNames?: string[]
 }
 
 type ManusResearchResponse = {
@@ -403,12 +404,13 @@ async function enrichBatchWithCanonicalEntities(batch: ReturnType<typeof normali
 }
 
 export async function GET() {
-  const latest = await readLatestWideRfpResearchArtifact({})
+  const latest = await loadLatestWideRfpResearchBatch({})
 
   return NextResponse.json({
     success: true,
     data: latest?.batch || null,
-    artifact: latest?.filePath || null,
+    artifact: latest?.artifact || null,
+    source: latest?.source || null,
   })
 }
 
@@ -421,12 +423,18 @@ export async function POST(request: NextRequest) {
       focusArea,
       currentRfpPage: body.currentRfpPage || '/rfps',
       currentIntakePage: body.currentIntakePage || '/tenders',
+      targetYear: body.targetYear,
+      excludeNames: body.excludeNames,
     })
 
     const manusResponse = await callManusApi(prompt)
-    const normalizedBatch = normalizeWideRfpResearchBatch(extractManusBatch(manusResponse))
+    const normalizedBatch = normalizeWideRfpResearchBatch({
+      ...extractManusBatch(manusResponse),
+      targetYear: body.targetYear,
+      excludeNames: body.excludeNames,
+    })
     const enrichedBatch = await enrichBatchWithCanonicalEntities(normalizedBatch)
-    const artifact = await writeWideRfpResearchArtifact({
+    const artifact = await persistWideRfpResearchBatch({
       outputDir: body.outputDir,
       batch: enrichedBatch,
     })
@@ -445,8 +453,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: enrichedBatch,
-      artifact: artifact.filePath,
-      graphiti: graphitiSync,
+      artifact: artifact.artifact,
     })
   } catch (error) {
     console.error('Wide RFP research failed:', error)

@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { requireCronSecret } from '@/lib/cron-auth'
-import { readLatestWideRfpResearchArtifact } from '@/lib/rfp-wide-research.mjs'
+import { loadLatestWideRfpResearchBatch } from '@/lib/rfp-wide-research-store'
+import { getDefaultWideRfpSeedQuery } from '@/lib/rfp-wide-research.mjs'
 import { UnauthorizedError } from '@/lib/server-auth'
 
 async function runWideResearchSeed(request: NextRequest) {
   requireCronSecret(request)
 
-  const latest = await readLatestWideRfpResearchArtifact({})
+  const latest = await loadLatestWideRfpResearchBatch({})
   if (!latest?.batch?.prompt) {
     return NextResponse.json({ ok: true, skipped: true, reason: 'No non-empty wide research batch is available to seed from' })
   }
@@ -18,10 +19,12 @@ async function runWideResearchSeed(request: NextRequest) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      prompt: latest.batch.prompt,
       focusArea: latest.batch.focus_area,
+      seedQuery: latest.batch.seed_query || getDefaultWideRfpSeedQuery(latest.batch.focus_area),
       currentRfpPage: '/rfps',
       currentIntakePage: '/tenders',
+      targetYear: normalizeTargetYear(latest.batch.target_year || new Date().getFullYear()),
+      excludeNames: collectOpportunityNames(latest.batch),
     }),
   })
 
@@ -64,4 +67,34 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   return GET(request)
+}
+
+function collectOpportunityNames(batch: any): string[] {
+  const names = new Set<string>()
+  for (const opportunity of batch?.opportunities || []) {
+    const raw = [
+      opportunity?.canonical_entity_name,
+      opportunity?.organization,
+      opportunity?.entity_name,
+    ]
+      .map((value) => toText(value))
+      .find(Boolean)
+
+    if (raw) {
+      names.add(raw)
+    }
+  }
+  return Array.from(names)
+}
+
+function normalizeTargetYear(value: unknown): number | null {
+  const text = toText(value)
+  if (!text) return null
+  const parsed = Number.parseInt(text, 10)
+  if (!Number.isInteger(parsed) || parsed < 1900 || parsed > 2100) return null
+  return parsed
+}
+
+function toText(value: unknown): string {
+  return value === null || value === undefined ? '' : String(value).trim()
 }

@@ -1,5 +1,5 @@
-import { normalizeQuestionFirstDossier, resolveCanonicalQuestionFirstDossier } from '@/lib/question-first-dossier'
 import { getEntityDossierOpsRecord } from '@/lib/dossier-ops'
+import { loadNormalizedPersistedDossier } from '@/lib/persisted-dossier'
 import { getDossierStaleWindowDays } from '@/lib/runtime-env'
 
 type EntityLike = {
@@ -16,7 +16,7 @@ export interface EntityDossierIndexRecord {
   latest_run_id: string | null
   latest_generated_at: string | null
   latest_dossier_path: string | null
-  dossier_source: 'question_first_dossier' | 'question_first_run' | 'legacy_dossier' | 'entity_state' | 'missing'
+  dossier_source: 'entity_dossiers' | 'entity_state' | 'missing'
   dossier_summary: string | null
   review_status: 'needs_review' | 'in_review' | 'resolved'
   rerun_reason: string | null
@@ -83,49 +83,26 @@ export async function getEntityDossierIndexRecord(
   entityId: string,
   entity?: EntityLike | null,
 ): Promise<EntityDossierIndexRecord> {
-  const canonical = await resolveCanonicalQuestionFirstDossier(entityId, entity)
-  const opsRecord = await getEntityDossierOpsRecord(entityId, canonical.dossier)
+  const dossier = await loadNormalizedPersistedDossier(entityId, entity)
+  const opsRecord = await getEntityDossierOpsRecord(entityId, dossier)
   const enrichmentStatus = toText(entity?.properties?.enrichment_status).toLowerCase()
   const shouldForceRerun = Boolean(opsRecord.rerun_reason)
     || ['failed', 'incomplete', 'missing'].includes(enrichmentStatus)
 
-  if (canonical.dossier) {
-    const generatedAt = getGeneratedAt(canonical.dossier)
+  if (dossier) {
+    const generatedAt = getGeneratedAt(dossier)
     const stale = isStale(generatedAt)
-    const dossier = normalizeQuestionFirstDossier(canonical.dossier, entityId, entity)
     const { clientReady } = getClientReadyInfo(dossier)
     const dossierStatus: DossierStatus = (!clientReady || shouldForceRerun) ? 'rerun_needed' : (stale ? 'stale' : 'ready')
     return {
       dossier_status: dossierStatus,
       latest_run_id: toText(dossier.run_rollup?.run_id) || toText(entity?.properties?.last_pipeline_batch_id) || null,
       latest_generated_at: generatedAt,
-      latest_dossier_path: canonical.artifactPath,
-      dossier_source: canonical.source,
+      latest_dossier_path: null,
+      dossier_source: 'entity_dossiers',
       dossier_summary: buildSummary(dossier, dossierStatus),
       review_status: opsRecord.review_status,
       rerun_reason: opsRecord.rerun_reason,
-    }
-  }
-
-  if (entity?.properties?.dossier_data) {
-    try {
-      const dossier = normalizeQuestionFirstDossier(JSON.parse(String(entity.properties.dossier_data)), entityId, entity)
-      const generatedAt = getGeneratedAt(dossier)
-      const stale = isStale(generatedAt)
-      const { clientReady } = getClientReadyInfo(dossier)
-      const dossierStatus: DossierStatus = (!clientReady || shouldForceRerun) ? 'rerun_needed' : (stale ? 'stale' : 'ready')
-      return {
-        dossier_status: dossierStatus,
-        latest_run_id: toText(dossier.run_rollup?.run_id) || toText(entity?.properties?.last_pipeline_batch_id) || null,
-        latest_generated_at: generatedAt,
-        latest_dossier_path: null,
-        dossier_source: 'legacy_dossier',
-        dossier_summary: buildSummary(dossier, dossierStatus),
-        review_status: opsRecord.review_status,
-        rerun_reason: opsRecord.rerun_reason,
-      }
-    } catch {
-      // ignore invalid legacy payloads
     }
   }
 

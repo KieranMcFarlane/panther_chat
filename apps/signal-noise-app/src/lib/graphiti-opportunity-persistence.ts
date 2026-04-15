@@ -377,6 +377,10 @@ async function loadSourceOpportunities(limit: number) {
   })
 }
 
+export async function loadGraphitiOpportunitySourceRows(limit = 100) {
+  return loadSourceOpportunities(limit)
+}
+
 export async function loadPersistedGraphitiOpportunities(limit = 25) {
   const supabase = getSupabaseAdmin()
   const warnings: string[] = []
@@ -468,12 +472,19 @@ export async function materializeGraphitiOpportunities(limit = 100) {
     ]),
   )
 
-  const persistedRows = opportunityRows.map((row) => ({
-    ...row,
-    materialized_at: nowIso,
-    last_seen_at: nowIso,
-    updated_at: nowIso,
-  }))
+  const persistedRows = opportunityRows.map((row) => {
+    const {
+      freshness: _freshness,
+      metadata: _metadata,
+      ...persisted
+    } = row as typeof row & { freshness?: unknown; metadata?: unknown }
+    return {
+      ...persisted,
+      materialized_at: nowIso,
+      last_seen_at: nowIso,
+      updated_at: nowIso,
+    }
+  })
 
   if (persistedRows.length > 0) {
     const upsertResponse = await supabase

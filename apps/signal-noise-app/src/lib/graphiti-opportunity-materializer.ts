@@ -20,10 +20,55 @@ function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {}
 }
 
-function toTextArray(value: unknown): string[] {
-  if (Array.isArray(value)) return value.map(toText).filter(Boolean)
-  const text = toText(value)
-  return text ? [text] : []
+function extractStructuredText(value: string): string {
+  const fields = ['summary', 'answer', 'name', 'title', 'label', 'description', 'value']
+  for (const field of fields) {
+    const match = value.match(new RegExp(`['"]${field}['"]\\s*:\\s*['"]([^'"]+)['"]`))
+    if (match?.[1]) {
+      return match[1].trim()
+    }
+  }
+  return ''
+}
+
+function toReadableText(value: unknown): string {
+  if (value === null || value === undefined) return ''
+  if (typeof value === 'string') {
+    const text = value.trim()
+    return text === '[object Object]' ? '' : text
+      ? extractStructuredText(text) || text
+      : ''
+  }
+  if (typeof value === 'number' || typeof value === 'boolean') return String(value)
+  if (Array.isArray(value)) {
+    return value.map(toReadableText).filter(Boolean).join(' · ')
+  }
+  if (typeof value === 'object') {
+    const record = value as Record<string, unknown>
+    return toText([
+      record.name,
+      record.title,
+      record.label,
+      record.value,
+      record.summary,
+      record.description,
+      record.answer,
+      record.role,
+      record.name && record.answer ? `${record.name}: ${record.answer}` : '',
+    ].find(Boolean))
+  }
+  return toText(value)
+}
+
+function toReadableArray(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    const text = toReadableText(value)
+    return text ? [text] : []
+  }
+
+  return value
+    .map((item) => toReadableText(item))
+    .filter(Boolean)
 }
 
 function uniqueTextValues(values: Array<unknown>): string[] {
@@ -95,8 +140,8 @@ export function materializeGraphitiOpportunity(
     : {}
   const graphitiSalesBrief = asRecord(rawPayload.graphiti_sales_brief)
   const yellowPantherOpportunity = asRecord(rawPayload.yellow_panther_opportunity)
-  const decisionOwners = toTextArray(rawPayload.decision_owners)
-  const serviceFit = toTextArray(yellowPantherOpportunity.service_fit || graphitiSalesBrief.service_fit)
+  const decisionOwners = toReadableArray(rawPayload.decision_owners)
+  const serviceFit = toReadableArray(yellowPantherOpportunity.service_fit || graphitiSalesBrief.service_fit)
   const sourceUrl = toText(
     rawPayload['source_url'] ||
       rawPayload['destination_url'] ||
@@ -140,18 +185,45 @@ export function materializeGraphitiOpportunity(
   const fitScore = Math.max(confidence, priorityScore * 10)
   const opportunityKind = enrichedTaxonomy.opportunity_kind || 'Other'
   const title = source.title || organization
-  const summary = source.summary || source.why_it_matters || source.suggested_action || 'No summary available'
-  const whyItMatters = source.why_it_matters || summary
-  const suggestedAction = source.suggested_action || 'Review the dossier and progress the strongest aligned opportunity.'
+  const graphitiCapabilityGap = toReadableText(graphitiSalesBrief.capability_gap)
+  const graphitiOutreachAngle = toReadableText(graphitiSalesBrief.outreach_angle)
+  const graphitiOutreachRoute = toReadableText(graphitiSalesBrief.outreach_route)
+  const graphitiOutreachTarget = toReadableText(graphitiSalesBrief.outreach_target || graphitiSalesBrief.buyer_name)
+  const graphitiBestPathOwner = toReadableText(graphitiSalesBrief.best_path_owner)
+  const ypCompetitiveAdvantage = toReadableText(yellowPantherOpportunity.competitive_advantage)
+  const ypFitFeedback = toReadableText(yellowPantherOpportunity.fit_feedback)
+  const ypEntryPoint = toReadableText(yellowPantherOpportunity.entry_point)
+  const dossierSignalSummary = toReadableText(source.summary)
+  const dossierSignalWhyItMatters = toReadableText(source.why_it_matters)
+  const dossierSignalSuggestedAction = toReadableText(source.suggested_action)
+  const dossierDecisionOwnerSummary = decisionOwners.length > 0 ? `Decision owners: ${decisionOwners.join(', ')}` : ''
+
+  const summary =
+    graphitiOutreachAngle ||
+    graphitiCapabilityGap ||
+    dossierSignalSummary ||
+    dossierSignalWhyItMatters ||
+    dossierSignalSuggestedAction ||
+    'No summary available'
+  const whyItMatters =
+    graphitiCapabilityGap ||
+    ypCompetitiveAdvantage ||
+    dossierSignalWhyItMatters ||
+    dossierSignalSummary ||
+    'No dossier context available'
+  const suggestedAction =
+    graphitiOutreachRoute ||
+    graphitiOutreachTarget ||
+    ypEntryPoint ||
+    dossierSignalSuggestedAction ||
+    'Review the dossier and progress the strongest aligned opportunity.'
   const whyThisIsAnOpportunity =
-    toText(rawPayload.why_this_is_an_opportunity) ||
-    toText(graphitiSalesBrief.capability_gap) ||
-    toText(yellowPantherOpportunity.competitive_advantage) ||
-    whyItMatters ||
+    graphitiCapabilityGap ||
+    ypCompetitiveAdvantage ||
     summary
   const yellowPantherFitFeedback =
-    toText(rawPayload.yellow_panther_fit_feedback) ||
-    toText(yellowPantherOpportunity.fit_feedback) ||
+    toReadableText(rawPayload.yellow_panther_fit_feedback) ||
+    ypFitFeedback ||
     (serviceFit.length > 0
       ? `Yellow Panther fit is strongest where the dossier maps to ${serviceFit.slice(0, 3).join(', ')}.`
       : 'Yellow Panther fit is inferred from the dossier-level commercial signal and current timing.')
@@ -159,23 +231,31 @@ export function materializeGraphitiOpportunity(
     rawPayload.next_steps,
     graphitiSalesBrief.next_steps,
     graphitiSalesBrief.next_step,
-    yellowPantherOpportunity.next_step,
+    graphitiOutreachRoute,
+    graphitiOutreachTarget,
+    graphitiBestPathOwner,
+    ypEntryPoint,
     suggestedAction,
   ]).slice(0, 4)
   const supportingSignals = uniqueTextValues([
     rawPayload.supporting_signals,
     rawPayload.signals,
     graphitiSalesBrief.signals,
+    graphitiCapabilityGap,
+    graphitiOutreachAngle,
+    graphitiOutreachRoute,
+    graphitiOutreachTarget,
+    ypCompetitiveAdvantage,
     yellowPantherOpportunity.signals,
-    decisionOwners.length > 0 ? `Decision owners: ${decisionOwners.join(', ')}` : '',
+    dossierDecisionOwnerSummary,
     serviceFit.length > 0 ? `YP fit: ${serviceFit.join(', ')}` : '',
-    source.summary,
-    source.why_it_matters,
+    dossierSignalSummary,
+    dossierSignalWhyItMatters,
   ]).slice(0, 5)
   const readMoreContext = uniqueTextValues([
     whyThisIsAnOpportunity,
     yellowPantherFitFeedback,
-    decisionOwners.length > 0 ? `Decision owners: ${decisionOwners.join(', ')}` : '',
+    dossierDecisionOwnerSummary,
     serviceFit.length > 0 ? `Service fit: ${serviceFit.join(', ')}` : '',
     `Score basis: ${confidence}% confidence, ${priorityScore}/10 priority, ${fitScore}% YP fit`,
   ]).join(' · ')

@@ -8,6 +8,7 @@ export type QuestionFirstScaleManifest = {
     entity_type?: string
     default_rollout_phase?: string
   }>
+  sort_key?: string[]
   [key: string]: unknown
 }
 

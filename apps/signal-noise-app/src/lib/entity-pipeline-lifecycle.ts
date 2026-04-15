@@ -319,7 +319,12 @@ export async function deriveEntityPipelineLifecycle(input: {
   const qualitySummary = toText(dossier?.quality_summary) || 'No persisted dossier quality assessment is available yet.'
   const baseStage = stageFromRunStatus(run)
   const checkpoint = getCheckpointMetadata(dossier, run)
-  const heartbeatAtTs = parseTimestamp(checkpoint.heartbeat_at)
+  const runMetadata = (run?.metadata && typeof run.metadata === 'object') ? run.metadata as Record<string, unknown> : {}
+  const activeRunHeartbeatAt = baseStage === 'running'
+    ? (toText(runMetadata.heartbeat_at) || toText(run?.started_at) || null)
+    : checkpoint.heartbeat_at
+  const heartbeatAtTs = parseTimestamp(activeRunHeartbeatAt)
+  const hasCheckpointGap = !checkpoint.checkpoint_consistent || checkpoint.non_terminal_question_ids.length > 0
   const isStalled = Boolean(
     heartbeatAtTs
     && Date.now() - heartbeatAtTs > CHECKPOINT_STALE_MS
@@ -327,21 +332,23 @@ export async function deriveEntityPipelineLifecycle(input: {
   )
 
   let stage = baseStage
+  const hasActiveRun = baseStage === 'running' || baseStage === 'queued'
+
   if (checkpoint.reconciliation_state === 'pending' || checkpoint.reconciliation_state === 'retrying') {
     stage = 'reconciling'
   } else if (checkpoint.repair_state === 'queued' || checkpoint.repair_state === 'repairing') {
     stage = 'repairing'
   } else if (checkpoint.retryable) {
     stage = 'retryable_failure'
-  } else if (!checkpoint.checkpoint_consistent || checkpoint.non_terminal_question_ids.length > 0) {
+  } else if (baseStage !== 'running' && hasCheckpointGap) {
     stage = isStalled ? 'stalled' : 'resume_needed'
   } else if (isStalled) {
     stage = 'stalled'
   } else if (checkpoint.resume_from_question && !canonical.dossier && baseStage === 'queued') {
     stage = 'resume_needed'
-  } else if (canonical.source === 'question_first_run' && checkpoint.checkpoint_consistent && checkpoint.non_terminal_question_ids.length === 0) {
+  } else if (!hasActiveRun && canonical.source === 'question_first_run' && checkpoint.checkpoint_consistent && checkpoint.non_terminal_question_ids.length === 0) {
     stage = 'artifact_generated'
-  } else if (canonical.source === 'question_first_dossier') {
+  } else if (!hasActiveRun && canonical.source === 'question_first_dossier') {
     stage = clientReady
       ? 'client_ready'
       : (qualityState === 'blocked' ? 'complete_blocked' : 'dossier_persisted')
@@ -381,7 +388,7 @@ export async function deriveEntityPipelineLifecycle(input: {
     artifact_path: artifactPath,
     dossier_path: dossierPath,
     blocker_summary: (qualityBlockers.length > 0 ? qualityBlockers : blockers).join(', ') || null,
-    heartbeat_at: checkpoint.heartbeat_at,
+    heartbeat_at: activeRunHeartbeatAt,
     failure_reason: checkpoint.failure_reason,
     failure_category: checkpoint.failure_category,
     publication_status: checkpoint.publication_status,

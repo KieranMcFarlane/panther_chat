@@ -10,6 +10,7 @@ type QueueCandidate = {
 type OperationalStartDrilldown = {
   queue?: {
     in_progress_entity?: QueueCandidate | null
+    stale_active_rows?: QueueCandidate[]
     resume_needed_entities?: QueueCandidate[]
     completed_entities?: QueueCandidate[]
     upcoming_entities?: QueueCandidate[]
@@ -36,16 +37,17 @@ function selectCandidate(section: OperationalStartSection, drilldown: Operationa
   const resumeCandidate = queue.resume_needed_entities?.[0] || null
   const completedCandidate = queue.completed_entities?.[0] || null
   const upcomingCandidate = queue.upcoming_entities?.[0] || null
+  const staleCandidate = queue.stale_active_rows?.[0] || null
   switch (section) {
     case 'running':
-      return queue.in_progress_entity || resumeCandidate || completedCandidate || upcomingCandidate || null
+      return queue.in_progress_entity || staleCandidate || resumeCandidate || upcomingCandidate || completedCandidate || null
     case 'blocked':
-      return blockedCandidate || resumeCandidate || completedCandidate || upcomingCandidate || null
+      return blockedCandidate || resumeCandidate || upcomingCandidate || completedCandidate || null
     case 'completed':
       return completedCandidate || resumeCandidate || upcomingCandidate || blockedCandidate || null
     case 'entities':
     default:
-      return upcomingCandidate || resumeCandidate || completedCandidate || blockedCandidate || null
+      return upcomingCandidate || resumeCandidate || blockedCandidate || completedCandidate || null
   }
 }
 

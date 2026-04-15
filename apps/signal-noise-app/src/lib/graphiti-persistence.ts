@@ -8,7 +8,7 @@ import { buildGraphitiNotificationPayload, materializeGraphitiInsight, rankGraph
 import { resolvePinnedSmokeEntities } from '@/lib/entity-smoke-set'
 import { resolveEntityUuid } from '@/lib/entity-public-id'
 import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
-import { allowDemoFallbacks, getGraphitiStaleWindowHours } from '@/lib/runtime-env'
+import { getGraphitiStaleWindowHours } from '@/lib/runtime-env'
 
 const RAW_HOME_INSIGHT_COLUMNS = [
   'insight_id',
@@ -568,9 +568,5 @@ export async function materializeGraphitiInsights(limit = 100) {
 
 export async function loadGraphitiInsightsWithPersistence(limit = 25, options?: { clientFacingOnly?: boolean }) {
   const persisted = await loadPersistedGraphitiInsights(limit, options)
-  if (persisted.highlights.length > 0 || !allowDemoFallbacks()) {
-    return persisted
-  }
-
-  return null
+  return persisted
 }
