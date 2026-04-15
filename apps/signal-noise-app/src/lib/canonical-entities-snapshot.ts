@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs'
-import { readFile } from 'node:fs/promises'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
@@ -11,6 +11,7 @@ const scaleManifestData = loadQuestionFirstScaleManifest()
 
 const SNAPSHOT_TTL_MS = 15 * 60_000
 const localFalkorExportPath = path.resolve(process.cwd(), 'backend', 'falkordb_export.json')
+const canonicalEntitiesInvalidationPath = path.resolve(process.cwd(), 'tmp', 'canonical-entities-cache.invalidated.json')
 const hasUsableSupabaseConfiguration = Boolean(
   process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
 ) && Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY)
@@ -21,7 +22,7 @@ const defaultSnapshotSource = (
 ) ? 'supabase' : 'local'
 const preferSupabaseSnapshot = String(process.env.ENTITY_SNAPSHOT_SOURCE || defaultSnapshotSource).toLowerCase() === 'supabase'
 
-let canonicalEntitiesCache: { entities: CanonicalEntity[]; expiresAt: number } | null = null
+let canonicalEntitiesCache: { entities: CanonicalEntity[]; expiresAt: number; invalidatedAt: number } | null = null
 let inFlightCanonicalEntitiesRequest: Promise<CanonicalEntity[]> | null = null
 
 function mapCanonicalEntityRow(entity: any): CanonicalEntity {
@@ -146,8 +147,29 @@ async function fetchCanonicalEntitiesFromBestAvailableSource(): Promise<Canonica
   }
 }
 
+async function readCanonicalEntitiesInvalidationStamp(): Promise<number> {
+  if (!existsSync(canonicalEntitiesInvalidationPath)) {
+    return 0
+  }
+
+  try {
+    const fileContents = await readFile(canonicalEntitiesInvalidationPath, 'utf8')
+    const parsed = JSON.parse(fileContents) as { invalidated_at?: string }
+    const invalidatedAt = Date.parse(String(parsed.invalidated_at || ''))
+    return Number.isFinite(invalidatedAt) ? invalidatedAt : 0
+  } catch {
+    return 0
+  }
+}
+
 export async function getCanonicalEntitiesSnapshot(): Promise<CanonicalEntity[]> {
-  if (canonicalEntitiesCache && canonicalEntitiesCache.expiresAt > Date.now()) {
+  const invalidationStamp = await readCanonicalEntitiesInvalidationStamp()
+
+  if (
+    canonicalEntitiesCache
+    && canonicalEntitiesCache.expiresAt > Date.now()
+    && canonicalEntitiesCache.invalidatedAt >= invalidationStamp
+  ) {
     return canonicalEntitiesCache.entities
   }
 
@@ -162,6 +184,7 @@ export async function getCanonicalEntitiesSnapshot(): Promise<CanonicalEntity[]>
     canonicalEntitiesCache = {
       entities,
       expiresAt: Date.now() + SNAPSHOT_TTL_MS,
+      invalidatedAt: invalidationStamp,
     }
     return entities
   } finally {
@@ -175,4 +198,17 @@ export async function prewarmCanonicalEntitiesSnapshot(): Promise<void> {
 
 export function clearCanonicalEntitiesSnapshot(): void {
   canonicalEntitiesCache = null
+}
+
+export async function invalidateCanonicalEntitiesSnapshot(reason = 'manual'): Promise<void> {
+  await mkdir(path.dirname(canonicalEntitiesInvalidationPath), { recursive: true })
+  await writeFile(
+    canonicalEntitiesInvalidationPath,
+    JSON.stringify({
+      invalidated_at: new Date().toISOString(),
+      reason,
+    }, null, 2) + '\n',
+    'utf8',
+  )
+  clearCanonicalEntitiesSnapshot()
 }
