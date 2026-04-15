@@ -139,6 +139,28 @@ def _has_credible_website(entity: Dict[str, Any]) -> bool:
     return host not in _NON_CREDIBLE_WEBSITE_HOSTS
 
 
+def _normalize_manifest_priority_score(entity: Dict[str, Any]) -> int:
+    raw_priority = _extract_manifest_field(entity, "priority_score", "priority")
+    parsed_priority = re.sub(r"[^0-9.-]", "", raw_priority).strip()
+    if parsed_priority:
+        try:
+            return int(float(parsed_priority))
+        except ValueError:
+            pass
+
+    symbolic_priority = raw_priority.strip().upper()
+    symbolic_scores = {
+        "CRITICAL": 100,
+        "HIGH": 75,
+        "MEDIUM": 50,
+        "LOW": 25,
+    }
+    if symbolic_priority in symbolic_scores:
+        return symbolic_scores[symbolic_priority]
+
+    return 50
+
+
 def _looks_person_like(entity_name: str, entity_id: str) -> bool:
     lowered_name = entity_name.strip().lower()
     lowered_id = entity_id.strip().lower()
@@ -235,15 +257,30 @@ def build_filtered_scale_manifest(
                 "entity_id": canonical_id,
                 "entity_name": entity_name,
                 "entity_type": entity_type,
+                "priority_score": _normalize_manifest_priority_score(raw_entity),
                 "default_rollout_phase": default_rollout_phase,
             }
         )
 
+    filtered_entities.sort(
+        key=lambda entity: (
+            -int(entity.get("priority_score") or 0),
+            str(entity.get("entity_type") or ""),
+            str(entity.get("entity_name") or "").strip().lower(),
+            str(entity.get("entity_id") or ""),
+        )
+    )
     metrics["selected_count"] = len(filtered_entities)
     return {
         "schema_version": "question_first_scale_batch_v1",
         "batch_name": batch_name,
         "description": description,
+        "sort_key": [
+            "priority_score DESC",
+            "entity_type ASC",
+            "entity_name ASC",
+            "entity_id ASC",
+        ],
         "entities": filtered_entities,
         "metrics": metrics,
     }

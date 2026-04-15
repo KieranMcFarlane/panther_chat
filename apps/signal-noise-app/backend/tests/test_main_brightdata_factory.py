@@ -143,6 +143,81 @@ async def test_run_entity_pipeline_uses_pipeline_brightdata_factory(monkeypatch)
 
 
 @pytest.mark.asyncio
+async def test_run_entity_pipeline_passes_canonical_entity_id_into_dossier_request(monkeypatch):
+    captured_request = {}
+
+    monkeypatch.setenv("BRIGHTDATA_API_TOKEN", "test-token")
+
+    class _FakeBrightDataClient:
+        async def search_engine(self, *args, **kwargs):
+            return {"status": "success", "results": []}
+
+        async def scrape_as_markdown(self, *args, **kwargs):
+            return {"status": "success", "content": ""}
+
+    monkeypatch.setattr(main, "create_pipeline_brightdata_client", lambda *args, **kwargs: _FakeBrightDataClient(), raising=False)
+
+    orchestrator_module = types.ModuleType("backend.pipeline_orchestrator")
+
+    class _DummyOrchestrator:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def run_entity_pipeline(self, **kwargs):
+            return {
+                "entity_id": kwargs.get("entity_id", "unknown"),
+                "entity_name": kwargs.get("entity_name", "unknown"),
+                "phases": {"dossier_generation": {"status": "completed"}},
+                "validated_signal_count": 0,
+                "capability_signal_count": 0,
+                "rfp_count": 0,
+                "sales_readiness": "MONITOR",
+                "artifacts": {"dossier": kwargs.get("initial_dossier", {})},
+                "completed_at": "2026-03-25T00:00:00+00:00",
+            }
+
+    orchestrator_module.PipelineOrchestrator = _DummyOrchestrator
+    monkeypatch.setitem(sys.modules, "backend.pipeline_orchestrator", orchestrator_module)
+
+    async def _fake_generate_dossier(request):
+        captured_request["canonical_entity_id"] = getattr(request, "canonical_entity_id", None)
+        captured_request["metadata"] = getattr(request, "metadata", None)
+        return types.SimpleNamespace(
+            metadata={
+                "hypothesis_count": 0,
+                "signal_count": 0,
+                "generation_time_seconds": 0,
+                "tier": "STANDARD",
+                "source_count": 0,
+                "sources_used": [],
+                "source_timings": {},
+                "canonical_sources": {},
+                "generation_mode": "test",
+                "collection_timed_out": False,
+                "model_max_tokens": 0,
+                "inference_runtime": {},
+            },
+            dossier_data={"metadata": {}},
+        )
+
+    monkeypatch.setattr(main, "generate_dossier", _fake_generate_dossier)
+
+    await run_entity_pipeline(
+        EntityPipelineRequest(
+            entity_id="fc-porto-2027",
+            canonical_entity_id="fc-porto-canonical",
+            entity_name="FC Porto",
+            entity_type="CLUB",
+            priority_score=85,
+            metadata={"canonical_entity_id": "fc-porto-canonical", "rerun_mode": "full"},
+        )
+    )
+
+    assert captured_request["canonical_entity_id"] == "fc-porto-canonical"
+    assert captured_request["metadata"]["canonical_entity_id"] == "fc-porto-canonical"
+
+
+@pytest.mark.asyncio
 async def test_run_entity_pipeline_emits_phase_boundary_logs(monkeypatch, caplog):
     monkeypatch.setenv("BRIGHTDATA_API_TOKEN", "test-token")
     monkeypatch.setenv("BRIGHTDATA_FASTMCP_URL", "http://127.0.0.1:8000/mcp")

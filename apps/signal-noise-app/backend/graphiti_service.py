@@ -21,6 +21,7 @@ import os
 import sys
 import json
 import logging
+import re
 import urllib.parse
 from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional, Any
@@ -722,7 +723,49 @@ class GraphitiService:
             return default
         return numeric if numeric == numeric else default
 
-    def _select_homepage_insight_candidate(
+    @staticmethod
+    def _first_sentence(value: Any) -> str:
+        text = str(value or "").strip().replace("\n", " ")
+        if not text:
+            return ""
+        parts = re.split(r"(?<=[.!?])\s+", text)
+        return str(parts[0] if parts else text).strip()
+
+    def _build_question_first_copy(
+        self,
+        *,
+        entity_name: str,
+        service_label: str,
+        question_text: str,
+        answer_text: str,
+        selected_question: Dict[str, Any],
+    ) -> Dict[str, str]:
+        question_summary = self._first_sentence(question_text) or question_text.strip()
+        answer_summary = self._first_sentence(answer_text) or answer_text.strip()
+        yp_advantage = str(selected_question.get("yp_advantage") or "").strip()
+
+        why_it_matters_parts = [
+            f"{entity_name}'s dossier answers \"{question_summary}\".",
+            answer_summary or f"This points to a live {service_label} change window rather than a passive watch item.",
+        ]
+        if yp_advantage:
+            why_it_matters_parts.append(f"Yellow Panther angle: {yp_advantage}.")
+        else:
+            why_it_matters_parts.append(f"This is a live {service_label} opportunity, not just background monitoring.")
+
+        suggested_action_parts = [
+            f"Open the dossier and confirm the buyer hypothesis.",
+            f"Lead with the {service_label} angle and prepare a short outreach step.",
+        ]
+        if yp_advantage:
+            suggested_action_parts.append(f"Use the YP angle: {yp_advantage}.")
+
+        return {
+            "why_it_matters": " ".join(part for part in why_it_matters_parts if part).strip(),
+            "suggested_action": " ".join(part for part in suggested_action_parts if part).strip(),
+        }
+
+    def _build_homepage_insight_candidates(
         self,
         *,
         entity_name: str,
@@ -731,7 +774,7 @@ class GraphitiService:
         episodes: List[Dict[str, Any]],
         scores: Dict[str, Any],
         discovery_result: Dict[str, Any],
-    ) -> Optional[Dict[str, Any]]:
+    ) -> List[Dict[str, Any]]:
         sales_readiness = str(scores.get("sales_readiness") or "").strip().upper()
         active_probability_value = self._safe_float(scores.get("active_probability"))
         discovery_confidence = discovery_result.get("final_confidence") if isinstance(discovery_result, dict) else None
@@ -745,34 +788,19 @@ class GraphitiService:
                 or ""
             ).strip().lower()
 
-        def _build_question_first_candidate() -> Optional[Dict[str, Any]]:
+        def _build_question_first_candidates() -> List[Dict[str, Any]]:
             question_first = dossier.get("question_first") if isinstance(dossier.get("question_first"), dict) else {}
             answers = question_first.get("answers") if isinstance(question_first.get("answers"), list) else []
             dossier_promotions = question_first.get("dossier_promotions") if isinstance(question_first.get("dossier_promotions"), list) else []
+            discovery_summary = question_first.get("discovery_summary") if isinstance(question_first.get("discovery_summary"), dict) else {}
             questions = dossier.get("questions") if isinstance(dossier.get("questions"), list) else []
             if not answers and not dossier_promotions:
-                return None
+                return []
 
             question_index: Dict[str, Dict[str, Any]] = {}
             for question in questions:
                 if isinstance(question, dict):
                     question_index[_question_lookup_key(question)] = question
-
-            selected_promotion = None
-            if dossier_promotions:
-                eligible_promotions = [
-                    item for item in dossier_promotions
-                    if isinstance(item, dict) and self._safe_float(item.get("confidence")) >= 0.7 and str(item.get("evidence_url") or "").strip()
-                ]
-                if eligible_promotions:
-                    selected_promotion = sorted(
-                        eligible_promotions,
-                        key=lambda item: (
-                            self._safe_float(item.get("confidence")),
-                            len(str(item.get("answer") or "")),
-                        ),
-                        reverse=True,
-                    )[0]
 
             validated_answers: List[Dict[str, Any]] = []
             for answer in answers:
@@ -783,35 +811,123 @@ class GraphitiService:
                 if validation_state == "validated" and confidence_value >= 0.7:
                     validated_answers.append(answer)
 
-            if not selected_promotion and not validated_answers:
-                return None
+            promotion_source = dossier_promotions
+            if not promotion_source and isinstance(discovery_summary.get("opportunity_signals"), list):
+                promotion_source = discovery_summary.get("opportunity_signals") or []
 
-            if selected_promotion:
-                promoted_question_id = str(selected_promotion.get("question_id") or "").strip().lower()
-                selected_answer = next(
-                    (
-                        answer for answer in validated_answers
-                        if str(answer.get("question_id") or answer.get("question_text") or "").strip().lower() == promoted_question_id
-                    ),
-                    {
-                        "question_id": selected_promotion.get("question_id"),
-                        "question_text": selected_promotion.get("question_text"),
-                        "answer": selected_promotion.get("answer"),
-                        "confidence": selected_promotion.get("confidence"),
-                        "validation_state": "validated",
-                        "evidence_url": selected_promotion.get("evidence_url"),
-                        "signal_type": selected_promotion.get("signal_type"),
-                    },
-                )
-            else:
-                selected_answer = sorted(
-                    validated_answers,
+            eligible_promotions = [
+                item
+                for item in promotion_source
+                if isinstance(item, dict)
+                and self._safe_float(item.get("confidence")) >= 0.7
+                and str(item.get("evidence_url") or "").strip()
+            ]
+
+            if eligible_promotions:
+                eligible_promotions = sorted(
+                    eligible_promotions,
                     key=lambda item: (
                         self._safe_float(item.get("confidence")),
-                        1 if bool(item.get("search_hit")) else 0,
+                        len(str(item.get("answer") or "")),
                     ),
                     reverse=True,
-                )[0]
+                )
+
+                question_first_answers = question_first.get("answers") or []
+                candidates: List[Dict[str, Any]] = []
+                seen_candidate_ids = set()
+                for promotion in eligible_promotions:
+                    promoted_question_id = str(promotion.get("question_id") or "").strip().lower()
+                    selected_answer = next(
+                        (
+                            answer for answer in validated_answers
+                            if str(answer.get("question_id") or answer.get("question_text") or "").strip().lower() == promoted_question_id
+                        ),
+                        {
+                            "question_id": promotion.get("question_id"),
+                            "question_text": promotion.get("question_text"),
+                            "answer": promotion.get("answer"),
+                            "confidence": promotion.get("confidence"),
+                            "validation_state": "validated",
+                            "evidence_url": promotion.get("evidence_url"),
+                            "signal_type": promotion.get("signal_type"),
+                        },
+                    )
+                    selected_question = question_index.get(
+                        str(selected_answer.get("question_id") or selected_answer.get("question_text") or "").strip().lower()
+                    ) or {}
+                    service_fit = selected_question.get("yp_service_fit") if isinstance(selected_question.get("yp_service_fit"), list) else []
+                    service_code = service_fit[0] if service_fit else "question_first"
+                    service_label = self._humanize_service_label(service_code)
+                    if not service_fit:
+                        service_label = "commercial"
+                    question_text = str(
+                        selected_answer.get("question_text")
+                        or selected_question.get("question")
+                        or selected_question.get("question_text")
+                        or f"Question-first evidence for {entity_name}"
+                    ).strip()
+                    answer_text = str(selected_answer.get("answer") or question_text).strip()
+                    copy = self._build_question_first_copy(
+                        entity_name=entity_name,
+                        service_label=service_label,
+                        question_text=question_text,
+                        answer_text=answer_text,
+                        selected_question=selected_question,
+                    )
+                    confidence_value = max(
+                        self._safe_float(selected_answer.get("confidence")),
+                        active_probability_value,
+                        discovery_confidence_value,
+                    )
+                    candidate_id = str(
+                        promotion.get("candidate_id")
+                        or selected_answer.get("question_id")
+                        or selected_answer.get("evidence_url")
+                        or selected_answer.get("id")
+                        or promoted_question_id
+                        or f"question-first-{len(candidates) + 1}"
+                    ).strip()
+                    if not candidate_id or candidate_id in seen_candidate_ids:
+                        continue
+                    seen_candidate_ids.add(candidate_id)
+                    candidates.append({
+                        "candidate_id": candidate_id,
+                        "signal_basis": "question_first",
+                        "signal_statement": answer_text,
+                        "title": f"{entity_name}: {service_label} opportunity",
+                        "suggested_action": copy["suggested_action"],
+                        "why_it_matters": copy["why_it_matters"],
+                        "confidence": round(min(0.99, confidence_value), 4),
+                        "selected_signal": None,
+                        "selected_episode": episodes[0] if episodes and isinstance(episodes[0], dict) else None,
+                        "source_signal_id": str(selected_answer.get("question_id") or selected_answer.get("evidence_url") or selected_answer.get("id") or candidate_id),
+                        "source_episode_id": str((episodes[0].get("episode_id") if episodes and isinstance(episodes[0], dict) else "") or ""),
+                        "question_first_answer": selected_answer,
+                        "question_first_question": selected_question,
+                        "question_first_promotion": promotion,
+                        "question_first_summary": {
+                            "questions_answered": int(question_first.get("questions_answered") or len(question_first_answers) or 0),
+                            "validated_answers": len(validated_answers),
+                            "promoted_answers": len(eligible_promotions),
+                            "service_fit": service_fit,
+                        },
+                    })
+
+                if candidates:
+                    return candidates
+
+            if not validated_answers:
+                return []
+
+            selected_answer = sorted(
+                validated_answers,
+                key=lambda item: (
+                    self._safe_float(item.get("confidence")),
+                    1 if bool(item.get("search_hit")) else 0,
+                ),
+                reverse=True,
+            )[0]
 
             selected_question = question_index.get(
                 str(selected_answer.get("question_id") or selected_answer.get("question_text") or "").strip().lower()
@@ -819,6 +935,8 @@ class GraphitiService:
             service_fit = selected_question.get("yp_service_fit") if isinstance(selected_question.get("yp_service_fit"), list) else []
             service_code = service_fit[0] if service_fit else "question_first"
             service_label = self._humanize_service_label(service_code)
+            if not service_fit:
+                service_label = "commercial"
             question_text = str(
                 selected_answer.get("question_text")
                 or selected_question.get("question")
@@ -826,6 +944,13 @@ class GraphitiService:
                 or f"Question-first evidence for {entity_name}"
             ).strip()
             answer_text = str(selected_answer.get("answer") or question_text).strip()
+            copy = self._build_question_first_copy(
+                entity_name=entity_name,
+                service_label=service_label,
+                question_text=question_text,
+                answer_text=answer_text,
+                selected_question=selected_question,
+            )
             question_first_answers = question_first.get("answers") or []
             confidence_value = max(
                 self._safe_float(selected_answer.get("confidence")),
@@ -833,15 +958,13 @@ class GraphitiService:
                 discovery_confidence_value,
             )
 
-            return {
+            return [{
+                "candidate_id": str(selected_answer.get("question_id") or selected_answer.get("evidence_url") or selected_answer.get("id") or "question-first"),
                 "signal_basis": "question_first",
                 "signal_statement": answer_text,
-                "title": f"{entity_name}: {service_label} opportunity signal",
-                "suggested_action": str(
-                    selected_question.get("yp_advantage")
-                    or f"Review {service_label} evidence and prepare outreach."
-                ).strip(),
-                "why_it_matters": f"Question-first BrightData evidence validated a {service_label} trigger.",
+                "title": f"{entity_name}: {service_label} opportunity",
+                "suggested_action": copy["suggested_action"],
+                "why_it_matters": copy["why_it_matters"],
                 "confidence": round(min(0.99, confidence_value), 4),
                 "selected_signal": None,
                 "selected_episode": episodes[0] if episodes and isinstance(episodes[0], dict) else None,
@@ -849,73 +972,90 @@ class GraphitiService:
                 "source_episode_id": str((episodes[0].get("episode_id") if episodes and isinstance(episodes[0], dict) else "") or ""),
                 "question_first_answer": selected_answer,
                 "question_first_question": selected_question,
-                "question_first_promotion": selected_promotion,
+                "question_first_promotion": None,
                 "question_first_summary": {
                     "questions_answered": int(question_first.get("questions_answered") or len(question_first_answers) or 0),
                     "validated_answers": len(validated_answers),
-                    "promoted_answers": len(dossier_promotions),
+                    "promoted_answers": len(eligible_promotions),
                     "service_fit": service_fit,
                 },
-            }
+            }]
 
-        def _build_validated_signal_candidate() -> Optional[Dict[str, Any]]:
+        def _build_validated_signal_candidates() -> List[Dict[str, Any]]:
             if not validated_signals:
-                return None
+                return []
 
             def _signal_sort_key(signal: Dict[str, Any]) -> tuple[int, float]:
                 signal_type = str(signal.get("type") or signal.get("signal_type") or "").upper()
                 confidence_value = self._safe_float(signal.get("confidence"))
                 return (1 if signal_type == "RFP_DETECTED" else 0, confidence_value)
 
-            selected_signal = sorted(
+            sorted_signals = sorted(
                 [signal for signal in validated_signals if isinstance(signal, dict)],
                 key=_signal_sort_key,
                 reverse=True,
-            )[0]
-            selected_episode = episodes[0] if episodes and isinstance(episodes[0], dict) else None
-            signal_type = str(selected_signal.get("type") or selected_signal.get("signal_type") or "").upper()
-            signal_statement = str(
-                selected_signal.get("statement")
-                or selected_signal.get("text")
-                or selected_signal.get("title")
-                or (selected_episode or {}).get("description")
-                or dossier.get("summary")
-                or f"Fresh pipeline evidence for {entity_name}"
-            ).strip()
-            if len(signal_statement) > 180:
-                signal_statement = f"{signal_statement[:177].rstrip()}..."
-
-            confidence_value = max(
-                self._safe_float(selected_signal.get("confidence")),
-                active_probability_value,
-                discovery_confidence_value,
             )
+            candidates: List[Dict[str, Any]] = []
+            seen_candidate_ids = set()
+            for selected_signal in sorted_signals:
+                selected_episode = episodes[0] if episodes and isinstance(episodes[0], dict) else None
+                signal_type = str(selected_signal.get("type") or selected_signal.get("signal_type") or "").upper()
+                signal_statement = str(
+                    selected_signal.get("statement")
+                    or selected_signal.get("text")
+                    or selected_signal.get("title")
+                    or (selected_episode or {}).get("description")
+                    or dossier.get("summary")
+                    or f"Fresh pipeline evidence for {entity_name}"
+                ).strip()
+                if len(signal_statement) > 180:
+                    signal_statement = f"{signal_statement[:177].rstrip()}..."
 
-            if signal_type == "RFP_DETECTED":
-                title = f"{entity_name}: validated opportunity signal"
-                suggested_action = f"Review the latest opportunity window for {entity_name} and prepare outreach."
-                why_it_matters = "Graphiti linked the newest evidence to a live opportunity window."
-            else:
-                title = f"{entity_name}: fresh validated signal"
-                suggested_action = f"Monitor {entity_name} for the next Graphiti pass and related evidence."
-                why_it_matters = "Graphiti grounded this insight in validated pipeline evidence."
+                confidence_value = max(
+                    self._safe_float(selected_signal.get("confidence")),
+                    active_probability_value,
+                    discovery_confidence_value,
+                )
 
-            return {
-                "signal_basis": "validated_signal",
-                "signal_statement": signal_statement,
-                "title": title,
-                "suggested_action": suggested_action,
-                "why_it_matters": why_it_matters,
-                "confidence": round(min(0.99, confidence_value), 4),
-                "selected_signal": selected_signal,
-                "selected_episode": selected_episode,
-                "source_signal_id": str(selected_signal.get("id") or selected_signal.get("signal_id") or ""),
-                "source_episode_id": str((selected_episode or {}).get("episode_id") or (selected_episode or {}).get("id") or ""),
-            }
+                if confidence_value < 0.7:
+                    continue
 
-        def _build_sales_readiness_candidate() -> Optional[Dict[str, Any]]:
+                if signal_type == "RFP_DETECTED":
+                    title = f"{entity_name}: validated opportunity signal"
+                    suggested_action = f"Review the latest opportunity window for {entity_name} and prepare outreach."
+                    why_it_matters = "Graphiti linked the newest evidence to a live opportunity window."
+                else:
+                    title = f"{entity_name}: fresh validated signal"
+                    suggested_action = f"Monitor {entity_name} for the next Graphiti pass and related evidence."
+                    why_it_matters = "Graphiti grounded this insight in validated pipeline evidence."
+
+                candidate_id = str(
+                    selected_signal.get("id")
+                    or selected_signal.get("signal_id")
+                    or f"validated-signal-{len(candidates) + 1}"
+                ).strip()
+                if not candidate_id or candidate_id in seen_candidate_ids:
+                    continue
+                seen_candidate_ids.add(candidate_id)
+                candidates.append({
+                    "candidate_id": candidate_id,
+                    "signal_basis": "validated_signal",
+                    "signal_statement": signal_statement,
+                    "title": title,
+                    "suggested_action": suggested_action,
+                    "why_it_matters": why_it_matters,
+                    "confidence": round(min(0.99, confidence_value), 4),
+                    "selected_signal": selected_signal,
+                    "selected_episode": selected_episode,
+                    "source_signal_id": str(selected_signal.get("id") or selected_signal.get("signal_id") or candidate_id),
+                    "source_episode_id": str((selected_episode or {}).get("episode_id") or (selected_episode or {}).get("id") or ""),
+                })
+
+            return candidates
+
+        def _build_sales_readiness_candidate() -> List[Dict[str, Any]]:
             if not (sales_readiness == "LIVE" or active_probability_value >= 0.8):
-                return None
+                return []
 
             selected_episode = episodes[0] if episodes and isinstance(episodes[0], dict) else None
             signal_statement = str(
@@ -926,7 +1066,8 @@ class GraphitiService:
             if len(signal_statement) > 180:
                 signal_statement = f"{signal_statement[:177].rstrip()}..."
 
-            return {
+            return [{
+                "candidate_id": "sales-readiness",
                 "signal_basis": "sales_readiness",
                 "signal_statement": signal_statement,
                 "title": f"{entity_name}: strong pipeline movement",
@@ -937,20 +1078,31 @@ class GraphitiService:
                 "selected_episode": selected_episode,
                 "source_signal_id": "",
                 "source_episode_id": str((selected_episode or {}).get("episode_id") or (selected_episode or {}).get("id") or ""),
-            }
+            }]
 
-        for candidate_builder in (_build_validated_signal_candidate, _build_question_first_candidate, _build_sales_readiness_candidate):
-            candidate = candidate_builder()
-            if candidate:
-                return candidate
+        question_first_candidates = _build_question_first_candidates()
+        if question_first_candidates:
+            return question_first_candidates
 
-        return None
+        validated_signal_candidates = _build_validated_signal_candidates()
+        if validated_signal_candidates:
+            return validated_signal_candidates
+
+        return _build_sales_readiness_candidate()
 
     def _build_homepage_insight_record(
         self,
         *,
         run_result: Dict[str, Any],
     ) -> Optional[Dict[str, Any]]:
+        records = self._build_homepage_insight_records(run_result=run_result)
+        return records[0] if records else None
+
+    def _build_homepage_insight_records(
+        self,
+        *,
+        run_result: Dict[str, Any],
+    ) -> List[Dict[str, Any]]:
         artifacts = run_result.get("artifacts") if isinstance(run_result.get("artifacts"), dict) else {}
         dossier = artifacts.get("dossier") if isinstance(artifacts.get("dossier"), dict) else {}
         discovery_result = artifacts.get("discovery_result") if isinstance(artifacts.get("discovery_result"), dict) else {}
@@ -971,7 +1123,7 @@ class GraphitiService:
         if discovery_confidence is None and isinstance(discovery_result, dict):
             discovery_confidence = discovery_result.get("final_confidence")
 
-        candidate = self._select_homepage_insight_candidate(
+        candidates = self._build_homepage_insight_candidates(
             entity_name=entity_name,
             dossier=dossier,
             validated_signals=validated_signals,
@@ -981,149 +1133,156 @@ class GraphitiService:
                 "final_confidence": discovery_confidence,
             },
         )
-        if candidate is None:
-            return None
+        if not candidates:
+            return []
 
-        selected_signal = candidate.get("selected_signal") if isinstance(candidate.get("selected_signal"), dict) else None
-        selected_episode = candidate.get("selected_episode") if isinstance(candidate.get("selected_episode"), dict) else None
-        signal_statement = str(candidate.get("signal_statement") or f"Fresh pipeline evidence for {entity_name}").strip()
-        if len(signal_statement) > 180:
-            signal_statement = f"{signal_statement[:177].rstrip()}..."
-        confidence = self._safe_float(candidate.get("confidence"))
-        signal_basis = str(candidate.get("signal_basis") or "context_refresh").strip()
-        sales_readiness = str(scores.get("sales_readiness") or "").strip().upper()
-        active_probability = scores.get("active_probability")
-        active_probability_value = self._safe_float(active_probability)
+        def _build_record(candidate: Dict[str, Any], candidate_index: int) -> Dict[str, Any]:
+            selected_signal = candidate.get("selected_signal") if isinstance(candidate.get("selected_signal"), dict) else None
+            selected_episode = candidate.get("selected_episode") if isinstance(candidate.get("selected_episode"), dict) else None
+            signal_statement = str(candidate.get("signal_statement") or f"Fresh pipeline evidence for {entity_name}").strip()
+            if len(signal_statement) > 180:
+                signal_statement = f"{signal_statement[:177].rstrip()}..."
+            confidence = self._safe_float(candidate.get("confidence"))
+            signal_basis = str(candidate.get("signal_basis") or "context_refresh").strip()
+            sales_readiness = str(scores.get("sales_readiness") or "").strip().upper()
+            active_probability = scores.get("active_probability")
+            active_probability_value = self._safe_float(active_probability)
 
-        entity_type_lower = entity_type.lower()
-        if entity_type_lower in {"club", "team"}:
-            canonical_type = "team"
-        elif entity_type_lower in {"league"}:
-            canonical_type = "league"
-        elif entity_type_lower in {"federation"}:
-            canonical_type = "federation"
-        elif entity_type_lower in {"rights_holder", "rightsholder"}:
-            canonical_type = "rights_holder"
-        else:
-            canonical_type = "organisation"
+            entity_type_lower = entity_type.lower()
+            if entity_type_lower in {"club", "team"}:
+                canonical_type = "team"
+            elif entity_type_lower in {"league"}:
+                canonical_type = "league"
+            elif entity_type_lower in {"federation"}:
+                canonical_type = "federation"
+            elif entity_type_lower in {"rights_holder", "rightsholder"}:
+                canonical_type = "rights_holder"
+            else:
+                canonical_type = "organisation"
 
-        freshness = "recent"
-        age_hours = (materialized_at - completed_dt).total_seconds() / 3600.0
-        if age_hours <= 24:
-            freshness = "new"
-        elif age_hours > 72:
-            freshness = "stale"
+            freshness = "recent"
+            age_hours = (materialized_at - completed_dt).total_seconds() / 3600.0
+            if age_hours <= 24:
+                freshness = "new"
+            elif age_hours > 72:
+                freshness = "stale"
 
-        title = str(candidate.get("title") or f"{entity_name}: pipeline context refreshed").strip()
-        suggested_action = str(candidate.get("suggested_action") or f"Monitor {entity_name} for the next validated signal.").strip()
-        why_it_matters = str(candidate.get("why_it_matters") or "This is the latest materialized context from the Graphiti pipeline.").strip()
+            title = str(candidate.get("title") or f"{entity_name}: pipeline context refreshed").strip()
+            suggested_action = str(candidate.get("suggested_action") or f"Monitor {entity_name} for the next validated signal.").strip()
+            why_it_matters = str(candidate.get("why_it_matters") or "This is the latest materialized context from the Graphiti pipeline.").strip()
 
-        related_relationships: List[Dict[str, Any]] = []
-        dossier_relationships = dossier.get("relationships") if isinstance(dossier.get("relationships"), list) else []
-        for relationship in dossier_relationships:
-            if not isinstance(relationship, dict):
-                continue
-            target_name = str(
-                relationship.get("target_name")
-                or relationship.get("name")
-                or relationship.get("entity_name")
-                or ""
-            ).strip()
-            if not target_name:
-                continue
-            related_relationships.append({
-                "type": str(relationship.get("type") or "related_to"),
-                "target_id": str(relationship.get("target_id") or relationship.get("id") or target_name.lower().replace(" ", "-")),
-                "target_name": target_name,
-                "direction": str(relationship.get("direction") or "outbound"),
-            })
+            related_relationships: List[Dict[str, Any]] = []
+            dossier_relationships = dossier.get("relationships") if isinstance(dossier.get("relationships"), list) else []
+            for relationship in dossier_relationships:
+                if not isinstance(relationship, dict):
+                    continue
+                target_name = str(
+                    relationship.get("target_name")
+                    or relationship.get("name")
+                    or relationship.get("entity_name")
+                    or ""
+                ).strip()
+                if not target_name:
+                    continue
+                related_relationships.append({
+                    "type": str(relationship.get("type") or "related_to"),
+                    "target_id": str(relationship.get("target_id") or relationship.get("id") or target_name.lower().replace(" ", "-")),
+                    "target_name": target_name,
+                    "direction": str(relationship.get("direction") or "outbound"),
+                })
 
-        if not related_relationships and selected_signal:
-            related_entities = selected_signal.get("related_entities")
-            if isinstance(related_entities, list):
-                for target in related_entities:
-                    if isinstance(target, str) and target.strip():
-                        related_relationships.append({
-                            "type": "related_to",
-                            "target_id": target.lower().replace(" ", "-"),
-                            "target_name": target.strip(),
-                            "direction": "bidirectional",
-                        })
+            if not related_relationships and selected_signal:
+                related_entities = selected_signal.get("related_entities")
+                if isinstance(related_entities, list):
+                    for target in related_entities:
+                        if isinstance(target, str) and target.strip():
+                            related_relationships.append({
+                                "type": "related_to",
+                                "target_id": target.lower().replace(" ", "-"),
+                                "target_name": target.strip(),
+                                "direction": "bidirectional",
+                            })
 
-        evidence: List[Dict[str, Any]] = []
-        if signal_basis == "question_first":
-            question_first_answer = candidate.get("question_first_answer") if isinstance(candidate.get("question_first_answer"), dict) else {}
-            evidence.append({
-                "type": "note",
-                "id": str(question_first_answer.get("question_id") or f"{entity_id}:{run_result.get('run_id') or 'run'}:question-first"),
-                "snippet": signal_statement,
-                "source": str(question_first_answer.get("evidence_url") or "question_first_runner"),
-            })
-        if selected_episode:
-            evidence.append({
-                "type": "episode",
-                "id": str(selected_episode.get("episode_id") or selected_episode.get("id") or f"{entity_id}:{run_result.get('run_id') or 'run'}"),
-                "snippet": str(
-                    selected_episode.get("description")
-                    or selected_episode.get("summary")
-                    or signal_statement
-                ),
-                "source": str(selected_episode.get("source") or "pipeline_orchestrator"),
-            })
-        if selected_signal:
-            evidence.append({
-                "type": "note",
-                "id": str(selected_signal.get("id") or selected_signal.get("signal_id") or f"{entity_id}:{run_result.get('run_id') or 'run'}:signal"),
-                "snippet": signal_statement,
-                "source": str(selected_signal.get("source") or "graphiti_pipeline"),
-            })
-        if not evidence:
-            evidence.append({
-                "type": "note",
-                "id": f"{entity_id}:{run_result.get('run_id') or 'run'}:context",
-                "snippet": signal_statement,
-                "source": "graphiti_pipeline",
-            })
+            evidence: List[Dict[str, Any]] = []
+            if signal_basis == "question_first":
+                question_first_answer = candidate.get("question_first_answer") if isinstance(candidate.get("question_first_answer"), dict) else {}
+                evidence.append({
+                    "type": "note",
+                    "id": str(question_first_answer.get("question_id") or f"{entity_id}:{run_result.get('run_id') or 'run'}:question-first"),
+                    "snippet": signal_statement,
+                    "source": str(question_first_answer.get("evidence_url") or "question_first_runner"),
+                })
+            if selected_episode:
+                evidence.append({
+                    "type": "episode",
+                    "id": str(selected_episode.get("episode_id") or selected_episode.get("id") or f"{entity_id}:{run_result.get('run_id') or 'run'}"),
+                    "snippet": str(
+                        selected_episode.get("description")
+                        or selected_episode.get("summary")
+                        or signal_statement
+                    ),
+                    "source": str(selected_episode.get("source") or "pipeline_orchestrator"),
+                })
+            if selected_signal:
+                evidence.append({
+                    "type": "note",
+                    "id": str(selected_signal.get("id") or selected_signal.get("signal_id") or f"{entity_id}:{run_result.get('run_id') or 'run'}:signal"),
+                    "snippet": signal_statement,
+                    "source": str(selected_signal.get("source") or "graphiti_pipeline"),
+                })
+            if not evidence:
+                evidence.append({
+                    "type": "note",
+                    "id": f"{entity_id}:{run_result.get('run_id') or 'run'}:context",
+                    "snippet": signal_statement,
+                    "source": "graphiti_pipeline",
+                })
 
-        insight_id = f"{run_result.get('run_id') or 'run'}:{entity_id}"
-        return {
-            "insight_id": insight_id,
-            "entity_id": entity_id,
-            "entity_name": entity_name,
-            "entity_type": canonical_type,
-            "sport": str(dossier.get("sport") or run_result.get("sport") or "unknown").strip() or "unknown",
-            "league": str(dossier.get("league") or run_result.get("league") or "").strip() or None,
-            "title": title,
-            "summary": signal_statement,
-            "why_it_matters": why_it_matters,
-            "confidence": confidence,
-            "freshness": freshness,
-            "evidence": evidence,
-            "relationships": related_relationships,
-            "suggested_action": suggested_action,
-            "detected_at": completed_at,
-            "source_run_id": str(run_result.get("run_id") or ""),
-            "source_signal_id": str((selected_signal or {}).get("id") or (selected_signal or {}).get("signal_id") or ""),
-            "source_episode_id": str((selected_episode or {}).get("episode_id") or (selected_episode or {}).get("id") or ""),
-            "materialized_at": materialized_at.isoformat(),
-            "updated_at": materialized_at.isoformat(),
-            "source_objective": str(run_result.get("objective") or run_result.get("effective_objective") or ""),
-            "raw_payload": {
-                "run_id": run_result.get("run_id"),
+            base_insight_id = f"{run_result.get('run_id') or 'run'}:{entity_id}"
+            candidate_key = str(candidate.get("candidate_id") or candidate.get("source_signal_id") or signal_basis or candidate_index + 1).strip()
+            insight_id = base_insight_id if len(candidates) == 1 else f"{base_insight_id}:{candidate_key}"
+            return {
+                "insight_id": insight_id,
                 "entity_id": entity_id,
                 "entity_name": entity_name,
-                "objective": run_result.get("objective"),
-                "sales_readiness": scores.get("sales_readiness"),
-                "active_probability": scores.get("active_probability"),
-                "validated_signal_count": len(validated_signals),
-                "episode_count": len(episodes),
-                "signal_basis": signal_basis,
-                "signal_quality": confidence,
-                "question_first_question_id": str((candidate.get("question_first_question") or {}).get("question_id") or ""),
-                "question_first_validation_state": str((candidate.get("question_first_answer") or {}).get("validation_state") or ""),
-                "phase_status": {phase: details.get("status") for phase, details in phase_results.items() if isinstance(details, dict)},
-            },
-        }
+                "entity_type": canonical_type,
+                "sport": str(dossier.get("sport") or run_result.get("sport") or "unknown").strip() or "unknown",
+                "league": str(dossier.get("league") or run_result.get("league") or "").strip() or None,
+                "title": title,
+                "summary": signal_statement,
+                "why_it_matters": why_it_matters,
+                "confidence": confidence,
+                "freshness": freshness,
+                "evidence": evidence,
+                "relationships": related_relationships,
+                "suggested_action": suggested_action,
+                "detected_at": completed_at,
+                "source_run_id": str(run_result.get("run_id") or ""),
+                "source_signal_id": str((candidate.get("source_signal_id") or (selected_signal or {}).get("id") or (selected_signal or {}).get("signal_id") or "")),
+                "source_episode_id": str((selected_episode or {}).get("episode_id") or (selected_episode or {}).get("id") or ""),
+                "materialized_at": materialized_at.isoformat(),
+                "updated_at": materialized_at.isoformat(),
+                "source_objective": str(run_result.get("objective") or run_result.get("effective_objective") or ""),
+                "raw_payload": {
+                    "run_id": run_result.get("run_id"),
+                    "entity_id": entity_id,
+                    "entity_name": entity_name,
+                    "objective": run_result.get("objective"),
+                    "sales_readiness": scores.get("sales_readiness"),
+                    "active_probability": scores.get("active_probability"),
+                    "validated_signal_count": len(validated_signals),
+                    "episode_count": len(episodes),
+                    "signal_basis": signal_basis,
+                    "signal_quality": confidence,
+                    "question_first_question_id": str((candidate.get("question_first_question") or {}).get("question_id") or ""),
+                    "question_first_validation_state": str((candidate.get("question_first_answer") or {}).get("validation_state") or ""),
+                    "question_first_promotion_id": str((candidate.get("question_first_promotion") or {}).get("candidate_id") or ""),
+                    "question_first_candidate_id": str(candidate.get("candidate_id") or ""),
+                    "phase_status": {phase: details.get("status") for phase, details in phase_results.items() if isinstance(details, dict)},
+                },
+            }
+
+        return [_build_record(candidate, index) for index, candidate in enumerate(candidates)]
 
     async def materialize_homepage_insight(self, run_result: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -1137,22 +1296,25 @@ class GraphitiService:
                 "reason": "supabase_unavailable",
             }
 
-        insight_record = self._build_homepage_insight_record(run_result=run_result)
-        if not insight_record:
+        insight_records = self._build_homepage_insight_records(run_result=run_result)
+        if not insight_records:
             return {
                 "status": "skipped",
                 "reason": "insufficient_signal_quality",
             }
-        self.supabase_client.table("homepage_graphiti_insights").upsert(
-            insight_record,
-            on_conflict="insight_id",
-        ).execute()
+        for insight_record in insight_records:
+            self.supabase_client.table("homepage_graphiti_insights").upsert(
+                insight_record,
+                on_conflict="insight_id",
+            ).execute()
         return {
             "status": "materialized",
-            "insight_id": insight_record["insight_id"],
-            "entity_id": insight_record["entity_id"],
-            "entity_name": insight_record["entity_name"],
-            "materialized_at": insight_record["materialized_at"],
+            "materialized_count": len(insight_records),
+            "insight_id": insight_records[0]["insight_id"],
+            "insight_ids": [record["insight_id"] for record in insight_records],
+            "entity_id": insight_records[0]["entity_id"],
+            "entity_name": insight_records[0]["entity_name"],
+            "materialized_at": insight_records[0]["materialized_at"],
         }
 
     async def add_discovery_episode(

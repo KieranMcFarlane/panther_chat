@@ -561,11 +561,13 @@ async def sync_from_supabase():
 class DossierRequest(BaseModel):
     """Request for enhanced dossier generation"""
     entity_id: str = Field(..., description="Entity ID (e.g., 'arsenal-fc')")
+    canonical_entity_id: Optional[str] = Field(default=None, description="Canonical UUID for internal identity normalization")
     entity_name: str = Field(..., description="Entity display name")
     entity_type: str = Field(default="CLUB", description="Entity type (CLUB, LEAGUE, ORG, etc.)")
     priority_score: int = Field(default=85, ge=0, le=100, description="Priority score for tier determination")
     force_refresh: bool = Field(default=False, description="Force regeneration even if cache is fresh")
     run_objective: str = Field(default="dossier_core", description="Objective profile for phase-0 generation")
+    metadata: Dict[str, Any] = Field(default_factory=dict, description="Optional request metadata used by cached and pipeline paths")
 
 
 class DossierResponse(BaseModel):
@@ -1434,11 +1436,13 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
 
         dossier_generation_request = DossierRequest(
             entity_id=request.entity_id,
+            canonical_entity_id=request.canonical_entity_id,
             entity_name=request.entity_name,
             entity_type=request.entity_type,
             priority_score=request.priority_score,
             force_refresh=True,
             run_objective=request.run_objective,
+            metadata=dict(request.metadata or {}),
         )
         dossier_timeout_seconds = resolve_phase0_timeout_seconds()
         queue_mode = (os.getenv("ENTITY_IMPORT_QUEUE_MODE") or "durable_worker").strip().lower()

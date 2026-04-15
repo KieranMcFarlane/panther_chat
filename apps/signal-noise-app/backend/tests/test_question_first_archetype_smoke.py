@@ -448,6 +448,83 @@ def test_filter_scale_manifest_entities_excludes_people_placeholders_and_missing
     assert metrics["excluded_missing_website"] == 1
 
 
+def test_filter_scale_manifest_entities_orders_by_priority_then_type_name_and_id():
+    manifest = smoke.build_filtered_scale_manifest(
+        [
+            {
+                "entity_id": "gamma-low",
+                "entity_name": "Gamma Club",
+                "entity_type": "SPORT_CLUB",
+                "website": "https://gamma.example",
+                "priority_score": 10,
+            },
+            {
+                "entity_id": "alpha-high",
+                "entity_name": "Alpha Club",
+                "entity_type": "SPORT_CLUB",
+                "website": "https://alpha.example",
+                "priority_score": 90,
+            },
+            {
+                "entity_id": "beta-high",
+                "entity_name": "Beta Federation",
+                "entity_type": "SPORT_FEDERATION",
+                "website": "https://beta.example",
+                "priority_score": 90,
+            },
+            {
+                "entity_id": "beta-low",
+                "entity_name": "Beta Federation",
+                "entity_type": "SPORT_FEDERATION",
+                "website": "https://beta2.example",
+                "priority_score": 90,
+            },
+        ],
+        batch_name="question-first-scale-3000-live",
+        description="Sorted manifest",
+        require_website=False,
+    )
+
+    entities = manifest["entities"]
+
+    assert [entity["entity_id"] for entity in entities] == [
+        "alpha-high",
+        "beta-high",
+        "beta-low",
+        "gamma-low",
+    ]
+    assert [entity["priority_score"] for entity in entities] == [90, 90, 90, 10]
+
+
+def test_filter_scale_manifest_entities_normalizes_symbolic_priority_scores():
+    manifest = smoke.build_filtered_scale_manifest(
+        [
+            {
+                "entity_id": "critical-club",
+                "entity_name": "Critical Club",
+                "entity_type": "SPORT_CLUB",
+                "website": "https://critical.example",
+                "priority": "CRITICAL",
+            },
+            {
+                "entity_id": "medium-club",
+                "entity_name": "Medium Club",
+                "entity_type": "SPORT_CLUB",
+                "website": "https://medium.example",
+                "priority": "MEDIUM",
+            },
+        ],
+        batch_name="question-first-scale-3000-live",
+        description="Symbolic priorities",
+        require_website=False,
+    )
+
+    entities = manifest["entities"]
+
+    assert [entity["entity_id"] for entity in entities] == ["critical-club", "medium-club"]
+    assert [entity["priority_score"] for entity in entities] == [100, 50]
+
+
 def test_build_rerun_archetypes_filters_failed_entities_and_failed_question(tmp_path):
     output_root = tmp_path / "smoke"
     summary_path = output_root / "question_first_archetype_smoke.json"

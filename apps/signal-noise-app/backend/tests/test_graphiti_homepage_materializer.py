@@ -286,3 +286,138 @@ async def test_materialize_homepage_insight_skips_low_signal_runs():
     assert result["status"] == "skipped"
     assert result["reason"] == "insufficient_signal_quality"
     assert svc.supabase_client.rows == []
+
+
+@pytest.mark.asyncio
+async def test_materialize_homepage_insight_materializes_all_question_first_opportunities():
+    svc = GraphitiService.__new__(GraphitiService)
+    svc.use_supabase = True
+    svc.supabase_client = _FakeSupabase()
+
+    result = await GraphitiService.materialize_homepage_insight(
+        svc,
+        {
+            "entity_id": "major-league-cricket",
+            "entity_name": "Major League Cricket",
+            "entity_type": "LEAGUE",
+            "run_id": "run-dossier-multi",
+            "objective": "procurement_discovery",
+            "scores": {
+                "sales_readiness": "MONITOR",
+                "active_probability": 0.61,
+            },
+            "phase_details_by_phase": {
+                "temporal_persistence": {"status": "completed"},
+            },
+            "artifacts": {
+                "dossier": {
+                    "league": "Major League Cricket",
+                    "sport": "cricket",
+                    "questions": [
+                        {
+                            "question_id": "sc_media_rights",
+                            "question": "What evidence shows Major League Cricket is investing in media rights or distribution?",
+                            "yp_service_fit": ["MEDIA_RIGHTS"],
+                            "yp_advantage": "Review media rights evidence and prepare outreach.",
+                        },
+                        {
+                            "question_id": "sc_sponsorship",
+                            "question": "What evidence shows Major League Cricket is investing in sponsorship or partnership growth?",
+                            "yp_service_fit": ["SPONSORSHIP"],
+                            "yp_advantage": "Review sponsorship evidence and prepare outreach.",
+                        },
+                    ],
+                    "question_first": {
+                        "enabled": True,
+                        "questions_answered": 2,
+                        "answers": [
+                            {
+                                "question_id": "sc_media_rights",
+                                "section_id": "commercial_signal",
+                                "question_text": "What evidence shows Major League Cricket is investing in media rights or distribution?",
+                                "answer": "Major League Cricket is actively evaluating distribution and media-rights partnerships.",
+                                "confidence": 0.88,
+                                "evidence_url": "https://example.com/mlc-media-rights",
+                                "validation_state": "validated",
+                                "signal_type": "PROCUREMENT_SIGNAL",
+                            },
+                            {
+                                "question_id": "sc_sponsorship",
+                                "section_id": "commercial_signal",
+                                "question_text": "What evidence shows Major League Cricket is investing in sponsorship or partnership growth?",
+                                "answer": "Major League Cricket is actively evaluating sponsorship and partnership expansion.",
+                                "confidence": 0.86,
+                                "evidence_url": "https://example.com/mlc-sponsorship",
+                                "validation_state": "validated",
+                                "signal_type": "PROCUREMENT_SIGNAL",
+                            },
+                        ],
+                        "dossier_promotions": [
+                            {
+                                "candidate_id": "sc_media_rights:opportunity_signals",
+                                "question_id": "sc_media_rights",
+                                "promotion_target": "opportunity_signals",
+                                "signal_type": "PROCUREMENT_SIGNAL",
+                                "answer": "Major League Cricket is actively evaluating distribution and media-rights partnerships.",
+                                "confidence": 0.88,
+                                "evidence_url": "https://example.com/mlc-media-rights",
+                                "promotion_candidate": True,
+                            },
+                            {
+                                "candidate_id": "sc_sponsorship:opportunity_signals",
+                                "question_id": "sc_sponsorship",
+                                "promotion_target": "opportunity_signals",
+                                "signal_type": "PROCUREMENT_SIGNAL",
+                                "answer": "Major League Cricket is actively evaluating sponsorship and partnership expansion.",
+                                "confidence": 0.86,
+                                "evidence_url": "https://example.com/mlc-sponsorship",
+                                "promotion_candidate": True,
+                            },
+                        ],
+                        "discovery_summary": {
+                            "promoted_count": 2,
+                            "supporting_evidence_count": 2,
+                            "promotion_targets": ["opportunity_signals"],
+                            "opportunity_signals": [
+                                {
+                                    "candidate_id": "sc_media_rights:opportunity_signals",
+                                    "question_id": "sc_media_rights",
+                                    "promotion_target": "opportunity_signals",
+                                    "signal_type": "PROCUREMENT_SIGNAL",
+                                    "answer": "Major League Cricket is actively evaluating distribution and media-rights partnerships.",
+                                    "confidence": 0.88,
+                                    "evidence_url": "https://example.com/mlc-media-rights",
+                                },
+                                {
+                                    "candidate_id": "sc_sponsorship:opportunity_signals",
+                                    "question_id": "sc_sponsorship",
+                                    "promotion_target": "opportunity_signals",
+                                    "signal_type": "PROCUREMENT_SIGNAL",
+                                    "answer": "Major League Cricket is actively evaluating sponsorship and partnership expansion.",
+                                    "confidence": 0.86,
+                                    "evidence_url": "https://example.com/mlc-sponsorship",
+                                },
+                            ],
+                        },
+                    },
+                },
+                "validated_signals": [],
+                "episodes": [
+                    {
+                        "episode_id": "episode-dossier-multi",
+                        "description": "Multiple dossier-derived opportunity promotions",
+                        "source": "question_first_runner",
+                    }
+                ],
+            },
+        },
+    )
+
+    assert result["status"] == "materialized"
+    assert result["materialized_count"] == 2
+    assert len(svc.supabase_client.rows) == 2
+    stored_question_ids = {
+        payload["raw_payload"]["question_first_question_id"]
+        for _, payload in svc.supabase_client.rows
+    }
+    assert stored_question_ids == {"sc_media_rights", "sc_sponsorship"}
