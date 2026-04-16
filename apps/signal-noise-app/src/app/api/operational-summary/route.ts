@@ -5,11 +5,15 @@ import { readLaneSnapshot } from '@/lib/discovery-lanes/lane-status'
 import { getEntityPipelineActivitySummary } from '@/lib/entity-import-jobs'
 import { buildOperationalSummary } from '@/lib/operational-summary'
 
+// Cache operational summary for 60 seconds
+let summaryCache: { data: any; expiresAt: number } | null = null;
+const SUMMARY_TTL_MS = 60_000;
+
 async function getEntitiesActive(): Promise<number> {
   try {
     const { count, error } = await supabase
-      .from('cached_entities')
-      .select('*', { count: 'exact', head: true })
+      .from('canonical_entities')
+      .select('id', { count: 'exact', head: true })
 
     if (error) throw error
     if (typeof count === 'number') return count
@@ -19,8 +23,8 @@ async function getEntitiesActive(): Promise<number> {
 
   try {
     const { data, error } = await supabase
-      .from('cached_entities')
-      .select('neo4j_id')
+      .from('canonical_entities')
+      .select('id')
       .limit(10000)
 
     if (error) throw error
@@ -31,6 +35,11 @@ async function getEntitiesActive(): Promise<number> {
 }
 
 export async function GET() {
+  // Return cached summary if still fresh
+  if (summaryCache && summaryCache.expiresAt > Date.now()) {
+    return NextResponse.json(summaryCache.data);
+  }
+
   const [entitiesActive, pipeline, scoutSnapshot, enrichmentSnapshot] = await Promise.all([
     getEntitiesActive(),
     getEntityPipelineActivitySummary(),
@@ -64,8 +73,12 @@ export async function GET() {
     updatedAt: new Date().toISOString(),
   })
 
-  return NextResponse.json({
+  const responseData = {
     success: true,
     data: summary,
-  })
+  }
+
+  summaryCache = { data: responseData, expiresAt: Date.now() + SUMMARY_TTL_MS }
+
+  return NextResponse.json(responseData)
 }

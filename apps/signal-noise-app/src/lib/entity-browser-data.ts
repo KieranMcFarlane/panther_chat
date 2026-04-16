@@ -1,6 +1,5 @@
+import { getSupabaseAdmin } from '@/lib/supabase-client'
 import { resolveLocalBadgeUrl } from '@/lib/badge-resolver'
-import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
-import { buildCanonicalEntitySearchText, matchesCanonicalSearch } from '@/lib/canonical-search'
 import { getCanonicalEntityRole } from '@/lib/entity-role-taxonomy'
 import { resolveEntityUuid } from '@/lib/entity-public-id'
 import { buildEntitiesTaxonomy } from '@/lib/entities-taxonomy'
@@ -86,101 +85,77 @@ function buildLightweightDossierIndexFromEntityState(entity: any): LightweightDo
   }
 }
 
-export async function getEntityBrowserPageData(options: {
-  page: number
-  search: string
-  filters: EntityBrowserFilters
-}): Promise<EntityBrowserResponse> {
-  const { page, search, filters } = options
-  const limit = Number.parseInt(filters.limit || '20', 10)
-  let entityType = filters.entityType || ''
-  if (entityType === 'all') entityType = ''
-  const sortBy = filters.sortBy || 'name'
-  const sortOrder = filters.sortOrder || 'asc'
-  const sport = normalizeFilterValue(filters.sport || '')
-  const league = normalizeFilterValue(filters.league || '')
-  const country = normalizeFilterValue(filters.country || '')
-  const entityClass = normalizeFilterValue(filters.entityClass || '')
+const CANONICAL_ENTITY_COLUMNS = 'id, name, entity_type, sport, league, country, canonical_key, badge_path, badge_s3_url, labels, properties, source_neo4j_ids, source_graph_ids, source_entity_ids'
 
-  const canonicalEntities = await getCanonicalEntitiesSnapshot()
-  const normalizedSearch = search.trim().toLowerCase()
-  const normalizedSport = sport.toLowerCase()
-  const normalizedLeague = league.toLowerCase()
-  const normalizedCountry = country.toLowerCase()
-  const normalizedEntityClass = entityClass.toLowerCase()
+function mapDbRowToCanonicalEntity(row: any) {
+  const properties = row.properties || {}
+  const sourceNeo4jId = Array.isArray(row.source_neo4j_ids) && row.source_neo4j_ids.length > 0
+    ? row.source_neo4j_ids[0]
+    : Array.isArray(row.source_graph_ids) && row.source_graph_ids.length > 0
+      ? row.source_graph_ids[0]
+      : Array.isArray(row.source_entity_ids) && row.source_entity_ids.length > 0
+        ? row.source_entity_ids[0]
+        : row.id
 
-  const filteredEntities = canonicalEntities.filter((entity) => {
-    const properties = entity.properties || {}
-    const entityLabels = (entity.labels || []).map((label: string) => String(label).toLowerCase())
-    const propType = String(properties.type || '').toLowerCase()
-    const propEntityClass = String(properties.entityClass || properties.entity_class || '').toLowerCase()
-    const propSport = String(properties.sport || '').toLowerCase()
-    const propLeague = String(properties.league || '').toLowerCase()
-    const propCountry = String(properties.country || '').toLowerCase()
-    const canonicalEntityRole = getCanonicalEntityRole(entity).toLowerCase()
+  return {
+    id: row.id,
+    uuid: row.id,
+    neo4j_id: sourceNeo4jId,
+    badge_path: row.badge_path || properties.badge_path || null,
+    badge_s3_url: row.badge_s3_url || properties.badge_s3_url || null,
+    labels: row.labels || [],
+    properties: {
+      ...properties,
+      name: row.name || properties.name || row.id,
+      type: row.entity_type || properties.type || row.labels?.[0] || 'ENTITY',
+      sport: row.sport || properties.sport || '',
+      league: row.league || properties.league || '',
+      country: row.country || properties.country || '',
+      canonical_key: row.canonical_key || properties.canonical_key || '',
+    },
+  }
+}
 
-    if (
-      entityType &&
-      entityType !== 'all' &&
-      !entityLabels.includes(entityType.toLowerCase()) &&
-      propType !== entityType.toLowerCase() &&
-      propEntityClass !== entityType.toLowerCase()
-    ) {
-      return false
-    }
+function matchesEntityClassFilter(canonicalEntity: ReturnType<typeof mapDbRowToCanonicalEntity>, entityClass: string): boolean {
+  const role = getCanonicalEntityRole(canonicalEntity).toLowerCase()
+  const propEntityClass = String(canonicalEntity.properties.entityClass || canonicalEntity.properties.entity_class || '').toLowerCase()
+  const propType = String(canonicalEntity.properties.type || '').toLowerCase()
+  return role === entityClass || propEntityClass === entityClass || propType === entityClass
+}
 
-    if (normalizedSport && propSport !== normalizedSport) return false
-    if (normalizedLeague && propLeague !== normalizedLeague) return false
-    if (normalizedCountry && propCountry !== normalizedCountry) return false
-    if (
-      normalizedEntityClass &&
-      canonicalEntityRole !== normalizedEntityClass &&
-      propEntityClass !== normalizedEntityClass &&
-      propType !== normalizedEntityClass
-    ) {
-      return false
-    }
-
-    if (!normalizedSearch) return true
-
-    return matchesCanonicalSearch(normalizedSearch, buildCanonicalEntitySearchText(entity))
+function mapCanonicalEntityToResponse(canonical: ReturnType<typeof mapDbRowToCanonicalEntity>) {
+  const entityName = canonical.properties.name
+  const canonicalEntityRole = getCanonicalEntityRole(canonical)
+  const uuid = resolveEntityUuid(canonical) || undefined
+  const lightweightDossierIndex = buildLightweightDossierIndexFromEntityState(canonical)
+  const resolvedBadgeUrl = resolveLocalBadgeUrl({
+    entityId: canonical.id,
+    entityName,
+    badgePath: canonical.badge_path,
+    badgeS3Url: canonical.badge_s3_url,
   })
 
-  const ascending = sortOrder.toLowerCase() !== 'desc'
-  filteredEntities.sort((left, right) => {
-    const leftName = String(left.properties?.name || '')
-    const rightName = String(right.properties?.name || '')
-    return ascending ? leftName.localeCompare(rightName) : rightName.localeCompare(leftName)
-  })
-
-  const total = filteredEntities.length
-  const start = (page - 1) * limit
-  const paginatedEntities = filteredEntities.slice(start, start + limit)
-
-  const entities = paginatedEntities.map((entity: any) => {
-    const entityName = entity.properties?.name || entity.neo4j_id
-    const canonicalEntityRole = getCanonicalEntityRole(entity)
-    const uuid = resolveEntityUuid({
-      canonical_entity_id: entity.uuid || entity.id,
-      id: entity.id,
-      uuid: entity.uuid,
-      neo4j_id: entity.neo4j_id,
-      graph_id: entity.graph_id,
-      supabase_id: entity.supabase_id || entity.properties?.supabase_id,
-      properties: entity.properties,
-    }) || undefined
-    const lightweightDossierIndex = buildLightweightDossierIndexFromEntityState(entity)
-    const resolvedBadgeUrl = resolveLocalBadgeUrl({
-      entityId: entity.id ?? entity.neo4j_id,
-      entityName,
-      badgePath: entity.badge_path || entity.properties?.badge_path || null,
-      badgeS3Url: entity.badge_s3_url || entity.properties?.badge_s3_url || null,
-    })
-
-    return {
-      id: uuid || entity.id,
+  return {
+    id: uuid || canonical.id,
+    uuid,
+    neo4j_id: canonical.neo4j_id,
+    dossier_status: lightweightDossierIndex.dossier_status,
+    latest_run_id: lightweightDossierIndex.latest_run_id,
+    latest_generated_at: lightweightDossierIndex.latest_generated_at,
+    latest_dossier_path: lightweightDossierIndex.latest_dossier_path,
+    dossier_source: lightweightDossierIndex.dossier_source,
+    dossier_summary: lightweightDossierIndex.dossier_summary,
+    review_status: lightweightDossierIndex.review_status,
+    rerun_reason: lightweightDossierIndex.rerun_reason,
+    badge_s3_url: resolvedBadgeUrl,
+    badge_lookup_complete: true,
+    labels: canonical.labels,
+    properties: {
+      ...canonical.properties,
+      badge_path: resolvedBadgeUrl,
+      badge_s3_url: resolvedBadgeUrl,
+      badge_lookup_complete: true,
       uuid,
-      neo4j_id: entity.neo4j_id,
       dossier_status: lightweightDossierIndex.dossier_status,
       latest_run_id: lightweightDossierIndex.latest_run_id,
       latest_generated_at: lightweightDossierIndex.latest_generated_at,
@@ -189,32 +164,102 @@ export async function getEntityBrowserPageData(options: {
       dossier_summary: lightweightDossierIndex.dossier_summary,
       review_status: lightweightDossierIndex.review_status,
       rerun_reason: lightweightDossierIndex.rerun_reason,
-      badge_s3_url: resolvedBadgeUrl,
-      badge_lookup_complete: true,
-      labels: entity.labels || [],
-      properties: {
-        ...entity.properties,
-        badge_path: resolvedBadgeUrl,
-        badge_s3_url: resolvedBadgeUrl,
-        badge_lookup_complete: true,
-        uuid,
-        dossier_status: lightweightDossierIndex.dossier_status,
-        latest_run_id: lightweightDossierIndex.latest_run_id,
-        latest_generated_at: lightweightDossierIndex.latest_generated_at,
-        latest_dossier_path: lightweightDossierIndex.latest_dossier_path,
-        dossier_source: lightweightDossierIndex.dossier_source,
-        dossier_summary: lightweightDossierIndex.dossier_summary,
-        review_status: lightweightDossierIndex.review_status,
-        rerun_reason: lightweightDossierIndex.rerun_reason,
-        name: entityName,
-        type: entity.properties?.type || entity.labels?.[0] || 'ENTITY',
-        entity_role: canonicalEntityRole,
+      name: entityName,
+      type: canonical.properties.type,
+      entity_role: canonicalEntityRole,
+    },
+  }
+}
+
+export async function getEntityBrowserPageData(options: {
+  page: number
+  search: string
+  filters: EntityBrowserFilters
+}): Promise<EntityBrowserResponse> {
+  const { page, search, filters } = options
+  const limit = Number.parseInt(filters.limit || '20', 10)
+  const entityType = normalizeFilterValue(filters.entityType || '')
+  const sortBy = filters.sortBy || 'name'
+  const sortOrder = filters.sortOrder || 'asc'
+  const sport = normalizeFilterValue(filters.sport || '')
+  const league = normalizeFilterValue(filters.league || '')
+  const country = normalizeFilterValue(filters.country || '')
+  const entityClass = normalizeFilterValue(filters.entityClass || '')
+
+  const supabase = getSupabaseAdmin()
+
+  // Build base query with DB-pushable filters
+  let query = supabase
+    .from('canonical_entities')
+    .select(CANONICAL_ENTITY_COLUMNS, { count: 'exact' })
+
+  if (entityType) {
+    query = query.ilike('entity_type', entityType)
+  }
+  if (sport) {
+    query = query.ilike('sport', sport)
+  }
+  if (country) {
+    query = query.ilike('country', country)
+  }
+  if (league) {
+    query = query.ilike('league', league)
+  }
+  if (search.trim()) {
+    const s = search.trim()
+    query = query.or(`name.ilike.%${s}%,entity_type.ilike.%${s}%,sport.ilike.%${s}%,country.ilike.%${s}%`)
+  }
+
+  const ascending = sortOrder.toLowerCase() !== 'desc'
+  query = query.order('name', { ascending })
+
+  const start = (page - 1) * limit
+
+  // entityClass requires in-memory role matching (complex pattern detection)
+  // When active, fetch all DB-filtered rows and filter/paginate in memory
+  if (entityClass) {
+    const { data, error } = await query
+    if (error) throw error
+
+    const allFiltered = (data || [])
+      .map(mapDbRowToCanonicalEntity)
+      .filter(entity => matchesEntityClassFilter(entity, entityClass))
+
+    const total = allFiltered.length
+    const paginatedEntities = allFiltered.slice(start, start + limit)
+
+    return {
+      entities: paginatedEntities.map(mapCanonicalEntityToResponse),
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+        hasNext: start + limit < total,
+        hasPrev: page > 1,
       },
+      filters: {
+        entityType: entityType || filters.entityType,
+        sport: sport || undefined,
+        league: league || undefined,
+        country: country || undefined,
+        entityClass: entityClass || undefined,
+        sortBy,
+        sortOrder,
+      },
+      source: 'supabase',
     }
-  })
+  }
+
+  // Pure DB pagination (no entityClass filter)
+  query = query.range(start, start + limit - 1)
+  const { data, error, count } = await query
+  if (error) throw error
+
+  const total = count || 0
 
   return {
-    entities,
+    entities: (data || []).map(row => mapCanonicalEntityToResponse(mapDbRowToCanonicalEntity(row))),
     pagination: {
       page,
       limit,
@@ -224,11 +269,11 @@ export async function getEntityBrowserPageData(options: {
       hasPrev: page > 1,
     },
     filters: {
-      entityType,
-      sport,
-      league,
-      country,
-      entityClass,
+      entityType: entityType || filters.entityType,
+      sport: sport || undefined,
+      league: league || undefined,
+      country: country || undefined,
+      entityClass: entityClass || undefined,
       sortBy,
       sortOrder,
     },
@@ -238,9 +283,18 @@ export async function getEntityBrowserPageData(options: {
 
 export async function getEntitiesTaxonomyData() {
   const startedAt = Date.now()
-  const canonicalEntities = await getCanonicalEntitiesSnapshot()
-  return buildEntitiesTaxonomy(canonicalEntities, {
-    source: 'canonical_snapshot',
+  const supabase = getSupabaseAdmin()
+
+  const { data, error } = await supabase
+    .from('canonical_entities')
+    .select('name, entity_type, sport, country, league, labels, properties')
+
+  if (error) throw error
+
+  const mappedEntities = (data || []).map(mapDbRowToCanonicalEntity)
+
+  return buildEntitiesTaxonomy(mappedEntities, {
+    source: 'supabase_direct',
     latencyMs: Date.now() - startedAt,
   })
 }
