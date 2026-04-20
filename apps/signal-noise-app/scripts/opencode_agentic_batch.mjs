@@ -2,6 +2,7 @@
 
 import fs from 'node:fs/promises';
 import { spawn } from 'node:child_process';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import dotenv from 'dotenv';
@@ -13,19 +14,55 @@ import {
 const MODULE_DIR = path.dirname(fileURLToPath(import.meta.url));
 const APP_ROOT = path.resolve(MODULE_DIR, '..');
 const WORKTREE_ROOT = path.resolve(APP_ROOT, '..', '..');
+const STANDALONE_BRIGHTDATA_FALLBACK_SCRIPT = path.join(APP_ROOT, 'scripts', 'standalone_brightdata_fallback.py');
 const DEFAULT_PROVIDER_ID = 'zai-coding-plan';
 const DEFAULT_MODEL_ID = 'glm-5';
 const DEFAULT_MODEL = `${DEFAULT_PROVIDER_ID}/${DEFAULT_MODEL_ID}`;
+const COMMERCIAL_SIGNAL_QUESTION_IDS = new Set([
+  'q6_launch_signal',
+  'q7_procurement_signal',
+  'q8_explicit_rfp',
+  'q9_news_signal',
+  'q10_hiring_signal',
+  'q11_decision_owner',
+]);
+const VALID_EVIDENCE_GRADES = new Set(['weak', 'moderate', 'strong']);
+const VALID_PROCUREMENT_MODELS = new Set(['private_direct', 'partner_led', 'agency_led', 'unknown']);
 
-function _loadEnv() {
+function _loadEnv(override = true) {
   for (const envPath of [
     path.resolve(WORKTREE_ROOT, '..', '..', 'apps', 'signal-noise-app', '.env'),
     path.join(WORKTREE_ROOT, '.env'),
     path.join(APP_ROOT, '.env'),
     path.join(APP_ROOT, 'backend', '.env'),
   ]) {
-    dotenv.config({ path: envPath, override: true });
+    dotenv.config({ path: envPath, override });
   }
+}
+
+function _captureOpenCodeExplicitEnv() {
+  return {
+    baseUrl: process.env.ANTHROPIC_BASE_URL,
+    zaiApiKey: process.env.ZAI_API_KEY,
+    anthropicAuthToken: process.env.ANTHROPIC_AUTH_TOKEN,
+    brightdataApiToken: process.env.BRIGHTDATA_API_TOKEN,
+    brightdataToken: process.env.BRIGHTDATA_TOKEN,
+    brightdataZone: process.env.BRIGHTDATA_ZONE,
+  };
+}
+
+function _resolveOpenCodeEnv(explicit) {
+  _loadEnv(true);
+  const env = explicit || _captureOpenCodeExplicitEnv();
+  return {
+    baseUrl: env.baseUrl || process.env.ANTHROPIC_BASE_URL || 'https://api.z.ai/api/anthropic/v1',
+    apiKey: env.zaiApiKey || env.anthropicAuthToken || process.env.ZAI_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN || '',
+    anthropicAuthToken:
+      env.anthropicAuthToken || env.zaiApiKey || process.env.ANTHROPIC_AUTH_TOKEN || process.env.ZAI_API_KEY || '',
+    brightdataToken:
+      env.brightdataApiToken || env.brightdataToken || process.env.BRIGHTDATA_API_TOKEN || process.env.BRIGHTDATA_TOKEN || '',
+    brightdataZone: env.brightdataZone || process.env.BRIGHTDATA_ZONE || '',
+  };
 }
 
 function _slugify(value) {
@@ -33,6 +70,267 @@ function _slugify(value) {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '') || 'entity';
+}
+
+function _isCommercialSignalQuestion(question) {
+  return COMMERCIAL_SIGNAL_QUESTION_IDS.has(String(question?.question_id || '').trim());
+}
+
+function _clampNumber(value, min = 0, max = 1) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return min;
+  return Math.max(min, Math.min(max, number));
+}
+
+function _normalizeCommercialSignalItem(item, fallbackUrl = '') {
+  if (!item) return null;
+  if (typeof item === 'string') {
+    const name = item.trim();
+    return name
+      ? { name, evidence_url: fallbackUrl || '', evidence_kind: 'web_signal', summary: '' }
+      : null;
+  }
+  if (typeof item !== 'object') return null;
+  const name = String(item.name || item.vendor || item.partner || item.platform || item.label || '').trim();
+  if (!name) return null;
+  return {
+    name,
+    evidence_url: String(item.evidence_url || item.url || fallbackUrl || '').trim(),
+    evidence_kind: String(item.evidence_kind || item.source_type || item.type || item.kind || 'web_signal').trim(),
+    summary: String(item.summary || item.description || item.note || '').trim(),
+  };
+}
+
+function _normalizeQ7StructuredSignal(structuredOutput, fallbackUrl = '') {
+  const source = structuredOutput?.structured_signal && typeof structuredOutput.structured_signal === 'object'
+    ? structuredOutput.structured_signal
+    : structuredOutput || {};
+  const normalizeBucket = (key) => {
+    const values = Array.isArray(source?.[key]) ? source[key] : [];
+    return values.map((item) => _normalizeCommercialSignalItem(item, fallbackUrl)).filter(Boolean);
+  };
+  return {
+    vendor_changes: normalizeBucket('vendor_changes'),
+    platform_migrations: normalizeBucket('platform_migrations'),
+    partnerships: normalizeBucket('partnerships'),
+    org_changes: normalizeBucket('org_changes'),
+  };
+}
+
+function _countStructuredSignalItems(questionId, structuredSignal) {
+  if (!structuredSignal || typeof structuredSignal !== 'object') return 0;
+  if (questionId === 'q7_procurement_signal') {
+    const weightedCount = (values, bucket) => {
+      if (!Array.isArray(values)) return 0;
+      return values.reduce((sum, item) => {
+        const kind = String(item?.evidence_kind || '').trim().toLowerCase();
+        if (bucket === 'vendor_changes') return sum + 1;
+        if (bucket === 'platform_migrations') return sum + 1;
+        if (bucket === 'org_changes') return sum + 0.5;
+        if (bucket === 'partnerships') {
+          if (kind === 'commercial_sponsorship') return sum + 0.1;
+          return sum + 0.75;
+        }
+        return sum;
+      }, 0);
+    };
+    return weightedCount(structuredSignal.vendor_changes, 'vendor_changes')
+      + weightedCount(structuredSignal.platform_migrations, 'platform_migrations')
+      + weightedCount(structuredSignal.partnerships, 'partnerships')
+      + weightedCount(structuredSignal.org_changes, 'org_changes');
+  }
+  if (questionId === 'q10_hiring_signal') {
+    return [
+      Array.isArray(structuredSignal.role_categories_observed) ? structuredSignal.role_categories_observed.length : 0,
+      Number.isFinite(Number(structuredSignal.open_roles_approx)) ? 1 : 0,
+      Array.isArray(structuredSignal.tech_partnerships) ? Math.min(structuredSignal.tech_partnerships.length, 1) : 0,
+      Array.isArray(structuredSignal.geographic_expansion) ? Math.min(structuredSignal.geographic_expansion.length, 1) : 0,
+    ].reduce((sum, value) => sum + value, 0);
+  }
+  return Object.values(structuredSignal).reduce((sum, value) => {
+    if (Array.isArray(value)) return sum + value.length;
+    return sum + (value ? 1 : 0);
+  }, 0);
+}
+
+function _collectUniqueSourceUrls(structuredOutput = {}) {
+  const urls = new Set();
+  const directSources = Array.isArray(structuredOutput.sources) ? structuredOutput.sources : [];
+  directSources.forEach((item) => {
+    const url = typeof item === 'string' ? item : item?.url;
+    if (url) urls.add(String(url).trim());
+  });
+  if (structuredOutput.evidence_url) urls.add(String(structuredOutput.evidence_url).trim());
+  return Array.from(urls).filter(Boolean);
+}
+
+function _inferEvidenceGrade(question, structuredOutput, validationState, structuredSignal) {
+  if (!_isCommercialSignalQuestion(question)) return null;
+  const sourceCount = _collectUniqueSourceUrls(structuredOutput).length;
+  const namedSignalCount = _countStructuredSignalItems(question?.question_id, structuredSignal);
+  const answerText = String(structuredOutput?.answer || '').trim();
+  const explicit = String(structuredOutput?.evidence_grade || '').trim().toLowerCase();
+  let inferred = null;
+  if (sourceCount >= 3 && namedSignalCount >= 2.75) inferred = 'strong';
+  else if (sourceCount >= 2 && namedSignalCount >= 1) inferred = 'moderate';
+  else if (sourceCount >= 1 || (validationState !== 'no_signal' && answerText)) inferred = 'weak';
+  else inferred = null;
+
+  if (!VALID_EVIDENCE_GRADES.has(explicit)) return inferred;
+  if (explicit === 'strong' && inferred !== 'strong') return inferred || 'weak';
+  if (explicit === 'moderate' && inferred === 'weak') return 'weak';
+  return explicit;
+}
+
+function _capConfidenceByEvidenceGrade(confidence, evidenceGrade) {
+  const capped = _clampNumber(confidence);
+  if (evidenceGrade === 'weak') return Math.min(capped, 0.65);
+  if (evidenceGrade === 'moderate') return Math.min(capped, 0.82);
+  if (evidenceGrade === 'strong') return Math.min(capped, 0.97);
+  return capped;
+}
+
+function _inferProcurementModel(structuredOutput, structuredSignal, validationState) {
+  const explicit = String(structuredOutput?.procurement_model || '').trim();
+  if (VALID_PROCUREMENT_MODELS.has(explicit)) return explicit;
+  const haystack = [
+    structuredOutput?.answer,
+    structuredOutput?.context,
+    structuredOutput?.notes,
+    JSON.stringify(structuredSignal || {}),
+  ].join(' ').toLowerCase();
+  if (/agency/.test(haystack)) return 'agency_led';
+  if (/partner|partnership|provider|platform|vendor|rights|sportsbook|kambi|migration/.test(haystack)) return 'partner_led';
+  if (/direct procurement|direct vendor|private procurement/.test(haystack)) return 'private_direct';
+  return validationState === 'no_signal' ? 'unknown' : null;
+}
+
+function _inferCommercialImplication(question, structuredOutput, structuredSignal, procurementModel) {
+  const explicit = String(structuredOutput?.commercial_implication || '').trim();
+  if (explicit) return explicit;
+  const answer = String(structuredOutput?.answer || '').trim();
+  const questionId = String(question?.question_id || '').trim();
+  if (questionId === 'q7_procurement_signal') {
+    const buckets = ['vendor_changes', 'platform_migrations', 'partnerships', 'org_changes']
+      .filter((key) => Array.isArray(structuredSignal?.[key]) && structuredSignal[key].length > 0);
+    if (buckets.length > 0) {
+      return `Named ${buckets.join(', ')} signals suggest active third-party evaluation and ecosystem reshaping.`;
+    }
+    if (answer) {
+      return 'Commercial ecosystem signals suggest active partner or platform evaluation, but named evidence remains thin.';
+    }
+  }
+  if (questionId === 'q8_explicit_rfp' && procurementModel && procurementModel !== 'unknown') {
+    return `No public tender was found, but the surrounding evidence suggests a ${procurementModel.replace('_', ' ')} procurement motion.`;
+  }
+  if (questionId === 'q10_hiring_signal' && answer) {
+    return 'Observed hiring patterns suggest where the organisation is actively investing capability and budget.';
+  }
+  if (questionId === 'q11_decision_owner' && answer) {
+    return 'A named commercial owner provides a plausible first outreach route for Yellow Panther.';
+  }
+  if ((questionId === 'q6_launch_signal' || questionId === 'q9_news_signal') && answer) {
+    return 'Recent launches and strategic announcements indicate current commercial priorities and timing windows.';
+  }
+  return answer ? String(structuredOutput?.context || '').trim() || null : null;
+}
+
+function _computeSignalDensity(questionId, validationState, sourceCount, namedSignalCount) {
+  if (questionId === 'q7_procurement_signal') {
+    const sourceScore = Math.min(sourceCount, 4) * 0.09;
+    const namedSignalScore = Math.min(namedSignalCount, 4) * 0.07;
+    return _clampNumber(sourceScore + namedSignalScore);
+  }
+  const validationBonus = validationState === 'validated' ? 0.18 : validationState === 'provisional' ? 0.1 : 0;
+  const sourceScore = Math.min(sourceCount, 4) * 0.11;
+  const namedSignalScore = Math.min(namedSignalCount, 4) * 0.09;
+  return _clampNumber(validationBonus + sourceScore + namedSignalScore);
+}
+
+function _capCommercialValidationState(question, validationState, commercialFields, confidence) {
+  const questionId = String(question?.question_id || '');
+  if (questionId === 'q10_hiring_signal') {
+    const normalizedState = String(validationState || '').trim().toLowerCase();
+    if (normalizedState !== 'validated' && normalizedState !== 'confirmed') {
+      return validationState;
+    }
+    const evidenceGrade = commercialFields?.evidence_grade;
+    if (evidenceGrade === 'weak') {
+      return 'provisional';
+    }
+    return validationState;
+  }
+
+  if (questionId !== 'q7_procurement_signal') {
+    return validationState;
+  }
+  const normalizedState = String(validationState || '').trim().toLowerCase();
+  if (!['validated', 'confirmed', 'provisional'].includes(normalizedState)) {
+    return validationState;
+  }
+  const structuredSignal = commercialFields?.structured_signal;
+  const namedSignalCount = _countStructuredSignalItems(question?.question_id, structuredSignal);
+  const evidenceGrade = commercialFields?.evidence_grade;
+  if (normalizedState === 'provisional') {
+    return validationState;
+  }
+  if (namedSignalCount >= 2 && evidenceGrade === 'strong' && Number(confidence || 0) > 0.82) {
+    return normalizedState === 'confirmed' ? 'confirmed' : 'validated';
+  }
+  return 'provisional';
+}
+
+function _augmentCommercialStructuredOutput(question, structuredOutput, validationState) {
+  if (!_isCommercialSignalQuestion(question)) {
+    return {
+      structuredOutput,
+      commercialFields: {
+        evidence_grade: null,
+        structured_signal: null,
+        procurement_model: null,
+        commercial_implication: null,
+        signal_density: null,
+      },
+      confidence: _clampNumber(structuredOutput?.confidence ?? 0),
+    };
+  }
+
+  const sourceUrls = _collectUniqueSourceUrls(structuredOutput);
+  const fallbackUrl = sourceUrls[0] || '';
+  const structuredSignal = question?.question_id === 'q7_procurement_signal'
+    ? _normalizeQ7StructuredSignal(structuredOutput, fallbackUrl)
+    : (structuredOutput?.structured_signal && typeof structuredOutput.structured_signal === 'object'
+      ? structuredOutput.structured_signal
+      : null);
+  const namedSignalCount = _countStructuredSignalItems(question?.question_id, structuredSignal);
+  const evidenceGrade = _inferEvidenceGrade(question, structuredOutput, validationState, structuredSignal);
+  const procurementModel = question?.question_id === 'q8_explicit_rfp'
+    ? _inferProcurementModel(structuredOutput, structuredSignal, validationState)
+    : null;
+  const commercialImplication = _inferCommercialImplication(question, structuredOutput, structuredSignal, procurementModel);
+  const signalDensity = _computeSignalDensity(question?.question_id, validationState, sourceUrls.length, namedSignalCount);
+  const confidence = validationState === 'no_signal'
+    ? 0
+    : _capConfidenceByEvidenceGrade(structuredOutput?.confidence ?? 0, evidenceGrade);
+  return {
+    structuredOutput: {
+      ...structuredOutput,
+      confidence,
+      evidence_grade: evidenceGrade ?? null,
+      structured_signal: structuredSignal,
+      procurement_model: procurementModel,
+      commercial_implication: commercialImplication,
+      signal_density: signalDensity,
+    },
+    commercialFields: {
+      evidence_grade: evidenceGrade ?? null,
+      structured_signal: structuredSignal,
+      procurement_model: procurementModel,
+      commercial_implication: commercialImplication,
+      signal_density: signalDensity,
+    },
+    confidence,
+  };
 }
 
 function _presetQuestionSpecs(entityName) {
@@ -574,21 +872,63 @@ async function _writeTrackerFile(trackerPath, tracker) {
   await _writeJsonFile(trackerPath, tracker);
 }
 
-export function buildOpenCodeConfig({
+const FASTMCP_HEALTH_URL = 'http://127.0.0.1:8000/health';
+const FASTMCP_MCP_URL = 'http://127.0.0.1:8000/mcp';
+
+async function isFastMcpAlreadyRunning() {
+  try {
+    const res = await fetch(FASTMCP_HEALTH_URL, { signal: AbortSignal.timeout(2000) });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+export async function buildOpenCodeConfig({
   worktreeRoot = WORKTREE_ROOT,
-  baseUrl = process.env.ANTHROPIC_BASE_URL || 'https://api.z.ai/api/anthropic',
+  baseUrl,
 } = {}) {
-  const brightdataToken = process.env.BRIGHTDATA_API_TOKEN || process.env.BRIGHTDATA_TOKEN || '';
+  const resolvedEnv = _resolveOpenCodeEnv();
+  const fastMcpLauncherPath = path.join(APP_ROOT, 'scripts', 'start_brightdata_fastmcp_service.py');
+
+  const fastMcpRunning = await isFastMcpAlreadyRunning();
+  const mcpConfig = fastMcpRunning
+    ? {
+        brightData: {
+          type: 'remote',
+          url: FASTMCP_MCP_URL,
+          enabled: true,
+          timeout: 10_000,
+        },
+      }
+    : {
+        brightData: {
+          type: 'local',
+          enabled: true,
+          command: ['python3', fastMcpLauncherPath],
+          environment: {
+            BRIGHTDATA_FASTMCP_HOST: '127.0.0.1',
+            BRIGHTDATA_FASTMCP_PORT: '8000',
+            BRIGHTDATA_FASTMCP_URL: 'http://127.0.0.1:8000/mcp',
+            BRIGHTDATA_API_TOKEN: resolvedEnv.brightdataToken,
+            BRIGHTDATA_TOKEN: resolvedEnv.brightdataToken,
+            BRIGHTDATA_ZONE: resolvedEnv.brightdataZone,
+            BRIGHTDATA_MCP_USE_HOSTED: 'false',
+            BRIGHTDATA_MCP_HOSTED_URL: '',
+          },
+        },
+      };
+
   return {
     $schema: 'https://opencode.ai/config.json',
     model: DEFAULT_MODEL,
     provider: {
       [DEFAULT_PROVIDER_ID]: {
-        npm: '@ai-sdk/openai-compatible',
+        npm: '@ai-sdk/anthropic',
         name: 'Z.AI Coding Plan',
         options: {
-          baseURL: baseUrl,
-          apiKey: process.env.ZAI_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN || '',
+          baseURL: baseUrl || resolvedEnv.baseUrl,
+          apiKey: '{env:ZAI_API_KEY}',
         },
         models: {
           [DEFAULT_MODEL_ID]: {
@@ -608,11 +948,13 @@ export function buildOpenCodeConfig({
       edit: 'deny',
     },
     tools: {
+      'brightData*': false,
       'brightdata*': false,
     },
     agent: {
       build: {
         tools: {
+          'brightData*': true,
           'brightdata*': true,
         },
       },
@@ -625,6 +967,7 @@ export function buildOpenCodeConfig({
         prompt:
           'You are a procurement discovery agent. Use the brightdata tool to search broadly, inspect evidence carefully, and return only validated JSON.',
         tools: {
+          'brightData*': true,
           'brightdata*': true,
         },
         permission: {
@@ -634,42 +977,21 @@ export function buildOpenCodeConfig({
         },
       },
     },
-    mcp: {
-      brightData: {
-        type: 'local',
-        enabled: true,
-        command: ['npx', '-y', '@brightdata/mcp'],
-        environment: {
-          API_TOKEN: brightdataToken,
-          PRO_MODE: 'true',
-        },
-      },
-    },
-    mcpServers: {
-      'brightdata-mcp': {
-        type: 'stdio',
-        command: 'npx',
-        args: ['-y', '@brightdata/mcp'],
-        env: {
-          API_TOKEN: brightdataToken,
-          PRO_MODE: 'true',
-        },
-      },
-    },
+    mcp: mcpConfig,
     instructions: [
-      'Use BrightData MCP for search and scrape operations.',
+      'Use the BrightData FastMCP service at the configured MCP URL for search and scrape operations.',
       'Return validated JSON only.',
       'Keep the agentic loop bounded.',
     ],
-    metadata: {
-      worktreeRoot,
-    },
   };
 }
 
-export function buildOpenCodeQuestionPrompt(question) {
-  return [
+export function buildOpenCodeQuestionPrompt(question, { standaloneHarness = false } = {}) {
+  const promptLines = [
     'Use BrightData to answer one atomic question.',
+    'Do not inspect local files, the repository, tests, or generated scripts.',
+    'Do not use bash, python, grep, ripgrep, or any local code-analysis workflow.',
+    'Use only BrightData-backed web evidence and your final JSON response.',
     `Question type: ${question.question_type}`,
     `Question: ${question.question_text}`,
     `Canonical query: ${question.query}`,
@@ -677,7 +999,169 @@ export function buildOpenCodeQuestionPrompt(question) {
     'If you cannot find an answer, leave answer empty, keep context brief, and set confidence to 0.',
     'If the question is compound, answer the narrowest concrete fact first.',
     'Do not return markdown or prose.',
-  ].join('\n');
+  ];
+  if (standaloneHarness) {
+    promptLines.splice(
+      promptLines.length - 1,
+      0,
+      'This is a bounded standalone debug harness run.',
+      'Your first action must be one BrightData search using the canonical query.',
+      'If that search does not produce a usable lead, do at most one follow-up BrightData search or scrape, then return JSON immediately.',
+      'Do not spend steps on repeated reasoning without BrightData tool progress.',
+      'If no BrightData-backed evidence is retrieved after the bounded search, return no_signal immediately.',
+    );
+  }
+  if (_isCommercialSignalQuestion(question)) {
+    promptLines.splice(
+      promptLines.length - 1,
+      0,
+      'For commercial-signal questions, also return these optional keys when justified: evidence_grade, structured_signal, procurement_model, commercial_implication, signal_density.',
+    );
+  }
+  if (question?.question_id === 'q7_procurement_signal') {
+    promptLines.splice(
+      promptLines.length - 1,
+      0,
+      'For structured_signal, use vendor_changes, platform_migrations, partnerships, and org_changes arrays of objects with: name, evidence_url, evidence_kind, summary.',
+      'If a bucket has no concrete named evidence, return an empty array for that bucket.',
+      'If indirect multi-source ecosystem-change evidence exists but you cannot prove a named procurement cycle, return a non-empty answer with validation_state implied as provisional rather than collapsing to no_signal.',
+      'Do not return no_signal for q7 when multiple credible sources point to platform, partner, launch, or ecosystem change but named vendor structure is still incomplete.',
+    );
+  }
+  if (question?.question_id === 'q8_explicit_rfp') {
+    promptLines.splice(
+      promptLines.length - 1,
+      0,
+      'If no explicit public tender exists, you may still return procurement_model as private_direct, partner_led, agency_led, or unknown.',
+    );
+  }
+  if (question?.question_id === 'q10_hiring_signal') {
+    promptLines.splice(
+      promptLines.length - 1,
+      0,
+      'If hiring evidence is found, commercial_implication should explain what the role mix implies about investment priorities.',
+    );
+  }
+  if (question?.empty_result_policy === 'no_signal') {
+    promptLines.splice(
+      promptLines.length - 1,
+      0,
+      'If no meaningful public evidence is visible after a bounded search, treat that as no_signal rather than a failed run.',
+    );
+  }
+  return promptLines.join('\n');
+}
+
+function _usesTwoStageOpenCodeFlow(question) {
+  return question?.question_id === 'q7_procurement_signal'
+    || question?.question_id === 'q10_hiring_signal';
+}
+
+export function buildOpenCodeRetrievalPrompt(question, { standaloneHarness = false } = {}) {
+  const promptLines = [
+    'Use BrightData to gather retrieval evidence for one atomic question.',
+    'This is the retrieval pass.',
+    'Do not classify, score confidence, or decide validation_state.',
+    'Do not inspect local files, the repository, tests, or generated scripts.',
+    'Do not use bash, python, grep, ripgrep, or any local code-analysis workflow.',
+    'Use only BrightData-backed web evidence.',
+    `Question type: ${question.question_type}`,
+    `Question: ${question.question_text}`,
+    `Canonical query: ${question.query}`,
+    'Your first action must be one BrightData search using the canonical query.',
+    'If the first search is weak, do at most one follow-up BrightData search or scrape.',
+    'Return only JSON with these keys: question, query, leads, retrieval_summary.',
+    'Each lead should include title, url, snippet, and excerpt when available.',
+    'Do not classify or decide validation_state.',
+    'Do not return markdown or prose.',
+  ];
+  if (standaloneHarness) {
+    promptLines.splice(
+      promptLines.length - 1,
+      0,
+      'This is a bounded standalone debug harness run.',
+      'If no BrightData-backed evidence is retrieved after the bounded search, return an empty leads array and a brief retrieval_summary immediately.',
+      'Do not spend steps on repeated reasoning without BrightData tool progress.',
+    );
+  }
+  return promptLines.join('\n');
+}
+
+export function buildOpenCodeSynthesisPrompt(question, { retrievalOutput = {}, standaloneHarness = false } = {}) {
+  const promptLines = [
+    'Use BrightData retrieval evidence to answer one atomic question.',
+    'This is the synthesis pass.',
+    'Use only the supplied retrieval evidence.',
+    'Do not inspect local files, the repository, tests, or generated scripts.',
+    'Do not use bash, python, grep, ripgrep, or any local code-analysis workflow.',
+    `Question type: ${question.question_type}`,
+    `Question: ${question.question_text}`,
+    `Canonical query: ${question.query}`,
+    'Return only JSON with these keys: question, answer, context, sources, confidence.',
+    'Also return these optional keys when justified: validation_state, evidence_grade, structured_signal, procurement_model, commercial_implication, signal_density.',
+    'If the supplied retrieval evidence is weak or empty, be conservative and return a bounded no_signal or provisional outcome instead of inventing evidence.',
+    'Do not return markdown or prose.',
+    `Retrieval evidence JSON:\n${JSON.stringify(retrievalOutput, null, 2)}`,
+  ];
+  if (question?.question_id === 'q7_procurement_signal') {
+    promptLines.splice(
+      promptLines.length - 2,
+      0,
+      'For structured_signal, use vendor_changes, platform_migrations, partnerships, and org_changes arrays of objects with: name, evidence_url, evidence_kind, summary.',
+      'If indirect multi-source ecosystem-change evidence exists but named procurement structure is incomplete, prefer provisional over no_signal.',
+      'Only return validated or confirmed when named vendor or platform evidence is concrete.',
+    );
+  }
+  if (question?.question_id === 'q10_hiring_signal') {
+    promptLines.splice(
+      promptLines.length - 2,
+      0,
+      'Only return validated when the supplied retrieval evidence contains specific named hiring or role evidence strong enough to justify it.',
+      'Weak hiring evidence should stay provisional.',
+    );
+  }
+  if (standaloneHarness) {
+    promptLines.splice(
+      promptLines.length - 2,
+      0,
+      'This is a bounded standalone debug harness run.',
+      'Use the retrieval evidence directly and finish promptly.',
+    );
+  }
+  return promptLines.join('\n');
+}
+
+export function buildOpenCodeRunArgs(question, prompt, { standaloneHarness = false } = {}) {
+  const args = [
+    'run',
+    '--format',
+    'json',
+    '--model',
+    DEFAULT_MODEL,
+    '--agent',
+    'build',
+    '--title',
+    `Yellow Panther :: ${question.question_id}`,
+    prompt,
+  ];
+  if (standaloneHarness) {
+    args.splice(args.length - 1, 0, '--print-logs', '--log-level', 'INFO');
+  }
+  return args;
+}
+
+export async function prepareOpenCodeRunWorkspace({ worktreeRoot = WORKTREE_ROOT } = {}) {
+  const runWorkspace = await fs.mkdtemp(path.join(os.tmpdir(), 'opencode-question-run-'));
+  const configPath = path.join(runWorkspace, 'opencode.json');
+  const config = await buildOpenCodeConfig({ worktreeRoot });
+  await fs.writeFile(configPath, `${JSON.stringify(config, null, 2)}\n`, 'utf8');
+  return {
+    cwd: runWorkspace,
+    configPath,
+    cleanup: async () => {
+      await fs.rm(runWorkspace, { recursive: true, force: true });
+    },
+  };
 }
 
 export function buildOpenCodeQuestionSchema() {
@@ -692,18 +1176,26 @@ export function buildOpenCodeQuestionSchema() {
         items: { type: 'string' },
       },
       confidence: { type: 'number' },
+      evidence_grade: { type: 'string' },
+      structured_signal: { type: 'object' },
+      procurement_model: { type: 'string' },
+      commercial_implication: { type: 'string' },
+      signal_density: { type: 'number' },
     },
     required: ['answer', 'confidence'],
     additionalProperties: true,
   };
 }
 
-function _classifyValidationState(structuredOutput) {
-  if (!structuredOutput || typeof structuredOutput !== 'object') {
+function _classifyValidationState(question, structuredOutput, cliResult) {
+  if (cliResult && Number(cliResult.code ?? 0) !== 0) {
     return 'tool_call_missing';
   }
+  if (!structuredOutput || typeof structuredOutput !== 'object') {
+    return 'no_signal';
+  }
   if (Object.keys(structuredOutput).length === 0) {
-    return 'tool_call_missing';
+    return 'no_signal';
   }
   if (structuredOutput.validation_state) {
     return structuredOutput.validation_state;
@@ -745,23 +1237,142 @@ function _extractFinalCliJson(stdout) {
   const stripped = _stripJsonFence(lastText);
   try {
     return JSON.parse(stripped);
-  } catch {
+  } catch (parseErr) {
+    if (textEvents.length > 0) {
+      console.error(`[_extractFinalCliJson] textEvents=${textEvents.length} lastText(${lastText.length})=${lastText.slice(0, 200)} stripped(${stripped.length})=${stripped.slice(0, 200)} parseErr=${parseErr.message}`);
+    } else {
+      const types = lines.map((l) => { try { return JSON.parse(l).type; } catch { return '?'; } }).join(', ');
+      console.error(`[_extractFinalCliJson] no textEvents in ${lines.length} lines. types=[${types}]`);
+    }
     return {};
   }
 }
 
-function _spawnOpencodeRun(args, { cwd, env, timeoutMs = 300000 } = {}) {
+function _extractUrlsFromText(text) {
+  const matches = String(text || '').match(/https?:\/\/[^\s"')\]}]+/g) || [];
+  return Array.from(new Set(matches));
+}
+
+function _countBrightDataToolCalls(stdout, stderr) {
+  const lines = `${stdout || ''}\n${stderr || ''}`
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .filter((line) => !/service=default .* args=\[/i.test(line))
+    .filter((line) => !/service=mcp key=brightData .*create\(\) successfully created client/i.test(line))
+    .filter((line) => !/service=mcp key=brightData type=local found/i.test(line));
+  return lines.filter((line) =>
+    /brightdata[_-][a-z0-9_:-]+/i.test(line)
+    || /tool[^\n]{0,120}brightdata/i.test(line)
+    || /brightdata[^\n]{0,120}(search|scrape|invoke|call)/i.test(line),
+  ).length;
+}
+
+function _summarizeOpencodeFailureDiagnostics({ stdout = '', stderr = '' } = {}) {
+  const stepCount = (String(stdout).match(/"type":"step_start"/g) || []).length;
+  const brightdataClientStarted = /service=mcp key=brightData .*successfully created client/i.test(String(stderr));
+  const brightdataToolCallCount = _countBrightDataToolCalls(stdout, stderr);
+  const brightdataSourceCount = _extractUrlsFromText(`${stdout}\n${stderr}`).length;
+  const noProductiveProgress = brightdataClientStarted && brightdataToolCallCount === 0 && brightdataSourceCount === 0 && stepCount > 0;
+  return {
+    tool_progress_summary: {
+      step_count: stepCount,
+      brightdata_client_started: brightdataClientStarted,
+      no_productive_progress: noProductiveProgress,
+    },
+    brightdata_tool_call_count: brightdataToolCallCount,
+    brightdata_source_count: brightdataSourceCount,
+    failure_signature: noProductiveProgress
+      ? 'loop_after_mcp_start_no_productive_progress'
+      : (!brightdataClientStarted && stepCount > 0 ? 'timeout_before_brightdata_client_ready' : null),
+  };
+}
+
+function _shouldAbortStandaloneHarnessStall({ stdout = '', stderr = '' } = {}) {
+  const diagnostics = _summarizeOpencodeFailureDiagnostics({ stdout, stderr });
+  return diagnostics.tool_progress_summary.brightdata_client_started
+    && diagnostics.tool_progress_summary.step_count >= 8
+    && diagnostics.brightdata_tool_call_count === 0
+    && diagnostics.brightdata_source_count === 0;
+}
+
+function _normalizeQuestionRunResult(questionRun, { fallbackMode = null, failureDiagnostics = null } = {}) {
+  const normalized = questionRun && typeof questionRun === 'object' ? questionRun : {};
+  const promptTrace = normalized.promptTrace && typeof normalized.promptTrace === 'object'
+    ? { ...normalized.promptTrace }
+    : {};
+  if (fallbackMode) {
+    promptTrace.fallback = true;
+    promptTrace.fallback_mode = fallbackMode;
+  }
+  if (failureDiagnostics?.failure_signature && !promptTrace.failure_signature) {
+    promptTrace.failure_signature = failureDiagnostics.failure_signature;
+  }
+  return {
+    structuredOutput: normalized.structuredOutput && typeof normalized.structuredOutput === 'object'
+      ? normalized.structuredOutput
+      : {},
+    promptTrace,
+    messageTrace: Array.isArray(normalized.messageTrace) ? normalized.messageTrace : [],
+    cliResult: normalized.cliResult && typeof normalized.cliResult === 'object'
+      ? normalized.cliResult
+      : { code: 0, stdout: '', stderr: '' },
+  };
+}
+
+function _parseFallbackRunnerStdout(stdout) {
+  const trimmed = String(stdout || '').trim();
+  if (!trimmed) return {};
+  try {
+    return JSON.parse(trimmed);
+  } catch (error) {
+    const parseError = new Error(`Standalone BrightData fallback returned invalid JSON: ${error.message}`);
+    parseError.name = 'StandaloneBrightDataFallbackParseError';
+    parseError.stdout = stdout;
+    throw parseError;
+  }
+}
+
+async function runStandaloneDirectBrightDataFallback(question, failureDiagnostics, { worktreeRoot, timeoutMs = 45000 } = {}) {
+  const resolvedEnv = _resolveOpenCodeEnv();
+  const payload = {
+    question,
+    failure_diagnostics: failureDiagnostics,
+  };
   return new Promise((resolve, reject) => {
-    const child = spawn('opencode', args, {
-      cwd,
-      env,
-      stdio: ['ignore', 'pipe', 'pipe'],
+    const child = spawn('python3', [STANDALONE_BRIGHTDATA_FALLBACK_SCRIPT], {
+      cwd: worktreeRoot || WORKTREE_ROOT,
+      env: {
+        ...process.env,
+        BRIGHTDATA_API_TOKEN: resolvedEnv.brightdataToken,
+        BRIGHTDATA_TOKEN: resolvedEnv.brightdataToken,
+        BRIGHTDATA_ZONE: resolvedEnv.brightdataZone,
+        PATH: process.env.PATH,
+      },
+      stdio: ['pipe', 'pipe', 'pipe'],
     });
     let stdout = '';
     let stderr = '';
+    let settled = false;
+    const finishReject = (error) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      reject(error);
+    };
+    const finishResolve = (value) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      resolve(value);
+    };
     const timer = setTimeout(() => {
       child.kill('SIGTERM');
-      reject(new Error(`opencode run timed out after ${timeoutMs}ms`));
+      const error = new Error(`standalone direct BrightData fallback timed out after ${timeoutMs}ms`);
+      error.name = 'StandaloneBrightDataFallbackTimeoutError';
+      error.stdout = stdout;
+      error.stderr = stderr;
+      finishReject(error);
     }, timeoutMs);
     child.stdout.on('data', (chunk) => {
       stdout += chunk.toString();
@@ -770,67 +1381,217 @@ function _spawnOpencodeRun(args, { cwd, env, timeoutMs = 300000 } = {}) {
       stderr += chunk.toString();
     });
     child.on('error', (error) => {
-      clearTimeout(timer);
-      reject(error);
+      finishReject(error);
     });
     child.on('close', (code) => {
+      if (code !== 0) {
+        const error = new Error(`standalone direct BrightData fallback exited with code ${code}`);
+        error.name = 'StandaloneBrightDataFallbackProcessError';
+        error.stdout = stdout;
+        error.stderr = stderr;
+        finishReject(error);
+        return;
+      }
+      try {
+        finishResolve({
+          structuredOutput: _parseFallbackRunnerStdout(stdout),
+          promptTrace: {
+            fallback: true,
+            fallback_mode: 'direct_brightdata',
+            failure_signature: failureDiagnostics?.failure_signature || null,
+            stderr_preview: String(stderr || '').trim().slice(-500) || '',
+          },
+          messageTrace: [],
+          cliResult: { code: 0, stdout, stderr },
+        });
+      } catch (error) {
+        finishReject(error);
+      }
+    });
+    child.stdin.end(JSON.stringify(payload));
+  });
+}
+
+function _spawnOpencodeRun(args, { cwd, env, timeoutMs = 300000, standaloneHarness = false } = {}) {
+  return new Promise((resolve, reject) => {
+    const child = spawn('opencode', args, {
+      cwd,
+      env,
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+    let stdout = '';
+    let stderr = '';
+    let settled = false;
+    const rejectOnce = (error) => {
+      if (settled) return;
+      settled = true;
       clearTimeout(timer);
-      resolve({ code, stdout, stderr });
+      reject(error);
+    };
+    const resolveOnce = (value) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      resolve(value);
+    };
+    const timer = setTimeout(() => {
+      child.kill('SIGTERM');
+      const error = new Error(`opencode run timed out after ${timeoutMs}ms`);
+      error.name = 'OpenCodeTimeoutError';
+      error.stdout = stdout;
+      error.stderr = stderr;
+      error.timeoutMs = timeoutMs;
+      rejectOnce(error);
+    }, timeoutMs);
+    const maybeAbortForHarnessStall = () => {
+      if (!standaloneHarness) return;
+      if (!_shouldAbortStandaloneHarnessStall({ stdout, stderr })) return;
+      child.kill('SIGTERM');
+      const error = new Error('opencode standalone harness stalled after BrightData MCP startup without productive progress');
+      error.name = 'OpenCodeHarnessStallError';
+      error.stdout = stdout;
+      error.stderr = stderr;
+      error.timeoutMs = timeoutMs;
+      rejectOnce(error);
+    };
+    child.stdout.on('data', (chunk) => {
+      stdout += chunk.toString();
+      maybeAbortForHarnessStall();
+    });
+    child.stderr.on('data', (chunk) => {
+      stderr += chunk.toString();
+      maybeAbortForHarnessStall();
+    });
+    child.on('error', (error) => {
+      rejectOnce(error);
+    });
+    child.on('close', (code) => {
+      resolveOnce({ code, stdout, stderr });
     });
   });
 }
 
-async function runOpenCodeCliQuestion(question, { worktreeRoot, opencodeTimeoutMs } = {}) {
-  const prompt = buildOpenCodeQuestionPrompt(question);
-  const cliResult = await _spawnOpencodeRun(
-    [
-      'run',
-      '--format',
-      'json',
-      '--model',
-      DEFAULT_MODEL,
-      '--title',
-      `Yellow Panther :: ${question.question_id}`,
-      prompt,
-    ],
+async function _writeFailureDiagnosticFile(filePath, content) {
+  if (!String(content || '').trim()) {
+    return null;
+  }
+  await fs.writeFile(filePath, String(content), 'utf8');
+  return filePath;
+}
+
+export async function runOpenCodeCliQuestion(
+  question,
+  {
+    worktreeRoot,
+    opencodeTimeoutMs,
+    standaloneHarness = false,
+    spawnRunner = _spawnOpencodeRun,
+  } = {},
+) {
+  const preparedWorkspace = await prepareOpenCodeRunWorkspace({ worktreeRoot });
+  const resolvedEnv = _resolveOpenCodeEnv();
+  const runCliPass = async (prompt) => spawnRunner(
+    buildOpenCodeRunArgs(question, prompt, { standaloneHarness }),
     {
-      cwd: worktreeRoot,
+      cwd: preparedWorkspace.cwd,
       env: {
         ...process.env,
-        ZAI_API_KEY: process.env.ZAI_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN || '',
-        ANTHROPIC_AUTH_TOKEN: process.env.ZAI_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN || '',
-        BRIGHTDATA_API_TOKEN: process.env.BRIGHTDATA_API_TOKEN || process.env.BRIGHTDATA_TOKEN || '',
-        BRIGHTDATA_ZONE: process.env.BRIGHTDATA_ZONE || '',
+        ZAI_API_KEY: resolvedEnv.apiKey,
+        ANTHROPIC_AUTH_TOKEN: resolvedEnv.anthropicAuthToken,
+        BRIGHTDATA_API_TOKEN: resolvedEnv.brightdataToken,
+        BRIGHTDATA_ZONE: resolvedEnv.brightdataZone,
         PATH: process.env.PATH,
       },
       timeoutMs: opencodeTimeoutMs,
+      standaloneHarness,
     },
   );
-  const structuredOutput = _extractFinalCliJson(cliResult.stdout);
-  const promptTrace = {
-    exit_code: cliResult.code,
-    stdout_length: cliResult.stdout.length,
-    stderr_length: cliResult.stderr.length,
-    has_structured_output: Object.keys(structuredOutput).length > 0,
-  };
-  const messageTrace = [
-    {
-      role: 'assistant',
-      completed: cliResult.code === 0,
-      type: 'cli-run',
+  try {
+    if (_usesTwoStageOpenCodeFlow(question)) {
+      const retrievalPrompt = buildOpenCodeRetrievalPrompt(question, { standaloneHarness });
+      const retrievalCliResult = await runCliPass(retrievalPrompt);
+      const retrievalOutput = _extractFinalCliJson(retrievalCliResult.stdout);
+      const retrievalLeads = Array.isArray(retrievalOutput?.leads) ? retrievalOutput.leads : [];
+      const synthesisPrompt = buildOpenCodeSynthesisPrompt(question, {
+        retrievalOutput,
+        standaloneHarness,
+      });
+      const synthesisCliResult = await runCliPass(synthesisPrompt);
+      const structuredOutput = _extractFinalCliJson(synthesisCliResult.stdout);
+      const promptTrace = {
+        exit_code: synthesisCliResult.code,
+        stdout_length: synthesisCliResult.stdout.length,
+        stderr_length: synthesisCliResult.stderr.length,
+        has_structured_output: Object.keys(structuredOutput).length > 0,
+        stage_count: 2,
+        retrieval_has_leads: retrievalLeads.length > 0,
+        retrieval_lead_count: retrievalLeads.length,
+        retrieval_exit_code: retrievalCliResult.code,
+      };
+      const messageTrace = [
+        {
+          role: 'assistant',
+          completed: retrievalCliResult.code === 0,
+          type: 'cli-run',
+          stage: 'retrieval',
+          has_structured_output: Object.keys(retrievalOutput).length > 0,
+          part_count: 1,
+        },
+        {
+          role: 'assistant',
+          completed: synthesisCliResult.code === 0,
+          type: 'cli-run',
+          stage: 'synthesis',
+          has_structured_output: Object.keys(structuredOutput).length > 0,
+          part_count: 1,
+        },
+      ];
+      return {
+        structuredOutput,
+        promptTrace,
+        messageTrace,
+        cliResult: synthesisCliResult,
+      };
+    }
+    const prompt = buildOpenCodeQuestionPrompt(question, { standaloneHarness });
+    const cliResult = await runCliPass(prompt);
+    const structuredOutput = _extractFinalCliJson(cliResult.stdout);
+    const promptTrace = {
+      exit_code: cliResult.code,
+      stdout_length: cliResult.stdout.length,
+      stderr_length: cliResult.stderr.length,
       has_structured_output: Object.keys(structuredOutput).length > 0,
-      part_count: 1,
-    },
-  ];
-  return { structuredOutput, promptTrace, messageTrace, cliResult };
+      stage_count: 1,
+    };
+    const messageTrace = [
+      {
+        role: 'assistant',
+        completed: cliResult.code === 0,
+        type: 'cli-run',
+        has_structured_output: Object.keys(structuredOutput).length > 0,
+        part_count: 1,
+      },
+    ];
+    return { structuredOutput, promptTrace, messageTrace, cliResult };
+  } finally {
+    await preparedWorkspace.cleanup();
+  }
 }
 
-function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTrace = null, messageTrace = [], executionQuery = '' } = {}) {
-  const validationState = _classifyValidationState(structuredOutput);
-  const sources = Array.isArray(structuredOutput.sources) ? structuredOutput.sources : [];
-  const evidenceUrl = structuredOutput.evidence_url || sources[0] || '';
-  const notes = structuredOutput.notes || structuredOutput.context || '';
-  const inferredSignalType = structuredOutput.signal_type || (question.question_type ? question.question_type.toUpperCase() : 'NO_SIGNAL');
+function _buildQuestionPayload(
+  question,
+  structuredOutput,
+  sessionId,
+  { promptTrace = null, messageTrace = [], executionQuery = '', cliResult = null } = {},
+) {
+  const initialValidationState = _classifyValidationState(question, structuredOutput, cliResult);
+  const { structuredOutput: enhancedStructuredOutput, commercialFields, confidence } =
+    _augmentCommercialStructuredOutput(question, structuredOutput, initialValidationState);
+  const validationState = _capCommercialValidationState(question, initialValidationState, commercialFields, confidence);
+  const sources = Array.isArray(enhancedStructuredOutput.sources) ? enhancedStructuredOutput.sources : [];
+  const evidenceUrl = enhancedStructuredOutput.evidence_url || sources[0] || '';
+  const notes = enhancedStructuredOutput.notes || enhancedStructuredOutput.context || '';
+  const inferredSignalType = enhancedStructuredOutput.signal_type || (question.question_type ? question.question_type.toUpperCase() : 'NO_SIGNAL');
   return {
     question_id: question.question_id,
     question_type: question.question_type,
@@ -850,20 +1611,25 @@ function _buildQuestionPayload(question, structuredOutput, sessionId, { promptTr
       stop_rule: `continue for up to ${question.hop_budget} hops within OpenCode steps budget`,
     },
     reasoning: {
-      structured_output: structuredOutput,
+      structured_output: enhancedStructuredOutput,
       prompt_trace: promptTrace,
       message_trace: messageTrace,
     },
     prompt_trace: promptTrace,
     message_trace: messageTrace,
     execution_query: executionQuery || question.query,
-    answer: structuredOutput.answer || '',
+    answer: enhancedStructuredOutput.answer || '',
     signal_type: inferredSignalType,
-    confidence: structuredOutput.confidence ?? 0,
+    confidence,
     validation_state: validationState,
     evidence_url: evidenceUrl,
-    recommended_next_query: structuredOutput.recommended_next_query || '',
+    recommended_next_query: enhancedStructuredOutput.recommended_next_query || '',
     notes,
+    evidence_grade: commercialFields.evidence_grade,
+    structured_signal: commercialFields.structured_signal,
+    procurement_model: commercialFields.procurement_model,
+    commercial_implication: commercialFields.commercial_implication,
+    signal_density: commercialFields.signal_density,
   };
 }
 
@@ -910,12 +1676,52 @@ function _buildCategorySummary(answers) {
   return Array.from(summary.values());
 }
 
+export const OPENCODE_PROGRESS_EVENT_PREFIX = '__QF_PROGRESS__';
+
+function _buildProgressEvent({
+  eventType,
+  question = null,
+  questionIndex = 0,
+  questionsTotal = 0,
+  error = null,
+}) {
+  const answeredCount = eventType === 'batch_complete'
+    ? questionsTotal
+    : Math.max(0, Number(questionIndex || 0) - 1);
+  const progress = questionsTotal > 0
+    ? `${Math.min(Math.max(0, Number(questionIndex || 0)), questionsTotal)}/${questionsTotal} questions`
+    : null;
+  return {
+    event_type: eventType,
+    phase: 'dossier_generation',
+    current_substep: eventType === 'batch_complete' ? 'question_first_completed' : 'question_first_running',
+    current_substep_label: eventType === 'batch_complete' ? 'Question-first completed' : 'Question-first running',
+    current_section_id: question?.current_section_id || null,
+    current_section_label: question?.current_section_label || null,
+    current_section_index: question?.current_section_index ?? null,
+    current_section_total: question?.current_section_total ?? null,
+    current_question_id: question?.question_id || null,
+    current_question_text: question?.question_text || null,
+    current_question_index: question?.current_question_index ?? null,
+    current_question_total: question?.current_question_total ?? null,
+    current_strategy_label: question?.current_strategy_label || null,
+    current_execution_state: question?.current_execution_state || (eventType === 'batch_complete' ? 'finalising section' : 'searching sources'),
+    current_source_order: Array.isArray(question?.current_source_order) ? question.current_source_order : (Array.isArray(question?.source_priority) ? question.source_priority : null),
+    questions_answered: answeredCount,
+    questions_total: questionsTotal,
+    current_substep_progress: progress,
+    error: error ? String(error) : null,
+  };
+}
+
 export async function runOpenCodePresetBatch({
   outputDir,
   preset = 'major-league-cricket',
   worktreeRoot = WORKTREE_ROOT,
   opencodeTimeoutMs = 300000,
   questionRunner = runOpenCodeCliQuestion,
+  directBrightDataRunner = runStandaloneDirectBrightDataFallback,
+  standaloneHarness = false,
   resume = false,
   searchCredits,
   scrapeCredits,
@@ -926,6 +1732,7 @@ export async function runOpenCodePresetBatch({
   entityIdOverride = null,
   entityTypeOverride = null,
   questionSourcePath = null,
+  onProgress = null,
 } = {}) {
   let normalizedPreset = _slugify(preset || entityNameOverride || entityIdOverride || 'question-first');
   let questions;
@@ -961,6 +1768,7 @@ export async function runOpenCodePresetBatch({
   if (!process.env.ZAI_API_KEY && !process.env.ANTHROPIC_AUTH_TOKEN) {
     throw new Error('ZAI_API_KEY (or ANTHROPIC_AUTH_TOKEN) is required for OpenCode Z.AI auth');
   }
+  await fs.mkdir(outputDir, { recursive: true });
 
   const runStartedAt = new Date().toISOString();
   const statePath = _buildStateFilePath(outputDir, normalizedPreset, entityId);
@@ -993,12 +1801,30 @@ export async function runOpenCodePresetBatch({
   const finalQuestions = [];
   const perQuestionPayloads = [];
   const transcripts = [];
+  const slug = _slugify(entityId);
+  const timestamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z').replace('T', '_').replace('Z', '');
+  const stem = `${slug}_opencode_batch_${timestamp}`;
+  const metaPath = path.join(outputDir, `${stem}_meta.json`);
+  const rollupPath = path.join(outputDir, `${stem}_rollup.json`);
+  const transcriptPath = path.join(outputDir, `${stem}.txt`);
+  const questionFirstRunPath = path.join(outputDir, `${stem}_question_first_run_v1.json`);
+  const failureStdoutPath = path.join(outputDir, `${stem}_failure_stdout.log`);
+  const failureStderrPath = path.join(outputDir, `${stem}_failure_stderr.log`);
 
   try {
     for (const [index, question] of questions.entries()) {
+      if (typeof onProgress === 'function') {
+        await onProgress(_buildProgressEvent({
+          eventType: 'question_progress',
+          question,
+          questionIndex: index + 1,
+          questionsTotal: questions.length,
+        }));
+      }
       const questionStartedAt = new Date().toISOString();
       tracker.current_question_index = index + 1;
       tracker.current_question_id = question.question_id;
+      tracker.current_question_text = question.question_text;
       tracker = _updateTrackerQuestion(tracker, index, {
         status: 'running',
         started_at: questionStartedAt,
@@ -1103,7 +1929,38 @@ export async function runOpenCodePresetBatch({
             await _writeTrackerFile(trackerPath, tracker);
             break;
           }
-          questionRun = await questionRunner(executionQuestion, { worktreeRoot, opencodeTimeoutMs });
+          try {
+            questionRun = await questionRunner(executionQuestion, { worktreeRoot, opencodeTimeoutMs, standaloneHarness });
+          } catch (error) {
+            const failureDiagnostics = _summarizeOpencodeFailureDiagnostics({
+              stdout: error && typeof error === 'object' && 'stdout' in error ? error.stdout : '',
+              stderr: error && typeof error === 'object' && 'stderr' in error ? error.stderr : '',
+            });
+            const shouldUseDirectFallback = standaloneHarness
+              && typeof directBrightDataRunner === 'function'
+              && failureDiagnostics.failure_signature === 'loop_after_mcp_start_no_productive_progress';
+            if (!shouldUseDirectFallback) {
+              throw error;
+            }
+            questionRun = await directBrightDataRunner(
+              executionQuestion,
+              failureDiagnostics,
+              { worktreeRoot, timeoutMs: Math.min(opencodeTimeoutMs, 45000) },
+            );
+            questionRun = _normalizeQuestionRunResult(questionRun, {
+              fallbackMode: 'direct_brightdata',
+              failureDiagnostics,
+            });
+            _appendTrackerEvent(tracker, {
+              type: 'question_fallback_used',
+              question_id: executionQuestion.question_id,
+              question_index: index + 1,
+              fallback_mode: 'direct_brightdata',
+              failure_signature: failureDiagnostics.failure_signature,
+            });
+            await _writeTrackerFile(trackerPath, tracker);
+          }
+          questionRun = _normalizeQuestionRunResult(questionRun);
           questionPayload = _buildQuestionPayload(
             question,
             questionRun.structuredOutput || {},
@@ -1112,6 +1969,7 @@ export async function runOpenCodePresetBatch({
               promptTrace: questionRun.promptTrace || null,
               messageTrace: questionRun.messageTrace || [],
               executionQuery: executionQuestion.query,
+              cliResult: questionRun.cliResult || null,
             },
           );
           let updatedState = _mergeQuestionState(existingQuestionState || currentQuestionState, questionPayload, new Date().toISOString());
@@ -1240,15 +2098,6 @@ export async function runOpenCodePresetBatch({
       );
     }
 
-	    const slug = _slugify(entityId);
-	    const timestamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z').replace('T', '_').replace('Z', '');
-	    const stem = `${slug}_opencode_batch_${timestamp}`;
-	    await fs.mkdir(outputDir, { recursive: true });
-
-	    const metaPath = path.join(outputDir, `${stem}_meta.json`);
-	    const rollupPath = path.join(outputDir, `${stem}_rollup.json`);
-	    const transcriptPath = path.join(outputDir, `${stem}.txt`);
-	    const questionFirstRunPath = path.join(outputDir, `${stem}_question_first_run_v1.json`);
 	    const questionPaths = [];
 
     for (const [index, payload] of perQuestionPayloads.entries()) {
@@ -1321,12 +2170,21 @@ export async function runOpenCodePresetBatch({
 	      questions_provisional: questionsProvisional,
 	    });
 	    await _writeTrackerFile(trackerPath, tracker);
-	    await _writeJsonFile(statePath, {
-	      ...runState,
-	      last_run_at: new Date().toISOString(),
-	      preset: normalizedPreset,
-	      questions: runState.questions,
+    await _writeJsonFile(statePath, {
+      ...runState,
+      last_run_at: new Date().toISOString(),
+      preset: normalizedPreset,
+      questions: runState.questions,
     });
+
+    if (typeof onProgress === 'function') {
+      await onProgress(_buildProgressEvent({
+        eventType: 'batch_complete',
+        question: questions[questions.length - 1] || null,
+        questionIndex: questions.length,
+        questionsTotal: questions.length,
+      }));
+    }
 
     return {
       ...rollupPayload,
@@ -1340,16 +2198,44 @@ export async function runOpenCodePresetBatch({
 	      state_path: statePath,
 	    };
   } catch (error) {
+    const diagnosticStdoutPath = await _writeFailureDiagnosticFile(
+      failureStdoutPath,
+      error && typeof error === 'object' && 'stdout' in error ? error.stdout : '',
+    );
+    const diagnosticStderrPath = await _writeFailureDiagnosticFile(
+      failureStderrPath,
+      error && typeof error === 'object' && 'stderr' in error ? error.stderr : '',
+    );
+    const failureDiagnostics = _summarizeOpencodeFailureDiagnostics({
+      stdout: error && typeof error === 'object' && 'stdout' in error ? error.stdout : '',
+      stderr: error && typeof error === 'object' && 'stderr' in error ? error.stderr : '',
+    });
     tracker = {
       ...tracker,
       status: 'failed',
       run_completed_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
       error: error instanceof Error ? error.message : String(error),
+      state_path: statePath,
+      diagnostic_stdout_path: diagnosticStdoutPath,
+      diagnostic_stderr_path: diagnosticStderrPath,
+      tool_progress_summary: failureDiagnostics.tool_progress_summary,
+      brightdata_tool_call_count: failureDiagnostics.brightdata_tool_call_count,
+      brightdata_source_count: failureDiagnostics.brightdata_source_count,
+      failure_signature: failureDiagnostics.failure_signature,
     };
     _appendTrackerEvent(tracker, {
       type: 'run_failed',
       error: error instanceof Error ? error.message : String(error),
+      current_question_id: tracker.current_question_id || null,
+      current_question_text: tracker.current_question_text || null,
+      state_path: statePath,
+      diagnostic_stdout_path: diagnosticStdoutPath,
+      diagnostic_stderr_path: diagnosticStderrPath,
+      tool_progress_summary: failureDiagnostics.tool_progress_summary,
+      brightdata_tool_call_count: failureDiagnostics.brightdata_tool_call_count,
+      brightdata_source_count: failureDiagnostics.brightdata_source_count,
+      failure_signature: failureDiagnostics.failure_signature,
     });
     try {
       await _writeTrackerFile(trackerPath, tracker);
@@ -1365,13 +2251,15 @@ export async function runOpenCodeQuestionSourceBatch({
   questionSourcePath,
   outputDir,
   worktreeRoot = WORKTREE_ROOT,
-  opencodeTimeoutMs = 300000,
+  opencodeTimeoutMs = 60000,
   questionRunner = runOpenCodeCliQuestion,
+  directBrightDataRunner = runStandaloneDirectBrightDataFallback,
   resume = false,
   searchCredits,
   scrapeCredits,
   revisitCredits,
   confidenceThreshold,
+  onProgress = null,
 } = {}) {
   if (!questionSourcePath) {
     throw new Error('questionSourcePath is required');
@@ -1385,7 +2273,20 @@ export async function runOpenCodeQuestionSourceBatch({
     throw new Error(`Question source ${JSON.stringify(questionSourcePath)} must resolve to a JSON object`);
   }
 
-  const questions = Array.isArray(sourcePayload.questions) ? sourcePayload.questions.filter((question) => question && typeof question === 'object') : [];
+  const questions = Array.isArray(sourcePayload.questions)
+    ? sourcePayload.questions
+        .filter((question) => question && typeof question === 'object')
+        .map((question, index) => {
+          const normalizedQuestionText = String(question.question_text || question.question || question.prompt || '').trim();
+          const normalizedQuestionId = String(question.question_id || question.id || question.slug || `q${index + 1}`).trim();
+          return {
+            ...question,
+            question_id: normalizedQuestionId,
+            question_text: normalizedQuestionText || normalizedQuestionId,
+            question: normalizedQuestionText || String(question.question || question.prompt || normalizedQuestionId).trim(),
+          };
+        })
+    : [];
   if (questions.length === 0) {
     throw new Error(`Question source ${JSON.stringify(questionSourcePath)} does not contain any questions`);
   }
@@ -1401,16 +2302,19 @@ export async function runOpenCodeQuestionSourceBatch({
     worktreeRoot,
     opencodeTimeoutMs,
     questionRunner,
+    directBrightDataRunner,
     resume,
     searchCredits,
     scrapeCredits,
     revisitCredits,
     confidenceThreshold,
+    standaloneHarness: true,
     questionsOverride: questions,
     entityNameOverride: entityName,
     entityIdOverride: entityId,
     entityTypeOverride: entityType,
     questionSourcePath,
+    onProgress,
   });
 }
 
@@ -1441,6 +2345,9 @@ export async function main(argv = process.argv.slice(2)) {
   const revisitCredits = args.get('revisit-credits');
   const confidenceThreshold = args.get('confidence-threshold');
   const questionSourcePath = args.get('question-source');
+  const progressWriter = async (event) => {
+    process.stdout.write(`${OPENCODE_PROGRESS_EVENT_PREFIX}${JSON.stringify(event)}\n`);
+  };
   const result = questionSourcePath
     ? await runOpenCodeQuestionSourceBatch({
       questionSourcePath: path.resolve(questionSourcePath),
@@ -1451,6 +2358,7 @@ export async function main(argv = process.argv.slice(2)) {
       scrapeCredits,
       revisitCredits,
       confidenceThreshold,
+      onProgress: progressWriter,
     })
     : await runOpenCodePresetBatch({
       outputDir: path.resolve(outputDir),
@@ -1461,6 +2369,7 @@ export async function main(argv = process.argv.slice(2)) {
       scrapeCredits,
       revisitCredits,
       confidenceThreshold,
+      onProgress: progressWriter,
     });
   process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
   return 0;
@@ -1468,6 +2377,10 @@ export async function main(argv = process.argv.slice(2)) {
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   main().catch((error) => {
+    process.stdout.write(`${OPENCODE_PROGRESS_EVENT_PREFIX}${JSON.stringify(_buildProgressEvent({
+      eventType: 'batch_failed',
+      error: error instanceof Error ? error.message : String(error),
+    }))}\n`);
     process.stderr.write(`${error instanceof Error ? error.stack || error.message : String(error)}\n`);
     process.exitCode = 1;
   });
