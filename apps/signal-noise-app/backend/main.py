@@ -10,6 +10,7 @@ import sys
 import logging
 import asyncio
 from contextvars import ContextVar
+from contextlib import asynccontextmanager
 from copy import deepcopy
 from typing import Dict, Any, Optional, List, Callable, Awaitable
 from datetime import datetime
@@ -30,6 +31,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
+from supabase import create_client, Client
 
 # Add backend to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
@@ -40,12 +42,23 @@ logger = logging.getLogger(__name__)
 from pipeline_run_metadata import (
     merge_pipeline_phase_metadata,
     normalize_phase_status,
+    normalize_phase_callback_payload,
     validate_runtime_imports,
 )
+try:
+    from backend.objective_profiles import DEFAULT_PIPELINE_OBJECTIVE, normalize_run_objective
+except ImportError:
+    from objective_profiles import DEFAULT_PIPELINE_OBJECTIVE, normalize_run_objective
+from question_progress_framework import build_question_checkpoint_fields
+from universal_atomic_matrix import build_universal_atomic_question_source
 try:
     from backend.brightdata_client_factory import create_pipeline_brightdata_client
 except ImportError:
     from brightdata_client_factory import create_pipeline_brightdata_client
+try:
+    from backend.legacy_llm_disabled_client import LegacyLLMDisabledClient
+except ImportError:
+    from legacy_llm_disabled_client import LegacyLLMDisabledClient
 
 PipelinePhaseCallback = Callable[[str, Dict[str, Any]], Awaitable[None]]
 _pipeline_phase_callback_ctx: ContextVar[Optional[PipelinePhaseCallback]] = ContextVar(
@@ -66,6 +79,12 @@ PHASE0_SUBSTEP_ORDER = [
     "persist_dossier",
     "finalize_response",
 ]
+
+DEFAULT_OPENCODE_PROVIDER = "chutes"
+DEFAULT_OPENCODE_MODEL_ID = "zai-org/GLM-5.1-TEE"
+DEFAULT_OPENCODE_MODEL = f"{DEFAULT_OPENCODE_PROVIDER}/{DEFAULT_OPENCODE_MODEL_ID}"
+PHASE0_MODE_OPENCODE_FIRST = "opencode_first"
+PHASE0_MODE_LEGACY_PYTHON = "legacy_python"
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -99,8 +118,101 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Mount BrightData FastMCP service on /mcp so OpenCode can connect
+try:
+    from backend.brightdata_fastmcp_service import mcp as brightdata_mcp
+    _mcp_asgi = brightdata_mcp.http_app(path="/")
+    # Merge the MCP lifespan into the FastAPI app's lifespan
+    _original_router_lifespan = app.router.lifespan_context
+
+    @asynccontextmanager
+    async def _combined_lifespan(app_instance):
+        async with _original_router_lifespan(app_instance):
+            async with _mcp_asgi.lifespan(app_instance):
+                yield
+
+    app.router.lifespan_context = _combined_lifespan
+    app.mount("/mcp", _mcp_asgi)
+    logger.info("🌐 BrightData FastMCP mounted at /mcp/")
+except Exception as _mcp_mount_err:
+    logger.warning("⚠️ Failed to mount BrightData FastMCP service: %s", _mcp_mount_err)
+
 # Graphiti service (lazy initialization)
 graphiti_service = None
+
+
+def _resolve_phase0_run_objective(request_run_objective: str | None) -> str:
+    requested_objective = str(request_run_objective or "").strip().lower() or DEFAULT_PIPELINE_OBJECTIVE
+    objective = normalize_run_objective(requested_objective, default=DEFAULT_PIPELINE_OBJECTIVE)
+    dossier_objective_default = (
+        "leadership_enrichment"
+        if os.getenv("PIPELINE_QUESTION_FIRST_ENABLED", "false").lower() in {"1", "true", "yes"}
+        or objective == "procurement_discovery"
+        else objective
+    )
+    return normalize_run_objective(
+        os.getenv("PIPELINE_DOSSIER_OBJECTIVE", dossier_objective_default),
+        default=dossier_objective_default,
+    )
+
+
+def _question_first_enabled_for_request(request_run_objective: str | None = None) -> bool:
+    requested_objective = str(request_run_objective or "").strip().lower() or DEFAULT_PIPELINE_OBJECTIVE
+    objective = normalize_run_objective(requested_objective, default=DEFAULT_PIPELINE_OBJECTIVE)
+    return (
+        os.getenv("PIPELINE_QUESTION_FIRST_ENABLED", "false").lower() in {"1", "true", "yes"}
+        or objective == "procurement_discovery"
+    )
+
+
+def _resolve_phase0_mode(request_run_objective: str | None = None) -> str:
+    configured = str(os.getenv("PIPELINE_PHASE0_MODE") or "").strip().lower()
+    if configured in {PHASE0_MODE_OPENCODE_FIRST, PHASE0_MODE_LEGACY_PYTHON}:
+        return configured
+    return PHASE0_MODE_OPENCODE_FIRST if _question_first_enabled_for_request(request_run_objective) else PHASE0_MODE_LEGACY_PYTHON
+
+
+def _disable_legacy_claude_for_opencode(phase0_mode: str) -> bool:
+    if phase0_mode != PHASE0_MODE_OPENCODE_FIRST:
+        return False
+    return str(os.getenv("PIPELINE_DISABLE_LEGACY_CLAUDE_FOR_OPENCODE", "true")).strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
+
+
+def build_question_first_execution_metadata(
+    *,
+    phase0_mode: str,
+    question_first_backend: str,
+) -> Dict[str, Any]:
+    normalized_backend = str(question_first_backend or "").strip().lower() or "opencode"
+    metadata: Dict[str, Any] = {
+        "phase0_mode": phase0_mode,
+        "question_first_backend": normalized_backend,
+        "legacy_phase0_used": phase0_mode == PHASE0_MODE_LEGACY_PYTHON,
+    }
+    if normalized_backend == "opencode":
+        metadata.update(
+            {
+                "execution_backend": "OpenCode",
+                "execution_model": DEFAULT_OPENCODE_MODEL,
+                "execution_provider": "z.ai",
+                "brightdata_transport": "stdio",
+                "opencode_model": DEFAULT_OPENCODE_MODEL,
+                "opencode_provider": "z.ai",
+            }
+        )
+    elif normalized_backend == "python_direct":
+        metadata.update(
+            {
+                "execution_backend": "Python",
+                "brightdata_transport": "python_client",
+            }
+        )
+    return metadata
 
 
 # =============================================================================
@@ -676,6 +788,8 @@ def build_dossier_running_phase_metadata(
     phase0_substeps: Optional[Dict[str, Dict[str, Any]]] = None,
     current_substep: Optional[str] = None,
     inference_runtime: Optional[Dict[str, Any]] = None,
+    checkpoint_seed: Optional[Dict[str, Any]] = None,
+    execution_metadata: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     substeps: Dict[str, Dict[str, Any]] = {}
     for step in PHASE0_SUBSTEP_ORDER:
@@ -695,12 +809,43 @@ def build_dossier_running_phase_metadata(
     if active_step is None and PHASE0_SUBSTEP_ORDER:
         active_step = PHASE0_SUBSTEP_ORDER[0]
 
+    active_step_index = PHASE0_SUBSTEP_ORDER.index(active_step) + 1 if active_step in PHASE0_SUBSTEP_ORDER else None
+    progress_label = (
+        f"{active_step_index}/{len(PHASE0_SUBSTEP_ORDER)} steps"
+        if active_step_index is not None and PHASE0_SUBSTEP_ORDER
+        else None
+    )
+    checkpoint_metadata = build_question_checkpoint_fields(
+        question_id=str((checkpoint_seed or {}).get("question_id") or "").strip() or None,
+        execution_state=str((checkpoint_seed or {}).get("current_execution_state") or "").strip() or None,
+        current_substep=active_step,
+        source_order=(checkpoint_seed or {}).get("current_source_order") or (checkpoint_seed or {}).get("source_priority"),
+    )
     return {
         "status": "running",
         "entity_name": entity_name,
         "entity_type": entity_type,
         "priority_score": priority_score,
+        **(execution_metadata or {}),
+        **checkpoint_metadata,
         "current_substep": active_step,
+        "current_substep_label": (
+            {
+                "dossier_request_preparing": "Preparing question-first runtime",
+                "cache_lookup": "Checking cached dossier",
+                "collect_entity_data": "Collecting entity data",
+                "connect_falkordb": "Connecting knowledge graph",
+                "fetch_falkordb_metadata": "Reading graph metadata",
+                "connect_brightdata": "Connecting search provider",
+                "brightdata_search_official": "Searching official sources",
+                "brightdata_scrape_official": "Scraping official sources",
+                "extract_entity_properties": "Extracting entity properties",
+                "generate_dossier_content": "Generating dossier content",
+                "persist_dossier": "Persisting dossier",
+                "finalize_response": "Finalizing dossier response",
+            }.get(active_step or "")
+        ),
+        "current_substep_progress": progress_label,
         "phase0_substeps": substeps,
         "inference_runtime": inference_runtime or build_inference_runtime_metadata(),
     }
@@ -1094,6 +1239,17 @@ async def generate_dossier(request: DossierRequest):
             or (request.metadata or {}).get("canonical_entity_id")
             or ""
         ).strip() or None
+        question_source_preview = build_universal_atomic_question_source(
+            entity_type=request.entity_type,
+            entity_name=request.entity_name,
+            entity_id=request.entity_id,
+            preset=(request.metadata or {}).get("preset") if isinstance(request.metadata, dict) else None,
+            question_source_label=f"{request.entity_id}::question-first",
+        )
+        checkpoint_seed = next(
+            (question for question in question_source_preview.get("questions", []) if isinstance(question, dict)),
+            {},
+        )
         phase0_substeps: Dict[str, Dict[str, Any]] = {
             step: {"status": "pending"} for step in PHASE0_SUBSTEP_ORDER
         }
@@ -1120,6 +1276,7 @@ async def generate_dossier(request: DossierRequest):
                     phase0_substeps=phase0_substeps,
                     current_substep=step if status == "running" else None,
                     inference_runtime=build_inference_runtime_metadata(runtime_client),
+                    checkpoint_seed=checkpoint_seed,
                 ),
             )
 
@@ -1349,14 +1506,22 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
     try:
         logger.warning("🚦 Pipeline boundary: pipeline_execute:start")
         from datetime import datetime
-        from backend.claude_client import ClaudeClient
-        from backend.dashboard_scorer import DashboardScorer
-        from backend.discovery_engine_factory import create_discovery_engine
-        from backend.dossier_generator import UniversalDossierGenerator
-        from backend.graphiti_service import GraphitiService
-        from backend.pipeline_orchestrator import PipelineOrchestrator
-        from backend.ralph_loop import RalphLoop
-        from supabase import create_client, Client
+        try:
+            from backend.claude_client import ClaudeClient
+            from backend.dashboard_scorer import DashboardScorer
+            from backend.discovery_engine_factory import create_discovery_engine
+            from backend.dossier_generator import UniversalDossierGenerator
+            from backend.graphiti_service import GraphitiService
+            from backend.pipeline_orchestrator import PipelineOrchestrator
+            from backend.ralph_loop import RalphLoop
+        except ImportError:
+            from claude_client import ClaudeClient
+            from dashboard_scorer import DashboardScorer
+            from discovery_engine_factory import create_discovery_engine
+            from dossier_generator import UniversalDossierGenerator
+            from graphiti_service import GraphitiService
+            from pipeline_orchestrator import PipelineOrchestrator
+            from ralph_loop import RalphLoop
 
         runtime_guard = validate_runtime_imports()
         if runtime_guard.get("status") != "ok":
@@ -1389,6 +1554,7 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
         async def emit_phase_update(phase: str, payload: Dict[str, Any]) -> None:
             if not pipeline_supabase or not request.batch_id:
                 return
+            normalized_payload = normalize_phase_callback_payload(phase, payload)
 
             existing_metadata: Dict[str, Any] = {}
             try:
@@ -1403,12 +1569,12 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             except Exception as fetch_error:
                 logger.warning(f"⚠️ Failed to fetch existing phase metadata for {request.entity_id}/{phase}: {fetch_error}")
 
-            normalized_status = normalize_phase_status(payload.get("status"), default="running")
+            normalized_status = normalize_phase_status(normalized_payload.get("status"), default="running")
             update_payload = {
                 "phase": phase,
                 "status": normalized_status,
                 "completed_at": datetime.now().isoformat() if normalized_status == "completed" else None,
-                "metadata": merge_pipeline_phase_metadata(existing_metadata, phase, payload),
+                "metadata": merge_pipeline_phase_metadata(existing_metadata, phase, normalized_payload),
             }
 
             try:
@@ -1421,9 +1587,21 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             except Exception as phase_error:
                 logger.warning(f"⚠️ Failed to emit phase update for {request.entity_id}/{phase}: {phase_error}")
 
+        phase0_mode = _resolve_phase0_mode(request.run_objective)
+        legacy_claude_disabled = _disable_legacy_claude_for_opencode(phase0_mode)
         logger.warning("🚦 Pipeline boundary: dossier_phase_runtime_init:start")
-        phase0_runtime = build_inference_runtime_metadata(ClaudeClient())
+        if legacy_claude_disabled:
+            phase0_runtime_client = LegacyLLMDisabledClient()
+        else:
+            from backend.claude_client import ClaudeClient
+
+            phase0_runtime_client = ClaudeClient()
+        phase0_runtime = build_inference_runtime_metadata(phase0_runtime_client)
         logger.warning("🚦 Pipeline boundary: dossier_phase_runtime_init:complete")
+        question_first_execution_metadata = build_question_first_execution_metadata(
+            phase0_mode=phase0_mode,
+            question_first_backend="opencode",
+        )
         await emit_phase_update(
             "dossier_generation",
             build_dossier_running_phase_metadata(
@@ -1431,141 +1609,176 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
                 entity_type=request.entity_type,
                 priority_score=request.priority_score,
                 inference_runtime=phase0_runtime,
+                execution_metadata=question_first_execution_metadata if phase0_mode == PHASE0_MODE_OPENCODE_FIRST else {
+                    "phase0_mode": phase0_mode,
+                    "legacy_phase0_used": phase0_mode == PHASE0_MODE_LEGACY_PYTHON,
+                },
             ),
         )
 
-        dossier_generation_request = DossierRequest(
-            entity_id=request.entity_id,
-            canonical_entity_id=request.canonical_entity_id,
-            entity_name=request.entity_name,
-            entity_type=request.entity_type,
-            priority_score=request.priority_score,
-            force_refresh=True,
-            run_objective=request.run_objective,
-            metadata=dict(request.metadata or {}),
-        )
-        dossier_timeout_seconds = resolve_phase0_timeout_seconds()
-        queue_mode = (os.getenv("ENTITY_IMPORT_QUEUE_MODE") or "durable_worker").strip().lower()
-        default_timeout_mode = "degraded" if queue_mode == "durable_worker" else "fail"
-        phase0_timeout_mode = (os.getenv("PIPELINE_PHASE0_TIMEOUT_MODE") or default_timeout_mode).strip().lower()
-        callback_token = _pipeline_phase_callback_ctx.set(emit_phase_update)
-        try:
-            repair_source_response = build_question_repair_source_dossier_response(request)
+        phase0_run_objective = _resolve_phase0_run_objective(request.run_objective)
+        orchestrator_request_metadata = {
+            **dict(request.metadata or {}),
+            "phase0_mode": phase0_mode,
+            "legacy_phase0_used": phase0_mode == PHASE0_MODE_LEGACY_PYTHON,
+        }
+        if phase0_mode == PHASE0_MODE_OPENCODE_FIRST:
+            orchestrator_request_metadata.update(question_first_execution_metadata)
+
+        dossier_response = None
+        if phase0_mode == PHASE0_MODE_LEGACY_PYTHON:
+            dossier_generation_request = DossierRequest(
+                entity_id=request.entity_id,
+                canonical_entity_id=request.canonical_entity_id,
+                entity_name=request.entity_name,
+                entity_type=request.entity_type,
+                priority_score=request.priority_score,
+                force_refresh=True,
+                run_objective=phase0_run_objective,
+                metadata=dict(request.metadata or {}),
+            )
+            dossier_timeout_seconds = resolve_phase0_timeout_seconds()
+            queue_mode = (os.getenv("ENTITY_IMPORT_QUEUE_MODE") or "durable_worker").strip().lower()
+            default_timeout_mode = "degraded" if queue_mode == "durable_worker" else "fail"
+            phase0_timeout_mode = (os.getenv("PIPELINE_PHASE0_TIMEOUT_MODE") or default_timeout_mode).strip().lower()
+            callback_token = _pipeline_phase_callback_ctx.set(emit_phase_update)
             try:
-                if repair_source_response is not None:
-                    logger.warning("🚦 Pipeline boundary: dossier_generation_call:question_repair_source")
-                    await emit_phase_update(
-                        "dossier_generation",
-                        {
-                            "status": "completed",
-                            "reason": "question_repair_source_loaded",
-                            "generation_mode": "question_repair_source",
-                            "source_path": str(request.metadata.get("repair_source_dossier_path") or request.metadata.get("repair_source_run_path") or ""),
-                        },
-                    )
-                    dossier_response = repair_source_response
-                else:
-                    logger.warning("🚦 Pipeline boundary: dossier_generation_call:start")
-                    if dossier_timeout_seconds > 0:
-                        dossier_response = await asyncio.wait_for(
-                            generate_dossier(dossier_generation_request),
-                            timeout=dossier_timeout_seconds,
+                repair_source_response = build_question_repair_source_dossier_response(request)
+                try:
+                    if repair_source_response is not None:
+                        logger.warning("🚦 Pipeline boundary: dossier_generation_call:question_repair_source")
+                        await emit_phase_update(
+                            "dossier_generation",
+                            {
+                                "status": "completed",
+                                "reason": "question_repair_source_loaded",
+                                "generation_mode": "question_repair_source",
+                                "source_path": str(request.metadata.get("repair_source_dossier_path") or request.metadata.get("repair_source_run_path") or ""),
+                            },
                         )
+                        dossier_response = repair_source_response
                     else:
-                        dossier_response = await generate_dossier(dossier_generation_request)
-                    logger.warning("🚦 Pipeline boundary: dossier_generation_call:complete")
-                    logger.warning("🚦 Pipeline boundary: dossier_response_received")
-            except asyncio.TimeoutError:
-                logger.error(
-                    "⏱️ Dossier generation timed out after %.2fs for entity %s",
-                    dossier_timeout_seconds,
-                    request.entity_id,
-                )
-                if phase0_timeout_mode == "degraded":
-                    await emit_phase_update(
-                        "dossier_generation",
-                        {
-                            "status": "completed",
-                            "reason": "dossier_generation_timeout_degraded",
-                            "timeout_seconds": dossier_timeout_seconds,
-                            "degraded_mode": True,
-                            "inference_runtime": build_inference_runtime_metadata(),
-                        },
+                        logger.warning("🚦 Pipeline boundary: dossier_generation_call:start")
+                        if dossier_timeout_seconds > 0:
+                            dossier_response = await asyncio.wait_for(
+                                generate_dossier(dossier_generation_request),
+                                timeout=dossier_timeout_seconds,
+                            )
+                        else:
+                            dossier_response = await generate_dossier(dossier_generation_request)
+                        logger.warning("🚦 Pipeline boundary: dossier_generation_call:complete")
+                        logger.warning("🚦 Pipeline boundary: dossier_response_received")
+                except asyncio.TimeoutError:
+                    logger.error(
+                        "⏱️ Dossier generation timed out after %.2fs for entity %s",
+                        dossier_timeout_seconds,
+                        request.entity_id,
                     )
-                    dossier_response = build_timeout_fallback_dossier_response(request)
-                else:
-                    await emit_phase_update(
-                        "dossier_generation",
-                        {
-                            "status": "failed",
-                            "error": "Phase 0 timeout",
-                            "reason": "dossier_generation_timeout",
-                            "timeout_seconds": dossier_timeout_seconds,
-                            "inference_runtime": build_inference_runtime_metadata(),
-                        },
+                    if phase0_timeout_mode == "degraded":
+                        await emit_phase_update(
+                            "dossier_generation",
+                            {
+                                "status": "completed",
+                                "reason": "dossier_generation_timeout_degraded",
+                                "timeout_seconds": dossier_timeout_seconds,
+                                "degraded_mode": True,
+                                "inference_runtime": build_inference_runtime_metadata(),
+                            },
+                        )
+                        dossier_response = build_timeout_fallback_dossier_response(request)
+                    else:
+                        await emit_phase_update(
+                            "dossier_generation",
+                            {
+                                "status": "failed",
+                                "error": "Phase 0 timeout",
+                                "reason": "dossier_generation_timeout",
+                                "timeout_seconds": dossier_timeout_seconds,
+                                "inference_runtime": build_inference_runtime_metadata(),
+                            },
+                        )
+                        raise HTTPException(
+                            status_code=504,
+                            detail="Dossier generation timed out during phase 0",
+                        )
+                except HTTPException as phase0_http_error:
+                    detail_text = str(getattr(phase0_http_error, "detail", "") or "")
+                    is_retryable_inference = (
+                        phase0_http_error.status_code in {429, 503, 504}
+                        and "inference_capacity_retryable" in detail_text
                     )
-                    raise HTTPException(
-                        status_code=504,
-                        detail="Dossier generation timed out during phase 0",
-                    )
-            except HTTPException as phase0_http_error:
-                detail_text = str(getattr(phase0_http_error, "detail", "") or "")
-                is_retryable_inference = (
-                    phase0_http_error.status_code in {429, 503, 504}
-                    and "inference_capacity_retryable" in detail_text
-                )
-                if phase0_timeout_mode == "degraded" and is_retryable_inference:
-                    await emit_phase_update(
-                        "dossier_generation",
-                        {
-                            "status": "completed",
-                            "reason": "dossier_generation_retryable_inference_degraded",
-                            "degraded_mode": True,
-                            "upstream_status_code": phase0_http_error.status_code,
-                            "upstream_error": detail_text,
-                            "inference_runtime": build_inference_runtime_metadata(),
-                        },
-                    )
-                    dossier_response = build_timeout_fallback_dossier_response(request)
-                else:
-                    await emit_phase_update(
-                        "dossier_generation",
-                        {
-                            "status": "failed",
-                            "error": detail_text,
-                            "reason": "dossier_generation_http_error",
-                            "upstream_status_code": phase0_http_error.status_code,
-                            "inference_runtime": build_inference_runtime_metadata(),
-                        },
-                    )
-                    raise
-        finally:
-            _pipeline_phase_callback_ctx.reset(callback_token)
+                    if phase0_timeout_mode == "degraded" and is_retryable_inference:
+                        await emit_phase_update(
+                            "dossier_generation",
+                            {
+                                "status": "completed",
+                                "reason": "dossier_generation_retryable_inference_degraded",
+                                "degraded_mode": True,
+                                "upstream_status_code": phase0_http_error.status_code,
+                                "upstream_error": detail_text,
+                                "inference_runtime": build_inference_runtime_metadata(),
+                            },
+                        )
+                        dossier_response = build_timeout_fallback_dossier_response(request)
+                    else:
+                        await emit_phase_update(
+                            "dossier_generation",
+                            {
+                                "status": "failed",
+                                "error": detail_text,
+                                "reason": "dossier_generation_http_error",
+                                "upstream_status_code": phase0_http_error.status_code,
+                                "inference_runtime": build_inference_runtime_metadata(),
+                            },
+                        )
+                        raise
+            finally:
+                _pipeline_phase_callback_ctx.reset(callback_token)
 
-        logger.warning("🚦 Pipeline boundary: dossier_post_runtime_init:start")
-        phase0_runtime = build_inference_runtime_metadata(ClaudeClient())
-        logger.warning("🚦 Pipeline boundary: dossier_post_runtime_init:complete")
-        await emit_phase_update(
-            "dossier_generation",
-            {
-                "status": "completed",
-                "hypothesis_count": dossier_response.metadata.get("hypothesis_count", 0),
-                "signal_count": dossier_response.metadata.get("signal_count", 0),
-                "tier": dossier_response.metadata.get("tier"),
-                "duration_seconds": dossier_response.metadata.get("generation_time_seconds"),
-                "collection_time_seconds": dossier_response.metadata.get("collection_time_seconds"),
-                "source_count": dossier_response.metadata.get("source_count", 0),
-                "sources_used": dossier_response.metadata.get("sources_used", []),
-                "source_timings": dossier_response.metadata.get("source_timings", {}),
-                "canonical_sources": dossier_response.metadata.get("canonical_sources", {}),
-                "generation_mode": dossier_response.metadata.get("generation_mode"),
-                "collection_timed_out": dossier_response.metadata.get("collection_timed_out"),
-                "model_max_tokens": dossier_response.metadata.get("model_max_tokens"),
-                "inference_runtime": dossier_response.metadata.get("inference_runtime") or phase0_runtime,
-            },
-        )
+            logger.warning("🚦 Pipeline boundary: dossier_post_runtime_init:start")
+            phase0_runtime = build_inference_runtime_metadata(ClaudeClient())
+            logger.warning("🚦 Pipeline boundary: dossier_post_runtime_init:complete")
+            await emit_phase_update(
+                "dossier_generation",
+                {
+                    "status": "completed",
+                    "phase0_mode": phase0_mode,
+                    "legacy_phase0_used": True,
+                    "hypothesis_count": dossier_response.metadata.get("hypothesis_count", 0),
+                    "signal_count": dossier_response.metadata.get("signal_count", 0),
+                    "tier": dossier_response.metadata.get("tier"),
+                    "duration_seconds": dossier_response.metadata.get("generation_time_seconds"),
+                    "collection_time_seconds": dossier_response.metadata.get("collection_time_seconds"),
+                    "source_count": dossier_response.metadata.get("source_count", 0),
+                    "sources_used": dossier_response.metadata.get("sources_used", []),
+                    "source_timings": dossier_response.metadata.get("source_timings", {}),
+                    "canonical_sources": dossier_response.metadata.get("canonical_sources", {}),
+                    "generation_mode": dossier_response.metadata.get("generation_mode"),
+                    "collection_timed_out": dossier_response.metadata.get("collection_timed_out"),
+                    "model_max_tokens": dossier_response.metadata.get("model_max_tokens"),
+                    "inference_runtime": dossier_response.metadata.get("inference_runtime") or phase0_runtime,
+                },
+            )
+        else:
+            await emit_phase_update(
+                "dossier_generation",
+                build_dossier_running_phase_metadata(
+                    entity_name=request.entity_name,
+                    entity_type=request.entity_type,
+                    priority_score=request.priority_score,
+                    current_substep="dossier_request_preparing",
+                    inference_runtime=phase0_runtime,
+                    checkpoint_seed={"current_execution_state": "preparing question"},
+                    execution_metadata=question_first_execution_metadata,
+                ),
+            )
 
-        claude = ClaudeClient()
+        if legacy_claude_disabled:
+            claude = LegacyLLMDisabledClient()
+        else:
+            from backend.claude_client import ClaudeClient
+
+            claude = ClaudeClient()
         try:
             brightdata = create_pipeline_brightdata_client()
         except Exception as brightdata_error:  # noqa: BLE001
@@ -1618,6 +1831,8 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             ralph_validator=RalphLoop(claude, active_graphiti_service),
             graphiti_service=active_graphiti_service,
             dashboard_scorer=DashboardScorer(),
+            brightdata_client=brightdata,
+            claude_client=claude,
         )
 
         logger.warning("🚦 Pipeline boundary: orchestrator_run:start")
@@ -1627,9 +1842,9 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
             entity_type=request.entity_type,
             priority_score=request.priority_score,
             run_objective=request.run_objective,
-            initial_dossier=dossier_response.dossier_data,
+            initial_dossier=dossier_response.dossier_data if dossier_response is not None else None,
             phase_callback=emit_phase_update,
-            request_metadata=request.metadata,
+            request_metadata=orchestrator_request_metadata,
         )
         logger.warning("🚦 Pipeline boundary: orchestrator_run:complete")
 

@@ -1,0 +1,142 @@
+{
+  "sections": [
+    { "id": "core_information", "label": "Core Information" },
+    { "id": "digital_transformation", "label": "Digital Transformation" },
+    { "id": "ai_reasoner_assessment", "label": "AI Reasoner Assessment" },
+    { "id": "strategic_opportunities", "label": "Strategic Opportunities" },
+    { "id": "key_decision_makers", "label": "Key Decision Makers" },
+    { "id": "connections_analysis", "label": "Connections Analysis" },
+    { "id": "recent_news", "label": "Recent News" },
+    { "id": "current_performance", "label": "Current Performance" },
+    { "id": "outreach_strategy", "label": "Outreach Strategy" },
+    { "id": "risk_assessment", "label": "Risk Assessment" },
+    { "id": "league_context", "label": "League Context" }
+  ],
+  "questions": {
+    "q1_foundation": {
+      "section_id": "core_information",
+      "strategy_label": "Direct factual lookup",
+      "source_order": ["google_serp", "official_site", "wikipedia"]
+    },
+    "q2_digital_stack": {
+      "section_id": "digital_transformation",
+      "strategy_label": "Visible stack and vendor discovery",
+      "source_order": ["apify_techstack", "google_serp", "news", "press_release", "official_site"]
+    },
+    "q3_leadership": {
+      "section_id": "key_decision_makers",
+      "strategy_label": "LinkedIn-first leadership search",
+      "source_order": ["wikipedia", "official_site", "linkedin_company_profile", "linkedin_people_search", "linkedin_person_profile", "google_serp", "news"]
+    },
+    "q4_performance": {
+      "section_id": "current_performance",
+      "strategy_label": "Competitive performance lookup",
+      "source_order": ["google_serp", "official_site", "news"]
+    },
+    "q5_league_context": {
+      "section_id": "league_context",
+      "strategy_label": "Peer benchmarking and market context",
+      "source_order": ["google_serp", "news", "official_site"]
+    },
+    "q6_launch_signal": {
+      "section_id": "strategic_opportunities",
+      "strategy_label": "Launch and platform signal discovery",
+      "source_order": ["google_serp", "news", "press_release", "official_site"]
+    },
+    "q7_procurement_signal": {
+      "section_id": "strategic_opportunities",
+      "strategy_label": "Broad web-first procurement signal discovery",
+      "source_order": ["google_serp", "news", "press_release", "linkedin_posts", "official_site"]
+    },
+    "q8_explicit_rfp": {
+      "section_id": "strategic_opportunities",
+      "strategy_label": "Secondary follow-up-only tender and RFP confirmation",
+      "source_order": ["google_serp", "news", "press_release", "linkedin_posts", "official_site"]
+    },
+    "q9_news_signal": {
+      "section_id": "recent_news",
+      "strategy_label": "Priority and timing signal review",
+      "source_order": ["google_serp", "news", "press_release", "official_site"]
+    },
+    "q10_hiring_signal": {
+      "section_id": "recent_news",
+      "strategy_label": "Broad hiring and capability signal review",
+      "source_order": ["careers", "linkedin_jobs", "google_serp", "linkedin_posts", "news", "official_site"]
+    },
+    "q11_decision_owner": {
+      "section_id": "key_decision_makers",
+      "strategy_label": "LinkedIn-first decision-owner search",
+      "source_order": ["google_serp", "linkedin_posts", "linkedin_people_search", "linkedin_person_profile", "linkedin_company_profile", "news", "official_site"]
+    },
+    "q12_connections": {
+      "section_id": "connections_analysis",
+      "strategy_label": "Network path and connector mapping",
+      "source_order": ["linkedin_people_search", "linkedin_person_profile", "google_serp", "official_site"]
+    },
+    "q13_capability_gap": {
+      "section_id": "risk_assessment",
+      "strategy_label": "Capability gap and blocker assessment",
+      "source_order": ["google_serp", "news", "official_site"]
+    },
+    "q14_yp_fit": {
+      "section_id": "ai_reasoner_assessment",
+      "strategy_label": "Executive fit and entry-point judgement",
+      "source_order": ["google_serp", "news", "official_site"]
+    },
+    "q15_outreach_strategy": {
+      "section_id": "outreach_strategy",
+      "strategy_label": "Contact plan and outreach angle design",
+      "source_order": ["google_serp", "news", "official_site"]
+    },
+    "q2_procurement_signal": {
+      "section_id": "strategic_opportunities",
+      "strategy_label": "Broad web-first discovery",
+      "source_order": ["google_serp", "news", "press_release", "linkedin_posts", "official_site"]
+    },
+    "q2b_public_procurement_or_tender": {
+      "section_id": "strategic_opportunities",
+      "strategy_label": "Explicit tender confirmation",
+      "source_order": ["google_serp", "news", "press_release", "linkedin_posts", "official_site"]
+    },
+    "q3_decision_owner": {
+      "section_id": "key_decision_makers",
+      "strategy_label": "LinkedIn-first leadership search",
+      "source_order": ["google_serp", "linkedin_posts", "linkedin_people_search", "linkedin_person_profile", "linkedin_company_profile", "news", "official_site"]
+    },
+    "q1_rfp": {
+      "section_id": "strategic_opportunities",
+      "strategy_label": "Stage 1 broad RFP opener",
+      "source_order": ["google_serp", "linkedin_posts", "news", "press_release", "official_site"]
+    },
+    "q2_tender": {
+      "section_id": "strategic_opportunities",
+      "strategy_label": "Stage 1 tender opener",
+      "source_order": ["google_serp", "linkedin_posts", "news", "press_release", "official_site"]
+    },
+    "q3_procurement": {
+      "section_id": "strategic_opportunities",
+      "strategy_label": "Stage 1 procurement opener",
+      "source_order": ["google_serp", "linkedin_posts", "news", "press_release", "official_site"]
+    },
+    "q4_vendor": {
+      "section_id": "digital_transformation",
+      "strategy_label": "Stage 2 vendor follow-up",
+      "source_order": ["google_serp", "linkedin_posts", "news", "press_release", "official_site"]
+    },
+    "q5_digital_transformation": {
+      "section_id": "digital_transformation",
+      "strategy_label": "Stage 2 digital transformation follow-up",
+      "source_order": ["google_serp", "linkedin_posts", "news", "press_release", "official_site"]
+    },
+    "q6_broadcast_partner": {
+      "section_id": "strategic_opportunities",
+      "strategy_label": "Stage 2 broadcast partner follow-up",
+      "source_order": ["google_serp", "linkedin_posts", "news", "press_release", "official_site"]
+    },
+    "q7_fan_engagement_platform": {
+      "section_id": "digital_transformation",
+      "strategy_label": "Stage 2 fan engagement platform follow-up",
+      "source_order": ["google_serp", "linkedin_posts", "news", "press_release", "official_site"]
+    }
+  }
+}

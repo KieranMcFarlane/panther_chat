@@ -52,6 +52,11 @@ test('buildQuestionFirstRunArtifact emits the canonical question_first_run_v2 sh
         confidence: 0.92,
         validation_state: 'validated',
         signal_type: 'FOUNDATION',
+        evidence_grade: 'strong',
+        structured_signal: { named_entities: [{ name: 'Major League Cricket', evidence_url: 'https://example.com', evidence_kind: 'official_site', summary: 'Official entity profile.' }] },
+        procurement_model: 'unknown',
+        commercial_implication: 'Clear official grounding supports commercial targeting.',
+        signal_density: 0.66,
         answer: {
           kind: 'fact',
           value: '2023',
@@ -134,9 +139,16 @@ test('buildQuestionFirstRunArtifact emits the canonical question_first_run_v2 sh
   assert.equal(artifact.answer_records[0].rollout_phase, 'phase_1_core');
   assert.equal(artifact.answer_records[0].evidence_refs[0], 'q1:foundation');
   assert.equal(artifact.answer_records[0].trace_ref, 'trace:q1');
+  assert.equal(artifact.answer_records[0].evidence_grade, 'strong');
+  assert.equal(artifact.answer_records[0].procurement_model, 'unknown');
+  assert.equal(artifact.answer_records[0].commercial_implication, 'Clear official grounding supports commercial targeting.');
+  assert.equal(artifact.answer_records[0].signal_density, 0.66);
+  assert.equal(artifact.answer_records[0].structured_signal.named_entities[0].name, 'Major League Cricket');
   assert.equal(artifact.merge_patch.question_first.schema_version, QUESTION_FIRST_RUN_SCHEMA_VERSION);
   assert.equal(artifact.merge_patch.question_first.questions_answered, 1);
   assert.equal(artifact.merge_patch.question_first.answers[0].answer.value, '2023');
+  assert.equal(artifact.merge_patch.question_first.answers[0].evidence_grade, 'strong');
+  assert.equal(artifact.merge_patch.question_first.answers[0].commercial_implication, 'Clear official grounding supports commercial targeting.');
   assert.ok(!('questions' in artifact.merge_patch));
   assert.ok(!('question_first_answer' in artifact.question_specs[0]));
   assert.ok(!('raw_execution_trace' in artifact.answer_records[0]));

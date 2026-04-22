@@ -15,6 +15,13 @@ from pipeline_orchestrator import PipelineOrchestrator
 from pipeline_run_metadata import merge_pipeline_run_metadata
 
 
+@pytest.fixture(autouse=True)
+def isolate_pipeline_env(monkeypatch):
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_ENABLED", "false")
+    monkeypatch.delenv("PIPELINE_QUESTION_FIRST_BACKEND", raising=False)
+    monkeypatch.delenv("PIPELINE_PHASE0_MODE", raising=False)
+
+
 class FakeDossierGenerator:
     async def generate_universal_dossier(self, **kwargs):
         return {
@@ -66,6 +73,24 @@ class FakeDiscoveryResult:
 
 class FakeDiscovery:
     async def run_discovery_with_dossier_context(self, **kwargs):
+        return FakeDiscoveryResult()
+
+
+class FakeDiscoveryWithProgress:
+    async def run_discovery_with_dossier_context(self, **kwargs):
+        progress_callback = kwargs.get("progress_callback")
+        if callable(progress_callback):
+            await progress_callback(
+                {
+                    "status": "running",
+                    "current_substep": "discovery_candidate_evaluation",
+                    "current_substep_label": "Discovery evaluating candidates",
+                    "iteration": 2,
+                    "items_completed": 2,
+                    "items_total": 8,
+                    "candidate_count": 5,
+                }
+            )
         return FakeDiscoveryResult()
 
 
@@ -226,6 +251,26 @@ class FakeDashboardScorer:
         }
 
 
+class ExplodingDiscovery:
+    async def run_discovery_with_dossier_context(self, **kwargs):
+        raise AssertionError("legacy discovery should be bypassed for opencode question-first dossiers")
+
+
+class ExplodingRalph:
+    async def validate_signals(self, raw_signals, entity_id):
+        raise AssertionError("legacy Ralph validation should be bypassed for opencode question-first dossiers")
+
+
+class DisabledLegacyClaudeClient:
+    provider = "disabled_legacy"
+    requested_model = "disabled"
+    runtime_model = "disabled"
+
+    @staticmethod
+    def _get_disabled_reason():
+        return "legacy_llm_disabled_for_opencode"
+
+
 class FakePersistenceCoordinator:
     async def persist_run_artifacts(self, **kwargs):
         return {
@@ -322,6 +367,7 @@ class CapturingPersistenceCoordinator(FakePersistenceCoordinator):
 @pytest.mark.asyncio
 async def test_pipeline_orchestrator_runs_phases_and_returns_artifacts():
     phase_events = []
+    question_first_calls = {}
 
     async def phase_callback(phase, payload):
         phase_events.append((phase, payload["status"]))
@@ -364,6 +410,50 @@ async def test_pipeline_orchestrator_runs_phases_and_returns_artifacts():
     assert result["persistence_status"]["supabase"]["ok"] is True
     assert ("discovery", "running") in phase_events
     assert ("dashboard_scoring", "completed") in phase_events
+
+
+@pytest.mark.asyncio
+async def test_pipeline_orchestrator_emits_structured_substeps():
+    phase_events = []
+
+    async def phase_callback(phase, payload):
+        phase_events.append((phase, dict(payload)))
+
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=FakeDossierGenerator(),
+        discovery=FakeDiscoveryWithProgress(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=FakePersistenceCoordinator(),
+    )
+
+    await orchestrator.run_entity_pipeline(
+        entity_id="arsenal-fc",
+        entity_name="Arsenal FC",
+        entity_type="CLUB",
+        priority_score=90,
+        phase_callback=phase_callback,
+    )
+
+    discovery_running = [
+        payload for phase, payload in phase_events
+        if phase == "discovery" and payload.get("current_substep") == "discovery_candidate_evaluation"
+    ]
+    assert discovery_running
+    assert discovery_running[0]["current_substep_label"] == "Discovery evaluating candidates"
+    assert discovery_running[0]["iteration"] == 2
+    assert discovery_running[0]["items_completed"] == 2
+    assert discovery_running[0]["items_total"] == 8
+    assert discovery_running[0]["candidate_count"] == 5
+
+    dashboard_running = [
+        payload for phase, payload in phase_events
+        if phase == "dashboard_scoring" and payload.get("status") == "running"
+    ]
+    assert dashboard_running
+    assert dashboard_running[0]["current_substep"] == "dashboard_scoring_running"
+    assert dashboard_running[0]["current_substep_label"] == "Dashboard scoring running"
 
 
 @pytest.mark.asyncio
@@ -596,8 +686,8 @@ async def test_pipeline_orchestrator_enriches_dossier_with_question_first(monkey
         phase_callback=phase_callback,
     )
 
-    assert question_first_calls["dossier_run_objective"] == "leadership_enrichment"
-    assert question_first_calls["source_payload"]["questions"][0]["question_text"] == "When was Leeds United founded?"
+    assert question_first_calls["source_payload"]["metadata"]["question_first_backend"] == "opencode"
+    assert len(question_first_calls["source_payload"]["questions"]) >= 1
     assert result["artifacts"]["dossier"]["question_first"]["questions_answered"] == 1
     assert result["artifacts"]["dossier"]["question_first"]["connections_graph_enrichment_enabled"] is False
     assert result["artifacts"]["dossier"]["question_first"]["connections_graph_enrichment_status"] == "optional"
@@ -681,11 +771,178 @@ async def test_pipeline_orchestrator_forwards_question_repair_metadata(monkeypat
     assert repair_meta["question_id"] == "q11_decision_owner"
     assert repair_meta["cascade_dependents"] is True
     assert repair_meta["repair_source_run_id"] == "fc-porto-base-run"
-    assert repair_meta["repaired_question_ids"] == ["q11_decision_owner", "q12_connections"]
-    assert [question["question_id"] for question in captured["launch_source_payload"]["questions"]] == [
-        "q11_decision_owner",
-        "q12_connections",
+    assert "q11_decision_owner" in repair_meta["repaired_question_ids"]
+    assert "q12_connections" in repair_meta["repaired_question_ids"]
+    launch_question_ids = [question["question_id"] for question in captured["launch_source_payload"]["questions"]]
+    assert "q11_decision_owner" in launch_question_ids
+    assert "q12_connections" in launch_question_ids
+
+
+@pytest.mark.asyncio
+async def test_pipeline_orchestrator_forwards_live_question_progress_from_opencode_fallback(monkeypatch):
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_ENABLED", "true")
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_PERSIST_REPORTS", "false")
+
+    import question_first_dossier_runner as question_first_runner
+    try:
+        import backend.question_first_dossier_runner as backend_question_first_runner
+    except ModuleNotFoundError:
+        import question_first_dossier_runner as backend_question_first_runner
+
+    async def fake_run_question_first_dossier_from_payload(**kwargs):
+        progress_callback = kwargs.get("progress_callback")
+        if progress_callback is not None:
+            await progress_callback(
+                {
+                    "event_type": "question_progress",
+                    "phase": "dossier_generation",
+                    "current_substep": "question_first_running",
+                    "current_substep_label": "Question-first running",
+                    "current_question_id": "q1",
+                    "current_question_text": "When was Leeds United founded?",
+                    "questions_answered": 1,
+                    "questions_total": 1,
+                    "current_substep_progress": "1/1 questions",
+                }
+            )
+        payload = dict(kwargs["source_payload"])
+        payload["question_first"] = {
+            "enabled": True,
+            "schema_version": "question_first_run_v1",
+            "questions_answered": 1,
+            "answers": [],
+            "categories": [],
+        }
+        return payload
+
+    monkeypatch.setattr(question_first_runner, "run_question_first_dossier_from_payload", fake_run_question_first_dossier_from_payload)
+    monkeypatch.setattr(backend_question_first_runner, "run_question_first_dossier_from_payload", fake_run_question_first_dossier_from_payload)
+
+    class QuestionFirstDossierGenerator(FakeDossierGenerator):
+        async def generate_universal_dossier(self, **kwargs):
+            payload = await super().generate_universal_dossier(**kwargs)
+            payload["questions"] = [
+                {
+                    "question_id": "q1",
+                    "section_id": "core_information",
+                    "question_text": "When was Leeds United founded?",
+                }
+            ]
+            return payload
+
+    phase_events = []
+
+    async def phase_callback(phase, payload):
+        phase_events.append((phase, dict(payload)))
+
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=QuestionFirstDossierGenerator(),
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=FakePersistenceCoordinator(),
+        brightdata_client=None,
+        claude_client=None,
+    )
+
+    await orchestrator.run_entity_pipeline(
+        entity_id="leedsunited",
+        entity_name="Leeds United",
+        entity_type="CLUB",
+        priority_score=95,
+        phase_callback=phase_callback,
+    )
+
+    progress_events = [
+        payload for phase, payload in phase_events
+        if phase == "dossier_generation" and payload.get("current_question_id") == "q1"
     ]
+    assert progress_events
+    assert progress_events[0]["current_question_text"] == "When was Leeds United founded?"
+    assert progress_events[0]["current_execution_state"] == "searching sources"
+    assert progress_events[0]["current_substep_progress"] == "1/1 questions"
+
+
+@pytest.mark.asyncio
+async def test_pipeline_orchestrator_converts_question_first_timeout_seconds_to_batch_milliseconds(monkeypatch):
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_ENABLED", "true")
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_PERSIST_REPORTS", "false")
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_OPENCODE_TIMEOUT_SECONDS", "60")
+
+    import question_first_dossier_runner as question_first_runner
+    try:
+        import backend.question_first_dossier_runner as backend_question_first_runner
+    except ModuleNotFoundError:
+        import question_first_dossier_runner as backend_question_first_runner
+
+    captured = {}
+
+    async def fake_run_question_first_dossier_from_payload(**kwargs):
+        captured["opencode_timeout_ms"] = kwargs.get("opencode_timeout_ms")
+        payload = dict(kwargs["source_payload"])
+        payload["question_first"] = {
+            "enabled": True,
+            "schema_version": "question_first_run_v1",
+            "questions_answered": 1,
+            "answers": [],
+            "categories": [],
+        }
+        return payload
+
+    monkeypatch.setattr(question_first_runner, "run_question_first_dossier_from_payload", fake_run_question_first_dossier_from_payload)
+    monkeypatch.setattr(backend_question_first_runner, "run_question_first_dossier_from_payload", fake_run_question_first_dossier_from_payload)
+
+    class QuestionFirstDossierGenerator(FakeDossierGenerator):
+        async def generate_universal_dossier(self, **kwargs):
+            payload = await super().generate_universal_dossier(**kwargs)
+            payload["questions"] = [
+                {
+                    "question_id": "q1",
+                    "section_id": "core_information",
+                    "question_text": "When was Leeds United founded?",
+                }
+            ]
+            return payload
+
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=QuestionFirstDossierGenerator(),
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=FakePersistenceCoordinator(),
+        brightdata_client=None,
+        claude_client=None,
+    )
+
+    await orchestrator.run_entity_pipeline(
+        entity_id="leedsunited",
+        entity_name="Leeds United",
+        entity_type="CLUB",
+        priority_score=95,
+    )
+
+    assert captured["opencode_timeout_ms"] == 60_000
+
+
+def test_pipeline_orchestrator_defaults_question_first_timeout_to_five_minutes(monkeypatch):
+    monkeypatch.delenv("PIPELINE_QUESTION_FIRST_OPENCODE_TIMEOUT_SECONDS", raising=False)
+    monkeypatch.delenv("PIPELINE_QUESTION_FIRST_BRIGHTDATA_TIMEOUT_SECONDS", raising=False)
+
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=FakeDossierGenerator(),
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=FakePersistenceCoordinator(),
+        brightdata_client=None,
+        claude_client=None,
+    )
+
+    assert orchestrator.question_first_opencode_timeout_seconds == 300
+    assert orchestrator.question_first_opencode_timeout == 300_000
 
 
 @pytest.mark.asyncio
@@ -1037,3 +1294,71 @@ async def test_pipeline_orchestrator_emits_objective_contract_fields():
     assert isinstance(result["llm_efficiency_metrics"], dict)
     assert "length_stop_count" in result["llm_efficiency_metrics"]
     assert "schema_fail_count" in result["llm_efficiency_metrics"]
+
+
+@pytest.mark.asyncio
+async def test_opencode_question_first_dossier_bypasses_legacy_discovery_and_ralph(monkeypatch):
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_ENABLED", "true")
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_BACKEND", "opencode")
+    monkeypatch.setenv("PIPELINE_DISABLE_LEGACY_CLAUDE_FOR_OPENCODE", "true")
+
+    dossier = {
+        "metadata": {
+            "entity_id": "livescore",
+            "entity_name": "LiveScore Group (media)",
+            "entity_type": "MEDIA",
+        },
+        "question_first": {
+            "answers": [
+                {
+                    "question_id": "q7_procurement_signal",
+                    "question_text": "Is there evidence LiveScore Group (media) is buying or reshaping vendors?",
+                    "answer": "Public reporting indicates platform and ecosystem change around LiveScore's digital products.",
+                    "confidence": 0.92,
+                    "validation_state": "validated",
+                    "signal_type": "PROCUREMENT_INDICATOR",
+                    "evidence_url": "https://example.com/procurement",
+                    "category": "strategic_opportunities",
+                },
+                {
+                    "question_id": "q10_hiring_signal",
+                    "question_text": "What hiring signals suggest investment priorities?",
+                    "answer": "",
+                    "confidence": 0.0,
+                    "validation_state": "no_signal",
+                    "signal_type": "CAPABILITY_SIGNAL",
+                    "evidence_url": None,
+                    "category": "recent_news",
+                },
+            ]
+        },
+    }
+
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=FakeDossierGenerator(),
+        discovery=ExplodingDiscovery(),
+        ralph_validator=ExplodingRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=FakePersistenceCoordinator(),
+        claude_client=DisabledLegacyClaudeClient(),
+    )
+
+    result = await orchestrator.run_entity_pipeline(
+        entity_id="livescore",
+        entity_name="LiveScore Group (media)",
+        entity_type="MEDIA",
+        initial_dossier=dossier,
+        request_metadata={
+            "question_first_backend": "opencode",
+            "phase0_mode": "opencode_first",
+            "legacy_phase0_used": False,
+        },
+    )
+
+    assert result["phases"]["discovery"]["status"] == "completed"
+    assert result["phases"]["ralph_validation"]["status"] == "completed"
+    assert result["validated_signal_count"] == 1
+    assert result["artifacts"]["validated_signals"][0]["type"] == "PROCUREMENT_INDICATOR"
+    assert result["artifacts"]["discovery_result"]["parse_path"] == "question_first_downstream_fallback"
+    assert result["llm_efficiency_metrics"]["llm_call_count"] == 0

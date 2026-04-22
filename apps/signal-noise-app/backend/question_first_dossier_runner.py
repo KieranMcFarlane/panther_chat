@@ -13,7 +13,6 @@ import json
 import logging
 import os
 import re
-import subprocess
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
@@ -25,11 +24,14 @@ from pydantic import BaseModel, Field, ValidationError
 try:
     from backend.brightdata_mcp_client import BrightDataMCPClient
     from backend.claude_client import ClaudeClient
+    from backend.question_progress_framework import build_question_checkpoint_fields, enrich_question_specs
 except ImportError:
     from brightdata_mcp_client import BrightDataMCPClient  # type: ignore
     from claude_client import ClaudeClient  # type: ignore
+    from question_progress_framework import build_question_checkpoint_fields, enrich_question_specs  # type: ignore
 
 logger = logging.getLogger(__name__)
+OPENCODE_PROGRESS_EVENT_PREFIX = "__QF_PROGRESS__"
 
 
 def _iso_now() -> str:
@@ -42,17 +44,20 @@ def _slugify(value: str) -> str:
 
 
 class QuestionFirstRunArtifact(BaseModel):
-    schema_version: Literal["question_first_run_v1"]
+    schema_version: Literal["question_first_run_v1", "question_first_run_v2"]
     generated_at: str
     run_started_at: str
     source: str
     status: str
     warnings: List[str] = Field(default_factory=list)
     entity: Dict[str, Any] = Field(default_factory=dict)
+    run_id: Optional[str] = None
     preset: Optional[str] = None
     question_source_path: Optional[str] = None
     questions: List[Dict[str, Any]] = Field(default_factory=list)
     answers: List[Dict[str, Any]] = Field(default_factory=list)
+    evidence_items: List[Dict[str, Any]] = Field(default_factory=list)
+    trace_index: List[Dict[str, Any]] = Field(default_factory=list)
     categories: List[Dict[str, Any]] = Field(default_factory=list)
     run_rollup: Dict[str, Any] = Field(default_factory=dict)
     merge_patch: Dict[str, Any] = Field(default_factory=dict)
@@ -61,7 +66,23 @@ class QuestionFirstRunArtifact(BaseModel):
 def _load_question_first_run_artifact(artifact_path: Path | str) -> QuestionFirstRunArtifact:
     path = Path(artifact_path)
     try:
-        return QuestionFirstRunArtifact.model_validate_json(path.read_text(encoding="utf-8"))
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(payload, dict) and str(payload.get("schema_version") or "").strip() == "question_first_run_v2":
+            normalized_payload = dict(payload)
+            if not isinstance(normalized_payload.get("questions"), list):
+                normalized_payload["questions"] = (
+                    normalized_payload.get("question_specs")
+                    if isinstance(normalized_payload.get("question_specs"), list)
+                    else []
+                )
+            if not isinstance(normalized_payload.get("answers"), list):
+                normalized_payload["answers"] = (
+                    normalized_payload.get("answer_records")
+                    if isinstance(normalized_payload.get("answer_records"), list)
+                    else []
+                )
+            payload = normalized_payload
+        return QuestionFirstRunArtifact.model_validate(payload)
     except ValidationError as exc:
         raise ValueError(f"Invalid question_first_run artifact at {path}") from exc
 
@@ -88,6 +109,41 @@ def _merge_question_first_run_patch(
 
     if "questions" in patch and isinstance(patch["questions"], list):
         payload["questions"] = patch["questions"]
+    elif isinstance(payload.get("questions"), list) and artifact.answers:
+        answer_by_id = {
+            str(answer.get("question_id") or "").strip(): answer
+            for answer in artifact.answers
+            if isinstance(answer, dict) and str(answer.get("question_id") or "").strip()
+        }
+        merged_questions: List[Dict[str, Any]] = []
+        for question in payload.get("questions") or []:
+            if not isinstance(question, dict):
+                merged_questions.append(question)
+                continue
+            merged_question = dict(question)
+            answer = answer_by_id.get(str(merged_question.get("question_id") or "").strip())
+            if isinstance(answer, dict):
+                merged_question.setdefault("question_first_answer", answer)
+                if answer.get("answer") is not None:
+                    merged_question.setdefault("answer", answer.get("answer"))
+                if answer.get("confidence") is not None:
+                    merged_question.setdefault("confidence", answer.get("confidence"))
+                if answer.get("validation_state") is not None:
+                    merged_question.setdefault("validation_state", answer.get("validation_state"))
+                if answer.get("signal_type") is not None:
+                    merged_question.setdefault("signal_type", answer.get("signal_type"))
+                if answer.get("evidence_grade") is not None:
+                    merged_question.setdefault("evidence_grade", answer.get("evidence_grade"))
+                if answer.get("structured_signal") is not None:
+                    merged_question.setdefault("structured_signal", answer.get("structured_signal"))
+                if answer.get("procurement_model") is not None:
+                    merged_question.setdefault("procurement_model", answer.get("procurement_model"))
+                if answer.get("commercial_implication") is not None:
+                    merged_question.setdefault("commercial_implication", answer.get("commercial_implication"))
+                if answer.get("signal_density") is not None:
+                    merged_question.setdefault("signal_density", answer.get("signal_density"))
+            merged_questions.append(merged_question)
+        payload["questions"] = merged_questions
 
     payload.setdefault("question_first", {})
     if isinstance(payload["question_first"], dict):
@@ -96,6 +152,8 @@ def _merge_question_first_run_patch(
         payload["question_first"].setdefault("run_rollup", artifact.run_rollup)
         payload["question_first"].setdefault("categories", artifact.categories)
         payload["question_first"].setdefault("answers", artifact.answers)
+        payload["question_first"].setdefault("evidence_items", artifact.evidence_items)
+        payload["question_first"].setdefault("trace_index", artifact.trace_index)
         payload["question_first"].setdefault("questions_answered", len(artifact.answers))
 
     metadata.setdefault("question_first", {})
@@ -104,6 +162,8 @@ def _merge_question_first_run_patch(
         metadata["question_first"].setdefault("generated_at", artifact.generated_at)
         metadata["question_first"].setdefault("questions_answered", len(artifact.answers))
         metadata["question_first"].setdefault("categories", artifact.categories)
+        metadata["question_first"].setdefault("evidence_items", artifact.evidence_items)
+        metadata["question_first"].setdefault("trace_index", artifact.trace_index)
         metadata["question_first"].setdefault("question_source_path", artifact.question_source_path)
         metadata["question_first"].setdefault("run_rollup", artifact.run_rollup)
 
@@ -145,13 +205,14 @@ def _find_latest_question_first_run_artifact(output_dir: Path) -> Optional[Path]
     return candidates[0]
 
 
-def _launch_opencode_question_first_batch(
+async def _launch_opencode_question_first_batch(
     *,
     source_payload: Dict[str, Any],
     output_dir: Path,
     preset: Optional[str] = None,
     worktree_root: Optional[Path] = None,
     opencode_timeout_ms: int = 300000,
+    progress_callback: Optional[Any] = None,
 ) -> Path:
     backend_root = Path(__file__).resolve().parent
     app_root = backend_root.parent
@@ -170,28 +231,91 @@ def _launch_opencode_question_first_batch(
             "--question-source",
             str(temp_source_path),
             "--output-dir",
-            str(output_dir),
+            str(output_dir.resolve()),
             "--opencode-timeout-ms",
             str(opencode_timeout_ms),
         ]
         if preset:
             command.extend(["--preset", preset])
 
-        proc = subprocess.run(
-            command,
+        proc = await asyncio.create_subprocess_exec(
+            *command,
             cwd=str(worktree_root),
-            capture_output=True,
-            text=True,
-            check=False,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
             env=dict(os.environ),
         )
+        stdout_lines: List[str] = []
+        stderr_lines: List[str] = []
+
+        async def _read_stdout() -> None:
+            if proc.stdout is None:
+                return
+            while True:
+                raw_line = await proc.stdout.readline()
+                if not raw_line:
+                    break
+                line = raw_line.decode("utf-8", errors="replace").strip()
+                if not line:
+                    continue
+                progress_line = line
+                if line.startswith(OPENCODE_PROGRESS_EVENT_PREFIX):
+                    progress_line = line[len(OPENCODE_PROGRESS_EVENT_PREFIX):]
+                try:
+                    parsed = json.loads(progress_line)
+                except Exception:
+                    stdout_lines.append(line)
+                    continue
+                if (
+                    isinstance(parsed, dict)
+                    and parsed.get("event_type")
+                    and progress_callback is not None
+                ):
+                    if parsed.get("current_question_id"):
+                        parsed.update(
+                            build_question_checkpoint_fields(
+                                question_id=str(parsed.get("current_question_id") or "").strip() or None,
+                                execution_state=parsed.get("current_execution_state") or "searching sources",
+                                current_substep=parsed.get("current_substep"),
+                                source_order=parsed.get("current_source_order"),
+                            )
+                        )
+                    await progress_callback(parsed)
+                    continue
+                stdout_lines.append(line)
+
+        async def _read_stderr() -> None:
+            if proc.stderr is None:
+                return
+            while True:
+                raw_line = await proc.stderr.readline()
+                if not raw_line:
+                    break
+                stderr_lines.append(raw_line.decode("utf-8", errors="replace").rstrip())
+
+        await asyncio.gather(_read_stdout(), _read_stderr())
+        await proc.wait()
+        if not stdout_lines:
+            logger.warning(
+                "OpenCode question-first batch produced no stdout lines for entity=%s preset=%s",
+                source_payload.get("entity_id"),
+                source_payload.get("preset"),
+            )
+        if stderr_lines:
+            stderr_preview = " ".join(line for line in stderr_lines[:10] if line).strip()[:1000]
+            logger.warning(
+                "OpenCode question-first batch stderr (%d lines) for entity=%s: %s",
+                len(stderr_lines),
+                source_payload.get("entity_id"),
+                stderr_preview,
+            )
         if proc.returncode != 0:
             raise RuntimeError(
                 "OpenCode question-first batch failed with exit code "
-                f"{proc.returncode}: {proc.stderr.strip() or proc.stdout.strip()}"
+                f"{proc.returncode}: {(' '.join(line for line in stderr_lines if line).strip()) or (' '.join(line for line in stdout_lines if line).strip())}"
             )
         try:
-            result = json.loads(proc.stdout.strip().splitlines()[-1])
+            result = json.loads(stdout_lines[-1]) if stdout_lines else {}
         except Exception:
             result = {}
         question_first_run_path = result.get("question_first_run_path")
@@ -675,23 +799,49 @@ async def run_question_first_dossier_from_payload(
     opencode_timeout_ms: int = 300000,
     preset: Optional[str] = None,
     question_source_label: Optional[str] = None,
+    progress_callback: Optional[Any] = None,
     **_legacy_kwargs: Any,
 ) -> Dict[str, Any]:
     source = dict(source_payload or {})
+    if isinstance(source.get("questions"), list):
+        source["questions"] = enrich_question_specs(source.get("questions") or [])
     artifact_path_value = question_first_run_path or source.get("question_first_run_path")
     if artifact_path_value:
         artifact_path = Path(artifact_path_value)
     else:
         target_output_dir = Path(output_dir) if output_dir is not None else Path(tempfile.mkdtemp(prefix="question-first-run-"))
-        artifact_path = _launch_opencode_question_first_batch(
+        artifact_path = await _launch_opencode_question_first_batch(
             source_payload=source,
             output_dir=target_output_dir,
             preset=preset or source.get("preset") or source.get("question_source_label") or None,
             worktree_root=worktree_root,
             opencode_timeout_ms=opencode_timeout_ms,
+            progress_callback=progress_callback,
         )
 
     artifact = _load_question_first_run_artifact(artifact_path)
+    non_empty_answers = sum(
+        1
+        for a in (artifact.answers or [])
+        if isinstance(a, dict)
+        and str(a.get("answer") or "").strip() not in ("", "No answer found")
+    )
+    total_answers = len(artifact.answers or [])
+    entity_id_for_log = str(source.get("entity_id") or "unknown")
+    logger.info(
+        "Question-first artifact loaded: entity=%s answers=%d non_empty=%d status=%s artifact_path=%s",
+        entity_id_for_log,
+        total_answers,
+        non_empty_answers,
+        artifact.status or "unknown",
+        artifact_path,
+    )
+    if total_answers > 0 and non_empty_answers == 0:
+        logger.warning(
+            "Question-first: all %d answers empty for entity=%s — OpenCode produced no structured output",
+            total_answers,
+            entity_id_for_log,
+        )
     merged = merge_question_first_run_artifact_into_dossier(dossier_payload=source, artifact=artifact)
 
     if output_dir is not None:
@@ -765,6 +915,95 @@ async def run_question_first_dossier(
         preset=preset,
         question_source_label=str(question_source_path),
     )
+
+
+async def run_question_first_direct(
+    *,
+    source_payload: Dict[str, Any],
+    brightdata_client: Any,
+    claude_client: Any,
+    progress_callback: Optional[Any] = None,
+    max_questions: int = 0,
+) -> Dict[str, Any]:
+    """Run question-first enrichment directly with BrightData + Claude.
+
+    Iterates questions from the dossier payload, answers each one via
+    search + scrape + reasoning, and emits per-question progress via
+    the optional callback.
+
+    Args:
+        source_payload: Dossier payload with ``questions`` list.
+        brightdata_client: Client with ``search_engine()`` and ``scrape_as_markdown()``.
+        claude_client: Client with ``query()`` method.
+        progress_callback: ``async callback(question_id, question_text, index, total)``.
+        max_questions: Cap on questions to process (0 = all).
+
+    Returns:
+        Merged dossier payload with ``question_first`` section populated.
+    """
+    from datetime import datetime, timezone
+
+    source = dict(source_payload or {})
+    if isinstance(source.get("questions"), list):
+        source["questions"] = enrich_question_specs(source.get("questions") or [])
+    questions = _question_list_from_payload(source)
+    if max_questions > 0:
+        questions = questions[:max_questions]
+
+    total = len(questions)
+    entity_name = str(source.get("entity_name") or source.get("entity_id") or "entity")
+    answers: List[Dict[str, Any]] = []
+    categories: Dict[str, List[Dict[str, Any]]] = {}
+
+    for idx, question in enumerate(questions):
+        qid = str(question.get("question_id") or f"q_{idx}").strip()
+        qtext = str(question.get("question_text") or question.get("question") or question.get("prompt") or qid).strip()
+
+        logger.info("Question-first [%d/%d] %s: %s", idx + 1, total, qid, qtext[:80])
+
+        if progress_callback is not None:
+            try:
+                await progress_callback(qid, qtext, idx + 1, total)
+            except Exception as cb_err:
+                logger.warning("Progress callback error for %s: %s", qid, cb_err)
+
+        try:
+            answer = await _answer_question(
+                question,
+                entity_name=entity_name,
+                brightdata_client=brightdata_client,
+                claude_client=claude_client,
+            )
+        except Exception as answer_err:
+            logger.warning("Failed to answer question %s: %s", qid, answer_err)
+            answer = {
+                "question_id": qid,
+                "section_id": question.get("section_id"),
+                "question_text": qtext,
+                "answer": None,
+                "confidence": 0.0,
+                "evidence_url": None,
+                "error": str(answer_err),
+                "category": _category_for_section(question.get("section_id")),
+            }
+
+        answers.append(answer)
+        cat = answer.get("category") or "uncategorized"
+        categories.setdefault(cat, []).append(answer)
+
+    now_iso = datetime.now(timezone.utc).isoformat()
+    source.setdefault("question_first", {})
+    if isinstance(source["question_first"], dict):
+        source["question_first"].update({
+            "generated_at": now_iso,
+            "questions_answered": len(answers),
+            "answers": answers,
+            "categories": {k: len(v) for k, v in categories.items()},
+            "run_mode": "direct_brightdata",
+        })
+    source["answers"] = answers
+
+    return source
 
 
 def main(argv: Optional[List[str]] = None) -> int:

@@ -10,6 +10,13 @@ test('dossier api reads the latest Supabase-published dossier without filesystem
   assert.doesNotMatch(entityDossierRouteSource, /resolveCanonicalQuestionFirstDossier/)
 })
 
+test('dossier api checks persisted dossier rows before the final missing-entity 404 in read mode', () => {
+  assert.match(
+    entityDossierRouteSource,
+    /const entity = await resolveEntity\(entityId\)\s*if \(!entity && !forceQueue\)\s*\{\s*const persisted = await getPersistedDossier\(entityId, null\)[\s\S]*?buildCanonicalDossierResponse\(dossier, 'supabase_persisted_dossier'\)[\s\S]*?\}\s*if \(!entity\)\s*\{\s*return NextResponse\.json\(\{ error: 'Entity not found', entityId \}, \{ status: 404 \}\)/,
+  )
+})
+
 test('dossier api exposes the normalized question-first payload expected by the app', () => {
   assert.match(entityDossierRouteSource, /entity_id:/)
   assert.match(entityDossierRouteSource, /entity_name:/)
@@ -29,6 +36,17 @@ test('dossier api exposes the normalized question-first payload expected by the 
   assert.match(entityDossierRouteSource, /heartbeat_at:/)
   assert.match(entityDossierRouteSource, /checkpoint_consistent:/)
   assert.match(entityDossierRouteSource, /non_terminal_question_ids:/)
+})
+
+test('dossier api keeps commercial signal fields available through normalized question-first answers', () => {
+  const questionFirstDossierSource = readFileSync(new URL('../src/lib/question-first-dossier.ts', import.meta.url), 'utf8')
+  assert.match(entityDossierRouteSource, /question_first:\s*dossier\.question_first/)
+  assert.match(entityDossierRouteSource, /answers:\s*dossier\.answers/)
+  assert.match(questionFirstDossierSource, /evidence_grade:\s*toText\(answerRecord\.evidence_grade\)\s*\|\|\s*null/)
+  assert.match(questionFirstDossierSource, /structured_signal:\s*ensureObject\(answerRecord\.structured_signal\).*null/s)
+  assert.match(questionFirstDossierSource, /procurement_model:\s*toText\(answerRecord\.procurement_model\)\s*\|\|\s*null/)
+  assert.match(questionFirstDossierSource, /commercial_implication:\s*toText\(answerRecord\.commercial_implication\)\s*\|\|\s*null/)
+  assert.match(questionFirstDossierSource, /signal_density:\s*Number\.isFinite\(Number\(answerRecord\.signal_density\)\)\s*\?\s*Number\(answerRecord\.signal_density\)\s*:\s*null/)
 })
 
 test('question-first normalization preserves readable procurement timeout summaries and validation-sample metadata', () => {
@@ -71,4 +89,10 @@ test('dossier api ranks persisted dossier candidates so malformed newer rows can
 test('dossier api does not synthesize entities from question-first artifacts when no live row exists', () => {
   assert.doesNotMatch(entityDossierRouteSource, /resolveCanonicalQuestionFirstDossier/)
   assert.doesNotMatch(entityDossierRouteSource, /dossier_data: JSON\.stringify\(dossier\)/)
+})
+
+test('dossier api still requires a live resolvable entity before queueing new work', () => {
+  assert.match(entityDossierRouteSource, /const entity = await resolveEntity\(entityId\)/)
+  assert.match(entityDossierRouteSource, /if \(!entity\)\s*\{\s*return NextResponse\.json\(\{ error: 'Entity not found', entityId \}, \{ status: 404 \}\)/)
+  assert.match(entityDossierRouteSource, /const batchId = await queueRun\(entityId, entity\)/)
 })

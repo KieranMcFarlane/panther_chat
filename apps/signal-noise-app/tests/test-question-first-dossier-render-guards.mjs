@@ -48,3 +48,11 @@ test('question-first dossier renders enriched poi cards with bio, verified email
   assert.match(source, /Verified email/)
   assert.match(source, /LinkedIn/)
 })
+
+test('question-first dossier renders read-only commercial evidence fields for procurement-ecosystem cards', () => {
+  assert.match(source, /function getCommercialQuestionFields/)
+  assert.match(source, /Evidence grade/)
+  assert.match(source, /Procurement model/)
+  assert.match(source, /Commercial implication/)
+  assert.match(source, /getQuestionBucket\(item\) === "procurement-ecosystem"/)
+})

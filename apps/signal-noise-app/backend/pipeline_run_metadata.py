@@ -9,6 +9,10 @@ from copy import deepcopy
 from importlib import import_module
 from typing import Any, Dict, Optional
 
+try:
+    from backend.question_progress_framework import derive_execution_state
+except ImportError:
+    from question_progress_framework import derive_execution_state
 
 VALID_PHASE_STATUSES = {"pending", "running", "completed", "failed", "skipped"}
 CANONICAL_PHASE_ORDER = (
@@ -19,12 +23,139 @@ CANONICAL_PHASE_ORDER = (
     "dashboard_scoring",
 )
 
+PHASE_CALLBACK_SUBSTEP_LABELS = {
+    "dossier_request_preparing": "Preparing dossier request",
+    "cache_lookup": "Checking cached dossier",
+    "collect_entity_data": "Collecting entity data",
+    "connect_falkordb": "Connecting knowledge graph",
+    "fetch_falkordb_metadata": "Reading graph metadata",
+    "connect_brightdata": "Connecting search provider",
+    "brightdata_search_official": "Searching official sources",
+    "brightdata_scrape_official": "Scraping official sources",
+    "extract_entity_properties": "Extracting entity properties",
+    "generate_dossier_content": "Generating dossier content",
+    "persist_dossier": "Persisting dossier",
+    "finalize_response": "Finalizing dossier response",
+    "dossier_generation_running": "Generating dossier",
+    "question_first_running": "Question-first running",
+    "question_first_completed": "Question-first completed",
+    "dossier_generation_degraded": "Dossier generation degraded",
+    "dossier_generation_completed": "Dossier generation completed",
+    "discovery_running": "Discovery running",
+    "discovery_candidate_evaluation": "Discovery evaluating candidates",
+    "discovery_completed": "Discovery completed",
+    "discovery_failed": "Discovery failed",
+    "discovery_no_signals": "Discovery found no signals",
+    "ralph_validation_running": "Ralph validation running",
+    "ralph_validation_completed": "Ralph validation completed",
+    "ralph_validation_failed": "Ralph validation failed",
+    "temporal_persistence_running": "Persisting episodes",
+    "temporal_persistence_completed": "Temporal persistence completed",
+    "temporal_persistence_failed": "Temporal persistence failed",
+    "dashboard_scoring_running": "Dashboard scoring running",
+    "dashboard_scoring_completed": "Dashboard scoring completed",
+}
+
 
 def normalize_phase_status(status: Any, default: str = "running") -> str:
     normalized = str(status or "").strip().lower()
     if normalized in VALID_PHASE_STATUSES:
         return normalized
     return default
+
+
+def _format_default_substep_label(value: str) -> str:
+    return value.replace("_", " ").strip().capitalize()
+
+
+def _normalize_substep_key(phase: str, payload: Dict[str, Any]) -> Optional[str]:
+    explicit = str(payload.get("current_substep") or payload.get("substep") or "").strip().lower()
+    if explicit:
+        return explicit
+    raw_status = str(payload.get("status") or "").strip().lower()
+    if raw_status and raw_status not in VALID_PHASE_STATUSES and "_" in raw_status:
+        return raw_status
+    status = normalize_phase_status(payload.get("status"), default="running")
+    if phase == "dossier_generation" and bool(payload.get("degraded_mode")):
+        return "dossier_generation_degraded"
+    if phase == "discovery" and status == "completed" and int(payload.get("signals_discovered", 0) or 0) == 0:
+        return "discovery_no_signals"
+    if phase in CANONICAL_PHASE_ORDER and status in {"running", "completed", "failed"}:
+        return f"{phase}_{status}"
+    return None
+
+
+def _derive_substep_progress(payload: Dict[str, Any]) -> Optional[str]:
+    items_completed = payload.get("items_completed")
+    items_total = payload.get("items_total")
+    if items_completed is not None and items_total:
+        return f"{int(items_completed)}/{int(items_total)}"
+
+    questions_answered = payload.get("questions_answered")
+    questions_total = payload.get("questions_total")
+    if questions_answered is not None and questions_total:
+        return f"{int(questions_answered)}/{int(questions_total)} questions"
+
+    iteration = payload.get("iteration")
+    if iteration is not None and items_total:
+        return f"Iteration {int(iteration)} of {int(items_total)}"
+    if iteration is not None:
+        return f"Iteration {int(iteration)}"
+
+    validated_count = payload.get("validated_count")
+    if validated_count is not None:
+        return f"{int(validated_count)} validated"
+
+    episode_count = payload.get("episode_count")
+    if episode_count is not None:
+        return f"{int(episode_count)} episodes"
+
+    candidate_count = payload.get("candidate_count")
+    if candidate_count is not None:
+        return f"{int(candidate_count)} candidates"
+
+    return None
+
+
+def normalize_phase_callback_payload(phase: str, payload: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    phase_payload = deepcopy(payload or {})
+    phase_payload["phase"] = phase
+    raw_status = str(phase_payload.get("status") or "").strip()
+    phase_payload["phase_status"] = normalize_phase_status(raw_status, default="running")
+    phase_payload["status"] = raw_status or phase_payload["phase_status"]
+
+    current_substep = _normalize_substep_key(phase, phase_payload)
+    if current_substep:
+        phase_payload["current_substep"] = current_substep
+
+    label = str(phase_payload.get("current_substep_label") or "").strip()
+    if not label and current_substep:
+        label = PHASE_CALLBACK_SUBSTEP_LABELS.get(current_substep) or _format_default_substep_label(current_substep)
+    if label:
+        phase_payload["current_substep_label"] = label
+
+    progress = str(phase_payload.get("current_substep_progress") or "").strip()
+    if not progress:
+        derived_progress = _derive_substep_progress(phase_payload)
+        if derived_progress:
+            progress = derived_progress
+    if progress:
+        phase_payload["current_substep_progress"] = progress
+
+    execution_state = derive_execution_state(
+        explicit_state=str(phase_payload.get("current_execution_state") or "").strip() or None,
+        current_substep=str(phase_payload.get("current_substep") or "").strip() or None,
+    )
+    if execution_state:
+        phase_payload["current_execution_state"] = execution_state
+
+    source_order = phase_payload.get("current_source_order")
+    if isinstance(source_order, list):
+        normalized_source_order = [str(item).strip() for item in source_order if str(item).strip()]
+        if normalized_source_order:
+            phase_payload["current_source_order"] = normalized_source_order
+
+    return phase_payload
 
 
 def merge_pipeline_phase_metadata(
@@ -80,6 +211,19 @@ def merge_pipeline_phase_metadata(
         metadata["degraded_mode"] = bool(phase_payload.get("degraded_mode"))
     if phase_payload.get("persistence_status") is not None:
         metadata["persistence"] = phase_payload.get("persistence_status")
+    for field in (
+        "phase0_mode",
+        "question_first_backend",
+        "execution_backend",
+        "execution_model",
+        "execution_provider",
+        "brightdata_transport",
+        "legacy_phase0_used",
+        "opencode_model",
+        "opencode_provider",
+    ):
+        if phase_payload.get(field) is not None:
+            metadata[field] = phase_payload.get(field)
     return metadata
 
 

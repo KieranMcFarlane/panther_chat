@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import sys
 
@@ -97,6 +98,33 @@ def test_universal_atomic_matrix_adds_execution_class_phase_and_schema_metadata(
     assert questions["q4_performance"]["rollout_phase"] == "phase_2_conditional"
     assert questions["q11_decision_owner"]["rollout_phase"] == "phase_3_decision"
     assert questions["q15_outreach_strategy"]["rollout_phase"] == "phase_3_decision"
+
+def test_universal_atomic_matrix_marks_commercial_subset_and_uses_real_world_queries():
+    payload = build_universal_atomic_question_source(
+        entity_type="RIGHTS_HOLDER",
+        entity_name="LiveScore Group (media)",
+        entity_id="livescore-group-media",
+        preset="livescore-group-media-atomic-matrix",
+    )
+    questions = _question_index(payload)
+
+    for question_id in [
+        "q6_launch_signal",
+        "q7_procurement_signal",
+        "q8_explicit_rfp",
+        "q9_news_signal",
+        "q10_hiring_signal",
+        "q11_decision_owner",
+    ]:
+        assert questions[question_id]["commercial_output_enabled"] is True
+
+    assert questions["q7_procurement_signal"]["query"] == '"LiveScore Group (media)" platform migration provider partnership'
+    assert '"LiveScore Group (media)" sportsbook provider migration' in questions["q7_procurement_signal"]["search_strategy"]["search_queries"]
+    assert '"LiveScore Group (media)" rights partner platform' in questions["q7_procurement_signal"]["search_strategy"]["search_queries"]
+
+    assert questions["q10_hiring_signal"]["query"] == '"LiveScore Group (media)" careers jobs product engineering data'
+    assert 'site:linkedin.com/jobs "LiveScore Group (media)"' in questions["q10_hiring_signal"]["search_strategy"]["search_queries"]
+    assert '"LiveScore Group (media)" hiring product data engineering roles' in questions["q10_hiring_signal"]["search_strategy"]["search_queries"]
 
     assert questions["q11_decision_owner"]["depends_on"] == [
         "q3_leadership",
@@ -201,6 +229,54 @@ def test_universal_atomic_matrix_marks_conditional_questions_explicitly():
     assert questions["q12_connections"]["conditional_on"] == [
         {"type": "validated_question", "question_id": "q11_decision_owner"}
     ]
+    assert questions["q8_explicit_rfp"]["question_role"] == "follow_up_negative_confirmation"
+
+
+def test_universal_atomic_matrix_uses_broader_procurement_tender_and_hiring_openers():
+    payload = build_universal_atomic_question_source(
+        entity_type="SPORT_LEAGUE",
+        entity_name="Major League Cricket",
+        entity_id="major-league-cricket",
+        preset="major-league-cricket-atomic-matrix",
+    )
+    questions = _question_index(payload)
+
+    assert questions["q7_procurement_signal"]["query"] == '"Major League Cricket" platform migration provider partnership'
+    assert questions["q7_procurement_signal"]["source_priority"][:4] == [
+        "google_serp",
+        "news",
+        "press_release",
+        "linkedin_posts",
+    ]
+    assert '"Major League Cricket" rights partner platform' in questions["q7_procurement_signal"]["search_strategy"]["search_queries"]
+    assert '"Major League Cricket" betting platform provider' in questions["q7_procurement_signal"]["search_strategy"]["search_queries"]
+
+    assert questions["q8_explicit_rfp"]["query"] == '"Major League Cricket" RFP tender procurement'
+    assert questions["q8_explicit_rfp"]["source_priority"] == [
+        "google_serp",
+        "news",
+        "press_release",
+        "linkedin_posts",
+        "official_site",
+    ]
+    assert '"Major League Cricket" procurement portal tender' in questions["q8_explicit_rfp"]["search_strategy"]["search_queries"]
+
+    assert questions["q10_hiring_signal"]["query"] == '"Major League Cricket" careers jobs product engineering data'
+    assert questions["q10_hiring_signal"]["source_priority"] == [
+        "careers",
+        "linkedin_jobs",
+        "google_serp",
+        "linkedin_posts",
+        "news",
+        "official_site",
+    ]
+
+
+def test_question_progress_framework_marks_q8_as_secondary_follow_up_confirmation():
+    framework_path = BACKEND_DIR / "question_progress_framework.json"
+    framework = json.loads(framework_path.read_text(encoding="utf-8"))
+
+    assert framework["questions"]["q8_explicit_rfp"]["strategy_label"] == "Secondary follow-up-only tender and RFP confirmation"
 
 
 def test_universal_atomic_matrix_keeps_deterministic_and_derived_questions_out_of_retrieval_fallback():

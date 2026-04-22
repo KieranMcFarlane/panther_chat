@@ -4227,6 +4227,37 @@ Hard requirements:
         # Attach hypotheses and signals
         dossier["extracted_hypotheses"] = hypotheses
         dossier["extracted_signals"] = signals
+
+        # Generate entity-type questions for question-first enrichment
+        if enable_question_extraction and not self.disable_question_extraction:
+            try:
+                corpus_key = self._entity_type_question_corpus_key(entity_type)
+                question_templates = get_questions_for_entity_type(corpus_key)
+                if question_templates:
+                    timestamp = int(datetime.now(timezone.utc).timestamp())
+                    questions_list = []
+                    for idx, template in enumerate(question_templates):
+                        question_text = template.question.format(entity=entity_name)
+                        questions_list.append({
+                            "question_id": template.question_id,
+                            "question_text": question_text,
+                            "section_id": template.section_id if hasattr(template, 'section_id') else None,
+                            "question_type": template.question_type if hasattr(template, 'question_type') else "procurement",
+                            "query": question_text,
+                            "hop_budget": template.hop_budget if hasattr(template, 'hop_budget') else 2,
+                            "entity_id": entity_id,
+                            "entity_name": entity_name,
+                            "entity_type": entity_type,
+                        })
+                    dossier["questions"] = questions_list
+                    logger.info("Generated %d entity-type questions for %s", len(questions_list), entity_name)
+                else:
+                    dossier["questions"] = []
+            except Exception as qe:
+                logger.warning("Could not generate questions for %s: %s", entity_name, qe)
+                dossier["questions"] = []
+        else:
+            dossier["questions"] = []
         field_extraction_results = self._build_field_extraction_results(
             entity_id=entity_id,
             entity_name=entity_name,
