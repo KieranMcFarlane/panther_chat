@@ -26,3 +26,8 @@ end_to_end_demo_results.json
 test_rfp_detection_results_*.json
 coventry_city_fc_dossier.md
 .vercel
+
+# Generated local run artifacts and temporary state
+tmp/
+backend/data/question_first_live_runs/
+backend/data/question_first_dossiers/
