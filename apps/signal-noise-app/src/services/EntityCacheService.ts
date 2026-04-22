@@ -1,11 +1,7 @@
 import { Neo4jService } from '@/lib/neo4j'
 import { resolveEntityUuid } from '@/lib/entity-public-id'
-import { createClient } from '@supabase/supabase-js'
+import { supabase } from '@/lib/pg-client'
 import neo4j from 'neo4j-driver'
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY!
-const supabase = createClient(supabaseUrl, supabaseKey)
 
 export interface CachedEntity {
   id: string
@@ -169,17 +165,35 @@ export class EntityCacheService {
 
   private async upsertEntitiesToSupabase(entities: any[], forceRefresh: boolean): Promise<number> {
     try {
-      console.log(`🗄️ Upserting ${entities.length} entities to Supabase...`)
-      
+      console.log(`🗄️ Upserting ${entities.length} entities to canonical_entities...`)
+
+      // Transform Neo4j entity format to canonical_entities columns
+      const canonicalRows = entities.map((entity) => {
+        const props = entity.properties || {}
+        const uuid = entity.uuid || entity.canonical_entity_id || entity.neo4j_id
+        return {
+          id: uuid,
+          name: props.name || entity.neo4j_id,
+          entity_type: props.type || (Array.isArray(entity.labels) && entity.labels[0]) || 'ENTITY',
+          sport: props.sport || null,
+          country: props.country || null,
+          league: props.league || null,
+          labels: entity.labels || [],
+          properties: props,
+          source_neo4j_ids: [entity.neo4j_id],
+          updated_at: entity.updated_at || new Date().toISOString(),
+        }
+      })
+
       const { data, error } = await supabase
-        .from('cached_entities')
-        .upsert(entities, { onConflict: 'neo4j_id' })
-      
+        .from('canonical_entities')
+        .upsert(canonicalRows, { onConflict: 'id' })
+
       if (error) {
         console.error('❌ Supabase upsert error:', error)
         throw error
       }
-      
+
       console.log(`✅ Successfully upserted ${entities.length} entities`)
       return entities.length
     } catch (error) {
@@ -206,30 +220,31 @@ export class EntityCacheService {
       sortOrder = 'asc',
       leagues = ''
     } = options
-    
+
     const start = (page - 1) * limit
     const end = start + limit - 1
-    
+
+    const canonicalSelect = 'id, name, entity_type, sport, league, country, labels, properties, source_neo4j_ids, badge_path, badge_s3_url'
+
     try {
-      // Performance optimization: Log query parameters for debugging
-      console.log(`📖 Fetching cached entities from Supabase...`, {
+      console.log(`📖 Fetching entities from canonical_entities...`, {
         page,
         limit,
         leagues: leagues || 'none',
         search: search || 'none',
         entityType: entityType || 'none'
       })
-      
+
       let query = supabase
-        .from('cached_entities')
-        .select('*', { count: 'exact' })
-      
+        .from('canonical_entities')
+        .select(canonicalSelect, { count: 'exact' })
+
       // Apply filters
       if (entityType && entityType !== 'all') {
-        query = query.contains('labels', [entityType])
+        query = query.eq('entity_type', entityType)
       }
-      
-      // Apply leagues filter with performance logging
+
+      // Apply leagues filter
       if (leagues) {
         const leagueMap: Record<string, string[]> = {
           'premier': ['Premier League'],
@@ -240,57 +255,25 @@ export class EntityCacheService {
           'ligue1': ['Ligue 1'],
           'all': ['Premier League', 'LaLiga', 'NBA', 'Serie A', 'Bundesliga', 'Ligue 1']
         }
-        
-        const selectedLeagues = leagues.split(',').flatMap(league => 
+
+        const selectedLeagues = leagues.split(',').flatMap(league =>
           leagueMap[league.trim().toLowerCase()] || []
         )
-        
+
         if (selectedLeagues.length > 0) {
-          console.log(`🏆 Optimizing for leagues: ${selectedLeagues.join(', ')} (${selectedLeagues.length} leagues)`)
-          query = query.in('properties->>league', selectedLeagues)
+          query = query.in('league', selectedLeagues)
         }
       }
-      
+
       if (search) {
-        // Use raw SQL query via Supabase for search to overcome client limitations
-        console.log(`🔍 Search query detected, using raw SQL approach`)
-        console.log(`🔍 Search term: "${search}"`)
-        
+        const searchLower = search.toLowerCase()
+
         try {
-          // Build SQL query dynamically
-          const searchLower = search.toLowerCase()
-          let whereConditions = []
-          let params: any[] = []
-          
-          // Add entity type filter if specified
-          if (entityType && entityType !== 'all') {
-            whereConditions.push(`entity_type = $${params.length + 1}`)
-            params.push(entityType)
-          } else {
-            whereConditions.push(`(entity_type = '' OR entity_type = 'all' OR entity_type = ANY(labels))`)
-          }
-          
-          // Add search conditions
-          const searchConditions = [
-            `LOWER(properties->>'name') LIKE $${params.length + 1}`,
-            `LOWER(properties->>'description') LIKE $${params.length + 1}`,
-            `LOWER(properties->>'type') LIKE $${params.length + 1}`,
-            `LOWER(properties->>'sport') LIKE $${params.length + 1}`,
-            `LOWER(properties->>'country') LIKE $${params.length + 1}`,
-            `(properties->>'level' IS NOT NULL AND LOWER(properties->>'level') LIKE $${params.length + 1})`
-          ]
-          
-          whereConditions.push(`(${searchConditions.join(' OR ')})`)
-          params.push(`%${searchLower}%`)
-          
-          const whereClause = whereConditions.join(' AND ')
-          
-          // Optimized search approach: Use database-level filtering with appropriate limit
           let searchQuery = supabase
-            .from('cached_entities')
-            .select('*', { count: 'exact' })
-          
-          // Apply leagues filter first to reduce dataset size
+            .from('canonical_entities')
+            .select(canonicalSelect, { count: 'exact' })
+
+          // Apply leagues filter
           if (leagues) {
             const leagueMap: Record<string, string[]> = {
               'premier': ['Premier League'],
@@ -301,69 +284,61 @@ export class EntityCacheService {
               'ligue1': ['Ligue 1'],
               'all': ['Premier League', 'LaLiga', 'NBA', 'Serie A', 'Bundesliga', 'Ligue 1']
             }
-            const selectedLeagues = leagues.split(',').flatMap(league => 
+            const selectedLeagues = leagues.split(',').flatMap(league =>
               leagueMap[league.trim().toLowerCase()] || []
             )
             if (selectedLeagues.length > 0) {
-              searchQuery = searchQuery.in('properties->>league', selectedLeagues)
+              searchQuery = searchQuery.in('league', selectedLeagues)
             }
           }
-          
+
           // Apply entity type filter
           if (entityType && entityType !== 'all') {
-            searchQuery = searchQuery.contains('labels', [entityType])
+            searchQuery = searchQuery.eq('entity_type', entityType)
           }
-          
-          // Use database text search for better performance
-          searchQuery = searchQuery.or(`name.ilike.%${searchLower}%,description.ilike.%${searchLower}%,properties->>'type'.ilike.%${searchLower}%,properties->>'sport'.ilike.%${searchLower}%,properties->>'country'.ilike.%${searchLower}%,properties->>'level'.ilike.%${searchLower}%`)
-          
-          // Apply sorting and pagination  
-          const searchStart = (page - 1) * limit
-          const sortField = sortBy === 'name' ? 'name' : `properties->>'${sortBy}'`
+
+          // Search across proper columns
+          searchQuery = searchQuery.or(`name.ilike.%${searchLower}%,entity_type.ilike.%${searchLower}%,sport.ilike.%${searchLower}%,country.ilike.%${searchLower}%,league.ilike.%${searchLower}%`)
+
+          // Apply sorting and pagination
+          const sortField = sortBy === 'name' ? 'name' : sortBy === 'type' ? 'entity_type' : sortBy === 'sport' ? 'sport' : sortBy === 'country' ? 'country' : 'name'
           searchQuery = searchQuery.order(sortField, { ascending: sortOrder === 'asc' })
-          searchQuery = searchQuery.range(searchStart, Math.min(searchStart + limit * 2, 999)) // Reasonable limit for search
-          
+          searchQuery = searchQuery.range(start, Math.min(start + limit * 2, 999))
+
           const { data: searchResults, error: fetchError } = await searchQuery
-          
+
           if (fetchError) {
             console.error('❌ Cache fetch error:', fetchError)
             throw fetchError
           }
-          
-          // No additional in-memory filtering needed - database did the work
+
           const filteredEntities = searchResults || []
-          
-          // Sort results
-          filteredEntities.sort((a, b) => {
-            const aProp = a.properties[sortBy] || ''
-            const bProp = b.properties[sortBy] || ''
-            
-            if (sortBy === 'priorityScore' || sortBy === 'estimatedValue') {
-              const aNum = parseFloat(aProp) || 0
-              const bNum = parseFloat(bProp) || 0
-              return sortOrder === 'desc' ? bNum - aNum : aNum - bNum
+
+          // Map to response format
+          const mappedEntities = filteredEntities.map(entity => {
+            const sourceNeo4jId = Array.isArray(entity.source_neo4j_ids) && entity.source_neo4j_ids.length > 0
+              ? entity.source_neo4j_ids[0]
+              : entity.id
+            return {
+              id: entity.id,
+              canonical_entity_id: entity.id,
+              neo4j_id: sourceNeo4jId,
+              labels: entity.labels || [],
+              properties: {
+                ...entity.properties,
+                name: entity.name,
+                type: entity.entity_type,
+                sport: entity.sport,
+                country: entity.country,
+                league: entity.league,
+              },
             }
-            
-            const aStr = aProp.toString().toLowerCase()
-            const bStr = bProp.toString().toLowerCase()
-            return sortOrder === 'desc' ? bStr.localeCompare(aStr) : aStr.localeCompare(bStr)
           })
-          
-          // Apply pagination
-          const start = (page - 1) * limit
-          const end = start + limit
-          const paginatedEntities = filteredEntities.slice(start, end)
-          
-          console.log(`✅ Cache search successful, found ${filteredEntities.length} results, returning ${paginatedEntities.length}`)
-          
-      return {
-        entities: paginatedEntities.map(entity => ({
-              id: entity.uuid || entity.canonical_entity_id || entity.neo4j_id,
-              canonical_entity_id: entity.canonical_entity_id || entity.uuid || null,
-              neo4j_id: entity.neo4j_id,
-              labels: entity.labels,
-              properties: entity.properties
-            })),
+
+          console.log(`✅ Canonical search successful, found ${filteredEntities.length} results`)
+
+          return {
+            entities: mappedEntities,
             pagination: {
               page,
               limit,
@@ -379,9 +354,7 @@ export class EntityCacheService {
             }
           }
         } catch (searchError) {
-          console.error('❌ Cache search error:', searchError)
-          console.log('🔍 Cache search failed, returning empty results')
-          // Return empty results for failed search instead of falling back to non-search query
+          console.error('❌ Canonical search error:', searchError)
           return {
             entities: [],
             pagination: {
@@ -400,57 +373,49 @@ export class EntityCacheService {
           }
         }
       }
-      
-      // Apply sorting
-      const sortColumn = sortBy === 'name' ? 'properties->>name' : 
-                       sortBy === 'type' ? 'properties->>type' :
-                       sortBy === 'sport' ? 'properties->>sport' :
-                       sortBy === 'country' ? 'properties->>country' :
-                       sortBy === 'priorityScore' ? 'properties->>priorityScore' :
-                       sortBy === 'estimatedValue' ? 'properties->>estimatedValue' :
-                       'properties->>name'
-      
+
+      // Apply sorting (non-search path)
+      const sortColumn = sortBy === 'name' ? 'name' :
+                       sortBy === 'type' ? 'entity_type' :
+                       sortBy === 'sport' ? 'sport' :
+                       sortBy === 'country' ? 'country' :
+                       'name'
+
       query = query.order(sortColumn, { ascending: sortOrder === 'asc' })
-      
+
       // Apply pagination
       query = query.range(start, end)
-      
-      let data, error, count
-      try {
-        const result = await query
-        data = result.data
-        error = result.error
-        count = result.count
-      } catch (queryError) {
-        console.error('❌ Supabase query execution error:', queryError)
-        throw queryError
-      }
-      
+
+      const { data, error, count } = await query
+
       if (error) {
         console.error('❌ Supabase query error:', error)
-        console.error('Query details:', { search, entityType, sortBy, sortOrder })
-        console.error('Error details:', JSON.stringify(error, null, 2))
         throw error
       }
-      
-      if (search) {
-        console.log(`🔍 Cache search results for "${search}": ${data?.length || 0} entities found`)
-        if (data && data.length > 0) {
-          console.log(`🔍 First result name: ${data[0]?.properties?.name || 'N/A'}`)
+
+      const entities = (data || []).map(entity => {
+        const sourceNeo4jId = Array.isArray(entity.source_neo4j_ids) && entity.source_neo4j_ids.length > 0
+          ? entity.source_neo4j_ids[0]
+          : entity.id
+        return {
+          id: entity.id,
+          canonical_entity_id: entity.id,
+          neo4j_id: sourceNeo4jId,
+          labels: entity.labels || [],
+          properties: {
+            ...entity.properties,
+            name: entity.name,
+            type: entity.entity_type,
+            sport: entity.sport,
+            country: entity.country,
+            league: entity.league,
+          },
         }
-      }
-      
-      const entities = data || []
+      })
       const total = count || 0
-      
+
       return {
-        entities: entities.map(entity => ({
-          id: entity.uuid || entity.canonical_entity_id || entity.neo4j_id,
-          canonical_entity_id: entity.canonical_entity_id || entity.uuid || null,
-          neo4j_id: entity.neo4j_id,
-          labels: entity.labels,
-          properties: entity.properties
-        })),
+        entities,
         pagination: {
           page,
           limit,
@@ -466,7 +431,7 @@ export class EntityCacheService {
         }
       }
     } catch (error) {
-      console.error('❌ Failed to fetch cached entities:', error)
+      console.error('❌ Failed to fetch entities:', error)
       throw error
     }
   }
@@ -475,22 +440,30 @@ export class EntityCacheService {
     try {
       if (entityIds && entityIds.length > 0) {
         console.log(`🗑️ Invalidating cache for ${entityIds.length} entities`)
-        const { error } = await supabase
-          .from('cached_entities')
-          .delete()
-          .in('neo4j_id', entityIds)
-        
-        if (error) throw error
+        // entityIds are neo4j_ids — find matching canonical rows via source_neo4j_ids
+        const { data: matchingRows } = await supabase
+          .from('canonical_entities')
+          .select('id')
+          .overlaps('source_neo4j_ids', entityIds)
+
+        const idsToDelete = (matchingRows || []).map((r: any) => r.id)
+        if (idsToDelete.length > 0) {
+          const { error } = await supabase
+            .from('canonical_entities')
+            .delete()
+            .in('id', idsToDelete)
+          if (error) throw error
+        }
       } else {
         console.log('🗑️ Invalidating entire entity cache')
         const { error } = await supabase
-          .from('cached_entities')
+          .from('canonical_entities')
           .delete()
-          .neq('id', '00000000-0000-0000-0000-000000000000') // Delete all
-        
+          .neq('id', '00000000-0000-0000-0000-000000000000')
+
         if (error) throw error
       }
-      
+
       return { success: true, invalidatedCount: entityIds?.length || 0 }
     } catch (error) {
       console.error('❌ Failed to invalidate cache:', error)
@@ -501,28 +474,28 @@ export class EntityCacheService {
   async getCacheStats() {
     try {
       const { data, error } = await supabase
-        .from('cached_entities')
-        .select('labels, created_at, cache_version')
-      
+        .from('canonical_entities')
+        .select('labels, created_at')
+
       if (error) throw error
-      
+
       const entities = data || []
       const entitiesByType: Record<string, number> = {}
-      
+
       entities.forEach(entity => {
         entity.labels.forEach((label: string) => {
           entitiesByType[label] = (entitiesByType[label] || 0) + 1
         })
       })
-      
-      const lastSync = entities.length > 0 
+
+      const lastSync = entities.length > 0
         ? new Date(Math.max(...entities.map(e => new Date(e.created_at).getTime())))
         : null
-      
+
       return {
         totalCached: entities.length,
         lastSync,
-        cacheVersion: entities.length > 0 ? entities[0].cache_version : 1,
+        cacheVersion: 1,
         entitiesByType
       }
     } catch (error) {
@@ -727,17 +700,19 @@ export class EntityCacheService {
             weight: 1.0
           }
           
-          // Check if both entities exist in cache
+          // Check if both entities exist in canonical
           const { data: sourceCheck } = await supabase
-            .from('cached_entities')
-            .select('neo4j_id')
-            .eq('neo4j_id', relationship.source_neo4j_id)
+            .from('canonical_entities')
+            .select('id')
+            .contains('source_neo4j_ids', [relationship.source_neo4j_id])
+            .limit(1)
             .single()
-          
+
           const { data: targetCheck } = await supabase
-            .from('cached_entities')
-            .select('neo4j_id')
-            .eq('neo4j_id', relationship.target_neo4j_id)
+            .from('canonical_entities')
+            .select('id')
+            .contains('source_neo4j_ids', [relationship.target_neo4j_id])
+            .limit(1)
             .single()
           
           if (!sourceCheck || !targetCheck) {
@@ -801,78 +776,78 @@ export class EntityCacheService {
       sortOrder = 'asc',
       filters = {}
     } = options
-    
+
     const start = (page - 1) * limit
     const end = start + limit - 1
-    
+
+    const canonicalSelect = 'id, name, entity_type, sport, league, country, labels, properties, source_neo4j_ids, priority_score, entity_category'
+
     try {
-      console.log(`🎯 Fetching priority ${priority} entities from Supabase...`)
-      
+      console.log(`🎯 Fetching priority ${priority} entities from canonical_entities...`)
+
       let query = supabase
-        .from('cached_entities')
-        .select('*', { count: 'exact' })
+        .from('canonical_entities')
+        .select(canonicalSelect, { count: 'exact' })
         .eq('priority_score', priority)
-      
-      // Apply filters
+
       if (entityType && entityType !== 'all') {
-        query = query.contains('labels', [entityType])
+        query = query.eq('entity_type', entityType)
       }
-      
-      // Apply LeagueNav-specific filters
-      // Note: leaguenav_eligible filter disabled as property doesn't exist in database
-      // if (filters.leaguenav_eligible) {
-      //   query = query.eq('properties->>leaguenav_eligible', 'true')
-      // }
-      
+
       if (filters.hasLeague) {
-        query = query.not('properties->>league', 'is', null)
-        query = query.neq('properties->>league', '')
+        query = query.not('league', 'is', null)
+        query = query.neq('league', '')
       }
-      
+
       if (filters.excludeTypes && filters.excludeTypes.length > 0) {
-        query = query.not('properties->>entity_type', 'in', `(${filters.excludeTypes.map(t => `'${t}'`).join(',')})`)
+        query = query.not('entity_type', 'in', `(${filters.excludeTypes.map(t => `'${t}'`).join(',')})`)
       }
-      
+
       if (search) {
-        // Use the existing search logic for priority-based queries
         return this.performPrioritySearch(priority, search, entityType, sortBy, sortOrder, page, limit)
       }
-      
-      // Apply sorting
-      const sortColumn = sortBy === 'name' ? 'properties->>name' : 
-                       sortBy === 'type' ? 'properties->>type' :
-                       sortBy === 'sport' ? 'properties->>sport' :
-                       sortBy === 'country' ? 'properties->>country' :
+
+      const sortColumn = sortBy === 'name' ? 'name' :
+                       sortBy === 'type' ? 'entity_type' :
+                       sortBy === 'sport' ? 'sport' :
+                       sortBy === 'country' ? 'country' :
                        sortBy === 'priorityScore' ? 'priority_score' :
-                       'properties->>name'
-      
+                       'name'
+
       query = query.order(sortColumn, { ascending: sortOrder === 'asc' })
-      
-      // Apply pagination
       query = query.range(start, end)
-      
+
       const { data, error, count } = await query
-      
+
       if (error) {
         console.error('❌ Priority query error:', error)
         throw error
       }
-      
-      const entities = data || []
-      
-      console.log(`✅ Priority ${priority} fetch successful: ${entities.length} entities`)
-      
-      return {
-        entities: entities.map(entity => ({
-          id: entity.neo4j_id,
-          neo4j_id: entity.neo4j_id,
-          labels: entity.labels,
+
+      const entities = (data || []).map(row => {
+        const sourceNeo4jId = Array.isArray(row.source_neo4j_ids) && row.source_neo4j_ids.length > 0
+          ? row.source_neo4j_ids[0] : row.id
+        return {
+          id: sourceNeo4jId,
+          neo4j_id: sourceNeo4jId,
+          labels: row.labels || [],
           properties: {
-            ...entity.properties,
-            _priority_score: entity.priority_score,
-            _entity_category: entity.entity_category
-          }
-        })),
+            ...row.properties,
+            name: row.name,
+            type: row.entity_type,
+            sport: row.sport,
+            country: row.country,
+            league: row.league,
+            _priority_score: row.priority_score,
+            _entity_category: row.entity_category,
+          },
+        }
+      })
+
+      console.log(`✅ Priority ${priority} fetch successful: ${entities.length} entities`)
+
+      return {
+        entities,
         pagination: {
           page,
           limit,
@@ -895,80 +870,77 @@ export class EntityCacheService {
   }
 
   private async performPrioritySearch(
-    priority: number, 
-    search: string, 
-    entityType: string, 
-    sortBy: string, 
+    priority: number,
+    search: string,
+    entityType: string,
+    sortBy: string,
     sortOrder: 'asc' | 'desc',
     page: number,
     limit: number
   ) {
     const searchLower = search.toLowerCase()
-    
+
+    const canonicalSelect = 'id, name, entity_type, sport, league, country, labels, properties, source_neo4j_ids, priority_score, entity_category'
+
     try {
-      // Get all entities of this priority for search
-      const { data: allData, error } = await supabase
-        .from('cached_entities')
-        .select('*')
+      let query = supabase
+        .from('canonical_entities')
+        .select(canonicalSelect)
         .eq('priority_score', priority)
-        .limit(2000) // Reasonable limit for search
-      
+
+      if (entityType && entityType !== 'all') {
+        query = query.eq('entity_type', entityType)
+      }
+
+      // Search across proper columns
+      query = query.or(`name.ilike.%${searchLower}%,entity_type.ilike.%${searchLower}%,sport.ilike.%${searchLower}%,country.ilike.%${searchLower}%,league.ilike.%${searchLower}%`)
+      query = query.limit(2000)
+
+      const { data: allData, error } = await query
+
       if (error) {
         console.error('❌ Priority search fetch error:', error)
         throw error
       }
-      
-      // Filter in memory
-      const filteredEntities = allData?.filter(entity => {
-        const props = entity.properties || {}
-        const searchTerm = searchLower
-        
-        const matchesType = !entityType || entityType === 'all' || entity.labels.includes(entityType)
-        const matchesSearch = (
-          props.name?.toLowerCase().includes(searchTerm) ||
-          props.description?.toLowerCase().includes(searchTerm) ||
-          props.type?.toLowerCase().includes(searchTerm) ||
-          props.sport?.toLowerCase().includes(searchTerm) ||
-          props.country?.toLowerCase().includes(searchTerm) ||
-          (props.league && props.league.toLowerCase().includes(searchTerm)) ||
-          (props.level && props.level.toLowerCase().includes(searchTerm))
-        )
-        
-        return matchesType && matchesSearch
-      }) || []
-      
-      // Sort results
+
+      const filteredEntities = allData || []
+
+      const sortField = sortBy === 'name' ? 'name' : sortBy === 'type' ? 'entity_type' : sortBy === 'sport' ? 'sport' : sortBy === 'country' ? 'country' : 'name'
       filteredEntities.sort((a, b) => {
-        const aProp = a.properties[sortBy] || ''
-        const bProp = b.properties[sortBy] || ''
-        
         if (sortBy === 'priorityScore') {
-          return sortOrder === 'desc' ? b.priority_score - a.priority_score : a.priority_score - b.priority_score
+          return sortOrder === 'desc' ? (b.priority_score || 0) - (a.priority_score || 0) : (a.priority_score || 0) - (b.priority_score || 0)
         }
-        
-        const aStr = aProp.toString().toLowerCase()
-        const bStr = bProp.toString().toLowerCase()
-        return sortOrder === 'desc' ? bStr.localeCompare(aStr) : aStr.localeCompare(bStr)
+        const aVal = String(a[sortField] || '').toLowerCase()
+        const bVal = String(b[sortField] || '').toLowerCase()
+        return sortOrder === 'desc' ? bVal.localeCompare(aVal) : aVal.localeCompare(bVal)
       })
-      
-      // Apply pagination
+
       const start = (page - 1) * limit
       const end = start + limit
       const paginatedEntities = filteredEntities.slice(start, end)
-      
+
       console.log(`✅ Priority ${priority} search successful: ${filteredEntities.length} results, returning ${paginatedEntities.length}`)
-      
+
       return {
-        entities: paginatedEntities.map(entity => ({
-          id: entity.neo4j_id,
-          neo4j_id: entity.neo4j_id,
-          labels: entity.labels,
-          properties: {
-            ...entity.properties,
-            _priority_score: entity.priority_score,
-            _entity_category: entity.entity_category
+        entities: paginatedEntities.map(row => {
+          const sourceNeo4jId = Array.isArray(row.source_neo4j_ids) && row.source_neo4j_ids.length > 0
+            ? row.source_neo4j_ids[0] : row.id
+          return {
+            id: sourceNeo4jId,
+            neo4j_id: sourceNeo4jId,
+            labels: row.labels || [],
+            properties: {
+              ...row.properties,
+              name: row.name,
+              type: row.entity_type,
+              sport: row.sport,
+              country: row.country,
+              league: row.league,
+              _priority_score: row.priority_score,
+              _entity_category: row.entity_category,
+            },
           }
-        })),
+        }),
         pagination: {
           page,
           limit,
@@ -1157,7 +1129,7 @@ export class EntityCacheService {
   async getPriorityStats() {
     try {
       const { data, error } = await supabase
-        .from('cached_entities')
+        .from('canonical_entities')
         .select('priority_score, entity_category')
         .not('priority_score', 'is', null)
       
