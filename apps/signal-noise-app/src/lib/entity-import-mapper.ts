@@ -18,7 +18,8 @@ function labelsForEntityType(entityType: string): string[] {
   }
 }
 
-export function mapImportedEntityRowToCachedEntity(row: ImportedEntityRow) {
+/** Map an imported row to a canonical_entities upsert payload */
+export function mapImportedEntityRowToCanonicalEntity(row: ImportedEntityRow) {
   const uuid = resolveEntityUuid({
     id: row.entity_id,
     neo4j_id: row.entity_id,
@@ -32,12 +33,17 @@ export function mapImportedEntityRowToCachedEntity(row: ImportedEntityRow) {
   }) || row.entity_id
 
   return {
-    uuid,
-    neo4j_id: row.entity_id,
+    id: uuid,
+    name: row.name,
+    entity_type: row.entity_type,
+    sport: row.sport || null,
+    country: row.country || null,
+    league: row.league || null,
     labels: labelsForEntityType(row.entity_type),
     badge_s3_url: row.badge_url ?? null,
     priority_score: row.priority_score,
     entity_category: row.entity_type,
+    source_neo4j_ids: [row.entity_id],
     properties: {
       uuid,
       name: row.name,
@@ -56,5 +62,19 @@ export function mapImportedEntityRowToCachedEntity(row: ImportedEntityRow) {
       imported_at: new Date().toISOString(),
       priority_score: row.priority_score,
     },
+  }
+}
+
+/** @deprecated Use mapImportedEntityRowToCanonicalEntity instead */
+export function mapImportedEntityRowToCachedEntity(row: ImportedEntityRow) {
+  const canonical = mapImportedEntityRowToCanonicalEntity(row)
+  return {
+    uuid: canonical.id,
+    neo4j_id: row.entity_id,
+    labels: canonical.labels,
+    badge_s3_url: canonical.badge_s3_url,
+    priority_score: canonical.priority_score,
+    entity_category: canonical.entity_category,
+    properties: canonical.properties,
   }
 }

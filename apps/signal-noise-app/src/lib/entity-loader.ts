@@ -1,4 +1,3 @@
-import { buildCachedEntityCanonicalLookup, dedupeCanonicalCachedEntityRows } from '@/lib/cached-entity-canonicalization.mjs'
 import { getCanonicalEntitiesSnapshot } from '@/lib/canonical-entities-snapshot'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
@@ -30,7 +29,6 @@ function buildNameCandidates(entityId: string): string[] {
 
 async function findEntityInLiveStores(entityId: string): Promise<Entity | null> {
   const canonicalEntities = await getCanonicalEntitiesSnapshot()
-  const canonicalLookup = buildCachedEntityCanonicalLookup(canonicalEntities)
 
   const canonicalMatch = canonicalEntities.find((entity) => {
     const canonicalId = String(entity.id || '')
@@ -49,61 +47,69 @@ async function findEntityInLiveStores(entityId: string): Promise<Entity | null> 
 
   const [normalizedName] = buildNameCandidates(entityId)
 
-  const directIdPredicate = [
-    `id.eq.${entityId}`,
-    `neo4j_id.eq.${entityId}`,
-    `canonical_entity_id.eq.${entityId}`,
-    Number.isNaN(Number.parseInt(entityId, 10)) ? null : `neo4j_id.eq.${Number.parseInt(entityId, 10)}`
-  ].filter(Boolean).join(',')
+  // Direct ID lookup on canonical_entities
+  const idFilters = [`id.eq.${entityId}`]
+  const parsedId = Number.parseInt(entityId, 10)
+  if (Number.isFinite(parsedId)) {
+    idFilters.push(`source_neo4j_ids.cs.{${String(parsedId)}}`)
+  }
+  if (entityId !== String(parsedId)) {
+    idFilters.push(`source_neo4j_ids.cs.{${entityId}}`)
+  }
 
-  const { data: cachedEntity, error: cacheError } = await supabase
-    .from('cached_entities')
-    .select('*')
-    .or(directIdPredicate)
+  const { data: canonicalEntity, error: canonicalError } = await supabase
+    .from('canonical_entities')
+    .select('id, name, entity_type, sport, league, country, labels, properties, source_neo4j_ids')
+    .or(idFilters.join(','))
     .limit(1)
-    .single()
+    .maybeSingle()
 
-  if (!cacheError && cachedEntity) {
+  if (!canonicalError && canonicalEntity) {
+    const sourceNeo4jId = Array.isArray(canonicalEntity.source_neo4j_ids) && canonicalEntity.source_neo4j_ids.length > 0
+      ? canonicalEntity.source_neo4j_ids[0]
+      : canonicalEntity.id
     return {
-      id: cachedEntity.id,
-      uuid: resolveEntityUuid({
-        canonical_entity_id: cachedEntity.canonical_entity_id,
-        id: cachedEntity.id,
-        neo4j_id: cachedEntity.neo4j_id,
-        graph_id: cachedEntity.graph_id,
-        supabase_id: cachedEntity.supabase_id || cachedEntity.properties?.supabase_id,
-        properties: cachedEntity.properties,
-      }) || undefined,
-      neo4j_id: cachedEntity.neo4j_id,
-      labels: cachedEntity.labels,
-      properties: cachedEntity.properties,
+      id: canonicalEntity.id,
+      uuid: canonicalEntity.id,
+      neo4j_id: sourceNeo4jId,
+      labels: canonicalEntity.labels || [],
+      properties: {
+        ...canonicalEntity.properties,
+        name: canonicalEntity.name,
+        type: canonicalEntity.entity_type,
+        sport: canonicalEntity.sport,
+        country: canonicalEntity.country,
+        league: canonicalEntity.league,
+      },
     }
   }
 
+  // Name fallback on canonical_entities
   for (const candidateName of buildNameCandidates(entityId)) {
     const fallbackByName = await supabase
-      .from('cached_entities')
-      .select('id, neo4j_id, graph_id, labels, properties, canonical_entity_id')
-      .ilike('properties->>name', `%${candidateName}%`)
-      .limit(50)
+      .from('canonical_entities')
+      .select('id, name, entity_type, sport, league, country, labels, properties, source_neo4j_ids')
+      .ilike('name', `%${candidateName}%`)
+      .limit(1)
 
     if (fallbackByName.data && fallbackByName.data.length > 0) {
-      const deduped = dedupeCanonicalCachedEntityRows(fallbackByName.data, canonicalLookup)
-      const nameEntity = deduped[0]
+      const row = fallbackByName.data[0]
+      const sourceNeo4jId = Array.isArray(row.source_neo4j_ids) && row.source_neo4j_ids.length > 0
+        ? row.source_neo4j_ids[0]
+        : row.id
       return {
-        id: nameEntity.id,
-        uuid: resolveEntityUuid({
-          canonical_entity_id: nameEntity.canonical_entity_id,
-          id: nameEntity.id,
-          neo4j_id: nameEntity.neo4j_id,
-          graph_id: nameEntity.graph_id,
-          uuid: nameEntity.canonical_entity_id,
-          supabase_id: nameEntity.supabase_id || nameEntity.properties?.supabase_id,
-          properties: nameEntity.properties,
-        }) || nameEntity.canonical_entity_id || undefined,
-        neo4j_id: nameEntity.neo4j_id,
-        labels: nameEntity.labels,
-        properties: nameEntity.properties,
+        id: row.id,
+        uuid: row.id,
+        neo4j_id: sourceNeo4jId,
+        labels: row.labels || [],
+        properties: {
+          ...row.properties,
+          name: row.name,
+          type: row.entity_type,
+          sport: row.sport,
+          country: row.country,
+          league: row.league,
+        },
       }
     }
   }

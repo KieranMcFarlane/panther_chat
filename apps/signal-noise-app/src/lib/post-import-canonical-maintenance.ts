@@ -1,7 +1,7 @@
 import { spawn } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import path from 'node:path'
-import { createClient } from '@supabase/supabase-js'
+import { supabase as supabaseAuditClient } from '@/lib/pg-client'
 
 type MaintenanceStep = {
   command: string
@@ -30,16 +30,6 @@ const MAINTENANCE_COMMANDS = [
 
 const MAINTENANCE_TIMEOUT_MS = 20 * 60 * 1000
 
-const supabaseAuditUrl =
-  process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || ''
-const supabaseAuditKey =
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-const supabaseAuditClient =
-  supabaseAuditUrl && supabaseAuditKey
-    ? createClient(supabaseAuditUrl, supabaseAuditKey, {
-        auth: { persistSession: false, autoRefreshToken: false },
-      })
-    : null
 
 function resolveAppCwd(): string {
   const cwd = process.cwd()
@@ -103,10 +93,6 @@ async function persistMaintenanceAudit(params: {
   errorMessage?: string
   metadata?: Record<string, unknown>
 }) {
-  if (!supabaseAuditClient) {
-    return
-  }
-
   await supabaseAuditClient.from('canonical_maintenance_audit').insert({
     sync_run_id: params.syncRunId,
     trigger: params.trigger,

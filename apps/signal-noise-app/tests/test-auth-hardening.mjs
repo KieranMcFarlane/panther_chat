@@ -11,6 +11,10 @@ const mailboxSendRouteSource = readFileSync(
   new URL('../src/app/api/mailbox/send/route.ts', import.meta.url),
   'utf8'
 )
+const pipelineControlRouteSource = readFileSync(
+  new URL('../src/app/api/home/pipeline-control/route.ts', import.meta.url),
+  'utf8'
+)
 const authRouteSource = readFileSync(
   new URL('../src/app/api/auth/[[...all]]/route.ts', import.meta.url),
   'utf8'
@@ -74,6 +78,12 @@ test('better auth delegates verification and reset emails to a shared auth email
 test('mailbox send API enforces an authenticated server session', () => {
   assert.match(mailboxSendRouteSource, /requireApiSession/)
   assert.match(mailboxSendRouteSource, /await requireApiSession\(request\)/)
+})
+
+test('pipeline control API enforces an authenticated server session', () => {
+  assert.match(pipelineControlRouteSource, /requireApiSession/)
+  assert.match(pipelineControlRouteSource, /UnauthorizedError/)
+  assert.match(pipelineControlRouteSource, /await requireApiSession\(request\)/)
 })
 
 test('better auth dash support is installed and configured', () => {

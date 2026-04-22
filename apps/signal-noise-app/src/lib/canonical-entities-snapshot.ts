@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 
-import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
+import { getSupabaseAdmin } from '@/lib/supabase-client'
 import { CANONICAL_GOVERNING_BODY_OVERRIDES } from '@/lib/canonical-governing-body-overrides'
 import { canonicalizeEntities, type CanonicalEntity } from '@/lib/entity-canonicalization'
 import { loadQuestionFirstScaleManifest } from '@/lib/question-first-manifest'
@@ -11,7 +11,8 @@ const scaleManifestData = loadQuestionFirstScaleManifest()
 
 const SNAPSHOT_TTL_MS = 15 * 60_000
 const localFalkorExportPath = path.resolve(process.cwd(), 'backend', 'falkordb_export.json')
-const canonicalEntitySelectColumns = 'id, labels, properties, source_neo4j_ids, source_graph_ids, source_entity_ids'
+const canonicalEntitySelectColumns = 'id, name, entity_type, sport, league, country, canonical_key, badge_path, badge_s3_url, labels, properties, source_neo4j_ids, source_graph_ids, source_entity_ids'
+const canonicalEntitiesInvalidationPath = path.resolve(process.cwd(), 'tmp', 'canonical-entities-cache.invalidated.json')
 const hasUsableSupabaseConfiguration = Boolean(
   process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
 ) && Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY)
@@ -38,9 +39,9 @@ function mapCanonicalEntityRow(entity: any): CanonicalEntity {
     id: entity.id,
     uuid: entity.id,
     neo4j_id: sourceNeo4jId,
-    badge_path: entity.properties?.badge_path || null,
-    badge_s3_url: entity.properties?.badge_s3_url || null,
-    labels: entity.labels || (entity.properties?.labels || []),
+    badge_path: entity.badge_path || entity.properties?.badge_path || null,
+    badge_s3_url: entity.badge_s3_url || entity.properties?.badge_s3_url || null,
+    labels: entity.labels || [],
     properties: {
       ...entity.properties,
       name: entity.name || entity.properties?.name || entity.id,
@@ -62,6 +63,7 @@ async function fetchCanonicalEntitiesFromSupabase(): Promise<CanonicalEntity[]> 
   let offset = 0
   let hasMore = true
   const pageSize = 1000
+  const supabase = getSupabaseAdmin()
 
   while (hasMore) {
     const { data, error } = await supabase

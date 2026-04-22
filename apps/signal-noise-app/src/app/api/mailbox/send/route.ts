@@ -1,17 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/lib/pg-client';
 import { render } from '@react-email/render';
 import EmailTemplate from '@/components/mailbox/EmailTemplate';
 import { UnauthorizedError, requireApiSession } from '@/lib/server-auth';
 
 export const dynamic = 'force-dynamic';
-
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-);
 
 function getResendClient() {
   const apiKey = process.env.RESEND_API_KEY;

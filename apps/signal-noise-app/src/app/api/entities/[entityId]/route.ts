@@ -106,7 +106,7 @@ export async function GET(
           error: 'Entity not found',
           entityId,
           suggestion: 'This entity may have been removed or the ID is incorrect. Please verify the entity ID or refresh the entity list.',
-          availableSources: ['Supabase cached_entities, teams, and leagues tables'],
+          availableSources: ['Supabase canonical_entities, teams, and leagues tables'],
         },
         { status: 404 },
       )

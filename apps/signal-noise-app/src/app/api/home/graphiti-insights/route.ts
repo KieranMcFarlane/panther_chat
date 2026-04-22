@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
     let lastUpdatedAt = new Date().toISOString();
 
     const [entitiesResponse, insightPayload] = await Promise.all([
-      supabase.from('cached_entities').select('id', { count: 'exact', head: true }),
+      supabase.from('canonical_entities').select('id', { count: 'exact', head: true }),
       loadGraphitiInsights(5),
     ]);
 

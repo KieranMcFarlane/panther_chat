@@ -7,11 +7,11 @@ let inFlightUniverseCountRequest: Promise<number | null> | null = null
 
 async function fetchNormalizedUniverseCount(): Promise<number | null> {
   const { count, error } = await supabase
-    .from('cached_entities')
+    .from('canonical_entities')
     .select('id', { count: 'exact', head: true })
 
   if (error) {
-    console.warn('Failed to load normalized universe count from cached_entities:', error)
+    console.warn('Failed to load normalized universe count from canonical_entities:', error)
     return null
   }
 

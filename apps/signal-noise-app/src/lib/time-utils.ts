@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Fragment, createElement, useEffect, useState } from 'react';
 
 // Hook for handling time display that avoids hydration mismatches
 export function useTimeDisplay(timestamp?: Date | string | number) {
@@ -65,14 +65,14 @@ export function TimeDisplay({
   
   switch (format) {
     case 'time':
-      return <>{timeData.timeString}</>;
+      return createElement(Fragment, null, timeData.timeString);
     case 'date':
-      return <>{timeData.dateString}</>;
+      return createElement(Fragment, null, timeData.dateString);
     case 'datetime':
-      return <>{timeData.formatted}</>;
+      return createElement(Fragment, null, timeData.formatted);
     case 'short':
-      return <>{formatTime(timestamp || new Date(), { short: true })}</>;
+      return createElement(Fragment, null, formatTime(timestamp || new Date(), { short: true }));
     default:
-      return <>{timeData.timeString}</>;
+      return createElement(Fragment, null, timeData.timeString);
   }
 }

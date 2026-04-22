@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { cachedEntitiesSupabase as supabase } from '@/lib/cached-entities-supabase'
 import { upsertImportedEntityIntoFalkor } from '@/lib/entity-import-falkor-writer'
 import { normalizeImportedEntityRow, REQUIRED_ENTITY_IMPORT_COLUMNS } from '@/lib/entity-import-schema'
-import { mapImportedEntityRowToCachedEntity } from '@/lib/entity-import-mapper'
+import { mapImportedEntityRowToCanonicalEntity } from '@/lib/entity-import-mapper'
 import {
   createEntityImportBatch,
   createEntityPipelineRuns,
@@ -67,10 +67,10 @@ export async function POST(request: NextRequest) {
     await storeFallbackEntityImportState(batch, pipeline_runs)
 
     const entityIds = validRows.map((row) => row.entity_id)
+    // Check existing entities via source_neo4j_ids overlap
     const { data: existingRows, error: existingError } = await supabase
-      .from('cached_entities')
-      .select('neo4j_id')
-      .in('neo4j_id', entityIds)
+      .from('canonical_entities')
+      .select('id, source_neo4j_ids')
 
     if (existingError) {
       return NextResponse.json(
@@ -79,12 +79,21 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const existingIds = new Set((existingRows || []).map((row: { neo4j_id: string }) => row.neo4j_id))
-    const payload = validRows.map((row) => mapImportedEntityRowToCachedEntity(row))
+    // Build set of entity_ids that already exist in canonical
+    const existingEntityIds = new Set<string>()
+    for (const row of (existingRows || [])) {
+      if (Array.isArray(row.source_neo4j_ids)) {
+        for (const nid of row.source_neo4j_ids) {
+          existingEntityIds.add(String(nid))
+        }
+      }
+    }
+
+    const payload = validRows.map((row) => mapImportedEntityRowToCanonicalEntity(row))
 
     const { error: upsertError } = await supabase
-      .from('cached_entities')
-      .upsert(payload, { onConflict: 'neo4j_id' })
+      .from('canonical_entities')
+      .upsert(payload, { onConflict: 'id' })
 
     if (upsertError) {
       return NextResponse.json(
@@ -93,7 +102,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const created_rows = validRows.filter((row) => !existingIds.has(row.entity_id)).length
+    const created_rows = validRows.filter((row) => !existingEntityIds.has(row.entity_id)).length
     const updated_rows = validRows.length - created_rows
 
     let falkor_synced_rows = 0
