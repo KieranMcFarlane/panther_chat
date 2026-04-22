@@ -17,6 +17,14 @@ from typing import Any, Callable, Optional
 logger = logging.getLogger(__name__)
 _PIPELINE_BRIGHTDATA_CLIENT_CACHE: Any | None = None
 _PIPELINE_BRIGHTDATA_CLIENT_CACHE_KEY: tuple[Any, ...] | None = None
+DEFAULT_BRIGHTDATA_FASTMCP_URL = "http://127.0.0.1:8000/mcp/"
+
+
+def _normalize_fastmcp_url(url: str) -> str:
+    value = str(url or "").strip()
+    if value.endswith("/mcp"):
+        return f"{value}/"
+    return value
 
 
 def _env_flag(name: str, default: str = "false") -> bool:
@@ -53,7 +61,7 @@ def create_pipeline_brightdata_client(
         else float(mcp_timeout)
     )
     shared_client_enabled = _env_flag("PIPELINE_BRIGHTDATA_SHARED_CLIENT", "true")
-    fastmcp_url = str(os.getenv("BRIGHTDATA_FASTMCP_URL") or "").strip()
+    fastmcp_url = _normalize_fastmcp_url(os.getenv("BRIGHTDATA_FASTMCP_URL") or "")
     prefer_fastmcp = _env_flag("PIPELINE_USE_BRIGHTDATA_FASTMCP", "false") or bool(fastmcp_url)
     cache_key = (prefer_mcp, use_fallback, resolved_mcp_timeout, shared_client_enabled, prefer_fastmcp, fastmcp_url)
 
@@ -64,7 +72,7 @@ def create_pipeline_brightdata_client(
 
     if prefer_fastmcp:
         if not fastmcp_url:
-            fastmcp_url = "http://127.0.0.1:8000/mcp"
+            fastmcp_url = DEFAULT_BRIGHTDATA_FASTMCP_URL
         if fastmcp_factory is None:
             try:
                 from backend.brightdata_fastmcp_client import create_brightdata_fastmcp_client as fastmcp_factory  # type: ignore

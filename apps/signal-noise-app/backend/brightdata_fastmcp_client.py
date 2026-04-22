@@ -16,9 +16,16 @@ from fastmcp import Client
 logger = logging.getLogger(__name__)
 
 
+def _normalize_mcp_url(url: str) -> str:
+    value = str(url or "").strip()
+    if value.endswith("/mcp"):
+        return f"{value}/"
+    return value
+
+
 class BrightDataFastMCPClient:
     def __init__(self, mcp_url: Optional[str] = None, timeout: float = 20.0):
-        self.mcp_url = (mcp_url or os.getenv("BRIGHTDATA_FASTMCP_URL") or "http://127.0.0.1:8000/mcp").strip()
+        self.mcp_url = _normalize_mcp_url(mcp_url or os.getenv("BRIGHTDATA_FASTMCP_URL") or "http://127.0.0.1:8000/mcp/")
         self.timeout = timeout
         self._client = Client(self.mcp_url)
         self._client_handle = None

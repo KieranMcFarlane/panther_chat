@@ -70,6 +70,29 @@ def test_create_pipeline_brightdata_client_prefers_fastmcp_service(monkeypatch):
     monkeypatch.setenv("BRIGHTDATA_FASTMCP_URL", "http://127.0.0.1:8000/mcp")
     monkeypatch.setattr(factory, "_PIPELINE_BRIGHTDATA_CLIENT_CACHE", None, raising=False)
     monkeypatch.setattr(factory, "_PIPELINE_BRIGHTDATA_CLIENT_CACHE_KEY", None, raising=False)
+
+    captured = {}
+
+    def fake_fastmcp_factory(*, mcp_url, timeout):
+        captured["mcp_url"] = mcp_url
+        captured["timeout"] = timeout
+        return SimpleNamespace(kind="fastmcp")
+
+    client = factory.create_pipeline_brightdata_client(
+        mcp_timeout=4.5,
+        fastmcp_factory=fake_fastmcp_factory,
+        sdk_factory=lambda: SimpleNamespace(kind="sdk"),
+        mcp_factory=lambda **kwargs: SimpleNamespace(kind="mcp"),
+    )
+
+    assert client.kind == "fastmcp"
+    assert captured == {"mcp_url": "http://127.0.0.1:8000/mcp/", "timeout": 4.5}
+
+
+def test_create_pipeline_brightdata_client_defaults_fastmcp_to_local_service(monkeypatch):
+    monkeypatch.setenv("BRIGHTDATA_API_TOKEN", "token")
+    monkeypatch.setenv("PIPELINE_USE_BRIGHTDATA_FASTMCP", "true")
+    monkeypatch.delenv("BRIGHTDATA_FASTMCP_URL", raising=False)
     monkeypatch.setattr(factory, "_PIPELINE_BRIGHTDATA_CLIENT_CACHE", None, raising=False)
     monkeypatch.setattr(factory, "_PIPELINE_BRIGHTDATA_CLIENT_CACHE_KEY", None, raising=False)
 
@@ -88,7 +111,7 @@ def test_create_pipeline_brightdata_client_prefers_fastmcp_service(monkeypatch):
     )
 
     assert client.kind == "fastmcp"
-    assert captured == {"mcp_url": "http://127.0.0.1:8000/mcp", "timeout": 4.5}
+    assert captured["mcp_url"] == "http://127.0.0.1:8000/mcp/"
 
 
 def test_create_pipeline_brightdata_client_reuses_shared_instance(monkeypatch):

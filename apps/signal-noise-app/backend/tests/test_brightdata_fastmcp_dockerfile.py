@@ -8,5 +8,6 @@ def test_brightdata_fastmcp_dockerfile_declares_service_contract():
     assert 'EXPOSE 8000' in content
     assert 'http://localhost:8000/health' in content
     assert 'BRIGHTDATA_FASTMCP_HOST=0.0.0.0' in content
+    assert 'BRIGHTDATA_FASTMCP_PORT=8000' in content
     assert 'python3", "-m", "backend.brightdata_fastmcp_service' in content
     assert 'fastmcp' in content.lower()
