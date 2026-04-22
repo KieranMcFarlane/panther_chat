@@ -52,6 +52,22 @@ def test_claude_client_prefers_chutes_when_configured(monkeypatch):
     assert client.chutes_max_retries == 2
 
 
+def test_claude_client_prefers_zai_anthropic_config_over_chutes(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
+    monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")
+    monkeypatch.setenv("CHUTES_BASE_URL", "https://llm.chutes.ai/v1")
+    monkeypatch.setenv("ZAI_API_KEY", "test-zai-key")
+    monkeypatch.setenv("ANTHROPIC_BASE_URL", "https://api.z.ai/api/anthropic")
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.delenv("ANTHROPIC_AUTH_TOKEN", raising=False)
+
+    client = ClaudeClient()
+
+    assert client.provider == ClaudeClient.PROVIDER_ANTHROPIC
+    assert client.api_key == "test-zai-key"
+    assert client.base_url == "https://api.z.ai/api/anthropic"
+
+
 def test_claude_client_default_chutes_tier_mapping(monkeypatch):
     monkeypatch.setenv("LLM_PROVIDER", ClaudeClient.PROVIDER_CHUTES_OPENAI)
     monkeypatch.setenv("CHUTES_API_KEY", "test-chutes-key")

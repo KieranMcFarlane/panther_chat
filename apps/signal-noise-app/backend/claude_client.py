@@ -653,6 +653,13 @@ class ClaudeClient:
         )
 
     def _resolve_provider(self) -> str:
+        anthropic_base_url = (os.getenv("ANTHROPIC_BASE_URL") or "").strip().lower()
+        has_zai_anthropic_config = bool(os.getenv("ZAI_API_KEY")) and (
+            not anthropic_base_url or "api.z.ai" in anthropic_base_url
+        )
+        if has_zai_anthropic_config:
+            return self.PROVIDER_ANTHROPIC
+
         provider = (os.getenv("LLM_PROVIDER") or "").strip().lower()
         if provider in {self.PROVIDER_ANTHROPIC, self.PROVIDER_CHUTES_OPENAI, self.PROVIDER_CHUTES_ANTHROPIC}:
             return provider
@@ -666,7 +673,11 @@ class ClaudeClient:
         if self.provider in {self.PROVIDER_CHUTES_OPENAI, self.PROVIDER_CHUTES_ANTHROPIC}:
             return os.getenv("CHUTES_API_KEY")
 
-        return os.getenv("ANTHROPIC_API_KEY")
+        return (
+            os.getenv("ANTHROPIC_API_KEY")
+            or os.getenv("ANTHROPIC_AUTH_TOKEN")
+            or os.getenv("ZAI_API_KEY")
+        )
 
     def _resolve_base_url(self) -> str:
         if self.provider == self.PROVIDER_CHUTES_OPENAI:
@@ -679,7 +690,12 @@ class ClaudeClient:
                 or "https://llm.chutes.ai/v1"
             )
 
-        return os.getenv("ANTHROPIC_BASE_URL", "https://api.anthropic.com")
+        anthropic_base_url = os.getenv("ANTHROPIC_BASE_URL")
+        if anthropic_base_url and anthropic_base_url.strip():
+            return anthropic_base_url
+        if os.getenv("ZAI_API_KEY"):
+            return "https://api.z.ai/api/anthropic"
+        return "https://api.anthropic.com"
 
     def _validate_provider_configuration(self) -> None:
         """Fail fast on known-invalid Chutes provider/model/endpoint combinations."""
