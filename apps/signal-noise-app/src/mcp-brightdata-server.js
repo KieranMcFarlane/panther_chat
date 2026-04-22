@@ -217,7 +217,42 @@ class BrightDataMCPServer {
         cursor,
       });
 
+      if (data?.status === 'error') {
+        const failureType = data?.error_type || data?.metadata?.failure_type || 'search_transport_failed';
+        const source = data?.metadata?.source || 'brightdata_sdk';
+        const errorText = data?.error || data?.metadata?.error || 'Unknown search transport failure';
+        const diagnostics = [
+          `Search transport failed for "${query}" on ${engine}.`,
+          `Failure type: ${failureType}`,
+          `Source: ${source}`,
+          `Error: ${errorText}`,
+        ];
+        const attemptedZones = Array.isArray(data?.metadata?.attempted_zones) ? data.metadata.attempted_zones : [];
+        if (attemptedZones.length > 0) {
+          diagnostics.push(`Attempted zones: ${attemptedZones.join(', ')}`);
+        }
+        return {
+          content: [
+            {
+              type: 'text',
+              text: diagnostics.join('\n'),
+            },
+          ],
+        };
+      }
+
       const results = Array.isArray(data.results) ? data.results : [];
+      if (results.length === 0) {
+        const emptyReason = data?.metadata?.failure_type || data?.metadata?.sdk_failure_type || 'search_empty';
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Search returned no results for "${query}" on ${engine}.\nReason: ${emptyReason}`,
+            },
+          ],
+        };
+      }
       let resultsText = `Search results for "${query}" on ${engine}:\n\n`;
       results.forEach((result, index) => {
         resultsText += `${index + 1}. ${result.title || 'Untitled'}\n`;
