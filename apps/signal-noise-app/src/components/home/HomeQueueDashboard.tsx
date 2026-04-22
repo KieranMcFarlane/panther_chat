@@ -7,6 +7,16 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { getEntityBrowserDossierHref } from '@/lib/entity-routing'
+import {
+  getCachedOperationalDrilldownPayload,
+  loadOperationalDrilldownPayload,
+  refreshOperationalDrilldownPayload,
+  startOperationalDrilldownPolling,
+  subscribeOperationalDrilldown,
+  type OperationalDrilldownPayload,
+  type OperationalQueueEntity,
+} from '@/lib/operational-drilldown-client'
+import { buildCheckpointSummary, formatCheckpointQuestionProgress, formatCheckpointSourceOrder } from '@/lib/operational-checkpoint'
 import { formatPlaylistSortKey } from '@/lib/playlist-sort-key'
 
 type QueueEntityRecord = {
@@ -19,7 +29,21 @@ type QueueEntityRecord = {
   summary: string | null
   generated_at: string | null
   active_question_id?: string | null
+  current_section_id?: string | null
+  current_section_label?: string | null
+  current_section_index?: number | null
+  current_section_total?: number | null
+  current_question_id?: string | null
+  current_question_text?: string | null
+  current_question_index?: number | null
+  current_question_total?: number | null
+  current_strategy_label?: string | null
+  current_execution_state?: string | null
+  current_source_order?: string[] | null
+  current_substep_label?: string | null
+  current_substep_progress?: string | null
   current_action?: string | null
+  run_phase?: string | null
   publication_status?: string | null
   publication_mode?: string | null
   repair_state?: string | null
@@ -76,28 +100,39 @@ type HomeQueueDashboardPayload = {
     observed_state?: 'starting' | 'running' | 'stopping' | 'paused'
     transition_state?: 'starting' | 'running' | 'stopping' | 'paused'
   }
-  loop_status: {
-    universe_count: number
-    total_scheduled: number
-    completed: number
-    failed: number
-    retryable_failures: number
-    client_ready_dossiers: number
-    promoted_dossiers: number
-    last_successful_canonical_run_at: string | null
-    health: 'active' | 'stale' | 'idle'
-    source: 'pipeline_runs' | 'diagnostics' | 'snapshot'
-    last_activity_at: string | null
-    quality_counts: Record<'partial' | 'blocked' | 'complete' | 'client_ready', number>
-    runtime_counts: Record<'running' | 'queued' | 'stalled' | 'retryable' | 'resume_needed', number>
-  }
-  queue: {
-    completed_entities: QueueEntityRecord[]
-    in_progress_entity: QueueEntityRecord | null
-    running_entities: QueueEntityRecord[]
-    stale_active_rows: QueueEntityRecord[]
-    resume_needed_entities: QueueEntityRecord[]
-    upcoming_entities: QueueEntityRecord[]
+  live_operational?: {
+    control?: {
+      is_paused?: boolean
+      requested_state?: 'running' | 'paused'
+      observed_state?: 'starting' | 'running' | 'stopping' | 'paused'
+      transition_state?: 'starting' | 'running' | 'stopping' | 'paused'
+    }
+    operational_state?: 'starting' | 'running' | 'stopping' | 'paused' | 'stopped' | 'waiting'
+    freshness_state?: 'fresh' | 'stale'
+    last_activity_at?: string | null
+    loop_status?: {
+      universe_count: number
+      total_scheduled: number
+      completed: number
+      failed: number
+      retryable_failures: number
+      client_ready_dossiers: number
+      promoted_dossiers: number
+      last_successful_canonical_run_at: string | null
+      health: 'active' | 'stale' | 'idle'
+      source: 'pipeline_runs' | 'diagnostics' | 'snapshot'
+      last_activity_at: string | null
+      quality_counts: Record<'partial' | 'blocked' | 'complete' | 'client_ready', number>
+      runtime_counts: Record<'running' | 'queued' | 'stalled' | 'retryable' | 'resume_needed', number>
+    }
+    queue?: {
+      completed_entities: QueueEntityRecord[]
+      in_progress_entity: QueueEntityRecord | null
+      running_entities: QueueEntityRecord[]
+      stale_active_rows: QueueEntityRecord[]
+      resume_needed_entities: QueueEntityRecord[]
+      upcoming_entities: QueueEntityRecord[]
+    }
   }
   playlist_sort_key: string[]
   client_ready_dossiers: ClientReadyDossierCard[]
@@ -205,6 +240,8 @@ function isSelfHealingRunning(item: QueueEntityRecord) {
 }
 
 function QueueCard({ item }: { item: QueueEntityRecord }) {
+  const checkpointSummary = buildCheckpointSummary(item)
+  const questionProgress = formatCheckpointQuestionProgress(item)
   const stateLabel = item.client_ready
     ? 'Client-ready'
     : item.run_phase === 'stalled'
@@ -244,10 +281,35 @@ function QueueCard({ item }: { item: QueueEntityRecord }) {
         {formatRepairState(item.repair_state) ? <span>{formatRepairState(item.repair_state)}</span> : null}
         {formatNextRepairStatus(item.next_repair_status) ? <span>{formatNextRepairStatus(item.next_repair_status)}</span> : null}
       </div>
-      <p className="mt-3 text-sm leading-6 text-slate-300">{toText(item.summary) || 'No summary available yet.'}</p>
-      {item.current_action ? (
+      <p className="mt-3 text-sm leading-6 text-slate-300">{checkpointSummary || toText(item.summary) || 'No summary available yet.'}</p>
+      {item.current_section_label ? (
+        <p className="mt-2 text-xs uppercase tracking-[0.14em] text-emerald-300">
+          current section: {item.current_section_label}
+        </p>
+      ) : null}
+      {item.current_question_text ? (
+        <p className="mt-2 text-xs uppercase tracking-[0.14em] text-sky-300">
+          current question: {questionProgress ? `${questionProgress} • ` : ''}{item.current_question_text}
+        </p>
+      ) : null}
+      {item.current_execution_state ? (
         <p className="mt-2 text-xs uppercase tracking-[0.14em] text-cyan-300">
-          current action: {item.current_action}
+          execution: {item.current_execution_state}
+        </p>
+      ) : null}
+      {item.current_strategy_label ? (
+        <p className="mt-2 text-xs uppercase tracking-[0.14em] text-sky-300">
+          strategy: {item.current_strategy_label}
+        </p>
+      ) : null}
+      {item.current_source_order?.length ? (
+        <p className="mt-2 text-xs uppercase tracking-[0.14em] text-slate-400">
+          source order: {formatCheckpointSourceOrder(item.current_source_order)}
+        </p>
+      ) : null}
+      {questionProgress ? (
+        <p className="mt-2 text-xs uppercase tracking-[0.14em] text-sky-300">
+          question progress: {questionProgress}
         </p>
       ) : null}
       {item.next_repair_question_id ? (
@@ -311,6 +373,109 @@ function dedupeQueueItems(items: Array<QueueEntityRecord | null | undefined>) {
   return deduped
 }
 
+function mapOperationalQueueEntity(
+  item: OperationalQueueEntity | null | undefined,
+  state: QueueEntityRecord['state'],
+): QueueEntityRecord | null {
+  if (!item) return null
+  return {
+    entity_id: item.entity_id,
+    entity_name: item.entity_name,
+    entity_type: item.entity_type || 'Entity',
+    state,
+    client_ready: false,
+    promoted: false,
+    summary: buildCheckpointSummary(item) || item.summary || item.current_substep_label || item.current_action || null,
+    generated_at: item.generated_at,
+    active_question_id: item.active_question_id,
+    current_section_id: item.current_section_id || null,
+    current_section_label: item.current_section_label || null,
+    current_section_index: item.current_section_index ?? null,
+    current_section_total: item.current_section_total ?? null,
+    current_question_id: item.current_question_id || null,
+    current_question_text: item.current_question_text || null,
+    current_question_index: item.current_question_index ?? null,
+    current_question_total: item.current_question_total ?? null,
+    current_strategy_label: item.current_strategy_label || null,
+    current_execution_state: item.current_execution_state || null,
+    current_source_order: item.current_source_order || null,
+    current_substep_label: item.current_substep_label || null,
+    current_substep_progress: item.current_substep_progress || null,
+    current_action: item.current_execution_state || item.current_substep_label || item.current_action,
+    publication_status: item.publication_status,
+    repair_state: null,
+    repair_retry_count: null,
+    repair_retry_budget: null,
+    next_repair_question_id: item.next_repair_question_id,
+    next_repair_status: item.next_repair_status,
+    next_repair_batch_id: item.next_repair_batch_id,
+    next_repair_batch_status: item.next_repair_batch_status,
+    reconciliation_state: null,
+  }
+}
+
+function mapOperationalQueueEntities(
+  items: Array<OperationalQueueEntity | null | undefined> | undefined,
+  state: QueueEntityRecord['state'],
+) {
+  return (items || [])
+    .map((item) => mapOperationalQueueEntity(item, state))
+    .filter((item): item is QueueEntityRecord => Boolean(item))
+}
+
+function deriveLiveDashboardState(
+  livePayload: OperationalDrilldownPayload | null,
+  fallbackData: HomeQueueDashboardPayload | null,
+) {
+  const fallbackLoopStatus = fallbackData?.live_operational?.loop_status
+  const fallbackQueue = fallbackData?.live_operational?.queue
+  const loop_status = livePayload?.loop_status
+    ? {
+        universe_count: livePayload.loop_status.universe_count ?? fallbackLoopStatus?.universe_count ?? 0,
+        total_scheduled: livePayload.loop_status.total_scheduled ?? fallbackLoopStatus?.total_scheduled ?? 0,
+        completed: livePayload.loop_status.completed ?? fallbackLoopStatus?.completed ?? 0,
+        failed: livePayload.loop_status.failed ?? fallbackLoopStatus?.failed ?? 0,
+        retryable_failures: livePayload.loop_status.retryable_failures ?? fallbackLoopStatus?.retryable_failures ?? 0,
+        client_ready_dossiers: livePayload.loop_status.quality_counts?.client_ready ?? fallbackLoopStatus?.client_ready_dossiers ?? 0,
+        promoted_dossiers: livePayload.loop_status.quality_counts?.client_ready ?? fallbackLoopStatus?.promoted_dossiers ?? 0,
+        last_successful_canonical_run_at: fallbackLoopStatus?.last_successful_canonical_run_at ?? null,
+        health: livePayload.freshness_state === 'stale' ? 'stale' : ((livePayload.operational_state === 'running' || livePayload.operational_state === 'retrying') ? 'active' : 'idle'),
+        source: 'pipeline_runs' as const,
+        last_activity_at: livePayload.last_activity_at ?? fallbackLoopStatus?.last_activity_at ?? null,
+        quality_counts: {
+          partial: livePayload.loop_status.quality_counts?.partial ?? fallbackLoopStatus?.quality_counts.partial ?? 0,
+          blocked: livePayload.loop_status.quality_counts?.blocked ?? fallbackLoopStatus?.quality_counts.blocked ?? 0,
+          complete: livePayload.loop_status.quality_counts?.complete ?? fallbackLoopStatus?.quality_counts.complete ?? 0,
+          client_ready: livePayload.loop_status.quality_counts?.client_ready ?? fallbackLoopStatus?.quality_counts.client_ready ?? 0,
+        },
+        runtime_counts: {
+          running: livePayload.loop_status.runtime_counts?.running ?? fallbackLoopStatus?.runtime_counts.running ?? 0,
+          queued: livePayload.loop_status.runtime_counts?.queued ?? fallbackLoopStatus?.runtime_counts.queued ?? 0,
+          stalled: livePayload.loop_status.runtime_counts?.stalled ?? fallbackLoopStatus?.runtime_counts.stalled ?? 0,
+          retryable: livePayload.loop_status.runtime_counts?.retryable ?? fallbackLoopStatus?.runtime_counts.retryable ?? 0,
+          resume_needed: livePayload.loop_status.runtime_counts?.resume_needed ?? fallbackLoopStatus?.runtime_counts.resume_needed ?? 0,
+        },
+      }
+    : fallbackLoopStatus
+  const queue = livePayload
+    ? {
+        completed_entities: mapOperationalQueueEntities(livePayload.queue?.completed_entities, 'completed'),
+        in_progress_entity: mapOperationalQueueEntity(livePayload.queue?.in_progress_entity, 'in_progress'),
+        running_entities: mapOperationalQueueEntities(livePayload.queue?.running_entities, 'in_progress'),
+        stale_active_rows: mapOperationalQueueEntities(livePayload.queue?.stale_active_rows, 'resume_needed'),
+        resume_needed_entities: mapOperationalQueueEntities(livePayload.queue?.resume_needed_entities, 'resume_needed'),
+        upcoming_entities: mapOperationalQueueEntities(livePayload.queue?.upcoming_entities, 'upcoming'),
+      }
+    : fallbackQueue
+  return {
+    control: livePayload?.control ?? fallbackData?.live_operational?.control ?? fallbackData?.control,
+    freshness_state: livePayload?.freshness_state ?? fallbackData?.live_operational?.freshness_state ?? 'fresh',
+    operational_state: livePayload?.operational_state ?? livePayload?.live_state?.operational_state ?? fallbackData?.live_operational?.operational_state ?? 'waiting',
+    loop_status,
+    queue,
+  }
+}
+
 // Legacy contract marker: In progress now
 
 function mergeDashboardPayload(
@@ -327,9 +492,16 @@ function mergeDashboardPayload(
 
 export function HomeQueueDashboard() {
   const [data, setData] = useState<HomeQueueDashboardPayload | null>(null)
+  const [livePayload, setLivePayload] = useState<OperationalDrilldownPayload | null>(null)
   const [loading, setLoading] = useState(true)
   const [queueingEntityId, setQueueingEntityId] = useState<string | null>(null)
   const didLoadRfpCardsRef = useRef(false)
+
+  async function loadDashboardEnrichment() {
+    const response = await fetch('/api/home/queue-dashboard', { cache: 'no-store' })
+    const payload = await response.json()
+    setData((current) => mergeDashboardPayload(current, payload))
+  }
 
   async function queueEntity(entityId: string) {
     if (!entityId) return
@@ -349,11 +521,10 @@ export function HomeQueueDashboard() {
       if (!response.ok) {
         throw new Error(`Failed to queue entity (${response.status})`)
       }
-      const responsePayload = await fetch('/api/home/queue-dashboard', { cache: 'no-store' })
-      if (responsePayload.ok) {
-        const nextPayload = await responsePayload.json()
-        setData((current) => mergeDashboardPayload(current, nextPayload))
-      }
+      await Promise.all([
+        loadDashboardEnrichment(),
+        refreshOperationalDrilldownPayload(),
+      ])
     } catch {
       // Keep the dashboard visible and leave the existing state intact.
     } finally {
@@ -362,16 +533,32 @@ export function HomeQueueDashboard() {
   }
 
   useEffect(() => {
+    const cachedPayload = getCachedOperationalDrilldownPayload()
+    if (cachedPayload) {
+      setLivePayload(cachedPayload)
+    }
+
+    const unsubscribe = subscribeOperationalDrilldown((payload) => {
+      setLivePayload(payload)
+    })
+    const stopPolling = startOperationalDrilldownPolling(10_000)
+
     async function load() {
       try {
-        const response = await fetch('/api/home/queue-dashboard', { cache: 'no-store' })
-        const payload = await response.json()
-        setData((current) => mergeDashboardPayload(current, payload))
+        await Promise.all([
+          loadDashboardEnrichment(),
+          loadOperationalDrilldownPayload(),
+        ])
       } finally {
         setLoading(false)
       }
     }
-    load()
+    void load()
+
+    return () => {
+      unsubscribe()
+      stopPolling()
+    }
   }, [])
 
   useEffect(() => {
@@ -427,23 +614,31 @@ export function HomeQueueDashboard() {
     )
   }
 
-  const { loop_status, queue, playlist_sort_key, client_ready_dossiers, rfp_cards, sales_summary, dossier_quality, rollout_proof_set } = data
+  const { playlist_sort_key, client_ready_dossiers, rfp_cards, sales_summary, dossier_quality, rollout_proof_set } = data
+  const liveState = deriveLiveDashboardState(livePayload, data)
+  const loop_status = liveState.loop_status
+  const queue = liveState.queue
+
+  if (!loop_status || !queue) {
+    return (
+      <Card className="mt-10 border-white/10 bg-white/[0.04]">
+        <CardContent className="p-6 text-sm text-slate-300">
+          Unable to load the live loop dashboard right now.
+        </CardContent>
+      </Card>
+    )
+  }
+
   const healthLabel = formatLoopHealth(loop_status.health)
-  const controlRequestedState = data.control?.requested_state === 'paused' || data.control?.is_paused
+  const controlRequestedState = liveState.control?.requested_state === 'paused' || liveState.control?.is_paused
     ? 'paused'
     : 'running'
-  const controlObservedState = data.control?.observed_state || data.control?.transition_state || null
-  const operationalState = controlObservedState === 'starting'
-    ? 'starting'
-    : controlObservedState === 'stopping'
-      ? 'stopping'
-      : controlRequestedState === 'paused'
-        ? 'paused'
-        : loop_status.runtime_counts.stalled > 0
-          ? 'stopped'
-          : loop_status.runtime_counts.running > 0
-            ? 'running'
-            : 'waiting'
+  const controlObservedState = liveState.control?.observed_state || liveState.control?.transition_state || null
+  const operationalState = liveState.operational_state === 'waiting' && controlRequestedState === 'paused'
+    ? 'paused'
+    : liveState.operational_state === 'stopped' && controlObservedState === 'starting'
+      ? 'starting'
+      : liveState.operational_state
   const runningEntities = dedupeQueueItems([
     queue.in_progress_entity,
     ...queue.running_entities,
@@ -475,6 +670,11 @@ export function HomeQueueDashboard() {
             <p className="mt-2 text-xs leading-5 text-slate-400">
               Source of truth: {formatLoopSource(loop_status.source)}. Last observed activity: {formatDate(loop_status.last_activity_at)}.
             </p>
+            {liveState.freshness_state === 'stale' ? (
+              <p className="mt-2 text-xs leading-5 text-amber-300">
+                Operational snapshot is stale. The pipeline may still be running; treat this as lagging state, not an idle confirmation.
+              </p>
+            ) : null}
             <p className="mt-2 text-xs uppercase tracking-[0.14em] text-slate-400">
               State: {operationalState === 'starting'
                 ? 'Starting'

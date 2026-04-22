@@ -100,61 +100,68 @@ export async function resolveEntityForDossierQueue(entityId: string): Promise<Re
   }
 
   const parsedId = Number.parseInt(normalizedId, 10)
-  const idFilters = [`id.eq.${normalizedId}`, `neo4j_id.eq.${normalizedId}`, `canonical_entity_id.eq.${normalizedId}`]
+  const idFilters = [`id.eq.${normalizedId}`]
   if (Number.isFinite(parsedId)) {
-    idFilters.push(`neo4j_id.eq.${parsedId}`)
+    idFilters.push(`source_neo4j_ids.cs.{${String(parsedId)}}`)
+  }
+  if (normalizedId !== String(parsedId)) {
+    idFilters.push(`source_neo4j_ids.cs.{${normalizedId}}`)
   }
 
   const directResult = await supabase
-    .from('cached_entities')
-    .select('id, neo4j_id, labels, properties, canonical_entity_id')
+    .from('canonical_entities')
+    .select('id, name, entity_type, sport, league, country, labels, properties, source_neo4j_ids')
     .or(idFilters.join(','))
     .limit(1)
     .maybeSingle()
 
   if (directResult.data) {
+    const row = directResult.data
+    const sourceNeo4jId = Array.isArray(row.source_neo4j_ids) && row.source_neo4j_ids.length > 0
+      ? row.source_neo4j_ids[0]
+      : row.id
     return {
-      id: String(directResult.data.id ?? normalizedId),
-      uuid: resolveEntityUuid({
-        id: directResult.data.id,
-        uuid: directResult.data.canonical_entity_id,
-        neo4j_id: directResult.data.neo4j_id,
-        graph_id: directResult.data.graph_id,
-        supabase_id: directResult.data.supabase_id || directResult.data.properties?.supabase_id,
-        properties: directResult.data.properties,
-      }) || directResult.data.canonical_entity_id || undefined,
-      neo4j_id: directResult.data.neo4j_id,
-      labels: directResult.data.labels,
-      properties: typeof directResult.data.properties === 'object' && directResult.data.properties !== null
-        ? directResult.data.properties
-        : {},
+      id: String(row.id),
+      uuid: row.id,
+      neo4j_id: sourceNeo4jId,
+      labels: row.labels || [],
+      properties: {
+        ...row.properties,
+        name: row.name,
+        type: row.entity_type,
+        sport: row.sport,
+        country: row.country,
+        league: row.league,
+      },
     }
   }
 
   for (const candidateName of canonicalNameCandidates) {
     const nameResult = await supabase
-      .from('cached_entities')
-      .select('id, neo4j_id, labels, properties, canonical_entity_id')
-      .ilike('properties->>name', `%${candidateName}%`)
+      .from('canonical_entities')
+      .select('id, name, entity_type, sport, league, country, labels, properties, source_neo4j_ids')
+      .ilike('name', `%${candidateName}%`)
       .limit(1)
       .maybeSingle()
 
     if (nameResult.data) {
+      const row = nameResult.data
+      const sourceNeo4jId = Array.isArray(row.source_neo4j_ids) && row.source_neo4j_ids.length > 0
+        ? row.source_neo4j_ids[0]
+        : row.id
       return {
-        id: String(nameResult.data.id ?? normalizedId),
-        uuid: resolveEntityUuid({
-          id: nameResult.data.id,
-          uuid: nameResult.data.canonical_entity_id,
-          neo4j_id: nameResult.data.neo4j_id,
-          graph_id: nameResult.data.graph_id,
-          supabase_id: nameResult.data.supabase_id || nameResult.data.properties?.supabase_id,
-          properties: nameResult.data.properties,
-        }) || nameResult.data.canonical_entity_id || undefined,
-        neo4j_id: nameResult.data.neo4j_id,
-        labels: nameResult.data.labels,
-        properties: typeof nameResult.data.properties === 'object' && nameResult.data.properties !== null
-          ? nameResult.data.properties
-          : {},
+        id: String(row.id),
+        uuid: row.id,
+        neo4j_id: sourceNeo4jId,
+        labels: row.labels || [],
+        properties: {
+          ...row.properties,
+          name: row.name,
+          type: row.entity_type,
+          sport: row.sport,
+          country: row.country,
+          league: row.league,
+        },
       }
     }
   }
@@ -204,7 +211,7 @@ async function markQueued(entity: ResolvedEntity, entityId: string, batchId: str
   }
 
   await supabase
-    .from('cached_entities')
+    .from('canonical_entities')
     .update({ properties })
     .eq('id', entity.id)
 }
@@ -287,7 +294,7 @@ export async function queueDossierRefresh(entityId: string, trigger: string, opt
 
   const runs = await createEntityPipelineRuns(batch.id, [row])
   await storeFallbackEntityImportState(batch, runs)
-  await queueEntityImportBatch(batch.id, {
+  const queuedStatus = await queueEntityImportBatch(batch.id, {
     queue_mode: ENTITY_IMPORT_QUEUE_MODE,
     queued_at: new Date().toISOString(),
     trigger,
@@ -296,11 +303,24 @@ export async function queueDossierRefresh(entityId: string, trigger: string, opt
   })
   await markQueued(entity, entityId, batch.id)
 
+  const queuedRun = queuedStatus.pipeline_runs[0] ?? null
+  const resolvedStatus = String(queuedRun?.status ?? queuedStatus.batch?.status ?? 'queued').trim().toLowerCase()
+  const resolvedQueuedAt = String(
+    queuedStatus.batch?.started_at
+      ?? queuedRun?.started_at
+      ?? batch.started_at
+      ?? new Date().toISOString(),
+  )
+
   return {
     entity,
     batchId: batch.id,
-    queuedAt: new Date().toISOString(),
-    status: 'queued' as const,
+    queuedAt: resolvedQueuedAt,
+    status: (
+      ['queued', 'claiming', 'running', 'retrying'].includes(resolvedStatus)
+        ? resolvedStatus
+        : 'queued'
+    ) as 'queued' | 'claiming' | 'running' | 'retrying',
     reusedBatch: false,
     reusedBatchId: null,
   }

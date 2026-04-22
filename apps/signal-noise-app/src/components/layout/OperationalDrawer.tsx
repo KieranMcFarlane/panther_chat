@@ -11,6 +11,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   getCachedOperationalDrilldownPayload,
   loadOperationalDrilldownPayload,
+  refreshOperationalDrilldownPayload,
+  subscribeOperationalDrilldown,
   type OperationalDrilldownPayload,
 } from "@/lib/operational-drilldown-client";
 import {
@@ -162,8 +164,13 @@ export function OperationalDrawer({
     if (!open) return;
 
     let cancelled = false;
+    const unsubscribe = subscribeOperationalDrilldown((payload) => {
+      if (!cancelled && payload) {
+        setDashboard(payload as OperationalDrawerPayload);
+      }
+    });
 
-    async function loadData() {
+    async function loadData(refresh = false) {
       if (!cancelled) {
         setIsLoading(true);
         setLoadError(null);
@@ -173,7 +180,9 @@ export function OperationalDrawer({
         }
       }
       try {
-        const dashboardPayload = await loadOperationalDrilldownPayload();
+        const dashboardPayload = refresh
+          ? await refreshOperationalDrilldownPayload()
+          : await loadOperationalDrilldownPayload();
         if (!cancelled) {
           setDashboard(dashboardPayload as OperationalDrawerPayload);
           setIsLoading(false);
@@ -186,10 +195,11 @@ export function OperationalDrawer({
       }
     }
 
-    loadData();
+    void loadData();
 
     return () => {
       cancelled = true;
+      unsubscribe();
     };
   }, [open]);
 
@@ -231,6 +241,17 @@ export function OperationalDrawer({
         <div className="text-xs uppercase tracking-[0.14em] text-slate-400">
           Queue order: {drawerVm.playlistSortKeyLabel}
         </div>
+        <div className="text-xs uppercase tracking-[0.14em] text-slate-400">
+          Snapshot: {dashboard.snapshot_at ?? dashboard.runtime?.snapshot_at ?? dashboard.runtime?.generated_at ?? "unavailable"}
+        </div>
+        <div className="text-xs uppercase tracking-[0.14em] text-slate-400">
+          Last activity: {dashboard.last_activity_at ?? dashboard.snapshot_at ?? "unavailable"} · Freshness: {dashboard.freshness_state ?? "fresh"}
+        </div>
+        {dashboard.freshness_state === "stale" ? (
+          <div className="text-sm text-amber-300">
+            Lagging snapshot. Entity stage and question movement are behind the most recent pipeline activity.
+          </div>
+        ) : null}
       </CardHeader>
       <CardContent className="max-h-[calc(100vh-14rem)] space-y-4 overflow-y-auto pr-2">
         <div className="grid gap-4 lg:grid-cols-4">

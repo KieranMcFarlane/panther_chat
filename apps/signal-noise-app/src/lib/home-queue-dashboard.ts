@@ -8,6 +8,7 @@ import { matchesEntityUuid, resolveEntityUuid } from '@/lib/entity-public-id'
 import { mergeQuestionFirstRunArtifactIntoDossier, normalizeQuestionFirstDossier, resolveCanonicalQuestionFirstDossier } from '@/lib/question-first-dossier'
 import { resolveOperationalHeartbeatDetails } from '@/lib/operational-heartbeat'
 import { readPipelineControlState } from '@/lib/pipeline-control-state'
+import { buildPipelineRuntimeSnapshot, loadPipelineRuntimeReadSet, type PipelineRuntimeRunRecord } from '@/lib/pipeline-runtime'
 import { loadQuestionFirstLiveQueueSnapshot, loadQuestionFirstScaleManifest } from '@/lib/question-first-manifest'
 import { ROLLOUT_PROOF_SET } from '@/lib/rollout-proof-set'
 
@@ -45,6 +46,18 @@ type QueueEntityRecord = {
   started_at?: string | null
   active_question_id?: string | null
   current_question_id?: string | null
+  current_question_text?: string | null
+  current_section_id?: string | null
+  current_section_label?: string | null
+  current_section_index?: number | null
+  current_section_total?: number | null
+  current_question_index?: number | null
+  current_question_total?: number | null
+  current_strategy_label?: string | null
+  current_execution_state?: string | null
+  current_source_order?: string[] | null
+  current_substep_label?: string | null
+  current_substep_progress?: string | null
   next_action?: string | null
   run_phase?: string | null
   publication_status?: string | null
@@ -940,6 +953,138 @@ function computeLoopHealth(
   return 'idle'
 }
 
+function resolveManifestEntityRecord(
+  entityId: string | null | undefined,
+  entityName: string | null | undefined,
+  manifestEntities: ManifestEntity[],
+) {
+  const normalizedId = toText(entityId)
+  const normalizedName = toText(entityName).toLowerCase()
+  return manifestEntities.find((entity) =>
+    entity.entity_id === normalizedId
+    || entity.entity_name.toLowerCase() === normalizedName,
+  ) || null
+}
+
+function resolveCanonicalRuntimeEntity(
+  entityId: string | null | undefined,
+  entityName: string | null | undefined,
+  canonicalEntities: any[],
+) {
+  const normalizedId = toText(entityId)
+  const normalizedName = toText(entityName).toLowerCase()
+
+  const exactIdMatch = canonicalEntities.find((entity) => matchesEntityUuid(entity, normalizedId))
+  if (exactIdMatch) return exactIdMatch
+
+  return canonicalEntities.find((entity) => {
+    const candidateName = toText(entity?.properties?.name || entity?.name).toLowerCase()
+    return Boolean(candidateName) && candidateName === normalizedName
+  }) || null
+}
+
+function toRuntimeQueueRecord(
+  runtimeRun: PipelineRuntimeRunRecord,
+  manifestEntities: ManifestEntity[],
+  canonicalEntities: any[],
+): QueueEntityRecord {
+  const manifestEntity = resolveManifestEntityRecord(runtimeRun.entity_id, runtimeRun.entity_name, manifestEntities)
+  const canonicalEntity = resolveCanonicalRuntimeEntity(runtimeRun.canonical_entity_id || runtimeRun.entity_id, runtimeRun.entity_name, canonicalEntities)
+  const canonicalEntityType = toText(
+    canonicalEntity?.entity_type
+    || canonicalEntity?.properties?.type
+    || canonicalEntity?.labels?.[0],
+  )
+  return {
+    entity_id: runtimeRun.canonical_entity_id || runtimeRun.entity_id,
+    entity_name: manifestEntity?.entity_name || runtimeRun.entity_name,
+    entity_type: manifestEntity?.entity_type || canonicalEntityType || 'Entity',
+    state: 'in_progress',
+    client_ready: false,
+    promoted: false,
+    summary: runtimeRun.current_question_text
+      || runtimeRun.current_execution_state
+      || runtimeRun.current_substep_label
+      || runtimeRun.current_action
+      || 'Canonical dossier run in progress',
+    generated_at: runtimeRun.heartbeat_at || null,
+    started_at: runtimeRun.heartbeat_at || null,
+    active_question_id: runtimeRun.current_question_id,
+    current_question_id: runtimeRun.current_question_id,
+    current_question_text: runtimeRun.current_question_text || null,
+    current_section_id: runtimeRun.current_section_id || null,
+    current_section_label: runtimeRun.current_section_label || null,
+    current_section_index: runtimeRun.current_section_index ?? null,
+    current_section_total: runtimeRun.current_section_total ?? null,
+    current_question_index: runtimeRun.current_question_index ?? null,
+    current_question_total: runtimeRun.current_question_total ?? null,
+    current_strategy_label: runtimeRun.current_strategy_label || null,
+    current_execution_state: runtimeRun.current_execution_state || null,
+    current_source_order: runtimeRun.current_source_order || null,
+    current_substep_label: runtimeRun.current_substep_label || null,
+    current_substep_progress: runtimeRun.current_substep_progress || null,
+    next_action: runtimeRun.current_execution_state || runtimeRun.current_substep_label || runtimeRun.current_action,
+    run_phase: runtimeRun.queue_state,
+    publication_status: runtimeRun.publication_status,
+    freshness_state: runtimeRun.heartbeat_age_seconds !== null && runtimeRun.heartbeat_age_seconds <= LOOP_ACTIVE_WINDOW_MS / 1000
+      ? 'fresh'
+      : 'stale',
+    heartbeat_at: runtimeRun.heartbeat_at,
+    heartbeat_age_seconds: runtimeRun.heartbeat_age_seconds,
+    heartbeat_source: runtimeRun.heartbeat_at ? 'heartbeat_at' : null,
+  }
+}
+
+function applyRuntimeOverride(
+  selectedSource: QueueSourceSelection,
+  runtimeCurrentLiveRun: PipelineRuntimeRunRecord | null,
+  manifestEntities: ManifestEntity[],
+  canonicalEntities: any[],
+  universeCount: number,
+  clientReadyCount: number,
+  qualityCounts: Record<DossierQualityState, number>,
+): QueueSourceSelection {
+  if (!runtimeCurrentLiveRun) return selectedSource
+
+  const liveQueueRecord = toRuntimeQueueRecord(runtimeCurrentLiveRun, manifestEntities, canonicalEntities)
+  const runningEntities = [liveQueueRecord, ...selectedSource.queue.running_entities]
+    .filter((item, index, items) => items.findIndex((candidate) => candidate.entity_id === item.entity_id) === index)
+
+  const nextQueue: HomeQueueDashboardPayload['queue'] = {
+    ...selectedSource.queue,
+    in_progress_entity: liveQueueRecord,
+    running_entities: runningEntities.slice(0, 8),
+  }
+
+  const runtimeCounts = buildRuntimeCounts(
+    nextQueue,
+    universeCount,
+    (qualityCounts.partial ?? 0) + (qualityCounts.blocked ?? 0),
+    {
+      ...selectedSource.loop_status.runtime_counts,
+      running: Math.max(selectedSource.loop_status.runtime_counts.running ?? 0, 1),
+    },
+  )
+
+  return {
+    source: 'pipeline_runs',
+    priority: Math.max(selectedSource.priority || 0, 3),
+    last_activity_at: runtimeCurrentLiveRun.heartbeat_at || selectedSource.last_activity_at,
+    queue: nextQueue,
+    loop_status: {
+      ...selectedSource.loop_status,
+      universe_count: universeCount,
+      client_ready_dossiers: clientReadyCount,
+      promoted_dossiers: clientReadyCount,
+      source: 'pipeline_runs',
+      health: 'active',
+      last_activity_at: runtimeCurrentLiveRun.heartbeat_at || selectedSource.last_activity_at,
+      quality_counts: qualityCounts,
+      runtime_counts: runtimeCounts,
+    },
+  }
+}
+
 function selectQueueSource(options: {
   control: Awaited<ReturnType<typeof readPipelineControlState>>
   universeCount: number
@@ -1293,8 +1438,17 @@ export async function buildHomeQueueDashboardPayload(options: BuildOptions = {})
   const rolloutProofSet = includeRolloutProofSet ? await buildRolloutProofSet(canonicalEntities) : []
   const rfpCards = includeRfpCards && options.opportunitiesFetcher ? await options.opportunitiesFetcher() : []
   const control = await readPipelineControlState()
+  let runtimeCurrentLiveRun: PipelineRuntimeRunRecord | null = null
   let pipelineRuns: PipelineRunRecord[] = []
   let activeRepairRuns: PipelineRunRecord[] = []
+
+  try {
+    const runtimeReadSet = await loadPipelineRuntimeReadSet()
+    const runtimeSnapshot = buildPipelineRuntimeSnapshot(runtimeReadSet)
+    runtimeCurrentLiveRun = runtimeSnapshot.current_live_run
+  } catch {
+    runtimeCurrentLiveRun = null
+  }
 
   try {
     pipelineRuns = await loadPipelineRuns(manifestEntities.map((entity) => entity.entity_id))
@@ -1351,16 +1505,25 @@ export async function buildHomeQueueDashboardPayload(options: BuildOptions = {})
     clientReadyCount: cards.length,
     qualityCounts: dossierQuality.counts,
   })
+  const runtimeSelectedSource = applyRuntimeOverride(
+    selectedSource,
+    runtimeCurrentLiveRun,
+    dashboardEntities,
+    canonicalEntities,
+    universeCount,
+    cards.length,
+    dossierQuality.counts,
+  )
 
-  const blockedPipelineCount = (selectedSource.loop_status.quality_counts.partial ?? 0) + (selectedSource.loop_status.quality_counts.blocked ?? 0)
+  const blockedPipelineCount = (runtimeSelectedSource.loop_status.quality_counts.partial ?? 0) + (runtimeSelectedSource.loop_status.quality_counts.blocked ?? 0)
   const runtimeCounts = buildRuntimeCounts(
-    selectedSource.queue,
+    runtimeSelectedSource.queue,
     universeCount,
     blockedPipelineCount,
-    selectedSource.loop_status.runtime_counts,
+    runtimeSelectedSource.loop_status.runtime_counts,
   )
-  selectedSource.loop_status = {
-    ...selectedSource.loop_status,
+  runtimeSelectedSource.loop_status = {
+    ...runtimeSelectedSource.loop_status,
     universe_count: universeCount,
     runtime_counts: runtimeCounts,
   }
@@ -1370,8 +1533,8 @@ export async function buildHomeQueueDashboardPayload(options: BuildOptions = {})
     playlist_sort_key: playlistSortKey.length > 0
       ? playlistSortKey
       : ['priority_score DESC', 'entity_type ASC', 'entity_name ASC', 'entity_id ASC'],
-    loop_status: selectedSource.loop_status,
-    queue: selectedSource.queue,
+    loop_status: runtimeSelectedSource.loop_status,
+    queue: runtimeSelectedSource.queue,
     client_ready_dossiers: includeClientReadyDossiers ? cards.slice(0, 6) : [],
     rfp_cards: rfpCards.slice(0, 6),
     sales_summary: {
