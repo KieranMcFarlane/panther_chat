@@ -73,9 +73,9 @@ async function fetchGraphData() {
     let totalAvailable = 0;
 
     const { data: initialEntities, count: initialCount, error: initialError } = await supabase
-      .from('cached_entities')
-      .select('*', { count: 'exact' })
-      .order('created_at', { ascending: false })
+      .from('canonical_entities')
+      .select('id, name, entity_type, sport, league, country, labels, properties, source_neo4j_ids', { count: 'exact' })
+      .order('name', { ascending: true })
       .range(0, INITIAL_LIMIT - 1);
 
     if (initialError) {
@@ -84,64 +84,61 @@ async function fetchGraphData() {
 
     if (initialEntities && initialEntities.length > 0) {
       // Convert initial batch of entities for display
-      entities = initialEntities.map((cachedEntity: any) => {
-          const properties = cachedEntity.properties || {};
-          const labels = cachedEntity.labels || [];
-          
-          // Determine entity type from labels
+      entities = initialEntities.map((row: any) => {
+          const properties = row.properties || {};
+          const labels = row.labels || [];
+          const sourceNeo4jId = Array.isArray(row.source_neo4j_ids) && row.source_neo4j_ids.length > 0
+            ? row.source_neo4j_ids[0]
+            : row.id;
+
+          // Determine entity type from entity_type column, with labels fallback
           let entityType = 'entity';
-          if (labels.includes('Club') || labels.includes('Company')) {
+          const typeStr = String(row.entity_type || '').toLowerCase();
+          if (typeStr === 'club' || typeStr === 'company' || labels.includes('Club') || labels.includes('Company')) {
             entityType = 'club';
-          } else if (labels.includes('League')) {
+          } else if (typeStr === 'league' || labels.includes('League')) {
             entityType = 'league';
-          } else if (labels.includes('Competition')) {
+          } else if (typeStr === 'competition' || labels.includes('Competition')) {
             entityType = 'competition';
-          } else if (labels.includes('Venue') || labels.includes('Stadium')) {
+          } else if (typeStr === 'venue' || typeStr === 'stadium' || labels.includes('Venue') || labels.includes('Stadium')) {
             entityType = 'venue';
           } else if (labels.includes('RfpOpportunity') || labels.includes('RFP')) {
             entityType = 'tender';
           } else if (labels.includes('Stakeholder')) {
             entityType = 'poi';
-          } else if (labels.includes('Person') || labels.includes('Sportsperson')) {
+          } else if (typeStr === 'person' || typeStr === 'sportsperson' || labels.includes('Person') || labels.includes('Sportsperson')) {
             entityType = 'sportsperson';
           }
-          
-          // For proper relationship mapping, we need to handle ID compatibility
-          // The relationships API returns Neo4j elementIds, but cached entities use neo4j_id
-          let entity_id = cachedEntity.neo4j_id || cachedEntity.id;
-          
-          // Check if this is a simple numeric ID that needs to be converted to Neo4j elementId format
-          // Since we can't easily convert back to elementId, we'll need to handle this in the relationship mapping
-          if (entity_id && !entity_id.includes(':')) {
-            // This is a simple ID from cache, we'll need special handling for relationships
-            entity_id = cachedEntity.neo4j_id || entity_id;
-          }
-          
+
           return {
-            entity_id: entity_id,
-            neo4j_id: cachedEntity.neo4j_id, // Keep both for different mapping purposes
-            cache_id: cachedEntity.id, // Keep the cache ID as backup
+            entity_id: sourceNeo4jId,
+            neo4j_id: sourceNeo4jId,
+            cache_id: row.id,
             entity_type: entityType,
-            name: properties.name || 'Unknown Entity',
+            name: row.name || 'Unknown Entity',
             description: properties.description || '',
-            source: 'supabase-cache',
+            source: 'supabase-canonical',
             last_updated: properties.last_updated || new Date().toISOString(),
             trust_score: properties.trust_score || 0.8,
             vector_embedding: properties.embedding || [],
             priority_score: properties.priority_score || 0.7,
             notes: properties.notes || '',
             division_id: properties.division_id || properties.league_id || '',
-            location: properties.location || properties.city || properties.country || '',
+            location: row.country || properties.city || '',
             club_id: properties.club_id || properties.team_id || '',
             role: properties.role || properties.position || '',
             tags: properties.tags || [],
-            // Include all original properties
-            ...properties
+            ...properties,
+            name: row.name,
+            type: row.entity_type,
+            sport: row.sport,
+            country: row.country,
+            league: row.league,
           };
       });
-      
+
       // Get total count of available entities
-      totalAvailable = initialCount || initialEntities.length || 4422;
+      totalAvailable = initialCount || initialEntities.length || 3332;
 
     }
     

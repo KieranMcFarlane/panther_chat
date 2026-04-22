@@ -132,7 +132,7 @@ export class ASCIIDossierRenderer {
     const defaultAnalysis = `${props.name}s digital structure is mature but rigid. Their reliance on NTT DATA constrains innovation velocity. To engage, consider framing Yellow Panther as a lightweight experimental R&D wing for pilot projects that NTT cannot deliver quickly.`
     dossier += `║ ${this.wrapText(props.aiAnalysis || defaultAnalysis)} ║\n`
     dossier += '\n║                                                                                                  ║\n'
-    dossier += `║ Recommended Action: ${this.wrapText(props.recommendedAction || 'Target community, youth, and women\'s sports digital transformation with data-backed ROI projections.')} ║\n'
+    dossier += `║ Recommended Action: ${this.wrapText(props.recommendedAction || 'Target community, youth, and women\'s sports digital transformation with data-backed ROI projections.')} ║\n`
     
     // Strategic Opportunities
     dossier += `╠${'═'.repeat(width)}╣\n`

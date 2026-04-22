@@ -324,6 +324,21 @@ function getQuestionTerminalSummary(item: QuestionRecord) {
   )
 }
 
+function getCommercialQuestionFields(item: QuestionRecord) {
+  const questionFirstAnswer = item?.question_first_answer && typeof item.question_first_answer === "object"
+    ? item.question_first_answer
+    : null
+  const evidenceGrade = toText(item?.evidence_grade || questionFirstAnswer?.evidence_grade).trim()
+  const procurementModel = toText(item?.procurement_model || questionFirstAnswer?.procurement_model).trim()
+  const commercialImplication = toText(item?.commercial_implication || questionFirstAnswer?.commercial_implication).trim()
+
+  return {
+    evidenceGrade,
+    procurementModel,
+    commercialImplication,
+  }
+}
+
 function getQuestionBody(item: QuestionRecord) {
   const formatted = formatQuestionAnswer(item)
   if (formatted) {
@@ -404,13 +419,31 @@ function renderQuestionCards(items: QuestionRecord[], emptyLabel: string, eviden
       {items.map((item, index) => {
         const questionSources = extractQuestionSources(item, evidenceIndex)
         const questionBody = getQuestionBody(item) || getQuestionTerminalSummary(item) || "No validated answer was produced for this question."
+        const commercialFields = getCommercialQuestionFields(item)
+        const isCommercialQuestion = getQuestionBucket(item) === "procurement-ecosystem"
         return (
           <div key={`${getQuestionTitle(item, index)}-${index}`} className="rounded-xl border border-border/70 bg-card/60 p-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <p className="text-sm font-semibold text-foreground">{getQuestionTitle(item, index)}</p>
               <Badge className={getQuestionStatusClasses(item)} variant="outline">{getQuestionStatusLabel(item)}</Badge>
             </div>
+            {isCommercialQuestion && (commercialFields.evidenceGrade || commercialFields.procurementModel) ? (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {commercialFields.evidenceGrade ? (
+                  <Badge variant="outline">Evidence grade: {commercialFields.evidenceGrade}</Badge>
+                ) : null}
+                {commercialFields.procurementModel ? (
+                  <Badge variant="outline">Procurement model: {commercialFields.procurementModel}</Badge>
+                ) : null}
+              </div>
+            ) : null}
             <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-muted-foreground">{questionBody}</p>
+            {isCommercialQuestion && commercialFields.commercialImplication ? (
+              <div className="mt-3 rounded-md border border-border/60 bg-background/40 p-3">
+                <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Commercial implication</p>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">{commercialFields.commercialImplication}</p>
+              </div>
+            ) : null}
             {getQuestionTerminalState(item) === "blocked" && Array.isArray(item?.blocked_by) && item.blocked_by.length > 0 ? (
               <p className="mt-3 text-xs text-amber-200">Blocked by: {item.blocked_by.join(", ")}</p>
             ) : null}

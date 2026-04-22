@@ -171,7 +171,7 @@ export default function SyncDashboard() {
           <div>
             <h3 className="font-semibold mb-2">What this sync does:</h3>
             <ul className="list-disc list-inside space-y-1 text-sm text-gray-600">
-              <li>Keeps Supabase cached_entities table synchronized with FalkorDB</li>
+              <li>Keeps Supabase staging cache synchronized with FalkorDB (reads use canonical_entities)</li>
               <li>Detects new, updated, and removed entities</li>
               <li>Maintains checksums to detect changes</li>
               <li>Provides comprehensive logging and monitoring</li>
