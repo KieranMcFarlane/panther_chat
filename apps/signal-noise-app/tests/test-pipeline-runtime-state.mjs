@@ -150,3 +150,115 @@ test('pipeline runtime treats fresh DB activity as live when supervisor crash me
   assert.equal(snapshot.current_live_run?.queue_state, 'running')
   assert.equal(snapshot.failure_buckets.worker_stale, 0)
 })
+
+test('pipeline runtime does not treat a fresh queued row as proof that a stopped worker is running', () => {
+  const snapshot = buildPipelineRuntimeSnapshot({
+    snapshot_at: '2026-04-23T12:00:00.000Z',
+    control: {
+      is_paused: false,
+      pause_reason: null,
+      stop_reason: null,
+      stop_details: null,
+      updated_at: '2026-04-23T11:59:59.000Z',
+      desired_state: 'running',
+      requested_state: 'running',
+      observed_state: 'running',
+      transition_state: 'running',
+    },
+    worker: {
+      worker_process_state: 'stopped',
+      worker_health: 'stopped',
+      worker_pid: null,
+      worker_command: 'npm run worker:entity-pipeline',
+      worker_state_path: '/tmp/entity-pipeline-worker-state.json',
+      worker_pid_path: '/tmp/entity-pipeline-worker.pid',
+      started_at: '2026-04-23T11:58:00.000Z',
+      stopped_at: '2026-04-23T11:59:00.000Z',
+      updated_at: '2026-04-23T11:59:00.000Z',
+      last_error: null,
+    },
+    fastmcp: {
+      url: 'http://127.0.0.1:8001/health',
+      reachable: true,
+      status_code: 200,
+      latency_ms: 10,
+      error: null,
+    },
+    rows: [
+      {
+        batch_id: 'import_queued',
+        entity_id: 'arsenal',
+        canonical_entity_id: 'arsenal',
+        entity_name: 'Arsenal',
+        status: 'queued',
+        phase: 'question_first',
+        started_at: new Date(Date.now() - 5_000).toISOString(),
+        completed_at: null,
+        metadata: {},
+      },
+    ],
+    dossiers: [],
+  })
+
+  assert.equal(snapshot.worker.worker_process_state, 'stopped')
+  assert.equal(snapshot.worker.worker_health, 'stopped')
+  assert.equal(snapshot.current_live_run, null)
+  assert.equal(snapshot.current_run?.queue_state, 'worker_stale')
+  assert.equal(snapshot.failure_buckets.worker_stale, 1)
+})
+
+test('pipeline runtime does not treat a claiming row without fresh heartbeat as proof that a crashed worker recovered', () => {
+  const snapshot = buildPipelineRuntimeSnapshot({
+    snapshot_at: '2026-04-23T12:00:00.000Z',
+    control: {
+      is_paused: false,
+      pause_reason: null,
+      stop_reason: null,
+      stop_details: null,
+      updated_at: '2026-04-23T11:59:59.000Z',
+      desired_state: 'running',
+      requested_state: 'running',
+      observed_state: 'running',
+      transition_state: 'running',
+    },
+    worker: {
+      worker_process_state: 'crashed',
+      worker_health: 'degraded',
+      worker_pid: null,
+      worker_command: 'npm run worker:entity-pipeline',
+      worker_state_path: '/tmp/entity-pipeline-worker-state.json',
+      worker_pid_path: '/tmp/entity-pipeline-worker.pid',
+      started_at: '2026-04-23T11:58:00.000Z',
+      stopped_at: '2026-04-23T11:59:00.000Z',
+      updated_at: '2026-04-23T11:59:00.000Z',
+      last_error: 'tracked pid exited',
+    },
+    fastmcp: {
+      url: 'http://127.0.0.1:8001/health',
+      reachable: true,
+      status_code: 200,
+      latency_ms: 10,
+      error: null,
+    },
+    rows: [
+      {
+        batch_id: 'import_claiming',
+        entity_id: 'porto',
+        canonical_entity_id: 'porto',
+        entity_name: 'FC Porto',
+        status: 'claiming',
+        phase: 'entity_registration',
+        started_at: new Date(Date.now() - 5_000).toISOString(),
+        completed_at: null,
+        metadata: {},
+      },
+    ],
+    dossiers: [],
+  })
+
+  assert.equal(snapshot.worker.worker_process_state, 'crashed')
+  assert.equal(snapshot.worker.worker_health, 'degraded')
+  assert.equal(snapshot.current_live_run, null)
+  assert.equal(snapshot.current_run?.queue_state, 'worker_stale')
+  assert.equal(snapshot.failure_buckets.worker_stale, 1)
+})

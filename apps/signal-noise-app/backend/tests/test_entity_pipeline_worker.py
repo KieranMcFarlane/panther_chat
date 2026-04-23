@@ -1088,6 +1088,249 @@ def test_claim_next_batch_materializes_resumable_candidate_when_queue_is_idle(mo
     assert inserted_runs[-1][0]["metadata"]["question_id"] == "q11_decision_owner"
 
 
+def test_restart_matrix_manual_stop_mid_question_resumes_as_bounded_question_repair(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker.recover_stale_batches = lambda: None
+    worker.worker_id = "worker-manual-stop"
+    worker.lease_seconds = 60
+    worker._build_follow_on_repair_batch_id = lambda: "batch-manual-stop-resume"
+    worker._select_next_entity_cursor_candidate = lambda **kwargs: {
+        "candidate_kind": "resume_repair",
+        "entity_id": "entity-b",
+        "canonical_entity_id": "entity-b",
+        "entity_name": "Entity B",
+        "entity_type": "CLUB",
+        "question_id": "q11_decision_owner",
+        "current_question_id": "q7_procurement_signal",
+        "next_repair_question_id": "q11_decision_owner",
+    }
+    inserted_batches = []
+    inserted_runs = []
+
+    class FakeRpcQuery:
+        def __init__(self, rows):
+            self.rows = rows
+
+        def execute(self):
+            return SimpleNamespace(data=self.rows)
+
+    class FakeTableQuery:
+        def __init__(self, table_name):
+            self.table_name = table_name
+            self.payload = None
+
+        def insert(self, payload):
+            self.payload = payload
+            return self
+
+        def execute(self):
+            if self.table_name == "entity_import_batches":
+                inserted_batches.append(self.payload)
+                return SimpleNamespace(data=[self.payload])
+            if self.table_name == "entity_pipeline_runs":
+                inserted_runs.append(self.payload)
+                return SimpleNamespace(data=self.payload)
+            return SimpleNamespace(data=[])
+
+    class FakeSupabase:
+        def __init__(self):
+            self.calls = 0
+
+        def rpc(self, _name, _params):
+            self.calls += 1
+            if self.calls == 1:
+                return FakeRpcQuery([])
+            return FakeRpcQuery([{"id": "batch-manual-stop-resume", "status": "running", "entity_id": "entity-b"}])
+
+        def table(self, table_name):
+            return FakeTableQuery(table_name)
+
+    worker.supabase = FakeSupabase()
+    monkeypatch.setattr(
+        "entity_pipeline_worker.read_pipeline_control_state",
+        lambda: {
+            "is_paused": False,
+            "pause_reason": "manual stop",
+            "requested_state": "running",
+            "observed_state": "running",
+            "transition_state": "running",
+            "desired_state": "running",
+        },
+    )
+    monkeypatch.setattr("entity_pipeline_worker.write_pipeline_control_state", lambda payload: payload)
+
+    claimed = worker.claim_next_batch()
+
+    assert claimed["id"] == "batch-manual-stop-resume"
+    assert inserted_batches[-1]["metadata"]["rerun_mode"] == "question"
+    assert inserted_batches[-1]["metadata"]["cascade_dependents"] is False
+    assert inserted_runs[-1][0]["metadata"]["question_id"] == "q11_decision_owner"
+    assert inserted_runs[-1][0]["metadata"]["rerun_mode"] == "question"
+    assert inserted_runs[-1][0]["metadata"]["cascade_dependents"] is False
+
+
+def test_restart_matrix_worker_crash_mid_question_prefers_unfinished_repair_checkpoint(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+
+    candidate = {
+        "candidate_kind": "resume_repair",
+        "entity_id": "entity-b",
+        "canonical_entity_id": "entity-b",
+        "entity_name": "Entity B",
+        "entity_type": "CLUB",
+        "current_question_id": "q7_procurement_signal",
+        "next_repair_question_id": "q11_decision_owner",
+        "question_id": "q11_decision_owner",
+    }
+
+    class FakeRpcQuery:
+        def execute(self):
+            return SimpleNamespace(data=[candidate])
+
+    worker.supabase = SimpleNamespace(
+        rpc=lambda name, params: (
+            FakeRpcQuery()
+            if name == "select_next_entity_cursor_candidate" and params == {
+                "current_entity_id": "entity-c",
+                "current_canonical_entity_id": "entity-c",
+            }
+            else None
+        )
+    )
+    worker._find_next_manifest_entity = lambda **kwargs: {
+        "entity_id": "entity-d",
+        "canonical_entity_id": "entity-d",
+        "entity_name": "Entity D",
+        "entity_type": "CLUB",
+    }
+
+    selected = worker._select_next_entity_cursor_candidate(
+        current_entity_id="entity-c",
+        current_canonical_entity_id="entity-c",
+    )
+
+    assert selected["candidate_kind"] == "resume_repair"
+    assert selected["question_id"] == "q11_decision_owner"
+    assert selected["entity_id"] == "entity-b"
+
+
+def test_restart_matrix_completed_batch_with_resumable_metadata_resumes_from_run_checkpoint(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker.recover_stale_batches = lambda: None
+    worker.worker_id = "worker-completed-batch"
+    worker.lease_seconds = 60
+    worker._build_follow_on_repair_batch_id = lambda: "batch-completed-resume"
+    worker._select_next_entity_cursor_candidate = lambda **kwargs: {
+        "candidate_kind": "resume_repair",
+        "entity_id": "entity-b",
+        "canonical_entity_id": "entity-b",
+        "entity_name": "Entity B",
+        "entity_type": "CLUB",
+        "question_id": "q11_decision_owner",
+        "current_question_id": "q7_procurement_signal",
+        "next_repair_question_id": "q11_decision_owner",
+    }
+    inserted_runs = []
+
+    class FakeRpcQuery:
+        def __init__(self, rows):
+            self.rows = rows
+
+        def execute(self):
+            return SimpleNamespace(data=self.rows)
+
+    class FakeTableQuery:
+        def __init__(self, table_name):
+            self.table_name = table_name
+            self.payload = None
+
+        def insert(self, payload):
+            self.payload = payload
+            return self
+
+        def execute(self):
+            if self.table_name == "entity_pipeline_runs":
+                inserted_runs.append(self.payload)
+                return SimpleNamespace(data=self.payload)
+            return SimpleNamespace(data=[self.payload] if self.payload is not None else [])
+
+    class FakeSupabase:
+        def __init__(self):
+            self.calls = 0
+
+        def rpc(self, _name, _params):
+            self.calls += 1
+            if self.calls == 1:
+                return FakeRpcQuery([])
+            return FakeRpcQuery([{"id": "batch-completed-resume", "status": "running", "entity_id": "entity-b"}])
+
+        def table(self, table_name):
+            return FakeTableQuery(table_name)
+
+    worker.supabase = FakeSupabase()
+    monkeypatch.setattr(
+        "entity_pipeline_worker.read_pipeline_control_state",
+        lambda: {"is_paused": False, "requested_state": "running", "observed_state": "running"},
+    )
+    monkeypatch.setattr("entity_pipeline_worker.write_pipeline_control_state", lambda payload: payload)
+
+    claimed = worker.claim_next_batch()
+
+    assert claimed["id"] == "batch-completed-resume"
+    assert inserted_runs[-1][0]["metadata"]["source"] == "entity_cursor_resume"
+    assert inserted_runs[-1][0]["metadata"]["question_id"] == "q11_decision_owner"
+    assert inserted_runs[-1][0]["metadata"]["rerun_mode"] == "question"
+
+
+def test_restart_matrix_partial_checkpoint_metadata_falls_back_to_current_question_resume(monkeypatch):
+    worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
+    worker._build_follow_on_repair_batch_id = lambda: "batch-partial"
+    worker._now_iso = lambda: "2026-04-23T12:00:00+00:00"
+    inserted_batches = []
+    inserted_runs = []
+
+    class FakeTableQuery:
+        def __init__(self, table_name):
+            self.table_name = table_name
+            self.payload = None
+
+        def insert(self, payload):
+            self.payload = payload
+            return self
+
+        def execute(self):
+            if self.table_name == "entity_import_batches":
+                inserted_batches.append(self.payload)
+                return SimpleNamespace(data=[self.payload])
+            if self.table_name == "entity_pipeline_runs":
+                inserted_runs.append(self.payload)
+                return SimpleNamespace(data=self.payload)
+            return SimpleNamespace(data=[])
+
+    worker.supabase = SimpleNamespace(table=lambda table_name: FakeTableQuery(table_name))
+    worker._safe_execute = lambda operation, context=None: operation()
+
+    batch_id = worker._materialize_entity_cursor_candidate(
+        {
+            "candidate_kind": "resume_repair",
+            "entity_id": "entity-b",
+            "canonical_entity_id": "entity-b",
+            "entity_name": "Entity B",
+            "entity_type": "CLUB",
+            "question_id": None,
+            "current_question_id": "q7_procurement_signal",
+            "next_repair_question_id": None,
+        },
+        queue_mode="durable_worker",
+    )
+
+    assert batch_id == "batch-partial"
+    assert inserted_batches[-1]["metadata"]["rerun_mode"] == "question"
+    assert inserted_batches[-1]["metadata"]["question_id"] == "q7_procurement_signal"
+    assert inserted_runs[-1][0]["metadata"]["question_id"] == "q7_procurement_signal"
+    assert inserted_runs[-1][0]["metadata"]["cascade_dependents"] is False
+
+
 def test_claim_next_batch_prefers_resumable_candidate_over_existing_queued_batch(monkeypatch):
     worker = EntityPipelineWorker.__new__(EntityPipelineWorker)
     worker.recover_stale_batches = lambda: None

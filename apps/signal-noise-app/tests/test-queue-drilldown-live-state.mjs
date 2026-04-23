@@ -93,7 +93,9 @@ async function loadQueueDrilldownRouteModule() {
 
   await writeFile(stubs.queueDrilldownNormalization, [
     'export function normalizeTerminalFollowOnMetadata(record) { return record }',
-    'export function shouldSurfaceResumeNeeded() { return false }',
+    'export function shouldSurfaceResumeNeeded(record) {',
+    "  return Boolean((record?.status === 'completed' || record?.status === 'failed') && (record?.next_repair_question_id || record?.current_question_id))",
+    '}',
     '',
   ].join('\n'), 'utf8')
 
@@ -240,4 +242,193 @@ test('queue drilldown stays waiting when control and worker are running but only
   assert.equal(payload.live_state.in_progress_entity, null)
   assert.equal(payload.queue.stale_active_rows[0]?.entity_name, 'FC Porto')
   assert.equal(payload.queue.latest_noteworthy_entity?.entity_name, 'Tom Bradley')
+})
+
+test('queue drilldown reports worker heartbeat stale when control says running but the worker crashed and only stale rows remain', async () => {
+  const staleHeartbeatAt = new Date(Date.now() - 15 * 60_000).toISOString()
+  const staleStartedAt = new Date(Date.now() - 20 * 60_000).toISOString()
+
+  globalThis.__queueDrilldownTestReadSet = {
+    snapshot_at: new Date().toISOString(),
+    control: {
+      is_paused: false,
+      pause_reason: null,
+      stop_reason: null,
+      stop_details: null,
+      updated_at: new Date().toISOString(),
+      desired_state: 'running',
+      requested_state: 'running',
+      observed_state: 'running',
+      transition_state: 'running',
+    },
+    worker: {
+      worker_process_state: 'crashed',
+      worker_health: 'degraded',
+      worker_pid: null,
+      worker_command: 'npm run worker:entity-pipeline',
+      worker_state_path: '/tmp/state.json',
+      worker_pid_path: '/tmp/pid',
+      started_at: staleStartedAt,
+      stopped_at: new Date(Date.now() - 10 * 60_000).toISOString(),
+      updated_at: new Date().toISOString(),
+      last_error: 'tracked pid exited',
+    },
+    fastmcp: { reachable: true },
+    rows: [
+      {
+        batch_id: 'import_fc_porto',
+        entity_id: 'fc-porto',
+        canonical_entity_id: 'fc-porto',
+        entity_name: 'FC Porto',
+        status: 'running',
+        phase: 'dossier_generation',
+        started_at: staleStartedAt,
+        completed_at: null,
+        metadata: {
+          heartbeat_at: staleHeartbeatAt,
+          current_question_id: 'q11_decision_owner',
+          current_question_text: 'Who is the highest probability buyer?',
+        },
+      },
+    ],
+    dossiers: [],
+  }
+
+  globalThis.__queueDrilldownTestRuntimeSnapshot = {
+    snapshot_at: new Date().toISOString(),
+    generated_at: new Date().toISOString(),
+    control: globalThis.__queueDrilldownTestReadSet.control,
+    worker: globalThis.__queueDrilldownTestReadSet.worker,
+    fastmcp: { reachable: true },
+    queue_depth: 1,
+    current_run: {
+      batch_id: 'import_fc_porto',
+      entity_id: 'fc-porto',
+      canonical_entity_id: 'fc-porto',
+      entity_name: 'FC Porto',
+      phase: 'dossier_generation',
+      queue_state: 'worker_stale',
+      heartbeat_at: staleHeartbeatAt,
+    },
+    current_live_run: null,
+    latest_noteworthy_run: {
+      batch_id: 'import_fc_porto',
+      entity_id: 'fc-porto',
+      canonical_entity_id: 'fc-porto',
+      entity_name: 'FC Porto',
+      phase: 'dossier_generation',
+      queue_state: 'worker_stale',
+      heartbeat_at: staleHeartbeatAt,
+    },
+    recent_failures: [],
+    failure_buckets: {
+      queued: 0,
+      running: 0,
+      completed: 0,
+      retrying: 0,
+      reconciling: 0,
+      published_degraded: 0,
+      failed_terminal: 0,
+      worker_stale: 1,
+    },
+  }
+
+  const response = await GET()
+  const payload = await response.json()
+
+  assert.equal(payload.runtime.worker.worker_process_state, 'crashed')
+  assert.equal(payload.operational_state, 'stopped')
+  assert.equal(payload.stop_reason, 'worker_heartbeat_stale')
+  assert.equal(payload.live_state.worker_process_state, 'crashed')
+  assert.equal(payload.queue.stale_active_rows[0]?.entity_name, 'FC Porto')
+})
+
+test('queue drilldown surfaces resumable terminal work as resume-needed instead of silently completed', async () => {
+  const completedAt = new Date(Date.now() - 2 * 60_000).toISOString()
+
+  globalThis.__queueDrilldownTestReadSet = {
+    snapshot_at: new Date().toISOString(),
+    control: {
+      is_paused: true,
+      pause_reason: 'manual stop',
+      stop_reason: null,
+      stop_details: null,
+      updated_at: new Date().toISOString(),
+      desired_state: 'paused',
+      requested_state: 'paused',
+      observed_state: 'paused',
+      transition_state: 'paused',
+    },
+    worker: {
+      worker_process_state: 'stopped',
+      worker_health: 'stopped',
+      worker_pid: null,
+      worker_command: 'npm run worker:entity-pipeline',
+      worker_state_path: '/tmp/state.json',
+      worker_pid_path: '/tmp/pid',
+      started_at: new Date(Date.now() - 10 * 60_000).toISOString(),
+      stopped_at: new Date(Date.now() - 5 * 60_000).toISOString(),
+      updated_at: new Date().toISOString(),
+      last_error: null,
+    },
+    fastmcp: { reachable: true },
+    rows: [
+      {
+        batch_id: 'batch_completed',
+        entity_id: 'arsenal',
+        canonical_entity_id: 'arsenal',
+        entity_name: 'Arsenal',
+        status: 'completed',
+        phase: 'dossier_generation',
+        started_at: new Date(Date.now() - 8 * 60_000).toISOString(),
+        completed_at: completedAt,
+        metadata: {
+          current_question_id: 'q7_procurement_signal',
+          next_repair_question_id: 'q11_decision_owner',
+        },
+      },
+    ],
+    dossiers: [],
+  }
+
+  globalThis.__queueDrilldownTestRuntimeSnapshot = {
+    snapshot_at: new Date().toISOString(),
+    generated_at: new Date().toISOString(),
+    control: globalThis.__queueDrilldownTestReadSet.control,
+    worker: globalThis.__queueDrilldownTestReadSet.worker,
+    fastmcp: { reachable: true },
+    queue_depth: 1,
+    current_run: null,
+    current_live_run: null,
+    latest_noteworthy_run: {
+      batch_id: 'batch_completed',
+      entity_id: 'arsenal',
+      canonical_entity_id: 'arsenal',
+      entity_name: 'Arsenal',
+      phase: 'dossier_generation',
+      queue_state: 'completed',
+      heartbeat_at: completedAt,
+      current_question_id: 'q7_procurement_signal',
+    },
+    recent_failures: [],
+    failure_buckets: {
+      queued: 0,
+      running: 0,
+      completed: 1,
+      retrying: 0,
+      reconciling: 0,
+      published_degraded: 0,
+      failed_terminal: 0,
+      worker_stale: 0,
+    },
+  }
+
+  const response = await GET()
+  const payload = await response.json()
+
+  assert.equal(payload.operational_state, 'paused')
+  assert.equal(payload.loop_status.runtime_counts.resume_needed, 1)
+  assert.equal(payload.queue.resume_needed_entities.length, 1)
+  assert.equal(payload.queue.resume_needed_entities[0]?.entity_name, 'Arsenal')
+  assert.equal(payload.queue.resume_needed_entities[0]?.next_repair_question_id, 'q11_decision_owner')
 })

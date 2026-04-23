@@ -535,6 +535,72 @@ test("status view model treats stale backlog as waiting when control remains run
   assert.match(vm.liveEntityTicker, /Idle|waiting for claimable work/i);
 });
 
+test("status view model keeps stale backlog in a stopped state when the worker crashed even if control still says running", () => {
+  const staleAt = new Date(Date.now() - 15 * 60_000).toISOString();
+  const vm = buildOperationalStatusViewModel({
+    drilldown: {
+      control: {
+        is_paused: false,
+        requested_state: "running",
+        observed_state: "running",
+        transition_state: "running",
+      },
+      operational_state: "stopped",
+      stop_reason: "worker_heartbeat_stale",
+      runtime: {
+        worker: {
+          worker_process_state: "crashed",
+          worker_health: "degraded",
+        },
+      },
+      loop_status: {
+        total_scheduled: 4,
+        completed: 1,
+        quality_counts: { blocked: 0 },
+        runtime_counts: { running: 0, stalled: 1, retryable: 0, resume_needed: 0 },
+      },
+      queue: {
+        in_progress_entity: null,
+        running_entities: [],
+        stale_active_rows: [
+          {
+            entity_id: "fc-porto",
+            entity_name: "FC Porto",
+            entity_type: "club",
+            summary: "Heartbeat stalled.",
+            generated_at: staleAt,
+            started_at: staleAt,
+            heartbeat_at: staleAt,
+            current_question_id: "q11_decision_owner",
+            current_action: "dossier_generation",
+            run_phase: "running",
+          },
+        ],
+        latest_noteworthy_entity: null,
+        completed_entities: [],
+        resume_needed_entities: [],
+        upcoming_entities: [],
+      },
+      dossier_quality: {
+        incomplete_entities: [],
+      },
+    },
+    controlState: {
+      is_paused: false,
+      requested_state: "running",
+      observed_state: "running",
+      transition_state: "running",
+    },
+  });
+
+  assert.equal(vm.workerStateLabel, "Running");
+  assert.equal(vm.activityStateLabel, "Stale");
+  assert.equal(vm.statusBadgeLabel, "Stale");
+  assert.equal(vm.isStaleOrStopped, true);
+  assert.equal(vm.primaryActionLabel, "Start pipeline");
+  assert.match(vm.liveEntityTicker, /Stale|FC Porto/);
+});
+
 test("operational drawer merges stopped, stale, and resume-needed items into a single stopped lane", () => {
   const drawerVm = buildOperationalDrawerViewModel({
     dashboard: {

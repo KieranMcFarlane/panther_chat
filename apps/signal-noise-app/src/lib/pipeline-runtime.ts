@@ -351,14 +351,18 @@ function classifyQueueState(row: PipelineRunRow, workerRunning: boolean): Pipeli
   return 'running'
 }
 
-function isFreshLiveRuntimeRow(row: PipelineRunRow) {
+function hasFreshExecutionHeartbeat(row: PipelineRunRow) {
   const status = toText(row.status).toLowerCase()
-  if (!['running', 'queued', 'retrying', 'reconciling', 'claiming'].includes(status)) {
+  if (!['running', 'retrying', 'reconciling'].includes(status)) {
     return false
   }
   const metadata = row.metadata && typeof row.metadata === 'object' ? row.metadata : {}
+  const heartbeatAt = toText(metadata.heartbeat_at)
+  if (!heartbeatAt) {
+    return false
+  }
   const heartbeat = resolveOperationalHeartbeatDetails({
-    heartbeat_at: metadata.heartbeat_at || row.completed_at || row.started_at,
+    heartbeat_at: heartbeatAt,
     started_at: row.started_at,
     generated_at: row.completed_at ?? row.started_at,
   })
@@ -373,9 +377,9 @@ function resolveEffectiveWorkerState(
   const workerState = worker.worker_process_state
   const controlStopping = control.observed_state === 'stopping' || control.transition_state === 'stopping'
   const controlPaused = control.is_paused === true || control.requested_state === 'paused' || control.observed_state === 'paused'
-  const hasFreshLiveRow = rows.some(isFreshLiveRuntimeRow)
+  const hasFreshExecutionEvidence = rows.some(hasFreshExecutionHeartbeat)
 
-  if ((workerState === 'crashed' || workerState === 'stopped') && !controlStopping && !controlPaused && hasFreshLiveRow) {
+  if ((workerState === 'crashed' || workerState === 'stopped') && !controlStopping && !controlPaused && hasFreshExecutionEvidence) {
     return {
       ...worker,
       worker_process_state: 'running',

@@ -751,15 +751,9 @@ export async function GET() {
   const observedStopping = control?.observed_state === 'stopping' || control?.transition_state === 'stopping' || workerStopping
   const observedPaused = control?.observed_state === 'paused'
   const workerShowsActiveProcessing = workerProcessState === 'running' || workerProcessState === 'starting'
-  const controlShowsActiveProcessing = !requestedPaused && !observedPaused && !observedStopping && (
-    control?.observed_state === 'running'
-    || control?.transition_state === 'running'
-    || control?.transition_state === 'starting'
-  )
   const hasActiveProcessingEvidence = !requestedPaused && !observedPaused && (
     hasFreshRunningEntities
     || workerShowsActiveProcessing
-    || controlShowsActiveProcessing
   )
   const stopReason = hasFreshRunningEntities
     ? null
