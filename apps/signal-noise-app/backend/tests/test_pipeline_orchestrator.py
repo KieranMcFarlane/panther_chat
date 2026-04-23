@@ -779,6 +779,66 @@ async def test_pipeline_orchestrator_forwards_question_repair_metadata(monkeypat
 
 
 @pytest.mark.asyncio
+async def test_pipeline_orchestrator_applies_max_questions_to_opencode_fallback(monkeypatch):
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_ENABLED", "true")
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_PERSIST_REPORTS", "false")
+    monkeypatch.setenv("PIPELINE_QUESTION_FIRST_MAX_QUESTIONS", "1")
+
+    import question_first_dossier_runner as question_first_runner
+    try:
+        import backend.question_first_dossier_runner as backend_question_first_runner
+    except ModuleNotFoundError:
+        import question_first_dossier_runner as backend_question_first_runner
+
+    captured = {}
+
+    async def fake_run_question_first_dossier_from_payload(**kwargs):
+        captured["launch_source_payload"] = kwargs.get("launch_source_payload")
+        payload = dict(kwargs["source_payload"])
+        payload["question_first"] = {
+            "enabled": True,
+            "schema_version": "question_first_run_v2",
+            "questions_answered": 1,
+            "answers": [],
+            "categories": [],
+        }
+        return payload
+
+    monkeypatch.setattr(question_first_runner, "run_question_first_dossier_from_payload", fake_run_question_first_dossier_from_payload)
+    monkeypatch.setattr(backend_question_first_runner, "run_question_first_dossier_from_payload", fake_run_question_first_dossier_from_payload)
+
+    class MultiQuestionDossierGenerator(FakeDossierGenerator):
+        async def generate_universal_dossier(self, **kwargs):
+            payload = await super().generate_universal_dossier(**kwargs)
+            payload["questions"] = [
+                {"question_id": "q1", "question_text": "Foundation question"},
+                {"question_id": "q2", "question_text": "Commercial question"},
+            ]
+            return payload
+
+    orchestrator = PipelineOrchestrator(
+        dossier_generator=MultiQuestionDossierGenerator(),
+        discovery=FakeDiscovery(),
+        ralph_validator=FakeRalph(),
+        graphiti_service=FakeGraphiti(),
+        dashboard_scorer=FakeDashboardScorer(),
+        persistence_coordinator=FakePersistenceCoordinator(),
+        brightdata_client=None,
+        claude_client=None,
+    )
+
+    await orchestrator.run_entity_pipeline(
+        entity_id="arsenal-fc",
+        entity_name="Arsenal FC",
+        entity_type="CLUB",
+        priority_score=92,
+    )
+
+    launch_questions = captured["launch_source_payload"]["questions"]
+    assert len(launch_questions) == 1
+
+
+@pytest.mark.asyncio
 async def test_pipeline_orchestrator_forwards_live_question_progress_from_opencode_fallback(monkeypatch):
     monkeypatch.setenv("PIPELINE_QUESTION_FIRST_ENABLED", "true")
     monkeypatch.setenv("PIPELINE_QUESTION_FIRST_PERSIST_REPORTS", "false")

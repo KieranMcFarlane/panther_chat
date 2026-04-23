@@ -371,6 +371,72 @@ test('buildQuestionFirstRunArtifact writes trace refs instead of embedding raw e
   assert.ok(!('raw_execution_trace' in artifact.answer_records[0]));
 });
 
+test('buildQuestionFirstRunArtifact preserves prompt-trace failure provenance on failed answers', () => {
+  const artifact = buildQuestionFirstRunArtifact({
+    entity_id: 'arsenal-fc',
+    entity_name: 'Arsenal Football Club',
+    entity_type: 'SPORT_CLUB',
+    question_specs: [
+      {
+        question_id: 'q15_outreach_strategy',
+        question_family: 'outreach_strategy',
+        question_type: 'outreach_strategy',
+        question_text: 'What is the best outreach strategy for Arsenal FC?',
+        query: '"Arsenal FC" outreach strategy',
+        hop_budget: 1,
+        evidence_extension_budget: 0,
+        source_priority: ['google_serp'],
+        evidence_focus: 'commercial_strategy',
+        promotion_target: 'outreach_strategy',
+        answer_kind: 'summary',
+        question_shape: 'atomic',
+        question_timeout_ms: 180000,
+        hop_timeout_ms: 180000,
+        evidence_extension_confidence_threshold: 0.65,
+        entity_name: 'Arsenal Football Club',
+        entity_id: 'arsenal-fc',
+        entity_type: 'SPORT_CLUB',
+        preset: 'arsenal',
+        pack_role: 'discovery',
+        execution_class: 'derived_inference',
+        rollout_phase: 'phase_3_decision',
+        conditional_on: [],
+        depends_on: ['q11_decision_owner'],
+        structured_output_schema: 'outreach_strategy_v1',
+        graph_write_targets: ['strategy.outreach'],
+      },
+    ],
+    answer_records: [
+      {
+        question_id: 'q15_outreach_strategy',
+        question_type: 'outreach_strategy',
+        status: 'failed',
+        validation_state: 'tool_call_missing',
+        confidence: 0,
+        signal_type: 'OUTREACH_STRATEGY',
+        answer: { kind: 'summary', summary: null },
+        prompt_trace: {
+          status: 'derived_inference_tool_call_missing',
+          failure_origin: 'derived_inference',
+        },
+        evidence_refs: [],
+        trace_ref: 'trace:q15',
+        started_at: '2026-03-30T00:00:00+00:00',
+        completed_at: '2026-03-30T00:00:05+00:00',
+        duration_seconds: 5,
+      },
+    ],
+    evidence_items: [],
+    trace_index: [],
+    categories: [],
+    run_rollup: {},
+  });
+
+  assert.equal(artifact.answer_records[0].validation_state, 'failed');
+  assert.equal(artifact.answer_records[0].prompt_trace.status, 'derived_inference_tool_call_missing');
+  assert.equal(artifact.answer_records[0].prompt_trace.failure_origin, 'derived_inference');
+});
+
 test('buildQuestionFirstRunArtifact writes derived episodes into the canonical poi graph', () => {
   const artifact = buildQuestionFirstRunArtifact({
     entity_id: 'arsenal-fc',

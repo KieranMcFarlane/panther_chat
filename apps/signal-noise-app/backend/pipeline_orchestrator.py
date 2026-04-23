@@ -47,7 +47,7 @@ except ImportError:
     from objective_profiles import DEFAULT_PIPELINE_OBJECTIVE, normalize_run_objective
 
 logger = logging.getLogger(__name__)
-DEFAULT_OPENCODE_MODEL = "chutes/zai-org/GLM-5.1-TEE"
+DEFAULT_OPENCODE_MODEL = "zai-api/glm-5.1"
 
 
 @dataclass
@@ -1135,6 +1135,17 @@ class PipelineOrchestrator:
                 source_payload=source_payload,
                 question_ids=repaired_question_ids,
             )
+        elif self.question_first_max_questions > 0 and len(questions) > self.question_first_max_questions:
+            capped_question_ids = [
+                str(question.get("question_id") or "").strip()
+                for question in questions[: self.question_first_max_questions]
+                if isinstance(question, dict) and str(question.get("question_id") or "").strip()
+            ]
+            if capped_question_ids:
+                launch_source_payload = build_filtered_question_source_payload(
+                    source_payload=source_payload,
+                    question_ids=capped_question_ids,
+                )
         async def _opencode_progress_callback(event: Dict[str, Any]) -> None:
             if not isinstance(event, dict):
                 return

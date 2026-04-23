@@ -30,6 +30,7 @@ def test_graphiti_service_prefers_service_role_key_for_backend_writes(monkeypatc
     monkeypatch.setenv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "public-anon")
     monkeypatch.setenv("SUPABASE_ANON_KEY", "server-anon")
     monkeypatch.setenv("SUPABASE_SERVICE_ROLE_KEY", "service-role")
+    monkeypatch.delenv("DATABASE_URL", raising=False)
     monkeypatch.setattr(graphiti_module, "SUPABASE_AVAILABLE", True, raising=False)
     monkeypatch.setattr(graphiti_module, "create_client", _fake_create_client, raising=False)
 
@@ -38,6 +39,30 @@ def test_graphiti_service_prefers_service_role_key_for_backend_writes(monkeypatc
     assert service.use_supabase is True
     assert captured["url"] == "https://example.supabase.co"
     assert captured["key"] == "service-role"
+
+
+def test_graphiti_service_prefers_local_postgres_when_database_url_is_set(monkeypatch):
+    fake_client = object()
+    remote_calls = []
+
+    monkeypatch.setenv("DATABASE_URL", "postgresql://localhost/signal_noise_app")
+    monkeypatch.setenv("SUPABASE_URL", "https://example.supabase.co")
+    monkeypatch.setenv("SUPABASE_SERVICE_ROLE_KEY", "service-role")
+    monkeypatch.delenv("PYTHON_PERSISTENCE_BACKEND", raising=False)
+    monkeypatch.setattr(graphiti_module, "SUPABASE_AVAILABLE", True, raising=False)
+    monkeypatch.setattr(graphiti_module, "create_local_pg_client", lambda: fake_client, raising=False)
+    monkeypatch.setattr(
+        graphiti_module,
+        "create_client",
+        lambda *_args, **_kwargs: remote_calls.append(_args) or object(),
+        raising=False,
+    )
+
+    service = graphiti_module.GraphitiService()
+
+    assert service.use_supabase is True
+    assert service.supabase_client is fake_client
+    assert remote_calls == []
 
 
 @pytest.mark.asyncio

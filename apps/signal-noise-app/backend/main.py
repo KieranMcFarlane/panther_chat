@@ -32,6 +32,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from supabase import create_client, Client
+from local_pg_client import create_local_pg_client, should_use_local_pg
 
 # Add backend to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
@@ -66,6 +67,16 @@ _pipeline_phase_callback_ctx: ContextVar[Optional[PipelinePhaseCallback]] = Cont
     default=None,
 )
 
+
+def create_pipeline_persistence_client():
+    if should_use_local_pg():
+        return create_local_pg_client()
+    supabase_url = os.getenv("SUPABASE_URL") or os.getenv("NEXT_PUBLIC_SUPABASE_URL")
+    supabase_key = os.getenv("SUPABASE_ANON_KEY") or os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
+    if not supabase_url or not supabase_key:
+        return None
+    return create_client(supabase_url, supabase_key)
+
 PHASE0_SUBSTEP_ORDER = [
     "cache_lookup",
     "collect_entity_data",
@@ -80,8 +91,8 @@ PHASE0_SUBSTEP_ORDER = [
     "finalize_response",
 ]
 
-DEFAULT_OPENCODE_PROVIDER = "chutes"
-DEFAULT_OPENCODE_MODEL_ID = "zai-org/GLM-5.1-TEE"
+DEFAULT_OPENCODE_PROVIDER = "zai-api"
+DEFAULT_OPENCODE_MODEL_ID = "glm-5.1"
 DEFAULT_OPENCODE_MODEL = f"{DEFAULT_OPENCODE_PROVIDER}/{DEFAULT_OPENCODE_MODEL_ID}"
 PHASE0_MODE_OPENCODE_FIRST = "opencode_first"
 PHASE0_MODE_LEGACY_PYTHON = "legacy_python"
@@ -1540,16 +1551,14 @@ async def run_entity_pipeline(request: EntityPipelineRequest):
                 },
             )
 
-        supabase_url = os.getenv("SUPABASE_URL") or os.getenv("NEXT_PUBLIC_SUPABASE_URL")
-        supabase_key = os.getenv("SUPABASE_ANON_KEY") or os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
-        pipeline_supabase: Optional[Client] = None
+        pipeline_supabase: Optional[Any] = None
         canonical_entity_id = str(
             request.canonical_entity_id
             or (request.metadata or {}).get("canonical_entity_id")
             or ""
         ).strip() or None
-        if request.batch_id and supabase_url and supabase_key:
-            pipeline_supabase = create_client(supabase_url, supabase_key)
+        if request.batch_id:
+            pipeline_supabase = create_pipeline_persistence_client()
 
         async def emit_phase_update(phase: str, payload: Dict[str, Any]) -> None:
             if not pipeline_supabase or not request.batch_id:

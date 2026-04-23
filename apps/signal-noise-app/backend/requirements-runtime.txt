@@ -15,6 +15,7 @@ neo4j>=5.15.0
 
 # Supabase client
 supabase>=2.3.0
+psycopg[binary]>=3.1.0
 
 # Embeddings for Episode Clustering
 sentence-transformers>=2.2.0

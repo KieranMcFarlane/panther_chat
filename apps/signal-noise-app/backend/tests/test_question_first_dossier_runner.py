@@ -356,6 +356,66 @@ async def test_question_first_runner_groups_by_category_and_retries_on_empty_sea
 
 
 @pytest.mark.asyncio
+async def test_run_question_first_dossier_from_payload_uses_launch_source_payload_for_opencode(tmp_path, monkeypatch):
+    artifact_path = tmp_path / "question_first_run.json"
+    _write_question_first_run_artifact(
+        artifact_path,
+        entity_id="arsenal-fc",
+        entity_name="Arsenal FC",
+        questions=[{"question_id": "q1", "question_text": "Foundation question"}],
+        answers=[],
+        categories=[],
+    )
+
+    captured = {}
+
+    class _FakeStream:
+        def __init__(self, lines):
+            self._lines = [line.encode("utf-8") for line in lines]
+
+        async def readline(self):
+            if not self._lines:
+                return b""
+            return self._lines.pop(0)
+
+    class _FakeProcess:
+        stdout = _FakeStream([json.dumps({"question_first_run_path": str(artifact_path)}) + "\n"])
+        stderr = _FakeStream([])
+        returncode = 0
+
+        async def wait(self):
+            return self.returncode
+
+    async def fake_create_subprocess_exec(*args, **kwargs):
+        source_path = Path(args[args.index("--question-source") + 1])
+        captured["launched_source"] = json.loads(source_path.read_text(encoding="utf-8"))
+        return _FakeProcess()
+
+    monkeypatch.setattr(asyncio, "create_subprocess_exec", fake_create_subprocess_exec)
+
+    source_payload = {
+        "entity_id": "arsenal-fc",
+        "entity_name": "Arsenal FC",
+        "questions": [
+            {"question_id": "q1", "question_text": "Foundation question"},
+            {"question_id": "q2", "question_text": "Commercial question"},
+        ],
+    }
+    launch_source_payload = {
+        **source_payload,
+        "questions": [{"question_id": "q1", "question_text": "Foundation question"}],
+    }
+
+    await runner.run_question_first_dossier_from_payload(
+        source_payload=source_payload,
+        launch_source_payload=launch_source_payload,
+        output_dir=tmp_path,
+    )
+
+    assert [question["question_id"] for question in captured["launched_source"]["questions"]] == ["q1"]
+
+
+@pytest.mark.asyncio
 async def test_question_first_runner_streams_opencode_progress_events(tmp_path, monkeypatch):
     artifact_path = tmp_path / "major-league-cricket_question_first_run_v1.json"
     _write_question_first_run_artifact(

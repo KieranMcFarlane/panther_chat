@@ -4,6 +4,7 @@ import socket
 import threading
 import time
 import logging
+from uuid import UUID
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -16,6 +17,7 @@ try:
     from supabase import create_client
 except ImportError:  # pragma: no cover - allows unit tests without supabase package
     create_client = None
+from local_pg_client import create_local_pg_client, should_use_local_pg
 from pipeline_run_metadata import (
     derive_discovery_context,
     derive_monitoring_summary,
@@ -267,6 +269,14 @@ def resolve_pipeline_timeout(timeout_seconds: int) -> Optional[int]:
     return timeout_seconds
 
 
+def is_uuid_like(value: str) -> bool:
+    try:
+        UUID(str(value))
+        return True
+    except (TypeError, ValueError, AttributeError):
+        return False
+
+
 def build_batch_claim_metadata(existing_metadata: Optional[Dict[str, Any]], *, worker_id: str, now_iso: str) -> Dict[str, Any]:
     metadata = deepcopy(existing_metadata or {})
     metadata["attempt_count"] = int(metadata.get("attempt_count", 0) or 0) + 1
@@ -460,6 +470,13 @@ def merge_cached_entity_properties(
 
 class EntityPipelineWorker:
     def __init__(self) -> None:
+        if should_use_local_pg():
+            self.supabase = create_local_pg_client()
+            self.worker_id = f"{socket.gethostname()}-{os.getpid()}"
+            self.lease_seconds = LEASE_SECONDS
+            self.max_run_attempts = MAX_RUN_ATTEMPTS
+            self.repair_retry_budget = DEFAULT_REPAIR_RETRY_BUDGET
+            return
         if create_client is None:
             raise RuntimeError("supabase package is required for entity pipeline worker runtime")
         supabase_url = (
@@ -762,16 +779,17 @@ class EntityPipelineWorker:
         ).strip()
         entity_id = canonical_entity_id or str(run.get("entity_id") or "").strip()
 
-        # Try lookup by canonical id first
-        lookup = (
-            self.supabase.table("canonical_entities")
-            .select("id, properties")
-            .eq("id", entity_id)
-            .limit(1)
-            .execute()
-        )
+        lookup = None
+        if canonical_entity_id or is_uuid_like(entity_id):
+            lookup = (
+                self.supabase.table("canonical_entities")
+                .select("id, properties")
+                .eq("id", entity_id)
+                .limit(1)
+                .execute()
+            )
         # Fallback: match by source_neo4j_ids containing the entity_id
-        if not (lookup.data or []):
+        if lookup is None or not (lookup.data or []):
             lookup = (
                 self.supabase.table("canonical_entities")
                 .select("id, properties")

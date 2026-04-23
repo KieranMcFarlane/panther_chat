@@ -44,6 +44,8 @@ def isolate_pipeline_env(monkeypatch):
     monkeypatch.setenv("PIPELINE_QUESTION_FIRST_ENABLED", "false")
     monkeypatch.delenv("PIPELINE_QUESTION_FIRST_BACKEND", raising=False)
     monkeypatch.delenv("PIPELINE_PHASE0_MODE", raising=False)
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+    monkeypatch.delenv("PYTHON_PERSISTENCE_BACKEND", raising=False)
     monkeypatch.setitem(
         sys.modules,
         "backend.claude_client",
@@ -74,6 +76,25 @@ def isolate_pipeline_env(monkeypatch):
         "backend.dashboard_scorer",
         types.SimpleNamespace(DashboardScorer=_StubDashboardScorer),
     )
+
+
+def test_pipeline_phase_metadata_client_prefers_local_postgres_when_database_url_is_set(monkeypatch):
+    fake_client = object()
+    remote_calls = []
+
+    monkeypatch.setenv("DATABASE_URL", "postgresql://localhost/signal_noise_app")
+    monkeypatch.setenv("SUPABASE_URL", "https://example.supabase.co")
+    monkeypatch.setenv("SUPABASE_ANON_KEY", "anon-key")
+    monkeypatch.setattr(main, "create_local_pg_client", lambda: fake_client, raising=False)
+    monkeypatch.setattr(
+        main,
+        "create_client",
+        lambda *_args, **_kwargs: remote_calls.append(_args) or object(),
+        raising=False,
+    )
+
+    assert main.create_pipeline_persistence_client() is fake_client
+    assert remote_calls == []
 
 
 @pytest.mark.asyncio
@@ -386,8 +407,8 @@ async def test_run_entity_pipeline_skips_python_phase0_and_enters_orchestrator_w
                         "status": "question_first_running",
                         "question_first_backend": "opencode",
                         "phase0_mode": "opencode_first",
-                        "opencode_model": "chutes/zai-org/GLM-5.1-TEE",
-                        "opencode_provider": "chutes",
+                        "opencode_model": "zai-api/glm-5.1",
+                        "opencode_provider": "z.ai",
                         "brightdata_transport": "stdio",
                     },
                 )

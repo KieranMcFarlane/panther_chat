@@ -322,6 +322,7 @@ function _normalizeAnswerRecord(answer, questionTiming, questionSpec) {
     trace_ref: normalized.trace_ref ?? null,
     recommended_next_query: normalized.recommended_next_query ?? null,
     notes: normalized.notes ?? null,
+    prompt_trace: normalized.prompt_trace && typeof normalized.prompt_trace === 'object' ? _clone(normalized.prompt_trace) : null,
     evidence_grade: _normalizeEvidenceGrade(normalized.evidence_grade),
     structured_signal: normalized.structured_signal && typeof normalized.structured_signal === 'object' ? _clone(normalized.structured_signal) : null,
     procurement_model: _normalizeProcurementModel(normalized.procurement_model),

@@ -793,6 +793,7 @@ def merge_question_first_report_into_dossier(
 async def run_question_first_dossier_from_payload(
     *,
     source_payload: Dict[str, Any],
+    launch_source_payload: Optional[Dict[str, Any]] = None,
     output_dir: Optional[Path] = None,
     question_first_run_path: Optional[Path | str] = None,
     worktree_root: Optional[Path] = None,
@@ -805,13 +806,16 @@ async def run_question_first_dossier_from_payload(
     source = dict(source_payload or {})
     if isinstance(source.get("questions"), list):
         source["questions"] = enrich_question_specs(source.get("questions") or [])
+    launch_source = dict(launch_source_payload or source)
+    if isinstance(launch_source.get("questions"), list):
+        launch_source["questions"] = enrich_question_specs(launch_source.get("questions") or [])
     artifact_path_value = question_first_run_path or source.get("question_first_run_path")
     if artifact_path_value:
         artifact_path = Path(artifact_path_value)
     else:
         target_output_dir = Path(output_dir) if output_dir is not None else Path(tempfile.mkdtemp(prefix="question-first-run-"))
         artifact_path = await _launch_opencode_question_first_batch(
-            source_payload=source,
+            source_payload=launch_source,
             output_dir=target_output_dir,
             preset=preset or source.get("preset") or source.get("question_source_label") or None,
             worktree_root=worktree_root,

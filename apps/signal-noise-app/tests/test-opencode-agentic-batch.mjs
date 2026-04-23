@@ -3,6 +3,7 @@ import test from 'node:test';
 import { mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import {
   buildOpenCodeRetrievalPrompt,
@@ -23,6 +24,16 @@ import {
   runOpenCodePresetBatch,
   spawnOpenCodeRunForTesting,
 } from '../scripts/opencode_agentic_batch.mjs';
+
+const TEST_DIR = fileURLToPath(new URL('.', import.meta.url));
+const APP_ROOT = join(TEST_DIR, '..');
+const CANONICAL_PARITY_SMOKE_SOURCE = join(
+  APP_ROOT,
+  'backend',
+  'data',
+  'question_sources',
+  'canonical_two_question_parity_smoke.json',
+);
 
 test('buildOpenCodeConfig wires Z.AI API GLM 5.1 and BrightData MCP for OpenCode', async () => {
   const previousZaiApiKey = process.env.ZAI_API_KEY;
@@ -249,6 +260,18 @@ test('buildOpenCodeQuestionPrompt tells q7 to use provisional for indirect multi
   assert.match(prompt, /indirect multi-source/i);
   assert.match(prompt, /provisional/i);
   assert.match(prompt, /do not return no_signal/i);
+});
+
+test('buildOpenCodeQuestionPrompt includes the structured output schema when provided by the old matrix', () => {
+  const prompt = buildOpenCodeQuestionPrompt({
+    question_id: 'q1_foundation',
+    question_text: 'When was Arsenal FC founded?',
+    question_type: 'foundation',
+    query: '"Arsenal FC" official website founded year',
+    structured_output_schema: 'foundation_v1',
+  });
+
+  assert.match(prompt, /Structured output schema: foundation_v1/i);
 });
 
 test('buildOpenCodeQuestionPrompt makes standalone harness runs BrightData-first and bounded', () => {
@@ -786,6 +809,97 @@ test('runOpenCodeQuestionSourceBatch writes the canonical question_first_run art
     assert.equal(tracker.status, 'completed');
     assert.equal(tracker.total_questions, 1);
     assert.equal(tracker.questions[0].status, 'validated');
+  } finally {
+    if (previousZaiApiKey === undefined) {
+      delete process.env.ZAI_API_KEY;
+    } else {
+      process.env.ZAI_API_KEY = previousZaiApiKey;
+    }
+  }
+});
+
+test('runOpenCodeQuestionSourceBatch preserves execution-class failure provenance for empty tool-call-missing answers', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-question-source-failure-origin-'));
+  const sourcePath = join(outputDir, 'source.json');
+  const previousZaiApiKey = process.env.ZAI_API_KEY;
+  delete process.env.ZAI_API_KEY;
+  process.env.ZAI_API_KEY = 'test-zai-token';
+
+  writeFileSync(
+    sourcePath,
+    JSON.stringify(
+      {
+        entity_id: 'arsenal-fc',
+        entity_name: 'Arsenal FC',
+        entity_type: 'SPORT_CLUB',
+        preset: 'arsenal-fc',
+        questions: [
+          {
+            question_id: 'q3_leadership',
+            question_family: 'leadership',
+            question_type: 'leadership',
+            question_text: 'Who are the key leadership figures at Arsenal FC?',
+            query: '"Arsenal FC" chairman chief executive officer board',
+            hop_budget: 1,
+            source_priority: ['google_serp', 'official_site'],
+            execution_class: 'atomic_retrieval',
+            structured_output_schema: 'leadership_candidates_v1',
+          },
+          {
+            question_id: 'q15_outreach_strategy',
+            question_family: 'outreach_strategy',
+            question_type: 'outreach_strategy',
+            question_text: 'What is the best outreach strategy for Yellow Panther at Arsenal FC?',
+            query: '"Arsenal FC" outreach strategy',
+            hop_budget: 1,
+            source_priority: ['google_serp', 'official_site'],
+            execution_class: 'derived_inference',
+            depends_on: ['q3_leadership'],
+            structured_output_schema: 'outreach_strategy_v1',
+          },
+        ],
+      },
+      null,
+      2,
+    ),
+    'utf8',
+  );
+
+  try {
+    const result = await runOpenCodeQuestionSourceBatch({
+      questionSourcePath: sourcePath,
+      outputDir,
+      questionRunner: async () => ({
+        structuredOutput: {},
+        promptTrace: {},
+        messageTrace: [{ role: 'assistant', completed: false, type: 'cli-run', has_structured_output: false, part_count: 1 }],
+        cliResult: { code: 1, stdout: '', stderr: 'child failed' },
+      }),
+    });
+
+    const meta = JSON.parse(readFileSync(result.meta_result_path, 'utf8'));
+    const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+    const tracker = JSON.parse(readFileSync(result.tracker_path, 'utf8'));
+
+    assert.equal(meta.questions[0].validation_state, 'tool_call_missing');
+    assert.equal(meta.questions[0].prompt_trace.status, 'atomic_retrieval_tool_call_missing');
+    assert.equal(meta.questions[0].prompt_trace.failure_origin, 'atomic_retrieval');
+    assert.equal(meta.questions[1].validation_state, 'tool_call_missing');
+    assert.equal(meta.questions[1].prompt_trace.status, 'derived_inference_tool_call_missing');
+    assert.equal(meta.questions[1].prompt_trace.failure_origin, 'derived_inference');
+
+    assert.equal(tracker.questions[0].validation_state, 'tool_call_missing');
+    assert.equal(tracker.questions[1].validation_state, 'tool_call_missing');
+
+    const leadershipAnswer = artifact.answer_records.find((item) => item.question_id === 'q3_leadership');
+    const outreachAnswer = artifact.answer_records.find((item) => item.question_id === 'q15_outreach_strategy');
+
+    assert.equal(leadershipAnswer.validation_state, 'failed');
+    assert.equal(leadershipAnswer.prompt_trace.status, 'atomic_retrieval_tool_call_missing');
+    assert.equal(leadershipAnswer.prompt_trace.failure_origin, 'atomic_retrieval');
+    assert.equal(outreachAnswer.validation_state, 'failed');
+    assert.equal(outreachAnswer.prompt_trace.status, 'derived_inference_tool_call_missing');
+    assert.equal(outreachAnswer.prompt_trace.failure_origin, 'derived_inference');
   } finally {
     if (previousZaiApiKey === undefined) {
       delete process.env.ZAI_API_KEY;
@@ -2031,6 +2145,104 @@ test('runOpenCodeQuestionSourceBatch emits per-question progress events before c
   assert.equal(events[1].current_question_id, 'q2');
   assert.equal(events[2].current_substep, 'question_first_completed');
   assert.equal(events[2].questions_total, 2);
+});
+
+// Parity inventory for the old dossier-backed path:
+// - Matrix metadata must survive into question_first_run_v2 question_specs and answer_records.
+// - {entity} templates must be hydrated before prompt/execution/progress emission.
+// - Progress events must carry framework metadata directly from the runner, not rely on backend repair.
+test('runOpenCodeQuestionSourceBatch preserves old matrix metadata and framework progress fields from the canonical parity smoke source', async () => {
+  const outputDir = mkdtempSync(join(tmpdir(), 'opencode-parity-smoke-'));
+  const events = [];
+
+  const result = await runOpenCodeQuestionSourceBatch({
+    questionSourcePath: CANONICAL_PARITY_SMOKE_SOURCE,
+    outputDir,
+    onProgress: (event) => {
+      events.push(event);
+    },
+    questionRunner: async (question) => ({
+      structuredOutput: {
+        question: question.question_text,
+        answer: question.question_id === 'q1_foundation' ? '1886' : 'Vendor and platform changes are visible.',
+        context: `stubbed-${question.question_id}`,
+        sources: [`https://example.com/${question.question_id}`],
+        confidence: question.question_id === 'q1_foundation' ? 0.82 : 0.74,
+        validation_state: question.question_id === 'q1_foundation' ? 'validated' : 'provisional',
+        evidence_grade: question.question_id === 'q7_procurement_signal' ? 'moderate' : undefined,
+        structured_signal: question.question_id === 'q7_procurement_signal'
+          ? {
+            vendor_changes: [
+              {
+                name: 'VendorCo',
+                evidence_url: 'https://example.com/q7_procurement_signal',
+                evidence_kind: 'vendor_change',
+                summary: 'Named vendor evidence.',
+              },
+            ],
+            platform_migrations: [],
+            partnerships: [],
+            org_changes: [],
+          }
+          : undefined,
+      },
+      promptTrace: { status: 'ok', structured_output_keys: 1, has_structured_output: true },
+      messageTrace: [{ role: 'assistant', completed: true, type: 'cli-run', has_structured_output: true, part_count: 1 }],
+      cliResult: { code: 0, stdout: '{"answer":"stub"}', stderr: '' },
+    }),
+  });
+
+  const artifact = JSON.parse(readFileSync(result.question_first_run_path, 'utf8'));
+  const foundationSpec = artifact.question_specs.find((item) => item.question_id === 'q1_foundation');
+  const procurementSpec = artifact.question_specs.find((item) => item.question_id === 'q7_procurement_signal');
+  const procurementAnswer = artifact.answer_records.find((item) => item.question_id === 'q7_procurement_signal');
+
+  assert.equal(foundationSpec.question_text, 'When was Arsenal FC founded?');
+  assert.equal(foundationSpec.question_family, 'foundation');
+  assert.equal(foundationSpec.structured_output_schema, 'foundation_v1');
+  assert.equal(foundationSpec.execution_class, 'atomic_retrieval');
+  assert.equal(foundationSpec.rollout_phase, 'phase_1_core');
+  assert.equal(foundationSpec.evidence_extension_budget, 1);
+  assert.deepEqual(foundationSpec.graph_write_targets, ['entity.identity.foundation']);
+
+  assert.equal(procurementSpec.question_text, 'Is there evidence Arsenal FC is buying, reshaping vendors, or changing its ecosystem?');
+  assert.equal(procurementSpec.question_family, 'procurement_signal');
+  assert.equal(procurementSpec.structured_output_schema, 'procurement_signal_v1');
+  assert.equal(procurementSpec.execution_class, 'commercial_signal');
+  assert.equal(procurementSpec.rollout_phase, 'phase_1_core');
+  assert.equal(procurementSpec.evidence_extension_budget, 2);
+  assert.deepEqual(procurementSpec.depends_on, ['q1_foundation']);
+
+  assert.equal(procurementAnswer.structured_output_schema, 'procurement_signal_v1');
+  assert.equal(procurementAnswer.execution_class, 'commercial_signal');
+  assert.equal(procurementAnswer.rollout_phase, 'phase_1_core');
+
+  assert.equal(events.length, 3);
+  assert.equal(events[0].current_question_id, 'q1_foundation');
+  assert.equal(events[0].current_question_text, 'When was Arsenal FC founded?');
+  assert.equal(events[0].current_section_label, 'Core Information');
+  assert.equal(events[0].current_strategy_label, 'Direct factual lookup');
+  assert.deepEqual(events[0].current_source_order, ['google_serp', 'official_site', 'wikipedia']);
+  assert.equal(events[0].current_question_index, 1);
+  assert.equal(events[0].current_question_total, 1);
+  assert.equal(events[1].current_question_id, 'q7_procurement_signal');
+  assert.equal(events[1].current_section_label, 'Strategic Opportunities');
+  assert.equal(events[1].current_strategy_label, 'Broad web-first procurement signal discovery');
+  assert.deepEqual(events[1].current_source_order, ['google_serp', 'news', 'press_release', 'linkedin_posts', 'official_site']);
+});
+
+test('buildQuestionState uses evidence extension confidence thresholds from the old matrix when provided', () => {
+  const state = buildQuestionState({
+    question_id: 'q7_procurement_signal',
+    question_type: 'procurement_signal',
+    question_text: 'Is there evidence Arsenal FC is changing vendors?',
+    query: '"Arsenal FC" platform migration provider partnership',
+    hop_budget: 2,
+    evidence_extension_confidence_threshold: 0.68,
+    source_priority: ['google_serp'],
+  });
+
+  assert.equal(state.confidence_threshold, 0.68);
 });
 
 test('runOpenCodeQuestionSourceBatch defaults standalone timeout to 60000ms', async () => {

@@ -14,6 +14,7 @@ import {
 const MODULE_DIR = path.dirname(fileURLToPath(import.meta.url));
 const APP_ROOT = path.resolve(MODULE_DIR, '..');
 const WORKTREE_ROOT = path.resolve(APP_ROOT, '..', '..');
+const QUESTION_PROGRESS_FRAMEWORK_PATH = path.join(APP_ROOT, 'backend', 'question_progress_framework.json');
 const STANDALONE_BRIGHTDATA_FALLBACK_SCRIPT = path.join(APP_ROOT, 'scripts', 'standalone_brightdata_fallback.py');
 const DEFAULT_PROVIDER_ID = 'zai-api';
 const DEFAULT_MODEL_ID = 'glm-5.1';
@@ -28,6 +29,7 @@ const COMMERCIAL_SIGNAL_QUESTION_IDS = new Set([
 ]);
 const VALID_EVIDENCE_GRADES = new Set(['weak', 'moderate', 'strong']);
 const VALID_PROCUREMENT_MODELS = new Set(['private_direct', 'partner_led', 'agency_led', 'unknown']);
+let _questionProgressFrameworkPromise = null;
 
 function _loadEnv(override = true) {
   for (const envPath of [
@@ -67,6 +69,107 @@ function _slugify(value) {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '') || 'entity';
+}
+
+async function _loadQuestionProgressFramework() {
+  if (!_questionProgressFrameworkPromise) {
+    _questionProgressFrameworkPromise = fs.readFile(QUESTION_PROGRESS_FRAMEWORK_PATH, 'utf8')
+      .then((raw) => JSON.parse(raw))
+      .catch(() => ({ sections: [], questions: {} }));
+  }
+  return _questionProgressFrameworkPromise;
+}
+
+function _hydrateQuestionValue(value, replacements) {
+  if (typeof value === 'string') {
+    return value.replace(/\{([a-z_]+)\}/gi, (match, key) => {
+      const normalizedKey = String(key || '').toLowerCase();
+      return Object.prototype.hasOwnProperty.call(replacements, normalizedKey) ? replacements[normalizedKey] : match;
+    });
+  }
+  if (Array.isArray(value)) {
+    return value.map((item) => _hydrateQuestionValue(item, replacements));
+  }
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, nestedValue]) => [key, _hydrateQuestionValue(nestedValue, replacements)]),
+    );
+  }
+  return value;
+}
+
+function _buildQuestionProgressLookup(framework) {
+  const sections = Array.isArray(framework?.sections) ? framework.sections : [];
+  const questions = framework?.questions && typeof framework.questions === 'object' ? framework.questions : {};
+  const sectionOrder = sections
+    .map((section) => String(section?.id || '').trim())
+    .filter(Boolean);
+  const sectionLabels = new Map(
+    sections
+      .map((section) => [String(section?.id || '').trim(), String(section?.label || '').trim()])
+      .filter(([sectionId]) => Boolean(sectionId)),
+  );
+  const sectionQuestionIds = new Map(sectionOrder.map((sectionId) => [sectionId, []]));
+  for (const [questionId, config] of Object.entries(questions)) {
+    const sectionId = String(config?.section_id || '').trim();
+    if (!sectionQuestionIds.has(sectionId)) continue;
+    sectionQuestionIds.get(sectionId).push(questionId);
+  }
+  const lookup = new Map();
+  for (const [questionId, config] of Object.entries(questions)) {
+    const sectionId = String(config?.section_id || '').trim();
+    if (!sectionId) continue;
+    const sectionQuestionOrder = sectionQuestionIds.get(sectionId) || [];
+    lookup.set(questionId, {
+      current_section_id: sectionId,
+      current_section_label: sectionLabels.get(sectionId) || sectionId.replace(/_/g, ' '),
+      current_section_index: sectionOrder.indexOf(sectionId) >= 0 ? sectionOrder.indexOf(sectionId) + 1 : null,
+      current_section_total: sectionOrder.length || null,
+      current_question_index: sectionQuestionOrder.indexOf(questionId) >= 0 ? sectionQuestionOrder.indexOf(questionId) + 1 : null,
+      current_question_total: sectionQuestionOrder.length || null,
+      current_strategy_label: String(config?.strategy_label || '').trim() || null,
+      current_source_order: Array.isArray(config?.source_order) ? [...config.source_order] : null,
+    });
+  }
+  return lookup;
+}
+
+async function _normalizeQuestionSourceQuestions(sourcePayload) {
+  const framework = await _loadQuestionProgressFramework();
+  const progressLookup = _buildQuestionProgressLookup(framework);
+  const entityName = String(sourcePayload?.entity_name || sourcePayload?.entityName || sourcePayload?.entity_id || sourcePayload?.entityId || 'entity').trim() || 'entity';
+  const entityId = String(sourcePayload?.entity_id || sourcePayload?.entityId || _slugify(entityName)).trim() || _slugify(entityName);
+  const entityType = String(sourcePayload?.entity_type || sourcePayload?.entityType || 'ENTITY').trim() || 'ENTITY';
+  const preset = String(sourcePayload?.preset || sourcePayload?.question_source_label || entityId).trim() || entityId;
+  const replacements = {
+    entity: entityName,
+    entity_name: entityName,
+    entity_id: entityId,
+    entity_type: entityType,
+    preset,
+  };
+  return Array.isArray(sourcePayload?.questions)
+    ? sourcePayload.questions
+        .filter((question) => question && typeof question === 'object')
+        .map((question, index) => {
+          const hydratedQuestion = _hydrateQuestionValue(question, replacements);
+          const normalizedQuestionId = String(hydratedQuestion.question_id || hydratedQuestion.id || hydratedQuestion.slug || `q${index + 1}`).trim();
+          const progressFields = progressLookup.get(normalizedQuestionId) || {};
+          const normalizedQuestionText = String(hydratedQuestion.question_text || hydratedQuestion.question || hydratedQuestion.prompt || '').trim();
+          return {
+            ...hydratedQuestion,
+            ...Object.fromEntries(Object.entries(progressFields).filter(([, value]) => value !== null && value !== undefined)),
+            question_id: normalizedQuestionId,
+            question_text: normalizedQuestionText || normalizedQuestionId,
+            question: normalizedQuestionText || String(hydratedQuestion.question || hydratedQuestion.prompt || normalizedQuestionId).trim(),
+            entity_name: String(hydratedQuestion.entity_name || entityName).trim() || entityName,
+            entity_id: String(hydratedQuestion.entity_id || entityId).trim() || entityId,
+            entity_type: String(hydratedQuestion.entity_type || entityType).trim() || entityType,
+            preset: hydratedQuestion.preset ?? preset,
+            current_execution_state: String(hydratedQuestion.current_execution_state || progressFields.current_execution_state || 'searching sources').trim(),
+          };
+        })
+    : [];
 }
 
 function _isCommercialSignalQuestion(question) {
@@ -468,10 +571,10 @@ function _buildQuestionCredits(question, overrides = {}) {
     : Math.max(1, Number(question.hop_budget || 0));
   const scrape = Number.isFinite(_coerceOverrideNumber(overrides, 'scrapeCredits', 'scrape'))
     ? _coerceOverrideNumber(overrides, 'scrapeCredits', 'scrape')
-    : Math.max(1, Number(question.hop_budget || 0));
+    : Math.max(1, Number(question.evidence_extension_budget || question.hop_budget || 0));
   const revisit = Number.isFinite(_coerceOverrideNumber(overrides, 'revisitCredits', 'revisit'))
     ? _coerceOverrideNumber(overrides, 'revisitCredits', 'revisit')
-    : Math.max(1, Math.ceil(Number(question.hop_budget || 0) / 2));
+    : Math.max(1, Number(question.evidence_extension_budget || Math.ceil(Number(question.hop_budget || 0) / 2)));
   return {
     search,
     scrape,
@@ -592,6 +695,10 @@ function _normalizeConfidenceThreshold(question, overrides = {}) {
   if (Number.isFinite(threshold) && threshold >= 0 && threshold <= 1) {
     return threshold;
   }
+  const questionThreshold = Number(question?.evidence_extension_confidence_threshold);
+  if (Number.isFinite(questionThreshold) && questionThreshold >= 0 && questionThreshold <= 1) {
+    return questionThreshold;
+  }
   return question.question_type === 'procurement' ? 0.85 : 0.8;
 }
 
@@ -633,12 +740,29 @@ export function buildQuestionState(question, { runId = 'cli', timestamp = new Da
     entity_name: question.entity_name,
     entity_id: question.entity_id,
     entity_type: question.entity_type,
+    question_family: question.question_family,
     question_type: question.question_type,
     question_text: question.question_text,
     seed_query: question.query,
     aliases: _buildQuestionAliases(question),
     source_priority: question.source_priority,
     hop_budget: question.hop_budget,
+    evidence_extension_budget: question.evidence_extension_budget,
+    structured_output_schema: question.structured_output_schema,
+    execution_class: question.execution_class,
+    rollout_phase: question.rollout_phase,
+    search_strategy: question.search_strategy,
+    graph_write_targets: question.graph_write_targets,
+    depends_on: question.depends_on,
+    conditional_on: question.conditional_on,
+    current_section_id: question.current_section_id,
+    current_section_label: question.current_section_label,
+    current_section_index: question.current_section_index,
+    current_section_total: question.current_section_total,
+    current_question_index: question.current_question_index,
+    current_question_total: question.current_question_total,
+    current_strategy_label: question.current_strategy_label,
+    current_source_order: question.current_source_order,
     credit_budget: _buildQuestionCredits(question, creditBudgetOverrides),
     credits_spent: {
       search: 0,
@@ -1012,6 +1136,7 @@ export function buildOpenCodeQuestionPrompt(question, { standaloneHarness = fals
     `Question type: ${question.question_type}`,
     `Question: ${question.question_text}`,
     `Canonical query: ${question.query}`,
+    ...(question?.structured_output_schema ? [`Structured output schema: ${question.structured_output_schema}`] : []),
     'Return only JSON with these keys: question, answer, context, sources, confidence.',
     'If you cannot find an answer, leave answer empty, keep context brief, and set confidence to 0.',
     'If the question is compound, answer the narrowest concrete fact first.',
@@ -1089,6 +1214,7 @@ export function buildOpenCodeRetrievalPrompt(question, { standaloneHarness = fal
     `Question type: ${question.question_type}`,
     `Question: ${question.question_text}`,
     `Canonical query: ${question.query}`,
+    ...(question?.structured_output_schema ? [`Structured output schema: ${question.structured_output_schema}`] : []),
     'Your first action must be one BrightData search using the canonical query.',
     'If the first search is weak, do at most one follow-up BrightData search or scrape.',
     'Return only JSON with these keys: question, query, leads, retrieval_summary.',
@@ -1119,6 +1245,7 @@ export function buildOpenCodeSynthesisPrompt(question, { retrievalOutput = {}, s
     `Question type: ${question.question_type}`,
     `Question: ${question.question_text}`,
     `Canonical query: ${question.query}`,
+    ...(question?.structured_output_schema ? [`Structured output schema: ${question.structured_output_schema}`] : []),
     'Return only JSON with these keys: question, answer, context, sources, confidence.',
     'Also return these optional keys when justified: validation_state, evidence_grade, structured_signal, procurement_model, commercial_implication, signal_density.',
     'If the supplied retrieval evidence is weak or empty, be conservative and return a bounded no_signal or provisional outcome instead of inventing evidence.',
@@ -1246,6 +1373,40 @@ function _classifyValidationState(question, structuredOutput, cliResult) {
     return 'validated';
   }
   return 'provisional';
+}
+
+function _derivePromptTraceStatus(question, structuredOutput, cliResult, promptTrace) {
+  if (promptTrace?.status) return promptTrace.status;
+  const executionClass = String(question?.execution_class || 'atomic_retrieval').trim() || 'atomic_retrieval';
+  const hasStructuredOutput = Boolean(structuredOutput && typeof structuredOutput === 'object' && Object.keys(structuredOutput).length > 0);
+  if (hasStructuredOutput) {
+    return null;
+  }
+  const exitCode = Number(cliResult?.code ?? 0);
+  return exitCode !== 0 ? `${executionClass}_tool_call_missing` : `${executionClass}_no_signal`;
+}
+
+function _decoratePromptTrace(question, structuredOutput, cliResult, promptTrace) {
+  const base = promptTrace && typeof promptTrace === 'object' ? { ...promptTrace } : {};
+  const executionClass = String(question?.execution_class || '').trim();
+  const questionType = String(question?.question_type || '').trim();
+  const status = _derivePromptTraceStatus(question, structuredOutput, cliResult, base);
+  if (status && !base.status) {
+    base.status = status;
+  }
+  if (executionClass && !base.failure_origin) {
+    base.failure_origin = executionClass;
+  }
+  if (questionType && !base.failure_question_type) {
+    base.failure_question_type = questionType;
+  }
+  if (!base.has_structured_output) {
+    base.has_structured_output = Boolean(structuredOutput && typeof structuredOutput === 'object' && Object.keys(structuredOutput).length > 0);
+  }
+  if (!Number.isFinite(Number(base.exit_code)) && cliResult) {
+    base.exit_code = Number(cliResult.code ?? 0);
+  }
+  return base;
 }
 
 function _stripJsonFence(text) {
@@ -1892,6 +2053,7 @@ function _buildQuestionPayload(
   sessionId,
   { promptTrace = null, messageTrace = [], executionQuery = '', cliResult = null } = {},
 ) {
+  const normalizedPromptTrace = _decoratePromptTrace(question, structuredOutput, cliResult, promptTrace);
   const initialValidationState = _classifyValidationState(question, structuredOutput, cliResult);
   const { structuredOutput: enhancedStructuredOutput, commercialFields, confidence } =
     _augmentCommercialStructuredOutput(question, structuredOutput, initialValidationState);
@@ -1902,16 +2064,36 @@ function _buildQuestionPayload(
   const inferredSignalType = enhancedStructuredOutput.signal_type || (question.question_type ? question.question_type.toUpperCase() : 'NO_SIGNAL');
   return {
     question_id: question.question_id,
+    question_family: question.question_family,
     question_type: question.question_type,
     question_text: question.question_text,
     question: question.question_text,
     query: question.query,
     hop_budget: question.hop_budget,
+    evidence_extension_budget: question.evidence_extension_budget,
     source_priority: question.source_priority,
+    search_strategy: question.search_strategy,
+    evidence_extension_confidence_threshold: question.evidence_extension_confidence_threshold,
     entity_name: question.entity_name,
     entity_id: question.entity_id,
     entity_type: question.entity_type,
     preset: question.preset,
+    pack_role: question.pack_role,
+    execution_class: question.execution_class,
+    rollout_phase: question.rollout_phase,
+    commercial_output_enabled: question.commercial_output_enabled,
+    conditional_on: question.conditional_on,
+    depends_on: question.depends_on,
+    structured_output_schema: question.structured_output_schema,
+    graph_write_targets: question.graph_write_targets,
+    current_section_id: question.current_section_id,
+    current_section_label: question.current_section_label,
+    current_section_index: question.current_section_index,
+    current_section_total: question.current_section_total,
+    current_question_index: question.current_question_index,
+    current_question_total: question.current_question_total,
+    current_strategy_label: question.current_strategy_label,
+    current_source_order: question.current_source_order,
     model_used: DEFAULT_MODEL,
     session_id: sessionId,
     agentic_plan: {
@@ -1920,10 +2102,10 @@ function _buildQuestionPayload(
     },
     reasoning: {
       structured_output: enhancedStructuredOutput,
-      prompt_trace: promptTrace,
+      prompt_trace: normalizedPromptTrace,
       message_trace: messageTrace,
     },
-    prompt_trace: promptTrace,
+    prompt_trace: normalizedPromptTrace,
     message_trace: messageTrace,
     execution_query: executionQuery || question.query,
     answer: enhancedStructuredOutput.answer || '',
@@ -2586,20 +2768,7 @@ export async function runOpenCodeQuestionSourceBatch({
     throw new Error(`Question source ${JSON.stringify(questionSourcePath)} must resolve to a JSON object`);
   }
 
-  const questions = Array.isArray(sourcePayload.questions)
-    ? sourcePayload.questions
-        .filter((question) => question && typeof question === 'object')
-        .map((question, index) => {
-          const normalizedQuestionText = String(question.question_text || question.question || question.prompt || '').trim();
-          const normalizedQuestionId = String(question.question_id || question.id || question.slug || `q${index + 1}`).trim();
-          return {
-            ...question,
-            question_id: normalizedQuestionId,
-            question_text: normalizedQuestionText || normalizedQuestionId,
-            question: normalizedQuestionText || String(question.question || question.prompt || normalizedQuestionId).trim(),
-          };
-        })
-    : [];
+  const questions = await _normalizeQuestionSourceQuestions(sourcePayload);
   if (questions.length === 0) {
     throw new Error(`Question source ${JSON.stringify(questionSourcePath)} does not contain any questions`);
   }
